@@ -34,7 +34,7 @@ function UpdaterScene:showText(text)
         size = 20,
         aligh = ui.TEXT_ALIGN_CENTER,
         valigh = ui.TEXT_VALIGN_CENTER,
-        color = ccc3(255, 255, 255)
+        color = ccc3(0, 0, 0)
     })
     label:setPosition(display.cx, display.cy)
     label:addTo(self)
@@ -51,6 +51,8 @@ end
 
 function UpdaterScene:loadLocalJson()
     local jsonPath = CCFileUtils:sharedFileUtils():fullPathForFilename(self.m_jsonFileName)
+    print(jsonPath)
+
     local file = io.open(jsonPath)
     local jsonString = file:read("*a")
     file:close()
@@ -95,16 +97,16 @@ function UpdaterScene:getUpdateFileList()
         end
     end
 
-    if #updateFileList > 0 then
-        LuaUtils:outputTable("updateFileList", updateFileList)
-        for _, v in ipairs(updateFileList) do
-            self.m_totalSize = self.m_totalSize + v.size
-        end
+    -- if #updateFileList > 0 then
+    --     LuaUtils:outputTable("updateFileList", updateFileList)
+    --     for _, v in ipairs(updateFileList) do
+    --         self.m_totalSize = self.m_totalSize + v.size
+    --     end
 
-        self:downloadFiles(updateFileList)
-    else
-        -- app:enterScene("MainScene")
-    end
+    --     self:downloadFiles(updateFileList)
+    -- else
+    --     app:enterScene("MainScene")
+    -- end
 end
 
 function UpdaterScene:downloadFiles(files)
@@ -139,8 +141,8 @@ function UpdaterScene:downloadFiles(files)
 end
 
 function UpdaterScene:saveServerJson()
-    local resPath = GameUtils:getUpdatePath() .. "/res"
-    local filePath = resPath .. "/" .. self.m_jsonFileName
+    local resPath = GameUtils:getUpdatePath() .. "res/"
+    local filePath = resPath .. self.m_jsonFileName
     local file = io.open(filePath, "w")
     if not file then
         device.showAlert(nil, _("文件下载失败!"), { _("确定") })
@@ -164,7 +166,7 @@ function UpdaterScene:showVersion()
         size = 18,
         aligh = ui.TEXT_ALIGN_RIGHT,
         valigh = ui.TEXT_VALIGN_CENTER,
-        color = ccc3(255, 255, 255)
+        color = ccc3(0, 0, 0)
     })
 
     label:setPosition(display.right - label:getContentSize().width / 2, display.bottom + label:getContentSize().height / 2)

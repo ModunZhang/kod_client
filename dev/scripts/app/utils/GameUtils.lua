@@ -52,5 +52,5 @@ function GameUtils:formatTimeAsTimeAgoStyle( time )
 end
 
 function GameUtils:getUpdatePath(  )
-	device.writablePath .. "update/" .. CONFIG_APP_VERSION
+	return device.writablePath .. "update/" .. CONFIG_APP_VERSION + "/"
 end

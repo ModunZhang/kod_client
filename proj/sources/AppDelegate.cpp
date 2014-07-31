@@ -123,7 +123,6 @@ void AppDelegate::loadConfigFile()
 {
     CCLuaEngine *pEngine = CCLuaEngine::defaultEngine();
     string path = CCFileUtils::sharedFileUtils()->fullPathForFilename("scripts/config.lua");
-    printf("%s", path.c_str());
     pEngine->executeScriptFile("scripts/config.lua");
 }
 
@@ -148,8 +147,8 @@ void AppDelegate::checkPath()
     CCFileUtils* fileUtils = CCFileUtils::sharedFileUtils();
     const char* appVersion = this->getAppVersion();
     string writePath = fileUtils->getWritablePath();
-    string updatePath = writePath + "update";
-    string appPath = updatePath + "/" + appVersion;
+    string updatePath = writePath + "update/";
+    string appPath = updatePath + appVersion + "/";
     if(!fileUtils->isDirectoryExist(appPath)){
         if(fileUtils->isDirectoryExist(updatePath)){
             FileOperation::removeDirectory(updatePath.c_str());
@@ -157,8 +156,8 @@ void AppDelegate::checkPath()
         FileOperation::createDirectory(updatePath.c_str());
         FileOperation::createDirectory(appPath.c_str());
     }
-    string resPath = appPath + "/res";
-    string scriptsPath = appPath + "/scripts";
+    string resPath = appPath + "res/";
+    string scriptsPath = appPath + "scripts/";
     if (!fileUtils->isDirectoryExist(resPath)) {
         FileOperation::createDirectory(resPath.c_str());
     }
@@ -166,7 +165,7 @@ void AppDelegate::checkPath()
         FileOperation::createDirectory(scriptsPath.c_str());
     }
     string from = CCFileUtils::sharedFileUtils()->fullPathForFilename("res/fileList.json");
-    string to = appPath + "/res/fileList.json";
+    string to = appPath + "res/fileList.json";
     if (!CCFileUtils::sharedFileUtils()->isFileExist(to)) {
         FileOperation::copyFile(from.c_str(), to.c_str());
     }
