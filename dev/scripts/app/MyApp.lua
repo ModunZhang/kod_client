@@ -12,6 +12,8 @@ require("app.datas.GameDatas")
 local MyApp = class("MyApp", cc.mvc.AppBase)
 
 function MyApp:ctor()
+    self:initI18N()
+    NetManager:init()
     MyApp.super.ctor(self)
 end
 

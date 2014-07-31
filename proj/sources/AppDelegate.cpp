@@ -166,7 +166,7 @@ void AppDelegate::checkPath()
         FileOperation::createDirectory(scriptsPath.c_str());
     }
     string from = CCFileUtils::sharedFileUtils()->fullPathForFilename("res/fileList.json");
-    string to = appPath + "res/fileList.json";
+    string to = appPath + "/res/fileList.json";
     if (!CCFileUtils::sharedFileUtils()->isFileExist(to)) {
         FileOperation::copyFile(from.c_str(), to.c_str());
     }

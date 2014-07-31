@@ -9,14 +9,15 @@ global m_currentDir
 def getFileTag( fullPath ):
 	bashCommand = "git log -1 --pretty=format:%h -- path " + fullPath
 	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-	output = process.communicate()[0]
-	return output.rstrip()
+	output = process.communicate()[0].rstrip()
+	return output
 
 def getFileSvnPath( fullPath ):
 	bashCommand = "git ls-tree --name-only --full-name HEAD " + fullPath
 	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-	output = process.communicate()[0]
-	return output.rstrip()
+	output = process.communicate()[0].rstrip()
+	output = output[7:]
+	return output
 
 def getFileSize( fullPath ):
 	return os.path.getsize(fullPath)
@@ -24,8 +25,8 @@ def getFileSize( fullPath ):
 def getFileCrc32( fullPath ):
 	bashCommand = m_currentDir + "/crc32 " + fullPath
 	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-	output = process.communicate()[0]
-	return output.rstrip()
+	output = process.communicate()[0].rstrip()
+	return output
 
 def browseFolder( fullPath, fileList ):
 	for root, dirs, files in os.walk(fullPath):

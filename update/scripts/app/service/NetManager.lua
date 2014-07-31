@@ -163,7 +163,7 @@ function NetManager:getAllChat(cb)
 end
 
 function NetManager:getUpdateFileList(cb)
-    local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/res/fileList.json"
+    local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"
     self.m_netService:get(updateServer, nil, function(success, statusCode, msg)
         cb(success and statusCode == 200, msg)
     end)
