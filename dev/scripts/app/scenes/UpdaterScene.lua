@@ -103,7 +103,7 @@ function UpdaterScene:getUpdateFileList()
 
         self:downloadFiles(updateFileList)
     else
-        app:enterScene("MainScene")
+        -- app:enterScene("MainScene")
     end
 end
 
@@ -121,7 +121,6 @@ function UpdaterScene:downloadFiles(files)
                 device.showAlert(nil, _("文件下载失败!"), { _("确定") })
                 return
             end
-
             self.m_currentSize = self.m_currentSize + fileTotal
             self:downloadFiles(files)
         end, function(total, current)
@@ -140,9 +139,8 @@ function UpdaterScene:downloadFiles(files)
 end
 
 function UpdaterScene:saveServerJson()
-    local resPath = device.writablePath .. CONFIG_APP_VERSION .. "/res"
+    local resPath = GameUtils:getUpdatePath() .. "/res"
     local filePath = resPath .. "/" .. self.m_jsonFileName
-
     local file = io.open(filePath, "w")
     if not file then
         device.showAlert(nil, _("文件下载失败!"), { _("确定") })

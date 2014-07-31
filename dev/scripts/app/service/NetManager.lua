@@ -5,7 +5,7 @@ function NetManager:init()
     self.m_netService = import"app.service.NetService"
     self.m_netService:init()
 
-    self.m_docPath = device.writablePath .. CONFIG_APP_VERSION .. "/"
+    self.m_docPath = GameUtils:getUpdatePath()
 
     self.m_updateServer = {
         host = CONFIG_IS_LOCAL and CONFIG_LOCAL_SERVER.update.host or CONFIG_REMOTE_SERVER.update.host,
@@ -170,8 +170,8 @@ function NetManager:getUpdateFileList(cb)
 end
 
 function NetManager:downloadFile(fileInfo, cb, progressCb)
-    local downloadUrl = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/" .. fileInfo.path
-    local filePath = self.m_docPath .. fileInfo.path
+    local downloadUrl = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/" .. fileInfo.path
+    local filePath = self.m_docPath .. "/" .. fileInfo.path
     local docPath = LuaUtils:getDocPathFromFilePath(filePath)
     if not ext.isDirectoryExist(docPath) then
         if not ext.createDir(docPath) then
