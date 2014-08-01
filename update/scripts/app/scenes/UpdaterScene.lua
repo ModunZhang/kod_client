@@ -60,16 +60,16 @@ end
 function UpdaterScene:loadServerJson()
     self:showText(_("检查游戏更新...."))
 
-    -- NetManager:getUpdateFileList(function(success, msg)
-    --     self:removeText()
-    --     if not success then
-    --         device.showAlert(nil, _("检查游戏更新失败!"), { _("确定") })
-    --         return
-    --     end
+    NetManager:getUpdateFileList(function(success, msg)
+        self:removeText()
+        if not success then
+            device.showAlert(nil, _("检查游戏更新失败!"), { _("确定") })
+            return
+        end
 
-    --     self.m_serverJson = msg
-    --     self:getUpdateFileList()
-    -- end)
+        self.m_serverJson = msg
+        self:getUpdateFileList()
+    end)
 end
 
 function UpdaterScene:getUpdateFileList()
