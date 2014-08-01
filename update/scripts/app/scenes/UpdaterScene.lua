@@ -51,8 +51,6 @@ end
 
 function UpdaterScene:loadLocalJson()
     local jsonPath = CCFileUtils:sharedFileUtils():fullPathForFilename(self.m_jsonFileName)
-    print(jsonPath)
-
     local file = io.open(jsonPath)
     local jsonString = file:read("*a")
     file:close()
@@ -96,17 +94,16 @@ function UpdaterScene:getUpdateFileList()
             table.insert(updateFileList, v)
         end
     end
+    if #updateFileList > 0 then
+        LuaUtils:outputTable("updateFileList", updateFileList)
+        for _, v in ipairs(updateFileList) do
+            self.m_totalSize = self.m_totalSize + v.size
+        end
 
-    -- if #updateFileList > 0 then
-    --     LuaUtils:outputTable("updateFileList", updateFileList)
-    --     for _, v in ipairs(updateFileList) do
-    --         self.m_totalSize = self.m_totalSize + v.size
-    --     end
-
-    --     self:downloadFiles(updateFileList)
-    -- else
-    --     app:enterScene("MainScene")
-    -- end
+        self:downloadFiles(updateFileList)
+    else
+        app:enterScene("MainScene")
+    end
 end
 
 function UpdaterScene:downloadFiles(files)

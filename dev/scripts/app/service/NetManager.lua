@@ -172,7 +172,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
     local filePath = GameUtils:getUpdatePath() .. fileInfo.path
     local docPath = LuaUtils:getDocPathFromFilePath(filePath)
     if not ext.isDirectoryExist(docPath) then
-        if not ext.createDir(docPath) then
+        if not ext.createDirectory(docPath) then
             cb(false)
             return
         end
