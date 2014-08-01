@@ -17,7 +17,7 @@ function MainScene:onExit()
 end
 
 function MainScene:createBgLayer()
-    display.newSprite("#login_bkg.png", display.cx, display.cy):addTo(self)
+    display.newSprite("images/bg.png", display.cx, display.cy):addTo(self)
 end
 
 function MainScene:checkLogin()
