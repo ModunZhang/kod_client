@@ -102,7 +102,7 @@ function UpdaterScene:getUpdateFileList()
 
         self:downloadFiles(updateFileList)
     else
-        -- app:enterScene("MainScene")
+        app:enterScene("MainScene")
     end
 end
 
