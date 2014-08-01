@@ -98,8 +98,6 @@ function NetManager:getLogicServerInfo(cb)
             self.m_logicServer.port = msg.data.port
             self.m_logicServer.id = msg.data.id
 
-            self.m_netService:setDeltatime(msg.time - ext.now())
-
             cb(true)
         else
             cb(false)
@@ -127,6 +125,7 @@ function NetManager:login(cb)
     }
     self.m_netService:request("logic.entryHandler.login", loginInfo, function(success, msg)
         if success and msg.code == 200 then
+            self.m_netService:setDeltatime(msg.data.time - ext.now())
             cb(true, msg.data)
         else
             cb(false)
