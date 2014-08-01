@@ -31,7 +31,7 @@ function UpdaterScene:showText(text)
     local label = ui.newTTFLabel({
         text = text,
         font = "fonts/Arial.ttf",
-        size = 20,
+        size = 50,
         aligh = ui.TEXT_ALIGN_CENTER,
         valigh = ui.TEXT_VALIGN_CENTER,
         color = ccc3(0, 0, 0)
@@ -102,7 +102,7 @@ function UpdaterScene:getUpdateFileList()
 
         self:downloadFiles(updateFileList)
     else
-        app:enterScene("MainScene")
+        -- app:enterScene("MainScene")
     end
 end
 
@@ -160,7 +160,7 @@ function UpdaterScene:showVersion()
     local label = ui.newTTFLabel({
         text = version,
         font = "fonts/Arial.ttf",
-        size = 18,
+        size = 20,
         aligh = ui.TEXT_ALIGN_RIGHT,
         valigh = ui.TEXT_VALIGN_CENTER,
         color = ccc3(0, 0, 0)
