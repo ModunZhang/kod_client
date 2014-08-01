@@ -17,7 +17,7 @@ python buildUpdate.py
 cd ..
 
 echo ---------------- 同步代码
-cp -r ../update ../../KODServer/update-server/public
+cp -r ../update ../../server/update-server/public
 
 # rsync -rave "ssh -i /Users/modun/.ssh/T4FMacBookPro-EC2.pem" --exclude=.DS_Store*  ../res/ ubuntu@ec2-54-254-249-17.ap-southeast-1.compute.amazonaws.com:~/BFServer/update-server/public/res/
 # rsync -rave "ssh -i /Users/modun/.ssh/T4FMacBookPro-EC2.pem" --exclude=.DS_Store*  ../target/ ubuntu@ec2-54-254-249-17.ap-southeast-1.compute.amazonaws.com:~/BFServer/update-server/public/target/
