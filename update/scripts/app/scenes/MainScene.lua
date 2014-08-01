@@ -48,7 +48,7 @@ function MainScene:checkLogin()
                         return
                     else
                         self:showText(_("登录游戏成功!"))
-                        LuaUtils:outputTable(msg)
+                        LuaUtils:outputTable("userMessage", msg)
                     end
                 end)
             end)
