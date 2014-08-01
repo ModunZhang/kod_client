@@ -160,7 +160,7 @@ function UpdaterScene:showVersion()
     local label = ui.newTTFLabel({
         text = version,
         font = "fonts/Arial.ttf",
-        size = 15,
+        size = 18,
         aligh = ui.TEXT_ALIGN_RIGHT,
         valigh = ui.TEXT_VALIGN_CENTER,
         color = ccc3(255, 255, 255)
