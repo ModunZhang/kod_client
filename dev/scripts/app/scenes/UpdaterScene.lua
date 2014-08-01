@@ -25,30 +25,6 @@ function UpdaterScene:createBgLayer()
     display.newSprite("images/bg.png", display.cx, display.cy):addTo(self)
 end
 
-function UpdaterScene:showText(text)
-    self:removeText()
-
-    local label = ui.newTTFLabel({
-        text = text,
-        font = "fonts/Arial.ttf",
-        size = 35,
-        aligh = ui.TEXT_ALIGN_CENTER,
-        valigh = ui.TEXT_VALIGN_CENTER,
-        color = ccc3(255, 255, 255)
-    })
-    label:setPosition(display.cx, display.cy)
-    label:addTo(self)
-
-    self.m_currentLabel = label
-end
-
-function UpdaterScene:removeText()
-    if self.m_currentLabel then
-        self.m_currentLabel:removeSelf()
-        self.m_currentLabel = nil
-    end
-end
-
 function UpdaterScene:loadLocalJson()
     local jsonPath = CCFileUtils:sharedFileUtils():fullPathForFilename(self.m_jsonFileName)
     local file = io.open(jsonPath)
@@ -147,6 +123,30 @@ function UpdaterScene:saveServerJson()
     end
     file:write(self.m_serverJson)
     file:close()
+end
+
+function UpdaterScene:showText(text)
+    self:removeText()
+
+    local label = ui.newTTFLabel({
+        text = text,
+        font = "fonts/Arial.ttf",
+        size = 35,
+        aligh = ui.TEXT_ALIGN_CENTER,
+        valigh = ui.TEXT_VALIGN_CENTER,
+        color = ccc3(255, 255, 255)
+    })
+    label:setPosition(display.cx, display.cy)
+    label:addTo(self)
+
+    self.m_currentLabel = label
+end
+
+function UpdaterScene:removeText()
+    if self.m_currentLabel then
+        self.m_currentLabel:removeSelf()
+        self.m_currentLabel = nil
+    end
 end
 
 function UpdaterScene:showVersion()

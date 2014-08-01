@@ -15,10 +15,10 @@ function NetManager:init()
         port = CONFIG_IS_LOCAL and CONFIG_LOCAL_SERVER.gate.port or CONFIG_REMOTE_SERVER.gate.port,
         name = CONFIG_IS_LOCAL and CONFIG_LOCAL_SERVER.gate.name or CONFIG_REMOTE_SERVER.gate.name,
     }
-    self.m_connectorServer = {
+    self.m_logicServer = {
+        id = nil,
         host = nil,
         port = nil,
-        name = nil,
     }
 end
 
@@ -44,6 +44,10 @@ function NetManager:addTimeoutEventListener()
     end)
 end
 
+function NetManager:removeTimeoutEventListener(  )
+    self:removeEventListener("timeout")
+end
+
 function NetManager:addDisconnectEventListener()
     self:addEventListener("disconnect", function(success, msg)
         device.showAlert(nil, _("和服务器的连接已断开!"), {_("确定")}, function(event)
@@ -52,12 +56,20 @@ function NetManager:addDisconnectEventListener()
     end)
 end
 
+function NetManager:removeDisConnectEventListener(  )
+    self:removeEventListener("disconnect")
+end
+
 function NetManager:addKickEventListener()
     self:addEventListener("onKick", function(success, msg)
         device.showAlert(nil, _("和服务器的连接已断开!"), {_("确定")}, function(event)
             app:enterScene("MainScene")
         end)
     end)
+end
+
+function NetManager:removeKickEventListener(  )
+    self:removeEventListener("onKick")
 end
 
 function NetManager:connectGateServer(cb)
@@ -74,19 +86,19 @@ function NetManager:connectGateServer(cb)
     end)
 end
 
-function NetManager:getConnectorServerInfo(cb)
+function NetManager:getLogicServerInfo(cb)
     self.m_netService:request("gate.gateHandler.queryEntry", nil, function(success, msg)
+        self:removeTimeoutEventListener()
+        self:removeDisConnectEventListener()
+        self:removeKickEventListener()
+        self.m_netService:disconnect()
+
         if success and msg.code == Response.OK then
-            self.m_connectorServer.host = msg.host
-            self.m_connectorServer.port = msg.port
-            self.m_connectorServer.name = msg.name
+            self.m_logicServer.host = msg.data.host
+            self.m_logicServer.port = msg.data.port
+            self.m_logicServer.id = msg.data.id
 
             self.m_netService:setDeltatime(msg.time - ext.now())
-
-            self:removeEventListener("timeout")
-            self:removeEventListener("disconnect")
-            self:removeEventListener("onKick")
-            self.m_netService:disconnect()
 
             cb(true)
         else
@@ -95,8 +107,8 @@ function NetManager:getConnectorServerInfo(cb)
     end)
 end
 
-function NetManager:connectConnectorServer(cb)
-    self.m_netService:connect(self.m_connectorServer.host, self.m_connectorServer.port, function(success)
+function NetManager:connectLogicServer(cb)
+    self.m_netService:connect(self.m_logicServer.host, self.m_logicServer.port, function(success)
         if success then
             self:addDisconnectEventListener()
             self:addTimeoutEventListener()
@@ -109,35 +121,13 @@ function NetManager:connectConnectorServer(cb)
     end)
 end
 
-function NetManager:getUserInfo(cb)
-    local udid = device.getOpenUDID()
-    self.m_netService:request("connector.entryHandler.getUserByUdid", {
-        udid = udid,
-    }, function(success, msg)
-        if success then
-            cb(true, msg)
-        else
-            cb(false)
-        end
-    end)
-end
-
-function NetManager:register(name, cb)
-    self.m_netService:request("connector.entryHandler.createUser", {
-        userName = name,
-    }, function(success, msg)
-        if success then
-            cb(true, msg)
-        else
-            cb(false)
-        end
-    end)
-end
-
 function NetManager:login(cb)
-    self.m_netService:request("connector.entryHandler.login", nil, function(success, msg)
-        if success then
-            cb(true, msg)
+    local loginInfo = {
+        deviceId = device.getOpenUDID()
+    }
+    self.m_netService:request("logic.entryHandler.login", loginInfo, function(success, msg)
+        if success and msg.code == 200 then
+            cb(true, msg.data)
         else
             cb(false)
         end
