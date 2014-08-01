@@ -64,7 +64,7 @@ function MainScene:showText(text)
     local label = ui.newTTFLabel({
         text = text,
         font = "fonts/Arial.ttf",
-        size = 20,
+        size = 35,
         aligh = ui.TEXT_ALIGN_CENTER,
         valigh = ui.TEXT_VALIGN_CENTER,
         color = ccc3(255, 255, 255)

@@ -17,7 +17,7 @@ function MainScene:onExit()
 end
 
 function MainScene:createBgLayer()
-    display.newSprite("images/bg.png", display.cx, display.cy):addTo(self)
+    display.newSprite("#login_bkg.png", display.cx, display.cy):addTo(self)
 end
 
 function MainScene:checkLogin()
@@ -64,7 +64,7 @@ function MainScene:showText(text)
     local label = ui.newTTFLabel({
         text = text,
         font = "fonts/Arial.ttf",
-        size = 20,
+        size = 35,
         aligh = ui.TEXT_ALIGN_CENTER,
         valigh = ui.TEXT_VALIGN_CENTER,
         color = ccc3(255, 255, 255)
