@@ -93,7 +93,7 @@ function NetManager:getLogicServerInfo(cb)
         self:removeKickEventListener()
         self.m_netService:disconnect()
 
-        if success and msg.code == Response.OK then
+        if success and msg.code == 200 then
             self.m_logicServer.host = msg.data.host
             self.m_logicServer.port = msg.data.port
             self.m_logicServer.id = msg.data.id
