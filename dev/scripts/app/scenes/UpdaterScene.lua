@@ -31,10 +31,10 @@ function UpdaterScene:showText(text)
     local label = ui.newTTFLabel({
         text = text,
         font = "fonts/Arial.ttf",
-        size = 50,
+        size = 30,
         aligh = ui.TEXT_ALIGN_CENTER,
         valigh = ui.TEXT_VALIGN_CENTER,
-        color = ccc3(0, 0, 0)
+        color = ccc3(255, 255, 255)
     })
     label:setPosition(display.cx, display.cy)
     label:addTo(self)
@@ -163,7 +163,7 @@ function UpdaterScene:showVersion()
         size = 20,
         aligh = ui.TEXT_ALIGN_RIGHT,
         valigh = ui.TEXT_VALIGN_CENTER,
-        color = ccc3(0, 0, 0)
+        color = ccc3(255, 255, 255)
     })
 
     label:setPosition(display.right - label:getContentSize().width / 2, display.bottom + label:getContentSize().height / 2)
