@@ -43,6 +43,7 @@ public:
      */
     virtual void applicationWillEnterForeground();
     void setProjectConfig(const ProjectConfig& config);
+    
     void initLuaEngine();
     
 private:

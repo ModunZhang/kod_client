@@ -5,15 +5,13 @@
 #include "support/CCNotificationCenter.h"
 #include "CCLuaEngine.h"
 #include <string>
-#include "tolua++.h"
+
 #include "FileOperation.h"
 #include "LuaExtension.h"
 
 using namespace std;
 using namespace cocos2d;
 using namespace CocosDenshion;
-
-#define CONFIG_IS_DEBUG false
 
 void AppDelegateExtern::restartGame()
 {

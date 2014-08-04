@@ -5,4 +5,4 @@ GameDataDir=../gameData
 
 test -d $ClientDir || mkdir -p $ClientDir
 
-python ./buildGameData/exportGameData.py $GameDataDir $ClientDir "client"
+python ./buildGameData/buildGameData.py $GameDataDir $ClientDir "client"
