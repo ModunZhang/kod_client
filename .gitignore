@@ -1,0 +1,6 @@
+!.gitignore
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+project.xcworkspace/
+xcuserdata/
