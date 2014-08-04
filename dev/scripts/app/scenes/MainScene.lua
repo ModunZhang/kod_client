@@ -9,7 +9,6 @@ end
 
 function MainScene:onEnter()
     self:createBgLayer()
-    self:showVersion()
     self:checkLogin()
 end
 
@@ -79,27 +78,6 @@ function MainScene:removeText()
         self.m_currentLabel:removeSelf()
         self.m_currentLabel = nil
     end
-end
-
-function MainScene:showVersion()
-    local jsonPath = CCFileUtils:sharedFileUtils():fullPathForFilename("fileList.json")
-    local file = io.open(jsonPath)
-    local jsonString = file:read("*a")
-    file:close()
-
-    local tag = json.decode(jsonString).tag
-    local version = string.format("Version:%s(%s)", CONFIG_APP_VERSION, tag)
-    local label = ui.newTTFLabel({
-        text = version,
-        font = "fonts/Arial.ttf",
-        size = 18,
-        aligh = ui.TEXT_ALIGN_RIGHT,
-        valigh = ui.TEXT_VALIGN_CENTER,
-        color = ccc3(255, 255, 255)
-    })
-
-    label:setPosition(display.right - label:getContentSize().width / 2, display.bottom + label:getContentSize().height / 2)
-    label:addTo(self)
 end
 
 return MainScene

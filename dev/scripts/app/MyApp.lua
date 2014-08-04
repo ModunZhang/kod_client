@@ -7,7 +7,7 @@ require("app.utils.GameUtils")
 require("app.service.NetManager")
 require("app.service.DataManager")
 require("app.datas.GameDatas")
-
+import('.utils.UIKitHelper')
 
 local MyApp = class("MyApp", cc.mvc.AppBase)
 
