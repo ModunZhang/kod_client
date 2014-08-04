@@ -28,12 +28,12 @@ CONFIG_LOCAL_SERVER = {
 }
 CONFIG_REMOTE_SERVER = {
     update = {
-        host = "54.254.249.17",
+        host = "54.178.151.193",
         port = 3000,
         name = "update-server-1"
     },
     gate = {
-        host = "54.254.249.17",
+        host = "54.178.151.193",
         port = 3011,
         name = "gate-server-1"
     },
