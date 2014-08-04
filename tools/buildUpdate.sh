@@ -19,15 +19,13 @@ cd ..
 echo ---------------- 同步代码
 cp -r ../update ../../server/update-server/public
 
-# rsync -rave "ssh -i /Users/modun/.ssh/T4FMacBookPro-EC2.pem" --exclude=.DS_Store*  ../res/ ubuntu@ec2-54-254-249-17.ap-southeast-1.compute.amazonaws.com:~/BFServer/update-server/public/res/
-# rsync -rave "ssh -i /Users/modun/.ssh/T4FMacBookPro-EC2.pem" --exclude=.DS_Store*  ../target/ ubuntu@ec2-54-254-249-17.ap-southeast-1.compute.amazonaws.com:~/BFServer/update-server/public/target/
-# # ssh -i /Users/modun/.ssh/T4FMacBookPro-EC2.pem ubuntu@ec2-54-254-249-17.ap-southeast-1.compute.amazonaws.com 'pomelo kill -f; pomelo start -e production -D -d ~/BFServer/game-server; pomelo start -D -d ~/BFServer/update-server'
+rsync -rave "ssh -i ~/.ssh/ModunsMBP.pem" --exclude=.DS_Store*  ../../update ubuntu@ec2-54-254-249-17.ap-southeast-1.compute.amazonaws.com:~/BFServer/update-server/public/update
 
-# echo ---------------- 提交代码
-# cd ..
-# git add --all .
-# git commit -m "update new version"
-# git push
-# cd buildUpdate
+echo ---------------- 提交代码
+cd ..
+git add --all .
+git commit -m "update new version"
+git push
+cd buildUpdate
 
 echo ---------------- 自动更新完成
