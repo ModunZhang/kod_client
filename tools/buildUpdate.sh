@@ -19,7 +19,7 @@ cd ..
 echo ---------------- 同步代码
 cp -r ../update ../../server/update-server/public
 
-rsync --stats --progress -rave "ssh -i /Users/modun/.ssh/ModunsMBP.pem" --exclude=.DS_Store*  ../update ec2-user@ec2-54-254-249-17.ap-southeast-1.compute.amazonaws.com:~/BFServer/update-server/public/update
+rsync -rave "ssh -i /Users/modun/.ssh/ModunsMBP.pem" --exclude=.DS_Store*  ../update ec2-user@ec2-54-178-151-193.ap-northeast-1.compute.amazonaws.com:~/BFServer/update-server/public/update
 
 echo ---------------- 提交代码
 cd ..
