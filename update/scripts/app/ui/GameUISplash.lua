@@ -28,6 +28,7 @@ function GameUISplash:onEnter()
 	self.progressBar:setPercent(0)
 	self.progressLabel:setText('')
 
+	
 	self:showVersion()
 	self:loadLocalJson()
 	self:loadServerJson()
@@ -37,7 +38,7 @@ end
 -- Private Methods
 
 function GameUISplash:setProgressText(str)
-	self.progressLabel:setText('')
+	self.progressLabel:setText(str)
 end
 function GameUISplash:setProgressPercent(num)
 	self.progressBar:setPercent(num)
@@ -108,11 +109,12 @@ function GameUISplash:getUpdateFileList()
 
         self:downloadFiles(updateFileList)
     else
-    	print('进入游戏！！！')
+    	self:setProgressPercent(100)
         self:performWithDelay(function (  )
+    		print('进入游戏！！！')
 			app:enterScene('MainScene')
-		end, 0)
-		-- app:enterScene('MainScene')
+		end, 1)
+		-- 这里为什么需要延迟一秒？
     end
 end
 
