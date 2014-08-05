@@ -39,5 +39,5 @@ CONFIG_REMOTE_SERVER = {
     },
 }
 
-CONFIG_IS_LOCAL = false
+CONFIG_IS_LOCAL = true
 CONFIG_IS_DEBUG = true

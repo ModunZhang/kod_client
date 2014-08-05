@@ -1,46 +1,62 @@
-local UpdaterScene = class("UpdaterScene", function()
-    return display.newScene("UpdaterScene")
-end)
+--
+-- Author: dannyhe
+-- Date: 2014-08-05 17:29:19
+--
+local UIKitHelper = UIKitHelper
+local GameUISplash = UIKitHelper:inheritUIBase('GameUISplash')
 
-function UpdaterScene:ctor()
-    self.ui = UIKitHelper:createGameUI('GameUISplash')
-end
-
-function UpdaterScene:onEnter()
-    self.ui:addToScene(self,false)
-end
-
-function UpdaterScene:onExit()
-    self.ui = nil
-end
-
-
---[[ 
-
-function UpdaterScene:ctor()
-	self.m_currentLabel = nil
-    self.m_localJson = nil
+function GameUISplash:ctor()
+	if not self.super.ctor(self,{ui = 'images/GameUISplash.json'}) then
+		printError('Init GameUISplash Failed!')
+	end
+	-- data
+	self.m_localJson = nil
     self.m_serverJson = nil
     self.m_jsonFileName = "fileList.json"
     self.m_totalSize = 0
     self.m_currentSize = 0
+
 end
 
-function UpdaterScene:onEnter()
-    self:createBgLayer()
-    self:showVersion()
-    self:loadLocalJson()
-    self:loadServerJson()
+function GameUISplash:onEnter()
+	self.super.onEnter(self)
+	-- ui
+	self.progressBar = self:seekWidgetByName('ProgressBar_Loading')
+	self.progressLabel = self:seekWidgetByName('Label_Process')
+	self.tipsLabel = self:seekWidgetByName('Label_Tips')
+	self.verLabel = self:seekWidgetByName('Label_Version')
+	self.progressBar:setPercent(0)
+	self.progressLabel:setText('')
+
+	self:showVersion()
+	self:loadLocalJson()
+	self:loadServerJson()
+
 end
 
-function UpdaterScene:onExit()
+-- Private Methods
+
+function GameUISplash:setProgressText(str)
+	self.progressLabel:setText('')
+end
+function GameUISplash:setProgressPercent(num)
+	self.progressBar:setPercent(num)
 end
 
-function UpdaterScene:createBgLayer()
-    display.newSprite("images/bg.png", display.cx, display.cy):addTo(self)
+-- Auto Update
+
+function GameUISplash:showVersion()
+    local jsonPath = CCFileUtils:sharedFileUtils():fullPathForFilename("fileList.json")
+    local file = io.open(jsonPath)
+    local jsonString = file:read("*a")
+    file:close()
+
+    local tag = json.decode(jsonString).tag
+    local version =string.format("Version:%s(%s)", CONFIG_APP_VERSION, tag)
+  	self.verLabel:setText(version)
 end
 
-function UpdaterScene:loadLocalJson()
+function GameUISplash:loadLocalJson()
     local jsonPath = CCFileUtils:sharedFileUtils():fullPathForFilename(self.m_jsonFileName)
     local file = io.open(jsonPath)
     local jsonString = file:read("*a")
@@ -48,11 +64,10 @@ function UpdaterScene:loadLocalJson()
     self.m_localJson = jsonString
 end
 
-function UpdaterScene:loadServerJson()
-    self:showText(_("检查游戏更新...."))
+function GameUISplash:loadServerJson()
+    self:setProgressText(_("检查游戏更新...."))
 
     NetManager:getUpdateFileList(function(success, msg)
-        self:removeText()
         if not success then
             device.showAlert(nil, _("检查游戏更新失败!"), { _("确定") })
             return
@@ -63,7 +78,7 @@ function UpdaterScene:loadServerJson()
     end)
 end
 
-function UpdaterScene:getUpdateFileList()
+function GameUISplash:getUpdateFileList()
     self.m_totalSize = 0
     self.m_currentSize = 0
     local localFileList = json.decode(self.m_localJson)
@@ -93,11 +108,15 @@ function UpdaterScene:getUpdateFileList()
 
         self:downloadFiles(updateFileList)
     else
-        app:enterScene("MainScene")
+    	print('进入游戏！！！')
+        self:performWithDelay(function (  )
+			app:enterScene('MainScene')
+		end, 0)
+		-- app:enterScene('MainScene')
     end
 end
 
-function UpdaterScene:downloadFiles(files)
+function GameUISplash:downloadFiles(files)
     if #files > 0 then
         local file = files[1]
         table.remove(files, 1)
@@ -107,7 +126,6 @@ function UpdaterScene:downloadFiles(files)
         local percent = nil
         NetManager:downloadFile(file, function(success)
             if not success then
-                self:removeText()
                 device.showAlert(nil, _("文件下载失败!"), { _("确定") })
                 return
             end
@@ -119,7 +137,8 @@ function UpdaterScene:downloadFiles(files)
             local currentPercent = (self.m_currentSize + current) / self.m_totalSize * 100
             if (percent ~= currentPercent) then
                 percent = currentPercent
-                self:showText(string.format(_("下载进度:%d/%d"), percent, 100))
+                self:setProgressPercent(percent)
+                self:setProgressText(string.format(_("下载进度:%d/%d"), percent, 100))
             end
         end)
     else
@@ -128,7 +147,7 @@ function UpdaterScene:downloadFiles(files)
     end
 end
 
-function UpdaterScene:saveServerJson()
+function GameUISplash:saveServerJson()
     local resPath = GameUtils:getUpdatePath() .. "res/"
     local filePath = resPath .. self.m_jsonFileName
     local file = io.open(filePath, "w")
@@ -140,49 +159,4 @@ function UpdaterScene:saveServerJson()
     file:close()
 end
 
-function UpdaterScene:showText(text)
-    self:removeText()
-
-    local label = ui.newTTFLabel({
-        text = text,
-        font = "fonts/Arial.ttf",
-        size = 35,
-        aligh = ui.TEXT_ALIGN_CENTER,
-        valigh = ui.TEXT_VALIGN_CENTER,
-        color = ccc3(255, 255, 255)
-    })
-    label:setPosition(display.cx, display.cy)
-    label:addTo(self)
-
-    self.m_currentLabel = label
-end
-
-function UpdaterScene:removeText()
-    if self.m_currentLabel then
-        self.m_currentLabel:removeSelf()
-        self.m_currentLabel = nil
-    end
-end
-
-function UpdaterScene:showVersion()
-    local jsonPath = CCFileUtils:sharedFileUtils():fullPathForFilename("fileList.json")
-    local file = io.open(jsonPath)
-    local jsonString = file:read("*a")
-    file:close()
-
-    local tag = json.decode(jsonString).tag
-    local version =string.format("Version:%s(%s)", CONFIG_APP_VERSION, tag)
-    local label = ui.newTTFLabel({
-        text = version,
-        font = "fonts/Arial.ttf",
-        size = 18,
-        aligh = ui.TEXT_ALIGN_RIGHT,
-        valigh = ui.TEXT_VALIGN_CENTER,
-        color = ccc3(255, 255, 255)
-    })
-
-    label:setPosition(display.right - label:getContentSize().width / 2, display.bottom + label:getContentSize().height / 2)
-    label:addTo(self)
-end
-]]--
-return UpdaterScene
+return GameUISplash

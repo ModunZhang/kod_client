@@ -1,7 +1,8 @@
 --
 -- Author: dannyhe
 -- Date: 2014-08-01 16:18:16
--- BaseView is a CCLayer  
+-- GameUIBase is a CCLayer  
+
 local GameUIBase = class('GameUIBase', function()
 	return display.newLayer()
 end)
@@ -9,19 +10,59 @@ end)
 function GameUIBase:ctor(params)
 	assert(type(params) == 'table')
 	self.title = params.title
-	return self:_initUI(params.ui)
+	self.ui = params.ui
+	self:setNodeEventEnabled(true)
+	return true
 end
+
+
+-- Node Event
+--------------------------------------
+function GameUIBase:onEnter()
+	self:_initUI(self.ui)
+end
+
+function GameUIBase:onEnterTransitionFinish()
+end
+
+function GameUIBase:onExitTransitionStart()
+end
+
+function GameUIBase:onExit()
+end
+
+
+function GameUIBase:onCleanup()
+end
+
+
+-- overwrite in subclass
+--------------------------------------
+function GameUIBase:rightButtonClicked(sender)
+end
+
+function GameUIBase:onMovieInStage()
+	
+end
+
+function GameUIBase:onMovieOutStage()
+
+end
+
+
+-- public methods
+--------------------------------------
 
 function GameUIBase:getLayer()
 	return self.uiLayer
 end
 
-function GameUIBase:setLayer(view)
+function GameUIBase:setLayer(layer)
 	if self.uiLayer then
 		self:removeAllChildrenWithCleanup(true)
 		self.uiLayer = nil
 	end
-	self.uiLayer = view 
+	self.uiLayer = layer 
 	self:addChild(self.uiLayer)
 	return self
 end
@@ -34,19 +75,6 @@ function GameUIBase:leftButtonClicked(sender)
 	end
 end
 
--- overwrite in subclass
-------------
-function GameUIBase:rightButtonClicked(sender)
-end
-
-function GameUIBase:onAddToScene()
-	print('GameUIBase:onAddToScene')
-end
-
-function GameUIBase:onEraseFromScene()
-	self:removeFromParentAndCleanup(true) -- subclass must call this methods
-end
-------------
 function GameUIBase:addToScene(scene,anima)
 	if scene and tolua.type(scene) == 'CCScene' then
 		scene:addChild(self)
@@ -101,7 +129,7 @@ function GameUIBase:UIAnimationMoveIn()
     {
 	    easing = "sineIn",
 	    onComplete = function()
-	    	self:onAddToScene()
+	    	self:onMovieInStage()
 	    end
     })
 end
@@ -113,7 +141,7 @@ function GameUIBase:UIAnimationMoveOut()
     {
 	    easing = "sineOut",
 	    onComplete = function()
-	    	self:onEraseFromScene()
+	    	self:onMovieOutStage()
 	    end
     })
 end
@@ -148,7 +176,8 @@ function GameUIBase:seekAndBindEvent4SegmentButtons(cb,...)
 end
 
 
--- private methods
+-- Private Methods
+--------------------------------------
 function GameUIBase:_initUI( jsonFile )
 	self.uiLayer = TouchGroup:create() -- uiLayer is a TouchGroup(UILayer)
 	self:addChild(self.uiLayer)

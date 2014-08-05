@@ -8,6 +8,7 @@ function MainScene:ctor()
 end
 
 function MainScene:onEnter()
+    print("MainScene:onEnter")
     self:createBgLayer()
     self:checkLogin()
 end
@@ -16,7 +17,7 @@ function MainScene:onExit()
 end
 
 function MainScene:createBgLayer()
-    display.newSprite("images/bg.png", display.cx, display.cy):addTo(self)
+    display.newSprite("images/spalshbg.png", display.cx, display.cy):addTo(self)
 end
 
 function MainScene:checkLogin()

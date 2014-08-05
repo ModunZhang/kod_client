@@ -3,6 +3,21 @@ local UpdaterScene = class("UpdaterScene", function()
 end)
 
 function UpdaterScene:ctor()
+    self.ui = UIKitHelper:createGameUI('GameUISplash')
+end
+
+function UpdaterScene:onEnter()
+    self.ui:addToScene(self,false)
+end
+
+function UpdaterScene:onExit()
+    self.ui = nil
+end
+
+
+--[[ 
+
+function UpdaterScene:ctor()
 	self.m_currentLabel = nil
     self.m_localJson = nil
     self.m_serverJson = nil
@@ -169,5 +184,5 @@ function UpdaterScene:showVersion()
     label:setPosition(display.right - label:getContentSize().width / 2, display.bottom + label:getContentSize().height / 2)
     label:addTo(self)
 end
-
+]]--
 return UpdaterScene
