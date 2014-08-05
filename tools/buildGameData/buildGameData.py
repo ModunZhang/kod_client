@@ -170,6 +170,7 @@ def exportSheetAsJs(sheet):
 	for i in range(1, rowNum):
 		#export one row
 		datarow = sheet.row_values(i)
+		details = title[0].split('_')
 		valueType = details[0]
 		keyName = ""
 		if ("INT" == valueType):

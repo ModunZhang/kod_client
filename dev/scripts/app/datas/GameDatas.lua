@@ -1,8 +1,6 @@
 GameDatas = {}
 
-GameDatas.BuildingLevelUp = {
-	["dwelling"] = {},
-	["lumbermill"] = {},
+GameDatas.LocationInitData = {
+	["locations"] = {},
 }
-require("app.datas.BuildingLevelUp_dwelling")
-require("app.datas.BuildingLevelUp_lumbermill")
+require("app.datas.LocationInitData_locations")
