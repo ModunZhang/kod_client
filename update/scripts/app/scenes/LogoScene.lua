@@ -13,13 +13,18 @@ end
 function LogoScene:onEnter()
 	self.sprite = display.newSprite("images/batcat.png", display.cx, display.cy):addTo(self)
 	self:performWithDelay(function()
-		app:enterScene("UpdaterScene", nil, "fade", 0.6, display.COLOR_WHITE)
+		if CONFIG_IS_DEBUG then
+			print('xxxxxxxxxx')
+			app:enterScene("MainScene", nil, "fade", 0.6, display.COLOR_WHITE)
+		else
+			print('xxxxxxxxxx222222')
+			app:enterScene("UpdaterScene", nil, "fade", 0.6, display.COLOR_WHITE)
+		end
 	end, 0.8)	
 end
 
 function LogoScene:onExit()
 	self.sprite = nil
-	print('LogoScene:onExit')
 end
 
 return LogoScene
