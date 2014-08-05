@@ -17,11 +17,6 @@ function MyApp:ctor()
 end
 
 function MyApp:run()
-    -- if CONFIG_IS_DEBUG then
-    --     self:enterScene("MainScene")
-    -- else
-    --     self:enterScene("UpdaterScene")
-    -- end
     self:enterScene('LogoScene')
 end
 
