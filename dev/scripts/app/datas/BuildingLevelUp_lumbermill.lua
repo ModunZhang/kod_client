@@ -1,4 +1,4 @@
-local lumbermill = GameDatas.BuildGrowUpConfig.lumbermill
+local lumbermill = GameDatas.BuildingLevelUp.lumbermill
 
 lumbermill[0] = {
 	["level"] = 0,

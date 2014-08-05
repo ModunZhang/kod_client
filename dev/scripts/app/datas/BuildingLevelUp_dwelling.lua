@@ -1,4 +1,4 @@
-local dwelling = GameDatas.BuildGrowUpConfig.dwelling
+local dwelling = GameDatas.BuildingLevelUp.dwelling
 
 dwelling["0.0"] = {
 	["level"] = "0.0",
