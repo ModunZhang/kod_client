@@ -17,7 +17,7 @@ python buildUpdate.py
 cd ..
 
 echo ---------------- 同步代码
-cp -r ../update ../../kod_server/update-server/public
+cp -r ../update ../../server/update-server/public
 rsync -rave "ssh -i /Users/modun/.ssh/ModunsMBP.pem" --exclude=.DS_Store*  ../update ec2-user@ec2-54-178-151-193.ap-northeast-1.compute.amazonaws.com:~/server/update-server/public/
 
 # echo ---------------- 提交代码
