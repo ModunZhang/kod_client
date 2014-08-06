@@ -426,7 +426,7 @@
 					"\"$(QUICK_COCOS2DX_ROOT)/lib/third_party/CSArmature\"",
 					"\"$(QUICK_COCOS2DX_ROOT)/lib/third_party\"",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				VALID_ARCHS = armv7;
@@ -472,7 +472,7 @@
 					"\"$(QUICK_COCOS2DX_ROOT)/lib/third_party/CSArmature\"",
 					"\"$(QUICK_COCOS2DX_ROOT)/lib/third_party\"",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = armv7;
