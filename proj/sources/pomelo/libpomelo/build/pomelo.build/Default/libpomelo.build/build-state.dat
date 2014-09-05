@@ -1,638 +1,0 @@
-Tlibpomelo
-v6
-r1
-cCheck dependencies
-cCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/client.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/client.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/common.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/common.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/listener.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/listener.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/map.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/map.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/message.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/message.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/msg-json.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-json.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/msg-pb.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-pb.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/network.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/network.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/package.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/package.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-decode.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-encode.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-util.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-util.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pkg-handshake.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-handshake.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pkg-heartbeat.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-heartbeat.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/transport.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/transport.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/protocol.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/protocol.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/thread.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/thread.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cLibtool /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/libpomelo.a normal x86_64
-
-N/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
-c00000000531E896200000000000000AA
-t1394510178
-s170
-
-N/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/SDKSettings.plist
-c00000000528245D4000000000000044C
-t1384269268
-s1100
-
-N/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/CoreServices/SystemVersion.plist
-c00000000531E895000000000000001DE
-t1394510160
-s478
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/libpomelo.a
-t2
-s0
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/client.o
-t1395191732
-s35104
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/common.o
-t1395191732
-s10192
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/listener.o
-t1395191732
-s19732
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/map.o
-t1395191732
-s10944
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/message.o
-t1395191732
-s14212
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/msg-json.o
-t1395191732
-s5564
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/msg-pb.o
-t1395191732
-s6676
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/network.o
-t1395191732
-s42428
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/package.o
-t1395191732
-s12040
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-decode.o
-t1395191732
-s27500
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-encode.o
-t1395191732
-s20364
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-util.o
-t1395191732
-s3932
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pkg-handshake.o
-t1395191732
-s35704
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pkg-heartbeat.o
-t1395191732
-s23564
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pomelo.LinkFileList
-c000000005328EFB30000000000000A25
-t1395191731
-s2597
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/protocol.o
-t1395191732
-s29652
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/thread.o
-t1395191733
-s21044
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/transport.o
-t1395191732
-s23120
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/client.c
-c0000000052970E9C00000000000029FE
-t1385631388
-s10750
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/common.c
-c0000000052970E9C0000000000000066
-t1385631388
-s102
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/listener.c
-c0000000052970E9C000000000000024D
-t1385631388
-s589
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/map.c
-c0000000052970E9C0000000000000E8E
-t1385631388
-s3726
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/message.c
-c0000000052970E9C0000000000001763
-t1385631388
-s5987
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-json.c
-c0000000052970E9C00000000000002D5
-t1385631388
-s725
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-pb.c
-c0000000052970E9C00000000000006D5
-t1385631388
-s1749
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/network.c
-c0000000052970E9C0000000000003DB6
-t1385631388
-s15798
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/package.c
-c0000000052970E9C0000000000001560
-t1385631388
-s5472
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c
-c0000000052970E9C00000000000041ED
-t1385631388
-s16877
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c
-c0000000052970E9C0000000000003707
-t1385631388
-s14087
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-util.c
-c0000000052970E9C0000000000000380
-t1385631388
-s896
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-handshake.c
-c0000000052970E9C0000000000001B31
-t1385631388
-s6961
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-heartbeat.c
-c0000000052970E9C00000000000008BA
-t1385631388
-s2234
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/protocol.c
-c0000000052970E9C0000000000001920
-t1385631388
-s6432
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/thread.c
-c0000000052970E9C0000000000000442
-t1385631388
-s1090
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/transport.c
-c0000000052970E9C0000000000000A91
-t1385631388
-s2705
-
-CCheck dependencies
-r0
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies18"Check dependenciesf38df83327d9b841^1e6cfd3327d9b841^---0#1#1#--18"Check dependencies36"74106B77-C25B-4913-8605-5715838F975F-
-
-CCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/client.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/client.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884531.995550
-e416884532.493598
-r1
-xCompileC
-xbuild/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/client.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/client.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/client.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/listener.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/package.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/message.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/transport.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/internal.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/common.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection97"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/client.c171"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/client.o [1msrc/client.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilerdc2bff3327d9b841^c4607e3427d9b841^---0#0#1#-19%DVTDocumentLocation2@96"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/client.c0000000000000000^2626"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/client.o [1msrc/client.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources/x86_64 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/client.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/client.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/client.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/client.o36"32F5FF04-11DE-49C1-B574-E09B071ED476-
-b9059257D-BD26-4120-BA35-4745E5A0C0BF
-
-CCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/common.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/common.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884531.996241
-e416884532.382020
-r1
-xCompileC
-xbuild/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/common.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/common.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/common.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection97"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/common.c171"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/common.o [1msrc/common.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler7633ff3327d9b841^fad0613427d9b841^---0#0#1#-19%DVTDocumentLocation2@96"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/common.c0000000000000000^2626"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/common.o [1msrc/common.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources/x86_64 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/common.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/common.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/common.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/common.o36"7A109D9E-BDCA-40EC-832C-C1BDCA84366E-
-b9059257D-BD26-4120-BA35-4745E5A0C0BF
-
-CCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/listener.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/listener.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884531.997103
-e416884532.395553
-r1
-xCompileC
-xbuild/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/listener.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/listener.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/listener.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/listener.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection99"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/listener.c175"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/listener.o [1msrc/listener.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler857dff3327d9b841^6477653427d9b841^---0#0#1#-19%DVTDocumentLocation2@98"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/listener.c0000000000000000^2638"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/listener.o [1msrc/listener.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources/x86_64 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/listener.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/listener.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/listener.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/listener.o36"3E830380-F0FE-49B7-9810-BFF0E0B15BBB-
-b9059257D-BD26-4120-BA35-4745E5A0C0BF
-
-CCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/map.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/map.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884531.998153
-e416884532.296429
-r1
-xCompileC
-xbuild/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/map.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/map.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/map.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection94"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/map.c165"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/map.o [1msrc/map.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilerd3a1ff3327d9b841^dee84b3427d9b841^---0#0#1#-19%DVTDocumentLocation2@93"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/map.c0000000000000000^2608"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/map.o [1msrc/map.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources/x86_64 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/map.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/map.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/map.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/map.o36"64BCF067-52D3-4F67-ABAC-8F5775B31C70-
-b9059257D-BD26-4120-BA35-4745E5A0C0BF
-
-CCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/message.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/message.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884532.296892
-e416884532.492683
-r1
-xCompileC
-xbuild/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/message.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/message.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/message.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/message.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection98"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/message.c173"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/message.o [1msrc/message.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler03264c3427d9b841^3a237e3427d9b841^---0#0#1#-19%DVTDocumentLocation2@97"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/message.c0000000000000000^2632"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/message.o [1msrc/message.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources/x86_64 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/message.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/message.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/message.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/message.o36"FE1014A3-F215-4A0F-A2B4-143DCBDDFC6B-
-b9059257D-BD26-4120-BA35-4745E5A0C0BF
-
-CCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/msg-json.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-json.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884532.383088
-e416884532.524601
-r1
-xCompileC
-xbuild/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/msg-json.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-json.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-json.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/message.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection99"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-json.c175"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/msg-json.o [1msrc/msg-json.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler1230623427d9b841^7781863427d9b841^---0#0#1#-19%DVTDocumentLocation2@98"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-json.c0000000000000000^2638"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/msg-json.o [1msrc/msg-json.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources/x86_64 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/msg-json.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/msg-json.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-json.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/msg-json.o36"F1C6F38B-6720-4A9C-9FED-1C47F9BFB46E-
-b9059257D-BD26-4120-BA35-4745E5A0C0BF
-
-CCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/msg-pb.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-pb.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884532.396050
-e416884532.548969
-r1
-xCompileC
-xbuild/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/msg-pb.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-pb.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-pb.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/message.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protobuf/pb.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection97"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-pb.c171"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/msg-pb.o [1msrc/msg-pb.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilerae81653427d9b841^c9e88c3427d9b841^---0#0#1#-19%DVTDocumentLocation2@96"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-pb.c0000000000000000^2626"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/msg-pb.o [1msrc/msg-pb.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources/x86_64 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/msg-pb.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/msg-pb.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-pb.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/msg-pb.o36"3B8DFF29-5E80-4DD2-B707-C6962FCAAF62-
-b9059257D-BD26-4120-BA35-4745E5A0C0BF
-
-CCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/network.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/network.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884532.493087
-e416884532.843772
-r1
-xCompileC
-xbuild/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/network.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/network.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/network.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/package.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/message.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/common.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/transport.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection98"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/network.c173"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/network.o [1msrc/network.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilerac567e3427d9b841^677bd83427d9b841^---0#0#1#-19%DVTDocumentLocation2@97"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/network.c0000000000000000^2632"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/network.o [1msrc/network.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources/x86_64 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/network.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/network.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/network.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/network.o36"DFAA976F-20C2-4AB1-BB4B-80A701C3022C-
-b9059257D-BD26-4120-BA35-4745E5A0C0BF
-
-CCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/package.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/package.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884532.495930
-e416884532.711787
-r1
-xCompileC
-xbuild/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/package.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/package.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/package.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/internal.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/common.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/package.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection98"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/package.c173"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/package.o [1msrc/package.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler371b7f3427d9b841^0b25b73427d9b841^---0#0#1#-19%DVTDocumentLocation2@97"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/package.c0000000000000000^2632"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/package.o [1msrc/package.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources/x86_64 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/package.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/package.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/package.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/package.o36"420A60B2-A7AC-4FE8-9B10-173E6BEF9ED8-
-b9059257D-BD26-4120-BA35-4745E5A0C0BF
-
-CCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-decode.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884532.524911
-e416884532.689764
-r1
-xCompileC
-xbuild/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-decode.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protobuf/pb.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protobuf/pb-util.h
-o[1m/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c:246:45: [0m[0;1;35mwarning: [0m[1m
-o      'memset' call operates on objects of type 'char' while the size is based
-o      on a different type 'char *' [-Wsizeof-pointer-memaccess][0m
-o                memset(head_text, 0, sizeof(head_text));
-o[0;1;32m                       ~~~~~~~~~            ^~~~~~~~~
-o[0m[1m/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c:246:45: [0m[0;1;30mnote: [0m
-o      did you mean to provide an explicit length?[0m
-o                memset(head_text, 0, sizeof(head_text));
-o[0;1;32m                                            ^~~~~~~~~
-o[0m1 warning generated.
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection100"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c177"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-decode.o [1msrc/pb-decode.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler6f7f863427d9b841^9bfeb03427d9b841^-735"[1m/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c:246:45: [0m[0;1;35mwarning: [0m[1m      'memset' call operates on objects of type 'char' while the size is based      on a different type 'char *' [-Wsizeof-pointer-memaccess][0m                memset(head_text, 0, sizeof(head_text));[0;1;32m                       ~~~~~~~~~            ^~~~~~~~~[0m[1m/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c:246:45: [0m[0;1;30mnote: [0m      did you mean to provide an explicit length?[0m                memset(head_text, 0, sizeof(head_text));[0;1;32m                                            ^~~~~~~~~[0m1 warning generated.1(36%IDEClangDiagnosticActivityLogMessage2@101"'memset' call operates on objects of type 'char' while the size is based on a different type 'char *'-416884532#18446744073709551615#0#1(2@43"Did you mean to provide an explicit length?-416884532#18446744073709551615#0#-0#27"com.apple.dt.IDE.diagnostic23%DVTTextDocumentLocation3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c0000000000000000^245#44#245#44#8180#0#14"Semantic Issue1(3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c0000000000000000^245#44#245#53#8180#0#-1#27"com.apple.dt.IDE.diagnostic3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c0000000000000000^245#44#245#44#8180#0#14"Semantic Issue2(3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c0000000000000000^245#23#245#32#8159#0#3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c0000000000000000^245#44#245#53#8180#0#-0#0#1#-19%DVTDocumentLocation4@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c0000000000000000^2644"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-decode.o [1msrc/pb-decode.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources/x86_64 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-decode.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-decode.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-decode.o36"376D1A15-7A84-4850-8640-B1C85CAE46B8-
-b9059257D-BD26-4120-BA35-4745E5A0C0BF
-
-CCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-encode.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884532.549291
-e416884532.684680
-r1
-xCompileC
-xbuild/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-encode.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protobuf/pb.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protobuf/pb-util.h
-o[1m/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c:262:45: [0m[0;1;35mwarning: [0m[1m
-o      'memset' call operates on objects of type 'char' while the size is based
-o      on a different type 'char *' [-Wsizeof-pointer-memaccess][0m
-o                memset(head_text, 0, sizeof(head_text));
-o[0;1;32m                       ~~~~~~~~~            ^~~~~~~~~
-o[0m[1m/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c:262:45: [0m[0;1;30mnote: [0m
-o      did you mean to provide an explicit length?[0m
-o                memset(head_text, 0, sizeof(head_text));
-o[0;1;32m                                            ^~~~~~~~~
-o[0m1 warning generated.
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection100"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c177"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-encode.o [1msrc/pb-encode.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilerc3bb8c3427d9b841^7ea9af3427d9b841^-735"[1m/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c:262:45: [0m[0;1;35mwarning: [0m[1m      'memset' call operates on objects of type 'char' while the size is based      on a different type 'char *' [-Wsizeof-pointer-memaccess][0m                memset(head_text, 0, sizeof(head_text));[0;1;32m                       ~~~~~~~~~            ^~~~~~~~~[0m[1m/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c:262:45: [0m[0;1;30mnote: [0m      did you mean to provide an explicit length?[0m                memset(head_text, 0, sizeof(head_text));[0;1;32m                                            ^~~~~~~~~[0m1 warning generated.1(36%IDEClangDiagnosticActivityLogMessage2@101"'memset' call operates on objects of type 'char' while the size is based on a different type 'char *'-416884532#18446744073709551615#0#1(2@43"Did you mean to provide an explicit length?-416884532#18446744073709551615#0#-0#27"com.apple.dt.IDE.diagnostic23%DVTTextDocumentLocation3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c0000000000000000^261#44#261#44#9191#0#14"Semantic Issue1(3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c0000000000000000^261#44#261#53#9191#0#-1#27"com.apple.dt.IDE.diagnostic3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c0000000000000000^261#44#261#44#9191#0#14"Semantic Issue2(3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c0000000000000000^261#23#261#32#9170#0#3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c0000000000000000^261#44#261#53#9191#0#-0#0#1#-19%DVTDocumentLocation4@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c0000000000000000^2644"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-encode.o [1msrc/pb-encode.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources/x86_64 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-encode.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-encode.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-encode.o36"969C59F8-708A-4727-BD6E-4FB9A93971FB-
-b9059257D-BD26-4120-BA35-4745E5A0C0BF
-
-CCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-util.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-util.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884532.685111
-e416884532.746361
-r1
-xCompileC
-xbuild/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-util.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-util.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-util.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protobuf/pb-util.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection98"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-util.c173"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-util.o [1msrc/pb-util.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilerc382af3427d9b841^a016bf3427d9b841^---0#0#1#-19%DVTDocumentLocation2@97"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-util.c0000000000000000^2632"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-util.o [1msrc/pb-util.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources/x86_64 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-util.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-util.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-util.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pb-util.o36"6FD290C6-76C7-484F-865A-91E35E6AE580-
-b9059257D-BD26-4120-BA35-4745E5A0C0BF
-
-CCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pkg-handshake.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-handshake.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884532.690183
-e416884532.919669
-r1
-xCompileC
-xbuild/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pkg-handshake.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-handshake.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-handshake.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/package.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection104"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-handshake.c185"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pkg-handshake.o [1msrc/pkg-handshake.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilere2cbb03427d9b841^8f6feb3427d9b841^---0#0#1#-19%DVTDocumentLocation2@103"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-handshake.c0000000000000000^2668"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pkg-handshake.o [1msrc/pkg-handshake.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources/x86_64 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pkg-handshake.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pkg-handshake.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-handshake.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pkg-handshake.o36"F31FAACF-8635-443E-B30B-5CFB20957635-
-b9059257D-BD26-4120-BA35-4745E5A0C0BF
-
-CCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pkg-heartbeat.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-heartbeat.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884532.712193
-e416884532.919439
-r1
-xCompileC
-xbuild/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pkg-heartbeat.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-heartbeat.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-heartbeat.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/package.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection104"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-heartbeat.c185"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pkg-heartbeat.o [1msrc/pkg-heartbeat.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler8b88b63427d9b841^2062eb3427d9b841^---0#0#1#-19%DVTDocumentLocation2@103"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-heartbeat.c0000000000000000^2668"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pkg-heartbeat.o [1msrc/pkg-heartbeat.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources/x86_64 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pkg-heartbeat.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pkg-heartbeat.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-heartbeat.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pkg-heartbeat.o36"AC77A7AE-6832-40DA-AD27-CF7FEA0C9A8A-
-b9059257D-BD26-4120-BA35-4745E5A0C0BF
-
-CCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/protocol.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/protocol.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884532.844256
-e416884532.987292
-r1
-xCompileC
-xbuild/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/protocol.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/protocol.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/protocol.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/internal.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/message.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection99"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/protocol.c175"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/protocol.o [1msrc/protocol.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler9642d83427d9b841^3cbffc3427d9b841^---0#0#1#-19%DVTDocumentLocation2@98"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/protocol.c0000000000000000^2638"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/protocol.o [1msrc/protocol.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources/x86_64 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/protocol.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/protocol.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/protocol.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/protocol.o36"0C298404-302B-4014-972E-964AC9307107-
-b9059257D-BD26-4120-BA35-4745E5A0C0BF
-
-CCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/thread.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/thread.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884532.919830
-e416884533.018663
-r1
-xCompileC
-xbuild/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/thread.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/thread.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/thread.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/internal.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection97"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/thread.c171"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/thread.o [1msrc/thread.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler91b8eb3427d9b841^a4c6043527d9b841^---0#0#1#-19%DVTDocumentLocation2@96"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/thread.c0000000000000000^2626"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/thread.o [1msrc/thread.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources/x86_64 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/thread.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/thread.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/thread.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/thread.o36"DB38CDB7-327C-47C5-8481-D93F7055491F-
-b9059257D-BD26-4120-BA35-4745E5A0C0BF
-
-CCompileC build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/transport.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/transport.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884532.748095
-e416884532.920261
-r1
-xCompileC
-xbuild/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/transport.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/transport.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/transport.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/transport.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/package.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection100"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/transport.c177"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/transport.o [1msrc/transport.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler129fbf3427d9b841^b1a5eb3427d9b841^---0#0#1#-19%DVTDocumentLocation2@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/transport.c0000000000000000^2644"[1mCompileC[0m build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/transport.o [1msrc/transport.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources/x86_64 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/transport.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/transport.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/transport.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/transport.o36"643B600B-235C-42B9-AFCA-361980B4B2CC-
-b9059257D-BD26-4120-BA35-4745E5A0C0BF
-
-CLibtool /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/libpomelo.a normal x86_64
-s416884533.019997
-e416884533.031744
-r1
-xLibtool
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/libpomelo.a
-xnormal
-xx86_64
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection55"[1mLibtool[0m build/Default/libpomelo.a normal x86_6455"[1mLibtool[0m build/Default/libpomelo.a normal x86_64452d053527d9b841^c520083527d9b841^---0#0#1#--788"[1mLibtool[0m build/Default/libpomelo.a normal x86_64    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export MACOSX_DEPLOYMENT_TARGET=10.9    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool -static -arch_only x86_64 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -L/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default -filelist /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default/libpomelo.build/Objects-normal/x86_64/pomelo.LinkFileList -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default/libpomelo.a36"FBC9519F-AF4F-485D-9109-913059330505-
-b9059257D-BD26-4120-BA35-4745E5A0C0BF
-

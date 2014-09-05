@@ -1,632 +1,0 @@
-Tjansson
-v6
-r1
-cCheck dependencies
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/dump.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/error.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/hashtable.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/load.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/memory.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/pack_unpack.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/strbuffer.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/strconv.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/utf.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/value.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/dump.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/error.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/hashtable.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/load.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/memory.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/pack_unpack.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/strbuffer.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/strconv.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/utf.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/value.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-cLibtool /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/libjansson.a normal armv7
-cLibtool /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/libjansson.a normal armv7s
-cCreateUniversalBinary /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/libjansson.a normal armv7\ armv7s
-
-N/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk
-c00000000525642EE0000000000000110
-t1381384942
-s272
-
-N/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/SDKSettings.plist
-c00000000528245B4000000000000036B
-t1384269236
-s875
-
-N/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/CoreServices/SystemVersion.plist
-c00000000528245B500000000000001A0
-t1384269237
-s416
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/libjansson.a
-t2
-s0
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/dump.o
-t1394616957
-s21900
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/error.o
-t1394616957
-s5084
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/hashtable.o
-t1394616957
-s17720
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/jansson.LinkFileList
-c0000000053202A7D00000000000005AD
-t1394616957
-s1453
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/libjansson.a
-t1394616958
-s167040
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/load.o
-t1394616957
-s33164
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/memory.o
-t1394616957
-s4436
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/pack_unpack.o
-t1394616958
-s25448
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/strbuffer.o
-t1394616957
-s6052
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/strconv.o
-t1394616957
-s4596
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/utf.o
-t1394616957
-s5712
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/value.o
-t1394616958
-s39576
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/dump.o
-t1394616958
-s21900
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/error.o
-t1394616957
-s5072
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/hashtable.o
-t1394616958
-s17576
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/jansson.LinkFileList
-c0000000053202A7D00000000000005B7
-t1394616957
-s1463
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/libjansson.a
-t1394616958
-s166616
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/load.o
-t1394616958
-s33160
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/memory.o
-t1394616958
-s4428
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/pack_unpack.o
-t1394616958
-s25488
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/strbuffer.o
-t1394616958
-s6052
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/strconv.o
-t1394616958
-s4604
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/utf.o
-t1394616958
-s5668
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/value.o
-t1394616958
-s39320
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c
-c0000000052970E9C000000000000300F
-t1385631388
-s12303
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c
-c0000000052970E9C00000000000005D7
-t1385631388
-s1495
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c
-c0000000052970E9C00000000000020A3
-t1385631388
-s8355
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c
-c0000000052970E9C0000000000006165
-t1385631388
-s24933
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c
-c0000000052970E9C00000000000003D8
-t1385631388
-s984
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c
-c0000000052970E9C0000000000003D16
-t1385631388
-s15638
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c
-c0000000052970E9C0000000000000A37
-t1385631388
-s2615
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c
-c0000000052970E9C0000000000000AD4
-t1385631388
-s2772
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c
-c0000000052970E9C0000000000000FB5
-t1385631388
-s4021
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c
-c0000000052970E9C000000000000493E
-t1385631388
-s18750
-
-CCheck dependencies
-r0
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies18"Check dependenciesccd256fd61d0b841^96246ffd61d0b841^---0#1#1#--18"Check dependencies36"05377AA9-0E86-4F8F-AC3C-88B6A4CD724B-
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/dump.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309757.437155
-e416309757.787872
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/dump.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c
-xnormal
-xarmv7
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection82"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c173"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/dump.o [1msrc/dump.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compilerc23070fd61d0b841^780dcafd61d0b841^---0#0#1#-19%DVTDocumentLocation2@81"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c0000000000000000^2612"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/dump.o [1msrc/dump.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/dump.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/dump.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/dump.o36"7EFBA4F3-9A37-4F3B-A5A0-605C90417813-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/error.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309757.437515
-e416309757.721490
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/error.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c
-xnormal
-xarmv7
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection83"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c175"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/error.o [1msrc/error.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler4d2c70fd61d0b841^1cd2b8fd61d0b841^---0#0#1#-19%DVTDocumentLocation2@82"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c0000000000000000^2618"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/error.o [1msrc/error.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/error.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/error.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/error.o36"DBDBD182-1B96-45E4-A15D-66255A415F7A-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/hashtable.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309757.437916
-e416309757.764299
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/hashtable.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c
-xnormal
-xarmv7
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection87"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c183"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/hashtable.o [1msrc/hashtable.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler923f70fd61d0b841^41b7c3fd61d0b841^---0#0#1#-19%DVTDocumentLocation2@86"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c0000000000000000^2642"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/hashtable.o [1msrc/hashtable.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/hashtable.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/hashtable.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/hashtable.o36"46C8AB71-D6C1-43FC-A24E-DE397D9364B0-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/load.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309757.438720
-e416309757.866352
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/load.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c
-xnormal
-xarmv7
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection82"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c173"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/load.o [1msrc/load.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler836970fd61d0b841^6de1ddfd61d0b841^---0#0#1#-19%DVTDocumentLocation2@81"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c0000000000000000^2612"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/load.o [1msrc/load.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/load.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/load.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/load.o36"4046483D-9C11-4B8A-880F-45E254A520E8-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/memory.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309757.721879
-e416309757.782246
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/memory.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c
-xnormal
-xarmv7
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection84"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c177"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/memory.o [1msrc/memory.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler91edb8fd61d0b841^40a3c8fd61d0b841^---0#0#1#-19%DVTDocumentLocation2@83"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c0000000000000000^2624"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/memory.o [1msrc/memory.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/memory.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/memory.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/memory.o36"ECB584D4-5AA5-4427-A2AA-1456ACA3CC5E-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/pack_unpack.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309757.766047
-e416309758.004495
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/pack_unpack.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c
-xnormal
-xarmv7
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection89"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c187"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/pack_unpack.o [1msrc/pack_unpack.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler8e3cc4fd61d0b841^c93d01fe61d0b841^---0#0#1#-19%DVTDocumentLocation2@88"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c0000000000000000^2654"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/pack_unpack.o [1msrc/pack_unpack.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/pack_unpack.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/pack_unpack.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/pack_unpack.o36"D9D9395C-93B2-4821-8103-380A3F825A70-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/strbuffer.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309757.782577
-e416309757.854699
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/strbuffer.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c
-xnormal
-xarmv7
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection87"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c183"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/strbuffer.o [1msrc/strbuffer.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compilere276c8fd61d0b841^5034dbfd61d0b841^---0#0#1#-19%DVTDocumentLocation2@86"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c0000000000000000^2642"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/strbuffer.o [1msrc/strbuffer.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/strbuffer.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/strbuffer.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/strbuffer.o36"E71025F1-D8FB-414C-9449-383AD68DFF48-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/strconv.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309757.788186
-e416309757.850813
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/strconv.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c
-xnormal
-xarmv7
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection85"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c179"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/strconv.o [1msrc/strconv.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compilerc9e3c9fd61d0b841^4aedd9fd61d0b841^---0#0#1#-19%DVTDocumentLocation2@84"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c0000000000000000^2630"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/strconv.o [1msrc/strconv.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/strconv.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/strconv.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/strconv.o36"7FF679E4-E46B-44D2-A84F-0E3743A41D47-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/utf.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309757.851071
-e416309757.916952
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/utf.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c
-xnormal
-xarmv7
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection81"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c171"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/utf.o [1msrc/utf.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler4547dafd61d0b841^01bfeafd61d0b841^---0#0#1#-19%DVTDocumentLocation2@80"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c0000000000000000^2606"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/utf.o [1msrc/utf.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/utf.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/utf.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/utf.o36"53671C87-298F-4C98-A103-60E02789AB51-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/value.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309757.854953
-e416309758.321458
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/value.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c
-xnormal
-xarmv7
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection83"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c175"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/value.o [1msrc/value.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler44fddafd61d0b841^115352fe61d0b841^---0#0#1#-19%DVTDocumentLocation2@82"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c0000000000000000^2618"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/value.o [1msrc/value.c[0m normal armv7 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/value.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/value.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/value.o36"D14AF983-D7BE-4851-9005-913C67D69D3F-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/dump.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-s416309757.866639
-e416309758.025080
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/dump.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c
-xnormal
-xarmv7s
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection82"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c175"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/dump.o [1msrc/dump.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compileracfdddfd61d0b841^ea7a06fe61d0b841^---0#0#1#-19%DVTDocumentLocation2@81"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c0000000000000000^2619"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/dump.o [1msrc/dump.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7s -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7s -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/dump.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/dump.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/dump.o36"C1218107-33BD-4964-AF43-7E397DB2C954-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/error.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-s416309757.918330
-e416309757.980602
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/error.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c
-xnormal
-xarmv7s
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection83"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c177"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/error.o [1msrc/error.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler713cebfd61d0b841^522cfbfd61d0b841^---0#0#1#-19%DVTDocumentLocation2@82"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c0000000000000000^2625"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/error.o [1msrc/error.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7s -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7s -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/error.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/error.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/error.o36"360BFD26-7697-445D-9C3C-8CDA6896FA24-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/hashtable.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-s416309757.980943
-e416309758.176201
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/hashtable.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c
-xnormal
-xarmv7s
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection87"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c185"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/hashtable.o [1msrc/hashtable.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler8a3efbfd61d0b841^2f322dfe61d0b841^---0#0#1#-19%DVTDocumentLocation2@86"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c0000000000000000^2649"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/hashtable.o [1msrc/hashtable.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7s -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7s -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/hashtable.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/hashtable.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/hashtable.o36"245E73D8-7CFA-41F8-A2E3-E716CC3C85D0-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/load.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-s416309758.005873
-e416309758.328277
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/load.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c
-xnormal
-xarmv7s
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection82"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c175"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/load.o [1msrc/load.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler3ae901fe61d0b841^7d2154fe61d0b841^---0#0#1#-19%DVTDocumentLocation2@81"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c0000000000000000^2619"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/load.o [1msrc/load.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7s -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7s -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/load.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/load.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/load.o36"41D7752C-FEE2-41FB-9FC1-26CCB444EEC4-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/memory.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-s416309758.026495
-e416309758.087359
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/memory.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c
-xnormal
-xarmv7s
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection84"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c179"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/memory.o [1msrc/memory.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler19e806fe61d0b841^077816fe61d0b841^---0#0#1#-19%DVTDocumentLocation2@83"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c0000000000000000^2631"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/memory.o [1msrc/memory.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7s -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7s -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/memory.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/memory.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/memory.o36"A47B7514-20B7-401D-B8EF-6B9FEE2CC199-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/pack_unpack.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-s416309758.087746
-e416309758.313516
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/pack_unpack.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c
-xnormal
-xarmv7s
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection89"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c189"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/pack_unpack.o [1msrc/pack_unpack.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compilere19716fe61d0b841^564550fe61d0b841^---0#0#1#-19%DVTDocumentLocation2@88"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c0000000000000000^2661"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/pack_unpack.o [1msrc/pack_unpack.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7s -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7s -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/pack_unpack.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/pack_unpack.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/pack_unpack.o36"84DD3730-3F6C-4E22-9262-E034CBA5087C-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/strbuffer.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-s416309758.176502
-e416309758.245278
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/strbuffer.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c
-xnormal
-xarmv7s
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection87"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c185"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/strbuffer.o [1msrc/strbuffer.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler65502dfe61d0b841^f7cc3efe61d0b841^---0#0#1#-19%DVTDocumentLocation2@86"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c0000000000000000^2649"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/strbuffer.o [1msrc/strbuffer.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7s -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7s -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/strbuffer.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/strbuffer.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/strbuffer.o36"7FEC9910-0B1B-4859-A508-19A47156286C-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/strconv.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-s416309758.246984
-e416309758.311195
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/strconv.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c
-xnormal
-xarmv7s
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection85"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c181"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/strconv.o [1msrc/strconv.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler815b3ffe61d0b841^25ae4ffe61d0b841^---0#0#1#-19%DVTDocumentLocation2@84"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c0000000000000000^2637"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/strconv.o [1msrc/strconv.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7s -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7s -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/strconv.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/strconv.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/strconv.o36"80AC27A2-BDE8-4334-8F29-274B7532E353-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/utf.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-s416309758.311520
-e416309758.361133
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/utf.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c
-xnormal
-xarmv7s
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection81"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c173"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/utf.o [1msrc/utf.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compilera8e14ffe61d0b841^47735cfe61d0b841^---0#0#1#-19%DVTDocumentLocation2@80"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c0000000000000000^2613"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/utf.o [1msrc/utf.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7s -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7s -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/utf.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/utf.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/utf.o36"EB298FAE-A95E-4A7C-B555-C3A908D0F23C-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCompileC build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/value.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler
-s416309758.313799
-e416309758.484210
-r1
-xCompileC
-xbuild/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/value.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c
-xnormal
-xarmv7s
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection83"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c177"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/value.o [1msrc/value.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compilerb87450fe61d0b841^fdf47bfe61d0b841^---0#0#1#-19%DVTDocumentLocation2@82"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c0000000000000000^2625"[1mCompileC[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/value.o [1msrc/value.c[0m normal armv7s c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch armv7s -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=5.0 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources/armv7s -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/value.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/value.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/value.o36"1A9AF26B-76D2-4ABA-9DD0-7FB807484202-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CCreateUniversalBinary /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/libjansson.a normal armv7\ armv7s
-s416309758.553271
-e416309758.732170
-r1
-xCreateUniversalBinary
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/libjansson.a
-xnormal
-xarmv7 armv7s
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection123"Create universal binary /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/libjansson.a94"[1mCreateUniversalBinary[0m [1mbuild/Default-iphoneos/libjansson.a[0m normal armv7\ armv7s80ba8dfe61d0b841^6970bbfe61d0b841^---0#0#1#-19%DVTDocumentLocation2@106"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/libjansson.a003484d2dcffdf42^846"[1mCreateUniversalBinary[0m [1mbuild/Default-iphoneos/libjansson.a[0m normal armv7\ armv7s    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    libtool -static /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/libjansson.a /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/libjansson.a -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos/libjansson.a36"F8AC05C1-D6FE-426A-B00F-205B1455E541-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CLibtool /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/libjansson.a normal armv7
-s416309758.485346
-e416309758.552346
-r1
-xLibtool
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/libjansson.a
-xnormal
-xarmv7
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection113"[1mLibtool[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/libjansson.a normal armv7113"[1mLibtool[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/libjansson.a normal armv75d537cfe61d0b841^486a8dfe61d0b841^---0#0#1#--1131"[1mLibtool[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/libjansson.a normal armv7    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv IPHONEOS_DEPLOYMENT_TARGET 5.0    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool -static -arch_only armv7 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -L/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -filelist /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/jansson.LinkFileList -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7/libjansson.a36"01FFD3F8-75E8-4340-B6AE-64568231E7F2-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
-CLibtool /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/libjansson.a normal armv7s
-s416309758.486066
-e416309758.552428
-r1
-xLibtool
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/libjansson.a
-xnormal
-xarmv7s
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection115"[1mLibtool[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/libjansson.a normal armv7s115"[1mLibtool[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/libjansson.a normal armv7sf1827cfe61d0b841^38818dfe61d0b841^---0#0#1#--1136"[1mLibtool[0m build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/libjansson.a normal armv7s    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv IPHONEOS_DEPLOYMENT_TARGET 5.0    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/modun/Documents/Dev/sources/NDK/android-ndk-r8e"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool -static -arch_only armv7s -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk -L/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default-iphoneos -filelist /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/jansson.LinkFileList -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default-iphoneos/jansson.build/Objects-normal/armv7s/libjansson.a36"C5EE13A9-9840-44DB-ABB5-F7E8800AB639-
-b73DE791D-244B-41D4-89CE-29042AC5437B
-
