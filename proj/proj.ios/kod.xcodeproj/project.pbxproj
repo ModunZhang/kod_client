@@ -26,6 +26,7 @@
 		3F185E2B19B9EC8C000A75D0 /* Time.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3F1857BA19B9EC89000A75D0 /* Time.mm */; };
 		3F49B18319BE869A0023C33B /* res in Resources */ = {isa = PBXBuildFile; fileRef = 3F49B18119BE869A0023C33B /* res */; };
 		3F49B18419BE869A0023C33B /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = 3F49B18219BE869A0023C33B /* scripts */; };
+		3FD3CC6B19BEA81F00BED41B /* Noto Sans S Chinese.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3FD3CC6A19BEA81F00BED41B /* Noto Sans S Chinese.otf */; };
 		9FC0E165195418CB0064626D /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FC0E164195418CB0064626D /* CoreMotion.framework */; };
 		DAF28FC1196D31EB00959DA1 /* liblibquick.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF28FC0196D315A00959DA1 /* liblibquick.a */; };
 		F452BFC51687EEF900DC5BCC /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F452BFC41687EEF900DC5BCC /* CoreText.framework */; };
@@ -93,6 +94,7 @@
 		3F1857BA19B9EC89000A75D0 /* Time.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Time.mm; sourceTree = "<group>"; };
 		3F49B18119BE869A0023C33B /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; name = res; path = ../../../update/res; sourceTree = "<group>"; };
 		3F49B18219BE869A0023C33B /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = scripts; path = ../../../update/scripts; sourceTree = "<group>"; };
+		3FD3CC6A19BEA81F00BED41B /* Noto Sans S Chinese.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Noto Sans S Chinese.otf"; path = "../../../dev/res/fonts/Noto Sans S Chinese.otf"; sourceTree = "<group>"; };
 		9FC0E164195418CB0064626D /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		DAF28BDB196D03DD00959DA1 /* libquick.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libquick.xcodeproj; path = quick/lib/proj.ios/libquick.xcodeproj; sourceTree = QUICK_V3_ROOT; };
 		F452BFC41687EEF900DC5BCC /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
@@ -146,6 +148,7 @@
 		2EDD277F191B62CA004F9539 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3FD3CC6A19BEA81F00BED41B /* Noto Sans S Chinese.otf */,
 				3F49B18119BE869A0023C33B /* res */,
 				3F49B18219BE869A0023C33B /* scripts */,
 				2EDD279C191B641B004F9539 /* ios */,
@@ -378,6 +381,7 @@
 				2EDD278A191B62CA004F9539 /* Icon-72.png in Resources */,
 				2EDD278B191B62CA004F9539 /* Icon.png in Resources */,
 				3F49B18319BE869A0023C33B /* res in Resources */,
+				3FD3CC6B19BEA81F00BED41B /* Noto Sans S Chinese.otf in Resources */,
 				2EDD2787191B62CA004F9539 /* Default-568h@2x.png in Resources */,
 				2EDD2788191B62CA004F9539 /* Default.png in Resources */,
 				3F49B18419BE869A0023C33B /* scripts in Resources */,
