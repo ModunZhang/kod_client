@@ -1,7 +1,14 @@
 !.gitignore
 .DS_Store
+UserDefault.xml
 *.sublime-project
 *.sublime-workspace
 project.xcworkspace/
 xcuserdata/
 *.log
+.tags
+.tags_sorted_by_file
+proj/proj.android/obj/
+proj/proj.android/bin/
+proj/proj.android/assets/
+update/

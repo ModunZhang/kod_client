@@ -1,0 +1,930 @@
+Tjansson
+v6
+r1
+cCheck dependencies
+cCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/dump.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/dump.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/error.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/error.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/hashtable.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/hashtable.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/load.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/load.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/memory.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/memory.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/pack_unpack.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/pack_unpack.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strbuffer.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/strbuffer.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strconv.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/strconv.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/utf.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/utf.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/value.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/value.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+cLibtool /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/build/Default/libjansson.a normal x86_64
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
+c00000000531E896200000000000000AA
+t1394510178
+s170
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/SDKSettings.plist
+c00000000528245D4000000000000044C
+t1384269268
+s1100
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/CoreServices/SystemVersion.plist
+c00000000531E895000000000000001DE
+t1394510160
+s478
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default/libjansson.a
+t2
+s0
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/dump.o
+t1394617044
+s26144
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/error.o
+t1394617044
+s6472
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/hashtable.o
+t1394617044
+s22224
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/jansson.LinkFileList
+c0000000053202AD4000000000000055D
+t1394617044
+s1373
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/load.o
+t1394617044
+s40552
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/memory.o
+t1394617044
+s5032
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/pack_unpack.o
+t1394617044
+s31184
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strbuffer.o
+t1394617044
+s7788
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strconv.o
+t1394617044
+s5472
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/utf.o
+t1394617044
+s6820
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/value.o
+t1394617044
+s51776
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c
+c0000000052970E9C000000000000300F
+t1385631388
+s12303
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c
+c0000000052970E9C00000000000005D7
+t1385631388
+s1495
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c
+c0000000052970E9C00000000000020A3
+t1385631388
+s8355
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c
+c0000000052970E9C0000000000006165
+t1385631388
+s24933
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c
+c0000000052970E9C00000000000003D8
+t1385631388
+s984
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c
+c0000000052970E9C0000000000003D16
+t1385631388
+s15638
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c
+c0000000052970E9C0000000000000A37
+t1385631388
+s2615
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c
+c0000000052970E9C0000000000000AD4
+t1385631388
+s2772
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c
+c0000000052970E9C0000000000000FB5
+t1385631388
+s4021
+
+N/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c
+c0000000052970E9C000000000000493E
+t1385631388
+s18750
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default/libjansson.a
+t1395150892
+s381456
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/dump.o
+t1395150892
+s21440
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/error.o
+t1395150891
+s4716
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/hashtable.o
+t1395150892
+s17040
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/jansson.LinkFileList
+c000000005328502B0000000000000549
+t1395150891
+s1353
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/libjansson.a
+t1395150892
+s174608
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/load.o
+t1395150892
+s36328
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/memory.o
+t1395150892
+s4052
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/pack_unpack.o
+t1395150892
+s31172
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/strbuffer.o
+t1395150892
+s5996
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/strconv.o
+t1395150892
+s4544
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/utf.o
+t1395150892
+s5492
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/value.o
+t1395150892
+s40476
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/dump.o
+t1394617044
+s26144
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/error.o
+t1394617044
+s6472
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/hashtable.o
+t1394617044
+s22224
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/jansson.LinkFileList
+c000000005328502B000000000000055D
+t1395150891
+s1373
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/libjansson.a
+t1395150892
+s206800
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/load.o
+t1394617044
+s40552
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/memory.o
+t1394617044
+s5032
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/pack_unpack.o
+t1394617044
+s31184
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strbuffer.o
+t1394617044
+s7788
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strconv.o
+t1394617044
+s5472
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/utf.o
+t1394617044
+s6820
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/value.o
+t1394617044
+s51776
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/dump.c
+c0000000052970E9C000000000000300F
+t1385631388
+s12303
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/error.c
+c0000000052970E9C00000000000005D7
+t1385631388
+s1495
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/hashtable.c
+c0000000052970E9C00000000000020A3
+t1385631388
+s8355
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/hashtable.h
+c0000000052970E9C0000000000001286
+t1385631388
+s4742
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson.h
+c0000000052970E9C000000000000210D
+t1385631388
+s8461
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_config.h
+c0000000052970E9C00000000000004E4
+t1385631388
+s1252
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_private.h
+c0000000052970E9C00000000000009A5
+t1385631388
+s2469
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/load.c
+c0000000052970E9C0000000000006165
+t1385631388
+s24933
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/memory.c
+c0000000052970E9C00000000000003D8
+t1385631388
+s984
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/pack_unpack.c
+c0000000052970E9C0000000000003D16
+t1385631388
+s15638
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strbuffer.c
+c0000000052970E9C0000000000000A37
+t1385631388
+s2615
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strbuffer.h
+c0000000052970E9C000000000000036A
+t1385631388
+s874
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strconv.c
+c0000000052970E9C0000000000000AD4
+t1385631388
+s2772
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/utf.c
+c0000000052970E9C0000000000000FB5
+t1385631388
+s4021
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/utf.h
+c0000000052970E9C00000000000003F1
+t1385631388
+s1009
+
+N/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/value.c
+c0000000052970E9C000000000000493E
+t1385631388
+s18750
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/build/Default/libjansson.a
+t1395150892
+s381456
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/dump.o
+t1394617044
+s26144
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/error.o
+t1394617044
+s6472
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/hashtable.o
+t1394617044
+s22224
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/jansson.LinkFileList
+c000000005328EFB50000000000000661
+t1395191733
+s1633
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/load.o
+t1394617044
+s40552
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/memory.o
+t1394617044
+s5032
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/pack_unpack.o
+t1394617044
+s31184
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strbuffer.o
+t1394617044
+s7788
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strconv.o
+t1394617044
+s5472
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/utf.o
+t1394617044
+s6820
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/value.o
+t1394617044
+s51776
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/dump.c
+c0000000052970E9C000000000000300F
+t1385631388
+s12303
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/error.c
+c0000000052970E9C00000000000005D7
+t1385631388
+s1495
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/hashtable.c
+c0000000052970E9C00000000000020A3
+t1385631388
+s8355
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/load.c
+c0000000052970E9C0000000000006165
+t1385631388
+s24933
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/memory.c
+c0000000052970E9C00000000000003D8
+t1385631388
+s984
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/pack_unpack.c
+c0000000052970E9C0000000000003D16
+t1385631388
+s15638
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/strbuffer.c
+c0000000052970E9C0000000000000A37
+t1385631388
+s2615
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/strconv.c
+c0000000052970E9C0000000000000AD4
+t1385631388
+s2772
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/utf.c
+c0000000052970E9C0000000000000FB5
+t1385631388
+s4021
+
+N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/value.c
+c0000000052970E9C000000000000493E
+t1385631388
+s18750
+
+CCheck dependencies
+r0
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies18"Check dependencies6fba213527d9b841^cc28223527d9b841^---0#1#1#--18"Check dependencies36"E742F305-C0BE-4BE6-A99D-4375DB08E31D-
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/dump.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/dump.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+s416843691.879183
+e416843692.036970
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/i386/dump.o
+x/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/dump.c
+xnormal
+xi386
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/dump.c
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_config.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_private.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/hashtable.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strbuffer.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/utf.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection82"Compile /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/dump.c146"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/dump.o src/dump.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler4c52e1ab87d8b841^847f09ac87d8b841^---0#0#1#-19%DVTDocumentLocation2@81"file:///Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/dump.c0000000000000000^2238"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/dump.o src/dump.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/i386 -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/dump.d --serialize-diagnostics /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/dump.dia -c /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/dump.c -o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/dump.o36"655006FF-B749-408A-BCB9-D28EC5A72612-
+bAC4C9B4A-2FB3-416D-88C8-C8D057D4F578
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/error.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/error.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+s416843691.879348
+e416843691.948957
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/i386/error.o
+x/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/error.c
+xnormal
+xi386
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/error.c
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_private.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_config.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/hashtable.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strbuffer.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection83"Compile /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/error.c148"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/error.o src/error.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler8b4fe1ab87d8b841^774af3ab87d8b841^---0#0#1#-19%DVTDocumentLocation2@82"file:///Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/error.c0000000000000000^2244"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/error.o src/error.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/i386 -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/error.d --serialize-diagnostics /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/error.dia -c /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/error.c -o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/error.o36"756F5F06-D711-4CCA-B8BB-E42C23B19716-
+bAC4C9B4A-2FB3-416D-88C8-C8D057D4F578
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/hashtable.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/hashtable.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+s416843691.879542
+e416843692.035013
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/i386/hashtable.o
+x/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/hashtable.c
+xnormal
+xi386
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/hashtable.c
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_config.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_private.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/hashtable.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strbuffer.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection87"Compile /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/hashtable.c156"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/hashtable.o src/hashtable.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler8b53e1ab87d8b841^bf6209ac87d8b841^---0#0#1#-19%DVTDocumentLocation2@86"file:///Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/hashtable.c0000000000000000^2268"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/hashtable.o src/hashtable.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/i386 -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/hashtable.d --serialize-diagnostics /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/hashtable.dia -c /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/hashtable.c -o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/hashtable.o36"B8208DCF-EDE1-42C8-B792-EBBC1CCCB0C2-
+bAC4C9B4A-2FB3-416D-88C8-C8D057D4F578
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/load.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/load.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+s416843691.880362
+e416843692.216568
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/i386/load.o
+x/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/load.c
+xnormal
+xi386
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/load.c
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_config.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_private.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/hashtable.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strbuffer.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/utf.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection82"Compile /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/load.c146"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/load.o src/load.c normal i386 c com.apple.compilers.llvm.clang.1_0.compilerb378e1ab87d8b841^a98837ac87d8b841^---0#0#1#-19%DVTDocumentLocation2@81"file:///Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/load.c0000000000000000^2238"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/load.o src/load.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/i386 -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/load.d --serialize-diagnostics /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/load.dia -c /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/load.c -o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/load.o36"0680C391-E6DE-429D-BB31-A1D7DF25E7F6-
+bAC4C9B4A-2FB3-416D-88C8-C8D057D4F578
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/memory.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/memory.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+s416843691.949347
+e416843692.017641
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/i386/memory.o
+x/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/memory.c
+xnormal
+xi386
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/memory.c
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_config.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_private.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/hashtable.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strbuffer.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection84"Compile /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/memory.c150"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/memory.o src/memory.c normal i386 c com.apple.compilers.llvm.clang.1_0.compilerc824f3ab87d8b841^c7f004ac87d8b841^---0#0#1#-19%DVTDocumentLocation2@83"file:///Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/memory.c0000000000000000^2250"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/memory.o src/memory.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/i386 -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/memory.d --serialize-diagnostics /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/memory.dia -c /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/memory.c -o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/memory.o36"CC2BFD7E-9E77-4788-8E73-C67136E66383-
+bAC4C9B4A-2FB3-416D-88C8-C8D057D4F578
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/pack_unpack.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/pack_unpack.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+s416843692.018005
+e416843692.316108
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/i386/pack_unpack.o
+x/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/pack_unpack.c
+xnormal
+xi386
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/pack_unpack.c
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_config.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_private.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/hashtable.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strbuffer.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/utf.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection89"Compile /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/pack_unpack.c160"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/pack_unpack.o src/pack_unpack.c normal i386 c com.apple.compilers.llvm.clang.1_0.compilerd4b704ac87d8b841^d9ec50ac87d8b841^---0#0#1#-19%DVTDocumentLocation2@88"file:///Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/pack_unpack.c0000000000000000^2280"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/pack_unpack.o src/pack_unpack.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/i386 -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/pack_unpack.d --serialize-diagnostics /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/pack_unpack.dia -c /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/pack_unpack.c -o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/pack_unpack.o36"239392F4-A3D7-46C3-8A24-6D54CA7283BA-
+bAC4C9B4A-2FB3-416D-88C8-C8D057D4F578
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/strbuffer.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strbuffer.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+s416843692.035385
+e416843692.112366
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/i386/strbuffer.o
+x/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strbuffer.c
+xnormal
+xi386
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strbuffer.c
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_private.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_config.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/hashtable.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strbuffer.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection87"Compile /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strbuffer.c156"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/strbuffer.o src/strbuffer.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler3c2f09ac87d8b841^ffd01cac87d8b841^---0#0#1#-19%DVTDocumentLocation2@86"file:///Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strbuffer.c0000000000000000^2268"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/strbuffer.o src/strbuffer.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/i386 -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/strbuffer.d --serialize-diagnostics /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/strbuffer.dia -c /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strbuffer.c -o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/strbuffer.o36"955A08EA-0FF6-428D-B2B5-31DEE0BD6F89-
+bAC4C9B4A-2FB3-416D-88C8-C8D057D4F578
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/strconv.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strconv.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+s416843692.039381
+e416843692.114388
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/i386/strconv.o
+x/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strconv.c
+xnormal
+xi386
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strconv.c
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_private.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_config.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/hashtable.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strbuffer.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection85"Compile /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strconv.c152"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/strconv.o src/strconv.c normal i386 c com.apple.compilers.llvm.clang.1_0.compilerb77a0aac87d8b841^02671dac87d8b841^---0#0#1#-19%DVTDocumentLocation2@84"file:///Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strconv.c0000000000000000^2256"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/strconv.o src/strconv.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/i386 -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/strconv.d --serialize-diagnostics /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/strconv.dia -c /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strconv.c -o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/strconv.o36"42BF846C-3E8B-4A76-8EFE-63760C960E53-
+bAC4C9B4A-2FB3-416D-88C8-C8D057D4F578
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/utf.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/utf.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+s416843692.112644
+e416843692.182317
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/i386/utf.o
+x/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/utf.c
+xnormal
+xi386
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/utf.c
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/utf.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection81"Compile /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/utf.c144"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/utf.o src/utf.c normal i386 c com.apple.compilers.llvm.clang.1_0.compilerfaf01cac87d8b841^f4c12eac87d8b841^---0#0#1#-19%DVTDocumentLocation2@80"file:///Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/utf.c0000000000000000^2232"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/utf.o src/utf.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/i386 -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/utf.d --serialize-diagnostics /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/utf.dia -c /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/utf.c -o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/utf.o36"7314266E-6A4F-4368-A2B7-9936CA45166F-
+bAC4C9B4A-2FB3-416D-88C8-C8D057D4F578
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/value.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/value.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+s416843692.114754
+e416843692.382694
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/i386/value.o
+x/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/value.c
+xnormal
+xi386
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/value.c
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_config.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/hashtable.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/jansson_private.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strbuffer.h
+d/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/utf.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection83"Compile /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/value.c148"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/value.o src/value.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler72c11dac87d8b841^1af861ac87d8b841^---0#0#1#-19%DVTDocumentLocation2@82"file:///Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/value.c0000000000000000^2244"CompileC build/jansson.build/Default/jansson.build/Objects-normal/i386/value.o src/value.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/i386 -I/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/value.d --serialize-diagnostics /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/value.dia -c /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/value.c -o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/value.o36"D2F4EA2C-429C-41ED-AEF4-86E0C5150FA0-
+bAC4C9B4A-2FB3-416D-88C8-C8D057D4F578
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/dump.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+s416309844.354083
+e416309844.546350
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/x86_64/dump.o
+x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection82"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c166"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/dump.o [1msrc/dump.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler38ba5a5462d0b841^7a8a8c5462d0b841^---0#0#1#-19%DVTDocumentLocation2@81"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c0000000000000000^2289"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/dump.o [1msrc/dump.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/dump.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/dump.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/dump.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/dump.o36"8C07FEE9-985F-4D97-A9E9-2F24F155F200-
+b419AEEDA-C182-4F8A-AB59-2BCE0EEF42AB
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/dump.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/dump.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/dump.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/dump.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/error.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+s416309844.354268
+e416309844.415326
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/x86_64/error.o
+x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection83"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c168"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/error.o [1msrc/error.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler1dcc5a5462d0b841^22536a5462d0b841^---0#0#1#-19%DVTDocumentLocation2@82"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c0000000000000000^2295"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/error.o [1msrc/error.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/error.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/error.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/error.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/error.o36"2AC6483B-CF6E-4319-BC05-961AB7CB6F35-
+b419AEEDA-C182-4F8A-AB59-2BCE0EEF42AB
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/error.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/error.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/error.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/error.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/hashtable.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+s416309844.354508
+e416309844.519644
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/x86_64/hashtable.o
+x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection87"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c176"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/hashtable.o [1msrc/hashtable.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler9ce15a5462d0b841^5307855462d0b841^---0#0#1#-19%DVTDocumentLocation2@86"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c0000000000000000^2319"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/hashtable.o [1msrc/hashtable.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/hashtable.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/hashtable.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/hashtable.o36"A6E26335-A296-4625-898D-735198390AB1-
+b419AEEDA-C182-4F8A-AB59-2BCE0EEF42AB
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/hashtable.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/hashtable.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/hashtable.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/hashtable.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/load.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+s416309844.355158
+e416309844.667010
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/x86_64/load.o
+x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection82"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c166"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/load.o [1msrc/load.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler36045b5462d0b841^30d7aa5462d0b841^---0#0#1#-19%DVTDocumentLocation2@81"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c0000000000000000^2289"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/load.o [1msrc/load.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/load.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/load.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/load.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/load.o36"B6450564-B68B-4F5F-84DE-F828C71D5E33-
+b419AEEDA-C182-4F8A-AB59-2BCE0EEF42AB
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/load.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/load.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/load.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/load.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/memory.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+s416309844.416632
+e416309844.475077
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/x86_64/memory.o
+x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection84"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c170"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/memory.o [1msrc/memory.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilerc5c86a5462d0b841^a59e795462d0b841^---0#0#1#-19%DVTDocumentLocation2@83"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c0000000000000000^2301"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/memory.o [1msrc/memory.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/memory.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/memory.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/memory.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/memory.o36"62B52E54-165D-4091-8D2E-81698128B56E-
+b419AEEDA-C182-4F8A-AB59-2BCE0EEF42AB
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/memory.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/memory.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/memory.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/memory.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/pack_unpack.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+s416309844.475374
+e416309844.675587
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/x86_64/pack_unpack.o
+x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection89"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c180"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/pack_unpack.o [1msrc/pack_unpack.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler18ce795462d0b841^56f3ac5462d0b841^---0#0#1#-19%DVTDocumentLocation2@88"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c0000000000000000^2331"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/pack_unpack.o [1msrc/pack_unpack.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/pack_unpack.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/pack_unpack.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/pack_unpack.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/pack_unpack.o36"779F1D05-75EB-41DB-B1F4-ED353E8CE828-
+b419AEEDA-C182-4F8A-AB59-2BCE0EEF42AB
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/pack_unpack.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/pack_unpack.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/pack_unpack.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/pack_unpack.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strbuffer.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+s416309844.519937
+e416309844.588298
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/x86_64/strbuffer.o
+x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection87"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c176"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strbuffer.o [1msrc/strbuffer.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler7e37855462d0b841^419d965462d0b841^---0#0#1#-19%DVTDocumentLocation2@86"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c0000000000000000^2319"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strbuffer.o [1msrc/strbuffer.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strbuffer.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strbuffer.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strbuffer.o36"D9ADCBD5-4C13-4C84-8647-830D18F6F243-
+b419AEEDA-C182-4F8A-AB59-2BCE0EEF42AB
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strbuffer.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strbuffer.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strbuffer.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/strbuffer.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strconv.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+s416309844.549070
+e416309844.613076
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/x86_64/strconv.o
+x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection85"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c172"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strconv.o [1msrc/strconv.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler36ad8c5462d0b841^9df29c5462d0b841^---0#0#1#-19%DVTDocumentLocation2@84"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c0000000000000000^2307"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strconv.o [1msrc/strconv.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strconv.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strconv.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strconv.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strconv.o36"EF39BEE1-971E-4B88-A472-EC14A1A66EAF-
+b419AEEDA-C182-4F8A-AB59-2BCE0EEF42AB
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strconv.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/strconv.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/strconv.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/strconv.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/utf.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+s416309844.588608
+e416309844.649153
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/x86_64/utf.o
+x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection81"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c164"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/utf.o [1msrc/utf.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilera7cb965462d0b841^382fa65462d0b841^---0#0#1#-19%DVTDocumentLocation2@80"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c0000000000000000^2283"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/utf.o [1msrc/utf.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/utf.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/utf.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/utf.o36"6F1EE13D-014A-49DA-A369-410CFA6C6718-
+b419AEEDA-C182-4F8A-AB59-2BCE0EEF42AB
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/utf.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/utf.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/utf.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/utf.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/value.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+s416309844.613713
+e416309844.794453
+r1
+xCompileC
+xbuild/jansson.build/Default/jansson.build/Objects-normal/x86_64/value.o
+x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_config.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/hashtable.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/jansson_private.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/strbuffer.h
+d/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/utf.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection83"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c168"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/value.o [1msrc/value.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler2e3a9d5462d0b841^7861cb5462d0b841^---0#0#1#-19%DVTDocumentLocation2@82"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c0000000000000000^2295"[1mCompileC[0m build/jansson.build/Default/jansson.build/Objects-normal/x86_64/value.o [1msrc/value.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/jansson.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default/include -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/value.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/value.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/src/value.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/value.o36"642118D0-2737-4159-AA7E-84EB7CC4FE02-
+b419AEEDA-C182-4F8A-AB59-2BCE0EEF42AB
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/value.o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/src/value.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/jansson.build/Default/jansson.build/Objects-normal/x86_64/value.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/value.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCreateUniversalBinary /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default/libjansson.a normal x86_64\ i386
+s416843692.407501
+e416843692.421758
+r1
+xCreateUniversalBinary
+x/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default/libjansson.a
+xnormal
+xx86_64 i386
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection114"Create universal binary /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default/libjansson.a68"CreateUniversalBinary build/Default/libjansson.a normal x86_64\ i3869a6068ac87d8b841^a9f86bac87d8b841^---0#0#1#-19%DVTDocumentLocation2@97"file:///Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default/libjansson.a0000000000000000^621"CreateUniversalBinary build/Default/libjansson.a normal x86_64\ i386    cd /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool -static /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/libjansson.a /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/libjansson.a -o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default/libjansson.a36"B73DB002-355E-4C0A-AB4D-69F41C137A4A-
+bAC4C9B4A-2FB3-416D-88C8-C8D057D4F578
+
+CLibtool /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default/libjansson.a normal x86_64
+s416309844.795520
+e416309844.805323
+r1
+xLibtool
+x/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default/libjansson.a
+xnormal
+xx86_64
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection56"[1mLibtool[0m build/Default/libjansson.a normal x86_6456"[1mLibtool[0m build/Default/libjansson.a normal x86_6449bdcb5462d0b841^4e2ace5462d0b841^---0#0#1#--738"[1mLibtool[0m build/Default/libjansson.a normal x86_64    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson    setenv MACOSX_DEPLOYMENT_TARGET 10.9    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool -static -arch_only x86_64 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -L/Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default -filelist /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/jansson.LinkFileList -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/jansson/build/Default/libjansson.a36"7C290D59-1FC8-4B83-8839-D21E8DFC5196-
+b419AEEDA-C182-4F8A-AB59-2BCE0EEF42AB
+
+CLibtool /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/libjansson.a normal i386
+s416843692.384531
+e416843692.404087
+r1
+xLibtool
+x/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/libjansson.a
+xnormal
+xi386
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection94"Libtool build/jansson.build/Default/jansson.build/Objects-normal/i386/libjansson.a normal i38694"Libtool build/jansson.build/Default/jansson.build/Objects-normal/i386/libjansson.a normal i3862c8362ac87d8b841^937267ac87d8b841^---0#0#1#--820"Libtool build/jansson.build/Default/jansson.build/Objects-normal/i386/libjansson.a normal i386    cd /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson    export MACOSX_DEPLOYMENT_TARGET=10.9    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool -static -arch_only i386 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -L/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default -filelist /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/jansson.LinkFileList -o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/i386/libjansson.a36"9BD9F38B-456F-4AEA-B3B0-CF7F68B866FE-
+bAC4C9B4A-2FB3-416D-88C8-C8D057D4F578
+
+CLibtool /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/libjansson.a normal x86_64
+s416843692.383505
+e416843692.407053
+r1
+xLibtool
+x/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/libjansson.a
+xnormal
+xx86_64
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection98"Libtool build/jansson.build/Default/jansson.build/Objects-normal/x86_64/libjansson.a normal x86_6498"Libtool build/jansson.build/Default/jansson.build/Objects-normal/x86_64/libjansson.a normal x86_64ae4662ac87d8b841^373568ac87d8b841^---0#0#1#--830"Libtool build/jansson.build/Default/jansson.build/Objects-normal/x86_64/libjansson.a normal x86_64    cd /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson    export MACOSX_DEPLOYMENT_TARGET=10.9    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool -static -arch_only x86_64 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -L/Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/Default -filelist /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/jansson.LinkFileList -o /Users/modun/Software/tmpDownload/pomelo/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/libjansson.a36"5BBE253D-636B-4AE8-A0AD-04478C2F286E-
+bAC4C9B4A-2FB3-416D-88C8-C8D057D4F578
+
+CLibtool /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/build/Default/libjansson.a normal x86_64
+s416884533.136189
+e416884533.206195
+r1
+xLibtool
+x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/build/Default/libjansson.a
+xnormal
+xx86_64
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection56"[1mLibtool[0m build/Default/libjansson.a normal x86_6456"[1mLibtool[0m build/Default/libjansson.a normal x86_64e1ec223527d9b841^97c9343527d9b841^---0#0#1#--842"[1mLibtool[0m build/Default/libjansson.a normal x86_64    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson    export MACOSX_DEPLOYMENT_TARGET=10.9    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool -static -arch_only x86_64 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -L/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/build/Default -filelist /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/build/jansson.build/Default/jansson.build/Objects-normal/x86_64/jansson.LinkFileList -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/build/Default/libjansson.a36"C84517D0-186F-4A62-8E32-2AD6B604BAD4-
+b0FB05877-2873-4411-9EA4-A478CC5308BF
+
