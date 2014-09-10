@@ -1,0 +1,18 @@
+local RESOURCE_TYPE = {
+	WOOD = 1,
+	FOOD = 2,
+	IRON = 3,
+	STONE = 4,
+	POPULATION = 5,
+	RED_GEM = 6,
+	BLUE_GEM = 7,
+	GREEN_GEM = 8,
+	YELLOW_GEM = 9,
+	PURPLE_GEM = 10,
+}
+
+
+
+
+
+return RESOURCE_TYPE
