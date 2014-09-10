@@ -7,26 +7,18 @@ local LogoScene = class("LogoScene", function()
 end)
 
 function LogoScene:ctor()
-
 end
 
 function LogoScene:onEnter()
 	self.sprite = display.newSprite("logos/batcat.png", display.cx, display.cy):addTo(self)
-	-- NetManager:connectGateServer(function(success)
-	-- 	if not success then
-	-- 		print("连接网关失败")
-	-- 		return
-	-- 	end
-	-- 	print("连接网关成功")
-	-- end)
-self:performWithDelay(function()
-		if CONFIG_IS_DEBUG then
-			app:enterScene("MainScene", nil, "fade", 0.6, display.COLOR_WHITE)
-		else
-			app:enterScene("UpdaterScene", nil, "fade", 0.6, display.COLOR_WHITE)
-		end
-	end, 0.8)
-end
+	self:performWithDelay(function()
+			if CONFIG_IS_DEBUG then
+				app:enterScene("MainScene", nil, "fade", 0.6, display.COLOR_WHITE)
+			else
+				app:enterScene("UpdaterScene", nil, "fade", 0.6, display.COLOR_WHITE)
+			end
+		end, 0.8)
+	end
 
 function LogoScene:onExit()
 	self.sprite = nil

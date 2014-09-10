@@ -9,7 +9,7 @@ require("app.utils.UIKit")
 require("app.utils.PlatformAdapter") -- adapter for platform ios/android
 local Timer = import('.utils.Timer')
 local MyApp = class("MyApp", cc.mvc.AppBase)
-
+import('app.ui.GameGlobalUIUtils')
 function MyApp:ctor()
     self:initI18N()
     NetManager:init()
@@ -21,6 +21,10 @@ function MyApp:ctor()
     elseif device.platform == "mac" then
         fileutils:addSearchPath("dev/res/")
     end
+end
+
+function MyApp:enterScene(...)
+    self._runningScene = MyApp.super.enterScene(self,...)
 end
 
 function MyApp:run()

@@ -6,7 +6,7 @@ local GameUILogin = UIKit:createUIClass('GameUILogin')
 
 function GameUILogin:ctor()
     GameUILogin.super.ctor(self)
-    local bgImage = display.newScale9Sprite("images/spalshbg.png", display.cx, display.cy,cc.size(display.width,display.height))
+    local bgImage = display.newSprite("images/spalshbg.png", display.cx, display.cy,cc.size(display.width,display.height))
     bgImage:addTo(self)
 end
 
@@ -14,16 +14,19 @@ function GameUILogin:onEnter()
     GameUILogin.super.onEnter(self)
     self:createProgressBar()
     self:createTips()
-    self:proLoad()
 end
 
+
+function GameUILogin:onMovieInStage()
+    self:proLoad()
+end
 
 -- Private Methods
 function GameUILogin:createProgressBar()
     local bar = display.newSprite("images/splash_process_bg.png"):addTo(self):pos(display.cx,display.bottom+150)
     local progressFill = display.newSprite("images/splash_process_color.png")
     local ProgressTimer = cc.ProgressTimer:create(progressFill)
-    ProgressTimer:setType(1)
+    ProgressTimer:setType(display.PROGRESS_TIMER_BAR)
     ProgressTimer:setBarChangeRate(cc.p(1,0))
     ProgressTimer:setMidpoint(cc.p(0,0))
     ProgressTimer:align(display.LEFT_BOTTOM, 0, 0):addTo(bar)
