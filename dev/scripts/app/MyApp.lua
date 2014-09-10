@@ -5,7 +5,7 @@ require("app.datas.GameDatas")
 require("app.utils.LuaUtils")
 require("app.utils.GameUtils")
 require("app.service.NetManager")
-require("app.utils.UIKitHelper")
+require("app.utils.UIKit")
 require("app.utils.PlatformAdapter") -- adapter for platform ios/android
 local Timer = import('.utils.Timer')
 local MyApp = class("MyApp", cc.mvc.AppBase)
