@@ -28,18 +28,6 @@ function CityLayer:GetClickedObject(x, y, world_x, world_y)
     end)
     return clicked_list[1]
 end
-----
-function CityLayer:OnSceneMove()
-    self:IteratorCanUpgradingBuilding(function(_, building)
-        building:OnSceneMove()
-    end)
-    table.foreach(self.trees, function(k, v)
-        v:OnSceneMove()
-    end)
-    if self.road then
-        self.road:OnSceneMove()
-    end
-end
 function CityLayer:OnTileLocked(city)
     self:OnTileChanged(city)
 end
@@ -58,12 +46,7 @@ function CityLayer:OnTileChanged(city)
         end
     end)
 
-    -- self:UpdateTreesWithCity(city)
-    -- self:UpdateTilesWithCity(city)
-    -- self:UpdateRoadsWithCity(city)
-    -- self:UpdateWallsWithCity(city)
-    -- self:UpdateTowersWithCity(city)
-    -- self:UpdateCornsAndRocksWithCity(city)
+    self:UpdateAllWithCity(city)
 end
 function CityLayer:OnRoundUnlocked(round)
     print("OnRoundUnlocked", round)
@@ -110,7 +93,14 @@ function CityLayer:OnDestoryDecorator(destory_decorator, release_ruins)
     end
 end
 ---
-
+function CityLayer:UpdateAllWithCity(city)
+    self:UpdateTreesWithCity(city)
+    self:UpdateTilesWithCity(city)
+    self:UpdateRoadsWithCity(city)
+    self:UpdateWallsWithCity(city)
+    self:UpdateTowersWithCity(city)
+    -- self:UpdateCornsAndRocksWithCity(city)
+end
 function CityLayer:UpdateTilesWithCity(city)
     city:IteratorTilesByFunc(function(x, y, tile)
         self:EableTileBackground(x - 1, y - 1, tile:IsUnlocked())
@@ -185,7 +175,7 @@ function CityLayer:UpdateWallsWithCity(city)
             city_node:removeChild(v, true)
         end
     end
-    
+
 end
 function CityLayer:UpdateTowersWithCity(city)
     local city_node = self:GetCityNode()
@@ -309,9 +299,9 @@ function CityLayer:ctor(city)
 
     self.city_node = display.newLayer()
     self.city_node:setAnchorPoint(0, 0)
-    self.city_layer:addChild(self.city_node)
+    self:GetCityLayer():addChild(self.city_node)
 
-    self.city_layer:setPosition(cc.p(1000, 1000))
+    self:GetCityLayer():setPosition(cc.p(1000, 1000))
 
     local origin_point = self:GetPositionIndex(0, 0)
     self.iso_map = IsoMapAnchorBottomLeft.new({
@@ -322,6 +312,12 @@ function CityLayer:ctor(city)
         base_x = origin_point.x,
         base_y = origin_point.y
     })
+end
+function CityLayer:GetCityLayer()
+    return self.city_layer
+end
+function CityLayer:GetCityNode()
+    return self.city_node
 end
 function CityLayer:InitSceneWithFile(file)
     -- ccs.SceneReader:getInstance():createNodeWithSceneFile("scenetest/AttributeComponentTest/AttributeComponentTest.json")
@@ -368,13 +364,8 @@ function CityLayer:InitWithCity(city)
     self.walls = {}
     self.road = nil
 
-    -- self:UpdateTreesWithCity(city)
-    -- self:UpdateTilesWithCity(city)
-    -- self:UpdateRoadsWithCity(city)
-    -- self:UpdateWallsWithCity(city)
-    -- self:UpdateTowersWithCity(city)
-    -- self:UpdateCornsAndRocksWithCity(city)
 
+    self:UpdateAllWithCity(city)
 
     local city_node = self:GetCityNode()
     for k, ruin in pairs(city.ruins) do
@@ -406,6 +397,7 @@ function CityLayer:InitWithCity(city)
         table.insert(self.houses, house)
     end
 end
+
 function CityLayer:GetMapSize()
     if not self.width or not self.height then
         local layer_size = self:GetPositionLayer():getLayerSize()
@@ -413,7 +405,6 @@ function CityLayer:GetMapSize()
     end
     return self.width, self.height
 end
----[[
 function CityLayer:GetPositionIndex(x, y)
     return self:GetPositionLayer():getPositionAt(cc.p(x, y))
 end
@@ -424,55 +415,50 @@ function CityLayer:GetPositionLayer()
     end
     return self.position_layer
 end
---]]
 function CityLayer:GetPositionNode()
     return self.position_node
 end
+
+
 function CityLayer:EableTileBackground(x, y, enable)
     local tile = self:GetTileAtIndexInBackground(x, y)
     if tile then
         tile:setVisible(enable)
     end
 end
----[[
 function CityLayer:GetTileAtIndexInBackground(x, y)
-    return self:GetBackgroundLayer():tileAt(cc.p(x, y))
+    return self:GetBackgroundLayer():getTileAt(cc.p(x, y))
 end
 function CityLayer:GetBackgroundLayer()
     if not self.tile_layer then
-        local road_map = tolua.cast(self:GetCityNode():getComponent("CCTMXTiledMap"), "CCComRender")
-        self.tile_layer = road_map:getNode():layerNamed("layer1")
+        self.tile_layer = self.city_background:getLayer("layer1")
     end
     return self.tile_layer
 end
---]]
-function CityLayer:GetCityLayer()
-    return self.city_layer
-end
-function CityLayer:GetCityNode()
-    return self.city_node
-end
+
+
+
+
 function CityLayer:EableTileRoad(x, y, enable)
     local tile = self:GetTileAtIndexInRoad(x, y)
     if tile then
         tile:setVisible(enable)
     end
 end
----[[
 function CityLayer:GetTileAtIndexInRoad(x, y)
-    return self:GetRoadLayer():tileAt(cc.p(x, y))
+    return self:GetRoadLayer():getTileAt(cc.p(x, y))
 end
 function CityLayer:GetRoadLayer()
     if not self.road_layer then
-        local road_map = tolua.cast(self:GetRoadNode():getComponent("CCTMXTiledMap"), "CCComRender")
-        self.road_layer = road_map:getNode():layerNamed("layer1")
+        self.road_layer = self:GetRoadNode():getLayer("layer1")
     end
     return self.road_layer
 end
---]]
 function CityLayer:GetRoadNode()
     return self.road_node
 end
+
+
 ------zoom
 function CityLayer:ZoomBegin()
     self.scale_point = self:convertToNodeSpace(cc.p(display.cx, display.cy))
@@ -503,29 +489,35 @@ function CityLayer:setPosition(position)
     local parent_node = self:getParent()
     local super = getmetatable(self)
     super.setPosition(self, position)
-
+    local left_bottom_pos = self:GetLeftBottomPositionWithConstrain(x, y)
+    local right_top_pos = self:GetRightTopPositionWithConstrain(x, y)
+    local rx = x >= 0 and math.min(left_bottom_pos.x, right_top_pos.x) or math.max(left_bottom_pos.x, right_top_pos.x)
+    local ry = y >= 0 and math.min(left_bottom_pos.y, right_top_pos.y) or math.max(left_bottom_pos.y, right_top_pos.y)
+    super.setPosition(self, cc.p(rx, ry))
+    self:OnSceneMove()
+end
+function CityLayer:GetLeftBottomPositionWithConstrain(x, y)
     -- 左下角是否超出
-    local world_position = parent_node:convertToWorldSpace(position)
+    local parent_node = self:getParent()
+    local world_position = parent_node:convertToWorldSpace(cc.p(x, y))
     world_position.x = world_position.x > display.left and display.left or world_position.x
     world_position.y = world_position.y > display.bottom and display.bottom or world_position.y
-    local node_left_position = parent_node:convertToNodeSpace(world_position)
-
+    local left_bottom_pos = parent_node:convertToNodeSpace(world_position)
+    return left_bottom_pos
+end
+function CityLayer:GetRightTopPositionWithConstrain(x, y)
     -- 右上角是否超出
+    local parent_node = self:getParent()
     local world_top_right_point = self:convertToWorldSpace(cc.p(self:getContentWidthAndHeight()))
     local scene_top_right_position = parent_node:convertToNodeSpace(world_top_right_point)
     local display_top_right_position = parent_node:convertToNodeSpace(cc.p(display.right, display.top))
     local dx = display_top_right_position.x - scene_top_right_position.x
     local dy = display_top_right_position.y - scene_top_right_position.y
-    local node_right_position_x, node_right_position_y
-    node_right_position_x = scene_top_right_position.x < display_top_right_position.x and x + dx or x
-    node_right_position_y = scene_top_right_position.y < display_top_right_position.y and y + dy or y
-
-    local rx = x >= 0 and math.min(node_left_position.x, node_right_position_x) or math.max(node_left_position.x, node_right_position_x)
-    local ry = y >= 0 and math.min(node_left_position.y, node_right_position_y) or math.max(node_left_position.y, node_right_position_y)
-    super.setPosition(self, cc.p(rx, ry))
-
-
-    self:OnSceneMove()
+    local right_top_pos = {
+        x = scene_top_right_position.x < display_top_right_position.x and x + dx or x,
+        y = scene_top_right_position.y < display_top_right_position.y and y + dy or y
+    }
+    return right_top_pos
 end
 function CityLayer:getContentWidthAndHeight()
     if not self.content_width or not self.content_height then
@@ -534,8 +526,6 @@ function CityLayer:getContentWidthAndHeight()
     end
     return self.content_width, self.content_height
 end
-
----[[
 function CityLayer:getContentSize()
     if not self.content_size then
         local layer = self.background:getLayer("layer1")
@@ -543,7 +533,21 @@ function CityLayer:getContentSize()
     end
     return self.content_size
 end
---]]
+
+
+function CityLayer:OnSceneMove()
+    self:IteratorCanUpgradingBuilding(function(_, building)
+        building:OnSceneMove()
+    end)
+    table.foreach(self.trees, function(k, v)
+        v:OnSceneMove()
+    end)
+    if self.road then
+        self.road:OnSceneMove()
+    end
+end
 
 return CityLayer
+
+
 
