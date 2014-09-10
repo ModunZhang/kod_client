@@ -105,6 +105,7 @@ function NetManager:addLoginEventListener()
             else
                 LuaUtils:outputTable("onPlayerLoginSuccess", msg)
                 self.m_netService:setDeltatime(msg.serverTime - ext.now())
+                local InitGame = import("app.service.InitGame")
                 InitGame(msg)
                 app:enterScene("CityScene")
             end
