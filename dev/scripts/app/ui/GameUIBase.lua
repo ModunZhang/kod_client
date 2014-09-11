@@ -78,7 +78,9 @@ function GameUIBase:addToScene(scene,anima)
 	return self
 end
 
-
+function GameUIBase:addToCurrentScene(anima)
+	return self:addToScene(display.getRunningScene(),anima)
+end
 
 -- ui入场动画
 function GameUIBase:UIAnimationMoveIn()

@@ -10,15 +10,16 @@ function LogoScene:ctor()
 end
 
 function LogoScene:onEnter()
-	self.sprite = display.newSprite("logos/batcat.png", display.cx, display.cy):addTo(self)
-	self:performWithDelay(function()
-			if CONFIG_IS_DEBUG then
-				app:enterScene("MainScene", nil, "fade", 0.6, display.COLOR_WHITE)
-			else
-				app:enterScene("UpdaterScene", nil, "fade", 0.6, display.COLOR_WHITE)
-			end
-		end, 0.8)
-	end
+	-- self.sprite = display.newSprite("logos/batcat.png", display.cx, display.cy):addTo(self)
+	-- self:performWithDelay(function()
+	-- 		if CONFIG_IS_DEBUG then
+	-- 			app:enterScene("MainScene", nil, "fade", 0.6, display.COLOR_WHITE)
+	-- 		else
+	-- 			app:enterScene("UpdaterScene", nil, "fade", 0.6, display.COLOR_WHITE)
+	-- 		end
+	-- 	end, 0.8)
+	UIKit:newGameUI('GameUIChat'):addToCurrentScene(true)
+end
 
 function LogoScene:onExit()
 	self.sprite = nil
