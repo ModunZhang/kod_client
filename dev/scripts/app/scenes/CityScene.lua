@@ -7,7 +7,7 @@ local TouchJudgment = import("..layers.TouchJudgment")
 local IsoMapAnchorBottomLeft = import("..map.IsoMapAnchorBottomLeft")
 -- local GameUIBuildList = import("..ui.GameUIBuildList")
 -- local HomePageUI = import("..ui.HomePageUI")
--- local GameUIMain = import("..ui.GameUIMain")
+local GameUIHome = import("..ui.GameUIHome")
 -- require('app.service.ListenerService')
 
 local CityScene = class("CityScene", function()
@@ -65,13 +65,12 @@ end
 function CityScene:onEnter()
     -- CCArmatureDataManager:sharedArmatureDataManager():removeArmatureFileInfo("sprites/armatures/hammer/chuizidonghua.ExportJson")
     -- CCArmatureDataManager:sharedArmatureDataManager():addArmatureFileInfo("sprites/armatures/hammer/chuizidonghua.ExportJson")
-
     -- ListenerService:start()
-   
+
     running_scene = self
 
-    self._layer = display.newLayer()
-    self:addChild(self._layer, 2)
+
+    self._layer = display.newLayer():addTo(self, 1)
     self._layer:setTouchEnabled(true)
     self._layer:setTouchSwallowEnabled(false)
     self._layer:setTouchMode(cc.TOUCH_MODE_ALL_AT_ONCE)
@@ -79,13 +78,17 @@ function CityScene:onEnter()
         self.event_manager:OnEvent(event)
     end)
 
+    GameUIHome.new(City):addTo(self, 2):setTouchSwallowEnabled(false)
+
+    
+
+
 
     self.city_layer:AddObserver(self)
     self.city_layer:InitWithCity(City)
 
     self.upgrading_ui = {}
-    self._sprite_layer = display.newLayer()
-    self:addChild(self._sprite_layer, 0)
+    self._sprite_layer = display.newLayer():addTo(self)
 
     -- self.city_layer:IteratorCanUpgradingBuilding(function(_, building)
     --     local progress = BuildingUpgradeUINode.new()
@@ -166,11 +169,11 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building = self.city_layer:GetClickedObject(tx, ty, x, y)
     if building then
         if building:GetEntity():GetType() == "wall" then
-            -- if building:GetEntity():IsGate() then
-            --     NetManager:upgradeWallByLocation(function()end)
-            -- end
+        -- if building:GetEntity():IsGate() then
+        --     NetManager:upgradeWallByLocation(function()end)
+        -- end
         elseif building:GetEntity():GetType() == "tower" then
-            -- NetManager:upgradeTowerByLocation(building:GetEntity().tower_id, function()end)
+        -- NetManager:upgradeTowerByLocation(building:GetEntity().tower_id, function()end)
         elseif building:GetEntity():GetType() == "ruins" then
             select_ruins_list = City:GetNeighbourRuinWithSpecificRuin(building:GetEntity())
             select_ruins = building:GetEntity()
@@ -179,7 +182,7 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
         elseif building:GetEntity():GetType() == "keep" then
             self._keep_page = UIKitHelper:createGameUI('GameUIKeep',building:GetEntity())
             self._keep_page:addToScene(self, true)
-        -- elseif building:GetEntity():GetType() == "warehouse" then
+            -- elseif building:GetEntity():GetType() == "warehouse" then
             -- self._warehouse_page = UIKitHelper:createGameUI('GameUIWarehouse',building:GetEntity())
             -- self._warehouse_page:addToScene(self, true)
         elseif iskindof(building:GetEntity(), 'PopulationResourceUpgradeBuilding') then
@@ -203,124 +206,134 @@ function CityScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_spee
     self.city_layer:setPosition(cc.p(x + sp.x, y + sp.y))
 end
 function CityScene:OnCreateDecoratorSprite(building_sprite)
-    -- local progress = BuildingUpgradeUINode.new()
-    -- local levelup = BuildingLevelUpUINode.new()
-    -- self._sprite_layer:addChild(progress)
-    -- self._sprite_layer:addChild(levelup)
-    -- building_sprite:AddObserver(progress)
-    -- building_sprite:AddObserver(levelup)
-    -- building_sprite:OnSceneMove()
-    -- table.insert(self.upgrading_ui, progress)
-    -- table.insert(self.upgrading_ui, levelup)
+-- local progress = BuildingUpgradeUINode.new()
+-- local levelup = BuildingLevelUpUINode.new()
+-- self._sprite_layer:addChild(progress)
+-- self._sprite_layer:addChild(levelup)
+-- building_sprite:AddObserver(progress)
+-- building_sprite:AddObserver(levelup)
+-- building_sprite:OnSceneMove()
+-- table.insert(self.upgrading_ui, progress)
+-- table.insert(self.upgrading_ui, levelup)
 end
 function CityScene:OnDestoryDecoratorSprite(building_sprite)
-    -- building_sprite:NotifyObservers(function(ob)
-    --     for i, ui in ipairs(self.upgrading_ui) do
-    --         if ob == ui then
-    --             table.remove(self.upgrading_ui, i)
-    --             ui:removeFromParentAndCleanup(true)
-    --         end
-    --     end
-    -- end)
+-- building_sprite:NotifyObservers(function(ob)
+--     for i, ui in ipairs(self.upgrading_ui) do
+--         if ob == ui then
+--             table.remove(self.upgrading_ui, i)
+--             ui:removeFromParentAndCleanup(true)
+--         end
+--     end
+-- end)
 end
 function CityScene:OnTreesChanged(trees, road)
-    -- for _, v in pairs(self.lock_buttons == nil and {} or self.lock_buttons) do
-    --     City:RemoveListenerOnType(v, City.LISTEN_TYPE.UPGRADE_BUILDING)
-    --     v:removeFromParentAndCleanup(true)
-    -- end
-    -- self.lock_buttons = {}
-    -- table.foreach(trees, function(_, tree_)
-    --     if tree_:GetEntity().location_id then
-    --         local building = City:GetBuildingByLocationId(tree_:GetEntity().location_id)
-    --         if building and not building:IsUpgrading() then
-    --             local lock_button = SpriteButton.new(tree_, City)
-    --             self._homePage:addWidget(lock_button)
-    --             lock_button:setZOrder(-1)
-    --             table.insert(self.lock_buttons, lock_button)
-    --             tree_:AddObserver(lock_button)
-    --             tree_:OnSceneMove()
-    --             City:AddListenOnType(lock_button, City.LISTEN_TYPE.UPGRADE_BUILDING)
-    --         end
-    --     end
-    -- end)
+-- for _, v in pairs(self.lock_buttons == nil and {} or self.lock_buttons) do
+--     City:RemoveListenerOnType(v, City.LISTEN_TYPE.UPGRADE_BUILDING)
+--     v:removeFromParentAndCleanup(true)
+-- end
+-- self.lock_buttons = {}
+-- table.foreach(trees, function(_, tree_)
+--     if tree_:GetEntity().location_id then
+--         local building = City:GetBuildingByLocationId(tree_:GetEntity().location_id)
+--         if building and not building:IsUpgrading() then
+--             local lock_button = SpriteButton.new(tree_, City)
+--             self._homePage:addWidget(lock_button)
+--             lock_button:setZOrder(-1)
+--             table.insert(self.lock_buttons, lock_button)
+--             tree_:AddObserver(lock_button)
+--             tree_:OnSceneMove()
+--             City:AddListenOnType(lock_button, City.LISTEN_TYPE.UPGRADE_BUILDING)
+--         end
+--     end
+-- end)
 
-    -- if road then
-    --     if road:GetEntity().location_id then
-    --         local building = City:GetBuildingByLocationId(road:GetEntity().location_id)
-    --         if building and not building:IsUpgrading() then
-    --             local lock_button = SpriteButton.new(road, City)
-    --             self._homePage:addWidget(lock_button)
-    --             lock_button:setZOrder(-1)
-    --             table.insert(self.lock_buttons, lock_button)
-    --             road:AddObserver(lock_button)
-    --             road:OnSceneMove()
-    --             City:AddListenOnType(lock_button, City.LISTEN_TYPE.UPGRADE_BUILDING)
-    --         end
-    --     end
-    -- end
+-- if road then
+--     if road:GetEntity().location_id then
+--         local building = City:GetBuildingByLocationId(road:GetEntity().location_id)
+--         if building and not building:IsUpgrading() then
+--             local lock_button = SpriteButton.new(road, City)
+--             self._homePage:addWidget(lock_button)
+--             lock_button:setZOrder(-1)
+--             table.insert(self.lock_buttons, lock_button)
+--             road:AddObserver(lock_button)
+--             road:OnSceneMove()
+--             City:AddListenOnType(lock_button, City.LISTEN_TYPE.UPGRADE_BUILDING)
+--         end
+--     end
+-- end
 end
 function CityScene:OnTowersChanged(old_towers, new_towers)
-    -- if self._sprite_layer then
-    --     table.foreach(old_towers, function(k, tower)
-    --         if tower:GetEntity():IsUnlocked() then
-    --             tower:NotifyObservers(function(ob)
-    --                 for i, ui in ipairs(self.upgrading_ui) do
-    --                     if ob == ui then
-    --                         table.remove(self.upgrading_ui, i)
-    --                         ui:removeFromParentAndCleanup(true)
-    --                     end
-    --                 end
-    --             end)
-    --         end
-    --     end)
+-- if self._sprite_layer then
+--     table.foreach(old_towers, function(k, tower)
+--         if tower:GetEntity():IsUnlocked() then
+--             tower:NotifyObservers(function(ob)
+--                 for i, ui in ipairs(self.upgrading_ui) do
+--                     if ob == ui then
+--                         table.remove(self.upgrading_ui, i)
+--                         ui:removeFromParentAndCleanup(true)
+--                     end
+--                 end
+--             end)
+--         end
+--     end)
 
-    --     table.foreach(new_towers, function(k, tower)
-    --         if tower:GetEntity():IsUnlocked() then
-    --             local progress = BuildingUpgradeUINode.new()
-    --             local levelup = BuildingLevelUpUINode.new()
-    --             self._sprite_layer:addChild(progress)
-    --             self._sprite_layer:addChild(levelup)
-    --             tower:AddObserver(progress)
-    --             tower:AddObserver(levelup)
-    --             tower:OnSceneMove()
-    --             table.insert(self.upgrading_ui, progress)
-    --             table.insert(self.upgrading_ui, levelup)
-    --         end
-    --     end)
-    -- end
+--     table.foreach(new_towers, function(k, tower)
+--         if tower:GetEntity():IsUnlocked() then
+--             local progress = BuildingUpgradeUINode.new()
+--             local levelup = BuildingLevelUpUINode.new()
+--             self._sprite_layer:addChild(progress)
+--             self._sprite_layer:addChild(levelup)
+--             tower:AddObserver(progress)
+--             tower:AddObserver(levelup)
+--             tower:OnSceneMove()
+--             table.insert(self.upgrading_ui, progress)
+--             table.insert(self.upgrading_ui, levelup)
+--         end
+--     end)
+-- end
 end
 function CityScene:OnGateChanged(old_walls, new_walls)
-    -- if self._sprite_layer then
-    --     table.foreach(old_walls, function(k, wall)
-    --         if wall:GetEntity():IsGate() then
-    --             wall:NotifyObservers(function(ob)
-    --                 for i, ui in ipairs(self.upgrading_ui) do
-    --                     if ob == ui then
-    --                         table.remove(self.upgrading_ui, i)
-    --                         ui:removeFromParentAndCleanup(true)
-    --                     end
-    --                 end
-    --             end)
-    --         end
-    --     end)
+-- if self._sprite_layer then
+--     table.foreach(old_walls, function(k, wall)
+--         if wall:GetEntity():IsGate() then
+--             wall:NotifyObservers(function(ob)
+--                 for i, ui in ipairs(self.upgrading_ui) do
+--                     if ob == ui then
+--                         table.remove(self.upgrading_ui, i)
+--                         ui:removeFromParentAndCleanup(true)
+--                     end
+--                 end
+--             end)
+--         end
+--     end)
 
-    --     table.foreach(new_walls, function(k, wall)
-    --         if wall:GetEntity():IsGate() then
-    --             local progress = BuildingUpgradeUINode.new()
-    --             local levelup = BuildingLevelUpUINode.new()
-    --             self._sprite_layer:addChild(progress)
-    --             self._sprite_layer:addChild(levelup)
-    --             wall:AddObserver(progress)
-    --             wall:AddObserver(levelup)
-    --             wall:OnSceneMove()
-    --             table.insert(self.upgrading_ui, progress)
-    --             table.insert(self.upgrading_ui, levelup)
-    --         end
-    --     end)
-    -- end
+--     table.foreach(new_walls, function(k, wall)
+--         if wall:GetEntity():IsGate() then
+--             local progress = BuildingUpgradeUINode.new()
+--             local levelup = BuildingLevelUpUINode.new()
+--             self._sprite_layer:addChild(progress)
+--             self._sprite_layer:addChild(levelup)
+--             wall:AddObserver(progress)
+--             wall:AddObserver(levelup)
+--             wall:OnSceneMove()
+--             table.insert(self.upgrading_ui, progress)
+--             table.insert(self.upgrading_ui, levelup)
+--         end
+--     end)
+-- end
 end
 
 return CityScene
+
+
+
+
+
+
+
+
+
+
 
 
 

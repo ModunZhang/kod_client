@@ -69,6 +69,11 @@ function UIKit:hex2c3b(hexNum)
     return cc.c3b(r,g,b)
 end
 
+function UIKit:hex2c4b(hexNum)
+    local r,g,b,a = self:hex2rgba(hexNum)
+    return cc.c4b(r,g,b,a)
+end
+
 
 function UIKit:debugNode(node,name)
     name = name or " "
