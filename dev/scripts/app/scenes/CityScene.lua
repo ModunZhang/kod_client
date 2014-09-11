@@ -1,29 +1,16 @@
 local CityLayer = import("..layers.CityLayer")
--- local BuildingLevelUpUINode = import("..ui.BuildingLevelUpUINode")
--- local BuildingUpgradeUINode = import("..ui.BuildingUpgradeUINode")
--- local SpriteButton = import("..ui.SpriteButton")
 local EventManager = import("..layers.EventManager")
 local TouchJudgment = import("..layers.TouchJudgment")
 local IsoMapAnchorBottomLeft = import("..map.IsoMapAnchorBottomLeft")
--- local GameUIBuildList = import("..ui.GameUIBuildList")
--- local HomePageUI = import("..ui.HomePageUI")
-local GameUIHome = import("..ui.GameUIHome")
--- require('app.service.ListenerService')
+local app = app
+local timer = app.timer
+local running_scene = nil
+
 
 local CityScene = class("CityScene", function()
     return display.newScene("CityScene")
 end)
 
-local app = app
-local timer = app.timer
-
-function TraverseCCArray(array, filter)
-    local children = array:getChildren()
-    for i = 0, children:count() - 1, 1 do
-        filter(children:objectAtIndex(i), i)
-    end
-end
-local running_scene = nil
 function goto_logic(x, y, time)
     time = 0
     local p = logic2world(x, y)
@@ -70,7 +57,7 @@ function CityScene:onEnter()
     running_scene = self
 
 
-    self._layer = display.newLayer():addTo(self, 1)
+    self._layer = display.newLayer():addTo(self)
     self._layer:setTouchEnabled(true)
     self._layer:setTouchSwallowEnabled(false)
     self._layer:setTouchMode(cc.TOUCH_MODE_ALL_AT_ONCE)
@@ -78,8 +65,9 @@ function CityScene:onEnter()
         self.event_manager:OnEvent(event)
     end)
 
-    GameUIHome.new(City):addTo(self, 2):setTouchSwallowEnabled(false)
 
+    UIKit:newGameUI('GameUIHome', City):addToScene(self):setTouchSwallowEnabled(false)
+    UIKit:newGameUI('GameUIBuild'):addToScene(self, true)
     
 
 
@@ -88,7 +76,7 @@ function CityScene:onEnter()
     self.city_layer:InitWithCity(City)
 
     self.upgrading_ui = {}
-    self._sprite_layer = display.newLayer():addTo(self)
+    self._sprite_layer = display.newLayer():addTo(self):setTouchSwallowEnabled(false)
 
     -- self.city_layer:IteratorCanUpgradingBuilding(function(_, building)
     --     local progress = BuildingUpgradeUINode.new()
@@ -175,26 +163,28 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
         elseif building:GetEntity():GetType() == "tower" then
         -- NetManager:upgradeTowerByLocation(building:GetEntity().tower_id, function()end)
         elseif building:GetEntity():GetType() == "ruins" then
-            select_ruins_list = City:GetNeighbourRuinWithSpecificRuin(building:GetEntity())
-            select_ruins = building:GetEntity()
-            self._build_page = UIKitHelper:createGameUI('GameUIBuildList', City, select_ruins, select_ruins_list)
-            self._build_page:addToScene(self, true)
+            -- select_ruins_list = City:GetNeighbourRuinWithSpecificRuin(building:GetEntity())
+            -- select_ruins = building:GetEntity()
+            -- self._build_page = UIKitHelper:createGameUI('GameUIBuildList', City, select_ruins, select_ruins_list)
+            -- self._build_page:addToScene(self, true)
+
+            UIKit:newGameUI('GameUIBuild'):addToScene(self, true)
         elseif building:GetEntity():GetType() == "keep" then
-            self._keep_page = UIKitHelper:createGameUI('GameUIKeep',building:GetEntity())
-            self._keep_page:addToScene(self, true)
+            -- self._keep_page = UIKitHelper:createGameUI('GameUIKeep',building:GetEntity())
+            -- self._keep_page:addToScene(self, true)
             -- elseif building:GetEntity():GetType() == "warehouse" then
             -- self._warehouse_page = UIKitHelper:createGameUI('GameUIWarehouse',building:GetEntity())
             -- self._warehouse_page:addToScene(self, true)
         elseif iskindof(building:GetEntity(), 'PopulationResourceUpgradeBuilding') then
-            UIKitHelper:createGameUI('GameUIDwelling', building:GetEntity(), City):addToCurrentScene()
+            -- UIKitHelper:createGameUI('GameUIDwelling', building:GetEntity(), City):addToCurrentScene()
         elseif iskindof(building:GetEntity(), 'ResourceUpgradeBuilding') then
-            UIKitHelper:createGameUI('GameUIResourceCutter',building:GetEntity(),City):addToCurrentScene()
+            -- UIKitHelper:createGameUI('GameUIResourceCutter',building:GetEntity(),City):addToCurrentScene()
         elseif building:GetEntity():IsUpgrading() then
-            if building:GetEntity():GetType() == "dwelling" then
-                UIKitHelper:createGameUI('GameUIDwelling', building:GetEntity(), City):addToCurrentScene()
-            else
-                NetManager:speedUpBuildingByLocation(City:GetLocationIdByBuilding(building:GetEntity()), function(...) end)
-            end
+            -- if building:GetEntity():GetType() == "dwelling" then
+            --     UIKitHelper:createGameUI('GameUIDwelling', building:GetEntity(), City):addToCurrentScene()
+            -- else
+            --     NetManager:speedUpBuildingByLocation(City:GetLocationIdByBuilding(building:GetEntity()), function(...) end)
+            -- end
         end
     end
 end

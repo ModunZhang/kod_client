@@ -249,22 +249,7 @@ function GameUIHome:onEnter()
     display.newSprite("home/toggle_city.png"):addTo(bottom_bg):pos(52, 54)
 
 
-
-
-    -- self.wood_label = self:getWidgetByName("Label_Wood")
-    -- self.food_label = self:getWidgetByName("Label_Food")
-    -- self.iron_label = self:getWidgetByName("Label_Iron")
-    -- self.stone_label = self:getWidgetByName("Label_Stone")
-    -- self.citizen_label = self:getWidgetByName("Label_Citizen")
-    -- self.gem_label = self:getWidgetByName("Label_Gem")
-    -- self.coin_label = self:getWidgetByName("Label_Coin")
-    -- self.name_label = self:getWidgetByName("Label_Name")
-    -- self.power_label = self:getWidgetByName("Label_Power_Value")
-    -- self.level_label = self:getWidgetByName("Label_Level")
-    -- self.vip_label = self:getWidgetByName("Label_Vip")
-    -- self.quest_label = self:getWidgetByName("Label_Quest")
-    -- UIKitHelper:setLabelText(self.quest_label, "充值100000000000000000000000000宝石", true)
-
+    -- 更新数值
     local userdata = DataManager:getUserData()
     self.name_label:setString(userdata.basicInfo.name)
     self.power_label:setString(userdata.basicInfo.power)
