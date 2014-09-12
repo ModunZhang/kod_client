@@ -14,7 +14,9 @@ function TabButtons:ctor(buttons, tab_param, listener)
     self.tabListener = listener
 
     
-    local tab_bg = cc.ui.UIImage.new("tabs/tab_bg.png", {scale9 = true}):addTo(self):align(display.CENTER, 0, 0)
+    local tab_bg = cc.ui.UIImage.new("tabs/tab_bg.png", {scale9 = true})
+    :addTo(self)
+    :align(display.CENTER, 0, 0)
     tab_bg:setCapInsets(cc.rect(origin_x, origin_y, tab_bg:getContentSize().width - origin_x * 2, tab_bg:getContentSize().height - origin_y * 2))
     tab_bg:setContentSize(cc.size(tab_bg:getContentSize().width, tab_bg:getContentSize().height))
 
@@ -66,18 +68,17 @@ function TabButtons:ctor(buttons, tab_param, listener)
     end
 end
 function TabButtons:PushButton(button)
-    if self.push_button then
-        if self.push_button == button then
-            return 
-        end
-        self.push_button.label:setColor(display.COLOR_BLACK)
-        self.push_button:setOpacity(255)
+    if self.push_button == button then
+        return 
     end
+    if self.push_button then
+        self.push_button:setVisible(true)
+        self.push_button.label:setColor(display.COLOR_BLACK)
+    end
+    button:setVisible(false)
     button.label:setColor(display.COLOR_WHITE)
-    button:setOpacity(0)
     self.push_button = button
     if type(self.tabListener) == "function" then
-        print("check")
         self.tabListener(self.push_button.tag)
     end
 end
