@@ -163,32 +163,13 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
     local tx, ty = self.iso_map:ConvertToLogicPosition(point.x, point.y)
     local building = self.city_layer:GetClickedObject(tx, ty, x, y)
     if building then
-        if building:GetEntity():GetType() == "wall" then
-        -- if building:GetEntity():IsGate() then
-        --     NetManager:upgradeWallByLocation(function()end)
-        -- end
-        elseif building:GetEntity():GetType() == "tower" then
-        -- NetManager:upgradeTowerByLocation(building:GetEntity().tower_id, function()end)
-        elseif building:GetEntity():GetType() == "ruins" then
+        if building:GetEntity():GetType() == "ruins" then
             local select_ruins_list = City:GetNeighbourRuinWithSpecificRuin(building:GetEntity())
             local select_ruins = building:GetEntity()
             UIKit:newGameUI('GameUIBuild', City, select_ruins, select_ruins_list):addToScene(self, true)
         elseif building:GetEntity():GetType() == "keep" then
-        -- self._keep_page = UIKitHelper:createGameUI('GameUIKeep',building:GetEntity())
-        -- self._keep_page:addToScene(self, true)
-        -- elseif building:GetEntity():GetType() == "warehouse" then
-        -- self._warehouse_page = UIKitHelper:createGameUI('GameUIWarehouse',building:GetEntity())
-        -- self._warehouse_page:addToScene(self, true)
-        elseif iskindof(building:GetEntity(), 'PopulationResourceUpgradeBuilding') then
-        -- UIKitHelper:createGameUI('GameUIDwelling', building:GetEntity(), City):addToCurrentScene()
-        elseif iskindof(building:GetEntity(), 'ResourceUpgradeBuilding') then
-        -- UIKitHelper:createGameUI('GameUIResourceCutter',building:GetEntity(),City):addToCurrentScene()
-        elseif building:GetEntity():IsUpgrading() then
-        -- if building:GetEntity():GetType() == "dwelling" then
-        --     UIKitHelper:createGameUI('GameUIDwelling', building:GetEntity(), City):addToCurrentScene()
-        -- else
-        --     NetManager:speedUpBuildingByLocation(City:GetLocationIdByBuilding(building:GetEntity()), function(...) end)
-        -- end
+            self._keep_page = UIKit:newGameUI('GameUIKeep')
+            self._keep_page:addToScene(self, true)
         end
     end
 end
@@ -317,49 +298,5 @@ function CityScene:OnGateChanged(old_walls, new_walls)
 end
 
 return CityScene
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
