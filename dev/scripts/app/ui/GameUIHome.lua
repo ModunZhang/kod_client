@@ -212,7 +212,8 @@ function GameUIHome:onEnter()
         {normal = "home/chat_btn.png", pressed = "home/chat_btn.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        dump(event)
+        -- dump(event)
+        UIKit:newGameUI('GameUIChat'):addToCurrentScene(true)
     end):addTo(chat_bg):pos(31, 20)
 
 

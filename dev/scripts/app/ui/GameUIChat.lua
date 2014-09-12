@@ -22,7 +22,15 @@ function GameUIChat:onMovieInStage()
 end
 
 function GameUIChat:listviewListener(event)
+	if not event.listView:isItemInViewRect(event.itemPos) then
+        return
+    end
 
+    print("GameUIChat:listviewListener event:" .. event.name .. " pos:" .. event.itemPos)
+    local listView = event.listView
+    if "clicked" == event.name then
+        print(event.itemPos)
+    end
 end
 
 function GameUIChat:getChatIcon( chat )
@@ -55,7 +63,7 @@ function GameUIChat:getChatItem(chat)
 	if not isSelf then
 		local bottom = display.newScale9Sprite("chat_bubble_bottom.png"):addTo(content):align(display.RIGHT_BOTTOM, 549, 0)
 		local middle = display.newScale9Sprite("chat_bubble_middle.png"):addTo(content):align(display.RIGHT_BOTTOM, 549, bottom:getContentSize().height)
-		local label = ui.newTTFLabel({
+		local contentLable = ui.newTTFLabel({
 	            text = "hello1213123123123hello1213123123123hello1213123123123hello1213123123123hello1213123123123hello1213123123123",
 	            size = 20,
 	            color = UIKit:hex2c3b(0x403c2f),
@@ -64,8 +72,8 @@ function GameUIChat:getChatItem(chat)
 	            dimensions = cc.size(430, 0),
 	            font = UIKit:getFontFilePath(),
 	    })
-		middle:setContentSize(cc.size(middle:getContentSize().width,label:getContentSize().height))
-		label:align(display.LEFT_BOTTOM, 25, 0):addTo(middle,2)
+		middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getContentSize().height))
+		contentLable:align(display.LEFT_BOTTOM, 25, 0):addTo(middle,2)
 		local header = display.newScale9Sprite("chat_bubble_header.png"):addTo(content):align(display.RIGHT_BOTTOM, 549, bottom:getContentSize().height+middle:getContentSize().height)
 		local imageName = isVip and "chat_green.png" or "chat_gray.png"
 		local titleBg = display.newScale9Sprite(imageName):align(display.BOTTOM_LEFT, 12,18):addTo(header,3)
@@ -96,18 +104,59 @@ function GameUIChat:getChatItem(chat)
     	end):addTo(header,3)
     	translateButton:align(display.RIGHT_BOTTOM,timeLabel:getPositionX()+timeLabel:getContentSize().width+60,titleLabel:getPositionY()+titleLabel:getContentSize().height/2)
     	self:getChatIcon():addTo(content):align(display.LEFT_TOP, 1, bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
-		local item = self.lv:newItem()
+		local item = self.listView:newItem()
 		item:addContent(content)
 		item:setItemSize(549,bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height)
 		return item
 	else
+		--mine
+		local bottom = display.newScale9Sprite("chat_bubble_bottom.png"):addTo(content):align(display.LEFT_BOTTOM, -10, 0)
+		local middle = display.newScale9Sprite("chat_bubble_middle.png"):addTo(content):align(display.LEFT_BOTTOM, -10, bottom:getContentSize().height)
+		local contentLable = ui.newTTFLabel({
+	            text = "hello1213123123123hello1213123123123hello1213123123123hello1213123123123hello1213123123123hello1213123123123",
+	            size = 20,
+	            color = UIKit:hex2c3b(0x403c2f),
+	            align = ui.TEXT_ALIGN_LEFT,
+	            valign = ui.TEXT_VALIGN_TOP,
+	            dimensions = cc.size(430, 0),
+	            font = UIKit:getFontFilePath(),
+	    })
+		middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getContentSize().height))
+		contentLable:align(display.LEFT_BOTTOM, 25, 0):addTo(middle,2)
+		local header = display.newSprite("chat_bubble_header.png"):addTo(content)
+		header:setFlippedX(true)
+		header:align(display.LEFT_BOTTOM, -1, bottom:getContentSize().height+middle:getContentSize().height)
+		local titleBg = display.newScale9Sprite("chat_blue.png"):align(display.BOTTOM_RIGHT, header:getContentSize().width-12,18):addTo(header,3)
+			local titleLabel = ui.newTTFLabel({
+	            text = "Dannyhe",
+	            size = 22,
+	            color = UIKit:hex2c3b(0xffedae),
+	            align = ui.TEXT_ALIGN_LEFT,
+	            valign = ui.TEXT_VALIGN_CENTER,
+	            dimensions = cc.size(0, titleBg:getContentSize().height),
+	            font = UIKit:getFontFilePath(),
+	    }):align(display.LEFT_BOTTOM, 30, -5):addTo(titleBg,2)
+		--  timeLable
+		local timeLabel =  ui.newTTFLabel({
+	            text = "1 sec ago",
+	            size = 16,
+	            color = UIKit:hex2c3b(0x403c2f),
+	            align = ui.TEXT_ALIGN_LEFT,
+	            valign = ui.TEXT_VALIGN_CENTER,
+	            font = UIKit:getFontFilePath(),
+	    }):align(display.LEFT_BOTTOM,20, titleBg:getPositionY()-2):addTo(header,3)
 
+		self:getChatIcon():addTo(content):align(display.RIGHT_TOP, 549, bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
+		local item = self.listView:newItem()
+		item:addContent(content)
+		item:setItemSize(549,bottom:getContentSize().height+header:getContentSize().height+middle:getContentSize().height)
+		return item
 	end
 		return nil
 end
 
 function GameUIChat:createListView()
-	self.lv = cc.ui.UIListView.new {
+	self.listView = cc.ui.UIListView.new {
         bg = "chat_list_bg.png",
         bgScale9 = true,
         viewRect = cc.rect(display.left+45, display.bottom+150, 549, display.height - self.header:getCascadeBoundingBox().size.height - self.editbox:getContentSize().height - 150 - 20),
@@ -116,11 +165,12 @@ function GameUIChat:createListView()
     	}
         :onTouch(handler(self, self.listviewListener))
         :addTo(self)
+        for i=1,10 do
+	        local item = self:getChatItem()
+	        self.listView:addItem(item,1)
+        end
 
-        local item = self:getChatItem()
-        self.lv:addItem(item,1)
-
-    self.lv:reload()
+    self.listView:reload()
 end
 
 function GameUIChat:createHeader()
@@ -150,7 +200,6 @@ function GameUIChat:createHeader()
         align = ui.TEXT_ALIGN_CENTER, 
         dimensions = cc.size(500, 33),
         color = UIKit:hex2c3b(0xffedae),
-        -- shadowColor = cc.c3b(255,0,0)
     }):addTo(header)
     titleLabel:pos(display.cx,bg:getContentSize().height/2 + 12)
     header:addTo(self):pos(0,display.top-bg:getContentSize().height)
