@@ -170,8 +170,10 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
 
             UIKit:newGameUI('GameUIBuild'):addToScene(self, true)
         elseif building:GetEntity():GetType() == "keep" then
-            -- self._keep_page = UIKitHelper:createGameUI('GameUIKeep',building:GetEntity())
-            -- self._keep_page:addToScene(self, true)
+            -- self._keep_page = UIKit:createGameUI('GameUIKeep',building:GetEntity())
+            self._keep_page = UIKit:newGameUI('GameUIKeep')
+
+            self._keep_page:addToScene(self, true)
             -- elseif building:GetEntity():GetType() == "warehouse" then
             -- self._warehouse_page = UIKitHelper:createGameUI('GameUIWarehouse',building:GetEntity())
             -- self._warehouse_page:addToScene(self, true)
@@ -314,14 +316,6 @@ function CityScene:OnGateChanged(old_walls, new_walls)
 end
 
 return CityScene
-
-
-
-
-
-
-
-
 
 
 
