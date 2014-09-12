@@ -14,7 +14,7 @@ end
 function GameGlobalUIUtils:showTips(title,content)
 	local instance = cc.Director:getInstance():getRunningScene():getChildByTag(1020)
 	if not instance then
-		self.commonTips = UIKit:newGameUI('GameUICommonTips')
+		self.commonTips = UIKit:newGameUI('GameUICommonTips',self,false)
 		assert(self.commonTips)
 		cc.Director:getInstance():getRunningScene():addChild(self.commonTips, 1000000, 1020)
 		self.commonTips:setVisible(false)

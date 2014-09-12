@@ -105,7 +105,8 @@ function GameUICommonTips:onMovieOutStage()
 	if self.delegate and self.delegate.onTipsMoveOut then
 		self.delegate.onTipsMoveOut(self.delegate,self)
 	end
-	GameUICommonTips.super.onMovieOutStage(self)
+	-- 不释放自己
+	-- GameUICommonTips.super.onMovieOutStage(self)
 end
 
 function GameUICommonTips:onExit()

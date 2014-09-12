@@ -18,7 +18,7 @@ function LogoScene:onEnter()
 				app:enterScene("UpdaterScene", nil, "fade", 0.6, display.COLOR_WHITE)
 			end
 		end, 0.8)
-	end
+end
 
 function LogoScene:onExit()
 	self.sprite = nil
