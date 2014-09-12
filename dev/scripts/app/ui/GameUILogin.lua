@@ -6,8 +6,9 @@ local GameUILogin = UIKit:createUIClass('GameUILogin')
 
 function GameUILogin:ctor()
     GameUILogin.super.ctor(self)
-    local bgImage = display.newSprite("images/spalshbg.png", display.cx, display.cy,cc.size(display.width,display.height))
-    bgImage:addTo(self)
+    -- local bgImage = display.newSprite("images/spalshbg.png", display.cx, display.cy,cc.size(display.width,display.height))
+    display.newSprite("spalshbg.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(self)
+    display.newSprite("gameName.png"):pos(display.cx,display.top-150):addTo(self)
 end
 
 function GameUILogin:onEnter()
@@ -38,7 +39,7 @@ function GameUILogin:createProgressBar()
         size = 12,
         align = ui.TEXT_ALIGN_CENTER, 
         dimensions = cc.size(575, 33)
-    }):addTo(bar):pos(bar:getContentSize().width/2,bar:getContentSize().height/2)
+    }):addTo(bar):pos(bar:getContentSize().width/2,bar:getContentSize().height/2-4)
     self.progressTips = label
     self.progressTimer = ProgressTimer
 end

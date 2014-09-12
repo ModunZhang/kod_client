@@ -5,6 +5,7 @@ local IsoMapAnchorBottomLeft = import("..map.IsoMapAnchorBottomLeft")
 local app = app
 local timer = app.timer
 local running_scene = nil
+import('app.service.ListenerService')
 
 
 local CityScene = class("CityScene", function()
@@ -52,7 +53,7 @@ end
 function CityScene:onEnter()
     -- CCArmatureDataManager:sharedArmatureDataManager():removeArmatureFileInfo("sprites/armatures/hammer/chuizidonghua.ExportJson")
     -- CCArmatureDataManager:sharedArmatureDataManager():addArmatureFileInfo("sprites/armatures/hammer/chuizidonghua.ExportJson")
-    -- ListenerService:start()
+    ListenerService:start()
 
     running_scene = self
 
