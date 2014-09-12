@@ -24,7 +24,7 @@ function CityLayer:GetClickedObject(x, y, world_x, world_y)
         end
     end)
     table.sort(clicked_list, function(a, b)
-        return a:getZOrder() > b:getZOrder()
+        return a:getLocalZOrder() > b:getLocalZOrder()
     end)
     return clicked_list[1]
 end
@@ -45,7 +45,6 @@ function CityLayer:OnTileChanged(city)
             -- ruin:Normal()
         end
     end)
-
     self:UpdateAllWithCity(city)
 end
 function CityLayer:OnRoundUnlocked(round)
