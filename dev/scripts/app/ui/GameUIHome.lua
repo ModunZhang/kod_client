@@ -263,6 +263,7 @@ function GameUIHome:onEnter()
 end
 function GameUIHome:onExit()
     self.city:GetResourceManager():RemoveObserver(self)
+    GameUIHome.super.onExit(self)
 end
 
 

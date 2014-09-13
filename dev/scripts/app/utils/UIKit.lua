@@ -6,11 +6,12 @@
 import(".bit")
 UIKit = 
 {
-	GameUIBase = import('..ui.GameUIBase'),
+    GameUIBase = import('..ui.GameUIBase'),
+	GameUIWithCommonHeader = import('..ui.GameUIWithCommonHeader'),
 }
 
-function UIKit:createUIClass(className)
-	return class(className, self.GameUIBase)
+function UIKit:createUIClass(className, baseName)
+	return class(className, baseName == nil and self["GameUIBase"] or self[baseName])
 end
 
 function UIKit:newGameUI(gameUIName,... )

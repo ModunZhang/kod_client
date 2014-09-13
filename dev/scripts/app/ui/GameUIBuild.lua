@@ -2,7 +2,8 @@ local FoodResourceUpgradeBuilding = import("..entity.FoodResourceUpgradeBuilding
 local WoodResourceUpgradeBuilding = import("..entity.WoodResourceUpgradeBuilding")
 local IronResourceUpgradeBuilding = import("..entity.IronResourceUpgradeBuilding")
 local StoneResourceUpgradeBuilding = import("..entity.StoneResourceUpgradeBuilding")
-local GameUIBuild = UIKit:createUIClass('GameUIBuild')
+
+local GameUIBuild = UIKit:createUIClass('GameUIBuild', "GameUIWithCommonHeader")
 
 local base_items = {
     { label = _("住宅"), building_type = "dwelling" },
@@ -12,7 +13,7 @@ local base_items = {
     { label = _("矿工小屋"), building_type = "miner" },
 }
 function GameUIBuild:ctor(city, select_ruins, select_ruins_list)
-    GameUIBuild.super.ctor(self)
+    GameUIBuild.super.ctor(self, city, _("建筑列表"))
     self.city = city
     self.select_ruins = select_ruins
     self.select_ruins_list = select_ruins_list
@@ -21,12 +22,8 @@ end
 
 function GameUIBuild:onEnter()
     GameUIBuild.super.onEnter(self)
-    self:CreateBackGround()
-    self:CreateTitle(_("建筑列表"))
-    self:CreateHomeButton()
-    self:CreateShopButton()
-    self.base_list_view = self:CreateVerticalListView(20, 0, display.right - 20, display.top - 100)
     self.base_resource_building_items = {}
+    self.base_list_view = self:CreateVerticalListView(20, 0, display.right - 20, display.top - 100)
     for i, v in ipairs(base_items) do
         local item = self:CreateItemWithListView(self.base_list_view)
         item.building = v
@@ -36,6 +33,8 @@ function GameUIBuild:onEnter()
     end
     self.base_list_view:reload():resetPosition()
     self:OnCityChanged()
+    
+
     -- self:CreateTabButtons({
     --     {
     --         label = "Upgrade",
