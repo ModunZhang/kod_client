@@ -117,6 +117,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
         :addTo(content)
         :pos(w/2, h/2 + 51)
     local title_label = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "2000000",
         size = 24,
         font = UIKit:getFontFilePath(),
@@ -157,6 +158,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
     local gem_bg = display.newSprite("build_item/gem_bg.png"):addTo(content):pos(523, 83)
     display.newSprite("home/gem.png"):addTo(gem_bg):pos(10, 10):scale(0.5)
     cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "100",
         size = 20,
         font = UIKit:getFontFilePath(),
@@ -168,6 +170,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
     local build_btn = cc.ui.UIPushButton.new(
         {normal = "build_item/build_btn_up.png",pressed = "build_item/build_btn_down.png"})
         :setButtonLabel(cc.ui.UILabel.new({
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("建造"),
             size = 24,
             font = UIKit:getFontFilePath(),

@@ -36,13 +36,13 @@ function GameUIKeep:CreateTitle()
     cc.ui.UIImage.new("Title.png")
         :align(display.TOP_CENTER,display.cx,display.top)
         :addTo(self)
-    self.title_label = ui.newTTFLabelWithShadow({text = _("城堡"),
+    self.title_label = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = _("城堡"),
         font = UIKit:getFontFilePath(),
         size = 30,
         color = UIKit:hex2c3b(0xffedae),
-        shadowColor = UIKit:hex2c3b(0xffedae)
-    }):addTo(self)
-    self.title_label:pos(display.cx-self.title_label:getCascadeBoundingBox().size.width/2, display.top-35)
+    }):align(display.CENTER, display.cx, display.top-35):addTo(self)
 end
 
 function GameUIKeep:CreateShopButton()
@@ -58,7 +58,8 @@ function GameUIKeep:CreateShopButton()
 
     local gem_num_bg = cc.ui.UIImage.new("gem_num_bg.png"):addTo(self.gem_button):pos(-85, -85)
     local pos = gem_num_bg:getAnchorPointInPoints()
-    ui.newTTFLabel({
+    cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = ""..City.resource_manager:GetGemResource():GetValue(),
         font = UIKit:getFontFilePath(),
         size = 14,
@@ -110,8 +111,9 @@ function GameUIKeep:CreateCityBasicInfo()
         :addTo(self.info_layer)
     local bg_width, bg_height = change_city_name_prop_bg:getCascadeBoundingBox().size.width,
         change_city_name_prop_bg:getCascadeBoundingBox().size.height
-    ui.newTTFLabel(
+    cc.ui.UILabel.new(
         {
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("未定义"),
             font = UIKit:getFontFilePath(),
             size = 18,
@@ -119,16 +121,18 @@ function GameUIKeep:CreateCityBasicInfo()
         }):align(display.CENTER, bg_width/2, bg_height/2)
         :addTo(change_city_name_prop_bg)
     -- 城市名字
-    ui.newTTFLabel(
+    cc.ui.UILabel.new(
         {
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("城市名字"),
             font = UIKit:getFontFilePath(),
             size = 16,
             color = UIKit:hex2c3b(0x665f49)
         }):align(display.CENTER, display.left+200, display.top-130)
         :addTo(self.info_layer)
-    self.city_name_label  = ui.newTTFLabel(
+    self.city_name_label  = cc.ui.UILabel.new(
         {
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("未定义"),
             font = UIKit:getFontFilePath(),
             size = 22,
@@ -136,7 +140,7 @@ function GameUIKeep:CreateCityBasicInfo()
         }):align(display.LEFT_CENTER, display.left+167, display.top-160)
         :addTo(self.info_layer)
     self.change_city_name_button = cc.ui.UIPushButton.new({normal = "green_button_normal.png",pressed = "green_button_pressed.png"})
-        :setButtonLabel(cc.ui.UILabel.new({text = _("修改"), size = 20, color = display.COLOR_WHITE}))
+        :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("修改"), size = 20, color = display.COLOR_WHITE}))
         :onButtonClicked(function(event)
             print("使用道具改变城市名字未实现")
         end)
@@ -146,8 +150,9 @@ function GameUIKeep:CreateCityBasicInfo()
     local terrain_line = display.newScale9Sprite("dividing_line.png", display.right-260, display.top-216, cc.size(display.width-213,2))
         :addTo(self.info_layer)
     -- 地形标签
-    ui.newTTFLabel(
+    cc.ui.UILabel.new(
         {
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("地形"),
             font = UIKit:getFontFilePath(),
             size = 20,
@@ -155,8 +160,9 @@ function GameUIKeep:CreateCityBasicInfo()
         }):align(display.LEFT_CENTER, 0, 12)
         :addTo(terrain_line)
     -- 玩家城市所处地形属性值
-    self.terrain = ui.newTTFLabel(
+    self.terrain = cc.ui.UILabel.new(
         {
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("未匹配服务器值"),
             font = UIKit:getFontFilePath(),
             size = 20,
@@ -168,8 +174,9 @@ function GameUIKeep:CreateCityBasicInfo()
         :addTo(self.info_layer)
     
     -- 坐标标签
-    ui.newTTFLabel(
+    cc.ui.UILabel.new(
         {
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("坐标"),
             font = UIKit:getFontFilePath(),
             size = 20,
@@ -177,8 +184,9 @@ function GameUIKeep:CreateCityBasicInfo()
         }):align(display.LEFT_CENTER, 0, 12)
         :addTo(location_line)
     -- 玩家城市坐标值
-    ui.newTTFLabel(
+    cc.ui.UILabel.new(
         {
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("未匹配服务器值"),
             font = UIKit:getFontFilePath(),
             size = 20,
@@ -197,7 +205,8 @@ function GameUIKeep:CreateCanBeUnlockedBuildingBG()
         :align(display.LEFT_TOP, 1, self.main_building_listview_bg:getCascadeBoundingBox().size.height)
         :addTo(self.main_building_listview_bg,10)
     -- title label
-    ui.newTTFLabel({
+    cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = _("可解锁建筑"),
         font = UIKit:getFontFilePath(),
         size = 24,
@@ -205,7 +214,8 @@ function GameUIKeep:CreateCanBeUnlockedBuildingBG()
         :align(display.CENTER, title_bg:getCascadeBoundingBox().size.width/2,title_bg:getCascadeBoundingBox().size.height/2)
         :addTo(title_bg)
     -- tips
-    ui.newTTFLabel({
+    cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = _("提示:升级瞭望塔等级,可以获得更详细的敌军部队信息"),
         font = UIKit:getFontFilePath(),
         size = 18,
@@ -252,7 +262,8 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
         if v:GetLevel()>=1 then
             flag = true
             -- 已解锁
-            local unlocked_label = ui.newTTFLabel({
+            local unlocked_label = cc.ui.UILabel.new({
+                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
                 text = _("已解锁"),
                 font = UIKit:getFontFilePath(),
                 size = 24,
@@ -260,7 +271,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
         elseif City:IsTileCanbeUnlockAt(City:GetTileWhichBuildingBelongs(v).x,City:GetTileWhichBuildingBelongs(v).y) then
             flag = true
             cc.ui.UIPushButton.new({normal = "keep_unlocked_button_normal.png",pressed = "keep_unlocked_button_pressed.png"})
-                :setButtonLabel(cc.ui.UILabel.new({text = _("可解锁"), size = 24, color = display.COLOR_WHITE}))
+                :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("可解锁"), size = 24, color = display.COLOR_WHITE}))
                 :onButtonClicked(function(event)
                     self:leftButtonClicked()
                     goto_logic(v:GetLogicPosition())
@@ -269,13 +280,16 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
         if flag then
             content:addWidget(display.newSprite("keep_building_element_bg.png",  0, 0))
             -- building name
-            content:addWidget(ui.newTTFLabel({
+            content:addWidget(cc.ui.UILabel.new({
+                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
                 text = _(v:GetType()),
                 font = UIKit:getFontFilePath(),
                 size = 24,
+                dimensions = cc.size(384, 35),
                 color = UIKit:hex2c3b(0x403c2f)}):align(display.CENTER_LEFT, -120, 40))
             -- building introduce
-            local building_tip = ui.newTTFLabel({
+            local building_tip = cc.ui.UILabel.new({
+                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
                 text = building_introduces[v:GetType()],
                 font = UIKit:getFontFilePath(),
                 size = 20,
@@ -299,33 +313,3 @@ function GameUIKeep:Close()
 end
 
 return GameUIKeep
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
