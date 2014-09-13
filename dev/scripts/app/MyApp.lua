@@ -56,6 +56,7 @@ function MyApp:initI18N()
         return text
     end
     if cc.FileUtils:getInstance():isFileExist(currentLanFilePath) then
+        print("currentLanFilePath---->",currentLanFilePath)
         _ = require("app.utils.Gettext").gettextFromFile(currentLanFilePath)
     end
 end

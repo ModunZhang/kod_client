@@ -65,7 +65,7 @@ function UIKit:hex2rgba(hexNum)
 end
 
 function UIKit:hex2c3b(hexNum)
-    local r,g,b,_ = self:hex2rgba(hexNum)
+    local r,g,b = self:hex2rgba(hexNum)
     return cc.c3b(r,g,b)
 end
 

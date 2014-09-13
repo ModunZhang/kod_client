@@ -172,7 +172,7 @@ function ChatCenter:removeItemFromBlockList(fromId)
 end
 
 function ChatCenter:initBlockList()
-	local jsonString = CCUserDefault:sharedUserDefault():getStringForKey('ChatCenter')
+	local jsonString = cc.UserDefault:getInstance():getStringForKey('ChatCenter')
 	if jsonString and string.len(jsonString) > 0 then
 		local t = json.decode(jsonString)
 		if type(t) == 'table' then
@@ -184,8 +184,8 @@ end
 
 function ChatCenter:flush()  
 	local jsonString = json.encode(self._blockedIdList_)
-	CCUserDefault:sharedUserDefault():setStringForKey('ChatCenter', jsonString)
-	CCUserDefault:sharedUserDefault():flush()
+	cc.UserDefault:getInstance():setStringForKey('ChatCenter', jsonString)
+	cc.UserDefault:getInstance():flush()
 end
 
 return ChatCenter

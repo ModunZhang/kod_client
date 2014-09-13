@@ -7,6 +7,7 @@ local IsoMapAnchorBottomLeft = import("..map.IsoMapAnchorBottomLeft")
 local app = app
 local timer = app.timer
 local running_scene = nil
+import('app.service.ListenerService')
 
 
 local CityScene = class("CityScene", function()
@@ -43,6 +44,7 @@ function CityScene:ctor()
     self.touch_judgment = TouchJudgment.new(self)
 end
 function CityScene:onEnter()
+    ListenerService:start()
     running_scene = self
 
     self.city_layer = self:CreateSceneLayer()
