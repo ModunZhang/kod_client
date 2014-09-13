@@ -176,6 +176,8 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
         elseif building:GetEntity():GetType() == "warehouse" then
             self._warehouse_page = UIKit:newGameUI('GameUIWarehouse',City,building:GetEntity())
             self._warehouse_page:addToScene(self, true)
+         elseif iskindof(building:GetEntity(), 'ResourceUpgradeBuilding') then
+            UIKit:newGameUI('GameUIResource',building:GetEntity()):addToCurrentScene(true)
         end
     end
 end

@@ -7,9 +7,8 @@ local GameUIBase = class('GameUIBase', function()
     return display.newLayer()
 end)
 
-function GameUIBase:ctor(param)
+function GameUIBase:ctor()
     self:setNodeEventEnabled(true)
-    if param then return self:_initCommonUI(param) end
     return true
 end
 
@@ -108,17 +107,30 @@ end
 
 -- Private Methods
 --------------------------------------
-function GameUIBase:_initCommonUI(param)
-
-end
-
 
 --
 
 function GameUIBase:CreateBackGround()
-    return display.newSprite("back_ground.png")
-        :align(display.LEFT_TOP, display.left, display.top - 40)
-        :addTo(self)
+    local node = display.newNode()
+    local bg = display.newScale9Sprite("common_bg_center.png")
+        :align(display.LEFT_TOP, 0,display.height)
+        :addTo(node)
+    bg:setContentSize(cc.size(display.width,display.height))
+    local left = display.newScale9Sprite("common_bg_left.png")
+        :align(display.LEFT_TOP, display.left + 20, display.top)
+        :addTo(node)
+    left:setContentSize(cc.size(left:getContentSize().width,display.height))
+    local right = display.newScale9Sprite("common_bg_left.png")
+        :align(display.RIGHT_TOP, display.right - 20, display.top)
+        :addTo(node)
+    right:setContentSize(cc.size(right:getContentSize().width,display.height))
+    display.newSprite("common_bg_top.png")
+        :align(display.LEFT_TOP, 30, display.top - 72)
+        :addTo(node)
+    display.newSprite("common_bg_top.png")
+        :align(display.LEFT_BOTTOM, 30, display.bottom)
+        :addTo(node)
+    return node:addTo(self)
 end
 function GameUIBase:CreateTitle(title)
     local head_bg = cc.ui.UIImage.new("head_bg.png")
