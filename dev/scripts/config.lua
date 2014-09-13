@@ -13,6 +13,8 @@ CONFIG_SCREEN_AUTOSCALE = "FIXED_WIDTH"
 -- big version config
 CONFIG_APP_VERSION = "0.0.1"
 
+LOAD_DEPRECATED_API = true
+
 -- server config
 CONFIG_LOCAL_SERVER = {
     update = {

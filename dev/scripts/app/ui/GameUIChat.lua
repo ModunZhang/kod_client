@@ -89,12 +89,13 @@ function GameUIChat:getChatIcon( chat )
 	hero:addTo(heroBg)
 	if isVip then
 		local vipBg = display.newSprite("chat_vip_background.png"):addTo(hero):align(display.CENTER, math.floor(heroBg:getContentSize().width/2)-4, 12)
-		local vipLabel = ui.newTTFLabel({
+		local vipLabel = cc.ui.UILabel.new({
+				UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
 	            text = 'VIP ' .. chat.fromVip,
 	            size = 15,
 	            color = UIKit:hex2c3b(0xff9200),
-	            align = ui.TEXT_ALIGN_CENTER,
-	            valign = ui.TEXT_VALIGN_CENTER,
+	            align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
+	            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
 	            dimensions = cc.size(vipBg:getContentSize().width, 0),
 	            font = UIKit:getFontFilePath(),
 	    }):addTo(vipBg):align(display.CENTER, math.floor(vipBg:getContentSize().width/2), math.floor(vipBg:getContentSize().height/2))
@@ -117,12 +118,13 @@ function GameUIChat:getChatItem(chat)
         if chat._translate_ and chat._translateMode_ then
             labelText = chat._translate_
         end
-		local contentLable = ui.newTTFLabel({
+		local contentLable = cc.ui.UILabel.new({
+				UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
 	            text = labelText,
 	            size = 20,
 	            color = UIKit:hex2c3b(0x403c2f),
-	            align = ui.TEXT_ALIGN_LEFT,
-	            valign = ui.TEXT_VALIGN_TOP,
+	            align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
+	            valign = cc.ui.UILabel.TEXT_VALIGN_TOP,
 	            dimensions = cc.size(430, 0),
 	            font = UIKit:getFontFilePath(),
 	    })
@@ -132,14 +134,15 @@ function GameUIChat:getChatItem(chat)
 		local imageName = isVip and "chat_green.png" or "chat_gray.png"
 		local titleBg = display.newScale9Sprite(imageName):align(display.BOTTOM_LEFT, 12,18):addTo(header,3)
 		titleBg:setContentSize(cc.size(300,titleBg:getContentSize().height))
-		local titleLabel = ui.newTTFLabel({
-	            text = chat.fromName or  "name",
-	            size = 22,
-	            color = UIKit:hex2c3b(0xffedae),
-	            align = ui.TEXT_ALIGN_LEFT,
-	            valign = ui.TEXT_VALIGN_CENTER,
-	            dimensions = cc.size(0, titleBg:getContentSize().height),
-	            font = UIKit:getFontFilePath(),
+		local titleLabel = cc.ui.UILabel.new({
+			UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = chat.fromName or  "name",
+            size = 22,
+            color = UIKit:hex2c3b(0xffedae),
+            align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
+            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
+            dimensions = cc.size(0, titleBg:getContentSize().height),
+            font = UIKit:getFontFilePath(),
 	    }):align(display.LEFT_BOTTOM, 10, -5):addTo(titleBg,2)
 		local playerIcon = self:getChatIcon(chat)
 		local timeStr = NetService:formatTimeAsTimeAgoStyleByServerTime(chat.time)
@@ -148,12 +151,13 @@ function GameUIChat:getChatItem(chat)
         else
            	chat.timeStr = timeStr
         end
-	    local timeLabel =  ui.newTTFLabel({
+	    local timeLabel =  cc.ui.UILabel.new({
+	    		UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
 	            text = timeStr,
 	            size = 16,
 	            color = UIKit:hex2c3b(0x403c2f),
-	            align = ui.TEXT_ALIGN_LEFT,
-	            valign = ui.TEXT_VALIGN_CENTER,
+	            align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
+	            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
 	            font = UIKit:getFontFilePath(),
 	    }):align(display.LEFT_BOTTOM,titleBg:getPositionX()+titleBg:getContentSize().width+20, titleBg:getPositionY()-2):addTo(header,3)
 	  --   --adjustFunc
@@ -184,12 +188,13 @@ function GameUIChat:getChatItem(chat)
 		--mine
 		local bottom = display.newScale9Sprite("chat_bubble_bottom.png"):addTo(content):align(display.LEFT_BOTTOM, -10, 0)
 		local middle = display.newScale9Sprite("chat_bubble_middle.png"):addTo(content):align(display.LEFT_BOTTOM, -10, bottom:getContentSize().height)
-		local contentLable = ui.newTTFLabel({
+		local contentLable = cc.ui.UILabel.new({
+				UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
 	            text = chat.text,
 	            size = 20,
 	            color = UIKit:hex2c3b(0x403c2f),
-	            align = ui.TEXT_ALIGN_LEFT,
-	            valign = ui.TEXT_VALIGN_TOP,
+	            align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
+	            valign = cc.ui.UILabel.TEXT_VALIGN_TOP,
 	            dimensions = cc.size(430, 0),
 	            font = UIKit:getFontFilePath(),
 	    })
@@ -199,22 +204,24 @@ function GameUIChat:getChatItem(chat)
 		header:setFlippedX(true)
 		header:align(display.LEFT_BOTTOM, -1, bottom:getContentSize().height+middle:getContentSize().height)
 		local titleBg = display.newScale9Sprite("chat_blue.png"):align(display.BOTTOM_RIGHT, header:getContentSize().width-12,18):addTo(header,3)
-			local titleLabel = ui.newTTFLabel({
+			local titleLabel = cc.ui.UILabel.new({
+				UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
 	            text = chat.fromName or  "name",
 	            size = 22,
 	            color = UIKit:hex2c3b(0xffedae),
-	            align = ui.TEXT_ALIGN_LEFT,
-	            valign = ui.TEXT_VALIGN_CENTER,
+	            align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
+	            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
 	            dimensions = cc.size(0, titleBg:getContentSize().height),
 	            font = UIKit:getFontFilePath(),
 	    }):align(display.LEFT_BOTTOM, 30, -5):addTo(titleBg,2)
 		--  timeLable
-		local timeLabel =  ui.newTTFLabel({
+		local timeLabel =  cc.ui.UILabel.new({
+				UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
 	            text = NetService:formatTimeAsTimeAgoStyleByServerTime(chat.time),
 	            size = 16,
 	            color = UIKit:hex2c3b(0x403c2f),
-	            align = ui.TEXT_ALIGN_LEFT,
-	            valign = ui.TEXT_VALIGN_CENTER,
+	            align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
+	            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
 	            font = UIKit:getFontFilePath(),
 	    }):align(display.LEFT_BOTTOM,20, titleBg:getPositionY()-2):addTo(header,3)
 
@@ -274,11 +281,12 @@ function GameUIChat:createHeader()
     rightbutton:pos(display.right,bg:getContentSize().height)
     local rightIcon = display.newSprite("chat_setting.png"):addTo(header):pos(display.right-45, bg:getContentSize().height/2)
     -- titile
-    local titleLabel = ui.newTTFLabelWithShadow({
+    local titleLabel = cc.ui.UILabel.new({
+    	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
     	text = _("聊天"),
         font = UIKit:getFontFilePath(),
         size = 30,
-        align = ui.TEXT_ALIGN_CENTER, 
+        align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
         dimensions = cc.size(500, 33),
         color = UIKit:hex2c3b(0xffedae),
     }):addTo(header)
@@ -302,7 +310,8 @@ function GameUIChat:createTextFieldBody()
             end)
         end
     end
-    local editbox = ui.newEditBox({
+    local editbox = cc.ui.UIInput.new({
+    	UIInputType = 1,
         image = "chat_Input_box.png",
         size = cc.size(427,57),
         listener = onEdit,
@@ -338,8 +347,21 @@ function GameUIChat:createPlayerMenu()
     menuLayer:addNodeEventListener(cc.NODE_TOUCH_EVENT,function()
     	menuLayer:removeFromParent(true)
     end)
-    local copyButton = cc.ui.UIPushButton.new({normal = "chat_tab_button.png",pressed = "chat_tab_button_highlight.png",}, {scale9 = false})
-    copyButton:addTo(menuLayer):align(display.LEFT_BOTTOM, 0, 2)
+    -- local copyButton = cc.ui.UIPushButton.new({normal = "chat_tab_button.png",pressed = "chat_tab_button_highlight.png",}, {scale9 = false})
+    -- copyButton:addTo(menuLayer):align(display.LEFT_BOTTOM, 0, 2)
+    local copyButton = cc.ui.UIPushButton.new({normal="chat_tab_button.png",pressed="chat_tab_button_highlight.png"}, {scale9 = false})
+        :setButtonLabel("normal", cc.ui.UILabel.new({
+            UILabelType = 2,
+            text = _("复制"),
+            size = 20,
+            color = UIKit:hex2c3b(0x403c2f)
+        }))
+        :onButtonClicked(function(event)
+            
+        end)
+        :align(display.LEFT_BOTTOM, 0, 2)
+        :addTo(tabBg)
+    
 end
 
 return GameUIChat

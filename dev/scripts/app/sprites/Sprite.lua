@@ -40,7 +40,7 @@ end
 function Sprite:SetOrient(orient)
     self:GetEntity():SetOrient(orient)
 end
------ 复写
+----- 
 function Sprite:SetPosition(x, y)
     self:setPosition(x, y)
     self:setLocalZOrder(self:GetLogicZorder(self.width))
@@ -74,6 +74,10 @@ function Sprite:GetSpriteFile()
 end
 function Sprite:GetSpriteOffset()
     return 0, 0
+end
+function Sprite:GetSpriteButtomPosition()
+    local offset_x, offset_y = self:GetSpriteOffset()
+    return offset_x, offset_y - (self:GetSprite():getContentSize().height/2) * self:GetSprite():getScale()
 end
 function Sprite:GetFlipX()
     return false

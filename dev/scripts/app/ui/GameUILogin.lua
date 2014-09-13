@@ -33,12 +33,14 @@ function GameUILogin:createProgressBar()
     ProgressTimer:align(display.LEFT_BOTTOM, 0, 0):addTo(bar)
     ProgressTimer:setPercentage(1)
     display.newSprite("images/splash_process_bound.png"):align(display.LEFT_BOTTOM, -10, -4):addTo(bar)
-    local label = ui.newTTFLabel({
+    local label = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "Loading(1/3)...",
         font = UIKit:getFontFilePath(),
         size = 12,
-        align = ui.TEXT_ALIGN_CENTER, 
-        dimensions = cc.size(575, 33)
+        align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
+        dimensions = cc.size(575, 33),
+        color = UIKit:hex2c3b(0xf3f0b6)
     }):addTo(bar):pos(bar:getContentSize().width/2,bar:getContentSize().height/2-4)
     self.progressTips = label
     self.progressTimer = ProgressTimer
@@ -46,13 +48,14 @@ end
 
 function GameUILogin:createTips()
     local bgImage = display.newSprite("images/splash_tips_bg.png"):addTo(self):pos(display.cx,display.bottom+100)
-    local label = ui.newTTFLabel({
+    local label = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = _("提示:预留一定的空闲城民"),
         font = UIKit:getFontFilePath(),
         size = 18,
-        align = ui.TEXT_ALIGN_CENTER, 
+        align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
         dimensions = cc.size(569, 43),
-        color = cc.c3b(255,170,168)
+        color = UIKit:hex2c3b(0xaaa87f),
     }):addTo(bgImage):pos(bgImage:getContentSize().width/2,bgImage:getContentSize().height/2)
 end
 

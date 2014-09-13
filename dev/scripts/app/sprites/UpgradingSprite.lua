@@ -9,8 +9,10 @@ function UpgradingSprite:OnSceneMove()
     end)
 end
 function UpgradingSprite:GetWorldPosition()
-    local x, y = self:GetMap():ConvertToMapPosition(self:GetLogicPosition())
-    return self:convertToWorldSpace(cc.p(self:GetSpriteOffset())), self:getParent():convertToWorldSpace(cc.p(x, y))
+    -- local x, y = self:GetMap():ConvertToMapPosition(self:GetLogicPosition())
+    -- self:getParent():convertToWorldSpace(cc.p(x, y))
+    return self:convertToWorldSpace(cc.p(self:GetSpriteOffset())), 
+    self:convertToWorldSpace(cc.p(self:GetSpriteButtomPosition()))
 end
 function UpgradingSprite:OnOrientChanged()
 end

@@ -34,10 +34,10 @@ local hideActivityIndicator = device.hideActivityIndicator
 
 device.showActivityIndicator = function()
     showActivityIndicator()
-    CCDirector:sharedDirector():getTouchDispatcher():setDispatchEvents(false)
+    -- cc.Director:getInstance():getTouchDispatcher():setDispatchEvents(false)
 end
 
 device.hideActivityIndicator = function()
     hideActivityIndicator()
-    CCDirector:sharedDirector():getTouchDispatcher():setDispatchEvents(true)
+    -- cc.Director:getInstance():getTouchDispatcher():setDispatchEvents(true)
 end
