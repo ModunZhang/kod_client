@@ -41,7 +41,9 @@ function GameUIHome:onEnter()
         {normal = "home/player_btn_up.png", pressed = "home/player_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        dump(event)
+	    NetManager.m_netService:request("chat.chatHandler.send", 
+	    	{text = "reset",type = "global"}, 
+	    	function() end, false)
     end):addTo(top_bg):align(display.LEFT_BOTTOM, 109, 106)
 
 
@@ -223,11 +225,11 @@ function GameUIHome:onEnter()
     local label_padding = 20
     local padding_width = 100
     for i, v in ipairs({
-        {"home/bottom_icon_1.png", _("Quests")},
-        {"home/bottom_icon_2.png", _("Items")},
-        {"home/bottom_icon_3.png", _("Gmail")},
-        {"home/bottom_icon_4.png", _("Force")},
-        {"home/bottom_icon_2.png", _("More")},
+        {"home/bottom_icon_1.png", _("任务")},
+        {"home/bottom_icon_2.png", _("物品")},
+        {"home/bottom_icon_3.png", _("邮件")},
+        {"home/bottom_icon_4.png", _("部队")},
+        {"home/bottom_icon_2.png", _("更多")},
     }) do
         local col = i - 1
         local x, y = first_col + col * padding_width, first_row
