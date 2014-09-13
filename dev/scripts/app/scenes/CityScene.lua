@@ -171,10 +171,10 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
             local select_ruins = building:GetEntity()
             UIKit:newGameUI('GameUIBuild', City, select_ruins, select_ruins_list):addToScene(self, true)
         elseif building:GetEntity():GetType() == "keep" then
-            self._keep_page = UIKit:newGameUI('GameUIKeep')
+            self._keep_page = UIKit:newGameUI('GameUIKeep',City,building:GetEntity())
             self._keep_page:addToScene(self, true)
         elseif building:GetEntity():GetType() == "warehouse" then
-            self._warehouse_page = UIKit:newGameUI('GameUIWarehouse',building:GetEntity())
+            self._warehouse_page = UIKit:newGameUI('GameUIWarehouse',City,building:GetEntity())
             self._warehouse_page:addToScene(self, true)
         end
     end

@@ -1,100 +1,42 @@
 local TabButtons = import('.TabButtons')
-local GameUIKeep = UIKit:createUIClass('GameUIKeep')
+local GameUIKeep = UIKit:createUIClass('GameUIKeep',"GameUIWithCommonHeader")
 
-function GameUIKeep:ctor()
-    GameUIKeep.super.ctor(self)
-    local top_bg = display.newSprite("back_ground.png")
-        :align(display.LEFT_TOP, display.left, display.top - 40)
-        :addTo(self)
+function GameUIKeep:ctor(city,building)
+    GameUIKeep.super.ctor(self,city,_("城堡"))
+    self.city = city
+    self.building = building
+end
+
+function GameUIKeep:CreateBetweenBgAndTitle()
+    GameUIKeep.super.CreateBetweenBgAndTitle(self)
+    self.info_layer = display.newLayer()
+    self:addChild(self.info_layer)
 end
 
 function GameUIKeep:onEnter()
     GameUIKeep.super.onEnter(self)
-    self.info_layer = display.newLayer()
-    self:addChild(self.info_layer)
-    self:CreateTitle()
-    self:CreateHomeButton()
-    self:CreateShopButton()
-    self:CreateTabButtons()
-    self:CreateCanBeUnlockedBuildingBG()
-    self:CreateCanBeUnlockedBuildingListView()
-    self:CreateCityBasicInfo()
-end
-
-
-function GameUIKeep:CreateHomeButton()
-    self.homeButton = cc.ui.UIPushButton.new({normal = "common_ui_title_button_normal.png",pressed = "common_ui_title_button_pressed.png"})
-        :onButtonClicked(function(event)
-            self:Close()
-        end):align(display.LEFT_TOP, display.left , display.top):addTo(self)
-    cc.ui.UIImage.new("Back_button_icon.png")
-        :align(display.CENTER,self.homeButton:getCascadeBoundingBox().size.width/2-10,-self.homeButton:getCascadeBoundingBox().size.height/2+10)
-        :addTo(self.homeButton)
-end
-
-function GameUIKeep:CreateTitle()
-    cc.ui.UIImage.new("Title.png")
-        :align(display.TOP_CENTER,display.cx,display.top)
-        :addTo(self)
-    self.title_label = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("城堡"),
-        font = UIKit:getFontFilePath(),
-        size = 30,
-        color = UIKit:hex2c3b(0xffedae),
-    }):align(display.CENTER, display.cx, display.top-35):addTo(self)
-end
-
-function GameUIKeep:CreateShopButton()
-    self.gem_button = cc.ui.UIPushButton.new(
-        {normal = "gem_btn_up.png",pressed = "gem_btn_down.png"}
-    ):onButtonClicked(function(event)
-        dump(event)
-    end):addTo(self)
-    self.gem_button:align(display.RIGHT_TOP, display.right, display.top)
-    cc.ui.UIImage.new("home/gem.png")
-    :addTo(self.gem_button)
-    :pos(-75, -64)
-
-    local gem_num_bg = cc.ui.UIImage.new("gem_num_bg.png"):addTo(self.gem_button):pos(-85, -85)
-    local pos = gem_num_bg:getAnchorPointInPoints()
-    cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = ""..City.resource_manager:GetGemResource():GetValue(),
-        font = UIKit:getFontFilePath(),
-        size = 14,
-        color = UIKit:hex2c3b(0xfdfac2)})
-        :addTo(gem_num_bg)
-        :align(display.CENTER, 40, 12)
-end
-
-function GameUIKeep:CreateTabButtons()
-    local tab_buttons = TabButtons.new({
+    self:CreateTabButtons({
         {
             label = _("升级"),
-            tag = "base",
+            tag = "upgrade",
             default = true,
         },
         {
             label = _("信息"),
             tag = "info",
         },
-    },
-    {
-        gap = -4,
-        margin_left = -2,
-        margin_right = -2,
-        margin_up = -6,
-        margin_down = 1
-    },
-    function(tag)
-        if tag == "base" then
+    },function(tag)
+        if tag == "upgrade" then
             self.info_layer:setVisible(false)
         elseif tag == "info" then
             self.info_layer:setVisible(true)
         end
-    end):addTo(self):pos(display.cx, display.bottom + 40)
+    end):pos(display.cx, display.bottom + 40)
+    self:CreateCanBeUnlockedBuildingBG()
+    self:CreateCanBeUnlockedBuildingListView()
+    self:CreateCityBasicInfo()
 end
+
 
 function GameUIKeep:CreateCityBasicInfo()
     -- city icon bg
@@ -172,7 +114,7 @@ function GameUIKeep:CreateCityBasicInfo()
     -- 分割线
     local location_line = display.newScale9Sprite("dividing_line.png", display.right-260, display.top-260, cc.size(display.width-213,2))
         :addTo(self.info_layer)
-    
+
     -- 坐标标签
     cc.ui.UILabel.new(
         {
@@ -313,3 +255,4 @@ function GameUIKeep:Close()
 end
 
 return GameUIKeep
+

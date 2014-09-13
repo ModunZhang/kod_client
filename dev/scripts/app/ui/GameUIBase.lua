@@ -163,7 +163,7 @@ function GameUIBase:CreateShopButton(on_clicked)
     gem_button:align(display.RIGHT_TOP, display.right, display.top)
     cc.ui.UIImage.new("home/gem.png")
         :addTo(gem_button)
-        :pos(-80, -75)
+        :pos(-75, -65)
 
     local gem_num_bg = cc.ui.UIImage.new("gem_num_bg.png"):addTo(gem_button):pos(-85, -85)
     local pos = gem_num_bg:getAnchorPointInPoints()
