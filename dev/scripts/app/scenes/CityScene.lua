@@ -47,6 +47,7 @@ function CityScene:onEnter()
     ListenerService:start()
     running_scene = self
 
+
     self.city_layer = self:CreateSceneLayer()
     self.city_layer:AddObserver(self)
     self.city_layer:InitWithCity(City)
@@ -172,6 +173,9 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
         elseif building:GetEntity():GetType() == "keep" then
             self._keep_page = UIKit:newGameUI('GameUIKeep')
             self._keep_page:addToScene(self, true)
+        elseif building:GetEntity():GetType() == "warehouse" then
+            self._warehouse_page = UIKit:newGameUI('GameUIWarehouse',building:GetEntity())
+            self._warehouse_page:addToScene(self, true)
         end
     end
 end
@@ -300,5 +304,6 @@ function CityScene:OnGateChanged(old_walls, new_walls)
 end
 
 return CityScene
+
 
 
