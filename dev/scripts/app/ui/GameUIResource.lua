@@ -2,22 +2,25 @@
 -- Author: Danny He
 -- Date: 2014-09-13 10:30:04
 --
-local GameUIResource = UIKit:createUIClass("GameUIResource")
+local GameUIResource = UIKit:createUIClass("GameUIResource","GameUIWithCommonHeader")
 local TabButtons = import(".TabButtons")
 local ResourceManager = import("..entity.ResourceManager")
 local City = City
 local MAX_COUNT_DECORATOR = 5
 
 function GameUIResource:ctor(building)
-	 GameUIResource.super.ctor(self)
+	 GameUIResource.super.ctor(self,City,self:GetTitleByType(building))
      self.building = building
      self.dataSource = self:GetDataSource()
-	 self:CreateUI()
+end
+
+
+function GameUIResource:onEnter()
+    GameUIResource.super.onEnter(self)
+	self:CreateUI()
 end
 
 function GameUIResource:CreateUI()
-	self:CreateHeader()
-	self:CreateBG()
 	self:CreateInfomation()
 	self:createTabButtons()
 end
@@ -51,52 +54,6 @@ function GameUIResource:createTabButtons()
     end):addTo(self):pos(display.cx, display.bottom + 50)
 end
 
-function GameUIResource:CreateHeader()
-	local header = display.newNode()
-	local bg = display.newSprite("common_header_bg.png"):align(display.LEFT_BOTTOM, 0,0):addTo(header)
-	display.newSprite("common_bg_top.png"):align(display.LEFT_TOP, 30, display.top - 72):addTo(self)
-	display.newSprite("common_bg_top.png"):align(display.LEFT_BOTTOM, 30, display.bottom):addTo(self)
-	--left button
-	local backbutton = cc.ui.UIPushButton.new({normal = "common_back_button.png",pressed = "common_back_button_highlight.png"}, {scale9 = false})
-	backbutton:onButtonClicked(function(event)
-			self:leftButtonClicked()
-    end)
-    backbutton:align(display.TOP_LEFT, 0,bg:getContentSize().height):addTo(header)
-    local backIcon = display.newSprite("common_back_button_icon.png"):addTo(header):pos(display.left+45,bg:getContentSize().height/2)
-    --right button
-	local rightbutton = cc.ui.UIPushButton.new({normal = "common_back_button.png",pressed = "common_back_button_highlight.png"}, {scale9 = false})
-	rightbutton:onButtonClicked(function(event)
-
-    end)
-    rightbutton:align(display.TOP_LEFT, 0, 0):addTo(header)
-    rightbutton:setRotation(90)
-    rightbutton:pos(display.right,bg:getContentSize().height)
-    local rightIcon = display.newSprite("chat_setting.png"):addTo(header):pos(display.right-45, bg:getContentSize().height/2)
-    -- titile
-    local titleLabel = cc.ui.UILabel.new({
-    	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-    	text = _("木工小屋"),
-        font = UIKit:getFontFilePath(),
-        size = 30,
-        align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
-        dimensions = cc.size(500, 33),
-        color = UIKit:hex2c3b(0xffedae),
-    }):addTo(header)
-    titleLabel:pos(display.cx,bg:getContentSize().height/2 + 12)
-    header:addTo(self):pos(0,display.top-bg:getContentSize().height)
-    self.header = header
-end
-
-function GameUIResource:CreateBG()
-	-- body  bg
-	local left = display.newScale9Sprite("common_bg_left.png"):align(display.LEFT_TOP, display.left + 20, display.top):addTo(self,-99)
-	left:setContentSize(cc.size(left:getContentSize().width,display.height))
-	local right = display.newScale9Sprite("common_bg_left.png"):align(display.RIGHT_TOP, display.right - 20, display.top):addTo(self,-99)
-	right:setContentSize(cc.size(right:getContentSize().width,display.height))
-	display.newScale9Sprite("common_bg_center.png"):align(display.LEFT_TOP, 0,display.height):addTo(self,-100):setContentSize(cc.size(display.width,display.height))
-	display.newSprite("common_bg_top.png"):align(display.LEFT_TOP, 30, display.top - 72):addTo(self)
-	display.newSprite("common_bg_top.png"):align(display.LEFT_BOTTOM, 30, display.bottom):addTo(self)
-end
 
 function GameUIResource:CreateInfomation()
 	local infomationLayer = display.newNode():addTo(self)
@@ -133,7 +90,7 @@ function GameUIResource:CreateInfomation()
 	    	text = _("拆除"),
 	        font = UIKit:getFontFilePath(),
 	        size = 22,
-	        color = UIKit:hex2c3b(0x29261c),
+	        color = UIKit:hex2c3b(0xffedae),
    	 	}))
    	 	:setButtonLabelOffset(0, -5)
 	    :onButtonClicked(function(event)
@@ -217,7 +174,7 @@ function GameUIResource:CreateInfomation()
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         alignment = cc.ui.UIListView.ALIGNMENT_LEFT
     	}
-        :addTo(self)
+        :addTo(self.infomationLayer)
     self.infomationLayer:setVisible(false)
 end
 
@@ -230,9 +187,9 @@ function GameUIResource:GetListItem(index,title,val)
     	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
     	text = title,
         font = UIKit:getFontFilePath(),
-        size = 24,
+        size = 20,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
-        color = UIKit:hex2c3b(0x403c2f),
+        color = UIKit:hex2c3b(0x797154),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER})
 		:addTo(bg)
 		:align(display.LEFT_BOTTOM, 10, 0)
@@ -240,7 +197,7 @@ function GameUIResource:GetListItem(index,title,val)
     	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
     	text = val,
         font = UIKit:getFontFilePath(),
-        size = 24,
+        size = 20,
         align = cc.ui.UILabel.TEXT_ALIGN_RIGHT, 
         color = UIKit:hex2c3b(0x403c2f),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER})
@@ -252,7 +209,7 @@ function GameUIResource:GetListItem(index,title,val)
 end
 
 function GameUIResource:RefreshListView()
-	for i,v in ipairs(table_name) do
+	for i,v in ipairs(self.dataSource) do
 		local newItem = self:GetListItem(i,v[1],v[2])
 		self.listView:addItem(newItem)
 	end
@@ -276,13 +233,13 @@ function GameUIResource:GetDataSource()
     end
     local title = self:GetTitleByType(self.building)
     for k,v in pairs(levelTable) do
-        table.insert(dataSource,{title .. ' LV' .. k ,'x' .. #v})
+        table.insert(dataSource,{title .. ' LV ' .. k ,'x' .. #v})
     end
     return dataSource
 end
 
 
-function GameUIResourceCutter:GetTitleByType(building)
+function GameUIResource:GetTitleByType(building)
     local type = building:GetUpdateResourceType()
     if type == ResourceManager.RESOURCE_TYPE.WOOD then
         return _('木工小屋'),_('木材产量')
@@ -310,13 +267,41 @@ function GameUIResource:onMovieInStage()
 end
 
 function GameUIResource:ChaiButtonAction( event )
-
+    if self.building:IsUpgrading() then 
+                local message = "正在升级"
+                local dialog = PopDialogUI.new()
+                dialog:setTitle("提示")
+                dialog:setPopMessage(message)
+                display.getRunningScene():addChild(dialog,1000000)
+                return 
+            end
+            if tonumber(City:GetResourceManager():GetGemResource():GetValue()) < 100 then
+                local message = "宝石不足"
+                local dialog = PopDialogUI.new()
+                dialog:setTitle("提示")
+                dialog:setPopMessage(message)
+                dialog:setNeedGems(100)
+                display.getRunningScene():addChild(dialog,1000000)
+                return
+            end
+            local tile = self.city:GetTileWhichBuildingBelongs(self.building)
+            local house_location = tile:GetBuildingLocation(self.building)
+            NetManager:destroyHouseByLocation(tile.location_id, house_location, 
+            function(...) end)
+            self:leftButtonClicked(nil)
 end
 
 function GameUIResource:onMovieOutStage()
-	self.dataSource = nil
-	self.building = nil
-	self.
+    self.dataSource = nil
+    self.building = nil
+    GameUIResource.super.onMovieOutStage(self)
+end
+
+function GameUIResource:OnResourceChanged(resource_manager)
+    GameUIResource.super.OnResourceChanged(self,resource_manager)
+    -- if self.listView:getItems():count() < 2 then return end
+    local number = City.resource_manager:GetResourceByType(self.building:GetUpdateResourceType()):GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    print("update cout:",number)
 end
 
 return GameUIResource
