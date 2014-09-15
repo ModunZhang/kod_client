@@ -156,11 +156,16 @@ function UIListView:itemSizeChangeListener(listItem, newSize, oldSize)
 	else
 		itemH = 0
 	end
-
+	-- TODO:判断方向 设置Content的最终坐标
 	local content = listItem:getContent()
+	if UIScrollView.DIRECTION_VERTICAL == self.direction then
+		transition.moveBy(content,
+				{x = itemW/2, y = 0, time = 0.2})
+	else
+
 	transition.moveBy(content,
 				{x = itemW/2, y = itemH/2, time = 0.2})
-
+	end
 	self.size.width = self.size.width + itemW
 	self.size.height = self.size.height + itemH
 	if UIScrollView.DIRECTION_VERTICAL == self.direction then
@@ -335,7 +340,6 @@ function UIListView:layout_()
 			itemW, itemH = v:getItemSize()
 			itemW = itemW or 0
 			itemH = itemH or 0
-
 			height = height + itemH
 		end
 	else
@@ -361,7 +365,10 @@ function UIListView:layout_()
 		if 0 == margin.left and 0 == margin.right and 0 == margin.top and 0 == margin.bottom then
 			if UIScrollView.DIRECTION_VERTICAL == self.direction then
 				if UIListView.ALIGNMENT_LEFT == self.alignment then
-					content:setPosition(size.width/2, h/2)
+					-- content:setPosition(size.width/2, h/2)
+					-----fix it????
+					content:align(display.LEFT_BOTTOM, 0, 0)
+
 				elseif UIListView.ALIGNMENT_RIGHT == self.alignment then
 					content:setPosition(w - size.width/2, h/2)
 				else

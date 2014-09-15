@@ -69,7 +69,7 @@ function GameUIResource:CreateInfomation()
         align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
         dimensions = cc.size(500, 33),
         color = UIKit:hex2c3b(0x403c2f),
-    }):addTo(lvBg):pos(lvBg:getContentSize().width/2,lvBg:getContentSize().height/2-5)
+    }):addTo(lvBg):pos(lvBg:getContentSize().width/2,lvBg:getContentSize().height/2)
 
     local titleLable = cc.ui.UILabel.new({
     	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -92,7 +92,7 @@ function GameUIResource:CreateInfomation()
 	        size = 22,
 	        color = UIKit:hex2c3b(0xffedae),
    	 	}))
-   	 	:setButtonLabelOffset(0, -5)
+   	 	:setButtonLabelOffset(0, 2)
 	    :onButtonClicked(function(event)
 	    	self:ChaiButtonAction(event)
     	end)
@@ -192,7 +192,7 @@ function GameUIResource:GetListItem(index,title,val)
         color = UIKit:hex2c3b(0x797154),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER})
 		:addTo(bg)
-		:align(display.LEFT_BOTTOM, 10, 0)
+        :pos(10,20)
 	local valLabel = cc.ui.UILabel.new({
     	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
     	text = val,
@@ -202,7 +202,7 @@ function GameUIResource:GetListItem(index,title,val)
         color = UIKit:hex2c3b(0x403c2f),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER})
 		:addTo(bg)
-		:align(display.RIGHT_BOTTOM,bg:getContentSize().width -10 , 0)
+		:pos(bg:getContentSize().width -10 , 20)
 	item:addContent(bg)
 	item:setItemSize(bg:getContentSize().width,bg:getContentSize().height)
 	return item

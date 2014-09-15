@@ -4,7 +4,7 @@
 --
 local GameListViewDemo = UIKit:createUIClass("GameListViewDemo")
 local TabButtons = import(".TabButtons")
-local UIListView = import(".GameUIListView")
+local UIListView = import(".UIListView")
 
 function GameListViewDemo:ctor()
 	 GameListViewDemo.super.ctor(self)
