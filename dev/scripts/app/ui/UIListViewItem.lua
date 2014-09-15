@@ -29,7 +29,7 @@ quick UIListViewItem控件
 
 ]]
 
-local UIScrollView = import(".GameUIScrollView")
+local UIScrollView = import(".UIScrollView")
 
 local UIListViewItem = class("UIListViewItem", function()
 	return cc.Node:create()

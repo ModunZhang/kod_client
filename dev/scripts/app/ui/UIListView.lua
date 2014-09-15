@@ -31,10 +31,10 @@ quick 列表控件
 ]]
 
 
-local UIScrollView = import(".GameUIScrollView")
+local UIScrollView = import(".UIScrollView")
 local UIListView = class("UIListView", UIScrollView)
 
-local UIListViewItem = import(".GameUIListViewItem")
+local UIListViewItem = import(".UIListViewItem")
 
 
 UIListView.DELEGATE					= "ListView_delegate"
