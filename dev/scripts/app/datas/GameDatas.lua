@@ -114,6 +114,29 @@ GameDatas.Buildings = {
 }
 require("app.datas.Buildings_buildings")
 
+GameDatas.DragonEyrie = {
+	["crown"] = {},
+	["armguardLeft"] = {},
+	["armguardRight"] = {},
+	["chest"] = {},
+	["sting"] = {},
+	["orb"] = {},
+	["equipmentBuff"] = {},
+	["dragonAttribute"] = {},
+	["dragons"] = {},
+	["dragonSkill"] = {},
+}
+require("app.datas.DragonEyrie_crown")
+require("app.datas.DragonEyrie_armguardLeft")
+require("app.datas.DragonEyrie_armguardRight")
+require("app.datas.DragonEyrie_chest")
+require("app.datas.DragonEyrie_sting")
+require("app.datas.DragonEyrie_orb")
+require("app.datas.DragonEyrie_equipmentBuff")
+require("app.datas.DragonEyrie_dragonAttribute")
+require("app.datas.DragonEyrie_dragons")
+require("app.datas.DragonEyrie_dragonSkill")
+
 GameDatas.GemsPayment = {
 	["time"] = {},
 	["wood"] = {},
@@ -176,3 +199,28 @@ GameDatas.Houses = {
 	["houses"] = {},
 }
 require("app.datas.Houses_houses")
+
+GameDatas.PlayerInitData = {
+	["resources"] = {},
+	["materials"] = {},
+	["soldierMaterials"] = {},
+	["dragonMaterials"] = {},
+	["houses"] = {},
+}
+require("app.datas.PlayerInitData_resources")
+require("app.datas.PlayerInitData_materials")
+require("app.datas.PlayerInitData_soldierMaterials")
+require("app.datas.PlayerInitData_dragonMaterials")
+require("app.datas.PlayerInitData_houses")
+
+GameDatas.SmithConfig = {
+	["equipments"] = {},
+}
+require("app.datas.SmithConfig_equipments")
+
+GameDatas.UnitsConfig = {
+	["normal"] = {},
+	["special"] = {},
+}
+require("app.datas.UnitsConfig_normal")
+require("app.datas.UnitsConfig_special")
