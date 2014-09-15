@@ -33,29 +33,6 @@ function GameUIBuild:onEnter()
     end
     self.base_list_view:reload():resetPosition()
     self:OnCityChanged()
-    
-
-    -- self:CreateTabButtons({
-    --     {
-    --         label = "Upgrade",
-    --         tag = "Upgrade",
-    --         default = true,
-    --     },
-    --     {
-    --         label = "Citizen",
-    --         tag = "Citizen",
-    --     },
-    --     {
-    --         label = "Citizen1",
-    --         tag = "Citizen1",
-    --     },
-    -- },
-    -- function(tag)
-    --     if tag == "Upgrade" then
-    --         print("hello")
-    --     end
-    -- end)
-    -- :pos(display.cx, display.bottom + 50)
 end
 function GameUIBuild:onExit()
     self.city:RemoveListenerOnType(self, self.city.LISTEN_TYPE.UPGRADE_BUILDING)
