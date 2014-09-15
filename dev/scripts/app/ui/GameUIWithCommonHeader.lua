@@ -10,12 +10,16 @@ end
 function GameUIWithCommonHeader:onEnter()
     GameUIWithCommonHeader.super.onEnter(self)
     self:CreateBackGround()
+    self:CreateBetweenBgAndTitle()
     self:CreateTitle(self.title)
     self:CreateHomeButton()
     self.gem_label = self:CreateShopButton()
     local city = self.city
     city:GetResourceManager():AddObserver(self)
     city:GetResourceManager():OnResourceChanged()
+end
+function GameUIWithCommonHeader:CreateBetweenBgAndTitle()
+    print("->创建backgroud和title之间的中间层显示")
 end
 function GameUIWithCommonHeader:onExit()
     self.city:GetResourceManager():RemoveObserver(self)

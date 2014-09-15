@@ -1,39 +1,54 @@
 local TabButtons = import('.TabButtons')
 local ResourceManager = import('..entity.ResourceManager')
-local GameUIWarehouse = UIKit:createUIClass('GameUIWarehouse')
+local GameUIWarehouse = UIKit:createUIClass('GameUIWarehouse',"GameUIWithCommonHeader")
 
 local resource_type = {
-        WOOD = ResourceManager.RESOURCE_TYPE.WOOD,
-        FOOD = ResourceManager.RESOURCE_TYPE.FOOD,
-        IRON = ResourceManager.RESOURCE_TYPE.IRON,
-        STONE = ResourceManager.RESOURCE_TYPE.STONE,
-        COIN = ResourceManager.RESOURCE_TYPE.COIN
-    }
+    WOOD = ResourceManager.RESOURCE_TYPE.WOOD,
+    FOOD = ResourceManager.RESOURCE_TYPE.FOOD,
+    IRON = ResourceManager.RESOURCE_TYPE.IRON,
+    STONE = ResourceManager.RESOURCE_TYPE.STONE,
+    COIN = ResourceManager.RESOURCE_TYPE.COIN
+}
 
-function GameUIWarehouse:ctor(building)
-    GameUIWarehouse.super.ctor(self)
+function GameUIWarehouse:ctor(city,building)
+    GameUIWarehouse.super.ctor(self,city,_("仓库"))
     self.building = building
-    local top_bg = display.newSprite("back_ground.png")
-        :align(display.LEFT_TOP, display.left, display.top - 40)
-        :addTo(self)
+    self.city = city
+end
+
+function GameUIWarehouse:CreateBetweenBgAndTitle()
+    GameUIWarehouse.super.CreateBetweenBgAndTitle(self)
+    self.resource_layer = display.newLayer()
+    self:addChild(self.resource_layer)
 end
 
 function GameUIWarehouse:onEnter()
     GameUIWarehouse.super.onEnter(self)
-    self.resource_layer = display.newLayer()
-    self:addChild(self.resource_layer)
-    self:CreateTitle()
-    self:CreateHomeButton()
-    self:CreateShopButton()
-    self:CreateTabButtons()
+    self:CreateTabButtons({
+        {
+            label = _("升级"),
+            tag = "upgrade",
+            default = true,
+        },
+        {
+            label = _("资源"),
+            tag = "resource",
+        },
+    },function(tag)
+        if tag == "upgrade" then
+            self.resource_layer:setVisible(false)
+        elseif tag == "resource" then
+            self.resource_layer:setVisible(true)
+        end
+    end):pos(display.cx, display.bottom + 40)
     self:CreateResourceListView()
     self:InitAllResources()
 
-    City:GetResourceManager():AddObserver(self)
 end
 
 -- 资源刷新
 function GameUIWarehouse:OnResourceChanged(resource_manager)
+    GameUIWarehouse.super.OnResourceChanged(self,resource_manager)
     local maxwood, maxfood, maxiron, maxstone = self.building:GetResourceValueLimit()
     local resource_max = {
         [ResourceManager.RESOURCE_TYPE.WOOD] = maxwood,
@@ -41,16 +56,11 @@ function GameUIWarehouse:OnResourceChanged(resource_manager)
         [ResourceManager.RESOURCE_TYPE.IRON] = maxiron,
         [ResourceManager.RESOURCE_TYPE.STONE] = maxstone,
     }
-
-    for k,v in pairs(self.resource_items) do
-        self:RefreshSpecifyResource(resource_manager:GetResourceByType(k),v,resource_max[k],City:GetCitizenByType(City.RESOURCE_TYPE_TO_BUILDING_TYPE[k]))
+    if self.resource_items then
+        for k,v in pairs(self.resource_items) do
+            self:RefreshSpecifyResource(resource_manager:GetResourceByType(k),v,resource_max[k],City:GetCitizenByType(City.RESOURCE_TYPE_TO_BUILDING_TYPE[k]))
+        end
     end
-
-    -- self:RefreshSpecifyResource(resource_manager:GetFoodResource(),self.food_item,maxfood,City:GetCitizenByType("farmer"))
-    -- self:RefreshSpecifyResource(resource_manager:GetWoodResource(),self.wood_item,maxwood,City:GetCitizenByType("woodcutter"))
-    -- self:RefreshSpecifyResource(resource_manager:GetStoneResource(),self.stone_item,maxstone,City:GetCitizenByType("quarrier"))
-    -- self:RefreshSpecifyResource(resource_manager:GetIronResource(),self.iron_item,maxiron,City:GetCitizenByType("miner"))
-    -- self:RefreshSpecifyResource(resource_manager:GetCoinResource(),self.coin_item)
 end
 
 function GameUIWarehouse:RefreshSpecifyResource(resource,item,maxvalue,occupy_citizen)
@@ -62,80 +72,6 @@ function GameUIWarehouse:RefreshSpecifyResource(resource,item,maxvalue,occupy_ci
     end
 end
 
-function GameUIWarehouse:CreateHomeButton()
-    self.homeButton = cc.ui.UIPushButton.new({normal = "common_ui_title_button_normal.png",pressed = "common_ui_title_button_pressed.png"})
-        :onButtonClicked(function(event)
-            self:Close()
-        end):align(display.LEFT_TOP, display.left , display.top):addTo(self)
-    cc.ui.UIImage.new("Back_button_icon.png")
-        :align(display.CENTER,self.homeButton:getCascadeBoundingBox().size.width/2-10,-self.homeButton:getCascadeBoundingBox().size.height/2+10)
-        :addTo(self.homeButton)
-end
-
-function GameUIWarehouse:CreateTitle()
-    cc.ui.UIImage.new("Title.png")
-        :align(display.TOP_CENTER,display.cx,display.top)
-        :addTo(self)
-    self.title_label = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("资源仓库"),
-        font = UIKit:getFontFilePath(),
-        size = 30,
-        color = UIKit:hex2c3b(0xffedae),
-    }):align(display.CENTER, display.cx, display.top-35):addTo(self)
-
-end
-
-function GameUIWarehouse:CreateShopButton()
-    self.gem_button = cc.ui.UIPushButton.new(
-        {normal = "gem_btn_up.png",pressed = "gem_btn_down.png"}
-    ):onButtonClicked(function(event)
-        dump(event)
-    end):addTo(self)
-    self.gem_button:align(display.RIGHT_TOP, display.right, display.top)
-    cc.ui.UIImage.new("home/gem.png")
-        :addTo(self.gem_button)
-        :pos(-75, -64)
-
-    local gem_num_bg = cc.ui.UIImage.new("gem_num_bg.png"):addTo(self.gem_button):pos(-85, -85)
-    local pos = gem_num_bg:getAnchorPointInPoints()
-    cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = ""..City.resource_manager:GetGemResource():GetValue(),
-        font = UIKit:getFontFilePath(),
-        size = 14,
-        color = UIKit:hex2c3b(0xfdfac2)})
-        :addTo(gem_num_bg)
-        :align(display.CENTER, 40, 12)
-end
-
-function GameUIWarehouse:CreateTabButtons()
-    local tab_buttons = TabButtons.new({
-        {
-            label = _("升级"),
-            tag = "base",
-            default = true,
-        },
-        {
-            label = _("资源"),
-            tag = "resource",
-        },
-    },
-    {
-        gap = -4,
-        margin_left = -2,
-        margin_right = -2,
-        margin_up = -6,
-        margin_down = 1
-    },
-    function(tag)
-        if tag == "base" then
-            self.resource_layer:setVisible(false)
-        elseif tag == "resource" then
-            self.resource_layer:setVisible(true)
-        end
-    end):addTo(self):pos(display.cx, display.bottom + 40)
-end
 
 function GameUIWarehouse:CreateResourceListView()
     self.resource_listview = cc.ui.UIListView.new{
@@ -346,11 +282,12 @@ function GameUIWarehouse:AddResourceItem(parms)
 end
 
 function GameUIWarehouse:Close()
-    City:GetResourceManager():RemoveObserver(self)
     self:leftButtonClicked()
 end
 
 return GameUIWarehouse
+
+
 
 
 

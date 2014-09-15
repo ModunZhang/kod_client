@@ -77,8 +77,7 @@ function GameUIChat:listviewListener(event)
     print("GameUIChat:listviewListener event:" .. event.name .. " pos:" .. event.itemPos)
     local listView = event.listView
     if "clicked" == event.name then
-    	self:createPlayerMenu()
-        print(event.itemPos)
+    	self:createPlayerMenu(event)
     end
 end
 
@@ -240,11 +239,12 @@ function GameUIChat:refreshListView()
     end
     -- self.listView:removeAllItems()
     for i,v in ipairs(ChatCenter:getAllMessages(self._channelType)) do
+    	v.text = "32332"
         local newItem  = self:getChatItem(v)
         self.listView:addItem(newItem)
     end
     self.listView:reload()
-    -- self.listView:resetPosition()
+    self.listView:resetPosition()
 end
 
 function GameUIChat:createListView()
@@ -339,7 +339,8 @@ function GameUIChat:createTextFieldBody()
 	plusButton:addTo(self):pos(emojiButton:getPositionX()+emojiButton:getCascadeBoundingBox().size.width+5,emojiButton:getPositionY()+2)
 end
 
-function GameUIChat:createPlayerMenu()
+function GameUIChat:createPlayerMenu(event)
+	local item = event.item
 	local menuLayer = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
     menuLayer:setTouchEnabled(true)
     menuLayer:addTo(self,self.PLAYERMENU_ZORDER):pos(0, 0)
@@ -347,8 +348,15 @@ function GameUIChat:createPlayerMenu()
     menuLayer:addNodeEventListener(cc.NODE_TOUCH_EVENT,function()
     	menuLayer:removeFromParent(true)
     end)
-    -- local copyButton = cc.ui.UIPushButton.new({normal = "chat_tab_button.png",pressed = "chat_tab_button_highlight.png",}, {scale9 = false})
-    -- copyButton:addTo(menuLayer):align(display.LEFT_BOTTOM, 0, 2)
+    print("fuck select index ---->",self.listView:getItemPos(item),event.itemPos)
+	local chat = ChatCenter:getMessage(self.listView:getItemPos(item)-1,self.page,self._channelType)
+	local x,y = item:getPosition()
+    local p = item:getParent():getParent():convertToWorldSpace(cc.p(x,y))
+    local targetP = menuLayer:convertToNodeSpace(p)
+    local newItem = self:getChatItem(chat)
+    newItem:setPosition(targetP)
+    newItem:addTo(menuLayer)
+    --copy
     local copyButton = cc.ui.UIPushButton.new({normal="chat_tab_button.png",pressed="chat_tab_button_highlight.png"}, {scale9 = false})
         :setButtonLabel("normal", cc.ui.UILabel.new({
             UILabelType = 2,
@@ -361,7 +369,76 @@ function GameUIChat:createPlayerMenu()
         end)
         :align(display.LEFT_BOTTOM, 0, 2)
         :addTo(tabBg)
-    
+    local label = copyButton:getButtonLabel()
+    display.newSprite("chat_copy.png"):align(display.CENTER,label:getPositionX(), label:getPositionY()+20):addTo(copyButton)
+    copyButton:setButtonLabelOffset(0,-30)
+
+    --chat_check_out
+    local checkButton = cc.ui.UIPushButton.new({normal="chat_tab_button.png",pressed="chat_tab_button_highlight.png"}, {scale9 = false})
+        :setButtonLabel("normal", cc.ui.UILabel.new({
+            UILabelType = 2,
+            text = _("查看信息"),
+            size = 20,
+            color = UIKit:hex2c3b(0x403c2f)
+        }))
+        :onButtonClicked(function(event)
+            
+        end)
+        :align(display.LEFT_BOTTOM, tabBg:getContentSize().width/5, 2)
+        :addTo(tabBg)
+    local label = checkButton:getButtonLabel()
+    display.newSprite("chat_check_out.png"):align(display.CENTER,label:getPositionX(), label:getPositionY()+20):addTo(checkButton)
+    checkButton:setButtonLabelOffset(0,-30)
+
+    --chat_shield
+    local shieldButton = cc.ui.UIPushButton.new({normal="chat_tab_button.png",pressed="chat_tab_button_highlight.png"}, {scale9 = false})
+        :setButtonLabel("normal", cc.ui.UILabel.new({
+            UILabelType = 2,
+            text = _("屏蔽"),
+            size = 20,
+            color = UIKit:hex2c3b(0x403c2f)
+        }))
+        :onButtonClicked(function(event)
+            
+        end)
+        :align(display.LEFT_BOTTOM, tabBg:getContentSize().width/5 * 2 , 2)
+        :addTo(tabBg)
+    local label = shieldButton:getButtonLabel()
+    display.newSprite("chat_shield.png"):align(display.CENTER,label:getPositionX(), label:getPositionY()+20):addTo(shieldButton)
+    shieldButton:setButtonLabelOffset(0,-30)
+
+    --chat_report
+    local reportButton = cc.ui.UIPushButton.new({normal="chat_tab_button.png",pressed="chat_tab_button_highlight.png"}, {scale9 = false})
+        :setButtonLabel("normal", cc.ui.UILabel.new({
+            UILabelType = 2,
+            text = _("举报"),
+            size = 20,
+            color = UIKit:hex2c3b(0x403c2f)
+        }))
+        :onButtonClicked(function(event)
+            
+        end)
+        :align(display.LEFT_BOTTOM, tabBg:getContentSize().width/5 * 3 , 2)
+        :addTo(tabBg)
+    local label = reportButton:getButtonLabel()
+    display.newSprite("chat_report.png"):align(display.CENTER,label:getPositionX(), label:getPositionY()+20):addTo(reportButton)
+    reportButton:setButtonLabelOffset(0,-30)
+    --chat_mail
+    local mailButton = cc.ui.UIPushButton.new({normal="chat_tab_button.png",pressed="chat_tab_button_highlight.png"}, {scale9 = false})
+        :setButtonLabel("normal", cc.ui.UILabel.new({
+            UILabelType = 2,
+            text = _("邮件"),
+            size = 20,
+            color = UIKit:hex2c3b(0x403c2f)
+        }))
+        :onButtonClicked(function(event)
+            
+        end)
+        :align(display.LEFT_BOTTOM, tabBg:getContentSize().width/5 * 4 , 2)
+        :addTo(tabBg)
+    local label = mailButton:getButtonLabel()
+    display.newSprite("chat_mail.png"):align(display.CENTER,label:getPositionX(), label:getPositionY()+20):addTo(mailButton)
+    mailButton:setButtonLabelOffset(0,-30)
 end
 
 return GameUIChat
