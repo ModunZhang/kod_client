@@ -6,7 +6,7 @@ local GameUIResource = UIKit:createUIClass("GameUIResource","GameUIWithCommonHea
 local ResourceManager = import("..entity.ResourceManager")
 local City = City
 local MAX_COUNT_DECORATOR = 5
-
+local UIListView = import(".UIListView")
 function GameUIResource:ctor(building)
 	 GameUIResource.super.ctor(self, City, self:GetTitleByType(building))
      self.building = building
@@ -160,7 +160,7 @@ function GameUIResource:CreateInfomation()
     :addTo(listHeader,5)
     :pos(listHeader:getContentSize().width/2,listHeader:getContentSize().height/2-4)
 
-    self.listView = cc.ui.UIListView.new {
+    self.listView = UIListView.new {
         viewRect = cc.rect(listHeader:getPositionX(), listHeader:getPositionY()-listHeader:getContentSize().height-500, listHeader:getContentSize().width,500),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         alignment = cc.ui.UIListView.ALIGNMENT_LEFT
@@ -200,6 +200,7 @@ function GameUIResource:GetListItem(index,title,val)
 end
 
 function GameUIResource:RefreshListView()
+    self.listView:removeAllItems()
 	for i,v in ipairs(self.dataSource) do
 		local newItem = self:GetListItem(i,v[1],v[2])
 		self.listView:addItem(newItem)
