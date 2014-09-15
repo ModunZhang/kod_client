@@ -132,11 +132,9 @@ def exportSheetAsLua(sheet):
 				text = ('\t["%s"] = "%s",\n' % (nakeName(title[j]), datarow[j]) )
 			else:
 				continue
-
-			if j == colNum - 1:
-				text = text.split(",")[0] + "\n"
 			luaStr += text
 		
+		luaStr = luaStr.rsplit(",", 1)[0] + "\n"
 		luaStr += '}\n'
 		file.write(luaStr.encode('utf-8'))
 	file.close()
@@ -152,11 +150,13 @@ def exportSheetAsJs(sheet):
 	row = sheet.row_values(0)
 	value = row[0]
 	valueType = value.split("_")[0]
-	valueType = "{}"
 	if "INT" == valueType:
 		valueType = "[]"
 	elif "STR" == valueType:
 		valueType = "{}"
+	else:
+		return
+
 
 	file = open(g_exportDir + "/" + g_currentFileNamePrefix + "_" + sheetName + '.js', "w")
 	file.write("var %s = %s\n" % (sheetName, valueType))
@@ -195,14 +195,11 @@ def exportSheetAsJs(sheet):
 			elif ("STR" == valueType):
 				text = ('\t"%s":"%s",\n' % (nakeName(title[j]), datarow[j]) )
 			else:
-				continue
-
-			if j == colNum - 1:
-				text = text.split(",")[0] + "\n"
+				continue	
 			jsStr += text
 		
+		jsStr = jsStr.rsplit(",", 1)[0] + "\n"
 		jsStr += '}\n'
-		
 		file.write(jsStr.encode('utf-8'))
 	file.close()
 

@@ -8,7 +8,7 @@ dragonAttribute[0] = {
 	["perLevelStrength"] = 0,
 	["perLevelVitality"] = 0,
 	["initStrength"] = 0,
-	["initVitality"] = 0,
+	["initVitality"] = 0
 }
 dragonAttribute[1] = {
 	["star"] = 1,
@@ -18,7 +18,7 @@ dragonAttribute[1] = {
 	["perLevelStrength"] = 2,
 	["perLevelVitality"] = 6,
 	["initStrength"] = 20,
-	["initVitality"] = 60,
+	["initVitality"] = 60
 }
 dragonAttribute[2] = {
 	["star"] = 2,
@@ -29,7 +29,7 @@ dragonAttribute[2] = {
 	["perLevelVitality"] = 12,
 	["initStrength"] = 60,
 	["initVitality"] = 180,
-	["allCategory"] = "crown
+	["allCategory"] = "crown,armguardLeft,armguardRight"
 }
 dragonAttribute[3] = {
 	["star"] = 3,
@@ -40,7 +40,7 @@ dragonAttribute[3] = {
 	["perLevelVitality"] = 18,
 	["initStrength"] = 120,
 	["initVitality"] = 360,
-	["allCategory"] = "crown
+	["allCategory"] = "crown,armguardLeft,armguardRight,chest,sting,orb"
 }
 dragonAttribute[4] = {
 	["star"] = 4,
@@ -51,7 +51,7 @@ dragonAttribute[4] = {
 	["perLevelVitality"] = 24,
 	["initStrength"] = 200,
 	["initVitality"] = 580,
-	["allCategory"] = "crown
+	["allCategory"] = "crown,armguardLeft,armguardRight,chest,sting,orb"
 }
 dragonAttribute[5] = {
 	["star"] = 5,
@@ -62,5 +62,5 @@ dragonAttribute[5] = {
 	["perLevelVitality"] = 30,
 	["initStrength"] = 300,
 	["initVitality"] = 880,
-	["allCategory"] = "crown
+	["allCategory"] = "crown,armguardLeft,armguardRight,chest,sting,orb"
 }
