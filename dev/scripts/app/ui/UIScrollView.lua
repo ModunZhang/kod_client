@@ -74,7 +74,7 @@ function UIScrollView:ctor(params)
 	if params.viewRect then
 		self:setViewRect(params.viewRect)
 	end
-	if not params.direction then
+	if params.direction then
 		self:setDirection(params.direction)
 	end
 	if params.scrollbarImgH then
