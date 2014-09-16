@@ -1,4 +1,4 @@
-local GameUIUnlockBuilding = import("..ui.GameUIUnlockBuilding")
+-- local GameUIUnlockBuilding = import("..ui.GameUIUnlockBuilding")
 local LockState = class("LockState")
 function LockState:ctor(sprite_button)
     self.sprite_button = sprite_button
