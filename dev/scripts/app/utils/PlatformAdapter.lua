@@ -2,18 +2,19 @@
 -- Author: dannyhe
 -- Date: 2014-08-21 20:49:46
 --
--- 适配Android的本地api
-if device.platform == 'android' then
--------------------------------------------------
---openudid
-	if ext.getOpenUDID then
- 		device.getOpenUDID = function ()
+-- 适配相应平台的Lua接口
+local PlatformAdapter = {}
+
+function PlatformAdapter:android()
+    --openudid
+    if ext.getOpenUDID then
+        device.getOpenUDID = function ()
             return ext.getOpenUDID()
         end
     end
+end
 
--------------------------------------------------
-elseif device.platform == 'mac' then
+function PlatformAdapter:mac()
     ext.localpush = {
         switchNotification = function(...)
         end,
@@ -26,18 +27,24 @@ elseif device.platform == 'mac' then
     }
 end
 
+function PlatformAdapter:common()
+    --重写菊花显示的时候锁住事件
+    local showActivityIndicator = device.showActivityIndicator
+    local hideActivityIndicator = device.hideActivityIndicator
 
---这里重写菊花显示的时候锁住事件
+    device.showActivityIndicator = function()
+        showActivityIndicator()
+        -- cc.Director:getInstance():getTouchDispatcher():setDispatchEvents(false)
+    end
 
-local showActivityIndicator = device.showActivityIndicator
-local hideActivityIndicator = device.hideActivityIndicator
-
-device.showActivityIndicator = function()
-    showActivityIndicator()
-    -- cc.Director:getInstance():getTouchDispatcher():setDispatchEvents(false)
+    device.hideActivityIndicator = function()
+        hideActivityIndicator()
+        -- cc.Director:getInstance():getTouchDispatcher():setDispatchEvents(true)
+    end
 end
 
-device.hideActivityIndicator = function()
-    hideActivityIndicator()
-    -- cc.Director:getInstance():getTouchDispatcher():setDispatchEvents(true)
+--------------------------------------------------------------------
+if PlatformAdapter[device.platform] then
+    PlatformAdapter[device.platform]()
 end
+PlatformAdapter:common()
