@@ -135,7 +135,7 @@ function GameUIDwelling:CreateCitizenPanel()
 
 
     citizen_layer.citizen_number = {}
-    local end_pos = 720
+    local end_pos = display.top - 240
     local count = #citizen_layer.citizen_ui
     for i, v in pairs(citizen_layer.citizen_ui) do
 

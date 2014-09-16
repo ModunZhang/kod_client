@@ -89,14 +89,6 @@ function SpriteButton:OnTileChanged(city)
     else
         self:TranslateToSatateByName("can_not_unlocked")
     end
-
-    self:TranslateToSatateByName("locked")
-end
-function SpriteButton:OnBuildingUpgradingBegin(building, time)
-end
-function SpriteButton:OnBuildingUpgradeFinished(building, time)
-end
-function SpriteButton:OnBuildingUpgrading(building, time)
 end
 function SpriteButton:OnPositionChanged(x, y)
     self:setPosition(self:GetPositionFromWorld(x, y))
@@ -120,12 +112,9 @@ function SpriteButton:ctor(sprite, city)
     self:SetConfirmTouchListener(function()
         local tile = self.sprite:GetEntity()
         local unlock_point = city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(city)
-        print(tile and unlock_point > 0 and city:IsTileCanbeUnlockAt(tile.x, tile.y))
         if tile and unlock_point > 0 and city:IsTileCanbeUnlockAt(tile.x, tile.y) then
             self:TranslateToSatateByName("unlocked")
             NetManager:upgradeBuildingByLocation(tile.location_id, function(...)end)
-        else
-            self:TranslateToSatateByName("locked")
         end
     end)
 
