@@ -669,41 +669,6 @@ end
 function City:UpdateResourceByBuilding(current_time, building)
     self.resource_manager:OnBuildingChangedFromCity(self, current_time, building)
 end
-function City:UpdateResourceByType(current_time, resource_type)
-    if self.RESOURCE_TYPE_TO_BUILDING_TYPE[resource_type] then
-        local resource = self.resource_manager:GetResourceByType(resource_type)
-        if resource_type == ResourceManager.RESOURCE_TYPE.POPULATION then
-            local production, limit = self:CalculateResourceProductionAndLimitByType(resource_type)
-            resource:SetProductionPerHour(current_time, production)
-            resource:SetValueLimit(limit)
-        else
-            local production = self:CalculateResourceProductionByType(resource_type)
-            resource:SetProductionPerHour(current_time, production)
-        end
-    end
-end
-function City:CalculateResourceProductionAndLimitByType(RESOURCE_TYPE)
-    local total_production = 0
-    local total_limit = 0
-    self:IteratorDecoratorBuildingsByFunc(function(key, building)
-        if building:GetUpdateResourceType() == RESOURCE_TYPE then
-            total_production = total_production + building:GetProductionPerHour()
-            total_limit = total_limit + building:GetProductionLimit()
-        end
-    end)
-    return total_production, total_limit
-end
-function City:CalculateResourceProductionByType(RESOURCE_TYPE)
-    local total_production = 0
-    self:IteratorDecoratorBuildingsByFunc(function(key, building)
-        if building:GetUpdateResourceType() == RESOURCE_TYPE then
-            total_production = total_production + building:GetProductionPerHour()
-        end
-    end)
-    return total_production
-end
-
-
 ---------
 function City:GenerateWalls()
     local find_wall_neg_and_remove_dup = function (walls, wall)

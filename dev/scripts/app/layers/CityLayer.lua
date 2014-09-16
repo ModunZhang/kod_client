@@ -250,17 +250,17 @@ function CityLayer:IteratorCanUpgradingBuilding(func)
         end
     end
     repeat
-        table.foreach(self.buildings == nil and {} or self.buildings, handle_func)
+        table.foreach(self.buildings, handle_func)
         if handle then break end
-        table.foreach(self.houses == nil and {} or self.houses, handle_func)
+        table.foreach(self.houses, handle_func)
         if handle then break end
-        table.foreach(self.towers == nil and {} or self.towers, function(k, tower)
+        table.foreach(self.towers, function(k, tower)
             if tower:GetEntity():IsUnlocked() then
                 return handle_func(k, tower)
             end
         end)
         if handle then break end
-        table.foreach(self.walls == nil and {} or self.walls, function(k, wall)
+        table.foreach(self.walls, function(k, wall)
             if wall:GetEntity():IsGate() then
                 return handle_func(k, wall)
             end
@@ -290,7 +290,13 @@ function CityLayer:IteratorClickAble(func)
 end
 ----
 function CityLayer:ctor(city)
+    self.buildings = {}
+    self.houses = {}
+    self.towers = {}
+    self.ruins = {}
     self.trees = {}
+    self.walls = {}
+    self.road = nil
     self:InitBackground()
     self:InitCityBackGround()
     self:InitPositionNodeWithCityNode()
@@ -354,16 +360,6 @@ function CityLayer:InitWithCity(city)
     city:AddListenOnType(self, city.LISTEN_TYPE.OCCUPY_RUINS)
     city:AddListenOnType(self, city.LISTEN_TYPE.CREATE_DECORATOR)
     city:AddListenOnType(self, city.LISTEN_TYPE.DESTROY_DECORATOR)
-
-    self.buildings = {}
-    self.houses = {}
-    self.towers = {}
-    self.ruins = {}
-    self.trees = {}
-    self.walls = {}
-    self.road = nil
-
-
     self:UpdateAllWithCity(city)
 
     local city_node = self:GetCityNode()
@@ -382,12 +378,12 @@ function CityLayer:InitWithCity(city)
     end
 
     for _, building in pairs(city:GetAllBuildings()) do
-        local building = self:CreateBuilding(building, city)
-        city:AddListenOnType(building, city.LISTEN_TYPE.LOCK_TILE)
-        city:AddListenOnType(building, city.LISTEN_TYPE.UNLOCK_TILE)
-        city:AddListenOnType(building, city.LISTEN_TYPE.UPGRADE_BUILDING)
-        city_node:addChild(building)
-        table.insert(self.buildings, building)
+        local building_sprite = self:CreateBuilding(building, city)
+        city:AddListenOnType(building_sprite, city.LISTEN_TYPE.LOCK_TILE)
+        city:AddListenOnType(building_sprite, city.LISTEN_TYPE.UNLOCK_TILE)
+        city:AddListenOnType(building_sprite, city.LISTEN_TYPE.UPGRADE_BUILDING)
+        city_node:addChild(building_sprite)
+        table.insert(self.buildings, building_sprite)
     end
 
     for _, house in pairs(city:GetAllDecorators()) do

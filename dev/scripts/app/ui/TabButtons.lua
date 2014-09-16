@@ -13,6 +13,7 @@ function TabButtons:ctor(buttons, tab_param, listener)
     local margin_down = tab_param.margin_down ~= nil and tab_param.margin_down or 0
     self.tabListener = listener
 
+    self.buttons = {}
     
     local tab_bg = cc.ui.UIImage.new("tabs/tab_bg.png", {scale9 = true})
     :addTo(self)
@@ -59,11 +60,21 @@ function TabButtons:ctor(buttons, tab_param, listener)
         :addTo(tab_bg, 101)
         :align(display.CENTER, x, y)
 
+        table.insert(self.buttons, button)
+
         button:onButtonPressed(function(event)
             self:PushButton(event.target)
         end)
         if is_default then
             self:PushButton(button)
+        end
+    end
+end
+function TabButtons:SelectByTag(tag)
+    for _, button in pairs(self.buttons) do
+        if button.tag == tag then
+            self:PushButton(button)
+            return
         end
     end
 end

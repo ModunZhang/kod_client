@@ -3,13 +3,12 @@
 -- Date: 2014-09-13 10:30:04
 --
 local GameUIResource = UIKit:createUIClass("GameUIResource","GameUIWithCommonHeader")
-local TabButtons = import(".TabButtons")
 local ResourceManager = import("..entity.ResourceManager")
 local City = City
 local MAX_COUNT_DECORATOR = 5
 local UIListView = import(".UIListView")
 function GameUIResource:ctor(building)
-	 GameUIResource.super.ctor(self,City,self:GetTitleByType(building))
+	 GameUIResource.super.ctor(self, City, self:GetTitleByType(building))
      self.building = building
      self.dataSource = self:GetDataSource()
 end
@@ -17,16 +16,15 @@ end
 
 function GameUIResource:onEnter()
     GameUIResource.super.onEnter(self)
-	self:CreateUI()
+    self:CreateUI()
 end
-
 function GameUIResource:CreateUI()
 	self:CreateInfomation()
 	self:createTabButtons()
 end
 
 function GameUIResource:createTabButtons()
-	local tab_buttons = TabButtons.new({
+    self:CreateTabButtons({
         {
             label = _("升级"),
             tag = "upgrade",
@@ -37,21 +35,14 @@ function GameUIResource:createTabButtons()
             tag = "infomation",
         }
     },
-    {
-        gap = -4,
-        margin_left = -2,
-        margin_right = -2,
-        margin_up = -6,
-        margin_down = 1
-    },
     function(tag)
-    	if tag == 'infomation' then
-    		self.infomationLayer:setVisible(true)
-    		self:RefreshListView()
-    	else
-    		self.infomationLayer:setVisible(false)
-    	end
-    end):addTo(self):pos(display.cx, display.bottom + 50)
+        if tag == 'infomation' then
+            self.infomationLayer:setVisible(true)
+            self:RefreshListView()
+        else
+            self.infomationLayer:setVisible(false)
+        end
+    end):pos(display.cx, display.bottom + 50)
 end
 
 

@@ -336,6 +336,69 @@ function NetManager:instantUpgradeTowerByLocation(cb)
     end)
 end
 
+function NetManager:impose(cb)
+    self.m_netService:request("logic.playerHandler.impose", nil, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+
+function NetManager:makeBuildingMaterial(cb)
+    local info = {
+        category = "building",
+        finishNow = false
+    }
+    self.m_netService:request("logic.playerHandler.makeMaterial", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+function NetManager:instantMakeBuildingMaterial(cb)
+    local info = {
+        category = "building",
+        finishNow = true
+    }
+    self.m_netService:request("logic.playerHandler.makeMaterial", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+
+function NetManager:makeTechnologyMaterial(cb)
+    local info = {
+        category = "technology",
+        finishNow = false
+    }
+    self.m_netService:request("logic.playerHandler.makeMaterial", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+function NetManager:instantMakeTechnologyMaterial(cb)
+    local info = {
+        category = "technology",
+        finishNow = true
+    }
+    self.m_netService:request("logic.playerHandler.makeMaterial", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
 
 
 

@@ -103,7 +103,6 @@ function ResourceManager:OnBuildingChangedFromCity(city, current_time, building)
         [POPULATION] = 0,
     }
     local maxwood, maxfood, maxiron, maxstone = city:GetFirstBuildingByType("warehouse"):GetResourceValueLimit()
-    print(maxwood, maxfood, maxiron, maxstone)
     local total_limit_map = {
         [WOOD] = maxwood,
         [FOOD] = maxfood,
@@ -118,7 +117,7 @@ function ResourceManager:OnBuildingChangedFromCity(city, current_time, building)
             if resource_type then
                 total_citizen = total_citizen + decorator:GetCitizen()
                 citizen_map[resource_type] = citizen_map[resource_type] + decorator:GetCitizen()
-                print(decorator:GetType(), decorator:GetProductionPerHour())
+                -- print(decorator:GetType(), decorator:GetProductionPerHour())
                 total_production_map[resource_type] = total_production_map[resource_type] + decorator:GetProductionPerHour()
                 if POPULATION == resource_type then
                     total_limit_map[resource_type] = total_limit_map[resource_type] + decorator:GetProductionLimit()
