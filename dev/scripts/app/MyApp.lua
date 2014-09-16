@@ -35,10 +35,6 @@ function MyApp:ctor()
     end
 end
 
-function MyApp:enterScene(...)
-    self._runningScene = MyApp.super.enterScene(self,...)
-end
-
 function MyApp:run()
     self:enterScene('LogoScene')
 end
