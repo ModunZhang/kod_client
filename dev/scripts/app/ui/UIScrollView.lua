@@ -558,7 +558,13 @@ function UIScrollView:elasticScroll()
 	if 0 == disX and 0 == disY then
 		return
 	end
-
+	if UIScrollView.DIRECTION_VERTICAL == self.direction then
+		if disY > 0 then
+			self:callListener_{name = "SCROLLVIEW_EVENT_BOUNCE_TOP"}
+		else
+			self:callListener_{name = "SCROLLVIEW_EVENT_BOUNCE_BOTTOM"}
+		end
+	end
 	transition.moveBy(self.scrollNode,
 		{x = disX, y = disY, time = 0.3,
 		easing = "backout",

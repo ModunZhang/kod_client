@@ -163,7 +163,7 @@ function UIListView:itemSizeChangeListener(listItem, newSize, oldSize)
 				{x = itemW/2, y = 0, time = 0.2})
 	else
 
-	transition.moveBy(content,
+		transition.moveBy(content,
 				{x = itemW/2, y = itemH/2, time = 0.2})
 	end
 	self.size.width = self.size.width + itemW

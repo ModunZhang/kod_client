@@ -88,6 +88,22 @@ function GameUIChat:onMovieOutStage()
 end
 
 function GameUIChat:listviewListener(event)
+	if event.name == 'SCROLLVIEW_EVENT_BOUNCE_BOTTOM' then
+		  print('get more message!')
+            self.page = self.page + 1
+            local data = ChatCenter:getAllMessages(self._channelType,self.page)
+            if #data == 0 and self.page > 1 then
+                self.page = self.page - 1
+                return
+            end
+            for i,v in ipairs(data) do
+                local newItem  = self:getChatItem(v)
+                self.listView:addItem(newItem)
+            end
+            self.listView:reload()
+            self.listView:resetPosition()
+		return
+	end
 	if not event.listView:isItemInViewRect(event.itemPos) then
         return
     end
@@ -181,6 +197,7 @@ function GameUIChat:getChatItem(chat)
 	    local adjustFunc = function()
 	    	middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getContentSize().height))
 	    	header:align(display.RIGHT_BOTTOM, 549, bottom:getContentSize().height+middle:getContentSize().height)
+	    	playerIcon:pos(playerIcon:getPositionX(),bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
 	    	item:setItemSize(549,bottom:getContentSize().height+header:getContentSize().height+middle:getContentSize().height)
 	    end
 	    --button
@@ -188,7 +205,7 @@ function GameUIChat:getChatItem(chat)
 	    local translateButton = cc.ui.UIPushButton.new({normal = "chat_translation.png"}, {scale9 = false})
 	    	:addTo(header,3)
 	    	:onButtonClicked(function(event)
-		    	local oldHight = contentLable:getContentSize().height
+		    	-- local oldHight = contentLable:getContentSize().height
 	            if not chat._translate_ then
 	                GameUtils:Translate(chat.text,function(result,errText)
 	                    if result then
@@ -208,8 +225,7 @@ function GameUIChat:getChatItem(chat)
 	                    contentLable:setString(chat._translate_)
 	                end
 	            end
-				local offsetY = contentLable:getContentSize().height - oldHight
-				playerIcon:pos(playerIcon:getPositionX(),playerIcon:getPositionY()+offsetY)
+				-- local offsetY = contentLable:getContentSize().height - oldHight
 				adjustFunc()
     		end)
     		:align(display.RIGHT_BOTTOM,timeLabel:getPositionX()+timeLabel:getContentSize().width+60,titleLabel:getPositionY()+titleLabel:getContentSize().height/2)
