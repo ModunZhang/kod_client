@@ -34,12 +34,12 @@ function PlatformAdapter:common()
 
     device.showActivityIndicator = function()
         showActivityIndicator()
-        -- cc.Director:getInstance():getTouchDispatcher():setDispatchEvents(false)
+        cc.Director:getInstance():getEventDispatcher():setEnabled(false)
     end
 
     device.hideActivityIndicator = function()
         hideActivityIndicator()
-        -- cc.Director:getInstance():getTouchDispatcher():setDispatchEvents(true)
+        cc.Director:getInstance():getEventDispatcher():setEnabled(true)
     end
 end
 
