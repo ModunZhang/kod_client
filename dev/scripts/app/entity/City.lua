@@ -1,4 +1,5 @@
 -- 引入外部包
+local BuildingRegister = import(".BuildingRegister")
 local Enum = import("..utils.Enum")
 local Orient = import(".Orient")
 local Tile = import(".Tile")
@@ -290,6 +291,46 @@ function City:GetCanUpgradingTowers()
     return towers
 end
 -- 工具
+function City:IteratorCanUpgradBuildingsByUserData(user_data)
+    self:IteratorDecoratorBuildingsByFunc(function(key, building)
+        local tile = self:GetTileWhichBuildingBelongs(building)
+        building:OnUserDataChanged(user_data, tile.location_id, tile:GetBuildingLocation(building))
+    end)
+    self:IteratorFunctionBuildingsByFunc(function(key, building)
+        building:OnUserDataChanged(user_data, self:GetTileWhichBuildingBelongs(building).location_id)
+    end)
+    self:IteratorTowersByFunc(function(key, building)
+        building:OnUserDataChanged(user_data)
+    end)
+    self:GetGate():OnUserDataChanged(user_data)
+end
+function City:IteratorResourcesByUserData(user_data, current_time)
+    local resource_manager = self:GetResourceManager()
+    resource_manager:GetWoodResource():UpdateResource(current_time, user_data.resources.wood)
+    resource_manager:GetFoodResource():UpdateResource(current_time, user_data.resources.food)
+    resource_manager:GetIronResource():UpdateResource(current_time, user_data.resources.iron)
+    resource_manager:GetStoneResource():UpdateResource(current_time, user_data.resources.stone)
+    resource_manager:GetPopulationResource():UpdateResource(current_time, user_data.resources.citizen)
+    resource_manager:GetCoinResource():SetValue(user_data.resources.coin)
+    resource_manager:GetGemResource():SetValue(user_data.resources.gem)
+    self:UpdateAllResource(current_time)
+end
+function City:IteratorAllNeedTimerEntity(current_time)
+    self:IteratorFunctionBuildingsByFunc(function(key, building)
+        building:OnTimer(current_time)
+    end)
+    self:IteratorDecoratorBuildingsByFunc(function(key, building)
+        building:OnTimer(current_time)
+    end)
+    self:IteratorTowersByFunc(function(key, building)
+        building:OnTimer(current_time)
+    end)
+    local gate = self:GetGate()
+    if gate then
+        gate:OnTimer(current_time)
+    end
+    self.resource_manager:OnTimer(current_time)
+end
 function City:IteratorTilesByFunc(func)
     for iy, row in pairs(self.tiles) do
         for jx, col in pairs(row) do
@@ -351,20 +392,7 @@ function City:GetNeighbourRuinWithSpecificRuin(ruin)
 end
 -- 功能函数
 function City:OnTimer(time)
-    self:IteratorFunctionBuildingsByFunc(function(key, building)
-        building:OnTimer(time)
-    end)
-    self:IteratorDecoratorBuildingsByFunc(function(key, building)
-        building:OnTimer(time)
-    end)
-    self:IteratorTowersByFunc(function(key, building)
-        building:OnTimer(time)
-    end)
-    local gate = self:GetGate()
-    if gate then
-        gate:OnTimer(time)
-    end
-    self.resource_manager:OnTimer(time)
+    self:IteratorAllNeedTimerEntity(time)
 end
 function City:CreateDecorator(current_time, decorator_building)
     table.insert(self.decorators, decorator_building)
@@ -496,7 +524,6 @@ function City:OnUserDataChanged(current_time, userData)
             end
         end)
 
-
         -- 新建的
         local hosue_events = userData.houseEvents
         local function get_house_event_by_location(building_location, sub_id)
@@ -511,52 +538,18 @@ function City:OnUserDataChanged(current_time, userData)
             -- 当前位置没有小建筑并且推送的数据里面有就认为新建小建筑
             if not decorators[house.location] then
                 local tile = self:GetTileByLocationId(location.location)
-                local ax, ay = tile:GetAbsolutePositionByLocation(house.location)
-
+                local absolute_x, absolute_y = tile:GetAbsolutePositionByLocation(house.location)
                 local event = get_house_event_by_location(location.location, house.location)
-                finishTime = event == nil and 0 or event.finishTime / 1000
-
-                if house.type == "woodcutter" then
-                    self:CreateDecorator(current_time, WoodResourceUpgradeBuilding.new({
-                        x = ax, y = ay,
-                        w = 3, h = 3,
-                        building_type = house.type,
-                        level = house.level,
-                        finishTime = finishTime,
-                    }))
-                elseif house.type == "farmer" then
-                    self:CreateDecorator(current_time, FoodResourceUpgradeBuilding.new({
-                        x = ax, y = ay,
-                        w = 3, h = 3,
-                        building_type = house.type,
-                        level = house.level,
-                        finishTime = finishTime,
-                    }))
-                elseif house.type == "miner" then
-                    self:CreateDecorator(current_time, IronResourceUpgradeBuilding.new({
-                        x = ax, y = ay,
-                        w = 3, h = 3,
-                        building_type = house.type,
-                        level = house.level,
-                        finishTime = finishTime,
-                    }))
-                elseif house.type == "quarrier" then
-                    self:CreateDecorator(current_time, StoneResourceUpgradeBuilding.new({
-                        x = ax, y = ay,
-                        w = 3, h = 3,
-                        building_type = house.type,
-                        level = house.level,
-                        finishTime = finishTime,
-                    }))
-                elseif house.type == "dwelling" then
-                    self:CreateDecorator(current_time, PopulationResourceUpgradeBuilding.new({
-                        x = ax, y = ay,
-                        w = 3, h = 3,
-                        building_type = house.type,
-                        level = house.level,
-                        finishTime = finishTime,
-                    }))
-                end
+                local finishTime = event == nil and 0 or event.finishTime / 1000
+                self:CreateDecorator(current_time, BuildingRegister[house.type].new({
+                    x = absolute_x,
+                    y = absolute_y,
+                    w = 3,
+                    h = 3,
+                    building_type = house.type,
+                    level = house.level,
+                    finishTime = finishTime,
+                }))
             end
         end)
     end)
@@ -568,31 +561,13 @@ function City:OnUserDataChanged(current_time, userData)
     end
 
     -- 更新升级事件
-    self:IteratorDecoratorBuildingsByFunc(function(key, building)
-        local tile = self:GetTileWhichBuildingBelongs(building)
-        building:OnUserDataChanged(userData, tile.location_id, tile:GetBuildingLocation(building))
-    end)
-    self:IteratorFunctionBuildingsByFunc(function(key, building)
-        building:OnUserDataChanged(userData, self:GetTileWhichBuildingBelongs(building).location_id)
-    end)
-    self:IteratorTowersByFunc(function(key, building)
-        building:OnUserDataChanged(userData)
-    end)
-    self:GetGate():OnUserDataChanged(userData)
+    self:IteratorCanUpgradBuildingsByUserData(userData)
 
 
     -- 最后才更新资源
-    local resource_manager = self:GetResourceManager()
-    local resource_refresh_time = userData.basicInfo.resourceRefreshTime
-    resource_manager:GetWoodResource():UpdateResource(current_time, userData.resources.wood)
-    resource_manager:GetFoodResource():UpdateResource(current_time, userData.resources.food)
-    resource_manager:GetIronResource():UpdateResource(current_time, userData.resources.iron)
-    resource_manager:GetStoneResource():UpdateResource(current_time, userData.resources.stone)
-    resource_manager:GetPopulationResource():UpdateResource(current_time, userData.resources.citizen)
-    resource_manager:GetCoinResource():SetValue(userData.resources.coin)
-    resource_manager:GetGemResource():SetValue(userData.resources.gem)
-    self:UpdateAllResource(current_time)
-    resource_manager:OnResourceChanged()
+    self:IteratorResourcesByUserData(userData, current_time)
+    -- local resource_refresh_time = userData.basicInfo.resourceRefreshTime -- 这个时间有点不准确，还是使用服务器时间
+    -- resource_manager:OnResourceChanged()
 end
 function City:OnCreateDecorator(current_time, building)
     building:AddUpgradeListener(self)
@@ -801,6 +776,7 @@ end
 
 
 return City
+
 
 
 
