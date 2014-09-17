@@ -426,7 +426,7 @@ function NetManager:getTechnologyMaterials(cb)
 end
 function NetManager:makeDragonEquipment(equipment_name, cb)
     local info = {
-        equipmentName = equipmentName,
+        equipmentName = equipment_name,
         finishNow = false
     }
     self.m_netService:request("logic.playerHandler.makeDragonEquipment", info, function(success, msg)
@@ -439,7 +439,7 @@ function NetManager:makeDragonEquipment(equipment_name, cb)
 end
 function NetManager:instantMakeDragonEquipment(equipment_name, cb)
     local info = {
-        equipmentName = equipmentName,
+        equipmentName = equipment_name,
         finishNow = true
     }
     self.m_netService:request("logic.playerHandler.makeDragonEquipment", info, function(success, msg)

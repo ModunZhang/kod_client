@@ -75,6 +75,17 @@ function CityScene:onEnter()
     --         print("OnGetMaterialsWithEvent", event:Category())
     --     end,
     -- })
+    City:GetFirstBuildingByType("blackSmith"):AddBlackSmithListener({
+        OnBeginMakeEquipmentWithEvent = function(lisenter, tool_shop, event)
+            print("OnBeginMakeEquipmentWithEvent", event:Content())
+        end,
+        OnMakingEquipmentWithEvent = function(lisenter, tool_shop, event, current_time)
+            print("OnMakingEquipmentWithEvent", event:Content(), event:LeftTime(current_time))
+        end,
+        OnEndMakeEquipmentWithEvent = function(lisenter, tool_shop, event, equipment)
+            print("OnEndMakeEquipmentWithEvent", event:Content(), equipment)
+        end,
+    })
 end
 function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
@@ -224,6 +235,10 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
             self._keep_page:addToScene(self, true)
         elseif building:GetEntity():GetType() == "toolShop" then
             UIKit:newGameUI('GameUIToolShop', City):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "blackSmith" then
+            UIKit:newGameUI('GameUIBlackSmith', City):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "materialDepot" then
+            UIKit:newGameUI('GameUIMaterialDepot', City):addToScene(self, true)
         elseif building:GetEntity():GetType() == "barracks" then
             UIKit:newGameUI('GameUIBarracks', City):addToScene(self, true)
         elseif building:GetEntity():GetType() == "warehouse" then
@@ -301,6 +316,8 @@ function CityScene:OnGateChanged(old_walls, new_walls)
 end
 
 return CityScene
+
+
 
 
 

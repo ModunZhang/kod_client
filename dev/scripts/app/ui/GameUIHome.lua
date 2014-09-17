@@ -19,7 +19,7 @@ function GameUIHome:OnResourceChanged(resource_manager)
     self.stone_label:setString(GameUtils:formatNumber(stone_number))
     self.citizen_label:setString(GameUtils:formatNumber(citizen_number))
     self.coin_label:setString(GameUtils:formatNumber(coin_number))
-    self.gem_label:setString(GameUtils:formatNumber(gem_number))
+    self.gem_label:setString(gem_number)
 end
 
 

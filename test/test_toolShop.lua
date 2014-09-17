@@ -19,38 +19,38 @@ end
 function test_toolShop()
     local toolShop = City:GetFirstBuildingByType("toolShop")
     assert_table(toolShop)
-    assert_table(toolShop:GetMakeBuildingMaterialsEvent())
+    assert_table(toolShop:GetMakeMaterialsEventByCategory("building"))
 
     toolShop:AddToolShopListener({
         OnBeginMakeMaterialsWithEvent = function(lisenter, tool_shop, event)
-            assert_equal(0, tool_shop:GetMakeBuildingMaterialsEvent():StartTime())
+            assert_equal(0, tool_shop:GetMakeMaterialsEventByCategory("building"):StartTime())
         end,
         OnMakingMaterialsWithEvent = function(lisenter, tool_shop, event, current_time)
 
         end,
         OnEndMakeMaterialsWithEvent = function(lisenter, tool_shop, event, current_time)
-            assert_true(toolShop:IsStoredBuildingMaterials(current_time))
+            assert_true(toolShop:IsStoredMaterialsByCategory("building", current_time))
         end,
         OnGetMaterialsWithEvent = function(lisenter, tool_shop, event)
-            assert_true(tool_shop:IsBuildingMaterialsEmpty())
+            assert_true(tool_shop:IsMaterialsEmptyByCategory("building"))
         end,
     })
 
-    toolShop:MakeBuildingMaterials({1}, toolShop:GetMakingTimeByCategory("building"))
+    toolShop:MakeMaterialsByCategoryWithFinishTime("building", {1}, toolShop:GetMakingTimeByCategory("building"))
 
     Game.new():OnUpdate(function(time)
         toolShop:OnTimer(time)
         if time == 1 then
-            assert_true(toolShop:IsMakingBuildingMaterials(time))
-            assert_true(not toolShop:IsBuildingMaterialsEmpty())
-            assert_true(not toolShop:IsStoredBuildingMaterials(time))
-            assert_equal(1, toolShop:GetMakeBuildingMaterialsEvent():ElapseTime(time))
-            assert_equal(299, toolShop:GetMakeBuildingMaterialsEvent():LeftTime(time))
+            assert_true(toolShop:IsMakingMaterialsByCategory("building", time))
+            assert_true(not toolShop:IsMaterialsEmptyByCategory("building"))
+            assert_true(not toolShop:IsStoredMaterialsByCategory("building", time))
+            assert_equal(1, toolShop:GetMakeMaterialsEventByCategory("building"):ElapseTime(time))
+            assert_equal(299, toolShop:GetMakeMaterialsEventByCategory("building"):LeftTime(time))
             assert_equal(300, toolShop:GetMakingTimeByCategory("building"))
         elseif time == toolShop:GetMakingTimeByCategory("building") then
-            toolShop:EndMakeBuildingMaterials({1}, time)
+            toolShop:EndMakeMaterialsByCategoryWithCurrentTime("building", {1}, time)
         elseif time == toolShop:GetMakingTimeByCategory("building") + 1 then
-            toolShop:GetBuildingMaterials()
+            toolShop:GetMaterialsByCategory("building")
             return false
         end
         return true
