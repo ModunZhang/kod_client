@@ -374,6 +374,18 @@ function NetManager:instantMakeBuildingMaterial(cb)
         end
     end)
 end
+function NetManager:getBuildingMaterials(cb)
+    local info = {
+        category = "building",
+    }
+    self.m_netService:request("logic.playerHandler.getMaterials", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
 function NetManager:makeTechnologyMaterial(cb)
     local info = {
         category = "technology",
@@ -400,18 +412,6 @@ function NetManager:instantMakeTechnologyMaterial(cb)
         end
     end)
 end
-function NetManager:getBuildingMaterials(cb)
-    local info = {
-        category = "building",
-    }
-    self.m_netService:request("logic.playerHandler.getMaterials", info, function(success, msg)
-        if success and msg.code == SUCCESS_CODE then
-            cb(true)
-        else
-            cb(false)
-        end
-    end)
-end
 function NetManager:getTechnologyMaterials(cb)
     local info = {
         category = "technology",
@@ -424,7 +424,32 @@ function NetManager:getTechnologyMaterials(cb)
         end
     end)
 end
-
+function NetManager:makeDragonEquipment(equipment_name, cb)
+    local info = {
+        equipmentName = equipmentName,
+        finishNow = false
+    }
+    self.m_netService:request("logic.playerHandler.makeDragonEquipment", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+function NetManager:instantMakeDragonEquipment(equipment_name, cb)
+    local info = {
+        equipmentName = equipmentName,
+        finishNow = true
+    }
+    self.m_netService:request("logic.playerHandler.makeDragonEquipment", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
 
 
 function NetManager:resetGame()

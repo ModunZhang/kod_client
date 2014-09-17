@@ -41,9 +41,6 @@ function GameUIHome:onEnter()
         {normal = "home/player_btn_up.png", pressed = "home/player_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-	    NetManager.m_netService:request("chat.chatHandler.send", 
-	    	{text = "material 0",type = "global"}, 
-	    	function() end, false)
     end):addTo(top_bg):align(display.LEFT_BOTTOM, 109, 106)
 
 
@@ -154,7 +151,6 @@ function GameUIHome:onEnter()
         {normal = "home/gem_btn_up.png", pressed = "home/gem_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        NetManager:instantUpgradeBuildingByLocation(5, NOT_HANDLE)
     end):addTo(top_bg):pos(596, 60)
     display.newSprite("home/gem.png"):addTo(button):pos(-1, 8)
     display.newSprite("home/gem_num_bg.png"):addTo(button):pos(0, -27)
