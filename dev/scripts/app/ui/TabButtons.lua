@@ -84,10 +84,10 @@ function TabButtons:PushButton(button)
     end
     if self.push_button then
         self.push_button:setVisible(true)
-        self.push_button.label:setColor(display.COLOR_BLACK)
+        self.push_button.label:setColor(UIKit:hex2c3b(0x1f1d17))
     end
     button:setVisible(false)
-    button.label:setColor(display.COLOR_WHITE)
+    button.label:setColor(UIKit:hex2c3b(0xfff3c7))
     self.push_button = button
     if type(self.tabListener) == "function" then
         self.tabListener(self.push_button.tag)
