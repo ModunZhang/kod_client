@@ -300,7 +300,7 @@ function GameUIChat:CreateListView()
 	self.listView = UIListView.new {
         bg = "chat_list_bg.png",
         bgScale9 = true,
-        viewRect = cc.rect(display.left+45, display.bottom+100, 549, self.editbox:getPositionY() - self.editbox:getContentSize().height - 100),
+        viewRect = cc.rect(display.left+45, display.bottom+110, 549, self.editbox:getPositionY() - self.editbox:getContentSize().height - 130),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         alignment = cc.ui.UIListView.ALIGNMENT_LEFT
     	}
