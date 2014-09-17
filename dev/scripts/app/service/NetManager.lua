@@ -346,6 +346,8 @@ function NetManager:impose(cb)
     end)
 end
 
+
+
 function NetManager:makeBuildingMaterial(cb)
     local info = {
         category = "building",
@@ -372,7 +374,6 @@ function NetManager:instantMakeBuildingMaterial(cb)
         end
     end)
 end
-
 function NetManager:makeTechnologyMaterial(cb)
     local info = {
         category = "technology",
@@ -399,11 +400,35 @@ function NetManager:instantMakeTechnologyMaterial(cb)
         end
     end)
 end
+function NetManager:getBuildingMaterials(cb)
+    local info = {
+        category = "building",
+    }
+    self.m_netService:request("logic.playerHandler.getMaterials", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+function NetManager:getTechnologyMaterials(cb)
+    local info = {
+        category = "technology",
+    }
+    self.m_netService:request("logic.playerHandler.getMaterials", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
 
 
 
 function NetManager:resetGame()
-    self:sendMsg("reset", function(...) end)
+    self:sendMsg("reset", NOT_HANDLE)
 end
 function NetManager:sendMsg(text, cb)
     local msg = {

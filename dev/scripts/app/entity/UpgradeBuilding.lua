@@ -95,7 +95,7 @@ function UpgradeBuilding:OnTimer(current_time)
         end
     end
 end
-function UpgradeBuilding:OnUserDataChanged(user_data, location_id, sub_location_id)
+function UpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id, sub_location_id)
     -- 解析
     local building_events = user_data.buildingEvents
     local function get_building_event_by_location(loc_id)
