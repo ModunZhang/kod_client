@@ -161,6 +161,7 @@ function GameUIBase:CreateHomeButton(on_clicked)
     cc.ui.UIImage.new("home_icon.png")
         :pos(27, -72)
         :addTo(home_button)
+    return home_button
 end
 function GameUIBase:CreateShopButton(on_clicked)
     local gem_button = cc.ui.UIPushButton.new(

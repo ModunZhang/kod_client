@@ -90,7 +90,7 @@ function WallUpgradeBuilding:IntersectWithOtherWall(other_wall)
     end
     assert(false)
 end
-function WallUpgradeBuilding:OnUserDataChanged(user_data)
+function WallUpgradeBuilding:OnUserDataChanged(user_data, current_time)
     if self:IsGate() then
         local level = self:GetLevel()
         local event = user_data.wallEvents[1]

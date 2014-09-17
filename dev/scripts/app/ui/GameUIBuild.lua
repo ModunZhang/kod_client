@@ -80,7 +80,7 @@ function GameUIBuild:OnBuildOnItem(item)
     local w, h = self.select_ruins.w, self.select_ruins.h
     local tile = self.city:GetTileWhichBuildingBelongs(self.select_ruins)
     local house_location = tile:GetBuildingLocation(self.select_ruins)
-    NetManager:createHouseByLocation(tile.location_id, house_location, item.building.building_type, function(...) end)
+    NetManager:createHouseByLocation(tile.location_id, house_location, item.building.building_type, NOT_HANDLE)
     self:leftButtonClicked()
 end
 

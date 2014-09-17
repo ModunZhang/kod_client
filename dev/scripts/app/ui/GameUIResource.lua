@@ -279,7 +279,7 @@ function GameUIResource:ChaiButtonAction( event )
             local tile = self.city:GetTileWhichBuildingBelongs(self.building)
             local house_location = tile:GetBuildingLocation(self.building)
             NetManager:destroyHouseByLocation(tile.location_id, house_location, 
-            function(...) end)
+            NOT_HANDLE)
             self:leftButtonClicked(nil)
 end
 

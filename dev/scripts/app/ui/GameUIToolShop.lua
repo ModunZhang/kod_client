@@ -8,7 +8,9 @@ function GameUIToolShop:ctor(city)
 end
 function GameUIToolShop:onEnter()
     GameUIToolShop.super.onEnter(self)
-    self.citizen_panel:UpdateData()
+    self.home_btn:onButtonClicked(function(event)
+        NetManager:getBuildingMaterials(NOT_HANDLE)
+    end)
 end
 return GameUIToolShop
 

@@ -291,18 +291,18 @@ function City:GetCanUpgradingTowers()
     return towers
 end
 -- 工具
-function City:IteratorCanUpgradBuildingsByUserData(user_data)
+function City:IteratorCanUpgradBuildingsByUserData(user_data, current_time)
     self:IteratorDecoratorBuildingsByFunc(function(key, building)
         local tile = self:GetTileWhichBuildingBelongs(building)
-        building:OnUserDataChanged(user_data, tile.location_id, tile:GetBuildingLocation(building))
+        building:OnUserDataChanged(user_data, current_time, tile.location_id, tile:GetBuildingLocation(building))
     end)
     self:IteratorFunctionBuildingsByFunc(function(key, building)
-        building:OnUserDataChanged(user_data, self:GetTileWhichBuildingBelongs(building).location_id)
+        building:OnUserDataChanged(user_data, current_time, self:GetTileWhichBuildingBelongs(building).location_id)
     end)
     self:IteratorTowersByFunc(function(key, building)
-        building:OnUserDataChanged(user_data)
+        building:OnUserDataChanged(user_data, current_time)
     end)
-    self:GetGate():OnUserDataChanged(user_data)
+    self:GetGate():OnUserDataChanged(user_data, current_time)
 end
 function City:IteratorResourcesByUserData(user_data, current_time)
     local resource_manager = self:GetResourceManager()
@@ -485,7 +485,7 @@ function City:DestoryDecoratorByPosition(current_time, x, y)
 end
 
 ----------- 功能扩展点
-function City:OnUserDataChanged(current_time, userData)
+function City:OnUserDataChanged(userData, current_time)
     -- 解锁，建造，拆除类事件的解析
     local lock_table = {}
     local is_lock_any_tiles = false
@@ -560,9 +560,8 @@ function City:OnUserDataChanged(current_time, userData)
         self:LockTilesByIndexArray(lock_table)
     end
 
-    -- 更新升级事件
-    self:IteratorCanUpgradBuildingsByUserData(userData)
-
+    -- 更新建筑信息
+    self:IteratorCanUpgradBuildingsByUserData(userData, current_time)
 
     -- 最后才更新资源
     self:IteratorResourcesByUserData(userData, current_time)

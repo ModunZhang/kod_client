@@ -44,7 +44,7 @@ function TowerUpgradeBuilding:GetGlobalRegion()
         return start_x - 1, end_x + 1, start_y - 1, end_y + 1
     end
 end
-function TowerUpgradeBuilding:OnUserDataChanged(user_data)
+function TowerUpgradeBuilding:OnUserDataChanged(user_data, current_time)
     if self.tower_id then
         local tower_events = user_data.towerEvents
         local function get_tower_event_by_location(tower_id)

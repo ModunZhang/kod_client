@@ -114,7 +114,7 @@ function SpriteButton:ctor(sprite, city)
         local unlock_point = city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(city)
         if tile and unlock_point > 0 and city:IsTileCanbeUnlockAt(tile.x, tile.y) then
             self:TranslateToSatateByName("unlocked")
-            NetManager:upgradeBuildingByLocation(tile.location_id, function(...)end)
+            NetManager:instantUpgradeBuildingByLocation(tile.location_id, NOT_HANDLE)
         end
     end)
 
