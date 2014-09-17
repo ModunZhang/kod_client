@@ -1,13 +1,15 @@
 
 require("config")
 require("framework.init")
+require("app.utils.PlatformAdapter")
 require("app.datas.GameDatas")
 require("app.utils.LuaUtils")
 require("app.utils.GameUtils")
 require("app.service.NetManager")
 require("app.service.DataManager")
 require("app.utils.UIKit")
-require("app.utils.PlatformAdapter") -- adapter for platform ios/android
+require("app.ui.GameGlobalUIUtils")
+
 local Timer = import('.utils.Timer')
 local MyApp = class("MyApp", cc.mvc.AppBase)
 import('app.ui.GameGlobalUIUtils')
@@ -35,10 +37,6 @@ function MyApp:ctor()
     end
 end
 
-function MyApp:enterScene(...)
-    self._runningScene = MyApp.super.enterScene(self,...)
-end
-
 function MyApp:run()
     self:enterScene('LogoScene')
 end
@@ -57,9 +55,41 @@ function MyApp:initI18N()
         return text
     end
     if cc.FileUtils:getInstance():isFileExist(currentLanFilePath) then
-        print("currentLanFilePath---->",currentLanFilePath)
         _ = require("app.utils.Gettext").gettextFromFile(currentLanFilePath)
     end
+end
+
+function MyApp:flushIf()
+    if self.chatCenter then
+        self.chatCenter:flush()
+    end
+end
+
+function MyApp:retryConnectServer()
+    if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
+        device.showActivityIndicator()
+        NetManager:connectLogicServer(function(success)
+            if success then
+                NetManager:login(function(success)
+                    device.hideActivityIndicator()
+                end)
+            else
+                device.hideActivityIndicator()
+            end
+
+        end)
+    end
+end
+
+function MyApp:onEnterBackground()
+    MyApp.super.onEnterBackground(self)
+    self:flushIf()
+    NetManager:disconnect()
+end
+
+function MyApp:onEnterForeground()
+    self:retryConnectServer()
+    MyApp.super.onEnterForeground(self)
 end
 
 return MyApp

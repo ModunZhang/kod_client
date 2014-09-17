@@ -228,7 +228,7 @@ function GameUIChat:getChatItem(chat)
 				-- local offsetY = contentLable:getContentSize().height - oldHight
 				adjustFunc()
     		end)
-    		:align(display.RIGHT_BOTTOM,timeLabel:getPositionX()+timeLabel:getContentSize().width+60,titleLabel:getPositionY()+titleLabel:getContentSize().height/2)
+    		:align(display.RIGHT_BOTTOM,header:getContentSize().width-10,titleLabel:getPositionY()+titleLabel:getContentSize().height/2)
     	playerIcon:addTo(content):align(display.LEFT_TOP, 1, bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
 		item:addContent(content)
 		item:setItemSize(549,bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height)
