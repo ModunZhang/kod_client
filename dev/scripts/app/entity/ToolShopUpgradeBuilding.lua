@@ -1,5 +1,6 @@
 local config_function = GameDatas.BuildingFunction.toolShop
 local config_levelup = GameDatas.BuildingLevelUp.toolShop
+local Event = import(".Event")
 local Observer = import(".Observer")
 local UpgradeBuilding = import(".UpgradeBuilding")
 local ToolShopUpgradeBuilding = class("ToolShopUpgradeBuilding", UpgradeBuilding)
@@ -27,7 +28,7 @@ function ToolShopUpgradeBuilding:CreateEvent(category)
         self:Reset()
     end
     function event:Reset()
-        self.materials = {}
+        self.content = {}
         self.finished_time = 0
     end
     function event:Category()
@@ -48,15 +49,18 @@ function ToolShopUpgradeBuilding:CreateEvent(category)
     function event:SetFinishTime(current_time)
         self.finished_time = current_time
     end
-    function event:SetMaterials(materials, finished_time)
-        self.materials = materials == nil and {} or materials
+    function event:Content()
+        return self.content
+    end
+    function event:SetContent(content, finished_time)
+        self.content = content == nil and {} or content
         self.finished_time = finished_time
     end
     function event:IsStored(current_time)
-        return #self.materials > 0 and (self.finished_time == 0 or current_time >= self.finished_time)
+        return #self.content > 0 and (self.finished_time == 0 or current_time >= self.finished_time)
     end
     function event:IsEmpty()
-        return self.finished_time == 0 and #self.materials == 0
+        return self.finished_time == 0 and #self.content == 0
     end
     function event:IsMaking(current_time)
         return current_time < self.finished_time
@@ -136,24 +140,25 @@ function ToolShopUpgradeBuilding:IsMakingMaterialsByCategory(category, current_t
 end
 function ToolShopUpgradeBuilding:MakeMaterialsByCategory(category, materials, finished_time)
     local event = self.category[category]
-    event:SetMaterials(materials, finished_time)
+    event:SetContent(materials, finished_time)
     self.toolShop_building_observer:NotifyObservers(function(lisenter)
         lisenter:OnBeginMakeMaterialsWithEvent(self, event)
     end)
 end
 function ToolShopUpgradeBuilding:EndMakeMaterialsByCategory(category, materials, current_time)
     local event = self.category[category]
-    event:SetMaterials(materials, 0)
+    event:SetContent(materials, 0)
     self.toolShop_building_observer:NotifyObservers(function(lisenter)
         lisenter:OnEndMakeMaterialsWithEvent(self, event, current_time)
     end)
 end
 function ToolShopUpgradeBuilding:GetMaterialsByCategory(category)
     local event = self.category[category]
-    self.toolShop_building_observer:NotifyObservers(function(lisenter)
-        lisenter:OnGetMaterialsWithEvent(self, event)
-    end)
+    local materials = event:Content()
     event:Reset()
+    self.toolShop_building_observer:NotifyObservers(function(lisenter)
+        lisenter:OnGetMaterialsWithEvent(self, event, materials)
+    end)
 end
 function ToolShopUpgradeBuilding:GetMakingTimeByCategory(category)
     local config = config_function[self:GetLevel()]
@@ -209,7 +214,7 @@ function ToolShopUpgradeBuilding:OnUserDataChanged(...)
             elseif self:IsBuildingMaterialsEmpty() then
                 self:MakeMaterialsByCategory(category, event.materials, finished_time)
             else
-                self:GetMakeMaterialsEventByCategory(category):SetMaterials(event.materials, finished_time)
+                self:GetMakeMaterialsEventByCategory(category):SetContent(event.materials, finished_time)
             end
         else
             if self:IsStoredMaterialsByCategory(category, current_time) then
