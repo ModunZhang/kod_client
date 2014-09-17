@@ -1,6 +1,5 @@
 local config_function = GameDatas.BuildingFunction.toolShop
 local config_levelup = GameDatas.BuildingLevelUp.toolShop
-local Event = import(".Event")
 local Observer = import(".Observer")
 local UpgradeBuilding = import(".UpgradeBuilding")
 local ToolShopUpgradeBuilding = class("ToolShopUpgradeBuilding", UpgradeBuilding)
