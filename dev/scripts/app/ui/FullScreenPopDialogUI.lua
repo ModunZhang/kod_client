@@ -41,10 +41,10 @@ function FullScreenPopDialogUI:Init()
     -- 提示内容
     self.message_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("陛下，.................."),
+        -- text = _("陛下，.................."),
         font = UIKit:getFontFilePath(),
         size = 24,
-        dimensions = cc.size(420, 88),
+        dimensions = cc.size(360, 88),
         color = UIKit:hex2c3b(0x403c2f)
     }):align(display.LEFT_CENTER,display.cx-80,display.cy+10):addTo(self)
 
@@ -68,7 +68,7 @@ function FullScreenPopDialogUI:CreateOKButton(listener)
     local ok_button = cc.ui.UIPushButton.new({normal = "green_button_normal.png",pressed = "green_button_pressed.png"})
         :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("是的"), size = 26, color = display.COLOR_WHITE}))
         :onButtonClicked(function(event)
-            print(" pop dialog click")
+            -- print(" pop dialog click")
             listener()
             self:removeFromParent(true)
         end):align(display.CENTER, display.cx+50, display.cy-130):addTo(self)
