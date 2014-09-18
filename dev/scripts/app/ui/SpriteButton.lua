@@ -108,7 +108,7 @@ function SpriteButton:ctor(sprite, city)
         local tile = self.sprite:GetEntity()
         local unlock_point = city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(city)
         if tile and unlock_point > 0 and city:IsTileCanbeUnlockAt(tile.x, tile.y) then
-             homeUI的zorder在调用GameUIBase的addToScene方法时默认ZOrder为2000，所以这里全屏置顶的界面设置为2001
+             -- homeUI的zorder在调用GameUIBase的addToScene方法时默认ZOrder为2000，所以这里全屏置顶的界面设置为2001
             display.getRunningScene():addChild(GameUIUnlockBuilding.new(city,tile),2001)
         end
     end)
