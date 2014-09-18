@@ -48,6 +48,13 @@ function ToolShopUpgradeBuilding:CreateEvent(category)
     function event:SetFinishTime(current_time)
         self.finished_time = current_time
     end
+    function event:TotalCount()
+        local count = 0
+        for k, v in pairs(self.content) do
+            count = count + v.count
+        end
+        return count
+    end
     function event:Content()
         return self.content
     end
@@ -77,54 +84,6 @@ end
 function ToolShopUpgradeBuilding:RemoveToolShopListener(listener)
     self.toolShop_building_observer:RemoveObserver(listener)
 end
-
---
-function ToolShopUpgradeBuilding:GetMakeBuildingMaterialsEvent()
-    return self:GetMakeMaterialsEventByCategory(BUILDING)
-end
-function ToolShopUpgradeBuilding:IsBuildingMaterialsEmpty()
-    return self:IsMaterialsEmptyByCategory(BUILDING)
-end
-function ToolShopUpgradeBuilding:IsStoredBuildingMaterials(current_time)
-    return self:IsStoredMaterialsByCategory(BUILDING, current_time)
-end
-function ToolShopUpgradeBuilding:IsMakingBuildingMaterials(current_time)
-    return self:IsMakingMaterialsByCategory(BUILDING, current_time)
-end
-function ToolShopUpgradeBuilding:MakeBuildingMaterials(materials, finished_time)
-    self:MakeMaterialsByCategory(BUILDING, materials, finished_time)
-end
-function ToolShopUpgradeBuilding:EndMakeBuildingMaterials(materials, current_time)
-    self:EndMakeMaterialsByCategory(BUILDING, materials, current_time)
-end
-function ToolShopUpgradeBuilding:GetBuildingMaterials()
-    self:GetMaterialsByCategory(BUILDING)
-end
-
---
-function ToolShopUpgradeBuilding:GetMakeTechnologyMaterialsEvent()
-    return self:GetMakeMaterialsEventByCategory(TECHNOLOGY)
-end
-function ToolShopUpgradeBuilding:IsTechnologyMaterialsEmpty()
-    return self:IsMaterialsEmptyByCategory(TECHNOLOGY)
-end
-function ToolShopUpgradeBuilding:IsStoredTechnologyMaterials(current_time)
-    return self:IsStoredMaterialsByCategory(TECHNOLOGY, current_time)
-end
-function ToolShopUpgradeBuilding:IsMakingTechnologyMaterials(current_time)
-    return self:IsMakingMaterialsByCategory(TECHNOLOGY, current_time)
-end
-function ToolShopUpgradeBuilding:MakeTechnologyMaterials(materials, finished_time)
-    self:MakeMaterialsByCategory(TECHNOLOGY, materials, finished_time)
-end
-function ToolShopUpgradeBuilding:EndMakeTechnologyMaterials(materials, current_time)
-    self:EndMakeMaterialsByCategory(TECHNOLOGY, materials, current_time)
-end
-function ToolShopUpgradeBuilding:GetTechnologyMaterials()
-    self:GetMaterialsByCategory(TECHNOLOGY)
-end
---
-
 function ToolShopUpgradeBuilding:GetMakeMaterialsEventByCategory(category)
     return self.category[category]
 end
@@ -137,14 +96,14 @@ end
 function ToolShopUpgradeBuilding:IsMakingMaterialsByCategory(category, current_time)
     return self.category[category]:IsMaking(current_time)
 end
-function ToolShopUpgradeBuilding:MakeMaterialsByCategory(category, materials, finished_time)
+function ToolShopUpgradeBuilding:MakeMaterialsByCategoryWithFinishTime(category, materials, finished_time)
     local event = self.category[category]
     event:SetContent(materials, finished_time)
     self.toolShop_building_observer:NotifyObservers(function(lisenter)
         lisenter:OnBeginMakeMaterialsWithEvent(self, event)
     end)
 end
-function ToolShopUpgradeBuilding:EndMakeMaterialsByCategory(category, materials, current_time)
+function ToolShopUpgradeBuilding:EndMakeMaterialsByCategoryWithCurrentTime(category, materials, current_time)
     local event = self.category[category]
     event:SetContent(materials, 0)
     self.toolShop_building_observer:NotifyObservers(function(lisenter)
@@ -160,12 +119,18 @@ function ToolShopUpgradeBuilding:GetMaterialsByCategory(category)
     end)
 end
 function ToolShopUpgradeBuilding:GetMakingTimeByCategory(category)
+    local _, _, _, _, time = self:GetNeedByCategory(category)
+    return time
+end
+local needs = {"Wood", "Stone", "Iron", "time"}
+function ToolShopUpgradeBuilding:GetNeedByCategory(category)
     local config = config_function[self:GetLevel()]
-    if category == "building" then
-        return config["productBmtime"]
-    elseif category == "technology" then
-        return config["productAmtime"]
+    local key = category == "building" and "Bm" or "Am"
+    local need = {}
+    for _, v in ipairs(needs) do
+        table.insert(need, config[string.format("product%s%s", key, v)])
     end
+    return config["poduction"], unpack(need)
 end
 
 function ToolShopUpgradeBuilding:OnTimer(current_time)
@@ -209,9 +174,9 @@ function ToolShopUpgradeBuilding:OnUserDataChanged(...)
             local finished_time = event.finishTime / 1000
             local is_making_end = finished_time == 0
             if is_making_end then
-                self:EndMakeMaterialsByCategory(category, event.materials, current_time)
-            elseif self:IsBuildingMaterialsEmpty() then
-                self:MakeMaterialsByCategory(category, event.materials, finished_time)
+                self:EndMakeMaterialsByCategoryWithCurrentTime(category, event.materials, current_time)
+            elseif self:IsMaterialsEmptyByCategory(category) then
+                self:MakeMaterialsByCategoryWithFinishTime(category, event.materials, finished_time)
             else
                 self:GetMakeMaterialsEventByCategory(category):SetContent(event.materials, finished_time)
             end

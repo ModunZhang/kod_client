@@ -59,6 +59,33 @@ function CityScene:onEnter()
     self.city_layer:IteratorCanUpgradingBuilding(function(_, building)
         self.scene_ui_layer:NewUIFromBuildingSprite(building)
     end)
+
+
+    -- City:GetFirstBuildingByType("toolShop"):AddToolShopListener({
+    --     OnBeginMakeMaterialsWithEvent = function(lisenter, tool_shop, event)
+    --         print("OnBeginMakeMaterialsWithEvent", event:Category())
+    --     end,
+    --     OnMakingMaterialsWithEvent = function(lisenter, tool_shop, event, current_time)
+    --         print("OnMakingMaterialsWithEvent", event:Category(), current_time)
+    --     end,
+    --     OnEndMakeMaterialsWithEvent = function(lisenter, tool_shop, event, current_time)
+    --         print("OnEndMakeMaterialsWithEvent", event:Category(), current_time)
+    --     end,
+    --     OnGetMaterialsWithEvent = function(lisenter, tool_shop, event)
+    --         print("OnGetMaterialsWithEvent", event:Category())
+    --     end,
+    -- })
+    City:GetFirstBuildingByType("blackSmith"):AddBlackSmithListener({
+        OnBeginMakeEquipmentWithEvent = function(lisenter, tool_shop, event)
+            print("OnBeginMakeEquipmentWithEvent", event:Content())
+        end,
+        OnMakingEquipmentWithEvent = function(lisenter, tool_shop, event, current_time)
+            print("OnMakingEquipmentWithEvent", event:Content(), event:LeftTime(current_time))
+        end,
+        OnEndMakeEquipmentWithEvent = function(lisenter, tool_shop, event, equipment)
+            print("OnEndMakeEquipmentWithEvent", event:Content(), equipment)
+        end,
+    })
 end
 function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
@@ -97,11 +124,12 @@ function CityScene:CreateSceneUILayer()
         table.insert(self.lock_buttons, lock_button)
         building_sprite:OnSceneMove()
     end
-    function scene_ui_layer:RemoveAllLockButtons(building_sprite)
+    function scene_ui_layer:RemoveAllLockButtons()
         for _, v in pairs(self.lock_buttons) do
-            City:RemoveListenerOnType(v, City.LISTEN_TYPE.UPGRADE_BUILDING)
             v:removeFromParentAndCleanup(true)
+            City:RemoveListenerOnType(v, City.LISTEN_TYPE.UPGRADE_BUILDING)
         end
+        self.lock_buttons = {}
     end
     function scene_ui_layer:NewUIFromBuildingSprite(building_sprite)
         local progress = BuildingUpgradeUINode.new():addTo(self)
@@ -207,6 +235,12 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
             self._keep_page:addToScene(self, true)
         elseif building:GetEntity():GetType() == "toolShop" then
             UIKit:newGameUI('GameUIToolShop', City):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "blackSmith" then
+            UIKit:newGameUI('GameUIBlackSmith', City):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "materialDepot" then
+            UIKit:newGameUI('GameUIMaterialDepot', City):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "barracks" then
+            UIKit:newGameUI('GameUIBarracks', City):addToScene(self, true)
         elseif building:GetEntity():GetType() == "warehouse" then
             self._warehouse_page = UIKit:newGameUI('GameUIWarehouse',City,building:GetEntity())
             self._warehouse_page:addToScene(self, true)
@@ -282,6 +316,9 @@ function CityScene:OnGateChanged(old_walls, new_walls)
 end
 
 return CityScene
+
+
+
 
 
 
