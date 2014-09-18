@@ -11,7 +11,16 @@ end
 
 
 function GameUIUpdate:createVerLabel()
-	
+	self.verLabel = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "版本:1.0.0(ddf3d)",
+        font = UIKit:getFontFilePath(),
+        size = 18,
+        align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
+        -- dimensions = cc.size(569, 43),
+        color = UIKit:hex2c3b(0xaaa87f),
+    }):addTo(self,2)
+    :align(display.RIGHT_BOTTOM,display.right-2,display.bottom)
 end
 
 -- 复写UILogin方法
@@ -34,7 +43,7 @@ function GameUIUpdate:showVersion()
 
     local tag = json.decode(jsonString).tag
     local version =string.format(_("版本:%s(%s)"), CONFIG_APP_VERSION, tag)
-  	self.verLabel:setText(version)
+  	self.verLabel:setString(version)
 end
 
 function GameUIUpdate:loadLocalJson()
