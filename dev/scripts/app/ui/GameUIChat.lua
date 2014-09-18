@@ -13,9 +13,6 @@ local NetService = import('..service.NetService')
 GameUIChat.LISTVIEW_WIDTH = 549
 GameUIChat.PLAYERMENU_ZORDER = 2
 
--- function GameUIChat:ctor()
--- 	 GameUIChat.super.ctor(self,City,_("聊天"))
--- end
 
 function GameUIChat:onEnter()
 	self:CreateBackGround()
@@ -100,6 +97,7 @@ function GameUIChat:listviewListener(event)
                 local newItem  = self:getChatItem(v)
                 self.listView:addItem(newItem)
             end
+            self.listView:resetPosition()
             self.listView:reload()
             self.listView:resetPosition()
 		return
