@@ -1,4 +1,4 @@
--- local GameUIUnlockBuilding = import("..ui.GameUIUnlockBuilding")
+local GameUIUnlockBuilding = import("..ui.GameUIUnlockBuilding")
 local LockState = class("LockState")
 function LockState:ctor(sprite_button)
     self.sprite_button = sprite_button
@@ -105,18 +105,23 @@ function SpriteButton:ctor(sprite, city)
     self.confirm_button = cc.ui.UIPushButton.new({normal = "confirm_btn_up.png",pressed = "confirm_btn_down.png"}):addTo(self)
 
     self:SetLockTouchListener(function()
-        self:TranslateToSatateByName("confirm")
-        -- display.getRunningScene():addChild(import(".app.ui.GameUIUnlockBuilding").new())
-        -- display.getRunningScene():addChild(GameUIUnlockBuilding.new(city,self.sprite:GetEntity()))
-    end)
-    self:SetConfirmTouchListener(function()
         local tile = self.sprite:GetEntity()
         local unlock_point = city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(city)
         if tile and unlock_point > 0 and city:IsTileCanbeUnlockAt(tile.x, tile.y) then
-            self:TranslateToSatateByName("unlocked")
-            NetManager:instantUpgradeBuildingByLocation(tile.location_id, NOT_HANDLE)
+             homeUI的zorder在调用GameUIBase的addToScene方法时默认ZOrder为2000，所以这里全屏置顶的界面设置为2001
+            display.getRunningScene():addChild(GameUIUnlockBuilding.new(city,tile),2001)
         end
     end)
+    -- self:SetConfirmTouchListener(function()
+        -- local tile = self.sprite:GetEntity()
+        -- local unlock_point = city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(city)
+        -- if tile and unlock_point > 0 and city:IsTileCanbeUnlockAt(tile.x, tile.y) then
+            -- self:TranslateToSatateByName("unlocked")
+        --     -- NetManager:instantUpgradeBuildingByLocation(tile.location_id, NOT_HANDLE)
+        --     -- homeUI的zorder在调用GameUIBase的addToScene方法时默认ZOrder为2000，所以这里全屏置顶的界面设置为2001
+        --     display.getRunningScene():addChild(GameUIUnlockBuilding.new(city,tile),2001)
+        -- end
+    -- end)
 
     self:AddState("locked", LockState.new(self))
     self:AddState("confirm", ConfirmState.new(self))
@@ -139,6 +144,7 @@ end
 
 
 return SpriteButton
+
 
 
 
