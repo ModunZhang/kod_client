@@ -57,13 +57,13 @@ end
 --Tips
 -------------------------------------------------------------------------
 function ListenerService:ls_onBuildingLevelUp(msg)
-	local buildingName = UIKitHelper:getBuildingLocalizedKeyByBuildingType(msg.buildingType)
-	GameGlobalUI:showTips(_("建筑升级完成"),string.format('%s(LV %d)',_(buildingName),msg.level))
+	-- local buildingName = UIKit:getBuildingLocalizedKeyByBuildingType(msg.buildingType)
+	-- GameGlobalUI:showTips(_("建筑升级完成"),string.format('%s(LV %d)',_(buildingName),msg.level))
 end
 
 function ListenerService:ls_onHouseLevelUp(msg)
-	local houseName = UIKitHelper:getHouseLocalizedKeyByBuildingType(msg.houseType)
-	GameGlobalUI:showTips(_("小屋升级完成"),string.format('%s(LV %d)',_(houseName),msg.level))
+	-- local houseName = UIKit:getHouseLocalizedKeyByBuildingType(msg.houseType)
+	-- GameGlobalUI:showTips(_("小屋升级完成"),string.format('%s(LV %d)',_(houseName),msg.level))
 end
 
 function ListenerService:ls_onTowerLevelUp(msg)
