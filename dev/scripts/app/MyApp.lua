@@ -13,7 +13,7 @@ require("app.ui.GameGlobalUIUtils")
 local Timer = import('.utils.Timer')
 local MyApp = class("MyApp", cc.mvc.AppBase)
 import('app.ui.GameGlobalUIUtils')
-NOT_HANDLE = function(...) end
+NOT_HANDLE = function(...) print("net message not handel, please check !") end
 function MyApp:ctor()
     self:initI18N()
     NetManager:init()

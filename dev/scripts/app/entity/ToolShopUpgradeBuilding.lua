@@ -48,6 +48,13 @@ function ToolShopUpgradeBuilding:CreateEvent(category)
     function event:SetFinishTime(current_time)
         self.finished_time = current_time
     end
+    function event:TotalCount()
+        local count = 0
+        for k, v in pairs(self.content) do
+            count = count + v.count
+        end
+        return count
+    end
     function event:Content()
         return self.content
     end
@@ -112,12 +119,18 @@ function ToolShopUpgradeBuilding:GetMaterialsByCategory(category)
     end)
 end
 function ToolShopUpgradeBuilding:GetMakingTimeByCategory(category)
+    local _, _, _, _, time = self:GetNeedByCategory(category)
+    return time
+end
+local needs = {"Wood", "Stone", "Iron", "time"}
+function ToolShopUpgradeBuilding:GetNeedByCategory(category)
     local config = config_function[self:GetLevel()]
-    if category == "building" then
-        return config["productBmtime"]
-    elseif category == "technology" then
-        return config["productAmtime"]
+    local key = category == "building" and "Bm" or "Am"
+    local need = {}
+    for _, v in ipairs(needs) do
+        table.insert(need, config[string.format("product%s%s", key, v)])
     end
+    return config["poduction"], unpack(need)
 end
 
 function ToolShopUpgradeBuilding:OnTimer(current_time)

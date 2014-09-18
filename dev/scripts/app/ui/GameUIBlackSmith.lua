@@ -8,9 +8,9 @@ function GameUIBlackSmith:ctor(city)
 end
 function GameUIBlackSmith:onEnter()
     GameUIBlackSmith.super.onEnter(self)
-    self.home_btn:onButtonClicked(function(event)
-        NetManager:makeDragonEquipment("moltenCrown", NOT_HANDLE)
-    end)
+    -- self.home_btn:onButtonClicked(function(event)
+    --     NetManager:makeDragonEquipment("moltenCrown", NOT_HANDLE)
+    -- end)
 end
 return GameUIBlackSmith
 
