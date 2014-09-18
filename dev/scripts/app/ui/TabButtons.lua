@@ -6,11 +6,13 @@ local origin_y = 20
 function TabButtons:ctor(buttons, tab_param, listener)
     local count = #buttons
     local tab_param = tab_param ~= nil and tab_param or {}
+
+    local scale_on_height = display.height / 960
     local gap = tab_param.gap ~= nil and tab_param.gap or 0
     local margin_left = tab_param.margin_left ~= nil and tab_param.margin_left or 0
     local margin_right = tab_param.margin_right ~= nil and tab_param.margin_right or 0
-    local margin_up = tab_param.margin_up ~= nil and tab_param.margin_up or 0
-    local margin_down = tab_param.margin_down ~= nil and tab_param.margin_down or 0
+    local margin_up = tab_param.margin_up ~= nil and tab_param.margin_up * (tab_param.margin_up >= 0 and scale_on_height or 1 / scale_on_height) or 0
+    local margin_down = tab_param.margin_down ~= nil and tab_param.margin_down * (tab_param.margin_down >= 0 and scale_on_height or 1 / scale_on_height) or 0
     self.tabListener = listener
 
     self.buttons = {}
@@ -24,7 +26,7 @@ function TabButtons:ctor(buttons, tab_param, listener)
     local unit_len = tab_bg:getContentSize().width / count
     local unit_height = tab_bg:getContentSize().height
     local height = unit_height - margin_up - margin_down
-    local y = -margin_up/2 + margin_down/2 + unit_height/2
+    local y = - margin_up / 2 + margin_down / 2 + unit_height / 2
     for i = 1, count do
         local tag = buttons[i].tag
         local label = buttons[i].label

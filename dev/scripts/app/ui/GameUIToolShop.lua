@@ -89,7 +89,7 @@ function GameUIToolShop:Manufacture()
     self.list_view:reload():resetPosition()
 end
 function GameUIToolShop:TabButtons()
-    GameUIToolShop.super.CreateTabButtons(self, {
+    self:CreateTabButtons({
         {
             label = _("升级"),
             tag = "upgrade",
