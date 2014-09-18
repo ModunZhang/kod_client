@@ -11,7 +11,7 @@ function RoadSprite:GetSpriteOffset()
 end
 function RoadSprite:GetLogicZorder(width)
     local x, y = self:GetMidLogicPosition()
-    return x + y * width
+    return x + y * width - 100
 end
 
 

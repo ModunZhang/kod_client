@@ -1,18 +1,15 @@
 local TabButtons = import('.TabButtons')
-local CommonUpgradeUI = import('.CommonUpgradeUI')
-local GameUIKeep = UIKit:createUIClass('GameUIKeep',"GameUIWithCommonHeader")
+local GameUIKeep = UIKit:createUIClass('GameUIKeep',"GameUIUpgradeBuilding")
 
 function GameUIKeep:ctor(city,building)
-    GameUIKeep.super.ctor(self,city,_("城堡"))
-    self.city = city
-    self.building = building
+    GameUIKeep.super.ctor(self,city,_("城堡"),building)
+    -- self.city = city
+    -- self.building = building
 end
 
 function GameUIKeep:CreateBetweenBgAndTitle()
     GameUIKeep.super.CreateBetweenBgAndTitle(self)
-    -- 加入升级layer
-    self.upgrade_layer = CommonUpgradeUI.new(self.city,self.building)
-    self:addChild(self.upgrade_layer)
+
     -- 加入城堡info_layer
     self.info_layer = display.newLayer()
     self:addChild(self.info_layer)
@@ -22,23 +19,12 @@ function GameUIKeep:onEnter()
     GameUIKeep.super.onEnter(self)
     self:CreateTabButtons({
         {
-            label = _("升级"),
-            tag = "upgrade",
-            default = true,
-        },
-        {
             label = _("信息"),
             tag = "info",
         },
-    },function(tag)
-        if tag == "upgrade" then
-            self.upgrade_layer:setVisible(true)
-            self.info_layer:setVisible(false)
-        elseif tag == "info" then
-            self.upgrade_layer:setVisible(false)
-            self.info_layer:setVisible(true)
-        end
-    end):pos(display.cx, display.bottom + 40)
+    },{
+        ["info"] = self.info_layer
+    }):pos(display.cx, display.bottom + 40)
     self:CreateCanBeUnlockedBuildingBG()
     self:CreateCanBeUnlockedBuildingListView()
     self:CreateCityBasicInfo()
@@ -258,4 +244,5 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
 end
 
 return GameUIKeep
+
 

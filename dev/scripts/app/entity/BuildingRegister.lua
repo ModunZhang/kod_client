@@ -3,6 +3,7 @@ local BuildingRegister = {
 	keep 			= import("..entity.KeepUpgradeBuilding"),
     warehouse 		= import("..entity.WarehouseUpgradeBuilding"),
     toolShop 		= import("..entity.ToolShopUpgradeBuilding"),
+    blackSmith 		= import("..entity.BlackSmithUpgradeBuilding"),
     woodcutter 		= import("..entity.WoodResourceUpgradeBuilding"),
     farmer 			= import("..entity.FoodResourceUpgradeBuilding"),
     miner 			= import("..entity.IronResourceUpgradeBuilding"),
@@ -10,7 +11,7 @@ local BuildingRegister = {
     dwelling 		= import("..entity.PopulationResourceUpgradeBuilding"),
     dragonEyrie     = import("..entity.DragonEyrieUpgradeBuilding"),
 }
-setmetatable(BuildingRegister, {__index = function(t, k, v)
+setmetatable(BuildingRegister, {__index = function(t, k)
 	return UpgradeBuilding
 end})
 return BuildingRegister
