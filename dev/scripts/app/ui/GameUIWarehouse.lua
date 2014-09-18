@@ -1,6 +1,6 @@
 local TabButtons = import('.TabButtons')
 local ResourceManager = import('..entity.ResourceManager')
-local GameUIWarehouse = UIKit:createUIClass('GameUIWarehouse',"GameUIWithCommonHeader")
+local GameUIWarehouse = UIKit:createUIClass('GameUIWarehouse',"GameUIUpgradeBuilding")
 
 local resource_type = {
     WOOD = ResourceManager.RESOURCE_TYPE.WOOD,
@@ -11,9 +11,9 @@ local resource_type = {
 }
 
 function GameUIWarehouse:ctor(city,building)
-    GameUIWarehouse.super.ctor(self,city,_("仓库"))
-    self.building = building
-    self.city = city
+    GameUIWarehouse.super.ctor(self,city,_("仓库"),building)
+    -- self.building = building
+    -- self.city = city
 end
 
 function GameUIWarehouse:CreateBetweenBgAndTitle()
@@ -26,21 +26,12 @@ function GameUIWarehouse:onEnter()
     GameUIWarehouse.super.onEnter(self)
     self:CreateTabButtons({
         {
-            label = _("升级"),
-            tag = "upgrade",
-            default = true,
-        },
-        {
             label = _("资源"),
             tag = "resource",
         },
-    },function(tag)
-        if tag == "upgrade" then
-            self.resource_layer:setVisible(false)
-        elseif tag == "resource" then
-            self.resource_layer:setVisible(true)
-        end
-    end):pos(display.cx, display.bottom + 40)
+    },{
+        ["resource"] = self.resource_layer
+    }):pos(display.cx, display.bottom + 40)
     self:CreateResourceListView()
     self:InitAllResources()
 

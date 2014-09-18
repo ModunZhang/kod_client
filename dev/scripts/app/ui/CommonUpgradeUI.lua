@@ -1,3 +1,9 @@
+local SmallDialogUI = import(".SmallDialogUI")
+local UIListView = import(".UIListView")
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
+local UpgradeBuilding = import("..entity.UpgradeBuilding")
+
+
 local CommonUpgradeUI = class("CommonUpgradeUI", function ()
     return display.newLayer()
 end)
@@ -10,12 +16,56 @@ end
 
 -- Node Event
 function CommonUpgradeUI:onEnter()
-    print("CommonUpgradeUI onEnter->")
+    -- print("CommonUpgradeUI onEnter->")
     self:InitCommonPart()
+    self:InitUpgradePart()
+    self:InitAccelerationPart()
+    self.city:GetResourceManager():AddObserver(self)
+    self:AddUpgradeListener()
 end
 
 function CommonUpgradeUI:onExit()
-    print("CommonUpgradeUI onExit--->")
+    -- print("CommonUpgradeUI onExit--->")
+    self.city:GetResourceManager():RemoveObserver(self)
+    self:RemoveUpgradeListener()
+end
+
+function CommonUpgradeUI:OnResourceChanged(resource_manager)
+    self.upgrade_layer:isVisible()
+    if self.upgrade_layer:isVisible() then
+        -- print("资源更行，刷新相关数据， 现在是升级需求listview")
+        self:SetUpgradeRequirementListview()
+    end
+end
+
+function CommonUpgradeUI:AddUpgradeListener()
+
+    self.building:AddUpgradeListener(self)
+end
+
+function CommonUpgradeUI:RemoveUpgradeListener()
+    self.building:RemoveUpgradeListener(self)
+end
+function CommonUpgradeUI:OnBuildingUpgradingBegin( buidling, current_time )
+    self:visibleChildLayers()
+end
+function CommonUpgradeUI:OnBuildingUpgradeFinished( buidling, finish_time )
+    self:visibleChildLayers()
+    self:SetBuildingLevel()
+    self:SetUpgradeNowNeedGems()
+    self:SetBuildingIntroduces()
+    self:SetUpgradeTime()
+end
+
+function CommonUpgradeUI:OnBuildingUpgrading( buidling, current_time )
+    local pro = self.acc_layer.ProgressTimer
+    pro:setPercentage(self.building:GetElapsedTimeByCurrentTime(current_time)/self.building:GetUpgradeTimeToNextLevel()*100)
+    self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(current_time)))
+    if self.building:GetUpgradingLeftTimeByCurrentTime(current_time)>self.building.freeSpeedUpTime then
+        self.acc_layer.acc_button:setButtonEnabled(false)
+    else
+        self.acc_layer.acc_button:setButtonEnabled(true)
+    end
 end
 
 function CommonUpgradeUI:InitCommonPart()
@@ -34,7 +84,7 @@ function CommonUpgradeUI:InitCommonPart()
     self.building_image = display.newScale9Sprite(self.building:GetType()..".png", 0, 0):addTo(building_introduces_bg)
     self.building_image:setAnchorPoint(cc.p(0,0))
     self.building_image:setScale(164/self.building_image:getContentSize().height)
-    self:SetBuildingIntroduces()
+    self:InitBuildingIntroduces()
     --升级奖励部分
     -- title
     cc.ui.UIImage.new("upgrade_decoration.png"):align(display.CENTER, display.cx-145, display.top-260):addTo(self):setFlippedX(true)
@@ -54,6 +104,17 @@ end
 
 function CommonUpgradeUI:SetBuildingLevel()
     self.builging_level:setString(_("等级 ")..self.building:GetLevel())
+end
+
+function CommonUpgradeUI:InitBuildingIntroduces()
+    self.building_introduces = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        font = UIKit:getFontFilePath(),
+        size = 22,
+        dimensions = cc.size(400, 90),
+        color = UIKit:hex2c3b(0x403c2f)
+    }):align(display.LEFT_CENTER,display.left+180, display.top-190):addTo(self)
+    self:SetBuildingIntroduces()
 end
 
 function CommonUpgradeUI:SetBuildingIntroduces()
@@ -109,26 +170,21 @@ function CommonUpgradeUI:SetBuildingIntroduces()
         ["quarrier"] = _("占用城民%d\n石料产量+%d/每小时|"),
         ["miner"] = _("占用城民%d\n铁矿产量+%d/每小时|"),
     }
-    local building_introduces = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        font = UIKit:getFontFilePath(),
-        size = 22,
-        dimensions = cc.size(400, 90),
-        color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER,display.left+180, display.top-190):addTo(self)
     if self.building:GetType()=="keep" then
-        building_introduces:setString(string.format(building_introduces_table["keep"],self.building:GetUnlockPoint()))
+        self.building_introduces:setString(string.format(building_introduces_table["keep"],self.building:GetUnlockPoint()))
+    elseif self.building:GetType()=="warehouse" then
+        self.building_introduces:setString(string.format(building_introduces_table["warehouse"],self.building:GetResourceValueLimit()))
     end
 end
 
 -- set upgrade reward
 function CommonUpgradeUI:SetUpgradeReward()
-	-- TODO 暂时模拟升级奖励类型和数据
-	local reward_table = {
-		{reward_type = "surface",icon="upgrade_surface.png",value="X 100"},
-		{reward_type = "exp",icon="upgrade_experience_icon.png",value="X 10000"},
-		{reward_type = "power",icon="upgrade_power_icon.png",value="X 1000000"},
-	}
+    -- TODO 暂时模拟升级奖励类型和数据
+    local reward_table = {
+        {reward_type = "surface",icon="upgrade_surface.png",value="X 100"},
+        {reward_type = "exp",icon="upgrade_experience_icon.png",value="X 10000"},
+        {reward_type = "power",icon="upgrade_power_icon.png",value="X 1000000"},
+    }
     local reward_listview_width ,reward_listview_height= 545,95
     local item_icon_height = 62
     local reward_listview = cc.ui.UIListView.new{
@@ -151,8 +207,7 @@ function CommonUpgradeUI:SetUpgradeReward()
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.CENTER,0,-item_icon_height/2):addTo(content)
         local content_width = math.max(num_label:getContentSize().width,item_icon:getContentSize().width*item_icon_height/item_icon:getContentSize().height)
-    	item:setItemSize(content_width,num_label:getContentSize().height+item_icon_height+10)
-        print(content:getCascadeBoundingBox().size.width,content:getCascadeBoundingBox().size.height,"==========")
+        item:setItemSize(content_width,num_label:getContentSize().height+item_icon_height+10)
         item:addContent(content)
 
         return item
@@ -160,29 +215,466 @@ function CommonUpgradeUI:SetUpgradeReward()
     local created_item_table = {}
     local used_width = 0
     for k,v in pairs(reward_table) do
-    	local item = createItem(v.icon,v.value)
-    	created_item_table[k] = item
-    	local item_width = item:getItemSize()
-    	used_width = used_width + item_width
+        local item = createItem(v.icon,v.value)
+        created_item_table[k] = item
+        local item_width = item:getItemSize()
+        used_width = used_width + item_width
     end
     -- 计算出合理的各个item之间的间距，再添加进listview
     local usable_width = reward_listview_width - used_width
     for k,v in pairs(created_item_table) do
-    	local item_width,item_height = v:getItemSize()
-    	print("  添加的节点数量=",#created_item_table,item_width,item_height,usable_width,item_width+usable_width/#created_item_table)
-    	v:setItemSize(item_width+usable_width/#created_item_table,item_height)
-    	reward_listview:addItem(v)
+        local item_width,item_height = v:getItemSize()
+        v:setItemSize(item_width+usable_width/#created_item_table,item_height)
+        reward_listview:addItem(v)
     end
-
 
     reward_listview:reload()
 
 end
+
+function CommonUpgradeUI:InitUpgradePart()
+    -- 升级页
+    -- local color_layer = display.newColorLayer(cc.c4b(255,0,0,255)):addTo(self)
+    -- color_layer:setContentSize(cc.size(display.width,display.height-385))
+    self.upgrade_layer = display.newLayer()
+    self.upgrade_layer:setContentSize(cc.size(display.width,display.height-385))
+    self:addChild(self.upgrade_layer)
+    -- upgrade now button
+    cc.ui.UIPushButton.new({normal = "upgrade_green_button_normal.png",pressed = "upgrade_green_button_pressed.png"})
+        :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("立即升级"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                local upgrade_listener = function()
+                    local location = City:GetLocationIdByBuildingType(self.building:GetType())
+                    if location then
+                        NetManager:instantUpgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
+                    else
+                        local tile = City:GetTileWhichBuildingBelongs(self.building)
+                        local house_location = tile:GetBuildingLocation(self.building)
+                        NetManager:instantUpgradeHouseByLocation(tile.location_id, house_location, function(...) end)
+                    end
+                    print(self.building:GetType().."---------------- upgrade now button has been  clicked ")
+                end
+
+                local can_not_update_type = self.building:IsAbleToUpgrade(true)
+                if can_not_update_type then
+                    self:PopNotSatisfyDialog(upgrade_listener,can_not_update_type)
+                else
+                    upgrade_listener()
+                end
+            end
+        end):align(display.CENTER, display.cx-150, display.top-430):addTo(self.upgrade_layer)
+    -- upgrade button
+    cc.ui.UIPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
+        :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("升级"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                local upgrade_listener = function()
+                    local location = City:GetLocationIdByBuildingType(self.building:GetType())
+                    if location then
+                        NetManager:upgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
+                    else
+                        local tile = City:GetTileWhichBuildingBelongs(self.building)
+                        local house_location = tile:GetBuildingLocation(self.building)
+                        NetManager:upgradeHouseByLocation(tile.location_id, house_location, function(...) end)
+                    end
+                    print(self.building:GetType().."---------------- upgrade  button has been  clicked ")
+                end
+
+                local can_not_update_type = self.building:IsAbleToUpgrade(false)
+                if can_not_update_type then
+                    self:PopNotSatisfyDialog(upgrade_listener,can_not_update_type)
+                else
+                    upgrade_listener()
+                end
+            end
+        end):align(display.CENTER, display.right-140, display.top-430):addTo(self.upgrade_layer)
+    -- 立即升级所需宝石
+    display.newSprite("Topaz-icon.png", display.left+60, display.cy):addTo(self.upgrade_layer):setScale(0.5)
+    self.upgrade_now_need_gems_label = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        font = UIKit:getFontFilePath(),
+        size = 20,
+        color = UIKit:hex2c3b(0x403c2f)
+    }):align(display.LEFT_CENTER,display.left+80,display.cy-4):addTo(self.upgrade_layer)
+    self:SetUpgradeNowNeedGems()
+    --升级所需时间
+    display.newSprite("upgrade_hourglass.png", display.cx+100, display.cy):addTo(self.upgrade_layer):setScale(0.6)
+    self.upgrade_time = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        font = UIKit:getFontFilePath(),
+        size = 18,
+        color = UIKit:hex2c3b(0x403c2f)
+    }):align(display.LEFT_CENTER,display.cx+125,display.cy+10):addTo(self.upgrade_layer)
+    self:SetUpgradeTime()
+
+    -- 科技减少升级时间
+    self.buff_reduce_time = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "(-00:20:00)",
+        font = UIKit:getFontFilePath(),
+        size = 18,
+        color = UIKit:hex2c3b(0x068329)
+    }):align(display.LEFT_CENTER,display.cx+120,display.cy-10):addTo(self.upgrade_layer)
+
+    --升级需求listview
+    display.newSprite("upgrade_requirement_background.png", display.cx, display.cy-200):addTo(self.upgrade_layer)
+    cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "升级需求",
+        font = UIKit:getFontFilePath(),
+        size = 24,
+        color = UIKit:hex2c3b(0x403c2f)
+    }):align(display.CENTER,display.cx,display.cy-60):addTo(self.upgrade_layer)
+    self.requirement_listview = UIListView.new{
+        -- bg = "common_tips_bg.png",
+        bgScale9 = true,
+        viewRect = cc.rect(display.left+45, display.cy-366, 549, 284),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
+        :addTo(self.upgrade_layer)
+
+    -- 缓存已经添加的升级条件项,供刷新时使用
+    self.added_items = {}
+    self:SetUpgradeRequirementListview()
+
+
+
+    -- TODO
+    self:visibleChildLayers()
+
+    -- self.upgrade_layer:setVisible(false)
+end
+
+function CommonUpgradeUI:SetUpgradeNowNeedGems()
+    self.upgrade_now_need_gems_label:setString(self.building:getUpgradeNowNeedGems().."")
+end
+
+function CommonUpgradeUI:SetUpgradeTime()
+    self.upgrade_time:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradeTimeToNextLevel()))
+end
+
+function CommonUpgradeUI:SetUpgradeRequirementListview()
+    local wood = City.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local iron = City.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local stone = City.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local population = City.resource_manager:GetPopulationResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+
+
+    local userData = DataManager:getUserData()
+    requirements = {
+        {resource_type = "wood",isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
+            icon="wood_icon.png",description=self.building:GetLevelUpWood().."/"..wood},
+
+        {resource_type = "stone",isVisible = self.building:GetLevelUpStone()>0,     isSatisfy = stone>self.building:GetLevelUpStone() ,
+            icon="stone_icon.png",description=self.building:GetLevelUpStone().."/"..stone},
+
+        {resource_type = "iron",isVisible = self.building:GetLevelUpIron()>0,      isSatisfy = iron>self.building:GetLevelUpIron() ,
+            icon="iron_icon.png",description=self.building:GetLevelUpIron().."/"..iron},
+
+        {resource_type = "citizen",isVisible = self.building:GetLevelUpCitizen()>0,   isSatisfy = population>self.building:GetLevelUpCitizen() ,
+            icon="iron_icon.png",description=self.building:GetLevelUpCitizen().."/"..population},
+
+        {resource_type = "blueprints",isVisible = self.building:GetLevelUpBlueprints()>0,isSatisfy = userData.materials.blueprints>self.building:GetLevelUpBlueprints() ,
+            icon="iron_icon.png",description=self.building:GetLevelUpBlueprints().."/"..userData.materials.blueprints},
+        {resource_type = "tools",isVisible = self.building:GetLevelUpTools()>0,     isSatisfy = userData.materials.tools>self.building:GetLevelUpTools() ,
+            icon="iron_icon.png",description=self.building:GetLevelUpTools().."/"..userData.materials.tools},
+        {resource_type = "tiles",isVisible = self.building:GetLevelUpTiles()>0,     isSatisfy = userData.materials.tiles>self.building:GetLevelUpTiles() ,
+            icon="iron_icon.png",description=self.building:GetLevelUpTiles().."/"..userData.materials.tiles},
+        {resource_type = "pulley",isVisible = self.building:GetLevelUpPulley()>0,    isSatisfy = userData.materials.pulley>self.building:GetLevelUpPulley() ,
+            icon="iron_icon.png",description=self.building:GetLevelUpPulley().."/"..userData.materials.pulley},
+    }
+
+
+    --有两种背景色的达到要求的显示条，通过meeFlag来确定选取哪一个
+    local meetFlag = true
+
+    for k,v in pairs(requirements) do
+        -- print(k,v)
+        if v.isVisible then
+            -- 需求已添加，则更新最新资源数据
+            if self.added_items[v.resource_type] then
+                -- print("需求已添加，则更新最新资源数据 ",v.resource_type)
+                local added_resource = self.added_items[v.resource_type]
+                local content = added_resource:getContent()
+                if v.isSatisfy then
+                    if meetFlag then
+                        content.bg:setTexture("upgrade_resources_background_3.png")
+                    else
+                        content.bg:setTexture("upgrade_resources_background_2.png")
+                    end
+                    -- 符合条件，添加钩钩图标
+                    content.mark:setTexture("upgrade_mark.png")
+                    meetFlag =  not meetFlag
+                else
+                    content.bg:setTexture("upgrade_resources_background_red.png")
+                    -- 不符合条提案，添加X图标
+                    content.mark:setTexture("upgrade_prohibited.png")
+                end
+                content.resource_value:setString(v.description)
+            else
+                -- 添加新条件
+                -- print("添加新条件",v.resource_type)
+                local item = self.requirement_listview:newItem()
+                local item_width,item_height = 547,47
+                item:setItemSize(item_width,item_height)
+                local content = cc.ui.UIGroup.new()
+                --  筛选不同背景颜色 bg
+                if v.isSatisfy then
+                    if meetFlag then
+                        content.bg = display.newSprite("upgrade_resources_background_3.png", 0, 0):addTo(content)
+                    else
+                        content.bg = display.newSprite("upgrade_resources_background_2.png", 0, 0):addTo(content)
+                    end
+                    -- 符合条件，添加钩钩图标
+                    content.mark = display.newSprite("upgrade_mark.png", item_width/2-30, 0):addTo(content)
+                    meetFlag =  not meetFlag
+                else
+                    content.bg = display.newSprite("upgrade_resources_background_red.png", 0, 0):addTo(content)
+                    -- 不符合条提案，添加X图标
+                    content.mark = display.newSprite("upgrade_prohibited.png", item_width/2-25, 0):addTo(content)
+                end
+                -- 资源类型icon
+                local resource_type_icon = display.newSprite(v.icon, -item_width/2+35, 0):addTo(content)
+                resource_type_icon:setScale(0.4)
+                content.resource_value = cc.ui.UILabel.new({
+                    UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+                    text = v.description,
+                    font = UIKit:getFontFilePath(),
+                    size = 24,
+                    color = UIKit:hex2c3b(0x403c2f)
+                }):align(display.LEFT_CENTER,-200,0):addTo(content)
+                item:addContent(content)
+                self.requirement_listview:addItem(item)
+                self.added_items[v.resource_type] = item
+                self.requirement_listview:reload()
+            end
+        else
+            -- 刷新时已经没有此项条件时，删除之前添加的项
+            if self.added_items[v.resource_type] then
+                -- print("刷新时已经没有此项条件时，删除之前添加的项",v.resource_type)
+                self.requirement_listview:removeItem(self.added_items[v.resource_type])
+                self.requirement_listview:reload()
+            end
+        end
+    end
+end
+
+function CommonUpgradeUI:InitAccelerationPart()
+    self.acc_layer = display.newLayer()
+    self.acc_layer:setContentSize(cc.size(display.width,display.height-385))
+    self:addChild(self.acc_layer)
+
+    -- 正在升级文本说明
+    cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = string.format(_("正在升级 %s 到Level %d"),_(self.building:GetType()),self.building:GetLevel()+1),
+        font = UIKit:getFontFilePath(),
+        size = 22,
+        color = UIKit:hex2c3b(0x403c2f)
+    }):align(display.LEFT_CENTER, display.left+45, display.cy+70)
+        :addTo(self.acc_layer)
+    -- 升级倒数时间进度条
+    --进度条
+    local bar = display.newSprite("upgrade_progress_bar_1.png"):addTo(self.acc_layer):pos(display.cx-90, display.cy+20)
+    local progressFill = display.newSprite("upgrade_progress_bar_2.png")
+    self.acc_layer.ProgressTimer = cc.ProgressTimer:create(progressFill)
+    local pro = self.acc_layer.ProgressTimer
+    pro:setType(display.PROGRESS_TIMER_BAR)
+    pro:setBarChangeRate(cc.p(1,0))
+    pro:setMidpoint(cc.p(0,0))
+    pro:align(display.LEFT_BOTTOM, 0, 0):addTo(bar)
+    pro:setPercentage(0)
+    self.acc_layer.upgrade_time_label = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        -- text = "",
+        font = UIKit:getFontFilePath(),
+        size = 18,
+        align = ui.TEXT_ALIGN_CENTER,
+        color = UIKit:hex2c3b(0xfff3c7),
+    }):addTo(bar)
+    self.acc_layer.upgrade_time_label:setAnchorPoint(cc.p(0,0.5))
+    self.acc_layer.upgrade_time_label:pos(self.acc_layer.upgrade_time_label:getContentSize().width/2+10, bar:getContentSize().height/2)
+    -- 进度条头图标
+    display.newSprite("upgrade_progress_bar_icon_bg.png", display.left+64, display.cy+20):addTo(self.acc_layer)
+    display.newSprite("upgrade_hourglass.png", display.left+64, display.cy+20):addTo(self.acc_layer):setScale(0.8)
+    -- 免费加速按钮
+    self:CreateFreeSpeedUpBuildingUpgradeButton()
+    -- 可免费加速提示
+    -- 背景框
+    display.newSprite("upgrade_introduce_bg.png", display.cx, display.cy-60):addTo(self.acc_layer)
+    self.acc_tip_label = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        font = UIKit:getFontFilePath(),
+        size = 20,
+        dimensions = cc.size(530, 80),
+        color = UIKit:hex2c3b(0x403c2f)
+    }):align(display.LEFT_CENTER, display.left+50, display.cy-60)
+        :addTo(self.acc_layer)
+    self:SetAccTipLabel()
+    -- 按时间加速区域
+    self:CreateAccButtons()
+    self:visibleChildLayers()
+
+end
+
+function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
+    local  IMAGES  = {
+        normal = "upgrade_free_1.png",
+        pressed = "upgrade_free_2.png",
+        disabled = "upgrade_free_3.png",
+    }
+    self.acc_layer.acc_button = cc.ui.UIPushButton.new(IMAGES, {scale9 = true})
+        :setButtonSize(169, 86)
+        :setButtonLabel("normal", ui.newTTFLabel({
+            text = _("免费加速"),
+            size = 24
+        }))
+        :setButtonLabel("pressed", ui.newTTFLabel({
+            text = _("免费加速"),
+            size = 24,
+        }))
+        :setButtonLabel("disabled", ui.newTTFLabel({
+            text = _("免费加速"),
+            size = 24,
+        })):onButtonClicked(function(event)
+        print("服务器还未提供免费加速接口，暂时用作直接使用宝石加速")
+
+        end):align(display.CENTER, display.cx+185, display.cy+45):addTo(self.acc_layer)
+    self.acc_layer.acc_button:setButtonEnabled(false)
+end
+
+function CommonUpgradeUI:SetAccTipLabel()
+    --TODO 设置对应的提示 ，现在是临时的
+    self.acc_tip_label:setString(_("小于5min时，可使用免费加速\n激活VIP X后，小于5min时可使用免费加速"))
+end
+
+function CommonUpgradeUI:CreateAccButtons()
+    -- 8个加速按钮单独放置在一个layer上方便处理事件
+    self.acc_button_layer = display.newLayer()
+    self.acc_button_layer:addTo(self)
+    self.acc_button_layer:setTouchSwallowEnabled(false)
+    self.acc_button_layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function ( event )
+        if event.name=="began" then
+            self:ResetAccButtons()
+        end
+        return true
+    end, 1)
+    local gap_x , gap_y= 148,140
+    self.acc_button_table = {}
+    self.time_button_tbale = {}
+    for i=1,8 do
+        -- 按钮背景框
+        display.newSprite("upgrade_props_box.png", 100+gap_x*math.mod(i,4), display.cy-160-gap_y*math.floor((i-1)/4)):addTo(self.acc_layer)
+        -- 花销数值背景
+        local cost_bg = display.newSprite("upgrade_number.png", 100+gap_x*math.mod(i,4), display.cy-230-gap_y*math.floor((i-1)/4)):addTo(self.acc_layer)
+        -- 花销数值
+        cc.ui.UILabel.new({
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = "X 600",
+            font = UIKit:getFontFilePath(),
+            size = 20,
+            color = UIKit:hex2c3b(0x403c2f)
+        }):align(display.CENTER, 100+gap_x*math.mod(i,4), display.cy-230-gap_y*math.floor((i-1)/4))
+            :addTo(self.acc_layer)
+        -- 时间按钮
+        local time_button = cc.ui.UIPushButton.new({normal = "upgrade_time_"..i..".png"})
+        -- 确认加速按钮
+        local acc_button = cc.ui.UIPushButton.new({normal = "upgrade_acc_button_1.png",pressed="upgrade_acc_button_2.png"})
+        time_button:onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                self:ResetAccButtons()
+                acc_button:setVisible(true)
+                time_button:setVisible(false)
+                self:getParent():addChild(SmallDialogUI.new(
+                    {
+                        listener = function ()
+                            acc_button:setVisible(false)
+                            time_button:setVisible(true)
+                        end,
+                        x = math.floor((i-1)/4)==0 and cost_bg:getPositionX() or
+                        math.floor((i-1)/4)==1 and acc_button:getPositionX(),
+                        y = math.floor((i-1)/4)==0 and cost_bg:getPositionY()-cost_bg:getContentSize().height/2 or
+                        math.floor((i-1)/4)==1 and acc_button:getPositionY()+acc_button:getCascadeBoundingBox().size.height/2,
+                        tips1 = _("使用立即减少升级时间"),
+                        tips2 = _("使用立即减少5Min时间消耗"),
+                        direction = math.floor((i-1)/4), -- 0表示dialog的箭头指向上方，1反之
+                    }
+                ),2)
+            end
+        end):align(display.CENTER, 100+gap_x*math.mod(i,4), display.cy-160-gap_y*math.floor((i-1)/4)):addTo(self.acc_button_layer)
+        time_button:setScale(0.7)
+        acc_button:onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+
+                acc_button:setVisible(false)
+                time_button:setVisible(true)
+
+                -- print("确定按钮呗点中")
+            end
+        end):align(display.CENTER, 100+gap_x*math.mod(i,4), display.cy-160-gap_y*math.floor((i-1)/4)):addTo(self.acc_button_layer)
+        acc_button:setVisible(false)
+        self.acc_button_table[i] = acc_button
+        self.time_button_tbale[i] = time_button
+    end
+
+    self:visibleChildLayers()
+end
+
+-- 设置各个layers显示状态
+function CommonUpgradeUI:visibleChildLayers()
+    if self.acc_button_layer then
+        self.acc_button_layer:setVisible(self.building:IsUpgrading())
+    end
+    if self.upgrade_layer then
+        self.upgrade_layer:setVisible(not self.building:IsUpgrading())
+    end
+    if self.acc_layer then
+        self.acc_layer:setVisible(self.building:IsUpgrading())
+    end
+end
+
+function CommonUpgradeUI:ResetAccButtons()
+    for k,v in pairs(self.time_button_tbale) do
+        v:setVisible(true)
+    end
+    for k,v in pairs(self.acc_button_table) do
+        v:setVisible(false)
+    end
+end
+
+function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
+    local dialog = FullScreenPopDialogUI.new()
+    self:getParent():addChild(dialog,100,101)
+    if can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH then
+        local required_gems =self.building:getUpgradeRequiredGems()
+        local owen_gem = City.resource_manager:GetGemResource():GetValue()
+        if owen_gem<required_gems then
+            dialog:SetTitle(_("提示"))
+            dialog:SetPopMessage(UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH)
+        else
+            dialog:CreateOKButton(function()
+                listener()
+                self:getParent():leftButtonClicked()
+            end)
+            dialog:SetTitle(_("补充资源"))
+            dialog:SetPopMessage(_("您当前没有足够的资源,是否花费魔法石立即补充"))
+            dialog:CreateNeeds("Topaz-icon.png",required_gems)
+        end
+    elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH then
+        dialog:CreateOKButton(function(sender,type)
+            listener()
+            self:getParent():leftButtonClicked()
+        end)
+        dialog:SetTitle(_("立即开始"))
+        dialog:SetPopMessage(_("您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"))
+        dialog:CreateNeeds("Topaz-icon.png",required_gems)
+            :seekWidgetByName(dialog,"LC_Dialogue_Label"):setText(_("您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"))
+    else
+        dialog:SetTitle(_("提示"))
+        dialog:SetPopMessage(can_not_update_type)
+    end
+end
+
 return CommonUpgradeUI
-
-
-
-
-
 
 
