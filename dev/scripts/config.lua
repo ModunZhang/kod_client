@@ -43,3 +43,9 @@ CONFIG_REMOTE_SERVER = {
 
 CONFIG_IS_LOCAL = false
 CONFIG_IS_DEBUG = false
+
+CONFIG_SCREEN_AUTOSCALE_CALLBACK = function(w, h, deviceModel)
+    if w/h > 640/960 then
+        CONFIG_SCREEN_AUTOSCALE = "FIXED_HEIGHT"
+    end
+end
