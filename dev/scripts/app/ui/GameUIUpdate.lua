@@ -4,6 +4,17 @@
 --
 local GameUIUpdate = UIKit:createUIClass("GameUIUpdate","GameUILogin")
 
+function GameUIUpdate:ctor()
+	GameUIUpdate.super.ctor(self)
+	-- data
+	self.m_localJson = nil
+    self.m_serverJson = nil
+    self.m_jsonFileName = "fileList.json"
+    self.m_totalSize = 0
+    self.m_currentSize = 0
+end
+
+
 function GameUIUpdate:onEnter()
 	GameUIUpdate.super.onEnter(self)
 	self:createVerLabel()

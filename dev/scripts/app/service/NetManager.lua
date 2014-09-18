@@ -484,7 +484,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         end
     end
 
-    if CCFileUtils:sharedFileUtils():isFileExist(filePath) then
+    if cc.FileUtils:getInstance():isFileExist(filePath) then
         local crc32 = ext.crc32(filePath)
         if crc32 == fileInfo.crc32 then
             local file = io.open(filePath, "rb")
