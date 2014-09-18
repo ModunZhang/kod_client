@@ -290,22 +290,22 @@ function CommonUpgradeUI:InitUpgradePart()
             end
         end):align(display.CENTER, display.right-140, display.top-430):addTo(self.upgrade_layer)
     -- 立即升级所需宝石
-    display.newSprite("Topaz-icon.png", display.left+60, display.cy):addTo(self.upgrade_layer):setScale(0.5)
+    display.newSprite("Topaz-icon.png", display.left+60, display.top-490):addTo(self.upgrade_layer):setScale(0.5)
     self.upgrade_now_need_gems_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
         size = 20,
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER,display.left+80,display.cy-4):addTo(self.upgrade_layer)
+    }):align(display.LEFT_CENTER,display.left+80,display.top-494):addTo(self.upgrade_layer)
     self:SetUpgradeNowNeedGems()
     --升级所需时间
-    display.newSprite("upgrade_hourglass.png", display.cx+100, display.cy):addTo(self.upgrade_layer):setScale(0.6)
+    display.newSprite("upgrade_hourglass.png", display.cx+100, display.top-490):addTo(self.upgrade_layer):setScale(0.6)
     self.upgrade_time = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
         size = 18,
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER,display.cx+125,display.cy+10):addTo(self.upgrade_layer)
+    }):align(display.LEFT_CENTER,display.cx+125,display.top-480):addTo(self.upgrade_layer)
     self:SetUpgradeTime()
 
     -- 科技减少升级时间
@@ -315,23 +315,24 @@ function CommonUpgradeUI:InitUpgradePart()
         font = UIKit:getFontFilePath(),
         size = 18,
         color = UIKit:hex2c3b(0x068329)
-    }):align(display.LEFT_CENTER,display.cx+120,display.cy-10):addTo(self.upgrade_layer)
+    }):align(display.LEFT_CENTER,display.cx+120,display.top-500):addTo(self.upgrade_layer)
 
     --升级需求listview
-    display.newSprite("upgrade_requirement_background.png", display.cx, display.cy-200):addTo(self.upgrade_layer)
+    local list_bg = display.newScale9Sprite("upgrade_requirement_background.png", display.cx, display.top-512,cc.size(549, display.height-627))
+        :align(display.TOP_CENTER):addTo(self.upgrade_layer)
     cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "升级需求",
         font = UIKit:getFontFilePath(),
         size = 24,
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.CENTER,display.cx,display.cy-60):addTo(self.upgrade_layer)
+    }):align(display.CENTER,display.cx,display.top-540):addTo(self.upgrade_layer)
     self.requirement_listview = UIListView.new{
         -- bg = "common_tips_bg.png",
         bgScale9 = true,
-        viewRect = cc.rect(display.left+45, display.cy-366, 549, 284),
+        viewRect = cc.rect(0,0, 549, display.top-676),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
-        :addTo(self.upgrade_layer)
+        :addTo(list_bg,2)
 
     -- 缓存已经添加的升级条件项,供刷新时使用
     self.added_items = {}
@@ -676,5 +677,6 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
 
