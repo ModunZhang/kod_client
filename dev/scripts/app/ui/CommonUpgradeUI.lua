@@ -427,7 +427,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
                         content.bg = display.newSprite("upgrade_resources_background_2.png", 0, 0):addTo(content)
                     end
                     -- 符合条件，添加钩钩图标
-                    content.mark = display.newSprite("upgrade_mark.png", item_width/2-30, 0):addTo(content)
+                    content.mark = display.newSprite("upgrade_mark.png", item_width/2-25, 0):addTo(content)
                     meetFlag =  not meetFlag
                 else
                     content.bg = display.newSprite("upgrade_resources_background_red.png", 0, 0):addTo(content)
