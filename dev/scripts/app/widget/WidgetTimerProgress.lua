@@ -3,10 +3,11 @@ local WidgetTimerProgress = class("WidgetTimerProgress", function(...)
     return display.newNode(...)
 end)
 
-function WidgetTimerProgress:ctor()
-    local height = 100
-    local width = 549
-    local back_ground_351x96 = cc.ui.UIImage.new("back_ground_351x96.png", {scale9 = true}):setLayoutSize(width, height)
+function WidgetTimerProgress:ctor(width, height)
+    local width = width == nil and 549 or width
+    local height = height == nil and 100 or height
+    local back_ground_351x96 = cc.ui.UIImage.new("back_ground_351x96.png", {scale9 = true})
+    :setLayoutSize(width, height)
     self.describe = cc.ui.UILabel.new({
         text = _("制造材料"),
         size = 22,
@@ -51,8 +52,8 @@ function WidgetTimerProgress:ctor()
         :align(display.CENTER, width - 100, height / 2)
 
     back_ground_351x96:addTo(self)
+    self.back_ground = back_ground_351x96
 end
-
 function WidgetTimerProgress:OnButtonClicked(func)
     self.button:onButtonClicked(function(event)
         func(event)
@@ -68,7 +69,13 @@ function WidgetTimerProgress:SetProgressInfo(time_label, percent)
     self.progress_timer:setPercentage(percent)
     return self
 end
-
+function WidgetTimerProgress:align(...)
+    self.back_ground:align(...)
+    return self
+end
+function WidgetTimerProgress:getBoundingBox(...)
+    return self.back_ground:getBoundingBox(...)
+end
 
 
 return WidgetTimerProgress

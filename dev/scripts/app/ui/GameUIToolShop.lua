@@ -52,7 +52,7 @@ function GameUIToolShop:UpdateEvent(event)
     end
 end
 function GameUIToolShop:Manufacture()
-    self.list_view = self:CreateVerticalListView(20, display.bottom + 80, display.right - 20, display.top - 100)
+    self.list_view = self:CreateVerticalListView(20, display.bottom + 70, display.right - 20, display.top - 100)
     local item = self:CreateMaterialItemWithListView(self.list_view,
         _("生产建筑所需材料"),
         {
@@ -109,7 +109,7 @@ function GameUIToolShop:TabButtons()
         elseif tag == "manufacture" then
             self.list_view:setVisible(true)
         end
-    end):pos(display.cx, display.bottom + 50)
+    end):pos(display.cx, display.bottom + 40)
 end
 
 function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materials)
