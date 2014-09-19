@@ -234,7 +234,7 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
             self._keep_page = UIKit:newGameUI('GameUIKeep',City,building:GetEntity())
             self._keep_page:addToScene(self, true)
         elseif building:GetEntity():GetType() == "dragonEyrie" then
-            UIKit:newGameUI('GameUIDragonEyrie', City):addToCurrentScene(true)
+            UIKit:newGameUI('GameUIDragonEyrie', City,building:GetEntity()):addToCurrentScene(true)
         elseif building:GetEntity():GetType() == "toolShop" then
             UIKit:newGameUI('GameUIToolShop', City):addToScene(self, true)
         elseif building:GetEntity():GetType() == "blackSmith" then

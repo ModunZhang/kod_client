@@ -564,8 +564,8 @@ function City:OnUserDataChanged(userData, current_time)
     self:IteratorCanUpgradBuildingsByUserData(userData, current_time)
 
     -- 最后才更新资源
-    self:IteratorResourcesByUserData(userData, current_time)
-    -- local resource_refresh_time = userData.basicInfo.resourceRefreshTime -- 这个时间有点不准确，还是使用服务器时间
+    local resource_refresh_time = userData.basicInfo.resourceRefreshTime -- 这个时间有点不准确，还是使用服务器时间
+    self:IteratorResourcesByUserData(userData, resource_refresh_time/1000)
     -- resource_manager:OnResourceChanged()
 end
 function City:OnCreateDecorator(current_time, building)

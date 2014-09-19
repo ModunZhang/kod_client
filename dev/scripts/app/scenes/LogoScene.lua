@@ -10,7 +10,8 @@ function LogoScene:ctor()
 end
 
 function LogoScene:onEnter()
-	self.sprite = display.newSprite("logos/batcat.png", display.cx, display.cy):addTo(self)
+	self.sprite = display.newScale9Sprite("logos/batcat.png", display.cx, display.cy):addTo(self)
+	self.sprite:size(display.width,self.sprite:getContentSize().height)
 	self:performWithDelay(function()
 			if CONFIG_IS_DEBUG then
 				app:enterScene("MainScene", nil, "fade", 0.6, display.COLOR_WHITE)

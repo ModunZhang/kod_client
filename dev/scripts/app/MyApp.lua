@@ -93,5 +93,9 @@ function MyApp:onEnterForeground()
     MyApp.super.onEnterForeground(self)
 end
 
+function MyApp:lockInput(b)
+    cc.Director:getInstance():getEventDispatcher():setEnabled(b)
+end
+
 return MyApp
 

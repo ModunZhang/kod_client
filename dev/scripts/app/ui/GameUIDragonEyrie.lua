@@ -11,13 +11,13 @@ function GameUIDragonEyrie:GetStarBar()
 end
 
 
-function GameUIDragonEyrie:ctor()
+function GameUIDragonEyrie:ctor(building)
 	GameUIDragonEyrie.super.ctor(self,City,_("龙巢"))
+    self.building = building
 end
 
 function GameUIDragonEyrie:onEnter()
 	GameUIDragonEyrie.super.onEnter(self)
-	-- self:CreateDragon()
 	self:CreateTabButtons()
 end
 
@@ -25,7 +25,7 @@ function GameUIDragonEyrie:CreateDragonIf(dragon_data)
 	if self.dragon_bg then self.dragon_bg:setVisible(true) return end -- 只需创建一次
 	local bg = display.newSprite("dragon_bg.png")
 		:addTo(self)
-		:align(display.TOP_LEFT, display.left+15, display.top - 100)
+        :pos(display.cx,display.top - 350)
 	local title = display.newSprite("drgon_title_blue.png")
 		:addTo(bg)
 		:align(display.LEFT_TOP, 8, bg:getContentSize().height-8)
@@ -138,12 +138,21 @@ function GameUIDragonEyrie:CreateDragonIf(dragon_data)
     self.dragon_bg = bg
 end
 
+function GameUIDragonEyrie:CreateHatchDragonIf()
+    local hatchNode = display.newNode()
+    local content_bg = display.newSprite("dragon_content_bg.png")
+        :addTo(self)
+        :align(display.LEFT_BOTTOM, 0, 0)
+    hatchNode:addTo(self)
+        :pos((display.width - content_bg:getContentSize().width)/2,self.dragon_bg:getPositionY()-self.dragon_bg:getContentSize().height/2-130)
+end
+
 
 function GameUIDragonEyrie:CreateEquipmentContentIf()
 	if self.equipment_content then self.equipment_content:setVisible(true) return  end
 	local content_bg = display.newSprite("dragon_content_bg.png")
 		:addTo(self)
-	content_bg:pos(display.cx,self.dragon_bg:getPositionY()-self.dragon_bg:getContentSize().height-content_bg:getContentSize().height/2 - 10)
+	content_bg:pos(display.cx,self.dragon_bg:getPositionY()-self.dragon_bg:getContentSize().height/2-130)
 	local eqs = display.newNode()
 	for i=1,6 do
 		local eq = self:GetEquipmentItem()
@@ -242,21 +251,34 @@ function GameUIDragonEyrie:VisibleSkillContent(b)
 end
 
 function GameUIDragonEyrie:CreateSkillContentIf()
-	if self.skill_content then self:VisibleSkillContent(true) return end
-	local star = display.newSprite("dragon_star.png")
-		:addTo(self)
-		:align(display.LEFT_TOP,display.left+45,self.dragon_bg:getPositionY()-self.dragon_bg:getContentSize().height-10)
-	local timeLabel = cc.ui.UILabel.new({
+	if self.skill_content then self.skill_content:setVisible(true) return end
+    local skill = display.newNode()
+
+
+    local list = UIListView.new {
+        bg = "dragon_content_bg.png",
+        bgScale9 = true,
+        viewRect = cc.rect(0, 0, 551, 195),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
+        alignment = cc.ui.UIListView.ALIGNMENT_LEFT      
+    }
+    :addTo(skill)
+    local star = display.newSprite("dragon_star.png")
+    :addTo(skill)
+    :align(display.LEFT_BOTTOM,0,200)
+    local timeLabel = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "next one 00:20:45",
         font = UIKit:getFontFilePath(),
         size = 24,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
         color = UIKit:hex2c3b(0x403c2f)
-    }):addTo(self):align(display.LEFT_TOP, star:getPositionX() + star:getContentSize().width,star:getPositionY())
+    }):addTo(skill):align(display.LEFT_BTTOM, star:getPositionX() + star:getContentSize().width,star:getPositionY() + 12)
+
     local magic_bottle = display.newSprite("dragon_magic_bottle.png")
-    	:addTo(self)
-    	:align(display.LEFT_TOP,timeLabel:getPositionX()+timeLabel:getContentSize().width + 200 , timeLabel:getPositionY())
+     :addTo(skill)
+     :align(display.LEFT_TOP,timeLabel:getPositionX()+timeLabel:getContentSize().width + 200 , timeLabel:getPositionY()+14)
+
     local value_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "30000",
@@ -264,24 +286,22 @@ function GameUIDragonEyrie:CreateSkillContentIf()
         size = 24,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
         color = UIKit:hex2c3b(0x403c2f)
-    }):addTo(self):align(display.LEFT_TOP,magic_bottle:getPositionX()+magic_bottle:getContentSize().width+10,magic_bottle:getPositionY())
+    }):addTo(skill):align(display.LEFT_TOP,magic_bottle:getPositionX()+magic_bottle:getContentSize().width+10,magic_bottle:getPositionY())
+
     local line  = display.newScale9Sprite("dividing_line.png")
-    	:addTo(self)
-    	:align(display.LEFT_TOP, display.left+45,star:getPositionY()- star:getContentSize().height - 1)
+     :addTo(skill)
+     :align(display.LEFT_TOP,0,star:getPositionY() - 1)
+
     line:size(551,line:getContentSize().height)
-    self.skill_content = UIListView.new {
-		bg = "dragon_content_bg.png",
-        bgScale9 = true,
-        viewRect = cc.rect(display.left+45, line:getPositionY()-line:getContentSize().height - 195-10, 551, 195),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        alignment = cc.ui.UIListView.ALIGNMENT_LEFT      
-    }
-    :addTo(self)
-    self.skill_line = line
-    self.skill_star = star
-    self.skill_magic_bottle = magic_bottle
-    self.skill_value_label  = value_label
-    self.skill_time_label   = timeLabel
+    self.skill_content = skill
+    skill:addTo(self):pos((display.width - 551)/2,display.top - 850)
+
+
+    -- self.skill_line = line
+    -- self.skill_star = star
+    -- self.skill_magic_bottle = magic_bottle
+    -- self.skill_value_label  = value_label
+    -- self.skill_time_label   = timeLabel
 end
 
 function GameUIDragonEyrie:GetSkillItem()
@@ -293,8 +313,8 @@ function GameUIDragonEyrie:CreateInfomationIf()
 	if self.info_content then  self.info_content:setVisible(true) return end
 	self.info_content = UIListView.new {
 		bg = "dragon_info_bg.png",
-        bgScale9 = false,
-        viewRect = cc.rect(display.left+45, self.dragon_bg:getPositionY()-self.dragon_bg:getContentSize().height - 195 - 20, 551, 195),
+        bgScale9 = true,
+        viewRect = cc.rect((display.width - 551) /2, self.dragon_bg:getPositionY()-self.dragon_bg:getContentSize().height+30, 551, 200),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         alignment = cc.ui.UIListView.ALIGNMENT_LEFT      
     }
@@ -341,7 +361,6 @@ function GameUIDragonEyrie:CreateTabButtons()
     	if tag ~= "upgrade" then
     		if self.current_content then
     			self.current_content:setVisible(false)
-                self:VisibleSkillContent(false)
     		end
     		self:CreateDragonIf()
     	end
@@ -349,20 +368,18 @@ function GameUIDragonEyrie:CreateTabButtons()
    			if self.dragon_bg then
    				self.dragon_bg:setVisible(false)
    				self.current_content:setVisible(false)
-                self:VisibleSkillContent(false)
    			end
    		elseif tag == "equipment" then
-            self:VisibleSkillContent(false)
    			self:CreateEquipmentContentIf()
    			self.current_content = self.equipment_content
    		elseif tag == "skill" then
    			self:CreateSkillContentIf()
+            self.current_content = self.skill_content
    		elseif tag == "information" then
-            self:VisibleSkillContent(false)
    			self:CreateInfomationIf()
    			self.current_content = self.info_content
    		end
-    end):addTo(self):pos(display.cx, display.bottom + 50)
+    end):addTo(self):pos(display.cx, display.top - 910)
 end
 
 

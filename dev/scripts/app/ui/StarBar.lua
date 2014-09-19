@@ -1,3 +1,4 @@
+-- 用于星级显示或者分页控件 支持横竖
 local StarBar = class("StarBar",function()
 		return display.newNode()
 end)
