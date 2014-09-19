@@ -14,7 +14,7 @@ end
 function WidgetSlider:onSliderValueChanged(callback)
     return WidgetSlider.super.onSliderValueChanged(self, function(event)
         if self.progress then
-            self.progress:setPercentage(event.value)
+            self.progress:setPercentage(math.floor(event.value / (self.max_ - self.min_) * 100))
         end
         callback(event)
     end)
