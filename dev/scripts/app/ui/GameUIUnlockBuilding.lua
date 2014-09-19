@@ -140,9 +140,9 @@ function GameUIUnlockBuilding:InitBuildingIntroduces()
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
         size = 22,
-        dimensions = cc.size(400, 90),
+        dimensions = cc.size(350, 90),
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER,display.left+180, display.cy+190):addTo(self)
+    }):align(display.LEFT_CENTER,display.cx-100, display.cy+190):addTo(self)
     self:SetBuildingIntroduces()
 end
 

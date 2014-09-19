@@ -4,12 +4,10 @@ local WidgetSoldierBox = class("WidgetSoldierBox", function()
 end)
 
 
-function WidgetSoldierBox:ctor(soldier_png)
+function WidgetSoldierBox:ctor(soldier_png,cb)
     self.soldier_bg = WidgetPushButton.new({normal = "star1_114x128.png",
         pressed = "star1_114x128.png"}):addTo(self)
-        :onButtonClicked(function(event)
-            print("hello")
-        end)
+        :onButtonClicked(cb)
     local rect = self.soldier_bg:getCascadeBoundingBox()
 
     local soldier = cc.ui.UIImage.new(soldier_png):addTo(self.soldier_bg)

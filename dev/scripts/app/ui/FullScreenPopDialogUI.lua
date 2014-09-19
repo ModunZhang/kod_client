@@ -26,7 +26,7 @@ function FullScreenPopDialogUI:Init()
         color = UIKit:hex2c3b(0xffedae)
     }):align(display.CENTER,display.cx,display.cy+140):addTo(self)
     -- npc image
-    display.newSprite("Npc.png", display.left+115, display.cy+10):addTo(self)
+    display.newSprite("Npc.png", display.cx - 205, display.cy+10):addTo(self)
     -- 对话框 bg
     display.newSprite("pop_tip_bg.png", display.cx+80, display.cy+20):addTo(self)
 
@@ -52,7 +52,7 @@ function FullScreenPopDialogUI:Init()
     cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
         :onButtonClicked(function(event)
             self:removeFromParent(true)
-        end):align(display.CENTER, display.right-30, display.cy+150):addTo(self):addChild(display.newSprite("X_3.png"))
+        end):align(display.CENTER, display.cx + 290, display.cy+150):addTo(self):addChild(display.newSprite("X_3.png"))
 
 end
 

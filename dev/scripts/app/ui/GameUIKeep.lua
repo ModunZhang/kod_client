@@ -34,15 +34,15 @@ end
 function GameUIKeep:CreateCityBasicInfo()
     -- city icon bg
     cc.ui.UIImage.new("keep_city_icon_bg.png")
-        :align(display.TOP_LEFT, display.left+46, display.top-120)
+        :align(display.TOP_LEFT, display.cx-274, display.top-120)
         :addTo(self.info_layer)
     -- city icon
     cc.ui.UIImage.new("keep_city_icon.png")
-        :align(display.TOP_LEFT, display.left+52, display.top-127)
+        :align(display.TOP_LEFT, display.cx-268, display.top-127)
         :addTo(self.info_layer)
     -- 修改城市名字道具拥有数量显示背景框
     local change_city_name_prop_bg = cc.ui.UIImage.new("LV_background.png")
-        :align(display.TOP_LEFT, display.left+46, display.top-235)
+        :align(display.TOP_LEFT, display.cx-274, display.top-235)
         :addTo(self.info_layer)
     local bg_width, bg_height = change_city_name_prop_bg:getCascadeBoundingBox().size.width,
         change_city_name_prop_bg:getCascadeBoundingBox().size.height
@@ -63,7 +63,7 @@ function GameUIKeep:CreateCityBasicInfo()
             font = UIKit:getFontFilePath(),
             size = 16,
             color = UIKit:hex2c3b(0x665f49)
-        }):align(display.CENTER, display.left+200, display.top-130)
+        }):align(display.CENTER, display.cx-120, display.top-130)
         :addTo(self.info_layer)
     self.city_name_label  = cc.ui.UILabel.new(
         {
@@ -72,17 +72,17 @@ function GameUIKeep:CreateCityBasicInfo()
             font = UIKit:getFontFilePath(),
             size = 22,
             color = UIKit:hex2c3b(0x29261c)
-        }):align(display.LEFT_CENTER, display.left+167, display.top-160)
+        }):align(display.LEFT_CENTER, display.cx-153, display.top-160)
         :addTo(self.info_layer)
     self.change_city_name_button = cc.ui.UIPushButton.new({normal = "green_button_normal.png",pressed = "green_button_pressed.png"})
         :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("修改"), size = 20, color = display.COLOR_WHITE}))
         :onButtonClicked(function(event)
             print("使用道具改变城市名字未实现")
         end)
-        :align(display.CENTER, display.right-120, display.top-136)
+        :align(display.CENTER, display.cx+200, display.top-136)
         :addTo(self.info_layer)
     -- 分割线
-    local terrain_line = display.newScale9Sprite("dividing_line.png", display.right-260, display.top-216, cc.size(display.width-213,2))
+    local terrain_line = display.newScale9Sprite("dividing_line.png", display.cx+60, display.top-216, cc.size(427,2))
         :addTo(self.info_layer)
     -- 地形标签
     cc.ui.UILabel.new(
@@ -105,7 +105,7 @@ function GameUIKeep:CreateCityBasicInfo()
         }):align(display.RIGHT_CENTER, terrain_line:getCascadeBoundingBox().size.width, 12)
         :addTo(terrain_line)
     -- 分割线
-    local location_line = display.newScale9Sprite("dividing_line.png", display.right-260, display.top-260, cc.size(display.width-213,2))
+    local location_line = display.newScale9Sprite("dividing_line.png", display.cx+60, display.top-260, cc.size(427,2))
         :addTo(self.info_layer)
 
     -- 坐标标签
@@ -132,7 +132,7 @@ end
 
 function GameUIKeep:CreateCanBeUnlockedBuildingBG()
     -- 主背景
-    self.main_building_listview_bg = display.newScale9Sprite("keep_unlock_building_listview_bg.png", display.cx, display.bottom+116, cc.size(display.width-91, display.height-409))
+    self.main_building_listview_bg = display.newScale9Sprite("keep_unlock_building_listview_bg.png", display.cx, display.bottom+116, cc.size(549, display.height-409))
         :addTo(self.info_layer)
     self.main_building_listview_bg:setAnchorPoint(cc.p(0.5,0))
     -- title 背景
@@ -183,7 +183,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
     self.building_listview = cc.ui.UIListView.new{
         -- bg = "common_tips_bg.png",
         bgScale9 = true,
-        viewRect = cc.rect(display.left+47, display.bottom+118, 545, display.height-460),
+        viewRect = cc.rect(display.cx-273, display.bottom+118, 545, display.height-460),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
         :addTo(self.info_layer)
     local allBuildings = City:GetAllBuildings()
