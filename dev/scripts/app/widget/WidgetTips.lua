@@ -33,8 +33,9 @@ function WidgetTips:Size(width, height)
 	self.back_ground:setLayoutSize(width, height)
 	return self
 end
-function WidgetTips:align(...)
-	self.back_ground:align(...)
+function WidgetTips:align(anchorPoint, x, y)
+	self.back_ground:align(anchorPoint)
+    if x and y then self:setPosition(x, y) end
 	return self
 end
 

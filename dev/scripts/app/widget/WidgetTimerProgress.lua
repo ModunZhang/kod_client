@@ -69,13 +69,12 @@ function WidgetTimerProgress:SetProgressInfo(time_label, percent)
     self.progress_timer:setPercentage(percent)
     return self
 end
-function WidgetTimerProgress:align(...)
-    self.back_ground:align(...)
+function WidgetTimerProgress:align(anchorPoint, x, y)
+    self.back_ground:align(anchorPoint)
+    if x and y then self:setPosition(x, y) end
     return self
 end
-function WidgetTimerProgress:getBoundingBox(...)
-    return self.back_ground:getBoundingBox(...)
-end
+
 
 
 return WidgetTimerProgress

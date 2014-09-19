@@ -15,27 +15,31 @@ function GameUIBarracks:onEnter()
     self.tips = WidgetTips.new(_("招募队列空闲"), _("请选择一个兵种进行招募")):addTo(self)
     :align(display.CENTER, display.cx, display.top - 160)
 
-    self.widget = WidgetTimerProgress.new(549, 108)
-        :addTo(self)
+    self.timer = WidgetTimerProgress.new(549, 108):addTo(self)
         :align(display.CENTER, display.cx, display.top - 160)
-        :SetDescribe(_("hello"))
-        :SetProgressInfo("helo", 80)
-        :hide()
+        :SetDescribe(_("招募弓箭手x300"))
+        :SetProgressInfo("00:20:00", 80)
         :OnButtonClicked(function(event)
             print("hello")
         end)
 
 
-    local rect = self.widget:getBoundingBox()
+    local rect = self.timer:getCascadeBoundingBox()
     self.list_view = self:CreateVerticalListView(rect.x, display.bottom + 70, rect.x + rect.width, rect.y - 20)
-    local item = self:CreateItemWithListView(self.list_view)
-    self.list_view:addItem(item)
-    local item = self:CreateItemWithListView(self.list_view)
-    self.list_view:addItem(item)
+    -- local item = self:CreateItemWithListView(self.list_view)
+    -- self.list_view:addItem(item)
+    -- local item = self:CreateItemWithListView(self.list_view)
+    -- self.list_view:addItem(item)
+    -- self.list_view:reload():resetPosition()
 
-    self.list_view:reload():resetPosition()
 
-    self:TabButtons()
+    
+
+
+
+
+
+    self:TabButtons() 
 end
 function GameUIBarracks:TabButtons()
     self:CreateTabButtons({
@@ -62,7 +66,7 @@ end
 function GameUIBarracks:CreateItemWithListView(list_view)
     local rect = list_view:getViewRect()
     local origin_x = - rect.width / 2
-    local widget_rect = self.widget:getBoundingBox()
+    local widget_rect = self.timer:getCascadeBoundingBox()
     local unit_width = 130
     local gap_x = (widget_rect.width - unit_width * 4) / 3
     local row_item = display.newNode()
@@ -70,14 +74,13 @@ function GameUIBarracks:CreateItemWithListView(list_view)
 
     for i = 1, 4 do
         WidgetSoldierBox.new("soldier_130x183.png"):addTo(row_item)
-        :align(display.BOTTOM_CENTER, origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 0)
-        :SetNumber(999)
+            :alignByPoint(cc.p(0.5, 0.4), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 0)
+            :SetNumber(999)
     end
     local item = list_view:newItem()
+
     item:addContent(row_item)
     item:setItemSize(widget_rect.width, 170)
-
-
     return item
 end
 
@@ -86,6 +89,7 @@ end
 
 
 return GameUIBarracks
+
 
 
 

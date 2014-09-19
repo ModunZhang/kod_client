@@ -8,7 +8,6 @@ local origin_y = 20
 function WidgetTabButtons:ctor(buttons, tab_param, listener)
     local count = #buttons
     local tab_param = tab_param ~= nil and tab_param or {}
-
     local scale_on_height = display.height / 960
     local gap = tab_param.gap ~= nil and tab_param.gap or 0
     local margin_left = tab_param.margin_left ~= nil and tab_param.margin_left or 0
