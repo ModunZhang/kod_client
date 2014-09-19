@@ -1,3 +1,4 @@
+local WidgetHourGlass = import("..widget.WidgetHourGlass")
 local WidgetSlider = import("..widget.WidgetSlider")
 local WidgetRecruitSoldier = class("WidgetRecruitSoldier", function(...)
     return display.newNode(...)
@@ -6,7 +7,6 @@ end)
 
 
 function WidgetRecruitSoldier:ctor()
-
     local label_origin_x = 190
 
     local back_ground = cc.ui.UIImage.new("back_ground_608x458.png",
@@ -106,12 +106,13 @@ function WidgetRecruitSoldier:ctor()
         :align(display.LEFT_CENTER, size.width - 100, size.height - 100)
 
 
-
+    local slider_height, label_height = size.height - 170, size.height - 150
     WidgetSlider.new(display.LEFT_TO_RIGHT,  {bar = "slider_bg_461x24.png",
         progress = "slider_progress_445x14.png",
-        button = "slider_btn_66x66.png"}):addTo(back_ground, 2)
-        :align(display.LEFT_CENTER, 25, size.height - 150)
+        button = "slider_btn_66x66.png"}, {max = 100000}):addTo(back_ground, 2)
+        :align(display.LEFT_CENTER, 25, slider_height)
         :onSliderValueChanged(function(event)
+            -- print(event.value)
             end)
         :setSliderValue(0)
 
@@ -126,7 +127,7 @@ function WidgetRecruitSoldier:ctor()
         :align(display.LEFT_CENTER, size.width - 100, size.height - 100)
 
     local bg = cc.ui.UIImage.new("back_ground_83x32.png"):addTo(back_ground, 2)
-        :align(display.CENTER, size.width - 70, size.height - 130)
+        :align(display.CENTER, size.width - 70, label_height)
 
     local pos = bg:getAnchorPointInPoints()
     cc.ui.UILabel.new({
@@ -145,12 +146,103 @@ function WidgetRecruitSoldier:ctor()
         align = cc.ui.TEXT_ALIGN_RIGHT,
         color = UIKit:hex2c3b(0x403c2f)
     }):addTo(back_ground, 2)
-        :align(display.CENTER, size.width - 70, size.height - 160)
+        :align(display.CENTER, size.width - 70, label_height - 35)
 
 
-    cc.ui.UIImage.new("back_ground_583x107.png"):addTo(back_ground, 2)
-        :align(display.CENTER, size.width/2, size.height/2)
-    
+    local need = cc.ui.UIImage.new("back_ground_583x107.png"):addTo(back_ground, 2)
+        :align(display.CENTER, size.width/2, size.height/2 - 30)
+
+    local size = need:getContentSize()
+    local margin_x = 80
+    local length = size.width - margin_x * 2
+    local origin_x, origin_y, gap_x = margin_x, 30, length / 4
+    local res_map = {
+        "res_food_114x100.png",
+        "res_wood_114x100.png",
+        "res_iron_114x100.png",
+        "res_stone_128x128.png",
+        "res_citizen_44x50.png",
+    }
+    for i, v in pairs(res_map) do
+        local x = origin_x + (i - 1) * gap_x
+        local scale = i == #res_map and 1 or 0.4
+        cc.ui.UIImage.new(v):addTo(need, 2)
+            :align(display.CENTER, x, size.height - origin_y):scale(scale)
+
+        cc.ui.UILabel.new({
+            text = "2.1k\n/ 20000",
+            size = 20,
+            font = UIKit:getFontFilePath(),
+            align = cc.ui.TEXT_ALIGN_CENTER,
+            -- color = UIKit:hex2c3b(0x403c2f)
+            color = display.COLOR_RED
+        }):addTo(need, 2)
+            :align(display.CENTER, x, size.height - origin_y - 50)
+    end
+
+    local size = back_ground:getContentSize()
+    local instant_button = cc.ui.UIPushButton.new(
+        {normal = "green_btn_up_250x65.png",pressed = "green_btn_down_250x65.png"})
+        :addTo(back_ground, 2)
+        :align(display.CENTER, 160, 120)
+        :setButtonLabel(cc.ui.UILabel.new({
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = _("立即招募"),
+            size = 24,
+            color = UIKit:hex2c3b(0xfff3c7)
+        }))
+        :onButtonClicked(function(event)
+            dump(event)
+        end)
+
+    cc.ui.UIImage.new("gem_66x56.png"):addTo(instant_button, 2)
+        :align(display.CENTER, -100, -50):scale(0.5)
+
+    cc.ui.UILabel.new({
+        text = "600",
+        size = 18,
+        font = UIKit:getFontFilePath(),
+        align = cc.ui.TEXT_ALIGN_CENTER,
+        color = UIKit:hex2c3b(0x403c2f)
+    }):addTo(instant_button, 2)
+        :align(display.LEFT_CENTER, -100 + 20, -50)
+
+
+    local button = cc.ui.UIPushButton.new(
+        {normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"})
+        :addTo(back_ground, 2)
+        :align(display.CENTER, size.width - 120, 120)
+        :setButtonLabel(cc.ui.UILabel.new({
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = _("招募"),
+            size = 27,
+            color = UIKit:hex2c3b(0xfff3c7)
+        }))
+        :onButtonClicked(function(event)
+            dump(event)
+        end)
+
+    cc.ui.UIImage.new("hourglass_39x46.png"):addTo(button, 2)
+        :align(display.LEFT_CENTER, -90, -55):scale(0.7)
+
+	local center = -20
+    cc.ui.UILabel.new({
+        text = "20:20:20",
+        size = 18,
+        font = UIKit:getFontFilePath(),
+        align = cc.ui.TEXT_ALIGN_CENTER,
+        color = UIKit:hex2c3b(0x403c2f)
+    }):addTo(button, 2)
+        :align(display.CENTER, center, -50)
+
+    cc.ui.UILabel.new({
+        text = "-(20:20:20)",
+        size = 18,
+        font = UIKit:getFontFilePath(),
+        align = cc.ui.TEXT_ALIGN_CENTER,
+        color = UIKit:hex2c3b(0x068329)
+    }):addTo(button, 2)
+        :align(display.CENTER, center, -70)
 
 
     self.back_ground = back_ground
@@ -164,6 +256,12 @@ end
 
 
 return WidgetRecruitSoldier
+
+
+
+
+
+
 
 
 

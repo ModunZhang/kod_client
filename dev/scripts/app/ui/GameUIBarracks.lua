@@ -26,11 +26,11 @@ function GameUIBarracks:onEnter()
 
     local rect = self.timer:getCascadeBoundingBox()
     self.list_view = self:CreateVerticalListView(rect.x, display.bottom + 70, rect.x + rect.width, rect.y - 20)
-    -- local item = self:CreateItemWithListView(self.list_view)
-    -- self.list_view:addItem(item)
-    -- local item = self:CreateItemWithListView(self.list_view)
-    -- self.list_view:addItem(item)
-    -- self.list_view:reload():resetPosition()
+    local item = self:CreateItemWithListView(self.list_view)
+    self.list_view:addItem(item)
+    local item = self:CreateItemWithListView(self.list_view)
+    self.list_view:addItem(item)
+    self.list_view:reload():resetPosition()
 
 
     
