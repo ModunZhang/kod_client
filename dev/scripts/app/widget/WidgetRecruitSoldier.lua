@@ -1,4 +1,3 @@
-local WidgetHourGlass = import("..widget.WidgetHourGlass")
 local WidgetSlider = import("..widget.WidgetSlider")
 local WidgetRecruitSoldier = class("WidgetRecruitSoldier", function(...)
     return display.newNode(...)
