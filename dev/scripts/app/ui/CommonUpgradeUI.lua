@@ -113,7 +113,7 @@ function CommonUpgradeUI:InitBuildingIntroduces()
         size = 22,
         dimensions = cc.size(400, 90),
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER,display.left+180, display.top-190):addTo(self)
+    }):align(display.LEFT_CENTER,display.cx-100, display.top-190):addTo(self)
     self:SetBuildingIntroduces()
 end
 
@@ -174,6 +174,8 @@ function CommonUpgradeUI:SetBuildingIntroduces()
         self.building_introduces:setString(string.format(building_introduces_table["keep"],self.building:GetUnlockPoint()))
     elseif self.building:GetType()=="warehouse" then
         self.building_introduces:setString(string.format(building_introduces_table["warehouse"],self.building:GetResourceValueLimit()))
+    elseif self.building:GetType()=="armyCamp" then
+        self.building_introduces:setString(string.format(building_introduces_table["armyCamp"],self.building:GetTroopPopulation()))
     end
 end
 
@@ -185,12 +187,12 @@ function CommonUpgradeUI:SetUpgradeReward()
         {reward_type = "exp",icon="upgrade_experience_icon.png",value="X 10000"},
         {reward_type = "power",icon="upgrade_power_icon.png",value="X 1000000"},
     }
-    local reward_listview_width ,reward_listview_height= 545,95
+    local reward_listview_width ,reward_listview_height= 544,95
     local item_icon_height = 62
     local reward_listview = cc.ui.UIListView.new{
         -- bg = "common_tips_bg.png",
         bgScale9 = true,
-        viewRect = cc.rect(display.left+47, display.top-378, reward_listview_width, reward_listview_height),
+        viewRect = cc.rect(display.cx - 272, display.top-378, reward_listview_width, reward_listview_height),
         direction = cc.ui.UIScrollView.DIRECTION_HORIZONTAL}
         :addTo(self)
     local function createItem(icon,value)
@@ -288,15 +290,15 @@ function CommonUpgradeUI:InitUpgradePart()
                     upgrade_listener()
                 end
             end
-        end):align(display.CENTER, display.right-140, display.top-430):addTo(self.upgrade_layer)
+        end):align(display.CENTER, display.cx+180, display.top-430):addTo(self.upgrade_layer)
     -- 立即升级所需宝石
-    display.newSprite("Topaz-icon.png", display.left+60, display.top-490):addTo(self.upgrade_layer):setScale(0.5)
+    display.newSprite("Topaz-icon.png", display.cx - 260, display.top-490):addTo(self.upgrade_layer):setScale(0.5)
     self.upgrade_now_need_gems_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
         size = 20,
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER,display.left+80,display.top-494):addTo(self.upgrade_layer)
+    }):align(display.LEFT_CENTER,display.cx - 240,display.top-494):addTo(self.upgrade_layer)
     self:SetUpgradeNowNeedGems()
     --升级所需时间
     display.newSprite("upgrade_hourglass.png", display.cx+100, display.top-490):addTo(self.upgrade_layer):setScale(0.6)
@@ -472,7 +474,7 @@ function CommonUpgradeUI:InitAccelerationPart()
         font = UIKit:getFontFilePath(),
         size = 22,
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER, display.left+45, display.cy+70)
+    }):align(display.LEFT_CENTER, display.cx - 275, display.cy+70)
         :addTo(self.acc_layer)
     -- 升级倒数时间进度条
     --进度条
@@ -496,8 +498,8 @@ function CommonUpgradeUI:InitAccelerationPart()
     self.acc_layer.upgrade_time_label:setAnchorPoint(cc.p(0,0.5))
     self.acc_layer.upgrade_time_label:pos(self.acc_layer.upgrade_time_label:getContentSize().width/2+10, bar:getContentSize().height/2)
     -- 进度条头图标
-    display.newSprite("upgrade_progress_bar_icon_bg.png", display.left+64, display.cy+20):addTo(self.acc_layer)
-    display.newSprite("upgrade_hourglass.png", display.left+64, display.cy+20):addTo(self.acc_layer):setScale(0.8)
+    display.newSprite("upgrade_progress_bar_icon_bg.png", display.cx - 256, display.cy+20):addTo(self.acc_layer)
+    display.newSprite("upgrade_hourglass.png", display.cx - 256, display.cy+20):addTo(self.acc_layer):setScale(0.8)
     -- 免费加速按钮
     self:CreateFreeSpeedUpBuildingUpgradeButton()
     -- 可免费加速提示
@@ -509,7 +511,7 @@ function CommonUpgradeUI:InitAccelerationPart()
         size = 20,
         dimensions = cc.size(530, 80),
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER, display.left+50, display.cy-60)
+    }):align(display.LEFT_CENTER, display.cx - 270, display.cy-60)
         :addTo(self.acc_layer)
     self:SetAccTipLabel()
     -- 按时间加速区域
@@ -565,9 +567,9 @@ function CommonUpgradeUI:CreateAccButtons()
     self.time_button_tbale = {}
     for i=1,8 do
         -- 按钮背景框
-        display.newSprite("upgrade_props_box.png", 100+gap_x*math.mod(i,4), display.cy-160-gap_y*math.floor((i-1)/4)):addTo(self.acc_layer)
+        display.newSprite("upgrade_props_box.png", display.cx-220 + gap_x*math.mod(i,4), display.cy-160-gap_y*math.floor((i-1)/4)):addTo(self.acc_layer)
         -- 花销数值背景
-        local cost_bg = display.newSprite("upgrade_number.png", 100+gap_x*math.mod(i,4), display.cy-230-gap_y*math.floor((i-1)/4)):addTo(self.acc_layer)
+        local cost_bg = display.newSprite("upgrade_number.png", display.cx-220 + gap_x*math.mod(i,4), display.cy-230-gap_y*math.floor((i-1)/4)):addTo(self.acc_layer)
         -- 花销数值
         cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -575,7 +577,7 @@ function CommonUpgradeUI:CreateAccButtons()
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.CENTER, 100+gap_x*math.mod(i,4), display.cy-230-gap_y*math.floor((i-1)/4))
+        }):align(display.CENTER, display.cx-220+gap_x*math.mod(i,4), display.cy-230-gap_y*math.floor((i-1)/4))
             :addTo(self.acc_layer)
         -- 时间按钮
         local time_button = cc.ui.UIPushButton.new({normal = "upgrade_time_"..i..".png"})
@@ -602,7 +604,7 @@ function CommonUpgradeUI:CreateAccButtons()
                     }
                 ),2)
             end
-        end):align(display.CENTER, 100+gap_x*math.mod(i,4), display.cy-160-gap_y*math.floor((i-1)/4)):addTo(self.acc_button_layer)
+        end):align(display.CENTER, display.cx-220+gap_x*math.mod(i,4), display.cy-160-gap_y*math.floor((i-1)/4)):addTo(self.acc_button_layer)
         time_button:setScale(0.7)
         acc_button:onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
@@ -612,7 +614,7 @@ function CommonUpgradeUI:CreateAccButtons()
 
                 -- print("确定按钮呗点中")
             end
-        end):align(display.CENTER, 100+gap_x*math.mod(i,4), display.cy-160-gap_y*math.floor((i-1)/4)):addTo(self.acc_button_layer)
+        end):align(display.CENTER, display.cx-220+gap_x*math.mod(i,4), display.cy-160-gap_y*math.floor((i-1)/4)):addTo(self.acc_button_layer)
         acc_button:setVisible(false)
         self.acc_button_table[i] = acc_button
         self.time_button_tbale[i] = time_button
