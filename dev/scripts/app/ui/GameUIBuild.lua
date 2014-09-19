@@ -2,7 +2,7 @@ local FoodResourceUpgradeBuilding = import("..entity.FoodResourceUpgradeBuilding
 local WoodResourceUpgradeBuilding = import("..entity.WoodResourceUpgradeBuilding")
 local IronResourceUpgradeBuilding = import("..entity.IronResourceUpgradeBuilding")
 local StoneResourceUpgradeBuilding = import("..entity.StoneResourceUpgradeBuilding")
-
+local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUIBuild = UIKit:createUIClass('GameUIBuild', "GameUIWithCommonHeader")
 
 local base_items = {
@@ -107,11 +107,10 @@ function GameUIBuild:CreateItemWithListView(list_view)
         :align(display.LEFT_BOTTOM, 10, 10)
 
 
-    cc.ui.UIPushButton.new(
+    WidgetPushButton.new(
         {normal = "build_item/info.png",pressed = "build_item/info.png"})
         :addTo(content)
         :align(display.LEFT_BOTTOM, 10, 10)
-        :setTouchSwallowEnabled(false)
 
     local condition_label = cc.ui.UILabel.new({
         text = _("已达到最大建筑数量"),
@@ -143,7 +142,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
     }):addTo(gem_bg)
         :align(display.LEFT_CENTER, 40, 10)
 
-    local build_btn = cc.ui.UIPushButton.new(
+    local build_btn = WidgetPushButton.new(
         {normal = "build_item/build_btn_up.png",pressed = "build_item/build_btn_down.png"})
         :setButtonLabel(cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -153,17 +152,6 @@ function GameUIBuild:CreateItemWithListView(list_view)
             color = display.COLOR_WHITE}))
         :addTo(content)
         :pos(520, 40)
-        :onButtonPressed(function(event)
-            event.target.pre_pos = event.target:convertToWorldSpace(cc.p(event.target:getPosition()))
-        end)
-        :onButtonRelease(function(event)
-            local cur_pos = event.target:convertToWorldSpace(cc.p(event.target:getPosition()))
-            if event.touchInTarget and cc.pGetDistance(cur_pos, event.target.pre_pos) < 10 then
-                event.target:my_onButtonClicked(event)
-            end
-        end)
-    build_btn:setTouchSwallowEnabled(false)
-    build_btn.set_clicked_function = function(sender, func) sender.my_onButtonClicked = func end
 
     local item = list_view:newItem()
     item:addContent(content)
@@ -172,7 +160,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
 
     function item:SetType(item_info, on_build)
         title_label:setString(item_info.label)
-        build_btn:set_clicked_function(function(event)
+        build_btn:onButtonClicked(function(event)
             on_build(self)
         end)
     end

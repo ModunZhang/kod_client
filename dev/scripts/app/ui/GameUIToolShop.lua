@@ -2,6 +2,9 @@
 -- Author: gaozhou
 -- Date: 2014-08-18 14:33:28
 --
+local WidgetPushButton = import("..widget.WidgetPushButton")
+local WidgetNeedBox = import("..widget.WidgetNeedBox")
+local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
 local GameUIToolShop = UIKit:createUIClass("GameUIToolShop", "GameUIWithCommonHeader")
 
 local MATERIALS_MAP = {
@@ -39,17 +42,17 @@ function GameUIToolShop:OnEndMakeMaterialsWithEvent(tool_shop, event, current_ti
     self:UpdateEvent(event)
 end
 function GameUIToolShop:OnGetMaterialsWithEvent(tool_shop, event)
-	self:UpdateEvent(event)
+    self:UpdateEvent(event)
 end
 function GameUIToolShop:UpdateEvent(event)
-	if event:Category() == "building" then
+    if event:Category() == "building" then
         self.building_item:UpdateByEvent(event)
     elseif event:Category() == "technology" then
         self.technology_event:UpdateByEvent(event)
     end
 end
 function GameUIToolShop:Manufacture()
-    self.list_view = self:CreateVerticalListView(20, display.bottom + 80, display.right - 20, display.top - 100)
+    self.list_view = self:CreateVerticalListView(20, display.bottom + 70, display.right - 20, display.top - 100)
     local item = self:CreateMaterialItemWithListView(self.list_view,
         _("生产建筑所需材料"),
         {
@@ -106,7 +109,7 @@ function GameUIToolShop:TabButtons()
         elseif tag == "manufacture" then
             self.list_view:setVisible(true)
         end
-    end):pos(display.cx, display.bottom + 50)
+    end):pos(display.cx, display.bottom + 40)
 end
 
 function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materials)
@@ -209,52 +212,11 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
 
 
     local function new_need_box()
-        local col1_x, col2_x = 35, 190
-        local row1_y, row2_y = 65, 25
-        local label_relate_x, label_relate_y = 25, 0
-        local back_ground_351x96 = cc.ui.UIImage.new("back_ground_351x96.png")
-        local wood = cc.ui.UIImage.new("res_wood_114x100.png")
-            :addTo(back_ground_351x96):align(display.CENTER, col1_x, row1_y):scale(0.4)
-        local wood_label = cc.ui.UILabel.new({
-            text = "100",
-            size = 22,
-            font = UIKit:getFontFilePath(),
-            align = cc.ui.TEXT_ALIGN_RIGHT,
-            color = UIKit:hex2c3b(0x403c2f)
-        }):addTo(back_ground_351x96, 2):align(display.LEFT_CENTER, col1_x + label_relate_x, row1_y + label_relate_y)
+        local need_box = WidgetNeedBox.new()
 
-        local stone = cc.ui.UIImage.new("res_stone_128x128.png")
-            :addTo(back_ground_351x96):align(display.CENTER, col2_x, row1_y):scale(0.4)
-        local stone_label = cc.ui.UILabel.new({
-            text = "100",
-            size = 22,
-            font = UIKit:getFontFilePath(),
-            align = cc.ui.TEXT_ALIGN_RIGHT,
-            color = UIKit:hex2c3b(0x403c2f)
-        }):addTo(back_ground_351x96, 2):align(display.LEFT_CENTER, col2_x + label_relate_x, row1_y + label_relate_y)
-
-
-        local iron = cc.ui.UIImage.new("res_iron_114x100.png")
-            :addTo(back_ground_351x96):align(display.CENTER, col1_x, row2_y):scale(0.4)
-        local iron_label = cc.ui.UILabel.new({
-            text = "100",
-            size = 22,
-            font = UIKit:getFontFilePath(),
-            align = cc.ui.TEXT_ALIGN_RIGHT,
-            color = UIKit:hex2c3b(0x403c2f)
-        }):addTo(back_ground_351x96, 2):align(display.LEFT_CENTER, col1_x + label_relate_x, row2_y + label_relate_y)
-
-
-        local time = cc.ui.UIImage.new("hourglass_39x46.png")
-            :addTo(back_ground_351x96):align(display.CENTER, col2_x, row2_y):scale(0.8)
-        local time_label = cc.ui.UILabel.new({
-            text = "100",
-            size = 22,
-            font = UIKit:getFontFilePath(),
-            align = cc.ui.TEXT_ALIGN_RIGHT,
-            color = UIKit:hex2c3b(0x403c2f)
-        }):addTo(back_ground_351x96, 2):align(display.LEFT_CENTER, col2_x + label_relate_x, row2_y + label_relate_y)
-
+        local contetn_size = need_box:getCascadeBoundingBox()
+        local width = contetn_size.width
+        local height = contetn_size.height
 
         local describe = cc.ui.UILabel.new({
             text = _("随机制造10个材料"),
@@ -262,105 +224,35 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
             font = UIKit:getFontFilePath(),
             align = cc.ui.TEXT_ALIGN_RIGHT,
             color = UIKit:hex2c3b(0x403c2f)
-        }):addTo(back_ground_351x96, 2)
-            :align(display.LEFT_CENTER, 0, back_ground_351x96:getContentSize().height + 22)
+        }):addTo(need_box, 2)
+            :align(display.LEFT_CENTER, 0, height + 22)
 
-        local button = cc.ui.UIPushButton.new(
+        local button = WidgetPushButton.new(
             {normal = "yellow_btn_up.png", pressed = "yellow_btn_down.png"},
             {scale9 = false}
-        ):setButtonLabel(cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("建造"),
-            size = 24,
-            font = UIKit:getFontFilePath(),
-            color = UIKit:hex2c3b(0xfff3c7)}))
-            :addTo(back_ground_351x96, 2)
-            :align(display.CENTER, back_ground_351x96:getContentSize().width + 105, back_ground_351x96:getContentSize().height / 2)
+        ):addTo(need_box, 2)
+            :align(display.CENTER, width + 100, height / 2)
+            :setButtonLabel(cc.ui.UILabel.new({
+                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+                text = _("建造"),
+                size = 24,
+                font = UIKit:getFontFilePath(),
+                color = UIKit:hex2c3b(0xfff3c7)}))
 
-        local back_ground = back_ground_351x96
-        function back_ground:Update(category)
+
+        function need_box:Update(category)
             local number, wood, stone, iron, time = toolShop:GetNeedByCategory(category)
             describe:setString(_("随机制造")..string.format("%d", number).._("个材料"))
-            wood_label:setString(wood)
-            stone_label:setString(stone)
-            iron_label:setString(iron)
-            time_label:setString(time)
+            self:SetNeedNumber(wood, stone, iron, time)
             return self
         end
-        function back_ground:SetClicked(func)
+        function need_box:SetClicked(func)
             button:onButtonClicked(function(event)
                 func()
             end)
             return self
         end
-        return back_ground
-    end
-
-    local function new_progress_box()
-        local height = 100
-        local width = 549
-        local back_ground_351x96 = cc.ui.UIImage.new("back_ground_351x96.png", {scale9 = true})
-            :setLayoutSize(width, height)
-        local describe = cc.ui.UILabel.new({
-            text = _("制造材料"),
-            size = 22,
-            font = UIKit:getFontFilePath(),
-            align = cc.ui.TEXT_ALIGN_RIGHT,
-            color = UIKit:hex2c3b(0x403c2f)
-        }):addTo(back_ground_351x96, 2):align(display.LEFT_CENTER, 15, height - 30)
-
-
-        local progress_bg_311x35 = cc.ui.UIImage.new("progress_bg_311x35.png")
-            :addTo(back_ground_351x96, 2):align(display.LEFT_CENTER, 35, 40)
-        local progress_timer = display.newProgressTimer("progress_bar_315x33.png", display.PROGRESS_TIMER_BAR)
-            :align(display.LEFT_BOTTOM, 0, 0):addTo(progress_bg_311x35, 2):pos(0, 1)
-        progress_timer:setBarChangeRate(cc.p(1,0))
-        progress_timer:setMidpoint(cc.p(0,0))
-
-        local progress_label = cc.ui.UILabel.new({
-            text = "00:20:30",
-            size = 14,
-            font = UIKit:getFontFilePath(),
-            align = cc.ui.TEXT_ALIGN_RIGHT,
-            color = UIKit:hex2c3b(0xfdfac2)
-        }):addTo(progress_bg_311x35, 2):align(display.LEFT_CENTER, 35, 20)
-
-
-        local back_ground_43x43 = cc.ui.UIImage.new("back_ground_43x43.png")
-            :addTo(back_ground_351x96, 2):align(display.CENTER, 35, 40)
-        local pos = back_ground_43x43:getAnchorPointInPoints()
-        cc.ui.UIImage.new("hourglass_39x46.png"):addTo(back_ground_43x43):align(display.CENTER, pos.x, pos.y):scale(0.8)
-
-
-        local button = cc.ui.UIPushButton.new(
-            {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
-            {scale9 = false}
-        ):setButtonLabel(cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("加速"),
-            size = 24,
-            font = UIKit:getFontFilePath(),
-            color = UIKit:hex2c3b(0xfff3c7)}))
-            :addTo(back_ground_351x96, 2):align(display.CENTER, width - 100, height / 2)
-
-        local back_ground = back_ground_351x96
-        function back_ground:SetClicked(func)
-            button:onButtonClicked(function(event)
-                func()
-            end)
-            return self
-        end
-        function back_ground:SetNumber(number)
-            describe:setString(_("制造材料")..string.format(" %d", number))
-            return self
-        end
-        function back_ground:SetProgressInfo(time_label, percent)
-            progress_label:setString(time_label)
-            progress_timer:setPercentage(percent)
-            return self
-        end
-
-        return back_ground_351x96
+        return need_box
     end
 
 
@@ -375,7 +267,7 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
             color = UIKit:hex2c3b(0x403c2f)
         }):addTo(material, 2):align(display.LEFT_CENTER, 0, height)
 
-        local button = cc.ui.UIPushButton.new(
+        local button = WidgetPushButton.new(
             {normal = "yellow_btn_up.png", pressed = "yellow_btn_down.png"},
             {scale9 = false}
         ):setButtonLabel(cc.ui.UILabel.new({
@@ -400,7 +292,14 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
     end
 
     local back_ground_351x96 = new_need_box():addTo(content, 2):pos(align_x, align_y):hide()
-    local progress_box = new_progress_box():addTo(content, 2):pos(align_x, align_y):hide()
+    local progress_box = WidgetTimerProgress.new()
+        :addTo(content, 2)
+        :pos(align_x, align_y)
+        :hide()
+        :OnButtonClicked(function(event)
+            print("hello")
+        end)
+
     local get_material = new_get_material():addTo(content, 2):pos(align_x, align_y):hide()
 
     local item = list_view:newItem()
@@ -413,13 +312,13 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
             self:GetProgressBox():hide()
             self:GetMaterial():hide()
         elseif event:IsMaking(server_time) then
-            local number, _, _, _, _ = toolShop:GetNeedByCategory(event:Category())
+            local number = toolShop:GetNeedByCategory(event:Category())
             local elapse_time = event:ElapseTime(server_time)
             local total_time = event:FinishTime() - event:StartTime()
             local percent = math.floor((elapse_time * 100.0 / total_time))
 
             self:GetProgressBox():show()
-                :SetNumber(number)
+                :SetDescribe(_("制造材料")..string.format(" X%d", number))
                 :SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(server_time)), percent)
 
             self:GetMaterial():hide()
@@ -466,6 +365,11 @@ end
 
 
 return GameUIToolShop
+
+
+
+
+
 
 
 
