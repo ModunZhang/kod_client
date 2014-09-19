@@ -306,6 +306,7 @@ function City:IteratorCanUpgradBuildingsByUserData(user_data, current_time)
 end
 function City:IteratorResourcesByUserData(user_data, current_time)
     local resource_manager = self:GetResourceManager()
+    resource_manager:GetEnergyResource():UpdateResource(current_time, user_data.resources.energy)
     resource_manager:GetWoodResource():UpdateResource(current_time, user_data.resources.wood)
     resource_manager:GetFoodResource():UpdateResource(current_time, user_data.resources.food)
     resource_manager:GetIronResource():UpdateResource(current_time, user_data.resources.iron)
@@ -564,8 +565,8 @@ function City:OnUserDataChanged(userData, current_time)
     self:IteratorCanUpgradBuildingsByUserData(userData, current_time)
 
     -- 最后才更新资源
-    local resource_refresh_time = userData.basicInfo.resourceRefreshTime -- 这个时间有点不准确，还是使用服务器时间
-    self:IteratorResourcesByUserData(userData, resource_refresh_time/1000)
+    local resource_refresh_time = userData.basicInfo.resourceRefreshTime / 1000
+    self:IteratorResourcesByUserData(userData, resource_refresh_time)
     -- resource_manager:OnResourceChanged()
 end
 function City:OnCreateDecorator(current_time, building)

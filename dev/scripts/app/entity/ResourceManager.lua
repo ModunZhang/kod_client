@@ -7,7 +7,9 @@ local ResourceManager = class("ResourceManager", Observer)
 
 
 
-ResourceManager.RESOURCE_TYPE = Enum("WOOD",
+ResourceManager.RESOURCE_TYPE = Enum(
+    "ENERGY",
+    "WOOD",
     "FOOD",
     "IRON",
     "STONE",
@@ -19,6 +21,7 @@ ResourceManager.RESOURCE_TYPE = Enum("WOOD",
     "TOPAZ",            -- 黄宝石
     "GEM")              -- 玩家宝石
 
+local ENERGY = ResourceManager.RESOURCE_TYPE.ENERGY
 local WOOD = ResourceManager.RESOURCE_TYPE.WOOD
 local FOOD = ResourceManager.RESOURCE_TYPE.FOOD
 local IRON = ResourceManager.RESOURCE_TYPE.IRON
@@ -30,6 +33,7 @@ local GEM = ResourceManager.RESOURCE_TYPE.GEM
 function ResourceManager:ctor()
     ResourceManager.super.ctor(self)
     self.resources = {
+        [ENERGY] = AutomaticUpdateResource.new(),
         [WOOD] = AutomaticUpdateResource.new(),
         [FOOD] = AutomaticUpdateResource.new(),
         [IRON] = AutomaticUpdateResource.new(),
@@ -57,6 +61,9 @@ function ResourceManager:UpdateResourceByTime(current_time)
     for _, v in pairs(self.resources) do
         v:OnTimer(current_time)
     end
+end
+function ResourceManager:GetEnergyResource()
+    return self:GetResourceByType(ENERGY)
 end
 function ResourceManager:GetWoodResource()
     return self:GetResourceByType(WOOD)
@@ -95,49 +102,55 @@ function ResourceManager:OnBuildingChangedFromCity(city, current_time, building)
         [STONE] = 0,
         [POPULATION] = 0,
     }
+
     local total_production_map = {
+        [ENERGY] = 0,
         [WOOD] = 0,
         [FOOD] = 0,
         [IRON] = 0,
         [STONE] = 0,
         [POPULATION] = 0,
     }
-    local maxwood, maxfood, maxiron, maxstone = city:GetFirstBuildingByType("warehouse"):GetResourceValueLimit()
+
+    local max_energy = city:GetFirstBuildingByType("dragonEyrie"):EnergyMax()
+    local max_wood, max_food, max_iron, max_stone = city:GetFirstBuildingByType("warehouse"):GetResourceValueLimit()
     local total_limit_map = {
-        [WOOD] = maxwood,
-        [FOOD] = maxfood,
-        [IRON] = maxiron,
-        [STONE] = maxstone,
+        [ENERGY] = max_energy,
+        [WOOD] = max_wood,
+        [FOOD] = max_food,
+        [IRON] = max_iron,
+        [STONE] = max_stone,
         [POPULATION] = 0,
     }
+
     local total_citizen = 0
     city:IteratorDecoratorBuildingsByFunc(function(key, decorator)
         if iskindof(decorator, 'ResourceUpgradeBuilding') then
             local resource_type = decorator:GetUpdateResourceType()
             if resource_type then
-                total_citizen = total_citizen + decorator:GetCitizen()
-                citizen_map[resource_type] = citizen_map[resource_type] + decorator:GetCitizen()
-                -- print(decorator:GetType(), decorator:GetProductionPerHour())
+                local citizen = decorator:GetCitizen()
+                total_citizen = total_citizen + citizen
                 total_production_map[resource_type] = total_production_map[resource_type] + decorator:GetProductionPerHour()
+                if citizen_map[resource_type] then
+                    citizen_map[resource_type] = citizen_map[resource_type] + citizen
+                end
                 if POPULATION == resource_type then
                     total_limit_map[resource_type] = total_limit_map[resource_type] + decorator:GetProductionLimit()
                 end
             end
         end
     end)
-
-    self.resource_citizen = citizen_map
     self:GetPopulationResource():SetLowLimitResource(total_citizen)
-
-    LuaUtils:outputTable("citizen_map", citizen_map)
-    LuaUtils:outputTable("total_production_map", total_production_map)
-    LuaUtils:outputTable("total_limit_map", total_limit_map)
-
+    self.resource_citizen = citizen_map
     for resource_type, production in pairs(total_production_map) do
         local resource = self.resources[resource_type]
         resource:SetProductionPerHour(current_time, production)
         resource:SetValueLimit(total_limit_map[resource_type])
     end
+
+    LuaUtils:outputTable("citizen_map", citizen_map)
+    LuaUtils:outputTable("total_production_map", total_production_map)
+    LuaUtils:outputTable("total_limit_map", total_limit_map)
 end
 function ResourceManager:GetCitizenAllocInfo()
     return self.resource_citizen
@@ -152,8 +165,6 @@ end
 
 
 return ResourceManager
-
-
 
 
 
