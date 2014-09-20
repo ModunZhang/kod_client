@@ -240,7 +240,7 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
         elseif building:GetEntity():GetType() == "blackSmith" then
             UIKit:newGameUI('GameUIBlackSmith', City):addToScene(self, true)
         elseif building:GetEntity():GetType() == "materialDepot" then
-            UIKit:newGameUI('GameUIMaterialDepot', City):addToScene(self, true)
+            UIKit:newGameUI('GameUIMaterialDepot', City,building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "barracks" then
             UIKit:newGameUI('GameUIBarracks', City):addToScene(self, true)
         elseif building:GetEntity():GetType() == "armyCamp" then

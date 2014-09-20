@@ -1,0 +1,111 @@
+local UIListView = import('..ui.UIListView')
+local WidgetPushButton = import(".WidgetPushButton")
+local WidgetMaterialBox = import("..widget.WidgetMaterialBox")
+
+local WidgetMaterialDetails = class("WidgetMaterialDetails", function ()
+    return display.newColorLayer(cc.c4b(0,0,0,127))
+end)
+
+function WidgetMaterialDetails:ctor()
+    self:InitMaterialDetails()
+end
+
+function WidgetMaterialDetails:InitMaterialDetails()
+    -- bg
+    local bg = display.newScale9Sprite("full_screen_dialog_bg.png", display.cx, display.top-480,cc.size(608,506)):addTo(self)
+    local bg_width,bg_height = bg:getContentSize().width,bg:getContentSize().height
+    -- title bg
+    display.newSprite("Title_blue.png", bg_width/2,bg_height-30):addTo(bg,2)
+    -- soldier_name label
+    self.soldier_name_label = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = _("工程铁锭"),
+        font = UIKit:getFontFilePath(),
+        size = 24,
+        color = UIKit:hex2c3b(0xffedae)
+    }):align(display.LEFT_CENTER,30,bg_height-30):addTo(bg,2)
+    -- close button
+    cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
+        :onButtonClicked(function(event)
+            self:removeFromParent(true)
+        end):align(display.CENTER, bg_width-20, bg_height-20):addTo(bg,2):addChild(display.newSprite("X_3.png"))
+    -- 材料icon
+    local materialBox = WidgetMaterialBox.new("material_blueprints.png",function ()
+        self:OpenMaterialDetails()
+    end,false)
+    materialBox:SetNumber("1/99")
+    materialBox:addTo(self):pos(display.cx - 285, display.top -410)
+    -- 材料介绍
+    self.material_introduce = cc.ui.UILabel.new(
+        {
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = _("材料介绍"),
+            font = UIKit:getFontFilePath(),
+            size = 22,
+            valign = ui.TEXT_VALIGN_TOP,
+            dimensions = cc.size(320, 120),
+            color = UIKit:hex2c3b(0x797154)
+        }):align(display.LEFT_TOP, display.cx - 130, display.top -290)
+        :addTo(self)
+    -- 来源渠道
+    cc.ui.UILabel.new(
+        {
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = _("来源渠道"),
+            font = UIKit:getFontFilePath(),
+            size = 22,
+            valign = ui.TEXT_VALIGN_TOP,
+            -- dimensions = cc.size(320, 120),
+            color = UIKit:hex2c3b(0x5a5544)
+        }):align(display.CENTER, display.cx, display.top -430)
+        :addTo(self)
+    -- listview
+    self.origin_listview = UIListView.new{
+        -- bgColor = cc.c4b(200, 200, 0, 170),
+        bg ="back_ground_571X253.png",
+        bgScale9 = true,
+        viewRect = cc.rect(display.cx-286, display.top-700, 571, 253),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
+        :addTo(self)
+   self.origin_listview:addItem(self:CreateOriginItem(self.origin_listview))
+   self.origin_listview:addItem(self:CreateOriginItem(self.origin_listview))
+   self.origin_listview:addItem(self:CreateOriginItem(self.origin_listview))
+   self.origin_listview:addItem(self:CreateOriginItem(self.origin_listview))
+   self.origin_listview:addItem(self:CreateOriginItem(self.origin_listview))
+   self.origin_listview:reload()
+end
+
+function WidgetMaterialDetails:CreateOriginItem(listView)
+    local item = listView:newItem()
+    item:setItemSize(571,65)
+    local bg = display.newSprite("back_ground_568X62.png")
+    local size_bg = bg:getContentSize()
+    -- star icon 
+    display.newSprite("stars_23X22.png"):align(display.LEFT_CENTER, 10, size_bg.height/2):addTo(bg)
+    -- 来源 label
+    cc.ui.UILabel.new(
+        {
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = _("工具作坊生产"),
+            font = UIKit:getFontFilePath(),
+            size = 22,
+            valign = ui.TEXT_VALIGN_TOP,
+            -- dimensions = cc.size(320, 120),
+            color = UIKit:hex2c3b(0x403c2f)
+        }):align(display.CENTER, size_bg.width/2,  size_bg.height/2)
+        :addTo(bg)
+    -- 来源链接button
+    WidgetPushButton.new({normal = "X_62X62_2.png",
+        pressed = "X_62X62_1.png"}):align(display.CENTER_RIGHT,size_bg.width, size_bg.height/2):addTo(bg)
+        :onButtonClicked(function (  )
+            print("链接到资源来源")
+        end):addChild(display.newSprite("arrow_19X27.png",-31,0))
+    item:addContent(bg)
+    return item
+end
+
+return WidgetMaterialDetails
+
+
+
+
