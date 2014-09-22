@@ -19,6 +19,18 @@ function WidgetSlider:onSliderValueChanged(callback)
         callback(event)
     end)
 end
+function WidgetSlider:Max(max)
+    self.max_ = max
+    self:updateButtonPosition_()
+    self:dispatchEvent({name = UISlider.VALUE_CHANGED_EVENT, value = self.value_})
+    return self
+end
+function WidgetSlider:Min(min)
+    self.min_ = min
+    self:updateButtonPosition_()
+    self:dispatchEvent({name = UISlider.VALUE_CHANGED_EVENT, value = self.value_})
+    return self
+end
 function WidgetSlider:align(...)
     WidgetSlider.super.align(self, ...)
     local rect = self.barSprite_:getBoundingBox()

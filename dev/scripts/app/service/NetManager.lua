@@ -169,7 +169,7 @@ function NetManager:login(cb)
     local loginInfo = {
         deviceId = device.getOpenUDID()
     }
-    self.m_netService:request("front.entryHandler.login", loginInfo, function(success, msg)
+    self.m_netService:request("logic.entryHandler.login", loginInfo, function(success, msg)
         if success and msg.code == 200 then
             cb(true, msg.data)
         else
@@ -177,6 +177,8 @@ function NetManager:login(cb)
         end
     end, false)
 end
+
+-- 城建
 function NetManager:createHouseByLocation(location, sub_location, building_type, cb)
     local build_info = {
         buildingLocation = location,
@@ -246,7 +248,6 @@ function NetManager:speedupHouseBuildByLocation(location, sub_location, cb)
         end
     end)
 end
-
 function NetManager:instantUpgradeBuildingByLocation(location, cb)
     local building_info = {
         location = location,
@@ -336,6 +337,7 @@ function NetManager:instantUpgradeTowerByLocation(cb)
     end)
 end
 
+--
 function NetManager:impose(cb)
     self.m_netService:request("logic.playerHandler.impose", nil, function(success, msg)
         if success and msg.code == SUCCESS_CODE then
@@ -347,7 +349,7 @@ function NetManager:impose(cb)
 end
 
 
-
+-- 建造材料
 function NetManager:makeBuildingMaterial(cb)
     local info = {
         category = "building",
@@ -424,6 +426,8 @@ function NetManager:getTechnologyMaterials(cb)
         end
     end)
 end
+
+-- 打造装备
 function NetManager:makeDragonEquipment(equipment_name, cb)
     local info = {
         equipmentName = equipment_name,
@@ -451,7 +455,37 @@ function NetManager:instantMakeDragonEquipment(equipment_name, cb)
     end)
 end
 
+-- 招募士兵
+function NetManager:recruitNormalSoldier(soldierName, count, cb)
+    local info = {
+        soldierName = soldierName,
+        count = count,
+        finishNow = false
+    }
+    self.m_netService:request("logic.playerHandler.recruitNormalSoldier", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+function NetManager:instantRecruitNormalSoldier(soldierName, count, cb)
+    local info = {
+        soldierName = soldierName,
+        count = count,
+        finishNow = true
+    }
+    self.m_netService:request("logic.playerHandler.recruitNormalSoldier", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
 
+--
 function NetManager:resetGame()
     self:sendMsg("reset", NOT_HANDLE)
 end

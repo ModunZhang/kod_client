@@ -60,13 +60,13 @@ function DataUtils:buyResource(need, has)
         if type(has[key]) == "number" then
             value = value - has[key]
         end
-        print("需要购买",key,value)
+        -- print("需要购买",key,value)
         for i=#payment,1,-1 do
             if value>0 then
                 while payment[i].min<value do
                     value = value - payment[i].resource
                     usedGem = usedGem + payment[i].gem
-                    print("买了",payment[i].resource,"花费",payment[i].gem)
+                    -- print("买了",payment[i].resource,"花费",payment[i].gem)
                 end
             end
         end

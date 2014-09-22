@@ -145,6 +145,8 @@ function ToolShopUpgradeBuilding:OnTimer(current_time)
 end
 
 function ToolShopUpgradeBuilding:OnUserDataChanged(...)
+    ToolShopUpgradeBuilding.super.OnUserDataChanged(self, ...)
+    
     local arg = {...}
     local current_time = arg[2]
     local materialEvents = arg[1].materialEvents
@@ -186,8 +188,6 @@ function ToolShopUpgradeBuilding:OnUserDataChanged(...)
             end
         end
     end
-
-    ToolShopUpgradeBuilding.super.OnUserDataChanged(self, ...)
 end
 
 return ToolShopUpgradeBuilding

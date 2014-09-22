@@ -102,6 +102,8 @@ function BlackSmithUpgradeBuilding:OnTimer(current_time)
 end
 
 function BlackSmithUpgradeBuilding:OnUserDataChanged(...)
+    BlackSmithUpgradeBuilding.super.OnUserDataChanged(self, ...)
+
     local arg = {...}
     local current_time = arg[2]
     local dragonEquipmentEvents = arg[1].dragonEquipmentEvents
@@ -121,8 +123,6 @@ function BlackSmithUpgradeBuilding:OnUserDataChanged(...)
             self:EndMakeEquipmentWithCurrentTime(current_time)
         end
     end
-
-    BlackSmithUpgradeBuilding.super.OnUserDataChanged(self, ...)
 end
 
 return BlackSmithUpgradeBuilding
