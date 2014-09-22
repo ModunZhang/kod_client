@@ -176,6 +176,8 @@ function CommonUpgradeUI:SetBuildingIntroduces()
         self.building_introduces:setString(string.format(building_introduces_table["warehouse"],self.building:GetResourceValueLimit()))
     elseif self.building:GetType()=="armyCamp" then
         self.building_introduces:setString(string.format(building_introduces_table["armyCamp"],self.building:GetTroopPopulation()))
+    elseif self.building:GetType()=="materialDepot" then
+        self.building_introduces:setString(string.format(building_introduces_table["materialDepot"],self.building:GetMaxMaterial()))
     end
 end
 
@@ -679,6 +681,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
 
 

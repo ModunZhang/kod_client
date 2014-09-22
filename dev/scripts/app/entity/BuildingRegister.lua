@@ -10,7 +10,8 @@ local BuildingRegister = {
     quarrier 		= import("..entity.StoneResourceUpgradeBuilding"),
     dwelling 		= import("..entity.PopulationResourceUpgradeBuilding"),
     dragonEyrie     = import("..entity.DragonEyrieUpgradeBuilding"),
-    armyCamp 		= import("..entity.ArmyCampUpgradeBuilding"),
+    armyCamp        = import("..entity.ArmyCampUpgradeBuilding"),
+    materialDepot 	= import("..entity.MaterialDepotUpgradeBuilding"),
 }
 setmetatable(BuildingRegister, {__index = function(t, k)
 	return UpgradeBuilding
