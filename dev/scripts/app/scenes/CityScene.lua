@@ -236,7 +236,7 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
         elseif building:GetEntity():GetType() == "dragonEyrie" then
             UIKit:newGameUI('GameUIDragonEyrie', City,building:GetEntity()):addToCurrentScene(true)
         elseif building:GetEntity():GetType() == "toolShop" then
-            UIKit:newGameUI('GameUIToolShop', City):addToScene(self, true)
+            UIKit:newGameUI('GameUIToolShop', City, building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "blackSmith" then
             UIKit:newGameUI('GameUIBlackSmith', City):addToScene(self, true)
         elseif building:GetEntity():GetType() == "materialDepot" then

@@ -73,7 +73,9 @@ function GameUIBarracks:CreateItemWithListView(list_view)
 
 
     for i = 1, 4 do
-        WidgetSoldierBox.new("soldier_130x183.png"):addTo(row_item)
+        WidgetSoldierBox.new("soldier_130x183.png", function(event)
+            print("hello")
+        end):addTo(row_item)
             :alignByPoint(cc.p(0.5, 0.4), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 0)
             :SetNumber(999)
     end

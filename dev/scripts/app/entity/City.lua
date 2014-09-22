@@ -291,7 +291,7 @@ function City:GetCanUpgradingTowers()
     return towers
 end
 -- 工具
-function City:IteratorCanUpgradBuildingsByUserData(user_data, current_time)
+function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time)
     self:IteratorDecoratorBuildingsByFunc(function(key, building)
         local tile = self:GetTileWhichBuildingBelongs(building)
         building:OnUserDataChanged(user_data, current_time, tile.location_id, tile:GetBuildingLocation(building))
@@ -562,7 +562,7 @@ function City:OnUserDataChanged(userData, current_time)
     end
 
     -- 更新建筑信息
-    self:IteratorCanUpgradBuildingsByUserData(userData, current_time)
+    self:IteratorCanUpgradeBuildingsByUserData(userData, current_time)
 
     -- 最后才更新资源
     local resource_refresh_time = userData.basicInfo.resourceRefreshTime / 1000
