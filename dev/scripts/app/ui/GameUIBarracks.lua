@@ -46,8 +46,10 @@ function GameUIBarracks:onEnter()
 
     self:TabButtons()
     self.barracks:AddBarracksListener(self)
+    self.barracks_city:GetSoldierManager():AddObserver(self)
 end
 function GameUIBarracks:onExit()
+    self.barracks_city:GetSoldierManager():RemoveObserver(self)
     self.barracks_city:GetResourceManager():RemoveObserver(self.widget)
     self.barracks:RemoveBarracksListener(self)
     GameUIBarracks.super.onExit(self)
@@ -110,8 +112,9 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
     local unit_width = 130
     local gap_x = (widget_rect.width - unit_width * 4) / 3
     local row_item = display.newNode()
-
+    self.soldier_map = {}
     for i, soldier_name in pairs(soldiers) do
+        self.soldier_map[soldier_name] = 
         WidgetSoldierBox.new(nil, function(event)
             self.widget = WidgetRecruitSoldier.new(soldier_name, 
                 self.barracks.soldier_star, 
@@ -135,7 +138,7 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
         end):addTo(row_item)
             :alignByPoint(cc.p(0.5, 0.4), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 0)
             :SetSoldier(soldier_name, self.barracks.soldier_star)
-            :SetNumber(999)
+            -- :SetNumber(999)
     end
 
     local item = list_view:newItem()
@@ -143,7 +146,9 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
     item:setItemSize(widget_rect.width, 170)
     return item
 end
+function GameUIBarracks:OnSoliderCountChanged(...)
 
+end
 
 
 
