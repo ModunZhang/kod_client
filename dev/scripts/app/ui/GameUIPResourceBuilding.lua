@@ -273,16 +273,25 @@ function GameUIPResourceBuilding:RebuildPart()
             color = UIKit:hex2c3b(0x5a5544)
         }):align(display.LEFT_CENTER, 20 ,112)
         :addTo(bg)
+    -- 小屋数量是否满足转换条件
+    local after_rebuild_max_house_num = City:GetMaxHouseCanBeBuilt(self.building:GetHouseType())-self.building:GetMaxHouseNum()
+    print("after_rebuild_max_house_num   转换后最大数量" ,after_rebuild_max_house_num)
     cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = string.format(_("≤%d"),5),
+            text = string.format(_("≤%d"),after_rebuild_max_house_num),
             font = UIKit:getFontFilePath(),
             size = 22,
             -- dimensions = cc.size(560,70),
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.RIGHT_CENTER, bg_size.width - 60 ,150)
         :addTo(bg)
+        print("当前小屋数量",#City:GetBuildingByType(self.building:GetHouseType()))
+    if #City:GetBuildingByType(self.building:GetHouseType())>after_rebuild_max_house_num then
+        display.newSprite("upgrade_prohibited.png", bg_size.width - 40 ,150):addTo(bg)
+    else
+        display.newSprite("upgrade_mark.png", bg_size.width - 40 ,150):addTo(bg)
+    end
     cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -293,6 +302,13 @@ function GameUIPResourceBuilding:RebuildPart()
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.RIGHT_CENTER, bg_size.width - 60 ,112)
         :addTo(bg)
+    -- 魔法石数量是否满足转换条件
+    local need_gems = 100
+    if City:GetResourceManager():GetGemResource():GetValue()>need_gems then
+        display.newSprite("upgrade_mark.png", bg_size.width - 40 ,112):addTo(bg)
+    else
+        display.newSprite("upgrade_prohibited.png", bg_size.width - 40 ,112):addTo(bg)
+    end
     cc.ui.UIPushButton.new({normal = "green_btn_up_250x65.png",pressed = "green_btn_down_250x65.png"})
         :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("立即转换"), size = 20, color = display.COLOR_WHITE}))
         :onButtonClicked(function(event)
@@ -302,6 +318,7 @@ function GameUIPResourceBuilding:RebuildPart()
         :addTo(bg)
 end
 return GameUIPResourceBuilding
+
 
 
 

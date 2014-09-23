@@ -203,6 +203,34 @@ end
 function City:GetTileByIndex(x, y)
     return self.tiles[y] and self.tiles[y][x] or nil
 end
+-- 取得住宅最大建造数量
+function City:GetMaxDwellingCanBeBuilt()
+-- self:GetBuildingByType("build_type")
+end
+-- 取得小屋最大建造数量
+function City:GetMaxHouseCanBeBuilt(house_type)
+    local max = GameDatas.PlayerInitData.houses[1][house_type] --基础值
+
+    if house_type=="farmer" then
+        for _,mill in pairs(self:GetBuildingByType("mill")) do
+            max = max + mill:GetMaxHouseNum()
+        end
+    elseif house_type=="woodcutter" then
+        for _,lumbermill in pairs(self:GetBuildingByType("lumbermill")) do
+            max = max + lumbermill:GetMaxHouseNum()
+        end
+    elseif house_type=="quarrier" then
+        for _,stoneMason in pairs(self:GetBuildingByType("stoneMason")) do
+            max = max + stoneMason:GetMaxHouseNum()
+        end
+    elseif house_type=="miner" then
+        for _,foundry in pairs(self:GetBuildingByType("foundry")) do
+            max = max + foundry:GetMaxHouseNum()
+        end
+    end
+
+    return max
+end
 function City:IsUnLockedAtIndex(x, y)
     return not self.tiles[y][x].locked
 end
@@ -785,6 +813,7 @@ end
 
 
 return City
+
 
 
 
