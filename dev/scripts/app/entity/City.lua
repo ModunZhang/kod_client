@@ -3,6 +3,7 @@ local BuildingRegister = import(".BuildingRegister")
 local Enum = import("..utils.Enum")
 local Orient = import(".Orient")
 local Tile = import(".Tile")
+local SoldierManager = import(".SoldierManager")
 local ResourceManager = import(".ResourceManager")
 local Building = import(".Building")
 local TowerUpgradeBuilding = import(".TowerUpgradeBuilding")
@@ -37,6 +38,7 @@ City.RESOURCE_TYPE_TO_BUILDING_TYPE = {
 function City:ctor()
     City.super.ctor(self)
     self.resource_manager = ResourceManager.new()
+    self.soldier_manager = SoldierManager.new()
 
     self.buildings = {}
     self.walls = {}
@@ -101,6 +103,9 @@ function City:InitDecorators(decorators)
     self:CheckIfDecoratorsIntersectWithRuins()
 end
 -- 取值函数
+function City:GetSoldierManager()
+    return self.soldier_manager
+end
 function City:GetResourceManager()
     return self.resource_manager
 end
@@ -291,7 +296,7 @@ function City:GetCanUpgradingTowers()
     return towers
 end
 -- 工具
-function City:IteratorCanUpgradBuildingsByUserData(user_data, current_time)
+function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time)
     self:IteratorDecoratorBuildingsByFunc(function(key, building)
         local tile = self:GetTileWhichBuildingBelongs(building)
         building:OnUserDataChanged(user_data, current_time, tile.location_id, tile:GetBuildingLocation(building))
@@ -562,12 +567,16 @@ function City:OnUserDataChanged(userData, current_time)
     end
 
     -- 更新建筑信息
-    self:IteratorCanUpgradBuildingsByUserData(userData, current_time)
+    self:IteratorCanUpgradeBuildingsByUserData(userData, current_time)
 
     -- 最后才更新资源
     local resource_refresh_time = userData.basicInfo.resourceRefreshTime / 1000
     self:IteratorResourcesByUserData(userData, resource_refresh_time)
     -- resource_manager:OnResourceChanged()
+
+    -- 更新兵种
+    self.soldier_manager:OnUserDataChanged(userData)
+    -- dump(self.soldier_manager)
 end
 function City:OnCreateDecorator(current_time, building)
     building:AddUpgradeListener(self)

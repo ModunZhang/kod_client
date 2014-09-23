@@ -315,10 +315,10 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
             local number = toolShop:GetNeedByCategory(event:Category())
             local elapse_time = event:ElapseTime(server_time)
             local total_time = event:FinishTime() - event:StartTime()
-            local percent = math.floor((elapse_time * 100.0 / total_time))
+            local percent = elapse_time * 100.0 / total_time
 
             self:GetProgressBox():show()
-                :SetDescribe(_("制造材料")..string.format(" X%d", number))
+                :SetDescribe(string.format("%s X%d", _("制造材料"), number))
                 :SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(server_time)), percent)
 
             self:GetMaterial():hide()

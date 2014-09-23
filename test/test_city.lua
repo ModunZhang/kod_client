@@ -3,6 +3,7 @@ local Orient = import("app.entity.Orient")
 local UpgradeBuilding = import("app.entity.UpgradeBuilding")
 local KeepUpgradeBuilding = import("app.entity.KeepUpgradeBuilding")
 local WarehouseUpgradeBuilding = import("app.entity.WarehouseUpgradeBuilding")
+local DragonEyrieUpgradeBuilding = import("app.entity.DragonEyrieUpgradeBuilding")
 local City = import("app.entity.City").new()
 
 
@@ -155,6 +156,7 @@ function setup()
     City:InitBuildings({
         KeepUpgradeBuilding.new({ x = 9, y = 9, building_type = "keep", level = 1, w = 10, h = 10 }),
         WarehouseUpgradeBuilding.new({ x = 9, y = 9, building_type = "warehouse", level = 1, w = 9, h = 10 }),
+        DragonEyrieUpgradeBuilding.new({ x = 9, y = 9, building_type = "dragonEyrie", level = 1, w = 9, h = 10 }),
     })
     City:InitDecorators({})
 end
