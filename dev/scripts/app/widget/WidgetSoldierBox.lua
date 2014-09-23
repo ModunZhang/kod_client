@@ -71,12 +71,14 @@ function WidgetSoldierBox:ctor(soldier_png, cb)
 end
 function WidgetSoldierBox:SetSoldier(soldier_type, star)
     local soldier_type_with_star = soldier_type..(star == nil and "" or string.format("_%d", star))
+    print("soldier_type_with_star========!!!!!",soldier_type_with_star)
     local soldier_ui_config = SOLDIER_TYPE[soldier_type_with_star]
-
-    local bg = STAR_BG[star]
-    self.soldier_bg:setButtonImage(UIPushButton.NORMAL, bg, true)
-    self.soldier_bg:setButtonImage(UIPushButton.PRESSED, bg, true)
-    self.soldier:setTexture(display.newSprite(soldier_ui_config.png):getTexture())
+    if soldier_ui_config then
+        local bg = STAR_BG[star]
+        self.soldier_bg:setButtonImage(UIPushButton.NORMAL, bg, true)
+        self.soldier_bg:setButtonImage(UIPushButton.PRESSED, bg, true)
+        self.soldier:setTexture(display.newSprite(soldier_ui_config.png):getTexture())
+    end
     return self
 end
 function WidgetSoldierBox:SetNumber(number)
@@ -96,6 +98,7 @@ end
 
 
 return WidgetSoldierBox
+
 
 
 

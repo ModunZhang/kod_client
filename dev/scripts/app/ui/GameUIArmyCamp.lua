@@ -51,7 +51,7 @@ function GameUIArmyCamp:CreateTopPart()
     self.total_troops =  cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("120000"),
+            text = City:GetSoldierManager():GetTotalSoldierCount(),
             font = UIKit:getFontFilePath(),
             size = 22,
             color = UIKit:hex2c3b(0x29261c)
@@ -71,7 +71,7 @@ function GameUIArmyCamp:CreateTopPart()
     self.maintenance_cost = cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = "-12099",
+            text = City:GetSoldierManager():GetTotalUpkeep(),
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x930000)
@@ -109,18 +109,18 @@ function GameUIArmyCamp:CreateTopPart()
 
     -- 空闲部队人口
     self.free_troops = createTipItem({
-        title = _("空闲部队人口"),
+        title = _("驻防部队人口"),
         title_color = UIKit:hex2c3b(0x797154),
-        value = 1005 ,
+        value = City:GetSoldierManager():GetGarrisonSoldierCount(),
         value_color = UIKit:hex2c3b(0x403c2f),
         x = display.cx,
         y = display.top - 220
     }):addTo(self.info_layer)
     -- 驻防部队人口
     self.garrison_troops = createTipItem({
-        title = _("驻防部队人口"),
+        title = _("出征部队人口"),
         title_color = UIKit:hex2c3b(0x797154),
-        value = 475000 ,
+        value = City:GetSoldierManager():GetMarchSoldierCount() ,
         value_color = UIKit:hex2c3b(0x403c2f),
         x = display.cx,
         y = display.top - 260
@@ -146,8 +146,8 @@ function GameUIArmyCamp:SetGarrisonTroopsPop()
 end
 --END set 各项数值方法
 
-function GameUIArmyCamp:OpenSoldierDetails()
-    self.soldier_details_layer = WidgetSoldierDetails.new("swordsman",1)
+function GameUIArmyCamp:OpenSoldierDetails(soldier_type, star)
+    self.soldier_details_layer = WidgetSoldierDetails.new(soldier_type,star)
     self:addChild(self.soldier_details_layer)
 end
 
@@ -158,15 +158,15 @@ function GameUIArmyCamp:CresteSoldiersListView()
         viewRect = cc.rect(display.cx-274, display.top-870, 547, 600),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
         :addTo(self.info_layer)
-    local item = self:CreateItemWithListView(self.soldiers_listview)
-    self.soldiers_listview:addItem(item)
-    local item = self:CreateItemWithListView(self.soldiers_listview)
-    self.soldiers_listview:addItem(item)
-    local item = self:CreateItemWithListView(self.soldiers_listview)
-    self.soldiers_listview:addItem(item)
-    local item = self:CreateItemWithListView(self.soldiers_listview)
-    self.soldiers_listview:addItem(item)
-    self.soldiers_listview:reload()
+    self:CreateItemWithListView(self.soldiers_listview)
+    -- self.soldiers_listview:addItem(item)
+    -- local item = self:CreateItemWithListView(self.soldiers_listview)
+    -- self.soldiers_listview:addItem(item)
+    -- local item = self:CreateItemWithListView(self.soldiers_listview)
+    -- self.soldiers_listview:addItem(item)
+    -- local item = self:CreateItemWithListView(self.soldiers_listview)
+    -- self.soldiers_listview:addItem(item)
+    -- self.soldiers_listview:reload()
 end
 
 function GameUIArmyCamp:CreateItemWithListView(list_view)
@@ -176,24 +176,49 @@ function GameUIArmyCamp:CreateItemWithListView(list_view)
     local unit_width = 130
     local gap_x = (547 - unit_width * 4) / 3
     local row_item = display.newNode()
-
-
-    for i = 1, 4 do
-        WidgetSoldierBox.new("soldier_130x183.png",function (  )
-            self:OpenSoldierDetails()
+    local soldier_map = City:GetSoldierManager():GetSoldierMap()
+    local row_count = 4
+    for i,v in pairs(soldier_map) do
+        row_count = row_count -1
+        local soldier = WidgetSoldierBox.new("",function ()
+            if i=="skeletonWarrior"
+                or i=="skeletonArcher"
+                or i=="deathKnight"
+                or i=="meatWagon"
+            then
+                self:OpenSoldierDetails(i)
+            else
+                self:OpenSoldierDetails(i,City:GetSoldierManager():GetStarBySoldierType(i))
+            end
         end):addTo(row_item)
-        :alignByPoint(cc.p(0.5,0.4), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 0)
-        :SetNumber(999)
+            :alignByPoint(cc.p(0.5,0.4), origin_x + (unit_width + gap_x) * row_count + unit_width / 2, 0)
+            :SetNumber(v)
+        if i=="skeletonWarrior"
+            or i=="skeletonArcher"
+            or i=="deathKnight"
+            or i=="meatWagon"
+        then
+            soldier:SetSoldier(i)
+        else
+            soldier:SetSoldier(i,1)
+        end
+        if row_count<1 then
+            local item = list_view:newItem()
+            item:addContent(row_item)
+            item:setItemSize(547, 170)
+            list_view:addItem(item)
+            row_count=4
+            row_item = display.newNode()
+        end
     end
-    local item = list_view:newItem()
-    item:addContent(row_item)
-    item:setItemSize(547, 170)
-
-
-    return item
+    list_view:reload()
 end
 
 return GameUIArmyCamp
+
+
+
+
 
 
 

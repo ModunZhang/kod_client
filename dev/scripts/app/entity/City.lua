@@ -829,7 +829,17 @@ function City:GenerateTowers(walls)
 end
 
 
+function City:OnUpgradingBuildings()
+    local upgrading_buildings = {} 
+    for i,v in ipairs(self.buildings) do
+        print("OnUpgradingBuildings==========啊啊啊啊",i,v)
 
+        if v:IsUpgrading() then
+            upgrading_buildings[i] = v
+        end
+    end
+    return upgrading_buildings
+end
 
 return City
 
