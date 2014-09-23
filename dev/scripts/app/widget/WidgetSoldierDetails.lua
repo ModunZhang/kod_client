@@ -1,16 +1,28 @@
 local UIListView = import('..ui.UIListView')
 local WidgetSlider = import('.WidgetSlider')
 
+local normal = GameDatas.UnitsConfig.normal
+local special = GameDatas.UnitsConfig.special
+
+
 
 local WidgetSoldierDetails = class("WidgetSoldierDetails", function ()
     return display.newColorLayer(cc.c4b(0,0,0,127))
 end)
 
-function WidgetSoldierDetails:ctor()
+function WidgetSoldierDetails:ctor(soldier_type,soldier_level)
+    self.soldier_type = soldier_type
+    self.soldier_level = soldier_level
+    -- 取得对应士兵配置表
+    self.s_config = soldier_level and normal[soldier_type.."_"..soldier_level]
+        or special[soldier_type]
     self:InitSoldierDetails()
 end
 
 function WidgetSoldierDetails:InitSoldierDetails()
+    -- 士兵信息配置表
+    local sc = self.s_config
+
     -- bg
     local bg = display.newScale9Sprite("full_screen_dialog_bg.png", display.cx, display.top-480,cc.size(610,675)):addTo(self)
     local bg_width,bg_height = bg:getContentSize().width,bg:getContentSize().height
@@ -19,7 +31,7 @@ function WidgetSoldierDetails:InitSoldierDetails()
     -- soldier_name label
     self.soldier_name_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "T3 弓箭手",
+        text = _(sc.description),
         font = UIKit:getFontFilePath(),
         size = 24,
         color = UIKit:hex2c3b(0xffedae)
@@ -32,16 +44,23 @@ function WidgetSoldierDetails:InitSoldierDetails()
     -- 士兵头像
     local stars_bg = display.newSprite("soldier_head_stars_bg.png", display.cx-170, display.top-185):addTo(self)
     local soldier_head_bg  = display.newSprite("soldier_blue_box.png", display.cx-230, display.top-185):addTo(self)
-    local soldier_head_icon = display.newSprite("barracks_unit_archer.png"):align(display.LEFT_BOTTOM,10,10)
+    local soldier_head_image = self.soldier_level and "soldier_"..self.soldier_type.."_"..self.soldier_level..".png"
+        or "soldier_"..self.soldier_type..".png"
+
+    local soldier_head_icon = display.newSprite(soldier_head_image):align(display.LEFT_BOTTOM,10,10)
     soldier_head_icon:setScale(0.7)
     soldier_head_bg:addChild(soldier_head_icon)
-    local soldier_stars = 3
-    local gap_y = 25
-    for i=1,5 do
-        stars_bg:addChild(display.newSprite("soldier_stars_bg.png", 38, 15+gap_y*(i-1)))
-        if soldier_stars>0 then
-            stars_bg:addChild(display.newSprite("soldier_stars.png", 38, 15+gap_y*(i-1)))
-            soldier_stars = soldier_stars-1
+
+    -- 士兵星级，特殊兵种无星级
+    local soldier_stars = self.soldier_level
+    if soldier_stars then
+        local gap_y = 25
+        for i=1,5 do
+            stars_bg:addChild(display.newSprite("soldier_stars_bg.png", 38, 15+gap_y*(i-1)))
+            if soldier_stars>0 then
+                stars_bg:addChild(display.newSprite("soldier_stars.png", 38, 15+gap_y*(i-1)))
+                soldier_stars = soldier_stars-1
+            end
         end
     end
 
@@ -86,6 +105,17 @@ function WidgetSoldierDetails:CreateDismissSoldierSilder()
         color = UIKit:hex2c3b(0x403c2f)})
         :align(display.CENTER, display.cx + 230, display.top - 310)
         :addTo(self)
+    -- 返还城民
+    -- icon
+    display.newSprite("population.png", display.cx-255, display.top-370):addTo(self)
+    local citizen_label = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = _("0"),
+        font = UIKit:getFontFilePath(),
+        size = 20,
+        color = UIKit:hex2c3b(0x403c2f)})
+        :align(display.CENTER, display.cx - 215, display.top - 378)
+        :addTo(self)
     -- sliderbar
     WidgetSlider.new(display.LEFT_TO_RIGHT,  {bar = "slider_bg_461x24.png",
         progress = "slider_progress_445x14.png",
@@ -93,26 +123,10 @@ function WidgetSoldierDetails:CreateDismissSoldierSilder()
         :align(display.LEFT_BOTTOM, display.cx - 280, display.top - 310)
         :onSliderValueChanged(function(event)
             dismiss_value:setString(string.format("%d", event.value))
-            end)
+            dismiss_value:setString(string.format("%d", event.value*self.s_config.population))
+        end)
         :setSliderValue(0)
-    -- cc.ui.UISlider.new(display.LEFT_TO_RIGHT, {bar ="The_slider_1.png",button = "The_slider_3.png"}, {scale9 = true,max = 800000})
-    --     :onSliderValueChanged(function(event)
-    --         dismiss_value:setString(string.format("%d", event.value))
-    --     end)
-    --     :setSliderValue(0)
-    --     :align(display.LEFT_BOTTOM, display.cx - 280, display.top - 310)
-    --     :addTo(self)
-    -- 返还城民
-    -- icon
-    display.newSprite("population.png", display.cx-255, display.top-370):addTo(self)
-    cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("14"),
-        font = UIKit:getFontFilePath(),
-        size = 20,
-        color = UIKit:hex2c3b(0x403c2f)})
-        :align(display.CENTER, display.cx - 215, display.top - 378)
-        :addTo(self)
+ 
     cc.ui.UIPushButton.new({normal = "resource_butter_red.png",pressed = "resource_butter_red_highlight.png"})
         :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("解散"), size = 24, color = display.COLOR_WHITE}))
         :onButtonClicked(function(event)
@@ -122,6 +136,7 @@ function WidgetSoldierDetails:CreateDismissSoldierSilder()
 end
 
 function WidgetSoldierDetails:InitSoldierAttr()
+    local sc = self.s_config
     -- bg
     local bg = display.newSprite("back_ground_549X379.png", display.cx, display.top-600):addTo(self)
     -- upgrade_resources_background_3
@@ -150,35 +165,35 @@ function WidgetSoldierDetails:InitSoldierAttr()
     local  attr_table = {
         {
             name = _("对步兵攻击"),
-            value = "87+32"
+            value = sc.atkInfs..""
         },
         {
             name = _("对弓箭手攻击"),
-            value = "87+32"
+            value = sc.atkHunter..""
         },
         {
             name = _("对骑兵攻击"),
-            value = "87+32"
+            value = sc.atkCavalry..""
         },
         {
             name = _("对投石车攻击"),
-            value = "87+32"
+            value = sc.atkSiege..""
         },
         {
             name = _("对城墙攻击"),
-            value = "87+32"
+            value = sc.atkWall..""
         },
         {
             name = _("生命值"),
-            value = "87+32"
+            value = sc.hp..""
         },
         {
             name = _("人口"),
-            value = "87+32"
+            value = sc.population..""
         },
         {
             name = _("维护费"),
-            value = "87+32"
+            value = sc.upkeep..""
         },
     }
 
@@ -209,3 +224,4 @@ function WidgetSoldierDetails:InitSoldierAttr()
 end
 
 return WidgetSoldierDetails
+

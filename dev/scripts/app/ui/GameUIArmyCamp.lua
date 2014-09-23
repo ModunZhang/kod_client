@@ -24,9 +24,13 @@ function GameUIArmyCamp:onEnter()
             label = _("信息"),
             tag = "info",
         },
-    },{
-        ["info"] = self.info_layer
-    }):pos(display.cx, display.bottom + 40)
+    },function(tag)
+        if tag == 'info' then
+            self.info_layer:setVisible(true)
+        else
+            self.info_layer:setVisible(false)
+        end
+    end):pos(display.cx, display.bottom + 40)
 
     self:CreateTopPart()
     self:CresteSoldiersListView()
@@ -143,7 +147,7 @@ end
 --END set 各项数值方法
 
 function GameUIArmyCamp:OpenSoldierDetails()
-    self.soldier_details_layer = WidgetSoldierDetails.new()
+    self.soldier_details_layer = WidgetSoldierDetails.new("swordsman",1)
     self:addChild(self.soldier_details_layer)
 end
 

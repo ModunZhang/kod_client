@@ -86,10 +86,10 @@ function DataUtils:buyMaterial(need, has)
         if type(has[key]) == "number" then
             value = value - has[key]
         end
-        print(" 需要 购买 ",key,value)
+        -- print(" 需要 购买 ",key,value)
         if value>0 then
 	        usedGem = usedGem+payment[key]*value
-	        print("买了",value,"花费",payment[key]*value)
+	        -- print("买了",value,"花费",payment[key]*value)
         end
     end)
     return usedGem

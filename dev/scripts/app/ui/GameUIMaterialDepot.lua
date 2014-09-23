@@ -27,9 +27,13 @@ function GameUIMaterialDepot:onEnter()
             label = _("信息"),
             tag = "info",
         },
-    },{
-        ["info"] = self.info_layer
-    }):pos(display.cx, display.bottom + 40)
+    },function(tag)
+        if tag == 'info' then
+            self.info_layer:setVisible(true)
+        else
+            self.info_layer:setVisible(false)
+        end
+    end):pos(display.cx, display.bottom + 40)
 
     self:CreateMaterialInfo()
 

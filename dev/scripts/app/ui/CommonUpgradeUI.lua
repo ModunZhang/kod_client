@@ -61,7 +61,7 @@ function CommonUpgradeUI:OnBuildingUpgrading( buidling, current_time )
     local pro = self.acc_layer.ProgressTimer
     pro:setPercentage(self.building:GetElapsedTimeByCurrentTime(current_time)/self.building:GetUpgradeTimeToNextLevel()*100)
     self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(current_time)))
-    if self.building:GetUpgradingLeftTimeByCurrentTime(current_time)>self.building.freeSpeedUpTime then
+    if self.building:GetUpgradingLeftTimeByCurrentTime(current_time)<=self.building.freeSpeedUpTime then
         self.acc_layer.acc_button:setButtonEnabled(false)
     else
         self.acc_layer.acc_button:setButtonEnabled(true)
@@ -149,10 +149,10 @@ function CommonUpgradeUI:SetBuildingIntroduces()
         ["armyCamp"] = _("提供出兵时派兵上限\n派兵上限%d"),
         ["barracks"] = _("增加每次招募数量\n每次可招募%d"),
         ["blackSmith"] = _("提升装备打造速度\n装备打造速度+%d"),
-        ["foundry"] = _("可建造矿工小屋%d\n铁矿产量+%d"),
-        ["stoneMason"] = _("可建造石匠小屋%d\n石料产量+%d"),
-        ["lumbermill"] = _("可建造木工小屋%d\n木材产量+%d"),
-        ["mill"] = _("可建造农夫小屋%d\n粮食产量+%d"),
+        ["foundry"] = _("可建造矿工小屋:%d\n铁矿产量+%d%%"),
+        ["stoneMason"] = _("可建造石匠小屋:%d\n石料产量+%d%%"),
+        ["lumbermill"] = _("可建造木工小屋:%d\n木材产量+%d%%"),
+        ["mill"] = _("可建造农夫小屋:%d\n粮食产量+%d%%"),
         ["hospital"] = _("增加治愈伤兵的人数上限\n伤兵人数上限%d"),
         ["townHall"] = _("可建造住宅%d\n每次税收影响城民%d"),
         ["academy"] = _("提升科技研发速度\n研发速度+%d"),
@@ -178,6 +178,12 @@ function CommonUpgradeUI:SetBuildingIntroduces()
         self.building_introduces:setString(string.format(building_introduces_table["armyCamp"],self.building:GetTroopPopulation()))
     elseif self.building:GetType()=="materialDepot" then
         self.building_introduces:setString(string.format(building_introduces_table["materialDepot"],self.building:GetMaxMaterial()))
+    elseif self.building:GetType()=="foundry"
+        or self.building:GetType()=="stoneMason"
+        or self.building:GetType()=="lumbermill"
+        or self.building:GetType()=="mill"
+    then
+        self.building_introduces:setString(string.format(building_introduces_table[self.building:GetType()],self.building:GetMaxHouseNum(),self.building:GetAddEfficency()*100))
     end
 end
 
@@ -681,6 +687,8 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
 
 
 
