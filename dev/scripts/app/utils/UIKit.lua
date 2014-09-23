@@ -44,7 +44,7 @@ function UIKit:getHouseLocalizedKeyByBuildingType(type)
     end
     return "house localized string not found"
 end
-
+--通过type获取建筑或者小屋的本地化名称
 function UIKit:getLocaliedKeyByType(type)
     local house_config = GameDatas.Houses.houses
     if house_config[type] then

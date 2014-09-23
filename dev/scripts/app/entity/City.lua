@@ -563,7 +563,6 @@ function City:OnUserDataChanged(userData, current_time)
 
     -- 更新建筑信息
     self:IteratorCanUpgradBuildingsByUserData(userData, current_time)
-
     -- 最后才更新资源
     local resource_refresh_time = userData.basicInfo.resourceRefreshTime / 1000
     self:IteratorResourcesByUserData(userData, resource_refresh_time)

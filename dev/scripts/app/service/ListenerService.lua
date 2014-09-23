@@ -3,7 +3,6 @@
 -- Date: 2014-08-25 18:03:52
 --
 ListenerService = {}
--- import('app.ui.GameGlobalUIUtils')
 local CURRENT_MODULE_NAME = ...
 setmetatable(ListenerService, {__index=NetManager})
 -----------------------------------------------------

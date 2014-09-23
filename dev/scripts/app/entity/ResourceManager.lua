@@ -102,9 +102,9 @@ function ResourceManager:OnBuildingChangedFromCity(city, current_time, building)
         [STONE] = 0,
         [POPULATION] = 0,
     }
-
+    local energy_production_per_hour = city:GetFirstBuildingByType("dragonEyrie"):GetProductionPerHour()
     local total_production_map = {
-        [ENERGY] = 0,
+        [ENERGY] = energy_production_per_hour or 0,
         [WOOD] = 0,
         [FOOD] = 0,
         [IRON] = 0,
