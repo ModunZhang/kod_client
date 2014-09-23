@@ -1,5 +1,7 @@
 local GameUtils = GameUtils
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetSlider = import("..widget.WidgetSlider")
+local WidgetSoldierDetails = import('..widget.WidgetSoldierDetails')
 local WidgetRecruitSoldier = class("WidgetRecruitSoldier", function(...)
     local node = display.newLayer()
     node:setNodeEventEnabled(true)
@@ -99,19 +101,17 @@ local SOLDIER_LOCALIZE_MAP = {
 local function return_vs_soldiers_map(soldier_type)
     return SOLDIER_VS_MAP[SOLDIER_CATEGORY_MAP[soldier_type]]
 end
-local function return_soldiers(soldier_vs_map)
-    return unpack(soldier_vs_map)
-end
 
 function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
     self.soldier_type = soldier_type
     self.recruit_max = recruit_max
 
     local label_origin_x = 190
-
+   
     -- bg
     local back_ground = cc.ui.UIImage.new("back_ground_608x458.png",
         {scale9 = true}):addTo(self):setLayoutSize(608, 500)
+    -- local back_ground =  WidgetUIBackGround.new(158):addTo(self)
     back_ground:setTouchEnabled(true)
 
     -- title
@@ -135,7 +135,7 @@ function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
         pressed = "info_16x33.png"}):addTo(title_blue)
         :align(display.LEFT_CENTER, title_blue:getContentSize().width - 30, size.height/2)
         :onButtonClicked(function(event)
-            print("hello")
+            WidgetSoldierDetails.new("swordsman",1):addTo(self)
         end)
 
     -- soldier bg

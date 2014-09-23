@@ -123,7 +123,7 @@ function WidgetSoldierDetails:CreateDismissSoldierSilder()
         :align(display.LEFT_BOTTOM, display.cx - 280, display.top - 310)
         :onSliderValueChanged(function(event)
             dismiss_value:setString(string.format("%d", event.value))
-            dismiss_value:setString(string.format("%d", event.value*self.s_config.population))
+            dismiss_value:setString(string.format("%d", event.value*self.s_config.citizen))
         end)
         :setSliderValue(0)
  
@@ -189,7 +189,7 @@ function WidgetSoldierDetails:InitSoldierAttr()
         },
         {
             name = _("人口"),
-            value = sc.population..""
+            value = sc.citizen..""
         },
         {
             name = _("维护费"),

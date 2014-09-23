@@ -1,5 +1,5 @@
 local WidgetTabButtons = class("WidgetTabButtons", function()
-	return display.newNode()
+    return display.newNode()
 end)
 
 
@@ -17,10 +17,10 @@ function WidgetTabButtons:ctor(buttons, tab_param, listener)
     self.tabListener = listener
 
     self.buttons = {}
-    
+
     local tab_bg = cc.ui.UIImage.new("tabs/tab_bg.png", {scale9 = true})
-    :addTo(self)
-    :align(display.CENTER, 0, 0)
+        :addTo(self)
+        :align(display.CENTER, 0, 0)
     tab_bg:setCapInsets(cc.rect(origin_x, origin_y, tab_bg:getContentSize().width - origin_x * 2, tab_bg:getContentSize().height - origin_y * 2))
     tab_bg:setContentSize(cc.size(tab_bg:getContentSize().width, tab_bg:getContentSize().height))
 
@@ -33,35 +33,44 @@ function WidgetTabButtons:ctor(buttons, tab_param, listener)
         local label = buttons[i].label
         local is_default = buttons[i].default
         local x = unit_len/2 + unit_len * (i - 1)
+        local width
         local button
         if i == 1 then
             x = x - gap/2 + margin_left
+            width = unit_len - gap/2 - margin_left
             button = cc.ui.UIPushButton.new(
-                {normal = "tabs/tab_right.png",pressed = "tabs/tab_blank.png"}, 
+                {normal = "tabs/tab_right.png"},
                 {scale9 = true})
-            :addTo(tab_bg, 100)
+                :addTo(tab_bg, 100)
             button:setScaleX(-1)
-            button:setButtonSize(unit_len - gap/2 - margin_left, height)
+            for i, v in ipairs(button.sprite_) do
+                v:setCapInsets(cc.rect(origin_x, origin_y, 279 - origin_x * 2, 63 - origin_y * 2))
+            end
         elseif i == count then
             x = x + gap/2 - margin_right
+            width = unit_len - gap/2 - margin_right
             button = cc.ui.UIPushButton.new(
-                {normal = "tabs/tab_right.png", pressed = "tabs/tab_blank.png"}, 
+                {normal = "tabs/tab_right.png"},
                 {scale9 = true})
-            :addTo(tab_bg, 100)
-            button:setButtonSize(unit_len - gap/2 - margin_right, height)
+                :addTo(tab_bg, 100)
+            for i, v in ipairs(button.sprite_) do
+                v:setCapInsets(cc.rect(origin_x, origin_y, 279 - origin_x * 2, 63 - origin_y * 2))
+            end
         else
+            width = unit_len - gap
             button = cc.ui.UIPushButton.new(
-                {normal = "tabs/tab_middle.png", pressed = "tabs/tab_blank.png"}, 
+                {normal = "tabs/tab_middle.png"},
                 {scale9 = true})
-            :addTo(tab_bg, 100)
-            button:setButtonSize(unit_len - gap, height)
+                :addTo(tab_bg, 100)
         end
+        button:setButtonSize(width, height)
         button:pos(x, y)
         button.tag = tag
 
+
         button.label = cc.ui.UILabel.new({text = label, size = 22, color = display.COLOR_BLACK})
-        :addTo(tab_bg, 101)
-        :align(display.CENTER, x, y)
+            :addTo(tab_bg, 101)
+            :align(display.CENTER, x, y)
 
         table.insert(self.buttons, button)
 
@@ -83,7 +92,7 @@ function WidgetTabButtons:SelectByTag(tag)
 end
 function WidgetTabButtons:PushButton(button)
     if self.push_button == button then
-        return 
+        return
     end
     if self.push_button then
         self.push_button:setVisible(true)
@@ -98,6 +107,8 @@ function WidgetTabButtons:PushButton(button)
 end
 
 return WidgetTabButtons
+
+
 
 
 
