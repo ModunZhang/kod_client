@@ -7,6 +7,7 @@ local UIPushButton = cc.ui.UIPushButton
 local WidgetTips = import("..widget.WidgetTips")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
+local WidgetMakeEquip = import("..widget.WidgetMakeEquip")
 local GameUIBlackSmith = UIKit:createUIClass("GameUIBlackSmith", "GameUIWithCommonHeader")
 
 local STAR_BG = {
@@ -109,11 +110,11 @@ function GameUIBlackSmith:InitEquipmentTitle()
     local node = display.newNode():addTo(self)
     self.tips = WidgetTips.new(_("建造队列空闲"), _("请选择一个装备进行制造")):addTo(node)
         :align(display.CENTER, display.cx, display.top - 160)
-        :hide()
+        :show()
 
     self.timer = WidgetTimerProgress.new(549, 108):addTo(node)
         :align(display.CENTER, display.cx, display.top - 160)
-        :show()
+        :hide()
         :OnButtonClicked(function(event)
             print("hello")
         end)
@@ -253,8 +254,8 @@ function GameUIBlackSmith:CreateEquipmentByType(equip_type)
     end
 
     equip_clicked = function(event)
-        -- print("equip_clicked", equip_type)
-        NetManager:makeDragonEquipment(equip_type, NOT_HANDLE)
+        -- NetManager:makeDragonEquipment(equip_type, NOT_HANDLE)
+        WidgetMakeEquip.new():addTo(self):align(display.CENTER, display.cx, display.cy)
     end
     info_clicked = function(event)
         print("info_clicked", equip_type)
