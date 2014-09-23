@@ -4,6 +4,7 @@ local AutomaticUpdateResource = import("app.entity.AutomaticUpdateResource")
 local WoodResourceUpgradeBuilding = import("app.entity.WoodResourceUpgradeBuilding")
 local PopulationResourceUpgradeBuilding = import("app.entity.PopulationResourceUpgradeBuilding")
 local WarehouseUpgradeBuilding = import("app.entity.WarehouseUpgradeBuilding")
+local DragonEyrieUpgradeBuilding = import("app.entity.DragonEyrieUpgradeBuilding")
 City = import("app.entity.City").new()
 
 
@@ -71,6 +72,7 @@ function setup()
     })
     test_city:InitBuildings({
         WarehouseUpgradeBuilding.new({ x = 9, y = 9, building_type = "warehouse", level = 1, w = 9, h = 10 }),
+        DragonEyrieUpgradeBuilding.new({ x = 9, y = 9, building_type = "dragonEyrie", level = 1, w = 9, h = 10 }),
         })
 end
 function test_resource_manager()
@@ -91,6 +93,7 @@ function setup()
     })
     test_city:InitBuildings({
         WarehouseUpgradeBuilding.new({ x = 9, y = 9, building_type = "warehouse", level = 1, w = 9, h = 10 }),
+        DragonEyrieUpgradeBuilding.new({ x = 9, y = 9, building_type = "dragonEyrie", level = 1, w = 9, h = 10 }),
         })
 end
 function test_resource_wood()

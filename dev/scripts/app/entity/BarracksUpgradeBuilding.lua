@@ -1,28 +1,36 @@
-local config_equipments = GameDatas.SmithConfig.equipments
-local config_function = GameDatas.BuildingFunction.blackSmith
-local config_levelup = GameDatas.BuildingLevelUp.blackSmith
-
+local barracks_config = GameDatas.BuildingFunction.barracks
+local NORMAL = GameDatas.UnitsConfig.normal
 local Observer = import(".Observer")
 local UpgradeBuilding = import(".UpgradeBuilding")
-local BlackSmithUpgradeBuilding = class("BlackSmithUpgradeBuilding", UpgradeBuilding)
+local BarracksUpgradeBuilding = class("BarracksUpgradeBuilding", UpgradeBuilding)
 
-function BlackSmithUpgradeBuilding:ctor(...)
-    self.black_smith_building_observer = Observer.new()
-    self.making_event = self:CreateEvent()
-    BlackSmithUpgradeBuilding.super.ctor(self, ...)
+function BarracksUpgradeBuilding:ctor(...)
+    self.barracks_building_observer = Observer.new()
+    self.soldier_star = 1
+    self.recruit_event = self:CreateEvent()
+    BarracksUpgradeBuilding.super.ctor(self, ...)
 end
-function BlackSmithUpgradeBuilding:CreateEvent()
-    local black_smith = self
+function BarracksUpgradeBuilding:CreateEvent()
+    local barracks = self
     local event = {}
     function event:Init()
         self:Reset()
     end
     function event:Reset()
-        self.content = nil
+        self.soldier_type = nil
+        self.soldier_count = 0
         self.finished_time = 0
     end
+    function event:SetRecruitInfo(soldier_type, count, finish_time)
+        self.soldier_type = soldier_type
+        self.soldier_count = count
+        self.finished_time = finish_time
+    end
     function event:StartTime()
-        return self.finished_time - black_smith:GetMakingTimeByEquipment(self.content)
+        return self.finished_time - self:GetRecruitingTime()
+    end
+    function event:GetRecruitingTime()
+        return barracks:GetRecruitingTimeByTypeWithCount(self.soldier_type, self.soldier_count)
     end
     function event:ElapseTime(current_time)
         return current_time - self:StartTime()
@@ -36,76 +44,95 @@ function BlackSmithUpgradeBuilding:CreateEvent()
     function event:SetFinishTime(current_time)
         self.finished_time = current_time
     end
-    function event:Content()
-        return self.content
-    end
-    function event:SetContent(content, finished_time)
-        self.content = content
-        self.finished_time = finished_time
-    end
-    function event:IsStored(current_time)
-        return self.content ~= nil and (self.finished_time == 0 or current_time >= self.finished_time)
-    end
     function event:IsEmpty()
-        return self.finished_time == 0 and self.content == nil
+        return self.soldier_type == nil
     end
-    function event:IsMaking(current_time)
-        return current_time < self.finished_time
+    function event:IsRecruting()
+        return self.soldier_type
+    end
+    function event:GetRecruitInfo()
+        return self.soldier_type, self.soldier_count
     end
     event:Init()
     return event
 end
-function BlackSmithUpgradeBuilding:AddBlackSmithListener(listener)
-    assert(listener.OnBeginMakeEquipmentWithEvent)
-    assert(listener.OnMakingEquipmentWithEvent)
-    assert(listener.OnEndMakeEquipmentWithEvent)
-    self.black_smith_building_observer:AddObserver(listener)
+function BarracksUpgradeBuilding:AddBarracksListener(listener)
+    assert(listener.OnBeginRecruit)
+    assert(listener.OnRecruiting)
+    assert(listener.OnEndRecruit)
+    self.barracks_building_observer:AddObserver(listener)
 end
-function BlackSmithUpgradeBuilding:RemoveBlackSmithListener(listener)
-    self.black_smith_building_observer:RemoveObserver(listener)
+function BarracksUpgradeBuilding:RemoveBarracksListener(listener)
+    self.barracks_building_observer:RemoveObserver(listener)
 end
-function BlackSmithUpgradeBuilding:GetMakeEquipmentEvent()
-    return self.making_event
+function BarracksUpgradeBuilding:GetRecruitEvent()
+    return self.recruit_event
 end
-function BlackSmithUpgradeBuilding:IsEquipmentEventEmpty()
-    return self.making_event:IsEmpty()
+function BarracksUpgradeBuilding:IsRecruitEventEmpty()
+    return self.recruit_event:IsEmpty()
 end
-function BlackSmithUpgradeBuilding:IsMakingEquipment(current_time)
-    return self.making_event:IsMaking(current_time)
+function BarracksUpgradeBuilding:IsRecruting()
+    return not self.recruit_event:IsEmpty()
 end
-function BlackSmithUpgradeBuilding:MakeEquipment(equipment, finished_time)
-    local event = self.making_event
-    event:SetContent(equipment, finished_time)
-    self.black_smith_building_observer:NotifyObservers(function(lisenter)
-        lisenter:OnBeginMakeEquipmentWithEvent(self, event)
+function BarracksUpgradeBuilding:RecruitSoldiersWithFinishTime(soldier_type, count, finish_time)
+    local event = self.recruit_event
+    event:SetRecruitInfo(soldier_type, count, finish_time)
+    self.barracks_building_observer:NotifyObservers(function(lisenter)
+        lisenter:OnBeginRecruit(self, event)
     end)
 end
-function BlackSmithUpgradeBuilding:EndMakeEquipment(current_time)
-    local event = self.making_event
-    local equipment = event:Content()
-    event:SetContent(nil, 0)
-    self.black_smith_building_observer:NotifyObservers(function(lisenter)
-        lisenter:OnEndMakeEquipmentWithEvent(self, event, equipment)
+function BarracksUpgradeBuilding:EndRecruitSoldiersWithCurrentTime(current_time)
+    local event = self.recruit_event
+    local soldier_type = self.recruit_event.soldier_type
+    local soldier_count = self.recruit_event.soldier_count
+    event:SetRecruitInfo(nil, 0, 0)
+    self.barracks_building_observer:NotifyObservers(function(lisenter)
+        lisenter:OnEndRecruit(self, event, soldier_type, soldier_count, current_time)
     end)
 end
-function BlackSmithUpgradeBuilding:GetMakingTimeByEquipment(equipment)
-    local config = config_equipments[equipment]
-    return config.makeTime
+function BarracksUpgradeBuilding:GetRecruitingTimeByTypeWithCount(soldier_type, count)
+    return self:GetSoldierConfigByType(soldier_type).recruitTime * count
 end
-function BlackSmithUpgradeBuilding:OnTimer(current_time)
-    if self.making_event:IsMaking(current_time) then
-        self.black_smith_building_observer:NotifyObservers(function(lisenter)
-            lisenter:OnMakingEquipmentWithEvent(self, self.making_event, current_time)
+function BarracksUpgradeBuilding:GetSoldierConfigByType(soldier_type)
+    local soldier_name = string.format("%s_%d", soldier_type, self.soldier_star)
+    return NORMAL[soldier_name]
+end
+
+function BarracksUpgradeBuilding:GetMaxRecruitSoldierCount()
+    return barracks_config[self:GetLevel()].maxRecruit
+end
+function BarracksUpgradeBuilding:OnTimer(current_time)
+    local event = self.recruit_event
+    if event:IsRecruting() then
+        self.barracks_building_observer:NotifyObservers(function(lisenter)
+            lisenter:OnRecruiting(self, event, current_time)
         end)
     end
-    BlackSmithUpgradeBuilding.super.OnTimer(self, current_time)
+    BarracksUpgradeBuilding.super.OnTimer(self, current_time)
+end
+function BarracksUpgradeBuilding:OnUserDataChanged(...)
+    BarracksUpgradeBuilding.super.OnUserDataChanged(self, ...)
+
+    local arg = {...}
+    local current_time = arg[2]
+    local soldierEvent = arg[1].soldierEvents[1]
+
+    if soldierEvent then
+        local finished_time = soldierEvent.finishTime / 1000
+        if self.recruit_event:IsEmpty() then
+            self:RecruitSoldiersWithFinishTime(soldierEvent.name, soldierEvent.count, finished_time)
+        else
+            self.recruit_event:SetRecruitInfo(soldierEvent.name, soldierEvent.count, finished_time)
+        end
+    else
+        if self.recruit_event:IsRecruting() then
+            self:EndRecruitSoldiersWithCurrentTime(current_time)
+        end
+    end
 end
 
-function BlackSmithUpgradeBuilding:OnUserDataChanged(...)
-    BlackSmithUpgradeBuilding.super.OnUserDataChanged(self, ...)
-end
+return BarracksUpgradeBuilding
 
-return BlackSmithUpgradeBuilding
 
 
 

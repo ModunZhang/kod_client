@@ -103,7 +103,9 @@ function GameUIDragonEyrie:ChangeCurentContent(tag)
         end
         self:RefreshUIData()
     end
-
+    if self.dragonEquipment then
+        self.dragonEquipment:DragonDataChanged()
+    end
 end
 
 
@@ -475,15 +477,14 @@ function GameUIDragonEyrie:GetEquipmentItem(isFromConfig,equipmentCategory,drago
         bg:addNodeEventListener(cc.NODE_TOUCH_EVENT,function(event)
          local name, x, y = event.name, event.x, event.y
          if name == "ended" and bg:getCascadeBoundingBox():containsPoint(cc.p(x,y)) then
-                -- self:
-                self:HandleClickedOnEquipmentItem(equipment,isFromConfig,dragon,equipmentCategory)
+                self:HandleClickedOnEquipmentItem(dragon,equipmentCategory)
             end
             return bg:getCascadeBoundingBox():containsPoint(cc.p(x,y))
         end)
         if not isFromConfig then
            display.newSprite(equipmentIcon):addTo(bg):align(display.LEFT_BOTTOM, 0, 0):setScale(0.8)
-         local stars_bg = display.newSprite("dragon_eq_stars_bg.png"):addTo(bg):align(display.RIGHT_BOTTOM, bg:getContentSize().width,0)
-         local info = display.newSprite("dragon_eq_info.png"):addTo(bg):align(display.RIGHT_BOTTOM, bg:getContentSize().width,0)
+            local stars_bg = display.newSprite("dragon_eq_stars_bg.png"):addTo(bg):align(display.RIGHT_BOTTOM, bg:getContentSize().width,0)
+            local info = display.newSprite("dragon_eq_info.png"):addTo(bg):align(display.RIGHT_BOTTOM, bg:getContentSize().width,0)
             StarBar.new({
                 max = dragon.star,
                 bg = "Stars_bar_bg.png",
@@ -638,8 +639,9 @@ function GameUIDragonEyrie:HandleEquipmentItem(dragon)
     end     
 end
 
-function GameUIDragonEyrie:HandleClickedOnEquipmentItem(equipment,isFromConfig,dragon,equipmentCategory)
-    UIKit:newGameUI("GameUIDragonEquipment",equipment,isFromConfig,self,dragon,equipmentCategory):addToCurrentScene(false)
+function GameUIDragonEyrie:HandleClickedOnEquipmentItem(dragon,equipmentCategory)
+    self.dragonEquipment = UIKit:newGameUI("GameUIDragonEquipment",self,dragon,equipmentCategory)    
+    self.dragonEquipment:addToCurrentScene(false)
 end
 
 return GameUIDragonEyrie

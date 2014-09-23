@@ -32,8 +32,8 @@ function GameUIHome:onEnter()
     GameUIHome.super.onEnter(self)
     local city = self.city
     -- 上背景
-    local top_bg = display.newSprite("home/top_bg.png")
-        :align(display.LEFT_TOP, display.left, display.top)
+    local top_bg = display.newSprite("top_bg_640x201.png")
+        :align(display.CENTER, display.cx, display.top - 201 / 2)
         :addTo(self)
 
     -- 玩家按钮
@@ -195,8 +195,8 @@ function GameUIHome:onEnter()
     end):addTo(top_bg):pos(592, -51):scale(0.6)
 
     -- 底部背景
-    local bottom_bg = display.newSprite("home/bottom_bg.png")
-        :align(display.LEFT_BOTTOM, display.left, display.bottom)
+    local bottom_bg = display.newSprite("bottom_bg_640x101.png")
+        :align(display.CENTER, display.cx, display.bottom + 101/2)
         :addTo(self)
     bottom_bg:setTouchEnabled(true)
 

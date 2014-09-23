@@ -201,14 +201,18 @@ function GameUIBase:CreateTabButtons(param, func)
         :addTo(self)
 end
 
-function GameUIBase:CreateVerticalListView(left_bottom_x, left_bottom_y, right_top_x, right_top_y)
+function GameUIBase:CreateVerticalListView(...)
+    return self:CreateVerticalListViewDetached(...):addTo(self)
+end
+function GameUIBase:CreateVerticalListViewDetached(left_bottom_x, left_bottom_y, right_top_x, right_top_y)
     local width, height = right_top_x - left_bottom_x, right_top_y - left_bottom_y
     return cc.ui.UIListView.new{
         -- bgColor = UIKit:hex2c4b(0x7a000000),
         viewRect = cc.rect(left_bottom_x, left_bottom_y, width, height),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
-        :addTo(self)
 end
+
+
 return GameUIBase
 
 

@@ -8,10 +8,10 @@ local StarBar = import(".StarBar")
 local UIListView = import(".UIListView")
 local BODY_HEIGHT = 664
 local LISTVIEW_WIDTH = 547
-function GameUIDragonEquipment:ctor(equipment,isFromConfig,owner,dragon,equipmentCategory)
+
+function GameUIDragonEquipment:ctor(owner,dragon,equipmentCategory)
 	GameUIDragonEquipment.super.ctor(self)
-	self.equipment = equipment
-	self.isFromConfig = isFromConfig
+	self.isFromConfig = dragon.equipments[equipmentCategory].name == ""
 	self.owner = owner
 	self.dragon = dragon
 	self.equipmentCategory = equipmentCategory
@@ -35,7 +35,7 @@ function GameUIDragonEquipment:onEnter()
     :align(display.LEFT_BOTTOM, 10, 10)
     self.titleBar = titleBar
 
-    local closeButton = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"}, {scale9 = false})
+  local closeButton = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"}, {scale9 = false})
 	   	:addTo(titleBar)
 	   	:align(display.BOTTOM_RIGHT,titleBar:getContentSize().width+25, 10)
 	   	:onButtonClicked(function ()
@@ -44,6 +44,46 @@ function GameUIDragonEquipment:onEnter()
 	display.newSprite("X_3.png")
 	   	:addTo(closeButton)
 	   	:pos(-32,30)
+  local mainEquipment = self:GetEquipmentItem()
+    :addTo(backgroundImage)
+    :align(display.LEFT_TOP,(backgroundImage:getContentSize().width-LISTVIEW_WIDTH)/2,self.titleBar:getPositionY()-self.titleBar:getContentSize().height - 10)
+    self.mainEquipment = mainEquipment
+    local titleLable = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "护甲1",
+        font = UIKit:getFontFilePath(),
+        size = 24,
+        align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
+        color = UIKit:hex2c3b(0x403c2f)
+    }):addTo(backgroundImage):align(display.LEFT_TOP, mainEquipment:getPositionX()+mainEquipment:getContentSize().width+20, mainEquipment:getPositionY()-10)
+    self.titleLable = titleLable
+    local countLabel = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "数量 1/4",
+        font = UIKit:getFontFilePath(),
+        size = 22,
+        align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
+        color = UIKit:hex2c3b(0x403c2f)
+    }):addTo(backgroundImage):align(display.LEFT_BOTTOM, mainEquipment:getPositionX()+mainEquipment:getContentSize().width+20, mainEquipment:getPositionY()-mainEquipment:getContentSize().height+10)
+    self.countLabel = countLabel
+    local resetButton = cc.ui.UIPushButton.new({
+    normal = "dragon_yellow_button.png",
+    pressed = "dragon_yellow_button_h.png",
+    disabled="yellow_disable_185x65.png"}, {scale9 = false})
+      :setButtonLabel("normal",cc.ui.UILabel.new({
+          UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+          text = _("装备"),
+          font = UIKit:getFontFilePath(),
+          size = 24,
+          align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
+          color = UIKit:hex2c3b(0xfff3c7)
+      }))
+      :addTo(backgroundImage)
+      :align(display.LEFT_BOTTOM,mainEquipment:getPositionX()+mainEquipment:getContentSize().width+260,mainEquipment:getPositionY()-mainEquipment:getContentSize().height)
+      :onButtonClicked(function()
+        self:AdornOrResetButtonClicked()
+      end)
+    self.adornOrResetButton = resetButton
 	self:BuildInfoUI()
 	self:RefreshInfoUI()
 	local infoButton = self:GetButton(1)
@@ -72,9 +112,33 @@ function GameUIDragonEquipment:onEnter()
 end
 
 --type 为活力 力量 buffer 1 2 3
-function GameUIDragonEquipment:GetListItem(index,type)
+function GameUIDragonEquipment:GetListItem(index,type,title,value)
 	local bg = display.newSprite(string.format("resource_item_bg%d.png",index%2))
-	local icon = ""
+	local icon = "dragon_vitality_33x42.png"
+  print("GetListItem---->",index,type,title,value)
+  if type == 2 then
+    icon = "dragon_strength_27x31.png"
+  elseif type == 3 then
+    icon = "dragon_buffs_34x31.png"
+  end
+  local iconImage = display.newSprite(icon):pos(25, bg:getContentSize().height/2):addTo(bg)
+  cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = title,
+        font = UIKit:getFontFilePath(),
+        size = 20,
+        align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
+        color = UIKit:hex2c3b(0x615b44)
+    }):addTo(bg):pos(iconImage:getPositionX()+20,iconImage:getPositionY())
+
+  cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = value,
+        font = UIKit:getFontFilePath(),
+        size = 20,
+        align = cc.ui.UILabel.TEXT_ALIGN_RIGHT, 
+        color = UIKit:hex2c3b(0x403c2f)
+    }):addTo(bg):align(display.RIGHT_BOTTOM, bg:getContentSize().width-10, 10)
 	return bg
 end
 
@@ -82,71 +146,21 @@ end
 function GameUIDragonEquipment:BuildInfoUI()
 	self.info_ui = {}
 	local background = display.newNode():addTo(self):pos((display.width-self.background:getContentSize().width)/2,300)
-	background:setContentSize(cc.size(self.background:getContentSize().width,self.background:getContentSize().height))
-   	local mainEquipment = self:GetEquipmentItem()
-   	:addTo(background)
-   	:align(display.LEFT_TOP,(self.background:getContentSize().width-LISTVIEW_WIDTH)/2,self.titleBar:getPositionY()-self.titleBar:getContentSize().height - 10)
-
-   	local titleLable = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "护甲1",
-        font = UIKit:getFontFilePath(),
-        size = 24,
-        align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
-        color = UIKit:hex2c3b(0x403c2f)
-    }):addTo(background):align(display.LEFT_TOP, mainEquipment:getPositionX()+mainEquipment:getContentSize().width+20, mainEquipment:getPositionY()-10)
-    self.info_ui.titleLable = titleLable
-   	local countLabel = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "数量 1/4",
-        font = UIKit:getFontFilePath(),
-        size = 22,
-        align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
-        color = UIKit:hex2c3b(0x403c2f)
-    }):addTo(background):align(display.LEFT_BOTTOM, mainEquipment:getPositionX()+mainEquipment:getContentSize().width+20, mainEquipment:getPositionY()-mainEquipment:getContentSize().height+10)
-   	self.info_ui.countLabel = countLabel
-   	local resetButton = cc.ui.UIPushButton.new({
-   	normal = "dragon_yellow_button.png",
-   	pressed = "dragon_yellow_button_h.png",
-   	disabled="yellow_disable_185x65.png"}, {scale9 = false})
-   		:setButtonLabel("normal",cc.ui.UILabel.new({
-	        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-	        text = _("装备"),
-	        font = UIKit:getFontFilePath(),
-	        size = 24,
-	        align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
-	        color = UIKit:hex2c3b(0xfff3c7)
-    	}))
-   		:addTo(background)
-   		:align(display.LEFT_BOTTOM,mainEquipment:getPositionX()+mainEquipment:getContentSize().width+260,mainEquipment:getPositionY()-mainEquipment:getContentSize().height)
-   		:onButtonClicked(function()
-   			self:AdornOrResetButtonClicked()
-   		end)
-   	self.info_ui.adornOrResetButton = resetButton
-   	local descLabel = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("消耗相同一个装备，重新随机装备的加成属性"),
-        font = UIKit:getFontFilePath(),
-        size = 20,
-        align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
-        color = UIKit:hex2c3b(0x403c2f)
-    }):addTo(background):align(display.LEFT_TOP, mainEquipment:getPositionX(), mainEquipment:getPositionY()-mainEquipment:getContentSize().height-30)
-   	self.info_ui.descLabel = descLabel
-    self.info_ui.listView = UIListView.new {
-        viewRect = cc.rect((self.background:getContentSize().width-LISTVIEW_WIDTH)/2, 180, LISTVIEW_WIDTH, 250),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-    }
-    :addTo(background)
-    --test
-    for i=1,10 do
-    	local item = self.info_ui.listView:newItem()
-    	local content = self:GetListItem(i)
-    	item:addContent(content)
-    	item:setItemSize(LISTVIEW_WIDTH, 40)
-
-   	 self.info_ui.listView:addItem(item)
-    end
- 	self.info_ui.listView:reload()
+  local mainEquipment = self.mainEquipment
+ 	local descLabel = cc.ui.UILabel.new({
+      UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+      text = _("消耗相同一个装备，重新随机装备的加成属性"),
+      font = UIKit:getFontFilePath(),
+      size = 20,
+      align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
+      color = UIKit:hex2c3b(0x403c2f)
+  }):addTo(background):align(display.LEFT_TOP, mainEquipment:getPositionX(), mainEquipment:getPositionY()-mainEquipment:getContentSize().height-30)
+ 	self.info_ui.descLabel = descLabel
+  self.info_ui.listView = UIListView.new {
+      viewRect = cc.rect((self.background:getContentSize().width-LISTVIEW_WIDTH)/2, 180, LISTVIEW_WIDTH, 250),
+      direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
+  }
+  :addTo(background)
 
  	local makeButton  = cc.ui.UIPushButton.new({
    	normal = "dragon_yellow_button.png",
@@ -159,7 +173,7 @@ function GameUIDragonEquipment:BuildInfoUI()
 	        size = 24,
 	        align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
 	        color = UIKit:hex2c3b(0xffedae)
-    	})):addTo(background):pos(background:getContentSize().width/2, 80)
+    	})):addTo(background):pos(self.background:getContentSize().width/2, 80)
     local descLabel2 = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = _("立即前往铁匠铺制作"),
@@ -173,23 +187,32 @@ function GameUIDragonEquipment:BuildInfoUI()
     self.info_ui.main = background
 end
 
+function GameUIDragonEquipment:GetEquipment()
+  local config_equipments = self.owner.building:GetEquipmentsByStarAndType(self.dragon.star,self.dragon.type)
+  local  equipment = config_equipments[self.equipmentCategory]
+  self.isFromConfig = self.dragon.equipments[self.equipmentCategory].name == ""
+  if not self.isFromConfig then
+      equipment = self.dragon.equipments[self.equipmentCategory]
+  end
+  LuaUtils:outputTable("GetEquipment--->",equipment)
+  return equipment
+end
 
 function GameUIDragonEquipment:AdornOrResetButtonClicked()
-	local config_equipments = self.owner.building:GetEquipmentsByStarAndType(self.dragon.star,self.dragon.type)
-	local  equipment = config_equipments[self.equipmentCategory]
-    if self.isFromConfig then --来自服务器
+  local equipment = self:GetEquipment()
+  if self.isFromConfig then --来自服务器
 		PushService:setDragonEquipment(self.dragon.type,self.equipmentCategory,equipment.name,function( success)
 
 		end)
-    end
+  else
+    PushService:resetDragonEquipment(self.dragon.type,self.equipmentCategory,function(success)
+
+    end)
+  end
 end
 
 function GameUIDragonEquipment:GetEquipmentItem()
-    local config_equipments = self.owner.building:GetEquipmentsByStarAndType(self.dragon.star,self.dragon.type)
-    local  equipment = config_equipments[self.equipmentCategory]
-    if not self.isFromConfig then --来自服务器
-        equipment = self.dragon.equipments[self.equipmentCategory]
-    end
+    local equipment = self:GetEquipment()
     local bgImage,equipmentIcon = self.owner:GetEquipmentItemImageInfo(self.dragon.type,self.equipmentCategory,self.dragon.star)
     local bg = display.newSprite(bgImage)
     if not self.isFromConfig then 
@@ -210,47 +233,34 @@ function GameUIDragonEquipment:GetEquipmentItem()
     return bg
 end
 
-function GameUIDragonEquipment:AdornOrResetButtonClicked()
-	local config_equipments = self.owner.building:GetEquipmentsByStarAndType(self.dragon.star,self.dragon.type)
-	local  equipment = config_equipments[self.equipmentCategory]
-    if self.isFromConfig then --来自服务器
-		PushService:setDragonEquipment(self.dragon.type,self.equipmentCategory,equipment.name,function( success)
-
-		end)
-	else
-		PushService:resetDragonEquipment(self.dragon.type,self.equipmentCategory,function(success)
-
-		end)
-    end
-end
-
-
-
 function GameUIDragonEquipment:RefreshInfoUI()
-	local config_equipments = self.owner.building:GetEquipmentsByStarAndType(self.dragon.star,self.dragon.type)
-	local  equipment = config_equipments[self.equipmentCategory]
-    if not self.isFromConfig then --来自服务器
-        equipment = self.dragon.equipments[self.equipmentCategory]
-    end
+  self.mainEquipment:removeFromParentAndCleanup(true)
+  local mainEquipment = self:GetEquipmentItem()
+    :addTo(self.background)
+    :align(display.LEFT_TOP,(self.background:getContentSize().width-LISTVIEW_WIDTH)/2,self.titleBar:getPositionY()-self.titleBar:getContentSize().height - 10)
+    self.mainEquipment = mainEquipment
+
+  local equipment = self:GetEquipment()
     self.mainTitleLabel:setString(self.equipmentCategory)
 	if self.isFromConfig then -- 没有装备
-		self.info_ui.adornOrResetButton.labels_['normal']:setString(_("装备"))
+		self.adornOrResetButton.labels_['normal']:setString(_("装备"))
 		if DataManager:getUserData().dragonEquipments[equipment.name] > 0 then
-			self.info_ui.makeButton:hide()
-			self.info_ui.descLabel2:hide()
+			-- self.info_ui.makeButton:hide()
+			-- self.info_ui.descLabel2:hide()
 		else
-			self.info_ui.adornOrResetButton:setButtonEnabled(false)
-			self.info_ui.makeButton:show()
-			self.info_ui.descLabel2:show()
+			self.adornOrResetButton:setButtonEnabled(false)
+			-- self.info_ui.makeButton:show()
+			-- self.info_ui.descLabel2:show()
 		end
 	else -- 已经装备
-		self.info_ui.adornOrResetButton.labels_['normal']:setString(_("重置"))
+		self.adornOrResetButton.labels_['normal']:setString(_("重置"))
 	end
-	self.info_ui.titleLable:setString(equipment.name)
-	self.info_ui.countLabel:setString(DataManager:getUserData().dragonEquipments[equipment.name] .. "/" ..  City:GetFirstBuildingByType("materialDepot"):GetMaxMaterial())
+	self.titleLable:setString(equipment.name)
+	self.countLabel:setString(DataManager:getUserData().dragonEquipments[equipment.name] .. "/" ..  City:GetFirstBuildingByType("materialDepot"):GetMaxMaterial())
+  self:RefreshInfoListView()
 end
 
-function GameUIDragonEquipment:GetBuffWithEquipment()
+function GameUIDragonEquipment:BuildIntensifyUI()
 
 end
 
@@ -288,6 +298,43 @@ end
 
 function GameUIDragonEquipment:CloseButtonClicked()
 	self:removeFromParentAndCleanup(true)
+  self.owner.dragonEquipment = nil
+end
+
+function GameUIDragonEquipment:DragonDataChanged()
+  self.dragon = self.owner:GetCurrentDragon()
+  self.isFromConfig = self.dragon.equipments[self.equipmentCategory].name == ""
+  self:RefreshInfoUI()
+end
+
+function GameUIDragonEquipment:GetEquipmentEffect()
+  local r = {}
+  local equipment = self:GetEquipment()
+  local config_equipment_buffs = GameDatas.DragonEyrie.equipmentBuff
+
+  if not equipment.star then return nil end
+
+  local config_category = GameDatas.DragonEyrie[self.equipmentCategory][self.dragon.star .. "_" .. equipment.star]
+  table.insert(r,{1,_("活力"),config_category.vitality})
+  table.insert(r,{2,_("力量"),config_category.strength})
+  for _,v in ipairs(self.dragon.equipments[self.equipmentCategory].buffs) do
+    table.insert(r,{3,UIKit:getBuffsDescWithKey(v),string.format("%d%%",config_equipment_buffs[v].buffEffect*100)})
+  end
+  return r
+end
+
+function GameUIDragonEquipment:RefreshInfoListView()
+  local data = self:GetEquipmentEffect()
+  if not data then return end
+  self.info_ui.listView:removeAllItems()
+  table.foreach(data,function(index,dataItem)
+    local item = self.info_ui.listView:newItem()
+    local content = self:GetListItem(index,tonumber(dataItem[1]),dataItem[2],dataItem[3])
+    item:addContent(content)
+    item:setItemSize(LISTVIEW_WIDTH, 46)
+    self.info_ui.listView:addItem(item)
+  end)
+  self.info_ui.listView:reload()
 end
 
 return GameUIDragonEquipment

@@ -1,5 +1,6 @@
 local Game = require("Game")
 local WarehouseUpgradeBuilding = import("app.entity.WarehouseUpgradeBuilding")
+local DragonEyrieUpgradeBuilding = import("app.entity.DragonEyrieUpgradeBuilding")
 local City = import("app.entity.City").new()
 
 
@@ -14,6 +15,7 @@ function setup()
     })
     City:InitBuildings({
         WarehouseUpgradeBuilding.new({ x = 9, y = 9, building_type = "warehouse", level = 1, w = 9, h = 10 }),
+        DragonEyrieUpgradeBuilding.new({ x = 9, y = 9, building_type = "dragonEyrie", level = 1, w = 9, h = 10 }),
     })
     City:InitDecorators({})
     City:ClearAllListener()

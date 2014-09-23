@@ -1,6 +1,7 @@
 local Game = require("Game")
 local KeepUpgradeBuilding = import("app.entity.KeepUpgradeBuilding")
 local WarehouseUpgradeBuilding = import("app.entity.WarehouseUpgradeBuilding")
+local DragonEyrieUpgradeBuilding = import("app.entity.DragonEyrieUpgradeBuilding")
 local City = import("app.entity.City")
 
 module( "test_city_building", lunit.testcase, package.seeall )
@@ -16,6 +17,7 @@ function setup()
     test_city:InitBuildings({
         KeepUpgradeBuilding.new({ x = 9, y = 9, building_type = "keep", level = 1, w = 9, h = 10 }),
         WarehouseUpgradeBuilding.new({ x = 9, y = 9, building_type = "warehouse", level = 1, w = 9, h = 10 }),
+        DragonEyrieUpgradeBuilding.new({ x = 9, y = 9, building_type = "dragonEyrie", level = 1, w = 9, h = 10 }),
     })
 end
 

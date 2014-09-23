@@ -9,7 +9,6 @@ function WidgetTimerProgress:ctor(width, height)
     local back_ground_351x96 = cc.ui.UIImage.new("back_ground_351x96.png", {scale9 = true})
     :setLayoutSize(width, height)
     self.describe = cc.ui.UILabel.new({
-        text = _("制造材料"),
         size = 22,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
@@ -25,7 +24,6 @@ function WidgetTimerProgress:ctor(width, height)
     self.progress_timer:setMidpoint(cc.p(0,0))
 
     self.progress_label = cc.ui.UILabel.new({
-        text = "00:20:30",
         size = 14,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
@@ -69,13 +67,12 @@ function WidgetTimerProgress:SetProgressInfo(time_label, percent)
     self.progress_timer:setPercentage(percent)
     return self
 end
-function WidgetTimerProgress:align(...)
-    self.back_ground:align(...)
+function WidgetTimerProgress:align(anchorPoint, x, y)
+    self.back_ground:align(anchorPoint)
+    if x and y then self:setPosition(x, y) end
     return self
 end
-function WidgetTimerProgress:getBoundingBox(...)
-    return self.back_ground:getBoundingBox(...)
-end
+
 
 
 return WidgetTimerProgress

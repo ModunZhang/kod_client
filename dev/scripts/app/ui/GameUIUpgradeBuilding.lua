@@ -14,7 +14,7 @@ function GameUIUpgradeBuilding:CreateBetweenBgAndTitle()
     self:addChild(self.upgrade_layer)
 end
 
-function GameUIUpgradeBuilding:CreateTabButtons(param, layers)
+function GameUIUpgradeBuilding:CreateTabButtons(param, cb)
     table.insert(param,1, {
         label = _("升级"),
         tag = "upgrade",
@@ -23,19 +23,10 @@ function GameUIUpgradeBuilding:CreateTabButtons(param, layers)
     return GameUIUpgradeBuilding.super.CreateTabButtons(self,param,function(tag)
         if tag == "upgrade" then
             self.upgrade_layer:setVisible(true)
-            for k,v in pairs(layers) do
-                v:setVisible(false)
-            end
         else
             self.upgrade_layer:setVisible(false)
-            for layer_tag,layer in pairs(layers) do
-                if tag == layer_tag then
-                    layer:setVisible(true)
-                else
-                    layer:setVisible(false)
-                end
-            end
         end
+        cb(tag)
     end)
 end
 

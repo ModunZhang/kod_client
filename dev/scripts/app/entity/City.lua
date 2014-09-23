@@ -3,6 +3,8 @@ local BuildingRegister = import(".BuildingRegister")
 local Enum = import("..utils.Enum")
 local Orient = import(".Orient")
 local Tile = import(".Tile")
+local SoldierManager = import(".SoldierManager")
+local DragonEquipManager = import(".DragonEquipManager")
 local ResourceManager = import(".ResourceManager")
 local Building = import(".Building")
 local TowerUpgradeBuilding = import(".TowerUpgradeBuilding")
@@ -37,6 +39,8 @@ City.RESOURCE_TYPE_TO_BUILDING_TYPE = {
 function City:ctor()
     City.super.ctor(self)
     self.resource_manager = ResourceManager.new()
+    self.soldier_manager = SoldierManager.new()
+    self.equip_manager = DragonEquipManager.new()
 
     self.buildings = {}
     self.walls = {}
@@ -101,6 +105,12 @@ function City:InitDecorators(decorators)
     self:CheckIfDecoratorsIntersectWithRuins()
 end
 -- 取值函数
+function City:GetEquipManager()
+    return self.equip_manager
+end
+function City:GetSoldierManager()
+    return self.soldier_manager
+end
 function City:GetResourceManager()
     return self.resource_manager
 end
@@ -291,7 +301,7 @@ function City:GetCanUpgradingTowers()
     return towers
 end
 -- 工具
-function City:IteratorCanUpgradBuildingsByUserData(user_data, current_time)
+function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time)
     self:IteratorDecoratorBuildingsByFunc(function(key, building)
         local tile = self:GetTileWhichBuildingBelongs(building)
         building:OnUserDataChanged(user_data, current_time, tile.location_id, tile:GetBuildingLocation(building))
@@ -489,6 +499,8 @@ end
 function City:OnUserDataChanged(userData, current_time)
     -- 解锁，建造，拆除类事件的解析
     local lock_table = {}
+    local unlock_table = {}
+    local is_unlock_any_tiles = false
     local is_lock_any_tiles = false
     table.foreach(userData.buildings, function(key, location)
         local building = self:GetBuildingByLocationId(location.location)
@@ -496,9 +508,9 @@ function City:OnUserDataChanged(userData, current_time)
         local is_locking = building:GetLevel() > 0 and location.level <= 0
         local tile = self:GetTileByLocationId(location.location)
         if is_unlocking then
-            self:UnlockTilesByIndex(tile.x, tile.y)
+            is_unlock_any_tiles = true
+            table.insert(unlock_table, {x = tile.x, y = tile.y})
         elseif is_locking then
-            -- self:LockTilesByIndex(tile.x, tile.y)
             is_lock_any_tiles = true
             table.insert(lock_table, {x = tile.x, y = tile.y})
         end
@@ -554,19 +566,26 @@ function City:OnUserDataChanged(userData, current_time)
             end
         end)
     end)
-
-    -- 锁住地块
+    -- 更新地块信息
+    if is_unlock_any_tiles then
+        LuaUtils:outputTable("unlock_table", unlock_table)
+        self:UnlockTilesByIndexArray(unlock_table)
+    end
     if is_lock_any_tiles then
         LuaUtils:outputTable("lock_table", lock_table)
         self:LockTilesByIndexArray(lock_table)
     end
 
     -- 更新建筑信息
-    self:IteratorCanUpgradBuildingsByUserData(userData, current_time)
+    self:IteratorCanUpgradeBuildingsByUserData(userData, current_time)
+
+    -- 更新兵种
+    self.soldier_manager:OnUserDataChanged(userData)
+    -- 更新装备
+    self.equip_manager:OnUserDataChanged(userData)
     -- 最后才更新资源
     local resource_refresh_time = userData.basicInfo.resourceRefreshTime / 1000
     self:IteratorResourcesByUserData(userData, resource_refresh_time)
-    -- resource_manager:OnResourceChanged()
 end
 function City:OnCreateDecorator(current_time, building)
     building:AddUpgradeListener(self)
@@ -615,6 +634,16 @@ function City:LockTilesByIndex(x, y)
         listener:OnTileLocked(city, x, y)
     end)
 end
+function City:UnlockTilesByIndexArray(index_array)
+    table.foreach(index_array, function(_, index)
+        self.tiles[index.y][index.x].locked = false
+    end)
+    self:GenerateWalls()
+    local city = self
+    self:NotifyListeneOnType(City.LISTEN_TYPE.UNLOCK_TILE, function(listener)
+        listener:OnTileUnlocked(city)
+    end)
+end
 function City:UnlockTilesByIndex(x, y)
     local success, ret_code = self:IsTileCanbeUnlockAt(x, y)
     if not success then
@@ -626,14 +655,13 @@ function City:UnlockTilesByIndex(x, y)
     self:NotifyListeneOnType(City.LISTEN_TYPE.UNLOCK_TILE, function(listener)
         listener:OnTileUnlocked(city, x, y)
     end)
-
     -- 检查是否解锁完一圈
-    local round = self:GetAroundByPosition(x, y)
-    if self:IsUnlockedInAroundNumber(round) then
-        self:NotifyListeneOnType(City.LISTEN_TYPE.UNLOCK_ROUND, function(listener)
-            listener:OnRoundUnlocked(round)
-        end)
-    end
+    -- local round = self:GetAroundByPosition(x, y)
+    -- if self:IsUnlockedInAroundNumber(round) then
+    --     self:NotifyListeneOnType(City.LISTEN_TYPE.UNLOCK_ROUND, function(listener)
+    --         listener:OnRoundUnlocked(round)
+    --     end)
+    -- end
     return success, ret_code
 end
 -----
