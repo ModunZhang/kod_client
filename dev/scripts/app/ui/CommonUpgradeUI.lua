@@ -2,6 +2,8 @@ local SmallDialogUI = import(".SmallDialogUI")
 local UIListView = import(".UIListView")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local UpgradeBuilding = import("..entity.UpgradeBuilding")
+local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
+
 
 
 local CommonUpgradeUI = class("CommonUpgradeUI", function ()
@@ -328,24 +330,6 @@ function CommonUpgradeUI:InitUpgradePart()
     }):align(display.LEFT_CENTER,display.cx+120,display.top-500):addTo(self.upgrade_layer)
 
     --升级需求listview
-    local list_bg = display.newScale9Sprite("upgrade_requirement_background.png", display.cx, display.top-512,cc.size(549, display.height-627))
-        :align(display.TOP_CENTER):addTo(self.upgrade_layer)
-    cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "升级需求",
-        font = UIKit:getFontFilePath(),
-        size = 24,
-        color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.CENTER,display.cx,display.top-540):addTo(self.upgrade_layer)
-    self.requirement_listview = UIListView.new{
-        -- bg = "common_tips_bg.png",
-        bgScale9 = true,
-        viewRect = cc.rect(0,0, 549, display.top-676),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
-        :addTo(list_bg,2)
-
-    -- 缓存已经添加的升级条件项,供刷新时使用
-    self.added_items = {}
     self:SetUpgradeRequirementListview()
 
 
@@ -395,79 +379,14 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
             icon="iron_icon.png",description=self.building:GetLevelUpPulley().."/"..userData.materials.pulley},
     }
 
-
-    --有两种背景色的达到要求的显示条，通过meeFlag来确定选取哪一个
-    local meetFlag = true
-
-    for k,v in pairs(requirements) do
-        -- print(k,v)
-        if v.isVisible then
-            -- 需求已添加，则更新最新资源数据
-            if self.added_items[v.resource_type] then
-                -- print("需求已添加，则更新最新资源数据 ",v.resource_type)
-                local added_resource = self.added_items[v.resource_type]
-                local content = added_resource:getContent()
-                if v.isSatisfy then
-                    if meetFlag then
-                        content.bg:setTexture("upgrade_resources_background_3.png")
-                    else
-                        content.bg:setTexture("upgrade_resources_background_2.png")
-                    end
-                    -- 符合条件，添加钩钩图标
-                    content.mark:setTexture("upgrade_mark.png")
-                    meetFlag =  not meetFlag
-                else
-                    content.bg:setTexture("upgrade_resources_background_red.png")
-                    -- 不符合条提案，添加X图标
-                    content.mark:setTexture("upgrade_prohibited.png")
-                end
-                content.resource_value:setString(v.description)
-            else
-                -- 添加新条件
-                -- print("添加新条件",v.resource_type)
-                local item = self.requirement_listview:newItem()
-                local item_width,item_height = 547,47
-                item:setItemSize(item_width,item_height)
-                local content = cc.ui.UIGroup.new()
-                --  筛选不同背景颜色 bg
-                if v.isSatisfy then
-                    if meetFlag then
-                        content.bg = display.newSprite("upgrade_resources_background_3.png", 0, 0):addTo(content)
-                    else
-                        content.bg = display.newSprite("upgrade_resources_background_2.png", 0, 0):addTo(content)
-                    end
-                    -- 符合条件，添加钩钩图标
-                    content.mark = display.newSprite("upgrade_mark.png", item_width/2-25, 0):addTo(content)
-                    meetFlag =  not meetFlag
-                else
-                    content.bg = display.newSprite("upgrade_resources_background_red.png", 0, 0):addTo(content)
-                    -- 不符合条提案，添加X图标
-                    content.mark = display.newSprite("upgrade_prohibited.png", item_width/2-25, 0):addTo(content)
-                end
-                -- 资源类型icon
-                local resource_type_icon = display.newSprite(v.icon, -item_width/2+35, 0):addTo(content)
-                resource_type_icon:setScale(0.4)
-                content.resource_value = cc.ui.UILabel.new({
-                    UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                    text = v.description,
-                    font = UIKit:getFontFilePath(),
-                    size = 24,
-                    color = UIKit:hex2c3b(0x403c2f)
-                }):align(display.LEFT_CENTER,-200,0):addTo(content)
-                item:addContent(content)
-                self.requirement_listview:addItem(item)
-                self.added_items[v.resource_type] = item
-                self.requirement_listview:reload()
-            end
-        else
-            -- 刷新时已经没有此项条件时，删除之前添加的项
-            if self.added_items[v.resource_type] then
-                -- print("刷新时已经没有此项条件时，删除之前添加的项",v.resource_type)
-                self.requirement_listview:removeItem(self.added_items[v.resource_type])
-                self.requirement_listview:reload()
-            end
-        end
+    if not self.requirement_listview then
+        self.requirement_listview = WidgetRequirementListview.new({
+            title = _("升级需求"),
+            height = 333,
+            contents = requirements,
+        }):addTo(self):pos(display.cx-275, display.top-855)
     end
+    self.requirement_listview:RefreshListView(requirements)
 end
 
 function CommonUpgradeUI:InitAccelerationPart()
@@ -688,6 +607,9 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
+
 
 
 
