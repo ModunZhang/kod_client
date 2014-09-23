@@ -24,6 +24,9 @@ function SoldierManager:ctor()
         ["skeletonWarrior"] = 0,
     }
 end
+function SoldierManager:GetSoldierMap()
+	return self.soldier_map
+end
 function SoldierManager:GetCountBySoldierType(soldier_type)
 	return self.soldier_map[soldier_type]
 end

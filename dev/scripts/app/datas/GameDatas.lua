@@ -7,6 +7,13 @@ GameDatas.ClientInitGame = {
 require("app.datas.ClientInitGame_ruins")
 require("app.datas.ClientInitGame_locations")
 
+GameDatas.AllianceInitData = {
+	["resources"] = {},
+	["rights"] = {},
+}
+require("app.datas.AllianceInitData_resources")
+require("app.datas.AllianceInitData_rights")
+
 GameDatas.BuildingFunction = {
 	["wall"] = {},
 	["tower"] = {},

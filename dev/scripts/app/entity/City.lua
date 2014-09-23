@@ -576,7 +576,7 @@ function City:OnUserDataChanged(userData, current_time)
 
     -- 更新兵种
     self.soldier_manager:OnUserDataChanged(userData)
-    dump(self.soldier_manager)
+    -- dump(self.soldier_manager)
 end
 function City:OnCreateDecorator(current_time, building)
     building:AddUpgradeListener(self)

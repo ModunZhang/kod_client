@@ -29,7 +29,7 @@ function GameUIBarracks:onEnter()
             print("hello")
         end)
 
-
+    self.soldier_map = {}
     local rect = self.timer:getCascadeBoundingBox()
     self.list_view = self:CreateVerticalListViewDetached(rect.x, display.bottom + 70, rect.x + rect.width, rect.y - 20):addTo(recruit)
     local item = self:CreateItemWithListView(self.list_view, {
@@ -47,6 +47,14 @@ function GameUIBarracks:onEnter()
     self:TabButtons()
     self.barracks:AddBarracksListener(self)
     self.barracks_city:GetSoldierManager():AddObserver(self)
+
+
+    local soldier_map = self.barracks_city:GetSoldierManager():GetSoldierMap()
+    dump(soldier_map)
+    for k, v in pairs(self.soldier_map) do
+        print(k, v)
+        v:SetNumber(soldier_map[k]) 
+    end
 end
 function GameUIBarracks:onExit()
     self.barracks_city:GetSoldierManager():RemoveObserver(self)
@@ -73,7 +81,7 @@ function GameUIBarracks:OnRecruiting(barracks, event, current_time)
 
         local elapse_time = event:ElapseTime(current_time)
         local total_time = event:FinishTime() - event:StartTime()
-        local percent = math.floor((elapse_time * 100.0 / total_time))
+        local percent = (elapse_time * 100.0 / total_time)
         self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(current_time)), percent)
     end
 end
@@ -112,7 +120,6 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
     local unit_width = 130
     local gap_x = (widget_rect.width - unit_width * 4) / 3
     local row_item = display.newNode()
-    self.soldier_map = {}
     for i, soldier_name in pairs(soldiers) do
         self.soldier_map[soldier_name] = 
         WidgetSoldierBox.new(nil, function(event)
@@ -147,7 +154,10 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
     return item
 end
 function GameUIBarracks:OnSoliderCountChanged(...)
-
+    local soldier_map = self.barracks_city:GetSoldierManager():GetSoldierMap()
+    for k, v in pairs(self.soldier_map) do
+        v:SetNumber(soldier_map[k]) 
+    end
 end
 
 
