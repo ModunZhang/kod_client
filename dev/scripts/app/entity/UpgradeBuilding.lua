@@ -225,7 +225,10 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.IS_MAX_LEVEL
     end
     local gem = City.resource_manager:GetGemResource():GetValue()
-
+    -- 建造队列不足
+    if #City:OnUpgradingBuildings()>0 then
+        return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH
+    end
     if isUpgradeNow then
         if gem<self:getUpgradeNowNeedGems() then
             return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH

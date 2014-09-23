@@ -592,14 +592,13 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
             dialog:CreateNeeds("Topaz-icon.png",required_gems)
         end
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH then
+        local required_gems = self.building:getUpgradeNowNeedGems()
         dialog:CreateOKButton(function(sender,type)
             listener()
-            self:getParent():leftButtonClicked()
         end)
         dialog:SetTitle(_("立即开始"))
         dialog:SetPopMessage(_("您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"))
         dialog:CreateNeeds("Topaz-icon.png",required_gems)
-            :seekWidgetByName(dialog,"LC_Dialogue_Label"):setText(_("您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"))
     else
         dialog:SetTitle(_("提示"))
         dialog:SetPopMessage(can_not_update_type)
