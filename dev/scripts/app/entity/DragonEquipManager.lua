@@ -72,7 +72,7 @@ function DragonEquipManager:ctor()
 		["poisonSting"] = 0,
     }
 end
-function DragonEquipManager:GetSoldierMap()
+function DragonEquipManager:GetEquipMap()
 	return self.equip_map
 end
 function DragonEquipManager:GetCountByType(equip_type)

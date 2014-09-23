@@ -17,16 +17,49 @@ local STAR_BG = {
     "star5_105x104.png",
 }
 
-function GameUIBlackSmith:ctor(city)
+function GameUIBlackSmith:ctor(city, black_smith)
     GameUIBlackSmith.super.ctor(self, city, _("铁匠铺"))
+
+    self.black_smith = black_smith
 end
 function GameUIBlackSmith:onEnter()
     GameUIBlackSmith.super.onEnter(self)
-    self:InitEquipmentTitle()
+    self.title = self:InitEquipmentTitle()
     self.red_dragon_list_view, self.red_dragon_equip_map = self:CreateRedDragonEquipments()
     self.blue_dragon_list_view, self.blue_dragon_equip_map = self:CreateBlueDragonEquipments()
     self.green_dragon_list_view, self.green_dragon_equip_map = self:CreateGreenDragonEquipments()
     self:TabButtons()
+
+
+    self.black_smith:AddBlackSmithListener(self)
+end
+function GameUIBlackSmith:OnExit()
+    self.black_smith:RemoveBlackSmithListener(self)
+    GameUIBlackSmith.super.OnExit(self)
+end
+function GameUIBlackSmith:OnBeginMakeEquipmentWithEvent(black_smith, event)
+    self.tips:setVisible(false)
+    self.timer:setVisible(true)
+end
+function GameUIBlackSmith:OnMakingEquipmentWithEvent(black_smith, event, current_time)
+    if self.title:isVisible() then
+        if self.tips:isVisible() then
+            self.tips:setVisible(false)
+        end
+        if not self.timer:isVisible() then
+            self.timer:setVisible(true)
+        end
+        self.timer:SetDescribe(string.format("%s %s", _("正在制作"), event:Content()))
+
+        local elapse_time = event:ElapseTime(current_time)
+        local total_time = event:FinishTime() - event:StartTime()
+        local percent = (elapse_time * 100.0 / total_time)
+        self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(current_time)), percent)
+    end
+end
+function GameUIBlackSmith:OnEndMakeEquipmentWithEvent(black_smith, event, equipment)
+    self.tips:setVisible(true)
+    self.timer:setVisible(false)
 end
 function GameUIBlackSmith:TabButtons()
     self:CreateTabButtons({
@@ -50,22 +83,22 @@ function GameUIBlackSmith:TabButtons()
     },
     function(tag)
         if tag == 'upgrade' then
-            self:HideEquipmentTitle()
+            self.title:setVisible(false)
             self.red_dragon_list_view:setVisible(false)
             self.blue_dragon_list_view:setVisible(false)
             self.green_dragon_list_view:setVisible(false)
         elseif tag == "redDragon" then
-            self:ShowEquipmentTitle()
+            self.title:setVisible(true)
             self.red_dragon_list_view:setVisible(true)
             self.blue_dragon_list_view:setVisible(false)
             self.green_dragon_list_view:setVisible(false)
         elseif tag == "blueDragon" then
-            self:ShowEquipmentTitle()
+            self.title:setVisible(true)
             self.red_dragon_list_view:setVisible(false)
             self.blue_dragon_list_view:setVisible(true)
             self.green_dragon_list_view:setVisible(false)
         elseif tag == "greenDragon" then
-            self:ShowEquipmentTitle()
+            self.title:setVisible(true)
             self.red_dragon_list_view:setVisible(false)
             self.blue_dragon_list_view:setVisible(false)
             self.green_dragon_list_view:setVisible(true)
@@ -73,24 +106,18 @@ function GameUIBlackSmith:TabButtons()
     end):pos(display.cx, display.bottom + 40)
 end
 function GameUIBlackSmith:InitEquipmentTitle()
-    self.tips = WidgetTips.new(_("建造队列空闲"), _("请选择一个装备进行制造")):addTo(self)
+    local node = display.newNode():addTo(self)
+    self.tips = WidgetTips.new(_("建造队列空闲"), _("请选择一个装备进行制造")):addTo(node)
         :align(display.CENTER, display.cx, display.top - 160)
         :hide()
 
-    self.timer = WidgetTimerProgress.new(549, 108):addTo(self)
+    self.timer = WidgetTimerProgress.new(549, 108):addTo(node)
         :align(display.CENTER, display.cx, display.top - 160)
         :show()
         :OnButtonClicked(function(event)
             print("hello")
         end)
-end
-function GameUIBlackSmith:ShowEquipmentTitle()
-    self.tips:setVisible(true)
-    self.timer:setVisible(true)
-end
-function GameUIBlackSmith:HideEquipmentTitle()
-    self.tips:setVisible(false)
-    self.timer:setVisible(false)
+    return node
 end
 function GameUIBlackSmith:CreateRedDragonEquipments()
     return self:CreateDragonEquipmentsByType("redDragon")
@@ -226,7 +253,8 @@ function GameUIBlackSmith:CreateEquipmentByType(equip_type)
     end
 
     equip_clicked = function(event)
-        print("equip_clicked", equip_type)
+        -- print("equip_clicked", equip_type)
+        NetManager:makeDragonEquipment(equip_type, NOT_HANDLE)
     end
     info_clicked = function(event)
         print("info_clicked", equip_type)
@@ -235,8 +263,9 @@ function GameUIBlackSmith:CreateEquipmentByType(equip_type)
     return equipment_btn
 end
 
-
 return GameUIBlackSmith
+
+
 
 
 

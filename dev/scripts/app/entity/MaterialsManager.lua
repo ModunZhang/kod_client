@@ -3,7 +3,7 @@ local Observer = import(".Observer")
 local MaterialsManager = class("MaterialsManager", Observer)
 
 
-MaterialsManager.MATERIAL_TYPE = Enum("NORMAL", "SOLDIER", "DRAGON")
+MaterialsManager.MATERIAL_TYPE = Enum("BUILD", "SOLDIER", "DRAGON")
 
 function MaterialsManager:ctor()
     MaterialsManager.super.ctor(self)

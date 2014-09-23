@@ -110,7 +110,6 @@ function BlackSmithUpgradeBuilding:OnUserDataChanged(...)
 
     local event = dragonEquipmentEvents[1]
     if event then
-        dump(event)
         local finished_time = event.finishTime / 1000
         local is_making_end = finished_time == 0
         if self:IsEquipmentEventEmpty() then

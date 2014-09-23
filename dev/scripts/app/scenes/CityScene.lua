@@ -61,43 +61,15 @@ function CityScene:onEnter()
     end)
 
 
-    -- City:GetFirstBuildingByType("toolShop"):AddToolShopListener({
-    --     OnBeginMakeMaterialsWithEvent = function(lisenter, tool_shop, event)
-    --         print("OnBeginMakeMaterialsWithEvent", event:Category())
-    --     end,
-    --     OnMakingMaterialsWithEvent = function(lisenter, tool_shop, event, current_time)
-    --         print("OnMakingMaterialsWithEvent", event:Category(), current_time)
-    --     end,
-    --     OnEndMakeMaterialsWithEvent = function(lisenter, tool_shop, event, current_time)
-    --         print("OnEndMakeMaterialsWithEvent", event:Category(), current_time)
-    --     end,
-    --     OnGetMaterialsWithEvent = function(lisenter, tool_shop, event)
-    --         print("OnGetMaterialsWithEvent", event:Category())
-    --     end,
-    -- })
-    -- City:GetFirstBuildingByType("blackSmith"):AddBlackSmithListener({
-    --     OnBeginMakeEquipmentWithEvent = function(lisenter, tool_shop, event)
-    --         print("OnBeginMakeEquipmentWithEvent", event:Content())
-    --     end,
-    --     OnMakingEquipmentWithEvent = function(lisenter, tool_shop, event, current_time)
-    --         print("OnMakingEquipmentWithEvent", event:Content(), event:LeftTime(current_time))
-    --     end,
-    --     OnEndMakeEquipmentWithEvent = function(lisenter, tool_shop, event, equipment)
-    --         print("OnEndMakeEquipmentWithEvent", event:Content(), equipment)
-    --     end,
-    -- })
-
-
-    City:GetFirstBuildingByType("barracks"):AddBarracksListener({
-        OnBeginRecruit = function(lisenter, barracks, event)
-            print("OnBeginRecruit", event:StartTime(), event:GetRecruitingTime())
+    City:GetFirstBuildingByType("blackSmith"):AddBlackSmithListener({
+        OnBeginMakeEquipmentWithEvent = function(lisenter, tool_shop, event)
+            print("OnBeginMakeEquipmentWithEvent", event:Content())
         end,
-        OnRecruiting = function(lisenter, barracks, event, current_time)
-            print("OnRecruiting", event:LeftTime(current_time))
+        OnMakingEquipmentWithEvent = function(lisenter, tool_shop, event, current_time)
+            print("OnMakingEquipmentWithEvent", event:Content(), event:LeftTime(current_time))
         end,
-        OnEndRecruit = function(lisenter, barracks, event, current_time)
-            print("OnEndRecruit")
-            dump(event)
+        OnEndMakeEquipmentWithEvent = function(lisenter, tool_shop, event, equipment)
+            print("OnEndMakeEquipmentWithEvent", event:Content(), equipment)
         end,
     })
 end
@@ -252,7 +224,7 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
         elseif building:GetEntity():GetType() == "toolShop" then
             UIKit:newGameUI('GameUIToolShop', City, building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "blackSmith" then
-            UIKit:newGameUI('GameUIBlackSmith', City):addToScene(self, true)
+            UIKit:newGameUI('GameUIBlackSmith', City, building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "materialDepot" then
             UIKit:newGameUI('GameUIMaterialDepot', City, building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "barracks" then
