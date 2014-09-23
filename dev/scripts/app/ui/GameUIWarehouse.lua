@@ -29,9 +29,13 @@ function GameUIWarehouse:onEnter()
             label = _("资源"),
             tag = "resource",
         },
-    },{
-        ["resource"] = self.resource_layer
-    }):pos(display.cx, display.bottom + 40)
+    },function(tag)
+        if tag == 'resource' then
+            self.resource_layer:setVisible(true)
+        else
+            self.resource_layer:setVisible(false)
+        end
+    end):pos(display.cx, display.bottom + 40)
     self:CreateResourceListView()
     self:InitAllResources()
 

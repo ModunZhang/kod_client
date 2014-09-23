@@ -245,6 +245,11 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
             UIKit:newGameUI('GameUIBarracks', City):addToScene(self, true)
         elseif building:GetEntity():GetType() == "armyCamp" then
             self._armyCamp_page = UIKit:newGameUI('GameUIArmyCamp',City,building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "foundry" 
+            or building:GetEntity():GetType() == "stoneMason" 
+            or building:GetEntity():GetType() == "lumbermill"
+            or building:GetEntity():GetType() == "mill" then
+            self._armyCamp_page = UIKit:newGameUI('GameUIPResourceBuilding',City,building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "warehouse" then
             self._warehouse_page = UIKit:newGameUI('GameUIWarehouse',City,building:GetEntity())
             self._warehouse_page:addToScene(self, true)
