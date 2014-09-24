@@ -14,9 +14,9 @@ end
 
 function FullScreenPopDialogUI:Init()
     -- bg
-    display.newSprite("full_screen_dialog_bg.png", display.cx, display.cy):addTo(self)
+    display.newSprite("full_screen_dialog_bg.png", display.cx, display.top - 480):addTo(self)
     -- title bg
-    display.newSprite("Title_blue.png", display.cx, display.cy+140):addTo(self)
+    display.newSprite("Title_blue.png", display.cx, display.top-340):addTo(self)
     -- title label
     self.title = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -24,11 +24,11 @@ function FullScreenPopDialogUI:Init()
         font = UIKit:getFontFilePath(),
         size = 24,
         color = UIKit:hex2c3b(0xffedae)
-    }):align(display.CENTER,display.cx,display.cy+140):addTo(self)
+    }):align(display.CENTER,display.cx,display.top-340):addTo(self)
     -- npc image
-    display.newSprite("Npc.png", display.cx - 205, display.cy+10):addTo(self)
+    display.newSprite("Npc.png", display.cx - 205, display.top-470):addTo(self)
     -- 对话框 bg
-    display.newSprite("pop_tip_bg.png", display.cx+80, display.cy+20):addTo(self)
+    display.newSprite("pop_tip_bg.png", display.cx+80, display.top-460):addTo(self)
 
     -- 称谓label
     cc.ui.UILabel.new({
@@ -37,7 +37,7 @@ function FullScreenPopDialogUI:Init()
         font = UIKit:getFontFilePath(),
         size = 24,
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER,display.cx-80,display.cy+70):addTo(self)
+    }):align(display.LEFT_CENTER,display.cx-80,display.top-410):addTo(self)
     -- 提示内容
     self.message_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -46,13 +46,13 @@ function FullScreenPopDialogUI:Init()
         size = 24,
         dimensions = cc.size(360, 88),
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER,display.cx-80,display.cy+10):addTo(self)
+    }):align(display.LEFT_CENTER,display.cx-80,display.top-470):addTo(self)
 
     -- close button
     cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
         :onButtonClicked(function(event)
             self:removeFromParent(true)
-        end):align(display.CENTER, display.cx + 290, display.cy+150):addTo(self):addChild(display.newSprite("X_3.png"))
+        end):align(display.CENTER, display.cx + 290, display.top-320):addTo(self):addChild(display.newSprite("X_3.png"))
 
 end
 
@@ -71,11 +71,11 @@ function FullScreenPopDialogUI:CreateOKButton(listener)
             -- print(" pop dialog click")
             listener()
             self:removeFromParent(true)
-        end):align(display.CENTER, display.cx+50, display.cy-130):addTo(self)
+        end):align(display.CENTER, display.cx+50, display.top-610):addTo(self)
 end
 
 function FullScreenPopDialogUI:CreateNeeds(icon,value)
-    local icon_image = display.newScale9Sprite(icon, display.cx+20, display.cy-80):addTo(self)
+    local icon_image = display.newScale9Sprite(icon, display.cx+20, display.top-560):addTo(self)
     icon_image:setScale(30/icon_image:getContentSize().height)
     cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -83,7 +83,7 @@ function FullScreenPopDialogUI:CreateNeeds(icon,value)
         font = UIKit:getFontFilePath(),
         size = 24,
         color = UIKit:hex2c3b(0xfdfac2)
-    }):align(display.LEFT_CENTER,display.cx+60,display.cy-80):addTo(self)
+    }):align(display.LEFT_CENTER,display.cx+60,display.top-560):addTo(self)
 end
 
 return FullScreenPopDialogUI

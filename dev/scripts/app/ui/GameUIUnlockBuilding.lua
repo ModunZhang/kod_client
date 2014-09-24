@@ -23,7 +23,7 @@ function GameUIUnlockBuilding:onExit()
 end
 function GameUIUnlockBuilding:Init()
     -- bg
-    local bg = display.newScale9Sprite("full_screen_dialog_bg.png",display.cx, display.cy, cc.size(612,663)):addTo(self)
+    local bg = display.newScale9Sprite("full_screen_dialog_bg.png",display.cx, display.top-480, cc.size(612,663)):addTo(self)
     -- title bg
     local title_bg = display.newSprite("Title_blue.png"):align(display.TOP_LEFT, 8, bg:getContentSize().height):addTo(bg,2)
     -- title label
@@ -41,7 +41,7 @@ function GameUIUnlockBuilding:Init()
             self:removeFromParent(true)
         end):align(display.CENTER, bg:getContentSize().width-15, bg:getContentSize().height-5):addTo(bg,2):addChild(display.newSprite("X_3.png"))
     -- 建筑功能介绍
-    local building_introduces_bg = display.newSprite("upgrade_introduce_bg.png", display.cx, display.cy+190):addTo(self)
+    local building_introduces_bg = display.newSprite("upgrade_introduce_bg.png", display.cx, display.top-290):addTo(self)
     self.building_image = display.newScale9Sprite(self.building:GetType()..".png", 0, 0):addTo(building_introduces_bg)
     self.building_image:setAnchorPoint(cc.p(0,0))
     self.building_image:setScale(164/self.building_image:getContentSize().height)
@@ -66,7 +66,7 @@ function GameUIUnlockBuilding:Init()
                     self:removeFromParent(true)
                 end
             end
-        end):align(display.CENTER, display.cx-150, display.cy+100):addTo(self)
+        end):align(display.CENTER, display.cx-150, display.top-380):addTo(self)
     -- upgrade button
     cc.ui.UIPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
         :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("解锁"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
@@ -84,24 +84,24 @@ function GameUIUnlockBuilding:Init()
                     self:removeFromParent(true)
                 end
             end
-        end):align(display.CENTER, display.right-140, display.cy+100):addTo(self)
+        end):align(display.CENTER, display.cx+180, display.top-380):addTo(self)
     -- 立即升级所需宝石
-    display.newSprite("Topaz-icon.png", display.left+60, display.cy+40):addTo(self):setScale(0.5)
+    display.newSprite("Topaz-icon.png", display.cx-260, display.top-440):addTo(self):setScale(0.5)
     self.upgrade_now_need_gems_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
         size = 20,
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER,display.left+80,display.cy+34):addTo(self)
+    }):align(display.LEFT_CENTER,display.cx-240,display.top-446):addTo(self)
     self:SetUpgradeNowNeedGems()
     --升级所需时间
-    display.newSprite("upgrade_hourglass.png", display.cx+100, display.cy+40):addTo(self):setScale(0.6)
+    display.newSprite("upgrade_hourglass.png", display.cx+100, display.top-440):addTo(self):setScale(0.6)
     self.upgrade_time = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
         size = 18,
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER,display.cx+125,display.cy+50):addTo(self)
+    }):align(display.LEFT_CENTER,display.cx+125,display.top-430):addTo(self)
     self:SetUpgradeTime()
 
     -- 科技减少升级时间
@@ -111,10 +111,10 @@ function GameUIUnlockBuilding:Init()
         font = UIKit:getFontFilePath(),
         size = 18,
         color = UIKit:hex2c3b(0x068329)
-    }):align(display.LEFT_CENTER,display.cx+120,display.cy+30):addTo(self)
+    }):align(display.LEFT_CENTER,display.cx+120,display.top-450):addTo(self)
 
     --升级需求listview
-    local list_bg = display.newScale9Sprite("upgrade_requirement_background.png", display.cx, display.cy+18)
+    local list_bg = display.newScale9Sprite("upgrade_requirement_background.png", display.cx, display.top-462)
         :align(display.TOP_CENTER):addTo(self)
     cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -122,7 +122,7 @@ function GameUIUnlockBuilding:Init()
         font = UIKit:getFontFilePath(),
         size = 24,
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.CENTER,display.cx,display.cy-10):addTo(self)
+    }):align(display.CENTER,display.cx,display.top-490):addTo(self)
     self.requirement_listview = UIListView.new{
         -- bg = "common_tips_bg.png",
         bgScale9 = true,
@@ -142,7 +142,7 @@ function GameUIUnlockBuilding:InitBuildingIntroduces()
         size = 22,
         dimensions = cc.size(350, 90),
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER,display.cx-100, display.cy+190):addTo(self)
+    }):align(display.LEFT_CENTER,display.cx-100, display.top-290):addTo(self)
     self:SetBuildingIntroduces()
 end
 

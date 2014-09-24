@@ -6,7 +6,10 @@ end)
 function WidgetMaterialBox:ctor(material_png,cb,is_has_i_icon)
     self.material_bg = WidgetPushButton.new({normal = "icon_background_wareHouseUI.png",
         pressed = "icon_background_wareHouseUI.png"}):align(display.LEFT_BOTTOM):addTo(self)
-        :onButtonClicked(cb)
+    if cb then
+        self.material_bg:onButtonClicked(cb)
+    end
+        
     local rect = self.material_bg:getCascadeBoundingBox()
 
     local material = cc.ui.UIImage.new(material_png):addTo(self.material_bg)
@@ -30,14 +33,8 @@ function WidgetMaterialBox:ctor(material_png,cb,is_has_i_icon)
 end
 function WidgetMaterialBox:SetNumber(number)
     self.number:setString(number)
+    return self
 end
-
--- function WidgetMaterialBox:alignByPoint(point, x, y)
---     self.material_bg:setAnchorPoint(point)
---     if x and y then self:setPosition(x, y) end
---     return self
--- end
-
 
 return WidgetMaterialBox
 
