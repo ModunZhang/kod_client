@@ -1,9 +1,12 @@
+local EQUIPMENTS = GameDatas.SmithConfig.equipments
+local Localize = import("..utils.Localize")
 local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetUIBackGround2 = import(".WidgetUIBackGround2")
 local WidgetMakeEquip = class("WidgetMakeEquip", function()
-    return display.newNode()
+    local node = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
+    node:setNodeEventEnabled(true)
+    return node
 end)
-
 local STAR_BG = {
     "star1_105x104.png",
     "star2_105x104.png",
@@ -12,9 +15,9 @@ local STAR_BG = {
     "star5_105x104.png",
 }
 local DRAGON_BG = {
-    redDragon = "star1_105x104.png",
-    blueDragon = "star2_105x104.png",
-    greenDragon = "star3_105x104.png",
+    redDragon = "star4_105x104.png",
+    blueDragon = "star3_105x104.png",
+    greenDragon = "star2_105x104.png",
 }
 local MATERIAL_MAP = {
     ["ironIngot"] = "ironIngot_92x92.png",
@@ -55,7 +58,18 @@ local MATERIAL_MAP = {
     ["arcanaRune"] = "arcanaRune_92x92.png",
     ["eternityRune"] = "eternityRune_92x92.png"
 }
-function WidgetMakeEquip:ctor()
+local EQUIP_LOCALIZE = Localize.equip_material
+local EQUIP_LOCALIZE = Localize.equip
+local DRAGON_LOCALIZE = Localize.dragon
+local BODY_LOCALIZE = Localize.body
+function WidgetMakeEquip:ctor(equip_type, black_smith, city)
+    self.equip_type = equip_type
+    self.black_smith = black_smith
+    self.city = city
+    local equip_config = EQUIPMENTS[equip_type]
+    self.matrials = LuaUtils:table_map(string.split(equip_config.materials, ","), function(k, v)
+        return k, string.split(v, ":")
+    end)
     -- back_ground
     local back_ground = WidgetUIBackGround.new(650):addTo(self)
 
@@ -78,15 +92,18 @@ function WidgetMakeEquip:ctor()
     -- X
     local x_btn = cc.ui.UIPushButton.new({normal = "x_up_66x66.png",
         pressed = "x_down_66x66.png"}):addTo(title_blue, 2)
-        :align(display.CENTER, size.width - 10, size.height - 10)
+        :align(display.CENTER, size.width - 15, size.height - 15)
         :onButtonClicked(function(event)
-            print("hello")
+            if type(self.on_closed) == "function" then
+                self.on_closed(self)
+            end
+            self:removeFromParentAndCleanup(true)
         end)
     cc.ui.UIImage.new("x_31x28.png"):addTo(x_btn, 2):align(display.CENTER, 0, 0)
 
 
     -- 装备星级背景
-    local bg = STAR_BG[5]
+    local bg = STAR_BG[equip_config.maxStar]
     local size = back_ground:getContentSize()
     local star_bg = cc.ui.UIImage.new(bg):addTo(back_ground, 2)
         :align(display.CENTER, 80, size.height - 115)
@@ -115,7 +132,7 @@ function WidgetMakeEquip:ctor()
 
     -- 装备名字
     cc.ui.UILabel.new({
-        text = _("铁艺头盔"),
+        text = EQUIP_LOCALIZE[equip_type],
         size = 24,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
@@ -126,7 +143,7 @@ function WidgetMakeEquip:ctor()
 
     -- used for dragon
     cc.ui.UILabel.new({
-        text = _("仅供红龙装备"),
+        text = string.format("%s%s%s", _("仅供"), DRAGON_LOCALIZE[equip_config.usedFor], _("装备")),
         size = 24,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
@@ -139,7 +156,7 @@ function WidgetMakeEquip:ctor()
 
     -- used for dragon category
     cc.ui.UILabel.new({
-        text = _("脚部"),
+        text = BODY_LOCALIZE[equip_config.category],
         size = 24,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
@@ -244,18 +261,18 @@ function WidgetMakeEquip:ctor()
     -- 需求列表
     local pos = need_bg:getAnchorPointInPoints()
     local unit_len, origin_y, gap_x = 105, 95, 80
-    local t = {"arcaniteIngot", "blackIronIngot", "dolanRune"}
-    local len = #t
+    local len = #self.matrials
     local total_len = len * unit_len + (len - 1) * gap_x
     local origin_x = pos.x - total_len / 2 + unit_len / 2
     local materials_map = {}
-    for i, v in ipairs(t) do
+    for i, v in ipairs(self.matrials) do
+        local material_type = v[1]
         -- 材料背景根据龙的颜色来
-        local material = cc.ui.UIImage.new(DRAGON_BG.redDragon):addTo(need_bg, 2)
+        local material = cc.ui.UIImage.new(DRAGON_BG[equip_config.usedFor]):addTo(need_bg, 2)
             :align(display.CENTER, origin_x + (unit_len + gap_x) * (i - 1), origin_y)
         -- 材料icon
         local pos = material:getAnchorPointInPoints()
-        local material_image = MATERIAL_MAP[v]
+        local material_image = MATERIAL_MAP[material_type]
         cc.ui.UIImage.new(material_image):addTo(material, 2)
             :align(display.CENTER, pos.x, pos.y)
         -- 材料数量
@@ -322,33 +339,110 @@ function WidgetMakeEquip:ctor()
 
     self.back_ground = back_ground
 end
-
+function WidgetMakeEquip:onEnter()
+    self.black_smith:AddBlackSmithListener(self)
+    self.city:GetEquipManager():AddObserver(self)
+    self.city:GetResourceManager():AddObserver(self)
+    -- self.city:GetFirstBuildingByType("")
+    local label = string.format("%d/%d", self.city:GetEquipManager():GetCountByType(self.equip_type), 0)
+    if label ~= self.number:getString() then
+        self.number:setString(label)
+    end
+    self:UpdateBuildLabel(self.black_smith:IsEquipmentEventEmpty() and 0 or 1)
+    self:UpdateMaterials()
+end
+function WidgetMakeEquip:onExit()
+    self.black_smith:RemoveBlackSmithListener(self)
+    self.city:GetEquipManager():RemoveObserver(self)
+    self.city:GetResourceManager():RemoveObserver(self)
+end
+function WidgetMakeEquip:OnEquipCountChanged(material_manager, changed, new_equipments)
+    local equip_type = self.equip_type
+    if changed[equip_type] then
+        local number = new_equipments[equip_type]
+        self.number:setString(number)
+    end
+end
+function WidgetMakeEquip:OnResourceChanged(resource_manager)
+    local equip_type = self.equip_type
+    local equip_config = EQUIPMENTS[equip_type]
+    local current_coin = resource_manager:GetCoinResource():GetValue()
+    local need_coin = equip_config.coin
+    self.coin_check_box:setButtonSelected(current_coin >= need_coin)
+    local label = string.format("%s %s/%s", _("需要银币"), GameUtils:formatNumber(need_coin), GameUtils:formatNumber(current_coin))
+    if self.coin_label:getString() ~= label then
+        self.coin_label:setString(label)
+    end
+end
+function WidgetMakeEquip:OnBeginMakeEquipmentWithEvent(black_smith, event)
+    self:UpdateBuildLabel(1)
+end
+function WidgetMakeEquip:OnMakingEquipmentWithEvent(black_smith, event, current_time)
+    self:UpdateBuildLabel(1)
+end
+function WidgetMakeEquip:OnEndMakeEquipmentWithEvent(black_smith, event, equipment)
+    self:UpdateBuildLabel(0)
+end
+function WidgetMakeEquip:UpdateBuildLabel(queue)
+    self.build_check_box:setButtonSelected(queue == 0)
+    local label = string.format("%s %d/%d", _("制造队列"), queue, 1)
+    if label ~= self.build_label:getString() then
+        self.build_label:setString(label)
+    end
+end
+function WidgetMakeEquip:SetNumber(number)
+    -- self.number:setString(number)
+    -- self.gem_label:setString(number)
+    -- self.make_time:setString(number)
+    local matrials_map = self.materials_map
+    for i, v in ipairs(self.matrials) do
+        local material_type = v[1]
+        local matrials_need = tonumber(v[2])
+        local ui = matrials_map[i]
+        local current_number = 0
+        ui:setString(string.format("%d/%d", current_number, matrials_need))
+        local un_reached = matrials_need > current_number
+        ui:setColor(un_reached and display.COLOR_RED or UIKit:hex2c3b(0x403c2f))
+    end
+    -- self.build_label:setString(number)
+    -- self.coin_label:setString(number)
+    -- self.build_check_box:setButtonSelected(true)
+    -- self.coin_check_box:setButtonSelected(false)
+end
+function WidgetMakeEquip:UpdateMaterials()
+    local matrials_map = self.materials_map
+    for i, v in ipairs(self.matrials) do
+        local material_type = v[1]
+        local matrials_need = tonumber(v[2])
+        local ui = matrials_map[i]
+        local current_number = 0
+        ui:setString(string.format("%d/%d", current_number, matrials_need))
+        local un_reached = matrials_need > current_number
+        ui:setColor(un_reached and display.COLOR_RED or UIKit:hex2c3b(0x403c2f))
+    end
+end
+function WidgetMakeEquip:OnClosed(func)
+    self.on_closed = func
+    return self
+end
 function WidgetMakeEquip:align(anchorPoint, x, y)
     local size = self.back_ground:getContentSize()
     local point = display.ANCHOR_POINTS[anchorPoint]
     local offset_x, offset_y = size.width * point.x, size.height * point.y
-    self.back_ground:setPosition(- offset_x, - offset_y)
-    if x and y then self:setPosition(x, y) end
+    self.back_ground:setPosition(- offset_x + x, - offset_y + y)
     return self
 end
 
-function WidgetMakeEquip:SetNumber(number)
-    self.number:setString(number)
-    self.gem_label:setString(number)
-    self.make_time:setString(number)
-    for k, v in pairs(self.materials_map) do
-        v:setString(number)
-        v:setColor(display.COLOR_RED)
-    end
-    self.build_label:setString(number)
-    self.coin_label:setString(number)
-    self.build_check_box:setButtonSelected(true)
-    self.coin_check_box:setButtonSelected(false)
-end
+
 
 
 
 return WidgetMakeEquip
+
+
+
+
+
 
 
 

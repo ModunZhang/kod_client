@@ -20,7 +20,7 @@ local STAR_BG = {
 
 function GameUIBlackSmith:ctor(city, black_smith)
     GameUIBlackSmith.super.ctor(self, city, _("铁匠铺"))
-
+    self.black_smith_city = city
     self.black_smith = black_smith
 end
 function GameUIBlackSmith:onEnter()
@@ -34,9 +34,9 @@ function GameUIBlackSmith:onEnter()
 
     self.black_smith:AddBlackSmithListener(self)
 end
-function GameUIBlackSmith:OnExit()
+function GameUIBlackSmith:onExit()
     self.black_smith:RemoveBlackSmithListener(self)
-    GameUIBlackSmith.super.OnExit(self)
+    GameUIBlackSmith.super.onExit(self)
 end
 function GameUIBlackSmith:OnBeginMakeEquipmentWithEvent(black_smith, event)
     self.tips:setVisible(false)
@@ -255,7 +255,9 @@ function GameUIBlackSmith:CreateEquipmentByType(equip_type)
 
     equip_clicked = function(event)
         -- NetManager:makeDragonEquipment(equip_type, NOT_HANDLE)
-        WidgetMakeEquip.new():addTo(self):align(display.CENTER, display.cx, display.cy)
+        WidgetMakeEquip.new(equip_type, self.black_smith, self.black_smith_city):addTo(self)
+            :align(display.CENTER, display.cx, display.cy)
+        self.black_smith_city:GetResourceManager():OnResourceChanged()
     end
     info_clicked = function(event)
         print("info_clicked", equip_type)
@@ -265,6 +267,7 @@ function GameUIBlackSmith:CreateEquipmentByType(equip_type)
 end
 
 return GameUIBlackSmith
+
 
 
 
