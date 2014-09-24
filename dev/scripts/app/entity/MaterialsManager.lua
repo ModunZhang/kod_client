@@ -162,7 +162,7 @@ function MaterialsManager:OnUserDataChanged(user_data)
     end
     if #changed > 0 then
         self:NotifyObservers(function(listener)
-            listener:OnSoliderCountChanged(self, changed)
+            listener:OnMaterialChanged(self, changed)
         end)
     end
 end
