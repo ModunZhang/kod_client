@@ -1,5 +1,6 @@
 local EQUIPMENTS = GameDatas.SmithConfig.equipments
 local Localize = import("..utils.Localize")
+local MaterialManager = import("..entity.MaterialManager")
 local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetUIBackGround2 = import(".WidgetUIBackGround2")
 local WidgetMakeEquip = class("WidgetMakeEquip", function()
@@ -70,6 +71,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
     self.matrials = LuaUtils:table_map(string.split(equip_config.materials, ","), function(k, v)
         return k, string.split(v, ":")
     end)
+    self.equip_config = equip_config
     -- back_ground
     local back_ground = WidgetUIBackGround.new(650):addTo(self)
 
@@ -94,10 +96,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
         pressed = "x_down_66x66.png"}):addTo(title_blue, 2)
         :align(display.CENTER, size.width - 15, size.height - 15)
         :onButtonClicked(function(event)
-            if type(self.on_closed) == "function" then
-                self.on_closed(self)
-            end
-            self:removeFromParentAndCleanup(true)
+            self:Close()
         end)
     cc.ui.UIImage.new("x_31x28.png"):addTo(x_btn, 2):align(display.CENTER, 0, 0)
 
@@ -179,7 +178,8 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
             color = UIKit:hex2c3b(0xfff3c7)
         }))
         :onButtonClicked(function(event)
-            print("hello")
+            NetManager:instantMakeDragonEquipment(equip_type, NOT_HANDLE)
+            self:Close()
         end)
 
     -- gem
@@ -207,7 +207,8 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
             color = UIKit:hex2c3b(0xfff3c7)
         }))
         :onButtonClicked(function(event)
-            print("hello")
+            NetManager:makeDragonEquipment(equip_type, NOT_HANDLE)
+            self:Close()
         end)
 
     -- 时间glass
@@ -217,7 +218,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
     -- 时间
     local center = -20
     self.make_time = cc.ui.UILabel.new({
-        text = "20:20:20",
+        text = GameUtils:formatTimeStyle1(equip_config.makeTime),
         size = 18,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_CENTER,
@@ -226,8 +227,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
         :align(display.CENTER, center, -50)
 
     -- buff增益
-    cc.ui.UILabel.new({
-        text = "-(20:20:20)",
+    self.buff_time = cc.ui.UILabel.new({
         size = 18,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_CENTER,
@@ -277,7 +277,6 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
             :align(display.CENTER, pos.x, pos.y)
         -- 材料数量
         materials_map[i] = cc.ui.UILabel.new({
-            text = "10/99",
             size = 18,
             font = UIKit:getFontFilePath(),
             align = cc.ui.TEXT_ALIGN_CENTER,
@@ -341,39 +340,36 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
 end
 function WidgetMakeEquip:onEnter()
     self.black_smith:AddBlackSmithListener(self)
-    self.city:GetEquipManager():AddObserver(self)
+    self.city:GetMaterialManager():AddObserver(self)
     self.city:GetResourceManager():AddObserver(self)
-    -- self.city:GetFirstBuildingByType("")
-    local label = string.format("%d/%d", self.city:GetEquipManager():GetCountByType(self.equip_type), 0)
-    if label ~= self.number:getString() then
-        self.number:setString(label)
-    end
-    self:UpdateBuildLabel(self.black_smith:IsEquipmentEventEmpty() and 0 or 1)
+
+    
+    self:UpdateEquipCounts()
     self:UpdateMaterials()
+    self:UpdateBuildLabel(self.black_smith:IsEquipmentEventEmpty() and 0 or 1)
+    self:UpdateCoin(self.city:GetResourceManager():GetCoinResource():GetValue())
+    self:UpdateGemLabel()
+    self:UpdateBuffTime()
 end
 function WidgetMakeEquip:onExit()
     self.black_smith:RemoveBlackSmithListener(self)
-    self.city:GetEquipManager():RemoveObserver(self)
+    self.city:GetMaterialManager():RemoveObserver(self)
     self.city:GetResourceManager():RemoveObserver(self)
 end
-function WidgetMakeEquip:OnEquipCountChanged(material_manager, changed, new_equipments)
-    local equip_type = self.equip_type
-    if changed[equip_type] then
-        local number = new_equipments[equip_type]
-        self.number:setString(number)
+-- 装备数量监听
+function WidgetMakeEquip:OnMaterialsChanged(material_manager, material_type, changed)
+    if material_type == MaterialManager.MATERIAL_TYPE.EQUIPMENT then
+        local current = changed[self.equip_type]
+        if current then
+            self.number:setString(current.new)
+        end
     end
 end
+-- 资源数量监听
 function WidgetMakeEquip:OnResourceChanged(resource_manager)
-    local equip_type = self.equip_type
-    local equip_config = EQUIPMENTS[equip_type]
-    local current_coin = resource_manager:GetCoinResource():GetValue()
-    local need_coin = equip_config.coin
-    self.coin_check_box:setButtonSelected(current_coin >= need_coin)
-    local label = string.format("%s %s/%s", _("需要银币"), GameUtils:formatNumber(need_coin), GameUtils:formatNumber(current_coin))
-    if self.coin_label:getString() ~= label then
-        self.coin_label:setString(label)
-    end
+    self:UpdateCoin(resource_manager:GetCoinResource():GetValue())
 end
+-- 建造队列监听
 function WidgetMakeEquip:OnBeginMakeEquipmentWithEvent(black_smith, event)
     self:UpdateBuildLabel(1)
 end
@@ -383,43 +379,77 @@ end
 function WidgetMakeEquip:OnEndMakeEquipmentWithEvent(black_smith, event, equipment)
     self:UpdateBuildLabel(0)
 end
+-- 更新装备数量
+function WidgetMakeEquip:UpdateEquipCounts()
+    local material_manager = self.city:GetMaterialManager()
+    local cur = material_manager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.EQUIPMENT)[self.equip_type]
+    local max = self.city:GetFirstBuildingByType("materialDepot"):GetMaxDragonEquipment()
+    local label = string.format("%d/%d", cur, max)
+    if label ~= self.number:getString() then
+        self.number:setString(label)
+    end
+end
+-- 更新材料数量
+function WidgetMakeEquip:UpdateMaterials()
+    local material_manager = self.city:GetMaterialManager()
+    local materials = material_manager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.DRAGON)
+    local matrials_map = self.materials_map
+    for i, v in ipairs(self.matrials) do
+        local material_type = v[1]
+        local matrials_need = tonumber(v[2])
+        local ui = matrials_map[i]
+        local current = materials[material_type]
+        ui:setString(string.format("%d/%d", current, matrials_need))
+        local un_reached = matrials_need > current
+        ui:setColor(un_reached and display.COLOR_RED or UIKit:hex2c3b(0x403c2f))
+    end
+end
+-- 更新建筑队列
 function WidgetMakeEquip:UpdateBuildLabel(queue)
-    self.build_check_box:setButtonSelected(queue == 0)
+    local is_enough = queue == 0
     local label = string.format("%s %d/%d", _("制造队列"), queue, 1)
     if label ~= self.build_label:getString() then
         self.build_label:setString(label)
     end
+    self.build_label:setColor(is_enough and UIKit:hex2c3b(0x403c2f) or display.COLOR_RED)
+    self.build_check_box:setButtonSelected(is_enough)
 end
-function WidgetMakeEquip:SetNumber(number)
-    -- self.number:setString(number)
-    -- self.gem_label:setString(number)
-    -- self.make_time:setString(number)
-    local matrials_map = self.materials_map
-    for i, v in ipairs(self.matrials) do
-        local material_type = v[1]
-        local matrials_need = tonumber(v[2])
-        local ui = matrials_map[i]
-        local current_number = 0
-        ui:setString(string.format("%d/%d", current_number, matrials_need))
-        local un_reached = matrials_need > current_number
-        ui:setColor(un_reached and display.COLOR_RED or UIKit:hex2c3b(0x403c2f))
+-- 更新银币数量
+function WidgetMakeEquip:UpdateCoin(coin)
+    local equip_config = self.equip_config
+    local need_coin = equip_config.coin
+    local label = string.format("%s %s/%s", _("需要银币"), GameUtils:formatNumber(need_coin), GameUtils:formatNumber(coin))
+    if self.coin_label:getString() ~= label then
+        self.coin_label:setString(label)
     end
-    -- self.build_label:setString(number)
-    -- self.coin_label:setString(number)
-    -- self.build_check_box:setButtonSelected(true)
-    -- self.coin_check_box:setButtonSelected(false)
+    local is_enough = coin >= need_coin
+    self.coin_label:setColor(is_enough and UIKit:hex2c3b(0x403c2f) or display.COLOR_RED)
+    self.coin_check_box:setButtonSelected(is_enough)
 end
-function WidgetMakeEquip:UpdateMaterials()
-    local matrials_map = self.materials_map
-    for i, v in ipairs(self.matrials) do
-        local material_type = v[1]
-        local matrials_need = tonumber(v[2])
-        local ui = matrials_map[i]
-        local current_number = 0
-        ui:setString(string.format("%d/%d", current_number, matrials_need))
-        local un_reached = matrials_need > current_number
-        ui:setColor(un_reached and display.COLOR_RED or UIKit:hex2c3b(0x403c2f))
+-- 更新宝石数量
+function WidgetMakeEquip:UpdateGemLabel()
+    local equip_config = self.equip_config
+    local gem_label = string.format("%d", DataUtils:buyResource({coin = equip_config.coin}, {}) + DataUtils:getGemByTimeInterval(equip_config.makeTime))
+    if self.gem_label:getString() ~= gem_label then
+        self.gem_label:setString(gem_label)
     end
+end
+-- 更新buff加成
+function WidgetMakeEquip:UpdateBuffTime()
+    local time = self.equip_config.makeTime
+    local math = math
+    local const = 1000000
+    local rate = 1 / (1 + self.black_smith:GetEfficiency())
+    local rate_new = math.floor(rate * const) / const
+    local actual_time = math.floor(rate_new * time)
+    self.buff_time:setString(string.format("(-%s)", GameUtils:formatTimeStyle1(time - actual_time)))
+end
+
+function WidgetMakeEquip:Close()
+    if type(self.on_closed) == "function" then
+        self.on_closed(self)
+    end
+    self:removeFromParentAndCleanup(true)
 end
 function WidgetMakeEquip:OnClosed(func)
     self.on_closed = func
@@ -438,6 +468,10 @@ end
 
 
 return WidgetMakeEquip
+
+
+
+
 
 
 

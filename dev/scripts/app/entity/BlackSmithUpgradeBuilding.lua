@@ -95,6 +95,7 @@ function BlackSmithUpgradeBuilding:GetMakingTimeByEquipment(equipment)
     local config = config_equipments[equipment]
     return config.makeTime
 end
+
 function BlackSmithUpgradeBuilding:OnTimer(current_time)
     if self.making_event:IsMaking(current_time) then
         self.black_smith_building_observer:NotifyObservers(function(lisenter)
@@ -103,7 +104,6 @@ function BlackSmithUpgradeBuilding:OnTimer(current_time)
     end
     BlackSmithUpgradeBuilding.super.OnTimer(self, current_time)
 end
-
 function BlackSmithUpgradeBuilding:OnUserDataChanged(...)
     BlackSmithUpgradeBuilding.super.OnUserDataChanged(self, ...)
 

@@ -78,6 +78,11 @@ end
 function DragonEquipManager:GetCountByType(equip_type)
 	return self.equip_map[equip_type]
 end
+function DragonEquipManager:IteratorEquipments(func)
+	for k, v in pairs(self.equip_map) do
+		func(k, v)
+	end
+end
 function DragonEquipManager:OnUserDataChanged(user_data)
 	local new_equipments = user_data.dragonEquipments
 	local changed = {}

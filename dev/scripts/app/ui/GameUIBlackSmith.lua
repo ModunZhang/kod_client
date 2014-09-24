@@ -3,6 +3,7 @@
 -- Date: 2014-08-18 14:33:28
 --
 local EQUIPMENTS = GameDatas.SmithConfig.equipments
+local MaterialManager = import("..entity.MaterialManager")
 local UIPushButton = cc.ui.UIPushButton
 local WidgetTips = import("..widget.WidgetTips")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -32,24 +33,35 @@ function GameUIBlackSmith:onEnter()
     self:TabButtons()
 
 
+
+    self.black_smith_city:GetMaterialManager():IteratorEquipmentMaterialsByType(function(k, v)
+        local red_dragon = self.red_dragon_equip_map[k]
+        if red_dragon then
+            red_dragon:SetNumber(v)
+        end
+    end)
+
+    self.black_smith_city:GetMaterialManager():AddObserver(self)
     self.black_smith:AddBlackSmithListener(self)
 end
 function GameUIBlackSmith:onExit()
+    self.black_smith_city:GetMaterialManager():RemoveObserver(self)
     self.black_smith:RemoveBlackSmithListener(self)
     GameUIBlackSmith.super.onExit(self)
 end
 function GameUIBlackSmith:OnBeginMakeEquipmentWithEvent(black_smith, event)
     self.tips:setVisible(false)
     self.timer:setVisible(true)
+    self:OnMakingEquipmentWithEvent(black_smith, event, app.timer:GetServerTime())
 end
 function GameUIBlackSmith:OnMakingEquipmentWithEvent(black_smith, event, current_time)
+    if self.tips:isVisible() then
+        self.tips:setVisible(false)
+    end
+    if not self.timer:isVisible() then
+        self.timer:setVisible(true)
+    end
     if self.title:isVisible() then
-        if self.tips:isVisible() then
-            self.tips:setVisible(false)
-        end
-        if not self.timer:isVisible() then
-            self.timer:setVisible(true)
-        end
         self.timer:SetDescribe(string.format("%s %s", _("正在制作"), event:Content()))
 
         local elapse_time = event:ElapseTime(current_time)
@@ -62,6 +74,15 @@ function GameUIBlackSmith:OnEndMakeEquipmentWithEvent(black_smith, event, equipm
     self.tips:setVisible(true)
     self.timer:setVisible(false)
 end
+function GameUIBlackSmith:OnMaterialsChanged(material_manager, material_type, changed)
+    if MaterialManager.MATERIAL_TYPE.EQUIPMENT == material_type then
+        if self.red_dragon_list_view:isVisible() then
+            for k, v in pairs(changed) do
+                self.red_dragon_equip_map[k]:SetNumber(v.new)
+            end
+        end
+    end
+end
 function GameUIBlackSmith:TabButtons()
     self:CreateTabButtons({
         -- {
@@ -71,7 +92,7 @@ function GameUIBlackSmith:TabButtons()
         {
             label = _("红龙装备"),
             tag = "redDragon",
-            -- default = true,
+        -- default = true,
         },
         {
             label = _("蓝龙装备"),
@@ -192,7 +213,7 @@ function GameUIBlackSmith:CreateItemWithListViewByEquipments(list_view, equipmen
     local total_len = len * unit_len + (len - 1) * gap_x
     local origin_x = pos.x - total_len / 2 + unit_len / 2
     for i, v in ipairs(equipments) do
-        self:CreateEquipmentByType(v.name):addTo(back_ground)
+        equip_map[v.name] = self:CreateEquipmentByType(v.name):addTo(back_ground)
             :align(display.CENTER, origin_x + (unit_len + gap_x) * (i - 1), origin_y)
             :SetNumber(0)
     end
@@ -254,10 +275,8 @@ function GameUIBlackSmith:CreateEquipmentByType(equip_type)
     end
 
     equip_clicked = function(event)
-        -- NetManager:makeDragonEquipment(equip_type, NOT_HANDLE)
         WidgetMakeEquip.new(equip_type, self.black_smith, self.black_smith_city):addTo(self)
             :align(display.CENTER, display.cx, display.cy)
-        self.black_smith_city:GetResourceManager():OnResourceChanged()
     end
     info_clicked = function(event)
         print("info_clicked", equip_type)
@@ -267,6 +286,8 @@ function GameUIBlackSmith:CreateEquipmentByType(equip_type)
 end
 
 return GameUIBlackSmith
+
+
 
 
 

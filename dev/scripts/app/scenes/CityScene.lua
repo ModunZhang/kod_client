@@ -59,19 +59,6 @@ function CityScene:onEnter()
     self.city_layer:IteratorCanUpgradingBuilding(function(_, building)
         self.scene_ui_layer:NewUIFromBuildingSprite(building)
     end)
-
-
-    City:GetFirstBuildingByType("blackSmith"):AddBlackSmithListener({
-        OnBeginMakeEquipmentWithEvent = function(lisenter, tool_shop, event)
-            print("OnBeginMakeEquipmentWithEvent", event:Content())
-        end,
-        OnMakingEquipmentWithEvent = function(lisenter, tool_shop, event, current_time)
-            print("OnMakingEquipmentWithEvent", event:Content(), event:LeftTime(current_time))
-        end,
-        OnEndMakeEquipmentWithEvent = function(lisenter, tool_shop, event, equipment)
-            print("OnEndMakeEquipmentWithEvent", event:Content(), equipment)
-        end,
-    })
 end
 function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()

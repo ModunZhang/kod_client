@@ -4,8 +4,8 @@ local Enum = import("..utils.Enum")
 local Orient = import(".Orient")
 local Tile = import(".Tile")
 local SoldierManager = import(".SoldierManager")
-local DragonEquipManager = import(".DragonEquipManager")
-local MaterialsManager = import(".MaterialsManager")
+-- local DragonEquipManager = import(".DragonEquipManager")
+local MaterialManager = import(".MaterialManager")
 local ResourceManager = import(".ResourceManager")
 local Building = import(".Building")
 local TowerUpgradeBuilding = import(".TowerUpgradeBuilding")
@@ -41,8 +41,8 @@ function City:ctor()
     City.super.ctor(self)
     self.resource_manager = ResourceManager.new()
     self.soldier_manager = SoldierManager.new()
-    self.equip_manager = DragonEquipManager.new()
-    self.material_manager = MaterialsManager.new()
+    -- self.equip_manager = DragonEquipManager.new()
+    self.material_manager = MaterialManager.new()
 
     self.buildings = {}
     self.walls = {}
@@ -107,9 +107,9 @@ function City:InitDecorators(decorators)
     self:CheckIfDecoratorsIntersectWithRuins()
 end
 -- 取值函数
-function City:GetEquipManager()
-    return self.equip_manager
-end
+-- function City:GetEquipManager()
+--     return self.equip_manager
+-- end
 function City:GetSoldierManager()
     return self.soldier_manager
 end
@@ -614,8 +614,8 @@ function City:OnUserDataChanged(userData, current_time)
     -- 更新兵种
     self.soldier_manager:OnUserDataChanged(userData)
     -- 更新装备
-    self.equip_manager:OnUserDataChanged(userData)
-    -- 更新材料
+    -- self.equip_manager:OnUserDataChanged(userData)
+    -- 更新材料，这里是广义的材料，包括龙的装备
     self.material_manager:OnUserDataChanged(userData)
     -- 最后才更新资源
     local resource_refresh_time = userData.basicInfo.resourceRefreshTime / 1000
