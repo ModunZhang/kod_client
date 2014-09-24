@@ -2,6 +2,7 @@
 -- Author: dannyhe
 -- Date: 2014-08-01 16:18:16
 -- GameUIBase is a CCLayer
+local window = import("..utils.window")
 local TabButtons = import('.TabButtons')
 local GameUIBase = class('GameUIBase', function()
     return display.newLayer()
@@ -134,7 +135,7 @@ function GameUIBase:CreateBackGround()
 end
 function GameUIBase:CreateTitle(title)
     local head_bg = cc.ui.UIImage.new("head_bg.png")
-        :align(display.TOP_CENTER, display.cx, display.top)
+        :align(display.TOP_CENTER, window.cx, window.top)
         :addTo(self)
     return ui.newTTFLabel({
         text = title,
@@ -156,7 +157,7 @@ function GameUIBase:CreateHomeButton(on_clicked)
                 self:leftButtonClicked()
             end
         end)
-        :align(display.LEFT_TOP, display.left , display.top)
+        :align(display.LEFT_TOP, window.left , window.top)
         :addTo(self)
     cc.ui.UIImage.new("home_icon.png")
         :pos(27, -72)
@@ -173,7 +174,7 @@ function GameUIBase:CreateShopButton(on_clicked)
             self:leftButtonClicked()
         end
     end):addTo(self)
-    gem_button:align(display.RIGHT_TOP, display.right, display.top)
+    gem_button:align(display.RIGHT_TOP, window.right, window.top)
     cc.ui.UIImage.new("home/gem.png")
         :addTo(gem_button)
         :pos(-75, -65)

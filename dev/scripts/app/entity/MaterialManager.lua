@@ -179,8 +179,6 @@ function MaterialManager:OnMaterialsComing(material_type, materials)
         end
     end
     self.material_map[material_type] = materials
-    dump(material_type)
-    dump(changed)
     for _, _ in pairs(changed) do
         self:NotifyObservers(function(listener)
             listener:OnMaterialsChanged(self, material_type, changed)

@@ -135,7 +135,7 @@ function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
         pressed = "info_16x33.png"}):addTo(title_blue)
         :align(display.LEFT_CENTER, title_blue:getContentSize().width - 30, size.height/2)
         :onButtonClicked(function(event)
-            WidgetSoldierDetails.new("swordsman",1):addTo(self)
+            WidgetSoldierDetails.new(soldier_type, 1):addTo(self)
         end)
 
     -- soldier bg

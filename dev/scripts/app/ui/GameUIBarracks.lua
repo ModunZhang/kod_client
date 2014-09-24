@@ -50,7 +50,6 @@ function GameUIBarracks:onEnter()
 
 
     local soldier_map = self.barracks_city:GetSoldierManager():GetSoldierMap()
-    dump(soldier_map)
     for k, v in pairs(self.soldier_map) do
         print(k, v)
         v:SetNumber(soldier_map[k]) 

@@ -54,11 +54,11 @@ function CityScene:onEnter()
     self.scene_ui_layer = self:CreateSceneUILayer()
     self:CreateHomePage()
 
-    self.city_layer:AddObserver(self)
     self.city_layer:InitWithCity(City)
     self.city_layer:IteratorCanUpgradingBuilding(function(_, building)
         self.scene_ui_layer:NewUIFromBuildingSprite(building)
     end)
+    self.city_layer:AddObserver(self)
 end
 function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
