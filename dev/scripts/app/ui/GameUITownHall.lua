@@ -67,13 +67,15 @@ function GameUITownHall:CreateAdministration()
 
     local function new_divide_item2(widget, height)
         local size = widget:getContentSize()
+        cc.ui.UIImage.new("citizen_44x50.png"):addTo(widget, 2)
+        :align(display.BOTTOM_CENTER, 40, size.height - height):scale(0.6)
         cc.ui.UILabel.new({
-            text = "达到 8/8",
+            text = "损失城民",
             size = 20,
             font = UIKit:getFontFilePath(),
             align = cc.ui.TEXT_ALIGN_RIGHT,
             color = UIKit:hex2c3b(0x615b44)
-        }):addTo(widget, 2):align(display.LEFT_CENTER, 30, size.height - height)
+        }):addTo(widget, 2):align(display.LEFT_BOTTOM, 70, size.height - height)
 
         cc.ui.UILabel.new({
             text = "增加 %5 城民增长",
@@ -81,16 +83,10 @@ function GameUITownHall:CreateAdministration()
             font = UIKit:getFontFilePath(),
             align = cc.ui.TEXT_ALIGN_RIGHT,
             color = UIKit:hex2c3b(0x615b44)
-        }):addTo(widget, 2):align(display.RIGHT_CENTER, size.width - 70, size.height - height)
-
-        cc.ui.UICheckBoxButton.new({on = "yes_40x40.png", off = "no_40x40.png" })
-            :addTo(widget)
-            :align(display.CENTER, size.width - 40, size.height - height)
-            :setButtonSelected(true)
-            :setTouchEnabled(false)
+        }):addTo(widget, 2):align(display.RIGHT_BOTTOM, size.width - 30, size.height - height)
 
         cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(widget, 2)
-            :setLayoutSize(570, 2):align(display.CENTER, size.width / 2, size.height - height - 25)
+            :setLayoutSize(570, 2):align(display.CENTER, size.width / 2, size.height - height - 5)
     end
 
     local widget = WidgetWithBlueTitle.new(170, _("周围2格范围的住宅数量")):align(display.CENTER)
@@ -104,7 +100,7 @@ function GameUITownHall:CreateAdministration()
 
     local widget = WidgetWithBlueTitle.new(170, _("税收")):align(display.CENTER)
     new_divide_item2(widget, 80)
-    new_divide_item2(widget, 130)
+    new_divide_item2(widget, 100)
     local item = list_view:newItem()
     item:addContent(widget)
     item:setItemSize(widget:getContentSize().width, widget:getContentSize().height + 10)
