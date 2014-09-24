@@ -5,6 +5,7 @@ local Orient = import(".Orient")
 local Tile = import(".Tile")
 local SoldierManager = import(".SoldierManager")
 local DragonEquipManager = import(".DragonEquipManager")
+local MaterialsManager = import(".MaterialsManager")
 local ResourceManager = import(".ResourceManager")
 local Building = import(".Building")
 local TowerUpgradeBuilding = import(".TowerUpgradeBuilding")
@@ -41,6 +42,7 @@ function City:ctor()
     self.resource_manager = ResourceManager.new()
     self.soldier_manager = SoldierManager.new()
     self.equip_manager = DragonEquipManager.new()
+    self.material_manager = MaterialsManager.new()
 
     self.buildings = {}
     self.walls = {}
@@ -110,6 +112,9 @@ function City:GetEquipManager()
 end
 function City:GetSoldierManager()
     return self.soldier_manager
+end
+function City:GetMaterialManager()
+    return self.material_manager
 end
 function City:GetResourceManager()
     return self.resource_manager
@@ -603,7 +608,6 @@ function City:OnUserDataChanged(userData, current_time)
         LuaUtils:outputTable("lock_table", lock_table)
         self:LockTilesByIndexArray(lock_table)
     end
-
     -- 更新建筑信息
     self:IteratorCanUpgradeBuildingsByUserData(userData, current_time)
 
@@ -611,7 +615,8 @@ function City:OnUserDataChanged(userData, current_time)
     self.soldier_manager:OnUserDataChanged(userData)
     -- 更新装备
     self.equip_manager:OnUserDataChanged(userData)
-
+    -- 更新材料
+    self.material_manager:OnUserDataChanged(userData)
     -- 最后才更新资源
     local resource_refresh_time = userData.basicInfo.resourceRefreshTime / 1000
     self:IteratorResourcesByUserData(userData, resource_refresh_time)

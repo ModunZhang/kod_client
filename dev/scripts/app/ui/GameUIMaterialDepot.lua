@@ -6,9 +6,12 @@ local WidgetMaterialDetails = import("..widget.WidgetMaterialDetails")
 local GameUIMaterialDepot = UIKit:createUIClass("GameUIMaterialDepot", "GameUIUpgradeBuilding")
 function GameUIMaterialDepot:ctor(city,building)
     GameUIMaterialDepot.super.ctor(self, city, _("材料库房"),building)
+    City:GetMaterialManager():AddObserver(self)
 end
-function GameUIMaterialDepot:onEnter()
-    GameUIMaterialDepot.super.onEnter(self)
+
+function GameUIMaterialDepot:onExit()
+    City:GetMaterialManager():RemoveObserver(self)
+    GameUIMaterialDepot.super.onExit(self)
 end
 
 

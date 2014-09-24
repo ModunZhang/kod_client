@@ -11,7 +11,18 @@ function MaterialDepotUpgradeBuilding:GetMaxMaterial()
     local level = self:GetLevel()
     return config_function[level].maxMaterial
 end
-
+function MaterialDepotUpgradeBuilding:GetMaxSoldierMaterial()
+    local level = self:GetLevel()
+    return config_function[level].maxSoldierMaterial
+end
+function MaterialDepotUpgradeBuilding:GetMaxDragonMaterial()
+    local level = self:GetLevel()
+    return config_function[level].maxDragonMaterial
+end
+function MaterialDepotUpgradeBuilding:GetMaxDragonEquipment()
+    local level = self:GetLevel()
+    return config_function[level].maxDragonEquipment
+end
 return MaterialDepotUpgradeBuilding
 
 
