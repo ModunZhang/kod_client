@@ -2,7 +2,9 @@
 -- Author: gaozhou
 -- Date: 2014-08-18 14:33:28
 --
+local window = import("..utils.window")
 local MaterialManager = import("..entity.MaterialManager")
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetNeedBox = import("..widget.WidgetNeedBox")
 local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
@@ -63,7 +65,7 @@ function GameUIToolShop:UpdateEvent(event)
     end
 end
 function GameUIToolShop:Manufacture()
-    self.list_view = self:CreateVerticalListView(20, display.bottom + 70, display.right - 20, display.top - 100)
+    self.list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 100)
     local item = self:CreateMaterialItemWithListView(self.list_view,
         _("生产建筑所需材料"),
         {
@@ -120,23 +122,20 @@ function GameUIToolShop:TabButtons()
         elseif tag == "manufacture" then
             self.list_view:setVisible(true)
         end
-    end):pos(display.cx, display.bottom + 40)
+    end):pos(window.cx, window.bottom + 40)
 end
 
 function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materials)
     local toolShop = self.toolShop
     local align_x, align_y = 30, 35
     local height = 380
-    local content = cc.ui.UIImage.new("back_ground_608x164.png",
-        {scale9 = true})
-        :align(display.CENTER)
-        :setLayoutSize(608, height)
+    local content = WidgetUIBackGround.new(height):align(display.CENTER)
 
-    local pos = content:getAnchorPointInPoints()
+    local size = content:getContentSize()
     local title_blue = cc.ui.UIImage.new("title_blue_596x49.png",
         {scale9 = true})
         :addTo(content, 2)
-        :align(display.CENTER, pos.x, height - 49/2)
+        :align(display.CENTER, size.width / 2, height - 49/2)
 
     cc.ui.UILabel.new({
         text = title,

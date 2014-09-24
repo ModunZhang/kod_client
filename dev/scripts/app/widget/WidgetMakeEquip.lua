@@ -457,7 +457,7 @@ function WidgetMakeEquip:align(anchorPoint, x, y)
     local size = self.back_ground:getContentSize()
     local point = display.ANCHOR_POINTS[anchorPoint]
     local offset_x, offset_y = size.width * point.x, size.height * point.y
-    self.back_ground:setPosition(- offset_x + x, - offset_y + y)
+    if x and y then self.back_ground:setPosition(- offset_x + x, - offset_y + y) end
     return self
 end
 
