@@ -54,11 +54,11 @@ function CityScene:onEnter()
     self.scene_ui_layer = self:CreateSceneUILayer()
     self:CreateHomePage()
 
+    self.city_layer:AddObserver(self)
     self.city_layer:InitWithCity(City)
-    self.city_layer:IteratorCanUpgradingBuilding(function(_, building)
+    self.city_layer:IteratorInnnerBuildings(function(_, building)
         self.scene_ui_layer:NewUIFromBuildingSprite(building)
     end)
-    self.city_layer:AddObserver(self)
 end
 function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
@@ -155,13 +155,6 @@ end
 ----- EventManager
 function CityScene:OnOneTouch(pre_x, pre_y, x, y, touch_type)
     self:OneTouch(pre_x, pre_y, x, y, touch_type)
-    -- if self.lock_buttons then
-    --     table.foreach(self.lock_buttons, function(k, v)
-    --         if v:IsInStateName("confirm") and not v:hitTest(x, y) then
-    --             v:TranslateToSatateByName("locked")
-    --         end
-    --     end)
-    -- end
 end
 function CityScene:OnTwoTouch(x1, y1, x2, y2, event_type)
     local scene = self.city_layer
