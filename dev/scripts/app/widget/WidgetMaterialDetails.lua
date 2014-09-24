@@ -1,6 +1,7 @@
 local UIListView = import('..ui.UIListView')
 local WidgetPushButton = import(".WidgetPushButton")
 local WidgetMaterialBox = import("..widget.WidgetMaterialBox")
+local MaterialManager = import("..entity.MaterialManager")
 local DRAGON_MATERIAL_PIC_MAP = {
     ["ironIngot"] = "ironIngot_92x92.png",
     ["steelIngot"] = "steelIngot_92x92.png",
@@ -44,11 +45,11 @@ local WidgetMaterialDetails = class("WidgetMaterialDetails", function ()
     return display.newColorLayer(cc.c4b(0,0,0,127))
 end)
 
-function WidgetMaterialDetails:ctor(material_type,material_name,num)
-    self:InitMaterialDetails(material_type,material_name,num)
+function WidgetMaterialDetails:ctor(material_type,material_name)
+    self:InitMaterialDetails(material_type,material_name)
 end
 
-function WidgetMaterialDetails:InitMaterialDetails(material_type,material_name,num)
+function WidgetMaterialDetails:InitMaterialDetails(material_type,material_name)
     -- bg
     local bg = display.newScale9Sprite("full_screen_dialog_bg.png", display.cx, display.top-480,cc.size(608,506)):addTo(self)
     local bg_width,bg_height = bg:getContentSize().width,bg:getContentSize().height
@@ -68,7 +69,8 @@ function WidgetMaterialDetails:InitMaterialDetails(material_type,material_name,n
             self:removeFromParent(true)
         end):align(display.CENTER, bg_width-20, bg_height-20):addTo(bg,2):addChild(display.newSprite("X_3.png"))
     -- 材料icon
-    local materialBox = WidgetMaterialBox.new(material_type=="dragonMaterials" and DRAGON_MATERIAL_PIC_MAP[material_name] or "material_blueprints.png",false)
+    local materialBox = WidgetMaterialBox.new(material_type==MaterialManager.MATERIAL_TYPE.DRAGON and DRAGON_MATERIAL_PIC_MAP[material_name] or "material_blueprints.png",false)
+    local num = City:GetMaterialManager():GetMaterialsByType(material_type)[material_name].."/"..City:GetBuildingByType("materialDepot")[1]:GetMaxMaterial()
     materialBox:SetNumber(num)
     materialBox:addTo(self):pos(display.cx - 285, display.top -410)
     -- 材料介绍

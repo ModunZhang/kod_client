@@ -24,7 +24,7 @@ function WidgetMaterialBox:ctor(material_png,cb,is_has_i_icon)
 
     local size = number_bg:getContentSize()
     self.number = cc.ui.UILabel.new({
-        text = "0/99",
+        -- text = "0/99",
         size = 22,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_LEFT,

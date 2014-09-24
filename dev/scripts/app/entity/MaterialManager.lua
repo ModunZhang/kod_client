@@ -139,6 +139,9 @@ function MaterialManager:ctor()
         ["poisonSting"] = 0,
     }
 end
+function MaterialManager:GetMaterialMap()
+    return self.material_map
+end
 function MaterialManager:GetMaterialsByType(material_type)
     return self.material_map[material_type]
 end
