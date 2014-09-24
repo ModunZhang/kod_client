@@ -78,19 +78,25 @@ end
 function DragonEquipManager:GetCountByType(equip_type)
 	return self.equip_map[equip_type]
 end
+function DragonEquipManager:IteratorEquipments(func)
+	for k, v in pairs(self.equip_map) do
+		func(k, v)
+	end
+end
 function DragonEquipManager:OnUserDataChanged(user_data)
-	local equipments = user_data.dragonEquipments
+	local new_equipments = user_data.dragonEquipments
 	local changed = {}
 	for k, v in pairs(self.equip_map) do
-		if equipments[k] ~= v then
-			table.insert(changed, k)
+		if new_equipments[k] ~= v then
+			changed[k] = v
 		end
 	end
-	self.equip_map = equipments
-	if #changed > 0 then
+	self.equip_map = new_equipments
+	for _, _ in pairs(changed) do
 		self:NotifyObservers(function(listener)
-			listener:OnEquipCountChanged(self, changed)
+			listener:OnEquipCountChanged(self, changed, new_equipments)
 		end)
+		break
 	end
 end
 

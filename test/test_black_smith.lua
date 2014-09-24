@@ -39,7 +39,7 @@ function test_blackSmith()
     Game.new():OnUpdate(function(time)
         blackSmith:OnTimer(time)
         if time == 1 then
-            assert_true(blackSmith:IsMakingEquipment(time))
+            assert_true(blackSmith:IsMakingEquipment())
             assert_true(not blackSmith:IsEquipmentEventEmpty())
             assert_equal(1, blackSmith:GetMakeEquipmentEvent():ElapseTime(time))
             assert_equal(1600 - 1, blackSmith:GetMakeEquipmentEvent():LeftTime(time))

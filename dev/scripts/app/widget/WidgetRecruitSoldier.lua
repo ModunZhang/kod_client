@@ -3,7 +3,7 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetSlider = import("..widget.WidgetSlider")
 local WidgetSoldierDetails = import('..widget.WidgetSoldierDetails')
 local WidgetRecruitSoldier = class("WidgetRecruitSoldier", function(...)
-    local node = display.newLayer()
+    local node = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
     node:setNodeEventEnabled(true)
     node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         if event.name == "began" then
@@ -135,7 +135,7 @@ function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
         pressed = "info_16x33.png"}):addTo(title_blue)
         :align(display.LEFT_CENTER, title_blue:getContentSize().width - 30, size.height/2)
         :onButtonClicked(function(event)
-            WidgetSoldierDetails.new("swordsman",1):addTo(self)
+            WidgetSoldierDetails.new(soldier_type, 1):addTo(self)
         end)
 
     -- soldier bg

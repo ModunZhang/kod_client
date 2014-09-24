@@ -2,6 +2,7 @@
 -- Author: gaozhou
 -- Date: 2014-08-18 14:33:28
 --
+local window = import("..utils.window")
 local ResourceManager = import("..entity.ResourceManager")
 local GameUIResource = import(".GameUIResource")
 local GameUIDwelling = class("GameUIDwelling", GameUIResource)
@@ -81,7 +82,7 @@ function GameUIDwelling:CreateCitizenPanel()
     local citizen_layer = display.newNode():addTo(self)
 
     local iconBg = cc.ui.UIImage.new("dwelling/citizen_bg.png")
-        :pos(display.left + 45, display.top - 150)
+        :pos(window.left + 45, window.top - 150)
         :addTo(citizen_layer)
 
     cc.ui.UIImage.new("home/res_citizen.png")
@@ -96,7 +97,7 @@ function GameUIDwelling:CreateCitizenPanel()
         color = UIKit:hex2c3b(0x29261c),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
     }):addTo(citizen_layer)
-        :align(display.LEFT_CENTER, display.left + 100, display.top - 110)
+        :align(display.LEFT_CENTER, window.left + 100, window.top - 110)
 
     local max_citizen_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -107,11 +108,11 @@ function GameUIDwelling:CreateCitizenPanel()
         color = UIKit:hex2c3b(0x29261c),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
     }):addTo(citizen_layer)
-        :align(display.LEFT_CENTER, display.left + 100, display.top - 134)
+        :align(display.LEFT_CENTER, window.left + 100, window.top - 134)
 
     local citizen_num_bg = cc.ui.UIImage.new("dwelling/citizen_num_bg.png")
         :addTo(citizen_layer)
-        :pos(display.left + 45, display.top - 150 - 702)
+        :pos(window.left + 45, window.top - 150 - 702)
 
     local tips_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -122,7 +123,7 @@ function GameUIDwelling:CreateCitizenPanel()
         color = UIKit:hex2c3b(0x29261c),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
     }):addTo(citizen_layer)
-        :align(display.LEFT_CENTER, display.left + 45, display.top - 150 - 702 - 10)
+        :align(display.LEFT_CENTER, window.left + 45, window.top - 150 - 702 - 10)
 
 
     local dwelling = self
@@ -135,7 +136,7 @@ function GameUIDwelling:CreateCitizenPanel()
 
 
     citizen_layer.citizen_number = {}
-    local end_pos = display.top - 240
+    local end_pos = window.top - 240
     local count = #citizen_layer.citizen_ui
     for i, v in pairs(citizen_layer.citizen_ui) do
 
@@ -143,7 +144,7 @@ function GameUIDwelling:CreateCitizenPanel()
 
         local cur_pos = end_pos - (count - i) * 100
 
-        local res_info_bg = cc.ui.UIImage.new("dwelling/res_info_bg.png"):addTo(citizen_layer):pos(205, cur_pos)
+        local res_info_bg = cc.ui.UIImage.new("dwelling/res_info_bg.png"):addTo(citizen_layer):pos(window.left + 205, cur_pos)
 
         cc.ui.UIImage.new("dwelling/dividing_line.png"):addTo(res_info_bg):pos(0, 43)
 
@@ -302,7 +303,7 @@ function GameUIDwelling:createTabButtons()
             self.citizen_panel:setVisible(false)
             self.infomationLayer:setVisible(false)
         end
-    end):pos(display.cx, display.bottom + 50)
+    end):pos(window.cx, window.bottom + 50)
 end
 function GameUIDwelling:OnUpgradingBegin(building)
     self:OnUpgradingFinished(building)
