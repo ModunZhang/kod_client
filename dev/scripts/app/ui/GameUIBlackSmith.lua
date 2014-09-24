@@ -8,7 +8,7 @@ local WidgetTips = import("..widget.WidgetTips")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
 local WidgetMakeEquip = import("..widget.WidgetMakeEquip")
-local GameUIBlackSmith = UIKit:createUIClass("GameUIBlackSmith", "GameUIWithCommonHeader")
+local GameUIBlackSmith = UIKit:createUIClass("GameUIBlackSmith", "GameUIUpgradeBuilding")
 
 local STAR_BG = {
     "star1_105x104.png",
@@ -19,7 +19,7 @@ local STAR_BG = {
 }
 
 function GameUIBlackSmith:ctor(city, black_smith)
-    GameUIBlackSmith.super.ctor(self, city, _("铁匠铺"))
+    GameUIBlackSmith.super.ctor(self, city, _("铁匠铺"),black_smith)
 
     self.black_smith = black_smith
 end
@@ -64,14 +64,14 @@ function GameUIBlackSmith:OnEndMakeEquipmentWithEvent(black_smith, event, equipm
 end
 function GameUIBlackSmith:TabButtons()
     self:CreateTabButtons({
-        {
-            label = _("升级"),
-            tag = "upgrade",
-        },
+        -- {
+        --     label = _("升级"),
+        --     tag = "upgrade",
+        -- },
         {
             label = _("红龙装备"),
             tag = "redDragon",
-            default = true,
+            -- default = true,
         },
         {
             label = _("蓝龙装备"),

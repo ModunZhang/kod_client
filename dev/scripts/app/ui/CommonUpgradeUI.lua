@@ -64,9 +64,9 @@ function CommonUpgradeUI:OnBuildingUpgrading( buidling, current_time )
     pro:setPercentage(self.building:GetElapsedTimeByCurrentTime(current_time)/self.building:GetUpgradeTimeToNextLevel()*100)
     self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(current_time)))
     if self.building:GetUpgradingLeftTimeByCurrentTime(current_time)<=self.building.freeSpeedUpTime then
-        self.acc_layer.acc_button:setButtonEnabled(false)
-    else
         self.acc_layer.acc_button:setButtonEnabled(true)
+    else
+        self.acc_layer.acc_button:setButtonEnabled(false)
     end
 end
 
@@ -150,7 +150,7 @@ function CommonUpgradeUI:SetBuildingIntroduces()
         ["materialDepot"] = _("提供材料的存储上限\n每种材料存放上限%d"),
         ["armyCamp"] = _("提供出兵时派兵上限\n派兵上限%d"),
         ["barracks"] = _("增加每次招募数量\n每次可招募%d"),
-        ["blackSmith"] = _("提升装备打造速度\n装备打造速度+%d"),
+        ["blackSmith"] = _("提升装备打造速度\n装备打造速度+%d%%"),
         ["foundry"] = _("可建造矿工小屋:%d\n铁矿产量+%d%%"),
         ["stoneMason"] = _("可建造石匠小屋:%d\n石料产量+%d%%"),
         ["lumbermill"] = _("可建造木工小屋:%d\n木材产量+%d%%"),
@@ -183,9 +183,14 @@ function CommonUpgradeUI:SetBuildingIntroduces()
     elseif self.building:GetType()=="foundry"
         or self.building:GetType()=="stoneMason"
         or self.building:GetType()=="lumbermill"
-        or self.building:GetType()=="mill"
-    then
+        or self.building:GetType()=="mill" then
         self.building_introduces:setString(string.format(building_introduces_table[self.building:GetType()],self.building:GetMaxHouseNum(),self.building:GetAddEfficency()*100))
+    elseif self.building:GetType()=="blackSmith" then
+        self.building_introduces:setString(string.format(building_introduces_table["blackSmith"],self.building:GetEfficiency()*100))
+    elseif self.building:GetType()=="barracks" then
+        self.building_introduces:setString(string.format(building_introduces_table["barracks"],self.building:GetMaxRecruitSoldierCount()))
+    else
+        self.building_introduces:setString(_("本地化未定义"))
     end
 end
 
@@ -384,7 +389,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
             title = _("升级需求"),
             height = 333,
             contents = requirements,
-        }):addTo(self):pos(display.cx-275, display.top-855)
+        }):addTo(self.upgrade_layer):pos(display.cx-275, display.top-855)
     end
     self.requirement_listview:RefreshListView(requirements)
 end
@@ -606,6 +611,10 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
+
+
 
 
 

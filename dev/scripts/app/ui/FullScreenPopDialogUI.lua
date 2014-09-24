@@ -83,7 +83,7 @@ function FullScreenPopDialogUI:CreateNeeds(icon,value)
         font = UIKit:getFontFilePath(),
         size = 24,
         color = UIKit:hex2c3b(0xfdfac2)
-    }):align(display.CENTER,display.cx+60,display.cy-80):addTo(self)
+    }):align(display.LEFT_CENTER,display.cx+60,display.cy-80):addTo(self)
 end
 
 return FullScreenPopDialogUI

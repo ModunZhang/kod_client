@@ -5,7 +5,7 @@
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetNeedBox = import("..widget.WidgetNeedBox")
 local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
-local GameUIToolShop = UIKit:createUIClass("GameUIToolShop", "GameUIWithCommonHeader")
+local GameUIToolShop = UIKit:createUIClass("GameUIToolShop", "GameUIUpgradeBuilding")
 
 local MATERIALS_MAP = {
     blueprints = { "blueprints_112x112.png",  _("建筑图纸"), 1},
@@ -19,7 +19,7 @@ local MATERIALS_MAP = {
 }
 
 function GameUIToolShop:ctor(city, toolShop)
-    GameUIToolShop.super.ctor(self, city, _("工具作坊"))
+    GameUIToolShop.super.ctor(self, city, _("工具作坊"),toolShop)
     self.toolShop = toolShop
 end
 function GameUIToolShop:onEnter()
@@ -94,13 +94,8 @@ end
 function GameUIToolShop:TabButtons()
     self:CreateTabButtons({
         {
-            label = _("升级"),
-            tag = "upgrade",
-        },
-        {
             label = _("制作"),
             tag = "manufacture",
-            default = true,
         }
     },
     function(tag)
