@@ -3,6 +3,7 @@
 -- Date: 2014-08-18 14:33:28
 --
 local EQUIPMENTS = GameDatas.SmithConfig.equipments
+local Localize = import("..utils.Localize")
 local MaterialManager = import("..entity.MaterialManager")
 local UIPushButton = cc.ui.UIPushButton
 local WidgetTips = import("..widget.WidgetTips")
@@ -18,29 +19,19 @@ local STAR_BG = {
     "star4_105x104.png",
     "star5_105x104.png",
 }
-
+local function return_map_of_list_view_and_ui_map(list_view, ui_map)
+    return { list_view = list_view, ui_map = ui_map}
+end
 function GameUIBlackSmith:ctor(city, black_smith)
-    GameUIBlackSmith.super.ctor(self, city, _("铁匠铺"),black_smith)
+    GameUIBlackSmith.super.ctor(self, city, _("铁匠铺"), black_smith)
     self.black_smith_city = city
     self.black_smith = black_smith
 end
 function GameUIBlackSmith:onEnter()
     GameUIBlackSmith.super.onEnter(self)
     self.title = self:InitEquipmentTitle()
-    self.red_dragon_list_view, self.red_dragon_equip_map = self:CreateRedDragonEquipments()
-    self.blue_dragon_list_view, self.blue_dragon_equip_map = self:CreateBlueDragonEquipments()
-    self.green_dragon_list_view, self.green_dragon_equip_map = self:CreateGreenDragonEquipments()
+    self.dragon_map = self:CreateDragonEquipments()
     self:TabButtons()
-
-
-
-    self.black_smith_city:GetMaterialManager():IteratorEquipmentMaterialsByType(function(k, v)
-        local red_dragon = self.red_dragon_equip_map[k]
-        if red_dragon then
-            red_dragon:SetNumber(v)
-        end
-    end)
-
     self.black_smith_city:GetMaterialManager():AddObserver(self)
     self.black_smith:AddBlackSmithListener(self)
 end
@@ -55,19 +46,15 @@ function GameUIBlackSmith:OnBeginMakeEquipmentWithEvent(black_smith, event)
     self:OnMakingEquipmentWithEvent(black_smith, event, app.timer:GetServerTime())
 end
 function GameUIBlackSmith:OnMakingEquipmentWithEvent(black_smith, event, current_time)
-    if self.tips:isVisible() then
-        self.tips:setVisible(false)
-    end
-    if not self.timer:isVisible() then
-        self.timer:setVisible(true)
-    end
     if self.title:isVisible() then
-        self.timer:SetDescribe(string.format("%s %s", _("正在制作"), event:Content()))
-
-        local elapse_time = event:ElapseTime(current_time)
-        local total_time = event:FinishTime() - event:StartTime()
-        local percent = (elapse_time * 100.0 / total_time)
-        self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(current_time)), percent)
+        if self.tips:isVisible() then
+            self.tips:setVisible(false)
+        end
+        if not self.timer:isVisible() then
+            self.timer:setVisible(true)
+        end
+        self.timer:SetDescribe(string.format("%s %s", _("正在制作"), Localize.equip[event:Content()]))
+        self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(current_time)), event:Percent(current_time))
     end
 end
 function GameUIBlackSmith:OnEndMakeEquipmentWithEvent(black_smith, event, equipment)
@@ -76,23 +63,23 @@ function GameUIBlackSmith:OnEndMakeEquipmentWithEvent(black_smith, event, equipm
 end
 function GameUIBlackSmith:OnMaterialsChanged(material_manager, material_type, changed)
     if MaterialManager.MATERIAL_TYPE.EQUIPMENT == material_type then
-        if self.red_dragon_list_view:isVisible() then
-            for k, v in pairs(changed) do
-                self.red_dragon_equip_map[k]:SetNumber(v.new)
+        for dragon_type, dragon in pairs(self.dragon_map) do
+            if dragon.list_view:isVisible() then
+                for k, v in pairs(changed) do
+                    if EQUIPMENTS[k].usedFor == dragon_type then
+                        dragon.ui_map[k]:SetNumber(v.new)
+                    end
+                end
+                break
             end
         end
     end
 end
 function GameUIBlackSmith:TabButtons()
     self:CreateTabButtons({
-        -- {
-        --     label = _("升级"),
-        --     tag = "upgrade",
-        -- },
         {
             label = _("红龙装备"),
             tag = "redDragon",
-        -- default = true,
         },
         {
             label = _("蓝龙装备"),
@@ -106,26 +93,32 @@ function GameUIBlackSmith:TabButtons()
     function(tag)
         if tag == 'upgrade' then
             self.title:setVisible(false)
-            self.red_dragon_list_view:setVisible(false)
-            self.blue_dragon_list_view:setVisible(false)
-            self.green_dragon_list_view:setVisible(false)
-        elseif tag == "redDragon" then
-            self.title:setVisible(true)
-            self.red_dragon_list_view:setVisible(true)
-            self.blue_dragon_list_view:setVisible(false)
-            self.green_dragon_list_view:setVisible(false)
-        elseif tag == "blueDragon" then
-            self.title:setVisible(true)
-            self.red_dragon_list_view:setVisible(false)
-            self.blue_dragon_list_view:setVisible(true)
-            self.green_dragon_list_view:setVisible(false)
-        elseif tag == "greenDragon" then
-            self.title:setVisible(true)
-            self.red_dragon_list_view:setVisible(false)
-            self.blue_dragon_list_view:setVisible(false)
-            self.green_dragon_list_view:setVisible(true)
+            for _, v in pairs(self.dragon_map) do
+                v.list_view:setVisible(false)
+            end
+        else
+            self:SwitchToDragon(tag)
         end
     end):pos(display.cx, display.bottom + 40)
+end
+function GameUIBlackSmith:SwitchToDragon(dragon_type)
+    self.title:setVisible(true)
+    for k, v in pairs(self.dragon_map) do
+        if k == dragon_type then
+            v.list_view:setVisible(true)
+        else
+            v.list_view:setVisible(false)
+        end
+    end
+    
+    local event = self.black_smith:GetMakeEquipmentEvent()
+    self.tips:setVisible(event:IsEmpty())
+    self.timer:setVisible(event:IsMaking())
+    if event:IsMaking() then
+        local current_time = app.timer:GetServerTime()
+        self.timer:SetDescribe(string.format("%s %s", _("正在制作"), Localize.equip[event:Content()]))
+        self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(current_time)), event:Percent(current_time))
+    end
 end
 function GameUIBlackSmith:InitEquipmentTitle()
     local node = display.newNode():addTo(self)
@@ -141,14 +134,20 @@ function GameUIBlackSmith:InitEquipmentTitle()
         end)
     return node
 end
-function GameUIBlackSmith:CreateRedDragonEquipments()
-    return self:CreateDragonEquipmentsByType("redDragon")
-end
-function GameUIBlackSmith:CreateBlueDragonEquipments()
-    return self:CreateDragonEquipmentsByType("blueDragon")
-end
-function GameUIBlackSmith:CreateGreenDragonEquipments()
-    return self:CreateDragonEquipmentsByType("greenDragon")
+function GameUIBlackSmith:CreateDragonEquipments()
+    local dragon_map = {
+        redDragon = {},
+        blueDragon = {},
+        greenDragon = {},
+    }
+    for k, v in pairs(dragon_map) do
+        dragon_map[k] = return_map_of_list_view_and_ui_map(self:CreateDragonEquipmentsByType(k))
+    end
+
+    self.black_smith_city:GetMaterialManager():IteratorEquipmentMaterialsByType(function(k, v)
+        dragon_map[EQUIPMENTS[k].usedFor].ui_map[k]:SetNumber(v)
+    end)
+    return dragon_map
 end
 function GameUIBlackSmith:CreateDragonEquipmentsByType(dragon_type)
     local equip_map = {}
@@ -270,7 +269,9 @@ function GameUIBlackSmith:CreateEquipmentByType(equip_type)
 
 
     function equipment_btn:SetNumber(number)
-        number_label:setString(number)
+        if number_label:getString() ~= tostring(number) then
+            number_label:setString(number)
+        end
         return self
     end
 
@@ -286,32 +287,6 @@ function GameUIBlackSmith:CreateEquipmentByType(equip_type)
 end
 
 return GameUIBlackSmith
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

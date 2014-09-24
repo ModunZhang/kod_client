@@ -33,6 +33,12 @@ function BlackSmithUpgradeBuilding:CreateEvent()
     function event:LeftTime(current_time)
         return self.finished_time - current_time
     end
+    function event:Percent(current_time)
+        local start_time = self:StartTime()
+        local elapse_time = current_time - start_time
+        local total_time = self.finished_time - start_time
+        return elapse_time * 100.0 / total_time
+    end
     function event:FinishTime()
         return self.finished_time
     end
@@ -46,14 +52,11 @@ function BlackSmithUpgradeBuilding:CreateEvent()
         self.content = content
         self.finished_time = finished_time
     end
-    function event:IsStored(current_time)
-        return self.content ~= nil and (self.finished_time == 0 or current_time >= self.finished_time)
-    end
     function event:IsEmpty()
         return self.finished_time == 0 and self.content == nil
     end
-    function event:IsMaking(current_time)
-        return current_time < self.finished_time
+    function event:IsMaking()
+        return self.content ~= nil
     end
     event:Init()
     return event
@@ -73,8 +76,8 @@ end
 function BlackSmithUpgradeBuilding:IsEquipmentEventEmpty()
     return self.making_event:IsEmpty()
 end
-function BlackSmithUpgradeBuilding:IsMakingEquipment(current_time)
-    return self.making_event:IsMaking(current_time)
+function BlackSmithUpgradeBuilding:IsMakingEquipment()
+    return self.making_event:IsMaking()
 end
 function BlackSmithUpgradeBuilding:MakeEquipmentWithFinishTime(equipment, finished_time)
     local event = self.making_event
@@ -97,7 +100,7 @@ function BlackSmithUpgradeBuilding:GetMakingTimeByEquipment(equipment)
 end
 
 function BlackSmithUpgradeBuilding:OnTimer(current_time)
-    if self.making_event:IsMaking(current_time) then
+    if self.making_event:IsMaking() then
         self.black_smith_building_observer:NotifyObservers(function(lisenter)
             lisenter:OnMakingEquipmentWithEvent(self, self.making_event, current_time)
         end)

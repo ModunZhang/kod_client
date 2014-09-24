@@ -3,7 +3,7 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetSlider = import("..widget.WidgetSlider")
 local WidgetSoldierDetails = import('..widget.WidgetSoldierDetails')
 local WidgetRecruitSoldier = class("WidgetRecruitSoldier", function(...)
-    local node = display.newLayer()
+    local node = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
     node:setNodeEventEnabled(true)
     node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         if event.name == "began" then

@@ -334,8 +334,6 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
     cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(back_ground, 2)
         :setLayoutSize(570, 2):align(display.CENTER, size.width / 2, 40 - 22)
 
-
-
     self.back_ground = back_ground
 end
 function WidgetMakeEquip:onEnter()
