@@ -2,6 +2,7 @@ local UIListView = import(".UIListView")
 local WidgetMaterialBox = import("..widget.WidgetMaterialBox")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetMaterialDetails = import("..widget.WidgetMaterialDetails")
+local MaterialManager = import("..entity.MaterialManager")
 local DRAGON_MATERIAL_PIC_MAP = {
     ["ironIngot"] = "ironIngot_92x92.png",
     ["steelIngot"] = "steelIngot_92x92.png",
@@ -46,6 +47,7 @@ local GameUIMaterialDepot = UIKit:createUIClass("GameUIMaterialDepot", "GameUIUp
 function GameUIMaterialDepot:ctor(city,building)
     GameUIMaterialDepot.super.ctor(self, city, _("材料库房"),building)
     City:GetMaterialManager():AddObserver(self)
+    self.material_box_table = {}
 end
 
 function GameUIMaterialDepot:onExit()
@@ -107,11 +109,13 @@ function GameUIMaterialDepot:CreateItemWithListView(list_view,material_type,mate
     local row_count = 4
     for i,v in pairs(materials) do
         row_count = row_count -1
-        
-        local soldier = WidgetMaterialBox.new(material_type=="dragonMaterials" and DRAGON_MATERIAL_PIC_MAP[i] or "material_blueprints.png",function ()
+
+        local material_box = WidgetMaterialBox.new(material_type==MaterialManager.MATERIAL_TYPE.DRAGON and DRAGON_MATERIAL_PIC_MAP[i] or "material_blueprints.png",function ()
             self:OpenMaterialDetails(material_type,i,v.."/"..self.building:GetMaxMaterial())
         end,true):addTo(row_item):SetNumber(v.."/"..self.building:GetMaxMaterial())
             :pos(origin_x + (unit_width + gap_x) * row_count , -unit_height/2)
+        self.material_box_table[material_type]={}
+        self.material_box_table[material_type][i] = material_box
         if row_count<1 then
             local item = list_view:newItem()
             item:addContent(row_item)
@@ -132,18 +136,11 @@ function GameUIMaterialDepot:OpenMaterialDetails(material_type,material_name,num
     self:addChild(WidgetMaterialDetails.new(material_type,material_name,num))
 end
 function GameUIMaterialDepot:CreateSelectButton()
-    self.selected = 2
-    local tt= {
-        "materials",
-        "dragonEquipments",
-        "dragonMaterials",
-        "soldierMaterials",
-    }
+    self.selected = 1
     self.material_bg = WidgetPushButton.new({normal = "icon_background_wareHouseUI.png",
         pressed = "icon_background_wareHouseUI.png"}):align(display.LEFT_BOTTOM):addTo(self.info_layer)
         :onButtonClicked(function ()
-            print("选中了！！！！！！====",tt[self.selected])
-            self:SelectOneTypeMaterials(tt[self.selected])
+            self:SelectOneTypeMaterials(self.selected)
             if self.selected<4 then
                 self.selected = self.selected +1
             else
@@ -153,10 +150,13 @@ function GameUIMaterialDepot:CreateSelectButton()
 end
 
 
-function GameUIMaterialDepot:OnMaterialChanged(material_manager,changed_table)
-    
+function GameUIMaterialDepot:OnMaterialsChanged(material_manager,material_type,changed_table)
+    for k,v in pairs(changed_table) do
+        self.material_box_table[material_type][k]:SetNumber(v.new.."/"..self.building:GetMaxMaterial())
+    end
 end
 return GameUIMaterialDepot
+
 
 
 
