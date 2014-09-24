@@ -6,9 +6,9 @@ local WidgetTips = import("..widget.WidgetTips")
 local WidgetSoldierBox = import("..widget.WidgetSoldierBox")
 local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
 local WidgetRecruitSoldier = import("..widget.WidgetRecruitSoldier")
-local GameUIBarracks = UIKit:createUIClass("GameUIBarracks", "GameUIWithCommonHeader")
+local GameUIBarracks = UIKit:createUIClass("GameUIBarracks", "GameUIUpgradeBuilding")
 function GameUIBarracks:ctor(city, barracks)
-    GameUIBarracks.super.ctor(self, city, _("兵营"))
+    GameUIBarracks.super.ctor(self, city, _("兵营"),barracks)
     self.barracks_city = city
     self.barracks = barracks
 end
@@ -92,13 +92,8 @@ end
 function GameUIBarracks:TabButtons()
     self:CreateTabButtons({
         {
-            label = _("升级"),
-            tag = "upgrade",
-        },
-        {
             label = _("招募"),
             tag = "recruit",
-            default = true,
         }
     },
     function(tag)

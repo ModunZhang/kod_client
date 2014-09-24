@@ -282,11 +282,6 @@ end
 function GameUIDwelling:createTabButtons()
     self:CreateTabButtons({
         {
-            label = _("升级"),
-            tag = "upgrade",
-            default = true,
-        },
-        {
             label = _("城民"),
             tag = "citizen",
         },

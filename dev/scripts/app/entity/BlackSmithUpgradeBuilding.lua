@@ -11,6 +11,9 @@ function BlackSmithUpgradeBuilding:ctor(...)
     self.making_event = self:CreateEvent()
     BlackSmithUpgradeBuilding.super.ctor(self, ...)
 end
+function BlackSmithUpgradeBuilding:GetEfficiency()
+    return config_function[self:GetLevel()].efficiency
+end
 function BlackSmithUpgradeBuilding:CreateEvent()
     local black_smith = self
     local event = {}

@@ -2,13 +2,13 @@
 -- Author: Danny He
 -- Date: 2014-09-13 10:30:04
 --
-local GameUIResource = UIKit:createUIClass("GameUIResource","GameUIWithCommonHeader")
+local GameUIResource = UIKit:createUIClass("GameUIResource","GameUIUpgradeBuilding")
 local ResourceManager = import("..entity.ResourceManager")
 local City = City
 local MAX_COUNT_DECORATOR = 5
 local UIListView = import(".UIListView")
 function GameUIResource:ctor(building)
-	 GameUIResource.super.ctor(self, City, self:GetTitleByType(building))
+	 GameUIResource.super.ctor(self, City, self:GetTitleByType(building),building)
      self.building = building
      self.dataSource = self:GetDataSource()
 end
@@ -25,11 +25,6 @@ end
 
 function GameUIResource:createTabButtons()
     self:CreateTabButtons({
-        {
-            label = _("升级"),
-            tag = "upgrade",
-            default = true,
-        },
         {
             label = _("信息"),
             tag = "infomation",
