@@ -152,7 +152,7 @@ locations[15] = {
 }
 locations[16] = {
 	["index"] = 16,
-	["building_type"] = "academy",
+	["building_type"] = "tradeGuild",
 	["x"] = 36,
 	["y"] = 9,
 	["w"] = 6,
@@ -182,7 +182,7 @@ locations[18] = {
 }
 locations[19] = {
 	["index"] = 19,
-	["building_type"] = "tradeGuild",
+	["building_type"] = "academy",
 	["x"] = 26,
 	["y"] = 49,
 	["w"] = 6,

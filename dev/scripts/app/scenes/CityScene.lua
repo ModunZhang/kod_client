@@ -211,8 +211,10 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
             UIKit:newGameUI('GameUIBarracks', City, building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "armyCamp" then
             self._armyCamp_page = UIKit:newGameUI('GameUIArmyCamp',City,building:GetEntity()):addToScene(self, true)
-        elseif building:GetEntity():GetType() == "foundry" 
-            or building:GetEntity():GetType() == "stoneMason" 
+        elseif building:GetEntity():GetType() == "townHall" then
+            self._armyCamp_page = UIKit:newGameUI('GameUITownHall',City,building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "foundry"
+            or building:GetEntity():GetType() == "stoneMason"
             or building:GetEntity():GetType() == "lumbermill"
             or building:GetEntity():GetType() == "mill" then
             self._armyCamp_page = UIKit:newGameUI('GameUIPResourceBuilding',City,building:GetEntity()):addToScene(self, true)
@@ -291,6 +293,7 @@ function CityScene:OnGateChanged(old_walls, new_walls)
 end
 
 return CityScene
+
 
 
 
