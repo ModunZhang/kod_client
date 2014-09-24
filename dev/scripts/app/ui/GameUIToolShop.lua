@@ -2,6 +2,7 @@
 -- Author: gaozhou
 -- Date: 2014-08-18 14:33:28
 --
+local MaterialManager = import("..entity.MaterialManager")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetNeedBox = import("..widget.WidgetNeedBox")
 local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
@@ -20,6 +21,7 @@ local MATERIALS_MAP = {
 
 function GameUIToolShop:ctor(city, toolShop)
     GameUIToolShop.super.ctor(self, city, _("工具作坊"),toolShop)
+    self.tool_shop_city = city
     self.toolShop = toolShop
 end
 function GameUIToolShop:onEnter()
@@ -27,9 +29,11 @@ function GameUIToolShop:onEnter()
     self:Manufacture()
     self:TabButtons()
     self.toolShop:AddToolShopListener(self)
+    self.tool_shop_city:GetMaterialManager():AddObserver(self)
 end
 function GameUIToolShop:onExit()
     self.toolShop:RemoveToolShopListener(self)
+    self.tool_shop_city:GetMaterialManager():RemoveObserver(self)
     GameUIToolShop.super.onExit(self)
 end
 function GameUIToolShop:OnBeginMakeMaterialsWithEvent(tool_shop, event)
@@ -43,6 +47,13 @@ function GameUIToolShop:OnEndMakeMaterialsWithEvent(tool_shop, event, current_ti
 end
 function GameUIToolShop:OnGetMaterialsWithEvent(tool_shop, event)
     self:UpdateEvent(event)
+end
+function GameUIToolShop:OnMaterialsChanged(material_manager, material_type, changed)
+    if MaterialManager.MATERIAL_TYPE.BUILD == material_type then
+        self.building_item:SetStoreMaterials(LuaUtils:table_map(changed, function(k, v)
+            return k, v.new
+        end))
+    end
 end
 function GameUIToolShop:UpdateEvent(event)
     if event:Category() == "building" then
@@ -90,6 +101,11 @@ function GameUIToolShop:Manufacture()
     self.technology_event = item
 
     self.list_view:reload():resetPosition()
+    local material_manager = self.tool_shop_city:GetMaterialManager()
+    local materials = material_manager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
+    dump(materials)
+    self.building_item:SetStoreMaterials(materials)
+    self.technology_event:SetStoreMaterials(materials)
 end
 function GameUIToolShop:TabButtons()
     self:CreateTabButtons({
@@ -152,7 +168,6 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
         num_bg:setTouchEnabled(false)
 
         local store_label = cc.ui.UILabel.new({
-            text = "1000",
             size = 18,
             font = UIKit:getFontFilePath(),
             align = cc.ui.TEXT_ALIGN_LEFT,
@@ -171,7 +186,6 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
             :align(display.CENTER, pos.x, pos.y + 78)
 
         local num_label = cc.ui.UILabel.new({
-            text = "+2",
             size = 18,
             font = UIKit:getFontFilePath(),
             align = cc.ui.TEXT_ALIGN_RIGHT,
@@ -336,12 +350,20 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
     function item:GetMaterial()
         return get_material
     end
-    function item:SetGetMaterials(materials)
-        for k, v in pairs(materials_map) do
-            v:ShowNumber(nil)
-        end
+    function item:SetStoreMaterials(materials)
         for k, v in pairs(materials) do
-            materials_map[v.type]:ShowNumber(v.count)
+            local ui = materials_map[k]
+            if ui then
+                ui:SetStoreNumber(v)
+            end
+        end
+    end
+    function item:SetGetMaterials(materials)
+        local get_material = LuaUtils:table_map(materials, function(k, v)
+            return v.type, v.count
+        end)
+        for k, v in pairs(materials_map) do
+            v:ShowNumber(get_material[k])
         end
     end
     function item:ResetGetMaterials()
@@ -360,6 +382,10 @@ end
 
 
 return GameUIToolShop
+
+
+
+
 
 
 
