@@ -23,6 +23,7 @@ function CommonUpgradeUI:onEnter()
     self:InitUpgradePart()
     self:InitAccelerationPart()
     self.city:GetResourceManager():AddObserver(self)
+
     self:AddUpgradeListener()
 end
 
@@ -363,25 +364,25 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
     local userData = DataManager:getUserData()
     requirements = {
         {resource_type = "wood",isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
-            icon="wood_icon.png",description=self.building:GetLevelUpWood().."/"..wood},
+            icon="wood_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpWood()).."/"..GameUtils:formatNumber(wood)},
 
         {resource_type = "stone",isVisible = self.building:GetLevelUpStone()>0,     isSatisfy = stone>self.building:GetLevelUpStone() ,
-            icon="stone_icon.png",description=self.building:GetLevelUpStone().."/"..stone},
+            icon="stone_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpStone()).."/"..GameUtils:formatNumber(stone)},
 
         {resource_type = "iron",isVisible = self.building:GetLevelUpIron()>0,      isSatisfy = iron>self.building:GetLevelUpIron() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpIron().."/"..iron},
+            icon="iron_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpIron()).."/"..GameUtils:formatNumber(iron)},
 
         {resource_type = "citizen",isVisible = self.building:GetLevelUpCitizen()>0,   isSatisfy = population>self.building:GetLevelUpCitizen() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpCitizen().."/"..population},
+            icon="iron_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpCitizen()).."/"..GameUtils:formatNumber(population)},
 
         {resource_type = "blueprints",isVisible = self.building:GetLevelUpBlueprints()>0,isSatisfy = userData.materials.blueprints>self.building:GetLevelUpBlueprints() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpBlueprints().."/"..userData.materials.blueprints},
+            icon="iron_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpBlueprints()).."/"..GameUtils:formatNumber(userData.materials.blueprints)},
         {resource_type = "tools",isVisible = self.building:GetLevelUpTools()>0,     isSatisfy = userData.materials.tools>self.building:GetLevelUpTools() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpTools().."/"..userData.materials.tools},
+            icon="iron_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpTools()).."/"..GameUtils:formatNumber(userData.materials.tools)},
         {resource_type = "tiles",isVisible = self.building:GetLevelUpTiles()>0,     isSatisfy = userData.materials.tiles>self.building:GetLevelUpTiles() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpTiles().."/"..userData.materials.tiles},
+            icon="iron_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpTiles()).."/"..GameUtils:formatNumber(userData.materials.tiles)},
         {resource_type = "pulley",isVisible = self.building:GetLevelUpPulley()>0,    isSatisfy = userData.materials.pulley>self.building:GetLevelUpPulley() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpPulley().."/"..userData.materials.pulley},
+            icon="iron_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpPulley()).."/"..GameUtils:formatNumber(userData.materials.pulley)},
     }
 
     if not self.requirement_listview then
@@ -429,6 +430,10 @@ function CommonUpgradeUI:InitAccelerationPart()
     }):addTo(bar)
     self.acc_layer.upgrade_time_label:setAnchorPoint(cc.p(0,0.5))
     self.acc_layer.upgrade_time_label:pos(self.acc_layer.upgrade_time_label:getContentSize().width/2+10, bar:getContentSize().height/2)
+    if self.building:IsUpgrading() then
+        self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime())))
+    end
+
     -- 进度条头图标
     display.newSprite("upgrade_progress_bar_icon_bg.png", display.cx - 256, display.cy+20):addTo(self.acc_layer)
     display.newSprite("upgrade_hourglass.png", display.cx - 256, display.cy+20):addTo(self.acc_layer):setScale(0.8)
@@ -611,6 +616,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
 
 
