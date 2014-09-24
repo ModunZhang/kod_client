@@ -181,6 +181,8 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
         ["hospital"] = _("医院提供治愈伤兵的功能，升级能够提升伤兵的最大容量。"),
         ["townHall"] = _("市政厅提升可建造的住宅的数量，并提升城民的增长速度。周围建立更多的住宅，可获得额外的城民增长。"),
         ["academy"] = _("学院提供的科技能够提升城市生产和防御能力，等级越过研发速度越快。"),
+        ["tradeGuild"] = _("贸易行会提供玩家资源和材料的交易平台。消耗运输小车挂出自己的资源需求，升级提升运输小车总量和生产速度。"),
+
     }
 
     -- unlock building listview
@@ -191,62 +193,57 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
         :addTo(self.info_layer)
     local allBuildings = City:GetAllBuildings()
-    for i,v in ipairs(allBuildings) do
-        local item = self.building_listview:newItem()
-        item:setItemSize(540, 135)
-        local item_width, item_height = item:getItemSize()
-        local content = cc.ui.UIGroup.new()
-        local flag = false
-        -- 建筑是否可解锁 ，或者已经解锁
-        if v:GetLevel()>=1 then
-            flag = true
-            -- 已解锁
-            local unlocked_label = cc.ui.UILabel.new({
-                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                text = _("已解锁"),
-                font = UIKit:getFontFilePath(),
-                size = 24,
-                color = UIKit:hex2c3b(0x403c2f)}):align(display.CENTER_RIGHT, 260, 40):addTo(content,10)
-        elseif City:IsTileCanbeUnlockAt(City:GetTileWhichBuildingBelongs(v).x,City:GetTileWhichBuildingBelongs(v).y) then
-            flag = true
-            cc.ui.UIPushButton.new({normal = "keep_unlocked_button_normal.png",pressed = "keep_unlocked_button_pressed.png"})
-                :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("可解锁"), size = 24, color = display.COLOR_WHITE}))
-                :onButtonClicked(function(event)
-                    self:leftButtonClicked()
-                    goto_logic(v:GetLogicPosition())
-                end):align(display.CENTER, 190, 40):addTo(content, 10)
-        end
-        if flag then
-            content:addWidget(display.newSprite("keep_building_element_bg.png",  0, 0))
-            -- building name
-            content:addWidget(cc.ui.UILabel.new({
-                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                text = _(v:GetType()),
-                font = UIKit:getFontFilePath(),
-                size = 24,
-                dimensions = cc.size(384, 35),
-                color = UIKit:hex2c3b(0x403c2f)}):align(display.CENTER_LEFT, -120, 40))
-            -- building introduce
-            local building_tip = cc.ui.UILabel.new({
-                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                text = building_introduces[v:GetType()],
-                font = UIKit:getFontFilePath(),
-                size = 20,
-                aglin = ui.TEXT_ALIGN_LEFT,
-                valign = ui.TEXT_VALIGN_CENTER,
-                dimensions = cc.size(384, 65),
-                color = UIKit:hex2c3b(0x797154)}):align(display.TOP_LEFT, -120, 10)
-            content:addWidget(building_tip)
-            local building_image = display.newScale9Sprite(v:GetType()..".png", -item_width/2+70, 0)
-            building_image:setScale(133/building_image:getContentSize().height)
-            content:addWidget(building_image)
-            item:addContent(content)
-            self.building_listview:addItem(item)
+    local buildings = GameDatas.Buildings.buildings
+    for i,v in ipairs(buildings) do
+        if v.location<17 then
+            local unlock_building = City:GetBuildingByLocationId(v.location)
+            -- 建筑是否可解锁
+            if City:IsTileCanbeUnlockAt(City:GetTileWhichBuildingBelongs(unlock_building).x,City:GetTileWhichBuildingBelongs(unlock_building).y) then
+                local item = self.building_listview:newItem()
+                item:setItemSize(540, 135)
+                local item_width, item_height = item:getItemSize()
+                local content = cc.ui.UIGroup.new()
+                cc.ui.UIPushButton.new({normal = "keep_unlocked_button_normal.png",pressed = "keep_unlocked_button_pressed.png"})
+                    :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("可解锁"), size = 24, color = display.COLOR_WHITE}))
+                    :onButtonClicked(function(event)
+                        self:leftButtonClicked()
+                        goto_logic(unlock_building:GetLogicPosition())
+                    end):align(display.CENTER, 190, 40):addTo(content, 10)
+
+                content:addWidget(display.newSprite("keep_building_element_bg.png",  0, 0))
+                -- building name
+                content:addWidget(cc.ui.UILabel.new({
+                    UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+                    text = _(unlock_building:GetType()),
+                    font = UIKit:getFontFilePath(),
+                    size = 24,
+                    dimensions = cc.size(384, 35),
+                    color = UIKit:hex2c3b(0x403c2f)}):align(display.CENTER_LEFT, -120, 40))
+                -- building introduce
+                local building_tip = cc.ui.UILabel.new({
+                    UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+                    text = building_introduces[unlock_building:GetType()],
+                    font = UIKit:getFontFilePath(),
+                    size = 20,
+                    aglin = ui.TEXT_ALIGN_LEFT,
+                    valign = ui.TEXT_VALIGN_CENTER,
+                    dimensions = cc.size(384, 65),
+                    color = UIKit:hex2c3b(0x797154)}):align(display.TOP_LEFT, -120, 10)
+                content:addWidget(building_tip)
+                local building_image = display.newScale9Sprite(unlock_building:GetType()..".png", -item_width/2+70, 0)
+                building_image:setScale(133/building_image:getContentSize().height)
+                content:addWidget(building_image)
+                item:addContent(content)
+                self.building_listview:addItem(item)
+            end
         end
     end
     self.building_listview:reload()
 end
 
 return GameUIKeep
+
+
+
 
 
