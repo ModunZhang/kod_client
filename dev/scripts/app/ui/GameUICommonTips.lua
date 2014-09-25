@@ -1,5 +1,6 @@
 --需要有入场动画
 local GameUICommonTips = UIKit:createUIClass('GameUICommonTips')
+local window = import("..utils.window")
 
 function GameUICommonTips:ctor(delegate,autoClose)
 	GameUICommonTips.super.ctor(self)
@@ -24,44 +25,41 @@ function GameUICommonTips:onEnter()
 end
 
 function GameUICommonTips:createUI()
-
-	local bgImage = display.newSprite("common_tips_bg.png"):addTo(self):align(display.LEFT_BOTTOM, display.left, display.bottom)
+	local bgImage = display.newScale9Sprite("common_tips_bg.png"):addTo(self):align(display.LEFT_BOTTOM, display.left, display.bottom)
+	bgImage:size(display.width,bgImage:getContentSize().height)
 	local button = cc.ui.UIPushButton.new("common_tips_button.png", {scale9 = false})
 		:onButtonClicked(function(event)
         	self:closeButtonPressed()
         end)
-
-
-    local buttonLabel = ui.newTTFLabelWithShadow({
-            text = _("点击关闭"),
-            size = 18,
-            color = UIKit:hex2c3b(0xFFF3C7),
-            font = UIKit:getFontFilePath(),
-            align = ui.TEXT_ALIGN_CENTER,
-       	})
+	local buttonLabel = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = _("点击关闭"),
+        font = UIKit:getFontFilePath(),
+        size = 18,
+        align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
+        color = UIKit:hex2c3b(0xFFF3C7)
+    })
 
 	button:setButtonLabel("normal",buttonLabel):addTo(self):align(display.RIGHT_BOTTOM, display.right, 10)
 	button:setButtonLabelOffset(50,0)
 
-	local titleLabel = ui.newTTFLabelWithShadow({
-		text = "建筑升级完成",
-        size = 20,
-		color = UIKit:hex2c3b(0xf3f0b6),
+	local titleLabel = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "建筑升级完成",
         font = UIKit:getFontFilePath(),
-        align = ui.TEXT_ALIGN_CENTER,
-	}):addTo(bgImage)
-	
-	titleLabel.label:align(display.LEFT_BOTTOM, 0, 0)
-	titleLabel.shadow1:align(display.LEFT_BOTTOM, 0, 0)
+        size = 20,
+        align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
+        color = UIKit:hex2c3b(0xf3f0b6)
+    }):addTo(bgImage,2)
 	titleLabel:align(display.LEFT_TOP,15, bgImage:getContentSize().height-35)
-	-- UIKit:debugNode(button,"button")
+
 	local contentLabel = ui.newTTFLabel({
 		text = "小屋升级完成 (LV2) 00:01:23",
         size = 18,
 		color = UIKit:hex2c3b(0xd1ca95),
         font = UIKit:getFontFilePath(),
         align = ui.TEXT_ALIGN_CENTER,
-	}):align(display.TOP_LEFT, 15, bgImage:getContentSize().height - 30 - titleLabel:getContentSize().height):addTo(bgImage)
+	}):align(display.TOP_LEFT, 15, bgImage:getContentSize().height - 35 - titleLabel:getContentSize().height):addTo(bgImage,2)
 	self.titleLabel = titleLabel
 	self.contentLabel = contentLabel
 end
