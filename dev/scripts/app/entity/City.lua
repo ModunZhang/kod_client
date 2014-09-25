@@ -4,7 +4,7 @@ local Enum = import("..utils.Enum")
 local Orient = import(".Orient")
 local Tile = import(".Tile")
 local SoldierManager = import(".SoldierManager")
-local DragonEquipManager = import(".DragonEquipManager")
+local MaterialManager = import(".MaterialManager")
 local ResourceManager = import(".ResourceManager")
 local Building = import(".Building")
 local TowerUpgradeBuilding = import(".TowerUpgradeBuilding")
@@ -40,7 +40,7 @@ function City:ctor()
     City.super.ctor(self)
     self.resource_manager = ResourceManager.new()
     self.soldier_manager = SoldierManager.new()
-    self.equip_manager = DragonEquipManager.new()
+    self.material_manager = MaterialManager.new()
 
     self.buildings = {}
     self.walls = {}
@@ -105,11 +105,11 @@ function City:InitDecorators(decorators)
     self:CheckIfDecoratorsIntersectWithRuins()
 end
 -- 取值函数
-function City:GetEquipManager()
-    return self.equip_manager
-end
 function City:GetSoldierManager()
     return self.soldier_manager
+end
+function City:GetMaterialManager()
+    return self.material_manager
 end
 function City:GetResourceManager()
     return self.resource_manager
@@ -207,6 +207,34 @@ function City:GetLocationById(location_id)
 end
 function City:GetTileByIndex(x, y)
     return self.tiles[y] and self.tiles[y][x] or nil
+end
+-- 取得住宅最大建造数量
+function City:GetMaxDwellingCanBeBuilt()
+-- self:GetBuildingByType("build_type")
+end
+-- 取得小屋最大建造数量
+function City:GetMaxHouseCanBeBuilt(house_type)
+    local max = GameDatas.PlayerInitData.houses[1][house_type] --基础值
+
+    if house_type=="farmer" then
+        for _,mill in pairs(self:GetBuildingByType("mill")) do
+            max = max + mill:GetMaxHouseNum()
+        end
+    elseif house_type=="woodcutter" then
+        for _,lumbermill in pairs(self:GetBuildingByType("lumbermill")) do
+            max = max + lumbermill:GetMaxHouseNum()
+        end
+    elseif house_type=="quarrier" then
+        for _,stoneMason in pairs(self:GetBuildingByType("stoneMason")) do
+            max = max + stoneMason:GetMaxHouseNum()
+        end
+    elseif house_type=="miner" then
+        for _,foundry in pairs(self:GetBuildingByType("foundry")) do
+            max = max + foundry:GetMaxHouseNum()
+        end
+    end
+
+    return max
 end
 function City:IsUnLockedAtIndex(x, y)
     return not self.tiles[y][x].locked
@@ -576,14 +604,13 @@ function City:OnUserDataChanged(userData, current_time)
         LuaUtils:outputTable("lock_table", lock_table)
         self:LockTilesByIndexArray(lock_table)
     end
-
     -- 更新建筑信息
     self:IteratorCanUpgradeBuildingsByUserData(userData, current_time)
 
     -- 更新兵种
     self.soldier_manager:OnUserDataChanged(userData)
-    -- 更新装备
-    self.equip_manager:OnUserDataChanged(userData)
+    -- 更新材料，这里是广义的材料，包括龙的装备
+    self.material_manager:OnUserDataChanged(userData)
     -- 最后才更新资源
     local resource_refresh_time = userData.basicInfo.resourceRefreshTime / 1000
     self:IteratorResourcesByUserData(userData, resource_refresh_time)
@@ -801,9 +828,20 @@ function City:GenerateTowers(walls)
 end
 
 
+function City:OnUpgradingBuildings()
+    local upgrading_buildings = {} 
+    for i,v in ipairs(self.buildings) do
+        print("OnUpgradingBuildings==========啊啊啊啊",i,v)
 
+        if v:IsUpgrading() then
+            upgrading_buildings[i] = v
+        end
+    end
+    return upgrading_buildings
+end
 
 return City
+
 
 
 

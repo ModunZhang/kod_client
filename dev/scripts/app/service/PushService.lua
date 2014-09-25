@@ -56,3 +56,14 @@ function PushService:upgradeDragonStar(dragonType,cb)
 			,true
 	)
 end
+
+function PushService:upgradeDragonDragonSkill(dragonType, skillLocation, cb)
+	if not LuaUtils:isString(dragonType) then cb(false) end
+	self.m_netService:request("logic.playerHandler.upgradeDragonSkill"
+			,{dragonType=dragonType,skillLocation=skillLocation}
+			,function(success)
+				cb(success)
+			end
+			,true
+	)
+end

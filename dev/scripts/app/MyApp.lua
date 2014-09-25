@@ -6,15 +6,18 @@ require("app.datas.GameDatas")
 require("app.utils.LuaUtils")
 require("app.utils.GameUtils")
 require("app.utils.DataUtils")
+require("app.utils.UIKit")
+require("app.utils.window")
+require("app.ui.GameGlobalUIUtils")
 require("app.service.NetManager")
 require("app.service.DataManager")
-require("app.utils.UIKit")
-require("app.ui.GameGlobalUIUtils")
 
 local Timer = import('.utils.Timer')
 local MyApp = class("MyApp", cc.mvc.AppBase)
 import('app.ui.GameGlobalUIUtils')
 NOT_HANDLE = function(...) print("net message not handel, please check !") end
+
+
 function MyApp:ctor()
     self:initI18N()
     NetManager:init()

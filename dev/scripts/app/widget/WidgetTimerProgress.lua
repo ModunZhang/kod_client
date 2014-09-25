@@ -19,7 +19,7 @@ function WidgetTimerProgress:ctor(width, height)
     local progress_bg_311x35 = cc.ui.UIImage.new("progress_bg_311x35.png")
         :addTo(back_ground_351x96, 2):align(display.LEFT_CENTER, 35, 40)
     self.progress_timer = display.newProgressTimer("progress_bar_315x33.png", display.PROGRESS_TIMER_BAR)
-        :align(display.LEFT_BOTTOM, 0, 0):addTo(progress_bg_311x35, 2):pos(0, 1)
+        :align(display.LEFT_BOTTOM, 0, 0):addTo(progress_bg_311x35, 2):pos(-4, 1)
     self.progress_timer:setBarChangeRate(cc.p(1,0))
     self.progress_timer:setMidpoint(cc.p(0,0))
 

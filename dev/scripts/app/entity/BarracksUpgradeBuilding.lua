@@ -38,6 +38,12 @@ function BarracksUpgradeBuilding:CreateEvent()
     function event:LeftTime(current_time)
         return self.finished_time - current_time
     end
+    function event:Percent(current_time)
+        local start_time = self:StartTime()
+        local elapse_time = current_time - start_time
+        local total_time = self.finished_time - start_time
+        return elapse_time * 100.0 / total_time
+    end
     function event:FinishTime()
         return self.finished_time
     end
@@ -48,10 +54,14 @@ function BarracksUpgradeBuilding:CreateEvent()
         return self.soldier_type == nil
     end
     function event:IsRecruting()
-        return self.soldier_type
+        return not not self.soldier_type
     end
     function event:GetRecruitInfo()
         return self.soldier_type, self.soldier_count
+    end
+    function event:Describe()
+        -- local soldier_type, count = event:GetRecruitInfo()
+        -- local soldier_name = barracks:GetSoldierConfigByType(soldier_type).description
     end
     event:Init()
     return event

@@ -8,7 +8,7 @@ local StarBar = import(".StarBar")
 local UIListView = import(".UIListView")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local config_dragonSkill = GameDatas.DragonEyrie.dragonSkill
-
+local Localize = import("..utils.Localize")
 
 function GameUIDragonEyrie:ctor(city,building)
 	GameUIDragonEyrie.super.ctor(self,City,_("龙巢"))
@@ -42,7 +42,7 @@ end
 function GameUIDragonEyrie:RefreshUIData()
     local dragon = self:GetCurrentDragon()
     if self.dragon_bg then -- 龙
-        self.dragonUI.dragonNameLabel:setString(dragon.type)
+        self.dragonUI.dragonNameLabel:setString(Localize.dragon[dragon.type])
         self.dragonUI.dragonLVLabel:setString("LV " .. dragon.level .. '/' .. self.building:GetLevelMaxWithStar(dragon.star))
         self.dragonUI.dragonLVLabel:setVisible(dragon.star>0)
         self.dragonUI.dragonStarBar:setNum(dragon.star)
@@ -77,6 +77,8 @@ function GameUIDragonEyrie:RefreshUIData()
             elseif currentButtonTag == "skill" then
                 self.skillUI.blood_label:setString(City:GetResourceManager():GetBloodResource():GetValue()) -- 英雄之血
                 self:RefreshSkillList()
+            elseif currentButtonTag == "information" then
+                self:RefreshInformationList(dragon)
             end
         end
     end
@@ -109,6 +111,14 @@ function GameUIDragonEyrie:ChangeCurentContent(tag)
             self.current_content = self:CreateHatchDragonIf()
         else
              self.current_content = self:CreateSkillContentIf()
+        end
+        self:RefreshUIData()
+    elseif tag == "information" then
+         self:CreateDragonIf() -- 龙信息
+        if self:GetCurrentDragon() and self:GetCurrentDragon().star < 1 then
+            self.current_content = self:CreateHatchDragonIf()
+        else
+             self.current_content = self:CreateInfomationIf()
         end
         self:RefreshUIData()
     end
@@ -459,7 +469,18 @@ function GameUIDragonEyrie:CreateEquipmentContentIf()
     return self.equipment_content
 end
 function GameUIDragonEyrie:UpgradeDragonStar()
-    local dragonType = self:GetCurrentDragon().type
+    local dragon = self:GetCurrentDragon()
+    if not self.building:DragonEquipmentIsReachPromotionLevel(dragon) then
+        print("未达到晋级等级")
+        return
+    end
+
+    if not self.building:DragonEquipmentsIsReachMaxStar(dragon) then
+        print("所有装备未达到最高星级")
+        return
+    end
+    
+    local dragonType = dragon.type
     PushService:upgradeDragonStar(dragonType,function()
     end)
 end
@@ -534,9 +555,9 @@ function GameUIDragonEyrie:IsSkillLocked(dragonSkill)
     return dragon.star < config.unlockStar
 end
 
-function GameUIDragonEyrie:SkillListItemClicked(skill)
+function GameUIDragonEyrie:SkillListItemClicked(skill,skillLocation)
     if self:IsSkillLocked(skill.name or "") then return end
-    UIKit:newGameUI("GameUIDragonSkill",skill):addToCurrentScene(false)
+    self.dragonEquipment = UIKit:newGameUI("GameUIDragonSkill",self,skillLocation):addToCurrentScene(false)
 end
 
 function GameUIDragonEyrie:GetSkillListItem(skill)
@@ -546,7 +567,7 @@ function GameUIDragonEyrie:GetSkillListItem(skill)
     titleBg:pos(0,45)
     local titleLabel = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = skill.name,
+        text = Localize.dragon_skill[skill.name],
         font = UIKit:getFontFilePath(),
         size = 18,
         align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
@@ -623,7 +644,7 @@ function GameUIDragonEyrie:RefreshSkillList()
             local x = oneSkill:getCascadeBoundingBox().width/2 + (j-1) * (oneSkill:getCascadeBoundingBox().width + 3)
             oneSkill:pos(x,oneSkill:getCascadeBoundingBox().height/2)
             oneSkill:onButtonClicked(function(event)
-                self:SkillListItemClicked(skillData)
+                self:SkillListItemClicked(skillData,j)
             end)
         end    
         item:addContent(content)
@@ -684,25 +705,60 @@ function GameUIDragonEyrie:CreateSkillContentIf()
     return self.skill_content
 end
 
+function GameUIDragonEyrie:GetInformationListItem(index,title,value)
+    local bg = display.newSprite(string.format("resource_item_bg%d.png",index%2))
+    local titleLabel =  cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = title,
+        font = UIKit:getFontFilePath(),
+        size = 20,
+        align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
+        color = UIKit:hex2c3b(0x615b44)
+    }):addTo(bg):pos(10,bg:getContentSize().height/2)
+    local valLabel = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = value,
+        font = UIKit:getFontFilePath(),
+        size = 20,
+        align = cc.ui.UILabel.TEXT_ALIGN_RIGTH, 
+        color = UIKit:hex2c3b(0x403c2f)
+    }):addTo(bg)
+    valLabel:pos(bg:getContentSize().width - valLabel:getContentSize().width-20,bg:getContentSize().height/2)
+    return bg
+end
+
+function GameUIDragonEyrie:RefreshInformationList(dragon)
+    self.info_content:removeAllItems()
+    local data = self.building:GetAllBuffInfomation(dragon)
+    for i,v in ipairs(data) do
+        local item = self.info_content:newItem()
+        local content = self:GetInformationListItem(i,v[1],v[2])
+        item:addContent(content)
+        item:setItemSize(content:getContentSize().width,content:getContentSize().height)
+        self.info_content:addItem(item)
+    end
+    self.info_content:reload()
+end
+
 function GameUIDragonEyrie:CreateInfomationIf()
 	if self.info_content then  self.info_content:setVisible(true) return self.info_content end
 	self.info_content = UIListView.new {
 		bg = "dragon_info_bg.png",
         bgScale9 = true,
-        viewRect = cc.rect((display.width - 551) /2, self.dragon_bg:getPositionY()-self.dragon_bg:getContentSize().height+30, 551, 200),
+        viewRect = cc.rect((display.width - 547) /2, self.dragon_bg:getPositionY()-self.dragon_bg:getContentSize().height+30, 547, 184),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         alignment = cc.ui.UIListView.ALIGNMENT_LEFT      
     }
     :addTo(self)
 
-    for i=1,4 do
-    	local item = self.info_content:newItem()
-    	local bg = display.newSprite(string.format("dragon_info_item_bg%d.png",i%2))
-    	item:addContent(bg)
-    	item:setItemSize(551,bg:getContentSize().height)
-    	self.info_content:addItem(item)
-    end
-    self.info_content:reload()
+    -- for i=1,4 do
+    -- 	local item = self.info_content:newItem()
+    -- 	local bg = display.newSprite(string.format("resource_item_bg%d.png",i%2))
+    -- 	item:addContent(bg)
+    -- 	item:setItemSize(551,bg:getContentSize().height)
+    -- 	self.info_content:addItem(item)
+    -- end
+    -- self.info_content:reload()
     return self.info_content
 end
 

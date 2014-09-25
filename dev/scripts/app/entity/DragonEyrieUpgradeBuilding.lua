@@ -6,6 +6,10 @@ local config_function = GameDatas.BuildingFunction.dragonEyrie
 local config_levelup = GameDatas.BuildingLevelUp.dragonEyrie
 local config_dragonAttribute = GameDatas.DragonEyrie.dragonAttribute
 local config_equipments = GameDatas.SmithConfig.equipments
+local config_equipment_buffs = GameDatas.DragonEyrie.equipmentBuff
+local config_dragonSkill = GameDatas.DragonEyrie.dragonSkill
+local Localize = import("..utils.Localize")
+
 local ResourceManager = import(".ResourceManager")
 local ResourceUpgradeBuilding = import(".ResourceUpgradeBuilding")
 local DragonEyrieUpgradeBuilding = class("DragonEyrieUpgradeBuilding", ResourceUpgradeBuilding)
@@ -67,6 +71,18 @@ end
 function DragonEyrieUpgradeBuilding:GetLevelMaxWithStar(star)
 	return config_dragonAttribute[star].levelMax
 end
+--龙是否可以晋级
+function DragonEyrieUpgradeBuilding:DragonEquipmentIsReachPromotionLevel(dragon)
+	return dragon.level >= config_dragonAttribute[dragon.star].promotionLevel
+end
+
+function DragonEyrieUpgradeBuilding:DragonEquipmentsIsReachMaxStar(dragon)
+	for k,equipment in pairs(dragon.equipments) do
+		if equipment.star ~= dragon.star then return false end
+	end
+	return true
+end
+
 --龙升级需要的经验值
 function DragonEyrieUpgradeBuilding:GetNextLevelMaxExp(dragon)
 	return tonumber(config_dragonAttribute[dragon.star].perLevelExp) * math.pow(dragon.level,2)
@@ -91,7 +107,7 @@ function DragonEyrieUpgradeBuilding:GetEquipmentByName(name)
 	return config_equipments[name]
 end
 
--- 如果是Armguard类型的装备 一次是装两个
+--如果是Armguard类型的装备 一次是装两个
 function DragonEyrieUpgradeBuilding:GetEquipmentsByStarAndType(dragonStar,dragonType)
 	local r = {}
 	for name,equipment in pairs(config_equipments) do
@@ -109,6 +125,34 @@ end
 
 function DragonEyrieUpgradeBuilding:GetEquipmentCategorys()
 	return {"armguardLeft","crown","armguardRight","orb","chest","sting"}
+end
+
+function DragonEyrieUpgradeBuilding:GetAllBuffInfomation(dragon)
+	local list = {}
+	local equipmentsbuffs = {}
+	--equipment
+	for k,equipment in pairs(dragon.equipments) do
+		for _,buff in ipairs(equipment.buffs) do
+			if not equipmentsbuffs[buff] then
+				equipmentsbuffs[buff] = 1
+			else
+				equipmentsbuffs[buff] = equipmentsbuffs[buff] + 1
+			end
+		end
+	end
+	for k,v in pairs(equipmentsbuffs) do
+		local valStr = string.format("%d%%",config_equipment_buffs[k].buffEffect*v*100)
+		table.insert(list,{Localize.dragon_buff_effection[k],valStr})
+	end
+	--skill 
+	for k,skill in pairs(dragon.skills) do
+		if skill.level > 0 then
+			local valStr = string.format("%d%%",skill.level * config_dragonSkill[skill.name].effection*100)
+			table.insert(list,{Localize.dragon_skill_effection[skill.name],valStr})
+		end
+	end
+	-- LuaUtils:outputTable("list--->", list)
+	return list
 end
 
 return DragonEyrieUpgradeBuilding

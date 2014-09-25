@@ -74,7 +74,7 @@ function WidgetSoldierDetails:InitSoldierDetails()
 
     self.total_soldier = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("10000"),
+        text = City:GetSoldierManager():GetCountBySoldierType(self.soldier_type),
         font = UIKit:getFontFilePath(),
         size = 22,
         color = UIKit:hex2c3b(0x5a5544)
@@ -99,7 +99,7 @@ function WidgetSoldierDetails:CreateDismissSoldierSilder()
     -- 士兵总数
     cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("/ 800000"),
+        text = _("/ "..City:GetSoldierManager():GetCountBySoldierType(self.soldier_type)),
         font = UIKit:getFontFilePath(),
         size = 20,
         color = UIKit:hex2c3b(0x403c2f)})
@@ -119,7 +119,7 @@ function WidgetSoldierDetails:CreateDismissSoldierSilder()
     -- sliderbar
     WidgetSlider.new(display.LEFT_TO_RIGHT,  {bar = "slider_bg_461x24.png",
         progress = "slider_progress_445x14.png",
-        button = "slider_btn_66x66.png"},{max = 800000}):addTo(self)
+        button = "slider_btn_66x66.png"},{max = City:GetSoldierManager():GetCountBySoldierType(self.soldier_type)}):addTo(self)
         :align(display.LEFT_BOTTOM, display.cx - 280, display.top - 310)
         :onSliderValueChanged(function(event)
             dismiss_value:setString(string.format("%d", event.value))

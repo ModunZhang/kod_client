@@ -84,36 +84,36 @@ function UIKit:debugNode(node,name)
     printf("Position---->%d,%d\n",node:getPositionX(),node:getPositionY())
     printf("Size---->%d,%d\n",node:getContentSize().width,node:getContentSize().height)
 end
+--弃用
+-- function UIKit:getBuffsDescWithKey( key )
+--     local map = {
+--         addInfantryAtk = _("步兵攻击加成"),
+--         addInfantryHp = _("步兵生命值加成"),
+--         addInfantryLoad = _("提升步兵负重加成"),
+--         addInfantryMarch = _("步兵行军速度加成"),
 
-function UIKit:getBuffsDescWithKey( key )
-    local map = {
-        addInfantryAtk = _("步兵攻击加成"),
-        addInfantryHp = _("步兵生命值加成"),
-        addInfantryLoad = _("提升步兵负重加成"),
-        addInfantryMarch = _("步兵行军速度加成"),
+--         addHunterAtk = _("弓手攻击加成"),
+--         addHunterHp = _("弓手生命值加成"),
+--         addHunterLoad = _("弓手负重加成"),
+--         addHunterMarch = _("弓手行军速度加成"),
 
-        addHunterAtk = _("弓手攻击加成"),
-        addHunterHp = _("弓手生命值加成"),
-        addHunterLoad = _("弓手负重加成"),
-        addHunterMarch = _("弓手行军速度加成"),
+--         addCavalryAtk = _("骑兵攻击加成"),
+--         addCavalryHp = _("骑兵生命值加成"),
+--         addCavalryLoad = _("骑兵负重加成"),
+--         addCavalryMarch = _("骑兵行军速度加成"),
 
-        addCavalryAtk = _("骑兵攻击加成"),
-        addCavalryHp = _("骑兵生命值加成"),
-        addCavalryLoad = _("骑兵负重加成"),
-        addCavalryMarch = _("骑兵行军速度加成"),
+--         addSiegeAtk = _("攻城系攻击加成"),
+--         addSiegeHp = _("攻城系生命值加成"),
+--         addSiegeLoad = _("攻城系负重加成"),
+--         addSiegeMarch = _("攻城系行军速度加成"),
 
-        addSiegeAtk = _("攻城系攻击加成"),
-        addSiegeHp = _("攻城系生命值加成"),
-        addSiegeLoad = _("攻城系负重加成"),
-        addSiegeMarch = _("攻城系行军速度加成"),
+--         addMarchSize = _("带兵上限加成"),
+--         addMarchSize = _("带兵上限加成"),
+--         addCasualtyRate = _("可治愈伤兵几率加成"),
+--     }
 
-        addMarchSize = _("带兵上限加成"),
-        addMarchSize = _("带兵上限加成"),
-        addCasualtyRate = _("可治愈伤兵几率加成"),
-    }
-
-    return map[key] or  ""
-end
+--     return map[key] or  ""
+-- end
 
 function UIKit:commonProgressTimer(png)
     local progressFill = display.newSprite(png)

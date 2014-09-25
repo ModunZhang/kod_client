@@ -1,16 +1,55 @@
 local UIListView = import('..ui.UIListView')
 local WidgetPushButton = import(".WidgetPushButton")
 local WidgetMaterialBox = import("..widget.WidgetMaterialBox")
-
+local MaterialManager = import("..entity.MaterialManager")
+local DRAGON_MATERIAL_PIC_MAP = {
+    ["ironIngot"] = "ironIngot_92x92.png",
+    ["steelIngot"] = "steelIngot_92x92.png",
+    ["mithrilIngot"] = "mithrilIngot_92x92.png",
+    ["blackIronIngot"] = "blackIronIngot_92x92.png",
+    ["arcaniteIngot"] = "arcaniteIngot_92x92.png",
+    ["wispOfFire"] = "wispOfFire_92x92.png",
+    ["wispOfCold"] = "wispOfCold_92x92.png",
+    ["wispOfWind"] = "wispOfWind_92x92.png",
+    ["lavaSoul"] = "lavaSoul_92x92.png",
+    ["iceSoul"] = "iceSoul_92x92.png",
+    ["forestSoul"] = "forestSoul_92x92.png",
+    ["infernoSoul"] = "infernoSoul_92x92.png",
+    ["blizzardSoul"] = "blizzardSoul_92x92.png",
+    ["fairySoul"] = "fairySoul_92x92.png",
+    ["moltenShard"] = "moltenShard_92x92.png",
+    ["glacierShard"] = "glacierShard_92x92.png",
+    ["chargedShard"] = "chargedShard_92x92.png",
+    ["moltenShiver"] = "moltenShiver_92x92.png",
+    ["glacierShiver"] = "glacierShiver_92x92.png",
+    ["chargedShiver"] = "chargedShiver_92x92.png",
+    ["moltenCore"] = "moltenCore_92x92.png",
+    ["glacierCore"] = "glacierCore_92x92.png",
+    ["chargedCore"] = "chargedCore_92x92.png",
+    ["moltenMagnet"] = "moltenMagnet_92x92.png",
+    ["glacierMagnet"] = "glacierMagnet_92x92.png",
+    ["chargedMagnet"] = "chargedMagnet_92x92.png",
+    ["challengeRune"] = "challengeRune_92x92.png",
+    ["suppressRune"] = "suppressRune_92x92.png",
+    ["rageRune"] = "rageRune_92x92.png",
+    ["guardRune"] = "guardRune_92x92.png",
+    ["poisonRune"] = "poisonRune_92x92.png",
+    ["giantRune"] = "giantRune_92x92.png",
+    ["dolanRune"] = "dolanRune_92x92.png",
+    ["warsongRune"] = "warsongRune_92x92.png",
+    ["infernoRune"] = "infernoRune_92x92.png",
+    ["arcanaRune"] = "arcanaRune_92x92.png",
+    ["eternityRune"] = "eternityRune_92x92.png"
+}
 local WidgetMaterialDetails = class("WidgetMaterialDetails", function ()
     return display.newColorLayer(cc.c4b(0,0,0,127))
 end)
 
-function WidgetMaterialDetails:ctor()
-    self:InitMaterialDetails()
+function WidgetMaterialDetails:ctor(material_type,material_name)
+    self:InitMaterialDetails(material_type,material_name)
 end
 
-function WidgetMaterialDetails:InitMaterialDetails()
+function WidgetMaterialDetails:InitMaterialDetails(material_type,material_name)
     -- bg
     local bg = display.newScale9Sprite("full_screen_dialog_bg.png", display.cx, display.top-480,cc.size(608,506)):addTo(self)
     local bg_width,bg_height = bg:getContentSize().width,bg:getContentSize().height
@@ -19,7 +58,7 @@ function WidgetMaterialDetails:InitMaterialDetails()
     -- soldier_name label
     self.soldier_name_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("工程铁锭"),
+        text = _(material_name),
         font = UIKit:getFontFilePath(),
         size = 24,
         color = UIKit:hex2c3b(0xffedae)
@@ -30,10 +69,9 @@ function WidgetMaterialDetails:InitMaterialDetails()
             self:removeFromParent(true)
         end):align(display.CENTER, bg_width-20, bg_height-20):addTo(bg,2):addChild(display.newSprite("X_3.png"))
     -- 材料icon
-    local materialBox = WidgetMaterialBox.new("material_blueprints.png",function ()
-        self:OpenMaterialDetails()
-    end,false)
-    materialBox:SetNumber("1/99")
+    local materialBox = WidgetMaterialBox.new(material_type==MaterialManager.MATERIAL_TYPE.DRAGON and DRAGON_MATERIAL_PIC_MAP[material_name] or "material_blueprints.png",false)
+    local num = City:GetMaterialManager():GetMaterialsByType(material_type)[material_name].."/"..City:GetBuildingByType("materialDepot")[1]:GetMaxMaterial()
+    materialBox:SetNumber(num)
     materialBox:addTo(self):pos(display.cx - 285, display.top -410)
     -- 材料介绍
     self.material_introduce = cc.ui.UILabel.new(

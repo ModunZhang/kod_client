@@ -241,6 +241,23 @@ end
 function CityLayer:IteratorDecoratorBuildings(func)
     table.foreach(self.houses, func)
 end
+function CityLayer:IteratorFunctionsBuildings(func)
+    table.foreach(self.buildings, func)
+end
+function CityLayer:IteratorInnnerBuildings(func)
+    local handle = false
+    local handle_func = function(k, v)
+        if func(k, v) then
+            handle = true
+            return true
+        end
+    end
+    repeat
+        table.foreach(self.buildings, handle_func)
+        if handle then break end
+        table.foreach(self.houses, handle_func)
+    until true
+end
 function CityLayer:IteratorCanUpgradingBuilding(func)
     local handle = false
     local handle_func = function(k, v)
@@ -360,6 +377,7 @@ function CityLayer:InitWithCity(city)
     city:AddListenOnType(self, city.LISTEN_TYPE.OCCUPY_RUINS)
     city:AddListenOnType(self, city.LISTEN_TYPE.CREATE_DECORATOR)
     city:AddListenOnType(self, city.LISTEN_TYPE.DESTROY_DECORATOR)
+
     self:UpdateAllWithCity(city)
 
     local city_node = self:GetCityNode()

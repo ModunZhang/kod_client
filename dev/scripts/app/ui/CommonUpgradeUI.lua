@@ -23,6 +23,7 @@ function CommonUpgradeUI:onEnter()
     self:InitUpgradePart()
     self:InitAccelerationPart()
     self.city:GetResourceManager():AddObserver(self)
+
     self:AddUpgradeListener()
 end
 
@@ -64,9 +65,9 @@ function CommonUpgradeUI:OnBuildingUpgrading( buidling, current_time )
     pro:setPercentage(self.building:GetElapsedTimeByCurrentTime(current_time)/self.building:GetUpgradeTimeToNextLevel()*100)
     self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(current_time)))
     if self.building:GetUpgradingLeftTimeByCurrentTime(current_time)<=self.building.freeSpeedUpTime then
-        self.acc_layer.acc_button:setButtonEnabled(false)
-    else
         self.acc_layer.acc_button:setButtonEnabled(true)
+    else
+        self.acc_layer.acc_button:setButtonEnabled(false)
     end
 end
 
@@ -150,7 +151,7 @@ function CommonUpgradeUI:SetBuildingIntroduces()
         ["materialDepot"] = _("提供材料的存储上限\n每种材料存放上限%d"),
         ["armyCamp"] = _("提供出兵时派兵上限\n派兵上限%d"),
         ["barracks"] = _("增加每次招募数量\n每次可招募%d"),
-        ["blackSmith"] = _("提升装备打造速度\n装备打造速度+%d"),
+        ["blackSmith"] = _("提升装备打造速度\n装备打造速度+%d%%"),
         ["foundry"] = _("可建造矿工小屋:%d\n铁矿产量+%d%%"),
         ["stoneMason"] = _("可建造石匠小屋:%d\n石料产量+%d%%"),
         ["lumbermill"] = _("可建造木工小屋:%d\n木材产量+%d%%"),
@@ -183,9 +184,14 @@ function CommonUpgradeUI:SetBuildingIntroduces()
     elseif self.building:GetType()=="foundry"
         or self.building:GetType()=="stoneMason"
         or self.building:GetType()=="lumbermill"
-        or self.building:GetType()=="mill"
-    then
+        or self.building:GetType()=="mill" then
         self.building_introduces:setString(string.format(building_introduces_table[self.building:GetType()],self.building:GetMaxHouseNum(),self.building:GetAddEfficency()*100))
+    elseif self.building:GetType()=="blackSmith" then
+        self.building_introduces:setString(string.format(building_introduces_table["blackSmith"],self.building:GetEfficiency()*100))
+    elseif self.building:GetType()=="barracks" then
+        self.building_introduces:setString(string.format(building_introduces_table["barracks"],self.building:GetMaxRecruitSoldierCount()))
+    else
+        self.building_introduces:setString(_("本地化未定义"))
     end
 end
 
@@ -358,25 +364,25 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
     local userData = DataManager:getUserData()
     requirements = {
         {resource_type = "wood",isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
-            icon="wood_icon.png",description=self.building:GetLevelUpWood().."/"..wood},
+            icon="wood_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpWood()).."/"..GameUtils:formatNumber(wood)},
 
         {resource_type = "stone",isVisible = self.building:GetLevelUpStone()>0,     isSatisfy = stone>self.building:GetLevelUpStone() ,
-            icon="stone_icon.png",description=self.building:GetLevelUpStone().."/"..stone},
+            icon="stone_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpStone()).."/"..GameUtils:formatNumber(stone)},
 
         {resource_type = "iron",isVisible = self.building:GetLevelUpIron()>0,      isSatisfy = iron>self.building:GetLevelUpIron() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpIron().."/"..iron},
+            icon="iron_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpIron()).."/"..GameUtils:formatNumber(iron)},
 
         {resource_type = "citizen",isVisible = self.building:GetLevelUpCitizen()>0,   isSatisfy = population>self.building:GetLevelUpCitizen() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpCitizen().."/"..population},
+            icon="iron_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpCitizen()).."/"..GameUtils:formatNumber(population)},
 
         {resource_type = "blueprints",isVisible = self.building:GetLevelUpBlueprints()>0,isSatisfy = userData.materials.blueprints>self.building:GetLevelUpBlueprints() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpBlueprints().."/"..userData.materials.blueprints},
+            icon="iron_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpBlueprints()).."/"..GameUtils:formatNumber(userData.materials.blueprints)},
         {resource_type = "tools",isVisible = self.building:GetLevelUpTools()>0,     isSatisfy = userData.materials.tools>self.building:GetLevelUpTools() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpTools().."/"..userData.materials.tools},
+            icon="iron_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpTools()).."/"..GameUtils:formatNumber(userData.materials.tools)},
         {resource_type = "tiles",isVisible = self.building:GetLevelUpTiles()>0,     isSatisfy = userData.materials.tiles>self.building:GetLevelUpTiles() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpTiles().."/"..userData.materials.tiles},
+            icon="iron_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpTiles()).."/"..GameUtils:formatNumber(userData.materials.tiles)},
         {resource_type = "pulley",isVisible = self.building:GetLevelUpPulley()>0,    isSatisfy = userData.materials.pulley>self.building:GetLevelUpPulley() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpPulley().."/"..userData.materials.pulley},
+            icon="iron_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpPulley()).."/"..GameUtils:formatNumber(userData.materials.pulley)},
     }
 
     if not self.requirement_listview then
@@ -384,7 +390,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
             title = _("升级需求"),
             height = 333,
             contents = requirements,
-        }):addTo(self):pos(display.cx-275, display.top-855)
+        }):addTo(self.upgrade_layer):pos(display.cx-275, display.top-855)
     end
     self.requirement_listview:RefreshListView(requirements)
 end
@@ -424,6 +430,10 @@ function CommonUpgradeUI:InitAccelerationPart()
     }):addTo(bar)
     self.acc_layer.upgrade_time_label:setAnchorPoint(cc.p(0,0.5))
     self.acc_layer.upgrade_time_label:pos(self.acc_layer.upgrade_time_label:getContentSize().width/2+10, bar:getContentSize().height/2)
+    if self.building:IsUpgrading() then
+        self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime())))
+    end
+
     -- 进度条头图标
     display.newSprite("upgrade_progress_bar_icon_bg.png", display.cx - 256, display.cy+20):addTo(self.acc_layer)
     display.newSprite("upgrade_hourglass.png", display.cx - 256, display.cy+20):addTo(self.acc_layer):setScale(0.8)
@@ -592,14 +602,13 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
             dialog:CreateNeeds("Topaz-icon.png",required_gems)
         end
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH then
+        local required_gems = self.building:getUpgradeNowNeedGems()
         dialog:CreateOKButton(function(sender,type)
             listener()
-            self:getParent():leftButtonClicked()
         end)
         dialog:SetTitle(_("立即开始"))
         dialog:SetPopMessage(_("您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"))
         dialog:CreateNeeds("Topaz-icon.png",required_gems)
-            :seekWidgetByName(dialog,"LC_Dialogue_Label"):setText(_("您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"))
     else
         dialog:SetTitle(_("提示"))
         dialog:SetPopMessage(can_not_update_type)
@@ -607,15 +616,3 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
-
-
-
-
-
-
-<<<<<<< Updated upstream
-
-
-
-=======
->>>>>>> Stashed changes

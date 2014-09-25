@@ -8,10 +8,14 @@ local config_dragonSkill = GameDatas.DragonEyrie.dragonSkill
 local BODY_HEIGHT = 664
 local LISTVIEW_WIDTH = 547
 local UIListView = import(".UIListView")
+local Localize = import("..utils.Localize")
 
-function GameUIDragonSkill:ctor( skill )
+function GameUIDragonSkill:ctor(owner,skillLocation)
 	GameUIDragonSkill.super.ctor(self)
-	self.skill = skill
+  self.owner = owner
+  self.skillLocation = skillLocation
+  self.dragon = self.owner:GetCurrentDragon()
+	self.skill = self.dragon.skills["skill_" .. skillLocation]
 end
 
 function GameUIDragonSkill:onEnter()
@@ -23,7 +27,7 @@ function GameUIDragonSkill:onEnter()
 		:addTo(self.backgroundImage)
 	self.mainTitleLabel =  cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "技能升级",
+        text = _("技能升级"),
         font = UIKit:getFontFilePath(),
         size = 24,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
@@ -43,27 +47,28 @@ function GameUIDragonSkill:onEnter()
 	   	:addTo(closeButton)
 	   	:pos(-32,30)
 
-	local skillBg = display.newSprite("dragonskill_84x86.png")
+  local skillBg = display.newSprite("dragonskill_84x86.png")
         :addTo(self.backgroundImage):align(display.LEFT_TOP,30,titleBar:getPositionY()-titleBar:getContentSize().height - 20)
     display.newSprite("dragonskill_70x70.png"):addTo(skillBg):pos(skillBg:getContentSize().width/2,skillBg:getContentSize().height/2)
 
-    local titleLabel = cc.ui.UILabel.new({
+  local titleLabel = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = self.skill.name,
+        text = Localize.dragon_skill[self.skill.name] .. " (LV" .. self.skill.level .. ")",
         font = UIKit:getFontFilePath(),
         size = 24,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
         color = UIKit:hex2c3b(0x403c2f)
 	}):addTo(self.backgroundImage):align(display.LEFT_TOP,skillBg:getPositionX()+skillBg:getContentSize().width+20,skillBg:getPositionY()-10)
+  self.titleLabel = titleLabel
 	local descLabel = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "加血",
+        text = self:GetSkillEffection(self.skill),
         font = UIKit:getFontFilePath(),
-        size = 22,
+        size = 20,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
         color = UIKit:hex2c3b(0x403c2f)
 	}):addTo(self.backgroundImage):align(display.LEFT_TOP, skillBg:getPositionX()+skillBg:getContentSize().width+20, titleLabel:getPositionY()- titleLabel:getContentSize().height - 10)
-
+  self.descLabel = descLabel
 	local upgradeButton = cc.ui.UIPushButton.new({
     normal = "dragon_yellow_button.png",
     pressed = "dragon_yellow_button_h.png",
@@ -81,6 +86,8 @@ function GameUIDragonSkill:onEnter()
       :onButtonClicked(function(event)
       		self:UpgradeButtonClicked()
       end)
+    upgradeButton:setButtonEnabled(self:CanUpgrade())
+    self.upgradeButton = upgradeButton
   	local requirementLabel = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = _("升级条件"),
@@ -99,7 +106,10 @@ function GameUIDragonSkill:onEnter()
 end
 
 function GameUIDragonSkill:RefreshUI()
+  self.titleLabel:setString(Localize.dragon_skill[self.skill.name] .. " (LV" .. self.skill.level .. ")")
+  self.descLabel:setString(self:GetSkillEffection(self.skill))
 	local requires = self:GetUpgradeSkillCost(self.skill.name,self.skill.level)
+  self.listView:removeAllItems()
 	for i,v in ipairs(requires) do
 		local newItem = self.listView:newItem()
   		local content = self:GetListItem(i,v[1],v[2])
@@ -107,17 +117,20 @@ function GameUIDragonSkill:RefreshUI()
   		newItem:setItemSize(content:getContentSize().width,content:getContentSize().height)
   		self.listView:addItem(newItem)
 	end
-
-  	self.listView:reload()
+  self.listView:reload()
+  self.upgradeButton:setButtonEnabled(self:CanUpgrade())
 end
 
 
 function GameUIDragonSkill:CloseButtonClicked()
 	self:removeFromParentAndCleanup(true)
+  self.owner.dragonEquipment = nil
 end
 
 function GameUIDragonSkill:UpgradeButtonClicked()
-	-- body
+  PushService:upgradeDragonDragonSkill(self.dragon.type,self.skillLocation,function ( ... )
+
+  end)
 end
 
 function GameUIDragonSkill:GetListItem(index,key,val)
@@ -158,13 +171,33 @@ function GameUIDragonSkill:GetUpgradeSkillCost( dragonSkill,level)
     local r = {
         {"energy",config.energyCostPerLevel},
         {"blood",math.pow(level+1,2) * config.heroBloodCostPerLevel},
-        {"dragonLevel",10}, -- 配置表未配置暂时写死
+        {"dragonLevel",1}, -- 配置表未配置暂时写死
     }
     return r
 end
 
+function GameUIDragonSkill:CanUpgrade()
+  local requires = self:GetUpgradeSkillCost(self.skill.name,self.skill.level)
+  local flag = City:GetResourceManager():GetEnergyResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()) >= requires[1][2]
+    and City:GetResourceManager():GetBloodResource():GetValue() >= requires[2][2]
+    and self.dragon.level >= requires[3][2]
+  return flag
+end
+
+function GameUIDragonSkill:GetSkillEffection(skill)
+  local config = self:GetSkillConfig(skill.name)
+  local count  = string.format("%d%%",skill.level * config.effection * 100)
+  return Localize.dragon_skill_effection[self.skill.name] .. " " .. count
+end
+
 function GameUIDragonSkill:GetSkillConfig(dragonSkill)
-    return config_dragonSkill[dragonSkill]
+  return config_dragonSkill[dragonSkill]
+end
+
+function GameUIDragonSkill:DragonDataChanged()
+  self.dragon = self.owner:GetCurrentDragon()
+  self.skill = self.dragon.skills["skill_" .. self.skillLocation]  
+  self:RefreshUI()
 end
 
 return GameUIDragonSkill

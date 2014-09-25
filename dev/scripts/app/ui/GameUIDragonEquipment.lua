@@ -10,6 +10,7 @@ local config_category = GameDatas.DragonEyrie
 local WidgetDragonEquipIntensify = import("..widget.WidgetDragonEquipIntensify")
 local BODY_HEIGHT = 664
 local LISTVIEW_WIDTH = 547
+local Localize = import("..utils.Localize")
 
 function GameUIDragonEquipment:ctor(owner,dragon,equipmentCategory)
 	GameUIDragonEquipment.super.ctor(self)
@@ -195,7 +196,6 @@ function GameUIDragonEquipment:IntensifyEvent()
         table.insert(equipments,{name=name,count=count})
       end
   end)
-
   PushService:enhanceDragonEquipment(self.dragon.type,self.equipmentCategory,equipments,function()
   end)
 end
@@ -326,6 +326,9 @@ function GameUIDragonEquipment:BuildInfoUI()
 	        align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
 	        color = UIKit:hex2c3b(0xffedae)
     	})):addTo(background):pos(self.background:getContentSize().width/2, 80)
+      :onButtonClicked(function(event)
+          self:OnMakeButtonClicked()
+      end)
     local descLabel2 = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = _("立即前往铁匠铺制作"),
@@ -337,6 +340,13 @@ function GameUIDragonEquipment:BuildInfoUI()
     self.info_ui.makeButton = makeButton
     self.info_ui.descLabel2 = descLabel2
     self.info_ui.main = background
+end
+
+function GameUIDragonEquipment:OnMakeButtonClicked()
+    local blackSmith = City:GetFirstBuildingByType("blackSmith")
+    if not blackSmith:IsUnlock() then
+         UIKit:newGameUI('GameUIBlackSmith', City, blackSmith):addToScene(self, true)
+    end
 end
 
 function GameUIDragonEquipment:GetEquipment()
@@ -391,7 +401,7 @@ end
 function GameUIDragonEquipment:RefreshInfoUI()
   self:RefreshEquipmentItem()
   local equipment = self:GetEquipment()
-    self.mainTitleLabel:setString(self.equipmentCategory)
+    self.mainTitleLabel:setString(Localize.body[self.equipmentCategory])
 	if self.isFromConfig then -- 没有装备
     self.adornOrResetButton.labels_['normal']:setString(_("装备"))
     self.intensifyButton:hide()
@@ -405,8 +415,8 @@ function GameUIDragonEquipment:RefreshInfoUI()
     self.intensifyButton:show()
     self.adornOrResetButton:setButtonEnabled(true)
   end
-	self.titleLable:setString(equipment.name)
-	self.countLabel:setString(DataManager:getUserData().dragonEquipments[equipment.name] .. "/" ..  City:GetFirstBuildingByType("materialDepot"):GetMaxMaterial())
+	self.titleLable:setString(Localize.equip[equipment.name])
+	self.countLabel:setString(_("数量") .. " " .. DataManager:getUserData().dragonEquipments[equipment.name] .. "/" ..  City:GetFirstBuildingByType("materialDepot"):GetMaxMaterial())
   self:RefreshInfoListView()
 end
 
@@ -497,7 +507,8 @@ function GameUIDragonEquipment:GetEquipmentEffect()
   table.insert(r,{1,_("活力"),config_category.vitality})
   table.insert(r,{2,_("力量"),config_category.strength})
   for _,v in ipairs(self.dragon.equipments[self.equipmentCategory].buffs) do
-    table.insert(r,{3,UIKit:getBuffsDescWithKey(v),string.format("%d%%",config_equipment_buffs[v].buffEffect*100)})
+    -- table.insert(r,{3,UIKit:getBuffsDescWithKey(v),string.format("%d%%",config_equipment_buffs[v].buffEffect*100)})
+    table.insert(r,{3,Localize.dragon_buff_effection[v],string.format("%d%%",config_equipment_buffs[v].buffEffect*100)})
   end
   return r
 end

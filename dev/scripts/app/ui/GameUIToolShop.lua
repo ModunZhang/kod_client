@@ -2,10 +2,13 @@
 -- Author: gaozhou
 -- Date: 2014-08-18 14:33:28
 --
+local window = import("..utils.window")
+local MaterialManager = import("..entity.MaterialManager")
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetNeedBox = import("..widget.WidgetNeedBox")
 local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
-local GameUIToolShop = UIKit:createUIClass("GameUIToolShop", "GameUIWithCommonHeader")
+local GameUIToolShop = UIKit:createUIClass("GameUIToolShop", "GameUIUpgradeBuilding")
 
 local MATERIALS_MAP = {
     blueprints = { "blueprints_112x112.png",  _("建筑图纸"), 1},
@@ -19,7 +22,8 @@ local MATERIALS_MAP = {
 }
 
 function GameUIToolShop:ctor(city, toolShop)
-    GameUIToolShop.super.ctor(self, city, _("工具作坊"))
+    GameUIToolShop.super.ctor(self, city, _("工具作坊"),toolShop)
+    self.tool_shop_city = city
     self.toolShop = toolShop
 end
 function GameUIToolShop:onEnter()
@@ -27,9 +31,11 @@ function GameUIToolShop:onEnter()
     self:Manufacture()
     self:TabButtons()
     self.toolShop:AddToolShopListener(self)
+    self.tool_shop_city:GetMaterialManager():AddObserver(self)
 end
 function GameUIToolShop:onExit()
     self.toolShop:RemoveToolShopListener(self)
+    self.tool_shop_city:GetMaterialManager():RemoveObserver(self)
     GameUIToolShop.super.onExit(self)
 end
 function GameUIToolShop:OnBeginMakeMaterialsWithEvent(tool_shop, event)
@@ -44,6 +50,13 @@ end
 function GameUIToolShop:OnGetMaterialsWithEvent(tool_shop, event)
     self:UpdateEvent(event)
 end
+function GameUIToolShop:OnMaterialsChanged(material_manager, material_type, changed)
+    if MaterialManager.MATERIAL_TYPE.BUILD == material_type then
+        self.building_item:SetStoreMaterials(LuaUtils:table_map(changed, function(k, v)
+            return k, v.new
+        end))
+    end
+end
 function GameUIToolShop:UpdateEvent(event)
     if event:Category() == "building" then
         self.building_item:UpdateByEvent(event)
@@ -52,7 +65,7 @@ function GameUIToolShop:UpdateEvent(event)
     end
 end
 function GameUIToolShop:Manufacture()
-    self.list_view = self:CreateVerticalListView(20, display.bottom + 70, display.right - 20, display.top - 100)
+    self.list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 100)
     local item = self:CreateMaterialItemWithListView(self.list_view,
         _("生产建筑所需材料"),
         {
@@ -90,17 +103,17 @@ function GameUIToolShop:Manufacture()
     self.technology_event = item
 
     self.list_view:reload():resetPosition()
+    local material_manager = self.tool_shop_city:GetMaterialManager()
+    local materials = material_manager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
+    dump(materials)
+    self.building_item:SetStoreMaterials(materials)
+    self.technology_event:SetStoreMaterials(materials)
 end
 function GameUIToolShop:TabButtons()
     self:CreateTabButtons({
         {
-            label = _("升级"),
-            tag = "upgrade",
-        },
-        {
             label = _("制作"),
             tag = "manufacture",
-            default = true,
         }
     },
     function(tag)
@@ -109,23 +122,20 @@ function GameUIToolShop:TabButtons()
         elseif tag == "manufacture" then
             self.list_view:setVisible(true)
         end
-    end):pos(display.cx, display.bottom + 40)
+    end):pos(window.cx, window.bottom + 40)
 end
 
 function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materials)
     local toolShop = self.toolShop
     local align_x, align_y = 30, 35
     local height = 380
-    local content = cc.ui.UIImage.new("back_ground_608x164.png",
-        {scale9 = true})
-        :align(display.CENTER)
-        :setLayoutSize(608, height)
+    local content = WidgetUIBackGround.new(height):align(display.CENTER)
 
-    local pos = content:getAnchorPointInPoints()
+    local size = content:getContentSize()
     local title_blue = cc.ui.UIImage.new("title_blue_596x49.png",
         {scale9 = true})
         :addTo(content, 2)
-        :align(display.CENTER, pos.x, height - 49/2)
+        :align(display.CENTER, size.width / 2, height - 49/2)
 
     cc.ui.UILabel.new({
         text = title,
@@ -157,7 +167,6 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
         num_bg:setTouchEnabled(false)
 
         local store_label = cc.ui.UILabel.new({
-            text = "1000",
             size = 18,
             font = UIKit:getFontFilePath(),
             align = cc.ui.TEXT_ALIGN_LEFT,
@@ -176,7 +185,6 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
             :align(display.CENTER, pos.x, pos.y + 78)
 
         local num_label = cc.ui.UILabel.new({
-            text = "+2",
             size = 18,
             font = UIKit:getFontFilePath(),
             align = cc.ui.TEXT_ALIGN_RIGHT,
@@ -341,12 +349,20 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
     function item:GetMaterial()
         return get_material
     end
-    function item:SetGetMaterials(materials)
-        for k, v in pairs(materials_map) do
-            v:ShowNumber(nil)
-        end
+    function item:SetStoreMaterials(materials)
         for k, v in pairs(materials) do
-            materials_map[v.type]:ShowNumber(v.count)
+            local ui = materials_map[k]
+            if ui then
+                ui:SetStoreNumber(v)
+            end
+        end
+    end
+    function item:SetGetMaterials(materials)
+        local get_material = LuaUtils:table_map(materials, function(k, v)
+            return v.type, v.count
+        end)
+        for k, v in pairs(materials_map) do
+            v:ShowNumber(get_material[k])
         end
     end
     function item:ResetGetMaterials()
@@ -365,6 +381,10 @@ end
 
 
 return GameUIToolShop
+
+
+
+
 
 
 

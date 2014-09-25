@@ -41,6 +41,7 @@ function GameUIHome:onEnter()
         {normal = "home/player_btn_up.png", pressed = "home/player_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
+        NetManager:resetGame()
     end):addTo(top_bg):align(display.LEFT_BOTTOM, 109, 106)
 
 

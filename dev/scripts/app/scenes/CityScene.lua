@@ -57,50 +57,9 @@ function CityScene:onEnter()
 
     self.city_layer:AddObserver(self)
     self.city_layer:InitWithCity(City)
-    self.city_layer:IteratorCanUpgradingBuilding(function(_, building)
+    self.city_layer:IteratorInnnerBuildings(function(_, building)
         self.scene_ui_layer:NewUIFromBuildingSprite(building)
     end)
-
-
-    -- City:GetFirstBuildingByType("toolShop"):AddToolShopListener({
-    --     OnBeginMakeMaterialsWithEvent = function(lisenter, tool_shop, event)
-    --         print("OnBeginMakeMaterialsWithEvent", event:Category())
-    --     end,
-    --     OnMakingMaterialsWithEvent = function(lisenter, tool_shop, event, current_time)
-    --         print("OnMakingMaterialsWithEvent", event:Category(), current_time)
-    --     end,
-    --     OnEndMakeMaterialsWithEvent = function(lisenter, tool_shop, event, current_time)
-    --         print("OnEndMakeMaterialsWithEvent", event:Category(), current_time)
-    --     end,
-    --     OnGetMaterialsWithEvent = function(lisenter, tool_shop, event)
-    --         print("OnGetMaterialsWithEvent", event:Category())
-    --     end,
-    -- })
-    -- City:GetFirstBuildingByType("blackSmith"):AddBlackSmithListener({
-    --     OnBeginMakeEquipmentWithEvent = function(lisenter, tool_shop, event)
-    --         print("OnBeginMakeEquipmentWithEvent", event:Content())
-    --     end,
-    --     OnMakingEquipmentWithEvent = function(lisenter, tool_shop, event, current_time)
-    --         print("OnMakingEquipmentWithEvent", event:Content(), event:LeftTime(current_time))
-    --     end,
-    --     OnEndMakeEquipmentWithEvent = function(lisenter, tool_shop, event, equipment)
-    --         print("OnEndMakeEquipmentWithEvent", event:Content(), equipment)
-    --     end,
-    -- })
-
-
-    City:GetFirstBuildingByType("barracks"):AddBarracksListener({
-        OnBeginRecruit = function(lisenter, barracks, event)
-            print("OnBeginRecruit", event:StartTime(), event:GetRecruitingTime())
-        end,
-        OnRecruiting = function(lisenter, barracks, event, current_time)
-            print("OnRecruiting", event:LeftTime(current_time))
-        end,
-        OnEndRecruit = function(lisenter, barracks, event, current_time)
-            print("OnEndRecruit")
-            dump(event)
-        end,
-    })
 end
 function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
@@ -197,13 +156,6 @@ end
 ----- EventManager
 function CityScene:OnOneTouch(pre_x, pre_y, x, y, touch_type)
     self:OneTouch(pre_x, pre_y, x, y, touch_type)
-    -- if self.lock_buttons then
-    --     table.foreach(self.lock_buttons, function(k, v)
-    --         if v:IsInStateName("confirm") and not v:hitTest(x, y) then
-    --             v:TranslateToSatateByName("locked")
-    --         end
-    --     end)
-    -- end
 end
 function CityScene:OnTwoTouch(x1, y1, x2, y2, event_type)
     local scene = self.city_layer
@@ -253,15 +205,17 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
         elseif building:GetEntity():GetType() == "toolShop" then
             UIKit:newGameUI('GameUIToolShop', City, building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "blackSmith" then
-            UIKit:newGameUI('GameUIBlackSmith', City):addToScene(self, true)
+            UIKit:newGameUI('GameUIBlackSmith', City, building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "materialDepot" then
             UIKit:newGameUI('GameUIMaterialDepot', City, building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "barracks" then
             UIKit:newGameUI('GameUIBarracks', City, building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "armyCamp" then
             self._armyCamp_page = UIKit:newGameUI('GameUIArmyCamp',City,building:GetEntity()):addToScene(self, true)
-        elseif building:GetEntity():GetType() == "foundry" 
-            or building:GetEntity():GetType() == "stoneMason" 
+        elseif building:GetEntity():GetType() == "townHall" then
+            self._armyCamp_page = UIKit:newGameUI('GameUITownHall',City,building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "foundry"
+            or building:GetEntity():GetType() == "stoneMason"
             or building:GetEntity():GetType() == "lumbermill"
             or building:GetEntity():GetType() == "mill" then
             self._armyCamp_page = UIKit:newGameUI('GameUIPResourceBuilding',City,building:GetEntity()):addToScene(self, true)
@@ -340,6 +294,7 @@ function CityScene:OnGateChanged(old_walls, new_walls)
 end
 
 return CityScene
+
 
 
 
