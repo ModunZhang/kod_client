@@ -272,10 +272,42 @@ function UIListView:removeItem(listItem, bAni)
 	self.size.width = self.size.width - itemW
 	self.size.height = self.size.height - itemH
 	if UIScrollView.DIRECTION_VERTICAL == self.direction then
+		print(1, pos - 1, -itemW, -itemH, bAni)
 		self:moveItems(1, pos - 1, -itemW, -itemH, bAni)
 	else
 		self:moveItems(pos, table.nums(self.items_), -itemW, -itemH, bAni)
 	end
+
+	return self
+end
+
+function UIListView:replaceItem(new_item, be_repalced, bAni, index)
+	-- local itemW, itemH = be_repalced:getItemSize()
+	self.container:removeChild(be_repalced)
+
+	local pos = self:getItemPos(be_repalced)
+	if pos then
+		table.remove(self.items_, pos)
+	end
+	if index then
+		self:addItem(new_item, index)
+	elseif pos then
+		self:addItem(new_item, pos)
+	end
+
+	-- if UIScrollView.DIRECTION_VERTICAL == self.direction then
+	-- 	itemW = 0
+	-- else
+	-- 	itemH = 0
+	-- end
+
+	-- self.size.width = self.size.width - itemW
+	-- self.size.height = self.size.height - itemH
+	-- if UIScrollView.DIRECTION_VERTICAL == self.direction then
+	-- 	self:moveItems(1, pos - 1, -itemW, -itemH, bAni)
+	-- else
+	-- 	self:moveItems(pos, table.nums(self.items_), -itemW, -itemH, bAni)
+	-- end
 
 	return self
 end

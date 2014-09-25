@@ -12,7 +12,7 @@ local WidgetWithBlueTitle = class("WidgetWithBlueTitle", function(height, title)
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
         color = UIKit:hex2c3b(0xffedae)
-    }):addTo(title_blue, 2):align(display.LEFT_CENTER, 30, title_blue:getContentSize().height/2)
+    }):addTo(title_blue, 2):align(display.LEFT_CENTER, 20, title_blue:getContentSize().height/2)
     return back_ground
 end)
 function WidgetWithBlueTitle:SetTitle(title)
