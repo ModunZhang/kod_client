@@ -1,6 +1,7 @@
 require "framework.functions"
 require "framework.debug"
 package.path = package.path .. ";../dev/scripts/?.lua;"
+_ = function()end
 local _ = import("app.datas.GameDatas")
 local _ = import("app.utils.LuaUtils")
 local Game = class("Game")
