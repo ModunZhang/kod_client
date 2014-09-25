@@ -9,6 +9,7 @@ local UIListView = import(".UIListView")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local config_dragonSkill = GameDatas.DragonEyrie.dragonSkill
 local Localize = import("..utils.Localize")
+local window = import("..utils.window")
 
 function GameUIDragonEyrie:ctor(city,building)
 	GameUIDragonEyrie.super.ctor(self,City,_("龙巢"))
@@ -401,19 +402,6 @@ function GameUIDragonEyrie:CreateEquipmentContentIf()
 		:addTo(self)
 	content_bg:pos(display.cx,self.dragon_bg:getPositionY()-self.dragon_bg:getContentSize().height/2-130)
 	local eqs = display.newNode()
-	-- for i=1,6 do
-	-- 	local eq = self:GetEquipmentItem()
-	-- 	if i < 4 then
-	-- 		local x = (i - 1)*(eq:getContentSize().width + 10)
- --            eq:setAnchorPoint(cc.p(0,0))
- --            eq:setPosition(cc.p(x,0))
- --            eq:addTo(eqs)
-	-- 	else
- --            eq:setAnchorPoint(cc.p(0,0))
- --            eq:setPosition(cc.p((i - 4)*(eq:getContentSize().width + 10),eq:getContentSize().height + 10))
- --            eq:addTo(eqs)
-	-- 	end
-	-- end
 	eqs:addTo(content_bg):pos(8,16)
     self.equipmentUI.equipmentContent = eqs
 	local upgradeButton = cc.ui.UIPushButton.new({normal = "dragon_yellow_button.png",pressed = "dragon_yellow_button_h.png"}, {scale9 = false})
@@ -791,7 +779,7 @@ function GameUIDragonEyrie:CreateTabButtons()
     },
     function(tag)
     	self:TabButtonsAction(tag)
-    end):addTo(self):pos(display.cx, display.top - 910)
+    end):addTo(self):pos(display.cx, window.bottom + 50)
     self.tabButton = tab_buttons
 end
 
