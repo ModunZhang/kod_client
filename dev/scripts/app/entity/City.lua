@@ -1,4 +1,4 @@
--- 引入外部包
+local HOUSES = GameDatas.PlayerInitData.houses[1]
 local BuildingRegister = import(".BuildingRegister")
 local Enum = import("..utils.Enum")
 local Orient = import(".Orient")
@@ -8,11 +8,6 @@ local MaterialManager = import(".MaterialManager")
 local ResourceManager = import(".ResourceManager")
 local Building = import(".Building")
 local TowerUpgradeBuilding = import(".TowerUpgradeBuilding")
-local FoodResourceUpgradeBuilding = import(".FoodResourceUpgradeBuilding")
-local WoodResourceUpgradeBuilding = import(".WoodResourceUpgradeBuilding")
-local IronResourceUpgradeBuilding = import(".IronResourceUpgradeBuilding")
-local StoneResourceUpgradeBuilding = import(".StoneResourceUpgradeBuilding")
-local PopulationResourceUpgradeBuilding = import(".PopulationResourceUpgradeBuilding")
 local MultiObserver = import(".MultiObserver")
 local City = class("City", MultiObserver)
 -- 枚举定义
@@ -116,6 +111,19 @@ function City:GetResourceManager()
 end
 function City:GetDwellingCounts()
     return self.dwelling_count_max - #self:GetBuildingByType("dwelling")
+end
+function City:GetBuildingMaxCountsByType(building_type)
+    local building_map = {
+        dwelling = "townHall",
+        woodcutter = "lumbermill",
+        farmer = "mill",
+        quarrier = "stoneMason",
+        miner = "foundry",
+    }
+    return HOUSES[building_type] + self:GetFirstBuildingByType(building_map[building_type]):GetMaxHouseNum()
+end
+function City:GetLeftBuildingCountsByType(building_type)
+    return self:GetBuildingMaxCountsByType(building_type) - #self:GetBuildingByType(building_type)
 end
 function City:GetAllBuildings()
     return self.buildings
@@ -828,7 +836,7 @@ end
 
 
 function City:OnUpgradingBuildings()
-    local upgrading_buildings = {} 
+    local upgrading_buildings = {}
     for i,v in ipairs(self.buildings) do
         print("OnUpgradingBuildings==========啊啊啊啊",i,v)
 
@@ -840,6 +848,7 @@ function City:OnUpgradingBuildings()
 end
 
 return City
+
 
 
 

@@ -156,50 +156,50 @@ function UpgradeBuilding:OnHandle(level, finish_time)
         end
     end
 end
-
+----
 function UpgradeBuilding:GetLevelUpWood()
     local level = self.level
-    return self.config_building_levelup[self:GetType()][level+1].wood
+    return self.config_building_levelup[self:GetType()][self:GetNextLevel()].wood
 end
 
 function UpgradeBuilding:GetLevelUpStone()
     local level = self.level
-    return self.config_building_levelup[self:GetType()][level+1].stone
+    return self.config_building_levelup[self:GetType()][self:GetNextLevel()].stone
 end
 
 function UpgradeBuilding:GetLevelUpIron()
     local level = self.level
-    return self.config_building_levelup[self:GetType()][level+1].iron
+    return self.config_building_levelup[self:GetType()][self:GetNextLevel()].iron
 end
 
 function UpgradeBuilding:GetLevelUpBlueprints()
     local level = self.level
-    return self.config_building_levelup[self:GetType()][level+1].blueprints
+    return self.config_building_levelup[self:GetType()][self:GetNextLevel()].blueprints
 end
 
 function UpgradeBuilding:GetLevelUpTools()
     local level = self.level
-    return self.config_building_levelup[self:GetType()][level+1].tools
+    return self.config_building_levelup[self:GetType()][self:GetNextLevel()].tools
 end
 
 function UpgradeBuilding:GetLevelUpTiles()
     local level = self.level
-    return self.config_building_levelup[self:GetType()][level+1].tiles
+    return self.config_building_levelup[self:GetType()][self:GetNextLevel()].tiles
 end
 
 function UpgradeBuilding:GetLevelUpPulley()
     local level = self.level
-    return self.config_building_levelup[self:GetType()][level+1].pulley
+    return self.config_building_levelup[self:GetType()][self:GetNextLevel()].pulley
 end
 
 function UpgradeBuilding:GetLevelUpBuildTime()
     local level = self.level
-    return self.config_building_levelup[self:GetType()][level+1].buildTime
+    return self.config_building_levelup[self:GetType()][self:GetNextLevel()].buildTime
 end
 
 function UpgradeBuilding:GetLevelUpCitizen()
     local level = self.level
-    return self.config_building_levelup[self:GetType()][level+1].citizen
+    return self.config_building_levelup[self:GetType()][self:GetNextLevel()].citizen
 end
 
 function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)

@@ -1,7 +1,4 @@
-local FoodResourceUpgradeBuilding = import("..entity.FoodResourceUpgradeBuilding")
-local WoodResourceUpgradeBuilding = import("..entity.WoodResourceUpgradeBuilding")
-local IronResourceUpgradeBuilding = import("..entity.IronResourceUpgradeBuilding")
-local StoneResourceUpgradeBuilding = import("..entity.StoneResourceUpgradeBuilding")
+local BuildingRegister = import("..entity.BuildingRegister")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUIBuild = UIKit:createUIClass('GameUIBuild', "GameUIWithCommonHeader")
 
@@ -51,33 +48,16 @@ end
 function GameUIBuild:OnCityChanged()
     local citizen = self.city:GetResourceManager():GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
     table.foreachi(self.base_resource_building_items, function(i, v)
-        local number = #self.city:GetDecoratorsByType(base_items[i].building_type)
-        local max_number = 0
-        v:SetNumber(number, max_number)
-        local building
-        if base_items[i].building_type == "farmer" then
-            max_number = City:GetMaxHouseCanBeBuilt("farmer")
-            building = FoodResourceUpgradeBuilding.new({ building_type = base_items[i].building_type, level = 1, finishTime = 0 })
-        elseif base_items[i].building_type == "woodcutter" then
-            max_number = City:GetMaxHouseCanBeBuilt("woodcutter")
-            building = WoodResourceUpgradeBuilding.new({ building_type = base_items[i].building_type, level = 1, finishTime = 0 })
-        elseif base_items[i].building_type == "miner" then
-            max_number = City:GetMaxHouseCanBeBuilt("miner")
-            building = IronResourceUpgradeBuilding.new({ building_type = base_items[i].building_type, level = 1, finishTime = 0 })
-        elseif base_items[i].building_type == "quarrier" then
-            max_number = City:GetMaxHouseCanBeBuilt("quarrier")
-            building = StoneResourceUpgradeBuilding.new({ building_type = base_items[i].building_type, level = 1, finishTime = 0 })
-        end
-        -- 发现数量上限为0，重置为最低数量上限3
-        if max_number==0 then
-            max_number=3
-        end
+        local building_type = base_items[i].building_type
+        local number = #self.city:GetDecoratorsByType(building_type)
+        local max_number = City:GetBuildingMaxCountsByType(building_type)
+        local building = BuildingRegister[building_type].new({building_type = building_type, level = 1, finishTime = 0})
         v:SetNumber(number, max_number)
         if building then
             if building:GetCitizen() >= citizen then
                 v:SetBuildEnable(false)
                 v:SetCondition(_("空闲城民不足"), display.COLOR_RED)
-            elseif number>=max_number then
+            elseif number >= max_number then
                 v:SetBuildEnable(false)
                 v:SetCondition(_("已达到最大建筑数量"), display.COLOR_RED)
             else
