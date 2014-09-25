@@ -59,6 +59,8 @@ function GameUIDragonEyrie:RefreshUIData()
             self.hatchUI.costEnergyLabel:setString(100) -- 服务器暂时定值为100 TODO: 转化一次 消耗 100 能量 ---> 100活力
             self.hatchUI.progressTimer:setPercentage(dragon.vitality/100) -- vitality此时为孵化龙的活力 不会自增长 需要自己转化  100为服务器暂定值
             self.hatchUI.drgonVitalityLabel:setString(dragon.vitality .. "/100")
+            self.dragonUI.pageControl:setPositionY(self.dragonUI.pageControl_origin_y + 20)
+            self.dragonUI.dragonStateLabel:setPositionY(self.dragonUI.dragonStateLabel_origin_y+20)
         else
             self.dragonUI.vitalityProgressMain:show()
             self.dragonUI.dragon_LV_icon:show()
@@ -66,6 +68,8 @@ function GameUIDragonEyrie:RefreshUIData()
             self.dragonUI.drgonVitalityProgress:setPercentage(dragon.vitality/self.building:GetMaxVitalityCurrentLevel(dragon)*100)
             self.dragonUI.drgonVitalityLabel:setString(dragon.vitality .. "/" .. self.building:GetMaxVitalityCurrentLevel(dragon))
             self.dragonUI.vitalityProductPerHourLabel:setString("+" .. self.building:GetVitalityRecoveryPerHour() .. "/H")
+            self.dragonUI.pageControl:setPositionY(self.dragonUI.pageControl_origin_y)
+            self.dragonUI.dragonStateLabel:setPositionY(self.dragonUI.dragonStateLabel_origin_y)
         end
 
         local currentButtonTag = self.tabButton:GetSelectedButtonTag()
@@ -276,6 +280,7 @@ function GameUIDragonEyrie:CreateDragonIf()
         color = UIKit:hex2c3b(0x388500)
     }):addTo(bg):align(display.CENTER,bg:getContentSize().width/2,lv_bg:getPositionY() - lv_bg:getContentSize().height - 20)
     self.dragonUI.dragonStateLabel = label
+    self.dragonUI.dragonStateLabel_origin_y = lv_bg:getPositionY() - lv_bg:getContentSize().height - 20
     local pageContent = StarBar.new({
 		max = 3,
 		bg = "dragon_page_bg.png",
@@ -287,7 +292,8 @@ function GameUIDragonEyrie:CreateDragonIf()
 		end
 	})
     self.dragonUI.pageControl = pageContent
-	pageContent:pos(display.cx-pageContent:getContentSize().width/2,label:getPositionY() - label:getContentSize().height-10):addTo(bg)
+	pageContent:pos(bg:getContentSize().width/2-pageContent:getContentSize().width/2,label:getPositionY() - label:getContentSize().height-10):addTo(bg)
+    self.dragonUI.pageControl_origin_y = label:getPositionY() - label:getContentSize().height-10
 	local add_button = cc.ui.UIPushButton.new({normal = "dragon_add_button_normal.png",pressed = "dragon_add_button_highlight.png"}, {scale9 = false})
 		:addTo(lv_bg)
 		:align(display.TOP_RIGHT,lv_bg:getContentSize().width,lv_bg:getContentSize().height)
@@ -738,15 +744,6 @@ function GameUIDragonEyrie:CreateInfomationIf()
         alignment = cc.ui.UIListView.ALIGNMENT_LEFT      
     }
     :addTo(self)
-
-    -- for i=1,4 do
-    -- 	local item = self.info_content:newItem()
-    -- 	local bg = display.newSprite(string.format("resource_item_bg%d.png",i%2))
-    -- 	item:addContent(bg)
-    -- 	item:setItemSize(551,bg:getContentSize().height)
-    -- 	self.info_content:addItem(item)
-    -- end
-    -- self.info_content:reload()
     return self.info_content
 end
 
