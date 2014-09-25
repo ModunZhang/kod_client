@@ -3,6 +3,7 @@
 -- Date: 2014-08-01 16:18:16
 -- GameUIBase is a CCLayer
 local window = import("..utils.window")
+local UIListView = import(".UIListView")
 local TabButtons = import('.TabButtons')
 local GameUIBase = class('GameUIBase', function()
     return display.newLayer()
@@ -207,10 +208,11 @@ function GameUIBase:CreateVerticalListView(...)
 end
 function GameUIBase:CreateVerticalListViewDetached(left_bottom_x, left_bottom_y, right_top_x, right_top_y)
     local width, height = right_top_x - left_bottom_x, right_top_y - left_bottom_y
-    return cc.ui.UIListView.new{
+    return UIListView.new{
         -- bgColor = UIKit:hex2c4b(0x7a000000),
         viewRect = cc.rect(left_bottom_x, left_bottom_y, width, height),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+    }
 end
 
 

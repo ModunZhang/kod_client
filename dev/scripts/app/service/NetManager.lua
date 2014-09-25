@@ -487,7 +487,8 @@ end
 
 --
 function NetManager:resetGame()
-    self:sendMsg("reset", NOT_HANDLE)
+    -- self:sendMsg("reset", NOT_HANDLE)
+    self:sendMsg("gem 10000000", NOT_HANDLE)
 end
 function NetManager:sendMsg(text, cb)
     local msg = {

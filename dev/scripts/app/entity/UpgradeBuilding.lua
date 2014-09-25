@@ -27,7 +27,7 @@ function UpgradeBuilding:AddUpgradeListener(listener)
     assert(listener.OnBuildingUpgrading)
     self.upgrade_building_observer:AddObserver(listener)
 end
-function Building:RemoveUpgradeListener(listener)
+function UpgradeBuilding:RemoveUpgradeListener(listener)
     self.upgrade_building_observer:RemoveObserver(listener)
 end
 function UpgradeBuilding:GetElapsedTimeByCurrentTime(current_time)
@@ -35,6 +35,9 @@ function UpgradeBuilding:GetElapsedTimeByCurrentTime(current_time)
 end
 function UpgradeBuilding:GetUpgradingLeftTimeByCurrentTime(current_time)
     return self.upgrade_to_next_level_time - current_time
+end
+function UpgradeBuilding:IsUnlocked()
+    return self:GetLevel() > 0
 end
 function UpgradeBuilding:IsUpgrading()
     return self.upgrade_to_next_level_time ~= 0

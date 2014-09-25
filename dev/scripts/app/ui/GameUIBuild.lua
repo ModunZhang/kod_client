@@ -54,7 +54,7 @@ function GameUIBuild:OnCityChanged()
         local building = BuildingRegister[building_type].new({building_type = building_type, level = 1, finishTime = 0})
         v:SetNumber(number, max_number)
         if building then
-            if building:GetCitizen() >= citizen then
+            if building:GetCitizen() > citizen then
                 v:SetBuildEnable(false)
                 v:SetCondition(_("空闲城民不足"), display.COLOR_RED)
             elseif number >= max_number then

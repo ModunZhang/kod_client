@@ -1,23 +1,25 @@
 local config_function = GameDatas.BuildingFunction.townHall
 local config_levelup = GameDatas.BuildingLevelUp.townHall
 local Observer = import(".Observer")
-local UpgradeBuilding = import(".UpgradeBuilding")
-local TownHallUpgradeBuilding = class("TownHallUpgradeBuilding", UpgradeBuilding)
+local PResourceUpgradeBuilding = import(".PResourceUpgradeBuilding")
+local TownHallUpgradeBuilding = class("TownHallUpgradeBuilding", PResourceUpgradeBuilding)
 
 
 
 function TownHallUpgradeBuilding:ctor(building_info)
-    self.toolShop_building_observer = Observer.new()
-    self.building_event = self:CreateEvent("building")
+    self.townHall_building_observer = Observer.new()
+    self.tax_event = self:CreateEvent()
 
     TownHallUpgradeBuilding.super.ctor(self, building_info)
 end
-function TownHallUpgradeBuilding:CreateEvent(category)
+function TownHallUpgradeBuilding:CreateEvent()
+    local townHall = self
     local event = {}
     function event:Init()
         self:Reset()
     end
     function event:Reset()
+        self.tax = nil
         self.finished_time = 0
     end
     function event:Percent(current_time)
@@ -27,7 +29,7 @@ function TownHallUpgradeBuilding:CreateEvent(category)
         return elapse_time * 100.0 / total_time
     end
     function event:StartTime()
-        return 0
+        return self.finished_time - townHall:GetImposeTime()
     end
     function event:ElapseTime(current_time)
         return current_time - self:StartTime()
@@ -42,64 +44,71 @@ function TownHallUpgradeBuilding:CreateEvent(category)
         self.finished_time = current_time
     end
     function event:IsEmpty()
-        return self.finished_time == 0
+        return self.tax == nil
     end
-    function event:IsRunning(current_time)
-        return current_time < self.finished_time
+    function event:IsRunning()
+        return self.tax and self.finished_time ~= 0
+    end
+    function event:Value()
+        return self.tax
+    end
+    function event:UpdateValueWithFinishTime(value, finished_time)
+        self.tax = value
+        self.finished_time = finished_time
     end
     event:Init()
     return event
 end
-function TownHallUpgradeBuilding:AddToolShopListener(listener)
-    assert(listener.OnBeginMakeMaterialsWithEvent)
-    assert(listener.OnMakingMaterialsWithEvent)
-    assert(listener.OnEndMakeMaterialsWithEvent)
-    assert(listener.OnGetMaterialsWithEvent)
-    self.toolShop_building_observer:AddObserver(listener)
+function TownHallUpgradeBuilding:AddTownHallListener(listener)
+    assert(listener.OnBeginImposeWithEvent)
+    assert(listener.OnImposingWithEvent)
+    assert(listener.OnEndImposeWithEvent)
+    self.townHall_building_observer:AddObserver(listener)
 end
-function TownHallUpgradeBuilding:RemoveToolShopListener(listener)
-    self.toolShop_building_observer:RemoveObserver(listener)
+function TownHallUpgradeBuilding:RemoveTownHallListener(listener)
+    self.townHall_building_observer:RemoveObserver(listener)
 end
-function TownHallUpgradeBuilding:GetMakeMaterialsEventByCategory(category)
-    return self.category[category]
+function TownHallUpgradeBuilding:GetTaxEvent()
+    return self.tax_event
 end
-function TownHallUpgradeBuilding:IsMaterialsEmptyByCategory(category)
-    return self.category[category]:IsEmpty()
+function TownHallUpgradeBuilding:IsEmpty()
+    return self.tax_event:IsEmpty()
 end
-function TownHallUpgradeBuilding:IsStoredMaterialsByCategory(category, current_time)
-    return self.category[category]:IsStored(current_time)
+function TownHallUpgradeBuilding:IsInImposing()
+    return self.tax_event:IsRunning()
 end
-function TownHallUpgradeBuilding:IsMakingMaterialsByCategory(category, current_time)
-    return self.category[category]:IsMaking(current_time)
-end
-function TownHallUpgradeBuilding:MakeMaterialsByCategoryWithFinishTime(category, materials, finished_time)
-    local event = self.category[category]
-    event:SetContent(materials, finished_time)
-    self.toolShop_building_observer:NotifyObservers(function(lisenter)
-        lisenter:OnBeginMakeMaterialsWithEvent(self, event)
+function TownHallUpgradeBuilding:ImposeWithFinishedTime(tax, finished_time)
+    local event = self.tax_event
+    event:UpdateValueWithFinishTime(tax, finished_time)
+
+    self.townHall_building_observer:NotifyObservers(function(lisenter)
+        lisenter:OnBeginImposeWithEvent(self, event)
     end)
 end
-function TownHallUpgradeBuilding:EndMakeMaterialsByCategoryWithCurrentTime(category, materials, current_time)
-    local event = self.category[category]
-    event:SetContent(materials, 0)
-    self.toolShop_building_observer:NotifyObservers(function(lisenter)
-        lisenter:OnEndMakeMaterialsWithEvent(self, event, current_time)
-    end)
-end
-function TownHallUpgradeBuilding:GetMaterialsByCategory(category)
-    local event = self.category[category]
-    local materials = event:Content()
+function TownHallUpgradeBuilding:EndImposeWithCurrentTime(current_time)
+    local event = self.tax_event
     event:Reset()
-    self.toolShop_building_observer:NotifyObservers(function(lisenter)
-        lisenter:OnGetMaterialsWithEvent(self, event, materials)
+    self.townHall_building_observer:NotifyObservers(function(lisenter)
+        lisenter:OnEndImposeWithEvent(self, event, current_time)
     end)
 end
-function TownHallUpgradeBuilding:GetMakingTimeByCategory(category)
-    local _, _, _, _, time = self:GetNeedByCategory(category)
+function TownHallUpgradeBuilding:GetImposeTime()
+    local _, _, time = self:GetImposeInfo()
     return time
 end
+function TownHallUpgradeBuilding:GetImposeInfo()
+    local config = config_function[self:GetLevel()]
+    return config.taxCitizen, config.totalTax, config.taxTime
+end
+
 
 function TownHallUpgradeBuilding:OnTimer(current_time)
+    local event = self.tax_event
+    if event:IsRunning() then
+        self.townHall_building_observer:NotifyObservers(function(lisenter)
+            lisenter:OnImposingWithEvent(self, event, current_time)
+        end)
+    end
     TownHallUpgradeBuilding.super.OnTimer(self, current_time)
 end
 
@@ -108,7 +117,22 @@ function TownHallUpgradeBuilding:OnUserDataChanged(...)
 
     local arg = {...}
     local current_time = arg[2]
-    local materialEvents = arg[1].materialEvents
+    local coinEvents = arg[1].coinEvents
+
+    local event = coinEvents[1]
+    if event then
+        local finished_time = event.finishTime / 1000
+        local is_making_end = finished_time == 0
+        if self:IsEmpty() then
+            self:ImposeWithFinishedTime(event.coin, finished_time)
+        else
+            self:GetTaxEvent():UpdateValueWithFinishTime(event.coin, finished_time)
+        end
+    else
+        if not self:IsEmpty() then
+            self:EndImposeWithCurrentTime(event.coin, current_time)
+        end
+    end
 end
 
 return TownHallUpgradeBuilding

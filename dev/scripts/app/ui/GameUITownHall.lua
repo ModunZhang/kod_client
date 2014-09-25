@@ -16,9 +16,50 @@ function GameUITownHall:onEnter()
     GameUITownHall.super.onEnter(self)
     self.list_view = self:CreateAdministration()
     self:TabButtons()
+    self.town_hall:AddTownHallListener(self)
+    self.town_hall:AddUpgradeListener(self)
 end
 function GameUITownHall:onExit()
+    self.town_hall:RemoveTownHallListener(self)
+    self.town_hall:RemoveUpgradeListener(self)
     GameUITownHall.super.onExit(self)
+end
+function GameUITownHall:OnBuildingUpgradingBegin()
+end
+function GameUITownHall:OnBuildingUpgradeFinished()
+end
+function GameUITownHall:OnBuildingUpgrading()
+    if self.impose then
+        self.impose:RefreshImpose()
+    end
+end
+function GameUITownHall:OnBeginImposeWithEvent(building, event)
+    -- 前置条件
+    assert(self.impose)
+    assert(self.timer == nil)
+    local list_view = self.list_view
+    self.timer = self:CreateTimerItemWithListView(list_view):RefreshByEvent(event, app.timer:GetServerTime())
+    list_view:replaceItem(self.timer, self.impose)
+    self.impose = nil
+    -- 重置列表
+    list_view:reload()
+end
+function GameUITownHall:OnImposingWithEvent(building, event, current_time)
+    assert(self.impose == nil)
+    assert(self.timer)
+    self.timer:RefreshByEvent(event, current_time)
+end
+function GameUITownHall:OnEndImposeWithEvent(building, event, current_time)
+    assert(self.impose == nil)
+    assert(self.timer)
+
+    local list_view = self.list_view
+    self.impose = self:CreateImposeItemWithListView(list_view):RefreshImpose()
+    list_view:replaceItem(self.impose, self.timer)
+    self.timer = nil
+
+    -- 重置列表
+    list_view:reload()
 end
 function GameUITownHall:TabButtons()
     self:CreateTabButtons({
@@ -35,7 +76,6 @@ function GameUITownHall:TabButtons()
         end
     end):pos(window.cx, window.bottom + 40)
 end
-
 function GameUITownHall:CreateAdministration()
     local list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 100)
 
@@ -44,23 +84,16 @@ function GameUITownHall:CreateAdministration()
     self.dwelling:GetLineByIndex(2):SetCondition(2, 6)
     list_view:addItem(self.dwelling)
 
-    self.impose = self:CreateImposeItemWithListView(list_view)
-    self.impose:GetLineByIndex(1):SetLabel("hello")
-    self.impose:GetLineByIndex(2):SetLabel("hello fd")
-    self.impose:GetLineByIndex(3):SetLabel("hello fffffss")
-    list_view:addItem(self.impose)
+    if self.town_hall:IsEmpty() then
+        self.impose = self:CreateImposeItemWithListView(list_view):RefreshImpose()
+        list_view:addItem(self.impose)
+    elseif self.town_hall:IsInImposing() then
+        self.timer = self:CreateTimerItemWithListView(list_view)
+            :RefreshByEvent(self.town_hall:GetTaxEvent(), app.timer:GetServerTime())
+        list_view:addItem(self.timer)
+    end
 
-    self.timer = self:CreateTimerItemWithListView(list_view)
-    :SetProgressInfo("time_label", 80)
-    :SetNumberLabel("100")
-    list_view:addItem(self.timer)
-
-    self.get = self:CreateGetItemWithListView(list_view)
-    self.get:SetGetLabel("200")
-    list_view:addItem(self.get)
-
-
-    list_view:reload():resetPosition()
+    list_view:reload()
     return list_view
 end
 
@@ -84,6 +117,7 @@ function GameUITownHall:CreateDwellingItemWithListView(list_view)
 end
 
 function GameUITownHall:CreateImposeItemWithListView(list_view)
+    local townHall = self
     local widget = WidgetWithBlueTitle.new(260, _("税收")):align(display.CENTER)
     local size = widget:getContentSize()
     local lineItems = {}
@@ -107,13 +141,20 @@ function GameUITownHall:CreateImposeItemWithListView(list_view)
         :addTo(widget, 2):align(display.CENTER, size.width - 110, 50)
         :onButtonClicked(function(event)
             NetManager:impose(NOT_HANDLE)
-            end)
+        end)
     local item = list_view:newItem()
     item:addContent(widget)
     item:setItemSize(widget:getContentSize().width, widget:getContentSize().height + 10)
 
     function item:GetLineByIndex(index)
         return lineItems[index]
+    end
+    function item:RefreshImpose()
+        local citizen, tax, time = townHall.town_hall:GetImposeInfo()
+        self:GetLineByIndex(1):SetLabel(tostring(citizen))
+        self:GetLineByIndex(2):SetLabel(tostring(tax))
+        self:GetLineByIndex(3):SetLabel(GameUtils:formatTimeStyle1(time))
+        return self
     end
     return item
 end
@@ -142,7 +183,6 @@ function GameUITownHall:CreateTimerItemWithListView(list_view)
 
     local progress = WidgetProgress.new():addTo(widget, 2)
         :align(display.LEFT_CENTER, 60, size.height - 125)
-        :SetProgressInfo("jello", 69)
 
     WidgetPushButton.new({normal = "green_btn_up_169x86.png", pressed = "green_btn_down_169x86.png"})
         :setButtonLabel(cc.ui.UILabel.new({
@@ -152,6 +192,8 @@ function GameUITownHall:CreateTimerItemWithListView(list_view)
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xfff3c7)}))
         :addTo(widget, 2):align(display.CENTER, size.width - 120, size.height - 110)
+        :onButtonClicked(function(event)
+        end)
 
     local item = list_view:newItem()
     item:addContent(widget)
@@ -167,64 +209,72 @@ function GameUITownHall:CreateTimerItemWithListView(list_view)
         end
         return self
     end
-    return item
-end
-
-function GameUITownHall:CreateGetItemWithListView(list_view)
-    local widget = WidgetWithBlueTitle.new(180, _("税收")):align(display.CENTER)
-    local size = widget:getContentSize()
-
-    cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "征收银币完成",
-        size = 24,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0x403c2f)
-    }):addTo(widget, 2):align(display.LEFT_CENTER, 40, size.height - 90)
-
-    cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "获得银币",
-        size = 20,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0x615b44)
-    }):addTo(widget, 2):align(display.LEFT_CENTER, 40, size.height - 135)
-    cc.ui.UIImage.new("coin_icon.png"):addTo(widget, 2):align(display.CENTER, 200, size.height - 135):scale(0.25)
-    local get_label = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        size = 20,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0x403c2f)
-    }):addTo(widget, 2):align(display.LEFT_CENTER, 200 + 20, size.height - 135)
-
-    WidgetPushButton.new(
-        {normal = "yellow_btn_up_185x65.png", pressed = "yellow_btn_down_185x65.png"},
-        {scale9 = false}
-    ):setButtonLabel(cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("获得"),
-        size = 24,
-        font = UIKit:getFontFilePath(),
-        color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(widget, 2):align(display.CENTER, size.width - 120, size.height - 120)
-
-    local item = list_view:newItem()
-    item:addContent(widget)
-    item:setItemSize(widget:getContentSize().width, widget:getContentSize().height + 10)
-
-
-    function item:SetGetLabel(str)
-        if get_label:getString() ~= str then
-            get_label:setString(str)
-        end
-        return self
+    function item:RefreshByEvent(event, current_time)
+        return self:SetNumberLabel(event:Value())
+            :SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(current_time)),
+                event:Percent(current_time))
     end
-
     return item
 end
+
+-- function GameUITownHall:CreateGetItemWithListView(list_view)
+--     local widget = WidgetWithBlueTitle.new(180, _("税收")):align(display.CENTER)
+--     local size = widget:getContentSize()
+
+--     cc.ui.UILabel.new({
+--         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+--         text = "征收银币完成",
+--         size = 24,
+--         font = UIKit:getFontFilePath(),
+--         align = cc.ui.TEXT_ALIGN_RIGHT,
+--         color = UIKit:hex2c3b(0x403c2f)
+--     }):addTo(widget, 2):align(display.LEFT_CENTER, 40, size.height - 90)
+
+--     cc.ui.UILabel.new({
+--         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+--         text = "获得银币",
+--         size = 20,
+--         font = UIKit:getFontFilePath(),
+--         align = cc.ui.TEXT_ALIGN_RIGHT,
+--         color = UIKit:hex2c3b(0x615b44)
+--     }):addTo(widget, 2):align(display.LEFT_CENTER, 40, size.height - 135)
+--     cc.ui.UIImage.new("coin_icon.png"):addTo(widget, 2):align(display.CENTER, 200, size.height - 135):scale(0.25)
+--     local get_label = cc.ui.UILabel.new({
+--         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+--         size = 20,
+--         font = UIKit:getFontFilePath(),
+--         align = cc.ui.TEXT_ALIGN_RIGHT,
+--         color = UIKit:hex2c3b(0x403c2f)
+--     }):addTo(widget, 2):align(display.LEFT_CENTER, 200 + 20, size.height - 135)
+
+--     WidgetPushButton.new(
+--         {normal = "yellow_btn_up_185x65.png", pressed = "yellow_btn_down_185x65.png"},
+--         {scale9 = false}
+--     ):setButtonLabel(cc.ui.UILabel.new({
+--         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+--         text = _("获得"),
+--         size = 24,
+--         font = UIKit:getFontFilePath(),
+--         color = UIKit:hex2c3b(0xfff3c7)}))
+--         :addTo(widget, 2):align(display.CENTER, size.width - 120, size.height - 120)
+--         :onButtonClicked(function(event)
+--             -- self.town_hall:GetTax()
+--         end)
+
+--     local item = list_view:newItem()
+--     item:addContent(widget)
+--     item:setItemSize(widget:getContentSize().width, widget:getContentSize().height + 10)
+
+
+--     function item:SetGetLabel(str)
+--         if get_label:getString() ~= str then
+--             get_label:setString(str)
+--         end
+--         return self
+--     end
+
+--     return item
+-- end
 
 function GameUITownHall:CreateDwellingLineItem(width)
     local left, right = -width/2, width/2
@@ -305,6 +355,16 @@ end
 
 
 return GameUITownHall
+
+
+
+
+
+
+
+
+
+
 
 
 
