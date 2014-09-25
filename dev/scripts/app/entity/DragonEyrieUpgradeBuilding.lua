@@ -11,8 +11,8 @@ local config_dragonSkill = GameDatas.DragonEyrie.dragonSkill
 local Localize = import("..utils.Localize")
 
 local ResourceManager = import(".ResourceManager")
-local ResourceUpgradeBuilding = import(".ResourceUpgradeBuilding")
-local DragonEyrieUpgradeBuilding = class("DragonEyrieUpgradeBuilding", ResourceUpgradeBuilding)
+local UpgradeBuilding = import(".UpgradeBuilding")
+local DragonEyrieUpgradeBuilding = class("DragonEyrieUpgradeBuilding", UpgradeBuilding)
 local DragonVitalityManager = import('.DragonVitalityManager')
 
 function DragonEyrieUpgradeBuilding:ctor(building_info)

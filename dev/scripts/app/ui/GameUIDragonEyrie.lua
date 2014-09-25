@@ -2,16 +2,17 @@
 -- Author: Danny He
 -- Date: 2014-09-17 09:00:04
 --
-local GameUIDragonEyrie = UIKit:createUIClass("GameUIDragonEyrie","GameUIWithCommonHeader")
+local GameUIDragonEyrie = UIKit:createUIClass("GameUIDragonEyrie","GameUIUpgradeBuilding")
 local TabButtons = import(".TabButtons")
 local StarBar = import(".StarBar")
 local UIListView = import(".UIListView")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local config_dragonSkill = GameDatas.DragonEyrie.dragonSkill
 local Localize = import("..utils.Localize")
+local window = import("..utils.window")
 
 function GameUIDragonEyrie:ctor(city,building)
-	GameUIDragonEyrie.super.ctor(self,City,_("龙巢"))
+	GameUIDragonEyrie.super.ctor(self,City,_("龙巢"),building)
     self.building = building
     self.building:SetListener(self)
     self.current_page = 0
@@ -19,7 +20,7 @@ end
 
 function GameUIDragonEyrie:onEnter()
 	GameUIDragonEyrie.super.onEnter(self)
-	self:CreateTabButtons()
+	self:CreateTabButtons_()
     self:ChangePageAction(1)
 end
 
@@ -58,6 +59,8 @@ function GameUIDragonEyrie:RefreshUIData()
             self.hatchUI.costEnergyLabel:setString(100) -- 服务器暂时定值为100 TODO: 转化一次 消耗 100 能量 ---> 100活力
             self.hatchUI.progressTimer:setPercentage(dragon.vitality/100) -- vitality此时为孵化龙的活力 不会自增长 需要自己转化  100为服务器暂定值
             self.hatchUI.drgonVitalityLabel:setString(dragon.vitality .. "/100")
+            self.dragonUI.pageControl:setPositionY(self.dragonUI.pageControl_origin_y + 20)
+            self.dragonUI.dragonStateLabel:setPositionY(self.dragonUI.dragonStateLabel_origin_y+20)
         else
             self.dragonUI.vitalityProgressMain:show()
             self.dragonUI.dragon_LV_icon:show()
@@ -65,6 +68,8 @@ function GameUIDragonEyrie:RefreshUIData()
             self.dragonUI.drgonVitalityProgress:setPercentage(dragon.vitality/self.building:GetMaxVitalityCurrentLevel(dragon)*100)
             self.dragonUI.drgonVitalityLabel:setString(dragon.vitality .. "/" .. self.building:GetMaxVitalityCurrentLevel(dragon))
             self.dragonUI.vitalityProductPerHourLabel:setString("+" .. self.building:GetVitalityRecoveryPerHour() .. "/H")
+            self.dragonUI.pageControl:setPositionY(self.dragonUI.pageControl_origin_y)
+            self.dragonUI.dragonStateLabel:setPositionY(self.dragonUI.dragonStateLabel_origin_y)
         end
 
         local currentButtonTag = self.tabButton:GetSelectedButtonTag()
@@ -275,6 +280,7 @@ function GameUIDragonEyrie:CreateDragonIf()
         color = UIKit:hex2c3b(0x388500)
     }):addTo(bg):align(display.CENTER,bg:getContentSize().width/2,lv_bg:getPositionY() - lv_bg:getContentSize().height - 20)
     self.dragonUI.dragonStateLabel = label
+    self.dragonUI.dragonStateLabel_origin_y = lv_bg:getPositionY() - lv_bg:getContentSize().height - 20
     local pageContent = StarBar.new({
 		max = 3,
 		bg = "dragon_page_bg.png",
@@ -286,7 +292,8 @@ function GameUIDragonEyrie:CreateDragonIf()
 		end
 	})
     self.dragonUI.pageControl = pageContent
-	pageContent:pos(display.cx-pageContent:getContentSize().width/2,label:getPositionY() - label:getContentSize().height-10):addTo(bg)
+	pageContent:pos(bg:getContentSize().width/2-pageContent:getContentSize().width/2,label:getPositionY() - label:getContentSize().height-10):addTo(bg)
+    self.dragonUI.pageControl_origin_y = label:getPositionY() - label:getContentSize().height-10
 	local add_button = cc.ui.UIPushButton.new({normal = "dragon_add_button_normal.png",pressed = "dragon_add_button_highlight.png"}, {scale9 = false})
 		:addTo(lv_bg)
 		:align(display.TOP_RIGHT,lv_bg:getContentSize().width,lv_bg:getContentSize().height)
@@ -401,19 +408,6 @@ function GameUIDragonEyrie:CreateEquipmentContentIf()
 		:addTo(self)
 	content_bg:pos(display.cx,self.dragon_bg:getPositionY()-self.dragon_bg:getContentSize().height/2-130)
 	local eqs = display.newNode()
-	-- for i=1,6 do
-	-- 	local eq = self:GetEquipmentItem()
-	-- 	if i < 4 then
-	-- 		local x = (i - 1)*(eq:getContentSize().width + 10)
- --            eq:setAnchorPoint(cc.p(0,0))
- --            eq:setPosition(cc.p(x,0))
- --            eq:addTo(eqs)
-	-- 	else
- --            eq:setAnchorPoint(cc.p(0,0))
- --            eq:setPosition(cc.p((i - 4)*(eq:getContentSize().width + 10),eq:getContentSize().height + 10))
- --            eq:addTo(eqs)
-	-- 	end
-	-- end
 	eqs:addTo(content_bg):pos(8,16)
     self.equipmentUI.equipmentContent = eqs
 	local upgradeButton = cc.ui.UIPushButton.new({normal = "dragon_yellow_button.png",pressed = "dragon_yellow_button_h.png"}, {scale9 = false})
@@ -750,26 +744,12 @@ function GameUIDragonEyrie:CreateInfomationIf()
         alignment = cc.ui.UIListView.ALIGNMENT_LEFT      
     }
     :addTo(self)
-
-    -- for i=1,4 do
-    -- 	local item = self.info_content:newItem()
-    -- 	local bg = display.newSprite(string.format("resource_item_bg%d.png",i%2))
-    -- 	item:addContent(bg)
-    -- 	item:setItemSize(551,bg:getContentSize().height)
-    -- 	self.info_content:addItem(item)
-    -- end
-    -- self.info_content:reload()
     return self.info_content
 end
 
-function GameUIDragonEyrie:CreateTabButtons()
-	local tab_buttons = TabButtons.new({
-        {
-            label = _("升级"),
-            tag = "upgrade",
-            default = true,
-        },
-        {
+function GameUIDragonEyrie:CreateTabButtons_()
+    self.tabButton = self:CreateTabButtons({
+       {
             label = _("装备"),
             tag = "equipment",
         },
@@ -782,17 +762,9 @@ function GameUIDragonEyrie:CreateTabButtons()
             tag = "information",
         }
     },
-    {
-        gap = -4,
-        margin_left = -2,
-        margin_right = -2,
-        margin_up = -6,
-        margin_down = 1
-    },
     function(tag)
-    	self:TabButtonsAction(tag)
-    end):addTo(self):pos(display.cx, display.top - 910)
-    self.tabButton = tab_buttons
+        self:TabButtonsAction(tag)
+    end):pos(window.cx, window.bottom + 50)
 end
 
 function GameUIDragonEyrie:onMovieOutStage()
