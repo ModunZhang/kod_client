@@ -103,6 +103,7 @@ function ChatCenter:_notifyObservers( event,data)
 end
 
 function ChatCenter:_insertMessage(v )
+	if not v.fromType then return end
 	if string.lower(v.fromType) ~='system' then
 		if not self._messageQueue_[string.lower(v.fromType)] then
 			self._messageQueue_[string.lower(v.fromType)] = {}
