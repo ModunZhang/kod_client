@@ -40,7 +40,6 @@ function GameUILogin:createProgressBar()
         font = UIKit:getFontFilePath(),
         size = 12,
         align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
-        dimensions = cc.size(575, 33),
         color = UIKit:hex2c3b(0xf3f0b6)
     }):addTo(bar):pos(bar:getContentSize().width/2,bar:getContentSize().height/2)
     self.progressTips = label
@@ -55,9 +54,8 @@ function GameUILogin:createTips()
         font = UIKit:getFontFilePath(),
         size = 18,
         align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
-        dimensions = cc.size(569, 43),
         color = UIKit:hex2c3b(0xaaa87f),
-    }):addTo(bgImage):pos(bgImage:getContentSize().width/2,bgImage:getContentSize().height/2)
+    }):addTo(bgImage):align(display.CENTER,bgImage:getContentSize().width/2,bgImage:getContentSize().height/2)
 end
 
 function GameUILogin:setProgressText(str)

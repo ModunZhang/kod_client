@@ -7,6 +7,7 @@ local ResourceManager = import("..entity.ResourceManager")
 local City = City
 local MAX_COUNT_DECORATOR = 5
 local UIListView = import(".UIListView")
+local window = import("..utils.window")
 function GameUIResource:ctor(building)
 	 GameUIResource.super.ctor(self, City, self:GetTitleByType(building),building)
      self.building = building
@@ -37,7 +38,7 @@ function GameUIResource:createTabButtons()
         else
             self.infomationLayer:setVisible(false)
         end
-    end):pos(display.cx, display.bottom + 50)
+    end):pos(window.cx, window.bottom + 50)
 end
 
 
@@ -53,9 +54,9 @@ function GameUIResource:CreateInfomation()
         font = UIKit:getFontFilePath(),
         size = 18,
         align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
-        dimensions = cc.size(500, 33),
+        -- dimensions = cc.size(500, 33),
         color = UIKit:hex2c3b(0x403c2f),
-    }):addTo(lvBg):pos(lvBg:getContentSize().width/2,lvBg:getContentSize().height/2)
+    }):addTo(lvBg):align(display.CENTER,lvBg:getContentSize().width/2,lvBg:getContentSize().height/2)
 
     local titleLable = cc.ui.UILabel.new({
     	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -92,11 +93,11 @@ function GameUIResource:CreateInfomation()
         font = UIKit:getFontFilePath(),
         size = 20,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
-        dimensions = cc.size(500, 33),
+        -- dimensions = cc.size(500, 33),
         color = UIKit:hex2c3b(0x797154),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
     }):addTo(infomationLayer)
-    :align(display.LEFT_BOTTOM,fistLine:getPositionX(),fistLine:getPositionY()-5)
+    :align(display.LEFT_BOTTOM,fistLine:getPositionX(),fistLine:getPositionY()+2)
 
     local firstValueLabel = cc.ui.UILabel.new({
     	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -104,7 +105,7 @@ function GameUIResource:CreateInfomation()
         font = UIKit:getFontFilePath(),
         size = 20,
         align = cc.ui.UILabel.TEXT_ALIGN_RIGHT, 
-        dimensions = cc.size(500, 33),
+        -- dimensions = cc.size(500, 33),
         color = UIKit:hex2c3b(0x403c2f),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
     }):addTo(infomationLayer)
@@ -120,11 +121,11 @@ function GameUIResource:CreateInfomation()
         font = UIKit:getFontFilePath(),
         size = 20,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
-        dimensions = cc.size(500, 33),
+        -- dimensions = cc.size(500, 33),
         color = UIKit:hex2c3b(0x797154),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
     }):addTo(infomationLayer)
-    :align(display.LEFT_BOTTOM,secondLine:getPositionX(),secondLine:getPositionY()-5)
+    :align(display.LEFT_BOTTOM,secondLine:getPositionX(),secondLine:getPositionY()+2)
     self.secondLabel = secondLabel
     self.secondValueLabel = cc.ui.UILabel.new({
     	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -132,7 +133,7 @@ function GameUIResource:CreateInfomation()
         font = UIKit:getFontFilePath(),
         size = 20,
         align = cc.ui.UILabel.TEXT_ALIGN_RIGHT, 
-        dimensions = cc.size(500, 33),
+        -- dimensions = cc.size(500, 33),
         color = UIKit:hex2c3b(0x403c2f),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
     }):addTo(infomationLayer)
@@ -148,12 +149,12 @@ function GameUIResource:CreateInfomation()
         font = UIKit:getFontFilePath(),
         size = 24,
         align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
-        dimensions = cc.size(listHeader:getContentSize().width, listHeader:getContentSize().height),
+        -- dimensions = cc.size(listHeader:getContentSize().width, listHeader:getContentSize().height),
         color = UIKit:hex2c3b(0x403c2f),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
     })
     :addTo(listHeader,5)
-    :pos(listHeader:getContentSize().width/2,listHeader:getContentSize().height/2-4)
+    :pos(listHeader:getContentSize().width/2,listHeader:getContentSize().height/2)
 
     self.listView = UIListView.new {
         viewRect = cc.rect(listHeader:getPositionX(), listHeader:getPositionY()-listHeader:getContentSize().height-500, listHeader:getContentSize().width,500),
@@ -188,7 +189,7 @@ function GameUIResource:GetListItem(index,title,val)
         color = UIKit:hex2c3b(0x403c2f),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER})
 		:addTo(bg)
-		:pos(bg:getContentSize().width -10 , 20)
+		valLabel:pos(bg:getContentSize().width - valLabel:getContentSize().width - 10 , 20)
 	item:addContent(bg)
 	item:setItemSize(bg:getContentSize().width,bg:getContentSize().height)
 	return item

@@ -13,7 +13,9 @@ function GameUIWithCommonHeader:onEnter()
     self:CreateBetweenBgAndTitle()
     self:CreateTitle(self.title)
     self.home_btn = self:CreateHomeButton()
-    self.gem_label = self:CreateShopButton()
+    self.gem_label = self:CreateShopButton(function()
+        NetManager:sendMsg("reset ",function()end)
+    end)
     self.city:GetResourceManager():AddObserver(self)
     -- city:GetResourceManager():OnResourceChanged()
 end
@@ -30,17 +32,3 @@ end
 
 
 return GameUIWithCommonHeader
-
-
-
-
-
-
-
-
-
-
-
-
-
-

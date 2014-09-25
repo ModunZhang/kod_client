@@ -9,6 +9,7 @@ local app = app
 local timer = app.timer
 local running_scene = nil
 import('app.service.ListenerService')
+import('app.service.PushService')
 
 
 local CityScene = class("CityScene", function()

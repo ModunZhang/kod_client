@@ -1,6 +1,3 @@
-
-
-
 local EQUIP_MATERIAL_LOCALIZE = {
     ["ironIngot"] = _("铁锭"),
     ["steelIngot"] = _("钢锭"),
@@ -119,16 +116,78 @@ local BODY_LOCALIZE = {
     ["sting"] = _("尾部"),
     ["orb"] = _("法球"),
     ["armguardLeft,armguardRight"] = _("护臂"),
-    ["armguardRight"] = _("左护臂"),
-    ["armguardLeft"] = _("右护臂"),
+    ["armguardRight"] = _("右护臂"),
+    ["armguardLeft"] = _("左护臂"),
 }
 
+local DRAGON_SKILL_EFFECTION = {
+    ["dragonBlood"] = _("提升龙的活力上限"),
+    ["infantryEnhance"] = _("提升步兵的攻击和生命"),
+    ["dragonBreath"] = _("提升龙的总攻击"),
+    ["siegeEnhance"] = _("提升攻城攻击和生命"),
+    ["cavalryEnhance"] = _("提升骑兵攻击和生命"),
+    ["hunterEnhance"] = _("提升弓手攻击和生命"),
+    ["rapidity"] = _("增加行军速度"),
+    ["frenzied"] = _("增加敌方士气损失"),
+    ["insensitive"] = _("减少己方士气损失"),
+    ["leadership"] = _("增加带兵量"),
+    ["earthquake"] = _("增加对城墙的伤害"),
+    ["greedy"] = _("减少敌方的暗仓保护比例"),
+    ["scheme"] = _("增加捕获敌军几率"),
+    ["recover"] = _("提升阵亡士兵的治愈率"),
+}
+
+local DRAGON_SKILL = {
+    ["dragonBlood"] = _("龙之血脉"),
+    ["infantryEnhance"] = _("步兵强化"),
+    ["dragonBreath"] = _("龙之吐息"),
+    ["siegeEnhance"] = _("攻城强化"),
+    ["cavalryEnhance"] = _("骑兵强化"),
+    ["hunterEnhance"] = _("弓手强化"),
+    ["rapidity"] = _("迅捷之力"),
+    ["frenzied"] = _("狂乱"),
+    ["insensitive"] = _("忘却痛苦"),
+    ["leadership"] = _("统帅之力"),
+    ["earthquake"] = _("山崩地裂"),
+    ["greedy"] = _("贪婪"),
+    ["scheme"] = _("暗算"),
+    ["recover"] = _("恢复"),
+}
+
+local DRAGON_BUFF_EFFECTION = {
+    ["addInfantryAtk"] = _("步兵攻击加成"),
+    ["addInfantryHp"] = _("步兵生命值加成"),
+    ["addInfantryLoad"] = _("提升步兵负重加成"),
+    ["addInfantryMarch"] = _("步兵行军速度加成"),
+
+    ["addHunterAtk"] = _("弓手攻击加成"),
+    ["addHunterHp"] = _("弓手生命值加成"),
+    ["addHunterLoad"] = _("弓手负重加成"),
+    ["addHunterMarch"] = _("弓手行军速度加成"),
+
+    ["addCavalryAtk"] = _("骑兵攻击加成"),
+    ["addCavalryHp"] = _("骑兵生命值加成"),
+    ["addCavalryLoad"] = _("骑兵负重加成"),
+    ["addCavalryMarch"] = _("骑兵行军速度加成"),
+
+    ["addSiegeAtk"] = _("攻城系攻击加成"),
+    ["addSiegeHp"] = _("攻城系生命值加成"),
+    ["addSiegeLoad"] = _("攻城系负重加成"),
+    ["addSiegeMarch"] = _("攻城系行军速度加成"),
+
+    ["addMarchSize"] = _("带兵上限加成"),
+    ["addMarchSize"] = _("带兵上限加成"),
+    ["addCasualtyRate"] = _("可治愈伤兵几率加成"),
+}
 
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
     dragon = DRAGON_LOCALIZE,
-    body = BODY_LOCALIZE
+    body = BODY_LOCALIZE,
+    dragon_skill_effection = DRAGON_SKILL_EFFECTION,
+    dragon_skill = DRAGON_SKILL,
+    dragon_buff_effection = DRAGON_BUFF_EFFECTION,
 }
 
 

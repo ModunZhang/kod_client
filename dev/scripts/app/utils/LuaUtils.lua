@@ -14,6 +14,12 @@ function LuaUtils:printTab(n)
     end
 end
 
+function LuaUtils:table_size(t)
+    local r = 0
+    for _, _ in pairs(t) do r = r + 1 end
+    return r
+end
+
 function LuaUtils:printValue(v, depth)
     if type(v) == 'string' then
         io.write(string.format('%q', v))
@@ -126,4 +132,18 @@ function LuaUtils:table_map(t, func)
         r[nk] = nv
     end
     return r
+end
+
+function LuaUtils:table_slice(t,star_index,end_index)
+    local r = {}
+    for i= star_index,end_index do
+        if t[i] then
+            table.insert(r,t[i])
+        end
+    end
+    return r
+end
+
+function LuaUtils:isString(str)
+    return str and type(str) == 'string'
 end

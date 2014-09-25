@@ -102,16 +102,15 @@ local function return_vs_soldiers_map(soldier_type)
     return SOLDIER_VS_MAP[SOLDIER_CATEGORY_MAP[soldier_type]]
 end
 
+
 function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
     self.soldier_type = soldier_type
     self.recruit_max = recruit_max
 
     local label_origin_x = 190
-   
     -- bg
     local back_ground = cc.ui.UIImage.new("back_ground_608x458.png",
         {scale9 = true}):addTo(self):setLayoutSize(608, 500)
-    -- local back_ground =  WidgetUIBackGround.new(158):addTo(self)
     back_ground:setTouchEnabled(true)
 
     -- title

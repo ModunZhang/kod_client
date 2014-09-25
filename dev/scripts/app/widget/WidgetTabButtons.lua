@@ -106,6 +106,10 @@ function WidgetTabButtons:PushButton(button)
     end
 end
 
+function WidgetTabButtons:GetSelectedButtonTag()
+    return self.push_button.tag or ""
+end
+
 return WidgetTabButtons
 
 

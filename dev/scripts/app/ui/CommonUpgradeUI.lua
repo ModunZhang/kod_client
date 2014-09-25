@@ -616,17 +616,3 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
-
-
-
-
-
-
-
-
-
-
-
-
-
-
