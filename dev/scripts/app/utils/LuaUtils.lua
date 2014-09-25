@@ -134,6 +134,16 @@ function LuaUtils:table_map(t, func)
     return r
 end
 
+function LuaUtils:table_slice(t,star_index,end_index)
+    local r = {}
+    for i= star_index,end_index do
+        if t[i] then
+            table.insert(r,t[i])
+        end
+    end
+    return r
+end
+
 function LuaUtils:isString(str)
     return str and type(str) == 'string'
 end

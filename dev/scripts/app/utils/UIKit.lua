@@ -114,3 +114,13 @@ function UIKit:getBuffsDescWithKey( key )
 
     return map[key] or  ""
 end
+
+function UIKit:commonProgressTimer(png)
+    local progressFill = display.newSprite(png)
+    local ProgressTimer = cc.ProgressTimer:create(progressFill)
+    ProgressTimer:setType(display.PROGRESS_TIMER_BAR)
+    ProgressTimer:setBarChangeRate(cc.p(1,0))
+    ProgressTimer:setMidpoint(cc.p(0,0))
+    ProgressTimer:setPercentage(0)
+    return ProgressTimer
+end

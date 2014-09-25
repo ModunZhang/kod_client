@@ -8,6 +8,7 @@ local ResourceManager = class("ResourceManager", Observer)
 
 
 ResourceManager.RESOURCE_TYPE = Enum(
+    "BLOOD",
     "ENERGY",
     "WOOD",
     "FOOD",
@@ -29,6 +30,7 @@ local STONE = ResourceManager.RESOURCE_TYPE.STONE
 local POPULATION = ResourceManager.RESOURCE_TYPE.POPULATION
 local COIN = ResourceManager.RESOURCE_TYPE.COIN
 local GEM = ResourceManager.RESOURCE_TYPE.GEM
+local BLOOD = ResourceManager.RESOURCE_TYPE.BLOOD
 
 function ResourceManager:ctor()
     ResourceManager.super.ctor(self)
@@ -41,6 +43,7 @@ function ResourceManager:ctor()
         [POPULATION] = PopulationAutomaticUpdateResource.new(),
         [COIN] = Resource.new(),
         [GEM] = Resource.new(),
+        [BLOOD] = Resource.new(),
     }
     self:GetGemResource():SetValueLimit(math.huge) -- 会有人充值这么多的宝石吗？
     self:GetCoinResource():SetValueLimit(math.huge) -- 会有人充值这么多的宝石吗？
@@ -85,6 +88,9 @@ function ResourceManager:GetGemResource()
 end
 function ResourceManager:GetCoinResource()
     return self:GetResourceByType(COIN)
+end
+function ResourceManager:GetBloodResource()
+    return self:GetResourceByType(BLOOD)
 end
 function ResourceManager:GetResourceByType(RESOURCE_TYPE)
     return self.resources[RESOURCE_TYPE]

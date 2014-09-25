@@ -19,9 +19,13 @@ end
 
 function PushService:setDragonEquipment(dragonType,equipmentCategory,equipmentName,cb)
 	if not LuaUtils:isString(dragonType) then cb(false) end
-	  self.m_netService:request("logic.playerHandler.setDragonEquipment",{dragonType=dragonType,equipmentCategory=equipmentCategory,equipmentName=equipmentName}, function(success)
-	        cb(success)
-	end, false)
+	  	self.m_netService:request("logic.playerHandler.setDragonEquipment"
+	  		,{dragonType=dragonType,equipmentCategory=equipmentCategory,equipmentName=equipmentName}
+	  		, function(success)
+	        	cb(success)
+			end
+			,false
+		)
 end
 
 function PushService:resetDragonEquipment(dragonType,equipmentCategory,cb)
@@ -29,4 +33,26 @@ function PushService:resetDragonEquipment(dragonType,equipmentCategory,cb)
 	self.m_netService:request("logic.playerHandler.resetDragonEquipment",{dragonType=dragonType,equipmentCategory=equipmentCategory,equipmentName=equipmentName}, function(success)
 	        cb(success)
 	end, false)
+end
+
+function PushService:enhanceDragonEquipment(dragonType, equipmentCategory, equipments, cb)
+	if not LuaUtils:isString(dragonType) then cb(false) end
+	self.m_netService:request("logic.playerHandler.enhanceDragonEquipment"
+			,{dragonType=dragonType,equipmentCategory=equipmentCategory,equipments=equipments}
+			,function(success)
+				cb(success)
+			end
+			,true
+	)
+end
+
+function PushService:upgradeDragonStar(dragonType,cb)
+	if not LuaUtils:isString(dragonType) then cb(false) end
+	self.m_netService:request("logic.playerHandler.upgradeDragonStar"
+			,{dragonType=dragonType}
+			,function(success)
+				cb(success)
+			end
+			,true
+	)
 end

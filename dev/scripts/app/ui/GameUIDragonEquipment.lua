@@ -6,6 +6,8 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIDragonEquipment = UIKit:createUIClass("GameUIDragonEquipment")
 local StarBar = import(".StarBar")
 local UIListView = import(".UIListView")
+local config_category = GameDatas.DragonEyrie
+local WidgetDragonEquipIntensify = import("..widget.WidgetDragonEquipIntensify")
 local BODY_HEIGHT = 664
 local LISTVIEW_WIDTH = 547
 
@@ -18,8 +20,9 @@ function GameUIDragonEquipment:ctor(owner,dragon,equipmentCategory)
 end
 
 function GameUIDragonEquipment:onEnter()
+  GameUIDragonEquipment.super.onEnter(self)
 	local backgroundImage = WidgetUIBackGround.new(BODY_HEIGHT):addTo(self)
-	self.background = backgroundImage:pos((display.width-backgroundImage:getContentSize().width)/2,300)
+	self.background = backgroundImage:pos((display.width-backgroundImage:getContentSize().width)/2,display.height - backgroundImage:getContentSize().height - 80)
 	local titleBar = display.newSprite("title_blue_596x49.png")
 		:align(display.TOP_LEFT, 6,backgroundImage:getContentSize().height - 6)
 		:addTo(backgroundImage)
@@ -35,7 +38,7 @@ function GameUIDragonEquipment:onEnter()
     :align(display.LEFT_BOTTOM, 10, 10)
     self.titleBar = titleBar
 
-  local closeButton = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"}, {scale9 = false})
+  local closeButton = cc.ui.UIPushButton.new({normal = "X_2.png",pressed = "X_1.png"}, {scale9 = false})
 	   	:addTo(titleBar)
 	   	:align(display.BOTTOM_RIGHT,titleBar:getContentSize().width+25, 10)
 	   	:onButtonClicked(function ()
@@ -83,39 +86,56 @@ function GameUIDragonEquipment:onEnter()
       :onButtonClicked(function()
         self:AdornOrResetButtonClicked()
       end)
-    self.adornOrResetButton = resetButton
+  self.adornOrResetButton = resetButton
 	self:BuildInfoUI()
-	self:RefreshInfoUI()
+	
 	local infoButton = self:GetButton(1)
 		:addTo(backgroundImage)
-		:align(display.LEFT_BOTTOM, 20, -55)
+		:align(display.LEFT_BOTTOM, 20, -57)
 	infoButton.selected_ = true
 	local intensifyButton = self:GetButton(2)
 		:addTo(backgroundImage)
-		:align(display.LEFT_BOTTOM, 183, -55)
+		:align(display.LEFT_BOTTOM, 190, -57)
+  
+  self.infoButton = infoButton
+  self.intensifyButton = intensifyButton
 
 	infoButton.setEvent(function( ... )
-		if infoButton.selected_ then return end
-		infoButton.selected_ = true
-		infoButton.setSelected(true)
-		intensifyButton.setSelected(false)
-		self:RefreshInfoUI()
-		self.info_ui.main:show()
+		  self:InfoButtonAction()
 	end)
 	intensifyButton.setEvent(function( ... )
-		if intensifyButton.selected_ then return end
-		infoButton.selected_ = false
-		intensifyButton.setSelected(true)
-		infoButton.setSelected(false)
-		self.info_ui.main:hide()
+	   self:IntensifyButtonAction()
 	end)
+  self:RefreshInfoUI()
 end
+
+function GameUIDragonEquipment:InfoButtonAction()
+    if self.infoButton.selected_ then return end
+    self.infoButton.setSelected(true)
+    self.intensifyButton.setSelected(false)
+    self:RefreshInfoUI()
+    self.info_ui.main:show()
+    self.intensify_ui.main:hide()
+end
+
+function GameUIDragonEquipment:IntensifyButtonAction()
+    if self.intensifyButton.selected_ then return end
+    self.intensifyButton.setSelected(true)
+    self.infoButton.setSelected(false)
+    if not self.intensify_ui then
+      self:BuildIntensifyUI()
+    end
+    self:RefreshIntensifyUI()
+    self.intensify_ui.main:show()
+    self.info_ui.main:hide()
+end
+
 
 --type 为活力 力量 buffer 1 2 3
 function GameUIDragonEquipment:GetListItem(index,type,title,value)
 	local bg = display.newSprite(string.format("resource_item_bg%d.png",index%2))
 	local icon = "dragon_vitality_33x42.png"
-  print("GetListItem---->",index,type,title,value)
+  -- print("GetListItem---->",index,type,title,value)
   if type == 2 then
     icon = "dragon_strength_27x31.png"
   elseif type == 3 then
@@ -142,10 +162,142 @@ function GameUIDragonEquipment:GetListItem(index,type,title,value)
 	return bg
 end
 
+function GameUIDragonEquipment:WidgetDragonEquipIntensifyEvent(widgetDragonEquipIntensify)
+    local equipment = self:GetEquipment()
+    --如果装备星级达到最高星级 无条件回滚
+    if equipment.star >= self.dragon.star then return true end
+    local exp = 0
+    table.foreach(self.allEquipemnts,function(index,v)
+        exp = exp + v:GetTotalExp()
+    end)
+    local oldExp = exp - widgetDragonEquipIntensify:GetExpPerEq()
+    local oldPercent = (oldExp + (equipment.exp or 0))/self:GetEquipmentCategory().enhanceExp * 100
+    print("exp----->",oldExp,exp,self:GetEquipmentCategory().enhanceExp,oldPercent)
+    if oldPercent >= 100 then
+      return true
+    else
+      local percent = (exp + (equipment.exp or 0))/self:GetEquipmentCategory().enhanceExp * 100
+      local str = equipment.exp .. "/" .. self:GetEquipmentCategory().enhanceExp
+      if exp > 0 then
+        str = str .. " +" .. exp
+      end
+      self.intensify_ui.expLabel:setString(str)
+      self.intensify_ui.greenProgress:setPercentage(percent)
+    end
+end
+
+function GameUIDragonEquipment:IntensifyEvent()
+
+  local equipments = {}
+  table.foreach(self.allEquipemnts,function(index,v)
+      local name,count = v:GetNameAndCount()
+      if count > 0 then
+        table.insert(equipments,{name=name,count=count})
+      end
+  end)
+
+  PushService:enhanceDragonEquipment(self.dragon.type,self.equipmentCategory,equipments,function()
+  end)
+end
+
+
+function GameUIDragonEquipment:BuildIntensifyUI()
+  self.intensify_ui = {}
+  local mainEquipment = self.mainEquipment
+  local body = display.newNode():addTo(self):pos((display.width-self.background:getContentSize().width)/2,display.height - self.background:getContentSize().height - 80)
+  local progressBg = display.newSprite("balckbar_555x44.png")
+    :addTo(body)
+    :align(display.LEFT_TOP, mainEquipment:getPositionX(), mainEquipment:getPositionY()-mainEquipment:getContentSize().height-30)
+  local greenProgress = UIKit:commonProgressTimer("greenbar_550x38.png")
+    :addTo(progressBg)
+    :align(display.LEFT_BOTTOM,1,3)
+  greenProgress:setPercentage(50)
+  local yellowProgress = UIKit:commonProgressTimer("yellowbar_551x38.png")
+    :addTo(progressBg)
+    :align(display.LEFT_BOTTOM,1,3)
+  yellowProgress:setPercentage(30)
+
+  local descLabel =   cc.ui.UILabel.new({
+    UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+    text = "",
+    font = UIKit:getFontFilePath(),
+    size = 20,
+    align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
+    color = UIKit:hex2c3b(0xfff3c7)
+  }):addTo(yellowProgress)
+    :align(display.LEFT_BOTTOM, 5, 5)
+  self.intensify_ui.expLabel = descLabel
+  self.intensify_ui.yellowProgress = yellowProgress
+  self.intensify_ui.greenProgress = greenProgress
+  --- listview
+  self.intensify_ui.main = body
+  self.intensify_ui.listView = UIListView.new {
+      viewRect = cc.rect(mainEquipment:getPositionX(), 60, 555, 350),
+      direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
+      alignment = cc.ui.UIListView.ALIGNMENT_LEFT,
+  }
+  :addTo(body)
+  self.allEquipemnts = {}
+  local equipment = self:GetEquipment()
+  local lineCount = self:GetPlayerEquipmentsListData(5)
+  for i=1,lineCount do
+      local item = self.intensify_ui.listView:newItem()
+      local node = display.newNode()
+      local lineData = self:GetPlayerEquipmentsListData(5,i)
+      for j=1,#lineData do
+        local perData = lineData[j]
+        local tempNode = WidgetDragonEquipIntensify.new(self,perData[1],0,perData[2],equipment.name)
+        :addTo(node)
+        local x = tempNode:getCascadeBoundingBox().width/2 + (j-1) * (tempNode:getCascadeBoundingBox().width +6)
+        tempNode:pos(x,tempNode:getCascadeBoundingBox().height/2)
+        table.insert(self.allEquipemnts,tempNode)
+      end
+      item:addContent(node)
+      item:setItemSize(node:getCascadeBoundingBox().width, node:getCascadeBoundingBox().height+10)
+      self.intensify_ui.listView:addItem(item)
+  end
+  self.intensify_ui.listView:reload()
+end
+
+function GameUIDragonEquipment:GetEquipmentCategory()
+  local equipment = self:GetEquipment()
+  local equipment_category = config_category[self.equipmentCategory][self.dragon.star .. "_" .. self.dragon.equipments[self.equipmentCategory].star]
+  return equipment_category
+end
+
+
+function GameUIDragonEquipment:RefreshEquipmentItem()
+     self.mainEquipment:removeFromParentAndCleanup(true)
+    local mainEquipment = self:GetEquipmentItem()
+    :addTo(self.background)
+    :align(display.LEFT_TOP,(self.background:getContentSize().width-LISTVIEW_WIDTH)/2,self.titleBar:getPositionY()-self.titleBar:getContentSize().height - 10)
+    self.mainEquipment = mainEquipment
+end
+
+function GameUIDragonEquipment:RefreshIntensifyUI()
+  self:RefreshEquipmentItem()
+  local equipment = self:GetEquipment()
+  self.adornOrResetButton.labels_['normal']:setString(_("强化"))
+  if equipment.star < self.dragon.star then 
+    self.adornOrResetButton:setButtonEnabled(true)
+    self.intensify_ui.expLabel:setString(equipment.exp .. "/" .. self:GetEquipmentCategory().enhanceExp)
+    self.intensify_ui.yellowProgress:setPercentage((equipment.exp or 0)/self:GetEquipmentCategory().enhanceExp * 100)
+    self.intensify_ui.greenProgress:setPercentage((equipment.exp or 0)/self:GetEquipmentCategory().enhanceExp * 100)
+  else
+    self.intensify_ui.yellowProgress:setPercentage(100)
+    self.intensify_ui.greenProgress:setPercentage(100)
+    self.adornOrResetButton:setButtonEnabled(false)
+    self.intensify_ui.expLabel:setString(_("装备已达到最大星级"))
+
+  end
+    table.foreach(self.allEquipemnts,function(index,v)
+        v:Reset()
+    end)
+end
 
 function GameUIDragonEquipment:BuildInfoUI()
 	self.info_ui = {}
-	local background = display.newNode():addTo(self):pos((display.width-self.background:getContentSize().width)/2,300)
+	local background = display.newNode():addTo(self):pos((display.width-self.background:getContentSize().width)/2,display.height - self.background:getContentSize().height - 80)
   local mainEquipment = self.mainEquipment
  	local descLabel = cc.ui.UILabel.new({
       UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -194,20 +346,23 @@ function GameUIDragonEquipment:GetEquipment()
   if not self.isFromConfig then
       equipment = self.dragon.equipments[self.equipmentCategory]
   end
-  LuaUtils:outputTable("GetEquipment--->",equipment)
   return equipment
 end
 
 function GameUIDragonEquipment:AdornOrResetButtonClicked()
-  local equipment = self:GetEquipment()
-  if self.isFromConfig then --来自服务器
-		PushService:setDragonEquipment(self.dragon.type,self.equipmentCategory,equipment.name,function( success)
+  if self.infoButton.selected_ then -- 信息界面
+    local equipment = self:GetEquipment()
+    if self.isFromConfig then --来自配置 装备
+  		PushService:setDragonEquipment(self.dragon.type,self.equipmentCategory,equipment.name,function( success)
 
-		end)
-  else
-    PushService:resetDragonEquipment(self.dragon.type,self.equipmentCategory,function(success)
+  		end)
+    else -- 重置
+      PushService:resetDragonEquipment(self.dragon.type,self.equipmentCategory,function(success)
 
-    end)
+      end)
+    end
+  else -- 强化界面
+      self:IntensifyEvent()
   end
 end
 
@@ -234,38 +389,57 @@ function GameUIDragonEquipment:GetEquipmentItem()
 end
 
 function GameUIDragonEquipment:RefreshInfoUI()
-  self.mainEquipment:removeFromParentAndCleanup(true)
-  local mainEquipment = self:GetEquipmentItem()
-    :addTo(self.background)
-    :align(display.LEFT_TOP,(self.background:getContentSize().width-LISTVIEW_WIDTH)/2,self.titleBar:getPositionY()-self.titleBar:getContentSize().height - 10)
-    self.mainEquipment = mainEquipment
-
+  self:RefreshEquipmentItem()
   local equipment = self:GetEquipment()
     self.mainTitleLabel:setString(self.equipmentCategory)
 	if self.isFromConfig then -- 没有装备
-		self.adornOrResetButton.labels_['normal']:setString(_("装备"))
-		if DataManager:getUserData().dragonEquipments[equipment.name] > 0 then
-			-- self.info_ui.makeButton:hide()
-			-- self.info_ui.descLabel2:hide()
+    self.adornOrResetButton.labels_['normal']:setString(_("装备"))
+    self.intensifyButton:hide()
+    if DataManager:getUserData().dragonEquipments[equipment.name] > 0 then
+      self.adornOrResetButton:setButtonEnabled(true)
 		else
 			self.adornOrResetButton:setButtonEnabled(false)
-			-- self.info_ui.makeButton:show()
-			-- self.info_ui.descLabel2:show()
-		end
-	else -- 已经装备
-		self.adornOrResetButton.labels_['normal']:setString(_("重置"))
-	end
+    end
+  else -- 已经装备
+    self.adornOrResetButton.labels_['normal']:setString(_("重置"))
+    self.intensifyButton:show()
+    self.adornOrResetButton:setButtonEnabled(true)
+  end
 	self.titleLable:setString(equipment.name)
 	self.countLabel:setString(DataManager:getUserData().dragonEquipments[equipment.name] .. "/" ..  City:GetFirstBuildingByType("materialDepot"):GetMaxMaterial())
   self:RefreshInfoListView()
 end
 
-function GameUIDragonEquipment:BuildIntensifyUI()
-
+function GameUIDragonEquipment:GetPlayerEquipments()
+    local t = {}
+    local r = LuaUtils:table_filter(DataManager:getUserData().dragonEquipments,function(equipment,count)
+        return count > 0 
+    end)
+    for k,v in pairs(r) do
+      table.insert(t,{k,v})
+    end
+    return t
 end
 
+function GameUIDragonEquipment:GetPlayerEquipmentsListData(perLineCount,page)
+  local data = self:GetPlayerEquipments()
+  local pageCount =  math.ceil(#data/perLineCount)
+  if not page then return pageCount end
+  return LuaUtils:table_slice(data,1+(page - 1)*perLineCount,perLineCount*page)
+end
+
+-- function GameUIDragonEquipment:SliceTable(t, s,e)
+--     local r = {}
+--     for i= s,e do
+--         if t[i] then
+--             table.insert(r,t[i])
+--         end
+--     end
+--     return r
+-- end
+
 function GameUIDragonEquipment:GetButton(index)
-	local button = display.newSprite(index == 1 and "equipemt_sort_170x87.png" or "equipemt_sort_169x67.png")
+	local button = display.newSprite(index == 1 and "equipemt_sort_170x73.png" or "equipemt_sort_169x67.png")
 	button.index_ = index
 	cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -276,8 +450,9 @@ function GameUIDragonEquipment:GetButton(index)
         color = UIKit:hex2c3b(0x403c2f)
     }):addTo(button):align(display.CENTER,button:getContentSize().width/2, 35)
     button.setSelected = function(b)
+      button.selected_ = b
     	if b then
-    		button:setTexture("equipemt_sort_170x87.png")
+    		button:setTexture("equipemt_sort_170x73.png")
     	else
     		button:setTexture("equipemt_sort_169x67.png")
     	end
@@ -304,7 +479,11 @@ end
 function GameUIDragonEquipment:DragonDataChanged()
   self.dragon = self.owner:GetCurrentDragon()
   self.isFromConfig = self.dragon.equipments[self.equipmentCategory].name == ""
-  self:RefreshInfoUI()
+  if self.infoButton.selected_ then
+    self:RefreshInfoUI()
+  else
+    self:RefreshIntensifyUI()
+  end
 end
 
 function GameUIDragonEquipment:GetEquipmentEffect()

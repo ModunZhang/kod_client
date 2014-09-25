@@ -32,17 +32,3 @@ end
 
 
 return GameUIWithCommonHeader
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -104,7 +104,6 @@ function DragonEyrieUpgradeBuilding:GetEquipmentsByStarAndType(dragonStar,dragon
 			end
 		end
 	end
-	LuaUtils:outputTable("GetEquipmentsByStarAndType----->", r)
 	return r
 end
 

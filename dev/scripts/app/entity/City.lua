@@ -324,6 +324,7 @@ function City:IteratorResourcesByUserData(user_data, current_time)
     resource_manager:GetPopulationResource():UpdateResource(current_time, user_data.resources.citizen)
     resource_manager:GetCoinResource():SetValue(user_data.resources.coin)
     resource_manager:GetGemResource():SetValue(user_data.resources.gem)
+    resource_manager:GetBloodResource():SetValue(user_data.resources.blood)
     self:UpdateAllResource(current_time)
 end
 function City:IteratorAllNeedTimerEntity(current_time)

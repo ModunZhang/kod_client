@@ -6,9 +6,8 @@ local GameUIDragonEyrie = UIKit:createUIClass("GameUIDragonEyrie","GameUIWithCom
 local TabButtons = import(".TabButtons")
 local StarBar = import(".StarBar")
 local UIListView = import(".UIListView")
-
-function GameUIDragonEyrie:GetStarBar()
-end
+local WidgetPushButton = import("..widget.WidgetPushButton")
+local config_dragonSkill = GameDatas.DragonEyrie.dragonSkill
 
 
 function GameUIDragonEyrie:ctor(city,building)
@@ -65,7 +64,7 @@ function GameUIDragonEyrie:RefreshUIData()
             self.dragonUI.dragonContent:setTexture("dragon.png")
             self.dragonUI.drgonVitalityProgress:setPercentage(dragon.vitality/self.building:GetMaxVitalityCurrentLevel(dragon)*100)
             self.dragonUI.drgonVitalityLabel:setString(dragon.vitality .. "/" .. self.building:GetMaxVitalityCurrentLevel(dragon))
-            self.dragonUI.vitalityProductPerHourLabel:setString("+" .. self.building:GetVitalityRecoveryPerHour() .. "/h")
+            self.dragonUI.vitalityProductPerHourLabel:setString("+" .. self.building:GetVitalityRecoveryPerHour() .. "/H")
         end
 
         local currentButtonTag = self.tabButton:GetSelectedButtonTag()
@@ -73,9 +72,11 @@ function GameUIDragonEyrie:RefreshUIData()
             if currentButtonTag == "equipment" then
                 self.equipmentUI.strenghLabel:setString(dragon.strength)
                 self.equipmentUI.vitailtyLabel:setString(dragon.vitality)
-                --
                 -- self.equipmentUI.equipmentContent
                 self:HandleEquipmentItem(dragon)
+            elseif currentButtonTag == "skill" then
+                self.skillUI.blood_label:setString(City:GetResourceManager():GetBloodResource():GetValue()) -- 英雄之血
+                self:RefreshSkillList()
             end
         end
     end
@@ -100,6 +101,14 @@ function GameUIDragonEyrie:ChangeCurentContent(tag)
             self.current_content = self:CreateHatchDragonIf()
         else
              self.current_content = self:CreateEquipmentContentIf()
+        end
+        self:RefreshUIData()
+    elseif tag == "skill" then
+         self:CreateDragonIf() -- 龙信息
+        if self:GetCurrentDragon() and self:GetCurrentDragon().star < 1 then
+            self.current_content = self:CreateHatchDragonIf()
+        else
+             self.current_content = self:CreateSkillContentIf()
         end
         self:RefreshUIData()
     end
@@ -139,6 +148,9 @@ function GameUIDragonEyrie:OnResourceChanged(resource_manager)
     local energy = resource_manager:GetEnergyResource()
     if self.building and self.hatchUI and energy then
         self.hatchUI.nextEnergyLabel:setString(self:GetHatchEneryLabelString())
+    end
+    if self.building and self.skillUI and energy then
+        self.skillUI.timeLabel:setString(self:GetHatchEneryLabelString())
     end
 end
 
@@ -405,6 +417,9 @@ function GameUIDragonEyrie:CreateEquipmentContentIf()
 	        align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
 	        color = UIKit:hex2c3b(0xfff3c7)
 		}))
+        :onButtonClicked(function(event)
+            self:UpgradeDragonStar()
+        end)
 
 	 cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -443,13 +458,18 @@ function GameUIDragonEyrie:CreateEquipmentContentIf()
     self.equipment_content = content_bg
     return self.equipment_content
 end
+function GameUIDragonEyrie:UpgradeDragonStar()
+    local dragonType = self:GetCurrentDragon().type
+    PushService:upgradeDragonStar(dragonType,function()
+    end)
+end
 
 --返回装备的背景图和装备icon
 function GameUIDragonEyrie:GetEquipmentItemImageInfo( dragonType,equipmentCategory,equipmentStar)
     --三条龙的背景
     local bgImages = {greenDragon="drgon_eq_bg_gray.png",redDragon="drgon_eq_bg_gray.png",blueDragon="drgon_eq_bg_gray.png"}
     local equipmentIcon = {}
-    --五个星级的装备
+    --五个星级的装备 TODO:6种装备
     equipmentIcon["armguardLeft"] = {"armguard_1.png","armguard_1.png","armguard_1.png","armguard_1.png","armguard_1.png"}
     equipmentIcon["armguardRight"] = {"armguard_1.png","armguard_1.png","armguard_1.png","armguard_1.png","armguard_1.png"}
     equipmentIcon["crown"] = {"crown_1.png","crown_1.png","crown_1.png","crown_1.png","crown_1.png"}
@@ -502,22 +522,133 @@ function GameUIDragonEyrie:GetEquipmentItem(isFromConfig,equipmentCategory,drago
     end
 end
 
+function GameUIDragonEyrie:GetSkillConfig(dragonSkill)
+    return config_dragonSkill[dragonSkill]
+end
+
+
+
+function GameUIDragonEyrie:IsSkillLocked(dragonSkill)
+    local dragon = self:GetCurrentDragon()
+    local config = self:GetSkillConfig(dragonSkill)
+    return dragon.star < config.unlockStar
+end
+
+function GameUIDragonEyrie:SkillListItemClicked(skill)
+    if self:IsSkillLocked(skill.name or "") then return end
+    UIKit:newGameUI("GameUIDragonSkill",skill):addToCurrentScene(false)
+end
+
+function GameUIDragonEyrie:GetSkillListItem(skill)
+    local bg = WidgetPushButton.new({normal = "dragonskill_183x121.png"}, {scale9 = false})
+    local titleBg = display.newSprite("dragonskilltitle_167x26.png")
+        :addTo(bg)
+    titleBg:pos(0,45)
+    local titleLabel = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = skill.name,
+        font = UIKit:getFontFilePath(),
+        size = 18,
+        align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
+        color = UIKit:hex2c3b(0x403c2f)
+    }):addTo(titleBg):align(display.CENTER,titleBg:getContentSize().width/2,titleBg:getContentSize().height/2)
+    local skillBg = display.newSprite("dragonskill_84x86.png")
+        :addTo(bg):align(display.LEFT_BOTTOM,-85,titleBg:getPositionY()-100)
+    local skillIcon
+    if self:IsSkillLocked(skill.name or "") then
+        skillIcon = display.newFilteredSprite("dragonskill_70x70.png","GRAY", {0.2, 0.3, 0.5, 0.1})
+    else
+        skillIcon = display.newSprite("dragonskill_70x70.png")
+    end
+    skillIcon:addTo(skillBg):pos(skillBg:getContentSize().width/2,skillBg:getContentSize().height/2)
+    local skillInfo = display.newSprite("info_46x45.png"):addTo(skillBg):align(display.RIGHT_BOTTOM,skillBg:getContentSize().width-5,5)
+    if self:IsSkillLocked(skill.name or "") then
+        -- lock
+        local lockLabel = cc.ui.UILabel.new({
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = _("未解锁"),
+            font = UIKit:getFontFilePath(),
+            size = 18,
+            align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
+            color = UIKit:hex2c3b(0x403c2f)
+        }):addTo(bg):align(display.CENTER,skillBg:getPositionX()+skillBg:getContentSize().width+30,skillBg:getPositionY() + skillBg:getContentSize().height/2)
+        display.newSprite("skill_lock_32x50.png"):addTo(skillBg):pos(skillBg:getContentSize().width/2,skillBg:getContentSize().height/2)
+    else
+        --  normal
+        local levelLable = cc.ui.UILabel.new({
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = _("等级"),
+            font = UIKit:getFontFilePath(),
+            size = 20,
+            align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
+            color = UIKit:hex2c3b(0x68634f)
+        }):addTo(bg):align(display.LEFT_BOTTOM,skillBg:getPositionX()+skillBg:getContentSize().width+10,skillBg:getPositionY() + skillBg:getContentSize().height - 40)
+
+        local levelValLabel = cc.ui.UILabel.new({
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = skill.level,
+            font = UIKit:getFontFilePath(),
+            size = 24,
+            align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
+            color = UIKit:hex2c3b(0x403c2f)
+        }):addTo(bg):align(display.LEFT_TOP, skillBg:getPositionX()+skillBg:getContentSize().width+10, levelLable:getPositionY() - 2)
+    end
+    return bg
+end
+
+function GameUIDragonEyrie:GetSkillListData(perLineCount,page)
+    local dragon = self:GetCurrentDragon()
+    local skills = dragon.skills
+    local skills_local = {}
+    for k,v in pairs(skills) do
+        local _,_,index = string.find(k,"%w_(%d)")
+        table.insert(skills_local,index,v)
+    end
+    local pageCount =  math.ceil(#skills_local/perLineCount)
+    if not page then return pageCount end
+    return LuaUtils:table_slice(skills_local,1+(page - 1)*perLineCount,perLineCount*page)
+end
+
+
+function GameUIDragonEyrie:RefreshSkillList()
+    self.skillUI.listView:removeAllItems()
+    for i=1,self:GetSkillListData(3) do
+        local item = self.skillUI.listView:newItem()
+        local content = display.newNode()
+        local lineData = self:GetSkillListData(5,i)
+        for j=1,#lineData do
+            local skillData = lineData[j]
+            local oneSkill = self:GetSkillListItem(skillData)
+            oneSkill:addTo(content)
+            local x = oneSkill:getCascadeBoundingBox().width/2 + (j-1) * (oneSkill:getCascadeBoundingBox().width + 3)
+            oneSkill:pos(x,oneSkill:getCascadeBoundingBox().height/2)
+            oneSkill:onButtonClicked(function(event)
+                self:SkillListItemClicked(skillData)
+            end)
+        end    
+        item:addContent(content)
+        item:setItemSize(content:getCascadeBoundingBox().width,content:getCascadeBoundingBox().height)
+        self.skillUI.listView:addItem(item)
+    end
+    self.skillUI.listView:reload()
+end
+
 function GameUIDragonEyrie:CreateSkillContentIf()
 	if self.skill_content then self.skill_content:setVisible(true) return self.skill_content end
+    self.skillUI = {}
     local skill = display.newNode()
-
-
     local list = UIListView.new {
         bg = "dragon_content_bg.png",
         bgScale9 = true,
-        viewRect = cc.rect(0, 0, 551, 195),
+        viewRect = cc.rect(0, 0, 554, 240),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         alignment = cc.ui.UIListView.ALIGNMENT_LEFT      
     }
     :addTo(skill)
+    self.skillUI.listView = list
     local star = display.newSprite("dragon_star.png")
     :addTo(skill)
-    :align(display.LEFT_BOTTOM,0,200)
+    :align(display.LEFT_BOTTOM,0,244)
     local timeLabel = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "next one 00:20:45",
@@ -527,14 +658,14 @@ function GameUIDragonEyrie:CreateSkillContentIf()
         color = UIKit:hex2c3b(0x403c2f)
     })
     timeLabel:setAnchorPoint(cc.p(0,0))
-    timeLabel:setPosition(cc.p(star:getPositionX() + star:getContentSize().width,star:getPositionY()))
+    timeLabel:pos(star:getPositionX() + star:getContentSize().width,star:getPositionY())
     timeLabel:addTo(skill)
-
+    self.skillUI.timeLabel = timeLabel
     local magic_bottle = display.newSprite("dragon_magic_bottle.png")
      :addTo(skill)
      :align(display.LEFT_BOTTOM,timeLabel:getPositionX()+timeLabel:getContentSize().width + 200 , timeLabel:getPositionY())
 
-    local value_label = cc.ui.UILabel.new({
+    local blood_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "30000",
         font = UIKit:getFontFilePath(),
@@ -542,20 +673,15 @@ function GameUIDragonEyrie:CreateSkillContentIf()
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
         color = UIKit:hex2c3b(0x403c2f)
     }):addTo(skill):align(display.LEFT_BOTTOM,magic_bottle:getPositionX()+magic_bottle:getContentSize().width+10,magic_bottle:getPositionY())
-
+    self.skillUI.blood_label = blood_label
     local line  = display.newScale9Sprite("dividing_line.png")
      :addTo(skill)
      :align(display.LEFT_TOP,0,star:getPositionY() - 1)
 
-    line:size(551,line:getContentSize().height)
+    line:size(554,line:getContentSize().height)
     self.skill_content = skill
-    skill:addTo(self):pos((display.width - 551)/2,display.top - 850)
+    skill:addTo(self):pos((display.width - 551)/2,display.top - 870)
     return self.skill_content
-end
-
-function GameUIDragonEyrie:GetSkillItem()
-	local node = display.newNode()
-
 end
 
 function GameUIDragonEyrie:CreateInfomationIf()
