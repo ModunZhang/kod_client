@@ -2,7 +2,7 @@
 -- Author: Danny He
 -- Date: 2014-09-17 09:00:04
 --
-local GameUIDragonEyrie = UIKit:createUIClass("GameUIDragonEyrie","GameUIWithCommonHeader")
+local GameUIDragonEyrie = UIKit:createUIClass("GameUIDragonEyrie","GameUIUpgradeBuilding")
 local TabButtons = import(".TabButtons")
 local StarBar = import(".StarBar")
 local UIListView = import(".UIListView")
@@ -12,7 +12,7 @@ local Localize = import("..utils.Localize")
 local window = import("..utils.window")
 
 function GameUIDragonEyrie:ctor(city,building)
-	GameUIDragonEyrie.super.ctor(self,City,_("龙巢"))
+	GameUIDragonEyrie.super.ctor(self,City,_("龙巢"),building)
     self.building = building
     self.building:SetListener(self)
     self.current_page = 0
@@ -20,7 +20,7 @@ end
 
 function GameUIDragonEyrie:onEnter()
 	GameUIDragonEyrie.super.onEnter(self)
-	self:CreateTabButtons()
+	self:CreateTabButtons_()
     self:ChangePageAction(1)
 end
 
@@ -747,14 +747,9 @@ function GameUIDragonEyrie:CreateInfomationIf()
     return self.info_content
 end
 
-function GameUIDragonEyrie:CreateTabButtons()
-	local tab_buttons = TabButtons.new({
-        {
-            label = _("升级"),
-            tag = "upgrade",
-            default = true,
-        },
-        {
+function GameUIDragonEyrie:CreateTabButtons_()
+    self.tabButton = self:CreateTabButtons({
+       {
             label = _("装备"),
             tag = "equipment",
         },
@@ -767,17 +762,9 @@ function GameUIDragonEyrie:CreateTabButtons()
             tag = "information",
         }
     },
-    {
-        gap = -4,
-        margin_left = -2,
-        margin_right = -2,
-        margin_up = -6,
-        margin_down = 1
-    },
     function(tag)
-    	self:TabButtonsAction(tag)
-    end):addTo(self):pos(display.cx, window.bottom + 50)
-    self.tabButton = tab_buttons
+        self:TabButtonsAction(tag)
+    end):pos(window.cx, window.bottom + 50)
 end
 
 function GameUIDragonEyrie:onMovieOutStage()
