@@ -54,7 +54,6 @@ end
 
 function GameUIBase:onMovieOutStage()
     self:removeFromParent(true)
-    app:lockInput(false)
 end
 
 
@@ -110,6 +109,7 @@ function GameUIBase:UIAnimationMoveOut()
         {
             easing = "sineIn",
             onComplete = function()
+                app:lockInput(false)
                 self:onMovieOutStage()
             end
         })
