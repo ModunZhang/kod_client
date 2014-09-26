@@ -18,6 +18,7 @@ local BuildingRegister = {
     lumbermill      = import("..entity.PResourceUpgradeBuilding"),
     mill            = import("..entity.PResourceUpgradeBuilding"),
     townHall 	    = import("..entity.TownHallUpgradeBuilding"),
+    hospital 	    = import("..entity.HospitalUpgradeBuilding"),
 }
 setmetatable(BuildingRegister, {__index = function(t, k)
 	return UpgradeBuilding
