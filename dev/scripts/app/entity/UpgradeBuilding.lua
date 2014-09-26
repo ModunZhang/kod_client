@@ -136,12 +136,15 @@ function UpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id,
         finishTime = event == nil and 0 or event.finishTime / 1000
         level = location.level
     end
+
     -- 适配
     self:OnHandle(level, finishTime)
 end
 function UpgradeBuilding:OnHandle(level, finish_time)
     if self.level == level then
-        if self.upgrade_to_next_level_time == 0 and finish_time ~= 0 then
+        if self.upgrade_to_next_level_time == finish_time and finish_time ~= 0 then
+            self:UpgradeByCurrentTime(finish_time - self:GetUpgradeTimeToNextLevel())
+        elseif self.upgrade_to_next_level_time == 0 and finish_time ~= 0 then
             self:UpgradeByCurrentTime(finish_time - self:GetUpgradeTimeToNextLevel())
         elseif self.upgrade_to_next_level_time ~= 0 and finish_time ~= 0 then
             self.upgrade_to_next_level_time = finish_time
