@@ -18,11 +18,11 @@ function GameUIBarracks:onEnter()
     self.recruit = self:CreateSoldierUI()
     self:TabButtons()
     self.barracks:AddBarracksListener(self)
-    self.barracks_city:GetSoldierManager():AddObserver(self)
+    self.barracks_city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
 end
 function GameUIBarracks:onExit()
     self.barracks:RemoveBarracksListener(self)
-    self.barracks_city:GetSoldierManager():RemoveObserver(self)
+    self.barracks_city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
     GameUIBarracks.super.onExit(self)
 end
 function GameUIBarracks:OnBeginRecruit(barracks, event)

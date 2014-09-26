@@ -97,7 +97,7 @@ function MyApp:onEnterForeground()
 end
 
 function MyApp:lockInput(b)
-    cc.Director:getInstance():getEventDispatcher():setEnabled(b)
+    cc.Director:getInstance():getEventDispatcher():setEnabled(not b)
 end
 
 return MyApp

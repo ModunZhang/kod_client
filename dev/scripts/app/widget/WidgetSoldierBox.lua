@@ -40,7 +40,7 @@ local SOLDIER_TYPE = {
     ["skeletonWarrior"] = { png = "soldier_skeletonWarrior.png" },
     ["skeletonArcher"] = { png = "soldier_skeletonArcher.png" },
     ["deathKnight"] = { png = "soldier_deathKnight.png" },
-    ["meatWagon"] = { png = "meatWagon.png" },
+    ["meatWagon"] = { png = "soldier_meatWagon.png" },
 -- ["priest"] = {},
 -- ["demonHunter"] = {},
 -- ["paladin"] = {},
