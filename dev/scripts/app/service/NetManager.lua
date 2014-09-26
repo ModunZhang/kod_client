@@ -485,6 +485,37 @@ function NetManager:instantRecruitNormalSoldier(soldierName, count, cb)
     end)
 end
 
+-- 普通治疗所有士兵
+function NetManager:treatAllSoldier(soldierName, count, cb)
+    local info = {
+        soldierName = soldierName,
+        count = count,
+        finishNow = false
+    }
+    self.m_netService:request("logic.playerHandler.recruitNormalSoldier", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+-- 立即治疗所有士兵
+function NetManager:instantTreatAllSoldier(soldierName, count, cb)
+    local info = {
+        soldierName = soldierName,
+        count = count,
+        finishNow = true
+    }
+    self.m_netService:request("logic.playerHandler.recruitNormalSoldier", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+
 --
 function NetManager:resetGame()
     self:sendMsg("reset", NOT_HANDLE)

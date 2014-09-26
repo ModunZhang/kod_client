@@ -227,6 +227,8 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
             else
                 UIKit:newGameUI('GameUIResource',building:GetEntity()):addToCurrentScene(true)
             end
+        elseif building:GetEntity():GetType() == "hospital" then
+            UIKit:newGameUI('GameUIHospital', City, building:GetEntity()):addToScene(self, true)
         end
     end
 end
@@ -293,6 +295,7 @@ function CityScene:OnGateChanged(old_walls, new_walls)
 end
 
 return CityScene
+
 
 
 

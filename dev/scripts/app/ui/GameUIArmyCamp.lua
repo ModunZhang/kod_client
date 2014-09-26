@@ -5,6 +5,25 @@ local WidgetSoldierDetails = import('..widget.WidgetSoldierDetails')
 local WidgetSoldierBox = import('..widget.WidgetSoldierBox')
 local GameUIArmyCamp = UIKit:createUIClass('GameUIArmyCamp',"GameUIUpgradeBuilding")
 
+GameUIArmyCamp.SOLDIERS_NAME = {
+    [1] = "swordsman",
+    [2] = "archer",
+    [3] = "lancer",
+    [4] = "catapult",
+    [5] = "sentinel",
+    [6] = "crossbowman",
+    [7] = "horseArcher",
+    [8] = "ballista",
+    [9] = "skeletonWarrior",
+    [10] = "skeletonArcher",
+    [11] = "deathKnight",
+    [12] = "meatWagon",
+    -- [13] = "priest",
+    -- [14] = "demonHunter",
+    -- [15] = "paladin",
+    -- [16] = "steamTank",
+}
+
 function GameUIArmyCamp:ctor(city,building)
     GameUIArmyCamp.super.ctor(self,city,_("军用帐篷"),building)
 end
@@ -159,14 +178,6 @@ function GameUIArmyCamp:CresteSoldiersListView()
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
         :addTo(self.info_layer)
     self:CreateItemWithListView(self.soldiers_listview)
-    -- self.soldiers_listview:addItem(item)
-    -- local item = self:CreateItemWithListView(self.soldiers_listview)
-    -- self.soldiers_listview:addItem(item)
-    -- local item = self:CreateItemWithListView(self.soldiers_listview)
-    -- self.soldiers_listview:addItem(item)
-    -- local item = self:CreateItemWithListView(self.soldiers_listview)
-    -- self.soldiers_listview:addItem(item)
-    -- self.soldiers_listview:reload()
 end
 
 function GameUIArmyCamp:CreateItemWithListView(list_view)
@@ -177,37 +188,40 @@ function GameUIArmyCamp:CreateItemWithListView(list_view)
     local gap_x = (547 - unit_width * 4) / 3
     local row_item = display.newNode()
     local soldier_map = City:GetSoldierManager():GetSoldierMap()
-    local row_count = 4
-    for i,v in pairs(soldier_map) do
-        row_count = row_count -1
+    local row_count = -1
+    for i,soldier_name in pairs(GameUIArmyCamp.SOLDIERS_NAME) do
+        print("index ===",i," soldier name = ",soldier_name)
+        -- local soldier_name = v
+        local soldier_number = soldier_map[soldier_name]
+        row_count = row_count+1
         local soldier = WidgetSoldierBox.new("",function ()
-            if i=="skeletonWarrior"
-                or i=="skeletonArcher"
-                or i=="deathKnight"
-                or i=="meatWagon"
+            if soldier_name=="skeletonWarrior"
+                or soldier_name=="skeletonArcher"
+                or soldier_name=="deathKnight"
+                or soldier_name=="meatWagon"
             then
-                self:OpenSoldierDetails(i)
+                self:OpenSoldierDetails(soldier_name)
             else
-                self:OpenSoldierDetails(i,City:GetSoldierManager():GetStarBySoldierType(i))
+                self:OpenSoldierDetails(soldier_name,City:GetSoldierManager():GetStarBySoldierType(soldier_name))
             end
         end):addTo(row_item)
             :alignByPoint(cc.p(0.5,0.4), origin_x + (unit_width + gap_x) * row_count + unit_width / 2, 0)
-            :SetNumber(v)
-        if i=="skeletonWarrior"
-            or i=="skeletonArcher"
-            or i=="deathKnight"
-            or i=="meatWagon"
+            :SetNumber(soldier_number)
+        if soldier_name=="skeletonWarrior"
+            or soldier_name=="skeletonArcher"
+            or soldier_name=="deathKnight"
+            or soldier_name=="meatWagon"
         then
-            soldier:SetSoldier(i)
+            soldier:SetSoldier(soldier_name)
         else
-            soldier:SetSoldier(i,1)
+            soldier:SetSoldier(soldier_name,1)
         end
-        if row_count<1 then
+        if row_count>2 then
             local item = list_view:newItem()
             item:addContent(row_item)
             item:setItemSize(547, 170)
             list_view:addItem(item)
-            row_count=4
+            row_count=-1
             row_item = display.newNode()
         end
     end

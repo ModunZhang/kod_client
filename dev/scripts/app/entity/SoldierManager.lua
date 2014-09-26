@@ -1,7 +1,10 @@
 local NORMAL = GameDatas.UnitsConfig.normal
 local SPECIAL = GameDatas.UnitsConfig.special
-local Observer = import(".Observer")
-local SoldierManager = class("SoldierManager", Observer)
+local Enum = import("..utils.Enum")
+local MultiObserver = import(".MultiObserver")
+local SoldierManager = class("SoldierManager", MultiObserver)
+
+SoldierManager.LISTEN_TYPE = Enum("SOLDIER_CHANGED","TREAT_SOLDIER_CHANGED")
 
 function SoldierManager:ctor()
     SoldierManager.super.ctor(self)
@@ -23,12 +26,28 @@ function SoldierManager:ctor()
         ["priest"] = 0,
         ["skeletonWarrior"] = 0,
     }
+    self.treatSoldiers_map = {
+        ["ballista"] = 0,
+        ["archer"] = 0,
+        ["lancer"] = 0,
+        ["crossbowman"] = 0,
+        ["horseArcher"] = 0,
+        ["swordsman"] = 0,
+        ["sentinel"] = 0,
+        ["catapult"] = 0,
+    }
 end
 function SoldierManager:GetSoldierMap()
     return self.soldier_map
 end
+function SoldierManager:GetTreatSoldierMap()
+    return self.treatSoldiers_map
+end
 function SoldierManager:GetCountBySoldierType(soldier_type)
     return self.soldier_map[soldier_type]
+end
+function SoldierManager:GetTreatCountBySoldierType(soldier_type)
+    return self.treatSoldiers_map[soldier_type]
 end
 function SoldierManager:GetMarchSoldierCount()
     return 0
@@ -50,9 +69,33 @@ function SoldierManager:GetTotalUpkeep()
     end
     return total_upkeep
 end
+function SoldierManager:GetTreatResource()
+    local total_iron,total_stone,total_wood,total_food = 0,0,0,0
+    for k, v in pairs(self.treatSoldiers_map) do
+        total_iron = total_iron + NORMAL[k.."_"..self:GetStarBySoldierType()].treatIron*v
+        total_stone = total_iron + NORMAL[k.."_"..self:GetStarBySoldierType()].treatStone*v
+        total_wood = total_iron + NORMAL[k.."_"..self:GetStarBySoldierType()].treatWood*v
+        total_food = total_iron + NORMAL[k.."_"..self:GetStarBySoldierType()].treatFood*v
+    end
+    return total_iron,total_stone,total_wood,total_food
+end
+function SoldierManager:GetTreatAllTime()
+    local total_time= 0
+    for k, v in pairs(self.treatSoldiers_map) do
+        total_time = total_time + NORMAL[k.."_"..self:GetStarBySoldierType()].treatTime*v
+    end
+    return total_time
+end
 function SoldierManager:GetTotalSoldierCount()
     local total_count = 0
     for k, v in pairs(self.soldier_map) do
+        total_count = total_count + v
+    end
+    return total_count
+end
+function SoldierManager:GetTotalTreatSoldierCount()
+    local total_count = 0
+    for k, v in pairs(self.treatSoldiers_map) do
         total_count = total_count + v
     end
     return total_count
@@ -67,12 +110,28 @@ function SoldierManager:OnUserDataChanged(user_data)
     end
     self.soldier_map = user_data.soldiers
     if #changed > 0 then
-        self:NotifyObservers(function(listener)
+        self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED,function(listener)
             listener:OnSoliderCountChanged(self, changed)
+        end)
+    end
+    -- 伤兵列表
+    local treatSoldiers = user_data.treatSoldiers
+    local treat_soldier_changed = {}
+    for k,v in pairs(self.treatSoldiers_map) do
+        if treatSoldiers[k] ~= v then
+            table.insert(treat_soldier_changed,k)
+        end
+    end
+    self.treatSoldiers_map = user_data.treatSoldiers
+    if #treat_soldier_changed > 0 then
+        self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.TREAT_SOLDIER_CHANGED,function(listener)
+            listener:OnTreatSoliderCountChanged(self, treat_soldier_changed)
         end)
     end
 end
 
 
 return SoldierManager
+
+
 
