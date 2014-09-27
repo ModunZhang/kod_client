@@ -20,7 +20,11 @@ GameUIChat.CELL_TITLE_LABEL_TAG = 103
 GameUIChat.CELL_PLAYER_ICON_TAG = 104
 GameUIChat.CELL_TIME_LABEL_TAG = 105
 GameUIChat.CELL_TRANSLATEBUTTON = 106
-
+GameUIChat.CELL_MAIN_CONENT_TAG = 107
+GameUIChat.CELL_TITLE_BG_TAG = 108
+GameUIChat.CELL_PLAYER_ICON_VIP_BG_TAG = 109
+GameUIChat.CELL_PLAYER_ICON_VIP_LABEL_TAG = 110
+GameUIChat.CELL_PLAYER_ICON_HERO_TAG = 111
 
 function GameUIChat:onEnter()
 	self:CreateBackGround()
@@ -120,36 +124,38 @@ end
 --     end
 -- end
 
-function GameUIChat:GetChatIcon( chat )
-	local isVip = chat.fromVip and chat.fromVip > 0
+function GameUIChat:GetChatIcon()
 	local heroBg = display.newSprite("chat_hero_background.png")
 	local hero = display.newSprite("Hero_1.png"):align(display.CENTER, math.floor(heroBg:getContentSize().width/2), math.floor(heroBg:getContentSize().height/2)+5)
 	hero:addTo(heroBg)
-	if isVip then
-		local vipBg = display.newSprite("chat_vip_background.png"):addTo(hero):align(display.CENTER, math.floor(heroBg:getContentSize().width/2)-4, 12)
-		local vipLabel = cc.ui.UILabel.new({
-				UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-	            text = 'VIP ' .. chat.fromVip,
-	            size = 15,
-	            color = UIKit:hex2c3b(0xff9200),
-	            align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-	            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
-	            dimensions = cc.size(vipBg:getContentSize().width, 0),
-	            font = UIKit:getFontFilePath(),
-	    }):addTo(vipBg):align(display.CENTER, math.floor(vipBg:getContentSize().width/2), math.floor(vipBg:getContentSize().height/2))
-	    vipLabel:setScale(1)
-	end
+	hero:setTag(self.CELL_PLAYER_ICON_HERO_TAG)
+	local vipBg = display.newSprite("chat_vip_background.png"):addTo(hero):align(display.CENTER, math.floor(heroBg:getContentSize().width/2)-4, 12)
+	local vipLabel = cc.ui.UILabel.new({
+			UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = 'VIP ',
+            size = 15,
+            color = UIKit:hex2c3b(0xff9200),
+            align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
+            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
+            -- dimensions = cc.size(vipBg:getContentSize().width, 0),
+            font = UIKit:getFontFilePath(),
+    }):addTo(vipBg):align(display.CENTER, math.floor(vipBg:getContentSize().width/2), math.floor(vipBg:getContentSize().height/2))
+    vipLabel:setScale(1)
 	heroBg:setScale(0.7)
+	vipBg:setTag(self.CELL_PLAYER_ICON_VIP_BG_TAG)
+	vipLabel:setTag(self.CELL_PLAYER_ICON_VIP_LABEL_TAG)
 	return heroBg
 end
 
-function GameUIChat:GetChatItemOther(chat)
+function GameUIChat:GetChatItemCell()
+	local main = display.newNode()
+	--other
 	local content = display.newNode()
 	local bottom = display.newScale9Sprite("chat_bubble_bottom.png"):addTo(content):align(display.RIGHT_BOTTOM, 549, 0)
 	bottom:setTag(self.CELL_BOTTM_TAG)
 	local middle = display.newScale9Sprite("chat_bubble_middle.png"):addTo(content):align(display.RIGHT_BOTTOM, 549, bottom:getContentSize().height)
 	middle:setTag(self.CELL_MIDDLE_TAG)
-	local labelText = chat.text
+	local labelText = "内容x"
 	local contentLable = cc.ui.UILabel.new({
 		UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = labelText,
@@ -169,9 +175,10 @@ function GameUIChat:GetChatItemOther(chat)
 	local imageName = isVip and "chat_green.png" or "chat_gray.png"
 	local titleBg = display.newScale9Sprite(imageName):align(display.BOTTOM_LEFT, 12,18):addTo(header,3)
 	titleBg:setContentSize(cc.size(300,titleBg:getContentSize().height))
+	titleBg:setTag(self.CELL_TITLE_BG_TAG)
 	local titleLabel = cc.ui.UILabel.new({
 		UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = chat.fromName or  "name",
+        text = "玩家名",
         size = 22,
         color = UIKit:hex2c3b(0xffedae),
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
@@ -180,17 +187,17 @@ function GameUIChat:GetChatItemOther(chat)
         font = UIKit:getFontFilePath(),
     }):align(display.LEFT_BOTTOM, 10, 0):addTo(titleBg,2)
     titleLabel:setTag(self.CELL_TITLE_LABEL_TAG)
-	local playerIcon = self:GetChatIcon(chat)
+	local playerIcon = self:GetChatIcon()
 	playerIcon:setTag(self.CELL_PLAYER_ICON_TAG)
-	local timeStr = NetService:formatTimeAsTimeAgoStyleByServerTime(chat.time)
-	if chat.timeStr then 
-       timeStr = chat.timeStr
-    else
-        chat.timeStr = timeStr
-    end
+	-- local timeStr = NetService:formatTimeAsTimeAgoStyleByServerTime(chat.time)
+	-- if chat.timeStr then 
+ --       timeStr = chat.timeStr
+ --    else
+ --        chat.timeStr = timeStr
+ --    end
     local timeLabel =  cc.ui.UILabel.new({
     		UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = timeStr,
+            text = "聊天时间",
             size = 16,
             color = UIKit:hex2c3b(0x403c2f),
             align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
@@ -207,159 +214,63 @@ function GameUIChat:GetChatItemOther(chat)
 		:align(display.RIGHT_BOTTOM,header:getContentSize().width-10,titleLabel:getPositionY()+titleLabel:getContentSize().height/2)
 	playerIcon:addTo(content):align(display.LEFT_TOP, 1, bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
 	translateButton:setTag(self.CELL_TRANSLATEBUTTON)
-	return content
-end
-
-
-function GameUIChat:getChatItem(chat)
-	local isSelf = DataManager:getUserData()._id == chat.fromId
-    local isVip = chat.fromVip and chat.fromVip > 0
-    
-	local content = display.newNode()
-	if not isSelf then
-		-- local item = self.listView:newItem()
-		local bottom = display.newScale9Sprite("chat_bubble_bottom.png"):addTo(content):align(display.RIGHT_BOTTOM, 549, 0)
-		local middle = display.newScale9Sprite("chat_bubble_middle.png"):addTo(content):align(display.RIGHT_BOTTOM, 549, bottom:getContentSize().height)
-		local labelText = chat.text
-        if chat._translate_ and chat._translateMode_ then
-            labelText = chat._translate_
-        end
-		local contentLable = cc.ui.UILabel.new({
-				UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-	            text = labelText,
-	            size = 20,
-	            color = UIKit:hex2c3b(0x403c2f),
-	            align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-	            valign = cc.ui.UILabel.TEXT_VALIGN_TOP,
-	            dimensions = cc.size(430, 0),
-	            font = UIKit:getFontFilePath(),
-	    })
-		middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getContentSize().height))
-		contentLable:align(display.LEFT_BOTTOM, 25, 0):addTo(middle,2)
-		local header = display.newScale9Sprite("chat_bubble_header.png"):addTo(content):align(display.RIGHT_BOTTOM, 549, bottom:getContentSize().height+middle:getContentSize().height)
-		local imageName = isVip and "chat_green.png" or "chat_gray.png"
-		local titleBg = display.newScale9Sprite(imageName):align(display.BOTTOM_LEFT, 12,18):addTo(header,3)
-		titleBg:setContentSize(cc.size(300,titleBg:getContentSize().height))
-		local titleLabel = cc.ui.UILabel.new({
+	main.other = content
+	main:addChild(content)
+	--self
+	local selfContent = display.newNode()
+	local bottom = display.newScale9Sprite("chat_bubble_bottom.png"):addTo(selfContent):align(display.LEFT_BOTTOM, -10, 0)
+	local middle = display.newScale9Sprite("chat_bubble_middle.png"):addTo(selfContent):align(display.LEFT_BOTTOM, -10, bottom:getContentSize().height)
+	bottom:setTag(self.CELL_BOTTM_TAG)
+	middle:setTag(self.CELL_MIDDLE_TAG)
+	local contentLable = cc.ui.UILabel.new({
 			UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = chat.fromName or  "name",
+            text = "聊天信息",
+            size = 20,
+            color = UIKit:hex2c3b(0x403c2f),
+            align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
+            valign = cc.ui.UILabel.TEXT_VALIGN_TOP,
+            dimensions = cc.size(430, 0),
+            font = UIKit:getFontFilePath(),
+    })
+    contentLable:setTag(self.CELL_CONTENT_LABEL_TAG)
+	middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getContentSize().height))
+	contentLable:align(display.LEFT_BOTTOM, 25, 0):addTo(middle,2)
+	local header = display.newSprite("chat_bubble_header.png"):addTo(selfContent)
+	header:setFlippedX(true)
+	header:align(display.LEFT_BOTTOM, -1, bottom:getContentSize().height+middle:getContentSize().height)
+	local titleBg = display.newScale9Sprite("chat_blue.png"):align(display.BOTTOM_RIGHT, header:getContentSize().width-12,18):addTo(header,3)
+	titleBg:setTag(self.CELL_TITLE_BG_TAG)
+	local titleLabel = cc.ui.UILabel.new({
+			UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = "玩家名称",
             size = 22,
             color = UIKit:hex2c3b(0xffedae),
             align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
             valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
-            dimensions = cc.size(0, titleBg:getContentSize().height),
             font = UIKit:getFontFilePath(),
-	    }):align(display.LEFT_BOTTOM, 10, -5):addTo(titleBg,2)
-		local playerIcon = self:GetChatIcon(chat)
-		local timeStr = NetService:formatTimeAsTimeAgoStyleByServerTime(chat.time)
-		if chat.timeStr then 
-            timeStr = chat.timeStr
-        else
-           	chat.timeStr = timeStr
-        end
-	    local timeLabel =  cc.ui.UILabel.new({
-	    		UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-	            text = timeStr,
-	            size = 16,
-	            color = UIKit:hex2c3b(0x403c2f),
-	            align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-	            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
-	            font = UIKit:getFontFilePath(),
-	    }):align(display.LEFT_BOTTOM,titleBg:getPositionX()+titleBg:getContentSize().width+20, titleBg:getPositionY()-2):addTo(header,3)
-	 	--adjustFunc
-	    -- local adjustFunc = function()
-	    -- 	middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getContentSize().height))
-	    -- 	header:align(display.RIGHT_BOTTOM, 549, bottom:getContentSize().height+middle:getContentSize().height)
-	    -- 	playerIcon:pos(playerIcon:getPositionX(),bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
-	    -- 	item:setItemSize(549,bottom:getContentSize().height+header:getContentSize().height+middle:getContentSize().height)
-	    -- end
-	    --button
-	    -- chat_translation.png
-	    local translateButton = cc.ui.UIPushButton.new({normal = "chat_translation.png"}, {scale9 = false})
-	    	:addTo(header,3)
-	    	:onButtonClicked(function(event)
-		    	-- local oldHight = contentLable:getContentSize().height
-	   --          if not chat._translate_ then
-	   --              GameUtils:Translate(chat.text,function(result,errText)
-	   --                  if result then
-	   --                      chat._translate_ = result
-	   --                      chat._translateMode_ = true
-	   --                      contentLable:setString(chat._translate_)
-	   --                  else
-	   --                      print('Translate error------->',errText)
-	   --                  end
-	   --              end)
-	   --          else
-	   --              if chat._translateMode_ then
-	   --                  chat._translateMode_ = false
-	   --                  contentLable:setString(chat.text)
-	   --              else
-	   --                  chat._translateMode_ = true
-	   --                  contentLable:setString(chat._translate_)
-	   --              end
-	   --          end
-				-- -- local offsetY = contentLable:getContentSize().height - oldHight
-				-- adjustFunc()
-				print("duck button-------")
-    		end)
-    		:align(display.RIGHT_BOTTOM,header:getContentSize().width-10,titleLabel:getPositionY()+titleLabel:getContentSize().height/2)
-    	playerIcon:addTo(content):align(display.LEFT_TOP, 1, bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
-		-- item:addContent(content)
-		-- item:setItemSize(549,bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height)
-		print("item------>size----->1",bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height,contentLable:getContentSize().height,
-			bottom:getContentSize().height+header:getContentSize().height)
-		return content
-	else
-		--mine
-		local bottom = display.newScale9Sprite("chat_bubble_bottom.png"):addTo(content):align(display.LEFT_BOTTOM, -10, 0)
-		local middle = display.newScale9Sprite("chat_bubble_middle.png"):addTo(content):align(display.LEFT_BOTTOM, -10, bottom:getContentSize().height)
-		local contentLable = cc.ui.UILabel.new({
-				UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-	            text = chat.text,
-	            size = 20,
-	            color = UIKit:hex2c3b(0x403c2f),
-	            align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-	            valign = cc.ui.UILabel.TEXT_VALIGN_TOP,
-	            dimensions = cc.size(430, 0),
-	            font = UIKit:getFontFilePath(),
-	    })
-		middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getContentSize().height))
-		contentLable:align(display.LEFT_BOTTOM, 25, 0):addTo(middle,2)
-		local header = display.newSprite("chat_bubble_header.png"):addTo(content)
-		header:setFlippedX(true)
-		header:align(display.LEFT_BOTTOM, -1, bottom:getContentSize().height+middle:getContentSize().height)
-		local titleBg = display.newScale9Sprite("chat_blue.png"):align(display.BOTTOM_RIGHT, header:getContentSize().width-12,18):addTo(header,3)
-			local titleLabel = cc.ui.UILabel.new({
-				UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-	            text = chat.fromName or  "name",
-	            size = 22,
-	            color = UIKit:hex2c3b(0xffedae),
-	            align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-	            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
-	            dimensions = cc.size(0, titleBg:getContentSize().height),
-	            font = UIKit:getFontFilePath(),
-	    }):align(display.LEFT_BOTTOM, 30, -5):addTo(titleBg,2)
-		--  timeLable
-		local timeLabel =  cc.ui.UILabel.new({
-				UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-	            text = NetService:formatTimeAsTimeAgoStyleByServerTime(chat.time),
-	            size = 16,
-	            color = UIKit:hex2c3b(0x403c2f),
-	            align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-	            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
-	            font = UIKit:getFontFilePath(),
-	    }):align(display.LEFT_BOTTOM,20, titleBg:getPositionY()-2):addTo(header,3)
-
-		self:GetChatIcon(chat):addTo(content):align(display.RIGHT_TOP, 549, bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
-		-- local item = self.listView:newItem()
-		-- item:addContent(content)
-		-- item:setItemSize(549,bottom:getContentSize().height+header:getContentSize().height+middle:getContentSize().height)
-		print("item------>size----->2",bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height,contentLable:getContentSize().height,
-			bottom:getContentSize().height+header:getContentSize().height)
-		return content
-	end
-		return nil
+    }):align(display.LEFT_BOTTOM, 30, 0):addTo(titleBg,2)
+	header:setTag(self.CELL_HEADER_TAG)
+	titleLabel:setTag(self.CELL_TITLE_LABEL_TAG)
+	--  timeLable
+	local timeLabel =  cc.ui.UILabel.new({
+			UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = "时间",
+            size = 16,
+            color = UIKit:hex2c3b(0x403c2f),
+            align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
+            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
+            font = UIKit:getFontFilePath(),
+    }):align(display.LEFT_BOTTOM,20, titleBg:getPositionY()):addTo(header,3)
+    timeLabel:setTag(self.CELL_TIME_LABEL_TAG)
+	local playerIcon = self:GetChatIcon()
+	playerIcon:setTag(self.CELL_PLAYER_ICON_TAG)
+	playerIcon:addTo(selfContent):align(display.RIGHT_TOP, 549, bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
+	main.self = selfContent
+	main:addChild(selfContent)
+	return main
 end
+
+
 
 function GameUIChat:RefreshListView()
     if not  self._channelType then 
@@ -367,12 +278,6 @@ function GameUIChat:RefreshListView()
     end
     self.dataSource_ = ChatCenter:getAll(self._channelType)
     self.listView:reloadData()
-    -- self.listView:removeAllItems()
-    -- for i,v in ipairs(ChatCenter:getAllMessages(self._channelType)) do
-    -- 	print("add item listview---->")
-    --     local newItem  = self:getChatItem(v)
-    --     self.listView:addItem(newItem)
-    -- end
 end
 
 function GameUIChat:CreateListView()
@@ -411,89 +316,83 @@ end
 
 function GameUIChat:tableCellAtIndex(table, idx)
 	print("tableCellAtIndex---->",idx,cc.TableViewCell:new()==nil)
-  local chat = self.dataSource_[idx+1]
-	 local strValue = string.format("%d",idx)
+    local chat = self.dataSource_[idx+1]
+    local isSelf = DataManager:getUserData()._id == chat.fromId
+    local isVip = chat.fromVip and chat.fromVip > 0
+
     local cell = table:dequeueCell()
-    local label = nil
     if nil == cell then
         cell = cc.TableViewCell:new()
-        local content = self:GetChatItemOther(chat)
+        local content = self:GetChatItemCell()
+        content:setTag(self.CELL_MAIN_CONENT_TAG)
         cell:addChild(content)
-  --      	local bottom = display.newScale9Sprite("chat_bubble_bottom.png"):addTo(cell):align(display.RIGHT_BOTTOM, 549, 0)
-		-- bottom:setTag(self.CELL_BOTTM_TAG)
-		-- local middle = display.newScale9Sprite("chat_bubble_middle.png"):addTo(cell):align(display.RIGHT_BOTTOM, 549, bottom:getContentSize().height)
-		-- middle:setTag(self.CELL_MIDDLE_TAG)
-		-- local labelText = chat.text
-		-- local contentLable = cc.ui.UILabel.new({
-		-- 	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-  --       	text = labelText,
-  --       	size = 20,
-  --   		color = UIKit:hex2c3b(0x403c2f),
-  --       	align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-  --       	valign = cc.ui.UILabel.TEXT_VALIGN_TOP,
-  --       	dimensions = cc.size(430, 0),
-  --       	font = UIKit:getFontFilePath(),
-		-- })
-		-- contentLable:setTag(self.CELL_CONTENT_LABEL_TAG)
-		-- middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getContentSize().height))
-		-- contentLable:align(display.LEFT_BOTTOM, 25, 0):addTo(middle,2)
-		-- local header = display.newScale9Sprite("chat_bubble_header.png"):addTo(cell):align(display.RIGHT_BOTTOM, 549, bottom:getContentSize().height+middle:getContentSize().height)
-		-- header:setTag(self.CELL_HEADER_TAG)
-		-- local imageName = "chat_green.png"
-		-- local titleBg = display.newScale9Sprite(imageName):align(display.BOTTOM_LEFT, 12,18):addTo(header,3)
-		-- titleBg:setContentSize(cc.size(300,titleBg:getContentSize().height))
-		-- local titleLabel = cc.ui.UILabel.new({
-		-- 	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-	 --        text = chat.fromName or  "name",
-	 --        size = 22,
-	 --        color = UIKit:hex2c3b(0xffedae),
-	 --        align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-	 --        valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
-	 --        -- dimensions = cc.size(0, titleBg:getContentSize().height),
-	 --        font = UIKit:getFontFilePath(),
-  --   	}):align(display.LEFT_BOTTOM, 10, -5):addTo(titleBg,2)
-  --   	titleLabel:setTag(self.CELL_TITLE_LABEL_TAG)
-		-- local playerIcon = self:GetChatIcon(chat)
-		-- playerIcon:setTag(self.CELL_PLAYER_ICON_TAG)
-		-- local timeStr = NetService:formatTimeAsTimeAgoStyleByServerTime(chat.time)
-		-- if chat.timeStr then 
-  --      		timeStr = chat.timeStr
-  --   	else
-  --       	chat.timeStr = timeStr
-  --  		end
-	 --    local timeLabel =  cc.ui.UILabel.new({
-	 --    		UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-	 --            text = timeStr,
-	 --            size = 16,
-	 --            color = UIKit:hex2c3b(0x403c2f),
-	 --            align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-	 --            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
-	 --            font = UIKit:getFontFilePath(),
-	 --    }):align(display.LEFT_BOTTOM,titleBg:getPositionX()+titleBg:getContentSize().width+20, titleBg:getPositionY()-2):addTo(header,3)
-	 --    timeLabel:setTag(self.CELL_TIME_LABEL_TAG)
-	 --    -- chat_translation.png
-  --   	local translateButton = cc.ui.UIPushButton.new({normal = "chat_translation.png"}, {scale9 = false})
-  --   	:addTo(header,3)
-  --   	:onButtonClicked(function(event)
-		-- 	print("duck button-------")
-		-- end)
-		-- :align(display.RIGHT_BOTTOM,header:getContentSize().width-10,titleLabel:getPositionY()+titleLabel:getContentSize().height/2)
-		-- playerIcon:addTo(cell):align(display.LEFT_TOP, 1, bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
-		-- translateButton:setTag(self.CELL_TRANSLATEBUTTON)
-    else
-        -- label = cell:getChildByTag(123)
-        -- if nil ~= label then
-        --     label:setString(strValue)
-        -- end
     end
 
-    return cell
+   	local mainContent = cell:getChildByTag(self.CELL_MAIN_CONENT_TAG)
+   	local currentContent = nil
+   	if isSelf then
+   		mainContent.other:hide()
+   		currentContent = mainContent.self
+   	else
+   		mainContent.self:hide()
+   		currentContent = mainContent.other
+   	end
 
+   	local bottom = currentContent:getChildByTag(self.CELL_BOTTM_TAG)
+   	local middle = currentContent:getChildByTag(self.CELL_MIDDLE_TAG)
+   	local header = currentContent:getChildByTag(self.CELL_HEADER_TAG)
+   	assert(bottom)
+   	assert(header)
+   	assert(middle)
+   	--header node
+   	local timeLabel = header:getChildByTag(self.CELL_TIME_LABEL_TAG)
+   	assert(timeLabel)
+   	local titleBg = header:getChildByTag(self.CELL_TITLE_BG_TAG)
+   	assert(titleBg)
+   	local titleLabel = titleBg:getChildByTag(self.CELL_TITLE_LABEL_TAG)
+   	assert(titleLabel)
+   	-- middle node
+   	local contentLable = middle:getChildByTag(self.CELL_CONTENT_LABEL_TAG)
+   	assert(contentLable)
+   	--bind
+   	titleLabel:setString(chat.fromName)
+   	local timeStr = NetService:formatTimeAsTimeAgoStyleByServerTime(chat.time)
+   	timeLabel:setString(timeStr)
+
+   	local palyerIcon = currentContent:getChildByTag(self.CELL_PLAYER_ICON_TAG)
+   	assert(palyerIcon)
+   	local hero = palyerIcon:getChildByTag(self.CELL_PLAYER_ICON_HERO_TAG)
+   	local vipBg = hero:getChildByTag(self.CELL_PLAYER_ICON_VIP_BG_TAG)
+	local vipLabel = vipBg:getChildByTag(self.CELL_PLAYER_ICON_VIP_LABEL_TAG)
+
+	assert(hero)
+	assert(vipBg)
+	assert(vipLabel)
+	vipBg:setVisible(isVip)
+	vipLabel:setVisible(isVip)
+	vipLabel:setString('VIP ' .. chat.fromVip)
+	local labelText = chat.text
+    if chat._translate_ and chat._translateMode_ then
+        labelText = chat._translate_
+    end
+   	contentLable:setString("1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890") --聊天信息
+	if not isSelf then
+   		middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getContentSize().height))
+		header:align(display.RIGHT_BOTTOM, 549, bottom:getContentSize().height+middle:getContentSize().height)
+		palyerIcon:pos(palyerIcon:getPositionX(),bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
+		if isVip then
+			titleBg:loadTexture(fileName, texType)
+		end
+	else
+		middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getContentSize().height))
+	end
+
+
+    return cell
 end
 
 
 function GameUIChat:numberOfCellsInTableView()
-	-- print("nums------->",#self.dataSource_)
 	return #self.dataSource_
 end
 
