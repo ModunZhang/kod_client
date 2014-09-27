@@ -624,7 +624,7 @@ function City:OnUserDataChanged(userData, current_time)
                 local tile = self:GetTileByLocationId(location.location)
                 local absolute_x, absolute_y = tile:GetAbsolutePositionByLocation(house.location)
                 local event = get_house_event_by_location(location.location, house.location)
-                local finishTime = event == nil and 0 or event.finishTime / 1000
+                -- local finishTime = event == nil and 0 or event.finishTime / 1000
                 self:CreateDecorator(current_time, BuildingRegister[house.type].new({
                     x = absolute_x,
                     y = absolute_y,
@@ -632,7 +632,7 @@ function City:OnUserDataChanged(userData, current_time)
                     h = 3,
                     building_type = house.type,
                     level = house.level,
-                    finishTime = finishTime,
+                    finishTime = 0,
                 }))
             end
         end)
