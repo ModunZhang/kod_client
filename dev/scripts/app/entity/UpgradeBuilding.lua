@@ -15,6 +15,7 @@ UpgradeBuilding.NOT_ABLE_TO_UPGRADE = {
 function UpgradeBuilding:ctor(building_info)
     UpgradeBuilding.super.ctor(self, building_info)
     self.config_building_levelup = GameDatas.BuildingLevelUp
+    self.config_building_function = GameDatas.BuildingFunction
     self.level = building_info.level and building_info.level or 1
     self.upgrade_to_next_level_time = (building_info.finishTime == nil) and 0 or building_info.finishTime
     self.upgrade_building_observer = Observer.new()
@@ -160,6 +161,12 @@ function UpgradeBuilding:OnHandle(level, finish_time)
     end
 end
 ----
+function UpgradeBuilding:GetNextLevelPower()
+    return self.config_building_function[self:GetType()][self:GetNextLevel()].power
+end
+function UpgradeBuilding:GetPower()
+    return self.config_building_function[self:GetType()][self:GetLevel()].power
+end
 function UpgradeBuilding:GetLevelUpWood()
     local level = self.level
     return self.config_building_levelup[self:GetType()][self:GetNextLevel()].wood

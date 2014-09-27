@@ -3,45 +3,7 @@ local WidgetMaterialBox = import("..widget.WidgetMaterialBox")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetMaterialDetails = import("..widget.WidgetMaterialDetails")
 local MaterialManager = import("..entity.MaterialManager")
-local DRAGON_MATERIAL_PIC_MAP = {
-    ["ironIngot"] = "ironIngot_92x92.png",
-    ["steelIngot"] = "steelIngot_92x92.png",
-    ["mithrilIngot"] = "mithrilIngot_92x92.png",
-    ["blackIronIngot"] = "blackIronIngot_92x92.png",
-    ["arcaniteIngot"] = "arcaniteIngot_92x92.png",
-    ["wispOfFire"] = "wispOfFire_92x92.png",
-    ["wispOfCold"] = "wispOfCold_92x92.png",
-    ["wispOfWind"] = "wispOfWind_92x92.png",
-    ["lavaSoul"] = "lavaSoul_92x92.png",
-    ["iceSoul"] = "iceSoul_92x92.png",
-    ["forestSoul"] = "forestSoul_92x92.png",
-    ["infernoSoul"] = "infernoSoul_92x92.png",
-    ["blizzardSoul"] = "blizzardSoul_92x92.png",
-    ["fairySoul"] = "fairySoul_92x92.png",
-    ["moltenShard"] = "moltenShard_92x92.png",
-    ["glacierShard"] = "glacierShard_92x92.png",
-    ["chargedShard"] = "chargedShard_92x92.png",
-    ["moltenShiver"] = "moltenShiver_92x92.png",
-    ["glacierShiver"] = "glacierShiver_92x92.png",
-    ["chargedShiver"] = "chargedShiver_92x92.png",
-    ["moltenCore"] = "moltenCore_92x92.png",
-    ["glacierCore"] = "glacierCore_92x92.png",
-    ["chargedCore"] = "chargedCore_92x92.png",
-    ["moltenMagnet"] = "moltenMagnet_92x92.png",
-    ["glacierMagnet"] = "glacierMagnet_92x92.png",
-    ["chargedMagnet"] = "chargedMagnet_92x92.png",
-    ["challengeRune"] = "challengeRune_92x92.png",
-    ["suppressRune"] = "suppressRune_92x92.png",
-    ["rageRune"] = "rageRune_92x92.png",
-    ["guardRune"] = "guardRune_92x92.png",
-    ["poisonRune"] = "poisonRune_92x92.png",
-    ["giantRune"] = "giantRune_92x92.png",
-    ["dolanRune"] = "dolanRune_92x92.png",
-    ["warsongRune"] = "warsongRune_92x92.png",
-    ["infernoRune"] = "infernoRune_92x92.png",
-    ["arcanaRune"] = "arcanaRune_92x92.png",
-    ["eternityRune"] = "eternityRune_92x92.png"
-}
+
 
 local GameUIMaterialDepot = UIKit:createUIClass("GameUIMaterialDepot", "GameUIUpgradeBuilding")
 function GameUIMaterialDepot:ctor(city,building)
@@ -77,11 +39,11 @@ function GameUIMaterialDepot:onEnter()
         else
             self.info_layer:setVisible(false)
         end
-    end):pos(display.cx, display.bottom + 40)
+    end):pos(display.cx, display.top - 920)
 
     self:CreateMaterialInfo()
-    self:SelectOneTypeMaterials("materials")
     self:CreateSelectButton()
+    self:SelectOneTypeMaterials(MaterialManager.MATERIAL_TYPE.BUILD)
 end
 
 function GameUIMaterialDepot:CreateMaterialInfo()
@@ -90,9 +52,9 @@ function GameUIMaterialDepot:CreateMaterialInfo()
     self.material_listview_table = {}
     for k,v in pairs(material_map) do
         self.material_listview_table[k] = UIListView.new{
-            -- bgColor = cc.c4b(math.random(255) math.random(255), math.random(255), math.random(255)),
+            -- bgColor = cc.c4b(math.random(255), math.random(255), math.random(255), math.random(255)),
             bgScale9 = true,
-            viewRect = cc.rect(display.cx-266, display.top-870, 547, 700),
+            viewRect = cc.rect(display.cx-271, display.top-870, 548, 700),
             direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}:addTo(self.info_layer)
         self.material_listview_table[k]:setVisible(false)
         self:CreateItemWithListView(self.material_listview_table[k],k,v)
@@ -104,22 +66,22 @@ function GameUIMaterialDepot:CreateItemWithListView(list_view,material_type,mate
     local rect = list_view:getViewRect()
     local origin_x = - rect.width / 2
     local unit_width ,unit_height = 118 , 140
-    local gap_x = (547 - unit_width * 4) / 3
+    local gap_x = (548 - unit_width * 4) / 3
     local row_item = display.newNode()
     local row_count = 4
-    for i,v in pairs(materials) do
+    for material_name,v in pairs(materials) do
         row_count = row_count -1
 
-        local material_box = WidgetMaterialBox.new(material_type==MaterialManager.MATERIAL_TYPE.DRAGON and DRAGON_MATERIAL_PIC_MAP[i] or "material_blueprints.png",function ()
-            self:OpenMaterialDetails(material_type,i,v.."/"..self.building:GetMaxMaterial())
+        local material_box = WidgetMaterialBox.new(material_type,material_name,function ()
+            self:OpenMaterialDetails(material_type,material_name,v.."/"..self.building:GetMaxMaterial())
         end,true):addTo(row_item):SetNumber(v.."/"..self.building:GetMaxMaterial())
             :pos(origin_x + (unit_width + gap_x) * row_count , -unit_height/2)
         self.material_box_table[material_type]={}
-        self.material_box_table[material_type][i] = material_box
+        self.material_box_table[material_type][material_name] = material_box
         if row_count<1 then
             local item = list_view:newItem()
             item:addContent(row_item)
-            item:setItemSize(547, unit_height)
+            item:setItemSize(548, unit_height)
             list_view:addItem(item)
             row_count=4
             row_item = display.newNode()
@@ -128,17 +90,33 @@ function GameUIMaterialDepot:CreateItemWithListView(list_view,material_type,mate
     list_view:reload()
 end
 function GameUIMaterialDepot:SelectOneTypeMaterials(m_type)
+    local  material_type = {
+        [MaterialManager.MATERIAL_TYPE.BUILD] = _("建造材料"),
+        [MaterialManager.MATERIAL_TYPE.DRAGON] = _("龙的材料"),
+        [MaterialManager.MATERIAL_TYPE.SOLDIER] = _("士兵材料"),
+        [MaterialManager.MATERIAL_TYPE.EQUIPMENT] = _("龙的装备"),
+    }
     for k,v in pairs(self.material_listview_table) do
+
         self.material_listview_table[k]:setVisible(m_type==k)
+        if m_type==k then
+            self.material_button:setButtonLabel(cc.ui.UILabel.new(
+                {
+                    UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+                    text = material_type[k],
+                    size = 24,
+                    color = UIKit:hex2c3b(0xffedae)
+                }))
+        end
     end
 end
 function GameUIMaterialDepot:OpenMaterialDetails(material_type,material_name,num)
     self:addChild(WidgetMaterialDetails.new(material_type,material_name,num))
 end
 function GameUIMaterialDepot:CreateSelectButton()
-    self.selected = 1
-    self.material_bg = WidgetPushButton.new({normal = "icon_background_wareHouseUI.png",
-        pressed = "icon_background_wareHouseUI.png"}):align(display.LEFT_BOTTOM):addTo(self.info_layer)
+    self.selected = 2
+    self.material_button = WidgetPushButton.new({normal = "yellow_btn_up_185x65.png",
+        pressed = "yellow_btn_down_185x65.png"}):align(display.LEFT_BOTTOM):addTo(self.info_layer)
         :onButtonClicked(function ()
             self:SelectOneTypeMaterials(self.selected)
             if self.selected<4 then
@@ -146,7 +124,7 @@ function GameUIMaterialDepot:CreateSelectButton()
             else
                 self.selected=1
             end
-        end):pos(display.cx, display.top-100)
+        end):align(display.CENTER,display.cx, display.top-130)
 end
 
 
@@ -156,6 +134,10 @@ function GameUIMaterialDepot:OnMaterialsChanged(material_manager,material_type,c
     end
 end
 return GameUIMaterialDepot
+
+
+
+
 
 
 
