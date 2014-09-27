@@ -37,7 +37,9 @@ function GameUIHome:onEnter()
     self:CreateTop()
     self:CreateBottom()
 
-    WidgetEventTabButtons.new():addTo(self):pos(window.right - 491, display.bottom + 150)
+    local event = WidgetEventTabButtons.new(city):addTo(self):pos(window.right - 491, display.bottom + 150)
+
+
 
     self:RefreshData()
     city:GetResourceManager():AddObserver(self)

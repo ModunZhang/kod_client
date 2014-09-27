@@ -25,8 +25,15 @@ function WidgetEventTabButtons:isTouchInViewRect(event)
 end
 
 
+function WidgetEventTabButtons:OnUpgradingBegin(building, current_time, self)
+end
+function WidgetEventTabButtons:OnUpgrading(building, current_time, self)
+end
+function WidgetEventTabButtons:OnUpgradingFinished(building, current_time, self)
+end
+
 ------
-function WidgetEventTabButtons:ctor()
+function WidgetEventTabButtons:ctor(city)
     self.item_array = {}
     local node = display.newNode():addTo(self)
     display.newLayer():addTo(node):pos(0, -150 + 47):setContentSize(cc.size(491, 150 + 47))
@@ -37,6 +44,12 @@ function WidgetEventTabButtons:ctor()
     self:Reset()
     self:HighLightTab("build")
     self:InitAnimation()
+
+    self.city = city
+    city:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
+end
+function WidgetEventTabButtons:OnExit()
+    city:RemoveListenerOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
 end
 -- 构造ui
 function WidgetEventTabButtons:CreateTabButtons()
@@ -125,6 +138,13 @@ function WidgetEventTabButtons:CreateProgressItem()
         btn:onButtonClicked(func)
         return self
     end
+    function progress:GetEventKey()
+        return self.key
+    end
+    function progress:SetEventKey(key)
+        self.key = key
+        return self
+    end
 
     return progress
 end
@@ -148,13 +168,13 @@ function WidgetEventTabButtons:CreateOpenItem()
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xfff3c7)}))
         :onButtonClicked(function(event)
-            if not self.item_array[2] then
-                self:InsertItemWithAnimation(function()
-                    return self:CreateItem():SetProgressInfo("time_label", 50)
-                end)
-            else
-                self:RemoveItemWithAnimation(2)
-            end
+            -- if not self.item_array[2] then
+            --     self:InsertItemWithAnimation(function()
+            --         return self:CreateItem():SetProgressInfo("time_label", 50)
+            --     end)
+            -- else
+            --     self:RemoveItemWithAnimation(2)
+            -- end
             end)
 
     return node
@@ -209,7 +229,9 @@ function WidgetEventTabButtons:GetItem(pos)
 end
 function WidgetEventTabButtons:InsertItemWithAnimation(get_item_func, pos)
     self:ResizeOnHorizonWithAnimation(self:Length(#self.item_array + 1), function()
-        self:InsertItem(get_item_func(), pos)
+        for _, v in ipairs(get_item_func()) do
+            self:InsertItem(v, pos)
+        end
     end)
 end
 function WidgetEventTabButtons:InsertItem(item, pos)
@@ -242,27 +264,30 @@ function WidgetEventTabButtons:ShowTab(tab)
     self:ForceShow()
 end
 function WidgetEventTabButtons:HighLightTab(tab)
+    self:ResetOtherTabByCurrentTab(tab)
+    self.tab_map[tab]:Enable(false)
+    self.tab_map[tab]:SetStatus(true)
+end
+function WidgetEventTabButtons:OnTabClicked(widget, is_pressed)
+    assert(is_pressed)
+    local tab
+    for k, v in pairs(self.tab_map) do
+        if v == widget then
+            tab = k
+            break
+        end
+    end
+    self:ResetOtherTabByCurrentTab(tab)
+    self.tab_map[tab]:Enable(false)
+    self:ForceShow()
+end
+function WidgetEventTabButtons:ResetOtherTabByCurrentTab(tab)
     for k, v in pairs(self.tab_map) do
         if k ~= tab then
             v:Enable(true)
             v:SetStatus(false)
-        else
-            v:Enable(false)
-            v:SetStatus(true)
         end
     end
-end
-function WidgetEventTabButtons:OnTabClicked(widget, is_pressed)
-    assert(is_pressed)
-    for _, v in pairs(self.tab_map) do
-        if v ~= widget then
-            v:Enable(true)
-            v:SetStatus(false)
-        else
-            v:Enable(false)
-        end
-    end
-    self:ForceShow()
 end
 function WidgetEventTabButtons:ForceShow()
     if self:IsShow() then
@@ -315,30 +340,31 @@ function WidgetEventTabButtons:ResetPosition()
     self.node:setPositionY(- self.back_ground:getContentSize().height)
 end
 function WidgetEventTabButtons:Show()
-    self.node:stopAllActions()
-    local size = self.back_ground:getContentSize()
-    self.back_ground:setContentSize(cc.size(size.width, size.height))
-    self.tab_buttons:setPositionY(size.height)
-    self:Lock(true)
-    self:Reload()
-    transition.moveTo(self.node,
-        {x = 0, y = 0, time = 0.3,
-            easing = "sineIn",
-            onComplete = function()
-                self:OnShowEnd()
-            end})
+    if self:OnBeforeShow() then
+        self.node:stopAllActions()
+        local size = self.back_ground:getContentSize()
+        self.back_ground:setContentSize(cc.size(size.width, size.height))
+        self.tab_buttons:setPositionY(size.height)
+        self:Lock(true)
+        self:Reload()
+        transition.moveTo(self.node,
+            {x = 0, y = 0, time = 0.3,
+                easing = "sineIn",
+                onComplete = function()
+                    self:OnShowEnd()
+                end})
+
+    end
 end
 function WidgetEventTabButtons:Hide()
-    self.node:stopAllActions()
-    self:Lock(true)
-    transition.moveTo(self.node,
-        {x = 0, y = -self.back_ground:getContentSize().height, time = 0.3,
-            easing = "sineIn",
-            onComplete = function()
-                self:OnHideEnd()
-            end})
+    self:HideWithCallback(nil)
 end
 function WidgetEventTabButtons:Switch()
+    self:HideWithCallback(function()
+        self:Show()
+    end)
+end
+function WidgetEventTabButtons:HideWithCallback(callback)
     self.node:stopAllActions()
     self:Lock(true)
     transition.moveTo(self.node,
@@ -346,7 +372,9 @@ function WidgetEventTabButtons:Switch()
             easing = "sineIn",
             onComplete = function()
                 self:OnHideEnd()
-                self:Show()
+                if type(callback) == "function" then
+                    callback()
+                end
             end})
 end
 function WidgetEventTabButtons:OnShowEnd()
@@ -357,16 +385,34 @@ function WidgetEventTabButtons:OnHideEnd()
     self.arrow:flipY(true)
     self:Lock(false)
 end
+function WidgetEventTabButtons:OnBeforeShow()
+    return self:GetCurrentTab() == "build"
+end
+function WidgetEventTabButtons:GetCurrentTab()
+    for k, v in pairs(self.tab_map) do
+        if v:IsPressed() then
+            return k
+        end
+    end
+    assert(false)
+end
 function WidgetEventTabButtons:Reload()
     self:Reset()
     for k, v in pairs(self.tab_map) do
         if v:IsPressed() then
             if k == "build" then
                 self:InsertItem(self:CreateBottom())
-                self:InsertItem(self:CreateBottom())
-                self:ResizeBelowHorizon(self:Length(#self.item_array))
+                local buildings = self.city:GetOnUpgradingBuildings()
+                self:InsertItemWithAnimation(function()
+                    local items = {}
+                    for i, v in ipairs(self.city:GetOnUpgradingBuildings()) do
+                        table.insert(items, self:CreateItem():SetProgressInfo("time_label", 50):SetEventKey(v:UniqueKey()))
+                    end
+                    return items
+                end)
+                self:ResizeBelowHorizon(self:Length(#self.item_array + #buildings))
             end
-            break
+            return 
         end
     end
 end
@@ -374,6 +420,11 @@ end
 
 
 return WidgetEventTabButtons
+
+
+
+
+
 
 
 
