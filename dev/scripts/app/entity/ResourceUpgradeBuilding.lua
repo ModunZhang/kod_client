@@ -5,6 +5,7 @@ local ResourceUpgradeBuilding = class("ResourceUpgradeBuilding", UpgradeBuilding
 
 function ResourceUpgradeBuilding:ctor(building_info)
     ResourceUpgradeBuilding.super.ctor(self, building_info)
+    self.config_building_function = config_house_function
     self.config_building_levelup = config_house_levelup
 end
 function ResourceUpgradeBuilding:GetNextLevelUpgradeTimeByLevel(level)
@@ -28,6 +29,11 @@ function ResourceUpgradeBuilding:GetProductionPerHour()
 	local config = config_house_function[self:GetType()]
 	local current_config = config[self:GetLevel()]
 	return current_config.poduction
+end
+function ResourceUpgradeBuilding:GetNextLevelProductionPerHour()
+    local config = config_house_function[self:GetType()]
+    local current_config = config[self:GetNextLevel()]
+    return current_config.poduction
 end
 function ResourceUpgradeBuilding:GetUpdateResourceType()
 	return nil
