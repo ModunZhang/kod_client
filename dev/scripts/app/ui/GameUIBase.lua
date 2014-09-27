@@ -16,14 +16,17 @@ function GameUIBase:ctor()
     return true
 end
 
-
+local visible_count = 0
 -- Node Event
 --------------------------------------
 function GameUIBase:onEnter()
     print("onEnter->")
     app:lockInput(false)
     if home_page then
-        home_page.bottom:setVisible(false)
+        visible_count = visible_count - 1
+        if visible_count == 0 then
+            home_page.bottom:setVisible(false)
+        end
     end
 end
 
@@ -39,7 +42,10 @@ function GameUIBase:onExit()
     print("onExit--->")
     app:lockInput(false)
     if home_page then
-        home_page.bottom:setVisible(true)
+        visible_count = visible_count + 1
+        if visible_count > 0 then
+            home_page.bottom:setVisible(true)
+        end
     end
 end
 
@@ -192,12 +198,12 @@ function GameUIBase:CreateShopButton(on_clicked)
     local gem_num_bg = cc.ui.UIImage.new("gem_num_bg.png"):addTo(gem_button):pos(-85, -85)
     local pos = gem_num_bg:getAnchorPointInPoints()
     return ui.newTTFLabel({
-            text = ""..City.resource_manager:GetGemResource():GetValue(),
-            font = UIKit:getFontFilePath(),
-            size = 14,
-            color = UIKit:hex2c3b(0xfdfac2)})
-            :addTo(gem_num_bg)
-            :align(display.CENTER, 40, 15)
+        text = ""..City.resource_manager:GetGemResource():GetValue(),
+        font = UIKit:getFontFilePath(),
+        size = 14,
+        color = UIKit:hex2c3b(0xfdfac2)})
+        :addTo(gem_num_bg)
+        :align(display.CENTER, 40, 15)
 end
 function GameUIBase:CreateTabButtons(param, func)
     return WidgetBackGroundTabButtons.new(param,
@@ -219,6 +225,8 @@ end
 
 
 return GameUIBase
+
+
 
 
 
