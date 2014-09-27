@@ -185,7 +185,7 @@ local BUILDING_DESCRIPTION = {
     ["unlock"] = _("可解锁的地块"),
     ["troopPopulation"] = _("部队派兵上限"),
     ["power"] = _("战斗力"),
-    
+
     ["watchTower"] = _("瞭望塔提供查看部队的情况，并提供敌方来袭时的信息，"),
     ["watchTower_1"] = _("能够看到来袭部队，NPC titles，自己的出征部队，告诉你前来的部队的行军目的，达到时间"),
     ["watchTower_2"] = _("可以进入其他联盟的领地，查看他们的行军事件"),
@@ -305,9 +305,47 @@ local BUILDING_DESCRIPTION = {
     ["miner"] = _("将城民派往矿工小屋获得持续的铁矿产出。建筑等级越高需要更多的城民，铁矿产出也会更高。"),
     ["miner_poduction"] = _("每小时铁矿产量"),
 
-    
+
 
 }
+
+
+local BUILDING_NAME = {
+    ["keep"] = _("城堡"),
+    ["watchTower"] = _("瞭望塔"),
+    ["acdemy"] = _("学院"),
+    ["trainingGround"] = _("训练营地"),
+    ["hunterhall"] = _("猎手大厅"),
+    ["stable"] = _("马厩"),
+    ["workshop"] = _("车间"),
+    ["wall"] = _("城墙"),
+    ["tower"] = _("防御塔"),
+    ["dragonEyrie"] = _("龙巢"),
+    ["hospital"] = _("医院"),
+    ["prison"] = _("监狱"),
+    ["toolShop"] = _("工具作坊"),
+    ["barracks"] = _("兵营"),
+    ["tradeGuild"] = _("贸易行会"),
+    ["blackSmith"] = _("铁匠铺"),
+    ["lumbermill"] = _("锯木坊"),
+    ["mill"] = _("磨坊"),
+    ["stoneMason"] = _("石匠作坊"),
+    ["foundry"] = _("铸造坊"),
+    ["townHall"] = _("市政厅"),
+    ["warehouse"] = _("资源仓库"),
+    ["materialDepot"] = _("材料库房"),
+    ["armyCamp"] = _("军帐"),
+    ["dwelling"] = _("住宅"),
+    ["woodcutter"] = _("木工小屋"),
+    ["farmer"] = _("农夫小屋"),
+    ["quarrier"] = _("石匠小屋"),
+    ["miner"] = _("矿工小屋"),
+}
+
+
+
+
+
 
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
@@ -318,7 +356,9 @@ return {
     dragon_skill = DRAGON_SKILL,
     dragon_buff_effection = DRAGON_BUFF_EFFECTION,
     building_description = BUILDING_DESCRIPTION,
+    building_name = BUILDING_NAME,
 }
+
 
 
 

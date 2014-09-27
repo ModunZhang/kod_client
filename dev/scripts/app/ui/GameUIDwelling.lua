@@ -61,12 +61,16 @@ end
 function GameUIDwelling:ctor(building, city)
     GameUIDwelling.super.ctor(self, building)
     self.dwelling_city = city
-    city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
     return true
 end
 function GameUIDwelling:onEnter()
     GameUIDwelling.super.onEnter(self)
     self.citizen_panel:UpdateData()
+    self.dwelling_city:AddListenOnType(self, self.dwelling_city.LISTEN_TYPE.UPGRADE_BUILDING)
+end
+function GameUIDwelling:onExit()
+    self.dwelling_city:RemoveListenerOnType(self, self.dwelling_city.LISTEN_TYPE.UPGRADE_BUILDING)
+    GameUIDwelling.super.onExit(self)
 end
 function GameUIDwelling:CreateUI()
     self:CreateInfomation()
@@ -74,7 +78,6 @@ function GameUIDwelling:CreateUI()
     self:createTabButtons()
 end
 function GameUIDwelling:onMovieOutStage()
-    self.dwelling_city:RemoveListenerOnType(self, self.dwelling_city.LISTEN_TYPE.UPGRADE_BUILDING)
     self.dwelling_city = nil
     GameUIDwelling.super.onMovieOutStage(self)
 end
