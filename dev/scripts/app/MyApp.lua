@@ -107,8 +107,6 @@ function MyApp:lockInput(b)
     elseif lockInputCount == 0 then
         cc.Director:getInstance():getEventDispatcher():setEnabled(true)
     end
-    print("b------>",b)
-    print(debug.traceback("", 2))
 end
 
 return MyApp

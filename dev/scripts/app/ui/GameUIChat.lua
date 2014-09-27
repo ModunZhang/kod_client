@@ -15,6 +15,7 @@ GameUIChat.PLAYERMENU_ZORDER = 2
 
 
 function GameUIChat:onEnter()
+	GameUIChat.super.onEnter(self)
 	self:CreateBackGround()
     self:CreateTitle(_("聊天"))
     self:CreateHomeButton()

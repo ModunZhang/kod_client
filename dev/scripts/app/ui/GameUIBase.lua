@@ -22,6 +22,9 @@ end
 function GameUIBase:onEnter()
     print("onEnter->")
     -- app:lockInput(false)
+    if home_page then
+        home_page.bottom:setVisible(false)
+    end
 end
 
 function GameUIBase:onEnterTransitionFinish()
@@ -35,6 +38,9 @@ end
 function GameUIBase:onExit()
     print("onExit--->")
     -- app:lockInput(false)
+    if home_page then
+        home_page.bottom:setVisible(true)
+    end
 end
 
 
@@ -66,7 +72,8 @@ function GameUIBase:leftButtonClicked()
         if self.moveInAnima then
             self:UIAnimationMoveOut()
         else
-            self:removeFromParent(true) -- 没有动画就直接删除
+            -- self:removeFromParent(true) -- 没有动画就直接删除
+            self:onMovieOutStage()
         end
     end
 end
