@@ -68,7 +68,7 @@ function GameUIHome:CreateTop()
         {normal = "home/player_btn_up.png", pressed = "home/player_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        self:sendMsg("reset", NOT_HANDLE)
+        -- NetManager:sendMsg("reset", NOT_HANDLE)
     end):addTo(top_bg):align(display.LEFT_BOTTOM, 109, 106)
 
 
@@ -115,7 +115,7 @@ function GameUIHome:CreateTop()
         {normal = "home/res_btn_up.png", pressed = "home/res_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        NetManager:instantUpgradeBuildingByLocation(1, NOT_HANDLE)
+        -- NetManager:instantUpgradeBuildingByLocation(1, NOT_HANDLE)
     end):addTo(top_bg):align(display.LEFT_BOTTOM, 317, 106)
 
     -- 资源图片和文字
@@ -185,7 +185,7 @@ function GameUIHome:CreateTop()
         {normal = "home/gem_btn_up.png", pressed = "home/gem_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        self:sendMsg("gem 10000000", NOT_HANDLE)
+        -- NetManager:sendMsg("gem 10000000", NOT_HANDLE)
     end):addTo(top_bg):pos(596, 60)
     display.newSprite("home/gem.png"):addTo(button):pos(-1, 8)
     display.newSprite("home/gem_num_bg.png"):addTo(button):pos(0, -27)
@@ -216,7 +216,7 @@ function GameUIHome:CreateTop()
         {normal = "home/quest_btn_up.png", pressed = "home/quest_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        NetManager:instantMakeBuildingMaterial(NOT_HANDLE)
+        -- NetManager:instantMakeBuildingMaterial(NOT_HANDLE)
     end):addTo(quest_bar_bg):pos(290, 20)
     local pos = button:getAnchorPointInPoints()
     display.newSprite("home/quest_hook.png"):addTo(button):pos(pos.x, pos.y)
