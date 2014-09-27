@@ -11,7 +11,7 @@ local GameUIBase = class('GameUIBase', function()
 end)
 
 function GameUIBase:ctor()
-    app:lockInput(true)
+    -- app:lockInput(true)
     self:setNodeEventEnabled(true)
     return true
 end
@@ -21,7 +21,7 @@ local visible_count = 1
 --------------------------------------
 function GameUIBase:onEnter()
     print("onEnter->")
-    app:lockInput(false)
+    -- app:lockInput(false)
     if home_page then
         print(visible_count)
         visible_count = visible_count - 1
@@ -41,7 +41,7 @@ end
 
 function GameUIBase:onExit()
     print("onExit--->")
-    app:lockInput(false)
+    -- app:lockInput(false)
     if home_page then
         visible_count = visible_count + 1
         if visible_count > 0 then
@@ -53,7 +53,7 @@ end
 
 function GameUIBase:onCleanup()
     print("onCleanup->")
-    app:lockInput(false)
+    -- app:lockInput(false)
 end
 
 
@@ -63,7 +63,7 @@ function GameUIBase:rightButtonClicked()
 end
 
 function GameUIBase:onMovieInStage()
-    app:lockInput(false)
+    -- app:lockInput(false)
 end
 
 function GameUIBase:onMovieOutStage()
@@ -79,7 +79,8 @@ function GameUIBase:leftButtonClicked()
         if self.moveInAnima then
             self:UIAnimationMoveOut()
         else
-            self:removeFromParent(true) -- 没有动画就直接删除
+            -- self:removeFromParent(true) -- 没有动画就直接删除
+            self:onMovieOutStage()
         end
     end
 end
@@ -105,7 +106,7 @@ end
 
 -- ui入场动画
 function GameUIBase:UIAnimationMoveIn()
-    app:lockInput(true)
+    -- app:lockInput(true)
     self:pos(0,-self:getContentSize().height)
     transition.execute(self, cc.MoveTo:create(0.5, cc.p(0, 0)),
         {
@@ -119,12 +120,12 @@ end
 -- ui 出场动画
 function GameUIBase:UIAnimationMoveOut()
     print("UIAnimationMoveOut->",self,tolua.type(self))
-    app:lockInput(true)
+    -- app:lockInput(true)
     transition.execute(self, cc.MoveTo:create(0.5, cc.p(0, -self:getContentSize().height)),
         {
             easing = "sineIn",
             onComplete = function()
-                app:lockInput(false)
+                -- app:lockInput(false)
                 self:onMovieOutStage()
             end
         })

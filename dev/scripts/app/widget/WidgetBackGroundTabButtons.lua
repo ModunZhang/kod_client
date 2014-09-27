@@ -70,6 +70,14 @@ function WidgetBackGroundTabButtons:OnSelectTag(tag)
     end
 end
 
+function WidgetBackGroundTabButtons:GetSelectedButtonTag()
+    for _, v in pairs(self.tabs) do
+        if v.pressed then
+            return v.tag
+        end
+    end
+end
+
 return WidgetBackGroundTabButtons
 
 
