@@ -30,6 +30,9 @@ function ToolShopUpgradeBuilding:CreateEvent(category)
         self.content = {}
         self.finished_time = 0
     end
+    function event:UniqueKey()
+        return self.category
+    end
     function event:Category()
         return self.category
     end
@@ -41,6 +44,12 @@ function ToolShopUpgradeBuilding:CreateEvent(category)
     end
     function event:LeftTime(current_time)
         return self.finished_time - current_time
+    end
+    function event:Percent(current_time)
+        local start_time = self:StartTime()
+        local elapse_time = current_time - start_time
+        local total_time = self.finished_time - start_time
+        return elapse_time * 100.0 / total_time
     end
     function event:FinishTime()
         return self.finished_time
@@ -83,6 +92,9 @@ function ToolShopUpgradeBuilding:AddToolShopListener(listener)
 end
 function ToolShopUpgradeBuilding:RemoveToolShopListener(listener)
     self.toolShop_building_observer:RemoveObserver(listener)
+end
+function ToolShopUpgradeBuilding:GetMakeMaterialsEvents()
+    return self.category
 end
 function ToolShopUpgradeBuilding:GetMakeMaterialsEventByCategory(category)
     return self.category[category]

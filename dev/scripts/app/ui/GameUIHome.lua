@@ -37,7 +37,8 @@ function GameUIHome:onEnter()
     self:CreateTop()
     self:CreateBottom()
 
-    local event = WidgetEventTabButtons.new(city):addTo(self):pos(window.right - 491, display.bottom + 150)
+    local event = WidgetEventTabButtons.new(city)
+    :addTo(self):pos(window.right - 491, display.bottom + 150)
 
 
 

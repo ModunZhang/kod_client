@@ -25,11 +25,14 @@ function WidgetEventTabButtons:isTouchInViewRect(event)
     return cc.rectContainsPoint(viewRect, cc.p(event.x, event.y))
 end
 local timer = app.timer
+-- 建筑事件
 function WidgetEventTabButtons:OnUpgradingBegin(building, current_time, city)
-    self:Switch()
+    if self:GetCurrentTab() == "build" then
+        self:Switch()
+    end
 end
 function WidgetEventTabButtons:OnUpgrading(building, current_time, city)
-    if self:IsShow() then
+    if self:IsShow() and self:GetCurrentTab() == "build" then
         self:IteratorAllItem(function(i, v)
             if v:GetEventKey() == building:UniqueKey() then
                 v:SetProgressInfo(self:BuildingDescribe(building))
@@ -38,9 +41,70 @@ function WidgetEventTabButtons:OnUpgrading(building, current_time, city)
     end
 end
 function WidgetEventTabButtons:OnUpgradingFinished(building, current_time, city)
-    self:Switch()
+    if self:GetCurrentTab() == "build" then
+        self:Switch()
+    end
 end
-
+-- 兵营事件
+function WidgetEventTabButtons:OnBeginRecruit(barracks, event)
+    if self:GetCurrentTab() == "soldier" then
+        self:Switch()
+    end
+end
+function WidgetEventTabButtons:OnRecruiting(barracks, event, current_time)
+    if self:IsShow() and self:GetCurrentTab() == "soldier" then
+        self:IteratorAllItem(function(i, v)
+            v:SetProgressInfo(self:SoldierDescribe(event))
+        end)
+    end
+end
+function WidgetEventTabButtons:OnEndRecruit(barracks, event, current_time)
+    if self:GetCurrentTab() == "soldier" then
+        self:Switch()
+    end
+end
+-- 装备事件
+function WidgetEventTabButtons:OnBeginMakeEquipmentWithEvent(black_smith, event)
+    if self:GetCurrentTab() == "material" then
+        self:Switch()
+    end
+end
+function WidgetEventTabButtons:OnMakingEquipmentWithEvent(black_smith, event, current_time)
+    if self:IsShow() and self:GetCurrentTab() == "material" then
+        self:IteratorAllItem(function(i, v)
+            if v:GetEventKey() == event:UniqueKey() then
+                v:SetProgressInfo(self:EquipmentDescribe(event))
+            end
+        end)
+    end
+end
+function WidgetEventTabButtons:OnEndMakeEquipmentWithEvent(black_smith, event, equipment)
+    if self:GetCurrentTab() == "material" then
+        self:Switch()
+    end
+end
+-- 材料事件
+function WidgetEventTabButtons:OnBeginMakeMaterialsWithEvent(tool_shop, event)
+    if self:GetCurrentTab() == "material" then
+        self:Switch()
+    end
+end
+function WidgetEventTabButtons:OnMakingMaterialsWithEvent(tool_shop, event, current_time)
+    if self:IsShow() and self:GetCurrentTab() == "material" then
+        self:IteratorAllItem(function(i, v)
+            if v:GetEventKey() == event:UniqueKey() then
+                v:SetProgressInfo(self:MaterialDescribe(event))
+            end
+        end)
+    end
+end
+function WidgetEventTabButtons:OnEndMakeMaterialsWithEvent(tool_shop, event, current_time)
+end
+function WidgetEventTabButtons:OnGetMaterialsWithEvent(tool_shop, event)
+    if self:GetCurrentTab() == "material" then
+        self:Switch()
+    end
+end
 ------
 function WidgetEventTabButtons:ctor(city)
     self.item_array = {}
@@ -53,9 +117,18 @@ function WidgetEventTabButtons:ctor(city)
     self:Reset()
     self:HighLightTab("build")
 
+
     self.city = city
     city:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
 
+    self.barracks = city:GetFirstBuildingByType("barracks")
+    self.barracks:AddBarracksListener(self)
+
+    self.blackSmith = city:GetFirstBuildingByType("blackSmith")
+    self.blackSmith:AddBlackSmithListener(self)
+
+    self.toolShop = city:GetFirstBuildingByType("toolShop")
+    self.toolShop:AddToolShopListener(self)
 
     -- self:InitAnimation()
     -- self.event_queue = {}
@@ -74,6 +147,9 @@ function WidgetEventTabButtons:OnExit()
     -- self.node:stopAllActions()
     -- self.node:unscheduleUpdate()
     -- self:unscheduleUpdate()
+    self.toolShop:RemoveToolShopListener(self)
+    self.blackSmith:RemoveBlackSmithListener(self)
+    self.barracks:RemoveBarracksListener(self)
     city:RemoveListenerOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
 end
 function WidgetEventTabButtons:InsertEvent(func)
@@ -179,9 +255,8 @@ function WidgetEventTabButtons:CreateProgressItem()
 end
 function WidgetEventTabButtons:CreateOpenItem()
     local node = display.newNode()
-    cc.ui.UILabel.new({
+    local label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("查看已拥有的建筑"),
         size = 18,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xd1ca95)}):addTo(node):align(display.LEFT_CENTER, 10, 0)
@@ -203,6 +278,13 @@ function WidgetEventTabButtons:CreateOpenItem()
                 return items
             end)
         end)
+
+    function node:SetLabel(str)
+        if label:getString() ~= str then
+            label:setString(str)
+        end
+        return self
+    end
 
     return node
 end
@@ -436,7 +518,15 @@ function WidgetEventTabButtons:OnHideEnd()
     self:Reset()
 end
 function WidgetEventTabButtons:OnBeforeShow()
-    return self:GetCurrentTab() == "build"
+    local tab = self:GetCurrentTab()
+    if tab == "build" then
+        return true
+    elseif tab == "soldier" and self.barracks:IsUnlocked() then
+        return true
+    elseif tab == "material" and self.blackSmith:IsUnlocked() then
+        return true
+    end
+    return false
 end
 function WidgetEventTabButtons:GetCurrentTab()
     for k, v in pairs(self.tab_map) do
@@ -454,17 +544,17 @@ function WidgetEventTabButtons:Load()
     for k, v in pairs(self.tab_map) do
         if v:IsPressed() then
             if k == "build" then
-                self:InsertItem(self:CreateBottom())
+                self:InsertItem(self:CreateBottom():SetLabel(_("查看已拥有的建筑")))
+
                 local buildings = self.city:GetOnUpgradingBuildings()
                 local items = {}
                 for i, v in ipairs(buildings) do
                     table.insert(items, self:CreateItem()
                         :SetProgressInfo(self:BuildingDescribe(v))
-                        :SetEventKey(v:UniqueKey()))
+                        :SetEventKey(v:UniqueKey())
+                    )
                 end
                 self:InsertItem(items)
-                self:ResizeBelowHorizon(self:Length(#self.item_array))
-
                 -- local buildings = self.city:GetOnUpgradingBuildings()
                 -- self:InsertItemWithAnimation(function()
                 --     local items = {}
@@ -476,7 +566,38 @@ function WidgetEventTabButtons:Load()
                 --     return items
                 -- end)
                 -- self:ResizeBelowHorizon(self:Length(#self.item_array + #buildings))
+            elseif k == "soldier" then
+                self:InsertItem(self:CreateBottom():SetLabel(_("查看现有的士兵")))
+                local event = self.barracks:GetRecruitEvent()
+                if event:IsRecruting() then
+                    self:InsertItem(self:CreateItem():SetProgressInfo(self:SoldierDescribe(event)))
+                end
+            elseif k == "technology" then
+                self:InsertItem(self:CreateBottom():SetLabel(_("查看现有的科技")))
+            elseif k == "material" then
+                self:InsertItem(self:CreateBottom():SetLabel(_("查看材料")))
+
+                local event = self.blackSmith:GetMakeEquipmentEvent()
+                if event:IsMaking() then
+                    self:InsertItem(self:CreateItem()
+                        :SetProgressInfo(self:EquipmentDescribe(event))
+                        :SetEventKey(event:UniqueKey())
+                    )
+                end
+
+                local events = self.toolShop:GetMakeMaterialsEvents()
+                for k, v in pairs(events) do
+                    if v:IsMaking(timer:GetServerTime()) then
+                        self:InsertItem(
+                            self:CreateItem()
+                                :SetProgressInfo(self:MaterialDescribe(v))
+                                :SetEventKey(v:UniqueKey())
+                        )
+                    end
+                end
             end
+
+            self:ResizeBelowHorizon(self:Length(#self.item_array))
             return
         end
     end
@@ -498,9 +619,38 @@ function WidgetEventTabButtons:BuildingDescribe(building)
     local percent = building:GetUpgradingPercentByCurrentTime(time)
     return str, percent
 end
-
+function WidgetEventTabButtons:SoldierDescribe(event)
+    local soldier_type, count = event:GetRecruitInfo()
+    local soldier_name = self.barracks:GetSoldierConfigByType(soldier_type).description
+    local current_time = timer:GetServerTime()
+    local str = string.format("%s%s x%d %s", _("招募"), _(soldier_name), count, GameUtils:formatTimeStyle1(event:LeftTime(current_time)))
+    return str, event:Percent(current_time)
+end
+function WidgetEventTabButtons:EquipmentDescribe(event)
+    local current_time = app.timer:GetServerTime()
+    local str = string.format("%s %s %s", _("正在制作"), Localize.equip[event:Content()], GameUtils:formatTimeStyle1(event:LeftTime(current_time)))
+    return str, event:Percent(current_time)
+end
+function WidgetEventTabButtons:MaterialDescribe(event)
+    local current_time = app.timer:GetServerTime()
+    local str = string.format("%s x%d %s", _("制造材料"), event:TotalCount(), GameUtils:formatTimeStyle1(event:LeftTime(current_time)))
+    return str, event:Percent(current_time)
+end
 
 return WidgetEventTabButtons
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

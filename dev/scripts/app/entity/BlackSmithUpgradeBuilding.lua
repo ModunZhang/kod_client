@@ -27,6 +27,9 @@ function BlackSmithUpgradeBuilding:CreateEvent()
         self.content = nil
         self.finished_time = 0
     end
+    function event:UniqueKey()
+        return "blackSmith"
+    end
     function event:StartTime()
         return self.finished_time - black_smith:GetMakingTimeByEquipment(self.content)
     end
