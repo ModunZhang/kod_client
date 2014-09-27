@@ -53,7 +53,7 @@ function CityScene:onEnter()
     self.city_layer = self:CreateSceneLayer()
     self:CreateMultiTouchLayer()
     self.scene_ui_layer = self:CreateSceneUILayer()
-    self:CreateHomePage()
+    home_page = self:CreateHomePage()
 
     self.city_layer:AddObserver(self)
     self.city_layer:InitWithCity(City)

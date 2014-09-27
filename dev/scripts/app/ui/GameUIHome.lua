@@ -35,10 +35,7 @@ function GameUIHome:onEnter()
     local city = self.city
     -- 上背景
     self:CreateTop()
-    self:CreateBottom()
-
-    local event = WidgetEventTabButtons.new(city)
-    :addTo(self):pos(window.right - 491, display.bottom + 150)
+    self.bottom = self:CreateBottom()
 
 
 
@@ -252,6 +249,10 @@ function GameUIHome:CreateBottom()
     ):onButtonClicked(function(event)
         UIKit:newGameUI('GameUIChat'):addToCurrentScene(true)
     end):addTo(chat_bg):pos(31, 20)
+
+
+    local event = WidgetEventTabButtons.new(self.city)
+    :addTo(bottom_bg):pos(bottom_bg:getContentSize().width - 491, bottom_bg:getContentSize().height + 50)
 
 
     -- 底部按钮
