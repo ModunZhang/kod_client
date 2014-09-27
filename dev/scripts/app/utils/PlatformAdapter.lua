@@ -41,6 +41,24 @@ function PlatformAdapter:common()
         hideActivityIndicator()
         cc.Director:getInstance():getEventDispatcher():setEnabled(true)
     end
+    --CCTableView
+    cc.TABLEVIEW_FILL_TOPDOWN = 0
+    cc.TABLEVIEW_FILL_BOTTOMUP = 1
+
+    cc.SCROLLVIEW_SCRIPT_SCROLL = 0
+    cc.SCROLLVIEW_SCRIPT_ZOOM   = 1
+    cc.TABLECELL_TOUCHED        = 2
+    cc.TABLECELL_HIGH_LIGHT     = 3
+    cc.TABLECELL_UNHIGH_LIGHT   = 4
+    cc.TABLECELL_WILL_RECYCLE   = 5
+    cc.TABLECELL_SIZE_FOR_INDEX = 6
+    cc.TABLECELL_SIZE_AT_INDEX  = 7
+    cc.NUMBER_OF_CELLS_IN_TABLEVIEW = 8
+
+    cc.SCROLLVIEW_DIRECTION_NONE = -1
+    cc.SCROLLVIEW_DIRECTION_HORIZONTAL = 0
+    cc.SCROLLVIEW_DIRECTION_VERTICAL = 1
+    cc.SCROLLVIEW_DIRECTION_BOTH  = 2
 end
 
 --------------------------------------------------------------------

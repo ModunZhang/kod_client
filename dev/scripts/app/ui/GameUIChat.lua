@@ -8,7 +8,7 @@ local TabButtons = import('.TabButtons')
 local ChatService = import('..service.ChatService')
 local ChatCenter = app.chatCenter
 local NetService = import('..service.NetService')
-
+local window = import("..utils.window")
 
 GameUIChat.LISTVIEW_WIDTH = 549
 GameUIChat.PLAYERMENU_ZORDER = 2
@@ -56,9 +56,9 @@ function GameUIChat:CreateTabButtons()
         margin_down = 1
     },
     function(tag)
-    	self._channelType = string.lower(tag)
-        self.page = 1
-        self:RefreshListView()
+    	-- self._channelType = string.lower(tag)
+     --    self.page = 1
+     --    self:RefreshListView()
     end):addTo(self):pos(display.cx, display.bottom + 50)
 end
 
@@ -142,7 +142,7 @@ function GameUIChat:getChatItem(chat)
     
 	local content = display.newNode()
 	if not isSelf then
-		local item = self.listView:newItem()
+		-- local item = self.listView:newItem()
 		local bottom = display.newScale9Sprite("chat_bubble_bottom.png"):addTo(content):align(display.RIGHT_BOTTOM, 549, 0)
 		local middle = display.newScale9Sprite("chat_bubble_middle.png"):addTo(content):align(display.RIGHT_BOTTOM, 549, bottom:getContentSize().height)
 		local labelText = chat.text
@@ -228,9 +228,9 @@ function GameUIChat:getChatItem(chat)
     		end)
     		:align(display.RIGHT_BOTTOM,header:getContentSize().width-10,titleLabel:getPositionY()+titleLabel:getContentSize().height/2)
     	playerIcon:addTo(content):align(display.LEFT_TOP, 1, bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
-		item:addContent(content)
-		item:setItemSize(549,bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height)
-		return item
+		-- item:addContent(content)
+		-- item:setItemSize(549,bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height)
+		return content
 	else
 		--mine
 		local bottom = display.newScale9Sprite("chat_bubble_bottom.png"):addTo(content):align(display.LEFT_BOTTOM, -10, 0)
@@ -273,10 +273,10 @@ function GameUIChat:getChatItem(chat)
 	    }):align(display.LEFT_BOTTOM,20, titleBg:getPositionY()-2):addTo(header,3)
 
 		self:GetChatIcon(chat):addTo(content):align(display.RIGHT_TOP, 549, bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
-		local item = self.listView:newItem()
-		item:addContent(content)
-		item:setItemSize(549,bottom:getContentSize().height+header:getContentSize().height+middle:getContentSize().height)
-		return item
+		-- local item = self.listView:newItem()
+		-- item:addContent(content)
+		-- item:setItemSize(549,bottom:getContentSize().height+header:getContentSize().height+middle:getContentSize().height)
+		return content
 	end
 		return nil
 end
@@ -295,17 +295,71 @@ function GameUIChat:RefreshListView()
 end
 
 function GameUIChat:CreateListView()
-	self.listView = UIListView.new {
-        bg = "chat_list_bg.png",
-        bgScale9 = true,
-        viewRect = cc.rect(display.left+45, display.bottom+110, 549, self.editbox:getPositionY() - self.editbox:getContentSize().height - 130),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        alignment = cc.ui.UIListView.ALIGNMENT_LEFT
-    	}
-        :onTouch(handler(self, self.listviewListener))
-        :addTo(self)
+	-- self.listView = UIListView.new {
+ --        bg = "chat_list_bg.png",
+ --        bgScale9 = true,
+ --        viewRect = cc.rect(display.left+45, display.bottom+110, 549, self.editbox:getPositionY() - self.editbox:getContentSize().height - 130),
+ --        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
+ --        alignment = cc.ui.UIListView.ALIGNMENT_LEFT
+ --    	}
+ --        :onTouch(handler(self, self.listviewListener))
+ --        :addTo(self)
+ 	local listView  = cc.TableView:create(cc.size(549, self.editbox:getPositionY() - self.editbox:getContentSize().height - 130))
+    listView:setDirection(cc.SCROLLVIEW_DIRECTION_VERTICAL)
+    listView:setDelegate()
+    listView:setVerticalFillOrder(cc.TABLEVIEW_FILL_TOPDOWN)
+    listView:addTo(self):pos(window.left+45,window.bottom+110)
+
+    listView:registerScriptHandler(handler(self,self.cellSizeForTable),cc.TABLECELL_SIZE_FOR_INDEX)
+    listView:registerScriptHandler(handler(self,self.tableCellAtIndex),cc.TABLECELL_SIZE_AT_INDEX)
+    listView:registerScriptHandler(handler(self,self.numberOfCellsInTableView),cc.NUMBER_OF_CELLS_IN_TABLEVIEW)
+    self.listView = listView
+    listView:reloadData()
 end
 
+-----------------------CCTableView adapter
+
+function GameUIChat:cellSizeForTable(table,idx)
+	return 60,549 --height,width
+end
+
+function GameUIChat:tableCellAtIndex(table, idx)
+	local strValue = string.format("%d",idx)
+    local cell = table:dequeueCell()
+    local label = nil
+    if nil == cell then
+    	print("create new cell------->")
+        cell = cc.TableViewCell:new()
+        local sprite = cc.Sprite:create("chat_bubble_bottom.png")
+        sprite:setAnchorPoint(cc.p(0,0))
+        sprite:setPosition(cc.p(0, 0))
+        cell:addChild(sprite)
+
+        label = cc.Label:createWithSystemFont(strValue, "Helvetica", 20.0)
+        label:setPosition(cc.p(0,0))
+        label:setAnchorPoint(cc.p(0,0))
+        label:setTag(123)
+        cell:addChild(label)
+    else
+        label = cell:getChildByTag(123)
+        if nil ~= label then
+            label:setString(strValue)
+        end
+    end
+
+    return cell
+
+end
+
+
+function GameUIChat:numberOfCellsInTableView()
+	print("------>")
+	return 25
+end
+
+
+
+-----------------------end
 function GameUIChat:CreateTextFieldBody()
 	local function onEdit(event, editbox)
         if event == "return" then
