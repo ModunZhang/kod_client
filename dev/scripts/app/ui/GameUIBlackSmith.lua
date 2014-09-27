@@ -153,7 +153,7 @@ end
 function GameUIBlackSmith:CreateDragonEquipmentsByType(dragon_type)
     local equip_map = {}
     local red_dragon_equipments = self:GetDragonEquipmentsByType(dragon_type)
-    local list_view = self:CreateVerticalListView(20, display.bottom + 70, display.right - 20, display.top - 230)
+    local list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 230)
     for i, v in ipairs(red_dragon_equipments) do
         local item = self:CreateItemWithListViewByEquipments(list_view, v.equipments, v.title, equip_map)
         list_view:addItem(item)
