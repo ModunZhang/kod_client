@@ -6,6 +6,10 @@ local HospitalUpgradeBuilding = class("HospitalUpgradeBuilding", UpgradeBuilding
 function HospitalUpgradeBuilding:ctor(building_info)
     HospitalUpgradeBuilding.super.ctor(self, building_info)
 end
+--获取下一级伤病最大上限
+function HospitalUpgradeBuilding:GetNextLevelMaxCasualty()
+	return config_function[self:GetNextLevel()].maxCasualty
+end
 --获取伤病最大上限
 function HospitalUpgradeBuilding:GetMaxCasualty()
 	return config_function[self:GetLevel()].maxCasualty

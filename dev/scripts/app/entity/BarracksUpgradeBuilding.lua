@@ -107,7 +107,9 @@ function BarracksUpgradeBuilding:GetSoldierConfigByType(soldier_type)
     local soldier_name = string.format("%s_%d", soldier_type, self.soldier_star)
     return NORMAL[soldier_name]
 end
-
+function BarracksUpgradeBuilding:GetNextLevelMaxRecruitSoldierCount()
+    return barracks_config[self:GetNextLevel()].maxRecruit
+end
 function BarracksUpgradeBuilding:GetMaxRecruitSoldierCount()
     return barracks_config[self:GetLevel()].maxRecruit
 end
