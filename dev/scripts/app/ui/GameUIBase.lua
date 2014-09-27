@@ -16,13 +16,14 @@ function GameUIBase:ctor()
     return true
 end
 
-local visible_count = 0
+local visible_count = 1
 -- Node Event
 --------------------------------------
 function GameUIBase:onEnter()
     print("onEnter->")
     app:lockInput(false)
     if home_page then
+        print(visible_count)
         visible_count = visible_count - 1
         if visible_count == 0 then
             home_page.bottom:setVisible(false)
