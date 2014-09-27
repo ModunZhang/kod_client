@@ -72,6 +72,7 @@ end
 
 function GameUIBase:addToScene(scene,anima)
     print("addToScene->",tolua.type(scene))
+    anima = false
     if scene and tolua.type(scene) == 'cc.Scene' then
         scene:addChild(self, 2000)
         self.moveInAnima = anima == nil and false or anima
@@ -121,26 +122,19 @@ end
 --
 
 function GameUIBase:CreateBackGround()
-    local node = display.newNode()
-    local bg = display.newScale9Sprite("common_bg_center.png")
-        :pos(display.cx,display.cy)
-        :addTo(node)
-    bg:setContentSize(cc.size(bg:getContentSize().width,display.height))
-    -- local left = display.newScale9Sprite("common_bg_left.png")
-    --     :align(display.LEFT_TOP, display.left + 20, display.top)
+    -- local node = display.newNode()
+    -- local bg = display.newScale9Sprite("common_bg_center.png")
+    --     :pos(display.cx,display.cy)
     --     :addTo(node)
-    -- left:setContentSize(cc.size(left:getContentSize().width,display.height))
-    -- local right = display.newScale9Sprite("common_bg_left.png")
-    --     :align(display.RIGHT_TOP, display.right - 20, display.top)
+    -- bg:setContentSize(cc.size(bg:getContentSize().width,display.height))
+    -- display.newSprite("common_bg_top.png")
+    --     :align(display.CENTER, display.cx, display.top - 72)
     --     :addTo(node)
-    -- right:setContentSize(cc.size(right:getContentSize().width,display.height))
-    display.newSprite("common_bg_top.png")
-        :align(display.CENTER, display.cx, display.top - 72)
-        :addTo(node)
-    display.newSprite("common_bg_top.png")
-        :align(display.CENTER, display.cx, display.bottom)
-        :addTo(node)
-    return node:addTo(self)
+    -- display.newSprite("common_bg_top.png")
+    --     :align(display.CENTER, display.cx, display.bottom)
+    --     :addTo(node)
+    -- return node:addTo(self)
+    return display.newSprite("common_bg_center.png"):align(display.LEFT_TOP, window.left,window.top-40):addTo(self)
 end
 function GameUIBase:CreateTitle(title)
     local head_bg = cc.ui.UIImage.new("head_bg.png")
