@@ -35,7 +35,7 @@ end
 --
 
 function ResourceUpgradeBuilding:getUpgradeNowNeedGems()
-
+    
     local resource_config = DataUtils:getHouseUpgradeRequired(self.building_type, self.level+1)
     local required_gems = 0
     required_gems = required_gems + DataUtils:buyResource(resource_config.resources, {})

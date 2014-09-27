@@ -35,7 +35,7 @@ function GameUIWarehouse:onEnter()
         else
             self.resource_layer:setVisible(false)
         end
-    end):pos(display.cx, display.bottom + 40)
+    end):pos(display.cx, display.top - 920)
     self:CreateResourceListView()
     self:InitAllResources()
 
@@ -72,7 +72,7 @@ function GameUIWarehouse:CreateResourceListView()
     self.resource_listview = cc.ui.UIListView.new{
         -- bg = "common_tips_bg.png",
         bgScale9 = true,
-        viewRect = cc.rect(display.left+20, display.bottom+80, 600, display.height-180),
+        viewRect = cc.rect(display.cx-300, display.top-880, 600, 780),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
         :addTo(self.resource_layer)
 end
@@ -147,7 +147,7 @@ function GameUIWarehouse:AddResourceItem(parms)
     -- 构造分割线显示信息方法
     local function createTipItem(prams)
         -- 分割线
-        local line = display.newScale9Sprite("dividing_line.png",prams.x, prams.y, cc.size(display.width-245,2))
+        local line = display.newScale9Sprite("dividing_line.png",prams.x, prams.y, cc.size(395,2))
 
         -- title
         cc.ui.UILabel.new(

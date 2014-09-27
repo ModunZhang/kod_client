@@ -50,7 +50,7 @@ function GameUIPResourceBuilding:onEnter()
         else
             self.info_layer:setVisible(false)
         end
-    end):pos(display.cx, display.bottom + 40)
+    end):pos(display.cx, display.top - 920)
     self:ProduceIncreasePart()
     self:RebuildPart()
 end

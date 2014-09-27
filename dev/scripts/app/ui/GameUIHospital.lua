@@ -65,7 +65,7 @@ function GameUIHospital:onEnter()
         else
             self.heal_layer:setVisible(false)
         end
-    end):pos(display.cx, display.bottom + 40)
+    end):pos(display.cx, display.top - 920)
 
     -- 创建伤兵数量占最大伤兵数量比例条
     self:CreateCasualtyRateBar()
@@ -86,7 +86,7 @@ end
 
 function GameUIHospital:CreateHealAllSoldierItem()
     self.treate_all_soldiers_item = WidgetWithBlueTitle.new(266, _("治疗所有伤兵")):addTo(self.heal_layer)
-        :pos(window.left+16,window.bottom+80)
+        :pos(window.cx,window.top-750)
     local bg_size = self.treate_all_soldiers_item:getContentSize()
     -- 治疗伤病需要使用的4种资源和数量（矿，石头，木材，食物）
     local function createResourceItem(resource_icon,num)

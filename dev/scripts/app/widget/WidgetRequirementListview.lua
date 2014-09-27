@@ -7,40 +7,36 @@ end)
 function WidgetRequirementListview:ctor(parms)
     self:setNodeEventEnabled(true)
 	self.title = parms.title
-	self.height = parms.height
+    self.listview_height = parms.height
+	self.listview_width = 520
 	self.listParms = parms.listParms
 	self.contents = parms.contents
 
-	self.width = 549
-	self:setContentSize(cc.size(self.width, self.height))
+	self.width = 548
+	self:setContentSize(cc.size(self.width, self.listview_height+50))
 	self:setAnchorPoint(cc.p(0.5,0))
-end
 
-function WidgetRequirementListview:onEnter()
     print("onEnter-> WidgetRequirementListview",display.height)
-    local list_bg = display.newScale9Sprite("upgrade_requirement_background.png", 0, 0,cc.size(self.width, self.height))
+    local list_bg = display.newScale9Sprite("upgrade_requirement_background.png", 0, 0,cc.size(self.width, self.listview_height))
         :align(display.LEFT_BOTTOM):addTo(self)
+    local title_bg = display.newSprite("upgrade_resources_title.png", x, y):align(display.CENTER_BOTTOM, self.width/2, self.listview_height):addTo(self)
     cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = self.title ,
         font = UIKit:getFontFilePath(),
         size = 24,
-        color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.CENTER,self.width/2, self.height-27):addTo(self)
+        color = UIKit:hex2c3b(0xffedae)
+    }):align(display.CENTER,self.width/2, 25):addTo(title_bg)
     self.listview = UIListView.new({
         -- bg = "common_tips_bg.png",
         bgScale9 = true,
-        viewRect = cc.rect(0,0, self.width, self.height-49),
+        viewRect = cc.rect(0,0, self.listview_width, self.listview_height-20),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL})
-        :addTo(list_bg,2)
+        :addTo(list_bg,2):pos((self.width-self.listview_width)/2, 12)
 
     -- 缓存已经添加的升级条件项,供刷新时使用
     self.added_items = {}
     self:RefreshListView(self.contents)
-end
-
-function WidgetRequirementListview:onExit()
-    print("onExit--->")
 end
 
 
@@ -70,12 +66,12 @@ function WidgetRequirementListview:RefreshListView(contents)
                     -- 不符合条提案，添加X图标
                     content.mark:setTexture("upgrade_prohibited.png")
                 end
-                content.resource_value:setString(v.description)
+                content.resource_value:setString(v.resource_type.." "..v.description)
             else
                 -- 添加新条件
-                -- print("添加新条件",v.resource_type)
+                print("添加新条件",v.resource_type)
                 local item = self.listview:newItem()
-                local item_width,item_height = 547,47
+                local item_width,item_height = self.listview_width,48
                 item:setItemSize(item_width,item_height)
                 local content = cc.ui.UIGroup.new()
                 --  筛选不同背景颜色 bg
@@ -98,11 +94,11 @@ function WidgetRequirementListview:RefreshListView(contents)
                 resource_type_icon:setScale(40/resource_type_icon:getContentSize().width)
                 content.resource_value = cc.ui.UILabel.new({
                     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                    text = v.description,
+                    text = v.resource_type.." "..v.description,
                     font = UIKit:getFontFilePath(),
-                    size = 24,
+                    size = 22,
                     color = UIKit:hex2c3b(0x403c2f)
-                }):align(display.LEFT_CENTER,-200,0):addTo(content)
+                }):align(display.LEFT_CENTER,-180,0):addTo(content)
                 item:addContent(content)
                 self.listview:addItem(item)
                 self.added_items[v.resource_type] = item
