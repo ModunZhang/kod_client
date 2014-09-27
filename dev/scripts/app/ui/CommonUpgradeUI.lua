@@ -264,6 +264,16 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         efficiency = string.format("%s%d,%s+%d",bd.maxCasualty,building:GetNextLevelMaxCasualty(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="townHall" then
         efficiency = string.format("%s%d,%s%d",bd.townHall_dwelling,building:GetNextLevelDwellingNum(),bd.totalTax,building:GetNextLevelTotalTax())
+    elseif self.building:GetType()=="dwelling" then
+        efficiency = string.format("%s%d,%s+%d,%s+%d",bd.dwelling_citizen,building:GetNextLevelCitizen(),bd.recoveryCitizen,building:GetNextLevelRecoveryCitizen(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="woodcutter" then
+        efficiency = string.format("%s%d,%s+%d",bd.woodcutter_poduction,building:GetNextLevelProductionPerHour(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="farmer" then
+        efficiency = string.format("%s%d,%s+%d",bd.farmer_poduction,building:GetNextLevelProductionPerHour(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="quarrier" then
+        efficiency = string.format("%s%d,%s+%d",bd.quarrier_poduction,building:GetNextLevelProductionPerHour(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="miner" then
+        efficiency = string.format("%s%d,%s+%d",bd.miner_poduction,building:GetNextLevelProductionPerHour(),bd.power,building:GetNextLevelPower())
     else
         efficiency = (_("本地化未添加"))
     end
@@ -691,6 +701,8 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
 
 
 
