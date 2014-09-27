@@ -11,7 +11,7 @@ require("app.utils.window")
 require("app.ui.GameGlobalUIUtils")
 require("app.service.NetManager")
 require("app.service.DataManager")
-
+local lockInputCount = 0
 local Timer = import('.utils.Timer')
 local MyApp = class("MyApp", cc.mvc.AppBase)
 import('app.ui.GameGlobalUIUtils')
@@ -97,7 +97,18 @@ function MyApp:onEnterForeground()
 end
 
 function MyApp:lockInput(b)
-    cc.Director:getInstance():getEventDispatcher():setEnabled(not b)
+    if b then
+        lockInputCount = lockInputCount + 1
+    else
+        lockInputCount = lockInputCount - 1
+    end
+    if lockInputCount > 0 then
+        cc.Director:getInstance():getEventDispatcher():setEnabled(false)
+    elseif lockInputCount == 0 then
+        cc.Director:getInstance():getEventDispatcher():setEnabled(true)
+    end
+    print("b------>",b)
+    print(debug.traceback("", 2))
 end
 
 return MyApp
