@@ -306,7 +306,7 @@ function GameUIDwelling:createTabButtons()
             self.citizen_panel:setVisible(false)
             self.infomationLayer:setVisible(false)
         end
-    end):pos(window.cx, window.bottom + 50)
+    end):pos(window.cx, window.bottom + 34)
 end
 function GameUIDwelling:OnUpgradingBegin(building)
     self:OnUpgradingFinished(building)

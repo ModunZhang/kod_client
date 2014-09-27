@@ -390,7 +390,7 @@ end
 function WidgetEventTabButtons:ResetPosition()
     self.node:setPositionY(- self.back_ground:getContentSize().height)
 end
-function WidgetEventTabButtons:Show()
+function WidgetEventTabButtons:Show(time)
     if self:OnBeforeShow() then
         self.node:stopAllActions()
         local size = self.back_ground:getContentSize()
@@ -399,7 +399,7 @@ function WidgetEventTabButtons:Show()
         self:Lock(true)
         self:Reload()
         transition.moveTo(self.node,
-            {x = 0, y = 0, time = 0.15,
+            {x = 0, y = 0, time = time == nil and 0.15 or time,
                 easing = "sineIn",
                 onComplete = function()
                     self:OnShowEnd()
@@ -411,15 +411,15 @@ function WidgetEventTabButtons:Hide()
     self:HideWithCallback(nil)
 end
 function WidgetEventTabButtons:Switch()
-    self:HideWithCallback(function()
+    self:HideWithCallback(nil, function()
         self:Show()
     end)
 end
-function WidgetEventTabButtons:HideWithCallback(callback)
+function WidgetEventTabButtons:HideWithCallback(time, callback)
     self.node:stopAllActions()
     self:Lock(true)
     transition.moveTo(self.node,
-        {x = 0, y = -self.back_ground:getContentSize().height, time = 0.15,
+        {x = 0, y = -self.back_ground:getContentSize().height, time = time == nil and 0.15 or time,
             easing = "sineIn",
             onComplete = function()
                 self:OnHideEnd()

@@ -6,6 +6,7 @@ local EQUIPMENTS = GameDatas.SmithConfig.equipments
 local Localize = import("..utils.Localize")
 local MaterialManager = import("..entity.MaterialManager")
 local UIPushButton = cc.ui.UIPushButton
+local window = import("..utils.window")
 local WidgetTips = import("..widget.WidgetTips")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
@@ -99,7 +100,7 @@ function GameUIBlackSmith:TabButtons()
         else
             self:SwitchToDragon(tag)
         end
-    end):pos(display.cx, display.bottom + 40)
+    end):pos(window.cx, window.bottom + 34)
 end
 function GameUIBlackSmith:SwitchToDragon(dragon_type)
     self.title:setVisible(true)

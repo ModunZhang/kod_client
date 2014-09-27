@@ -764,7 +764,7 @@ function GameUIDragonEyrie:CreateTabButtons_()
     },
     function(tag)
         self:TabButtonsAction(tag)
-    end):pos(window.cx, window.bottom + 50)
+    end):pos(window.cx, window.bottom + 34)
 end
 
 function GameUIDragonEyrie:onMovieOutStage()

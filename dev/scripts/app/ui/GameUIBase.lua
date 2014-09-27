@@ -4,7 +4,8 @@
 -- GameUIBase is a CCLayer
 local window = import("..utils.window")
 local UIListView = import(".UIListView")
-local TabButtons = import('.TabButtons')
+local WidgetBackGroundTabButtons = import('..widget.WidgetBackGroundTabButtons')
+-- local TabButtons = import('.TabButtons')
 local GameUIBase = class('GameUIBase', function()
     return display.newLayer()
 end)
@@ -193,14 +194,7 @@ function GameUIBase:CreateShopButton(on_clicked)
             :align(display.CENTER, 40, 15)
 end
 function GameUIBase:CreateTabButtons(param, func)
-    return TabButtons.new(param,
-        {
-            gap = -4,
-            margin_left = -2,
-            margin_right = -2,
-            margin_up = -6,
-            margin_down = 1
-        },
+    return WidgetBackGroundTabButtons.new(param,
         func)
         :addTo(self)
 end

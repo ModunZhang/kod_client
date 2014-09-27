@@ -8,10 +8,11 @@ function WidgetTab:ctor(param, width, height)
     local png = param.tab
 
     self.back_ground = display.newLayer():addTo(self)
-    self.tab = cc.ui.UICheckBoxButton.new(param)
+    self.tab = cc.ui.UICheckBoxButton.new(param, {scale9 = true})
         :addTo(self.back_ground)
         :align(display.LEFT_BOTTOM)
         :setButtonSelected(self.pressed)
+        :setButtonSize(width, height)
     self.tab:setTouchEnabled(false)
 
     if png then
@@ -47,7 +48,11 @@ end
 function WidgetTab:IsPressed()
     return self.pressed
 end
-
+function WidgetTab:Size(width, height)
+    self.tab:setButtonSize(width, height)
+    self.back_ground:setContentSize(cc.size(width, height))
+    return self
+end
 function WidgetTab:align(anchorPoint, x, y)
     local size = self.back_ground:getContentSize()
     local point = display.ANCHOR_POINTS[anchorPoint]

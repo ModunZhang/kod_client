@@ -107,7 +107,7 @@ function GameUIBarracks:TabButtons()
         elseif tag == "specialRecruit" then
             self.recruit:setVisible(false)
         end
-    end):pos(window.cx, window.bottom + 40)
+    end):pos(window.cx, window.bottom + 34)
 end
 function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
     local rect = list_view:getViewRect()

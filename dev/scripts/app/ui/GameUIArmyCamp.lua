@@ -1,6 +1,7 @@
 
 local TabButtons = import('.TabButtons')
 local UIListView = import('.UIListView')
+local window = import('..utils.window')
 local WidgetSoldierDetails = import('..widget.WidgetSoldierDetails')
 local WidgetSoldierBox = import('..widget.WidgetSoldierBox')
 local GameUIArmyCamp = UIKit:createUIClass('GameUIArmyCamp',"GameUIUpgradeBuilding")
@@ -49,7 +50,7 @@ function GameUIArmyCamp:onEnter()
         else
             self.info_layer:setVisible(false)
         end
-    end):pos(display.cx, display.top - 920)
+    end):pos(window.cx, window.bottom + 34)
 
     self:CreateTopPart()
     self:CresteSoldiersListView()

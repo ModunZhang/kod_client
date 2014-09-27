@@ -74,7 +74,7 @@ function GameUITownHall:TabButtons()
         elseif tag == "administration" then
             self.list_view:setVisible(true)
         end
-    end):pos(window.cx, window.bottom + 40)
+    end):pos(window.cx, window.bottom + 34)
 end
 function GameUITownHall:CreateAdministration()
     local list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 100)
