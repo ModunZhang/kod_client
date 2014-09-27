@@ -2,6 +2,7 @@ local UIListView = import(".UIListView")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
 local UpgradeBuilding = import("..entity.UpgradeBuilding")
+local Localize = import("..utils.Localize")
 local window = import("..utils.window")
 
 local GameUIUnlockBuilding = class("GameUIUnlockBuilding", function ()
@@ -43,10 +44,14 @@ function GameUIUnlockBuilding:Init()
             self:removeFromParent(true)
         end):align(display.CENTER, bg:getContentSize().width-15, bg:getContentSize().height-5):addTo(bg,2):addChild(display.newSprite("X_3.png"))
     -- 建筑功能介绍
-    local building_introduces_bg = display.newSprite("upgrade_introduce_bg.png", display.cx, display.top-290):addTo(self)
-    self.building_image = display.newScale9Sprite(self.building:GetType()..".png", 0, 0):addTo(building_introduces_bg)
-    self.building_image:setAnchorPoint(cc.p(0,0))
-    self.building_image:setScale(164/self.building_image:getContentSize().height)
+    cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-250, display.top-265)
+        :addTo(self):setFlippedX(true)
+    cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-145, display.top-265)
+        :addTo(self)
+    -- local building_introduces_bg = display.newSprite("upgrade_introduce_bg.png", display.cx, display.top-290):addTo(self)
+    self.building_image = display.newScale9Sprite(self.building:GetType()..".png", display.cx-197, display.top-245):addTo(self)
+    self.building_image:setAnchorPoint(cc.p(0.5,0.5))
+    self.building_image:setScale(124/self.building_image:getContentSize().width)
     self:InitBuildingIntroduces()
 
     -- upgrade now button
@@ -126,36 +131,13 @@ function GameUIUnlockBuilding:InitBuildingIntroduces()
         size = 22,
         dimensions = cc.size(350, 90),
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER,display.cx-100, display.top-290):addTo(self)
+    }):align(display.LEFT_CENTER,display.cx-100, display.top-280):addTo(self)
     self:SetBuildingIntroduces()
 end
 
 function GameUIUnlockBuilding:SetBuildingIntroduces()
-    local building_introduces_table = {
-        ["toolShop"] = _("工具作坊提供常用材料的制作，升级能够提升每次制作的工具数量"),
-        ["materialDepot"] = _("材料库房能够存储各种材料，等级越高，每种材料的存放上限越高。"),
-        ["armyCamp"] = _("军帐提供出兵时的带兵上限，等级越高，每次出兵和防御时可派出的部队人口上限越大。"),
-        ["barracks"] = _("兵营提供军事单位的招募，将城民转换成各种作战单位。升级提升每次招募的最大数量。"),
-        ["blackSmith"] = _("铁匠铺打造和强化龙的装备。升级建筑提升装备打造速度。"),
-        ["foundry"] = _("铸造坊提升可建造的矿工小屋和铁矿生产效率。周围建立更多的矿工小屋，可获得额外的铁矿产量。"),
-        ["stoneMason"] = _("石匠作坊提升可建造的石匠小屋和石料的生产效率。周围建立更多的石匠小屋，可获得额外的石料产量。"),
-        ["lumbermill"] = _("锯木坊提升可建造的木工小屋和木材生产效率。周围建立更多的木工小屋，可获得额外的木材产量。"),
-        ["mill"] = _("磨坊提升可建造的农夫小屋和粮食生产效率。周围建立更多的农夫小屋，可获得额外的粮食产量。"),
-        ["hospital"] = _("医院提供治愈伤兵的功能，升级能够提升伤兵的最大容量。"),
-        ["townHall"] = _("市政厅提升可建造的住宅的数量，并提升城民的增长速度。周围建立更多的住宅，可获得额外的城民增长。"),
-        ["academy"] = _("学院提供的科技能够提升城市生产和防御能力，等级越过研发速度越快。"),
-        ["trainingGround"] = _("训练营提供步兵的相关科技，升级提升步兵招募速度。"),
-        ["hunterhall"] = _("猎手大厅提供猎手的相关科技，升级提升猎手招募速度。"),
-        ["stable"] = _("马厩提供骑兵的相关科技，升级提升骑兵的招募速度。"),
-        ["workshop"] = _("车间提供投石车的相关科技，升级提升投石车的招募速度。"),
-        ["prison"] = _("监狱有一定几率捕获来袭的敌军，升级能够提升关押敌军的时间。"),
-        ["tradeGuild"] = _("贸易行会提供玩家资源和材料的交易平台。消耗运输小车挂出自己的资源需求，升级提升运输小车总量和生产速度。"),
-    }
-    for k,v in pairs(building_introduces_table) do
-        if self.building:GetType()==k then
-            self.building_introduces:setString(v)
-        end
-    end
+    local bd = Localize.building_description
+    self.building_introduces:setString(bd[self.building:GetType()])
 end
 
 
@@ -240,6 +222,7 @@ function GameUIUnlockBuilding:SetUpgradeTime()
     self.upgrade_time:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradeTimeToNextLevel()))
 end
 return GameUIUnlockBuilding
+
 
 
 

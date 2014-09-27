@@ -6,7 +6,10 @@ local MaterialDepotUpgradeBuilding = class("MaterialDepotUpgradeBuilding", Upgra
 function MaterialDepotUpgradeBuilding:ctor(building_info)
     MaterialDepotUpgradeBuilding.super.ctor(self, building_info)
 end
-
+function MaterialDepotUpgradeBuilding:GetNextLevelMaxMaterial()
+    local level = self:GetNextLevel()
+    return config_function[level].maxMaterial
+end
 function MaterialDepotUpgradeBuilding:GetMaxMaterial()
     local level = self:GetLevel()
     return config_function[level].maxMaterial

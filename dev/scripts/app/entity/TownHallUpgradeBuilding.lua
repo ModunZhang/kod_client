@@ -135,6 +135,13 @@ function TownHallUpgradeBuilding:OnUserDataChanged(...)
     end
 end
 
+
+function TownHallUpgradeBuilding:GetNextLevelDwellingNum()
+    return config_function[self:GetNextLevel()].dwelling
+end
+function TownHallUpgradeBuilding:GetNextLevelTotalTax()
+    return config_function[self:GetNextLevel()].totalTax
+end
 return TownHallUpgradeBuilding
 
 
