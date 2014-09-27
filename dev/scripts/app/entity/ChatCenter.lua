@@ -55,6 +55,10 @@ function ChatCenter:getAllMessages(type,page)
 	return self:limitDataSource(data,s,e)
 end
 
+function ChatCenter:getAll(type)
+	return self._messageQueue_[type] or  {}
+end
+
 function ChatCenter:getSAndEWithPage(page)
 	return 1 + (page - 1) * MAX_MESSAGE_PER_PAGE,MAX_MESSAGE_PER_PAGE * page
 end
