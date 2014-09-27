@@ -26,15 +26,7 @@ function WidgetEventTabButtons:isTouchInViewRect(event)
 end
 local timer = app.timer
 function WidgetEventTabButtons:OnUpgradingBegin(building, current_time, city)
-    if self:IsShow() then
-        self:InsertItemWithAnimation(function()
-            local items = {}
-            table.insert(items, self:CreateItem()
-                :SetProgressInfo(self:BuildingDescribe(building))
-                :SetEventKey(building:UniqueKey()))
-            return items
-        end)
-    end
+    self:Switch()
 end
 function WidgetEventTabButtons:OnUpgrading(building, current_time, city)
     if self:IsShow() then
@@ -46,14 +38,7 @@ function WidgetEventTabButtons:OnUpgrading(building, current_time, city)
     end
 end
 function WidgetEventTabButtons:OnUpgradingFinished(building, current_time, city)
-    if self:IsShow() then
-        self:IteratorAllItem(function(i, v)
-            if v:GetEventKey() == building:UniqueKey() then
-                self:RemoveItemWithAnimation(i)
-                return true
-            end
-        end)
-    end
+    self:Switch()
 end
 
 ------
@@ -67,13 +52,32 @@ function WidgetEventTabButtons:ctor(city)
     self.back_ground = self:CreateBackGround():addTo(node)
     self:Reset()
     self:HighLightTab("build")
-    self:InitAnimation()
 
     self.city = city
     city:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
+
+
+    -- self:InitAnimation()
+    -- self.event_queue = {}
+    -- -- 事件队列
+    -- self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function()
+    --     local queue = self.event_queue
+    --     if #queue > 0 and not self:IsInAnimation() then
+    --         local func = queue[1]
+    --         func()
+    --         table.remove(queue, 1)
+    --     end
+    -- end)
+    -- self:scheduleUpdate()
 end
 function WidgetEventTabButtons:OnExit()
+    -- self.node:stopAllActions()
+    -- self.node:unscheduleUpdate()
+    -- self:unscheduleUpdate()
     city:RemoveListenerOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
+end
+function WidgetEventTabButtons:InsertEvent(func)
+    table.insert(self.event_queue, func)
 end
 -- 构造ui
 function WidgetEventTabButtons:CreateTabButtons()
@@ -145,7 +149,8 @@ function WidgetEventTabButtons:CreateProgressItem()
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xfff3c7)}))
         :onButtonClicked(function(event)
-            end)
+            self:RemoveItemWithAnimation(2)
+        end)
 
     cc.ui.UIImage.new("divide_line_489x2.png"):addTo(progress)
         :align(display.LEFT_BOTTOM, -4, -5)
@@ -192,7 +197,12 @@ function WidgetEventTabButtons:CreateOpenItem()
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xfff3c7)}))
         :onButtonClicked(function(event)
+            self:InsertItemWithAnimation(function()
+                local items = {}
+                table.insert(items, self:CreateItem())
+                return items
             end)
+        end)
 
     return node
 end
@@ -202,13 +212,15 @@ function WidgetEventTabButtons:Reset()
         v:removeFromParentAndCleanup(true)
     end
     self.item_array = {}
+    -- self.event_queue = {}
     self:ResizeBelowHorizon(0)
-    self.node:unscheduleUpdate()
+    -- self.node:unscheduleUpdate()
     self.node:stopAllActions()
     self:AdapterPosition()
     self:ResetPosition()
     self.arrow:flipY(true)
     self:Lock(false)
+    -- self.is_in_animation = false
 end
 function WidgetEventTabButtons:ResetItemPosition()
     for i, v in ipairs(self.item_array) do
@@ -216,28 +228,28 @@ function WidgetEventTabButtons:ResetItemPosition()
     end
 end
 function WidgetEventTabButtons:InitAnimation()
-    self.timer = 0
-    self.old_heigth = 0
-    self.diff_height = 0
-    local total_timer = 0.3
-    local width = self.back_ground:getContentSize().width
-    self.node:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
-        self.timer = self.timer + dt
-        if self.timer >= total_timer then
-            self.timer = total_timer
-            self:OnResizeEnd()
-        end
-        local current_height = self.old_heigth + self.diff_height * (self.timer / total_timer)
-        self.back_ground:setContentSize(cc.size(width, current_height))
+-- self.timer = 0
+-- self.old_heigth = 0
+-- self.diff_height = 0
+-- local total_timer = 0.3
+-- local width = self.back_ground:getContentSize().width
+-- self.node:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
+--     self.timer = self.timer + dt
+--     if self.timer >= total_timer then
+--         self.timer = total_timer
+--         self:OnResizeEnd()
+--     end
+--     local current_height = self.old_heigth + self.diff_height * (self.timer / total_timer)
+--     self.back_ground:setContentSize(cc.size(width, current_height))
 
-        if self:IsShow() then
-            self.tab_buttons:setPositionY(current_height)
-        end
-    end)
+--     if self:IsShow() then
+--         self.tab_buttons:setPositionY(current_height)
+--     end
+-- end)
 end
-function WidgetEventTabButtons:IsInAnimation()
-    return self.timer > 0 or self.node:getNumberOfRunningActions() > 0
-end
+-- function WidgetEventTabButtons:IsInAnimation()
+--     return self.node:getNumberOfRunningActions() > 0
+-- end
 
 
 -- 操作
@@ -248,38 +260,48 @@ function WidgetEventTabButtons:IteratorAllItem(func)
         end
     end
 end
-function WidgetEventTabButtons:GetItem(pos)
-    return self.item_array[pos]
-end
-function WidgetEventTabButtons:InsertItemWithAnimation(get_item_func, pos)
-    self:ResizeOnHorizonWithAnimation(self:Length(#self.item_array + 1), function()
-        local items = get_item_func()
-        local count = #items
-        for i = #items, 1, -1 do
-            self:InsertItem(items[i], pos)
-        end
-    end)
-end
+-- function WidgetEventTabButtons:GetItem(pos)
+--     return self.item_array[pos]
+-- end
+-- function WidgetEventTabButtons:InsertItemWithAnimation(get_item_func, pos)
+--     self:ResizeOnHorizonWithAnimation(self:Length(#self.item_array + 1), function()
+--         local items = get_item_func()
+--         local count = #items
+--         for i = #items, 1, -1 do
+--             self:InsertItem(items[i], pos)
+--         end
+--     end)
+-- end
 function WidgetEventTabButtons:InsertItem(item, pos)
+    if type(item) == "table" then
+        local count = #item
+        for i = count, 1, -1 do
+            self:InsertItem_(item[i], pos)
+        end
+    else
+        self:InsertItem_(item, pos)
+    end
+    self:ResetItemPosition()
+end
+function WidgetEventTabButtons:InsertItem_(item, pos)
     item:addTo(self.back_ground, 2)
     if pos then
         table.insert(self.item_array, pos, item)
     else
         table.insert(self.item_array, item)
     end
-    self:ResetItemPosition()
 end
-function WidgetEventTabButtons:RemoveItemWithAnimation(pos)
-    self:RemoveItem(pos)
-    self:ResizeOnHorizonWithAnimation(self:Length(#self.item_array))
-end
-function WidgetEventTabButtons:RemoveItem(pos)
-    if pos then
-        self.item_array[pos]:removeFromParentAndCleanup(true)
-        table.remove(self.item_array, pos)
-    end
-    self:ResetItemPosition()
-end
+-- function WidgetEventTabButtons:RemoveItemWithAnimation(pos)
+--     self:RemoveItem(pos)
+--     self:ResizeOnHorizonWithAnimation(self:Length(#self.item_array))
+-- end
+-- function WidgetEventTabButtons:RemoveItem(pos)
+--     if pos then
+--         self.item_array[pos]:removeFromParentAndCleanup(true)
+--         table.remove(self.item_array, pos)
+--     end
+--     self:ResetItemPosition()
+-- end
 
 
 
@@ -331,31 +353,33 @@ end
 function WidgetEventTabButtons:IsHide()
     return self.arrow:isFlippedY()
 end
-function WidgetEventTabButtons:ResizeOnHorizonWithAnimation(new_height, callback)
-    local height = new_height < 50 and 50 or new_height
-    self.timer = 0
-    self.old_heigth = self.back_ground:getContentSize().height
-    self.diff_height = height - self.old_heigth
-    self.node:unscheduleUpdate()
-    self.node:scheduleUpdate()
-    self:Lock(true)
-    self.callback = callback
-end
-function WidgetEventTabButtons:OnResizeEnd()
-    self.node:unscheduleUpdate()
-    self:Lock(false)
-    if self.callback then
-        self:callback()
-        self.callback = nil
-    end
-end
+-- function WidgetEventTabButtons:ResizeOnHorizonWithAnimation(new_height, callback)
+--     local height = new_height < 50 and 50 or new_height
+--     self.timer = 0
+--     self.old_heigth = self.back_ground:getContentSize().height
+--     self.diff_height = height - self.old_heigth
+--     self.node:unscheduleUpdate()
+--     self.node:scheduleUpdate()
+--     self:Lock(true)
+--     self.is_in_animation = true
+--     self.callback = callback
+-- end
+-- function WidgetEventTabButtons:OnResizeEnd()
+--     self.node:unscheduleUpdate()
+--     self:Lock(false)
+--     self.is_in_animation = false
+--     if self.callback then
+--         self:callback()
+--         self.callback = nil
+--     end
+-- end
 function WidgetEventTabButtons:ResizeBelowHorizon(new_height)
     local height = new_height < 50 and 50 or new_height
     local size = self.back_ground:getContentSize()
     self.back_ground:setContentSize(cc.size(size.width, height))
     self.node:setPositionY(- height)
     self.tab_buttons:setPositionY(height)
-    self:OnResizeEnd()
+    -- self:OnResizeEnd()
 end
 function WidgetEventTabButtons:Length(array_len)
     return array_len * 50
@@ -375,7 +399,7 @@ function WidgetEventTabButtons:Show()
         self:Lock(true)
         self:Reload()
         transition.moveTo(self.node,
-            {x = 0, y = 0, time = 0.3,
+            {x = 0, y = 0, time = 0.15,
                 easing = "sineIn",
                 onComplete = function()
                     self:OnShowEnd()
@@ -395,7 +419,7 @@ function WidgetEventTabButtons:HideWithCallback(callback)
     self.node:stopAllActions()
     self:Lock(true)
     transition.moveTo(self.node,
-        {x = 0, y = -self.back_ground:getContentSize().height, time = 0.3,
+        {x = 0, y = -self.back_ground:getContentSize().height, time = 0.15,
             easing = "sineIn",
             onComplete = function()
                 self:OnHideEnd()
@@ -432,29 +456,44 @@ function WidgetEventTabButtons:Load()
             if k == "build" then
                 self:InsertItem(self:CreateBottom())
                 local buildings = self.city:GetOnUpgradingBuildings()
-                self:InsertItemWithAnimation(function()
-                    local items = {}
-                    for i, v in ipairs(self.city:GetOnUpgradingBuildings()) do
-                        table.insert(items, self:CreateItem()
-                            :SetProgressInfo(self:BuildingDescribe(v))
-                            :SetEventKey(v:UniqueKey()))
-                    end
-                    return items
-                end)
-                self:ResizeBelowHorizon(self:Length(#self.item_array + #buildings))
+                local items = {}
+                for i, v in ipairs(buildings) do
+                    table.insert(items, self:CreateItem()
+                        :SetProgressInfo(self:BuildingDescribe(v))
+                        :SetEventKey(v:UniqueKey()))
+                end
+                self:InsertItem(items)
+                self:ResizeBelowHorizon(self:Length(#self.item_array))
+
+                -- local buildings = self.city:GetOnUpgradingBuildings()
+                -- self:InsertItemWithAnimation(function()
+                --     local items = {}
+                --     for i, v in ipairs(self.city:GetOnUpgradingBuildings()) do
+                --         table.insert(items, self:CreateItem()
+                --             :SetProgressInfo(self:BuildingDescribe(v))
+                --             :SetEventKey(v:UniqueKey()))
+                --     end
+                --     return items
+                -- end)
+                -- self:ResizeBelowHorizon(self:Length(#self.item_array + #buildings))
             end
             return
         end
     end
 end
-
-
 function WidgetEventTabButtons:BuildingDescribe(building)
+    local upgrade_info
+    if iskindof(building, "ResourceUpgradeBuilding") and building:IsBuilding() then
+        upgrade_info = string.format("%s", _("建造"))
+    elseif building:IsUnlocking() then
+        upgrade_info = string.format("%s", _("解锁"))
+    else
+        upgrade_info = string.format("%s %d", _("升级到"), building:GetLevel())
+    end
     local time = timer:GetServerTime()
-    local str = string.format("%s (%s%d) %s",
+    local str = string.format("%s (%s) %s",
         Localize.building_name[building:GetType()],
-        _("等级"),
-        building:GetLevel(),
+        upgrade_info,
         GameUtils:formatTimeStyle1(building:GetUpgradingLeftTimeByCurrentTime(time)))
     local percent = building:GetUpgradingPercentByCurrentTime(time)
     return str, percent
@@ -462,6 +501,12 @@ end
 
 
 return WidgetEventTabButtons
+
+
+
+
+
+
 
 
 
