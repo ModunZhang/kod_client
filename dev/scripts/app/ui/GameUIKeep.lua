@@ -28,7 +28,7 @@ function GameUIKeep:onEnter()
         else
             self.info_layer:setVisible(false)
         end
-    end):pos(display.cx, display.bottom + 40)
+    end):pos(display.cx, display.top -920)
     self:CreateCanBeUnlockedBuildingBG()
     self:CreateCanBeUnlockedBuildingListView()
     self:CreateCityBasicInfo()
@@ -136,7 +136,7 @@ end
 
 function GameUIKeep:CreateCanBeUnlockedBuildingBG()
     -- 主背景
-    self.main_building_listview_bg = display.newScale9Sprite("keep_unlock_building_listview_bg.png", display.cx, display.bottom+116, cc.size(549, display.height-409))
+    self.main_building_listview_bg = display.newScale9Sprite("keep_unlock_building_listview_bg.png", display.cx, display.top-844, cc.size(549, 551))
         :addTo(self.info_layer)
     self.main_building_listview_bg:setAnchorPoint(cc.p(0.5,0))
     -- title 背景
@@ -159,7 +159,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingBG()
         font = UIKit:getFontFilePath(),
         size = 18,
         color = UIKit:hex2c3b(0x403c2f)})
-        :align(display.CENTER, display.cx,display.bottom+90)
+        :align(display.CENTER, display.cx,display.top-870)
         :addTo(self.info_layer)
 end
 
@@ -189,7 +189,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
     self.building_listview = cc.ui.UIListView.new{
         -- bg = "common_tips_bg.png",
         bgScale9 = true,
-        viewRect = cc.rect(display.cx-273, display.bottom+118, 545, display.height-460),
+        viewRect = cc.rect(display.cx-273, display.top-842, 545, 500),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
         :addTo(self.info_layer)
     local allBuildings = City:GetAllBuildings()

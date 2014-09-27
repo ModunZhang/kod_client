@@ -1,6 +1,8 @@
 local SmallDialogUI = import(".SmallDialogUI")
 local UIListView = import(".UIListView")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
+local Localize = import("..utils.Localize")
+local window = import("..utils.window")
 local UpgradeBuilding = import("..entity.UpgradeBuilding")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
 
@@ -73,54 +75,64 @@ end
 
 function CommonUpgradeUI:InitCommonPart()
     -- building level
-    local level_bg = display.newSprite("upgrade_level_bg.png", display.cx, display.top-125):addTo(self)
+    local level_bg = display.newSprite("upgrade_level_bg.png", display.cx+80, display.top-125):addTo(self)
     self.builging_level = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
         size = 26,
         color = UIKit:hex2c3b(0xffedae)
-    }):align(display.RIGHT_BOTTOM, 540, 0)
+    }):align(display.LEFT_BOTTOM, 20, 8)
         :addTo(level_bg)
-    self:SetBuildingLevel()
     -- 建筑功能介绍
-    local building_introduces_bg = display.newSprite("upgrade_introduce_bg.png", display.cx, display.top-190):addTo(self)
-    self.building_image = display.newScale9Sprite(self.building:GetType()..".png", 0, 0):addTo(building_introduces_bg)
-    self.building_image:setAnchorPoint(cc.p(0,0))
-    self.building_image:setScale(164/self.building_image:getContentSize().height)
+    -- 建筑图片 放置区域左右边框
+    cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-250, display.top-175)
+        :addTo(self):setFlippedX(true)
+    cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-145, display.top-175)
+        :addTo(self)
+
+    self.building_image = display.newScale9Sprite(self.building:GetType()..".png", 0, 0):addTo(self):pos(display.cx-196, display.top-158)
+    self.building_image:setAnchorPoint(cc.p(0.5,0.5))
+    self.building_image:setScale(124/self.building_image:getContentSize().width)
     self:InitBuildingIntroduces()
     --升级奖励部分
     -- title
-    cc.ui.UIImage.new("upgrade_decoration.png"):align(display.CENTER, display.cx-145, display.top-260):addTo(self):setFlippedX(true)
-    cc.ui.UIImage.new("upgrade_decoration.png"):align(display.CENTER, display.cx+145, display.top-260):addTo(self)
-    cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("升级奖励"),
-        font = UIKit:getFontFilePath(),
-        size = 24,
-        color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.CENTER, display.cx, display.top-260)
-        :addTo(self)
+    -- cc.ui.UIImage.new("upgrade_decoration.png"):align(display.CENTER, display.cx-145, display.top-260):addTo(self):setFlippedX(true)
+    -- cc.ui.UIImage.new("upgrade_decoration.png"):align(display.CENTER, display.cx+145, display.top-260):addTo(self)
+    -- cc.ui.UILabel.new({
+    --     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+    --     text = _("升级奖励"),
+    --     font = UIKit:getFontFilePath(),
+    --     size = 24,
+    --     color = UIKit:hex2c3b(0x403c2f)
+    -- }):align(display.CENTER, display.cx, display.top-260)
+    --     :addTo(self)
     -- reward list bg
-    display.newScale9Sprite("upgrade_introduce_bg.png", display.cx, display.top-330, cc.size(549,100)):addTo(self)
-    self:SetUpgradeReward()
+    -- display.newScale9Sprite("upgrade_introduce_bg.png", display.cx, display.top-330, cc.size(549,100)):addTo(self)
+    -- self:SetUpgradeReward()
+    self:InitNextLevelEfficiency()
+    self:SetBuildingLevel()
 end
 
 function CommonUpgradeUI:SetBuildingLevel()
     self.builging_level:setString(_("等级 ")..self.building:GetLevel())
+    self.next_level:setString(_("下一级 ")..self.building:GetLevel()+1)
 end
 
 function CommonUpgradeUI:InitBuildingIntroduces()
     self.building_introduces = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
-        size = 22,
-        dimensions = cc.size(400, 90),
-        color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER,display.cx-100, display.top-190):addTo(self)
+        size = 18,
+        dimensions = cc.size(380, 90),
+        color = UIKit:hex2c3b(0x797154)
+    }):align(display.LEFT_CENTER,display.cx-110, display.top-190):addTo(self)
     self:SetBuildingIntroduces()
 end
-
 function CommonUpgradeUI:SetBuildingIntroduces()
+    local bd = Localize.building_description
+    self.building_introduces:setString(bd[self.building:GetType()])
+end
+function CommonUpgradeUI:SetBuildingIntroduces_()
     local building_introduces_table = {
         ["keep"] = _("提升建筑等级上限\n可解锁地块数量:%d"),
         ["watchTower"] ={
@@ -195,67 +207,106 @@ function CommonUpgradeUI:SetBuildingIntroduces()
     end
 end
 
--- set upgrade reward
-function CommonUpgradeUI:SetUpgradeReward()
-    -- TODO 暂时模拟升级奖励类型和数据
-    local reward_table = {
-        {reward_type = "surface",icon="upgrade_surface.png",value="X 100"},
-        {reward_type = "exp",icon="upgrade_experience_icon.png",value="X 10000"},
-        {reward_type = "power",icon="upgrade_power_icon.png",value="X 1000000"},
-    }
-    local reward_listview_width ,reward_listview_height= 544,95
-    local item_icon_height = 62
-    local reward_listview = cc.ui.UIListView.new{
-        -- bg = "common_tips_bg.png",
-        bgScale9 = true,
-        viewRect = cc.rect(display.cx - 272, display.top-378, reward_listview_width, reward_listview_height),
-        direction = cc.ui.UIScrollView.DIRECTION_HORIZONTAL}
-        :addTo(self)
-    local function createItem(icon,value)
-        local item = reward_listview:newItem()
-        local content = cc.ui.UIGroup.new()
-        local item_icon = display.newSprite(icon):align(display.CENTER, 0, 10)
-        item_icon:setScale(item_icon_height/item_icon:getContentSize().height)
-        item_icon:addTo(content)
-        local num_label = cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = value,
-            font = UIKit:getFontFilePath(),
-            size = 20,
-            color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.CENTER,0,-item_icon_height/2):addTo(content)
-        local content_width = math.max(num_label:getContentSize().width,item_icon:getContentSize().width*item_icon_height/item_icon:getContentSize().height)
-        item:setItemSize(content_width,num_label:getContentSize().height+item_icon_height+10)
-        item:addContent(content)
+function CommonUpgradeUI:InitNextLevelEfficiency()
+    -- 下一级 框
+    local bg  = display.newSprite("upgrade_next_level_bg.png", window.left+110, window.top-320):addTo(self)
+    local bg_size = bg:getContentSize()
+    self.next_level = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        font = UIKit:getFontFilePath(),
+        size = 20,
+        color = UIKit:hex2c3b(0x403c2f)
+    }):align(display.CENTER,bg_size.width/2,bg_size.height/2):addTo(bg)
 
-        return item
-    end
-    local created_item_table = {}
-    local used_width = 0
-    for k,v in pairs(reward_table) do
-        local item = createItem(v.icon,v.value)
-        created_item_table[k] = item
-        local item_width = item:getItemSize()
-        used_width = used_width + item_width
-    end
-    -- 计算出合理的各个item之间的间距，再添加进listview
-    local usable_width = reward_listview_width - used_width
-    for k,v in pairs(created_item_table) do
-        local item_width,item_height = v:getItemSize()
-        v:setItemSize(item_width+usable_width/#created_item_table,item_height)
-        reward_listview:addItem(v)
-    end
-
-    reward_listview:reload()
-
+    local efficiency_bg = display.newSprite("back_ground_398x97.png", window.cx+70, window.top-320):addTo(self)
+    local efficiency_bg_size = efficiency_bg:getContentSize()
+    self.efficiency = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        font = UIKit:getFontFilePath(),
+        size = 20,
+        dimensions = cc.size(380,90),
+        color = UIKit:hex2c3b(0x403c2f)
+    }):align(display.CENTER,efficiency_bg_size.width/2+10,efficiency_bg_size.height/2):addTo(efficiency_bg)
+    self:SetUpgradeEfficiency()
 end
+
+function CommonUpgradeUI:SetUpgradeEfficiency()
+    local bd = Localize.building_description
+    local building = self.building
+    local efficiency
+    if self.building:GetType()=="keep" then
+        efficiency = string.format("%s%d,%s%d,%s+%d",bd.unlock,building:GetNextLevelUnlockPoint(),bd.troopPopulation,building:GetNextLevelTroopPopulation(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="dragonEyrie" then
+        efficiency = string.format("%s%d,%s+%d",bd.vitalityRecoveryPerHour,building:GetNextLevelVitalityRecoveryPerHour(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="warehouse" then
+        efficiency = string.format("%s%d,%s+%d",bd.warehouse_max,building:GetResourceNextLevelValueLimit(),bd.power,building:GetNextLevelPower())
+    else
+        efficiency = (_("本地化未添加"))
+    end
+    self.efficiency:setString(efficiency)
+end
+
+-- set upgrade reward
+-- function CommonUpgradeUI:SetUpgradeReward()
+--     -- TODO 暂时模拟升级奖励类型和数据
+--     local reward_table = {
+--         {reward_type = "surface",icon="upgrade_surface.png",value="X 100"},
+--         {reward_type = "exp",icon="upgrade_experience_icon.png",value="X 10000"},
+--         {reward_type = "power",icon="upgrade_power_icon.png",value="X 1000000"},
+--     }
+--     local reward_listview_width ,reward_listview_height= 544,95
+--     local item_icon_height = 62
+--     local reward_listview = cc.ui.UIListView.new{
+--         -- bg = "common_tips_bg.png",
+--         bgScale9 = true,
+--         viewRect = cc.rect(display.cx - 272, display.top-378, reward_listview_width, reward_listview_height),
+--         direction = cc.ui.UIScrollView.DIRECTION_HORIZONTAL}
+--         :addTo(self)
+--     local function createItem(icon,value)
+--         local item = reward_listview:newItem()
+--         local content = cc.ui.UIGroup.new()
+--         local item_icon = display.newSprite(icon):align(display.CENTER, 0, 10)
+--         item_icon:setScale(item_icon_height/item_icon:getContentSize().height)
+--         item_icon:addTo(content)
+--         local num_label = cc.ui.UILabel.new({
+--             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+--             text = value,
+--             font = UIKit:getFontFilePath(),
+--             size = 20,
+--             color = UIKit:hex2c3b(0x403c2f)
+--         }):align(display.CENTER,0,-item_icon_height/2):addTo(content)
+--         local content_width = math.max(num_label:getContentSize().width,item_icon:getContentSize().width*item_icon_height/item_icon:getContentSize().height)
+--         item:setItemSize(content_width,num_label:getContentSize().height+item_icon_height+10)
+--         item:addContent(content)
+
+--         return item
+--     end
+--     local created_item_table = {}
+--     local used_width = 0
+--     for k,v in pairs(reward_table) do
+--         local item = createItem(v.icon,v.value)
+--         created_item_table[k] = item
+--         local item_width = item:getItemSize()
+--         used_width = used_width + item_width
+--     end
+--     -- 计算出合理的各个item之间的间距，再添加进listview
+--     local usable_width = reward_listview_width - used_width
+--     for k,v in pairs(created_item_table) do
+--         local item_width,item_height = v:getItemSize()
+--         v:setItemSize(item_width+usable_width/#created_item_table,item_height)
+--         reward_listview:addItem(v)
+--     end
+
+--     reward_listview:reload()
+
+-- end
 
 function CommonUpgradeUI:InitUpgradePart()
     -- 升级页
     -- local color_layer = display.newColorLayer(cc.c4b(255,0,0,255)):addTo(self)
     -- color_layer:setContentSize(cc.size(display.width,display.height-385))
     self.upgrade_layer = display.newLayer()
-    self.upgrade_layer:setContentSize(cc.size(display.width,display.height-385))
+    self.upgrade_layer:setContentSize(cc.size(display.width,575))
     self:addChild(self.upgrade_layer)
     -- upgrade now button
     cc.ui.UIPushButton.new({normal = "upgrade_green_button_normal.png",pressed = "upgrade_green_button_pressed.png"})
@@ -388,16 +439,16 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
     if not self.requirement_listview then
         self.requirement_listview = WidgetRequirementListview.new({
             title = _("升级需求"),
-            height = 333,
+            height = 298,
             contents = requirements,
-        }):addTo(self.upgrade_layer):pos(display.cx-275, display.top-855)
+        }):addTo(self.upgrade_layer):pos(display.cx-275, display.top-866)
     end
     self.requirement_listview:RefreshListView(requirements)
 end
 
 function CommonUpgradeUI:InitAccelerationPart()
     self.acc_layer = display.newLayer()
-    self.acc_layer:setContentSize(cc.size(display.width,display.height-385))
+    self.acc_layer:setContentSize(cc.size(display.width,575))
     self:addChild(self.acc_layer)
 
     -- 正在升级文本说明
@@ -407,11 +458,11 @@ function CommonUpgradeUI:InitAccelerationPart()
         font = UIKit:getFontFilePath(),
         size = 22,
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER, display.cx - 275, display.cy+70)
+    }):align(display.LEFT_CENTER, display.cx - 275, display.top - 410)
         :addTo(self.acc_layer)
     -- 升级倒数时间进度条
     --进度条
-    local bar = display.newSprite("upgrade_progress_bar_1.png"):addTo(self.acc_layer):pos(display.cx-90, display.cy+20)
+    local bar = display.newSprite("upgrade_progress_bar_1.png"):addTo(self.acc_layer):pos(display.cx-90, display.top - 460)
     local progressFill = display.newSprite("upgrade_progress_bar_2.png")
     self.acc_layer.ProgressTimer = cc.ProgressTimer:create(progressFill)
     local pro = self.acc_layer.ProgressTimer
@@ -435,20 +486,20 @@ function CommonUpgradeUI:InitAccelerationPart()
     end
 
     -- 进度条头图标
-    display.newSprite("upgrade_progress_bar_icon_bg.png", display.cx - 256, display.cy+20):addTo(self.acc_layer)
-    display.newSprite("upgrade_hourglass.png", display.cx - 256, display.cy+20):addTo(self.acc_layer):setScale(0.8)
+    display.newSprite("upgrade_progress_bar_icon_bg.png", display.cx - 256, display.top - 460):addTo(self.acc_layer)
+    display.newSprite("upgrade_hourglass.png", display.cx - 256, display.top - 460):addTo(self.acc_layer):setScale(0.8)
     -- 免费加速按钮
     self:CreateFreeSpeedUpBuildingUpgradeButton()
     -- 可免费加速提示
     -- 背景框
-    display.newSprite("upgrade_introduce_bg.png", display.cx, display.cy-60):addTo(self.acc_layer)
+    display.newSprite("upgrade_introduce_bg.png", display.cx, display.top - 540):addTo(self.acc_layer)
     self.acc_tip_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
         size = 20,
         dimensions = cc.size(530, 80),
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER, display.cx - 270, display.cy-60)
+    }):align(display.LEFT_CENTER, display.cx - 270, display.top - 540)
         :addTo(self.acc_layer)
     self:SetAccTipLabel()
     -- 按时间加速区域
@@ -480,7 +531,7 @@ function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
         -- print("服务器还未提供免费加速接口，暂时用作直接使用宝石加速")
         NetManager:sendMsg("keep 5", NOT_HANDLE)
 
-        end):align(display.CENTER, display.cx+185, display.cy+45):addTo(self.acc_layer)
+        end):align(display.CENTER, display.cx+185, display.top - 435):addTo(self.acc_layer)
     self.acc_layer.acc_button:setButtonEnabled(false)
 end
 
@@ -505,9 +556,9 @@ function CommonUpgradeUI:CreateAccButtons()
     self.time_button_tbale = {}
     for i=1,8 do
         -- 按钮背景框
-        display.newSprite("upgrade_props_box.png", display.cx-220 + gap_x*math.mod(i,4), display.cy-160-gap_y*math.floor((i-1)/4)):addTo(self.acc_layer)
+        display.newSprite("upgrade_props_box.png", display.cx-220 + gap_x*math.mod(i,4), display.top-640-gap_y*math.floor((i-1)/4)):addTo(self.acc_layer)
         -- 花销数值背景
-        local cost_bg = display.newSprite("upgrade_number.png", display.cx-220 + gap_x*math.mod(i,4), display.cy-230-gap_y*math.floor((i-1)/4)):addTo(self.acc_layer)
+        local cost_bg = display.newSprite("upgrade_number.png", display.cx-220 + gap_x*math.mod(i,4), display.top-710-gap_y*math.floor((i-1)/4)):addTo(self.acc_layer)
         -- 花销数值
         cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -515,7 +566,7 @@ function CommonUpgradeUI:CreateAccButtons()
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.CENTER, display.cx-220+gap_x*math.mod(i,4), display.cy-230-gap_y*math.floor((i-1)/4))
+        }):align(display.CENTER, display.cx-220+gap_x*math.mod(i,4), display.top-710-gap_y*math.floor((i-1)/4))
             :addTo(self.acc_layer)
         -- 时间按钮
         local time_button = cc.ui.UIPushButton.new({normal = "upgrade_time_"..i..".png"})
@@ -542,7 +593,7 @@ function CommonUpgradeUI:CreateAccButtons()
                     }
                 ),2)
             end
-        end):align(display.CENTER, display.cx-220+gap_x*math.mod(i,4), display.cy-160-gap_y*math.floor((i-1)/4)):addTo(self.acc_button_layer)
+        end):align(display.CENTER, display.cx-220+gap_x*math.mod(i,4), display.top-640-gap_y*math.floor((i-1)/4)):addTo(self.acc_button_layer)
         time_button:setScale(0.7)
         acc_button:onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
@@ -552,7 +603,7 @@ function CommonUpgradeUI:CreateAccButtons()
 
                 -- print("确定按钮呗点中")
             end
-        end):align(display.CENTER, display.cx-220+gap_x*math.mod(i,4), display.cy-160-gap_y*math.floor((i-1)/4)):addTo(self.acc_button_layer)
+        end):align(display.CENTER, display.cx-220+gap_x*math.mod(i,4), display.top-640-gap_y*math.floor((i-1)/4)):addTo(self.acc_button_layer)
         acc_button:setVisible(false)
         self.acc_button_table[i] = acc_button
         self.time_button_tbale[i] = time_button
@@ -616,3 +667,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
+
+

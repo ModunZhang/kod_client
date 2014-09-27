@@ -22,6 +22,22 @@ function KeepUpgradeBuilding:GetUnlockPoint()
     return config_function[level].unlock
 end
 
+--派兵上限
+function KeepUpgradeBuilding:GetTroopPopulation()
+    local level = self:GetLevel()
+    return config_function[level].troopPopulation
+end
+
+function KeepUpgradeBuilding:GetNextLevelUnlockPoint()
+    local level = self:GetLevel()
+    return config_function[level+1].unlock
+end
+
+function KeepUpgradeBuilding:GetNextLevelTroopPopulation()
+    local level = self:GetLevel()
+    return config_function[level+1].troopPopulation
+end
+
 return KeepUpgradeBuilding
 
 
