@@ -132,6 +132,10 @@ function ToolShopUpgradeBuilding:GetNeedByCategory(category)
     end
     return config["poduction"], unpack(need)
 end
+function ToolShopUpgradeBuilding:GetNextLevelPoducttion()
+    local config = config_function[self:GetNextLevel()]
+    return config["poduction"]
+end
 
 function ToolShopUpgradeBuilding:OnTimer(current_time)
     for _, event in pairs(self.category) do
