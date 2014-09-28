@@ -11,7 +11,6 @@ end
 
 
 function GameUICommonTips:onEnter()
-	GameUICommonTips.super.onEnter(self)
 	self:createUI()
 	self:setTouchEnabled(true)
 	self:setTouchSwallowEnabled(true)
