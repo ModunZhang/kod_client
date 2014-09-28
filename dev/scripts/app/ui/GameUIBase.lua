@@ -52,7 +52,8 @@ end
 
 
 function GameUIBase:onCleanup()
-    print("onCleanup->")
+    print("onCleanup->",self.__cname)
+    UIKit:getRegistry().removeObject(self.__cname)
     -- app:lockInput(false)
 end
 
