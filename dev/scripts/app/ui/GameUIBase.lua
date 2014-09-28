@@ -4,23 +4,31 @@
 -- GameUIBase is a CCLayer
 local window = import("..utils.window")
 local UIListView = import(".UIListView")
-local TabButtons = import('.TabButtons')
+local WidgetBackGroundTabButtons = import('..widget.WidgetBackGroundTabButtons')
+-- local TabButtons = import('.TabButtons')
 local GameUIBase = class('GameUIBase', function()
     return display.newLayer()
 end)
 
 function GameUIBase:ctor()
-    app:lockInput(true)
+    -- app:lockInput(true)
     self:setNodeEventEnabled(true)
     return true
 end
 
-
+local visible_count = 1
 -- Node Event
 --------------------------------------
 function GameUIBase:onEnter()
     print("onEnter->")
-    app:lockInput(false)
+    -- app:lockInput(false)
+    if home_page then
+        print(visible_count)
+        visible_count = visible_count - 1
+        if visible_count == 0 then
+            home_page.bottom:setVisible(false)
+        end
+    end
 end
 
 function GameUIBase:onEnterTransitionFinish()
@@ -33,13 +41,20 @@ end
 
 function GameUIBase:onExit()
     print("onExit--->")
-    app:lockInput(false)
+    -- app:lockInput(false)
+    if home_page then
+        visible_count = visible_count + 1
+        if visible_count > 0 then
+            home_page.bottom:setVisible(true)
+        end
+    end
 end
 
 
 function GameUIBase:onCleanup()
-    print("onCleanup->")
-    app:lockInput(false)
+    print("onCleanup->",self.__cname)
+    UIKit:getRegistry().removeObject(self.__cname)
+    -- app:lockInput(false)
 end
 
 
@@ -49,7 +64,7 @@ function GameUIBase:rightButtonClicked()
 end
 
 function GameUIBase:onMovieInStage()
-    app:lockInput(false)
+    -- app:lockInput(false)
 end
 
 function GameUIBase:onMovieOutStage()
@@ -65,7 +80,8 @@ function GameUIBase:leftButtonClicked()
         if self.moveInAnima then
             self:UIAnimationMoveOut()
         else
-            self:removeFromParent(true) -- 没有动画就直接删除
+            -- self:removeFromParent(true) -- 没有动画就直接删除
+            self:onMovieOutStage()
         end
     end
 end
@@ -91,7 +107,7 @@ end
 
 -- ui入场动画
 function GameUIBase:UIAnimationMoveIn()
-    app:lockInput(true)
+    -- app:lockInput(true)
     self:pos(0,-self:getContentSize().height)
     transition.execute(self, cc.MoveTo:create(0.5, cc.p(0, 0)),
         {
@@ -105,12 +121,12 @@ end
 -- ui 出场动画
 function GameUIBase:UIAnimationMoveOut()
     print("UIAnimationMoveOut->",self,tolua.type(self))
-    app:lockInput(true)
+    -- app:lockInput(true)
     transition.execute(self, cc.MoveTo:create(0.5, cc.p(0, -self:getContentSize().height)),
         {
             easing = "sineIn",
             onComplete = function()
-                app:lockInput(false)
+                -- app:lockInput(false)
                 self:onMovieOutStage()
             end
         })
@@ -185,22 +201,15 @@ function GameUIBase:CreateShopButton(on_clicked)
     local gem_num_bg = cc.ui.UIImage.new("gem_num_bg.png"):addTo(gem_button):pos(-85, -85)
     local pos = gem_num_bg:getAnchorPointInPoints()
     return ui.newTTFLabel({
-            text = ""..City.resource_manager:GetGemResource():GetValue(),
-            font = UIKit:getFontFilePath(),
-            size = 14,
-            color = UIKit:hex2c3b(0xfdfac2)})
-            :addTo(gem_num_bg)
-            :align(display.CENTER, 40, 15)
+        text = ""..City.resource_manager:GetGemResource():GetValue(),
+        font = UIKit:getFontFilePath(),
+        size = 14,
+        color = UIKit:hex2c3b(0xfdfac2)})
+        :addTo(gem_num_bg)
+        :align(display.CENTER, 40, 15)
 end
 function GameUIBase:CreateTabButtons(param, func)
-    return TabButtons.new(param,
-        {
-            gap = -4,
-            margin_left = -2,
-            margin_right = -2,
-            margin_up = -6,
-            margin_down = 1
-        },
+    return WidgetBackGroundTabButtons.new(param,
         func)
         :addTo(self)
 end
@@ -219,6 +228,8 @@ end
 
 
 return GameUIBase
+
+
 
 
 

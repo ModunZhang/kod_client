@@ -1,3 +1,4 @@
+local window = import('..utils.window')
 local TabButtons = import('.TabButtons')
 local UIListView = import('.UIListView')
 local WidgetSoldierDetails = import('..widget.WidgetSoldierDetails')
@@ -50,7 +51,7 @@ function GameUIPResourceBuilding:onEnter()
         else
             self.info_layer:setVisible(false)
         end
-    end):pos(display.cx, display.top - 920)
+    end):pos(window.cx, window.bottom + 34)
     self:ProduceIncreasePart()
     self:RebuildPart()
 end

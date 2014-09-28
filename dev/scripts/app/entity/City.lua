@@ -112,6 +112,28 @@ end
 function City:GetDwellingCounts()
     return self.dwelling_count_max - #self:GetBuildingByType("dwelling")
 end
+function City:GetOnUpgradingBuildings()
+    local builds = {}
+    self:IteratorCanUpgradeBuildings(function(building)
+        if building:IsUpgrading() then
+            table.insert(builds, building)
+        end
+    end)
+    table.sort(builds, function(a, b)
+        local a_index = self:GetLocationIdByBuildingType(a:GetType())
+        local b_index = self:GetLocationIdByBuildingType(b:GetType())
+        if a_index and b_index then
+            return a_index < b_index
+        elseif a_index == nil and b_index then
+            return false
+        elseif a_index and b_index == nil then
+            return true
+        else
+            return a:GetType() < b:GetType()
+        end
+    end)
+    return builds
+end
 function City:GetBuildingMaxCountsByType(building_type)
     local building_map = {
         dwelling = "townHall",
@@ -337,6 +359,18 @@ function City:GetCanUpgradingTowers()
     return towers
 end
 -- 工具
+function City:IteratorCanUpgradeBuildings(func)
+    self:IteratorDecoratorBuildingsByFunc(function(key, building)
+        func(building)
+    end)
+    self:IteratorFunctionBuildingsByFunc(function(key, building)
+        func(building)
+    end)
+    self:IteratorTowersByFunc(function(key, building)
+        func(building)
+    end)
+    func(self:GetGate())
+end
 function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time)
     self:IteratorDecoratorBuildingsByFunc(function(key, building)
         local tile = self:GetTileWhichBuildingBelongs(building)
@@ -590,7 +624,7 @@ function City:OnUserDataChanged(userData, current_time)
                 local tile = self:GetTileByLocationId(location.location)
                 local absolute_x, absolute_y = tile:GetAbsolutePositionByLocation(house.location)
                 local event = get_house_event_by_location(location.location, house.location)
-                local finishTime = event == nil and 0 or event.finishTime / 1000
+                -- local finishTime = event == nil and 0 or event.finishTime / 1000
                 self:CreateDecorator(current_time, BuildingRegister[house.type].new({
                     x = absolute_x,
                     y = absolute_y,
@@ -598,7 +632,7 @@ function City:OnUserDataChanged(userData, current_time)
                     h = 3,
                     building_type = house.type,
                     level = house.level,
-                    finishTime = finishTime,
+                    finishTime = 0,
                 }))
             end
         end)
@@ -849,6 +883,7 @@ function City:OnUpgradingBuildings()
 end
 
 return City
+
 
 
 

@@ -16,7 +16,16 @@ local p_resource_building_to_house = {
 function PResourceUpgradeBuilding:ctor(building_info)
     PResourceUpgradeBuilding.super.ctor(self, building_info)
 end
-
+-- 获取下一级可以建造的最大小屋数量
+function PResourceUpgradeBuilding:GetNextLevelMaxHouseNum()
+    local level = self:GetNextLevel() < 0 and 0 or self:GetNextLevel()
+    return config_function[self:GetType()][level][p_resource_building_to_house[self:GetType()]]
+end
+-- 获取对应资源生产加速比
+function PResourceUpgradeBuilding:GetNextLevelAddEfficency()
+	local level = self:GetNextLevel()
+    return config_function[self:GetType()][level].addEfficency
+end
 -- 获取当前等级可以建造的最大小屋数量
 function PResourceUpgradeBuilding:GetMaxHouseNum()
     local level = self:GetLevel() < 0 and 0 or self:GetLevel()
@@ -25,7 +34,6 @@ end
 -- 获取对应资源生产加速比
 function PResourceUpgradeBuilding:GetAddEfficency()
 	local level = self:GetLevel()
-	-- print("···",self:GetType(),"addEfficency=====",config_function[self:GetType()].addEfficency)
     return config_function[self:GetType()][level].addEfficency
 end
 -- 获取对应小屋类型

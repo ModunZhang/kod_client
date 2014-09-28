@@ -23,6 +23,9 @@ function Building:ctor(building_info)
     self.can_change_head = self.w ~= self.h
     self.base_building_observer = Observer.new()
 end
+function Building:UniqueKey()
+    return string.format("%s_%d_%d", self:GetType(), self.x, self.y)
+end
 function Building:OnTimer(current_time)
 
 end

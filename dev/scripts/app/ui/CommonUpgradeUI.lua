@@ -132,80 +132,80 @@ function CommonUpgradeUI:SetBuildingIntroduces()
     local bd = Localize.building_description
     self.building_introduces:setString(bd[self.building:GetType()])
 end
-function CommonUpgradeUI:SetBuildingIntroduces_()
-    local building_introduces_table = {
-        ["keep"] = _("提升建筑等级上限\n可解锁地块数量:%d"),
-        ["watchTower"] ={
-            [1] = _("能够看到来袭部队，NPC titles，自己的出征部队，告诉你前来的部队的行军目的，达到时间"),
-            [2] = _("显示敌方突袭你部队的龙的类型(之前显示“?”)"),
-            [3] = _("显示突袭的龙的等级"),
-            [4] = _("显示进攻的龙的等级"),
-            [5] = _("显示突袭的龙的装备信息"),
-            [6] = _("显示进攻的龙的装备信息"),
-            [7] = _("显示突袭的龙的技能信息"),
-            [8] = _("显示进攻的龙的技能信息"),
-            [9] = _("显示进攻部队的兵种类型和排序"),
-            [10] = _("显示进攻部队的兵种星级"),
-            [11] = _("可以在敌方领土上预警到敌方部队来袭(之前只会在敌方穿过传送门后才预警，现在还会显示传送门到敌方玩家城市的路径)"),
-            [12] = _("可以查看突袭的龙的力量和活力属性"),
-            [13] = _("可以查看进攻的龙的力量和活力属性"),
-            [14] = _("显示进攻部队的大致数量"),
-            [15] = _("显示进攻敌方的科技水平(训练营地，猎手大厅，马厩，车间的科技研发值)"),
-            [16] = _("可以在敌方领地上查看敌方玩家的城市布局和建筑等级等信息(不能点击建筑)"),
-            [17] = _("显示进攻部队兵种的准确数量"),
-            [18] = _("显示敌方进攻部队的战斗力预估(之前显示“?”)"),
-            [19] = _("减少敌方行军速度10%"),
-            [20] = _("增加己方行军速度10%"),
-        },
-        ["warehouse"] = _("提供木材, 石料, 铁矿, 粮食存储上限\n资源存放上限%d"),
-        ["dragonEyrie"] = _("提升龙的体力恢复速度\n体力恢复速度+%d"),
-        ["toolShop"] = _("提升每次生产材料的数量\n材料数量%d"),
-        ["materialDepot"] = _("提供材料的存储上限\n每种材料存放上限%d"),
-        ["armyCamp"] = _("提供出兵时派兵上限\n派兵上限%d"),
-        ["barracks"] = _("增加每次招募数量\n每次可招募%d"),
-        ["blackSmith"] = _("提升装备打造速度\n装备打造速度+%d%%"),
-        ["foundry"] = _("可建造矿工小屋:%d\n铁矿产量+%d%%"),
-        ["stoneMason"] = _("可建造石匠小屋:%d\n石料产量+%d%%"),
-        ["lumbermill"] = _("可建造木工小屋:%d\n木材产量+%d%%"),
-        ["mill"] = _("可建造农夫小屋:%d\n粮食产量+%d%%"),
-        ["hospital"] = _("增加治愈伤兵的人数上限\n伤兵人数上限%d"),
-        ["townHall"] = _("可建造住宅%d\n每次税收影响城民%d"),
-        ["academy"] = _("提升科技研发速度\n研发速度+%d"),
-        ["trainingGround"] = _("提升步兵招募速度\n步兵招募速度+%d"),
-        ["hunterhall"] = _("提升猎手招募速度\n猎手招募速度+%d"),
-        ["stable"] = _("提升骑兵招募速度\n骑兵招募速度+%d"),
-        ["workshop"] = _("提升攻城器械速度\n攻城器械招募速度+%d"),
-        ["wall"] = _("提升城墙生命值\n城墙生命值+%d"),
-        ["tower"] = _("提升城墙攻击力\n城墙攻击力+%d"),
-        ["prison"] = _("捕获敌军的几率%d\n关押敌军的时间%d"),
-        ["tradeGuild"] = _("运输小车总数%d\n运输小车生产速度%d"),
-        ["dwelling"] = _("提供城民上限%d\n城民恢复速度+%d"),
-        ["woodcutter"] = _("占用城民%d\n木材产量+%d/每小时"),
-        ["farmer"] = _("占用城民%d\n粮食产量+%d/每小时"),
-        ["quarrier"] = _("占用城民%d\n石料产量+%d/每小时|"),
-        ["miner"] = _("占用城民%d\n铁矿产量+%d/每小时|"),
-    }
-    if self.building:GetType()=="keep" then
-        self.building_introduces:setString(string.format(building_introduces_table["keep"],self.building:GetUnlockPoint()))
-    elseif self.building:GetType()=="warehouse" then
-        self.building_introduces:setString(string.format(building_introduces_table["warehouse"],self.building:GetResourceValueLimit()))
-    elseif self.building:GetType()=="armyCamp" then
-        self.building_introduces:setString(string.format(building_introduces_table["armyCamp"],self.building:GetTroopPopulation()))
-    elseif self.building:GetType()=="materialDepot" then
-        self.building_introduces:setString(string.format(building_introduces_table["materialDepot"],self.building:GetMaxMaterial()))
-    elseif self.building:GetType()=="foundry"
-        or self.building:GetType()=="stoneMason"
-        or self.building:GetType()=="lumbermill"
-        or self.building:GetType()=="mill" then
-        self.building_introduces:setString(string.format(building_introduces_table[self.building:GetType()],self.building:GetMaxHouseNum(),self.building:GetAddEfficency()*100))
-    elseif self.building:GetType()=="blackSmith" then
-        self.building_introduces:setString(string.format(building_introduces_table["blackSmith"],self.building:GetEfficiency()*100))
-    elseif self.building:GetType()=="barracks" then
-        self.building_introduces:setString(string.format(building_introduces_table["barracks"],self.building:GetMaxRecruitSoldierCount()))
-    else
-        self.building_introduces:setString(_("本地化未定义"))
-    end
-end
+-- function CommonUpgradeUI:SetBuildingIntroduces_()
+--     local building_introduces_table = {
+--         ["keep"] = _("提升建筑等级上限\n可解锁地块数量:%d"),
+--         ["watchTower"] ={
+--             [1] = _("能够看到来袭部队，NPC titles，自己的出征部队，告诉你前来的部队的行军目的，达到时间"),
+--             [2] = _("显示敌方突袭你部队的龙的类型(之前显示“?”)"),
+--             [3] = _("显示突袭的龙的等级"),
+--             [4] = _("显示进攻的龙的等级"),
+--             [5] = _("显示突袭的龙的装备信息"),
+--             [6] = _("显示进攻的龙的装备信息"),
+--             [7] = _("显示突袭的龙的技能信息"),
+--             [8] = _("显示进攻的龙的技能信息"),
+--             [9] = _("显示进攻部队的兵种类型和排序"),
+--             [10] = _("显示进攻部队的兵种星级"),
+--             [11] = _("可以在敌方领土上预警到敌方部队来袭(之前只会在敌方穿过传送门后才预警，现在还会显示传送门到敌方玩家城市的路径)"),
+--             [12] = _("可以查看突袭的龙的力量和活力属性"),
+--             [13] = _("可以查看进攻的龙的力量和活力属性"),
+--             [14] = _("显示进攻部队的大致数量"),
+--             [15] = _("显示进攻敌方的科技水平(训练营地，猎手大厅，马厩，车间的科技研发值)"),
+--             [16] = _("可以在敌方领地上查看敌方玩家的城市布局和建筑等级等信息(不能点击建筑)"),
+--             [17] = _("显示进攻部队兵种的准确数量"),
+--             [18] = _("显示敌方进攻部队的战斗力预估(之前显示“?”)"),
+--             [19] = _("减少敌方行军速度10%"),
+--             [20] = _("增加己方行军速度10%"),
+--         },
+--         ["warehouse"] = _("提供木材, 石料, 铁矿, 粮食存储上限\n资源存放上限%d"),
+--         ["dragonEyrie"] = _("提升龙的体力恢复速度\n体力恢复速度+%d"),
+--         ["toolShop"] = _("提升每次生产材料的数量\n材料数量%d"),
+--         ["materialDepot"] = _("提供材料的存储上限\n每种材料存放上限%d"),
+--         ["armyCamp"] = _("提供出兵时派兵上限\n派兵上限%d"),
+--         ["barracks"] = _("增加每次招募数量\n每次可招募%d"),
+--         ["blackSmith"] = _("提升装备打造速度\n装备打造速度+%d%%"),
+--         ["foundry"] = _("可建造矿工小屋:%d\n铁矿产量+%d%%"),
+--         ["stoneMason"] = _("可建造石匠小屋:%d\n石料产量+%d%%"),
+--         ["lumbermill"] = _("可建造木工小屋:%d\n木材产量+%d%%"),
+--         ["mill"] = _("可建造农夫小屋:%d\n粮食产量+%d%%"),
+--         ["hospital"] = _("增加治愈伤兵的人数上限\n伤兵人数上限%d"),
+--         ["townHall"] = _("可建造住宅%d\n每次税收影响城民%d"),
+--         ["academy"] = _("提升科技研发速度\n研发速度+%d"),
+--         ["trainingGround"] = _("提升步兵招募速度\n步兵招募速度+%d"),
+--         ["hunterhall"] = _("提升猎手招募速度\n猎手招募速度+%d"),
+--         ["stable"] = _("提升骑兵招募速度\n骑兵招募速度+%d"),
+--         ["workshop"] = _("提升攻城器械速度\n攻城器械招募速度+%d"),
+--         ["wall"] = _("提升城墙生命值\n城墙生命值+%d"),
+--         ["tower"] = _("提升城墙攻击力\n城墙攻击力+%d"),
+--         ["prison"] = _("捕获敌军的几率%d\n关押敌军的时间%d"),
+--         ["tradeGuild"] = _("运输小车总数%d\n运输小车生产速度%d"),
+--         ["dwelling"] = _("提供城民上限%d\n城民恢复速度+%d"),
+--         ["woodcutter"] = _("占用城民%d\n木材产量+%d/每小时"),
+--         ["farmer"] = _("占用城民%d\n粮食产量+%d/每小时"),
+--         ["quarrier"] = _("占用城民%d\n石料产量+%d/每小时|"),
+--         ["miner"] = _("占用城民%d\n铁矿产量+%d/每小时|"),
+--     }
+--     if self.building:GetType()=="keep" then
+--         self.building_introduces:setString(string.format(building_introduces_table["keep"],self.building:GetUnlockPoint()))
+--     elseif self.building:GetType()=="warehouse" then
+--         self.building_introduces:setString(string.format(building_introduces_table["warehouse"],self.building:GetResourceValueLimit()))
+--     elseif self.building:GetType()=="armyCamp" then
+--         self.building_introduces:setString(string.format(building_introduces_table["armyCamp"],self.building:GetTroopPopulation()))
+--     elseif self.building:GetType()=="materialDepot" then
+--         self.building_introduces:setString(string.format(building_introduces_table["materialDepot"],self.building:GetMaxMaterial()))
+--     elseif self.building:GetType()=="foundry"
+--         or self.building:GetType()=="stoneMason"
+--         or self.building:GetType()=="lumbermill"
+--         or self.building:GetType()=="mill" then
+--         self.building_introduces:setString(string.format(building_introduces_table[self.building:GetType()],self.building:GetMaxHouseNum(),self.building:GetAddEfficency()*100))
+--     elseif self.building:GetType()=="blackSmith" then
+--         self.building_introduces:setString(string.format(building_introduces_table["blackSmith"],self.building:GetEfficiency()*100))
+--     elseif self.building:GetType()=="barracks" then
+--         self.building_introduces:setString(string.format(building_introduces_table["barracks"],self.building:GetMaxRecruitSoldierCount()))
+--     else
+--         self.building_introduces:setString(_("本地化未定义"))
+--     end
+-- end
 
 function CommonUpgradeUI:InitNextLevelEfficiency()
     -- 下一级 框
@@ -224,9 +224,11 @@ function CommonUpgradeUI:InitNextLevelEfficiency()
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
         size = 20,
-        dimensions = cc.size(380,90),
+        dimensions = cc.size(380,0),
+        valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.CENTER,efficiency_bg_size.width/2+10,efficiency_bg_size.height/2):addTo(efficiency_bg)
+    }):addTo(efficiency_bg):align(display.LEFT_CENTER)
+    self.efficiency:pos(10,efficiency_bg_size.height/2)
     self:SetUpgradeEfficiency()
 end
 
@@ -240,6 +242,38 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         efficiency = string.format("%s%d,%s+%d",bd.vitalityRecoveryPerHour,building:GetNextLevelVitalityRecoveryPerHour(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="warehouse" then
         efficiency = string.format("%s%d,%s+%d",bd.warehouse_max,building:GetResourceNextLevelValueLimit(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="toolShop" then
+        efficiency = string.format("%s%d%s,%s+%d",bd.poduction,building:GetNextLevelPoducttion(),bd.poduction_1,bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="materialDepot" then
+        efficiency = string.format("%s%d,%s+%d",bd.maxMaterial,building:GetNextLevelMaxMaterial(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="armyCamp" then
+        efficiency = string.format("%s%d,%s+%d",bd.armyCamp_troopPopulation,building:GetNextLevelTroopPopulation(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="barracks" then
+        efficiency = string.format("%s%d,%s+%d",bd.maxRecruit,building:GetNextLevelMaxRecruitSoldierCount(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="blackSmith" then
+        efficiency = string.format("%s%d%%,%s+%d",bd.blackSmith_efficiency,building:GetNextLevelEfficiency()*100,bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="foundry" then
+        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.foundry_miner,building:GetNextLevelMaxHouseNum(),bd.foundry_addEfficency,building:GetNextLevelAddEfficency()*100,bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="lumbermill" then
+        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.lumbermill_woodcutter,building:GetNextLevelMaxHouseNum(),bd.lumbermill_addEfficency,building:GetNextLevelAddEfficency()*100,bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="mill" then
+        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.mill_farmer,building:GetNextLevelMaxHouseNum(),bd.mill_addEfficency,building:GetNextLevelAddEfficency()*100,bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="stoneMason" then
+        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.stoneMason_quarrier,building:GetNextLevelMaxHouseNum(),bd.stoneMason_addEfficency,building:GetNextLevelAddEfficency()*100,bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="hospital" then
+        efficiency = string.format("%s%d,%s+%d",bd.maxCasualty,building:GetNextLevelMaxCasualty(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="townHall" then
+        efficiency = string.format("%s%d,%s%d",bd.townHall_dwelling,building:GetNextLevelDwellingNum(),bd.totalTax,building:GetNextLevelTotalTax())
+    elseif self.building:GetType()=="dwelling" then
+        efficiency = string.format("%s%d,%s+%d,%s+%d",bd.dwelling_citizen,building:GetNextLevelCitizen(),bd.recoveryCitizen,building:GetNextLevelRecoveryCitizen(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="woodcutter" then
+        efficiency = string.format("%s%d,%s+%d",bd.woodcutter_poduction,building:GetNextLevelProductionPerHour(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="farmer" then
+        efficiency = string.format("%s%d,%s+%d",bd.farmer_poduction,building:GetNextLevelProductionPerHour(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="quarrier" then
+        efficiency = string.format("%s%d,%s+%d",bd.quarrier_poduction,building:GetNextLevelProductionPerHour(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="miner" then
+        efficiency = string.format("%s%d,%s+%d",bd.miner_poduction,building:GetNextLevelProductionPerHour(),bd.power,building:GetNextLevelPower())
     else
         efficiency = (_("本地化未添加"))
     end
@@ -667,6 +701,16 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
+
+
+
+
+
+
+
+
 
 
 

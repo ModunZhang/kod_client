@@ -11,6 +11,9 @@ function BlackSmithUpgradeBuilding:ctor(...)
     self.making_event = self:CreateEvent()
     BlackSmithUpgradeBuilding.super.ctor(self, ...)
 end
+function BlackSmithUpgradeBuilding:GetNextLevelEfficiency()
+    return config_function[self:GetNextLevel()].efficiency
+end
 function BlackSmithUpgradeBuilding:GetEfficiency()
     return config_function[self:GetLevel()].efficiency
 end
@@ -23,6 +26,9 @@ function BlackSmithUpgradeBuilding:CreateEvent()
     function event:Reset()
         self.content = nil
         self.finished_time = 0
+    end
+    function event:UniqueKey()
+        return "blackSmith"
     end
     function event:StartTime()
         return self.finished_time - black_smith:GetMakingTimeByEquipment(self.content)

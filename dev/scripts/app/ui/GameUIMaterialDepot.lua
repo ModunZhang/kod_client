@@ -1,4 +1,5 @@
 local UIListView = import(".UIListView")
+local window = import("..utils.window")
 local WidgetMaterialBox = import("..widget.WidgetMaterialBox")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetMaterialDetails = import("..widget.WidgetMaterialDetails")
@@ -39,7 +40,7 @@ function GameUIMaterialDepot:onEnter()
         else
             self.info_layer:setVisible(false)
         end
-    end):pos(display.cx, display.top - 920)
+    end):pos(window.cx, window.bottom + 34)
 
     self:CreateMaterialInfo()
     self:CreateSelectButton()

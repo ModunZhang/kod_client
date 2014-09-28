@@ -6,6 +6,7 @@ local EQUIPMENTS = GameDatas.SmithConfig.equipments
 local Localize = import("..utils.Localize")
 local MaterialManager = import("..entity.MaterialManager")
 local UIPushButton = cc.ui.UIPushButton
+local window = import("..utils.window")
 local WidgetTips = import("..widget.WidgetTips")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
@@ -99,7 +100,7 @@ function GameUIBlackSmith:TabButtons()
         else
             self:SwitchToDragon(tag)
         end
-    end):pos(display.cx, display.bottom + 40)
+    end):pos(window.cx, window.bottom + 34)
 end
 function GameUIBlackSmith:SwitchToDragon(dragon_type)
     self.title:setVisible(true)
@@ -152,7 +153,7 @@ end
 function GameUIBlackSmith:CreateDragonEquipmentsByType(dragon_type)
     local equip_map = {}
     local red_dragon_equipments = self:GetDragonEquipmentsByType(dragon_type)
-    local list_view = self:CreateVerticalListView(20, display.bottom + 70, display.right - 20, display.top - 230)
+    local list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 230)
     for i, v in ipairs(red_dragon_equipments) do
         local item = self:CreateItemWithListViewByEquipments(list_view, v.equipments, v.title, equip_map)
         list_view:addItem(item)

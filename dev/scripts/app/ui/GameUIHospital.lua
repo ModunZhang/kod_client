@@ -65,7 +65,7 @@ function GameUIHospital:onEnter()
         else
             self.heal_layer:setVisible(false)
         end
-    end):pos(display.cx, display.top - 920)
+    end):pos(window.cx, window.bottom + 34)
 
     -- 创建伤兵数量占最大伤兵数量比例条
     self:CreateCasualtyRateBar()

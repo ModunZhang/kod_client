@@ -38,7 +38,7 @@ function GameUIResource:createTabButtons()
         else
             self.infomationLayer:setVisible(false)
         end
-    end):pos(window.cx, window.bottom + 50)
+    end):pos(window.cx, window.bottom + 34)
 end
 
 

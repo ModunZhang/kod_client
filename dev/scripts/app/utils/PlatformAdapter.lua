@@ -34,12 +34,12 @@ function PlatformAdapter:common()
 
     device.showActivityIndicator = function()
         showActivityIndicator()
-        cc.Director:getInstance():getEventDispatcher():setEnabled(false)
+        app:lockInput(true)
     end
 
     device.hideActivityIndicator = function()
         hideActivityIndicator()
-        cc.Director:getInstance():getEventDispatcher():setEnabled(true)
+        app:lockInput(false)
     end
 end
 

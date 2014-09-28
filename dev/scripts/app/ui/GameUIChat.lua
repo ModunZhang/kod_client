@@ -4,17 +4,18 @@
 --
 local GameUIChat = UIKit:createUIClass('GameUIChat')
 local UIListView = import(".UIListView")
-local TabButtons = import('.TabButtons')
+local WidgetBackGroundTabButtons = import('..widget.WidgetBackGroundTabButtons')
 local ChatService = import('..service.ChatService')
 local ChatCenter = app.chatCenter
 local NetService = import('..service.NetService')
-
+local window = import("..utils.window")
 
 GameUIChat.LISTVIEW_WIDTH = 549
 GameUIChat.PLAYERMENU_ZORDER = 2
 
 
 function GameUIChat:onEnter()
+	GameUIChat.super.onEnter(self)
 	self:CreateBackGround()
     self:CreateTitle(_("聊天"))
     self:CreateHomeButton()
@@ -37,7 +38,7 @@ function GameUIChat:CreateSettingButton()
 end
 
 function GameUIChat:CreateTabButtons()
-	local tab_buttons = TabButtons.new({
+	local tab_buttons = WidgetBackGroundTabButtons.new({
         {
             label = _("世界"),
             tag = "global",
@@ -48,18 +49,11 @@ function GameUIChat:CreateTabButtons()
             tag = "Alliance",
         }
     },
-    {
-        gap = -4,
-        margin_left = -2,
-        margin_right = -2,
-        margin_up = -6,
-        margin_down = 1
-    },
     function(tag)
     	self._channelType = string.lower(tag)
         self.page = 1
         self:RefreshListView()
-    end):addTo(self):pos(display.cx, display.bottom + 50)
+    end):addTo(self):pos(window.cx, window.bottom + 34)
 end
 
 -- response from chatcenter
@@ -298,7 +292,7 @@ function GameUIChat:CreateListView()
 	self.listView = UIListView.new {
         bg = "chat_list_bg.png",
         bgScale9 = true,
-        viewRect = cc.rect(display.left+45, display.bottom+110, 549, self.editbox:getPositionY() - self.editbox:getContentSize().height - 130),
+        viewRect = cc.rect(window.left+45, window.bottom+90, 549, 700),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         alignment = cc.ui.UIListView.ALIGNMENT_LEFT
     	}
@@ -326,7 +320,7 @@ function GameUIChat:CreateTextFieldBody()
     editbox:setFontColor(cc.c3b(0,0,0))
     editbox:setPlaceholderFontColor(cc.c3b(204,196,158))
     editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)
-    editbox:align(display.LEFT_TOP,display.left+46,display.height - 100):addTo(self)
+    editbox:align(display.LEFT_TOP,window.left+46,window.top - 100):addTo(self)
     self.editbox = editbox
 
     -- body button
@@ -338,7 +332,7 @@ function GameUIChat:CreateTextFieldBody()
             end)
     	end)
     	:addTo(self)
-    	:align(display.LEFT_TOP,self.editbox:getPositionX()+self.editbox:getContentSize().width+10, display.height - 100)
+    	:align(display.LEFT_TOP,self.editbox:getPositionX()+self.editbox:getContentSize().width+10, window.top - 100)
     local plusButton = cc.ui.UIPushButton.new({normal = "chat_add.png",pressed = "chat_add_highlight.png",}, {scale9 = false})
     	:onButtonClicked(function(event)
 
@@ -419,7 +413,7 @@ function GameUIChat:CreatShieldView()
 		:addTo(self,self.PLAYERMENU_ZORDER)
     local bg = display.newSprite("chat_setting_bg.png")
     	:addTo(shieldView)
-    	:pos(display.cx,display.cy)
+    	:pos(window.cx,window.cy)
     local header = display.newSprite("chat_setting_Title_blue.png")
     	:addTo(bg)
     	:align(display.TOP_LEFT,8,bg:getContentSize().height-8)

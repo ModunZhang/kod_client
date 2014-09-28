@@ -37,6 +37,20 @@ end
 function UpgradeBuilding:GetUpgradingLeftTimeByCurrentTime(current_time)
     return self.upgrade_to_next_level_time - current_time
 end
+function UpgradeBuilding:GetUpgradingPercentByCurrentTime(current_time)
+    if self:IsUpgrading() then
+        local total_time = self:GetUpgradeTimeToNextLevel()
+        return (total_time + current_time - self.upgrade_to_next_level_time) / total_time * 100
+    else
+        return 0
+    end
+end
+function UpgradeBuilding:IsUnlocking()
+    return self:GetLevel() == 0 and self.upgrade_to_next_level_time ~= 0
+end
+function UpgradeBuilding:IsBuilding()
+    return self:GetLevel() == 0 and self.upgrade_to_next_level_time ~= 0
+end
 function UpgradeBuilding:IsUnlocked()
     return self:GetLevel() > 0
 end
@@ -81,12 +95,12 @@ function UpgradeBuilding:GetLevel()
 end
 
 function UpgradeBuilding:GeneralLocalPush()
-    -- if ext and ext.localpush then
-    --     local pushIdentity = self.x .. self.y .. self.w .. self.h .. self.orient
-    --     ext.localpush.cancelNotification(pushIdentity)
-    --     local title = UIKitHelper:getLocaliedKeyByType(self.building_type) .. _("升级完成")
-    --     ext.localpush.addNotification("BUILDING_PUSH_UPGRADE", self.upgrade_to_next_level_time,title,pushIdentity)
-    -- end
+    if ext and ext.localpush then
+        local pushIdentity = self.x .. self.y .. self.w .. self.h .. self.orient
+        ext.localpush.cancelNotification(pushIdentity)
+        local title = UIKit:getLocaliedKeyByType(self.building_type) .. _("升级完成")
+        ext.localpush.addNotification("BUILDING_PUSH_UPGRADE", self.upgrade_to_next_level_time,title,pushIdentity)
+    end
 end
 
 function UpgradeBuilding:OnTimer(current_time)
@@ -137,6 +151,7 @@ function UpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id,
         finishTime = event == nil and 0 or event.finishTime / 1000
         level = location.level
     end
+
     -- 适配
     self:OnHandle(level, finishTime)
 end
@@ -294,6 +309,8 @@ function UpgradeBuilding:getUpgradeRequiredGems()
 end
 
 return UpgradeBuilding
+
+
 
 
 
