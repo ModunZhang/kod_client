@@ -78,7 +78,6 @@ function GameUIDwelling:CreateUI()
     self:createTabButtons()
 end
 function GameUIDwelling:onMovieOutStage()
-    self.dwelling_city = nil
     GameUIDwelling.super.onMovieOutStage(self)
 end
 function GameUIDwelling:CreateCitizenPanel()
