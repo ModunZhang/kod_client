@@ -77,7 +77,7 @@ end
 function FullScreenPopDialogUI:CreateNeeds(icon,value)
     local icon_image = display.newScale9Sprite(icon, display.cx+20, display.top-560):addTo(self)
     icon_image:setScale(30/icon_image:getContentSize().height)
-    cc.ui.UILabel.new({
+    self.needs_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = value.."",
         font = UIKit:getFontFilePath(),
@@ -85,8 +85,16 @@ function FullScreenPopDialogUI:CreateNeeds(icon,value)
         color = UIKit:hex2c3b(0xfdfac2)
     }):align(display.LEFT_CENTER,display.cx+60,display.top-560):addTo(self)
 end
-
+function FullScreenPopDialogUI:SetNeedsValue(value)
+    if self.needs_label then
+        self.needs_label:setString(value)
+    end
+end
+function FullScreenPopDialogUI:AddToCurrentScene(anima)
+    diplay.getRunningScene():addChild(self)
+end
 return FullScreenPopDialogUI
+
 
 
 

@@ -1,20 +1,20 @@
 -- 需求列表控件
 local UIListView = import("..ui.UIListView")
 local WidgetRequirementListview = class("WidgetRequirementListview", function ()
-	return display.newLayer()
+    return display.newLayer()
 end)
 
 function WidgetRequirementListview:ctor(parms)
     self:setNodeEventEnabled(true)
-	self.title = parms.title
+    self.title = parms.title
     self.listview_height = parms.height
-	self.listview_width = 520
-	self.listParms = parms.listParms
-	self.contents = parms.contents
+    self.listview_width = 520
+    self.listParms = parms.listParms
+    self.contents = parms.contents
 
-	self.width = 548
-	self:setContentSize(cc.size(self.width, self.listview_height+50))
-	self:setAnchorPoint(cc.p(0.5,0))
+    self.width = 548
+    self:setContentSize(cc.size(self.width, self.listview_height+50))
+    self:setAnchorPoint(cc.p(0.5,0))
 
     print("onEnter-> WidgetRequirementListview",display.height)
     local list_bg = display.newScale9Sprite("upgrade_requirement_background.png", 0, 0,cc.size(self.width, self.listview_height))
@@ -41,7 +41,7 @@ end
 
 
 function WidgetRequirementListview:RefreshListView(contents)
-	--有两种背景色的达到要求的显示条，通过meeFlag来确定选取哪一个
+    --有两种背景色的达到要求的显示条，通过meeFlag来确定选取哪一个
     local meetFlag = true
 
     for k,v in pairs(contents ) do
@@ -52,19 +52,20 @@ function WidgetRequirementListview:RefreshListView(contents)
                 -- print("需求已添加，则更新最新资源数据 ",v.resource_type)
                 local added_resource = self.added_items[v.resource_type]
                 local content = added_resource:getContent()
+                if meetFlag then
+                    content.bg:setTexture("upgrade_resources_background_3.png")
+                else
+                    content.bg:setTexture("upgrade_resources_background_2.png")
+                end
+                meetFlag =  not meetFlag
                 if v.isSatisfy then
-                    if meetFlag then
-                        content.bg:setTexture("upgrade_resources_background_3.png")
-                    else
-                        content.bg:setTexture("upgrade_resources_background_2.png")
-                    end
                     -- 符合条件，添加钩钩图标
                     content.mark:setTexture("upgrade_mark.png")
-                    meetFlag =  not meetFlag
                 else
-                    content.bg:setTexture("upgrade_resources_background_red.png")
-                    -- 不符合条提案，添加X图标
-                    content.mark:setTexture("upgrade_prohibited.png")
+                    -- content.bg:setTexture("upgrade_resources_background_red.png")
+                    -- 不符合条提案，添加!图标
+                    -- content.mark:setTexture("upgrade_prohibited.png")
+                    content.mark:setTexture("upgrade_warning.png")
                 end
                 content.resource_value:setString(v.resource_type.." "..v.description)
             else
@@ -116,3 +117,4 @@ function WidgetRequirementListview:RefreshListView(contents)
 end
 
 return WidgetRequirementListview
+
