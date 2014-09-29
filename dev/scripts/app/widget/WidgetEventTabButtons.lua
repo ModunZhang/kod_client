@@ -272,11 +272,11 @@ function WidgetEventTabButtons:CreateOpenItem()
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xfff3c7)}))
         :onButtonClicked(function(event)
-            self:InsertItemWithAnimation(function()
-                local items = {}
-                table.insert(items, self:CreateItem())
-                return items
-            end)
+            -- self:InsertItemWithAnimation(function()
+            --     local items = {}
+            --     table.insert(items, self:CreateItem())
+            --     return items
+            -- end)
         end)
 
     function node:SetLabel(str)

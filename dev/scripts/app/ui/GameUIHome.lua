@@ -184,6 +184,7 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         -- NetManager:sendMsg("gem 10000000", NOT_HANDLE)
+        UIKit:newGameUI('GameUIShop', City):addToCurrentScene(true)
     end):addTo(top_bg):pos(596, 60)
     display.newSprite("home/gem.png"):addTo(button):pos(-1, 8)
     display.newSprite("home/gem_num_bg.png"):addTo(button):pos(0, -27)
