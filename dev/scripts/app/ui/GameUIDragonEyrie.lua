@@ -90,6 +90,11 @@ function GameUIDragonEyrie:RefreshUIData()
 end
 -- api
 function GameUIDragonEyrie:HatchAction()
+    local energy =  City.resource_manager:GetEnergyResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    if energy < 100 then 
+        print("TODO::::::::能量不足！")
+        return 
+    end
     local dragon = self:GetCurrentDragon()
     PushService:HatchDragon(dragon.type,function()end)
 end
