@@ -216,8 +216,12 @@ function WidgetEventTabButtons:CreateProgressItem()
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xd1ca95)}):addTo(progress):align(display.LEFT_CENTER, 10, 43/2)
 
-    local btn = cc.ui.UIPushButton.new({normal = "green_btn_up_142x39.png",
-        pressed = "green_btn_down_142x39.png"}):addTo(progress)
+    local btn = WidgetPushButton.new({normal = "green_btn_up_142x39.png",
+        pressed = "green_btn_down_142x39.png"}
+    ,{}
+    ,{
+        disabled = {name = "SATURATION", params = {0}}
+    }):addTo(progress)
         :align(display.LEFT_CENTER, 340, 43/2)
         :setButtonLabel(cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -226,8 +230,7 @@ function WidgetEventTabButtons:CreateProgressItem()
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xfff3c7)}))
         :onButtonClicked(function(event)
-            self:RemoveItemWithAnimation(2)
-        end)
+            end)
 
     cc.ui.UIImage.new("divide_line_489x2.png"):addTo(progress)
         :align(display.LEFT_BOTTOM, -4, -5)
@@ -251,6 +254,10 @@ function WidgetEventTabButtons:CreateProgressItem()
         self.key = key
         return self
     end
+    function progress:onEnter()
+        btn:setButtonEnabled(false)
+    end
+    progress:setNodeEventEnabled(true)
 
     return progress
 end
@@ -267,7 +274,7 @@ function WidgetEventTabButtons:CreateOpenItem()
         pressed = "blue_btn_down_142x39.png"}
     ,{}
     ,{
-        disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
+        disabled = {name = "SATURATION", params = {0}}
     }):addTo(node)
         :align(display.LEFT_CENTER, 340, 0)
         :setButtonLabel(cc.ui.UILabel.new({
@@ -277,13 +284,8 @@ function WidgetEventTabButtons:CreateOpenItem()
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xfff3c7)}))
         :onButtonClicked(function(event)
-            -- self:InsertItemWithAnimation(function()
-            --     local items = {}
-            --     table.insert(items, self:CreateItem())
-            --     return items
-            -- end)
             end)
-    node:setNodeEventEnabled(true)
+
 
 
     function node:SetLabel(str)
@@ -293,9 +295,9 @@ function WidgetEventTabButtons:CreateOpenItem()
         return self
     end
     function node:onEnter()
-        print("node:onEnter")
         button:setButtonEnabled(false)
     end
+    node:setNodeEventEnabled(true)
 
     return node
 end
@@ -649,6 +651,8 @@ function WidgetEventTabButtons:MaterialDescribe(event)
 end
 
 return WidgetEventTabButtons
+
+
 
 
 

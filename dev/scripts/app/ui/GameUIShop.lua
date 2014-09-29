@@ -17,7 +17,7 @@ function GameUIShop:onEnter()
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"}
         ,{scale9 = false}
         -- ,{
-        --     disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
+        --     disabled = {name = "SATURATION", params = {0}}
         -- }
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
