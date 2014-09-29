@@ -2,6 +2,7 @@
 -- Author: gaozhou
 -- Date: 2014-08-18 14:33:28
 --
+local WidgetPushButton = import("..widget.WidgetPushButton")
 local window = import("..utils.window")
 local GameUIShop = UIKit:createUIClass("GameUIShop", "GameUIWithCommonHeader")
 function GameUIShop:ctor(city)
@@ -12,9 +13,12 @@ function GameUIShop:onEnter()
     GameUIShop.super.onEnter(self)
 
     local add_gem = 100000
-    self.button = cc.ui.UIPushButton.new(
-        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
-        {scale9 = false}
+    local button = WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"}
+        ,{scale9 = false}
+        -- ,{
+        --     disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
+        -- }
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "gem add "..add_gem,
@@ -27,9 +31,12 @@ function GameUIShop:onEnter()
             local current = self.shop_city:GetResourceManager():GetGemResource():GetValue() + add_gem
             NetManager:sendMsg("gem "..current, NOT_HANDLE)
         end)
+        -- :setButtonEnabled(false)
+        -- :SetFilter({
+        --     disabled = nil
+        -- })
 
-
-        self.button = cc.ui.UIPushButton.new(
+    WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
@@ -57,6 +64,7 @@ end
 
 
 return GameUIShop
+
 
 
 
