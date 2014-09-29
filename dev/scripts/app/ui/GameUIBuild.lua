@@ -135,7 +135,11 @@ function GameUIBuild:CreateItemWithListView(list_view)
     --     :align(display.LEFT_CENTER, 40, 10)
 
     local build_btn = WidgetPushButton.new(
-        {normal = "build_item/build_btn_up.png",pressed = "build_item/build_btn_down.png"})
+        {normal = "build_item/build_btn_up.png",pressed = "build_item/build_btn_down.png"}
+        ,{}
+        ,{
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+        })
         :setButtonLabel(cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("建造"),
@@ -171,7 +175,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
         condition_label:setColor(color == nil and display.COLOR_GREEN or display.COLOR_RED)
     end
     function item:SetBuildEnable(is_enable)
-        build_btn:setVisible(is_enable)
+        build_btn:setButtonEnabled(is_enable)
     end
 
     return item
