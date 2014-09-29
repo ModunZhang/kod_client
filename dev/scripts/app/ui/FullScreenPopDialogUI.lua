@@ -91,7 +91,7 @@ function FullScreenPopDialogUI:SetNeedsValue(value)
     end
 end
 function FullScreenPopDialogUI:AddToCurrentScene(anima)
-    diplay.getRunningScene():addChild(self)
+    display.getRunningScene():addChild(self,3000)
 end
 return FullScreenPopDialogUI
 
