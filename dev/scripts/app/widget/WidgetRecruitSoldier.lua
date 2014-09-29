@@ -333,7 +333,7 @@ function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
         {normal = "green_btn_up_250x65.png",pressed = "green_btn_down_250x65.png"}
         ,{}
         ,{
-            disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
         })
         :addTo(back_ground, 2)
         :align(display.CENTER, 160, 120)
@@ -371,7 +371,7 @@ function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
         {normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"}
         ,{}
         ,{
-            disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
         })
         :addTo(back_ground, 2)
         :align(display.CENTER, size.width - 120, 120)
@@ -383,10 +383,6 @@ function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
         }))
         :onButtonClicked(function(event)
             NetManager:recruitNormalSoldier(self.soldier_type, self.count, NOT_HANDLE)
-            -- self:SetSoldier(soldier_type, 3)
-            -- self:OnCountChanged(self.count)
-            -- slider:Max(100)
-            -- self.soldier_total_count:setString(string.format("/ %d", 100))
             self:button_clicked()
         end)
     self.button = button
@@ -398,7 +394,6 @@ function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
     -- 时间
     local center = -20
     self.recruit_time = cc.ui.UILabel.new({
-        -- text = "20:20:20",
         size = 18,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_CENTER,

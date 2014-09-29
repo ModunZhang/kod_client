@@ -234,7 +234,16 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
             end
         elseif building:GetEntity():GetType() == "hospital" then
             UIKit:newGameUI('GameUIHospital', City, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "watchTower" then
+            UIKit:newGameUI('GameUIWatchTower', City, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "tradeGuild" then
+            UIKit:newGameUI('GameUITradeGuild', City, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "wall" then
+            UIKit:newGameUI('GameUIWall', City, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "tower" then
+            UIKit:newGameUI('GameUITower', City, building:GetEntity()):addToScene(self, true)
         end
+
     end
 end
 function CityScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed_y, millisecond)
@@ -300,6 +309,9 @@ function CityScene:OnGateChanged(old_walls, new_walls)
 end
 
 return CityScene
+
+
+
 
 
 

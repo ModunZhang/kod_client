@@ -17,16 +17,29 @@ end)
 
 
 function CityLayer:GetClickedObject(x, y, world_x, world_y)
-    local clicked_list = {}
+    local clicked_list = {
+        logic_clicked = {},
+        sprite_clicked = {}
+    }
     self:IteratorClickAble(function(k, v)
-        if v:isVisible() and v:IsContainPoint(x, y, world_x, world_y) then
-            table.insert(clicked_list, v)
+        if v:isVisible() then
+            local check = v:IsContainPointWithFullCheck(x, y, world_x, world_y)
+            if check.logic_clicked then
+                table.insert(clicked_list.logic_clicked, v)
+                return true
+            elseif check.sprite_clicked then
+                table.insert(clicked_list.sprite_clicked, v)
+            end
         end
     end)
-    table.sort(clicked_list, function(a, b)
+    table.sort(clicked_list.logic_clicked, function(a, b)
         return a:getLocalZOrder() > b:getLocalZOrder()
     end)
-    return clicked_list[1]
+    table.sort(clicked_list.sprite_clicked, function(a, b)
+        return a:getLocalZOrder() > b:getLocalZOrder()
+    end)
+    local logic = clicked_list.logic_clicked[1]
+    return logic == nil and clicked_list.sprite_clicked[1] or logic
 end
 function CityLayer:OnTileLocked(city)
     self:OnTileChanged(city)
@@ -561,6 +574,7 @@ function CityLayer:OnSceneMove()
 end
 
 return CityLayer
+
 
 
 
