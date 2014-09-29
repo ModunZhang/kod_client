@@ -383,10 +383,6 @@ function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
         }))
         :onButtonClicked(function(event)
             NetManager:recruitNormalSoldier(self.soldier_type, self.count, NOT_HANDLE)
-            -- self:SetSoldier(soldier_type, 3)
-            -- self:OnCountChanged(self.count)
-            -- slider:Max(100)
-            -- self.soldier_total_count:setString(string.format("/ %d", 100))
             self:button_clicked()
         end)
     self.button = button
@@ -398,7 +394,6 @@ function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
     -- 时间
     local center = -20
     self.recruit_time = cc.ui.UILabel.new({
-        -- text = "20:20:20",
         size = 18,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_CENTER,

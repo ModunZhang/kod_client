@@ -10,7 +10,7 @@ local base_items = {
     { label = _("矿工小屋"), building_type = "miner" },
 }
 function GameUIBuild:ctor(city, select_ruins, select_ruins_list)
-    GameUIBuild.super.ctor(self, city, _("建筑列表"))
+    GameUIBuild.super.ctor(self, city, _("待建地基"))
     self.city = city
     self.select_ruins = select_ruins
     self.select_ruins_list = select_ruins_list
