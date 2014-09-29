@@ -249,7 +249,7 @@ function GameUIHome:CreateBottom()
             chat_bg.prevP = cc.p(event.x,event.y)
             return true
         elseif event.name == 'ended' then
-            if cc.pGetDistance(chat_bg.prevP,cc.p(event.x,event.y)) <= 5 then
+            if cc.pGetDistance(chat_bg.prevP,cc.p(event.x,event.y)) <= 10 then
                 UIKit:newGameUI('GameUIChat'):addToCurrentScene(true)
             end
         end
