@@ -61,20 +61,9 @@ function CityScene:onEnter()
         self.scene_ui_layer:NewUIFromBuildingSprite(building)
     end)
 
-    -- City:GetFirstBuildingByType("townHall"):AddTownHallListener({
-    --     OnBeginImposeWithEvent = function(lisenter, building, event)
-    --         print("OnBeginImposeWithEvent")
-    --     end,
-    --     OnImposingWithEvent = function(lisenter, building, event, current_time)
-    --         print("OnImposingWithEvent", event:Percent(current_time), event:LeftTime(current_time))
-    --     end,
-    --     OnEndImposeWithEvent = function(lisenter, building, event, current_time)
-    --         print("OnEndImposeWithEvent")
-    --     end,
-    --     OnGetTaxWithEvent = function(lisenter, building, event)
-    --         print("OnGetTaxWithEvent")
-    --     end,
-    -- })
+
+    audio.playMusic("muisc_peace.mp3", true)
+    audio.playSound("sfx_peace.mp3", true)
 end
 function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
