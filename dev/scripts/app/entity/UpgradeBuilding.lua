@@ -250,15 +250,15 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.IS_MAX_LEVEL
     end
     local gem = City.resource_manager:GetGemResource():GetValue()
-    -- 建造队列不足
-    if #City:OnUpgradingBuildings()>0 then
-        return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH
-    end
     if isUpgradeNow then
         if gem<self:getUpgradeNowNeedGems() then
             return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH
         end
         return
+    end
+    -- 建造队列不足
+    if #City:OnUpgradingBuildings()>0 then
+        return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH
     end
 
     local wood = City.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
@@ -270,10 +270,10 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     local m = DataManager:getUserData().materials
 
     -- 升级所需资源不足
-    if wood<config[level+1].wood or population<config[level+1].citizen
-        or stone<config[level+1].stone or iron<config[level+1].iron
-        or m.tiles<config[level+1].tiles or m.tools<config[level+1].tools
-        or m.blueprints<config[level+1].blueprints or m.pulley<config[level+1].pulley
+    if wood<config[self:GetNextLevel()].wood or population<config[self:GetNextLevel()].citizen
+        or stone<config[self:GetNextLevel()].stone or iron<config[self:GetNextLevel()].iron
+        or m.tiles<config[self:GetNextLevel()].tiles or m.tools<config[self:GetNextLevel()].tools
+        or m.blueprints<config[self:GetNextLevel()].blueprints or m.pulley<config[self:GetNextLevel()].pulley
     then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH
     end
@@ -281,7 +281,7 @@ end
 
 function UpgradeBuilding:getUpgradeNowNeedGems()
 
-    local resource_config = DataUtils:getBuildingUpgradeRequired(self.building_type, self.level+1)
+    local resource_config = DataUtils:getBuildingUpgradeRequired(self.building_type, self:GetNextLevel())
     local required_gems = 0
     required_gems = required_gems + DataUtils:buyResource(resource_config.resources, {})
     required_gems = required_gems + DataUtils:buyMaterial(resource_config.materials, {})
@@ -302,7 +302,7 @@ function UpgradeBuilding:getUpgradeRequiredGems()
     -- 还未管理道具，暂时从userdata中取
     local has_materials = DataManager:getUserData().materials
 
-    local resource_config = DataUtils:getBuildingUpgradeRequired(self.building_type, self.level+1)
+    local resource_config = DataUtils:getBuildingUpgradeRequired(self.building_type, self:GetNextLevel())
     required_gems = required_gems + DataUtils:buyResource(resource_config.resources, has_resourcce)
     required_gems = required_gems + DataUtils:buyMaterial(resource_config.materials, has_materials)
     return required_gems

@@ -36,6 +36,9 @@ function CommonUpgradeUI:onExit()
 end
 
 function CommonUpgradeUI:OnResourceChanged(resource_manager)
+    if self.building:GetNextLevel() == self.building:GetLevel() then
+        return
+    end
     self.upgrade_layer:isVisible()
     if self.upgrade_layer:isVisible() then
         -- print("资源更行，刷新相关数据， 现在是升级需求listview")
@@ -60,6 +63,7 @@ function CommonUpgradeUI:OnBuildingUpgradeFinished( buidling, finish_time )
     self:SetUpgradeNowNeedGems()
     self:SetBuildingIntroduces()
     self:SetUpgradeTime()
+    self:SetUpgradeEfficiency()
 end
 
 function CommonUpgradeUI:OnBuildingUpgrading( buidling, current_time )
@@ -115,7 +119,11 @@ end
 
 function CommonUpgradeUI:SetBuildingLevel()
     self.builging_level:setString(_("等级 ")..self.building:GetLevel())
-    self.next_level:setString(_("下一级 ")..self.building:GetLevel()+1)
+    if self.building:GetNextLevel() == self.building:GetLevel() then
+        self.next_level:setString(_("等级已满 "))
+    else
+        self.next_level:setString(_("等级 ")..self.building:GetNextLevel())
+    end
 end
 
 function CommonUpgradeUI:InitBuildingIntroduces()
@@ -339,6 +347,9 @@ function CommonUpgradeUI:InitUpgradePart()
     -- 升级页
     -- local color_layer = display.newColorLayer(cc.c4b(255,0,0,255)):addTo(self)
     -- color_layer:setContentSize(cc.size(display.width,display.height-385))
+    if self.building:GetNextLevel() == self.building:GetLevel() then
+        return
+    end
     self.upgrade_layer = display.newLayer()
     self.upgrade_layer:setContentSize(cc.size(display.width,575))
     self:addChild(self.upgrade_layer)
@@ -448,6 +459,8 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
 
     local userData = DataManager:getUserData()
     requirements = {
+        {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetOnUpgradingBuildings()<1,
+            icon="wood_icon.png",description=GameUtils:formatNumber(#City:GetOnUpgradingBuildings()).."/1"},
         {resource_type = "wood",isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
             icon="wood_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpWood()).."/"..GameUtils:formatNumber(wood)},
 
@@ -481,6 +494,9 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
 end
 
 function CommonUpgradeUI:InitAccelerationPart()
+    if self.building:GetNextLevel() == self.building:GetLevel() then
+        return
+    end
     self.acc_layer = display.newLayer()
     self.acc_layer:setContentSize(cc.size(display.width,575))
     self:addChild(self.acc_layer)

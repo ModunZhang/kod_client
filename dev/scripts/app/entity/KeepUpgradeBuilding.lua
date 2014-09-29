@@ -29,13 +29,13 @@ function KeepUpgradeBuilding:GetTroopPopulation()
 end
 
 function KeepUpgradeBuilding:GetNextLevelUnlockPoint()
-    local level = self:GetLevel()
-    return config_function[level+1].unlock
+    local level = self:GetNextLevel()
+    return config_function[level].unlock
 end
 
 function KeepUpgradeBuilding:GetNextLevelTroopPopulation()
-    local level = self:GetLevel()
-    return config_function[level+1].troopPopulation
+    local level = self:GetNextLevel()
+    return config_function[level].troopPopulation
 end
 
 return KeepUpgradeBuilding
