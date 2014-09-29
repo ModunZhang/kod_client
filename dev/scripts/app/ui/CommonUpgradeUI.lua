@@ -96,7 +96,11 @@ function CommonUpgradeUI:InitCommonPart()
 
     self.building_image = display.newScale9Sprite(self.building:GetType()..".png", 0, 0):addTo(self):pos(display.cx-196, display.top-158)
     self.building_image:setAnchorPoint(cc.p(0.5,0.5))
-    self.building_image:setScale(124/self.building_image:getContentSize().width)
+    if self.building:GetType()=="watchTower" then
+        self.building_image:setScale(150/self.building_image:getContentSize().height)
+    else
+        self.building_image:setScale(124/self.building_image:getContentSize().width)
+    end
     self:InitBuildingIntroduces()
     --升级奖励部分
     -- title
@@ -248,6 +252,8 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         efficiency = string.format("%s%d,%s%d,%s+%d",bd.unlock,building:GetNextLevelUnlockPoint(),bd.troopPopulation,building:GetNextLevelTroopPopulation(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="dragonEyrie" then
         efficiency = string.format("%s%d,%s+%d",bd.vitalityRecoveryPerHour,building:GetNextLevelVitalityRecoveryPerHour(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="watchTower" then
+        efficiency = string.format("%s",bd["watchTower_"..self.building:GetLevel()])
     elseif self.building:GetType()=="warehouse" then
         efficiency = string.format("%s%d,%s+%d",bd.warehouse_max,building:GetResourceNextLevelValueLimit(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="toolShop" then
@@ -396,6 +402,7 @@ function CommonUpgradeUI:InitUpgradePart()
                 end
 
                 local can_not_update_type = self.building:IsAbleToUpgrade(false)
+                print("can_not_update_type====",can_not_update_type)
                 if can_not_update_type then
                     self:PopNotSatisfyDialog(upgrade_listener,can_not_update_type)
                 else
@@ -703,12 +710,20 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
             dialog:CreateNeeds("Topaz-icon.png",required_gems)
         end
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH then
-        local required_gems = self.building:getUpgradeNowNeedGems()
+        local required_gems = self.building:getUpgradeRequiredGems()
         dialog:CreateOKButton(function(sender,type)
             listener()
         end)
         dialog:SetTitle(_("立即开始"))
         dialog:SetPopMessage(_("您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"))
+        dialog:CreateNeeds("Topaz-icon.png",required_gems)
+    elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_AND_RESOURCE_NOT_ENOUGH then
+        local required_gems = self.building:getUpgradeRequiredGems()
+        dialog:CreateOKButton(function(sender,type)
+            listener()
+        end)
+        dialog:SetTitle(_("立即开始"))
+        dialog:SetPopMessage(can_not_update_type)
         dialog:CreateNeeds("Topaz-icon.png",required_gems)
     else
         dialog:SetTitle(_("提示"))
@@ -717,6 +732,9 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
+
 
 
 
