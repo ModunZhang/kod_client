@@ -46,6 +46,8 @@ function MyApp:run()
 end
 
 function MyApp:restart()
+    audio.stopMusic()
+    audio.stopAllSounds()
     NetManager:disconnect()
     self.timer:Stop()
     ext.restart()

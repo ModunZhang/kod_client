@@ -10,6 +10,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local config_dragonSkill = GameDatas.DragonEyrie.dragonSkill
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 
 function GameUIDragonEyrie:ctor(city,building)
 	GameUIDragonEyrie.super.ctor(self,City,_("龙巢"),building)
@@ -92,7 +93,10 @@ end
 function GameUIDragonEyrie:HatchAction()
     local energy =  City.resource_manager:GetEnergyResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     if energy < 100 then 
-        print("TODO::::::::能量不足！")
+        local dialog = FullScreenPopDialogUI.new()
+        dialog:SetTitle(_("提示"))
+        dialog:SetPopMessage(_("能量不足!"))
+        dialog:AddToCurrentScene()
         return 
     end
     local dragon = self:GetCurrentDragon()
