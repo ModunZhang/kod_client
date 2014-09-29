@@ -5,6 +5,8 @@ local Localize = import("..utils.Localize")
 local window = import("..utils.window")
 local UpgradeBuilding = import("..entity.UpgradeBuilding")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
+local WidgetPushButton = import("..widget.WidgetPushButton")
+
 
 
 
@@ -70,11 +72,11 @@ function CommonUpgradeUI:OnBuildingUpgrading( buidling, current_time )
     local pro = self.acc_layer.ProgressTimer
     pro:setPercentage(self.building:GetElapsedTimeByCurrentTime(current_time)/self.building:GetUpgradeTimeToNextLevel()*100)
     self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(current_time)))
-    if self.building:GetUpgradingLeftTimeByCurrentTime(current_time)<=self.building.freeSpeedUpTime then
-        self.acc_layer.acc_button:setButtonEnabled(true)
-    else
-        self.acc_layer.acc_button:setButtonEnabled(false)
-    end
+    -- if self.building:GetUpgradingLeftTimeByCurrentTime(current_time)<=self.building.freeSpeedUpTime then
+    --     self.acc_layer.acc_button:setButtonEnabled(true)
+    -- else
+    -- self.acc_layer.acc_button:setButtonEnabled(false)
+    -- end
 end
 
 function CommonUpgradeUI:InitCommonPart()
@@ -96,7 +98,7 @@ function CommonUpgradeUI:InitCommonPart()
 
     self.building_image = display.newScale9Sprite(self.building:GetType()..".png", 0, 0):addTo(self):pos(display.cx-196, display.top-158)
     self.building_image:setAnchorPoint(cc.p(0.5,0.5))
-    if self.building:GetType()=="watchTower" then
+    if self.building:GetType()=="watchTower" or self.building:GetType()=="tower" then
         self.building_image:setScale(150/self.building_image:getContentSize().height)
     else
         self.building_image:setScale(124/self.building_image:getContentSize().width)
@@ -360,7 +362,7 @@ function CommonUpgradeUI:InitUpgradePart()
     self.upgrade_layer:setContentSize(cc.size(display.width,575))
     self:addChild(self.upgrade_layer)
     -- upgrade now button
-    cc.ui.UIPushButton.new({normal = "upgrade_green_button_normal.png",pressed = "upgrade_green_button_pressed.png"})
+    WidgetPushButton.new({normal = "upgrade_green_button_normal.png",pressed = "upgrade_green_button_pressed.png"})
         :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("立即升级"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
@@ -385,7 +387,7 @@ function CommonUpgradeUI:InitUpgradePart()
             end
         end):align(display.CENTER, display.cx-150, display.top-430):addTo(self.upgrade_layer)
     -- upgrade button
-    cc.ui.UIPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
+    WidgetPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
         :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("升级"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
@@ -539,6 +541,7 @@ function CommonUpgradeUI:InitAccelerationPart()
     self.acc_layer.upgrade_time_label:setAnchorPoint(cc.p(0,0.5))
     self.acc_layer.upgrade_time_label:pos(self.acc_layer.upgrade_time_label:getContentSize().width/2+10, bar:getContentSize().height/2)
     if self.building:IsUpgrading() then
+        pro:setPercentage(self.building:GetElapsedTimeByCurrentTime(app.timer:GetServerTime())/self.building:GetUpgradeTimeToNextLevel()*100)
         self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime())))
     end
 
@@ -571,7 +574,7 @@ function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
         pressed = "upgrade_free_2.png",
         disabled = "upgrade_free_3.png",
     }
-    self.acc_layer.acc_button = cc.ui.UIPushButton.new(IMAGES, {scale9 = true})
+    self.acc_layer.acc_button = WidgetPushButton.new(IMAGES, {scale9 = true})
         :setButtonSize(169, 86)
         :setButtonLabel("normal", ui.newTTFLabel({
             text = _("免费加速"),
@@ -626,9 +629,15 @@ function CommonUpgradeUI:CreateAccButtons()
         }):align(display.CENTER, display.cx-220+gap_x*math.mod(i,4), display.top-710-gap_y*math.floor((i-1)/4))
             :addTo(self.acc_layer)
         -- 时间按钮
-        local time_button = cc.ui.UIPushButton.new({normal = "upgrade_time_"..i..".png"})
+        local time_button = WidgetPushButton.new({normal = "upgrade_time_"..i..".png"},{scale9 = false}
+            ,{
+                disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
+            }):setButtonEnabled(false)
+            :SetFilter({
+                disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
+            })
         -- 确认加速按钮
-        local acc_button = cc.ui.UIPushButton.new({normal = "upgrade_acc_button_1.png",pressed="upgrade_acc_button_2.png"})
+        local acc_button = WidgetPushButton.new({normal = "upgrade_acc_button_1.png",pressed="upgrade_acc_button_2.png"})
         time_button:onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 self:ResetAccButtons()
@@ -732,6 +741,9 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
+
 
 
 

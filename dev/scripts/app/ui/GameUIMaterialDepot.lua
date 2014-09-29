@@ -11,6 +11,7 @@ function GameUIMaterialDepot:ctor(city,building)
     GameUIMaterialDepot.super.ctor(self, city, _("材料库房"),building)
     City:GetMaterialManager():AddObserver(self)
     self.material_box_table = {}
+    self.material_listview_table = {}
 end
 
 function GameUIMaterialDepot:onExit()
@@ -42,7 +43,7 @@ function GameUIMaterialDepot:onEnter()
         end
     end):pos(window.cx, window.bottom + 34)
 
-    self:CreateMaterialInfo()
+    -- self:CreateMaterialInfo()
     self:CreateSelectButton()
     self:SelectOneTypeMaterials(MaterialManager.MATERIAL_TYPE.BUILD)
 end
@@ -91,12 +92,22 @@ function GameUIMaterialDepot:CreateItemWithListView(list_view,material_type,mate
     list_view:reload()
 end
 function GameUIMaterialDepot:SelectOneTypeMaterials(m_type)
+    local material_map = City:GetMaterialManager():GetMaterialMap()
     local  material_type = {
         [MaterialManager.MATERIAL_TYPE.BUILD] = _("建造材料"),
         [MaterialManager.MATERIAL_TYPE.DRAGON] = _("龙的材料"),
         [MaterialManager.MATERIAL_TYPE.SOLDIER] = _("士兵材料"),
         [MaterialManager.MATERIAL_TYPE.EQUIPMENT] = _("龙的装备"),
     }
+    if not self.material_listview_table[m_type] then
+        self.material_listview_table[m_type] = UIListView.new{
+            -- bgColor = cc.c4b(math.random(255), math.random(255), math.random(255), math.random(255)),
+            bgScale9 = true,
+            viewRect = cc.rect(display.cx-271, display.top-870, 548, 700),
+            direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}:addTo(self.info_layer)
+        self.material_listview_table[m_type]:setVisible(false)
+        self:CreateItemWithListView(self.material_listview_table[m_type],m_type,material_map[m_type])
+    end
     for k,v in pairs(self.material_listview_table) do
 
         self.material_listview_table[k]:setVisible(m_type==k)
@@ -135,6 +146,7 @@ function GameUIMaterialDepot:OnMaterialsChanged(material_manager,material_type,c
     end
 end
 return GameUIMaterialDepot
+
 
 
 

@@ -238,6 +238,10 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
             UIKit:newGameUI('GameUIWatchTower', City, building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "tradeGuild" then
             UIKit:newGameUI('GameUITradeGuild', City, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "wall" then
+            UIKit:newGameUI('GameUIWall', City, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "tower" then
+            UIKit:newGameUI('GameUITower', City, building:GetEntity()):addToScene(self, true)
         end
 
     end
@@ -305,6 +309,7 @@ function CityScene:OnGateChanged(old_walls, new_walls)
 end
 
 return CityScene
+
 
 
 
