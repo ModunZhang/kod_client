@@ -333,7 +333,7 @@ function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
         {normal = "green_btn_up_250x65.png",pressed = "green_btn_down_250x65.png"}
         ,{}
         ,{
-            disabled = {name = "SATURATION", params = {0}}
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
         })
         :addTo(back_ground, 2)
         :align(display.CENTER, 160, 120)
@@ -371,7 +371,7 @@ function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
         {normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"}
         ,{}
         ,{
-            disabled = {name = "SATURATION", params = {0}}
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
         })
         :addTo(back_ground, 2)
         :align(display.CENTER, size.width - 120, 120)

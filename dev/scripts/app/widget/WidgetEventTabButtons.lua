@@ -220,7 +220,7 @@ function WidgetEventTabButtons:CreateProgressItem()
         pressed = "green_btn_down_142x39.png"}
     ,{}
     ,{
-        disabled = {name = "SATURATION", params = {0}}
+        disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
     }):addTo(progress)
         :align(display.LEFT_CENTER, 340, 43/2)
         :setButtonLabel(cc.ui.UILabel.new({
@@ -274,7 +274,7 @@ function WidgetEventTabButtons:CreateOpenItem()
         pressed = "blue_btn_down_142x39.png"}
     ,{}
     ,{
-        disabled = {name = "SATURATION", params = {0}}
+        disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
     }):addTo(node)
         :align(display.LEFT_CENTER, 340, 0)
         :setButtonLabel(cc.ui.UILabel.new({

@@ -138,7 +138,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
         {normal = "build_item/build_btn_up.png",pressed = "build_item/build_btn_down.png"}
         ,{}
         ,{
-            disabled = {name = "SATURATION", params = {0}}
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
         })
         :setButtonLabel(cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
