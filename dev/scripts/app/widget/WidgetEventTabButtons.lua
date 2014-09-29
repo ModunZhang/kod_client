@@ -1,4 +1,5 @@
 local Localize = import("..utils.Localize")
+local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTab = import(".WidgetTab")
 local WidgetEventTabButtons = class("WidgetEventTabButtons", function()
     local rect = cc.rect(0, 0, 491, 150 + 47)
@@ -262,8 +263,12 @@ function WidgetEventTabButtons:CreateOpenItem()
         color = UIKit:hex2c3b(0xd1ca95)}):addTo(node):align(display.LEFT_CENTER, 10, 0)
 
 
-    cc.ui.UIPushButton.new({normal = "blue_btn_up_142x39.png",
-        pressed = "blue_btn_down_142x39.png"}):addTo(node)
+    local button = WidgetPushButton.new({normal = "blue_btn_up_142x39.png",
+        pressed = "blue_btn_down_142x39.png"}
+    ,{}
+    ,{
+        disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
+    }):addTo(node)
         :align(display.LEFT_CENTER, 340, 0)
         :setButtonLabel(cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -277,13 +282,19 @@ function WidgetEventTabButtons:CreateOpenItem()
             --     table.insert(items, self:CreateItem())
             --     return items
             -- end)
-        end)
+            end)
+    node:setNodeEventEnabled(true)
+
 
     function node:SetLabel(str)
         if label:getString() ~= str then
             label:setString(str)
         end
         return self
+    end
+    function node:onEnter()
+        print("node:onEnter")
+        button:setButtonEnabled(false)
     end
 
     return node
@@ -638,6 +649,7 @@ function WidgetEventTabButtons:MaterialDescribe(event)
 end
 
 return WidgetEventTabButtons
+
 
 
 
