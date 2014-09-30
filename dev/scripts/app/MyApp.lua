@@ -11,7 +11,7 @@ require("app.utils.window")
 require("app.ui.GameGlobalUIUtils")
 require("app.service.NetManager")
 require("app.service.DataManager")
-local lockInputCount = 0
+local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 local Timer = import('.utils.Timer')
 local MyApp = class("MyApp", cc.mvc.AppBase)
 import('app.ui.GameGlobalUIUtils')
@@ -88,16 +88,23 @@ function MyApp:retryConnectServer()
 end
 
 function MyApp:onEnterBackground()
-    MyApp.super.onEnterBackground(self)
+    LuaUtils:outputTable("onEnterBackground", {})
     self:flushIf()
     NetManager:disconnect()
 end
 
 function MyApp:onEnterForeground()
+    LuaUtils:outputTable("onEnterForeground", {})
     self:retryConnectServer()
-    MyApp.super.onEnterForeground(self)
+end
+function MyApp:onEnterPause()
+    LuaUtils:outputTable("onEnterPause", {})
+end
+function MyApp:onEnterResume()
+    LuaUtils:outputTable("onEnterResume", {})
 end
 
+local lockInputCount = 0
 function MyApp:lockInput(b)
     if b then
         lockInputCount = lockInputCount + 1
@@ -112,4 +119,8 @@ function MyApp:lockInput(b)
 end
 
 return MyApp
+
+
+
+
 

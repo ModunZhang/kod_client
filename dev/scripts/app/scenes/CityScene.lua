@@ -51,7 +51,7 @@ function CityScene:onEnter()
 
     self:LoadAnimation()
     self.city_layer = self:CreateSceneLayer()
-    self:CreateMultiTouchLayer()
+    self.touch_layer = self:CreateMultiTouchLayer()
     self.scene_ui_layer = self:CreateSceneUILayer()
     home_page = self:CreateHomePage()
 
@@ -71,13 +71,15 @@ function CityScene:LoadAnimation()
     manager:addArmatureFileInfo("sprites/armatures/hammer/chuizidonghua.ExportJson")
 end
 function CityScene:CreateMultiTouchLayer()
-    local touch_layer = display.newLayer():addTo(self)
+    local touch_layer = display.newLayer():addTo(self, 1)
     touch_layer:setTouchEnabled(true)
-    touch_layer:setTouchSwallowEnabled(false)
+    touch_layer:setTouchSwallowEnabled(true)
     touch_layer:setTouchMode(cc.TOUCH_MODE_ALL_AT_ONCE)
-    touch_layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+    self.handle = touch_layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         self.event_manager:OnEvent(event)
+        return true
     end)
+    return touch_layer
 end
 function CityScene:CreateSceneLayer()
     local scene = CityLayer.new():addTo(self, 0, 1)
@@ -309,6 +311,7 @@ function CityScene:OnGateChanged(old_walls, new_walls)
 end
 
 return CityScene
+
 
 
 
