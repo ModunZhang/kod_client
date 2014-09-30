@@ -95,7 +95,10 @@ function WidgetSoldierBox:alignByPoint(point, x, y)
     if x and y then self:setPosition(x, y) end
     return self
 end
-
+function WidgetSoldierBox:SetButtonListener( cb ) 
+    self.soldier_bg:removeAllEventListeners()
+    self.soldier_bg:onButtonClicked(cb)
+end
 
 return WidgetSoldierBox
 

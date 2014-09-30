@@ -248,9 +248,9 @@ function GameUIPResourceBuilding:RebuildPart()
             text = string.format(_("满足下列条件,可将 %s改建成以上建筑,改建后该建筑的等级保留"),_(self.building:GetType())),
             font = UIKit:getFontFilePath(),
             size = 20,
-            dimensions = cc.size(560,70),
+            dimensions = cc.size(560,0),
             color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.LEFT_TOP, 10 ,72)
+        }):align(display.LEFT_CENTER, 10 ,38)
         :addTo(bg2)
     -- 分割线
     display.newScale9Sprite("dividing_line.png", bg_size.width/2, 130, cc.size(594,2)):addTo(bg)
