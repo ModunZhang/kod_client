@@ -13,34 +13,34 @@ end
 function GameUICommonTips:onEnter()
 	self:createUI()
 	self:setTouchEnabled(true)
-	self:setTouchSwallowEnabled(true)
-	self:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-		if event.name == "began" then
-        	return true
-        elseif event.name == 'ended' then
-        	self:closeButtonPressed(nil,TOUCH_EVENT_ENDED)
-    	end
-	end)
+	self:setTouchSwallowEnabled(false)
+	-- self:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+	-- 	if event.name == "began" then
+ --        	return true
+ --        elseif event.name == 'ended' then
+ --        	self:closeButtonPressed(nil,TOUCH_EVENT_ENDED)
+ --    	end
+	-- end)
 end
 
 function GameUICommonTips:createUI()
 	local bgImage = display.newScale9Sprite("common_tips_bg.png"):addTo(self):align(display.LEFT_BOTTOM, display.left, display.bottom)
 	bgImage:size(display.width,bgImage:getContentSize().height)
-	local button = cc.ui.UIPushButton.new("common_tips_button.png", {scale9 = false})
-		:onButtonClicked(function(event)
-        	self:closeButtonPressed()
-        end)
-	local buttonLabel = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("点击关闭"),
-        font = UIKit:getFontFilePath(),
-        size = 18,
-        align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
-        color = UIKit:hex2c3b(0xFFF3C7)
-    })
+	-- local button = cc.ui.UIPushButton.new("common_tips_button.png", {scale9 = false})
+	-- 	:onButtonClicked(function(event)
+ --        	self:closeButtonPressed()
+ --        end)
+	-- local buttonLabel = cc.ui.UILabel.new({
+ --        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+ --        text = _("点击关闭"),
+ --        font = UIKit:getFontFilePath(),
+ --        size = 18,
+ --        align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
+ --        color = UIKit:hex2c3b(0xFFF3C7)
+ --    })
 
-	button:setButtonLabel("normal",buttonLabel):addTo(self):align(display.RIGHT_BOTTOM, display.right, 10)
-	button:setButtonLabelOffset(50,0)
+	-- button:setButtonLabel("normal",buttonLabel):addTo(self):align(display.RIGHT_BOTTOM, display.right, 10)
+	-- button:setButtonLabelOffset(50,0)
 
 	local titleLabel = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,

@@ -52,12 +52,16 @@ static AppDelegate s_sharedApplication;
                                      numberOfSamples: 0 ];
     // Enable multi-touches
      [eaglView setMultipleTouchEnabled:YES];
-
     // Use RootViewController manage EAGLView
     viewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
     viewController.wantsFullScreenLayout = YES;
     viewController.view = eaglView;
-
+    //启用本地通知的BadgeNumber权限 后面会加入远程通知
+    if (IS_IOS8) {
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge categories:nil];
+        [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+    }
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0]; //清空红圈
     // Set RootViewController to window
     if ([[UIDevice currentDevice].systemVersion floatValue] < 6.0)
     {

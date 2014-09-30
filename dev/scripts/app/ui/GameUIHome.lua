@@ -243,7 +243,17 @@ function GameUIHome:CreateBottom()
     chat_bg:setContentSize(640, 50)
     chat_bg:setTouchEnabled(true)
     chat_bg:addTo(bottom_bg):pos(0, bottom_bg:getContentSize().height)
-
+    chat_bg:setTouchSwallowEnabled(true)
+    chat_bg:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        if event.name == "began" then
+            chat_bg.prevP = cc.p(event.x,event.y)
+            return true
+        elseif event.name == 'ended' then
+            if cc.pGetDistance(chat_bg.prevP,cc.p(event.x,event.y)) <= 10 then
+                UIKit:newGameUI('GameUIChat'):addToCurrentScene(true)
+            end
+        end
+    end)
     local button = cc.ui.UIPushButton.new(
         {normal = "home/chat_btn.png", pressed = "home/chat_btn.png"},
         {scale9 = false}
