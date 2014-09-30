@@ -262,6 +262,7 @@ function WidgetEventTabButtons:CreateProgressItem()
     return progress
 end
 function WidgetEventTabButtons:CreateOpenItem()
+    local widget = self
     local node = display.newNode()
     local label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -284,7 +285,8 @@ function WidgetEventTabButtons:CreateOpenItem()
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xfff3c7)}))
         :onButtonClicked(function(event)
-            end)
+            UIKit:newGameUI('GameUIHasBeenBuild', City):addToCurrentScene(true)
+        end)
 
 
 
@@ -295,7 +297,11 @@ function WidgetEventTabButtons:CreateOpenItem()
         return self
     end
     function node:onEnter()
-        button:setButtonEnabled(false)
+        if widget:GetCurrentTab() == "build" then
+            button:setButtonEnabled(true)
+        else
+            button:setButtonEnabled(false)
+        end
     end
     node:setNodeEventEnabled(true)
 
@@ -651,6 +657,8 @@ function WidgetEventTabButtons:MaterialDescribe(event)
 end
 
 return WidgetEventTabButtons
+
+
 
 
 

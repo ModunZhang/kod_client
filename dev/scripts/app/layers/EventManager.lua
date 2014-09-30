@@ -15,7 +15,9 @@ function EventManager:PushTouch(touch_id, touch)
 end
 function EventManager:RemoveTouch(touch_id)
     if self.cursors[touch_id] then
-        -- self.cursors[touch_id]:removeSelf() -- 调试触摸时打开
+        -- do
+        --     self.cursors[touch_id]:removeSelf() -- 调试触摸时打开
+        -- end
         self.cursors[touch_id] = nil
     end
 end
@@ -26,7 +28,9 @@ function EventManager:AllTouches()
     return self.cursors
 end
 function EventManager:RemoveAllTouches()
-    -- table.foreach(self.cursors, function(_, cursor) cursor:removeSelf() end) -- 调试触摸时打开
+    -- do
+    --     table.foreach(self.cursors, function(_, cursor) cursor:removeSelf() end) -- 调试触摸时打开
+    -- end
     self.cursors = {}
 end
 function EventManager:TouchCounts()
@@ -80,9 +84,15 @@ end
 function EventManager:add_touches(points)
     local add_count = 0
     table.foreach(points, function(id, point)
-        -- local cursor = display.newSprite("Cursor.png"):pos(point.x, point.y):scale(1.2):addTo(self.running_scene, 100000)
-        -- self:PushTouch(id, cursor) -- 调试触摸时打开
-        self:PushTouch(id, {x = point.x, y = point.y})
+        -- do
+        --     local cursor = display.newSprite("Cursor.png"):pos(point.x, point.y):scale(1.2):addTo(self.running_scene, 100000)
+        --     self:PushTouch(id, cursor) -- 调试触摸时打开
+        -- end
+
+        self:PushTouch(id, {x = point.x, y = point.y}) -- 
+
+
+
         add_count = add_count + 1
     end)
     return add_count
@@ -128,8 +138,10 @@ function EventManager:two_touch_began(points)
 
     local points = {}
     for id, cursor in pairs(self:AllTouches()) do
-        -- local x, y = cursor:getPosition()
-        -- table.insert(points, {id = id, x = x, y = y}) -- 调试触摸时打开
+        -- do
+        --     local x, y = cursor:getPosition()
+        --     table.insert(points, {id = id, x = x, y = y}) -- 调试触摸时打开
+        -- end
         table.insert(points, {id = id, x = cursor.x, y = cursor.y})
     end
     self.scale_id_1 = points[1].id
@@ -145,8 +157,10 @@ function EventManager:try_to_find_another_point_by_moving_touch(has_get_point)
     local id = has_get_point.id == self.scale_id_1 and self.scale_id_2 or self.scale_id_1
     local cursor = self:GetTouchById(id)
     if cursor then
-        -- local x, y = cursor:getPosition()
-        -- return { id = id, x = x, y = y } -- 调试触摸时打开
+        -- do
+        --     local x, y = cursor:getPosition()
+        --     return { id = id, x = x, y = y } -- 调试触摸时打开
+        -- end
         return { id = id, x = cursor.x, y = cursor.y }
     end
     return nil
@@ -157,14 +171,16 @@ function EventManager:touch_moving(event_points)
     table.foreach(event_points, function(id, point)
         local cursor = self.cursors[id]
         if cursor then
+            -- do
+            --     local rect = cc.rect(display.left, display.bottom, display.width, display.height)
+            --     if cc.rectContainsPoint(rect, cc.p(point.x, point.y)) then
+            --         cursor:setPosition(point.x, point.y)
+            --         cursor:setVisible(true)
+            --     else
+            --         cursor:setVisible(false)
+            --     end -- 调试触摸时打开
+            -- end
             cursor.x, cursor.y = point.x, point.y
-            -- local rect = CCRect(display.left, display.bottom, display.width, display.height)
-            -- if rect:containsPoint(cc.p(point.x, point.y)) then
-            --     cursor:setPosition(point.x, point.y)
-            --     cursor:setVisible(true)
-            -- else
-            --     cursor:setVisible(false)
-            -- end -- 调试触摸时打开
         end
         if self.scale_id_1 == id or
             self.scale_id_2 == id then
@@ -217,6 +233,7 @@ end
 
 
 return EventManager
+
 
 
 

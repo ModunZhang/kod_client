@@ -4,13 +4,14 @@ local GameUIUpgradeBuilding = class('GameUIUpgradeBuilding', GameUIWithCommonHea
 
 function GameUIUpgradeBuilding:ctor(city, title , building)
     GameUIUpgradeBuilding.super.ctor(self,city, title)
+    self.upgrade_city = city
     self.building = building
 end
 
 function GameUIUpgradeBuilding:CreateBetweenBgAndTitle()
     GameUIUpgradeBuilding.super.CreateBetweenBgAndTitle(self)
     -- 加入升级layer
-    self.upgrade_layer = CommonUpgradeUI.new(self.city,self.building)
+    self.upgrade_layer = CommonUpgradeUI.new(self.upgrade_city, self.building)
     self:addChild(self.upgrade_layer)
 end
 

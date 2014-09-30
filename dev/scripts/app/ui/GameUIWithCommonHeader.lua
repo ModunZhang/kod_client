@@ -16,7 +16,6 @@ function GameUIWithCommonHeader:onEnter()
     self.gem_label = self:CreateShopButton(function()
     end)
     self.city:GetResourceManager():AddObserver(self)
-    -- city:GetResourceManager():OnResourceChanged()
 end
 function GameUIWithCommonHeader:CreateBetweenBgAndTitle()
     print("->创建backgroud和title之间的中间层显示")

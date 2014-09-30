@@ -1,3 +1,4 @@
+local window = import("..utils.window")
 local BuildingRegister = import("..entity.BuildingRegister")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUIBuild = UIKit:createUIClass('GameUIBuild', "GameUIWithCommonHeader")
@@ -20,7 +21,7 @@ end
 function GameUIBuild:onEnter()
     GameUIBuild.super.onEnter(self)
     self.base_resource_building_items = {}
-    self.base_list_view = self:CreateVerticalListView(20, 0, display.right - 20, display.top - 100)
+    self.base_list_view = self:CreateVerticalListView(window.left + 20, window.bottom+20, window.right - 20, window.top - 100)
     for i, v in ipairs(base_items) do
         local item = self:CreateItemWithListView(self.base_list_view)
         item.building = v
