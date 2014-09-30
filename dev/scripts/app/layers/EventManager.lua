@@ -1,6 +1,205 @@
 local EventManager = class("EventManager")
 
 
+
+function EventManager:RemoveTouch(touch_id)
+    if self.cursors[touch_id] then
+        do
+            self.cursors[touch_id]:removeSelf() -- 调试触摸时打开
+        end
+        self.cursors[touch_id] = nil
+    end
+end
+function EventManager:RemoveAllTouches()
+    do
+        table.foreach(self.cursors, function(_, cursor) cursor:removeSelf() end) -- 调试触摸时打开
+    end
+    self.cursors = {}
+end
+function EventManager:add_touches(points)
+    local add_count = 0
+    table.foreach(points, function(id, point)
+        do
+            local cursor = display.newSprite("Cursor.png"):pos(point.x, point.y):scale(1.2):addTo(self.running_scene, 100000)
+            self:PushTouch(id, cursor) -- 调试触摸时打开
+        end
+        add_count = add_count + 1
+    end)
+    return add_count
+end
+function EventManager:two_touch_began(points)
+    table.foreach(points, function(id, point)
+        if self.one_touch_id == id then
+            if self.one_touch_handle then
+                self.one_touch_handle:OnOneTouch(0, 0, point.x, point.y, "cancelled")
+            end
+            self.one_touch_id = nil
+            return true
+        end
+    end)
+
+    local points = {}
+    for id, cursor in pairs(self:AllTouches()) do
+        do
+            local x, y = cursor:getPosition()
+            table.insert(points, {id = id, x = x, y = y}) -- 调试触摸时打开
+        end
+    end
+    self.scale_id_1 = points[1].id
+    self.scale_id_2 = points[2].id
+    local x1, y1 = points[1].x, points[1].y
+    local x2, y2 = points[2].x, points[2].y
+    if self.two_touch_handle then
+        self.two_touch_handle:OnTwoTouch(x1, y1, x2, y2, "began")
+    end
+end
+function EventManager:touch_moving(event_points)
+    local points = {}
+    local count = 0
+    table.foreach(event_points, function(id, point)
+        local cursor = self.cursors[id]
+        if cursor then
+            do
+                local rect = cc.rect(display.left, display.bottom, display.width, display.height)
+                if cc.rectContainsPoint(rect, cc.p(point.x, point.y)) then
+                    cursor:setPosition(point.x, point.y)
+                    cursor:setVisible(true)
+                else
+                    cursor:setVisible(false)
+                end -- 调试触摸时打开
+            end
+        end
+        if self.scale_id_1 == id or
+            self.scale_id_2 == id then
+            table.insert(points, {id = id, x = point.x, y = point.y })
+        end
+        count = count + 1
+    end)
+
+    local is_only_one_finger_moving = #points == 1
+    if is_only_one_finger_moving then
+        local point = self:try_to_find_another_point_by_moving_touch(points[1])
+        if point then
+            table.insert(points, point)
+        end
+    end
+
+    local is_two_finger_moving = #points == 2
+    if is_two_finger_moving then
+        local x1, y1 = points[1].x, points[1].y
+        local x2, y2 = points[2].x, points[2].y
+        if self.two_touch_handle then
+            self.two_touch_handle:OnTwoTouch(x1, y1, x2, y2, "moved")
+        end
+    end
+
+    local is_only_one_finger_on_screen = count == 1
+    if is_only_one_finger_on_screen then
+        self:one_touch_moving(event_points)
+    end
+end
+function EventManager:try_to_find_another_point_by_moving_touch(has_get_point)
+    -- 试图获取另一个点
+    local id = has_get_point.id == self.scale_id_1 and self.scale_id_2 or self.scale_id_1
+    local cursor = self:GetTouchById(id)
+    if cursor then
+        do
+            local x, y = cursor:getPosition()
+            return { id = id, x = x, y = y } -- 调试触摸时打开
+        end
+    end
+    return nil
+end
+-------------------------------------------------------------------
+
+-- function EventManager:RemoveTouch(touch_id)
+--     if self.cursors[touch_id] then
+--         self.cursors[touch_id] = nil
+--     end
+-- end
+-- function EventManager:RemoveAllTouches()
+--     self.cursors = {}
+-- end
+-- function EventManager:add_touches(points)
+--     local add_count = 0
+--     table.foreach(points, function(id, point)
+--         self:PushTouch(id, {x = point.x, y = point.y}) -- 
+--         add_count = add_count + 1
+--     end)
+--     return add_count
+-- end
+-- function EventManager:two_touch_began(points)
+--     table.foreach(points, function(id, point)
+--         if self.one_touch_id == id then
+--             if self.one_touch_handle then
+--                 self.one_touch_handle:OnOneTouch(0, 0, point.x, point.y, "cancelled")
+--             end
+--             self.one_touch_id = nil
+--             return true
+--         end
+--     end)
+
+--     local points = {}
+--     for id, cursor in pairs(self:AllTouches()) do
+--         table.insert(points, {id = id, x = cursor.x, y = cursor.y})
+--     end
+--     self.scale_id_1 = points[1].id
+--     self.scale_id_2 = points[2].id
+--     local x1, y1 = points[1].x, points[1].y
+--     local x2, y2 = points[2].x, points[2].y
+--     if self.two_touch_handle then
+--         self.two_touch_handle:OnTwoTouch(x1, y1, x2, y2, "began")
+--     end
+-- end
+-- function EventManager:touch_moving(event_points)
+--     local points = {}
+--     local count = 0
+--     table.foreach(event_points, function(id, point)
+--         local cursor = self.cursors[id]
+--         if cursor then
+--             cursor.x, cursor.y = point.x, point.y
+--         end
+--         if self.scale_id_1 == id or
+--             self.scale_id_2 == id then
+--             table.insert(points, {id = id, x = point.x, y = point.y })
+--         end
+--         count = count + 1
+--     end)
+
+--     local is_only_one_finger_moving = #points == 1
+--     if is_only_one_finger_moving then
+--         local point = self:try_to_find_another_point_by_moving_touch(points[1])
+--         if point then
+--             table.insert(points, point)
+--         end
+--     end
+
+--     local is_two_finger_moving = #points == 2
+--     if is_two_finger_moving then
+--         local x1, y1 = points[1].x, points[1].y
+--         local x2, y2 = points[2].x, points[2].y
+--         if self.two_touch_handle then
+--             self.two_touch_handle:OnTwoTouch(x1, y1, x2, y2, "moved")
+--         end
+--     end
+
+--     local is_only_one_finger_on_screen = count == 1
+--     if is_only_one_finger_on_screen then
+--         self:one_touch_moving(event_points)
+--     end
+-- end
+-- function EventManager:try_to_find_another_point_by_moving_touch(has_get_point)
+--     -- 试图获取另一个点
+--     local id = has_get_point.id == self.scale_id_1 and self.scale_id_2 or self.scale_id_1
+--     local cursor = self:GetTouchById(id)
+--     if cursor then
+--         return { id = id, x = cursor.x, y = cursor.y }
+--     end
+--     return nil
+-- end
+
+
+
 function EventManager:ctor(event_handle)
     self.running_scene = event_handle
     self.one_touch_id = nil
@@ -13,25 +212,11 @@ end
 function EventManager:PushTouch(touch_id, touch)
     self.cursors[touch_id] = touch
 end
-function EventManager:RemoveTouch(touch_id)
-    if self.cursors[touch_id] then
-        -- do
-        --     self.cursors[touch_id]:removeSelf() -- 调试触摸时打开
-        -- end
-        self.cursors[touch_id] = nil
-    end
-end
 function EventManager:GetTouchById(touch_id)
     return self.cursors[touch_id]
 end
 function EventManager:AllTouches()
     return self.cursors
-end
-function EventManager:RemoveAllTouches()
-    -- do
-    --     table.foreach(self.cursors, function(_, cursor) cursor:removeSelf() end) -- 调试触摸时打开
-    -- end
-    self.cursors = {}
 end
 function EventManager:TouchCounts()
     local count = 0
@@ -81,22 +266,6 @@ function EventManager:OnEvent(event)
         self:check_two_touches_has_cancelled()
     end
 end
-function EventManager:add_touches(points)
-    local add_count = 0
-    table.foreach(points, function(id, point)
-        -- do
-        --     local cursor = display.newSprite("Cursor.png"):pos(point.x, point.y):scale(1.2):addTo(self.running_scene, 100000)
-        --     self:PushTouch(id, cursor) -- 调试触摸时打开
-        -- end
-
-        self:PushTouch(id, {x = point.x, y = point.y}) -- 
-
-
-
-        add_count = add_count + 1
-    end)
-    return add_count
-end
 function EventManager:one_touch_began(points)
     table.foreach(points, function(id, point)
         self.one_touch_id = id
@@ -124,92 +293,6 @@ function EventManager:one_touch_over(points, event_name)
             return true
         end
     end)
-end
-function EventManager:two_touch_began(points)
-    table.foreach(points, function(id, point)
-        if self.one_touch_id == id then
-            if self.one_touch_handle then
-                self.one_touch_handle:OnOneTouch(0, 0, point.x, point.y, "cancelled")
-            end
-            self.one_touch_id = nil
-            return true
-        end
-    end)
-
-    local points = {}
-    for id, cursor in pairs(self:AllTouches()) do
-        -- do
-        --     local x, y = cursor:getPosition()
-        --     table.insert(points, {id = id, x = x, y = y}) -- 调试触摸时打开
-        -- end
-        table.insert(points, {id = id, x = cursor.x, y = cursor.y})
-    end
-    self.scale_id_1 = points[1].id
-    self.scale_id_2 = points[2].id
-    local x1, y1 = points[1].x, points[1].y
-    local x2, y2 = points[2].x, points[2].y
-    if self.two_touch_handle then
-        self.two_touch_handle:OnTwoTouch(x1, y1, x2, y2, "began")
-    end
-end
-function EventManager:try_to_find_another_point_by_moving_touch(has_get_point)
-    -- 试图获取另一个点
-    local id = has_get_point.id == self.scale_id_1 and self.scale_id_2 or self.scale_id_1
-    local cursor = self:GetTouchById(id)
-    if cursor then
-        -- do
-        --     local x, y = cursor:getPosition()
-        --     return { id = id, x = x, y = y } -- 调试触摸时打开
-        -- end
-        return { id = id, x = cursor.x, y = cursor.y }
-    end
-    return nil
-end
-function EventManager:touch_moving(event_points)
-    local points = {}
-    local count = 0
-    table.foreach(event_points, function(id, point)
-        local cursor = self.cursors[id]
-        if cursor then
-            -- do
-            --     local rect = cc.rect(display.left, display.bottom, display.width, display.height)
-            --     if cc.rectContainsPoint(rect, cc.p(point.x, point.y)) then
-            --         cursor:setPosition(point.x, point.y)
-            --         cursor:setVisible(true)
-            --     else
-            --         cursor:setVisible(false)
-            --     end -- 调试触摸时打开
-            -- end
-            cursor.x, cursor.y = point.x, point.y
-        end
-        if self.scale_id_1 == id or
-            self.scale_id_2 == id then
-            table.insert(points, {id = id, x = point.x, y = point.y })
-        end
-        count = count + 1
-    end)
-
-    local is_only_one_finger_moving = #points == 1
-    if is_only_one_finger_moving then
-        local point = self:try_to_find_another_point_by_moving_touch(points[1])
-        if point then
-            table.insert(points, point)
-        end
-    end
-
-    local is_two_finger_moving = #points == 2
-    if is_two_finger_moving then
-        local x1, y1 = points[1].x, points[1].y
-        local x2, y2 = points[2].x, points[2].y
-        if self.two_touch_handle then
-            self.two_touch_handle:OnTwoTouch(x1, y1, x2, y2, "moved")
-        end
-    end
-
-    local is_only_one_finger_on_screen = count == 1
-    if is_only_one_finger_on_screen then
-        self:one_touch_moving(event_points)
-    end
 end
 function EventManager:check_two_touches_which_has_removed(id)
     if self.scale_id_1 == id then
