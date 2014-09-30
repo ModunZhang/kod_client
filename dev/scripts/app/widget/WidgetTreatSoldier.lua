@@ -1,6 +1,9 @@
 local GameUtils = GameUtils
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
+local HospitalUpgradeBuilding = import("..entity.HospitalUpgradeBuilding")
+local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local WidgetSlider = import("..widget.WidgetSlider")
+local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTreatSoldier = class("WidgetTreatSoldier", function(...)
     local node = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
     node:setNodeEventEnabled(true)
@@ -106,7 +109,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
     self.treat_max = treat_max
 
     local label_origin_x = 190
-   
+
     -- bg
     local back_ground = cc.ui.UIImage.new("back_ground_608x458.png",
         {scale9 = true}):addTo(self):setLayoutSize(608, 500)
@@ -285,7 +288,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
         { "treatWood", "res_wood_114x100.png" },
         { "treatIron", "res_iron_114x100.png" },
         { "treatStone", "res_stone_128x128.png" },
-        -- { "citizen", "res_citizen_44x50.png" },
+    -- { "citizen", "res_citizen_44x50.png" },
     }
     self.res_map = {}
     for i, v in pairs(res_map) do
@@ -318,8 +321,12 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
 
     -- 立即治疗
     local size = back_ground:getContentSize()
-    local instant_button = cc.ui.UIPushButton.new(
-        {normal = "green_btn_up_250x65.png",pressed = "green_btn_down_250x65.png"})
+    local instant_button = WidgetPushButton.new(
+        {normal = "green_btn_up_250x65.png",pressed = "green_btn_down_250x65.png"},
+        {scale9 = false},
+        {
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+        })
         :addTo(back_ground, 2)
         :align(display.CENTER, 160, 120)
         :setButtonLabel(cc.ui.UILabel.new({
@@ -329,11 +336,23 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
             color = UIKit:hex2c3b(0xfff3c7)
         }))
         :onButtonClicked(function(event)
-            DataUtils:buyResource({
-                }, {})
-            -- NetManager:instantRecruitNormalSoldier(self.soldier_type, self.count, NOT_HANDLE)
-            self:instant_button_clicked()
-        end)
+            local soldiers = {{name=self.soldier_type, count=self.count}}
+            local treat_fun = function ()
+                NetManager:instantTreatSoldiers(soldiers, NOT_HANDLE)
+                self:instant_button_clicked()
+            end
+            if self.count<1 then
+                local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                    :SetPopMessage(_("请设置要治疗的伤兵数")):AddToCurrentScene()
+            elseif self.treat_now_gems>City:GetResourceManager():GetGemResource():GetValue() then
+                local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                    :SetPopMessage(_("宝石补足")):AddToCurrentScene()
+            else
+                treat_fun()
+            end
+        end):SetFilter({
+        disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+        })
 
     -- gem
     cc.ui.UIImage.new("gem_66x56.png"):addTo(instant_button, 2)
@@ -351,8 +370,12 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
 
 
     -- 治疗
-    local button = cc.ui.UIPushButton.new(
-        {normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"})
+    local button = WidgetPushButton.new(
+        {normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"} ,
+        {scale9 = false},
+        {
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+        })
         :addTo(back_ground, 2)
         :align(display.CENTER, size.width - 120, 120)
         :setButtonLabel(cc.ui.UILabel.new({
@@ -362,13 +385,40 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
             color = UIKit:hex2c3b(0xfff3c7)
         }))
         :onButtonClicked(function(event)
-            -- NetManager:recruitNormalSoldier(self.soldier_type, self.count, NOT_HANDLE)
-            -- self:SetSoldier(soldier_type, 3)
-            -- self:OnCountChanged(self.count)
-            -- slider:Max(100)
-            -- self.soldier_total_count:setString(string.format("/ %d", 100))
-            self:button_clicked()
-        end)
+            local hospital = City:GetFirstBuildingByType("hospital")
+            local soldiers = {{name=self.soldier_type, count=self.count}}
+            local treat_fun = function ()
+                NetManager:treatSoldiers(soldiers, NOT_HANDLE)
+                self:button_clicked()
+            end
+            local isAbleToTreat =hospital:IsAbleToTreat(soldiers)
+            if self.count<1 then
+                local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                    :SetPopMessage(_("请设置要治疗的伤兵数")):AddToCurrentScene()
+            elseif City:GetResourceManager():GetGemResource():GetValue()< hospital:GetTreatGems(soldiers) then
+                local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                    :SetPopMessage(_("没有足够的宝石补充资源")):AddToCurrentScene()
+            elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING_AND_LACK_RESOURCE then
+                local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                    :SetPopMessage(_("正在治疗，资源不足"))
+                    :CreateOKButton(treat_fun)
+                    :CreateNeeds("Topaz-icon.png",hospital:GetTreatGems(soldiers)):AddToCurrentScene()
+            elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.LACK_RESOURCE then
+                local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                    :SetPopMessage(_("资源不足，是否花费宝石补足"))
+                    :CreateOKButton(treat_fun)
+                    :CreateNeeds("Topaz-icon.png",hospital:GetTreatGems(soldiers)):AddToCurrentScene()
+            elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING then
+                local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                    :SetPopMessage(_("正在治疗，是否花费魔法石立即完成"))
+                    :CreateOKButton(treat_fun)
+                    :CreateNeeds("Topaz-icon.png",hospital:GetTreatGems(soldiers)):AddToCurrentScene()
+            else
+                treat_fun()
+            end
+        end):SetFilter({
+        disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+        })
 
     -- 时间glass
     cc.ui.UIImage.new("hourglass_39x46.png"):addTo(button, 2)
@@ -467,20 +517,34 @@ function WidgetTreatSoldier:OnCountChanged(count)
     local current_res_map = {}
     for k, v in pairs(self.res_map) do
         local total = total_map[k] == nil and 0 or total_map[k]
-        if conditions then
-            --todo
-        end
         local current = soldier_config[k] * count
-        current_res_map[k] = current
+        local rs_k = ""
+        if k=="treatStone" then
+            rs_k = "stone"
+        elseif k=="treatIron" then
+            rs_k = "iron"
+        elseif k=="treatFood" then
+            rs_k = "food"
+        elseif k=="treatWood" then
+            rs_k = "wood"
+        end
+        current_res_map[rs_k] = current
         local color = total >= current and UIKit:hex2c3b(0x403c2f) or display.COLOR_RED
         v.need:setString(string.format("/ %s", GameUtils:formatNumber(current)))
         v.total:setColor(color)
         v.need:setColor(color)
     end
     self.count = count
-    self.gem_label:setString(DataUtils:buyResource(current_res_map, {}) + DataUtils:getGemByTimeInterval(total_time))
+    LuaUtils:outputTable("current_res_map", current_res_map)
+    self.treat_now_gems = DataUtils:buyResource(current_res_map, {}) + DataUtils:getGemByTimeInterval(total_time)
+    self.gem_label:setString(self.treat_now_gems)
 end
 return WidgetTreatSoldier
+
+
+
+
+
 
 
 
