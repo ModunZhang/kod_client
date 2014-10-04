@@ -62,8 +62,8 @@ function CityScene:onEnter()
     end)
 
 
-    -- audio.playMusic("muisc_peace.mp3", true)
-    -- audio.playSound("sfx_peace.mp3", true)
+    audio.playMusic("muisc_peace.mp3", true)
+    audio.playSound("sfx_peace.mp3", true)
 end
 function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
