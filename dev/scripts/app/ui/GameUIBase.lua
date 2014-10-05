@@ -65,7 +65,8 @@ function GameUIBase:leftButtonClicked()
         if self.moveInAnima then
             self:UIAnimationMoveOut()
         else
-            self:removeFromParent(true) -- 没有动画就直接删除
+            self:onMovieOutStage() -- fix 
+            -- self:removeFromParent(true) -- 没有动画就直接删除
         end
     end
 end

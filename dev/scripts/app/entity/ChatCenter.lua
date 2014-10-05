@@ -102,7 +102,9 @@ end
 
 function ChatCenter:_notifyObservers( event,data)
 	self:NotifyObservers(function(listener)
-		listener.messageEvent(listener,event,data)
+		if listener.messageEvent then
+			listener.messageEvent(listener,event,data)
+		end
 	end)
 end
 
