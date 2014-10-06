@@ -189,6 +189,10 @@ function GameUIDragonEyrie:CreateDragonIf()
     local bg = display.newSprite("dragon_box_606x494.png")
         :addTo(dragonContent)
         :pos(window.cx,window.top - 350)
+    display.newScale9Sprite("chat_setting_bg.png")
+        :size(bg:getContentSize().width,bg:getContentSize().height-50)
+        :addTo(dragonContent,-1)
+        :pos(window.cx,window.top - 350 - 20)
     self.dragonUI.dragonNameLabel = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "Red Dragon",
@@ -206,6 +210,7 @@ function GameUIDragonEyrie:CreateDragonIf()
         color = UIKit:hex2c3b(0xb1a475)
     }):addTo(bg):align(display.RIGHT_TOP, bg:getContentSize().width - 50, bg:getContentSize().height-12)
     local drgonBg = display.newSprite("dragon.png"):addTo(dragonContent,-1):pos(window.cx,window.top - 326)
+    display.newSprite("dragon_line_594x4.png"):addTo(drgonBg):align(display.TOP_LEFT, 0, 0)
     self.dragonUI.dragonContent = drgonBg
     local shieldView = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
          :addTo(dragonContent,-1)
