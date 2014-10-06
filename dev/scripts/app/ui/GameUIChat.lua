@@ -254,6 +254,7 @@ function GameUIChat:CreateListView()
     listView:registerScriptHandler(handler(self,self.tableViewScrollBoundTop),cc.SCROLLVIEW_BOUND_TOP)
     listView:registerScriptHandler(handler(self,self.tableViewScrollBoundBottom),cc.SCROLLVIEW_BOUND_BOTTOM)
     self.listView = listView
+    listView:setTouchSwallowEnabled(false)
     print("list------>",listView:getLocalZOrder())
 end
 
@@ -304,12 +305,10 @@ function GameUIChat:tableCellTouched(table,cell,x,y)
                 end
                 self.listView:updateCellAtIndex(idx)
             end
-            return 
+        elseif not self.listView:isOutOfViewSize(cell) then
+            self:CreatePlayerMenu(chat,cell)
         end
-    else
-        return
     end
-    self:CreatePlayerMenu(chat,cell)
 end
 
 -- 根据聊天信息的高度 计算cell的高度
@@ -455,12 +454,14 @@ function GameUIChat:CreateTextFieldBody()
     	end)
     	:addTo(self)
     	:align(display.LEFT_TOP,self.editbox:getPositionX()+self.editbox:getContentSize().width+10, window.top - 100)
+        :zorder(2)
     local plusButton = cc.ui.UIPushButton.new({normal = "chat_add.png",pressed = "chat_add_highlight.png",}, {scale9 = false})
     	:onButtonClicked(function(event)
 
 		end)
 		:addTo(self)
 		:align(display.LEFT_TOP, emojiButton:getPositionX()+emojiButton:getCascadeBoundingBox().size.width+10,emojiButton:getPositionY()-2)
+        :zorder(2)
 end
 
 
@@ -532,7 +533,7 @@ end
 function GameUIChat:CreatShieldView()
 	self:setEditBoxAble(false)
 	local shieldView = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
-		:addTo(self,self.PLAYERMENU_ZORDER)
+		:addTo(self,self.PLAYERMENU_ZORDER):zorder(2)
     local bg = display.newSprite("chat_setting_bg.png")
     	:addTo(shieldView)
     	:pos(window.cx,window.cy)
@@ -587,10 +588,10 @@ end
 
 function GameUIChat:setEditBoxAble( b )
 	self.editbox:setEnable(b)
+    self.listView:setTouchEnabled(b)
 end
 
 function GameUIChat:CreatePlayerMenu(chat,cell)
-  self.listView:setTouchEnabled(false)
   self:setEditBoxAble(false)
   if DataManager:getUserData()._id == chat.fromId then return end -- if self return 
   local menuLayer = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
@@ -601,7 +602,6 @@ function GameUIChat:CreatePlayerMenu(chat,cell)
     menuLayer:addNodeEventListener(cc.NODE_TOUCH_EVENT,function()
       menuLayer:removeFromParent(true)
       self:setEditBoxAble(true)
-      self.listView:setTouchEnabled(true)
     end)
     local content = self:GetChatItemCell()
     local x,y = cell:getPosition()
