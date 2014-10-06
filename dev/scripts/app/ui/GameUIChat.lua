@@ -27,7 +27,7 @@ GameUIChat.CELL_PLAYER_ICON_VIP_LABEL_TAG = 110
 GameUIChat.CELL_PLAYER_ICON_HERO_TAG = 111
 
 function GameUIChat:onEnter()
-	self:CreateBackGround()
+	  self:CreateBackGround()
     self:CreateTitle(_("聊天"))
     self:CreateHomeButton()
     self:CreateSettingButton()
@@ -78,8 +78,8 @@ function GameUIChat:messageEvent( event,data )
     if event == 'onRefresh'  then
         self:RefreshListView()
     elseif event == 'onPush' then
-        self.listView:insertCellAtIndex(0)
-        -- self.listView:updateCellAtIndex(0)
+        self.listView:insertCellAtIndex(#self.dataSource_-1)
+        --顶部插头
     end
 end
 
@@ -97,34 +97,6 @@ function GameUIChat:onMovieOutStage()
 	GameUIChat.super.onMovieOutStage(self)
 end
 
--- function GameUIChat:listviewListener(event)
--- 	if event.name == 'SCROLLVIEW_EVENT_BOUNCE_BOTTOM' then
--- 		  print('get more message!')
---             self.page = self.page + 1
---             local data = ChatCenter:getAllMessages(self._channelType,self.page)
---             if #data == 0 and self.page > 1 then
---                 self.page = self.page - 1
---                 return
---             end
---             for i,v in ipairs(data) do
---                 local newItem  = self:getChatItem(v)
---                 self.listView:addItem(newItem)
---             end
---             self.listView:resetPosition()
---             self.listView:reload()
---             self.listView:resetPosition()
--- 		return
--- 	end
--- 	if not event.listView:isItemInViewRect(event.itemPos) then
---         return
---     end
-
---     print("GameUIChat:listviewListener event:" .. event.name .. " pos:" .. event.itemPos)
---     local listView = event.listView
---     if "clicked" == event.name then
---     	self:CreatePlayerMenu(event)
---     end
--- end
 
 function GameUIChat:GetChatIcon()
 	local heroBg = display.newSprite("chat_hero_background.png")
@@ -204,10 +176,10 @@ function GameUIChat:GetChatItemCell()
 	    -- chat_translation.png
     local translateButton = cc.ui.UIPushButton.new({normal = "chat_translation.png"}, {scale9 = false})
     	:addTo(header,3)
-    	:onButtonClicked(function(event)
-			-- print("duck button-------")
-		end)
-		:align(display.RIGHT_BOTTOM,header:getContentSize().width-10,titleLabel:getPositionY()+titleLabel:getContentSize().height/2)
+        :align(display.RIGHT_BOTTOM,header:getContentSize().width-10,titleLabel:getPositionY()+titleLabel:getContentSize().height/2)
+  --   	:onButtonClicked(function(event)
+  --           print("button test----->")
+		-- end)
 	playerIcon:addTo(content):align(display.LEFT_TOP, 1, bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
 	translateButton:setTag(self.CELL_TRANSLATEBUTTON)
 	main.other = content
@@ -273,7 +245,6 @@ function GameUIChat:RefreshListView()
         self._channelType = 'global'
     end
     self.dataSource_ = ChatCenter:getAll(self._channelType)
-    print("......->RefreshListView")
     self.listView:reloadData()
 end
 
@@ -281,49 +252,63 @@ function GameUIChat:CreateListView()
  	local listView  = cc.TableView:create(cc.size(549, 700))
     listView:setDirection(cc.SCROLLVIEW_DIRECTION_VERTICAL)
     listView:setDelegate()
-    listView:setVerticalFillOrder(cc.TABLEVIEW_FILL_TOPDOWN)
     listView:addTo(self):pos(window.left+45,window.bottom+100)
-
     listView:registerScriptHandler(handler(self,self.cellSizeForTable),cc.TABLECELL_SIZE_FOR_INDEX)
     listView:registerScriptHandler(handler(self,self.tableCellAtIndex),cc.TABLECELL_SIZE_AT_INDEX)
     listView:registerScriptHandler(handler(self,self.numberOfCellsInTableView),cc.NUMBER_OF_CELLS_IN_TABLEVIEW)
     listView:registerScriptHandler(handler(self,self.tableCellTouched),cc.TABLECELL_TOUCHED)
     self.listView = listView
-    
+    print("list------>",listView:getLocalZOrder())
 end
 
 -----------------------CCTableView adapter
-
-function GameUIChat:tableCellTouched(table,cell)
-    print("cell touched at index: " .. cell:getIdx())
-    local idx = cell:getIdx()
-    local chat = self.dataSource_[idx+1]
-    --翻译
-    -- if not chat._translate_ then
-    --     GameUtils:Translate(chat.text,function(result,errText)
-    --         if result then
-    --             chat._translate_ = result
-    --             chat._translateMode_ = true
-    --             -- contentLable:setString(chat._translate_)
-    --             self.listView:updateCellAtIndex(idx)
-    --         else
-    --             print('Translate error------->',errText)
-    --         end
-    --     end)
-    -- else
-    --     if chat._translateMode_ then
-    --         chat._translateMode_ = false
-    --         -- contentLable:setString(chat.text)
-    --     else
-    --         chat._translateMode_ = true
-    --         -- contentLable:setString(chat._translate_)
-    --     end
-    --     self.listView:updateCellAtIndex(idx)
-    -- end
-    -- print("cell clone-------->",clone(cell))
-    self:CreatePlayerMenu(cell,chat)
+-- 回调被拓展成有
+function GameUIChat:tableCellTouched(table,cell,x,y)
+    local chat = self.dataSource_[cell:getIdx()+1]
+    print("cell touched at index: " .. cell:getIdx(),x,y)
+    if not chat then return end
+    local isSelf = DataManager:getUserData()._id == chat.fromId
+    local mainContent = cell:getChildByTag(self.CELL_MAIN_CONENT_TAG)
+    if not isSelf then
+        local currentContent = mainContent.other
+        local header = currentContent:getChildByTag(self.CELL_HEADER_TAG)
+        local buttonTranslate = header:getChildByTag(self.CELL_TRANSLATEBUTTON)
+        --计算button的世界坐标
+        local  p2world = header:convertToWorldSpace(cc.p(buttonTranslate:getPositionX()-buttonTranslate:getCascadeBoundingBox().width,buttonTranslate:getPositionY())) 
+        local buttonRect =  buttonTranslate:getCascadeBoundingBox()
+        buttonRect.x = p2world.x
+        buttonRect.y = p2world.y
+        --如果点中button不处理cell点击事件
+        if cc.rectContainsPoint(buttonRect,cc.p(x,y)) then 
+            local idx = cell:getIdx()
+            --翻译
+            if not chat._translate_ then
+                GameUtils:Translate(chat.text,function(result,errText)
+                    if result then
+                        chat._translate_ = result
+                        chat._translateMode_ = true
+                        self.listView:updateCellAtIndex(idx)
+                    else
+                        print('Translate error------->',errText)
+                    end
+                end)
+            else
+                if chat._translateMode_ then
+                    chat._translateMode_ = false
+                else
+                    chat._translateMode_ = true
+                end
+                self.listView:updateCellAtIndex(idx)
+            end
+            return 
+        end
+    else
+        return
+    end
+    self:CreatePlayerMenu(chat,cell)
 end
 
+-- 根据聊天信息的高度 计算cell的高度
 function GameUIChat:cellSizeForTable(table,idx)
 	local chat = self.dataSource_[idx+1]
 	local w,h = 549,83
@@ -345,11 +330,76 @@ function GameUIChat:cellSizeForTable(table,idx)
 	return h,w --height,width
 end
 
-function GameUIChat:tableCellAtIndex(table, idx)
-    local chat = self.dataSource_[idx+1]
+function GameUIChat:HandleCellUIData(mainContent,chat,cell)
+    if not chat then return end
     local isSelf = DataManager:getUserData()._id == chat.fromId
     local isVip = chat.fromVip and chat.fromVip > 0
+    local currentContent = nil
+    if isSelf then
+      mainContent.other:hide()
+      currentContent = mainContent.self
+    else
+      mainContent.self:hide()
+      currentContent = mainContent.other
+    end
+    currentContent:show()
 
+    local bottom = currentContent:getChildByTag(self.CELL_BOTTM_TAG)
+    local middle = currentContent:getChildByTag(self.CELL_MIDDLE_TAG)
+    local header = currentContent:getChildByTag(self.CELL_HEADER_TAG)
+    -- assert(bottom)
+    -- assert(header)
+    -- assert(middle)
+    
+
+    --header node
+    local timeLabel = header:getChildByTag(self.CELL_TIME_LABEL_TAG)
+    -- assert(timeLabel)
+    local titleBg = header:getChildByTag(self.CELL_TITLE_BG_TAG)
+    -- assert(titleBg)
+    local titleLabel = titleBg:getChildByTag(self.CELL_TITLE_LABEL_TAG)
+    -- assert(titleLabel)
+    -- middle node
+    local contentLable = middle:getChildByTag(self.CELL_CONTENT_LABEL_TAG)
+    -- assert(contentLable)
+    --bind
+    titleLabel:setString(chat.fromName)
+    if not chat.timeStr then
+        chat.timeStr = NetService:formatTimeAsTimeAgoStyleByServerTime(chat.time)
+    end
+    timeLabel:setString(chat.timeStr)
+
+    local palyerIcon = currentContent:getChildByTag(self.CELL_PLAYER_ICON_TAG)
+    -- assert(palyerIcon)
+    local hero = palyerIcon:getChildByTag(self.CELL_PLAYER_ICON_HERO_TAG)
+    local vipBg = hero:getChildByTag(self.CELL_PLAYER_ICON_VIP_BG_TAG)
+    local vipLabel = vipBg:getChildByTag(self.CELL_PLAYER_ICON_VIP_LABEL_TAG)
+
+    -- assert(hero)
+    -- assert(vipBg)
+    -- assert(vipLabel)
+    vipBg:setVisible(isVip)
+    vipLabel:setVisible(isVip)
+    vipLabel:setString('VIP ' .. chat.fromVip)
+    local labelText = chat.text
+    if chat._translate_ and chat._translateMode_ then
+        labelText = chat._translate_
+    end
+
+    contentLable:setString(labelText) --聊天信息
+    if not isSelf then
+        --重新布局
+        middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getContentSize().height))
+        header:align(display.RIGHT_BOTTOM, 549, bottom:getContentSize().height+middle:getContentSize().height)
+        palyerIcon:pos(palyerIcon:getPositionX(),bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
+    else
+        middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getContentSize().height))
+    end
+end
+
+
+function GameUIChat:tableCellAtIndex(table, idx)
+    local chat = self.dataSource_[idx+1]
     local cell = table:dequeueCell()
     if nil == cell then
         cell = cc.TableViewCell:new()
@@ -359,64 +409,8 @@ function GameUIChat:tableCellAtIndex(table, idx)
     end
 
    	local mainContent = cell:getChildByTag(self.CELL_MAIN_CONENT_TAG)
-   	local currentContent = nil
-   	if isSelf then
-   		mainContent.other:hide()
-   		currentContent = mainContent.self
-   	else
-   		mainContent.self:hide()
-   		currentContent = mainContent.other
-   	end
-    currentContent:show()
-
-    print("idx------>",idx,mainContent.self:isVisible(),mainContent.other:isVisible())
-   	local bottom = currentContent:getChildByTag(self.CELL_BOTTM_TAG)
-   	local middle = currentContent:getChildByTag(self.CELL_MIDDLE_TAG)
-   	local header = currentContent:getChildByTag(self.CELL_HEADER_TAG)
-   	assert(bottom)
-   	assert(header)
-   	assert(middle)
-   	--header node
-   	local timeLabel = header:getChildByTag(self.CELL_TIME_LABEL_TAG)
-   	assert(timeLabel)
-   	local titleBg = header:getChildByTag(self.CELL_TITLE_BG_TAG)
-   	assert(titleBg)
-   	local titleLabel = titleBg:getChildByTag(self.CELL_TITLE_LABEL_TAG)
-   	assert(titleLabel)
-   	-- middle node
-   	local contentLable = middle:getChildByTag(self.CELL_CONTENT_LABEL_TAG)
-   	assert(contentLable)
-   	--bind
-   	titleLabel:setString(chat.fromName)
-   	local timeStr = NetService:formatTimeAsTimeAgoStyleByServerTime(chat.time)
-   	timeLabel:setString(timeStr)
-
-  local palyerIcon = currentContent:getChildByTag(self.CELL_PLAYER_ICON_TAG)
-  assert(palyerIcon)
-  local hero = palyerIcon:getChildByTag(self.CELL_PLAYER_ICON_HERO_TAG)
-  local vipBg = hero:getChildByTag(self.CELL_PLAYER_ICON_VIP_BG_TAG)
-	local vipLabel = vipBg:getChildByTag(self.CELL_PLAYER_ICON_VIP_LABEL_TAG)
-
-	assert(hero)
-	assert(vipBg)
-	assert(vipLabel)
-	vipBg:setVisible(isVip)
-	vipLabel:setVisible(isVip)
-	vipLabel:setString('VIP ' .. chat.fromVip)
-	local labelText = chat.text
-  if chat._translate_ and chat._translateMode_ then
-      labelText = chat._translate_
-  end
-
-  contentLable:setString(labelText) --聊天信息
-	if not isSelf then
-   	middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getContentSize().height))
-		header:align(display.RIGHT_BOTTOM, 549, bottom:getContentSize().height+middle:getContentSize().height)
-		palyerIcon:pos(palyerIcon:getPositionX(),bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
-  else
-    middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getContentSize().height))
-  end
-  return cell
+    self:HandleCellUIData(mainContent,chat,cell)
+    return cell
 end
 
 
@@ -451,11 +445,9 @@ function GameUIChat:CreateTextFieldBody()
 
 	local emojiButton = cc.ui.UIPushButton.new({normal = "chat_expression.png",pressed = "chat_expression_highlight.png",},{scale9 = false})
 		:onButtonClicked(function(event)
-			 -- ChatService:sendChat({text = editbox:getText(),type=self._channelType},function(err)
-    --             editbox:setText('')
-    --         end)
-      print("insertCellAtIndex 0")
-        
+			 ChatService:sendChat({text = editbox:getText(),type=self._channelType},function(err)
+                editbox:setText('')
+            end)
     	end)
     	:addTo(self)
     	:align(display.LEFT_TOP,self.editbox:getPositionX()+self.editbox:getContentSize().width+10, window.top-100)
@@ -590,29 +582,31 @@ function GameUIChat:CreatShieldView()
 end
 
 function GameUIChat:setEditBoxAble( b )
-	self.editbox:setEnabled(b)
+	self.editbox:setEnable(b)
 end
 
-function GameUIChat:CreatePlayerMenu(cell,chat)
-	self:setEditBoxAble(false)
-	-- local item = event.item
-	-- local chat = ChatCenter:getMessage(self.listView:getItemPos(item)-1,self.page,self._channelType)
-	if DataManager:getUserData()._id == chat.fromId then return end -- if self return 
-	local menuLayer = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
-    menuLayer:setTouchEnabled(true)
-    menuLayer:addTo(self,self.PLAYERMENU_ZORDER):pos(0, 0)
+function GameUIChat:CreatePlayerMenu(chat,cell)
+  self.listView:setTouchEnabled(false)
+  self:setEditBoxAble(false)
+  if DataManager:getUserData()._id == chat.fromId then return end -- if self return 
+  local menuLayer = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
+  menuLayer:setTouchEnabled(true)
+  menuLayer:setTouchSwallowEnabled(true)
+  menuLayer:addTo(self,self.PLAYERMENU_ZORDER):pos(0, 0)
     local tabBg = display.newSprite("chat_tab_backgroud.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(menuLayer)
     menuLayer:addNodeEventListener(cc.NODE_TOUCH_EVENT,function()
-    	menuLayer:removeFromParent(true)
-    	self:setEditBoxAble(true)
+      menuLayer:removeFromParent(true)
+      self:setEditBoxAble(true)
+      self.listView:setTouchEnabled(true)
     end)
-	  -- local x,y = item:getContent():getPosition()
-    -- local p = item:convertToWorldSpace(cc.p(x,y))
-    -- local targetP = menuLayer:convertToNodeSpace(p)
-    -- local newItem = self:getChatItem(chat)
-    -- newItem:setPosition(targetP)
-    -- newItem:addTo(menuLayer)
-    cell:addTo(menuLayer):center()
+    local content = self:GetChatItemCell()
+    local x,y = cell:getPosition()
+    local p = cell:getParent():convertToWorldSpace(cc.p(x,y))
+    local posIntMenuLayer = menuLayer:convertToNodeSpace(p)
+    content:addTo(menuLayer)
+    content:setPosition(posIntMenuLayer)
+
+    self:HandleCellUIData(content, chat)
     --copy
     local copyButton = cc.ui.UIPushButton.new({normal="chat_tab_button.png",pressed="chat_tab_button_highlight.png"}, {scale9 = false})
         :setButtonLabel("normal", cc.ui.UILabel.new({

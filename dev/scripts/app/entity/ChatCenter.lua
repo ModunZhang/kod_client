@@ -115,14 +115,14 @@ function ChatCenter:_insertMessage(v )
 			self._messageQueue_[string.lower(v.fromType)] = {}
 		end
 		if not self:_isBlockedChat(v) then
-			table.insert(self._messageQueue_[string.lower(v.fromType)],1,v)
+			table.insert(self._messageQueue_[string.lower(v.fromType)],v)
 			return true
 		end
 	else
 		print("插入系统消息")
 		--系统邮件默认放入世界聊天频道
 		if not self._messageQueue_[string.lower('global')] then self._messageQueue_[string.lower('global')] = {} end
-		table.insert(self._messageQueue_[string.lower('global')],1,v)
+		table.insert(self._messageQueue_[string.lower('global')],v)
 		return true
 	end
 	return false
