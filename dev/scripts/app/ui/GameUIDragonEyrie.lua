@@ -149,7 +149,7 @@ function GameUIDragonEyrie:TabButtonsAction(tag)
     self.button_tag = tag
     if tag == "upgrade" then
         if self.dragon_bg then
-            self.dragon_bg:setVisible(false)
+            self.dragonUI.main:setVisible(false)
             self.current_content:setVisible(false)
         end
     else
@@ -182,9 +182,10 @@ function GameUIDragonEyrie:OnResourceChanged(resource_manager)
 end
 
 function GameUIDragonEyrie:CreateDragonIf()
-    if self.dragon_bg then self.dragon_bg:setVisible(true) return self.dragon_bg end -- 只需创建一次
+    if self.dragon_bg then self.dragonUI.main:setVisible(true) return self.dragon_bg end -- 只需创建一次
     self.dragonUI = {}
     local dragonContent = display.newNode():addTo(self)
+    self.dragonUI.main = dragonContent
     local bg = display.newSprite("dragon_box_606x494.png")
         :addTo(dragonContent)
         :pos(window.cx,window.top - 350)
