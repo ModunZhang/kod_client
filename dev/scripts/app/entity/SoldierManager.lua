@@ -69,15 +69,22 @@ function SoldierManager:GetTotalUpkeep()
     end
     return total_upkeep
 end
-function SoldierManager:GetTreatResource()
+function SoldierManager:GetTreatResource(soldiers)
     local total_iron,total_stone,total_wood,total_food = 0,0,0,0
-    for k, v in pairs(self.treatSoldiers_map) do
-        total_iron = total_iron + NORMAL[k.."_"..self:GetStarBySoldierType()].treatIron*v
-        total_stone = total_iron + NORMAL[k.."_"..self:GetStarBySoldierType()].treatStone*v
-        total_wood = total_iron + NORMAL[k.."_"..self:GetStarBySoldierType()].treatWood*v
-        total_food = total_iron + NORMAL[k.."_"..self:GetStarBySoldierType()].treatFood*v
+    for k, v in pairs(soldiers) do
+        total_iron = total_iron + NORMAL[v.name.."_"..self:GetStarBySoldierType()].treatIron*v.count
+        total_stone = total_iron + NORMAL[v.name.."_"..self:GetStarBySoldierType()].treatStone*v.count
+        total_wood = total_iron + NORMAL[v.name.."_"..self:GetStarBySoldierType()].treatWood*v.count
+        total_food = total_iron + NORMAL[v.name.."_"..self:GetStarBySoldierType()].treatFood*v.count
     end
     return total_iron,total_stone,total_wood,total_food
+end
+function SoldierManager:GetTreatTime(soldiers)
+    local treat_time = 0
+    for k, v in pairs(soldiers) do
+        total_iron = total_iron + NORMAL[v.name.."_"..self:GetStarBySoldierType()].treatTime*v.count
+    end
+    return treat_time
 end
 function SoldierManager:GetTreatAllTime()
     local total_time= 0

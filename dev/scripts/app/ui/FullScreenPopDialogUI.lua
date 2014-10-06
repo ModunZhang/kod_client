@@ -58,10 +58,12 @@ end
 
 function FullScreenPopDialogUI:SetTitle(title)
     self.title:setString(title)
+    return self
 end
 
 function FullScreenPopDialogUI:SetPopMessage(message)
     self.message_label:setString(message)
+    return self
 end
 
 function FullScreenPopDialogUI:CreateOKButton(listener)
@@ -72,6 +74,7 @@ function FullScreenPopDialogUI:CreateOKButton(listener)
             listener()
             self:removeFromParent(true)
         end):align(display.CENTER, display.cx+50, display.top-610):addTo(self)
+    return self
 end
 
 function FullScreenPopDialogUI:CreateNeeds(icon,value)
@@ -84,14 +87,17 @@ function FullScreenPopDialogUI:CreateNeeds(icon,value)
         size = 24,
         color = UIKit:hex2c3b(0xfdfac2)
     }):align(display.LEFT_CENTER,display.cx+60,display.top-560):addTo(self)
+    return self
 end
 function FullScreenPopDialogUI:SetNeedsValue(value)
     if self.needs_label then
         self.needs_label:setString(value)
     end
+    return self
 end
 function FullScreenPopDialogUI:AddToCurrentScene(anima)
     display.getRunningScene():addChild(self,3000)
+    return self
 end
 return FullScreenPopDialogUI
 
