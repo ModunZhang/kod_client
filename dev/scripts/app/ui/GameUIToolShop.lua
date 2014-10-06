@@ -122,7 +122,7 @@ function GameUIToolShop:TabButtons()
         elseif tag == "manufacture" then
             self.list_view:setVisible(true)
         end
-    end):pos(window.cx, window.bottom + 40)
+    end):pos(window.cx, window.bottom + 34)
 end
 
 function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materials)

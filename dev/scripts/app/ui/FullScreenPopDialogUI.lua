@@ -58,10 +58,12 @@ end
 
 function FullScreenPopDialogUI:SetTitle(title)
     self.title:setString(title)
+    return self
 end
 
 function FullScreenPopDialogUI:SetPopMessage(message)
     self.message_label:setString(message)
+    return self
 end
 
 function FullScreenPopDialogUI:CreateOKButton(listener)
@@ -72,21 +74,33 @@ function FullScreenPopDialogUI:CreateOKButton(listener)
             listener()
             self:removeFromParent(true)
         end):align(display.CENTER, display.cx+50, display.top-610):addTo(self)
+    return self
 end
 
 function FullScreenPopDialogUI:CreateNeeds(icon,value)
     local icon_image = display.newScale9Sprite(icon, display.cx+20, display.top-560):addTo(self)
     icon_image:setScale(30/icon_image:getContentSize().height)
-    cc.ui.UILabel.new({
+    self.needs_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = value.."",
         font = UIKit:getFontFilePath(),
         size = 24,
         color = UIKit:hex2c3b(0xfdfac2)
     }):align(display.LEFT_CENTER,display.cx+60,display.top-560):addTo(self)
+    return self
 end
-
+function FullScreenPopDialogUI:SetNeedsValue(value)
+    if self.needs_label then
+        self.needs_label:setString(value)
+    end
+    return self
+end
+function FullScreenPopDialogUI:AddToCurrentScene(anima)
+    display.getRunningScene():addChild(self,3000)
+    return self
+end
 return FullScreenPopDialogUI
+
 
 
 

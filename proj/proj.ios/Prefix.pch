@@ -6,3 +6,7 @@
 	#import <Foundation/Foundation.h>
 	#import <UIKit/UIKit.h>
 #endif
+
+#ifndef IS_IOS8
+#define IS_IOS8 [[UIDevice currentDevice].systemVersion intValue] == 8
+#endif

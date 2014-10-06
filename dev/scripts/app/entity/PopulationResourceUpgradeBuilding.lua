@@ -15,6 +15,12 @@ end
 function PopulationResourceUpgradeBuilding:GetUpdateResourceType()
 	return ResourceManager.RESOURCE_TYPE.POPULATION
 end
+function PopulationResourceUpgradeBuilding:GetNextLevelCitizen()
+	return config_dwelling[self:GetNextLevel()].citizen
+end
+function PopulationResourceUpgradeBuilding:GetNextLevelRecoveryCitizen()
+	return config_dwelling[self:GetNextLevel()].recoveryCitizen
+end
 --
 
 return PopulationResourceUpgradeBuilding

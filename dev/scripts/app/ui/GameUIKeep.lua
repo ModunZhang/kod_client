@@ -1,4 +1,5 @@
 local TabButtons = import('.TabButtons')
+local window = import('..utils.window')
 local GameUIKeep = UIKit:createUIClass('GameUIKeep',"GameUIUpgradeBuilding")
 
 function GameUIKeep:ctor(city,building)
@@ -28,7 +29,7 @@ function GameUIKeep:onEnter()
         else
             self.info_layer:setVisible(false)
         end
-    end):pos(display.cx, display.top -920)
+    end):pos(window.cx, window.bottom + 34)
     self:CreateCanBeUnlockedBuildingBG()
     self:CreateCanBeUnlockedBuildingListView()
     self:CreateCityBasicInfo()

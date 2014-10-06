@@ -1,4 +1,5 @@
 local GameUtils = GameUtils
+local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetSlider = import("..widget.WidgetSlider")
 local WidgetSoldierDetails = import('..widget.WidgetSoldierDetails')
@@ -105,6 +106,7 @@ end
 
 function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
     self.soldier_type = soldier_type
+    self.star = star
     self.recruit_max = recruit_max
 
     local label_origin_x = 190
@@ -251,6 +253,7 @@ function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
         :onSliderValueChanged(function(event)
             self:OnCountChanged(math.floor(event.value))
         end)
+        self.slider = slider
 
 
     -- soldier count bg
@@ -326,8 +329,12 @@ function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
 
     -- 立即招募
     local size = back_ground:getContentSize()
-    local instant_button = cc.ui.UIPushButton.new(
-        {normal = "green_btn_up_250x65.png",pressed = "green_btn_down_250x65.png"})
+    local instant_button = WidgetPushButton.new(
+        {normal = "green_btn_up_250x65.png",pressed = "green_btn_down_250x65.png"}
+        ,{}
+        ,{
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+        })
         :addTo(back_ground, 2)
         :align(display.CENTER, 160, 120)
         :setButtonLabel(cc.ui.UILabel.new({
@@ -342,6 +349,7 @@ function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
             NetManager:instantRecruitNormalSoldier(self.soldier_type, self.count, NOT_HANDLE)
             self:instant_button_clicked()
         end)
+    self.instant_button = instant_button
 
     -- gem
     cc.ui.UIImage.new("gem_66x56.png"):addTo(instant_button, 2)
@@ -359,8 +367,12 @@ function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
 
 
     -- 招募
-    local button = cc.ui.UIPushButton.new(
-        {normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"})
+    local button = WidgetPushButton.new(
+        {normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"}
+        ,{}
+        ,{
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+        })
         :addTo(back_ground, 2)
         :align(display.CENTER, size.width - 120, 120)
         :setButtonLabel(cc.ui.UILabel.new({
@@ -371,12 +383,9 @@ function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
         }))
         :onButtonClicked(function(event)
             NetManager:recruitNormalSoldier(self.soldier_type, self.count, NOT_HANDLE)
-            -- self:SetSoldier(soldier_type, 3)
-            -- self:OnCountChanged(self.count)
-            -- slider:Max(100)
-            -- self.soldier_total_count:setString(string.format("/ %d", 100))
             self:button_clicked()
         end)
+    self.button = button
 
     -- 时间glass
     cc.ui.UIImage.new("hourglass_39x46.png"):addTo(button, 2)
@@ -385,7 +394,6 @@ function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
     -- 时间
     local center = -20
     self.recruit_time = cc.ui.UILabel.new({
-        -- text = "20:20:20",
         size = 18,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_CENTER,
@@ -404,8 +412,11 @@ function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
 
     self.back_ground = back_ground
 
-    self:SetSoldier(soldier_type, star)
-    self:OnCountChanged(0)
+
+end
+function WidgetRecruitSoldier:onEnter()
+    self:SetSoldier(self.soldier_type, self.star)
+    self.slider:setSliderValue(1)
 end
 function WidgetRecruitSoldier:SetSoldier(soldier_type, star)
     local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(soldier_type, star)
@@ -464,6 +475,10 @@ function WidgetRecruitSoldier:OnBlankClicked(func)
     return self
 end
 function WidgetRecruitSoldier:OnCountChanged(count)
+    local enable = count > 0
+    self.instant_button:setButtonEnabled(enable)
+    self.button:setButtonEnabled(enable)
+
     local soldier_config = self.soldier_config
     local soldier_ui_config = self.soldier_ui_config
     local total_time = soldier_config.recruitTime * count
@@ -486,6 +501,9 @@ function WidgetRecruitSoldier:OnCountChanged(count)
     self.gem_label:setString(DataUtils:buyResource(current_res_map, {}) + DataUtils:getGemByTimeInterval(total_time))
 end
 return WidgetRecruitSoldier
+
+
+
 
 
 

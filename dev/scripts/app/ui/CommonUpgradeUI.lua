@@ -5,6 +5,8 @@ local Localize = import("..utils.Localize")
 local window = import("..utils.window")
 local UpgradeBuilding = import("..entity.UpgradeBuilding")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
+local WidgetPushButton = import("..widget.WidgetPushButton")
+
 
 
 
@@ -36,6 +38,9 @@ function CommonUpgradeUI:onExit()
 end
 
 function CommonUpgradeUI:OnResourceChanged(resource_manager)
+    if self.building:GetNextLevel() == self.building:GetLevel() then
+        return
+    end
     self.upgrade_layer:isVisible()
     if self.upgrade_layer:isVisible() then
         -- print("资源更行，刷新相关数据， 现在是升级需求listview")
@@ -60,17 +65,18 @@ function CommonUpgradeUI:OnBuildingUpgradeFinished( buidling, finish_time )
     self:SetUpgradeNowNeedGems()
     self:SetBuildingIntroduces()
     self:SetUpgradeTime()
+    self:SetUpgradeEfficiency()
 end
 
 function CommonUpgradeUI:OnBuildingUpgrading( buidling, current_time )
     local pro = self.acc_layer.ProgressTimer
     pro:setPercentage(self.building:GetElapsedTimeByCurrentTime(current_time)/self.building:GetUpgradeTimeToNextLevel()*100)
     self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(current_time)))
-    if self.building:GetUpgradingLeftTimeByCurrentTime(current_time)<=self.building.freeSpeedUpTime then
-        self.acc_layer.acc_button:setButtonEnabled(true)
-    else
-        self.acc_layer.acc_button:setButtonEnabled(false)
-    end
+    -- if self.building:GetUpgradingLeftTimeByCurrentTime(current_time)<=self.building.freeSpeedUpTime then
+    --     self.acc_layer.acc_button:setButtonEnabled(true)
+    -- else
+    -- self.acc_layer.acc_button:setButtonEnabled(false)
+    -- end
 end
 
 function CommonUpgradeUI:InitCommonPart()
@@ -92,7 +98,11 @@ function CommonUpgradeUI:InitCommonPart()
 
     self.building_image = display.newScale9Sprite(self.building:GetType()..".png", 0, 0):addTo(self):pos(display.cx-196, display.top-158)
     self.building_image:setAnchorPoint(cc.p(0.5,0.5))
-    self.building_image:setScale(124/self.building_image:getContentSize().width)
+    if self.building:GetType()=="watchTower" or self.building:GetType()=="tower" then
+        self.building_image:setScale(150/self.building_image:getContentSize().height)
+    else
+        self.building_image:setScale(124/self.building_image:getContentSize().width)
+    end
     self:InitBuildingIntroduces()
     --升级奖励部分
     -- title
@@ -115,7 +125,11 @@ end
 
 function CommonUpgradeUI:SetBuildingLevel()
     self.builging_level:setString(_("等级 ")..self.building:GetLevel())
-    self.next_level:setString(_("下一级 ")..self.building:GetLevel()+1)
+    if self.building:GetNextLevel() == self.building:GetLevel() then
+        self.next_level:setString(_("等级已满 "))
+    else
+        self.next_level:setString(_("等级 ")..self.building:GetNextLevel())
+    end
 end
 
 function CommonUpgradeUI:InitBuildingIntroduces()
@@ -132,80 +146,80 @@ function CommonUpgradeUI:SetBuildingIntroduces()
     local bd = Localize.building_description
     self.building_introduces:setString(bd[self.building:GetType()])
 end
-function CommonUpgradeUI:SetBuildingIntroduces_()
-    local building_introduces_table = {
-        ["keep"] = _("提升建筑等级上限\n可解锁地块数量:%d"),
-        ["watchTower"] ={
-            [1] = _("能够看到来袭部队，NPC titles，自己的出征部队，告诉你前来的部队的行军目的，达到时间"),
-            [2] = _("显示敌方突袭你部队的龙的类型(之前显示“?”)"),
-            [3] = _("显示突袭的龙的等级"),
-            [4] = _("显示进攻的龙的等级"),
-            [5] = _("显示突袭的龙的装备信息"),
-            [6] = _("显示进攻的龙的装备信息"),
-            [7] = _("显示突袭的龙的技能信息"),
-            [8] = _("显示进攻的龙的技能信息"),
-            [9] = _("显示进攻部队的兵种类型和排序"),
-            [10] = _("显示进攻部队的兵种星级"),
-            [11] = _("可以在敌方领土上预警到敌方部队来袭(之前只会在敌方穿过传送门后才预警，现在还会显示传送门到敌方玩家城市的路径)"),
-            [12] = _("可以查看突袭的龙的力量和活力属性"),
-            [13] = _("可以查看进攻的龙的力量和活力属性"),
-            [14] = _("显示进攻部队的大致数量"),
-            [15] = _("显示进攻敌方的科技水平(训练营地，猎手大厅，马厩，车间的科技研发值)"),
-            [16] = _("可以在敌方领地上查看敌方玩家的城市布局和建筑等级等信息(不能点击建筑)"),
-            [17] = _("显示进攻部队兵种的准确数量"),
-            [18] = _("显示敌方进攻部队的战斗力预估(之前显示“?”)"),
-            [19] = _("减少敌方行军速度10%"),
-            [20] = _("增加己方行军速度10%"),
-        },
-        ["warehouse"] = _("提供木材, 石料, 铁矿, 粮食存储上限\n资源存放上限%d"),
-        ["dragonEyrie"] = _("提升龙的体力恢复速度\n体力恢复速度+%d"),
-        ["toolShop"] = _("提升每次生产材料的数量\n材料数量%d"),
-        ["materialDepot"] = _("提供材料的存储上限\n每种材料存放上限%d"),
-        ["armyCamp"] = _("提供出兵时派兵上限\n派兵上限%d"),
-        ["barracks"] = _("增加每次招募数量\n每次可招募%d"),
-        ["blackSmith"] = _("提升装备打造速度\n装备打造速度+%d%%"),
-        ["foundry"] = _("可建造矿工小屋:%d\n铁矿产量+%d%%"),
-        ["stoneMason"] = _("可建造石匠小屋:%d\n石料产量+%d%%"),
-        ["lumbermill"] = _("可建造木工小屋:%d\n木材产量+%d%%"),
-        ["mill"] = _("可建造农夫小屋:%d\n粮食产量+%d%%"),
-        ["hospital"] = _("增加治愈伤兵的人数上限\n伤兵人数上限%d"),
-        ["townHall"] = _("可建造住宅%d\n每次税收影响城民%d"),
-        ["academy"] = _("提升科技研发速度\n研发速度+%d"),
-        ["trainingGround"] = _("提升步兵招募速度\n步兵招募速度+%d"),
-        ["hunterhall"] = _("提升猎手招募速度\n猎手招募速度+%d"),
-        ["stable"] = _("提升骑兵招募速度\n骑兵招募速度+%d"),
-        ["workshop"] = _("提升攻城器械速度\n攻城器械招募速度+%d"),
-        ["wall"] = _("提升城墙生命值\n城墙生命值+%d"),
-        ["tower"] = _("提升城墙攻击力\n城墙攻击力+%d"),
-        ["prison"] = _("捕获敌军的几率%d\n关押敌军的时间%d"),
-        ["tradeGuild"] = _("运输小车总数%d\n运输小车生产速度%d"),
-        ["dwelling"] = _("提供城民上限%d\n城民恢复速度+%d"),
-        ["woodcutter"] = _("占用城民%d\n木材产量+%d/每小时"),
-        ["farmer"] = _("占用城民%d\n粮食产量+%d/每小时"),
-        ["quarrier"] = _("占用城民%d\n石料产量+%d/每小时|"),
-        ["miner"] = _("占用城民%d\n铁矿产量+%d/每小时|"),
-    }
-    if self.building:GetType()=="keep" then
-        self.building_introduces:setString(string.format(building_introduces_table["keep"],self.building:GetUnlockPoint()))
-    elseif self.building:GetType()=="warehouse" then
-        self.building_introduces:setString(string.format(building_introduces_table["warehouse"],self.building:GetResourceValueLimit()))
-    elseif self.building:GetType()=="armyCamp" then
-        self.building_introduces:setString(string.format(building_introduces_table["armyCamp"],self.building:GetTroopPopulation()))
-    elseif self.building:GetType()=="materialDepot" then
-        self.building_introduces:setString(string.format(building_introduces_table["materialDepot"],self.building:GetMaxMaterial()))
-    elseif self.building:GetType()=="foundry"
-        or self.building:GetType()=="stoneMason"
-        or self.building:GetType()=="lumbermill"
-        or self.building:GetType()=="mill" then
-        self.building_introduces:setString(string.format(building_introduces_table[self.building:GetType()],self.building:GetMaxHouseNum(),self.building:GetAddEfficency()*100))
-    elseif self.building:GetType()=="blackSmith" then
-        self.building_introduces:setString(string.format(building_introduces_table["blackSmith"],self.building:GetEfficiency()*100))
-    elseif self.building:GetType()=="barracks" then
-        self.building_introduces:setString(string.format(building_introduces_table["barracks"],self.building:GetMaxRecruitSoldierCount()))
-    else
-        self.building_introduces:setString(_("本地化未定义"))
-    end
-end
+-- function CommonUpgradeUI:SetBuildingIntroduces_()
+--     local building_introduces_table = {
+--         ["keep"] = _("提升建筑等级上限\n可解锁地块数量:%d"),
+--         ["watchTower"] ={
+--             [1] = _("能够看到来袭部队，NPC titles，自己的出征部队，告诉你前来的部队的行军目的，达到时间"),
+--             [2] = _("显示敌方突袭你部队的龙的类型(之前显示“?”)"),
+--             [3] = _("显示突袭的龙的等级"),
+--             [4] = _("显示进攻的龙的等级"),
+--             [5] = _("显示突袭的龙的装备信息"),
+--             [6] = _("显示进攻的龙的装备信息"),
+--             [7] = _("显示突袭的龙的技能信息"),
+--             [8] = _("显示进攻的龙的技能信息"),
+--             [9] = _("显示进攻部队的兵种类型和排序"),
+--             [10] = _("显示进攻部队的兵种星级"),
+--             [11] = _("可以在敌方领土上预警到敌方部队来袭(之前只会在敌方穿过传送门后才预警，现在还会显示传送门到敌方玩家城市的路径)"),
+--             [12] = _("可以查看突袭的龙的力量和活力属性"),
+--             [13] = _("可以查看进攻的龙的力量和活力属性"),
+--             [14] = _("显示进攻部队的大致数量"),
+--             [15] = _("显示进攻敌方的科技水平(训练营地，猎手大厅，马厩，车间的科技研发值)"),
+--             [16] = _("可以在敌方领地上查看敌方玩家的城市布局和建筑等级等信息(不能点击建筑)"),
+--             [17] = _("显示进攻部队兵种的准确数量"),
+--             [18] = _("显示敌方进攻部队的战斗力预估(之前显示“?”)"),
+--             [19] = _("减少敌方行军速度10%"),
+--             [20] = _("增加己方行军速度10%"),
+--         },
+--         ["warehouse"] = _("提供木材, 石料, 铁矿, 粮食存储上限\n资源存放上限%d"),
+--         ["dragonEyrie"] = _("提升龙的体力恢复速度\n体力恢复速度+%d"),
+--         ["toolShop"] = _("提升每次生产材料的数量\n材料数量%d"),
+--         ["materialDepot"] = _("提供材料的存储上限\n每种材料存放上限%d"),
+--         ["armyCamp"] = _("提供出兵时派兵上限\n派兵上限%d"),
+--         ["barracks"] = _("增加每次招募数量\n每次可招募%d"),
+--         ["blackSmith"] = _("提升装备打造速度\n装备打造速度+%d%%"),
+--         ["foundry"] = _("可建造矿工小屋:%d\n铁矿产量+%d%%"),
+--         ["stoneMason"] = _("可建造石匠小屋:%d\n石料产量+%d%%"),
+--         ["lumbermill"] = _("可建造木工小屋:%d\n木材产量+%d%%"),
+--         ["mill"] = _("可建造农夫小屋:%d\n粮食产量+%d%%"),
+--         ["hospital"] = _("增加治愈伤兵的人数上限\n伤兵人数上限%d"),
+--         ["townHall"] = _("可建造住宅%d\n每次税收影响城民%d"),
+--         ["academy"] = _("提升科技研发速度\n研发速度+%d"),
+--         ["trainingGround"] = _("提升步兵招募速度\n步兵招募速度+%d"),
+--         ["hunterhall"] = _("提升猎手招募速度\n猎手招募速度+%d"),
+--         ["stable"] = _("提升骑兵招募速度\n骑兵招募速度+%d"),
+--         ["workshop"] = _("提升攻城器械速度\n攻城器械招募速度+%d"),
+--         ["wall"] = _("提升城墙生命值\n城墙生命值+%d"),
+--         ["tower"] = _("提升城墙攻击力\n城墙攻击力+%d"),
+--         ["prison"] = _("捕获敌军的几率%d\n关押敌军的时间%d"),
+--         ["tradeGuild"] = _("运输小车总数%d\n运输小车生产速度%d"),
+--         ["dwelling"] = _("提供城民上限%d\n城民恢复速度+%d"),
+--         ["woodcutter"] = _("占用城民%d\n木材产量+%d/每小时"),
+--         ["farmer"] = _("占用城民%d\n粮食产量+%d/每小时"),
+--         ["quarrier"] = _("占用城民%d\n石料产量+%d/每小时|"),
+--         ["miner"] = _("占用城民%d\n铁矿产量+%d/每小时|"),
+--     }
+--     if self.building:GetType()=="keep" then
+--         self.building_introduces:setString(string.format(building_introduces_table["keep"],self.building:GetUnlockPoint()))
+--     elseif self.building:GetType()=="warehouse" then
+--         self.building_introduces:setString(string.format(building_introduces_table["warehouse"],self.building:GetResourceValueLimit()))
+--     elseif self.building:GetType()=="armyCamp" then
+--         self.building_introduces:setString(string.format(building_introduces_table["armyCamp"],self.building:GetTroopPopulation()))
+--     elseif self.building:GetType()=="materialDepot" then
+--         self.building_introduces:setString(string.format(building_introduces_table["materialDepot"],self.building:GetMaxMaterial()))
+--     elseif self.building:GetType()=="foundry"
+--         or self.building:GetType()=="stoneMason"
+--         or self.building:GetType()=="lumbermill"
+--         or self.building:GetType()=="mill" then
+--         self.building_introduces:setString(string.format(building_introduces_table[self.building:GetType()],self.building:GetMaxHouseNum(),self.building:GetAddEfficency()*100))
+--     elseif self.building:GetType()=="blackSmith" then
+--         self.building_introduces:setString(string.format(building_introduces_table["blackSmith"],self.building:GetEfficiency()*100))
+--     elseif self.building:GetType()=="barracks" then
+--         self.building_introduces:setString(string.format(building_introduces_table["barracks"],self.building:GetMaxRecruitSoldierCount()))
+--     else
+--         self.building_introduces:setString(_("本地化未定义"))
+--     end
+-- end
 
 function CommonUpgradeUI:InitNextLevelEfficiency()
     -- 下一级 框
@@ -224,9 +238,11 @@ function CommonUpgradeUI:InitNextLevelEfficiency()
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
         size = 20,
-        dimensions = cc.size(380,90),
+        dimensions = cc.size(380,0),
+        valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.CENTER,efficiency_bg_size.width/2+10,efficiency_bg_size.height/2):addTo(efficiency_bg)
+    }):addTo(efficiency_bg):align(display.LEFT_CENTER)
+    self.efficiency:pos(10,efficiency_bg_size.height/2)
     self:SetUpgradeEfficiency()
 end
 
@@ -238,8 +254,42 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         efficiency = string.format("%s%d,%s%d,%s+%d",bd.unlock,building:GetNextLevelUnlockPoint(),bd.troopPopulation,building:GetNextLevelTroopPopulation(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="dragonEyrie" then
         efficiency = string.format("%s%d,%s+%d",bd.vitalityRecoveryPerHour,building:GetNextLevelVitalityRecoveryPerHour(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="watchTower" then
+        efficiency = string.format("%s",bd["watchTower_"..self.building:GetLevel()])
     elseif self.building:GetType()=="warehouse" then
         efficiency = string.format("%s%d,%s+%d",bd.warehouse_max,building:GetResourceNextLevelValueLimit(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="toolShop" then
+        efficiency = string.format("%s%d%s,%s+%d",bd.poduction,building:GetNextLevelPoducttion(),bd.poduction_1,bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="materialDepot" then
+        efficiency = string.format("%s%d,%s+%d",bd.maxMaterial,building:GetNextLevelMaxMaterial(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="armyCamp" then
+        efficiency = string.format("%s%d,%s+%d",bd.armyCamp_troopPopulation,building:GetNextLevelTroopPopulation(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="barracks" then
+        efficiency = string.format("%s%d,%s+%d",bd.maxRecruit,building:GetNextLevelMaxRecruitSoldierCount(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="blackSmith" then
+        efficiency = string.format("%s%d%%,%s+%d",bd.blackSmith_efficiency,building:GetNextLevelEfficiency()*100,bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="foundry" then
+        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.foundry_miner,building:GetNextLevelMaxHouseNum(),bd.foundry_addEfficency,building:GetNextLevelAddEfficency()*100,bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="lumbermill" then
+        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.lumbermill_woodcutter,building:GetNextLevelMaxHouseNum(),bd.lumbermill_addEfficency,building:GetNextLevelAddEfficency()*100,bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="mill" then
+        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.mill_farmer,building:GetNextLevelMaxHouseNum(),bd.mill_addEfficency,building:GetNextLevelAddEfficency()*100,bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="stoneMason" then
+        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.stoneMason_quarrier,building:GetNextLevelMaxHouseNum(),bd.stoneMason_addEfficency,building:GetNextLevelAddEfficency()*100,bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="hospital" then
+        efficiency = string.format("%s%d,%s+%d",bd.maxCasualty,building:GetNextLevelMaxCasualty(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="townHall" then
+        efficiency = string.format("%s%d,%s%d",bd.townHall_dwelling,building:GetNextLevelDwellingNum(),bd.totalTax,building:GetNextLevelTotalTax())
+    elseif self.building:GetType()=="dwelling" then
+        efficiency = string.format("%s%d,%s+%d,%s+%d",bd.dwelling_citizen,building:GetNextLevelCitizen(),bd.recoveryCitizen,building:GetNextLevelRecoveryCitizen(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="woodcutter" then
+        efficiency = string.format("%s%d,%s+%d",bd.woodcutter_poduction,building:GetNextLevelProductionPerHour(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="farmer" then
+        efficiency = string.format("%s%d,%s+%d",bd.farmer_poduction,building:GetNextLevelProductionPerHour(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="quarrier" then
+        efficiency = string.format("%s%d,%s+%d",bd.quarrier_poduction,building:GetNextLevelProductionPerHour(),bd.power,building:GetNextLevelPower())
+    elseif self.building:GetType()=="miner" then
+        efficiency = string.format("%s%d,%s+%d",bd.miner_poduction,building:GetNextLevelProductionPerHour(),bd.power,building:GetNextLevelPower())
     else
         efficiency = (_("本地化未添加"))
     end
@@ -305,11 +355,14 @@ function CommonUpgradeUI:InitUpgradePart()
     -- 升级页
     -- local color_layer = display.newColorLayer(cc.c4b(255,0,0,255)):addTo(self)
     -- color_layer:setContentSize(cc.size(display.width,display.height-385))
+    if self.building:GetNextLevel() == self.building:GetLevel() then
+        return
+    end
     self.upgrade_layer = display.newLayer()
     self.upgrade_layer:setContentSize(cc.size(display.width,575))
     self:addChild(self.upgrade_layer)
     -- upgrade now button
-    cc.ui.UIPushButton.new({normal = "upgrade_green_button_normal.png",pressed = "upgrade_green_button_pressed.png"})
+    WidgetPushButton.new({normal = "upgrade_green_button_normal.png",pressed = "upgrade_green_button_pressed.png"})
         :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("立即升级"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
@@ -334,7 +387,7 @@ function CommonUpgradeUI:InitUpgradePart()
             end
         end):align(display.CENTER, display.cx-150, display.top-430):addTo(self.upgrade_layer)
     -- upgrade button
-    cc.ui.UIPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
+    WidgetPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
         :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("升级"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
@@ -351,6 +404,7 @@ function CommonUpgradeUI:InitUpgradePart()
                 end
 
                 local can_not_update_type = self.building:IsAbleToUpgrade(false)
+                print("can_not_update_type====",can_not_update_type)
                 if can_not_update_type then
                     self:PopNotSatisfyDialog(upgrade_listener,can_not_update_type)
                 else
@@ -414,6 +468,8 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
 
     local userData = DataManager:getUserData()
     requirements = {
+        {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetOnUpgradingBuildings()<1,
+            icon="wood_icon.png",description=GameUtils:formatNumber(#City:GetOnUpgradingBuildings()).."/1"},
         {resource_type = "wood",isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
             icon="wood_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpWood()).."/"..GameUtils:formatNumber(wood)},
 
@@ -447,6 +503,9 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
 end
 
 function CommonUpgradeUI:InitAccelerationPart()
+    if self.building:GetNextLevel() == self.building:GetLevel() then
+        return
+    end
     self.acc_layer = display.newLayer()
     self.acc_layer:setContentSize(cc.size(display.width,575))
     self:addChild(self.acc_layer)
@@ -482,6 +541,7 @@ function CommonUpgradeUI:InitAccelerationPart()
     self.acc_layer.upgrade_time_label:setAnchorPoint(cc.p(0,0.5))
     self.acc_layer.upgrade_time_label:pos(self.acc_layer.upgrade_time_label:getContentSize().width/2+10, bar:getContentSize().height/2)
     if self.building:IsUpgrading() then
+        pro:setPercentage(self.building:GetElapsedTimeByCurrentTime(app.timer:GetServerTime())/self.building:GetUpgradeTimeToNextLevel()*100)
         self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime())))
     end
 
@@ -514,7 +574,7 @@ function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
         pressed = "upgrade_free_2.png",
         disabled = "upgrade_free_3.png",
     }
-    self.acc_layer.acc_button = cc.ui.UIPushButton.new(IMAGES, {scale9 = true})
+    self.acc_layer.acc_button = WidgetPushButton.new(IMAGES, {scale9 = true})
         :setButtonSize(169, 86)
         :setButtonLabel("normal", ui.newTTFLabel({
             text = _("免费加速"),
@@ -569,9 +629,15 @@ function CommonUpgradeUI:CreateAccButtons()
         }):align(display.CENTER, display.cx-220+gap_x*math.mod(i,4), display.top-710-gap_y*math.floor((i-1)/4))
             :addTo(self.acc_layer)
         -- 时间按钮
-        local time_button = cc.ui.UIPushButton.new({normal = "upgrade_time_"..i..".png"})
+        local time_button = WidgetPushButton.new({normal = "upgrade_time_"..i..".png"},{scale9 = false}
+            ,{
+                disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
+            }):setButtonEnabled(false)
+            :SetFilter({
+                disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
+            })
         -- 确认加速按钮
-        local acc_button = cc.ui.UIPushButton.new({normal = "upgrade_acc_button_1.png",pressed="upgrade_acc_button_2.png"})
+        local acc_button = WidgetPushButton.new({normal = "upgrade_acc_button_1.png",pressed="upgrade_acc_button_2.png"})
         time_button:onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 self:ResetAccButtons()
@@ -653,12 +719,20 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
             dialog:CreateNeeds("Topaz-icon.png",required_gems)
         end
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH then
-        local required_gems = self.building:getUpgradeNowNeedGems()
+        local required_gems = self.building:getUpgradeRequiredGems()
         dialog:CreateOKButton(function(sender,type)
             listener()
         end)
         dialog:SetTitle(_("立即开始"))
         dialog:SetPopMessage(_("您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"))
+        dialog:CreateNeeds("Topaz-icon.png",required_gems)
+    elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_AND_RESOURCE_NOT_ENOUGH then
+        local required_gems = self.building:getUpgradeRequiredGems()
+        dialog:CreateOKButton(function(sender,type)
+            listener()
+        end)
+        dialog:SetTitle(_("立即开始"))
+        dialog:SetPopMessage(can_not_update_type)
         dialog:CreateNeeds("Topaz-icon.png",required_gems)
     else
         dialog:SetTitle(_("提示"))
@@ -667,6 +741,22 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

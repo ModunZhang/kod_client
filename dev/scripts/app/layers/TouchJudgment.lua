@@ -1,6 +1,6 @@
 local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 local TouchJudgment = class("TouchJudgment")
-
+local move_judgment_distance = 15
 function TouchJudgment:ctor(touch_handle)
     self.touch_handle = touch_handle
     self.time = 0
@@ -82,7 +82,7 @@ function TouchJudgment:OnTouchMove(pre_x, pre_y, x, y)
     self.touch_handle:OnTouchMove(pre_x, pre_y, x, y)
     local touch = self.one_touch_begin
     if touch then
-        local is_finger_moved = math.abs(touch.x - x) > 10 or math.abs(touch.y - y) > 10
+        local is_finger_moved = math.abs(touch.x - x) > move_judgment_distance or math.abs(touch.y - y) > move_judgment_distance
         if is_finger_moved then
             self.one_touch_begin = nil
         end
@@ -95,7 +95,7 @@ function TouchJudgment:OnTouchEnd(pre_x, pre_y, x, y)
         local begin_x, begin_y = self.one_touch_begin.x, self.one_touch_begin.y
         local dx = x - begin_x
         local dy = y - begin_y
-        if math.sqrt(dx * dx + dy * dy) < 10 then
+        if math.sqrt(dx * dx + dy * dy) < move_judgment_distance then
             self.touch_handle:OnTouchClicked(pre_x, pre_y, x, y)
         else
         end

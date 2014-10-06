@@ -6,11 +6,13 @@ local EQUIPMENTS = GameDatas.SmithConfig.equipments
 local Localize = import("..utils.Localize")
 local MaterialManager = import("..entity.MaterialManager")
 local UIPushButton = cc.ui.UIPushButton
+local window = import("..utils.window")
 local WidgetTips = import("..widget.WidgetTips")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
 local WidgetMakeEquip = import("..widget.WidgetMakeEquip")
 local GameUIBlackSmith = UIKit:createUIClass("GameUIBlackSmith", "GameUIUpgradeBuilding")
+
 
 local STAR_BG = {
     "star1_105x104.png",
@@ -24,13 +26,14 @@ local function return_map_of_list_view_and_ui_map(list_view, ui_map)
 end
 function GameUIBlackSmith:ctor(city, black_smith)
     GameUIBlackSmith.super.ctor(self, city, _("铁匠铺"), black_smith)
+    self.dragon_map = {}
     self.black_smith_city = city
     self.black_smith = black_smith
 end
 function GameUIBlackSmith:onEnter()
     GameUIBlackSmith.super.onEnter(self)
     self.title = self:InitEquipmentTitle()
-    self.dragon_map = self:CreateDragonEquipments()
+    -- self.dragon_map = self:CreateDragonEquipments()
     self:TabButtons()
     self.black_smith_city:GetMaterialManager():AddObserver(self)
     self.black_smith:AddBlackSmithListener(self)
@@ -99,9 +102,20 @@ function GameUIBlackSmith:TabButtons()
         else
             self:SwitchToDragon(tag)
         end
-    end):pos(display.cx, display.bottom + 40)
+    end):pos(window.cx, window.bottom + 34)
 end
 function GameUIBlackSmith:SwitchToDragon(dragon_type)
+    if not self.dragon_map[dragon_type] then
+        dragon_equipments = {}
+        dragon_equipments = return_map_of_list_view_and_ui_map(self:CreateDragonEquipmentsByType(dragon_type))
+        self.black_smith_city:GetMaterialManager():IteratorEquipmentMaterialsByType(function(k, v)
+            if EQUIPMENTS[k].usedFor == dragon_type then
+                dragon_equipments.ui_map[k]:SetNumber(v)
+            end
+        end)
+        self.dragon_map[dragon_type] = dragon_equipments
+    end
+
     self.title:setVisible(true)
     for k, v in pairs(self.dragon_map) do
         if k == dragon_type then
@@ -110,7 +124,7 @@ function GameUIBlackSmith:SwitchToDragon(dragon_type)
             v.list_view:setVisible(false)
         end
     end
-    
+
     local event = self.black_smith:GetMakeEquipmentEvent()
     self.tips:setVisible(event:IsEmpty())
     self.timer:setVisible(event:IsMaking())
@@ -140,6 +154,7 @@ function GameUIBlackSmith:CreateDragonEquipments()
         blueDragon = {},
         greenDragon = {},
     }
+
     for k, v in pairs(dragon_map) do
         dragon_map[k] = return_map_of_list_view_and_ui_map(self:CreateDragonEquipmentsByType(k))
     end
@@ -152,7 +167,7 @@ end
 function GameUIBlackSmith:CreateDragonEquipmentsByType(dragon_type)
     local equip_map = {}
     local red_dragon_equipments = self:GetDragonEquipmentsByType(dragon_type)
-    local list_view = self:CreateVerticalListView(20, display.bottom + 70, display.right - 20, display.top - 230)
+    local list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 230)
     for i, v in ipairs(red_dragon_equipments) do
         local item = self:CreateItemWithListViewByEquipments(list_view, v.equipments, v.title, equip_map)
         list_view:addItem(item)
@@ -287,6 +302,7 @@ function GameUIBlackSmith:CreateEquipmentByType(equip_type)
 end
 
 return GameUIBlackSmith
+
 
 
 

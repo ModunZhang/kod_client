@@ -1,4 +1,6 @@
-
+local window = import("..utils.window")
+local WidgetTab = import("..widget.WidgetTab")
+local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
 
 
@@ -32,30 +34,53 @@ function GameUIHome:onEnter()
     GameUIHome.super.onEnter(self)
     local city = self.city
     -- 上背景
-    local top_bg = display.newSprite("top_bg_640x201.png")
+    self:CreateTop()
+    self.bottom = self:CreateBottom()
+
+
+
+    self:RefreshData()
+    city:GetResourceManager():AddObserver(self)
+    city:GetResourceManager():OnResourceChanged()
+end
+function GameUIHome:onExit()
+    self.city:GetResourceManager():RemoveObserver(self)
+    GameUIHome.super.onExit(self)
+end
+function GameUIHome:RefreshData()
+    -- 更新数值
+    local userdata = DataManager:getUserData()
+    self.name_label:setString(userdata.basicInfo.name)
+    self.power_label:setString(userdata.basicInfo.power)
+    self.level_label:setString(userdata.basicInfo.level)
+    self.vip_label:setString("VIP "..userdata.basicInfo.vip)
+end
+
+
+function GameUIHome:CreateTop()
+    local top_bg = display.newSprite("top_bg_640x201.png"):addTo(self)
         :align(display.CENTER, display.cx, display.top - 201 / 2)
-        :addTo(self)
 
     -- 玩家按钮
     local button = cc.ui.UIPushButton.new(
         {normal = "home/player_btn_up.png", pressed = "home/player_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        self:sendMsg("reset", NOT_HANDLE)
+        -- NetManager:sendMsg("reset", NOT_HANDLE)
     end):addTo(top_bg):align(display.LEFT_BOTTOM, 109, 106)
 
 
     -- 玩家名字背景加文字
     display.newSprite("home/player_name_bg.png"):addTo(button):pos(96, 65)
-    self.name_label = 
-    cc.ui.UILabel.new({
-        text = "有背",
-        size = 20,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0xfff1cc)
-    }):addTo(button)
-    :align(display.LEFT_CENTER, 25, 68)
+    self.name_label =
+        cc.ui.UILabel.new({
+            text = "有背",
+            size = 20,
+            font = UIKit:getFontFilePath(),
+            align = cc.ui.TEXT_ALIGN_RIGHT,
+            color = UIKit:hex2c3b(0xfff1cc)
+        }):addTo(button)
+            :align(display.LEFT_CENTER, 25, 68)
 
     -- 玩家战斗值图片
     display.newSprite("home/power.png"):addTo(button):pos(32, 37)
@@ -69,22 +94,26 @@ function GameUIHome:onEnter()
         color = UIKit:hex2c3b(0x9a946b)
     }):addTo(button):align(display.LEFT_CENTER, 46, 38)
 
-    -- 玩家战斗值数字
-    self.power_label = 
-    cc.ui.UILabel.new({
-        text = "2000000",
-        size = 20,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0x9a946b)
-    }):addTo(button):align(display.LEFT_CENTER, 25, 16)
 
+    -- 玩家战斗值数字
+    self.power_label =
+        cc.ui.UILabel.new({
+            text = "2000000",
+            size = 20,
+            font = UIKit:getFontFilePath(),
+            align = cc.ui.TEXT_ALIGN_RIGHT,
+            color = UIKit:hex2c3b(0x9a946b)
+        }):addTo(button):align(display.LEFT_CENTER, 25, 16)
+
+
+
+    -----------------------
     -- 资源按钮
     local button = cc.ui.UIPushButton.new(
         {normal = "home/res_btn_up.png", pressed = "home/res_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        NetManager:instantUpgradeBuildingByLocation(1, NOT_HANDLE)
+        -- NetManager:instantUpgradeBuildingByLocation(1, NOT_HANDLE)
     end):addTo(top_bg):align(display.LEFT_BOTTOM, 317, 106)
 
     -- 资源图片和文字
@@ -105,12 +134,12 @@ function GameUIHome:onEnter()
         local col = (i - 1) % 3
         local x, y = first_col + col * padding_width, first_row - (row * padding_height)
         display.newSprite(v[1]):addTo(button):pos(x, y):scale(i == 3 and 0.65 or 0.25)
-        self[v[2]] = 
-        cc.ui.UILabel.new({text = "2k",
-            size = 20,
-            font = UIKit:getFontFilePath(),
-            color = UIKit:hex2c3b(0xf3f0b6)})
-            :addTo(button):pos(x + label_padding, y)
+        self[v[2]] =
+            cc.ui.UILabel.new({text = "2k",
+                size = 20,
+                font = UIKit:getFontFilePath(),
+                color = UIKit:hex2c3b(0xf3f0b6)})
+                :addTo(button):pos(x + label_padding, y)
     end
     -- 框
     display.newSprite("home/frame.png"):addTo(top_bg, 1):align(display.LEFT_TOP, 0, 200)
@@ -127,42 +156,45 @@ function GameUIHome:onEnter()
         :addTo(player_bg)
         :pos(61, 33)
         :setTouchEnabled(true)
-    self.level_label = 
-    cc.ui.UILabel.new({text = "10000",
-        size = 20,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_CENTER,
-        color = UIKit:hex2c3b(0xfff1cc)})
-        :addTo(player_bg):align(display.CENTER, 61, 32)
+    self.level_label =
+        cc.ui.UILabel.new({text = "10000",
+            size = 20,
+            font = UIKit:getFontFilePath(),
+            align = cc.ui.TEXT_ALIGN_CENTER,
+            color = UIKit:hex2c3b(0xfff1cc)})
+            :addTo(player_bg):align(display.CENTER, 61, 32)
     display.newSprite("home/player_exp_bar.png")
         :addTo(player_bg)
         :pos(61, 53)
         :setTouchEnabled(true)
-    self.vip_label = 
-    cc.ui.UILabel.new({text = "VIP 1",
-        size = 18,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_CENTER,
-        valign = cc.ui.TEXT_VALIGN_CENTER,
-        color = UIKit:hex2c3b(0xe19319)})
-        :addTo(player_bg):align(display.LEFT_CENTER, 135, 15)
+    self.vip_label =
+        cc.ui.UILabel.new({text = "VIP 1",
+            size = 18,
+            font = UIKit:getFontFilePath(),
+            align = cc.ui.TEXT_ALIGN_CENTER,
+            valign = cc.ui.TEXT_VALIGN_CENTER,
+            color = UIKit:hex2c3b(0xe19319)})
+            :addTo(player_bg):align(display.LEFT_CENTER, 135, 15)
+
+
 
     -- 宝石按钮
     local button = cc.ui.UIPushButton.new(
         {normal = "home/gem_btn_up.png", pressed = "home/gem_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        self:sendMsg("gem 10000000", NOT_HANDLE)
+        -- NetManager:sendMsg("gem 10000000", NOT_HANDLE)
+        UIKit:newGameUI('GameUIShop', City):addToCurrentScene(true)
     end):addTo(top_bg):pos(596, 60)
     display.newSprite("home/gem.png"):addTo(button):pos(-1, 8)
     display.newSprite("home/gem_num_bg.png"):addTo(button):pos(0, -27)
-    self.gem_label = 
-    cc.ui.UILabel.new({text = "10000000",
-        size = 16,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_CENTER,
-        color = UIKit:hex2c3b(0xe19319)})
-        :addTo(button):align(display.CENTER, 0, -25)
+    self.gem_label =
+        cc.ui.UILabel.new({text = "10000000",
+            size = 16,
+            font = UIKit:getFontFilePath(),
+            align = cc.ui.TEXT_ALIGN_CENTER,
+            color = UIKit:hex2c3b(0xe19319)})
+            :addTo(button):align(display.CENTER, 0, -25)
 
     -- 任务条
     local quest_bar_bg = display.newSprite("home/quest_bar_bg.png"):addTo(player_bg):pos(202, -32)
@@ -170,20 +202,20 @@ function GameUIHome:onEnter()
     local quest_bg = display.newSprite("home/quest_bg.png"):addTo(quest_bar_bg):pos(-15, 24)
     local pos = quest_bg:getAnchorPointInPoints()
     display.newSprite("home/quest_icon.png"):addTo(quest_bg):pos(pos.x, pos.y):scale(0.7)
-    self.quest_label = 
-    cc.ui.UILabel.new({text = "任务就是杀死你",
-        size = 20,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_CENTER,
-        color = UIKit:hex2c3b(0x3b3827)})
-        :addTo(quest_bar_bg):align(display.LEFT_CENTER, 25, 18)
+    self.quest_label =
+        cc.ui.UILabel.new({text = "任务就是杀死你",
+            size = 20,
+            font = UIKit:getFontFilePath(),
+            align = cc.ui.TEXT_ALIGN_CENTER,
+            color = UIKit:hex2c3b(0x3b3827)})
+            :addTo(quest_bar_bg):align(display.LEFT_CENTER, 25, 18)
     display.newSprite("home/quest_info.png"):addTo(quest_bar_bg):pos(300, 20)
 
     local button = cc.ui.UIPushButton.new(
         {normal = "home/quest_btn_up.png", pressed = "home/quest_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        NetManager:instantMakeBuildingMaterial(NOT_HANDLE)
+        -- NetManager:instantMakeBuildingMaterial(NOT_HANDLE)
     end):addTo(quest_bar_bg):pos(290, 20)
     local pos = button:getAnchorPointInPoints()
     display.newSprite("home/quest_hook.png"):addTo(button):pos(pos.x, pos.y)
@@ -196,6 +228,10 @@ function GameUIHome:onEnter()
         dump(event)
     end):addTo(top_bg):pos(592, -51):scale(0.6)
 
+    return top_bg
+end
+
+function GameUIHome:CreateBottom()
     -- 底部背景
     local bottom_bg = display.newSprite("bottom_bg_640x101.png")
         :align(display.CENTER, display.cx, display.bottom + 101/2)
@@ -207,13 +243,27 @@ function GameUIHome:onEnter()
     chat_bg:setContentSize(640, 50)
     chat_bg:setTouchEnabled(true)
     chat_bg:addTo(bottom_bg):pos(0, bottom_bg:getContentSize().height)
-
+    chat_bg:setTouchSwallowEnabled(true)
+    chat_bg:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        if event.name == "began" then
+            chat_bg.prevP = cc.p(event.x,event.y)
+            return true
+        elseif event.name == 'ended' then
+            if cc.pGetDistance(chat_bg.prevP,cc.p(event.x,event.y)) <= 10 then
+                UIKit:newGameUI('GameUIChat'):addToCurrentScene(true)
+            end
+        end
+    end)
     local button = cc.ui.UIPushButton.new(
         {normal = "home/chat_btn.png", pressed = "home/chat_btn.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
         UIKit:newGameUI('GameUIChat'):addToCurrentScene(true)
     end):addTo(chat_bg):pos(31, 20)
+
+
+    local event = WidgetEventTabButtons.new(self.city)
+    :addTo(bottom_bg):pos(bottom_bg:getContentSize().width - 491, bottom_bg:getContentSize().height + 50)
 
 
     -- 底部按钮
@@ -248,23 +298,16 @@ function GameUIHome:onEnter()
     display.newSprite("home/toggle_arrow.png"):addTo(bottom_bg):pos(53, 51)
     display.newSprite("home/toggle_city.png"):addTo(bottom_bg):pos(52, 54)
 
-
-    -- 更新数值
-    local userdata = DataManager:getUserData()
-    self.name_label:setString(userdata.basicInfo.name)
-    self.power_label:setString(userdata.basicInfo.power)
-    self.level_label:setString(userdata.basicInfo.level)
-    self.vip_label:setString("VIP "..userdata.basicInfo.vip)
-
-    city:GetResourceManager():AddObserver(self)
-    city:GetResourceManager():OnResourceChanged()
+    return bottom_bg
 end
-function GameUIHome:onExit()
-    self.city:GetResourceManager():RemoveObserver(self)
-    GameUIHome.super.onExit(self)
-end
-
 
 return GameUIHome
+
+
+
+
+
+
+
 
 

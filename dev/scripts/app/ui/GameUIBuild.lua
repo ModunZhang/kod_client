@@ -10,7 +10,7 @@ local base_items = {
     { label = _("矿工小屋"), building_type = "miner" },
 }
 function GameUIBuild:ctor(city, select_ruins, select_ruins_list)
-    GameUIBuild.super.ctor(self, city, _("建筑列表"))
+    GameUIBuild.super.ctor(self, city, _("待建地基"))
     self.city = city
     self.select_ruins = select_ruins
     self.select_ruins_list = select_ruins_list
@@ -122,20 +122,24 @@ function GameUIBuild:CreateItemWithListView(list_view)
     }):addTo(content)
         :align(display.LEFT_CENTER, 175, 40)
 
-    local gem_bg = display.newSprite("build_item/gem_bg.png"):addTo(content):pos(523, 83)
-    display.newSprite("home/gem.png"):addTo(gem_bg):pos(10, 10):scale(0.5)
-    cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "100",
-        size = 20,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_LEFT,
-        color = display.COLOR_WHITE
-    }):addTo(gem_bg)
-        :align(display.LEFT_CENTER, 40, 10)
+    -- local gem_bg = display.newSprite("build_item/gem_bg.png"):addTo(content):pos(523, 83)
+    -- display.newSprite("home/gem.png"):addTo(gem_bg):pos(10, 10):scale(0.5)
+    -- cc.ui.UILabel.new({
+    --     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+    --     text = "100",
+    --     size = 20,
+    --     font = UIKit:getFontFilePath(),
+    --     align = cc.ui.TEXT_ALIGN_LEFT,
+    --     color = display.COLOR_WHITE
+    -- }):addTo(gem_bg)
+    --     :align(display.LEFT_CENTER, 40, 10)
 
     local build_btn = WidgetPushButton.new(
-        {normal = "build_item/build_btn_up.png",pressed = "build_item/build_btn_down.png"})
+        {normal = "build_item/build_btn_up.png",pressed = "build_item/build_btn_down.png"}
+        ,{}
+        ,{
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+        })
         :setButtonLabel(cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("建造"),
@@ -171,7 +175,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
         condition_label:setColor(color == nil and display.COLOR_GREEN or display.COLOR_RED)
     end
     function item:SetBuildEnable(is_enable)
-        build_btn:setVisible(is_enable)
+        build_btn:setButtonEnabled(is_enable)
     end
 
     return item

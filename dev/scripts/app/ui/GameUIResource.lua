@@ -38,16 +38,16 @@ function GameUIResource:createTabButtons()
         else
             self.infomationLayer:setVisible(false)
         end
-    end):pos(window.cx, window.bottom + 50)
+    end):pos(window.cx, window.bottom + 34)
 end
 
 
 function GameUIResource:CreateInfomation()
 	local infomationLayer = display.newNode():addTo(self)
 	self.infomationLayer = infomationLayer
-	local iconBg = display.newSprite("resource_icon_background.png"):align(display.LEFT_TOP, display.left+60, display.top - 110):addTo(infomationLayer)
+	local iconBg = display.newSprite("resource_icon_background.png"):align(display.LEFT_TOP, window.left+60, window.top - 110):addTo(infomationLayer)
 	display.newSprite("resource_icon.png"):align(display.CENTER, iconBg:getContentSize().width/2, iconBg:getContentSize().height/2):addTo(iconBg)
-	local lvBg = display.newSprite("LV_background.png"):align(display.LEFT_TOP, display.left+60, iconBg:getPositionY()-iconBg:getContentSize().height-10):addTo(infomationLayer)
+	local lvBg = display.newSprite("LV_background.png"):align(display.LEFT_TOP, window.left+60, iconBg:getPositionY()-iconBg:getContentSize().height-10):addTo(infomationLayer)
 	local lvLabel = cc.ui.UILabel.new({
     	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
     	text = "OWN 998",
@@ -71,7 +71,7 @@ function GameUIResource:CreateInfomation()
 
     local chaiButton = cc.ui.UIPushButton.new({normal = "resource_butter_red.png",pressed = "resource_butter_red_highlight.png"}, {scale9 = false})
     	:addTo(infomationLayer)
-    	:align(display.TOP_RIGHT, display.right-60, iconBg:getPositionY())
+    	:align(display.TOP_RIGHT, window.right-60, iconBg:getPositionY())
     	:setButtonLabel("normal",  cc.ui.UILabel.new({
 	    	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
 	    	text = _("拆除"),
@@ -141,7 +141,7 @@ function GameUIResource:CreateInfomation()
 
     local listHeader = display.newScale9Sprite("resources_background_header.png")
 	:addTo(infomationLayer)
-	:align(display.TOP_LEFT, display.left+45,secondLine:getPositionY()-30)
+	:align(display.TOP_LEFT, window.left+45,secondLine:getPositionY()-30)
 
 	cc.ui.UILabel.new({
     	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,

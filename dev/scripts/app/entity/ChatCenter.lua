@@ -6,7 +6,7 @@
 local Observer = import('.Observer')
 local ChatCenter = class('ChatCenter',Observer)
 local ChatService = import('..service.ChatService')
-local MAX_MESSAGE_PER_PAGE = 10
+local MAX_MESSAGE_PER_PAGE = 100
 
 
 function ChatCenter:ctor()

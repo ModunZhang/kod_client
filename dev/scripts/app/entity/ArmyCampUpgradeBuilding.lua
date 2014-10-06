@@ -10,5 +10,9 @@ function ArmyCampUpgradeBuilding:GetTroopPopulation()
     local level = self:GetLevel()
     return config_function[level].troopPopulation
 end
+function ArmyCampUpgradeBuilding:GetNextLevelTroopPopulation()
+    local level = self:GetNextLevel()
+    return config_function[level].troopPopulation
+end
 
 return ArmyCampUpgradeBuilding

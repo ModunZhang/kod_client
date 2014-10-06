@@ -6,6 +6,7 @@
 import(".bit")
 UIKit = 
 {
+    Registry   = import('framework.cc.Registry'),
     GameUIBase = import('..ui.GameUIBase'),
 }
 local CURRENT_MODULE_NAME = ...
@@ -16,9 +17,15 @@ function UIKit:createUIClass(className, baseName)
 end
 
 function UIKit:newGameUI(gameUIName,... )
+    if self.Registry.isObjectExists(gameUIName) then
+        print("已经创建过一个Object-->",gameUIName)
+        return {addToCurrentScene=function(...)end,addToScene=function(...)end} -- 适配后面的调用不报错
+    end
 	local viewPackageName = app.packageRoot .. ".ui." .. gameUIName
     local viewClass = require(viewPackageName)
-    return viewClass.new(...)
+    local instance = viewClass.new(...)
+    self.Registry.setObject(instance,gameUIName)
+    return instance
 end
 
 function UIKit:getFontFilePath()
@@ -93,4 +100,8 @@ function UIKit:commonProgressTimer(png)
     ProgressTimer:setMidpoint(cc.p(0,0))
     ProgressTimer:setPercentage(0)
     return ProgressTimer
+end
+
+function UIKit:getRegistry()
+    return self.Registry
 end
