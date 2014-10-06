@@ -27,7 +27,7 @@ GameUIChat.CELL_PLAYER_ICON_VIP_LABEL_TAG = 110
 GameUIChat.CELL_PLAYER_ICON_HERO_TAG = 111
 
 function GameUIChat:onEnter()
-	  self:CreateBackGround()
+	self:CreateBackGround()
     self:CreateTitle(_("聊天"))
     self:CreateHomeButton()
     self:CreateSettingButton()
@@ -257,11 +257,21 @@ function GameUIChat:CreateListView()
     listView:registerScriptHandler(handler(self,self.tableCellAtIndex),cc.TABLECELL_SIZE_AT_INDEX)
     listView:registerScriptHandler(handler(self,self.numberOfCellsInTableView),cc.NUMBER_OF_CELLS_IN_TABLEVIEW)
     listView:registerScriptHandler(handler(self,self.tableCellTouched),cc.TABLECELL_TOUCHED)
+    listView:registerScriptHandler(handler(self,self.tableViewScrollBoundTop),cc.SCROLLVIEW_BOUND_TOP)
+    listView:registerScriptHandler(handler(self,self.tableViewScrollBoundBottom),cc.SCROLLVIEW_BOUND_BOTTOM)
     self.listView = listView
     print("list------>",listView:getLocalZOrder())
 end
 
 -----------------------CCTableView adapter
+function GameUIChat:tableViewScrollBoundBottom()
+    print("tableViewScrollBoundBottom-------->")
+end
+
+function GameUIChat:tableViewScrollBoundTop()
+    print("tableViewScrollBoundTop-------->")
+end
+
 -- 回调被拓展成有
 function GameUIChat:tableCellTouched(table,cell,x,y)
     local chat = self.dataSource_[cell:getIdx()+1]
