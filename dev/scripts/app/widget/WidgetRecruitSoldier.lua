@@ -104,10 +104,11 @@ local function return_vs_soldiers_map(soldier_type)
 end
 
 
-function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
+function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max, city)
     self.soldier_type = soldier_type
     self.star = star
     self.recruit_max = recruit_max
+    self.city = city
 
     local label_origin_x = 190
     -- bg
@@ -411,12 +412,18 @@ function WidgetRecruitSoldier:ctor(soldier_type, star, recruit_max)
         :align(display.CENTER, center, -70)
 
     self.back_ground = back_ground
-
-
 end
 function WidgetRecruitSoldier:onEnter()
     self:SetSoldier(self.soldier_type, self.star)
-    self.slider:setSliderValue(1)
+    self.count = 1
+
+    self.city:GetResourceManager():AddObserver(self)
+    self:OnResourceChanged(self.city:GetResourceManager())
+    
+    self.slider:setSliderValue(self.count)
+end
+function WidgetRecruitSoldier:onExit()
+    self.city:GetResourceManager():RemoveObserver(self)
 end
 function WidgetRecruitSoldier:SetSoldier(soldier_type, star)
     local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(soldier_type, star)
@@ -456,11 +463,8 @@ function WidgetRecruitSoldier:OnResourceChanged(resource_manager)
     res_map.iron = resource_manager:GetIronResource():GetResourceValueByCurrentTime(server_time)
     res_map.stone = resource_manager:GetStoneResource():GetResourceValueByCurrentTime(server_time)
     res_map.citizen = resource_manager:GetPopulationResource():GetNoneAllocatedByTime(server_time)
-    for k, v in pairs(self.res_map) do
-        local total = res_map[k]
-        v.total:setString(GameUtils:formatNumber(total))
-    end
     self.res_total_map = res_map
+    self:CheckNeedResource(res_map, self.count)
 end
 function WidgetRecruitSoldier:OnInstantButtonClicked(func)
     self.instant_button_clicked = func
@@ -476,9 +480,11 @@ function WidgetRecruitSoldier:OnBlankClicked(func)
 end
 function WidgetRecruitSoldier:OnCountChanged(count)
     local enable = count > 0
+    -- 按钮
     self.instant_button:setButtonEnabled(enable)
     self.button:setButtonEnabled(enable)
 
+    -- 数量和时间
     local soldier_config = self.soldier_config
     local soldier_ui_config = self.soldier_ui_config
     local total_time = soldier_config.recruitTime * count
@@ -486,20 +492,29 @@ function WidgetRecruitSoldier:OnCountChanged(count)
     self.upkeep:setString(string.format("%s%d", count > 0 and "-" or "", soldier_config.upkeep * count))
     self.recruit_time:setString(GameUtils:formatTimeStyle1(total_time))
 
-    local total_map = self.res_total_map == nil and {} or self.res_total_map
+    -- 检查资源
+    local need_resource = self:CheckNeedResource(self.res_total_map, count)
+    self.count = count
+    self.gem_label:setString(DataUtils:buyResource(need_resource, {}) + DataUtils:getGemByTimeInterval(total_time))
+end
+function WidgetRecruitSoldier:CheckNeedResource(total_resouce, count)
+    local soldier_config = self.soldier_config
+    local total_map = total_resouce
     local current_res_map = {}
     for k, v in pairs(self.res_map) do
         local total = total_map[k] == nil and 0 or total_map[k]
         local current = soldier_config[k] * count
         current_res_map[k] = current
         local color = total >= current and UIKit:hex2c3b(0x403c2f) or display.COLOR_RED
-        v.need:setString(string.format("/ %s", GameUtils:formatNumber(current)))
+        v.total:setString(string.format("%s", GameUtils:formatNumber(total)))
         v.total:setColor(color)
+        v.need:setString(string.format("/ %s", GameUtils:formatNumber(current)))
         v.need:setColor(color)
     end
-    self.count = count
-    self.gem_label:setString(DataUtils:buyResource(current_res_map, {}) + DataUtils:getGemByTimeInterval(total_time))
+    return current_res_map
 end
+
+
 return WidgetRecruitSoldier
 
 

@@ -20,6 +20,9 @@ function Tile:ctor(tile_info)
     self.locked = tile_info.locked
     self.location_id = tile_info.location_id
 end
+function Tile:GetType()
+    return "tile"
+end
 function Tile:IsUnlocked()
     return not self.locked
 end

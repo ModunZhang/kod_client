@@ -14,20 +14,20 @@ end
 function WallUpgradingSprite:GetSpriteFile()
     local entity = self:GetEntity()
     if entity:GetOrient() == Orient.X then
-        return entity:IsGate() and "sprites/walls/gate.png" or "sprites/walls/wall_x.png"
+        return entity:IsGate() and "gate_256x277.png" or "wall_x_267x288.png"
     elseif entity:GetOrient() == Orient.Y then
-        return "sprites/walls/wall_x.png"
+        return "wall_y_267x288.png"
     elseif entity:GetOrient() == Orient.NEG_X then
-        return "sprites/walls/wall_neg_x.png"
+        return "wall_neg_x_284x312.png"
     elseif entity:GetOrient() == Orient.NEG_Y then
-        return "sprites/walls/wall_neg_x.png"
+        return "wall_neg_y_284x312.png"
     end
     assert(false)
 end
 function WallUpgradingSprite:GetSpriteOffset()
     local entity = self:GetEntity()
     if entity:GetOrient() == Orient.X then
-        return 100, 120
+        return 107, 120
     elseif entity:GetOrient() == Orient.Y then
         return -100, 120
     elseif entity:GetOrient() == Orient.NEG_X then
@@ -42,11 +42,11 @@ function WallUpgradingSprite:GetFlipX()
     if entity:GetOrient() == Orient.X then
         return false
     elseif entity:GetOrient() == Orient.Y then
-        return true
+        return false
     elseif entity:GetOrient() == Orient.NEG_X then
         return false
     elseif entity:GetOrient() == Orient.NEG_Y then
-        return true
+        return false
     end
     assert(false)
 end

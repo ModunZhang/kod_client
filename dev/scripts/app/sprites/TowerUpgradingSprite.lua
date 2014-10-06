@@ -10,30 +10,30 @@ end
 ---- 功能
 function TowerUpgradingSprite:ctor(city_layer, entity)
     TowerUpgradingSprite.super.ctor(self, city_layer, entity)
-    self.tower_sprite = display.newSprite("sprites/walls/tower_head.png")
+    self.tower_sprite = display.newSprite("tower_head_78x124.png")
     self.tower_sprite:setPosition(self:GetHeadOffset())
     self:addChild(self.tower_sprite)
 end
 function TowerUpgradingSprite:GetSpriteFile()
     local entity = self:GetEntity()
     if entity:GetOrient() == Orient.X then
-        return "sprites/walls/tower_x.png"
+        return "tower_x_196x236.png"
     elseif entity:GetOrient() == Orient.Y then
-        return "sprites/walls/tower_x.png"
+        return "tower_y_196x236.png"
     elseif entity:GetOrient() == Orient.NEG_X then
-        return "sprites/walls/tower_neg_x.png"
+        return "tower_neg_x_204x256.png"
     elseif entity:GetOrient() == Orient.NEG_Y then
-        return "sprites/walls/tower_neg_x.png"
+        return "tower_neg_y_204x256.png"
     elseif entity:GetOrient() == Orient.RIGHT then
-        return "sprites/walls/tower_left.png"
+        return "tower_left_200x338.png"
     elseif entity:GetOrient() == Orient.DOWN then
-        return "sprites/walls/tower_down.png"
+        return "tower_down_307x234.png"
     elseif entity:GetOrient() == Orient.LEFT then
-        return "sprites/walls/tower_left.png"
+        return "tower_left_200x338.png"
     elseif entity:GetOrient() == Orient.UP then
-        return "sprites/walls/tower_up.png"
+        return "tower_up_327x235.png"
     elseif entity:GetOrient() == Orient.NONE then
-        return "sprites/walls/tower_none.png"
+        return "tower_none_80x154.png"
     end
     assert(false)
 end
@@ -65,11 +65,11 @@ function TowerUpgradingSprite:GetFlipX()
     if entity:GetOrient() == Orient.X then
         return false
     elseif entity:GetOrient() == Orient.Y then
-        return true
+        return false
     elseif entity:GetOrient() == Orient.NEG_X then
         return false
     elseif entity:GetOrient() == Orient.NEG_Y then
-        return true
+        return false
     elseif entity:GetOrient() == Orient.RIGHT then
         return true
     elseif entity:GetOrient() == Orient.DOWN then
@@ -154,7 +154,6 @@ function TowerUpgradingSprite:GetBottomOffset()
     end
     assert(false)
 end
-
 return TowerUpgradingSprite
 
 

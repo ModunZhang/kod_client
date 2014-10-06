@@ -91,6 +91,13 @@ function UpgradeBuilding:GetNextLevel()
     local config = self.config_building_levelup[self:GetType()]
     return #config == self.level and self.level or self.level + 1
 end
+function UpgradeBuilding:GetBeforeLevel()
+    if self.level > 0 then
+        return self.level - 1
+    else
+        return 0
+    end
+end
 function UpgradeBuilding:GetLevel()
     return self.level
 end

@@ -6,7 +6,6 @@ local TowerUpgradingSprite = import("..sprites.TowerUpgradingSprite")
 local WallUpgradingSprite = import("..sprites.WallUpgradingSprite")
 local RoadSprite = import("..sprites.RoadSprite")
 local TreeSprite = import("..sprites.TreeSprite")
-local BuildingSprite = import("..sprites.BuildingSprite")
 local Observer = import("..entity.Observer")
 local CityLayer = class("CityLayer", function(...)
     local layer = display.newLayer()
@@ -91,6 +90,7 @@ function CityLayer:OnDestoryDecorator(destory_decorator, release_ruins)
             end)
 
             table.remove(self.houses, i)
+            house:DestoryShadow()
             house:removeFromParentAndCleanup(true)
             break
         end
@@ -331,6 +331,7 @@ function CityLayer:ctor(city)
     self:InitCityBackGround()
     self:InitPositionNodeWithCityNode()
     self:InitRoadNodeWithCityNode()
+    -- self:InitShadowLayer()
 
     self.city_node = display.newLayer()
     self.city_node:setAnchorPoint(0, 0)
@@ -363,10 +364,12 @@ end
 function CityLayer:GetSceneFile()
     return 'kod/publish/KODCityScene.json'
 end
+-- 城市背景地表
 function CityLayer:InitBackground()
     self.background = cc.TMXTiledMap:create("city_background1.tmx")
     self:addChild(self.background)
 end
+-- 城市地表
 function CityLayer:InitCityBackGround()
     self.city_layer = display.newLayer()
     self.city_layer:setAnchorPoint(0, 0)
@@ -375,13 +378,28 @@ function CityLayer:InitCityBackGround()
     self.city_background = cc.TMXTiledMap:create("city_background2.tmx")
     self.city_layer:addChild(self.city_background)
 end
+-- just for 坐标计算
 function CityLayer:InitPositionNodeWithCityNode()
     self.position_node = cc.TMXTiledMap:create("city_road.tmx")
     self.city_background:addChild(self.position_node)
 end
+-- 路
 function CityLayer:InitRoadNodeWithCityNode()
     self.road_node = cc.TMXTiledMap:create("city_road_2.tmx")
     self.city_background:addChild(self.road_node)
+end
+--
+function CityLayer:CreateShadow(shadow, x, y, z)
+    if shadow then
+        return display.newSprite(shadow.png):addTo(self.city_node, z-1):align(display.CENTER, x+shadow.offset.x, y+shadow.offset.y):scale(shadow.scale)
+    else
+        return nil
+    end
+end
+function CityLayer:DestoryShadow(shadow)
+    if shadow then
+        shadow:removeFromParentAndCleanup(true)
+    end
 end
 function CityLayer:InitWithCity(city)
     city:AddListenOnType(self, city.LISTEN_TYPE.UNLOCK_TILE)
@@ -574,6 +592,9 @@ function CityLayer:OnSceneMove()
 end
 
 return CityLayer
+
+
+
 
 
 

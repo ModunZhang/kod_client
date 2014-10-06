@@ -71,7 +71,7 @@ function CityScene:LoadAnimation()
     manager:addArmatureFileInfo("sprites/armatures/hammer/chuizidonghua.ExportJson")
 end
 function CityScene:CreateMultiTouchLayer()
-    local touch_layer = display.newLayer():addTo(self, 1)
+    local touch_layer = display.newLayer():addTo(self)
     touch_layer:setTouchEnabled(true)
     touch_layer:setTouchSwallowEnabled(true)
     touch_layer:setTouchMode(cc.TOUCH_MODE_ALL_AT_ONCE)
