@@ -66,6 +66,7 @@ function CommonUpgradeUI:OnBuildingUpgradeFinished( buidling, finish_time )
     self:SetBuildingIntroduces()
     self:SetUpgradeTime()
     self:SetUpgradeEfficiency()
+    self.building_image:setTexture(UIKit:getImageByBuildingType( self.building:GetType() ,self.building:GetLevel()))
 end
 
 function CommonUpgradeUI:OnBuildingUpgrading( buidling, current_time )
@@ -96,7 +97,7 @@ function CommonUpgradeUI:InitCommonPart()
     cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-145, display.top-175)
         :addTo(self)
 
-    self.building_image = display.newScale9Sprite(self.building:GetType()..".png", 0, 0):addTo(self):pos(display.cx-196, display.top-158)
+    self.building_image = display.newSprite(UIKit:getImageByBuildingType( self.building:GetType() ,self.building:GetLevel()), 0, 0):addTo(self):pos(display.cx-196, display.top-158)
     self.building_image:setAnchorPoint(cc.p(0.5,0.5))
     if self.building:GetType()=="watchTower" or self.building:GetType()=="tower" then
         self.building_image:setScale(150/self.building_image:getContentSize().height)
