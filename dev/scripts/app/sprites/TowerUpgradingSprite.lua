@@ -25,7 +25,7 @@ function TowerUpgradingSprite:GetSpriteFile()
     elseif entity:GetOrient() == Orient.NEG_Y then
         return "tower_neg_y_204x256.png"
     elseif entity:GetOrient() == Orient.RIGHT then
-        return "tower_left_200x338.png"
+        return "tower_right_200x338.png"
     elseif entity:GetOrient() == Orient.DOWN then
         return "tower_down_307x234.png"
     elseif entity:GetOrient() == Orient.LEFT then
@@ -71,7 +71,7 @@ function TowerUpgradingSprite:GetFlipX()
     elseif entity:GetOrient() == Orient.NEG_Y then
         return false
     elseif entity:GetOrient() == Orient.RIGHT then
-        return true
+        return false
     elseif entity:GetOrient() == Orient.DOWN then
         return false
     elseif entity:GetOrient() == Orient.LEFT then

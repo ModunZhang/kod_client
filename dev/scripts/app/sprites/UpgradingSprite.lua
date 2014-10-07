@@ -58,7 +58,7 @@ function UpgradingSprite:ctor(city_layer, entity)
     UpgradingSprite.super.ctor(self, city_layer, entity, x, y)
     entity:AddBaseListener(self)
     entity:AddUpgradeListener(self)
-    
+
     if entity:IsUnlocked() and self:GetShadowConfig() then
         self:CreateShadow(self:GetShadowConfig())
     end
@@ -76,129 +76,12 @@ function UpgradingSprite:InitLabel(entity)
     label:setString(entity:GetType().." "..level)
 end
 function UpgradingSprite:GetSpriteFile()
-    local entity = self:GetEntity()
-    if self:HasConfig() then
-        local config = self:GetCurrentConfig()
-        return config.png, config.scale
-    elseif entity:GetType() == "dragonEyrie" then
-        return "sprites/buildings/dragonEyrie.png"
-    elseif entity:GetType() == "academy" then
-        return "sprites/buildings/academy.png"
-    elseif entity:GetType() == "hunterHall" then
-        return "sprites/buildings/hunterHall.png"
-    elseif entity:GetType() == "stable" then
-        return "sprites/buildings/stable.png"
-    elseif entity:GetType() == "trainGround" then
-        return "sprites/buildings/trainGround.png"
-    elseif entity:GetType() == "workShop" then
-        return "sprites/buildings/workShop.png"
-    elseif entity:GetType() == "watchTower" then
-        return "sprites/buildings/watchTower.png"
-    elseif entity:GetType() == "blackSmith" or
-        entity:GetType() == "academy" or
-        entity:GetType() == "workShop" or
-        entity:GetType() == "warehouse" or
-        entity:GetType() == "townHall" or
-        entity:GetType() == "stable" or
-        entity:GetType() == "hospital" or
-        entity:GetType() == "materialDepot" or
-        entity:GetType() == "armyCamp" or
-        entity:GetType() == "toolShop" or
-        entity:GetType() == "trainingGround" or
-        entity:GetType() == "foundry" or
-        entity:GetType() == "stoneMason" or
-        entity:GetType() == "lumbermill" or
-        entity:GetType() == "hunterHall" or
-        entity:GetType() == "tradeGuild" or
-        entity:GetType() == "barracks" or
-        entity:GetType() == "mill" or
-        entity:GetType() == "prison"
-    then
-        return "sprites/buildings/armyCamp.png"
-    elseif entity:GetType() == "woodcutter" then
-        return "woodCutter_1_312x250.png", 0.6
-    elseif entity:GetType() == "woodcutter" or
-        entity:GetType() == "quarrier" or
-        entity:GetType() == "farmer" or
-        entity:GetType() == "dwelling" or
-        entity:GetType() == "miner"
-    then
-        return "sprites/houses/waterWell.png"
-    end
+    local config = self:GetCurrentConfig()
+    return config.png, config.scale
 end
 function UpgradingSprite:GetSpriteOffset()
-    local entity = self:GetEntity()
-    if self:HasConfig() then
-        local offset = self:GetCurrentConfig().offset
-        return offset.x, offset.y
-    elseif entity:GetType() == "dragonEyrie" then
-        return 0, 350
-    elseif entity:GetType() == "academy" then
-        return 0, 250
-    elseif entity:GetType() == "hunterHall" then
-        return 0, 250
-    elseif entity:GetType() == "stable" then
-        return 0, 250
-    elseif entity:GetType() == "trainGround" then
-        return 0, 250
-    elseif entity:GetType() == "workShop" then
-        return 0, 250
-    elseif entity:GetType() == "watchTower" then
-        return 0, 320
-    elseif entity:GetType() == "blackSmith" or
-        entity:GetType() == "academy" or
-        entity:GetType() == "workShop" or
-        entity:GetType() == "warehouse" or
-        entity:GetType() == "townHall" or
-        entity:GetType() == "stable" or
-        entity:GetType() == "hospital" or
-        entity:GetType() == "materialDepot" or
-        entity:GetType() == "armyCamp" or
-        entity:GetType() == "toolShop" or
-        entity:GetType() == "trainingGround" or
-        entity:GetType() == "foundry" or
-        entity:GetType() == "stoneMason" or
-        entity:GetType() == "lumbermill" or
-        entity:GetType() == "hunterHall" or
-        entity:GetType() == "tradeGuild" or
-        entity:GetType() == "barracks" or
-        entity:GetType() == "mill" or
-        entity:GetType() == "prison"
-    then
-        return 0, 180
-    elseif entity:GetType() == "woodcutter" or
-        entity:GetType() == "quarrier" or
-        entity:GetType() == "farmer" or
-        entity:GetType() == "dwelling" or
-        entity:GetType() == "miner"
-    then
-        return 0, 100
-    end
-end
-function UpgradingSprite:HasConfig()
-    local entity = self:GetEntity()
-    return entity:GetType() == "keep"
-        or entity:GetType() == "watchTower"
-        or entity:GetType() == "warehouse"
-        or entity:GetType() == "dragonEyrie"
-        or entity:GetType() == "toolShop"
-        or entity:GetType() == "materialDepot"
-        or entity:GetType() == "armyCamp"
-        or entity:GetType() == "barracks"
-        or entity:GetType() == "blackSmith"
-        or entity:GetType() == "foundry"
-        or entity:GetType() == "stoneMason"
-        or entity:GetType() == "lumbermill"
-        or entity:GetType() == "mill"
-        or entity:GetType() == "hospital"
-        or entity:GetType() == "townHall"
-        or entity:GetType() == "tradeGuild"
-        --
-        or entity:GetType() == "dwelling"
-        or entity:GetType() == "farmer"
-        or entity:GetType() == "woodcutter"
-        or entity:GetType() == "quarrier"
-        or entity:GetType() == "miner"
+    local offset = self:GetCurrentConfig().offset
+    return offset.x, offset.y
 end
 function UpgradingSprite:UpdateSprite()
     local next_config, next_i = self:GetCurrentConfig()
@@ -243,6 +126,7 @@ end
 
 
 return UpgradingSprite
+
 
 
 

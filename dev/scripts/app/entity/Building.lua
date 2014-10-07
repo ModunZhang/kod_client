@@ -1,3 +1,4 @@
+local Enum = import("..utils.Enum")
 local Orient = import(".Orient")
 local Observer = import(".Observer")
 local Building = class("Building")
@@ -12,6 +13,31 @@ local orient_desc = {
     [Orient.UP] = "Orient.UP",
     [Orient.NONE] = "Orient.NONE",
 }
+local sort_map = Enum(
+    "keep",
+    "watchTower",
+    "warehouse",
+    "dragonEyrie",
+    "toolShop",
+    "materialDepot",
+    "armyCamp",
+    "barracks",
+    "blackSmith",
+    "foundry",
+    "stoneMason",
+    "lumbermill",
+    "mill",
+    "hospital",
+    "townHall",
+    "tradeGuild",
+    "academy",
+    "prison",
+    "hunterHall",
+    "trainingGround",
+    "stable",
+    "workShop",
+    "wall",
+    "tower")
 function Building:ctor(building_info)
     assert(building_info)
     self.x = building_info.x and building_info.x or 0
@@ -25,6 +51,17 @@ function Building:ctor(building_info)
 end
 function Building:UniqueKey()
     return string.format("%s_%d_%d", self:GetType(), self.x, self.y)
+end
+function Building:IsImportantThanBuilding(building)
+    return sort_map[self:GetType()] < sort_map[building:GetType()]
+end
+function Building:IsAheadOfBuilding(building)
+    local ox, oy = building:GetLogicPosition()
+    if self.y == oy then
+        return self.x < ox
+    else
+        return self.y < oy
+    end
 end
 function Building:OnTimer(current_time)
 
@@ -152,5 +189,6 @@ function Building:GetGlobalRegion()
     return start_x, end_x, start_y, end_y
 end
 return Building
+
 
 

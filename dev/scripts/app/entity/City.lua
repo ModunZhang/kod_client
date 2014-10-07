@@ -42,8 +42,6 @@ function City:ctor()
     self.towers = {}
     self.decorators = {}
 
-    self.dwelling_count_max = 5
-
     self.locations_decorators = {}
     self:InitLocations()
     self:InitRuins()
@@ -109,9 +107,6 @@ end
 function City:GetResourceManager()
     return self.resource_manager
 end
-function City:GetDwellingCounts()
-    return self.dwelling_count_max - #self:GetBuildingByType("dwelling")
-end
 function City:GetOnUpgradingBuildings()
     local builds = {}
     self:IteratorCanUpgradeBuildings(function(building)
@@ -146,6 +141,20 @@ function City:GetBuildingMaxCountsByType(building_type)
 end
 function City:GetLeftBuildingCountsByType(building_type)
     return self:GetBuildingMaxCountsByType(building_type) - #self:GetBuildingByType(building_type)
+end
+function City:GetFunctionBuildings()
+    local r = {}
+    for i, v in pairs(self:GetAllBuildings()) do
+        table.insert(r, v)
+    end
+    for i, v in pairs(self:GetCanUpgradingTowers()) do
+        table.insert(r, v)
+    end
+    table.insert(r, self:GetGate())
+    table.sort(r, function(a, b)
+        return a:GetType() == b:GetType() and a:IsAheadOfBuilding(b) or a:IsImportantThanBuilding(b)
+    end)
+    return r
 end
 function City:GetAllBuildings()
     return self.buildings
@@ -237,10 +246,6 @@ function City:GetLocationById(location_id)
 end
 function City:GetTileByIndex(x, y)
     return self.tiles[y] and self.tiles[y][x] or nil
-end
--- 取得住宅最大建造数量
-function City:GetMaxDwellingCanBeBuilt()
--- self:GetBuildingByType("build_type")
 end
 -- 取得小屋最大建造数量
 function City:GetMaxHouseCanBeBuilt(house_type)
@@ -881,6 +886,9 @@ function City:OnUpgradingBuildings()
 end
 
 return City
+
+
+
 
 
 
