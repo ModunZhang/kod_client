@@ -324,7 +324,7 @@ function NetManager:upgradeWallByLocation(cb)
         end
     end)
 end
-function NetManager:instantUpgradeTowerByLocation(cb)
+function NetManager:instantUpgradeWallByLocation(cb)
     local building_info = {
         finishNow = true
     }

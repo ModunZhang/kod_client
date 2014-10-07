@@ -368,15 +368,21 @@ function CommonUpgradeUI:InitUpgradePart()
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 local upgrade_listener = function()
-                    local location = City:GetLocationIdByBuildingType(self.building:GetType())
-                    if location then
-                        NetManager:instantUpgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
+                    if self.building:GetType()=="tower" then
+                        NetManager:instantUpgradeTowerByLocation(self.building:IsUnlocked(), function(...) end)
+                    elseif self.building:GetType()=="wall" then
+                        NetManager:instantUpgradeWallByLocation(function(...) end)
                     else
-                        local tile = City:GetTileWhichBuildingBelongs(self.building)
-                        local house_location = tile:GetBuildingLocation(self.building)
-                        NetManager:instantUpgradeHouseByLocation(tile.location_id, house_location, function(...) end)
+                        local location = City:GetLocationIdByBuildingType(self.building:GetType())
+                        if location then
+                            NetManager:instantUpgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
+                        else
+                            local tile = City:GetTileWhichBuildingBelongs(self.building)
+                            local house_location = tile:GetBuildingLocation(self.building)
+                            NetManager:instantUpgradeHouseByLocation(tile.location_id, house_location, function(...) end)
+                        end
+                        print(self.building:GetType().."---------------- upgrade now button has been  clicked ")
                     end
-                    print(self.building:GetType().."---------------- upgrade now button has been  clicked ")
                 end
 
                 local can_not_update_type = self.building:IsAbleToUpgrade(true)
@@ -393,15 +399,21 @@ function CommonUpgradeUI:InitUpgradePart()
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 local upgrade_listener = function()
-                    local location = City:GetLocationIdByBuildingType(self.building:GetType())
-                    if location then
-                        NetManager:upgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
+                    if self.building:GetType()=="tower" then
+                        NetManager:upgradeTowerByLocation(self.building:IsUnlocked(), function(...) end)
+                    elseif self.building:GetType()=="wall" then
+                        NetManager:upgradeWallByLocation(function(...) end)
                     else
-                        local tile = City:GetTileWhichBuildingBelongs(self.building)
-                        local house_location = tile:GetBuildingLocation(self.building)
-                        NetManager:upgradeHouseByLocation(tile.location_id, house_location, function(...) end)
+                        local location = City:GetLocationIdByBuildingType(self.building:GetType())
+                        if location then
+                            NetManager:upgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
+                        else
+                            local tile = City:GetTileWhichBuildingBelongs(self.building)
+                            local house_location = tile:GetBuildingLocation(self.building)
+                            NetManager:upgradeHouseByLocation(tile.location_id, house_location, function(...) end)
+                        end
+                        print(self.building:GetType().."---------------- upgrade  button has been  clicked ")
                     end
-                    print(self.building:GetType().."---------------- upgrade  button has been  clicked ")
                 end
 
                 local can_not_update_type = self.building:IsAbleToUpgrade(false)
@@ -742,6 +754,9 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
+
 
 
 
