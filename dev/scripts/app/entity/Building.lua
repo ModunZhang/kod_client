@@ -77,6 +77,15 @@ end
 function Building:CopyListenerFrom(building)
     self.base_building_observer:CopyListenerFrom(building:GetBaseObserver())
 end
+function Building:CopyValueFrom(building)
+    self.x = building.x
+    self.y = building.y
+    self.w = building.w
+    self.h = building.h
+    self.building_type = building.building_type
+    self.orient = building.orient
+    self.can_change_head = self.can_change_head
+end
 function Building:GetBaseObserver()
     return self.base_building_observer
 end

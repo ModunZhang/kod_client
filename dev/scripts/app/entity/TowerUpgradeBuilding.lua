@@ -33,6 +33,12 @@ function TowerUpgradeBuilding:ctor(building_info)
         self.h = 1
     end
 end
+function TowerUpgradeBuilding:CopyValueFrom(building)
+    TowerUpgradeBuilding.super.CopyValueFrom(self, building)
+    self.tower_id = building.tower_id
+    self.w = building.w
+    self.h = building.h
+end
 function TowerUpgradeBuilding:TowerId()
     return self.tower_id
 end
@@ -72,6 +78,7 @@ end
 
 
 return TowerUpgradeBuilding
+
 
 
 

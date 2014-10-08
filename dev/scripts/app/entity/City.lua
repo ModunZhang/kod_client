@@ -343,14 +343,6 @@ function City:GetWalls()
 end
 function City:GetGate()
     return self:GetGateInWalls(self.walls)
-        -- local gate
-        -- table.foreach(self.walls, function(k, wall)
-        --     if wall:IsGate() then
-        --         gate = wall
-        --         return true
-        --     end
-        -- end)
-        -- return gate
 end
 function City:GetGateInWalls(walls)
     local gate
@@ -841,13 +833,24 @@ end
 function City:ReloadWalls(walls)
     local old_walls = self.walls
     local old_gate = self:GetGateInWalls(old_walls)
-    local new_gate = self:GetGateInWalls(walls)
+    local new_index = nil
+    local new_gate = nil
+    for i, v in ipairs(walls) do
+        if v:IsGate() then
+            new_index = i
+            new_gate = v
+            break
+        end
+    end
 
+    assert(new_index)
+    -- 已经生成过城门了
     if old_gate then
-        new_gate:CopyListenerFrom(old_gate)
+        walls[new_index] = old_gate
+        old_gate:CopyValueFrom(new_gate)
     else
         -- 如果是第一次生成
-        new_gate:AddUpgradeListener(self)
+        self:GetGateInWalls(walls):AddUpgradeListener(self)
     end
     return walls
 end
@@ -912,7 +915,7 @@ function City:ReloadTowers(towers)
             local old_tower = old_tower_map[v:TowerId()]
             -- 已经解锁的
             if old_tower then
-                v:CopyListenerFrom(old_tower)
+                old_tower:CopyValueFrom(v)
             else
                 -- 如果是新解锁的
                 v:AddUpgradeListener(self)

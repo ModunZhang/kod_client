@@ -29,9 +29,9 @@ end
 function WallUpgradingSprite:GetSpriteFile()
     local entity = self:GetEntity()
     if entity:GetOrient() == Orient.X then
-        return entity:IsGate() and "gate_295x292.png" or "wall_x_267x288.png"
+        return entity:IsGate() and "gate_295x301.png" or "wall_x_292x302.png"
     elseif entity:GetOrient() == Orient.Y then
-        return "wall_y_267x288.png"
+        return "wall_y_292x302.png"
     elseif entity:GetOrient() == Orient.NEG_X then
         return "wall_neg_x_328x343.png"
     elseif entity:GetOrient() == Orient.NEG_Y then

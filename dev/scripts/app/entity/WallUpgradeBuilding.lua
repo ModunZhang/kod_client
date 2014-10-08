@@ -6,6 +6,12 @@ function WallUpgradeBuilding:ctor(wall_info)
     self.len = wall_info.len
     self.w, self.h = self:GetSize()
 end
+function WallUpgradeBuilding:CopyValueFrom(building)
+    WallUpgradeBuilding.super.CopyValueFrom(self, building)
+    self.len = building.len
+    self.w, self.h = building:GetSize()
+    self.is_gate = building.is_gate
+end
 function WallUpgradeBuilding:GetSize()
     if self.orient == Orient.X then
         return 1, self.len
