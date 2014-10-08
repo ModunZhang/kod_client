@@ -202,6 +202,7 @@ function GameUIUnlockBuilding:PopNotSatisfyDialog(listener,can_not_update_type)
             dialog:CreateNeeds("Topaz-icon.png",required_gems)
         end
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH then
+        local required_gems =self.building:getUpgradeRequiredGems()
         dialog:CreateOKButton(function(sender,type)
             listener()
             self:removeFromParent(true)
