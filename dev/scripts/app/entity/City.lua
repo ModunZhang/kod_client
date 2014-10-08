@@ -142,6 +142,15 @@ end
 function City:GetLeftBuildingCountsByType(building_type)
     return self:GetBuildingMaxCountsByType(building_type) - #self:GetBuildingByType(building_type)
 end
+function City:GetFunctionBuildingsWhichIsUnlocked()
+    local r = {}
+    for i, v in ipairs(self:GetFunctionBuildings()) do
+        if v:IsUnlocked() or v:IsUnlocking() then
+            table.insert(r, v)
+        end
+    end
+    return r
+end
 function City:GetFunctionBuildings()
     local r = {}
     for i, v in pairs(self:GetAllBuildings()) do

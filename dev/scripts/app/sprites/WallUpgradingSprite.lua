@@ -10,26 +10,21 @@ end
 ----
 function WallUpgradingSprite:ctor(city_layer, entity)
     WallUpgradingSprite.super.ctor(self, city_layer, entity, x, y)
-    
-        -- self:CreateBase()
+
     -- if entity:GetOrient() == Orient.X then
-    --     self.sprite:setVisible(true)
-    --     self:CreateBase()
+    --     self.sprite:setVisible(false)
     -- elseif entity:GetOrient() == Orient.Y then
     --     self.sprite:setVisible(true)
-    --     self:CreateBase()
     -- elseif entity:GetOrient() == Orient.NEG_X then
-    --     self.sprite:setVisible(true)
-    --     self:CreateBase()
+    --     self.sprite:setVisible(false)
     -- elseif entity:GetOrient() == Orient.NEG_Y then
-    --     self.sprite:setVisible(true)
-    --     self:CreateBase()
+    --     self.sprite:setVisible(false)
     -- end
 end
 function WallUpgradingSprite:GetSpriteFile()
     local entity = self:GetEntity()
     if entity:GetOrient() == Orient.X then
-        return entity:IsGate() and "gate_295x301.png" or "wall_x_292x302.png"
+        return entity:IsGate() and "gate_292x302.png" or "wall_x_290x302.png"
     elseif entity:GetOrient() == Orient.Y then
         return "wall_y_292x302.png"
     elseif entity:GetOrient() == Orient.NEG_X then
@@ -42,13 +37,13 @@ end
 function WallUpgradingSprite:GetSpriteOffset()
     local entity = self:GetEntity()
     if entity:GetOrient() == Orient.X then
-        return 100, 120
+        return 99, 125
     elseif entity:GetOrient() == Orient.Y then
-        return -100, 120
+        return -103, 120
     elseif entity:GetOrient() == Orient.NEG_X then
-        return 120, 110
+        return 120, 116
     elseif entity:GetOrient() == Orient.NEG_Y then
-        return -110, 120
+        return -120, 116
     end
     assert(false)
 end

@@ -187,6 +187,18 @@ create_building_config(
     ,create_config(level(2), level(2), "miner_2_340x308.png", offset(0, 100), scale(0.5))
     ,create_config(level(3), MAX_LEVEL, "miner_3_326x307.png", offset(0, 100), scale(0.5))
 )
+create_building_config(
+    "wall"
+    ,create_config(MIN_LEVEL, level(1), "gate_292x302.png", offset(0, 100), scale(0.5))
+    ,create_config(level(2), level(2), "gate_292x302.png", offset(0, 100), scale(0.5))
+    ,create_config(level(3), MAX_LEVEL, "gate_292x302.png", offset(0, 100), scale(0.5))
+)
+create_building_config(
+    "tower"
+    ,create_config(MIN_LEVEL, level(1), "tower_head_78x124.png", offset(0, 100), scale(0.5))
+    ,create_config(level(2), level(2), "tower_head_78x124.png", offset(0, 100), scale(0.5))
+    ,create_config(level(3), MAX_LEVEL, "tower_head_78x124.png", offset(0, 100), scale(0.5))
+)
 
 
 

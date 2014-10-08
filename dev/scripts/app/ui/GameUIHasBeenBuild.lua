@@ -1,8 +1,44 @@
+local Localize = import("..utils.Localize")
+local SpriteConfig = import("..sprites.SpriteConfig")
 local window = import("..utils.window")
 local WidgetProgress = import("..widget.WidgetProgress")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUIHasBeenBuild = UIKit:createUIClass('GameUIHasBeenBuild', "GameUIWithCommonHeader")
+
+
+local building_config_map = {
+    ["keep"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["watchTower"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["warehouse"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["dragonEyrie"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["toolShop"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["materialDepot"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["armyCamp"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["barracks"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["blackSmith"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["foundry"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["stoneMason"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["lumbermill"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["mill"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["hospital"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["townHall"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["tradeGuild"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["academy"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["prison"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["hunterHall"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["trainingGround"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["stable"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["workShop"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["wall"] = {scale = 0.2, offset = {x = 0, y = 0}},
+    ["tower"] = {scale = 0.2, offset = {x = 0, y = 0}},
+}
+
+
+
+
+
+
 function GameUIHasBeenBuild:ctor(city)
     GameUIHasBeenBuild.super.ctor(self, city, _("建筑列表"))
     self.build_city = city
@@ -17,13 +53,13 @@ function GameUIHasBeenBuild:onExit()
     GameUIHasBeenBuild.super.onExit(self)
 end
 function GameUIHasBeenBuild:OnUpgradingBegin(building, current_time, city)
-    -- dump(building)
+-- dump(building)
 end
 function GameUIHasBeenBuild:OnUpgrading(building, current_time, city)
-    -- dump(building)
+-- dump(building)
 end
 function GameUIHasBeenBuild:OnUpgradingFinished(building, current_time, city)
-    -- dump(building)
+-- dump(building)
 end
 
 function GameUIHasBeenBuild:TabButtons()
@@ -49,15 +85,13 @@ end
 function GameUIHasBeenBuild:LoadFunctionListView()
     if not self.function_list_view then
         self.function_list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 180)
-
-        -- local item = self:CreateItemWithListView(self.function_list_view)
-        -- self.function_list_view:addItem(item)
-
-        for i, v in pairs(self.build_city:GetFunctionBuildings()) do
-            print(v:UniqueKey())
+        for i, v in pairs(self.build_city:GetFunctionBuildingsWhichIsUnlocked()) do
+            -- print(v:UniqueKey())
+            local item = self:CreateItemWithListView(self.function_list_view)
+            item:SetBuildingType(v:GetType(), v:GetLevel())
+            item:UpdateByBuilding(v)
+            self.function_list_view:addItem(item)
         end
-
-
         self.function_list_view:reload():resetPosition()
     end
     self.function_list_view:setVisible(true)
@@ -68,6 +102,8 @@ function GameUIHasBeenBuild:UnloadFunctionListView()
 end
 
 
+
+--
 function GameUIHasBeenBuild:CreateItemWithListView(list_view)
     local item = list_view:newItem()
     local back_ground = WidgetUIBackGround.new(170)
@@ -90,7 +126,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
 
 
     local building_icon = display.newSprite("keep_131x164.png")
-        :addTo(back_ground):align(display.CENTER, (left_x + right_x) / 2, h/2 + 30)
+        :addTo(back_ground):align(display.BOTTOM_CENTER, (left_x + right_x) / 2, 30)
 
 
     local title_blue = cc.ui.UIImage.new("title_blue_402x48.png", {scale9 = true})
@@ -116,7 +152,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
 
 
 
-    local number_label = cc.ui.UILabel.new({
+    local desc_label = cc.ui.UILabel.new({
         size = 20,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_LEFT,
@@ -183,8 +219,13 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
             color = UIKit:hex2c3b(0xffedae)}))
 
 
-    function item:SetBuildingType(building_type)
-        self:SetTitleLabel(_("城堡"))
+    function item:SetBuildingType(building_type, level)
+        self:SetTitleLabel(Localize.building_name[building_type])
+        local config = building_config_map[building_type]
+        local png = SpriteConfig[building_type]:GetConfigByLevel(level).png
+        building_icon:setTexture(png)
+        building_icon:scale(config.scale)
+        -- building_icon:(config.scale)
         return self
     end
     function item:SetTitleLabel(label)
@@ -199,9 +240,9 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         end
         return self
     end
-    function item:SetNumberLabel(label)
-        if number_label:getString() ~= label then
-            number_label:setString(label)
+    function item:SetDescLabel(label)
+        if desc_label:getString() ~= label then
+            desc_label:setString(label)
         end
         return self
     end
@@ -209,32 +250,80 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         progress:SetProgressInfo(time_label, percent)
         return self
     end
+    function item:UpdateByBuilding(building)
+        self.building = building
+        if building:IsUpgrading() then
+            self:ChangeStatus("building")
+        else
+            if building:IsMaxLevel() then
+                self:ChangeStatus("max")
+            else
+                self:ChangeStatus("normal")
+            end
+        end
+    end
+    function item:UpdateDesc(building)
+        if building:IsUpgrading() then
+            self:SetDescLabel(string.format("%s%d", _("正在升级到"), building:GetLevel()))
+        else
+            if building:IsMaxLevel() then
+                self:SetDescLabel(string.format("%s", _("已经到最大等级了")))
+            else
+                self:SetDescLabel(string.format("%s%d%s%d", _("从等级"), building:GetLevel(), _("升级到等级"), building:GetNextLevel()))
+            end
+        end
+    end
+    function item:OnBuildingUpgradingBegin(building)
+        self:ChangeStatus("building")
+    end
+    function item:OnBuildingUpgrading(building)
+
+    end
+    function item:OnBuildingUpgradingEnd(building)
+
+    end
     function item:ChangeStatus(status)
+        if self.status == status then
+            return
+        end
         if status == "instant" then
             self:HideNormal()
             self:HideProgress()
             self:HideDisable()
+            self:HideMax()
 
             self:ShowInstant()
         elseif status == "normal" then
             self:HideInstant()
             self:HideProgress()
             self:HideDisable()
+            self:HideMax()
 
             self:ShowNormal()
         elseif status == "building" then
             self:HideInstant()
             self:HideNormal()
             self:HideDisable()
+            self:HideMax()
 
             self:ShowProgress()
         elseif status == "disable" then
             self:HideInstant()
             self:HideNormal()
             self:HideProgress()
+            self:HideMax()
 
             self:ShowDisable()
+        elseif status == "max" then
+            self:HideInstant()
+            self:HideNormal()
+            self:HideProgress()
+            self:HideDisable()
+
+            self:ShowMax()
         end
+        self.status = status
+        self:UpdateDesc(self.building)
         return self
     end
     function item:HideInstant()
@@ -273,15 +362,24 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         condition_label:setString(_("不满足升级条件"))
         condition_label:setColor(UIKit:hex2c3b(0x7e0000))
     end
+    function item:HideMax()
+
+    end
+    function item:ShowMax()
+        normal_build:setVisible(false)
+        condition_label:setVisible(false)
+    end
 
     -- item:ChangeStatus("disable"):SetGemLabel("999"):SetNumberLabel("999"):SetProgressInfo("asdf", 80):SetTitleLabel(_("城"))
 
     return item
 end
 
-
-
 return GameUIHasBeenBuild
+
+
+
+
 
 
 

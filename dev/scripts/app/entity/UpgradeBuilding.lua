@@ -95,8 +95,11 @@ function UpgradeBuilding:GetNextLevelUpgradeTimeByLevel(level)
     return 1
 end
 function UpgradeBuilding:GetNextLevel()
+    return self:IsMaxLevel() and self.level or self.level + 1
+end
+function UpgradeBuilding:IsMaxLevel()
     local config = self.config_building_levelup[self:GetType()]
-    return #config == self.level and self.level or self.level + 1
+    return #config == self.level
 end
 function UpgradeBuilding:GetBeforeLevel()
     if self.level > 0 then

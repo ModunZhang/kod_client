@@ -17,9 +17,9 @@ end
 function TowerUpgradingSprite:GetSpriteFile()
     local entity = self:GetEntity()
     if entity:GetOrient() == Orient.X then
-        return "tower_x_196x236.png"
+        return "tower_x_195x233.png"
     elseif entity:GetOrient() == Orient.Y then
-        return "tower_y_196x236.png"
+        return "tower_y_195x234.png"
     elseif entity:GetOrient() == Orient.NEG_X then
         return "tower_neg_x_253x297.png"
     elseif entity:GetOrient() == Orient.NEG_Y then
@@ -27,7 +27,7 @@ function TowerUpgradingSprite:GetSpriteFile()
     elseif entity:GetOrient() == Orient.RIGHT then
         return "tower_right_278x338.png"
     elseif entity:GetOrient() == Orient.DOWN then
-        return "tower_down_307x234.png"
+        return "tower_down_324x246.png"
     elseif entity:GetOrient() == Orient.LEFT then
         return "tower_left_235x338.png"
     elseif entity:GetOrient() == Orient.UP then
@@ -40,23 +40,23 @@ end
 function TowerUpgradingSprite:GetSpriteOffset()
     local entity = self:GetEntity()
     if entity:GetOrient() == Orient.X then
-        return 60, 92
+        return 59, 97
     elseif entity:GetOrient() == Orient.Y then
-        return -60, 92
+        return -63, 93
     elseif entity:GetOrient() == Orient.NEG_X then
-        return 60, 92
+        return 83, 83
     elseif entity:GetOrient() == Orient.NEG_Y then
-        return -85, 87
+        return -82, 83
     elseif entity:GetOrient() == Orient.RIGHT then
-        return -62, 65
+        return -60, 67
     elseif entity:GetOrient() == Orient.DOWN then
-        return 0, 92
+        return 2, 98
     elseif entity:GetOrient() == Orient.LEFT then
-        return 70, 55
+        return 78, 62
     elseif entity:GetOrient() == Orient.UP then
         return 0, -7
     elseif entity:GetOrient() == Orient.NONE then
-        return 0,  50
+        return -40,  40
     end
     assert(false)
 end
