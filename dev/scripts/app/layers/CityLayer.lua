@@ -184,10 +184,10 @@ function CityLayer:UpdateWallsWithCity(city)
 
     if old_walls then
         for k, v in pairs(old_walls) do
-            city_node:removeChild(v, true)
+            v:DestorySelf()
+            v:removeFromParentAndCleanup(true)
         end
     end
-
 end
 function CityLayer:UpdateTowersWithCity(city)
     local city_node = self:GetCityNode()
@@ -208,7 +208,8 @@ function CityLayer:UpdateTowersWithCity(city)
 
     if old_towers then
         for k, v in pairs(old_towers) do
-            city_node:removeChild(v, true)
+            v:DestorySelf()
+            v:removeFromParentAndCleanup(true)
         end
     end
 end

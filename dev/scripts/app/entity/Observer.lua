@@ -16,8 +16,8 @@ function Observer:ctor(...)
 end
 function Observer:CopyListenerFrom(subject)
 	local observer = {}
-	for k, v in pairs(subject.observer) do
-		observer[k] = v
+	for i, v in ipairs(subject.observer) do
+		observer[i] = v
 	end
 	self.observer = observer
 end

@@ -66,6 +66,10 @@ function UpgradingSprite:ctor(city_layer, entity)
     self.handle = self:schedule(function() self:CheckCondition() end, 1)
     -- self:InitLabel(entity)
 end
+function UpgradingSprite:DestorySelf()
+    self:GetEntity():RemoveBaseListener(self)
+    self:GetEntity():RemoveUpgradeListener(self)
+end
 function UpgradingSprite:InitLabel(entity)
     local label = ui.newTTFLabel({ text = "text" , x = 0, y = 0 })
     self:addChild(label, 101)
