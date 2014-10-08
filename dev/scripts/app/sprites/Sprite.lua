@@ -66,7 +66,6 @@ function Sprite:ctor(city_layer, entity, x, y)
     self.entity = entity
     self.sprite = self:CreateSprite():addTo(self)
     self:SetPositionWithLogic(x, y)
-    -- self:CreateBase()
 end
 function Sprite:GetShadow()
     return self.shadow
@@ -127,7 +126,7 @@ end
 ----------base
 function Sprite:GenerateBaseTiles(w, h)
     local base_node = self:newBatchNode(w, h)
-    self:addChild(base_node)
+    self:addChild(base_node, -1)
 end
 function Sprite:newBatchNode(w, h)
     local start_x, end_x, start_y, end_y = self:GetLocalRegion(w, h)
@@ -135,7 +134,7 @@ function Sprite:newBatchNode(w, h)
     local map = self:GetMap()
     for ix = start_x, end_x do
         for iy = start_y, end_y do
-            local sprite = display.newSprite(base_node:getTexture(), CCRectMake(0, 0, 80, 56))
+            local sprite = display.newSprite(base_node:getTexture(), cc.rect(0, 0, 80, 56))
             sprite:setPosition(cc.p(map:ConvertToLocalPosition(ix, iy)))
             base_node:addChild(sprite)
         end
@@ -162,6 +161,7 @@ function Sprite:GetLocalRegion(w, h)
 end
 
 return Sprite
+
 
 
 

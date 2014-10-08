@@ -13,6 +13,8 @@ function TowerUpgradingSprite:ctor(city_layer, entity)
     self.tower_sprite = display.newSprite("tower_head_78x124.png")
     self.tower_sprite:setPosition(self:GetHeadOffset())
     self:addChild(self.tower_sprite)
+
+    self.sprite:setVisible(false)
 end
 function TowerUpgradingSprite:GetSpriteFile()
     local entity = self:GetEntity()
@@ -21,19 +23,19 @@ function TowerUpgradingSprite:GetSpriteFile()
     elseif entity:GetOrient() == Orient.Y then
         return "tower_y_196x236.png"
     elseif entity:GetOrient() == Orient.NEG_X then
-        return "tower_neg_x_204x256.png"
+        return "tower_neg_x_253x297.png"
     elseif entity:GetOrient() == Orient.NEG_Y then
-        return "tower_neg_y_204x256.png"
+        return "tower_neg_y_253x297.png"
     elseif entity:GetOrient() == Orient.RIGHT then
-        return "tower_right_200x338.png"
+        return "tower_right_278x338.png"
     elseif entity:GetOrient() == Orient.DOWN then
         return "tower_down_307x234.png"
     elseif entity:GetOrient() == Orient.LEFT then
-        return "tower_left_200x338.png"
+        return "tower_left_235x338.png"
     elseif entity:GetOrient() == Orient.UP then
-        return "tower_up_327x235.png"
+        return "tower_up_327x266.png"
     elseif entity:GetOrient() == Orient.NONE then
-        return "tower_none_80x154.png"
+        return "tower_none_158x181.png"
     end
     assert(false)
 end
@@ -46,15 +48,15 @@ function TowerUpgradingSprite:GetSpriteOffset()
     elseif entity:GetOrient() == Orient.NEG_X then
         return 60, 92
     elseif entity:GetOrient() == Orient.NEG_Y then
-        return -60, 92
+        return -85, 87
     elseif entity:GetOrient() == Orient.RIGHT then
-        return -70, 55
+        return -62, 65
     elseif entity:GetOrient() == Orient.DOWN then
         return 0, 92
     elseif entity:GetOrient() == Orient.LEFT then
         return 70, 55
     elseif entity:GetOrient() == Orient.UP then
-        return 0, -2
+        return 0, -7
     elseif entity:GetOrient() == Orient.NONE then
         return 0,  50
     end
