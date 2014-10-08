@@ -53,7 +53,7 @@ function GameUIHome:RefreshData()
     self.name_label:setString(userdata.basicInfo.name)
     self.power_label:setString(userdata.basicInfo.power)
     self.level_label:setString(userdata.basicInfo.level)
-    self.vip_label:setString("VIP "..userdata.basicInfo.vip)
+    self.vip_label:setString("VIP 1")
 end
 
 

@@ -74,6 +74,12 @@ end
 function Building:RemoveBaseListener(listener)
     self.base_building_observer:RemoveObserver(listener)
 end
+function Building:CopyListenerFrom(building)
+    self.base_building_observer:CopyListenerFrom(building:GetBaseObserver())
+end
+function Building:GetBaseObserver()
+    return self.base_building_observer
+end
 function Building:GetSize()
     return self.w, self.h
 end

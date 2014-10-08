@@ -10,9 +10,8 @@ end
 ----
 function WallUpgradingSprite:ctor(city_layer, entity)
     WallUpgradingSprite.super.ctor(self, city_layer, entity, x, y)
-    self.sprite:setVisible(false)
     
-        self:CreateBase()
+        -- self:CreateBase()
     -- if entity:GetOrient() == Orient.X then
     --     self.sprite:setVisible(true)
     --     self:CreateBase()

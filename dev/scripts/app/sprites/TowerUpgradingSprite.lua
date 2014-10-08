@@ -13,8 +13,6 @@ function TowerUpgradingSprite:ctor(city_layer, entity)
     self.tower_sprite = display.newSprite("tower_head_78x124.png")
     self.tower_sprite:setPosition(self:GetHeadOffset())
     self:addChild(self.tower_sprite)
-
-    self.sprite:setVisible(false)
 end
 function TowerUpgradingSprite:GetSpriteFile()
     local entity = self:GetEntity()

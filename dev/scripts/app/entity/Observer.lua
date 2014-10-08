@@ -14,6 +14,13 @@ end
 function Observer:ctor(...)
 	self.observer = {}
 end
+function Observer:CopyListenerFrom(subject)
+	local observer = {}
+	for k, v in pairs(subject.observer) do
+		observer[k] = v
+	end
+	self.observer = observer
+end
 function Observer:AddObserver(observer)
 	table.insert(self.observer, observer)
 	return observer

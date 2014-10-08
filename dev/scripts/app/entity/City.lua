@@ -342,8 +342,19 @@ function City:GetWalls()
     return self.walls
 end
 function City:GetGate()
+    return self:GetGateInWalls(self.walls)
+        -- local gate
+        -- table.foreach(self.walls, function(k, wall)
+        --     if wall:IsGate() then
+        --         gate = wall
+        --         return true
+        --     end
+        -- end)
+        -- return gate
+end
+function City:GetGateInWalls(walls)
     local gate
-    table.foreach(self.walls, function(k, wall)
+    table.foreach(walls, function(k, wall)
         if wall:IsGate() then
             gate = wall
             return true
@@ -820,16 +831,30 @@ function City:GenerateWalls()
             break
         end
     end
-
-    self.walls = sort_walls
+    -- 重新生成城门的监听
+    self.walls = self:ReloadWalls(sort_walls)
 
     -- 生成防御塔
     self:GenerateTowers(self.walls)
 end
+-- 因为重新生成了城墙，所以必须把添加的listener都转移到新的城门上去
+function City:ReloadWalls(walls)
+    local old_walls = self.walls
+    local old_gate = self:GetGateInWalls(old_walls)
+    local new_gate = self:GetGateInWalls(walls)
+
+    if old_gate then
+        new_gate:CopyListenerFrom(old_gate)
+    else
+        -- 如果是第一次生成
+        new_gate:AddUpgradeListener(self)
+    end
+    return walls
+end
 function City:GenerateTowers(walls)
-    self.towers = {}
+    local towers = {}
     local p = walls[#walls]:IntersectWithOtherWall(walls[1])
-    table.insert(self.towers, TowerUpgradeBuilding.new({ x = p.x, y = p.y,
+    table.insert(towers, TowerUpgradeBuilding.new({ x = p.x, y = p.y,
         building_type = "tower",
         level = -1,
         orient = p.orient }))
@@ -837,7 +862,7 @@ function City:GenerateTowers(walls)
     for i, v in pairs(walls) do
         if i < #walls then
             local p = walls[i]:IntersectWithOtherWall(walls[i + 1])
-            table.insert(self.towers, TowerUpgradeBuilding.new({
+            table.insert(towers, TowerUpgradeBuilding.new({
                 x = p.x, y = p.y,
                 building_type = "tower",
                 level = -1,
@@ -845,7 +870,6 @@ function City:GenerateTowers(walls)
         end
     end
 
-    local towers = self.towers
     local mx, my = 0, 0
     local index
     for i, v in ipairs(towers) do
@@ -869,9 +893,33 @@ function City:GenerateTowers(walls)
     until #t >= tower_limit
 
     for tower_id, tower_index in ipairs(t) do
-        local tower = towers[tower_index]
-        tower.tower_id = tower_id
+        towers[tower_index]:SetTowerId(tower_id)
     end
+    self.towers = self:ReloadTowers(towers)
+end
+function City:ReloadTowers(towers)
+    local old_towers = self.towers
+    local old_tower_map = {}
+    for k, v in pairs(old_towers) do
+        if v:IsUnlocked() then
+            old_tower_map[v:TowerId()] = v
+        end
+    end
+
+
+    for k,v in pairs(towers) do
+        if v:IsUnlocked() then
+            local old_tower = old_tower_map[v:TowerId()]
+            -- 已经解锁的
+            if old_tower then
+                v:CopyListenerFrom(old_tower)
+            else
+                -- 如果是新解锁的
+                v:AddUpgradeListener(self)
+            end
+        end
+    end
+    return towers
 end
 
 
@@ -886,6 +934,8 @@ function City:OnUpgradingBuildings()
 end
 
 return City
+
+
 
 
 

@@ -23,6 +23,10 @@ function UpgradeBuilding:ctor(building_info)
     --building剩余升级时间小于5 min时可以免费加速  单位 seconds
     self.freeSpeedUpTime=300
 end
+function UpgradeBuilding:CopyListenerFrom(building)
+    UpgradeBuilding.super.CopyListenerFrom(self, building)
+    self.upgrade_building_observer:CopyListenerFrom(building:GetUpgradeObserver())
+end
 function UpgradeBuilding:AddUpgradeListener(listener)
     assert(listener.OnBuildingUpgradingBegin)
     assert(listener.OnBuildingUpgradeFinished)
@@ -31,6 +35,9 @@ function UpgradeBuilding:AddUpgradeListener(listener)
 end
 function UpgradeBuilding:RemoveUpgradeListener(listener)
     self.upgrade_building_observer:RemoveObserver(listener)
+end
+function UpgradeBuilding:GetUpgradeObserver()
+    return self.upgrade_building_observer
 end
 function UpgradeBuilding:GetElapsedTimeByCurrentTime(current_time)
     return self:GetUpgradeTimeToNextLevel() - self:GetUpgradingLeftTimeByCurrentTime(current_time)

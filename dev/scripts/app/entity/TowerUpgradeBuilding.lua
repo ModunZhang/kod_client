@@ -33,6 +33,12 @@ function TowerUpgradeBuilding:ctor(building_info)
         self.h = 1
     end
 end
+function TowerUpgradeBuilding:TowerId()
+    return self.tower_id
+end
+function TowerUpgradeBuilding:SetTowerId(tower_id)
+    self.tower_id = tower_id
+end
 function TowerUpgradeBuilding:IsUnlocked()
     return self.tower_id
 end
