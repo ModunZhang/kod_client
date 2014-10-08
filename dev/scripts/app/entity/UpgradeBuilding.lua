@@ -262,7 +262,7 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
         if gem<self:getUpgradeNowNeedGems() then
             return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH
         end
-        retrun nil
+        return
     end
     -- 还未管理道具，暂时从userdata中取
     local m = DataManager:getUserData().materials
