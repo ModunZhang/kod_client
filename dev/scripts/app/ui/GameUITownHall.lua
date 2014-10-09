@@ -347,7 +347,7 @@ function GameUITownHall:CreateTaxLineItem(width, param)
     }):addTo(node, 2):align(display.LEFT_BOTTOM, left + 70, 0)
 
     local label = cc.ui.UILabel.new({
-        text = "增加 %5 城民增长",
+        text = "增加 5% 城民增长",
         size = 20,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
