@@ -41,6 +41,7 @@ end
 function GameUIToolShop:OnBeginMakeMaterialsWithEvent(tool_shop, event)
     self:UpdateEvent(event)
     self:UpdateNeedStatus()
+    audio.playSound("ui_toolShop_craft_start.mp3")
 end
 function GameUIToolShop:OnMakingMaterialsWithEvent(tool_shop, event, current_time)
     self:UpdateEvent(event)

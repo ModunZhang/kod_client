@@ -65,6 +65,23 @@ function CityScene:onEnter()
 
     self:PlayBackground()
     audio.playSound("sfx_peace.mp3", true)
+
+    City:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
+end
+function CityScene:onExit()
+    City:RemoveListenerOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
+end
+function CityScene:onEnterTransitionFinish()
+    goto_logic(6, 4, 0)
+end
+function CityScene:OnUpgradingBegin()
+    audio.playSound("ui_building_upgrade_start.mp3")
+end
+function CityScene:OnUpgrading()
+
+end
+function CityScene:OnUpgradingFinished()
+
 end
 function CityScene:PlayBackground()
     audio.playMusic("KoD_music_city.mp3", false)
@@ -146,12 +163,6 @@ function CityScene:CreateHomePage()
     local home = UIKit:newGameUI('GameUIHome', City):addToScene(self)
     home:setTouchSwallowEnabled(false)
     return home
-end
-function CityScene:onEnterTransitionFinish()
-    goto_logic(6, 4, 0)
-end
-function CityScene:onExit()
-
 end
 function CityScene:OneTouch(pre_x, pre_y, x, y, touch_type)
     local citynode = self.city_layer:GetCityNode()

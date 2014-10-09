@@ -18,6 +18,19 @@ import('app.ui.GameGlobalUIUtils')
 NOT_HANDLE = function(...) print("net message not handel, please check !") end
 
 
+local old_ctor = cc.ui.UIPushButton.ctor
+function cc.ui.UIPushButton:ctor(...)
+    old_ctor(self, ...)
+    self:addButtonPressedEventListener(function(event)
+        audio.playSound("ui_button_down.wav")
+    end)
+    self:addButtonReleaseEventListener(function(event)
+        audio.playSound("ui_button_up.wav")
+    end)
+end
+
+
+
 function MyApp:ctor()
     self:initI18N()
     NetManager:init()
@@ -119,6 +132,8 @@ function MyApp:lockInput(b)
 end
 
 return MyApp
+
+
 
 
 

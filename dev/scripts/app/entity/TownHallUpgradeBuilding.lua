@@ -130,7 +130,7 @@ function TownHallUpgradeBuilding:OnUserDataChanged(...)
         end
     else
         if not self:IsEmpty() then
-            self:EndImposeWithCurrentTime(event.coin, current_time)
+            self:EndImposeWithCurrentTime(current_time)
         end
     end
 end
