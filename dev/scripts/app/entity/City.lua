@@ -300,6 +300,10 @@ function City:IsUnLockedAtIndex(x, y)
     return not self.tiles[y][x].locked
 end
 function City:IsTileCanbeUnlockAt(x, y)
+    -- 没有第五圈
+    if x == 5 or y == 5 then
+        return false
+    end
     -- 是否解锁
     if not self:GetTileByIndex(x, y) then
         return false , self.RETURN_CODE.OUT_OF_BOUND

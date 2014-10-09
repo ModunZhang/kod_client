@@ -217,7 +217,9 @@ function WidgetEventTabButtons:CreateProgressItem()
         color = UIKit:hex2c3b(0xd1ca95)}):addTo(progress):align(display.LEFT_CENTER, 10, 43/2)
 
     local btn = WidgetPushButton.new({normal = "green_btn_up_142x39.png",
-        pressed = "green_btn_down_142x39.png"}
+        pressed = "green_btn_down_142x39.png",
+        disabled = "blue_btn_up_142x39.png",
+    }
     ,{}
     ,{
         disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
@@ -272,7 +274,9 @@ function WidgetEventTabButtons:CreateOpenItem()
 
 
     local button = WidgetPushButton.new({normal = "blue_btn_up_142x39.png",
-        pressed = "blue_btn_down_142x39.png"}
+        pressed = "blue_btn_down_142x39.png",
+        disabled = "blue_btn_up_142x39.png"
+    }
     ,{}
     ,{
         disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
@@ -657,6 +661,7 @@ function WidgetEventTabButtons:MaterialDescribe(event)
 end
 
 return WidgetEventTabButtons
+
 
 
 
