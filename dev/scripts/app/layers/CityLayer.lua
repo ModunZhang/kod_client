@@ -21,14 +21,16 @@ function CityLayer:GetClickedObject(x, y, world_x, world_y)
         sprite_clicked = {}
     }
     self:IteratorClickAble(function(k, v)
-        if v:isVisible() then
-            local check = v:IsContainPointWithFullCheck(x, y, world_x, world_y)
-            if check.logic_clicked then
-                table.insert(clicked_list.logic_clicked, v)
-                return true
-            elseif check.sprite_clicked then
-                table.insert(clicked_list.sprite_clicked, v)
-            end
+        if not v:isVisible() then return false end
+        if v:GetEntity():GetType() == "wall" and not v:GetEntity():IsGate() then return false end
+        if v:GetEntity():GetType() == "tower" and not v:GetEntity():IsUnlocked() then return false end
+        
+        local check = v:IsContainPointWithFullCheck(x, y, world_x, world_y)
+        if check.logic_clicked then
+            table.insert(clicked_list.logic_clicked, v)
+            return true
+        elseif check.sprite_clicked then
+            table.insert(clicked_list.sprite_clicked, v)
         end
     end)
     table.sort(clicked_list.logic_clicked, function(a, b)
@@ -594,6 +596,7 @@ function CityLayer:OnSceneMove()
 end
 
 return CityLayer
+
 
 
 
