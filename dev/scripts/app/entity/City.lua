@@ -98,6 +98,28 @@ function City:InitDecorators(decorators)
     self:CheckIfDecoratorsIntersectWithRuins()
 end
 -- 取值函数
+function City:GetHousesAroundFunctionBuildingByType(building, building_type, len)
+    return self:GetHousesAroundFunctionBuildingWithFilter(building, len, function(house)
+        return house:GetType() == building_type
+    end)
+end
+function City:GetHousesAroundFunctionBuildingWithFilter(building, len, filter)
+    assert(self:IsFunctionBuilding(building))
+    local r = {}
+    self:IteratorDecoratorBuildingsByFunc(function(k, v)
+        local is_neighbour = building:IsNearByBuildingWithLength(v, len)
+        if is_neighbour then
+            if type(filter) == "function" then
+                if filter(v) then
+                    table.insert(r, v)
+                end
+            else
+                table.insert(r, v)
+            end
+        end
+    end)
+    return r
+end
 function City:IsFunctionBuilding(building)
     local location_id = self:GetLocationIdByBuilding(building)
     local b = self:GetBuildingByLocationId(location_id)
@@ -981,6 +1003,9 @@ function City:OnUpgradingBuildings()
 end
 
 return City
+
+
+
 
 
 

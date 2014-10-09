@@ -52,17 +52,6 @@ end
 function Building:UniqueKey()
     return string.format("%s_%d_%d", self:GetType(), self.x, self.y)
 end
-function Building:IsImportantThanBuilding(building)
-    return sort_map[self:GetType()] < sort_map[building:GetType()]
-end
-function Building:IsAheadOfBuilding(building)
-    local ox, oy = building:GetLogicPosition()
-    if self.y == oy then
-        return self.x < ox
-    else
-        return self.y < oy
-    end
-end
 function Building:OnTimer(current_time)
 
 end
@@ -126,6 +115,41 @@ end
 function Building:Descriptor()
     return orient_desc[self.orient]
 end
+
+----
+function Building:IsNearByBuildingWithLength(building, len)
+    local abs = math.abs
+    local start_x, end_x, start_y, end_y = building:GetGlobalRegion()
+    local mid_x, mid_y = self:GetMidLogicPosition()
+    local w, h = self:GetSize()
+    local half_w, half_h = w/2, h/2
+    for k, v in pairs({
+        {start_x, start_y},
+        {start_x, end_y},
+        {end_x, start_y},
+        {end_x, end_y}
+    }) do
+        local x = v[1]
+        local y = v[2]
+        if abs(x - mid_x) < half_w + len then
+            return true
+        elseif abs(y - mid_y) < half_h + len then
+            return true
+        end
+    end
+    return false
+end
+function Building:IsImportantThanBuilding(building)
+    return sort_map[self:GetType()] < sort_map[building:GetType()]
+end
+function Building:IsAheadOfBuilding(building)
+    local ox, oy = building:GetLogicPosition()
+    if self.y == oy then
+        return self.x < ox
+    else
+        return self.y < oy
+    end
+end
 function Building:IsSamePositionWith(building)
     local x, y = building:GetLogicPosition()
     return self.x == x and self.y == y
@@ -161,6 +185,7 @@ function Building:IsIntersectWithOtherBuilding(building)
     end
     return false
 end
+---
 function Building:GetTopLeftPoint()
     local start_x, end_x, start_y, end_y = self:GetGlobalRegion()
     return start_x, start_y
@@ -204,6 +229,7 @@ function Building:GetGlobalRegion()
     return start_x, end_x, start_y, end_y
 end
 return Building
+
 
 
 
