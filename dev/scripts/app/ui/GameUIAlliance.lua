@@ -17,8 +17,7 @@ GameUIAlliance.FLAG_GRAPHIC_TAG = 2
 GameUIAlliance.FLAG_GRAPHIC_ZORDER = 2
 GameUIAlliance.FLAG_BOX_TAG  = 3
 GameUIAlliance.FLAG_BOX_ZORDER = 3
-
-
+local WidgetAllianceLanguagePanel = import("..widget.WidgetAllianceLanguagePanel")
 GameUIAlliance.flagData_ = {
 	color = {}, -- 颜色
 	graphic = {}, -- 图案
@@ -305,7 +304,7 @@ function GameUIAlliance:createFlagPanel()
 		text = _("联盟旗帜"),
 		size = 22,
 		color = 0x403c2f
-	}):addTo(node):pos(color_header:getPositionX()-320,color_header:getPositionY()+color_header:getContentSize().height+15)
+	}):addTo(node):pos(color_header:getPositionX()-320+10,color_header:getPositionY()+color_header:getContentSize().height+15)
 
 	local randomButton = WidgetPushButton.new({normal = "alliance_sieve_51x45.png"})
 		:addTo(node)
@@ -576,7 +575,7 @@ function GameUIAlliance:NoAllianceTabEvent_createIf()
     self.landformPanel = self:CreateCheckAllianeGroup():addTo(createContent):pos(0,self.createFlagPanel:getCascadeBoundingBox().height+120)
     -- test 
     --
-	
+
 	local scrollView = UIScrollView.new({viewRect = cc.rect(0,0,contentWidth,window.betweenHeaderAndTab)})
         :addScrollNode(createContent)
         :setDirection(UIScrollView.DIRECTION_VERTICAL)
@@ -605,7 +604,7 @@ function GameUIAlliance:CreateCheckAllianeGroup()
         on_disabled = "checkbox_selectd.png",
 
     }
-	local group = cc.ui.UICheckBoxButtonGroup.new()
+	local landGroup = cc.ui.UICheckBoxButtonGroup.new()
         :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
             :setButtonLabel(UIKit:ttfLabel({text = _("草地"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
@@ -623,13 +622,32 @@ function GameUIAlliance:CreateCheckAllianeGroup()
             printf("Option %d selected, Option %d unselected", event.selected, event.last)
         end)
         :addTo(landSelect)
- --    UIKit:ttfLabel({
-	-- 	text = _("联盟地形"),
-	-- 	size = 22,
-	-- 	color = 0x403c2f
-	-- }):addTo(groupNode):align(display.LEFT_BOTTOM,, y)
+    local landLabel = UIKit:ttfLabel({
+		text = _("联盟地形"),
+		size = 22,
+		color = 0x403c2f
+	}):addTo(groupNode):align(display.CENTER,window.cx-30, landSelect:getPositionY()+landSelect:getCascadeBoundingBox().height+20)
+
+    -- local languageSelected = self:CreateBoxPanel(180):addTo(groupNode):pos(0,landLabel:getPositionY()+20)
+    local languageSelected = WidgetAllianceLanguagePanel.new(260):addTo(groupNode):pos(0,landLabel:getPositionY()+20)
+
+    local checkButtons = {
+    	cc.ui.UICheckBoxButton.new(checkbox_image)
+		    :setButtonLabel(UIKit:ttfLabel({text = _("草地"),size = 20,color = 0x797154}))
+		    :setButtonLabelOffset(40, 0)
+		    :align(display.LEFT_CENTER),
+		cc.ui.UICheckBoxButton.new(checkbox_image)
+		    :setButtonLabel(UIKit:ttfLabel({text = _("草地"),size = 20,color = 0x797154}))
+		    :setButtonLabelOffset(40, 0)
+		    :align(display.LEFT_CENTER)
+	}
     return groupNode
 end
+
+function GameUIAlliance:CreateLanguageButtonGroup()
+
+end
+
 
 
 function GameUIAlliance:CreateBoxPanel(height)
