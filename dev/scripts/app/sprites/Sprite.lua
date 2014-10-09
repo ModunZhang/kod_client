@@ -4,7 +4,7 @@ local Sprite = class("Sprite", function(...)
     return Observer.extend(display.newNode(), ...)
 end)
 
-
+local SPRITE = 1
 ---- 回调
 function Sprite:OnSceneMove()
     local world_point = self:GetWorldPosition()
@@ -64,7 +64,7 @@ function Sprite:ctor(city_layer, entity, x, y)
     self.iso_map = city_layer.iso_map
     self.width = (city_layer:GetMapSize())
     self.entity = entity
-    self.sprite = self:CreateSprite():addTo(self)
+    self.sprite = self:CreateSprite():addTo(self, SPRITE)
     self:SetPositionWithLogic(x, y)
     -- self:CreateBase()
 end
@@ -87,6 +87,10 @@ function Sprite:RefreshShadow()
         self:DestoryShadow()
         self:CreateShadow(shadow)
     end
+end
+function Sprite:UpdateSprite()
+    self.sprite:removeFromParentAndCleanup(true)
+    self.sprite = self:CreateSprite():addTo(self, SPRITE)
 end
 function Sprite:CreateSprite()
     local sprite_file, scale = self:GetSpriteFile()
@@ -126,8 +130,7 @@ end
 
 ----------base
 function Sprite:GenerateBaseTiles(w, h)
-    local base_node = self:newBatchNode(w, h)
-    self:addChild(base_node, -1)
+    self:newBatchNode(w, h):addTo(self, -1)
 end
 function Sprite:newBatchNode(w, h)
     local start_x, end_x, start_y, end_y = self:GetLocalRegion(w, h)

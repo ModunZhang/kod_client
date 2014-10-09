@@ -87,13 +87,6 @@ function UpgradingSprite:GetSpriteOffset()
     local offset = self:GetCurrentConfig().offset
     return offset.x, offset.y
 end
-function UpgradingSprite:UpdateSprite()
-    local next_config, next_i = self:GetCurrentConfig()
-    local before_config, before_i = self:GetBeforeConfig()
-    if next_i ~= before_i then
-        self:GetSprite():setTexture(display.newSprite(next_config.png):getTexture())
-    end
-end
 function UpgradingSprite:GetShadowConfig()
     local config = self:GetCurrentConfig()
     if config then

@@ -156,37 +156,6 @@ create_building_config(
     ,create_config(level(2), level(2), "tradeGuild_1_558x403.png", offset(30, 180), scale(0.7))
     ,create_config(level(3), MAX_LEVEL, "tradeGuild_1_558x403.png", offset(30, 180), scale(0.7))
 )
--- 装饰小屋
-create_building_config(
-    "dwelling"
-    ,create_config(MIN_LEVEL, level(1), "dwelling_1_297x365.png", offset(0, 100), scale(0.5))
-    ,create_config(level(2), level(2), "dwelling_2_357x401.png", offset(0, 100), scale(0.5))
-    ,create_config(level(3), MAX_LEVEL, "dwelling_3_369x419.png", offset(0, 100), scale(0.5))
-)
-create_building_config(
-    "woodcutter"
-    ,create_config(MIN_LEVEL, level(1), "woodcutter_1_342x250.png", offset(0, 100), scale(0.5))
-    ,create_config(level(2), level(2), "woodcutter_2_364x334.png", offset(0, 100), scale(0.5))
-    ,create_config(level(3), MAX_LEVEL, "woodcutter_3_351x358.png", offset(0, 100), scale(0.5))
-)
-create_building_config(
-    "farmer"
-    ,create_config(MIN_LEVEL, level(1), "farmer_1_315x281.png", offset(0, 100), scale(0.5))
-    ,create_config(level(2), level(2), "farmer_2_312x305.png", offset(0, 100), scale(0.5))
-    ,create_config(level(3), MAX_LEVEL, "farmer_3_332x345.png", offset(0, 100), scale(0.5))
-)
-create_building_config(
-    "quarrier"
-    ,create_config(MIN_LEVEL, level(1), "quarrier_1_303x296.png", offset(0, 100), scale(0.5))
-    ,create_config(level(2), level(2), "quarrier_2_347x324.png", offset(0, 100), scale(0.5))
-    ,create_config(level(3), MAX_LEVEL, "quarrier_3_363x386.png", offset(0, 100), scale(0.5))
-)
-create_building_config(
-    "miner"
-    ,create_config(MIN_LEVEL, level(1), "miner_1_315x309.png", offset(0, 100), scale(0.5))
-    ,create_config(level(2), level(2), "miner_2_340x308.png", offset(0, 100), scale(0.5))
-    ,create_config(level(3), MAX_LEVEL, "miner_3_326x307.png", offset(0, 100), scale(0.5))
-)
 create_building_config(
     "wall"
     ,create_config(MIN_LEVEL, level(1), "gate_292x302.png", offset(0, 100), scale(0.5))
@@ -199,6 +168,38 @@ create_building_config(
     ,create_config(level(2), level(2), "tower_head_78x124.png", offset(0, 100), scale(0.5))
     ,create_config(level(3), MAX_LEVEL, "tower_head_78x124.png", offset(0, 100), scale(0.5))
 )
+-- 装饰小屋
+create_building_config(
+    "dwelling"
+    ,create_config(MIN_LEVEL, level(1), "dwelling_1_297x365.png", offset(10, 90), scale(0.6))
+    ,create_config(level(2), level(2), "dwelling_2_357x401.png", offset(0, 100), scale(0.6))
+    ,create_config(level(3), MAX_LEVEL, "dwelling_3_369x419.png", offset(0, 110), scale(0.6))
+)
+create_building_config(
+    "farmer"
+    ,create_config(MIN_LEVEL, level(1), "farmer_1_315x281.png", offset(10, 80), scale(0.6))
+    ,create_config(level(2), level(2), "farmer_2_312x305.png", offset(0, 80), scale(0.6))
+    ,create_config(level(3), MAX_LEVEL, "farmer_3_332x345.png", offset(10, 90), scale(0.6))
+)
+create_building_config(
+    "woodcutter"
+    ,create_config(MIN_LEVEL, level(1), "woodcutter_1_342x250.png", offset(5, 70), scale(0.6))
+    ,create_config(level(2), level(2), "woodcutter_2_364x334.png", offset(10, 90), scale(0.6))
+    ,create_config(level(3), MAX_LEVEL, "woodcutter_3_351x358.png", offset(15, 95), scale(0.6))
+)
+create_building_config(
+    "quarrier"
+    ,create_config(MIN_LEVEL, level(1), "quarrier_1_303x296.png", offset(5, 80), scale(0.6))
+    ,create_config(level(2), level(2), "quarrier_2_347x324.png", offset(15, 85), scale(0.6))
+    ,create_config(level(3), MAX_LEVEL, "quarrier_3_363x386.png", offset(20, 100), scale(0.6))
+)
+create_building_config(
+    "miner"
+    ,create_config(MIN_LEVEL, level(1), "miner_1_315x309.png", offset(15, 80), scale(0.6))
+    ,create_config(level(2), level(2), "miner_2_340x308.png", offset(20, 90), scale(0.6))
+    ,create_config(level(3), MAX_LEVEL, "miner_3_326x307.png", offset(20, 90), scale(0.6))
+)
+
 
 
 
