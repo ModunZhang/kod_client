@@ -19,10 +19,10 @@ GameUIArmyCamp.SOLDIERS_NAME = {
     [10] = "skeletonArcher",
     [11] = "deathKnight",
     [12] = "meatWagon",
-    -- [13] = "priest",
-    -- [14] = "demonHunter",
-    -- [15] = "paladin",
-    -- [16] = "steamTank",
+-- [13] = "priest",
+-- [14] = "demonHunter",
+-- [15] = "paladin",
+-- [16] = "steamTank",
 }
 
 function GameUIArmyCamp:ctor(city,building)
@@ -196,14 +196,16 @@ function GameUIArmyCamp:CreateItemWithListView(list_view)
         local soldier_number = soldier_map[soldier_name]
         row_count = row_count+1
         local soldier = WidgetSoldierBox.new("",function ()
-            if soldier_name=="skeletonWarrior"
-                or soldier_name=="skeletonArcher"
-                or soldier_name=="deathKnight"
-                or soldier_name=="meatWagon"
-            then
-                self:OpenSoldierDetails(soldier_name)
-            else
-                self:OpenSoldierDetails(soldier_name,City:GetSoldierManager():GetStarBySoldierType(soldier_name))
+            if soldier_number>0 then
+                if soldier_name=="skeletonWarrior"
+                    or soldier_name=="skeletonArcher"
+                    or soldier_name=="deathKnight"
+                    or soldier_name=="meatWagon"
+                then
+                    self:OpenSoldierDetails(soldier_name)
+                else
+                    self:OpenSoldierDetails(soldier_name,City:GetSoldierManager():GetStarBySoldierType(soldier_name))
+                end
             end
         end):addTo(row_item)
             :alignByPoint(cc.p(0.5,0.4), origin_x + (unit_width + gap_x) * row_count + unit_width / 2, 0)
@@ -230,6 +232,7 @@ function GameUIArmyCamp:CreateItemWithListView(list_view)
 end
 
 return GameUIArmyCamp
+
 
 
 
