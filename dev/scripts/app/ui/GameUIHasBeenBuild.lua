@@ -33,6 +33,12 @@ local building_config_map = {
     ["workShop"] = {scale = 0.2, offset = {x = 10, y = -10}},
     ["wall"] = {scale = 0.4, offset = {x = 0, y = -10}},
     ["tower"] = {scale = 1, offset = {x = 0, y = -10}},
+    --
+    ["dwelling"] = {scale = 0.35, offset = {x = 0, y = -10}},
+    ["farmer"] = {scale = 0.35, offset = {x = 0, y = -10}},
+    ["woodcutter"] = {scale = 0.35, offset = {x = 0, y = -10}},
+    ["quarrier"] = {scale = 0.35, offset = {x = 0, y = -10}},
+    ["miner"] = {scale = 0.35, offset = {x = 0, y = -10}},
 }
 local timer = app.timer
 
@@ -61,21 +67,38 @@ end
 function GameUIHasBeenBuild:OnUpgradingBegin(building, current_time, city)
     self:UpdateBuildingQueue(city)
 
-    if self.function_list_view and not self.build_city:IsHouse(building) then
+    local is_house = self.build_city:IsHouse(building)
+    if self.function_list_view and not is_house then
         self.function_list_view:UpdateItemsByBuildings(self.build_city:GetFunctionBuildingsWhichIsUnlocked())
+    elseif self.house_list_view and is_house then
+        self.house_list_view:UpdateItemsByBuildings(self.build_city:GetHousesWhichIsBuilded())
     end
 end
 function GameUIHasBeenBuild:OnUpgrading(building, current_time, city)
-    if self.function_list_view and not self.build_city:IsHouse(building) then
+
+    local is_house = self.build_city:IsHouse(building)
+    if self.function_list_view and not is_house then
         self.function_list_view:UpdateItemByBuilding(building)
+    elseif self.house_list_view and is_house then
+        self.house_list_view:UpdateItemByBuilding(building)
     end
 end
 function GameUIHasBeenBuild:OnUpgradingFinished(building, current_time, city)
     self:UpdateBuildingQueue(city)
 
-    if self.function_list_view and not self.build_city:IsHouse(building) then
+    local is_house = self.build_city:IsHouse(building)
+    if self.function_list_view and not is_house then
         self.function_list_view:UpdateItemsByBuildings(self.build_city:GetFunctionBuildingsWhichIsUnlocked())
-        self.function_list_view:GetItemByUniqueKey(building:UniqueKey()):UpdateIcon(building)
+        local item = self.function_list_view:GetItemByUniqueKey(building:UniqueKey())
+        if item then
+            item:UpdateIcon(building)
+        end
+    elseif self.house_list_view and is_house then
+        self.house_list_view:UpdateItemsByBuildings(self.build_city:GetHousesWhichIsBuilded())
+        local item = self.house_list_view:GetItemByUniqueKey(building:UniqueKey())
+        if item then
+            item:UpdateIcon(building)
+        end
     end
 end
 function GameUIHasBeenBuild:LoadBuildingQueue()
@@ -83,7 +106,6 @@ function GameUIHasBeenBuild:LoadBuildingQueue()
     local check = cc.ui.UICheckBoxButton.new({on = "yes_40x40.png", off = "wow_40x40.png" })
         :addTo(back_ground)
         :align(display.CENTER, 30, back_ground:getContentSize().height/2)
-        -- :setButtonSelected(false)
     check:setTouchEnabled(false)
     local building_label = cc.ui.UILabel.new({
         text = _("建筑队列"),
@@ -135,48 +157,73 @@ function GameUIHasBeenBuild:TabButtons()
     },
     function(tag)
         if tag == "function" then
+            self:UnloadHouseListView()
+
             self:LoadFunctionListView()
         elseif tag == "resource" then
             self:UnloadFunctionListView()
+
+            self:LoadHouseListView()
         end
     end):pos(window.cx, window.bottom + 34)
 end
+-- function
 function GameUIHasBeenBuild:LoadFunctionListView()
     if not self.function_list_view then
-        local function_list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 180)
-        local unique_map = {}
-        for i, v in pairs(self.build_city:GetFunctionBuildingsWhichIsUnlocked()) do
-            local item = self:CreateItemWithListView(function_list_view)
-            item:UpdateIcon(v)
-            item:UpdateByBuilding(v)
-            unique_map[v:UniqueKey()] = item
-            function_list_view:addItem(item)
-        end
-        function_list_view.unique_map = unique_map
-        function function_list_view:GetItemByUniqueKey(unique_key)
-            return self.unique_map[unique_key]
-        end
-        function function_list_view:UpdateItemsByBuildings(buildings)
-            for k, v in pairs(buildings) do
-                self:UpdateItemByBuilding(v)
-            end
-        end
-        function function_list_view:UpdateItemByBuilding(building)
-            local item = self.unique_map[building:UniqueKey()]
-            item:UpdateByBuilding(building)
-        end
-        self.function_list_view = function_list_view
+        self.function_list_view = self:CreateListView(self.build_city:GetFunctionBuildingsWhichIsUnlocked())
         self.function_list_view:reload():resetPosition()
     end
-    self.function_list_view:setVisible(true)
 end
 function GameUIHasBeenBuild:UnloadFunctionListView()
-    self.function_list_view:removeFromParentAndCleanup(true)
+    if self.function_list_view then
+        self.function_list_view:removeFromParentAndCleanup(true)
+    end
     self.function_list_view = nil
 end
+-- house
+function GameUIHasBeenBuild:LoadHouseListView()
+    if not self.house_list_view then
+        self.house_list_view = self:CreateListView(self.build_city:GetHousesWhichIsBuilded())
+        self.house_list_view:reload():resetPosition()
+    end
+end
+function GameUIHasBeenBuild:UnloadHouseListView()
+    if self.house_list_view then
+        self.house_list_view:removeFromParentAndCleanup(true)
+    end
+    self.house_list_view = nil
+end
+---
+function GameUIHasBeenBuild:CreateListView(buildings)
+    local list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 180)
 
+    -- 初始化item
+    local unique_map = {}
+    for i, v in pairs(buildings) do
+        local item = self:CreateItemWithListView(list_view)
+        item:UpdateIcon(v)
+        item:UpdateByBuilding(v)
+        unique_map[v:UniqueKey()] = item
+        list_view:addItem(item)
+    end
+    list_view.unique_map = unique_map
 
-
+    function list_view:GetItemByUniqueKey(unique_key)
+        return self.unique_map[unique_key]
+    end
+    function list_view:UpdateItemsByBuildings(buildings)
+        for k, v in pairs(buildings) do
+            self:UpdateItemByBuilding(v)
+        end
+    end
+    function list_view:UpdateItemByBuilding(building)
+        local item = self.unique_map[building:UniqueKey()]
+        if item then
+            item:UpdateByBuilding(building)
+        end
+    end
+    return list_view
+end
 --
 function GameUIHasBeenBuild:CreateItemWithListView(list_view)
     local city = self.build_city
@@ -387,6 +434,12 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
                 self:ChangeStatus("disable")
                 break
             end
+            if building:IsAbleToUpgrade(false) == NOT_ABLE_TO_UPGRADE.BUILDINGLIST_AND_RESOURCE_NOT_ENOUGH then
+                self:ChangeStatus("instant")
+                self:SetConditionLabel(_("建筑队列不足"), UIKit:hex2c3b(0x7e0000))
+                self:SetGemLabel(building:getUpgradeNowNeedGems())
+                break
+            end
             if building:IsAbleToUpgrade(false) == NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH then
                 self:ChangeStatus("instant")
                 self:SetConditionLabel(_("升级资源不足"), UIKit:hex2c3b(0x7e0000))
@@ -395,8 +448,8 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
             end
             if building:IsAbleToUpgrade(false) == NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH then
                 self:ChangeStatus("instant")
-                self:SetGemLabel(building:getUpgradeNowNeedGems())
                 self:SetConditionLabel(_("建筑队列不足"), UIKit:hex2c3b(0x7e0000))
+                self:SetGemLabel(building:getUpgradeNowNeedGems())
                 break
             end
             self:ChangeStatus("normal")
@@ -417,7 +470,11 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
     function item:UpdateDesc(building)
         if building:IsUpgrading() then
             if building:GetNextLevel() == 1 then
-                self:SetDescLabel(_("正在解锁"))
+                if city:IsHouse(building) then
+                    self:SetDescLabel(_("正在建造"))
+                else
+                    self:SetDescLabel(_("正在解锁"))
+                end
             else
                 self:SetDescLabel(string.format("%s%d", _("正在升级到 等级"), building:GetNextLevel()))
             end
@@ -524,6 +581,19 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
 end
 
 return GameUIHasBeenBuild
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

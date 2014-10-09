@@ -218,6 +218,17 @@ end
 function City:GetAllBuildings()
     return self.buildings
 end
+function City:GetHousesWhichIsBuilded()
+    local r = {}
+    for i, v in ipairs(self:GetAllDecorators()) do
+        table.insert(r, v)
+    end
+    table.sort(r, function(a, b)
+        local compare = a:GetLevel() - b:GetLevel()
+        return compare == 0 and a:IsAheadOfBuilding(b) or (compare > 0 and true or false)
+    end)
+    return r
+end
 function City:GetAllDecorators()
     return self.decorators
 end
@@ -1003,6 +1014,7 @@ function City:OnUpgradingBuildings()
 end
 
 return City
+
 
 
 

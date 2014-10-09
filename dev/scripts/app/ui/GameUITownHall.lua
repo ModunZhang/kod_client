@@ -98,8 +98,6 @@ function GameUITownHall:CreateAdministration()
     local list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 100)
 
     self.dwelling = self:CreateDwellingItemWithListView(list_view)
-    self.dwelling:GetLineByIndex(1):SetCondition(1, 3)
-    self.dwelling:GetLineByIndex(2):SetCondition(2, 6)
     list_view:addItem(self.dwelling)
 
     if self.town_hall:IsEmpty() then
@@ -326,7 +324,7 @@ function GameUITownHall:CreateDwellingLineItem(width)
         assert("you should not use this function for any purpose!")
     end
     function node:SetCondition(current, max)
-        local str = string.format("%s %d/%d", _("达到"), current, max)
+        local str = string.format("%s %d/%d", _("达到"), current > max and max or current, max)
         if condition:getString() ~= str then
             condition:setString(str)
         end
