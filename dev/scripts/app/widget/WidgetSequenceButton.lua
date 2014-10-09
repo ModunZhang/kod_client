@@ -12,7 +12,7 @@ local WidgetSequenceButton = class("WidgetSequenceButton",WidgetPushButton)
 -- images, options, filters 参数同WidgetPushButton
 
 function WidgetSequenceButton:ctor(images,options,seqImages,seqFilters,initial_state)
-	assert(initial_state)
+	-- assert(initial_state)
 	self.seqImages_ = {}
 	self.seqsprite_ = {}
 	self.seqFilter_ = {}
@@ -24,133 +24,38 @@ function WidgetSequenceButton:ctor(images,options,seqImages,seqFilters,initial_s
 		local countOfimages = #seqImages
 		if countOfimages > 1 then
 			self.isImageState = true
-			for i,v in ipairs(seqImages) do
-				local event = {}
-				if i == 1 then
-					event = {
-						name = v.name,
-						from = seqImages[countOfimages].name,
-						to   = seqImages[1].name,
-						image = v.image
-					}
-				elseif i == countOfimages then
-					event = {
-						name = v.name,
-						from = seqImages[countOfimages - 1].name,
-						to   = seqImages[i].name,
-						image = v.image
-					}
-				else
-					event = {
-						name = v.name,
-						from = seqImages[i-1].name,
-						to   = seqImages[i].name,
-						image = v.image,
-					}
-				end
-				table.insert(events,event)
-			end
-			self.events_ = events
-			-- dump(events)
-
-
-			self.fsm_seq_ = {}
-			cc(self.fsm_seq_)
-		    	:addComponent("components.behavior.StateMachine")
-		    	:exportMethods()
-		    self.fsm_seq_:setupState({
-		        initial = {state = initial_state and initial_state or self:getCurrentEvent().name, event = "startup", defer = false},
-		        events = events,
-		        callbacks = {
-		            onchangestate = handler(self, self.onSeqStateChange_),
-		        }
-		    })
-			for i,v in ipairs(events) do
-				self:setButtonSeqImage(v.name,v.image,true)
-			end
-			self:addNodeEventListener(cc.NODE_EVENT, function(event)
-		        if event.name == "enter" then
-		            self:updateSeqButtonImage_()
-		        end
-	    	end)
-		    self:setSeqState(initial_state and initial_state or self:getCurrentEvent().name)
+			self.events_ = seqImages
 	    elseif countOfimages == 1 and seqFilters then
-	    	local countOfFilters = #seqFilters
-	    	for i,v in ipairs(seqFilters) do
-	    		local event = {}
-	    		if i == 1 then
-	    			event = {
-						name = v.name,
-						from = seqFilters[countOfFilters].name,
-						to   = seqFilters[1].name,
-						color = v.color
-					}
-				elseif i == countOfFilters then
-					event = {
-						name = v.name,
-						from = seqFilters[countOfFilters - 1].name,
-						to   = seqFilters[i].name,
-						color = v.color
-					}
-				else
-					event = {
-						name = v.name,
-						from = seqFilters[i-1].name,
-						to   = seqFilters[i].name,
-						color = v.color,
-					}
-	    		end
-	    		table.insert(events,event)
-	    	end
-	    	-- dump(events)
-	    	self.events_ = events
-	    	self.fsm_seq_ = {}
-			cc(self.fsm_seq_)
-		    	:addComponent("components.behavior.StateMachine")
-		    	:exportMethods()
-		    self.fsm_seq_:setupState({
-		        initial = {state = initial_state and initial_state or self:getCurrentEvent().name, event = "startup", defer = false},
-		        events = events,
-		        callbacks = {
-		            onchangestate = handler(self, self.onSeqStateChange_),
-		        }
-		    })
-	    	for i,v in ipairs(events) do
-	    		self:setButtonFilter(v.name,v.color,true)
-	    	end
-	    	self:addNodeEventListener(cc.NODE_EVENT, function(event)
-		        if event.name == "enter" then
-		            self:updateSeqButtonImage_(seqImages[1].image)
-		        end
-	    	end)
-	    	self:setSeqState(initial_state and initial_state or self:getCurrentEvent().name)
+	    	self.events_ = seqFilters
 		end
+		local index_init = -1
+
+    	for i,v in ipairs(self.events_) do
+    		if initial_state and v.name == initial_state then
+    			self:setCurrentIndex_(i)
+    		end
+    		if self.isImageState then
+    			self:setButtonSeqImage(v.name,v.image,true)
+    		else
+    			self:setButtonFilter(v.name,v.color,true)
+    		end
+    	end
+    	self:addNodeEventListener(cc.NODE_EVENT, function(event)
+	        if event.name == "enter" then
+    			if self.isImageState then
+    				self:updateSeqButtonImage_()
+    			else
+	            	self:updateSeqButtonImage_(seqImages[1].image)
+	            end
+	        end
+    	end)
 	end
 	-- call super	
 	WidgetSequenceButton.super.ctor(self,images, options, {disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}})
 	self:onButtonClicked(handler(self, self.onButtonClicked_))
 end
 
-function WidgetSequenceButton:setSeqState( state )
-	local indexOfState = -1
-	for i,v in ipairs(self.events_) do
-	 	if v.name == state then
-	 		indexOfState = i
-	 		break
-	 	end
-	 end
-	 if indexOfState > 0 then
-	 	print("WidgetSequenceButton:setSeqState------>",state,indexOfState)
-	 	if self.fsm_seq_:canDoEvent(state) then
-	 		self.fsm_seq_:doEvent(state)
-	 		self.indexOfEvent_ = indexOfState
-	 	else
-	 		self.fsm_seq_:doEventForce(state)
-	 		self.indexOfEvent_ = indexOfState
-	 	end
-	 	print(self.fsm_seq_:getState())
-	 end
-end
+
 
 function WidgetSequenceButton:setButtonFilter(state,color,ignoreEmpty)
 	 if ignoreEmpty and color == nil then return end
@@ -160,24 +65,24 @@ end
 function WidgetSequenceButton:setButtonSeqImage(state, image, ignoreEmpty)
     if ignoreEmpty and image == nil then return end
     self.seqImages_[state] = image
-    if state == self.fsm_seq_:getState() then
+    if state == self:getCurrentEvent().name then
         self:updateSeqButtonImage_()
     end
     return self
 end
 
 function WidgetSequenceButton:GetSeqState()
-	return self.fsm_seq_:getState()
+	return self:getCurrentEvent().name
 end
 
 function WidgetSequenceButton:onSeqStateChange_()
-	if self:isRunning() then
+	-- if self:isRunning() then
 		if self.isImageState then
         	self:updateSeqButtonImage_()
         else
         	self:updateSeqButtonImage_(self.currentSeqImage_)
         end
-    end
+    -- end
 end
 
 function WidgetSequenceButton:align(align, x, y)
@@ -190,7 +95,7 @@ end
 function WidgetSequenceButton:updateSeqButtonImage_(oneImage)
 	print("updateSeqButtonImage_---->")
 	if not oneImage then
-		local state = self.fsm_seq_:getState()
+		local state = self:getCurrentEvent().name
 	    local image = self.seqImages_[state]
 		print("state----->",state,self.scale9_)
 
@@ -215,7 +120,7 @@ function WidgetSequenceButton:updateSeqButtonImage_(oneImage)
 	        end
 	    end
 	else
-		local state = self.fsm_seq_:getState()
+		local state = self:getCurrentEvent().name
 		print("state----->",state,self.scale9_)
 		-- dump(self.seqFilter_)
 		local filter = self.seqFilter_[state]
@@ -255,15 +160,41 @@ end
 function WidgetSequenceButton:onButtonClicked_(event)
 		--change state
 		if not self.events_ then return end
-		local nextEvent = self:getNextEvent().name
-    	if self.fsm_seq_:canDoEvent(nextEvent) then 
-    		self.fsm_seq_:doEvent(nextEvent)
-    	end
+		local next_index = self:getNextIndex_()
+		self:setCurrentIndex_(next_index)
+		self:onSeqStateChange_()
+		-- local nextEvent = self:getNextEvent().name
+    	-- if self.fsm_seq_:canDoEvent(nextEvent) then 
+    	-- 	self.fsm_seq_:doEvent(nextEvent)
+    	-- end
+end
+
+function WidgetSequenceButton:setSeqState( state )
+	self:doEvent(state)
+end
+
+
+function WidgetSequenceButton:setCurrentIndex_( index )
+	if index > 0 and index<= #self.events_ then
+		self.indexOfEvent_  = index
+	end
+end
+
+function WidgetSequenceButton:getNextIndex_()
+	if self.indexOfEvent_ >= #self.events_ then
+		return 1
+	else
+		return self.indexOfEvent_ + 1
+	end
+end
+
+function WidgetSequenceButton:getCurrentIndex_()
+	return self.indexOfEvent_
 end
 
 function WidgetSequenceButton:getCurrentEvent()
 	if not self.indexOfEvent_ then
-		self.indexOfEvent_ = 1
+		self:setCurrentIndex_(1)
 	end
 	return self.events_[self.indexOfEvent_]
 end
@@ -279,6 +210,20 @@ function WidgetSequenceButton:getNextEvent()
 	end
 	self.indexOfEvent_ = index
 	return self:getCurrentEvent()
+end
+
+function WidgetSequenceButton:doEvent(state)
+	local indexOfState = -1
+	for i,v in ipairs(self.events_) do
+	 	if v.name == state then
+	 		indexOfState = i
+	 		break
+	 	end
+	 end
+	 if indexOfState > 0 and indexOfState ~= self:getCurrentIndex_() then
+	 	self:setCurrentIndex_(indexOfState)
+	 	self:onSeqStateChange_()
+	 end
 end
 
 

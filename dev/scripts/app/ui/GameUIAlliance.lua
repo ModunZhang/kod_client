@@ -6,7 +6,6 @@ local Enum = import("..utils.Enum")
 local window = import('..utils.window')
 local UIScrollView = import(".UIScrollView")
 local WidgetSequenceButton = import("..widget.WidgetSequenceButton")
-local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetBackGroundTabButtons = import("..widget.WidgetBackGroundTabButtons")
 local GameUIAlliance = UIKit:createUIClass("GameUIAlliance","GameUIWithCommonHeader")
@@ -310,11 +309,11 @@ function GameUIAlliance:_createFlagPanel()
 
 	local randomButton = WidgetPushButton.new({normal = "alliance_sieve_51x45.png"})
 		:addTo(node)
-		:pos(upgrade_surface:getPositionX() - 50,upgrade_surface:getPositionY()-50)
+		:pos(upgrade_surface:getPositionX() - 50,upgrade_surface:getPositionY()-20)
 		:onButtonClicked(function()
 			self:RandomFlag()
 			self:RefreshButtonState()
-			-- self:RefrshFlagSprite()
+			self:RefrshFlagSprite()
 		end)
 	return node
 end
@@ -346,7 +345,7 @@ function GameUIAlliance:GetFlagSprite(flagInfo)
 end
 
 function GameUIAlliance:GetGraphic(flagInfo,box_bounding)
-	local graphic_node = display.newNode() -- :addTo(box,self.FLAG_GRAPHIC_ZORDER,self.FLAG_GRAPHIC_TAG)
+	local graphic_node = display.newNode() 
 	if flagInfo.graphic == self.FLAG_LOCATION_TYPE.ONE then
 
 		local color_1 = flagInfo.graphicColor[1]
@@ -483,14 +482,6 @@ function GameUIAlliance:RefrshFlagSprite(where)
 end
 
 function GameUIAlliance:GetFlagInfomation()
-	-- local flagInfo = {
-	-- 	flag = self.FLAG_LOCATION_TYPE.TWO_X,
-	-- 	flagColor = {"red","yellow"}, 
-	-- 	graphic = self.FLAG_LOCATION_TYPE.TWO_X,
-	-- 	graphicColor = {"blue","green"},
-	-- 	graphicContent = {17,16}, --graphic image is index
-	-- }
-	-- return flagInfo
 	return self.flag_info
 end
 
@@ -508,19 +499,19 @@ function GameUIAlliance:RandomFlag()
 end
 
 function GameUIAlliance:RefreshButtonState()
-	self.flag_type_button:setSeqState(self.flag_info.flag)
-	-- self.color_middleColor_button:setSeqState(self.flag_info.flagColor[1])
-	-- self.color_rightColor_button:setSeqState(self.flag_info.flagColor[2])
-	-- self.color_rightColor_button:setButtonEnabled(self:GetFlagInfomation().flag ~= self.FLAG_LOCATION_TYPE.ONE)
+	self.flag_type_button:setSeqState(self:GetFlagInfomation().flag)
+	self.color_middleColor_button:setSeqState(self:GetFlagInfomation().flagColor[1])
+	self.color_rightColor_button:setSeqState(self:GetFlagInfomation().flagColor[2])
+	self.color_rightColor_button:setButtonEnabled(self:GetFlagInfomation().flag ~= self.FLAG_LOCATION_TYPE.ONE)
 
-	-- self.graphic_type_button:setSeqState(self.flag_info.graphic)
-	-- self.colorButton_right:setSeqState(self.flag_info.graphicColor[2])
-	-- self.colorButton_left:setSeqState(self.flag_info.graphicColor[1])
+	self.graphic_type_button:setSeqState(self:GetFlagInfomation().graphic)
+	self.colorButton_right:setSeqState(self:GetFlagInfomation().graphicColor[2])
+	self.colorButton_left:setSeqState(self:GetFlagInfomation().graphicColor[1])
 	
-	-- self.graphic_middle_button:setSeqState(self.flag_info.graphicContent[1])
-	-- self.graphic_right_button:setSeqState(self.flag_info.graphicContent[2])
-	-- self.colorButton_right:setButtonEnabled(self:GetFlagInfomation().graphic ~= self.FLAG_LOCATION_TYPE.ONE)
-	-- self.graphic_right_button:setButtonEnabled(self:GetFlagInfomation().graphic ~= self.FLAG_LOCATION_TYPE.ONE)
+	self.graphic_middle_button:setSeqState(self:GetFlagInfomation().graphicContent[1])
+	self.graphic_right_button:setSeqState(self:GetFlagInfomation().graphicContent[2])
+	self.colorButton_right:setButtonEnabled(self:GetFlagInfomation().graphic ~= self.FLAG_LOCATION_TYPE.ONE)
+	self.graphic_right_button:setButtonEnabled(self:GetFlagInfomation().graphic ~= self.FLAG_LOCATION_TYPE.ONE)
 end
 
 -- flag button event
@@ -580,8 +571,9 @@ function GameUIAlliance:NoAllianceTabEvent_createIf()
 		:align(display.LEFT_BOTTOM, gemIcon:getPositionX()+gemIcon:getContentSize().width*0.4 + 4,gemIcon:getPositionY())
 	self.createAllianceUI.gemLabel = gemLabel
 	-- flags
-    self:_createFlagPanel():addTo(createContent):pos(0,okButton:getPositionY()+45)
+    self.createFlagPanel = self:_createFlagPanel():addTo(createContent):pos(0,okButton:getPositionY()+45)
     -- landform
+
     -- test 
     --
 	
@@ -593,6 +585,26 @@ function GameUIAlliance:NoAllianceTabEvent_createIf()
 	scrollView:fixResetPostion()
 	self.createScrollView = scrollView
 	return self.createScrollView
+end
+
+function GameUIAlliance:CreateBoxPanel(height)
+	local node = display.newNode()
+	local bottom = display.newSprite("alliance_box_bottom_552x12.png")
+		:addTo(node)
+		:align(display.LEFT_BOTTOM,0,0)
+	local top =  display.newSprite("alliance_box_top_552x12.png")
+	local middleHeight = height - bottom:getContentSize().height - top:getContentSize().height
+	local next_y = bottom:getContentSize().height
+	while middleHeight > 0 do
+		local middle = display.newSprite("alliance_box_middle_552x1.png")
+			:addTo(node)
+			:align(display.LEFT_BOTTOM,0, next_y)
+		middleHeight = middleHeight - middle:getContentSize().height
+		next_y = next_y + middle:getContentSize().height
+	end
+	top:addTo(node)
+		:align(display.LEFT_BOTTOM,0,next_y)
+	return node
 end
 
 --2.join 
