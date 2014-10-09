@@ -127,8 +127,8 @@ function HospitalUpgradeBuilding:OnUserDataChanged(...)
     local arg = {...}
     local current_time = arg[2]
     local soldierEvent = arg[1].treatSoldierEvents[1]
-    LuaUtils:outputTable("arg[1]arg[1]arg[1]arg[1]arg[1]====", arg[1])
-    LuaUtils:outputTable("soldierEvent[1]====", soldierEvent)
+    -- LuaUtils:outputTable("arg[1]arg[1]arg[1]arg[1]arg[1]====", arg[1])
+    -- LuaUtils:outputTable("soldierEvent[1]====", soldierEvent)
 
     if soldierEvent then
         local finished_time = soldierEvent.finishTime / 1000

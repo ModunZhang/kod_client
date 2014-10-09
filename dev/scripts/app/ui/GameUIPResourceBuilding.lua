@@ -200,7 +200,7 @@ function GameUIPResourceBuilding:RebuildPart()
     for k,r_type in pairs(P_RESOURCE_BUILDING_TYPE) do
         if self.building:GetType()~= r_type then
             local next_x =  gap_x*(add_count+1) + building_image_width/2+add_count*building_image_width
-            local builing_icon = display.newSprite(r_type..".png"):align(display.CENTER, next_x, 460):addTo(bg)
+            local builing_icon = display.newSprite(UIKit:getImageByBuildingType( r_type ,self.building:GetLevel())):align(display.CENTER, next_x, 450):addTo(bg)
             -- building name label
             cc.ui.UILabel.new(
                 {
@@ -209,7 +209,7 @@ function GameUIPResourceBuilding:RebuildPart()
                     font = UIKit:getFontFilePath(),
                     size = 20,
                     color = UIKit:hex2c3b(0x797154)
-                }):align(display.CENTER, next_x ,340)
+                }):align(display.CENTER, next_x ,350)
                 :addTo(bg)
             rebuild_list[add_count+1] = r_type
             builing_icon:setScale(building_image_width/builing_icon:getContentSize().width)

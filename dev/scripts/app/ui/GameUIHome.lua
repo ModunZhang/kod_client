@@ -53,7 +53,7 @@ function GameUIHome:RefreshData()
     self.name_label:setString(userdata.basicInfo.name)
     self.power_label:setString(userdata.basicInfo.power)
     self.level_label:setString(userdata.basicInfo.level)
-    self.vip_label:setString("VIP "..userdata.basicInfo.vip)
+    self.vip_label:setString("VIP 1")
 end
 
 
@@ -66,7 +66,7 @@ function GameUIHome:CreateTop()
         {normal = "home/player_btn_up.png", pressed = "home/player_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        NetManager:sendMsg("reset", NOT_HANDLE)
+        -- NetManager:sendMsg("reset", NOT_HANDLE)
     end):addTo(top_bg):align(display.LEFT_BOTTOM, 109, 106)
 
 

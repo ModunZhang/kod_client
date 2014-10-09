@@ -6,6 +6,15 @@ function WallUpgradeBuilding:ctor(wall_info)
     self.len = wall_info.len
     self.w, self.h = self:GetSize()
 end
+function WallUpgradeBuilding:UniqueKey()
+    return self:GetType()
+end
+function WallUpgradeBuilding:CopyValueFrom(building)
+    WallUpgradeBuilding.super.CopyValueFrom(self, building)
+    self.len = building.len
+    self.w, self.h = building:GetSize()
+    self.is_gate = building.is_gate
+end
 function WallUpgradeBuilding:GetSize()
     if self.orient == Orient.X then
         return 1, self.len
@@ -84,9 +93,9 @@ function WallUpgradeBuilding:IntersectWithOtherWall(other_wall)
     elseif wall1.orient == Orient.Y and wall2.orient == Orient.X then
         return {x = wall2.x, y = wall1.y, orient = Orient.NONE}
     elseif wall1.orient == Orient.X and wall2.orient == Orient.NEG_Y then
-        return {x = wall1.x, y = wall2.y, orient = Orient.NONE}
+        return {x = wall1.x, y = wall2.y, orient = Orient.NONE, sub_orient = Orient.RIGHT}
     elseif wall1.orient == Orient.NEG_X and wall2.orient == Orient.Y then
-        return {x = wall1.x, y = wall2.y, orient = Orient.NONE}
+        return {x = wall1.x, y = wall2.y, orient = Orient.NONE, sub_orient = Orient.LEFT}
     end
     assert(false)
 end

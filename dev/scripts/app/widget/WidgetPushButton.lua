@@ -19,6 +19,12 @@ function WidgetPushButton:ctor(images, options, filters)
         end
     end)
     self:setTouchSwallowEnabled(false)
+    self:setNodeEventEnabled(true)
+end
+function WidgetPushButton:onEnter()
+    if self:HasFilters() then
+        self:UpdateFilters()
+    end
 end
 function WidgetPushButton:onChangeState_()
     if self:isRunning() then
@@ -164,6 +170,7 @@ end
 
 
 return WidgetPushButton
+
 
 
 

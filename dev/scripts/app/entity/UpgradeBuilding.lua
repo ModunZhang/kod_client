@@ -23,6 +23,10 @@ function UpgradeBuilding:ctor(building_info)
     --building剩余升级时间小于5 min时可以免费加速  单位 seconds
     self.freeSpeedUpTime=300
 end
+function UpgradeBuilding:CopyListenerFrom(building)
+    UpgradeBuilding.super.CopyListenerFrom(self, building)
+    self.upgrade_building_observer:CopyListenerFrom(building:GetUpgradeObserver())
+end
 function UpgradeBuilding:AddUpgradeListener(listener)
     assert(listener.OnBuildingUpgradingBegin)
     assert(listener.OnBuildingUpgradeFinished)
@@ -31,6 +35,9 @@ function UpgradeBuilding:AddUpgradeListener(listener)
 end
 function UpgradeBuilding:RemoveUpgradeListener(listener)
     self.upgrade_building_observer:RemoveObserver(listener)
+end
+function UpgradeBuilding:GetUpgradeObserver()
+    return self.upgrade_building_observer
 end
 function UpgradeBuilding:GetElapsedTimeByCurrentTime(current_time)
     return self:GetUpgradeTimeToNextLevel() - self:GetUpgradingLeftTimeByCurrentTime(current_time)
@@ -88,8 +95,11 @@ function UpgradeBuilding:GetNextLevelUpgradeTimeByLevel(level)
     return 1
 end
 function UpgradeBuilding:GetNextLevel()
+    return self:IsMaxLevel() and self.level or self.level + 1
+end
+function UpgradeBuilding:IsMaxLevel()
     local config = self.config_building_levelup[self:GetType()]
-    return #config == self.level and self.level or self.level + 1
+    return #config == self.level
 end
 function UpgradeBuilding:GetBeforeLevel()
     if self.level > 0 then
@@ -262,6 +272,7 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
         if gem<self:getUpgradeNowNeedGems() then
             return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH
         end
+        return
     end
     -- 还未管理道具，暂时从userdata中取
     local m = DataManager:getUserData().materials
@@ -274,15 +285,15 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
         or stone<config[self:GetNextLevel()].stone or iron<config[self:GetNextLevel()].iron
         or m.tiles<config[self:GetNextLevel()].tiles or m.tools<config[self:GetNextLevel()].tools
         or m.blueprints<config[self:GetNextLevel()].blueprints or m.pulley<config[self:GetNextLevel()].pulley
-    local is_building_list_enought = #City:GetOnUpgradingBuildings()>0
+    local is_building_list_enough = #City:GetOnUpgradingBuildings()>0
     print("#City:GetOnUpgradingBuildings()",#City:GetOnUpgradingBuildings())
-    if is_resource_enough and is_building_list_enought then
+    if is_resource_enough and is_building_list_enough then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_AND_RESOURCE_NOT_ENOUGH
     end
     if is_resource_enough then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH
     end
-    if is_building_list_enought then
+    if is_building_list_enough then
     print("当前建造的建筑",City:GetOnUpgradingBuildings()[1]:GetType())
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH
     end
