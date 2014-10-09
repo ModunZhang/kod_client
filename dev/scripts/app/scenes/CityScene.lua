@@ -309,8 +309,9 @@ function CityScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_spee
     local parent = self.city_layer:getParent()
     local speed = parent:convertToNodeSpace(cc.p(new_speed_x, new_speed_y))
     local x, y  = self.city_layer:getPosition()
-    speed.x = speed.x > 10 and 10 or speed.x
-    speed.y = speed.y > 10 and 10 or speed.y
+    local max_speed = 5
+    speed.x = speed.x > max_speed and max_speed or speed.x
+    speed.y = speed.y > max_speed and max_speed or speed.y
     local sp = self:convertToNodeSpace(cc.p(speed.x * millisecond, speed.y * millisecond))
     self.city_layer:setPosition(cc.p(x + sp.x, y + sp.y))
 end

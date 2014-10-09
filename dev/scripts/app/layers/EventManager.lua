@@ -1,5 +1,5 @@
 local EventManager = class("EventManager")
-
+---
 
 
 -- function EventManager:RemoveTouch(touch_id)
@@ -92,8 +92,7 @@ local EventManager = class("EventManager")
 --             self.two_touch_handle:OnTwoTouch(x1, y1, x2, y2, "moved")
 --         end
 --     end
-
---     local is_only_one_finger_on_screen = count == 1
+--     local is_only_one_finger_on_screen = count == 1 and #points == 0
 --     if is_only_one_finger_on_screen then
 --         self:one_touch_moving(event_points)
 --     end
@@ -183,7 +182,7 @@ function EventManager:touch_moving(event_points)
         end
     end
 
-    local is_only_one_finger_on_screen = count == 1
+    local is_only_one_finger_on_screen = #points == 0 and count == 1
     if is_only_one_finger_on_screen then
         self:one_touch_moving(event_points)
     end
@@ -199,7 +198,7 @@ function EventManager:try_to_find_another_point_by_moving_touch(has_get_point)
 end
 
 
-
+-------------------
 function EventManager:ctor(event_handle)
     self.running_scene = event_handle
     self.one_touch_id = nil
