@@ -6,6 +6,9 @@ function WallUpgradeBuilding:ctor(wall_info)
     self.len = wall_info.len
     self.w, self.h = self:GetSize()
 end
+function WallUpgradeBuilding:UniqueKey()
+    return self:GetType()
+end
 function WallUpgradeBuilding:CopyValueFrom(building)
     WallUpgradeBuilding.super.CopyValueFrom(self, building)
     self.len = building.len

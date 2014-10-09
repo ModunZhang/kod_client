@@ -98,6 +98,22 @@ function City:InitDecorators(decorators)
     self:CheckIfDecoratorsIntersectWithRuins()
 end
 -- 取值函数
+function City:IsFunctionBuilding(building)
+    local location_id = self:GetLocationIdByBuilding(building)
+    local b = self:GetBuildingByLocationId(location_id)
+    return b:IsSamePositionWith(building)
+end
+function City:IsHouse(building)
+    return not self:IsFunctionBuilding(building) and not self:IsTower(building) and not self:IsGate(building)
+end
+function City:IsTower(building)
+    return iskindof(building, "TowerUpgradeBuilding")
+end
+function City:IsGate(building)
+    if iskindof(building, "WallUpgradeBuilding") then
+        return building:IsGate()
+    end
+end
 function City:GetSoldierManager()
     return self.soldier_manager
 end
@@ -919,11 +935,12 @@ function City:ReloadTowers(towers)
     end
 
 
-    for k,v in pairs(towers) do
+    for i, v in ipairs(towers) do
         if v:IsUnlocked() then
             local old_tower = old_tower_map[v:TowerId()]
             -- 已经解锁的
             if old_tower then
+                towers[i] = old_tower
                 old_tower:CopyValueFrom(v)
             else
                 -- 如果是新解锁的

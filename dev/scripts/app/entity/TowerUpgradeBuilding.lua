@@ -33,6 +33,9 @@ function TowerUpgradeBuilding:ctor(building_info)
         self.h = 1
     end
 end
+function TowerUpgradeBuilding:UniqueKey()
+    return string.format("%s_%d", self:GetType(), self:TowerId())
+end
 function TowerUpgradeBuilding:CopyValueFrom(building)
     TowerUpgradeBuilding.super.CopyValueFrom(self, building)
     self.tower_id = building.tower_id
