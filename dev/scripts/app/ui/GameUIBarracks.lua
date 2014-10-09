@@ -62,6 +62,7 @@ function GameUIBarracks:CreateSoldierUI()
         :OnButtonClicked(function(event)
             print("hello")
         end)
+    self.timer:GetSpeedUpButton():setButtonEnabled(false)
 
     self.soldier_map = {}
     local rect = self.timer:getCascadeBoundingBox()
@@ -119,21 +120,9 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
     for i, soldier_name in pairs(soldiers) do
         self.soldier_map[soldier_name] =
             WidgetSoldierBox.new(nil, function(event)
-                WidgetRecruitSoldier.new(soldier_name,
-                    self.barracks.soldier_star,
-                    self.barracks:GetMaxRecruitSoldierCount(),
-                    self.barracks_city)
+                WidgetRecruitSoldier.new(self.barracks, self.barracks_city, soldier_name)
                     :addTo(self)
                     :align(display.CENTER, window.cx, 500 / 2)
-                    :OnBlankClicked(function(widget)
-                        widget:removeFromParentAndCleanup(true)
-                    end)
-                    :OnNormalButtonClicked(function(widget)
-                        widget:removeFromParentAndCleanup(true)
-                    end)
-                    :OnInstantButtonClicked(function(widget)
-                        widget:removeFromParentAndCleanup(true)
-                    end)
             end):addTo(row_item)
                 :alignByPoint(cc.p(0.5, 0.4), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 0)
                 :SetSoldier(soldier_name, self.barracks.soldier_star)
@@ -155,6 +144,7 @@ end
 
 
 return GameUIBarracks
+
 
 
 
