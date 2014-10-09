@@ -63,7 +63,7 @@ function CityScene:onEnter()
     end)
 
 
-    audio.playMusic("muisc_peace.mp3", true)
+    audio.playMusic("KoD_music_city.mp3", true)
     audio.playSound("sfx_peace.mp3", true)
 end
 function CityScene:LoadAnimation()
@@ -292,6 +292,8 @@ function CityScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_spee
     local parent = self.city_layer:getParent()
     local speed = parent:convertToNodeSpace(cc.p(new_speed_x, new_speed_y))
     local x, y  = self.city_layer:getPosition()
+    speed.x = speed.x > 10 and 10 or speed.x
+    speed.y = speed.y > 10 and 10 or speed.y
     local sp = self:convertToNodeSpace(cc.p(speed.x * millisecond, speed.y * millisecond))
     self.city_layer:setPosition(cc.p(x + sp.x, y + sp.y))
 end
