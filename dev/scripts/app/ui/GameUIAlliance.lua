@@ -24,6 +24,7 @@ GameUIAlliance.flagData_ = {
 	body = {}, -- 背景
 	bodyButton = {}, -- 背景类型按钮
 	graphicButton = {}, -- 图案类型按钮
+	lawn = {},
 }
 
 --flag data
@@ -53,6 +54,12 @@ local FLAG_LOCATION_TYPES = {
     "TWO_LEFT_RIGHT",
     "TWO_TOP_BOTTOM",
     "TWO_X"
+}
+
+GameUIAlliance.LANDFORM_TYPE = {
+	LAWN = 1,
+	DESERT = 2,
+	SNOWFIELD = 3
 }
 
 GameUIAlliance.FLAG_LOCATION_TYPE = {
@@ -87,6 +94,10 @@ for i=1,17 do
 	table.insert(GameUIAlliance.flagData_.graphic,{name = i,image = imageName .. ".png"})
 end
 
+for i=1,3 do
+	GameUIAlliance.flagData_.lawn[i] = "greensward_540x378.png"
+end
+-- 
 --------------------------------------------------------------------------------
 function GameUIAlliance:ctor()
 	GameUIAlliance.super.ctor(self,City,_("联盟"))
@@ -97,6 +108,7 @@ function GameUIAlliance:ctor()
 		graphic = self.FLAG_LOCATION_TYPE.TWO_LEFT_RIGHT,
 		graphicColor = {"charmRed","blue"},
 		graphicContent = {1,3}, --graphic image is index
+		lawn = 1, -- type
 	}
 	dump(self.flag_info)
 	--fisrt 
@@ -283,11 +295,12 @@ function GameUIAlliance:createFlagPanel()
 	:pos(color_middleColor_button:getPositionX() - 135,color_rightColor_button:getPositionY())
 	:onButtonClicked(handler(self, self.OnFlagTypeButtonClicked))
 	self.flag_type_button = flag_type_button
-
-	local upgrade_surface = display.newSprite("greensward_540x378.png")
+	local lawn = self.flagData_.lawn[self.flag_info.lawn]
+	local upgrade_surface = display.newSprite(lawn)
 		:addTo(node)
 		:align(display.RIGHT_BOTTOM, contentWidth - header:getContentSize().width - 15, header:getPositionY() - 20)
 		:scale(0.258)
+	self.upgrade_surface = upgrade_surface
 	local shadow = display.newSprite("alliance_flag_shadow_113x79.png")
 		:addTo(node)
 		:align(display.RIGHT_BOTTOM, upgrade_surface:getPositionX() - 42, upgrade_surface:getPositionY()+28)
@@ -461,7 +474,7 @@ function GameUIAlliance:GetFlagBody(flagInfo,box_bounding)
 	end
 	return body_node
 end
--- where : 1 body 2 graphic
+-- where : 1 body 2 graphic 
 function GameUIAlliance:RefrshFlagSprite(where)
 	local box_bounding = self.flag_sprite:getChildByTag(self.FLAG_BOX_TAG)
 	if 1 == where then --body
@@ -474,9 +487,13 @@ function GameUIAlliance:RefrshFlagSprite(where)
 		graphic_node:removeFromParent(true)
 		graphic_node = self:GetGraphic(self:GetFlagInfomation(),box_bounding)
 		graphic_node:addTo(self.flag_sprite,self.FLAG_GRAPHIC_ZORDER,self.FLAG_GRAPHIC_TAG)
+	elseif 3 == where then
+		print("RefrshFlagSprite---->",3,self:GetFlagInfomation().lawn,self.flagData_.lawn[self:GetFlagInfomation().lawn])
+		self.upgrade_surface:setTexture(self.flagData_.lawn[self:GetFlagInfomation().lawn])
 	else --all
 		self:RefrshFlagSprite(1)
 		self:RefrshFlagSprite(2)
+		-- self:RefrshFlagSprite(3)
 	end
 end
 
@@ -494,6 +511,12 @@ function GameUIAlliance:RandomFlag()
 	self.flag_info.graphicColor[2] = self.flagData_.color[math.random(#self.flagData_.color)].name
 	self.flag_info.graphicContent[1] = self.flagData_.graphic[math.random(#self.flagData_.graphic)].name
 	self.flag_info.graphicContent[2] = self.flagData_.graphic[math.random(#self.flagData_.graphic)].name
+	--强制每次随机出不一样的数(地形)
+	local randomLawn = math.random(3)
+	while randomLawn == self.flag_info.lawn do
+		randomLawn = math.random(3)
+	end
+	self.flag_info.lawn = randomLawn
 	-- dump(self.flag_info)
 end
 
@@ -511,6 +534,7 @@ function GameUIAlliance:RefreshButtonState()
 	self.graphic_right_button:setSeqState(self:GetFlagInfomation().graphicContent[2])
 	self.colorButton_right:setButtonEnabled(self:GetFlagInfomation().graphic ~= self.FLAG_LOCATION_TYPE.ONE)
 	self.graphic_right_button:setButtonEnabled(self:GetFlagInfomation().graphic ~= self.FLAG_LOCATION_TYPE.ONE)
+	self:SelectLandCheckButton(self:GetFlagInfomation().lawn,true)
 end
 
 -- flag button event
@@ -571,17 +595,18 @@ function GameUIAlliance:NoAllianceTabEvent_createIf()
 	self.createAllianceUI.gemLabel = gemLabel
 	-- flags
     self.createFlagPanel = self:createFlagPanel():addTo(createContent):pos(0,okButton:getPositionY()+45)
-    -- landform
+    -- landform & language
     self.landformPanel = self:CreateCheckAllianeGroup():addTo(createContent):pos(0,self.createFlagPanel:getCascadeBoundingBox().height+120)
-    -- test 
-    --
+    -- textfield
+    self.textfieldPanel = self:CreateTextfieldPanel():addTo(createContent):pos(0,self.landformPanel:getPositionY()+self.landformPanel:getCascadeBoundingBox().height+360)
+
 
 	local scrollView = UIScrollView.new({viewRect = cc.rect(0,0,contentWidth,window.betweenHeaderAndTab)})
         :addScrollNode(createContent)
         :setDirection(UIScrollView.DIRECTION_VERTICAL)
         :onScroll(handler(self, self.CreateAllianceScrollListener))
         :addTo(self.main_content)
-	scrollView:fixResetPostion()
+	scrollView:fixResetPostion(-50)
 	self.createScrollView = scrollView
 	return self.createScrollView
 end
@@ -604,7 +629,7 @@ function GameUIAlliance:CreateCheckAllianeGroup()
         on_disabled = "checkbox_selectd.png",
 
     }
-	local landGroup = cc.ui.UICheckBoxButtonGroup.new()
+	self.landTypeButton = cc.ui.UICheckBoxButtonGroup.new()
         :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
             :setButtonLabel(UIKit:ttfLabel({text = _("草地"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
@@ -619,7 +644,9 @@ function GameUIAlliance:CreateCheckAllianeGroup()
             :align(display.LEFT_CENTER))
         :setButtonsLayoutMargin(10, 130, 0,10)
         :onButtonSelectChanged(function(event)
-            printf("Option %d selected, Option %d unselected", event.selected, event.last)
+            print("onButtonSelectChanged-------->")
+            self.flag_info.lawn = event.selected
+            self:RefrshFlagSprite(3)
         end)
         :addTo(landSelect)
     local landLabel = UIKit:ttfLabel({
@@ -628,24 +655,78 @@ function GameUIAlliance:CreateCheckAllianeGroup()
 		color = 0x403c2f
 	}):addTo(groupNode):align(display.CENTER,window.cx-30, landSelect:getPositionY()+landSelect:getCascadeBoundingBox().height+20)
 
-    -- local languageSelected = self:CreateBoxPanel(180):addTo(groupNode):pos(0,landLabel:getPositionY()+20)
     local languageSelected = WidgetAllianceLanguagePanel.new(260):addTo(groupNode):pos(0,landLabel:getPositionY()+20)
-
-    local checkButtons = {
-    	cc.ui.UICheckBoxButton.new(checkbox_image)
-		    :setButtonLabel(UIKit:ttfLabel({text = _("草地"),size = 20,color = 0x797154}))
-		    :setButtonLabelOffset(40, 0)
-		    :align(display.LEFT_CENTER),
-		cc.ui.UICheckBoxButton.new(checkbox_image)
-		    :setButtonLabel(UIKit:ttfLabel({text = _("草地"),size = 20,color = 0x797154}))
-		    :setButtonLabelOffset(40, 0)
-		    :align(display.LEFT_CENTER)
-	}
+    self:SelectLandCheckButton(self.flag_info.lawn,true)
     return groupNode
 end
+--[[ 
+	LAWN = 1,
+	DESERT = 2,
+	SNOWFIELD = 3
+]]--
+function GameUIAlliance:SelectLandCheckButton( type,selected)
+	print("GameUIAlliance:SelectLandCheckButton---->",type,selected)
+	self.landTypeButton:getButtonAtIndex(type):setButtonSelected(selected)
+end
 
-function GameUIAlliance:CreateLanguageButtonGroup()
+function GameUIAlliance:CreateTextfieldPanel()
+	local node = display.newNode()
+	local limitLabel = UIKit:ttfLabel({
+		text = _("只允许字母、数字和空格，需要3~20个字符"),
+		size = 18,
+		color = 0x797154
+	}):addTo(node):align(display.LEFT_BOTTOM, 0, 0)
 
+	local editbox_tag = cc.ui.UIInput.new({
+    	UIInputType = 1,
+        image = "alliance_editbox_575x48.png",
+        size = cc.size(552,48),
+        -- listener = onEdit,
+    })
+    editbox_tag:setPlaceHolder(_("最多可输入600字符"))
+    editbox_tag:setMaxLength(600)
+    editbox_tag:setFont(UIKit:getFontFilePath(),18)
+    editbox_tag:setFontColor(cc.c3b(0,0,0))
+    editbox_tag:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))
+    editbox_tag:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)
+    editbox_tag:align(display.LEFT_BOTTOM,0,limitLabel:getContentSize().height+10):addTo(node)
+    self.editbox_tag = editbox_tag
+
+    local tagLabel = UIKit:ttfLabel({
+		text = _("联盟标签"),
+		size = 22,
+		color = 0x403c2f
+	}):addTo(node):align(display.CENTER, 552/2, editbox_tag:getPositionY()+editbox_tag:getContentSize().height+20)
+
+	local nameTipLabel = UIKit:ttfLabel({
+		text = _("只允许字母、数字和空格，需要3~20个字符"),
+		size = 18,
+		color = 0x797154
+	}):addTo(node):align(display.LEFT_BOTTOM, 0, tagLabel:getPositionY()+40)
+
+	local editbox_name = cc.ui.UIInput.new({
+    	UIInputType = 1,
+        image = "alliance_editbox_575x48.png",
+        size = cc.size(552,48),
+        -- listener = onEdit,
+    })
+    editbox_name:setPlaceHolder(_("最多可输入600字符"))
+    editbox_name:setMaxLength(600)
+    editbox_name:setFont(UIKit:getFontFilePath(),18)
+    editbox_name:setFontColor(cc.c3b(0,0,0))
+    editbox_name:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))
+    editbox_name:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)
+    editbox_name:align(display.LEFT_BOTTOM,0,nameTipLabel:getPositionY()+nameTipLabel:getContentSize().height+10):addTo(node)
+
+    self.editbox_name = editbox_name
+
+
+     local nameLabel = UIKit:ttfLabel({
+		text = _("联盟标签"),
+		size = 22,
+		color = 0x403c2f
+	}):addTo(node):align(display.CENTER, 552/2, editbox_name:getPositionY()+editbox_name:getContentSize().height+20)
+	return node
 end
 
 

@@ -748,15 +748,15 @@ function UIScrollView:scaleToParent_()
 	return scale
 end
 
-function UIScrollView:fixResetPostion()
+function UIScrollView:fixResetPostion(fixNum)
 	if UIScrollView.DIRECTION_VERTICAL ~= self.direction then
 		return
 	end
-
+	fixNum = fixNum or 0
 	local x, y = self.scrollNode:getPosition()
 	local bound = self.scrollNode:getCascadeBoundingBox()
 	-- local disY = self.viewRect_.y + self.viewRect_.height - bound.y - bound.height
 	-- y = y + disY
-	self.scrollNode:setPosition(x, self.viewRect_.height - bound.height)
+	self.scrollNode:setPosition(x, self.viewRect_.height - bound.height + fixNum)
 end
 return UIScrollView

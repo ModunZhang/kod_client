@@ -14,8 +14,9 @@ local checkbox_image = {
     on_pressed = "checkbox_selectd.png",
     on_disabled = "checkbox_selectd.png",
 }
-
+WidgetAllianceLanguagePanel.BUTTON_SELECT_CHANGED = "BUTTON_SELECT_CHANGED"
 function WidgetAllianceLanguagePanel:ctor(height)
+    cc(self):addComponent("components.behavior.EventProtocol"):exportMethods()
 	self.height_ = height
 	self:setNodeEventEnabled(true)
 	self.currentIndex_ = 0
@@ -39,6 +40,7 @@ function WidgetAllianceLanguagePanel:onEnter()
 	top:addTo(self)
 		:align(display.LEFT_BOTTOM,0,next_y)
 	self:createCheckBoxButtons_()
+    self:buttonEvents_()
 end
 
 
@@ -47,73 +49,120 @@ function WidgetAllianceLanguagePanel:createCheckBoxButtons_()
 	local button = UICheckBoxButton.new(checkbox_image)
             :setButtonLabel(UIKit:ttfLabel({text = _("西班牙语"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
-            :align(display.LEFT_BOTTOM,0,0)
+            :align(display.LEFT_BOTTOM,10,0)
             :addTo(self)
 	table.insert(self.buttons_,button)
 	button = UICheckBoxButton.new(checkbox_image)
             :setButtonLabel(UIKit:ttfLabel({text = _("葡萄牙语"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
-            :align(display.LEFT_BOTTOM,button:getCascadeBoundingBox().width + 140,0)
+            :align(display.LEFT_BOTTOM,button:getCascadeBoundingBox().width + 150,0)
             :addTo(self)
    table.insert(self.buttons_,button)
     button = UICheckBoxButton.new(checkbox_image)
             :setButtonLabel(UIKit:ttfLabel({text = _("韩语"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
-            :align(display.LEFT_BOTTOM,0,button:getCascadeBoundingBox().height+5)
+            :align(display.LEFT_BOTTOM,10,button:getCascadeBoundingBox().height+5)
             :addTo(self)
 	table.insert(self.buttons_,button) 
     button = UICheckBoxButton.new(checkbox_image)
             :setButtonLabel(UIKit:ttfLabel({text = _("日语"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
-            :align(display.LEFT_BOTTOM,button:getCascadeBoundingBox().width + 140,button:getCascadeBoundingBox().height+5)
+            :align(display.LEFT_BOTTOM,button:getCascadeBoundingBox().width + 150,button:getCascadeBoundingBox().height+5)
             :addTo(self)
     table.insert(self.buttons_,button)
     button = UICheckBoxButton.new(checkbox_image)
             :setButtonLabel(UIKit:ttfLabel({text = _("俄语"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
-            :align(display.LEFT_BOTTOM,(button:getCascadeBoundingBox().width + 140)*2,button:getCascadeBoundingBox().height+5)
+            :align(display.LEFT_BOTTOM,(button:getCascadeBoundingBox().width + 150)*2,button:getCascadeBoundingBox().height+5)
             :addTo(self)
     table.insert(self.buttons_,button)    
     button = UICheckBoxButton.new(checkbox_image)
             :setButtonLabel(UIKit:ttfLabel({text = _("简体中文"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
-            :align(display.LEFT_BOTTOM,0,(button:getCascadeBoundingBox().height+5)*2)
+            :align(display.LEFT_BOTTOM,10,(button:getCascadeBoundingBox().height+5)*2)
             :addTo(self)
     table.insert(self.buttons_,button)   
     button = UICheckBoxButton.new(checkbox_image)
             :setButtonLabel(UIKit:ttfLabel({text = _("繁体中文"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
-            :align(display.LEFT_BOTTOM,button:getCascadeBoundingBox().width + 140,(button:getCascadeBoundingBox().height+5)*2)
+            :align(display.LEFT_BOTTOM,button:getCascadeBoundingBox().width + 150,(button:getCascadeBoundingBox().height+5)*2)
             :addTo(self)
     table.insert(self.buttons_,button)
 	button = UICheckBoxButton.new(checkbox_image)
             :setButtonLabel(UIKit:ttfLabel({text = _("德语"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
-            :align(display.LEFT_BOTTOM,(button:getCascadeBoundingBox().width+140)*2,(button:getCascadeBoundingBox().height+5)*2)
+            :align(display.LEFT_BOTTOM,(button:getCascadeBoundingBox().width+150)*2,(button:getCascadeBoundingBox().height+5)*2)
             :addTo(self)
     table.insert(self.buttons_,button)
     button = UICheckBoxButton.new(checkbox_image)
             :setButtonLabel(UIKit:ttfLabel({text = _("所有语言"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
-            :align(display.LEFT_BOTTOM,0,(button:getCascadeBoundingBox().height+5)*3)
+            :align(display.LEFT_BOTTOM,10,(button:getCascadeBoundingBox().height+5)*3)
             :addTo(self)
     table.insert(self.buttons_,button)
 	button = UICheckBoxButton.new(checkbox_image)
             :setButtonLabel(UIKit:ttfLabel({text = _("英语"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
-            :align(display.LEFT_BOTTOM,button:getCascadeBoundingBox().width+140,(button:getCascadeBoundingBox().height+5)*3)
+            :align(display.LEFT_BOTTOM,button:getCascadeBoundingBox().width+150,(button:getCascadeBoundingBox().height+5)*3)
             :addTo(self)
     table.insert(self.buttons_,button)
     button = UICheckBoxButton.new(checkbox_image)
             :setButtonLabel(UIKit:ttfLabel({text = _("法语"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
-            :align(display.LEFT_BOTTOM,(button:getCascadeBoundingBox().width+140)*2,(button:getCascadeBoundingBox().height+5)*3)
+            :align(display.LEFT_BOTTOM,(button:getCascadeBoundingBox().width+150)*2,(button:getCascadeBoundingBox().height+5)*3)
             :addTo(self)
     table.insert(self.buttons_,button)
+
+    UIKit:ttfLabel({
+        text = _("联盟的语言"),
+        size = 22,
+        color = 0x403c2f
+    }):addTo(self):align(display.CENTER,self:getCascadeBoundingBox().width/2,button:getPositionY()+90)
 end
 
-function WidgetAllianceLanguagePanel:buttonEvents()
-	
+function WidgetAllianceLanguagePanel:buttonEvents_()
+	for i,button in ipairs(self.buttons_) do
+        button:onButtonStateChanged(handler(self, self.onButtonStateChanged_))
+        button:onButtonClicked(handler(self, self.onButtonStateChanged_))
+    end
+end
+
+function WidgetAllianceLanguagePanel:onButtonStateChanged_(event)
+    if event.name == UICheckBoxButton.STATE_CHANGED_EVENT and event.target:isButtonSelected() == false then
+        return
+    end
+    self:updateButtonState_(event.target)
+end
+
+function WidgetAllianceLanguagePanel:updateButtonState_(clickedButton)
+    local currentSelectedIndex = 0
+    for index, button in ipairs(self.buttons_) do
+        if button == clickedButton then
+            currentSelectedIndex = index
+            if not button:isButtonSelected() then
+                button:setButtonSelected(true)
+            end
+        else
+            if button:isButtonSelected() then
+                button:setButtonSelected(false)
+            end
+        end
+    end
+    if self.currentSelectedIndex_ ~= currentSelectedIndex then
+        local last = self.currentSelectedIndex_
+        self.currentSelectedIndex_ = currentSelectedIndex
+        self:dispatchEvent({name = WidgetAllianceLanguagePanel.BUTTON_SELECT_CHANGED, selected = currentSelectedIndex, last = last})
+    end
+end
+
+
+function WidgetAllianceLanguagePanel:addButtonSelectChangedEventListener(callback)
+    return self:addEventListener(WidgetAllianceLanguagePanel.BUTTON_SELECT_CHANGED, callback)
+end
+
+function WidgetAllianceLanguagePanel:onButtonSelectChanged(callback)
+    self:addButtonSelectChangedEventListener(callback)
+    return self
 end
 
 return WidgetAllianceLanguagePanel
