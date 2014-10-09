@@ -11,6 +11,7 @@ local running_scene = nil
 import('app.service.ListenerService')
 import('app.service.PushService')
 
+local debug = false
 
 local CityScene = class("CityScene", function()
     return display.newScene("CityScene")
@@ -87,7 +88,7 @@ function CityScene:CreateSceneLayer()
     self.iso_map = IsoMapAnchorBottomLeft.new({
         tile_w = 80, tile_h = 56, map_width = 50, map_height = 50, base_x = origin_point.x, base_y = origin_point.y
     })
-    scene:ZoomTo(0.5)
+    scene:ZoomTo(1.2)
     return scene
 end
 function CityScene:CreateSceneUILayer()
@@ -178,12 +179,51 @@ function CityScene:OnTwoTouch(x1, y1, x2, y2, event_type)
 end
 -- TouchJudgment
 function CityScene:OnTouchBegan(pre_x, pre_y, x, y)
+    if not debug then return end
+    local citynode = self.city_layer:GetCityNode()
+    local point = citynode:convertToNodeSpace(cc.p(x, y))
+    local tx, ty = self.iso_map:ConvertToLogicPosition(point.x, point.y)
+    if not self.building then
+        local building = self.city_layer:GetClickedObject(tx, ty, x, y)
+        if building then
+            local lx, ly = building:GetLogicPosition()
+            building._shiftx = lx - tx
+            building._shifty = ly - ty
+            building:zorder(99999999)
+            self.building = building
+        end
+    end
 end
 function CityScene:OnTouchEnd(pre_x, pre_y, x, y)
+    if not debug then return end
+    local citynode = self.city_layer:GetCityNode()
+    local point = citynode:convertToNodeSpace(cc.p(x, y))
+    local tx, ty = self.iso_map:ConvertToLogicPosition(point.x, point.y)
+    if self.building then
+        local lx, ly = self.building:GetLogicPosition()
+        self.building:zorder(lx + ly * 50 + 100)
+        if self.building._shiftx + tx == lx and
+            self.building._shifty + ty == ly then
+        end
+    end
+    self.building = nil
 end
 function CityScene:OnTouchCancelled(pre_x, pre_y, x, y)
 end
 function CityScene:OnTouchMove(pre_x, pre_y, x, y)
+    if debug then
+        if self.building then
+            local citynode = self.city_layer:GetCityNode()
+            local point = citynode:convertToNodeSpace(cc.p(x, y))
+            local lx, ly = self.iso_map:ConvertToLogicPosition(point.x, point.y)
+            local bx, by = self.building:GetLogicPosition()
+            local is_moved_one_more = lx ~= bx or ly ~= by
+            if is_moved_one_more then
+                self.building:SetLogicPosition(lx + self.building._shiftx, ly + self.building._shifty)
+            end
+            return
+        end
+    end
     if self.distance then return end
     local parent = self.city_layer:getParent()
     local old_point = parent:convertToNodeSpace(cc.p(pre_x, pre_y))
@@ -311,6 +351,14 @@ function CityScene:OnGateChanged(old_walls, new_walls)
 end
 
 return CityScene
+
+
+
+
+
+
+
+
 
 
 

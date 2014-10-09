@@ -21,14 +21,16 @@ function CityLayer:GetClickedObject(x, y, world_x, world_y)
         sprite_clicked = {}
     }
     self:IteratorClickAble(function(k, v)
-        if v:isVisible() then
-            local check = v:IsContainPointWithFullCheck(x, y, world_x, world_y)
-            if check.logic_clicked then
-                table.insert(clicked_list.logic_clicked, v)
-                return true
-            elseif check.sprite_clicked then
-                table.insert(clicked_list.sprite_clicked, v)
-            end
+        if not v:isVisible() then return false end
+        if v:GetEntity():GetType() == "wall" and not v:GetEntity():IsGate() then return false end
+        if v:GetEntity():GetType() == "tower" and not v:GetEntity():IsUnlocked() then return false end
+
+        local check = v:IsContainPointWithFullCheck(x, y, world_x, world_y)
+        if check.logic_clicked then
+            table.insert(clicked_list.logic_clicked, v)
+            return true
+        elseif check.sprite_clicked then
+            table.insert(clicked_list.sprite_clicked, v)
         end
     end)
     table.sort(clicked_list.logic_clicked, function(a, b)
@@ -184,10 +186,10 @@ function CityLayer:UpdateWallsWithCity(city)
 
     if old_walls then
         for k, v in pairs(old_walls) do
-            city_node:removeChild(v, true)
+            v:DestorySelf()
+            v:removeFromParentAndCleanup(true)
         end
     end
-
 end
 function CityLayer:UpdateTowersWithCity(city)
     local city_node = self:GetCityNode()
@@ -208,7 +210,8 @@ function CityLayer:UpdateTowersWithCity(city)
 
     if old_towers then
         for k, v in pairs(old_towers) do
-            city_node:removeChild(v, true)
+            v:DestorySelf()
+            v:removeFromParentAndCleanup(true)
         end
     end
 end
@@ -333,6 +336,10 @@ function CityLayer:ctor(city)
     self:InitRoadNodeWithCityNode()
     -- self:InitShadowLayer()
 
+    local point = self:GetRoadLayer():getPositionAt(cc.p(0, 1))
+    display.newSprite("ground_766x558.png"):addTo(self:GetRoadNode()):align(display.BOTTOM_LEFT, point.x, point.y)
+
+
     self.city_node = display.newLayer()
     self.city_node:setAnchorPoint(0, 0)
     self:GetCityLayer():addChild(self.city_node)
@@ -381,6 +388,7 @@ end
 -- just for 坐标计算
 function CityLayer:InitPositionNodeWithCityNode()
     self.position_node = cc.TMXTiledMap:create("city_road.tmx")
+    self.position_node:setVisible(false)
     self.city_background:addChild(self.position_node)
 end
 -- 路
@@ -592,6 +600,7 @@ function CityLayer:OnSceneMove()
 end
 
 return CityLayer
+
 
 
 

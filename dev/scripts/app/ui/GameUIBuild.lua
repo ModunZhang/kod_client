@@ -146,7 +146,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
             text = _("建造"),
             size = 24,
             font = UIKit:getFontFilePath(),
-            color = display.COLOR_WHITE}))
+            color = UIKit:hex2c3b(0xfff3c7)}))
         :addTo(content)
         :pos(520, 40)
 
