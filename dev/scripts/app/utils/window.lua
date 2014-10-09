@@ -16,5 +16,5 @@ window.bottom 				= display.bottom + height_diff
 
 window.cx 					= window.left + window.width / 2
 window.cy                 	= window.bottom + window.height / 2
-
+window.betweenHeaderAndTab = window.height - 34*2 - 101
 return window

@@ -534,24 +534,27 @@ function UIScrollView:elasticScroll()
 
 	-- dump(cascadeBound, "UIScrollView - cascBoundingBox:")
 	-- dump(viewRect, "UIScrollView - viewRect:")
-
-	if cascadeBound.width < viewRect.width then
-		disX = viewRect.x - cascadeBound.x
-	else
-		if cascadeBound.x > viewRect.x then
+	--by dannyhe 如果是单方向滑动 只改变该方向上的位移！
+	if UIScrollView.DIRECTION_VERTICAL ~= self.direction then
+		if cascadeBound.width < viewRect.width then
 			disX = viewRect.x - cascadeBound.x
-		elseif cascadeBound.x + cascadeBound.width < viewRect.x + viewRect.width then
-			disX = viewRect.x + viewRect.width - cascadeBound.x - cascadeBound.width
+		else
+			if cascadeBound.x > viewRect.x then
+				disX = viewRect.x - cascadeBound.x
+			elseif cascadeBound.x + cascadeBound.width < viewRect.x + viewRect.width then
+				disX = viewRect.x + viewRect.width - cascadeBound.x - cascadeBound.width
+			end
 		end
 	end
-
-	if cascadeBound.height < viewRect.height then
-		disY = viewRect.y + viewRect.height - cascadeBound.y - cascadeBound.height
-	else
-		if cascadeBound.y > viewRect.y then
-			disY = viewRect.y - cascadeBound.y
-		elseif cascadeBound.y + cascadeBound.height < viewRect.y + viewRect.height then
+	if UIScrollView.DIRECTION_HORIZONTAL ~= self.direction then
+		if cascadeBound.height < viewRect.height then
 			disY = viewRect.y + viewRect.height - cascadeBound.y - cascadeBound.height
+		else
+			if cascadeBound.y > viewRect.y then
+				disY = viewRect.y - cascadeBound.y
+			elseif cascadeBound.y + cascadeBound.height < viewRect.y + viewRect.height then
+				disY = viewRect.y + viewRect.height - cascadeBound.y - cascadeBound.height
+			end
 		end
 	end
 
@@ -745,4 +748,15 @@ function UIScrollView:scaleToParent_()
 	return scale
 end
 
+function UIScrollView:fixResetPostion()
+	if UIScrollView.DIRECTION_VERTICAL ~= self.direction then
+		return
+	end
+
+	local x, y = self.scrollNode:getPosition()
+	local bound = self.scrollNode:getCascadeBoundingBox()
+	-- local disY = self.viewRect_.y + self.viewRect_.height - bound.y - bound.height
+	-- y = y + disY
+	self.scrollNode:setPosition(x, self.viewRect_.height - bound.height)
+end
 return UIScrollView

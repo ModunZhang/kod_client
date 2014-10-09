@@ -105,3 +105,27 @@ end
 function UIKit:getRegistry()
     return self.Registry
 end
+
+function UIKit:ttfLabel( params )
+    if not checktable(params) then
+         printError("%s","params must a table")
+    end
+    params.font = UIKit:getFontFilePath()
+    params.UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF
+    if params.color then
+        params.color = self:hex2c3b(params.color)
+    end
+    local label = cc.ui.UILabel.new(params)
+    if params.shadow then
+        label:enableShadow()
+    end
+    return label
+end
+
+function UIKit:convertColorToGL_( color )
+    local r,g,b = self:hex2rgba(color)
+    r = tonumber(string.format("%1.1f",r/255))
+    g = tonumber(string.format("%1.1f",g/255))
+    b = tonumber(string.format("%1.1f",b/255))
+    return {r,g,b}
+end

@@ -19,6 +19,13 @@ function WidgetPushButton:ctor(images, options, filters)
         end
     end)
     self:setTouchSwallowEnabled(false)
+    self:addNodeEventListener(cc.NODE_EVENT, function(event)
+        if event.name == "enter" then
+            if self:HasFilters() then
+                self:UpdateFilters()
+            end
+        end
+    end)
 end
 function WidgetPushButton:onChangeState_()
     if self:isRunning() then
