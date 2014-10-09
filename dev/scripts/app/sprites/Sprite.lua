@@ -66,6 +66,7 @@ function Sprite:ctor(city_layer, entity, x, y)
     self.entity = entity
     self.sprite = self:CreateSprite():addTo(self)
     self:SetPositionWithLogic(x, y)
+    -- self:CreateBase()
 end
 function Sprite:GetShadow()
     return self.shadow

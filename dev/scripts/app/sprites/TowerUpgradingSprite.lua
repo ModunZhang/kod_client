@@ -56,7 +56,12 @@ function TowerUpgradingSprite:GetSpriteOffset()
     elseif entity:GetOrient() == Orient.UP then
         return 0, -7
     elseif entity:GetOrient() == Orient.NONE then
-        return -40,  40
+        if entity:GetSubOrient() == Orient.LEFT then
+            return 38,  38
+        elseif entity:GetSubOrient() == Orient.RIGHT then
+            return -38,  38
+        end
+        return 38,  38
     end
     assert(false)
 end
@@ -79,6 +84,11 @@ function TowerUpgradingSprite:GetFlipX()
     elseif entity:GetOrient() == Orient.UP then
         return false
     elseif entity:GetOrient() == Orient.NONE then
+        if entity:GetSubOrient() == Orient.LEFT then
+            return true
+        elseif entity:GetSubOrient() == Orient.RIGHT then
+            return false
+        end
         return false
     end
     assert(false)
@@ -115,17 +125,17 @@ function TowerUpgradingSprite:GetHeadOffset()
     elseif entity:GetOrient() == Orient.Y then
         return -60, 180
     elseif entity:GetOrient() == Orient.NEG_X then
-        return 60, 165
+        return 60, 175
     elseif entity:GetOrient() == Orient.NEG_Y then
-        return -60, 165
+        return -60, 175
     elseif entity:GetOrient() == Orient.RIGHT then
-        return -10, 130
+        return 0, 140
     elseif entity:GetOrient() == Orient.DOWN then
-        return 0, 130
+        return -10, 135
     elseif entity:GetOrient() == Orient.LEFT then
-        return 10, 130
+        return 0, 140
     elseif entity:GetOrient() == Orient.UP then
-        return 0, 125
+        return 0, 130
     elseif entity:GetOrient() == Orient.NONE then
         return 0,  135
     end

@@ -93,9 +93,9 @@ function WallUpgradeBuilding:IntersectWithOtherWall(other_wall)
     elseif wall1.orient == Orient.Y and wall2.orient == Orient.X then
         return {x = wall2.x, y = wall1.y, orient = Orient.NONE}
     elseif wall1.orient == Orient.X and wall2.orient == Orient.NEG_Y then
-        return {x = wall1.x, y = wall2.y, orient = Orient.NONE}
+        return {x = wall1.x, y = wall2.y, orient = Orient.NONE, sub_orient = Orient.RIGHT}
     elseif wall1.orient == Orient.NEG_X and wall2.orient == Orient.Y then
-        return {x = wall1.x, y = wall2.y, orient = Orient.NONE}
+        return {x = wall1.x, y = wall2.y, orient = Orient.NONE, sub_orient = Orient.LEFT}
     end
     assert(false)
 end

@@ -4,6 +4,7 @@ local TowerUpgradeBuilding = class("TowerUpgradeBuilding", UpgradeBuilding)
 
 function TowerUpgradeBuilding:ctor(building_info)
     TowerUpgradeBuilding.super.ctor(self, building_info)
+    self.sub_orient = building_info.sub_orient
     if self.orient == Orient.X then
         self.w = 1
         self.h = 4
@@ -32,6 +33,9 @@ function TowerUpgradeBuilding:ctor(building_info)
         self.w = 1
         self.h = 1
     end
+end
+function TowerUpgradeBuilding:GetSubOrient()
+    return self.sub_orient
 end
 function TowerUpgradeBuilding:UniqueKey()
     return string.format("%s_%d", self:GetType(), self:TowerId())

@@ -382,6 +382,7 @@ end
 -- just for 坐标计算
 function CityLayer:InitPositionNodeWithCityNode()
     self.position_node = cc.TMXTiledMap:create("city_road.tmx")
+    self.position_node:setVisible(false)
     self.city_background:addChild(self.position_node)
 end
 -- 路

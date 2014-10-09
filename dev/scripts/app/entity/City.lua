@@ -885,7 +885,8 @@ function City:GenerateTowers(walls)
     table.insert(towers, TowerUpgradeBuilding.new({ x = p.x, y = p.y,
         building_type = "tower",
         level = -1,
-        orient = p.orient }))
+        orient = p.orient,
+        sub_orient = p.sub_orient }))
 
     for i, v in pairs(walls) do
         if i < #walls then
@@ -894,7 +895,8 @@ function City:GenerateTowers(walls)
                 x = p.x, y = p.y,
                 building_type = "tower",
                 level = -1,
-                orient = p.orient }))
+                orient = p.orient,
+                sub_orient = p.sub_orient }))
         end
     end
 
