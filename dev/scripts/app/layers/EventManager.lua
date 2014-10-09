@@ -182,7 +182,7 @@ function EventManager:touch_moving(event_points)
         end
     end
 
-    local is_only_one_finger_on_screen = #points == 1 and count == 1
+    local is_only_one_finger_on_screen = #points == 0 and count == 1
     if is_only_one_finger_on_screen then
         self:one_touch_moving(event_points)
     end
