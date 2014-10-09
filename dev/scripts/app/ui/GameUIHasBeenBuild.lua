@@ -75,7 +75,10 @@ function GameUIHasBeenBuild:OnUpgradingFinished(building, current_time, city)
 
     if self.function_list_view and not self.build_city:IsHouse(building) then
         self.function_list_view:UpdateItemsByBuildings(self.build_city:GetFunctionBuildingsWhichIsUnlocked())
-        self.function_list_view:GetItemByUniqueKey(building:UniqueKey()):UpdateIcon(building)
+        local item = self.function_list_view:GetItemByUniqueKey(building:UniqueKey())
+        if item then
+            item:UpdateIcon(building)
+        end
     end
 end
 function GameUIHasBeenBuild:LoadBuildingQueue()
@@ -83,7 +86,7 @@ function GameUIHasBeenBuild:LoadBuildingQueue()
     local check = cc.ui.UICheckBoxButton.new({on = "yes_40x40.png", off = "wow_40x40.png" })
         :addTo(back_ground)
         :align(display.CENTER, 30, back_ground:getContentSize().height/2)
-        -- :setButtonSelected(false)
+    -- :setButtonSelected(false)
     check:setTouchEnabled(false)
     local building_label = cc.ui.UILabel.new({
         text = _("建筑队列"),
@@ -163,7 +166,9 @@ function GameUIHasBeenBuild:LoadFunctionListView()
         end
         function function_list_view:UpdateItemByBuilding(building)
             local item = self.unique_map[building:UniqueKey()]
-            item:UpdateByBuilding(building)
+            if item then
+                item:UpdateByBuilding(building)
+            end
         end
         self.function_list_view = function_list_view
         self.function_list_view:reload():resetPosition()
@@ -387,6 +392,12 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
                 self:ChangeStatus("disable")
                 break
             end
+            if building:IsAbleToUpgrade(false) == NOT_ABLE_TO_UPGRADE.BUILDINGLIST_AND_RESOURCE_NOT_ENOUGH then
+                self:ChangeStatus("instant")
+                self:SetConditionLabel(_("建筑队列不足"), UIKit:hex2c3b(0x7e0000))
+                self:SetGemLabel(building:getUpgradeNowNeedGems())
+                break
+            end
             if building:IsAbleToUpgrade(false) == NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH then
                 self:ChangeStatus("instant")
                 self:SetConditionLabel(_("升级资源不足"), UIKit:hex2c3b(0x7e0000))
@@ -395,8 +406,8 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
             end
             if building:IsAbleToUpgrade(false) == NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH then
                 self:ChangeStatus("instant")
-                self:SetGemLabel(building:getUpgradeNowNeedGems())
                 self:SetConditionLabel(_("建筑队列不足"), UIKit:hex2c3b(0x7e0000))
+                self:SetGemLabel(building:getUpgradeNowNeedGems())
                 break
             end
             self:ChangeStatus("normal")
@@ -439,6 +450,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         self:ChangeStatus("normal")
     end
     function item:ChangeStatus(status)
+        print(status)
         if self.status == status then
             return
         end
@@ -524,6 +536,8 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
 end
 
 return GameUIHasBeenBuild
+
+
 
 
 
