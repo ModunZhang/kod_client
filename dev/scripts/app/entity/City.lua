@@ -145,6 +145,18 @@ function City:GetOnUpgradingBuildings()
     end)
     return builds
 end
+function City:GetUpgradingBuildingsWithOrder(current_time)
+    local builds = {}
+    self:IteratorCanUpgradeBuildings(function(building)
+        if building:IsUpgrading() then
+            table.insert(builds, building)
+        end
+    end)
+    table.sort(builds, function(a, b)
+        return a:GetUpgradingLeftTimeByCurrentTime(current_time) < b:GetUpgradingLeftTimeByCurrentTime(current_time)
+    end)
+    return builds
+end
 function City:GetBuildingMaxCountsByType(building_type)
     local building_map = {
         dwelling = "townHall",
