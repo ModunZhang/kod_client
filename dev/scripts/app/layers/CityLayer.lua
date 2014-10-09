@@ -24,7 +24,7 @@ function CityLayer:GetClickedObject(x, y, world_x, world_y)
         if not v:isVisible() then return false end
         if v:GetEntity():GetType() == "wall" and not v:GetEntity():IsGate() then return false end
         if v:GetEntity():GetType() == "tower" and not v:GetEntity():IsUnlocked() then return false end
-        
+
         local check = v:IsContainPointWithFullCheck(x, y, world_x, world_y)
         if check.logic_clicked then
             table.insert(clicked_list.logic_clicked, v)
@@ -335,6 +335,10 @@ function CityLayer:ctor(city)
     self:InitPositionNodeWithCityNode()
     self:InitRoadNodeWithCityNode()
     -- self:InitShadowLayer()
+
+    local point = self:GetRoadLayer():getPositionAt(cc.p(0, 1))
+    display.newSprite("ground_766x558.png"):addTo(self:GetRoadNode()):align(display.BOTTOM_LEFT, point.x, point.y)
+
 
     self.city_node = display.newLayer()
     self.city_node:setAnchorPoint(0, 0)
