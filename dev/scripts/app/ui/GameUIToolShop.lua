@@ -307,6 +307,7 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
         :OnButtonClicked(function(event)
             print("hello")
         end)
+        progress_box:GetSpeedUpButton():setButtonEnabled(false)
 
     local get_material = new_get_material():addTo(content, 2):pos(align_x, align_y):hide()
 
