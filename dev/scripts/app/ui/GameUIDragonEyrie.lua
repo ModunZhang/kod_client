@@ -476,12 +476,18 @@ end
 function GameUIDragonEyrie:UpgradeDragonStar()
     local dragon = self:GetCurrentDragon()
     if not self.building:DragonEquipmentIsReachPromotionLevel(dragon) then
-        print("未达到晋级等级")
+        local dialog = FullScreenPopDialogUI.new()
+        dialog:SetTitle(_("提示"))
+        dialog:SetPopMessage(_("未达到晋级等级!"))
+        dialog:AddToCurrentScene()
         return
     end
 
     if not self.building:DragonEquipmentsIsReachMaxStar(dragon) then
-        print("所有装备未达到最高星级")
+        local dialog = FullScreenPopDialogUI.new()
+        dialog:SetTitle(_("提示"))
+        dialog:SetPopMessage(_("所有装备未达到最高星级!"))
+        dialog:AddToCurrentScene()
         return
     end
     
