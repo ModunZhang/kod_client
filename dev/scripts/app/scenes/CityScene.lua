@@ -1,3 +1,4 @@
+local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 local SpriteButton = import("..ui.SpriteButton")
 local BuildingLevelUpUINode = import("..ui.BuildingLevelUpUINode")
 local BuildingUpgradeUINode = import("..ui.BuildingUpgradeUINode")
@@ -62,9 +63,14 @@ function CityScene:onEnter()
         self.scene_ui_layer:NewUIFromBuildingSprite(building)
     end)
 
-
-    audio.playMusic("KoD_music_city.mp3", true)
+    self:PlayBackground()
     audio.playSound("sfx_peace.mp3", true)
+end
+function CityScene:PlayBackground()
+    audio.playMusic("KoD_music_city.mp3", false)
+    scheduler.performWithDelayGlobal(function()
+        self:PlayBackground()
+    end, 113 + 30)
 end
 function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
