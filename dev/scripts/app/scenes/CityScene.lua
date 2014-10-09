@@ -88,7 +88,7 @@ function CityScene:CreateSceneLayer()
     self.iso_map = IsoMapAnchorBottomLeft.new({
         tile_w = 80, tile_h = 56, map_width = 50, map_height = 50, base_x = origin_point.x, base_y = origin_point.y
     })
-    scene:ZoomTo(1.2)
+    scene:ZoomTo(0.7)
     return scene
 end
 function CityScene:CreateSceneUILayer()
@@ -142,7 +142,7 @@ function CityScene:CreateHomePage()
     return home
 end
 function CityScene:onEnterTransitionFinish()
-    goto_logic(0, 0, 0)
+    goto_logic(6, 4, 0)
 end
 function CityScene:onExit()
 
