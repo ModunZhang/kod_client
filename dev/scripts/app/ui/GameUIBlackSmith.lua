@@ -146,6 +146,7 @@ function GameUIBlackSmith:InitEquipmentTitle()
         :OnButtonClicked(function(event)
             print("hello")
         end)
+    self.timer:GetSpeedUpButton():setButtonEnabled(false)
     return node
 end
 function GameUIBlackSmith:CreateDragonEquipments()
