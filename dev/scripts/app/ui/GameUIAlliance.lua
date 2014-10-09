@@ -167,7 +167,7 @@ end
 -- TabButtons event
 -- 1.create
 -- 1.1 flag
-function GameUIAlliance:_createFlagPanel()
+function GameUIAlliance:createFlagPanel()
 	local node = display.newNode()
 	-- graphic
 	local bottom = display.newSprite("alliance_flag_bg_bottom_404x36.png")
@@ -303,8 +303,8 @@ function GameUIAlliance:_createFlagPanel()
 	:scale(0.7)
 	UIKit:ttfLabel({
 		text = _("联盟旗帜"),
-		size = 20,
-		color = 0x797154
+		size = 22,
+		color = 0x403c2f
 	}):addTo(node):pos(color_header:getPositionX()-320,color_header:getPositionY()+color_header:getContentSize().height+15)
 
 	local randomButton = WidgetPushButton.new({normal = "alliance_sieve_51x45.png"})
@@ -320,7 +320,7 @@ end
 
 function GameUIAlliance:getColorSprite(image,color)
 	print(image,color)
-	dump(UIKit:convertColorToGL_(color_from_excel[color]))
+	-- dump(UIKit:convertColorToGL_(color_from_excel[color]))
 	local customParams = {
 		frag = "shaders/customer_color.fsh",
 		shaderName = color,
@@ -571,9 +571,9 @@ function GameUIAlliance:NoAllianceTabEvent_createIf()
 		:align(display.LEFT_BOTTOM, gemIcon:getPositionX()+gemIcon:getContentSize().width*0.4 + 4,gemIcon:getPositionY())
 	self.createAllianceUI.gemLabel = gemLabel
 	-- flags
-    self.createFlagPanel = self:_createFlagPanel():addTo(createContent):pos(0,okButton:getPositionY()+45)
+    self.createFlagPanel = self:createFlagPanel():addTo(createContent):pos(0,okButton:getPositionY()+45)
     -- landform
-
+    self.landformPanel = self:CreateCheckAllianeGroup():addTo(createContent):pos(0,self.createFlagPanel:getCascadeBoundingBox().height+120)
     -- test 
     --
 	
@@ -586,6 +586,51 @@ function GameUIAlliance:NoAllianceTabEvent_createIf()
 	self.createScrollView = scrollView
 	return self.createScrollView
 end
+
+function GameUIAlliance:CreateCheckAllianeGroup()
+	local groupNode = display.newNode()
+	local tipsLabel = UIKit:ttfLabel({
+			text = _("草地——产出强化绿龙的材料，更容易培养绿龙，更容易培养绿龙，草地产出绿宝石，建造资源加成类的铺筑建筑"),
+			size = 18,
+			color = 0x797154,
+			dimensions = cc.size(552, 0),
+	}):addTo(groupNode):align(display.LEFT_BOTTOM, 0, 0)
+	local landSelect = self:CreateBoxPanel(60):addTo(groupNode):pos(0,tipsLabel:getContentSize().height+10)
+	local checkbox_image = {
+        off = "checkbox_unselected.png",
+        off_pressed = "checkbox_unselected.png",
+        off_disabled = "checkbox_unselected.png",
+        on = "checkbox_selectd.png",
+        on_pressed = "checkbox_selectd.png",
+        on_disabled = "checkbox_selectd.png",
+
+    }
+	local group = cc.ui.UICheckBoxButtonGroup.new()
+        :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
+            :setButtonLabel(UIKit:ttfLabel({text = _("草地"),size = 20,color = 0x797154}))
+            :setButtonLabelOffset(40, 0)
+            :align(display.LEFT_CENTER))
+        :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
+            :setButtonLabel(UIKit:ttfLabel({text = _("沙漠"),size = 20,color = 0x797154}))
+            :setButtonLabelOffset(40, 0)
+            :align(display.LEFT_CENTER))
+        :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
+            :setButtonLabel(UIKit:ttfLabel({text = _("雪地"),size = 20,color = 0x797154}))
+            :setButtonLabelOffset(40, 0)
+            :align(display.LEFT_CENTER))
+        :setButtonsLayoutMargin(10, 130, 0,10)
+        :onButtonSelectChanged(function(event)
+            printf("Option %d selected, Option %d unselected", event.selected, event.last)
+        end)
+        :addTo(landSelect)
+ --    UIKit:ttfLabel({
+	-- 	text = _("联盟地形"),
+	-- 	size = 22,
+	-- 	color = 0x403c2f
+	-- }):addTo(groupNode):align(display.LEFT_BOTTOM,, y)
+    return groupNode
+end
+
 
 function GameUIAlliance:CreateBoxPanel(height)
 	local node = display.newNode()
