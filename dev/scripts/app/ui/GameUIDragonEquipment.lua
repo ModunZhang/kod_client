@@ -344,8 +344,8 @@ end
 
 function GameUIDragonEquipment:OnMakeButtonClicked()
     local blackSmith = City:GetFirstBuildingByType("blackSmith")
-    if not blackSmith:IsUnlock() then
-         UIKit:newGameUI('GameUIBlackSmith', City, blackSmith):addToScene(self, true)
+    if blackSmith:IsUnlocked() then
+         UIKit:newGameUI('GameUIBlackSmith', City, blackSmith):addToCurrentScene(true)
     end
 end
 
@@ -418,6 +418,8 @@ function GameUIDragonEquipment:RefreshInfoUI()
 	self.titleLable:setString(Localize.equip[equipment.name])
 	self.countLabel:setString(_("数量") .. " " .. DataManager:getUserData().dragonEquipments[equipment.name] .. "/" ..  City:GetFirstBuildingByType("materialDepot"):GetMaxMaterial())
   self:RefreshInfoListView()
+  local blackSmith = City:GetFirstBuildingByType("blackSmith")
+  self.info_ui.makeButton:setButtonEnabled(blackSmith:IsUnlocked())
 end
 
 function GameUIDragonEquipment:GetPlayerEquipments()
