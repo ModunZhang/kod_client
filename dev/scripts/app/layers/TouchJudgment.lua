@@ -1,6 +1,6 @@
 local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 local TouchJudgment = class("TouchJudgment")
-local move_judgment_distance = 15
+local move_judgment_distance = 20
 function TouchJudgment:ctor(touch_handle)
     self.touch_handle = touch_handle
     self.time = 0
@@ -8,7 +8,7 @@ function TouchJudgment:ctor(touch_handle)
     self.time_has_resisted = 0
     self.resist_factor = 0.9
     self.has_reduced_factor = 1
-    self.expire_time = 500
+    self.expire_time = 300
     self.time_has_expired = 0
     self.one_touch_array = {}
     self.one_touch_begin = nil

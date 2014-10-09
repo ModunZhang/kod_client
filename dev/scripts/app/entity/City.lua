@@ -98,6 +98,28 @@ function City:InitDecorators(decorators)
     self:CheckIfDecoratorsIntersectWithRuins()
 end
 -- 取值函数
+function City:GetHousesAroundFunctionBuildingByType(building, building_type, len)
+    return self:GetHousesAroundFunctionBuildingWithFilter(building, len, function(house)
+        return house:GetType() == building_type
+    end)
+end
+function City:GetHousesAroundFunctionBuildingWithFilter(building, len, filter)
+    assert(self:IsFunctionBuilding(building))
+    local r = {}
+    self:IteratorDecoratorBuildingsByFunc(function(k, v)
+        local is_neighbour = building:IsNearByBuildingWithLength(v, len)
+        if is_neighbour then
+            if type(filter) == "function" then
+                if filter(v) then
+                    table.insert(r, v)
+                end
+            else
+                table.insert(r, v)
+            end
+        end
+    end)
+    return r
+end
 function City:IsFunctionBuilding(building)
     local location_id = self:GetLocationIdByBuilding(building)
     local b = self:GetBuildingByLocationId(location_id)
@@ -142,6 +164,18 @@ function City:GetOnUpgradingBuildings()
         else
             return a:GetType() < b:GetType()
         end
+    end)
+    return builds
+end
+function City:GetUpgradingBuildingsWithOrder(current_time)
+    local builds = {}
+    self:IteratorCanUpgradeBuildings(function(building)
+        if building:IsUpgrading() then
+            table.insert(builds, building)
+        end
+    end)
+    table.sort(builds, function(a, b)
+        return a:GetUpgradingLeftTimeByCurrentTime(current_time) < b:GetUpgradingLeftTimeByCurrentTime(current_time)
     end)
     return builds
 end
@@ -300,6 +334,10 @@ function City:IsUnLockedAtIndex(x, y)
     return not self.tiles[y][x].locked
 end
 function City:IsTileCanbeUnlockAt(x, y)
+    -- 没有第五圈
+    if x == 5 or y == 5 then
+        return false
+    end
     -- 是否解锁
     if not self:GetTileByIndex(x, y) then
         return false , self.RETURN_CODE.OUT_OF_BOUND
@@ -965,6 +1003,9 @@ function City:OnUpgradingBuildings()
 end
 
 return City
+
+
+
 
 
 

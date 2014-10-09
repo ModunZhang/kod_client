@@ -151,26 +151,28 @@ function GameUIUnlockBuilding:SetUpgradeRequirementListview()
 
     local userData = DataManager:getUserData()
     requirements = {
-        {resource_type = "wood",isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
+        {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetOnUpgradingBuildings()<1,
+            icon="hammer_31x33.png",description=GameUtils:formatNumber(#City:GetOnUpgradingBuildings()).."/1"},
+        {resource_type = _("木材"),isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
             icon="wood_icon.png",description=self.building:GetLevelUpWood().."/"..wood},
 
-        {resource_type = "stone",isVisible = self.building:GetLevelUpStone()>0,     isSatisfy = stone>self.building:GetLevelUpStone() ,
+        {resource_type = _("石料"),isVisible = self.building:GetLevelUpStone()>0,     isSatisfy = stone>self.building:GetLevelUpStone() ,
             icon="stone_icon.png",description=self.building:GetLevelUpStone().."/"..stone},
 
-        {resource_type = "iron",isVisible = self.building:GetLevelUpIron()>0,      isSatisfy = iron>self.building:GetLevelUpIron() ,
+        {resource_type = _("铁矿"),isVisible = self.building:GetLevelUpIron()>0,      isSatisfy = iron>self.building:GetLevelUpIron() ,
             icon="iron_icon.png",description=self.building:GetLevelUpIron().."/"..iron},
 
-        {resource_type = "citizen",isVisible = self.building:GetLevelUpCitizen()>0,   isSatisfy = population>self.building:GetLevelUpCitizen() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpCitizen().."/"..population},
+        {resource_type = _("城民"),isVisible = self.building:GetLevelUpCitizen()>0,   isSatisfy = population>self.building:GetLevelUpCitizen() ,
+            icon="citizen_44x50.png",description=self.building:GetLevelUpCitizen().."/"..population},
 
-        {resource_type = "blueprints",isVisible = self.building:GetLevelUpBlueprints()>0,isSatisfy = userData.materials.blueprints>self.building:GetLevelUpBlueprints() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpBlueprints().."/"..userData.materials.blueprints},
-        {resource_type = "tools",isVisible = self.building:GetLevelUpTools()>0,     isSatisfy = userData.materials.tools>self.building:GetLevelUpTools() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpTools().."/"..userData.materials.tools},
-        {resource_type = "tiles",isVisible = self.building:GetLevelUpTiles()>0,     isSatisfy = userData.materials.tiles>self.building:GetLevelUpTiles() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpTiles().."/"..userData.materials.tiles},
-        {resource_type = "pulley",isVisible = self.building:GetLevelUpPulley()>0,    isSatisfy = userData.materials.pulley>self.building:GetLevelUpPulley() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpPulley().."/"..userData.materials.pulley},
+        {resource_type = _("建筑蓝图"),isVisible = self.building:GetLevelUpBlueprints()>0,isSatisfy = userData.materials.blueprints>self.building:GetLevelUpBlueprints() ,
+            icon="blueprints_112x112.png",description=self.building:GetLevelUpBlueprints().."/"..userData.materials.blueprints},
+        {resource_type = _("建造工具"),isVisible = self.building:GetLevelUpTools()>0,     isSatisfy = userData.materials.tools>self.building:GetLevelUpTools() ,
+            icon="tools_112x112.png",description=self.building:GetLevelUpTools().."/"..userData.materials.tools},
+        {resource_type = _("砖石瓦片"),isVisible = self.building:GetLevelUpTiles()>0,     isSatisfy = userData.materials.tiles>self.building:GetLevelUpTiles() ,
+            icon="tiles_112x112.png",description=self.building:GetLevelUpTiles().."/"..userData.materials.tiles},
+        {resource_type = _("滑轮组"),isVisible = self.building:GetLevelUpPulley()>0,    isSatisfy = userData.materials.pulley>self.building:GetLevelUpPulley() ,
+            icon="pulley_112x112.png",description=self.building:GetLevelUpPulley().."/"..userData.materials.pulley},
     }
 
     if not self.requirement_listview then
@@ -222,6 +224,7 @@ function GameUIUnlockBuilding:SetUpgradeTime()
     self.upgrade_time:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradeTimeToNextLevel()))
 end
 return GameUIUnlockBuilding
+
 
 
 

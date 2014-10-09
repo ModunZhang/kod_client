@@ -148,20 +148,30 @@ function GameUIHospital:CreateHealAllSoldierItem()
     end
 
     -- 立即治疗和治疗按钮
-    self.treat_all_now_button = WidgetPushButton.new({normal = "upgrade_green_button_normal.png",pressed = "upgrade_green_button_pressed.png"})
+    self.treat_all_now_button = WidgetPushButton.new({normal = "upgrade_green_button_normal.png",pressed = "upgrade_green_button_pressed.png"}
+        ,{}
+        ,{
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+        })
         :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("立即治疗"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 self:TreatNowListener()
             end
         end):align(display.CENTER, bg_size.width/2-150, 110):addTo(self.treate_all_soldiers_item)
-    self.treat_all_button = WidgetPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
+    self.treat_all_button = WidgetPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"}
+        ,{}
+        ,{
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+        })
         :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("治疗"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 self:TreatListener()
             end
         end):align(display.CENTER, bg_size.width/2+180, 110):addTo(self.treate_all_soldiers_item)
+    self.treat_all_now_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
+    self.treat_all_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
     -- 立即治疗所需宝石
     display.newSprite("Topaz-icon.png", bg_size.width/2 - 260, 50):addTo(self.treate_all_soldiers_item):setScale(0.5)
     self.heal_now_need_gems_label = cc.ui.UILabel.new({
@@ -351,25 +361,27 @@ function GameUIHospital:CreateItemWithListView(list_view)
         local soldier_number = treat_soldier_map[soldier_name] or 0
         row_count = row_count + 1
         local soldier = WidgetSoldierBox.new("",function ()
-            local widget = WidgetTreatSoldier.new(soldier_name,
-                1,
-                soldier_number)
-                :addTo(self)
-                :align(display.CENTER, window.cx, 500 / 2)
-                :OnBlankClicked(function(widget)
-                    City:GetResourceManager():RemoveObserver(widget)
-                    widget:removeFromParentAndCleanup(true)
-                end)
-                :OnNormalButtonClicked(function(widget)
-                    City:GetResourceManager():RemoveObserver(widget)
-                    widget:removeFromParentAndCleanup(true)
-                end)
-                :OnInstantButtonClicked(function(widget)
-                    City:GetResourceManager():RemoveObserver(widget)
-                    widget:removeFromParentAndCleanup(true)
-                end)
-            City:GetResourceManager():AddObserver(widget)
-            City:GetResourceManager():OnResourceChanged()
+            if soldier_number>0 then
+                local widget = WidgetTreatSoldier.new(soldier_name,
+                    1,
+                    soldier_number)
+                    :addTo(self)
+                    :align(display.CENTER, window.cx, 500 / 2)
+                    :OnBlankClicked(function(widget)
+                        City:GetResourceManager():RemoveObserver(widget)
+                        widget:removeFromParentAndCleanup(true)
+                    end)
+                    :OnNormalButtonClicked(function(widget)
+                        City:GetResourceManager():RemoveObserver(widget)
+                        widget:removeFromParentAndCleanup(true)
+                    end)
+                    :OnInstantButtonClicked(function(widget)
+                        City:GetResourceManager():RemoveObserver(widget)
+                        widget:removeFromParentAndCleanup(true)
+                    end)
+                City:GetResourceManager():AddObserver(widget)
+                City:GetResourceManager():OnResourceChanged()
+            end
         end):addTo(row_item)
             :alignByPoint(cc.p(0.5,0.4), origin_x + (unit_width + gap_x) * row_count + unit_width / 2, 0)
             :SetNumber(soldier_number)
@@ -452,9 +464,18 @@ function GameUIHospital:OnTreatSoliderCountChanged(soldier_manager, treat_soldie
             self:TreatListener()
         end
     end )
+
+    self.treat_all_now_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
+    self.treat_all_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
+
+
 end
 
 return GameUIHospital
+
+
+
+
 
 
 

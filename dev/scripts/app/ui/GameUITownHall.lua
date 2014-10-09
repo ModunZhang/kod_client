@@ -18,12 +18,24 @@ function GameUITownHall:onEnter()
     self:TabButtons()
     self.town_hall:AddTownHallListener(self)
     self.town_hall:AddUpgradeListener(self)
+    -- self.town_hall_city:AddListenOnType(self, self.town_hall_city.LISTEN_TYPE.UPGRADE_BUILDING)
+    self:UpdateDwellingCondition()
 end
 function GameUITownHall:onExit()
+    -- self.town_hall_city:RemoveListenerOnType(self, self.town_hall_city.LISTEN_TYPE.UPGRADE_BUILDING)
     self.town_hall:RemoveTownHallListener(self)
     self.town_hall:RemoveUpgradeListener(self)
     GameUITownHall.super.onExit(self)
 end
+-- function GameUITownHall:OnUpgradingBegin()
+--     self:UpdateDwellingCondition()
+-- end
+-- function GameUITownHall:OnUpgrading()
+
+-- end
+-- function GameUITownHall:OnUpgradingFinished()
+-- end
+
 function GameUITownHall:OnBuildingUpgradingBegin()
 end
 function GameUITownHall:OnBuildingUpgradeFinished()
@@ -61,6 +73,12 @@ function GameUITownHall:OnEndImposeWithEvent(building, event, current_time)
     -- 重置列表
     list_view:reload()
 end
+function GameUITownHall:UpdateDwellingCondition()
+    local cur = #self.town_hall_city:GetHousesAroundFunctionBuildingByType(self.town_hall, "dwelling", 2)
+    self.dwelling:GetLineByIndex(1):SetCondition(cur, 3)
+    self.dwelling:GetLineByIndex(2):SetCondition(cur, 6)
+end
+---
 function GameUITownHall:TabButtons()
     self:CreateTabButtons({
         {

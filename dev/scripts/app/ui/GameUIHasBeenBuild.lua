@@ -416,7 +416,11 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
     end
     function item:UpdateDesc(building)
         if building:IsUpgrading() then
-            self:SetDescLabel(string.format("%s%d", _("正在升级到 等级"), building:GetLevel()))
+            if building:GetNextLevel() == 1 then
+                self:SetDescLabel(_("正在解锁"))
+            else
+                self:SetDescLabel(string.format("%s%d", _("正在升级到 等级"), building:GetNextLevel()))
+            end
         else
             if building:IsMaxLevel() then
                 self:SetDescLabel(string.format("%s", _("已经到最大等级了")))

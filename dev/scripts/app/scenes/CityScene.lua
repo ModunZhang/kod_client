@@ -1,3 +1,4 @@
+local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 local SpriteButton = import("..ui.SpriteButton")
 local BuildingLevelUpUINode = import("..ui.BuildingLevelUpUINode")
 local BuildingUpgradeUINode = import("..ui.BuildingUpgradeUINode")
@@ -62,9 +63,31 @@ function CityScene:onEnter()
         self.scene_ui_layer:NewUIFromBuildingSprite(building)
     end)
 
-
-    audio.playMusic("muisc_peace.mp3", true)
+    self:PlayBackground()
     audio.playSound("sfx_peace.mp3", true)
+
+    City:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
+end
+function CityScene:onExit()
+    City:RemoveListenerOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
+end
+function CityScene:onEnterTransitionFinish()
+    goto_logic(6, 4, 0)
+end
+function CityScene:OnUpgradingBegin()
+    audio.playSound("ui_building_upgrade_start.mp3")
+end
+function CityScene:OnUpgrading()
+
+end
+function CityScene:OnUpgradingFinished()
+
+end
+function CityScene:PlayBackground()
+    audio.playMusic("KoD_music_city.mp3", false)
+    scheduler.performWithDelayGlobal(function()
+        self:PlayBackground()
+    end, 113 + 30)
 end
 function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
@@ -88,7 +111,7 @@ function CityScene:CreateSceneLayer()
     self.iso_map = IsoMapAnchorBottomLeft.new({
         tile_w = 80, tile_h = 56, map_width = 50, map_height = 50, base_x = origin_point.x, base_y = origin_point.y
     })
-    scene:ZoomTo(1.2)
+    scene:ZoomTo(0.7)
     return scene
 end
 function CityScene:CreateSceneUILayer()
@@ -140,12 +163,6 @@ function CityScene:CreateHomePage()
     local home = UIKit:newGameUI('GameUIHome', City):addToScene(self)
     home:setTouchSwallowEnabled(false)
     return home
-end
-function CityScene:onEnterTransitionFinish()
-    goto_logic(0, 0, 0)
-end
-function CityScene:onExit()
-
 end
 function CityScene:OneTouch(pre_x, pre_y, x, y, touch_type)
     local citynode = self.city_layer:GetCityNode()
@@ -292,6 +309,9 @@ function CityScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_spee
     local parent = self.city_layer:getParent()
     local speed = parent:convertToNodeSpace(cc.p(new_speed_x, new_speed_y))
     local x, y  = self.city_layer:getPosition()
+    local max_speed = 5
+    speed.x = speed.x > max_speed and max_speed or speed.x
+    speed.y = speed.y > max_speed and max_speed or speed.y
     local sp = self:convertToNodeSpace(cc.p(speed.x * millisecond, speed.y * millisecond))
     self.city_layer:setPosition(cc.p(x + sp.x, y + sp.y))
 end

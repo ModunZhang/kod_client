@@ -1,5 +1,6 @@
 local UIListView = import('..ui.UIListView')
 local WidgetSlider = import('.WidgetSlider')
+local WidgetPushButton = import("..widget.WidgetPushButton")
 
 local normal = GameDatas.UnitsConfig.normal
 local special = GameDatas.UnitsConfig.special
@@ -122,16 +123,20 @@ function WidgetSoldierDetails:CreateDismissSoldierSilder()
         button = "slider_btn_66x66.png"},{max = City:GetSoldierManager():GetCountBySoldierType(self.soldier_type)}):addTo(self)
         :align(display.LEFT_BOTTOM, display.cx - 280, display.top - 310)
         :onSliderValueChanged(function(event)
-            dismiss_value:setString(string.format("%d", event.value))
-            dismiss_value:setString(string.format("%d", event.value*self.s_config.citizen))
+            dismiss_value:setString(string.format("%d", math.floor(event.value)))
+            citizen_label:setString(string.format("%d", math.floor(event.value)*self.s_config.citizen))
         end)
         :setSliderValue(0)
  
-    cc.ui.UIPushButton.new({normal = "resource_butter_red.png",pressed = "resource_butter_red_highlight.png"})
+    local dismiss_soldier_button = WidgetPushButton.new({normal = "resource_butter_red.png",pressed = "resource_butter_red_highlight.png"},{}
+        ,{
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+        })
         :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("解散"), size = 24, color = display.COLOR_WHITE}))
         :onButtonClicked(function(event)
             print("解散士兵 =================")
         end):align(display.CENTER, display.cx + 205, display.top-370):addTo(self)
+        :setButtonEnabled(false)
 
 end
 

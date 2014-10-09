@@ -15,6 +15,7 @@ function WidgetPushButton:ctor(images, options, filters)
         if event.touchInTarget and cc.pGetDistance(cur_pos, self.pre_pos) > 10 then
             if event.target.fsm_:canDoEvent("release") then
                 event.target.fsm_:doEvent("release")
+                self:dispatchEvent({name = UIPushButton.RELEASE_EVENT, x = cur_pos.x, y = cur_pos.y, touchInTarget = event.touchInTarget})
             end
         end
     end)
