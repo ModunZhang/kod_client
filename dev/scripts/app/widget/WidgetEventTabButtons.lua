@@ -298,7 +298,7 @@ function WidgetEventTabButtons:CreateOpenItem()
     end
     function node:onEnter()
         if widget:GetCurrentTab() == "build" then
-            button:setButtonEnabled(true)
+            button:setButtonEnabled(false)
         else
             button:setButtonEnabled(false)
         end
