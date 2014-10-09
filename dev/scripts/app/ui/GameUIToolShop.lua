@@ -77,9 +77,9 @@ function GameUIToolShop:UpdateEvent(event)
 end
 function GameUIToolShop:UpdateNeedStatus()
     self.building_item:GetNeedBox():GetNormalButton()
-        :setButtonEnabled(toolShop_ui:IsQueueEmpty())
+        :setButtonEnabled(self:IsQueueEmpty())
     self.technology_event:GetNeedBox():GetNormalButton()
-        :setButtonEnabled(toolShop_ui:IsQueueEmpty())
+        :setButtonEnabled(self:IsQueueEmpty())
 end
 function GameUIToolShop:Manufacture()
     self.list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 100)
