@@ -526,7 +526,7 @@ function CommonUpgradeUI:InitAccelerationPart()
     -- 正在升级文本说明
     cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = string.format(_("正在升级 %s 到Level %d"),_(self.building:GetType()),self.building:GetLevel()+1),
+        text = string.format(_("正在升级 %s 到等级 %d"),_(UIKit:getBuildingLocalizedKeyByBuildingType(self.building:GetType())),self.building:GetLevel()+1),
         font = UIKit:getFontFilePath(),
         size = 22,
         color = UIKit:hex2c3b(0x403c2f)
@@ -610,7 +610,7 @@ end
 
 function CommonUpgradeUI:SetAccTipLabel()
     --TODO 设置对应的提示 ，现在是临时的
-    self.acc_tip_label:setString(_("小于5min时，可使用免费加速\n激活VIP X后，小于5min时可使用免费加速"))
+    self.acc_tip_label:setString(_("小于5分钟时，可使用免费加速\n激活VIP X后，小于5分钟时可使用免费加速"))
 end
 
 function CommonUpgradeUI:CreateAccButtons()
