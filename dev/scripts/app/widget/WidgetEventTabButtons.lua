@@ -298,7 +298,7 @@ function WidgetEventTabButtons:CreateOpenItem()
     end
     function node:onEnter()
         if widget:GetCurrentTab() == "build" then
-            button:setButtonEnabled(false)
+            button:setButtonEnabled(true)
         else
             button:setButtonEnabled(false)
         end
@@ -628,7 +628,7 @@ function WidgetEventTabButtons:BuildingDescribe(building)
     elseif building:IsUnlocking() then
         upgrade_info = string.format("%s", _("解锁"))
     else
-        upgrade_info = string.format("%s%d", _("升级到 等级"), building:GetLevel())
+        upgrade_info = string.format("%s%d", _("升级到 等级"), building:GetNextLevel())
     end
     local time = timer:GetServerTime()
     local str = string.format("%s (%s) %s",
