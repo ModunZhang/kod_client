@@ -20,6 +20,7 @@ end
 function BuildingLevelUpUINode:ctor()
     BuildingLevelUpUINode.super.ctor(self)
     self:zorder(0)
+    self:setCascadeOpacityEnabled(true)
 end
 function BuildingLevelUpUINode:InitWidget()
     cc.ui.UIImage.new("levelup/level_bg.png"):addTo(self)

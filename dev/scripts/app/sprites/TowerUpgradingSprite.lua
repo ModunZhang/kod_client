@@ -1,7 +1,7 @@
 local Orient = import("..entity.Orient")
 local UpgradingSprite = import(".UpgradingSprite")
 local TowerUpgradingSprite = class("TowerUpgradingSprite", UpgradingSprite)
-
+local HEAD_SPRITE = 2
 function TowerUpgradingSprite:GetWorldPosition()
     local center_point = self:convertToWorldSpace(cc.p(self:GetSpriteOffset()))
     local bottom_point = self:convertToWorldSpace(cc.p(self:GetBottomOffset()))
@@ -10,9 +10,7 @@ end
 ---- 功能
 function TowerUpgradingSprite:ctor(city_layer, entity)
     TowerUpgradingSprite.super.ctor(self, city_layer, entity)
-    self.tower_sprite = display.newSprite("tower_head_78x124.png")
-    self.tower_sprite:setPosition(self:GetHeadOffset())
-    self:addChild(self.tower_sprite)
+    self.tower_sprite = display.newSprite("tower_head_78x124.png"):addTo(self, HEAD_SPRITE):pos(self:GetHeadOffset())
 end
 function TowerUpgradingSprite:GetSpriteFile()
     local entity = self:GetEntity()

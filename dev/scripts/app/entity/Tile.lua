@@ -26,6 +26,9 @@ end
 function Tile:IsUnlocked()
     return not self.locked
 end
+function Tile:GetLogicPosition()
+    return self:GetEndPos()
+end
 function Tile:GetMidLogicPosition()
     local start_x, start_y = self:GetStartPos()
     local end_x, end_y = self:GetEndPos()
