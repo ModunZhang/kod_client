@@ -31,7 +31,7 @@ local max = math.max
 local min = math.min
 function Tile:RandomGrounds(random_number)
     local grounds = self:GetEmptyGround()
-    local grounds_number = max(random_number % 6 + 1, 4)
+    local grounds_number = min(max(random_number % 6 + 1, 4), #grounds)
     return self:RandomGroundsInArrays(grounds, self:RandomArraysWithNumber(grounds_number, #grounds, random_number))
 end
 function Tile:RandomArraysWithNumber(grounds_number, max_number, random_number)
@@ -40,12 +40,13 @@ function Tile:RandomArraysWithNumber(grounds_number, max_number, random_number)
         table.insert(index_array, i)
     end
     local r = {}
-    while #r ~= grounds_number do
-        local index = random_number % #index_array + 1
+    for i = 1, grounds_number do
+        local index = (random_number % #index_array) + 1
         random_number = random_number + 1234567890
         table.insert(r, index_array[index])
         table.remove(index_array, index)
     end
+    assert(#r == grounds_number)
     return r
 end
 function Tile:RandomGroundsInArrays(empty_grounds, index_array)
@@ -206,6 +207,7 @@ end
 
 
 return Tile
+
 
 
 
