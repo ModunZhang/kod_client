@@ -44,7 +44,6 @@ local color_from_excel =
 	orangeRed = 0xa74b00,
 }
 
-
 table.foreach(color_from_excel,function(k,v)
 	table.insert(GameUIAlliance.flagData_.color,{name = k,color=UIKit:convertColorToGL_(v)})
 end)
@@ -56,11 +55,7 @@ local FLAG_LOCATION_TYPES = {
     "TWO_X"
 }
 
-GameUIAlliance.LANDFORM_TYPE = {
-	LAWN = 1,
-	DESERT = 2,
-	SNOWFIELD = 3
-}
+GameUIAlliance.LANDFORM_TYPE = {grassLand = 1,desert = 2,iceField = 3}
 
 GameUIAlliance.FLAG_LOCATION_TYPE = {
 	ONE = 1,
@@ -97,34 +92,46 @@ end
 for i=1,3 do
 	GameUIAlliance.flagData_.lawn[i] = "greensward_540x378.png"
 end
+
+local ALLIANCE_NAMES = {
+	"Kingdom of Dragon",
+	"Tian Chao"
+}
+
 -- 
 --------------------------------------------------------------------------------
 function GameUIAlliance:ctor()
 	GameUIAlliance.super.ctor(self,City,_("联盟"))
-	self.isJoinAlliance = false
-	self.flag_info = {
-		flag = self.FLAG_LOCATION_TYPE.ONE,
-		flagColor = {"red","yellow"}, 
-		graphic = self.FLAG_LOCATION_TYPE.TWO_LEFT_RIGHT,
-		graphicColor = {"charmRed","blue"},
-		graphicContent = {1,3}, --graphic image is index
-		lawn = 1, -- type
-	}
-	dump(self.flag_info)
-	--fisrt 
-	self:RandomFlag()
+	self.alliance_manager = DataManager:GetDataChangedManager("AllianceManager")
+	
 end
 
 function GameUIAlliance:onEnter()
 	GameUIAlliance.super.onEnter(self)
-	self:CreateBetweenBgAndTitle()
-	if not self.isJoinAlliance then
+	self:RefreshMainUI()
+end
+
+function GameUIAlliance:RefreshMainUI()
+	self.main_content:removeAllChildren()
+	if not self.alliance_manager:haveAlliance() then
+		--没有联盟初始化创建界面的数据
+		self.flag_info = {
+			flag = self.FLAG_LOCATION_TYPE.ONE,
+			flagColor = {"red","yellow"}, 
+			graphic = self.FLAG_LOCATION_TYPE.TWO_LEFT_RIGHT,
+			graphicColor = {"charmRed","blue"},
+			graphicContent = {1,3}, --graphic image is index
+		}
+		self.terrain_info = self.LANDFORM_TYPE.grassLand -- 地形
+		--fisrt random a 
+		self:RandomFlag()
+		-- 没有联盟主界面
 		self:CreateNoAllianceUI()
-		if not DataManager.open_alliance then
+		if not self.alliance_manager.open_alliance then
 			self:CreateAllianceTips()
 		end
 	else
-		self:CreateNoAllianceUI()
+		self:CreateHaveAlliaceUI()
 	end
 end
 
@@ -132,6 +139,30 @@ function GameUIAlliance:CreateBetweenBgAndTitle()
 	self.main_content = display.newNode():addTo(self):pos(window.left+40,window.bottom+68)
 	self.main_content:setContentSize(cc.size(window.width - 80,window.betweenHeaderAndTab))
 end
+
+function GameUIAlliance:onMovieInStage()
+	GameUIAlliance.super.onMovieInStage(self)
+	self.alliance_manager:onAllianceDataChanged(function(event)
+		if event.allianceEvent == self.alliance_manager.ALLIANCE_EVENT_TYPE.CREATE_OR_JOIN 
+		 	or event.allianceEvent == self.alliance_manager.ALLIANCE_EVENT_TYPE.QUIT then
+	 		self:RefreshMainUI()
+	 	elseif event.allianceEvent == self.alliance_manager.ALLIANCE_EVENT_TYPE.NORMAL then -- normal alliance data
+
+		end
+
+	end)
+end
+
+function GameUIAlliance:onMovieOutStage()
+	self.alliance_manager:cancelAllianceDataChanged()
+	self.alliance_manager = nil
+	GameUIAlliance.super.onMovieOutStage(self)
+end
+
+-- function GameUIAlliance:CreateBetweenBgAndTitle()
+-- 	self.main_content = display.newNode():addTo(self):pos(window.left+40,window.bottom+68)
+-- 	self.main_content:setContentSize(cc.size(window.width - 80,window.betweenHeaderAndTab))
+-- end
 
 ------------------------------------------------------------------------------------------------
 ---- I did not have a alliance
@@ -172,7 +203,7 @@ function GameUIAlliance:CreateNoAllianceUI()
 end
 
 function GameUIAlliance:CreateAllianceTips()
-	DataManager.open_alliance = true --已打开过联盟界面
+	self.alliance_manager.open_alliance = true --已打开过联盟界面
 end
 
 -- TabButtons event
@@ -295,7 +326,7 @@ function GameUIAlliance:createFlagPanel()
 	:pos(color_middleColor_button:getPositionX() - 135,color_rightColor_button:getPositionY())
 	:onButtonClicked(handler(self, self.OnFlagTypeButtonClicked))
 	self.flag_type_button = flag_type_button
-	local lawn = self.flagData_.lawn[self.flag_info.lawn]
+	local lawn = self.flagData_.lawn[self.terrain_info]
 	local upgrade_surface = display.newSprite(lawn)
 		:addTo(node)
 		:align(display.RIGHT_BOTTOM, contentWidth - header:getContentSize().width - 15, header:getPositionY() - 20)
@@ -488,12 +519,11 @@ function GameUIAlliance:RefrshFlagSprite(where)
 		graphic_node = self:GetGraphic(self:GetFlagInfomation(),box_bounding)
 		graphic_node:addTo(self.flag_sprite,self.FLAG_GRAPHIC_ZORDER,self.FLAG_GRAPHIC_TAG)
 	elseif 3 == where then
-		print("RefrshFlagSprite---->",3,self:GetFlagInfomation().lawn,self.flagData_.lawn[self:GetFlagInfomation().lawn])
-		self.upgrade_surface:setTexture(self.flagData_.lawn[self:GetFlagInfomation().lawn])
+		print("RefrshFlagSprite---->",3,self.terrain_info,self.flagData_.lawn[self.terrain_info])
+		self.upgrade_surface:setTexture(self.flagData_.lawn[self.terrain_info])
 	else --all
 		self:RefrshFlagSprite(1)
 		self:RefrshFlagSprite(2)
-		-- self:RefrshFlagSprite(3)
 	end
 end
 
@@ -511,13 +541,6 @@ function GameUIAlliance:RandomFlag()
 	self.flag_info.graphicColor[2] = self.flagData_.color[math.random(#self.flagData_.color)].name
 	self.flag_info.graphicContent[1] = self.flagData_.graphic[math.random(#self.flagData_.graphic)].name
 	self.flag_info.graphicContent[2] = self.flagData_.graphic[math.random(#self.flagData_.graphic)].name
-	--强制每次随机出不一样的数(地形)
-	local randomLawn = math.random(3)
-	while randomLawn == self.flag_info.lawn do
-		randomLawn = math.random(3)
-	end
-	self.flag_info.lawn = randomLawn
-	-- dump(self.flag_info)
 end
 
 function GameUIAlliance:RefreshButtonState()
@@ -534,8 +557,48 @@ function GameUIAlliance:RefreshButtonState()
 	self.graphic_right_button:setSeqState(self:GetFlagInfomation().graphicContent[2])
 	self.colorButton_right:setButtonEnabled(self:GetFlagInfomation().graphic ~= self.FLAG_LOCATION_TYPE.ONE)
 	self.graphic_right_button:setButtonEnabled(self:GetFlagInfomation().graphic ~= self.FLAG_LOCATION_TYPE.ONE)
-	self:SelectLandCheckButton(self:GetFlagInfomation().lawn,true)
+	-- self:SelectLandCheckButton(self:GetFlagInfomation().lawn,true)
 end
+
+function GameUIAlliance:AdapterCreateData2Server_()
+	return {
+		name=string.trim(self.editbox_name:getText()),
+		tag=string.trim(self.editbox_tag:getText()),
+		language=self.languageSelected:getSelectedLanguage(),
+		terrain=self:AdaterTerrainType2Server_(self.terrain_info),
+		flag=json.encode(self:GetFlagInfomation())
+	}
+end
+
+function GameUIAlliance:CreateAllianceButtonClicked()
+	local data = self:AdapterCreateData2Server_()
+	--TODO: check data
+	dump(data)
+	-- return
+	PushService:createAlliance(data,function(success)
+
+	end)
+end
+-- TODO:减少字符长度
+-- {"graphic":2,"flag":4,"flagColor":["orangeRed","blue"],"graphicColor":["charmRed","orange"],"graphicContent":[9,8]}
+function GameUIAlliance:AdapterFlagData_(tableOrString)
+	local typeOfParam = type(tableOrString)
+	if typeOfParam == 'string' then
+
+	elseif typeOfParam == 'table' then
+		return tableOrString
+	end
+end
+
+function GameUIAlliance:AdaterTerrainType2Server_(index)
+	for k,v in pairs(self.LANDFORM_TYPE) do
+		if index == v then
+			return k
+		end
+	end
+	return ""
+end
+
 
 -- flag button event
 
@@ -580,7 +643,7 @@ function GameUIAlliance:NoAllianceTabEvent_createIf()
 	        color = UIKit:hex2c3b(0xffedae),
    	 	}))
 	    :onButtonClicked(function(event)
-
+	    	self:CreateAllianceButtonClicked()
     	end)
 	local gemIcon = display.newSprite("gem_66x56.png")
 		:addTo(createContent)
@@ -645,7 +708,7 @@ function GameUIAlliance:CreateCheckAllianeGroup()
         :setButtonsLayoutMargin(10, 130, 0,10)
         :onButtonSelectChanged(function(event)
             print("onButtonSelectChanged-------->")
-            self.flag_info.lawn = event.selected
+            self.terrain_info = event.selected
             self:RefrshFlagSprite(3)
         end)
         :addTo(landSelect)
@@ -656,7 +719,11 @@ function GameUIAlliance:CreateCheckAllianeGroup()
 	}):addTo(groupNode):align(display.CENTER,window.cx-30, landSelect:getPositionY()+landSelect:getCascadeBoundingBox().height+20)
 
     local languageSelected = WidgetAllianceLanguagePanel.new(260):addTo(groupNode):pos(0,landLabel:getPositionY()+20)
-    self:SelectLandCheckButton(self.flag_info.lawn,true)
+    	-- :onButtonSelectChanged(function(event)
+
+        -- end)
+	self.languageSelected = languageSelected
+    self:SelectLandCheckButton(self.terrain_info,true)
     return groupNode
 end
 --[[ 
@@ -681,7 +748,6 @@ function GameUIAlliance:CreateTextfieldPanel()
     	UIInputType = 1,
         image = "alliance_editbox_575x48.png",
         size = cc.size(552,48),
-        -- listener = onEdit,
     })
     editbox_tag:setPlaceHolder(_("最多可输入600字符"))
     editbox_tag:setMaxLength(600)
@@ -707,8 +773,7 @@ function GameUIAlliance:CreateTextfieldPanel()
 	local editbox_name = cc.ui.UIInput.new({
     	UIInputType = 1,
         image = "alliance_editbox_575x48.png",
-        size = cc.size(552,48),
-        -- listener = onEdit,
+        size = cc.size(510,48),
     })
     editbox_name:setPlaceHolder(_("最多可输入600字符"))
     editbox_name:setMaxLength(600)
@@ -720,15 +785,37 @@ function GameUIAlliance:CreateTextfieldPanel()
 
     self.editbox_name = editbox_name
 
+    local randomButton = WidgetPushButton.new({normal = "alliance_sieve_51x45.png"})
+		:addTo(node)
+		:align(display.LEFT_BOTTOM, editbox_name:getContentSize().width+editbox_name:getPositionX()+2, editbox_name:getPositionY())
+		:onButtonClicked(function()
+			self:RandomAllianceName()
+		end):zorder(editbox_name:getLocalZOrder()+10)
+	randomButton:setTouchSwallowEnabled(false)
 
      local nameLabel = UIKit:ttfLabel({
-		text = _("联盟标签"),
+		text = _("联盟名称"),
 		size = 22,
 		color = 0x403c2f
 	}):addTo(node):align(display.CENTER, 552/2, editbox_name:getPositionY()+editbox_name:getContentSize().height+20)
 	return node
 end
 
+
+function GameUIAlliance:RandomAllianceName()
+	local name = ALLIANCE_NAMES[math.random(#ALLIANCE_NAMES)]
+	self.editbox_name:setText(name)
+	local trimedName = string.trim(name)
+	print(trimedName)
+	local t = string.split(trimedName," ")
+	dump(t)
+	local randomTag = ""
+	table.foreachi(t,function (i,v)
+		randomTag = randomTag .. string.sub(v,1,1)
+		print(v)
+	end)
+	self.editbox_tag:setText(randomTag)
+end
 
 
 function GameUIAlliance:CreateBoxPanel(height)
@@ -772,5 +859,33 @@ end
 ------------------------------------------------------------------------------------------------
 ---- I have join in a alliance
 ------------------------------------------------------------------------------------------------
-
+function GameUIAlliance:CreateHaveAlliaceUI()
+	self:CreateTabButtons(
+	{
+		{
+			label = _("总览"),
+        	tag = "overview",
+        	default = true,
+        },
+        {
+        	label = _("成员"),
+        	tag = "members",
+    	},
+    	{
+        	label = _("信息"),
+        	tag = "infomation",
+    	}
+    },
+	function(tag)
+		-- --call common tabButtons event
+		-- if self["NoAllianceTabEvent_" .. tag .. "If"] then
+		-- 	if self.currentContent then
+		-- 		self.currentContent:hide()
+		-- 	end
+		-- 	self.currentContent = self["NoAllianceTabEvent_" .. tag .. "If"](self)
+		-- 	self.currentContent:show()
+		-- end
+	end
+	):pos(window.cx, window.bottom + 34)
+end
 return GameUIAlliance

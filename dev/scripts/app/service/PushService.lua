@@ -67,3 +67,18 @@ function PushService:upgradeDragonDragonSkill(dragonType, skillLocation, cb)
 			,true
 	)
 end
+function PushService:createAlliance( data,cb )
+	for k,v in pairs(data) do
+		if not LuaUtils:isString(v) then
+			cb(false)
+			return false
+		end
+	end
+	self.m_netService:request("logic.playerHandler.createAlliance"
+			,data
+			,function(success)
+				cb(success)
+			end
+			,true
+	)
+end
