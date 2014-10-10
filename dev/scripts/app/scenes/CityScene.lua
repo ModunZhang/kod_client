@@ -152,11 +152,9 @@ function CityScene:CreateSceneUILayer()
     end
     function scene_ui_layer:RemoveUIFromBuildingSprite(building_sprite)
         building_sprite:NotifyObservers(function(ob)
-            local removed = false
             table.foreachi(self.ui, function(i, v)
                 if ob == v then
                     table.remove(self.ui, i)
-                    removed = true
                     v:removeFromParentAndCleanup(true)
                 end
             end)

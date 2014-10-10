@@ -32,9 +32,11 @@ function NetService:request(route, lmsg, cb, blocking)
     lmsg = lmsg or {}
     lmsg.__time__ = ext.now() + self.m_deltatime
     if blocking then
-        device.showActivityIndicator()
+        -- device.showActivityIndicator()
+        local loading = UIKit:newGameUI("GameUIWatiForNetWork"):addToCurrentScene(true)
         self.m_pomelo:request(route, json.encode(lmsg), function ( success, jmsg )
-            device.hideActivityIndicator()
+            -- device.hideActivityIndicator()
+            loading:removeFromParent()
             cb(success, jmsg and json.decode(jmsg) or nil)
         end)
     else
