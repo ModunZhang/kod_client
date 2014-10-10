@@ -163,10 +163,6 @@ function WidgetSequenceButton:onButtonClicked_(event)
 		local next_index = self:getNextIndex_()
 		self:setCurrentIndex_(next_index)
 		self:onSeqStateChange_()
-		-- local nextEvent = self:getNextEvent().name
-    	-- if self.fsm_seq_:canDoEvent(nextEvent) then 
-    	-- 	self.fsm_seq_:doEvent(nextEvent)
-    	-- end
 end
 
 function WidgetSequenceButton:setSeqState( state )
