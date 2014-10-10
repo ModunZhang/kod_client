@@ -66,6 +66,8 @@ function Sprite:ctor(city_layer, entity, x, y)
     self.entity = entity
     self.sprite = self:CreateSprite():addTo(self, SPRITE)
     self:SetPositionWithLogic(x, y)
+    self:setCascadeOpacityEnabled(true)
+    self:setCascadeColorEnabled(true)
     -- self:CreateBase()
 end
 function Sprite:GetShadow()
