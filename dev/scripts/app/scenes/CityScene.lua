@@ -148,6 +148,7 @@ function CityScene:CreateSceneUILayer()
         building_sprite:AddObserver(levelup)
         table.insert(self.ui, levelup)
 
+        building_sprite:CheckCondition()
         building_sprite:OnSceneMove()
     end
     function scene_ui_layer:RemoveUIFromBuildingSprite(building_sprite)
