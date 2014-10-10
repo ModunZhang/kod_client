@@ -11,8 +11,8 @@ uniform vec2 iResolution;
 
 void main(void)
 {
-	vec2 point = gl_FragCoord.xy;	
-	vec2 mid_point = iResolution.xy / 2.0;
+	vec2 point = gl_FragCoord.xy/iResolution.xy;	
+	vec2 mid_point = vec2(0.5);
 	float radius = distance(mid_point, vec2(0.0));
 	float alpha = distance(point, mid_point) / radius;
 	gl_FragColor = vec4(0.0, 0.0, 0.0, alpha);	

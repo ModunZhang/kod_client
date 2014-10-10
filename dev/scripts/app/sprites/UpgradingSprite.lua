@@ -67,6 +67,7 @@ function UpgradingSprite:StartBuildingAnimation()
 end
 function UpgradingSprite:StopBuildingAnimation()
     self:stopAllActions()
+    self:setColor(display.COLOR_WHITE)
     self.building_animation = nil
 end
 function UpgradingSprite:CheckCondition()
