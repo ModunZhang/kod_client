@@ -60,7 +60,6 @@ end
 ---- 功能
 function Sprite:ctor(city_layer, entity, x, y)
     self.city_layer = city_layer
-    self.observer = Observer.new()
     self.iso_map = city_layer.iso_map
     self.width = (city_layer:GetMapSize())
     self.entity = entity
