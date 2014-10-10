@@ -27,30 +27,31 @@ function Tile:IsUnlocked()
     return not self.locked
 end
 local math = math
-local floor = math.floor
-local random = math.random
-local randomseed = math.randomseed
+local max = math.max
 local min = math.min
 function Tile:RandomGrounds(random_number)
-    local grounds_number = min(floor(random() * 1000) % 5 + 1, 3)
-    return self:RandomGroundsWithNumber(grounds_number, random_number)
+    local grounds = self:GetEmptyGround()
+    local grounds_number = min(max(random_number % 6 + 1, 4), #grounds)
+    return self:RandomGroundsInArrays(grounds, self:RandomArraysWithNumber(grounds_number, random_number))
 end
-function Tile:RandomGroundsWithNumber(grounds_number, random_number)
-    local empty_grounds = self:GetEmptyGround()
-    if #empty_grounds > 0 then
-        local random_seed = random_number == nil and floor(random() * 1000) or random_number
-        return self:RandomGroundsInArrays(empty_grounds, grounds_number, random_seed)
+function Tile:RandomArraysWithNumber(grounds_number, random_number)
+    local index_array = {}
+    for i = 1, grounds_number do
+        table.insert(index_array, i)
     end
-    return {}
+    local r = {}
+    while #r ~= grounds_number do
+        local index = random_number % #index_array + 1
+        random_number = random_number + 1234567890
+        table.insert(r, index_array[index])
+        table.remove(index_array, index)
+    end
+    return r
 end
-function Tile:RandomGroundsInArrays(empty_grounds, grounds_number, random_seed)
-    randomseed(random_seed)
+function Tile:RandomGroundsInArrays(empty_grounds, index_array)
     local grounds = {}
-    while grounds_number > 0 do
-        local index = (floor(random() * 1000) % #empty_grounds)
+    for _, index in ipairs(index_array) do
         table.insert(grounds, empty_grounds[index])
-        table.remove(empty_grounds, index)
-        grounds_number = grounds_number - 1
     end
     return grounds
 end
@@ -62,19 +63,44 @@ function Tile:GetEmptyGround()
         return {}
     end
     local base_x, base_y = self:GetStartPos()
-    return {
-        {x = base_y + 7, y = base_x + 4},
-        {x = base_y + 8, y = base_x + 4},
-        {x = base_y + 7, y = base_x + 5},
-        {x = base_y + 8, y = base_x + 5},
-        {x = base_y + 8, y = base_x + 6},
-        {x = base_y + 7, y = base_x + 7},
-        {x = base_y + 8, y = base_x + 7},
-        {x = base_y + 7, y = base_x + 8},
-        {x = base_y + 8, y = base_x + 8},
-        {x = base_y + 7, y = base_x + 9},
-        {x = base_y + 8, y = base_x + 9},
-    }
+
+    if self.x == 1 then
+        return {
+            -- {x = base_x + 7, y = base_y + 4},
+            -- {x = base_x + 8, y = base_y + 4},
+
+            {x = base_x + 7, y = base_y + 5},
+            {x = base_x + 8, y = base_y + 5},
+
+            -- {x = base_x + 7, y = base_y + 8},
+            -- {x = base_x + 8, y = base_y + 8},
+
+            {x = base_x + 7, y = base_y + 9},
+            {x = base_x + 8, y = base_y + 9},
+        }
+    else
+        return {
+            -- 背面
+            -- {x = base_x, y = base_y + 4},
+            {x = base_x, y = base_y + 5},
+            {x = base_x, y = base_y + 6},
+            {x = base_x, y = base_y + 7},
+            {x = base_x, y = base_y + 8},
+            -- {x = base_x, y = base_y + 9},
+            -- 正面
+            -- {x = base_x + 7, y = base_y + 4},
+            -- {x = base_x + 8, y = base_y + 4},
+
+            {x = base_x + 7, y = base_y + 5},
+            {x = base_x + 8, y = base_y + 5},
+
+            -- {x = base_x + 7, y = base_y + 8},
+            -- {x = base_x + 8, y = base_y + 8},
+
+            {x = base_x + 7, y = base_y + 9},
+            {x = base_x + 8, y = base_y + 9},
+        }
+    end
 end
 function Tile:GetLogicPosition()
     return self:GetEndPos()
@@ -180,6 +206,8 @@ end
 
 
 return Tile
+
+
 
 
 
