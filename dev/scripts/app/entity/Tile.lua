@@ -26,6 +26,56 @@ end
 function Tile:IsUnlocked()
     return not self.locked
 end
+local math = math
+local floor = math.floor
+local random = math.random
+local randomseed = math.randomseed
+local min = math.min
+function Tile:RandomGrounds(random_number)
+    local grounds_number = min(floor(random() * 1000) % 5 + 1, 3)
+    return self:RandomGroundsWithNumber(grounds_number, random_number)
+end
+function Tile:RandomGroundsWithNumber(grounds_number, random_number)
+    local empty_grounds = self:GetEmptyGround()
+    if #empty_grounds > 0 then
+        local random_seed = random_number == nil and floor(random() * 1000) or random_number
+        return self:RandomGroundsInArrays(empty_grounds, grounds_number, random_seed)
+    end
+    return {}
+end
+function Tile:RandomGroundsInArrays(empty_grounds, grounds_number, random_seed)
+    randomseed(random_seed)
+    local grounds = {}
+    while grounds_number > 0 do
+        local index = (floor(random() * 1000) % #empty_grounds)
+        table.insert(grounds, empty_grounds[index])
+        table.remove(empty_grounds, index)
+        grounds_number = grounds_number - 1
+    end
+    return grounds
+end
+function Tile:GetEmptyGround()
+    if (self.x == 1 and self.y == 1)
+        or (self.x == 1 and self.y == 2)
+        or (self.x == 2 and self.y == 1)
+    then
+        return {}
+    end
+    local base_x, base_y = self:GetStartPos()
+    return {
+        {x = base_y + 7, y = base_x + 4},
+        {x = base_y + 8, y = base_x + 4},
+        {x = base_y + 7, y = base_x + 5},
+        {x = base_y + 8, y = base_x + 5},
+        {x = base_y + 8, y = base_x + 6},
+        {x = base_y + 7, y = base_x + 7},
+        {x = base_y + 8, y = base_x + 7},
+        {x = base_y + 7, y = base_x + 8},
+        {x = base_y + 8, y = base_x + 8},
+        {x = base_y + 7, y = base_x + 9},
+        {x = base_y + 8, y = base_x + 9},
+    }
+end
 function Tile:GetLogicPosition()
     return self:GetEndPos()
 end
@@ -130,5 +180,7 @@ end
 
 
 return Tile
+
+
 
 

@@ -31,7 +31,7 @@ function TowerUpgradingSprite:GetSpriteFile()
     elseif entity:GetOrient() == Orient.UP then
         return "tower_up_327x266.png"
     elseif entity:GetOrient() == Orient.NONE then
-        return "tower_none_158x181.png"
+        return entity:GetSubOrient() ~= nil and "tower_none_158x181.png" or "tower_none_80x154.png"
     end
     assert(false)
 end
@@ -59,7 +59,7 @@ function TowerUpgradingSprite:GetSpriteOffset()
         elseif entity:GetSubOrient() == Orient.RIGHT then
             return -38,  38
         end
-        return 38,  38
+        return 0, 50
     end
     assert(false)
 end

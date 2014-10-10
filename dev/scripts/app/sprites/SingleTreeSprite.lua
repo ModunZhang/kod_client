@@ -11,7 +11,7 @@ function SingleTreeSprite:GetSpriteFile()
     return (math.floor(math.random() * 1000) % 2) == 0 and "tree_2_183x273.png" or "tree_2_183x273.png", 0.8
 end
 function SingleTreeSprite:GetSpriteOffset()
-    return 0, -50
+    return -10, -40
     -- return -10, 70
 end
 function SingleTreeSprite:GetMidLogicPosition()
