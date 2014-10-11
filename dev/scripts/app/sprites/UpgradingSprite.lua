@@ -82,9 +82,9 @@ function UpgradingSprite:ctor(city_layer, entity)
     entity:AddBaseListener(self)
     entity:AddUpgradeListener(self)
 
-    if entity:IsUnlocked() and self:GetShadowConfig() then
-        self:CreateShadow(self:GetShadowConfig())
-    end
+    -- if entity:IsUnlocked() and self:GetShadowConfig() then
+    --     self:CreateShadow(self:GetShadowConfig())
+    -- end
 
     self.handle = self:schedule(function() self:CheckCondition() end, 1)
     -- self:InitLabel(entity)
@@ -111,14 +111,14 @@ function UpgradingSprite:GetSpriteOffset()
     local offset = self:GetCurrentConfig().offset
     return offset.x, offset.y
 end
-function UpgradingSprite:GetShadowConfig()
-    local config = self:GetCurrentConfig()
-    if config then
-        return config.shadow
-    else
-        return nil
-    end
-end
+-- function UpgradingSprite:GetShadowConfig()
+--     local config = self:GetCurrentConfig()
+--     if config then
+--         return config.shadow
+--     else
+--         return nil
+--     end
+-- end
 function UpgradingSprite:GetCurrentConfig()
     if self.config then
         return self.config:GetConfigByLevel(self.entity:GetLevel())

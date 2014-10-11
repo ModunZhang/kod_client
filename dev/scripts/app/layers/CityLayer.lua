@@ -8,12 +8,14 @@ local RoadSprite = import("..sprites.RoadSprite")
 local TreeSprite = import("..sprites.TreeSprite")
 local SingleTreeSprite = import("..sprites.SingleTreeSprite")
 local Observer = import("..entity.Observer")
-local CityLayer = class("CityLayer", function(...)
-    local layer = display.newLayer()
-    layer:setAnchorPoint(0, 0)
-    Observer.extend(layer, ...)
-    return layer
-end)
+local MapLayer = import(".MapLayer")
+local CityLayer = class("CityLayer", MapLayer)
+-- local CityLayer = class("CityLayer", function(...)
+--     local layer = display.newLayer()
+--     layer:setAnchorPoint(0, 0)
+--     Observer.extend(layer, ...)
+--     return layer
+-- end)
 local math = math
 local floor = math.floor
 local random = math.random
@@ -238,9 +240,6 @@ function CityLayer:UpdateCornsAndRocksWithCity(city)
         rocks:getChildByTag(i):setVisible(false)
     end
 end
-function CityLayer:UpdateSingleTree(city)
-
-end
 function CityLayer:CreateRoadWithTile(tile)
     local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
     return RoadSprite.new(self, tile, x, y)
@@ -339,6 +338,9 @@ function CityLayer:IteratorClickAble(func)
 end
 ----
 function CityLayer:ctor(city)
+    CityLayer.super.ctor(self, 0.3, 1)
+    Observer.extend(self)
+
     self.buildings = {}
     self.houses = {}
     self.towers = {}
@@ -350,11 +352,10 @@ function CityLayer:ctor(city)
     self:InitCityBackGround()
     self:InitPositionNodeWithCityNode()
     self:InitRoadNodeWithCityNode()
-    -- self:InitShadowLayer()
+
 
     local point = self:GetRoadLayer():getPositionAt(cc.p(0, 1))
     display.newSprite("ground_766x558.png"):addTo(self:GetRoadNode()):align(display.BOTTOM_LEFT, point.x, point.y)
-
 
     self.city_node = display.newLayer()
     self.city_node:setAnchorPoint(0, 0)
@@ -413,18 +414,18 @@ function CityLayer:InitRoadNodeWithCityNode()
     self.city_background:addChild(self.road_node)
 end
 --
-function CityLayer:CreateShadow(shadow, x, y, z)
-    if shadow then
-        return display.newSprite(shadow.png):addTo(self.city_node, z-1):align(display.CENTER, x+shadow.offset.x, y+shadow.offset.y):scale(shadow.scale)
-    else
-        return nil
-    end
-end
-function CityLayer:DestoryShadow(shadow)
-    if shadow then
-        shadow:removeFromParentAndCleanup(true)
-    end
-end
+-- function CityLayer:CreateShadow(shadow, x, y, z)
+--     if shadow then
+--         return display.newSprite(shadow.png):addTo(self.city_node, z-1):align(display.CENTER, x+shadow.offset.x, y+shadow.offset.y):scale(shadow.scale)
+--     else
+--         return nil
+--     end
+-- end
+-- function CityLayer:DestoryShadow(shadow)
+--     if shadow then
+--         shadow:removeFromParentAndCleanup(true)
+--     end
+-- end
 function CityLayer:InitWithCity(city)
     city:AddListenOnType(self, city.LISTEN_TYPE.UNLOCK_TILE)
     city:AddListenOnType(self, city.LISTEN_TYPE.LOCK_TILE)
@@ -483,8 +484,6 @@ function CityLayer:InitWithCity(city)
             tree:setVisible(tile:IsUnlocked())
         end
     end)
-    -- dump(city:GetTileByIndex(2, 2):RandomArraysWithNumber(2, 3))
-
     self.single_tree = single_tree
 end
 
@@ -509,7 +508,7 @@ function CityLayer:GetPositionNode()
     return self.position_node
 end
 
-
+---
 function CityLayer:EableTileBackground(x, y, enable)
     local tile = self:GetTileAtIndexInBackground(x, y)
     if tile then
@@ -528,7 +527,7 @@ end
 
 
 
-
+---
 function CityLayer:EableTileRoad(x, y, enable)
     local tile = self:GetTileAtIndexInRoad(x, y)
     if tile then
@@ -548,44 +547,7 @@ function CityLayer:GetRoadNode()
     return self.road_node
 end
 
-
-------zoom
-function CityLayer:ZoomBegin()
-    self.scale_point = self:convertToNodeSpace(cc.p(display.cx, display.cy))
-    self.scale_current = self:getScale()
-end
-function CityLayer:ZoomTo(scale)
-    self:ZoomBegin()
-    self:ZoomBy(scale / self:getScale())
-    self:ZoomEnd()
-end
-function CityLayer:ZoomBy(scale)
-    self:setScale(math.min(math.max(self.scale_current * scale, 0.3), 0.8))
-    local scene_point = self:getParent():convertToWorldSpace(cc.p(display.cx, display.cy))
-    local world_point = self:convertToWorldSpace(cc.p(self.scale_point.x, self.scale_point.y))
-    local new_scene_point = self:getParent():convertToNodeSpace(world_point)
-    local cur_x, cur_y = self:getPosition()
-    local new_position = cc.p(cur_x + scene_point.x - new_scene_point.x, cur_y + scene_point.y - new_scene_point.y)
-    self:setPosition(new_position)
-end
-function CityLayer:ZoomEnd()
-    self.scale_point = nil
-    self.scale_current = self:getScale()
-end
-
--------
-function CityLayer:setPosition(position)
-    local x, y = position.x, position.y
-    local parent_node = self:getParent()
-    local super = getmetatable(self)
-    super.setPosition(self, position)
-    local left_bottom_pos = self:GetLeftBottomPositionWithConstrain(x, y)
-    local right_top_pos = self:GetRightTopPositionWithConstrain(x, y)
-    local rx = x >= 0 and math.min(left_bottom_pos.x, right_top_pos.x) or math.max(left_bottom_pos.x, right_top_pos.x)
-    local ry = y >= 0 and math.min(left_bottom_pos.y, right_top_pos.y) or math.max(left_bottom_pos.y, right_top_pos.y)
-    super.setPosition(self, cc.p(rx, ry))
-    self:OnSceneMove()
-end
+----- override
 function CityLayer:GetLeftBottomPositionWithConstrain(x, y)
     -- 左下角是否超出
     local parent_node = self:getParent()

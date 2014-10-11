@@ -31,7 +31,7 @@ local max = math.max
 local min = math.min
 function Tile:RandomGrounds(random_number)
     local grounds = self:GetEmptyGround()
-    local grounds_number = min(max(random_number % 6 + 1, 4), #grounds)
+    local grounds_number = min(max(random_number % 5 + 1, 2), #grounds)
     return self:RandomGroundsInArrays(grounds, self:RandomArraysWithNumber(grounds_number, #grounds, random_number))
 end
 function Tile:RandomArraysWithNumber(grounds_number, max_number, random_number)
@@ -71,13 +71,13 @@ function Tile:GetEmptyGround()
             -- {x = base_x + 8, y = base_y + 4},
 
             {x = base_x + 7, y = base_y + 5},
-            {x = base_x + 8, y = base_y + 5},
+            -- {x = base_x + 8, y = base_y + 5},
 
             -- {x = base_x + 7, y = base_y + 8},
             -- {x = base_x + 8, y = base_y + 8},
 
             {x = base_x + 7, y = base_y + 9},
-            {x = base_x + 8, y = base_y + 9},
+            -- {x = base_x + 8, y = base_y + 9},
         }
     else
         return {
@@ -93,13 +93,13 @@ function Tile:GetEmptyGround()
             -- {x = base_x + 8, y = base_y + 4},
 
             {x = base_x + 7, y = base_y + 5},
-            {x = base_x + 8, y = base_y + 5},
+            -- {x = base_x + 8, y = base_y + 5},
 
             -- {x = base_x + 7, y = base_y + 8},
             -- {x = base_x + 8, y = base_y + 8},
 
             {x = base_x + 7, y = base_y + 9},
-            {x = base_x + 8, y = base_y + 9},
+            -- {x = base_x + 8, y = base_y + 9},
         }
     end
 end

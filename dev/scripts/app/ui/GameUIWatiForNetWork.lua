@@ -19,7 +19,7 @@ function GameUIWatiForNetWork:onEnter()
     )
     self.sprite:setFilter(filter)
     local loading = display.newSprite("loading_88x86.png"):addTo(self):pos(display.cx, display.cy)
-    loading:runAction(cc.RepeatForever:create(cc.RotateBy:create(1, 360)))
+    loading:runAction(cc.RepeatForever:create(cc.RotateBy:create(7, 360)))
 end
 
 

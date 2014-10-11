@@ -69,26 +69,26 @@ function Sprite:ctor(city_layer, entity, x, y)
     self:setCascadeColorEnabled(true)
     -- self:CreateBase()
 end
-function Sprite:GetShadow()
-    return self.shadow
-end
-function Sprite:CreateShadow(shadow)
-    local x, y = self:GetCenterPosition()
-    self.shadow = self.city_layer:CreateShadow(shadow, x, y, self:getLocalZOrder())
-end
-function Sprite:DestoryShadow()
-    self.city_layer:DestoryShadow(self.shadow)
-end
-function Sprite:GetShadowConfig()
-    return nil
-end
-function Sprite:RefreshShadow()
-    local shadow = self:GetShadowConfig()
-    if shadow and self:GetEntity():IsUnlocked() then
-        self:DestoryShadow()
-        self:CreateShadow(shadow)
-    end
-end
+-- function Sprite:GetShadow()
+--     return self.shadow
+-- end
+-- function Sprite:CreateShadow(shadow)
+--     local x, y = self:GetCenterPosition()
+--     self.shadow = self.city_layer:CreateShadow(shadow, x, y, self:getLocalZOrder())
+-- end
+-- function Sprite:DestoryShadow()
+--     self.city_layer:DestoryShadow(self.shadow)
+-- end
+-- function Sprite:GetShadowConfig()
+--     return nil
+-- end
+-- function Sprite:RefreshShadow()
+--     local shadow = self:GetShadowConfig()
+--     if shadow and self:GetEntity():IsUnlocked() then
+--         self:DestoryShadow()
+--         self:CreateShadow(shadow)
+--     end
+-- end
 function Sprite:UpdateSprite()
     self.sprite:removeFromParentAndCleanup(true)
     self.sprite = self:CreateSprite():addTo(self, SPRITE)

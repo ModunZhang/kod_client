@@ -8,7 +8,7 @@ function Observer.extend(target, ...)
         tolua.setpeer(target, t)
     end
     setmetatable(t, Observer)
-    target:ctor(...)
+    Observer.ctor(target, ...)
     return target
 end
 function Observer:ctor(...)
