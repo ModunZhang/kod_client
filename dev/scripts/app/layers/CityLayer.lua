@@ -6,6 +6,7 @@ local TowerUpgradingSprite = import("..sprites.TowerUpgradingSprite")
 local WallUpgradingSprite = import("..sprites.WallUpgradingSprite")
 local RoadSprite = import("..sprites.RoadSprite")
 local TreeSprite = import("..sprites.TreeSprite")
+local SingleTreeSprite = import("..sprites.SingleTreeSprite")
 local Observer = import("..entity.Observer")
 local CityLayer = class("CityLayer", function(...)
     local layer = display.newLayer()
@@ -13,7 +14,10 @@ local CityLayer = class("CityLayer", function(...)
     Observer.extend(layer, ...)
     return layer
 end)
-
+local math = math
+local floor = math.floor
+local random = math.random
+local randomseed = math.randomseed
 
 function CityLayer:GetClickedObject(x, y, world_x, world_y)
     local clicked_list = {
@@ -22,8 +26,8 @@ function CityLayer:GetClickedObject(x, y, world_x, world_y)
     }
     self:IteratorClickAble(function(k, v)
         if not v:isVisible() then return false end
-        if v:GetEntity():GetType() == "wall" and not v:GetEntity():IsGate() then return false end
-        if v:GetEntity():GetType() == "tower" and not v:GetEntity():IsUnlocked() then return false end
+        -- if v:GetEntity():GetType() == "wall" and not v:GetEntity():IsGate() then return false end
+        -- if v:GetEntity():GetType() == "tower" and not v:GetEntity():IsUnlocked() then return false end
 
         local check = v:IsContainPointWithFullCheck(x, y, world_x, world_y)
         if check.logic_clicked then
@@ -49,16 +53,8 @@ function CityLayer:OnTileUnlocked(city)
     self:OnTileChanged(city)
 end
 function CityLayer:OnTileChanged(city)
-    table.foreach(self.ruins, function(_, ruin)
-        local building_entity = ruin:GetEntity()
-        local tile = city:GetTileWhichBuildingBelongs(building_entity)
-        if tile.locked or city:GetDecoratorByPosition(building_entity:GetLogicPosition()) then
-            ruin:setVisible(false)
-        else
-            ruin:setVisible(true)
-            -- ruin:Normal()
-        end
-    end)
+    self:UpdateRuinsWithCity(city)
+    self:UpdateSingleTreeWithCity(city)
     self:UpdateAllWithCity(city)
 end
 function CityLayer:OnRoundUnlocked(round)
@@ -114,6 +110,22 @@ function CityLayer:UpdateAllWithCity(city)
     self:UpdateWallsWithCity(city)
     self:UpdateTowersWithCity(city)
     -- self:UpdateCornsAndRocksWithCity(city)
+end
+function CityLayer:UpdateRuinsWithCity(city)
+    table.foreach(self.ruins, function(_, ruin)
+        local building_entity = ruin:GetEntity()
+        local tile = city:GetTileWhichBuildingBelongs(building_entity)
+        if tile.locked or city:GetDecoratorByPosition(building_entity:GetLogicPosition()) then
+            ruin:setVisible(false)
+        else
+            ruin:setVisible(true)
+        end
+    end)
+end
+function CityLayer:UpdateSingleTreeWithCity(city)
+    table.foreach(self.single_tree, function(_, tree)
+        tree:setVisible(city:GetTileByBuildingPosition(tree.x, tree.y):IsUnlocked())
+    end)
 end
 function CityLayer:UpdateTilesWithCity(city)
     city:IteratorTilesByFunc(function(x, y, tile)
@@ -187,7 +199,6 @@ function CityLayer:UpdateWallsWithCity(city)
     if old_walls then
         for k, v in pairs(old_walls) do
             v:DestorySelf()
-            v:removeFromParentAndCleanup(true)
         end
     end
 end
@@ -211,7 +222,6 @@ function CityLayer:UpdateTowersWithCity(city)
     if old_towers then
         for k, v in pairs(old_towers) do
             v:DestorySelf()
-            v:removeFromParentAndCleanup(true)
         end
     end
 end
@@ -227,6 +237,9 @@ function CityLayer:UpdateCornsAndRocksWithCity(city)
         corns:getChildByTag(i):setVisible(false)
         rocks:getChildByTag(i):setVisible(false)
     end
+end
+function CityLayer:UpdateSingleTree(city)
+
 end
 function CityLayer:CreateRoadWithTile(tile)
     local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
@@ -250,6 +263,9 @@ function CityLayer:CreateDecorator(house)
 end
 function CityLayer:CreateBuilding(building, city)
     return FunctionUpgradingSprite.new(self, building, city)
+end
+function CityLayer:CreateSingleTree(logic_x, logic_y)
+    return SingleTreeSprite.new(self, logic_x, logic_y)
 end
 function CityLayer:IteratorFunctionsBuildings(func)
     table.foreach(self.buildings, func)
@@ -419,12 +435,11 @@ function CityLayer:InitWithCity(city)
 
     self:UpdateAllWithCity(city)
 
-    local city_node = self:GetCityNode()
-    for k, ruin in pairs(city.ruins) do
-        local x, y = ruin:GetLogicPosition()
-        local building = self:CreateRuin(ruin)
-        city_node:addChild(building)
 
+    local city_node = self:GetCityNode()
+    -- 加废墟
+    for k, ruin in pairs(city.ruins) do
+        local building = self:CreateRuin(ruin):addTo(city_node)
         local tile = city:GetTileWhichBuildingBelongs(ruin)
         if tile.locked or city:GetDecoratorByPosition(ruin.x, ruin.y) then
             building:setVisible(false)
@@ -434,20 +449,43 @@ function CityLayer:InitWithCity(city)
         table.insert(self.ruins, building)
     end
 
+    -- 加功能建筑
     for _, building in pairs(city:GetAllBuildings()) do
-        local building_sprite = self:CreateBuilding(building, city)
+        local building_sprite = self:CreateBuilding(building, city):addTo(city_node)
         city:AddListenOnType(building_sprite, city.LISTEN_TYPE.LOCK_TILE)
         city:AddListenOnType(building_sprite, city.LISTEN_TYPE.UNLOCK_TILE)
         city:AddListenOnType(building_sprite, city.LISTEN_TYPE.UPGRADE_BUILDING)
-        city_node:addChild(building_sprite)
         table.insert(self.buildings, building_sprite)
     end
 
+    -- 加小屋
     for _, house in pairs(city:GetAllDecorators()) do
-        local house = self:CreateDecorator(house)
-        city_node:addChild(house)
+        local house = self:CreateDecorator(house):addTo(city_node)
         table.insert(self.houses, house)
     end
+
+
+    -- 加树
+    randomseed(DataManager:getUserData().countInfo.registerTime)
+    local single_tree = {}
+    city:IteratorTilesByFunc(function(x, y, tile)
+        if (x == 1 and y == 1)
+            or (x == 2 and y == 1)
+            or (x == 1 and y == 2)
+            or x == 5
+            or y == 5 then
+            return
+        end
+        local grounds = tile:RandomGrounds(floor(random() * 1000))
+        for _, v in pairs(grounds) do
+            local tree = self:CreateSingleTree(v.x, v.y):addTo(city_node)
+            table.insert(single_tree, tree)
+            tree:setVisible(tile:IsUnlocked())
+        end
+    end)
+    -- dump(city:GetTileByIndex(2, 2):RandomArraysWithNumber(2, 3))
+
+    self.single_tree = single_tree
 end
 
 function CityLayer:GetMapSize()
@@ -600,6 +638,12 @@ function CityLayer:OnSceneMove()
 end
 
 return CityLayer
+
+
+
+
+
+
 
 
 

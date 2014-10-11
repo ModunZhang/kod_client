@@ -22,7 +22,7 @@ local MATERIALS_MAP = {
 }
 
 function GameUIToolShop:ctor(city, toolShop)
-    GameUIToolShop.super.ctor(self, city, _("工具作坊"),toolShop)
+    GameUIToolShop.super.ctor(self, city, _("工具作坊"), toolShop)
     self.tool_shop_city = city
     self.toolShop = toolShop
 end
@@ -61,8 +61,9 @@ function GameUIToolShop:OnMaterialsChanged(material_manager, material_type, chan
     end
 end
 function GameUIToolShop:IsQueueEmpty()
+    local current_time = app.timer:GetServerTime()
     for _, event in pairs(self.toolShop:GetMakeMaterialsEvents()) do
-        if not event:IsEmpty() then
+        if event:IsMaking(current_time) then
             return false
         end
     end

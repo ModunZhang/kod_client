@@ -27,6 +27,9 @@ function UpgradingSprite:OnBuildingUpgradingBegin(building, time)
     self:NotifyObservers(function(listener)
         listener:OnBuildingUpgradingBegin(building, time)
     end)
+
+    -- animation
+    self:StartBuildingAnimation()
 end
 function UpgradingSprite:OnBuildingUpgradeFinished(building, time)
     if self.label then
@@ -36,8 +39,11 @@ function UpgradingSprite:OnBuildingUpgradeFinished(building, time)
         listener:OnBuildingUpgradeFinished(building, time)
     end)
     self:UpdateSprite()
-    self:RefreshShadow()
+    -- self:RefreshShadow()
     self:OnSceneMove()
+
+    -- animation
+    self:StopBuildingAnimation()
 end
 function UpgradingSprite:OnBuildingUpgrading(building, time)
     if self.label then
@@ -46,6 +52,23 @@ function UpgradingSprite:OnBuildingUpgrading(building, time)
     self:NotifyObservers(function(listener)
         listener:OnBuildingUpgrading(building, time)
     end)
+
+    -- animation
+    self:StartBuildingAnimation()
+end
+function UpgradingSprite:StartBuildingAnimation()
+    if self.building_animation then return end
+    local sequence = transition.sequence{
+        cc.TintTo:create(0.8, 180, 180, 180),
+        cc.TintTo:create(0.8, 255, 255, 255)
+    }
+    self:stopAllActions()
+    self.building_animation = self:runAction(cc.RepeatForever:create(sequence))
+end
+function UpgradingSprite:StopBuildingAnimation()
+    self:stopAllActions()
+    self:setColor(display.COLOR_WHITE)
+    self.building_animation = nil
 end
 function UpgradingSprite:CheckCondition()
     self:NotifyObservers(function(listener)
@@ -69,6 +92,7 @@ end
 function UpgradingSprite:DestorySelf()
     self:GetEntity():RemoveBaseListener(self)
     self:GetEntity():RemoveUpgradeListener(self)
+    self:removeFromParentAndCleanup(true)
 end
 function UpgradingSprite:InitLabel(entity)
     local label = ui.newTTFLabel({ text = "text" , x = 0, y = 0 })
@@ -86,13 +110,6 @@ end
 function UpgradingSprite:GetSpriteOffset()
     local offset = self:GetCurrentConfig().offset
     return offset.x, offset.y
-end
-function UpgradingSprite:UpdateSprite()
-    local next_config, next_i = self:GetCurrentConfig()
-    local before_config, before_i = self:GetBeforeConfig()
-    if next_i ~= before_i then
-        self:GetSprite():setTexture(display.newSprite(next_config.png):getTexture())
-    end
 end
 function UpgradingSprite:GetShadowConfig()
     local config = self:GetCurrentConfig()
@@ -130,6 +147,7 @@ end
 
 
 return UpgradingSprite
+
 
 
 

@@ -289,7 +289,13 @@ function WidgetEventTabButtons:CreateOpenItem()
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xfff3c7)}))
         :onButtonClicked(function(event)
-            UIKit:newGameUI('GameUIHasBeenBuild', City):addToCurrentScene(true)
+            if widget:GetCurrentTab() == "build" then
+                UIKit:newGameUI('GameUIHasBeenBuild', City):addToCurrentScene(true)
+            elseif widget:GetCurrentTab() == "soldier" then
+                UIKit:newGameUI('GameUIBarracks', City, self.barracks):addToCurrentScene(true)
+            elseif widget:GetCurrentTab() == "material" then
+                UIKit:newGameUI('GameUIToolShop', City, self.toolShop):addToCurrentScene(true)
+            end
         end)
 
 
@@ -301,11 +307,7 @@ function WidgetEventTabButtons:CreateOpenItem()
         return self
     end
     function node:onEnter()
-        if widget:GetCurrentTab() == "build" then
-            button:setButtonEnabled(true)
-        else
-            button:setButtonEnabled(false)
-        end
+        button:setButtonEnabled(widget:GetCurrentTab() ~= "technology")
     end
     node:setNodeEventEnabled(true)
 
@@ -661,6 +663,7 @@ function WidgetEventTabButtons:MaterialDescribe(event)
 end
 
 return WidgetEventTabButtons
+
 
 
 

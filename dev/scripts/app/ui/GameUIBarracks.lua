@@ -69,8 +69,8 @@ function GameUIBarracks:CreateSoldierUI()
     self.list_view = self:CreateVerticalListViewDetached(rect.x, window.bottom + 70, rect.x + rect.width, rect.y - 20):addTo(recruit)
 
     for i, v in ipairs({
-        {"swordsman", "sentinel", "archer", "crossbowman"},
-        {"lancer", "horseArcher", "catapult", "ballista"}
+        {"swordsman", "archer", "lancer", "catapult"},
+        {"sentinel", "crossbowman", "horseArcher", "ballista"}
     }) do
         self.list_view:addItem(self:CreateItemWithListView(self.list_view, v))
     end

@@ -118,8 +118,12 @@ function CityScene:CreateSceneUILayer()
     local scene_ui_layer = display.newLayer():addTo(self)
     scene_ui_layer:setTouchSwallowEnabled(false)
     function scene_ui_layer:Init()
+        self.levelup_node = display.newNode():addTo(self)
+        self.levelup_node:setCascadeOpacityEnabled(true)
         self.ui = {}
+        self.level_up_ui = {}
         self.lock_buttons = {}
+        self.status = nil
     end
     function scene_ui_layer:NewLockButtonFromBuildingSprite(building_sprite)
         local lock_button = SpriteButton.new(building_sprite, City):addTo(self, 1)
@@ -140,10 +144,11 @@ function CityScene:CreateSceneUILayer()
         building_sprite:AddObserver(progress)
         table.insert(self.ui, progress)
 
-        local levelup = BuildingLevelUpUINode.new():addTo(self)
+        local levelup = BuildingLevelUpUINode.new():addTo(self.levelup_node)
         building_sprite:AddObserver(levelup)
         table.insert(self.ui, levelup)
 
+        building_sprite:CheckCondition()
         building_sprite:OnSceneMove()
     end
     function scene_ui_layer:RemoveUIFromBuildingSprite(building_sprite)
@@ -155,6 +160,22 @@ function CityScene:CreateSceneUILayer()
                 end
             end)
         end)
+    end
+    function scene_ui_layer:ShowLevelUpNode()
+        if self.status == "show" then
+            return
+        end
+        self.levelup_node:stopAllActions()
+        self.levelup_node:fadeTo(0.5, 255)
+        self.status = "show"
+    end
+    function scene_ui_layer:HideLevelUpNode()
+        if self.status == "hide" then
+            return
+        end
+        self.levelup_node:stopAllActions()
+        self.levelup_node:fadeTo(0.5, 0)
+        self.status = "hide"
     end
     scene_ui_layer:Init()
     return scene_ui_layer
@@ -189,6 +210,11 @@ function CityScene:OnTwoTouch(x1, y1, x2, y2, event_type)
     elseif event_type == "moved" then
         local new_distance = math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
         scene:ZoomBy(new_distance / self.distance)
+        if scene:getScale() < 0.5 then
+            self.scene_ui_layer:HideLevelUpNode()
+        else
+            self.scene_ui_layer:ShowLevelUpNode()
+        end
     elseif event_type == "ended" then
         scene:ZoomEnd()
         self.distance = nil
@@ -371,6 +397,7 @@ function CityScene:OnGateChanged(old_walls, new_walls)
 end
 
 return CityScene
+
 
 
 

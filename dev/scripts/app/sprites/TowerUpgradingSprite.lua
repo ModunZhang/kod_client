@@ -1,7 +1,7 @@
 local Orient = import("..entity.Orient")
 local UpgradingSprite = import(".UpgradingSprite")
 local TowerUpgradingSprite = class("TowerUpgradingSprite", UpgradingSprite)
-
+local HEAD_SPRITE = 2
 function TowerUpgradingSprite:GetWorldPosition()
     local center_point = self:convertToWorldSpace(cc.p(self:GetSpriteOffset()))
     local bottom_point = self:convertToWorldSpace(cc.p(self:GetBottomOffset()))
@@ -10,9 +10,7 @@ end
 ---- 功能
 function TowerUpgradingSprite:ctor(city_layer, entity)
     TowerUpgradingSprite.super.ctor(self, city_layer, entity)
-    self.tower_sprite = display.newSprite("tower_head_78x124.png")
-    self.tower_sprite:setPosition(self:GetHeadOffset())
-    self:addChild(self.tower_sprite)
+    self.tower_sprite = display.newSprite("tower_head_78x124.png"):addTo(self, HEAD_SPRITE):pos(self:GetHeadOffset())
 end
 function TowerUpgradingSprite:GetSpriteFile()
     local entity = self:GetEntity()
@@ -33,7 +31,7 @@ function TowerUpgradingSprite:GetSpriteFile()
     elseif entity:GetOrient() == Orient.UP then
         return "tower_up_327x266.png"
     elseif entity:GetOrient() == Orient.NONE then
-        return "tower_none_158x181.png"
+        return entity:GetSubOrient() ~= nil and "tower_none_158x181.png" or "tower_none_80x154.png"
     end
     assert(false)
 end
@@ -61,7 +59,7 @@ function TowerUpgradingSprite:GetSpriteOffset()
         elseif entity:GetSubOrient() == Orient.RIGHT then
             return -38,  38
         end
-        return 38,  38
+        return 0, 50
     end
     assert(false)
 end
