@@ -159,11 +159,6 @@ function GameUIAlliance:onMovieOutStage()
 	GameUIAlliance.super.onMovieOutStage(self)
 end
 
--- function GameUIAlliance:CreateBetweenBgAndTitle()
--- 	self.main_content = display.newNode():addTo(self):pos(window.left+40,window.bottom+68)
--- 	self.main_content:setContentSize(cc.size(window.width - 80,window.betweenHeaderAndTab))
--- end
-
 ------------------------------------------------------------------------------------------------
 ---- I did not have a alliance
 ------------------------------------------------------------------------------------------------
@@ -174,11 +169,11 @@ function GameUIAlliance:CreateNoAllianceUI()
 		{
 			label = _("创建"),
         	tag = "create",
-        	default = true,
         },
         {
         	label = _("加入"),
         	tag = "join",
+        	default = true,
     	},
     	{
         	label = _("邀请"),
@@ -837,7 +832,9 @@ end
 
 --2.join 
 function GameUIAlliance:NoAllianceTabEvent_joinIf()
-
+	local joinNode = display.newNode()
+	
+	return joinNode
 end
 
 function GameUIAlliance:NoAllianceTabEvent_inviteIf()
