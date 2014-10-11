@@ -291,9 +291,8 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
             local select_ruins = building:GetEntity()
             UIKit:newGameUI('GameUIBuild', City, select_ruins, select_ruins_list):addToScene(self, true)
         elseif building:GetEntity():GetType() == "keep" then
-            app:enterScene("AllianceScene")
-            -- self._keep_page = UIKit:newGameUI('GameUIKeep',City,building:GetEntity())
-            -- self._keep_page:addToScene(self, true)
+            self._keep_page = UIKit:newGameUI('GameUIKeep',City,building:GetEntity())
+            self._keep_page:addToScene(self, true)
         elseif building:GetEntity():GetType() == "dragonEyrie" then
             UIKit:newGameUI('GameUIDragonEyrie', City,building:GetEntity()):addToCurrentScene(true)
         elseif building:GetEntity():GetType() == "toolShop" then
