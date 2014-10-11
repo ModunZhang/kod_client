@@ -44,7 +44,7 @@ function Sprite:SetOrient(orient)
     self:GetEntity():SetOrient(orient)
 end
 -----position
-function Sprite:SetPositionWithLogic(x, y)
+function Sprite:SetPositionWithZOrder(x, y)
     self:setPosition(x, y)
     self:setLocalZOrder(self:GetLogicZorder(self.width))
 end
@@ -64,7 +64,7 @@ function Sprite:ctor(city_layer, entity, x, y)
     self.width = (city_layer:GetMapSize())
     self.entity = entity
     self.sprite = self:CreateSprite():addTo(self, SPRITE)
-    self:SetPositionWithLogic(x, y)
+    self:SetPositionWithZOrder(x, y)
     self:setCascadeOpacityEnabled(true)
     self:setCascadeColorEnabled(true)
     -- self:CreateBase()
@@ -104,6 +104,9 @@ function Sprite:CreateBase()
     if self:GetEntity() and self:GetEntity().GetSize then
         self:GenerateBaseTiles(self:GetSize())
     end
+end
+function Sprite:GetMapLayer()
+    return self.city_layer
 end
 function Sprite:GetSpriteFile()
     assert(false)
