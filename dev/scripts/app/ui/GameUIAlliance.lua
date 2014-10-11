@@ -832,8 +832,21 @@ end
 
 --2.join 
 function GameUIAlliance:NoAllianceTabEvent_joinIf()
-	local joinNode = display.newNode()
-	
+	local joinNode = display.newNode():addTo(self.main_content)
+	local editbox_tag_search = cc.ui.UIInput.new({
+    	UIInputType = 1,
+        image = "alliance_editbox_575x48.png",
+        size = cc.size(510,48),
+    })
+    editbox_tag_search:setPlaceHolder(_("最多可输入600字符"))
+    editbox_tag_search:setMaxLength(600)
+    editbox_tag_search:setFont(UIKit:getFontFilePath(),18)
+    editbox_tag_search:setFontColor(cc.c3b(0,0,0))
+    editbox_tag_search:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))
+    editbox_tag_search:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)
+    editbox_tag_search:align(display.LEFT_TOP,0,self.main_content:getCascadeBoundingBox().height - 10):addTo(joinNode)
+
+    self.editbox_tag_search = editbox_tag_search
 	return joinNode
 end
 
