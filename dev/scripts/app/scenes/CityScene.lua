@@ -189,6 +189,14 @@ function CityScene:CreateHomePage()
     home:setTouchSwallowEnabled(false)
     return home
 end
+
+---
+function CityScene:ChangeTerrain(terrain_type)
+    self.city_layer:ChangeTerrain(terrain_type)
+end
+
+
+-------------
 function CityScene:OneTouch(pre_x, pre_y, x, y, touch_type)
     local citynode = self.city_layer:GetCityNode()
     if touch_type == "began" then

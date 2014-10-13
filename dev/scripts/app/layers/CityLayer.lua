@@ -10,17 +10,11 @@ local SingleTreeSprite = import("..sprites.SingleTreeSprite")
 local Observer = import("..entity.Observer")
 local MapLayer = import(".MapLayer")
 local CityLayer = class("CityLayer", MapLayer)
--- local CityLayer = class("CityLayer", function(...)
---     local layer = display.newLayer()
---     layer:setAnchorPoint(0, 0)
---     Observer.extend(layer, ...)
---     return layer
--- end)
+
 local math = math
 local floor = math.floor
 local random = math.random
 local randomseed = math.randomseed
-
 function CityLayer:GetClickedObject(x, y, world_x, world_y)
     local clicked_list = {
         logic_clicked = {},
@@ -111,7 +105,6 @@ function CityLayer:UpdateAllWithCity(city)
     self:UpdateRoadsWithCity(city)
     self:UpdateWallsWithCity(city)
     self:UpdateTowersWithCity(city)
-    -- self:UpdateCornsAndRocksWithCity(city)
 end
 function CityLayer:UpdateRuinsWithCity(city)
     table.foreach(self.ruins, function(_, ruin)
@@ -130,25 +123,26 @@ function CityLayer:UpdateSingleTreeWithCity(city)
     end)
 end
 function CityLayer:UpdateTilesWithCity(city)
+    local map = self:GetCityBackgroundsMap()
     city:IteratorTilesByFunc(function(x, y, tile)
-        self:EableTileBackground(x - 1, y - 1, tile:IsUnlocked())
+        map[y][x].visible = tile:IsUnlocked()
     end)
+    self:UpdateCityBackgroundsByMap(map)
 end
 function CityLayer:UpdateRoadsWithCity(city)
+    local map = self:GetRoadsmap()
     city:IteratorTilesByFunc(function(x, y, tile)
-        local tmx_x = x - 1
-        local tmx_y = y - 1
         if
-            tmx_x == 0 and tmx_y == 0
-            or  tmx_x == 1 and tmx_y == 0
-            or  tmx_x == 0 and tmx_y == 1
+            x == 1 and y == 1
+            or  x == 2 and y == 1
+            or  x == 1 and y == 2
         then
-            enable = false
-            self:EableTileRoad(tmx_x, tmx_y, false)
+            map[y][x].visible = false
         else
-            self:EableTileRoad(tmx_x, tmx_y, tile:IsUnlocked())
+            map[y][x].visible = tile:IsUnlocked()
         end
     end)
+    self:UpdateRoadsByMap(map)
 end
 function CityLayer:UpdateTreesWithCity(city)
     local city_node = self:GetCityNode()
@@ -336,11 +330,32 @@ function CityLayer:IteratorClickAble(func)
         if handle then break end
     until true
 end
+
+local SCENE_BACKGROUND = 1
+local CITY_LAYER = 2
+local CITY_BACKGROUND = 1
+local ROAD_NODE = 2
+local BUILDING_NODE = 3
 ----
+local TERRAIN_MAP = {
+    ["grass"] = {background = "grass_background1.tmx"},
+    ["desert"] = {background = "desert_background1.tmx"},
+    ["icefield"] = {background = "icefield_background1.tmx"},
+}
+local GROUNDS_MAP = {
+    grass = {"grass_ground1_800x560.png", "grass_ground2_800x560.png"},
+    desert = {"desert1_800x560.png", "desert2_800x560.png"},
+    icefield = {"icefield1_800x560.png", "icefield2_800x560.png"},
+}
+local ROADS_MAP = {
+    grass = {"road1_800x560.png", "road2_800x560.png", "ground_766x558.png"},
+    desert = {"road1_800x560.png", "road2_800x560.png", "ground_766x558.png"},
+    icefield = {"road1_800x560.png", "road2_800x560.png", "ground_766x558.png"},
+}
 function CityLayer:ctor(city)
     CityLayer.super.ctor(self, 0.3, 1)
     Observer.extend(self)
-
+    self.terrain_type = "grass"
     self.buildings = {}
     self.houses = {}
     self.towers = {}
@@ -349,19 +364,17 @@ function CityLayer:ctor(city)
     self.walls = {}
     self.road = nil
     self:InitBackground()
-    self:InitCityBackGround()
-    self:InitPositionNodeWithCityNode()
-    self:InitRoadNodeWithCityNode()
+    self.city_layer = display.newLayer():addTo(self, CITY_LAYER):align(display.BOTTOM_LEFT, 1000, 1000)
+    self.city_background = cc.TMXTiledMap:create("background2.tmx"):addTo(self.city_layer):hide()
+    self.position_node = cc.TMXTiledMap:create("city_road.tmx"):addTo(self.city_layer):hide()
+    self.background2 = display.newNode():addTo(self.city_layer, CITY_BACKGROUND)
+    self.road_node = display.newNode():addTo(self.city_layer, ROAD_NODE)
+    self.city_node = display.newLayer():addTo(self.city_layer, BUILDING_NODE):align(display.BOTTOM_LEFT)
 
+    randomseed(DataManager:getUserData().countInfo.registerTime)
+    self:InitCityBackgroundsWithRandom()
+    self:InitRoadsWithRandom()
 
-    local point = self:GetRoadLayer():getPositionAt(cc.p(0, 1))
-    display.newSprite("ground_766x558.png"):addTo(self:GetRoadNode()):align(display.BOTTOM_LEFT, point.x, point.y)
-
-    self.city_node = display.newLayer()
-    self.city_node:setAnchorPoint(0, 0)
-    self:GetCityLayer():addChild(self.city_node)
-
-    self:GetCityLayer():setPosition(cc.p(1000, 1000))
 
     local origin_point = self:GetPositionIndex(0, 0)
     self.iso_map = IsoMapAnchorBottomLeft.new({
@@ -373,59 +386,138 @@ function CityLayer:ctor(city)
         base_y = origin_point.y
     })
 end
+function CityLayer:CurrentTerrain()
+    return self.terrain_type
+end
+--
+function CityLayer:InitBackground()
+    self:ReloadSceneBackground()
+end
+---
+function CityLayer:InitCityBackgroundsWithRandom()
+    local city_backgrounds_map = {}
+    for row_index = 1, 5 do
+        local row = {}
+        for col = 1, 5 do
+            local png_index = floor(random() * 1000) % 2 == 0 and 1 or 2
+            local flipx = floor(random() * 1000) % 2 == 0 and true or false
+            local flipy = floor(random() * 1000) % 2 == 0 and true or false
+            row[col] = {png_index = png_index, flipx = flipx, flipy = flipy, visible = false}
+        end
+        city_backgrounds_map[row_index] = row
+    end
+    self.city_backgrounds_map = city_backgrounds_map
+    self:RefreshCityBackgroundsByMap(city_backgrounds_map)
+end
+-- 更新只会影响可见性
+function CityLayer:UpdateCityBackgroundsByMap(map)
+    local city_backgrounds = self.city_backgrounds
+    for row_index, row in ipairs(map) do
+        for col_index, v in ipairs(row) do
+            city_backgrounds[row_index][col_index]:setVisible(v.visible)
+        end
+    end
+end
+-- 刷新会重新生成地图
+function CityLayer:RefreshCityBackgroundsByMap(map)
+    assert(self.background2, "场景背景必须被生成!")
+    self.background2:removeAllChildren()
+    local city_backgrounds = {{}, {}, {}, {}, {}}
+    for row_index, row in ipairs(map) do
+        for col_index, v in ipairs(row) do
+            local point = self:GetBackgroundLayer():getPositionAt(cc.p(col_index - 1, row_index - 1))
+            local ground = display.newSprite(GROUNDS_MAP[self.terrain_type][v.png_index])
+                :addTo(self.background2)
+                :align(display.BOTTOM_LEFT, point.x, point.y)
+                :flipX(v.flipx):flipY(v.flipy)
+
+            ground:setVisible(v.visible)
+            city_backgrounds[row_index][col_index] = ground
+        end
+    end
+    self.city_backgrounds = city_backgrounds
+end
+function CityLayer:GetCityBackgroundsMap()
+    return self.city_backgrounds_map
+end
+function CityLayer:GetCityBackgrounds()
+    return self.city_backgrounds
+end
+
+
+
+function CityLayer:InitRoadsWithRandom()
+    local roads_map = {}
+    for row_index = 1, 5 do
+        local row = {}
+        for col_index = 1, 5 do
+            local png_index = floor(random() * 1000) % 2 == 0 and 1 or 2
+            row[col_index] = {png_index = png_index, visible = false}
+        end
+        roads_map[row_index] = row
+    end
+    self.roads_map = roads_map
+    self:RefreshRoadsByMap(roads_map)
+end
+-- 刷新会重新生成地图
+function CityLayer:RefreshRoadsByMap(map)
+    assert(self.road_node, "场景背景必须被生成!")
+    self.road_node:removeAllChildren()
+    local roads = {{}, {}, {}, {}, {}}
+    for row_index, row in ipairs(map) do
+        for col_index, v in ipairs(row) do
+            local point = self:GetBackgroundLayer():getPositionAt(cc.p(col_index - 1, row_index - 1))
+            local road = display.newSprite(ROADS_MAP[self.terrain_type][v.png_index])
+                :addTo(self.road_node)
+                :align(display.BOTTOM_LEFT, point.x, point.y)
+            road:setVisible(v.visible)
+            roads[row_index][col_index] = road
+        end
+    end
+    local point = self:GetBackgroundLayer():getPositionAt(cc.p(0, 1))
+    display.newSprite(ROADS_MAP[self.terrain_type][3])
+        :addTo(self.road_node):align(display.BOTTOM_LEFT, point.x + 20, point.y - 20)
+    self.roads = roads
+end
+-- 更新只会影响可见性
+function CityLayer:UpdateRoadsByMap(map)
+    local roads = self.roads
+    for row_index, row in ipairs(map) do
+        for col_index, v in ipairs(row) do
+            roads[row_index][col_index]:setVisible(v.visible)
+        end
+    end
+end
+function CityLayer:GetRoadsmap()
+    return self.roads_map
+end
 function CityLayer:GetCityLayer()
     return self.city_layer
 end
 function CityLayer:GetCityNode()
     return self.city_node
 end
-function CityLayer:InitSceneWithFile(file)
-    -- ccs.SceneReader:getInstance():createNodeWithSceneFile("scenetest/AttributeComponentTest/AttributeComponentTest.json")
-    -- local scene = SceneReader:sharedSceneReader():createNodeWithSceneFile(file)
-    self.background = cc.TMXTiledMap:create("city_background1.tmx")
-    self:addChild(self.background)
-end
-function CityLayer:GetSceneFile()
-    return 'kod/publish/KODCityScene.json'
-end
--- 城市背景地表
-function CityLayer:InitBackground()
-    self.background = cc.TMXTiledMap:create("city_background1.tmx")
-    self:addChild(self.background)
-end
--- 城市地表
-function CityLayer:InitCityBackGround()
-    self.city_layer = display.newLayer()
-    self.city_layer:setAnchorPoint(0, 0)
-    self:addChild(self.city_layer)
-
-    self.city_background = cc.TMXTiledMap:create("city_background2.tmx")
-    self.city_layer:addChild(self.city_background)
-end
--- just for 坐标计算
-function CityLayer:InitPositionNodeWithCityNode()
-    self.position_node = cc.TMXTiledMap:create("city_road.tmx")
-    self.position_node:setVisible(false)
-    self.city_background:addChild(self.position_node)
-end
--- 路
-function CityLayer:InitRoadNodeWithCityNode()
-    self.road_node = cc.TMXTiledMap:create("city_road_2.tmx")
-    self.city_background:addChild(self.road_node)
+function CityLayer:ChangeTerrain(terrain_type)
+    if self.terrain_type ~= terrain_type then
+        self.terrain_type = terrain_type
+        self:ReloadSceneBackground()
+        self:RefreshCityBackgroundsByMap(self.city_backgrounds_map)
+        self:RefreshRoadsByMap(self.roads_map)
+        table.foreach(self.trees, function(_, v)
+            v:ReloadSprite()
+        end)
+        table.foreach(self.single_tree, function(_, tree)
+            tree:ReloadSprite()
+        end)
+    end
 end
 --
--- function CityLayer:CreateShadow(shadow, x, y, z)
---     if shadow then
---         return display.newSprite(shadow.png):addTo(self.city_node, z-1):align(display.CENTER, x+shadow.offset.x, y+shadow.offset.y):scale(shadow.scale)
---     else
---         return nil
---     end
--- end
--- function CityLayer:DestoryShadow(shadow)
---     if shadow then
---         shadow:removeFromParentAndCleanup(true)
---     end
--- end
+function CityLayer:ReloadSceneBackground()
+    if self.background then
+        self.background:removeFromParent()
+    end
+    self.background = cc.TMXTiledMap:create(TERRAIN_MAP[self.terrain_type].background):addTo(self, SCENE_BACKGROUND)
+end
 function CityLayer:InitWithCity(city)
     city:AddListenOnType(self, city.LISTEN_TYPE.UNLOCK_TILE)
     city:AddListenOnType(self, city.LISTEN_TYPE.LOCK_TILE)
@@ -465,7 +557,6 @@ function CityLayer:InitWithCity(city)
         table.insert(self.houses, house)
     end
 
-
     -- 加树
     randomseed(DataManager:getUserData().countInfo.registerTime)
     local single_tree = {}
@@ -486,7 +577,6 @@ function CityLayer:InitWithCity(city)
     end)
     self.single_tree = single_tree
 end
-
 function CityLayer:GetMapSize()
     if not self.width or not self.height then
         local layer_size = self:GetPositionLayer():getLayerSize()
@@ -494,6 +584,7 @@ function CityLayer:GetMapSize()
     end
     return self.width, self.height
 end
+--
 function CityLayer:GetPositionIndex(x, y)
     return self:GetPositionLayer():getPositionAt(cc.p(x, y))
 end
@@ -525,59 +616,7 @@ function CityLayer:GetBackgroundLayer()
     return self.tile_layer
 end
 
-
-
----
-function CityLayer:EableTileRoad(x, y, enable)
-    local tile = self:GetTileAtIndexInRoad(x, y)
-    if tile then
-        tile:setVisible(enable)
-    end
-end
-function CityLayer:GetTileAtIndexInRoad(x, y)
-    return self:GetRoadLayer():getTileAt(cc.p(x, y))
-end
-function CityLayer:GetRoadLayer()
-    if not self.road_layer then
-        self.road_layer = self:GetRoadNode():getLayer("layer1")
-    end
-    return self.road_layer
-end
-function CityLayer:GetRoadNode()
-    return self.road_node
-end
-
 ----- override
-function CityLayer:GetLeftBottomPositionWithConstrain(x, y)
-    -- 左下角是否超出
-    local parent_node = self:getParent()
-    local world_position = parent_node:convertToWorldSpace(cc.p(x, y))
-    world_position.x = world_position.x > display.left and display.left or world_position.x
-    world_position.y = world_position.y > display.bottom and display.bottom or world_position.y
-    local left_bottom_pos = parent_node:convertToNodeSpace(world_position)
-    return left_bottom_pos
-end
-function CityLayer:GetRightTopPositionWithConstrain(x, y)
-    -- 右上角是否超出
-    local parent_node = self:getParent()
-    local world_top_right_point = self:convertToWorldSpace(cc.p(self:getContentWidthAndHeight()))
-    local scene_top_right_position = parent_node:convertToNodeSpace(world_top_right_point)
-    local display_top_right_position = parent_node:convertToNodeSpace(cc.p(display.right, display.top))
-    local dx = display_top_right_position.x - scene_top_right_position.x
-    local dy = display_top_right_position.y - scene_top_right_position.y
-    local right_top_pos = {
-        x = scene_top_right_position.x < display_top_right_position.x and x + dx or x,
-        y = scene_top_right_position.y < display_top_right_position.y and y + dy or y
-    }
-    return right_top_pos
-end
-function CityLayer:getContentWidthAndHeight()
-    if not self.content_width or not self.content_height then
-        local content_size = self:getContentSize()
-        self.content_width, self.content_height = content_size.width, content_size.height
-    end
-    return self.content_width, self.content_height
-end
 function CityLayer:getContentSize()
     if not self.content_size then
         local layer = self.background:getLayer("layer1")
@@ -585,8 +624,6 @@ function CityLayer:getContentSize()
     end
     return self.content_size
 end
-
-
 function CityLayer:OnSceneMove()
     self:IteratorCanUpgradingBuilding(function(_, building)
         building:OnSceneMove()
@@ -600,6 +637,28 @@ function CityLayer:OnSceneMove()
 end
 
 return CityLayer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

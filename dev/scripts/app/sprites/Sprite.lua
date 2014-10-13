@@ -69,6 +69,9 @@ function Sprite:ctor(city_layer, entity, x, y)
     self:setCascadeColorEnabled(true)
     -- self:CreateBase()
 end
+function Sprite:ReloadSprite()
+    -- print("你应该在子类实现切换地形的功能")
+end
 -- function Sprite:GetShadow()
 --     return self.shadow
 -- end
