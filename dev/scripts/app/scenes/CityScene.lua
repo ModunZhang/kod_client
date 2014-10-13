@@ -65,6 +65,38 @@ function CityScene:onEnter()
 
     self:PlayBackgroundMusic()
     City:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
+
+
+    -- local dragon = display.newSprite("blue_dragon_idle_00000.png", display.cx, display.cy):addTo(self)
+    -- local animation = cc.Animation:create()
+    -- animation:addSpriteFrameWithFile("blue_dragon_idle_00000.png")
+    -- animation:addSpriteFrameWithFile("blue_dragon_idle_00001.png")
+    -- animation:addSpriteFrameWithFile("blue_dragon_idle_00002.png")
+    -- animation:addSpriteFrameWithFile("blue_dragon_idle_00003.png")
+    -- animation:addSpriteFrameWithFile("blue_dragon_idle_00004.png")
+    -- animation:addSpriteFrameWithFile("blue_dragon_idle_00005.png")
+    -- animation:addSpriteFrameWithFile("blue_dragon_idle_00006.png")
+    -- animation:addSpriteFrameWithFile("blue_dragon_idle_00007.png")
+    -- animation:setDelayPerUnit(1.0 / 8.0)
+    -- animation:setRestoreOriginalFrame(true)
+    -- dragon:playAnimationForever(animation)
+    -- dragon:flipX(true)
+
+    -- local sprite = cc.Sprite3D:create("boss.obj")
+    -- sprite:setScale(10.0)
+    -- sprite:setTexture("boss.png")
+    -- sprite:setPosition(display.cx, display.cy)
+    -- sprite:setRotation3D({x = 0, y = 0, z = 0})
+    -- self:addChild(sprite)
+
+    -- local armature = ccs.Armature:create("NewAnimation")
+    -- self:addChild(armature)
+    -- armature:setPosition(display.cx, display.cy)
+    -- armature:setScaleX(-1)
+    -- -- armature:getAnimation():play("Animation1", -1, -1)
+    -- armature:getAnimation():playWithIndex(0, 0, -1)
+
+    -- display.newFrames("blue_dragon_idle_%05d.png", 0, 8)
 end
 function CityScene:onExit()
     self:stopAllActions()
@@ -97,6 +129,9 @@ function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
     manager:removeArmatureFileInfo("sprites/armatures/hammer/chuizidonghua.ExportJson")
     manager:addArmatureFileInfo("sprites/armatures/hammer/chuizidonghua.ExportJson")
+
+    manager:removeArmatureFileInfo("animations/Red_dragon.ExportJson")
+    manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
 end
 function CityScene:CreateMultiTouchLayer()
     local touch_layer = display.newLayer():addTo(self)

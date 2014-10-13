@@ -1,4 +1,6 @@
 local IsoMapAnchorBottomLeft = import("..map.IsoMapAnchorBottomLeft")
+local CitizenSprite = import("..sprites.CitizenSprite")
+local DragonEyrieSprite = import("..sprites.DragonEyrieSprite")
 local FunctionUpgradingSprite = import("..sprites.FunctionUpgradingSprite")
 local UpgradingSprite = import("..sprites.UpgradingSprite")
 local RuinSprite = import("..sprites.RuinSprite")
@@ -254,6 +256,9 @@ end
 function CityLayer:CreateDecorator(house)
     return UpgradingSprite.new(self, house)
 end
+function CityLayer:CreateDragonEyrie(building, city)
+    return DragonEyrieSprite.new(self, building, city)
+end
 function CityLayer:CreateBuilding(building, city)
     return FunctionUpgradingSprite.new(self, building, city)
 end
@@ -506,8 +511,11 @@ function CityLayer:ChangeTerrain(terrain_type)
         table.foreach(self.trees, function(_, v)
             v:ReloadSprite()
         end)
-        table.foreach(self.single_tree, function(_, tree)
-            tree:ReloadSprite()
+        table.foreach(self.single_tree, function(_, v)
+            v:ReloadSprite()
+        end)
+        table.foreach(self.buildings, function(_, v)
+            v:ReloadSprite()
         end)
     end
 end
@@ -544,7 +552,12 @@ function CityLayer:InitWithCity(city)
 
     -- 加功能建筑
     for _, building in pairs(city:GetAllBuildings()) do
-        local building_sprite = self:CreateBuilding(building, city):addTo(city_node)
+        local building_sprite
+        if building:GetType() == "dragonEyrie" then
+            building_sprite = self:CreateDragonEyrie(building, city):addTo(city_node)
+        else
+            building_sprite = self:CreateBuilding(building, city):addTo(city_node)
+        end
         city:AddListenOnType(building_sprite, city.LISTEN_TYPE.LOCK_TILE)
         city:AddListenOnType(building_sprite, city.LISTEN_TYPE.UNLOCK_TILE)
         city:AddListenOnType(building_sprite, city.LISTEN_TYPE.UPGRADE_BUILDING)
