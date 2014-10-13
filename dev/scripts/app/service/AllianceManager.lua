@@ -14,14 +14,18 @@ AllianceManager.ALLIANCETITLE = {
 		Member = "member"
 	}
 
-AllianceManager.ONUSERDATACHANGED = "AllianceManager.OnUserDataChanged"
+-- server event
+AllianceManager.ON_USER_DATA_CHANGED = "AllianceManager.OnUserDataChanged"
+AllianceManager.ON_SERVER_DATA_EVENT = "AllianceManager.OnServerDataEvent"
+
+--inner alliance event
 AllianceManager.ALLIANCE_EVENT_TYPE = Enum(
 	"NORMAL",
 	"CREATE_OR_JOIN",
 	"QUIT"
 )
 
---flag
+--flag ui
 ------------------------------------------------------------------------------------------------
 
 AllianceManager.FLAG_BODY_TAG = 1
@@ -107,7 +111,7 @@ for i=1,3 do
 	AllianceManager.flagData_.lawn[i] = "greensward_540x378.png"
 end
 
---end
+--end flag ui
 ------------------------------------------------------------------------------------------------
 
 function AllianceManager:ctor()
@@ -127,8 +131,10 @@ function AllianceManager:OnUserDataChanged(userData,timer)
 		end
 	end
 	self.alliance_ = userData.alliance 
-	self:dispatchEvent({name = AllianceManager.ONUSERDATACHANGED,
-        allianceEvent = eventType
+	self.requestToAllianceEvents_ = userData.requestToAllianceEvents
+	self.inviteToAllianceEvents_  = userData.inviteToAllianceEvents
+	self:dispatchEvent({name = AllianceManager.ON_USER_DATA_CHANGED,
+        allianceEvent = eventType,
     })
     self.isInit_  = false
 end
@@ -139,15 +145,34 @@ function AllianceManager:onAllianceDataChanged(callback)
 end
 
 function AllianceManager:cancelAllianceDataChanged()
-	return self:removeUserDataChangedListener("_")
+	return self:removeDataListener("_")
 end
 
 function AllianceManager:addUserDataChangedListener(tag,callback)
-    return self:addEventListener(AllianceManager.ONUSERDATACHANGED, callback,tag)
+    return self:addEventListener(AllianceManager.ON_USER_DATA_CHANGED, callback,tag)
 end
 
-function AllianceManager:removeUserDataChangedListener( tag )
+function AllianceManager:removeDataListener( tag )
 	return self:removeEventListenersByTag(tag)
+end
+
+-- add listener about server data event for search etc
+function AllianceManager:onAllianceDataEvent(tag,callback)
+	self:addEventListener(AllianceManager.ON_SERVER_DATA_EVENT, callback,tag)
+end
+
+function AllianceManager:cancelAllianceDataEvent(tag)
+	self:removeDataListener(tag)
+end
+
+-- 1 apply 2 invate
+function AllianceManager:GetAllianceEvents(eventType)
+	print("GetAllianceEvents------->",eventType)
+	if eventType == 2 then
+		return self.inviteToAllianceEvents_
+	elseif eventType == 3 then
+		return self.requestToAllianceEvents_
+	end
 end
 
 --logic methods
@@ -160,11 +185,21 @@ function AllianceManager:haveAlliance()
 	return self:getAlliance() ~= nil
 end
 
--- flag
+
+-- event dispatch from server
+
+function AllianceManager:dispatchAlliceServerData(eventType,msg)
+	self:dispatchEvent({name = AllianceManager.ON_SERVER_DATA_EVENT,
+        eventType = eventType,
+        data = msg
+    })
+end
+
+-- flag ui
 
 function AllianceManager:GetFlagSprite(flagInfo)
 	-- flagInfo = self:GetFlagInfomation()
-
+	if type(flagInfo) == 'string' then flagInfo = json.decode(flagInfo)  end
 	local box_bounding = display.newSprite("alliance_flag_box_119x139.png")
 	local box = display.newNode()
 	--body
@@ -298,7 +333,6 @@ end
 
 function AllianceManager:getColorSprite(image,color)
 	print(image,color)
-	-- dump(UIKit:convertColorToGL_(color_from_excel[color]))
 	local customParams = {
 		frag = "shaders/customer_color.fsh",
 		shaderName = color,
@@ -308,13 +342,13 @@ function AllianceManager:getColorSprite(image,color)
 end
 
 function AllianceManager:CreateFlagWithLawn(terrain_info,flagInfo)
+	if type(flagInfo) == 'string' then flagInfo = json.decode(flagInfo)  end
+	if type(terrain_info) == 'string' then terrain_info = self.LANDFORM_TYPE[terrain_info] end
 	local node = display.newNode()
 	local lawn = self.flagData_.lawn[terrain_info]
 	local upgrade_surface = display.newSprite(lawn)
 		:addTo(node)
-		-- :align(display.RIGHT_BOTTOM, contentWidth - header:getContentSize().width - 15, header:getPositionY() - 20)
 		:scale(0.258)
-	-- self.upgrade_surface = upgrade_surface
 	local shadow = display.newSprite("alliance_flag_shadow_113x79.png")
 		:addTo(node)
 		:align(display.RIGHT_BOTTOM, upgrade_surface:getPositionX()+27, upgrade_surface:getPositionY()-23)
