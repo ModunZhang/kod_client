@@ -9,7 +9,7 @@ local TREE_MAP = {
 
 function SingleTreeSprite:ctor(city_layer, x, y)
     self.x, self.y = x, y
-    local ax, ay = city_layer.iso_map:ConvertToMapPosition(x, y)
+    local ax, ay = city_layer:GetLogicMap():ConvertToMapPosition(x, y)
     SingleTreeSprite.super.ctor(self, city_layer, nil, ax, ay)
     self:GetSprite():align(display.BOTTOM_CENTER)
 end

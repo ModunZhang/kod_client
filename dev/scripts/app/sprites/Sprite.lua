@@ -60,7 +60,7 @@ end
 ---- 功能
 function Sprite:ctor(city_layer, entity, x, y)
     self.city_layer = city_layer
-    self.iso_map = city_layer.iso_map
+    self.logic_map = city_layer:GetLogicMap()
     self.width = (city_layer:GetMapSize())
     self.entity = entity
     self.sprite = self:CreateSprite():addTo(self, SPRITE):pos(self:GetSpriteOffset())
@@ -129,8 +129,8 @@ end
 function Sprite:GetEntity()
     return self.entity
 end
-function Sprite:GetMap()
-    return self.iso_map
+function Sprite:GetLogicMap()
+    return self.logic_map
 end
 
 
@@ -141,7 +141,7 @@ end
 function Sprite:newBatchNode(w, h)
     local start_x, end_x, start_y, end_y = self:GetLocalRegion(w, h)
     local base_node = display.newBatchNode("tile.png", 10)
-    local map = self:GetMap()
+    local map = self:GetLogicMap()
     for ix = start_x, end_x do
         for iy = start_y, end_y do
             local sprite = display.newSprite(base_node:getTexture(), cc.rect(0, 0, 80, 56))

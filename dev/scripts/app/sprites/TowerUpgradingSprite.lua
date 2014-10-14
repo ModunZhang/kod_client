@@ -97,7 +97,6 @@ function TowerUpgradingSprite:GetFlipX()
 end
 function TowerUpgradingSprite:GetLogicZorder(width)
     local entity = self:GetEntity()
-    local map = self.iso_map
     local x, y
     if entity:GetOrient() == Orient.X then
         x, y = self:GetMidLogicPosition()

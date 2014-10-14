@@ -2,7 +2,7 @@ local AnimationSprite = import(".AnimationSprite")
 local PeopleSprite = class("PeopleSprite", AnimationSprite)
 function PeopleSprite:ctor(city_layer, x, y)
 	self.x, self.y = x, y
-    AnimationSprite.super.ctor(self, city_layer, nil, city_layer.iso_map:ConvertToMapPosition(x, y))
+    AnimationSprite.super.ctor(self, city_layer, nil, city_layer:GetLogicMap():ConvertToMapPosition(x, y))
  	self:TurnRight()
  	self:PlayAnimation("Flying")
  	self:CreateBase()
@@ -17,7 +17,7 @@ function PeopleSprite:RealScale()
     return 1
 end
 function PeopleSprite:SetPositionWithZOrder(x, y)
-	self.x, self.y = self:GetMap():ConvertToLogicPosition(x, y)
+	self.x, self.y = self:GetLogicMap():ConvertToLogicPosition(x, y)
 	PeopleSprite.super.SetPositionWithZOrder(self, x, y)
 end
 function PeopleSprite:GetMidLogicPosition()

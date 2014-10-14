@@ -2,10 +2,11 @@ local Sprite = import(".Sprite")
 local CitizenSprite = class("CitizenSprite", Sprite)
 function CitizenSprite:ctor(city_layer, x, y)
 	self.x, self.y = x, y
-    CitizenSprite.super.ctor(self, city_layer, nil, city_layer.iso_map:ConvertToMapPosition(x, y))
+    CitizenSprite.super.ctor(self, city_layer, nil, city_layer:GetLogicMap():ConvertToMapPosition(x, y))
  	self:TurnRight()
  	self:PlayAnimation("Flying")
  	self:CreateBase()
+ 	self.sprite:setVisible(false)
 end
 function CitizenSprite:PlayAnimation(animation)
     self.current_animation = animation
@@ -32,14 +33,14 @@ function CitizenSprite:GetSpriteOffset()
     return 0, 50
 end
 function CitizenSprite:SetPositionWithZOrder(x, y)
-	self.x, self.y = self:GetMap():ConvertToLogicPosition(x, y)
+	self.x, self.y = self:GetLogicMap():ConvertToLogicPosition(x, y)
 	CitizenSprite.super.SetPositionWithZOrder(self, x, y)
 end
 function CitizenSprite:GetMidLogicPosition()
     return self.x, self.y
 end
 function CitizenSprite:CreateBase()
-    self:GenerateBaseTiles(1, 1)
+    self:GenerateBaseTiles(2, 2)
 end
 
 return CitizenSprite

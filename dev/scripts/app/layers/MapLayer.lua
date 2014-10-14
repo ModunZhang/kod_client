@@ -9,6 +9,9 @@ function MapLayer:ctor(min_scale, max_scale)
     self.min_scale = min_scale
     self.max_scale = max_scale
 end
+function MapLayer:GetLogicMap()
+    return nil
+end
 ------zoom
 function MapLayer:ZoomBegin()
     self.scale_point = self:convertToNodeSpace(cc.p(display.cx, display.cy))

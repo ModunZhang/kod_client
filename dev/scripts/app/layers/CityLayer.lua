@@ -161,6 +161,9 @@ function CityLayer:ctor(city)
         base_y = origin_point.y
     })
 end
+function CityLayer:GetLogicMap()
+    return self.iso_map
+end
 function CityLayer:ConvertLogicPositionToMapPosition(lx, ly)
     local map_pos = cc.p(self.iso_map:ConvertToMapPosition(lx, ly))
     return self:convertToNodeSpace(self:GetCityNode():convertToWorldSpace(map_pos))
