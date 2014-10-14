@@ -18,12 +18,24 @@ function GameUITownHall:onEnter()
     self:TabButtons()
     self.town_hall:AddTownHallListener(self)
     self.town_hall:AddUpgradeListener(self)
+    -- self.town_hall_city:AddListenOnType(self, self.town_hall_city.LISTEN_TYPE.UPGRADE_BUILDING)
+    self:UpdateDwellingCondition()
 end
 function GameUITownHall:onExit()
+    -- self.town_hall_city:RemoveListenerOnType(self, self.town_hall_city.LISTEN_TYPE.UPGRADE_BUILDING)
     self.town_hall:RemoveTownHallListener(self)
     self.town_hall:RemoveUpgradeListener(self)
     GameUITownHall.super.onExit(self)
 end
+-- function GameUITownHall:OnUpgradingBegin()
+--     self:UpdateDwellingCondition()
+-- end
+-- function GameUITownHall:OnUpgrading()
+
+-- end
+-- function GameUITownHall:OnUpgradingFinished()
+-- end
+
 function GameUITownHall:OnBuildingUpgradingBegin()
 end
 function GameUITownHall:OnBuildingUpgradeFinished()
@@ -61,6 +73,12 @@ function GameUITownHall:OnEndImposeWithEvent(building, event, current_time)
     -- 重置列表
     list_view:reload()
 end
+function GameUITownHall:UpdateDwellingCondition()
+    local cur = #self.town_hall_city:GetHousesAroundFunctionBuildingByType(self.town_hall, "dwelling", 2)
+    self.dwelling:GetLineByIndex(1):SetCondition(cur, 3)
+    self.dwelling:GetLineByIndex(2):SetCondition(cur, 6)
+end
+---
 function GameUITownHall:TabButtons()
     self:CreateTabButtons({
         {
@@ -80,8 +98,6 @@ function GameUITownHall:CreateAdministration()
     local list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 100)
 
     self.dwelling = self:CreateDwellingItemWithListView(list_view)
-    self.dwelling:GetLineByIndex(1):SetCondition(1, 3)
-    self.dwelling:GetLineByIndex(2):SetCondition(2, 6)
     list_view:addItem(self.dwelling)
 
     if self.town_hall:IsEmpty() then
@@ -308,7 +324,7 @@ function GameUITownHall:CreateDwellingLineItem(width)
         assert("you should not use this function for any purpose!")
     end
     function node:SetCondition(current, max)
-        local str = string.format("%s %d/%d", _("达到"), current, max)
+        local str = string.format("%s %d/%d", _("达到"), current > max and max or current, max)
         if condition:getString() ~= str then
             condition:setString(str)
         end
@@ -331,7 +347,7 @@ function GameUITownHall:CreateTaxLineItem(width, param)
     }):addTo(node, 2):align(display.LEFT_BOTTOM, left + 70, 0)
 
     local label = cc.ui.UILabel.new({
-        text = "增加 %5 城民增长",
+        text = "增加 5% 城民增长",
         size = 20,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,

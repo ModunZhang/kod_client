@@ -62,14 +62,15 @@ function GameUIBarracks:CreateSoldierUI()
         :OnButtonClicked(function(event)
             print("hello")
         end)
+    self.timer:GetSpeedUpButton():setButtonEnabled(false)
 
     self.soldier_map = {}
     local rect = self.timer:getCascadeBoundingBox()
     self.list_view = self:CreateVerticalListViewDetached(rect.x, window.bottom + 70, rect.x + rect.width, rect.y - 20):addTo(recruit)
 
     for i, v in ipairs({
-        {"swordsman", "sentinel", "archer", "crossbowman"},
-        {"lancer", "horseArcher", "catapult", "ballista"}
+        {"swordsman", "archer", "lancer", "catapult"},
+        {"sentinel", "crossbowman", "horseArcher", "ballista"}
     }) do
         self.list_view:addItem(self:CreateItemWithListView(self.list_view, v))
     end
@@ -119,25 +120,9 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
     for i, soldier_name in pairs(soldiers) do
         self.soldier_map[soldier_name] =
             WidgetSoldierBox.new(nil, function(event)
-                local widget = WidgetRecruitSoldier.new(soldier_name,
-                    self.barracks.soldier_star,
-                    self.barracks:GetMaxRecruitSoldierCount())
+                WidgetRecruitSoldier.new(self.barracks, self.barracks_city, soldier_name)
                     :addTo(self)
                     :align(display.CENTER, window.cx, 500 / 2)
-                    :OnBlankClicked(function(widget)
-                        self.barracks_city:GetResourceManager():RemoveObserver(widget)
-                        widget:removeFromParentAndCleanup(true)
-                    end)
-                    :OnNormalButtonClicked(function(widget)
-                        self.barracks_city:GetResourceManager():RemoveObserver(widget)
-                        widget:removeFromParentAndCleanup(true)
-                    end)
-                    :OnInstantButtonClicked(function(widget)
-                        self.barracks_city:GetResourceManager():RemoveObserver(widget)
-                        widget:removeFromParentAndCleanup(true)
-                    end)
-                self.barracks_city:GetResourceManager():AddObserver(widget)
-                self.barracks_city:GetResourceManager():OnResourceChanged()
             end):addTo(row_item)
                 :alignByPoint(cc.p(0.5, 0.4), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 0)
                 :SetSoldier(soldier_name, self.barracks.soldier_star)
@@ -159,6 +144,8 @@ end
 
 
 return GameUIBarracks
+
+
 
 
 

@@ -20,8 +20,91 @@ function Tile:ctor(tile_info)
     self.locked = tile_info.locked
     self.location_id = tile_info.location_id
 end
+function Tile:GetType()
+    return "tile"
+end
 function Tile:IsUnlocked()
     return not self.locked
+end
+local math = math
+local max = math.max
+local min = math.min
+function Tile:RandomGrounds(random_number)
+    local grounds = self:GetEmptyGround()
+    local grounds_number = min(max(random_number % 5 + 1, 2), #grounds)
+    return self:RandomGroundsInArrays(grounds, self:RandomArraysWithNumber(grounds_number, #grounds, random_number))
+end
+function Tile:RandomArraysWithNumber(grounds_number, max_number, random_number)
+    local index_array = {}
+    for i = 1, max_number do
+        table.insert(index_array, i)
+    end
+    local r = {}
+    for i = 1, grounds_number do
+        local index = (random_number % #index_array) + 1
+        random_number = random_number + 1234567890
+        table.insert(r, index_array[index])
+        table.remove(index_array, index)
+    end
+    assert(#r == grounds_number)
+    return r
+end
+function Tile:RandomGroundsInArrays(empty_grounds, index_array)
+    local grounds = {}
+    for _, index in ipairs(index_array) do
+        table.insert(grounds, empty_grounds[index])
+    end
+    return grounds
+end
+function Tile:GetEmptyGround()
+    if (self.x == 1 and self.y == 1)
+        or (self.x == 1 and self.y == 2)
+        or (self.x == 2 and self.y == 1)
+    then
+        return {}
+    end
+    local base_x, base_y = self:GetStartPos()
+
+    if self.x == 1 then
+        return {
+            -- {x = base_x + 7, y = base_y + 4},
+            -- {x = base_x + 8, y = base_y + 4},
+
+            {x = base_x + 7, y = base_y + 5},
+            -- {x = base_x + 8, y = base_y + 5},
+
+            -- {x = base_x + 7, y = base_y + 8},
+            -- {x = base_x + 8, y = base_y + 8},
+
+            {x = base_x + 7, y = base_y + 9},
+            -- {x = base_x + 8, y = base_y + 9},
+        }
+    else
+        return {
+            -- 背面
+            -- {x = base_x, y = base_y + 4},
+            {x = base_x, y = base_y + 5},
+            {x = base_x, y = base_y + 6},
+            {x = base_x, y = base_y + 7},
+            {x = base_x, y = base_y + 8},
+            -- {x = base_x, y = base_y + 9},
+            -- 正面
+            -- {x = base_x + 7, y = base_y + 4},
+            -- {x = base_x + 8, y = base_y + 4},
+
+            {x = base_x + 7, y = base_y + 5},
+            -- {x = base_x + 8, y = base_y + 5},
+
+            -- {x = base_x + 7, y = base_y + 8},
+            -- {x = base_x + 8, y = base_y + 8},
+
+            {x = base_x + 7, y = base_y + 9},
+            -- {x = base_x + 8, y = base_y + 9},
+        }
+    end
+end
+function Tile:GetLogicPosition()
+    return self:GetEndPos()
 end
 function Tile:GetMidLogicPosition()
     local start_x, start_y = self:GetStartPos()
@@ -124,5 +207,10 @@ end
 
 
 return Tile
+
+
+
+
+
 
 

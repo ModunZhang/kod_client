@@ -8,6 +8,7 @@ UpgradeBuilding.NOT_ABLE_TO_UPGRADE = {
     LEVEL_CAN_NOT_HIGHER_THAN_KEEP_LEVEL = "请首先提升城堡等级",
     RESOURCE_NOT_ENOUGH = "资源不足",
     BUILDINGLIST_NOT_ENOUGH = "建造队列不足",
+    BUILDINGLIST_AND_RESOURCE_NOT_ENOUGH = "资源不足\n建造队列不足",
     GEM_NOT_ENOUGH = "宝石不足",
     LEVEL_NOT_ENOUGH = "等级小于0级",
     BUILDING_IS_UPGRADING = "建筑正在升级",
@@ -22,6 +23,14 @@ function UpgradeBuilding:ctor(building_info)
     --building剩余升级时间小于5 min时可以免费加速  单位 seconds
     self.freeSpeedUpTime=300
 end
+function UpgradeBuilding:ResetAllListeners()
+    UpgradeBuilding.super.ResetAllListeners(self)
+    self:GetUpgradeObserver():RemoveAllObserver()
+end
+function UpgradeBuilding:CopyListenerFrom(building)
+    UpgradeBuilding.super.CopyListenerFrom(self, building)
+    self.upgrade_building_observer:CopyListenerFrom(building:GetUpgradeObserver())
+end
 function UpgradeBuilding:AddUpgradeListener(listener)
     assert(listener.OnBuildingUpgradingBegin)
     assert(listener.OnBuildingUpgradeFinished)
@@ -30,6 +39,9 @@ function UpgradeBuilding:AddUpgradeListener(listener)
 end
 function UpgradeBuilding:RemoveUpgradeListener(listener)
     self.upgrade_building_observer:RemoveObserver(listener)
+end
+function UpgradeBuilding:GetUpgradeObserver()
+    return self.upgrade_building_observer
 end
 function UpgradeBuilding:GetElapsedTimeByCurrentTime(current_time)
     return self:GetUpgradeTimeToNextLevel() - self:GetUpgradingLeftTimeByCurrentTime(current_time)
@@ -87,8 +99,18 @@ function UpgradeBuilding:GetNextLevelUpgradeTimeByLevel(level)
     return 1
 end
 function UpgradeBuilding:GetNextLevel()
+    return self:IsMaxLevel() and self.level or self.level + 1
+end
+function UpgradeBuilding:IsMaxLevel()
     local config = self.config_building_levelup[self:GetType()]
-    return #config == self.level and self.level or self.level + 1
+    return #config == self.level
+end
+function UpgradeBuilding:GetBeforeLevel()
+    if self.level > 0 then
+        return self.level - 1
+    else
+        return 0
+    end
 end
 function UpgradeBuilding:GetLevel()
     return self.level
@@ -250,38 +272,40 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.IS_MAX_LEVEL
     end
     local gem = City.resource_manager:GetGemResource():GetValue()
-    -- 建造队列不足
-    if #City:OnUpgradingBuildings()>0 then
-        return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH
-    end
     if isUpgradeNow then
         if gem<self:getUpgradeNowNeedGems() then
             return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH
         end
         return
     end
-
+    -- 还未管理道具，暂时从userdata中取
+    local m = DataManager:getUserData().materials
+    -- 升级所需资源不足
     local wood = City.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local iron = City.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local stone = City.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local population = City.resource_manager:GetPopulationResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-
-    -- 还未管理道具，暂时从userdata中取
-    local m = DataManager:getUserData().materials
-
-    -- 升级所需资源不足
-    if wood<config[level+1].wood or population<config[level+1].citizen
-        or stone<config[level+1].stone or iron<config[level+1].iron
-        or m.tiles<config[level+1].tiles or m.tools<config[level+1].tools
-        or m.blueprints<config[level+1].blueprints or m.pulley<config[level+1].pulley
-    then
+    local is_resource_enough = wood<config[self:GetNextLevel()].wood or population<config[self:GetNextLevel()].citizen
+        or stone<config[self:GetNextLevel()].stone or iron<config[self:GetNextLevel()].iron
+        or m.tiles<config[self:GetNextLevel()].tiles or m.tools<config[self:GetNextLevel()].tools
+        or m.blueprints<config[self:GetNextLevel()].blueprints or m.pulley<config[self:GetNextLevel()].pulley
+    local is_building_list_enough = #City:GetOnUpgradingBuildings()>0
+    print("#City:GetOnUpgradingBuildings()",#City:GetOnUpgradingBuildings())
+    if is_resource_enough and is_building_list_enough then
+        return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_AND_RESOURCE_NOT_ENOUGH
+    end
+    if is_resource_enough then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH
+    end
+    if is_building_list_enough then
+    print("当前建造的建筑",City:GetOnUpgradingBuildings()[1]:GetType())
+        return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH
     end
 end
 
 function UpgradeBuilding:getUpgradeNowNeedGems()
 
-    local resource_config = DataUtils:getBuildingUpgradeRequired(self.building_type, self.level+1)
+    local resource_config = DataUtils:getBuildingUpgradeRequired(self.building_type, self:GetNextLevel())
     local required_gems = 0
     required_gems = required_gems + DataUtils:buyResource(resource_config.resources, {})
     required_gems = required_gems + DataUtils:buyMaterial(resource_config.materials, {})
@@ -302,13 +326,29 @@ function UpgradeBuilding:getUpgradeRequiredGems()
     -- 还未管理道具，暂时从userdata中取
     local has_materials = DataManager:getUserData().materials
 
-    local resource_config = DataUtils:getBuildingUpgradeRequired(self.building_type, self.level+1)
+    local resource_config = DataUtils:getBuildingUpgradeRequired(self.building_type, self:GetNextLevel())
     required_gems = required_gems + DataUtils:buyResource(resource_config.resources, has_resourcce)
     required_gems = required_gems + DataUtils:buyMaterial(resource_config.materials, has_materials)
+    --当升级队列不足时，立即完成正在升级的建筑中所剩升级时间最少的建筑
+    if #City:GetOnUpgradingBuildings()>0 then
+        local min_time = math.huge
+        for k,v in pairs(City:GetOnUpgradingBuildings()) do
+            local left_time = v:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime())
+            if left_time<min_time then
+                min_time=left_time
+                print("完成上个升级的建筑",v:GetType())
+            end
+        end
+        print("完成上个升级事件的时间",min_time)
+        required_gems = required_gems + DataUtils:getGemByTimeInterval(min_time)
+    end
+
     return required_gems
 end
 
 return UpgradeBuilding
+
+
 
 
 

@@ -4,7 +4,7 @@ local Sprite = class("Sprite", function(...)
     return Observer.extend(display.newNode(), ...)
 end)
 
-
+local SPRITE = 1
 ---- 回调
 function Sprite:OnSceneMove()
     local world_point = self:GetWorldPosition()
@@ -19,8 +19,11 @@ function Sprite:GetCenterPosition()
     return self:getPosition()
 end
 -- 委托
-function Sprite:IsContainPoint(x, y)
+function Sprite:IsContainPoint(x, y, world_x, world_y)
     return self:GetEntity():IsContainPoint(x, y)
+end
+function Sprite:IsContainPointWithFullCheck(x, y, world_x, world_y)
+    return { logic_clicked = self:GetEntity():IsContainPoint(x, y), sprite_clicked = cc.rectContainsPoint(self:GetSprite():getBoundingBox(), self:convertToNodeSpace(cc.p(world_x, world_y)))}
 end
 function Sprite:SetLogicPosition(logic_x, logic_y)
     self:GetEntity():SetLogicPosition(logic_x, logic_y)
@@ -40,8 +43,8 @@ end
 function Sprite:SetOrient(orient)
     self:GetEntity():SetOrient(orient)
 end
------ 
-function Sprite:SetPosition(x, y)
+-----position
+function Sprite:SetPositionWithLogic(x, y)
     self:setPosition(x, y)
     self:setLocalZOrder(self:GetLogicZorder(self.width))
 end
@@ -56,18 +59,51 @@ function Sprite:GetLogicZorder(width)
 end
 ---- 功能
 function Sprite:ctor(city_layer, entity, x, y)
-    self.observer = Observer.new()
+    self.city_layer = city_layer
     self.iso_map = city_layer.iso_map
     self.width = (city_layer:GetMapSize())
     self.entity = entity
-    self.sprite = display.newSprite(self:GetSpriteFile())
-    self.sprite:setPosition(self:GetSpriteOffset())
-    self.sprite:setFlippedX(self:GetFlipX())
-    self:addChild(self.sprite)
-    self:SetPosition(x, y)
-    -- if entity and entity.GetSize then
-    --     self:GenerateBaseTiles(self:GetSize())
-    -- end
+    self.sprite = self:CreateSprite():addTo(self, SPRITE)
+    self:SetPositionWithLogic(x, y)
+    self:setCascadeOpacityEnabled(true)
+    self:setCascadeColorEnabled(true)
+    -- self:CreateBase()
+end
+-- function Sprite:GetShadow()
+--     return self.shadow
+-- end
+-- function Sprite:CreateShadow(shadow)
+--     local x, y = self:GetCenterPosition()
+--     self.shadow = self.city_layer:CreateShadow(shadow, x, y, self:getLocalZOrder())
+-- end
+-- function Sprite:DestoryShadow()
+--     self.city_layer:DestoryShadow(self.shadow)
+-- end
+-- function Sprite:GetShadowConfig()
+--     return nil
+-- end
+-- function Sprite:RefreshShadow()
+--     local shadow = self:GetShadowConfig()
+--     if shadow and self:GetEntity():IsUnlocked() then
+--         self:DestoryShadow()
+--         self:CreateShadow(shadow)
+--     end
+-- end
+function Sprite:UpdateSprite()
+    self.sprite:removeFromParentAndCleanup(true)
+    self.sprite = self:CreateSprite():addTo(self, SPRITE)
+end
+function Sprite:CreateSprite()
+    local sprite_file, scale = self:GetSpriteFile()
+    return display.newSprite(sprite_file)
+        :pos(self:GetSpriteOffset())
+        :scale(scale == nil and 1 or scale)
+        :flipX(self:GetFlipX())
+end
+function Sprite:CreateBase()
+    if self:GetEntity() and self:GetEntity().GetSize then
+        self:GenerateBaseTiles(self:GetSize())
+    end
 end
 function Sprite:GetSpriteFile()
     assert(false)
@@ -91,9 +127,11 @@ end
 function Sprite:GetMap()
     return self.iso_map
 end
+
+
+----------base
 function Sprite:GenerateBaseTiles(w, h)
-    local base_node = self:newBatchNode(w, h)
-    self:addChild(base_node)
+    self:newBatchNode(w, h):addTo(self, -1)
 end
 function Sprite:newBatchNode(w, h)
     local start_x, end_x, start_y, end_y = self:GetLocalRegion(w, h)
@@ -101,7 +139,7 @@ function Sprite:newBatchNode(w, h)
     local map = self:GetMap()
     for ix = start_x, end_x do
         for iy = start_y, end_y do
-            local sprite = display.newSprite(base_node:getTexture(), CCRectMake(0, 0, 80, 56))
+            local sprite = display.newSprite(base_node:getTexture(), cc.rect(0, 0, 80, 56))
             sprite:setPosition(cc.p(map:ConvertToLocalPosition(ix, iy)))
             base_node:addChild(sprite)
         end
@@ -128,6 +166,9 @@ function Sprite:GetLocalRegion(w, h)
 end
 
 return Sprite
+
+
+
 
 
 

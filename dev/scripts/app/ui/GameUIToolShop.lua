@@ -22,7 +22,7 @@ local MATERIALS_MAP = {
 }
 
 function GameUIToolShop:ctor(city, toolShop)
-    GameUIToolShop.super.ctor(self, city, _("工具作坊"),toolShop)
+    GameUIToolShop.super.ctor(self, city, _("工具作坊"), toolShop)
     self.tool_shop_city = city
     self.toolShop = toolShop
 end
@@ -40,12 +40,15 @@ function GameUIToolShop:onExit()
 end
 function GameUIToolShop:OnBeginMakeMaterialsWithEvent(tool_shop, event)
     self:UpdateEvent(event)
+    self:UpdateNeedStatus()
+    audio.playSound("ui_toolShop_craft_start.mp3")
 end
 function GameUIToolShop:OnMakingMaterialsWithEvent(tool_shop, event, current_time)
     self:UpdateEvent(event)
 end
 function GameUIToolShop:OnEndMakeMaterialsWithEvent(tool_shop, event, current_time)
     self:UpdateEvent(event)
+    self:UpdateNeedStatus()
 end
 function GameUIToolShop:OnGetMaterialsWithEvent(tool_shop, event)
     self:UpdateEvent(event)
@@ -57,12 +60,27 @@ function GameUIToolShop:OnMaterialsChanged(material_manager, material_type, chan
         end))
     end
 end
+function GameUIToolShop:IsQueueEmpty()
+    local current_time = app.timer:GetServerTime()
+    for _, event in pairs(self.toolShop:GetMakeMaterialsEvents()) do
+        if event:IsMaking(current_time) then
+            return false
+        end
+    end
+    return true
+end
 function GameUIToolShop:UpdateEvent(event)
     if event:Category() == "building" then
         self.building_item:UpdateByEvent(event)
     elseif event:Category() == "technology" then
         self.technology_event:UpdateByEvent(event)
     end
+end
+function GameUIToolShop:UpdateNeedStatus()
+    self.building_item:GetNeedBox():GetNormalButton()
+        :setButtonEnabled(self:IsQueueEmpty())
+    self.technology_event:GetNeedBox():GetNormalButton()
+        :setButtonEnabled(self:IsQueueEmpty())
 end
 function GameUIToolShop:Manufacture()
     self.list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 100)
@@ -127,6 +145,7 @@ end
 
 function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materials)
     local toolShop = self.toolShop
+    local toolShop_ui = self
     local align_x, align_y = 30, 35
     local height = 380
     local content = WidgetUIBackGround.new(height):align(display.CENTER)
@@ -237,7 +256,10 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
 
         local button = WidgetPushButton.new(
             {normal = "yellow_btn_up.png", pressed = "yellow_btn_down.png"},
-            {scale9 = false}
+            {scale9 = false},
+            {
+                disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
+            }
         ):addTo(need_box, 2)
             :align(display.CENTER, width + 100, height / 2)
             :setButtonLabel(cc.ui.UILabel.new({
@@ -253,6 +275,9 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
             describe:setString(_("随机制造")..string.format("%d", number).._("个材料"))
             self:SetNeedNumber(wood, stone, iron, time)
             return self
+        end
+        function need_box:GetNormalButton()
+            return button
         end
         function need_box:SetClicked(func)
             button:onButtonClicked(function(event)
@@ -307,6 +332,7 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
         :OnButtonClicked(function(event)
             print("hello")
         end)
+    progress_box:GetSpeedUpButton():setButtonEnabled(false)
 
     local get_material = new_get_material():addTo(content, 2):pos(align_x, align_y):hide()
 
@@ -315,7 +341,12 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
         local server_time = app.timer:GetServerTime()
         if event:IsEmpty() then
             self:ResetGetMaterials()
-            self:GetNeedBox():show():Update(event:Category())
+
+            self:GetNeedBox()
+                :show()
+                :Update(event:Category())
+                :GetNormalButton()
+                :setButtonEnabled(toolShop_ui:IsQueueEmpty())
 
             self:GetProgressBox():hide()
             self:GetMaterial():hide()
@@ -381,6 +412,9 @@ end
 
 
 return GameUIToolShop
+
+
+
 
 
 

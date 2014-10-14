@@ -53,7 +53,7 @@ function GameUIHome:RefreshData()
     self.name_label:setString(userdata.basicInfo.name)
     self.power_label:setString(userdata.basicInfo.power)
     self.level_label:setString(userdata.basicInfo.level)
-    self.vip_label:setString("VIP "..userdata.basicInfo.vip)
+    self.vip_label:setString("VIP 1")
 end
 
 
@@ -184,6 +184,7 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         -- NetManager:sendMsg("gem 10000000", NOT_HANDLE)
+        UIKit:newGameUI('GameUIShop', City):addToCurrentScene(true)
     end):addTo(top_bg):pos(596, 60)
     display.newSprite("home/gem.png"):addTo(button):pos(-1, 8)
     display.newSprite("home/gem_num_bg.png"):addTo(button):pos(0, -27)
@@ -202,7 +203,7 @@ function GameUIHome:CreateTop()
     local pos = quest_bg:getAnchorPointInPoints()
     display.newSprite("home/quest_icon.png"):addTo(quest_bg):pos(pos.x, pos.y):scale(0.7)
     self.quest_label =
-        cc.ui.UILabel.new({text = "任务就是杀死你",
+        cc.ui.UILabel.new({text = "挖掘机技术哪家强?",
             size = 20,
             font = UIKit:getFontFilePath(),
             align = cc.ui.TEXT_ALIGN_CENTER,
@@ -215,6 +216,12 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         -- NetManager:instantMakeBuildingMaterial(NOT_HANDLE)
+        if self.quest_label:getString() == _("挖掘机技术哪家强?") then
+            self.quest_label:setString(_("中国山东找蓝翔!"))
+        else
+            self.quest_label:setString(_("挖掘机技术哪家强?"))
+        end
+
     end):addTo(quest_bar_bg):pos(290, 20)
     local pos = button:getAnchorPointInPoints()
     display.newSprite("home/quest_hook.png"):addTo(button):pos(pos.x, pos.y)
@@ -242,7 +249,17 @@ function GameUIHome:CreateBottom()
     chat_bg:setContentSize(640, 50)
     chat_bg:setTouchEnabled(true)
     chat_bg:addTo(bottom_bg):pos(0, bottom_bg:getContentSize().height)
-
+    chat_bg:setTouchSwallowEnabled(true)
+    chat_bg:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        if event.name == "began" then
+            chat_bg.prevP = cc.p(event.x,event.y)
+            return true
+        elseif event.name == 'ended' then
+            if cc.pGetDistance(chat_bg.prevP,cc.p(event.x,event.y)) <= 10 then
+                UIKit:newGameUI('GameUIChat'):addToCurrentScene(true)
+            end
+        end
+    end)
     local button = cc.ui.UIPushButton.new(
         {normal = "home/chat_btn.png", pressed = "home/chat_btn.png"},
         {scale9 = false}

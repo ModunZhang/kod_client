@@ -1,4 +1,5 @@
 local Localize = import("..utils.Localize")
+local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTab = import(".WidgetTab")
 local WidgetEventTabButtons = class("WidgetEventTabButtons", function()
     local rect = cc.rect(0, 0, 491, 150 + 47)
@@ -215,8 +216,14 @@ function WidgetEventTabButtons:CreateProgressItem()
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xd1ca95)}):addTo(progress):align(display.LEFT_CENTER, 10, 43/2)
 
-    local btn = cc.ui.UIPushButton.new({normal = "green_btn_up_142x39.png",
-        pressed = "green_btn_down_142x39.png"}):addTo(progress)
+    local btn = WidgetPushButton.new({normal = "green_btn_up_142x39.png",
+        pressed = "green_btn_down_142x39.png",
+        disabled = "blue_btn_up_142x39.png",
+    }
+    ,{}
+    ,{
+        disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+    }):addTo(progress)
         :align(display.LEFT_CENTER, 340, 43/2)
         :setButtonLabel(cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -225,8 +232,7 @@ function WidgetEventTabButtons:CreateProgressItem()
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xfff3c7)}))
         :onButtonClicked(function(event)
-            self:RemoveItemWithAnimation(2)
-        end)
+            end)
 
     cc.ui.UIImage.new("divide_line_489x2.png"):addTo(progress)
         :align(display.LEFT_BOTTOM, -4, -5)
@@ -250,10 +256,15 @@ function WidgetEventTabButtons:CreateProgressItem()
         self.key = key
         return self
     end
+    function progress:onEnter()
+        btn:setButtonEnabled(false)
+    end
+    progress:setNodeEventEnabled(true)
 
     return progress
 end
 function WidgetEventTabButtons:CreateOpenItem()
+    local widget = self
     local node = display.newNode()
     local label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -262,8 +273,14 @@ function WidgetEventTabButtons:CreateOpenItem()
         color = UIKit:hex2c3b(0xd1ca95)}):addTo(node):align(display.LEFT_CENTER, 10, 0)
 
 
-    cc.ui.UIPushButton.new({normal = "blue_btn_up_142x39.png",
-        pressed = "blue_btn_down_142x39.png"}):addTo(node)
+    local button = WidgetPushButton.new({normal = "blue_btn_up_142x39.png",
+        pressed = "blue_btn_down_142x39.png",
+        disabled = "blue_btn_up_142x39.png"
+    }
+    ,{}
+    ,{
+        disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+    }):addTo(node)
         :align(display.LEFT_CENTER, 340, 0)
         :setButtonLabel(cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -272,12 +289,16 @@ function WidgetEventTabButtons:CreateOpenItem()
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xfff3c7)}))
         :onButtonClicked(function(event)
-            self:InsertItemWithAnimation(function()
-                local items = {}
-                table.insert(items, self:CreateItem())
-                return items
-            end)
+            if widget:GetCurrentTab() == "build" then
+                UIKit:newGameUI('GameUIHasBeenBuild', City):addToCurrentScene(true)
+            elseif widget:GetCurrentTab() == "soldier" then
+                UIKit:newGameUI('GameUIBarracks', City, self.barracks):addToCurrentScene(true)
+            elseif widget:GetCurrentTab() == "material" then
+                UIKit:newGameUI('GameUIToolShop', City, self.toolShop):addToCurrentScene(true)
+            end
         end)
+
+
 
     function node:SetLabel(str)
         if label:getString() ~= str then
@@ -285,6 +306,10 @@ function WidgetEventTabButtons:CreateOpenItem()
         end
         return self
     end
+    function node:onEnter()
+        button:setButtonEnabled(widget:GetCurrentTab() ~= "technology")
+    end
+    node:setNodeEventEnabled(true)
 
     return node
 end
@@ -523,7 +548,7 @@ function WidgetEventTabButtons:OnBeforeShow()
         return true
     elseif tab == "soldier" and self.barracks:IsUnlocked() then
         return true
-    elseif tab == "material" and self.blackSmith:IsUnlocked() then
+    elseif tab == "material" and self.toolShop:IsUnlocked() then
         return true
     end
     return false
@@ -609,7 +634,7 @@ function WidgetEventTabButtons:BuildingDescribe(building)
     elseif building:IsUnlocking() then
         upgrade_info = string.format("%s", _("解锁"))
     else
-        upgrade_info = string.format("%s %d", _("升级到"), building:GetLevel())
+        upgrade_info = string.format("%s%d", _("升级到 等级"), building:GetNextLevel())
     end
     local time = timer:GetServerTime()
     local str = string.format("%s (%s) %s",
@@ -638,6 +663,13 @@ function WidgetEventTabButtons:MaterialDescribe(event)
 end
 
 return WidgetEventTabButtons
+
+
+
+
+
+
+
 
 
 

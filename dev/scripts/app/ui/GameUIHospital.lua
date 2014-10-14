@@ -5,6 +5,9 @@ local WidgetSoldierBox = import("..widget.WidgetSoldierBox")
 local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
 local WidgetTreatSoldier = import("..widget.WidgetTreatSoldier")
 local SoldierManager = import("..entity.SoldierManager")
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
+local HospitalUpgradeBuilding = import("..entity.HospitalUpgradeBuilding")
+
 local window = import("..utils.window")
 local GameUIHospital = UIKit:createUIClass('GameUIHospital',"GameUIUpgradeBuilding")
 GameUIHospital.SOLDIERS_NAME = {
@@ -77,11 +80,34 @@ function GameUIHospital:onEnter()
     self:CreateSpeedUpHeal()
 
     self.city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.TREAT_SOLDIER_CHANGED)
+    self.building:AddHospitalListener(self)
 end
 
 function GameUIHospital:onExit()
+    self.building:RemoveHospitalListener(self)
     self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.TREAT_SOLDIER_CHANGED)
     GameUIHospital.super.onExit(self)
+end
+
+function GameUIHospital:OnBeginTreat(hospital, event)
+    self:OnTreating(hospital, event, app.timer:GetServerTime())
+end
+
+function GameUIHospital:OnTreating(hospital, event, current_time)
+    local treat_count = 0
+    local soldiers = event:GetTreatInfo()
+    for k,v in pairs(soldiers) do
+        treat_count = treat_count + v.count
+    end
+    self:SetTreatingSoldierNum(treat_count)
+    self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(current_time)),event:Percent(current_time))
+    self.treate_all_soldiers_item:hide()
+    self.timer:show()
+end
+
+function GameUIHospital:OnEndTreat(hospital, event, soldiers, current_time)
+    self.treate_all_soldiers_item:show()
+    self.timer:hide()
 end
 
 function GameUIHospital:CreateHealAllSoldierItem()
@@ -97,7 +123,7 @@ function GameUIHospital:CreateHealAllSoldierItem()
         item.need_value = cc.ui.UILabel.new(
             {
                 UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                text = "X "..num,
+                text = "X "..GameUtils:formatNumber(num),
                 font = UIKit:getFontFilePath(),
                 size = 20,
                 color = UIKit:hex2c3b(0x403c2f)
@@ -106,7 +132,11 @@ function GameUIHospital:CreateHealAllSoldierItem()
     end
     local item_width = 116
     local gap_x = (bg_size.width - 4*item_width)/5
-    local total_iron,total_stone,total_wood,total_food = self.city:GetSoldierManager():GetTreatResource()
+    local soldiers = {}
+    for k,v in pairs(self.city:GetSoldierManager():GetTreatSoldierMap()) do
+        table.insert(soldiers,{name=k,count=v})
+    end
+    local total_iron,total_stone,total_wood,total_food = self.city:GetSoldierManager():GetTreatResource(soldiers)
     local resource_icons = {
         [IRON] = {total_iron,"iron_icon.png"},
         [STONE]  = {total_stone,"stone_icon.png"},
@@ -118,22 +148,30 @@ function GameUIHospital:CreateHealAllSoldierItem()
     end
 
     -- 立即治疗和治疗按钮
-    WidgetPushButton.new({normal = "upgrade_green_button_normal.png",pressed = "upgrade_green_button_pressed.png"})
+    self.treat_all_now_button = WidgetPushButton.new({normal = "upgrade_green_button_normal.png",pressed = "upgrade_green_button_pressed.png"}
+        ,{}
+        ,{
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+        })
         :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("立即治疗"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-            	print("立即治疗")
+                self:TreatNowListener()
             end
         end):align(display.CENTER, bg_size.width/2-150, 110):addTo(self.treate_all_soldiers_item)
-    WidgetPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
+    self.treat_all_button = WidgetPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"}
+        ,{}
+        ,{
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+        })
         :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("治疗"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-            	self.treate_all_soldiers_item:hide()
-            	self.timer:show()
-            	print("治疗")
+                self:TreatListener()
             end
         end):align(display.CENTER, bg_size.width/2+180, 110):addTo(self.treate_all_soldiers_item)
+    self.treat_all_now_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
+    self.treat_all_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
     -- 立即治疗所需宝石
     display.newSprite("Topaz-icon.png", bg_size.width/2 - 260, 50):addTo(self.treate_all_soldiers_item):setScale(0.5)
     self.heal_now_need_gems_label = cc.ui.UILabel.new({
@@ -163,6 +201,64 @@ function GameUIHospital:CreateHealAllSoldierItem()
     }):align(display.LEFT_CENTER,bg_size.width/2+120,40):addTo(self.treate_all_soldiers_item)
 end
 
+function GameUIHospital:TreatListener()
+    local soldiers = {}
+    local treat_soldier_map = self.city:GetSoldierManager():GetTreatSoldierMap()
+    for k,v in pairs(treat_soldier_map) do
+        if v>0 then
+            table.insert(soldiers,{name=k,count=v})
+        end
+    end
+    local treat_fun = function ()
+        NetManager:treatSoldiers(soldiers, NOT_HANDLE)
+    end
+    local isAbleToTreat =self.building:IsAbleToTreat(soldiers)
+    if #soldiers<1 then
+        local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
+            :SetPopMessage(_("没有伤兵需要治疗")):AddToCurrentScene()
+    elseif City:GetResourceManager():GetGemResource():GetValue()< self.building:GetTreatGems(soldiers) then
+        local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
+            :SetPopMessage(_("没有足够的宝石补充资源")):AddToCurrentScene()
+    elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING_AND_LACK_RESOURCE then
+        local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
+            :SetPopMessage(_("正在治疗，资源不足"))
+            :CreateOKButton(treat_fun)
+            :CreateNeeds("Topaz-icon.png",self.building:GetTreatGems(soldiers)):AddToCurrentScene()
+    elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.LACK_RESOURCE then
+        local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
+            :SetPopMessage(_("资源不足，是否花费宝石补足"))
+            :CreateOKButton(treat_fun)
+            :CreateNeeds("Topaz-icon.png",self.building:GetTreatGems(soldiers)):AddToCurrentScene()
+    elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING then
+        local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
+            :SetPopMessage(_("正在治疗，是否花费魔法石立即完成"))
+            :CreateOKButton(treat_fun)
+            :CreateNeeds("Topaz-icon.png",self.building:GetTreatGems(soldiers)):AddToCurrentScene()
+    else
+        treat_fun()
+    end
+end
+function GameUIHospital:TreatNowListener()
+    local soldiers = {}
+    local treat_soldier_map = self.city:GetSoldierManager():GetTreatSoldierMap()
+    for k,v in pairs(treat_soldier_map) do
+        if v>0 then
+            table.insert(soldiers,{name=k,count=v})
+        end
+    end
+    local treat_fun = function ()
+        NetManager:instantTreatSoldiers(soldiers, NOT_HANDLE)
+    end
+    if #soldiers<1 then
+        local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
+            :SetPopMessage(_("没有伤兵需要治疗")):AddToCurrentScene()
+    elseif self.treat_all_now_need_gems>City:GetResourceManager():GetGemResource():GetValue() then
+        local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
+            :SetPopMessage(_("宝石补足")):AddToCurrentScene()
+    else
+        treat_fun()
+    end
+end
 function GameUIHospital:SetTreatAllSoldiersNeedResources(params)
     for k,v in pairs(GameUIHospital.HEAL_NEED_RESOURCE_TYPE) do
         -- 有对应资源需求
@@ -176,20 +272,35 @@ end
 -- 设置立即治疗所有伤兵需要魔法石数量
 function GameUIHospital:SetTreatAllSoldiersNowNeedGems()
     local total_treat_time = self.city:GetSoldierManager():GetTreatAllTime()
-    local total_iron,total_stone,total_wood,total_food = self.city:GetSoldierManager():GetTreatResource()
+    local soldiers = {}
+    for k,v in pairs(self.city:GetSoldierManager():GetTreatSoldierMap()) do
+        table.insert(soldiers,{name=k,count=v})
+    end
+    local total_iron,total_stone,total_wood,total_food = self.city:GetSoldierManager():GetTreatResource(soldiers)
     local bur_resource_gems = DataUtils:buyResource({wood=total_wood,
         stone=total_stone,
         iron=total_iron,
         food=total_food},{})
     local buy_time = DataUtils:getGemByTimeInterval(total_treat_time)
-    local need_gems = buy_time+bur_resource_gems
-    self.heal_now_need_gems_label:setString(""..need_gems)
+    self.treat_all_now_need_gems = buy_time+bur_resource_gems
+    self.heal_now_need_gems_label:setString(""..self.treat_all_now_need_gems)
 end
 -- 设置普通治疗需要时间
 function GameUIHospital:SetTreatAllSoldiersTime()
     self.heal_time:setString(GameUtils:formatTimeStyle1(self.city:GetSoldierManager():GetTreatAllTime()))
-
 end
+-- 检查普通治疗需要资源
+-- function GameUIHospital:IsAbleToTreat()
+--     local total_iron,total_stone,total_wood,total_food = self.city:GetSoldierManager():GetTreatResource()
+--     if self.city:GetResourceManager():GetWoodResource()<total_wood
+--         or self.city:GetResourceManager():GetFoodResource()<total_food
+--         or self.city:GetResourceManager():GetIronResource()<total_iron
+--         or self.city:GetResourceManager():GetStoneResource()<total_stone
+--     then
+--         return false
+--     end
+--     return true
+-- end
 
 function GameUIHospital:CreateCasualtyRateBar()
     local bar = display.newSprite("progress_bg_535x35.png"):addTo(self.heal_layer):pos(window.cx+10, window.top-120)
@@ -247,32 +358,33 @@ function GameUIHospital:CreateItemWithListView(list_view)
     local treat_soldier_map = City:GetSoldierManager():GetTreatSoldierMap()
     local row_count = -1
     for i,soldier_name in pairs(GameUIHospital.SOLDIERS_NAME) do
-        local soldier_number = treat_soldier_map[soldier_name]
+        local soldier_number = treat_soldier_map[soldier_name] or 0
         row_count = row_count + 1
         local soldier = WidgetSoldierBox.new("",function ()
-            local widget = WidgetTreatSoldier.new(soldier_name,
-                1,
-                soldier_number)
-                :addTo(self)
-                :align(display.CENTER, window.cx, 500 / 2)
-                :OnBlankClicked(function(widget)
-                    City:GetResourceManager():RemoveObserver(widget)
-                    widget:removeFromParentAndCleanup(true)
-                end)
-                :OnNormalButtonClicked(function(widget)
-                    City:GetResourceManager():RemoveObserver(widget)
-                    widget:removeFromParentAndCleanup(true)
-                end)
-                :OnInstantButtonClicked(function(widget)
-                    City:GetResourceManager():RemoveObserver(widget)
-                    widget:removeFromParentAndCleanup(true)
-                end)
-            City:GetResourceManager():AddObserver(widget)
-            City:GetResourceManager():OnResourceChanged()
+            if soldier_number>0 then
+                local widget = WidgetTreatSoldier.new(soldier_name,
+                    1,
+                    soldier_number)
+                    :addTo(self)
+                    :align(display.CENTER, window.cx, 500 / 2)
+                    :OnBlankClicked(function(widget)
+                        City:GetResourceManager():RemoveObserver(widget)
+                        widget:removeFromParentAndCleanup(true)
+                    end)
+                    :OnNormalButtonClicked(function(widget)
+                        City:GetResourceManager():RemoveObserver(widget)
+                        widget:removeFromParentAndCleanup(true)
+                    end)
+                    :OnInstantButtonClicked(function(widget)
+                        City:GetResourceManager():RemoveObserver(widget)
+                        widget:removeFromParentAndCleanup(true)
+                    end)
+                City:GetResourceManager():AddObserver(widget)
+                City:GetResourceManager():OnResourceChanged()
+            end
         end):addTo(row_item)
             :alignByPoint(cc.p(0.5,0.4), origin_x + (unit_width + gap_x) * row_count + unit_width / 2, 0)
             :SetNumber(soldier_number)
-        soldier:SetSoldier(soldier_name)
         soldier:SetSoldier(soldier_name,1)
         self.treat_soldier_boxes_table[soldier_name] = soldier
         if row_count>2 then
@@ -297,14 +409,39 @@ function GameUIHospital:CreateSpeedUpHeal()
 end
 --设置正在治疗的伤兵数量label
 function GameUIHospital:SetTreatingSoldierNum( treat_soldier_num )
-	self.timer:SetDescribe(string.format(_("正在治愈%d人口的伤兵"),treat_soldier_num))
+    self.timer:SetDescribe(string.format(_("正在治愈%d人口的伤兵"),treat_soldier_num))
 end
 
 function GameUIHospital:OnTreatSoliderCountChanged(soldier_manager, treat_soldier_changed)
     for k,soldier_type in pairs(treat_soldier_changed) do
         local changed_treat_soldier_num = soldier_manager:GetTreatCountBySoldierType(soldier_type)
         self.treat_soldier_boxes_table[soldier_type]:SetNumber(changed_treat_soldier_num)
-        local total_iron,total_stone,total_wood,total_food = soldier_manager:GetTreatResource()
+        self.treat_soldier_boxes_table[soldier_type]:SetButtonListener(function ()
+            local widget = WidgetTreatSoldier.new(soldier_type,
+                1,
+                changed_treat_soldier_num)
+                :addTo(self)
+                :align(display.CENTER, window.cx, 500 / 2)
+                :OnBlankClicked(function(widget)
+                    City:GetResourceManager():RemoveObserver(widget)
+                    widget:removeFromParentAndCleanup(true)
+                end)
+                :OnNormalButtonClicked(function(widget)
+                    City:GetResourceManager():RemoveObserver(widget)
+                    widget:removeFromParentAndCleanup(true)
+                end)
+                :OnInstantButtonClicked(function(widget)
+                    City:GetResourceManager():RemoveObserver(widget)
+                    widget:removeFromParentAndCleanup(true)
+                end)
+            City:GetResourceManager():AddObserver(widget)
+            City:GetResourceManager():OnResourceChanged()
+        end)
+        local soldiers = {}
+        for k,v in pairs(self.city:GetSoldierManager():GetTreatSoldierMap()) do
+            table.insert(soldiers,{name=k,count=v})
+        end
+        local total_iron,total_stone,total_wood,total_food = soldier_manager:GetTreatResource(soldiers)
         self:SetTreatAllSoldiersNeedResources({
             [IRON] = total_iron,
             [STONE]  = total_stone,
@@ -314,9 +451,51 @@ function GameUIHospital:OnTreatSoliderCountChanged(soldier_manager, treat_soldie
         self:SetTreatAllSoldiersNowNeedGems()
         self:SetTreatAllSoldiersTime()
     end
+    self:SetProgressCasualtyRateLabel()
+    self.treat_all_now_button:removeAllEventListeners()
+    self.treat_all_button:removeAllEventListeners()
+    self.treat_all_now_button:onButtonClicked(function (event)
+        if event.name == "CLICKED_EVENT" then
+            self:TreatNowListener()
+        end
+    end )
+    self.treat_all_button:onButtonClicked(function (event)
+        if event.name == "CLICKED_EVENT" then
+            self:TreatListener()
+        end
+    end )
+
+    self.treat_all_now_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
+    self.treat_all_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
+
+
 end
 
 return GameUIHospital
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,3 +1,4 @@
+local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 local SpriteButton = import("..ui.SpriteButton")
 local BuildingLevelUpUINode = import("..ui.BuildingLevelUpUINode")
 local BuildingUpgradeUINode = import("..ui.BuildingUpgradeUINode")
@@ -11,6 +12,7 @@ local running_scene = nil
 import('app.service.ListenerService')
 import('app.service.PushService')
 
+local debug = false
 
 local CityScene = class("CityScene", function()
     return display.newScene("CityScene")
@@ -51,7 +53,7 @@ function CityScene:onEnter()
 
     self:LoadAnimation()
     self.city_layer = self:CreateSceneLayer()
-    self:CreateMultiTouchLayer()
+    self.touch_layer = self:CreateMultiTouchLayer()
     self.scene_ui_layer = self:CreateSceneUILayer()
     home_page = self:CreateHomePage()
 
@@ -61,20 +63,35 @@ function CityScene:onEnter()
         self.scene_ui_layer:NewUIFromBuildingSprite(building)
     end)
 
-    -- City:GetFirstBuildingByType("townHall"):AddTownHallListener({
-    --     OnBeginImposeWithEvent = function(lisenter, building, event)
-    --         print("OnBeginImposeWithEvent")
-    --     end,
-    --     OnImposingWithEvent = function(lisenter, building, event, current_time)
-    --         print("OnImposingWithEvent", event:Percent(current_time), event:LeftTime(current_time))
-    --     end,
-    --     OnEndImposeWithEvent = function(lisenter, building, event, current_time)
-    --         print("OnEndImposeWithEvent")
-    --     end,
-    --     OnGetTaxWithEvent = function(lisenter, building, event)
-    --         print("OnGetTaxWithEvent")
-    --     end,
-    -- })
+    self:PlayBackgroundMusic()
+    City:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
+end
+function CityScene:onExit()
+    self:stopAllActions()
+    audio.stopMusic()
+    audio.stopAllSounds()
+    City:ResetAllListeners()
+    app:makeLuaVMSnapshot()
+    -- City:RemoveListenerOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
+end
+function CityScene:onEnterTransitionFinish()
+    goto_logic(6, 4, 0)
+end
+function CityScene:OnUpgradingBegin()
+    audio.playSound("ui_building_upgrade_start.mp3")
+end
+function CityScene:OnUpgrading()
+
+end
+function CityScene:OnUpgradingFinished()
+
+end
+function CityScene:PlayBackgroundMusic()
+    audio.playMusic("music_city.mp3", true)
+    audio.playSound("sfx_peace.mp3", true)
+    -- self:performWithDelay(function()
+    --     self:PlayBackgroundMusic()
+    -- end, 113 + 30)
 end
 function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
@@ -84,11 +101,13 @@ end
 function CityScene:CreateMultiTouchLayer()
     local touch_layer = display.newLayer():addTo(self)
     touch_layer:setTouchEnabled(true)
-    touch_layer:setTouchSwallowEnabled(false)
+    touch_layer:setTouchSwallowEnabled(true)
     touch_layer:setTouchMode(cc.TOUCH_MODE_ALL_AT_ONCE)
-    touch_layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+    self.handle = touch_layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         self.event_manager:OnEvent(event)
+        return true
     end)
+    return touch_layer
 end
 function CityScene:CreateSceneLayer()
     local scene = CityLayer.new():addTo(self, 0, 1)
@@ -96,15 +115,19 @@ function CityScene:CreateSceneLayer()
     self.iso_map = IsoMapAnchorBottomLeft.new({
         tile_w = 80, tile_h = 56, map_width = 50, map_height = 50, base_x = origin_point.x, base_y = origin_point.y
     })
-    scene:ZoomTo(0.5)
+    scene:ZoomTo(0.7)
     return scene
 end
 function CityScene:CreateSceneUILayer()
     local scene_ui_layer = display.newLayer():addTo(self)
     scene_ui_layer:setTouchSwallowEnabled(false)
     function scene_ui_layer:Init()
+        self.levelup_node = display.newNode():addTo(self)
+        self.levelup_node:setCascadeOpacityEnabled(true)
         self.ui = {}
+        self.level_up_ui = {}
         self.lock_buttons = {}
+        self.status = nil
     end
     function scene_ui_layer:NewLockButtonFromBuildingSprite(building_sprite)
         local lock_button = SpriteButton.new(building_sprite, City):addTo(self, 1)
@@ -125,10 +148,11 @@ function CityScene:CreateSceneUILayer()
         building_sprite:AddObserver(progress)
         table.insert(self.ui, progress)
 
-        local levelup = BuildingLevelUpUINode.new():addTo(self)
+        local levelup = BuildingLevelUpUINode.new():addTo(self.levelup_node)
         building_sprite:AddObserver(levelup)
         table.insert(self.ui, levelup)
 
+        building_sprite:CheckCondition()
         building_sprite:OnSceneMove()
     end
     function scene_ui_layer:RemoveUIFromBuildingSprite(building_sprite)
@@ -141,6 +165,22 @@ function CityScene:CreateSceneUILayer()
             end)
         end)
     end
+    function scene_ui_layer:ShowLevelUpNode()
+        if self.status == "show" then
+            return
+        end
+        self.levelup_node:stopAllActions()
+        self.levelup_node:fadeTo(0.5, 255)
+        self.status = "show"
+    end
+    function scene_ui_layer:HideLevelUpNode()
+        if self.status == "hide" then
+            return
+        end
+        self.levelup_node:stopAllActions()
+        self.levelup_node:fadeTo(0.5, 0)
+        self.status = "hide"
+    end
     scene_ui_layer:Init()
     return scene_ui_layer
 end
@@ -148,12 +188,6 @@ function CityScene:CreateHomePage()
     local home = UIKit:newGameUI('GameUIHome', City):addToScene(self)
     home:setTouchSwallowEnabled(false)
     return home
-end
-function CityScene:onEnterTransitionFinish()
-    goto_logic(0, 0, 0)
-end
-function CityScene:onExit()
-
 end
 function CityScene:OneTouch(pre_x, pre_y, x, y, touch_type)
     local citynode = self.city_layer:GetCityNode()
@@ -180,6 +214,11 @@ function CityScene:OnTwoTouch(x1, y1, x2, y2, event_type)
     elseif event_type == "moved" then
         local new_distance = math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
         scene:ZoomBy(new_distance / self.distance)
+        if scene:getScale() < 0.5 then
+            self.scene_ui_layer:HideLevelUpNode()
+        else
+            self.scene_ui_layer:ShowLevelUpNode()
+        end
     elseif event_type == "ended" then
         scene:ZoomEnd()
         self.distance = nil
@@ -187,12 +226,51 @@ function CityScene:OnTwoTouch(x1, y1, x2, y2, event_type)
 end
 -- TouchJudgment
 function CityScene:OnTouchBegan(pre_x, pre_y, x, y)
+    if not debug then return end
+    local citynode = self.city_layer:GetCityNode()
+    local point = citynode:convertToNodeSpace(cc.p(x, y))
+    local tx, ty = self.iso_map:ConvertToLogicPosition(point.x, point.y)
+    if not self.building then
+        local building = self.city_layer:GetClickedObject(tx, ty, x, y)
+        if building then
+            local lx, ly = building:GetLogicPosition()
+            building._shiftx = lx - tx
+            building._shifty = ly - ty
+            building:zorder(99999999)
+            self.building = building
+        end
+    end
 end
 function CityScene:OnTouchEnd(pre_x, pre_y, x, y)
+    if not debug then return end
+    local citynode = self.city_layer:GetCityNode()
+    local point = citynode:convertToNodeSpace(cc.p(x, y))
+    local tx, ty = self.iso_map:ConvertToLogicPosition(point.x, point.y)
+    if self.building then
+        local lx, ly = self.building:GetLogicPosition()
+        self.building:zorder(lx + ly * 50 + 100)
+        if self.building._shiftx + tx == lx and
+            self.building._shifty + ty == ly then
+        end
+    end
+    self.building = nil
 end
 function CityScene:OnTouchCancelled(pre_x, pre_y, x, y)
 end
 function CityScene:OnTouchMove(pre_x, pre_y, x, y)
+    if debug then
+        if self.building then
+            local citynode = self.city_layer:GetCityNode()
+            local point = citynode:convertToNodeSpace(cc.p(x, y))
+            local lx, ly = self.iso_map:ConvertToLogicPosition(point.x, point.y)
+            local bx, by = self.building:GetLogicPosition()
+            local is_moved_one_more = lx ~= bx or ly ~= by
+            if is_moved_one_more then
+                self.building:SetLogicPosition(lx + self.building._shiftx, ly + self.building._shifty)
+            end
+            return
+        end
+    end
     if self.distance then return end
     local parent = self.city_layer:getParent()
     local old_point = parent:convertToNodeSpace(cc.p(pre_x, pre_y))
@@ -245,13 +323,25 @@ function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
             end
         elseif building:GetEntity():GetType() == "hospital" then
             UIKit:newGameUI('GameUIHospital', City, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "watchTower" then
+            UIKit:newGameUI('GameUIWatchTower', City, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "tradeGuild" then
+            UIKit:newGameUI('GameUITradeGuild', City, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "wall" then
+            UIKit:newGameUI('GameUIWall', City, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "tower" then
+            UIKit:newGameUI('GameUITower', City, building:GetEntity()):addToScene(self, true)
         end
+
     end
 end
 function CityScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed_y, millisecond)
     local parent = self.city_layer:getParent()
     local speed = parent:convertToNodeSpace(cc.p(new_speed_x, new_speed_y))
     local x, y  = self.city_layer:getPosition()
+    local max_speed = 5
+    speed.x = speed.x > max_speed and max_speed or speed.x
+    speed.y = speed.y > max_speed and max_speed or speed.y
     local sp = self:convertToNodeSpace(cc.p(speed.x * millisecond, speed.y * millisecond))
     self.city_layer:setPosition(cc.p(x + sp.x, y + sp.y))
 end
@@ -311,6 +401,19 @@ function CityScene:OnGateChanged(old_walls, new_walls)
 end
 
 return CityScene
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

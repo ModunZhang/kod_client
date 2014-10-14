@@ -92,7 +92,7 @@ function DragonEyrieUpgradeBuilding:GetVitalityRecoveryPerHour()
 	return config_function[self:GetLevel()].vitalityRecoveryPerHour
 end
 function DragonEyrieUpgradeBuilding:GetNextLevelVitalityRecoveryPerHour()
-	return config_function[self:GetLevel()+1].vitalityRecoveryPerHour
+	return config_function[self:GetNextLevel()].vitalityRecoveryPerHour
 end
 
 function DragonEyrieUpgradeBuilding:GetMaxVitalityCurrentLevel(dragon)

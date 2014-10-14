@@ -8,7 +8,7 @@ function BuildingLevelUpUINode:OnBuildingUpgradingBegin(building, time)
     self:OnBuildingUpgradeFinished(building, time)
 end
 function BuildingLevelUpUINode:OnBuildingUpgradeFinished(building, time)
-    self:setVisible(not building:IsUpgrading() and building:GetLevel() > 0)
+    self:setVisible(not building:IsUpgrading() and building:GetLevel() > 0 and not building:IsMaxLevel())
     self:SetLevel(building:GetLevel())
 end
 function BuildingLevelUpUINode:OnPositionChanged(x, y, bottom_x, bottom_y)
@@ -20,6 +20,7 @@ end
 function BuildingLevelUpUINode:ctor()
     BuildingLevelUpUINode.super.ctor(self)
     self:zorder(0)
+    self:setCascadeOpacityEnabled(true)
 end
 function BuildingLevelUpUINode:InitWidget()
     cc.ui.UIImage.new("levelup/level_bg.png"):addTo(self)

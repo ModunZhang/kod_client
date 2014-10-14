@@ -11,11 +11,24 @@ require("app.utils.window")
 require("app.ui.GameGlobalUIUtils")
 require("app.service.NetManager")
 require("app.service.DataManager")
-local lockInputCount = 0
+local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 local Timer = import('.utils.Timer')
 local MyApp = class("MyApp", cc.mvc.AppBase)
 import('app.ui.GameGlobalUIUtils')
 NOT_HANDLE = function(...) print("net message not handel, please check !") end
+
+
+local old_ctor = cc.ui.UIPushButton.ctor
+function cc.ui.UIPushButton:ctor(...)
+    old_ctor(self, ...)
+    self:addButtonPressedEventListener(function(event)
+        audio.playSound("ui_button_down.wav")
+    end)
+    self:addButtonReleaseEventListener(function(event)
+        audio.playSound("ui_button_up.wav")
+    end)
+end
+
 
 
 function MyApp:ctor()
@@ -46,6 +59,8 @@ function MyApp:run()
 end
 
 function MyApp:restart()
+    audio.stopMusic()
+    audio.stopAllSounds()
     NetManager:disconnect()
     self.timer:Stop()
     ext.restart()
@@ -86,16 +101,23 @@ function MyApp:retryConnectServer()
 end
 
 function MyApp:onEnterBackground()
-    MyApp.super.onEnterBackground(self)
+    LuaUtils:outputTable("onEnterBackground", {})
     self:flushIf()
     NetManager:disconnect()
 end
 
 function MyApp:onEnterForeground()
+    LuaUtils:outputTable("onEnterForeground", {})
     self:retryConnectServer()
-    MyApp.super.onEnterForeground(self)
+end
+function MyApp:onEnterPause()
+    LuaUtils:outputTable("onEnterPause", {})
+end
+function MyApp:onEnterResume()
+    LuaUtils:outputTable("onEnterResume", {})
 end
 
+local lockInputCount = 0
 function MyApp:lockInput(b)
     if b then
         lockInputCount = lockInputCount + 1
@@ -110,4 +132,10 @@ function MyApp:lockInput(b)
 end
 
 return MyApp
+
+
+
+
+
+
 

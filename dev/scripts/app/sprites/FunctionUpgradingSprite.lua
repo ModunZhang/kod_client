@@ -51,7 +51,6 @@ end
 function FunctionUpgradingSprite:ctor(city_layer, entity, city)
     FunctionUpgradingSprite.super.ctor(self, city_layer, entity)
     self:OnTileChanged(city, city:GetTileWhichBuildingBelongs(entity))
-    self:GetSprite():setScale(0.7)
 end
 
 
