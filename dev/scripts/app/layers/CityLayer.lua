@@ -1,5 +1,4 @@
 local IsoMapAnchorBottomLeft = import("..map.IsoMapAnchorBottomLeft")
-local CitizenSprite = import("..sprites.CitizenSprite")
 local DragonEyrieSprite = import("..sprites.DragonEyrieSprite")
 local FunctionUpgradingSprite = import("..sprites.FunctionUpgradingSprite")
 local UpgradingSprite = import("..sprites.UpgradingSprite")
@@ -9,6 +8,9 @@ local WallUpgradingSprite = import("..sprites.WallUpgradingSprite")
 local RoadSprite = import("..sprites.RoadSprite")
 local TreeSprite = import("..sprites.TreeSprite")
 local SingleTreeSprite = import("..sprites.SingleTreeSprite")
+local CitizenSprite = import("..sprites.CitizenSprite")
+local SoldierSprite = import("..sprites.SoldierSprite")
+local SoldierManager = import("..entity.SoldierManager")
 local Observer = import("..entity.Observer")
 local MapLayer = import(".MapLayer")
 local CityLayer = class("CityLayer", MapLayer)
@@ -51,9 +53,9 @@ function CityLayer:OnTileUnlocked(city)
     self:OnTileChanged(city)
 end
 function CityLayer:OnTileChanged(city)
-    self:UpdateRuinsWithCity(city)
-    self:UpdateSingleTreeWithCity(city)
-    self:UpdateAllWithCity(city)
+    self:UpdateRuinsVisibleWithCity(city)
+    self:UpdateSingleTreeVisibleWithCity(city)
+    self:UpdateAllDynamicWithCity(city)
 end
 function CityLayer:OnRoundUnlocked(round)
     print("OnRoundUnlocked", round)
@@ -100,242 +102,10 @@ function CityLayer:OnDestoryDecorator(destory_decorator, release_ruins)
         end
     end
 end
----
-function CityLayer:UpdateAllWithCity(city)
-    self:UpdateTreesWithCity(city)
-    self:UpdateTilesWithCity(city)
-    self:UpdateRoadsWithCity(city)
-    self:UpdateWallsWithCity(city)
-    self:UpdateTowersWithCity(city)
+function CityLayer:OnSoliderCountChanged(soldier_manager, changed)
+    self:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
 end
-function CityLayer:UpdateRuinsWithCity(city)
-    table.foreach(self.ruins, function(_, ruin)
-        local building_entity = ruin:GetEntity()
-        local tile = city:GetTileWhichBuildingBelongs(building_entity)
-        if tile.locked or city:GetDecoratorByPosition(building_entity:GetLogicPosition()) then
-            ruin:setVisible(false)
-        else
-            ruin:setVisible(true)
-        end
-    end)
-end
-function CityLayer:UpdateSingleTreeWithCity(city)
-    table.foreach(self.single_tree, function(_, tree)
-        tree:setVisible(city:GetTileByBuildingPosition(tree.x, tree.y):IsUnlocked())
-    end)
-end
-function CityLayer:UpdateTilesWithCity(city)
-    local map = self:GetCityBackgroundsMap()
-    city:IteratorTilesByFunc(function(x, y, tile)
-        map[y][x].visible = tile:IsUnlocked()
-    end)
-    self:UpdateCityBackgroundsByMap(map)
-end
-function CityLayer:UpdateRoadsWithCity(city)
-    local map = self:GetRoadsmap()
-    city:IteratorTilesByFunc(function(x, y, tile)
-        if
-            x == 1 and y == 1
-            or  x == 2 and y == 1
-            or  x == 1 and y == 2
-        then
-            map[y][x].visible = false
-        else
-            map[y][x].visible = tile:IsUnlocked()
-        end
-    end)
-    self:UpdateRoadsByMap(map)
-end
-function CityLayer:UpdateTreesWithCity(city)
-    local city_node = self:GetCityNode()
-
-    if self.road then
-        city_node:removeChild(self.road, true)
-    end
-    if self.trees then
-        for k, v in pairs(self.trees) do
-            city_node:removeChild(v, true)
-        end
-    end
-
-    self.trees = {}
-    self.road = nil
-
-    local face_tile = city:GetTileFaceToGate()
-    self.road = self:CreateRoadWithTile(face_tile)
-    city_node:addChild(self.road)
-
-    city:IteratorTilesByFunc(function(x, y, tile)
-        if face_tile ~= tile and tile.locked then
-            local tree = self:CreateTreeWithTile(tile)
-            city_node:addChild(tree)
-            table.insert(self.trees, tree)
-        end
-    end)
-
-    self:NotifyObservers(function(listener)
-        local road = city:GetTileByIndex(face_tile.x, face_tile.y) and self.road or nil
-        listener:OnTreesChanged(self.trees, road)
-    end)
-end
-function CityLayer:UpdateWallsWithCity(city)
-    local city_node = self:GetCityNode()
-    local old_walls = self.walls
-    local new_walls = {}
-    for _, v in pairs(city:GetWalls()) do
-        local x, y = v:GetLogicPosition()
-        local wall = self:CreateWall(v)
-        city_node:addChild(wall)
-        table.insert(new_walls, wall)
-    end
-    self.walls = new_walls
-
-    self:NotifyObservers(function(listener)
-        listener:OnGateChanged(old_walls, new_walls)
-    end)
-
-    if old_walls then
-        for k, v in pairs(old_walls) do
-            v:DestorySelf()
-        end
-    end
-end
-function CityLayer:UpdateTowersWithCity(city)
-    local city_node = self:GetCityNode()
-    local old_towers = self.towers
-    local new_towers = {}
-    for k, v in pairs(city:GetTowers()) do
-        local x, y = v:GetLogicPosition()
-        local w, h = v:GetSize()
-        local tower = self:CreateTower(v)
-        city_node:addChild(tower)
-        table.insert(new_towers, tower)
-    end
-    self.towers = new_towers
-
-    self:NotifyObservers(function(listener)
-        listener:OnTowersChanged(old_towers, new_towers)
-    end)
-
-    if old_towers then
-        for k, v in pairs(old_towers) do
-            v:DestorySelf()
-        end
-    end
-end
-function CityLayer:UpdateCornsAndRocksWithCity(city)
-    local corns = self.background:getChildByTag(10032)
-    local rocks = self.background:getChildByTag(10033)
-    local unlock_round = city:GetUnlockAround()
-    for i = 1, unlock_round do
-        corns:getChildByTag(i):setVisible(true)
-        rocks:getChildByTag(i):setVisible(true)
-    end
-    for i = unlock_round + 1, 5 do
-        corns:getChildByTag(i):setVisible(false)
-        rocks:getChildByTag(i):setVisible(false)
-    end
-end
-function CityLayer:CreateRoadWithTile(tile)
-    local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
-    return RoadSprite.new(self, tile, x, y)
-end
-function CityLayer:CreateTreeWithTile(tile)
-    local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
-    return TreeSprite.new(self, tile, x, y)
-end
-function CityLayer:CreateWall(wall)
-    return WallUpgradingSprite.new(self, wall)
-end
-function CityLayer:CreateTower(tower)
-    return TowerUpgradingSprite.new(self, tower)
-end
-function CityLayer:CreateRuin(ruin)
-    return RuinSprite.new(self, ruin)
-end
-function CityLayer:CreateDecorator(house)
-    return UpgradingSprite.new(self, house)
-end
-function CityLayer:CreateDragonEyrie(building, city)
-    return DragonEyrieSprite.new(self, building, city)
-end
-function CityLayer:CreateBuilding(building, city)
-    return FunctionUpgradingSprite.new(self, building, city)
-end
-function CityLayer:CreateSingleTree(logic_x, logic_y)
-    return SingleTreeSprite.new(self, logic_x, logic_y)
-end
-function CityLayer:IteratorFunctionsBuildings(func)
-    table.foreach(self.buildings, func)
-end
-function CityLayer:IteratorDecoratorBuildings(func)
-    table.foreach(self.houses, func)
-end
-function CityLayer:IteratorFunctionsBuildings(func)
-    table.foreach(self.buildings, func)
-end
-function CityLayer:IteratorInnnerBuildings(func)
-    local handle = false
-    local handle_func = function(k, v)
-        if func(k, v) then
-            handle = true
-            return true
-        end
-    end
-    repeat
-        table.foreach(self.buildings, handle_func)
-        if handle then break end
-        table.foreach(self.houses, handle_func)
-    until true
-end
-function CityLayer:IteratorCanUpgradingBuilding(func)
-    local handle = false
-    local handle_func = function(k, v)
-        if func(k, v) then
-            handle = true
-            return true
-        end
-    end
-    repeat
-        table.foreach(self.buildings, handle_func)
-        if handle then break end
-        table.foreach(self.houses, handle_func)
-        if handle then break end
-        table.foreach(self.towers, function(k, tower)
-            if tower:GetEntity():IsUnlocked() then
-                return handle_func(k, tower)
-            end
-        end)
-        if handle then break end
-        table.foreach(self.walls, function(k, wall)
-            if wall:GetEntity():IsGate() then
-                return handle_func(k, wall)
-            end
-        end)
-    until true
-end
-function CityLayer:IteratorClickAble(func)
-    local handle = false
-    local handle_func = function(k, v)
-        if func(k, v) then
-            handle = true
-            return true
-        end
-    end
-    repeat
-        table.foreach(self.buildings, handle_func)
-        if handle then break end
-        table.foreach(self.houses, handle_func)
-        if handle then break end
-        table.foreach(self.towers, handle_func)
-        if handle then break end
-        table.foreach(self.walls, handle_func)
-        if handle then break end
-        table.foreach(self.ruins, handle_func)
-        if handle then break end
-    until true
-end
-
+-----
 local SCENE_BACKGROUND = 1
 local CITY_LAYER = 2
 local CITY_BACKGROUND = 1
@@ -448,9 +218,7 @@ end
 function CityLayer:GetCityBackgrounds()
     return self.city_backgrounds
 end
-
-
-
+--
 function CityLayer:InitRoadsWithRandom()
     local roads_map = {}
     for row_index = 1, 5 do
@@ -493,15 +261,6 @@ function CityLayer:UpdateRoadsByMap(map)
         end
     end
 end
-function CityLayer:GetRoadsmap()
-    return self.roads_map
-end
-function CityLayer:GetCityLayer()
-    return self.city_layer
-end
-function CityLayer:GetCityNode()
-    return self.city_node
-end
 function CityLayer:ChangeTerrain(terrain_type)
     if self.terrain_type ~= terrain_type then
         self.terrain_type = terrain_type
@@ -509,13 +268,13 @@ function CityLayer:ChangeTerrain(terrain_type)
         self:RefreshCityBackgroundsByMap(self.city_backgrounds_map)
         self:RefreshRoadsByMap(self.roads_map)
         table.foreach(self.trees, function(_, v)
-            v:ReloadSprite()
+            v:ReloadSpriteCauseTerrainChanged()
         end)
         table.foreach(self.single_tree, function(_, v)
-            v:ReloadSprite()
+            v:ReloadSpriteCauseTerrainChanged()
         end)
         table.foreach(self.buildings, function(_, v)
-            v:ReloadSprite()
+            v:ReloadSpriteCauseTerrainChanged()
         end)
     end
 end
@@ -533,10 +292,8 @@ function CityLayer:InitWithCity(city)
     city:AddListenOnType(self, city.LISTEN_TYPE.OCCUPY_RUINS)
     city:AddListenOnType(self, city.LISTEN_TYPE.CREATE_DECORATOR)
     city:AddListenOnType(self, city.LISTEN_TYPE.DESTROY_DECORATOR)
-
-    self:UpdateAllWithCity(city)
-
-
+    city:GetSoldierManager():AddListenOnType(self, SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
+    
     local city_node = self:GetCityNode()
     -- 加废墟
     for k, ruin in pairs(city.ruins) do
@@ -589,7 +346,301 @@ function CityLayer:InitWithCity(city)
         end
     end)
     self.single_tree = single_tree
+
+    -- 兵种
+    local soldiers = {}
+    for i, v in ipairs({
+        {x = 9, y = 11, soldier_type = "swordsman"},
+        {x = 7, y = 11, soldier_type = "archer"},
+        {x = 5, y = 11, soldier_type = "lancer"},
+        {x = 3, y = 11, soldier_type = "catapult"},
+
+        {x = 9, y = 13, soldier_type = "sentinel"},
+        {x = 7, y = 13, soldier_type = "crossbowman"},
+        {x = 5, y = 13, soldier_type = "horseArcher"},
+        {x = 3, y = 13, soldier_type = "ballista"},
+        }) do
+        table.insert(soldiers, self:CreateSoldier(v.soldier_type, v.x, v.y):addTo(city_node))
+    end
+    self.soldiers = soldiers
+
+    -- 更新其他需要动态生成的建筑
+    self:UpdateAllDynamicWithCity(city)
+    ---
+    -- local cc = cc
+    -- local function wrap_point_in_table(...)
+    --     local arg = {...}
+    --     return {x = arg[1], y = arg[2]}
+    -- end
+    -- local function return_dir_and_velocity(start_point, end_point)
+    --     local speed = 50
+    --     local spt = wrap_point_in_table(self.iso_map:ConvertToMapPosition(start_point.x, start_point.y))
+    --     local ept = wrap_point_in_table(self.iso_map:ConvertToMapPosition(end_point.x, end_point.y))
+    --     local dir = cc.pSub(ept, spt)
+    --     local distance = cc.pGetLength(dir)
+    --     local vdir = {x = speed * dir.x / distance, y = speed * dir.y / distance}
+    --     return dir, vdir
+    -- end
+    -- local _, vdir = return_dir_and_velocity({x = 10, y = 13}, {x = 19, y = 13})
+    -- local citizen = self:CreateCitizen(10, 13):addTo(city_node)
+    -- self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
+    --     local x, y = citizen:getPosition()
+    --     local tx, ty = self.iso_map:ConvertToMapPosition(19, 13)
+    --     local disSQ = cc.pDistanceSQ({x = x, y = y}, {x = tx, y = ty})
+    --     if disSQ < 10 * 10 then
+    --         citizen:TurnLeft()
+    --         _, vdir = return_dir_and_velocity({x = 19, y = 13}, {x = 19, y = 19})
+    --     end
+    --     local tx, ty = self.iso_map:ConvertToMapPosition(19, 29)
+    --     local disSQ = cc.pDistanceSQ({x = x, y = y}, {x = tx, y = ty})
+    --     if disSQ < 10 * 10 then
+    --         self:unscheduleUpdate()
+    --     end
+    --     citizen:SetPositionWithZOrder(x + vdir.x * dt, y + vdir.y * dt)
+    -- end)
+    -- self:scheduleUpdate()
 end
+---
+function CityLayer:UpdateAllDynamicWithCity(city)
+    self:UpdateTreesWithCity(city)
+    self:UpdateTilesWithCity(city)
+    self:UpdateRoadsWithCity(city)
+    self:UpdateWallsWithCity(city)
+    self:UpdateTowersWithCity(city)
+    self:UpdateSoldiersVisibleWithSoldierManager(city:GetSoldierManager())
+end
+function CityLayer:UpdateRuinsVisibleWithCity(city)
+    table.foreach(self.ruins, function(_, ruin)
+        local building_entity = ruin:GetEntity()
+        local tile = city:GetTileWhichBuildingBelongs(building_entity)
+        if tile.locked or city:GetDecoratorByPosition(building_entity:GetLogicPosition()) then
+            ruin:setVisible(false)
+        else
+            ruin:setVisible(true)
+        end
+    end)
+end
+function CityLayer:UpdateSingleTreeVisibleWithCity(city)
+    table.foreach(self.single_tree, function(_, tree)
+        tree:setVisible(city:GetTileByBuildingPosition(tree.x, tree.y):IsUnlocked())
+    end)
+end
+function CityLayer:UpdateTilesWithCity(city)
+    local map = self:GetCityBackgroundsMap()
+    city:IteratorTilesByFunc(function(x, y, tile)
+        map[y][x].visible = tile:IsUnlocked()
+    end)
+    self:UpdateCityBackgroundsByMap(map)
+end
+function CityLayer:UpdateRoadsWithCity(city)
+    local map = self:GetRoadsmap()
+    city:IteratorTilesByFunc(function(x, y, tile)
+        if
+            x == 1 and y == 1
+            or  x == 2 and y == 1
+            or  x == 1 and y == 2
+        then
+            map[y][x].visible = false
+        else
+            map[y][x].visible = tile:IsUnlocked()
+        end
+    end)
+    self:UpdateRoadsByMap(map)
+end
+function CityLayer:UpdateTreesWithCity(city)
+    local city_node = self:GetCityNode()
+
+    if self.road then
+        city_node:removeChild(self.road, true)
+    end
+    if self.trees then
+        for k, v in pairs(self.trees) do
+            city_node:removeChild(v, true)
+        end
+    end
+
+    self.trees = {}
+    self.road = nil
+
+    local face_tile = city:GetTileFaceToGate()
+    self.road = self:CreateRoadWithTile(face_tile)
+    city_node:addChild(self.road)
+
+    city:IteratorTilesByFunc(function(x, y, tile)
+        if face_tile ~= tile and tile.locked then
+            local tree = self:CreateTreeWithTile(tile)
+            city_node:addChild(tree)
+            table.insert(self.trees, tree)
+        end
+    end)
+
+    self:NotifyObservers(function(listener)
+        local road = city:GetTileByIndex(face_tile.x, face_tile.y) and self.road or nil
+        listener:OnTreesChanged(self.trees, road)
+    end)
+end
+function CityLayer:UpdateWallsWithCity(city)
+    local city_node = self:GetCityNode()
+    local old_walls = self.walls
+    local new_walls = {}
+    for _, v in pairs(city:GetWalls()) do
+        local x, y = v:GetLogicPosition()
+        local wall = self:CreateWall(v)
+        city_node:addChild(wall)
+        table.insert(new_walls, wall)
+    end
+    self.walls = new_walls
+
+    self:NotifyObservers(function(listener)
+        listener:OnGateChanged(old_walls, new_walls)
+    end)
+
+    if old_walls then
+        for k, v in pairs(old_walls) do
+            v:DestorySelf()
+        end
+    end
+end
+function CityLayer:UpdateTowersWithCity(city)
+    local city_node = self:GetCityNode()
+    local old_towers = self.towers
+    local new_towers = {}
+    for k, v in pairs(city:GetTowers()) do
+        local x, y = v:GetLogicPosition()
+        local w, h = v:GetSize()
+        local tower = self:CreateTower(v)
+        city_node:addChild(tower)
+        table.insert(new_towers, tower)
+    end
+    self.towers = new_towers
+
+    self:NotifyObservers(function(listener)
+        listener:OnTowersChanged(old_towers, new_towers)
+    end)
+
+    if old_towers then
+        for k, v in pairs(old_towers) do
+            v:DestorySelf()
+        end
+    end
+end
+function CityLayer:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
+    local map = soldier_manager:GetSoldierMap()
+    self:IteratorSoldiers(function(_, v)
+        local is_visible = map[v:GetSoldierType()] > 0
+        v:setVisible(is_visible)
+    end)
+end
+function CityLayer:IteratorFunctionsBuildings(func)
+    table.foreach(self.buildings, func)
+end
+function CityLayer:IteratorDecoratorBuildings(func)
+    table.foreach(self.houses, func)
+end
+function CityLayer:IteratorFunctionsBuildings(func)
+    table.foreach(self.buildings, func)
+end
+function CityLayer:IteratorSoldiers(func)
+    table.foreach(self.soldiers, func)
+end
+function CityLayer:IteratorInnnerBuildings(func)
+    local handle = false
+    local handle_func = function(k, v)
+        if func(k, v) then
+            handle = true
+            return true
+        end
+    end
+    repeat
+        table.foreach(self.buildings, handle_func)
+        if handle then break end
+        table.foreach(self.houses, handle_func)
+    until true
+end
+function CityLayer:IteratorCanUpgradingBuilding(func)
+    local handle = false
+    local handle_func = function(k, v)
+        if func(k, v) then
+            handle = true
+            return true
+        end
+    end
+    repeat
+        table.foreach(self.buildings, handle_func)
+        if handle then break end
+        table.foreach(self.houses, handle_func)
+        if handle then break end
+        table.foreach(self.towers, function(k, tower)
+            if tower:GetEntity():IsUnlocked() then
+                return handle_func(k, tower)
+            end
+        end)
+        if handle then break end
+        table.foreach(self.walls, function(k, wall)
+            if wall:GetEntity():IsGate() then
+                return handle_func(k, wall)
+            end
+        end)
+    until true
+end
+function CityLayer:IteratorClickAble(func)
+    local handle = false
+    local handle_func = function(k, v)
+        if func(k, v) then
+            handle = true
+            return true
+        end
+    end
+    repeat
+        table.foreach(self.buildings, handle_func)
+        if handle then break end
+        table.foreach(self.houses, handle_func)
+        if handle then break end
+        table.foreach(self.towers, handle_func)
+        if handle then break end
+        table.foreach(self.walls, handle_func)
+        if handle then break end
+        table.foreach(self.ruins, handle_func)
+        if handle then break end
+    until true
+end
+function CityLayer:CreateRoadWithTile(tile)
+    local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
+    return RoadSprite.new(self, tile, x, y)
+end
+function CityLayer:CreateTreeWithTile(tile)
+    local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
+    return TreeSprite.new(self, tile, x, y)
+end
+function CityLayer:CreateWall(wall)
+    return WallUpgradingSprite.new(self, wall)
+end
+function CityLayer:CreateTower(tower)
+    return TowerUpgradingSprite.new(self, tower)
+end
+function CityLayer:CreateRuin(ruin)
+    return RuinSprite.new(self, ruin)
+end
+function CityLayer:CreateDecorator(house)
+    return UpgradingSprite.new(self, house)
+end
+function CityLayer:CreateDragonEyrie(building, city)
+    return DragonEyrieSprite.new(self, building, city)
+end
+function CityLayer:CreateBuilding(building, city)
+    return FunctionUpgradingSprite.new(self, building, city)
+end
+function CityLayer:CreateSingleTree(logic_x, logic_y)
+    return SingleTreeSprite.new(self, logic_x, logic_y)
+end
+function CityLayer:CreateCitizen(logic_x, logic_y)
+    return CitizenSprite.new(self, logic_x, logic_y)
+end
+function CityLayer:CreateSoldier(soldier_type, logic_x, logic_y)
+    return SoldierSprite.new(self, soldier_type, logic_x, logic_y)
+end
+
+--
 function CityLayer:GetMapSize()
     if not self.width or not self.height then
         local layer_size = self:GetPositionLayer():getLayerSize()
@@ -611,22 +662,18 @@ end
 function CityLayer:GetPositionNode()
     return self.position_node
 end
-
----
-function CityLayer:EableTileBackground(x, y, enable)
-    local tile = self:GetTileAtIndexInBackground(x, y)
-    if tile then
-        tile:setVisible(enable)
-    end
-end
-function CityLayer:GetTileAtIndexInBackground(x, y)
-    return self:GetBackgroundLayer():getTileAt(cc.p(x, y))
-end
+--
 function CityLayer:GetBackgroundLayer()
     if not self.tile_layer then
         self.tile_layer = self.city_background:getLayer("layer1")
     end
     return self.tile_layer
+end
+function CityLayer:GetRoadsmap()
+    return self.roads_map
+end
+function CityLayer:GetCityNode()
+    return self.city_node
 end
 
 ----- override

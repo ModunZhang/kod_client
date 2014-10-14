@@ -37,6 +37,13 @@ function SoldierManager:ctor()
         ["catapult"] = 0,
     }
 end
+function SoldierManager:IteratorSoldiers(func)
+    for k, v in pairs(self:GetSoldierMap()) do
+        if func(k, v) then
+            return
+        end
+    end
+end
 function SoldierManager:GetSoldierMap()
     return self.soldier_map
 end

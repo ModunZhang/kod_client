@@ -8,10 +8,14 @@ local TREE_MAP = {
 function TreeSprite:ctor(city_layer, entity, x, y)
     TreeSprite.super.ctor(self, city_layer, entity, x, y)
 end
-function TreeSprite:ReloadSprite()
+function TreeSprite:ReloadSpriteCauseTerrainChanged()
     self.sprite:removeFromParent()
     self.sprite = self:CreateSprite():addTo(self, SPRITE)
 end
+-- function TreeSprite:GetLogicZorder(width)
+--     local x, y = self:GetLogicPosition()
+--     return x + y * width + 100
+-- end
 function TreeSprite:GetSpriteFile()
     if not self.png_index then
         self.png_index = (math.floor(math.random() * 1000) % 2) + 1

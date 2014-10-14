@@ -13,7 +13,7 @@ function SingleTreeSprite:ctor(city_layer, x, y)
     SingleTreeSprite.super.ctor(self, city_layer, nil, ax, ay)
     self:GetSprite():align(display.BOTTOM_CENTER)
 end
-function SingleTreeSprite:ReloadSprite()
+function SingleTreeSprite:ReloadSpriteCauseTerrainChanged()
 	self.sprite:removeFromParent()
     self.sprite = self:CreateSprite():addTo(self, SPRITE):align(display.BOTTOM_CENTER)
 end

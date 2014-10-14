@@ -4,14 +4,14 @@
     {
       "strVersion": "1.6.0.0",
       "version": 1.6,
-      "name": "Red_dragon",
+      "name": "Blue_dragon",
       "bone_data": [
         {
           "name": "Layer1",
           "parent": "",
           "dI": 40,
-          "x": 12.772727012634277,
-          "y": 130.21878051757813,
+          "x": 12.833333015441895,
+          "y": 130.72891235351563,
           "z": 1,
           "cX": 1.0,
           "cY": 1.0,
@@ -23,7 +23,7 @@
           "bl": 0,
           "display_data": [
             {
-              "name": "Red_render/fly/00000.png",
+              "name": "Blue_render/fly/00000.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -37,7 +37,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00001.png",
+              "name": "Blue_render/fly/00001.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -51,7 +51,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00002.png",
+              "name": "Blue_render/fly/00002.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -65,7 +65,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00003.png",
+              "name": "Blue_render/fly/00003.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -79,7 +79,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00004.png",
+              "name": "Blue_render/fly/00004.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -93,7 +93,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00005.png",
+              "name": "Blue_render/fly/00005.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -107,7 +107,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00006.png",
+              "name": "Blue_render/fly/00006.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -121,7 +121,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00007.png",
+              "name": "Blue_render/fly/00007.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -135,7 +135,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00008.png",
+              "name": "Blue_render/fly/00008.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -149,7 +149,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00009.png",
+              "name": "Blue_render/fly/00009.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -163,7 +163,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00010.png",
+              "name": "Blue_render/fly/00010.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -177,7 +177,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00011.png",
+              "name": "Blue_render/fly/00011.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -191,7 +191,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00012.png",
+              "name": "Blue_render/fly/00012.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -205,7 +205,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00013.png",
+              "name": "Blue_render/fly/00013.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -219,7 +219,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00014.png",
+              "name": "Blue_render/fly/00014.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -233,7 +233,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00015.png",
+              "name": "Blue_render/fly/00015.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -247,7 +247,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00016.png",
+              "name": "Blue_render/fly/00016.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -261,7 +261,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00017.png",
+              "name": "Blue_render/fly/00017.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -275,7 +275,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00018.png",
+              "name": "Blue_render/fly/00018.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -289,7 +289,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00019.png",
+              "name": "Blue_render/fly/00019.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -303,7 +303,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00020.png",
+              "name": "Blue_render/fly/00020.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -317,7 +317,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00021.png",
+              "name": "Blue_render/fly/00021.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -331,7 +331,7 @@
               ]
             },
             {
-              "name": "Red_render/fly/00022.png",
+              "name": "Blue_render/fly/00022.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -345,7 +345,7 @@
               ]
             },
             {
-              "name": "Red_render/flying/00000.png",
+              "name": "Blue_render/flying/00000.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -359,7 +359,7 @@
               ]
             },
             {
-              "name": "Red_render/flying/00001.png",
+              "name": "Blue_render/flying/00001.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -373,7 +373,7 @@
               ]
             },
             {
-              "name": "Red_render/flying/00002.png",
+              "name": "Blue_render/flying/00002.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -387,7 +387,7 @@
               ]
             },
             {
-              "name": "Red_render/flying/00003.png",
+              "name": "Blue_render/flying/00003.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -401,7 +401,7 @@
               ]
             },
             {
-              "name": "Red_render/flying/00004.png",
+              "name": "Blue_render/flying/00004.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -415,7 +415,7 @@
               ]
             },
             {
-              "name": "Red_render/flying/00005.png",
+              "name": "Blue_render/flying/00005.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -429,7 +429,7 @@
               ]
             },
             {
-              "name": "Red_render/flying/00006.png",
+              "name": "Blue_render/flying/00006.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -443,7 +443,7 @@
               ]
             },
             {
-              "name": "Red_render/flying/00007.png",
+              "name": "Blue_render/flying/00007.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -457,7 +457,7 @@
               ]
             },
             {
-              "name": "Red_render/flying/00008.png",
+              "name": "Blue_render/flying/00008.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -471,7 +471,7 @@
               ]
             },
             {
-              "name": "Red_render/flying/00009.png",
+              "name": "Blue_render/flying/00009.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -485,7 +485,7 @@
               ]
             },
             {
-              "name": "Red_render/idle/00000.png",
+              "name": "Blue_render/idle/00000.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -499,7 +499,7 @@
               ]
             },
             {
-              "name": "Red_render/idle/00001.png",
+              "name": "Blue_render/idle/00001.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -513,7 +513,7 @@
               ]
             },
             {
-              "name": "Red_render/idle/00002.png",
+              "name": "Blue_render/idle/00002.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -527,7 +527,7 @@
               ]
             },
             {
-              "name": "Red_render/idle/00003.png",
+              "name": "Blue_render/idle/00003.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -541,7 +541,7 @@
               ]
             },
             {
-              "name": "Red_render/idle/00004.png",
+              "name": "Blue_render/idle/00004.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -555,7 +555,7 @@
               ]
             },
             {
-              "name": "Red_render/idle/00005.png",
+              "name": "Blue_render/idle/00005.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -569,7 +569,7 @@
               ]
             },
             {
-              "name": "Red_render/idle/00006.png",
+              "name": "Blue_render/idle/00006.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -583,7 +583,7 @@
               ]
             },
             {
-              "name": "Red_render/idle/00007.png",
+              "name": "Blue_render/idle/00007.png",
               "displayType": 0,
               "skin_data": [
                 {
@@ -603,7 +603,7 @@
   ],
   "animation_data": [
     {
-      "name": "Red_dragon",
+      "name": "Blue_dragon",
       "mov_data": [
         {
           "name": "Fly",
@@ -982,8 +982,8 @@
               "frame_data": [
                 {
                   "dI": 23,
-                  "x": -77.727294921875,
-                  "y": -61.590927124023438,
+                  "x": -71.666702270507812,
+                  "y": -55.833343505859375,
                   "z": 0,
                   "cX": 1.0,
                   "cY": 1.0,
@@ -997,8 +997,8 @@
                 },
                 {
                   "dI": 24,
-                  "x": -77.727294921875,
-                  "y": -61.590927124023438,
+                  "x": -71.666702270507812,
+                  "y": -55.833343505859375,
                   "z": 0,
                   "cX": 1.0,
                   "cY": 1.0,
@@ -1012,8 +1012,8 @@
                 },
                 {
                   "dI": 25,
-                  "x": -77.727294921875,
-                  "y": -61.590927124023438,
+                  "x": -71.666702270507812,
+                  "y": -55.833343505859375,
                   "z": 0,
                   "cX": 1.0,
                   "cY": 1.0,
@@ -1027,8 +1027,8 @@
                 },
                 {
                   "dI": 26,
-                  "x": -77.727294921875,
-                  "y": -61.590927124023438,
+                  "x": -71.666702270507812,
+                  "y": -55.833343505859375,
                   "z": 0,
                   "cX": 1.0,
                   "cY": 1.0,
@@ -1042,8 +1042,8 @@
                 },
                 {
                   "dI": 27,
-                  "x": -77.727294921875,
-                  "y": -61.590927124023438,
+                  "x": -71.666702270507812,
+                  "y": -55.833343505859375,
                   "z": 0,
                   "cX": 1.0,
                   "cY": 1.0,
@@ -1057,8 +1057,8 @@
                 },
                 {
                   "dI": 28,
-                  "x": -77.727294921875,
-                  "y": -61.590927124023438,
+                  "x": -71.666702270507812,
+                  "y": -55.833343505859375,
                   "z": 0,
                   "cX": 1.0,
                   "cY": 1.0,
@@ -1072,8 +1072,8 @@
                 },
                 {
                   "dI": 29,
-                  "x": -77.727294921875,
-                  "y": -61.590927124023438,
+                  "x": -71.666702270507812,
+                  "y": -55.833343505859375,
                   "z": 0,
                   "cX": 1.0,
                   "cY": 1.0,
@@ -1087,8 +1087,8 @@
                 },
                 {
                   "dI": 30,
-                  "x": -77.727294921875,
-                  "y": -61.590927124023438,
+                  "x": -71.666702270507812,
+                  "y": -55.833343505859375,
                   "z": 0,
                   "cX": 1.0,
                   "cY": 1.0,
@@ -1102,8 +1102,8 @@
                 },
                 {
                   "dI": 31,
-                  "x": -77.727294921875,
-                  "y": -61.590927124023438,
+                  "x": -71.666702270507812,
+                  "y": -55.833343505859375,
                   "z": 0,
                   "cX": 1.0,
                   "cY": 1.0,
@@ -1117,8 +1117,8 @@
                 },
                 {
                   "dI": 32,
-                  "x": -77.727294921875,
-                  "y": -61.590927124023438,
+                  "x": -71.666702270507812,
+                  "y": -55.833343505859375,
                   "z": 0,
                   "cX": 1.0,
                   "cY": 1.0,
@@ -1149,8 +1149,8 @@
               "frame_data": [
                 {
                   "dI": 33,
-                  "x": -62.0455322265625,
-                  "y": -52.1363525390625,
+                  "x": -61.111137390136719,
+                  "y": -52.222251892089844,
                   "z": 0,
                   "cX": 1.0,
                   "cY": 1.0,
@@ -1164,8 +1164,8 @@
                 },
                 {
                   "dI": 34,
-                  "x": -62.0455322265625,
-                  "y": -52.1363525390625,
+                  "x": -61.111137390136719,
+                  "y": -52.222251892089844,
                   "z": 0,
                   "cX": 1.0,
                   "cY": 1.0,
@@ -1179,8 +1179,8 @@
                 },
                 {
                   "dI": 35,
-                  "x": -62.0455322265625,
-                  "y": -52.1363525390625,
+                  "x": -61.111137390136719,
+                  "y": -52.222251892089844,
                   "z": 0,
                   "cX": 1.0,
                   "cY": 1.0,
@@ -1194,8 +1194,8 @@
                 },
                 {
                   "dI": 36,
-                  "x": -62.0455322265625,
-                  "y": -52.1363525390625,
+                  "x": -61.111137390136719,
+                  "y": -52.222251892089844,
                   "z": 0,
                   "cX": 1.0,
                   "cY": 1.0,
@@ -1209,8 +1209,8 @@
                 },
                 {
                   "dI": 37,
-                  "x": -62.0455322265625,
-                  "y": -52.1363525390625,
+                  "x": -61.111137390136719,
+                  "y": -52.222251892089844,
                   "z": 0,
                   "cX": 1.0,
                   "cY": 1.0,
@@ -1224,8 +1224,8 @@
                 },
                 {
                   "dI": 38,
-                  "x": -62.0455322265625,
-                  "y": -52.1363525390625,
+                  "x": -61.111137390136719,
+                  "y": -52.222251892089844,
                   "z": 0,
                   "cX": 1.0,
                   "cY": 1.0,
@@ -1239,8 +1239,8 @@
                 },
                 {
                   "dI": 39,
-                  "x": -62.0455322265625,
-                  "y": -52.1363525390625,
+                  "x": -61.111137390136719,
+                  "y": -52.222251892089844,
                   "z": 0,
                   "cX": 1.0,
                   "cY": 1.0,
@@ -1254,8 +1254,8 @@
                 },
                 {
                   "dI": 40,
-                  "x": -62.0455322265625,
-                  "y": -52.1363525390625,
+                  "x": -61.111137390136719,
+                  "y": -52.222251892089844,
                   "z": 0,
                   "cX": 1.0,
                   "cY": 1.0,
@@ -1276,7 +1276,7 @@
   ],
   "texture_data": [
     {
-      "name": "Red_render/fly/00008",
+      "name": "Blue_render/idle/00007",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1284,7 +1284,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00009",
+      "name": "Blue_render/idle/00006",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1292,7 +1292,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00010",
+      "name": "Blue_render/idle/00005",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1300,7 +1300,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00011",
+      "name": "Blue_render/idle/00004",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1308,7 +1308,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00012",
+      "name": "Blue_render/idle/00003",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1316,7 +1316,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00013",
+      "name": "Blue_render/idle/00002",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1324,7 +1324,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00014",
+      "name": "Blue_render/idle/00001",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1332,7 +1332,15 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00015",
+      "name": "Blue_render/idle/00000",
+      "width": 192.0,
+      "height": 158.0,
+      "pX": 0.5,
+      "pY": 0.5,
+      "plistFile": ""
+    },
+    {
+      "name": "Blue_render/flying/00009",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1340,7 +1348,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00016",
+      "name": "Blue_render/flying/00008",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1348,7 +1356,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00017",
+      "name": "Blue_render/flying/00007",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1356,7 +1364,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00018",
+      "name": "Blue_render/flying/00006",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1364,7 +1372,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00019",
+      "name": "Blue_render/flying/00005",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1372,7 +1380,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00020",
+      "name": "Blue_render/flying/00004",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1380,7 +1388,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00021",
+      "name": "Blue_render/flying/00003",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1388,7 +1396,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00022",
+      "name": "Blue_render/flying/00002",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1396,7 +1404,15 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/flying/00000",
+      "name": "Blue_render/flying/00001",
+      "width": 0.0,
+      "height": 0.0,
+      "pX": 0.5,
+      "pY": 0.5,
+      "plistFile": ""
+    },
+    {
+      "name": "Blue_render/flying/00000",
       "width": 328.0,
       "height": 310.0,
       "pX": 0.5,
@@ -1404,7 +1420,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/flying/00001",
+      "name": "Blue_render/fly/00022",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1412,7 +1428,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/flying/00002",
+      "name": "Blue_render/fly/00021",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1420,7 +1436,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/flying/00003",
+      "name": "Blue_render/fly/00020",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1428,7 +1444,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/flying/00004",
+      "name": "Blue_render/fly/00019",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1436,7 +1452,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/flying/00005",
+      "name": "Blue_render/fly/00018",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1444,7 +1460,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/flying/00006",
+      "name": "Blue_render/fly/00017",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1452,7 +1468,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/flying/00007",
+      "name": "Blue_render/fly/00016",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1460,7 +1476,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/flying/00008",
+      "name": "Blue_render/fly/00015",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1468,7 +1484,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/flying/00009",
+      "name": "Blue_render/fly/00014",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1476,15 +1492,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/idle/00000",
-      "width": 190.0,
-      "height": 158.0,
-      "pX": 0.5,
-      "pY": 0.5,
-      "plistFile": ""
-    },
-    {
-      "name": "Red_render/idle/00001",
+      "name": "Blue_render/fly/00013",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1492,7 +1500,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/idle/00002",
+      "name": "Blue_render/fly/00012",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1500,7 +1508,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/idle/00003",
+      "name": "Blue_render/fly/00011",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1508,7 +1516,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/idle/00004",
+      "name": "Blue_render/fly/00010",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1516,7 +1524,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/idle/00005",
+      "name": "Blue_render/fly/00009",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1524,7 +1532,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/idle/00006",
+      "name": "Blue_render/fly/00008",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1532,7 +1540,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/idle/00007",
+      "name": "Blue_render/fly/00007",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1540,7 +1548,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00007",
+      "name": "Blue_render/fly/00006",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1548,7 +1556,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00006",
+      "name": "Blue_render/fly/00005",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1556,7 +1564,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00005",
+      "name": "Blue_render/fly/00004",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1564,7 +1572,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00004",
+      "name": "Blue_render/fly/00003",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1572,7 +1580,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00003",
+      "name": "Blue_render/fly/00002",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1580,7 +1588,7 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00002",
+      "name": "Blue_render/fly/00001",
       "width": 0.0,
       "height": 0.0,
       "pX": 0.5,
@@ -1588,16 +1596,8 @@
       "plistFile": ""
     },
     {
-      "name": "Red_render/fly/00001",
-      "width": 0.0,
-      "height": 0.0,
-      "pX": 0.5,
-      "pY": 0.5,
-      "plistFile": ""
-    },
-    {
-      "name": "Red_render/fly/00000",
-      "width": 294.0,
+      "name": "Blue_render/fly/00000",
+      "width": 288.0,
       "height": 292.0,
       "pX": 0.5,
       "pY": 0.5,
@@ -1605,9 +1605,9 @@
     }
   ],
   "config_file_path": [
-    "Red_dragon0.plist"
+    "Blue_dragon0.plist"
   ],
   "config_png_path": [
-    "Red_dragon0.png"
+    "Blue_dragon0.png"
   ]
 }

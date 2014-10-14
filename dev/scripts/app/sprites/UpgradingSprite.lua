@@ -38,7 +38,7 @@ function UpgradingSprite:OnBuildingUpgradeFinished(building, time)
     self:NotifyObservers(function(listener)
         listener:OnBuildingUpgradeFinished(building, time)
     end)
-    self:UpdateSprite()
+    self:RefreshSprite()
     -- self:RefreshShadow()
     self:OnSceneMove()
 

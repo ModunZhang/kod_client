@@ -1,26 +1,34 @@
-local DragonSprite = class("DragonSprite", function()
-    return display.newNode()
-end)
+local AnimationSprite = import(".AnimationSprite")
+local DragonSprite = class("DragonSprite", AnimationSprite)
 
-function DragonSprite:ctor(tarrain)
-    self.label = ui.newTTFLabel({ text = "text" , size = 50, x = 0, y = 0 }):addTo(self, 1)
-    self.armature = self:CreateSprite(tarrain):addTo(self)
-    self:PlayAnimation("Idle")
+function DragonSprite:ctor(map_layer, tarrain)
+    AnimationSprite.super.ctor(self, map_layer, nil, 0, 0)
+    self:ReloadSpriteCauseTerrainChanged(tarrain)
 end
-function DragonSprite:ReloadSprite(terrain)
-    self.armature:removeFromParent()
-    self.armature = self:CreateSprite(terrain):addTo(self, SPRITE)
+function DragonSprite:SetPositionWithZOrder()
+
+end
+function DragonSprite:GetLogicZorder()
+    return 1
+end
+function DragonSprite:ReloadSpriteCauseTerrainChanged(terrain)
+    if self.sprite then
+        self.sprite:removeFromParent()
+    end
+    self.sprite = self:CreateSprite(terrain):addTo(self)
+    self:AddAnimationCallbackTo(self.sprite)
     self:PlayAnimation("Idle")
 end
 function DragonSprite:CreateSprite(terrain)
+    local dragon_animation
     if terrain == "grass" then
-        self.label:setString("这是绿龙")
+        dragon_animation = "green_dragon"
     elseif terrain == "desert" then
-        self.label:setString("这是红龙")
+        dragon_animation = "Red_dragon"
     elseif terrain == "icefield" then
-        self.label:setString("这是蓝龙")
+        dragon_animation = "Blue_dragon"
     end
-    local armature = ccs.Armature:create("Red_dragon")
+    local armature = ccs.Armature:create(dragon_animation)
     armature:setAnchorPoint(display.ANCHOR_POINTS[display.CENTER])
     armature:setScaleX(-1.5)
     armature:setScaleY(1.5)
@@ -29,35 +37,34 @@ function DragonSprite:CreateSprite(terrain)
     self.idle_count = 0
     return armature
 end
-function DragonSprite:OnAnimationCallback(armatureBack, movementType, movementID)
-    if movementType == ccs.MovementEventType.start then
-    elseif movementType == ccs.MovementEventType.complete then
-    elseif movementType == ccs.MovementEventType.loopComplete then
-        if movementID == "Idle" then
-            self.idle_count = self.idle_count + 1
-            if self.idle_count > 10 then
-                if (math.floor(math.random() * 10) % 10) < self.idle_count - 10 then
-                    self:PlayAnimation("Fly")
-                end
-            else
-                self:PlayAnimation("Idle")
-            end
-        elseif movementID == "Fly" then
-            self.idle_count = 0
-            self:PlayAnimation("Idle")
-        end
+function DragonSprite:OnAnimationStart(animation_name)
+    if animation_name == "Fly" then
+        self.idle_count = 0
     end
 end
-function DragonSprite:PlayAnimation(animation)
-    self.current_animation = animation
-    self.armature:getAnimation():play(animation)
+function DragonSprite:OnAnimationComplete(animation_name)
 end
-function DragonSprite:CurrentAnimation()
-    return self.current_animation
+function DragonSprite:OnAnimationEnded(animation_name)
+    if animation_name == "Idle" then
+        self.idle_count = self.idle_count + 1
+        local count = 10
+        if self.idle_count > count then
+            if (math.floor(math.random() * 10000) % count) < self.idle_count - count then
+                self:PlayAnimation("Fly")
+            end
+        else
+            self:PlayAnimation("Idle")
+        end
+    elseif animation_name == "Fly" then
+        self:PlayAnimation("Idle")
+    end
 end
 
 
 return DragonSprite
+
+
+
 
 
 

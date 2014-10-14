@@ -63,13 +63,13 @@ function Sprite:ctor(city_layer, entity, x, y)
     self.iso_map = city_layer.iso_map
     self.width = (city_layer:GetMapSize())
     self.entity = entity
-    self.sprite = self:CreateSprite():addTo(self, SPRITE)
+    self.sprite = self:CreateSprite():addTo(self, SPRITE):pos(self:GetSpriteOffset())
     self:SetPositionWithZOrder(x, y)
     self:setCascadeOpacityEnabled(true)
     self:setCascadeColorEnabled(true)
     -- self:CreateBase()
 end
-function Sprite:ReloadSprite()
+function Sprite:ReloadSpriteCauseTerrainChanged()
     -- print("你应该在子类实现切换地形的功能")
 end
 -- function Sprite:GetShadow()
@@ -92,14 +92,13 @@ end
 --         self:CreateShadow(shadow)
 --     end
 -- end
-function Sprite:UpdateSprite()
-    self.sprite:removeFromParentAndCleanup(true)
-    self.sprite = self:CreateSprite():addTo(self, SPRITE)
+function Sprite:RefreshSprite()
+    self.sprite:removeFromParent()
+    self.sprite = self:CreateSprite():addTo(self, SPRITE):pos(self:GetSpriteOffset())
 end
 function Sprite:CreateSprite()
     local sprite_file, scale = self:GetSpriteFile()
     return display.newSprite(sprite_file)
-        :pos(self:GetSpriteOffset())
         :scale(scale == nil and 1 or scale)
         :flipX(self:GetFlipX())
 end

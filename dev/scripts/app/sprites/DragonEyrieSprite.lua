@@ -6,11 +6,11 @@ local DRAGON = 2
 function DragonEyrieSprite:ctor(...)
     DragonEyrieSprite.super.ctor(self, ...)
     local x, y = self:GetSpriteOffset()
-    self.dragon_sprite = DragonSprite.new(self:GetMapLayer():CurrentTerrain())
-    :addTo(self, DRAGON):pos(x-40, y+70)
+    self.dragon_sprite = DragonSprite.new(self:GetMapLayer(), self:GetMapLayer():CurrentTerrain())
+    :addTo(self, DRAGON):pos(x-100, y+60)
 end
-function DragonEyrieSprite:ReloadSprite()
-    self.dragon_sprite:ReloadSprite(self:GetMapLayer():CurrentTerrain())
+function DragonEyrieSprite:ReloadSpriteCauseTerrainChanged()
+    self.dragon_sprite:ReloadSpriteCauseTerrainChanged(self:GetMapLayer():CurrentTerrain())
 end
 
 return DragonEyrieSprite

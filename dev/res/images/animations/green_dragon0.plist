@@ -4,7 +4,7 @@
 	<dict>
 		<key>frames</key>
 		<dict>
-			<key>Red_render/fly/00000.png</key>
+			<key>green_render/fly/00000.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -23,7 +23,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00001.png</key>
+			<key>green_render/fly/00001.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -42,7 +42,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00002.png</key>
+			<key>green_render/fly/00002.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -61,7 +61,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00003.png</key>
+			<key>green_render/fly/00003.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -80,7 +80,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00004.png</key>
+			<key>green_render/fly/00004.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -99,7 +99,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00005.png</key>
+			<key>green_render/fly/00005.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -118,7 +118,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00006.png</key>
+			<key>green_render/fly/00006.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -137,7 +137,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00007.png</key>
+			<key>green_render/fly/00007.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -156,7 +156,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00008.png</key>
+			<key>green_render/fly/00008.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -175,7 +175,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00009.png</key>
+			<key>green_render/fly/00009.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -194,7 +194,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00010.png</key>
+			<key>green_render/fly/00010.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -213,7 +213,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00011.png</key>
+			<key>green_render/fly/00011.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -232,7 +232,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00012.png</key>
+			<key>green_render/fly/00012.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -251,7 +251,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00013.png</key>
+			<key>green_render/fly/00013.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -270,7 +270,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00014.png</key>
+			<key>green_render/fly/00014.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -289,7 +289,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00015.png</key>
+			<key>green_render/fly/00015.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -308,7 +308,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00016.png</key>
+			<key>green_render/fly/00016.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -327,7 +327,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00017.png</key>
+			<key>green_render/fly/00017.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -346,7 +346,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00018.png</key>
+			<key>green_render/fly/00018.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -365,7 +365,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00019.png</key>
+			<key>green_render/fly/00019.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -384,7 +384,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00020.png</key>
+			<key>green_render/fly/00020.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -403,7 +403,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00021.png</key>
+			<key>green_render/fly/00021.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -422,7 +422,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/fly/00022.png</key>
+			<key>green_render/fly/00022.png</key>
 			<dict>
 				<key>width</key>
 				<integer>294</integer>
@@ -441,7 +441,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/flying/00000.png</key>
+			<key>green_render/flying/00000.png</key>
 			<dict>
 				<key>width</key>
 				<integer>328</integer>
@@ -460,7 +460,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/flying/00001.png</key>
+			<key>green_render/flying/00001.png</key>
 			<dict>
 				<key>width</key>
 				<integer>328</integer>
@@ -479,7 +479,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/flying/00002.png</key>
+			<key>green_render/flying/00002.png</key>
 			<dict>
 				<key>width</key>
 				<integer>328</integer>
@@ -498,7 +498,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/flying/00003.png</key>
+			<key>green_render/flying/00003.png</key>
 			<dict>
 				<key>width</key>
 				<integer>328</integer>
@@ -517,7 +517,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/flying/00004.png</key>
+			<key>green_render/flying/00004.png</key>
 			<dict>
 				<key>width</key>
 				<integer>328</integer>
@@ -536,7 +536,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/flying/00005.png</key>
+			<key>green_render/flying/00005.png</key>
 			<dict>
 				<key>width</key>
 				<integer>328</integer>
@@ -555,7 +555,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/flying/00006.png</key>
+			<key>green_render/flying/00006.png</key>
 			<dict>
 				<key>width</key>
 				<integer>328</integer>
@@ -574,7 +574,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/flying/00007.png</key>
+			<key>green_render/flying/00007.png</key>
 			<dict>
 				<key>width</key>
 				<integer>328</integer>
@@ -593,7 +593,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/flying/00008.png</key>
+			<key>green_render/flying/00008.png</key>
 			<dict>
 				<key>width</key>
 				<integer>328</integer>
@@ -612,7 +612,7 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/flying/00009.png</key>
+			<key>green_render/flying/00009.png</key>
 			<dict>
 				<key>width</key>
 				<integer>328</integer>
@@ -631,16 +631,16 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/idle/00000.png</key>
+			<key>green_render/idle/00000.png</key>
 			<dict>
 				<key>width</key>
-				<integer>190</integer>
+				<integer>192</integer>
 				<key>height</key>
-				<integer>158</integer>
+				<integer>160</integer>
 				<key>originalWidth</key>
-				<integer>190</integer>
+				<integer>192</integer>
 				<key>originalHeight</key>
-				<integer>158</integer>
+				<integer>160</integer>
 				<key>x</key>
 				<integer>990</integer>
 				<key>y</key>
@@ -650,18 +650,18 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/idle/00001.png</key>
+			<key>green_render/idle/00001.png</key>
 			<dict>
 				<key>width</key>
-				<integer>190</integer>
+				<integer>192</integer>
 				<key>height</key>
-				<integer>158</integer>
+				<integer>160</integer>
 				<key>originalWidth</key>
-				<integer>190</integer>
+				<integer>192</integer>
 				<key>originalHeight</key>
-				<integer>158</integer>
+				<integer>160</integer>
 				<key>x</key>
-				<integer>1182</integer>
+				<integer>1184</integer>
 				<key>y</key>
 				<integer>1506</integer>
 				<key>offsetX</key>
@@ -669,18 +669,18 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/idle/00002.png</key>
+			<key>green_render/idle/00002.png</key>
 			<dict>
 				<key>width</key>
-				<integer>190</integer>
+				<integer>192</integer>
 				<key>height</key>
-				<integer>158</integer>
+				<integer>160</integer>
 				<key>originalWidth</key>
-				<integer>190</integer>
+				<integer>192</integer>
 				<key>originalHeight</key>
-				<integer>158</integer>
+				<integer>160</integer>
 				<key>x</key>
-				<integer>1374</integer>
+				<integer>1378</integer>
 				<key>y</key>
 				<integer>1506</integer>
 				<key>offsetX</key>
@@ -688,18 +688,18 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/idle/00003.png</key>
+			<key>green_render/idle/00003.png</key>
 			<dict>
 				<key>width</key>
-				<integer>190</integer>
+				<integer>192</integer>
 				<key>height</key>
-				<integer>158</integer>
+				<integer>160</integer>
 				<key>originalWidth</key>
-				<integer>190</integer>
+				<integer>192</integer>
 				<key>originalHeight</key>
-				<integer>158</integer>
+				<integer>160</integer>
 				<key>x</key>
-				<integer>1566</integer>
+				<integer>1572</integer>
 				<key>y</key>
 				<integer>1506</integer>
 				<key>offsetX</key>
@@ -707,18 +707,18 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/idle/00004.png</key>
+			<key>green_render/idle/00004.png</key>
 			<dict>
 				<key>width</key>
-				<integer>190</integer>
+				<integer>192</integer>
 				<key>height</key>
-				<integer>158</integer>
+				<integer>160</integer>
 				<key>originalWidth</key>
-				<integer>190</integer>
+				<integer>192</integer>
 				<key>originalHeight</key>
-				<integer>158</integer>
+				<integer>160</integer>
 				<key>x</key>
-				<integer>1758</integer>
+				<integer>1766</integer>
 				<key>y</key>
 				<integer>1506</integer>
 				<key>offsetX</key>
@@ -726,16 +726,16 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/idle/00005.png</key>
+			<key>green_render/idle/00005.png</key>
 			<dict>
 				<key>width</key>
-				<integer>190</integer>
+				<integer>192</integer>
 				<key>height</key>
-				<integer>158</integer>
+				<integer>160</integer>
 				<key>originalWidth</key>
-				<integer>190</integer>
+				<integer>192</integer>
 				<key>originalHeight</key>
-				<integer>158</integer>
+				<integer>160</integer>
 				<key>x</key>
 				<integer>0</integer>
 				<key>y</key>
@@ -745,18 +745,18 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/idle/00006.png</key>
+			<key>green_render/idle/00006.png</key>
 			<dict>
 				<key>width</key>
-				<integer>190</integer>
-				<key>height</key>
-				<integer>158</integer>
-				<key>originalWidth</key>
-				<integer>190</integer>
-				<key>originalHeight</key>
-				<integer>158</integer>
-				<key>x</key>
 				<integer>192</integer>
+				<key>height</key>
+				<integer>160</integer>
+				<key>originalWidth</key>
+				<integer>192</integer>
+				<key>originalHeight</key>
+				<integer>160</integer>
+				<key>x</key>
+				<integer>194</integer>
 				<key>y</key>
 				<integer>1818</integer>
 				<key>offsetX</key>
@@ -764,18 +764,18 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Red_render/idle/00007.png</key>
+			<key>green_render/idle/00007.png</key>
 			<dict>
 				<key>width</key>
-				<integer>190</integer>
+				<integer>192</integer>
 				<key>height</key>
-				<integer>158</integer>
+				<integer>160</integer>
 				<key>originalWidth</key>
-				<integer>190</integer>
+				<integer>192</integer>
 				<key>originalHeight</key>
-				<integer>158</integer>
+				<integer>160</integer>
 				<key>x</key>
-				<integer>384</integer>
+				<integer>388</integer>
 				<key>y</key>
 				<integer>1818</integer>
 				<key>offsetX</key>
@@ -789,9 +789,9 @@
 			<key>format</key>
 			<integer>0</integer>
 			<key>textureFileName</key>
-			<string>Red_dragon0.png</string>
+			<string>green_dragon0.png</string>
 			<key>realTextureFileName</key>
-			<string>Red_dragon0.png</string>
+			<string>green_dragon0.png</string>
 			<key>size</key>
 			<string>{2048,2048}</string>
 		</dict>

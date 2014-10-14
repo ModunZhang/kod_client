@@ -12,6 +12,10 @@ function TowerUpgradingSprite:ctor(city_layer, entity)
     TowerUpgradingSprite.super.ctor(self, city_layer, entity)
     self.tower_sprite = display.newSprite("tower_head_78x124.png"):addTo(self, HEAD_SPRITE):pos(self:GetHeadOffset())
 end
+-- function TowerUpgradingSprite:GetLogicZorder(width)
+--     local x, y = self:GetLogicPosition()
+--     return x + y * width + 100
+-- end
 function TowerUpgradingSprite:GetSpriteFile()
     local entity = self:GetEntity()
     if entity:GetOrient() == Orient.X then

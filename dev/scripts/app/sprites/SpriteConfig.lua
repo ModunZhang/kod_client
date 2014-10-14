@@ -62,9 +62,9 @@ end
 
 create_building_config(
     "keep"
-    ,create_config(MIN_LEVEL, level(1), "keep_760x855.png", offset(50, 330), scale(0.7))
-    ,create_config(level(2), level(2), "keep_760x855.png", offset(50, 330), scale(0.7))
-    ,create_config(level(3), MAX_LEVEL, "keep_760x855.png", offset(50, 330), scale(0.7))
+    ,create_config(MIN_LEVEL, level(1), "keep_760x855.png", offset(50, 330), scale(0.8))
+    ,create_config(level(2), level(2), "keep_760x855.png", offset(50, 330), scale(0.8))
+    ,create_config(level(3), MAX_LEVEL, "keep_760x855.png", offset(50, 330), scale(0.8))
 )
 create_building_config(
     "watchTower"
@@ -80,9 +80,9 @@ create_building_config(
 )
 create_building_config(
     "dragonEyrie"
-    ,create_config(MIN_LEVEL, level(1), "dragonEyrie_581x558.png", offset(0, 250), scale(0.7))
-    ,create_config(level(2), level(2), "dragonEyrie_581x558.png", offset(0, 250), scale(0.7))
-    ,create_config(level(3), MAX_LEVEL, "dragonEyrie_581x558.png", offset(0, 250), scale(0.7))
+    ,create_config(MIN_LEVEL, level(1), "dragonEyrie_581x558.png", offset(0, 250), scale(0.9))
+    ,create_config(level(2), level(2), "dragonEyrie_581x558.png", offset(0, 250), scale(0.9))
+    ,create_config(level(3), MAX_LEVEL, "dragonEyrie_581x558.png", offset(0, 250), scale(0.9))
 )
 create_building_config(
     "toolShop"

@@ -82,12 +82,17 @@ function CityScene:onEnter()
     -- dragon:playAnimationForever(animation)
     -- dragon:flipX(true)
 
-    -- local sprite = cc.Sprite3D:create("boss.obj")
-    -- sprite:setScale(10.0)
-    -- sprite:setTexture("boss.png")
+    -- local sprite = cc.Sprite3D:create("images/3d/tortoise.c3b")
+    -- sprite:setScale(0.5)
     -- sprite:setPosition(display.cx, display.cy)
     -- sprite:setRotation3D({x = 0, y = 0, z = 0})
     -- self:addChild(sprite)
+    -- local animation = cc.Animation3D:create("images/3d/tortoise.c3b")
+    -- local sequence = transition.sequence{
+    --     cc.Animate3D:create(animation, 0, 1.933),
+    --     cc.Animate3D:create(animation, 1.933, 2.8)
+    -- }
+    -- sprite:runAction(cc.RepeatForever:create(sequence))
 
     -- local armature = ccs.Armature:create("NewAnimation")
     -- self:addChild(armature)
@@ -103,7 +108,6 @@ function CityScene:onExit()
     audio.stopMusic()
     audio.stopAllSounds()
     City:ResetAllListeners()
-    app:makeLuaVMSnapshot()
     -- City:RemoveListenerOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
 end
 function CityScene:onEnterTransitionFinish()
@@ -127,11 +131,15 @@ function CityScene:PlayBackgroundMusic()
 end
 function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
-    manager:removeArmatureFileInfo("sprites/armatures/hammer/chuizidonghua.ExportJson")
-    manager:addArmatureFileInfo("sprites/armatures/hammer/chuizidonghua.ExportJson")
+    manager:removeArmatureFileInfo("images/animations/chuizidonghua.ExportJson")
+    manager:removeArmatureFileInfo("images/animations/green_dragon.ExportJson")
+    manager:removeArmatureFileInfo("images/animations/Red_dragon.ExportJson")
+    manager:removeArmatureFileInfo("images/animations/Blue_dragon.ExportJson")
 
-    manager:removeArmatureFileInfo("animations/Red_dragon.ExportJson")
-    manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
+    manager:addArmatureFileInfo("images/animations/chuizidonghua.ExportJson")
+    manager:addArmatureFileInfo("images/animations/green_dragon.ExportJson")
+    manager:addArmatureFileInfo("images/animations/Red_dragon.ExportJson")
+    manager:addArmatureFileInfo("images/animations/Blue_dragon.ExportJson")
 end
 function CityScene:CreateMultiTouchLayer()
     local touch_layer = display.newLayer():addTo(self)
