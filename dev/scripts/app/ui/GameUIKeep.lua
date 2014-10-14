@@ -208,7 +208,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                     :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("可解锁"), size = 24, color = display.COLOR_WHITE}))
                     :onButtonClicked(function(event)
                         self:leftButtonClicked()
-                        goto_logic(unlock_building:GetLogicPosition())
+                        display.getRunningScene():GotoLogicPoint(unlock_building:GetLogicPosition())
                     end):align(display.CENTER, 190, 40):addTo(content, 10)
 
                 content:addWidget(display.newSprite("keep_building_element_bg.png",  0, 0))

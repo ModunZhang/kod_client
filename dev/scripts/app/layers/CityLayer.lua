@@ -88,7 +88,7 @@ function CityLayer:OnDestoryDecorator(destory_decorator, release_ruins)
             end)
 
             table.remove(self.houses, i)
-            house:DestoryShadow()
+            -- house:DestoryShadow()
             house:removeFromParentAndCleanup(true)
             break
         end
@@ -160,6 +160,10 @@ function CityLayer:ctor(city)
         base_x = origin_point.x,
         base_y = origin_point.y
     })
+end
+function CityLayer:ConvertLogicPositionToMapPosition(lx, ly)
+    local map_pos = cc.p(self.iso_map:ConvertToMapPosition(lx, ly))
+    return self:convertToNodeSpace(self:GetCityNode():convertToWorldSpace(map_pos))
 end
 function CityLayer:CurrentTerrain()
     return self.terrain_type

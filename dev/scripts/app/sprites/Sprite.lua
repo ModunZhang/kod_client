@@ -4,7 +4,7 @@ local Sprite = class("Sprite", function(...)
     return Observer.extend(display.newNode(), ...)
 end)
 
-local SPRITE = 1
+local SPRITE = -1
 ---- 回调
 function Sprite:OnSceneMove()
     local world_point = self:GetWorldPosition()
@@ -136,7 +136,7 @@ end
 
 ----------base
 function Sprite:GenerateBaseTiles(w, h)
-    self:newBatchNode(w, h):addTo(self, -1)
+    self:newBatchNode(w, h):addTo(self, -2)
 end
 function Sprite:newBatchNode(w, h)
     local start_x, end_x, start_y, end_y = self:GetLocalRegion(w, h)

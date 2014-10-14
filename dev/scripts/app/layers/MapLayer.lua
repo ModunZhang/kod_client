@@ -38,6 +38,14 @@ function MapLayer:ZoomEnd()
 end
 
 -------
+function MapLayer:GotoMapPositionInMiddle(x, y)
+    local scene_mid_point = self:getParent():convertToNodeSpace(cc.p(display.cx, display.cy))
+    local world_point = self:convertToWorldSpace(cc.p(x, y))
+    local new_scene_point = self:getParent():convertToNodeSpace(world_point)
+    local dx, dy = scene_mid_point.x - new_scene_point.x, scene_mid_point.y - new_scene_point.y
+    local current_x, current_y = self:getPosition()
+    self:setPosition(cc.p(current_x + dx, current_y + dy))
+end
 function MapLayer:setPosition(position)
     local x, y = position.x, position.y
     local parent_node = self:getParent()

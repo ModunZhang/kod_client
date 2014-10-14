@@ -20,10 +20,7 @@ function MapScene:GetSceneLayer()
     return self.scene_layer
 end
 function MapScene:CreateSceneLayer()
-    local scene = AllianceLayer.new()
-    :addTo(self, 0, 1)
-    :ZoomTo(0.7)
-    return scene
+    assert(false, "必须在子类实现生成场景的方法")
 end
 function MapScene:CreateMultiTouchLayer()
     local touch_layer = display.newLayer():addTo(self)
@@ -59,11 +56,6 @@ function MapScene:OnTwoTouch(x1, y1, x2, y2, event_type)
     elseif event_type == "moved" then
         local new_distance = math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
         scene:ZoomBy(new_distance / self.distance)
-        if scene:getScale() < 0.5 then
-            self.scene_ui_layer:HideLevelUpNode()
-        else
-            self.scene_ui_layer:ShowLevelUpNode()
-        end
     elseif event_type == "ended" then
         scene:ZoomEnd()
         self.distance = nil
