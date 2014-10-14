@@ -49,7 +49,7 @@ end
 function City:ResetAllListeners()
     self.resource_manager:RemoveAllObserver()
     self.soldier_manager:ClearAllListener()
-    self.soldier_manager:RemoveAllObserver()
+    self.material_manager:RemoveAllObserver()
     self:ClearAllListener()
     self:IteratorCanUpgradeBuildings(function(building)
         building:ResetAllListeners()

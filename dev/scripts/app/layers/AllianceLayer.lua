@@ -1,5 +1,6 @@
 local CitizenSprite = import("..sprites.CitizenSprite")
 local Observer = import("..entity.Observer")
+local NormalMapAnchorBottomLeft = import("..map.NormalMapAnchorBottomLeft")
 local MapLayer = import(".MapLayer")
 local AllianceLayer = class("AllianceLayer", MapLayer)
 ----
@@ -7,7 +8,6 @@ function AllianceLayer:ctor(city)
     AllianceLayer.super.ctor(self, 0.3, 1)
     Observer.extend(self)
     self:InitBackground()
-
 
     self.normal_map = NormalMapAnchorBottomLeft.new{
         tile_w = 80,
@@ -27,7 +27,7 @@ function AllianceLayer:InitBuildingNode()
 end
 
 function AllianceLayer:GetBuildingNode()
-    self.building_node
+    -- self.building_node
 end
 
 

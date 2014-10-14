@@ -67,7 +67,7 @@ function GameUIHome:CreateTop()
         {normal = "home/player_btn_up.png", pressed = "home/player_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        -- NetManager:sendMsg("reset", NOT_HANDLE)
+        NetManager:sendMsg("reset", NOT_HANDLE)
         end):addTo(top_bg):align(display.LEFT_BOTTOM, 109, 106)
 
 
@@ -308,9 +308,9 @@ function GameUIHome:CreateBottom()
         {normal = "toggle_city_89x97.png", pressed = "toggle_city_89x97.png"}
     ):addTo(bottom_bg)
         :pos(52, 54)
-        :onButtonClicked(function(event)
+        :onButtonClicked(function(event)    
             app:lockInput(true)
-            if display.getRunningScene().name == "AllianceScene" then
+            if display.getRunningScene().__cname == "AllianceScene" then
                 transition.rotateTo(arrow, {
                     rotate = 0,
                     time = 0.2,
@@ -319,7 +319,7 @@ function GameUIHome:CreateBottom()
                         app:enterScene("CityScene", nil, "fade", 0.6, display.COLOR_WHITE)
                     end}
                 )
-            elseif display.getRunningScene().name == "CityScene" then
+            elseif display.getRunningScene().__cname == "CityScene" then
                 transition.rotateTo(arrow, {
                     rotate = 90,
                     time = 0.2,
