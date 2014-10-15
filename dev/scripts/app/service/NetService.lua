@@ -87,7 +87,7 @@ function NetService:get(url, args, cb, progressCb)
         end
     end, urlString)
 
-    request:setTimeout(10)
+    request:setTimeout(180) -- 3 min
     request:start()
 
     return request
