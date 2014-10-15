@@ -20,8 +20,6 @@ function LogoScene:onEnter()
     			app:enterScene("UpdaterScene", nil, "fade", 0.6, display.COLOR_WHITE)
     		end
     	end, 0.8)
-
-    -- WidgetRecruitSoldier.new("swordsman", 1, 100):addTo(self):align(display.CENTER, display.cx, 500 / 2)
 end
 
 function LogoScene:onExit()
