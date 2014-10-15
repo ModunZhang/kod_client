@@ -1,6 +1,7 @@
 
 local Observer = import(".Observer")
 local Building = import(".Building")
+local MaterialManager = import("..entity.MaterialManager")
 local UpgradeBuilding = class("UpgradeBuilding", Building)
 UpgradeBuilding.NOT_ABLE_TO_UPGRADE = {
     TILE_NOT_UNLOCKED = "地块未解锁",
@@ -284,7 +285,9 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
         return
     end
     -- 还未管理道具，暂时从userdata中取
-    local m = DataManager:getUserData().materials
+    -- local m = DataManager:getUserData().materials
+    local m =City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
+
     -- 升级所需资源不足
     local wood = City.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local iron = City.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
