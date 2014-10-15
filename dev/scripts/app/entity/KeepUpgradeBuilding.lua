@@ -6,6 +6,13 @@ local KeepUpgradeBuilding = class("KeepUpgradeBuilding", UpgradeBuilding)
 function KeepUpgradeBuilding:ctor(building_info)
     KeepUpgradeBuilding.super.ctor(self, building_info)
 end
+function KeepUpgradeBuilding:CanUpgradeThis(building)
+    if self == building then
+        return self:CanUpgrade()
+    else
+        return building:GetLevel() < self:GetLevel() and building:CanUpgrade()
+    end
+end
 --
 function KeepUpgradeBuilding:GetFreeUnlockPoint(city)
     local unlock_tile_count = 0
@@ -39,5 +46,6 @@ function KeepUpgradeBuilding:GetNextLevelTroopPopulation()
 end
 
 return KeepUpgradeBuilding
+
 
 

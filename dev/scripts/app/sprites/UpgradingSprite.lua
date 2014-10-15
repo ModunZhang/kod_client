@@ -10,7 +10,7 @@ function UpgradingSprite:OnSceneMove()
     end)
 end
 function UpgradingSprite:GetWorldPosition()
-    -- local x, y = self:GetMap():ConvertToMapPosition(self:GetLogicPosition())
+    -- local x, y = self:GetLogicMap():ConvertToMapPosition(self:GetLogicPosition())
     -- self:getParent():convertToWorldSpace(cc.p(x, y))
     return self:convertToWorldSpace(cc.p(self:GetSpriteOffset())),
         self:convertToWorldSpace(cc.p(self:GetSpriteButtomPosition()))
@@ -18,7 +18,7 @@ end
 function UpgradingSprite:OnOrientChanged()
 end
 function UpgradingSprite:OnLogicPositionChanged(x, y)
-    self:SetPositionWithLogic(self:GetMap():ConvertToMapPosition(x, y))
+    self:SetPositionWithZOrder(self:GetLogicMap():ConvertToMapPosition(x, y))
 end
 function UpgradingSprite:OnBuildingUpgradingBegin(building, time)
     if self.label then
@@ -27,6 +27,9 @@ function UpgradingSprite:OnBuildingUpgradingBegin(building, time)
     self:NotifyObservers(function(listener)
         listener:OnBuildingUpgradingBegin(building, time)
     end)
+
+    -- animation
+    self:StartBuildingAnimation()
 end
 function UpgradingSprite:OnBuildingUpgradeFinished(building, time)
     if self.label then
@@ -35,9 +38,12 @@ function UpgradingSprite:OnBuildingUpgradeFinished(building, time)
     self:NotifyObservers(function(listener)
         listener:OnBuildingUpgradeFinished(building, time)
     end)
-    self:UpdateSprite()
-    self:RefreshShadow()
+    self:RefreshSprite()
+    -- self:RefreshShadow()
     self:OnSceneMove()
+
+    -- animation
+    self:StopBuildingAnimation()
 end
 function UpgradingSprite:OnBuildingUpgrading(building, time)
     if self.label then
@@ -46,6 +52,23 @@ function UpgradingSprite:OnBuildingUpgrading(building, time)
     self:NotifyObservers(function(listener)
         listener:OnBuildingUpgrading(building, time)
     end)
+
+    -- animation
+    self:StartBuildingAnimation()
+end
+function UpgradingSprite:StartBuildingAnimation()
+    if self.building_animation then return end
+    local sequence = transition.sequence{
+        cc.TintTo:create(0.8, 180, 180, 180),
+        cc.TintTo:create(0.8, 255, 255, 255)
+    }
+    self:stopAllActions()
+    self.building_animation = self:runAction(cc.RepeatForever:create(sequence))
+end
+function UpgradingSprite:StopBuildingAnimation()
+    self:stopAllActions()
+    self:setColor(display.COLOR_WHITE)
+    self.building_animation = nil
 end
 function UpgradingSprite:CheckCondition()
     self:NotifyObservers(function(listener)
@@ -54,17 +77,22 @@ function UpgradingSprite:CheckCondition()
 end
 function UpgradingSprite:ctor(city_layer, entity)
     self.config = SpriteConfig[entity:GetType()]
-    local x, y = city_layer.iso_map:ConvertToMapPosition(entity:GetLogicPosition())
+    local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     UpgradingSprite.super.ctor(self, city_layer, entity, x, y)
     entity:AddBaseListener(self)
     entity:AddUpgradeListener(self)
-    
-    if entity:IsUnlocked() and self:GetShadowConfig() then
-        self:CreateShadow(self:GetShadowConfig())
-    end
+
+    -- if entity:IsUnlocked() and self:GetShadowConfig() then
+    --     self:CreateShadow(self:GetShadowConfig())
+    -- end
 
     self.handle = self:schedule(function() self:CheckCondition() end, 1)
     -- self:InitLabel(entity)
+end
+function UpgradingSprite:DestorySelf()
+    self:GetEntity():RemoveBaseListener(self)
+    self:GetEntity():RemoveUpgradeListener(self)
+    self:removeFromParentAndCleanup(true)
 end
 function UpgradingSprite:InitLabel(entity)
     local label = ui.newTTFLabel({ text = "text" , x = 0, y = 0 })
@@ -76,145 +104,21 @@ function UpgradingSprite:InitLabel(entity)
     label:setString(entity:GetType().." "..level)
 end
 function UpgradingSprite:GetSpriteFile()
-    local entity = self:GetEntity()
-    if self:HasConfig() then
-        local config = self:GetCurrentConfig()
-        return config.png, config.scale
-    elseif entity:GetType() == "dragonEyrie" then
-        return "sprites/buildings/dragonEyrie.png"
-    elseif entity:GetType() == "academy" then
-        return "sprites/buildings/academy.png"
-    elseif entity:GetType() == "hunterHall" then
-        return "sprites/buildings/hunterHall.png"
-    elseif entity:GetType() == "stable" then
-        return "sprites/buildings/stable.png"
-    elseif entity:GetType() == "trainGround" then
-        return "sprites/buildings/trainGround.png"
-    elseif entity:GetType() == "workShop" then
-        return "sprites/buildings/workShop.png"
-    elseif entity:GetType() == "watchTower" then
-        return "sprites/buildings/watchTower.png"
-    elseif entity:GetType() == "blackSmith" or
-        entity:GetType() == "academy" or
-        entity:GetType() == "workShop" or
-        entity:GetType() == "warehouse" or
-        entity:GetType() == "townHall" or
-        entity:GetType() == "stable" or
-        entity:GetType() == "hospital" or
-        entity:GetType() == "materialDepot" or
-        entity:GetType() == "armyCamp" or
-        entity:GetType() == "toolShop" or
-        entity:GetType() == "trainingGround" or
-        entity:GetType() == "foundry" or
-        entity:GetType() == "stoneMason" or
-        entity:GetType() == "lumbermill" or
-        entity:GetType() == "hunterHall" or
-        entity:GetType() == "tradeGuild" or
-        entity:GetType() == "barracks" or
-        entity:GetType() == "mill" or
-        entity:GetType() == "prison"
-    then
-        return "sprites/buildings/armyCamp.png"
-    elseif entity:GetType() == "woodcutter" then
-        return "woodCutter_1_312x250.png", 0.6
-    elseif entity:GetType() == "woodcutter" or
-        entity:GetType() == "quarrier" or
-        entity:GetType() == "farmer" or
-        entity:GetType() == "dwelling" or
-        entity:GetType() == "miner"
-    then
-        return "sprites/houses/waterWell.png"
-    end
+    local config = self:GetCurrentConfig()
+    return config.png, config.scale
 end
 function UpgradingSprite:GetSpriteOffset()
-    local entity = self:GetEntity()
-    if self:HasConfig() then
-        local offset = self:GetCurrentConfig().offset
-        return offset.x, offset.y
-    elseif entity:GetType() == "dragonEyrie" then
-        return 0, 350
-    elseif entity:GetType() == "academy" then
-        return 0, 250
-    elseif entity:GetType() == "hunterHall" then
-        return 0, 250
-    elseif entity:GetType() == "stable" then
-        return 0, 250
-    elseif entity:GetType() == "trainGround" then
-        return 0, 250
-    elseif entity:GetType() == "workShop" then
-        return 0, 250
-    elseif entity:GetType() == "watchTower" then
-        return 0, 320
-    elseif entity:GetType() == "blackSmith" or
-        entity:GetType() == "academy" or
-        entity:GetType() == "workShop" or
-        entity:GetType() == "warehouse" or
-        entity:GetType() == "townHall" or
-        entity:GetType() == "stable" or
-        entity:GetType() == "hospital" or
-        entity:GetType() == "materialDepot" or
-        entity:GetType() == "armyCamp" or
-        entity:GetType() == "toolShop" or
-        entity:GetType() == "trainingGround" or
-        entity:GetType() == "foundry" or
-        entity:GetType() == "stoneMason" or
-        entity:GetType() == "lumbermill" or
-        entity:GetType() == "hunterHall" or
-        entity:GetType() == "tradeGuild" or
-        entity:GetType() == "barracks" or
-        entity:GetType() == "mill" or
-        entity:GetType() == "prison"
-    then
-        return 0, 180
-    elseif entity:GetType() == "woodcutter" or
-        entity:GetType() == "quarrier" or
-        entity:GetType() == "farmer" or
-        entity:GetType() == "dwelling" or
-        entity:GetType() == "miner"
-    then
-        return 0, 100
-    end
+    local offset = self:GetCurrentConfig().offset
+    return offset.x, offset.y
 end
-function UpgradingSprite:HasConfig()
-    local entity = self:GetEntity()
-    return entity:GetType() == "keep"
-        or entity:GetType() == "watchTower"
-        or entity:GetType() == "warehouse"
-        or entity:GetType() == "dragonEyrie"
-        or entity:GetType() == "toolShop"
-        or entity:GetType() == "materialDepot"
-        or entity:GetType() == "armyCamp"
-        or entity:GetType() == "barracks"
-        or entity:GetType() == "blackSmith"
-        or entity:GetType() == "foundry"
-        or entity:GetType() == "stoneMason"
-        or entity:GetType() == "lumbermill"
-        or entity:GetType() == "mill"
-        or entity:GetType() == "hospital"
-        or entity:GetType() == "townHall"
-        or entity:GetType() == "tradeGuild"
-        --
-        or entity:GetType() == "dwelling"
-        or entity:GetType() == "farmer"
-        or entity:GetType() == "woodcutter"
-        or entity:GetType() == "quarrier"
-        or entity:GetType() == "miner"
-end
-function UpgradingSprite:UpdateSprite()
-    local next_config, next_i = self:GetCurrentConfig()
-    local before_config, before_i = self:GetBeforeConfig()
-    if next_i ~= before_i then
-        self:GetSprite():setTexture(display.newSprite(next_config.png):getTexture())
-    end
-end
-function UpgradingSprite:GetShadowConfig()
-    local config = self:GetCurrentConfig()
-    if config then
-        return config.shadow
-    else
-        return nil
-    end
-end
+-- function UpgradingSprite:GetShadowConfig()
+--     local config = self:GetCurrentConfig()
+--     if config then
+--         return config.shadow
+--     else
+--         return nil
+--     end
+-- end
 function UpgradingSprite:GetCurrentConfig()
     if self.config then
         return self.config:GetConfigByLevel(self.entity:GetLevel())
@@ -238,11 +142,13 @@ function UpgradingSprite:GetLogicZorder(width)
     end
 end
 function UpgradingSprite:GetCenterPosition()
-    return self:GetMap():ConvertToMapPosition(self:GetEntity():GetMidLogicPosition())
+    return self:GetLogicMap():ConvertToMapPosition(self:GetEntity():GetMidLogicPosition())
 end
 
 
 return UpgradingSprite
+
+
 
 
 

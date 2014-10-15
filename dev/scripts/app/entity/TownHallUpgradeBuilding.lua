@@ -118,19 +118,21 @@ function TownHallUpgradeBuilding:OnUserDataChanged(...)
     local arg = {...}
     local current_time = arg[2]
     local coinEvents = arg[1].coinEvents
+    if coinEvents then
 
-    local event = coinEvents[1]
-    if event then
-        local finished_time = event.finishTime / 1000
-        local is_making_end = finished_time == 0
-        if self:IsEmpty() then
-            self:ImposeWithFinishedTime(event.coin, finished_time)
+        local event = coinEvents[1]
+        if event then
+            local finished_time = event.finishTime / 1000
+            local is_making_end = finished_time == 0
+            if self:IsEmpty() then
+                self:ImposeWithFinishedTime(event.coin, finished_time)
+            else
+                self:GetTaxEvent():UpdateValueWithFinishTime(event.coin, finished_time)
+            end
         else
-            self:GetTaxEvent():UpdateValueWithFinishTime(event.coin, finished_time)
-        end
-    else
-        if not self:IsEmpty() then
-            self:EndImposeWithCurrentTime(event.coin, current_time)
+            if not self:IsEmpty() then
+                self:EndImposeWithCurrentTime(current_time)
+            end
         end
     end
 end
@@ -143,6 +145,7 @@ function TownHallUpgradeBuilding:GetNextLevelTotalTax()
     return config_function[self:GetNextLevel()].totalTax
 end
 return TownHallUpgradeBuilding
+
 
 
 

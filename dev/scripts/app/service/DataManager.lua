@@ -6,12 +6,19 @@ DataManager.managers_ = {}
 
 function DataManager:setUserData( userData )
 	self:registerManager_("AllianceManager")
-	self["user"] = userData
-	self:OnUserDataChanged(userData, app.timer:GetServerTime())
+    if not self.user then
+        self.user = userData
+    else
+    	for k, v in pairs(userData) do
+    		self.user[k] = v
+    	end
+    end
+    self:OnUserDataChanged(userData, app.timer:GetServerTime())
 end
 
+
 function DataManager:getUserData(  )
-	return self["user"]
+    return self.user
 end
 
 function DataManager:registerManager_(name,...)

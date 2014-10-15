@@ -4,6 +4,7 @@ local TowerUpgradeBuilding = class("TowerUpgradeBuilding", UpgradeBuilding)
 
 function TowerUpgradeBuilding:ctor(building_info)
     TowerUpgradeBuilding.super.ctor(self, building_info)
+    self.sub_orient = building_info.sub_orient
     if self.orient == Orient.X then
         self.w = 1
         self.h = 4
@@ -33,6 +34,24 @@ function TowerUpgradeBuilding:ctor(building_info)
         self.h = 1
     end
 end
+function TowerUpgradeBuilding:GetSubOrient()
+    return self.sub_orient
+end
+function TowerUpgradeBuilding:UniqueKey()
+    return string.format("%s_%d", self:GetType(), self:TowerId())
+end
+function TowerUpgradeBuilding:CopyValueFrom(building)
+    TowerUpgradeBuilding.super.CopyValueFrom(self, building)
+    self.tower_id = building.tower_id
+    self.w = building.w
+    self.h = building.h
+end
+function TowerUpgradeBuilding:TowerId()
+    return self.tower_id
+end
+function TowerUpgradeBuilding:SetTowerId(tower_id)
+    self.tower_id = tower_id
+end
 function TowerUpgradeBuilding:IsUnlocked()
     return self.tower_id
 end
@@ -45,7 +64,7 @@ function TowerUpgradeBuilding:GetGlobalRegion()
     end
 end
 function TowerUpgradeBuilding:OnUserDataChanged(user_data, current_time)
-    if self.tower_id then
+    if self.tower_id and user_data.towerEvents then
         local tower_events = user_data.towerEvents
         local function get_tower_event_by_location(tower_id)
             for _, event in pairs(tower_events) do
@@ -66,6 +85,7 @@ end
 
 
 return TowerUpgradeBuilding
+
 
 
 

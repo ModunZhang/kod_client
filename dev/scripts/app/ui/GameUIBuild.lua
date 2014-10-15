@@ -1,21 +1,23 @@
 local window = import("..utils.window")
 local BuildingRegister = import("..entity.BuildingRegister")
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUIBuild = UIKit:createUIClass('GameUIBuild', "GameUIWithCommonHeader")
 
 local base_items = {
-    { label = _("住宅"), building_type = "dwelling" },
-    { label = _("农夫小屋"), building_type = "farmer" },
-    { label = _("木工小屋"), building_type = "woodcutter" },
-    { label = _("石匠小屋"), building_type = "quarrier" },
-    { label = _("矿工小屋"), building_type = "miner" },
+    { label = _("住宅"), building_type = "dwelling", png = "dwelling_1_297x365.png", scale = 0.4 },
+    { label = _("农夫小屋"), building_type = "farmer", png = "farmer_1_315x281.png", scale = 0.4 },
+    { label = _("木工小屋"), building_type = "woodcutter", png = "woodcutter_1_342x250.png", scale = 0.4 },
+    { label = _("石匠小屋"), building_type = "quarrier", png = "quarrier_1_303x296.png", scale = 0.4 },
+    { label = _("矿工小屋"), building_type = "miner", png = "miner_1_315x309.png", scale = 0.4 },
 }
 function GameUIBuild:ctor(city, select_ruins, select_ruins_list)
     GameUIBuild.super.ctor(self, city, _("待建地基"))
-    self.city = city
+    self.build_city = city
     self.select_ruins = select_ruins
     self.select_ruins_list = select_ruins_list
-    self.city:AddListenOnType(self, self.city.LISTEN_TYPE.UPGRADE_BUILDING)
+    self.build_city:AddListenOnType(self, self.build_city.LISTEN_TYPE.UPGRADE_BUILDING)
 end
 
 function GameUIBuild:onEnter()
@@ -33,7 +35,7 @@ function GameUIBuild:onEnter()
     self:OnCityChanged()
 end
 function GameUIBuild:onExit()
-    self.city:RemoveListenerOnType(self, self.city.LISTEN_TYPE.UPGRADE_BUILDING)
+    self.build_city:RemoveListenerOnType(self, self.build_city.LISTEN_TYPE.UPGRADE_BUILDING)
     GameUIBuild.super.onExit(self)
 end
 
@@ -47,10 +49,10 @@ function GameUIBuild:OnUpgradingFinished(building)
     self:OnCityChanged()
 end
 function GameUIBuild:OnCityChanged()
-    local citizen = self.city:GetResourceManager():GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
+    local citizen = self.build_city:GetResourceManager():GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
     table.foreachi(self.base_resource_building_items, function(i, v)
         local building_type = base_items[i].building_type
-        local number = #self.city:GetDecoratorsByType(building_type)
+        local number = #self.build_city:GetDecoratorsByType(building_type)
         local max_number = City:GetBuildingMaxCountsByType(building_type)
         local building = BuildingRegister[building_type].new({building_type = building_type, level = 1, finishTime = 0})
         v:SetNumber(number, max_number)
@@ -69,35 +71,89 @@ function GameUIBuild:OnCityChanged()
     end)
 end
 function GameUIBuild:OnBuildOnItem(item)
-    local x, y = self.select_ruins:GetLogicPosition()
-    local w, h = self.select_ruins.w, self.select_ruins.h
-    local tile = self.city:GetTileWhichBuildingBelongs(self.select_ruins)
-    local house_location = tile:GetBuildingLocation(self.select_ruins)
-    NetManager:createHouseByLocation(tile.location_id, house_location, item.building.building_type, NOT_HANDLE)
+    local max = 1
+    local current_time = app.timer:GetServerTime()
+    local upgrading_buildings = self.build_city:GetUpgradingBuildingsWithOrder(current_time)
+    local current = max - #upgrading_buildings
+
+    if current > 0 then
+        self:BuildWithRuins(self.select_ruins, item.building.building_type)
+    else
+        local dialog = FullScreenPopDialogUI.new():addTo(self)
+        local required_gems = DataUtils:getGemByTimeInterval(upgrading_buildings[1]:GetUpgradingLeftTimeByCurrentTime(current_time))
+        dialog:SetTitle(_("提示"))
+        dialog:SetPopMessage(_("您当前没有空闲的建筑队列,是否花费魔法石立即完成上一个队列"))
+        dialog:CreateNeeds("Topaz-icon.png", required_gems)
+        dialog:CreateOKButton(function()
+            self:BuildWithRuins(self.select_ruins, item.building.building_type)
+        end)
+    end
+end
+function GameUIBuild:BuildWithRuins(select_ruins, building_type)
+    local x, y = select_ruins:GetLogicPosition()
+    local w, h = select_ruins.w, select_ruins.h
+    local tile = self.build_city:GetTileWhichBuildingBelongs(select_ruins)
+    local house_location = tile:GetBuildingLocation(select_ruins)
+    NetManager:createHouseByLocation(tile.location_id, house_location, building_type, NOT_HANDLE)
     self:leftButtonClicked()
 end
 
-
 function GameUIBuild:CreateItemWithListView(list_view)
-    local content = display.newSprite("build_item/bg.png")
-    local w, h = content:getContentSize().width, content:getContentSize().height
 
-    local title_bg = display.newSprite("build_item/title_bg.png")
-        :addTo(content)
-        :pos(w/2, h/2 + 51)
+    local item = list_view:newItem()
+    local content = WidgetUIBackGround.new(170)
+    item:addContent(content)
+
+    local w, h = content:getContentSize().width, content:getContentSize().height
+    item:setItemSize(w, h)
+
+
+    local left_x, right_x = 15, 160
+    local left = display.newSprite("building_frame_36x136.png")
+        :addTo(content):align(display.LEFT_CENTER, left_x, h/2):flipX(true)
+
+    display.newSprite("building_frame_36x136.png")
+        :addTo(content):align(display.RIGHT_CENTER, right_x, h/2)
+
+    WidgetPushButton.new(
+        {normal = "info_26x26.png",pressed = "info_26x26.png"})
+        :addTo(left)
+        :align(display.CENTER, 6, 6)
+
+
+    local building_icon = display.newSprite("keep_131x164.png")
+        :addTo(content):align(display.BOTTOM_CENTER, (left_x + right_x) / 2, 30)
+
+
+
+    -- local title_bg = display.newSprite("build_item/title_bg.png")
+    --     :addTo(content)
+    --     :pos(w/2, h/2 + 51)
+    -- local title_label = cc.ui.UILabel.new({
+    --     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+    --     text = "2000000",
+    --     size = 24,
+    --     font = UIKit:getFontFilePath(),
+    --     align = cc.ui.TEXT_ALIGN_LEFT,
+    --     color = UIKit:hex2c3b(0xffedae)
+    -- }):addTo(title_bg)
+    --     :align(display.LEFT_CENTER, 172, 24)
+
+    -- display.newSprite("build_item/building_image.png")
+    --     :addTo(content)
+    --     :align(display.LEFT_BOTTOM, 10, 10)
+
+    local title_blue = cc.ui.UIImage.new("title_blue_402x48.png", {scale9 = true})
+        :addTo(content):align(display.LEFT_CENTER, right_x, h - 33)
+    title_blue:setContentSize(cc.size(435, 48))
+    local size = title_blue:getContentSize()
     local title_label = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "2000000",
-        size = 24,
+        size = 22,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_LEFT,
         color = UIKit:hex2c3b(0xffedae)
-    }):addTo(title_bg)
-        :align(display.LEFT_CENTER, 172, 24)
-
-    display.newSprite("build_item/building_image.png")
-        :addTo(content)
-        :align(display.LEFT_BOTTOM, 10, 10)
+    }):addTo(title_blue, 2)
+        :align(display.LEFT_CENTER, 30, size.height/2)
 
 
     WidgetPushButton.new(
@@ -123,18 +179,6 @@ function GameUIBuild:CreateItemWithListView(list_view)
     }):addTo(content)
         :align(display.LEFT_CENTER, 175, 40)
 
-    -- local gem_bg = display.newSprite("build_item/gem_bg.png"):addTo(content):pos(523, 83)
-    -- display.newSprite("home/gem.png"):addTo(gem_bg):pos(10, 10):scale(0.5)
-    -- cc.ui.UILabel.new({
-    --     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-    --     text = "100",
-    --     size = 20,
-    --     font = UIKit:getFontFilePath(),
-    --     align = cc.ui.TEXT_ALIGN_LEFT,
-    --     color = display.COLOR_WHITE
-    -- }):addTo(gem_bg)
-    --     :align(display.LEFT_CENTER, 40, 10)
-
     local build_btn = WidgetPushButton.new(
         {normal = "build_item/build_btn_up.png",pressed = "build_item/build_btn_down.png"}
         ,{}
@@ -146,17 +190,18 @@ function GameUIBuild:CreateItemWithListView(list_view)
             text = _("建造"),
             size = 24,
             font = UIKit:getFontFilePath(),
-            color = display.COLOR_WHITE}))
+            color = UIKit:hex2c3b(0xfff3c7)}))
         :addTo(content)
         :pos(520, 40)
 
-    local item = list_view:newItem()
-    item:addContent(content)
-    item:setItemSize(w, h)
 
 
     function item:SetType(item_info, on_build)
-        title_label:setString(item_info.label)
+        building_icon:setTexture(item_info.png)
+        building_icon:scale(item_info.scale)
+        if title_label:getString() ~= item_info.label then
+            title_label:setString(item_info.label)
+        end
         build_btn:onButtonClicked(function(event)
             on_build(self)
         end)
@@ -183,6 +228,12 @@ function GameUIBuild:CreateItemWithListView(list_view)
 end
 
 return GameUIBuild
+
+
+
+
+
+
 
 
 

@@ -1,3 +1,4 @@
+local Enum = import("..utils.Enum")
 local Orient = import(".Orient")
 local Observer = import(".Observer")
 local Building = class("Building")
@@ -12,6 +13,31 @@ local orient_desc = {
     [Orient.UP] = "Orient.UP",
     [Orient.NONE] = "Orient.NONE",
 }
+local sort_map = Enum(
+    "keep",
+    "watchTower",
+    "warehouse",
+    "dragonEyrie",
+    "toolShop",
+    "materialDepot",
+    "armyCamp",
+    "barracks",
+    "blackSmith",
+    "foundry",
+    "stoneMason",
+    "lumbermill",
+    "mill",
+    "hospital",
+    "townHall",
+    "tradeGuild",
+    "academy",
+    "prison",
+    "hunterHall",
+    "trainingGround",
+    "stable",
+    "workShop",
+    "wall",
+    "tower")
 function Building:ctor(building_info)
     assert(building_info)
     self.x = building_info.x and building_info.x or 0
@@ -22,12 +48,19 @@ function Building:ctor(building_info)
     self.orient = building_info.orient and building_info.orient or Orient.X
     self.can_change_head = self.w ~= self.h
     self.base_building_observer = Observer.new()
+    self.city = building_info.city
+end
+function Building:BelongCity()
+    return self.city
 end
 function Building:UniqueKey()
     return string.format("%s_%d_%d", self:GetType(), self.x, self.y)
 end
 function Building:OnTimer(current_time)
 
+end
+function Building:ResetAllListeners()
+    self:GetBaseObserver():RemoveAllObserver()
 end
 function Building:AddBaseListener(listener)
     assert(listener.OnOrientChanged)
@@ -36,6 +69,21 @@ function Building:AddBaseListener(listener)
 end
 function Building:RemoveBaseListener(listener)
     self.base_building_observer:RemoveObserver(listener)
+end
+function Building:CopyListenerFrom(building)
+    self.base_building_observer:CopyListenerFrom(building:GetBaseObserver())
+end
+function Building:CopyValueFrom(building)
+    self.x = building.x
+    self.y = building.y
+    self.w = building.w
+    self.h = building.h
+    self.building_type = building.building_type
+    self.orient = building.orient
+    self.can_change_head = self.can_change_head
+end
+function Building:GetBaseObserver()
+    return self.base_building_observer
 end
 function Building:GetSize()
     return self.w, self.h
@@ -74,6 +122,41 @@ end
 function Building:Descriptor()
     return orient_desc[self.orient]
 end
+
+----
+function Building:IsNearByBuildingWithLength(building, len)
+    local abs = math.abs
+    local start_x, end_x, start_y, end_y = building:GetGlobalRegion()
+    local mid_x, mid_y = self:GetMidLogicPosition()
+    local w, h = self:GetSize()
+    local half_w, half_h = w/2, h/2
+    for k, v in pairs({
+        {start_x, start_y},
+        {start_x, end_y},
+        {end_x, start_y},
+        {end_x, end_y}
+    }) do
+        local x = v[1]
+        local y = v[2]
+        if abs(x - mid_x) < half_w + len then
+            return true
+        elseif abs(y - mid_y) < half_h + len then
+            return true
+        end
+    end
+    return false
+end
+function Building:IsImportantThanBuilding(building)
+    return sort_map[self:GetType()] < sort_map[building:GetType()]
+end
+function Building:IsAheadOfBuilding(building)
+    local ox, oy = building:GetLogicPosition()
+    if self.y == oy then
+        return self.x < ox
+    else
+        return self.y < oy
+    end
+end
 function Building:IsSamePositionWith(building)
     local x, y = building:GetLogicPosition()
     return self.x == x and self.y == y
@@ -86,7 +169,14 @@ function Building:CombineWithOtherBuilding(building)
     local max_y = math.max(self.y, building.y)
     local new_w = self.y == building.y and self.w + building.w or self.w
     local new_h = self.y == building.y and self.h or self.h + building.h
-    return Building.new({x = max_x, y = max_y, building_type = self:GetType(), w = new_w, h = new_h})
+    return Building.new{
+        building_type = self:GetType(),
+        x = max_x, 
+        y = max_y,
+        w = new_w, 
+        h = new_h,
+        city = self:BelongCity(),
+    }
 end
 function Building:IsIntersectWithOtherBuilding(building)
     local other_x, other_y = building:GetLogicPosition()
@@ -109,6 +199,7 @@ function Building:IsIntersectWithOtherBuilding(building)
     end
     return false
 end
+---
 function Building:GetTopLeftPoint()
     local start_x, end_x, start_y, end_y = self:GetGlobalRegion()
     return start_x, start_y
@@ -152,5 +243,8 @@ function Building:GetGlobalRegion()
     return start_x, end_x, start_y, end_y
 end
 return Building
+
+
+
 
 

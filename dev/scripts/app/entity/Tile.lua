@@ -19,12 +19,93 @@ function Tile:ctor(tile_info)
     self.y = tile_info.y
     self.locked = tile_info.locked
     self.location_id = tile_info.location_id
+    self.city = tile_info.city
 end
 function Tile:GetType()
     return "tile"
 end
 function Tile:IsUnlocked()
     return not self.locked
+end
+local math = math
+local max = math.max
+local min = math.min
+function Tile:RandomGrounds(random_number)
+    local grounds = self:GetEmptyGround()
+    local grounds_number = min(max(random_number % 5 + 1, 2), #grounds)
+    return self:RandomGroundsInArrays(grounds, self:RandomArraysWithNumber(grounds_number, #grounds, random_number))
+end
+function Tile:RandomArraysWithNumber(grounds_number, max_number, random_number)
+    local index_array = {}
+    for i = 1, max_number do
+        table.insert(index_array, i)
+    end
+    local r = {}
+    for i = 1, grounds_number do
+        local index = (random_number % #index_array) + 1
+        random_number = random_number + 1234567890
+        table.insert(r, index_array[index])
+        table.remove(index_array, index)
+    end
+    assert(#r == grounds_number)
+    return r
+end
+function Tile:RandomGroundsInArrays(empty_grounds, index_array)
+    local grounds = {}
+    for _, index in ipairs(index_array) do
+        table.insert(grounds, empty_grounds[index])
+    end
+    return grounds
+end
+function Tile:GetEmptyGround()
+    if (self.x == 1 and self.y == 1)
+        or (self.x == 1 and self.y == 2)
+        or (self.x == 2 and self.y == 1)
+    then
+        return {}
+    end
+    local base_x, base_y = self:GetStartPos()
+
+    if self.x == 1 then
+        return {
+            -- {x = base_x + 7, y = base_y + 4},
+            -- {x = base_x + 8, y = base_y + 4},
+
+            {x = base_x + 7, y = base_y + 5},
+            -- {x = base_x + 8, y = base_y + 5},
+
+            -- {x = base_x + 7, y = base_y + 8},
+            -- {x = base_x + 8, y = base_y + 8},
+
+            {x = base_x + 7, y = base_y + 9},
+            -- {x = base_x + 8, y = base_y + 9},
+        }
+    else
+        return {
+            -- 背面
+            -- {x = base_x, y = base_y + 4},
+            {x = base_x, y = base_y + 5},
+            {x = base_x, y = base_y + 6},
+            {x = base_x, y = base_y + 7},
+            {x = base_x, y = base_y + 8},
+            -- {x = base_x, y = base_y + 9},
+            -- 正面
+            -- {x = base_x + 7, y = base_y + 4},
+            -- {x = base_x + 8, y = base_y + 4},
+
+            {x = base_x + 7, y = base_y + 5},
+            -- {x = base_x + 8, y = base_y + 5},
+
+            -- {x = base_x + 7, y = base_y + 8},
+            -- {x = base_x + 8, y = base_y + 8},
+
+            {x = base_x + 7, y = base_y + 9},
+            -- {x = base_x + 8, y = base_y + 9},
+        }
+    end
+end
+function Tile:GetLogicPosition()
+    return self:GetEndPos()
 end
 function Tile:GetMidLogicPosition()
     local start_x, start_y = self:GetStartPos()
@@ -71,22 +152,22 @@ end
 function Tile:GetUpWall()
     local start_x, start_y = self:GetStartPos()
     local end_x, end_y = self:GetEndPos()
-    return WallUpgradeBuilding.new({ x = end_x - 2, y = start_y - 2, len = 6, orient = Orient.NEG_Y, building_type = "wall" })
+    return WallUpgradeBuilding.new({ x = end_x - 2, y = start_y - 2, len = 6, orient = Orient.NEG_Y, building_type = "wall", city = self.city })
 end
 function Tile:GetRightWall()
     local start_x, start_y = self:GetStartPos()
     local end_x, end_y = self:GetEndPos()
-    return WallUpgradeBuilding.new({ x = end_x + 2, y = end_y - 2, len = 6, orient = Orient.X, building_type = "wall" })
+    return WallUpgradeBuilding.new({ x = end_x + 2, y = end_y - 2, len = 6, orient = Orient.X, building_type = "wall", city = self.city })
 end
 function Tile:GetDownWall()
     local start_x, start_y = self:GetStartPos()
     local end_x, end_y = self:GetEndPos()
-    return WallUpgradeBuilding.new({ x = end_x - 2, y = end_y + 2, len = 6, orient = Orient.Y, building_type = "wall" })
+    return WallUpgradeBuilding.new({ x = end_x - 2, y = end_y + 2, len = 6, orient = Orient.Y, building_type = "wall", city = self.city })
 end
 function Tile:GetLeftWall()
     local start_x, start_y = self:GetStartPos()
     local end_x, end_y = self:GetEndPos()
-    return WallUpgradeBuilding.new({ x = start_x - 2, y = end_y - 2, len = 6, orient = Orient.NEG_X, building_type = "wall" })
+    return WallUpgradeBuilding.new({ x = start_x - 2, y = end_y - 2, len = 6, orient = Orient.NEG_X, building_type = "wall", city = self.city })
 end
 function Tile:IsContainPosition(x, y)
     local start_x, start_y = self:GetStartPos()
@@ -127,5 +208,10 @@ end
 
 
 return Tile
+
+
+
+
+
 
 

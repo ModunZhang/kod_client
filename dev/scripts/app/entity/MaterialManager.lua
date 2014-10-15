@@ -146,16 +146,16 @@ function MaterialManager:GetMaterialsByType(material_type)
     return self.material_map[material_type]
 end
 function MaterialManager:IteratorBuildMaterialsByType(func)
-	self:IteratorMaterialsByType(BUILD, func)
+    self:IteratorMaterialsByType(BUILD, func)
 end
 function MaterialManager:IteratorDragonMaterialsByType(func)
-	self:IteratorMaterialsByType(DRAGON, func)
+    self:IteratorMaterialsByType(DRAGON, func)
 end
 function MaterialManager:IteratorSoldierMaterialsByType(func)
-	self:IteratorMaterialsByType(SOLDIER, func)
+    self:IteratorMaterialsByType(SOLDIER, func)
 end
 function MaterialManager:IteratorEquipmentMaterialsByType(func)
-	self:IteratorMaterialsByType(EQUIPMENT, func)
+    self:IteratorMaterialsByType(EQUIPMENT, func)
 end
 function MaterialManager:IteratorMaterialsByType(material_type, func)
     for k, v in pairs(self.material_map[material_type]) do
@@ -163,14 +163,16 @@ function MaterialManager:IteratorMaterialsByType(material_type, func)
     end
 end
 function MaterialManager:OnUserDataChanged(user_data)
-	local user_map = {
+    local user_map = {
         [BUILD] = "materials",
         [DRAGON] = "dragonMaterials",
         [SOLDIER] = "soldierMaterials",
         [EQUIPMENT] = "dragonEquipments",
     }
     for i, v in ipairs(user_map) do
-    	self:OnMaterialsComing(i, user_data[v])
+        if user_data[v] then
+            self:OnMaterialsComing(i, user_data[v])
+        end
     end
 end
 function MaterialManager:OnMaterialsComing(material_type, materials)
@@ -191,6 +193,7 @@ function MaterialManager:OnMaterialsComing(material_type, materials)
 end
 
 return MaterialManager
+
 
 
 

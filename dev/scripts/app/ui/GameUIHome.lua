@@ -1,5 +1,6 @@
 local window = import("..utils.window")
 local WidgetTab = import("..widget.WidgetTab")
+local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
 
@@ -53,7 +54,7 @@ function GameUIHome:RefreshData()
     self.name_label:setString(userdata.basicInfo.name)
     self.power_label:setString(userdata.basicInfo.power)
     self.level_label:setString(userdata.basicInfo.level)
-    self.vip_label:setString("VIP "..userdata.basicInfo.vip)
+    self.vip_label:setString("VIP 1")
 end
 
 
@@ -67,7 +68,7 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         NetManager:sendMsg("reset", NOT_HANDLE)
-    end):addTo(top_bg):align(display.LEFT_BOTTOM, 109, 106)
+        end):addTo(top_bg):align(display.LEFT_BOTTOM, 109, 106)
 
 
     -- 玩家名字背景加文字
@@ -114,7 +115,7 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         -- NetManager:instantUpgradeBuildingByLocation(1, NOT_HANDLE)
-    end):addTo(top_bg):align(display.LEFT_BOTTOM, 317, 106)
+        end):addTo(top_bg):align(display.LEFT_BOTTOM, 317, 106)
 
     -- 资源图片和文字
     local first_row = 60
@@ -203,7 +204,7 @@ function GameUIHome:CreateTop()
     local pos = quest_bg:getAnchorPointInPoints()
     display.newSprite("home/quest_icon.png"):addTo(quest_bg):pos(pos.x, pos.y):scale(0.7)
     self.quest_label =
-        cc.ui.UILabel.new({text = "任务就是杀死你",
+        cc.ui.UILabel.new({text = "挖掘机技术哪家强?",
             size = 20,
             font = UIKit:getFontFilePath(),
             align = cc.ui.TEXT_ALIGN_CENTER,
@@ -216,6 +217,12 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         -- NetManager:instantMakeBuildingMaterial(NOT_HANDLE)
+        if self.quest_label:getString() == _("挖掘机技术哪家强?") then
+            self.quest_label:setString(_("中国山东找蓝翔!"))
+        else
+            self.quest_label:setString(_("挖掘机技术哪家强?"))
+        end
+
     end):addTo(quest_bar_bg):pos(290, 20)
     local pos = button:getAnchorPointInPoints()
     display.newSprite("home/quest_hook.png"):addTo(button):pos(pos.x, pos.y)
@@ -265,7 +272,7 @@ function GameUIHome:CreateBottom()
 
 
     local event = WidgetEventTabButtons.new(self.city)
-    :addTo(bottom_bg):pos(bottom_bg:getContentSize().width - 491, bottom_bg:getContentSize().height + 50)
+        :addTo(bottom_bg):pos(bottom_bg:getContentSize().width - 491, bottom_bg:getContentSize().height + 50)
 
 
     -- 底部按钮
@@ -297,13 +304,42 @@ function GameUIHome:CreateBottom()
     display.newSprite("home/toggle_map_bg.png"):addTo(bottom_bg):pos(58, 53)
     display.newSprite("home/toggle_point.png"):addTo(bottom_bg):pos(94, 89)
     display.newSprite("home/toggle_point.png"):addTo(bottom_bg):pos(94, 10)
-    display.newSprite("home/toggle_arrow.png"):addTo(bottom_bg):pos(53, 51)
-    display.newSprite("home/toggle_city.png"):addTo(bottom_bg):pos(52, 54)
+    local arrow = display.newSprite("toggle_arrow_103x104.png"):addTo(bottom_bg):pos(53, 51)
+        :rotation(display.getRunningScene().name == "AllianceScene" and 90 or 0)
+    WidgetPushButton.new(
+        {normal = "toggle_city_89x97.png", pressed = "toggle_city_89x97.png"}
+    ):addTo(bottom_bg)
+        :pos(52, 54)
+        :onButtonClicked(function(event)    
+            app:lockInput(true)
+            if display.getRunningScene().__cname == "AllianceScene" then
+                transition.rotateTo(arrow, {
+                    rotate = 0,
+                    time = 0.2,
+                    onComplete = function()
+                        app:lockInput(false)
+                        app:enterScene("CityScene", nil, "fade", 0.6, display.COLOR_WHITE)
+                    end}
+                )
+            elseif display.getRunningScene().__cname == "CityScene" then
+                transition.rotateTo(arrow, {
+                    rotate = 90,
+                    time = 0.2,
+                    onComplete = function()
+                        app:lockInput(false)
+                        app:enterScene("AllianceScene", nil, "fade", 0.6, display.COLOR_WHITE)
+                    end}
+                )
+            end
+        end)
 
     return bottom_bg
 end
 
 return GameUIHome
+
+
+
 
 
 

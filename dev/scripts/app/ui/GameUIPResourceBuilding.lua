@@ -81,11 +81,33 @@ function GameUIPResourceBuilding:ProduceIncreasePart()
     -- 分割线
     display.newScale9Sprite("dividing_line.png", bg_size.width/2, 58, cc.size(594,2)):addTo(bg)
 
+    
+
+
+    -- 是否达成标识
+    local building_x,building_y = self.building:GetLogicPosition()
+    
+    -- 匹配对应关系的小屋数量
+    local house_count = #self.city:GetHousesAroundFunctionBuildingByType(self.building , self.building:GetHouseType(), 2)
+    
+    print(" 满足 数量 ",house_count,self.building:GetHouseType())
+    if house_count>2 then
+        display.newSprite("upgrade_mark.png", bg_size.width-50 ,78):addTo(bg)
+    else
+        display.newSprite("upgrade_prohibited.png", bg_size.width-50 ,78):addTo(bg)
+    end
+    if house_count>5 then
+        display.newSprite("upgrade_mark.png", bg_size.width-50 ,32):addTo(bg)
+    else
+        display.newSprite("upgrade_prohibited.png", bg_size.width-50 ,32):addTo(bg)
+    end
+
     -- 周围小屋数量 3/6 是否达成
+    local first_count = house_count>3 and 3 or house_count
     cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("达到").."3/6",
+            text = _("达到")..first_count.."/3",
             font = UIKit:getFontFilePath(),
             size = 22,
             color = UIKit:hex2c3b(0x5a5544)
@@ -106,7 +128,7 @@ function GameUIPResourceBuilding:ProduceIncreasePart()
     cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("达到").."6/6",
+            text = _("达到")..first_count.."/6",
             font = UIKit:getFontFilePath(),
             size = 22,
             color = UIKit:hex2c3b(0x5a5544)
@@ -121,55 +143,6 @@ function GameUIPResourceBuilding:ProduceIncreasePart()
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.RIGHT_CENTER, bg_size.width-80 ,32)
         :addTo(bg)
-
-
-    -- 是否达成标识
-    local building_x,building_y = self.building:GetLogicPosition()
-    -- 周围两格范围6个小屋坐标
-    local house_postion = {
-        {
-            x = building_x-4,
-            y = building_y+3
-        },
-        {
-            x = building_x-1,
-            y = building_y+3
-        },
-        {
-            x = building_x+2,
-            y = building_y+3
-        },
-        {
-            x = building_x-4,
-            y = building_y-7
-        },
-        {
-            x = building_x-1,
-            y = building_y-7
-        },
-        {
-            x = building_x+2,
-            y = building_y-7
-        },
-    }
-    -- 匹配对应关系的小屋数量
-    local house_count = 0
-    for _,postion in pairs(house_postion) do
-        if City:GetBuildingByTypeWithSpecificPosition(self.building:GetHouseType(),postion.x,postion.y) then
-            house_count = house_count + 1
-        end
-    end
-    print(" 满足 数量 ",house_count,self.building:GetHouseType())
-    if house_count>2 then
-        display.newSprite("upgrade_mark.png", bg_size.width-50 ,78):addTo(bg)
-    else
-        display.newSprite("upgrade_prohibited.png", bg_size.width-50 ,78):addTo(bg)
-    end
-    if house_count>5 then
-        display.newSprite("upgrade_mark.png", bg_size.width-50 ,32):addTo(bg)
-    else
-        display.newSprite("upgrade_prohibited.png", bg_size.width-50 ,32):addTo(bg)
-    end
 end
 
 
@@ -200,7 +173,7 @@ function GameUIPResourceBuilding:RebuildPart()
     for k,r_type in pairs(P_RESOURCE_BUILDING_TYPE) do
         if self.building:GetType()~= r_type then
             local next_x =  gap_x*(add_count+1) + building_image_width/2+add_count*building_image_width
-            local builing_icon = display.newSprite(r_type..".png"):align(display.CENTER, next_x, 460):addTo(bg)
+            local builing_icon = display.newSprite(UIKit:getImageByBuildingType( r_type ,self.building:GetLevel())):align(display.CENTER, next_x, 450):addTo(bg)
             -- building name label
             cc.ui.UILabel.new(
                 {
@@ -209,7 +182,7 @@ function GameUIPResourceBuilding:RebuildPart()
                     font = UIKit:getFontFilePath(),
                     size = 20,
                     color = UIKit:hex2c3b(0x797154)
-                }):align(display.CENTER, next_x ,340)
+                }):align(display.CENTER, next_x ,350)
                 :addTo(bg)
             rebuild_list[add_count+1] = r_type
             builing_icon:setScale(building_image_width/builing_icon:getContentSize().width)

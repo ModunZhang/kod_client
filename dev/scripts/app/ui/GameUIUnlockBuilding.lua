@@ -4,6 +4,7 @@ local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
 local UpgradeBuilding = import("..entity.UpgradeBuilding")
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
+local MaterialManager = import("..entity.MaterialManager")
 
 local GameUIUnlockBuilding = class("GameUIUnlockBuilding", function ()
     return display.newColorLayer(cc.c4b(0,0,0,127))
@@ -49,7 +50,7 @@ function GameUIUnlockBuilding:Init()
     cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-145, display.top-265)
         :addTo(self)
     -- local building_introduces_bg = display.newSprite("upgrade_introduce_bg.png", display.cx, display.top-290):addTo(self)
-    self.building_image = display.newScale9Sprite(self.building:GetType()..".png", display.cx-197, display.top-245):addTo(self)
+    self.building_image = display.newScale9Sprite(UIKit:getImageByBuildingType( self.building:GetType()), display.cx-197, display.top-245):addTo(self)
     self.building_image:setAnchorPoint(cc.p(0.5,0.5))
     self.building_image:setScale(124/self.building_image:getContentSize().width)
     self:InitBuildingIntroduces()
@@ -149,28 +150,32 @@ function GameUIUnlockBuilding:SetUpgradeRequirementListview()
     local population = City.resource_manager:GetPopulationResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
 
 
-    local userData = DataManager:getUserData()
+    -- local userData = DataManager:getUserData()
+    local has_materials =City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
+
     requirements = {
-        {resource_type = "wood",isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
+        {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetOnUpgradingBuildings()<1,
+            icon="hammer_31x33.png",description=GameUtils:formatNumber(#City:GetOnUpgradingBuildings()).."/1"},
+        {resource_type = _("木材"),isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
             icon="wood_icon.png",description=self.building:GetLevelUpWood().."/"..wood},
 
-        {resource_type = "stone",isVisible = self.building:GetLevelUpStone()>0,     isSatisfy = stone>self.building:GetLevelUpStone() ,
+        {resource_type = _("石料"),isVisible = self.building:GetLevelUpStone()>0,     isSatisfy = stone>self.building:GetLevelUpStone() ,
             icon="stone_icon.png",description=self.building:GetLevelUpStone().."/"..stone},
 
-        {resource_type = "iron",isVisible = self.building:GetLevelUpIron()>0,      isSatisfy = iron>self.building:GetLevelUpIron() ,
+        {resource_type = _("铁矿"),isVisible = self.building:GetLevelUpIron()>0,      isSatisfy = iron>self.building:GetLevelUpIron() ,
             icon="iron_icon.png",description=self.building:GetLevelUpIron().."/"..iron},
 
-        {resource_type = "citizen",isVisible = self.building:GetLevelUpCitizen()>0,   isSatisfy = population>self.building:GetLevelUpCitizen() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpCitizen().."/"..population},
+        {resource_type = _("城民"),isVisible = self.building:GetLevelUpCitizen()>0,   isSatisfy = population>self.building:GetLevelUpCitizen() ,
+            icon="citizen_44x50.png",description=self.building:GetLevelUpCitizen().."/"..population},
 
-        {resource_type = "blueprints",isVisible = self.building:GetLevelUpBlueprints()>0,isSatisfy = userData.materials.blueprints>self.building:GetLevelUpBlueprints() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpBlueprints().."/"..userData.materials.blueprints},
-        {resource_type = "tools",isVisible = self.building:GetLevelUpTools()>0,     isSatisfy = userData.materials.tools>self.building:GetLevelUpTools() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpTools().."/"..userData.materials.tools},
-        {resource_type = "tiles",isVisible = self.building:GetLevelUpTiles()>0,     isSatisfy = userData.materials.tiles>self.building:GetLevelUpTiles() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpTiles().."/"..userData.materials.tiles},
-        {resource_type = "pulley",isVisible = self.building:GetLevelUpPulley()>0,    isSatisfy = userData.materials.pulley>self.building:GetLevelUpPulley() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpPulley().."/"..userData.materials.pulley},
+        {resource_type = _("建筑蓝图"),isVisible = self.building:GetLevelUpBlueprints()>0,isSatisfy = has_materials.blueprints>self.building:GetLevelUpBlueprints() ,
+            icon="blueprints_112x112.png",description=self.building:GetLevelUpBlueprints().."/"..has_materials.blueprints},
+        {resource_type = _("建造工具"),isVisible = self.building:GetLevelUpTools()>0,     isSatisfy = has_materials.tools>self.building:GetLevelUpTools() ,
+            icon="tools_112x112.png",description=self.building:GetLevelUpTools().."/"..has_materials.tools},
+        {resource_type = _("砖石瓦片"),isVisible = self.building:GetLevelUpTiles()>0,     isSatisfy = has_materials.tiles>self.building:GetLevelUpTiles() ,
+            icon="tiles_112x112.png",description=self.building:GetLevelUpTiles().."/"..has_materials.tiles},
+        {resource_type = _("滑轮组"),isVisible = self.building:GetLevelUpPulley()>0,    isSatisfy = has_materials.pulley>self.building:GetLevelUpPulley() ,
+            icon="pulley_112x112.png",description=self.building:GetLevelUpPulley().."/"..has_materials.pulley},
     }
 
     if not self.requirement_listview then
@@ -202,6 +207,7 @@ function GameUIUnlockBuilding:PopNotSatisfyDialog(listener,can_not_update_type)
             dialog:CreateNeeds("Topaz-icon.png",required_gems)
         end
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH then
+        local required_gems =self.building:getUpgradeRequiredGems()
         dialog:CreateOKButton(function(sender,type)
             listener()
             self:removeFromParent(true)
@@ -209,7 +215,6 @@ function GameUIUnlockBuilding:PopNotSatisfyDialog(listener,can_not_update_type)
         dialog:SetTitle(_("立即开始"))
         dialog:SetPopMessage(_("您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"))
         dialog:CreateNeeds("Topaz-icon.png",required_gems)
-            :seekWidgetByName(dialog,"LC_Dialogue_Label"):setText(_("您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"))
     else
         dialog:SetTitle(_("提示"))
         dialog:SetPopMessage(can_not_update_type)
@@ -222,6 +227,7 @@ function GameUIUnlockBuilding:SetUpgradeTime()
     self.upgrade_time:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradeTimeToNextLevel()))
 end
 return GameUIUnlockBuilding
+
 
 
 

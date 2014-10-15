@@ -1,6 +1,7 @@
 local EQUIPMENTS = GameDatas.SmithConfig.equipments
 local Localize = import("..utils.Localize")
 local MaterialManager = import("..entity.MaterialManager")
+local WidgetPushButton = import(".WidgetPushButton")
 local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetUIBackGround2 = import(".WidgetUIBackGround2")
 local WidgetMakeEquip = class("WidgetMakeEquip", function()
@@ -197,8 +198,15 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
         :align(display.LEFT_CENTER, -100 + 20, -50)
 
     local size = back_ground:getContentSize()
-    local button = cc.ui.UIPushButton.new({normal = "yellow_btn_up_185x65.png",
-        pressed = "yellow_btn_down_185x65.png"}):addTo(back_ground)
+    local button = WidgetPushButton.new({
+        normal = "yellow_btn_up_185x65.png",
+        pressed = "yellow_btn_down_185x65.png"
+    }
+    ,{}
+    ,{
+        disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
+    }
+    ):addTo(back_ground)
         :align(display.CENTER, size.width - 130, size.height - 250)
         :setButtonLabel(cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -210,6 +218,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
             NetManager:makeDragonEquipment(equip_type, NOT_HANDLE)
             self:Close()
         end)
+    self.normal_build_btn = button
 
     -- 时间glass
     cc.ui.UIImage.new("hourglass_39x46.png"):addTo(button, 2)
@@ -341,7 +350,7 @@ function WidgetMakeEquip:onEnter()
     self.city:GetMaterialManager():AddObserver(self)
     self.city:GetResourceManager():AddObserver(self)
 
-    
+
     self:UpdateEquipCounts()
     self:UpdateMaterials()
     self:UpdateBuildLabel(self.black_smith:IsEquipmentEventEmpty() and 0 or 1)
@@ -405,6 +414,7 @@ end
 -- 更新建筑队列
 function WidgetMakeEquip:UpdateBuildLabel(queue)
     local is_enough = queue == 0
+    self.normal_build_btn:setButtonEnabled(is_enough)
     local label = string.format("%s %d/%d", _("制造队列"), queue, 1)
     if label ~= self.build_label:getString() then
         self.build_label:setString(label)
@@ -466,6 +476,8 @@ end
 
 
 return WidgetMakeEquip
+
+
 
 
 

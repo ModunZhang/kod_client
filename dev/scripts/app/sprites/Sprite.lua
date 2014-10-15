@@ -4,7 +4,7 @@ local Sprite = class("Sprite", function(...)
     return Observer.extend(display.newNode(), ...)
 end)
 
-
+local SPRITE = -1
 ---- 回调
 function Sprite:OnSceneMove()
     local world_point = self:GetWorldPosition()
@@ -44,7 +44,7 @@ function Sprite:SetOrient(orient)
     self:GetEntity():SetOrient(orient)
 end
 -----position
-function Sprite:SetPositionWithLogic(x, y)
+function Sprite:SetPositionWithZOrder(x, y)
     self:setPosition(x, y)
     self:setLocalZOrder(self:GetLogicZorder(self.width))
 end
@@ -60,38 +60,45 @@ end
 ---- 功能
 function Sprite:ctor(city_layer, entity, x, y)
     self.city_layer = city_layer
-    self.observer = Observer.new()
-    self.iso_map = city_layer.iso_map
+    self.logic_map = city_layer:GetLogicMap()
     self.width = (city_layer:GetMapSize())
     self.entity = entity
-    self.sprite = self:CreateSprite():addTo(self)
-    self:SetPositionWithLogic(x, y)
+    self.sprite = self:CreateSprite():addTo(self, SPRITE):pos(self:GetSpriteOffset())
+    self:SetPositionWithZOrder(x, y)
+    self:setCascadeOpacityEnabled(true)
+    self:setCascadeColorEnabled(true)
     -- self:CreateBase()
 end
-function Sprite:GetShadow()
-    return self.shadow
+function Sprite:ReloadSpriteCauseTerrainChanged()
+    -- print("你应该在子类实现切换地形的功能")
 end
-function Sprite:CreateShadow(shadow)
-    local x, y = self:GetCenterPosition()
-    self.shadow = self.city_layer:CreateShadow(shadow, x, y, self:getLocalZOrder())
-end
-function Sprite:DestoryShadow()
-    self.city_layer:DestoryShadow(self.shadow)
-end
-function Sprite:GetShadowConfig()
-    return nil
-end
-function Sprite:RefreshShadow()
-    local shadow = self:GetShadowConfig()
-    if shadow and self:GetEntity():IsUnlocked() then
-        self:DestoryShadow()
-        self:CreateShadow(shadow)
-    end
+-- function Sprite:GetShadow()
+--     return self.shadow
+-- end
+-- function Sprite:CreateShadow(shadow)
+--     local x, y = self:GetCenterPosition()
+--     self.shadow = self.city_layer:CreateShadow(shadow, x, y, self:getLocalZOrder())
+-- end
+-- function Sprite:DestoryShadow()
+--     self.city_layer:DestoryShadow(self.shadow)
+-- end
+-- function Sprite:GetShadowConfig()
+--     return nil
+-- end
+-- function Sprite:RefreshShadow()
+--     local shadow = self:GetShadowConfig()
+--     if shadow and self:GetEntity():IsUnlocked() then
+--         self:DestoryShadow()
+--         self:CreateShadow(shadow)
+--     end
+-- end
+function Sprite:RefreshSprite()
+    self.sprite:removeFromParent()
+    self.sprite = self:CreateSprite():addTo(self, SPRITE):pos(self:GetSpriteOffset())
 end
 function Sprite:CreateSprite()
     local sprite_file, scale = self:GetSpriteFile()
     return display.newSprite(sprite_file)
-        :pos(self:GetSpriteOffset())
         :scale(scale == nil and 1 or scale)
         :flipX(self:GetFlipX())
 end
@@ -99,6 +106,9 @@ function Sprite:CreateBase()
     if self:GetEntity() and self:GetEntity().GetSize then
         self:GenerateBaseTiles(self:GetSize())
     end
+end
+function Sprite:GetMapLayer()
+    return self.city_layer
 end
 function Sprite:GetSpriteFile()
     assert(false)
@@ -119,23 +129,22 @@ end
 function Sprite:GetEntity()
     return self.entity
 end
-function Sprite:GetMap()
-    return self.iso_map
+function Sprite:GetLogicMap()
+    return self.logic_map
 end
 
 
 ----------base
 function Sprite:GenerateBaseTiles(w, h)
-    local base_node = self:newBatchNode(w, h)
-    self:addChild(base_node)
+    self:newBatchNode(w, h):addTo(self, -2)
 end
 function Sprite:newBatchNode(w, h)
     local start_x, end_x, start_y, end_y = self:GetLocalRegion(w, h)
     local base_node = display.newBatchNode("tile.png", 10)
-    local map = self:GetMap()
+    local map = self:GetLogicMap()
     for ix = start_x, end_x do
         for iy = start_y, end_y do
-            local sprite = display.newSprite(base_node:getTexture(), CCRectMake(0, 0, 80, 56))
+            local sprite = display.newSprite(base_node:getTexture(), cc.rect(0, 0, 80, 56))
             sprite:setPosition(cc.p(map:ConvertToLocalPosition(ix, iy)))
             base_node:addChild(sprite)
         end
@@ -162,6 +171,7 @@ function Sprite:GetLocalRegion(w, h)
 end
 
 return Sprite
+
 
 
 

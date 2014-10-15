@@ -1,6 +1,7 @@
 
 local Observer = import(".Observer")
 local Building = import(".Building")
+local MaterialManager = import("..entity.MaterialManager")
 local UpgradeBuilding = class("UpgradeBuilding", Building)
 UpgradeBuilding.NOT_ABLE_TO_UPGRADE = {
     TILE_NOT_UNLOCKED = "地块未解锁",
@@ -23,6 +24,14 @@ function UpgradeBuilding:ctor(building_info)
     --building剩余升级时间小于5 min时可以免费加速  单位 seconds
     self.freeSpeedUpTime=300
 end
+function UpgradeBuilding:ResetAllListeners()
+    UpgradeBuilding.super.ResetAllListeners(self)
+    self:GetUpgradeObserver():RemoveAllObserver()
+end
+function UpgradeBuilding:CopyListenerFrom(building)
+    UpgradeBuilding.super.CopyListenerFrom(self, building)
+    self.upgrade_building_observer:CopyListenerFrom(building:GetUpgradeObserver())
+end
 function UpgradeBuilding:AddUpgradeListener(listener)
     assert(listener.OnBuildingUpgradingBegin)
     assert(listener.OnBuildingUpgradeFinished)
@@ -31,6 +40,9 @@ function UpgradeBuilding:AddUpgradeListener(listener)
 end
 function UpgradeBuilding:RemoveUpgradeListener(listener)
     self.upgrade_building_observer:RemoveObserver(listener)
+end
+function UpgradeBuilding:GetUpgradeObserver()
+    return self.upgrade_building_observer
 end
 function UpgradeBuilding:GetElapsedTimeByCurrentTime(current_time)
     return self:GetUpgradeTimeToNextLevel() - self:GetUpgradingLeftTimeByCurrentTime(current_time)
@@ -45,6 +57,9 @@ function UpgradeBuilding:GetUpgradingPercentByCurrentTime(current_time)
     else
         return 0
     end
+end
+function UpgradeBuilding:CanUpgrade()
+    return not self:IsUpgrading() and self:GetLevel() > 0 and not self:IsMaxLevel()
 end
 function UpgradeBuilding:IsUnlocking()
     return self:GetLevel() == 0 and self.upgrade_to_next_level_time ~= 0
@@ -88,8 +103,11 @@ function UpgradeBuilding:GetNextLevelUpgradeTimeByLevel(level)
     return 1
 end
 function UpgradeBuilding:GetNextLevel()
+    return self:IsMaxLevel() and self.level or self.level + 1
+end
+function UpgradeBuilding:IsMaxLevel()
     local config = self.config_building_levelup[self:GetType()]
-    return #config == self.level and self.level or self.level + 1
+    return #config == self.level
 end
 function UpgradeBuilding:GetBeforeLevel()
     if self.level > 0 then
@@ -124,44 +142,46 @@ end
 function UpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id, sub_location_id)
     -- 解析
     local building_events = user_data.buildingEvents
-    local function get_building_event_by_location(loc_id)
-        for k, v in pairs(building_events) do
-            if v.location == loc_id then
-                return v
+    if building_events then
+        local function get_building_event_by_location(loc_id)
+            for k, v in pairs(building_events) do
+                if v.location == loc_id then
+                    return v
+                end
             end
         end
-    end
 
-    local hosue_events = user_data.houseEvents
-    local function get_house_event_by_location(building_location, sub_id)
-        for k, v in pairs(hosue_events) do
-            if v.buildingLocation == building_location and
-                v.houseLocation == sub_id then
-                return v
+        local hosue_events = user_data.houseEvents
+        local function get_house_event_by_location(building_location, sub_id)
+            for k, v in pairs(hosue_events) do
+                if v.buildingLocation == building_location and
+                    v.houseLocation == sub_id then
+                    return v
+                end
             end
         end
-    end
 
-    local finishTime
-    local level
-    local location = user_data.buildings["location_"..location_id]
-    if sub_location_id then
-        table.foreach(location.houses, function(key, building_info)
-            if building_info.location == sub_location_id then
-                local event = get_house_event_by_location(location_id, sub_location_id)
-                finishTime = event == nil and 0 or event.finishTime / 1000
-                level = building_info.level
-                return true
-            end
-        end)
-    else
-        local event = get_building_event_by_location(location_id)
-        finishTime = event == nil and 0 or event.finishTime / 1000
-        level = location.level
-    end
+        local finishTime
+        local level
+        local location = user_data.buildings["location_"..location_id]
+        if sub_location_id then
+            table.foreach(location.houses, function(key, building_info)
+                if building_info.location == sub_location_id then
+                    local event = get_house_event_by_location(location_id, sub_location_id)
+                    finishTime = event == nil and 0 or event.finishTime / 1000
+                    level = building_info.level
+                    return true
+                end
+            end)
+        else
+            local event = get_building_event_by_location(location_id)
+            finishTime = event == nil and 0 or event.finishTime / 1000
+            level = location.level
+        end
 
-    -- 适配
-    self:OnHandle(level, finishTime)
+        -- 适配
+        self:OnHandle(level, finishTime)
+    end
 end
 function UpgradeBuilding:OnHandle(level, finish_time)
     if self.level == level then
@@ -262,9 +282,12 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
         if gem<self:getUpgradeNowNeedGems() then
             return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH
         end
+        return
     end
     -- 还未管理道具，暂时从userdata中取
-    local m = DataManager:getUserData().materials
+    -- local m = DataManager:getUserData().materials
+    local m =City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
+
     -- 升级所需资源不足
     local wood = City.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local iron = City.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
@@ -274,16 +297,16 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
         or stone<config[self:GetNextLevel()].stone or iron<config[self:GetNextLevel()].iron
         or m.tiles<config[self:GetNextLevel()].tiles or m.tools<config[self:GetNextLevel()].tools
         or m.blueprints<config[self:GetNextLevel()].blueprints or m.pulley<config[self:GetNextLevel()].pulley
-    local is_building_list_enought = #City:GetOnUpgradingBuildings()>0
+    local is_building_list_enough = #City:GetOnUpgradingBuildings()>0
     print("#City:GetOnUpgradingBuildings()",#City:GetOnUpgradingBuildings())
-    if is_resource_enough and is_building_list_enought then
+    if is_resource_enough and is_building_list_enough then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_AND_RESOURCE_NOT_ENOUGH
     end
     if is_resource_enough then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH
     end
-    if is_building_list_enought then
-    print("当前建造的建筑",City:GetOnUpgradingBuildings()[1]:GetType())
+    if is_building_list_enough then
+        print("当前建造的建筑",City:GetOnUpgradingBuildings()[1]:GetType())
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH
     end
 end
@@ -332,6 +355,7 @@ function UpgradeBuilding:getUpgradeRequiredGems()
 end
 
 return UpgradeBuilding
+
 
 
 
