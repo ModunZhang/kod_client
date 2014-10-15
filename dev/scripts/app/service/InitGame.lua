@@ -35,9 +35,23 @@ return function(userData)
     end)
     City:InitBuildings(init_buildings)
 
+
+    -- table.insert(init_unlock_tiles, {x = 1, y = 3})
+    -- table.insert(init_unlock_tiles, {x = 2, y = 3})
+    -- table.insert(init_unlock_tiles, {x = 3, y = 3})
     -- table.insert(init_unlock_tiles, {x = 3, y = 2})
+    -- table.insert(init_unlock_tiles, {x = 3, y = 1})
+
+    -- table.insert(init_unlock_tiles, {x = 1, y = 4})
+    -- table.insert(init_unlock_tiles, {x = 2, y = 4})
+    -- table.insert(init_unlock_tiles, {x = 3, y = 4})
+    -- table.insert(init_unlock_tiles, {x = 4, y = 4})
+    -- table.insert(init_unlock_tiles, {x = 4, y = 3})
     -- table.insert(init_unlock_tiles, {x = 4, y = 2})
-    -- table.insert(init_unlock_tiles, {x = 5, y = 2})
+    -- table.insert(init_unlock_tiles, {x = 4, y = 1})
+
+    -- table.insert(init_unlock_tiles, {x = 1, y = 5})
+
     City:InitTiles(5, 5, init_unlock_tiles)
 
 

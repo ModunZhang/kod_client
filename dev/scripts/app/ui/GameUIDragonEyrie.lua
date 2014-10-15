@@ -149,7 +149,7 @@ function GameUIDragonEyrie:TabButtonsAction(tag)
     self.button_tag = tag
     if tag == "upgrade" then
         if self.dragon_bg then
-            self.dragon_bg:setVisible(false)
+            self.dragonUI.main:setVisible(false)
             self.current_content:setVisible(false)
         end
     else
@@ -182,12 +182,17 @@ function GameUIDragonEyrie:OnResourceChanged(resource_manager)
 end
 
 function GameUIDragonEyrie:CreateDragonIf()
-    if self.dragon_bg then self.dragon_bg:setVisible(true) return self.dragon_bg end -- 只需创建一次
+    if self.dragon_bg then self.dragonUI.main:setVisible(true) return self.dragon_bg end -- 只需创建一次
     self.dragonUI = {}
     local dragonContent = display.newNode():addTo(self)
+    self.dragonUI.main = dragonContent
     local bg = display.newSprite("dragon_box_606x494.png")
         :addTo(dragonContent)
         :pos(window.cx,window.top - 350)
+    display.newScale9Sprite("chat_setting_bg.png")
+        :size(bg:getContentSize().width,bg:getContentSize().height-50)
+        :addTo(dragonContent,-1)
+        :pos(window.cx,window.top - 350 - 20)
     self.dragonUI.dragonNameLabel = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "Red Dragon",
@@ -205,6 +210,7 @@ function GameUIDragonEyrie:CreateDragonIf()
         color = UIKit:hex2c3b(0xb1a475)
     }):addTo(bg):align(display.RIGHT_TOP, bg:getContentSize().width - 50, bg:getContentSize().height-12)
     local drgonBg = display.newSprite("dragon.png"):addTo(dragonContent,-1):pos(window.cx,window.top - 326)
+    display.newSprite("dragon_line_594x4.png"):addTo(drgonBg):align(display.TOP_LEFT, 0, 0)
     self.dragonUI.dragonContent = drgonBg
     local shieldView = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
          :addTo(dragonContent,-1)
@@ -257,7 +263,7 @@ function GameUIDragonEyrie:CreateDragonIf()
         size = 20,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
         color = UIKit:hex2c3b(0xfff3c7)
-    }):addTo(lv_bg):align(display.LEFT_BOTTOM, 20, 5)
+    }):addTo(lv_bg):align(display.LEFT_BOTTOM, 40, 5)
 
     self.dragonUI.vitalityProductPerHourLabel = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -300,146 +306,14 @@ function GameUIDragonEyrie:CreateDragonIf()
      end
  })
     self.dragonUI.pageControl = pageContent
- pageContent:pos(page_content:getContentSize().width/2-pageContent:getContentSize().width/2,label:getPositionY() - label:getContentSize().height-10):addTo(page_content)
- local add_button = cc.ui.UIPushButton.new({normal = "dragon_add_button_normal.png",pressed = "dragon_add_button_highlight.png"}, {scale9 = false})
+    pageContent:pos(page_content:getContentSize().width/2-pageContent:getContentSize().width/2,label:getPositionY() - label:getContentSize().height-10):addTo(page_content)
+    local add_button = cc.ui.UIPushButton.new({normal = "dragon_add_button_normal.png",pressed = "dragon_add_button_highlight.png"}, {scale9 = false})
      :addTo(lv_bg)
      :align(display.TOP_RIGHT,lv_bg:getContentSize().width,lv_bg:getContentSize().height)
-    
+    lv_bg:setPositionX(lv_bg:getPositionX()+5)
     self.dragon_bg = bg
     return self.dragon_bg
 end
-
--- function GameUIDragonEyrie:CreateDragonIf()
-	-- if self.dragon_bg then self.dragon_bg:setVisible(true) return self.dragon_bg end -- 只需创建一次
- --    self.dragonUI = {}
-
--- 	local bg = display.newSprite("dragon_bg.png")
--- 		:addTo(self)
---         :pos(display.cx,display.top - 350)
--- 	local title = display.newSprite("drgon_title_blue.png")
--- 		:addTo(bg)
--- 		:align(display.LEFT_TOP, 8, bg:getContentSize().height-8)
--- 	self.dragonUI.dragonNameLabel = cc.ui.UILabel.new({
---         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
---         text = "Red Dragon",
---         font = UIKit:getFontFilePath(),
---         size = 28,
---         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
---         color = UIKit:hex2c3b(0xffedae)
---     }):addTo(title):align(display.LEFT_BOTTOM, 10, 10)
-
--- 	self.dragonUI.dragonLVLabel = cc.ui.UILabel.new({
---         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
---         text = "LV 20/50",
---         font = UIKit:getFontFilePath(),
---         size = 22,
---         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
---         color = UIKit:hex2c3b(0xb1a475)
---     }):addTo(title):align(display.RIGHT_BOTTOM, title:getContentSize().width - 10, 10)
-
--- 	local drgonBg = display.newSprite("dragon.png")
--- 		:addTo(bg):align(display.LEFT_TOP,display.left+9,title:getPositionY() - title:getContentSize().height+3)
---     self.dragonUI.dragonContent = drgonBg
--- 	local shieldView = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
--- 			:addTo(bg)
--- 			:size(595,31)
--- 			:pos(display.left+9, title:getPositionY() - title:getContentSize().height-28)
---     self.dragonUI.dragonStarBar = StarBar.new({
--- 		max = 5,
--- 		bg = "Stars_bar_bg.png",
--- 		fill = "Stars_bar_highlight.png", 
--- 		num = 3,
--- 		margin = 0,
--- 	}):addTo(shieldView)
--- 	self.dragonUI.dragonEXPLabel = cc.ui.UILabel.new({
---         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
---         text = "2600/2600",
---         font = UIKit:getFontFilePath(),
---         size = 22,
---         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
---         color = UIKit:hex2c3b(0xb1a475)
---     }):addTo(shieldView):align(display.RIGHT_BOTTOM, 585, 5)
-
-
--- 	local rightButton = cc.ui.UIPushButton.new({normal = "drgon_switching_normal.png",pressed = "drgon_switching_hight.png"}, {scale9 = false}):addTo(bg)
--- 	rightButton:align(display.RIGHT_TOP,bg:getContentSize().width - 7,shieldView:getPositionY() - 80)
---         :onButtonClicked(function()
---             self:ChangePageAction(1)
---         end)
--- 	local leftButton = cc.ui.UIPushButton.new({normal = "drgon_switching_normal.png",pressed = "drgon_switching_hight.png"}, {scale9 = false}):addTo(bg)
---         :onButtonClicked(function()
---             self:ChangePageAction(-1)
---         end)
--- 	leftButton:setRotation(180)
--- 	leftButton:pos(display.left+35,shieldView:getPositionY()-80 - 56)
---     self.dragonUI.prePageButton = leftButton
---     self.dragonUI.nextPageButton = rightButton
--- 	local lv_bg = display.newSprite("drgon_lvbar_bg.png"):addTo(bg):align(display.RIGHT_TOP,drgonBg:getContentSize().width+10,drgonBg:getPositionY()-drgonBg:getContentSize().height)
---     self.dragonUI.vitalityProgressMain = lv_bg
--- 	local progressFill = display.newSprite("drgon_lvbar_color.png")
---     local ProgressTimer = cc.ProgressTimer:create(progressFill)
---     ProgressTimer:setType(display.PROGRESS_TIMER_BAR)
---     ProgressTimer:setBarChangeRate(cc.p(1,0))
---     ProgressTimer:setMidpoint(cc.p(0,0))
---     ProgressTimer:align(display.LEFT_BOTTOM, 0, 0):addTo(lv_bg)
---     ProgressTimer:setPercentage(0)
---     self.dragonUI.drgonVitalityProgress = ProgressTimer
---     self.dragonUI.drgonVitalityLabel = cc.ui.UILabel.new({
---         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
---         text = "120/360",
---         font = UIKit:getFontFilePath(),
---         size = 20,
---         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
---         color = UIKit:hex2c3b(0xfff3c7)
---     }):addTo(lv_bg):align(display.LEFT_BOTTOM, 20, 5)
-
---     self.dragonUI.vitalityProductPerHourLabel = cc.ui.UILabel.new({
---         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
---         text = "+55/h",
---         font = UIKit:getFontFilePath(),
---         size = 20,
---         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
---         color = UIKit:hex2c3b(0xfff3c7)
---     }):addTo(lv_bg):align(display.RIGHT_BOTTOM, lv_bg:getContentSize().width - 50, 5)
-
---     local iconbg = display.newSprite("drgon_process_icon_bg.png")
---     	:addTo(bg)
---     	:align(display.LEFT_TOP, 8,drgonBg:getPositionY()-drgonBg:getContentSize().height+5)
---     self.dragonUI.dragon_LV_icon = iconbg
--- 	display.newSprite("dragon_lv_icon.png")
--- 		:addTo(iconbg)
--- 		:pos(iconbg:getContentSize().width/2,iconbg:getContentSize().height/2)
--- 	local label = cc.ui.UILabel.new({
---         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
---         text = "待命中",
---         font = UIKit:getFontFilePath(),
---         size = 20,
---         valign = cc.ui.TEXT_VALIGN_CENTER,
---         align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
---         color = UIKit:hex2c3b(0x388500)
---     }):addTo(bg):align(display.CENTER,bg:getContentSize().width/2,lv_bg:getPositionY() - lv_bg:getContentSize().height - 20)
---     self.dragonUI.dragonStateLabel = label
---     self.dragonUI.dragonStateLabel_origin_y = lv_bg:getPositionY() - lv_bg:getContentSize().height - 20
---     local pageContent = StarBar.new({
--- 		max = 3,
--- 		bg = "dragon_page_bg.png",
--- 		fill = "dragon_page_focus.png", 
--- 		num = 1,
--- 		margin = 20,
--- 		fillFunc = function(index,current,max)
--- 			return index == current
--- 		end
--- 	})
---     self.dragonUI.pageControl = pageContent
--- 	pageContent:pos(bg:getContentSize().width/2-pageContent:getContentSize().width/2,label:getPositionY() - label:getContentSize().height-10):addTo(bg)
---     self.dragonUI.pageControl_origin_y = label:getPositionY() - label:getContentSize().height-10
--- 	local add_button = cc.ui.UIPushButton.new({normal = "dragon_add_button_normal.png",pressed = "dragon_add_button_highlight.png"}, {scale9 = false})
--- 		:addTo(lv_bg)
--- 		:align(display.TOP_RIGHT,lv_bg:getContentSize().width,lv_bg:getContentSize().height)
-	
---     self.dragon_bg = bg
---     return self.dragon_bg
--- end
 
 function GameUIDragonEyrie:CreateHatchDragonIf()
     if self.content_hatchdragon then self.content_hatchdragon:setVisible(true) return self.content_hatchdragon end
@@ -448,7 +322,7 @@ function GameUIDragonEyrie:CreateHatchDragonIf()
     hatchNode:addTo(self)
         -- :pos(window.left+30,window.bottom + 34 + 20)
     local energyIcon_big =  display.newSprite("dragon_hate_icon.png")
-        :align(display.LEFT_BOTTOM,50,self.dragon_bg:getPositionY() - self.dragon_bg:getContentSize().height/2 - 50)
+        :align(display.LEFT_BOTTOM,window.left + 50,self.dragon_bg:getPositionY() - self.dragon_bg:getContentSize().height/2 - 50)
         :addTo(hatchNode)
     self.hatchUI.nextEnergyLabel =  cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -479,17 +353,15 @@ function GameUIDragonEyrie:CreateHatchDragonIf()
 
     local iconbg = display.newSprite("drgon_process_icon_bg.png")
         :addTo(hatchNode)
-        :align(display.LEFT_BOTTOM, 50,lvBg:getPositionY() - 70)
-    display.newSprite("dragon_lv_icon.png")
+        :align(display.LEFT_BOTTOM,window.left + 50,lvBg:getPositionY() - 70)
+     display.newSprite("dragon_lv_icon.png")
         :addTo(iconbg)
         :pos(iconbg:getContentSize().width/2,iconbg:getContentSize().height/2)
 
-    local lv_bg = display.newScale9Sprite("drgon_lvbar_bg.png"):addTo(hatchNode,-1):align(display.LEFT_BOTTOM,40+iconbg:getContentSize().width,iconbg:getPositionY()+3)
+    local lv_bg = display.newScale9Sprite("drgon_lvbar_bg.png"):addTo(hatchNode,-1):align(display.LEFT_BOTTOM,window.left+40+iconbg:getContentSize().width,iconbg:getPositionY()+3)
     lv_bg:size(400,lv_bg:getContentSize().height)
     self.hatchUI.progressTimer = UIKit:commonProgressTimer("drgon_lvbar_color.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(lv_bg,2)
     self.hatchUI.progressTimer:setScaleX(0.71)
-    -- self.hatchUI.progressTimer:setPercentage(100)
-    -- self.hatchUI.progressTimer = ProgressTimer
     local hateButton = cc.ui.UIPushButton.new({normal = "dragon_yellow_button.png",pressed = "dragon_yellow_button_h.png"}, {scale9 = true})
     :setButtonSize(110,50)
     :setButtonLabel("normal",  cc.ui.UILabel.new({
@@ -523,7 +395,7 @@ function GameUIDragonEyrie:CreateHatchDragonIf()
         dimensions = cc.size(520,100),
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
         color = UIKit:hex2c3b(0x6403c2f)
-    }):addTo(hatchNode,2):align(display.LEFT_TOP,60, lv_bg:getPositionY() - 20)
+    }):addTo(hatchNode,2):align(display.LEFT_TOP,window.left+60, lv_bg:getPositionY() - 20)
 
     local tips_bg = display.newSprite("dragon_tips_bg_534x46.png"):addTo(hatchNode):pos(window.cx,descLabel:getPositionY()-120)
     local tips_icon = display.newSprite("dragon_tips_icon.png"):addTo(tips_bg):pos(tips_bg:getContentSize().width/4,tips_bg:getContentSize().height/2)
@@ -539,104 +411,6 @@ function GameUIDragonEyrie:CreateHatchDragonIf()
     self.content_hatchdragon = hatchNode
     return self.content_hatchdragon
 end
-
--- function GameUIDragonEyrie:CreateHatchDragonIf()
---     --bindData
---     if self.content_hatchdragon then self.content_hatchdragon:setVisible(true) return self.content_hatchdragon end
---     self.hatchUI = {}
---     local hatchNode = display.newNode()
---     local content_bg = display.newScale9Sprite("dragon_content_bg.png")
---         :addTo(hatchNode)
---         :align(display.LEFT_BOTTOM, 0, 0)
---     local rect = content_bg:getContentSize()
---     hatchNode:addTo(self)
---         :pos((display.width - content_bg:getContentSize().width)/2,self.dragon_bg:getPositionY()-self.dragon_bg:getContentSize().height/2-content_bg:getContentSize().height)
---     content_bg:size(content_bg:getContentSize().width,content_bg:getContentSize().height/2)
-    --  cc.ui.UILabel.new({
-    --     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-    --     text = _("消耗能量,为龙蛋补充活力,活力补充到100时,可以获得巨龙"),
-    --     font = UIKit:getFontFilePath(),
-    --     size = 20,
-    --     dimensions = cc.size(content_bg:getContentSize().width,content_bg:getContentSize().height),
-    --     align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
-    --     color = UIKit:hex2c3b(0x6403c2f)
-    -- }):addTo(content_bg,2):align(display.LEFT_TOP, 10, content_bg:getContentSize().height - 20)
-
---     local iconbg = display.newSprite("drgon_process_icon_bg.png")
---         :addTo(hatchNode)
---         :align(display.LEFT_BOTTOM, 0,content_bg:getContentSize().height + 20)
---     display.newSprite("dragon_lv_icon.png")
---         :addTo(iconbg)
---         :pos(iconbg:getContentSize().width/2,iconbg:getContentSize().height/2)
-
---     local lv_bg = display.newScale9Sprite("drgon_lvbar_bg.png"):addTo(hatchNode,-1):align(display.LEFT_BOTTOM,30,content_bg:getContentSize().height + 22)
---     lv_bg:size(400,lv_bg:getContentSize().height)
---     local progressFill = display.newSprite("drgon_lvbar_color.png")
---     local ProgressTimer = cc.ProgressTimer:create(progressFill)
---     ProgressTimer:setType(display.PROGRESS_TIMER_BAR)
---     ProgressTimer:setBarChangeRate(cc.p(1,0))
---     ProgressTimer:setScaleX(0.71)
---     ProgressTimer:setMidpoint(cc.p(0,0))
---     ProgressTimer:align(display.LEFT_BOTTOM, 0, 0):addTo(lv_bg,2)
---     ProgressTimer:setPercentage(100)
---     self.hatchUI.progressTimer = ProgressTimer
---     local hateButton = cc.ui.UIPushButton.new({normal = "dragon_yellow_button.png",pressed = "dragon_yellow_button_h.png"}, {scale9 = true})
---     :setButtonSize(110,50)
---     :setButtonLabel("normal",  cc.ui.UILabel.new({
---         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
---         text = _("孵化"),
---         font = UIKit:getFontFilePath(),
---         size = 20,
---         align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
---         color = UIKit:hex2c3b(0xffedae)
---     }))
---     :onButtonClicked(function()
---         self:HatchAction()
---     end)
---     :addTo(hatchNode)
---     :align(display.LEFT_BOTTOM,lv_bg:getPositionX()+410,lv_bg:getPositionY()-5)
-
---     self.hatchUI.drgonVitalityLabel = cc.ui.UILabel.new({
---         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
---         text = _("120/360"),
---         font = UIKit:getFontFilePath(),
---         size = 20,
---         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
---         color = UIKit:hex2c3b(0xffedae)
---     }):addTo(lv_bg,3):pos(20,lv_bg:getContentSize().height/2)
-
---     local energyIcon_big =  display.newSprite("dragon_hate_icon.png"):align(display.LEFT_BOTTOM,0,iconbg:getPositionY()+iconbg:getContentSize().height + 20)
---         :addTo(hatchNode)
---     self.hatchUI.nextEnergyLabel =  cc.ui.UILabel.new({
---         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
---         text = "80/100 下一点 00:02:32",
---         font = UIKit:getFontFilePath(),
---         size = 20,
---         align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
---         color = UIKit:hex2c3b(0x403c2f)
---     }):addTo(hatchNode):align(display.LEFT_BOTTOM,energyIcon_big:getPositionX()+energyIcon_big:getContentSize().width,energyIcon_big:getPositionY()+10)
-
---     local energyIcon_small = display.newSprite("dragon_hate_icon.png")
---         :align(display.RIGHT_BOTTOM,rect.width - 100,energyIcon_big:getPositionY()+5)
---         :addTo(hatchNode)
---     energyIcon_small:setScale(0.6)
-
---     local lvBg = display.newSprite("LV_background.png"):addTo(hatchNode,-1)
---         :align(display.LEFT_BOTTOM, energyIcon_small:getPositionX()-10, energyIcon_small:getPositionY())
-
---     self.hatchUI.costEnergyLabel = cc.ui.UILabel.new({
---         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
---         text = "20",
---         font = UIKit:getFontFilePath(),
---         size = 18,
---         align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
---         color = UIKit:hex2c3b(0x403c2f)
---     }):addTo(lvBg):align(display.LEFT_BOTTOM,40,2)
-
---     self.content_hatchdragon = hatchNode
---     return self.content_hatchdragon
--- end
-
 
 function GameUIDragonEyrie:CreateEquipmentContentIf()
 	if self.equipment_content then self.equipment_content:setVisible(true) return self.equipment_content end
@@ -702,12 +476,18 @@ end
 function GameUIDragonEyrie:UpgradeDragonStar()
     local dragon = self:GetCurrentDragon()
     if not self.building:DragonEquipmentIsReachPromotionLevel(dragon) then
-        print("未达到晋级等级")
+        local dialog = FullScreenPopDialogUI.new()
+        dialog:SetTitle(_("提示"))
+        dialog:SetPopMessage(_("未达到晋级等级!"))
+        dialog:AddToCurrentScene()
         return
     end
 
     if not self.building:DragonEquipmentsIsReachMaxStar(dragon) then
-        print("所有装备未达到最高星级")
+        local dialog = FullScreenPopDialogUI.new()
+        dialog:SetTitle(_("提示"))
+        dialog:SetPopMessage(_("所有装备未达到最高星级!"))
+        dialog:AddToCurrentScene()
         return
     end
     

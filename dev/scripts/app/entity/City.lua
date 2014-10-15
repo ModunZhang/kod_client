@@ -42,8 +42,6 @@ function City:ctor()
     self.towers = {}
     self.decorators = {}
 
-    self.dwelling_count_max = 5
-
     self.locations_decorators = {}
     self:InitLocations()
     self:InitRuins()
@@ -100,6 +98,44 @@ function City:InitDecorators(decorators)
     self:CheckIfDecoratorsIntersectWithRuins()
 end
 -- 取值函数
+function City:GetHousesAroundFunctionBuildingByType(building, building_type, len)
+    return self:GetHousesAroundFunctionBuildingWithFilter(building, len, function(house)
+        return house:GetType() == building_type
+    end)
+end
+function City:GetHousesAroundFunctionBuildingWithFilter(building, len, filter)
+    assert(self:IsFunctionBuilding(building))
+    local r = {}
+    self:IteratorDecoratorBuildingsByFunc(function(k, v)
+        local is_neighbour = building:IsNearByBuildingWithLength(v, len)
+        if is_neighbour then
+            if type(filter) == "function" then
+                if filter(v) then
+                    table.insert(r, v)
+                end
+            else
+                table.insert(r, v)
+            end
+        end
+    end)
+    return r
+end
+function City:IsFunctionBuilding(building)
+    local location_id = self:GetLocationIdByBuilding(building)
+    local b = self:GetBuildingByLocationId(location_id)
+    return b:IsSamePositionWith(building)
+end
+function City:IsHouse(building)
+    return not self:IsFunctionBuilding(building) and not self:IsTower(building) and not self:IsGate(building)
+end
+function City:IsTower(building)
+    return iskindof(building, "TowerUpgradeBuilding")
+end
+function City:IsGate(building)
+    if iskindof(building, "WallUpgradeBuilding") then
+        return building:IsGate()
+    end
+end
 function City:GetSoldierManager()
     return self.soldier_manager
 end
@@ -108,9 +144,6 @@ function City:GetMaterialManager()
 end
 function City:GetResourceManager()
     return self.resource_manager
-end
-function City:GetDwellingCounts()
-    return self.dwelling_count_max - #self:GetBuildingByType("dwelling")
 end
 function City:GetOnUpgradingBuildings()
     local builds = {}
@@ -134,6 +167,18 @@ function City:GetOnUpgradingBuildings()
     end)
     return builds
 end
+function City:GetUpgradingBuildingsWithOrder(current_time)
+    local builds = {}
+    self:IteratorCanUpgradeBuildings(function(building)
+        if building:IsUpgrading() then
+            table.insert(builds, building)
+        end
+    end)
+    table.sort(builds, function(a, b)
+        return a:GetUpgradingLeftTimeByCurrentTime(current_time) < b:GetUpgradingLeftTimeByCurrentTime(current_time)
+    end)
+    return builds
+end
 function City:GetBuildingMaxCountsByType(building_type)
     local building_map = {
         dwelling = "townHall",
@@ -147,8 +192,42 @@ end
 function City:GetLeftBuildingCountsByType(building_type)
     return self:GetBuildingMaxCountsByType(building_type) - #self:GetBuildingByType(building_type)
 end
+function City:GetFunctionBuildingsWhichIsUnlocked()
+    local r = {}
+    for i, v in ipairs(self:GetFunctionBuildings()) do
+        if v:IsUnlocked() or v:IsUnlocking() then
+            table.insert(r, v)
+        end
+    end
+    return r
+end
+function City:GetFunctionBuildings()
+    local r = {}
+    for i, v in pairs(self:GetAllBuildings()) do
+        table.insert(r, v)
+    end
+    for i, v in pairs(self:GetCanUpgradingTowers()) do
+        table.insert(r, v)
+    end
+    table.insert(r, self:GetGate())
+    table.sort(r, function(a, b)
+        return a:GetType() == b:GetType() and a:IsAheadOfBuilding(b) or a:IsImportantThanBuilding(b)
+    end)
+    return r
+end
 function City:GetAllBuildings()
     return self.buildings
+end
+function City:GetHousesWhichIsBuilded()
+    local r = {}
+    for i, v in ipairs(self:GetAllDecorators()) do
+        table.insert(r, v)
+    end
+    table.sort(r, function(a, b)
+        local compare = a:GetLevel() - b:GetLevel()
+        return compare == 0 and a:IsAheadOfBuilding(b) or (compare > 0 and true or false)
+    end)
+    return r
 end
 function City:GetAllDecorators()
     return self.decorators
@@ -238,10 +317,6 @@ end
 function City:GetTileByIndex(x, y)
     return self.tiles[y] and self.tiles[y][x] or nil
 end
--- 取得住宅最大建造数量
-function City:GetMaxDwellingCanBeBuilt()
--- self:GetBuildingByType("build_type")
-end
 -- 取得小屋最大建造数量
 function City:GetMaxHouseCanBeBuilt(house_type)
     local max = GameDatas.PlayerInitData.houses[1][house_type] --基础值
@@ -270,6 +345,10 @@ function City:IsUnLockedAtIndex(x, y)
     return not self.tiles[y][x].locked
 end
 function City:IsTileCanbeUnlockAt(x, y)
+    -- 没有第五圈
+    if x == 5 or y == 5 then
+        return false
+    end
     -- 是否解锁
     if not self:GetTileByIndex(x, y) then
         return false , self.RETURN_CODE.OUT_OF_BOUND
@@ -337,8 +416,11 @@ function City:GetWalls()
     return self.walls
 end
 function City:GetGate()
+    return self:GetGateInWalls(self.walls)
+end
+function City:GetGateInWalls(walls)
     local gate
-    table.foreach(self.walls, function(k, wall)
+    table.foreach(walls, function(k, wall)
         if wall:IsGate() then
             gate = wall
             return true
@@ -815,32 +897,58 @@ function City:GenerateWalls()
             break
         end
     end
-
-    self.walls = sort_walls
+    -- 重新生成城门的监听
+    self.walls = self:ReloadWalls(sort_walls)
 
     -- 生成防御塔
     self:GenerateTowers(self.walls)
 end
+-- 因为重新生成了城墙，所以必须把添加的listener都转移到新的城门上去
+function City:ReloadWalls(walls)
+    local old_walls = self.walls
+    local old_gate = self:GetGateInWalls(old_walls)
+    local new_index = nil
+    local new_gate = nil
+    for i, v in ipairs(walls) do
+        if v:IsGate() then
+            new_index = i
+            new_gate = v
+            break
+        end
+    end
+
+    assert(new_index)
+    -- 已经生成过城门了
+    if old_gate then
+        walls[new_index] = old_gate
+        old_gate:CopyValueFrom(new_gate)
+    else
+        -- 如果是第一次生成
+        self:GetGateInWalls(walls):AddUpgradeListener(self)
+    end
+    return walls
+end
 function City:GenerateTowers(walls)
-    self.towers = {}
+    local towers = {}
     local p = walls[#walls]:IntersectWithOtherWall(walls[1])
-    table.insert(self.towers, TowerUpgradeBuilding.new({ x = p.x, y = p.y,
+    table.insert(towers, TowerUpgradeBuilding.new({ x = p.x, y = p.y,
         building_type = "tower",
         level = -1,
-        orient = p.orient }))
+        orient = p.orient,
+        sub_orient = p.sub_orient }))
 
     for i, v in pairs(walls) do
         if i < #walls then
             local p = walls[i]:IntersectWithOtherWall(walls[i + 1])
-            table.insert(self.towers, TowerUpgradeBuilding.new({
+            table.insert(towers, TowerUpgradeBuilding.new({
                 x = p.x, y = p.y,
                 building_type = "tower",
                 level = -1,
-                orient = p.orient }))
+                orient = p.orient,
+                sub_orient = p.sub_orient }))
         end
     end
 
-    local towers = self.towers
     local mx, my = 0, 0
     local index
     for i, v in ipairs(towers) do
@@ -864,9 +972,34 @@ function City:GenerateTowers(walls)
     until #t >= tower_limit
 
     for tower_id, tower_index in ipairs(t) do
-        local tower = towers[tower_index]
-        tower.tower_id = tower_id
+        towers[tower_index]:SetTowerId(tower_id)
     end
+    self.towers = self:ReloadTowers(towers)
+end
+function City:ReloadTowers(towers)
+    local old_towers = self.towers
+    local old_tower_map = {}
+    for k, v in pairs(old_towers) do
+        if v:IsUnlocked() then
+            old_tower_map[v:TowerId()] = v
+        end
+    end
+
+
+    for i, v in ipairs(towers) do
+        if v:IsUnlocked() then
+            local old_tower = old_tower_map[v:TowerId()]
+            -- 已经解锁的
+            if old_tower then
+                towers[i] = old_tower
+                old_tower:CopyValueFrom(v)
+            else
+                -- 如果是新解锁的
+                v:AddUpgradeListener(self)
+            end
+        end
+    end
+    return towers
 end
 
 
@@ -881,6 +1014,15 @@ function City:OnUpgradingBuildings()
 end
 
 return City
+
+
+
+
+
+
+
+
+
 
 
 

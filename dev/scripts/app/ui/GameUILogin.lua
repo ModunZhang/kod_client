@@ -6,7 +6,6 @@ local GameUILogin = UIKit:createUIClass('GameUILogin')
 
 function GameUILogin:ctor()
     GameUILogin.super.ctor(self)
-    -- local bgImage = display.newSprite("images/spalshbg.png", display.cx, display.cy,cc.size(display.width,display.height))
     local bg = display.newScale9Sprite("spalshbg.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(self)
     bg:size(display.width,bg:getContentSize().height)
     display.newSprite("gameName.png"):pos(display.cx,display.top-150):addTo(self)
@@ -50,7 +49,7 @@ function GameUILogin:createTips()
     local bgImage = display.newSprite("images/splash_tips_bg.png"):addTo(self):pos(display.cx,display.bottom+100)
     local label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("提示:预留一定的空闲城民"),
+        text = _("提示:预留一定的空闲城民,兵营将他们训练成士兵"),
         font = UIKit:getFontFilePath(),
         size = 18,
         align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 

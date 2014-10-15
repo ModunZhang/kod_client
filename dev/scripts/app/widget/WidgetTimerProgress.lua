@@ -8,7 +8,7 @@ function WidgetTimerProgress:ctor(width, height)
     local width = width == nil and 549 or width
     local height = height == nil and 100 or height
     local back_ground_351x96 = cc.ui.UIImage.new("back_ground_351x96.png", {scale9 = true})
-    :setLayoutSize(width, height)
+        :setLayoutSize(width, height)
     self.describe = cc.ui.UILabel.new({
         size = 22,
         font = UIKit:getFontFilePath(),
@@ -18,10 +18,13 @@ function WidgetTimerProgress:ctor(width, height)
 
 
     self.progress = WidgetProgress.new():addTo(back_ground_351x96, 2):align(display.LEFT_CENTER, 35, 40)
-    
+
     self.button = WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
-        {scale9 = false}
+        {scale9 = false},
+        {
+            disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
+        }
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = _("加速"),
@@ -33,6 +36,9 @@ function WidgetTimerProgress:ctor(width, height)
 
     back_ground_351x96:addTo(self)
     self.back_ground = back_ground_351x96
+end
+function WidgetTimerProgress:GetSpeedUpButton()
+    return self.button
 end
 function WidgetTimerProgress:OnButtonClicked(func)
     self.button:onButtonClicked(function(event)
@@ -57,6 +63,7 @@ end
 
 
 return WidgetTimerProgress
+
 
 
 

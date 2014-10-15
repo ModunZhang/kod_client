@@ -8,11 +8,18 @@ function Observer.extend(target, ...)
         tolua.setpeer(target, t)
     end
     setmetatable(t, Observer)
-    target:ctor(...)
+    Observer.ctor(target, ...)
     return target
 end
 function Observer:ctor(...)
 	self.observer = {}
+end
+function Observer:CopyListenerFrom(subject)
+	local observer = {}
+	for i, v in ipairs(subject.observer) do
+		observer[i] = v
+	end
+	self.observer = observer
 end
 function Observer:AddObserver(observer)
 	table.insert(self.observer, observer)

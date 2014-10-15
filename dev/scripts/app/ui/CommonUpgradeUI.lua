@@ -66,6 +66,7 @@ function CommonUpgradeUI:OnBuildingUpgradeFinished( buidling, finish_time )
     self:SetBuildingIntroduces()
     self:SetUpgradeTime()
     self:SetUpgradeEfficiency()
+    self.building_image:setTexture(UIKit:getImageByBuildingType( self.building:GetType() ,self.building:GetLevel()))
 end
 
 function CommonUpgradeUI:OnBuildingUpgrading( buidling, current_time )
@@ -96,7 +97,7 @@ function CommonUpgradeUI:InitCommonPart()
     cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-145, display.top-175)
         :addTo(self)
 
-    self.building_image = display.newScale9Sprite(self.building:GetType()..".png", 0, 0):addTo(self):pos(display.cx-196, display.top-158)
+    self.building_image = display.newSprite(UIKit:getImageByBuildingType( self.building:GetType() ,self.building:GetLevel()), 0, 0):addTo(self):pos(display.cx-196, display.top-158)
     self.building_image:setAnchorPoint(cc.p(0.5,0.5))
     if self.building:GetType()=="watchTower" or self.building:GetType()=="tower" then
         self.building_image:setScale(150/self.building_image:getContentSize().height)
@@ -367,15 +368,21 @@ function CommonUpgradeUI:InitUpgradePart()
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 local upgrade_listener = function()
-                    local location = City:GetLocationIdByBuildingType(self.building:GetType())
-                    if location then
-                        NetManager:instantUpgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
+                    if self.building:GetType()=="tower" then
+                        NetManager:instantUpgradeTowerByLocation(self.building:IsUnlocked(), function(...) end)
+                    elseif self.building:GetType()=="wall" then
+                        NetManager:instantUpgradeWallByLocation(function(...) end)
                     else
-                        local tile = City:GetTileWhichBuildingBelongs(self.building)
-                        local house_location = tile:GetBuildingLocation(self.building)
-                        NetManager:instantUpgradeHouseByLocation(tile.location_id, house_location, function(...) end)
+                        local location = City:GetLocationIdByBuildingType(self.building:GetType())
+                        if location then
+                            NetManager:instantUpgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
+                        else
+                            local tile = City:GetTileWhichBuildingBelongs(self.building)
+                            local house_location = tile:GetBuildingLocation(self.building)
+                            NetManager:instantUpgradeHouseByLocation(tile.location_id, house_location, function(...) end)
+                        end
+                        print(self.building:GetType().."---------------- upgrade now button has been  clicked ")
                     end
-                    print(self.building:GetType().."---------------- upgrade now button has been  clicked ")
                 end
 
                 local can_not_update_type = self.building:IsAbleToUpgrade(true)
@@ -392,15 +399,21 @@ function CommonUpgradeUI:InitUpgradePart()
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 local upgrade_listener = function()
-                    local location = City:GetLocationIdByBuildingType(self.building:GetType())
-                    if location then
-                        NetManager:upgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
+                    if self.building:GetType()=="tower" then
+                        NetManager:upgradeTowerByLocation(self.building:IsUnlocked(), function(...) end)
+                    elseif self.building:GetType()=="wall" then
+                        NetManager:upgradeWallByLocation(function(...) end)
                     else
-                        local tile = City:GetTileWhichBuildingBelongs(self.building)
-                        local house_location = tile:GetBuildingLocation(self.building)
-                        NetManager:upgradeHouseByLocation(tile.location_id, house_location, function(...) end)
+                        local location = City:GetLocationIdByBuildingType(self.building:GetType())
+                        if location then
+                            NetManager:upgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
+                        else
+                            local tile = City:GetTileWhichBuildingBelongs(self.building)
+                            local house_location = tile:GetBuildingLocation(self.building)
+                            NetManager:upgradeHouseByLocation(tile.location_id, house_location, function(...) end)
+                        end
+                        print(self.building:GetType().."---------------- upgrade  button has been  clicked ")
                     end
-                    print(self.building:GetType().."---------------- upgrade  button has been  clicked ")
                 end
 
                 local can_not_update_type = self.building:IsAbleToUpgrade(false)
@@ -469,27 +482,27 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
     local userData = DataManager:getUserData()
     requirements = {
         {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetOnUpgradingBuildings()<1,
-            icon="wood_icon.png",description=GameUtils:formatNumber(#City:GetOnUpgradingBuildings()).."/1"},
-        {resource_type = "wood",isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
+            icon="hammer_31x33.png",description=GameUtils:formatNumber(#City:GetOnUpgradingBuildings()).."/1"},
+        {resource_type = _("木材"),isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
             icon="wood_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpWood()).."/"..GameUtils:formatNumber(wood)},
 
-        {resource_type = "stone",isVisible = self.building:GetLevelUpStone()>0,     isSatisfy = stone>self.building:GetLevelUpStone() ,
+        {resource_type = _("石料"),isVisible = self.building:GetLevelUpStone()>0,     isSatisfy = stone>self.building:GetLevelUpStone() ,
             icon="stone_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpStone()).."/"..GameUtils:formatNumber(stone)},
 
-        {resource_type = "iron",isVisible = self.building:GetLevelUpIron()>0,      isSatisfy = iron>self.building:GetLevelUpIron() ,
+        {resource_type = _("铁矿"),isVisible = self.building:GetLevelUpIron()>0,      isSatisfy = iron>self.building:GetLevelUpIron() ,
             icon="iron_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpIron()).."/"..GameUtils:formatNumber(iron)},
 
-        {resource_type = "citizen",isVisible = self.building:GetLevelUpCitizen()>0,   isSatisfy = population>self.building:GetLevelUpCitizen() ,
-            icon="iron_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpCitizen()).."/"..GameUtils:formatNumber(population)},
+        {resource_type = _("城民"),isVisible = self.building:GetLevelUpCitizen()>0,   isSatisfy = population>self.building:GetLevelUpCitizen() ,
+            icon="citizen_44x50.png",description=GameUtils:formatNumber(self.building:GetLevelUpCitizen()).."/"..GameUtils:formatNumber(population)},
 
-        {resource_type = "blueprints",isVisible = self.building:GetLevelUpBlueprints()>0,isSatisfy = userData.materials.blueprints>self.building:GetLevelUpBlueprints() ,
-            icon="iron_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpBlueprints()).."/"..GameUtils:formatNumber(userData.materials.blueprints)},
-        {resource_type = "tools",isVisible = self.building:GetLevelUpTools()>0,     isSatisfy = userData.materials.tools>self.building:GetLevelUpTools() ,
-            icon="iron_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpTools()).."/"..GameUtils:formatNumber(userData.materials.tools)},
-        {resource_type = "tiles",isVisible = self.building:GetLevelUpTiles()>0,     isSatisfy = userData.materials.tiles>self.building:GetLevelUpTiles() ,
-            icon="iron_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpTiles()).."/"..GameUtils:formatNumber(userData.materials.tiles)},
-        {resource_type = "pulley",isVisible = self.building:GetLevelUpPulley()>0,    isSatisfy = userData.materials.pulley>self.building:GetLevelUpPulley() ,
-            icon="iron_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpPulley()).."/"..GameUtils:formatNumber(userData.materials.pulley)},
+        {resource_type = _("建筑蓝图"),isVisible = self.building:GetLevelUpBlueprints()>0,isSatisfy = userData.materials.blueprints>self.building:GetLevelUpBlueprints() ,
+            icon="blueprints_112x112.png",description=GameUtils:formatNumber(self.building:GetLevelUpBlueprints()).."/"..GameUtils:formatNumber(userData.materials.blueprints)},
+        {resource_type = _("建造工具"),isVisible = self.building:GetLevelUpTools()>0,     isSatisfy = userData.materials.tools>self.building:GetLevelUpTools() ,
+            icon="tools_112x112.png",description=GameUtils:formatNumber(self.building:GetLevelUpTools()).."/"..GameUtils:formatNumber(userData.materials.tools)},
+        {resource_type =_("砖石瓦片"),isVisible = self.building:GetLevelUpTiles()>0,     isSatisfy = userData.materials.tiles>self.building:GetLevelUpTiles() ,
+            icon="tiles_112x112.png",description=GameUtils:formatNumber(self.building:GetLevelUpTiles()).."/"..GameUtils:formatNumber(userData.materials.tiles)},
+        {resource_type = _("滑轮组"),isVisible = self.building:GetLevelUpPulley()>0,    isSatisfy = userData.materials.pulley>self.building:GetLevelUpPulley() ,
+            icon="pulley_112x112.png",description=GameUtils:formatNumber(self.building:GetLevelUpPulley()).."/"..GameUtils:formatNumber(userData.materials.pulley)},
     }
 
     if not self.requirement_listview then
@@ -513,7 +526,7 @@ function CommonUpgradeUI:InitAccelerationPart()
     -- 正在升级文本说明
     cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = string.format(_("正在升级 %s 到Level %d"),_(self.building:GetType()),self.building:GetLevel()+1),
+        text = string.format(_("正在升级 %s 到等级 %d"),_(UIKit:getBuildingLocalizedKeyByBuildingType(self.building:GetType())),self.building:GetLevel()+1),
         font = UIKit:getFontFilePath(),
         size = 22,
         color = UIKit:hex2c3b(0x403c2f)
@@ -597,7 +610,7 @@ end
 
 function CommonUpgradeUI:SetAccTipLabel()
     --TODO 设置对应的提示 ，现在是临时的
-    self.acc_tip_label:setString(_("小于5min时，可使用免费加速\n激活VIP X后，小于5min时可使用免费加速"))
+    self.acc_tip_label:setString(_("小于5分钟时，可使用免费加速\n激活VIP X后，小于5分钟时可使用免费加速"))
 end
 
 function CommonUpgradeUI:CreateAccButtons()
@@ -741,6 +754,9 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
+
 
 
 

@@ -231,7 +231,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                     dimensions = cc.size(384, 65),
                     color = UIKit:hex2c3b(0x797154)}):align(display.TOP_LEFT, -120, 10)
                 content:addWidget(building_tip)
-                local building_image = display.newScale9Sprite(unlock_building:GetType()..".png", -item_width/2+70, 0)
+                local building_image = display.newScale9Sprite(UIKit:getImageByBuildingType( self.building:GetType() ,self.building:GetLevel()), -item_width/2+70, 0)
                 building_image:setScale(133/building_image:getContentSize().height)
                 content:addWidget(building_image)
                 item:addContent(content)

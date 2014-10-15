@@ -53,7 +53,7 @@ function GameUIHome:RefreshData()
     self.name_label:setString(userdata.basicInfo.name)
     self.power_label:setString(userdata.basicInfo.power)
     self.level_label:setString(userdata.basicInfo.level)
-    self.vip_label:setString("VIP "..userdata.basicInfo.vip)
+    self.vip_label:setString("VIP 1")
 end
 
 
@@ -203,7 +203,7 @@ function GameUIHome:CreateTop()
     local pos = quest_bg:getAnchorPointInPoints()
     display.newSprite("home/quest_icon.png"):addTo(quest_bg):pos(pos.x, pos.y):scale(0.7)
     self.quest_label =
-        cc.ui.UILabel.new({text = "任务就是杀死你",
+        cc.ui.UILabel.new({text = "挖掘机技术哪家强?",
             size = 20,
             font = UIKit:getFontFilePath(),
             align = cc.ui.TEXT_ALIGN_CENTER,
@@ -216,6 +216,12 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         -- NetManager:instantMakeBuildingMaterial(NOT_HANDLE)
+        if self.quest_label:getString() == _("挖掘机技术哪家强?") then
+            self.quest_label:setString(_("中国山东找蓝翔!"))
+        else
+            self.quest_label:setString(_("挖掘机技术哪家强?"))
+        end
+
     end):addTo(quest_bar_bg):pos(290, 20)
     local pos = button:getAnchorPointInPoints()
     display.newSprite("home/quest_hook.png"):addTo(button):pos(pos.x, pos.y)

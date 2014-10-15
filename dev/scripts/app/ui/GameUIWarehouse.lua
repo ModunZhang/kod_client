@@ -1,5 +1,6 @@
 local TabButtons = import('.TabButtons')
 local ResourceManager = import('..entity.ResourceManager')
+local SoldierManager = import('..entity.SoldierManager')
 local GameUIWarehouse = UIKit:createUIClass('GameUIWarehouse',"GameUIUpgradeBuilding")
 
 local resource_type = {
@@ -38,9 +39,16 @@ function GameUIWarehouse:onEnter()
     end):pos(display.cx, display.top - 920)
     self:CreateResourceListView()
     self:InitAllResources()
+    self.city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
 
 end
-
+function GameUIWarehouse:onExit()
+    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
+    GameUIWarehouse.super.onExit(self)
+end
+function GameUIWarehouse:OnSoliderCountChanged(...)
+    self.maintenance_cost:setString("-"..self.city:GetSoldierManager():GetTotalUpkeep())
+end
 -- 资源刷新
 function GameUIWarehouse:OnResourceChanged(resource_manager)
     GameUIWarehouse.super.OnResourceChanged(self,resource_manager)
@@ -64,6 +72,14 @@ function GameUIWarehouse:RefreshSpecifyResource(resource,item,maxvalue,occupy_ci
         item.resource_label:setString(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime()).."/"..maxvalue)
         item.produce_capacity.value:setString(resource:GetProductionPerHour().."/h")
         item.occupy_citizen.value:setString(occupy_citizen.."")
+    else
+        item.resource_label:setString(resource:GetValue())
+         local townHall = self.city:GetFirstBuildingByType("townHall")
+        local title_value = townHall:IsInImposing() and _("正在征税") or _("当前没有进行征税")
+        item.tax.title:setString(title_value)
+        local tax_time = townHall:IsInImposing() and GameUtils:formatTimeStyle1(townHall:GetTaxEvent():LeftTime(app.timer:GetServerTime())) or ""
+        item.tax.value:setString(tax_time)
+        item.free_citizen.value:setString(self.city:GetResourceManager():GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime()))
     end
 end
 
@@ -87,7 +103,7 @@ function GameUIWarehouse:InitAllResources()
             resource_current_value=crm:GetFoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
             total_income=crm:GetFoodResource():GetProductionPerHour().."/h",
             occupy_citizen=City:GetCitizenByType("farmer"),
-            maintenance_cost=8888,
+            maintenance_cost="-"..self.city:GetSoldierManager():GetTotalUpkeep(),
         },
         wood = {
             resource_icon="wood_icon.png",
@@ -114,7 +130,7 @@ function GameUIWarehouse:InitAllResources()
             resource_icon="coin_icon.png",
             resource_current_value=crm:GetCoinResource():GetValue(),
             total_income=8888,
-            occupy_citizen=8888,
+            occupy_citizen=self.city:GetResourceManager():GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime()),
         },
     }
     self.resource_items = {}
@@ -150,7 +166,7 @@ function GameUIWarehouse:AddResourceItem(parms)
         local line = display.newScale9Sprite("dividing_line.png",prams.x, prams.y, cc.size(395,2))
 
         -- title
-        cc.ui.UILabel.new(
+        line.title = cc.ui.UILabel.new(
             {
                 UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
                 text = prams.title,
@@ -224,6 +240,7 @@ function GameUIWarehouse:AddResourceItem(parms)
                 x = 40,
                 y = -70
             })
+            self.maintenance_cost = item.maintenance_cost
             content:addWidget(item.maintenance_cost)
         end
 
@@ -241,10 +258,13 @@ function GameUIWarehouse:AddResourceItem(parms)
         -- item.resource_label:setAnchorPoint(cc.p(0,0.5))
         -- item.resource_label:pos(-125, 40)
         -- 是否在征税
+        local townHall = self.city:GetFirstBuildingByType("townHall")
+        local title_value = townHall:IsInImposing() and _("正在征税") or _("当前没有进行征税")
+        local tax_time = townHall:IsInImposing() and GameUtils:formatTimeStyle1(townHall:GetTaxEvent():LeftTime(app.timer:GetServerTime())) or ""
         item.tax = createTipItem({
-            title = _("当前没有进行征税"),
+            title = title_value,
             title_color = UIKit:hex2c3b(0x797154),
-            value = total_income ,
+            value = tax_time ,
             value_color = UIKit:hex2c3b(0x403c2f),
             x = 40,
             y = -10

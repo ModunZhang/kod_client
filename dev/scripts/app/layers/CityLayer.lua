@@ -6,15 +6,20 @@ local TowerUpgradingSprite = import("..sprites.TowerUpgradingSprite")
 local WallUpgradingSprite = import("..sprites.WallUpgradingSprite")
 local RoadSprite = import("..sprites.RoadSprite")
 local TreeSprite = import("..sprites.TreeSprite")
-local BuildingSprite = import("..sprites.BuildingSprite")
+local SingleTreeSprite = import("..sprites.SingleTreeSprite")
 local Observer = import("..entity.Observer")
-local CityLayer = class("CityLayer", function(...)
-    local layer = display.newLayer()
-    layer:setAnchorPoint(0, 0)
-    Observer.extend(layer, ...)
-    return layer
-end)
-
+local MapLayer = import(".MapLayer")
+local CityLayer = class("CityLayer", MapLayer)
+-- local CityLayer = class("CityLayer", function(...)
+--     local layer = display.newLayer()
+--     layer:setAnchorPoint(0, 0)
+--     Observer.extend(layer, ...)
+--     return layer
+-- end)
+local math = math
+local floor = math.floor
+local random = math.random
+local randomseed = math.randomseed
 
 function CityLayer:GetClickedObject(x, y, world_x, world_y)
     local clicked_list = {
@@ -22,14 +27,16 @@ function CityLayer:GetClickedObject(x, y, world_x, world_y)
         sprite_clicked = {}
     }
     self:IteratorClickAble(function(k, v)
-        if v:isVisible() then
-            local check = v:IsContainPointWithFullCheck(x, y, world_x, world_y)
-            if check.logic_clicked then
-                table.insert(clicked_list.logic_clicked, v)
-                return true
-            elseif check.sprite_clicked then
-                table.insert(clicked_list.sprite_clicked, v)
-            end
+        if not v:isVisible() then return false end
+        -- if v:GetEntity():GetType() == "wall" and not v:GetEntity():IsGate() then return false end
+        -- if v:GetEntity():GetType() == "tower" and not v:GetEntity():IsUnlocked() then return false end
+
+        local check = v:IsContainPointWithFullCheck(x, y, world_x, world_y)
+        if check.logic_clicked then
+            table.insert(clicked_list.logic_clicked, v)
+            return true
+        elseif check.sprite_clicked then
+            table.insert(clicked_list.sprite_clicked, v)
         end
     end)
     table.sort(clicked_list.logic_clicked, function(a, b)
@@ -48,16 +55,8 @@ function CityLayer:OnTileUnlocked(city)
     self:OnTileChanged(city)
 end
 function CityLayer:OnTileChanged(city)
-    table.foreach(self.ruins, function(_, ruin)
-        local building_entity = ruin:GetEntity()
-        local tile = city:GetTileWhichBuildingBelongs(building_entity)
-        if tile.locked or city:GetDecoratorByPosition(building_entity:GetLogicPosition()) then
-            ruin:setVisible(false)
-        else
-            ruin:setVisible(true)
-            -- ruin:Normal()
-        end
-    end)
+    self:UpdateRuinsWithCity(city)
+    self:UpdateSingleTreeWithCity(city)
     self:UpdateAllWithCity(city)
 end
 function CityLayer:OnRoundUnlocked(round)
@@ -91,6 +90,7 @@ function CityLayer:OnDestoryDecorator(destory_decorator, release_ruins)
             end)
 
             table.remove(self.houses, i)
+            house:DestoryShadow()
             house:removeFromParentAndCleanup(true)
             break
         end
@@ -112,6 +112,22 @@ function CityLayer:UpdateAllWithCity(city)
     self:UpdateWallsWithCity(city)
     self:UpdateTowersWithCity(city)
     -- self:UpdateCornsAndRocksWithCity(city)
+end
+function CityLayer:UpdateRuinsWithCity(city)
+    table.foreach(self.ruins, function(_, ruin)
+        local building_entity = ruin:GetEntity()
+        local tile = city:GetTileWhichBuildingBelongs(building_entity)
+        if tile.locked or city:GetDecoratorByPosition(building_entity:GetLogicPosition()) then
+            ruin:setVisible(false)
+        else
+            ruin:setVisible(true)
+        end
+    end)
+end
+function CityLayer:UpdateSingleTreeWithCity(city)
+    table.foreach(self.single_tree, function(_, tree)
+        tree:setVisible(city:GetTileByBuildingPosition(tree.x, tree.y):IsUnlocked())
+    end)
 end
 function CityLayer:UpdateTilesWithCity(city)
     city:IteratorTilesByFunc(function(x, y, tile)
@@ -184,10 +200,9 @@ function CityLayer:UpdateWallsWithCity(city)
 
     if old_walls then
         for k, v in pairs(old_walls) do
-            city_node:removeChild(v, true)
+            v:DestorySelf()
         end
     end
-
 end
 function CityLayer:UpdateTowersWithCity(city)
     local city_node = self:GetCityNode()
@@ -208,7 +223,7 @@ function CityLayer:UpdateTowersWithCity(city)
 
     if old_towers then
         for k, v in pairs(old_towers) do
-            city_node:removeChild(v, true)
+            v:DestorySelf()
         end
     end
 end
@@ -247,6 +262,9 @@ function CityLayer:CreateDecorator(house)
 end
 function CityLayer:CreateBuilding(building, city)
     return FunctionUpgradingSprite.new(self, building, city)
+end
+function CityLayer:CreateSingleTree(logic_x, logic_y)
+    return SingleTreeSprite.new(self, logic_x, logic_y)
 end
 function CityLayer:IteratorFunctionsBuildings(func)
     table.foreach(self.buildings, func)
@@ -320,6 +338,9 @@ function CityLayer:IteratorClickAble(func)
 end
 ----
 function CityLayer:ctor(city)
+    CityLayer.super.ctor(self, 0.3, 1)
+    Observer.extend(self)
+
     self.buildings = {}
     self.houses = {}
     self.towers = {}
@@ -331,6 +352,10 @@ function CityLayer:ctor(city)
     self:InitCityBackGround()
     self:InitPositionNodeWithCityNode()
     self:InitRoadNodeWithCityNode()
+
+
+    local point = self:GetRoadLayer():getPositionAt(cc.p(0, 1))
+    display.newSprite("ground_766x558.png"):addTo(self:GetRoadNode()):align(display.BOTTOM_LEFT, point.x, point.y)
 
     self.city_node = display.newLayer()
     self.city_node:setAnchorPoint(0, 0)
@@ -363,10 +388,12 @@ end
 function CityLayer:GetSceneFile()
     return 'kod/publish/KODCityScene.json'
 end
+-- 城市背景地表
 function CityLayer:InitBackground()
     self.background = cc.TMXTiledMap:create("city_background1.tmx")
     self:addChild(self.background)
 end
+-- 城市地表
 function CityLayer:InitCityBackGround()
     self.city_layer = display.newLayer()
     self.city_layer:setAnchorPoint(0, 0)
@@ -375,14 +402,30 @@ function CityLayer:InitCityBackGround()
     self.city_background = cc.TMXTiledMap:create("city_background2.tmx")
     self.city_layer:addChild(self.city_background)
 end
+-- just for 坐标计算
 function CityLayer:InitPositionNodeWithCityNode()
     self.position_node = cc.TMXTiledMap:create("city_road.tmx")
+    self.position_node:setVisible(false)
     self.city_background:addChild(self.position_node)
 end
+-- 路
 function CityLayer:InitRoadNodeWithCityNode()
     self.road_node = cc.TMXTiledMap:create("city_road_2.tmx")
     self.city_background:addChild(self.road_node)
 end
+--
+-- function CityLayer:CreateShadow(shadow, x, y, z)
+--     if shadow then
+--         return display.newSprite(shadow.png):addTo(self.city_node, z-1):align(display.CENTER, x+shadow.offset.x, y+shadow.offset.y):scale(shadow.scale)
+--     else
+--         return nil
+--     end
+-- end
+-- function CityLayer:DestoryShadow(shadow)
+--     if shadow then
+--         shadow:removeFromParentAndCleanup(true)
+--     end
+-- end
 function CityLayer:InitWithCity(city)
     city:AddListenOnType(self, city.LISTEN_TYPE.UNLOCK_TILE)
     city:AddListenOnType(self, city.LISTEN_TYPE.LOCK_TILE)
@@ -393,12 +436,11 @@ function CityLayer:InitWithCity(city)
 
     self:UpdateAllWithCity(city)
 
-    local city_node = self:GetCityNode()
-    for k, ruin in pairs(city.ruins) do
-        local x, y = ruin:GetLogicPosition()
-        local building = self:CreateRuin(ruin)
-        city_node:addChild(building)
 
+    local city_node = self:GetCityNode()
+    -- 加废墟
+    for k, ruin in pairs(city.ruins) do
+        local building = self:CreateRuin(ruin):addTo(city_node)
         local tile = city:GetTileWhichBuildingBelongs(ruin)
         if tile.locked or city:GetDecoratorByPosition(ruin.x, ruin.y) then
             building:setVisible(false)
@@ -408,20 +450,41 @@ function CityLayer:InitWithCity(city)
         table.insert(self.ruins, building)
     end
 
+    -- 加功能建筑
     for _, building in pairs(city:GetAllBuildings()) do
-        local building_sprite = self:CreateBuilding(building, city)
+        local building_sprite = self:CreateBuilding(building, city):addTo(city_node)
         city:AddListenOnType(building_sprite, city.LISTEN_TYPE.LOCK_TILE)
         city:AddListenOnType(building_sprite, city.LISTEN_TYPE.UNLOCK_TILE)
         city:AddListenOnType(building_sprite, city.LISTEN_TYPE.UPGRADE_BUILDING)
-        city_node:addChild(building_sprite)
         table.insert(self.buildings, building_sprite)
     end
 
+    -- 加小屋
     for _, house in pairs(city:GetAllDecorators()) do
-        local house = self:CreateDecorator(house)
-        city_node:addChild(house)
+        local house = self:CreateDecorator(house):addTo(city_node)
         table.insert(self.houses, house)
     end
+
+
+    -- 加树
+    randomseed(DataManager:getUserData().countInfo.registerTime)
+    local single_tree = {}
+    city:IteratorTilesByFunc(function(x, y, tile)
+        if (x == 1 and y == 1)
+            or (x == 2 and y == 1)
+            or (x == 1 and y == 2)
+            or x == 5
+            or y == 5 then
+            return
+        end
+        local grounds = tile:RandomGrounds(floor(random() * 1000))
+        for _, v in pairs(grounds) do
+            local tree = self:CreateSingleTree(v.x, v.y):addTo(city_node)
+            table.insert(single_tree, tree)
+            tree:setVisible(tile:IsUnlocked())
+        end
+    end)
+    self.single_tree = single_tree
 end
 
 function CityLayer:GetMapSize()
@@ -445,7 +508,7 @@ function CityLayer:GetPositionNode()
     return self.position_node
 end
 
-
+---
 function CityLayer:EableTileBackground(x, y, enable)
     local tile = self:GetTileAtIndexInBackground(x, y)
     if tile then
@@ -464,7 +527,7 @@ end
 
 
 
-
+---
 function CityLayer:EableTileRoad(x, y, enable)
     local tile = self:GetTileAtIndexInRoad(x, y)
     if tile then
@@ -484,44 +547,7 @@ function CityLayer:GetRoadNode()
     return self.road_node
 end
 
-
-------zoom
-function CityLayer:ZoomBegin()
-    self.scale_point = self:convertToNodeSpace(cc.p(display.cx, display.cy))
-    self.scale_current = self:getScale()
-end
-function CityLayer:ZoomTo(scale)
-    self:ZoomBegin()
-    self:ZoomBy(scale / self:getScale())
-    self:ZoomEnd()
-end
-function CityLayer:ZoomBy(scale)
-    self:setScale(math.min(math.max(self.scale_current * scale, 0.3), 0.8))
-    local scene_point = self:getParent():convertToWorldSpace(cc.p(display.cx, display.cy))
-    local world_point = self:convertToWorldSpace(cc.p(self.scale_point.x, self.scale_point.y))
-    local new_scene_point = self:getParent():convertToNodeSpace(world_point)
-    local cur_x, cur_y = self:getPosition()
-    local new_position = cc.p(cur_x + scene_point.x - new_scene_point.x, cur_y + scene_point.y - new_scene_point.y)
-    self:setPosition(new_position)
-end
-function CityLayer:ZoomEnd()
-    self.scale_point = nil
-    self.scale_current = self:getScale()
-end
-
--------
-function CityLayer:setPosition(position)
-    local x, y = position.x, position.y
-    local parent_node = self:getParent()
-    local super = getmetatable(self)
-    super.setPosition(self, position)
-    local left_bottom_pos = self:GetLeftBottomPositionWithConstrain(x, y)
-    local right_top_pos = self:GetRightTopPositionWithConstrain(x, y)
-    local rx = x >= 0 and math.min(left_bottom_pos.x, right_top_pos.x) or math.max(left_bottom_pos.x, right_top_pos.x)
-    local ry = y >= 0 and math.min(left_bottom_pos.y, right_top_pos.y) or math.max(left_bottom_pos.y, right_top_pos.y)
-    super.setPosition(self, cc.p(rx, ry))
-    self:OnSceneMove()
-end
+----- override
 function CityLayer:GetLeftBottomPositionWithConstrain(x, y)
     -- 左下角是否超出
     local parent_node = self:getParent()
@@ -574,6 +600,16 @@ function CityLayer:OnSceneMove()
 end
 
 return CityLayer
+
+
+
+
+
+
+
+
+
+
 
 
 

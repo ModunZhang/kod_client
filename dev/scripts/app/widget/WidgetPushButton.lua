@@ -15,10 +15,17 @@ function WidgetPushButton:ctor(images, options, filters)
         if event.touchInTarget and cc.pGetDistance(cur_pos, self.pre_pos) > 10 then
             if event.target.fsm_:canDoEvent("release") then
                 event.target.fsm_:doEvent("release")
+                self:dispatchEvent({name = UIPushButton.RELEASE_EVENT, x = cur_pos.x, y = cur_pos.y, touchInTarget = event.touchInTarget})
             end
         end
     end)
     self:setTouchSwallowEnabled(false)
+    self:setNodeEventEnabled(true)
+end
+function WidgetPushButton:onEnter()
+    if self:HasFilters() then
+        self:UpdateFilters()
+    end
 end
 function WidgetPushButton:onChangeState_()
     if self:isRunning() then
@@ -164,6 +171,7 @@ end
 
 
 return WidgetPushButton
+
 
 
 
