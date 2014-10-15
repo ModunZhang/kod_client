@@ -122,7 +122,7 @@ function UIKit:getImageByBuildingType( building_type ,level)
     elseif building_type=="materialDepot" then
         return "materialDepot_1_436x531.png"
     elseif building_type=="armyCamp" then
-        return "armyCamp_458x444.png"
+        return "armyCamp_485x444.png"
     elseif building_type=="barracks" then
         return "barracks_472x536.png"
     elseif building_type=="blackSmith" then
