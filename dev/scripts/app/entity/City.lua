@@ -75,9 +75,9 @@ function City:InitRuins()
         table.insert(self.ruins,
             Building.new{
                 building_type = v.building_type,
-                x = v.x, 
+                x = v.x,
                 y = v.y,
-                w = v.w, 
+                w = v.w,
                 h = v.h,
                 city = self,
             }
@@ -739,33 +739,35 @@ function City:OnUserDataChanged(userData, current_time)
 
             -- 新建的
             local hosue_events = userData.houseEvents
-            local function get_house_event_by_location(building_location, sub_id)
-                for k, v in pairs(hosue_events) do
-                    if v.buildingLocation == building_location and
-                        v.houseLocation == sub_id then
-                        return v
+            if hosue_events then
+                local function get_house_event_by_location(building_location, sub_id)
+                    for k, v in pairs(hosue_events) do
+                        if v.buildingLocation == building_location and
+                            v.houseLocation == sub_id then
+                            return v
+                        end
                     end
                 end
+                table.foreach(location.houses, function(key, house)
+                    -- 当前位置没有小建筑并且推送的数据里面有就认为新建小建筑
+                    if not decorators[house.location] then
+                        local tile = self:GetTileByLocationId(location.location)
+                        local absolute_x, absolute_y = tile:GetAbsolutePositionByLocation(house.location)
+                        local event = get_house_event_by_location(location.location, house.location)
+                        -- local finishTime = event == nil and 0 or event.finishTime / 1000
+                        self:CreateDecorator(current_time, BuildingRegister[house.type].new({
+                            x = absolute_x,
+                            y = absolute_y,
+                            w = 3,
+                            h = 3,
+                            building_type = house.type,
+                            level = house.level,
+                            finishTime = 0,
+                            city = self,
+                        }))
+                    end
+                end)
             end
-            table.foreach(location.houses, function(key, house)
-                -- 当前位置没有小建筑并且推送的数据里面有就认为新建小建筑
-                if not decorators[house.location] then
-                    local tile = self:GetTileByLocationId(location.location)
-                    local absolute_x, absolute_y = tile:GetAbsolutePositionByLocation(house.location)
-                    local event = get_house_event_by_location(location.location, house.location)
-                    -- local finishTime = event == nil and 0 or event.finishTime / 1000
-                    self:CreateDecorator(current_time, BuildingRegister[house.type].new({
-                        x = absolute_x,
-                        y = absolute_y,
-                        w = 3,
-                        h = 3,
-                        building_type = house.type,
-                        level = house.level,
-                        finishTime = 0,
-                        city = self,
-                    }))
-                end
-            end)
         end)
     end
     -- 更新地块信息
@@ -990,9 +992,9 @@ function City:GenerateTowers(walls)
     local towers = {}
     local p = walls[#walls]:IntersectWithOtherWall(walls[1])
     table.insert(towers,
-        TowerUpgradeBuilding.new({ 
+        TowerUpgradeBuilding.new({
             building_type = "tower",
-            x = p.x, 
+            x = p.x,
             y = p.y,
             level = -1,
             orient = p.orient,
@@ -1007,7 +1009,7 @@ function City:GenerateTowers(walls)
             table.insert(towers,
                 TowerUpgradeBuilding.new({
                     building_type = "tower",
-                    x = p.x, 
+                    x = p.x,
                     y = p.y,
                     level = -1,
                     orient = p.orient,
@@ -1084,6 +1086,7 @@ function City:OnUpgradingBuildings()
 end
 
 return City
+
 
 
 
