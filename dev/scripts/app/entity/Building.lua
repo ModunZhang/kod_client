@@ -55,6 +55,9 @@ end
 function Building:OnTimer(current_time)
 
 end
+function Building:ResetAllListeners()
+    self:GetBaseObserver():RemoveAllObserver()
+end
 function Building:AddBaseListener(listener)
     assert(listener.OnOrientChanged)
     assert(listener.OnLogicPositionChanged)

@@ -63,13 +63,16 @@ function CityScene:onEnter()
         self.scene_ui_layer:NewUIFromBuildingSprite(building)
     end)
 
-    self:PlayBackground()
-    audio.playSound("sfx_peace.mp3", true)
-
+    self:PlayBackgroundMusic()
     City:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
 end
 function CityScene:onExit()
-    City:RemoveListenerOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
+    self:stopAllActions()
+    audio.stopMusic()
+    audio.stopAllSounds()
+    City:ResetAllListeners()
+    app:makeLuaVMSnapshot()
+    -- City:RemoveListenerOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
 end
 function CityScene:onEnterTransitionFinish()
     goto_logic(6, 4, 0)
@@ -83,11 +86,12 @@ end
 function CityScene:OnUpgradingFinished()
 
 end
-function CityScene:PlayBackground()
-    audio.playMusic("KoD_music_city.mp3", false)
-    scheduler.performWithDelayGlobal(function()
-        self:PlayBackground()
-    end, 113 + 30)
+function CityScene:PlayBackgroundMusic()
+    audio.playMusic("music_city.mp3", true)
+    audio.playSound("sfx_peace.mp3", true)
+    -- self:performWithDelay(function()
+    --     self:PlayBackgroundMusic()
+    -- end, 113 + 30)
 end
 function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()

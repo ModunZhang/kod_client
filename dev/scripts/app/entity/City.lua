@@ -46,6 +46,13 @@ function City:ctor()
     self:InitLocations()
     self:InitRuins()
 end
+function City:ResetAllListeners()
+    self:ClearAllListener()
+    self:IteratorCanUpgradeBuildings(function(building)
+        building:ResetAllListeners()
+        building:AddUpgradeListener(self)
+    end)
+end
 function City:InitRuins()
     self.ruins = {}
     for _,v in ipairs(GameDatas.ClientInitGame['ruins']) do
