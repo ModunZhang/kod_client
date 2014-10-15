@@ -6,7 +6,7 @@ function Begin()
 function End()
 {
 	if [ ${#total_array[*]} -gt 0 ]; then
-		echo "找到为使用的图片:"
+		echo "找到未使用的图片:"
 		for png_name in ${total_array[*]}
 		do
 			echo $png_name

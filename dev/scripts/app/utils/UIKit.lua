@@ -135,35 +135,35 @@ function UIKit:getImageByBuildingType( building_type ,level)
     print("建筑等级=",level)
     local level_1,level_2 = 6 ,16
     if building_type=="keep" then
-        return "keep_616x855.png"
+        return "keep_760x855.png"
     elseif building_type=="dragonEyrie" then
-        return "dragonEyrie_564x558.png"
+        return "dragonEyrie_581x558.png"
     elseif building_type=="watchTower" then
-        return "watchTower_263x638.png"
+        return "watchTower_445x638.png"
     elseif building_type=="warehouse" then
-        return "warehouse_454x468.png"
+        return "warehouse_498x468.png"
     elseif building_type=="toolShop" then
-        return "toolShop_1_465x539.png"
+        return "toolShop_1_521x539.png"
     elseif building_type=="materialDepot" then
-        return "materialDepot_1_436x531.png"
+        return "materialDepot_1_438x531.png"
     elseif building_type=="armyCamp" then
         return "armyCamp_485x444.png"
     elseif building_type=="barracks" then
-        return "barracks_472x536.png"
+        return "barracks_553x536.png"
     elseif building_type=="blackSmith" then
-        return "blackSmith_1_424x519.png"
+        return "blackSmith_1_442x519.png"
     elseif building_type=="foundry" then
-        return "foundry_1_475x479.png"
+        return "foundry_1_487x479.png"
     elseif building_type=="lumbermill" then
-        return "lumbermill_1_454x423.png"
+        return "lumbermill_1_495x423.png"
     elseif building_type=="mill" then
-        return "mill_1_432x405.png"
+        return "mill_1_470x405.png"
     elseif building_type=="stoneMason" then
-        return "stoneMason_1_461x486.png"
+        return "stoneMason_1_423x486.png"
     elseif building_type=="hospital" then
-        return "hospital_1_367x458.png"
+        return "hospital_1_461x458.png"
     elseif building_type=="townHall" then
-        return "townHall_1_464x553.png"
+        return "townHall_1_524x553.png"
     elseif building_type=="tradeGuild" then
         return "tradeGuild_1_558x403.png"
     elseif building_type=="tower" then
@@ -172,43 +172,43 @@ function UIKit:getImageByBuildingType( building_type ,level)
         return "gate_292x302.png"
     elseif building_type=="dwelling" then
         if level<level_1 then
-            return "dwelling_1_290x365.png"
+            return "dwelling_1_297x365.png"
         elseif level<level_2 then
-            return "dwelling_2_318x401.png"
+            return "dwelling_2_357x401.png"
         else
-            return "dwelling_3_320x419.png"
+            return "dwelling_3_369x419.png"
         end
     elseif building_type=="woodcutter" then
         if level<level_1 then
-            return "woodcutter_1_312x250.png"
+            return "woodcutter_1_342x250.png"
         elseif level<level_2 then
-            return "woodcutter_2_299x334.png"
+            return "woodcutter_2_364x334.png"
         else
-            return "woodcutter_3_302x358.png"
+            return "woodcutter_3_351x358.png"
         end
     elseif building_type=="farmer" then
         if level<level_1 then
-            return "farmer_1_306x280.png"
+            return "farmer_1_315x281.png"
         elseif level<level_2 then
-            return "farmer_2_303x305.png"
+            return "farmer_2_312x305.png"
         else
-            return "farmer_3_314x345.png"
+            return "farmer_3_332x345.png"
         end
     elseif building_type=="quarrier" then
         if level<level_1 then
-            return "quarrier_1_267x295.png"
+            return "quarrier_1_303x296.png"
         elseif level<level_2 then
-            return "quarrier_2_307x324.png"
+            return "quarrier_2_347x324.png"
         else
-            return "quarrier_3_294x386.png"
+            return "quarrier_3_363x386.png"
         end
     elseif building_type=="miner" then
         if level<level_1 then
-            return "miner_1_258x309.png"
+            return "miner_1_315x309.png"
         elseif level<level_2 then
-            return "miner_2_285x308.png"
+            return "miner_2_340x308.png"
         else
-            return "miner_3_284x307.png"
+            return "miner_3_326x307.png"
         end
     end
 end
