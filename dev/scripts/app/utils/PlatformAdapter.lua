@@ -25,7 +25,28 @@ function PlatformAdapter:mac()
         cancelNotification = function(...)
         end
     }
+    cc.DTextView = {}
+    setmetatable(cc.DTextView,{
+        __index= function( ... )
+            assert(false,"\n--- cc.DTextView not support for Player!\n")
+        end
+    })
 end
+
+--[[
+    模拟器和真机支持cc.DTextView 
+    函数名和参数同EditBox 构造函数不同
+    player 不支持
+    
+    local textView = cc.DTextView:create(cc.size(549,379),display.newScale9Sprite("chat_setting_listview_bg.png"))
+    textView:addTo(self):center()
+    textView:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)    
+    textView:setFont(UIKit:getFontFilePath(), 24)
+    textView:registerScriptTextViewHandler(function(event,textView)
+
+ end)
+]]--
+
 
 function PlatformAdapter:common()
     --重写菊花显示的时候锁住事件
