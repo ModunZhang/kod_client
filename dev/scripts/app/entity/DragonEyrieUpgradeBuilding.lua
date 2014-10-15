@@ -51,7 +51,14 @@ function DragonEyrieUpgradeBuilding:OnUserDataChanged(user_data, current_time, l
 end
 
 function DragonEyrieUpgradeBuilding:RefreshDragonData(dragons)
-    self.dragons = dragons
+    if not self.dragons then
+        self.dragons = dragons
+    else
+        --遍历更新的龙信息
+        for k,v in pairs(dragons) do
+           self.dragons[k] = v
+        end
+    end
     if self.listener and self.listener.DragonDataChanged then
         self.listener.DragonDataChanged(self.listener)
     end
@@ -98,7 +105,6 @@ function DragonEyrieUpgradeBuilding:GetNextLevelVitalityRecoveryPerHour()
 end
 
 function DragonEyrieUpgradeBuilding:GetMaxVitalityCurrentLevel(dragon)
-    -- self.drgaon_vitality_manager:GetVitalityLimitValue(dragon)
     return config_dragonAttribute[dragon.star].initVitality + dragon.level * config_dragonAttribute[dragon.star].perLevelVitality
 end
 
@@ -156,7 +162,6 @@ function DragonEyrieUpgradeBuilding:GetAllBuffInfomation(dragon)
             table.insert(list,{Localize.dragon_skill_effection[skill.name],valStr})
         end
     end
-    -- LuaUtils:outputTable("list--->", list)
     return list
 end
 
