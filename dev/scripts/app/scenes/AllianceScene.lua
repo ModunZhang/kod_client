@@ -44,11 +44,10 @@ function AllianceScene:onExit()
     AllianceScene.super.onExit(self)
     City:ResetAllListeners()
 end
-
 function AllianceScene:CreateSceneLayer()
     local scene = AllianceLayer.new()
     :addTo(self, 0, 1)
-    :ZoomTo(1)
+    :ZoomTo(0.7)
     return scene
 end
 

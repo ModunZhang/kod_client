@@ -18,7 +18,7 @@ function NormalMapAnchorBottomLeftReverseY:ConvertToLogicPosition(x, y)
     return floor((x - self.base_x) % 80), floor((y - self.base_y) % 80)
 end
 function NormalMapAnchorBottomLeftReverseY:ConvertToLocalPosition(x, y)
-    return x * self.tile_w - self.half_w, y * self.tile_h + self.half_h
+    return - x * self.tile_w, y * self.tile_h
 end
 
 
