@@ -8,7 +8,7 @@ function BuildingLevelUpUINode:OnBuildingUpgradingBegin(building, time)
     self:OnBuildingUpgradeFinished(building, time)
 end
 function BuildingLevelUpUINode:OnBuildingUpgradeFinished(building, time)
-    self:setVisible(not building:IsUpgrading() and building:GetLevel() > 0 and not building:IsMaxLevel())
+    self:setVisible(building:BelongCity():GetKeep():CanUpgradeThis(building))
     self:SetLevel(building:GetLevel())
 end
 function BuildingLevelUpUINode:OnPositionChanged(x, y, bottom_x, bottom_y)

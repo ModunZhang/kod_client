@@ -53,13 +53,35 @@ function City:ResetAllListeners()
     self:ClearAllListener()
     self:IteratorCanUpgradeBuildings(function(building)
         building:ResetAllListeners()
-        building:AddUpgradeListener(self)
+        -- building:AddUpgradeListener(self)
+        self:OnInitBuilding(building)
     end)
+end
+function City:NewBuildingWithType(building_type, x, y, w, h, level, finish_time)
+    return BuildingRegister[building_type].new{
+        x = x,
+        y = y,
+        w = w,
+        h = h,
+        building_type = building_type,
+        level = level,
+        finishTime = finish_time,
+        city = self,
+    }
 end
 function City:InitRuins()
     self.ruins = {}
     for _,v in ipairs(GameDatas.ClientInitGame['ruins']) do
-        table.insert(self.ruins, Building.new({ x = v.x, y = v.y, building_type = v.building_type, w = v.w, h = v.h}))
+        table.insert(self.ruins,
+            Building.new{
+                building_type = v.building_type,
+                x = v.x, 
+                y = v.y,
+                w = v.w, 
+                h = v.h,
+                city = self,
+            }
+        )
     end
     -- GameDatas.ClientInitGame['ruins'] = {}
 end
@@ -70,7 +92,7 @@ function City:InitTiles(w, h, unlocked)
         for x = 1, w do
             for location_id, location in pairs(self.locations) do
                 if location.tile_x == x and location.tile_y == y then
-                    self.tiles[y][x] = Tile.new({x = x, y = y, locked = true, location_id = location_id})
+                    self.tiles[y][x] = Tile.new({x = x, y = y, locked = true, location_id = location_id, city = self})
                 end
             end
         end
@@ -85,7 +107,12 @@ function City:InitBuildings(buildings)
     self.buildings = buildings
 
     table.foreach(buildings, function(key, building)
-        building:AddUpgradeListener(self)
+        if building:GetType() == "keep" then
+            self.keep = building
+        end
+        -- building.city = self
+        -- building:AddUpgradeListener(self)
+        self:OnInitBuilding(building)
     end)
 end
 function City:InitLocations()
@@ -98,7 +125,10 @@ function City:InitDecorators(decorators)
     self.decorators = decorators
     table.foreach(decorators, function(key, building)
 
-            building:AddUpgradeListener(self)
+            -- building.city = self
+            -- building:AddUpgradeListener(self)
+
+            self:OnInitBuilding(building)
 
             local tile = self:GetTileWhichBuildingBelongs(building)
             local sub_location = tile:GetBuildingLocation(building)
@@ -108,6 +138,9 @@ function City:InitDecorators(decorators)
     self:CheckIfDecoratorsIntersectWithRuins()
 end
 -- 取值函数
+function City:GetKeep()
+    return self.keep
+end
 function City:GetHousesAroundFunctionBuildingByType(building, building_type, len)
     return self:GetHousesAroundFunctionBuildingWithFilter(building, len, function(house)
         return house:GetType() == building_type
@@ -303,7 +336,7 @@ function City:GetTileFaceToGate()
                 return tile
             else
                 local x, y = self:GetTileIndexPosition(v.x, v.y)
-                return Tile.new({x = x, y = y, locked = false})
+                return Tile.new({x = x, y = y, locked = false, city = self})
             end
         end
     end
@@ -729,6 +762,7 @@ function City:OnUserDataChanged(userData, current_time)
                         building_type = house.type,
                         level = house.level,
                         finishTime = 0,
+                        city = self,
                     }))
                 end
             end)
@@ -757,7 +791,8 @@ function City:OnUserDataChanged(userData, current_time)
     end
 end
 function City:OnCreateDecorator(current_time, building)
-    building:AddUpgradeListener(self)
+    -- building:AddUpgradeListener(self)
+    self:OnInitBuilding(building)
 
     self:UpdateResourceByBuilding(current_time, building)
 end
@@ -832,6 +867,10 @@ function City:UnlockTilesByIndex(x, y)
     --     end)
     -- end
     return success, ret_code
+end
+function City:OnInitBuilding(building)
+    building.city = self
+    building:AddUpgradeListener(self)
 end
 -----
 function City:UpdateAllResource(current_time)
@@ -941,28 +980,41 @@ function City:ReloadWalls(walls)
         old_gate:CopyValueFrom(new_gate)
     else
         -- 如果是第一次生成
-        self:GetGateInWalls(walls):AddUpgradeListener(self)
+        local gate = self:GetGateInWalls(walls)
+        self:OnInitBuilding(gate)
+        -- self:GetGateInWalls(walls):AddUpgradeListener(self)
     end
     return walls
 end
 function City:GenerateTowers(walls)
     local towers = {}
     local p = walls[#walls]:IntersectWithOtherWall(walls[1])
-    table.insert(towers, TowerUpgradeBuilding.new({ x = p.x, y = p.y,
-        building_type = "tower",
-        level = -1,
-        orient = p.orient,
-        sub_orient = p.sub_orient }))
+    table.insert(towers,
+        TowerUpgradeBuilding.new({ 
+            building_type = "tower",
+            x = p.x, 
+            y = p.y,
+            level = -1,
+            orient = p.orient,
+            sub_orient = p.sub_orient,
+            city = self,
+        })
+    )
 
     for i, v in pairs(walls) do
         if i < #walls then
             local p = walls[i]:IntersectWithOtherWall(walls[i + 1])
-            table.insert(towers, TowerUpgradeBuilding.new({
-                x = p.x, y = p.y,
-                building_type = "tower",
-                level = -1,
-                orient = p.orient,
-                sub_orient = p.sub_orient }))
+            table.insert(towers,
+                TowerUpgradeBuilding.new({
+                    building_type = "tower",
+                    x = p.x, 
+                    y = p.y,
+                    level = -1,
+                    orient = p.orient,
+                    sub_orient = p.sub_orient,
+                    city = self,
+                })
+            )
         end
     end
 
@@ -1012,7 +1064,8 @@ function City:ReloadTowers(towers)
                 old_tower:CopyValueFrom(v)
             else
                 -- 如果是新解锁的
-                v:AddUpgradeListener(self)
+                self:OnInitBuilding(v)
+                -- v:AddUpgradeListener(self)
             end
         end
     end
@@ -1031,6 +1084,15 @@ function City:OnUpgradingBuildings()
 end
 
 return City
+
+
+
+
+
+
+
+
+
 
 
 

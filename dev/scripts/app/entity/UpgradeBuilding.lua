@@ -57,6 +57,9 @@ function UpgradeBuilding:GetUpgradingPercentByCurrentTime(current_time)
         return 0
     end
 end
+function UpgradeBuilding:CanUpgrade()
+    return not self:IsUpgrading() and self:GetLevel() > 0 and not self:IsMaxLevel()
+end
 function UpgradeBuilding:IsUnlocking()
     return self:GetLevel() == 0 and self.upgrade_to_next_level_time ~= 0
 end

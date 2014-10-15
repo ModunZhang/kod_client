@@ -48,6 +48,10 @@ function Building:ctor(building_info)
     self.orient = building_info.orient and building_info.orient or Orient.X
     self.can_change_head = self.w ~= self.h
     self.base_building_observer = Observer.new()
+    self.city = building_info.city
+end
+function Building:BelongCity()
+    return self.city
 end
 function Building:UniqueKey()
     return string.format("%s_%d_%d", self:GetType(), self.x, self.y)
@@ -165,7 +169,14 @@ function Building:CombineWithOtherBuilding(building)
     local max_y = math.max(self.y, building.y)
     local new_w = self.y == building.y and self.w + building.w or self.w
     local new_h = self.y == building.y and self.h or self.h + building.h
-    return Building.new({x = max_x, y = max_y, building_type = self:GetType(), w = new_w, h = new_h})
+    return Building.new{
+        building_type = self:GetType(),
+        x = max_x, 
+        y = max_y,
+        w = new_w, 
+        h = new_h,
+        city = self:BelongCity(),
+    }
 end
 function Building:IsIntersectWithOtherBuilding(building)
     local other_x, other_y = building:GetLogicPosition()
@@ -232,6 +243,7 @@ function Building:GetGlobalRegion()
     return start_x, end_x, start_y, end_y
 end
 return Building
+
 
 
 
