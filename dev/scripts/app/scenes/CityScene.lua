@@ -52,7 +52,7 @@ function CityScene:LoadAnimation()
     manager:addArmatureFileInfo("images/animations/Blue_dragon.ExportJson")
 end
 function CityScene:CreateSceneLayer()
-    local scene = CityLayer.new():addTo(self, 0, 1)
+    local scene = CityLayer.new():addTo(self)
     local origin_point = scene:GetPositionIndex(0, 0)
     self.iso_map = IsoMapAnchorBottomLeft.new({
         tile_w = 80, tile_h = 56, map_width = 50, map_height = 50, base_x = origin_point.x, base_y = origin_point.y

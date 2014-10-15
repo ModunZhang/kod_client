@@ -60,8 +60,8 @@ function BarracksUpgradeBuilding:CreateEvent()
         return self.soldier_type, self.soldier_count
     end
     function event:Describe()
-        -- local soldier_type, count = event:GetRecruitInfo()
-        -- local soldier_name = barracks:GetSoldierConfigByType(soldier_type).description
+    -- local soldier_type, count = event:GetRecruitInfo()
+    -- local soldier_name = barracks:GetSoldierConfigByType(soldier_type).description
     end
     event:Init()
     return event
@@ -124,26 +124,27 @@ function BarracksUpgradeBuilding:OnTimer(current_time)
 end
 function BarracksUpgradeBuilding:OnUserDataChanged(...)
     BarracksUpgradeBuilding.super.OnUserDataChanged(self, ...)
-
     local arg = {...}
     local current_time = arg[2]
-    local soldierEvent = arg[1].soldierEvents[1]
-
-    if soldierEvent then
-        local finished_time = soldierEvent.finishTime / 1000
-        if self.recruit_event:IsEmpty() then
-            self:RecruitSoldiersWithFinishTime(soldierEvent.name, soldierEvent.count, finished_time)
+    if arg[1].soldierEvents then
+        local soldierEvent = arg[1].soldierEvents[1]
+        if soldierEvent then
+            local finished_time = soldierEvent.finishTime / 1000
+            if self.recruit_event:IsEmpty() then
+                self:RecruitSoldiersWithFinishTime(soldierEvent.name, soldierEvent.count, finished_time)
+            else
+                self.recruit_event:SetRecruitInfo(soldierEvent.name, soldierEvent.count, finished_time)
+            end
         else
-            self.recruit_event:SetRecruitInfo(soldierEvent.name, soldierEvent.count, finished_time)
-        end
-    else
-        if self.recruit_event:IsRecruting() then
-            self:EndRecruitSoldiersWithCurrentTime(current_time)
+            if self.recruit_event:IsRecruting() then
+                self:EndRecruitSoldiersWithCurrentTime(current_time)
+            end
         end
     end
 end
 
 return BarracksUpgradeBuilding
+
 
 
 

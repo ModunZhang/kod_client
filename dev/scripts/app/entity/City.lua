@@ -477,17 +477,20 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time)
     self:GetGate():OnUserDataChanged(user_data, current_time)
 end
 function City:IteratorResourcesByUserData(user_data, current_time)
-    local resource_manager = self:GetResourceManager()
-    resource_manager:GetEnergyResource():UpdateResource(current_time, user_data.resources.energy)
-    resource_manager:GetWoodResource():UpdateResource(current_time, user_data.resources.wood)
-    resource_manager:GetFoodResource():UpdateResource(current_time, user_data.resources.food)
-    resource_manager:GetIronResource():UpdateResource(current_time, user_data.resources.iron)
-    resource_manager:GetStoneResource():UpdateResource(current_time, user_data.resources.stone)
-    resource_manager:GetPopulationResource():UpdateResource(current_time, user_data.resources.citizen)
-    resource_manager:GetCoinResource():SetValue(user_data.resources.coin)
-    resource_manager:GetGemResource():SetValue(user_data.resources.gem)
-    resource_manager:GetBloodResource():SetValue(user_data.resources.blood)
-    self:UpdateAllResource(current_time)
+    local resources = user_data.resources
+    if resources then
+        local resource_manager = self:GetResourceManager()
+        resource_manager:GetEnergyResource():UpdateResource(current_time, resources.energy)
+        resource_manager:GetWoodResource():UpdateResource(current_time, resources.wood)
+        resource_manager:GetFoodResource():UpdateResource(current_time, resources.food)
+        resource_manager:GetIronResource():UpdateResource(current_time, resources.iron)
+        resource_manager:GetStoneResource():UpdateResource(current_time, resources.stone)
+        resource_manager:GetPopulationResource():UpdateResource(current_time, resources.citizen)
+        resource_manager:GetCoinResource():SetValue(resources.coin)
+        resource_manager:GetGemResource():SetValue(resources.gem)
+        resource_manager:GetBloodResource():SetValue(resources.blood)
+        self:UpdateAllResource(current_time)
+    end
 end
 function City:IteratorAllNeedTimerEntity(current_time)
     self:IteratorFunctionBuildingsByFunc(function(key, building)
@@ -665,70 +668,72 @@ function City:OnUserDataChanged(userData, current_time)
     local unlock_table = {}
     local is_unlock_any_tiles = false
     local is_lock_any_tiles = false
-    table.foreach(userData.buildings, function(key, location)
-        local building = self:GetBuildingByLocationId(location.location)
-        local is_unlocking = building:GetLevel() == 0 and location.level > 0
-        local is_locking = building:GetLevel() > 0 and location.level <= 0
-        local tile = self:GetTileByLocationId(location.location)
-        if is_unlocking then
-            is_unlock_any_tiles = true
-            table.insert(unlock_table, {x = tile.x, y = tile.y})
-        elseif is_locking then
-            is_lock_any_tiles = true
-            table.insert(lock_table, {x = tile.x, y = tile.y})
-        end
+    if userData.buildings then
+        table.foreach(userData.buildings, function(key, location)
+            local building = self:GetBuildingByLocationId(location.location)
+            local is_unlocking = building:GetLevel() == 0 and location.level > 0
+            local is_locking = building:GetLevel() > 0 and location.level <= 0
+            local tile = self:GetTileByLocationId(location.location)
+            if is_unlocking then
+                is_unlock_any_tiles = true
+                table.insert(unlock_table, {x = tile.x, y = tile.y})
+            elseif is_locking then
+                is_lock_any_tiles = true
+                table.insert(lock_table, {x = tile.x, y = tile.y})
+            end
 
-        -- 拆除
-        local decorators = self:GetDecoratorsByLocationId(location.location)
-        assert(decorators)
-        local find_building_info_by_location = function(houses, location_id)
-            for _, v in pairs(houses) do
-                if v.location == location_id then
-                    return v
+            -- 拆除
+            local decorators = self:GetDecoratorsByLocationId(location.location)
+            assert(decorators)
+            local find_building_info_by_location = function(houses, location_id)
+                for _, v in pairs(houses) do
+                    if v.location == location_id then
+                        return v
+                    end
+                end
+                return nil
+            end
+            table.foreach(decorators, function(key, building)
+                -- 当前位置有小建筑并且推送的数据里面没有就认为是拆除
+                local tile = self:GetTileWhichBuildingBelongs(building)
+                local location_id = tile:GetBuildingLocation(building)
+                local building_info = find_building_info_by_location(location.houses, location_id)
+                -- 没有找到，就是已经被拆除了
+                if not building_info then
+                    self:DestoryDecorator(current_time, building)
+                end
+            end)
+
+            -- 新建的
+            local hosue_events = userData.houseEvents
+            local function get_house_event_by_location(building_location, sub_id)
+                for k, v in pairs(hosue_events) do
+                    if v.buildingLocation == building_location and
+                        v.houseLocation == sub_id then
+                        return v
+                    end
                 end
             end
-            return nil
-        end
-        table.foreach(decorators, function(key, building)
-            -- 当前位置有小建筑并且推送的数据里面没有就认为是拆除
-            local tile = self:GetTileWhichBuildingBelongs(building)
-            local location_id = tile:GetBuildingLocation(building)
-            local building_info = find_building_info_by_location(location.houses, location_id)
-            -- 没有找到，就是已经被拆除了
-            if not building_info then
-                self:DestoryDecorator(current_time, building)
-            end
-        end)
-
-        -- 新建的
-        local hosue_events = userData.houseEvents
-        local function get_house_event_by_location(building_location, sub_id)
-            for k, v in pairs(hosue_events) do
-                if v.buildingLocation == building_location and
-                    v.houseLocation == sub_id then
-                    return v
+            table.foreach(location.houses, function(key, house)
+                -- 当前位置没有小建筑并且推送的数据里面有就认为新建小建筑
+                if not decorators[house.location] then
+                    local tile = self:GetTileByLocationId(location.location)
+                    local absolute_x, absolute_y = tile:GetAbsolutePositionByLocation(house.location)
+                    local event = get_house_event_by_location(location.location, house.location)
+                    -- local finishTime = event == nil and 0 or event.finishTime / 1000
+                    self:CreateDecorator(current_time, BuildingRegister[house.type].new({
+                        x = absolute_x,
+                        y = absolute_y,
+                        w = 3,
+                        h = 3,
+                        building_type = house.type,
+                        level = house.level,
+                        finishTime = 0,
+                    }))
                 end
-            end
-        end
-        table.foreach(location.houses, function(key, house)
-            -- 当前位置没有小建筑并且推送的数据里面有就认为新建小建筑
-            if not decorators[house.location] then
-                local tile = self:GetTileByLocationId(location.location)
-                local absolute_x, absolute_y = tile:GetAbsolutePositionByLocation(house.location)
-                local event = get_house_event_by_location(location.location, house.location)
-                -- local finishTime = event == nil and 0 or event.finishTime / 1000
-                self:CreateDecorator(current_time, BuildingRegister[house.type].new({
-                    x = absolute_x,
-                    y = absolute_y,
-                    w = 3,
-                    h = 3,
-                    building_type = house.type,
-                    level = house.level,
-                    finishTime = 0,
-                }))
-            end
+            end)
         end)
-    end)
+    end
     -- 更新地块信息
     if is_unlock_any_tiles then
         LuaUtils:outputTable("unlock_table", unlock_table)
@@ -746,8 +751,10 @@ function City:OnUserDataChanged(userData, current_time)
     -- 更新材料，这里是广义的材料，包括龙的装备
     self.material_manager:OnUserDataChanged(userData)
     -- 最后才更新资源
-    local resource_refresh_time = userData.basicInfo.resourceRefreshTime / 1000
-    self:IteratorResourcesByUserData(userData, resource_refresh_time)
+    if userData.basicInfo then
+        local resource_refresh_time = userData.basicInfo.resourceRefreshTime / 1000
+        self:IteratorResourcesByUserData(userData, resource_refresh_time)
+    end
 end
 function City:OnCreateDecorator(current_time, building)
     building:AddUpgradeListener(self)
@@ -1024,6 +1031,9 @@ function City:OnUpgradingBuildings()
 end
 
 return City
+
+
+
 
 
 

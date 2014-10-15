@@ -46,7 +46,7 @@ function AllianceScene:onExit()
 end
 function AllianceScene:CreateSceneLayer()
     local scene = AllianceLayer.new()
-    :addTo(self, 0, 1)
+    :addTo(self)
     :ZoomTo(0.7)
     return scene
 end
