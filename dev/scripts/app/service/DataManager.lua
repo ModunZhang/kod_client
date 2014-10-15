@@ -1,6 +1,11 @@
 DataManager = {}
 
+local CURRENT_MODULE_NAME = ...
+
+DataManager.managers_ = {}
+
 function DataManager:setUserData( userData )
+	self:registerManager_("AllianceManager")
     if not self.user then
         self.user = userData
     else
@@ -8,10 +13,36 @@ function DataManager:setUserData( userData )
     		self.user[k] = v
     	end
     end
-    City:OnUserDataChanged(userData, app.timer:GetServerTime())
+    self:OnUserDataChanged(userData, app.timer:GetServerTime())
 end
+
 
 function DataManager:getUserData(  )
     return self.user
 end
 
+function DataManager:registerManager_(name,...)
+	if not self.managers_[name] then
+		local manager_ = import('.' .. name,CURRENT_MODULE_NAME).new(...)
+		self.managers_[name] = manager_
+	end
+	return self
+end
+
+function DataManager:OnUserDataChanged(userData,timer)
+	City:OnUserDataChanged(userData, timer)
+	self:callManagers_(userData,timer)
+end
+
+
+function DataManager:callManagers_(userData,timer)
+	table.foreach(self.managers_,function(name,obj)
+		if obj.OnUserDataChanged then
+			obj.OnUserDataChanged(obj,userData,timer)
+		end
+	end)
+end
+
+function DataManager:GetManager(name)
+	return self.managers_[name]
+end

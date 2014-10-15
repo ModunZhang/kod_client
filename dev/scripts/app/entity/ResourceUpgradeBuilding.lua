@@ -1,5 +1,6 @@
 local config_house_function = GameDatas.HouseFunction
 local config_house_levelup = GameDatas.HouseLevelUp
+local MaterialManager = import("..entity.MaterialManager")
 local UpgradeBuilding = import(".UpgradeBuilding")
 local ResourceUpgradeBuilding = class("ResourceUpgradeBuilding", UpgradeBuilding)
 
@@ -60,8 +61,8 @@ function ResourceUpgradeBuilding:getUpgradeRequiredGems()
         citizen = City.resource_manager:GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime()),
     }
 
-    -- 还未管理道具，暂时从userdata中取
-    local has_materials = DataManager:getUserData().materials
+    
+    local has_materials =City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
 
     local resource_config = DataUtils:getHouseUpgradeRequired(self.building_type, self.level+1)
     required_gems = required_gems + DataUtils:buyResource(resource_config.resources, has_resourcce)

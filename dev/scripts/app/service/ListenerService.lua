@@ -9,9 +9,10 @@ setmetatable(ListenerService, {__index=NetManager})
 local ChatCenter = import('..entity.ChatCenter')
 
 
-local events = {
+local events_to_listen = {
 	'onBuildingLevelUp','onHouseLevelUp','onTowerLevelUp','onWallLevelUp', --升级提示相关
 	'onChat','onAllChat', -- 聊天相关
+	'onSearchAllianceSuccess', -- 联盟
 }
 
 function ListenerService:_initOrNot()
@@ -23,7 +24,7 @@ function ListenerService:_initOrNot()
 end
 
 function ListenerService:_listenNetMessage()
-	for _,v in ipairs(events) do
+	for _,v in ipairs(events_to_listen) do
 		if type(v) == 'string' and string.len(v) ~= 0 then
 			NetManager:addEventListener(v,function( success,msg )
 				if success then
@@ -87,4 +88,15 @@ function ListenerService:ls_onAllChat(msg,eventName)
 	self:ls_onChat(msg,eventName)
 end
 
+-- Alliance 
+-------------------------------------------------------------------------
+function ListenerService:dispatchEventToAllianceManager_(msg,eventName)
+	local allianceManager = DataManager:GetManager("AllianceManager")
+	if allianceManager then
+		allianceManager:dispatchAlliceServerData(eventName,msg)
+	end
+end
 
+function ListenerService:ls_onSearchAllianceSuccess(msg,eventName)
+	self:dispatchEventToAllianceManager_(msg,eventName)
+end

@@ -4,6 +4,7 @@ local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
 local UpgradeBuilding = import("..entity.UpgradeBuilding")
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
+local MaterialManager = import("..entity.MaterialManager")
 
 local GameUIUnlockBuilding = class("GameUIUnlockBuilding", function ()
     return display.newColorLayer(cc.c4b(0,0,0,127))
@@ -149,7 +150,9 @@ function GameUIUnlockBuilding:SetUpgradeRequirementListview()
     local population = City.resource_manager:GetPopulationResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
 
 
-    local userData = DataManager:getUserData()
+    -- local userData = DataManager:getUserData()
+    local has_materials =City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
+
     requirements = {
         {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetOnUpgradingBuildings()<1,
             icon="hammer_31x33.png",description=GameUtils:formatNumber(#City:GetOnUpgradingBuildings()).."/1"},
@@ -165,14 +168,14 @@ function GameUIUnlockBuilding:SetUpgradeRequirementListview()
         {resource_type = _("城民"),isVisible = self.building:GetLevelUpCitizen()>0,   isSatisfy = population>self.building:GetLevelUpCitizen() ,
             icon="citizen_44x50.png",description=self.building:GetLevelUpCitizen().."/"..population},
 
-        {resource_type = _("建筑蓝图"),isVisible = self.building:GetLevelUpBlueprints()>0,isSatisfy = userData.materials.blueprints>self.building:GetLevelUpBlueprints() ,
-            icon="blueprints_112x112.png",description=self.building:GetLevelUpBlueprints().."/"..userData.materials.blueprints},
-        {resource_type = _("建造工具"),isVisible = self.building:GetLevelUpTools()>0,     isSatisfy = userData.materials.tools>self.building:GetLevelUpTools() ,
-            icon="tools_112x112.png",description=self.building:GetLevelUpTools().."/"..userData.materials.tools},
-        {resource_type = _("砖石瓦片"),isVisible = self.building:GetLevelUpTiles()>0,     isSatisfy = userData.materials.tiles>self.building:GetLevelUpTiles() ,
-            icon="tiles_112x112.png",description=self.building:GetLevelUpTiles().."/"..userData.materials.tiles},
-        {resource_type = _("滑轮组"),isVisible = self.building:GetLevelUpPulley()>0,    isSatisfy = userData.materials.pulley>self.building:GetLevelUpPulley() ,
-            icon="pulley_112x112.png",description=self.building:GetLevelUpPulley().."/"..userData.materials.pulley},
+        {resource_type = _("建筑蓝图"),isVisible = self.building:GetLevelUpBlueprints()>0,isSatisfy = has_materials.blueprints>self.building:GetLevelUpBlueprints() ,
+            icon="blueprints_112x112.png",description=self.building:GetLevelUpBlueprints().."/"..has_materials.blueprints},
+        {resource_type = _("建造工具"),isVisible = self.building:GetLevelUpTools()>0,     isSatisfy = has_materials.tools>self.building:GetLevelUpTools() ,
+            icon="tools_112x112.png",description=self.building:GetLevelUpTools().."/"..has_materials.tools},
+        {resource_type = _("砖石瓦片"),isVisible = self.building:GetLevelUpTiles()>0,     isSatisfy = has_materials.tiles>self.building:GetLevelUpTiles() ,
+            icon="tiles_112x112.png",description=self.building:GetLevelUpTiles().."/"..has_materials.tiles},
+        {resource_type = _("滑轮组"),isVisible = self.building:GetLevelUpPulley()>0,    isSatisfy = has_materials.pulley>self.building:GetLevelUpPulley() ,
+            icon="pulley_112x112.png",description=self.building:GetLevelUpPulley().."/"..has_materials.pulley},
     }
 
     if not self.requirement_listview then

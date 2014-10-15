@@ -4,16 +4,16 @@
 --
 -- 封装常用ui工具
 import(".bit")
-UIKit =
-    {
-        Registry   = import('framework.cc.Registry'),
-        GameUIBase = import('..ui.GameUIBase'),
-    }
+UIKit = 
+{
+    Registry   = import('framework.cc.Registry'),
+    GameUIBase = import('..ui.GameUIBase'),
+}
 local CURRENT_MODULE_NAME = ...
 
 
 function UIKit:createUIClass(className, baseName)
-    return class(className, baseName == nil and self["GameUIBase"] or import('..ui.' .. baseName,CURRENT_MODULE_NAME))
+	return class(className, baseName == nil and self["GameUIBase"] or import('..ui.' .. baseName,CURRENT_MODULE_NAME))
 end
 
 function UIKit:newGameUI(gameUIName,... )
@@ -21,7 +21,7 @@ function UIKit:newGameUI(gameUIName,... )
         print("已经创建过一个Object-->",gameUIName)
         return {addToCurrentScene=function(...)end,addToScene=function(...)end} -- 适配后面的调用不报错
     end
-    local viewPackageName = app.packageRoot .. ".ui." .. gameUIName
+	local viewPackageName = app.packageRoot .. ".ui." .. gameUIName
     local viewClass = require(viewPackageName)
     local instance = viewClass.new(...)
     self.Registry.setObject(instance,gameUIName)
@@ -106,6 +106,31 @@ function UIKit:getRegistry()
     return self.Registry
 end
 
+function UIKit:ttfLabel( params )
+    if not checktable(params) then
+         printError("%s","params must a table")
+    end
+    params.font = UIKit:getFontFilePath()
+    params.UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF
+    if params.color then
+        params.color = self:hex2c3b(params.color)
+    end
+    local label = cc.ui.UILabel.new(params)
+    if params.shadow then
+        label:enableShadow()
+    end
+    return label
+end
+
+function UIKit:convertColorToGL_( color )
+    local r,g,b = self:hex2rgba(color)
+    r = tonumber(string.format("%1.1f",r/255))
+    g = tonumber(string.format("%1.1f",g/255))
+    b = tonumber(string.format("%1.1f",b/255))
+    return {r,g,b}
+end
+
+
 function UIKit:getImageByBuildingType( building_type ,level)
     print("建筑等级=",level)
     local level_1,level_2 = 6 ,16
@@ -187,8 +212,3 @@ function UIKit:getImageByBuildingType( building_type ,level)
         end
     end
 end
-
-
-
-
-

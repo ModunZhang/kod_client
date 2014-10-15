@@ -58,12 +58,99 @@ function PushService:upgradeDragonStar(dragonType,cb)
 end
 
 function PushService:upgradeDragonDragonSkill(dragonType, skillLocation, cb)
-	if not LuaUtils:isString(dragonType) then cb(false) end
+	if not LuaUtils:isString(dragonType) or string.len(dragonType) == 0 then cb(false) end
 	self.m_netService:request("logic.playerHandler.upgradeDragonSkill"
 			,{dragonType=dragonType,skillLocation=skillLocation}
 			,function(success)
 				cb(success)
 			end
 			,true
+	)
+end
+
+function PushService:createAlliance( data,cb )
+	for k,v in pairs(data) do
+		if not LuaUtils:isString(v) or string.len(v) == 0 then
+			cb(false)
+			return false
+		end
+	end
+	self.m_netService:request("logic.playerHandler.createAlliance"
+			,data
+			,function(success)
+				cb(success)
+			end
+			,true
+	)
+end
+
+function PushService:searchAllianceByTag( tag,cb )
+	if not LuaUtils:isString(tag) or string.len(tag) == 0  then
+		cb(false)
+		return false
+	end
+	local data = {tag=tag}
+	self.m_netService:request("logic.playerHandler.searchAllianceByTag"
+		,data
+		,function(success)
+			cb(success)
+		end
+		,true
+	)
+end
+
+function PushService:requestToJoinAlliance( allianceId,cb )
+	if not LuaUtils:isString(allianceId) or string.len(allianceId) == 0  then
+		cb(false)
+		return false
+	end
+	self.m_netService:request("logic.playerHandler.requestToJoinAlliance"
+		,{allianceId=allianceId}
+		,function(success)
+			cb(success)
+		end
+		,true
+	)
+end
+
+function PushService:joinAllianceDirectly( allianceId,cb )
+	if not LuaUtils:isString(allianceId) or string.len(allianceId) == 0  then
+		cb(false)
+		return false
+	end
+	self.m_netService:request("logic.playerHandler.joinAllianceDirectly"
+		,{allianceId=allianceId}
+		,function(success)
+			cb(success)
+		end
+		,true
+	)
+end
+
+function PushService:cancelJoinAllianceRequest( allianceId,cb )
+	if not LuaUtils:isString(allianceId) or string.len(allianceId) == 0  then
+		cb(false)
+		return false
+	end
+	self.m_netService:request("logic.playerHandler.cancelJoinAllianceRequest"
+		,{allianceId=allianceId}
+		,function(success)
+			cb(success)
+		end
+		,true
+	)
+end
+
+function PushService:handleJoinAllianceInvite( allianceId,argree,cb )
+	if not LuaUtils:isString(allianceId) or string.len(allianceId) == 0 or type(argree)  == 'boolean' then
+		cb(false)
+		return false
+	end
+	self.m_netService:request("logic.playerHandler.handleJoinAllianceInvite"
+		,{allianceId=allianceId,agree=agree}
+		,function(success)
+			cb(success)
+		end
+		,true
 	)
 end

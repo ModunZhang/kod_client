@@ -257,7 +257,9 @@ function GameUIHome:CreateBottom()
             return true
         elseif event.name == 'ended' then
             if cc.pGetDistance(chat_bg.prevP,cc.p(event.x,event.y)) <= 10 then
-                UIKit:newGameUI('GameUIChat'):addToCurrentScene(true)
+                -- UIKit:newGameUI('GameUIChat'):addToCurrentScene(true)
+                UIKit:newGameUI('GameUIAlliance'):addToCurrentScene(true)
+                
             end
         end
     end)
