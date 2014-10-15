@@ -55,6 +55,10 @@ function ChatCenter:getAllMessages(type,page)
 	return self:limitDataSource(data,s,e)
 end
 
+function ChatCenter:getAll(type)
+	return self._messageQueue_[type] or  {}
+end
+
 function ChatCenter:getSAndEWithPage(page)
 	return 1 + (page - 1) * MAX_MESSAGE_PER_PAGE,MAX_MESSAGE_PER_PAGE * page
 end
@@ -98,7 +102,9 @@ end
 
 function ChatCenter:_notifyObservers( event,data)
 	self:NotifyObservers(function(listener)
-		listener.messageEvent(listener,event,data)
+		if listener.messageEvent then
+			listener.messageEvent(listener,event,data)
+		end
 	end)
 end
 
@@ -109,14 +115,14 @@ function ChatCenter:_insertMessage(v )
 			self._messageQueue_[string.lower(v.fromType)] = {}
 		end
 		if not self:_isBlockedChat(v) then
-			table.insert(self._messageQueue_[string.lower(v.fromType)],1,v)
+			table.insert(self._messageQueue_[string.lower(v.fromType)],v)
 			return true
 		end
 	else
 		print("插入系统消息")
 		--系统邮件默认放入世界聊天频道
 		if not self._messageQueue_[string.lower('global')] then self._messageQueue_[string.lower('global')] = {} end
-		table.insert(self._messageQueue_[string.lower('global')],1,v)
+		table.insert(self._messageQueue_[string.lower('global')],v)
 		return true
 	end
 	return false
