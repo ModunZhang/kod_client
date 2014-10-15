@@ -85,6 +85,7 @@ function GameUIAlliance:CreateNoAllianceUI()
 		{
 			label = _("创建"),
         	tag = "create",
+        	default = true,
         },
         {
         	label = _("加入"),
@@ -97,7 +98,6 @@ function GameUIAlliance:CreateNoAllianceUI()
     	{
         	label = _("申请"),
         	tag = "apply",
-        	default = true,
     	},
     },
 	function(tag)
