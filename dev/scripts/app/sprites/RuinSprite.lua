@@ -1,7 +1,7 @@
 local Sprite = import(".Sprite")
 local RuinSprite = class("RuinSprite", Sprite)
 function RuinSprite:ctor(city_layer, entity)
-    local x, y = city_layer.iso_map:ConvertToMapPosition(entity:GetLogicPosition())
+    local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     RuinSprite.super.ctor(self, city_layer, entity, x, y)
 end
 function RuinSprite:GetSpriteFile()

@@ -19,6 +19,7 @@ function Tile:ctor(tile_info)
     self.y = tile_info.y
     self.locked = tile_info.locked
     self.location_id = tile_info.location_id
+    self.city = tile_info.city
 end
 function Tile:GetType()
     return "tile"
@@ -151,22 +152,22 @@ end
 function Tile:GetUpWall()
     local start_x, start_y = self:GetStartPos()
     local end_x, end_y = self:GetEndPos()
-    return WallUpgradeBuilding.new({ x = end_x - 2, y = start_y - 2, len = 6, orient = Orient.NEG_Y, building_type = "wall" })
+    return WallUpgradeBuilding.new({ x = end_x - 2, y = start_y - 2, len = 6, orient = Orient.NEG_Y, building_type = "wall", city = self.city })
 end
 function Tile:GetRightWall()
     local start_x, start_y = self:GetStartPos()
     local end_x, end_y = self:GetEndPos()
-    return WallUpgradeBuilding.new({ x = end_x + 2, y = end_y - 2, len = 6, orient = Orient.X, building_type = "wall" })
+    return WallUpgradeBuilding.new({ x = end_x + 2, y = end_y - 2, len = 6, orient = Orient.X, building_type = "wall", city = self.city })
 end
 function Tile:GetDownWall()
     local start_x, start_y = self:GetStartPos()
     local end_x, end_y = self:GetEndPos()
-    return WallUpgradeBuilding.new({ x = end_x - 2, y = end_y + 2, len = 6, orient = Orient.Y, building_type = "wall" })
+    return WallUpgradeBuilding.new({ x = end_x - 2, y = end_y + 2, len = 6, orient = Orient.Y, building_type = "wall", city = self.city })
 end
 function Tile:GetLeftWall()
     local start_x, start_y = self:GetStartPos()
     local end_x, end_y = self:GetEndPos()
-    return WallUpgradeBuilding.new({ x = start_x - 2, y = end_y - 2, len = 6, orient = Orient.NEG_X, building_type = "wall" })
+    return WallUpgradeBuilding.new({ x = start_x - 2, y = end_y - 2, len = 6, orient = Orient.NEG_X, building_type = "wall", city = self.city })
 end
 function Tile:IsContainPosition(x, y)
     local start_x, start_y = self:GetStartPos()

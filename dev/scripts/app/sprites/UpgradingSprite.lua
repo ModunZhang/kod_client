@@ -10,7 +10,7 @@ function UpgradingSprite:OnSceneMove()
     end)
 end
 function UpgradingSprite:GetWorldPosition()
-    -- local x, y = self:GetMap():ConvertToMapPosition(self:GetLogicPosition())
+    -- local x, y = self:GetLogicMap():ConvertToMapPosition(self:GetLogicPosition())
     -- self:getParent():convertToWorldSpace(cc.p(x, y))
     return self:convertToWorldSpace(cc.p(self:GetSpriteOffset())),
         self:convertToWorldSpace(cc.p(self:GetSpriteButtomPosition()))
@@ -18,7 +18,7 @@ end
 function UpgradingSprite:OnOrientChanged()
 end
 function UpgradingSprite:OnLogicPositionChanged(x, y)
-    self:SetPositionWithLogic(self:GetMap():ConvertToMapPosition(x, y))
+    self:SetPositionWithZOrder(self:GetLogicMap():ConvertToMapPosition(x, y))
 end
 function UpgradingSprite:OnBuildingUpgradingBegin(building, time)
     if self.label then
@@ -38,7 +38,7 @@ function UpgradingSprite:OnBuildingUpgradeFinished(building, time)
     self:NotifyObservers(function(listener)
         listener:OnBuildingUpgradeFinished(building, time)
     end)
-    self:UpdateSprite()
+    self:RefreshSprite()
     -- self:RefreshShadow()
     self:OnSceneMove()
 
@@ -77,7 +77,7 @@ function UpgradingSprite:CheckCondition()
 end
 function UpgradingSprite:ctor(city_layer, entity)
     self.config = SpriteConfig[entity:GetType()]
-    local x, y = city_layer.iso_map:ConvertToMapPosition(entity:GetLogicPosition())
+    local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     UpgradingSprite.super.ctor(self, city_layer, entity, x, y)
     entity:AddBaseListener(self)
     entity:AddUpgradeListener(self)
@@ -142,7 +142,7 @@ function UpgradingSprite:GetLogicZorder(width)
     end
 end
 function UpgradingSprite:GetCenterPosition()
-    return self:GetMap():ConvertToMapPosition(self:GetEntity():GetMidLogicPosition())
+    return self:GetLogicMap():ConvertToMapPosition(self:GetEntity():GetMidLogicPosition())
 end
 
 

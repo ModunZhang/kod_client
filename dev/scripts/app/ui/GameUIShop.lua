@@ -16,9 +16,9 @@ function GameUIShop:onEnter()
     local button = WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"}
         ,{scale9 = false}
-        -- ,{
-        --     disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
-        -- }
+    -- ,{
+    --     disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+    -- }
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "gem add "..add_gem,
@@ -31,10 +31,10 @@ function GameUIShop:onEnter()
             local current = self.shop_city:GetResourceManager():GetGemResource():GetValue() + add_gem
             NetManager:sendMsg("gem "..current, NOT_HANDLE)
         end)
-        -- :setButtonEnabled(false)
-        -- :SetFilter({
-        --     disabled = nil
-        -- })
+    -- :setButtonEnabled(false)
+    -- :SetFilter({
+    --     disabled = nil
+    -- })
 
     WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
@@ -52,6 +52,60 @@ function GameUIShop:onEnter()
         end)
 
 
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "草地",
+        size = 24,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(self)
+        :align(display.CENTER, window.left + 140, window.top - 200)
+        :onButtonClicked(function()
+            if display.getRunningScene().name == "CityScene" then
+                display.getRunningScene():ChangeTerrain("grass")
+            end
+        end)
+
+
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "雪地",
+        size = 24,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(self)
+        :align(display.CENTER, window.left + 320, window.top - 200)
+        :onButtonClicked(function()
+            if display.getRunningScene().name == "CityScene" then
+                display.getRunningScene():ChangeTerrain("icefield")
+            end
+        end)
+
+
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "沙地",
+        size = 24,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(self)
+        :align(display.CENTER, window.left + 500, window.top - 200)
+        :onButtonClicked(function()
+            if display.getRunningScene().name == "CityScene" then
+                display.getRunningScene():ChangeTerrain("desert")
+            end
+        end)
+
+
     -- local node = display.newFilteredSprite("green_btn_up.png", "GRAY", {0.2, 0.3, 0.5, 0.1})
     --     :align(display.CENTER, window.cx, window.cy)
     --     :addTo(self)
@@ -64,6 +118,7 @@ end
 
 
 return GameUIShop
+
 
 
 

@@ -126,20 +126,21 @@ function HospitalUpgradeBuilding:OnUserDataChanged(...)
 
     local arg = {...}
     local current_time = arg[2]
-    local soldierEvent = arg[1].treatSoldierEvents[1]
-    -- LuaUtils:outputTable("arg[1]arg[1]arg[1]arg[1]arg[1]====", arg[1])
-    -- LuaUtils:outputTable("soldierEvent[1]====", soldierEvent)
-
-    if soldierEvent then
-        local finished_time = soldierEvent.finishTime / 1000
-        if self.treat_event:IsEmpty() then
-            self:TreatSoldiersWithFinishTime(soldierEvent.soldiers, finished_time)
+    if arg[1].treatSoldierEvents then
+        local soldierEvent = arg[1].treatSoldierEvents[1]
+        -- LuaUtils:outputTable("arg[1]arg[1]arg[1]arg[1]arg[1]====", arg[1])
+        -- LuaUtils:outputTable("soldierEvent[1]====", soldierEvent)
+        if soldierEvent then
+            local finished_time = soldierEvent.finishTime / 1000
+            if self.treat_event:IsEmpty() then
+                self:TreatSoldiersWithFinishTime(soldierEvent.soldiers, finished_time)
+            else
+                self.treat_event:SetTreatInfo(soldierEvent.soldiers, finished_time)
+            end
         else
-            self.treat_event:SetTreatInfo(soldierEvent.soldiers, finished_time)
-        end
-    else
-        if self.treat_event:IsTreating() then
-            self:EndTreatSoldiersWithCurrentTime(current_time)
+            if self.treat_event:IsTreating() then
+                self:EndTreatSoldiersWithCurrentTime(current_time)
+            end
         end
     end
 end
@@ -208,6 +209,7 @@ function HospitalUpgradeBuilding:GetCasualtyRate()
 end
 
 return HospitalUpgradeBuilding
+
 
 
 

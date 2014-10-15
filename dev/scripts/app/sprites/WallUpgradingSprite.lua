@@ -21,6 +21,10 @@ function WallUpgradingSprite:ctor(city_layer, entity)
     --     self.sprite:setVisible(false)
     -- end
 end
+-- function WallUpgradingSprite:GetLogicZorder(width)
+--     local x, y = self:GetLogicPosition()
+--     return x + y * width + 100
+-- end
 function WallUpgradingSprite:GetSpriteFile()
     local entity = self:GetEntity()
     if entity:GetOrient() == Orient.X then

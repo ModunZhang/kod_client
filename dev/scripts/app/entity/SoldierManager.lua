@@ -37,6 +37,13 @@ function SoldierManager:ctor()
         ["catapult"] = 0,
     }
 end
+function SoldierManager:IteratorSoldiers(func)
+    for k, v in pairs(self:GetSoldierMap()) do
+        if func(k, v) then
+            return
+        end
+    end
+end
 function SoldierManager:GetSoldierMap()
     return self.soldier_map
 end
@@ -108,37 +115,42 @@ function SoldierManager:GetTotalTreatSoldierCount()
     return total_count
 end
 function SoldierManager:OnUserDataChanged(user_data)
-    local soldiers = user_data.soldiers
-    local changed = {}
-    for k, v in pairs(self.soldier_map) do
-        if soldiers[k] ~= v then
-            table.insert(changed, k)
+    if user_data.soldiers then
+        local soldiers = user_data.soldiers
+        local changed = {}
+        for k, v in pairs(self.soldier_map) do
+            if soldiers[k] ~= v then
+                table.insert(changed, k)
+            end
+        end
+        self.soldier_map = user_data.soldiers
+        if #changed > 0 then
+            self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED,function(listener)
+                listener:OnSoliderCountChanged(self, changed)
+            end)
         end
     end
-    self.soldier_map = user_data.soldiers
-    if #changed > 0 then
-        self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED,function(listener)
-            listener:OnSoliderCountChanged(self, changed)
-        end)
-    end
-    -- 伤兵列表
-    local treatSoldiers = user_data.treatSoldiers
-    local treat_soldier_changed = {}
-    for k,v in pairs(self.treatSoldiers_map) do
-        if treatSoldiers[k] ~= v then
-            table.insert(treat_soldier_changed,k)
+    if user_data.treatSoldiers then
+        -- 伤兵列表
+        local treatSoldiers = user_data.treatSoldiers
+        local treat_soldier_changed = {}
+        for k,v in pairs(self.treatSoldiers_map) do
+            if treatSoldiers[k] ~= v then
+                table.insert(treat_soldier_changed,k)
+            end
         end
-    end
-    self.treatSoldiers_map = user_data.treatSoldiers
-    if #treat_soldier_changed > 0 then
-        self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.TREAT_SOLDIER_CHANGED,function(listener)
-            listener:OnTreatSoliderCountChanged(self, treat_soldier_changed)
-        end)
+        self.treatSoldiers_map = user_data.treatSoldiers
+        if #treat_soldier_changed > 0 then
+            self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.TREAT_SOLDIER_CHANGED,function(listener)
+                listener:OnTreatSoliderCountChanged(self, treat_soldier_changed)
+            end)
+        end
     end
 end
 
 
 return SoldierManager
+
 
 
 

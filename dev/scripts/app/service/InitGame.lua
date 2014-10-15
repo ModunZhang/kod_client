@@ -19,15 +19,26 @@ return function(userData)
         local location_config = City:GetLocationById(location.location)
         local event = get_building_event_by_location(location.location)
         local finishTime = event == nil and 0 or event.finishTime / 1000
-        table.insert(init_buildings, BuildingRegister[location_config.building_type].new{
-            x = location_config.x,
-            y = location_config.y,
-            w = location_config.w,
-            h = location_config.h,
-            building_type = location_config.building_type,
-            level = location.level,
-            finishTime = finishTime
-        })
+        -- table.insert(init_buildings, BuildingRegister[location_config.building_type].new{
+        --     x = location_config.x,
+        --     y = location_config.y,
+        --     w = location_config.w,
+        --     h = location_config.h,
+        --     building_type = location_config.building_type,
+        --     level = location.level,
+        --     finishTime = finishTime,
+        -- })
+
+        table.insert(init_buildings,
+            City:NewBuildingWithType(location_config.building_type,
+                location_config.x,
+                location_config.y,
+                location_config.w,
+                location_config.h,
+                location.level,
+                finishTime)
+        )
+
 
         if location.level > 0 then
             table.insert(init_unlock_tiles, {x = location_config.tile_x, y = location_config.tile_y})
@@ -75,15 +86,24 @@ return function(userData)
                 local absolute_x, absolute_y = tile:GetAbsolutePositionByLocation(house.location)
                 local event = get_house_event_by_location(location.location, house.location)
                 local finishTime = event == nil and 0 or event.finishTime / 1000
-                table.insert(init_decorators, BuildingRegister[house.type].new{
-                    x = absolute_x,
-                    y = absolute_y,
-                    w = 3,
-                    h = 3,
-                    building_type = house.type,
-                    level = house.level,
-                    finishTime = finishTime
-                })
+                -- table.insert(init_decorators, BuildingRegister[house.type].new{
+                --     x = absolute_x,
+                --     y = absolute_y,
+                --     w = 3,
+                --     h = 3,
+                --     building_type = house.type,
+                --     level = house.level,
+                --     finishTime = finishTime
+                -- })
+                table.insert(init_buildings,
+                    City:NewBuildingWithType(house.type,
+                        absolute_x,
+                        absolute_y,
+                        3,
+                        3,
+                        house.level,
+                        finishTime)
+                )
             end)
         end
     end)
@@ -99,6 +119,10 @@ return function(userData)
     --read userdefaults about local push
     ext.localpush.switchNotification('BUILDING_PUSH_UPGRADE',true)
 end
+
+
+
+
 
 
 

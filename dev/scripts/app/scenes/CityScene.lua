@@ -6,111 +6,53 @@ local CityLayer = import("..layers.CityLayer")
 local EventManager = import("..layers.EventManager")
 local TouchJudgment = import("..layers.TouchJudgment")
 local IsoMapAnchorBottomLeft = import("..map.IsoMapAnchorBottomLeft")
-local app = app
-local timer = app.timer
-local running_scene = nil
+local MapScene = import(".MapScene")
 import('app.service.ListenerService')
 import('app.service.PushService')
+local CityScene = class("CityScene", MapScene)
 
+local app = app
+local timer = app.timer
 local debug = false
-
-local CityScene = class("CityScene", function()
-    return display.newScene("CityScene")
-end)
-
-function goto_logic(x, y, time)
-    time = 0
-    local p = logic2world(x, y)
-    goto_world_pos(p.x, p.y, time == nil and 0.5 or time)
-end
-function goto_world_pos(target_x, target_y, time)
-    local scene = running_scene.city_layer
-    local scene_mid_point = scene:getParent():convertToNodeSpace(cc.p(display.cx, display.cy))
-    local world_point = scene:convertToWorldSpace(cc.p(target_x, target_y))
-    local new_scene_point = scene:getParent():convertToNodeSpace(world_point)
-    local dx, dy = scene_mid_point.x - new_scene_point.x, scene_mid_point.y - new_scene_point.y
-    local current_x, current_y = scene:getPosition()
-
-    if time == 0 then
-        scene:setPosition(cc.p(current_x + dx, current_y + dy))
-    else
-        transition.moveTo(scene, {x = current_x + dx, y = current_y + dy, time = time})
-    end
-end
-function logic2world(x, y)
-    local scene = running_scene.city_layer
-    local city_node = running_scene.city_layer:GetCityNode()
-    local map_pos = cc.p(running_scene.iso_map:ConvertToMapPosition(x, y))
-    return scene:convertToNodeSpace(city_node:convertToWorldSpace(map_pos))
-end
 function CityScene:ctor()
-    self.event_manager = EventManager.new(self)
-    self.touch_judgment = TouchJudgment.new(self)
+    CityScene.super.ctor(self)
+    self:LoadAnimation()
 end
 function CityScene:onEnter()
-    ListenerService:start()
-    running_scene = self
-
-    self:LoadAnimation()
-    self.city_layer = self:CreateSceneLayer()
-    self.touch_layer = self:CreateMultiTouchLayer()
+    CityScene.super.onEnter(self)
     self.scene_ui_layer = self:CreateSceneUILayer()
     home_page = self:CreateHomePage()
+    ListenerService:start()
 
-    self.city_layer:AddObserver(self)
-    self.city_layer:InitWithCity(City)
-    self.city_layer:IteratorInnnerBuildings(function(_, building)
+    self:GetSceneLayer():AddObserver(self)
+    self:GetSceneLayer():InitWithCity(City)
+    self:GetSceneLayer():IteratorInnnerBuildings(function(_, building)
         self.scene_ui_layer:NewUIFromBuildingSprite(building)
     end)
-
-    self:PlayBackgroundMusic()
     City:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
+    self:PlayBackgroundMusic()
 end
 function CityScene:onExit()
     self:stopAllActions()
     audio.stopMusic()
     audio.stopAllSounds()
     City:ResetAllListeners()
-    app:makeLuaVMSnapshot()
-    -- City:RemoveListenerOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
 end
-function CityScene:onEnterTransitionFinish()
-    goto_logic(6, 4, 0)
-end
-function CityScene:OnUpgradingBegin()
-    audio.playSound("ui_building_upgrade_start.mp3")
-end
-function CityScene:OnUpgrading()
-
-end
-function CityScene:OnUpgradingFinished()
-
-end
-function CityScene:PlayBackgroundMusic()
-    audio.playMusic("music_city.mp3", true)
-    audio.playSound("sfx_peace.mp3", true)
-    -- self:performWithDelay(function()
-    --     self:PlayBackgroundMusic()
-    -- end, 113 + 30)
-end
+-- init ui
 function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
-    manager:removeArmatureFileInfo("sprites/armatures/hammer/chuizidonghua.ExportJson")
-    manager:addArmatureFileInfo("sprites/armatures/hammer/chuizidonghua.ExportJson")
-end
-function CityScene:CreateMultiTouchLayer()
-    local touch_layer = display.newLayer():addTo(self)
-    touch_layer:setTouchEnabled(true)
-    touch_layer:setTouchSwallowEnabled(true)
-    touch_layer:setTouchMode(cc.TOUCH_MODE_ALL_AT_ONCE)
-    self.handle = touch_layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-        self.event_manager:OnEvent(event)
-        return true
-    end)
-    return touch_layer
+    manager:removeArmatureFileInfo("images/animations/chuizidonghua.ExportJson")
+    manager:removeArmatureFileInfo("images/animations/green_dragon.ExportJson")
+    manager:removeArmatureFileInfo("images/animations/Red_dragon.ExportJson")
+    manager:removeArmatureFileInfo("images/animations/Blue_dragon.ExportJson")
+
+    manager:addArmatureFileInfo("images/animations/chuizidonghua.ExportJson")
+    manager:addArmatureFileInfo("images/animations/green_dragon.ExportJson")
+    manager:addArmatureFileInfo("images/animations/Red_dragon.ExportJson")
+    manager:addArmatureFileInfo("images/animations/Blue_dragon.ExportJson")
 end
 function CityScene:CreateSceneLayer()
-    local scene = CityLayer.new():addTo(self, 0, 1)
+    local scene = CityLayer.new():addTo(self)
     local origin_point = scene:GetPositionIndex(0, 0)
     self.iso_map = IsoMapAnchorBottomLeft.new({
         tile_w = 80, tile_h = 56, map_width = 50, map_height = 50, base_x = origin_point.x, base_y = origin_point.y
@@ -189,161 +131,35 @@ function CityScene:CreateHomePage()
     home:setTouchSwallowEnabled(false)
     return home
 end
-function CityScene:OneTouch(pre_x, pre_y, x, y, touch_type)
-    local citynode = self.city_layer:GetCityNode()
-    if touch_type == "began" then
-        self.touch_judgment:OnTouchBegan(pre_x, pre_y, x, y)
-        return true
-    elseif touch_type == "moved" then
-        self.touch_judgment:OnTouchMove(pre_x, pre_y, x, y)
-    elseif touch_type == "ended" then
-        self.touch_judgment:OnTouchEnd(pre_x, pre_y, x, y)
-    elseif touch_type == "cancelled" then
-        self.touch_judgment:OnTouchCancelled(pre_x, pre_y, x, y)
-    end
+function CityScene:onEnterTransitionFinish()
+    self:GotoLogicPoint(6, 4)
 end
------ EventManager
-function CityScene:OnOneTouch(pre_x, pre_y, x, y, touch_type)
-    self:OneTouch(pre_x, pre_y, x, y, touch_type)
-end
-function CityScene:OnTwoTouch(x1, y1, x2, y2, event_type)
-    local scene = self.city_layer
-    if event_type == "began" then
-        self.distance = math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
-        scene:ZoomBegin()
-    elseif event_type == "moved" then
-        local new_distance = math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
-        scene:ZoomBy(new_distance / self.distance)
-        if scene:getScale() < 0.5 then
-            self.scene_ui_layer:HideLevelUpNode()
-        else
-            self.scene_ui_layer:ShowLevelUpNode()
-        end
-    elseif event_type == "ended" then
-        scene:ZoomEnd()
-        self.distance = nil
-    end
-end
--- TouchJudgment
-function CityScene:OnTouchBegan(pre_x, pre_y, x, y)
-    if not debug then return end
-    local citynode = self.city_layer:GetCityNode()
-    local point = citynode:convertToNodeSpace(cc.p(x, y))
-    local tx, ty = self.iso_map:ConvertToLogicPosition(point.x, point.y)
-    if not self.building then
-        local building = self.city_layer:GetClickedObject(tx, ty, x, y)
-        if building then
-            local lx, ly = building:GetLogicPosition()
-            building._shiftx = lx - tx
-            building._shifty = ly - ty
-            building:zorder(99999999)
-            self.building = building
-        end
-    end
-end
-function CityScene:OnTouchEnd(pre_x, pre_y, x, y)
-    if not debug then return end
-    local citynode = self.city_layer:GetCityNode()
-    local point = citynode:convertToNodeSpace(cc.p(x, y))
-    local tx, ty = self.iso_map:ConvertToLogicPosition(point.x, point.y)
-    if self.building then
-        local lx, ly = self.building:GetLogicPosition()
-        self.building:zorder(lx + ly * 50 + 100)
-        if self.building._shiftx + tx == lx and
-            self.building._shifty + ty == ly then
-        end
-    end
-    self.building = nil
-end
-function CityScene:OnTouchCancelled(pre_x, pre_y, x, y)
-end
-function CityScene:OnTouchMove(pre_x, pre_y, x, y)
-    if debug then
-        if self.building then
-            local citynode = self.city_layer:GetCityNode()
-            local point = citynode:convertToNodeSpace(cc.p(x, y))
-            local lx, ly = self.iso_map:ConvertToLogicPosition(point.x, point.y)
-            local bx, by = self.building:GetLogicPosition()
-            local is_moved_one_more = lx ~= bx or ly ~= by
-            if is_moved_one_more then
-                self.building:SetLogicPosition(lx + self.building._shiftx, ly + self.building._shifty)
-            end
-            return
-        end
-    end
-    if self.distance then return end
-    local parent = self.city_layer:getParent()
-    local old_point = parent:convertToNodeSpace(cc.p(pre_x, pre_y))
-    local new_point = parent:convertToNodeSpace(cc.p(x, y))
-    local old_x, old_y = self.city_layer:getPosition()
-    local diffX = new_point.x - old_point.x
-    local diffY = new_point.y - old_point.y
-    self.city_layer:setPosition(cc.p(old_x + diffX, old_y + diffY))
-end
-function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
-    local citynode = self.city_layer:GetCityNode()
-    local point = citynode:convertToNodeSpace(cc.p(x, y))
-    local tx, ty = self.iso_map:ConvertToLogicPosition(point.x, point.y)
-    local building = self.city_layer:GetClickedObject(tx, ty, x, y)
-    if building then
-        if building:GetEntity():GetType() == "ruins" then
-            local select_ruins_list = City:GetNeighbourRuinWithSpecificRuin(building:GetEntity())
-            local select_ruins = building:GetEntity()
-            UIKit:newGameUI('GameUIBuild', City, select_ruins, select_ruins_list):addToScene(self, true)
-        elseif building:GetEntity():GetType() == "keep" then
-            self._keep_page = UIKit:newGameUI('GameUIKeep',City,building:GetEntity())
-            self._keep_page:addToScene(self, true)
-        elseif building:GetEntity():GetType() == "dragonEyrie" then
-            UIKit:newGameUI('GameUIDragonEyrie', City,building:GetEntity()):addToCurrentScene(true)
-        elseif building:GetEntity():GetType() == "toolShop" then
-            UIKit:newGameUI('GameUIToolShop', City, building:GetEntity()):addToScene(self, true)
-        elseif building:GetEntity():GetType() == "blackSmith" then
-            UIKit:newGameUI('GameUIBlackSmith', City, building:GetEntity()):addToScene(self, true)
-        elseif building:GetEntity():GetType() == "materialDepot" then
-            UIKit:newGameUI('GameUIMaterialDepot', City, building:GetEntity()):addToScene(self, true)
-        elseif building:GetEntity():GetType() == "barracks" then
-            UIKit:newGameUI('GameUIBarracks', City, building:GetEntity()):addToScene(self, true)
-        elseif building:GetEntity():GetType() == "armyCamp" then
-            self._armyCamp_page = UIKit:newGameUI('GameUIArmyCamp',City,building:GetEntity()):addToScene(self, true)
-        elseif building:GetEntity():GetType() == "townHall" then
-            self._armyCamp_page = UIKit:newGameUI('GameUITownHall',City,building:GetEntity()):addToScene(self, true)
-        elseif building:GetEntity():GetType() == "foundry"
-            or building:GetEntity():GetType() == "stoneMason"
-            or building:GetEntity():GetType() == "lumbermill"
-            or building:GetEntity():GetType() == "mill" then
-            self._armyCamp_page = UIKit:newGameUI('GameUIPResourceBuilding',City,building:GetEntity()):addToScene(self, true)
-        elseif building:GetEntity():GetType() == "warehouse" then
-            self._warehouse_page = UIKit:newGameUI('GameUIWarehouse',City,building:GetEntity())
-            self._warehouse_page:addToScene(self, true)
-        elseif iskindof(building:GetEntity(), 'ResourceUpgradeBuilding') then
-            if building:GetEntity():GetType() == "dwelling" then
-                UIKit:newGameUI('GameUIDwelling',building:GetEntity(), City):addToCurrentScene(true)
-            else
-                UIKit:newGameUI('GameUIResource',building:GetEntity()):addToCurrentScene(true)
-            end
-        elseif building:GetEntity():GetType() == "hospital" then
-            UIKit:newGameUI('GameUIHospital', City, building:GetEntity()):addToScene(self, true)
-        elseif building:GetEntity():GetType() == "watchTower" then
-            UIKit:newGameUI('GameUIWatchTower', City, building:GetEntity()):addToScene(self, true)
-        elseif building:GetEntity():GetType() == "tradeGuild" then
-            UIKit:newGameUI('GameUITradeGuild', City, building:GetEntity()):addToScene(self, true)
-        elseif building:GetEntity():GetType() == "wall" then
-            UIKit:newGameUI('GameUIWall', City, building:GetEntity()):addToScene(self, true)
-        elseif building:GetEntity():GetType() == "tower" then
-            UIKit:newGameUI('GameUITower', City, building:GetEntity()):addToScene(self, true)
-        end
 
-    end
+-- function
+function CityScene:GotoLogicPoint(x, y)
+    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(x, y)
+    self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
 end
-function CityScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed_y, millisecond)
-    local parent = self.city_layer:getParent()
-    local speed = parent:convertToNodeSpace(cc.p(new_speed_x, new_speed_y))
-    local x, y  = self.city_layer:getPosition()
-    local max_speed = 5
-    speed.x = speed.x > max_speed and max_speed or speed.x
-    speed.y = speed.y > max_speed and max_speed or speed.y
-    local sp = self:convertToNodeSpace(cc.p(speed.x * millisecond, speed.y * millisecond))
-    self.city_layer:setPosition(cc.p(x + sp.x, y + sp.y))
+function CityScene:PlayBackgroundMusic()
+    audio.playMusic("music_city.mp3", true)
+    audio.playSound("sfx_peace.mp3", true)
+    -- self:performWithDelay(function()
+    --     self:PlayBackgroundMusic()
+    -- end, 113 + 30)
+end
+function CityScene:ChangeTerrain(terrain_type)
+    self:GetSceneLayer():ChangeTerrain(terrain_type)
+end
+
+--- callback
+function CityScene:OnUpgradingBegin()
+    audio.playSound("ui_building_upgrade_start.mp3")
+end
+function CityScene:OnUpgrading()
+
+end
+function CityScene:OnUpgradingFinished()
+
 end
 function CityScene:OnCreateDecoratorSprite(building_sprite)
     self.scene_ui_layer:NewUIFromBuildingSprite(building_sprite)
@@ -400,7 +216,125 @@ function CityScene:OnGateChanged(old_walls, new_walls)
     end
 end
 
+-- override
+function CityScene:OnTwoTouch(x1, y1, x2, y2, event_type)
+    CityScene.super.OnTwoTouch(self, x1, y1, x2, y2, event_type)
+    if event_type == "moved" then
+        if scene:getScale() < 0.5 then
+            self.scene_ui_layer:HideLevelUpNode()
+        else
+            self.scene_ui_layer:ShowLevelUpNode()
+        end
+    end
+end
+function CityScene:OnTouchBegan(pre_x, pre_y, x, y)
+    if not debug then return end
+    local citynode = self:GetSceneLayer():GetCityNode()
+    local point = citynode:convertToNodeSpace(cc.p(x, y))
+    local tx, ty = self.iso_map:ConvertToLogicPosition(point.x, point.y)
+    if not self.building then
+        local building = self:GetSceneLayer():GetClickedObject(tx, ty, x, y)
+        if building then
+            local lx, ly = building:GetLogicPosition()
+            building._shiftx = lx - tx
+            building._shifty = ly - ty
+            building:zorder(99999999)
+            self.building = building
+        end
+    end
+end
+function CityScene:OnTouchEnd(pre_x, pre_y, x, y)
+    if not debug then return end
+    local citynode = self:GetSceneLayer():GetCityNode()
+    local point = citynode:convertToNodeSpace(cc.p(x, y))
+    local tx, ty = self.iso_map:ConvertToLogicPosition(point.x, point.y)
+    if self.building then
+        local lx, ly = self.building:GetLogicPosition()
+        self.building:zorder(lx + ly * 50 + 100)
+        if self.building._shiftx + tx == lx and
+            self.building._shifty + ty == ly then
+        end
+    end
+    self.building = nil
+end
+function CityScene:OnTouchCancelled(pre_x, pre_y, x, y)
+
+end
+function CityScene:OnTouchMove(pre_x, pre_y, x, y)
+    if debug then
+        if self.building then
+            local citynode = self:GetSceneLayer():GetCityNode()
+            local point = citynode:convertToNodeSpace(cc.p(x, y))
+            local lx, ly = self.iso_map:ConvertToLogicPosition(point.x, point.y)
+            local bx, by = self.building:GetLogicPosition()
+            local is_moved_one_more = lx ~= bx or ly ~= by
+            if is_moved_one_more then
+                self.building:SetLogicPosition(lx + self.building._shiftx, ly + self.building._shifty)
+            end
+            return
+        end
+    end
+    CityScene.super.OnTouchMove(self, pre_x, pre_y, x, y)
+end
+function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
+    local citynode = self:GetSceneLayer():GetCityNode()
+    local point = citynode:convertToNodeSpace(cc.p(x, y))
+    local tx, ty = self.iso_map:ConvertToLogicPosition(point.x, point.y)
+    local building = self:GetSceneLayer():GetClickedObject(tx, ty, x, y)
+    if building then
+        if building:GetEntity():GetType() == "ruins" then
+            local select_ruins_list = City:GetNeighbourRuinWithSpecificRuin(building:GetEntity())
+            local select_ruins = building:GetEntity()
+            UIKit:newGameUI('GameUIBuild', City, select_ruins, select_ruins_list):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "keep" then
+            self._keep_page = UIKit:newGameUI('GameUIKeep',City,building:GetEntity())
+            self._keep_page:addToScene(self, true)
+        elseif building:GetEntity():GetType() == "dragonEyrie" then
+            UIKit:newGameUI('GameUIDragonEyrie', City,building:GetEntity()):addToCurrentScene(true)
+        elseif building:GetEntity():GetType() == "toolShop" then
+            UIKit:newGameUI('GameUIToolShop', City, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "blackSmith" then
+            UIKit:newGameUI('GameUIBlackSmith', City, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "materialDepot" then
+            UIKit:newGameUI('GameUIMaterialDepot', City, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "barracks" then
+            UIKit:newGameUI('GameUIBarracks', City, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "armyCamp" then
+            self._armyCamp_page = UIKit:newGameUI('GameUIArmyCamp',City,building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "townHall" then
+            self._armyCamp_page = UIKit:newGameUI('GameUITownHall',City,building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "foundry"
+            or building:GetEntity():GetType() == "stoneMason"
+            or building:GetEntity():GetType() == "lumbermill"
+            or building:GetEntity():GetType() == "mill" then
+            self._armyCamp_page = UIKit:newGameUI('GameUIPResourceBuilding',City,building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "warehouse" then
+            self._warehouse_page = UIKit:newGameUI('GameUIWarehouse',City,building:GetEntity())
+            self._warehouse_page:addToScene(self, true)
+        elseif iskindof(building:GetEntity(), 'ResourceUpgradeBuilding') then
+            if building:GetEntity():GetType() == "dwelling" then
+                UIKit:newGameUI('GameUIDwelling',building:GetEntity(), City):addToCurrentScene(true)
+            else
+                UIKit:newGameUI('GameUIResource',building:GetEntity()):addToCurrentScene(true)
+            end
+        elseif building:GetEntity():GetType() == "hospital" then
+            UIKit:newGameUI('GameUIHospital', City, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "watchTower" then
+            UIKit:newGameUI('GameUIWatchTower', City, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "tradeGuild" then
+            UIKit:newGameUI('GameUITradeGuild', City, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "wall" then
+            UIKit:newGameUI('GameUIWall', City, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "tower" then
+            UIKit:newGameUI('GameUITower', City, building:GetEntity()):addToScene(self, true)
+        end
+
+    end
+end
+
+
 return CityScene
+
 
 
 

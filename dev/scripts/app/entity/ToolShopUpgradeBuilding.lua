@@ -162,51 +162,54 @@ end
 
 function ToolShopUpgradeBuilding:OnUserDataChanged(...)
     ToolShopUpgradeBuilding.super.OnUserDataChanged(self, ...)
-    
+
     local arg = {...}
     local current_time = arg[2]
     local materialEvents = arg[1].materialEvents
+    if materialEvents then
 
-    local BUILDING_EVENT = 1
-    local TECHNOLOGY_EVENT = 2
-    local category_map = {
-        [BUILDING_EVENT] = "building",
-        [TECHNOLOGY_EVENT] = "technology",
-    }
-    local events = {
-        [BUILDING_EVENT] = nil,
-        [TECHNOLOGY_EVENT] = nil,
-    }
+        local BUILDING_EVENT = 1
+        local TECHNOLOGY_EVENT = 2
+        local category_map = {
+            [BUILDING_EVENT] = "building",
+            [TECHNOLOGY_EVENT] = "technology",
+        }
+        local events = {
+            [BUILDING_EVENT] = nil,
+            [TECHNOLOGY_EVENT] = nil,
+        }
 
-    for k, v in pairs(materialEvents) do
-        if v.category == "building" then
-            events[BUILDING_EVENT] = v
-        elseif v.category == "technology" then
-            events[TECHNOLOGY_EVENT] = v
-        end
-    end
-
-    for category_index, category in ipairs(category_map) do
-        local event = events[category_index]
-        if event then
-            local finished_time = event.finishTime / 1000
-            local is_making_end = finished_time == 0
-            if is_making_end then
-                self:EndMakeMaterialsByCategoryWithCurrentTime(category, event.materials, current_time)
-            elseif self:IsMaterialsEmptyByCategory(category) then
-                self:MakeMaterialsByCategoryWithFinishTime(category, event.materials, finished_time)
-            else
-                self:GetMakeMaterialsEventByCategory(category):SetContent(event.materials, finished_time)
+        for k, v in pairs(materialEvents) do
+            if v.category == "building" then
+                events[BUILDING_EVENT] = v
+            elseif v.category == "technology" then
+                events[TECHNOLOGY_EVENT] = v
             end
-        else
-            if self:IsStoredMaterialsByCategory(category, current_time) then
-                self:GetMaterialsByCategory(category)
+        end
+
+        for category_index, category in ipairs(category_map) do
+            local event = events[category_index]
+            if event then
+                local finished_time = event.finishTime / 1000
+                local is_making_end = finished_time == 0
+                if is_making_end then
+                    self:EndMakeMaterialsByCategoryWithCurrentTime(category, event.materials, current_time)
+                elseif self:IsMaterialsEmptyByCategory(category) then
+                    self:MakeMaterialsByCategoryWithFinishTime(category, event.materials, finished_time)
+                else
+                    self:GetMakeMaterialsEventByCategory(category):SetContent(event.materials, finished_time)
+                end
+            else
+                if self:IsStoredMaterialsByCategory(category, current_time) then
+                    self:GetMaterialsByCategory(category)
+                end
             end
         end
     end
 end
 
 return ToolShopUpgradeBuilding
+
 
 
 

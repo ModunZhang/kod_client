@@ -120,24 +120,27 @@ function BlackSmithUpgradeBuilding:OnUserDataChanged(...)
     local arg = {...}
     local current_time = arg[2]
     local dragonEquipmentEvents = arg[1].dragonEquipmentEvents
+    if dragonEquipmentEvents then
 
-    local event = dragonEquipmentEvents[1]
-    if event then
-        local finished_time = event.finishTime / 1000
-        local is_making_end = finished_time == 0
-        if self:IsEquipmentEventEmpty() then
-            self:MakeEquipmentWithFinishTime(event.name, finished_time)
+        local event = dragonEquipmentEvents[1]
+        if event then
+            local finished_time = event.finishTime / 1000
+            local is_making_end = finished_time == 0
+            if self:IsEquipmentEventEmpty() then
+                self:MakeEquipmentWithFinishTime(event.name, finished_time)
+            else
+                self:GetMakeEquipmentEvent():SetContentWithFinishTime(event.name, finished_time)
+            end
         else
-            self:GetMakeEquipmentEvent():SetContentWithFinishTime(event.name, finished_time)
-        end
-    else
-        if not self:IsEquipmentEventEmpty() then
-            self:EndMakeEquipmentWithCurrentTime(current_time)
+            if not self:IsEquipmentEventEmpty() then
+                self:EndMakeEquipmentWithCurrentTime(current_time)
+            end
         end
     end
 end
 
 return BlackSmithUpgradeBuilding
+
 
 
 
