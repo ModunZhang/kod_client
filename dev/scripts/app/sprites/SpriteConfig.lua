@@ -80,9 +80,9 @@ create_building_config(
 )
 create_building_config(
     "dragonEyrie"
-    ,create_config(MIN_LEVEL, level(1), "dragonEyrie_581x558.png", offset(30, 300), scale(0.9))
-    ,create_config(level(2), level(2), "dragonEyrie_581x558.png", offset(30, 300), scale(0.9))
-    ,create_config(level(3), MAX_LEVEL, "dragonEyrie_581x558.png", offset(30, 300), scale(0.9))
+    ,create_config(MIN_LEVEL, level(1), "dragonEyrie_566x464.png", offset(0, 230), scale(0.9))
+    ,create_config(level(2), level(2), "dragonEyrie_566x464.png", offset(0, 230), scale(0.9))
+    ,create_config(level(3), MAX_LEVEL, "dragonEyrie_566x464.png", offset(0, 230), scale(0.9))
 )
 create_building_config(
     "toolShop"
