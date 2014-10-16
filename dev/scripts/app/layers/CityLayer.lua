@@ -113,9 +113,9 @@ local ROAD_NODE = 2
 local BUILDING_NODE = 3
 ----
 local TERRAIN_MAP = {
-    ["grass"] = {background = "grass_background1.tmx"},
-    ["desert"] = {background = "desert_background1.tmx"},
-    ["icefield"] = {background = "icefield_background1.tmx"},
+    ["grass"] = {background = "tmxmaps/grass_background1.tmx"},
+    ["desert"] = {background = "tmxmaps/desert_background1.tmx"},
+    ["icefield"] = {background = "tmxmaps/icefield_background1.tmx"},
 }
 local GROUNDS_MAP = {
     grass = {"grass_ground1_800x560.png", "grass_ground2_800x560.png"},
@@ -140,8 +140,8 @@ function CityLayer:ctor(city)
     self.road = nil
     self:InitBackground()
     self.city_layer = display.newLayer():addTo(self, CITY_LAYER):align(display.BOTTOM_LEFT, 1000, 1000)
-    self.city_background = cc.TMXTiledMap:create("background2.tmx"):addTo(self.city_layer):hide()
-    self.position_node = cc.TMXTiledMap:create("city_road.tmx"):addTo(self.city_layer):hide()
+    self.city_background = cc.TMXTiledMap:create("tmxmaps/background2.tmx"):addTo(self.city_layer):hide()
+    self.position_node = cc.TMXTiledMap:create("tmxmaps/city_road.tmx"):addTo(self.city_layer):hide()
     self.background2 = display.newNode():addTo(self.city_layer, CITY_BACKGROUND)
     self.road_node = display.newNode():addTo(self.city_layer, ROAD_NODE)
     self.city_node = display.newLayer():addTo(self.city_layer, BUILDING_NODE):align(display.BOTTOM_LEFT)

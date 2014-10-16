@@ -98,7 +98,7 @@ function AllianceLayer:ConvertLogicPositionToMapPosition(lx, ly)
     return self:convertToNodeSpace(self.background:convertToWorldSpace(map_pos))
 end
 function AllianceLayer:InitBackground()
-    self.background = cc.TMXTiledMap:create("alliance_background.tmx"):addTo(self)
+    self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background.tmx"):addTo(self)
 end
 function AllianceLayer:InitBuildingNode()
     self.building_node = display.newNode():addTo(self)

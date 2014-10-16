@@ -121,7 +121,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
         :align(display.CENTER, 6, 6)
 
 
-    local building_icon = display.newSprite("keep_131x164.png")
+    local building_icon = display.newSprite("dwelling_1_297x365.png")
         :addTo(content):align(display.BOTTOM_CENTER, (left_x + right_x) / 2, 30)
 
 

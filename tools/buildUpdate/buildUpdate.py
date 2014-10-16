@@ -35,7 +35,6 @@ def browseFolder( fullPath, fileList ):
 				# print("检查文件 " + root + "/" + fileName)
 				path = root + "/" + fileName
 				svnPath = getFileSvnPath(path)
-				print path
 				tag = getFileTag(path)
 				size = getFileSize(path)
 				crc32 = getFileCrc32(path)

@@ -22,10 +22,10 @@ local old_ctor = cc.ui.UIPushButton.ctor
 function cc.ui.UIPushButton:ctor(...)
     old_ctor(self, ...)
     self:addButtonPressedEventListener(function(event)
-        audio.playSound("ui_button_down.wav")
+        audio.playSound("audios/ui_button_down.wav")
     end)
     self:addButtonReleaseEventListener(function(event)
-        audio.playSound("ui_button_up.wav")
+        audio.playSound("audios/ui_button_up.wav")
     end)
 end
 
@@ -39,18 +39,18 @@ function MyApp:ctor()
     local fileutils = cc.FileUtils:getInstance()
     if device.platform == "ios" then
         fileutils:addSearchPath("res/")
-        fileutils:addSearchPath("res/audios/")
         fileutils:addSearchPath("res/images/")
-        fileutils:addSearchPath("res/cocostudio/ui/")
-        fileutils:addSearchPath("res/cocostudio/scenes/")
-        fileutils:addSearchPath("res/cocostudio/scenes/kod/")
+        -- fileutils:addSearchPath("res/audios/")
+        -- fileutils:addSearchPath("res/cocostudio/ui/")
+        -- fileutils:addSearchPath("res/cocostudio/scenes/")
+        -- fileutils:addSearchPath("res/cocostudio/scenes/kod/")
     elseif device.platform == "mac" then
         fileutils:addSearchPath("dev/res/")
-        fileutils:addSearchPath("dev/res/audios/")
         fileutils:addSearchPath("dev/res/images/")
-        fileutils:addSearchPath("dev/res/cocostudio/ui/")
-        fileutils:addSearchPath("dev/res/cocostudio/scenes/")
-        fileutils:addSearchPath("dev/res/cocostudio/scenes/kod/")
+        -- fileutils:addSearchPath("dev/res/audios/")
+        -- fileutils:addSearchPath("dev/res/cocostudio/ui/")
+        -- fileutils:addSearchPath("dev/res/cocostudio/scenes/")
+        -- fileutils:addSearchPath("dev/res/cocostudio/scenes/kod/")
     end
 end
 

@@ -11,15 +11,15 @@ function AllianceScene:onEnter()
 
 
     local manager = ccs.ArmatureDataManager:getInstance()
-    manager:removeArmatureFileInfo("images/animations/chuizidonghua.ExportJson")
-    manager:removeArmatureFileInfo("images/animations/green_dragon.ExportJson")
-    manager:removeArmatureFileInfo("images/animations/Red_dragon.ExportJson")
-    manager:removeArmatureFileInfo("images/animations/Blue_dragon.ExportJson")
+    manager:removeArmatureFileInfo("animations/chuizidonghua.ExportJson")
+    manager:removeArmatureFileInfo("animations/green_dragon.ExportJson")
+    manager:removeArmatureFileInfo("animations/Red_dragon.ExportJson")
+    manager:removeArmatureFileInfo("animations/Blue_dragon.ExportJson")
 
-    manager:addArmatureFileInfo("images/animations/chuizidonghua.ExportJson")
-    manager:addArmatureFileInfo("images/animations/green_dragon.ExportJson")
-    manager:addArmatureFileInfo("images/animations/Red_dragon.ExportJson")
-    manager:addArmatureFileInfo("images/animations/Blue_dragon.ExportJson")
+    manager:addArmatureFileInfo("animations/chuizidonghua.ExportJson")
+    manager:addArmatureFileInfo("animations/green_dragon.ExportJson")
+    manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
+    manager:addArmatureFileInfo("animations/Blue_dragon.ExportJson")
 
     AllianceScene.super.onEnter(self)
 
