@@ -330,7 +330,7 @@ function GameUIHome:CreateBottom()
                             --         end
                             --     end)
                             -- end
-                        end)
+                            end)
                     end}
                 )
             elseif display.getRunningScene().__cname == "CityScene" then
@@ -342,7 +342,7 @@ function GameUIHome:CreateBottom()
                         app:enterScene("AllianceScene", nil, "custom", 2, function(scene, status)
                             if status == "onEnter" then
                                 local armature = ccs.Armature:create("Cloud_Animation")
-                                :addTo(scene):pos(display.cx, display.cy)
+                                    :addTo(scene):pos(display.cx, display.cy)
                                 armature:getAnimation():play("Animation1", -1, 0)
                                 armature:getAnimation():setMovementEventCallFunc(function(armatureBack, movementType, movementID)
                                     if movementType == ccs.MovementEventType.complete then
@@ -353,6 +353,13 @@ function GameUIHome:CreateBottom()
                                         end
                                     end
                                 end)
+                                local background = display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene)
+                                local sequence = transition.sequence{
+                                    cc.FadeIn:create(0.75),
+                                    cc.DelayTime:create(0.5),
+                                    cc.FadeOut:create(0.75),
+                                }
+                                background:runAction(sequence)
                             end
                         end)
                     end}
@@ -364,6 +371,12 @@ function GameUIHome:CreateBottom()
 end
 
 return GameUIHome
+
+
+
+
+
+
 
 
 
