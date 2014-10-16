@@ -257,9 +257,7 @@ function GameUIHome:CreateBottom()
             return true
         elseif event.name == 'ended' then
             if cc.pGetDistance(chat_bg.prevP,cc.p(event.x,event.y)) <= 10 then
-                -- UIKit:newGameUI('GameUIChat'):addToCurrentScene(true)
-                UIKit:newGameUI('GameUIAlliance'):addToCurrentScene(true)
-                
+                UIKit:newGameUI('GameUIChat'):addToCurrentScene(true)   
             end
         end
     end)
@@ -289,13 +287,17 @@ function GameUIHome:CreateBottom()
     }) do
         local col = i - 1
         local x, y = first_col + col * padding_width, first_row
-        local icon = display.newSprite(v[1]):addTo(bottom_bg):pos(x, y)
-        local pos = icon:getAnchorPointInPoints()
-        cc.ui.UILabel.new({text = v[2],
-            size = 16,
-            font = UIKit:getFontFilePath(),
-            color = UIKit:hex2c3b(0xf5e8c4)})
-            :addTo(icon):align(display.CENTER, pos.x, pos.y - 45)
+        local button = WidgetPushButton.new({normal = v[1]})
+            :onButtonClicked(handler(self, self.OnBottomButtonClicked))
+            :setButtonLabel("normal",cc.ui.UILabel.new({text = v[2],
+                size = 16,
+                font = UIKit:getFontFilePath(),
+                color = UIKit:hex2c3b(0xf5e8c4)}
+                )
+            )
+            :setButtonLabelOffset(0, -40)
+            :addTo(bottom_bg):pos(x, y)
+        button:setTag(i)    
     end
 
     -- 场景切换
@@ -334,6 +336,14 @@ function GameUIHome:CreateBottom()
         end)
 
     return bottom_bg
+end
+
+function GameUIHome:OnBottomButtonClicked(event)
+    local tag = event.sender:getTag()
+    if not tag then return end
+    if tag == 4 then
+        UIKit:newGameUI('GameUIAlliance'):addToCurrentScene(true)
+    end
 end
 
 return GameUIHome
