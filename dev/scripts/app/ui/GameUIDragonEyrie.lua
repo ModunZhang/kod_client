@@ -11,12 +11,15 @@ local config_dragonSkill = GameDatas.DragonEyrie.dragonSkill
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
+local DragonSprite = import("..sprites.DragonSprite")
 
 GameUIDragonEyrie.TIPS_OF_HATCH = {
     equipment = _("孵化后解锁装备功能"),
     skill = _("孵化后解锁技能功能"),
     information = _("孵化后查看龙信息")
 }
+
+GameUIDragonEyrie.DRAGON_CLIPNODE_TAG = 100
 
 function GameUIDragonEyrie:ctor(city,building)
 	GameUIDragonEyrie.super.ctor(self,City,_("龙巢"),building)
@@ -29,6 +32,31 @@ function GameUIDragonEyrie:onEnter()
 	GameUIDragonEyrie.super.onEnter(self)
 	self:CreateTabButtons_()
     self:ChangePageAction(1)
+end
+
+function GameUIDragonEyrie:GetTerrainByDragon(dragon)
+    local t = {
+        redDragon = "desert",
+        greenDragon = "grass",
+        blueDragon = "icefield"
+    }
+    return t[dragon.type]
+end
+
+function GameUIDragonEyrie:RefreshDragon(dragon)
+   local clipNode = self.dragonUI.dragonContent:getChildByTag(self.DRAGON_CLIPNODE_TAG)
+   clipNode:removeAllChildren()
+   if dragon.star < 1 then -- 孵化
+        local hatch_egg = display.newSprite("dragon_egg_139x187.png")
+        hatch_egg:addTo(clipNode):pos(280,160)
+   else
+        local dragon_entity = clipNode:getChildByTag(101)
+        if not dragon_entity then
+            DragonSprite.new(display.getRunningScene():GetSceneLayer(),self:GetTerrainByDragon(dragon)):addTo(clipNode):pos(250,300)
+        else
+            dragon_entity:ReloadSpriteCauseTerrainChanged(self:GetTerrainByDragon(dragon))
+        end
+   end
 end
 
 function GameUIDragonEyrie:ChangePageAction(pageFlag)
@@ -61,7 +89,7 @@ function GameUIDragonEyrie:RefreshUIData()
         if dragon.star < 1 then -- 孵化
             self.dragonUI.vitalityProgressMain:hide()
             self.dragonUI.dragon_LV_icon:hide()
-            self.dragonUI.dragonContent:setTexture("dragon_hatch.png")
+            -- self.dragonUI.dragonContent:setTexture("dragon_hatch.png")
             local energy = City.resource_manager:GetEnergyResource()
             self.hatchUI.nextEnergyLabel:setString(self:GetHatchEneryLabelString())
             self.hatchUI.costEnergyLabel:setString(100) -- 服务器暂时定值为100 TODO: 转化一次 消耗 100 能量 ---> 100活力
@@ -71,11 +99,12 @@ function GameUIDragonEyrie:RefreshUIData()
         else
             self.dragonUI.vitalityProgressMain:show()
             self.dragonUI.dragon_LV_icon:show()
-            self.dragonUI.dragonContent:setTexture("dragon.png")
+            -- self.dragonUI.dragonContent:setTexture("dragon.png")
             self.dragonUI.drgonVitalityProgress:setPercentage(dragon.vitality/self.building:GetMaxVitalityCurrentLevel(dragon)*100)
             self.dragonUI.drgonVitalityLabel:setString(dragon.vitality .. "/" .. self.building:GetMaxVitalityCurrentLevel(dragon))
             self.dragonUI.vitalityProductPerHourLabel:setString("+" .. self.building:GetVitalityRecoveryPerHour() .. "/H")
         end
+        self:RefreshDragon(dragon)
 
         if dragon.star > 0 then --不是孵化界面
             if currentButtonTag == "equipment" then
@@ -209,7 +238,10 @@ function GameUIDragonEyrie:CreateDragonIf()
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
         color = UIKit:hex2c3b(0xb1a475)
     }):addTo(bg):align(display.RIGHT_TOP, bg:getContentSize().width - 50, bg:getContentSize().height-12)
-    local drgonBg = display.newSprite("dragon.png"):addTo(dragonContent,-1):pos(window.cx,window.top - 326)
+    local drgonBg = display.newSprite("dragon_bg_grass_594x350.png"):addTo(dragonContent,-1):pos(window.cx,window.top - 326)
+    local rect = cc.rect(0,0,drgonBg:getContentSize().width,drgonBg:getContentSize().height)
+    local clipnode = display.newClippingRegionNode(rect):addTo(drgonBg)
+    clipnode:setTag(self.DRAGON_CLIPNODE_TAG)
     display.newSprite("dragon_line_594x4.png"):addTo(drgonBg):align(display.TOP_LEFT, 0, 0)
     self.dragonUI.dragonContent = drgonBg
     local shieldView = display.newColorLayer(UIKit:hex2c4b(0x7a000000))

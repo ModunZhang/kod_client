@@ -88,7 +88,7 @@ function GameUIUpdate:getUpdateFileList()
     local serverAppVersion = serverFileList.appVersion
     if localAppVersion < serverAppVersion then
         device.showAlert(nil, _("游戏版本过低,请更新!"), { _("确定") }, function(event)
-            device.openURL("https://dl.dropboxusercontent.com/s/wsmk4zf0zjh2fs6/build-index.html")
+            device.openURL("https://dl.dropboxusercontent.com/s/n1b75nkamnjh9qx/build-index.html")
         end)
         return
     end

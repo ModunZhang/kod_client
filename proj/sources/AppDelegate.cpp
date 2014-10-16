@@ -34,7 +34,6 @@ void AppDelegateExtern::initLuaEngine()
     LuaEngine *pEngine = LuaEngine::getInstance();
     ScriptEngineManager::getInstance()->setScriptEngine(pEngine);
     LuaStack *pStack = pEngine->getLuaStack();
-    string defaultLuaPath = FileUtils::getInstance()->fullPathForFilename("scripts/main.lua");
     loadConfigFile();
     checkPath();
     extendApplication();
@@ -81,24 +80,6 @@ void AppDelegateExtern::initLuaEngine()
     if (p != path.npos)
     {
         const string dir = path.substr(0, p);
-        pStack->addSearchPath(dir.c_str());
-        
-        p = dir.find_last_of("/\\");
-        if (p != dir.npos)
-        {
-            pStack->addSearchPath(dir.substr(0, p).c_str());
-        }
-    }
-    
-    //update bundle lua search path
-    while ((pos = defaultLuaPath.find_first_of("\\")) != std::string::npos)
-    {
-        defaultLuaPath.replace(pos, 1, "/");
-    }
-    p = defaultLuaPath.find_last_of("/\\");
-    if (p != defaultLuaPath.npos)
-    {
-        const string dir = defaultLuaPath.substr(0, p);
         pStack->addSearchPath(dir.c_str());
         
         p = dir.find_last_of("/\\");
@@ -175,15 +156,41 @@ void AppDelegateExtern::checkPath()
     std::vector<std::string> paths = fileUtils->getSearchPaths();
     if (isDebug())
     {
+        paths.insert(paths.begin(), "res/images");
         paths.insert(paths.begin(), "res/");
         fileUtils->setSearchPaths(paths);
     }
     else
     {
-        paths.insert(paths.begin(), appPath.c_str());
+        
+        paths.insert(paths.begin(), "res/images/");
         paths.insert(paths.begin(), "res/");
+        paths.insert(paths.begin(), (resPath + "images/").c_str());
         paths.insert(paths.begin(), resPath.c_str());
+        paths.insert(paths.begin(), appPath.c_str());
         fileUtils->setSearchPaths(paths);
+    }
+    
+    //update lua path
+    //in documents
+    
+    LuaStack* pStack = LuaEngine::getInstance()->getLuaStack();
+    size_t pos;
+    while ((pos = scriptsPath.find_first_of("\\")) != std::string::npos)
+    {
+        scriptsPath.replace(pos, 1, "/");
+    }
+    size_t p = scriptsPath.find_last_of("/\\");
+    if (p != scriptsPath.npos)
+    {
+        const string dir = scriptsPath.substr(0, p);
+        pStack->addSearchPath(dir.c_str());
+        
+        p = dir.find_last_of("/\\");
+        if (p != dir.npos)
+        {
+            pStack->addSearchPath(dir.substr(0, p).c_str());
+        }
     }
 }
 
