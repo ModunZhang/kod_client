@@ -26,19 +26,22 @@ function AllianceScene:onEnter()
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(10, 10)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
 
-    -- local button = WidgetPushButton.new(
-    --     {normal = "green_btn_up.png", pressed = "green_btn_down.png"}
-    --     ,{scale9 = false}
-    -- ):setButtonLabel(cc.ui.UILabel.new({
-    --     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-    --     size = 24,
-    --     font = UIKit:getFontFilePath(),
-    --     color = UIKit:hex2c3b(0xfff3c7)}))
-    --     :addTo(self)
-    --     :align(display.CENTER, window.cx, window.cy)
-    --     :onButtonClicked(function()
-    --         app:enterScene("CityScene")
-    --     end)
+    local button = WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"}
+        ,{scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        size = 24,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(self)
+        :align(display.CENTER, window.cx, window.cy)
+        :onButtonClicked(function()
+            app:enterScene("CityScene")
+        end)
+    -- local armature = ccs.Armature:create("Cloud_Animation"):addTo(self):pos(display.cx, display.cy)
+    -- armature:getAnimation():setSpeedScale(0.2)
+    -- armature:getAnimation():play("Animation4", -1, 0)
 end
 function AllianceScene:onExit()
     AllianceScene.super.onExit(self)

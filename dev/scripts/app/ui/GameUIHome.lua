@@ -318,7 +318,19 @@ function GameUIHome:CreateBottom()
                     time = 0.2,
                     onComplete = function()
                         app:lockInput(false)
-                        app:enterScene("CityScene", nil, "fade", 0.6, display.COLOR_WHITE)
+                        app:enterScene("CityScene", nil, "custom", 0.6, function(scene, status)
+                            -- if status == "onEnter" then
+                            --     local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
+                            --     armature:getAnimation():play("Animation1", -1, 0)
+                            --     armature:getAnimation():setMovementEventCallFunc(function(armatureBack, movementType, movementID)
+                            --         if movementType == ccs.MovementEventType.complete then
+                            --             if movementID == "Animation1" then
+                            --                 armatureBack:getAnimation():play("Animation4", -1, 0)
+                            --             end
+                            --         end
+                            --     end)
+                            -- end
+                        end)
                     end}
                 )
             elseif display.getRunningScene().__cname == "CityScene" then
@@ -326,14 +338,23 @@ function GameUIHome:CreateBottom()
                     rotate = 90,
                     time = 0.2,
                     onComplete = function()
-                        local node = display.newNode():pos(display.cx, display.cy)
-                        display.newScale9Sprite("logos/batcat.png"):addTo(node)
-                        -- local armature = ccs.Armature:create("Cloud_Animation")
-                        -- :addTo(node):pos(display.cx, display.cy)
-                        -- armature:getAnimation():play("Animation1", -1, 0)
-                        -- cc.Director:getInstance():setNotificationNode(node)
-                        -- app:lockInput(false)
-                        -- app:enterScene("AllianceScene", nil, "fade", 0.6, display.COLOR_WHITE)
+                        app:lockInput(false)
+                        app:enterScene("AllianceScene", nil, "custom", 2, function(scene, status)
+                            if status == "onEnter" then
+                                local armature = ccs.Armature:create("Cloud_Animation")
+                                :addTo(scene):pos(display.cx, display.cy)
+                                armature:getAnimation():play("Animation1", -1, 0)
+                                armature:getAnimation():setMovementEventCallFunc(function(armatureBack, movementType, movementID)
+                                    if movementType == ccs.MovementEventType.complete then
+                                        if movementID == "Animation1" then
+                                            scene:performWithDelay(function()
+                                                armatureBack:getAnimation():play("Animation4", -1, 0)
+                                            end, 0.5)
+                                        end
+                                    end
+                                end)
+                            end
+                        end)
                     end}
                 )
             end
@@ -343,6 +364,9 @@ function GameUIHome:CreateBottom()
 end
 
 return GameUIHome
+
+
+
 
 
 
