@@ -109,7 +109,7 @@ Begin;
 if [ ${#@} -gt 0 ]; then
 	for png_name in ${@}
 	do
-		ScanPng1 $png_name
+		ScanPng2 $png_name
 	done
 else
 	echo "无效文件名"
