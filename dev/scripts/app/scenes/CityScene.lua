@@ -41,11 +41,13 @@ end
 -- init ui
 function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
+    manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
     manager:removeArmatureFileInfo("animations/chuizidonghua.ExportJson")
     manager:removeArmatureFileInfo("animations/green_dragon.ExportJson")
     manager:removeArmatureFileInfo("animations/Red_dragon.ExportJson")
     manager:removeArmatureFileInfo("animations/Blue_dragon.ExportJson")
 
+    manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
     manager:addArmatureFileInfo("animations/chuizidonghua.ExportJson")
     manager:addArmatureFileInfo("animations/green_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
@@ -334,6 +336,8 @@ end
 
 
 return CityScene
+
+
 
 
 

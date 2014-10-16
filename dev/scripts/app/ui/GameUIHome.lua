@@ -68,7 +68,7 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         NetManager:sendMsg("reset", NOT_HANDLE)
-        end):addTo(top_bg):align(display.LEFT_BOTTOM, 109, 106)
+    end):addTo(top_bg):align(display.LEFT_BOTTOM, 109, 106)
 
 
     -- 玩家名字背景加文字
@@ -259,7 +259,7 @@ function GameUIHome:CreateBottom()
             if cc.pGetDistance(chat_bg.prevP,cc.p(event.x,event.y)) <= 10 then
                 -- UIKit:newGameUI('GameUIChat'):addToCurrentScene(true)
                 UIKit:newGameUI('GameUIAlliance'):addToCurrentScene(true)
-                
+
             end
         end
     end)
@@ -310,7 +310,7 @@ function GameUIHome:CreateBottom()
         {normal = "toggle_city_89x97.png", pressed = "toggle_city_89x97.png"}
     ):addTo(bottom_bg)
         :pos(52, 54)
-        :onButtonClicked(function(event)    
+        :onButtonClicked(function(event)
             app:lockInput(true)
             if display.getRunningScene().__cname == "AllianceScene" then
                 transition.rotateTo(arrow, {
@@ -326,8 +326,14 @@ function GameUIHome:CreateBottom()
                     rotate = 90,
                     time = 0.2,
                     onComplete = function()
-                        app:lockInput(false)
-                        app:enterScene("AllianceScene", nil, "fade", 0.6, display.COLOR_WHITE)
+                        local node = display.newNode():pos(display.cx, display.cy)
+                        display.newScale9Sprite("logos/batcat.png"):addTo(node)
+                        -- local armature = ccs.Armature:create("Cloud_Animation")
+                        -- :addTo(node):pos(display.cx, display.cy)
+                        -- armature:getAnimation():play("Animation1", -1, 0)
+                        -- cc.Director:getInstance():setNotificationNode(node)
+                        -- app:lockInput(false)
+                        -- app:enterScene("AllianceScene", nil, "fade", 0.6, display.COLOR_WHITE)
                     end}
                 )
             end
@@ -337,6 +343,7 @@ function GameUIHome:CreateBottom()
 end
 
 return GameUIHome
+
 
 
 
