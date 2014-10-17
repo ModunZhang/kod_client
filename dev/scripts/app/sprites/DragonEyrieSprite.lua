@@ -7,7 +7,7 @@ function DragonEyrieSprite:ctor(...)
     DragonEyrieSprite.super.ctor(self, ...)
     local x, y = self:GetSpriteOffset()
     self.dragon_sprite = DragonSprite.new(self:GetMapLayer(), self:GetMapLayer():CurrentTerrain())
-    :addTo(self, DRAGON):pos(x-30, y+130)
+    :addTo(self, DRAGON):pos(x-30, y+100)
 end
 function DragonEyrieSprite:ReloadSpriteCauseTerrainChanged()
     self.dragon_sprite:ReloadSpriteCauseTerrainChanged(self:GetMapLayer():CurrentTerrain())

@@ -64,7 +64,7 @@ function GameUIShop:onEnter()
         :addTo(self)
         :align(display.CENTER, window.left + 140, window.top - 200)
         :onButtonClicked(function()
-            if display.getRunningScene().name == "CityScene" then
+            if display.getRunningScene().__cname == "CityScene" then
                 display.getRunningScene():ChangeTerrain("grass")
             end
         end)
@@ -82,7 +82,7 @@ function GameUIShop:onEnter()
         :addTo(self)
         :align(display.CENTER, window.left + 320, window.top - 200)
         :onButtonClicked(function()
-            if display.getRunningScene().name == "CityScene" then
+            if display.getRunningScene().__cname == "CityScene" then
                 display.getRunningScene():ChangeTerrain("icefield")
             end
         end)
@@ -100,7 +100,7 @@ function GameUIShop:onEnter()
         :addTo(self)
         :align(display.CENTER, window.left + 500, window.top - 200)
         :onButtonClicked(function()
-            if display.getRunningScene().name == "CityScene" then
+            if display.getRunningScene().__cname == "CityScene" then
                 display.getRunningScene():ChangeTerrain("desert")
             end
         end)
