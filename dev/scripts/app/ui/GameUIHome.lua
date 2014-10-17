@@ -282,7 +282,7 @@ function GameUIHome:CreateBottom()
         {"home/bottom_icon_1.png", _("任务")},
         {"home/bottom_icon_2.png", _("物品")},
         {"home/bottom_icon_3.png", _("邮件")},
-        {"home/bottom_icon_4.png", _("部队")},
+        {"home/bottom_icon_4.png", _("联盟")},
         {"home/bottom_icon_2.png", _("更多")},
     }) do
         local col = i - 1
@@ -339,7 +339,7 @@ function GameUIHome:CreateBottom()
 end
 
 function GameUIHome:OnBottomButtonClicked(event)
-    local tag = event.sender:getTag()
+    local tag = event.target:getTag()
     if not tag then return end
     if tag == 4 then
         UIKit:newGameUI('GameUIAlliance'):addToCurrentScene(true)

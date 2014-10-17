@@ -44,5 +44,6 @@ function DataManager:callManagers_(userData,timer)
 end
 
 function DataManager:GetManager(name)
+	assert(self.managers_[name])
 	return self.managers_[name]
 end

@@ -8,22 +8,40 @@ local LogoScene = class("LogoScene", function()
 end)
 
 function LogoScene:ctor()
+
 end
 
 function LogoScene:onEnter()
-    self.sprite = display.newScale9Sprite("logos/batcat.png", display.cx, display.cy):addTo(self)
-    self.sprite:size(display.width,self.sprite:getContentSize().height)
+    self.layer = display.newColorLayer(cc.c4b(255,255,255,255)):addTo(self)
+    self.sprite = display.newScale9Sprite("logos/batcat.png", display.cx, display.cy):addTo(self.layer)
     self:performWithDelay(function()
-    		if CONFIG_IS_DEBUG then
-    			app:enterScene("MainScene", nil, "fade", 0.6, display.COLOR_WHITE)
-    		else
-    			app:enterScene("UpdaterScene", nil, "fade", 0.6, display.COLOR_WHITE)
-    		end
-    	end, 0.8)
+        self:beginAnimate()
+    end,1)
 end
 
+function LogoScene:beginAnimate()
+    transition.execute(self.sprite, cc.ScaleTo:create(checknumber(3),1.5))
+    transition.fadeTo(self.sprite, {opacity = 255/2, time = 1.5})
+    transition.fadeOut(self.layer,{time = 1.5})
+    local sequence = transition.sequence({
+        cc.FadeOut:create(1.5),
+        cc.DelayTime:create(0.5),
+        cc.CallFunc:create(function()
+            self:performWithDelay(function()
+                self.sprite:removeFromParent(true)
+                if CONFIG_IS_DEBUG then
+                    app:enterScene("MainScene")
+                else
+                    app:enterScene("UpdaterScene")
+                end
+            end, 0.5)
+        end),
+    })
+self.layer:runAction(sequence)
+end
+
+
 function LogoScene:onExit()
-    self.sprite = nil
 end
 
 return LogoScene

@@ -12,8 +12,10 @@ local ChatCenter = import('..entity.ChatCenter')
 local events_to_listen = {
 	'onBuildingLevelUp','onHouseLevelUp','onTowerLevelUp','onWallLevelUp', --升级提示相关
 	'onChat','onAllChat', -- 聊天相关
-	'onSearchAllianceSuccess', -- 联盟
+	-- 联盟
+	'onSearchAlliancesSuccess',"onGetCanDirectJoinAlliancesSuccess","onGetAllianceDataSuccess","onAllianceDataChanged"
 }
+
 
 function ListenerService:_initOrNot()
 	if not app.chatCenter  then
@@ -21,6 +23,7 @@ function ListenerService:_initOrNot()
     	app.chatCenter = chatCenter
     end
     app.chatCenter:requestAllMessage()
+    DataManager:GetManager("AllianceManager"):FetchMyAllianceData()
 end
 
 function ListenerService:_listenNetMessage()
@@ -90,6 +93,7 @@ end
 
 -- Alliance 
 -------------------------------------------------------------------------
+--data to alliance
 function ListenerService:dispatchEventToAllianceManager_(msg,eventName)
 	local allianceManager = DataManager:GetManager("AllianceManager")
 	if allianceManager then
@@ -97,6 +101,18 @@ function ListenerService:dispatchEventToAllianceManager_(msg,eventName)
 	end
 end
 
-function ListenerService:ls_onSearchAllianceSuccess(msg,eventName)
+function ListenerService:ls_onGetCanDirectJoinAlliancesSuccess(msg,eventName)
+	self:dispatchEventToAllianceManager_(msg,eventName)
+end
+
+function ListenerService:ls_onSearchAlliancesSuccess(msg,eventName)
+	self:dispatchEventToAllianceManager_(msg,eventName)
+end
+
+function ListenerService:ls_onAllianceDataChanged(msg,eventName)
+	self:dispatchEventToAllianceManager_(msg,eventName)
+end
+
+function ListenerService:ls_onGetAllianceDataSuccess(msg,eventName)
 	self:dispatchEventToAllianceManager_(msg,eventName)
 end

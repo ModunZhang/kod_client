@@ -5,24 +5,24 @@
 local AllianceManager = class("AllianceManager")
 local Enum = import("..utils.Enum")
 AllianceManager.ALLIANCETITLE = {
-		Archon = "archon",
-		General = "general",
-		Diplomat ="diplomat",
-		Quartermaster = "quartermaster",
-		Supervisor = "supervisor",
-		Elite = "elite",
-		Member = "member"
-	}
+	Archon = "archon",
+	General = "general",
+	Diplomat ="diplomat",
+	Quartermaster = "quartermaster",
+	Supervisor = "supervisor",
+	Elite = "elite",
+	Member = "member"
+}
 
--- server event
-AllianceManager.ON_USER_DATA_CHANGED = "AllianceManager.OnUserDataChanged"
-AllianceManager.ON_SERVER_DATA_EVENT = "AllianceManager.OnServerDataEvent"
+--event 
+AllianceManager.ALLIANCE_EVENT_TYPE_NAME = "ALLIANCE_EVENT_TYPE_NAME"
+AllianceManager.ALLIANCE_SERVER_EVENT_NAME = "ALLIANCE_SERVER_EVENT_NAME"
 
---inner alliance event
 AllianceManager.ALLIANCE_EVENT_TYPE = Enum(
 	"NORMAL",
 	"CREATE_OR_JOIN",
-	"QUIT"
+	"QUIT",
+	"NONE"
 )
 
 --flag ui
@@ -123,55 +123,42 @@ end
 function AllianceManager:OnUserDataChanged(userData,timer)
 	local eventType = self.ALLIANCE_EVENT_TYPE.NORMAL
 	if not self.isInit_ then
-		if (self.alliance_ == nil and  userData.alliance ~= nil) then
-			eventType = self.ALLIANCE_EVENT_TYPE.CREATE_OR_JOIN
+		if (self.alliance_.id == nil and  userData.alliance.id ~= nil) then
+			-- server auto push meessage
+			-- self:FetchMyAllianceData()
+			eventType = self.ALLIANCE_EVENT_TYPE.NONE
 		end
-		if (self.alliance_ ~= nil and  userData.alliance == nil) then
+		if (self.alliance_.id ~= nil and  userData.alliance.id == nil) then
+			self.localAllianceData_ = nil -- clean local alliance data
 			eventType = self.ALLIANCE_EVENT_TYPE.QUIT
 		end
+		if userData.requestToAllianceEvents then
+			self.requestToAllianceEvents_ = userData.requestToAllianceEvents
+		end
+		if userData.inviteToAllianceEvents then
+			self.inviteToAllianceEvents_  = userData.inviteToAllianceEvents
+		end
+		if userData.alliance  then
+			self.alliance_ = userData.alliance 
+			if eventType ~= self.ALLIANCE_EVENT_TYPE.NONE then
+				self:dispathAllianceEvent(eventType)
+			end
+		end
+	else
+		self.alliance_ = userData.alliance 
+		self.requestToAllianceEvents_ = userData.requestToAllianceEvents
+		self.inviteToAllianceEvents_  = userData.inviteToAllianceEvents
 	end
-	self.alliance_ = userData.alliance 
-	self.requestToAllianceEvents_ = userData.requestToAllianceEvents
-	self.inviteToAllianceEvents_  = userData.inviteToAllianceEvents
-	self:dispatchEvent({name = AllianceManager.ON_USER_DATA_CHANGED,
-        allianceEvent = eventType,
-    })
+	
     self.isInit_  = false
-end
-
-
-function AllianceManager:onAllianceDataChanged(callback)
-	return self:addUserDataChangedListener("_",callback)
-end
-
-function AllianceManager:cancelAllianceDataChanged()
-	return self:removeDataListener("_")
-end
-
-function AllianceManager:addUserDataChangedListener(tag,callback)
-    return self:addEventListener(AllianceManager.ON_USER_DATA_CHANGED, callback,tag)
-end
-
-function AllianceManager:removeDataListener( tag )
-	return self:removeEventListenersByTag(tag)
-end
-
--- add listener about server data event for search etc
-function AllianceManager:onAllianceDataEvent(tag,callback)
-	self:addEventListener(AllianceManager.ON_SERVER_DATA_EVENT, callback,tag)
-end
-
-function AllianceManager:cancelAllianceDataEvent(tag)
-	self:removeDataListener(tag)
 end
 
 -- 1 apply 2 invate
 function AllianceManager:GetAllianceEvents(eventType)
-	print("GetAllianceEvents------->",eventType)
 	if eventType == 2 then
-		return self.inviteToAllianceEvents_
+		return self.inviteToAllianceEvents_ or {}
 	elseif eventType == 3 then
-		return self.requestToAllianceEvents_
+		return self.requestToAllianceEvents_ or {}
 	end
 end
 
@@ -182,18 +169,9 @@ function AllianceManager:getAlliance()
 end
 
 function AllianceManager:haveAlliance()
-	return self:getAlliance() ~= nil
+	return self:getAlliance() and self:getAlliance().id ~= nil
 end
 
-
--- event dispatch from server
-
-function AllianceManager:dispatchAlliceServerData(eventType,msg)
-	self:dispatchEvent({name = AllianceManager.ON_SERVER_DATA_EVENT,
-        eventType = eventType,
-        data = msg
-    })
-end
 
 -- flag ui
 
@@ -341,7 +319,7 @@ function AllianceManager:getColorSprite(image,color)
 	return display.newFilteredSprite(image, "CUSTOM", json.encode(customParams))
 end
 
-function AllianceManager:CreateFlagWithLawn(terrain_info,flagInfo)
+function AllianceManager:CreateFlagWithTerrain(terrain_info,flagInfo)
 	if type(flagInfo) == 'string' then flagInfo = json.decode(flagInfo)  end
 	if type(terrain_info) == 'string' then terrain_info = self.LANDFORM_TYPE[terrain_info] end
 	local node = display.newNode()
@@ -362,6 +340,73 @@ function AllianceManager:CreateFlagWithLawn(terrain_info,flagInfo)
 	:scale(0.7)
 
 	return node,upgrade_surface,flag_sprite
+end
+
+-- alliance event
+
+
+-- basic event
+function AllianceManager:dispathAllianceEvent(eventType)
+	print("dispathAllianceEvent--------->",eventType)
+	self:dispatchEvent({name = AllianceManager.ALLIANCE_EVENT_TYPE_NAME,eventType = eventType})
+end
+
+-- event dispatch from server
+
+function AllianceManager:dispatchAlliceServerData(eventName,msg)
+	print("dispatchAlliceServerData------>",eventName)
+	if eventName == 'onSearchAlliancesSuccess' 
+		or  eventName == 'onGetCanDirectJoinAlliancesSuccess'
+		then
+		self:dispatchEvent({name = AllianceManager.ALLIANCE_SERVER_EVENT_NAME,
+	        eventName = eventName,
+	        data = msg
+	    })
+	elseif eventName == 'onGetAllianceDataSuccess' then
+		self:setMyAllianceData_(eventName,msg)
+	end
+end
+
+function AllianceManager:OnAllianceEvent(tag,callback)
+	self:addEventListener(self.ALLIANCE_EVENT_TYPE_NAME,callback,tag)
+end
+
+function AllianceManager:OnAllianceDataEvent(tag,callback)
+	self:addEventListener(self.ALLIANCE_SERVER_EVENT_NAME,callback,tag)
+end
+
+function AllianceManager:RemoveEventByTag(tag)
+	self:removeEventListenersByTag(tag)
+end
+
+function AllianceManager:FetchMyAllianceData()
+	if self:haveAlliance() then
+		PushService:getMyAllianceData()
+	end
+end
+
+function AllianceManager:setMyAllianceData_(eventName,data)
+	if self.localAllianceData_ ~= nil then
+		for k,v in pairs(data) do
+			self.localAllianceData_[k] = v
+		end
+	else
+		self.localAllianceData_ = data
+		self:dispathAllianceEvent(AllianceManager.ALLIANCE_EVENT_TYPE.CREATE_OR_JOIN)
+	end
+	--dispath event
+end
+
+function AllianceManager:GetMyAllianceData()
+	return self.localAllianceData_ or {}
+end
+
+function AllianceManager:GetMyAllianceFlag()
+	return self:CreateFlagWithTerrain(self:GetMyAllianceData().basicInfo.terrain,self:GetMyAllianceData().basicInfo.flag)
+end
+
+function AllianceManager:GetMyAllianceEventData()
+	return self:GetMyAllianceData()
 end
 
 return AllianceManager

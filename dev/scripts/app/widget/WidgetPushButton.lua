@@ -163,7 +163,7 @@ function WidgetPushButton:onTouch_(event)
             self:dispatchEvent({name = UIPushButton.RELEASE_EVENT, x = x, y = y, touchInTarget = touchInTarget})
         end
         if name == "ended" and is_pressed and touchInTarget then
-            self:dispatchEvent({name = UIPushButton.CLICKED_EVENT, x = x, y = y, touchInTarget = true,sender = self})
+            self:dispatchEvent({name = UIPushButton.CLICKED_EVENT, x = x, y = y, touchInTarget = true})
         end
     end
 end

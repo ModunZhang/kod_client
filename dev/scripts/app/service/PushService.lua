@@ -154,3 +154,38 @@ function PushService:handleJoinAllianceInvite( allianceId,argree,cb )
 		,true
 	)
 end
+
+function PushService:getCanDirectJoinAlliances(cb)
+	self.m_netService:request("logic.playerHandler.getCanDirectJoinAlliances"
+		,nil
+		,function(success)
+			cb(success)
+		end
+		,true
+	)
+end
+
+function PushService:getMyAllianceData(cb)
+	self.m_netService:request("logic.playerHandler.getMyAllianceData"
+		,nil
+		,function(success)
+			if cb then  
+				cb(success)
+			end
+		end
+		,true
+	)
+	
+end
+
+function PushService:quitAlliance(cb)
+	self.m_netService:request("logic.playerHandler.quitAlliance"
+		,nil
+		,function(success)
+			if cb then  
+				cb(success)
+			end
+		end
+		,true
+	)
+end
