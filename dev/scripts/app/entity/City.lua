@@ -790,6 +790,7 @@ function City:OnUserDataChanged(userData, current_time)
     if userData.basicInfo then
         local resource_refresh_time = userData.basicInfo.resourceRefreshTime / 1000
         self:IteratorResourcesByUserData(userData, resource_refresh_time)
+        self.build_queue = userData.basicInfo.buildQueue
     end
 end
 function City:OnCreateDecorator(current_time, building)

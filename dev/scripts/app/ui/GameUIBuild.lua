@@ -71,7 +71,7 @@ function GameUIBuild:OnCityChanged()
     end)
 end
 function GameUIBuild:OnBuildOnItem(item)
-    local max = 1
+    local max = self.build_city.build_queue
     local current_time = app.timer:GetServerTime()
     local upgrading_buildings = self.build_city:GetUpgradingBuildingsWithOrder(current_time)
     local current = max - #upgrading_buildings
