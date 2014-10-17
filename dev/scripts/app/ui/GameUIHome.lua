@@ -339,27 +339,19 @@ function GameUIHome:CreateBottom()
                     time = 0.2,
                     onComplete = function()
                         app:lockInput(false)
-                        app:enterScene("AllianceScene", nil, "custom", 2, function(scene, status)
+                        app:enterScene("AllianceScene", nil, "custom", -1, function(scene, status)
                             if status == "onEnter" then
-                                local armature = ccs.Armature:create("Cloud_Animation")
-                                    :addTo(scene):pos(display.cx, display.cy)
-                                armature:getAnimation():play("Animation1", -1, 0)
-                                armature:getAnimation():setMovementEventCallFunc(function(armatureBack, movementType, movementID)
-                                    if movementType == ccs.MovementEventType.complete then
-                                        if movementID == "Animation1" then
-                                            scene:performWithDelay(function()
-                                                armatureBack:getAnimation():play("Animation4", -1, 0)
-                                            end, 0.5)
-                                        end
-                                    end
-                                end)
-                                local background = display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene)
+                                local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
                                 local sequence = transition.sequence{
+                                    cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
                                     cc.FadeIn:create(0.75),
+                                    cc.CallFunc:create(function() scene:hideOutShowIn() end),
                                     cc.DelayTime:create(0.5),
+                                    cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
                                     cc.FadeOut:create(0.75),
+                                    cc.CallFunc:create(function() scene:finish() end),
                                 }
-                                background:runAction(sequence)
+                                display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(sequence)
                             end
                         end)
                     end}
