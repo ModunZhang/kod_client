@@ -1,0 +1,119 @@
+# modun <modunzhang@gmail.com>, 2014.
+msgid ""
+msgstr ""
+"Project-Id-Version: KOD\n"
+"POT-Creation-Date: 2014-08-01 11:11+0800\n"
+"PO-Revision-Date: 2014-08-01 11:12+0800\n"
+"Last-Translator: modun zhang <modunzhang@gmail.com>\n"
+"Language-Team: BatCatStudio <modunzhang@gmail.com>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 1.6.4\n"
+"X-Poedit-Basepath: ../../\n"
+"X-Poedit-KeywordsList: _\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: scripts\n"
+
+#: scripts/app/scenes/MainScene.lua:24
+msgid "连接网关服务器...."
+msgstr "连接网关服务器...."
+
+#: scripts/app/scenes/MainScene.lua:27
+msgid "连接网关服务器失败!"
+msgstr "连接网关服务器失败!"
+
+#: scripts/app/scenes/MainScene.lua:31
+msgid "获取游戏服务器信息...."
+msgstr "获取游戏服务器信息...."
+
+#: scripts/app/scenes/MainScene.lua:34
+msgid "获取游戏服务器信息失败!"
+msgstr "获取游戏服务器信息失败!"
+
+#: scripts/app/scenes/MainScene.lua:38
+msgid "连接游戏服务器...."
+msgstr "连接游戏服务器...."
+
+#: scripts/app/scenes/MainScene.lua:41
+msgid "连接游戏服务器失败!"
+msgstr "连接游戏服务器失败!"
+
+#: scripts/app/scenes/MainScene.lua:47
+msgid "登录游戏失败!"
+msgstr "登录游戏失败!"
+
+#: scripts/app/scenes/MainScene.lua:50
+msgid "登录游戏成功!"
+msgstr "登录游戏成功!"
+
+#: scripts/app/scenes/UpdaterScene.lua:37
+msgid "检查游戏更新...."
+msgstr "检查游戏更新...."
+
+#: scripts/app/scenes/UpdaterScene.lua:42
+msgid "检查游戏更新失败!"
+msgstr "检查游戏更新失败!"
+
+#: scripts/app/scenes/UpdaterScene.lua:42
+#: scripts/app/scenes/UpdaterScene.lua:59
+#: scripts/app/scenes/UpdaterScene.lua:96
+#: scripts/app/scenes/UpdaterScene.lua:121
+#: scripts/app/service/NetManager.lua:41 scripts/app/service/NetManager.lua:53
+#: scripts/app/service/NetManager.lua:65
+msgid "确定"
+msgstr "确定"
+
+#: scripts/app/scenes/UpdaterScene.lua:59
+msgid "游戏版本过低,请更新!"
+msgstr "游戏版本过低,请更新!"
+
+#: scripts/app/scenes/UpdaterScene.lua:96
+#: scripts/app/scenes/UpdaterScene.lua:121
+msgid "文件下载失败!"
+msgstr "文件下载失败!"
+
+#: scripts/app/scenes/UpdaterScene.lua:107
+#, lua-format
+msgid "下载进度:%d/%d"
+msgstr "下载进度:%d/%d"
+
+#: scripts/app/service/NetManager.lua:41
+msgid "连接服务器超时!"
+msgstr "连接服务器超时!"
+
+#: scripts/app/service/NetManager.lua:53 scripts/app/service/NetManager.lua:65
+msgid "和服务器的连接已断开!"
+msgstr "和服务器的连接已断开!"
+
+#~ msgid "需要更新%.2f%s的资源文件，是否立即更新?"
+#~ msgstr "需要更新%.2f%s的资源文件，是否立即更新?"
+
+#~ msgid "取消"
+#~ msgstr "取消"
+
+#~ msgid "请输入聊天内容"
+#~ msgstr "请输入聊天内容"
+
+#~ msgid "获取玩家信息...."
+#~ msgstr "获取玩家信息...."
+
+#~ msgid "欢迎你,"
+#~ msgstr "欢迎你,"
+
+#~ msgid "玩家信息不存在，请注册!"
+#~ msgstr "玩家信息不存在，请注册!"
+
+#~ msgid "请输入账号"
+#~ msgstr "请输入账号"
+
+#~ msgid "注册中...."
+#~ msgstr "注册中...."
+
+#~ msgid "账号已存在!"
+#~ msgstr "账号已存在!"
+
+#~ msgid "服务器错误!"
+#~ msgstr "服务器错误!"
