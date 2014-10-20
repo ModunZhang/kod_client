@@ -23,7 +23,7 @@ function WidgetUIBackGround:ctor(height)
         next_y = next_y+m_height
     end
     -- 最后一块小于中间部分图片原始高度时，缩放高度
-    print("最后一块小于中间部分图片原始高度时，需要 填充高度 need_filled_height",need_filled_height,"copy_count=",copy_count)
+    -- print("最后一块小于中间部分图片原始高度时，需要 填充高度 need_filled_height",need_filled_height,"copy_count=",copy_count)
     display.newSprite("back_ground_608X98.png", 0, next_y):align(display.LEFT_BOTTOM):addTo(self):setScaleY(need_filled_height/m_height)
 
 end

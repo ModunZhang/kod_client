@@ -48,7 +48,9 @@ function GameUIShop:onEnter()
         :addTo(self)
         :align(display.CENTER, window.cx, window.cy - 200)
         :onButtonClicked(function()
-            NetManager:sendMsg("reset", NOT_HANDLE)
+            -- NetManager:sendMsg("reset", NOT_HANDLE)
+            PushService:quitAlliance(function()
+            end)
         end)
 
 

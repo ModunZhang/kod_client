@@ -52,10 +52,12 @@ function WidgetSequenceButton:ctor(images,options,seqImages,seqFilters,initial_s
 	end
 	-- call super	
 	WidgetSequenceButton.super.ctor(self,images, options, {disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}})
-	self:onButtonClicked(handler(self, self.onButtonClicked_))
+	WidgetSequenceButton.super.onButtonClicked(self,handler(self, self.onButtonClicked_))
 end
 
-
+function WidgetSequenceButton:onButtonClicked()
+	assert(false,"WidgetSequenceButton is not support onButtonClicked!")
+end
 
 function WidgetSequenceButton:setButtonFilter(state,color,ignoreEmpty)
 	 if ignoreEmpty and color == nil then return end
@@ -75,6 +77,12 @@ function WidgetSequenceButton:GetSeqState()
 	return self:getCurrentEvent().name
 end
 
+function WidgetSequenceButton:onSeqStateChange(func)
+	self:addEventListener("onSeqStateChange", func)
+	return self
+end
+
+
 function WidgetSequenceButton:onSeqStateChange_()
 	-- if self:isRunning() then
 		if self.isImageState then
@@ -82,6 +90,7 @@ function WidgetSequenceButton:onSeqStateChange_()
         else
         	self:updateSeqButtonImage_(self.currentSeqImage_)
         end
+        self:dispatchEvent({name = "onSeqStateChange",state = self:GetSeqState()})
     -- end
 end
 
@@ -93,11 +102,9 @@ end
 
 
 function WidgetSequenceButton:updateSeqButtonImage_(oneImage)
-	print("updateSeqButtonImage_---->")
 	if not oneImage then
 		local state = self:getCurrentEvent().name
 	    local image = self.seqImages_[state]
-		print("state----->",state,self.scale9_)
 
 	    if image then
 	        if self.currentSeqImage_ ~= image then
@@ -121,7 +128,6 @@ function WidgetSequenceButton:updateSeqButtonImage_(oneImage)
 	    end
 	else
 		local state = self:getCurrentEvent().name
-		print("state----->",state,self.scale9_)
 		-- dump(self.seqFilter_)
 		local filter = self.seqFilter_[state]
     	local customParams = {frag = "shaders/customer_color.fsh",

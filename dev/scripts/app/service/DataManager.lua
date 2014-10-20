@@ -6,6 +6,7 @@ DataManager.managers_ = {}
 
 function DataManager:setUserData( userData )
 	self:registerManager_("AllianceManager")
+	self:registerManager_("MailManager")
     if not self.user then
         self.user = userData
     else
@@ -44,5 +45,6 @@ function DataManager:callManagers_(userData,timer)
 end
 
 function DataManager:GetManager(name)
+	assert(self.managers_[name])
 	return self.managers_[name]
 end
