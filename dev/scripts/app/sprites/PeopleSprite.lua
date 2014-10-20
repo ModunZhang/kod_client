@@ -3,12 +3,12 @@ local PeopleSprite = class("PeopleSprite", AnimationSprite)
 function PeopleSprite:ctor(city_layer, x, y)
 	self.x, self.y = x, y
     AnimationSprite.super.ctor(self, city_layer, nil, city_layer:GetLogicMap():ConvertToMapPosition(x, y))
- 	self:TurnRight()
- 	self:PlayAnimation("Flying")
- 	self:CreateBase()
+ 	self:TurnLeft()
+ 	-- self:PlayAnimation("move_1")
+ 	-- self:CreateBase()
 end
 function PeopleSprite:CreateSprite()
-    local armature = ccs.Armature:create("Red_dragon")
+    local armature = ccs.Armature:create("Infantry_1_render")
     armature:setAnchorPoint(display.ANCHOR_POINTS[display.CENTER])
     armature:setScale(self:RealScale())
     return armature

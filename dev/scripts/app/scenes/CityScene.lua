@@ -41,12 +41,20 @@ end
 -- init ui
 function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
+    manager:removeArmatureFileInfo("animations/Archer_1_render.ExportJson")
+    manager:removeArmatureFileInfo("animations/Catapult_1_render.ExportJson")
+    manager:removeArmatureFileInfo("animations/Cavalry_1_render.ExportJson")
+    manager:removeArmatureFileInfo("animations/Infantry_1_render.ExportJson")
     manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
     manager:removeArmatureFileInfo("animations/chuizidonghua.ExportJson")
     manager:removeArmatureFileInfo("animations/green_dragon.ExportJson")
     manager:removeArmatureFileInfo("animations/Red_dragon.ExportJson")
     manager:removeArmatureFileInfo("animations/Blue_dragon.ExportJson")
 
+    manager:addArmatureFileInfo("animations/Archer_1_render.ExportJson")
+    manager:addArmatureFileInfo("animations/Catapult_1_render.ExportJson")
+    manager:addArmatureFileInfo("animations/Cavalry_1_render.ExportJson")
+    manager:addArmatureFileInfo("animations/Infantry_1_render.ExportJson")
     manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
     manager:addArmatureFileInfo("animations/chuizidonghua.ExportJson")
     manager:addArmatureFileInfo("animations/green_dragon.ExportJson")
@@ -59,7 +67,7 @@ function CityScene:CreateSceneLayer()
     self.iso_map = IsoMapAnchorBottomLeft.new({
         tile_w = 80, tile_h = 56, map_width = 50, map_height = 50, base_x = origin_point.x, base_y = origin_point.y
     })
-    scene:ZoomTo(0.7)
+    scene:ZoomTo(0.3)
     return scene
 end
 function CityScene:CreateSceneUILayer()

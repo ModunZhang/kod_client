@@ -107,7 +107,8 @@ function CityLayer:OnSoliderCountChanged(soldier_manager, changed)
 end
 -----
 local SCENE_BACKGROUND = 1
-local CITY_LAYER = 2
+local BACK_NODE = 1
+local CITY_LAYER = 3
 local CITY_BACKGROUND = 1
 local ROAD_NODE = 2
 local BUILDING_NODE = 3
@@ -139,14 +140,16 @@ function CityLayer:ctor(city)
     self.walls = {}
     self.road = nil
     self:InitBackground()
-    self.city_layer = display.newLayer():addTo(self, CITY_LAYER):align(display.BOTTOM_LEFT, 1000, 1000)
+    self.back_node = display.newNode():addTo(self, BACK_NODE)
+    self.city_layer = display.newLayer():addTo(self, CITY_LAYER):align(display.BOTTOM_LEFT, 1000, 420)
     self.city_background = cc.TMXTiledMap:create("tmxmaps/background2.tmx"):addTo(self.city_layer):hide()
     self.position_node = cc.TMXTiledMap:create("tmxmaps/city_road.tmx"):addTo(self.city_layer):hide()
-    self.background2 = display.newNode():addTo(self.city_layer, CITY_BACKGROUND)
+    self.tile_node = display.newNode():addTo(self.city_layer, CITY_BACKGROUND)
     self.road_node = display.newNode():addTo(self.city_layer, ROAD_NODE)
     self.city_node = display.newLayer():addTo(self.city_layer, BUILDING_NODE):align(display.BOTTOM_LEFT)
 
     randomseed(DataManager:getUserData().countInfo.registerTime)
+    self:InitBackgroundsWithRandom()
     self:InitCityBackgroundsWithRandom()
     self:InitRoadsWithRandom()
 
@@ -176,6 +179,81 @@ function CityLayer:InitBackground()
     self:ReloadSceneBackground()
 end
 ---
+function CityLayer:InitBackgroundsWithRandom()
+    local back_size = self:GetBackgroundLayer():getLayerSize()
+    local end_x = back_size.width - 1
+    local end_y = back_size.height - 1
+    for x = 0, end_x do
+        for y = 0, end_y do
+            local point = self:GetBackgroundLayer():getPositionAt(cc.p(x, y))
+            local png = floor(random() * 1000) % 2 == 0 and "trees_490x450.png" or "trees_516x433.png"
+            repeat
+                -- 靠上边是山
+                local near_up_side = y == 0 or y == 1
+                if near_up_side then
+                    display.newSprite("quarrier_1_303x296.png"):addTo(self.back_node)
+                        :align(display.BOTTOM_LEFT, point.x, point.y)
+                    break
+                end
+
+                -- 靠其他边是树
+                local near_other_side = x == 0 or x == back_size.width - 1 or x == back_size.width - 2 or y == back_size.height - 1
+                if near_other_side then
+                    display.newSprite(png):addTo(self.back_node)
+                        :align(display.BOTTOM_LEFT, point.x, point.y)
+                    break
+                end
+
+                -- 左上角是树
+                if
+                    x + y <= 4
+                    or (x == 1 and y == 5)
+                    or (x == 5 and y == 1)
+                then
+                    display.newSprite(png):addTo(self.back_node)
+                        :align(display.BOTTOM_LEFT, point.x, point.y)
+                    break
+                end
+
+                -- 左下角是树
+                if x + (end_y - y) <= 4 then
+                    display.newSprite(png):addTo(self.back_node)
+                        :align(display.BOTTOM_LEFT, point.x, point.y)
+                    break
+                end
+
+                -- 右上角是树
+                if (end_x - x) + y <= 5 then
+                    display.newSprite(png):addTo(self.back_node)
+                        :align(display.BOTTOM_LEFT, point.x, point.y)
+                    break
+                end
+
+                -- 右上角是树
+                if (end_x - x) + (end_y - y) <= 5 then
+                    display.newSprite(png):addTo(self.back_node)
+                        :align(display.BOTTOM_LEFT, point.x, point.y)
+                    break
+                end
+
+                -- 左上角的麦蒂
+                if x + y == 5 then
+                    display.newSprite("corn_391x306.png"):addTo(self.back_node)
+                        :align(display.BOTTOM_LEFT, point.x, point.y)
+                    break
+                end
+
+                -- 左下角的矿山
+                if x + (end_y - y) == 5 then
+                    display.newSprite("stone_396x318.png"):addTo(self.back_node)
+                        :align(display.BOTTOM_LEFT, point.x, point.y)
+                    break
+                end
+
+            until true
+        end
+    end
+end
 function CityLayer:InitCityBackgroundsWithRandom()
     local city_backgrounds_map = {}
     for row_index = 1, 5 do
@@ -202,14 +280,14 @@ function CityLayer:UpdateCityBackgroundsByMap(map)
 end
 -- 刷新会重新生成地图
 function CityLayer:RefreshCityBackgroundsByMap(map)
-    assert(self.background2, "场景背景必须被生成!")
-    self.background2:removeAllChildren()
+    assert(self.tile_node, "场景背景必须被生成!")
+    self.tile_node:removeAllChildren()
     local city_backgrounds = {{}, {}, {}, {}, {}}
     for row_index, row in ipairs(map) do
         for col_index, v in ipairs(row) do
-            local point = self:GetBackgroundLayer():getPositionAt(cc.p(col_index - 1, row_index - 1))
+            local point = self:GetTileLayer():getPositionAt(cc.p(col_index - 1, row_index - 1))
             local ground = display.newSprite(GROUNDS_MAP[self.terrain_type][v.png_index])
-                :addTo(self.background2)
+                :addTo(self.tile_node)
                 :align(display.BOTTOM_LEFT, point.x, point.y)
                 :flipX(v.flipx):flipY(v.flipy)
 
@@ -246,7 +324,7 @@ function CityLayer:RefreshRoadsByMap(map)
     local roads = {{}, {}, {}, {}, {}}
     for row_index, row in ipairs(map) do
         for col_index, v in ipairs(row) do
-            local point = self:GetBackgroundLayer():getPositionAt(cc.p(col_index - 1, row_index - 1))
+            local point = self:GetTileLayer():getPositionAt(cc.p(col_index - 1, row_index - 1))
             local road = display.newSprite(ROADS_MAP[self.terrain_type][v.png_index])
                 :addTo(self.road_node)
                 :align(display.BOTTOM_LEFT, point.x, point.y)
@@ -254,7 +332,7 @@ function CityLayer:RefreshRoadsByMap(map)
             roads[row_index][col_index] = road
         end
     end
-    local point = self:GetBackgroundLayer():getPositionAt(cc.p(0, 1))
+    local point = self:GetTileLayer():getPositionAt(cc.p(0, 1))
     display.newSprite(ROADS_MAP[self.terrain_type][3])
         :addTo(self.road_node):align(display.BOTTOM_LEFT, point.x + 20, point.y - 20)
     self.roads = roads
@@ -300,7 +378,7 @@ function CityLayer:InitWithCity(city)
     city:AddListenOnType(self, city.LISTEN_TYPE.CREATE_DECORATOR)
     city:AddListenOnType(self, city.LISTEN_TYPE.DESTROY_DECORATOR)
     city:GetSoldierManager():AddListenOnType(self, SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
-    
+
     local city_node = self:GetCityNode()
     -- 加废墟
     for k, ruin in pairs(city.ruins) do
@@ -357,16 +435,21 @@ function CityLayer:InitWithCity(city)
     -- 兵种
     local soldiers = {}
     for i, v in ipairs({
-        {x = 9, y = 11, soldier_type = "swordsman"},
-        {x = 7, y = 11, soldier_type = "archer"},
-        {x = 5, y = 11, soldier_type = "lancer"},
-        {x = 3, y = 11, soldier_type = "catapult"},
+        {x = 1, y = 11, soldier_type = "swordsman"},
+        {x = 3, y = 11, soldier_type = "archer"},
+        {x = 6, y = 12, soldier_type = "lancer"},
+        {x = 9, y = 12, soldier_type = "catapult"},
 
-        {x = 9, y = 13, soldier_type = "sentinel"},
-        {x = 7, y = 13, soldier_type = "crossbowman"},
-        {x = 5, y = 13, soldier_type = "horseArcher"},
-        {x = 3, y = 13, soldier_type = "ballista"},
-        }) do
+        {x = 1, y = 13, soldier_type = "sentinel"},
+        {x = 3, y = 13, soldier_type = "crossbowman"},
+        {x = 6, y = 15, soldier_type = "horseArcher"},
+        {x = 9, y = 15, soldier_type = "ballista"},
+
+    -- {x = 1, y = 15, soldier_type = "sentinel"},
+    -- {x = 3, y = 15, soldier_type = "crossbowman"},
+    -- {x = 6, y = 18, soldier_type = "horseArcher"},
+    -- {x = 9, y = 18, soldier_type = "ballista"},
+    }) do
         table.insert(soldiers, self:CreateSoldier(v.soldier_type, v.x, v.y):addTo(city_node))
     end
     self.soldiers = soldiers
@@ -670,7 +753,7 @@ function CityLayer:GetPositionNode()
     return self.position_node
 end
 --
-function CityLayer:GetBackgroundLayer()
+function CityLayer:GetTileLayer()
     if not self.tile_layer then
         self.tile_layer = self.city_background:getLayer("layer1")
     end
@@ -681,6 +764,13 @@ function CityLayer:GetRoadsmap()
 end
 function CityLayer:GetCityNode()
     return self.city_node
+end
+--
+function CityLayer:GetBackgroundLayer()
+    if not self.background_layer then
+        self.background_layer = self.background:getLayer("layer1")
+    end
+    return self.background_layer
 end
 
 ----- override
@@ -704,6 +794,13 @@ function CityLayer:OnSceneMove()
 end
 
 return CityLayer
+
+
+
+
+
+
+
 
 
 
