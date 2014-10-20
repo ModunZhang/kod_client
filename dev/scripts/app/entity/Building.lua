@@ -138,9 +138,7 @@ function Building:IsNearByBuildingWithLength(building, len)
     }) do
         local x = v[1]
         local y = v[2]
-        if abs(x - mid_x) < half_w + len then
-            return true
-        elseif abs(y - mid_y) < half_h + len then
+        if abs(x - mid_x) < half_w + len and abs(y - mid_y) < half_h + len then
             return true
         end
     end
@@ -171,9 +169,9 @@ function Building:CombineWithOtherBuilding(building)
     local new_h = self.y == building.y and self.h or self.h + building.h
     return Building.new{
         building_type = self:GetType(),
-        x = max_x, 
+        x = max_x,
         y = max_y,
-        w = new_w, 
+        w = new_w,
         h = new_h,
         city = self:BelongCity(),
     }
@@ -243,6 +241,7 @@ function Building:GetGlobalRegion()
     return start_x, end_x, start_y, end_y
 end
 return Building
+
 
 
 

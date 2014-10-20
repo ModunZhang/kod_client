@@ -19,16 +19,6 @@ return function(userData)
         local location_config = City:GetLocationById(location.location)
         local event = get_building_event_by_location(location.location)
         local finishTime = event == nil and 0 or event.finishTime / 1000
-        -- table.insert(init_buildings, BuildingRegister[location_config.building_type].new{
-        --     x = location_config.x,
-        --     y = location_config.y,
-        --     w = location_config.w,
-        --     h = location_config.h,
-        --     building_type = location_config.building_type,
-        --     level = location.level,
-        --     finishTime = finishTime,
-        -- })
-
         table.insert(init_buildings,
             City:NewBuildingWithType(location_config.building_type,
                 location_config.x,
@@ -80,22 +70,14 @@ return function(userData)
     table.foreach(userData.buildings, function(_, location)
         if #location.houses > 0 then
             table.foreach(location.houses, function(_, house)
-                local tile_x = City:GetLocationById(location.location).tile_x
-                local tile_y = City:GetLocationById(location.location).tile_y
+                local city_location = City:GetLocationById(location.location)
+                local tile_x = city_location.tile_x
+                local tile_y = city_location.tile_y
                 local tile = City:GetTileByIndex(tile_x, tile_y)
                 local absolute_x, absolute_y = tile:GetAbsolutePositionByLocation(house.location)
                 local event = get_house_event_by_location(location.location, house.location)
                 local finishTime = event == nil and 0 or event.finishTime / 1000
-                -- table.insert(init_decorators, BuildingRegister[house.type].new{
-                --     x = absolute_x,
-                --     y = absolute_y,
-                --     w = 3,
-                --     h = 3,
-                --     building_type = house.type,
-                --     level = house.level,
-                --     finishTime = finishTime
-                -- })
-                table.insert(init_buildings,
+                table.insert(init_decorators,
                     City:NewBuildingWithType(house.type,
                         absolute_x,
                         absolute_y,

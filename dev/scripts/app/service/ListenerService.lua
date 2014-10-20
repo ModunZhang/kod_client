@@ -12,8 +12,8 @@ local ChatCenter = import('..entity.ChatCenter')
 local events_to_listen = {
 	'onBuildingLevelUp','onHouseLevelUp','onTowerLevelUp','onWallLevelUp', --升级提示相关
 	'onChat','onAllChat', -- 聊天相关
-	-- 联盟
-	'onSearchAlliancesSuccess',"onGetCanDirectJoinAlliancesSuccess","onGetAllianceDataSuccess","onAllianceDataChanged"
+	'onNewMailReceived','onGetMailsSuccess','onGetSavedMailsSuccess','onGetSendMailsSuccess','onSendMailSuccess', -- 邮件
+	'onSearchAlliancesSuccess',"onGetCanDirectJoinAlliancesSuccess","onGetAllianceDataSuccess","onAllianceDataChanged",-- 联盟
 }
 
 
@@ -31,6 +31,7 @@ function ListenerService:_listenNetMessage()
 		if type(v) == 'string' and string.len(v) ~= 0 then
 			NetManager:addEventListener(v,function( success,msg )
 				if success then
+            		LuaUtils:outputTable(v, msg)
 					self:_handleNetMessage(v, msg)
 				end
 			end)
@@ -116,3 +117,28 @@ end
 function ListenerService:ls_onGetAllianceDataSuccess(msg,eventName)
 	self:dispatchEventToAllianceManager_(msg,eventName)
 end
+
+-- Mails 
+-------------------------------------------------------------------------
+function ListenerService:dispatchEventToMailManager_(msg,eventName)
+	local mailManager = DataManager:GetManager("MailManager")
+	if mailManager then
+		mailManager:dispatchMailServerData(eventName,msg)
+	end
+end
+function ListenerService:ls_onNewMailReceived( msg,eventName )
+	self:dispatchEventToMailManager_(msg,eventName)
+end
+function ListenerService:ls_onGetMailsSuccess( msg,eventName )
+	self:dispatchEventToMailManager_(msg,eventName)
+end
+function ListenerService:ls_onGetSavedMailsSuccess( msg,eventName )
+	self:dispatchEventToMailManager_(msg,eventName)
+end
+function ListenerService:ls_onGetSendMailsSuccess( msg,eventName )
+	self:dispatchEventToMailManager_(msg,eventName)
+end
+function ListenerService:ls_onSendMailSuccess( msg,eventName )
+	self:dispatchEventToMailManager_(msg,eventName)
+end
+

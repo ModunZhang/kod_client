@@ -231,3 +231,8 @@ GameDatas.UnitsConfig = {
 }
 require("app.datas.UnitsConfig_normal")
 require("app.datas.UnitsConfig_special")
+
+GameDatas.Vip = {
+	["exp"] = {},
+}
+require("app.datas.Vip_exp")

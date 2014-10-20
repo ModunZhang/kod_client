@@ -140,43 +140,51 @@ function UpgradeBuilding:OnTimer(current_time)
     end
 end
 function UpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id, sub_location_id)
-    -- 解析
-    local building_events = user_data.buildingEvents
-    if building_events then
-        local function get_building_event_by_location(loc_id)
-            for k, v in pairs(building_events) do
-                if v.location == loc_id then
-                    return v
-                end
-            end
-        end
-
-        local hosue_events = user_data.houseEvents
-        local function get_house_event_by_location(building_location, sub_id)
-            for k, v in pairs(hosue_events) do
-                if v.buildingLocation == building_location and
-                    v.houseLocation == sub_id then
-                    return v
-                end
-            end
-        end
-
+    if user_data.buildings then
+        -- 解析
         local finishTime
         local level
         local location = user_data.buildings["location_"..location_id]
         if sub_location_id then
-            table.foreach(location.houses, function(key, building_info)
-                if building_info.location == sub_location_id then
-                    local event = get_house_event_by_location(location_id, sub_location_id)
-                    finishTime = event == nil and 0 or event.finishTime / 1000
-                    level = building_info.level
-                    return true
+            local hosue_events = user_data.houseEvents
+            if hosue_events then
+                local function get_house_event_by_location(building_location, sub_id)
+                    for k, v in pairs(hosue_events) do
+                        if v.buildingLocation == building_location and
+                            v.houseLocation == sub_id then
+                            return v
+                        end
+                    end
                 end
-            end)
+
+                table.foreach(location.houses, function(key, building_info)
+                    if building_info.location == sub_location_id then
+                        local event = get_house_event_by_location(location_id, sub_location_id)
+                        finishTime = event == nil and 0 or event.finishTime / 1000
+                        level = building_info.level
+                        return true
+                    end
+                end)
+            else
+                return
+            end
         else
-            local event = get_building_event_by_location(location_id)
-            finishTime = event == nil and 0 or event.finishTime / 1000
-            level = location.level
+            local building_events = user_data.buildingEvents
+            if building_events then
+                local function get_building_event_by_location(loc_id)
+                    for k, v in pairs(building_events) do
+                        if v.location == loc_id then
+                            return v
+                        end
+                    end
+                end
+
+                local event = get_building_event_by_location(location_id)
+                finishTime = event == nil and 0 or event.finishTime / 1000
+                level = location.level
+            else
+                return
+            end
         end
 
         -- 适配
@@ -355,6 +363,12 @@ function UpgradeBuilding:getUpgradeRequiredGems()
 end
 
 return UpgradeBuilding
+
+
+
+
+
+
 
 
 

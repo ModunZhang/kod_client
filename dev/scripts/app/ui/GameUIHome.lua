@@ -2,6 +2,7 @@ local window = import("..utils.window")
 local WidgetTab = import("..widget.WidgetTab")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
+local MailManager = import("..service.MailManager")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
 
 
@@ -43,10 +44,21 @@ function GameUIHome:onEnter()
     self:RefreshData()
     city:GetResourceManager():AddObserver(self)
     city:GetResourceManager():OnResourceChanged()
+    DataManager:GetManager("MailManager"):AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
+
 end
 function GameUIHome:onExit()
     self.city:GetResourceManager():RemoveObserver(self)
+    DataManager:GetManager("MailManager"):RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     GameUIHome.super.onExit(self)
+end
+function GameUIHome:MailUnreadChanged( num )
+    if num==0 then
+        self.self.mail_unread_num_bg:setVisible(false)
+    else
+        self.mail_unread_num_bg:setVisible(true)
+        self.mail_unread_num_label:setString(GameUtils:formatNumber(num))
+    end
 end
 function GameUIHome:RefreshData()
     -- 更新数值
@@ -283,6 +295,8 @@ function GameUIHome:CreateBottom()
         {"home/bottom_icon_2.png", _("物品")},
         {"home/bottom_icon_3.png", _("邮件")},
         {"home/bottom_icon_4.png", _("联盟")},
+        {"home/mail.png", _("邮件")},
+        {"home/bottom_icon_4.png", _("部队")},
         {"home/bottom_icon_2.png", _("更多")},
     }) do
         local col = i - 1
@@ -300,6 +314,20 @@ function GameUIHome:CreateBottom()
         button:setTag(i)    
     end
 
+    -- 未读邮件或战报数量显示条
+    self.mail_unread_num_bg = display.newSprite("home/mail_unread_bg.png"):addTo(bottom_bg):pos(400, first_row+20)
+    self.mail_unread_num_label = cc.ui.UILabel.new(
+        {cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = GameUtils:formatNumber(DataManager:GetManager("MailManager"):GetUnReadMailsAndReportsNum()),
+            font = UIKit:getFontFilePath(),
+            size = 16,
+            -- dimensions = cc.size(200,24),
+            color = UIKit:hex2c3b(0xf5f2b3)
+        }):align(display.CENTER,self.mail_unread_num_bg:getContentSize().width/2,self.mail_unread_num_bg:getContentSize().height/2+4)
+        :addTo(self.mail_unread_num_bg)
+    if DataManager:GetManager("MailManager"):GetUnReadMailsAndReportsNum()==0 then
+        self.mail_unread_num_bg:setVisible(false)
+    end
     -- 场景切换
     display.newSprite("home/toggle_bg.png"):addTo(bottom_bg):pos(91, 52)
     display.newSprite("home/toggle_gear.png"):addTo(bottom_bg):pos(106, 49)
@@ -329,7 +357,21 @@ function GameUIHome:CreateBottom()
                     time = 0.2,
                     onComplete = function()
                         app:lockInput(false)
-                        app:enterScene("AllianceScene", nil, "fade", 0.6, display.COLOR_WHITE)
+                        app:enterScene("AllianceScene", nil, "custom", -1, function(scene, status)
+                            if status == "onEnter" then
+                                local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
+                                local sequence = transition.sequence{
+                                    cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
+                                    cc.FadeIn:create(0.75),
+                                    cc.CallFunc:create(function() scene:hideOutShowIn() end),
+                                    cc.DelayTime:create(0.5),
+                                    cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
+                                    cc.FadeOut:create(0.75),
+                                    cc.CallFunc:create(function() scene:finish() end),
+                                }
+                                display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(sequence)
+                            end
+                        end)
                     end}
                 )
             end
@@ -343,19 +385,9 @@ function GameUIHome:OnBottomButtonClicked(event)
     if not tag then return end
     if tag == 4 then -- tag 4 = alliance button
         UIKit:newGameUI('GameUIAlliance'):addToCurrentScene(true)
+    elseif tag == 3 then
+        UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
     end
 end
 
 return GameUIHome
-
-
-
-
-
-
-
-
-
-
-
-
