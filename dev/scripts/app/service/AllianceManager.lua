@@ -22,6 +22,7 @@ AllianceManager.ALLIANCE_EVENT_TYPE = Enum(
 	"NORMAL",
 	"CREATE_OR_JOIN",
 	"QUIT",
+	"CHANGE",
 	"NONE"
 )
 
@@ -355,6 +356,7 @@ end
 
 function AllianceManager:dispatchAlliceServerData(eventName,msg)
 	print("dispatchAlliceServerData------>",eventName)
+	--simple response data
 	if eventName == 'onSearchAlliancesSuccess' 
 		or  eventName == 'onGetCanDirectJoinAlliancesSuccess'
 		then
@@ -362,7 +364,9 @@ function AllianceManager:dispatchAlliceServerData(eventName,msg)
 	        eventName = eventName,
 	        data = msg
 	    })
-	elseif eventName == 'onGetAllianceDataSuccess' then
+	--basic ui event
+	elseif eventName == 'onGetAllianceDataSuccess' 
+		or eventName == 'onAllianceDataChanged' then
 		self:setMyAllianceData_(eventName,msg)
 	end
 end
@@ -390,6 +394,11 @@ function AllianceManager:setMyAllianceData_(eventName,data)
 		for k,v in pairs(data) do
 			self.localAllianceData_[k] = v
 		end
+		--update ui
+		self:dispatchEvent({name = AllianceManager.ALLIANCE_SERVER_EVENT_NAME,
+	        eventName = eventName,
+	        data = data
+	    })
 	else
 		self.localAllianceData_ = data
 		self:dispathAllianceEvent(AllianceManager.ALLIANCE_EVENT_TYPE.CREATE_OR_JOIN)

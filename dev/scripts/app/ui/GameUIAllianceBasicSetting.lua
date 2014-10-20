@@ -2,24 +2,26 @@
 -- Author: Danny He
 -- Date: 2014-10-13 10:35:06
 --
-local GameUIAllianceBasicSetting = UIKit:createUIClass('GameUIAllianceBasicSetting')
 local window = import('..utils.window')
 local contentWidth = window.width - 80
 local UIListView = import(".UIListView")
-local WidgetSequenceButton = import("..widget.WidgetSequenceButton")
-local WidgetPushButton = import("..widget.WidgetPushButton")
-local WidgetAllianceLanguagePanel = import("..widget.WidgetAllianceLanguagePanel")
 local UIScrollView = import(".UIScrollView")
-
+local WidgetPushButton = import("..widget.WidgetPushButton")
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
+local WidgetSequenceButton = import("..widget.WidgetSequenceButton")
+local WidgetAllianceLanguagePanel = import("..widget.WidgetAllianceLanguagePanel")
+local GameUIAllianceBasicSetting = UIKit:createUIClass('GameUIAllianceBasicSetting')
+local modify_height = window.height - 20
 --name
 local RANDOM_ALLIANCE_NAMES = {
 	"Kingdom of Dragon",
 	"Tian Chao"
 }
 
-function GameUIAllianceBasicSetting:ctor(flag_info)
+function GameUIAllianceBasicSetting:ctor(isModify)
+	GameUIAllianceBasicSetting.super.ctor(self)
 	self.alliance_manager = DataManager:GetManager("AllianceManager")
-	self.isCreateAction_ = flag_info == nil 
+	self.isCreateAction_ = isModify ~= true 
 	if self.isCreateAction_ then
 		self.flag_info = {
 			flag = self.alliance_manager.FLAG_LOCATION_TYPE.ONE,
@@ -32,19 +34,58 @@ function GameUIAllianceBasicSetting:ctor(flag_info)
 		--fisrt random flag
 		self:RandomFlag()
 	else
-		self.flag_info = flag_info
+		local alliance_data = self.alliance_manager:GetMyAllianceData()
+		self.flag_info = self:AdapterFlagData_Local(alliance_data.basicInfo.flag)
+		self.terrain_info = self.alliance_manager.LANDFORM_TYPE[alliance_data.basicInfo.terrain] -- 地形
 	end
 end
 
+function GameUIAllianceBasicSetting:onMovieInStage()
+	assert(not self.isCreateAction_)
+	GameUIAllianceBasicSetting.super.onMovieInStage(self)
+	self:BuildModifyUI()
+end
+
+function GameUIAllianceBasicSetting:BuildModifyUI()
+	local shadowLayer = UIKit:shadowLayer():addTo(self)
+	local bg = WidgetUIBackGround.new(modify_height):addTo(shadowLayer):pos(window.left+10,window.bottom)
+	local titleBar = display.newSprite("title_blue_596x49.png"):align(display.LEFT_TOP,6,modify_height-5):addTo(bg)
+	local closeButton = cc.ui.UIPushButton.new({normal = "X_2.png",pressed = "X_1.png"}, {scale9 = false})
+	   	:addTo(titleBar,2)
+	   	:align(display.BOTTOM_RIGHT,titleBar:getContentSize().width+20,10)
+	   	:onButtonClicked(function ()
+	   		self:leftButtonClicked()
+	   	end)
+	display.newSprite("X_3.png")
+	   	:addTo(closeButton)
+	   	:pos(-32,30)
+	UIKit:ttfLabel({
+		text = _("联盟设置"),
+		size = 22,
+		shadow = true,
+		color = 0xffedae
+	}):addTo(titleBar):align(display.LEFT_CENTER,10,titleBar:getContentSize().height/2)
+
+	local scrollView = UIScrollView.new({viewRect = cc.rect(0,10,bg:getContentSize().width,titleBar:getPositionY() - titleBar:getContentSize().height - 10)})
+        :addScrollNode(self:GetContentNode():pos(20,0))
+        :setDirection(UIScrollView.DIRECTION_VERTICAL)
+        -- :onScroll(handler(self, self.CreateAllianceScrollListener))
+        :addTo(bg)
+	scrollView:fixResetPostion(-50)
+	self.createScrollView = scrollView
+end
+
+-- content node
 function GameUIAllianceBasicSetting:GetContentNode()
 	local createContent = cc.Node:create()
+	local buttonText = self.isCreateAction_ and _("创建") or _("修改")
 	--button
 	local okButton = cc.ui.UIPushButton.new({normal = "green_btn_up_142x39.png",pressed = "green_btn_down_142x39.png"}, {scale9 = true})
     	:addTo(createContent)
     	:align(display.BOTTOM_RIGHT, contentWidth - 10, 10)
     	:setButtonLabel("normal",  cc.ui.UILabel.new({
 	    	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-	    	text = _("创建"),
+	    	text = buttonText,
 	        font = UIKit:getFontFilePath(),
 	        size = 22,
 	        color = UIKit:hex2c3b(0xffedae),
@@ -291,7 +332,10 @@ function GameUIAllianceBasicSetting:createTextfieldPanel_()
     editbox_tag:setReturnType(cc.KEYBOARD_RETURNTYPE_DONE)
     editbox_tag:align(display.LEFT_BOTTOM,0,limitLabel:getContentSize().height+10):addTo(node)
     self.editbox_tag = editbox_tag
-
+    if not self.isCreateAction_ then
+    	local alliance_data = self.alliance_manager:GetMyAllianceData()
+    	editbox_tag:setText(alliance_data.basicInfo.tag)
+    end
     local tagLabel = UIKit:ttfLabel({
 		text = _("联盟标签"),
 		size = 22,
@@ -316,7 +360,10 @@ function GameUIAllianceBasicSetting:createTextfieldPanel_()
     editbox_name:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))
     editbox_name:setReturnType(cc.KEYBOARD_RETURNTYPE_DONE)
     editbox_name:align(display.LEFT_BOTTOM,0,nameTipLabel:getPositionY()+nameTipLabel:getContentSize().height+10):addTo(node)
-
+     if not self.isCreateAction_ then
+    	local alliance_data = self.alliance_manager:GetMyAllianceData()
+    	editbox_name:setText(alliance_data.basicInfo.name)
+    end
     self.editbox_name = editbox_name
 
     local randomButton = WidgetPushButton.new({normal = "alliance_sieve_51x45.png"})
@@ -415,15 +462,22 @@ end
 function GameUIAllianceBasicSetting:CreateAllianceButtonClicked()
 	local data = self:AdapterCreateData2Server_()
 	--TODO: check data
-	-- dump(data)
-	-- return
-	PushService:createAlliance(data,function(success)
-
-	end)
+	if self.isCreateAction_ then
+		PushService:createAlliance(data,function(success)end)
+	else
+		PushService:editAllianceBasicInfo(data,function(success)
+			self:leftButtonClicked()
+		end)
+	end
 end
+
+function GameUIAllianceBasicSetting:AdapterFlagData_Local(str)
+	return json.decode(str)
+end
+
 -- TODO:减少字符长度 用string数组代替
 -- {"graphic":2,"flag":4,"flagColor":["orangeRed","blue"],"graphicColor":["charmRed","orange"],"graphicContent":[9,8]}
-function GameUIAllianceBasicSetting:AdapterFlagData_(tableOrString)
+function GameUIAllianceBasicSetting:AdapterFlagData_Server(tableOrString)
 	local typeOfParam = type(tableOrString)
 	if typeOfParam == 'string' then
 

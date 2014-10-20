@@ -13,6 +13,7 @@ GameUIAllianceNoticeOrDescEdit.EDIT_TYPE = Enum("ALLIANCE_NOTICE","ALLIANCE_DESC
 local content_height = 470
 
 function GameUIAllianceNoticeOrDescEdit:ctor(edit_type)
+	self.allianceManager = DataManager:GetManager("AllianceManager")
 	GameUIAllianceNoticeOrDescEdit.super.ctor(self)
 	self.isNotice_ = edit_type == self.EDIT_TYPE.ALLIANCE_NOTICE
 end
@@ -40,22 +41,19 @@ function GameUIAllianceNoticeOrDescEdit:onMovieInStage()
     textView:setFont(UIKit:getFontFilePath(), 24)
     textView:setPlaceHolder(_("最多输入600个字符"))
     textView:setFontColor(UIKit:hex2c3b(0x000000))
-    textView:registerScriptTextViewHandler(function(event,textView)
-
- 	end)
- 	textView:setText("xxxxxxxxxxxxssssss")
-
+    textView:setText(self.allianceManager:GetMyAllianceData().notice or "")
+    self.textView = textView
  	display.newSprite("alliance_edit_box_584x364.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(textView,2)
 
- 	local closeButton = cc.ui.UIPushButton.new({normal = "X_2.png",pressed = "X_1.png"}, {scale9 = false})
-	   	:addTo(titleBar,2)
-	   	:align(display.BOTTOM_RIGHT,titleBar:getContentSize().width+20, 0)
-	   	:onButtonClicked(function ()
-	   		self:leftButtonClicked()
-	   	end)
-	display.newSprite("X_3.png")
-	   	:addTo(closeButton)
-	   	:pos(-32,30)
+ -- 	local closeButton = cc.ui.UIPushButton.new({normal = "X_2.png",pressed = "X_1.png"}, {scale9 = false})
+	--    	:addTo(titleBar,2)
+	--    	:align(display.BOTTOM_RIGHT,titleBar:getContentSize().width+10, -5)
+	--    	:onButtonClicked(function ()
+	--    		self:leftButtonClicked()
+	--    	end)
+	-- display.newSprite("X_3.png")
+	--    	:addTo(closeButton)
+	--    	:pos(-32,30)
 
 	local cancelButton = WidgetPushButton.new({normal = "red_button_146x42.png",pressed = "red_button_highlight_146x42.png"},{scale9 = true})
         :setButtonLabel(
@@ -66,6 +64,9 @@ function GameUIAllianceNoticeOrDescEdit:onMovieInStage()
 				color = 0xfff3c7
 			})
 		)
+		:onButtonClicked(function()
+			self:leftButtonClicked()
+		end)
 		:setButtonSize(146,42)
 		:addTo(bg_node)
 		:align(display.LEFT_BOTTOM,25, 20)
@@ -78,12 +79,24 @@ function GameUIAllianceNoticeOrDescEdit:onMovieInStage()
 				color = 0xfff3c7
 			})
 		)
-		:onButtonClicked(function(event)
-			print("text is------->",textView:getText())
-		end)
+		:onButtonClicked(handler(self, self.onOkButtonClicked))
 		:setButtonSize(146,42)
 		:addTo(bg_node)
 		:align(display.RIGHT_BOTTOM,bg_node:getCascadeBoundingBox().width - 120, 20)
+end
+
+
+function GameUIAllianceNoticeOrDescEdit:onOkButtonClicked()
+	local content = self.textView:getText()
+	if self.isNotice_ then
+		PushService:editAllianceNotice(content,function(success)
+			self:leftButtonClicked()
+		end)
+	else
+		PushService:editAllianceNotice(content,function(success)
+			self:leftButtonClicked()
+		end)
+	end
 end
 
 return GameUIAllianceNoticeOrDescEdit

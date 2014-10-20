@@ -212,3 +212,7 @@ function UIKit:getImageByBuildingType( building_type ,level)
         end
     end
 end
+
+function UIKit:shadowLayer()
+    return display.newColorLayer(UIKit:hex2c4b(0x7a000000))
+end

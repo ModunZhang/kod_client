@@ -190,15 +190,44 @@ function PushService:quitAlliance(cb)
 	)
 end
 
-function PushService:editAllianceNotice(notice,cb)
-	if not LuaUtils:isString(notice) then cb(false) return end
-	self.m_netService:request("logic.playerHandler.editAllianceNotice"
-		,{}
+function PushService:editAllianceNotice(description,cb)
+	if not LuaUtils:isString(description) then cb(false) return end
+	self.m_netService:request("logic.playerHandler.editAllianceDescription"
+		,{description=description}
 		,function(success)
 			if cb then  
 				cb(success)
 			end
 		end
 		,true
+	)
+end
+
+function PushService:editAllianceNotice(notice,cb)
+	if not LuaUtils:isString(notice) then cb(false) return end
+	self.m_netService:request("logic.playerHandler.editAllianceNotice"
+		,{notice=notice}
+		,function(success)
+			if cb then  
+				cb(success)
+			end
+		end
+		,true
+	)
+end
+
+function PushService:editAllianceBasicInfo(data,cb)
+	for k,v in pairs(data) do
+		if not LuaUtils:isString(v) or string.len(v) == 0 then
+			cb(false)
+			return false
+		end
+	end
+	self.m_netService:request("logic.playerHandler.editAllianceBasicInfo"
+			,data
+			,function(success)
+				cb(success)
+			end
+			,true
 	)
 end
