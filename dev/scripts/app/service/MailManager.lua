@@ -1,8 +1,8 @@
 local Enum = import("..utils.Enum")
-local Observer = import("..entity.Observer")
+local MultiObserver = import("..entity.MultiObserver")
 
-local MailManager = class("MailManager", Observer)
-MailManager.LISTEN_TYPE = Enum("RECEIVED_MAILS","DELETE_MAILS","SAVE_MAILS","UNSAVE_MAILS","SEND_MAILS")
+local MailManager = class("MailManager", MultiObserver)
+MailManager.LISTEN_TYPE = Enum("MAILS_CHANGED","UNREAD_MAILS_CHANGED")
 
 function MailManager:ctor()
     MailManager.super.ctor(self)
@@ -23,10 +23,16 @@ end
 
 function MailManager:IncreaseUnReadMailsAndReports(num)
     self.unread_num = self.unread_num + num
+    self:NotifyListeneOnType(MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED,function(listener)
+        listener:MailUnreadChanged(self.unread_num)
+    end)
 end
 
 function MailManager:DecreaseUnReadMailsAndReports(num)
     self.unread_num = self.unread_num - num
+    self:NotifyListeneOnType(MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED,function(listener)
+        listener:MailUnreadChanged(self.unread_num)
+    end)
 end
 
 function MailManager:GetUnReadMailsAndReportsNum()
@@ -60,6 +66,7 @@ function MailManager:dispatchMailServerData( eventName,msg )
         end
     elseif eventName == "onNewMailReceived" then
         table.insert(self.mails,1, msg.mail)
+        self:IncreaseUnReadMailsAndReports(1)
     elseif eventName == "onGetSavedMailsSuccess" then
         -- 获取邮件成功,加入MailManager缓存
         for _,mail in pairs(msg.mails) do
@@ -76,7 +83,7 @@ function MailManager:dispatchMailServerData( eventName,msg )
         end
     end
 
-    self:NotifyObservers(function(listener)
+    self:NotifyListeneOnType(MailManager.LISTEN_TYPE.MAILS_CHANGED,function(listener)
         listener:OnServerDataEvent({
             eventType = eventName,
             data = msg

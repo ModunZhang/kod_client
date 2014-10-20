@@ -10,6 +10,7 @@ local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
 local WidgetBackGroudWhite = import("..widget.WidgetBackGroudWhite")
 local WidgetBackGroundLucid = import("..widget.WidgetBackGroundLucid")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
+local MailManager = import("..service.MailManager")
 
 local GameUIMail = class('GameUIMail', GameUIBase)
 
@@ -76,7 +77,7 @@ function GameUIMail:onEnter()
         end
     end):pos(window.cx, window.bottom + 34)
 
-    DataManager:GetManager("MailManager"):AddObserver(self)
+    DataManager:GetManager("MailManager"):AddListenOnType(self,MailManager.LISTEN_TYPE.MAILS_CHANGED)
     local mails = DataManager:GetManager("MailManager"):GetMails(function (...)
         local saved_mails = DataManager:GetManager("MailManager"):GetSavedMails(function (...)
             local send_mails = DataManager:GetManager("MailManager"):GetSendMails(function (...)end)
@@ -87,7 +88,7 @@ function GameUIMail:onEnter()
     self:InitInbox(mails)
 end
 function GameUIMail:onExit()
-    DataManager:GetManager("MailManager"):RemoveObserver(self)
+    DataManager:GetManager("MailManager"):RemoveListenerOnType(self,MailManager.LISTEN_TYPE.MAILS_CHANGED)
     GameUIMail.super.onExit(self)
 end
 
@@ -210,7 +211,6 @@ function GameUIMail:CreateMailItem(listview,mail)
                 if tolua.type(mail.isRead)=="boolean" and not mail.isRead then
                     self:ReadMail(mail.id,function (flag)
                         if flag then
-                            DataManager:GetManager("MailManager"):RemoveObserver(self)
                             DataManager:GetManager("MailManager"):DecreaseUnReadMailsAndReports(1)
                             self.inbox_mails[mail.id].mail.isRead = true
                             self.inbox_mails[mail.id].mail_state:setTexture("mail_state_read.png")
@@ -662,7 +662,8 @@ function GameUIMail:ShowMailDetails(mail)
     content_item:addContent(content_label)
     content_listview:addItem(content_item)
     content_listview:reload()
-    if mail.isSaved then
+
+    if tolua.type(mail.isSaved)~="nil" then
         -- 删除按钮
         local delete_label = cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
