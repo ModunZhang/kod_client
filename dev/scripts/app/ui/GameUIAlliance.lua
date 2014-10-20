@@ -14,6 +14,7 @@ local AllianceManager = import("..service.AllianceManager")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIAllianceBasicSetting = import(".GameUIAllianceBasicSetting")
+local GameUIAllianceNoticeOrDescEdit = import(".GameUIAllianceNoticeOrDescEdit")
 
 GameUIAlliance.COMMON_LIST_ITEM_TYPE = Enum("JOIN","INVATE","APPLY")
 local SEARCH_ALLIAN_TO_JOIN_TAG = "join_alliance"
@@ -619,11 +620,12 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
         direction = UIScrollView.DIRECTION_VERTICAL,
         -- alignment = UIListView.ALIGNMENT_LEFT
     }:addTo(events_bg)
-
+    self.eventListView = eventListView
     for i=1,10 do
-    	local item = eventListView:newItem()
-
+    	local item = self:GetEventItemByIndexAndEvent(i,nil)
+  		eventListView:addItem(item)
     end
+    eventListView:reload()
 
 	local events_title = display.newSprite("alliance_evnets_title_548x50.png")
 		:addTo(overviewNode):align(display.CENTER_BOTTOM,window.width/2,events_bg:getPositionY()+events_bg:getContentSize().height)
@@ -684,6 +686,8 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 			})
 		)
 		:onButtonClicked(function(event)
+			UIKit:newGameUI('GameUIAllianceNoticeOrDescEdit',GameUIAllianceNoticeOrDescEdit.EDIT_TYPE.ALLIANCE_NOTICE)
+			 	:addToCurrentScene(true)
 		end)
 		:addTo(headerBg)
 		:align(display.LEFT_BOTTOM, 120,notice_bg:getPositionY()+notice_bg:getContentSize().height-5)
@@ -725,6 +729,41 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 
 	self.overviewNode = overviewNode
 	return self.overviewNode
+end
+
+function GameUIAlliance:GetEventItemByIndexAndEvent(index,event)
+	local item = self.eventListView:newItem()
+	local bg = display.newSprite(string.format("alliance_events_bg_520x84_%d.png",index%2))
+	local title_bg_image = self:GetEventTitleImageByEvent()
+	local title_bg = display.newSprite(title_bg_image):addTo(bg):align(display.LEFT_TOP, 0,70)
+	UIKit:ttfLabel({
+		text = "The enemy attack",
+		size = 20,
+		color = 0xffedae
+	}):addTo(title_bg):align(display.LEFT_BOTTOM,10,5)
+
+	UIKit:ttfLabel({
+		text = "2015/12/30 17:50",
+		size = 18,
+		color = 0x797154
+	}):addTo(bg):align(display.LEFT_BOTTOM,10, 5)
+
+	local contentLabel = UIKit:ttfLabel({
+		text = "A new member has joined the alliance",
+		size = 20,
+		color = 0x403c2f,
+		dimensions = cc.size(300, 42)
+	}):align(display.LEFT_CENTER,0,0)
+	contentLabel:pos(title_bg:getPositionX()+title_bg:getContentSize().width + 10,42)
+	contentLabel:addTo(bg)
+	--end
+	item:addContent(bg)
+	item:setItemSize(520,84)
+	return item
+end
+
+function GameUIAlliance:GetEventTitleImageByEvent(event)
+	return "alliance_event_type_cyan_222x30.png"
 end
 
 

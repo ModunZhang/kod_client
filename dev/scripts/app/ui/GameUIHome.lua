@@ -341,7 +341,7 @@ end
 function GameUIHome:OnBottomButtonClicked(event)
     local tag = event.target:getTag()
     if not tag then return end
-    if tag == 4 then
+    if tag == 4 then -- tag 4 = alliance button
         UIKit:newGameUI('GameUIAlliance'):addToCurrentScene(true)
     end
 end
