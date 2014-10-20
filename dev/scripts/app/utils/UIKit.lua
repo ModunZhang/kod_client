@@ -124,9 +124,9 @@ end
 
 function UIKit:convertColorToGL_( color )
     local r,g,b = self:hex2rgba(color)
-    r = tonumber(string.format("%1.1f",r/255))
-    g = tonumber(string.format("%1.1f",g/255))
-    b = tonumber(string.format("%1.1f",b/255))
+    r = r/255
+    g = g/255
+    b = b/255
     return {r,g,b}
 end
 
