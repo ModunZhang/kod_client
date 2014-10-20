@@ -32,6 +32,7 @@ end
 
 
 function MyApp:ctor()
+    print("ddd TableView",cc.TableView)
     self:initI18N()
     NetManager:init()
     MyApp.super.ctor(self)

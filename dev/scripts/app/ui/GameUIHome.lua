@@ -68,7 +68,7 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         NetManager:sendMsg("reset", NOT_HANDLE)
-    end):addTo(top_bg):align(display.LEFT_BOTTOM, 109, 106)
+        end):addTo(top_bg):align(display.LEFT_BOTTOM, 109, 106)
 
 
     -- 玩家名字背景加文字
@@ -259,7 +259,7 @@ function GameUIHome:CreateBottom()
             if cc.pGetDistance(chat_bg.prevP,cc.p(event.x,event.y)) <= 10 then
                 -- UIKit:newGameUI('GameUIChat'):addToCurrentScene(true)
                 UIKit:newGameUI('GameUIAlliance'):addToCurrentScene(true)
-
+                
             end
         end
     end)
@@ -283,13 +283,22 @@ function GameUIHome:CreateBottom()
     for i, v in ipairs({
         {"home/bottom_icon_1.png", _("任务")},
         {"home/bottom_icon_2.png", _("物品")},
-        {"home/bottom_icon_3.png", _("邮件")},
+        {"home/bottom_icon_3.png", _("邮件"),function ()
+            UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
+        end},
         {"home/bottom_icon_4.png", _("部队")},
         {"home/bottom_icon_2.png", _("更多")},
     }) do
         local col = i - 1
         local x, y = first_col + col * padding_width, first_row
-        local icon = display.newSprite(v[1]):addTo(bottom_bg):pos(x, y)
+        local icon = cc.ui.UIPushButton.new(
+            {normal = v[1], pressed = v[1]},
+            {scale9 = false}
+        ):onButtonClicked(function(event)
+            if v[3] then
+                v[3]()
+            end
+        end):addTo(bottom_bg):pos(x, y)
         local pos = icon:getAnchorPointInPoints()
         cc.ui.UILabel.new({text = v[2],
             size = 16,
@@ -310,7 +319,7 @@ function GameUIHome:CreateBottom()
         {normal = "toggle_city_89x97.png", pressed = "toggle_city_89x97.png"}
     ):addTo(bottom_bg)
         :pos(52, 54)
-        :onButtonClicked(function(event)
+        :onButtonClicked(function(event)    
             app:lockInput(true)
             if display.getRunningScene().__cname == "AllianceScene" then
                 transition.rotateTo(arrow, {
@@ -318,19 +327,7 @@ function GameUIHome:CreateBottom()
                     time = 0.2,
                     onComplete = function()
                         app:lockInput(false)
-                        app:enterScene("CityScene", nil, "custom", 0.6, function(scene, status)
-                            -- if status == "onEnter" then
-                            --     local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
-                            --     armature:getAnimation():play("Animation1", -1, 0)
-                            --     armature:getAnimation():setMovementEventCallFunc(function(armatureBack, movementType, movementID)
-                            --         if movementType == ccs.MovementEventType.complete then
-                            --             if movementID == "Animation1" then
-                            --                 armatureBack:getAnimation():play("Animation4", -1, 0)
-                            --             end
-                            --         end
-                            --     end)
-                            -- end
-                            end)
+                        app:enterScene("CityScene", nil, "fade", 0.6, display.COLOR_WHITE)
                     end}
                 )
             elseif display.getRunningScene().__cname == "CityScene" then
@@ -339,29 +336,7 @@ function GameUIHome:CreateBottom()
                     time = 0.2,
                     onComplete = function()
                         app:lockInput(false)
-                        app:enterScene("AllianceScene", nil, "custom", 2, function(scene, status)
-                            if status == "onEnter" then
-                                local armature = ccs.Armature:create("Cloud_Animation")
-                                    :addTo(scene):pos(display.cx, display.cy)
-                                armature:getAnimation():play("Animation1", -1, 0)
-                                armature:getAnimation():setMovementEventCallFunc(function(armatureBack, movementType, movementID)
-                                    if movementType == ccs.MovementEventType.complete then
-                                        if movementID == "Animation1" then
-                                            scene:performWithDelay(function()
-                                                armatureBack:getAnimation():play("Animation4", -1, 0)
-                                            end, 0.5)
-                                        end
-                                    end
-                                end)
-                                local background = display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene)
-                                local sequence = transition.sequence{
-                                    cc.FadeIn:create(0.75),
-                                    cc.DelayTime:create(0.5),
-                                    cc.FadeOut:create(0.75),
-                                }
-                                background:runAction(sequence)
-                            end
-                        end)
+                        app:enterScene("AllianceScene", nil, "fade", 0.6, display.COLOR_WHITE)
                     end}
                 )
             end
@@ -371,25 +346,3 @@ function GameUIHome:CreateBottom()
 end
 
 return GameUIHome
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
