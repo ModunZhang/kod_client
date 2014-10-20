@@ -18,6 +18,7 @@ local MyApp = class("MyApp", cc.mvc.AppBase)
 
 
 function MyApp:ctor()
+    print("ddd TableView",cc.TableView)
     self:initI18N()
     NetManager:init()
     MyApp.super.ctor(self)

@@ -2,6 +2,7 @@ local window = import("..utils.window")
 local WidgetTab = import("..widget.WidgetTab")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
+local MailManager = import("..service.MailManager")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
 
 
@@ -43,10 +44,21 @@ function GameUIHome:onEnter()
     self:RefreshData()
     city:GetResourceManager():AddObserver(self)
     city:GetResourceManager():OnResourceChanged()
+    DataManager:GetManager("MailManager"):AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
+
 end
 function GameUIHome:onExit()
     self.city:GetResourceManager():RemoveObserver(self)
+    DataManager:GetManager("MailManager"):RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     GameUIHome.super.onExit(self)
+end
+function GameUIHome:MailUnreadChanged( num )
+    if num==0 then
+        self.self.mail_unread_num_bg:setVisible(false)
+    else
+        self.mail_unread_num_bg:setVisible(true)
+        self.mail_unread_num_label:setString(GameUtils:formatNumber(num))
+    end
 end
 function GameUIHome:RefreshData()
     -- 更新数值
@@ -68,7 +80,7 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         NetManager:sendMsg("reset", NOT_HANDLE)
-    end):addTo(top_bg):align(display.LEFT_BOTTOM, 109, 106)
+        end):addTo(top_bg):align(display.LEFT_BOTTOM, 109, 106)
 
 
     -- 玩家名字背景加文字
@@ -259,7 +271,7 @@ function GameUIHome:CreateBottom()
             if cc.pGetDistance(chat_bg.prevP,cc.p(event.x,event.y)) <= 10 then
                 -- UIKit:newGameUI('GameUIChat'):addToCurrentScene(true)
                 UIKit:newGameUI('GameUIAlliance'):addToCurrentScene(true)
-
+                
             end
         end
     end)
@@ -283,13 +295,22 @@ function GameUIHome:CreateBottom()
     for i, v in ipairs({
         {"home/bottom_icon_1.png", _("任务")},
         {"home/bottom_icon_2.png", _("物品")},
-        {"home/bottom_icon_3.png", _("邮件")},
+        {"home/mail.png", _("邮件"),function ()
+            UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
+        end},
         {"home/bottom_icon_4.png", _("部队")},
         {"home/bottom_icon_2.png", _("更多")},
     }) do
         local col = i - 1
         local x, y = first_col + col * padding_width, first_row
-        local icon = display.newSprite(v[1]):addTo(bottom_bg):pos(x, y)
+        local icon = cc.ui.UIPushButton.new(
+            {normal = v[1], pressed = v[1]},
+            {scale9 = false}
+        ):onButtonClicked(function(event)
+            if v[3] then
+                v[3]()
+            end
+        end):addTo(bottom_bg):pos(x, y)
         local pos = icon:getAnchorPointInPoints()
         cc.ui.UILabel.new({text = v[2],
             size = 16,
@@ -298,6 +319,20 @@ function GameUIHome:CreateBottom()
             :addTo(icon):align(display.CENTER, pos.x, pos.y - 45)
     end
 
+    -- 未读邮件或战报数量显示条
+    self.mail_unread_num_bg = display.newSprite("home/mail_unread_bg.png"):addTo(bottom_bg):pos(400, first_row+20)
+    self.mail_unread_num_label = cc.ui.UILabel.new(
+        {cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = GameUtils:formatNumber(DataManager:GetManager("MailManager"):GetUnReadMailsAndReportsNum()),
+            font = UIKit:getFontFilePath(),
+            size = 16,
+            -- dimensions = cc.size(200,24),
+            color = UIKit:hex2c3b(0xf5f2b3)
+        }):align(display.CENTER,self.mail_unread_num_bg:getContentSize().width/2,self.mail_unread_num_bg:getContentSize().height/2+4)
+        :addTo(self.mail_unread_num_bg)
+    if DataManager:GetManager("MailManager"):GetUnReadMailsAndReportsNum()==0 then
+        self.mail_unread_num_bg:setVisible(false)
+    end
     -- 场景切换
     display.newSprite("home/toggle_bg.png"):addTo(bottom_bg):pos(91, 52)
     display.newSprite("home/toggle_gear.png"):addTo(bottom_bg):pos(106, 49)
@@ -310,7 +345,7 @@ function GameUIHome:CreateBottom()
         {normal = "toggle_city_89x97.png", pressed = "toggle_city_89x97.png"}
     ):addTo(bottom_bg)
         :pos(52, 54)
-        :onButtonClicked(function(event)
+        :onButtonClicked(function(event)    
             app:lockInput(true)
             if display.getRunningScene().__cname == "AllianceScene" then
                 transition.rotateTo(arrow, {
@@ -318,19 +353,7 @@ function GameUIHome:CreateBottom()
                     time = 0.2,
                     onComplete = function()
                         app:lockInput(false)
-                        app:enterScene("CityScene", nil, "custom", 0.6, function(scene, status)
-                            -- if status == "onEnter" then
-                            --     local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
-                            --     armature:getAnimation():play("Animation1", -1, 0)
-                            --     armature:getAnimation():setMovementEventCallFunc(function(armatureBack, movementType, movementID)
-                            --         if movementType == ccs.MovementEventType.complete then
-                            --             if movementID == "Animation1" then
-                            --                 armatureBack:getAnimation():play("Animation4", -1, 0)
-                            --             end
-                            --         end
-                            --     end)
-                            -- end
-                            end)
+                        app:enterScene("CityScene", nil, "fade", 0.6, display.COLOR_WHITE)
                     end}
                 )
             elseif display.getRunningScene().__cname == "CityScene" then
@@ -363,25 +386,3 @@ function GameUIHome:CreateBottom()
 end
 
 return GameUIHome
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

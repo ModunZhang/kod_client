@@ -514,7 +514,112 @@ function NetManager:instantTreatSoldiers(soldiers, cb)
         end
     end)
 end
-
+-- 发送个人邮件
+function NetManager:sendPersonalMail(memberName,title,content,cb)
+    local info = {
+        memberName = memberName,
+        title = title,
+        content = content,
+    }
+    self.m_netService:request("logic.playerHandler.sendMail", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+-- 获取收件箱邮件
+function NetManager:getMails( fromIndex, cb)
+    local info = {
+        fromIndex = fromIndex
+    }
+    self.m_netService:request("logic.playerHandler.getMails", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+-- 阅读邮件
+function NetManager:readMail(mailId,cb)
+    local info = {
+        mailId = mailId,
+    }
+    self.m_netService:request("logic.playerHandler.readMail", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+-- 收藏邮件
+function NetManager:saveMail(mailId,cb)
+    local info = {
+        mailId = mailId,
+    }
+    self.m_netService:request("logic.playerHandler.saveMail", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+-- 取消收藏邮件
+function NetManager:unSaveMail(mailId,cb)
+    local info = {
+        mailId = mailId,
+    }
+    self.m_netService:request("logic.playerHandler.unSaveMail", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+-- 获取收藏邮件
+function NetManager:getSavedMails(fromIndex, cb )
+    local info = {
+        fromIndex = fromIndex
+    }
+    self.m_netService:request("logic.playerHandler.getSavedMails", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+-- 获取已发送邮件
+function NetManager:getSendMails(fromIndex, cb )
+    local info = {
+        fromIndex = fromIndex
+    }
+    self.m_netService:request("logic.playerHandler.getSendMails", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+-- 删除邮件
+function NetManager:deleteMail(mailId,cb)
+    local info = {
+        mailId = mailId,
+    }
+    self.m_netService:request("logic.playerHandler.deleteMail", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
 --
 function NetManager:resetGame()
     -- self:sendMsg("reset", NOT_HANDLE)
