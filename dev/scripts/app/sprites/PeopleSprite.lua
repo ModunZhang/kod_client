@@ -21,7 +21,7 @@ function PeopleSprite:SetPositionWithZOrder(x, y)
 	PeopleSprite.super.SetPositionWithZOrder(self, x, y)
 end
 function PeopleSprite:GetMidLogicPosition()
-    return self.x, self.y
+    return self.x - 1, self.y - 1
 end
 
 return PeopleSprite

@@ -141,7 +141,7 @@ function CityLayer:ctor(city)
     self.road = nil
     self:InitBackground()
     self.back_node = display.newNode():addTo(self, BACK_NODE)
-    self.city_layer = display.newLayer():addTo(self, CITY_LAYER):align(display.BOTTOM_LEFT, 1000, 420)
+    self.city_layer = display.newLayer():addTo(self, CITY_LAYER):align(display.BOTTOM_LEFT, 800, 980)
     self.city_background = cc.TMXTiledMap:create("tmxmaps/background2.tmx"):addTo(self.city_layer):hide()
     self.position_node = cc.TMXTiledMap:create("tmxmaps/city_road.tmx"):addTo(self.city_layer):hide()
     self.tile_node = display.newNode():addTo(self.city_layer, CITY_BACKGROUND)
@@ -183,74 +183,97 @@ function CityLayer:InitBackgroundsWithRandom()
     local back_size = self:GetBackgroundLayer():getLayerSize()
     local end_x = back_size.width - 1
     local end_y = back_size.height - 1
+    local function tree(png, x, y)
+        return display.newSprite(png):addTo(self.back_node)
+            :align(display.BOTTOM_LEFT, x, y)
+    end
     for x = 0, end_x do
         for y = 0, end_y do
             local point = self:GetBackgroundLayer():getPositionAt(cc.p(x, y))
+            -- local png = floor(random() * 1000) % 2 == 0 and "tree_icefield_150x209.png" or "tree_icefield_150x209.png"
             local png = floor(random() * 1000) % 2 == 0 and "trees_490x450.png" or "trees_516x433.png"
+            local sprite
             repeat
-                -- 靠上边是山
-                local near_up_side = y == 0 or y == 1
-                if near_up_side then
-                    display.newSprite("quarrier_1_303x296.png"):addTo(self.back_node)
-                        :align(display.BOTTOM_LEFT, point.x, point.y)
-                    break
-                end
-
-                -- 靠其他边是树
-                local near_other_side = x == 0 or x == back_size.width - 1 or x == back_size.width - 2 or y == back_size.height - 1
-                if near_other_side then
-                    display.newSprite(png):addTo(self.back_node)
-                        :align(display.BOTTOM_LEFT, point.x, point.y)
-                    break
-                end
-
-                -- 左上角是树
                 if
-                    x + y <= 4
-                    or (x == 1 and y == 5)
-                    or (x == 5 and y == 1)
+                    (x == 5 and y == 2)
+                    or (x == 8 and y == 2)
+                    or (x == 1 and y == 7)
+                    or (x == 1 and y == 10)
+                    or (x == end_x - 1 and y == 7)
+                    or (x == end_x - 1 and y == 10)
+                    or (x == 5 and y == end_y - 2)
+                    or (x == 8 and y == end_y - 2)
                 then
-                    display.newSprite(png):addTo(self.back_node)
-                        :align(display.BOTTOM_LEFT, point.x, point.y)
-                    break
-                end
-
-                -- 左下角是树
-                if x + (end_y - y) <= 4 then
-                    display.newSprite(png):addTo(self.back_node)
-                        :align(display.BOTTOM_LEFT, point.x, point.y)
-                    break
-                end
-
-                -- 右上角是树
-                if (end_x - x) + y <= 5 then
-                    display.newSprite(png):addTo(self.back_node)
-                        :align(display.BOTTOM_LEFT, point.x, point.y)
-                    break
-                end
-
-                -- 右上角是树
-                if (end_x - x) + (end_y - y) <= 5 then
-                    display.newSprite(png):addTo(self.back_node)
-                        :align(display.BOTTOM_LEFT, point.x, point.y)
                     break
                 end
 
                 -- 左上角的麦蒂
-                if x + y == 5 then
+                if
+                    (x ~= 0 and x ~= 5 and y ~= 0 and y ~= 1)
+                    and (x + y == 6 or x + y == 7)
+                then
                     display.newSprite("corn_391x306.png"):addTo(self.back_node)
                         :align(display.BOTTOM_LEFT, point.x, point.y)
                     break
                 end
 
-                -- 左下角的矿山
-                if x + (end_y - y) == 5 then
+                -- 矿山
+                if
+                    x == 1 and y == 16
+                    or x == 1 and y == 13
+                    or x == 3 and y == 15
+                    or x == 11 and y == 14
+                    or x == 10 and y == 2
+                    or x == 12 and y == 4
+                then
                     display.newSprite("stone_396x318.png"):addTo(self.back_node)
                         :align(display.BOTTOM_LEFT, point.x, point.y)
                     break
                 end
 
+                -- 靠上边是树
+                local near_up_side = y <= 2
+                if near_up_side then
+                    sprite = tree(png, point.x, point.y)
+                    break
+                end
+
+                -- 靠其他边是树
+                local near_other_side = x <= 1 or x >= back_size.width - 2 or y >= back_size.height - 3
+                if near_other_side then
+                    sprite = tree(png, point.x, point.y)
+                    break
+                end
+
+                -- 左上角是树
+                if
+                    x + y <= 5
+                then
+                    sprite = tree(png, point.x, point.y)
+                    break
+                end
+
+                -- 左下角是树
+                if x + (end_y - y) <= 7 then
+                    sprite = tree(png, point.x, point.y)
+                    break
+                end
+
+                -- 右上角是树
+                if (end_x - x) + y <= 7 then
+                    sprite = tree(png, point.x, point.y)
+                    break
+                end
+
+                -- 右下角是树
+                if (end_x - x) + (end_y - y) <= 7 then
+                    sprite = tree(png, point.x, point.y)
+                    break
+                end
             until true
+            if sprite then
+                sprite:setLocalZOrder(back_size.width * y + x)
+            end
         end
     end
 end
@@ -435,13 +458,13 @@ function CityLayer:InitWithCity(city)
     -- 兵种
     local soldiers = {}
     for i, v in ipairs({
-        {x = 1, y = 11, soldier_type = "swordsman"},
-        {x = 3, y = 11, soldier_type = "archer"},
+        {x = 2, y = 11, soldier_type = "swordsman"},
+        {x = 4, y = 11, soldier_type = "archer"},
         {x = 6, y = 12, soldier_type = "lancer"},
         {x = 9, y = 12, soldier_type = "catapult"},
 
-        {x = 1, y = 13, soldier_type = "sentinel"},
-        {x = 3, y = 13, soldier_type = "crossbowman"},
+        {x = 2, y = 13, soldier_type = "sentinel"},
+        {x = 4, y = 13, soldier_type = "crossbowman"},
         {x = 6, y = 15, soldier_type = "horseArcher"},
         {x = 9, y = 15, soldier_type = "ballista"},
 
@@ -794,6 +817,9 @@ function CityLayer:OnSceneMove()
 end
 
 return CityLayer
+
+
+
 
 
 
