@@ -139,7 +139,8 @@ function GameUIHasBeenBuild:LoadBuildingQueue()
     return back_ground
 end
 function GameUIHasBeenBuild:UpdateBuildingQueue(city)
-    local max = 1
+    -- local max = 1
+    local max = city.build_queue
     local current = max - #city:GetOnUpgradingBuildings()
     self.queue:SetBuildingQueue(current, max)
 end

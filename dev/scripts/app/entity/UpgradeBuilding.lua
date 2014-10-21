@@ -265,6 +265,7 @@ end
 
 function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     local level = self.level
+
     --等级小于0级
     if level<0 then
         return NOT_ABLE_TO_UPGRADE.LEVEL_NOT_ENOUGH
@@ -306,15 +307,16 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
         or m.tiles<config[self:GetNextLevel()].tiles or m.tools<config[self:GetNextLevel()].tools
         or m.blueprints<config[self:GetNextLevel()].blueprints or m.pulley<config[self:GetNextLevel()].pulley
     local is_building_list_enough = #City:GetOnUpgradingBuildings()>0
-    print("#City:GetOnUpgradingBuildings()",#City:GetOnUpgradingBuildings())
-    if is_resource_enough and is_building_list_enough then
+    local max = City.build_queue
+    local current = max - #City:GetOnUpgradingBuildings()
+    
+    if is_resource_enough and current <= 0 then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_AND_RESOURCE_NOT_ENOUGH
     end
     if is_resource_enough then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH
     end
-    if is_building_list_enough then
-        print("当前建造的建筑",City:GetOnUpgradingBuildings()[1]:GetType())
+    if current <= 0 then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH
     end
 end
