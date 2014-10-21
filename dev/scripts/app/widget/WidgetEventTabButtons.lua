@@ -1,8 +1,11 @@
 local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTab = import(".WidgetTab")
+local WIDGET_WIDTH = 491
+local WIDGET_HEIGHT = 300
+local TAB_HEIGHT = 47
 local WidgetEventTabButtons = class("WidgetEventTabButtons", function()
-    local rect = cc.rect(0, 0, 491, 150 + 47)
+    local rect = cc.rect(0, 0, WIDGET_WIDTH, WIDGET_HEIGHT + TAB_HEIGHT)
     local node = display.newClippingRegionNode(rect)
     node.view_rect = rect
     node.locked = false
@@ -110,7 +113,7 @@ end
 function WidgetEventTabButtons:ctor(city)
     self.item_array = {}
     local node = display.newNode():addTo(self)
-    display.newLayer():addTo(node):pos(0, -150 + 47):setContentSize(cc.size(491, 150 + 47))
+    display.newLayer():addTo(node):pos(0, -WIDGET_HEIGHT + TAB_HEIGHT):setContentSize(cc.size(WIDGET_WIDTH, WIDGET_HEIGHT + TAB_HEIGHT))
     self.node = node
     self.tab_buttons, self.tab_map = self:CreateTabButtons()
     self.tab_buttons:addTo(node, 2):pos(0, 0)
@@ -175,7 +178,7 @@ function WidgetEventTabButtons:CreateTabButtons()
             on = "tab_button_down_111x47.png",
             off = "tab_button_up_111x47.png",
             tab = tab_png
-        }, unit_width, 47)
+        }, unit_width, TAB_HEIGHT)
             :addTo(node):align(display.LEFT_BOTTOM,origin_x + (i - 5) * unit_width, 0)
             :OnTabPress(handler(self, self.OnTabClicked))
     end
@@ -189,13 +192,13 @@ function WidgetEventTabButtons:CreateTabButtons()
                 self:Hide()
             end
         end)
-    self.arrow = cc.ui.UIImage.new("hide_18x19.png"):addTo(btn):align(display.CENTER, 48/2, 47/2)
+    self.arrow = cc.ui.UIImage.new("hide_18x19.png"):addTo(btn):align(display.CENTER, 48/2, TAB_HEIGHT/2)
     return node, tab_map
 end
 function WidgetEventTabButtons:CreateBackGround()
     return cc.ui.UIImage.new("back_ground_491x105.png", {scale9 = true,
-        capInsets = cc.rect(10, 10, 491 - 20, 105 - 20)
-    }):align(display.LEFT_BOTTOM):setLayoutSize(491, 50)
+        capInsets = cc.rect(10, 10, WIDGET_WIDTH - 20, 105 - 20)
+    }):align(display.LEFT_BOTTOM):setLayoutSize(WIDGET_WIDTH, 50)
 end
 function WidgetEventTabButtons:CreateItem()
     return self:CreateProgressItem():align(display.LEFT_CENTER)
