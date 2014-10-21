@@ -107,7 +107,7 @@ function CityLayer:OnSoliderCountChanged(soldier_manager, changed)
 end
 -----
 local SCENE_BACKGROUND = 1
-local BACK_NODE = 1
+local BACK_NODE = 2
 local CITY_LAYER = 3
 local CITY_BACKGROUND = 1
 local ROAD_NODE = 2
@@ -150,7 +150,9 @@ function CityLayer:ctor(city)
 
     randomseed(DataManager:getUserData().countInfo.registerTime)
     self:InitBackgroundsWithRandom()
+    randomseed(DataManager:getUserData().countInfo.registerTime)
     self:InitCityBackgroundsWithRandom()
+    randomseed(DataManager:getUserData().countInfo.registerTime)
     self:InitRoadsWithRandom()
 
 
@@ -179,7 +181,19 @@ function CityLayer:InitBackground()
     self:ReloadSceneBackground()
 end
 ---
+local CORN_MAP = {
+    grass = "corn_grass_399x302.png",
+    desert = "corn_desert_399x302.png",
+    icefield = "corn_icefield_399x302.png",
+}
+local STONE_MAP = {
+    grass = "stone_grass_379x307.png",
+    desert = "stone_desert_379x307.png",
+    icefield = "stone_icefield_379x307.png",
+}
 function CityLayer:InitBackgroundsWithRandom()
+    local terrain_type = self:CurrentTerrain()
+    self.back_node:removeAllChildren()
     local back_size = self:GetBackgroundLayer():getLayerSize()
     local end_x = back_size.width - 1
     local end_y = back_size.height - 1
@@ -192,6 +206,7 @@ function CityLayer:InitBackgroundsWithRandom()
             local point = self:GetBackgroundLayer():getPositionAt(cc.p(x, y))
             -- local png = floor(random() * 1000) % 2 == 0 and "tree_icefield_150x209.png" or "tree_icefield_150x209.png"
             local png = floor(random() * 1000) % 2 == 0 and "trees_490x450.png" or "trees_516x433.png"
+            -- local png = floor(random() * 1000) % 2 == 0 and "trees_490x450.png" or "trees_516x433.png"
             local sprite
             repeat
                 if
@@ -212,7 +227,7 @@ function CityLayer:InitBackgroundsWithRandom()
                     (x ~= 0 and x ~= 5 and y ~= 0 and y ~= 1)
                     and (x + y == 6 or x + y == 7)
                 then
-                    display.newSprite("corn_391x306.png"):addTo(self.back_node)
+                    display.newSprite(CORN_MAP[terrain_type]):addTo(self.back_node)
                         :align(display.BOTTOM_LEFT, point.x, point.y)
                     break
                 end
@@ -226,7 +241,7 @@ function CityLayer:InitBackgroundsWithRandom()
                     or x == 10 and y == 2
                     or x == 12 and y == 4
                 then
-                    display.newSprite("stone_396x318.png"):addTo(self.back_node)
+                    display.newSprite(STONE_MAP[terrain_type]):addTo(self.back_node)
                         :align(display.BOTTOM_LEFT, point.x, point.y)
                     break
                 end
@@ -372,7 +387,13 @@ end
 function CityLayer:ChangeTerrain(terrain_type)
     if self.terrain_type ~= terrain_type then
         self.terrain_type = terrain_type
+
         self:ReloadSceneBackground()
+
+        -- 
+        randomseed(DataManager:getUserData().countInfo.registerTime)
+        self:InitBackgroundsWithRandom(terrain_type)
+
         self:RefreshCityBackgroundsByMap(self.city_backgrounds_map)
         self:RefreshRoadsByMap(self.roads_map)
         table.foreach(self.trees, function(_, v)
@@ -392,6 +413,7 @@ function CityLayer:ReloadSceneBackground()
         self.background:removeFromParent()
     end
     self.background = cc.TMXTiledMap:create(TERRAIN_MAP[self.terrain_type].background):addTo(self, SCENE_BACKGROUND)
+    self.background_layer = self.background:getLayer("layer1")
 end
 function CityLayer:InitWithCity(city)
     city:AddListenOnType(self, city.LISTEN_TYPE.UNLOCK_TILE)
@@ -817,6 +839,8 @@ function CityLayer:OnSceneMove()
 end
 
 return CityLayer
+
+
 
 
 
