@@ -335,51 +335,39 @@ function GameUIHome:CreateBottom()
     display.newSprite("home/toggle_point.png"):addTo(bottom_bg):pos(94, 89)
     display.newSprite("home/toggle_point.png"):addTo(bottom_bg):pos(94, 10)
     local arrow = display.newSprite("toggle_arrow_103x104.png"):addTo(bottom_bg):pos(53, 51)
-        :rotation(display.getRunningScene().name == "AllianceScene" and 90 or 0)
     WidgetPushButton.new(
         {normal = "toggle_city_89x97.png", pressed = "toggle_city_89x97.png"}
     ):addTo(bottom_bg)
         :pos(52, 54)
         :onButtonClicked(function(event)
             app:lockInput(true)
-            if display.getRunningScene().__cname == "AllianceScene" then
-                transition.rotateTo(arrow, {
-                    rotate = 0,
-                    time = 0.2,
-                    onComplete = function()
-                        app:lockInput(false)
-                        app:enterScene("CityScene", nil, "fade", 0.6, display.COLOR_WHITE)
-                    end}
-                )
-            elseif display.getRunningScene().__cname == "CityScene" then
-                transition.rotateTo(arrow, {
-                    rotate = 90,
-                    time = 0.2,
-                    onComplete = function()
-                        app:lockInput(false)
-                        app:enterScene("AllianceScene", nil, "custom", -1, function(scene, status)
-                            local manager = ccs.ArmatureDataManager:getInstance()
-                            if status == "onEnter" then
-                                manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
-                                local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
-                                display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
-                                    transition.sequence{
-                                        cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
-                                        cc.FadeIn:create(0.75),
-                                        cc.CallFunc:create(function() scene:hideOutShowIn() end),
-                                        cc.DelayTime:create(0.5),
-                                        cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
-                                        cc.FadeOut:create(0.75),
-                                        cc.CallFunc:create(function() scene:finish() end),
-                                    }
-                                )
-                            elseif status == "onExit" then
-                                manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
-                            end
-                        end)
-                    end}
-                )
-            end
+            transition.rotateTo(arrow, {
+                rotate = 90,
+                time = 0.2,
+                onComplete = function()
+                    app:lockInput(false)
+                    app:enterScene("AllianceScene", nil, "custom", -1, function(scene, status)
+                        local manager = ccs.ArmatureDataManager:getInstance()
+                        if status == "onEnter" then
+                            manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+                            local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
+                            display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
+                                transition.sequence{
+                                    cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
+                                    cc.FadeIn:create(0.75),
+                                    cc.CallFunc:create(function() scene:hideOutShowIn() end),
+                                    cc.DelayTime:create(0.5),
+                                    cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
+                                    cc.FadeOut:create(0.75),
+                                    cc.CallFunc:create(function() scene:finish() end),
+                                }
+                            )
+                        elseif status == "onExit" then
+                            manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+                        end
+                    end)
+                end}
+            )
         end)
 
     return bottom_bg
@@ -396,5 +384,6 @@ function GameUIHome:OnBottomButtonClicked(event)
 end
 
 return GameUIHome
+
 
 

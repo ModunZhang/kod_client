@@ -31,8 +31,10 @@ function CityScene:onEnter()
     end)
     City:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
     self:PlayBackgroundMusic()
+    self:GotoLogicPoint(6, 4)
 end
 function CityScene:onExit()
+    home_page = nil
     self:stopAllActions()
     audio.stopMusic()
     audio.stopAllSounds()
@@ -142,7 +144,7 @@ function CityScene:CreateHomePage()
     return home
 end
 function CityScene:onEnterTransitionFinish()
-    self:GotoLogicPoint(6, 4)
+
 end
 
 -- function

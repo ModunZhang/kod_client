@@ -4,16 +4,16 @@ function CitizenSprite:ctor(city_layer, x, y)
 	self.x, self.y = x, y
     CitizenSprite.super.ctor(self, city_layer, nil, city_layer:GetLogicMap():ConvertToMapPosition(x, y))
  	self:TurnRight()
- 	self:PlayAnimation("Flying")
- 	self:CreateBase()
- 	self.sprite:setVisible(false)
+ 	self:PlayAnimation("move_1")
+ 	-- self:CreateBase()
+ 	-- self.sprite:setVisible(false)
 end
 function CitizenSprite:PlayAnimation(animation)
     self.current_animation = animation
     self.sprite:getAnimation():play(animation)
 end
 function CitizenSprite:CreateSprite()
-    local armature = ccs.Armature:create("Red_dragon")
+    local armature = ccs.Armature:create("Infantry_1_render")
     armature:setAnchorPoint(display.ANCHOR_POINTS[display.CENTER])
     -- armature:getAnimation():setMovementEventCallFunc(handler(self, self.OnAnimationCallback))
     -- self.idle_count = 0
@@ -40,7 +40,7 @@ function CitizenSprite:GetMidLogicPosition()
     return self.x, self.y
 end
 function CitizenSprite:CreateBase()
-    self:GenerateBaseTiles(2, 2)
+    self:GenerateBaseTiles(1, 1)
 end
 
 return CitizenSprite

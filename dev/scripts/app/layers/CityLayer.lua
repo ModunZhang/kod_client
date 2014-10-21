@@ -194,19 +194,18 @@ local STONE_MAP = {
 function CityLayer:InitBackgroundsWithRandom()
     local terrain_type = self:CurrentTerrain()
     self.back_node:removeAllChildren()
-    local back_size = self:GetBackgroundLayer():getLayerSize()
+    local back_layer = self:GetBackgroundLayer()
+    local back_size = back_layer:getLayerSize()
     local end_x = back_size.width - 1
     local end_y = back_size.height - 1
     local function tree(png, x, y)
-        return display.newSprite(png):addTo(self.back_node)
-            :align(display.BOTTOM_LEFT, x, y)
+        return display.newSprite(png):addTo(self.back_node):align(display.BOTTOM_LEFT, x, y)
     end
     for x = 0, end_x do
         for y = 0, end_y do
-            local point = self:GetBackgroundLayer():getPositionAt(cc.p(x, y))
+            local point = back_layer:getPositionAt(cc.p(x, y))
             -- local png = floor(random() * 1000) % 2 == 0 and "tree_icefield_150x209.png" or "tree_icefield_150x209.png"
             local png = floor(random() * 1000) % 2 == 0 and "trees_490x450.png" or "trees_516x433.png"
-            -- local png = floor(random() * 1000) % 2 == 0 and "trees_490x450.png" or "trees_516x433.png"
             local sprite
             repeat
                 if
@@ -413,7 +412,6 @@ function CityLayer:ReloadSceneBackground()
         self.background:removeFromParent()
     end
     self.background = cc.TMXTiledMap:create(TERRAIN_MAP[self.terrain_type].background):addTo(self, SCENE_BACKGROUND)
-    self.background_layer = self.background:getLayer("layer1")
 end
 function CityLayer:InitWithCity(city)
     city:AddListenOnType(self, city.LISTEN_TYPE.UNLOCK_TILE)
@@ -501,7 +499,8 @@ function CityLayer:InitWithCity(city)
 
     -- 更新其他需要动态生成的建筑
     self:UpdateAllDynamicWithCity(city)
-    ---
+    --
+
     -- local cc = cc
     -- local function wrap_point_in_table(...)
     --     local arg = {...}
@@ -523,8 +522,8 @@ function CityLayer:InitWithCity(city)
     --     local tx, ty = self.iso_map:ConvertToMapPosition(19, 13)
     --     local disSQ = cc.pDistanceSQ({x = x, y = y}, {x = tx, y = ty})
     --     if disSQ < 10 * 10 then
-    --         citizen:TurnLeft()
-    --         _, vdir = return_dir_and_velocity({x = 19, y = 13}, {x = 19, y = 19})
+    --         citizen:TurnRight()
+    --         _, vdir = return_dir_and_velocity({x = 19, y = 13}, {x = 19, y = 8})
     --     end
     --     local tx, ty = self.iso_map:ConvertToMapPosition(19, 29)
     --     local disSQ = cc.pDistanceSQ({x = x, y = y}, {x = tx, y = ty})
@@ -812,10 +811,7 @@ function CityLayer:GetCityNode()
 end
 --
 function CityLayer:GetBackgroundLayer()
-    if not self.background_layer then
-        self.background_layer = self.background:getLayer("layer1")
-    end
-    return self.background_layer
+    return self.background:getLayer("layer1")
 end
 
 ----- override
