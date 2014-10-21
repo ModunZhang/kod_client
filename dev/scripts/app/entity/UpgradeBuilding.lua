@@ -23,6 +23,10 @@ function UpgradeBuilding:ctor(building_info)
     self.upgrade_building_observer = Observer.new()
     --building剩余升级时间小于5 min时可以免费加速  单位 seconds
     self.freeSpeedUpTime=300
+    self.unique_upgrading_key = nil
+end
+function UpgradeBuilding:UniqueUpgradingKey()
+    return self.unique_upgrading_key
 end
 function UpgradeBuilding:ResetAllListeners()
     UpgradeBuilding.super.ResetAllListeners(self)
@@ -160,6 +164,7 @@ function UpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id,
                 table.foreach(location.houses, function(key, building_info)
                     if building_info.location == sub_location_id then
                         local event = get_house_event_by_location(location_id, sub_location_id)
+                        self:OnEvent(event)
                         finishTime = event == nil and 0 or event.finishTime / 1000
                         level = building_info.level
                         return true
@@ -180,6 +185,7 @@ function UpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id,
                 end
 
                 local event = get_building_event_by_location(location_id)
+                self:OnEvent(event)
                 finishTime = event == nil and 0 or event.finishTime / 1000
                 level = location.level
             else
@@ -190,6 +196,9 @@ function UpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id,
         -- 适配
         self:OnHandle(level, finishTime)
     end
+end
+function UpgradeBuilding:OnEvent(event)
+    self.unique_upgrading_key = event.id
 end
 function UpgradeBuilding:OnHandle(level, finish_time)
     if self.level == level then

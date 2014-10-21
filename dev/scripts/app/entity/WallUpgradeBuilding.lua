@@ -105,6 +105,7 @@ function WallUpgradeBuilding:OnUserDataChanged(user_data, current_time)
         local event = user_data.wallEvents[1]
         local finishTime = event == nil and 0 or event.finishTime / 1000
         local wall_info = user_data.wall
+        self:OnEvent(event)
         self:OnHandle(wall_info.level, finishTime)
     end
 end

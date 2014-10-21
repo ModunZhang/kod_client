@@ -77,6 +77,7 @@ function TowerUpgradeBuilding:OnUserDataChanged(user_data, current_time)
         local event = get_tower_event_by_location(self.tower_id)
         local finishTime = event == nil and 0 or event.finishTime / 1000
         local tower_info = user_data.towers["location_"..self.tower_id]
+        self:OnEvent(event)
         self:OnHandle(tower_info.level, finishTime)
     end
 end
