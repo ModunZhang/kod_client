@@ -295,8 +295,6 @@ function GameUIHome:CreateBottom()
         {"home/bottom_icon_2.png", _("物品")},
         {"home/bottom_icon_3.png", _("邮件")},
         {"home/bottom_icon_4.png", _("联盟")},
-        {"home/mail.png", _("邮件")},
-        {"home/bottom_icon_4.png", _("部队")},
         {"home/bottom_icon_2.png", _("更多")},
     }) do
         local col = i - 1

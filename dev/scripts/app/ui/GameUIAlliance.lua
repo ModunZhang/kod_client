@@ -9,12 +9,15 @@ local UIListView = import(".UIListView")
 local WidgetBackGroundTabButtons = import("..widget.WidgetBackGroundTabButtons")
 local GameUIAlliance = UIKit:createUIClass("GameUIAlliance","GameUIWithCommonHeader")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
 local contentWidth = window.width - 80
 local AllianceManager = import("..service.AllianceManager")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIAllianceBasicSetting = import(".GameUIAllianceBasicSetting")
 local GameUIAllianceNoticeOrDescEdit = import(".GameUIAllianceNoticeOrDescEdit")
+local Localize = import("..utils.Localize")
+local NetService = import('..service.NetService')
 
 GameUIAlliance.COMMON_LIST_ITEM_TYPE = Enum("JOIN","INVATE","APPLY")
 local SEARCH_ALLIAN_TO_JOIN_TAG = "join_alliance"
@@ -59,8 +62,8 @@ function GameUIAlliance:CreateBetweenBgAndTitle()
 	self.main_content:setContentSize(cc.size(window.width,window.betweenHeaderAndTab))
 end
 
-function GameUIAlliance:onMovieInStage()
-	GameUIAlliance.super.onMovieInStage(self)
+function GameUIAlliance:onMoveInStage()
+	GameUIAlliance.super.onMoveInStage(self)
 	-- local self_ = self
 	self.alliance_manager:OnAllianceEvent(ALLIANCE_EVENT_TAG,function(event)
 		if event.eventType == AllianceManager.ALLIANCE_EVENT_TYPE.QUIT
@@ -79,11 +82,11 @@ function GameUIAlliance:onMovieInStage()
 	end)
 end
 
-function GameUIAlliance:onMovieOutStage()
+function GameUIAlliance:onMoveOutStage()
 	self.alliance_manager:RemoveEventByTag(SEARCH_ALLIAN_TO_JOIN_TAG)
 	self.alliance_manager:RemoveEventByTag(ALLIANCE_EVENT_TAG)
 	self.alliance_manager = nil
-	GameUIAlliance.super.onMovieOutStage(self)
+	GameUIAlliance.super.onMoveOutStage(self)
 end
 
 ------------------------------------------------------------------------------------------------
@@ -270,13 +273,22 @@ function GameUIAlliance:OnAllianceDataEvent(event)
 		local data = event.data
 		self:RefreshJoinListView(data.alliances)
 	elseif event.eventName == "onAllianceDataChanged" then
-		self:RefreshOverViewUI()
+		if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
+			self:RefreshOverViewUI()
+		end
+	elseif event.eventName == "onAllianceNewEventReceived" then
+		if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
+			self:RefreshEventListView()
+		end
+	elseif event.eventName == "onAllianceMemberDataChanged" then
+		if self.tab_buttons:GetSelectedButtonTag() == 'members' then
+			self:RefreshMemberList()
+		end
 	end
 end
 
 function GameUIAlliance:RefreshJoinListView(data)
 	if not data then 
-		-- self:SearchAllianAction("K") -- 页面默认数据
 		PushService:getCanDirectJoinAlliances(function(success)
 
 		end)
@@ -612,6 +624,7 @@ function GameUIAlliance:CreateHaveAlliaceUI()
 	):pos(window.cx, window.bottom + 34)
 end
 
+--总览
 function GameUIAlliance:HaveAlliaceUI_overviewIf()
 	if self.overviewNode then return self.overviewNode end
 	self.ui_overview = {}
@@ -621,7 +634,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 		:addTo(overviewNode):align(display.CENTER_BOTTOM, window.width/2,0)
 
 	local eventListView = UIListView.new {
-    	viewRect = cc.rect(0, 0, 540,356),
+    	viewRect = cc.rect(0, 12, 540,340),
         direction = UIScrollView.DIRECTION_VERTICAL,
         -- alignment = UIListView.ALIGNMENT_LEFT
     }:addTo(events_bg)
@@ -732,22 +745,22 @@ end
 function GameUIAlliance:GetEventItemByIndexAndEvent(index,event)
 	local item = self.eventListView:newItem()
 	local bg = display.newSprite(string.format("alliance_events_bg_520x84_%d.png",index%2))
-	local title_bg_image = self:GetEventTitleImageByEvent()
+	local title_bg_image = self:GetEventTitleImageByEvent(event)
 	local title_bg = display.newSprite(title_bg_image):addTo(bg):align(display.LEFT_TOP, 0,70)
 	UIKit:ttfLabel({
-		text = "The enemy attack",
+		text = event.key or "",
 		size = 20,
 		color = 0xffedae
 	}):addTo(title_bg):align(display.LEFT_BOTTOM,10,5)
 
 	UIKit:ttfLabel({
-		text = "2015/12/30 17:50",
+		text = GameUtils:formatTimeStyle2(event.time/1000),
 		size = 18,
 		color = 0x797154
 	}):addTo(bg):align(display.LEFT_BOTTOM,10, 5)
 
 	local contentLabel = UIKit:ttfLabel({
-		text = "A new member has joined the alliance",
+		text = self:GetEventContent(event),
 		size = 20,
 		color = 0x403c2f,
 		dimensions = cc.size(300, 42)
@@ -760,8 +773,41 @@ function GameUIAlliance:GetEventItemByIndexAndEvent(index,event)
 	return item
 end
 
+function GameUIAlliance:GetEventContent(event)
+	local event_type = event.type
+	local string4event = {
+		donate = _("向联盟慷慨捐赠，提升荣耀值%s"),
+		promotion = _("在联盟中的职位被晋级/降级到%s"),
+		join = _("一个新成员加入联盟"),
+		kick = _("一个玩家被逐出联盟"),
+		quit = _("退出联盟"),
+		request = _("一个玩家申请加入我们的联盟"),
+		notice = _("一个新的联盟公告发布"),
+		desc = _("一个新的联盟宣言发布"),
+		diplomacy = _("将%s与我盟的外交关系改变为%s"),
+		handover = _("晋升为联盟新的盟主"),
+		tools = _("向联盟商店补充了一批新的高级道具"),
+		upgrade = _("%s 升级到 %s"),
+		name = _("最近更改联盟的名称为%s"),
+		tag = _("最近更改联盟的标签"),
+		flag = _("修改联盟旗帜"),
+		terrain = _("修改联盟地形为%s"),
+		language = _("修改联盟语言更改为%s"),
+		gve = _("激活了圣地的神秘事件"),
+	}
+	return string.format(string4event[event_type],unpack(event.params))
+end
+
+
 function GameUIAlliance:GetEventTitleImageByEvent(event)
-	return "alliance_event_type_cyan_222x30.png"
+	local category = event.category
+	if category == 'normal' then
+		return "alliance_event_type_cyan_222x30.png"
+	elseif category == 'important' then
+		return "alliance_event_type_green_222x30.png"
+	elseif category == 'war' then
+		return "alliance_event_type_red_222x30.png"
+	end
 end
 
 
@@ -785,15 +831,238 @@ function GameUIAlliance:RefreshOverViewUI()
 end
 
 function GameUIAlliance:RefreshEventListView()
-	for i=1,10 do
-    	local item = self:GetEventItemByIndexAndEvent(i,nil)
-  		self.eventListView:addItem(item)
-    end
+	local events = self.alliance_manager:GetMyAllianceData().events
+	self.eventListView:removeAllItems()
+	for i,v in ipairs(events) do
+		local item = self:GetEventItemByIndexAndEvent(i,v)
+		self.eventListView:addItem(item)
+	end
     self.eventListView:reload()
 end
 
 function GameUIAlliance:OnAllianceSettingButtonClicked(event)
 	UIKit:newGameUI('GameUIAllianceBasicSetting',true):addToCurrentScene(true)
+end
+
+--成员
+
+function GameUIAlliance:HaveAlliaceUI_membersIf()
+	if self.memberListView then self:RefreshMemberList() return self.memberListView end
+	local listView = UIListView.new {
+    	viewRect = cc.rect(0, 0, 608,window.betweenHeaderAndTab),
+        direction = UIScrollView.DIRECTION_VERTICAL,
+        alignment = UIListView.ALIGNMENT_LEFT
+    }:addTo(self.main_content):pos(20,0)
+    self.memberListView = listView
+    self:RefreshMemberList()
+	return self.memberListView
+end
+
+function GameUIAlliance:RefreshMemberList()
+	assert(self.memberListView)
+	self.memberListView:removeAllItems()
+
+	local item = self:GetMemberItem("archon")
+	self.memberListView:addItem(item)
+	item = self:GetMemberItem("general")
+	self.memberListView:addItem(item)
+	item = self:GetMemberItem("quartermaster")
+	self.memberListView:addItem(item)	
+
+	item = self:GetMemberItem("supervisor")
+	self.memberListView:addItem(item)
+	item = self:GetMemberItem("elite")
+	self.memberListView:addItem(item)
+	item = self:GetMemberItem("member")
+	self.memberListView:addItem(item)
+
+
+
+	self.memberListView:reload()
+end
+
+--title is alliance title
+function GameUIAlliance:GetMemberItem(title)
+	local item = self.memberListView:newItem()
+	local data = LuaUtils:table_filteri(self.alliance_manager:GetMyAllianceData().members,function(k,v)
+		return v.title == title
+	end)
+	local header_title,number_image = "",""
+
+	if title == 'archon' then
+		local node = WidgetUIBackGround.new(118)
+		local title_bar = display.newSprite("alliance_archon_frame_604x148.png")
+			:addTo(node)
+			:align(display.LEFT_BOTTOM,0,0)
+		local icon = display.newSprite("alliance_item_leader_39x39.png")
+			:align(display.TOP_LEFT,200, title_bar:getContentSize().height)
+			:addTo(title_bar)
+
+		local titleLabel = UIKit:ttfLabel({
+			text = Localize.alliance_title.archon,
+			size = 22,
+			color = 0xffedae,
+		}):align(display.LEFT_BOTTOM, icon:getPositionX()+icon:getContentSize().width+10,icon:getPositionY() - icon:getContentSize().height+5)
+			:addTo(title_bar)
+	
+		display.newSprite("i_8x17.png"):align(display.RIGHT_BOTTOM, 420, icon:getPositionY()-icon:getContentSize().height + 10)
+		:addTo(title_bar)
+
+		WidgetPushTransparentButton.new(cc.rect(0,0,372,44)):align(display.LEFT_TOP, 100,148)
+			:addTo(title_bar):onButtonClicked(function ()
+				self:OnAllianceTitleClicked(title)
+			end)
+
+		local box = display.newSprite("alliance_item_flag_box_126X126.png")
+			:scale(0.7)
+			:addTo(title_bar)
+			:align(display.LEFT_BOTTOM,12,12)
+		self:GetAllianceMemberIcon():addTo(box):pos(63,63)
+		local line = display.newScale9Sprite("dividing_line_594x2.png"):addTo(title_bar)
+			:align(display.LEFT_BOTTOM,box:getPositionX()+box:getContentSize().width*0.7,60)
+			:size(498,2)
+		local nameLabel = UIKit:ttfLabel({
+			text = data[1].name,
+			size = 22,
+			color = 0x403c2f,
+		}):addTo(title_bar):align(display.LEFT_BOTTOM,line:getPositionX()+20, line:getPositionY() + 10)
+
+		local lvLabel =  UIKit:ttfLabel({
+			text = "LV " .. data[1].level,
+			size = 22,
+			color = 0x797154,
+		}):addTo(title_bar):align(display.LEFT_BOTTOM,nameLabel:getPositionX()+200, line:getPositionY() + 10)
+		local powerIcon = display.newSprite("upgrade_power_icon.png")
+			:align(display.LEFT_BOTTOM,lvLabel:getPositionX()+lvLabel:getContentSize().width+50,lvLabel:getPositionY())
+			:addTo(title_bar):scale(0.5)
+		local powerLabel = UIKit:ttfLabel({
+			-- text = string.formatnumberthousands(21321312321),
+			text = string.formatnumberthousands(data[1].power),
+			size = 22,
+			color = 0x403c2f,
+			align = cc.TEXT_ALIGNMENT_LEFT,
+		}):addTo(title_bar):align(display.LEFT_BOTTOM,powerIcon:getPositionX()+powerIcon:getContentSize().width*0.5+10,powerIcon:getPositionY())
+		 UIKit:ttfLabel({
+			text = _("最后登陆时间:") .. NetService:formatTimeAsTimeAgoStyleByServerTime(data[1].lastLoginTime),
+			size = 22,
+			color = 0x403c2f,
+		}):addTo(title_bar):align(display.LEFT_BOTTOM, nameLabel:getPositionX(),line:getPositionY() - 40)
+		--
+		item:addContent(node)
+		item:setItemSize(608,node:getCascadeBoundingBox().height)
+		return item
+	elseif title == 'general' then -- 将军
+		header_title = Localize.alliance_title.general
+		number_image = "5_23x24.png"
+	elseif title == 'quartermaster' then
+		header_title = Localize.alliance_title.quartermaster
+		number_image = "4_32x24.png"
+	elseif title == 'supervisor' then
+		header_title = Localize.alliance_title.supervisor
+		number_image = "3_35x24.png"
+	elseif title == 'elite' then
+		header_title = Localize.alliance_title.elite
+		number_image = "2_23x24.png"
+	elseif title == 'member' then
+		header_title = Localize.alliance_title.member
+		number_image = "1_11x24.png"
+	end
+	local height = 70
+	local x,y = 7,20
+	local contentNode = display.newNode()
+	local oneLine = nil
+	dump(data)
+	for i,v in ipairs(data) do
+		oneLine = self:GetNormalSubItem(v.name,v.level,v.power,v.id)
+		oneLine:pos(x,y+(i-1)*height)
+		oneLine:addTo(contentNode)
+	end
+
+	local bg = nil
+	if #data > 0 then
+		assert(oneLine)
+		bg = WidgetUIBackGround.new(oneLine:getPositionY()+height+20)
+	else
+		contentNode = UIKit:ttfLabel({
+			text = _("该职位还未任命给任何成员"),
+			size = 22,
+			color = 0x403c2f,
+		}):align(display.LEFT_BOTTOM,20,20)
+		bg = WidgetUIBackGround.new(80)
+	end
+	contentNode:addTo(bg)
+	local bar = display.newSprite("alliance_blue_title_600x42.png"):addTo(bg):align(display.LEFT_BOTTOM, 3, bg:getCascadeBoundingBox().height-35)
+	local num = display.newSprite(number_image):addTo(bar):align(display.LEFT_BOTTOM,bar:getContentSize().width/2 - 10,10)
+	UIKit:ttfLabel({
+		text = header_title,
+		size = 22,
+		color = 0xffedae,
+	}):addTo(bar):align(display.LEFT_BOTTOM, num:getPositionX()+num:getContentSize().width + 2, num:getPositionY())
+	display.newSprite("i_8x17.png"):align(display.RIGHT_BOTTOM, 550, num:getPositionY()+2)
+		:addTo(bar)
+	WidgetPushTransparentButton.new(cc.rect(0,0,600,42)):align(display.LEFT_BOTTOM, 0,0)
+		:addTo(bar):onButtonClicked(function ()
+			self:OnAllianceTitleClicked(title)
+		end)
+	item:addContent(bg)
+	item:setItemSize(608,bg:getCascadeBoundingBox().height)
+	return item
+end
+
+function GameUIAlliance:GetNormalSubItem(playerName,level,power,memberId)
+	local itemNode =  display.newNode()
+	local line = display.newScale9Sprite("dividing_line_594x2.png"):addTo(itemNode)
+			:align(display.LEFT_BOTTOM,0,0)
+			:size(594,2)
+	local icon = self:GetAllianceMemberIcon():scale(0.5):align(display.LEFT_BOTTOM,10,line:getPositionY()+10):addTo(itemNode)
+	local nameLabel = UIKit:ttfLabel({
+			text = playerName,
+			size = 22,
+			color = 0x403c2f,
+	}):addTo(itemNode)
+		:align(display.LEFT_CENTER,icon:getPositionX()+icon:getContentSize().width*0.5 + 20,line:getPositionY()+line:getContentSize().height+ 10 + icon:getContentSize().height*0.5/2)
+
+	local lvLabel =  UIKit:ttfLabel({
+			text = "LV " .. level,
+			size = 22,
+			color = 0x797154,
+	}):addTo(itemNode):align(display.LEFT_CENTER,nameLabel:getPositionX()+200, nameLabel:getPositionY())
+
+	local powerIcon = display.newSprite("upgrade_power_icon.png")
+			:align(display.LEFT_CENTER,lvLabel:getPositionX()+lvLabel:getContentSize().width+50,lvLabel:getPositionY())
+			:addTo(itemNode):scale(0.5)
+	local powerLabel = UIKit:ttfLabel({
+			text = string.formatnumberthousands(power),
+			size = 22,
+			color = 0x403c2f,
+			align = cc.TEXT_ALIGNMENT_LEFT,
+		}):addTo(itemNode):align(display.LEFT_CENTER,powerIcon:getPositionX()+powerIcon:getContentSize().width*0.5+10,powerIcon:getPositionY())
+
+	WidgetPushButton.new({normal = "alliacne_search_29x33.png"})
+		:align(display.RIGHT_CENTER,588,powerLabel:getPositionY())
+		:addTo(itemNode)
+		:onButtonClicked(function()
+			self:OnPlayerDetailButtonClicked(memberId)
+		end)
+	return itemNode
+end
+
+function GameUIAlliance:GetAllianceMemberIcon()
+	local heroBg = display.newSprite("chat_hero_background.png")
+	local hero = display.newSprite("Hero_1.png"):align(display.CENTER, math.floor(heroBg:getContentSize().width/2), math.floor(heroBg:getContentSize().height/2)+5)
+	hero:addTo(heroBg)
+	return heroBg
+end
+
+function GameUIAlliance:OnAllianceTitleClicked( title )
+	-- TODO: 显示职位权限界面
+	print("OnAllianceTitleClicked---->",title)
+	UIKit:newGameUI('GameUIPlayerInfo'):addToCurrentScene(true)
+end
+
+function GameUIAlliance:OnPlayerDetailButtonClicked(memberId)
+	-- TODO: 显示玩家信息 
+	print("OnPlayerDetailButtonClicked---->",title)
 end
 
 return GameUIAlliance

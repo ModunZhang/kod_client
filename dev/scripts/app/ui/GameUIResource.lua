@@ -244,8 +244,8 @@ function GameUIResource:GetTitleByType(building)
     end
 end
 
-function GameUIResource:onMovieInStage()
-	GameUIResource.super.onMovieInStage(self)
+function GameUIResource:onMoveInStage()
+	GameUIResource.super.onMoveInStage(self)
 	local resource = City.resource_manager:GetResourceByType(self.building:GetUpdateResourceType())
     local citizen = self.building:GetCitizen()
     self.firstValueLabel:setString(string.format('%d',citizen))
@@ -279,10 +279,10 @@ function GameUIResource:ChaiButtonAction( event )
             self:leftButtonClicked(nil)
 end
 
-function GameUIResource:onMovieOutStage()
+function GameUIResource:onMoveOutStage()
     self.dataSource = nil
     self.building = nil
-    GameUIResource.super.onMovieOutStage(self)
+    GameUIResource.super.onMoveOutStage(self)
 end
 
 function GameUIResource:OnResourceChanged(resource_manager)

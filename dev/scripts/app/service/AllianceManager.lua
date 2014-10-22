@@ -123,7 +123,9 @@ end
 
 function AllianceManager:OnUserDataChanged(userData,timer)
 	local eventType = self.ALLIANCE_EVENT_TYPE.NORMAL
+	if not userData.alliance then return end
 	if not self.isInit_ then
+		if not userData.alliance then return end
 		if (self.alliance_.id == nil and  userData.alliance.id ~= nil) then
 			-- server auto push meessage
 			-- self:FetchMyAllianceData()
@@ -366,8 +368,32 @@ function AllianceManager:dispatchAlliceServerData(eventName,msg)
 	    })
 	--basic ui event
 	elseif eventName == 'onGetAllianceDataSuccess' 
-		or eventName == 'onAllianceDataChanged' then
+		or eventName == 'onAllianceDataChanged' 
+		or eventName == 'onAllianceNewEventReceived' 
+		then
 		self:setMyAllianceData_(eventName,msg)
+	elseif eventName == 'onAllianceMemberDataChanged'  --update one member
+		then
+		local members = self:GetMyAllianceData().members
+		local isFound = false
+		for i,member in ipairs(members) do
+			if member.id == msg.memberDoc.id then
+				members[i] = msg.memberDoc
+				isFound = true
+			end
+		end
+		if not isFound then
+			table.insert(members,msg.memberDoc)
+		end
+		-- onAllianceMemberDataChanged
+		self:dispatchEvent({name = AllianceManager.ALLIANCE_SERVER_EVENT_NAME,
+	        eventName = eventName,
+	        data = msg.memberDoc
+	    })
+	elseif eventName == 'onAllianceBasicInfoAndMemberDataChanged' then
+		-- 拆分onAllianceBasicInfoAndMemberDataChanged 分成两个事件
+		self:dispatchAlliceServerData("onAllianceDataChanged",{basicInfo=msg.basicInfo})
+		self:dispatchAlliceServerData("onAllianceMemberDataChanged",{memberDoc=msg.memberDoc})
 	end
 end
 
@@ -391,8 +417,12 @@ end
 
 function AllianceManager:setMyAllianceData_(eventName,data)
 	if self.localAllianceData_ ~= nil then
-		for k,v in pairs(data) do
-			self.localAllianceData_[k] = v
+		if eventName == 'onAllianceNewEventReceived' then
+			table.insert(self.localAllianceData_.events,data.event)
+		else
+			for k,v in pairs(data) do
+				self.localAllianceData_[k] = v
+			end
 		end
 		--update ui
 		self:dispatchEvent({name = AllianceManager.ALLIANCE_SERVER_EVENT_NAME,
@@ -416,6 +446,11 @@ end
 
 function AllianceManager:GetMyAllianceEventData()
 	return self:GetMyAllianceData()
+end
+
+--TODO: 添加权限判定函数
+function AllianceManager:AlliancePermission_can_modifyAllianceMemberTitle()
+
 end
 
 return AllianceManager

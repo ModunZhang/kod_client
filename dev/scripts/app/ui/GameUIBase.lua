@@ -63,11 +63,11 @@ end
 function GameUIBase:rightButtonClicked()
 end
 
-function GameUIBase:onMovieInStage()
+function GameUIBase:onMoveInStage()
     -- app:lockInput(false)
 end
 
-function GameUIBase:onMovieOutStage()
+function GameUIBase:onMoveOutStage()
     self:removeFromParent(true)
 end
 
@@ -80,7 +80,7 @@ function GameUIBase:leftButtonClicked()
         if self.moveInAnima then
             self:UIAnimationMoveOut()
         else
-            self:onMovieOutStage() -- fix 
+            self:onMoveOutStage() -- fix 
         end
     end
 end
@@ -94,7 +94,7 @@ function GameUIBase:addToScene(scene,anima)
         if self.moveInAnima then
             self:UIAnimationMoveIn()
         else
-            self:onMovieInStage()
+            self:onMoveInStage()
         end
     end
     return self
@@ -112,7 +112,7 @@ function GameUIBase:UIAnimationMoveIn()
         {
             easing = "sineIn",
             onComplete = function()
-                self:onMovieInStage()
+                self:onMoveInStage()
             end
         })
 end
@@ -126,7 +126,7 @@ function GameUIBase:UIAnimationMoveOut()
             easing = "sineIn",
             onComplete = function()
                 -- app:lockInput(false)
-                self:onMovieOutStage()
+                self:onMoveOutStage()
             end
         })
 end

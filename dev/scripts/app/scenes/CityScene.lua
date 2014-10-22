@@ -7,8 +7,7 @@ local EventManager = import("..layers.EventManager")
 local TouchJudgment = import("..layers.TouchJudgment")
 local IsoMapAnchorBottomLeft = import("..map.IsoMapAnchorBottomLeft")
 local MapScene = import(".MapScene")
-import('app.service.ListenerService')
-import('app.service.PushService')
+
 local CityScene = class("CityScene", MapScene)
 
 local app = app
@@ -22,7 +21,7 @@ function CityScene:onEnter()
     CityScene.super.onEnter(self)
     self.scene_ui_layer = self:CreateSceneUILayer()
     home_page = self:CreateHomePage()
-    ListenerService:start()
+    
 
     self:GetSceneLayer():AddObserver(self)
     self:GetSceneLayer():InitWithCity(City)

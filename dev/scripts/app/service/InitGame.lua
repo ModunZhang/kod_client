@@ -1,5 +1,7 @@
 local BuildingRegister = import("..entity.BuildingRegister")
 local city = import("..entity.City")
+import('app.service.ListenerService')
+import('app.service.PushService')
 
 return function(userData)
     City = city.new()
@@ -100,6 +102,7 @@ return function(userData)
     ext.localpush.cancelAll()
     --read userdefaults about local push
     ext.localpush.switchNotification('BUILDING_PUSH_UPGRADE',true)
+    ListenerService:start()
 end
 
 

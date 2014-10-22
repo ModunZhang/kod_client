@@ -816,9 +816,9 @@ function GameUIDragonEyrie:CreateTabButtons_()
     end):pos(window.cx, window.bottom + 34)
 end
 
-function GameUIDragonEyrie:onMovieOutStage()
+function GameUIDragonEyrie:onMoveOutStage()
     self.building:RemoveListener()
-    GameUIDragonEyrie.super.onMovieOutStage(self)
+    GameUIDragonEyrie.super.onMoveOutStage(self)
 end
 
 function GameUIDragonEyrie:HandleEquipmentItem(dragon)

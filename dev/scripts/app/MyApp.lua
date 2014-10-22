@@ -9,10 +9,10 @@ require("app.utils.GameUtils")
 require("app.utils.DataUtils")
 require("app.utils.UIKit")
 require("app.utils.window")
-require("app.ui.GameGlobalUIUtils")
 require("app.service.NetManager")
 require("app.service.DataManager")
 import('app.ui.GameGlobalUIUtils')
+
 local Timer = import('.utils.Timer')
 local MyApp = class("MyApp", cc.mvc.AppBase)
 

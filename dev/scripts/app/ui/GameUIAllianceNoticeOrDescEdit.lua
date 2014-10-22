@@ -18,7 +18,7 @@ function GameUIAllianceNoticeOrDescEdit:ctor(edit_type)
 	self.isNotice_ = edit_type == self.EDIT_TYPE.ALLIANCE_NOTICE
 end
 
-function GameUIAllianceNoticeOrDescEdit:onMovieInStage()
+function GameUIAllianceNoticeOrDescEdit:onMoveInStage()
 	--base UI
 	local shadowLayer = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
 		:addTo(self)

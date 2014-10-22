@@ -343,7 +343,14 @@ local BUILDING_NAME = {
 }
 
 
-
+local ALLIANCE_TITLE = {
+    archon = _("联盟盟主"),
+    general = _("将军"),
+    quartermaster = _("军需官"),
+    supervisor = _("监事"),
+    elite = _("精英"),
+    member = _("成员"),
+}
 
 
 
@@ -357,6 +364,7 @@ return {
     dragon_buff_effection = DRAGON_BUFF_EFFECTION,
     building_description = BUILDING_DESCRIPTION,
     building_name = BUILDING_NAME,
+    alliance_title = ALLIANCE_TITLE,
 }
 
 

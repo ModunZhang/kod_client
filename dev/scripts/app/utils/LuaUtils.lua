@@ -125,6 +125,14 @@ function LuaUtils:table_filter(t, func)
     return r
 end
 
+function LuaUtils:table_filteri(t, func)
+    local r = {}
+    for k, v in ipairs(t) do
+        if func(k, v) then table.insert(r,v) end
+    end
+    return r
+end
+
 function LuaUtils:table_map(t, func)
     local r = {}
     for k, v in pairs(t) do

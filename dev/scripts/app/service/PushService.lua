@@ -231,3 +231,14 @@ function PushService:editAllianceBasicInfo(data,cb)
 			,true
 	)
 end
+
+function PushService:getPlayerInfo(memberId,cb)
+	--TODO:数据校验
+	self.m_netService:request("logic.playerHandler.getPlayerInfo"
+			,{memberId=memberId}
+			,function(success)
+				cb(success)
+			end
+			,true
+	)
+end

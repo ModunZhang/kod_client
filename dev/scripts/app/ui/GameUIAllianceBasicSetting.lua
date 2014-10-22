@@ -40,9 +40,9 @@ function GameUIAllianceBasicSetting:ctor(isModify)
 	end
 end
 
-function GameUIAllianceBasicSetting:onMovieInStage()
+function GameUIAllianceBasicSetting:onMoveInStage()
 	assert(not self.isCreateAction_)
-	GameUIAllianceBasicSetting.super.onMovieInStage(self)
+	GameUIAllianceBasicSetting.super.onMoveInStage(self)
 	self:BuildModifyUI()
 end
 

@@ -77,18 +77,18 @@ function GameUIChat:messageEvent( event,data )
     end
 end
 
-function GameUIChat:onMovieInStage()
-	GameUIChat.super.onMovieInStage(self)
+function GameUIChat:onMoveInStage()
+	GameUIChat.super.onMoveInStage(self)
 	self:CreateTextFieldBody()
 	self:CreateListView()
 	ChatCenter:AddObserver(self)
 	self:CreateTabButtons()
 end
 
-function GameUIChat:onMovieOutStage()
+function GameUIChat:onMoveOutStage()
 	self.blackListView = nil
 	ChatCenter:RemoveObserver(self)
-	GameUIChat.super.onMovieOutStage(self)
+	GameUIChat.super.onMoveOutStage(self)
 end
 
 

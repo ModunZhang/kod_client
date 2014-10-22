@@ -216,3 +216,10 @@ end
 function UIKit:shadowLayer()
     return display.newColorLayer(UIKit:hex2c4b(0x7a000000))
 end
+-- TODO: 玩家头像
+function UIKit:GetPlayerCommonIcon()
+    local heroBg = display.newSprite("chat_hero_background.png")
+    local hero = display.newSprite("Hero_1.png"):align(display.CENTER, math.floor(heroBg:getContentSize().width/2), math.floor(heroBg:getContentSize().height/2)+5)
+    hero:addTo(heroBg)
+    return heroBg
+end
