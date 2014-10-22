@@ -147,7 +147,15 @@ end
 
 function MailManager:OnUserDataChanged(userData,timer)
     -- 未读邮件和战报信息
-    self.unread_num = userData.mailStatus.unreadMails + userData.mailStatus.unreadReports
+    if userData.mailStatus then
+        self.unread_num = userData.mailStatus.unreadMails + userData.mailStatus.unreadReports
+    end
+    if not userData.mails or
+        not userData.savedMails or
+        not userData.sendMails
+    then
+        return
+    end
     local mails = userData.mails
     -- inbox 改变，按收到时间最新排序
     table.sort(mails,function(mail_a,mail_b)
@@ -191,6 +199,7 @@ end
 
 
 return MailManager
+
 
 
 

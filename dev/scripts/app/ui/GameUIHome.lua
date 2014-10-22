@@ -3,6 +3,8 @@ local WidgetTab = import("..widget.WidgetTab")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
 local MailManager = import("..service.MailManager")
+local GameUIHelp = import(".GameUIHelp")
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
 
 
@@ -245,7 +247,12 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         dump(event)
+        if event.name == "CLICKED_EVENT" then
+            -- PushService:quitAlliance(NOT_HANDLE)
+        end
     end):addTo(top_bg):pos(592, -51):scale(0.6)
+
+
 
     return top_bg
 end
@@ -293,9 +300,8 @@ function GameUIHome:CreateBottom()
     for i, v in ipairs({
         {"home/bottom_icon_1.png", _("任务")},
         {"home/bottom_icon_2.png", _("物品")},
-        {"home/bottom_icon_3.png", _("邮件")},
-        {"home/bottom_icon_4.png", _("联盟")},
         {"home/mail.png", _("邮件")},
+        {"home/bottom_icon_4.png", _("联盟")},
         {"home/bottom_icon_4.png", _("部队")},
         {"home/bottom_icon_2.png", _("更多")},
     }) do
@@ -370,6 +376,22 @@ function GameUIHome:CreateBottom()
             )
         end)
 
+    -- 协助加速按钮
+    local help_button = cc.ui.UIPushButton.new(
+        {normal = "loyalty.png", pressed = "loyalty.png"},
+        {scale9 = false}
+    ):onButtonClicked(function(event)
+        if event.name == "CLICKED_EVENT" then
+            if DataManager:GetManager("AllianceManager"):haveAlliance() then
+                GameUIHelp.new():AddToCurrentScene()
+            else
+                FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                    :SetPopMessage(_("加入联盟才能激活帮助功能"))
+                    :AddToCurrentScene()
+            end
+        end
+    end):addTo(self):pos(display.cx+280, display.top-560)
+
     return bottom_bg
 end
 
@@ -384,6 +406,8 @@ function GameUIHome:OnBottomButtonClicked(event)
 end
 
 return GameUIHome
+
+
 
 
 

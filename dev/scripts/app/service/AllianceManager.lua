@@ -5,25 +5,25 @@
 local AllianceManager = class("AllianceManager")
 local Enum = import("..utils.Enum")
 AllianceManager.ALLIANCETITLE = {
-	Archon = "archon",
-	General = "general",
-	Diplomat ="diplomat",
-	Quartermaster = "quartermaster",
-	Supervisor = "supervisor",
-	Elite = "elite",
-	Member = "member"
+    Archon = "archon",
+    General = "general",
+    Diplomat ="diplomat",
+    Quartermaster = "quartermaster",
+    Supervisor = "supervisor",
+    Elite = "elite",
+    Member = "member"
 }
 
---event 
+--event
 AllianceManager.ALLIANCE_EVENT_TYPE_NAME = "ALLIANCE_EVENT_TYPE_NAME"
 AllianceManager.ALLIANCE_SERVER_EVENT_NAME = "ALLIANCE_SERVER_EVENT_NAME"
 
 AllianceManager.ALLIANCE_EVENT_TYPE = Enum(
-	"NORMAL",
-	"CREATE_OR_JOIN",
-	"QUIT",
-	"CHANGE",
-	"NONE"
+    "NORMAL",
+    "CREATE_OR_JOIN",
+    "QUIT",
+    "CHANGE",
+    "NONE"
 )
 
 --flag ui
@@ -38,37 +38,37 @@ AllianceManager.FLAG_BOX_ZORDER = 3
 
 
 AllianceManager.flagData_ = {
-	color = {}, -- 颜色
-	graphic = {}, -- 图案
-	body = {}, -- 背景
-	bodyButton = {}, -- 背景类型按钮
-	graphicButton = {}, -- 图案类型按钮
-	lawn = {},
+    color = {}, -- 颜色
+    graphic = {}, -- 图案
+    body = {}, -- 背景
+    bodyButton = {}, -- 背景类型按钮
+    graphicButton = {}, -- 图案类型按钮
+    lawn = {},
 }
 
 --flag data
-local color_from_excel =  
-{
-	red = 0x8b0000,
-	yellow = 0xd8bc00,
-	green = 0x0d8b00,
-	babyBlue = 0x008b89,
-	darkBlue = 0x000d8b,
-	purple = 0x8b0080,
-	orange = 0xd58200,
-	white = 0xffffff,
-	black = 0x000000,
-	charmRed = 0xc10084,
-	blue = 0x005ea7,
-	orangeRed = 0xa74b00,
-}
+local color_from_excel =
+    {
+        red = 0x8b0000,
+        yellow = 0xd8bc00,
+        green = 0x0d8b00,
+        babyBlue = 0x008b89,
+        darkBlue = 0x000d8b,
+        purple = 0x8b0080,
+        orange = 0xd58200,
+        white = 0xffffff,
+        black = 0x000000,
+        charmRed = 0xc10084,
+        blue = 0x005ea7,
+        orangeRed = 0xa74b00,
+    }
 
 table.foreach(color_from_excel,function(k,v)
-	table.insert(AllianceManager.flagData_.color,{name = k,color=UIKit:convertColorToGL_(v)})
+    table.insert(AllianceManager.flagData_.color,{name = k,color=UIKit:convertColorToGL_(v)})
 end)
 
 local FLAG_LOCATION_TYPES = {
-	"ONE",
+    "ONE",
     "TWO_LEFT_RIGHT",
     "TWO_TOP_BOTTOM",
     "TWO_X"
@@ -77,18 +77,18 @@ local FLAG_LOCATION_TYPES = {
 AllianceManager.LANDFORM_TYPE = {grassLand = 1,desert = 2,iceField = 3}
 
 AllianceManager.FLAG_LOCATION_TYPE = {
-	ONE = 1,
-	TWO_LEFT_RIGHT = 2,
-	TWO_TOP_BOTTOM = 3,
-	TWO_X = 4
+    ONE = 1,
+    TWO_LEFT_RIGHT = 2,
+    TWO_TOP_BOTTOM = 3,
+    TWO_X = 4
 }
 
 -- graphicButton & bodyButton
 for i=1,4 do
-	local graphicButtonImageName = string.format("alliance_flag_graphic_%d",i)
-	AllianceManager.flagData_.graphicButton[i] = {name = i,image = graphicButtonImageName .. ".png"}
-	local bodyButtonImageName = string.format("alliance_flag_type_45x45_%d",i)
-	AllianceManager.flagData_.bodyButton[i] = {name = i,image = bodyButtonImageName .. ".png"}
+    local graphicButtonImageName = string.format("alliance_flag_graphic_%d",i)
+    AllianceManager.flagData_.graphicButton[i] = {name = i,image = graphicButtonImageName .. ".png"}
+    local bodyButtonImageName = string.format("alliance_flag_type_45x45_%d",i)
+    AllianceManager.flagData_.bodyButton[i] = {name = i,image = bodyButtonImageName .. ".png"}
 end
 
 
@@ -104,243 +104,246 @@ AllianceManager.flagData_.body["4_2"] = "alliance_flag_body_4.png"
 --graphic
 
 for i=1,17 do
-	local imageName = string.format("alliance_graphic_%d",i)
-	table.insert(AllianceManager.flagData_.graphic,{name = i,image = imageName .. ".png"})
+    local imageName = string.format("alliance_graphic_%d",i)
+    table.insert(AllianceManager.flagData_.graphic,{name = i,image = imageName .. ".png"})
 end
 
 for i=1,3 do
-	AllianceManager.flagData_.lawn[i] = "greensward_540x378.png"
+    AllianceManager.flagData_.lawn[i] = "greensward_540x378.png"
 end
 
 --end flag ui
 ------------------------------------------------------------------------------------------------
 
 function AllianceManager:ctor()
-	cc(self):addComponent("components.behavior.EventProtocol"):exportMethods()
-	self.alliance_ = nil
-	self.isInit_ = true
+    cc(self):addComponent("components.behavior.EventProtocol"):exportMethods()
+    self.alliance_ = nil
+    self.isInit_ = true
 end
 
 function AllianceManager:OnUserDataChanged(userData,timer)
-	local eventType = self.ALLIANCE_EVENT_TYPE.NORMAL
-	if not self.isInit_ then
-		if (self.alliance_.id == nil and  userData.alliance.id ~= nil) then
-			-- server auto push meessage
-			-- self:FetchMyAllianceData()
-			eventType = self.ALLIANCE_EVENT_TYPE.NONE
-		end
-		if (self.alliance_.id ~= nil and  userData.alliance.id == nil) then
-			self.localAllianceData_ = nil -- clean local alliance data
-			eventType = self.ALLIANCE_EVENT_TYPE.QUIT
-		end
-		if userData.requestToAllianceEvents then
-			self.requestToAllianceEvents_ = userData.requestToAllianceEvents
-		end
-		if userData.inviteToAllianceEvents then
-			self.inviteToAllianceEvents_  = userData.inviteToAllianceEvents
-		end
-		if userData.alliance  then
-			self.alliance_ = userData.alliance 
-			if eventType ~= self.ALLIANCE_EVENT_TYPE.NONE then
-				self:dispathAllianceEvent(eventType)
-			end
-		end
-	else
-		self.alliance_ = userData.alliance 
-		self.requestToAllianceEvents_ = userData.requestToAllianceEvents
-		self.inviteToAllianceEvents_  = userData.inviteToAllianceEvents
-	end
-	
+    local eventType = self.ALLIANCE_EVENT_TYPE.NORMAL
+    if not userData.alliance then
+    	return
+    end
+    if not self.isInit_ then
+        if (self.alliance_.id == nil and  userData.alliance.id ~= nil) then
+            -- server auto push meessage
+            -- self:FetchMyAllianceData()
+            eventType = self.ALLIANCE_EVENT_TYPE.NONE
+        end
+        if (self.alliance_.id ~= nil and  userData.alliance.id == nil) then
+            self.localAllianceData_ = nil -- clean local alliance data
+            eventType = self.ALLIANCE_EVENT_TYPE.QUIT
+        end
+        if userData.requestToAllianceEvents then
+            self.requestToAllianceEvents_ = userData.requestToAllianceEvents
+        end
+        if userData.inviteToAllianceEvents then
+            self.inviteToAllianceEvents_  = userData.inviteToAllianceEvents
+        end
+        if userData.alliance  then
+            self.alliance_ = userData.alliance
+            if eventType ~= self.ALLIANCE_EVENT_TYPE.NONE then
+                self:dispathAllianceEvent(eventType)
+            end
+        end
+    else
+        self.alliance_ = userData.alliance
+        self.requestToAllianceEvents_ = userData.requestToAllianceEvents
+        self.inviteToAllianceEvents_  = userData.inviteToAllianceEvents
+    end
+
     self.isInit_  = false
 end
 
 -- 1 apply 2 invate
 function AllianceManager:GetAllianceEvents(eventType)
-	if eventType == 2 then
-		return self.inviteToAllianceEvents_ or {}
-	elseif eventType == 3 then
-		return self.requestToAllianceEvents_ or {}
-	end
+    if eventType == 2 then
+        return self.inviteToAllianceEvents_ or {}
+    elseif eventType == 3 then
+        return self.requestToAllianceEvents_ or {}
+    end
 end
 
 --logic methods
 
 function AllianceManager:getAlliance()
-	return self.alliance_
+    return self.alliance_
 end
 
 function AllianceManager:haveAlliance()
-	return self:getAlliance() and self:getAlliance().id ~= nil
+    return self:getAlliance() and self:getAlliance().id ~= nil
 end
 
 
 -- flag ui
 
 function AllianceManager:GetFlagSprite(flagInfo)
-	-- flagInfo = self:GetFlagInfomation()
-	if type(flagInfo) == 'string' then flagInfo = json.decode(flagInfo)  end
-	local box_bounding = display.newSprite("alliance_flag_box_119x139.png")
-	local box = display.newNode()
-	--body
-	local body_node = self:GetFlagBody(flagInfo,box_bounding)
-	body_node:addTo(box,self.FLAG_BODY_ZORDER,self.FLAG_BODY_TAG)
-	--graphic
-	local graphic_node = self:GetGraphic(flagInfo,box_bounding)
-	graphic_node:addTo(box,self.FLAG_GRAPHIC_ZORDER,self.FLAG_GRAPHIC_TAG)
-	box_bounding:addTo(box,self.FLAG_BOX_ZORDER,self.FLAG_BOX_TAG):align(display.LEFT_BOTTOM, 0, 0)
-	return box
+    -- flagInfo = self:GetFlagInfomation()
+    if type(flagInfo) == 'string' then flagInfo = json.decode(flagInfo)  end
+    local box_bounding = display.newSprite("alliance_flag_box_119x139.png")
+    local box = display.newNode()
+    --body
+    local body_node = self:GetFlagBody(flagInfo,box_bounding)
+    body_node:addTo(box,self.FLAG_BODY_ZORDER,self.FLAG_BODY_TAG)
+    --graphic
+    local graphic_node = self:GetGraphic(flagInfo,box_bounding)
+    graphic_node:addTo(box,self.FLAG_GRAPHIC_ZORDER,self.FLAG_GRAPHIC_TAG)
+    box_bounding:addTo(box,self.FLAG_BOX_ZORDER,self.FLAG_BOX_TAG):align(display.LEFT_BOTTOM, 0, 0)
+    return box
 end
 
 function AllianceManager:GetGraphic(flagInfo,box_bounding)
-	local graphic_node = display.newNode() 
-	if flagInfo.graphic == self.FLAG_LOCATION_TYPE.ONE then
+    local graphic_node = display.newNode()
+    if flagInfo.graphic == self.FLAG_LOCATION_TYPE.ONE then
 
-		local color_1 = flagInfo.graphicColor[1]
-		local imageName_1 = self.flagData_.graphic[flagInfo.graphicContent[1]].image
-		local graphic_1 =  self:getColorSprite(imageName_1,color_1)
-			:addTo(graphic_node)
-			:pos(box_bounding:getContentSize().width/2,box_bounding:getContentSize().height/2)
+        local color_1 = flagInfo.graphicColor[1]
+        local imageName_1 = self.flagData_.graphic[flagInfo.graphicContent[1]].image
+        local graphic_1 =  self:getColorSprite(imageName_1,color_1)
+            :addTo(graphic_node)
+            :pos(box_bounding:getContentSize().width/2,box_bounding:getContentSize().height/2)
 
-	elseif flagInfo.graphic == self.FLAG_LOCATION_TYPE.TWO_LEFT_RIGHT then
+    elseif flagInfo.graphic == self.FLAG_LOCATION_TYPE.TWO_LEFT_RIGHT then
 
-		local color_1 = flagInfo.graphicColor[1]
-		local imageName_1 = self.flagData_.graphic[flagInfo.graphicContent[1]].image
-		local graphic_1 =  self:getColorSprite(imageName_1,color_1)
-			:addTo(graphic_node)
-			:pos(box_bounding:getContentSize().width/3*1 - 4,box_bounding:getContentSize().height/2)
-			:scale(0.5)
-		local color_2 = flagInfo.graphicColor[2]
-		local imageName_2 = self.flagData_.graphic[flagInfo.graphicContent[2]].image
-		local graphic_2 =  self:getColorSprite(imageName_2,color_2)
-			:addTo(graphic_node)
-			:pos(box_bounding:getContentSize().width/3*2 + 4,box_bounding:getContentSize().height/2)
-			:scale(0.5)
+        local color_1 = flagInfo.graphicColor[1]
+        local imageName_1 = self.flagData_.graphic[flagInfo.graphicContent[1]].image
+        local graphic_1 =  self:getColorSprite(imageName_1,color_1)
+            :addTo(graphic_node)
+            :pos(box_bounding:getContentSize().width/3*1 - 4,box_bounding:getContentSize().height/2)
+            :scale(0.5)
+        local color_2 = flagInfo.graphicColor[2]
+        local imageName_2 = self.flagData_.graphic[flagInfo.graphicContent[2]].image
+        local graphic_2 =  self:getColorSprite(imageName_2,color_2)
+            :addTo(graphic_node)
+            :pos(box_bounding:getContentSize().width/3*2 + 4,box_bounding:getContentSize().height/2)
+            :scale(0.5)
 
-	elseif flagInfo.graphic == self.FLAG_LOCATION_TYPE.TWO_TOP_BOTTOM then
+    elseif flagInfo.graphic == self.FLAG_LOCATION_TYPE.TWO_TOP_BOTTOM then
 
-		local color_1 = flagInfo.graphicColor[1]
-		local imageName_1 = self.flagData_.graphic[flagInfo.graphicContent[1]].image
-		local graphic_1 =  self:getColorSprite(imageName_1,color_1)
-			:addTo(graphic_node)
-			:align(display.TOP_CENTER,box_bounding:getContentSize().width/2, box_bounding:getContentSize().height - 20)
-			:scale(0.5)
-		local color_2 = flagInfo.graphicColor[2]
-		local imageName_2 = self.flagData_.graphic[flagInfo.graphicContent[2]].image
-		local graphic_2 =  self:getColorSprite(imageName_2,color_2)
-			:addTo(graphic_node)
-			:align(display.CENTER_BOTTOM, box_bounding:getContentSize().width/2, 20)
-			:scale(0.5)
+        local color_1 = flagInfo.graphicColor[1]
+        local imageName_1 = self.flagData_.graphic[flagInfo.graphicContent[1]].image
+        local graphic_1 =  self:getColorSprite(imageName_1,color_1)
+            :addTo(graphic_node)
+            :align(display.TOP_CENTER,box_bounding:getContentSize().width/2, box_bounding:getContentSize().height - 20)
+            :scale(0.5)
+        local color_2 = flagInfo.graphicColor[2]
+        local imageName_2 = self.flagData_.graphic[flagInfo.graphicContent[2]].image
+        local graphic_2 =  self:getColorSprite(imageName_2,color_2)
+            :addTo(graphic_node)
+            :align(display.CENTER_BOTTOM, box_bounding:getContentSize().width/2, 20)
+            :scale(0.5)
 
-	elseif flagInfo.graphic == self.FLAG_LOCATION_TYPE.TWO_X then
-		local color_1 = flagInfo.graphicColor[1]
-		local imageName_1 = self.flagData_.graphic[flagInfo.graphicContent[1]].image
-		local graphic_1 =  self:getColorSprite(imageName_1,color_1)
-			:addTo(graphic_node)
-			:align(display.LEFT_TOP,box_bounding:getContentSize().width/8*1, box_bounding:getContentSize().height/8*7)
-			:scale(0.5)
-		graphic_1 = self:getColorSprite(imageName_1,color_1)
-			:addTo(graphic_node)
-			:align(display.RIGHT_BOTTOM,box_bounding:getContentSize().width/8*7, box_bounding:getContentSize().height/8*1+10)
-			:scale(0.5)
-		local color_2 = flagInfo.graphicColor[2]
-		local imageName_2 = self.flagData_.graphic[flagInfo.graphicContent[2]].image
-		local graphic_2 =  self:getColorSprite(imageName_2,color_2)
-			:addTo(graphic_node)
-			:align(display.LEFT_BOTTOM,box_bounding:getContentSize().width/8*1, box_bounding:getContentSize().height/8*1 + 10)
-			:scale(0.5)
-		graphic_2 = self:getColorSprite(imageName_2,color_2)
-			:addTo(graphic_node)
-			:align(display.RIGHT_TOP,box_bounding:getContentSize().width/8*7, box_bounding:getContentSize().height/8*7)
-			:scale(0.5)
-	end
-	return graphic_node
+    elseif flagInfo.graphic == self.FLAG_LOCATION_TYPE.TWO_X then
+        local color_1 = flagInfo.graphicColor[1]
+        local imageName_1 = self.flagData_.graphic[flagInfo.graphicContent[1]].image
+        local graphic_1 =  self:getColorSprite(imageName_1,color_1)
+            :addTo(graphic_node)
+            :align(display.LEFT_TOP,box_bounding:getContentSize().width/8*1, box_bounding:getContentSize().height/8*7)
+            :scale(0.5)
+        graphic_1 = self:getColorSprite(imageName_1,color_1)
+            :addTo(graphic_node)
+            :align(display.RIGHT_BOTTOM,box_bounding:getContentSize().width/8*7, box_bounding:getContentSize().height/8*1+10)
+            :scale(0.5)
+        local color_2 = flagInfo.graphicColor[2]
+        local imageName_2 = self.flagData_.graphic[flagInfo.graphicContent[2]].image
+        local graphic_2 =  self:getColorSprite(imageName_2,color_2)
+            :addTo(graphic_node)
+            :align(display.LEFT_BOTTOM,box_bounding:getContentSize().width/8*1, box_bounding:getContentSize().height/8*1 + 10)
+            :scale(0.5)
+        graphic_2 = self:getColorSprite(imageName_2,color_2)
+            :addTo(graphic_node)
+            :align(display.RIGHT_TOP,box_bounding:getContentSize().width/8*7, box_bounding:getContentSize().height/8*7)
+            :scale(0.5)
+    end
+    return graphic_node
 end
 
 
 function AllianceManager:GetFlagBody(flagInfo,box_bounding)
-	 --body
+    --body
     local body_node = display.newNode() -- :addTo(box,self.FLAG_BODY_ZORDER,self.FLAG_BODY_TAG)
-	if flagInfo.flag == self.FLAG_LOCATION_TYPE.ONE then
-    	local imageName = self.flagData_.body["1"]
-    	local color  = flagInfo.flagColor[1]
-		self:getColorSprite(imageName,color)
-			:addTo(body_node)
-			:pos(box_bounding:getContentSize().width/2,box_bounding:getContentSize().height/2)
-	elseif flagInfo.flag == self.FLAG_LOCATION_TYPE.TWO_LEFT_RIGHT then
-		local imageName_1 = self.flagData_.body["2_1"]
-    	local color_1  = flagInfo.flagColor[1]
-    	self:getColorSprite(imageName_1,color_1)
-    		:scale(0.95)
-    		:addTo(body_node)
-    		:align(display.CENTER_RIGHT,box_bounding:getContentSize().width/2,box_bounding:getContentSize().height/2)
-    	local imageName_2 = self.flagData_.body["2_2"]
-    	local color_2  = flagInfo.flagColor[2]
-    	self:getColorSprite(imageName_2,color_2)
-    		:scale(0.95)
-    		:addTo(body_node)
-    		:align(display.CENTER_LEFT,box_bounding:getContentSize().width/2,box_bounding:getContentSize().height/2)
+    if flagInfo.flag == self.FLAG_LOCATION_TYPE.ONE then
+        local imageName = self.flagData_.body["1"]
+        local color  = flagInfo.flagColor[1]
+        self:getColorSprite(imageName,color)
+            :addTo(body_node)
+            :pos(box_bounding:getContentSize().width/2,box_bounding:getContentSize().height/2)
+    elseif flagInfo.flag == self.FLAG_LOCATION_TYPE.TWO_LEFT_RIGHT then
+        local imageName_1 = self.flagData_.body["2_1"]
+        local color_1  = flagInfo.flagColor[1]
+        self:getColorSprite(imageName_1,color_1)
+            :scale(0.95)
+            :addTo(body_node)
+            :align(display.CENTER_RIGHT,box_bounding:getContentSize().width/2,box_bounding:getContentSize().height/2)
+        local imageName_2 = self.flagData_.body["2_2"]
+        local color_2  = flagInfo.flagColor[2]
+        self:getColorSprite(imageName_2,color_2)
+            :scale(0.95)
+            :addTo(body_node)
+            :align(display.CENTER_LEFT,box_bounding:getContentSize().width/2,box_bounding:getContentSize().height/2)
     elseif flagInfo.flag == self.FLAG_LOCATION_TYPE.TWO_TOP_BOTTOM then
-    	local imageName_1 = self.flagData_.body["3_1"]
-    	local color_1  = flagInfo.flagColor[1]
-    	self:getColorSprite(imageName_1,color_1)
-    		:scale(0.95)
-    		:addTo(body_node)
-    		:align(display.BOTTOM_CENTER,box_bounding:getContentSize().width/2,box_bounding:getContentSize().height/2)
-    	local imageName_2 = self.flagData_.body["3_2"]
-    	local color_2  = flagInfo.flagColor[2]
-    	self:getColorSprite(imageName_2,color_2)
-    		:scale(0.95)
-    		:addTo(body_node)
-    		:align(display.TOP_CENTER,box_bounding:getContentSize().width/2,box_bounding:getContentSize().height/2)
+        local imageName_1 = self.flagData_.body["3_1"]
+        local color_1  = flagInfo.flagColor[1]
+        self:getColorSprite(imageName_1,color_1)
+            :scale(0.95)
+            :addTo(body_node)
+            :align(display.BOTTOM_CENTER,box_bounding:getContentSize().width/2,box_bounding:getContentSize().height/2)
+        local imageName_2 = self.flagData_.body["3_2"]
+        local color_2  = flagInfo.flagColor[2]
+        self:getColorSprite(imageName_2,color_2)
+            :scale(0.95)
+            :addTo(body_node)
+            :align(display.TOP_CENTER,box_bounding:getContentSize().width/2,box_bounding:getContentSize().height/2)
     elseif flagInfo.flag == self.FLAG_LOCATION_TYPE.TWO_X then
-    	local imageName_1 = self.flagData_.body["4_1"]
-    	local color_1  = flagInfo.flagColor[1]
-    	self:getColorSprite(imageName_1,color_1)
-    		:scale(0.95)
-    		:addTo(body_node)
-    		:align(display.CENTER,box_bounding:getContentSize().width/2,box_bounding:getContentSize().height/2)
-    	local imageName_2 = self.flagData_.body["4_2"]
-    	local color_2  = flagInfo.flagColor[2]
-    	self:getColorSprite(imageName_2,color_2)
-    		:scale(0.95)
-    		:addTo(body_node)
-    		:align(display.CENTER,box_bounding:getContentSize().width/2-1,box_bounding:getContentSize().height/2)
-    		:setFlippedX(true)
-	end
-	return body_node
+        local imageName_1 = self.flagData_.body["4_1"]
+        local color_1  = flagInfo.flagColor[1]
+        self:getColorSprite(imageName_1,color_1)
+            :scale(0.95)
+            :addTo(body_node)
+            :align(display.CENTER,box_bounding:getContentSize().width/2,box_bounding:getContentSize().height/2)
+        local imageName_2 = self.flagData_.body["4_2"]
+        local color_2  = flagInfo.flagColor[2]
+        self:getColorSprite(imageName_2,color_2)
+            :scale(0.95)
+            :addTo(body_node)
+            :align(display.CENTER,box_bounding:getContentSize().width/2-1,box_bounding:getContentSize().height/2)
+            :setFlippedX(true)
+    end
+    return body_node
 end
 
 function AllianceManager:getColorSprite(image,color)
-	print(image,color)
-	local customParams = {
-		frag = "shaders/customer_color.fsh",
-		shaderName = color,
-		color = UIKit:convertColorToGL_(color_from_excel[color])
-	}
-	return display.newFilteredSprite(image, "CUSTOM", json.encode(customParams))
+    print(image,color)
+    local customParams = {
+        frag = "shaders/customer_color.fsh",
+        shaderName = color,
+        color = UIKit:convertColorToGL_(color_from_excel[color])
+    }
+    return display.newFilteredSprite(image, "CUSTOM", json.encode(customParams))
 end
 
 function AllianceManager:CreateFlagWithTerrain(terrain_info,flagInfo)
-	if type(flagInfo) == 'string' then flagInfo = json.decode(flagInfo)  end
-	if type(terrain_info) == 'string' then terrain_info = self.LANDFORM_TYPE[terrain_info] end
-	local node = display.newNode()
-	local lawn = self.flagData_.lawn[terrain_info]
-	local upgrade_surface = display.newSprite(lawn)
-		:addTo(node)
-		:scale(0.258)
-	local shadow = display.newSprite("alliance_flag_shadow_113x79.png")
-		:addTo(node)
-		:align(display.RIGHT_BOTTOM, upgrade_surface:getPositionX()+27, upgrade_surface:getPositionY()-23)
-		:scale(0.7)
-	local base = display.newSprite("alliance_flag_base_84x89.png")
-		:addTo(node)
-		:align(display.RIGHT_BOTTOM, upgrade_surface:getPositionX()+27, upgrade_surface:getPositionY()-23)
-		:scale(0.7)
-	local flag_sprite = self:GetFlagSprite(flagInfo):addTo(node)
-	:align(display.RIGHT_BOTTOM, upgrade_surface:getPositionX() - 42, upgrade_surface:getPositionY()+5)
-	:scale(0.7)
+    if type(flagInfo) == 'string' then flagInfo = json.decode(flagInfo)  end
+    if type(terrain_info) == 'string' then terrain_info = self.LANDFORM_TYPE[terrain_info] end
+    local node = display.newNode()
+    local lawn = self.flagData_.lawn[terrain_info]
+    local upgrade_surface = display.newSprite(lawn)
+        :addTo(node)
+        :scale(0.258)
+    local shadow = display.newSprite("alliance_flag_shadow_113x79.png")
+        :addTo(node)
+        :align(display.RIGHT_BOTTOM, upgrade_surface:getPositionX()+27, upgrade_surface:getPositionY()-23)
+        :scale(0.7)
+    local base = display.newSprite("alliance_flag_base_84x89.png")
+        :addTo(node)
+        :align(display.RIGHT_BOTTOM, upgrade_surface:getPositionX()+27, upgrade_surface:getPositionY()-23)
+        :scale(0.7)
+    local flag_sprite = self:GetFlagSprite(flagInfo):addTo(node)
+        :align(display.RIGHT_BOTTOM, upgrade_surface:getPositionX() - 42, upgrade_surface:getPositionY()+5)
+        :scale(0.7)
 
-	return node,upgrade_surface,flag_sprite
+    return node,upgrade_surface,flag_sprite
 end
 
 -- alliance event
@@ -348,74 +351,92 @@ end
 
 -- basic event
 function AllianceManager:dispathAllianceEvent(eventType)
-	print("dispathAllianceEvent--------->",eventType)
-	self:dispatchEvent({name = AllianceManager.ALLIANCE_EVENT_TYPE_NAME,eventType = eventType})
+    print("dispathAllianceEvent--------->",eventType)
+    self:dispatchEvent({name = AllianceManager.ALLIANCE_EVENT_TYPE_NAME,eventType = eventType})
 end
 
 -- event dispatch from server
 
 function AllianceManager:dispatchAlliceServerData(eventName,msg)
-	print("dispatchAlliceServerData------>",eventName)
-	--simple response data
-	if eventName == 'onSearchAlliancesSuccess' 
-		or  eventName == 'onGetCanDirectJoinAlliancesSuccess'
-		then
-		self:dispatchEvent({name = AllianceManager.ALLIANCE_SERVER_EVENT_NAME,
-	        eventName = eventName,
-	        data = msg
-	    })
-	--basic ui event
-	elseif eventName == 'onGetAllianceDataSuccess' 
-		or eventName == 'onAllianceDataChanged' then
-		self:setMyAllianceData_(eventName,msg)
-	end
+    print("dispatchAlliceServerData------>",eventName)
+    --simple response data
+    if eventName == 'onSearchAlliancesSuccess'
+        or  eventName == 'onGetCanDirectJoinAlliancesSuccess'
+    then
+        self:dispatchEvent({name = AllianceManager.ALLIANCE_SERVER_EVENT_NAME,
+            eventName = eventName,
+            data = msg
+        })
+        --basic ui event
+    elseif eventName == 'onGetAllianceDataSuccess'
+        or eventName == 'onAllianceDataChanged' then
+        self:setMyAllianceData_(eventName,msg)
+    elseif eventName == 'onAllianceHelpEventChanged' then
+    	self:refreshMyAllianceHelpEventsData_(eventName,msg)
+    end
 end
 
 function AllianceManager:OnAllianceEvent(tag,callback)
-	self:addEventListener(self.ALLIANCE_EVENT_TYPE_NAME,callback,tag)
+    self:addEventListener(self.ALLIANCE_EVENT_TYPE_NAME,callback,tag)
 end
 
 function AllianceManager:OnAllianceDataEvent(tag,callback)
-	self:addEventListener(self.ALLIANCE_SERVER_EVENT_NAME,callback,tag)
+    self:addEventListener(self.ALLIANCE_SERVER_EVENT_NAME,callback,tag)
 end
 
 function AllianceManager:RemoveEventByTag(tag)
-	self:removeEventListenersByTag(tag)
+    self:removeEventListenersByTag(tag)
 end
 
 function AllianceManager:FetchMyAllianceData()
-	if self:haveAlliance() then
-		PushService:getMyAllianceData()
-	end
+    if self:haveAlliance() then
+        PushService:getMyAllianceData()
+    end
+end
+
+function AllianceManager:refreshMyAllianceHelpEventsData_(eventName,data)
+    for k,v in pairs(self.localAllianceData_.helpEvents) do
+        if data.event.eventId == v.eventId  then
+            self.localAllianceData_.helpEvents[k] = data.event
+
+            --update ui
+            self:dispatchEvent({name = AllianceManager.ALLIANCE_SERVER_EVENT_NAME,
+                eventName = eventName,
+                data = data
+            })
+        end
+    end
 end
 
 function AllianceManager:setMyAllianceData_(eventName,data)
-	if self.localAllianceData_ ~= nil then
-		for k,v in pairs(data) do
-			self.localAllianceData_[k] = v
-		end
-		--update ui
-		self:dispatchEvent({name = AllianceManager.ALLIANCE_SERVER_EVENT_NAME,
-	        eventName = eventName,
-	        data = data
-	    })
-	else
-		self.localAllianceData_ = data
-		self:dispathAllianceEvent(AllianceManager.ALLIANCE_EVENT_TYPE.CREATE_OR_JOIN)
-	end
-	--dispath event
+    if self.localAllianceData_ ~= nil then
+        for k,v in pairs(data) do
+            self.localAllianceData_[k] = v
+        end
+        --update ui
+        self:dispatchEvent({name = AllianceManager.ALLIANCE_SERVER_EVENT_NAME,
+            eventName = eventName,
+            data = data
+        })
+    else
+        self.localAllianceData_ = data
+        self:dispathAllianceEvent(AllianceManager.ALLIANCE_EVENT_TYPE.CREATE_OR_JOIN)
+    end
+    --dispath event
 end
 
 function AllianceManager:GetMyAllianceData()
-	return self.localAllianceData_ or {}
+    return self.localAllianceData_ or {}
 end
 
 function AllianceManager:GetMyAllianceFlag()
-	return self:CreateFlagWithTerrain(self:GetMyAllianceData().basicInfo.terrain,self:GetMyAllianceData().basicInfo.flag)
+    return self:CreateFlagWithTerrain(self:GetMyAllianceData().basicInfo.terrain,self:GetMyAllianceData().basicInfo.flag)
 end
 
 function AllianceManager:GetMyAllianceEventData()
-	return self:GetMyAllianceData()
+    return self:GetMyAllianceData()
 end
 
 return AllianceManager
+
+
