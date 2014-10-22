@@ -1,13 +1,13 @@
 GameUtils = {
 	
 }
-
+local floor = math.floor
 function GameUtils:formatTimeStyle1(time)
     local seconds = time % 60
     time = time / 60
-    local minutes = time % 60
+    local minutes = floor(time)% 60
     time = time / 60
-    local hours = time
+    local hours = floor(time)
     return string.format("%02d:%02d:%02d", hours, minutes, seconds)
 end
 

@@ -259,8 +259,23 @@ function WidgetEventTabButtons:CreateProgressItem()
         self.key = key
         return self
     end
+    function progress:SetButtonImages(images)
+        btn:setButtonImage(cc.ui.UIPushButton.NORMAL, images["normal"], true)
+        btn:setButtonImage(cc.ui.UIPushButton.PRESSED, images["pressed"], true)
+        btn:setButtonImage(cc.ui.UIPushButton.DISABLED, images["disabled"], true)
+        return self
+    end
+    function progress:SetButtonLabel(str)
+        btn:setButtonLabel(cc.ui.UILabel.new({
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = str,
+            size = 18,
+            font = UIKit:getFontFilePath(),
+            color = UIKit:hex2c3b(0xfff3c7)}))
+        return self
+    end
     function progress:onEnter()
-        btn:setButtonEnabled(false)
+        btn:setButtonEnabled(true)
     end
     progress:setNodeEventEnabled(true)
 
@@ -577,10 +592,27 @@ function WidgetEventTabButtons:Load()
                 local buildings = self.city:GetOnUpgradingBuildings()
                 local items = {}
                 for i, v in ipairs(buildings) do
-                    table.insert(items, self:CreateItem()
+                    local event_item = self:CreateItem()
                         :SetProgressInfo(self:BuildingDescribe(v))
-                        :SetEventKey(v:UniqueKey())
-                    )
+                        :SetEventKey(v:UniqueKey()):OnClicked(
+                        function(event)
+                            if event.name == "CLICKED_EVENT" then
+                                local eventType = ""
+                                if self.city:IsFunctionBuilding(v) then
+                                    eventType = "building"
+                                elseif self.city:IsHouse(v) then
+                                    eventType = "house"
+                                elseif self.city:IsGate(v) then
+                                    eventType = "wall"
+                                elseif self.city:IsTower(v) then
+                                    eventType = "tower"
+                                end
+                                NetManager:requestToSpeedUp(eventType,v:UniqueUpgradingKey(),NOT_HANDLE)
+                            end
+                        end
+                        ):SetButtonLabel(_("帮助"))
+                
+                    table.insert(items, event_item)
                 end
                 self:InsertItem(items)
                 -- local buildings = self.city:GetOnUpgradingBuildings()
@@ -666,6 +698,10 @@ function WidgetEventTabButtons:MaterialDescribe(event)
 end
 
 return WidgetEventTabButtons
+
+
+
+
 
 
 

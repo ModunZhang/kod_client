@@ -206,13 +206,19 @@ function UpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id,
     self:OnHandle(level, finishTime)
 end
 function UpgradeBuilding:OnEvent(event)
-    self.unique_upgrading_key = event ~= nil and event.id or nil
+    if event == nil then
+        self.unique_upgrading_key = nil
+    else
+        self.unique_upgrading_key =  event.id
+    end
 end
 function UpgradeBuilding:OnHandle(level, finish_time)
     if self.level == level then
         if self.upgrade_to_next_level_time == 0 and finish_time ~= 0 then
+            print("请求升级的时间",finish_time,finish_time - self:GetUpgradeTimeToNextLevel())
             self:UpgradeByCurrentTime(finish_time - self:GetUpgradeTimeToNextLevel())
         elseif self.upgrade_to_next_level_time ~= 0 and finish_time ~= 0 then
+            print("升级时间finish_time= ",finish_time*1000,app.timer:GetServerTime()*1000,finish_time*1000-app.timer:GetServerTime()*1000)
             self.upgrade_to_next_level_time = finish_time
             self:GeneralLocalPush()
         elseif self.upgrade_to_next_level_time ~= 0 and finish_time == 0 then
@@ -323,7 +329,6 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
         or stone<config[self:GetNextLevel()].stone or iron<config[self:GetNextLevel()].iron
         or m.tiles<config[self:GetNextLevel()].tiles or m.tools<config[self:GetNextLevel()].tools
         or m.blueprints<config[self:GetNextLevel()].blueprints or m.pulley<config[self:GetNextLevel()].pulley
-    local is_building_list_enough = #City:GetOnUpgradingBuildings()>0
     local max = City.build_queue
     local current = max - #City:GetOnUpgradingBuildings()
 
@@ -382,21 +387,6 @@ function UpgradeBuilding:getUpgradeRequiredGems()
 end
 
 return UpgradeBuilding
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

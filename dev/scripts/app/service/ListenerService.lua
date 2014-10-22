@@ -13,7 +13,7 @@ local events_to_listen = {
 	'onBuildingLevelUp','onHouseLevelUp','onTowerLevelUp','onWallLevelUp', --升级提示相关
 	'onChat','onAllChat', -- 聊天相关
 	'onNewMailReceived','onGetMailsSuccess','onGetSavedMailsSuccess','onGetSendMailsSuccess','onSendMailSuccess', -- 邮件
-	'onSearchAlliancesSuccess',"onGetCanDirectJoinAlliancesSuccess","onGetAllianceDataSuccess","onAllianceDataChanged",-- 联盟
+	'onSearchAlliancesSuccess',"onGetCanDirectJoinAlliancesSuccess","onGetAllianceDataSuccess","onAllianceDataChanged","onAllianceHelpEventChanged",-- 联盟
 }
 
 
@@ -117,6 +117,11 @@ end
 function ListenerService:ls_onGetAllianceDataSuccess(msg,eventName)
 	self:dispatchEventToAllianceManager_(msg,eventName)
 end
+
+function ListenerService:ls_onAllianceHelpEventChanged(msg,eventName)
+	self:dispatchEventToAllianceManager_(msg,eventName)
+end
+
 
 -- Mails 
 -------------------------------------------------------------------------
