@@ -1,5 +1,6 @@
 local Sprite = import(".Sprite")
 local RuinSprite = class("RuinSprite", Sprite)
+local random = math.random
 function RuinSprite:ctor(city_layer, entity)
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     RuinSprite.super.ctor(self, city_layer, entity, x, y)

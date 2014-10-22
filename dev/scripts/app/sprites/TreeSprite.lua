@@ -16,6 +16,7 @@ end
 --     local x, y = self:GetLogicPosition()
 --     return x + y * width + 100
 -- end
+local random = math.random
 function TreeSprite:GetSpriteFile()
     if not self.png_index then
         self.png_index = random(123456789) % 2 + 1
