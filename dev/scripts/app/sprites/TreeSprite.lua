@@ -18,7 +18,7 @@ end
 -- end
 function TreeSprite:GetSpriteFile()
     if not self.png_index then
-        self.png_index = (math.floor(math.random() * 1000) % 2) + 1
+        self.png_index = random(123456789) % 2 + 1
     end
     return TREE_MAP[self:GetMapLayer():CurrentTerrain()][self.png_index], 0.8
 end

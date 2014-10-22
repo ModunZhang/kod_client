@@ -5,7 +5,7 @@ function RuinSprite:ctor(city_layer, entity)
     RuinSprite.super.ctor(self, city_layer, entity, x, y)
 end
 function RuinSprite:GetSpriteFile()
-    local index = (math.floor(math.random() * 1000) % 2) + 1
+    local index = random(123456789) % 2 + 1
     local ruin_png = index == 1 and "ruin_1_193x151.png" or "ruin_2_190x149.png"
     return ruin_png
 end

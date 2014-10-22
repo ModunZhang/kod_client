@@ -36,7 +36,7 @@ function AllianceLayer:ctor(city)
         {x = 14.5, y = 4.5},
         {x = 14.5, y = 14.5},
     } do
-        local png_index = floor(random() * 10000) % 3 + 1
+        local png_index = random(123456789) % 3 + 1
         display.newSprite(png[png_index], nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(bottom_layer)
             :align(display.CENTER, self.normal_map:ConvertToMapPosition(v.x, v.y))
             :setFilter(filter)
@@ -46,15 +46,15 @@ function AllianceLayer:ctor(city)
         local count = 0
         local random_map = {}
         repeat
-            local x = floor(random() * 10000) % (rect.width + 1)
+            local x = random(123456789) % (rect.width + 1)
             if not random_map[x] then
                 random_map[x] = {}
             end
-            local y = floor(random() * 10000) % (rect.height + 1)
+            local y = random(123456789) % (rect.height + 1)
             if not random_map[x][y] then
                 random_map[x][y] = true
 
-                local png_index = floor(random() * 10000) % 3 + 1
+                local png_index = random(123456789) % 3 + 1
                 table.insert(indexes, {x = x + rect.x, y = y + rect.y, png_index = png_index})
                 count = count + 1
             end
@@ -173,7 +173,7 @@ function AllianceLayer:ctor(city)
     local random_map = get_index_from_map(map)
     local decorators = {}
     while #decorators < 20 do
-        local index = math.floor(math.random() * 100000) % #random_map + 1
+        local index = random(123456789) % #random_map + 1
         local decorator = random_decorator_by_index(random_map[index], 1, map)
         if decorator then
             table.insert(decorators, decorator)
@@ -182,7 +182,7 @@ function AllianceLayer:ctor(city)
         table.remove(random_map, index)
     end
     while #decorators < 39 do
-        local index = math.floor(math.random() * 100000) % #random_map + 1
+        local index = random(123456789) % #random_map + 1
         local decorator = random_decorator_by_index(random_map[index], 2, map)
         if decorator then
             table.insert(decorators, decorator)
@@ -191,7 +191,7 @@ function AllianceLayer:ctor(city)
         table.remove(random_map, index)
     end
     while #decorators < 50 do
-        local index = math.floor(math.random() * 100000) % #random_map + 1
+        local index = random(123456789) % #random_map + 1
         local decorator = random_decorator_by_index(random_map[index], 3, map)
         if decorator then
             table.insert(decorators, decorator)
@@ -200,7 +200,7 @@ function AllianceLayer:ctor(city)
         table.remove(random_map, index)
     end
     while #decorators < 60 do
-        local index = math.floor(math.random() * 100000) % #random_map + 1
+        local index = random(123456789) % #random_map + 1
         local decorator = random_decorator_by_index(random_map[index], 4, map)
         if decorator then
             table.insert(decorators, decorator)
