@@ -587,6 +587,7 @@
 					"\"$(SRCROOT)/../sources/pomelo/libpomelo/deps/uv/build/Default-iphonesimulator\"",
 					"\"$(SRCROOT)/../sources/pomelo/libpomelo/deps/jansson/build/Default-iphonesimulator\"",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lz",
@@ -596,8 +597,8 @@
 					"-lpomelo",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "167e50b6-d309-4457-a952-3328e0ba6bf6";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "167e50b6-d309-4457-a952-3328e0ba6bf6";
+				PROVISIONING_PROFILE = "d97aee55-d627-4fed-9652-e953747362ea";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "d97aee55-d627-4fed-9652-e953747362ea";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../sources\"/**";
 				VALID_ARCHS = armv7;
@@ -656,6 +657,7 @@
 					"\"$(SRCROOT)/../sources/pomelo/libpomelo/deps/uv/build/Default-iphonesimulator\"",
 					"\"$(SRCROOT)/../sources/pomelo/libpomelo/deps/jansson/build/Default-iphonesimulator\"",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lz",
@@ -665,8 +667,8 @@
 					"-lpomelo",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "167e50b6-d309-4457-a952-3328e0ba6bf6";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "167e50b6-d309-4457-a952-3328e0ba6bf6";
+				PROVISIONING_PROFILE = "44027bf1-065a-4f31-b507-03ada9169351";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "44027bf1-065a-4f31-b507-03ada9169351";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../sources\"/**";
 				VALIDATE_PRODUCT = YES;
