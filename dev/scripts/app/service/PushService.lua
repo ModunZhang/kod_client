@@ -242,3 +242,23 @@ function PushService:getPlayerInfo(memberId,cb)
 			,true
 	)
 end
+
+function PushService:kickAllianceMemberOff(memberId, callback)
+	self.m_netService:request("logic.playerHandler.kickAllianceMemberOff"
+			,{memberId=memberId}
+			,function(success)
+				callback(success)
+			end
+			,true
+	)
+end
+
+function PushService:handOverArchon(memberId, callback)
+	self.m_netService:request("logic.playerHandler.handOverArchon"
+			,{memberId=memberId}
+			,function(success)
+				callback(success)
+			end
+			,true
+	)
+end

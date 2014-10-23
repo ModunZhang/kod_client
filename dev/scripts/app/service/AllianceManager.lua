@@ -448,6 +448,24 @@ function AllianceManager:GetMyAllianceEventData()
 	return self:GetMyAllianceData()
 end
 
+function AllianceManager:KickAllianceMemberById(memberId)
+	local members = self:GetMyAllianceData().members
+	local member = nil
+	for i,v in ipairs(members) do
+		print("find one member----->id",v.id)
+		if v.id == memberId then
+			member = v
+			print("find one member----->",member)
+			table.remove(members,i)
+		end
+	end
+	if member then
+		self:dispatchEvent({name = AllianceManager.ALLIANCE_SERVER_EVENT_NAME,
+	        eventName = "onAllianceMemberDataChanged"
+	    })
+	end
+end
+
 --TODO: 添加权限判定函数
 function AllianceManager:AlliancePermission_can_modifyAllianceMemberTitle()
 

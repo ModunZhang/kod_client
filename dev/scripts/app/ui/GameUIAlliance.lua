@@ -1057,12 +1057,12 @@ end
 function GameUIAlliance:OnAllianceTitleClicked( title )
 	-- TODO: 显示职位权限界面
 	print("OnAllianceTitleClicked---->",title)
-	UIKit:newGameUI('GameUIPlayerInfo'):addToCurrentScene(true)
 end
 
 function GameUIAlliance:OnPlayerDetailButtonClicked(memberId)
+	UIKit:newGameUI('GameUIPlayerInfo',false,memberId):addToCurrentScene(true)
 	-- TODO: 显示玩家信息 
-	print("OnPlayerDetailButtonClicked---->",title)
+	print("OnPlayerDetailButtonClicked---->",memberId)
 end
 
 return GameUIAlliance

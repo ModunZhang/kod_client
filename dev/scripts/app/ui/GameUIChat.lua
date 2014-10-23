@@ -330,6 +330,7 @@ function GameUIChat:cellSizeForTable(table,idx)
 	            font = UIKit:getFontFilePath(),
 	    })
 	h = 83 + contentLable:getContentSize().height
+    contentLable = nil
 	return h,w --height,width
 end
 

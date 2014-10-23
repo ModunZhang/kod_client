@@ -39,7 +39,7 @@ function ListenerService:_initOrNot()
 		local chatCenter = ChatCenter.new()
     	app.chatCenter = chatCenter
     end
-    app.chatCenter:requestAllMessage()
+    -- app.chatCenter:requestAllMessage()
 end
 
 function ListenerService:_listenNetMessage()

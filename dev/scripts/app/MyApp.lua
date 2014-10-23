@@ -12,6 +12,8 @@ require("app.utils.window")
 require("app.service.NetManager")
 require("app.service.DataManager")
 import('app.ui.GameGlobalUIUtils')
+import('app.service.ListenerService')
+import('app.service.PushService')
 
 local Timer = import('.utils.Timer')
 local MyApp = class("MyApp", cc.mvc.AppBase)

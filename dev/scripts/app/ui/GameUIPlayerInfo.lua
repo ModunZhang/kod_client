@@ -9,9 +9,10 @@ local UIListView = import(".UIListView")
 local UIScrollView = import(".UIScrollView")
 local NetService = import('..service.NetService')
 
-function GameUIPlayerInfo:ctor(isOnlyMail)
+function GameUIPlayerInfo:ctor(isOnlyMail,memberId)
 	GameUIPlayerInfo.super.ctor(self)
 	self.isOnlyMail_ = isOnlyMail or false
+	self.memberId_ = memberId
 end
 
 function GameUIPlayerInfo:onMoveInStage()
@@ -40,7 +41,7 @@ function GameUIPlayerInfo:onMoveInStage()
 	self.bg = bg
 	self.title_bar = title_bar
 	ListenerService:OnListenEvnet("onGetPlayerInfoSuccess","GameUIPlayerInfo",handler(self,self.OnGetPlayerInfoSuccess))
-	PushService:getPlayerInfo(DataManager:getUserData()._id,function(success)
+	PushService:getPlayerInfo(self.memberId_,function(success)
 		if not success then 
 			self:leftButtonClicked()
 		end
@@ -198,8 +199,18 @@ function GameUIPlayerInfo:BuildUI()
 end
 
 function GameUIPlayerInfo:OnPlayerButtonClicked( tag )
-	if tag == 1 then
-
+	if tag == 1 then -- 踢出
+		PushService:kickAllianceMemberOff(self.memberId_,function(success)
+			if success then
+				DataManager:GetManager("AllianceManager"):KickAllianceMemberById(self.memberId_)
+				self:leftButtonClicked()
+			end
+		end)
+	elseif tag == 2 then
+		PushService:handOverArchon(self.memberId_,function(success)
+			if success then
+			end
+		end)
 	end
 end
 
