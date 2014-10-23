@@ -204,8 +204,8 @@ function CityLayer:InitBackgroundsWithRandom()
     for x = 0, end_x do
         for y = 0, end_y do
             local point = back_layer:getPositionAt(cc.p(x, y))
-            -- local png = floor(random() * 1000) % 2 == 0 and "tree_icefield_150x209.png" or "tree_icefield_150x209.png"
-            local png = floor(random() * 1000) % 2 == 0 and "trees_490x450.png" or "trees_516x433.png"
+            -- local png = random(123456789) % 2 == 0 and "tree_icefield_150x209.png" or "tree_icefield_150x209.png"
+            local png = random(123456789) % 2 == 0 and "trees_490x450.png" or "trees_516x433.png"
             local sprite
             repeat
                 if
@@ -296,9 +296,9 @@ function CityLayer:InitCityBackgroundsWithRandom()
     for row_index = 1, 5 do
         local row = {}
         for col = 1, 5 do
-            local png_index = floor(random() * 1000) % 2 == 0 and 1 or 2
-            local flipx = floor(random() * 1000) % 2 == 0 and true or false
-            local flipy = floor(random() * 1000) % 2 == 0 and true or false
+            local png_index = random(123456789) % 2 == 0 and 1 or 2
+            local flipx = random(123456789) % 2 == 0 and true or false
+            local flipy = random(123456789) % 2 == 0 and true or false
             row[col] = {png_index = png_index, flipx = flipx, flipy = flipy, visible = false}
         end
         city_backgrounds_map[row_index] = row
@@ -346,7 +346,7 @@ function CityLayer:InitRoadsWithRandom()
     for row_index = 1, 5 do
         local row = {}
         for col_index = 1, 5 do
-            local png_index = floor(random() * 1000) % 2 == 0 and 1 or 2
+            local png_index = random(123456789) % 2 == 0 and 1 or 2
             row[col_index] = {png_index = png_index, visible = false}
         end
         roads_map[row_index] = row
@@ -466,7 +466,7 @@ function CityLayer:InitWithCity(city)
             or y == 5 then
             return
         end
-        local grounds = tile:RandomGrounds(floor(random() * 1000))
+        local grounds = tile:RandomGrounds(random(123456789))
         for _, v in pairs(grounds) do
             local tree = self:CreateSingleTree(v.x, v.y):addTo(city_node)
             table.insert(single_tree, tree)

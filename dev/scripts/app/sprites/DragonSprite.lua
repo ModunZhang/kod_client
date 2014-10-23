@@ -49,7 +49,7 @@ function DragonSprite:OnAnimationEnded(animation_name)
         self.idle_count = self.idle_count + 1
         local count = 10
         if self.idle_count > count then
-            if (math.floor(math.random() * 10000) % count) < self.idle_count - count then
+            if math.random(123456789) % count < self.idle_count - count then
                 self:PlayAnimation("Fly")
             end
         else

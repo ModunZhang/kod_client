@@ -12,7 +12,7 @@ def getFileTag( fullPath ):
 	output = process.communicate()[0].rstrip()
 	return output
 
-def getFileSvnPath( fullPath ):
+def getFileGitPath( fullPath ):
 	bashCommand = "git ls-tree --name-only --full-name HEAD " + fullPath
 	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 	output = process.communicate()[0].rstrip()
@@ -32,9 +32,8 @@ def browseFolder( fullPath, fileList ):
 	for root, dirs, files in os.walk(fullPath):
 		for fileName in files:
 			if fileName != ".DS_Store" and fileName != "fileList.json":
-				# print("检查文件 " + root + "/" + fileName)
 				path = root + "/" + fileName
-				svnPath = getFileSvnPath(path)
+				svnPath = getFileGitPath(path)
 				tag = getFileTag(path)
 				size = getFileSize(path)
 				crc32 = getFileCrc32(path)
