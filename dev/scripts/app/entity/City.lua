@@ -934,15 +934,13 @@ function City:GenerateWalls()
     end)
 
     -- 边排序,首尾相连接
-    local first = walls[1]
-    table.remove(walls, 1)
+    local first = table.remove(walls, 1)
     local sort_walls = { first }
     while #walls > 0 do
         local index = find_beside_wall(walls, first)
         if index then
-            first = walls[index]
-            table.insert(sort_walls, walls[index])
-            table.remove(walls, index)
+            first = table.remove(walls, index)
+            table.insert(sort_walls, first)
         else
             break
         end

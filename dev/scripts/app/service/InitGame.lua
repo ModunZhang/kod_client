@@ -1,8 +1,10 @@
 local BuildingRegister = import("..entity.BuildingRegister")
-local city = import("..entity.City")
+local City_ = import("..entity.City")
+local AllianceManager_ = import("..entity.AllianceManager")
 
 return function(userData)
-    City = city.new()
+    Alliance_Manager = AllianceManager_.new()
+    City = City_.new()
     local init_buildings = {}
     local init_unlock_tiles = {}
 

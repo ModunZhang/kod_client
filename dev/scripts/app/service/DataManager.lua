@@ -32,6 +32,7 @@ end
 
 function DataManager:OnUserDataChanged(userData,timer)
 	City:OnUserDataChanged(userData, timer)
+	Alliance_Manager:OnUserDataChanged(userData, timer)
 	self:callManagers_(userData,timer)
 end
 

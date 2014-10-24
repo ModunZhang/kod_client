@@ -7,6 +7,8 @@ local EventManager = import("..layers.EventManager")
 local TouchJudgment = import("..layers.TouchJudgment")
 local IsoMapAnchorBottomLeft = import("..map.IsoMapAnchorBottomLeft")
 local MapScene = import(".MapScene")
+local promise = import("..utils.promise")
+local Alliance = import("..entity.Alliance")
 import('app.service.ListenerService')
 import('app.service.PushService')
 local CityScene = class("CityScene", MapScene)
@@ -32,6 +34,36 @@ function CityScene:onEnter()
     City:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
     self:PlayBackgroundMusic()
     self:GotoLogicPoint(6, 4)
+
+
+    Alliance_Manager:GetMyAlliance():AddListenOnType({
+        OnBasicChanged = function(this, alliance, changed_map)
+            dump(changed_map)
+        end}, Alliance.LISTEN_TYPE.BASIC)
+
+    Alliance_Manager:GetMyAlliance():AddListenOnType({
+        OnOperation = function(this, alliance, operation_type)
+            dump(operation_type)
+        end}, Alliance.LISTEN_TYPE.OPERATION)
+    Alliance_Manager:GetMyAlliance():AddListenOnType({
+        OnMemberChanged = function(this, alliance, changed_map)
+            dump(changed_map)
+            dump(alliance:GetAllMembers())
+        end}, Alliance.LISTEN_TYPE.MEMBER)
+
+    -- promise.new(function(...)
+    --     print(...)
+    --     return "end"
+    -- end):next(function(...)
+    --     return (function(data)
+    --         local pp = promise.new()
+    --         self:performWithDelay(function()
+    --             print(data)
+    --             pp:resolve()
+    --         end, 2)
+    --         return pp
+    --     end)(...)
+    -- end):resolve("start")
 end
 function CityScene:onExit()
     home_page = nil
@@ -153,11 +185,11 @@ function CityScene:GotoLogicPoint(x, y)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
 end
 function CityScene:PlayBackgroundMusic()
-    -- audio.playMusic("audios/music_city.mp3", true)
-    -- audio.playSound("audios/sfx_peace.mp3", true)
-    -- self:performWithDelay(function()
-    --     self:PlayBackgroundMusic()
-    -- end, 113 + 30)
+-- audio.playMusic("audios/music_city.mp3", true)
+-- audio.playSound("audios/sfx_peace.mp3", true)
+-- self:performWithDelay(function()
+--     self:PlayBackgroundMusic()
+-- end, 113 + 30)
 end
 function CityScene:ChangeTerrain(terrain_type)
     self:GetSceneLayer():ChangeTerrain(terrain_type)
@@ -346,6 +378,10 @@ end
 
 
 return CityScene
+
+
+
+
 
 
 

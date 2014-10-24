@@ -370,6 +370,7 @@ function AllianceManager:dispatchAlliceServerData(eventName,msg)
         --basic ui event
     elseif eventName == 'onGetAllianceDataSuccess'
         or eventName == 'onAllianceDataChanged' then
+        Alliance_Manager:OnAllianceDataChanged(msg)
         self:setMyAllianceData_(eventName,msg)
     elseif eventName == 'onAllianceHelpEventChanged' then
     	self:refreshMyAllianceHelpEventsData_(eventName,msg)
