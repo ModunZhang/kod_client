@@ -81,6 +81,23 @@ function test_alliance_events()
 	alliance:PopLastEventWithNotify()
 end
 
+function test_alliance_join_events()
+    local alliance = Alliance.new("联盟id")
+    local l1 = {
+        OnJoinEventsChanged = function(this, alliance, changed_map)
+            dump(changed_map)	
+        end}
+    alliance:AddListenOnType(l1, Alliance.LISTEN_TYPE.JOIN_EVENTS)
+    assert_false(alliance:IsDefault())
+    assert_equal(0, alliance:GetJoinEventsCount())
+    alliance:AddJoinEventWithNotify(alliance:CreateJoinEvents("1", 1, 1, 1, 1))
+    assert_equal(1, alliance:GetJoinEventsCount())
+    alliance:RemoveJoinEventWithNotify(alliance:CreateJoinEvents("1", 1, 1, 1, 1))
+    assert_equal(0, alliance:GetJoinEventsCount())
+
+
+end
+
 
 
 

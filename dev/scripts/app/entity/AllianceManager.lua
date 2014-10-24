@@ -1,4 +1,4 @@
-local Flag = import(".Flag")
+-- local Flag = import(".Flag")
 local Alliance = import(".Alliance")
 local AllianceManager = class("AllianceManager")
 function AllianceManager:ctor()
@@ -20,10 +20,12 @@ function AllianceManager:OnUserDataChanged(user_data, time)
             my_alliance:SetAliasName(alliance.tag)
         end
     end
+    -- dump(self:GetMyAlliance())
 end
 
 function AllianceManager:OnAllianceDataChanged(alliance_data)
 	self:GetMyAlliance():OnAllianceDataChanged(alliance_data)
+    -- dump(self:GetMyAlliance())
 end
 function AllianceManager:OnAllianceBasicInfoAndMemberDataChanged(basic_and_member)
     local my_alliance = self:GetMyAlliance()
@@ -31,21 +33,12 @@ function AllianceManager:OnAllianceBasicInfoAndMemberDataChanged(basic_and_membe
     local memberDoc = basic_and_member.memberDoc
     if my_alliance:IsDefault() then return end
     if basicInfo then
-        my_alliance:SetName(basicInfo.name)
-        my_alliance:SetAliasName(basicInfo.tag)
-        my_alliance:SetDefaultLanguage(basicInfo.language)
-        my_alliance:SetFlag(Flag:DecodeFromJson(basicInfo.flag))
-        my_alliance:SetTerrainType(basicInfo.terrain)
-        my_alliance:SetJoinType(basicInfo.joinType)
-        my_alliance:SetKills(basicInfo.kill)
-        my_alliance:SetPower(basicInfo.power)
-        my_alliance:SetExp(basicInfo.exp)
-        my_alliance:SetLevel(basicInfo.level)
-        my_alliance:SetCreateTime(basicInfo.createTime)
+        my_alliance:OnAllianceBasicInfoChanged(basicInfo)
     end
     if memberDoc then
         my_alliance:OnAllianceMemberDataChanged(memberDoc)
     end
+    -- dump(self:GetMyAlliance())
 end
 
 

@@ -109,6 +109,65 @@ function GameUIShop:onEnter()
         end)
 
 
+    -- print(Alliance_Manager:GetMyAlliance():JoinType())
+    local join_btn = WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = string.format("修改联盟加入类型到%s", Alliance_Manager:GetMyAlliance():JoinType() == "all" and "audit" or "all"),
+        size = 24,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(self)
+        :align(display.CENTER, window.left + 140, window.top - 300)
+        :onButtonClicked(function(event)
+            if event.target:getButtonLabel():getString() == "修改联盟加入类型到all" then
+                event.target:getButtonLabel():setString("修改联盟加入类型到audit")
+                NetManager:editAllianceJoinType("all", NOT_HANDLE)
+            else
+                event.target:getButtonLabel():setString("修改联盟加入类型到all")
+                NetManager:editAllianceJoinType("audit", NOT_HANDLE)
+            end
+        end)
+
+    local member_id
+    for _, v in pairs(Alliance_Manager:GetMyAlliance():GetJoinEventsMap()) do
+        member_id = v.id
+    end
+
+    local join_btn = WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "拒绝一个玩家的申请",
+        size = 24,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(self)
+        :align(display.CENTER, window.left + 320, window.top - 300)
+        :onButtonClicked(function(event)
+            NetManager:refuseJoinAllianceRequest(member_id, function()
+                Alliance_Manager:GetMyAlliance():RemoveJoinEventWithNotifyById(member_id)
+            end)
+        end)
+    local join_btn = WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "接受一个玩家的申请",
+        size = 24,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(self)
+        :align(display.CENTER, window.left + 500, window.top - 300)
+        :onButtonClicked(function(event)
+            NetManager:agreeJoinAllianceRequest(member_id, NOT_HANDLE)
+        end)
+
+
     -- local node = display.newFilteredSprite("green_btn_up.png", "GRAY", {0.2, 0.3, 0.5, 0.1})
     --     :align(display.CENTER, window.cx, window.cy)
     --     :addTo(self)
@@ -121,6 +180,7 @@ end
 
 
 return GameUIShop
+
 
 
 

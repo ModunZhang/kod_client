@@ -677,6 +677,48 @@ function NetManager:helpAllAllianceMemberSpeedUp(cb)
     end)
 end
 
+-- 修改联盟加入条件
+function NetManager:editAllianceJoinType(join_type, cb)
+    local info = {
+        joinType = join_type
+    }
+    self.m_netService:request("logic.playerHandler.editAllianceJoinType", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+-- 拒绝玩家
+function NetManager:refuseJoinAllianceRequest(memberId, cb)
+    local info = {
+        memberId = memberId,
+        agree = false
+    }
+    self.m_netService:request("logic.playerHandler.handleJoinAllianceRequest", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+-- 接受玩家
+function NetManager:agreeJoinAllianceRequest(memberId, cb)
+    local info = {
+        memberId = memberId,
+        agree = true
+    }
+    self.m_netService:request("logic.playerHandler.handleJoinAllianceRequest", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+
 --
 function NetManager:resetGame()
     -- self:sendMsg("reset", NOT_HANDLE)

@@ -4,7 +4,7 @@ local Flag = import("app.entity.Flag")
 local AllianceMember = import("app.entity.AllianceMember")
 local MultiObserver = import("app.entity.MultiObserver")
 local Alliance = class("Alliance", MultiObserver)
-Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS")
+Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS")
 
 local unpack = unpack
 local function pack(...)
@@ -67,7 +67,7 @@ function Alliance:IteratorAllMembers(func)
     end
 end
 function Alliance:ReplaceMemberWithNotify(member)
-    if member:IsSameDataWith(self:GetMemeberById(member:Id())) then
+    if not member:IsSameDataWith(self:GetMemeberById(member:Id())) then
         local old = self:ReplaceMember(member)
         self:OnMemberChanged{
             added = pack(),
@@ -131,6 +131,7 @@ function Alliance:OnMemberChanged(changed_map)
 end
 function Alliance:Reset()
     self:SetId(nil)
+    self:SetJoinType("all")
     self.members = {}
     self.events = {}
     self.join_events = {}
@@ -144,7 +145,7 @@ function Alliance:OnOperation(operation_type)
 end
 function Alliance:IsSameEventWithTwo(event1, event2)
     return event1.key == event2.key
-        and event1.event_type == event2.event_type
+        and event1.type == event2.type
         and event1.category == event2.category
         and event1.time == event2.time
 end
@@ -180,15 +181,162 @@ end
 function Alliance:GetEvents()
     return self.events
 end
-function Alliance:CreateEvent(key, event_type, category, time, params)
-    return {key = key, event_type = event_type, category = category, time = time, params = params}
+function Alliance:CreateEventFromJsonData(json_data)
+    return json_data
+end
+function Alliance:CreateEvent(key, type, category, time, params)
+    return {key = key, type = type, category = category, time = time, params = params}
 end
 function Alliance:OnEventsChanged(changed_map)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.EVENTS, function(listener)
         listener:OnEventsChanged(self, changed_map)
     end)
 end
+function Alliance:CreateJoinEventsFromJsonData(json_data)
+    return json_data
+end
+function Alliance:CreateJoinEvents(id, name, level, power, requestTime)
+    return {id = id, name = name, level = level, power = power, requestTime = requestTime}
+end
+function Alliance:AddJoinEventWithNotify(event)
+    local e = self:AddJoinEvent(event)
+    self:OnJoinEventsChanged{
+        added = pack(e),
+        removed = pack(),
+    }
+    return e
+end
+function Alliance:AddJoinEvent(event)
+    local join_events = self.join_events
+    assert(join_events[event.id] == nil)
+    join_events[event.id] = event
+    return event
+end
+
+function Alliance:RemoveJoinEventWithNotify(event)
+    return self:RemoveJoinEventWithNotifyById(event.id)
+end
+function Alliance:RemoveJoinEventWithNotifyById(id)
+    local e = self:RemoveJoinEventById(id)
+    self:OnJoinEventsChanged{
+        added = pack(),
+        removed = pack(e),
+    }
+    return e
+end
+function Alliance:RemoveJoinEventById(id)
+    local join_events = self.join_events
+    local old = join_events[id]
+    join_events[id] = nil
+    return old
+end
+function Alliance:RemoveJoinEvent(event)
+    return self:RemoveJoinEventById(event.id)
+end
+function Alliance:GetJoinEventsCount()
+    local count = 0
+    for _,_ in pairs(self.join_events) do
+        count = count + 1
+    end
+    return count
+end
+function Alliance:GetJoinEventsMap()
+    return self.join_events
+end
+function Alliance:OnJoinEventsChanged(changed_map)
+    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.JOIN_EVENTS, function(listener)
+        listener:OnJoinEventsChanged(self, changed_map)
+    end)
+end
+function Alliance:OnAllianceBasicInfoChanged(basicInfo)
+    if basicInfo == nil then return end
+    self:SetName(basicInfo.name)
+    self:SetAliasName(basicInfo.tag)
+    self:SetDefaultLanguage(basicInfo.language)
+    self:SetFlag(Flag:DecodeFromJson(basicInfo.flag))
+    self:SetTerrainType(basicInfo.terrain)
+    self:SetJoinType(basicInfo.joinType)
+    self:SetKills(basicInfo.kill)
+    self:SetPower(basicInfo.power)
+    self:SetExp(basicInfo.exp)
+    self:SetLevel(basicInfo.level)
+    self:SetCreateTime(basicInfo.createTime)
+end
+function Alliance:OnJoinRequestEventsChanged(joinRequestEvents)
+    if joinRequestEvents == nil then return end
+    local join_events = self.join_events
+    -- 找出新加入的请求
+    local mark_map = {}
+    local added = {}
+    for i, v in ipairs(joinRequestEvents) do
+        if not join_events[v.id] then
+            table.insert(added, v)
+        end
+        mark_map[v.id] = true
+    end
+    -- 找出删除的请求
+    local removed = {}
+    for k, v in pairs(join_events) do
+        if not mark_map[k] then
+            table.insert(removed, v)
+        end
+    end
+    -- 更新集合
+    join_events = {}
+    for i, v in ipairs(joinRequestEvents) do
+        join_events[v.id] = v
+    end
+    self.join_events = join_events
+
+
+    self:OnJoinEventsChanged{
+        added = added,
+        removed = removed,
+    }
+end
+function Alliance:OnEventsChanged(events)
+    if events == nil then return end
+    -- 先按从新到旧排序
+    table.sort(events, function(a, b)
+        return a.time > b.time
+    end)
+    -- 只会添加新事件，只会在登录的时候才会重新加载所有事件
+    -- 先找到最近的事件索引
+    local top_event = self:TopEvent() or {time = 0}
+    local index = 0
+    for i, new_event in ipairs(events) do
+        local diff_time = new_event.time - top_event.time
+        if diff_time > 0 then
+            index = i
+        else
+            break
+        end
+    end
+    -- 索引大于0才表明有新的事件来临
+    local is_new_events_coming = index > 0
+    if is_new_events_coming then
+        local new_coming_events = {}
+        for i = index, 1, -1 do
+            local new_event = self:CreateEventFromJsonData(events[i])
+            table.insert(new_coming_events, 1, new_event)
+            self:PushEventInHead(new_event)
+        end
+        self:OnEventsChanged{
+            pop = pack(),
+            push = new_coming_events
+        }
+    end
+end
 function Alliance:OnAllianceDataChanged(alliance_data)
+    if alliance_data.basicInfo then
+        self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
+    end
+    if alliance_data.events then
+        self:OnEventsChanged(alliance_data.events)
+    end
+    if alliance_data.joinRequestEvents then
+        self:OnJoinRequestEventsChanged(alliance_data.joinRequestEvents)
+    end
     local members = alliance_data.members
     if members then
         local function find_members_with_id(id)
@@ -247,40 +395,6 @@ function Alliance:OnAllianceDataChanged(alliance_data)
             }
         end
     end
-
-    local events = alliance_data.events
-    if events then
-        -- 先按从新到旧排序
-        table.sort(events, function(a, b)
-            return a.time > b.time
-        end)
-        -- 只会添加新事件，只会在登录的时候才会重新加载所有事件
-        -- 先找到最近的事件索引
-        local top_event = self:TopEvent() or {time = 0}
-        local index = 0
-        for i, new_event in ipairs(events) do
-            local diff_time = new_event.time - top_event.time
-            if diff_time > 0 then
-                index = i
-            else
-                break
-            end
-        end
-        -- 索引大于0才表明有新的事件来临
-        local is_new_events_coming = index > 0
-        if is_new_events_coming then
-            local new_coming_events = {}
-            for i = index, 1, -1 do
-                local new_event = events[i]
-                table.insert(new_coming_events, 1, new_event)
-                self:PushEventInHead(new_event)
-            end
-            self:OnEventsChanged{
-                pop = pack(),
-                push = new_coming_events
-            }
-        end
-    end
 end
 function Alliance:OnAllianceMemberDataChanged(member_data)
     self:ReplaceMemberWithNotify(AllianceMember:CreatFromData(member_data))
@@ -288,6 +402,11 @@ end
 
 
 return Alliance
+
+
+
+
+
 
 
 
