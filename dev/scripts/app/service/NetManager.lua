@@ -621,6 +621,20 @@ function NetManager:deleteMail(mailId,cb)
         end
     end)
 end
+-- 发送联盟邮件
+function NetManager:sendAllianceMail(title, content, cb)
+    local info = {
+        title = title,
+        content = content,
+    }
+    self.m_netService:request("logic.playerHandler.sendAllianceMail", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
 -- 请求加速
 function NetManager:requestToSpeedUp(eventType,eventId,cb)
     local info = {
