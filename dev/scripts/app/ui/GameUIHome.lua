@@ -56,7 +56,7 @@ function GameUIHome:onExit()
 end
 function GameUIHome:MailUnreadChanged( num )
     if num==0 then
-        self.self.mail_unread_num_bg:setVisible(false)
+        self.mail_unread_num_bg:setVisible(false)
     else
         self.mail_unread_num_bg:setVisible(true)
         self.mail_unread_num_label:setString(GameUtils:formatNumber(num))
@@ -301,7 +301,7 @@ function GameUIHome:CreateBottom()
     for i, v in ipairs({
         {"home/bottom_icon_1.png", _("任务")},
         {"home/bottom_icon_2.png", _("物品")},
-        {"home/bottom_icon_3.png", _("邮件")},
+        {"home/mail.png", _("邮件")},
         {"home/bottom_icon_4.png", _("联盟")},
         {"home/bottom_icon_2.png", _("更多")},
     }) do

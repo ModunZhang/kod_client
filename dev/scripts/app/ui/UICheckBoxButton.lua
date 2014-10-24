@@ -29,7 +29,7 @@ quick CheckButton控件
 
 ]]
 
-local UIButton = cc.ui.UIButton
+local UIButton = import(".UIButton")
 local UICheckBoxButton = class("UICheckBoxButton", UIButton)
 
 UICheckBoxButton.OFF          = "off"

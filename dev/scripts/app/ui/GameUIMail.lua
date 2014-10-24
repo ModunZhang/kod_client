@@ -4,6 +4,7 @@ local UICheckBoxButton = import(".UICheckBoxButton")
 local GameUIStrikeReport = import(".GameUIStrikeReport")
 local GameUIWarReport = import(".GameUIWarReport")
 local window = import("..utils.window")
+local GameUIWriteMail = import(".GameUIWriteMail")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
@@ -226,10 +227,10 @@ function GameUIMail:CreateMailItem(listview,mail)
     local from_name_label =  cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = mail.fromName,
+            text = (mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."]"..mail.fromName) or mail.fromName,
             font = UIKit:getFontFilePath(),
             size = 22,
-            dimensions = cc.size(200,0),
+            dimensions = cc.size(0,24),
             color = UIKit:hex2c3b(0xffedae)
         }):align(display.LEFT_CENTER, 60, 17)
         :addTo(title_bg)
@@ -239,7 +240,7 @@ function GameUIMail:CreateMailItem(listview,mail)
             text = GameUtils:formatTimeStyle2(mail.sendTime/1000),
             font = UIKit:getFontFilePath(),
             size = 16,
-            -- dimensions = cc.size(200,0),
+            dimensions = cc.size(0,0),
             color = UIKit:hex2c3b(0xffedae)
         }):align(display.RIGHT_CENTER, 540, 17)
         :addTo(title_bg)
@@ -459,13 +460,13 @@ function GameUIMail:ShowSendMailDetails(mail)
     -- title bg
     local title_bg = display.newSprite("title_blue_596x49.png"):align(display.TOP_LEFT, 6, bg:getContentSize().height-6):addTo(bg)
     -- title
-    local title_string = mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."] "..mail.fromName or mail.fromName
+    local title_string = (mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."] "..mail.fromName) or mail.fromName
     local title_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
             text = title_string,
             font = UIKit:getFontFilePath(),
             size = 22,
-            dimensions = cc.size(200,24),
+            dimensions = cc.size(0,24),
             color = UIKit:hex2c3b(0xffedae)
         }):align(display.LEFT_CENTER, 150, 25)
         :addTo(title_bg)
@@ -564,13 +565,14 @@ function GameUIMail:ShowMailDetails(mail)
     -- title bg
     local title_bg = display.newSprite("title_blue_596x49.png"):align(display.TOP_LEFT, 6, bg:getContentSize().height-6):addTo(bg)
     -- title
-    local title_string = mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."] "..mail.fromName or mail.fromName
+    local title_string = (mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."] "..mail.fromName) or mail.fromName
+    print("ShowMailDetails",mail.fromName,mail.fromAllianceTag,title_string)
     local title_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
             text = title_string,
             font = UIKit:getFontFilePath(),
             size = 22,
-            dimensions = cc.size(200,24),
+            dimensions = cc.size(0,24),
             color = UIKit:hex2c3b(0xffedae)
         }):align(display.LEFT_CENTER, 150, 25)
         :addTo(title_bg)
@@ -987,120 +989,9 @@ end
 
 
 function GameUIMail:CreateWriteMail()
-    local layer_bg = display.newColorLayer(UIKit:hex2c4b(0x7a000000)):addTo(self)
-    -- bg
-    local write_mail = WidgetUIBackGround.new(768):addTo(layer_bg)
-    write_mail:pos((display.width-write_mail:getContentSize().width)/2,display.top - write_mail:getContentSize().height - 120)
-    local r_size = write_mail:getContentSize()
-    -- title write_mail
-    local title_write_mail = display.newSprite("title_blue_596x49.png"):align(display.TOP_LEFT, 6, write_mail:getContentSize().height-6):addTo(write_mail)
-    -- title
-    local title_label = cc.ui.UILabel.new(
-        {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("写邮件"),
-            font = UIKit:getFontFilePath(),
-            size = 22,
-            dimensions = cc.size(200,24),
-            color = UIKit:hex2c3b(0xffedae)
-        }):align(display.LEFT_CENTER,30, 25)
-        :addTo(title_write_mail)
-
-    --close button
-    cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                layer_bg:removeFromParent()
-            end
-        end):align(display.CENTER, title_write_mail:getContentSize().width-10, title_write_mail:getContentSize().height-6):addTo(title_write_mail):addChild(display.newSprite("X_3.png"))
-
-    -- 收件人
-    local addressee_title_label = cc.ui.UILabel.new(
-        {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("收件人："),
-            font = UIKit:getFontFilePath(),
-            size = 20,
-            color = UIKit:hex2c3b(0x797154)
-        }):align(display.RIGHT_CENTER,120, r_size.height-90)
-        :addTo(write_mail)
-    local editbox_addressee = cc.ui.UIInput.new({
-        UIInputType = 1,
-        image = "input_box.png",
-        size = cc.size(422,40),
-        listener = onEdit,
-        font = UIKit:getFontFilePath(),
-    })
-    editbox_addressee:setPlaceHolder(_("最多可输入140字符"))
-    editbox_addressee:setMaxLength(140)
-    editbox_addressee:setFont(UIKit:getFontFilePath(),22)
-    editbox_addressee:setFontColor(cc.c3b(0,0,0))
-    editbox_addressee:setPlaceholderFontColor(cc.c3b(204,196,158))
-    editbox_addressee:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)
-    editbox_addressee:align(display.LEFT_TOP,150, r_size.height-70):addTo(write_mail)
-    -- 主题
-    local subject_title_label = cc.ui.UILabel.new(
-        {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("主题："),
-            font = UIKit:getFontFilePath(),
-            size = 20,
-            color = UIKit:hex2c3b(0x797154)
-        }):align(display.RIGHT_CENTER,120, r_size.height-140)
-        :addTo(write_mail)
-    local editbox_subject = cc.ui.UIInput.new({
-        UIInputType = 1,
-        image = "input_box.png",
-        size = cc.size(422,40),
-        listener = onEdit,
-        font = UIKit:getFontFilePath(),
-    })
-    editbox_subject:setPlaceHolder(_("最多可输入140字符"))
-    editbox_subject:setMaxLength(140)
-    editbox_subject:setFont(UIKit:getFontFilePath(),22)
-    editbox_subject:setFontColor(cc.c3b(0,0,0))
-    editbox_subject:setPlaceholderFontColor(cc.c3b(204,196,158))
-    editbox_subject:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)
-    editbox_subject:align(display.LEFT_TOP,150, r_size.height-120):addTo(write_mail)
-
-    -- 分割线
-    display.newScale9Sprite("dividing_line_584x1.png", r_size.width/2, r_size.height-180,cc.size(594,1)):addTo(write_mail)
-    -- 内容
-    cc.ui.UILabel.new(
-        {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("内容："),
-            font = UIKit:getFontFilePath(),
-            size = 18,
-            dimensions = cc.size(410,24),
-            color = UIKit:hex2c3b(0x797154)
-        }):align(display.LEFT_CENTER,30,r_size.height-200)
-        :addTo(write_mail)
-    -- 回复的邮件内容
-    local textView = cc.DTextView:create(cc.size(580,472),display.newScale9Sprite("background_580X472.png"))
-    textView:addTo(write_mail):align(display.CENTER_BOTTOM,r_size.width/2,76)
-    textView:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)
-    textView:setFont(UIKit:getFontFilePath(), 24)
-    
-    textView:setFontColor(cc.c3b(0,0,0))
-
-    -- 发送按钮
-    local send_label = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("发送"),
-        size = 20,
-        font = UIKit:getFontFilePath(),
-        color = UIKit:hex2c3b(0xfff3c7)})
-
-    send_label:enableShadow()
-    WidgetPushButton.new(
-        {normal = "keep_unlocked_button_normal.png", pressed = "keep_unlocked_button_pressed.png"},
-        {scale9 = false}
-    ):setButtonLabel(send_label)
-        :addTo(write_mail):align(display.CENTER, write_mail:getContentSize().width-120, 40)
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                self:SendMail(editbox_addressee:getText(), editbox_subject:getText(), textView:getText())
-                layer_bg:removeFromParent()
-            end
-        end)
-    return layer_bg
+    return GameUIWriteMail.new():SetTitle(_("写邮件"))
+        :OnSendButtonClicked(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL)
+        :addTo(self)
 end
 
 --[[
