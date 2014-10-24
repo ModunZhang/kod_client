@@ -32,6 +32,18 @@ end
 function Flag:SetFrontImageColors(color1, color2)
     self.flag.graphicColor = {color1, color2}
 end
+function Flag:IsSameWithFlag(flag)
+    local this_flag = self.flag
+    local flag_ = flag.flag
+    return this_flag.flagColor[1] == flag_.flagColor[1]
+        and this_flag.flagColor[2] == flag_.flagColor[2]
+        and this_flag.flag == flag_.flag
+        and this_flag.graphic == flag_.graphic
+        and this_flag.graphicContent[1] == flag_.graphicContent[1]
+        and this_flag.graphicContent[2] == flag_.graphicContent[2]
+        and this_flag.graphicColor[1] == flag_.graphicColor[1]
+        and this_flag.graphicColor[2] == flag_.graphicColor[2]
+end
 -- 随机不会替换以前的旗帜
 function Flag:RandomFlag()
     local flag = Flag.new()
@@ -51,10 +63,13 @@ function Flag:EncodeToJson()
     assert(self.flag.graphicContent)
     return json.encode(self.flag)
 end
-function Flag:DecodeFromJson(json)
-    self.flag = json.decode(json)
+function Flag:DecodeFromJson(json_data)
+    local flag = Flag.new()
+    flag.flag = json.decode(json_data)
+    return flag
 end
 
 
 return Flag
+
 

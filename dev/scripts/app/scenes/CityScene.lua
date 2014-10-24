@@ -24,7 +24,7 @@ function CityScene:onEnter()
     CityScene.super.onEnter(self)
     self.scene_ui_layer = self:CreateSceneUILayer()
     home_page = self:CreateHomePage()
-    
+
 
     self:GetSceneLayer():AddObserver(self)
     self:GetSceneLayer():InitWithCity(City)
@@ -38,19 +38,24 @@ function CityScene:onEnter()
 
     Alliance_Manager:GetMyAlliance():AddListenOnType({
         OnBasicChanged = function(this, alliance, changed_map)
-            dump(changed_map)
+            -- dump(changed_map)
         end}, Alliance.LISTEN_TYPE.BASIC)
 
     Alliance_Manager:GetMyAlliance():AddListenOnType({
         OnOperation = function(this, alliance, operation_type)
-            dump(operation_type)
+            -- dump(operation_type)
         end}, Alliance.LISTEN_TYPE.OPERATION)
     Alliance_Manager:GetMyAlliance():AddListenOnType({
         OnMemberChanged = function(this, alliance, changed_map)
-            dump(changed_map)
-            dump(alliance:GetAllMembers())
+            -- dump(changed_map)
+            -- dump(alliance:GetAllMembers())
         end}, Alliance.LISTEN_TYPE.MEMBER)
-
+    Alliance_Manager:GetMyAlliance():AddListenOnType({
+        OnEventsChanged = function(this, alliance, changed_map)
+            -- dump(changed_map)
+            dump(changed_map)
+        end
+    }, Alliance.LISTEN_TYPE.EVENTS)
     -- promise.new(function(...)
     --     print(...)
     --     return "end"
@@ -378,6 +383,7 @@ end
 
 
 return CityScene
+
 
 
 

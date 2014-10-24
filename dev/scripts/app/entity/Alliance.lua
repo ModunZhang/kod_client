@@ -26,11 +26,21 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     property(self, "aliasName", aliasName)
     property(self, "defaultLanguage", defaultLanguage or "all")
     property(self, "terrainType", terrainType or "grassLand")
-    property(self, "flag", Flag:RandomFlag())
+    self.flag = Flag:RandomFlag()
     self.members = {}
     self.events = {}
     self.join_events = {}
     self.help_vents = {}
+end
+function Alliance:Flag()
+    return self.flag
+end
+function Alliance:SetFlag(flag)
+    if not self.flag:IsSameWithFlag(flag) then
+        local old = self.flag
+        self.flag = flag
+        self:OnPropertyChange("flag", old, flag)
+    end
 end
 function Alliance:IsDefault()
     return self:Id() == nil
@@ -55,6 +65,14 @@ function Alliance:IteratorAllMembers(func)
             return
         end
     end
+end
+function Alliance:ReplaceMemberWithNotify(member)
+    local old = self:ReplaceMember(member)
+    self:OnMemberChanged{
+        added = pack(),
+        removed = pack(),
+        changed = pack({old = old, new = member}),
+    }
 end
 function Alliance:ReplaceMember(member)
     local old = self.members[member:Id()]
@@ -148,8 +166,11 @@ function Alliance:PushEventInHeadWithNotify(event)
     return e
 end
 function Alliance:PushEventInHead(event)
-    table.insert(self.events, event)
+    table.insert(self.events, 1, event)
     return event
+end
+function Alliance:TopEvent()
+    return self:GetEventByIndex(1)
 end
 function Alliance:GetEventByIndex(index)
     return self.events[index]
@@ -182,28 +203,28 @@ function Alliance:OnAllianceDataChanged(alliance_data)
                 table.insert(remove_members, member)
             end
         end)
-        dump(remove_members)
+        -- dump(remove_members)
 
         -- 再找新加入的成员
         local add_members = {}
         for _, v in ipairs(members) do
             if not self:GetMemeberById(v.id) then
-                table.insert(add_members, AllianceMember:CreatFromJsonData(v))
+                table.insert(add_members, AllianceMember:CreatFromData(v))
             end
         end
-        dump(add_members)
+        -- dump(add_members)
 
         -- 成员更新的数据, 直接替换成员数据
         local update_members = {}
         for _, v in ipairs(members) do
             local member = self:GetMemeberById(v.id)
-            local new_data = AllianceMember:CreatFromJsonData(v)
+            local new_data = AllianceMember:CreatFromData(v)
             if member and not member:IsSameDataWith(new_data) then
-                self:ReplaceMember(new_data)
-                table.insert(update_members, new_data)
+                local old = self:ReplaceMember(new_data)
+                table.insert(update_members, {old = old, new = new_data})
             end
         end
-        dump(update_members)
+        -- dump(update_members)
 
         -- 开始真正删除成员了
         for _, v in ipairs(remove_members) do
@@ -224,11 +245,56 @@ function Alliance:OnAllianceDataChanged(alliance_data)
             }
         end
     end
+
+    local events = alliance_data.events
+    if events then
+        -- 先按从新到旧排序
+        table.sort(events, function(a, b)
+            return a.time > b.time
+        end)
+        dump(events)
+        -- 只会添加新事件，只会在登录的时候才会重新加载所有事件
+        -- 先找到最近的事件索引
+        dump(self:GetEvents())
+        local top_event = self:TopEvent() or {time = 0}
+        local index = 0
+        print()
+        for i, new_event in ipairs(events) do
+            local diff_time = new_event.time - top_event.time
+            print(diff_time)
+            if diff_time > 0 then
+                index = i
+            else
+                break
+            end
+        end
+        print("==", index)
+        -- 索引大于0才表明有新的事件来临
+        local is_new_events_coming = index > 0
+        if is_new_events_coming then
+            local new_coming_events = {}
+            for i = index, 1, -1 do
+                local new_event = events[i]
+                table.insert(new_coming_events, new_event, 1)
+                self:PushEventInHead(new_event)
+            end
+            self:OnEventsChanged{
+                pop = pack(),
+                push = new_coming_events
+            }
+        end
+    end
+end
+function Alliance:OnAllianceMemberDataChanged(member_data)
+    self:ReplaceMemberWithNotify(AllianceMember:CreatFromData(member_data))
 end
 
 
-
 return Alliance
+
+
+
+
 
 
 

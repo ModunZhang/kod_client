@@ -392,6 +392,7 @@ function AllianceManager:dispatchAlliceServerData(eventName,msg)
 	        data = msg.memberDoc
 	    })
 	elseif eventName == 'onAllianceBasicInfoAndMemberDataChanged' then
+        Alliance_Manager:OnAllianceBasicInfoAndMemberDataChanged(msg)
 		-- 拆分onAllianceBasicInfoAndMemberDataChanged 分成两个事件
 		self:dispatchAlliceServerData("onAllianceDataChanged",{basicInfo=msg.basicInfo})
 		self:dispatchAlliceServerData("onAllianceMemberDataChanged",{memberDoc=msg.memberDoc})
