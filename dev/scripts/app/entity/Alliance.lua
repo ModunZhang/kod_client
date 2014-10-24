@@ -67,12 +67,14 @@ function Alliance:IteratorAllMembers(func)
     end
 end
 function Alliance:ReplaceMemberWithNotify(member)
-    local old = self:ReplaceMember(member)
-    self:OnMemberChanged{
-        added = pack(),
-        removed = pack(),
-        changed = pack({old = old, new = member}),
-    }
+    if member:IsSameDataWith(self:GetMemeberById(member:Id())) then
+        local old = self:ReplaceMember(member)
+        self:OnMemberChanged{
+            added = pack(),
+            removed = pack(),
+            changed = pack({old = old, new = member}),
+        }
+    end
 end
 function Alliance:ReplaceMember(member)
     local old = self.members[member:Id()]
@@ -252,30 +254,25 @@ function Alliance:OnAllianceDataChanged(alliance_data)
         table.sort(events, function(a, b)
             return a.time > b.time
         end)
-        dump(events)
         -- 只会添加新事件，只会在登录的时候才会重新加载所有事件
         -- 先找到最近的事件索引
-        dump(self:GetEvents())
         local top_event = self:TopEvent() or {time = 0}
         local index = 0
-        print()
         for i, new_event in ipairs(events) do
             local diff_time = new_event.time - top_event.time
-            print(diff_time)
             if diff_time > 0 then
                 index = i
             else
                 break
             end
         end
-        print("==", index)
         -- 索引大于0才表明有新的事件来临
         local is_new_events_coming = index > 0
         if is_new_events_coming then
             local new_coming_events = {}
             for i = index, 1, -1 do
                 local new_event = events[i]
-                table.insert(new_coming_events, new_event, 1)
+                table.insert(new_coming_events, 1, new_event)
                 self:PushEventInHead(new_event)
             end
             self:OnEventsChanged{
@@ -291,6 +288,7 @@ end
 
 
 return Alliance
+
 
 
 
