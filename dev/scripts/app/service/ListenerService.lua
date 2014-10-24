@@ -135,6 +135,7 @@ function ListenerService:ls_onGetAllianceDataSuccess(msg,eventName)
 	self:dispatchEventToAllianceManager_(msg,eventName)
 end
 
+
 function ListenerService:ls_onAllianceNewEventReceived(msg,eventName)
 	self:dispatchEventToAllianceManager_(msg,eventName)
 end
@@ -152,6 +153,11 @@ function ListenerService:ls_onGetPlayerInfoSuccess( msg,eventName )
 	        data = msg
 	    })
 end
+
+function ListenerService:ls_onAllianceHelpEventChanged(msg,eventName)
+	self:dispatchEventToAllianceManager_(msg,eventName)
+end
+
 
 -- Mails 
 -------------------------------------------------------------------------

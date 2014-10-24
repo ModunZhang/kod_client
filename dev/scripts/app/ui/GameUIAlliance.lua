@@ -22,7 +22,7 @@ local NetService = import('..service.NetService')
 GameUIAlliance.COMMON_LIST_ITEM_TYPE = Enum("JOIN","INVATE","APPLY")
 local SEARCH_ALLIAN_TO_JOIN_TAG = "join_alliance"
 local ALLIANCE_EVENT_TAG = "ALLIANCE_EVENT_TAG"
--- 
+--
 --------------------------------------------------------------------------------
 function GameUIAlliance:ctor()
 	GameUIAlliance.super.ctor(self,City,_("联盟"))
@@ -275,6 +275,9 @@ function GameUIAlliance:OnAllianceDataEvent(event)
 	elseif event.eventName == "onAllianceDataChanged" then
 		if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
 			self:RefreshOverViewUI()
+		end
+		if self.tab_buttons:GetSelectedButtonTag() == 'members' then
+			self:RefreshMemberList()
 		end
 	elseif event.eventName == "onAllianceNewEventReceived" then
 		if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
@@ -1057,6 +1060,8 @@ end
 function GameUIAlliance:OnAllianceTitleClicked( title )
 	-- TODO: 显示职位权限界面
 	print("OnAllianceTitleClicked---->",title)
+	
+	UIKit:newGameUI('GameUIAllianTitle',title):addToCurrentScene(true)
 end
 
 function GameUIAlliance:OnPlayerDetailButtonClicked(memberId)

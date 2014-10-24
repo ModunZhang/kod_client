@@ -621,6 +621,48 @@ function NetManager:deleteMail(mailId,cb)
         end
     end)
 end
+-- 请求加速
+function NetManager:requestToSpeedUp(eventType,eventId,cb)
+    local info = {
+        eventType = eventType,
+        eventId = eventId,
+    }
+    self.m_netService:request("logic.playerHandler.requestToSpeedUp", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+
+-- 协助玩家加速
+function NetManager:helpAllianceMemberSpeedUp(eventId,cb)
+    local info = {
+        eventId = eventId,
+    }
+    self.m_netService:request("logic.playerHandler.helpAllianceMemberSpeedUp", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+
+-- 协助所有玩家加速
+function NetManager:helpAllAllianceMemberSpeedUp(cb)
+    local info = {
+    }
+    self.m_netService:request("logic.playerHandler.helpAllAllianceMemberSpeedUp", info, function(success, msg)
+        if success and msg.code == SUCCESS_CODE then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
+end
+
 --
 function NetManager:resetGame()
     -- self:sendMsg("reset", NOT_HANDLE)

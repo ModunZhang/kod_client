@@ -3,6 +3,8 @@ local WidgetTab = import("..widget.WidgetTab")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
 local MailManager = import("..service.MailManager")
+local GameUIHelp = import(".GameUIHelp")
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
 
 
@@ -80,7 +82,7 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         NetManager:sendMsg("reset", NOT_HANDLE)
-        end):addTo(top_bg):align(display.LEFT_BOTTOM, 109, 106)
+    end):addTo(top_bg):align(display.LEFT_BOTTOM, 109, 106)
 
 
     -- 玩家名字背景加文字
@@ -245,7 +247,12 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         dump(event)
+        if event.name == "CLICKED_EVENT" then
+            -- PushService:quitAlliance(NOT_HANDLE)
+        end
     end):addTo(top_bg):pos(592, -51):scale(0.6)
+
+
 
     return top_bg
 end
@@ -269,7 +276,7 @@ function GameUIHome:CreateBottom()
             return true
         elseif event.name == 'ended' then
             if cc.pGetDistance(chat_bg.prevP,cc.p(event.x,event.y)) <= 10 then
-                UIKit:newGameUI('GameUIChat'):addToCurrentScene(true)   
+                UIKit:newGameUI('GameUIChat'):addToCurrentScene(true)
             end
         end
     end)
@@ -305,11 +312,11 @@ function GameUIHome:CreateBottom()
                 size = 16,
                 font = UIKit:getFontFilePath(),
                 color = UIKit:hex2c3b(0xf5e8c4)}
-                )
+            )
             )
             :setButtonLabelOffset(0, -40)
             :addTo(bottom_bg):pos(x, y)
-        button:setTag(i)    
+        button:setTag(i)
     end
 
     -- 未读邮件或战报数量显示条
@@ -333,32 +340,24 @@ function GameUIHome:CreateBottom()
     display.newSprite("home/toggle_point.png"):addTo(bottom_bg):pos(94, 89)
     display.newSprite("home/toggle_point.png"):addTo(bottom_bg):pos(94, 10)
     local arrow = display.newSprite("toggle_arrow_103x104.png"):addTo(bottom_bg):pos(53, 51)
-        :rotation(display.getRunningScene().name == "AllianceScene" and 90 or 0)
     WidgetPushButton.new(
         {normal = "toggle_city_89x97.png", pressed = "toggle_city_89x97.png"}
     ):addTo(bottom_bg)
         :pos(52, 54)
-        :onButtonClicked(function(event)    
+        :onButtonClicked(function(event)
             app:lockInput(true)
-            if display.getRunningScene().__cname == "AllianceScene" then
-                transition.rotateTo(arrow, {
-                    rotate = 0,
-                    time = 0.2,
-                    onComplete = function()
-                        app:lockInput(false)
-                        app:enterScene("CityScene", nil, "fade", 0.6, display.COLOR_WHITE)
-                    end}
-                )
-            elseif display.getRunningScene().__cname == "CityScene" then
-                transition.rotateTo(arrow, {
-                    rotate = 90,
-                    time = 0.2,
-                    onComplete = function()
-                        app:lockInput(false)
-                        app:enterScene("AllianceScene", nil, "custom", -1, function(scene, status)
-                            if status == "onEnter" then
-                                local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
-                                local sequence = transition.sequence{
+            transition.rotateTo(arrow, {
+                rotate = 90,
+                time = 0.2,
+                onComplete = function()
+                    app:lockInput(false)
+                    app:enterScene("AllianceScene", nil, "custom", -1, function(scene, status)
+                        local manager = ccs.ArmatureDataManager:getInstance()
+                        if status == "onEnter" then
+                            manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+                            local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
+                            display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
+                                transition.sequence{
                                     cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
                                     cc.FadeIn:create(0.75),
                                     cc.CallFunc:create(function() scene:hideOutShowIn() end),
@@ -367,13 +366,30 @@ function GameUIHome:CreateBottom()
                                     cc.FadeOut:create(0.75),
                                     cc.CallFunc:create(function() scene:finish() end),
                                 }
-                                display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(sequence)
-                            end
-                        end)
-                    end}
-                )
-            end
+                            )
+                        elseif status == "onExit" then
+                            manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+                        end
+                    end)
+                end}
+            )
         end)
+
+    -- 协助加速按钮
+    local help_button = cc.ui.UIPushButton.new(
+        {normal = "loyalty.png", pressed = "loyalty.png"},
+        {scale9 = false}
+    ):onButtonClicked(function(event)
+        if event.name == "CLICKED_EVENT" then
+            if DataManager:GetManager("AllianceManager"):haveAlliance() then
+                GameUIHelp.new():AddToCurrentScene()
+            else
+                FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                    :SetPopMessage(_("加入联盟才能激活帮助功能"))
+                    :AddToCurrentScene()
+            end
+        end
+    end):addTo(self):pos(display.cx+280, display.top-560)
 
     return bottom_bg
 end
@@ -389,3 +405,8 @@ function GameUIHome:OnBottomButtonClicked(event)
 end
 
 return GameUIHome
+
+
+
+
+

@@ -218,7 +218,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
     end
     function item:SetCondition(condition, color)
         condition_label:setString(_(condition))
-        condition_label:setColor(color == nil and display.COLOR_GREEN or display.COLOR_RED)
+        condition_label:setColor(color == nil and UIKit:hex2c3b(0x007c23) or UIKit:hex2c3b(0x7e0000))
     end
     function item:SetBuildEnable(is_enable)
         build_btn:setButtonEnabled(is_enable)

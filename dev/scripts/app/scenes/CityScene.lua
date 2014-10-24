@@ -30,8 +30,10 @@ function CityScene:onEnter()
     end)
     City:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
     self:PlayBackgroundMusic()
+    self:GotoLogicPoint(6, 4)
 end
 function CityScene:onExit()
+    home_page = nil
     self:stopAllActions()
     audio.stopMusic()
     audio.stopAllSounds()
@@ -40,12 +42,20 @@ end
 -- init ui
 function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
+    manager:removeArmatureFileInfo("animations/Archer_1_render.ExportJson")
+    manager:removeArmatureFileInfo("animations/Catapult_1_render.ExportJson")
+    manager:removeArmatureFileInfo("animations/Cavalry_1_render.ExportJson")
+    manager:removeArmatureFileInfo("animations/Infantry_1_render.ExportJson")
     manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
     manager:removeArmatureFileInfo("animations/chuizidonghua.ExportJson")
     manager:removeArmatureFileInfo("animations/green_dragon.ExportJson")
     manager:removeArmatureFileInfo("animations/Red_dragon.ExportJson")
     manager:removeArmatureFileInfo("animations/Blue_dragon.ExportJson")
 
+    manager:addArmatureFileInfo("animations/Archer_1_render.ExportJson")
+    manager:addArmatureFileInfo("animations/Catapult_1_render.ExportJson")
+    manager:addArmatureFileInfo("animations/Cavalry_1_render.ExportJson")
+    manager:addArmatureFileInfo("animations/Infantry_1_render.ExportJson")
     manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
     manager:addArmatureFileInfo("animations/chuizidonghua.ExportJson")
     manager:addArmatureFileInfo("animations/green_dragon.ExportJson")
@@ -133,7 +143,7 @@ function CityScene:CreateHomePage()
     return home
 end
 function CityScene:onEnterTransitionFinish()
-    self:GotoLogicPoint(6, 4)
+
 end
 
 -- function

@@ -23,6 +23,10 @@ function UpgradeBuilding:ctor(building_info)
     self.upgrade_building_observer = Observer.new()
     --building剩余升级时间小于5 min时可以免费加速  单位 seconds
     self.freeSpeedUpTime=300
+    self.unique_upgrading_key = nil
+end
+function UpgradeBuilding:UniqueUpgradingKey()
+    return self.unique_upgrading_key
 end
 function UpgradeBuilding:ResetAllListeners()
     UpgradeBuilding.super.ResetAllListeners(self)
@@ -139,63 +143,82 @@ function UpgradeBuilding:OnTimer(current_time)
         end
     end
 end
+local function get_building_event_by_location(building_events, loc_id)
+    for k, v in pairs(building_events) do
+        if v.location == loc_id then
+            return v
+        end
+    end
+end
+local function get_house_event_by_location(house_events, building_location, sub_id)
+    for k, v in pairs(house_events) do
+        if v.buildingLocation == building_location and
+            v.houseLocation == sub_id then
+            return v
+        end
+    end
+end
+local function get_house_info_from_houses_by_id(houses, houses_id)
+    for _, v in pairs(houses) do
+        if v.location == houses_id then
+            return v
+        end
+    end
+    return nil
+end
 function UpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id, sub_location_id)
+    -- 是否属于
+    local house_events = user_data.houseEvents
+    local building_events = user_data.buildingEvents
+    local buildings = user_data.buildings
+    local is_has_no_building = not (house_events or building_events or buildings)
+    if is_has_no_building then return end
+    --
+    -- 解析
+    local finishTime = 0
+    local level = self:GetLevel()
+    -- 先找小屋
+    if sub_location_id then
+        if house_events then
+            local event = get_house_event_by_location(house_events, location_id, sub_location_id)
+            self:OnEvent(event)
+            finishTime = event == nil and 0 or event.finishTime / 1000
+        end
+        -- 再找功能建筑
+    else
+        if building_events then
+            local event = get_building_event_by_location(building_events, location_id)
+            self:OnEvent(event)
+            finishTime = event == nil and 0 or event.finishTime / 1000
+        end
+    end
+
+    -- 更新等级信息
     if user_data.buildings then
-        -- 解析
-        local finishTime
-        local level
         local location = user_data.buildings["location_"..location_id]
         if sub_location_id then
-            local hosue_events = user_data.houseEvents
-            if hosue_events then
-                local function get_house_event_by_location(building_location, sub_id)
-                    for k, v in pairs(hosue_events) do
-                        if v.buildingLocation == building_location and
-                            v.houseLocation == sub_id then
-                            return v
-                        end
-                    end
-                end
-
-                table.foreach(location.houses, function(key, building_info)
-                    if building_info.location == sub_location_id then
-                        local event = get_house_event_by_location(location_id, sub_location_id)
-                        finishTime = event == nil and 0 or event.finishTime / 1000
-                        level = building_info.level
-                        return true
-                    end
-                end)
-            else
-                return
-            end
+            level = get_house_info_from_houses_by_id(location.houses, sub_location_id).level
         else
-            local building_events = user_data.buildingEvents
-            if building_events then
-                local function get_building_event_by_location(loc_id)
-                    for k, v in pairs(building_events) do
-                        if v.location == loc_id then
-                            return v
-                        end
-                    end
-                end
-
-                local event = get_building_event_by_location(location_id)
-                finishTime = event == nil and 0 or event.finishTime / 1000
-                level = location.level
-            else
-                return
-            end
+            level = location.level
         end
-
-        -- 适配
-        self:OnHandle(level, finishTime)
+    end
+    -- 适配
+    self:OnHandle(level, finishTime)
+end
+function UpgradeBuilding:OnEvent(event)
+    if event == nil then
+        self.unique_upgrading_key = nil
+    else
+        self.unique_upgrading_key =  event.id
     end
 end
 function UpgradeBuilding:OnHandle(level, finish_time)
     if self.level == level then
         if self.upgrade_to_next_level_time == 0 and finish_time ~= 0 then
+            print("请求升级的时间",finish_time,finish_time - self:GetUpgradeTimeToNextLevel())
             self:UpgradeByCurrentTime(finish_time - self:GetUpgradeTimeToNextLevel())
         elseif self.upgrade_to_next_level_time ~= 0 and finish_time ~= 0 then
+            print("升级时间finish_time= ",finish_time*1000,app.timer:GetServerTime()*1000,finish_time*1000-app.timer:GetServerTime()*1000)
             self.upgrade_to_next_level_time = finish_time
             self:GeneralLocalPush()
         elseif self.upgrade_to_next_level_time ~= 0 and finish_time == 0 then
@@ -265,6 +288,7 @@ end
 
 function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     local level = self.level
+
     --等级小于0级
     if level<0 then
         return NOT_ABLE_TO_UPGRADE.LEVEL_NOT_ENOUGH
@@ -305,16 +329,16 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
         or stone<config[self:GetNextLevel()].stone or iron<config[self:GetNextLevel()].iron
         or m.tiles<config[self:GetNextLevel()].tiles or m.tools<config[self:GetNextLevel()].tools
         or m.blueprints<config[self:GetNextLevel()].blueprints or m.pulley<config[self:GetNextLevel()].pulley
-    local is_building_list_enough = #City:GetOnUpgradingBuildings()>0
-    print("#City:GetOnUpgradingBuildings()",#City:GetOnUpgradingBuildings())
-    if is_resource_enough and is_building_list_enough then
+    local max = City.build_queue
+    local current = max - #City:GetOnUpgradingBuildings()
+
+    if is_resource_enough and current <= 0 then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_AND_RESOURCE_NOT_ENOUGH
     end
     if is_resource_enough then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH
     end
-    if is_building_list_enough then
-        print("当前建造的建筑",City:GetOnUpgradingBuildings()[1]:GetType())
+    if current <= 0 then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH
     end
 end
@@ -363,6 +387,7 @@ function UpgradeBuilding:getUpgradeRequiredGems()
 end
 
 return UpgradeBuilding
+
 
 
 

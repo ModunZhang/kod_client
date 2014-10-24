@@ -13,6 +13,7 @@ function GameUIPlayerInfo:ctor(isOnlyMail,memberId)
 	GameUIPlayerInfo.super.ctor(self)
 	self.isOnlyMail_ = isOnlyMail or false
 	self.memberId_ = memberId
+	self.alliance_manager = DataManager:GetManager("AllianceManager")
 end
 
 function GameUIPlayerInfo:onMoveInStage()
@@ -41,6 +42,7 @@ function GameUIPlayerInfo:onMoveInStage()
 	self.bg = bg
 	self.title_bar = title_bar
 	ListenerService:OnListenEvnet("onGetPlayerInfoSuccess","GameUIPlayerInfo",handler(self,self.OnGetPlayerInfoSuccess))
+	self.alliance_manager:OnAllianceDataEvent("GameUIPlayerInfo",handler(self, self.OnPlayerDataChanged))
 	PushService:getPlayerInfo(self.memberId_,function(success)
 		if not success then 
 			self:leftButtonClicked()
@@ -202,7 +204,7 @@ function GameUIPlayerInfo:OnPlayerButtonClicked( tag )
 	if tag == 1 then -- 踢出
 		PushService:kickAllianceMemberOff(self.memberId_,function(success)
 			if success then
-				DataManager:GetManager("AllianceManager"):KickAllianceMemberById(self.memberId_)
+				self.alliance_manager:KickAllianceMemberById(self.memberId_)
 				self:leftButtonClicked()
 			end
 		end)
@@ -211,6 +213,25 @@ function GameUIPlayerInfo:OnPlayerButtonClicked( tag )
 			if success then
 			end
 		end)
+	elseif tag == 3 then
+		local nextTitle = self.alliance_manager:GetMemberTitle(self.player_info.title,2)
+		if nextTitle then
+			PushService:modifyAllianceMemberTitle(self.memberId_,nextTitle,function(success)
+				if success then
+				end
+			end)
+		end
+	elseif tag == 4 then
+		local nextTitle = self.alliance_manager:GetMemberTitle(self.player_info.title,1)
+		if nextTitle then
+			PushService:modifyAllianceMemberTitle(self.memberId_,nextTitle,function(success)
+				if success then
+				end
+			end)
+		end
+	elseif tag == 5 then
+		--TODO:打开邮件界面
+		--if self.isOnlyMail_
 	end
 end
 
@@ -301,7 +322,12 @@ end
 
 function GameUIPlayerInfo:onMoveOutStage()
 	ListenerService:RemoveEventByTag("GameUIPlayerInfo")
+	self.alliance_manager:RemoveEventByTag("GameUIPlayerInfo")
 	GameUIPlayerInfo.super.onMoveOutStage(self)
+end
+
+function GameUIPlayerInfo:OnPlayerDataChanged(event)
+	
 end
 
 return GameUIPlayerInfo

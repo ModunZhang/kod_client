@@ -23,7 +23,6 @@ function GameUIMail:ctor(title,city)
     self.inbox_mails = {}
     self.saved_mails = {}
     self.send_mails = {}
-    -- print("测试",tolua.type(nil)=="nil",nil==false,tolua.type(true))
 end
 
 function GameUIMail:onEnter()
@@ -91,12 +90,6 @@ function GameUIMail:onExit()
     DataManager:GetManager("MailManager"):RemoveListenerOnType(self,MailManager.LISTEN_TYPE.MAILS_CHANGED)
     GameUIMail.super.onExit(self)
 end
-
-function GameUIMail:OnSavedMailsChanged(mail_manager,saved_mails)
-end
-function GameUIMail:OnSendMailsChanged(mail_manager,send_mails)
-end
-
 function GameUIMail:CreateWriteMailButton()
     local write_mail_button = WidgetPushButton.new(
         {normal = "gem_btn_up.png", pressed = "gem_btn_down.png"}
@@ -215,12 +208,6 @@ function GameUIMail:CreateMailItem(listview,mail)
                             self.inbox_mails[mail.id].mail.isRead = true
                             self.inbox_mails[mail.id].mail_state:setTexture("mail_state_read.png")
                             self.inbox_mails[mail.id].mail_state:setScale(34/self.inbox_mails[mail.id].mail_state:getContentSize().width)
-                            -- --如果收藏夹中有此邮件也要更改已读状态
-                            -- if self.saved_mails[mail.id] then
-                            --     self.saved_mails[mail.id].mail.isRead = true
-                            --     self.saved_mails[mail.id].mail_state:setTexture("mail_state_read.png")
-                            --     self.saved_mails[mail.id].mail_state:setScale(34/self.inbox_mails[mail.id].mail_state:getContentSize().width)
-                            -- end
                         end
                     end)
                 end
@@ -309,7 +296,6 @@ function GameUIMail:SaveOrUnsaveMail(mail,target)
                 -- 收藏成功，收藏夹添加此封邮件
                 local item =  self:CreateMailItem(self.save_mails_listview, mail)
                 self:AddMails(self.save_mails_listview, item, mail ,1)
-                -- LuaUtils:outputTable("当前saved_mails", self.saved_mails)
             else
                 target:setButtonSelected(false,true)
             end
@@ -500,7 +486,6 @@ function GameUIMail:ShowSendMailDetails(mail)
             text = _("收件人: "),
             font = UIKit:getFontFilePath(),
             size = 20,
-            -- dimensions = cc.size(200,24),
             color = UIKit:hex2c3b(0x797154)
         }):align(display.LEFT_CENTER, 155, bg:getContentSize().height-80)
         :addTo(bg)
@@ -519,7 +504,6 @@ function GameUIMail:ShowSendMailDetails(mail)
             text = _("主题: "),
             font = UIKit:getFontFilePath(),
             size = 20,
-            -- dimensions = cc.size(200,24),
             color = UIKit:hex2c3b(0x797154)
         }):align(display.LEFT_CENTER, 155, bg:getContentSize().height-120)
         :addTo(bg)
@@ -528,7 +512,6 @@ function GameUIMail:ShowSendMailDetails(mail)
             text = mail.title,
             font = UIKit:getFontFilePath(),
             size = 20,
-            -- dimensions = cc.size(200,24),
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.LEFT_CENTER,155 + subject_label:getContentSize().width+20, bg:getContentSize().height-120)
         :addTo(bg)
@@ -538,7 +521,6 @@ function GameUIMail:ShowSendMailDetails(mail)
             text = _("日期: "),
             font = UIKit:getFontFilePath(),
             size = 20,
-            -- dimensions = cc.size(200,24),
             color = UIKit:hex2c3b(0x797154)
         }):align(display.LEFT_CENTER, 155, bg:getContentSize().height-160)
         :addTo(bg)
@@ -547,13 +529,11 @@ function GameUIMail:ShowSendMailDetails(mail)
             text = GameUtils:formatTimeStyle2(mail.sendTime/1000),
             font = UIKit:getFontFilePath(),
             size = 20,
-            -- dimensions = cc.size(200,24),
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.LEFT_CENTER, 155 + date_title_label:getContentSize().width+20, bg:getContentSize().height-160)
         :addTo(bg)
     -- 内容
     local content_listview = UIListView.new{
-        -- bgColor = UIKit:hex2c4b(0x7a000000),
         viewRect = cc.rect(0, 10, 550, 520),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(content_bg):pos(10, 0)
@@ -611,7 +591,6 @@ function GameUIMail:ShowMailDetails(mail)
             text = _("主题: "),
             font = UIKit:getFontFilePath(),
             size = 20,
-            -- dimensions = cc.size(200,24),
             color = UIKit:hex2c3b(0x797154)
         }):align(display.LEFT_CENTER, 155, bg:getContentSize().height-80)
         :addTo(bg)
@@ -620,7 +599,6 @@ function GameUIMail:ShowMailDetails(mail)
             text = mail.title,
             font = UIKit:getFontFilePath(),
             size = 20,
-            -- dimensions = cc.size(200,24),
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.LEFT_CENTER,155 + subject_label:getContentSize().width+20, bg:getContentSize().height-80)
         :addTo(bg)
@@ -630,7 +608,6 @@ function GameUIMail:ShowMailDetails(mail)
             text = _("日期: "),
             font = UIKit:getFontFilePath(),
             size = 20,
-            -- dimensions = cc.size(200,24),
             color = UIKit:hex2c3b(0x797154)
         }):align(display.LEFT_CENTER, 155, bg:getContentSize().height-120)
         :addTo(bg)
@@ -639,13 +616,11 @@ function GameUIMail:ShowMailDetails(mail)
             text = GameUtils:formatTimeStyle2(mail.sendTime/1000),
             font = UIKit:getFontFilePath(),
             size = 20,
-            -- dimensions = cc.size(200,24),
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.LEFT_CENTER, 155 + date_title_label:getContentSize().width+20, bg:getContentSize().height-120)
         :addTo(bg)
     -- 内容
     local content_listview = UIListView.new{
-        -- bgColor = UIKit:hex2c4b(0x7a000000),
         viewRect = cc.rect(0, 10, 550, 520),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(content_bg):pos(10, 0)
@@ -725,7 +700,6 @@ end
 function GameUIMail:InitReport()
     local flag = true
     self.report_listview = UIListView.new{
-        -- bgColor = UIKit:hex2c4b(0x7a000000),
         viewRect = cc.rect(display.cx-304, display.top-890, 612, 790),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.report_layer)
@@ -772,7 +746,6 @@ function GameUIMail:CreateReportItem(flag)
             text = _("2015.5.1 13:50"),
             font = UIKit:getFontFilePath(),
             size = 16,
-            -- dimensions = cc.size(200,0),
             color = UIKit:hex2c3b(0xffedae)
         }):align(display.RIGHT_CENTER, 540, 17)
         :addTo(title_bg)
@@ -787,7 +760,6 @@ function GameUIMail:CreateReportItem(flag)
             text = _("From"),
             font = UIKit:getFontFilePath(),
             size = 16,
-            -- dimensions = cc.size(200,0),
             color = UIKit:hex2c3b(0x797154)
         }):align(display.LEFT_CENTER, 160, 70)
         :addTo(report_content_bg)
@@ -798,7 +770,6 @@ function GameUIMail:CreateReportItem(flag)
             text = _("Viciouss"),
             font = UIKit:getFontFilePath(),
             size = 20,
-            -- dimensions = cc.size(200,0),
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.LEFT_CENTER, 160, 50)
         :addTo(report_content_bg)
@@ -809,7 +780,6 @@ function GameUIMail:CreateReportItem(flag)
             text = _("[KOD]"),
             font = UIKit:getFontFilePath(),
             size = 20,
-            -- dimensions = cc.size(200,0),
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.LEFT_CENTER, 160, 30)
         :addTo(report_content_bg)
@@ -825,7 +795,6 @@ function GameUIMail:CreateReportItem(flag)
             text = _("To"),
             font = UIKit:getFontFilePath(),
             size = 16,
-            -- dimensions = cc.size(200,0),
             color = UIKit:hex2c3b(0x797154)
         }):align(display.LEFT_CENTER, 400, 70)
         :addTo(report_content_bg)
@@ -836,7 +805,6 @@ function GameUIMail:CreateReportItem(flag)
             text = _("Viciouss"),
             font = UIKit:getFontFilePath(),
             size = 20,
-            -- dimensions = cc.size(200,0),
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.LEFT_CENTER, 400, 50)
         :addTo(report_content_bg)
@@ -847,7 +815,6 @@ function GameUIMail:CreateReportItem(flag)
             text = _("[KOD]"),
             font = UIKit:getFontFilePath(),
             size = 20,
-            -- dimensions = cc.size(200,0),
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.LEFT_CENTER, 400, 30)
         :addTo(report_content_bg)
@@ -859,7 +826,6 @@ function GameUIMail:CreateReportItem(flag)
             text = _("敌方获得一封C级情报"),
             font = UIKit:getFontFilePath(),
             size = 18,
-            -- dimensions = cc.size(200,0),
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.CENTER, report_result_bg:getContentSize().width/2, report_result_bg:getContentSize().height/2)
         :addTo(report_result_bg)
@@ -880,7 +846,6 @@ end
 
 function GameUIMail:InitSaved()
     self.saved_listview = UIListView.new{
-        -- bgColor = UIKit:hex2c4b(0x7a000000),
         viewRect = cc.rect(display.cx-304, display.top-890, 612, 790),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.saved_layer)
@@ -918,7 +883,6 @@ function GameUIMail:CreateReplyMail(mail)
             text = _("收件人："),
             font = UIKit:getFontFilePath(),
             size = 20,
-            -- dimensions = cc.size(200,24),
             color = UIKit:hex2c3b(0x797154)
         }):align(display.RIGHT_CENTER,120, r_size.height-90)
         :addTo(reply_mail)
@@ -939,7 +903,6 @@ function GameUIMail:CreateReplyMail(mail)
             text = _("主题："),
             font = UIKit:getFontFilePath(),
             size = 20,
-            -- dimensions = cc.size(200,24),
             color = UIKit:hex2c3b(0x797154)
         }):align(display.RIGHT_CENTER,120, r_size.height-140)
         :addTo(reply_mail)
@@ -1056,7 +1019,6 @@ function GameUIMail:CreateWriteMail()
             text = _("收件人："),
             font = UIKit:getFontFilePath(),
             size = 20,
-            -- dimensions = cc.size(200,24),
             color = UIKit:hex2c3b(0x797154)
         }):align(display.RIGHT_CENTER,120, r_size.height-90)
         :addTo(write_mail)
@@ -1080,7 +1042,6 @@ function GameUIMail:CreateWriteMail()
             text = _("主题："),
             font = UIKit:getFontFilePath(),
             size = 20,
-            -- dimensions = cc.size(200,24),
             color = UIKit:hex2c3b(0x797154)
         }):align(display.RIGHT_CENTER,120, r_size.height-140)
         :addTo(write_mail)

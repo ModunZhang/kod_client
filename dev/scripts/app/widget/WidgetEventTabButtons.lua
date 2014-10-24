@@ -1,8 +1,11 @@
 local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTab = import(".WidgetTab")
+local WIDGET_WIDTH = 491
+local WIDGET_HEIGHT = 300
+local TAB_HEIGHT = 47
 local WidgetEventTabButtons = class("WidgetEventTabButtons", function()
-    local rect = cc.rect(0, 0, 491, 150 + 47)
+    local rect = cc.rect(0, 0, WIDGET_WIDTH, WIDGET_HEIGHT + TAB_HEIGHT)
     local node = display.newClippingRegionNode(rect)
     node.view_rect = rect
     node.locked = false
@@ -110,7 +113,7 @@ end
 function WidgetEventTabButtons:ctor(city)
     self.item_array = {}
     local node = display.newNode():addTo(self)
-    display.newLayer():addTo(node):pos(0, -150 + 47):setContentSize(cc.size(491, 150 + 47))
+    display.newLayer():addTo(node):pos(0, -WIDGET_HEIGHT + TAB_HEIGHT):setContentSize(cc.size(WIDGET_WIDTH, WIDGET_HEIGHT + TAB_HEIGHT))
     self.node = node
     self.tab_buttons, self.tab_map = self:CreateTabButtons()
     self.tab_buttons:addTo(node, 2):pos(0, 0)
@@ -175,7 +178,7 @@ function WidgetEventTabButtons:CreateTabButtons()
             on = "tab_button_down_111x47.png",
             off = "tab_button_up_111x47.png",
             tab = tab_png
-        }, unit_width, 47)
+        }, unit_width, TAB_HEIGHT)
             :addTo(node):align(display.LEFT_BOTTOM,origin_x + (i - 5) * unit_width, 0)
             :OnTabPress(handler(self, self.OnTabClicked))
     end
@@ -189,13 +192,13 @@ function WidgetEventTabButtons:CreateTabButtons()
                 self:Hide()
             end
         end)
-    self.arrow = cc.ui.UIImage.new("hide_18x19.png"):addTo(btn):align(display.CENTER, 48/2, 47/2)
+    self.arrow = cc.ui.UIImage.new("hide_18x19.png"):addTo(btn):align(display.CENTER, 48/2, TAB_HEIGHT/2)
     return node, tab_map
 end
 function WidgetEventTabButtons:CreateBackGround()
     return cc.ui.UIImage.new("back_ground_491x105.png", {scale9 = true,
-        capInsets = cc.rect(10, 10, 491 - 20, 105 - 20)
-    }):align(display.LEFT_BOTTOM):setLayoutSize(491, 50)
+        capInsets = cc.rect(10, 10, WIDGET_WIDTH - 20, 105 - 20)
+    }):align(display.LEFT_BOTTOM):setLayoutSize(WIDGET_WIDTH, 50)
 end
 function WidgetEventTabButtons:CreateItem()
     return self:CreateProgressItem():align(display.LEFT_CENTER)
@@ -256,8 +259,23 @@ function WidgetEventTabButtons:CreateProgressItem()
         self.key = key
         return self
     end
+    function progress:SetButtonImages(images)
+        btn:setButtonImage(cc.ui.UIPushButton.NORMAL, images["normal"], true)
+        btn:setButtonImage(cc.ui.UIPushButton.PRESSED, images["pressed"], true)
+        btn:setButtonImage(cc.ui.UIPushButton.DISABLED, images["disabled"], true)
+        return self
+    end
+    function progress:SetButtonLabel(str)
+        btn:setButtonLabel(cc.ui.UILabel.new({
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = str,
+            size = 18,
+            font = UIKit:getFontFilePath(),
+            color = UIKit:hex2c3b(0xfff3c7)}))
+        return self
+    end
     function progress:onEnter()
-        btn:setButtonEnabled(false)
+        btn:setButtonEnabled(true)
     end
     progress:setNodeEventEnabled(true)
 
@@ -574,10 +592,27 @@ function WidgetEventTabButtons:Load()
                 local buildings = self.city:GetOnUpgradingBuildings()
                 local items = {}
                 for i, v in ipairs(buildings) do
-                    table.insert(items, self:CreateItem()
+                    local event_item = self:CreateItem()
                         :SetProgressInfo(self:BuildingDescribe(v))
-                        :SetEventKey(v:UniqueKey())
-                    )
+                        :SetEventKey(v:UniqueKey()):OnClicked(
+                        function(event)
+                            if event.name == "CLICKED_EVENT" then
+                                local eventType = ""
+                                if self.city:IsFunctionBuilding(v) then
+                                    eventType = "building"
+                                elseif self.city:IsHouse(v) then
+                                    eventType = "house"
+                                elseif self.city:IsGate(v) then
+                                    eventType = "wall"
+                                elseif self.city:IsTower(v) then
+                                    eventType = "tower"
+                                end
+                                NetManager:requestToSpeedUp(eventType,v:UniqueUpgradingKey(),NOT_HANDLE)
+                            end
+                        end
+                        ):SetButtonLabel(_("帮助"))
+                
+                    table.insert(items, event_item)
                 end
                 self:InsertItem(items)
                 -- local buildings = self.city:GetOnUpgradingBuildings()
@@ -663,6 +698,10 @@ function WidgetEventTabButtons:MaterialDescribe(event)
 end
 
 return WidgetEventTabButtons
+
+
+
+
 
 
 

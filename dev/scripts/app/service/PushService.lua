@@ -262,3 +262,13 @@ function PushService:handOverArchon(memberId, callback)
 			,true
 	)
 end
+
+function PushService:modifyAllianceMemberTitle(memberId,title,callback)
+	self.m_netService:request("logic.playerHandler.modifyAllianceMemberTitle"
+			,{memberId=memberId,title=title}
+			,function(success)
+				callback(success)
+			end
+			,true
+	)
+end

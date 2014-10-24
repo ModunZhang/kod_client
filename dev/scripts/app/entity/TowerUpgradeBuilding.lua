@@ -63,20 +63,21 @@ function TowerUpgradeBuilding:GetGlobalRegion()
         return start_x - 1, end_x + 1, start_y - 1, end_y + 1
     end
 end
+local function get_tower_event_by_location(tower_events, tower_id)
+    for _, event in pairs(tower_events) do
+        if event.location == tower_id then
+            return event
+        end
+    end
+end
 function TowerUpgradeBuilding:OnUserDataChanged(user_data, current_time)
     if self.tower_id and user_data.towerEvents then
-        local tower_events = user_data.towerEvents
-        local function get_tower_event_by_location(tower_id)
-            for _, event in pairs(tower_events) do
-                if event.location == tower_id then
-                    return event
-                end
-            end
-        end
         local level = self:GetLevel()
-        local event = get_tower_event_by_location(self.tower_id)
+        local tower_events = user_data.towerEvents
+        local event = get_tower_event_by_location(tower_events, self.tower_id)
         local finishTime = event == nil and 0 or event.finishTime / 1000
         local tower_info = user_data.towers["location_"..self.tower_id]
+        self:OnEvent(event)
         self:OnHandle(tower_info.level, finishTime)
     end
 end
@@ -85,6 +86,7 @@ end
 
 
 return TowerUpgradeBuilding
+
 
 
 

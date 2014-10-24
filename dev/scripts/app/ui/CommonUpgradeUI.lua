@@ -59,6 +59,9 @@ function CommonUpgradeUI:RemoveUpgradeListener()
     self.building:RemoveUpgradeListener(self)
 end
 function CommonUpgradeUI:OnBuildingUpgradingBegin( buidling, current_time )
+    local pro = self.acc_layer.ProgressTimer
+    pro:setPercentage(self.building:GetElapsedTimeByCurrentTime(current_time)/self.building:GetUpgradeTimeToNextLevel()*100)
+    self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(current_time)))
     self:visibleChildLayers()
 end
 function CommonUpgradeUI:OnBuildingUpgradeFinished( buidling, finish_time )
