@@ -78,7 +78,7 @@ function MailManager:dispatchMailServerData( eventName,msg )
             table.insert(self.sendMails, mail)
         end
     elseif eventName == "onSendMailSuccess" then
-        for _,mail in pairs(msg.mails) do
+        for _,mail in pairs(msg.mail) do
             table.insert(self.sendMails, mail)
         end
     end
