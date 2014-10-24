@@ -52,7 +52,7 @@ function GameUIDragonEyrie:RefreshDragon(dragon)
    else
         local dragon_entity = clipNode:getChildByTag(101)
         if not dragon_entity then
-            DragonSprite.new(display.getRunningScene():GetSceneLayer(),self:GetTerrainByDragon(dragon)):addTo(clipNode):pos(250,300)
+            DragonSprite.new(display.getRunningScene():GetSceneLayer(),self:GetTerrainByDragon(dragon)):addTo(clipNode):pos(250,250)
         else
             dragon_entity:ReloadSpriteCauseTerrainChanged(self:GetTerrainByDragon(dragon))
         end
@@ -816,9 +816,9 @@ function GameUIDragonEyrie:CreateTabButtons_()
     end):pos(window.cx, window.bottom + 34)
 end
 
-function GameUIDragonEyrie:onMovieOutStage()
+function GameUIDragonEyrie:onMoveOutStage()
     self.building:RemoveListener()
-    GameUIDragonEyrie.super.onMovieOutStage(self)
+    GameUIDragonEyrie.super.onMoveOutStage(self)
 end
 
 function GameUIDragonEyrie:HandleEquipmentItem(dragon)

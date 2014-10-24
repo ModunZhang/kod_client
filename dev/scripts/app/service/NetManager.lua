@@ -159,6 +159,7 @@ function NetManager:connectLogicServer(cb)
             self:addKickEventListener()
             self:addPlayerDataChangedEventListener()
             self:addLoginEventListener()
+            ListenerService:start()
             cb(true)
         else
             cb(false)

@@ -5,6 +5,13 @@
 ListenerService = {}
 local CURRENT_MODULE_NAME = ...
 setmetatable(ListenerService, {__index=NetManager})
+local ListenEventDispather = class("ListenEventDispather")
+
+function ListenEventDispather:ctor()
+	cc(self):addComponent("components.behavior.EventProtocol"):exportMethods()
+end
+
+
 -----------------------------------------------------
 local ChatCenter = import('..entity.ChatCenter')
 
@@ -13,17 +20,26 @@ local events_to_listen = {
 	'onBuildingLevelUp','onHouseLevelUp','onTowerLevelUp','onWallLevelUp', --升级提示相关
 	'onChat','onAllChat', -- 聊天相关
 	'onNewMailReceived','onGetMailsSuccess','onGetSavedMailsSuccess','onGetSendMailsSuccess','onSendMailSuccess', -- 邮件
-	'onSearchAlliancesSuccess',"onGetCanDirectJoinAlliancesSuccess","onGetAllianceDataSuccess","onAllianceDataChanged","onAllianceHelpEventChanged",-- 联盟
+	'onSearchAlliancesSuccess',"onGetCanDirectJoinAlliancesSuccess","onGetAllianceDataSuccess","onAllianceDataChanged","onAllianceNewEventReceived",-- 联盟
+	'onAllianceMemberDataChanged','onAllianceBasicInfoAndMemberDataChanged',
+	'onGetPlayerInfoSuccess',
 }
 
+
+function ListenerService:OnListenEvnet(eventName,tag,callback)
+	self.dispather_:addEventListener(eventName,callback,tag)
+end
+
+function ListenerService:RemoveEventByTag( tag )
+	self.dispather_:removeEventListenersByTag(tag)
+end
 
 function ListenerService:_initOrNot()
 	if not app.chatCenter  then
 		local chatCenter = ChatCenter.new()
     	app.chatCenter = chatCenter
     end
-    app.chatCenter:requestAllMessage()
-    DataManager:GetManager("AllianceManager"):FetchMyAllianceData()
+    -- app.chatCenter:requestAllMessage()
 end
 
 function ListenerService:_listenNetMessage()
@@ -52,6 +68,7 @@ function ListenerService:_handleNetMessage(eventName,msg )
 end
 
 function ListenerService:start()
+	self.dispather_ = ListenEventDispather.new()
 	self:_initOrNot()
 	self:_listenNetMessage()
 end
@@ -116,6 +133,25 @@ end
 
 function ListenerService:ls_onGetAllianceDataSuccess(msg,eventName)
 	self:dispatchEventToAllianceManager_(msg,eventName)
+end
+
+
+function ListenerService:ls_onAllianceNewEventReceived(msg,eventName)
+	self:dispatchEventToAllianceManager_(msg,eventName)
+end
+
+function ListenerService:ls_onAllianceMemberDataChanged(msg,eventName)
+	self:dispatchEventToAllianceManager_(msg,eventName)
+end
+
+function ListenerService:ls_onAllianceBasicInfoAndMemberDataChanged(msg,eventName)
+	self:dispatchEventToAllianceManager_(msg,eventName)
+end
+
+function ListenerService:ls_onGetPlayerInfoSuccess( msg,eventName )
+	self.dispather_:dispatchEvent({name = eventName,
+	        data = msg
+	    })
 end
 
 function ListenerService:ls_onAllianceHelpEventChanged(msg,eventName)

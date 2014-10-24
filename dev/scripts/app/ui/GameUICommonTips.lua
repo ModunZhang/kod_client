@@ -71,8 +71,8 @@ function GameUICommonTips:closeButtonPressed()
 	end
 end
 
-function GameUICommonTips:onMovieInStage()
-	GameUICommonTips.super.onMovieInStage(self)
+function GameUICommonTips:onMoveInStage()
+	GameUICommonTips.super.onMoveInStage(self)
 	self.isAnimation = false
 	if self.autoClose and type(self.autoClose) == 'number' then
 		--自动关闭
@@ -96,14 +96,14 @@ function GameUICommonTips:showTips(title,content)
 	self.isAnimation = true
 end
 
-function GameUICommonTips:onMovieOutStage()
+function GameUICommonTips:onMoveOutStage()
 	self:setVisible(false)
 	self.isAnimation = false
 	if self.delegate and self.delegate.onTipsMoveOut then
 		self.delegate.onTipsMoveOut(self.delegate,self)
 	end
 	-- 不释放自己
-	-- GameUICommonTips.super.onMovieOutStage(self)
+	-- GameUICommonTips.super.onMoveOutStage(self)
 end
 
 function GameUICommonTips:onExit()

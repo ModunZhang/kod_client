@@ -2,6 +2,7 @@ local BuildingRegister = import("..entity.BuildingRegister")
 local City_ = import("..entity.City")
 local AllianceManager_ = import("..entity.AllianceManager")
 
+
 return function(userData)
     Alliance_Manager = AllianceManager_.new()
     City = City_.new()
@@ -102,6 +103,7 @@ return function(userData)
     ext.localpush.cancelAll()
     --read userdefaults about local push
     ext.localpush.switchNotification('BUILDING_PUSH_UPGRADE',true)
+    app.chatCenter:requestAllMessage()
 end
 
 

@@ -24,7 +24,7 @@ function CityScene:onEnter()
     CityScene.super.onEnter(self)
     self.scene_ui_layer = self:CreateSceneUILayer()
     home_page = self:CreateHomePage()
-    ListenerService:start()
+    
 
     self:GetSceneLayer():AddObserver(self)
     self:GetSceneLayer():InitWithCity(City)

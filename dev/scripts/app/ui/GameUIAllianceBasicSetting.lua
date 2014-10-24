@@ -2,6 +2,7 @@
 -- Author: Danny He
 -- Date: 2014-10-13 10:35:06
 --
+--TODO:修改联盟界面调整 除去地形修改
 local window = import('..utils.window')
 local contentWidth = window.width - 80
 local UIListView = import(".UIListView")
@@ -40,9 +41,9 @@ function GameUIAllianceBasicSetting:ctor(isModify)
 	end
 end
 
-function GameUIAllianceBasicSetting:onMovieInStage()
+function GameUIAllianceBasicSetting:onMoveInStage()
 	assert(not self.isCreateAction_)
-	GameUIAllianceBasicSetting.super.onMovieInStage(self)
+	GameUIAllianceBasicSetting.super.onMoveInStage(self)
 	self:BuildModifyUI()
 end
 

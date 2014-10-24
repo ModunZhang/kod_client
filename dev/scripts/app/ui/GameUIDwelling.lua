@@ -77,8 +77,8 @@ function GameUIDwelling:CreateUI()
     self.citizen_panel = self:CreateCitizenPanel()
     self:createTabButtons()
 end
-function GameUIDwelling:onMovieOutStage()
-    GameUIDwelling.super.onMovieOutStage(self)
+function GameUIDwelling:onMoveOutStage()
+    GameUIDwelling.super.onMoveOutStage(self)
 end
 function GameUIDwelling:CreateCitizenPanel()
     local citizen_layer = display.newNode():addTo(self)

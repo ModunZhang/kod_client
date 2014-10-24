@@ -4,14 +4,14 @@
 --
 local AllianceManager = class("AllianceManager")
 local Enum = import("..utils.Enum")
-AllianceManager.ALLIANCETITLE = {
-    Archon = "archon",
-    General = "general",
-    Diplomat ="diplomat",
-    Quartermaster = "quartermaster",
-    Supervisor = "supervisor",
-    Elite = "elite",
-    Member = "member"
+
+local ALLIANCETITLE_LEVEL = {
+    "member",
+    "elite",
+    "supervisor",
+    "quartermaster",
+    "general",
+    "archon"
 }
 
 --event
@@ -122,37 +122,36 @@ function AllianceManager:ctor()
 end
 
 function AllianceManager:OnUserDataChanged(userData,timer)
-    local eventType = self.ALLIANCE_EVENT_TYPE.NORMAL
-    if not userData.alliance then
-    	return
-    end
-    if not self.isInit_ then
-        if (self.alliance_.id == nil and  userData.alliance.id ~= nil) then
-            -- server auto push meessage
-            -- self:FetchMyAllianceData()
-            eventType = self.ALLIANCE_EVENT_TYPE.NONE
-        end
-        if (self.alliance_.id ~= nil and  userData.alliance.id == nil) then
-            self.localAllianceData_ = nil -- clean local alliance data
-            eventType = self.ALLIANCE_EVENT_TYPE.QUIT
-        end
-        if userData.requestToAllianceEvents then
-            self.requestToAllianceEvents_ = userData.requestToAllianceEvents
-        end
-        if userData.inviteToAllianceEvents then
-            self.inviteToAllianceEvents_  = userData.inviteToAllianceEvents
-        end
-        if userData.alliance  then
-            self.alliance_ = userData.alliance
-            if eventType ~= self.ALLIANCE_EVENT_TYPE.NONE then
-                self:dispathAllianceEvent(eventType)
-            end
-        end
-    else
-        self.alliance_ = userData.alliance
-        self.requestToAllianceEvents_ = userData.requestToAllianceEvents
-        self.inviteToAllianceEvents_  = userData.inviteToAllianceEvents
-    end
+	local eventType = self.ALLIANCE_EVENT_TYPE.NORMAL
+	if not userData.alliance then return end
+	if not self.isInit_ then
+		if not userData.alliance then return end
+		if (self.alliance_.id == nil and  userData.alliance.id ~= nil) then
+			-- server auto push meessage
+			-- self:FetchMyAllianceData()
+			eventType = self.ALLIANCE_EVENT_TYPE.NONE
+		end
+		if (self.alliance_.id ~= nil and  userData.alliance.id == nil) then
+			self.localAllianceData_ = nil -- clean local alliance data
+			eventType = self.ALLIANCE_EVENT_TYPE.QUIT
+		end
+		if userData.requestToAllianceEvents then
+			self.requestToAllianceEvents_ = userData.requestToAllianceEvents
+		end
+		if userData.inviteToAllianceEvents then
+			self.inviteToAllianceEvents_  = userData.inviteToAllianceEvents
+		end
+		if userData.alliance  then
+			self.alliance_ = userData.alliance 
+			if eventType ~= self.ALLIANCE_EVENT_TYPE.NONE then
+				self:dispathAllianceEvent(eventType)
+			end
+		end
+	else
+		self.alliance_ = userData.alliance 
+		self.requestToAllianceEvents_ = userData.requestToAllianceEvents
+		self.inviteToAllianceEvents_  = userData.inviteToAllianceEvents
+	end
 
     self.isInit_  = false
 end
@@ -358,23 +357,45 @@ end
 -- event dispatch from server
 
 function AllianceManager:dispatchAlliceServerData(eventName,msg)
-    print("dispatchAlliceServerData------>",eventName)
-    --simple response data
-    if eventName == 'onSearchAlliancesSuccess'
-        or  eventName == 'onGetCanDirectJoinAlliancesSuccess'
-    then
-        self:dispatchEvent({name = AllianceManager.ALLIANCE_SERVER_EVENT_NAME,
-            eventName = eventName,
-            data = msg
-        })
-        --basic ui event
-    elseif eventName == 'onGetAllianceDataSuccess'
-        or eventName == 'onAllianceDataChanged' then
+	print("dispatchAlliceServerData------>",eventName)
+	--simple response data
+	if eventName == 'onSearchAlliancesSuccess' 
+		or  eventName == 'onGetCanDirectJoinAlliancesSuccess'
+		then
+		self:dispatchEvent({name = AllianceManager.ALLIANCE_SERVER_EVENT_NAME,
+	        eventName = eventName,
+	        data = msg
+	    })
+	--basic ui event
+	elseif eventName == 'onGetAllianceDataSuccess' 
+		or eventName == 'onAllianceDataChanged' 
+		or eventName == 'onAllianceNewEventReceived' 
+		then
         Alliance_Manager:OnAllianceDataChanged(msg)
-        self:setMyAllianceData_(eventName,msg)
-    elseif eventName == 'onAllianceHelpEventChanged' then
-    	self:refreshMyAllianceHelpEventsData_(eventName,msg)
-    end
+		self:setMyAllianceData_(eventName,msg)
+	elseif eventName == 'onAllianceMemberDataChanged'  --update one member
+		then
+		local members = self:GetMyAllianceData().members
+		local isFound = false
+		for i,member in ipairs(members) do
+			if member.id == msg.memberDoc.id then
+				members[i] = msg.memberDoc
+				isFound = true
+			end
+		end
+		if not isFound then
+			table.insert(members,msg.memberDoc)
+		end
+		-- onAllianceMemberDataChanged
+		self:dispatchEvent({name = AllianceManager.ALLIANCE_SERVER_EVENT_NAME,
+	        eventName = eventName,
+	        data = msg.memberDoc
+	    })
+	elseif eventName == 'onAllianceBasicInfoAndMemberDataChanged' then
+		-- 拆分onAllianceBasicInfoAndMemberDataChanged 分成两个事件
+		self:dispatchAlliceServerData("onAllianceDataChanged",{basicInfo=msg.basicInfo})
+		self:dispatchAlliceServerData("onAllianceMemberDataChanged",{memberDoc=msg.memberDoc})
+	end
 end
 
 function AllianceManager:OnAllianceEvent(tag,callback)
@@ -410,20 +431,23 @@ function AllianceManager:refreshMyAllianceHelpEventsData_(eventName,data)
 end
 
 function AllianceManager:setMyAllianceData_(eventName,data)
-    if self.localAllianceData_ ~= nil then
-        for k,v in pairs(data) do
-            self.localAllianceData_[k] = v
-        end
-        --update ui
-        self:dispatchEvent({name = AllianceManager.ALLIANCE_SERVER_EVENT_NAME,
-            eventName = eventName,
-            data = data
-        })
-    else
-        self.localAllianceData_ = data
-        self:dispathAllianceEvent(AllianceManager.ALLIANCE_EVENT_TYPE.CREATE_OR_JOIN)
-    end
-    --dispath event
+	if self.localAllianceData_ ~= nil then
+		if eventName == 'onAllianceNewEventReceived' then
+			table.insert(self.localAllianceData_.events,data.event)
+		else
+			for k,v in pairs(data) do
+				self.localAllianceData_[k] = v
+			end
+		end
+		--update ui
+		self:dispatchEvent({name = AllianceManager.ALLIANCE_SERVER_EVENT_NAME,
+	        eventName = eventName,
+	        data = data
+	    })
+	else
+		self.localAllianceData_ = data
+		self:dispathAllianceEvent(AllianceManager.ALLIANCE_EVENT_TYPE.CREATE_OR_JOIN)
+	end
 end
 
 function AllianceManager:GetMyAllianceData()
@@ -438,6 +462,50 @@ function AllianceManager:GetMyAllianceEventData()
     return self:GetMyAllianceData()
 end
 
-return AllianceManager
+function AllianceManager:KickAllianceMemberById(memberId)
+	local members = self:GetMyAllianceData().members
+	local member = nil
+	for i,v in ipairs(members) do
+		print("find one member----->id",v.id)
+		if v.id == memberId then
+			member = v
+			print("find one member----->",member)
+			table.remove(members,i)
+		end
+	end
+	if member then
+		self:dispatchEvent({name = AllianceManager.ALLIANCE_SERVER_EVENT_NAME,
+	        eventName = "onAllianceMemberDataChanged"
+	    })
+	end
+end
 
+-- getType 1 up 2 down
+function AllianceManager:GetMemberTitle(currentTitle,getType)
+	local currentIndex = -1
+	for i,v in ipairs(ALLIANCETITLE_LEVEL) do
+		if v == currentTitle then
+			currentIndex = i
+		end
+	end
+	print("currentIndex------>",currentIndex,currentTitle,getType)
+	local nextIndex = -1
+	if getType == 1 then
+		nextIndex = currentIndex + 1 > #ALLIANCETITLE_LEVEL and -1 or currentIndex + 1
+	elseif getType == 2 then
+		nextIndex = currentIndex - 1 < 0 and -1 or currentIndex - 1
+	end
+	if nextIndex > 0 then
+		return ALLIANCETITLE_LEVEL[nextIndex]
+	else
+		return nil
+	end
+end
+
+--TODO: 添加权限判定函数
+function AllianceManager:AlliancePermission_can_modifyAllianceMemberTitle()
+
+end
+
+return AllianceManager
 

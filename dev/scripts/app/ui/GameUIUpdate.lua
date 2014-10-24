@@ -35,7 +35,7 @@ function GameUIUpdate:createVerLabel()
 end
 
 -- 复写UILogin方法
-function GameUIUpdate:onMovieInStage()
+function GameUIUpdate:onMoveInStage()
 	self:showVersion()
 	self:loadLocalJson()
 	self:loadServerJson()

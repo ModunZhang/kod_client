@@ -18,7 +18,7 @@ function GameUILogin:onEnter()
 end
 
 
-function GameUILogin:onMovieInStage()
+function GameUILogin:onMoveInStage()
     self:proLoad()
 end
 

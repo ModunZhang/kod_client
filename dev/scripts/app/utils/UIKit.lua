@@ -124,9 +124,9 @@ end
 
 function UIKit:convertColorToGL_( color )
     local r,g,b = self:hex2rgba(color)
-    r = tonumber(string.format("%1.1f",r/255))
-    g = tonumber(string.format("%1.1f",g/255))
-    b = tonumber(string.format("%1.1f",b/255))
+    r = r/255
+    g = g/255
+    b = b/255
     return {r,g,b}
 end
 
@@ -215,4 +215,11 @@ end
 
 function UIKit:shadowLayer()
     return display.newColorLayer(UIKit:hex2c4b(0x7a000000))
+end
+-- TODO: 玩家头像
+function UIKit:GetPlayerCommonIcon()
+    local heroBg = display.newSprite("chat_hero_background.png")
+    local hero = display.newSprite("Hero_1.png"):align(display.CENTER, math.floor(heroBg:getContentSize().width/2), math.floor(heroBg:getContentSize().height/2)+5)
+    hero:addTo(heroBg)
+    return heroBg
 end
