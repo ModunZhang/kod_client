@@ -19,16 +19,18 @@ local GameUIAllianceNoticeOrDescEdit = import(".GameUIAllianceNoticeOrDescEdit")
 local Localize = import("..utils.Localize")
 local NetService = import('..service.NetService')
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
+local Alliance_Manager = Alliance_Manager
 
 GameUIAlliance.COMMON_LIST_ITEM_TYPE = Enum("JOIN","INVATE","APPLY")
-local SEARCH_ALLIAN_TO_JOIN_TAG = "join_alliance"
-local ALLIANCE_EVENT_TAG = "ALLIANCE_EVENT_TAG"
+-- local SEARCH_ALLIAN_TO_JOIN_TAG = "join_alliance"
+-- local ALLIANCE_EVENT_TAG = "ALLIANCE_EVENT_TAG"
+
 --
 --------------------------------------------------------------------------------
 function GameUIAlliance:ctor()
 	GameUIAlliance.super.ctor(self,City,_("联盟"))
-	self.alliance_manager = DataManager:GetManager("AllianceManager")
-	self.alliance_manager:OnAllianceDataEvent(SEARCH_ALLIAN_TO_JOIN_TAG,handler(self, self.OnAllianceDataEvent))
+	-- self.alliance_manager = DataManager:GetManager("AllianceManager")
+	-- self.alliance_manager:OnAllianceDataEvent(SEARCH_ALLIAN_TO_JOIN_TAG,handler(self, self.OnAllianceDataEvent))
 end
 
 function GameUIAlliance:Reset()
@@ -48,9 +50,9 @@ end
 function GameUIAlliance:RefreshMainUI()
 	self:Reset()
 	self.main_content:removeAllChildren()
-	if not self.alliance_manager:haveAlliance() then
+	if Alliance_Manager:GetMyAlliance():IsDefault() then
 		self:CreateNoAllianceUI()
-		if not self.alliance_manager.open_alliance then
+		if not Alliance_Manager.open_alliance then
 			self:CreateAllianceTips()
 		end
 	else
@@ -66,27 +68,27 @@ end
 function GameUIAlliance:onMoveInStage()
 	GameUIAlliance.super.onMoveInStage(self)
 	-- local self_ = self
-	self.alliance_manager:OnAllianceEvent(ALLIANCE_EVENT_TAG,function(event)
-		if event.eventType == AllianceManager.ALLIANCE_EVENT_TYPE.QUIT
-			or event.eventType == AllianceManager.ALLIANCE_EVENT_TYPE.CREATE_OR_JOIN 
-		 then
-	 		self:RefreshMainUI()
-	 	elseif event.eventType == AllianceManager.ALLIANCE_EVENT_TYPE.NORMAL then -- normal alliance data play data
-			--refresh list
-			if self.tab_buttons:GetSelectedButtonTag() == 'apply' then
-				self:RefreshApplyListView()
-			elseif self.tab_buttons:GetSelectedButtonTag() == 'invate' then
-				self:RefreshInvateListView()
-			end
-		end
+	-- self.alliance_manager:OnAllianceEvent(ALLIANCE_EVENT_TAG,function(event)
+	-- 	if event.eventType == AllianceManager.ALLIANCE_EVENT_TYPE.QUIT
+	-- 		or event.eventType == AllianceManager.ALLIANCE_EVENT_TYPE.CREATE_OR_JOIN 
+	-- 	 then
+	--  		self:RefreshMainUI()
+	--  	elseif event.eventType == AllianceManager.ALLIANCE_EVENT_TYPE.NORMAL then -- normal alliance data play data
+	-- 		--refresh list
+	-- 		if self.tab_buttons:GetSelectedButtonTag() == 'apply' then
+	-- 			self:RefreshApplyListView()
+	-- 		elseif self.tab_buttons:GetSelectedButtonTag() == 'invate' then
+	-- 			self:RefreshInvateListView()
+	-- 		end
+	-- 	end
 
-	end)
+	-- end)
 end
 
 function GameUIAlliance:onMoveOutStage()
-	self.alliance_manager:RemoveEventByTag(SEARCH_ALLIAN_TO_JOIN_TAG)
-	self.alliance_manager:RemoveEventByTag(ALLIANCE_EVENT_TAG)
-	self.alliance_manager = nil
+	-- self.alliance_manager:RemoveEventByTag(SEARCH_ALLIAN_TO_JOIN_TAG)
+	-- self.alliance_manager:RemoveEventByTag(ALLIANCE_EVENT_TAG)
+	-- self.alliance_manager = nil
 	GameUIAlliance.super.onMoveOutStage(self)
 end
 
@@ -130,7 +132,7 @@ function GameUIAlliance:CreateNoAllianceUI()
 end
 
 function GameUIAlliance:CreateAllianceTips()
-	self.alliance_manager.open_alliance = true 
+	Alliance_Manager.open_alliance = true 
 	local shadowLayer = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
 		:addTo(self)
     local backgroundImage = WidgetUIBackGround.new(500):addTo(shadowLayer):pos(window.left+20,window.top - 600)
@@ -218,10 +220,10 @@ function GameUIAlliance:NoAllianceTabEvent_createIf()
 	local scrollView = UIScrollView.new({viewRect = cc.rect(10,0,contentWidth+50,window.betweenHeaderAndTab)})
         :addScrollNode(basic_setting:GetContentNode():pos(40,0))
         :setDirection(UIScrollView.DIRECTION_VERTICAL)
-        -- :onScroll(handler(self, self.CreateAllianceScrollListener))
         :addTo(self.main_content)
 	scrollView:fixResetPostion(-50)
 	self.createScrollView = scrollView
+	basic_setting = nil
 	return self.createScrollView
 end
 
@@ -663,7 +665,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 		:scale(0.4)
 		:onButtonClicked(handler(self, self.OnAllianceSettingButtonClicked))
 	self.ui_overview.nameLabel = UIKit:ttfLabel({
-		text = self.alliance_manager:GetMyAllianceData().basicInfo.name,
+		text = Alliance_Manager:GetMyAlliance():Name(),
 		size = 24,
 		color = 0xffedae,
 	}):align(display.LEFT_BOTTOM,170,10):addTo(titileBar)
@@ -697,9 +699,9 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 		:addTo(headerBg)
 		:align(display.LEFT_BOTTOM, 120,notice_bg:getPositionY()+notice_bg:getContentSize().height-5)
 	display.newSprite("alliance_notice_icon_26x26.png"):addTo(notice_button):pos(250,22)
-	self.ui_overview.my_alliance_flag = self.alliance_manager:GetMyAllianceFlag()
-		:addTo(overviewNode)
-		:pos(100,titileBar:getPositionY() - 65)
+	-- self.ui_overview.my_alliance_flag = self.alliance_manager:GetMyAllianceFlag()
+	-- 	:addTo(overviewNode)
+	-- 	:pos(100,titileBar:getPositionY() - 65)
 	local tagLabel = UIKit:ttfLabel({
 		text = _("标签"),
 		size = 22,
@@ -707,7 +709,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 	}):addTo(headerBg):align(display.LEFT_BOTTOM,170,270)
 
 	local tagLabelVal = UIKit:ttfLabel({
-		text = self.alliance_manager:GetMyAllianceData().basicInfo.tag,
+		text = Alliance_Manager:GetMyAlliance():AliasName(),
 		size = 22,
 		color = 0x403c2f,
 	})
@@ -723,7 +725,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 
 
 	local languageLabelVal =  UIKit:ttfLabel({
-		text = self.alliance_manager:GetMyAllianceData().basicInfo.language,
+		text = Alliance_Manager:GetMyAlliance():DefaultLanguage(),
 		size = 22,
 		color = 0x403c2f,
 	}):addTo(headerBg):align(display.LEFT_BOTTOM,languageLabel:getPositionX()+languageLabel:getContentSize().width+20,tagLabel:getPositionY())
@@ -739,7 +741,7 @@ end
 function GameUIAlliance:RefreshNoticeView()
 	local textLabel = cc.ui.UILabel.new({
 			UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = self.alliance_manager:GetMyAllianceData().notice or "",
+            text = Alliance_Manager:GetMyAlliance().notice or "",
             size = 20,
             color = UIKit:hex2c3b(0x403c2f),
             align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
@@ -844,7 +846,7 @@ function GameUIAlliance:RefreshOverViewUI()
 end
 
 function GameUIAlliance:RefreshEventListView()
-	local events = self.alliance_manager:GetMyAllianceData().events
+	local events = Alliance_Manager:GetMyAlliance():GetEvents()
 	self.eventListView:removeAllItems()
 	for i,v in ipairs(events) do
 		local item = self:GetEventItemByIndexAndEvent(i,v)

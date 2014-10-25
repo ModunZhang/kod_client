@@ -13,31 +13,34 @@ local WidgetSequenceButton = import("..widget.WidgetSequenceButton")
 local WidgetAllianceLanguagePanel = import("..widget.WidgetAllianceLanguagePanel")
 local GameUIAllianceBasicSetting = UIKit:createUIClass('GameUIAllianceBasicSetting')
 local modify_height = window.height - 20
---name
-local RANDOM_ALLIANCE_NAMES = {
-	"Kingdom of Dragon",
-	"Tian Chao"
-}
+local Alliance_Manager = Alliance_Manager
+local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 
 function GameUIAllianceBasicSetting:ctor(isModify)
 	GameUIAllianceBasicSetting.super.ctor(self)
-	self.alliance_manager = DataManager:GetManager("AllianceManager")
+	self.alliance_ui_helper = WidgetAllianceUIHelper.new()
+	-- self.alliance_manager = DataManager:GetManager("AllianceManager")
 	self.isCreateAction_ = isModify ~= true 
 	if self.isCreateAction_ then
-		self.flag_info = {
-			flag = self.alliance_manager.FLAG_LOCATION_TYPE.ONE,
-			flagColor = {"red","yellow"}, 
-			graphic = self.alliance_manager.FLAG_LOCATION_TYPE.TWO_LEFT_RIGHT,
-			graphicColor = {"charmRed","blue"},
-			graphicContent = {1,3}, --graphic image is index
-		}
-		self.terrain_info = self.alliance_manager.LANDFORM_TYPE.grassLand -- 地形
+		self.flag_info = Alliance_Manager:GetMyAlliance():Flag()
+		self.terrain_info = self.alliance_ui_helper:SetTerrain(Alliance_Manager:GetMyAlliance():TerrainType()):RandomTerrain()
+		dump(self.flag_info)
+		dump(self.terrain_info)
+		-- self.flag_info = {
+		-- 	flag = self.alliance_manager.FLAG_LOCATION_TYPE.ONE,
+		-- 	flagColor = {"red","yellow"}, 
+		-- 	graphic = self.alliance_manager.FLAG_LOCATION_TYPE.TWO_LEFT_RIGHT,
+		-- 	graphicColor = {"charmRed","blue"},
+		-- 	graphicContent = {1,3}, --graphic image is index
+		-- }
+		-- self.terrain_info = self.alliance_manager.LANDFORM_TYPE.grassLand -- 地形
 		--fisrt random flag
-		self:RandomFlag()
+		-- self:RandomFlag()
+
 	else
-		local alliance_data = self.alliance_manager:GetMyAllianceData()
-		self.flag_info = self:AdapterFlagData_Local(alliance_data.basicInfo.flag)
-		self.terrain_info = self.alliance_manager.LANDFORM_TYPE[alliance_data.basicInfo.terrain] -- 地形
+		-- local alliance_data = self.alliance_manager:GetMyAllianceData()
+		-- self.flag_info = self:AdapterFlagData_Local(alliance_data.basicInfo.flag)
+		-- self.terrain_info = self.alliance_manager.LANDFORM_TYPE[alliance_data.basicInfo.terrain] -- 地形
 	end
 end
 
@@ -108,11 +111,11 @@ function GameUIAllianceBasicSetting:GetContentNode()
     self.createFlagPanel = self:createFlagPanel_():addTo(createContent)
     	:pos(0,okButton:getPositionY()+45)
     -- landform & language
-    self.landformPanel = self:createCheckAllianeGroup_():addTo(createContent)
-    	:pos(0,self.createFlagPanel:getCascadeBoundingBox().height+120)
-    -- textfield
-    self.textfieldPanel = self:createTextfieldPanel_():addTo(createContent)
-    	:pos(0,self.landformPanel:getPositionY()+self.landformPanel:getCascadeBoundingBox().height+360)
+    -- self.landformPanel = self:createCheckAllianeGroup_():addTo(createContent)
+    -- 	:pos(0,self.createFlagPanel:getCascadeBoundingBox().height+120)
+    -- -- textfield
+    -- self.textfieldPanel = self:createTextfieldPanel_():addTo(createContent)
+    -- 	:pos(0,self.landformPanel:getPositionY()+self.landformPanel:getCascadeBoundingBox().height+360)
     return createContent
 end
 
@@ -140,122 +143,123 @@ function GameUIAllianceBasicSetting:createFlagPanel_()
 		{normal = "alliance_flag_button_normal.png",pressed = "alliance_flag_button_highlight.png"},
 		{scale9 = false},
 		{{image="alliance_flag_color_44x44.png"}},
-		self.alliance_manager.flagData_.color,
-		self:GetFlagInfomation().graphicColor[2]
+		self.alliance_ui_helper:GetFlagColors(),
+		self:GetFlagInfomation():GetFrontImageColors()[2]
 	):addTo(node)
 		:pos(bottom:getPositionX()-60,bottom:getPositionY()+50)
-		:setButtonEnabled(self:GetFlagInfomation().graphic ~= self.alliance_manager.FLAG_LOCATION_TYPE.ONE)
-		:onSeqStateChange(handler(self, self.OnGraphicTypeButtonClicked))
+		-- :setButtonEnabled(self:GetFlagInfomation().graphic ~= self.alliance_manager.FLAG_LOCATION_TYPE.ONE)
+		-- :onSeqStateChange(handler(self, self.OnGraphicTypeButtonClicked))
 	self.colorButton_right = colorButton_right
 	local colorButton_left = WidgetSequenceButton.new(
 		{normal = "alliance_flag_button_normal.png",pressed = "alliance_flag_button_highlight.png"}, 
 		{scale9 = false},
 		{{image="alliance_flag_color_44x44.png"}},
-		self.alliance_manager.flagData_.color,
-		self:GetFlagInfomation().graphicColor[1]
+		self.alliance_ui_helper:GetFlagColors(),
+		self:GetFlagInfomation():GetFrontImageColors()[1]
 	):addTo(node):pos(colorButton_right:getPositionX()-135,colorButton_right:getPositionY())
-	:onSeqStateChange(handler(self, self.OnGraphicTypeButtonClicked))
+	-- :onSeqStateChange(handler(self, self.OnGraphicTypeButtonClicked))
 	self.colorButton_left = colorButton_left
 	local graphic_right_button = WidgetSequenceButton.new(
 		{normal = "alliance_flag_button_normal.png",pressed = "alliance_flag_button_highlight.png"}, 
 		{scale9 = false,scale = 0.55},
-		self.alliance_manager.flagData_.graphic,
+		self.alliance_ui_helper:GetGraphics(),
 		nil,
-		self:GetFlagInfomation().graphicContent[2]
-		):addTo(node)
-			:pos(colorButton_right:getPositionX(),colorButton_right:getPositionY()+80)
-			:setButtonEnabled(self:GetFlagInfomation().graphic ~= self.alliance_manager.FLAG_LOCATION_TYPE.ONE)
-			:onSeqStateChange(handler(self, self.OnGraphicTypeButtonClicked))
+		self:GetFlagInfomation():GetFrontImagesStyle()[2]
+		)
+		:addTo(node)
+		:pos(colorButton_right:getPositionX(),colorButton_right:getPositionY()+80)
+		-- :setButtonEnabled(self:GetFlagInfomation().graphic ~= self.alliance_manager.FLAG_LOCATION_TYPE.ONE)
+		-- :onSeqStateChange(handler(self, self.OnGraphicTypeButtonClicked))
 		self.graphic_right_button = graphic_right_button
 	local graphic_middle_button = WidgetSequenceButton.new(
 		{normal = "alliance_flag_button_normal.png",pressed = "alliance_flag_button_highlight.png"}, 
 		{scale9 = false,scale = 0.55},
-		self.alliance_manager.flagData_.graphic,
+		self.alliance_ui_helper:GetGraphics(),
 		nil,
-		self:GetFlagInfomation().graphicContent[1]
+		self:GetFlagInfomation():GetFrontImagesStyle()[1]
 		):addTo(node)
 			:pos(colorButton_left:getPositionX(),colorButton_right:getPositionY()+80)
-			:onSeqStateChange(handler(self, self.OnGraphicTypeButtonClicked))
+			-- :onSeqStateChange(handler(self, self.OnGraphicTypeButtonClicked))
 		self.graphic_middle_button = graphic_middle_button
-	local graphic_type_button = WidgetSequenceButton.new(
-		{normal = "alliance_flag_button_normal.png",pressed = "alliance_flag_button_highlight.png"}, 
-		{scale9 = false},
-		self.alliance_manager.flagData_.graphicButton,
-		nil,
-		self:GetFlagInfomation().graphic
-		):addTo(node)
-		:pos(colorButton_left:getPositionX() - 135,colorButton_right:getPositionY()+80)
-		:onSeqStateChange(handler(self, self.OnGraphicTypeButtonClicked))
+	-- local graphic_type_button = WidgetSequenceButton.new(
+	-- 	{normal = "alliance_flag_button_normal.png",pressed = "alliance_flag_button_highlight.png"}, 
+	-- 	{scale9 = false},
+	-- 	self.alliance_manager.flagData_.graphicButton,
+	-- 	nil,
+	-- 	self:GetFlagInfomation().graphic
+	-- 	):addTo(node)
+	-- 	:pos(colorButton_left:getPositionX() - 135,colorButton_right:getPositionY()+80)
+	-- 	:onSeqStateChange(handler(self, self.OnGraphicTypeButtonClicked))
 
-	self.graphic_type_button =  graphic_type_button
-	-- color body
-	--118
-	local color_bottom = display.newSprite("alliance_flag_bg_bottom_404x36.png")
-		:align(display.RIGHT_BOTTOM, contentWidth - 10,header:getPositionY()+header:getContentSize().height+20)
-		:addTo(node)
-	local color_header = display.newSprite("alliance_flag_bg_header_404x36.png")
-	local color_middle = display.newScale9Sprite("alliance_flag_bg_middle_404x1.png")
-		:size(404,130 - 36*2)
-		:addTo(node)
-		:align(display.RIGHT_BOTTOM,color_bottom:getPositionX(),color_bottom:getPositionY()+color_bottom:getContentSize().height)
-	color_header:addTo(node)
-		:align(display.RIGHT_BOTTOM, color_middle:getPositionX(), color_middle:getPositionY()+color_middle:getContentSize().height)
-	UIKit:ttfLabel({
-		text = _("颜色"),
-		size = 20,
-		color = 0x797154
-	}):addTo(color_header):pos(color_header:getContentSize().width/2 - 10,color_header:getContentSize().height/2)
+	-- self.graphic_type_button =  graphic_type_button
+	-- -- color body
+	-- --118
+	-- local color_bottom = display.newSprite("alliance_flag_bg_bottom_404x36.png")
+	-- 	:align(display.RIGHT_BOTTOM, contentWidth - 10,header:getPositionY()+header:getContentSize().height+20)
+	-- 	:addTo(node)
+	-- local color_header = display.newSprite("alliance_flag_bg_header_404x36.png")
+	-- local color_middle = display.newScale9Sprite("alliance_flag_bg_middle_404x1.png")
+	-- 	:size(404,130 - 36*2)
+	-- 	:addTo(node)
+	-- 	:align(display.RIGHT_BOTTOM,color_bottom:getPositionX(),color_bottom:getPositionY()+color_bottom:getContentSize().height)
+	-- color_header:addTo(node)
+	-- 	:align(display.RIGHT_BOTTOM, color_middle:getPositionX(), color_middle:getPositionY()+color_middle:getContentSize().height)
+	-- UIKit:ttfLabel({
+	-- 	text = _("颜色"),
+	-- 	size = 20,
+	-- 	color = 0x797154
+	-- }):addTo(color_header):pos(color_header:getContentSize().width/2 - 10,color_header:getContentSize().height/2)
 
-	local color_rightColor_button = WidgetSequenceButton.new(
-		{normal = "alliance_flag_button_normal.png",pressed = "alliance_flag_button_highlight.png"}, 
-		{scale9 = false},
-		{{image="alliance_flag_color_44x44.png"}},
-		self.alliance_manager.flagData_.color,
-		self:GetFlagInfomation().flagColor[2]
-	):addTo(node):pos(color_bottom:getPositionX()-60,color_bottom:getPositionY()+50)
-		:setButtonEnabled(self:GetFlagInfomation().flag ~= self.alliance_manager.FLAG_LOCATION_TYPE.ONE)
-		:onSeqStateChange(handler(self, self.OnFlagTypeButtonClicked))
-	self.color_rightColor_button = color_rightColor_button
-	local color_middleColor_button = WidgetSequenceButton.new(
-		{normal = "alliance_flag_button_normal.png",pressed = "alliance_flag_button_highlight.png"}, 
-		{scale9 = false},
-		{{image="alliance_flag_color_44x44.png"}},
-		self.alliance_manager.flagData_.color,
-		self:GetFlagInfomation().flagColor[1]
-	)
-		:addTo(node):pos(color_rightColor_button:getPositionX()-135,color_rightColor_button:getPositionY())
-		:onSeqStateChange(handler(self, self.OnFlagTypeButtonClicked))
-	self.color_middleColor_button = color_middleColor_button
-	local flag_type_button = WidgetSequenceButton.new(
-		{normal = "alliance_flag_button_normal.png",pressed = "alliance_flag_button_highlight.png"}, 
-		{scale9 = false},
-		self.alliance_manager.flagData_.bodyButton,
-		nil,
-		self:GetFlagInfomation().flag
-	):addTo(node)
-	:pos(color_middleColor_button:getPositionX() - 135,color_rightColor_button:getPositionY())
-	:onSeqStateChange(handler(self, self.OnFlagTypeButtonClicked))
-	self.flag_type_button = flag_type_button
+	-- local color_rightColor_button = WidgetSequenceButton.new(
+	-- 	{normal = "alliance_flag_button_normal.png",pressed = "alliance_flag_button_highlight.png"}, 
+	-- 	{scale9 = false},
+	-- 	{{image="alliance_flag_color_44x44.png"}},
+	-- 	self.alliance_manager.flagData_.color,
+	-- 	self:GetFlagInfomation().flagColor[2]
+	-- ):addTo(node):pos(color_bottom:getPositionX()-60,color_bottom:getPositionY()+50)
+	-- 	:setButtonEnabled(self:GetFlagInfomation().flag ~= self.alliance_manager.FLAG_LOCATION_TYPE.ONE)
+	-- 	:onSeqStateChange(handler(self, self.OnFlagTypeButtonClicked))
+	-- self.color_rightColor_button = color_rightColor_button
+	-- local color_middleColor_button = WidgetSequenceButton.new(
+	-- 	{normal = "alliance_flag_button_normal.png",pressed = "alliance_flag_button_highlight.png"}, 
+	-- 	{scale9 = false},
+	-- 	{{image="alliance_flag_color_44x44.png"}},
+	-- 	self.alliance_manager.flagData_.color,
+	-- 	self:GetFlagInfomation().flagColor[1]
+	-- )
+	-- 	:addTo(node):pos(color_rightColor_button:getPositionX()-135,color_rightColor_button:getPositionY())
+	-- 	:onSeqStateChange(handler(self, self.OnFlagTypeButtonClicked))
+	-- self.color_middleColor_button = color_middleColor_button
+	-- local flag_type_button = WidgetSequenceButton.new(
+	-- 	{normal = "alliance_flag_button_normal.png",pressed = "alliance_flag_button_highlight.png"}, 
+	-- 	{scale9 = false},
+	-- 	self.alliance_manager.flagData_.bodyButton,
+	-- 	nil,
+	-- 	self:GetFlagInfomation().flag
+	-- ):addTo(node)
+	-- :pos(color_middleColor_button:getPositionX() - 135,color_rightColor_button:getPositionY())
+	-- :onSeqStateChange(handler(self, self.OnFlagTypeButtonClicked))
+	-- self.flag_type_button = flag_type_button
 
-	local flagNode,upgrade_surface,flag_sprite = self.alliance_manager:CreateFlagWithTerrain(self.terrain_info,self:GetFlagInfomation())
-	flagNode:addTo(node):pos(contentWidth - header:getContentSize().width - flagNode:getCascadeBoundingBox().width + 50,header:getPositionY()+30)
-	self.upgrade_surface = upgrade_surface
-	self.flag_sprite = flag_sprite
+	-- local flagNode,upgrade_surface,flag_sprite = self.alliance_manager:CreateFlagWithTerrain(self.terrain_info,self:GetFlagInfomation())
+	-- flagNode:addTo(node):pos(contentWidth - header:getContentSize().width - flagNode:getCascadeBoundingBox().width + 50,header:getPositionY()+30)
+	-- self.upgrade_surface = upgrade_surface
+	-- self.flag_sprite = flag_sprite
 
-	UIKit:ttfLabel({
-		text = _("联盟旗帜"),
-		size = 22,
-		color = 0x403c2f
-	}):addTo(node):pos(color_header:getPositionX()-320+10,color_header:getPositionY()+color_header:getContentSize().height+15)
+	-- UIKit:ttfLabel({
+	-- 	text = _("联盟旗帜"),
+	-- 	size = 22,
+	-- 	color = 0x403c2f
+	-- }):addTo(node):pos(color_header:getPositionX()-320+10,color_header:getPositionY()+color_header:getContentSize().height+15)
 
-	local randomButton = WidgetPushButton.new({normal = "alliance_sieve_51x45.png"})
-		:addTo(node)
-		:pos(flagNode:getPositionX()+2,flagNode:getPositionY()-80)
-		:onButtonClicked(function()
-			self:RandomFlag()
-			self:RefreshButtonState()
-			self:RefrshFlagSprite()
-		end)
+	-- local randomButton = WidgetPushButton.new({normal = "alliance_sieve_51x45.png"})
+	-- 	:addTo(node)
+	-- 	:pos(flagNode:getPositionX()+2,flagNode:getPositionY()-80)
+	-- 	:onButtonClicked(function()
+	-- 		self:RandomFlag()
+	-- 		self:RefreshButtonState()
+	-- 		self:RefrshFlagSprite()
+	-- 	end)
 	return node
 end
 
@@ -419,20 +423,20 @@ function GameUIAllianceBasicSetting:RefrshFlagSprite(where)
 end
 
 function GameUIAllianceBasicSetting:GetFlagInfomation()
-	return self.flag_info
+	return Alliance_Manager:GetMyAlliance():Flag()
 end
 
-function GameUIAllianceBasicSetting:RandomFlag()
-	math.randomseed(tostring(os.time()):reverse():sub(1, 6))
-	self.flag_info.flag = math.random(4)
-	self.flag_info.flagColor[1] = self.alliance_manager.flagData_.color[math.random(#self.alliance_manager.flagData_.color)].name
-	self.flag_info.flagColor[2] = self.alliance_manager.flagData_.color[math.random(#self.alliance_manager.flagData_.color)].name
-	self.flag_info.graphic = math.random(4)
-	self.flag_info.graphicColor[1] = self.alliance_manager.flagData_.color[math.random(#self.alliance_manager.flagData_.color)].name
-	self.flag_info.graphicColor[2] = self.alliance_manager.flagData_.color[math.random(#self.alliance_manager.flagData_.color)].name
-	self.flag_info.graphicContent[1] = self.alliance_manager.flagData_.graphic[math.random(#self.alliance_manager.flagData_.graphic)].name
-	self.flag_info.graphicContent[2] = self.alliance_manager.flagData_.graphic[math.random(#self.alliance_manager.flagData_.graphic)].name
-end
+-- function GameUIAllianceBasicSetting:RandomFlag()
+-- 	math.randomseed(tostring(os.time()):reverse():sub(1, 6))
+-- 	self.flag_info.flag = math.random(4)
+-- 	self.flag_info.flagColor[1] = self.alliance_manager.flagData_.color[math.random(#self.alliance_manager.flagData_.color)].name
+-- 	self.flag_info.flagColor[2] = self.alliance_manager.flagData_.color[math.random(#self.alliance_manager.flagData_.color)].name
+-- 	self.flag_info.graphic = math.random(4)
+-- 	self.flag_info.graphicColor[1] = self.alliance_manager.flagData_.color[math.random(#self.alliance_manager.flagData_.color)].name
+-- 	self.flag_info.graphicColor[2] = self.alliance_manager.flagData_.color[math.random(#self.alliance_manager.flagData_.color)].name
+-- 	self.flag_info.graphicContent[1] = self.alliance_manager.flagData_.graphic[math.random(#self.alliance_manager.flagData_.graphic)].name
+-- 	self.flag_info.graphicContent[2] = self.alliance_manager.flagData_.graphic[math.random(#self.alliance_manager.flagData_.graphic)].name
+-- end
 
 function GameUIAllianceBasicSetting:RefreshButtonState()
 	self.flag_type_button:setSeqState(self:GetFlagInfomation().flag)
