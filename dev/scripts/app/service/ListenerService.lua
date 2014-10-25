@@ -158,6 +158,7 @@ end
 
 function ListenerService:ls_onAllianceHelpEventChanged(msg,eventName)
 	-- self:dispatchEventToAllianceManager_(msg,eventName)
+	Alliance_Manager:OnAllianceHelpDataChanged(msg)
 end
 
 

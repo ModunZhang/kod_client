@@ -248,6 +248,23 @@ function Alliance:OnJoinEventsChanged(changed_map)
         listener:OnJoinEventsChanged(self, changed_map)
     end)
 end
+function Alliance:OnAllianceDataChanged(alliance_data)
+    if alliance_data.basicInfo then
+        self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
+    end
+    if alliance_data.events then
+        self:OnAllianceEventsChanged(alliance_data.events)
+    end
+    if alliance_data.joinRequestEvents then
+        self:OnJoinRequestEventsChanged(alliance_data.joinRequestEvents)
+    end
+    if alliance_data.helpEvents then
+        self:OnHelpEventsChanged(alliance_data.helpEvents)
+    end
+    if alliance_data.members then
+        self:OnAllianceMemberDataChanged(alliance_data.members)
+    end
+end
 function Alliance:OnAllianceBasicInfoChanged(basicInfo)
     if basicInfo == nil then return end
     self:SetName(basicInfo.name)
@@ -261,6 +278,39 @@ function Alliance:OnAllianceBasicInfoChanged(basicInfo)
     self:SetExp(basicInfo.exp)
     self:SetLevel(basicInfo.level)
     self:SetCreateTime(basicInfo.createTime)
+end
+function Alliance:OnAllianceEventsChanged(events)
+    if events == nil then return end
+    -- 先按从新到旧排序
+    table.sort(events, function(a, b)
+        return a.time > b.time
+    end)
+    -- 只会添加新事件，只会在登录的时候才会重新加载所有事件
+    -- 先找到最近的事件索引
+    local top_event = self:TopEvent() or {time = 0}
+    local index = 0
+    for i, new_event in ipairs(events) do
+        local diff_time = new_event.time - top_event.time
+        if diff_time > 0 then
+            index = i
+        else
+            break
+        end
+    end
+    -- 索引大于0才表明有新的事件来临
+    local is_new_events_coming = index > 0
+    if is_new_events_coming then
+        local new_coming_events = {}
+        for i = index, 1, -1 do
+            local new_event = self:CreateEventFromJsonData(events[i])
+            table.insert(new_coming_events, 1, new_event)
+            self:PushEventInHead(new_event)
+        end
+        self:OnEventsChanged{
+            pop = pack(),
+            push = new_coming_events
+        }
+    end
 end
 function Alliance:OnJoinRequestEventsChanged(joinRequestEvents)
     if joinRequestEvents == nil then return end
@@ -294,114 +344,74 @@ function Alliance:OnJoinRequestEventsChanged(joinRequestEvents)
         removed = removed,
     }
 end
-function Alliance:OnEventsChanged(events)
-    if events == nil then return end
-    -- 先按从新到旧排序
-    table.sort(events, function(a, b)
-        return a.time > b.time
-    end)
-    -- 只会添加新事件，只会在登录的时候才会重新加载所有事件
-    -- 先找到最近的事件索引
-    local top_event = self:TopEvent() or {time = 0}
-    local index = 0
-    for i, new_event in ipairs(events) do
-        local diff_time = new_event.time - top_event.time
-        if diff_time > 0 then
-            index = i
-        else
-            break
+function Alliance:OnAllianceMemberDataChanged(members)
+    if not members then return end
+    local function find_members_with_id(id)
+        for _, v in ipairs(members) do
+            if v.id == id then
+                return v
+            end
         end
     end
-    -- 索引大于0才表明有新的事件来临
-    local is_new_events_coming = index > 0
-    if is_new_events_coming then
-        local new_coming_events = {}
-        for i = index, 1, -1 do
-            local new_event = self:CreateEventFromJsonData(events[i])
-            table.insert(new_coming_events, 1, new_event)
-            self:PushEventInHead(new_event)
+    -- 先找退出的成员
+    local remove_members = {}
+    self:IteratorAllMembers(function(id, member)
+        if not find_members_with_id(id) then
+            table.insert(remove_members, member)
         end
-        self:OnEventsChanged{
-            pop = pack(),
-            push = new_coming_events
+    end)
+    -- dump(remove_members)
+
+    -- 再找新加入的成员
+    local add_members = {}
+    for _, v in ipairs(members) do
+        if not self:GetMemeberById(v.id) then
+            table.insert(add_members, AllianceMember:CreatFromData(v))
+        end
+    end
+    -- dump(add_members)
+
+    -- 成员更新的数据, 直接替换成员数据
+    local update_members = {}
+    for _, v in ipairs(members) do
+        local member = self:GetMemeberById(v.id)
+        local new_data = AllianceMember:CreatFromData(v)
+        if member and not member:IsSameDataWith(new_data) then
+            local old = self:ReplaceMember(new_data)
+            table.insert(update_members, {old = old, new = new_data})
+        end
+    end
+    -- dump(update_members)
+
+    -- 开始真正删除成员了
+    for _, v in ipairs(remove_members) do
+        self:RemoveMemberById(v.id)
+    end
+
+    -- 开始真正添加成员了
+    for _, v in ipairs(add_members) do
+        self:AddMembers(v)
+    end
+
+    local need_notify = #remove_members > 0 or #add_members > 0 or #update_members > 0
+    if need_notify then
+        self:OnMemberChanged{
+            added = add_members,
+            removed = remove_members,
+            changed = update_members,
         }
     end
 end
-function Alliance:OnAllianceDataChanged(alliance_data)
-    if alliance_data.basicInfo then
-        self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
-    end
-    if alliance_data.events then
-        self:OnEventsChanged(alliance_data.events)
-    end
-    if alliance_data.joinRequestEvents then
-        self:OnJoinRequestEventsChanged(alliance_data.joinRequestEvents)
-    end
-    local members = alliance_data.members
-    if members then
-        local function find_members_with_id(id)
-            for _, v in ipairs(members) do
-                if v.id == id then
-                    return v
-                end
-            end
-        end
-        -- 先找退出的成员
-        local remove_members = {}
-        self:IteratorAllMembers(function(id, member)
-            if not find_members_with_id(id) then
-                table.insert(remove_members, member)
-            end
-        end)
-        -- dump(remove_members)
-
-        -- 再找新加入的成员
-        local add_members = {}
-        for _, v in ipairs(members) do
-            if not self:GetMemeberById(v.id) then
-                table.insert(add_members, AllianceMember:CreatFromData(v))
-            end
-        end
-        -- dump(add_members)
-
-        -- 成员更新的数据, 直接替换成员数据
-        local update_members = {}
-        for _, v in ipairs(members) do
-            local member = self:GetMemeberById(v.id)
-            local new_data = AllianceMember:CreatFromData(v)
-            if member and not member:IsSameDataWith(new_data) then
-                local old = self:ReplaceMember(new_data)
-                table.insert(update_members, {old = old, new = new_data})
-            end
-        end
-        -- dump(update_members)
-
-        -- 开始真正删除成员了
-        for _, v in ipairs(remove_members) do
-            self:RemoveMemberById(v.id)
-        end
-
-        -- 开始真正添加成员了
-        for _, v in ipairs(add_members) do
-            self:AddMembers(v)
-        end
-
-        local need_notify = #remove_members > 0 or #add_members > 0 or #update_members > 0
-        if need_notify then
-            self:OnMemberChanged{
-                added = add_members,
-                removed = remove_members,
-                changed = update_members,
-            }
-        end
-    end
-end
-function Alliance:OnAllianceMemberDataChanged(member_data)
+function Alliance:OnOneAllianceMemberDataChanged(member_data)
     self:ReplaceMemberWithNotify(AllianceMember:CreatFromData(member_data))
 end
-
+function Alliance:OnHelpEventsChanged(helpEvents)
+    dump(helpEvents)
+end
 
 return Alliance
+
+
 
 
 
