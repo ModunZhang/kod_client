@@ -36,9 +36,12 @@ function AllianceManager:OnAllianceBasicInfoAndMemberDataChanged(basic_and_membe
         my_alliance:OnAllianceBasicInfoChanged(basicInfo)
     end
     if memberDoc then
-        my_alliance:OnAllianceMemberDataChanged(memberDoc)
+        my_alliance:OnOneAllianceMemberDataChanged(memberDoc)
     end
     -- dump(self:GetMyAlliance())
+end
+function AllianceManager:OnAllianceHelpDataChanged(...)
+    self:GetMyAlliance():OnHelpEventsChanged(...)
 end
 
 
