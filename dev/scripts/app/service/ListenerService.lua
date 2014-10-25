@@ -112,50 +112,52 @@ end
 -- Alliance 
 -------------------------------------------------------------------------
 --data to alliance
-function ListenerService:dispatchEventToAllianceManager_(msg,eventName)
-	local allianceManager = DataManager:GetManager("AllianceManager")
-	if allianceManager then
-		allianceManager:dispatchAlliceServerData(eventName,msg)
-	end
-end
+-- function ListenerService:dispatchEventToAllianceManager_(msg,eventName)
+-- 	local allianceManager = DataManager:GetManager("AllianceManager")
+-- 	if allianceManager then
+-- 		allianceManager:dispatchAlliceServerData(eventName,msg)
+-- 	end
+-- end
 
 function ListenerService:ls_onGetCanDirectJoinAlliancesSuccess(msg,eventName)
-	self:dispatchEventToAllianceManager_(msg,eventName)
+	-- self:dispatchEventToAllianceManager_(msg,eventName)
 end
 
 function ListenerService:ls_onSearchAlliancesSuccess(msg,eventName)
-	self:dispatchEventToAllianceManager_(msg,eventName)
+	-- self:dispatchEventToAllianceManager_(msg,eventName)
 end
 
 function ListenerService:ls_onAllianceDataChanged(msg,eventName)
-	self:dispatchEventToAllianceManager_(msg,eventName)
+	-- self:dispatchEventToAllianceManager_(msg,eventName)
+	Alliance_Manager:OnAllianceDataChanged(msg)
 end
 
 function ListenerService:ls_onGetAllianceDataSuccess(msg,eventName)
-	self:dispatchEventToAllianceManager_(msg,eventName)
+	-- self:dispatchEventToAllianceManager_(msg,eventName)
 end
 
 
 function ListenerService:ls_onAllianceNewEventReceived(msg,eventName)
-	self:dispatchEventToAllianceManager_(msg,eventName)
+	-- self:dispatchEventToAllianceManager_(msg,eventName)
 end
 
 function ListenerService:ls_onAllianceMemberDataChanged(msg,eventName)
-	self:dispatchEventToAllianceManager_(msg,eventName)
+	-- self:dispatchEventToAllianceManager_(msg,eventName)
 end
 
 function ListenerService:ls_onAllianceBasicInfoAndMemberDataChanged(msg,eventName)
-	self:dispatchEventToAllianceManager_(msg,eventName)
+	-- self:dispatchEventToAllianceManager_(msg,eventName)
+	Alliance_Manager:OnAllianceBasicInfoAndMemberDataChanged(msg)
 end
 
 function ListenerService:ls_onGetPlayerInfoSuccess( msg,eventName )
-	self.dispather_:dispatchEvent({name = eventName,
-	        data = msg
-	    })
+	-- self.dispather_:dispatchEvent({name = eventName,
+	--         data = msg
+	--     })
 end
 
 function ListenerService:ls_onAllianceHelpEventChanged(msg,eventName)
-	self:dispatchEventToAllianceManager_(msg,eventName)
+	-- self:dispatchEventToAllianceManager_(msg,eventName)
 end
 
 
