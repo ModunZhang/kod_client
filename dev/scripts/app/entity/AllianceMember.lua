@@ -24,6 +24,7 @@ function AllianceMember:CreatFromData(data)
     return member
 end
 function AllianceMember:IsSameDataWith(member)
+	if not member then return false end
     for _, v in ipairs{
         "Level",
         "Kill",
