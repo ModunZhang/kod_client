@@ -508,5 +508,18 @@ function AllianceManager:AlliancePermission_can_modifyAllianceMemberTitle()
 
 end
 
+function AllianceManager:CanBuyArchon()
+    if not self:haveAlliance() then return false end
+    local archon = nil
+    for i,v in ipairs(self:GetMyAllianceData().members) do
+        if v.title == 'archon' then
+            archon = v
+            break
+        end
+    end
+    print("(app.timer:GetServerTime() - archon.lastLoginTime/1000)/60*60*24---->",(app.timer:GetServerTime() - archon.lastLoginTime/1000)/60*60*24)
+    return  (app.timer:GetServerTime() - archon.lastLoginTime/1000)/60*60*24 >= 7
+end
+
 return AllianceManager
 

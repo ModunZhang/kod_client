@@ -41,19 +41,14 @@ function GameUIAllianceNoticeOrDescEdit:onMoveInStage()
     textView:setFont(UIKit:getFontFilePath(), 24)
     textView:setPlaceHolder(_("最多输入600个字符"))
     textView:setFontColor(UIKit:hex2c3b(0x000000))
-    textView:setText(self.allianceManager:GetMyAllianceData().notice or "")
+    if self.isNotice_ then
+    	textView:setText(self.allianceManager:GetMyAllianceData().notice or "")
+    else
+    	textView:setText(self.allianceManager:GetMyAllianceData().desc or "")
+    end
     self.textView = textView
  	display.newSprite("alliance_edit_box_584x364.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(textView,2)
 
- -- 	local closeButton = cc.ui.UIPushButton.new({normal = "X_2.png",pressed = "X_1.png"}, {scale9 = false})
-	--    	:addTo(titleBar,2)
-	--    	:align(display.BOTTOM_RIGHT,titleBar:getContentSize().width+10, -5)
-	--    	:onButtonClicked(function ()
-	--    		self:leftButtonClicked()
-	--    	end)
-	-- display.newSprite("X_3.png")
-	--    	:addTo(closeButton)
-	--    	:pos(-32,30)
 
 	local cancelButton = WidgetPushButton.new({normal = "red_button_146x42.png",pressed = "red_button_highlight_146x42.png"},{scale9 = true})
         :setButtonLabel(

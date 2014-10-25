@@ -8,6 +8,7 @@ UIKit =
 {
     Registry   = import('framework.cc.Registry'),
     GameUIBase = import('..ui.GameUIBase'),
+    UIListView = import('..ui.UIListView'),
 }
 local CURRENT_MODULE_NAME = ...
 
@@ -222,4 +223,18 @@ function UIKit:GetPlayerCommonIcon()
     local hero = display.newSprite("Hero_1.png"):align(display.CENTER, math.floor(heroBg:getContentSize().width/2), math.floor(heroBg:getContentSize().height/2)+5)
     hero:addTo(heroBg)
     return heroBg
+end
+
+function UIKit:GetTextListView(rect,label)
+     local listView = self.UIListView.new {
+        viewRect =  rect,
+        direction = 0
+    }
+
+    local textItem = listView:newItem()
+    textItem:addContent(label)
+    textItem:setItemSize(rect.width,label:getContentSize().height)
+    listView:addItem(textItem)
+    listView:reload()
+    return listView
 end

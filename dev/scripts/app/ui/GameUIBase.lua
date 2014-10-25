@@ -5,6 +5,7 @@
 local window = import("..utils.window")
 local UIListView = import(".UIListView")
 local WidgetBackGroundTabButtons = import('..widget.WidgetBackGroundTabButtons')
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 -- local TabButtons = import('.TabButtons')
 local GameUIBase = class('GameUIBase', function()
     return display.newLayer()
@@ -224,7 +225,9 @@ function GameUIBase:CreateVerticalListViewDetached(left_bottom_x, left_bottom_y,
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }
 end
-
+function GameUIBase:CreatePopupBg(height)
+   return WidgetUIBackGround.new(height)
+end
 
 return GameUIBase
 

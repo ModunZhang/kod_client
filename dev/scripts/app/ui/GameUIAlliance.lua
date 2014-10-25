@@ -18,6 +18,7 @@ local GameUIAllianceBasicSetting = import(".GameUIAllianceBasicSetting")
 local GameUIAllianceNoticeOrDescEdit = import(".GameUIAllianceNoticeOrDescEdit")
 local Localize = import("..utils.Localize")
 local NetService = import('..service.NetService')
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 
 GameUIAlliance.COMMON_LIST_ITEM_TYPE = Enum("JOIN","INVATE","APPLY")
 local SEARCH_ALLIAN_TO_JOIN_TAG = "join_alliance"
@@ -670,25 +671,15 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 	local notice_bg = display.newSprite("alliance_notice_bg_576x174.png")
 		:align(display.LEFT_BOTTOM,15,15)
 		:addTo(headerBg)
-	local textLabel = cc.ui.UILabel.new({
-			UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = self.alliance_manager:GetMyAllianceData().notice or "",
-            size = 20,
-            color = UIKit:hex2c3b(0x403c2f),
-            align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
-            dimensions = cc.size(556, 0),
-            font = UIKit:getFontFilePath(),
-    }):align(display.LEFT_BOTTOM, 0, 0)
-    local contentNode = display.newNode()
-    textLabel:addTo(contentNode)
 
-	local scrollView = UIScrollView.new({viewRect = cc.rect(10,2,556,170)})
-		  				:addScrollNode(contentNode)
-        				:setDirection(UIScrollView.DIRECTION_VERTICAL)
-        				:addTo(notice_bg)
-        			
-    -- scrollView:fixResetPostion(-textLabel:getContentSize().height+170)
+     local noticeView = UIListView.new {
+    	viewRect =  cc.rect(10,2,556,170),
+        direction = UIScrollView.DIRECTION_VERTICAL,
+        alignment = UIListView.ALIGNMENT_LEFT
+    }:addTo(notice_bg)
+    self.ui_overview.noticeView = noticeView
+
+    self:RefreshNoticeView()
 	display.newSprite("alliance_notice_box_584x180.png"):align(display.LEFT_BOTTOM,13,15)
 		:addTo(headerBg)
 
@@ -743,6 +734,25 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 
 	self.overviewNode = overviewNode
 	return self.overviewNode
+end
+
+function GameUIAlliance:RefreshNoticeView()
+	local textLabel = cc.ui.UILabel.new({
+			UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = self.alliance_manager:GetMyAllianceData().notice or "",
+            size = 20,
+            color = UIKit:hex2c3b(0x403c2f),
+            align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
+            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
+            dimensions = cc.size(576, 0),
+            font = UIKit:getFontFilePath(),
+    })
+	self.ui_overview.noticeView:removeAllItems()
+    local textItem = self.ui_overview.noticeView:newItem()
+    textItem:addContent(textLabel)
+    textItem:setItemSize(576,textLabel:getContentSize().height)
+    self.ui_overview.noticeView:addItem(textItem)
+    self.ui_overview.noticeView:reload()
 end
 
 function GameUIAlliance:GetEventItemByIndexAndEvent(index,event)
@@ -828,7 +838,7 @@ function GameUIAlliance:RefreshOverViewUI()
 			self.ui_overview.my_alliance_flag = self.alliance_manager:GetMyAllianceFlag()
 				:addTo(self.overviewNode)
 				:pos(x,y)
-
+			self:RefreshNoticeView()
 		end
 	end
 end
@@ -884,6 +894,25 @@ function GameUIAlliance:RefreshMemberList()
 	self.memberListView:reload()
 end
 
+function GameUIAlliance:GetAllianceTitleAndLevelPng(title)
+	local levelImages = {
+		general = "5_23x24.png",
+		quartermaster = "4_32x24.png",
+		supervisor = "3_35x24.png",
+		elite = "2_23x24.png",
+		member = "1_11x24.png",
+		archon = "alliance_item_leader_39x39.png"
+	}
+	local title_r = ""
+	local alliance = self.alliance_manager:GetMyAllianceData()
+	if alliance.titles[title] ~= "__" .. title then
+		title_r = alliance.titles[title]
+	else
+		title_r = Localize.alliance_title[title]
+	end
+	return title_r,levelImages[title]
+end
+
 --title is alliance title
 function GameUIAlliance:GetMemberItem(title)
 	local item = self.memberListView:newItem()
@@ -897,12 +926,13 @@ function GameUIAlliance:GetMemberItem(title)
 		local title_bar = display.newSprite("alliance_archon_frame_604x148.png")
 			:addTo(node)
 			:align(display.LEFT_BOTTOM,0,0)
-		local icon = display.newSprite("alliance_item_leader_39x39.png")
+		local display_title,imageName = self:GetAllianceTitleAndLevelPng(title)
+		local icon = display.newSprite(imageName)
 			:align(display.TOP_LEFT,200, title_bar:getContentSize().height)
 			:addTo(title_bar)
 
 		local titleLabel = UIKit:ttfLabel({
-			text = Localize.alliance_title.archon,
+			text = display_title,
 			size = 22,
 			color = 0xffedae,
 		}):align(display.LEFT_BOTTOM, icon:getPositionX()+icon:getContentSize().width+10,icon:getPositionY() - icon:getContentSize().height+5)
@@ -954,21 +984,8 @@ function GameUIAlliance:GetMemberItem(title)
 		item:addContent(node)
 		item:setItemSize(608,node:getCascadeBoundingBox().height)
 		return item
-	elseif title == 'general' then -- 将军
-		header_title = Localize.alliance_title.general
-		number_image = "5_23x24.png"
-	elseif title == 'quartermaster' then
-		header_title = Localize.alliance_title.quartermaster
-		number_image = "4_32x24.png"
-	elseif title == 'supervisor' then
-		header_title = Localize.alliance_title.supervisor
-		number_image = "3_35x24.png"
-	elseif title == 'elite' then
-		header_title = Localize.alliance_title.elite
-		number_image = "2_23x24.png"
-	elseif title == 'member' then
-		header_title = Localize.alliance_title.member
-		number_image = "1_11x24.png"
+	else
+		header_title,number_image = self:GetAllianceTitleAndLevelPng(title)
 	end
 	local height = 70
 	local x,y = 7,20
@@ -990,7 +1007,7 @@ function GameUIAlliance:GetMemberItem(title)
 			text = _("该职位还未任命给任何成员"),
 			size = 22,
 			color = 0x403c2f,
-		}):align(display.LEFT_BOTTOM,20,20)
+		}):align(display.CENTER_BOTTOM,304,20)
 		bg = WidgetUIBackGround.new(80)
 	end
 	contentNode:addTo(bg)
@@ -1058,16 +1075,182 @@ function GameUIAlliance:GetAllianceMemberIcon()
 end
 
 function GameUIAlliance:OnAllianceTitleClicked( title )
-	-- TODO: 显示职位权限界面
-	print("OnAllianceTitleClicked---->",title)
-	
-	UIKit:newGameUI('GameUIAllianTitle',title):addToCurrentScene(true)
+	UIKit:newGameUI('GameUIAllianceTitle',title):addToCurrentScene(true)
 end
 
 function GameUIAlliance:OnPlayerDetailButtonClicked(memberId)
 	UIKit:newGameUI('GameUIPlayerInfo',false,memberId):addToCurrentScene(true)
-	-- TODO: 显示玩家信息 
-	print("OnPlayerDetailButtonClicked---->",memberId)
 end
+-- 信息
+function GameUIAlliance:HaveAlliaceUI_infomationIf()
+	if self.informationNode then return self.informationNode end
+	local informationNode = WidgetUIBackGround.new(556):addTo(self.main_content):pos(20,window.betweenHeaderAndTab-556)
+	self.informationNode = informationNode
+
+	local notice_bg = display.newSprite("alliance_notice_bg_576x174.png")
+		:align(display.LEFT_TOP,15,556 - 45)
+		:addTo(informationNode)
+
+	local textLabel = cc.ui.UILabel.new({
+			UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = "test------------->testtest------------->testtest------------->testtest------------->test",
+            size = 20,
+            color = UIKit:hex2c3b(0x403c2f),
+            align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
+            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
+            dimensions = cc.size(576, 0),
+            font = UIKit:getFontFilePath(),
+    })
+
+
+    local descView = UIListView.new {
+    	viewRect =  cc.rect(10,2,556,170),
+        direction = UIScrollView.DIRECTION_VERTICAL,
+        alignment = UIListView.ALIGNMENT_LEFT
+    }:addTo(notice_bg)
+
+    local textItem = descView:newItem()
+    textItem:addContent(textLabel)
+    textItem:setItemSize(576,textLabel:getContentSize().height)
+    descView:addItem(textItem)
+    descView:reload()
+
+	display.newSprite("alliance_notice_box_584x180.png"):align(display.LEFT_TOP,13,notice_bg:getPositionY())
+		:addTo(informationNode)
+
+	local notice_button = WidgetPushButton.new({normal = "alliance_notice_button_normal_372x44.png",pressed = "alliance_notice_button_highlight_372x44.png"})
+		:setButtonLabel('normal',UIKit:ttfLabel({
+			text = _("联盟描述"),
+			size = 22,
+			color = 0xffedae,
+			})
+		)
+		:onButtonClicked(function(event)
+			UIKit:newGameUI('GameUIAllianceNoticeOrDescEdit',GameUIAllianceNoticeOrDescEdit.EDIT_TYPE.ALLIANCE_DESC)
+			 	:addToCurrentScene(true)
+		end)
+		:addTo(informationNode)
+		:align(display.LEFT_BOTTOM, 120,notice_bg:getPositionY()-10)
+		display.newSprite("alliance_notice_icon_26x26.png"):addTo(notice_button):pos(250,22)
+	local checkbox_image = {
+        off = "checkbox_unselected.png",
+        off_pressed = "checkbox_unselected.png",
+        off_disabled = "checkbox_unselected.png",
+        on = "checkbox_selectd.png",
+        on_pressed = "checkbox_selectd.png",
+        on_disabled = "checkbox_selectd.png",
+
+    }
+	self.joinTypeButton = cc.ui.UICheckBoxButtonGroup.new(display.TOP_TO_BOTTOM)
+        :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
+            :setButtonLabel(UIKit:ttfLabel({text = _("允许玩家立即加入联盟"),size = 20,color = 0x797154}))
+            :setButtonLabelOffset(40, 0)
+            :align(display.LEFT_CENTER))
+        :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
+            :setButtonLabel(UIKit:ttfLabel({text = _("玩家仅能通过申请或者邀请的方式加入"),size = 20,color = 0x797154}))
+            :setButtonLabelOffset(40, 0)
+            :align(display.LEFT_CENTER))
+        :onButtonSelectChanged(handler(self, self.OnAllianceJoinTypeButtonClicked))
+        :addTo(informationNode)
+        :pos(notice_bg:getPositionX(),notice_bg:getPositionY() - notice_bg:getContentSize().height - 100)
+    local line = display.newSprite("dividing_line_594x2.png")
+    	:addTo(informationNode)
+    	:align(display.LEFT_TOP,7,self.joinTypeButton:getPositionY() - 50)
+
+    local button_bg = display.newSprite("alliance_info_btn_bg_513x100.png"):align(display.TOP_CENTER,304,line:getPositionY() - 30):addTo(informationNode)
+    local x = 0
+    local button_imags = {"alliance_sign_out_56x50.png","alliance_invitation_39x59.png","alliance_apply_55x54.png","alliance_group_mail_62x48.png"}
+    local button_texts = {_("退出联盟"),_("邀请加入"),_("申请审批"),_("群邮件")}
+    for i=1,4 do
+    	local button = cc.ui.UIPushButton.new({normal = 'chat_tab_button.png',pressed = "chat_tab_button_highlight.png"}):align(display.LEFT_BOTTOM,128*(i-1), 0)
+    	:addTo(button_bg)
+    	:onButtonClicked(function(event)
+    		self:OnInfoButtonClicked(i)
+    	end)
+    	:setButtonLabel("normal",UIKit:ttfLabel({text = button_texts[i],size = 18,color = 0x403c2f}))
+    	:setButtonLabelOffset(0, -35)
+    	display.newSprite(button_imags[i]):addTo(button):pos(64,59)
+    end
+    self:SelectJoinType()
+
+	return self.informationNode
+end
+
+function GameUIAlliance:SelectJoinType()
+	if self.alliance_manager:GetMyAllianceData().basicInfo.joinType == "all" then
+    	self.joinTypeButton:getButtonAtIndex(1):setButtonSelected(true)
+    else
+    	self.joinTypeButton:getButtonAtIndex(2):setButtonSelected(true)
+    end
+end
+
+function GameUIAlliance:OnAllianceJoinTypeButtonClicked(event)
+	--TODO:选择联盟的加入方式
+end
+
+function GameUIAlliance:OnInfoButtonClicked(tag)
+	--TODO:联盟操作按钮
+	if tag == 1 then
+		FullScreenPopDialogUI.new():SetTitle(_("退出联盟"))
+            :SetPopMessage(_("您必须在没有部队在外行军的情况下，才可以退出联盟。退出联盟会损失当前未打开的联盟礼物。"))
+            :AddToCurrentScene()
+	elseif tag == 2 then
+		self:CreateInvateUI()
+	elseif tag == 3 then
+		UIKit:newGameUI("GameAllianceApproval"):addToCurrentScene(true)
+	elseif tag == 4 then
+	end
+end
+
+function GameUIAlliance:CreateInvateUI()
+	local layer = UIKit:shadowLayer()
+	local bg = WidgetUIBackGround.new(150):addTo(layer):pos(window.left+20,window.cy-20)
+	local title_bar = display.newSprite("alliance_blue_title_600x42.png")
+		:addTo(bg)
+		:align(display.LEFT_BOTTOM, 0,150-15)
+
+	local closeButton = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"}, {scale9 = false})
+	   	:addTo(title_bar)
+	   	:align(display.BOTTOM_RIGHT,title_bar:getContentSize().width+10, 0)
+	   	:onButtonClicked(function ()
+	   		layer:removeFromParent(true)
+	   	end)
+	display.newSprite("X_3.png")
+	   	:addTo(closeButton)
+	   	:pos(-32,30)
+	UIKit:ttfLabel({
+		text = _("邀请加入联盟"),
+		size = 22,
+		color = 0xffedae
+	}):addTo(title_bar):align(display.LEFT_BOTTOM, 100, 10)
+
+	UIKit:ttfLabel({
+		text = _("邀请玩家加入"),
+		size = 20,
+		color = 0x797154
+	}):addTo(bg):align(display.LEFT_TOP, 20,150-40)
+
+	local editbox = cc.ui.UIInput.new({
+    	UIInputType = 1,
+        image = "input_box.png",
+        size = cc.size(422,40),
+    })
+    editbox:setFont(UIKit:getFontFilePath(),18)
+    editbox:setFontColor(UIKit:hex2c3b(0xccc49e))
+    editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
+    editbox:align(display.RIGHT_TOP,608-20,150-30):addTo(bg)
+
+    cc.ui.UIPushButton.new({normal= "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
+    	:addTo(bg):align(display.RIGHT_BOTTOM,editbox:getPositionX(), 20)
+    	:setButtonLabel("normal",UIKit:ttfLabel({
+		text = _("发送"),
+		size = 22,
+		color = 0xffedae,
+		shadow = true
+	}))
+
+	layer:addTo(self)
+end
+
 
 return GameUIAlliance
