@@ -1,3 +1,22 @@
+-- error类
+local err_class = {}
+err_class.__index = err_class
+function err_class.new(...)
+    local r = {}
+    setmetatable(r, err_class)
+    r:ctor(...)
+    return r
+end
+function err_class:ctor(...)
+    self.errcode = {...}
+end
+function err_class:reason()
+    return unpack(self.errcode)
+end
+local function is_error(obj)
+    return getmetatable(obj) == err_class
+end
+------
 local promise = {}
 promise.__index = promise
 local PENDING = 1
@@ -25,7 +44,7 @@ local function do_promise(p)
     end
     return success, result, failed_func
 end
-local function next_failed_func(p, error_code)
+local function next_failed_func(p, err)
     local thens = p.thens
     local _, failed_func
     repeat
@@ -34,15 +53,16 @@ local function next_failed_func(p, error_code)
     until failed_func ~= nil or #thens == 0
 
     if type(failed_func) == "function" then
-        return failed_func(error_code)
+        return failed_func(err)
     end
 
     -- 在子任务里面找
     local next_promise = pop_head(p.next_promises)
     if next_promise == nil then
+        dump(err)
         assert(false, "你应该捕获这个错误!")
     end
-    return next_failed_func(next_promise, error_code)
+    return next_failed_func(next_promise, err)
 end
 local function handle_result(p, success, result, failed_func)
     if success then
@@ -54,6 +74,9 @@ local function handle_result(p, success, result, failed_func)
     else
         -- 如果当前任务有错误处理函数,捕获并继续传入下一个任务进行处理
         p.state_ = REJECTED
+        if not is_error(result) then
+            result = err_class.new(result)
+        end
         if type(failed_func) == "function" then
             p.result = failed_func(result)
         else
@@ -134,12 +157,6 @@ function promise:next(success_func, failed_func)
     table.insert(self.thens, {success_func, failed_func})
     return self
 end
-function promise:reject()
-    assert(false, "还未实现")
-    assert(self.state_ ~= REJECTED)
-    self.state_ = REJECTED
-    return "reason"
-end
 function promise:catch(func)
     assert(type(func) == "function")
     self:next(empty_func, function(...)
@@ -161,6 +178,9 @@ function promise:always(func)
     assert(type(func) == "function", "always的函数不能为空!")
     table.insert(self.always_, func)
     return self
+end
+function promise.reject(...)
+    error(err_class.new(...))
 end
 local function foreach_promise(func, ...)
     assert(type(func) == "function")
@@ -189,9 +209,13 @@ function promise.all(...)
 end
 function promise.any(...)
     assert(...)
+    local not_resolved = true
     return foreach_promise(function(_, v, p, resolve)
         v:done(function(...)
-            resolve(p, ...)
+            if not_resolved then
+                not_resolved = false
+                resolve(p, ...)
+            end
         end)
     end, ...)
 end

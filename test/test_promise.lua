@@ -30,9 +30,9 @@ function test_promise1()
     end):catch(function(...)
         dump(...)
     end)
-    :done(function(...)
-        assert_equal(0, ...)
-    end)
+        :done(function(...)
+            assert_equal(0, ...)
+        end)
     Game.new():OnUpdate(function(time)
         if time == 10 then
             p:resolve(1)
@@ -50,16 +50,16 @@ function test_promise2()
         assert_equal(2, ...)
         return "end"
     end):always(function( ... )
-    end):done(function( ... )
-    end)
-    :fail(function()
-    end):catch(function(...)
+        end):done(function( ... )
+        end)
+        :fail(function()
+            end):catch(function(...)
         return "end"
-    end):next(function(...)
+            end):next(function(...)
         assert_equal("end", ...)
         return "end_"
-    end)
-    :resolve("start")
+            end)
+        :resolve("start")
 end
 function test_promise_all()
     local p = promise.new(function(...)
@@ -75,7 +75,7 @@ function test_promise_all()
         assert_equal(3, ...)
         return "end"
     end):done(function(...)
-        -- dump(...)
+        assert_equal("end", ...)
     end)
 
     local p1 = promise.new(function(...)
@@ -90,15 +90,14 @@ function test_promise_all()
     end):next(function(...)
         assert_equal(3, ...)
         return "end1"
-    end):catch(function(...)
-        -- dump(...)
-    end)
-    :done(function(...)
-        -- dump(...)
+    end):done(function(...)
+        assert_equal("end1", ...)
     end)
 
-    promise.all(p, p1):next(function(...)
+    promise.any(p, p1):next(function(...)
         dump(...)
+    end):catch(function(err)
+        dump(err:reason())
     end)
 
     p1:resolve("start")
@@ -110,7 +109,7 @@ function test_promise_all()
     end)
 end
 
-function test_promise_all()
+function test_promise_all1()
     promise.new(function(...)
         assert_equal("start", ...)
         return 1
@@ -121,41 +120,43 @@ function test_promise_all()
         assert_equal(2, ...)
         return 3
     end)
-    :next(function(...)
-        assert_equal(3, ...)
-        pp = promise.new(function(...)
-            assert_equal(10, ...)
-            return 11
-        end):next(function(...)
-            assert_equal(11, ...)
-            return 1
-        end):done(function(...)
-            assert_equal(1, ...)
+        :next(function(...)
+            assert_equal(3, ...)
+            pp = promise.new(function(...)
+                assert_equal(10, ...)
+                return 11
+            end):next(function(...)
+                assert_equal(11, ...)
+                -- promise.reject("你不应该调用这个", 500)
+                return 1
+            end):done(function(...)
+                assert_equal(1, ...)
+            end)
+            return pp
         end)
-        return pp
-    end)
-    :next(function(...)
-        assert_equal(1, ...)
-        return 4
-    end)
-    :catch(function(...)
-        dump(...)
-        return 4
-    end)
-    :next(function(...)
-        assert_equal(4, ...)
-        return 5
-    end)
-    :next(function(...)
-        assert_equal(5, ...)
-        return "end"
-    end)
-    :done(function(...)
-        assert_equal("end", ...)
-    end)
-    :resolve("start")
+        :next(function(...)
+            assert_equal(1, ...)
+            return 4
+        end)
+        :catch(function(err)
+            print(err:reason())
+            return 4
+        end)
+        :next(function(...)
+            assert_equal(4, ...)
+            return 5
+        end)
+        :next(function(...)
+            assert_equal(5, ...)
+            return "end"
+        end)
+        :done(function(...)
+            assert_equal("end", ...)
+        end)
+        :resolve("start")
     pp:resolve(10)
 end
+
 
 
 
