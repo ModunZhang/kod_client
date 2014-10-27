@@ -65,7 +65,7 @@ end
 function GameUIHome:RefreshData()
     -- 更新数值
     local userdata = DataManager:getUserData()
-    self.name_label:setString(userdata.basicInfo.name)
+    self.name_label:setString(userdata.countInfo.deviceId)
     self.power_label:setString(userdata.basicInfo.power)
     self.level_label:setString(userdata.basicInfo.level)
     self.vip_label:setString("VIP 1")
