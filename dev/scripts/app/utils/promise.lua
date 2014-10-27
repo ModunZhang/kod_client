@@ -36,8 +36,6 @@ end
 local function is_not_complete(p)
     return #p.thens > 0
 end
---------------------------------------------
--- 弹出任务列表的第一个任务,并执行,返回错误码和结果
 local function do_promise(p)
     local head = pop_head(p.thens)
     local success_func, failed_func = unpack(head or {})
@@ -62,10 +60,11 @@ local function handle_next_failed_func(p, err)
     -- 在子任务里面找
     local next_promise = pop_head(p.next_promises)
     if next_promise == nil then
-        print("你应该捕获这个错误!")
+        if p.ignore_error then
+            return err
+        end
         dump(err)
-        -- assert(false, "你应该捕获这个错误!")
-        return err
+        assert(false, "你应该捕获这个错误!")
     end
     return handle_next_failed_func(next_promise, err)
 end
@@ -102,7 +101,6 @@ local function always_promise(p)
     table.foreachi(p.always_, function(_, v) v(result) end)
 end
 local function complete_promise(p)
-    p.full_filled = true
     if p:state() == REJECTED then
         fail_promise(p)
     else
@@ -145,6 +143,20 @@ local function resolve(p, data)
     repeat_resolve(p)
     return p
 end
+local function clear_promise(p)
+    p.thens = {}
+    p.dones = {}
+    p.fails = {}
+    p.always_ = {}
+    p.next_promises = {}
+end
+-- 因为某种原因取消了promise对象
+local function cancel_promise(p)
+    clear_promise(p)
+end
+local function ignore_error(p)
+    p.ignore_error = true
+end
 function promise.new(data)
     local r = {}
     setmetatable(r, promise)
@@ -152,13 +164,9 @@ function promise.new(data)
     return r
 end
 function promise:ctor(resolver)
-    self.full_filled = false
+    self.ignore_error = false
     self.state_ = PENDING
-    self.thens = {}
-    self.dones = {}
-    self.fails = {}
-    self.always_ = {}
-    self.next_promises = {}
+    clear_promise(self)
     self:next(resolver or empty_func)
 end
 function promise:state()
@@ -201,8 +209,16 @@ end
 local function foreach_promise(func, ...)
     assert(type(func) == "function")
     local p = promise.new()
-    for i, v in ipairs{...} do
-        func(i, v, p)
+    local promises = {...}
+    for i, v in ipairs(promises) do
+        local other_promises = {}
+        for _, ov in ipairs(promises) do
+            if ov ~= v then
+                table.insert(other_promises, ov)
+            end
+        end
+        ignore_error(v)
+        func(i, v, p, other_promises)
     end
     return p
 end
@@ -231,7 +247,7 @@ end
 function promise.any(...)
     assert(...)
     local not_resolved = true
-    return foreach_promise(function(_, v, p)
+    return foreach_promise(function(_, v, p, other_promises)
         v:always(function(result)
             if not_resolved then
                 not_resolved = false
@@ -239,6 +255,9 @@ function promise.any(...)
                     failed_resolve(p, result)
                 else
                     p:resolve(result)
+                end
+                for _, v in ipairs(other_promises) do
+                    cancel_promise(v)
                 end
             end
         end)
@@ -248,11 +267,14 @@ end
 function promise.race(...)
     assert(...)
     local not_resolved = true
-    return foreach_promise(function(_, v, p)
+    return foreach_promise(function(_, v, p, other_promises)
         v:always(function(result)
             if not_resolved then
                 not_resolved = false
                 p:resolve(result)
+                for _, v in ipairs(other_promises) do
+                    cancel_promise(v)
+                end
             end
         end)
     end, ...)
@@ -264,6 +286,7 @@ end
 
 
 return promise
+
 
 
 
