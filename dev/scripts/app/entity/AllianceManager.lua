@@ -29,14 +29,12 @@ function AllianceManager:OnAllianceDataChanged(alliance_data)
 end
 function AllianceManager:OnAllianceBasicInfoAndMemberDataChanged(basic_and_member)
     local my_alliance = self:GetMyAlliance()
-    local basicInfo = basic_and_member.basicInfo
-    local memberDoc = basic_and_member.memberDoc
     if my_alliance:IsDefault() then return end
-    if basicInfo then
-        my_alliance:OnAllianceBasicInfoChanged(basicInfo)
+    if basic_and_member.basicInfo then
+        my_alliance:OnAllianceBasicInfoChanged(basic_and_member.basicInfo)
     end
-    if memberDoc then
-        my_alliance:OnOneAllianceMemberDataChanged(memberDoc)
+    if basic_and_member.memberDoc then
+        my_alliance:OnOneAllianceMemberDataChanged(basic_and_member.memberDoc)
     end
     -- dump(self:GetMyAlliance())
 end
