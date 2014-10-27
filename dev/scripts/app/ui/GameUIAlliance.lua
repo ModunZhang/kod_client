@@ -21,6 +21,8 @@ local NetService = import('..service.NetService')
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local Alliance_Manager = Alliance_Manager
 local Alliance = import("..entity.Alliance")
+local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
+local Flag = import("..entity.Flag")
 
 GameUIAlliance.COMMON_LIST_ITEM_TYPE = Enum("JOIN","INVATE","APPLY")
 
@@ -28,6 +30,7 @@ GameUIAlliance.COMMON_LIST_ITEM_TYPE = Enum("JOIN","INVATE","APPLY")
 --------------------------------------------------------------------------------
 function GameUIAlliance:ctor()
 	GameUIAlliance.super.ctor(self,City,_("联盟"))
+	self.alliance_ui_helper = WidgetAllianceUIHelper.new()
 end
 
 function GameUIAlliance:OnBasicChanged(alliance, changed_map)
@@ -458,7 +461,8 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
 	}):addTo(titleBg,2):align(display.LEFT_BOTTOM, 10, 5)
 
 	local flag_box = display.newSprite("alliance_item_flag_box_126X126.png"):addTo(bg):align(display.LEFT_BOTTOM, 10, 22)
-	local flag_sprite = self.alliance_manager:CreateFlagWithTerrain(terrain,flag_info)
+	-- local flag_sprite = self.alliance_manager:CreateFlagWithTerrain(terrain,flag_info)
+	local flag_sprite = self.alliance_ui_helper:CreateFlagWithRhombusTerrain(terrain,Flag.new():DecodeFromJson(flag_info))
 	flag_sprite:addTo(flag_box):scale(0.8)
 	flag_sprite:pos(60,40)
 	local memberTitleLabel = UIKit:ttfLabel({

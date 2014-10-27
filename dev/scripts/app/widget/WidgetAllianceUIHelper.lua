@@ -299,7 +299,9 @@ function WidgetAllianceUIHelper:CreateFlagContentSprite(obj_flag)
 end
 --带地形(菱形)的旗帜
 function WidgetAllianceUIHelper:CreateFlagWithRhombusTerrain(terrain_info,obj_flag)
+    print("terrain_info-------->",terrain_info)
     local node = display.newNode()
+    if type(terrain_info) == 'string' then terrain_info = self.LANDFORM_TYPE[terrain_info] end
     local terrain = self:GetAllRhombusTerrains()[terrain_info]
     local terrain_sprite = display.newSprite(terrain)
         :addTo(node)
