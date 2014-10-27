@@ -1,3 +1,4 @@
+local promise = import("..utils.promise")
 NetManager = {}
 local SUCCESS_CODE = 200
 local FAILED_CODE = 500
@@ -57,12 +58,12 @@ function NetManager:removeTimeoutEventListener(  )
 end
 
 function NetManager:addDisconnectEventListener()
-    -- self:addEventListener("disconnect", function(success, msg)
-    --     device.showAlert(nil, _("和服务器的连接已断开!"), {_("确定")}, function(event)
-    --         app:restart()
-    --     end)
-    --     print("addDisconnectEventListener----->disconnect")
-    -- end)
+-- self:addEventListener("disconnect", function(success, msg)
+--     device.showAlert(nil, _("和服务器的连接已断开!"), {_("确定")}, function(event)
+--         app:restart()
+--     end)
+--     print("addDisconnectEventListener----->disconnect")
+-- end)
 end
 
 function NetManager:removeDisConnectEventListener(  )
@@ -74,7 +75,7 @@ function NetManager:addKickEventListener()
         print("addKickEventListener----->onKick")
         device.showAlert(nil, _("和服务器的连接已断开!"), {_("确定")}, function(event)
             LuaUtils:outputTable("msg", msg)
-                app:restart()
+            app:restart()
         end)
     end)
 end
@@ -169,7 +170,8 @@ end
 
 function NetManager:login(cb)
     local loginInfo = {
-        deviceId = device.getOpenUDID()
+        -- deviceId = device.getOpenUDID()
+        deviceId = "1"
     }
     self.m_netService:request("logic.entryHandler.login", loginInfo, function(success, msg)
         if success and msg.code == 200 then
@@ -667,7 +669,7 @@ end
 -- 协助所有玩家加速
 function NetManager:helpAllAllianceMemberSpeedUp(cb)
     local info = {
-    }
+        }
     self.m_netService:request("logic.playerHandler.helpAllAllianceMemberSpeedUp", info, function(success, msg)
         if success and msg.code == SUCCESS_CODE then
             cb(true)
@@ -718,7 +720,27 @@ function NetManager:agreeJoinAllianceRequest(memberId, cb)
         end
     end)
 end
-
+-- 搜索联盟
+function NetManager:searchAllianceByTag( tag,cb )
+    if not LuaUtils:isString(tag) or string.len(tag) == 0  then
+        cb(false)
+        return false
+    end
+    local p1 = promise.new()
+    local p2 = promise.new()
+    promise.all(p1, p2):next(function(results)
+        cb(unpack(results))
+    end)
+    local data = {tag=tag}
+    self.m_netService:request("logic.playerHandler.searchAllianceByTag"
+        ,data
+        ,function(success, msg)
+            p1:resolve(success)
+        end)
+    table.insert(onSearchAlliancesSuccess_callbacks, function(success, msg)
+        p2:resolve(msg)
+    end)
+end
 --
 function NetManager:resetGame()
     -- self:sendMsg("reset", NOT_HANDLE)
@@ -788,6 +810,8 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
+
 
 
 

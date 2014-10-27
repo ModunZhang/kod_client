@@ -13,12 +13,14 @@ end
 property(Alliance, "power", 0)
 property(Alliance, "exp", 0)
 property(Alliance, "createTime", 0)
-property(Alliance, "kills", 0)
+property(Alliance, "kill", 0)
 property(Alliance, "level", 0)
 property(Alliance, "joinType", "all")
 property(Alliance, "maxMembers", 0)
 property(Alliance, "describe", "")
 property(Alliance, "notice", "")
+property(Alliance, "archon", "")
+property(Alliance, "memberCount", 0)
 function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     Alliance.super.ctor(self)
     property(self, "id", id)
@@ -31,6 +33,17 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     self.events = {}
     self.join_events = {}
     self.help_vents = {}
+end
+function Alliance:DecodeFromJsonData(json_data)
+    local alliance = Alliance.new(json_data.id, json_data.name, json_data.tag, json_data.language)
+    alliance:SetLevel(json_data.level)
+    alliance:SetPower(json_data.power)
+    alliance:SetArchon(json_data.archon)
+    alliance:SetKill(json_data.kill)
+    alliance:SetMemberCount(json_data.members)
+    alliance:SetJoinType(json_data.joinType)
+    alliance:SetFlag(Flag:DecodeFromJson(json_data.flag))
+    return alliance
 end
 function Alliance:Flag()
     return self.flag
@@ -273,7 +286,7 @@ function Alliance:OnAllianceBasicInfoChanged(basicInfo)
     self:SetFlag(Flag:DecodeFromJson(basicInfo.flag))
     self:SetTerrainType(basicInfo.terrain)
     self:SetJoinType(basicInfo.joinType)
-    self:SetKills(basicInfo.kill)
+    self:SetKill(basicInfo.kill)
     self:SetPower(basicInfo.power)
     self:SetExp(basicInfo.exp)
     self:SetLevel(basicInfo.level)
@@ -346,6 +359,9 @@ function Alliance:OnJoinRequestEventsChanged(joinRequestEvents)
 end
 function Alliance:OnAllianceMemberDataChanged(members)
     if not members then return end
+    -- 先更新成员数量
+    self:SetMemberCount(#members)
+
     local function find_members_with_id(id)
         for _, v in ipairs(members) do
             if v.id == id then
