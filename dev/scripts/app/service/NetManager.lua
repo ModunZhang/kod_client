@@ -720,7 +720,7 @@ function NetManager:agreeJoinAllianceRequest(memberId, cb)
         end
     end)
 end
--- 搜索联盟
+-- 搜索特定标签联盟
 function NetManager:searchAllianceByTag( tag,cb )
     if not LuaUtils:isString(tag) or string.len(tag) == 0  then
         cb(false)
@@ -739,6 +739,24 @@ function NetManager:searchAllianceByTag( tag,cb )
         end)
     table.insert(onSearchAlliancesSuccess_callbacks, function(success, msg)
         p2:resolve(msg)
+    end)
+end
+-- 搜索能直接加入联盟
+function NetManager:getCanDirectJoinAlliances(cb)
+    local p1 = promise.new()
+    local p2 = promise.new()
+    promise.all(p1, p2):next(function(results)
+        cb(unpack(results))
+    end)
+    self.m_netService:request("logic.playerHandler.getCanDirectJoinAlliances"
+        ,nil
+        ,function(success, msg)
+            p1:resolve(success)
+        end)
+    table.insert(onGetCanDirectJoinAlliancesSuccess_callbacks, function(success, msg)
+    --     p2:resolve(msg)
+        dump(success)
+        dump(msg)
     end)
 end
 --

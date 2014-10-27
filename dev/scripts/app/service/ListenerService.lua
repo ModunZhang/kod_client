@@ -43,6 +43,7 @@ function ListenerService:_initOrNot()
 end
 
 onSearchAlliancesSuccess_callbacks = {}
+onGetCanDirectJoinAlliancesSuccess_callbacks = {}
 function ListenerService:_listenNetMessage()
     for _,v in ipairs(events_to_listen) do
         if type(v) == 'string' and string.len(v) ~= 0 then
@@ -59,6 +60,13 @@ function ListenerService:_listenNetMessage()
                         callback(success, msg)
                     end
                     onSearchAlliancesSuccess_callbacks = {}
+                elseif  v == "onGetCanDirectJoinAlliancesSuccess" then
+                    assert(#onGetCanDirectJoinAlliancesSuccess_callbacks <= 1, "重复请求过多了!")
+                    local callback = onGetCanDirectJoinAlliancesSuccess_callbacks[1]
+                    if type(callback) == "function" then
+                        callback(success, msg)
+                    end
+                    onGetCanDirectJoinAlliancesSuccess_callbacks = {}
                 end
             end)
         end
@@ -197,5 +205,6 @@ end
 function ListenerService:ls_onSendMailSuccess( msg,eventName )
     self:dispatchEventToMailManager_(msg,eventName)
 end
+
 
 
