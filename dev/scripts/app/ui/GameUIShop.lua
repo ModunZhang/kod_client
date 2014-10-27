@@ -222,11 +222,13 @@ function GameUIShop:onEnter()
         :addTo(self)
         :align(display.CENTER, window.left + 500, window.top - 400)
         :onButtonClicked(function(event)
-            NetManager:searchAllianceByTag("1", function(success, data)
-                if success and #data.alliances > 0 then
-                    print("loading searchAllianceByTag end")
-                    PushService:requestToJoinAlliance(Alliance:DecodeFromJsonData(data.alliances[1]):Id(), NOT_HANDLE)
-                end
+            NetManager:getCanDirectJoinAlliances("1", function(success, data)
+                dump(success)
+                dump(data)
+                -- if success and #data.alliances > 0 then
+                --     print("loading searchAllianceByTag end")
+                --     PushService:requestToJoinAlliance(Alliance:DecodeFromJsonData(data.alliances[1]):Id(), NOT_HANDLE)
+                -- end
             end)
         end)
 
