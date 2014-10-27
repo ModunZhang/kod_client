@@ -63,6 +63,7 @@ local function handle_next_failed_func(p, err)
     local next_promise = pop_head(p.next_promises)
     if next_promise == nil then
         print("你应该捕获这个错误!")
+        dump(err)
         -- assert(false, "你应该捕获这个错误!")
         return err
     end
