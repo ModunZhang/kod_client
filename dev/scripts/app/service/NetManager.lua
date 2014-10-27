@@ -170,8 +170,8 @@ end
 
 function NetManager:login(cb)
     local loginInfo = {
-        -- deviceId = device.getOpenUDID()
-        deviceId = "1"
+        deviceId = device.getOpenUDID()
+        -- deviceId = "1"
     }
     self.m_netService:request("logic.entryHandler.login", loginInfo, function(success, msg)
         if success and msg.code == 200 then

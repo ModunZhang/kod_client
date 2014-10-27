@@ -277,7 +277,7 @@ end
 --2.join 
 function GameUIAlliance:NoAllianceTabEvent_joinIf()
 	if self.joinNode then
-		self:RefreshJoinListView()
+		self:GetJoinList(1)
 		return self.joinNode
 	end
 	local joinNode = display.newNode():addTo(self.main_content)
@@ -306,19 +306,17 @@ function GameUIAlliance:NoAllianceTabEvent_joinIf()
     editbox_tag_search:align(display.LEFT_TOP,searchIcon:getPositionX()+searchIcon:getContentSize().width+10,self.main_content:getCascadeBoundingBox().height - 10):addTo(joinNode)
     self.editbox_tag_search = editbox_tag_search
 
-
-    -- local bg = GameUIAllianceBasicSetting.CreateBoxPanel(710):addTo(joinNode):pos(5,10)
     self.joinListView = UIListView.new {
     	viewRect = cc.rect(20, 0,608,710),
         direction = UIScrollView.DIRECTION_VERTICAL,
     }:addTo(joinNode)
-    self:RefreshJoinListView()
+    self:GetJoinList(1)
 	return joinNode
 end
 
-function GameUIAlliance:OnAllianceDataEvent(event)
-	print("GameUIAlliance:OnAllianceServerData----->",event.eventName)
-	dump(event.data)
+-- function GameUIAlliance:OnAllianceDataEvent(event)
+-- 	print("GameUIAlliance:OnAllianceServerData----->",event.eventName)
+-- 	dump(event.data)
 	-- if event.eventName == "onSearchAlliancesSuccess" or event.eventName == "onGetCanDirectJoinAlliancesSuccess" then
 	-- 	local data = event.data
 	-- 	self:RefreshJoinListView(data.alliances)
@@ -338,15 +336,26 @@ function GameUIAlliance:OnAllianceDataEvent(event)
 		-- 	self:RefreshMemberList()
 		-- end
 	-- end
+-- end
+-- tag 1 canjoin 2 search
+function GameUIAlliance:GetJoinList(tag)
+	if tag == 1 then
+		NetManager:searchAllianceByTag("1", function(success, data)
+            if success and #data.alliances > 0 then
+                self:RefreshJoinListView(data.alliances)
+			end
+        end)
+	elseif tag == 2 then
+		NetManager:searchAllianceByTag("1", function(success, data)
+            if success and #data.alliances > 0 then
+                self:RefreshJoinListView(data.alliances)
+			end
+        end)
+	end
 end
 
 function GameUIAlliance:RefreshJoinListView(data)
-	if not data then 
-		PushService:getCanDirectJoinAlliances(function(success)
-
-		end)
-		return 
-	end
+	assert(data)
   	self.joinListView:removeAllItems()
 	for i,v in ipairs(data) do
 		local newItem = self:getCommonListItem_(self.COMMON_LIST_ITEM_TYPE.JOIN,v)
@@ -356,8 +365,7 @@ function GameUIAlliance:RefreshJoinListView(data)
 end
 
 function GameUIAlliance:SearchAllianAction(tag)
-	PushService:searchAllianceByTag(tag,function(success)
-	end)
+	self:GetJoinList(2)
 end
 
 --3.invite
