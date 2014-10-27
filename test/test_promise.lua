@@ -3,7 +3,7 @@ local promise = import("app.utils.promise")
 local PENDING = 1
 local RESOLVED = 2
 module( "test_promise", lunit.testcase, package.seeall )
-function tet_promise1()
+function test_promise1()
     assert_equal(PENDING, promise.new():state())
     assert_equal(RESOLVED, promise.new():resolve():state())
 
@@ -21,12 +21,17 @@ function tet_promise1()
             assert_equal(10, ...)
             return 11
         end):done(function(...)
+            assert_equal(11, ...)
         end)
         return pp
     end):next(function(...)
         assert_equal(11, ...)
         return 0
-    end):done(function(...)
+    end):catch(function(...)
+        dump(...)
+    end)
+    :done(function(...)
+        assert_equal(0, ...)
     end)
     Game.new():OnUpdate(function(time)
         if time == 10 then
@@ -37,33 +42,31 @@ function tet_promise1()
         return time <= 100
     end)
 end
-function tst_promise2()
+function test_promise2()
     local p = promise.new(function(...)
         assert_equal("start", ...)
         return 1
     end):next(function(...)
         assert_equal(2, ...)
-        return 3
-    end):catch(function(...)
-        return 2
-    end):next(function(...)
-        assert_equal(2, ...)
-        return 3
-    end):next(function(...)
-        assert_equal(3, ...)
         return "end"
-    end):done(function(...)
-        -- dump(...)
-    end):resolve("start")
+    end):always(function( ... )
+    end):done(function( ... )
+    end)
+    :fail(function()
+    end):catch(function(...)
+        return "end"
+    end):next(function(...)
+        assert_equal("end", ...)
+        return "end_"
+    end)
+    :resolve("start")
 end
 function test_promise_all()
     local p = promise.new(function(...)
         assert_equal("start", ...)
         return 1
     end):next(function(...)
-        assert_equal(2, ...)
-        return 3
-    end):catch(function(...)
+        assert_equal(1, ...)
         return 2
     end):next(function(...)
         assert_equal(2, ...)
@@ -74,32 +77,85 @@ function test_promise_all()
     end):done(function(...)
         -- dump(...)
     end)
+
     local p1 = promise.new(function(...)
         assert_equal("start", ...)
         return 1
     end):next(function(...)
-        assert_equal(2, ...)
-        return 3
-    end):catch(function(...)
+        assert_equal(1, ...)
         return 2
     end):next(function(...)
         assert_equal(2, ...)
         return 3
     end):next(function(...)
         assert_equal(3, ...)
-        return "end"
-    end):done(function(...)
+        return "end1"
+    end):catch(function(...)
         -- dump(...)
     end)
+    :done(function(...)
+        -- dump(...)
+    end)
+
     promise.all(p, p1):next(function(...)
         dump(...)
     end)
 
-    p:resolve("start")
     p1:resolve("start")
+    Game.new():OnUpdate(function(time)
+        if time == 10 then
+            p:resolve("start")
+        end
+        return time <= 100
+    end)
 end
 
-
+function test_promise_all()
+    promise.new(function(...)
+        assert_equal("start", ...)
+        return 1
+    end):next(function(...)
+        assert_equal(1, ...)
+        return 2
+    end):next(function(...)
+        assert_equal(2, ...)
+        return 3
+    end)
+    :next(function(...)
+        assert_equal(3, ...)
+        pp = promise.new(function(...)
+            assert_equal(10, ...)
+            return 11
+        end):next(function(...)
+            assert_equal(11, ...)
+            return 1
+        end):done(function(...)
+            assert_equal(1, ...)
+        end)
+        return pp
+    end)
+    :next(function(...)
+        assert_equal(1, ...)
+        return 4
+    end)
+    :catch(function(...)
+        dump(...)
+        return 4
+    end)
+    :next(function(...)
+        assert_equal(4, ...)
+        return 5
+    end)
+    :next(function(...)
+        assert_equal(5, ...)
+        return "end"
+    end)
+    :done(function(...)
+        assert_equal("end", ...)
+    end)
+    :resolve("start")
+    pp:resolve(10)
+end
 
 
 
