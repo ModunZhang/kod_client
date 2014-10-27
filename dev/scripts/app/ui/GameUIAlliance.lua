@@ -20,17 +20,53 @@ local Localize = import("..utils.Localize")
 local NetService = import('..service.NetService')
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local Alliance_Manager = Alliance_Manager
+local Alliance = import("..entity.Alliance")
 
 GameUIAlliance.COMMON_LIST_ITEM_TYPE = Enum("JOIN","INVATE","APPLY")
--- local SEARCH_ALLIAN_TO_JOIN_TAG = "join_alliance"
--- local ALLIANCE_EVENT_TAG = "ALLIANCE_EVENT_TAG"
 
 --
 --------------------------------------------------------------------------------
 function GameUIAlliance:ctor()
 	GameUIAlliance.super.ctor(self,City,_("联盟"))
-	-- self.alliance_manager = DataManager:GetManager("AllianceManager")
-	-- self.alliance_manager:OnAllianceDataEvent(SEARCH_ALLIAN_TO_JOIN_TAG,handler(self, self.OnAllianceDataEvent))
+end
+
+function GameUIAlliance:OnBasicChanged(alliance, changed_map)
+	if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
+		self:RefreshOverViewUI()
+	end
+	if self.tab_buttons:GetSelectedButtonTag() == 'members' then
+		self:RefreshMemberList()
+	end
+end
+
+function GameUIAlliance:OnJoinEventsChanged(alliance,changed_map)
+
+end
+
+function GameUIAlliance:OnEventsChanged(alliance,changed_map)
+	if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
+		self:RefreshEventListView()
+	end
+end
+
+function GameUIAlliance:OnMemberChanged(alliance,changed_map)
+	if self.tab_buttons:GetSelectedButtonTag() == 'members' then
+		self:RefreshMemberList()
+	end
+end
+
+function GameUIAlliance:OnOperation(alliance,operation_type)
+    self:RefreshMainUI()
+end
+
+function GameUIAlliance:AddListenerOfMyAlliance()
+	local myAlliance = Alliance_Manager:GetMyAlliance()
+	myAlliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
+	-- join or quit
+    myAlliance:AddListenOnType(self, Alliance.LISTEN_TYPE.OPERATION)
+    myAlliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
+    myAlliance:AddListenOnType(self, Alliance.LISTEN_TYPE.EVENTS)
+    myAlliance:AddListenOnType(self, Alliance.LISTEN_TYPE.JOIN_EVENTS)
 end
 
 function GameUIAlliance:Reset()
@@ -67,6 +103,7 @@ end
 
 function GameUIAlliance:onMoveInStage()
 	GameUIAlliance.super.onMoveInStage(self)
+	self:AddListenerOfMyAlliance()
 	-- local self_ = self
 	-- self.alliance_manager:OnAllianceEvent(ALLIANCE_EVENT_TAG,function(event)
 	-- 	if event.eventType == AllianceManager.ALLIANCE_EVENT_TYPE.QUIT
@@ -89,6 +126,13 @@ function GameUIAlliance:onMoveOutStage()
 	-- self.alliance_manager:RemoveEventByTag(SEARCH_ALLIAN_TO_JOIN_TAG)
 	-- self.alliance_manager:RemoveEventByTag(ALLIANCE_EVENT_TAG)
 	-- self.alliance_manager = nil
+	local myAlliance = Alliance_Manager:GetMyAlliance()
+	myAlliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
+	-- join or quit
+    myAlliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.OPERATION)
+    myAlliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
+    myAlliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.EVENTS)
+    myAlliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.JOIN_EVENTS)
 	GameUIAlliance.super.onMoveOutStage(self)
 end
 
@@ -217,10 +261,13 @@ function GameUIAlliance:NoAllianceTabEvent_createIf()
 	end
 	local basic_setting = GameUIAllianceBasicSetting.new()
 
-	local scrollView = UIScrollView.new({viewRect = cc.rect(10,0,contentWidth+50,window.betweenHeaderAndTab)})
-        :addScrollNode(basic_setting:GetContentNode():pos(40,0))
-        :setDirection(UIScrollView.DIRECTION_VERTICAL)
-        :addTo(self.main_content)
+	local scrollView = UIScrollView.new({
+		viewRect = cc.rect(0,0,window.width,window.betweenHeaderAndTab),
+		-- bgColor = UIKit:hex2c4b(0x7a000000),
+		})
+		:addScrollNode(basic_setting:GetContentNode():pos(55,0))
+	  	:setDirection(UIScrollView.DIRECTION_VERTICAL)
+	  	:addTo(self.main_content)
 	scrollView:fixResetPostion(-50)
 	self.createScrollView = scrollView
 	basic_setting = nil
@@ -272,25 +319,25 @@ end
 function GameUIAlliance:OnAllianceDataEvent(event)
 	print("GameUIAlliance:OnAllianceServerData----->",event.eventName)
 	dump(event.data)
-	if event.eventName == "onSearchAlliancesSuccess" or event.eventName == "onGetCanDirectJoinAlliancesSuccess" then
-		local data = event.data
-		self:RefreshJoinListView(data.alliances)
-	elseif event.eventName == "onAllianceDataChanged" then
-		if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
-			self:RefreshOverViewUI()
-		end
-		if self.tab_buttons:GetSelectedButtonTag() == 'members' then
-			self:RefreshMemberList()
-		end
-	elseif event.eventName == "onAllianceNewEventReceived" then
-		if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
-			self:RefreshEventListView()
-		end
-	elseif event.eventName == "onAllianceMemberDataChanged" then
-		if self.tab_buttons:GetSelectedButtonTag() == 'members' then
-			self:RefreshMemberList()
-		end
-	end
+	-- if event.eventName == "onSearchAlliancesSuccess" or event.eventName == "onGetCanDirectJoinAlliancesSuccess" then
+	-- 	local data = event.data
+	-- 	self:RefreshJoinListView(data.alliances)
+	-- elseif event.eventName == "onAllianceDataChanged" then
+		-- if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
+		-- 	self:RefreshOverViewUI()
+		-- end
+		-- if self.tab_buttons:GetSelectedButtonTag() == 'members' then
+		-- 	self:RefreshMemberList()
+		-- end
+	-- elseif event.eventName == "onAllianceNewEventReceived" then
+		-- if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
+		-- 	self:RefreshEventListView()
+		-- end
+	-- elseif event.eventName == "onAllianceMemberDataChanged" then
+		-- if self.tab_buttons:GetSelectedButtonTag() == 'members' then
+		-- 	self:RefreshMemberList()
+		-- end
+	-- end
 end
 
 function GameUIAlliance:RefreshJoinListView(data)

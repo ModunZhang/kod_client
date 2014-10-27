@@ -36,32 +36,33 @@ function CityScene:onEnter()
     self:GotoLogicPoint(6, 4)
 
 
-    Alliance_Manager:GetMyAlliance():AddListenOnType({
-        OnBasicChanged = function(this, alliance, changed_map)
-            -- dump(changed_map)
-        end}, Alliance.LISTEN_TYPE.BASIC)
+    -- Alliance_Manager:GetMyAlliance():AddListenOnType({
+    --     OnBasicChanged = function(this, alliance, changed_map)
+    --         -- dump(changed_map)
+    --     end}, Alliance.LISTEN_TYPE.BASIC)
 
-    Alliance_Manager:GetMyAlliance():AddListenOnType({
-        OnOperation = function(this, alliance, operation_type)
-            -- dump(operation_type)
-        end}, Alliance.LISTEN_TYPE.OPERATION)
-    Alliance_Manager:GetMyAlliance():AddListenOnType({
-        OnMemberChanged = function(this, alliance, changed_map)
-            -- dump(changed_map)
-            -- dump(alliance:GetAllMembers())
-        end}, Alliance.LISTEN_TYPE.MEMBER)
-    Alliance_Manager:GetMyAlliance():AddListenOnType({
-        OnEventsChanged = function(this, alliance, changed_map)
-            -- dump(changed_map)
-            -- dump(changed_map)
-        end
-    }, Alliance.LISTEN_TYPE.EVENTS)
+    -- Alliance_Manager:GetMyAlliance():AddListenOnType({
+    --     OnOperation = function(this, alliance, operation_type)
+    --         -- dump(operation_type)
 
-    Alliance_Manager:GetMyAlliance():AddListenOnType({
-        OnJoinEventsChanged = function(this, alliance, changed_map)
-            dump(changed_map)
-        end
-    }, Alliance.LISTEN_TYPE.JOIN_EVENTS)
+    --     end}, Alliance.LISTEN_TYPE.OPERATION)
+    -- Alliance_Manager:GetMyAlliance():AddListenOnType({
+    --     OnMemberChanged = function(this, alliance, changed_map)
+    --         -- dump(changed_map)
+    --         -- dump(alliance:GetAllMembers())
+    --     end}, Alliance.LISTEN_TYPE.MEMBER)
+    -- Alliance_Manager:GetMyAlliance():AddListenOnType({
+    --     OnEventsChanged = function(this, alliance, changed_map)
+    --         -- dump(changed_map)
+    --         -- dump(changed_map)
+    --     end
+    -- }, Alliance.LISTEN_TYPE.EVENTS)
+
+    -- Alliance_Manager:GetMyAlliance():AddListenOnType({
+    --     OnJoinEventsChanged = function(this, alliance, changed_map)
+    --         dump(changed_map)
+    --     end
+    -- }, Alliance.LISTEN_TYPE.JOIN_EVENTS)
     -- promise.new(function(...)
     --     print(...)
     --     return "end"
