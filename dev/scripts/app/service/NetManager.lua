@@ -84,12 +84,20 @@ function NetManager:removeKickEventListener(  )
     self:removeEventListener("onKick")
 end
 
+
+onPlayerDataChanged_callbacks = {}
 function NetManager:addPlayerDataChangedEventListener()
     self:addEventListener("onPlayerDataChanged", function(success, msg)
         if success then
             LuaUtils:outputTable("onPlayerDataChanged", msg)
             DataManager:setUserData(msg)
         end
+        assert(#onPlayerDataChanged_callbacks <= 1, "重复请求过多了!")
+        local callback = onPlayerDataChanged_callbacks[1]
+        if type(callback) == "function" then
+            callback(success, msg)
+        end
+        onPlayerDataChanged_callbacks = {}
     end)
 end
 function NetManager:removePlayerDataChangedEventListener(  )
@@ -171,7 +179,7 @@ end
 function NetManager:login(cb)
     local loginInfo = {
         -- deviceId = device.getOpenUDID()
-        deviceId = "1"
+        deviceId = "2"
     }
     self.m_netService:request("logic.entryHandler.login", loginInfo, function(success, msg)
         if success and msg.code == 200 then
@@ -720,7 +728,7 @@ function NetManager:agreeJoinAllianceRequest(memberId, cb)
         end
     end)
 end
--- 搜索联盟
+-- 搜索特定标签联盟
 function NetManager:searchAllianceByTag( tag,cb )
     if not LuaUtils:isString(tag) or string.len(tag) == 0  then
         cb(false)
@@ -741,6 +749,40 @@ function NetManager:searchAllianceByTag( tag,cb )
         p2:resolve(msg)
     end)
 end
+-- 搜索能直接加入联盟
+function NetManager:getCanDirectJoinAlliances(cb)
+    local p1 = promise.new()
+    local p2 = promise.new()
+    promise.all(p1, p2):next(function(results)
+        cb(unpack(results))
+    end)
+    self.m_netService:request("logic.playerHandler.getCanDirectJoinAlliances"
+        ,nil
+        ,function(success, msg)
+            p1:resolve(success)
+        end)
+    table.insert(onGetCanDirectJoinAlliancesSuccess_callbacks, function(success, msg)
+        p2:resolve(msg)
+    end)
+end
+
+-- 搜索能直接加入联盟
+function NetManager:inviteToJoinAlliance(member_id, cb)
+    local p1 = promise.new()
+    local p2 = promise.new()
+    promise.all(p1, p2):next(function(results)
+        cb(unpack(results))
+    end)
+    self.m_netService:request("logic.playerHandler.inviteToJoinAlliance"
+        ,{memberId = member_id}
+        ,function(success, msg)
+            p1:resolve(success)
+        end)
+    table.insert(onPlayerDataChanged_callbacks, function(success, msg)
+        p2:resolve(msg)
+    end)
+end
+
 --
 function NetManager:resetGame()
     -- self:sendMsg("reset", NOT_HANDLE)
@@ -810,6 +852,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 

@@ -1,9 +1,11 @@
 local BuildingRegister = import("..entity.BuildingRegister")
 local City_ = import("..entity.City")
 local AllianceManager_ = import("..entity.AllianceManager")
+local User_ = import("..entity.User")
 
 
 return function(userData)
+    User = User_.new()
     Alliance_Manager = AllianceManager_.new()
     City = City_.new()
     local init_buildings = {}
