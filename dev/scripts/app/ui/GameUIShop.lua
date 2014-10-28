@@ -23,7 +23,7 @@ function GameUIShop:onEnter()
     -- }
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "gemadd"..add_gem,
+        text = "宝石增加十万",
         size = 24,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
@@ -43,7 +43,7 @@ function GameUIShop:onEnter()
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "reset",
+        text = "重置玩家数据和联盟",
         size = 24,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
@@ -117,27 +117,28 @@ function GameUIShop:onEnter()
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = string.format("联盟类型到%s", Alliance_Manager:GetMyAlliance():JoinType() == "all" and "audit" or "all"),
+        text = string.format("联盟类型到%s", Alliance_Manager:GetMyAlliance():JoinType() == "all" and "审核" or "直接"),
         size = 24,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
         :addTo(self)
         :align(display.CENTER, window.left + 140, window.top - 300)
         :onButtonClicked(function(event)
-            if event.target:getButtonLabel():getString() == "联盟类型到all" then
-                event.target:getButtonLabel():setString("联盟类型到audit")
+            if event.target:getButtonLabel():getString() == "联盟类型到直接" then
+                event.target:getButtonLabel():setString("联盟类型到审核")
                 NetManager:editAllianceJoinType("all", NOT_HANDLE)
             else
-                event.target:getButtonLabel():setString("联盟类型到all")
+                event.target:getButtonLabel():setString("联盟类型到直接")
                 NetManager:editAllianceJoinType("audit", NOT_HANDLE)
             end
         end)
 
     local member_id
     for _, v in pairs(Alliance_Manager:GetMyAlliance():GetJoinEventsMap()) do
-        member_id = v.id
+        if v.id ~=  DataManager:getUserData()._id then
+            member_id = v.id
+        end
     end
-
     local join_btn = WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
         {scale9 = false}
@@ -222,13 +223,10 @@ function GameUIShop:onEnter()
         :addTo(self)
         :align(display.CENTER, window.left + 500, window.top - 400)
         :onButtonClicked(function(event)
-            NetManager:getCanDirectJoinAlliances("1", function(success, data)
-                dump(success)
-                dump(data)
-                -- if success and #data.alliances > 0 then
-                --     print("loading searchAllianceByTag end")
-                --     PushService:requestToJoinAlliance(Alliance:DecodeFromJsonData(data.alliances[1]):Id(), NOT_HANDLE)
-                -- end
+            NetManager:searchAllianceByTag("1", function(success, data)
+                if success and #data.alliances > 0 then
+                    PushService:requestToJoinAlliance(Alliance:DecodeFromJsonData(data.alliances[1]):Id(), NOT_HANDLE)
+                end
             end)
         end)
 
@@ -247,6 +245,88 @@ function GameUIShop:onEnter()
         :onButtonClicked(function(event)
             PushService:quitAlliance(NOT_HANDLE)
         end)
+
+
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "创建联盟2",
+        size = 24,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(self)
+        :align(display.CENTER, window.left + 140, window.top - 600)
+        :onButtonClicked(function(event)
+            PushService:createAlliance({
+                name="2",
+                tag="222",
+                language="all",
+                terrain="grassLand",
+                flag=Flag:RandomFlag():EncodeToJson()
+            }, NOT_HANDLE)
+        end)
+
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "立即加入联盟2",
+        size = 24,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(self)
+        :align(display.CENTER, window.left + 320, window.top - 600)
+        :onButtonClicked(function(event)
+            NetManager:searchAllianceByTag("2", function(success, data)
+                if success and #data.alliances > 0 then
+                    PushService:joinAllianceDirectly(Alliance:DecodeFromJsonData(data.alliances[1]):Id(), NOT_HANDLE)
+                end
+            end)
+        end)
+
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "请求加入联盟2",
+        size = 24,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(self)
+        :align(display.CENTER, window.left + 500, window.top - 600)
+        :onButtonClicked(function(event)
+            NetManager:searchAllianceByTag("2", function(success, data)
+                if success and #data.alliances > 0 then
+                    PushService:requestToJoinAlliance(Alliance:DecodeFromJsonData(data.alliances[1]):Id(), NOT_HANDLE)
+                end
+            end)
+        end)
+
+
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "邀请2进入联盟",
+        size = 24,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(self)
+        :align(display.CENTER, window.left + 140, window.top - 700)
+        :onButtonClicked(function(event)
+            NetManager:inviteToJoinAlliance("W1t87MVYS", function(success, data)
+                if success and data then
+                    dump(data)
+                end
+            end)
+        end)
+
+
 
     --     WidgetPushButton.new(
     --     {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
@@ -276,6 +356,7 @@ end
 
 
 return GameUIShop
+
 
 
 
