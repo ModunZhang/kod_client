@@ -337,7 +337,7 @@ function GameUIVip:CreateVIPButtons(level)
             ):addTo(button_group):align(display.LEFT_BOTTOM, (math.mod(i-1,5))*gap_x, 130-math.floor((i-1)/5)*130)
                 :onButtonClicked(function(event)
                     if event.name == "CLICKED_EVENT" then
-                        self:OpenVIPDetails()
+                        self:OpenVIPDetails(i)
                     end
                 end)
         else
@@ -347,7 +347,7 @@ function GameUIVip:CreateVIPButtons(level)
             ):addTo(button_group):align(display.LEFT_BOTTOM, (math.mod(i-1,5))*gap_x, 130-math.floor((i-1)/5)*130)
                 :onButtonClicked(function(event)
                     if event.name == "CLICKED_EVENT" then
-                        self:OpenVIPDetails()
+                        self:OpenVIPDetails(i)
                     end
                 end)
 
@@ -574,7 +574,7 @@ function GameUIVip:CreateVIPItem(params)
     return body
 end
 
-function GameUIVip:OpenVIPDetails()
+function GameUIVip:OpenVIPDetails(show_vip_level)
     if self:getChildByTag(101) then
         return
     end
@@ -598,6 +598,7 @@ function GameUIVip:OpenVIPDetails()
         self.pv:addItem(item)
     end
     self.pv:reload()
+    self.pv:gotoPage(show_vip_level)
 end
 
 function GameUIVip:CreateVIPPageItem(title_string,parent,isReach,vip_level)

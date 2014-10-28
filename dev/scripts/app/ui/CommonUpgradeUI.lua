@@ -244,8 +244,9 @@ function CommonUpgradeUI:InitNextLevelEfficiency()
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
         size = 20,
-        dimensions = cc.size(380,0),
+        dimensions = cc.size(380,40),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
+        align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
         color = UIKit:hex2c3b(0x403c2f)
     }):addTo(efficiency_bg):align(display.LEFT_CENTER)
     self.efficiency:pos(10,efficiency_bg_size.height/2)
