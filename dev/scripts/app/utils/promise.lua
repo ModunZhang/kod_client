@@ -16,6 +16,7 @@ end
 local function is_error(obj)
     return getmetatable(obj) == err_class
 end
+
 ------
 local promise = {}
 promise.__index = promise
@@ -137,7 +138,7 @@ local function failed_resolve(p, data)
     return p
 end
 local function resolve(p, data)
-    assert(p.state_ == PENDING)
+    assert(p.state_ == PENDING, p.state_)
     p.state_ = RESOLVED
     p.result = data
     repeat_resolve(p)
@@ -263,25 +264,26 @@ function promise.any(...)
         end)
     end, ...)
 end
--- 一个完成的promise不管结果都会发送给下一个任务
-function promise.race(...)
-    assert(...)
-    local not_resolved = true
-    return foreach_promise(function(_, v, p, other_promises)
-        v:always(function(result)
-            if not_resolved then
-                not_resolved = false
-                p:resolve(result)
-                for _, v in ipairs(other_promises) do
-                    cancel_promise(v)
-                end
-            end
-        end)
-    end, ...)
-end
+-- -- 一个完成的promise不管结果都会发送给下一个任务
+-- function promise.race(...)
+--     assert(...)
+--     local not_resolved = true
+--     return foreach_promise(function(_, v, p, other_promises)
+--         v:always(function(result)
+--             if not_resolved then
+--                 not_resolved = false
+--                 p:resolve(result)
+--                 for _, v in ipairs(other_promises) do
+--                     cancel_promise(v)
+--                 end
+--             end
+--         end)
+--     end, ...)
+-- end
 function promise.isError(obj)
     return is_error(obj)
 end
+
 
 
 
