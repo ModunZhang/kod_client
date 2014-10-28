@@ -1,8 +1,8 @@
-local property = import("app.utils.property")
-local Enum = import("app.utils.Enum")
-local Flag = import("app.entity.Flag")
-local AllianceMember = import("app.entity.AllianceMember")
-local MultiObserver = import("app.entity.MultiObserver")
+local property = import("..utils.property")
+local Enum = import("..utils.Enum")
+local Flag = import(".Flag")
+local AllianceMember = import(".AllianceMember")
+local MultiObserver = import(".MultiObserver")
 local Alliance = class("Alliance", MultiObserver)
 Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS")
 

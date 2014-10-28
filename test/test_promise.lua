@@ -29,7 +29,7 @@ function test_promise1()
         return 0
     end):catch(function(...)
         -- dump(...)
-    end)
+        end)
         :done(function(...)
             assert_equal(0, ...)
         end)
@@ -66,7 +66,7 @@ function test_promise2()
 end
 
 
-function test_promise_all()
+function test_promise3()
     local p = promise.new(function(...)
         assert_equal("start", ...)
         return 1
@@ -100,10 +100,7 @@ function test_promise_all()
     end)
 
     promise.any(p, p1):next(function(results)
-        -- dump(results)
-        -- promise.reject("hello", 0)
-        -- assert_equal("end", results[1])
-        -- assert_equal("end1", results[2])
+        dump(results)
     end):catch(function(err)
         dump(err:reason())
     end)
@@ -112,13 +109,13 @@ function test_promise_all()
         if time == 10 then
             p:resolve("start")
         elseif time == 9 then
-            -- p1:resolve("start")
+            p1:resolve("start")
         end
         return time <= 100
     end)
 end
 
-function test_promise_all1()
+function test_promise4()
     promise.new(function(...)
         assert_equal("start", ...)
         return 1
@@ -158,6 +155,8 @@ function test_promise_all1()
     end):resolve("start")
     pp:resolve(10)
 end
+
+
 
 
 

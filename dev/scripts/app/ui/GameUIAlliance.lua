@@ -388,7 +388,7 @@ function GameUIAlliance:NoAllianceTabEvent_inviteIf()
 end
 
 function GameUIAlliance:RefreshInvateListView()
-	local list = self.alliance_manager:GetAllianceEvents(self.COMMON_LIST_ITEM_TYPE.INVATE)
+	local list = User:GetInviteEvents()
 	self.invateListView:removeAllItems()
 	for i,v in ipairs(list) do
 		local item = self:getCommonListItem_(self.COMMON_LIST_ITEM_TYPE.INVATE,v)
@@ -413,7 +413,7 @@ function GameUIAlliance:NoAllianceTabEvent_applyIf()
 end
 
 function GameUIAlliance:RefreshApplyListView()
-	local list = self.alliance_manager:GetAllianceEvents(self.COMMON_LIST_ITEM_TYPE.APPLY)
+	local list = User:GetRequestEvents()
 	self.applyListView:removeAllItems()
 	for i,v in ipairs(list) do
 		local item = self:getCommonListItem_(self.COMMON_LIST_ITEM_TYPE.APPLY,v)
@@ -433,19 +433,20 @@ end
 
 --  listType:join appy invate
 function GameUIAlliance:getCommonListItem_(listType,alliance)
+	dump(alliance)
 	local targetListView = nil
 	local item = nil
 	local terrain,flag_info = nil,nil
+	terrain = alliance.terrain
+	flag_info = alliance.flag
 	if listType == self.COMMON_LIST_ITEM_TYPE.JOIN then
 		targetListView = self.joinListView
-		terrain = alliance.terrain
-		flag_info = alliance.flag
 	elseif listType == self.COMMON_LIST_ITEM_TYPE.INVATE then
 		targetListView = self.invateListView
 	else
 		targetListView = self.applyListView
-		terrain = alliance.terrain
-		flag_info = alliance.flag
+		-- terrain = alliance.terrain
+		-- flag_info = alliance.flag
 	end
 
 	local item = targetListView:newItem()
@@ -701,7 +702,6 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 	local eventListView = UIListView.new {
     	viewRect = cc.rect(0, 12, 540,340),
         direction = UIScrollView.DIRECTION_VERTICAL,
-        -- alignment = UIListView.ALIGNMENT_LEFT
     }:addTo(events_bg)
     self.eventListView = eventListView
    	self:RefreshEventListView()
@@ -761,6 +761,11 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 	-- self.ui_overview.my_alliance_flag = self.alliance_manager:GetMyAllianceFlag()
 	-- 	:addTo(overviewNode)
 	-- 	:pos(100,titileBar:getPositionY() - 65)
+
+	
+	self.alliance_ui_helper:CreateFlagWithRhombusTerrain(Alliance_Manager:GetMyAlliance():TerrainType(),Alliance_Manager:GetMyAlliance():Flag())
+		:addTo(overviewNode)
+		:pos(100,titileBar:getPositionY() - 65)
 	local tagLabel = UIKit:ttfLabel({
 		text = _("标签"),
 		size = 22,
@@ -965,7 +970,7 @@ function GameUIAlliance:GetAllianceTitleAndLevelPng(title)
 		archon = "alliance_item_leader_39x39.png"
 	}
 	local title_r = ""
-	local alliance = self.alliance_manager:GetMyAllianceData()
+	local alliance = Alliance_Manager:GetMyAlliance()
 	if alliance.titles[title] ~= "__" .. title then
 		title_r = alliance.titles[title]
 	else
@@ -977,7 +982,7 @@ end
 --title is alliance title
 function GameUIAlliance:GetMemberItem(title)
 	local item = self.memberListView:newItem()
-	local data = LuaUtils:table_filteri(self.alliance_manager:GetMyAllianceData().members,function(k,v)
+	local data = LuaUtils:table_filteri(Alliance_Manager:GetMyAlliance():GetAllMembers(),function(k,v)
 		return v.title == title
 	end)
 	local header_title,number_image = "",""

@@ -11,7 +11,7 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetSequenceButton = import("..widget.WidgetSequenceButton")
 local WidgetAllianceLanguagePanel = import("..widget.WidgetAllianceLanguagePanel")
 local GameUIAllianceBasicSetting = UIKit:createUIClass('GameUIAllianceBasicSetting')
-local modify_height = window.height - 20
+local modify_height = window.height - 60
 local Alliance_Manager = Alliance_Manager
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local Flag = import("..entity.Flag")
@@ -25,9 +25,9 @@ function GameUIAllianceBasicSetting:ctor(isModify)
 		dump(self.flag_info)
 		dump(self.terrain_info)
 	else
-		-- local alliance_data = self.alliance_manager:GetMyAllianceData()
-		-- self.flag_info = self:AdapterFlagData_Local(alliance_data.basicInfo.flag)
-		-- self.terrain_info = self.alliance_manager.LANDFORM_TYPE[alliance_data.basicInfo.terrain] -- 地形
+		self.flag_info  = Alliance_Manager:GetMyAlliance():Flag()
+		self.terrain_info = Alliance_Manager:GetMyAlliance():TerrainType()
+		dump(self.terrain_info)
 	end
 end
 
@@ -40,10 +40,10 @@ end
 function GameUIAllianceBasicSetting:BuildModifyUI()
 	local shadowLayer = UIKit:shadowLayer():addTo(self)
 	local bg = WidgetUIBackGround.new(modify_height):addTo(shadowLayer):pos(window.left+10,window.bottom)
-	local titleBar = display.newSprite("title_blue_596x49.png"):align(display.LEFT_TOP,6,modify_height-5):addTo(bg)
-	local closeButton = cc.ui.UIPushButton.new({normal = "X_2.png",pressed = "X_1.png"}, {scale9 = false})
+	local titleBar = display.newSprite("alliance_blue_title_600x42.png"):align(display.LEFT_BOTTOM,3,modify_height-15):addTo(bg)
+	local closeButton = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"}, {scale9 = false})
 	   	:addTo(titleBar,2)
-	   	:align(display.BOTTOM_RIGHT,titleBar:getContentSize().width+20,10)
+	   	:align(display.BOTTOM_RIGHT,titleBar:getContentSize().width+20,0)
 	   	:onButtonClicked(function ()
 	   		self:leftButtonClicked()
 	   	end)
@@ -55,10 +55,10 @@ function GameUIAllianceBasicSetting:BuildModifyUI()
 		size = 22,
 		shadow = true,
 		color = 0xffedae
-	}):addTo(titleBar):align(display.LEFT_CENTER,10,titleBar:getContentSize().height/2)
+	}):addTo(titleBar):align(display.CENTER,300,titleBar:getContentSize().height/2)
 
-	local scrollView = UIScrollView.new({viewRect = cc.rect(0,10,bg:getContentSize().width,titleBar:getPositionY() - titleBar:getContentSize().height - 10)})
-        :addScrollNode(self:GetContentNode():pos(20,0))
+	local scrollView = UIScrollView.new({viewRect = cc.rect(0,10,bg:getContentSize().width,titleBar:getPositionY() - 10)})
+        :addScrollNode(self:GetContentNode():pos(35,0))
         :setDirection(UIScrollView.DIRECTION_VERTICAL)
         :addTo(bg)
 	scrollView:fixResetPostion(-50)
@@ -333,8 +333,7 @@ function GameUIAllianceBasicSetting:createTextfieldPanel_()
     editbox_tag:align(display.LEFT_BOTTOM,0,limitLabel:getContentSize().height+10):addTo(node)
     self.editbox_tag = editbox_tag
     if not self.isCreateAction_ then
-    	local alliance_data = self.alliance_manager:GetMyAllianceData()
-    	editbox_tag:setText(alliance_data.basicInfo.tag)
+    	editbox_tag:setText(Alliance_Manager:GetMyAlliance():AliasName())
     end
     local tagLabel = UIKit:ttfLabel({
 		text = _("联盟标签"),
@@ -361,8 +360,7 @@ function GameUIAllianceBasicSetting:createTextfieldPanel_()
     editbox_name:setReturnType(cc.KEYBOARD_RETURNTYPE_DONE)
     editbox_name:align(display.LEFT_BOTTOM,0,nameTipLabel:getPositionY()+nameTipLabel:getContentSize().height+10):addTo(node)
      if not self.isCreateAction_ then
-    	local alliance_data = self.alliance_manager:GetMyAllianceData()
-    	editbox_name:setText(alliance_data.basicInfo.name)
+    	editbox_name:setText(Alliance_Manager:GetMyAlliance():Name())
     end
     self.editbox_name = editbox_name
 
