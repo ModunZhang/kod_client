@@ -84,12 +84,39 @@ function NetManager:removeKickEventListener(  )
     self:removeEventListener("onKick")
 end
 
+
+-- local event_map = {}
+-- function NetManager:addEventHandle(event_name, handle)
+--     event_map[event_name] = {handle = handle, callbacks = {}}
+--     self:addEventListener("onPlayerDataChanged", function(...)
+--         local event = event_map[event_name]
+--         handle(...)
+--         assert(#event.callbacks <= 1, "重复请求过多了")
+--         local callback = event.callbacks[1]
+--         if type(callback) == "function" then
+--             callback(success, msg)
+--         end
+--         event.callbacks = {}
+--     end)
+-- end
+-- function NetManager:removeEventHandle(event_name)
+--     self:removeEventListener(event_name)
+--     event_map[event_name] = nil
+-- end
+
+onPlayerDataChanged_callbacks = {}
 function NetManager:addPlayerDataChangedEventListener()
     self:addEventListener("onPlayerDataChanged", function(success, msg)
         if success then
             LuaUtils:outputTable("onPlayerDataChanged", msg)
             DataManager:setUserData(msg)
         end
+        assert(#onPlayerDataChanged_callbacks <= 1, "重复请求过多了!")
+        local callback = onPlayerDataChanged_callbacks[1]
+        if type(callback) == "function" then
+            callback(success, msg)
+        end
+        onPlayerDataChanged_callbacks = {}
     end)
 end
 function NetManager:removePlayerDataChangedEventListener(  )
@@ -754,11 +781,64 @@ function NetManager:getCanDirectJoinAlliances(cb)
             p1:resolve(success)
         end)
     table.insert(onGetCanDirectJoinAlliancesSuccess_callbacks, function(success, msg)
-    --     p2:resolve(msg)
-        dump(success)
-        dump(msg)
+        p2:resolve(msg)
     end)
 end
+
+-- 搜索能直接加入联盟
+function NetManager:inviteToJoinAlliance(member_id, cb)
+    local p1 = promise.new()
+    local p2 = promise.new()
+    promise.all(p1, p2):next(function(results)
+        cb(unpack(results))
+    end)
+    self.m_netService:request("logic.playerHandler.inviteToJoinAlliance"
+        ,{memberId = member_id}
+        ,function(success, msg)
+            p1:resolve(success)
+        end)
+    table.insert(onPlayerDataChanged_callbacks, function(success, msg)
+        p2:resolve(msg)
+    end)
+end
+
+
+
+-- 获取玩家信息,返回promise对象
+local function get_request_promise(request_route, data)
+    local p = promise.new()
+    NetManager.m_netService:request(request_route, data, function(success, msg)
+        p:resolve({success = success, msg = msg})
+    end)
+    return p
+end
+local function get_callback_promise(callbacks)
+    local p = promise.new()
+    table.insert(callbacks, function(success, msg)
+        p:resolve({success = success, msg = msg})
+    end)
+    return p
+end
+local function getPlayerInfo(member_id)
+    return get_request_promise("logic.playerHandler.getPlayerInfo", {memberId = member_id})
+end
+local function getPlayerInfoCallback()
+    return get_callback_promise(onGetPlayerInfoSuccess_callbacks)
+end
+function NetManager:getPlayerInfo(member_id)
+    return promise.all(getPlayerInfo(member_id), getPlayerInfoCallback()):next(function(results)
+        local request = results[1]
+        local response = results[2]
+        if not request.success then
+            promise.reject("请求失败!", request.msg)
+        end
+        if not response.success then
+            promise.reject("响应失败!", response.msg)
+        end
+        return response.msg
+    end)
+end
+
 --
 function NetManager:resetGame()
     -- self:sendMsg("reset", NOT_HANDLE)
@@ -828,6 +908,8 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
+
 
 
 
