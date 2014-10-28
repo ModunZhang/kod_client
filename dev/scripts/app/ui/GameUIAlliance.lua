@@ -107,28 +107,9 @@ end
 function GameUIAlliance:onMoveInStage()
 	GameUIAlliance.super.onMoveInStage(self)
 	self:AddListenerOfMyAlliance()
-	-- local self_ = self
-	-- self.alliance_manager:OnAllianceEvent(ALLIANCE_EVENT_TAG,function(event)
-	-- 	if event.eventType == AllianceManager.ALLIANCE_EVENT_TYPE.QUIT
-	-- 		or event.eventType == AllianceManager.ALLIANCE_EVENT_TYPE.CREATE_OR_JOIN 
-	-- 	 then
-	--  		self:RefreshMainUI()
-	--  	elseif event.eventType == AllianceManager.ALLIANCE_EVENT_TYPE.NORMAL then -- normal alliance data play data
-	-- 		--refresh list
-	-- 		if self.tab_buttons:GetSelectedButtonTag() == 'apply' then
-	-- 			self:RefreshApplyListView()
-	-- 		elseif self.tab_buttons:GetSelectedButtonTag() == 'invate' then
-	-- 			self:RefreshInvateListView()
-	-- 		end
-	-- 	end
-
-	-- end)
 end
 
 function GameUIAlliance:onMoveOutStage()
-	-- self.alliance_manager:RemoveEventByTag(SEARCH_ALLIAN_TO_JOIN_TAG)
-	-- self.alliance_manager:RemoveEventByTag(ALLIANCE_EVENT_TAG)
-	-- self.alliance_manager = nil
 	local myAlliance = Alliance_Manager:GetMyAlliance()
 	myAlliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
 	-- join or quit
@@ -462,7 +443,6 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
 	}):addTo(titleBg,2):align(display.LEFT_BOTTOM, 10, 5)
 
 	local flag_box = display.newSprite("alliance_item_flag_box_126X126.png"):addTo(bg):align(display.LEFT_BOTTOM, 10, 22)
-	-- local flag_sprite = self.alliance_manager:CreateFlagWithTerrain(terrain,flag_info)
 	local flag_sprite = self.alliance_ui_helper:CreateFlagWithRhombusTerrain(terrain,Flag.new():DecodeFromJson(flag_info))
 	flag_sprite:addTo(flag_box):scale(0.8)
 	flag_sprite:pos(60,40)
@@ -758,10 +738,6 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 		:addTo(headerBg)
 		:align(display.LEFT_BOTTOM, 120,notice_bg:getPositionY()+notice_bg:getContentSize().height-5)
 	display.newSprite("alliance_notice_icon_26x26.png"):addTo(notice_button):pos(250,22)
-	-- self.ui_overview.my_alliance_flag = self.alliance_manager:GetMyAllianceFlag()
-	-- 	:addTo(overviewNode)
-	-- 	:pos(100,titileBar:getPositionY() - 65)
-
 	
 	self.alliance_ui_helper:CreateFlagWithRhombusTerrain(Alliance_Manager:GetMyAlliance():TerrainType(),Alliance_Manager:GetMyAlliance():Flag())
 		:addTo(overviewNode)
@@ -889,24 +865,24 @@ function GameUIAlliance:GetEventTitleImageByEvent(event)
 	end
 end
 
-
+--TODO:RefreshOverView adapter
 function GameUIAlliance:RefreshOverViewUI()
 	print("RefreshOverViewUI---->")
 	self:RefreshEventListView()
-	if self.ui_overview and self.tab_buttons:GetSelectedButtonTag() == 'overview' then
-		local alliance_data = self.alliance_manager:GetMyAllianceData()
-		self.ui_overview.nameLabel:setString(alliance_data.basicInfo.name)
-		self.ui_overview.tagLabel:setString(alliance_data.basicInfo.tag)
-		self.ui_overview.languageLabel:setString(alliance_data.basicInfo.language)
-		if self.ui_overview.my_alliance_flag then
-			local x,y = self.ui_overview.my_alliance_flag:getPosition()
-			self.ui_overview.my_alliance_flag:removeFromParent()
-			self.ui_overview.my_alliance_flag = self.alliance_manager:GetMyAllianceFlag()
-				:addTo(self.overviewNode)
-				:pos(x,y)
-			self:RefreshNoticeView()
-		end
-	end
+	-- if self.ui_overview and self.tab_buttons:GetSelectedButtonTag() == 'overview' then
+	-- 	local alliance_data = self.alliance_manager:GetMyAllianceData()
+	-- 	self.ui_overview.nameLabel:setString(alliance_data.basicInfo.name)
+	-- 	self.ui_overview.tagLabel:setString(alliance_data.basicInfo.tag)
+	-- 	self.ui_overview.languageLabel:setString(alliance_data.basicInfo.language)
+	-- 	if self.ui_overview.my_alliance_flag then
+	-- 		local x,y = self.ui_overview.my_alliance_flag:getPosition()
+	-- 		self.ui_overview.my_alliance_flag:removeFromParent()
+	-- 		self.ui_overview.my_alliance_flag = self.alliance_manager:GetMyAllianceFlag()
+	-- 			:addTo(self.overviewNode)
+	-- 			:pos(x,y)
+	-- 		self:RefreshNoticeView()
+	-- 	end
+	-- end
 end
 
 function GameUIAlliance:RefreshEventListView()
@@ -969,22 +945,23 @@ function GameUIAlliance:GetAllianceTitleAndLevelPng(title)
 		member = "1_11x24.png",
 		archon = "alliance_item_leader_39x39.png"
 	}
-	local title_r = ""
 	local alliance = Alliance_Manager:GetMyAlliance()
-	if alliance.titles[title] ~= "__" .. title then
-		title_r = alliance.titles[title]
-	else
-		title_r = Localize.alliance_title[title]
-	end
-	return title_r,levelImages[title]
+	return alliance:GetTitles()[title],levelImages[title]
 end
 
 --title is alliance title
 function GameUIAlliance:GetMemberItem(title)
 	local item = self.memberListView:newItem()
-	local data = LuaUtils:table_filteri(Alliance_Manager:GetMyAlliance():GetAllMembers(),function(k,v)
-		return v.title == title
+	local filter_data = LuaUtils:table_filter(Alliance_Manager:GetMyAlliance():GetAllMembers(),function(k,v)
+		return v:Title() == title
 	end)
+	local data = {}
+	table.foreach(filter_data,function(k,v)
+		table.insert(data,v)
+	end)
+
+	dump(Alliance_Manager:GetMyAlliance():GetAllMembers())
+	dump(data)
 	local header_title,number_image = "",""
 
 	if title == 'archon' then
@@ -1057,7 +1034,6 @@ function GameUIAlliance:GetMemberItem(title)
 	local x,y = 7,20
 	local contentNode = display.newNode()
 	local oneLine = nil
-	dump(data)
 	for i,v in ipairs(data) do
 		oneLine = self:GetNormalSubItem(v.name,v.level,v.power,v.id)
 		oneLine:pos(x,y+(i-1)*height)
@@ -1243,7 +1219,7 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
 end
 
 function GameUIAlliance:SelectJoinType()
-	if self.alliance_manager:GetMyAllianceData().basicInfo.joinType == "all" then
+	if Alliance_Manager:GetMyAlliance():JoinType() == "all" then
     	self.joinTypeButton:getButtonAtIndex(1):setButtonSelected(true)
     else
     	self.joinTypeButton:getButtonAtIndex(2):setButtonSelected(true)

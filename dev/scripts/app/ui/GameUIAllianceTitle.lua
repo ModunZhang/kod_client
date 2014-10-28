@@ -30,14 +30,8 @@ function GameUIAllianceTitle:GetAllianceTitleAndLevelPng(title)
 		member = "1_11x24.png",
 		archon = "alliance_item_leader_39x39.png"
 	}
-	local title_r = ""
-	local alliance = DataManager:GetManager("AllianceManager"):GetMyAllianceData()
-	if alliance.titles[title] ~= "__" .. title then
-		title_r = alliance.titles[title]
-	else
-		title_r = Localize.alliance_title[title]
-	end
-	return title_r,levelImages[title]
+	local alliance = Alliance_Manager:GetMyAlliance()
+	return alliance:GetTitles()[title],levelImages[title]
 end
 
 function GameUIAllianceTitle:BuildUI()
@@ -82,12 +76,10 @@ function GameUIAllianceTitle:BuildUI()
         size = cc.size(427,51),
         listener = onEdit,
     })
-    -- editbox:setPlaceHolder(_("联盟盟主"))
     editbox:setText(display_title)
     editbox:setMaxLength(140)
     editbox:setFont(UIKit:getFontFilePath(),18)
     editbox:setFontColor(UIKit:hex2c3b(0xccc49e))
-    -- editbox:setPlaceholderFontColor(cc.c3b(204,196,158))
     editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
     editbox:align(display.LEFT_TOP,icon:getPositionX()+50,icon:getPositionY()+20):addTo(bg)
     local pageLabel = UIKit:ttfLabel({
@@ -104,7 +96,6 @@ function GameUIAllianceTitle:BuildUI()
 	self.authority_list = UIListView.new {
     	viewRect = cc.rect(4, 12, 564,325),
         direction = UIScrollView.DIRECTION_VERTICAL,
-        -- alignment = UIListView.ALIGNMENT_LEFT
     }:addTo(listBg)
 
     for i=1,10 do
