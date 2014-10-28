@@ -1,4 +1,5 @@
 local promise = import("..utils.promise")
+local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 NetManager = {}
 local SUCCESS_CODE = 200
 local FAILED_CODE = 500
@@ -84,6 +85,25 @@ function NetManager:removeKickEventListener(  )
     self:removeEventListener("onKick")
 end
 
+
+-- local event_map = {}
+-- function NetManager:addEventHandle(event_name, handle)
+--     event_map[event_name] = {handle = handle, callbacks = {}}
+--     self:addEventListener("onPlayerDataChanged", function(...)
+--         local event = event_map[event_name]
+--         handle(...)
+--         assert(#event.callbacks <= 1, "重复请求过多了")
+--         local callback = event.callbacks[1]
+--         if type(callback) == "function" then
+--             callback(success, msg)
+--         end
+--         event.callbacks = {}
+--     end)
+-- end
+-- function NetManager:removeEventHandle(event_name)
+--     self:removeEventListener(event_name)
+--     event_map[event_name] = nil
+-- end
 
 onPlayerDataChanged_callbacks = {}
 function NetManager:addPlayerDataChangedEventListener()
@@ -179,7 +199,7 @@ end
 function NetManager:login(cb)
     local loginInfo = {
         -- deviceId = device.getOpenUDID()
-        deviceId = "2"
+        deviceId = "1"
     }
     self.m_netService:request("logic.entryHandler.login", loginInfo, function(success, msg)
         if success and msg.code == 200 then
@@ -783,6 +803,59 @@ function NetManager:inviteToJoinAlliance(member_id, cb)
     end)
 end
 
+
+
+-- 获取玩家信息,返回promise对象
+local function get_request_promise(request_route, data)
+    local p = promise.new()
+    NetManager.m_netService:request(request_route, data, function(success, msg)
+        p:resolve({success = success, msg = msg})
+    end)
+    return p
+end
+local function get_callback_promise(callbacks)
+    local p = promise.new()
+    table.insert(callbacks, function(success, msg)
+        p:resolve({success = success, msg = msg})
+    end)
+    return p
+end
+local function get_playerinfo_promise(member_id)
+    return get_request_promise("logic.playerHandler.getPlayerInfo", {memberId = member_id})
+end
+local function get_playerinfo_callback()
+    return get_callback_promise(onGetPlayerInfoSuccess_callbacks)
+end
+local function wrap_time_out_with(p, time)
+    local time = time or 5
+    local time_out = false
+    local t = promise.new(function()
+        time_out = true
+    end)
+    scheduler.performWithDelayGlobal(function()
+        t:resolve()
+    end, time)
+    return promise.any(p, t):next(function(result)
+        if time_out then
+            promise.reject("timeout", time)
+        end
+        return result
+    end)
+end
+function NetManager:getPlayerInfoPromise(member_id)
+    return wrap_time_out_with(promise.all(get_playerinfo_promise(member_id), get_playerinfo_callback())):next(function(results)
+        local request = results[1]
+        local response = results[2]
+        if not request.success then
+            promise.reject("请求失败!", request.msg)
+        end
+        if not response.success then
+            promise.reject("响应失败!", response.msg)
+        end
+        return response.msg
+    end)
+end
+
 --
 function NetManager:resetGame()
     -- self:sendMsg("reset", NOT_HANDLE)
@@ -852,6 +925,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 

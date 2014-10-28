@@ -5,6 +5,7 @@
 local Alliance = import("..entity.Alliance")
 local Flag = import("..entity.Flag")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local promise = import("..utils.promise")
 local window = import("..utils.window")
 local GameUIShop = UIKit:createUIClass("GameUIShop", "GameUIWithCommonHeader")
 function GameUIShop:ctor(city)
@@ -326,6 +327,24 @@ function GameUIShop:onEnter()
             end)
         end)
 
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "获取2号玩家信息",
+        size = 24,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(self)
+        :align(display.CENTER, window.left + 320, window.top - 700)
+        :onButtonClicked(function(event)
+            NetManager:getPlayerInfo("W1t87MVYS"):next(function(data)
+                dump(data)
+            end):catch(function(err)
+                dump(err:reason())
+            end)
+        end)
 
 
     --     WidgetPushButton.new(
@@ -356,6 +375,10 @@ end
 
 
 return GameUIShop
+
+
+
+
 
 
 
