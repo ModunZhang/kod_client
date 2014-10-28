@@ -85,6 +85,25 @@ function NetManager:removeKickEventListener(  )
 end
 
 
+-- local event_map = {}
+-- function NetManager:addEventHandle(event_name, handle)
+--     event_map[event_name] = {handle = handle, callbacks = {}}
+--     self:addEventListener("onPlayerDataChanged", function(...)
+--         local event = event_map[event_name]
+--         handle(...)
+--         assert(#event.callbacks <= 1, "重复请求过多了")
+--         local callback = event.callbacks[1]
+--         if type(callback) == "function" then
+--             callback(success, msg)
+--         end
+--         event.callbacks = {}
+--     end)
+-- end
+-- function NetManager:removeEventHandle(event_name)
+--     self:removeEventListener(event_name)
+--     event_map[event_name] = nil
+-- end
+
 onPlayerDataChanged_callbacks = {}
 function NetManager:addPlayerDataChangedEventListener()
     self:addEventListener("onPlayerDataChanged", function(success, msg)
@@ -179,7 +198,7 @@ end
 function NetManager:login(cb)
     local loginInfo = {
         -- deviceId = device.getOpenUDID()
-        deviceId = "2"
+        deviceId = "1"
     }
     self.m_netService:request("logic.entryHandler.login", loginInfo, function(success, msg)
         if success and msg.code == 200 then
@@ -783,6 +802,43 @@ function NetManager:inviteToJoinAlliance(member_id, cb)
     end)
 end
 
+
+
+-- 获取玩家信息,返回promise对象
+local function get_request_promise(request_route, data)
+    local p = promise.new()
+    NetManager.m_netService:request(request_route, data, function(success, msg)
+        p:resolve({success = success, msg = msg})
+    end)
+    return p
+end
+local function get_callback_promise(callbacks)
+    local p = promise.new()
+    table.insert(callbacks, function(success, msg)
+        p:resolve({success = success, msg = msg})
+    end)
+    return p
+end
+local function getPlayerInfo(member_id)
+    return get_request_promise("logic.playerHandler.getPlayerInfo", {memberId = member_id})
+end
+local function getPlayerInfoCallback()
+    return get_callback_promise(onGetPlayerInfoSuccess_callbacks)
+end
+function NetManager:getPlayerInfo(member_id)
+    return promise.all(getPlayerInfo(member_id), getPlayerInfoCallback()):next(function(results)
+        local request = results[1]
+        local response = results[2]
+        if not request.success then
+            promise.reject("请求失败!", request.msg)
+        end
+        if not response.success then
+            promise.reject("响应失败!", response.msg)
+        end
+        return response.msg
+    end)
+end
+
 --
 function NetManager:resetGame()
     -- self:sendMsg("reset", NOT_HANDLE)
@@ -852,6 +908,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 
