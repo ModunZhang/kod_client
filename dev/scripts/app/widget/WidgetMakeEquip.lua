@@ -74,7 +74,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
     end)
     self.equip_config = equip_config
     -- back_ground
-    local back_ground = WidgetUIBackGround.new(650):addTo(self)
+    local back_ground = WidgetUIBackGround.new({height=650}):addTo(self)
 
     -- title
     local size = back_ground:getContentSize()

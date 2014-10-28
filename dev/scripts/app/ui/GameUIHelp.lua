@@ -19,7 +19,7 @@ function GameUIHelp:ctor()
 end
 
 function GameUIHelp:onEnter()
-    local body = WidgetUIBackGround.new(756):addTo(self):align(display.TOP_CENTER,display.cx,display.top-100)
+    local body = WidgetUIBackGround.new({height=756}):addTo(self):align(display.TOP_CENTER,display.cx,display.top-100)
     local rb_size = body:getContentSize()
     local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height)
         :addTo(body)

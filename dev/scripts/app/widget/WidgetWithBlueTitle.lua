@@ -1,6 +1,6 @@
 local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetWithBlueTitle = class("WidgetWithBlueTitle", function(height, title)
-    local back_ground = WidgetUIBackGround.new(height):align(display.CENTER)
+    local back_ground = WidgetUIBackGround.new({height=height}):align(display.CENTER)
     local size = back_ground:getContentSize()
     local title_blue = cc.ui.UIImage.new("title_blue_596x49.png")
         :addTo(back_ground, 2)

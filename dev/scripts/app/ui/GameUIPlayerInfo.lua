@@ -24,7 +24,7 @@ function GameUIPlayerInfo:onMoveInStage()
 		main_height = 814
 		main_y = window.bottom + 70
 	end
-	local bg = WidgetUIBackGround.new(main_height):addTo(shadowLayer):pos(window.left+20,main_y)
+	local bg = WidgetUIBackGround.new({height=main_height}):addTo(shadowLayer):pos(window.left+20,main_y)
 	local title_bar = display.newSprite("alliance_blue_title_600x42.png")
 		:addTo(bg)
 		:align(display.LEFT_BOTTOM, 0, main_height - 15)

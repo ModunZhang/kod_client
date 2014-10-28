@@ -114,7 +114,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
     -- bg
     local back_ground = cc.ui.UIImage.new("back_ground_608x458.png",
         {scale9 = true}):addTo(self):setLayoutSize(608, 500)
-    -- local back_ground =  WidgetUIBackGround.new(158):addTo(self)
+ 
     back_ground:setTouchEnabled(true)
 
     -- title
