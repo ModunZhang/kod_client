@@ -1,4 +1,5 @@
 local promise = import("..utils.promise")
+local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 NetManager = {}
 local SUCCESS_CODE = 200
 local FAILED_CODE = 500
@@ -819,14 +820,30 @@ local function get_callback_promise(callbacks)
     end)
     return p
 end
-local function getPlayerInfo(member_id)
+local function get_playerinfo_promise(member_id)
     return get_request_promise("logic.playerHandler.getPlayerInfo", {memberId = member_id})
 end
-local function getPlayerInfoCallback()
+local function get_playerinfo_callback()
     return get_callback_promise(onGetPlayerInfoSuccess_callbacks)
 end
-function NetManager:getPlayerInfo(member_id)
-    return promise.all(getPlayerInfo(member_id), getPlayerInfoCallback()):next(function(results)
+local function wrap_time_out_with(p, time)
+    local time = time or 5
+    local time_out = false
+    local t = promise.new(function()
+        time_out = true
+    end)
+    scheduler.performWithDelayGlobal(function()
+        t:resolve()
+    end, time)
+    return promise.any(p, t):next(function(result)
+        if time_out then
+            promise.reject("timeout", time)
+        end
+        return result
+    end)
+end
+function NetManager:getPlayerInfoPromise(member_id)
+    return wrap_time_out_with(promise.all(get_playerinfo_promise(member_id), get_playerinfo_callback())):next(function(results)
         local request = results[1]
         local response = results[2]
         if not request.success then

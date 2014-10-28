@@ -1,3 +1,4 @@
+local Localize = import("..utils.Localize")
 local property = import("..utils.property")
 local Enum = import("..utils.Enum")
 local Flag = import(".Flag")
@@ -5,7 +6,6 @@ local AllianceMember = import(".AllianceMember")
 local MultiObserver = import(".MultiObserver")
 local Alliance = class("Alliance", MultiObserver)
 Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS")
-
 local unpack = unpack
 local function pack(...)
     return {...}
@@ -29,6 +29,14 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     property(self, "defaultLanguage", defaultLanguage or "all")
     property(self, "terrainType", terrainType or "grassLand")
     self.flag = Flag:RandomFlag()
+    self.titles = {
+        ["member"] = "__member",
+        ["supervisor"] = "__supervisor",
+        ["quartermaster"] = "__quartermaster",
+        ["general"] = "__general",
+        ["archon"] = "__archon",
+        ["elite"] = "__elite",
+    }
     self.members = {}
     self.events = {}
     self.join_events = {}
@@ -44,6 +52,33 @@ function Alliance:DecodeFromJsonData(json_data)
     alliance:SetJoinType(json_data.joinType)
     alliance:SetFlag(Flag:DecodeFromJson(json_data.flag))
     return alliance
+end
+local alliance_title = Localize.alliance_title
+function Alliance:GetMemberTitle()
+    return self:GetTitles()["member"]
+end
+function Alliance:GetSupervisorTitle()
+    return self:GetTitles()["supervisor"]
+end
+function Alliance:GetQuarterMasterTitle()
+    return self:GetTitles()["quartermaster"]
+end
+function Alliance:GetGeneralTitle()
+    return self:GetTitles()["general"]
+end
+function Alliance:GetArchonTitle()
+    return self:GetTitles()["archon"]
+end
+function Alliance:GetEliteTitle()
+    return self:GetTitles()["elite"]
+end
+function Alliance:GetTitles()
+    return LuaUtils:table_map(self.titles, function(k, v)
+        if string.sub(v, 1, 2) == "__" then
+            dump(alliance_title[k])
+            return k, alliance_title[k]
+        end
+    end)
 end
 function Alliance:Flag()
     return self.flag
@@ -427,6 +462,7 @@ function Alliance:OnHelpEventsChanged(helpEvents)
 end
 
 return Alliance
+
 
 
 

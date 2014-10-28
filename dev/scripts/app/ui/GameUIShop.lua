@@ -5,6 +5,7 @@
 local Alliance = import("..entity.Alliance")
 local Flag = import("..entity.Flag")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local promise = import("..utils.promise")
 local window = import("..utils.window")
 local GameUIShop = UIKit:createUIClass("GameUIShop", "GameUIWithCommonHeader")
 function GameUIShop:ctor(city)
@@ -374,6 +375,8 @@ end
 
 
 return GameUIShop
+
+
 
 
 
