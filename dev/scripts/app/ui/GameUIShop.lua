@@ -15,6 +15,10 @@ end
 function GameUIShop:onEnter()
     GameUIShop.super.onEnter(self)
 
+    local list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 100)
+    local item = list_view:newItem()
+    local content = display.newNode()
+    content:setContentSize(cc.size(640, 0))
     local add_gem = 100000
     local button = WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"}
@@ -25,10 +29,10 @@ function GameUIShop:onEnter()
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "宝石增加十万",
-        size = 24,
+        size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(self)
+        :addTo(content)
         :align(display.CENTER, window.left + 320, window.top - 500)
         :onButtonClicked(function()
             local current = self.shop_city:GetResourceManager():GetGemResource():GetValue() + add_gem
@@ -49,10 +53,10 @@ function GameUIShop:onEnter()
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "重置玩家数据和联盟",
-        size = 24,
+        size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(self)
+        :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 500)
         :onButtonClicked(function()
             NetManager:getSendGlobalMsgPromise("reset"):next(function()
@@ -69,10 +73,10 @@ function GameUIShop:onEnter()
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "草地",
-        size = 24,
+        size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(self)
+        :addTo(content)
         :align(display.CENTER, window.left + 140, window.top - 200)
         :onButtonClicked(function()
             if display.getRunningScene().__cname == "CityScene" then
@@ -87,10 +91,10 @@ function GameUIShop:onEnter()
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "雪地",
-        size = 24,
+        size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(self)
+        :addTo(content)
         :align(display.CENTER, window.left + 320, window.top - 200)
         :onButtonClicked(function()
             if display.getRunningScene().__cname == "CityScene" then
@@ -105,10 +109,10 @@ function GameUIShop:onEnter()
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "沙地",
-        size = 24,
+        size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(self)
+        :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 200)
         :onButtonClicked(function()
             if display.getRunningScene().__cname == "CityScene" then
@@ -124,10 +128,10 @@ function GameUIShop:onEnter()
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = string.format("联盟类型到%s", Alliance_Manager:GetMyAlliance():JoinType() == "all" and "审核" or "直接"),
-        size = 24,
+        size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(self)
+        :addTo(content)
         :align(display.CENTER, window.left + 140, window.top - 300)
         :onButtonClicked(function(event)
             if event.target:getButtonLabel():getString() == "联盟类型到直接" then
@@ -161,10 +165,10 @@ function GameUIShop:onEnter()
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "拒绝一个申请",
-        size = 24,
+        size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(self)
+        :addTo(content)
         :align(display.CENTER, window.left + 320, window.top - 300)
         :onButtonClicked(function(event)
             NetManager:getRefuseJoinAllianceRequestPromise(member_id):catch(function(err)
@@ -179,10 +183,10 @@ function GameUIShop:onEnter()
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "接受一个申请",
-        size = 24,
+        size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(self)
+        :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 300)
         :onButtonClicked(function(event)
             NetManager:getAgreeJoinAllianceRequestPromise(member_id):catch(function(err)
@@ -199,10 +203,10 @@ function GameUIShop:onEnter()
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "创建联盟1",
-        size = 24,
+        size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(self)
+        :addTo(content)
         :align(display.CENTER, window.left + 140, window.top - 400)
         :onButtonClicked(function(event)
             -- PushService:createAlliance({
@@ -224,10 +228,10 @@ function GameUIShop:onEnter()
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "立即加入联盟1",
-        size = 24,
+        size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(self)
+        :addTo(content)
         :align(display.CENTER, window.left + 320, window.top - 400)
         :onButtonClicked(function(event)
             -- NetManager:searchAllianceByTag("1", function(success, data)
@@ -248,10 +252,10 @@ function GameUIShop:onEnter()
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "请求加入联盟1",
-        size = 24,
+        size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(self)
+        :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 400)
         :onButtonClicked(function(event)
             -- NetManager:searchAllianceByTag("1", function(success, data)
@@ -273,10 +277,10 @@ function GameUIShop:onEnter()
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "退出联盟 1",
-        size = 24,
+        size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(self)
+        :addTo(content)
         :align(display.CENTER, window.left + 140, window.top - 500)
         :onButtonClicked(function(event)
             -- PushService:quitAlliance(NOT_HANDLE)
@@ -292,10 +296,10 @@ function GameUIShop:onEnter()
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "创建联盟2",
-        size = 24,
+        size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(self)
+        :addTo(content)
         :align(display.CENTER, window.left + 140, window.top - 600)
         :onButtonClicked(function(event)
             -- PushService:createAlliance({
@@ -317,10 +321,10 @@ function GameUIShop:onEnter()
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "立即加入联盟2",
-        size = 24,
+        size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(self)
+        :addTo(content)
         :align(display.CENTER, window.left + 320, window.top - 600)
         :onButtonClicked(function(event)
             NetManager:getSearchAllianceByTagPromsie("2"):next(function(result)
@@ -336,10 +340,10 @@ function GameUIShop:onEnter()
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "请求加入联盟2",
-        size = 24,
+        size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(self)
+        :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 600)
         :onButtonClicked(function(event)
             NetManager:getSearchAllianceByTagPromsie("2"):next(function(result)
@@ -356,10 +360,10 @@ function GameUIShop:onEnter()
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "邀请2进入联盟",
-        size = 24,
+        size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(self)
+        :addTo(content)
         :align(display.CENTER, window.left + 140, window.top - 700)
         :onButtonClicked(function(event)
             -- NetManager:inviteToJoinAlliance("W1t87MVYS", function(success, data)
@@ -378,10 +382,10 @@ function GameUIShop:onEnter()
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = "获取2号玩家信息",
-        size = 24,
+        size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(self)
+        :addTo(content)
         :align(display.CENTER, window.left + 320, window.top - 700)
         :onButtonClicked(function(event)
             NetManager:getPlayerInfoPromise("W1t87MVYS")
@@ -399,11 +403,11 @@ function GameUIShop:onEnter()
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "踢出随机一个成员",
-        size = 24,
+        text = "随机踢出一个成员",
+        size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(self)
+        :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 700)
         :onButtonClicked(function(event)
             local memberid
@@ -422,28 +426,72 @@ function GameUIShop:onEnter()
                 end)
         end)
 
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "随机提升一个成员",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 140, window.top - 800)
+        :onButtonClicked(function(event)
+            local member
+            Alliance_Manager:GetMyAlliance():IteratorAllMembers(function(_, v)
+                if v:Id() ~= User:Id() then
+                    member = v
+                    return true
+                end
+            end)
+            if not member:IsTitleHighest() then
+                NetManager:getModifyAllianceMemberTitlePromise(member:Id(), member:TitleUpgrade())
+                    :next(function(data)
+                        dump(data)
+                    end)
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
+            end
+        end)
 
-    --     WidgetPushButton.new(
-    --     {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
-    --     {scale9 = false}
-    -- ):setButtonLabel(cc.ui.UILabel.new({
-    --     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-    --     text = "退出联盟",
-    --     size = 24,
-    --     font = UIKit:getFontFilePath(),
-    --     color = UIKit:hex2c3b(0xfff3c7)}))
-    --     :addTo(self)
-    --     :align(display.CENTER, window.left + 320, window.top - 400)
-    --     :onButtonClicked(function(event)
-    --         PushService:quitAlliance(NOT_HANDLE)
-    --     end)
+
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "随机降级一个成员",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 320, window.top - 800)
+        :onButtonClicked(function(event)
+            local member
+            Alliance_Manager:GetMyAlliance():IteratorAllMembers(function(_, v)
+                if v:Id() ~= User:Id() then
+                    member = v
+                    return true
+                end
+            end)
+            if not member:IsTitleLowest() then
+                NetManager:getModifyAllianceMemberTitlePromise(member:Id(), member:TitleDegrade())
+                    :next(function(data)
+                        dump(data)
+                    end)
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
+            end
+        end)
 
 
-    -- local node = display.newFilteredSprite("green_btn_up.png", "GRAY", {0.2, 0.3, 0.5, 0.1})
-    --     :align(display.CENTER, window.cx, window.cy)
-    --     :addTo(self)
-    --     node:clearFilter()
-    --     node:setFilter(filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1}))
+    item:addContent(content)
+    item:setItemSize(640, 1000)
+    list_view:addItem(item)
+    list_view:reload():resetPosition()
 end
 function GameUIShop:onExit()
     GameUIShop.super.onExit(self)
@@ -451,6 +499,12 @@ end
 
 
 return GameUIShop
+
+
+
+
+
+
 
 
 
