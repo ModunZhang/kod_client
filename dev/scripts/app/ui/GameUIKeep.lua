@@ -101,7 +101,11 @@ function GameUIKeep:CreateLineItem(params)
         }):align(display.LEFT_BOTTOM, 0, 10)
         :addTo(line)
     local button = WidgetPushButton.new({normal = "green_button_normal.png",pressed = "green_button_pressed.png"})
-        :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = params.button_label, size = 20, color = display.COLOR_WHITE}))
+        :setButtonLabel(UIKit:ttfLabel({
+            text = params.button_label,
+            size = 20,
+            color = 0xffedae,
+        }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 params.listener()
@@ -194,7 +198,11 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                 local item_width, item_height = item:getItemSize()
                 local content = cc.ui.UIGroup.new()
                 WidgetPushButton.new({normal = "keep_unlocked_button_normal.png",pressed = "keep_unlocked_button_pressed.png"})
-                    :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("可解锁"), size = 24, color = display.COLOR_WHITE}))
+                    :setButtonLabel(UIKit:ttfLabel({
+                        text = _("可解锁"),
+                        size = 24,
+                        color = 0xffedae,
+                    }))
                     :onButtonClicked(function(event)
                         if event.name == "CLICKED_EVENT" then
                             self:leftButtonClicked()
@@ -296,24 +304,24 @@ function GameUIKeep:CreateModifyCityNameWindow()
             color = UIKit:hex2c3b(0x797154)
         }):align(display.LEFT_TOP, 120, 70)
         :addTo(bg2)
-        -- 回复按钮
-        local buy_label = cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("购买使用"),
-            size = 20,
-            font = UIKit:getFontFilePath(),
-            color = UIKit:hex2c3b(0xfff3c7)})
+    -- 回复按钮
+    local buy_label = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = _("购买使用"),
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)})
 
-        buy_label:enableShadow()
-        WidgetPushButton.new(
-            {normal = "green_btn_up_142x39.png", pressed = "green_btn_down_142x39.png"},
-            {scale9 = false}
-        ):setButtonLabel(buy_label)
-            :addTo(bg2):align(display.CENTER, 480, 100)
-            :onButtonClicked(function(event)
-                if event.name == "CLICKED_EVENT" then
-                end
-            end)
+    buy_label:enableShadow()
+    WidgetPushButton.new(
+        {normal = "green_btn_up_142x39.png", pressed = "green_btn_down_142x39.png"},
+        {scale9 = false}
+    ):setButtonLabel(buy_label)
+        :addTo(bg2):align(display.CENTER, 480, 100)
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+            end
+        end)
 end
 
 
@@ -329,7 +337,7 @@ function GameUIKeep:CreateChangeTerrainWindow()
         b_height = 12,
         m_height = 1,
     }):align(display.CENTER,304, 294)
-    
+
     layer:addToBody(bg1)
 
     self.terrain_eff_label = cc.ui.UILabel.new({
@@ -341,13 +349,13 @@ function GameUIKeep:CreateChangeTerrainWindow()
     }):addTo(bg1):align(display.CENTER,304,30)
 
     -- 草地
-     display.newSprite("grass_ground1_800x560.png")
+    display.newSprite("grass_ground1_800x560.png")
         :align(display.CENTER, 110, 180):addTo(bg1):scale(0.2)
     -- 雪地
-     display.newSprite("desert1_800x560.png")
+    display.newSprite("desert1_800x560.png")
         :align(display.CENTER, 295, 180):addTo(bg1):scale(0.2)
     -- 沙漠
-     display.newSprite("icefield1_800x560.png")
+    display.newSprite("icefield1_800x560.png")
         :align(display.CENTER, 485, 180):addTo(bg1):scale(0.2)
 
     local checkbox_image = {
@@ -368,7 +376,7 @@ function GameUIKeep:CreateChangeTerrainWindow()
         :setButtonsLayoutMargin(0, 130, 0, 0)
         :onButtonSelectChanged(function(event)
             -- self.selected_rebuild_to_building = rebuild_list[event.selected]
-        end)
+            end)
         :align(display.CENTER, 80 , 50)
         :addTo(bg1)
     group:getButtonAtIndex(1):setButtonSelected(true)
@@ -412,24 +420,24 @@ function GameUIKeep:CreateChangeTerrainWindow()
             color = UIKit:hex2c3b(0x797154)
         }):align(display.LEFT_TOP, 120, 70)
         :addTo(bg2)
-        -- 回复按钮
-        local buy_label = cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("购买使用"),
-            size = 20,
-            font = UIKit:getFontFilePath(),
-            color = UIKit:hex2c3b(0xfff3c7)})
+    -- 回复按钮
+    local buy_label = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = _("购买使用"),
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)})
 
-        buy_label:enableShadow()
-        WidgetPushButton.new(
-            {normal = "green_btn_up_142x39.png", pressed = "green_btn_down_142x39.png"},
-            {scale9 = false}
-        ):setButtonLabel(buy_label)
-            :addTo(bg2):align(display.CENTER, 480, 100)
-            :onButtonClicked(function(event)
-                if event.name == "CLICKED_EVENT" then
-                end
-            end)
+    buy_label:enableShadow()
+    WidgetPushButton.new(
+        {normal = "green_btn_up_142x39.png", pressed = "green_btn_down_142x39.png"},
+        {scale9 = false}
+    ):setButtonLabel(buy_label)
+        :addTo(bg2):align(display.CENTER, 480, 100)
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+            end
+        end)
 end
 
 function GameUIKeep:CreateBackGroundWithTitle(title_string)
@@ -461,6 +469,8 @@ function GameUIKeep:CreateBackGroundWithTitle(title_string)
     return leyer
 end
 return GameUIKeep
+
+
 
 
 

@@ -370,7 +370,12 @@ function CommonUpgradeUI:InitUpgradePart()
     self:addChild(self.upgrade_layer)
     -- upgrade now button
     WidgetPushButton.new({normal = "upgrade_green_button_normal.png",pressed = "upgrade_green_button_pressed.png"})
-        :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("立即升级"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
+        :setButtonLabel(UIKit:ttfLabel({
+            text = _("立即升级"),
+            size = 24,
+            color = 0xffedae,
+            shadow= true
+        }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 local upgrade_listener = function()
@@ -401,7 +406,12 @@ function CommonUpgradeUI:InitUpgradePart()
         end):align(display.CENTER, display.cx-150, display.top-430):addTo(self.upgrade_layer)
     -- upgrade button
     WidgetPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
-        :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("升级"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
+        :setButtonLabel(UIKit:ttfLabel({
+            text = _("升级"),
+            size = 24,
+            color = 0xffedae,
+            shadow= true
+        }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 local upgrade_listener = function()
@@ -759,6 +769,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
 
 
