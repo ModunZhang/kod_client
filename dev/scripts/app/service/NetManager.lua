@@ -609,7 +609,7 @@ function NetManager:getModifyAllianceMemberTitlePromise(memberId, title)
     return promise.all(get_blocking_request_promise("logic.playerHandler.modifyAllianceMemberTitle", {
         memberId = memberId,
         title = title
-    }, "修改成员职位失败!"), get_playerinfo_callback()):next(get_response_msg)
+    }, "修改成员职位失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 -- 修改联盟公告
 function NetManager:getEditAllianceNoticePromise(notice)
