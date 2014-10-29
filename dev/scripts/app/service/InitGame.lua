@@ -5,7 +5,7 @@ local User_ = import("..entity.User")
 
 
 return function(userData)
-    User = User_.new()
+    User = User_.new(userData._id)
     Alliance_Manager = AllianceManager_.new()
     City = City_.new()
     local init_buildings = {}

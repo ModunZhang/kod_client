@@ -72,6 +72,9 @@ end
 function Alliance:GetEliteTitle()
     return self:GetTitles()["elite"]
 end
+function Alliance:ModifyTitleWithMemberType(member_type, new_name)
+    self.titles[member_type] = new_name
+end
 function Alliance:GetTitles()
     return LuaUtils:table_map(self.titles, function(k, v)
         if string.sub(v, 1, 2) == "__" then
@@ -298,24 +301,14 @@ function Alliance:OnJoinEventsChanged(changed_map)
     end)
 end
 function Alliance:OnAllianceDataChanged(alliance_data)
-    if alliance_data.basicInfo then
-        self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
-    end
-    if alliance_data.events then
-        self:OnAllianceEventsChanged(alliance_data.events)
-    end
-    if alliance_data.joinRequestEvents then
-        self:OnJoinRequestEventsChanged(alliance_data.joinRequestEvents)
-    end
-    if alliance_data.helpEvents then
-        self:OnHelpEventsChanged(alliance_data.helpEvents)
-    end
-    if alliance_data.members then
-        self:OnAllianceMemberDataChanged(alliance_data.members)
-    end
+    self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
+    self:OnAllianceEventsChanged(alliance_data.events)
+    self:OnJoinRequestEventsChanged(alliance_data.joinRequestEvents)
+    self:OnHelpEventsChanged(alliance_data.helpEvents)
+    self:OnAllianceMemberDataChanged(alliance_data.members)
 end
 function Alliance:OnAllianceBasicInfoChanged(basicInfo)
-    if basicInfo == nil then return end
+    if not basicInfo then return end
     self:SetName(basicInfo.name)
     self:SetAliasName(basicInfo.tag)
     self:SetDefaultLanguage(basicInfo.language)
@@ -362,7 +355,7 @@ function Alliance:OnAllianceEventsChanged(events)
     end
 end
 function Alliance:OnJoinRequestEventsChanged(joinRequestEvents)
-    if joinRequestEvents == nil then return end
+    if not joinRequestEvents then return end
     local join_events = self.join_events
     -- 找出新加入的请求
     local mark_map = {}
@@ -462,6 +455,7 @@ function Alliance:OnHelpEventsChanged(helpEvents)
 end
 
 return Alliance
+
 
 
 

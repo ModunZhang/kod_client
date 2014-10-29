@@ -350,7 +350,11 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type)
             color = UIKit:hex2c3b(0xfff3c7)
         }))
         :onButtonClicked(function(event)
-            NetManager:instantRecruitNormalSoldier(self.soldier_type, self.count, NOT_HANDLE)
+            -- NetManager:instantRecruitNormalSoldier(self.soldier_type, self.count, NOT_HANDLE)
+            NetManager:getInstantRecruitNormalSoldierPromise(self.soldier_type, self.count)
+                :catch(function(err)
+                    dump(err:reason())
+                end)
             if type(self.instant_button_clicked) == "function" then
                 self:instant_button_clicked()
             end
@@ -389,7 +393,11 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type)
             color = UIKit:hex2c3b(0xfff3c7)
         }))
         :onButtonClicked(function(event)
-            NetManager:recruitNormalSoldier(self.soldier_type, self.count, NOT_HANDLE)
+            -- NetManager:recruitNormalSoldier(self.soldier_type, self.count, NOT_HANDLE)
+            NetManager:getRecruitNormalSoldierPromise(self.soldier_type, self.count)
+                :catch(function(err)
+                    dump(err:reason())
+                end)
             if type(self.button_clicked) == "function" then
                 self:button_clicked()
             end
@@ -547,6 +555,8 @@ end
 
 
 return WidgetRecruitSoldier
+
+
 
 
 

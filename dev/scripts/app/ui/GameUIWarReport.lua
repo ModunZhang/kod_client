@@ -13,7 +13,7 @@ function GameUIWarReport:ctor(report)
 end
 
 function GameUIWarReport:onEnter()
-    local report_body = WidgetUIBackGround.new(800):addTo(self):align(display.TOP_CENTER,display.cx,display.top-100)
+    local report_body = WidgetUIBackGround.new({height=800}):addTo(self):align(display.TOP_CENTER,display.cx,display.top-100)
     local rb_size = report_body:getContentSize()
     local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height)
         :addTo(report_body)

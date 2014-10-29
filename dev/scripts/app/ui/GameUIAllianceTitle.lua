@@ -36,7 +36,7 @@ end
 
 function GameUIAllianceTitle:BuildUI()
 	local shadowLayer = UIKit:shadowLayer():addTo(self)
-	local bg = WidgetUIBackGround.new(634):addTo(shadowLayer):pos(window.left+20,window.bottom+150)
+	local bg = WidgetUIBackGround.new({height=634}):addTo(shadowLayer):pos(window.left+20,window.bottom+150)
 	local title_bar = display.newSprite("alliance_blue_title_600x42.png")
 		:addTo(bg)
 		:align(display.LEFT_BOTTOM, 0, 619)

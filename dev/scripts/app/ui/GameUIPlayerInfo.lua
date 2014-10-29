@@ -23,7 +23,7 @@ function GameUIPlayerInfo:onMoveInStage()
 		main_height = 814
 		main_y = window.bottom + 70
 	end
-	local bg = WidgetUIBackGround.new(main_height):addTo(shadowLayer):pos(window.left+20,main_y)
+	local bg = WidgetUIBackGround.new({height=main_height}):addTo(shadowLayer):pos(window.left+20,main_y)
 	local title_bar = display.newSprite("alliance_blue_title_600x42.png")
 		:addTo(bg)
 		:align(display.LEFT_BOTTOM, 0, main_height - 15)
@@ -41,7 +41,6 @@ function GameUIPlayerInfo:onMoveInStage()
 	self.bg = bg
 	self.title_bar = title_bar
 	NetManager:getPlayerInfoPromise(self.memberId_):next(function(data)
-       dump(data)
        self:OnGetPlayerInfoSuccess(data)
     end):catch(function(err)
     	self:leftButtonClicked()
@@ -206,6 +205,13 @@ function GameUIPlayerInfo:OnPlayerButtonClicked( tag )
 		-- 		-- self:leftButtonClicked()
 		-- 	end
 		-- end)
+        NetManager:getKickAllianceMemberOffPromise(self.memberId_)
+           	:next(function(data)
+                    dump(data)
+           	end)
+            :catch(function(err)
+                    dump(err:reason())
+            end)
 	elseif tag == 2 then
 		-- PushService:handOverArchon(self.memberId_,function(success)
 		-- 	if success then

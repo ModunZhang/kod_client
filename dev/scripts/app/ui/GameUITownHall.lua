@@ -156,7 +156,10 @@ function GameUITownHall:CreateImposeItemWithListView(list_view)
         color = UIKit:hex2c3b(0xfff3c7)}))
         :addTo(widget, 2):align(display.CENTER, size.width - 110, 50)
         :onButtonClicked(function(event)
-            NetManager:impose(NOT_HANDLE)
+            -- NetManager:impose(NOT_HANDLE)
+            NetManager:getImposePromise():catch(function(err)
+                dump(err:reason())
+            end)
         end)
     local item = list_view:newItem()
     item:addContent(widget)
@@ -209,7 +212,7 @@ function GameUITownHall:CreateTimerItemWithListView(list_view)
             color = UIKit:hex2c3b(0xfff3c7)}))
         :addTo(widget, 2):align(display.CENTER, size.width - 120, size.height - 110)
         :onButtonClicked(function(event)
-        end)
+            end)
 
     local item = list_view:newItem()
     item:addContent(widget)
@@ -371,6 +374,7 @@ end
 
 
 return GameUITownHall
+
 
 
 

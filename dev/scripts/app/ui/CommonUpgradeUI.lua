@@ -244,8 +244,9 @@ function CommonUpgradeUI:InitNextLevelEfficiency()
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
         size = 20,
-        dimensions = cc.size(380,0),
+        dimensions = cc.size(380,40),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
+        align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
         color = UIKit:hex2c3b(0x403c2f)
     }):addTo(efficiency_bg):align(display.LEFT_CENTER)
     self.efficiency:pos(10,efficiency_bg_size.height/2)
@@ -369,22 +370,46 @@ function CommonUpgradeUI:InitUpgradePart()
     self:addChild(self.upgrade_layer)
     -- upgrade now button
     WidgetPushButton.new({normal = "upgrade_green_button_normal.png",pressed = "upgrade_green_button_pressed.png"})
-        :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("立即升级"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
+        :setButtonLabel(UIKit:ttfLabel({
+            text = _("立即升级"),
+            size = 24,
+            color = 0xffedae,
+            shadow= true
+        }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 local upgrade_listener = function()
                     if self.building:GetType()=="tower" then
-                        NetManager:instantUpgradeTowerByLocation(self.building:IsUnlocked(), function(...) end)
+                        -- NetManager:instantUpgradeTowerByLocation(self.building:IsUnlocked(), function(...) end)
+                        NetManager:getInstantUpgradeTowerByLocationPromise(self.building:TowerId())
+                            :catch(function(err)
+                                dump(err:reason())
+                            end)
                     elseif self.building:GetType()=="wall" then
-                        NetManager:instantUpgradeWallByLocation(function(...) end)
+                        -- NetManager:instantUpgradeWallByLocation(function(...) end)
+                        NetManager:getInstantUpgradeWallByLocationPromise()
+                            :catch(function(err)
+                                dump(err:reason())
+                            end)
                     else
                         local location = City:GetLocationIdByBuildingType(self.building:GetType())
                         if location then
-                            NetManager:instantUpgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
+                            -- NetManager:instantUpgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
+
+                            local location_id = City:GetLocationIdByBuildingType(self.building:GetType())
+                            NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
+                                :catch(function(err)
+                                    dump(err:reason())
+                                end)
                         else
                             local tile = City:GetTileWhichBuildingBelongs(self.building)
                             local house_location = tile:GetBuildingLocation(self.building)
-                            NetManager:instantUpgradeHouseByLocation(tile.location_id, house_location, function(...) end)
+                            -- NetManager:instantUpgradeHouseByLocation(tile.location_id, house_location, function(...) end)
+
+                            NetManager:getInstantUpgradeHouseByLocationPromise(tile.location_id, house_location)
+                                :catch(function(err)
+                                    dump(err:reason())
+                                end)
                         end
                         print(self.building:GetType().."---------------- upgrade now button has been  clicked ")
                     end
@@ -400,22 +425,45 @@ function CommonUpgradeUI:InitUpgradePart()
         end):align(display.CENTER, display.cx-150, display.top-430):addTo(self.upgrade_layer)
     -- upgrade button
     WidgetPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
-        :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("升级"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
+        :setButtonLabel(UIKit:ttfLabel({
+            text = _("升级"),
+            size = 24,
+            color = 0xffedae,
+            shadow= true
+        }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 local upgrade_listener = function()
                     if self.building:GetType()=="tower" then
-                        NetManager:upgradeTowerByLocation(self.building:IsUnlocked(), function(...) end)
+                        -- NetManager:upgradeTowerByLocation(self.building:IsUnlocked(), function(...) end)
+                        NetManager:getUpgradeTowerByLocationPromise(self.building:TowerId())
+                            :catch(function(err)
+                                dump(err:reason())
+                            end)
                     elseif self.building:GetType()=="wall" then
-                        NetManager:upgradeWallByLocation(function(...) end)
+                        -- NetManager:upgradeWallByLocation(function(...) end)
+                        NetManager:getUpgradeWallByLocationPromise()
+                            :catch(function(err)
+                                dump(err:reason())
+                            end)
                     else
                         local location = City:GetLocationIdByBuildingType(self.building:GetType())
                         if location then
-                            NetManager:upgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
+                            -- NetManager:upgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
+                            local location_id = City:GetLocationIdByBuildingType(self.building:GetType())
+                            NetManager:getUpgradeBuildingByLocationPromise(location_id)
+                                :catch(function(err)
+                                    dump(err:reason())
+                                end)
                         else
                             local tile = City:GetTileWhichBuildingBelongs(self.building)
                             local house_location = tile:GetBuildingLocation(self.building)
-                            NetManager:upgradeHouseByLocation(tile.location_id, house_location, function(...) end)
+                            -- NetManager:upgradeHouseByLocation(tile.location_id, house_location, function(...) end)
+
+                            NetManager:getUpgradeHouseByLocationPromise(tile.location_id, house_location)
+                                :catch(function(err)
+                                    dump(err:reason())
+                                end)
                         end
                         print(self.building:GetType().."---------------- upgrade  button has been  clicked ")
                     end
@@ -606,7 +654,10 @@ function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
             size = 24,
         })):onButtonClicked(function(event)
         -- print("服务器还未提供免费加速接口，暂时用作直接使用宝石加速")
-        NetManager:sendMsg("keep 5", NOT_HANDLE)
+        -- NetManager:sendMsg("keep 5", NOT_HANDLE)
+        NetManager:getSendGlobalMsgPromise("keep 5"):catch(function(err)
+            dump(err:reason())
+        end)
 
         end):align(display.CENTER, display.cx+185, display.top - 435):addTo(self.acc_layer)
     self.acc_layer.acc_button:setButtonEnabled(false)
@@ -758,26 +809,5 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

@@ -22,7 +22,7 @@ function GameUIAllianceNoticeOrDescEdit:onMoveInStage()
 	--base UI
 	local shadowLayer = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
 		:addTo(self)
-	local bg_node = WidgetUIBackGround.new(content_height):addTo(shadowLayer):pos(window.left+20,window.bottom + 250)
+	local bg_node = WidgetUIBackGround.new({height=content_height}):addTo(shadowLayer):pos(window.left+20,window.bottom + 250)
 	local titleBar = display.newScale9Sprite("alliance_blue_title_600x42.png")
 		:size(bg_node:getCascadeBoundingBox().width,42)
 		:align(display.LEFT_BOTTOM, -2,content_height - 15)

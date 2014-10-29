@@ -81,7 +81,10 @@ function GameUIHome:CreateTop()
         {normal = "home/player_btn_up.png", pressed = "home/player_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        NetManager:sendMsg("reset", NOT_HANDLE)
+        -- NetManager:sendMsg("reset", NOT_HANDLE)
+        NetManager:getSendGlobalMsgPromise("reset"):catch(function(err)
+            dump(err:reason())
+        end)
     end):addTo(top_bg):align(display.LEFT_BOTTOM, 109, 106)
 
 
@@ -128,7 +131,6 @@ function GameUIHome:CreateTop()
         {normal = "home/res_btn_up.png", pressed = "home/res_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        -- NetManager:instantUpgradeBuildingByLocation(1, NOT_HANDLE)
         PushService:quitAlliance(NOT_HANDLE)
         end):addTo(top_bg):align(display.LEFT_BOTTOM, 317, 106)
 

@@ -133,7 +133,6 @@ end
 
 
 function UIKit:getImageByBuildingType( building_type ,level)
-    print("建筑等级=",level)
     local level_1,level_2 = 6 ,16
     if building_type=="keep" then
         return "keep_760x855.png"
