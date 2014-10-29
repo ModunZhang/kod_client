@@ -19,6 +19,9 @@ local titles_enum = Enum("member",
 function AllianceMember:ctor(id)
     property(self, "id", id)
 end
+function AllianceMember:IsArchon()
+    return self:Title() == "archon"
+end
 function AllianceMember:IsTitleHighest()
     return self:Title() == titles_enum[#titles_enum - 1]
 end

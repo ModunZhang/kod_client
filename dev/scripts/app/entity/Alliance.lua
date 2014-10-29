@@ -73,7 +73,18 @@ function Alliance:GetEliteTitle()
     return self:GetTitles()["elite"]
 end
 function Alliance:ModifyTitleWithMemberType(member_type, new_name)
-    self.titles[member_type] = new_name
+    if self.titles[member_type] ~= new_name then
+        local old_value = self.titles[member_type]
+        self.titles[member_type] = new_name
+        self:OnBasicChanged{
+            ["title_name"] = {old = old_value, new = new_name}
+        }
+    end
+end
+function Alliance:SetTitleNames(title_names)
+    for k, v in pairs(title_names) do
+        self:ModifyTitleWithMemberType(k, v)
+    end
 end
 function Alliance:GetTitles()
     return LuaUtils:table_map(self.titles, function(k, v)
@@ -315,21 +326,20 @@ function Alliance:OnJoinEventsChanged(changed_map)
     end)
 end
 function Alliance:OnAllianceDataChanged(alliance_data)
-    if alliance_data.basicInfo then
-        self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
+    if alliance_data.notice then
+        self:SetNotice(alliance_data.notice)
     end
-    if alliance_data.events then
-        self:OnAllianceEventsChanged(alliance_data.events)
+    if alliance_data.desc then
+        self:SetDescribe(alliance_data.desc)
     end
-    if alliance_data.joinRequestEvents then
-        self:OnJoinRequestEventsChanged(alliance_data.joinRequestEvents)
+    if alliance_data.titles then
+        self:SetTitleNames(alliance_data.titles)
     end
-    if alliance_data.helpEvents then
-        self:OnHelpEventsChanged(alliance_data.helpEvents)
-    end
-    if alliance_data.members then
-        self:OnAllianceMemberDataChanged(alliance_data.members)
-    end
+    self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
+    self:OnAllianceEventsChanged(alliance_data.events)
+    self:OnJoinRequestEventsChanged(alliance_data.joinRequestEvents)
+    self:OnHelpEventsChanged(alliance_data.helpEvents)
+    self:OnAllianceMemberDataChanged(alliance_data.members)
 end
 function Alliance:OnAllianceBasicInfoChanged(basicInfo)
     if basicInfo == nil then return end
