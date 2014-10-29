@@ -38,7 +38,7 @@ function CityScene:onEnter()
 
     Alliance_Manager:GetMyAlliance():AddListenOnType({
         OnBasicChanged = function(this, alliance, changed_map)
-        -- dump(changed_map)
+        dump(changed_map)
         end}, Alliance.LISTEN_TYPE.BASIC)
 
     Alliance_Manager:GetMyAlliance():AddListenOnType({
