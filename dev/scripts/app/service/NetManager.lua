@@ -405,6 +405,48 @@ end
 function NetManager:getInstantTreatSoldiersPromise(soldiers)
     return promise.all(get_treatSoldier_promise(soldiers), get_playerdata_callback()):next(get_response_msg)
 end
+-- 孵化
+function NetManager:getHatchDragonPromise(dragonType)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.hatchDragon", {
+        dragonType = dragonType,
+    }, "孵化失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 装备
+function NetManager:getLoadDragonEquipmentPromise(dragonType, equipmentCategory, equipmentName)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.hatchDragon", {
+        dragonType = dragonType,
+        equipmentCategory = equipmentCategory,
+        equipmentName = equipmentName
+    }, "装备失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 卸载装备
+function NetManager:getResetDragonEquipmentPromise(dragonType, equipmentCategory)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.resetDragonEquipment", {
+        dragonType = dragonType,
+        equipmentCategory = equipmentCategory
+    }, "卸载装备失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 强化装备
+function NetManager:getEnhanceDragonEquipmentPromise(dragonType, equipmentCategory, equipments)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.enhanceDragonEquipment", {
+        dragonType = dragonType,
+        equipmentCategory = equipmentCategory,
+        equipments = equipments
+    }, "强化装备失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 升级龙星
+function NetManager:getUpgradeDragonStarPromise(dragonType)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.upgradeDragonStar", {
+        dragonType = dragonType,
+    }, "升级龙星失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 升级龙技能
+function NetManager:getUpgradeDragonDragonSkillPromise(dragonType, skillLocation)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.upgradeDragonSkill", {
+        dragonType = dragonType,
+        skillLocation = skillLocation
+    }, "升级龙技能失败!"), get_playerdata_callback()):next(get_response_msg)
+end
 -- 发送个人邮件
 function NetManager:getSendPersonalMailPromise(memberName, title, content)
     return promise.all(get_blocking_request_promise("logic.playerHandler.sendMail", {
