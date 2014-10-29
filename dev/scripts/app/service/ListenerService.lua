@@ -21,7 +21,7 @@ local events_to_listen = {
     'onChat','onAllChat', -- 聊天相关
     'onNewMailReceived','onGetMailsSuccess','onGetSavedMailsSuccess','onGetSendMailsSuccess','onSendMailSuccess', -- 邮件
     'onSearchAlliancesSuccess',"onGetCanDirectJoinAlliancesSuccess","onGetAllianceDataSuccess","onAllianceDataChanged","onAllianceNewEventReceived",-- 联盟
-    'onAllianceMemberDataChanged','onAllianceBasicInfoAndMemberDataChanged',
+    'onAllianceMemberDataChanged','onAllianceBasicInfoAndMemberDataChanged','onAllianceHelpEventChanged',
     'onGetPlayerInfoSuccess',
 }
 
@@ -46,6 +46,10 @@ onSearchAlliancesSuccess_callbacks = {}
 onGetCanDirectJoinAlliancesSuccess_callbacks = {}
 onGetPlayerInfoSuccess_callbacks = {}
 onAllianceDataChanged_callbacks = {}
+onGetMailsSuccess_callbacks = {}
+onGetSavedMailsSuccess_callbacks = {}
+onGetSendMailsSuccess_callbacks = {}
+
 function ListenerService:_listenNetMessage()
     for _,v in ipairs(events_to_listen) do
         if type(v) == 'string' and string.len(v) ~= 0 then
@@ -79,6 +83,27 @@ function ListenerService:_listenNetMessage()
                         callback(success, msg)
                     end
                     onAllianceDataChanged_callbacks = {}
+                elseif v == "onGetMailsSuccess" then
+                    assert(#onGetMailsSuccess_callbacks <= 1, "重复请求过多了!")
+                    local callback = onGetMailsSuccess_callbacks[1]
+                    if type(callback) == "function" then
+                        callback(success, msg)
+                    end
+                    onGetMailsSuccess_callbacks = {}
+                elseif v == "onGetSavedMailsSuccess" then
+                    assert(#onGetSavedMailsSuccess_callbacks <= 1, "重复请求过多了!")
+                    local callback = onGetSavedMailsSuccess_callbacks[1]
+                    if type(callback) == "function" then
+                        callback(success, msg)
+                    end
+                    onGetSavedMailsSuccess_callbacks = {}
+                elseif v == "onGetSendMailsSuccess" then
+                    assert(#onGetSendMailsSuccess_callbacks <= 1, "重复请求过多了!")
+                    local callback = onGetSendMailsSuccess_callbacks[1]
+                    if type(callback) == "function" then
+                        callback(success, msg)
+                    end
+                    onGetSendMailsSuccess_callbacks = {}
                 end
             end)
         end
@@ -190,7 +215,9 @@ end
 
 function ListenerService:ls_onAllianceHelpEventChanged(msg,eventName)
     -- self:dispatchEventToAllianceManager_(msg,eventName)
-    Alliance_Manager:OnAllianceHelpDataChanged(msg)
+    print("ls_onAllianceHelpEventChanged",msg)
+    LuaUtils:outputTable("msg", msg)
+    Alliance_Manager:OnAllianceHelpDataChanged(msg.event)
 end
 
 
@@ -217,6 +244,7 @@ end
 function ListenerService:ls_onSendMailSuccess( msg,eventName )
     self:dispatchEventToMailManager_(msg,eventName)
 end
+
 
 
 
