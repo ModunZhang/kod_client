@@ -263,6 +263,16 @@ end
 local function get_alliancedata_callback()
     return get_callback_promise(onAllianceDataChanged_callbacks, "修改联盟信息失败!")
 end
+local function get_inboxmails_callback()
+    return get_callback_promise(onGetMailsSuccess_callbacks, "获取收件箱邮件失败!")
+end
+local function get_savedmails_callback()
+    return get_callback_promise(onGetSavedMailsSuccess_callbacks, "获取收藏邮件失败!")
+end
+local function get_sendmails_callback()
+    return get_callback_promise(onGetSendMailsSuccess_callbacks, "获取发件箱邮件失败!")
+end
+
 -- 建造小屋
 function NetManager:getCreateHouseByLocationPromise(location, sub_location, building_type)
     return promise.all(get_blocking_request_promise("logic.playerHandler.createHouse", {
@@ -459,7 +469,7 @@ end
 function NetManager:getFetchMailsPromise(fromIndex)
     return promise.all(get_blocking_request_promise("logic.playerHandler.getMails", {
         fromIndex = fromIndex
-    }, "获取收件箱邮件失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "获取收件箱邮件失败!"), get_inboxmails_callback()):next(get_response_msg)
 end
 -- 阅读邮件
 function NetManager:getReadMailPromise(mailId)
@@ -483,13 +493,13 @@ end
 function NetManager:getFetchSavedMailsPromise(fromIndex)
     return promise.all(get_blocking_request_promise("logic.playerHandler.getSavedMails", {
         fromIndex = fromIndex
-    }, "获取收藏邮件失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "获取收藏邮件失败!"), get_savedmails_callback()):next(get_response_msg)
 end
 -- 获取已发送邮件
 function NetManager:getFetchSendMailsPromise(fromIndex)
     return promise.all(get_blocking_request_promise("logic.playerHandler.getSendMails", {
         fromIndex = fromIndex
-    }, "获取已发送邮件失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "获取已发送邮件失败!"), get_sendmails_callback()):next(get_response_msg)
 end
 -- 删除邮件
 function NetManager:getDeleteMailPromise(mailId)
@@ -515,12 +525,12 @@ end
 function NetManager:getHelpAllianceMemberSpeedUpPromise(eventId)
     return promise.all(get_blocking_request_promise("logic.playerHandler.helpAllianceMemberSpeedUp", {
         eventId = eventId,
-    }, "协助玩家加速失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "协助玩家加速失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 -- 协助所有玩家加速
 function NetManager:getHelpAllAllianceMemberSpeedUpPromise()
     return promise.all(get_blocking_request_promise("logic.playerHandler.helpAllAllianceMemberSpeedUp", {}
-        , "协助所有玩家加速失败!"), get_playerdata_callback()):next(get_response_msg)
+        , "协助所有玩家加速失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 -- 创建联盟
 function NetManager:getCreateAlliancePromise(name, tag, language, terrain, flag)
