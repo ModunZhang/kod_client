@@ -72,8 +72,8 @@ function UIPageView:ctor(params)
 
     self:setContentSize(self.viewRect_.width,self.viewRect_.height)
     -- self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(...)
-    -- 		self:update_(...)
-    -- 	end)
+    --      self:update_(...)
+    --  end)
     self:setTouchEnabled(true)
     self:addNodeEventListener(cc.NODE_TOUCH_EVENT, function (event)
         return self:onTouch_(event)
@@ -149,7 +149,7 @@ function UIPageView:reload()
         self.pages_[1]:setVisible(true)
         self.pages_[2]:setVisible(true)
         -- self.pages_[1]:setPosition(
-        -- 	self.viewRect_.x, self.viewRect_.y)
+        --  self.viewRect_.x, self.viewRect_.y)
     end
 
     return self
@@ -179,15 +179,36 @@ function UIPageView:gotoPage(pageIdx, bSmooth, bLeftToRight)
         self:scrollPagePos(pageIdx, bLeftToRight)
     else
         -- self.pages_[self.curPageIdx_]:setVisible(false)
-        self.pages_[pageIdx]:setVisible(true)
-        self.pages_[pageIdx]:setPosition(
-            self.viewRect_.x, self.viewRect_.y)
+        for i = 1, self:getPageCount() do
+            self.pages_[i]:setPosition(
+                self.viewRect_.x+(i-pageIdx)*self.viewRect_.width, self.viewRect_.y)
+        end
         self.curPageIdx_ = pageIdx
+        -- for i=1,self:getPageCount() do
+        --     if pageIdx==i then
+        --         self.pages_[i]:setVisible(true)
+        --         self.pages_[i]:setPosition(
+        --             self.viewRect_.x, self.viewRect_.y)
+        --         
+        --     elseif (pageIdx-1)==i then
+        --         self.pages_[i]:setVisible(true)
+        --         self.pages_[i]:setPosition(
+        --             self.viewRect_.x-self.viewRect_.width, self.viewRect_.y)
+        --     elseif (pageIdx+1)==i then
+        --         self.pages_[i]:setVisible(true)
+        --         self.pages_[i]:setPosition(
+        --             self.viewRect_.x+self.viewRect_.width, self.viewRect_.y)
+        --     else
+        --         self.pages_[i]:setVisible(false)
+        --     end
+        -- end
+
+
 
         -- self.notifyListener_{name = "clicked",
-        -- 		item = self.items_[clickIdx],
-        -- 		itemIdx = clickIdx,
-        -- 		pageIdx = self.curPageIdx_}
+        --      item = self.items_[clickIdx],
+        --      itemIdx = clickIdx,
+        --      pageIdx = self.curPageIdx_}
         self:notifyListener_{name = "pageChange"}
     end
 
@@ -521,7 +542,7 @@ function UIPageView:scrollLCRPages(threePages, dis)
     if pageL and "boolean" ~= type(pageL) then
         pageL:setPosition(posX, posY)
         -- if not pageL:isVisible() then
-        -- 	pageL:setVisible(true)
+        --  pageL:setVisible(true)
         -- end
     end
 
@@ -529,7 +550,7 @@ function UIPageView:scrollLCRPages(threePages, dis)
     if pageR then
         pageR:setPosition(posX, posY)
         -- if not pageR:isVisible() then
-        -- 	pageR:setVisible(true)
+        --  pageR:setVisible(true)
         -- end
     end
 end
@@ -749,4 +770,5 @@ end
 
 
 return UIPageView
+
 

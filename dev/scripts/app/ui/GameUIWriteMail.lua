@@ -14,7 +14,7 @@ local ALLIANCE_MAIL = GameUIWriteMail.SEND_TYPE.ALLIANCE_MAIL
 
 function GameUIWriteMail:ctor()
     -- bg
-    local write_mail = WidgetUIBackGround.new(768):addTo(self)
+    local write_mail = WidgetUIBackGround.new({height=768}):addTo(self)
     write_mail:pos((display.width-write_mail:getContentSize().width)/2,display.top - write_mail:getContentSize().height - 120)
     local r_size = write_mail:getContentSize()
     -- title write_mail
@@ -50,7 +50,6 @@ function GameUIWriteMail:ctor()
         UIInputType = 1,
         image = "input_box.png",
         size = cc.size(422,40),
-        listener = onEdit,
         font = UIKit:getFontFilePath(),
     })
     local editbox_addressee = self.editbox_addressee
@@ -74,7 +73,6 @@ function GameUIWriteMail:ctor()
         UIInputType = 1,
         image = "input_box.png",
         size = cc.size(422,40),
-        listener = onEdit,
         font = UIKit:getFontFilePath(),
     })
     local editbox_subject = self.editbox_subject

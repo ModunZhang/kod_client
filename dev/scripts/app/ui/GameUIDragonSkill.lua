@@ -20,7 +20,7 @@ end
 
 function GameUIDragonSkill:onEnter()
 	GameUIDragonSkill.super.onEnter(self)
-	self.backgroundImage = WidgetUIBackGround.new(BODY_HEIGHT):addTo(self)
+	self.backgroundImage = WidgetUIBackGround.new({height=BODY_HEIGHT}):addTo(self)
 	self.backgroundImage:pos((display.width-self.backgroundImage:getContentSize().width)/2,display.height - self.backgroundImage:getContentSize().height - 80)
 	local titleBar = display.newSprite("title_blue_596x49.png")
 		:align(display.TOP_LEFT, 6,self.backgroundImage:getContentSize().height - 6)

@@ -45,6 +45,7 @@ end
 onSearchAlliancesSuccess_callbacks = {}
 onGetCanDirectJoinAlliancesSuccess_callbacks = {}
 onGetPlayerInfoSuccess_callbacks = {}
+onAllianceDataChanged_callbacks = {}
 function ListenerService:_listenNetMessage()
     for _,v in ipairs(events_to_listen) do
         if type(v) == 'string' and string.len(v) ~= 0 then
@@ -55,26 +56,29 @@ function ListenerService:_listenNetMessage()
                 end
                 -- 搜索回调
                 if v == "onSearchAlliancesSuccess" then
-                    assert(#onSearchAlliancesSuccess_callbacks <= 1, "重复请求过多了!")
                     local callback = onSearchAlliancesSuccess_callbacks[1]
                     if type(callback) == "function" then
                         callback(success, msg)
                     end
                     onSearchAlliancesSuccess_callbacks = {}
                 elseif  v == "onGetCanDirectJoinAlliancesSuccess" then
-                    assert(#onGetCanDirectJoinAlliancesSuccess_callbacks <= 1, "重复请求过多了!")
                     local callback = onGetCanDirectJoinAlliancesSuccess_callbacks[1]
                     if type(callback) == "function" then
                         callback(success, msg)
                     end
                     onGetCanDirectJoinAlliancesSuccess_callbacks = {}
                 elseif v == "onGetPlayerInfoSuccess" then
-                    assert(#onGetPlayerInfoSuccess_callbacks <= 1, "重复请求过多了!")
                     local callback = onGetPlayerInfoSuccess_callbacks[1]
                     if type(callback) == "function" then
                         callback(success, msg)
                     end
                     onGetPlayerInfoSuccess_callbacks = {}
+                elseif v == "onAllianceDataChanged" then
+                    local callback = onAllianceDataChanged_callbacks[1]
+                    if type(callback) == "function" then
+                        callback(success, msg)
+                    end
+                    onAllianceDataChanged_callbacks = {}
                 end
             end)
         end
@@ -213,6 +217,7 @@ end
 function ListenerService:ls_onSendMailSuccess( msg,eventName )
     self:dispatchEventToMailManager_(msg,eventName)
 end
+
 
 
 

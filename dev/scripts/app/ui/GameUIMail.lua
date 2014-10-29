@@ -452,7 +452,7 @@ function GameUIMail:ShowSendMailDetails(mail)
     -- 蒙层背景
     local layer_bg = display.newColorLayer(UIKit:hex2c4b(0x7a000000)):addTo(self)
     -- bg
-    local bg = WidgetUIBackGround.new(768):addTo(layer_bg)
+    local bg = WidgetUIBackGround.new({height=768}):addTo(layer_bg)
     bg:pos((display.width-bg:getContentSize().width)/2,display.top - bg:getContentSize().height - 120)
     -- mail content bg
     local content_bg = WidgetUIBackGround2.new(544):addTo(bg)
@@ -557,7 +557,7 @@ function GameUIMail:ShowMailDetails(mail)
     -- 蒙层背景
     local layer_bg = display.newColorLayer(UIKit:hex2c4b(0x7a000000)):addTo(self)
     -- bg
-    local bg = WidgetUIBackGround.new(768):addTo(layer_bg)
+    local bg = WidgetUIBackGround.new({height=768}):addTo(layer_bg)
     bg:pos((display.width-bg:getContentSize().width)/2,display.top - bg:getContentSize().height - 120)
     -- mail content bg
     local content_bg = WidgetUIBackGround2.new(544):addTo(bg)
@@ -855,7 +855,7 @@ end
 
 function GameUIMail:CreateReplyMail(mail)
     -- bg
-    local reply_mail = WidgetUIBackGround.new(768)
+    local reply_mail = WidgetUIBackGround.new({height=768})
     reply_mail:pos((display.width-reply_mail:getContentSize().width)/2,display.top - reply_mail:getContentSize().height - 120)
     local r_size = reply_mail:getContentSize()
     -- title reply_mail

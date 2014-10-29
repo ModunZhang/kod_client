@@ -231,7 +231,7 @@ function GameUIVip:CreateVipExpBar()
 end
 
 function GameUIVip:CreateVIPStatus()
-    local status_bg = WidgetUIBackGround.new(528):addTo(self.main_layer)
+    local status_bg = WidgetUIBackGround.new({height=528}):addTo(self.main_layer)
         :align(display.BOTTOM_CENTER, display.cx, display.top-940)
     local bg_size = status_bg:getContentSize()
     -- 透明边框
@@ -337,7 +337,7 @@ function GameUIVip:CreateVIPButtons(level)
             ):addTo(button_group):align(display.LEFT_BOTTOM, (math.mod(i-1,5))*gap_x, 130-math.floor((i-1)/5)*130)
                 :onButtonClicked(function(event)
                     if event.name == "CLICKED_EVENT" then
-                        self:OpenVIPDetails()
+                        self:OpenVIPDetails(i)
                     end
                 end)
         else
@@ -347,7 +347,7 @@ function GameUIVip:CreateVIPButtons(level)
             ):addTo(button_group):align(display.LEFT_BOTTOM, (math.mod(i-1,5))*gap_x, 130-math.floor((i-1)/5)*130)
                 :onButtonClicked(function(event)
                     if event.name == "CLICKED_EVENT" then
-                        self:OpenVIPDetails()
+                        self:OpenVIPDetails(i)
                     end
                 end)
 
@@ -478,7 +478,7 @@ end
 
 function GameUIVip:CreateBackGroundWithTitle(title_string)
     local leyer = display.newColorLayer(cc.c4b(0,0,0,127))
-    local body = WidgetUIBackGround.new(643):align(display.TOP_CENTER,display.cx,display.top-200)
+    local body = WidgetUIBackGround.new({height=643}):align(display.TOP_CENTER,display.cx,display.top-200)
         :addTo(leyer)
     local rb_size = body:getContentSize()
     local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height)
@@ -574,7 +574,7 @@ function GameUIVip:CreateVIPItem(params)
     return body
 end
 
-function GameUIVip:OpenVIPDetails()
+function GameUIVip:OpenVIPDetails(show_vip_level)
     if self:getChildByTag(101) then
         return
     end
@@ -598,6 +598,7 @@ function GameUIVip:OpenVIPDetails()
         self.pv:addItem(item)
     end
     self.pv:reload()
+    self.pv:gotoPage(show_vip_level)
 end
 
 function GameUIVip:CreateVIPPageItem(title_string,parent,isReach,vip_level)
@@ -607,7 +608,7 @@ function GameUIVip:CreateVIPPageItem(title_string,parent,isReach,vip_level)
     --             200))
     local layer = display.newLayer()
 
-    local body = WidgetUIBackGround.new(850):scale(0.8):addTo(layer)
+    local body = WidgetUIBackGround.new({height=850}):scale(0.8):addTo(layer)
         :align(display.CENTER, (display.width-200)/2, display.top-550)
     local rb_size = body:getContentSize()
     local title = display.newSprite("vip_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height)
