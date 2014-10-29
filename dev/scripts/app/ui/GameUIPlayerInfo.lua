@@ -8,6 +8,7 @@ local window = import("..utils.window")
 local UIListView = import(".UIListView")
 local UIScrollView = import(".UIScrollView")
 local NetService = import('..service.NetService')
+local AllianceMember = import('..entity.AllianceMember')
 
 function GameUIPlayerInfo:ctor(isOnlyMail,memberId)
 	GameUIPlayerInfo.super.ctor(self)
@@ -217,22 +218,36 @@ function GameUIPlayerInfo:OnPlayerButtonClicked( tag )
 		-- 	if success then
 		-- 	end
 		-- end)
-	elseif tag == 3 then
-		-- local nextTitle = self.alliance_manager:GetMemberTitle(self.player_info.title,2)
-		-- if nextTitle then
-		-- 	PushService:modifyAllianceMemberTitle(self.memberId_,nextTitle,function(success)
-		-- 		if success then
-		-- 		end
-		-- 	end)
-		-- end
-	elseif tag == 4 then
-		-- local nextTitle = self.alliance_manager:GetMemberTitle(self.player_info.title,1)
-		-- if nextTitle then
-		-- 	PushService:modifyAllianceMemberTitle(self.memberId_,nextTitle,function(success)
-		-- 		if success then
-		-- 		end
-		-- 	end)
-		-- end
+	elseif tag == 3 then --降级
+		local member = AllianceMember:CreatFromData(self.player_info)
+		 if not member:IsTitleLowest() then
+		 	  NetManager:getModifyAllianceMemberTitlePromise(member:Id(), member:TitleDegrade()):next(function(data)
+		 	  		local alliacne =  Alliance_Manager:GetMyAlliance()
+		 	  		local title = alliacne:GetMemeberById(member:Id()):Title()
+		 	  		local displayTitle = alliacne:GetTitles()[title]
+		 	  		print("displayTitle------>",displayTitle)
+		 	  		dump(data,"displayTitle------>")
+		 	  end)
+		 	  :catch(function(err)
+		 	  		print("err------>")
+		 	  		dump(err,"err------>")
+		 	  end)
+		 end
+	elseif tag == 4 then --晋级
+		local member = AllianceMember:CreatFromData(self.player_info)
+		if not member:IsTitleHighest() then
+            NetManager:getModifyAllianceMemberTitlePromise(member:Id(), member:TitleUpgrade()):next(function(data)
+            		local alliacne =  Alliance_Manager:GetMyAlliance()
+		 	  		local title = alliacne:GetMemeberById(member:Id()):Title()
+		 	  		local displayTitle = alliacne:GetTitles()[title]
+		 	  		print("displayTitle------>",displayTitle)
+		 	  		dump(data,"displayTitle------>")
+            end)
+             :catch(function(err)
+		 	  		print("err------>")
+		 	  		dump(err,"err------>")
+		 	  end)
+        end
 	elseif tag == 5 then
 		--TODO:打开邮件界面
 		--if self.isOnlyMail_

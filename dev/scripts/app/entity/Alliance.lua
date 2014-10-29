@@ -107,7 +107,6 @@ function Alliance:OnPropertyChange(property_name, old_value, new_value)
 end
 function Alliance:OnBasicChanged(changed_map)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.BASIC, function(listener)
-        dump(listener)
         listener:OnBasicChanged(self, changed_map)
     end)
 end
@@ -301,6 +300,12 @@ function Alliance:OnJoinEventsChanged(changed_map)
     end)
 end
 function Alliance:OnAllianceDataChanged(alliance_data)
+    if alliance_data.notice then
+        self:SetNotice(alliance_data.notice)
+    end
+    if alliance_data.desc then
+        self:SetDescribe(alliance_data.desc)
+    end
     self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
     self:OnAllianceEventsChanged(alliance_data.events)
     self:OnJoinRequestEventsChanged(alliance_data.joinRequestEvents)

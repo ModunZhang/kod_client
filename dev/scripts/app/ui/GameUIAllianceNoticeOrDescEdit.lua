@@ -13,7 +13,6 @@ GameUIAllianceNoticeOrDescEdit.EDIT_TYPE = Enum("ALLIANCE_NOTICE","ALLIANCE_DESC
 local content_height = 470
 
 function GameUIAllianceNoticeOrDescEdit:ctor(edit_type)
-	self.allianceManager = DataManager:GetManager("AllianceManager")
 	GameUIAllianceNoticeOrDescEdit.super.ctor(self)
 	self.isNotice_ = edit_type == self.EDIT_TYPE.ALLIANCE_NOTICE
 end
@@ -42,9 +41,9 @@ function GameUIAllianceNoticeOrDescEdit:onMoveInStage()
     textView:setPlaceHolder(_("最多输入600个字符"))
     textView:setFontColor(UIKit:hex2c3b(0x000000))
     if self.isNotice_ then
-    	textView:setText(self.allianceManager:GetMyAllianceData().notice or "")
+    	textView:setText(Alliance_Manager:GetMyAlliance():Notice() or "")
     else
-    	textView:setText(self.allianceManager:GetMyAllianceData().desc or "")
+    	textView:setText(Alliance_Manager:GetMyAlliance():Describe() or "")
     end
     self.textView = textView
  	display.newSprite("alliance_edit_box_584x364.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(textView,2)
@@ -84,9 +83,10 @@ end
 function GameUIAllianceNoticeOrDescEdit:onOkButtonClicked()
 	local content = self.textView:getText()
 	if self.isNotice_ then
-		PushService:editAllianceNotice(content,function(success)
-			self:leftButtonClicked()
-		end)
+		NetManager:getEditAllianceNoticePromise(content)
+        	:done(function()
+        		self:leftButtonClicked()
+        	end)
 	else
 		PushService:editAllianceNotice(content,function(success)
 			self:leftButtonClicked()

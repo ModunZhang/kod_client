@@ -716,7 +716,8 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 		:align(display.LEFT_BOTTOM, 120,notice_bg:getPositionY()+notice_bg:getContentSize().height-5)
 	display.newSprite("alliance_notice_icon_26x26.png"):addTo(notice_button):pos(250,22)
 	
-	self.alliance_ui_helper:CreateFlagWithRhombusTerrain(Alliance_Manager:GetMyAlliance():TerrainType(),Alliance_Manager:GetMyAlliance():Flag())
+
+	self.ui_overview.my_alliance_flag = self.alliance_ui_helper:CreateFlagWithRhombusTerrain(Alliance_Manager:GetMyAlliance():TerrainType(),Alliance_Manager:GetMyAlliance():Flag())
 		:addTo(overviewNode)
 		:pos(100,titileBar:getPositionY() - 65)
 	local tagLabel = UIKit:ttfLabel({
@@ -756,9 +757,10 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 end
 
 function GameUIAlliance:RefreshNoticeView()
+	print("RefreshNoticeView------->")
 	local textLabel = cc.ui.UILabel.new({
 			UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = Alliance_Manager:GetMyAlliance().notice or "",
+            text = Alliance_Manager:GetMyAlliance():Notice() or "",
             size = 20,
             color = UIKit:hex2c3b(0x403c2f),
             align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
@@ -846,20 +848,20 @@ end
 function GameUIAlliance:RefreshOverViewUI()
 	print("RefreshOverViewUI---->")
 	self:RefreshEventListView()
-	-- if self.ui_overview and self.tab_buttons:GetSelectedButtonTag() == 'overview' then
-	-- 	local alliance_data = self.alliance_manager:GetMyAllianceData()
-	-- 	self.ui_overview.nameLabel:setString(alliance_data.basicInfo.name)
-	-- 	self.ui_overview.tagLabel:setString(alliance_data.basicInfo.tag)
-	-- 	self.ui_overview.languageLabel:setString(alliance_data.basicInfo.language)
-	-- 	if self.ui_overview.my_alliance_flag then
-	-- 		local x,y = self.ui_overview.my_alliance_flag:getPosition()
-	-- 		self.ui_overview.my_alliance_flag:removeFromParent()
-	-- 		self.ui_overview.my_alliance_flag = self.alliance_manager:GetMyAllianceFlag()
-	-- 			:addTo(self.overviewNode)
-	-- 			:pos(x,y)
-	-- 		self:RefreshNoticeView()
-	-- 	end
-	-- end
+	if self.ui_overview and self.tab_buttons:GetSelectedButtonTag() == 'overview' then
+		local alliance_data = Alliance_Manager:GetMyAlliance()
+		self.ui_overview.nameLabel:setString(alliance_data:Name())
+		self.ui_overview.tagLabel:setString(alliance_data:AliasName())
+		self.ui_overview.languageLabel:setString(alliance_data:DefaultLanguage())
+		if self.ui_overview.my_alliance_flag then
+			local x,y = self.ui_overview.my_alliance_flag:getPosition()
+			self.ui_overview.my_alliance_flag:removeFromParent()
+			self.ui_overview.my_alliance_flag = self.alliance_ui_helper:CreateFlagWithRhombusTerrain(Alliance_Manager:GetMyAlliance():TerrainType(),Alliance_Manager:GetMyAlliance():Flag())
+				:addTo(self.overviewNode)
+				:pos(x,y)
+		end
+		self:RefreshNoticeView()
+	end
 end
 
 function GameUIAlliance:RefreshEventListView()
