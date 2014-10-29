@@ -19,30 +19,27 @@ end
 local function check_request(m)
     return function(result)
         if not result.success or result.msg.code ~= SUCCESS_CODE then
-            promise.reject(m)
+            promise.reject(result.msg.message, m)
         end
         return result
     end
 end
 -- 返回promise的函数
-local function get_blocking_request_promise(request_route, data, m)
+local function get_request_promise(request_route, data, m)
     local p = promise.new(check_request(m or ""))
     NetManager.m_netService:request(request_route, data, function(success, msg)
         p:resolve({success = success, msg = msg})
     end)
-
+    return p
+end
+local function get_blocking_request_promise(request_route, data, m)
     local loading = UIKit:newGameUI("GameUIWatiForNetWork"):addToCurrentScene(true)
-    return cocos_promise.promiseWithTimeOut(p, TIME_OUT):always(function()
+    return cocos_promise.promiseWithTimeOut(get_request_promise(request_route, data, m), TIME_OUT):always(function()
         loading:removeFromParent()
     end)
 end
 local function get_none_blocking_request_promise(request_route, data, m)
-    local p = promise.new(check_request(m or ""))
-    NetManager.m_netService:request(request_route, data, function(success, msg)
-        p:resolve({success = success, msg = msg})
-    end)
-    -- return p
-    return cocos_promise.promiseWithTimeOut(p, TIME_OUT)
+    return cocos_promise.promiseWithTimeOut(get_request_promise(request_route, data, m), TIME_OUT)
 end
 local function get_callback_promise(callbacks, m)
     local p = promise.new(check_response(m or ""))
