@@ -559,6 +559,26 @@ function GameUIShop:onEnter()
         end)
 
 
+         WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "随机修改萌主名字",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 500, window.top - 900)
+        :onButtonClicked(function(event)
+            math.randomseed(os.time())
+            NetManager:getEditTitleNamePromise("archon", "萌主"..math.random(10))
+                :catch(function(err)
+                    dump(err:reason())
+                end)
+        end)
+
+
 
     item:addContent(content)
     item:setItemSize(640, 1000)
