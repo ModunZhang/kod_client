@@ -32,7 +32,11 @@ function GameUIShop:onEnter()
         :align(display.CENTER, window.left + 320, window.top - 500)
         :onButtonClicked(function()
             local current = self.shop_city:GetResourceManager():GetGemResource():GetValue() + add_gem
-            NetManager:sendMsg("gem "..current, NOT_HANDLE)
+            -- NetManager:sendMsg("gem "..current, NOT_HANDLE)
+            NetManager:getSendGlobalMsgPromise("gem "..current):catch(function(err)
+                dump(err:reason())
+            end)
+
         end)
     -- :setButtonEnabled(false)
     -- :SetFilter({
@@ -51,9 +55,10 @@ function GameUIShop:onEnter()
         :addTo(self)
         :align(display.CENTER, window.left + 500, window.top - 500)
         :onButtonClicked(function()
-            NetManager:sendMsg("reset", function()
-                PushService:quitAlliance(function()
-                    end)
+            NetManager:getSendGlobalMsgPromise("reset"):next(function()
+                return NetManager:getQuitAlliancePromise()
+            end):catch(function(err)
+                dump(err:reason())
             end)
         end)
 
@@ -389,7 +394,7 @@ function GameUIShop:onEnter()
         end)
 
 
-        WidgetPushButton.new(
+    WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
@@ -446,6 +451,9 @@ end
 
 
 return GameUIShop
+
+
+
 
 
 

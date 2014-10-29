@@ -56,28 +56,24 @@ function ListenerService:_listenNetMessage()
                 end
                 -- 搜索回调
                 if v == "onSearchAlliancesSuccess" then
-                    assert(#onSearchAlliancesSuccess_callbacks <= 1, "重复请求过多了!")
                     local callback = onSearchAlliancesSuccess_callbacks[1]
                     if type(callback) == "function" then
                         callback(success, msg)
                     end
                     onSearchAlliancesSuccess_callbacks = {}
                 elseif  v == "onGetCanDirectJoinAlliancesSuccess" then
-                    assert(#onGetCanDirectJoinAlliancesSuccess_callbacks <= 1, "重复请求过多了!")
                     local callback = onGetCanDirectJoinAlliancesSuccess_callbacks[1]
                     if type(callback) == "function" then
                         callback(success, msg)
                     end
                     onGetCanDirectJoinAlliancesSuccess_callbacks = {}
                 elseif v == "onGetPlayerInfoSuccess" then
-                    assert(#onGetPlayerInfoSuccess_callbacks <= 1, "重复请求过多了!")
                     local callback = onGetPlayerInfoSuccess_callbacks[1]
                     if type(callback) == "function" then
                         callback(success, msg)
                     end
                     onGetPlayerInfoSuccess_callbacks = {}
                 elseif v == "onAllianceDataChanged" then
-                    assert(#onAllianceDataChanged_callbacks <= 1, "重复请求过多了!")
                     local callback = onAllianceDataChanged_callbacks[1]
                     if type(callback) == "function" then
                         callback(success, msg)

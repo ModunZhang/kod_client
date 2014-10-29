@@ -162,7 +162,6 @@ function NetManager:addPlayerDataChangedEventListener()
             LuaUtils:outputTable("onPlayerDataChanged", msg)
             DataManager:setUserData(msg)
         end
-        assert(#onPlayerDataChanged_callbacks <= 1, "重复请求过多了!")
         local callback = onPlayerDataChanged_callbacks[1]
         if type(callback) == "function" then
             callback(success, msg)
@@ -427,19 +426,19 @@ end
 function NetManager:getReadMailPromise(mailId)
     return promise.all(get_blocking_request_promise("logic.playerHandler.readMail", {
         mailId = mailId
-    }, "阅读邮件失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "阅读邮件失败!"))
 end
 -- 收藏邮件
 function NetManager:getSaveMailPromise(mailId)
     return promise.all(get_blocking_request_promise("logic.playerHandler.saveMail", {
         mailId = mailId
-    }, "收藏邮件失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "收藏邮件失败!"))
 end
 -- 取消收藏邮件
 function NetManager:getUnSaveMailPromise(mailId)
     return promise.all(get_blocking_request_promise("logic.playerHandler.unSaveMail", {
         mailId = mailId
-    }, "取消收藏邮件失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "取消收藏邮件失败!"))
 end
 -- 获取收藏邮件
 function NetManager:getFetchSavedMailsPromise(fromIndex)
@@ -457,7 +456,7 @@ end
 function NetManager:getDeleteMailPromise(mailId)
     return promise.all(get_blocking_request_promise("logic.playerHandler.deleteMail", {
         mailId = mailId
-    }, "删除邮件失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "删除邮件失败!"))
 end
 -- 发送联盟邮件
 function NetManager:getSendAllianceMailPromise(title, content)
@@ -561,15 +560,11 @@ function NetManager:getPlayerInfoPromise(memberId)
     }, "获取玩家信息失败!"), get_playerinfo_callback()):next(get_response_msg)
 end
 -- 发送聊天信息
-function NetManager:sendMsg(text, cb)
-    local msg = {
-        text=text,
-        type="global"
-    }
-    local from = DataManager:getUserData().name
-    self.m_netService:request("chat.chatHandler.send", msg, function(success)
-        cb(success)
-    end)
+function NetManager:getSendGlobalMsgPromise(text)
+    return promise.all(get_blocking_request_promise("chat.chatHandler.send", {
+        ["text"] = text,
+        ["type"] = "global"
+    }, "发送世界聊天信息失败!"))
 end
 -- function NetManager:sendPersonalMail(memberName,title,content,cb)
 --     local info = {

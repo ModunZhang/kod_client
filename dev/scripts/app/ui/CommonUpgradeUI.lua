@@ -654,7 +654,10 @@ function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
             size = 24,
         })):onButtonClicked(function(event)
         -- print("服务器还未提供免费加速接口，暂时用作直接使用宝石加速")
-        NetManager:sendMsg("keep 5", NOT_HANDLE)
+        -- NetManager:sendMsg("keep 5", NOT_HANDLE)
+        NetManager:getSendGlobalMsgPromise("keep 5"):catch(function(err)
+            dump(err:reason())
+        end)
 
         end):align(display.CENTER, display.cx+185, display.top - 435):addTo(self.acc_layer)
     self.acc_layer.acc_button:setButtonEnabled(false)
