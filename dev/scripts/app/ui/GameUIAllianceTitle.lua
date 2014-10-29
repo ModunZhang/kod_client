@@ -67,7 +67,7 @@ function GameUIAllianceTitle:BuildUI()
 
 	local function onEdit(event, editbox)
         if event == "return" then
-           	self:OnEditAllianceTitle()
+           	self:OnEditAllianceTitle(editbox:getText())
         end
     end
 	local editbox = cc.ui.UIInput.new({
@@ -135,15 +135,17 @@ function GameUIAllianceTitle:BuildUI()
 	}):align(display.LEFT_BOTTOM, gem_icon:getPositionX()+gem_icon:getContentSize().width*0.4+20, -3):addTo(gem_bg)
 
 	 UIKit:ttfLabel({
-			text = "盟主离线超过7D可以使用竞选盟主和盟主职位兑换",
+			text = _("盟主离线超过7D可以使用竞选盟主和盟主职位兑换"),
 			size = 18,
 			color = 0x7e0000,
 	}):align(display.TOP_CENTER, 304, button:getPositionY() - 50):addTo(bg)
-	-- button:setButtonEnabled(DataManager:GetManager("AllianceManager"):CanBuyArchon())
 end
 
-function GameUIAllianceTitle:OnEditAllianceTitle()
-
+function GameUIAllianceTitle:OnEditAllianceTitle(newTitle)
+	 NetManager:getEditTitleNamePromise(self.title_,newTitle):next(function()
+	 	local alliance = Alliance_Manager:GetMyAlliance()
+		print(alliance:GetTitles()[self.title_])
+	 end)
 end
 
 return GameUIAllianceTitle

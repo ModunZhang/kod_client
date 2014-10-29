@@ -39,7 +39,8 @@ function GameUILogin:createProgressBar()
         font = UIKit:getFontFilePath(),
         size = 12,
         align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-        color = UIKit:hex2c3b(0xf3f0b6)
+        color = UIKit:hex2c3b(0xf3f0b6),
+        valign = cc.VERTICAL_TEXT_ALIGNMENT_CENTER,
     }):addTo(bar):align(display.CENTER,bar:getContentSize().width/2,bar:getContentSize().height/2)
     self.progressTips = label
     self.progressTimer = ProgressTimer

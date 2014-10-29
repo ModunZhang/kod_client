@@ -405,6 +405,48 @@ end
 function NetManager:getInstantTreatSoldiersPromise(soldiers)
     return promise.all(get_treatSoldier_promise(soldiers), get_playerdata_callback()):next(get_response_msg)
 end
+-- 孵化
+function NetManager:getHatchDragonPromise(dragonType)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.hatchDragon", {
+        dragonType = dragonType,
+    }, "孵化失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 装备
+function NetManager:getLoadDragonEquipmentPromise(dragonType, equipmentCategory, equipmentName)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.hatchDragon", {
+        dragonType = dragonType,
+        equipmentCategory = equipmentCategory,
+        equipmentName = equipmentName
+    }, "装备失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 卸载装备
+function NetManager:getResetDragonEquipmentPromise(dragonType, equipmentCategory)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.resetDragonEquipment", {
+        dragonType = dragonType,
+        equipmentCategory = equipmentCategory
+    }, "卸载装备失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 强化装备
+function NetManager:getEnhanceDragonEquipmentPromise(dragonType, equipmentCategory, equipments)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.enhanceDragonEquipment", {
+        dragonType = dragonType,
+        equipmentCategory = equipmentCategory,
+        equipments = equipments
+    }, "强化装备失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 升级龙星
+function NetManager:getUpgradeDragonStarPromise(dragonType)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.upgradeDragonStar", {
+        dragonType = dragonType,
+    }, "升级龙星失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 升级龙技能
+function NetManager:getUpgradeDragonDragonSkillPromise(dragonType, skillLocation)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.upgradeDragonSkill", {
+        dragonType = dragonType,
+        skillLocation = skillLocation
+    }, "升级龙技能失败!"), get_playerdata_callback()):next(get_response_msg)
+end
 -- 发送个人邮件
 function NetManager:getSendPersonalMailPromise(memberName, title, content)
     return promise.all(get_blocking_request_promise("logic.playerHandler.sendMail", {
@@ -567,7 +609,7 @@ function NetManager:getModifyAllianceMemberTitlePromise(memberId, title)
     return promise.all(get_blocking_request_promise("logic.playerHandler.modifyAllianceMemberTitle", {
         memberId = memberId,
         title = title
-    }, "修改成员职位失败!"), get_playerinfo_callback()):next(get_response_msg)
+    }, "修改成员职位失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 -- 修改联盟公告
 function NetManager:getEditAllianceNoticePromise(notice)
@@ -581,6 +623,13 @@ function NetManager:getEditAllianceDescriptionPromise(description)
         description = description
     }, "修改联盟描述失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
+-- 修改职位名字
+function NetManager:getEditTitleNamePromise(title, titleName)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.editTitleName", {
+        title = title,
+        titleName = titleName
+    }, "修改职位名字失败!"), get_alliancedata_callback()):next(get_response_msg)
+end
 -- 发送聊天信息
 function NetManager:getSendGlobalMsgPromise(text)
     return promise.all(get_blocking_request_promise("chat.chatHandler.send", {
@@ -588,297 +637,13 @@ function NetManager:getSendGlobalMsgPromise(text)
         ["type"] = "global"
     }, "发送世界聊天信息失败!"))
 end
--- function NetManager:sendPersonalMail(memberName,title,content,cb)
---     local info = {
---         memberName = memberName,
---         title = title,
---         content = content,
---     }
---     self.m_netService:request("logic.playerHandler.sendMail", info, function(success, msg)
---         if success and msg.code == SUCCESS_CODE then
---             cb(true)
---         else
---             cb(false)
---         end
---     end)
--- end
--- -- 获取收件箱邮件
--- function NetManager:getMails( fromIndex, cb)
---     local info = {
---         fromIndex = fromIndex
---     }
---     self.m_netService:request("logic.playerHandler.getMails", info, function(success, msg)
---         if success and msg.code == SUCCESS_CODE then
---             cb(true)
---         else
---             cb(false)
---         end
---     end)
--- end
--- -- 阅读邮件
--- function NetManager:readMail(mailId,cb)
---     local info = {
---         mailId = mailId,
---     }
---     self.m_netService:request("logic.playerHandler.readMail", info, function(success, msg)
---         if success and msg.code == SUCCESS_CODE then
---             cb(true)
---         else
---             cb(false)
---         end
---     end)
--- end
--- -- 收藏邮件
--- function NetManager:saveMail(mailId,cb)
---     local info = {
---         mailId = mailId,
---     }
---     self.m_netService:request("logic.playerHandler.saveMail", info, function(success, msg)
---         if success and msg.code == SUCCESS_CODE then
---             cb(true)
---         else
---             cb(false)
---         end
---     end)
--- end
--- -- 取消收藏邮件
--- function NetManager:unSaveMail(mailId,cb)
---     local info = {
---         mailId = mailId,
---     }
---     self.m_netService:request("logic.playerHandler.unSaveMail", info, function(success, msg)
---         if success and msg.code == SUCCESS_CODE then
---             cb(true)
---         else
---             cb(false)
---         end
---     end)
--- end
--- -- 获取收藏邮件
--- function NetManager:getSavedMails(fromIndex, cb )
---     local info = {
---         fromIndex = fromIndex
---     }
---     self.m_netService:request("logic.playerHandler.getSavedMails", info, function(success, msg)
---         if success and msg.code == SUCCESS_CODE then
---             cb(true)
---         else
---             cb(false)
---         end
---     end)
--- end
--- -- 获取已发送邮件
--- function NetManager:getSendMails(fromIndex, cb )
---     local info = {
---         fromIndex = fromIndex
---     }
---     self.m_netService:request("logic.playerHandler.getSendMails", info, function(success, msg)
---         if success and msg.code == SUCCESS_CODE then
---             cb(true)
---         else
---             cb(false)
---         end
---     end)
--- end
--- -- 删除邮件
--- function NetManager:deleteMail(mailId,cb)
---     local info = {
---         mailId = mailId,
---     }
---     self.m_netService:request("logic.playerHandler.deleteMail", info, function(success, msg)
---         if success and msg.code == SUCCESS_CODE then
---             cb(true)
---         else
---             cb(false)
---         end
---     end)
--- end
--- -- 发送联盟邮件
--- function NetManager:sendAllianceMail(title, content, cb)
---     local info = {
---         title = title,
---         content = content,
---     }
---     self.m_netService:request("logic.playerHandler.sendAllianceMail", info, function(success, msg)
---         if success and msg.code == SUCCESS_CODE then
---             cb(true)
---         else
---             cb(false)
---         end
---     end)
--- end
--- -- 请求加速
--- function NetManager:requestToSpeedUp(eventType,eventId,cb)
---     local info = {
---         eventType = eventType,
---         eventId = eventId,
---     }
---     self.m_netService:request("logic.playerHandler.requestToSpeedUp", info, function(success, msg)
---         if success and msg.code == SUCCESS_CODE then
---             cb(true)
---         else
---             cb(false)
---         end
---     end)
--- end
-
--- -- 协助玩家加速
--- function NetManager:helpAllianceMemberSpeedUp(eventId,cb)
---     local info = {
---         eventId = eventId,
---     }
---     self.m_netService:request("logic.playerHandler.helpAllianceMemberSpeedUp", info, function(success, msg)
---         if success and msg.code == SUCCESS_CODE then
---             cb(true)
---         else
---             cb(false)
---         end
---     end)
--- end
-
--- -- 协助所有玩家加速
--- function NetManager:helpAllAllianceMemberSpeedUp(cb)
---     local info = {
---         }
---     self.m_netService:request("logic.playerHandler.helpAllAllianceMemberSpeedUp", info, function(success, msg)
---         if success and msg.code == SUCCESS_CODE then
---             cb(true)
---         else
---             cb(false)
---         end
---     end)
--- end
-
--- -- 修改联盟加入条件
--- function NetManager:editAllianceJoinType(join_type, cb)
---     local info = {
---         joinType = join_type
---     }
---     self.m_netService:request("logic.playerHandler.editAllianceJoinType", info, function(success, msg)
---         if success and msg.code == SUCCESS_CODE then
---             cb(true)
---         else
---             cb(false)
---         end
---     end)
--- end
--- -- 拒绝玩家
--- function NetManager:refuseJoinAllianceRequest(memberId, cb)
---     local info = {
---         memberId = memberId,
---         agree = false
---     }
---     self.m_netService:request("logic.playerHandler.handleJoinAllianceRequest", info, function(success, msg)
---         if success and msg.code == SUCCESS_CODE then
---             cb(true)
---         else
---             cb(false)
---         end
---     end)
--- end
--- -- 接受玩家
--- function NetManager:agreeJoinAllianceRequest(memberId, cb)
---     local info = {
---         memberId = memberId,
---         agree = true
---     }
---     self.m_netService:request("logic.playerHandler.handleJoinAllianceRequest", info, function(success, msg)
---         if success and msg.code == SUCCESS_CODE then
---             cb(true)
---         else
---             cb(false)
---         end
---     end)
--- end
--- -- 搜索特定标签联盟
--- function NetManager:searchAllianceByTag( tag,cb )
---     if not LuaUtils:isString(tag) or string.len(tag) == 0  then
---         cb(false)
---         return false
---     end
---     local p1 = promise.new()
---     local p2 = promise.new()
---     promise.all(p1, p2):next(function(results)
---         cb(unpack(results))
---     end)
---     local data = {tag=tag}
---     self.m_netService:request("logic.playerHandler.searchAllianceByTag"
---         ,data
---         ,function(success, msg)
---             p1:resolve(success)
---         end)
---     table.insert(onSearchAlliancesSuccess_callbacks, function(success, msg)
---         p2:resolve(msg)
---     end)
--- end
--- 搜索能直接加入联盟
--- function NetManager:getCanDirectJoinAlliances(cb)
---     local p1 = promise.new()
---     local p2 = promise.new()
---     promise.all(p1, p2):next(function(results)
---         cb(unpack(results))
---     end)
---     self.m_netService:request("logic.playerHandler.getCanDirectJoinAlliances"
---         ,nil
---         ,function(success, msg)
---             p1:resolve(success)
---         end)
---     table.insert(onGetCanDirectJoinAlliancesSuccess_callbacks, function(success, msg)
---         p2:resolve(msg)
---     end)
--- end
-
--- -- 搜索能直接加入联盟
--- function NetManager:inviteToJoinAlliance(member_id, cb)
---     local p1 = promise.new()
---     local p2 = promise.new()
---     promise.all(p1, p2):next(function(results)
---         cb(unpack(results))
---     end)
---     self.m_netService:request("logic.playerHandler.inviteToJoinAlliance"
---         ,{memberId = member_id}
---         ,function(success, msg)
---             p1:resolve(success)
---         end)
---     table.insert(onPlayerDataChanged_callbacks, function(success, msg)
---         p2:resolve(msg)
---     end)
--- end
-
-
--- local function get_playerinfo_promise(member_id)
---     return get_blocking_request_promise("logic.playerHandler.getPlayerInfo", {memberId = member_id})
--- end
--- local function get_playerinfo_callback()
---     return get_callback_promise(onGetPlayerInfoSuccess_callbacks)
--- end
--- function NetManager:getPlayerInfoPromise(member_id)
---     return promise.all(get_playerinfo_promise(member_id), get_playerinfo_callback()):next(handle_request_and_respose)
--- end
-
 --
-function NetManager:resetGame()
-    -- self:sendMsg("reset", NOT_HANDLE)
-    self:sendMsg("gem 10000000", NOT_HANDLE)
-end
-function NetManager:sendMsg(text, cb)
-    local msg = {
-        text=text,
-        type="global"
-    }
-    local from = DataManager:getUserData().name
-    self.m_netService:request("chat.chatHandler.send", msg, function(success)
-        cb(success)
-    end)
-end
-
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"
     self.m_netService:get(updateServer, nil, function(success, statusCode, msg)
         cb(success and statusCode == 200, msg)
     end)
 end
-
 function NetManager:downloadFile(fileInfo, cb, progressCb)
     local downloadUrl = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/" .. fileInfo.path
     local filePath = GameUtils:getUpdatePath() .. fileInfo.path
@@ -925,28 +690,6 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

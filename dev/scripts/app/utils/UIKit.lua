@@ -30,7 +30,7 @@ function UIKit:newGameUI(gameUIName,... )
 end
 
 function UIKit:getFontFilePath()
-    return "res/fonts/Noto Sans S Chinese.otf"
+    return "Droid Sans Faliback.ttf"
 end
 
 function UIKit:getBuildingLocalizedKeyByBuildingType(type)

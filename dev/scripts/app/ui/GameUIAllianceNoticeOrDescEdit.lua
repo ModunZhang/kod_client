@@ -79,7 +79,7 @@ function GameUIAllianceNoticeOrDescEdit:onMoveInStage()
 		:align(display.RIGHT_BOTTOM,bg_node:getCascadeBoundingBox().width - 120, 20)
 end
 
-
+--TODO: done 关闭界面 
 function GameUIAllianceNoticeOrDescEdit:onOkButtonClicked()
 	local content = self.textView:getText()
 	if self.isNotice_ then
@@ -88,9 +88,10 @@ function GameUIAllianceNoticeOrDescEdit:onOkButtonClicked()
         		self:leftButtonClicked()
         	end)
 	else
-		PushService:editAllianceNotice(content,function(success)
-			self:leftButtonClicked()
-		end)
+		NetManager:getEditAllianceDescriptionPromise(content)
+				:catch(function(err)
+                    dump(err:reason())
+                end)
 	end
 end
 

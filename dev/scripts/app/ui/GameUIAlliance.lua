@@ -40,6 +40,9 @@ function GameUIAlliance:OnBasicChanged(alliance, changed_map)
 	if self.tab_buttons:GetSelectedButtonTag() == 'members' then
 		self:RefreshMemberList()
 	end
+	if self.tab_buttons:GetSelectedButtonTag() == 'infomation' then
+		self:RefreshInfomationView()
+	end
 end
 
 function GameUIAlliance:OnJoinEventsChanged(alliance,changed_map)
@@ -758,16 +761,24 @@ end
 
 function GameUIAlliance:RefreshNoticeView()
 	print("RefreshNoticeView------->")
-	local textLabel = cc.ui.UILabel.new({
-			UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = Alliance_Manager:GetMyAlliance():Notice() or "",
-            size = 20,
-            color = UIKit:hex2c3b(0x403c2f),
-            align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
-            dimensions = cc.size(576, 0),
-            font = UIKit:getFontFilePath(),
-    })
+	-- local textLabel = cc.ui.UILabel.new({
+	-- 		UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+ --            text = Alliance_Manager:GetMyAlliance():Notice() or "",
+ --            size = 20,
+ --            color = UIKit:hex2c3b(0x403c2f),
+ --            align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
+ --            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
+ --            dimensions = cc.size(576, 0),
+ --            font = UIKit:getFontFilePath(),
+    -- })
+	local textLabel = UIKit:ttfLabel({
+		dimensions = cc.size(576, 0),
+		text = Alliance_Manager:GetMyAlliance():Notice() or "",
+		size = 20,
+		color = 0x403c2f,
+		align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
+		valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
+	})
 	self.ui_overview.noticeView:removeAllItems()
     local textItem = self.ui_overview.noticeView:newItem()
     textItem:addContent(textLabel)
@@ -925,6 +936,7 @@ function GameUIAlliance:GetAllianceTitleAndLevelPng(title)
 		archon = "alliance_item_leader_39x39.png"
 	}
 	local alliance = Alliance_Manager:GetMyAlliance()
+	dump(alliance:GetTitles())
 	return alliance:GetTitles()[title],levelImages[title]
 end
 
@@ -1112,29 +1124,15 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
 		:align(display.LEFT_TOP,15,556 - 45)
 		:addTo(informationNode)
 
-	local textLabel = cc.ui.UILabel.new({
-			UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = "test------------->testtest------------->testtest------------->testtest------------->test",
-            size = 20,
-            color = UIKit:hex2c3b(0x403c2f),
-            align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
-            dimensions = cc.size(576, 0),
-            font = UIKit:getFontFilePath(),
-    })
-
+	
 
     local descView = UIListView.new {
     	viewRect =  cc.rect(10,2,556,170),
         direction = UIScrollView.DIRECTION_VERTICAL,
         alignment = UIListView.ALIGNMENT_LEFT
     }:addTo(notice_bg)
-
-    local textItem = descView:newItem()
-    textItem:addContent(textLabel)
-    textItem:setItemSize(576,textLabel:getContentSize().height)
-    descView:addItem(textItem)
-    descView:reload()
+    self.descListView = descView
+    
 
 	display.newSprite("alliance_notice_box_584x180.png"):align(display.LEFT_TOP,13,notice_bg:getPositionY())
 		:addTo(informationNode)
@@ -1193,7 +1191,7 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
     	display.newSprite(button_imags[i]):addTo(button):pos(64,59)
     end
     self:SelectJoinType()
-
+    self:RefreshDescView()
 	return self.informationNode
 end
 
@@ -1205,8 +1203,32 @@ function GameUIAlliance:SelectJoinType()
     end
 end
 
+function GameUIAlliance:RefreshDescView()
+	local textLabel = cc.ui.UILabel.new({
+			UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = Alliance_Manager:GetMyAlliance():Describe(),
+            size = 20,
+            color = UIKit:hex2c3b(0x403c2f),
+            align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
+            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
+            dimensions = cc.size(576, 0),
+            font = UIKit:getFontFilePath(),
+    })
+    self.descListView:removeAllItems()
+	local textItem = self.descListView:newItem()
+    textItem:addContent(textLabel)
+    textItem:setItemSize(576,textLabel:getContentSize().height)
+    self.descListView:addItem(textItem)
+    self.descListView:reload()
+end
+
 function GameUIAlliance:OnAllianceJoinTypeButtonClicked(event)
 	--TODO:选择联盟的加入方式
+end
+
+function GameUIAlliance:RefreshInfomationView()
+	self:RefreshDescView()
+	self:SelectJoinType()
 end
 
 function GameUIAlliance:OnInfoButtonClicked(tag)

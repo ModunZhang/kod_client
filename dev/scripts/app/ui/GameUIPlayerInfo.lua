@@ -200,53 +200,40 @@ end
 
 function GameUIPlayerInfo:OnPlayerButtonClicked( tag )
 	if tag == 1 then -- 踢出
-		-- PushService:kickAllianceMemberOff(self.memberId_,function(success)
-		-- 	if success then
-		-- 		-- self.alliance_manager:KickAllianceMemberById(self.memberId_)
-		-- 		-- self:leftButtonClicked()
-		-- 	end
-		-- end)
         NetManager:getKickAllianceMemberOffPromise(self.memberId_)
            	:next(function(data)
-                    dump(data)
+           		self:leftButtonClicked()
            	end)
-            :catch(function(err)
+	elseif tag == 2 then -- 移交盟主
+		local member = AllianceMember:CreatFromData(self.player_info)
+
+            NetManager:getHandOverArchonPromise(member:Id())
+                :next(function(data)
+                   	self.player_info.title = title
+	 	  			self:RefreshListView()
+                end)
+                :catch(function(err)
                     dump(err:reason())
-            end)
-	elseif tag == 2 then
-		-- PushService:handOverArchon(self.memberId_,function(success)
-		-- 	if success then
-		-- 	end
-		-- end)
+                end)
 	elseif tag == 3 then --降级
 		local member = AllianceMember:CreatFromData(self.player_info)
 		 if not member:IsTitleLowest() then
 		 	  NetManager:getModifyAllianceMemberTitlePromise(member:Id(), member:TitleDegrade()):next(function(data)
-		 	  		local alliacne =  Alliance_Manager:GetMyAlliance()
-		 	  		local title = alliacne:GetMemeberById(member:Id()):Title()
-		 	  		local displayTitle = alliacne:GetTitles()[title]
-		 	  		print("displayTitle------>",displayTitle)
-		 	  		dump(data,"displayTitle------>")
-		 	  end)
-		 	  :catch(function(err)
-		 	  		print("err------>")
-		 	  		dump(err,"err------>")
+	 	  		local alliacne =  Alliance_Manager:GetMyAlliance()
+	 	  		local title = alliacne:GetMemeberById(member:Id()):Title()
+	 	  		self.player_info.title = title
+	 	  		self:RefreshListView()
 		 	  end)
 		 end
 	elseif tag == 4 then --晋级
 		local member = AllianceMember:CreatFromData(self.player_info)
 		if not member:IsTitleHighest() then
             NetManager:getModifyAllianceMemberTitlePromise(member:Id(), member:TitleUpgrade()):next(function(data)
-            		local alliacne =  Alliance_Manager:GetMyAlliance()
-		 	  		local title = alliacne:GetMemeberById(member:Id()):Title()
-		 	  		local displayTitle = alliacne:GetTitles()[title]
-		 	  		print("displayTitle------>",displayTitle)
-		 	  		dump(data,"displayTitle------>")
+        		local alliacne =  Alliance_Manager:GetMyAlliance()
+	 	  		local title = alliacne:GetMemeberById(member:Id()):Title()
+	 	  		self.player_info.title = title
+	 	  		self:RefreshListView()
             end)
-             :catch(function(err)
-		 	  		print("err------>")
-		 	  		dump(err,"err------>")
-		 	  end)
         end
 	elseif tag == 5 then
 		--TODO:打开邮件界面
@@ -295,6 +282,7 @@ end
 
 function GameUIPlayerInfo:RefreshListView()
 	local list = self:AdapterPlayerList()
+	self.listView:removeAllItems()
 	for i,v in ipairs(list) do
 		local item = self.listView:newItem()
 		local bg = display.newSprite(string.format("playerinfo_item_547x40_%d.png",i%2))

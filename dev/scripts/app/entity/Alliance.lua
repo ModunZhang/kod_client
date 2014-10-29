@@ -73,7 +73,18 @@ function Alliance:GetEliteTitle()
     return self:GetTitles()["elite"]
 end
 function Alliance:ModifyTitleWithMemberType(member_type, new_name)
-    self.titles[member_type] = new_name
+    if self.titles[member_type] ~= new_name then
+        local old_value = self.titles[member_type]
+        self.titles[member_type] = new_name
+        self:OnBasicChanged{
+            ["title_name"] = {old = old_value, new = new_name}
+        }
+    end
+end
+function Alliance:SetTitleNames(title_names)
+    for k, v in pairs(title_names) do
+        self:ModifyTitleWithMemberType(k, v)
+    end
 end
 function Alliance:GetTitles()
     return LuaUtils:table_map(self.titles, function(k, v)
@@ -81,6 +92,7 @@ function Alliance:GetTitles()
             dump(alliance_title[k])
             return k, alliance_title[k]
         end
+        return k,v
     end)
 end
 function Alliance:Flag()
@@ -306,6 +318,9 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     if alliance_data.desc then
         self:SetDescribe(alliance_data.desc)
     end
+    if alliance_data.titles then
+        self:SetTitleNames(alliance_data.titles)
+    end
     self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
     self:OnAllianceEventsChanged(alliance_data.events)
     self:OnJoinRequestEventsChanged(alliance_data.joinRequestEvents)
@@ -458,8 +473,16 @@ end
 function Alliance:OnHelpEventsChanged(helpEvents)
     dump(helpEvents)
 end
-
+function Alliance:GetAllianceArchonMember()
+    for k,v in pairs(self.members) do
+        if v:IsArchon() then
+            return v
+        end
+    end
+    return nil
+end
 return Alliance
+
 
 
 
