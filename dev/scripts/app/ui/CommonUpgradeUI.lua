@@ -374,17 +374,36 @@ function CommonUpgradeUI:InitUpgradePart()
             if event.name == "CLICKED_EVENT" then
                 local upgrade_listener = function()
                     if self.building:GetType()=="tower" then
-                        NetManager:instantUpgradeTowerByLocation(self.building:IsUnlocked(), function(...) end)
+                        -- NetManager:instantUpgradeTowerByLocation(self.building:IsUnlocked(), function(...) end)
+                        NetManager:getInstantUpgradeTowerByLocationPromise(self.building:TowerId())
+                            :catch(function(err)
+                                dump(err:reason())
+                            end)
                     elseif self.building:GetType()=="wall" then
-                        NetManager:instantUpgradeWallByLocation(function(...) end)
+                        -- NetManager:instantUpgradeWallByLocation(function(...) end)
+                        NetManager:getInstantUpgradeWallByLocationPromise()
+                            :catch(function(err)
+                                dump(err:reason())
+                            end)
                     else
                         local location = City:GetLocationIdByBuildingType(self.building:GetType())
                         if location then
-                            NetManager:instantUpgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
+                            -- NetManager:instantUpgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
+
+                            local location_id = City:GetLocationIdByBuildingType(self.building:GetType())
+                            NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
+                                :catch(function(err)
+                                    dump(err:reason())
+                                end)
                         else
                             local tile = City:GetTileWhichBuildingBelongs(self.building)
                             local house_location = tile:GetBuildingLocation(self.building)
-                            NetManager:instantUpgradeHouseByLocation(tile.location_id, house_location, function(...) end)
+                            -- NetManager:instantUpgradeHouseByLocation(tile.location_id, house_location, function(...) end)
+
+                            NetManager:getInstantUpgradeHouseByLocationPromise(tile.location_id, house_location)
+                                :catch(function(err)
+                                    dump(err:reason())
+                                end)
                         end
                         print(self.building:GetType().."---------------- upgrade now button has been  clicked ")
                     end
@@ -405,17 +424,35 @@ function CommonUpgradeUI:InitUpgradePart()
             if event.name == "CLICKED_EVENT" then
                 local upgrade_listener = function()
                     if self.building:GetType()=="tower" then
-                        NetManager:upgradeTowerByLocation(self.building:IsUnlocked(), function(...) end)
+                        -- NetManager:upgradeTowerByLocation(self.building:IsUnlocked(), function(...) end)
+                        NetManager:getUpgradeTowerByLocationPromise(self.building:TowerId())
+                            :catch(function(err)
+                                dump(err:reason())
+                            end)
                     elseif self.building:GetType()=="wall" then
-                        NetManager:upgradeWallByLocation(function(...) end)
+                        -- NetManager:upgradeWallByLocation(function(...) end)
+                        NetManager:getUpgradeWallByLocationPromise()
+                            :catch(function(err)
+                                dump(err:reason())
+                            end)
                     else
                         local location = City:GetLocationIdByBuildingType(self.building:GetType())
                         if location then
-                            NetManager:upgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
+                            -- NetManager:upgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
+                            local location_id = City:GetLocationIdByBuildingType(self.building:GetType())
+                            NetManager:getUpgradeBuildingByLocationPromise(location_id)
+                                :catch(function(err)
+                                    dump(err:reason())
+                                end)
                         else
                             local tile = City:GetTileWhichBuildingBelongs(self.building)
                             local house_location = tile:GetBuildingLocation(self.building)
-                            NetManager:upgradeHouseByLocation(tile.location_id, house_location, function(...) end)
+                            -- NetManager:upgradeHouseByLocation(tile.location_id, house_location, function(...) end)
+
+                            NetManager:getUpgradeHouseByLocationPromise(tile.location_id, house_location)
+                                :catch(function(err)
+                                    dump(err:reason())
+                                end)
                         end
                         print(self.building:GetType().."---------------- upgrade  button has been  clicked ")
                     end
@@ -758,6 +795,15 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
+
+
+
+
+
+
+
 
 
 

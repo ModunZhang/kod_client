@@ -9,9 +9,9 @@ local MAX_COUNT_DECORATOR = 5
 local UIListView = import(".UIListView")
 local window = import("..utils.window")
 function GameUIResource:ctor(building)
-	 GameUIResource.super.ctor(self, City, self:GetTitleByType(building),building)
-     self.building = building
-     self.dataSource = self:GetDataSource()
+    GameUIResource.super.ctor(self, City, self:GetTitleByType(building),building)
+    self.building = building
+    self.dataSource = self:GetDataSource()
 end
 
 
@@ -20,8 +20,8 @@ function GameUIResource:onEnter()
     self:CreateUI()
 end
 function GameUIResource:CreateUI()
-	self:CreateInfomation()
-	self:createTabButtons()
+    self:CreateInfomation()
+    self:createTabButtons()
 end
 
 function GameUIResource:createTabButtons()
@@ -43,165 +43,165 @@ end
 
 
 function GameUIResource:CreateInfomation()
-	local infomationLayer = display.newNode():addTo(self)
-	self.infomationLayer = infomationLayer
-	local iconBg = display.newSprite("resource_icon_background.png"):align(display.LEFT_TOP, window.left+60, window.top - 110):addTo(infomationLayer)
-	display.newSprite("resource_icon.png"):align(display.CENTER, iconBg:getContentSize().width/2, iconBg:getContentSize().height/2):addTo(iconBg)
-	local lvBg = display.newSprite("LV_background.png"):align(display.LEFT_TOP, window.left+60, iconBg:getPositionY()-iconBg:getContentSize().height-10):addTo(infomationLayer)
-	local lvLabel = cc.ui.UILabel.new({
-    	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-    	text = "OWN 998",
+    local infomationLayer = display.newNode():addTo(self)
+    self.infomationLayer = infomationLayer
+    local iconBg = display.newSprite("resource_icon_background.png"):align(display.LEFT_TOP, window.left+60, window.top - 110):addTo(infomationLayer)
+    display.newSprite("resource_icon.png"):align(display.CENTER, iconBg:getContentSize().width/2, iconBg:getContentSize().height/2):addTo(iconBg)
+    local lvBg = display.newSprite("LV_background.png"):align(display.LEFT_TOP, window.left+60, iconBg:getPositionY()-iconBg:getContentSize().height-10):addTo(infomationLayer)
+    local lvLabel = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "OWN 998",
         font = UIKit:getFontFilePath(),
         size = 18,
-        align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
+        align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
         -- dimensions = cc.size(500, 33),
         color = UIKit:hex2c3b(0x403c2f),
     }):addTo(lvBg):align(display.CENTER,lvBg:getContentSize().width/2,lvBg:getContentSize().height/2)
 
     local titleLable = cc.ui.UILabel.new({
-    	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-    	text = _("拆除这个建筑"),
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = _("拆除这个建筑"),
         font = UIKit:getFontFilePath(),
         size = 22,
-        align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
+        align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
         dimensions = cc.size(500, 33),
         color = UIKit:hex2c3b(0x29261c),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
     }):addTo(infomationLayer):align(display.LEFT_TOP,iconBg:getPositionX()+iconBg:getContentSize().width+20,iconBg:getPositionY())
 
     local chaiButton = cc.ui.UIPushButton.new({normal = "resource_butter_red.png",pressed = "resource_butter_red_highlight.png"}, {scale9 = false})
-    	:addTo(infomationLayer)
-    	:align(display.TOP_RIGHT, window.right-60, iconBg:getPositionY())
-    	:setButtonLabel("normal",  cc.ui.UILabel.new({
-	    	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-	    	text = _("拆除"),
-	        font = UIKit:getFontFilePath(),
-	        size = 22,
-	        color = UIKit:hex2c3b(0xffedae),
-   	 	}))
-   	 	:setButtonLabelOffset(0, 2)
-	    :onButtonClicked(function(event)
-	    	self:ChaiButtonAction(event)
-    	end)
+        :addTo(infomationLayer)
+        :align(display.TOP_RIGHT, window.right-60, iconBg:getPositionY())
+        :setButtonLabel("normal",  cc.ui.UILabel.new({
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = _("拆除"),
+            font = UIKit:getFontFilePath(),
+            size = 22,
+            color = UIKit:hex2c3b(0xffedae),
+        }))
+        :setButtonLabelOffset(0, 2)
+        :onButtonClicked(function(event)
+            self:ChaiButtonAction(event)
+        end)
     local fistLine = display.newScale9Sprite("dividing_line.png")
-    :align(display.BOTTOM_LEFT, titleLable:getPositionX(),lvBg:getPositionY()+lvBg:getContentSize().height-15)
-    :addTo(infomationLayer)
+        :align(display.BOTTOM_LEFT, titleLable:getPositionX(),lvBg:getPositionY()+lvBg:getContentSize().height-15)
+        :addTo(infomationLayer)
 
     local firstLable = cc.ui.UILabel.new({
-    	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-    	text = _("返还城民"),
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = _("返还城民"),
         font = UIKit:getFontFilePath(),
         size = 20,
-        align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
+        align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
         -- dimensions = cc.size(500, 33),
         color = UIKit:hex2c3b(0x797154),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
     }):addTo(infomationLayer)
-    :align(display.LEFT_BOTTOM,fistLine:getPositionX(),fistLine:getPositionY()+2)
+        :align(display.LEFT_BOTTOM,fistLine:getPositionX(),fistLine:getPositionY()+2)
 
     local firstValueLabel = cc.ui.UILabel.new({
-    	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-    	text = "-100",
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "-100",
         font = UIKit:getFontFilePath(),
         size = 20,
-        align = cc.ui.UILabel.TEXT_ALIGN_RIGHT, 
+        align = cc.ui.UILabel.TEXT_ALIGN_RIGHT,
         -- dimensions = cc.size(500, 33),
         color = UIKit:hex2c3b(0x403c2f),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
     }):addTo(infomationLayer)
-    :align(display.RIGHT_BOTTOM,chaiButton:getPositionX(),firstLable:getPositionY())
+        :align(display.RIGHT_BOTTOM,chaiButton:getPositionX(),firstLable:getPositionY())
     self.firstValueLabel = firstValueLabel
     local secondLine = display.newScale9Sprite("dividing_line.png")
-    :align(display.BOTTOM_LEFT, firstLable:getPositionX(),lvBg:getPositionY()-lvBg:getContentSize().height)
-    :addTo(infomationLayer)
+        :align(display.BOTTOM_LEFT, firstLable:getPositionX(),lvBg:getPositionY()-lvBg:getContentSize().height)
+        :addTo(infomationLayer)
 
     local secondLabel = cc.ui.UILabel.new({
-    	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-    	text = _("城民增长"),
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = _("城民增长"),
         font = UIKit:getFontFilePath(),
         size = 20,
-        align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
+        align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
         -- dimensions = cc.size(500, 33),
         color = UIKit:hex2c3b(0x797154),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
     }):addTo(infomationLayer)
-    :align(display.LEFT_BOTTOM,secondLine:getPositionX(),secondLine:getPositionY()+2)
+        :align(display.LEFT_BOTTOM,secondLine:getPositionX(),secondLine:getPositionY()+2)
     self.secondLabel = secondLabel
     self.secondValueLabel = cc.ui.UILabel.new({
-    	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-    	text = "-100/h",
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "-100/h",
         font = UIKit:getFontFilePath(),
         size = 20,
-        align = cc.ui.UILabel.TEXT_ALIGN_RIGHT, 
+        align = cc.ui.UILabel.TEXT_ALIGN_RIGHT,
         -- dimensions = cc.size(500, 33),
         color = UIKit:hex2c3b(0x403c2f),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
     }):addTo(infomationLayer)
-    :align(display.RIGHT_BOTTOM,chaiButton:getPositionX(),secondLabel:getPositionY())
+        :align(display.RIGHT_BOTTOM,chaiButton:getPositionX(),secondLabel:getPositionY())
 
     local listHeader = display.newScale9Sprite("resources_background_header.png")
-	:addTo(infomationLayer)
-	:align(display.TOP_LEFT, window.left+45,secondLine:getPositionY()-30)
+        :addTo(infomationLayer)
+        :align(display.TOP_LEFT, window.left+45,secondLine:getPositionY()-30)
 
-	cc.ui.UILabel.new({
-    	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-    	text = _("总计"),
+    cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = _("总计"),
         font = UIKit:getFontFilePath(),
         size = 24,
-        align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
+        align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
         -- dimensions = cc.size(listHeader:getContentSize().width, listHeader:getContentSize().height),
         color = UIKit:hex2c3b(0x403c2f),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
     })
-    :addTo(listHeader,5)
-    :pos(listHeader:getContentSize().width/2,listHeader:getContentSize().height/2)
+        :addTo(listHeader,5)
+        :pos(listHeader:getContentSize().width/2,listHeader:getContentSize().height/2)
 
     self.listView = UIListView.new {
         viewRect = cc.rect(listHeader:getPositionX(), listHeader:getPositionY()-listHeader:getContentSize().height-500, listHeader:getContentSize().width,500),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         alignment = cc.ui.UIListView.ALIGNMENT_LEFT
-    	}
+    }
         :addTo(self.infomationLayer)
     self.infomationLayer:setVisible(false)
 end
 
 
 function GameUIResource:GetListItem(index,title,val)
-	local bgImage = string.format("resource_item_bg%d.png",tonumber(index-1)%2)
-	local item = self.listView:newItem()
-	local bg = display.newSprite(bgImage)
-	local titleLabel = cc.ui.UILabel.new({
-    	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-    	text = title,
+    local bgImage = string.format("resource_item_bg%d.png",tonumber(index-1)%2)
+    local item = self.listView:newItem()
+    local bg = display.newSprite(bgImage)
+    local titleLabel = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = title,
         font = UIKit:getFontFilePath(),
         size = 20,
-        align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
+        align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
         color = UIKit:hex2c3b(0x797154),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER})
-		:addTo(bg)
+        :addTo(bg)
         :pos(10,20)
-	local valLabel = cc.ui.UILabel.new({
-    	UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-    	text = val,
+    local valLabel = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = val,
         font = UIKit:getFontFilePath(),
         size = 20,
-        align = cc.ui.UILabel.TEXT_ALIGN_RIGHT, 
+        align = cc.ui.UILabel.TEXT_ALIGN_RIGHT,
         color = UIKit:hex2c3b(0x403c2f),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER})
-		:addTo(bg)
-		valLabel:pos(bg:getContentSize().width - valLabel:getContentSize().width - 10 , 20)
-	item:addContent(bg)
-	item:setItemSize(bg:getContentSize().width,bg:getContentSize().height)
-	return item
+        :addTo(bg)
+    valLabel:pos(bg:getContentSize().width - valLabel:getContentSize().width - 10 , 20)
+    item:addContent(bg)
+    item:setItemSize(bg:getContentSize().width,bg:getContentSize().height)
+    return item
 end
 
 function GameUIResource:RefreshListView()
     self.listView:removeAllItems()
-	for i,v in ipairs(self.dataSource) do
-		local newItem = self:GetListItem(i,v[1],v[2])
-		self.listView:addItem(newItem)
-	end
-	self.listView:reload()
+    for i,v in ipairs(self.dataSource) do
+        local newItem = self:GetListItem(i,v[1],v[2])
+        self.listView:addItem(newItem)
+    end
+    self.listView:reload()
 end
 
 function GameUIResource:GetDataSource()
@@ -245,8 +245,8 @@ function GameUIResource:GetTitleByType(building)
 end
 
 function GameUIResource:onMoveInStage()
-	GameUIResource.super.onMoveInStage(self)
-	local resource = City.resource_manager:GetResourceByType(self.building:GetUpdateResourceType())
+    GameUIResource.super.onMoveInStage(self)
+    local resource = City.resource_manager:GetResourceByType(self.building:GetUpdateResourceType())
     local citizen = self.building:GetCitizen()
     self.firstValueLabel:setString(string.format('%d',citizen))
     local _,resource_title = self:GetTitleByType(self.building)
@@ -255,28 +255,34 @@ function GameUIResource:onMoveInStage()
 end
 
 function GameUIResource:ChaiButtonAction( event )
-    if self.building:IsUpgrading() then 
-                local message = "正在升级"
-                local dialog = PopDialogUI.new()
-                dialog:setTitle("提示")
-                dialog:setPopMessage(message)
-                display.getRunningScene():addChild(dialog,1000000)
-                return 
-            end
-            if tonumber(City:GetResourceManager():GetGemResource():GetValue()) < 100 then
-                local message = "宝石不足"
-                local dialog = PopDialogUI.new()
-                dialog:setTitle("提示")
-                dialog:setPopMessage(message)
-                dialog:setNeedGems(100)
-                display.getRunningScene():addChild(dialog,1000000)
-                return
-            end
-            local tile = self.city:GetTileWhichBuildingBelongs(self.building)
-            local house_location = tile:GetBuildingLocation(self.building)
-            NetManager:destroyHouseByLocation(tile.location_id, house_location, 
-            NOT_HANDLE)
-            self:leftButtonClicked(nil)
+    if self.building:IsUpgrading() then
+        local message = "正在升级"
+        local dialog = PopDialogUI.new()
+        dialog:setTitle("提示")
+        dialog:setPopMessage(message)
+        display.getRunningScene():addChild(dialog,1000000)
+        return
+    end
+    if tonumber(City:GetResourceManager():GetGemResource():GetValue()) < 100 then
+        local message = "宝石不足"
+        local dialog = PopDialogUI.new()
+        dialog:setTitle("提示")
+        dialog:setPopMessage(message)
+        dialog:setNeedGems(100)
+        display.getRunningScene():addChild(dialog,1000000)
+        return
+    end
+    local tile = self.city:GetTileWhichBuildingBelongs(self.building)
+    local house_location = tile:GetBuildingLocation(self.building)
+    
+    -- NetManager:destroyHouseByLocation(tile.location_id, house_location,
+    --     NOT_HANDLE)
+
+    NetManager:getDestroyHouseByLocationPromise(tile.location_id, house_location)
+        :catch(function(err)
+            dump(err:reason())
+        end)
+    self:leftButtonClicked(nil)
 end
 
 function GameUIResource:onMoveOutStage()
@@ -293,3 +299,4 @@ function GameUIResource:OnResourceChanged(resource_manager)
 end
 
 return GameUIResource
+

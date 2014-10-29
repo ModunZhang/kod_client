@@ -67,15 +67,14 @@ end
 function MyApp:retryConnectServer()
     if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
         device.showActivityIndicator()
-        NetManager:connectLogicServer(function(success)
-            if success then
-                NetManager:login(function(success)
-                    device.hideActivityIndicator()
-                end)
-            else
-                device.hideActivityIndicator()
-            end
-
+        NetManager:getConnectLogicServerPromise():next(function()
+            NetManager:getLoginPromise():catch(function(err)
+                dump(err:reason())
+            end)
+        end):catch(function(err)
+            dump(err:reason())
+        end):always(function()
+            device.hideActivityIndicator()
         end)
     end
 end
@@ -112,6 +111,11 @@ function MyApp:lockInput(b)
 end
 
 return MyApp
+
+
+
+
+
 
 
 

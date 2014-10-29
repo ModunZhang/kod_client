@@ -72,6 +72,9 @@ end
 function Alliance:GetEliteTitle()
     return self:GetTitles()["elite"]
 end
+function Alliance:ModifyTitleWithMemberType(member_type, new_name)
+    self.titles[member_type] = new_name
+end
 function Alliance:GetTitles()
     return LuaUtils:table_map(self.titles, function(k, v)
         if string.sub(v, 1, 2) == "__" then

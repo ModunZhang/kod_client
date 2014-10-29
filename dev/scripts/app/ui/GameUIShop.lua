@@ -127,10 +127,20 @@ function GameUIShop:onEnter()
         :onButtonClicked(function(event)
             if event.target:getButtonLabel():getString() == "联盟类型到直接" then
                 event.target:getButtonLabel():setString("联盟类型到审核")
-                NetManager:editAllianceJoinType("all", NOT_HANDLE)
+                -- NetManager:editAllianceJoinType("all", NOT_HANDLE)
+                NetManager:getEditAllianceJoinTypePromise("all"):catch(function(err)
+                    dump(err:reason())
+                end):done(function(result)
+                    dump(result)
+                end)
             else
                 event.target:getButtonLabel():setString("联盟类型到直接")
-                NetManager:editAllianceJoinType("audit", NOT_HANDLE)
+                -- NetManager:editAllianceJoinType("audit", NOT_HANDLE)
+                NetManager:getEditAllianceJoinTypePromise("audit"):catch(function(err)
+                    dump(err:reason())
+                end):done(function(result)
+                    dump(result)
+                end)
             end
         end)
 
@@ -152,8 +162,10 @@ function GameUIShop:onEnter()
         :addTo(self)
         :align(display.CENTER, window.left + 320, window.top - 300)
         :onButtonClicked(function(event)
-            NetManager:refuseJoinAllianceRequest(member_id, function()
-                Alliance_Manager:GetMyAlliance():RemoveJoinEventWithNotifyById(member_id)
+            NetManager:getRefuseJoinAllianceRequestPromise(member_id):catch(function(err)
+                dump(err:reason())
+            end):done(function(result)
+                dump(result)
             end)
         end)
     local join_btn = WidgetPushButton.new(
@@ -168,7 +180,11 @@ function GameUIShop:onEnter()
         :addTo(self)
         :align(display.CENTER, window.left + 500, window.top - 300)
         :onButtonClicked(function(event)
-            NetManager:agreeJoinAllianceRequest(member_id, NOT_HANDLE)
+            NetManager:getAgreeJoinAllianceRequestPromise(member_id):catch(function(err)
+                dump(err:reason())
+            end):done(function(result)
+                dump(result)
+            end)
         end)
 
 
@@ -184,13 +200,17 @@ function GameUIShop:onEnter()
         :addTo(self)
         :align(display.CENTER, window.left + 140, window.top - 400)
         :onButtonClicked(function(event)
-            PushService:createAlliance({
-                name="1",
-                tag="111",
-                language="all",
-                terrain="grassLand",
-                flag=Flag:RandomFlag():EncodeToJson()
-            }, NOT_HANDLE)
+            -- PushService:createAlliance({
+            --     name="1",
+            --     tag="111",
+            --     language="all",
+            --     terrain="grassLand",
+            --     flag=Flag:RandomFlag():EncodeToJson()
+            -- }, NOT_HANDLE)
+            NetManager:getCreateAlliancePromise("1", "111", "all", "grassLand", Flag:RandomFlag():EncodeToJson())
+                :catch(function(err)
+                    dump(err:reason())
+                end)
         end)
 
     WidgetPushButton.new(
@@ -205,10 +225,15 @@ function GameUIShop:onEnter()
         :addTo(self)
         :align(display.CENTER, window.left + 320, window.top - 400)
         :onButtonClicked(function(event)
-            NetManager:searchAllianceByTag("1", function(success, data)
-                if success and #data.alliances > 0 then
-                    PushService:joinAllianceDirectly(Alliance:DecodeFromJsonData(data.alliances[1]):Id(), NOT_HANDLE)
-                end
+            -- NetManager:searchAllianceByTag("1", function(success, data)
+            --     if success and #data.alliances > 0 then
+            --         PushService:joinAllianceDirectly(Alliance:DecodeFromJsonData(data.alliances[1]):Id(), NOT_HANDLE)
+            --     end
+            -- end)
+            NetManager:getSearchAllianceByTagPromsie("1"):next(function(result)
+                return NetManager:getJoinAllianceDirectlyPromise(Alliance:DecodeFromJsonData(result.alliances[1]):Id())
+            end):catch(function(err)
+                dump(err:reason())
             end)
         end)
 
@@ -224,10 +249,15 @@ function GameUIShop:onEnter()
         :addTo(self)
         :align(display.CENTER, window.left + 500, window.top - 400)
         :onButtonClicked(function(event)
-            NetManager:searchAllianceByTag("1", function(success, data)
-                if success and #data.alliances > 0 then
-                    PushService:requestToJoinAlliance(Alliance:DecodeFromJsonData(data.alliances[1]):Id(), NOT_HANDLE)
-                end
+            -- NetManager:searchAllianceByTag("1", function(success, data)
+            --     if success and #data.alliances > 0 then
+            --         PushService:requestToJoinAlliance(Alliance:DecodeFromJsonData(data.alliances[1]):Id(), NOT_HANDLE)
+            --     end
+            -- end)
+            NetManager:getSearchAllianceByTagPromsie("1"):next(function(result)
+                return NetManager:getRequestToJoinAlliancePromise(Alliance:DecodeFromJsonData(result.alliances[1]):Id())
+            end):catch(function(err)
+                dump(err:reason())
             end)
         end)
 
@@ -244,7 +274,10 @@ function GameUIShop:onEnter()
         :addTo(self)
         :align(display.CENTER, window.left + 140, window.top - 500)
         :onButtonClicked(function(event)
-            PushService:quitAlliance(NOT_HANDLE)
+            -- PushService:quitAlliance(NOT_HANDLE)
+            NetManager:getQuitAlliancePromise():catch(function(err)
+                dump(err:reason())
+            end)
         end)
 
 
@@ -260,13 +293,17 @@ function GameUIShop:onEnter()
         :addTo(self)
         :align(display.CENTER, window.left + 140, window.top - 600)
         :onButtonClicked(function(event)
-            PushService:createAlliance({
-                name="2",
-                tag="222",
-                language="all",
-                terrain="grassLand",
-                flag=Flag:RandomFlag():EncodeToJson()
-            }, NOT_HANDLE)
+            -- PushService:createAlliance({
+            --     name="2",
+            --     tag="222",
+            --     language="all",
+            --     terrain="grassLand",
+            --     flag=Flag:RandomFlag():EncodeToJson()
+            -- }, NOT_HANDLE)
+            NetManager:getCreateAlliancePromise("2", "222", "all", "grassLand", Flag:RandomFlag():EncodeToJson())
+                :catch(function(err)
+                    dump(err:reason())
+                end)
         end)
 
     WidgetPushButton.new(
@@ -281,10 +318,10 @@ function GameUIShop:onEnter()
         :addTo(self)
         :align(display.CENTER, window.left + 320, window.top - 600)
         :onButtonClicked(function(event)
-            NetManager:searchAllianceByTag("2", function(success, data)
-                if success and #data.alliances > 0 then
-                    PushService:joinAllianceDirectly(Alliance:DecodeFromJsonData(data.alliances[1]):Id(), NOT_HANDLE)
-                end
+            NetManager:getSearchAllianceByTagPromsie("2"):next(function(result)
+                return NetManager:getRequestToJoinAlliancePromise(Alliance:DecodeFromJsonData(result.alliances[1]):Id())
+            end):catch(function(err)
+                dump(err:reason())
             end)
         end)
 
@@ -300,10 +337,10 @@ function GameUIShop:onEnter()
         :addTo(self)
         :align(display.CENTER, window.left + 500, window.top - 600)
         :onButtonClicked(function(event)
-            NetManager:searchAllianceByTag("2", function(success, data)
-                if success and #data.alliances > 0 then
-                    PushService:requestToJoinAlliance(Alliance:DecodeFromJsonData(data.alliances[1]):Id(), NOT_HANDLE)
-                end
+            NetManager:getSearchAllianceByTagPromsie("2"):next(function(result)
+                return NetManager:getRequestToJoinAlliancePromise(Alliance:DecodeFromJsonData(result.alliances[1]):Id())
+            end):catch(function(err)
+                dump(err:reason())
             end)
         end)
 
@@ -320,10 +357,13 @@ function GameUIShop:onEnter()
         :addTo(self)
         :align(display.CENTER, window.left + 140, window.top - 700)
         :onButtonClicked(function(event)
-            NetManager:inviteToJoinAlliance("W1t87MVYS", function(success, data)
-                if success and data then
-                    dump(data)
-                end
+            -- NetManager:inviteToJoinAlliance("W1t87MVYS", function(success, data)
+            --     if success and data then
+            --         dump(data)
+            --     end
+            -- end)
+            NetManager:getInviteToJoinAlliancePromise("W1t87MVYS"):catch(function(err)
+                dump(err:reason())
             end)
         end)
 
@@ -339,11 +379,13 @@ function GameUIShop:onEnter()
         :addTo(self)
         :align(display.CENTER, window.left + 320, window.top - 700)
         :onButtonClicked(function(event)
-            NetManager:getPlayerInfo("W1t87MVYS"):next(function(data)
-                dump(data)
-            end):catch(function(err)
-                dump(err:reason())
-            end)
+            NetManager:getPlayerInfoPromise("W1t87MVYS")
+                :next(function(data)
+                    dump(data)
+                end)
+                :catch(function(err)
+                    dump(err:reason())
+                end)
         end)
 
 
@@ -375,6 +417,11 @@ end
 
 
 return GameUIShop
+
+
+
+
+
 
 
 

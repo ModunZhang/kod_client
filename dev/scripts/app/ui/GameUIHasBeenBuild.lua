@@ -228,7 +228,7 @@ end
 --
 function GameUIHasBeenBuild:CreateItemWithListView(list_view)
     local city = self.build_city
-    
+
     local item = list_view:newItem()
     local back_ground = WidgetUIBackGround.new(170)
     item:addContent(back_ground)
@@ -297,15 +297,34 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         :onButtonClicked(function(event)
             local building = item.building
             if city:IsFunctionBuilding(building) then
-                NetManager:instantUpgradeBuildingByLocation(city:GetLocationIdByBuildingType(building:GetType()), NOT_HANDLE)
+                -- NetManager:instantUpgradeBuildingByLocation(city:GetLocationIdByBuildingType(building:GetType()), NOT_HANDLE)
+
+                local location_id = city:GetLocationIdByBuildingType(building:GetType())
+                NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
             elseif city:IsHouse(building) then
                 local tile = city:GetTileWhichBuildingBelongs(building)
                 local house_location = tile:GetBuildingLocation(building)
-                NetManager:instantUpgradeHouseByLocation(tile.location_id, house_location, NOT_HANDLE)
+                -- NetManager:instantUpgradeHouseByLocation(tile.location_id, house_location, NOT_HANDLE)
+
+                NetManager:getInstantUpgradeHouseByLocationPromise(tile.location_id, house_location)
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
             elseif city:IsGate(building) then
-                NetManager:instantUpgradeWallByLocation(NOT_HANDLE)
+                -- NetManager:instantUpgradeWallByLocation(NOT_HANDLE)
+                NetManager:getInstantUpgradeWallByLocationPromise()
+                            :catch(function(err)
+                                dump(err:reason())
+                            end)
             elseif city:IsTower(building) then
-                NetManager:instantUpgradeTowerByLocation(building:TowerId(), NOT_HANDLE)
+                -- NetManager:instantUpgradeTowerByLocation(building:TowerId(), NOT_HANDLE)
+                NetManager:getInstantUpgradeTowerByLocationPromise(building:TowerId())
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
             end
         end)
 
@@ -344,15 +363,34 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         :onButtonClicked(function(event)
             local building = item.building
             if city:IsFunctionBuilding(building) then
-                NetManager:upgradeBuildingByLocation(city:GetLocationIdByBuildingType(building:GetType()), NOT_HANDLE)
+                -- NetManager:upgradeBuildingByLocation(city:GetLocationIdByBuildingType(building:GetType()), NOT_HANDLE)
+
+                local location_id = city:GetLocationIdByBuildingType(building:GetType())
+                NetManager:getUpgradeBuildingByLocationPromise(location_id)
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
             elseif city:IsHouse(building) then
                 local tile = city:GetTileWhichBuildingBelongs(building)
                 local house_location = tile:GetBuildingLocation(building)
-                NetManager:upgradeHouseByLocation(tile.location_id, house_location, NOT_HANDLE)
+                -- NetManager:upgradeHouseByLocation(tile.location_id, house_location, NOT_HANDLE)
+
+                NetManager:getUpgradeHouseByLocationPromise(tile.location_id, house_location)
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
             elseif city:IsGate(building) then
-                NetManager:upgradeWallByLocation(NOT_HANDLE)
+                -- NetManager:upgradeWallByLocation(NOT_HANDLE)
+                NetManager:getUpgradeWallByLocationPromise()
+                        :catch(function(err)
+                            dump(err:reason())
+                        end)
             elseif city:IsTower(building) then
-                NetManager:upgradeTowerByLocation(building:TowerId(), NOT_HANDLE)
+                -- NetManager:upgradeTowerByLocation(building:TowerId(), NOT_HANDLE)
+                NetManager:getUpgradeTowerByLocationPromise(building:TowerId())
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
             end
         end)
 
@@ -583,6 +621,10 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
 end
 
 return GameUIHasBeenBuild
+
+
+
+
 
 
 

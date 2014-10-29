@@ -179,7 +179,10 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
             color = UIKit:hex2c3b(0xfff3c7)
         }))
         :onButtonClicked(function(event)
-            NetManager:instantMakeDragonEquipment(equip_type, NOT_HANDLE)
+            -- NetManager:instantMakeDragonEquipment(equip_type, NOT_HANDLE)
+            NetManager:getInstantMakeDragonEquipmentPromise(equip_type):catch(function(err)
+                dump(err:reason())
+            end)
             self:Close()
         end)
 
@@ -215,7 +218,10 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
             color = UIKit:hex2c3b(0xfff3c7)
         }))
         :onButtonClicked(function(event)
-            NetManager:makeDragonEquipment(equip_type, NOT_HANDLE)
+            -- NetManager:makeDragonEquipment(equip_type, NOT_HANDLE)
+            NetManager:getMakeDragonEquipmentPromise(equip_type):catch(function(err)
+                dump(err:reason())
+            end)
             self:Close()
         end)
     self.normal_build_btn = button
@@ -476,6 +482,7 @@ end
 
 
 return WidgetMakeEquip
+
 
 
 

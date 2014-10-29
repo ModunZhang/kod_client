@@ -339,7 +339,10 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
         :onButtonClicked(function(event)
             local soldiers = {{name=self.soldier_type, count=self.count}}
             local treat_fun = function ()
-                NetManager:instantTreatSoldiers(soldiers, NOT_HANDLE)
+                -- NetManager:instantTreatSoldiers(soldiers, NOT_HANDLE)
+                NetManager:getInstantTreatSoldiersPromise(soldiers):catch(function(err)
+                    dump(err:reason())
+                end)
                 self:instant_button_clicked()
             end
             if self.count<1 then
@@ -389,7 +392,10 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
             local hospital = City:GetFirstBuildingByType("hospital")
             local soldiers = {{name=self.soldier_type, count=self.count}}
             local treat_fun = function ()
-                NetManager:treatSoldiers(soldiers, NOT_HANDLE)
+                -- NetManager:treatSoldiers(soldiers, NOT_HANDLE)
+                NetManager:getTreatSoldiersPromise(soldiers):catch(function(err)
+                    dump(err:reason())
+                end)
                 self:button_clicked()
             end
             local isAbleToTreat =hospital:IsAbleToTreat(soldiers)
@@ -546,6 +552,8 @@ function WidgetTreatSoldier:OnCountChanged(count)
     self.gem_label:setString(self.treat_now_gems)
 end
 return WidgetTreatSoldier
+
+
 
 
 
