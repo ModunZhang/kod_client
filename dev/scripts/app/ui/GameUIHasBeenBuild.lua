@@ -230,7 +230,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
     local city = self.build_city
 
     local item = list_view:newItem()
-    local back_ground = WidgetUIBackGround.new(170)
+    local back_ground = WidgetUIBackGround.new({height=170})
     item:addContent(back_ground)
 
     local w, h = back_ground:getContentSize().width, back_ground:getContentSize().height

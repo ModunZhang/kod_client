@@ -132,7 +132,7 @@ function GameUIAlliance:CreateAllianceTips()
 	self.alliance_manager.open_alliance = true 
 	local shadowLayer = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
 		:addTo(self)
-    local backgroundImage = WidgetUIBackGround.new(500):addTo(shadowLayer):pos(window.left+20,window.top - 600)
+    local backgroundImage = WidgetUIBackGround.new({height=500}):addTo(shadowLayer):pos(window.left+20,window.top - 600)
     local titleBar = display.newSprite("title_blue_596x49.png")
 		:align(display.TOP_LEFT, 6,backgroundImage:getContentSize().height - 6)
 		:addTo(backgroundImage)
@@ -652,7 +652,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 				color = 0xffedae,
 	}):addTo(events_title):align(display.CENTER,events_title:getContentSize().width/2,events_title:getContentSize().height/2)
 
-	local headerBg  = WidgetUIBackGround.new(330):addTo(overviewNode,-1):pos(18,events_title:getPositionY()+events_title:getContentSize().height+20)
+	local headerBg  = WidgetUIBackGround.new({height=330}):addTo(overviewNode,-1):pos(18,events_title:getPositionY()+events_title:getContentSize().height+20)
 
 	local titileBar = display.newSprite("alliance_blue_title_600x42.png"):addTo(overviewNode):align(display.CENTER_BOTTOM,window.width/2,headerBg:getPositionY()+headerBg:getCascadeBoundingBox().height-15)
 
@@ -893,7 +893,7 @@ function GameUIAlliance:GetMemberItem(title)
 	local header_title,number_image = "",""
 
 	if title == 'archon' then
-		local node = WidgetUIBackGround.new(118)
+		local node = WidgetUIBackGround.new({height=118})
 		local title_bar = display.newSprite("alliance_archon_frame_604x148.png")
 			:addTo(node)
 			:align(display.LEFT_BOTTOM,0,0)
@@ -984,14 +984,14 @@ function GameUIAlliance:GetMemberItem(title)
 	local bg = nil
 	if #data > 0 then
 		assert(oneLine)
-		bg = WidgetUIBackGround.new(oneLine:getPositionY()+height+20)
+		bg = WidgetUIBackGround.new({height=oneLine:getPositionY()+height+20})
 	else
 		contentNode = UIKit:ttfLabel({
 			text = _("该职位还未任命给任何成员"),
 			size = 22,
 			color = 0x403c2f,
 		}):align(display.LEFT_BOTTOM,20,20)
-		bg = WidgetUIBackGround.new(80)
+		bg = WidgetUIBackGround.new({height=80})
 	end
 	contentNode:addTo(bg)
 	local bar = display.newSprite("alliance_blue_title_600x42.png"):addTo(bg):align(display.LEFT_BOTTOM, 3, bg:getCascadeBoundingBox().height-35)

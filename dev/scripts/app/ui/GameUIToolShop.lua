@@ -159,7 +159,7 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
     local toolShop_ui = self
     local align_x, align_y = 30, 35
     local height = 380
-    local content = WidgetUIBackGround.new(height):align(display.CENTER)
+    local content = WidgetUIBackGround.new({height=height}):align(display.CENTER)
 
     local size = content:getContentSize()
     local title_blue = cc.ui.UIImage.new("title_blue_596x49.png",

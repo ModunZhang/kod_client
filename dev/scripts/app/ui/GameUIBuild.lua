@@ -103,7 +103,7 @@ end
 function GameUIBuild:CreateItemWithListView(list_view)
 
     local item = list_view:newItem()
-    local content = WidgetUIBackGround.new(170)
+    local content = WidgetUIBackGround.new({height=170})
     item:addContent(content)
 
     local w, h = content:getContentSize().width, content:getContentSize().height
