@@ -4,8 +4,9 @@ NetManager = {}
 local SUCCESS_CODE = 200
 local FAILED_CODE = 500
 local TIME_OUT = 10
--- next
+-- 过滤器
 local function get_response_msg(results)
+    dump(results)
     return results[2].msg
 end
 local function check_response(m)
@@ -43,8 +44,7 @@ local function get_none_blocking_request_promise(request_route, data, m)
 end
 local function get_callback_promise(callbacks, m)
     local p = promise.new(check_response(m or ""))
-    table.insert(callbacks, function(success, msg)
-        -- dump(success, msg)
+    table.insert(callbacks, 1, function(success, msg)
         p:resolve({success = success, msg = msg})
     end)
     return p
@@ -243,8 +243,8 @@ end
 -- 登录
 function NetManager:getLoginPromise()
     return get_none_blocking_request_promise("logic.entryHandler.login", {
-        deviceId = device.getOpenUDID()
-        -- deviceId = "1"
+        -- deviceId = device.getOpenUDID()
+        deviceId = "111"
     })
 end
 -- 事件回调promise

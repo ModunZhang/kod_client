@@ -190,7 +190,7 @@ function promise:catch(func)
     return self
 end
 function promise:done(func)
-    local func = func == nil and empty_func or func
+    local func = func or empty_func
     assert(type(func) == "function", "done的函数不能为空!")
     table.insert(self.dones, func)
     return self
