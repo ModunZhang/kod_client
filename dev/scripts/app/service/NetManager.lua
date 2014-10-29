@@ -1,8 +1,9 @@
 local promise = import("..utils.promise")
-local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
+local cocos_promise = import("..utils.cocos_promise")
 NetManager = {}
 local SUCCESS_CODE = 200
 local FAILED_CODE = 500
+local TIME_OUT = 10
 -- next
 local function get_response_msg(results)
     return results[2].msg
@@ -29,14 +30,19 @@ local function get_blocking_request_promise(request_route, data, m)
     NetManager.m_netService:request(request_route, data, function(success, msg)
         p:resolve({success = success, msg = msg})
     end)
-    return p
+
+    local loading = UIKit:newGameUI("GameUIWatiForNetWork"):addToCurrentScene(true)
+    return cocos_promise.promiseWithTimeOut(p, TIME_OUT):always(function()
+        loading:removeFromParent()
+    end)
 end
 local function get_none_blocking_request_promise(request_route, data, m)
     local p = promise.new(check_request(m or ""))
     NetManager.m_netService:request(request_route, data, function(success, msg)
         p:resolve({success = success, msg = msg})
-    end, false)
-    return p
+    end)
+    -- return p
+    return cocos_promise.promiseWithTimeOut(p, TIME_OUT)
 end
 local function get_callback_promise(callbacks, m)
     local p = promise.new(check_response(m or ""))
@@ -46,21 +52,6 @@ local function get_callback_promise(callbacks, m)
     end)
     return p
 end
--- timeout promise
-local function get_timeout_promise(time)
-    local time = time or 5
-    local p = promise.new(function()
-        promise.reject("timeout", time)
-    end)
-    scheduler.performWithDelayGlobal(function()
-        p:resolve()
-    end, time)
-    return p
-end
-local function wrap_timeout_promise(p, time)
-    return promise.any(p, get_timeout_promise(time))
-end
-
 ------------------------
 --
 function NetManager:init()
@@ -213,7 +204,7 @@ local function get_connectGateServer_promise()
     NetManager.m_netService:connect(NetManager.m_gateServer.host, NetManager.m_gateServer.port, function(success)
         p:resolve({success = success, msg = {code = SUCCESS_CODE}})
     end)
-    return p
+    return cocos_promise.promiseWithTimeOut(p, TIME_OUT)
 end
 function NetManager:getConnectGateServerPromise()
     return get_connectGateServer_promise():next(function(result)
@@ -241,7 +232,7 @@ local function get_connectLogicServer_promise()
     NetManager.m_netService:connect(NetManager.m_logicServer.host, NetManager.m_logicServer.port, function(success)
         p:resolve({success = success, msg = {code = SUCCESS_CODE}})
     end)
-    return p
+    return cocos_promise.promiseWithTimeOut(p, TIME_OUT)
 end
 function NetManager:getConnectLogicServerPromise()
     return get_connectLogicServer_promise():next(function(result)
@@ -257,7 +248,7 @@ end
 function NetManager:getLoginPromise()
     return get_none_blocking_request_promise("logic.entryHandler.login", {
         -- deviceId = device.getOpenUDID()
-        deviceId = "1"
+        deviceId = "2"
     })
 end
 -- 事件回调promise
@@ -319,7 +310,6 @@ end
 function NetManager:getInstantUpgradeBuildingByLocationPromise(location)
     return promise.all(get_upgradeBuilding_promise(location, true), get_playerdata_callback()):next(get_response_msg)
 end
-
 -- 升级防御塔
 local function get_upgradeTower_promise(location, finish_now)
     return get_blocking_request_promise("logic.playerHandler.upgradeTower", {
@@ -528,6 +518,12 @@ function NetManager:getAgreeJoinAllianceRequestPromise(memberId, cb)
         memberId = memberId,
         agree = true
     }, "接受玩家失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 踢出玩家
+function NetManager:getKickAllianceMemberOffPromise(memberId)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.kickAllianceMemberOff", {
+        memberId = memberId,
+    }, "踢出玩家失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 -- 搜索特定标签联盟
 function NetManager:getSearchAllianceByTagPromsie(tag)
@@ -912,6 +908,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 

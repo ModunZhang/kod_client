@@ -1,9 +1,11 @@
+local property = import("..utils.property")
 local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local User = class("User", MultiObserver)
 User.LISTEN_TYPE = Enum("INVITE_TO_ALLIANCE", "REQUEST_TO_ALLIANCE")
-function User:ctor()
+function User:ctor(id)
     User.super.ctor(self)
+    property(self, "id", id)
     self.request_events = {}
     self.invite_events = {}
 end

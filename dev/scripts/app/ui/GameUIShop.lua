@@ -389,6 +389,35 @@ function GameUIShop:onEnter()
         end)
 
 
+        WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "踢出随机一个成员",
+        size = 24,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(self)
+        :align(display.CENTER, window.left + 500, window.top - 700)
+        :onButtonClicked(function(event)
+            local memberid
+            Alliance_Manager:GetMyAlliance():IteratorAllMembers(function(_, v)
+                if v:Id() ~= User:Id() then
+                    memberid = v:Id()
+                    return true
+                end
+            end)
+            NetManager:getKickAllianceMemberOffPromise(memberid)
+                :next(function(data)
+                    dump(data)
+                end)
+                :catch(function(err)
+                    dump(err:reason())
+                end)
+        end)
+
+
     --     WidgetPushButton.new(
     --     {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
     --     {scale9 = false}
