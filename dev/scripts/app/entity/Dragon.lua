@@ -70,6 +70,30 @@ function Dragon:ctor(drag_type,strength,vitality,status,star,level)
 	self.equipments_ = self:FitDefaultEquipments()
 end
 
+function Dragon:UpdateEquipmetsAndSkills(json_data)
+	assert(self.equipments_)
+	for k,v in pairs(json_data.equipments) do
+		local eq = self:GetEquipmentByCategory(k)
+		eq:setExp(v.exp or 0)
+		eq:setStar(v.star or 0)
+		eq:SetBuffData(v.buffs)
+	end
+	for k,v in pairs(json_data.skills) do
+		local skill = DragonSkill.new(self,k,v.name,v.level)
+		self.skills_[k] = skill
+	end
+end
+
+function Dragon:Update(json_data)
+	self:SetType(json_data.type)
+	self:SetStrength(json_data.strength)
+	self:SetVitality(json_data.vitality)
+	self:SetStatus(json_data.status)
+	self:SetStar(json_data.star)
+	self:SetLevel(json_data.level)
+	self:UpdateEquipmetsAndSkills(json_data)
+end
+
 --是否已孵化
 function Dragon:Ishated()
 	return self:Star() > 0
@@ -79,19 +103,6 @@ function Dragon:GetEquipmentByCategory( category )
 	return self.equipments_[category]
 end
 
-function Dragon:Update(json_data)
-	assert(self.equipments_)
-	for k,v in pairs(json_data.equipments) do
-		local eq = self:GetEquipmentByCategory(k)
-		eq:setExp(v.exp or 0)
-		eq:setStar(v.star or 0)
-		eq:SetBuffData(v.buffs)
-	end
-	self.skills_ = {}
-	for k,v in pairs(json_data.skills) do
-		local skill = DragonSkill.new(self,k,v.name,v.level)
-	end
-end
 
 --装备
 function Dragon:Equipments()
@@ -103,7 +114,7 @@ function Dragon:FitDefaultEquipments()
 	local r = {}
     for name,equipment in pairs(config_equipments) do
         if equipment.maxStar == self:Star() and self:Type() == equipment.usedFor then
-            if equipment["category"] == "armguardLeft,armguardRight" then
+            if equipment["category"] == "armguardLeft,armguardRight" then --如果是护肩 初始化左右
                 r[self.EQ_CATEGORY.armguardLeft]  = DragonEquipment.new(self.EQ_CATEGORY.armguardLeft,equipment.name,
                 	equipment.usedFor,equipment.maxStar,equipment.resolveLExp,equipment.resolveMExp,equipment.resolveSExp,equipment.coin,equipment.makeTime)
                 r[self.EQ_CATEGORY.armguardRight] = DragonEquipment.new(self.EQ_CATEGORY.armguardRight,equipment.name,
@@ -117,18 +128,26 @@ function Dragon:FitDefaultEquipments()
     return r
 end
 
-function Dragon:GetMaxVitalityCurrentLevel()
+--该等级下的最大活力
+function Dragon:GetMaxVitality()
 	 return config_dragonAttribute[self:Star()].initVitality + self:Level() * config_dragonAttribute[self:Star()].perLevelVitality
 end
 
+--升级需要的经验值
 function Dragon:GetNextLevelMaxExp()
 	return tonumber(config_dragonAttribute[self:Star()].perLevelExp) * math.pow(self:Level(),2)
 end
-
+--当前星级最大等级
 function Dragon:GetMaxLevel()
 	return config_dragonAttribute[self:Star()].levelMax
 end
---TODO:获取所有buffers
+
+--是否达到晋级等级
+function Dragon:IsReachPromotionLevel()
+	 return self:Level() >= config_dragonAttribute[self:Star()].promotionLevel
+end
+
+--TODO:获取所有buffers信息
 function Dragon:GetAllBuffInfomation()
 
 end

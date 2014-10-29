@@ -30,6 +30,7 @@ function MyApp:ctor()
         fileutils:addSearchPath("res/images/")
     elseif device.platform == "mac" then
         fileutils:addSearchPath("dev/res/")
+        fileutils:addSearchPath("dev/res/fonts/")
         fileutils:addSearchPath("dev/res/images/")
     end
 end
