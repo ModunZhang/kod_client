@@ -38,8 +38,9 @@ function AllianceManager:OnAllianceBasicInfoAndMemberDataChanged(basic_and_membe
     end
     -- dump(self:GetMyAlliance())
 end
-function AllianceManager:OnAllianceHelpDataChanged(...)
-    self:GetMyAlliance():OnHelpEventsChanged(...)
+function AllianceManager:OnAllianceHelpDataChanged(help_event)
+    print("AllianceManager:OnAllianceHelpDataChanged")
+    self:GetMyAlliance():ReFreashOneHelpEvent(help_event)
 end
 
 

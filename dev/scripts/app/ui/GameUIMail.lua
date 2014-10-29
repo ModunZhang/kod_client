@@ -21,6 +21,7 @@ function GameUIMail:ctor(title,city)
     GameUIMail.super.ctor(self)
     self.title = title
     self.city = city
+    self.manager = DataManager:GetManager("MailManager")
     self.inbox_mails = {}
     self.saved_mails = {}
     self.send_mails = {}
@@ -77,10 +78,10 @@ function GameUIMail:onEnter()
         end
     end):pos(window.cx, window.bottom + 34)
 
-    DataManager:GetManager("MailManager"):AddListenOnType(self,MailManager.LISTEN_TYPE.MAILS_CHANGED)
-    local mails = DataManager:GetManager("MailManager"):GetMails(function (...)
-        local saved_mails = DataManager:GetManager("MailManager"):GetSavedMails(function (...)
-            local send_mails = DataManager:GetManager("MailManager"):GetSendMails(function (...)end)
+    self.manager:AddListenOnType(self,MailManager.LISTEN_TYPE.MAILS_CHANGED)
+    local mails = self.manager:GetMails(function (...)
+        local saved_mails = self.manager:GetSavedMails(function (...)
+            local send_mails = self.manager:GetSendMails(function (...)end)
             self:InitSendMails(send_mails)
         end)
         self:InitSaveMails(saved_mails)
@@ -88,7 +89,7 @@ function GameUIMail:onEnter()
     self:InitInbox(mails)
 end
 function GameUIMail:onExit()
-    DataManager:GetManager("MailManager"):RemoveListenerOnType(self,MailManager.LISTEN_TYPE.MAILS_CHANGED)
+    self.manager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.MAILS_CHANGED)
     GameUIMail.super.onExit(self)
 end
 function GameUIMail:CreateWriteMailButton()
@@ -203,13 +204,12 @@ function GameUIMail:CreateMailItem(listview,mail)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if tolua.type(mail.isRead)=="boolean" and not mail.isRead then
-                    self:ReadMail(mail.id,function (flag)
-                        if flag then
-                            DataManager:GetManager("MailManager"):DecreaseUnReadMailsAndReports(1)
-                            self.inbox_mails[mail.id].mail.isRead = true
-                            self.inbox_mails[mail.id].mail_state:setTexture("mail_state_read.png")
-                            self.inbox_mails[mail.id].mail_state:setScale(34/self.inbox_mails[mail.id].mail_state:getContentSize().width)
-                        end
+                    self:ReadMail(mail.id,function ()
+                        print("readmail sussece")
+                        self.manager:DecreaseUnReadMailsAndReports(1)
+                        self.inbox_mails[mail.id].mail.isRead = true
+                        self.inbox_mails[mail.id].mail_state:setTexture("mail_state_read.png")
+                        self.inbox_mails[mail.id].mail_state:setScale(34/self.inbox_mails[mail.id].mail_state:getContentSize().width)
                     end)
                 end
                 --如果是发送邮件
@@ -284,43 +284,43 @@ end
 
 function GameUIMail:SaveOrUnsaveMail(mail,target)
     if target:isButtonSelected() then
-        NetManager:saveMail(mail.id,function(flag)
-            if flag then
-                if self.inbox_mails[mail.id] then
-                    self.inbox_mails[mail.id].mail.isSaved=true
-                    self.inbox_mails[mail.id].saved_button:setButtonSelected(true,true)
-                end
-                -- 收藏夹中的邮件没有这两个属性
-                mail.isRead = nil
-                mail.isSaved = nil
-                DataManager:GetManager("MailManager"):AddSavedMail(mail)
-                -- 收藏成功，收藏夹添加此封邮件
-                local item =  self:CreateMailItem(self.save_mails_listview, mail)
-                self:AddMails(self.save_mails_listview, item, mail ,1)
-            else
-                target:setButtonSelected(false,true)
+        NetManager:getSaveMailPromise(mail.id):done(function()
+            if self.inbox_mails[mail.id] then
+                self.inbox_mails[mail.id].mail.isSaved=true
+                self.inbox_mails[mail.id].saved_button:setButtonSelected(true,true)
             end
+            -- 收藏夹中的邮件没有这两个属性
+            mail.isRead = nil
+            mail.isSaved = nil
+            self.manager:AddSavedMail(mail)
+            -- 收藏成功，收藏夹添加此封邮件
+            local item =  self:CreateMailItem(self.save_mails_listview, mail)
+            self:AddMails(self.save_mails_listview, item, mail ,1)
+        end):catch(function(err)
+            target:setButtonSelected(false,true)
+            dump(err:reason())
         end)
     else
-        NetManager:unSaveMail(mail.id,function(flag)
-            if flag then
-                if self.inbox_mails[mail.id] then
-                    self.inbox_mails[mail.id].mail.isSaved=false
-                    self.inbox_mails[mail.id].saved_button:setButtonSelected(false,true)
-                end
-                -- 取消收藏成功，从收藏夹删除这封邮件
-                self.save_mails_listview:removeItem(self.saved_mails[mail.id])
-                self.saved_mails[mail.id] = nil
-                DataManager:GetManager("MailManager"):DeleteSavedMail(mail)
-            else
-                target:setButtonSelected(true,true)
+        NetManager:getUnSaveMailPromise(mail.id):done(function()
+            if self.inbox_mails[mail.id] then
+                self.inbox_mails[mail.id].mail.isSaved=false
+                self.inbox_mails[mail.id].saved_button:setButtonSelected(false,true)
             end
+            -- 取消收藏成功，从收藏夹删除这封邮件
+            self.save_mails_listview:removeItem(self.saved_mails[mail.id])
+            self.saved_mails[mail.id] = nil
+            self.manager:DeleteSavedMail(mail)
+        end):catch(function(err)
+            target:setButtonSelected(true,true)
+            dump(err:reason())
         end)
     end
 end
 
 function GameUIMail:ReadMail(mailId,cb)
-    NetManager:readMail(mailId,cb)
+    NetManager:getReadMailPromise(mailId):done(cb):catch(function(err)
+        dump(err:reason())
+    end)
 end
 
 function GameUIMail:AddMails( listview,item,mail,index )
@@ -392,11 +392,11 @@ function GameUIMail:CreateLoadingMoreItem(listview)
 end
 function GameUIMail:GetMails(listview)
     if listview == self.inbox_listview then
-        return DataManager:GetManager("MailManager"):GetMails(NOT_HANDLE, self:GetMailsCount(listview))
+        return self.manager:GetMails(NOT_HANDLE, self:GetMailsCount(listview))
     elseif listview == self.save_mails_listview then
-        return DataManager:GetManager("MailManager"):GetSavedMails(NOT_HANDLE,self:GetMailsCount(listview))
+        return self.manager:GetSavedMails(NOT_HANDLE,self:GetMailsCount(listview))
     elseif listview == self.send_mail_listview then
-        return DataManager:GetManager("MailManager"):GetSendMails(NOT_HANDLE,self:GetMailsCount(listview))
+        return self.manager:GetSendMails(NOT_HANDLE,self:GetMailsCount(listview))
     end
 end
 function GameUIMail:OnServerDataEvent(event)
@@ -657,13 +657,13 @@ function GameUIMail:ShowMailDetails(mail)
             :addTo(bg):align(display.CENTER, 140, 50)
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
-                    NetManager:deleteMail(mail.id,function (flag)
-                        if flag then
-                            layer_bg:removeFromParent()
-                            self.inbox_listview:removeItem(self.inbox_mails[mail.id])
-                            self.inbox_mails[mail.id]=nil
-                            DataManager:GetManager("MailManager"):DeleteMail(mail)
-                        end
+                    NetManager:getDeleteMailPromise(mail.id):done(function ()
+                        layer_bg:removeFromParent()
+                        self.inbox_listview:removeItem(self.inbox_mails[mail.id])
+                        self.inbox_mails[mail.id]=nil
+                        self.manager:DeleteMail(mail)
+                    end):catch(function(err)
+                        dump(err:reason())
                     end)
                 end
             end)
@@ -1017,7 +1017,13 @@ function GameUIMail:SendMail(addressee,title,content)
             :AddToCurrentScene()
         return
     end
-    NetManager:sendPersonalMail(addressee, title, content,NOT_HANDLE)
+    NetManager:getSendPersonalMailPromise(addressee, title, content):catch(function(err)
+        dump(err:reason())
+    end)
 end
 
 return GameUIMail
+
+
+
+

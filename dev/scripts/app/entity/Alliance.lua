@@ -5,7 +5,7 @@ local Flag = import(".Flag")
 local AllianceMember = import(".AllianceMember")
 local MultiObserver = import(".MultiObserver")
 local Alliance = class("Alliance", MultiObserver)
-Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS")
+Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS")
 local unpack = unpack
 local function pack(...)
     return {...}
@@ -40,7 +40,7 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     self.members = {}
     self.events = {}
     self.join_events = {}
-    self.help_vents = {}
+    self.help_events = {}
 end
 function Alliance:DecodeFromJsonData(json_data)
     local alliance = Alliance.new(json_data.id, json_data.name, json_data.tag, json_data.language)
@@ -180,13 +180,28 @@ function Alliance:OnMemberChanged(changed_map)
         listener:OnMemberChanged(self, changed_map)
     end)
 end
+function Alliance:GetAllHelpEvents()
+    return self.help_events
+end
+function Alliance:ReFreashOneHelpEvent(help_event)
+    for index,event in pairs(self.help_events) do
+            print("ReFreashOneHelpEvent",help_event.eventId)
+        if event.eventId == help_event.eventId then
+            print("ReFreashOneHelpEvent",help_event.eventId)
+            self.help_events[index] = help_event
+            self:NotifyListeneOnType(Alliance.LISTEN_TYPE.HELP_EVENTS, function(listener)
+                listener:OnOneHelpEventChanged(help_event)
+            end)
+        end
+    end
+end
 function Alliance:Reset()
     self:SetId(nil)
     self:SetJoinType("all")
     self.members = {}
     self.events = {}
     self.join_events = {}
-    self.help_vents = {}
+    self.help_events = {}
     self:OnOperation("quit")
 end
 function Alliance:OnOperation(operation_type)
@@ -300,14 +315,24 @@ function Alliance:OnJoinEventsChanged(changed_map)
     end)
 end
 function Alliance:OnAllianceDataChanged(alliance_data)
-    self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
-    self:OnAllianceEventsChanged(alliance_data.events)
-    self:OnJoinRequestEventsChanged(alliance_data.joinRequestEvents)
-    self:OnHelpEventsChanged(alliance_data.helpEvents)
-    self:OnAllianceMemberDataChanged(alliance_data.members)
+    if alliance_data.basicInfo then
+        self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
+    end
+    if alliance_data.events then
+        self:OnAllianceEventsChanged(alliance_data.events)
+    end
+    if alliance_data.joinRequestEvents then
+        self:OnJoinRequestEventsChanged(alliance_data.joinRequestEvents)
+    end
+    if alliance_data.helpEvents then
+        self:OnHelpEventsChanged(alliance_data.helpEvents)
+    end
+    if alliance_data.members then
+        self:OnAllianceMemberDataChanged(alliance_data.members)
+    end
 end
 function Alliance:OnAllianceBasicInfoChanged(basicInfo)
-    if not basicInfo then return end
+    if basicInfo == nil then return end
     self:SetName(basicInfo.name)
     self:SetAliasName(basicInfo.tag)
     self:SetDefaultLanguage(basicInfo.language)
@@ -354,7 +379,7 @@ function Alliance:OnAllianceEventsChanged(events)
     end
 end
 function Alliance:OnJoinRequestEventsChanged(joinRequestEvents)
-    if not joinRequestEvents then return end
+    if joinRequestEvents == nil then return end
     local join_events = self.join_events
     -- 找出新加入的请求
     local mark_map = {}
@@ -451,9 +476,14 @@ function Alliance:OnOneAllianceMemberDataChanged(member_data)
 end
 function Alliance:OnHelpEventsChanged(helpEvents)
     dump(helpEvents)
+    self.help_events = helpEvents
+    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.HELP_EVENTS, function(listener)
+        listener:OnAllHelpEventChanged(helpEvents)
+    end)
 end
 
 return Alliance
+
 
 
 

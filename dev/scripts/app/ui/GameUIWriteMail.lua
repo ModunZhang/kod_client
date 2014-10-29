@@ -119,7 +119,7 @@ function GameUIWriteMail:ctor()
         {scale9 = false}
     ):setButtonLabel(send_label)
         :addTo(write_mail):align(display.CENTER, write_mail:getContentSize().width-120, 40)
-        
+
 end
 function GameUIWriteMail:SendMail(send_type,addressee,title,content)
     if not addressee or string.trim(addressee)=="" then
@@ -139,9 +139,13 @@ function GameUIWriteMail:SendMail(send_type,addressee,title,content)
         return
     end
     if send_type == PERSONAL_MAIL then
-        NetManager:sendPersonalMail(addressee, title, content,NOT_HANDLE)
+        NetManager:getSendPersonalMailPromise(addressee, title, content):catch(function(err)
+            dump(err:reason())
+        end)
     elseif send_type == ALLIANCE_MAIL then
-        NetManager:sendAllianceMail(title, content,NOT_HANDLE)
+        NetManager:getSendAllianceMailPromise(title, content):catch(function(err)
+            dump(err:reason())
+        end)
     end
 end
 
@@ -186,3 +190,5 @@ return GameUIWriteMail
 
 
    
+
+
