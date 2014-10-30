@@ -509,32 +509,32 @@ function NetManager:getDeleteMailPromise(mailId)
 end
 -- 发送联盟邮件
 function NetManager:getSendAllianceMailPromise(title, content)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.sendAllianceMail", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.sendAllianceMail", {
         title = title,
         content = content,
     }, "发送联盟邮件失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 请求加速
-function NetManager:getRequestToSpeedUpPromise(eventType, eventId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.requestToSpeedUp", {
+function NetManager:getRequestAllianceToSpeedUpPromise(eventType, eventId)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.requestAllianceToSpeedUp", {
         eventType = eventType,
         eventId = eventId,
     }, "请求加速失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 协助玩家加速
 function NetManager:getHelpAllianceMemberSpeedUpPromise(eventId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.helpAllianceMemberSpeedUp", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.helpAllianceMemberSpeedUp", {
         eventId = eventId,
     }, "协助玩家加速失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 -- 协助所有玩家加速
 function NetManager:getHelpAllAllianceMemberSpeedUpPromise()
-    return promise.all(get_blocking_request_promise("logic.playerHandler.helpAllAllianceMemberSpeedUp", {}
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.helpAllAllianceMemberSpeedUp", {}
         , "协助所有玩家加速失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 -- 创建联盟
 function NetManager:getCreateAlliancePromise(name, tag, language, terrain, flag)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.createAlliance", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.createAlliance", {
         name = name,
         tag = tag,
         language = language,
@@ -544,61 +544,61 @@ function NetManager:getCreateAlliancePromise(name, tag, language, terrain, flag)
 end
 -- 退出联盟
 function NetManager:getQuitAlliancePromise()
-    return promise.all(get_blocking_request_promise("logic.playerHandler.quitAlliance", nil
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.quitAlliance", nil
         , "退出联盟失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 修改联盟加入条件
 function NetManager:getEditAllianceJoinTypePromise(join_type)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.editAllianceJoinType", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.editAllianceJoinType", {
         joinType = join_type
     }, "修改联盟加入条件失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 -- 拒绝玩家
 function NetManager:getRefuseJoinAllianceRequestPromise(memberId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.handleJoinAllianceRequest", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.handleJoinAllianceRequest", {
         memberId = memberId,
         agree = false
     }, "拒绝玩家失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 接受玩家
 function NetManager:getAgreeJoinAllianceRequestPromise(memberId, cb)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.handleJoinAllianceRequest", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.handleJoinAllianceRequest", {
         memberId = memberId,
         agree = true
     }, "接受玩家失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 踢出玩家
 function NetManager:getKickAllianceMemberOffPromise(memberId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.kickAllianceMemberOff", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.kickAllianceMemberOff", {
         memberId = memberId,
     }, "踢出玩家失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 -- 搜索特定标签联盟
 function NetManager:getSearchAllianceByTagPromsie(tag)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.searchAllianceByTag", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.searchAllianceByTag", {
         tag = tag
     }, "搜索特定标签联盟失败!"), get_searchalliance_callback()):next(get_response_msg)
 end
 -- 搜索能直接加入联盟
 function NetManager:getFetchCanDirectJoinAlliancesPromise()
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getCanDirectJoinAlliances", nil
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.getCanDirectJoinAlliances", nil
         , "搜索直接加入联盟失败!"), get_directjoin_callback()):next(get_response_msg)
 end
 -- 搜索能直接加入联盟
 function NetManager:getInviteToJoinAlliancePromise(memberId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.inviteToJoinAlliance", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.inviteToJoinAlliance", {
         memberId = memberId
     }, "搜索直接加入联盟失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 直接加入联盟
 function NetManager:getJoinAllianceDirectlyPromise(allianceId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.joinAllianceDirectly", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.joinAllianceDirectly", {
         allianceId = allianceId
     }, "直接加入联盟失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 请求加入联盟
 function NetManager:getRequestToJoinAlliancePromise(allianceId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.requestToJoinAlliance", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.requestToJoinAlliance", {
         allianceId = allianceId
     }, "请求加入联盟失败!"), get_playerdata_callback()):next(get_response_msg)
 end
@@ -609,33 +609,33 @@ function NetManager:getPlayerInfoPromise(memberId)
     }, "获取玩家信息失败!"), get_playerinfo_callback()):next(get_response_msg)
 end
 -- 移交萌主
-function NetManager:getHandOverArchonPromise(memberId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.handOverArchon", {
+function NetManager:getHandOverAllianceArchonPromise(memberId)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.handOverAllianceArchon", {
         memberId = memberId,
     }, "移交萌主失败!"), get_playerinfo_callback()):next(get_response_msg)
 end
 -- 修改成员职位
-function NetManager:getModifyAllianceMemberTitlePromise(memberId, title)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.modifyAllianceMemberTitle", {
+function NetManager:getEditAllianceMemberTitlePromise(memberId, title)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.editAllianceMemberTitle", {
         memberId = memberId,
         title = title
     }, "修改成员职位失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 -- 修改联盟公告
 function NetManager:getEditAllianceNoticePromise(notice)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.editAllianceNotice", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.editAllianceNotice", {
         notice = notice
     }, "修改联盟公告失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 -- 修改联盟描述
 function NetManager:getEditAllianceDescriptionPromise(description)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.editAllianceDescription", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.editAllianceDescription", {
         description = description
     }, "修改联盟描述失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 -- 修改职位名字
-function NetManager:getEditTitleNamePromise(title, titleName)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.editTitleName", {
+function NetManager:getEditAllianceTitleNamePromise(title, titleName)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.editAllianceTitleName", {
         title = title,
         titleName = titleName
     }, "修改职位名字失败!"), get_alliancedata_callback()):next(get_response_msg)

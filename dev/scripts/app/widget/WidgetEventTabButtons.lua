@@ -607,7 +607,7 @@ function WidgetEventTabButtons:Load()
                                 elseif self.city:IsTower(v) then
                                     eventType = "tower"
                                 end
-                                NetManager:getRequestToSpeedUpPromise(eventType,v:UniqueUpgradingKey())
+                                NetManager:getRequestAllianceToSpeedUpPromise(eventType,v:UniqueUpgradingKey())
                                     :catch(function(err)
                                         dump(err:reason())
                                     end)
