@@ -446,7 +446,7 @@ function GameUIShop:onEnter()
                 end
             end)
             if not member:IsTitleHighest() then
-                NetManager:getModifyAllianceMemberTitlePromise(member:Id(), member:TitleUpgrade())
+                NetManager:getEditAllianceMemberTitlePromise(member:Id(), member:TitleUpgrade())
                     :next(function(data)
                         dump(data)
                     end)
@@ -477,7 +477,7 @@ function GameUIShop:onEnter()
                 end
             end)
             if not member:IsTitleLowest() then
-                NetManager:getModifyAllianceMemberTitlePromise(member:Id(), member:TitleDegrade())
+                NetManager:getEditAllianceMemberTitlePromise(member:Id(), member:TitleDegrade())
                     :next(function(data)
                         dump(data)
                     end)
