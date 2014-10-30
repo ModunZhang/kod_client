@@ -20,18 +20,41 @@ end
 function Flag:SetBackColors(color1, color2)
     self.flag.flagColor = {color1, color2}
 end
+function Flag:GetBackColors()
+    return self.flag.flagColor
+end
+
 function Flag:SetBackStyle(back_style)
     self.flag.flag = back_style
 end
+
+function Flag:GetBackStyle()
+    return self.flag.flag
+end
+
 function Flag:SetFrontStyle(front_style)
     self.flag.graphic = front_style
+end
+
+function Flag:GetFrontStyle()
+    return self.flag.graphic
 end
 function Flag:SetFrontImagesStyle(style1, style2)
     self.flag.graphicContent = {style1, style2}
 end
+
+function Flag:GetFrontImagesStyle()
+    return self.flag.graphicContent
+end
+
 function Flag:SetFrontImageColors(color1, color2)
     self.flag.graphicColor = {color1, color2}
 end
+
+function Flag:GetFrontImageColors()
+    return self.flag.graphicColor
+end
+
 function Flag:IsSameWithFlag(flag)
     local this_flag = self.flag
     local flag_ = flag.flag

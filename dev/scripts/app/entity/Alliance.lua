@@ -92,6 +92,7 @@ function Alliance:GetTitles()
             dump(alliance_title[k])
             return k, alliance_title[k]
         end
+        return k,v
     end)
 end
 function Alliance:Flag()
@@ -491,7 +492,14 @@ function Alliance:OnHelpEventsChanged(helpEvents)
         listener:OnAllHelpEventChanged(helpEvents)
     end)
 end
-
+function Alliance:GetAllianceArchonMember()
+    for k,v in pairs(self.members) do
+        if v:IsArchon() then
+            return v
+        end
+    end
+    return nil
+end
 return Alliance
 
 

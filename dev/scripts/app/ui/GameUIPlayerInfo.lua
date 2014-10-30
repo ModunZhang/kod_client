@@ -8,12 +8,12 @@ local window = import("..utils.window")
 local UIListView = import(".UIListView")
 local UIScrollView = import(".UIScrollView")
 local NetService = import('..service.NetService')
+local AllianceMember = import('..entity.AllianceMember')
 
 function GameUIPlayerInfo:ctor(isOnlyMail,memberId)
 	GameUIPlayerInfo.super.ctor(self)
 	self.isOnlyMail_ = isOnlyMail or false
 	self.memberId_ = memberId
-	self.alliance_manager = DataManager:GetManager("AllianceManager")
 end
 
 function GameUIPlayerInfo:onMoveInStage()
@@ -41,13 +41,11 @@ function GameUIPlayerInfo:onMoveInStage()
 	   	:pos(-32,30)
 	self.bg = bg
 	self.title_bar = title_bar
-	ListenerService:OnListenEvnet("onGetPlayerInfoSuccess","GameUIPlayerInfo",handler(self,self.OnGetPlayerInfoSuccess))
-	self.alliance_manager:OnAllianceDataEvent("GameUIPlayerInfo",handler(self, self.OnPlayerDataChanged))
-	PushService:getPlayerInfo(self.memberId_,function(success)
-		if not success then 
-			self:leftButtonClicked()
-		end
-	end)
+	NetManager:getPlayerInfoPromise(self.memberId_):next(function(data)
+       self:OnGetPlayerInfoSuccess(data)
+    end):catch(function(err)
+    	self:leftButtonClicked()
+    end)
 end
 
 function GameUIPlayerInfo:BuildUI()
@@ -202,33 +200,41 @@ end
 
 function GameUIPlayerInfo:OnPlayerButtonClicked( tag )
 	if tag == 1 then -- 踢出
-		PushService:kickAllianceMemberOff(self.memberId_,function(success)
-			if success then
-				self.alliance_manager:KickAllianceMemberById(self.memberId_)
-				self:leftButtonClicked()
-			end
-		end)
-	elseif tag == 2 then
-		PushService:handOverArchon(self.memberId_,function(success)
-			if success then
-			end
-		end)
-	elseif tag == 3 then
-		local nextTitle = self.alliance_manager:GetMemberTitle(self.player_info.title,2)
-		if nextTitle then
-			PushService:modifyAllianceMemberTitle(self.memberId_,nextTitle,function(success)
-				if success then
-				end
-			end)
-		end
-	elseif tag == 4 then
-		local nextTitle = self.alliance_manager:GetMemberTitle(self.player_info.title,1)
-		if nextTitle then
-			PushService:modifyAllianceMemberTitle(self.memberId_,nextTitle,function(success)
-				if success then
-				end
-			end)
-		end
+        NetManager:getKickAllianceMemberOffPromise(self.memberId_)
+           	:next(function(data)
+           		self:leftButtonClicked()
+           	end)
+	elseif tag == 2 then -- 移交盟主
+		local member = AllianceMember:CreatFromData(self.player_info)
+
+            NetManager:getHandOverArchonPromise(member:Id())
+                :next(function(data)
+                   	self.player_info.title = title
+	 	  			self:RefreshListView()
+                end)
+                :catch(function(err)
+                    dump(err:reason())
+                end)
+	elseif tag == 3 then --降级
+		local member = AllianceMember:CreatFromData(self.player_info)
+		 if not member:IsTitleLowest() then
+		 	  NetManager:getModifyAllianceMemberTitlePromise(member:Id(), member:TitleDegrade()):next(function(data)
+	 	  		local alliacne =  Alliance_Manager:GetMyAlliance()
+	 	  		local title = alliacne:GetMemeberById(member:Id()):Title()
+	 	  		self.player_info.title = title
+	 	  		self:RefreshListView()
+		 	  end)
+		 end
+	elseif tag == 4 then --晋级
+		local member = AllianceMember:CreatFromData(self.player_info)
+		if not member:IsTitleHighest() then
+            NetManager:getModifyAllianceMemberTitlePromise(member:Id(), member:TitleUpgrade()):next(function(data)
+        		local alliacne =  Alliance_Manager:GetMyAlliance()
+	 	  		local title = alliacne:GetMemeberById(member:Id()):Title()
+	 	  		self.player_info.title = title
+	 	  		self:RefreshListView()
+            end)
+        end
 	elseif tag == 5 then
 		--TODO:打开邮件界面
 		--if self.isOnlyMail_
@@ -256,9 +262,10 @@ function GameUIPlayerInfo:GetPlayerButton( index )
 end
 
 function GameUIPlayerInfo:GetIconByTitle( title )
+	dump(title)
 	local number_image = ""
 	if title == 'archon' then
-		number_image = "5_23x24.png"
+		number_image = "alliance_item_leader_39x39.png"
 	elseif title == 'general' then -- 将军
 		number_image = "5_23x24.png"
 	elseif title == 'quartermaster' then
@@ -270,10 +277,12 @@ function GameUIPlayerInfo:GetIconByTitle( title )
 	elseif title == 'member' then
 		number_image = "1_11x24.png"
 	end
+	return number_image
 end
 
 function GameUIPlayerInfo:RefreshListView()
 	local list = self:AdapterPlayerList()
+	self.listView:removeAllItems()
 	for i,v in ipairs(list) do
 		local item = self.listView:newItem()
 		local bg = display.newSprite(string.format("playerinfo_item_547x40_%d.png",i%2))
@@ -286,9 +295,10 @@ function GameUIPlayerInfo:RefreshListView()
 		local x = 537
 
 		if v[1] == _("职位") then
-			x = x - 39
-			display.newSprite("alliance_item_leader_39x39.png"):align(display.RIGHT_BOTTOM, 537, 5)
+			local icon = display.newSprite(self:GetIconByTitle(v[2])):align(display.RIGHT_BOTTOM, 537, 5)
 			:addTo(bg)
+			x = x - icon:getContentSize().width - 2
+			v[2] = Alliance_Manager:GetMyAlliance():GetTitles()[v[2]]
 		end
 		UIKit:ttfLabel({
 			text = v[2],
@@ -314,20 +324,15 @@ function GameUIPlayerInfo:AdapterPlayerList()
 	return r
 end
 
-function GameUIPlayerInfo:OnGetPlayerInfoSuccess(event)
-	self.player_info = event.data
+function GameUIPlayerInfo:OnGetPlayerInfoSuccess(data)
+	self.player_info = data
 	self:BuildUI()
 	self:RefreshListView()
 end
 
 function GameUIPlayerInfo:onMoveOutStage()
-	ListenerService:RemoveEventByTag("GameUIPlayerInfo")
-	self.alliance_manager:RemoveEventByTag("GameUIPlayerInfo")
 	GameUIPlayerInfo.super.onMoveOutStage(self)
 end
 
-function GameUIPlayerInfo:OnPlayerDataChanged(event)
-	
-end
 
 return GameUIPlayerInfo
