@@ -16,6 +16,9 @@ function DataManager:setUserData( userData )
     end
     self:OnUserDataChanged(userData, app.timer:GetServerTime())
 end
+function DataManager:setUserAllianceData(allianceData)
+	Alliance_Manager:OnAllianceDataChanged(allianceData)
+end
 
 
 function DataManager:getUserData(  )

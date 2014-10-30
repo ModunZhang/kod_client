@@ -6,7 +6,6 @@ local FAILED_CODE = 500
 local TIME_OUT = 10
 -- 过滤器
 local function get_response_msg(results)
-    dump(results)
     return results[2].msg
 end
 local function check_response(m)
@@ -170,6 +169,24 @@ function NetManager:removePlayerDataChangedEventListener(  )
     self:removeEventListener("onPlayerDataChanged")
 end
 
+onAllianceDataChanged_callbacks = {}
+function NetManager:addAllianceDataChangedEventListener()
+    self:addEventListener("onAllianceDataChanged", function(success, msg)
+        if success then
+            LuaUtils:outputTable("onAllianceDataChanged", msg)
+            DataManager:setUserAllianceData(msg)
+        end
+        local callback = onAllianceDataChanged_callbacks[1]
+        if type(callback) == "function" then
+            callback(success, msg)
+        end
+        onAllianceDataChanged_callbacks = {}
+    end)
+end
+function NetManager:removeAllianceDataChangedEventListener(  )
+    self:removeEventListener("onAllianceDataChanged")
+end
+
 function NetManager:addLoginEventListener()
     self:addEventListener("onPlayerLoginSuccess", function(success, msg)
         if success then
@@ -236,6 +253,7 @@ function NetManager:getConnectLogicServerPromise()
         self:addTimeoutEventListener()
         self:addKickEventListener()
         self:addPlayerDataChangedEventListener()
+        self:addAllianceDataChangedEventListener()
         self:addLoginEventListener()
         ListenerService:start()
     end)

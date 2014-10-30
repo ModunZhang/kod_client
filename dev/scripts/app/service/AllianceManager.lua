@@ -371,7 +371,7 @@ function AllianceManager:dispatchAlliceServerData(eventName,msg)
 		or eventName == 'onAllianceDataChanged' 
 		or eventName == 'onAllianceNewEventReceived' 
 		then
-        Alliance_Manager:OnAllianceDataChanged(msg)
+        -- Alliance_Manager:OnAllianceDataChanged(msg)
 		self:setMyAllianceData_(eventName,msg)
 	elseif eventName == 'onAllianceMemberDataChanged'  --update one member
 		then
