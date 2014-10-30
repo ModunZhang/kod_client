@@ -11,7 +11,6 @@ local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
 local WidgetBackGroudWhite = import("..widget.WidgetBackGroudWhite")
 local WidgetBackGroundLucid = import("..widget.WidgetBackGroundLucid")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
-local MailManager = import("..service.MailManager")
 
 local GameUIMail = class('GameUIMail', GameUIBase)
 
@@ -21,7 +20,7 @@ function GameUIMail:ctor(title,city)
     GameUIMail.super.ctor(self)
     self.title = title
     self.city = city
-    self.manager = DataManager:GetManager("MailManager")
+    self.manager = MailManager
     self.inbox_mails = {}
     self.saved_mails = {}
     self.send_mails = {}
@@ -205,11 +204,7 @@ function GameUIMail:CreateMailItem(listview,mail)
             if event.name == "CLICKED_EVENT" then
                 if tolua.type(mail.isRead)=="boolean" and not mail.isRead then
                     self:ReadMail(mail.id,function ()
-                        print("readmail sussece")
                         self.manager:DecreaseUnReadMailsAndReports(1)
-                        self.inbox_mails[mail.id].mail.isRead = true
-                        self.inbox_mails[mail.id].mail_state:setTexture("mail_state_read.png")
-                        self.inbox_mails[mail.id].mail_state:setScale(34/self.inbox_mails[mail.id].mail_state:getContentSize().width)
                     end)
                 end
                 --如果是发送邮件
@@ -284,33 +279,12 @@ end
 
 function GameUIMail:SaveOrUnsaveMail(mail,target)
     if target:isButtonSelected() then
-        NetManager:getSaveMailPromise(mail.id):done(function()
-            if self.inbox_mails[mail.id] then
-                self.inbox_mails[mail.id].mail.isSaved=true
-                self.inbox_mails[mail.id].saved_button:setButtonSelected(true,true)
-            end
-            -- 收藏夹中的邮件没有这两个属性
-            mail.isRead = nil
-            mail.isSaved = nil
-            self.manager:AddSavedMail(mail)
-            -- 收藏成功，收藏夹添加此封邮件
-            local item =  self:CreateMailItem(self.save_mails_listview, mail)
-            self:AddMails(self.save_mails_listview, item, mail ,1)
-        end):catch(function(err)
+        NetManager:getSaveMailPromise(mail.id):catch(function(err)
             target:setButtonSelected(false,true)
             dump(err:reason())
         end)
     else
-        NetManager:getUnSaveMailPromise(mail.id):done(function()
-            if self.inbox_mails[mail.id] then
-                self.inbox_mails[mail.id].mail.isSaved=false
-                self.inbox_mails[mail.id].saved_button:setButtonSelected(false,true)
-            end
-            -- 取消收藏成功，从收藏夹删除这封邮件
-            self.save_mails_listview:removeItem(self.saved_mails[mail.id])
-            self.saved_mails[mail.id] = nil
-            self.manager:DeleteSavedMail(mail)
-        end):catch(function(err)
+        NetManager:getUnSaveMailPromise(mail.id):catch(function(err)
             target:setButtonSelected(true,true)
             dump(err:reason())
         end)
@@ -412,6 +386,69 @@ function GameUIMail:OnServerDataEvent(event)
     elseif event.eventType == "onSendMailSuccess" then
         local item = self:CreateMailItem(self.send_mail_listview,event.data.mail)
         self:AddMails(self.send_mail_listview,item,event.data.mail,1)
+    end
+end
+function GameUIMail:OnInboxMailsChanged(changed_mails)
+    LuaUtils:outputTable("OnInboxMailsChanged-changed_mails", changed_mails)
+    if changed_mails.add_mails then
+        for _,add_mail in pairs(changed_mails.add_mails) do
+            local item = self:CreateMailItem(self.inbox_listview,add_mail)
+            self:AddMails(self.inbox_listview,item,add_mail,1)
+        end
+    end
+    if changed_mails.edit_mails then
+        for _,edit_mail in pairs(changed_mails.edit_mails) do
+            if self.inbox_mails[edit_mail.id] then
+                self.inbox_mails[edit_mail.id].mail.isSaved=edit_mail.isSaved
+                self.inbox_mails[edit_mail.id].saved_button:setButtonSelected(edit_mail.isSaved,true)
+                if edit_mail.isRead then
+                    self.inbox_mails[edit_mail.id].mail.isRead = true
+                    self.inbox_mails[edit_mail.id].mail_state:setTexture("mail_state_read.png")
+                    self.inbox_mails[edit_mail.id].mail_state:setScale(34/self.inbox_mails[edit_mail.id].mail_state:getContentSize().width)
+                end
+            end
+        end
+    end
+    if changed_mails.remove_mails then
+        for _,remove_mail in pairs(changed_mails.remove_mails) do
+            self.inbox_listview:removeItem(self.inbox_mails[remove_mail.id])
+            self.inbox_mails[remove_mail.id]=nil
+        end
+    end
+end
+function GameUIMail:OnSavedMailsChanged(changed_mails)
+    LuaUtils:outputTable("OnSavedMailsChanged-changed_mails", changed_mails)
+    if changed_mails.add_mails then
+        for _,add_mail in pairs(changed_mails.add_mails) do
+             -- 收藏成功，收藏夹添加此封邮件
+            local item =  self:CreateMailItem(self.save_mails_listview, add_mail)
+            self:AddMails(self.save_mails_listview, item, add_mail ,1)
+        end
+    end
+    
+    if changed_mails.remove_mails then
+        for _,remove_mail in pairs(changed_mails.remove_mails) do
+           -- 取消收藏成功，从收藏夹删除这封邮件
+            self.save_mails_listview:removeItem(self.saved_mails[remove_mail.id])
+            self.saved_mails[remove_mail.id] = nil
+        end
+    end
+end
+function GameUIMail:OnSendMailsChanged(changed_mails)
+    LuaUtils:outputTable("OnSendMailsChanged-changed_mails", changed_mails)
+    if changed_mails.add_mails then
+        for _,add_mail in pairs(changed_mails.add_mails) do
+            local item = self:CreateMailItem(self.send_mail_listview,add_mail)
+            self:AddMails(self.send_mail_listview,item,add_mail,1)
+        end
+    end
+    
+    if changed_mails.remove_mails then
+        for _,remove_mail in pairs(changed_mails.remove_mails) do
+           -- 取消收藏成功，从收藏夹删除这封邮件
+            self.send_mail_listview:removeItem(self.send_mails[remove_mail.id])
+            self.send_mails[remove_mail.id] = nil
+        end
     end
 end
 
@@ -659,9 +696,6 @@ function GameUIMail:ShowMailDetails(mail)
                 if event.name == "CLICKED_EVENT" then
                     NetManager:getDeleteMailPromise(mail.id):done(function ()
                         layer_bg:removeFromParent()
-                        self.inbox_listview:removeItem(self.inbox_mails[mail.id])
-                        self.inbox_mails[mail.id]=nil
-                        self.manager:DeleteMail(mail)
                     end):catch(function(err)
                         dump(err:reason())
                     end)
@@ -1023,6 +1057,9 @@ function GameUIMail:SendMail(addressee,title,content)
 end
 
 return GameUIMail
+
+
+
 
 
 

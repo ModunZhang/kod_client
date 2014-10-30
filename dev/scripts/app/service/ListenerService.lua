@@ -224,10 +224,7 @@ end
 -- Mails
 -------------------------------------------------------------------------
 function ListenerService:dispatchEventToMailManager_(msg,eventName)
-    local mailManager = DataManager:GetManager("MailManager")
-    if mailManager then
-        mailManager:dispatchMailServerData(eventName,msg)
-    end
+    MailManager:dispatchMailServerData(eventName,msg)
 end
 function ListenerService:ls_onNewMailReceived( msg,eventName )
     self:dispatchEventToMailManager_(msg,eventName)
@@ -244,6 +241,7 @@ end
 function ListenerService:ls_onSendMailSuccess( msg,eventName )
     self:dispatchEventToMailManager_(msg,eventName)
 end
+
 
 
 

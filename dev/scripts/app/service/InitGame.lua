@@ -2,12 +2,14 @@ local BuildingRegister = import("..entity.BuildingRegister")
 local City_ = import("..entity.City")
 local AllianceManager_ = import("..entity.AllianceManager")
 local User_ = import("..entity.User")
+local MailManager_ = import("..entity.MailManager")
 
 
 return function(userData)
     User = User_.new(userData._id)
     Alliance_Manager = AllianceManager_.new()
     City = City_.new()
+    MailManager = MailManager_.new()
     local init_buildings = {}
     local init_unlock_tiles = {}
 

@@ -6,7 +6,6 @@ DataManager.managers_ = {}
 
 function DataManager:setUserData( userData )
 	self:registerManager_("AllianceManager")
-	self:registerManager_("MailManager")
     if not self.user then
         self.user = userData
     else
@@ -34,6 +33,7 @@ function DataManager:OnUserDataChanged(userData,timer)
 	User:OnUserDataChanged(userData)
 	City:OnUserDataChanged(userData, timer)
 	Alliance_Manager:OnUserDataChanged(userData, timer)
+	MailManager:OnUserDataChanged(userData, timer)
 	self:callManagers_(userData,timer)
 end
 
