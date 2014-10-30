@@ -608,7 +608,7 @@ function GameUIAlliance:commonListItemAction( listType,item,alliance,tag)
 			end)
 		end
 	elseif  listType == self.COMMON_LIST_ITEM_TYPE.APPLY then
-		NetManager:getcancelJoinAlliancePromise(alliance.id):done(function()
+		NetManager:getCancelJoinAlliancePromise(alliance.id):done(function()
 			self:RefreshApplyListView()
 		end)
 	elseif listType == self.COMMON_LIST_ITEM_TYPE.INVATE then

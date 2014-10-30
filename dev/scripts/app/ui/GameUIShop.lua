@@ -209,16 +209,11 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 140, window.top - 400)
         :onButtonClicked(function(event)
-            -- PushService:createAlliance({
-            --     name="1",
-            --     tag="111",
-            --     language="all",
-            --     terrain="grassLand",
-            --     flag=Flag:RandomFlag():EncodeToJson()
-            -- }, NOT_HANDLE)
             NetManager:getCreateAlliancePromise("1", "111", "all", "grassLand", Flag:RandomFlag():EncodeToJson())
-                :catch(function(err)
-                    dump(err:reason())
+                :done(function(result)
+                    dump(result)
+                end):catch(function(err)
+                dump(err:reason())
                 end)
         end)
 
@@ -234,13 +229,9 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 320, window.top - 400)
         :onButtonClicked(function(event)
-            -- NetManager:searchAllianceByTag("1", function(success, data)
-            --     if success and #data.alliances > 0 then
-            --         PushService:joinAllianceDirectly(Alliance:DecodeFromJsonData(data.alliances[1]):Id(), NOT_HANDLE)
-            --     end
-            -- end)
-            NetManager:getSearchAllianceByTagPromsie("1"):next(function(result)
-                return NetManager:getJoinAllianceDirectlyPromise(Alliance:DecodeFromJsonData(result.alliances[1]):Id())
+            NetManager:getFetchCanDirectJoinAlliancesPromise("1"):next(function(result)
+                dump(result)
+                -- return NetManager:getJoinAllianceDirectlyPromise(Alliance:DecodeFromJsonData(result.alliances[1]):Id())
             end):catch(function(err)
                 dump(err:reason())
             end)
@@ -258,11 +249,6 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 400)
         :onButtonClicked(function(event)
-            -- NetManager:searchAllianceByTag("1", function(success, data)
-            --     if success and #data.alliances > 0 then
-            --         PushService:requestToJoinAlliance(Alliance:DecodeFromJsonData(data.alliances[1]):Id(), NOT_HANDLE)
-            --     end
-            -- end)
             NetManager:getSearchAllianceByTagPromsie("1"):next(function(result)
                 return NetManager:getRequestToJoinAlliancePromise(Alliance:DecodeFromJsonData(result.alliances[1]):Id())
             end):catch(function(err)
@@ -283,7 +269,6 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 140, window.top - 500)
         :onButtonClicked(function(event)
-            -- PushService:quitAlliance(NOT_HANDLE)
             NetManager:getQuitAlliancePromise():catch(function(err)
                 dump(err:reason())
             end)
@@ -366,12 +351,9 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 140, window.top - 700)
         :onButtonClicked(function(event)
-            -- NetManager:inviteToJoinAlliance("W1t87MVYS", function(success, data)
-            --     if success and data then
-            --         dump(data)
-            --     end
-            -- end)
-            NetManager:getInviteToJoinAlliancePromise("W1t87MVYS"):catch(function(err)
+            NetManager:getInviteToJoinAlliancePromise("Zk9ErNdsH"):next(function(result)
+                dump(result)
+            end):catch(function(err)
                 dump(err:reason())
             end)
         end)
@@ -388,7 +370,7 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 320, window.top - 700)
         :onButtonClicked(function(event)
-            NetManager:getPlayerInfoPromise("W1t87MVYS")
+            NetManager:getPlayerInfoPromise("Zk9ErNdsH")
                 :next(function(data)
                     dump(data)
                 end)
@@ -539,7 +521,7 @@ function GameUIShop:onEnter()
                 end)
         end)
 
-        WidgetPushButton.new(
+    WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
@@ -559,7 +541,7 @@ function GameUIShop:onEnter()
         end)
 
 
-         WidgetPushButton.new(
+    WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
@@ -579,6 +561,70 @@ function GameUIShop:onEnter()
         end)
 
 
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "同意加入联盟",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 140, window.top - 1000)
+        :onButtonClicked(function(event)
+            NetManager:getAgreeJoinAllianceInvitePromise(User:GetInviteEvents()[1].id):next(function(ee)
+                dump(ee)
+            end):catch(function(err)
+                dump(err:reason())
+            end)
+        end)
+
+
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "撤销加入联盟",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 320, window.top - 1000)
+        :onButtonClicked(function(event)
+            NetManager:getCancelJoinAlliancePromise(
+                User:GetRequestEvents()[1].id
+            ):next(function(ee)
+                dump(ee)
+            end):catch(function(err)
+                dump(err:reason())
+            end)
+        end)
+
+        WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "拒绝一个邀请",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 500, window.top - 1000)
+        :onButtonClicked(function(event)
+            NetManager:getDisagreeJoinAllianceInvitePromise(
+                User:GetInviteEvents()[1].id
+            ):next(function(ee)
+                dump(ee)
+            end):catch(function(err)
+                dump(err:reason())
+            end)
+        end)
+
+
+
 
     item:addContent(content)
     item:setItemSize(640, 1000)
@@ -591,6 +637,13 @@ end
 
 
 return GameUIShop
+
+
+
+
+
+
+
 
 
 

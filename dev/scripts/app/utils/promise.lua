@@ -163,6 +163,7 @@ end
 local function failed_resolve(p, data)
     assert(p.state_ == PENDING)
     p.state_ = REJECTED
+    p.result = data
     repeat_resolve(handle_next_failed(p, data))
     return p
 end
@@ -187,12 +188,8 @@ end
 local function ignore_error(p)
     p.ignore_error = true
 end
-local sc = 0
 function promise.new(data)
-
     local r = {}
-    r.sc = sc
-    sc = sc + 1
     setmetatable(r, promise)
     r:ctor(data)
     return r
@@ -207,6 +204,9 @@ function promise:state()
     return self.state_
 end
 function promise:resolve(data)
+    if is_error(data) then
+        assert(false)
+    end
     return resolve(self, data)
 end
 function promise:next(success_func, failed_func)
@@ -269,12 +269,14 @@ function promise.all(...)
                 if is_error(result) then
                     not_resolved = false
                     failed_resolve(p, result)
+                else
+                    results[i] = result
+                    count = count + 1
+                    if task_count == count then
+                        p:resolve(results)
+                    end
                 end
-                results[i] = result
-                count = count + 1
-                if task_count == count then
-                    p:resolve(results)
-                end
+
             end
         end)
     end, ...)
@@ -306,5 +308,6 @@ end
 
 
 return promise
+
 
 
