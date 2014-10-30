@@ -1164,11 +1164,13 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
         :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
             :setButtonLabel(UIKit:ttfLabel({text = _("允许玩家立即加入联盟"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
-            :align(display.LEFT_CENTER))
+            :align(display.LEFT_CENTER)
+        	:setButtonSelected(Alliance_Manager:GetMyAlliance():JoinType() == "all"))
         :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
             :setButtonLabel(UIKit:ttfLabel({text = _("玩家仅能通过申请或者邀请的方式加入"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
-            :align(display.LEFT_CENTER))
+            :align(display.LEFT_CENTER)
+        	:setButtonSelected(Alliance_Manager:GetMyAlliance():JoinType() ~= "all"))
         :onButtonSelectChanged(handler(self, self.OnAllianceJoinTypeButtonClicked))
         :addTo(informationNode)
         :pos(notice_bg:getPositionX(),notice_bg:getPositionY() - notice_bg:getContentSize().height - 100)
@@ -1190,16 +1192,16 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
     	:setButtonLabelOffset(0, -35)
     	display.newSprite(button_imags[i]):addTo(button):pos(64,59)
     end
-    self:SelectJoinType()
+    -- self:SelectJoinType()
     self:RefreshDescView()
 	return self.informationNode
 end
 
 function GameUIAlliance:SelectJoinType()
 	if Alliance_Manager:GetMyAlliance():JoinType() == "all" then
-    	self.joinTypeButton:getButtonAtIndex(1):setButtonSelected(true)
+    	self.joinTypeButton:getButtonAtIndex(1):setButtonSelected(true,true)
     else
-    	self.joinTypeButton:getButtonAtIndex(2):setButtonSelected(true)
+    	self.joinTypeButton:getButtonAtIndex(2):setButtonSelected(true,true)
     end
 end
 
@@ -1223,8 +1225,24 @@ function GameUIAlliance:RefreshDescView()
 end
 
 function GameUIAlliance:OnAllianceJoinTypeButtonClicked(event)
-	--TODO:选择联盟的加入方式
+	local title,join_type = _("允许玩家立即加入联盟"),"all"
+
+	if event.selected ~= 1 then
+		title = _("玩家仅能通过申请或者邀请的方式加入")
+		join_type = "audit"
+	end
+	FullScreenPopDialogUI.new():SetTitle(_("你将设置联盟加入方式为"))
+        :SetPopMessage(title)
+        :CreateOKButton(function()
+        	  NetManager:getEditAllianceJoinTypePromise(join_type):catch(function(err)
+                    dump(err:reason())
+                end):done(function(result)
+                	self:RefreshInfomationView()
+                end)
+        end)
+        :AddToCurrentScene()
 end
+
 
 function GameUIAlliance:RefreshInfomationView()
 	self:RefreshDescView()
@@ -1236,6 +1254,9 @@ function GameUIAlliance:OnInfoButtonClicked(tag)
 	if tag == 1 then
 		FullScreenPopDialogUI.new():SetTitle(_("退出联盟"))
             :SetPopMessage(_("您必须在没有部队在外行军的情况下，才可以退出联盟。退出联盟会损失当前未打开的联盟礼物。"))
+            :CreateOKButton(function()
+            	NetManager:getQuitAlliancePromise():done()
+            end)
             :AddToCurrentScene()
 	elseif tag == 2 then
 		self:CreateInvateUI()
@@ -1285,6 +1306,23 @@ function GameUIAlliance:CreateInvateUI()
 
     cc.ui.UIPushButton.new({normal= "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
     	:addTo(bg):align(display.RIGHT_BOTTOM,editbox:getPositionX(), 20)
+    	:onButtonClicked(function()
+    		local playerName = string.trim(editbox:getText())
+    		if string.len(playerName) == 0 then
+    			FullScreenPopDialogUI.new():SetTitle(_("提示"))
+            	:SetPopMessage(_("请输入邀请的玩家名称"))
+            	:CreateOKButton(function()end)
+            	:AddToCurrentScene()
+    			return
+    		end
+    		NetManager:getInviteToJoinAlliancePromise(playerName)
+    			:next(function(result)
+    				layer:removeFromParent(true)
+            	end)
+            	:catch(function(err)
+            		dump(err:reason())
+            	end)
+    	end)
     	:setButtonLabel("normal",UIKit:ttfLabel({
 		text = _("发送"),
 		size = 22,

@@ -39,6 +39,7 @@ function GameAllianceApproval:onMoveInStage()
 end
 
 function GameAllianceApproval:RefreshListView()
+	dump(Alliance_Manager:GetMyAlliance():GetJoinEventsMap())
 	for i=1,10 do
 		local newItem = self:GetListItem()
 		self.listView:addItem(newItem)

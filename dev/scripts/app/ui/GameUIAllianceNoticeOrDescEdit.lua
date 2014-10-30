@@ -89,9 +89,9 @@ function GameUIAllianceNoticeOrDescEdit:onOkButtonClicked()
         	end)
 	else
 		NetManager:getEditAllianceDescriptionPromise(content)
-				:catch(function(err)
-                    dump(err:reason())
-                end)
+			:done(function()
+        		self:leftButtonClicked()
+        	end)
 	end
 end
 
