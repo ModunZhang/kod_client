@@ -39,15 +39,16 @@ function GameAllianceApproval:onMoveInStage()
 end
 
 function GameAllianceApproval:RefreshListView()
-	dump(Alliance_Manager:GetMyAlliance():GetJoinEventsMap())
-	for i=1,10 do
-		local newItem = self:GetListItem()
+	self.listView:removeAllItems()
+	table.foreach(Alliance_Manager:GetMyAlliance():GetJoinEventsMap(),function(k,v)
+		local newItem = self:GetListItem(v)
 		self.listView:addItem(newItem)
-	end
+	end)
 	self.listView:reload()
 end
 
-function GameAllianceApproval:GetListItem(memberId)
+
+function GameAllianceApproval:GetListItem(player)
 	local item = self.listView:newItem()
 	local node = display.newNode()
 	local icon_box = display.newSprite("alliance_item_flag_box_126X126.png"):align(display.LEFT_BOTTOM, 0,0)
@@ -60,28 +61,30 @@ function GameAllianceApproval:GetListItem(memberId)
 	UIKit:GetPlayerCommonIcon():addTo(icon_box):pos(icon_box:getContentSize().width/2,icon_box:getContentSize().height/2)
 	--name
 	UIKit:ttfLabel({
-		text = "PlayerName",
+		text = player.name or " ",
 		size = 22,
 		color = 0x403c2f
 	}):align(display.LEFT_TOP,20,110):addTo(content_box)
 	--lv
 	UIKit:ttfLabel({
-		text = "LV 1",
+		text = "LV " .. player.level,
 		size = 20,
 		color = 0x403c2f
-	}):align(display.LEFT_TOP,170,105):addTo(content_box)
+	}):align(display.LEFT_TOP,190,105):addTo(content_box)
 	--
 	local icon = display.newSprite("upgrade_power_icon.png"):scale(0.5):align(display.LEFT_TOP,250,110):addTo(content_box)
 	--power label
 	UIKit:ttfLabel({
-		text = string.formatnumberthousands(103231321),
+		text = string.formatnumberthousands(player.power),
 		size = 22,
 		color = 0x403c2f,
 		align = cc.TEXT_ALIGNMENT_LEFT,
 	}):align(display.LEFT_TOP,icon:getPositionX()+icon:getContentSize().width*0.5+10,110):addTo(content_box)
 	local agreeButton = WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
 		:align(display.RIGHT_BOTTOM,430,10)
-		:onButtonClicked(handler(self, self.OnAgreeButtonClicked))
+		:onButtonClicked(function()
+			self:OnAgreeButtonClicked(player.id)
+		end)
 		:setButtonLabel("normal", UIKit:ttfLabel({
 			text = _("同意"),
 			size = 22,
@@ -92,7 +95,9 @@ function GameAllianceApproval:GetListItem(memberId)
 
 	WidgetPushButton.new({normal = "red_button_146x42.png",pressed = "red_button_highlight_146x42.png"})
 		:align(display.RIGHT_BOTTOM,agreeButton:getPositionX() - 146 - 10,10)
-		:onButtonClicked(handler(self, self.OnAgreeButtonClicked))
+		:onButtonClicked(function()
+			self:OnRefuseButtonClicked(player.id)
+		end)
 		:setButtonLabel("normal", UIKit:ttfLabel({
 			text = _("拒绝"),
 			size = 22,
@@ -106,8 +111,16 @@ function GameAllianceApproval:GetListItem(memberId)
 	return item
 end
 
+function GameAllianceApproval:OnRefuseButtonClicked(memberId)
+	NetManager:getRefuseJoinAllianceRequestPromise(memberId):done(function(result)
+        self:RefreshListView()
+    end)
+end
+
 function GameAllianceApproval:OnAgreeButtonClicked(memberId)
-	-- body
+	NetManager:getAgreeJoinAllianceRequestPromise(memberId):done(function(result)
+		self:RefreshListView()
+	end)
 end
 
 return GameAllianceApproval

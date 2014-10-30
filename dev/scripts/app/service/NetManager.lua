@@ -243,8 +243,8 @@ end
 -- 登录
 function NetManager:getLoginPromise()
     return get_none_blocking_request_promise("logic.entryHandler.login", {
-        -- deviceId = device.getOpenUDID()
-        deviceId = "111"
+        deviceId = device.getOpenUDID()
+        -- deviceId = "111"
     })
 end
 -- 事件回调promise
@@ -647,6 +647,29 @@ function NetManager:getSendGlobalMsgPromise(text)
         ["type"] = "global"
     }, "发送世界聊天信息失败!"))
 end
+--处理联盟的对玩家的邀请
+function NetManager:getHandleJoinAllianceInvitePromise(allianceId,argree)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.handleJoinAllianceInvite", {
+        ["allianceId"] = allianceId,
+        ["argree"] = argree,
+    }, "处理联盟的对玩家的邀请失败!"),get_alliancedata_callback()):next(get_response_msg)
+end
+--取消申请联盟
+function NetManager:getcancelJoinAlliancePromise(allianceId)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.cancelJoinAllianceRequest", {
+        ["allianceId"] = allianceId,
+    }, "取消申请联盟失败!"),get_playerdata_callback()):next(get_response_msg)
+end
+--修改联盟基本信息
+function NetManager:getEditAllianceBasicInfoPromise(name, tag, language, flag)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.createAlliance", {
+        name = name,
+        tag = tag,
+        language = language,
+        flag = flag
+    }, "修改联盟基本信息失败!"), get_alliancedata_callback()):next(get_response_msg)
+end
+
 --
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

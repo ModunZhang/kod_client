@@ -23,6 +23,7 @@ local Alliance_Manager = Alliance_Manager
 local Alliance = import("..entity.Alliance")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local Flag = import("..entity.Flag")
+local GameUIWriteMail = import('.GameUIWriteMail')
 
 GameUIAlliance.COMMON_LIST_ITEM_TYPE = Enum("JOIN","INVATE","APPLY")
 
@@ -340,8 +341,8 @@ function GameUIAlliance:NoAllianceTabEvent_inviteIf()
 	end
 	local invateNode = display.newNode():addTo(self.main_content)
 	self.invateNode = invateNode
-   self.invateListView = UIListView.new {
-    	viewRect = cc.rect(20, 0,608,710),
+   	self.invateListView = UIListView.new {
+    	viewRect = cc.rect(20, 0,608,790),
         direction = UIScrollView.DIRECTION_VERTICAL,
     }:addTo(invateNode)
     self:RefreshInvateListView()
@@ -353,7 +354,7 @@ function GameUIAlliance:RefreshInvateListView()
 	self.invateListView:removeAllItems()
 	for i,v in ipairs(list) do
 		local item = self:getCommonListItem_(self.COMMON_LIST_ITEM_TYPE.INVATE,v)
-		self.invateListView:addItem(newItem)
+		self.invateListView:addItem(item)
 	end
 	self.invateListView:reload()
 end
@@ -375,6 +376,7 @@ end
 
 function GameUIAlliance:RefreshApplyListView()
 	local list = User:GetRequestEvents()
+	dump(list)
 	self.applyListView:removeAllItems()
 	for i,v in ipairs(list) do
 		local item = self:getCommonListItem_(self.COMMON_LIST_ITEM_TYPE.APPLY,v)
@@ -417,7 +419,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
 		:addTo(bg)
 		:align(display.RIGHT_TOP,590, 150)
 	local nameLabel = UIKit:ttfLabel({
-		text = "allianceName", -- alliance name
+		text = alliance.name, -- alliance name
 		size = 22,
 		color = 0xffedae
 	}):addTo(titleBg,2):align(display.LEFT_BOTTOM, 10, 5)
@@ -446,7 +448,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
 	}):addTo(bg):align(display.LEFT_TOP, memberValLabel:getContentSize().width+memberValLabel:getPositionX()+200, memberValLabel:getPositionY())
 
 	local fightingValLabel = UIKit:ttfLabel({
-				text = "100", 
+				text = alliance.power, 
 				size = 18,
 				color = 0x403c2f
 	}):addTo(bg):align(display.LEFT_TOP, fightingTitleLabel:getContentSize().width+fightingTitleLabel:getPositionX()+15, fightingTitleLabel:getPositionY())
@@ -459,7 +461,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
 	}):addTo(bg):align(display.LEFT_TOP,memberTitleLabel:getPositionX(), memberTitleLabel:getPositionY() - memberTitleLabel:getContentSize().height-5)
 
 	local languageValLabel = UIKit:ttfLabel({
-				text = "all", -- language
+				text = alliance.language, -- language
 				size = 18,
 				color = 0x403c2f
 	}):addTo(bg):align(display.LEFT_BOTTOM,languageTitleLabel:getPositionX()+languageTitleLabel:getContentSize().width+15,languageTitleLabel:getPositionY()-languageTitleLabel:getContentSize().height)
@@ -473,7 +475,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
 	}):addTo(bg):align(display.RIGHT_BOTTOM, fightingTitleLabel:getPositionX()+fightingTitleLabel:getContentSize().width, languageValLabel:getPositionY())
 
 	local killValLabel = UIKit:ttfLabel({
-				text = "100",
+				text = alliance.kill,
 				size = 18,
 				color = 0x403c2f
 	}):addTo(bg):align(display.LEFT_BOTTOM, killTitleLabel:getPositionX()+15, killTitleLabel:getPositionY())
@@ -594,27 +596,26 @@ end
 
 function GameUIAlliance:commonListItemAction( listType,item,alliance,tag)
 	if listType == self.COMMON_LIST_ITEM_TYPE.JOIN then
-		print("GameUIAlliance:commonListItemAction----->")
 		if  alliance.joinType == 'all' then --如果是直接加入
-			print("GameUIAlliance:commonListItemAction----->all")
 			PushService:joinAllianceDirectly(alliance.id,function(success)
 			end)
 		else
-			print("GameUIAlliance:commonListItemAction----->not all")
-			PushService:requestToJoinAlliance(alliance.id,function(success)
-				if success then 
+			NetManager:getRequestToJoinAlliancePromise(alliance.id):next(function()
 					local dialog = FullScreenPopDialogUI.new()
 	        		dialog:SetTitle(_("申请成功"))
 	        		dialog:SetPopMessage(string.format(_("您的申请已发送至%s,如果被接受将加入该联盟,如果被拒绝,将收到一封通知邮件."),alliance.name))
 	        		dialog:AddToCurrentScene()
-				end
 			end)
 		end
 	elseif  listType == self.COMMON_LIST_ITEM_TYPE.APPLY then
-		PushService:cancelJoinAllianceRequest(alliance.id,function(success)
+		NetManager:getcancelJoinAlliancePromise(alliance.id):done(function()
+			self:RefreshApplyListView()
 		end)
 	elseif listType == self.COMMON_LIST_ITEM_TYPE.INVATE then
-
+		-- tag == 1 -> 拒绝
+		NetManager:getHandleJoinAllianceInvitePromise(alliance.id,tag~=1):done(function()
+			self:RefreshInvateListView()
+		end)
 	end
 end
 
@@ -1262,7 +1263,12 @@ function GameUIAlliance:OnInfoButtonClicked(tag)
 		self:CreateInvateUI()
 	elseif tag == 3 then
 		UIKit:newGameUI("GameAllianceApproval"):addToCurrentScene(true)
-	elseif tag == 4 then
+	elseif tag == 4 then -- 邮件
+		local mail = GameUIWriteMail.new()
+		mail:SetTitle(_("联盟邮件"))
+		mail:SetAddressee(_("发送联盟所有成员"))
+		mail:OnSendButtonClicked( GameUIWriteMail.SEND_TYPE.ALLIANCE_MAIL)
+		mail:addTo(self)
 	end
 end
 

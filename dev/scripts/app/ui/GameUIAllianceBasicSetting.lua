@@ -442,13 +442,11 @@ end
 function GameUIAllianceBasicSetting:CreateAllianceButtonClicked()
 	local data = self:AdapterCreateData2Server_()
 	dump(data)
-	--TODO: check data
+	--TODO: check data 添加修改联盟的api
 	if self.isCreateAction_ then
-		PushService:createAlliance(data,function(success)end)
+		NetManager:getCreateAlliancePromise(data.name,data.tag,data.language,data.terrain,data.flag):done()
 	else
-		PushService:editAllianceBasicInfo(data,function(success)
-			self:leftButtonClicked()
-		end)
+		NetManager:getEditAllianceBasicInfoPromise(data.name,data.tag,data.language,data.flag):done()
 	end
 end
 
