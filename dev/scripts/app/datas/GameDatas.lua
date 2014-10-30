@@ -7,12 +7,51 @@ GameDatas.ClientInitGame = {
 require("app.datas.ClientInitGame_ruins")
 require("app.datas.ClientInitGame_locations")
 
-GameDatas.AllianceInitData = {
-	["resources"] = {},
-	["rights"] = {},
+GameDatas.AllianceBuilding = {
+	["palace"] = {},
+	["moonGate"] = {},
+	["orderHall"] = {},
+	["Shrine"] = {},
+	["allianceShop"] = {},
 }
-require("app.datas.AllianceInitData_resources")
-require("app.datas.AllianceInitData_rights")
+require("app.datas.AllianceBuilding_palace")
+require("app.datas.AllianceBuilding_moonGate")
+require("app.datas.AllianceBuilding_orderHall")
+require("app.datas.AllianceBuilding_Shrine")
+require("app.datas.AllianceBuilding_allianceShop")
+
+GameDatas.AllianceInitData = {
+	["resource"] = {},
+	["right"] = {},
+	["buildingType"] = {},
+	["donate"] = {},
+	["decorateCount"] = {},
+}
+require("app.datas.AllianceInitData_resource")
+require("app.datas.AllianceInitData_right")
+require("app.datas.AllianceInitData_buildingType")
+require("app.datas.AllianceInitData_donate")
+require("app.datas.AllianceInitData_decorateCount")
+
+GameDatas.AllianceShrine = {
+	["ShrineStage"] = {},
+}
+require("app.datas.AllianceShrine_ShrineStage")
+
+GameDatas.AllianceVillage = {
+	["woodVillage"] = {},
+	["foodVillage"] = {},
+	["stoneVillage"] = {},
+	["ironVillage"] = {},
+	["coinVillage"] = {},
+	["gemVillage"] = {},
+}
+require("app.datas.AllianceVillage_woodVillage")
+require("app.datas.AllianceVillage_foodVillage")
+require("app.datas.AllianceVillage_stoneVillage")
+require("app.datas.AllianceVillage_ironVillage")
+require("app.datas.AllianceVillage_coinVillage")
+require("app.datas.AllianceVillage_gemVillage")
 
 GameDatas.BuildingFunction = {
 	["wall"] = {},
@@ -213,12 +252,31 @@ GameDatas.PlayerInitData = {
 	["soldierMaterials"] = {},
 	["dragonMaterials"] = {},
 	["houses"] = {},
+	["playerLevel"] = {},
+	["vipLevel"] = {},
 }
 require("app.datas.PlayerInitData_resources")
 require("app.datas.PlayerInitData_materials")
 require("app.datas.PlayerInitData_soldierMaterials")
 require("app.datas.PlayerInitData_dragonMaterials")
 require("app.datas.PlayerInitData_houses")
+require("app.datas.PlayerInitData_playerLevel")
+require("app.datas.PlayerInitData_vipLevel")
+
+GameDatas.PlayerVillageExp = {
+	["exp"] = {},
+	["wood"] = {},
+	["stone"] = {},
+	["iron"] = {},
+	["food"] = {},
+	["coin"] = {},
+}
+require("app.datas.PlayerVillageExp_exp")
+require("app.datas.PlayerVillageExp_wood")
+require("app.datas.PlayerVillageExp_stone")
+require("app.datas.PlayerVillageExp_iron")
+require("app.datas.PlayerVillageExp_food")
+require("app.datas.PlayerVillageExp_coin")
 
 GameDatas.SmithConfig = {
 	["equipments"] = {},
@@ -231,8 +289,3 @@ GameDatas.UnitsConfig = {
 }
 require("app.datas.UnitsConfig_normal")
 require("app.datas.UnitsConfig_special")
-
-GameDatas.Vip = {
-	["exp"] = {},
-}
-require("app.datas.Vip_exp")
