@@ -11,10 +11,9 @@ local function pack(...)
     return {...}
 end
 property(Alliance, "power", 0)
-property(Alliance, "exp", 0)
 property(Alliance, "createTime", 0)
 property(Alliance, "kill", 0)
-property(Alliance, "level", 0)
+property(Alliance, "honour", 0)
 property(Alliance, "joinType", "all")
 property(Alliance, "maxMembers", 0)
 property(Alliance, "describe", "")
@@ -44,7 +43,7 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
 end
 function Alliance:DecodeFromJsonData(json_data)
     local alliance = Alliance.new(json_data.id, json_data.name, json_data.tag, json_data.language)
-    alliance:SetLevel(json_data.level)
+    alliance:SetHonour(json_data.honour)
     alliance:SetPower(json_data.power)
     alliance:SetArchon(json_data.archon)
     alliance:SetKill(json_data.kill)
@@ -161,9 +160,11 @@ function Alliance:AddMembersWithNotify(member)
 end
 function Alliance:AddMembers(member)
     local members = self.members
-    assert(members[member:Id()] == nil)
-    members[member:Id()] = member
-    return member
+    if members[member:Id()] == nil then
+        -- assert(members[member:Id()] == nil)
+        members[member:Id()] = member
+    end
+    return members[member:Id()]
 end
 function Alliance:RemoveMemberByIdWithNotify(id)
     local member = self:RemoveMemberById(id)
@@ -197,7 +198,7 @@ function Alliance:GetAllHelpEvents()
 end
 function Alliance:ReFreashOneHelpEvent(help_event)
     for index,event in pairs(self.help_events) do
-            print("ReFreashOneHelpEvent",help_event.eventId)
+        print("ReFreashOneHelpEvent",help_event.eventId)
         if event.eventId == help_event.eventId then
             print("ReFreashOneHelpEvent",help_event.eventId)
             self.help_events[index] = help_event
@@ -336,11 +337,85 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     if alliance_data.titles then
         self:SetTitleNames(alliance_data.titles)
     end
+    self:OnNewEventsComming(alliance_data.__events)
+    self:OnNewMemberDataComming(alliance_data.__members)
+    self:OnNewJoinRequestDataComming(alliance_data.__joinRequestEvents)
     self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
     self:OnAllianceEventsChanged(alliance_data.events)
     self:OnJoinRequestEventsChanged(alliance_data.joinRequestEvents)
     self:OnHelpEventsChanged(alliance_data.helpEvents)
     self:OnAllianceMemberDataChanged(alliance_data.members)
+end
+function Alliance:OnNewEventsComming(__events)
+    if not __events then return end
+    -- 先按从新到旧排序
+    table.sort(__events, function(a, b)
+        return a.data.time > b.data.time
+    end)
+    local new_coming_events = {}
+    for i = #__events, 1, -1 do
+        local v = __events[i]
+        local event = v.data
+        if v.type == "add" then
+            local new_event = self:CreateEventFromJsonData(event)
+            table.insert(new_coming_events, 1, new_event)
+            self:PushEventInHead(new_event)
+        end
+    end
+    self:OnEventsChanged{
+        pop = pack(),
+        push = new_coming_events
+    }
+end
+function Alliance:OnNewMemberDataComming(__members)
+    if not __members then return end
+    local add_members = {}
+    local remove_members = {}
+    local update_members = {}
+    for i, v in ipairs(__members) do
+        local type_ = v.type
+        local member_json = v.data
+        if type_ == "add" then
+            table.insert(add_members, self:AddMembers(AllianceMember:DecodeFromJson(member_json)))
+        elseif type_ == "remove" then
+            table.insert(remove_members, self:RemoveMemberById(member_json.id))
+        elseif type_ == "edit" then
+            local member = AllianceMember:DecodeFromJson(member_json)
+            if not member:IsSameDataWith(self:GetMemeberById(member_json.id)) then
+                self:ReplaceMember(member)
+                table.insert(update_members, member)
+            end
+        else
+            assert(false, "还有新类型?")
+        end
+    end
+    self:OnMemberChanged{
+        added = add_members,
+        removed = remove_members,
+        changed = update_members,
+    }
+end
+function Alliance:OnNewJoinRequestDataComming(__joinRequestEvents)
+    if not __joinRequestEvents then return end
+    local added = {}
+    local removed = {}
+    for i, v in ipairs(__joinRequestEvents) do
+        local type_ = v.type
+        local join_request = v.data
+        if type_ == "add" then
+            self:AddJoinEvent(join_request)
+            table.insert(added, join_request)
+        elseif type_ == "remove" then
+            self:RemoveJoinEvent(join_request)
+            table.insert(removed, join_request)
+        elseif type_ == "edit" then
+            assert(false, "能修改吗?")
+        end
+    end
+    self:OnJoinEventsChanged{
+        added = added,
+        removed = removed,
+    }
 end
 function Alliance:OnAllianceBasicInfoChanged(basicInfo)
     if basicInfo == nil then return end
@@ -352,8 +427,7 @@ function Alliance:OnAllianceBasicInfoChanged(basicInfo)
     self:SetJoinType(basicInfo.joinType)
     self:SetKill(basicInfo.kill)
     self:SetPower(basicInfo.power)
-    self:SetExp(basicInfo.exp)
-    self:SetLevel(basicInfo.level)
+    self:SetHonour(basicInfo.honour)
     self:SetCreateTime(basicInfo.createTime)
 end
 function Alliance:OnAllianceEventsChanged(events)
@@ -446,7 +520,7 @@ function Alliance:OnAllianceMemberDataChanged(members)
     local add_members = {}
     for _, v in ipairs(members) do
         if not self:GetMemeberById(v.id) then
-            table.insert(add_members, AllianceMember:CreatFromData(v))
+            table.insert(add_members, AllianceMember:DecodeFromJson(v))
         end
     end
     -- dump(add_members)
@@ -455,7 +529,7 @@ function Alliance:OnAllianceMemberDataChanged(members)
     local update_members = {}
     for _, v in ipairs(members) do
         local member = self:GetMemeberById(v.id)
-        local new_data = AllianceMember:CreatFromData(v)
+        local new_data = AllianceMember:DecodeFromJson(v)
         if member and not member:IsSameDataWith(new_data) then
             local old = self:ReplaceMember(new_data)
             table.insert(update_members, {old = old, new = new_data})
@@ -483,10 +557,9 @@ function Alliance:OnAllianceMemberDataChanged(members)
     end
 end
 function Alliance:OnOneAllianceMemberDataChanged(member_data)
-    self:ReplaceMemberWithNotify(AllianceMember:CreatFromData(member_data))
+    self:ReplaceMemberWithNotify(AllianceMember:DecodeFromJson(member_data))
 end
 function Alliance:OnHelpEventsChanged(helpEvents)
-    dump(helpEvents)
     self.help_events = helpEvents
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.HELP_EVENTS, function(listener)
         listener:OnAllHelpEventChanged(helpEvents)
@@ -501,6 +574,10 @@ function Alliance:GetAllianceArchonMember()
     return nil
 end
 return Alliance
+
+
+
+
 
 
 

@@ -261,8 +261,8 @@ end
 -- 登录
 function NetManager:getLoginPromise()
     return get_none_blocking_request_promise("logic.entryHandler.login", {
-        deviceId = device.getOpenUDID()
-        -- deviceId = "111"
+        -- deviceId = device.getOpenUDID()
+        deviceId = "a"
     })
 end
 -- 事件回调promise
@@ -576,14 +576,14 @@ function NetManager:getRefuseJoinAllianceRequestPromise(memberId)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.handleJoinAllianceRequest", {
         memberId = memberId,
         agree = false
-    }, "拒绝玩家失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "拒绝玩家失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 -- 接受玩家
-function NetManager:getAgreeJoinAllianceRequestPromise(memberId, cb)
+function NetManager:getAgreeJoinAllianceRequestPromise(memberId)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.handleJoinAllianceRequest", {
         memberId = memberId,
         agree = true
-    }, "接受玩家失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "接受玩家失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 -- 踢出玩家
 function NetManager:getKickAllianceMemberOffPromise(memberId)
@@ -602,11 +602,11 @@ function NetManager:getFetchCanDirectJoinAlliancesPromise()
     return promise.all(get_blocking_request_promise("logic.allianceHandler.getCanDirectJoinAlliances", nil
         , "搜索直接加入联盟失败!"), get_directjoin_callback()):next(get_response_msg)
 end
--- 搜索能直接加入联盟
+-- 邀请加入联盟
 function NetManager:getInviteToJoinAlliancePromise(memberId)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.inviteToJoinAlliance", {
         memberId = memberId
-    }, "搜索直接加入联盟失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "邀请加入联盟联盟失败!"))
 end
 -- 直接加入联盟
 function NetManager:getJoinAllianceDirectlyPromise(allianceId)
@@ -666,17 +666,26 @@ function NetManager:getSendGlobalMsgPromise(text)
     }, "发送世界聊天信息失败!"))
 end
 --处理联盟的对玩家的邀请
-function NetManager:getHandleJoinAllianceInvitePromise(allianceId,argree)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.handleJoinAllianceInvite", {
+local function getHandleJoinAllianceInvitePromise(allianceId, agree)
+    return get_blocking_request_promise("logic.allianceHandler.handleJoinAllianceInvite", {
         ["allianceId"] = allianceId,
-        ["argree"] = argree,
-    }, "处理联盟的对玩家的邀请失败!"),get_alliancedata_callback()):next(get_response_msg)
+        ["agree"] = agree,
+    }, "处理联盟的对玩家的邀请失败!")
+end
+function NetManager:getHandleJoinAllianceInvitePromise(allianceId, agree)
+    return promise.all(getHandleJoinAllianceInvitePromise(allianceId, agree))
+end
+function NetManager:getAgreeJoinAllianceInvitePromise(allianceId)
+    return getHandleJoinAllianceInvitePromise(allianceId, true)
+end
+function NetManager:getDisagreeJoinAllianceInvitePromise(allianceId)
+    return promise.all(getHandleJoinAllianceInvitePromise(allianceId, false))
 end
 --取消申请联盟
-function NetManager:getcancelJoinAlliancePromise(allianceId)
+function NetManager:getCancelJoinAlliancePromise(allianceId)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.cancelJoinAllianceRequest", {
         ["allianceId"] = allianceId,
-    }, "取消申请联盟失败!"),get_playerdata_callback()):next(get_response_msg)
+    }, "取消申请联盟失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 --修改联盟基本信息
 function NetManager:getEditAllianceBasicInfoPromise(name, tag, language, flag)

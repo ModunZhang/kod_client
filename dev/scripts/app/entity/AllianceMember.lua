@@ -18,6 +18,23 @@ local titles_enum = Enum("member",
     "archon")
 function AllianceMember:ctor(id)
     property(self, "id", id)
+    
+    self.location = {x = 0, y = 0}
+    self.donateStatus = {
+        ["wood"] = 1,
+        ["gem"] = 1,
+        ["coin"] = 1,
+        ["stone"] = 1,
+        ["iron"] = 1,
+        ["food"] = 1,
+    }
+    self.allianceExp = {
+        ["ironExp"] = 0,
+        ["stoneExp"] = 0,
+        ["coinExp"] = 0,
+        ["foodExp"] = 0,
+        ["woodExp"] = 0,
+    }
 end
 function AllianceMember:IsArchon()
     return self:Title() == "archon"
@@ -36,7 +53,7 @@ function AllianceMember:TitleDegrade()
     local cur = self:Title()
     return titles_enum[titles_enum[cur] - 1] or cur
 end
-function AllianceMember:CreatFromData(data)
+function AllianceMember:DecodeFromJson(data)
     local member = AllianceMember.new(data.id)
     member:SetLevel(data.level)
     member:SetKill(data.kill)
@@ -76,6 +93,8 @@ end
 
 
 return AllianceMember
+
+
 
 
 
