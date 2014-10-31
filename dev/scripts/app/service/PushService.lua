@@ -118,13 +118,9 @@ function PushService:joinAllianceDirectly( allianceId,cb )
 		cb(false)
 		return false
 	end
-	self.m_netService:request("logic.playerHandler.joinAllianceDirectly"
-		,{allianceId=allianceId}
-		,function(success)
-			cb(success)
-		end
-		,true
-	)
+	NetManager:getJoinAllianceDirectlyPromise(allianceId):catch(function(err)
+                    dump(err:reason())
+                end)
 end
 
 function PushService:cancelJoinAllianceRequest( allianceId,cb )

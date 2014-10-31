@@ -109,14 +109,14 @@ function GameUIHelp:IsAbleToHelpAll()
     end
 end
 function GameUIHelp:SetLoyalty()
-    self.loyalty_label:setString(_("每日获得最大忠诚度：")..DataManager:getUserData().basicInfo.loyalty.."/10000")
-    self.ProgressTimer:setPercentage(math.floor(DataManager:getUserData().basicInfo.loyalty/10000*100))
+    self.loyalty_label:setString(_("每日获得最大忠诚度：")..DataManager:getUserData().allianceInfo.loyalty.."/10000")
+    self.ProgressTimer:setPercentage(math.floor(DataManager:getUserData().allianceInfo.loyalty/10000*100))
 end
 function GameUIHelp:InitHelpEvents()
     local help_events = self.alliance:GetAllHelpEvents()
     if help_events then
         for k,event in pairs(help_events) do
-            if not self:IsHelpedByMe(event.helpedMembers) then
+            if not self:IsHelpedByMe(event.helpedMembers) and not self:IsHelpedToMaxNum(event) then
                 self:InsertItemToList(event)
             end
         end
@@ -140,6 +140,9 @@ function GameUIHelp:IsHelpedByMe(helpedMembers)
         end
     end
 end
+function GameUIHelp:IsHelpedToMaxNum(event)
+    return #event.helpedMembers == event.maxHelpCount
+end
 function GameUIHelp:RefreshUI(help_events)
     for k,item in pairs(self.help_events_items) do
         -- 帮助事件已经结束，删除列表中对应的帮助项
@@ -149,7 +152,7 @@ function GameUIHelp:RefreshUI(help_events)
         for _,v in pairs(help_events) do
             if v.eventId==k then
                 -- 帮助过的需要删除
-                if not self:IsHelpedByMe(v.helpedMembers) then
+                if not self:IsHelpedByMe(v.helpedMembers) or not self:IsHelpedToMaxNum(v) then
                     flag = false
                 end
             end
@@ -170,8 +173,10 @@ function GameUIHelp:RefreshUI(help_events)
 end
 
 function GameUIHelp:DeleteHelpItem(id)
-    self.help_listview:removeItem(self.help_events_items[id])
-    self.help_events_items[id] = nil
+    if self.help_events_items[id] then
+        self.help_listview:removeItem(self.help_events_items[id])
+        self.help_events_items[id] = nil
+    end
 end
 
 function GameUIHelp:CreateHelpItem(event)
@@ -253,18 +258,36 @@ function GameUIHelp:OnAllHelpEventChanged(event)
     dump(event)
     self:RefreshUI(event)
 end
-function GameUIHelp:OnOneHelpEventChanged(event)
-    print("GameUIHelp:OnOneHelpEventChanged----->",event.eventName)
-    dump(event)
-
-    -- 帮助过的需要删除
-    if self:IsHelpedByMe(event.helpedMembers) then
-        flag = false
-        self:DeleteHelpItem(event.eventId)
-    else
-        local item = self.help_events_items[event.eventId]
-        if item then
-            item:SetHelp(event)
+function GameUIHelp:OnHelpEventChanged(changed_help_event)
+    dump(changed_help_event)
+    if changed_help_event.added then
+        local added = changed_help_event.added
+        for _,event in pairs(added) do
+            if not self:IsHelpedByMe(event.helpedMembers) or not self:IsHelpedToMaxNum(event) then
+                self:InsertItemToList(event)
+            end
+        end
+        self.help_listview:reload()
+    end
+    if changed_help_event.removed then
+        local removed = changed_help_event.removed
+        for _,event in pairs(removed) do
+            self:DeleteHelpItem(event.eventId)
+        end
+    end
+    if changed_help_event.edit then
+        local edit = changed_help_event.edit
+        for _,event in pairs(edit) do
+            local item = self.help_events_items[event.eventId]
+            print(" 更新 item ",event.eventId)
+            if item then
+                if self:IsHelpedByMe(event.helpedMembers) or self:IsHelpedToMaxNum(event) then
+                    self:DeleteHelpItem(event.eventId)
+                else
+                    print("刷星 被帮助次数")
+                    item:SetHelp(event)
+                end
+            end
         end
     end
 end
@@ -278,17 +301,4 @@ function GameUIHelp:onExit()
 end
 
 return GameUIHelp
-
-
-
-
-
-
-
-
-
-
-
-
-
 

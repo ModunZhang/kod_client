@@ -196,18 +196,42 @@ end
 function Alliance:GetAllHelpEvents()
     return self.help_events
 end
-function Alliance:ReFreashOneHelpEvent(help_event)
-    for index,event in pairs(self.help_events) do
-        print("ReFreashOneHelpEvent",help_event.eventId)
-        if event.eventId == help_event.eventId then
-            print("ReFreashOneHelpEvent",help_event.eventId)
-            self.help_events[index] = help_event
-            self:NotifyListeneOnType(Alliance.LISTEN_TYPE.HELP_EVENTS, function(listener)
-                listener:OnOneHelpEventChanged(help_event)
-            end)
+function Alliance:AddHelpEvent(event)
+    local help_events = self.help_events
+    assert(help_events[event.eventId] == nil)
+    help_events[event.eventId] = event
+    return event
+end
+function Alliance:RemoveHelpEvent(event)
+    return self:RemoveHelpEventById(event.eventId)
+end
+function Alliance:RemoveHelpEventById(id)
+    local help_events = self.help_events
+    local old = help_events[id]
+    help_events[id] = nil
+    return old
+end
+function Alliance:EditHelpEvent(event)
+    local help_events = self.help_events
+    help_events[event.eventId] = event
+    return event
+end
+function Alliance:ReFreashHelpEvent(changed_help_event)
+    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.HELP_EVENTS, function(listener)
+        listener:OnHelpEventChanged(changed_help_event)
+    end)
+
+end
+function Alliance:IsBuildingHasBeenRequestedToHelpSpeedup(eventId)
+    if self.help_events then
+        for _,h_event in pairs(self.help_events) do
+            if h_event.id == DataManager:getUserData()._id and h_event.eventId == eventId then
+                return true
+            end
         end
     end
 end
+
 function Alliance:Reset()
     self:SetId(nil)
     self:SetJoinType("all")
@@ -340,6 +364,7 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     self:OnNewEventsComming(alliance_data.__events)
     self:OnNewMemberDataComming(alliance_data.__members)
     self:OnNewJoinRequestDataComming(alliance_data.__joinRequestEvents)
+    self:OnNewHelpEventsDataComming(alliance_data.__helpEvents)
     self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
     self:OnAllianceEventsChanged(alliance_data.events)
     self:OnJoinRequestEventsChanged(alliance_data.joinRequestEvents)
@@ -415,6 +440,31 @@ function Alliance:OnNewJoinRequestDataComming(__joinRequestEvents)
     self:OnJoinEventsChanged{
         added = added,
         removed = removed,
+    }
+end
+function Alliance:OnNewHelpEventsDataComming(__helpEvents)
+    if not __helpEvents then return end
+    local added = {}
+    local removed = {}
+    local edit = {}
+    for i, v in ipairs(__helpEvents) do
+        local type_ = v.type
+        local help_event = v.data
+        if type_ == "add" then
+            self:AddHelpEvent(help_event)
+            table.insert(added, help_event)
+        elseif type_ == "remove" then
+            self:RemoveHelpEvent(help_event)
+            table.insert(removed, help_event)
+        elseif type_ == "edit" then
+            self:EditHelpEvent(help_event)
+            table.insert(edit, help_event)
+        end
+    end
+    self:ReFreashHelpEvent{
+        added = added,
+        removed = removed,
+        edit = edit,
     }
 end
 function Alliance:OnAllianceBasicInfoChanged(basicInfo)
@@ -560,7 +610,10 @@ function Alliance:OnOneAllianceMemberDataChanged(member_data)
     self:ReplaceMemberWithNotify(AllianceMember:DecodeFromJson(member_data))
 end
 function Alliance:OnHelpEventsChanged(helpEvents)
-    self.help_events = helpEvents
+    if not helpEvents then return end
+    for _,v in pairs(helpEvents) do
+        self.help_events[v.eventId] = v
+    end
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.HELP_EVENTS, function(listener)
         listener:OnAllHelpEventChanged(helpEvents)
     end)
@@ -574,6 +627,8 @@ function Alliance:GetAllianceArchonMember()
     return nil
 end
 return Alliance
+
+
 
 
 
