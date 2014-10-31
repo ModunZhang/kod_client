@@ -130,7 +130,7 @@ function GameUIHome:CreateTop()
         {normal = "home/res_btn_up.png", pressed = "home/res_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        PushService:quitAlliance(NOT_HANDLE)
+        
         end):addTo(top_bg):align(display.LEFT_BOTTOM, 317, 106)
 
     -- 资源图片和文字

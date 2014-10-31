@@ -262,7 +262,7 @@ end
 function NetManager:getLoginPromise()
     local device_id 
     if CONFIG_IS_DEBUG then
-        device_id = "b"
+        device_id = device.getOpenUDID()
     else
         device_id = device.getOpenUDID()
     end
@@ -692,7 +692,7 @@ function NetManager:getCancelJoinAlliancePromise(allianceId)
 end
 --修改联盟基本信息
 function NetManager:getEditAllianceBasicInfoPromise(name, tag, language, flag)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.createAlliance", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.editAllianceBasicInfo", {
         name = name,
         tag = tag,
         language = language,
