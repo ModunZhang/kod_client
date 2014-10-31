@@ -231,13 +231,38 @@ function test_promise6()
 
 
 
-    promise.all(promise.any(promise.all(promise.any(p1, p2):next(function(...)
-        print(...)
-        return "any"
-    end)):catch(function(err)
-        dump(err:reason())
-    end))):next(function()
-    print("haha")
+    -- promise.all(promise.any(promise.all(promise.any(p1, p2):next(function(...)
+    --     print(...)
+    --     return "any"
+    -- end)):catch(function(err)
+    --     dump(err:reason())
+    -- end))):fail(function()
+    --     print("haha")
+    -- end)
+
+    promise.all(
+        promise.any(
+            promise.all(
+                promise.any(p1, p2):next(function(...)
+                    print(...)
+                    return "any"
+                end)
+            )
+            -- :catch(function(err)
+            --     dump(err:reason())
+            --     return "nil==="
+            -- end)
+        )
+        :catch(function(...)
+            dump(...)
+            return 1
+        end)
+    )
+    :catch(function(...)
+        dump(...)
+    end)
+    :fail(function(...)
+        print("fail")
     end)
 
 
@@ -252,6 +277,11 @@ function test_promise6()
         return time <= 100
     end)
 end
+
+
+
+
+
 
 
 
