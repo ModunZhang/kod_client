@@ -40,6 +40,7 @@ function WidgetEventTabButtons:OnUpgrading(building, current_time, city)
         self:IteratorAllItem(function(i, v)
             if v:GetEventKey() == building:UniqueKey() then
                 v:SetProgressInfo(self:BuildingDescribe(building))
+                self:SetUpgradeBuilidingBtnLabel(building,v)
             end
         end)
     end
@@ -583,6 +584,77 @@ function WidgetEventTabButtons:Reload()
     self:Reset()
     self:Load()
 end
+function WidgetEventTabButtons:IsAbleToFreeSpeedup(building)
+    return building:GetFreeSpeedupTime()>=building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime())
+end
+function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
+    if self:IsAbleToFreeSpeedup(building) then
+        local eventType = ""
+        if self.city:IsFunctionBuilding(building) then
+            eventType = "buildingEvents"
+        elseif self.city:IsHouse(building) then
+            eventType = "houseEvents"
+        elseif self.city:IsGate(building) then
+            eventType = "wallEvents"
+        elseif self.city:IsTower(building) then
+            eventType = "towerEvents"
+        end
+        NetManager:getFreeSpeedUpPromise(eventType,building:UniqueUpgradingKey())
+            :catch(function(err)
+                dump(err:reason())
+            end)
+    else
+        -- 是否已经申请过联盟加速
+        local isRequested = Alliance_Manager:GetMyAlliance()
+            :IsBuildingHasBeenRequestedToHelpSpeedup(building:UniqueUpgradingKey())
+        if not isRequested then
+            local eventType = ""
+            if self.city:IsFunctionBuilding(building) then
+                eventType = "building"
+            elseif self.city:IsHouse(building) then
+                eventType = "house"
+            elseif self.city:IsGate(building) then
+                eventType = "wall"
+            elseif self.city:IsTower(building) then
+                eventType = "tower"
+            end
+            NetManager:getRequestAllianceToSpeedUpPromise(eventType,building:UniqueUpgradingKey())
+                :catch(function(err)
+                    dump(err:reason())
+                end)
+        end
+    end
+end
+function WidgetEventTabButtons:SetUpgradeBuilidingBtnLabel(building,event_item)
+    local btn_label
+    local btn_images
+    if self:IsAbleToFreeSpeedup(building) then
+        btn_label = _("免费加速")
+        btn_images = {normal = "purple_btn_up_142x39.png",
+            pressed = "purple_btn_down_142x39.png",
+            disabled = "purple_btn_up_142x39.png",
+        }
+    else
+        -- 是否已经申请过联盟加速
+        local isRequested = Alliance_Manager:GetMyAlliance()
+            :IsBuildingHasBeenRequestedToHelpSpeedup(building:UniqueUpgradingKey())
+        if isRequested then
+            btn_label = _("加速")
+            btn_images = {normal = "green_btn_up_142x39.png",
+                pressed = "green_btn_down_142x39.png",
+                disabled = "blue_btn_up_142x39.png",
+            }
+        else
+            btn_label = _("帮助")
+            btn_images = {normal = "yellow_button_146x42.png",
+                pressed = "yellow_button_highlight_146x42.png",
+                disabled = "yellow_button_146x42.png",
+            }
+        end
+    end
+    event_item:SetButtonLabel(btn_label)
+    event_item:SetButtonImages(btn_images)
+end
 function WidgetEventTabButtons:Load()
     for k, v in pairs(self.tab_map) do
         if v:IsPressed() then
@@ -597,24 +669,11 @@ function WidgetEventTabButtons:Load()
                         :SetEventKey(v:UniqueKey()):OnClicked(
                         function(event)
                             if event.name == "CLICKED_EVENT" then
-                                local eventType = ""
-                                if self.city:IsFunctionBuilding(v) then
-                                    eventType = "building"
-                                elseif self.city:IsHouse(v) then
-                                    eventType = "house"
-                                elseif self.city:IsGate(v) then
-                                    eventType = "wall"
-                                elseif self.city:IsTower(v) then
-                                    eventType = "tower"
-                                end
-                                NetManager:getRequestAllianceToSpeedUpPromise(eventType,v:UniqueUpgradingKey())
-                                    :catch(function(err)
-                                        dump(err:reason())
-                                    end)
+                                self:UpgradeBuildingHelpOrSpeedup(v)
                             end
                         end
-                        ):SetButtonLabel(_("帮助"))
-
+                        )
+                    self:SetUpgradeBuilidingBtnLabel(v,event_item)
                     table.insert(items, event_item)
                 end
                 self:InsertItem(items)
@@ -701,6 +760,17 @@ function WidgetEventTabButtons:MaterialDescribe(event)
 end
 
 return WidgetEventTabButtons
+
+
+
+
+
+
+
+
+
+
+
 
 
 

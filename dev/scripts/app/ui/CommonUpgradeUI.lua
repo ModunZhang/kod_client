@@ -78,11 +78,10 @@ function CommonUpgradeUI:OnBuildingUpgrading( buidling, current_time )
     local pro = self.acc_layer.ProgressTimer
     pro:setPercentage(self.building:GetElapsedTimeByCurrentTime(current_time)/self.building:GetUpgradeTimeToNextLevel()*100)
     self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(current_time)))
-    -- if self.building:GetUpgradingLeftTimeByCurrentTime(current_time)<=self.building.freeSpeedUpTime then
-    --     self.acc_layer.acc_button:setButtonEnabled(true)
-    -- else
-    -- self.acc_layer.acc_button:setButtonEnabled(false)
-    -- end
+    if not self.acc_layer.acc_button:isButtonEnabled() and
+        self.building:GetFreeSpeedupTime()>=self.building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime()) then
+        self.acc_layer.acc_button:setButtonEnabled(true)
+    end
 end
 
 function CommonUpgradeUI:InitCommonPart()
@@ -653,14 +652,25 @@ function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
             text = _("免费加速"),
             size = 24,
         })):onButtonClicked(function(event)
-        -- print("服务器还未提供免费加速接口，暂时用作直接使用宝石加速")
-        -- NetManager:sendMsg("keep 5", NOT_HANDLE)
-        NetManager:getSendGlobalMsgPromise("keep 5"):catch(function(err)
-            dump(err:reason())
-        end)
-
+            if event.name == "CLICKED_EVENT" then
+                local eventType = ""
+                if self.city:IsFunctionBuilding(self.building) then
+                    eventType = "buildingEvents"
+                elseif self.city:IsHouse(self.building) then
+                    eventType = "houseEvents"
+                elseif self.city:IsGate(self.building) then
+                    eventType = "wallEvents"
+                elseif self.city:IsTower(self.building) then
+                    eventType = "towerEvents"
+                end
+                NetManager:getFreeSpeedUpPromise(eventType,self.building:UniqueUpgradingKey())
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
+            end
         end):align(display.CENTER, display.cx+185, display.top - 435):addTo(self.acc_layer)
     self.acc_layer.acc_button:setButtonEnabled(false)
+
 end
 
 function CommonUpgradeUI:SetAccTipLabel()
@@ -809,5 +819,8 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
+
 
 
