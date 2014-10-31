@@ -128,9 +128,10 @@ local ROADS_MAP = {
     desert = {"road1_800x560.png", "road2_800x560.png", "ground_766x558.png"},
     icefield = {"road1_800x560.png", "road2_800x560.png", "ground_766x558.png"},
 }
-function CityLayer:ctor(city)
+function CityLayer:ctor(city_scene)
     CityLayer.super.ctor(self, 0.3, 1)
     Observer.extend(self)
+    self.city_scene = city_scene
     self.terrain_type = "grass"
     self.buildings = {}
     self.houses = {}
@@ -832,6 +833,9 @@ function CityLayer:OnSceneMove()
     if self.road then
         self.road:OnSceneMove()
     end
+end
+function CityLayer:OnSceneScale()
+    self.city_scene:OnSceneScale(self)
 end
 
 return CityLayer
