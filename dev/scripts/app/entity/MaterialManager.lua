@@ -178,21 +178,13 @@ end
 function MaterialManager:OnMaterialsComing(material_type, materials)
     local changed = {}
     local old_materials = self.material_map[material_type]
-    for k, v in pairs(materials) do
+    for k, new in pairs(materials) do
         local old = old_materials[k]
-        local new = v
-        old_materials[k] = new
         if new ~= old then
-            changed[k] = {old = v, new = new}
+            old_materials[k] = new
+            changed[k] = {old = old, new = new}
         end
     end
-    -- for k, v in pairs(self.material_map[material_type]) do
-    --     local new = materials[k]
-    --     if new ~= v then
-    --         changed[k] = {old = v, new = new}
-    --     end
-    -- end
-    -- self.material_map[material_type] = materials
     for _, _ in pairs(changed) do
         self:NotifyObservers(function(listener)
             listener:OnMaterialsChanged(self, material_type, changed)
