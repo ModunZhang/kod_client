@@ -2,6 +2,7 @@ local Localize = import("..utils.Localize")
 local property = import("..utils.property")
 local Enum = import("..utils.Enum")
 local Flag = import(".Flag")
+local AllianceMap = import(".AllianceMap")
 local AllianceMember = import(".AllianceMember")
 local MultiObserver = import(".MultiObserver")
 local Alliance = class("Alliance", MultiObserver)
@@ -22,6 +23,7 @@ property(Alliance, "archon", "")
 property(Alliance, "memberCount", 0)
 function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     Alliance.super.ctor(self)
+    self.alliance_map = AllianceMap.new(self)
     property(self, "id", id)
     property(self, "name", name)
     property(self, "aliasName", aliasName)
@@ -40,6 +42,9 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     self.events = {}
     self.join_events = {}
     self.help_events = {}
+end
+function Alliance:GetAllianceMap()
+    return self.alliance_map
 end
 function Alliance:DecodeFromJsonData(json_data)
     local alliance = Alliance.new(json_data.id, json_data.name, json_data.tag, json_data.language)
@@ -98,7 +103,7 @@ function Alliance:Flag()
     return self.flag
 end
 function Alliance:SetFlag(flag)
-    if not self.flag:IsSameWithFlag(flag) then
+    if self.flag:IsDifferentWith(flag) then
         local old = self.flag
         self.flag = flag
         self:OnPropertyChange("flag", old, flag)
@@ -129,7 +134,7 @@ function Alliance:IteratorAllMembers(func)
     end
 end
 function Alliance:ReplaceMemberWithNotify(member)
-    if not member:IsSameDataWith(self:GetMemeberById(member:Id())) then
+    if member:IsDifferentWith(self:GetMemeberById(member:Id())) then
         local old = self:ReplaceMember(member)
         self:OnMemberChanged{
             added = pack(),
@@ -345,6 +350,7 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     self:OnJoinRequestEventsChanged(alliance_data.joinRequestEvents)
     self:OnHelpEventsChanged(alliance_data.helpEvents)
     self:OnAllianceMemberDataChanged(alliance_data.members)
+    self.alliance_map:OnAllianceDataChanged(alliance_data)
 end
 function Alliance:OnNewEventsComming(__events)
     if not __events then return end
@@ -381,7 +387,7 @@ function Alliance:OnNewMemberDataComming(__members)
             table.insert(remove_members, self:RemoveMemberById(member_json.id))
         elseif type_ == "edit" then
             local member = AllianceMember:DecodeFromJson(member_json)
-            if not member:IsSameDataWith(self:GetMemeberById(member_json.id)) then
+            if member:IsDifferentWith(self:GetMemeberById(member_json.id)) then
                 self:ReplaceMember(member)
                 table.insert(update_members, member)
             end
@@ -530,7 +536,7 @@ function Alliance:OnAllianceMemberDataChanged(members)
     for _, v in ipairs(members) do
         local member = self:GetMemeberById(v.id)
         local new_data = AllianceMember:DecodeFromJson(v)
-        if member and not member:IsSameDataWith(new_data) then
+        if member and member:IsDifferentWith(new_data) then
             local old = self:ReplaceMember(new_data)
             table.insert(update_members, {old = old, new = new_data})
         end

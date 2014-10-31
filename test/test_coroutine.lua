@@ -29,7 +29,7 @@ function consumer(prod)
         -- assert(false)
     end
 end
-consumer(filter(producer()))
+-- consumer(filter(producer()))
 
 
 

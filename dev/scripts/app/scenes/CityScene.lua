@@ -15,7 +15,7 @@ local CityScene = class("CityScene", MapScene)
 
 local app = app
 local timer = app.timer
-local debug = false
+local DEBUG = false
 function CityScene:ctor()
     CityScene.super.ctor(self)
     self:LoadAnimation()
@@ -40,7 +40,6 @@ function CityScene:onEnter()
         OnBasicChanged = function(this, alliance, changed_map)
             dump(changed_map)
         end}, Alliance.LISTEN_TYPE.BASIC)
-
     Alliance_Manager:GetMyAlliance():AddListenOnType({
         OnOperation = function(this, alliance, operation_type)
             dump(operation_type)
@@ -280,7 +279,7 @@ function CityScene:OnSceneScale(scene_layer)
     end
 end
 function CityScene:OnTouchBegan(pre_x, pre_y, x, y)
-    if not debug then return end
+    if not DEBUG then return end
     local citynode = self:GetSceneLayer():GetCityNode()
     local point = citynode:convertToNodeSpace(cc.p(x, y))
     local tx, ty = self.iso_map:ConvertToLogicPosition(point.x, point.y)
@@ -296,7 +295,7 @@ function CityScene:OnTouchBegan(pre_x, pre_y, x, y)
     end
 end
 function CityScene:OnTouchEnd(pre_x, pre_y, x, y)
-    if not debug then return end
+    if not DEBUG then return end
     local citynode = self:GetSceneLayer():GetCityNode()
     local point = citynode:convertToNodeSpace(cc.p(x, y))
     local tx, ty = self.iso_map:ConvertToLogicPosition(point.x, point.y)
@@ -313,7 +312,7 @@ function CityScene:OnTouchCancelled(pre_x, pre_y, x, y)
 
 end
 function CityScene:OnTouchMove(pre_x, pre_y, x, y)
-    if debug then
+    if DEBUG then
         if self.building then
             local citynode = self:GetSceneLayer():GetCityNode()
             local point = citynode:convertToNodeSpace(cc.p(x, y))

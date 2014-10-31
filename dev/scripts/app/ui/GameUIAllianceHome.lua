@@ -1,7 +1,7 @@
 local window = import("..utils.window")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
-local MailManager = import("..service.MailManager")
+-- local MailManager = import("..entity.MailManager")
 local GameUIAllianceHome = UIKit:createUIClass('GameUIAllianceHome')
 
 
@@ -79,16 +79,16 @@ function GameUIAllianceHome:CreateBottom()
     self.mail_unread_num_bg = display.newSprite("home/mail_unread_bg.png"):addTo(bottom_bg):pos(400, first_row+20)
     self.mail_unread_num_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = GameUtils:formatNumber(DataManager:GetManager("MailManager"):GetUnReadMailsAndReportsNum()),
+            -- text = GameUtils:formatNumber(DataManager:GetManager("MailManager"):GetUnReadMailsAndReportsNum()),
             font = UIKit:getFontFilePath(),
             size = 16,
             -- dimensions = cc.size(200,24),
             color = UIKit:hex2c3b(0xf5f2b3)
         }):align(display.CENTER,self.mail_unread_num_bg:getContentSize().width/2,self.mail_unread_num_bg:getContentSize().height/2+4)
         :addTo(self.mail_unread_num_bg)
-    if DataManager:GetManager("MailManager"):GetUnReadMailsAndReportsNum()==0 then
-        self.mail_unread_num_bg:setVisible(false)
-    end
+    -- if DataManager:GetManager("MailManager"):GetUnReadMailsAndReportsNum()==0 then
+        -- self.mail_unread_num_bg:setVisible(false)
+    -- end
     -- 场景切换
     display.newSprite("home/toggle_bg.png"):addTo(bottom_bg):pos(91, 52)
     display.newSprite("home/toggle_gear.png"):addTo(bottom_bg):pos(106, 49)
