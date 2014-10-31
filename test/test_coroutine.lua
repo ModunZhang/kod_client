@@ -1,12 +1,10 @@
-
 function send(x)
     coroutine.yield(x)
 end
-function receive(producer)
-    local status, value = coroutine.resume(producer)
+function receive(prod)
+    local status, value = coroutine.resume(prod)
     return value
 end
-
 function producer()
     return coroutine.create(function()
         while true do
@@ -15,37 +13,25 @@ function producer()
         end
     end)
 end
-
-function consumer(producer)
-    while true do
-        local x = receive(producer)
-        io.write(x, "\n")
-    end
-end
-
-function filter(producer)
+function filter(prod)
     return coroutine.create(function()
         while true do
-            local x = receive(producer)
-            x = string.format("%5 %s", 1, x)
+            local x = receive(prod)
+            x = string.format("%5d %s", 1, x)
             send(x)
         end
-    end) 
+    end)
 end
-
+function consumer(prod)
+    while true do
+        local x = receive(prod)
+        io.write(x, "\n")
+        -- assert(false)
+    end
+end
 consumer(filter(producer()))
 
--- producer = coroutine.create(function()
---     while true do
---         local x = io.read()
---         print("receive", x)
---         send(x)
---     end
--- end)
 
-
--- receive()
--- receive()
 
 
 

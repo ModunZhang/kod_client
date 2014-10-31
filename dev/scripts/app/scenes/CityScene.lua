@@ -38,20 +38,20 @@ function CityScene:onEnter()
 
     Alliance_Manager:GetMyAlliance():AddListenOnType({
         OnBasicChanged = function(this, alliance, changed_map)
-        dump(changed_map)
+            dump(changed_map)
         end}, Alliance.LISTEN_TYPE.BASIC)
 
     Alliance_Manager:GetMyAlliance():AddListenOnType({
         OnOperation = function(this, alliance, operation_type)
-        dump(operation_type)
+            dump(operation_type)
         end}, Alliance.LISTEN_TYPE.OPERATION)
     Alliance_Manager:GetMyAlliance():AddListenOnType({
         OnMemberChanged = function(this, alliance, changed_map)
-        dump(changed_map)
+            dump(changed_map)
         end}, Alliance.LISTEN_TYPE.MEMBER)
     Alliance_Manager:GetMyAlliance():AddListenOnType({
         OnEventsChanged = function(this, alliance, changed_map)
-        dump(changed_map)
+            dump(changed_map)
         end
     }, Alliance.LISTEN_TYPE.EVENTS)
 
@@ -75,21 +75,7 @@ function CityScene:onEnter()
         end
     }, User.LISTEN_TYPE.INVITE_TO_ALLIANCE)
 
-    -- dump(User:GetRequestEvents())
-
-    -- promise.new(function(...)
-    --     print(...)
-    --     return "end"
-    -- end):next(function(...)
-    --     return (function(data)
-    --         local pp = promise.new()
-    --         self:performWithDelay(function()
-    --             print(data)
-    --             pp:resolve()
-    --         end, 2)
-    --         return pp
-    --     end)(...)
-    -- end):resolve("start")
+    self:GetSceneLayer():ZoomTo(0.2)
 end
 function CityScene:onExit()
     home_page = nil
@@ -122,12 +108,11 @@ function CityScene:LoadAnimation()
     manager:addArmatureFileInfo("animations/Blue_dragon.ExportJson")
 end
 function CityScene:CreateSceneLayer()
-    local scene = CityLayer.new():addTo(self)
+    local scene = CityLayer.new(self):addTo(self)
     local origin_point = scene:GetPositionIndex(0, 0)
     self.iso_map = IsoMapAnchorBottomLeft.new({
         tile_w = 80, tile_h = 56, map_width = 50, map_height = 50, base_x = origin_point.x, base_y = origin_point.y
     })
-    scene:ZoomTo(0.7)
     return scene
 end
 function CityScene:CreateSceneUILayer()
@@ -287,14 +272,11 @@ function CityScene:OnGateChanged(old_walls, new_walls)
 end
 
 -- override
-function CityScene:OnTwoTouch(x1, y1, x2, y2, event_type)
-    CityScene.super.OnTwoTouch(self, x1, y1, x2, y2, event_type)
-    if event_type == "moved" then
-        if scene:getScale() < 0.5 then
-            self.scene_ui_layer:HideLevelUpNode()
-        else
-            self.scene_ui_layer:ShowLevelUpNode()
-        end
+function CityScene:OnSceneScale(scene_layer)
+    if scene_layer:getScale() < 0.5 then
+        self.scene_ui_layer:HideLevelUpNode()
+    else
+        self.scene_ui_layer:ShowLevelUpNode()
     end
 end
 function CityScene:OnTouchBegan(pre_x, pre_y, x, y)
@@ -404,6 +386,7 @@ end
 
 
 return CityScene
+
 
 
 

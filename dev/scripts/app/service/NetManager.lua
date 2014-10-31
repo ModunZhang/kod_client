@@ -260,10 +260,13 @@ function NetManager:getConnectLogicServerPromise()
 end
 -- 登录
 function NetManager:getLoginPromise()
-    return get_none_blocking_request_promise("logic.entryHandler.login", {
-        -- deviceId = device.getOpenUDID()
-        deviceId = "a"
-    })
+    local device_id 
+    if CONFIG_IS_DEBUG then
+        device_id = "b"
+    else
+        device_id = device.getOpenUDID()
+    end
+    return get_none_blocking_request_promise("logic.entryHandler.login", {deviceId = device_id})
 end
 -- 事件回调promise
 local function get_playerdata_callback()
