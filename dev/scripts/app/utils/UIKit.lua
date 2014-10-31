@@ -30,7 +30,7 @@ function UIKit:newGameUI(gameUIName,... )
 end
 
 function UIKit:getFontFilePath()
-    return "Noto Sans S Chinese.otf"
+    return "Droid Sans Faliback.ttf"
 end
 
 function UIKit:getBuildingLocalizedKeyByBuildingType(type)
@@ -106,7 +106,15 @@ end
 function UIKit:getRegistry()
     return self.Registry
 end
-
+--[[ 
+    参数和quick原函数一样
+新属性-->
+    color:hex 颜色值
+    shadow:bool 是否用阴影
+    margin:number 单个字水平间距
+    lineHeight: number 行高(多行)
+    bold:bool 加粗
+]]--
 function UIKit:ttfLabel( params )
     if not checktable(params) then
          printError("%s","params must a table")
@@ -119,6 +127,16 @@ function UIKit:ttfLabel( params )
     local label = cc.ui.UILabel.new(params)
     if params.shadow then
         label:enableShadow()
+    end
+    if params.margin then
+        label:setAdditionalKerning(params.margin)
+    end
+    if params.bold then
+       --TODO:ttf字体加粗
+       printInfo("%s","字体加粗还未实现....")
+    end
+    if params.lineHeight and params.dimensions then
+        label:setLineHeight(params.lineHeight)
     end
     return label
 end
@@ -133,7 +151,6 @@ end
 
 
 function UIKit:getImageByBuildingType( building_type ,level)
-    print("建筑等级=",level)
     local level_1,level_2 = 6 ,16
     if building_type=="keep" then
         return "keep_760x855.png"

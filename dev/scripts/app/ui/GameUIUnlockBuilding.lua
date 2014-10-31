@@ -62,7 +62,13 @@ function GameUIUnlockBuilding:Init()
             if event.name == "CLICKED_EVENT" then
                 local upgrade_listener = function()
 
-                    NetManager:instantUpgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), NOT_HANDLE)
+                    -- NetManager:instantUpgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), NOT_HANDLE)
+
+                    local location_id = City:GetLocationIdByBuildingType(self.building:GetType())
+                    NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
+                        :catch(function(err)
+                            dump(err:reason())
+                        end)
                     -- print(self.building:GetType().."---------------- 立即解锁 button has been  clicked ")
                 end
 
@@ -81,7 +87,13 @@ function GameUIUnlockBuilding:Init()
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 local upgrade_listener = function()
-                    NetManager:upgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), NOT_HANDLE)
+                    -- NetManager:upgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), NOT_HANDLE)
+
+                    local location_id = City:GetLocationIdByBuildingType(self.building:GetType())
+                    NetManager:getUpgradeBuildingByLocationPromise(location_id)
+                        :catch(function(err)
+                            dump(err:reason())
+                        end)
                 end
 
                 local can_not_update_type = self.building:IsAbleToUpgrade(false)
@@ -227,6 +239,8 @@ function GameUIUnlockBuilding:SetUpgradeTime()
     self.upgrade_time:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradeTimeToNextLevel()))
 end
 return GameUIUnlockBuilding
+
+
 
 
 

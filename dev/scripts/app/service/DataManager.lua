@@ -31,6 +31,7 @@ function DataManager:registerManager_(name,...)
 end
 
 function DataManager:OnUserDataChanged(userData,timer)
+	User:OnUserDataChanged(userData)
 	City:OnUserDataChanged(userData, timer)
 	Alliance_Manager:OnUserDataChanged(userData, timer)
 	self:callManagers_(userData,timer)

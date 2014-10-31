@@ -30,19 +30,13 @@ function GameUIAllianceTitle:GetAllianceTitleAndLevelPng(title)
 		member = "1_11x24.png",
 		archon = "alliance_item_leader_39x39.png"
 	}
-	local title_r = ""
-	local alliance = DataManager:GetManager("AllianceManager"):GetMyAllianceData()
-	if alliance.titles[title] ~= "__" .. title then
-		title_r = alliance.titles[title]
-	else
-		title_r = Localize.alliance_title[title]
-	end
-	return title_r,levelImages[title]
+	local alliance = Alliance_Manager:GetMyAlliance()
+	return alliance:GetTitles()[title],levelImages[title]
 end
 
 function GameUIAllianceTitle:BuildUI()
 	local shadowLayer = UIKit:shadowLayer():addTo(self)
-	local bg = WidgetUIBackGround.new(634):addTo(shadowLayer):pos(window.left+20,window.bottom+150)
+	local bg = WidgetUIBackGround.new({height=634}):addTo(shadowLayer):pos(window.left+20,window.bottom+150)
 	local title_bar = display.newSprite("alliance_blue_title_600x42.png")
 		:addTo(bg)
 		:align(display.LEFT_BOTTOM, 0, 619)
@@ -73,7 +67,7 @@ function GameUIAllianceTitle:BuildUI()
 
 	local function onEdit(event, editbox)
         if event == "return" then
-           	self:OnEditAllianceTitle()
+           	self:OnEditAllianceTitle(editbox:getText())
         end
     end
 	local editbox = cc.ui.UIInput.new({
@@ -82,12 +76,10 @@ function GameUIAllianceTitle:BuildUI()
         size = cc.size(427,51),
         listener = onEdit,
     })
-    -- editbox:setPlaceHolder(_("联盟盟主"))
     editbox:setText(display_title)
     editbox:setMaxLength(140)
     editbox:setFont(UIKit:getFontFilePath(),18)
     editbox:setFontColor(UIKit:hex2c3b(0xccc49e))
-    -- editbox:setPlaceholderFontColor(cc.c3b(204,196,158))
     editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
     editbox:align(display.LEFT_TOP,icon:getPositionX()+50,icon:getPositionY()+20):addTo(bg)
     local pageLabel = UIKit:ttfLabel({
@@ -104,7 +96,6 @@ function GameUIAllianceTitle:BuildUI()
 	self.authority_list = UIListView.new {
     	viewRect = cc.rect(4, 12, 564,325),
         direction = UIScrollView.DIRECTION_VERTICAL,
-        -- alignment = UIListView.ALIGNMENT_LEFT
     }:addTo(listBg)
 
     for i=1,10 do
@@ -144,15 +135,17 @@ function GameUIAllianceTitle:BuildUI()
 	}):align(display.LEFT_BOTTOM, gem_icon:getPositionX()+gem_icon:getContentSize().width*0.4+20, -3):addTo(gem_bg)
 
 	 UIKit:ttfLabel({
-			text = "盟主离线超过7D可以使用竞选盟主和盟主职位兑换",
+			text = _("盟主离线超过7D可以使用竞选盟主和盟主职位兑换"),
 			size = 18,
 			color = 0x7e0000,
 	}):align(display.TOP_CENTER, 304, button:getPositionY() - 50):addTo(bg)
-	-- button:setButtonEnabled(DataManager:GetManager("AllianceManager"):CanBuyArchon())
 end
 
-function GameUIAllianceTitle:OnEditAllianceTitle()
-
+function GameUIAllianceTitle:OnEditAllianceTitle(newTitle)
+	 NetManager:getEditTitleNamePromise(self.title_,newTitle):next(function()
+	 	local alliance = Alliance_Manager:GetMyAlliance()
+		print(alliance:GetTitles()[self.title_])
+	 end)
 end
 
 return GameUIAllianceTitle

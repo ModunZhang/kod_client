@@ -94,14 +94,16 @@ function GameUIBuild:BuildWithRuins(select_ruins, building_type)
     local w, h = select_ruins.w, select_ruins.h
     local tile = self.build_city:GetTileWhichBuildingBelongs(select_ruins)
     local house_location = tile:GetBuildingLocation(select_ruins)
-    NetManager:createHouseByLocation(tile.location_id, house_location, building_type, NOT_HANDLE)
+    NetManager:getCreateHouseByLocationPromise(tile.location_id, house_location, building_type):catch(function(err)
+        dump(err:reason())
+    end)
     self:leftButtonClicked()
 end
 
 function GameUIBuild:CreateItemWithListView(list_view)
 
     local item = list_view:newItem()
-    local content = WidgetUIBackGround.new(170)
+    local content = WidgetUIBackGround.new({height=170})
     item:addContent(content)
 
     local w, h = content:getContentSize().width, content:getContentSize().height
@@ -228,6 +230,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
 end
 
 return GameUIBuild
+
 
 
 

@@ -607,11 +607,14 @@ function WidgetEventTabButtons:Load()
                                 elseif self.city:IsTower(v) then
                                     eventType = "tower"
                                 end
-                                NetManager:requestToSpeedUp(eventType,v:UniqueUpgradingKey(),NOT_HANDLE)
+                                NetManager:getRequestAllianceToSpeedUpPromise(eventType,v:UniqueUpgradingKey())
+                                    :catch(function(err)
+                                        dump(err:reason())
+                                    end)
                             end
                         end
                         ):SetButtonLabel(_("帮助"))
-                
+
                     table.insert(items, event_item)
                 end
                 self:InsertItem(items)
@@ -698,6 +701,7 @@ function WidgetEventTabButtons:MaterialDescribe(event)
 end
 
 return WidgetEventTabButtons
+
 
 
 

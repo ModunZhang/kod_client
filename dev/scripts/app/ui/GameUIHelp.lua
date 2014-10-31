@@ -3,6 +3,7 @@ local UIListView = import(".UIListView")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetUIBackGround2= import("..widget.WidgetUIBackGround2")
 local WidgetBackGroudWhite = import("..widget.WidgetBackGroudWhite")
+local Alliance = import("..entity.Alliance")
 local Localize = import("..utils.Localize")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetBackGroundLucid = import("..widget.WidgetBackGroundLucid")
@@ -13,13 +14,13 @@ end)
 
 function GameUIHelp:ctor()
     self:setNodeEventEnabled(true)
-    self.alliance_manager = DataManager:GetManager("AllianceManager")
-    self.alliance_manager:OnAllianceDataEvent(HELP_EVENTS,handler(self, self.OnAllianceDataEvent))
+    self.alliance = Alliance_Manager:GetMyAlliance()
     self.help_events_items = {}
+    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
 end
 
 function GameUIHelp:onEnter()
-    local body = WidgetUIBackGround.new(756):addTo(self):align(display.TOP_CENTER,display.cx,display.top-100)
+    local body = WidgetUIBackGround.new({height=756}):addTo(self):align(display.TOP_CENTER,display.cx,display.top-100)
     local rb_size = body:getContentSize()
     local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height)
         :addTo(body)
@@ -87,7 +88,10 @@ function GameUIHelp:onEnter()
             if event.name == "CLICKED_EVENT" then
                 -- PushService:quitAlliance(NOT_HANDLE)
                 if self:IsAbleToHelpAll() then
-                    NetManager:helpAllAllianceMemberSpeedUp(NOT_HANDLE)
+                    NetManager:getHelpAllAllianceMemberSpeedUpPromise()
+                        :catch(function(err)
+                            dump(err:reason())
+                        end)
                 else
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))
                         :SetPopMessage(_("没有联盟成员需要协助加速"))
@@ -109,7 +113,7 @@ function GameUIHelp:SetLoyalty()
     self.ProgressTimer:setPercentage(math.floor(DataManager:getUserData().basicInfo.loyalty/10000*100))
 end
 function GameUIHelp:InitHelpEvents()
-    local help_events = self.alliance_manager:GetMyAllianceData().helpEvents
+    local help_events = self.alliance:GetAllHelpEvents()
     if help_events then
         for k,event in pairs(help_events) do
             if not self:IsHelpedByMe(event.helpedMembers) then
@@ -222,19 +226,14 @@ function GameUIHelp:CreateHelpItem(event)
             :onButtonClicked(function(e)
                 if e.name == "CLICKED_EVENT" then
                     print("===event.eventId",event.eventId,event.buildingName,event.name)
-                    NetManager:helpAllianceMemberSpeedUp(event.eventId,function ( flag )
-                        -- 帮助成功，从待帮助列表中移除
-                        if flag then
-                            self:DeleteHelpItem(event.eventId)
-                            self:SetLoyalty()
-                        end
+                    NetManager:getHelpAllianceMemberSpeedUpPromise(event.eventId):catch(function(err)
+                        dump(err:reason())
                     end)
                 end
             end):addTo(bg):pos(480, 30)
     end
     item:addContent(bg)
 
-    print("帮助事件ID=",event.eventId)
     self.help_events_items[event.eventId] = item
 
     function item:SetHelp(event)
@@ -249,17 +248,23 @@ function GameUIHelp:CreateHelpItem(event)
 
     return item
 end
-function GameUIHelp:OnAllianceDataEvent(event)
-    print("GameUIHelp:OnAllianceDataEvent----->",event.eventName)
-    dump(event.data)
-    if event.eventName == "onAllianceDataChanged" then
-        self:RefreshUI(event.data.helpEvents)
-    elseif event.eventName == "onAllianceHelpEventChanged" then
-        local help_event = event.data.event
-        LuaUtils:outputTable("onAllianceHelpEventChanged-->>help_events", help_event)
-        local item = self.help_events_items[help_event.eventId]
+function GameUIHelp:OnAllHelpEventChanged(event)
+    print("GameUIHelp:OnAllHelpEventChanged----->",event.eventName)
+    dump(event)
+    self:RefreshUI(event)
+end
+function GameUIHelp:OnOneHelpEventChanged(event)
+    print("GameUIHelp:OnOneHelpEventChanged----->",event.eventName)
+    dump(event)
+
+    -- 帮助过的需要删除
+    if self:IsHelpedByMe(event.helpedMembers) then
+        flag = false
+        self:DeleteHelpItem(event.eventId)
+    else
+        local item = self.help_events_items[event.eventId]
         if item then
-            item:SetHelp(help_event)
+            item:SetHelp(event)
         end
     end
 end
@@ -269,10 +274,13 @@ function GameUIHelp:AddToCurrentScene(anima)
 end
 
 function GameUIHelp:onExit()
-    self.alliance_manager:RemoveEventByTag(HELP_EVENTS)
+    self.alliance:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.HELP_EVENTS)
 end
 
 return GameUIHelp
+
+
+
 
 
 

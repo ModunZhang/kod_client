@@ -13,7 +13,6 @@ GameUIAllianceNoticeOrDescEdit.EDIT_TYPE = Enum("ALLIANCE_NOTICE","ALLIANCE_DESC
 local content_height = 470
 
 function GameUIAllianceNoticeOrDescEdit:ctor(edit_type)
-	self.allianceManager = DataManager:GetManager("AllianceManager")
 	GameUIAllianceNoticeOrDescEdit.super.ctor(self)
 	self.isNotice_ = edit_type == self.EDIT_TYPE.ALLIANCE_NOTICE
 end
@@ -22,7 +21,7 @@ function GameUIAllianceNoticeOrDescEdit:onMoveInStage()
 	--base UI
 	local shadowLayer = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
 		:addTo(self)
-	local bg_node = WidgetUIBackGround.new(content_height):addTo(shadowLayer):pos(window.left+20,window.bottom + 250)
+	local bg_node = WidgetUIBackGround.new({height=content_height}):addTo(shadowLayer):pos(window.left+20,window.bottom + 250)
 	local titleBar = display.newScale9Sprite("alliance_blue_title_600x42.png")
 		:size(bg_node:getCascadeBoundingBox().width,42)
 		:align(display.LEFT_BOTTOM, -2,content_height - 15)
@@ -42,9 +41,9 @@ function GameUIAllianceNoticeOrDescEdit:onMoveInStage()
     textView:setPlaceHolder(_("最多输入600个字符"))
     textView:setFontColor(UIKit:hex2c3b(0x000000))
     if self.isNotice_ then
-    	textView:setText(self.allianceManager:GetMyAllianceData().notice or "")
+    	textView:setText(Alliance_Manager:GetMyAlliance():Notice() or "")
     else
-    	textView:setText(self.allianceManager:GetMyAllianceData().desc or "")
+    	textView:setText(Alliance_Manager:GetMyAlliance():Describe() or "")
     end
     self.textView = textView
  	display.newSprite("alliance_edit_box_584x364.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(textView,2)
@@ -80,17 +79,19 @@ function GameUIAllianceNoticeOrDescEdit:onMoveInStage()
 		:align(display.RIGHT_BOTTOM,bg_node:getCascadeBoundingBox().width - 120, 20)
 end
 
-
+--TODO: done 关闭界面 
 function GameUIAllianceNoticeOrDescEdit:onOkButtonClicked()
 	local content = self.textView:getText()
 	if self.isNotice_ then
-		PushService:editAllianceNotice(content,function(success)
-			self:leftButtonClicked()
-		end)
+		NetManager:getEditAllianceNoticePromise(content)
+        	:done(function()
+        		self:leftButtonClicked()
+        	end)
 	else
-		PushService:editAllianceNotice(content,function(success)
-			self:leftButtonClicked()
-		end)
+		NetManager:getEditAllianceDescriptionPromise(content)
+			:done(function()
+        		self:leftButtonClicked()
+        	end)
 	end
 end
 

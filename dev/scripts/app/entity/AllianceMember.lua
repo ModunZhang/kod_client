@@ -1,3 +1,4 @@
+local Enum = import("..utils.Enum")
 local property = import("..utils.property")
 local AllianceMember = class("AllianceMember")
 property(AllianceMember, "level", 0)
@@ -8,8 +9,32 @@ property(AllianceMember, "lastLoginTime", 0)
 property(AllianceMember, "icon", "")
 property(AllianceMember, "title")
 property(AllianceMember, "name")
+
+local titles_enum = Enum("member",
+    "elite",
+    "supervisor",
+    "quartermaster",
+    "general",
+    "archon")
 function AllianceMember:ctor(id)
     property(self, "id", id)
+end
+function AllianceMember:IsArchon()
+    return self:Title() == "archon"
+end
+function AllianceMember:IsTitleHighest()
+    return self:Title() == titles_enum[#titles_enum - 1]
+end
+function AllianceMember:TitleUpgrade()
+    local cur = self:Title()
+    return titles_enum[titles_enum[cur] + 1] or cur
+end
+function AllianceMember:IsTitleLowest()
+    return self:Title() == titles_enum[1]
+end
+function AllianceMember:TitleDegrade()
+    local cur = self:Title()
+    return titles_enum[titles_enum[cur] - 1] or cur
 end
 function AllianceMember:CreatFromData(data)
     local member = AllianceMember.new(data.id)
@@ -24,7 +49,7 @@ function AllianceMember:CreatFromData(data)
     return member
 end
 function AllianceMember:IsSameDataWith(member)
-	if not member then return false end
+    if not member then return false end
     for _, v in ipairs{
         "Level",
         "Kill",
@@ -35,9 +60,9 @@ function AllianceMember:IsSameDataWith(member)
         "Title",
         "Name"
     } do
-    	if self[v](self) ~= member[v](member) then
-    		return false
-    	end
+        if self[v](self) ~= member[v](member) then
+            return false
+        end
     end
     return true
 end
@@ -51,6 +76,8 @@ end
 
 
 return AllianceMember
+
+
 
 
 

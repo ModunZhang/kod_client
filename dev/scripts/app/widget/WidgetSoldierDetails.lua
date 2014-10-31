@@ -4,8 +4,47 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 
 local normal = GameDatas.UnitsConfig.normal
 local special = GameDatas.UnitsConfig.special
-
-
+local STAR_BG = {
+    "star1_118x132.png",
+    "star2_118x132.png",
+    "star3_118x132.png",
+    "star4_118x132.png",
+    "star5_118x132.png",
+}
+local SOLDIER_TYPE = {
+    ["swordsman_1"] = { png = "#Infantry_1_render/idle/1/00000.png" },
+    ["swordsman_2"] = { png = "soldier_swordsman_2.png" },
+    ["swordsman_3"] = { png = "soldier_swordsman_3.png" },
+    ["sentinel_1"] = { png = "soldier_sentinel_1.png" },
+    ["sentinel_2"] = { png = "soldier_sentinel_2.png" },
+    ["sentinel_3"] = { png = "soldier_sentinel_3.png" },
+    ["archer_1"] = { png = "#Archer_1_render/idle/1/00000.png" },
+    ["archer_2"] = { png = "soldier_archer_2.png" },
+    ["archer_3"] = { png = "soldier_archer_3.png" },
+    ["crossbowman_1"] = { png = "soldier_crossbowman_1.png" },
+    ["crossbowman_2"] = { png = "soldier_crossbowman_2.png" },
+    ["crossbowman_3"] = { png = "soldier_crossbowman_2.png" },
+    ["lancer_1"] = { png = "#Cavalry_1_render/idle/1/00000.png" },
+    ["lancer_2"] = { png = "soldier_lancer_2.png" },
+    ["lancer_3"] = { png = "soldier_lancer_3.png" },
+    ["horseArcher_1"] = { png = "soldier_horseArcher_1.png" },
+    ["horseArcher_2"] = { png = "soldier_horseArcher_2.png" },
+    ["horseArcher_3"] = { png = "soldier_horseArcher_3.png" },
+    ["catapult_1"] = { png = "#Catapult_1_render/move/1/00000.png" },
+    ["catapult_2"] = { png = "soldier_catapult_2.png" },
+    ["catapult_3"] = { png = "soldier_catapult_3.png" },
+    ["ballista_1"] = { png = "soldier_ballista_1.png" },
+    ["ballista_2"] = { png = "soldier_ballista_2.png" },
+    ["ballista_3"] = { png = "soldier_ballista_3.png" },
+    ["skeletonWarrior"] = { png = "soldier_skeletonWarrior.png" },
+    ["skeletonArcher"] = { png = "soldier_skeletonArcher.png" },
+    ["deathKnight"] = { png = "soldier_deathKnight.png" },
+    ["meatWagon"] = { png = "meatWagon.png" },
+    ["priest"] = {},
+    ["demonHunter"] = {},
+    ["paladin"] = {},
+    ["steamTank"] = {},
+}
 
 local WidgetSoldierDetails = class("WidgetSoldierDetails", function ()
     return display.newColorLayer(cc.c4b(0,0,0,127))
@@ -44,12 +83,15 @@ function WidgetSoldierDetails:InitSoldierDetails()
         end):align(display.CENTER, bg_width-20, bg_height-20):addTo(bg,2):addChild(display.newSprite("X_3.png"))
     -- 士兵头像
     local stars_bg = display.newSprite("soldier_head_stars_bg.png", display.cx-170, display.top-185):addTo(self)
-    local soldier_head_bg  = display.newSprite("soldier_blue_box.png", display.cx-230, display.top-185):addTo(self)
-    local soldier_head_image = self.soldier_level and "soldier_"..self.soldier_type.."_"..self.soldier_level..".png"
-        or "soldier_"..self.soldier_type..".png"
+    local soldier_head_bg  = display.newSprite(STAR_BG[self.soldier_level], display.cx-230, display.top-185):addTo(self)
 
-    local soldier_head_icon = display.newSprite(soldier_head_image):align(display.LEFT_BOTTOM,10,10)
-    soldier_head_icon:setScale(0.7)
+    local soldier_type_with_star = self.soldier_type..(self.soldier_level == nil and "" or string.format("_%d", self.soldier_level))
+    local soldier_ui_config = SOLDIER_TYPE[soldier_type_with_star]
+    
+
+    local soldier_head_icon = display.newSprite(soldier_ui_config.png):align(display.LEFT_BOTTOM,0,10)
+    soldier_head_icon:scale(130/soldier_head_icon:getContentSize().height)
+    -- soldier_head_icon:setScale(0.7)
     soldier_head_bg:addChild(soldier_head_icon)
 
     -- 士兵星级，特殊兵种无星级

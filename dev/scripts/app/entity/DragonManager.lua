@@ -9,12 +9,28 @@ local DragonManager = class("DragonManager", MultiObserver)
 local AutomaticUpdateResource = import(".AutomaticUpdateResource")
 local Dragon = import(".Dragon")
 
+DragonManager.DRAGON_TYPE_INDEX = Enum("redDragon","greenDragon","blueDragon")
+
 function DragonManager:ctor()
-	self.dragons_ = {}
 	self.dragon_vatalitys_ = {}
 end
 
+function DragonManager:Dragon_Index_To_Type(type_index)
+	for k,v in pairs(DragonManager.DRAGON_TYPE_INDEX) do
+		if type_index == v then
+			return k
+		end
+	end
+	return nil
+end
+
+function DragonManager:GetDragonByIndex(index)
+	local dragon_type = self:Dragon_Index_To_Type(index)
+	return self:GetDragon(dragon_type)
+end
+
 function DragonManager:GetDragon(dragon_type)
+	if not dragon_type then return nil end
 	return self.dragons_[dragon_type]
 end
 
@@ -29,9 +45,11 @@ end
 
 
 function DragonManager:RefreshDragonData( dragons )
+	printInfo("%s","DragonManager:RefreshDragonData....")
 	if not self.dragons_ then -- 初始化龙信息
+		self.dragons_ = {}
 		for k,v in pairs(dragons) do
-			local dragon = Dragon.new(k,v.strength,v.vitality,v.status,v.star,v.level)
+			local dragon = Dragon.new(k,v.strength,v.vitality,v.status,v.star,v.level,v.exp)
 			dragon:UpdateEquipmetsAndSkills(v)
 			self:AddDragon(dragon)
 		end

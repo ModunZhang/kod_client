@@ -59,21 +59,24 @@ function DragonEquipment:IsReachMaxStar()
 end
 
 --Dragon
-function Dragon:ctor(drag_type,strength,vitality,status,star,level)
+function Dragon:ctor(drag_type,strength,vitality,status,star,level,exp)
 	property(self, "type", drag_type)
 	property(self, "strength", strength)
 	property(self, "vitality", vitality)
 	property(self, "status", status)
 	property(self, "star", star)
 	property(self, "level", level)
+	property(self, "exp", exp)
 	self.skills_ = {}
 	self.equipments_ = self:FitDefaultEquipments()
+	dump(self.equipments_,"Dragon FitDefaultEquipments")
 end
 
 function Dragon:UpdateEquipmetsAndSkills(json_data)
 	assert(self.equipments_)
 	for k,v in pairs(json_data.equipments) do
 		local eq = self:GetEquipmentByCategory(k)
+		if not eq then break end -- 如果未孵化没有装备
 		eq:setExp(v.exp or 0)
 		eq:setStar(v.star or 0)
 		eq:SetBuffData(v.buffs)
@@ -92,6 +95,10 @@ function Dragon:Update(json_data)
 	self:SetStar(json_data.star)
 	self:SetLevel(json_data.level)
 	self:UpdateEquipmetsAndSkills(json_data)
+end
+
+function Dragon:GetLocalizedName()
+	return Localize.dragon[self:Type()]
 end
 
 --是否已孵化
@@ -134,7 +141,7 @@ function Dragon:GetMaxVitality()
 end
 
 --升级需要的经验值
-function Dragon:GetNextLevelMaxExp()
+function Dragon:GetMaxExp()
 	return tonumber(config_dragonAttribute[self:Star()].perLevelExp) * math.pow(self:Level(),2)
 end
 --当前星级最大等级

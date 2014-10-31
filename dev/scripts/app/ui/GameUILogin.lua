@@ -38,8 +38,9 @@ function GameUILogin:createProgressBar()
         text = "Loading(1/3)...",
         font = UIKit:getFontFilePath(),
         size = 12,
-        align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
-        color = UIKit:hex2c3b(0xf3f0b6)
+        align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
+        color = UIKit:hex2c3b(0xf3f0b6),
+        valign = cc.VERTICAL_TEXT_ALIGNMENT_CENTER,
     }):addTo(bar):align(display.CENTER,bar:getContentSize().width/2,bar:getContentSize().height/2)
     self.progressTips = label
     self.progressTimer = ProgressTimer
@@ -52,7 +53,7 @@ function GameUILogin:createTips()
         text = _("提示:预留一定的空闲城民,兵营将他们训练成士兵"),
         font = UIKit:getFontFilePath(),
         size = 18,
-        align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
+        align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
         color = UIKit:hex2c3b(0xaaa87f),
     }):addTo(bgImage):align(display.CENTER,bgImage:getContentSize().width/2,bgImage:getContentSize().height/2)
 end
@@ -81,49 +82,45 @@ function GameUILogin:loginAction()
 end
 
 function GameUILogin:connectGateServer()
-    NetManager:connectGateServer(function(success)
-        if not success then
-            self:setProgressText(_("连接网关服务器失败!"))
-            return
-        end
+    NetManager:getConnectGateServerPromise():next(function()
         self:setProgressPercent(70)
         self:getLogicServerInfo()
+    end):catch(function(err)
+        dump(err:reason())
+        self:setProgressText(_("连接网关服务器失败!"))
     end)
 end
-
-
 function GameUILogin:getLogicServerInfo()
-    NetManager:getLogicServerInfo(function(success)
-        if not success then
-            self:setProgressText(_("获取游戏服务器信息失败!"))
-            return
-        end
+    NetManager:getLogicServerInfoPromise():next(function()
         self:setProgressPercent(80)
         self:connectLogicServer()
+    end):catch(function(err)
+        dump(err:reason())
+        self:setProgressText(_("获取游戏服务器信息失败!"))
     end)
 end
 
 
 function GameUILogin:connectLogicServer()
     self:setProgressText(_("连接游戏服务器...."))
-    NetManager:connectLogicServer(function(success)
-        if not success then
-            self:setProgressText(_("连接游戏服务器失败!"))
-            return
-        end
+    NetManager:getConnectLogicServerPromise():next(function()
         self:setProgressPercent(100)
         self:login()
+    end):catch(function(err)
+        self:setProgressText(_("连接游戏服务器失败!"))
     end)
+
 end
 
 function GameUILogin:login()
     self:setProgressText(_("登陆游戏服务器...."))
-    NetManager:login(function ( success, msg )
-        if not success then
-            self:setProgressText(_("登录游戏失败!"))
-            return
-        end
+    NetManager:getLoginPromise():catch(function(err)
+        dump(err:reason())
+        self:setProgressText(_("登录游戏失败!"))
     end)
 end
 
 return GameUILogin
+
+
+

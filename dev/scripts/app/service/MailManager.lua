@@ -55,9 +55,7 @@ function MailManager:DeleteMail(mail)
         end
     end
 end
-function MailManager:AddSendMail(mail)
--- body
-end
+
 function MailManager:dispatchMailServerData( eventName,msg )
     if eventName == "onGetMailsSuccess" then
         -- 获取邮件成功,加入MailManager缓存
@@ -105,7 +103,12 @@ function MailManager:GetMails(cb,fromIndex)
         return mails
     else
         -- 本地没有缓存，则从服务器获取
-        NetManager:getMails(fromIndex,NOT_HANDLE)
+        NetManager:getFetchMailsPromise(fromIndex):always(function ()
+            cb()
+            print("获取收件箱成功")
+        end):catch(function(err)
+            dump(err:reason())
+        end)
     end
 end
 
@@ -123,7 +126,11 @@ function MailManager:GetSavedMails(cb,fromIndex)
         return savedMails
     else
         -- 本地没有缓存，则从服务器获取
-        NetManager:getSavedMails(fromIndex,cb)
+        NetManager:getFetchSavedMailsPromise(fromIndex):always(function ()
+            cb()
+        end):catch(function(err)
+            dump(err:reason())
+        end)
     end
 end
 
@@ -141,14 +148,18 @@ function MailManager:GetSendMails(cb,fromIndex)
         return sendMails
     else
         -- 本地没有缓存，则从服务器获取
-        NetManager:getSendMails(fromIndex,NOT_HANDLE)
+        NetManager:getFetchSendMailsPromise(fromIndex):always(function ()
+            cb()
+        end):catch(function(err)
+            dump(err:reason())
+        end)
     end
 end
 
 function MailManager:OnUserDataChanged(userData,timer)
     -- 未读邮件和战报信息
     if userData.mailStatus then
-        self.unread_num = userData.mailStatus.unreadMails + userData.mailStatus.unreadReports
+        self.unread_num = userData.mailStatus.unreadMails + 0
     end
     if not userData.mails or
         not userData.savedMails or
@@ -171,13 +182,7 @@ function MailManager:OnUserDataChanged(userData,timer)
 
 
     local savedMails = userData.savedMails
-    -- table.sort(savedMails,function(mail_a,mail_b)
-    --     if mail_a.sendTime==mail_b.sendTime then
-    --         return mail_a.fromName<mail_b.fromName
-    --     else
-    --         return mail_a.sendTime>mail_b.sendTime
-    --     end
-    -- end)
+
     for k,v in pairs(savedMails) do
         table.insert(self.savedMails,v)
     end

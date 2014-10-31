@@ -16,6 +16,7 @@ end
 local function is_error(obj)
     return getmetatable(obj) == err_class
 end
+
 ------
 local promise = {}
 promise.__index = promise
@@ -36,73 +37,21 @@ end
 local function is_not_complete(p)
     return #p.thens > 0
 end
---------------------------------------------
--- 弹出任务列表的第一个任务,并执行,返回错误码和结果
-local function do_promise(p)
-    local head = pop_head(p.thens)
-    local success_func, failed_func = unpack(head or {})
-    local success, result
-    if type(success_func) == "function" then
-        success, result = pcall(success_func, p.result)
-    end
-    return success, result, failed_func
-end
-local function handle_next_failed_func(p, err)
-    local thens = p.thens
-    local _, failed_func
-    repeat
-        local head = pop_head(thens)
-        _, failed_func = unpack(head or {})
-    until failed_func ~= nil or #thens == 0
-
-    if type(failed_func) == "function" then
-        return failed_func(err)
-    end
-
-    -- 在子任务里面找
-    local next_promise = pop_head(p.next_promises)
-    if next_promise == nil then
-        print("你应该捕获这个错误!")
-        dump(err)
-        -- assert(false, "你应该捕获这个错误!")
-        return err
-    end
-    return handle_next_failed_func(next_promise, err)
-end
-local function handle_result(p, success, result, failed_func)
-    if success then
-        p.result = result
-        if is_promise(result) then
-            table.insert(result.next_promises, p)
-            return true
-        end
-    else
-        -- 如果当前任务有错误处理函数,捕获并继续传入下一个任务进行处理
-        p.state_ = REJECTED
-        if not is_error(result) then
-            result = err_class.new(result)
-        end
-        if type(failed_func) == "function" then
-            p.result = failed_func(result)
-        else
-            p.result = handle_next_failed_func(p, result)
-        end
-    end
-end
 local function done_promise(p)
     local result = p.result
     table.foreachi(p.dones, function(_, v) v(result) end)
+    p.dones = {}
 end
 local function fail_promise(p)
-    local result = p.result
-    table.foreachi(p.fails, function(_, v) v(result) end)
+    table.foreachi(p.fails, function(_, v) v() end)
+    p.fails = {}
 end
 local function always_promise(p)
     local result = p.result
     table.foreachi(p.always_, function(_, v) v(result) end)
+    p.always_ = {}
 end
-local function complete_promise(p)
-    p.full_filled = true
+local function complete_and_pop_promise(p)
     if p:state() == REJECTED then
         fail_promise(p)
     else
@@ -111,54 +60,147 @@ local function complete_promise(p)
     always_promise(p)
     return pop_head(p.next_promises)
 end
+local function do_function_with_protect(func, param)
+    local success, result = pcall(func, param)
+    if not success then
+        result = not is_error(result) and err_class.new(result) or result
+    end
+    return success, result
+end
+local function do_promise(p)
+    local head = pop_head(p.thens)
+    local success_func, failed_func = unpack(head or {})
+    local success, result
+    if type(success_func) == "function" then
+        success, result = do_function_with_protect(success_func, p.result)
+    end
+    p.result = result
+    return success, result, failed_func
+end
+local function handle_next_failed(p, err)
+    -- 当前任务里面找
+    local thens = p.thens
+    local _, failed_func
+    repeat
+        local head = pop_head(thens)
+        _, failed_func = unpack(head or {})
+    until failed_func ~= nil or #thens == 0
+    if type(failed_func) == "function" then
+        local success, err_ = do_function_with_protect(failed_func, err)
+        p.result = err_
+        if success then
+            return p
+        else
+            return handle_next_failed(p, err_)
+        end
+    end
+    -- 没有找到,就应该完成这个promise并在子promise里面找
+    local next_promise = complete_and_pop_promise(p)
+    if next_promise == nil then
+        if p.ignore_error then
+            p.result = err
+            return p
+        end
+        dump(err)
+        assert(false, "你应该捕获这个错误!")
+    else
+        next_promise.state_ = REJECTED
+    end
+    return handle_next_failed(next_promise, err)
+end
+local has_a_new_promise = true
+local has_no_promise = false
+local function handle_result(p, success, result, failed_func)
+    if success then
+        if is_promise(result) then
+            table.insert(result.next_promises, p)
+            return has_a_new_promise, p
+        end
+    else
+        -- 如果当前任务有错误处理函数,捕获并继续传入下一个任务进行处理
+        p.state_ = REJECTED
+        if not is_error(result) then
+            result = err_class.new(result)
+        end
+        if type(failed_func) == "function" then
+            local success_, result_ = do_function_with_protect(failed_func, err)
+            p.result = result_
+            if success_ then
+                return has_no_promise, p
+            else
+                return has_no_promise, handle_next_failed(p, result_)
+            end
+        else
+            return has_no_promise, handle_next_failed(p, result)
+        end
+    end
+    return has_no_promise, p
+end
 local function repeat_resolve(p)
     while is_not_complete(p) do
-        if handle_result(p, do_promise(p)) then
+        local is_has_a_new_promise, cp = handle_result(p, do_promise(p))
+        if is_has_a_new_promise then
             return
         end
+        -- 当前promise改变了
+        if cp ~= p then
+            p = cp
+        end
     end
-
-    local next_promise = complete_promise(p)
+    local state_, result_ = p:state(), p.result
+    local next_promise = complete_and_pop_promise(p)
     while true do
-        if not next_promise then
-            return
-        end
-        if not is_complete(next_promise) then
-            break
-        end
-        next_promise = complete_promise(next_promise)
+        if not next_promise then return end
+
+        next_promise.result = result_
+
+        if is_not_complete(next_promise) then break end
+
+        next_promise = complete_and_pop_promise(next_promise)
     end
-    next_promise.result = p.result
     return repeat_resolve(next_promise)
 end
 local function failed_resolve(p, data)
     assert(p.state_ == PENDING)
     p.state_ = REJECTED
-    p.result = handle_next_failed_func(p, data)
-    repeat_resolve(p)
+    repeat_resolve(handle_next_failed(p, data))
     return p
 end
 local function resolve(p, data)
-    assert(p.state_ == PENDING)
+    assert(p.state_ == PENDING, p.state_)
     p.state_ = RESOLVED
     p.result = data
     repeat_resolve(p)
     return p
 end
+local function clear_promise(p)
+    p.thens = {}
+    p.dones = {}
+    p.fails = {}
+    p.always_ = {}
+    p.next_promises = {}
+end
+-- 因为某种原因取消了promise对象
+local function cancel_promise(p)
+    clear_promise(p)
+end
+local function ignore_error(p)
+    p.ignore_error = true
+end
+local sc = 0
 function promise.new(data)
+
     local r = {}
+    r.sc = sc
+    sc = sc + 1
     setmetatable(r, promise)
     r:ctor(data)
     return r
 end
 function promise:ctor(resolver)
-    self.full_filled = false
+    self.ignore_error = false
     self.state_ = PENDING
-    self.thens = {}
-    self.dones = {}
-    self.fails = {}
-    self.always_ = {}
-    self.next_promises = {}
+    clear_promise(self)
     self:next(resolver or empty_func)
 end
 function promise:state()
@@ -181,6 +223,7 @@ function promise:catch(func)
     return self
 end
 function promise:done(func)
+    local func = func or empty_func
     assert(type(func) == "function", "done的函数不能为空!")
     table.insert(self.dones, func)
     return self
@@ -201,8 +244,16 @@ end
 local function foreach_promise(func, ...)
     assert(type(func) == "function")
     local p = promise.new()
-    for i, v in ipairs{...} do
-        func(i, v, p)
+    local promises = {...}
+    for i, v in ipairs(promises) do
+        local other_promises = {}
+        for _, ov in ipairs(promises) do
+            if ov ~= v then
+                table.insert(other_promises, ov)
+            end
+        end
+        ignore_error(v)
+        func(i, v, p, other_promises)
     end
     return p
 end
@@ -231,7 +282,7 @@ end
 function promise.any(...)
     assert(...)
     local not_resolved = true
-    return foreach_promise(function(_, v, p)
+    return foreach_promise(function(_, v, p, other_promises)
         v:always(function(result)
             if not_resolved then
                 not_resolved = false
@@ -240,19 +291,9 @@ function promise.any(...)
                 else
                     p:resolve(result)
                 end
-            end
-        end)
-    end, ...)
-end
--- 一个完成的promise不管结果都会发送给下一个任务
-function promise.race(...)
-    assert(...)
-    local not_resolved = true
-    return foreach_promise(function(_, v, p)
-        v:always(function(result)
-            if not_resolved then
-                not_resolved = false
-                p:resolve(result)
+                for _, v in ipairs(other_promises) do
+                    cancel_promise(v)
+                end
             end
         end)
     end, ...)
@@ -263,54 +304,7 @@ end
 
 
 
+
 return promise
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

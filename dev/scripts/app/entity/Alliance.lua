@@ -1,11 +1,11 @@
-local property = import("app.utils.property")
-local Enum = import("app.utils.Enum")
-local Flag = import("app.entity.Flag")
-local AllianceMember = import("app.entity.AllianceMember")
-local MultiObserver = import("app.entity.MultiObserver")
+local Localize = import("..utils.Localize")
+local property = import("..utils.property")
+local Enum = import("..utils.Enum")
+local Flag = import(".Flag")
+local AllianceMember = import(".AllianceMember")
+local MultiObserver = import(".MultiObserver")
 local Alliance = class("Alliance", MultiObserver)
-Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS")
-
+Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS")
 local unpack = unpack
 local function pack(...)
     return {...}
@@ -29,10 +29,18 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     property(self, "defaultLanguage", defaultLanguage or "all")
     property(self, "terrainType", terrainType or "grassLand")
     self.flag = Flag:RandomFlag()
+    self.titles = {
+        ["member"] = "__member",
+        ["supervisor"] = "__supervisor",
+        ["quartermaster"] = "__quartermaster",
+        ["general"] = "__general",
+        ["archon"] = "__archon",
+        ["elite"] = "__elite",
+    }
     self.members = {}
     self.events = {}
     self.join_events = {}
-    self.help_vents = {}
+    self.help_events = {}
 end
 function Alliance:DecodeFromJsonData(json_data)
     local alliance = Alliance.new(json_data.id, json_data.name, json_data.tag, json_data.language)
@@ -44,6 +52,48 @@ function Alliance:DecodeFromJsonData(json_data)
     alliance:SetJoinType(json_data.joinType)
     alliance:SetFlag(Flag:DecodeFromJson(json_data.flag))
     return alliance
+end
+local alliance_title = Localize.alliance_title
+function Alliance:GetMemberTitle()
+    return self:GetTitles()["member"]
+end
+function Alliance:GetSupervisorTitle()
+    return self:GetTitles()["supervisor"]
+end
+function Alliance:GetQuarterMasterTitle()
+    return self:GetTitles()["quartermaster"]
+end
+function Alliance:GetGeneralTitle()
+    return self:GetTitles()["general"]
+end
+function Alliance:GetArchonTitle()
+    return self:GetTitles()["archon"]
+end
+function Alliance:GetEliteTitle()
+    return self:GetTitles()["elite"]
+end
+function Alliance:ModifyTitleWithMemberType(member_type, new_name)
+    if self.titles[member_type] ~= new_name then
+        local old_value = self.titles[member_type]
+        self.titles[member_type] = new_name
+        self:OnBasicChanged{
+            ["title_name"] = {old = old_value, new = new_name}
+        }
+    end
+end
+function Alliance:SetTitleNames(title_names)
+    for k, v in pairs(title_names) do
+        self:ModifyTitleWithMemberType(k, v)
+    end
+end
+function Alliance:GetTitles()
+    return LuaUtils:table_map(self.titles, function(k, v)
+        if string.sub(v, 1, 2) == "__" then
+            dump(alliance_title[k])
+            return k, alliance_title[k]
+        end
+        return k,v
+    end)
 end
 function Alliance:Flag()
     return self.flag
@@ -69,7 +119,6 @@ function Alliance:OnPropertyChange(property_name, old_value, new_value)
 end
 function Alliance:OnBasicChanged(changed_map)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.BASIC, function(listener)
-        dump(listener)
         listener:OnBasicChanged(self, changed_map)
     end)
 end
@@ -143,13 +192,28 @@ function Alliance:OnMemberChanged(changed_map)
         listener:OnMemberChanged(self, changed_map)
     end)
 end
+function Alliance:GetAllHelpEvents()
+    return self.help_events
+end
+function Alliance:ReFreashOneHelpEvent(help_event)
+    for index,event in pairs(self.help_events) do
+            print("ReFreashOneHelpEvent",help_event.eventId)
+        if event.eventId == help_event.eventId then
+            print("ReFreashOneHelpEvent",help_event.eventId)
+            self.help_events[index] = help_event
+            self:NotifyListeneOnType(Alliance.LISTEN_TYPE.HELP_EVENTS, function(listener)
+                listener:OnOneHelpEventChanged(help_event)
+            end)
+        end
+    end
+end
 function Alliance:Reset()
     self:SetId(nil)
     self:SetJoinType("all")
     self.members = {}
     self.events = {}
     self.join_events = {}
-    self.help_vents = {}
+    self.help_events = {}
     self:OnOperation("quit")
 end
 function Alliance:OnOperation(operation_type)
@@ -263,21 +327,20 @@ function Alliance:OnJoinEventsChanged(changed_map)
     end)
 end
 function Alliance:OnAllianceDataChanged(alliance_data)
-    if alliance_data.basicInfo then
-        self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
+    if alliance_data.notice then
+        self:SetNotice(alliance_data.notice)
     end
-    if alliance_data.events then
-        self:OnAllianceEventsChanged(alliance_data.events)
+    if alliance_data.desc then
+        self:SetDescribe(alliance_data.desc)
     end
-    if alliance_data.joinRequestEvents then
-        self:OnJoinRequestEventsChanged(alliance_data.joinRequestEvents)
+    if alliance_data.titles then
+        self:SetTitleNames(alliance_data.titles)
     end
-    if alliance_data.helpEvents then
-        self:OnHelpEventsChanged(alliance_data.helpEvents)
-    end
-    if alliance_data.members then
-        self:OnAllianceMemberDataChanged(alliance_data.members)
-    end
+    self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
+    self:OnAllianceEventsChanged(alliance_data.events)
+    self:OnJoinRequestEventsChanged(alliance_data.joinRequestEvents)
+    self:OnHelpEventsChanged(alliance_data.helpEvents)
+    self:OnAllianceMemberDataChanged(alliance_data.members)
 end
 function Alliance:OnAllianceBasicInfoChanged(basicInfo)
     if basicInfo == nil then return end
@@ -424,9 +487,23 @@ function Alliance:OnOneAllianceMemberDataChanged(member_data)
 end
 function Alliance:OnHelpEventsChanged(helpEvents)
     dump(helpEvents)
+    self.help_events = helpEvents
+    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.HELP_EVENTS, function(listener)
+        listener:OnAllHelpEventChanged(helpEvents)
+    end)
 end
-
+function Alliance:GetAllianceArchonMember()
+    for k,v in pairs(self.members) do
+        if v:IsArchon() then
+            return v
+        end
+    end
+    return nil
+end
 return Alliance
+
+
+
 
 
 

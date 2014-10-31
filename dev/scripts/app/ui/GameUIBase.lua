@@ -226,7 +226,7 @@ function GameUIBase:CreateVerticalListViewDetached(left_bottom_x, left_bottom_y,
     }
 end
 function GameUIBase:CreatePopupBg(height)
-   return WidgetUIBackGround.new(height)
+   return WidgetUIBackGround.new({height=height})
 end
 
 return GameUIBase

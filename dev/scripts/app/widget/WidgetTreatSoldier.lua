@@ -18,31 +18,32 @@ end)
 local NORMAL = GameDatas.UnitsConfig.normal
 local SPECIAL = GameDatas.UnitsConfig.special
 local STAR_BG = {
-    "star1_114x128.png",
-    "star2_114x128.png",
-    "star3_114x128.png",
-    "star4_114x128.png",
+    "star1_118x132.png",
+    "star2_118x132.png",
+    "star3_118x132.png",
+    "star4_118x132.png",
+    "star5_118x132.png",
 }
 local SOLDIER_TYPE = {
-    ["swordsman_1"] = { png = "soldier_swordsman_1.png" },
+    ["swordsman_1"] = { png = "#Infantry_1_render/idle/1/00000.png" },
     ["swordsman_2"] = { png = "soldier_swordsman_2.png" },
     ["swordsman_3"] = { png = "soldier_swordsman_3.png" },
     ["sentinel_1"] = { png = "soldier_sentinel_1.png" },
     ["sentinel_2"] = { png = "soldier_sentinel_2.png" },
     ["sentinel_3"] = { png = "soldier_sentinel_3.png" },
-    ["archer_1"] = { png = "soldier_archer_1.png" },
+    ["archer_1"] = { png = "#Archer_1_render/idle/1/00000.png" },
     ["archer_2"] = { png = "soldier_archer_2.png" },
     ["archer_3"] = { png = "soldier_archer_3.png" },
     ["crossbowman_1"] = { png = "soldier_crossbowman_1.png" },
     ["crossbowman_2"] = { png = "soldier_crossbowman_2.png" },
     ["crossbowman_3"] = { png = "soldier_crossbowman_2.png" },
-    ["lancer_1"] = { png = "soldier_lancer_1.png" },
+    ["lancer_1"] = { png = "#Cavalry_1_render/idle/1/00000.png" },
     ["lancer_2"] = { png = "soldier_lancer_2.png" },
     ["lancer_3"] = { png = "soldier_lancer_3.png" },
     ["horseArcher_1"] = { png = "soldier_horseArcher_1.png" },
     ["horseArcher_2"] = { png = "soldier_horseArcher_2.png" },
     ["horseArcher_3"] = { png = "soldier_horseArcher_3.png" },
-    ["catapult_1"] = { png = "soldier_catapult_1.png" },
+    ["catapult_1"] = { png = "#Catapult_1_render/move/1/00000.png" },
     ["catapult_2"] = { png = "soldier_catapult_2.png" },
     ["catapult_3"] = { png = "soldier_catapult_3.png" },
     ["ballista_1"] = { png = "soldier_ballista_1.png" },
@@ -113,7 +114,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
     -- bg
     local back_ground = cc.ui.UIImage.new("back_ground_608x458.png",
         {scale9 = true}):addTo(self):setLayoutSize(608, 500)
-    -- local back_ground =  WidgetUIBackGround.new(158):addTo(self)
+ 
     back_ground:setTouchEnabled(true)
 
     -- title
@@ -162,9 +163,9 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
 
     -- soldier type
     local pos = star_bg:getAnchorPointInPoints()
-    local soldier = cc.ui.UIImage.new("soldier_130x183.png"):addTo(star_bg)
-        :align(display.CENTER, pos.x, pos.y + 5):scale(0.7)
-    self.soldier = soldier
+    -- local soldier = cc.ui.UIImage.new("soldier_130x183.png"):addTo(star_bg)
+    --     :align(display.CENTER, pos.x, pos.y + 5):scale(0.7)
+    -- self.soldier = soldier
 
 
     --
@@ -338,7 +339,10 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
         :onButtonClicked(function(event)
             local soldiers = {{name=self.soldier_type, count=self.count}}
             local treat_fun = function ()
-                NetManager:instantTreatSoldiers(soldiers, NOT_HANDLE)
+                -- NetManager:instantTreatSoldiers(soldiers, NOT_HANDLE)
+                NetManager:getInstantTreatSoldiersPromise(soldiers):catch(function(err)
+                    dump(err:reason())
+                end)
                 self:instant_button_clicked()
             end
             if self.count<1 then
@@ -388,7 +392,10 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
             local hospital = City:GetFirstBuildingByType("hospital")
             local soldiers = {{name=self.soldier_type, count=self.count}}
             local treat_fun = function ()
-                NetManager:treatSoldiers(soldiers, NOT_HANDLE)
+                -- NetManager:treatSoldiers(soldiers, NOT_HANDLE)
+                NetManager:getTreatSoldiersPromise(soldiers):catch(function(err)
+                    dump(err:reason())
+                end)
                 self:button_clicked()
             end
             local isAbleToTreat =hospital:IsAbleToTreat(soldiers)
@@ -456,7 +463,12 @@ function WidgetTreatSoldier:SetSoldier(soldier_type, star)
     -- bg
     self.star_bg:setTexture(display.newSprite(STAR_BG[star]):getTexture())
     -- soldier
-    self.soldier:setTexture(display.newSprite(soldier_ui_config.png):getTexture())
+    if self.soldier then
+        self.star_bg:removeChild(self.soldier)
+    end
+    self.soldier = display.newSprite(soldier_ui_config.png):addTo(self.star_bg)
+        :align(display.CENTER, self.star_bg:getContentSize().width/2, self.star_bg:getContentSize().height/2)
+    self.soldier:scale(130/self.soldier:getContentSize().height)
     -- stars
     local star = soldier_config.star
     for i, v in ipairs(self.stars) do
@@ -540,6 +552,8 @@ function WidgetTreatSoldier:OnCountChanged(count)
     self.gem_label:setString(self.treat_now_gems)
 end
 return WidgetTreatSoldier
+
+
 
 
 

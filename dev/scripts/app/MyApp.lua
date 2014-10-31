@@ -26,12 +26,13 @@ function MyApp:ctor()
     self.timer = Timer.new()
     local fileutils = cc.FileUtils:getInstance()
     if device.platform == "ios" then
-        fileutils:addSearchPath("res/")
-        fileutils:addSearchPath("res/images/")
+        -- fileutils:addSearchPath("res/")
+        -- fileutils:addSearchPath("res/images/")
     elseif device.platform == "mac" then
         fileutils:addSearchPath("dev/res/")
         fileutils:addSearchPath("dev/res/fonts/")
         fileutils:addSearchPath("dev/res/images/")
+        fileutils:addSearchPath("dev/res/fonts/")
     end
 end
 
@@ -68,15 +69,12 @@ end
 function MyApp:retryConnectServer()
     if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
         device.showActivityIndicator()
-        NetManager:connectLogicServer(function(success)
-            if success then
-                NetManager:login(function(success)
-                    device.hideActivityIndicator()
-                end)
-            else
-                device.hideActivityIndicator()
-            end
-
+        NetManager:getConnectLogicServerPromise():next(function()
+            return NetManager:getLoginPromise()
+        end):catch(function(err)
+            dump(err:reason())
+        end):always(function()
+            device.hideActivityIndicator()
         end)
     end
 end
@@ -113,6 +111,11 @@ function MyApp:lockInput(b)
 end
 
 return MyApp
+
+
+
+
+
 
 
 

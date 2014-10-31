@@ -60,7 +60,7 @@ end
 -- 构建对应资源生产加成条件是否达成部分
 function GameUIPResourceBuilding:ProduceIncreasePart()
     -- bg
-    local bg = WidgetUIBackGround.new(158):align(display.CENTER, display.cx, display.top-180):addTo(self.info_layer)
+    local bg = WidgetUIBackGround.new({height=158}):align(display.CENTER, display.cx, display.top-180):addTo(self.info_layer)
     local bg_size = bg:getContentSize()
 
     -- title bg
@@ -148,7 +148,7 @@ end
 
 -- 构建改建建筑部分
 function GameUIPResourceBuilding:RebuildPart()
-    local bg = WidgetUIBackGround.new(584):align(display.CENTER, display.cx, display.top-570):addTo(self.info_layer)
+    local bg = WidgetUIBackGround.new({height=584}):align(display.CENTER, display.cx, display.top-570):addTo(self.info_layer)
     local bg_size = bg:getContentSize()
     -- title bg
     local title_bg = display.newSprite("title_green_596X49.png"):align(display.TOP_CENTER, bg_size.width/2, bg_size.height-7):addTo(bg)

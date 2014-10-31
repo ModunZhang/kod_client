@@ -14,7 +14,7 @@ local ALLIANCE_MAIL = GameUIWriteMail.SEND_TYPE.ALLIANCE_MAIL
 
 function GameUIWriteMail:ctor()
     -- bg
-    local write_mail = WidgetUIBackGround.new(768):addTo(self)
+    local write_mail = WidgetUIBackGround.new({height=768}):addTo(self)
     write_mail:pos((display.width-write_mail:getContentSize().width)/2,display.top - write_mail:getContentSize().height - 120)
     local r_size = write_mail:getContentSize()
     -- title write_mail
@@ -50,7 +50,6 @@ function GameUIWriteMail:ctor()
         UIInputType = 1,
         image = "input_box.png",
         size = cc.size(422,40),
-        listener = onEdit,
         font = UIKit:getFontFilePath(),
     })
     local editbox_addressee = self.editbox_addressee
@@ -74,7 +73,6 @@ function GameUIWriteMail:ctor()
         UIInputType = 1,
         image = "input_box.png",
         size = cc.size(422,40),
-        listener = onEdit,
         font = UIKit:getFontFilePath(),
     })
     local editbox_subject = self.editbox_subject
@@ -121,7 +119,7 @@ function GameUIWriteMail:ctor()
         {scale9 = false}
     ):setButtonLabel(send_label)
         :addTo(write_mail):align(display.CENTER, write_mail:getContentSize().width-120, 40)
-        
+
 end
 function GameUIWriteMail:SendMail(send_type,addressee,title,content)
     if not addressee or string.trim(addressee)=="" then
@@ -141,9 +139,13 @@ function GameUIWriteMail:SendMail(send_type,addressee,title,content)
         return
     end
     if send_type == PERSONAL_MAIL then
-        NetManager:sendPersonalMail(addressee, title, content,NOT_HANDLE)
+        NetManager:getSendPersonalMailPromise(addressee, title, content):catch(function(err)
+            dump(err:reason())
+        end)
     elseif send_type == ALLIANCE_MAIL then
-        NetManager:sendAllianceMail(title, content,NOT_HANDLE)
+        NetManager:getSendAllianceMailPromise(title, content):catch(function(err)
+            dump(err:reason())
+        end)
     end
 end
 
@@ -188,3 +190,5 @@ return GameUIWriteMail
 
 
    
+
+

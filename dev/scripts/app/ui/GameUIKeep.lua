@@ -1,4 +1,8 @@
 local TabButtons = import('.TabButtons')
+local WidgetPushButton = import("..widget.WidgetPushButton")
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
+local WidgetUIBackGround2= import("..widget.WidgetUIBackGround2")
+local Localize = import("..utils.Localize")
 local window = import('..utils.window')
 local GameUIKeep = UIKit:createUIClass('GameUIKeep',"GameUIUpgradeBuilding")
 
@@ -37,112 +41,101 @@ end
 
 
 function GameUIKeep:CreateCityBasicInfo()
-    -- city icon bg
-    cc.ui.UIImage.new("keep_city_icon_bg.png")
-        :align(display.TOP_LEFT, display.cx-274, display.top-120)
+
+    -- 建筑图片 放置区域左右边框
+    cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-250, display.top-175)
+        :addTo(self.info_layer):setFlippedX(true)
+    cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-145, display.top-175)
         :addTo(self.info_layer)
-    -- city icon
-    cc.ui.UIImage.new("keep_city_icon.png")
-        :align(display.TOP_LEFT, display.cx-268, display.top-127)
+
+    local building_image = display.newSprite(UIKit:getImageByBuildingType( self.building:GetType() ,self.building:GetLevel()), 0, 0)
+        :addTo(self.info_layer):pos(display.cx-196, display.top-158)
+    building_image:setAnchorPoint(cc.p(0.5,0.5))
+    if self.building:GetType()=="watchTower" or self.building:GetType()=="tower" then
+        building_image:setScale(150/building_image:getContentSize().height)
+    else
+        building_image:setScale(124/building_image:getContentSize().width)
+    end
+    -- 修改城市名字item
+    self:CreateLineItem({
+        title_1 =  _("城市名字"),
+        title_2 =  _("未定义"),
+        button_label =  _("修改"),
+        listener =  function ()
+            self:CreateModifyCityNameWindow()
+        end,
+    }):align(display.LEFT_CENTER, display.cx-120, display.top-160)
         :addTo(self.info_layer)
-    -- 修改城市名字道具拥有数量显示背景框
-    local change_city_name_prop_bg = cc.ui.UIImage.new("LV_background.png")
-        :align(display.TOP_LEFT, display.cx-274, display.top-235)
+    -- 修改地形
+    self:CreateLineItem({
+        title_1 =  _("城市地形"),
+        title_2 =  _("草原"),
+        button_label =  _("修改"),
+        listener =  function ()
+            self:CreateChangeTerrainWindow()
+        end,
+    }):align(display.LEFT_CENTER, display.cx-120, display.top-240)
         :addTo(self.info_layer)
-    local bg_width, bg_height = change_city_name_prop_bg:getCascadeBoundingBox().size.width,
-        change_city_name_prop_bg:getCascadeBoundingBox().size.height
+end
+
+function GameUIKeep:CreateLineItem(params)
+    -- 分割线
+    local line = display.newSprite("dividing_line.png")
+    local line_size = line:getContentSize()
     cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("未定义"),
-            font = UIKit:getFontFilePath(),
-            size = 18,
-            color = UIKit:hex2c3b(0xf403c2f)
-        }):align(display.CENTER, bg_width/2, bg_height/2)
-        :addTo(change_city_name_prop_bg)
-    -- 城市名字
-    cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("城市名字"),
+            text = params.title_1,
             font = UIKit:getFontFilePath(),
             size = 16,
             color = UIKit:hex2c3b(0x665f49)
-        }):align(display.CENTER, display.cx-120, display.top-130)
-        :addTo(self.info_layer)
+        }):align(display.LEFT_BOTTOM, 0, 40)
+        :addTo(line)
     self.city_name_label  = cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("未定义"),
+            text = params.title_2,
             font = UIKit:getFontFilePath(),
             size = 22,
             color = UIKit:hex2c3b(0x29261c)
-        }):align(display.LEFT_CENTER, display.cx-153, display.top-160)
-        :addTo(self.info_layer)
-    self.change_city_name_button = cc.ui.UIPushButton.new({normal = "green_button_normal.png",pressed = "green_button_pressed.png"})
-        :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("修改"), size = 20, color = display.COLOR_WHITE}))
+        }):align(display.LEFT_BOTTOM, 0, 10)
+        :addTo(line)
+    local button = WidgetPushButton.new({normal = "green_button_normal.png",pressed = "green_button_pressed.png"})
+        :setButtonLabel(UIKit:ttfLabel({
+            text = params.button_label,
+            size = 20,
+            color = 0xffedae,
+        }))
         :onButtonClicked(function(event)
-            print("使用道具改变城市名字未实现")
+            if event.name == "CLICKED_EVENT" then
+                params.listener()
+            end
         end)
-        :align(display.CENTER, display.cx+200, display.top-136)
-        :addTo(self.info_layer)
-    -- 分割线
-    local terrain_line = display.newScale9Sprite("dividing_line.png", display.cx+60, display.top-216, cc.size(427,2))
-        :addTo(self.info_layer)
-    -- 地形标签
-    cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("地形"),
-            font = UIKit:getFontFilePath(),
-            size = 20,
-            color = UIKit:hex2c3b(0x797154)
-        }):align(display.LEFT_CENTER, 0, 12)
-        :addTo(terrain_line)
-    -- 玩家城市所处地形属性值
-    self.terrain = cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("未匹配服务器值"),
-            font = UIKit:getFontFilePath(),
-            size = 20,
-            color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.RIGHT_CENTER, terrain_line:getCascadeBoundingBox().size.width, 12)
-        :addTo(terrain_line)
-    -- 分割线
-    local location_line = display.newScale9Sprite("dividing_line.png", display.cx+60, display.top-260, cc.size(427,2))
-        :addTo(self.info_layer)
-
-    -- 坐标标签
-    cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("坐标"),
-            font = UIKit:getFontFilePath(),
-            size = 20,
-            color = UIKit:hex2c3b(0x797154)
-        }):align(display.LEFT_CENTER, 0, 12)
-        :addTo(location_line)
-    -- 玩家城市坐标值
-    cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("未匹配服务器值"),
-            font = UIKit:getFontFilePath(),
-            size = 20,
-            color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.RIGHT_CENTER, location_line:getCascadeBoundingBox().size.width, 12)
-        :addTo(location_line)
+        :align(display.RIGHT_BOTTOM, line_size.width, 10)
+        :addTo(line)
+    return line
 end
+
 
 function GameUIKeep:CreateCanBeUnlockedBuildingBG()
     -- 主背景
-    self.main_building_listview_bg = display.newScale9Sprite("keep_unlock_building_listview_bg.png", display.cx, display.top-844, cc.size(549, 551))
+    self.main_building_listview_bg = WidgetUIBackGround.new({
+        width = 538,
+        height = 508,
+        top_img = "back_ground_538x14_top.png",
+        bottom_img = "back_ground_538x20_bottom.png",
+        mid_img = "back_ground_538x1_mid.png",
+        u_height = 14,
+        b_height = 20,
+        m_height = 1,
+    }):align(display.CENTER, display.cx, display.top-844)
         :addTo(self.info_layer)
+    -- display.newScale9Sprite("keep_unlock_building_listview_bg.png", display.cx, display.top-844, cc.size(549, 551))
+
     self.main_building_listview_bg:setAnchorPoint(cc.p(0.5,0))
     -- title 背景
-    local title_bg = cc.ui.UIImage.new("keep_blue_title.png")
-        :align(display.LEFT_TOP, 1, self.main_building_listview_bg:getCascadeBoundingBox().size.height)
+    local title_bg = cc.ui.UIImage.new("alliance_evnets_title_548x50.png")
+        :align(display.LEFT_BOTTOM, -5, self.main_building_listview_bg:getContentSize().height)
         :addTo(self.main_building_listview_bg,10)
     -- title label
     cc.ui.UILabel.new({
@@ -190,9 +183,9 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
     self.building_listview = cc.ui.UIListView.new{
         -- bg = "common_tips_bg.png",
         bgScale9 = true,
-        viewRect = cc.rect(display.cx-273, display.top-842, 545, 500),
+        viewRect = cc.rect(self.main_building_listview_bg:getContentSize().width/2-258, 10, 516, 495),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
-        :addTo(self.info_layer)
+        :addTo(self.main_building_listview_bg)
     local allBuildings = City:GetAllBuildings()
     local buildings = GameDatas.Buildings.buildings
     for i,v in ipairs(buildings) do
@@ -201,21 +194,27 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
             -- 建筑是否可解锁
             if City:IsTileCanbeUnlockAt(City:GetTileWhichBuildingBelongs(unlock_building).x,City:GetTileWhichBuildingBelongs(unlock_building).y) then
                 local item = self.building_listview:newItem()
-                item:setItemSize(540, 135)
+                item:setItemSize(516, 140)
                 local item_width, item_height = item:getItemSize()
                 local content = cc.ui.UIGroup.new()
-                cc.ui.UIPushButton.new({normal = "keep_unlocked_button_normal.png",pressed = "keep_unlocked_button_pressed.png"})
-                    :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("可解锁"), size = 24, color = display.COLOR_WHITE}))
+                WidgetPushButton.new({normal = "keep_unlocked_button_normal.png",pressed = "keep_unlocked_button_pressed.png"})
+                    :setButtonLabel(UIKit:ttfLabel({
+                        text = _("可解锁"),
+                        size = 24,
+                        color = 0xffedae,
+                    }))
                     :onButtonClicked(function(event)
-                        self:leftButtonClicked()
-                        display.getRunningScene():GotoLogicPoint(unlock_building:GetLogicPosition())
-                    end):align(display.CENTER, 190, 40):addTo(content, 10)
+                        if event.name == "CLICKED_EVENT" then
+                            self:leftButtonClicked()
+                            display.getRunningScene():GotoLogicPoint(unlock_building:GetLogicPosition())
+                        end
+                    end):align(display.CENTER, 170, 35):addTo(content, 10)
 
-                content:addWidget(display.newSprite("keep_building_element_bg.png",  0, 0))
+                content:addWidget(display.newSprite("back_ground_516x138.png",  0, 0))
                 -- building name
                 content:addWidget(cc.ui.UILabel.new({
                     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                    text = _(unlock_building:GetType()),
+                    text = _(Localize.building_name[unlock_building:GetType()]),
                     font = UIKit:getFontFilePath(),
                     size = 24,
                     dimensions = cc.size(384, 35),
@@ -228,12 +227,21 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                     size = 20,
                     aglin = ui.TEXT_ALIGN_LEFT,
                     valign = ui.TEXT_VALIGN_CENTER,
-                    dimensions = cc.size(384, 65),
+                    dimensions = cc.size(354, 65),
                     color = UIKit:hex2c3b(0x797154)}):align(display.TOP_LEFT, -120, 10)
                 content:addWidget(building_tip)
-                local building_image = display.newScale9Sprite(UIKit:getImageByBuildingType( self.building:GetType() ,self.building:GetLevel()), -item_width/2+70, 0)
+
+                -- 建筑图片 放置区域左右边框
+                local filp_bg = cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, -item_width/2+20, 0)
+                filp_bg:setFlippedX(true)
+                content:addWidget(filp_bg)
+                content:addWidget(cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, -item_width/2+115, 0))
+                local building_image = display.newScale9Sprite(UIKit:getImageByBuildingType( unlock_building:GetType() ,unlock_building:GetLevel()), -item_width/2+70, 0)
                 building_image:setScale(133/building_image:getContentSize().height)
                 content:addWidget(building_image)
+                -- 边框
+                local bg_1 =display.newScale9Sprite("vip_bg_3.png", -item_width/2+135, 0,cc.size(376,126)):align(display.LEFT_CENTER)
+                content:addWidget(bg_1)
                 item:addContent(content)
                 self.building_listview:addItem(item)
             end
@@ -242,7 +250,234 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
     self.building_listview:reload()
 end
 
+function GameUIKeep:CreateModifyCityNameWindow()
+    local layer = self:CreateBackGroundWithTitle(_("城市名称修改")):addTo(self)
+    local editbox = cc.ui.UIInput.new({
+        UIInputType = 1,
+        image = "input_box.png",
+        size = cc.size(576,48),
+        font = UIKit:getFontFilePath(),
+    })
+    editbox:setPlaceHolder(_("最多可输入140字符"))
+    editbox:setMaxLength(140)
+    editbox:setFont(UIKit:getFontFilePath(),22)
+    editbox:setFontColor(cc.c3b(0,0,0))
+    editbox:setPlaceholderFontColor(cc.c3b(204,196,158))
+    editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)
+    editbox:align(display.LEFT_TOP,16, 420)
+    layer:addToBody(editbox)
+
+    local bg2 = WidgetUIBackGround2.new(140)
+    layer:addToBody(bg2):align(display.CENTER, 304, 280)
+
+    local prop_bg = display.newSprite("background_prop_100_100.png")
+        :align(display.LEFT_CENTER, 10, 82):addTo(bg2)
+    display.newSprite("change_city_name.png")
+        :align(display.CENTER, 50, 50):addTo(prop_bg):scale(0.5)
+    local num_bg = display.newSprite("number_bg_100x40.png")
+        :align(display.CENTER_TOP, 50, 12):addTo(prop_bg)
+    self.number = cc.ui.UILabel.new({
+        size = 20,
+        text = "10000",
+        font = UIKit:getFontFilePath(),
+        align = cc.ui.TEXT_ALIGN_LEFT,
+        color = UIKit:hex2c3b(0x423f32)
+    }):addTo(num_bg):align(display.CENTER, 50, 20)
+
+    local label_1 = cc.ui.UILabel.new(
+        {
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = _("城市名称变更"),
+            font = UIKit:getFontFilePath(),
+            size = 22,
+            color = UIKit:hex2c3b(0x514d3e)
+        }):align(display.LEFT_CENTER, 120, 100)
+        :addTo(bg2)
+
+    local label_2 = cc.ui.UILabel.new(
+        {
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = _("提供兵种招募，升级增加每次招募的最大数量"),
+            font = UIKit:getFontFilePath(),
+            size = 20,
+            dimensions = cc.size(300,100),
+            color = UIKit:hex2c3b(0x797154)
+        }):align(display.LEFT_TOP, 120, 70)
+        :addTo(bg2)
+    -- 回复按钮
+    local buy_label = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = _("购买使用"),
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)})
+
+    buy_label:enableShadow()
+    WidgetPushButton.new(
+        {normal = "green_btn_up_142x39.png", pressed = "green_btn_down_142x39.png"},
+        {scale9 = false}
+    ):setButtonLabel(buy_label)
+        :addTo(bg2):align(display.CENTER, 480, 100)
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+            end
+        end)
+end
+
+
+function GameUIKeep:CreateChangeTerrainWindow()
+    local layer = self:CreateBackGroundWithTitle(_("城市地形修改")):addTo(self)
+    local bg1 = WidgetUIBackGround.new({
+        width = 580,
+        height = 264,
+        top_img = "back_ground_580x12_top.png",
+        bottom_img = "back_ground_580X12_bottom.png",
+        mid_img = "back_ground_580X1_mid.png",
+        u_height = 12,
+        b_height = 12,
+        m_height = 1,
+    }):align(display.CENTER,304, 294)
+
+    layer:addToBody(bg1)
+
+    self.terrain_eff_label = cc.ui.UILabel.new({
+        size = 18,
+        text = "草地地形能提升50% 绿龙的活力回复速度",
+        font = UIKit:getFontFilePath(),
+        align = cc.ui.TEXT_ALIGN_LEFT,
+        color = UIKit:hex2c3b(0x514d3e)
+    }):addTo(bg1):align(display.CENTER,304,30)
+
+    -- 草地
+    display.newSprite("grass_ground1_800x560.png")
+        :align(display.CENTER, 110, 180):addTo(bg1):scale(0.2)
+    -- 雪地
+    display.newSprite("desert1_800x560.png")
+        :align(display.CENTER, 295, 180):addTo(bg1):scale(0.2)
+    -- 沙漠
+    display.newSprite("icefield1_800x560.png")
+        :align(display.CENTER, 485, 180):addTo(bg1):scale(0.2)
+
+    local checkbox_image = {
+        off = "checkbox_unselected.png",
+        off_pressed = "checkbox_unselected.png",
+        off_disabled = "checkbox_unselected.png",
+        on = "checkbox_selectd.png",
+        on_pressed = "checkbox_selectd.png",
+        on_disabled = "checkbox_selectd.png",
+
+    }
+    local group = cc.ui.UICheckBoxButtonGroup.new(display.LEFT_TO_RIGHT):addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
+        :align(display.LEFT_CENTER))
+        :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
+            :align(display.LEFT_CENTER))
+        :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
+            :align(display.LEFT_CENTER))
+        :setButtonsLayoutMargin(0, 130, 0, 0)
+        :onButtonSelectChanged(function(event)
+            -- self.selected_rebuild_to_building = rebuild_list[event.selected]
+            end)
+        :align(display.CENTER, 80 , 50)
+        :addTo(bg1)
+    group:getButtonAtIndex(1):setButtonSelected(true)
+
+    local bg2 = WidgetUIBackGround2.new(140)
+    layer:addToBody(bg2):align(display.CENTER, 304, 84)
+
+    local prop_bg = display.newSprite("background_prop_100_100.png")
+        :align(display.LEFT_CENTER, 10, 82):addTo(bg2)
+    display.newSprite("change_city_name.png")
+        :align(display.CENTER, 50, 50):addTo(prop_bg):scale(0.5)
+    local num_bg = display.newSprite("number_bg_100x40.png")
+        :align(display.CENTER_TOP, 50, 12):addTo(prop_bg)
+    local gem_img = display.newSprite("gem_66x56.png")
+        :align(display.LEFT_CENTER, 10, 20):addTo(num_bg):scale(0.4)
+    self.number = cc.ui.UILabel.new({
+        size = 20,
+        text = "500",
+        font = UIKit:getFontFilePath(),
+        align = cc.ui.TEXT_ALIGN_LEFT,
+        color = UIKit:hex2c3b(0x423f32)
+    }):addTo(num_bg):align(display.LEFT_CENTER,40,20)
+
+    local label_1 = cc.ui.UILabel.new(
+        {
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = _("变换地形"),
+            font = UIKit:getFontFilePath(),
+            size = 22,
+            color = UIKit:hex2c3b(0x514d3e)
+        }):align(display.LEFT_CENTER, 120, 100)
+        :addTo(bg2)
+
+    local label_2 = cc.ui.UILabel.new(
+        {
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = _("提供兵种招募，升级增加每次招募的最大数量"),
+            font = UIKit:getFontFilePath(),
+            size = 20,
+            dimensions = cc.size(300,100),
+            color = UIKit:hex2c3b(0x797154)
+        }):align(display.LEFT_TOP, 120, 70)
+        :addTo(bg2)
+    -- 回复按钮
+    local buy_label = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = _("购买使用"),
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)})
+
+    buy_label:enableShadow()
+    WidgetPushButton.new(
+        {normal = "green_btn_up_142x39.png", pressed = "green_btn_down_142x39.png"},
+        {scale9 = false}
+    ):setButtonLabel(buy_label)
+        :addTo(bg2):align(display.CENTER, 480, 100)
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+            end
+        end)
+end
+
+function GameUIKeep:CreateBackGroundWithTitle(title_string)
+    local leyer = display.newColorLayer(cc.c4b(0,0,0,127))
+    local body = WidgetUIBackGround.new({height=450}):align(display.TOP_CENTER,display.cx,display.top-200)
+        :addTo(leyer)
+    local rb_size = body:getContentSize()
+    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height)
+        :addTo(body)
+    local title_label = cc.ui.UILabel.new(
+        {
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = title_string,
+            font = UIKit:getFontFilePath(),
+            size = 22,
+            color = UIKit:hex2c3b(0xffedae)
+        }):align(display.CENTER, title:getContentSize().width/2, title:getContentSize().height/2)
+        :addTo(title)
+    -- close button
+    cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
+        :onButtonClicked(function(event)
+            leyer:removeFromParent()
+        end):align(display.CENTER, title:getContentSize().width-10, title:getContentSize().height-10)
+        :addTo(title):addChild(display.newSprite("X_3.png"))
+    function leyer:addToBody(node)
+        node:addTo(body)
+        return node
+    end
+    return leyer
+end
 return GameUIKeep
+
+
+
+
+
+
+
+
+
 
 
 
