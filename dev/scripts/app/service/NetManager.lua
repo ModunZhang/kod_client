@@ -261,8 +261,8 @@ end
 -- 登录
 function NetManager:getLoginPromise()
     return get_none_blocking_request_promise("logic.entryHandler.login", {
-        -- deviceId = device.getOpenUDID()
-        deviceId = "a"
+        deviceId = device.getOpenUDID()
+        -- deviceId = "kd9"
     })
 end
 -- 事件回调promise
@@ -534,10 +534,17 @@ function NetManager:getSendAllianceMailPromise(title, content)
 end
 -- 请求加速
 function NetManager:getRequestAllianceToSpeedUpPromise(eventType, eventId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.requestAllianceToSpeedUp", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.requestAllianceToSpeedUp", {
         eventType = eventType,
         eventId = eventId,
     }, "请求加速失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 免费加速建筑升级
+function NetManager:getFreeSpeedUpPromise(eventType, eventId)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.freeSpeedUp", {
+        eventType = eventType,
+        eventId = eventId,
+    }, "请求免费加速失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 协助玩家加速
 function NetManager:getHelpAllianceMemberSpeedUpPromise(eventId)
