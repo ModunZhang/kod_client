@@ -3,7 +3,7 @@ local CitySprite = class("CitySprite", Sprite)
 function CitySprite:ctor(city_layer, x, y)
 	self.x, self.y = x, y
     CitySprite.super.ctor(self, city_layer, nil, city_layer:GetLogicMap():ConvertToMapPosition(x, y))
-    -- self:CreateBase()
+    self:CreateBase()
 end
 function CitySprite:GetSpriteFile()
 	return "keep_760x855.png", 0.1

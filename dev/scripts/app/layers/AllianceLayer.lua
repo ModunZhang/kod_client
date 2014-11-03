@@ -23,20 +23,33 @@ function AllianceLayer:ctor(city)
 
     math.randomseed(1985423439857)
     self:InitBackground()
-    self:InitMiddleBackground()
-    self:InitTopBackground()
+    -- self:InitMiddleBackground()
+    -- self:InitTopBackground()
     self:InitBuildingNode()
 
     --
-    AllianceBuildingSprite.new(self, 11, 11):addTo(self:GetBuildingNode())
+    -- AllianceBuildingSprite.new(self, 11, 11):addTo(self:GetBuildingNode())
     AllianceBuildingSprite.new(self, 14, 11):addTo(self:GetBuildingNode())
     AllianceBuildingSprite.new(self, 11, 14):addTo(self:GetBuildingNode())
     AllianceBuildingSprite.new(self, 8, 11):addTo(self:GetBuildingNode())
     AllianceBuildingSprite.new(self, 11, 8):addTo(self:GetBuildingNode())
-    Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorCities(function(_, city)
-        local location = city.location
-        dump(city)
+    CitySprite.new(self, 0, 0):addTo(self:GetBuildingNode())
+    CitySprite.new(self, 20, 0):addTo(self:GetBuildingNode())
+    CitySprite.new(self, 0, 20):addTo(self:GetBuildingNode())
+    CitySprite.new(self, 20, 20):addTo(self:GetBuildingNode())
+    Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorCities(function(_, object)
+        local location = object.location
+        dump(object)
         CitySprite.new(self, location.x, location.y):addTo(self:GetBuildingNode())
+    end)
+    -- Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorVillages(function(_, object)
+    --     local location = object.location
+    --     dump(object)
+    --     CitySprite.new(self, location.x, location.y):addTo(self:GetBuildingNode())
+    -- end)
+    Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorDecorators(function(_, object)
+        local location = object.location
+        AllianceDecoratorSprite.new(self, location.x, location.y, object.type):addTo(self:GetBuildingNode())
     end)
 end
 function AllianceLayer:GetMapSize()

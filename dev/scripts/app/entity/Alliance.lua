@@ -23,7 +23,6 @@ property(Alliance, "archon", "")
 property(Alliance, "memberCount", 0)
 function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     Alliance.super.ctor(self)
-    self.alliance_map = AllianceMap.new(self)
     property(self, "id", id)
     property(self, "name", name)
     property(self, "aliasName", aliasName)
@@ -42,6 +41,7 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     self.events = {}
     self.join_events = {}
     self.help_events = {}
+    self.alliance_map = AllianceMap.new(self)
 end
 function Alliance:GetAllianceMap()
     return self.alliance_map

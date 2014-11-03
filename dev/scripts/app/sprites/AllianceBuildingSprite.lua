@@ -3,7 +3,7 @@ local AllianceBuildingSprite = class("AllianceBuildingSprite", Sprite)
 function AllianceBuildingSprite:ctor(city_layer, x, y)
 	self.x, self.y = x, y
     AllianceBuildingSprite.super.ctor(self, city_layer, nil, city_layer:GetLogicMap():ConvertToMapPosition(x, y))
-    -- self:CreateBase()
+    self:CreateBase()
 end
 function AllianceBuildingSprite:GetSpriteFile()
 	return "keep_760x855.png", 0.3
