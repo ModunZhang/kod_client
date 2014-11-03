@@ -37,12 +37,12 @@ end
 function Sprite:GetSize()
     return self:GetEntity():GetSize()
 end
-function Sprite:GetOrient()
-    return self:GetEntity():GetOrient()
-end
-function Sprite:SetOrient(orient)
-    self:GetEntity():SetOrient(orient)
-end
+-- function Sprite:GetOrient()
+--     return self:GetEntity():GetOrient()
+-- end
+-- function Sprite:SetOrient(orient)
+--     self:GetEntity():SetOrient(orient)
+-- end
 -----position
 function Sprite:SetPositionWithZOrder(x, y)
     self:setPosition(x, y)

@@ -19,17 +19,19 @@ local math = math
 local floor = math.floor
 local random = math.random
 local randomseed = math.randomseed
-function CityLayer:GetClickedObject(x, y, world_x, world_y)
+function CityLayer:GetClickedObject(world_x, world_y)
+    local point = self:GetCityNode():convertToNodeSpace(cc.p(world_x, world_y))
+    local logic_x, logic_y = self:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
     local clicked_list = {
         logic_clicked = {},
         sprite_clicked = {}
     }
-    self:IteratorClickAble(function(k, v)
+    self:IteratorClickAble(function(_, v)
         if not v:isVisible() then return false end
         if v:GetEntity():GetType() == "wall" and not v:GetEntity():IsGate() then return false end
         if v:GetEntity():GetType() == "tower" and not v:GetEntity():IsUnlocked() then return false end
 
-        local check = v:IsContainPointWithFullCheck(x, y, world_x, world_y)
+        local check = v:IsContainPointWithFullCheck(logic_x, logic_y, world_x, world_y)
         if check.logic_clicked then
             table.insert(clicked_list.logic_clicked, v)
             return true
@@ -43,8 +45,7 @@ function CityLayer:GetClickedObject(x, y, world_x, world_y)
     table.sort(clicked_list.sprite_clicked, function(a, b)
         return a:getLocalZOrder() > b:getLocalZOrder()
     end)
-    local logic = clicked_list.logic_clicked[1]
-    return logic == nil and clicked_list.sprite_clicked[1] or logic
+    return clicked_list.logic_clicked[1] or clicked_list.sprite_clicked[1]
 end
 function CityLayer:OnTileLocked(city)
     self:OnTileChanged(city)

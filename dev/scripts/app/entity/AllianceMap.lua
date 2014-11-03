@@ -1,34 +1,21 @@
 local Enum = import("..utils.Enum")
+local AllianceObject = import(".AllianceObject")
 local MultiObserver = import(".MultiObserver")
 local AllianceMap = class("AllianceMap", MultiObserver)
+local allianceBuildingType = GameDatas.AllianceInitData.buildingType
 AllianceMap.LISTEN_TYPE = Enum("AAA")
 
-local villages_map = {
-    woodVillage = true,
-    stoneVillage = true,
-    ironVillage = true,
-    foodVillage = true,
-    coinVillage = true,
-}
-local function is_village(type_)
-    return villages_map[type_]
+local function is_alliance_building(type_)
+    return type_ == "building"
 end
 local function is_city(type_)
     return type_ == "member"
 end
-local function is_alliance_building(type_)
-    return type_ == "building"
+local function is_village(type_)
+    return allianceBuildingType[type_].category == "village"
 end
-local decorators_map = {
-    decorate_lake_1 = true,
-    decorate_lake_2 = true,
-    decorate_mountain_1 = true,
-    decorate_mountain_2 = true,
-    decorate_tree_1 = true,
-    decorate_tree_2 = true,
-}
 local function is_decorator(type_)
-    return decorators_map[type_]
+    return allianceBuildingType[type_].category == "decorate"
 end
 function AllianceMap:ctor(alliance)
     AllianceMap.super.ctor(self)
@@ -80,21 +67,26 @@ function AllianceMap:OnAllianceDataChanged(alliance_data)
     return
 end
 function AllianceMap:DecodeObjectsFromJsonMapObjects(mapObjects)
-	dump(mapObjects)
     local alliance_buildings = {}
     local cities = {}
     local villages = {}
     local decorators = {}
     for _, v in ipairs(mapObjects) do
-    	local type_ = v.type
+        local type_ = v.type
+        local location_ = v.location
+        print(type_)
         if is_alliance_building(type_) then
-            table.insert(alliance_buildings, v)
+            dump(type_)
+            table.insert(alliance_buildings, AllianceObject.new(type_, location_.x, location_.y))
         elseif is_city(type_) then
-            table.insert(cities, v)
+            dump(type_)
+            table.insert(cities, AllianceObject.new(type_, location_.x, location_.y))
         elseif is_village(type_) then
-            table.insert(villages, v)
+            dump(type_)
+            table.insert(villages, AllianceObject.new(type_, location_.x, location_.y))
         elseif is_decorator(type_) then
-            table.insert(decorators, v)
+            dump(type_)
+            table.insert(decorators, AllianceObject.new(type_, location_.x, location_.y))
         end
     end
     self.alliance_buildings = alliance_buildings
@@ -103,6 +95,7 @@ function AllianceMap:DecodeObjectsFromJsonMapObjects(mapObjects)
     self.decorators = decorators
 end
 return AllianceMap
+
 
 
 

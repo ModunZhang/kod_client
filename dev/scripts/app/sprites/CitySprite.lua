@@ -1,9 +1,9 @@
 local Sprite = import(".Sprite")
 local CitySprite = class("CitySprite", Sprite)
-function CitySprite:ctor(city_layer, x, y)
-	self.x, self.y = x, y
-    CitySprite.super.ctor(self, city_layer, nil, city_layer:GetLogicMap():ConvertToMapPosition(x, y))
-    self:CreateBase()
+function CitySprite:ctor(city_layer, entity)
+    local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
+    CitySprite.super.ctor(self, city_layer, entity, x, y)
+    -- self:CreateBase()
 end
 function CitySprite:GetSpriteFile()
 	return "keep_760x855.png", 0.1
@@ -11,13 +11,11 @@ end
 function CitySprite:GetSpriteOffset()
 	return self:GetLogicMap():ConvertToLocalPosition(0, 0)
 end
-function CitySprite:SetPositionWithZOrder(x, y)
-	self.x, self.y = self:GetLogicMap():ConvertToLogicPosition(x, y)
-	CitySprite.super.SetPositionWithZOrder(self, x, y)
-end
-function CitySprite:GetMidLogicPosition()
-    return self.x, self.y
-end
+
+
+
+
+---
 function CitySprite:CreateBase()
     self:GenerateBaseTiles(1, 1)
 end

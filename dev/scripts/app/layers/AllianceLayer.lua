@@ -18,39 +18,44 @@ function AllianceLayer:ctor(city)
         map_width = 21,
         map_height = 21,
         base_x = 0,
-        base_y = 21 * 80
+        base_y = 23 * 80
     }
-
     math.randomseed(1985423439857)
     self:InitBackground()
-    -- self:InitMiddleBackground()
-    -- self:InitTopBackground()
+    self:InitMiddleBackground()
+    self:InitTopBackground()
     self:InitBuildingNode()
 
+    ---
+
+    local alliance_buildings = {}
+    Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorAllianceBuildings(function(_, object)
+        table.insert(alliance_buildings, AllianceBuildingSprite.new(self, object):addTo(self:GetBuildingNode()))
+    end)
+    self.alliance_buildings = alliance_buildings
+
     --
-    -- AllianceBuildingSprite.new(self, 11, 11):addTo(self:GetBuildingNode())
-    AllianceBuildingSprite.new(self, 14, 11):addTo(self:GetBuildingNode())
-    AllianceBuildingSprite.new(self, 11, 14):addTo(self:GetBuildingNode())
-    AllianceBuildingSprite.new(self, 8, 11):addTo(self:GetBuildingNode())
-    AllianceBuildingSprite.new(self, 11, 8):addTo(self:GetBuildingNode())
-    CitySprite.new(self, 0, 0):addTo(self:GetBuildingNode())
-    CitySprite.new(self, 20, 0):addTo(self:GetBuildingNode())
-    CitySprite.new(self, 0, 20):addTo(self:GetBuildingNode())
-    CitySprite.new(self, 20, 20):addTo(self:GetBuildingNode())
+    local cities = {}
     Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorCities(function(_, object)
-        local location = object.location
-        dump(object)
-        CitySprite.new(self, location.x, location.y):addTo(self:GetBuildingNode())
+        table.insert(cities, CitySprite.new(self, object):addTo(self:GetBuildingNode()))
     end)
-    -- Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorVillages(function(_, object)
-    --     local location = object.location
-    --     dump(object)
-    --     CitySprite.new(self, location.x, location.y):addTo(self:GetBuildingNode())
-    -- end)
+    self.cities = cities
+
+
+    --
+    local villages = {}
+    Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorVillages(function(_, object)
+        table.insert(villages, CitySprite.new(self, object):addTo(self:GetBuildingNode()))
+    end)
+    self.villages = villages
+    --
+
+    --
+    local decorators = {}
     Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorDecorators(function(_, object)
-        local location = object.location
-        AllianceDecoratorSprite.new(self, location.x, location.y, object.type):addTo(self:GetBuildingNode())
+        table.insert(decorators, AllianceDecoratorSprite.new(self, object):addTo(self:GetBuildingNode()))
     end)
+    self.decorators = decorators
 end
 function AllianceLayer:GetMapSize()
     return 21, 21
@@ -63,7 +68,7 @@ function AllianceLayer:ConvertLogicPositionToMapPosition(lx, ly)
     return self:convertToNodeSpace(self.background:convertToWorldSpace(map_pos))
 end
 function AllianceLayer:InitBackground()
-    self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background.tmx"):addTo(self, ZORDER.BOTTOM)
+    self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background1.tmx"):addTo(self, ZORDER.BOTTOM)
 end
 function AllianceLayer:InitMiddleBackground()
     local bottom_layer = display.newNode():addTo(self, ZORDER.MIDDLE)
@@ -121,11 +126,51 @@ end
 function AllianceLayer:InitBuildingNode()
     self.building_node = display.newNode():addTo(self, ZORDER.BUILDING)
 end
-
 function AllianceLayer:GetBuildingNode()
     return self.building_node
 end
-
+function AllianceLayer:GetClickedObject(world_x, world_y)
+    local point = self:GetBuildingNode():convertToNodeSpace(cc.p(world_x, world_y))
+    local logic_x, logic_y = self:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
+    local clicked_list = {
+        logic_clicked = {},
+        sprite_clicked = {}
+    }
+    self:IteratorAllianceObjects(function(_, v)
+        local check = v:IsContainPointWithFullCheck(logic_x, logic_y, world_x, world_y)
+        if check.logic_clicked then
+            table.insert(clicked_list.logic_clicked, v)
+            return true
+        elseif check.sprite_clicked then
+            table.insert(clicked_list.sprite_clicked, v)
+        end
+    end)
+    table.sort(clicked_list.logic_clicked, function(a, b)
+        return a:getLocalZOrder() > b:getLocalZOrder()
+    end)
+    table.sort(clicked_list.sprite_clicked, function(a, b)
+        return a:getLocalZOrder() > b:getLocalZOrder()
+    end)
+    return clicked_list.logic_clicked[1] or clicked_list.sprite_clicked[1]
+end
+function AllianceLayer:IteratorAllianceObjects(func)
+    local handle = false
+    local handle_func = function(k, v)
+        if func(k, v) then
+            handle = true
+            return true
+        end
+    end
+    repeat
+        table.foreach(self.alliance_buildings, handle_func)
+        if handle then break end
+        table.foreach(self.cities, handle_func)
+        if handle then break end
+        table.foreach(self.villages, handle_func)
+        if handle then break end
+        table.foreach(self.decorators, handle_func)
+    until true
+end
 
 ----- override
 function AllianceLayer:getContentSize()
@@ -136,7 +181,9 @@ function AllianceLayer:getContentSize()
     return self.content_size
 end
 function AllianceLayer:OnSceneMove()
-
+    self:IteratorAllianceObjects(function(_, object)
+        object:OnSceneMove()
+    end)
 end
 
 return AllianceLayer

@@ -284,7 +284,7 @@ function CityScene:OnTouchBegan(pre_x, pre_y, x, y)
     local point = citynode:convertToNodeSpace(cc.p(x, y))
     local tx, ty = self.iso_map:ConvertToLogicPosition(point.x, point.y)
     if not self.building then
-        local building = self:GetSceneLayer():GetClickedObject(tx, ty, x, y)
+        local building = self:GetSceneLayer():GetClickedObject(x, y)
         if building then
             local lx, ly = building:GetLogicPosition()
             building._shiftx = lx - tx
@@ -328,10 +328,7 @@ function CityScene:OnTouchMove(pre_x, pre_y, x, y)
     CityScene.super.OnTouchMove(self, pre_x, pre_y, x, y)
 end
 function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
-    local citynode = self:GetSceneLayer():GetCityNode()
-    local point = citynode:convertToNodeSpace(cc.p(x, y))
-    local tx, ty = self.iso_map:ConvertToLogicPosition(point.x, point.y)
-    local building = self:GetSceneLayer():GetClickedObject(tx, ty, x, y)
+    local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
         if building:GetEntity():GetType() == "ruins" then
             local select_ruins_list = City:GetNeighbourRuinWithSpecificRuin(building:GetEntity())

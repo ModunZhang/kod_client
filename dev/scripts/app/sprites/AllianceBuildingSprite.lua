@@ -1,9 +1,9 @@
 local Sprite = import(".Sprite")
 local AllianceBuildingSprite = class("AllianceBuildingSprite", Sprite)
-function AllianceBuildingSprite:ctor(city_layer, x, y)
-	self.x, self.y = x, y
-    AllianceBuildingSprite.super.ctor(self, city_layer, nil, city_layer:GetLogicMap():ConvertToMapPosition(x, y))
-    self:CreateBase()
+function AllianceBuildingSprite:ctor(city_layer, entity)
+    local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
+    AllianceBuildingSprite.super.ctor(self, city_layer, entity, x, y)
+    -- self:CreateBase()
 end
 function AllianceBuildingSprite:GetSpriteFile()
 	return "keep_760x855.png", 0.3
@@ -11,13 +11,11 @@ end
 function AllianceBuildingSprite:GetSpriteOffset()
 	return self:GetLogicMap():ConvertToLocalPosition(1, 1)
 end
-function AllianceBuildingSprite:SetPositionWithZOrder(x, y)
-	self.x, self.y = self:GetLogicMap():ConvertToLogicPosition(x, y)
-	AllianceBuildingSprite.super.SetPositionWithZOrder(self, x, y)
-end
-function AllianceBuildingSprite:GetMidLogicPosition()
-    return self.x, self.y
-end
+
+
+
+
+---
 function AllianceBuildingSprite:CreateBase()
     self:GenerateBaseTiles(3, 3)
 end
