@@ -707,7 +707,27 @@ function NetManager:getEditAllianceBasicInfoPromise(name, tag, language, flag)
         flag = flag
     }, "修改联盟基本信息失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
-
+-- 移动联盟建筑
+function NetManager:getMoveAllianceBuildingPromise(buildingName, locationX, locationY)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.moveAllianceBuilding", {
+        buildingName = buildingName,
+        locationX = locationX,
+        locationY = locationY
+    }, "移动联盟建筑失败!"), get_alliancedata_callback()):next(get_response_msg)
+end
+-- 移动玩家城市
+function NetManager:getMoveAllianceMemberPromise(locationX, locationY)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.moveAllianceMember", {
+        locationX = locationX,
+        locationY = locationY
+    }, "移动玩家城市失败!"), get_alliancedata_callback()):next(get_response_msg)
+end
+-- 拆除装饰物
+function NetManager:getDistroyAllianceDecoratePromise(decorateId)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.distroyAllianceDecorate", {
+        decorateId = decorateId
+    }, "拆除装饰物失败!"), get_alliancedata_callback()):next(get_response_msg)
+end
 --
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

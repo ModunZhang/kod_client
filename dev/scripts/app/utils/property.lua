@@ -27,23 +27,18 @@ return function(object, property_name, initial, property_type)
     end
     -- 生成设置函数
     if set_property_type_map[property_type] then
-        if type(object.OnPropertyChange) == "function" then
-            object[set_name] = function(obj, value)
-                if obj[property_name] ~= value then
-                    local old_value = obj[property_name]
-                    obj[property_name] = value
-                    obj:OnPropertyChange(property_name, old_value, value)
-                end
-            end
-        else
-            object[set_name] = function(obj, value)
+        object[set_name] = function(obj, value)
+            if obj[property_name] ~= value then
+                local old_value = obj[property_name]
                 obj[property_name] = value
+                obj:OnPropertyChange(property_name, old_value, value)
             end
         end
-
     end
-
 end
+
+
+
 
 
 

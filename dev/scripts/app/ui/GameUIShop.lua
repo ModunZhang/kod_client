@@ -140,7 +140,7 @@ function GameUIShop:onEnter()
                 event.target:getButtonLabel():setString("联盟类型到直接")
                 -- NetManager:editAllianceJoinType("audit", NOT_HANDLE)
                 cocos_promise.promiseWithCatchError(NetManager:getEditAllianceJoinTypePromise("audit")
-                    ):done(function(result)
+                ):done(function(result)
                     dump(result)
                 end)
             end
@@ -473,7 +473,7 @@ function GameUIShop:onEnter()
         :onButtonClicked(function(event)
             math.randomseed(os.time())
             cocos_promise.promiseWithCatchError(NetManager:getEditAllianceNoticePromise("随机数公告: "..math.random(123456789)))
-                
+
         end)
 
     WidgetPushButton.new(
@@ -547,7 +547,7 @@ function GameUIShop:onEnter()
             end))
         end)
 
-        WidgetPushButton.new(
+    WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
@@ -564,7 +564,78 @@ function GameUIShop:onEnter()
             ))
         end)
 
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "随机移动圣殿",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 140, window.top - 1100)
+        :onButtonClicked(function(event)
+            cocos_promise.promiseWithCatchError(
+                NetManager:getMoveAllianceBuildingPromise(
+                    "shrine", 14, 8
+                )
+            )
+        end)
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "修改联盟荣耀 1000",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 320, window.top - 1100)
+        :onButtonClicked(function(event)
+            cocos_promise.promiseWithCatchError(
+                NetManager:getSendGlobalMsgPromise("alliancehonour 1000")
+            )
+        end)
 
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "随机移动城市",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 500, window.top - 1100)
+        :onButtonClicked(function(event)
+            cocos_promise.promiseWithCatchError(
+                NetManager:getMoveAllianceMemberPromise(
+                    14, 15
+                )
+            )
+        end)
+
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "随机拆除一个装饰物",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 140, window.top - 1200)
+        :onButtonClicked(function(event)
+            cocos_promise.promiseWithCatchError(
+                NetManager:getDistroyAllianceDecoratePromise(
+                    "WkFMlrSqJL"
+                )
+            )
+        end)
 
 
     item:addContent(content)
@@ -578,6 +649,10 @@ end
 
 
 return GameUIShop
+
+
+
+
 
 
 

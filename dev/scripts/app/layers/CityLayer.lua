@@ -391,7 +391,7 @@ function CityLayer:ChangeTerrain(terrain_type)
 
         self:ReloadSceneBackground()
 
-        -- 
+        --
         randomseed(DataManager:getUserData().countInfo.registerTime)
         self:InitBackgroundsWithRandom(terrain_type)
 
@@ -501,40 +501,171 @@ function CityLayer:InitWithCity(city)
 
     -- 更新其他需要动态生成的建筑
     self:UpdateAllDynamicWithCity(city)
-    --
 
-    -- local cc = cc
-    -- local function wrap_point_in_table(...)
-    --     local arg = {...}
-    --     return {x = arg[1], y = arg[2]}
-    -- end
-    -- local function return_dir_and_velocity(start_point, end_point)
-    --     local speed = 50
-    --     local spt = wrap_point_in_table(self.iso_map:ConvertToMapPosition(start_point.x, start_point.y))
-    --     local ept = wrap_point_in_table(self.iso_map:ConvertToMapPosition(end_point.x, end_point.y))
-    --     local dir = cc.pSub(ept, spt)
-    --     local distance = cc.pGetLength(dir)
-    --     local vdir = {x = speed * dir.x / distance, y = speed * dir.y / distance}
-    --     return dir, vdir
-    -- end
-    -- local _, vdir = return_dir_and_velocity({x = 10, y = 13}, {x = 19, y = 13})
-    -- local citizen = self:CreateCitizen(10, 13):addTo(city_node)
-    -- self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
-    --     local x, y = citizen:getPosition()
-    --     local tx, ty = self.iso_map:ConvertToMapPosition(19, 13)
-    --     local disSQ = cc.pDistanceSQ({x = x, y = y}, {x = tx, y = ty})
-    --     if disSQ < 10 * 10 then
-    --         citizen:TurnRight()
-    --         _, vdir = return_dir_and_velocity({x = 19, y = 13}, {x = 19, y = 8})
-    --     end
-    --     local tx, ty = self.iso_map:ConvertToMapPosition(19, 29)
-    --     local disSQ = cc.pDistanceSQ({x = x, y = y}, {x = tx, y = ty})
-    --     if disSQ < 10 * 10 then
-    --         self:unscheduleUpdate()
-    --     end
-    --     citizen:SetPositionWithZOrder(x + vdir.x * dt, y + vdir.y * dt)
-    -- end)
-    -- self:scheduleUpdate()
+
+    --
+    --
+    local function find_unlock_tiles()
+        local r = {}
+        city:IteratorTilesByFunc(function(x, y, tile)
+            if (x == 1 and y == 1) or (x == 1 and y == 2) or (x == 2 and y == 1) then
+                return
+            end
+            if tile:IsUnlocked() then
+                table.insert(r, tile)
+            end
+        end)
+        return r
+    end
+    local function find_nearby(t, tiles)
+        local connectedness = {t}
+        local index = 1
+        while true do
+            local cur = connectedness[index]
+            if not cur then
+                break
+            end
+            for i, v in ipairs(tiles) do
+                if cur:IsNearBy(v) then
+                    table.insert(connectedness, table.remove(tiles, i))
+                end
+            end
+            index = index + 1
+        end
+        return connectedness
+    end
+
+    local connects = {}
+    local r = find_unlock_tiles()
+    while #r > 0 do
+        table.insert(connects, find_nearby(table.remove(r, 1), r))
+    end
+    local function alignmeng_path(path)
+        if #path <= 3 then
+            return path
+        end
+        local index = 1
+        while index <= #path - 2 do
+            local start = path[index]
+            local middle = path[index + 1]
+            local ending = path[index + 2]
+            if (start.x == middle.x and middle.x == ending.x)
+                or (start.y == middle.y and middle.y == ending.y) then
+                table.remove(path, index + 1)
+            else
+                index = index + 1
+            end
+        end
+        return path
+    end
+    local function find_path_tile(connectedness, start_tile)
+        if #connectedness == 0 then
+            return {start_tile}
+        end
+        local r = {start_tile or table.remove(connectedness, math.random(#connectedness))}
+        local index = 1
+        local changed = true
+        while changed do
+            local cur_nearbys = {}
+            for i, v in ipairs(connectedness) do
+                if r[index]:IsNearBy(v) then
+                    table.insert(cur_nearbys, i)
+                end
+            end
+            if #cur_nearbys > 0 then
+                table.insert(r, table.remove(connectedness, cur_nearbys[math.random(#cur_nearbys)]))
+                index = index + 1
+                changed = true
+            else
+                changed = false
+            end
+        end
+        return r
+    end
+
+    local cc = cc
+    local function wrap_point_in_table(...)
+        local arg = {...}
+        return {x = arg[1], y = arg[2]}
+    end
+    local function return_dir_and_velocity(start_point, end_point)
+        local speed = 200
+        local spt = wrap_point_in_table(self.iso_map:ConvertToMapPosition(start_point.x, start_point.y))
+        local ept = wrap_point_in_table(self.iso_map:ConvertToMapPosition(end_point.x, end_point.y))
+        local dir = cc.pSub(ept, spt)
+        local distance = cc.pGetLength(dir)
+        local vdir = {x = speed * dir.x / distance, y = speed * dir.y / distance}
+        return vdir
+    end
+    local path_tiles = find_path_tile(connects[1])
+    local path_point = LuaUtils:table_map(
+        path_tiles,
+        function(k, v)
+            return k, v:GetCrossPoint()
+        end)
+    table.insert(path_point, 1, path_tiles[1]:RandomPoint())
+    table.insert(path_point, #path_point + 1, path_tiles[#path_tiles]:RandomPoint())
+    local path = alignmeng_path(path_point)
+    -- dump(path)
+
+    local start = false
+    local citizen = self:CreateCitizen(0, 0):addTo(city_node)
+    self.vdir = {}
+    self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
+        if start then
+            local cx, cy = citizen:getPosition()
+            local point = path[1]
+            local ex, ey = self.iso_map:ConvertToMapPosition(point.x, point.y)
+            local disSQ = cc.pDistanceSQ({x = cx, y = cy}, {x = ex, y = ey})
+            if disSQ < 10 * 10 then
+                if #path <= 1 then
+
+                    local tile = city:GetTileByBuildingPosition(point.x, point.y)
+                    local connects = {}
+                    local r = find_unlock_tiles()
+                    while #r > 0 do
+                        table.insert(connects, find_nearby(table.remove(r, 1), r))
+                    end
+                    for i, v in ipairs(connects[1]) do
+                        if v.x == tile.x and v.y == tile.y then
+                            table.remove(connects[1], i)
+                        end
+                    end
+                    local path_tiles = find_path_tile(connects[1], tile)
+                    local path_point = LuaUtils:table_map(
+                        path_tiles,
+                        function(k, v)
+                            return k, v:GetCrossPoint()
+                        end)
+                    table.insert(path_point, 1, point)
+                    table.insert(path_point, #path_point + 1, path_tiles[#path_tiles]:RandomPoint())
+                    path = alignmeng_path(path_point)
+
+                    -- dump(path)
+                    -- self:unscheduleUpdate()
+                    -- return
+                end
+                self.vdir = return_dir_and_velocity(path[1], path[2])
+                table.remove(path, 1)
+            end
+            citizen:SetPositionWithZOrder(cx + self.vdir.x * dt, cy + self.vdir.y * dt)
+        else
+            if #path < 1 then
+                self:unscheduleUpdate()
+                return
+            end
+            start = true
+            local start_point = table.remove(path, 1)
+            local ex, ey = self.iso_map:ConvertToMapPosition(start_point.x, start_point.y)
+            citizen:SetPositionWithZOrder(ex, ey)
+            if #path < 1 then
+                self:unscheduleUpdate()
+                return
+            end
+            self.vdir = return_dir_and_velocity(start_point, path[1])
+        end
+    end)
+    self:scheduleUpdate()
 end
 ---
 function CityLayer:UpdateAllDynamicWithCity(city)
@@ -840,42 +971,6 @@ function CityLayer:OnSceneScale()
 end
 
 return CityLayer
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

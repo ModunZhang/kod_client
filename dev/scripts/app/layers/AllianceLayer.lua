@@ -2,6 +2,7 @@ local Enum = import("..utils.Enum")
 local CitySprite = import("..sprites.CitySprite")
 local AllianceDecoratorSprite = import("..sprites.AllianceDecoratorSprite")
 local AllianceBuildingSprite = import("..sprites.AllianceBuildingSprite")
+local AllianceMap = import("..entity.AllianceMap")
 local Observer = import("..entity.Observer")
 local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLeftReverseY")
 local MapLayer = import(".MapLayer")
@@ -26,36 +27,39 @@ function AllianceLayer:ctor(city)
     self:InitTopBackground()
     self:InitBuildingNode()
 
+    Alliance_Manager:GetMyAlliance():GetAllianceMap():AddListenOnType({
+        OnBuildingChange = function(this, alliance_map, add, remove, modify)
+            if #remove > 0 then
+                for _, v in pairs(remove) do
+                    self.objects[v:Id()]:removeFromParent()
+                    self.objects[v:Id()] = nil
+                end 
+            end
+            if #modify > 0 then
+                for _, v in pairs(modify) do
+                    self.objects[v:Id()]:SetPositionWithZOrder(self:GetLogicMap():ConvertToMapPosition(v:GetLogicPosition()))
+                end
+            end
+        end
+    }, AllianceMap.LISTEN_TYPE.BUILDING)
+
     ---
-
-    local alliance_buildings = {}
-    Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorAllianceBuildings(function(_, object)
-        table.insert(alliance_buildings, AllianceBuildingSprite.new(self, object):addTo(self:GetBuildingNode()))
+    local objects = {}
+    Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorAllObjects(function(_, entity)
+        local category = entity:GetCategory()
+        local object
+        if category == "building" then
+            object = AllianceBuildingSprite.new(self, entity):addTo(self:GetBuildingNode())
+        elseif category == "member" then
+            object = CitySprite.new(self, entity):addTo(self:GetBuildingNode())
+        -- elseif category == "village" then
+            -- object = CitySprite.new(self, entity):addTo(self:GetBuildingNode())
+        elseif category == "decorate" then
+            object = AllianceDecoratorSprite.new(self, entity):addTo(self:GetBuildingNode())
+        end
+        objects[entity:Id()] = object
     end)
-    self.alliance_buildings = alliance_buildings
-
-    --
-    local cities = {}
-    Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorCities(function(_, object)
-        table.insert(cities, CitySprite.new(self, object):addTo(self:GetBuildingNode()))
-    end)
-    self.cities = cities
-
-
-    --
-    local villages = {}
-    Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorVillages(function(_, object)
-        table.insert(villages, CitySprite.new(self, object):addTo(self:GetBuildingNode()))
-    end)
-    self.villages = villages
-    --
-
-    --
-    local decorators = {}
-    Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorDecorators(function(_, object)
-        table.insert(decorators, AllianceDecoratorSprite.new(self, object):addTo(self:GetBuildingNode()))
-    end)
-    self.decorators = decorators
+    self.objects = objects
 end
 function AllianceLayer:GetMapSize()
     return 21, 21
@@ -154,22 +158,7 @@ function AllianceLayer:GetClickedObject(world_x, world_y)
     return clicked_list.logic_clicked[1] or clicked_list.sprite_clicked[1]
 end
 function AllianceLayer:IteratorAllianceObjects(func)
-    local handle = false
-    local handle_func = function(k, v)
-        if func(k, v) then
-            handle = true
-            return true
-        end
-    end
-    repeat
-        table.foreach(self.alliance_buildings, handle_func)
-        if handle then break end
-        table.foreach(self.cities, handle_func)
-        if handle then break end
-        table.foreach(self.villages, handle_func)
-        if handle then break end
-        table.foreach(self.decorators, handle_func)
-    until true
+    table.foreach(self.objects, func)
 end
 
 ----- override
@@ -187,6 +176,7 @@ function AllianceLayer:OnSceneMove()
 end
 
 return AllianceLayer
+
 
 
 

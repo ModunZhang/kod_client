@@ -78,7 +78,7 @@ function Tile:GetEmptyGround()
             -- {x = base_x + 8, y = base_y + 8},
 
             {x = base_x + 7, y = base_y + 9},
-            -- {x = base_x + 8, y = base_y + 9},
+        -- {x = base_x + 8, y = base_y + 9},
         }
     else
         return {
@@ -100,9 +100,29 @@ function Tile:GetEmptyGround()
             -- {x = base_x + 8, y = base_y + 8},
 
             {x = base_x + 7, y = base_y + 9},
-            -- {x = base_x + 8, y = base_y + 9},
+        -- {x = base_x + 8, y = base_y + 9},
         }
     end
+end
+function Tile:RandomPoint()
+    local r = math.random(10)
+    local sx, sy = self:GetStartPos()
+    if r > 4 then
+        return {x = sx + math.random(9) - 1, y = sy + 3}
+    elseif r > 1 then
+        return {x = sx + 9, y = sy + 3 + math.random(6)}
+    elseif r > 0 then
+        return {x = sx + 9, y = sy + math.random(3) - 1}
+    end
+end
+function Tile:GetCrossPoint()
+    local end_x, end_y = self:GetEndPos()
+    return {x = end_x, y = end_y - 6}
+end
+function Tile:IsNearBy(other_tile)
+    assert(other_tile.x ~= self.x or other_tile.y ~= self.y)
+    return (math.abs(other_tile.x - self.x) == 1 and other_tile.y == self.y)
+        or (other_tile.x == self.x and math.abs(other_tile.y - self.y) == 1)
 end
 function Tile:GetLogicPosition()
     return self:GetEndPos()
@@ -208,6 +228,7 @@ end
 
 
 return Tile
+
 
 
 
