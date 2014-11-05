@@ -29,11 +29,13 @@ function AllianceLayer:ctor(city)
 
     Alliance_Manager:GetMyAlliance():GetAllianceMap():AddListenOnType({
         OnBuildingChange = function(this, alliance_map, add, remove, modify)
+            dump(add)
             if #add > 0 then
-                for _, v in pairs(remove) do
-                    self.objects[v:Id()] = self:CreateObject(entity)
+                for _, v in pairs(add) do
+                    self.objects[v:Id()] = self:CreateObject(v)
                 end
             end
+            dump(remove)
             if #remove > 0 then
                 for _, v in pairs(remove) do
                     self.objects[v:Id()]:removeFromParent()
@@ -51,6 +53,7 @@ function AllianceLayer:ctor(city)
     ---
     local objects = {}
     Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorAllObjects(function(_, entity)
+        -- entity:
         objects[entity:Id()] = self:CreateObject(entity)
     end)
     self.objects = objects

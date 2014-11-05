@@ -84,24 +84,28 @@ function AllianceMap:OnAllianceBuildingInfoChange(alliance_buildings)
 end
 function AllianceMap:DecodeObjectsFromJsonMapObjects__(__mapObjects)
     if not __mapObjects then return end
-    local data = __mapObjects.data
-    if __mapObjects.type == "edit" then
-        local object = self:GetObjectById(data.id)
-        object:SetLogicPosition(data.location.x, data.location.y)
-        self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING, function(listener)
-            listener:OnBuildingChange(self, {}, {}, {object})
-        end)
-    elseif __mapObjects.type == "add" then
-        local object = self:AddObjectById(AllianceObject.new(data.type, data.id, data.location.x, data.location.y))
-        self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING, function(listener)
-            listener:OnBuildingChange(self, {object}, {}, {})
-        end)
-    elseif __mapObjects.type == "remove" then
-        local object = self:RemoveObjectById(data.id)
-        self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING, function(listener)
-            listener:OnBuildingChange(self, {}, {object}, {})
-        end)
+    dump(__mapObjects)
+    local add = {}
+    local remove = {}
+    local edit = {}
+    for i, v in ipairs(__mapObjects) do
+        local type_ = v.type
+        local data = v.data
+        if type_ == "edit" then
+            local object = self:GetObjectById(data.id)
+            object:SetLogicPosition(data.location.x, data.location.y)
+            table.insert(edit, object)
+        elseif type_ == "add" then
+            local object = self:AddObjectById(AllianceObject.new(data.type, data.id, data.location.x, data.location.y))
+            table.insert(add, object)
+        elseif type_ == "remove" then
+            local object = self:RemoveObjectById(data.id)
+            table.insert(remove, object)
+        end
     end
+    self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING, function(listener)
+        listener:OnBuildingChange(self, add, remove, edit)
+    end)
 end
 function AllianceMap:DecodeObjectsFromJsonMapObjects(mapObjects)
     if not mapObjects then return end
@@ -134,6 +138,7 @@ function AllianceMap:DecodeObjectsFromJsonMapObjects(mapObjects)
     end)
 end
 return AllianceMap
+
 
 
 
