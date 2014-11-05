@@ -107,6 +107,11 @@ end
 function Tile:RandomPoint()
     local r = math.random(10)
     local sx, sy = self:GetStartPos()
+    local side_tile = self.city:GetTileByIndex(self.x + 1, self.y)
+    local is_nearby_side = side_tile == nil and true or (not side_tile:IsUnlocked())
+    if is_nearby_side then
+        return {x = sx + math.random(9) - 1, y = sy + 3}
+    end
     if r > 4 then
         return {x = sx + math.random(9) - 1, y = sy + 3}
     elseif r > 1 then
@@ -123,6 +128,15 @@ function Tile:IsNearBy(other_tile)
     assert(other_tile.x ~= self.x or other_tile.y ~= self.y)
     return (math.abs(other_tile.x - self.x) == 1 and other_tile.y == self.y)
         or (other_tile.x == self.x and math.abs(other_tile.y - self.y) == 1)
+        -- local side_tile = city:GetTileByIndex(self.x + 1, self.y)
+        -- local is_nearby_side = side_tile == nil and true or (not side_tile:IsUnlocked())
+        -- local city = self.city
+        -- for _, v in ipairs{
+        --     {self.x, self.y + 1},
+        --     {self.x, self.y - 1},
+        -- } do
+        --     city:GetTileByIndex(v[1], v[2])
+        -- end
 end
 function Tile:GetLogicPosition()
     return self:GetEndPos()
@@ -228,6 +242,11 @@ end
 
 
 return Tile
+
+
+
+
+
 
 
 

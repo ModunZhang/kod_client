@@ -29,11 +29,16 @@ function AllianceLayer:ctor(city)
 
     Alliance_Manager:GetMyAlliance():GetAllianceMap():AddListenOnType({
         OnBuildingChange = function(this, alliance_map, add, remove, modify)
+            if #add > 0 then
+                for _, v in pairs(remove) do
+                    self.objects[v:Id()] = self:CreateObject(entity)
+                end
+            end
             if #remove > 0 then
                 for _, v in pairs(remove) do
                     self.objects[v:Id()]:removeFromParent()
                     self.objects[v:Id()] = nil
-                end 
+                end
             end
             if #modify > 0 then
                 for _, v in pairs(modify) do
@@ -46,20 +51,23 @@ function AllianceLayer:ctor(city)
     ---
     local objects = {}
     Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorAllObjects(function(_, entity)
-        local category = entity:GetCategory()
-        local object
-        if category == "building" then
-            object = AllianceBuildingSprite.new(self, entity):addTo(self:GetBuildingNode())
-        elseif category == "member" then
-            object = CitySprite.new(self, entity):addTo(self:GetBuildingNode())
-        -- elseif category == "village" then
-            -- object = CitySprite.new(self, entity):addTo(self:GetBuildingNode())
-        elseif category == "decorate" then
-            object = AllianceDecoratorSprite.new(self, entity):addTo(self:GetBuildingNode())
-        end
-        objects[entity:Id()] = object
+        objects[entity:Id()] = self:CreateObject(entity)
     end)
     self.objects = objects
+end
+function AllianceLayer:CreateObject(entity)
+    local category = entity:GetCategory()
+    local object
+    if category == "building" then
+        object = AllianceBuildingSprite.new(self, entity):addTo(self:GetBuildingNode())
+    elseif category == "member" then
+        object = CitySprite.new(self, entity):addTo(self:GetBuildingNode())
+        -- elseif category == "village" then
+        -- object = CitySprite.new(self, entity):addTo(self:GetBuildingNode())
+    elseif category == "decorate" then
+        object = AllianceDecoratorSprite.new(self, entity):addTo(self:GetBuildingNode())
+    end
+    return object
 end
 function AllianceLayer:GetMapSize()
     return 21, 21
@@ -176,6 +184,7 @@ function AllianceLayer:OnSceneMove()
 end
 
 return AllianceLayer
+
 
 
 

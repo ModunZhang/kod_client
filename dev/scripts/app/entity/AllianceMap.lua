@@ -21,6 +21,7 @@ function AllianceMap:ctor(alliance)
     AllianceMap.super.ctor(self)
     self.alliance = alliance
     self.all_objects = {}
+    self.allliance_buildings = {}
 end
 function AllianceMap:IteratorAllianceBuildings(func)
     self:IteratorByCategory("building", func)
@@ -67,16 +68,22 @@ function AllianceMap:GetAlliance()
     return self.alliance
 end
 function AllianceMap:OnAllianceDataChanged(alliance_data)
-    for k, v in pairs(alliance_data) do
-        if "mapObjects" == k then
-            self:DecodeObjectsFromJsonMapObjects(v)
-        elseif "__mapObjects" == k then
-            self:DecodeObjectsFromJsonMapObjects__(v)
+    self:DecodeObjectsFromJsonMapObjects(alliance_data.mapObjects)
+    self:DecodeObjectsFromJsonMapObjects__(alliance_data.__mapObjects)
+    self:OnAllianceBuildingInfoChange(alliance_data.buildings)
+end
+function AllianceMap:OnAllianceBuildingInfoChange(alliance_buildings)
+    if not alliance_buildings then return end
+    for k, v in pairs(alliance_buildings) do
+        local old = self.allliance_buildings[k]
+        self.allliance_buildings[k] = v
+        if v.level ~= old then
+            print("v.level", v.level)
         end
     end
-    return
 end
 function AllianceMap:DecodeObjectsFromJsonMapObjects__(__mapObjects)
+    if not __mapObjects then return end
     local data = __mapObjects.data
     if __mapObjects.type == "edit" then
         local object = self:GetObjectById(data.id)
@@ -97,6 +104,7 @@ function AllianceMap:DecodeObjectsFromJsonMapObjects__(__mapObjects)
     end
 end
 function AllianceMap:DecodeObjectsFromJsonMapObjects(mapObjects)
+    if not mapObjects then return end
     local all_objects = {}
     local add = {}
     local remove = {}
@@ -126,6 +134,7 @@ function AllianceMap:DecodeObjectsFromJsonMapObjects(mapObjects)
     end)
 end
 return AllianceMap
+
 
 
 
