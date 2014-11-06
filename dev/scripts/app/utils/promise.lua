@@ -43,21 +43,22 @@ local function done_promise(p)
     p.dones = {}
 end
 local function fail_promise(p)
-    table.foreachi(p.fails, function(_, v) v() end)
+    local result = p.result
+    table.foreachi(p.fails, function(_, v) v(result) end)
     p.fails = {}
 end
-local function always_promise(p)
-    local result = p.result
-    table.foreachi(p.always_, function(_, v) v(result) end)
-    p.always_ = {}
-end
+-- local function always_promise(p)
+--     local result = p.result
+--     table.foreachi(p.always_, function(_, v) v(result) end)
+--     p.always_ = {}
+-- end
 local function complete_and_pop_promise(p)
     if p:state() == REJECTED then
         fail_promise(p)
     else
         done_promise(p)
     end
-    always_promise(p)
+    -- always_promise(p)
     return pop_head(p.next_promises)
 end
 local function do_function_with_protect(func, param)
@@ -160,9 +161,17 @@ local function repeat_resolve(p)
     end
     return repeat_resolve(next_promise)
 end
+local function catch_resolve(p, data)
+    assert(p.state_ == PENDING)
+    p.state_ = REJECTED
+    p.result = data
+    repeat_resolve(p)
+    return p
+end
 local function failed_resolve(p, data)
     assert(p.state_ == PENDING)
     p.state_ = REJECTED
+    p.result = data
     repeat_resolve(handle_next_failed(p, data))
     return p
 end
@@ -177,7 +186,7 @@ local function clear_promise(p)
     p.thens = {}
     p.dones = {}
     p.fails = {}
-    p.always_ = {}
+    -- p.always_ = {}
     p.next_promises = {}
 end
 -- 因为某种原因取消了promise对象
@@ -187,12 +196,8 @@ end
 local function ignore_error(p)
     p.ignore_error = true
 end
-local sc = 0
 function promise.new(data)
-
     local r = {}
-    r.sc = sc
-    sc = sc + 1
     setmetatable(r, promise)
     r:ctor(data)
     return r
@@ -207,6 +212,9 @@ function promise:state()
     return self.state_
 end
 function promise:resolve(data)
+    if is_error(data) then
+        assert(false)
+    end
     return resolve(self, data)
 end
 function promise:next(success_func, failed_func)
@@ -234,9 +242,10 @@ function promise:fail(func)
     return self
 end
 function promise:always(func)
-    assert(type(func) == "function", "always的函数不能为空!")
-    table.insert(self.always_, func)
-    return self
+    -- assert(type(func) == "function", "always的函数不能为空!")
+    -- table.insert(self.always_, func)
+    -- return self
+    return self:done(func):fail(func)
 end
 function promise.reject(...)
     error(err_class.new(...))
@@ -266,14 +275,19 @@ function promise.all(...)
     return foreach_promise(function(i, v, p)
         v:always(function(result)
             if not_resolved then
-                if is_error(result) then
+                if v:state() == REJECTED then
                     not_resolved = false
-                    failed_resolve(p, result)
-                end
-                results[i] = result
-                count = count + 1
-                if task_count == count then
-                    p:resolve(results)
+                    if is_error(result) then
+                        failed_resolve(p, result)
+                    else
+                        catch_resolve(p, result)
+                    end
+                else
+                    results[i] = result
+                    count = count + 1
+                    if task_count == count then
+                        p:resolve(results)
+                    end
                 end
             end
         end)
@@ -286,8 +300,12 @@ function promise.any(...)
         v:always(function(result)
             if not_resolved then
                 not_resolved = false
-                if is_error(result) then
-                    failed_resolve(p, result)
+                if v:state() == REJECTED then
+                    if is_error(result) then
+                        failed_resolve(p, result)
+                    else
+                        catch_resolve(p, result)
+                    end
                 else
                     p:resolve(result)
                 end
@@ -306,5 +324,7 @@ end
 
 
 return promise
+
+
 
 

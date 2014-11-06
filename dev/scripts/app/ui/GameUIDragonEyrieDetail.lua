@@ -41,11 +41,11 @@ function GameUIDragonEyrieDetail:CreateBetweenBgAndTitle()
 	}):align(display.LEFT_CENTER, 50,star_bg:getContentSize().height/2)
 		:addTo(star_bg)
 	local star_bar = StarBar.new({
-       		max = 5,
+       		max = self:GetDragon():MaxStar(),
        		bg = "Stars_bar_bg.png",
        		fill = "Stars_bar_highlight.png", 
        		num = self:GetDragon():Star(),
-    }):addTo(star_bg):pos(350,5)
+    }):addTo(star_bg):align(display.RIGHT_BOTTOM,480,5)
 	self.star_bar = star_bar
     self.dragon_button_line = display.newSprite("dragon_line_620x27.png")
     	:align(display.CENTER_BOTTOM,307,0)
@@ -296,9 +296,37 @@ function GameUIDragonEyrieDetail:CreateNodeIf_equipment()
 		pressed = "yellow_btn_down_185x65.png"
 	}):setButtonLabel("normal", UIKit:commonButtonLable({
 		text = _("晋级")
-	})):align(display.BOTTOM_LEFT, 350, 10):addTo(content_box)
+	})):align(display.BOTTOM_LEFT, 350, 10)
+	   :addTo(content_box)
+	   :onButtonClicked(function()
+	   		self:UpgradeDragonStar()
+		end)
 	self.equipment_node = equipment_node
 	return self.equipment_node
+end
+
+
+function GameUIDragonEyrieDetail:UpgradeDragonStar()
+    local dragon = self:GetDragon()
+    if not dragon:IsReachPromotionLevel() then
+        local dialog = FullScreenPopDialogUI.new()
+        dialog:SetTitle(_("提示"))
+        dialog:SetPopMessage(_("龙未达到晋级等级!"))
+        dialog:AddToCurrentScene()
+        return
+    end
+
+    if not dragon:EquipmentsIsReachMaxStar() then
+        local dialog = FullScreenPopDialogUI.new()
+        dialog:SetTitle(_("提示"))
+        dialog:SetPopMessage(_("所有装备未达到最高星级!"))
+        dialog:AddToCurrentScene()
+        return
+    end
+    
+    NetManager:getUpgradeDragonStarPromise(dragon:Type()):catch(function(err)
+    	dump(err:reason())
+    end)
 end
 
 function GameUIDragonEyrieDetail:HandleEquipments(dragon)

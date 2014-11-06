@@ -25,7 +25,7 @@ function GameUIAllianceBasicSetting:ctor(isModify)
 		dump(self.flag_info)
 		dump(self.terrain_info)
 	else
-		self.flag_info  = Alliance_Manager:GetMyAlliance():Flag()
+		self.flag_info  = clone(Alliance_Manager:GetMyAlliance():Flag())
 		self.terrain_info = Alliance_Manager:GetMyAlliance():TerrainType()
 		dump(self.terrain_info)
 	end
@@ -446,7 +446,9 @@ function GameUIAllianceBasicSetting:CreateAllianceButtonClicked()
 	if self.isCreateAction_ then
 		NetManager:getCreateAlliancePromise(data.name,data.tag,data.language,data.terrain,data.flag):done()
 	else
-		NetManager:getEditAllianceBasicInfoPromise(data.name,data.tag,data.language,data.flag):done()
+		NetManager:getEditAllianceBasicInfoPromise(data.name,data.tag,data.language,data.flag):done(function(result)
+			dump(result)
+		end)
 	end
 end
 

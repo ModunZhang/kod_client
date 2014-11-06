@@ -54,8 +54,10 @@ end
 function Flag:GetFrontImageColors()
     return self.flag.graphicColor
 end
-
-function Flag:IsSameWithFlag(flag)
+function Flag:IsDifferentWith(flag)
+    return not self:IsSameWith(flag)
+end
+function Flag:IsSameWith(flag)
     local this_flag = self.flag
     local flag_ = flag.flag
     return this_flag.flagColor[1] == flag_.flagColor[1]

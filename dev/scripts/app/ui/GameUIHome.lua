@@ -2,7 +2,6 @@ local window = import("..utils.window")
 local WidgetTab = import("..widget.WidgetTab")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
-local MailManager = import("..service.MailManager")
 local GameUIHelp = import(".GameUIHelp")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
@@ -46,12 +45,12 @@ function GameUIHome:onEnter()
     self:RefreshData()
     city:GetResourceManager():AddObserver(self)
     city:GetResourceManager():OnResourceChanged()
-    DataManager:GetManager("MailManager"):AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
+    MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
 
 end
 function GameUIHome:onExit()
     self.city:GetResourceManager():RemoveObserver(self)
-    DataManager:GetManager("MailManager"):RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
+    MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     GameUIHome.super.onExit(self)
 end
 function GameUIHome:MailUnreadChanged( num )
@@ -131,7 +130,7 @@ function GameUIHome:CreateTop()
         {normal = "home/res_btn_up.png", pressed = "home/res_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        PushService:quitAlliance(NOT_HANDLE)
+        
         end):addTo(top_bg):align(display.LEFT_BOTTOM, 317, 106)
 
     -- 资源图片和文字
@@ -327,14 +326,14 @@ function GameUIHome:CreateBottom()
     self.mail_unread_num_bg = display.newSprite("home/mail_unread_bg.png"):addTo(bottom_bg):pos(400, first_row+20)
     self.mail_unread_num_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = GameUtils:formatNumber(DataManager:GetManager("MailManager"):GetUnReadMailsAndReportsNum()),
+            text = GameUtils:formatNumber(MailManager:GetUnReadMailsAndReportsNum()),
             font = UIKit:getFontFilePath(),
             size = 16,
             -- dimensions = cc.size(200,24),
             color = UIKit:hex2c3b(0xf5f2b3)
         }):align(display.CENTER,self.mail_unread_num_bg:getContentSize().width/2,self.mail_unread_num_bg:getContentSize().height/2+4)
         :addTo(self.mail_unread_num_bg)
-    if DataManager:GetManager("MailManager"):GetUnReadMailsAndReportsNum()==0 then
+    if MailManager:GetUnReadMailsAndReportsNum()==0 then
         self.mail_unread_num_bg:setVisible(false)
     end
     -- 场景切换

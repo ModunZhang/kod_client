@@ -25,7 +25,6 @@ function test_alliance_basic()
     alliance:SetDefaultLanguage("eng")
     assert_equal("eng", alliance:DefaultLanguage())
     assert_equal(0, alliance:Power())
-    assert_equal(0, alliance:Exp())
     alliance:Flag():RandomFlag()
 end
 
@@ -67,7 +66,7 @@ function test_alliance_events()
     local alliance = Alliance.new("联盟id")
     local l1 = {
         OnEventsChanged = function(this, alliance, changed_map)
-            -- dump(changed_map)	
+            dump(changed_map)	
         end}
     alliance:AddListenOnType(l1, Alliance.LISTEN_TYPE.EVENTS)
     assert_false(alliance:IsDefault())

@@ -16,11 +16,11 @@ function WidgetDragonEquipIntensify:ctor(delegate,equipmentName,current_count,ma
     self.maxCount = maxCount or 0
     self.resolveEquipmentName = resolveEquipmentName
     --ui
-	super_.ctor(self,{normal = "star2_105x104.png"}, {scale9 = false})
+	super_.ctor(self,{normal = "eq_bg_1_146x146.png"}, {scale9 = true})
+	self:setButtonSize(105, 104)
 	local icon_ = display.newSprite(self:GetEqIcon(equipmentName))
-	icon_:addTo(self):setScale(0.8)
+	icon_:addTo(self):setScale(0.7)
 
-	-- local cancel = display.newSprite("cancel_39x39.png"):addTo(self):pos(50,50)
 	local labelbg = display.newSprite("back_ground_97x20.png"):addTo(self):pos(0,-70)
 	local label = cc.ui.UILabel.new({
       UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,

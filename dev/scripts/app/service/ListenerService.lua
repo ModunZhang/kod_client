@@ -20,7 +20,7 @@ local events_to_listen = {
     'onBuildingLevelUp','onHouseLevelUp','onTowerLevelUp','onWallLevelUp', --升级提示相关
     'onChat','onAllChat', -- 聊天相关
     'onNewMailReceived','onGetMailsSuccess','onGetSavedMailsSuccess','onGetSendMailsSuccess','onSendMailSuccess', -- 邮件
-    'onSearchAlliancesSuccess',"onGetCanDirectJoinAlliancesSuccess","onGetAllianceDataSuccess","onAllianceDataChanged","onAllianceNewEventReceived",-- 联盟
+    'onSearchAlliancesSuccess',"onGetCanDirectJoinAlliancesSuccess","onGetAllianceDataSuccess","onAllianceNewEventReceived",-- 联盟
     'onAllianceMemberDataChanged','onAllianceBasicInfoAndMemberDataChanged','onAllianceHelpEventChanged',
     'onGetPlayerInfoSuccess',
 }
@@ -45,7 +45,6 @@ end
 onSearchAlliancesSuccess_callbacks = {}
 onGetCanDirectJoinAlliancesSuccess_callbacks = {}
 onGetPlayerInfoSuccess_callbacks = {}
-onAllianceDataChanged_callbacks = {}
 onGetMailsSuccess_callbacks = {}
 onGetSavedMailsSuccess_callbacks = {}
 onGetSendMailsSuccess_callbacks = {}
@@ -77,12 +76,12 @@ function ListenerService:_listenNetMessage()
                         callback(success, msg)
                     end
                     onGetPlayerInfoSuccess_callbacks = {}
-                elseif v == "onAllianceDataChanged" then
-                    local callback = onAllianceDataChanged_callbacks[1]
-                    if type(callback) == "function" then
-                        callback(success, msg)
-                    end
-                    onAllianceDataChanged_callbacks = {}
+                -- elseif v == "onAllianceDataChanged" then
+                --     local callback = onAllianceDataChanged_callbacks[1]
+                --     if type(callback) == "function" then
+                --         callback(success, msg)
+                --     end
+                --     onAllianceDataChanged_callbacks = {}
                 elseif v == "onGetMailsSuccess" then
                     assert(#onGetMailsSuccess_callbacks <= 1, "重复请求过多了!")
                     local callback = onGetMailsSuccess_callbacks[1]
@@ -224,10 +223,7 @@ end
 -- Mails
 -------------------------------------------------------------------------
 function ListenerService:dispatchEventToMailManager_(msg,eventName)
-    local mailManager = DataManager:GetManager("MailManager")
-    if mailManager then
-        mailManager:dispatchMailServerData(eventName,msg)
-    end
+    MailManager:dispatchMailServerData(eventName,msg)
 end
 function ListenerService:ls_onNewMailReceived( msg,eventName )
     self:dispatchEventToMailManager_(msg,eventName)
@@ -244,6 +240,7 @@ end
 function ListenerService:ls_onSendMailSuccess( msg,eventName )
     self:dispatchEventToMailManager_(msg,eventName)
 end
+
 
 
 

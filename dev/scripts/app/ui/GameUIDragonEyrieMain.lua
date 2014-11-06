@@ -197,12 +197,12 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 			size  = 24
 		}):addTo(box):align(display.LEFT_TOP,70, box:getContentSize().height - 10)
 		local star_bar = StarBar.new({
-       		max = 5,
+       		max = self:GetCurrentDragon():MaxStar(),
        		bg = "Stars_bar_bg.png",
        		fill = "Stars_bar_highlight.png", 
        		num = self:GetCurrentDragon():Star(),
        		margin = 0,
-    	}):addTo(box):pos(420,box:getContentSize().height - 40)
+    	}):addTo(box):align(display.RIGHT_BOTTOM, 570,box:getContentSize().height - 40)
     	self.content_bg = box
     	self.nameLabel = nameLabel
     	self.star_bar = star_bar

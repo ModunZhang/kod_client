@@ -11,16 +11,6 @@ function MailManager:ctor()
     self.sendMails = {}
 end
 
--- function MailManager:GetMails()
---     return self.mails
--- end
--- function MailManager:GetSavedMails()
---     return self.savedMails
--- end
--- function MailManager:GetSendMails()
---     return self.sendMails
--- end
-
 function MailManager:IncreaseUnReadMailsAndReports(num)
     self.unread_num = self.unread_num + num
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED,function(listener)
@@ -55,6 +45,20 @@ function MailManager:DeleteMail(mail)
         end
     end
 end
+function MailManager:ModifyMail(mail)
+    for k,v in pairs(self.mails) do
+        if v.id == mail.id then
+            self.mails[k] = mail
+        end
+    end
+end
+function MailManager:DeleteSendMail(mail)
+    for k,v in pairs(self.sendMails) do
+        if v.id == mail.id then
+            table.remove(self.sendMails,k)
+        end
+    end
+end
 
 function MailManager:dispatchMailServerData( eventName,msg )
     if eventName == "onGetMailsSuccess" then
@@ -62,9 +66,6 @@ function MailManager:dispatchMailServerData( eventName,msg )
         for _,mail in pairs(msg.mails) do
             table.insert(self.mails, mail)
         end
-    elseif eventName == "onNewMailReceived" then
-        table.insert(self.mails,1, msg.mail)
-        self:IncreaseUnReadMailsAndReports(1)
     elseif eventName == "onGetSavedMailsSuccess" then
         -- 获取邮件成功,加入MailManager缓存
         for _,mail in pairs(msg.mails) do
@@ -105,7 +106,6 @@ function MailManager:GetMails(cb,fromIndex)
         -- 本地没有缓存，则从服务器获取
         NetManager:getFetchMailsPromise(fromIndex):always(function ()
             cb()
-            print("获取收件箱成功")
         end):catch(function(err)
             dump(err:reason())
         end)
@@ -155,60 +155,112 @@ function MailManager:GetSendMails(cb,fromIndex)
         end)
     end
 end
+function MailManager:OnMailStatusChanged( mailStatus )
+    self.unread_num = mailStatus.unreadMails
+    self:NotifyListeneOnType(MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED,function(listener)
+        listener:MailUnreadChanged(self.unread_num)
+    end)
+end
+function MailManager:OnMailsChanged( mails )
+    self.mails = mails
+end
+function MailManager:OnSavedMailsChanged( savedMails )
+    self.savedMails = savedMails
+end
+function MailManager:OnSendMailsChanged( sendMails )
+    self.sendMails =  sendMails
+end
 
+function MailManager:OnNewMailsChanged( mails )
+    local add_mails = {}
+    local remove_mails = {}
+    local edit_mails = {}
+    for _,mail in pairs(mails) do
+        if mail.type == "add" then
+            table.insert(add_mails, mail.data)
+            table.insert(self.mails, mail.data)
+            self:IncreaseUnReadMailsAndReports(1)
+        elseif mail.type == "remove" then
+            table.insert(remove_mails, mail.data)
+            self:DeleteMail(mail.data)
+        elseif mail.type == "edit" then
+            table.insert(edit_mails, mail.data)
+            self:ModifyMail(mail.data)
+        end
+    end
+    self:NotifyListeneOnType(MailManager.LISTEN_TYPE.MAILS_CHANGED,function(listener)
+        listener:OnInboxMailsChanged({
+            add_mails = add_mails,
+            remove_mails = remove_mails,
+            edit_mails = edit_mails,
+        })
+    end)
+end
+function MailManager:OnNewSavedMailsChanged( savedMails )
+    local add_mails = {}
+    local remove_mails = {}
+    for _,mail in pairs(savedMails) do
+        if mail.type == "add" then
+            table.insert(add_mails, mail.data)
+            table.insert(self.savedMails, mail.data)
+        elseif mail.type == "remove" then
+            table.insert(remove_mails, mail.data)
+            self:DeleteSavedMail(mail.data)
+        end
+    end
+    self:NotifyListeneOnType(MailManager.LISTEN_TYPE.MAILS_CHANGED,function(listener)
+        listener:OnSavedMailsChanged({
+            add_mails = add_mails,
+            remove_mails = remove_mails,
+        })
+    end)
+end
+function MailManager:OnNewSendMailsChanged( sendMails )
+    local add_mails = {}
+    local remove_mails = {}
+    for _,mail in pairs(sendMails) do
+        if mail.type == "add" then
+            table.insert(add_mails, mail.data)
+            table.insert(self.sendMails, mail.data)
+        elseif mail.type == "remove" then
+            table.insert(remove_mails, mail.data)
+            self:DeleteSendMail(mail.data)
+        end
+    end
+    self:NotifyListeneOnType(MailManager.LISTEN_TYPE.MAILS_CHANGED,function(listener)
+        listener:OnSendMailsChanged({
+            add_mails = add_mails,
+            remove_mails = remove_mails,
+        })
+    end)
+end
 function MailManager:OnUserDataChanged(userData,timer)
     -- 未读邮件和战报信息
     if userData.mailStatus then
-        self.unread_num = userData.mailStatus.unreadMails + 0
+        self:OnMailStatusChanged(userData.mailStatus)
     end
-    if not userData.mails or
-        not userData.savedMails or
-        not userData.sendMails
-    then
-        return
+    if userData.mails then
+        self:OnMailsChanged(userData.mails)
     end
-    local mails = userData.mails
-    -- inbox 改变，按收到时间最新排序
-    table.sort(mails,function(mail_a,mail_b)
-        if mail_a.sendTime==mail_b.sendTime then
-            return mail_a.fromName<mail_b.fromName
-        else
-            return mail_a.sendTime>mail_b.sendTime
-        end
-    end)
-    for k,v in pairs(mails) do
-        table.insert(self.mails,v)
+    if userData.savedMails then
+        self:OnSavedMailsChanged(userData.savedMails)
     end
-
-
-    local savedMails = userData.savedMails
-
-    for k,v in pairs(savedMails) do
-        table.insert(self.savedMails,v)
+    if userData.sendMails then
+        self:OnSendMailsChanged(userData.sendMails)
     end
-
-
-    local sendMails = userData.sendMails
-    table.sort(sendMails,function(mail_a,mail_b)
-        if mail_a.sendTime==mail_b.sendTime then
-            return mail_a.fromName<mail_b.fromName
-        else
-            return mail_a.sendTime<mail_b.sendTime
-        end
-    end)
-    for k,v in pairs(sendMails) do
-        table.insert(self.sendMails,v)
+    if userData.__mails then
+        self:OnNewMailsChanged(userData.__mails)
     end
-
+    if userData.__savedMails then
+        self:OnNewSavedMailsChanged(userData.__savedMails)
+    end
+    if userData.__sendMails then
+        self:OnNewSendMailsChanged(userData.__sendMails)
+    end
 end
 
 
 return MailManager
-
-
-
-
-
 
 
 

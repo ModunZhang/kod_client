@@ -25,6 +25,9 @@ function UpgradeBuilding:ctor(building_info)
     self.freeSpeedUpTime=300
     self.unique_upgrading_key = nil
 end
+function UpgradeBuilding:GetFreeSpeedupTime()
+    return self.freeSpeedUpTime
+end
 function UpgradeBuilding:UniqueUpgradingKey()
     return self.unique_upgrading_key
 end

@@ -48,6 +48,8 @@ function DragonSkill:GetEffect()
 	return self:Level() * self:GetSkillConfig().effection
 end
 
+function DragonSkill:OnPropertyChange( ... )
+end
 
 --DragonEquipment
 ----------------------------------------------------------------------------------------------------
@@ -71,6 +73,7 @@ function DragonEquipment:GetBuffData()
 end
 
 function DragonEquipment:IsReachMaxStar()
+	print("DragonEquipment:IsReachMaxStar------->",self:Name(),self:MaxStar(),self:Star())
 	return self:MaxStar() == self:Star()
 end
 
@@ -116,6 +119,9 @@ function DragonEquipment:GetBufferAndEffect()
   return r
 end
 
+function DragonEquipment:OnPropertyChange( ... )
+end
+
 --Dragon
 ----------------------------------------------------------------------------------------------------
 function Dragon:ctor(drag_type,strength,vitality,status,star,level,exp,hp)
@@ -144,6 +150,9 @@ function Dragon:UpdateEquipmetsAndSkills(json_data)
 		local skill = DragonSkill.new(k,v.name,v.level,self:Star(),self:Type())
 		self.skills_[k] = skill
 	end
+end
+
+function Dragon:OnPropertyChange( ... )
 end
 
 function Dragon:Skills()
@@ -186,6 +195,18 @@ function Dragon:CheckEquipemtIfLocked_()
         end
 
     end
+end
+
+function Dragon:EquipmentsIsReachMaxStar()
+	dump(self:Equipments())
+	local isReach = true
+	for i,equipment in ipairs(self:Equipments()) do
+		if not equipment:IsReachMaxStar() and not equipment:IsLocked() then
+			isReach = false
+			break
+		end
+	end
+	return isReach
 end
 
 function Dragon:GetLocalizedName()
@@ -261,8 +282,13 @@ function Dragon:IsReachPromotionLevel()
 	 return self:Level() >= self:GetPromotionLevel()
 end
 
+function Dragon:MaxStar()
+	return 4
+end
+
 function Dragon:GetPromotionLevel()
-	return config_dragonAttribute[self:Star()].promotionLevel
+	local star = self:Star() + 1 > self:MaxStar() and self:MaxStar() or self:Star() + 1
+	return config_dragonAttribute[star].promotionLevel
 end
 
 --获取所有装备的buffers信息

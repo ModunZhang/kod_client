@@ -18,13 +18,11 @@ local GameUIAllianceBasicSetting = import(".GameUIAllianceBasicSetting")
 local GameUIAllianceNoticeOrDescEdit = import(".GameUIAllianceNoticeOrDescEdit")
 local Localize = import("..utils.Localize")
 local NetService = import('..service.NetService')
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local Alliance_Manager = Alliance_Manager
 local Alliance = import("..entity.Alliance")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local Flag = import("..entity.Flag")
 local GameUIWriteMail = import('.GameUIWriteMail')
-
 GameUIAlliance.COMMON_LIST_ITEM_TYPE = Enum("JOIN","INVATE","APPLY")
 
 --
@@ -82,6 +80,8 @@ function GameUIAlliance:Reset()
 	self.invateNode = nil
 	self.applyNode = nil
 	self.overviewNode = nil
+	self.memberListView = nil
+	self.informationNode = nil
 	self.currentContent = nil
 end
 
@@ -597,8 +597,7 @@ end
 function GameUIAlliance:commonListItemAction( listType,item,alliance,tag)
 	if listType == self.COMMON_LIST_ITEM_TYPE.JOIN then
 		if  alliance.joinType == 'all' then --如果是直接加入
-			PushService:joinAllianceDirectly(alliance.id,function(success)
-			end)
+			NetManager:getJoinAllianceDirectlyPromise(alliance.id):done()
 		else
 			NetManager:getRequestToJoinAlliancePromise(alliance.id):next(function()
 					local dialog = FullScreenPopDialogUI.new()
@@ -608,7 +607,7 @@ function GameUIAlliance:commonListItemAction( listType,item,alliance,tag)
 			end)
 		end
 	elseif  listType == self.COMMON_LIST_ITEM_TYPE.APPLY then
-		NetManager:getcancelJoinAlliancePromise(alliance.id):done(function()
+		NetManager:getCancelJoinAlliancePromise(alliance.id):done(function()
 			self:RefreshApplyListView()
 		end)
 	elseif listType == self.COMMON_LIST_ITEM_TYPE.INVATE then
@@ -763,11 +762,9 @@ end
 function GameUIAlliance:RefreshNoticeView()
 	local textLabel = UIKit:ttfLabel({
 		dimensions = cc.size(576, 0),
-		text = Alliance_Manager:GetMyAlliance():Notice() or "",
+		text = string.len(Alliance_Manager:GetMyAlliance():Notice())>0 and Alliance_Manager:GetMyAlliance():Notice() or _("未设置联盟公告"),
 		size = 20,
 		color = 0x403c2f,
-		align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-		valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
 	})
 	self.ui_overview.noticeView:removeAllItems()
     local textItem = self.ui_overview.noticeView:newItem()
@@ -835,6 +832,7 @@ function GameUIAlliance:RefreshOverViewUI()
 		if self.ui_overview.my_alliance_flag then
 			local x,y = self.ui_overview.my_alliance_flag:getPosition()
 			self.ui_overview.my_alliance_flag:removeFromParent()
+			dump(Alliance_Manager:GetMyAlliance():Flag())
 			self.ui_overview.my_alliance_flag = self.alliance_ui_helper:CreateFlagWithRhombusTerrain(Alliance_Manager:GetMyAlliance():TerrainType(),Alliance_Manager:GetMyAlliance():Flag())
 				:addTo(self.overviewNode)
 				:pos(x,y)
@@ -1167,20 +1165,18 @@ end
 
 function GameUIAlliance:SelectJoinType()
 	if Alliance_Manager:GetMyAlliance():JoinType() == "all" then
-    	self.joinTypeButton:getButtonAtIndex(1):setButtonSelected(true,true)
+    	self.joinTypeButton:getButtonAtIndex(1):setButtonSelected(true)
     else
-    	self.joinTypeButton:getButtonAtIndex(2):setButtonSelected(true,true)
+    	self.joinTypeButton:getButtonAtIndex(2):setButtonSelected(true)
     end
 end
 
 function GameUIAlliance:RefreshDescView()
 	local textLabel = cc.ui.UILabel.new({
 			UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = Alliance_Manager:GetMyAlliance():Describe(),
+            text = string.len(Alliance_Manager:GetMyAlliance():Describe())>0 and Alliance_Manager:GetMyAlliance():Describe() or _("未设置联盟描述"),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f),
-            align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
             dimensions = cc.size(576, 0),
             font = UIKit:getFontFilePath(),
     })
@@ -1193,22 +1189,31 @@ function GameUIAlliance:RefreshDescView()
 end
 
 function GameUIAlliance:OnAllianceJoinTypeButtonClicked(event)
+	if self.fromCancel then 
+		self.fromCancel = nil
+		return 
+	end 
 	local title,join_type = _("允许玩家立即加入联盟"),"all"
 
 	if event.selected ~= 1 then
 		title = _("玩家仅能通过申请或者邀请的方式加入")
 		join_type = "audit"
 	end
-	FullScreenPopDialogUI.new():SetTitle(_("你将设置联盟加入方式为"))
-        :SetPopMessage(title)
-        :CreateOKButton(function()
-        	  NetManager:getEditAllianceJoinTypePromise(join_type):catch(function(err)
-                    dump(err:reason())
-                end):done(function(result)
-                	self:RefreshInfomationView()
-                end)
-        end)
-        :AddToCurrentScene()
+ 	FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                    :SetPopMessage(_("你将设置联盟加入方式为") .. title)
+                    :CreateOKButton(function ()
+                        NetManager:getEditAllianceJoinTypePromise(join_type):catch(function(err)
+                    		dump(err:reason())
+                		end):done(function(result)
+                			self:RefreshInfomationView()
+                		end)
+                    end,_("确定"))
+                    :CreateCancelButton({listener = function ()
+                    	self.fromCancel = true
+                    	self:SelectJoinType()
+                    end,btn_name = _("取消")})
+                    :CreateNeeds("Topaz-icon.png",100)
+                    :AddToCurrentScene()
 end
 
 
@@ -1291,9 +1296,16 @@ function GameUIAlliance:CreateInvateUI()
     		NetManager:getInviteToJoinAlliancePromise(playerName)
     			:next(function(result)
     				layer:removeFromParent(true)
+    				FullScreenPopDialogUI.new():SetTitle(_("提示"))
+            		:SetPopMessage(_("邀请发送成功"))
+            		:CreateOKButton(function()end)
+            		:AddToCurrentScene()
             	end)
             	:catch(function(err)
-            		dump(err:reason())
+            		FullScreenPopDialogUI.new():SetTitle(_("提示"))
+            		:SetPopMessage(err:reason())
+            		:CreateOKButton(function()end)
+            		:AddToCurrentScene()
             	end)
     	end)
     	:setButtonLabel("normal",UIKit:ttfLabel({

@@ -15,6 +15,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local DragonManager = import("..entity.DragonManager")
 local GameUIDragonEyrieDetail = import(".GameUIDragonEyrieDetail")
 local MaterialManager = import("..entity.MaterialManager")
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 
 function GameUIDragonEquipment:ctor(building,dragon,equipment_obj)
 	GameUIDragonEquipment.super.ctor(self)
@@ -218,9 +219,16 @@ function GameUIDragonEquipment:IntensifyEvent()
         table.insert(equipments,{name=name,count=count})
       end
   end)
+  if #equipments == 0 then 
+    local dialog = FullScreenPopDialogUI.new()
+        dialog:SetTitle(_("提示"))
+        dialog:SetPopMessage(_("请选择用来强化的装备!"))
+        dialog:AddToCurrentScene()
+        return  
+  end 
   local equipment = self:GetEquipment()
   PushService:enhanceDragonEquipment(self.dragon:Type(),equipment:Body(),equipments,function()
-      self:RefreshInfoUI()
+      self:RefreshIntensifyUI()
   end)
 end
 
@@ -441,6 +449,7 @@ end
 function GameUIDragonEquipment:GetEquipment()
   return self.equipment
 end
+
 
 function GameUIDragonEquipment:AdornOrResetButtonClicked()
   if self.infoButton.selected_ then -- 信息界面

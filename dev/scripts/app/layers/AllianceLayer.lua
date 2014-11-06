@@ -1,11 +1,15 @@
-local AllianceBuildingSprite = import("..sprites.AllianceBuildingSprite")
-local AllianceDecoratorSprite = import("..sprites.AllianceDecoratorSprite")
+local Enum = import("..utils.Enum")
 local CitySprite = import("..sprites.CitySprite")
+local AllianceDecoratorSprite = import("..sprites.AllianceDecoratorSprite")
+local AllianceBuildingSprite = import("..sprites.AllianceBuildingSprite")
+local AllianceMap = import("..entity.AllianceMap")
 local Observer = import("..entity.Observer")
 local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLeftReverseY")
 local MapLayer = import(".MapLayer")
 local AllianceLayer = class("AllianceLayer", MapLayer)
-----
+local ZORDER = Enum("BOTTOM", "MIDDLE", "TOP", "BUILDING")
+local floor = math.floor
+local random = math.random
 function AllianceLayer:ctor(city)
     Observer.extend(self)
     AllianceLayer.super.ctor(self, 0.3, 1)
@@ -15,21 +19,79 @@ function AllianceLayer:ctor(city)
         map_width = 21,
         map_height = 21,
         base_x = 0,
-        base_y = 21 * 80
+        base_y = 23 * 80
     }
-
-    self:InitBackground()
-
-    local floor = math.floor
-    local random = math.random
     math.randomseed(1985423439857)
+    self:InitBackground()
+    self:InitMiddleBackground()
+    self:InitTopBackground()
+    self:InitBuildingNode()
 
+    Alliance_Manager:GetMyAlliance():GetAllianceMap():AddListenOnType({
+        OnBuildingChange = function(this, alliance_map, add, remove, modify)
+            dump(add)
+            if #add > 0 then
+                for _, v in pairs(add) do
+                    self.objects[v:Id()] = self:CreateObject(v)
+                end
+            end
+            dump(remove)
+            if #remove > 0 then
+                for _, v in pairs(remove) do
+                    self.objects[v:Id()]:removeFromParent()
+                    self.objects[v:Id()] = nil
+                end
+            end
+            if #modify > 0 then
+                for _, v in pairs(modify) do
+                    self.objects[v:Id()]:SetPositionWithZOrder(self:GetLogicMap():ConvertToMapPosition(v:GetLogicPosition()))
+                end
+            end
+        end
+    }, AllianceMap.LISTEN_TYPE.BUILDING)
+
+    ---
+    local objects = {}
+    Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorAllObjects(function(_, entity)
+        -- entity:
+        objects[entity:Id()] = self:CreateObject(entity)
+    end)
+    self.objects = objects
+end
+function AllianceLayer:CreateObject(entity)
+    local category = entity:GetCategory()
+    local object
+    if category == "building" then
+        object = AllianceBuildingSprite.new(self, entity):addTo(self:GetBuildingNode())
+    elseif category == "member" then
+        object = CitySprite.new(self, entity):addTo(self:GetBuildingNode())
+        -- elseif category == "village" then
+        -- object = CitySprite.new(self, entity):addTo(self:GetBuildingNode())
+    elseif category == "decorate" then
+        object = AllianceDecoratorSprite.new(self, entity):addTo(self:GetBuildingNode())
+    end
+    return object
+end
+function AllianceLayer:GetMapSize()
+    return 21, 21
+end
+function AllianceLayer:GetLogicMap()
+    return self.normal_map
+end
+function AllianceLayer:ConvertLogicPositionToMapPosition(lx, ly)
+    local map_pos = cc.p(self.normal_map:ConvertToMapPosition(lx, ly))
+    return self:convertToNodeSpace(self.background:convertToWorldSpace(map_pos))
+end
+function AllianceLayer:InitBackground()
+    self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background1.tmx"):addTo(self, ZORDER.BOTTOM)
+end
+function AllianceLayer:InitMiddleBackground()
+    local bottom_layer = display.newNode():addTo(self, ZORDER.MIDDLE)
     local png = {
         "grass1_800x560.png",
         "grass2_800x560.png",
         "grass3_800x560.png",
     }
-    local bottom_layer = display.newNode():addTo(self)
     for i, v in pairs{
         {x = 4.5, y = 4.5},
         {x = 4.5, y = 14.5},
@@ -37,10 +99,12 @@ function AllianceLayer:ctor(city)
         {x = 14.5, y = 14.5},
     } do
         local png_index = random(123456789) % 3 + 1
-        display.newSprite(png[png_index], nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(bottom_layer)
+        display.newSprite(png[png_index]):addTo(bottom_layer)
             :align(display.CENTER, self.normal_map:ConvertToMapPosition(v.x, v.y))
-            :setFilter(filter)
     end
+    self.middle_background = bottom_layer
+end
+function AllianceLayer:InitTopBackground()
     local function random_indexes_in_rect(number, rect)
         local indexes = {}
         local count = 0
@@ -61,192 +125,52 @@ function AllianceLayer:ctor(city)
         until number < count
         return indexes
     end
-
     local png = {
         "grass1_400x280.png",
         "grass2_400x280.png",
         "grass3_400x280.png",
     }
-    local middle_layer = display.newNode():addTo(self)
+    local middle_layer = display.newNode():addTo(self, ZORDER.TOP)
     local indexes = random_indexes_in_rect(20, cc.rect(0, 0, 21, 21))
     for i, v in ipairs(indexes) do
-        display.newSprite(png[v.png_index], nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(middle_layer)
+        display.newSprite(png[v.png_index]):addTo(middle_layer)
             :align(display.CENTER, self.normal_map:ConvertToMapPosition(v.x, v.y))
-            :setFilter(filter)
     end
-
-
-    local filter = filter.newFilter("CUSTOM",
-        json.encode({
-            frag = "shaders/mask_layer.fs",
-            shaderName = "mask_layer",
-            iResolution = {display.widthInPixels, display.heightInPixels}
-        })
-    )
-
-    --
-    CitySprite.new(self, 11, 11):addTo(self)
-    CitySprite.new(self, 14, 11):addTo(self)
-    CitySprite.new(self, 11, 14):addTo(self)
-    CitySprite.new(self, 8, 11):addTo(self)
-    CitySprite.new(self, 11, 8):addTo(self)
-
-
-    local function return_start_end_from(decorator)
-        return {x = decorator.x - decorator.width + 1, y = decorator.y - decorator.height + 1},
-            {x = decorator.x, y = decorator.y}
-    end
-    local function iterator_every_point(decorator, func)
-        assert(type(func) == "function")
-        local sp, ep = return_start_end_from(decorator)
-        for i = sp.x, ep.x do
-            for j = sp.y, ep.y do
-                if func(i, j) then
-                    return
-                end
-            end
-        end
-    end
-    local alliance_decorator_map = {
-        {width = 1, height = 1},
-        {width = 2, height = 1},
-        {width = 2, height = 2},
-        {width = 3, height = 2},
-    }
-    local function is_validate_position(decorator, map)
-        local validate = true
-        iterator_every_point(decorator, function(x, y)
-            if map[y] == nil or map[y][x] or map[y][x] == nil then
-                validate = false
-                return true
-            end
-        end)
-        return validate
-    end
-    local function random_decorator_by_index(index, tmp_index, map)
-        local x, y = index % 21, math.floor(index / 21) + 1
-        local tmp = alliance_decorator_map[tmp_index]
-        local decorator = {width = tmp.width, height = tmp.height}
-        for _, v in ipairs{
-            {x = x, y = y},
-            {x = x + decorator.width - 1, y = y},
-            {x = x, y = y + decorator.height - 1},
-            {x = x + decorator.width - 1, y = y + decorator.height - 1},
-        } do
-            decorator.x = v.x
-            decorator.y = v.y
-            if is_validate_position(decorator, map) then
-                return decorator
-            end
-        end
-        return nil
-    end
-    local function update_map_with_decorator(map, decorator)
-        iterator_every_point(decorator, function(x, y)
-            map[y][x] = true
-        end)
-    end
-    local function get_index_from_map(map)
-        local random_map = {}
-        for j = 1, 21 do
-            for i = 1, 21 do
-                if not map[i][j] then
-                    table.insert(random_map, (j - 1) * 21 + i)
-                end
-            end
-        end
-        return random_map
-    end
-    local map = {}
-    for i = 1, 21 do
-        map[i] = {}
-        for j = 1, 21 do
-            map[i][j] = false
-        end
-    end
-    update_map_with_decorator(map, {width = 3, height = 3, x = 12, y = 12})
-    update_map_with_decorator(map, {width = 3, height = 3, x = 15, y = 12})
-    update_map_with_decorator(map, {width = 3, height = 3, x = 12, y = 15})
-    update_map_with_decorator(map, {width = 3, height = 3, x = 9, y = 12})
-    update_map_with_decorator(map, {width = 3, height = 3, x = 12, y = 9})
-    -- math.randomseed(23590239)
-    local random_map = get_index_from_map(map)
-    local decorators = {}
-    while #decorators < 20 do
-        local index = random(123456789) % #random_map + 1
-        local decorator = random_decorator_by_index(random_map[index], 1, map)
-        if decorator then
-            table.insert(decorators, decorator)
-            update_map_with_decorator(map, decorator)
-        end
-        table.remove(random_map, index)
-    end
-    while #decorators < 39 do
-        local index = random(123456789) % #random_map + 1
-        local decorator = random_decorator_by_index(random_map[index], 2, map)
-        if decorator then
-            table.insert(decorators, decorator)
-            update_map_with_decorator(map, decorator)
-        end
-        table.remove(random_map, index)
-    end
-    while #decorators < 50 do
-        local index = random(123456789) % #random_map + 1
-        local decorator = random_decorator_by_index(random_map[index], 3, map)
-        if decorator then
-            table.insert(decorators, decorator)
-            update_map_with_decorator(map, decorator)
-        end
-        table.remove(random_map, index)
-    end
-    while #decorators < 60 do
-        local index = random(123456789) % #random_map + 1
-        local decorator = random_decorator_by_index(random_map[index], 4, map)
-        if decorator then
-            table.insert(decorators, decorator)
-            update_map_with_decorator(map, decorator)
-        end
-        table.remove(random_map, index)
-    end
-
-    for i, v in pairs(decorators) do
-        if v.width == 3 and v.height == 2 then
-            AllianceDecoratorSprite.new(self, v.x - 1, v.y - 1, 3, 2, "lake2"):addTo(self)
-        elseif v.width == 2 and v.height == 2 then
-            AllianceDecoratorSprite.new(self, v.x - 1, v.y - 1, 2, 2, "lake1"):addTo(self)
-        elseif v.width == 2 and v.height == 1 then
-            AllianceDecoratorSprite.new(self, v.x - 1, v.y - 1, 2, 1, "hill1"):addTo(self)
-        elseif v.width == 1 and v.height == 1 then
-            AllianceDecoratorSprite.new(self, v.x - 1, v.y - 1, 1, 1, "hill2"):addTo(self)
-        end
-    end
-    -- AllianceBuildingSprite.new(self, 5, 15):addTo(self)
-    -- AllianceBuildingSprite.new(self, 15, 5):addTo(self)
-    -- AllianceBuildingSprite.new(self, 10, 18):addTo(self)
-    -- AllianceBuildingSprite.new(self, 1, 15):addTo(self)
-    -- display.newSprite("grass_80x80_.png"):addTo(self):align(display.CENTER, self.normal_map:ConvertToMapPosition(10, 10))
-end
-function AllianceLayer:GetMapSize()
-    return 21, 21
-end
-function AllianceLayer:GetLogicMap()
-    return self.normal_map
-end
-function AllianceLayer:ConvertLogicPositionToMapPosition(lx, ly)
-    local map_pos = cc.p(self.normal_map:ConvertToMapPosition(lx, ly))
-    return self:convertToNodeSpace(self.background:convertToWorldSpace(map_pos))
-end
-function AllianceLayer:InitBackground()
-    self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background.tmx"):addTo(self)
+    self.top_background = middle_layer
 end
 function AllianceLayer:InitBuildingNode()
-    self.building_node = display.newNode():addTo(self)
+    self.building_node = display.newNode():addTo(self, ZORDER.BUILDING)
 end
-
 function AllianceLayer:GetBuildingNode()
     return self.building_node
 end
-
+function AllianceLayer:GetClickedObject(world_x, world_y)
+    local point = self:GetBuildingNode():convertToNodeSpace(cc.p(world_x, world_y))
+    local logic_x, logic_y = self:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
+    local clicked_list = {
+        logic_clicked = {},
+        sprite_clicked = {}
+    }
+    self:IteratorAllianceObjects(function(_, v)
+        local check = v:IsContainPointWithFullCheck(logic_x, logic_y, world_x, world_y)
+        if check.logic_clicked then
+            table.insert(clicked_list.logic_clicked, v)
+            return true
+        elseif check.sprite_clicked then
+            table.insert(clicked_list.sprite_clicked, v)
+        end
+    end)
+    table.sort(clicked_list.logic_clicked, function(a, b)
+        return a:getLocalZOrder() > b:getLocalZOrder()
+    end)
+    table.sort(clicked_list.sprite_clicked, function(a, b)
+        return a:getLocalZOrder() > b:getLocalZOrder()
+    end)
+    return clicked_list.logic_clicked[1] or clicked_list.sprite_clicked[1]
+end
+function AllianceLayer:IteratorAllianceObjects(func)
+    table.foreach(self.objects, func)
+end
 
 ----- override
 function AllianceLayer:getContentSize()
@@ -256,13 +180,17 @@ function AllianceLayer:getContentSize()
     end
     return self.content_size
 end
-
-
 function AllianceLayer:OnSceneMove()
-
+    self:IteratorAllianceObjects(function(_, object)
+        object:OnSceneMove()
+    end)
 end
 
 return AllianceLayer
+
+
+
+
 
 
 
