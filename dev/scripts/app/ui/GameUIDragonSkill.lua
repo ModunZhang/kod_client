@@ -170,7 +170,7 @@ function GameUIDragonSkill:GetUpgradeSkillCost()
     local r = {
         {"energy",config.energyCostPerLevel},
         {"blood",math.pow(self.skill:Level()+1,2) * config.heroBloodCostPerLevel},
-        {"dragonLevel",1}, --TODO: 配置表未配置暂时写死
+        {"dragonLevel",1}, --TODO: 升级龙技能需要的龙等级配置表未配置暂时写死
     }
     return r
 end

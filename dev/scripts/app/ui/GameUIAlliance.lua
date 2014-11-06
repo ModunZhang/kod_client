@@ -1222,7 +1222,6 @@ function GameUIAlliance:RefreshInfomationView()
 end
 
 function GameUIAlliance:OnInfoButtonClicked(tag)
-	--TODO:联盟操作按钮
 	if tag == 1 then
 		FullScreenPopDialogUI.new():SetTitle(_("退出联盟"))
             :SetPopMessage(_("您必须在没有部队在外行军的情况下，才可以退出联盟。退出联盟会损失当前未打开的联盟礼物。"))
