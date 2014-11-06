@@ -3,7 +3,7 @@ local City_ = import("..entity.City")
 local AllianceManager_ = import("..entity.AllianceManager")
 local User_ = import("..entity.User")
 local MailManager_ = import("..entity.MailManager")
-
+local ChatCenter = import('..entity.ChatCenter')
 
 return function(userData)
     User = User_.new(userData._id)
@@ -107,7 +107,9 @@ return function(userData)
     ext.localpush.cancelAll()
     --read userdefaults about local push
     ext.localpush.switchNotification('BUILDING_PUSH_UPGRADE',true)
-    app.chatCenter:requestAllMessage()
+    local chatCenter = ChatCenter.new()
+    chatCenter:requestAllMessage()
+    app.chatCenter = chatCenter
 end
 
 

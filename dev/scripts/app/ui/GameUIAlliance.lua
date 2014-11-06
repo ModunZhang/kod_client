@@ -11,7 +11,6 @@ local GameUIAlliance = UIKit:createUIClass("GameUIAlliance","GameUIWithCommonHea
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
 local contentWidth = window.width - 80
-local AllianceManager = import("..service.AllianceManager")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIAllianceBasicSetting = import(".GameUIAllianceBasicSetting")

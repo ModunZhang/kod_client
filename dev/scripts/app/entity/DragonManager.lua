@@ -56,6 +56,7 @@ function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recov
 		end
 	else
 		 --遍历更新龙信息
+		if not dragons then return end
         for k,v in pairs(dragons) do
           	local dragon = self:GetDragon(k)
           	if dragon then
