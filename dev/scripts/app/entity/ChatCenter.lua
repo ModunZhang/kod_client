@@ -5,7 +5,7 @@
 
 local Observer = import('.Observer')
 local ChatCenter = class('ChatCenter',Observer)
-local ChatService = import('..service.ChatService')
+-- local ChatService = import('..service.ChatService')
 local MAX_MESSAGE_PER_PAGE = 100
 
 
@@ -79,8 +79,7 @@ function ChatCenter:limitDataSource(source,s,e)
 end
 
 function ChatCenter:requestAllMessage()
-	ChatService:getAllChat(function( ... )
-	end)
+	NetManager:getFetchChatPromise()
 end
 
 -- Private

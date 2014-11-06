@@ -677,12 +677,23 @@ function NetManager:getEditAllianceTitleNamePromise(title, titleName)
         titleName = titleName
     }, "修改职位名字失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
--- 发送聊天信息
+-- 发送秘籍
 function NetManager:getSendGlobalMsgPromise(text)
     return promise.all(get_blocking_request_promise("chat.chatHandler.send", {
         ["text"] = text,
         ["type"] = "global"
     }, "发送世界聊天信息失败!"))
+end
+--发送聊天信息
+function NetManager:getSendChatPromise(type,text)
+    return promise.all(get_none_blocking_request_promise("chat.chatHandler.send", {
+        ["text"] = text,
+        ["type"] = type
+    }, "发送聊天信息失败!"))
+end
+--获取所有聊天信息
+function NetManager:getFetchChatPromise()
+    return promise.all(get_none_blocking_request_promise("chat.chatHandler.getAll",nil, "获取聊天信息失败!"))
 end
 --处理联盟的对玩家的邀请
 local function getHandleJoinAllianceInvitePromise(allianceId, agree)
