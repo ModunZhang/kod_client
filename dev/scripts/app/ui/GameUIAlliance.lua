@@ -85,6 +85,7 @@ function GameUIAlliance:Reset()
 end
 
 function GameUIAlliance:onEnter()
+	dump(Alliance_Manager:GetMyAlliance():GetAllMembers())
 	GameUIAlliance.super.onEnter(self)
 	self:RefreshMainUI()
 end
@@ -908,6 +909,7 @@ end
 --title is alliance title
 function GameUIAlliance:GetMemberItem(title)
 	local item = self.memberListView:newItem()
+	dump(Alliance_Manager:GetMyAlliance():GetAllMembers())
 	local filter_data = LuaUtils:table_filter(Alliance_Manager:GetMyAlliance():GetAllMembers(),function(k,v)
 		return v:Title() == title
 	end)
