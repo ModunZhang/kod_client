@@ -8,8 +8,10 @@ local WidgetAllianceBuildingUpgrade = class("WidgetAllianceBuildingUpgrade", fun
     return display.newLayer()
 end)
 
-function WidgetAllianceBuildingUpgrade:ctor()
+function WidgetAllianceBuildingUpgrade:ctor(building)
     self:setNodeEventEnabled(true)
+    self.building = building
+    self.building_config = GameDatas.AllianceBuilding[building.name]
 end
 
 -- Node Event
@@ -30,7 +32,7 @@ function WidgetAllianceBuildingUpgrade:onEnter()
     cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-145, display.top-175)
         :addTo(self)
 
-    self.building_image = display.newSprite(UIKit:getImageByBuildingType( "keep" ,1), 0, 0):addTo(self):pos(display.cx-196, display.top-158)
+    self.building_image = display.newSprite(UIKit:getImageByBuildingType( self.building.name ,1), 0, 0):addTo(self):pos(display.cx-196, display.top-158)
     self.building_image:setAnchorPoint(cc.p(0.5,0.5))
     self.building_image:setScale(124/self.building_image:getContentSize().width)
     self:InitBuildingIntroduces()
@@ -66,7 +68,7 @@ end
 
 function WidgetAllianceBuildingUpgrade:SetBuildingIntroduces()
     local bd = Localize.building_description
-    self.building_introduces:setString(bd["palace"])
+    self.building_introduces:setString(bd[self.building.name])
 end
 
 function WidgetAllianceBuildingUpgrade:InitNextLevelEfficiency()
@@ -95,59 +97,81 @@ function WidgetAllianceBuildingUpgrade:InitNextLevelEfficiency()
     self:SetUpgradeEfficiency()
 end
 function WidgetAllianceBuildingUpgrade:SetBuildingLevel()
-    self.builging_level:setString(_("等级 1"))
-    -- if self.building:GetNextLevel() == self.building:GetLevel() then
-    self.next_level:setString(_("等级已满 "))
-    -- else
-    --     self.next_level:setString(_("等级 ")..self.building:GetNextLevel())
-    -- end
+    self.builging_level:setString(_("等级").." ".. self.building.level)
+    if #self.building_config == self.building.level then
+        self.next_level:setString(_("等级已满 "))
+    else
+        self.next_level:setString(_("等级 ")..self.building.level)
+    end
 end
 
 function WidgetAllianceBuildingUpgrade:SetUpgradeEfficiency()
     local bd = Localize.building_description
     local building = self.building
+    local now_c = self.building_config[building.level]
+    local next_c = self:getNextLevelConfig__()
     local efficiency
-    efficiency = string.format("%s+%d,%s+%d",bd.palace_total_members,"4",bd.palace_alliance_power,"300")
+    if #self.building_config == self.building.level then
+        efficiency = _("已达到最大等级")
+    else
+        if building.name == "palace" then
+            efficiency = string.format("%s+%d,%s+%d",bd.palace_total_members,next_c.memberCount-now_c.memberCount,bd.palace_alliance_power,next_c.power)
+        end
+    end
 
     self.efficiency:setString(efficiency)
 end
 
 function WidgetAllianceBuildingUpgrade:InitRequirement()
+    local alliance = Alliance_Manager:GetMyAlliance()
+    local now_c = self.building_config[self.building.level]
     local requirements = {
-        {resource_type = _("荣耀点"),
-            isVisible = true,
-            isSatisfy = true,
-            icon="honour.png",
-            description="200/400"},
-        {resource_type = _("联盟城堡等级"),
-            isVisible = true,
-            isSatisfy = true,
-            icon="keep_760x855.png",
-            description="22/16"},
+        palace = {
+            {resource_type = _("荣耀点"),
+                isVisible = true,
+                isSatisfy = alliance:Honour()>=now_c.needHonour,
+                icon="honour.png",
+                description=alliance:Honour().."/"..now_c.needHonour},
+            {resource_type = _("联盟城堡等级"),
+                isVisible = alliance:GetMemeberById(DataManager:getUserData()._id):IsArchon(),
+                isSatisfy = City:GetFirstBuildingByType("keep"):GetLevel()>=now_c.needKeep,
+                icon="keep_760x855.png",
+                description=City:GetFirstBuildingByType("keep"):GetLevel().."/"..now_c.needKeep},
 
-        {resource_type = _("职位"),
-            isVisible = true,
-            isSatisfy = true ,
-            icon="leader.png",
-            description= "联盟盟主"},
+            {resource_type = _("职位"),
+                isVisible = true,
+                isSatisfy = alliance:GetMemeberById(DataManager:getUserData()._id):IsArchon() ,
+                icon="leader.png",
+                description= _("联盟盟主")},
+        },
     }
-
     if not self.requirement_listview then
         self.requirement_listview = WidgetRequirementListview.new({
             title = _("升级需求"),
             height = 298,
-            contents = requirements,
+            contents = requirements[self.building.name],
         }):addTo(self):pos(display.cx-275, display.top-866)
     end
-    self.requirement_listview:RefreshListView(requirements)
+    self.requirement_listview:RefreshListView(requirements[self.building.name])
 end
 
 function WidgetAllianceBuildingUpgrade:onExit()
 
 end
 
+function WidgetAllianceBuildingUpgrade:getNextLevelConfig__()
+    self.building_config = GameDatas.AllianceBuilding[self.building.name]
+    if #self.building_config == self.building.level then
+        return self.building_config[self.building.level]
+    else
+        return self.building_config[self.building.level+1]
+    end
+end
 
 return WidgetAllianceBuildingUpgrade
+
+
+
 
 
 

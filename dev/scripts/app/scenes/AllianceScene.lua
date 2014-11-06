@@ -6,7 +6,7 @@ local AllianceScene = class("AllianceScene", MapScene)
 
 function AllianceScene:ctor()
     AllianceScene.super.ctor(self)
-    
+
     local manager = ccs.ArmatureDataManager:getInstance()
     manager:removeArmatureFileInfo("animations/chuizidonghua.ExportJson")
     manager:removeArmatureFileInfo("animations/green_dragon.ExportJson")
@@ -29,8 +29,8 @@ function AllianceScene:onExit()
 end
 function AllianceScene:CreateSceneLayer()
     local scene = AllianceLayer.new()
-    :addTo(self)
-    :ZoomTo(1)
+        :addTo(self)
+        :ZoomTo(1)
     return scene
 end
 function AllianceScene:onEnterTransitionFinish()
@@ -41,10 +41,16 @@ end
 function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
-        dump(building:GetEntity())
+        local building_info = building:GetEntity():GetAllianceBuildingInfo()
+        if building_info then
+            if building_info.name == "palace" then
+                UIKit:newGameUI('GameUIAllianceEnter',building_info):addToCurrentScene(true)
+            end
+        end
     end
 end
 return AllianceScene
+
 
 
 

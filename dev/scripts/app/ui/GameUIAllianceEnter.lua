@@ -11,8 +11,8 @@ local ENTER_LIST = {
     palace = {
         height = 261,
         title = _("联盟宫殿"),
-        building_image = "keep_760x855.png",
-        building_desc = "联盟的核心建筑，升级可提升联盟人数上限，向占领城市征税，更改联盟地形。",
+        building_image = "palace_421x481.png",
+        building_desc = _("联盟的核心建筑，升级可提升联盟人数上限，向占领城市征税，更改联盟地形。"),
         building_info = {
             {
                 {_("坐标"),0x797154},
@@ -31,74 +31,34 @@ local ENTER_LIST = {
             {
                 img = "Icon_info.png",
                 title = _("信息"),
-                func = function ()
-                    UIKit:newGameUI('GameUIAlliancePalace',City,"info"):addToCurrentScene(true)
+                func = function (building)
+                    UIKit:newGameUI('GameUIAlliancePalace',City,"info",building):addToCurrentScene(true)
                 end
             },
             {
-                img = "Icon_tax.png",
+                img = "icon_tax.png",
                 title = _("收税"),
-                func = function ()
-                    UIKit:newGameUI('GameUIAlliancePalace',City,"impose"):addToCurrentScene(true)
+                func = function (building)
+                    UIKit:newGameUI('GameUIAlliancePalace',City,"impose",building):addToCurrentScene(true)
                 end
             },
             {
                 img = "Icon_upgrade.png",
                 title = _("升级"),
-                func = function ()
-                    UIKit:newGameUI('GameUIAlliancePalace',City,"upgarde"):addToCurrentScene(true)
+                func = function (building)
+                    UIKit:newGameUI('GameUIAlliancePalace',City,"upgarde",building):addToCurrentScene(true)
                 end
             },
         },
     },
-    foodVillage = {
-        height = 261,
-        title = _("粮食村落"),
-        building_image = "farmer_2_312x305.png",
-        building_desc = "联盟的核心建筑，升级可提升联盟人数上限，向占领城市征税，更改联盟地形。",
-        building_info = {
-            {
-                {_("坐标"),0x797154},
-                {_("11,11"),0x403c2f},
-            },
-            {
-                {_("成员"),0x797154},
-                {_("25/30"),0x403c2f},
-            },
-            {
-                {_("占领城市"),0x797154},
-                {_("44"),0x403c2f},
-            },
-        },
-        enter_buttons = {
-            {
-                img = "Icon_info.png",
-                title = _("信息"),
-                func = function ()
-                    UIKit:newGameUI('GameUIAlliancePalace',City,"info"):addToCurrentScene(true)
-                end
-            },
-            {
-                img = "Icon_tax.png",
-                title = _("收税"),
-                func = function ()
-                    UIKit:newGameUI('GameUIAlliancePalace',City,"impose"):addToCurrentScene(true)
-                end
-            },
-            {
-                img = "Icon_upgrade.png",
-                title = _("升级"),
-                func = function ()
-                    UIKit:newGameUI('GameUIAlliancePalace',City,"upgarde"):addToCurrentScene(true)
-                end
-            },
-        },
-    },
+
 }
 
-function GameUIAllianceEnter:ctor()
+function GameUIAllianceEnter:ctor(building)
     self:setNodeEventEnabled(true)
-    self.params = ENTER_LIST.palace
+    self.building = building
+    self.params = ENTER_LIST[building.name]
+    assert(ENTER_LIST[building.name],"联盟建筑配置为空")
     self.body = self:CreateBackGroundWithTitle(self.params)
         :align(display.CENTER, window.cx, window.top -400)
         :addTo(self)
@@ -143,12 +103,14 @@ function GameUIAllianceEnter:CreateItemWithLine(params)
         color = params[1][2],
     }):align(display.LEFT_BOTTOM, 0, 6)
         :addTo(line)
-    UIKit:ttfLabel({
-        text = params[2][1],
-        size = 20,
-        color = params[2][2],
-    }):align(display.RIGHT_BOTTOM, size.width, 6)
-        :addTo(line)
+    if params[2] then
+        UIKit:ttfLabel({
+            text = params[2][1],
+            size = 20,
+            color = params[2][2],
+        }):align(display.RIGHT_BOTTOM, size.width, 6)
+            :addTo(line)
+    end
     return line
 end
 
@@ -190,7 +152,7 @@ function GameUIAllianceEnter:InitBuildingImage()
     local level_bg = display.newSprite("back_ground_138x34.png")
         :addTo(body):pos(96, p.height-180)
     UIKit:ttfLabel({
-        text = "Level 20",
+        text = _("Level").." "..self.building.level,
         size = 20,
         color = 0x514d3e,
     }):align(display.CENTER, level_bg:getContentSize().width/2 , level_bg:getContentSize().height/2)
@@ -205,7 +167,7 @@ function GameUIAllianceEnter:InitEnterButton(buttons)
         local btn = WidgetPushButton.new({normal = "btn_130X104.png",pressed = "btn_pressed_130X104.png"})
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
-                    v.func()
+                    v.func(self.building)
                     self:removeFromParent(true)
                 end
             end):align(display.RIGHT_TOP,width-count*btn_width, 5):addTo(self.body)
@@ -230,6 +192,7 @@ function GameUIAllianceEnter:onExit()
 end
 
 return GameUIAllianceEnter
+
 
 
 

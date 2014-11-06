@@ -10,9 +10,10 @@ local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local Localize = import("..utils.Localize")
 
 
-function GameUIAlliancePalace:ctor(city,default_tab)
+function GameUIAlliancePalace:ctor(city,default_tab,building)
     GameUIAlliancePalace.super.ctor(self, city, _("联盟宫殿"))
     self.default_tab = default_tab
+    self.building = building
 end
 
 function GameUIAlliancePalace:onEnter()
@@ -59,7 +60,7 @@ function GameUIAlliancePalace:CreateBetweenBgAndTitle()
     GameUIAlliancePalace.super.CreateBetweenBgAndTitle(self)
 
     -- upgrade_layer
-    self.upgrade_layer = WidgetAllianceBuildingUpgrade.new()
+    self.upgrade_layer = WidgetAllianceBuildingUpgrade.new(self.building)
     self:addChild(self.upgrade_layer)
     -- impose_layer
     self.impose_layer = display.newLayer()
