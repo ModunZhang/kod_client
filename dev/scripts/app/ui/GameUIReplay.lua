@@ -1,5 +1,6 @@
 local window = import("..utils.window")
 local promise = import("..utils.promise")
+local Wall = import(".Wall")
 local Corps = import(".Corps")
 local UILib = import(".UILib")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -16,10 +17,26 @@ local battle_data = {
         {{state = "defend"}, {state = "hurt"}},
         {{state = "defend"}, {state = "attack"}},
         {{state = "hurt"}, {state = "defend"}},
-        {{state = "defeat"}, {state = "defend"}},
+        {{state = "defend"}, {state = "defeat"}},
     },
+    -- {
+    --     {{soldier = "swordsman", state = "enter"}, {state = "defend"}},
+    --     {{state = "attack"}, {state = "defend"}},
+    --     {{state = "defend"}, {state = "hurt"}},
+    --     {{state = "defend"}, {state = "attack"}},
+    --     {{state = "hurt"}, {state = "defend"}},
+    --     {{state = "defeat"}, {state = "defend"}},
+    -- },
+    -- {
+    --     {{soldier = "wall", state = "enter"}, {state = "move"}},
+    --     {{state = "defend"}, {state = "attack"}},
+    --     {{state = "hurt"}, {state = "defend"}},
+    --     {{state = "attack"}, {state = "defend"}},
+    --     {{state = "defend"}, {state = "hurt"}},
+    --     {{state = "defend"}, {state = "defeat"}},
+    -- },    
     {
-        {{soldier = "swordsman", state = "enter"}, {state = "defend"}},
+        {{state = "move"}, {soldier = "wall", state = "enter"}},
         {{state = "attack"}, {state = "defend"}},
         {{state = "defend"}, {state = "hurt"}},
         {{state = "defend"}, {state = "attack"}},
@@ -88,8 +105,10 @@ function GameUIReplay:onEnter()
 
 
 
+    local battle = display.newNode():addTo(back_ground):pos(back_width_half - 590/2, back_height - 388 - 10)
+    self.battle = battle
     local battle_bg = cc.ui.UIImage.new("battle_bg_590x388.png")
-        :addTo(back_ground):align(display.CENTER, back_width_half, back_height - 388/2 - 10)
+        :addTo(battle):align(display.LEFT_BOTTOM, 0, 0)
     self.battle_bg = battle_bg
 
 
@@ -239,7 +258,6 @@ function GameUIReplay:onEnter()
     self.left_corps = {}
     self.right_corps = {}
 
-
     local item, left, right = self:CreateItemWithListView(self.list_view, {"ranger", "lancer"})
     table.insert(self.left_corps, left)
     table.insert(self.right_corps, right)
@@ -273,6 +291,25 @@ function GameUIReplay:onEnter()
         end)
     end
     rounds:resolve()
+
+
+
+
+end
+function GameUIReplay:MoveBattleBgBy(x)
+    return function(battle_bg)
+        local p = promise.new()
+        transition.moveBy(battle_bg, {
+            x = x, y = 0, time = 1,
+            onComplete = function()
+                p:resolve(battle_bg)
+            end
+        })
+        return p
+    end
+end
+function GameUIReplay:NewWall(x)
+    return Wall.new():addTo(self.battle_bg):pos(x, 150)
 end
 function GameUIReplay:NewCorps(soldier, x, y)
     local soldier_arrange = {
@@ -282,7 +319,7 @@ function GameUIReplay:NewCorps(soldier, x, y)
         catapult = {row = 2, col = 1},
     }
     local arrange = soldier_arrange[soldier]
-    return Corps.new(soldier, arrange.row, arrange.col):addTo(self.battle_bg):pos(x, y)
+    return Corps.new(soldier, arrange.row, arrange.col):addTo(self.battle):pos(x, y)
 end
 function GameUIReplay:DecodeStateBySide(side, is_left, round)
     local height = 90
@@ -292,41 +329,66 @@ function GameUIReplay:DecodeStateBySide(side, is_left, round)
     local right_start = {x = 700, y = height}
     local right_end = {x = right_start.x - len, y = height}
     local action
-    if side.state == "enter" then
+    local state = side.state
+    if state == "enter" then
         if is_left then
-            self.left = self:NewCorps(side.soldier, left_start.x, left_start.y)
-            action = Corps:Do(function(corps)
-                self.left_corps[round]:SetUnitStatus("fighting")
-                return corps
-            end):next(Corps:MoveTo(left_end.x, left_end.y, 2))
-                :next(Corps:BreathForever())
+            if side.soldier == "wall" then
+                self.left = self:NewWall(-50)
+                action = promise.new(Wall:TurnRight()):next(function()
+                    return promise.new(GameUIReplay:MoveBattleBgBy(100))
+                        :next(function()
+                            return self.left
+                        end):resolve(self.battle_bg)
+                end)
+            else
+                self.left = self:NewCorps(side.soldier, left_start.x, left_start.y)
+                action = Corps:Do(function(corps)
+                    self.left_corps[round]:SetUnitStatus("fighting")
+                    return corps
+                end):next(Corps:MoveTo(left_end.x, left_end.y, 2))
+                    :next(Corps:BreathForever())
+            end
         else
-            self.right = self:NewCorps(side.soldier, right_start.x, right_start.y)
-            action = Corps:Do(function(corps)
-                self.right_corps[round]:SetUnitStatus("fighting")
-                return corps
-            end):next(Corps:TurnLeft()):next(Corps:MoveTo(right_end.x, right_end.y, 2)):next(Corps:BreathForever())
+            if side.soldier == "wall" then
+                self.right = self:NewWall(650)
+                action = promise.new(Wall:TurnLeft()):next(function()
+                    return promise.new(GameUIReplay:MoveBattleBgBy(-100))
+                        :next(function()
+                            return self.right
+                        end):resolve(self.battle_bg)
+                end)
+            else
+                self.right = self:NewCorps(side.soldier, right_start.x, right_start.y)
+                action = Corps:Do(function(corps)
+                    self.right_corps[round]:SetUnitStatus("fighting")
+                    return corps
+                end):next(Corps:TurnLeft())
+                    :next(Corps:MoveTo(right_end.x, right_end.y, 2))
+                    :next(Corps:BreathForever())
+            end
         end
-    elseif side.state == "attack" then
+    elseif state == "attack" then
         action = Corps:Do(Corps:AttackOnce()):next(function(corps)
             Corps:Do(Corps:BreathForever()):resolve(corps)
             return corps
         end)
-    elseif side.state == "defend" then
+    elseif state == "defend" then
         action = Corps:Do(Corps:Hold())
-    elseif side.state == "breath" then
+    elseif state == "breath" then
         action = Corps:Do(Corps:BreathForever())
-    elseif side.state == "hurt" then
+    elseif state == "hurt" then
         action = Corps:Do(Corps:HitOnce()):next(function(corps)
             Corps:Do(Corps:BreathForever()):resolve(corps)
             return corps
         end)
-    elseif side.state == "defeat" then
+    elseif state == "move" then
+        action = Corps:Do(Corps:Move())
+    elseif state == "defeat" then
         action = Corps:Do(function(corps)
             if is_left then
                 self.left_corps[round]:SetUnitStatus("defeated")
             else
-                self.right_corps[round]:SetUnitStatus("defeated")
+                -- self.right_corps[round]:SetUnitStatus("defeated")
             end
             return corps
         end):next(Corps:FadeOut()):next(function(corps)
@@ -366,6 +428,20 @@ function GameUIReplay:CreateItemWithListView(list_view, duals)
 end
 
 return GameUIReplay
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

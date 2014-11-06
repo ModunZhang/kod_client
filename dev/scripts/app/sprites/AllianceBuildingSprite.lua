@@ -1,10 +1,10 @@
 local Sprite = import(".Sprite")
 local AllianceBuildingSprite = class("AllianceBuildingSprite", Sprite)
 local building_map = {
-    palace = {"palace_421x481.png", 0.7},
+    palace = {"palace_421x481.png", 0.5},
     shrine = {"shrine_256x210.png", 0.7},
-    shop = {"shop_268x274.png", 0.7},
-    orderHall = {"orderHall_277x417.png", 0.7},
+    shop = {"shop_268x274.png", 0.5},
+    orderHall = {"orderHall_277x417.png", 0.5},
     moonGate = {"moonGate_200x217.png", 1},
 }
 function AllianceBuildingSprite:ctor(city_layer, entity)

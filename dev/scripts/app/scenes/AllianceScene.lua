@@ -17,6 +17,7 @@ function AllianceScene:ctor()
     manager:addArmatureFileInfo("animations/green_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Blue_dragon.ExportJson")
+
 end
 function AllianceScene:onEnter()
     AllianceScene.super.onEnter(self)

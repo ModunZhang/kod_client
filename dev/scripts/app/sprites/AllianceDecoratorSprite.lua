@@ -2,12 +2,12 @@ local Sprite = import(".Sprite")
 local AllianceDecoratorSprite = class("AllianceDecoratorSprite", Sprite)
 local allianceBuildingType = GameDatas.AllianceInitData.buildingType
 local decorator_map = {
-    decorate_lake_1 = { png = "lake_288x240.png" },
-    decorate_lake_2 = { png = "lake_220x174.png" },
-    decorate_mountain_1 = { png = "hill_228x146.png" },
-    decorate_mountain_2 = { png = "hill_312x296.png" },
-    decorate_tree_1 = { png = "tree_1_120x120.png" },
-    decorate_tree_2 = { png = "tree_2_120x120.png" },
+    decorate_lake_1 = { "lake_288x240.png", 1 },
+    decorate_lake_2 = { "lake_220x174.png", 1 },
+    decorate_mountain_1 = { "hill_228x146.png", 1 },
+    decorate_mountain_2 = { "hill_312x296.png", 1 },
+    decorate_tree_1 = { "tree_1_120x120.png", 0.8 },
+    decorate_tree_2 = { "tree_2_120x120.png", 0.8 },
 }
 function AllianceDecoratorSprite:ctor(city_layer, entity)
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
@@ -16,7 +16,7 @@ function AllianceDecoratorSprite:ctor(city_layer, entity)
     -- self:GetSprite():setVisible(false)
 end
 function AllianceDecoratorSprite:GetSpriteFile()
-    return decorator_map[self:GetEntity():GetType()].png
+    return unpack(decorator_map[self:GetEntity():GetType()])
 end
 function AllianceDecoratorSprite:GetSpriteOffset()
     local w, h = self:GetSize()

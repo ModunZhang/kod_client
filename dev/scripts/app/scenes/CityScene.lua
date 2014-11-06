@@ -75,6 +75,7 @@ function CityScene:onEnter()
     }, User.LISTEN_TYPE.INVITE_TO_ALLIANCE)
 
     self:GetSceneLayer():ZoomTo(0.7)
+
 end
 function CityScene:onExit()
     home_page = nil

@@ -17,6 +17,9 @@ local SOLDIER_ANIMATIONS = {
     },
     swordsman = {
         "Infantry_1_render",
+    },
+    wall = {
+        "chengqiang_1",
     }
 }
 local SOLDIER_ANIMATION_FILES = {
@@ -31,6 +34,9 @@ local SOLDIER_ANIMATION_FILES = {
     },
     swordsman = {
         "animations/Infantry_1_render.ExportJson",
+    },
+    wall = {
+        "animations/chengqiang_1.ExportJson",
     }
 }
 local SOLDIER_IMAGES = {
@@ -55,5 +61,6 @@ return {
     soldier_animation = SOLDIER_ANIMATIONS,
     soldier_image = SOLDIER_IMAGES
 }
+
 
 

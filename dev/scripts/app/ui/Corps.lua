@@ -99,6 +99,16 @@ function Corps:MoveTo(x, y, time)
         return p
     end
 end
+function Corps:Move()
+    return function(corps)
+        corps:PlayAnimation("move_2")
+        local p = promise.new()
+        corps:OnAnimationPlayEnd("move_2", function()
+            p:resolve(corps)
+        end)
+        return p
+    end
+end
 function Corps:BreathForever()
     return function(corps)
         corps:PlayAnimation("idle_2")
