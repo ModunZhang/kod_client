@@ -31,14 +31,16 @@ return function(object, property_name, initial, property_type)
             if obj[property_name] ~= value then
                 local old_value = obj[property_name]
                 obj[property_name] = value
-                if type(obj.OnPropertyChange) == "function" then
-                    obj:OnPropertyChange(property_name, old_value, value)
-                end
+                obj:OnPropertyChange(property_name, old_value, value)
             end
         end
     end
-
 end
+
+
+
+
+
 
 
 

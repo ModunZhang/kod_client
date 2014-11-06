@@ -2,6 +2,7 @@
 -- Author: gaozhou
 -- Date: 2014-08-18 14:33:28
 --
+local cocos_promise = import("..utils.cocos_promise")
 local Alliance = import("..entity.Alliance")
 local Flag = import("..entity.Flag")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -37,10 +38,7 @@ function GameUIShop:onEnter()
         :onButtonClicked(function()
             local current = self.shop_city:GetResourceManager():GetGemResource():GetValue() + add_gem
             -- NetManager:sendMsg("gem "..current, NOT_HANDLE)
-            NetManager:getSendGlobalMsgPromise("gem "..current):catch(function(err)
-                dump(err:reason())
-            end)
-
+            cocos_promise.promiseWithCatchError(NetManager:getSendGlobalMsgPromise("gem "..current))
         end)
     -- :setButtonEnabled(false)
     -- :SetFilter({
@@ -59,11 +57,9 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 500)
         :onButtonClicked(function()
-            NetManager:getSendGlobalMsgPromise("reset"):next(function()
+            cocos_promise.promiseWithCatchError(NetManager:getSendGlobalMsgPromise("reset"):next(function()
                 return NetManager:getQuitAlliancePromise()
-            end):catch(function(err)
-                dump(err:reason())
-            end)
+            end))
         end)
 
 
@@ -137,17 +133,14 @@ function GameUIShop:onEnter()
             if event.target:getButtonLabel():getString() == "联盟类型到直接" then
                 event.target:getButtonLabel():setString("联盟类型到审核")
                 -- NetManager:editAllianceJoinType("all", NOT_HANDLE)
-                NetManager:getEditAllianceJoinTypePromise("all"):catch(function(err)
-                    dump(err:reason())
-                end):done(function(result)
+                cocos_promise.promiseWithCatchError(NetManager:getEditAllianceJoinTypePromise("all")):done(function(result)
                     dump(result)
                 end)
             else
                 event.target:getButtonLabel():setString("联盟类型到直接")
                 -- NetManager:editAllianceJoinType("audit", NOT_HANDLE)
-                NetManager:getEditAllianceJoinTypePromise("audit"):catch(function(err)
-                    dump(err:reason())
-                end):done(function(result)
+                cocos_promise.promiseWithCatchError(NetManager:getEditAllianceJoinTypePromise("audit")
+                ):done(function(result)
                     dump(result)
                 end)
             end
@@ -171,9 +164,7 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 320, window.top - 300)
         :onButtonClicked(function(event)
-            NetManager:getRefuseJoinAllianceRequestPromise(member_id):catch(function(err)
-                dump(err:reason())
-            end):done(function(result)
+            cocos_promise.promiseWithCatchError(NetManager:getRefuseJoinAllianceRequestPromise(member_id)):done(function(result)
                 dump(result)
             end)
         end)
@@ -189,9 +180,7 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 300)
         :onButtonClicked(function(event)
-            NetManager:getAgreeJoinAllianceRequestPromise(member_id):catch(function(err)
-                dump(err:reason())
-            end):done(function(result)
+            cocos_promise.promiseWithCatchError(NetManager:getAgreeJoinAllianceRequestPromise(member_id)):done(function(result)
                 dump(result)
             end)
         end)
@@ -209,12 +198,10 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 140, window.top - 400)
         :onButtonClicked(function(event)
-            NetManager:getCreateAlliancePromise("1", "111", "all", "grassLand", Flag:RandomFlag():EncodeToJson())
+            cocos_promise.promiseWithCatchError(NetManager:getCreateAlliancePromise("1", "111", "all", "grassLand", Flag:RandomFlag():EncodeToJson())
                 :done(function(result)
                     dump(result)
-                end):catch(function(err)
-                dump(err:reason())
-                end)
+                end))
         end)
 
     WidgetPushButton.new(
@@ -229,12 +216,10 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 320, window.top - 400)
         :onButtonClicked(function(event)
-            NetManager:getFetchCanDirectJoinAlliancesPromise("1"):next(function(result)
-                dump(result)
-                -- return NetManager:getJoinAllianceDirectlyPromise(Alliance:DecodeFromJsonData(result.alliances[1]):Id())
-            end):catch(function(err)
-                dump(err:reason())
-            end)
+            cocos_promise.promiseWithCatchError(NetManager:getFetchCanDirectJoinAlliancesPromise("1"):next(function(result)
+                -- dump(result)
+                return NetManager:getJoinAllianceDirectlyPromise(Alliance:DecodeFromJsonData(result.alliances[1]):Id())
+            end))
         end)
 
     WidgetPushButton.new(
@@ -249,11 +234,9 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 400)
         :onButtonClicked(function(event)
-            NetManager:getSearchAllianceByTagPromsie("1"):next(function(result)
+            cocos_promise.promiseWithCatchError(NetManager:getSearchAllianceByTagPromsie("1"):next(function(result)
                 return NetManager:getRequestToJoinAlliancePromise(Alliance:DecodeFromJsonData(result.alliances[1]):Id())
-            end):catch(function(err)
-                dump(err:reason())
-            end)
+            end))
         end)
 
 
@@ -269,9 +252,7 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 140, window.top - 500)
         :onButtonClicked(function(event)
-            NetManager:getQuitAlliancePromise():catch(function(err)
-                dump(err:reason())
-            end)
+            cocos_promise.promiseWithCatchError(NetManager:getQuitAlliancePromise())
         end)
 
 
@@ -294,10 +275,7 @@ function GameUIShop:onEnter()
             --     terrain="grassLand",
             --     flag=Flag:RandomFlag():EncodeToJson()
             -- }, NOT_HANDLE)
-            NetManager:getCreateAlliancePromise("2", "222", "all", "grassLand", Flag:RandomFlag():EncodeToJson())
-                :catch(function(err)
-                    dump(err:reason())
-                end)
+            cocos_promise.promiseWithCatchError(NetManager:getCreateAlliancePromise("2", "222", "all", "grassLand", Flag:RandomFlag():EncodeToJson()))
         end)
 
     WidgetPushButton.new(
@@ -312,11 +290,9 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 320, window.top - 600)
         :onButtonClicked(function(event)
-            NetManager:getSearchAllianceByTagPromsie("2"):next(function(result)
+            cocos_promise.promiseWithCatchError(NetManager:getSearchAllianceByTagPromsie("2"):next(function(result)
                 return NetManager:getRequestToJoinAlliancePromise(Alliance:DecodeFromJsonData(result.alliances[1]):Id())
-            end):catch(function(err)
-                dump(err:reason())
-            end)
+            end))
         end)
 
     WidgetPushButton.new(
@@ -331,11 +307,9 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 600)
         :onButtonClicked(function(event)
-            NetManager:getSearchAllianceByTagPromsie("2"):next(function(result)
+            cocos_promise.promiseWithCatchError(NetManager:getSearchAllianceByTagPromsie("2"):next(function(result)
                 return NetManager:getRequestToJoinAlliancePromise(Alliance:DecodeFromJsonData(result.alliances[1]):Id())
-            end):catch(function(err)
-                dump(err:reason())
-            end)
+            end))
         end)
 
 
@@ -351,11 +325,9 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 140, window.top - 700)
         :onButtonClicked(function(event)
-            NetManager:getInviteToJoinAlliancePromise("Zk9ErNdsH"):next(function(result)
+            cocos_promise.promiseWithCatchError(NetManager:getInviteToJoinAlliancePromise("Zk9ErNdsH"):next(function(result)
                 dump(result)
-            end):catch(function(err)
-                dump(err:reason())
-            end)
+            end))
         end)
 
     WidgetPushButton.new(
@@ -370,13 +342,10 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 320, window.top - 700)
         :onButtonClicked(function(event)
-            NetManager:getPlayerInfoPromise("Zk9ErNdsH")
+            cocos_promise.promiseWithCatchError(NetManager:getPlayerInfoPromise("Zk9ErNdsH")
                 :next(function(data)
                     dump(data)
-                end)
-                :catch(function(err)
-                    dump(err:reason())
-                end)
+                end))
         end)
 
 
@@ -399,13 +368,10 @@ function GameUIShop:onEnter()
                     return true
                 end
             end)
-            NetManager:getKickAllianceMemberOffPromise(memberid)
+            cocos_promise.promiseWithCatchError(NetManager:getKickAllianceMemberOffPromise(memberid)
                 :next(function(data)
                     dump(data)
-                end)
-                :catch(function(err)
-                    dump(err:reason())
-                end)
+                end))
         end)
 
     WidgetPushButton.new(
@@ -428,13 +394,10 @@ function GameUIShop:onEnter()
                 end
             end)
             if not member:IsTitleHighest() then
-                NetManager:getEditAllianceMemberTitlePromise(member:Id(), member:TitleUpgrade())
+                cocos_promise.promiseWithCatchError(NetManager:getEditAllianceMemberTitlePromise(member:Id(), member:TitleUpgrade())
                     :next(function(data)
                         dump(data)
-                    end)
-                    :catch(function(err)
-                        dump(err:reason())
-                    end)
+                    end))
             end
         end)
 
@@ -459,13 +422,10 @@ function GameUIShop:onEnter()
                 end
             end)
             if not member:IsTitleLowest() then
-                NetManager:getEditAllianceMemberTitlePromise(member:Id(), member:TitleDegrade())
+                cocos_promise.promiseWithCatchError(NetManager:getEditAllianceMemberTitlePromise(member:Id(), member:TitleDegrade())
                     :next(function(data)
                         dump(data)
-                    end)
-                    :catch(function(err)
-                        dump(err:reason())
-                    end)
+                    end))
             end
         end)
 
@@ -490,13 +450,10 @@ function GameUIShop:onEnter()
                 end
             end)
             if Alliance_Manager:GetMyAlliance():GetMemeberById(User:Id()):IsArchon() then
-                NetManager:getHandOverArchonPromise(member:Id())
+                cocos_promise.promiseWithCatchError(NetManager:getHandOverArchonPromise(member:Id())
                     :next(function(data)
                         dump(data)
-                    end)
-                    :catch(function(err)
-                        dump(err:reason())
-                    end)
+                    end))
             end
         end)
 
@@ -515,10 +472,8 @@ function GameUIShop:onEnter()
         :align(display.CENTER, window.left + 140, window.top - 900)
         :onButtonClicked(function(event)
             math.randomseed(os.time())
-            NetManager:getEditAllianceNoticePromise("随机数公告: "..math.random(123456789))
-                :catch(function(err)
-                    dump(err:reason())
-                end)
+            cocos_promise.promiseWithCatchError(NetManager:getEditAllianceNoticePromise("随机数公告: "..math.random(123456789)))
+
         end)
 
     WidgetPushButton.new(
@@ -534,10 +489,7 @@ function GameUIShop:onEnter()
         :align(display.CENTER, window.left + 320, window.top - 900)
         :onButtonClicked(function(event)
             math.randomseed(os.time())
-            NetManager:getEditAllianceDescriptionPromise("随机描述: "..math.random(123456789))
-                :catch(function(err)
-                    dump(err:reason())
-                end)
+            cocos_promise.promiseWithCatchError(NetManager:getEditAllianceDescriptionPromise("随机描述: "..math.random(123456789)))
         end)
 
 
@@ -554,10 +506,7 @@ function GameUIShop:onEnter()
         :align(display.CENTER, window.left + 500, window.top - 900)
         :onButtonClicked(function(event)
             math.randomseed(os.time())
-            NetManager:getEditTitleNamePromise("archon", "萌主"..math.random(10))
-                :catch(function(err)
-                    dump(err:reason())
-                end)
+            cocos_promise.promiseWithCatchError(NetManager:getEditTitleNamePromise("archon", "萌主"..math.random(10)))
         end)
 
 
@@ -573,11 +522,9 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 140, window.top - 1000)
         :onButtonClicked(function(event)
-            NetManager:getAgreeJoinAllianceInvitePromise(User:GetInviteEvents()[1].id):next(function(ee)
+            cocos_promise.promiseWithCatchError(NetManager:getAgreeJoinAllianceInvitePromise(User:GetInviteEvents()[1].id):next(function(ee)
                 dump(ee)
-            end):catch(function(err)
-                dump(err:reason())
-            end)
+            end))
         end)
 
 
@@ -593,16 +540,14 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 320, window.top - 1000)
         :onButtonClicked(function(event)
-            NetManager:getCancelJoinAlliancePromise(
+            cocos_promise.promiseWithCatchError(NetManager:getCancelJoinAlliancePromise(
                 User:GetRequestEvents()[1].id
             ):next(function(ee)
                 dump(ee)
-            end):catch(function(err)
-                dump(err:reason())
-            end)
+            end))
         end)
 
-        WidgetPushButton.new(
+    WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
@@ -614,16 +559,83 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 1000)
         :onButtonClicked(function(event)
-            NetManager:getDisagreeJoinAllianceInvitePromise(
+            cocos_promise.promiseWithCatchError(NetManager:getDisagreeJoinAllianceInvitePromise(
                 User:GetInviteEvents()[1].id
-            ):next(function(ee)
-                dump(ee)
-            end):catch(function(err)
-                dump(err:reason())
-            end)
+            ))
         end)
 
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "随机移动圣殿",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 140, window.top - 1100)
+        :onButtonClicked(function(event)
+            cocos_promise.promiseWithCatchError(
+                NetManager:getMoveAllianceBuildingPromise(
+                    "shrine", 14, 8
+                )
+            )
+        end)
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "修改联盟荣耀 1000",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 320, window.top - 1100)
+        :onButtonClicked(function(event)
+            cocos_promise.promiseWithCatchError(
+                NetManager:getSendGlobalMsgPromise("alliancehonour 1000")
+            )
+        end)
 
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "随机移动城市",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 500, window.top - 1100)
+        :onButtonClicked(function(event)
+            cocos_promise.promiseWithCatchError(
+                NetManager:getMoveAllianceMemberPromise(
+                    14, 15
+                )
+            )
+        end)
+
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "随机拆除一个装饰物",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 140, window.top - 1200)
+        :onButtonClicked(function(event)
+            cocos_promise.promiseWithCatchError(
+                NetManager:getDistroyAllianceDecoratePromise(
+                    "WkFMlrSqJL"
+                )
+            )
+        end)
 
 
     item:addContent(content)
@@ -637,83 +649,6 @@ end
 
 
 return GameUIShop
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -1,6 +1,7 @@
 local Enum = import("..utils.Enum")
 local property = import("..utils.property")
 local AllianceMember = class("AllianceMember")
+property(AllianceMember, "id")
 property(AllianceMember, "level", 0)
 property(AllianceMember, "kill", 0)
 property(AllianceMember, "power", 0)
@@ -9,7 +10,6 @@ property(AllianceMember, "lastLoginTime", 0)
 property(AllianceMember, "icon", "")
 property(AllianceMember, "title")
 property(AllianceMember, "name")
-
 local titles_enum = Enum("member",
     "elite",
     "supervisor",
@@ -17,24 +17,10 @@ local titles_enum = Enum("member",
     "general",
     "archon")
 function AllianceMember:ctor(id)
-    property(self, "id", id)
-    
+    self.id = id
     self.location = {x = 0, y = 0}
-    self.donateStatus = {
-        ["wood"] = 1,
-        ["gem"] = 1,
-        ["coin"] = 1,
-        ["stone"] = 1,
-        ["iron"] = 1,
-        ["food"] = 1,
-    }
-    self.allianceExp = {
-        ["ironExp"] = 0,
-        ["stoneExp"] = 0,
-        ["coinExp"] = 0,
-        ["foodExp"] = 0,
-        ["woodExp"] = 0,
-    }
+    self.donateStatus = {}
+    self.allianceExp = {}
 end
 function AllianceMember:IsArchon()
     return self:Title() == "archon"
@@ -55,33 +41,43 @@ function AllianceMember:TitleDegrade()
 end
 function AllianceMember:DecodeFromJson(data)
     local member = AllianceMember.new(data.id)
-    member:SetLevel(data.level)
-    member:SetKill(data.kill)
-    member:SetIcon(data.icon)
-    member:SetTitle(data.title)
-    member:SetName(data.name)
-    member:SetPower(data.power)
-    member:SetLastLoginTime(data.lastLoginTime)
-    member:SetLoyalty(data.loyalty)
+    for k, v in pairs(data) do
+        member[k] = v 
+    end
     return member
 end
 function AllianceMember:IsSameDataWith(member)
+    return not self:IsDifferentWith(member)
+end
+function AllianceMember:IsDifferentWith(member)
     if not member then return false end
     for _, v in ipairs{
-        "Level",
-        "Kill",
-        "Power",
-        "Loyalty",
-        "LastLoginTime",
-        "Icon",
-        "Title",
-        "Name"
+        "level",
+        "kill",
+        "power",
+        "loyalty",
+        "lastlogintime",
+        "icon",
+        "title",
+        "name"
     } do
-        if self[v](self) ~= member[v](member) then
-            return false
+        if self[v] ~= member[v] then
+            return true
         end
     end
-    return true
+    for _, key in ipairs{
+        "location",
+        "donateStatus",
+        "allianceExp",
+    } do
+        local value = member[key]
+        for k, v in pairs(self[key]) do
+            if v ~= value[k] then
+                return true
+            end
+        end
+    end
+    return false
 end
 function AllianceMember:IsTheSamePerson(member)
     return self:IsTheSameId(member:Id())
@@ -93,6 +89,8 @@ end
 
 
 return AllianceMember
+
+
 
 
 
