@@ -15,6 +15,9 @@ local modify_height = window.height - 60
 local Alliance_Manager = Alliance_Manager
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local Flag = import("..entity.Flag")
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
+
+
 function GameUIAllianceBasicSetting:ctor(isModify)
 	GameUIAllianceBasicSetting.super.ctor(self)
 	self.alliance_ui_helper = WidgetAllianceUIHelper.new()
@@ -324,8 +327,8 @@ function GameUIAllianceBasicSetting:createTextfieldPanel_()
         image = "alliance_editbox_575x48.png",
         size = cc.size(552,48),
     })
-    editbox_tag:setPlaceHolder(_("最多可输入600字符"))
-    editbox_tag:setMaxLength(600)
+    editbox_tag:setPlaceHolder(_("最多可输入20字符"))
+    editbox_tag:setMaxLength(20)
     editbox_tag:setFont(UIKit:getFontFilePath(),18)
     editbox_tag:setFontColor(cc.c3b(0,0,0))
     editbox_tag:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))
@@ -352,8 +355,8 @@ function GameUIAllianceBasicSetting:createTextfieldPanel_()
         image = "alliance_editbox_575x48.png",
         size = cc.size(510,48),
     })
-    editbox_name:setPlaceHolder(_("最多可输入600字符"))
-    editbox_name:setMaxLength(600)
+    editbox_name:setPlaceHolder(_("最多可输入20字符"))
+    editbox_name:setMaxLength(20)
     editbox_name:setFont(UIKit:getFontFilePath(),18)
     editbox_name:setFontColor(cc.c3b(0,0,0))
     editbox_name:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))
@@ -441,8 +444,20 @@ end
 
 function GameUIAllianceBasicSetting:CreateAllianceButtonClicked()
 	local data = self:AdapterCreateData2Server_()
-	dump(data)
-	--TODO: check data 添加修改联盟的api
+	local errMsg = ""
+	if string.utf8len(data.name) < 3 or string.utf8len(data.name) > 20 or string.find(data.name,"%p") then
+		errMsg = _("联盟名称不合法")
+	end 
+	if string.utf8len(data.tag) < 3 or string.utf8len(data.tag) > 20 or string.find(data.name,"%p") then
+		errMsg = _("联盟标签不合法")
+	end
+	if errMsg ~= "" then
+		local dialog = FullScreenPopDialogUI.new()
+        dialog:SetTitle(_("错误"))
+        dialog:SetPopMessage(errMsg)
+        dialog:AddToCurrentScene()
+		return 
+	end
 	if self.isCreateAction_ then
 		NetManager:getCreateAlliancePromise(data.name,data.tag,data.language,data.terrain,data.flag):done()
 	else

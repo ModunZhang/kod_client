@@ -85,6 +85,7 @@ function GameUIAlliance:Reset()
 end
 
 function GameUIAlliance:onEnter()
+	dump(Alliance_Manager:GetMyAlliance():GetAllMembers())
 	GameUIAlliance.super.onEnter(self)
 	self:RefreshMainUI()
 
@@ -910,6 +911,7 @@ end
 --title is alliance title
 function GameUIAlliance:GetMemberItem(title)
 	local item = self.memberListView:newItem()
+	dump(Alliance_Manager:GetMyAlliance():GetAllMembers())
 	local filter_data = LuaUtils:table_filter(Alliance_Manager:GetMyAlliance():GetAllMembers(),function(k,v)
 		return v:Title() == title
 	end)
@@ -1224,7 +1226,6 @@ function GameUIAlliance:RefreshInfomationView()
 end
 
 function GameUIAlliance:OnInfoButtonClicked(tag)
-	--TODO:联盟操作按钮
 	if tag == 1 then
 		FullScreenPopDialogUI.new():SetTitle(_("退出联盟"))
             :SetPopMessage(_("您必须在没有部队在外行军的情况下，才可以退出联盟。退出联盟会损失当前未打开的联盟礼物。"))

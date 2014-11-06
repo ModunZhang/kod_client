@@ -51,8 +51,6 @@ function DragonEyrieUpgradeBuilding:GetDragonManager()
     return self.dragon_manger_ 
 end
 
-
--- TODO:这里其实是每小时恢复的血 暂时使用以前活力的恢复速率(vitalityRecoveryPerHour会改)
 function DragonEyrieUpgradeBuilding:GetHPRecoveryPerHour()
     return config_function[self:GetLevel()].hpRecoveryPerHour
 end

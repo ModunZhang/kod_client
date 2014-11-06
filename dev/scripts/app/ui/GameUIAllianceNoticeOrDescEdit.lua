@@ -7,7 +7,7 @@ local window = import("..utils.window")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUIAllianceNoticeOrDescEdit = UIKit:createUIClass("GameUIAllianceNoticeOrDescEdit")
-
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 GameUIAllianceNoticeOrDescEdit.EDIT_TYPE = Enum("ALLIANCE_NOTICE","ALLIANCE_DESC")
 
 local content_height = 470
@@ -81,6 +81,13 @@ end
 
 function GameUIAllianceNoticeOrDescEdit:onOkButtonClicked()
 	local content = self.textView:getText()
+	if string.len(string.trim(content)) == 0 then
+		local dialog = FullScreenPopDialogUI.new()
+        dialog:SetTitle(_("错误"))
+        dialog:SetPopMessage(_("您还未输入任何内容"))
+        dialog:AddToCurrentScene()
+		return
+	end
 	if self.isNotice_ then
 		NetManager:getEditAllianceNoticePromise(content)
         	:done(function()
