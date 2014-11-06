@@ -222,6 +222,13 @@ function NetManager:addOnGetCanDirectJoinAlliancesSuccessListener()
         end
     end)
 end
+function NetManager:addOnGetAllianceDataSuccess()
+    self:addEventListener("onGetAllianceDataSuccess", function(success, msg)
+        if success then    
+          Alliance_Manager:OnAllianceDataChanged(msg)
+        end
+    end)
+end
 function NetManager:addOnGetPlayerInfoSuccessListener()
     self:addEventListener("onGetPlayerInfoSuccess", function(success, msg)
         if success then    
@@ -407,6 +414,7 @@ function NetManager:getConnectLogicServerPromise()
         self:addOnGetSendMailsSuccessListener()
         self:addOnChatListener()
         self:addOnAllChatListener()
+        self:addOnGetAllianceDataSuccess()
 
         self:addOnBuildingLevelUpListener()
         self:addOnHouseLevelUpListener()
