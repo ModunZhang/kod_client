@@ -11,7 +11,7 @@ function AllianceObject:ctor(object_type, id, x, y, alliance_map)
     self.level = 0
     self.alliance_map = alliance_map
 end
-function AllianceObject:GetAllianceBuildingType()
+function AllianceObject:GetAllianceBuildingInfo()
     return self.alliance_map:FindAllianceBuildingInfoByObjects(self)
 end
 function AllianceObject:GetCategory()
@@ -60,6 +60,7 @@ function AllianceObject:GetBottomRightPoint()
 end
 function AllianceObject:IsContainPoint(x, y)
     local start_x, end_x, start_y, end_y = self:GetGlobalRegion()
+    -- print(start_x, end_x, start_y, end_y)
     return x >= start_x and x <= end_x and y >= start_y and y <= end_y
 end
 function AllianceObject:GetGlobalRegion()

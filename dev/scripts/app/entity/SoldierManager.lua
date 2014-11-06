@@ -8,34 +8,8 @@ SoldierManager.LISTEN_TYPE = Enum("SOLDIER_CHANGED","TREAT_SOLDIER_CHANGED")
 
 function SoldierManager:ctor()
     SoldierManager.super.ctor(self)
-    self.soldier_map = {
-        -- ["sentinel"] = 0,
-        -- ["crossbowman"] = 0,
-        -- ["lancer"] = 0,
-        -- ["archer"] = 0,
-        -- ["horseArcher"] = 0,
-        -- ["steamTank"] = 0,
-        -- ["meatWagon"] = 0,
-        -- ["catapult"] = 0,
-        -- ["ballista"] = 0,
-        -- ["deathKnight"] = 0,
-        -- ["swordsman"] = 0,
-        -- ["skeletonArcher"] = 0,
-        -- ["demonHunter"] = 0,
-        -- ["paladin"] = 0,
-        -- ["priest"] = 0,
-        -- ["skeletonWarrior"] = 0,
-    }
-    self.treatSoldiers_map = {
-        -- ["ballista"] = 0,
-        -- ["archer"] = 0,
-        -- ["lancer"] = 0,
-        -- ["crossbowman"] = 0,
-        -- ["horseArcher"] = 0,
-        -- ["swordsman"] = 0,
-        -- ["sentinel"] = 0,
-        -- ["catapult"] = 0,
-    }
+    self.soldier_map = {}
+    self.treatSoldiers_map = {}
 end
 function SoldierManager:IteratorSoldiers(func)
     for k, v in pairs(self:GetSoldierMap()) do

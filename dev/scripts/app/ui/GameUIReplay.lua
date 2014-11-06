@@ -27,7 +27,7 @@ local battle_data = {
         {{state = "defeat"}, {state = "defend"}},
     },
 -- {
---     {{soldier = "archer", state = "enter"}, {state = "defend"}},
+--     {{soldier = "ranger", state = "enter"}, {state = "defend"}},
 --     {{state = "attack"}, {state = "defend"}},
 --     {{state = "defend"}, {state = "hurt"}},
 --     {{state = "defend"}, {state = "attack"}},
@@ -277,7 +277,7 @@ end
 function GameUIReplay:NewCorps(soldier, x, y)
     local soldier_arrange = {
         swordsman = {row = 4, col = 2},
-        archer = {row = 4, col = 2},
+        ranger = {row = 4, col = 2},
         lancer = {row = 3, col = 1},
         catapult = {row = 2, col = 1},
     }

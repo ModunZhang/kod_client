@@ -8,7 +8,7 @@ local GameUIArmyCamp = UIKit:createUIClass('GameUIArmyCamp',"GameUIUpgradeBuildi
 
 GameUIArmyCamp.SOLDIERS_NAME = {
     [1] = "swordsman",
-    [2] = "archer",
+    [2] = "ranger",
     [3] = "lancer",
     [4] = "catapult",
     [5] = "sentinel",

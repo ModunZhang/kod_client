@@ -12,7 +12,7 @@ local floor = math.floor
 local random = math.random
 function AllianceLayer:ctor(city)
     Observer.extend(self)
-    AllianceLayer.super.ctor(self, 0.3, 1)
+    AllianceLayer.super.ctor(self, 0.5, 1.5)
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new{
         tile_w = 80,
         tile_h = 80,
@@ -53,7 +53,6 @@ function AllianceLayer:ctor(city)
     ---
     local objects = {}
     Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorAllObjects(function(_, entity)
-        -- entity:
         objects[entity:Id()] = self:CreateObject(entity)
     end)
     self.objects = objects
@@ -187,16 +186,6 @@ function AllianceLayer:OnSceneMove()
 end
 
 return AllianceLayer
-
-
-
-
-
-
-
-
-
-
 
 
 
