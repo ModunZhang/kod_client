@@ -14,9 +14,9 @@ end
 function LogoScene:onEnter()
     self.layer = display.newColorLayer(cc.c4b(255,255,255,255)):addTo(self)
     self.sprite = display.newScale9Sprite("logos/batcat.png", display.cx, display.cy):addTo(self.layer)
-    self:performWithDelay(function()
-        self:beginAnimate()
-    end,1)
+    
+    self:performWithDelay(function() self:beginAnimate() end,1)
+    -- UIKit:newGameUI('GameUIReplay'):addToCurrentScene(true)
 end
 
 function LogoScene:beginAnimate()

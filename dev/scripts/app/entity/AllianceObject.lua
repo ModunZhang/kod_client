@@ -1,6 +1,6 @@
 local AllianceObject = class("AllianceObject")
 local allianceBuildingType = GameDatas.AllianceInitData.buildingType
-function AllianceObject:ctor(object_type, id, x, y)
+function AllianceObject:ctor(object_type, id, x, y, alliance_map)
     assert(object_type)
     self.object_type = object_type or "none"
     self.id = id
@@ -9,6 +9,10 @@ function AllianceObject:ctor(object_type, id, x, y)
     self.w = allianceBuildingType[object_type].width
     self.h = allianceBuildingType[object_type].height
     self.level = 0
+    self.alliance_map = alliance_map
+end
+function AllianceObject:GetAllianceBuildingInfo()
+    return self.alliance_map:FindAllianceBuildingInfoByObjects(self)
 end
 function AllianceObject:GetCategory()
     return allianceBuildingType[self:GetType()].category
@@ -56,6 +60,7 @@ function AllianceObject:GetBottomRightPoint()
 end
 function AllianceObject:IsContainPoint(x, y)
     local start_x, end_x, start_y, end_y = self:GetGlobalRegion()
+    -- print(start_x, end_x, start_y, end_y)
     return x >= start_x and x <= end_x and y >= start_y and y <= end_y
 end
 function AllianceObject:GetGlobalRegion()

@@ -10,7 +10,8 @@ orderHall[1] = {
 	["ironVillageCount"] = 1,
 	["foodVillageCount"] = 1,
 	["coinVillageCount"] = 1,
-	["gemVillageCount"] = 0
+	["gemVillageCount"] = 0,
+	["moveNeedHonour"] = 100
 }
 orderHall[2] = {
 	["level"] = 2,
@@ -22,7 +23,8 @@ orderHall[2] = {
 	["ironVillageCount"] = 2,
 	["foodVillageCount"] = 2,
 	["coinVillageCount"] = 2,
-	["gemVillageCount"] = 0
+	["gemVillageCount"] = 0,
+	["moveNeedHonour"] = 100
 }
 orderHall[3] = {
 	["level"] = 3,
@@ -34,7 +36,8 @@ orderHall[3] = {
 	["ironVillageCount"] = 3,
 	["foodVillageCount"] = 3,
 	["coinVillageCount"] = 3,
-	["gemVillageCount"] = 0
+	["gemVillageCount"] = 0,
+	["moveNeedHonour"] = 100
 }
 orderHall[4] = {
 	["level"] = 4,
@@ -46,7 +49,8 @@ orderHall[4] = {
 	["ironVillageCount"] = 4,
 	["foodVillageCount"] = 4,
 	["coinVillageCount"] = 4,
-	["gemVillageCount"] = 0
+	["gemVillageCount"] = 0,
+	["moveNeedHonour"] = 100
 }
 orderHall[5] = {
 	["level"] = 5,
@@ -58,7 +62,8 @@ orderHall[5] = {
 	["ironVillageCount"] = 5,
 	["foodVillageCount"] = 5,
 	["coinVillageCount"] = 5,
-	["gemVillageCount"] = 0
+	["gemVillageCount"] = 0,
+	["moveNeedHonour"] = 100
 }
 orderHall[6] = {
 	["level"] = 6,
@@ -70,7 +75,8 @@ orderHall[6] = {
 	["ironVillageCount"] = 6,
 	["foodVillageCount"] = 6,
 	["coinVillageCount"] = 6,
-	["gemVillageCount"] = 0
+	["gemVillageCount"] = 0,
+	["moveNeedHonour"] = 100
 }
 orderHall[7] = {
 	["level"] = 7,
@@ -82,7 +88,8 @@ orderHall[7] = {
 	["ironVillageCount"] = 7,
 	["foodVillageCount"] = 7,
 	["coinVillageCount"] = 7,
-	["gemVillageCount"] = 0
+	["gemVillageCount"] = 0,
+	["moveNeedHonour"] = 100
 }
 orderHall[8] = {
 	["level"] = 8,
@@ -94,7 +101,8 @@ orderHall[8] = {
 	["ironVillageCount"] = 8,
 	["foodVillageCount"] = 8,
 	["coinVillageCount"] = 8,
-	["gemVillageCount"] = 0
+	["gemVillageCount"] = 0,
+	["moveNeedHonour"] = 100
 }
 orderHall[9] = {
 	["level"] = 9,
@@ -106,7 +114,8 @@ orderHall[9] = {
 	["ironVillageCount"] = 9,
 	["foodVillageCount"] = 9,
 	["coinVillageCount"] = 9,
-	["gemVillageCount"] = 0
+	["gemVillageCount"] = 0,
+	["moveNeedHonour"] = 100
 }
 orderHall[10] = {
 	["level"] = 10,
@@ -118,5 +127,6 @@ orderHall[10] = {
 	["ironVillageCount"] = 10,
 	["foodVillageCount"] = 10,
 	["coinVillageCount"] = 10,
-	["gemVillageCount"] = 0
+	["gemVillageCount"] = 0,
+	["moveNeedHonour"] = 100
 }

@@ -453,20 +453,20 @@ end
 function GameUIWarReport:GetTestSelfSoldiers()
     return {
         {
-            soldier_type = _("archer"),
-            soldier_name = _("archer"),
+            soldier_type = _("ranger"),
+            soldier_name = _("ranger"),
             soldier_original_num = 1,
             soldier_after_war_num = 1,
         },
         {
-            soldier_type = _("archer"),
-            soldier_name = _("archer"),
+            soldier_type = _("ranger"),
+            soldier_name = _("ranger"),
             soldier_original_num = 1,
             soldier_after_war_num = 1,
         },
         {
-            soldier_type = _("archer"),
-            soldier_name = _("archer"),
+            soldier_type = _("ranger"),
+            soldier_name = _("ranger"),
             soldier_original_num = 1,
             soldier_after_war_num = 1,
         },
@@ -475,20 +475,20 @@ end
 function GameUIWarReport:GetTestEnemySoldiers()
     return {
         {
-            soldier_type = _("archer"),
-            soldier_name = _("archer"),
+            soldier_type = _("ranger"),
+            soldier_name = _("ranger"),
             soldier_original_num = 1,
             soldier_after_war_num = 1,
         },
         {
-            soldier_type = _("archer"),
-            soldier_name = _("archer"),
+            soldier_type = _("ranger"),
+            soldier_name = _("ranger"),
             soldier_original_num = 1,
             soldier_after_war_num = 1,
         },
     -- {
-    --     soldier_type = _("archer"),
-    --     soldier_name = _("archer"),
+    --     soldier_type = _("ranger"),
+    --     soldier_name = _("ranger"),
     --     soldier_original_num = 1,
     --     soldier_after_war_num = 1,
     -- },

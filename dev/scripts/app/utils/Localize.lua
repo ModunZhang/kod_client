@@ -338,15 +338,26 @@ local BUILDING_NAME = {
     ["quarrier"] = _("石匠小屋"),
     ["miner"] = _("矿工小屋"),
 }
-
-
 local ALLIANCE_TITLE = {
-    archon = _("联盟盟主"),
-    general = _("将军"),
-    quartermaster = _("军需官"),
-    supervisor = _("监事"),
-    elite = _("精英"),
-    member = _("成员"),
+    ["archon"] = _("联盟盟主"),
+    ["general"] = _("将军"),
+    ["quartermaster"] = _("军需官"),
+    ["supervisor"] = _("监事"),
+    ["elite"] = _("精英"),
+    ["member"] = _("成员"),
+}
+local SOLDIER_CATEGORY_MAP = {
+    ["swordsman"] = "infantry",
+    ["sentinel"] = "infantry",
+
+    ["ranger"] = "ranger",
+    ["crossbowman"] = "ranger",
+
+    ["lancer"] = "cavalry",
+    ["horseArcher"] = "cavalry",
+
+    ["catapult"] = "siege",
+    ["ballista"] = "siege",
 }
 
 local ALLIANCE_EVENTS = {
@@ -370,6 +381,25 @@ local ALLIANCE_EVENTS = {
     gve = _("激活了圣地的神秘事件"),
 }
 
+local SOLDIER_CATEGORY = {
+    ["infantry"] = _("步兵"),
+    ["ranger"] = _("弓手"),
+    ["cavalry"] = _("骑兵"),
+    ["siege"] = _("攻城"),
+    ["wall"] = _("城墙"),
+}
+local SOLDIER_NAME = {
+    ["swordsman"] = _("剑士"),
+    ["ranger"] = _("弓手"),
+    ["lancer"] = _("骑兵"),
+    ["catapult"] = _("投石车"),
+}
+local SOLDIER_STATUS = {
+    ["waiting"] = _("等待"),
+    ["fighting"] = _("战斗中"),
+    ["defeated"] = _("击溃!"),
+}
+
 
 
 return {
@@ -383,7 +413,11 @@ return {
     building_description = BUILDING_DESCRIPTION,
     building_name = BUILDING_NAME,
     alliance_title = ALLIANCE_TITLE,
-    alliance_events = ALLIANCE_EVENTS
+    alliance_events = ALLIANCE_EVENTS,
+    soldier_name = SOLDIER_NAME,
+    soldier_category = SOLDIER_CATEGORY,
+    soldier_status = SOLDIER_STATUS,
+    getSoldierCategoryByName = function(soldier_name) return SOLDIER_CATEGORY[SOLDIER_CATEGORY_MAP[soldier_name]] end
 }
 
 

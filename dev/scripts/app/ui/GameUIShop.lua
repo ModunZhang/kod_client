@@ -268,13 +268,6 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 140, window.top - 600)
         :onButtonClicked(function(event)
-            -- PushService:createAlliance({
-            --     name="2",
-            --     tag="222",
-            --     language="all",
-            --     terrain="grassLand",
-            --     flag=Flag:RandomFlag():EncodeToJson()
-            -- }, NOT_HANDLE)
             cocos_promise.promiseWithCatchError(NetManager:getCreateAlliancePromise("2", "222", "all", "grassLand", Flag:RandomFlag():EncodeToJson()))
         end)
 

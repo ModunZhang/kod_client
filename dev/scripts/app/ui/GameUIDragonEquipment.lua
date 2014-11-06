@@ -227,7 +227,7 @@ function GameUIDragonEquipment:IntensifyEvent()
         return  
   end 
   local equipment = self:GetEquipment()
-  PushService:enhanceDragonEquipment(self.dragon:Type(),equipment:Body(),equipments,function()
+  NetManager:getEnhanceDragonEquipmentPromise(self.dragon:Type(),equipment:Body(),equipments):next(function(result)
       self:RefreshIntensifyUI()
   end)
 end

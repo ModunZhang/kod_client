@@ -127,9 +127,6 @@ function GameUIDragonSkill:onMoveOutStage()
 end
 
 function GameUIDragonSkill:UpgradeButtonClicked()
-  -- PushService:upgradeDragonDragonSkill(self.dragon.type,self.skillLocation,function ( ... )
-
-  -- end)
   NetManager:getUpgradeDragonDragonSkillPromise(self.skill:Type(),self.skill:Key()):catch(function(err)
     dump(err:reason())
   end)

@@ -251,7 +251,6 @@ function GameUIHome:CreateTop()
         dump(event)
         if event.name == "CLICKED_EVENT" then
             UIKit:newGameUI('GameUIVip', City):addToCurrentScene(true)
-            -- PushService:quitAlliance(NOT_HANDLE)
         end
     end):addTo(top_bg):pos(592, -51):scale(0.6)
 
@@ -404,6 +403,8 @@ function GameUIHome:OnBottomButtonClicked(event)
         UIKit:newGameUI('GameUIAlliance'):addToCurrentScene(true)
     elseif tag == 3 then
         UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
+    elseif tag == 2 then
+        UIKit:newGameUI('GameUIReplay'):addToCurrentScene(true)
     end
 end
 

@@ -23,6 +23,16 @@ function AllianceMap:ctor(alliance)
     self.all_objects = {}
     self.allliance_buildings = {}
 end
+function AllianceMap:FindAllianceBuildingInfoByObjects(object)
+    if object:GetType() == "building" then
+        local x, y = object:GetLogicPosition()
+        for k, v in pairs(self.allliance_buildings) do
+            if v.location.x == x and v.location.y == y then
+                return v
+            end
+        end
+    end
+end
 function AllianceMap:IteratorAllianceBuildings(func)
     self:IteratorByCategory("building", func)
 end
@@ -96,7 +106,7 @@ function AllianceMap:DecodeObjectsFromJsonMapObjects__(__mapObjects)
             object:SetLogicPosition(data.location.x, data.location.y)
             table.insert(edit, object)
         elseif type_ == "add" then
-            local object = self:AddObjectById(AllianceObject.new(data.type, data.id, data.location.x, data.location.y))
+            local object = self:AddObjectById(AllianceObject.new(data.type, data.id, data.location.x, data.location.y, self))
             table.insert(add, object)
         elseif type_ == "remove" then
             local object = self:RemoveObjectById(data.id)
@@ -119,7 +129,7 @@ function AllianceMap:DecodeObjectsFromJsonMapObjects(mapObjects)
         local id = v.id
         local old = self.all_objects[id]
         if not old then
-            local object = AllianceObject.new(type_, id, location_.x, location_.y)
+            local object = AllianceObject.new(type_, id, location_.x, location_.y, self)
             all_objects[id] = object
             table.insert(add, object)
         elseif location_.x ~= old.x or location_.y ~= old.y then

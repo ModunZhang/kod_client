@@ -218,6 +218,10 @@ function promise:resolve(data)
     return resolve(self, data)
 end
 function promise:next(success_func, failed_func)
+    if is_promise(success_func) then
+        local p = success_func
+        success_func = function() return p end
+    end
     assert(type(success_func) == "function", "必须要有成功处理函数,如果不想要,请调用catch(func(err)end)")
     assert(self.state_ == PENDING, "暂不支持完成之后再次添加任务!")
     table.insert(self.thens, {success_func, failed_func})

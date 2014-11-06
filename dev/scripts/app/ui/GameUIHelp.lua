@@ -86,7 +86,6 @@ function GameUIHelp:onEnter()
     ):setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("全部帮助"), size = 18, color = UIKit:hex2c3b(0xfff3c7)}))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                -- PushService:quitAlliance(NOT_HANDLE)
                 if self:IsAbleToHelpAll() then
                     NetManager:getHelpAllAllianceMemberSpeedUpPromise()
                         :catch(function(err)

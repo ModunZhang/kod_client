@@ -9,8 +9,6 @@ local IsoMapAnchorBottomLeft = import("..map.IsoMapAnchorBottomLeft")
 local MapScene = import(".MapScene")
 local promise = import("..utils.promise")
 local Alliance = import("..entity.Alliance")
-import('app.service.ListenerService')
-import('app.service.PushService')
 local CityScene = class("CityScene", MapScene)
 
 local app = app

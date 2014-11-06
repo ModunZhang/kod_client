@@ -1,5 +1,10 @@
 local promise = import("..utils.promise")
 local cocos_promise = import("..utils.cocos_promise")
+local gaozhou
+if CONFIG_IS_DEBUG then
+    local result
+    gaozhou, result = pcall(require, "app.service.gaozhou")
+end
 NetManager = {}
 local SUCCESS_CODE = 200
 local FAILED_CODE = 500
@@ -260,10 +265,13 @@ function NetManager:getConnectLogicServerPromise()
 end
 -- 登录
 function NetManager:getLoginPromise()
-    local device_id 
+    local device_id
     if CONFIG_IS_DEBUG then
-        -- device_id = "a"
-        device_id = device.getOpenUDID()
+        if gaozhou then
+            device_id = "a"
+        else
+            device_id = device.getOpenUDID()
+        end
     else
         device_id = device.getOpenUDID()
     end
@@ -781,6 +789,10 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
+
+
+
 
 
 
