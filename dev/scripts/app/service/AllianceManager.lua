@@ -350,7 +350,6 @@ end
 
 -- basic event
 function AllianceManager:dispathAllianceEvent(eventType)
-    print("dispathAllianceEvent--------->",eventType)
     self:dispatchEvent({name = AllianceManager.ALLIANCE_EVENT_TYPE_NAME,eventType = eventType})
 end
 

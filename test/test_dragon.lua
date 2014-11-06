@@ -31,8 +31,8 @@ function setup()
   	assert_equal(dragon:Star(),1)
   	assert_equal(dragon:Ishated(),true)
   	assert_equal(dragon:GetMaxLevel(),10)
-  	assert_equal(dragon:GetEquipmentByCategory(Dragon.EQ_CATEGORY.armguardLeft):Star(),0)
-  	assert_equal(dragon:GetEquipmentByCategory(Dragon.EQ_CATEGORY.armguardLeft):IsReachMaxStar(),false)
+  	assert_equal(dragon:GetEquipmentByBody(Dragon.EQ_CATEGORY.armguardLeft):Star(),0)
+  	assert_equal(dragon:GetEquipmentByBody(Dragon.EQ_CATEGORY.armguardLeft):IsReachMaxStar(),false)
   	dragon_manager:AddDragon(dragon)
 end
 

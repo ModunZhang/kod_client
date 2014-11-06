@@ -48,7 +48,7 @@ end
 
 function DragonEyrieUpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id, sub_location_id)
     DragonEyrieUpgradeBuilding.super.OnUserDataChanged(self,user_data, current_time, location_id, sub_location_id)
-    self:GetDragonManager():OnUserDataChanged(user_data, current_time, location_id, sub_location_id,self:GetVitalityRecoveryPerHour())
+    self:GetDragonManager():OnUserDataChanged(user_data, current_time, location_id, sub_location_id,self:GetHPRecoveryPerHour())
     -- if user_data.dragons then
     --     self:RefreshDragonData(user_data.dragons)
     --     self.drgaon_vitality_manager:UpdateDragonResource(user_data,self:GetVitalityRecoveryPerHour())
@@ -112,7 +112,8 @@ end
 --     return tonumber(config_dragonAttribute[dragon.star].perLevelExp) * math.pow(dragon.level,2)
 -- end
 
-function DragonEyrieUpgradeBuilding:GetVitalityRecoveryPerHour()
+-- TODO:这里其实是每小时恢复的血 暂时使用以前活力的恢复速率(vitalityRecoveryPerHour会改)
+function DragonEyrieUpgradeBuilding:GetHPRecoveryPerHour()
     return config_function[self:GetLevel()].vitalityRecoveryPerHour
 end
 function DragonEyrieUpgradeBuilding:GetNextLevelVitalityRecoveryPerHour()

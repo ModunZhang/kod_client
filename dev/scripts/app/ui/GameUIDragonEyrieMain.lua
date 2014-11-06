@@ -6,12 +6,16 @@ local GameUIDragonEyrieMain = UIKit:createUIClass("GameUIDragonEyrieMain","GameU
 local window = import("..utils.window")
 local StarBar = import(".StarBar")
 local TAG_OF_CONTENT = 100
+local DragonManager = import("..entity.DragonManager")
 
 function GameUIDragonEyrieMain:ctor(city,building)
 	GameUIDragonEyrieMain.super.ctor(self,city,_("龙巢"),building)
 	self.building = building
 	self.city = city
 	self.dragon_manager = building:GetDragonManager()
+	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnHPChanged)
+	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
+	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonHatched)
 	self.draong_index = 1
 end
 
@@ -20,9 +24,35 @@ function GameUIDragonEyrieMain:CreateBetweenBgAndTitle()
 	self.dragonNode = display.newNode():size(window.width,window.height):addTo(self)
 end
 
+-- event
+------------------------------------------------------------------
+function GameUIDragonEyrieMain:OnHPChanged()
+	local dragon = self:GetCurrentDragon()
+	if not dragon:Ishated() then return end
+	if self.dragon_hp_label and self.dragon_hp_label:isVisible() then
+		self.dragon_hp_label:setString(dragon:Hp() .. "/" .. dragon:GetMaxHP())
+		self.progress_hated:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
+	end
+end
+
+function GameUIDragonEyrieMain:OnDragonHatched()
+	self:RefreshUI()
+end
+function GameUIDragonEyrieMain:OnBasicChanged()
+	self:RefreshUI()
+end
+------------------------------------------------------------------
+
 function GameUIDragonEyrieMain:onMoveInStage()
 	GameUIDragonEyrieMain.super.onMoveInStage(self)
 	self:CreateUI()
+end
+
+function GameUIDragonEyrieMain:onMoveOutStage()
+	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnHPChanged)
+	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
+	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonHatched)
+	GameUIDragonEyrieMain.super.onMoveOutStage(self)
 end
 
 function GameUIDragonEyrieMain:CreateUI()
@@ -53,16 +83,23 @@ function GameUIDragonEyrieMain:RefreshUI()
 		self.dragon_info:hide()
 		self.progress_content_not_hated:show()
 		self.progress_content_hated:hide()
-		self.progress_not_hated:setPercentage(dragon:Vitality()/100)
+		self.progress_not_hated:setPercentage(dragon:Vitality()/100*100) -- 充能
 		self.strength_val_label:setString("0")
 		self.vitality_val_label:setString("0")
 	else
 		self.dragon_info:show()
+		self.draong_info_lv_label:setString("LV " .. dragon:Level() .. "/" .. dragon:GetMaxLevel())
+		self.draong_info_xp_label:setString(dragon:Exp() .. "/" .. dragon:GetMaxExp())
 		self.progress_content_not_hated:hide()
 		self.progress_content_hated:show()
+		self.strength_val_label:setString(dragon:Strength())
+		self.vitality_val_label:setString(dragon:Vitality())
+		self.dragon_hp_label:setString(dragon:Hp() .. "/" .. dragon:GetMaxHP())
+		self.progress_hated:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
 	end
 	self.nameLabel:setString(dragon:GetLocalizedName())
 	self.state_label:setString(dragon:Status())
+	self.star_bar:setNum(dragon:Star())
 end
 
 function GameUIDragonEyrieMain:CreateProgressTimer(tag)
@@ -70,19 +107,19 @@ function GameUIDragonEyrieMain:CreateProgressTimer(tag)
 	if "hated" ~= tag then
 		bg = display.newSprite("dragon_energy_bar_bg_366x40.png")
 		progressTimer = UIKit:commonProgressTimer("dragon_energy_bar_366x40.png"):align(display.LEFT_BOTTOM,0,0):addTo(bg)
-		progressTimer:setPercentage(100)
+		progressTimer:setPercentage(0)
 		display.newSprite("dragon_energy_bar_box_366x40.png"):align(display.LEFT_BOTTOM,0,0):addTo(bg)
 	else
 		bg = display.newSprite("drgon_lvbar_bg.png"):scale(0.9)
     	progressTimer = UIKit:commonProgressTimer("drgon_lvbar_color.png"):addTo(bg):align(display.LEFT_BOTTOM,0,0)
-    	progressTimer:setPercentage(100)
+    	progressTimer:setPercentage(0)
     	local iconbg = display.newSprite("drgon_process_icon_bg.png")
      		:addTo(bg)
      		:align(display.LEFT_BOTTOM, -13,-5)
     	display.newSprite("dragon_lv_icon.png")
      		:addTo(iconbg)
      		:pos(iconbg:getContentSize().width/2,iconbg:getContentSize().height/2)
-     	UIKit:ttfLabel({
+     	self.dragon_hp_label = UIKit:ttfLabel({
      		 text = "120/360",
      		 color = 0xfff3c7,
      		 shadow = true,
@@ -90,7 +127,7 @@ function GameUIDragonEyrieMain:CreateProgressTimer(tag)
      	}):addTo(bg):align(display.LEFT_BOTTOM, 40, 5)
 
      	UIKit:ttfLabel({
-     		 text = "+55/h",
+     		 text = "+" .. self.building:GetHPRecoveryPerHour() .. "/h",
      		 color = 0xfff3c7,
      		 shadow = true,
      		 size = 20
@@ -107,17 +144,17 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 	if not self.dragonAnimateNode then
 		local dragonAnimateNode = display.newSprite("dragon_node_619x715.png")
 			:addTo(self.dragonNode)
-			:align(display.TOP_CENTER,window.cx,window.height)
+			:align(display.TOP_CENTER,window.cx,window.top)
 		self.dragonAnimateNode = dragonAnimateNode
 		--info
 		local info_bg = display.newSprite("dragon_info_bg_290x92.png")
-			:align(display.BOTTOM_CENTER, window.cx, 50)
+			:align(display.BOTTOM_CENTER, 309, 50)
 			:addTo(dragonAnimateNode)
 		local lv_bg = display.newSprite("dragon_lv_bg_270x30.png")
 			:addTo(info_bg)
 			:align(display.TOP_CENTER,info_bg:getContentSize().width/2,info_bg:getContentSize().height-10)
 		self.dragon_info = info_bg
-		UIKit:ttfLabel({
+		self.draong_info_lv_label = UIKit:ttfLabel({
 			text = "LV " .. self:GetCurrentDragon():Level() .. "/" .. self:GetCurrentDragon():GetMaxLevel(),
 			color = 0xb1a475,
 			size = 22
@@ -125,8 +162,8 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 		local expIcon = display.newSprite("dragonskill_xp_51x63.png")
 			:addTo(info_bg)
 			:scale(0.7)
-			:align(display.BOTTOM_LEFT, 50,10)
-		UIKit:ttfLabel({
+			:align(display.BOTTOM_LEFT, 90,10)
+		self.draong_info_xp_label = UIKit:ttfLabel({
 			text = self:GetCurrentDragon():Exp() .. "/" .. self:GetCurrentDragon():GetMaxExp(),
 			color = 0x403c2f,
 			size = 20
@@ -137,7 +174,7 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 			normal = "dragon_next_icon_28x31.png"
 			})
 			:addTo(dragonAnimateNode)
-			:align(display.BOTTOM_CENTER, window.cx+170,80)
+			:align(display.BOTTOM_CENTER, 306+170,80)
 			:onButtonClicked(function()
 				self:ChangeDragon('next')
 			end)
@@ -145,13 +182,15 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 			normal = "dragon_next_icon_28x31.png"
 			})
 			:addTo(dragonAnimateNode)
-			:align(display.TOP_CENTER, window.cx-170,80)
+			:align(display.TOP_CENTER, 306-170,80)
 			:onButtonClicked(function()
 				self:ChangeDragon('pre')
 			end)
 		self.preButton:setRotation(180)
 
-		local box = display.newSprite("dragon_main_box_624x226.png"):align(display.LEFT_BOTTOM, 10,66):addTo(self.dragonNode)
+		local box = display.newSprite("dragon_main_box_624x226.png")
+			:align(display.LEFT_BOTTOM, window.left+10,window.bottom+66)
+			:addTo(self.dragonNode)
 		local nameLabel = UIKit:ttfLabel({
 			text = "",
 			color = 0xffedae,

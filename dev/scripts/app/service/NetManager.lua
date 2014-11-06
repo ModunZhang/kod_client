@@ -423,7 +423,7 @@ function NetManager:getHatchDragonPromise(dragonType)
 end
 -- 装备
 function NetManager:getLoadDragonEquipmentPromise(dragonType, equipmentCategory, equipmentName)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.hatchDragon", {
+    return promise.all(get_blocking_request_promise("logic.playerHandler.setDragonEquipment", {
         dragonType = dragonType,
         equipmentCategory = equipmentCategory,
         equipmentName = equipmentName
@@ -451,10 +451,10 @@ function NetManager:getUpgradeDragonStarPromise(dragonType)
     }, "升级龙星失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 升级龙技能
-function NetManager:getUpgradeDragonDragonSkillPromise(dragonType, skillLocation)
+function NetManager:getUpgradeDragonDragonSkillPromise(dragonType, skillKey)
     return promise.all(get_blocking_request_promise("logic.playerHandler.upgradeDragonSkill", {
         dragonType = dragonType,
-        skillLocation = skillLocation
+        skillKey = skillKey
     }, "升级龙技能失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 发送个人邮件

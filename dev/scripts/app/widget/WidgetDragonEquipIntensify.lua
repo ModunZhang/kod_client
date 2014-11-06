@@ -83,16 +83,15 @@ end
 
 function WidgetDragonEquipIntensify:GetEqIcon(equipmentName)
 	local equipment = config_equipments[equipmentName]
-	LuaUtils:outputTable("GetEqIcon---->", equipment)
 	local equipmentCategory = self:GetEqCategory(equipment)
 	local equipmentIcon = {}
-    --五个星级的装备 TODO:6种装备
+    --五个星级的装备 TODO:6种龙装备
     equipmentIcon["armguardLeft"] = {"armguard_1.png","armguard_1.png","armguard_1.png","armguard_1.png","armguard_1.png"}
     equipmentIcon["armguardRight"] = {"armguard_1.png","armguard_1.png","armguard_1.png","armguard_1.png","armguard_1.png"}
     equipmentIcon["crown"] = {"crown_1.png","crown_1.png","crown_1.png","crown_1.png","crown_1.png"}
-    equipmentIcon["orb"] = {"crown_1.png","crown_1.png","crown_1.png","crown_1.png","crown_1.png"}
-    equipmentIcon["chest"] = {"crown_1.png","crown_1.png","crown_1.png","crown_1.png","crown_1.png"}
-    equipmentIcon["sting"] = {"crown_1.png","crown_1.png","crown_1.png","crown_1.png","crown_1.png"}
+    equipmentIcon["orb"] = {"orb_1.png","orb_1.png","orb_1.png","orb_1.png","orb_1.png"}
+    equipmentIcon["chest"] = {"chest_1.png","chest_1.png","chest_1.png","chest_1.png","chest_1.png"}
+    equipmentIcon["sting"] = {"sting_1.png","sting_1.png","sting_1.png","sting_1.png","sting_1.png"}
     return equipmentIcon[equipmentCategory][1]
 end
 

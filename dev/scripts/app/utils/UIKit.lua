@@ -8,7 +8,6 @@ UIKit =
 {
     Registry   = import('framework.cc.Registry'),
     GameUIBase = import('..ui.GameUIBase'),
-    UIListView = import('..ui.UIListView'),
 }
 local CURRENT_MODULE_NAME = ...
 
@@ -234,6 +233,7 @@ end
 function UIKit:shadowLayer()
     return display.newColorLayer(UIKit:hex2c4b(0x7a000000))
 end
+
 -- TODO: 玩家头像
 function UIKit:GetPlayerCommonIcon()
     local heroBg = display.newSprite("chat_hero_background.png")
@@ -242,16 +242,49 @@ function UIKit:GetPlayerCommonIcon()
     return heroBg
 end
 
-function UIKit:GetTextListView(rect,label)
-     local listView = self.UIListView.new {
-        viewRect =  rect,
-        direction = 0
-    }
+function UIKit:CreateBoxPanel(height)
+    local node = display.newNode()
+    local bottom = display.newSprite("alliance_box_bottom_552x12.png")
+        :addTo(node)
+        :align(display.LEFT_BOTTOM,0,0)
+    local top =  display.newSprite("alliance_box_top_552x12.png")
+    local middleHeight = height - bottom:getContentSize().height - top:getContentSize().height
+    local next_y = bottom:getContentSize().height
+    while middleHeight > 0 do
+        local middle = display.newSprite("alliance_box_middle_552x1.png")
+            :addTo(node)
+            :align(display.LEFT_BOTTOM,0, next_y)
+        middleHeight = middleHeight - middle:getContentSize().height
+        next_y = next_y + middle:getContentSize().height
+    end
+    top:addTo(node)
+        :align(display.LEFT_BOTTOM,0,next_y)
+    return node
+end
 
-    local textItem = listView:newItem()
-    textItem:addContent(label)
-    textItem:setItemSize(rect.width,label:getContentSize().height)
-    listView:addItem(textItem)
-    listView:reload()
-    return listView
+function UIKit:commonButtonLable(params)
+    if not params then params = {} end
+    params.color = params.color or 0xffedae
+    params.size  = params.size or 24
+    params.shadow = true
+    return UIKit:ttfLabel(params)
+end
+
+function UIKit:commonTitleBox(height)
+    local node = display.newNode()
+    local bottom = display.newSprite("title_box_bottom_540x18.png")
+        :addTo(node)
+        :align(display.LEFT_BOTTOM,4,0)
+    local top =  display.newSprite("title_box_top_548x58.png")
+    local middleHeight = height - bottom:getContentSize().height - top:getContentSize().height
+    local next_y = bottom:getContentSize().height
+     while middleHeight > 0 do
+        local middle = display.newSprite("title_box_middle_540x1.png")
+            :addTo(node)
+            :align(display.LEFT_BOTTOM,4, next_y)
+        middleHeight = middleHeight - middle:getContentSize().height
+        next_y = next_y + middle:getContentSize().height
+    end
+    top:addTo(node):align(display.LEFT_BOTTOM,0,next_y)
+    return node
 end
