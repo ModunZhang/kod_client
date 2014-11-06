@@ -21,7 +21,7 @@ function Corps:ctor(soldier, row, col)
     local t = {}
     local ani = UILib.soldier_animation[soldier][1] or "Infantry_1_render"
     for i = 0, col_max * row_max - 1 do
-        local armature = ccs.Armature:create(ani):addTo(corps):scale(0.6):pos(return_x_y_by_index(row_max, col_max, i))
+        local armature = ccs.Armature:create(ani):addTo(corps):scale(0.5):pos(return_x_y_by_index(row_max, col_max, i))
         table.insert(t, armature)
     end
     self.corps = t
