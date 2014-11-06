@@ -11,32 +11,34 @@ GameDatas.AllianceBuilding = {
 	["palace"] = {},
 	["moonGate"] = {},
 	["orderHall"] = {},
-	["Shrine"] = {},
+	["shrine"] = {},
 	["allianceShop"] = {},
 }
 require("app.datas.AllianceBuilding_palace")
 require("app.datas.AllianceBuilding_moonGate")
 require("app.datas.AllianceBuilding_orderHall")
-require("app.datas.AllianceBuilding_Shrine")
+require("app.datas.AllianceBuilding_shrine")
 require("app.datas.AllianceBuilding_allianceShop")
 
 GameDatas.AllianceInitData = {
-	["resource"] = {},
+	["intInit"] = {},
+	["stringInit"] = {},
 	["right"] = {},
 	["buildingType"] = {},
 	["donate"] = {},
 	["decorateCount"] = {},
 }
-require("app.datas.AllianceInitData_resource")
+require("app.datas.AllianceInitData_intInit")
+require("app.datas.AllianceInitData_stringInit")
 require("app.datas.AllianceInitData_right")
 require("app.datas.AllianceInitData_buildingType")
 require("app.datas.AllianceInitData_donate")
 require("app.datas.AllianceInitData_decorateCount")
 
 GameDatas.AllianceShrine = {
-	["ShrineStage"] = {},
+	["shrineStage"] = {},
 }
-require("app.datas.AllianceShrine_ShrineStage")
+require("app.datas.AllianceShrine_shrineStage")
 
 GameDatas.AllianceVillage = {
 	["woodVillage"] = {},

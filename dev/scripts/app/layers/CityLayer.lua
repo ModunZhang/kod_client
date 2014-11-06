@@ -481,7 +481,7 @@ function CityLayer:InitWithCity(city)
     local soldiers = {}
     for i, v in ipairs({
         {x = 2, y = 11, soldier_type = "swordsman"},
-        {x = 4, y = 11, soldier_type = "archer"},
+        {x = 4, y = 11, soldier_type = "ranger"},
         {x = 6, y = 12, soldier_type = "lancer"},
         {x = 9, y = 12, soldier_type = "catapult"},
 
@@ -803,7 +803,9 @@ function CityLayer:UpdateTowersWithCity(city)
 end
 function CityLayer:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
     local map = soldier_manager:GetSoldierMap()
+    dump(map)
     self:IteratorSoldiers(function(_, v)
+        print(v:GetSoldierType())
         local is_visible = map[v:GetSoldierType()] > 0
         v:setVisible(is_visible)
     end)

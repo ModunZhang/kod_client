@@ -6,7 +6,7 @@ local STAR_BG = {
     "star5_118x132.png",
 }
 local SOLDIER_ANIMATIONS = {
-    archer = {
+    ranger = {
         "Archer_1_render",
     },
     catapult = {
@@ -20,7 +20,7 @@ local SOLDIER_ANIMATIONS = {
     }
 }
 local SOLDIER_ANIMATION_FILES = {
-    archer = {
+    ranger = {
         "animations/Archer_1_render.ExportJson",
     },
     catapult = {
@@ -34,7 +34,7 @@ local SOLDIER_ANIMATION_FILES = {
     }
 }
 local SOLDIER_IMAGES = {
-    archer = {
+    ranger = {
         "#Archer_1_render/idle/1/00000.png",
     },
     catapult = {

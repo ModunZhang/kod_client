@@ -5,7 +5,7 @@ local soldier_config = {
         ["swordsman"] = {
             animation = "Infantry_1_render", count = 4, scale = 0.5, offset = {x = 0, y = 50}
         },
-        ["archer"] = {
+        ["ranger"] = {
             animation = "Archer_1_render", count = 4, scale = 0.5, offset = {x = 30, y = 50}
         },
         ["lancer"] = {

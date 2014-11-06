@@ -357,8 +357,8 @@ local SOLDIER_CATEGORY_MAP = {
     ["swordsman"] = "infantry",
     ["sentinel"] = "infantry",
 
-    ["archer"] = "archer",
-    ["crossbowman"] = "archer",
+    ["ranger"] = "ranger",
+    ["crossbowman"] = "ranger",
 
     ["lancer"] = "cavalry",
     ["horseArcher"] = "cavalry",
@@ -368,14 +368,14 @@ local SOLDIER_CATEGORY_MAP = {
 }
 local SOLDIER_CATEGORY = {
     ["infantry"] = _("步兵"),
-    ["archer"] = _("弓手"),
+    ["ranger"] = _("弓手"),
     ["cavalry"] = _("骑兵"),
     ["siege"] = _("攻城"),
     ["wall"] = _("城墙"),
 }
 local SOLDIER_NAME = {
     ["swordsman"] = _("剑士"),
-    ["archer"] = _("弓手"),
+    ["ranger"] = _("弓手"),
     ["lancer"] = _("骑兵"),
     ["catapult"] = _("投石车"),
 }
