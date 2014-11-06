@@ -11,7 +11,7 @@ local GameUIReplay = UIKit:createUIClass('GameUIReplay')
 
 local battle_data = {
     {
-        {{soldier = "swordsman", state = "enter"}, {soldier = "lancer", state = "enter"}},
+        {{soldier = "ranger", state = "enter"}, {soldier = "lancer", state = "enter"}},
         {{state = "attack"}, {state = "defend"}},
         {{state = "defend"}, {state = "hurt"}},
         {{state = "defend"}, {state = "attack"}},
@@ -240,7 +240,7 @@ function GameUIReplay:onEnter()
     self.right_corps = {}
 
 
-    local item, left, right = self:CreateItemWithListView(self.list_view, {"swordsman", "lancer"})
+    local item, left, right = self:CreateItemWithListView(self.list_view, {"ranger", "lancer"})
     table.insert(self.left_corps, left)
     table.insert(self.right_corps, right)
     self.list_view:addItem(item)

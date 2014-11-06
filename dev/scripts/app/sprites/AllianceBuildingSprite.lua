@@ -1,12 +1,19 @@
 local Sprite = import(".Sprite")
 local AllianceBuildingSprite = class("AllianceBuildingSprite", Sprite)
+local building_map = {
+    palace = {"palace_421x481.png", 0.7},
+    shrine = {"shrine_256x210.png", 0.7},
+    shop = {"shop_268x274.png", 0.7},
+    orderHall = {"orderHall_277x417.png", 0.7},
+    moonGate = {"moonGate_200x217.png", 1},
+}
 function AllianceBuildingSprite:ctor(city_layer, entity)
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     AllianceBuildingSprite.super.ctor(self, city_layer, entity, x, y)
     -- self:CreateBase()
 end
 function AllianceBuildingSprite:GetSpriteFile()
-	return "keep_760x855.png", 0.3
+    return unpack(building_map[self:GetEntity():GetAllianceBuildingInfo().name])
 end
 function AllianceBuildingSprite:GetSpriteOffset()
 	return self:GetLogicMap():ConvertToLocalPosition(1, 1)
