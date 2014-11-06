@@ -15,23 +15,27 @@ function WidgetUIBackGround:ctor(params)
 
     self:setContentSize(cc.size(width,height))
     --top
-    display.newSprite(top_img):align(display.LEFT_TOP, 0, height):addTo(self)
+    display.newScale9Sprite(top_img,0, height,cc.size(width,u_height)):align(display.LEFT_TOP):addTo(self)
     --bottom
-    display.newSprite(bottom_img):align(display.LEFT_BOTTOM, 0, 0):addTo(self)
-
+    local bottom = display.newSprite(bottom_img):align(display.LEFT_BOTTOM,0, 0):addTo(self)
+    bottom:setScaleX(width/bottom:getContentSize().width)
+    bottom:setScaleY(b_height/bottom:getContentSize().height)
+    if params.b_flip then
+        bottom:flipY(true)
+    end
     --center
     local need_filled_height = height-(u_height+b_height) --中间部分需要填充的高度
     local center_y = b_height -- 中间部分起始 y 坐标
     local  next_y = b_height
     -- 需要填充的剩余高度大于中间部分图片原始高度时，直接复制即可
     while need_filled_height>=m_height do
-        display.newSprite(mid_img):align(display.LEFT_BOTTOM, 0, next_y):addTo(self)
+        display.newScale9Sprite(mid_img, 0, next_y,cc.size(width,m_height)):align(display.LEFT_BOTTOM):addTo(self)
         need_filled_height = need_filled_height - m_height
         next_y = next_y+m_height
     end
     -- 最后一块小于中间部分图片原始高度时，缩放高度
     if need_filled_height>0 then
-        display.newSprite(mid_img, 0, next_y):align(display.LEFT_BOTTOM):addTo(self):setScaleY(need_filled_height/m_height)
+        display.newScale9Sprite(mid_img, 0, next_y,cc.size(width,need_filled_height)):align(display.LEFT_BOTTOM):addTo(self)
     end
 end
 

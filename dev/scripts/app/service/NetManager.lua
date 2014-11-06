@@ -262,7 +262,8 @@ end
 function NetManager:getLoginPromise()
     local device_id 
     if CONFIG_IS_DEBUG then
-        device_id = "b"
+        -- device_id = device.getOpenUDID()
+        device_id = "kd"
     else
         device_id = device.getOpenUDID()
     end

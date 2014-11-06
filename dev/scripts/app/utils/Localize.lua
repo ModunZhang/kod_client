@@ -305,6 +305,10 @@ local BUILDING_DESCRIPTION = {
     ["miner"] = _("将城民派往矿工小屋获得持续的铁矿产出。建筑等级越高需要更多的城民，铁矿产出也会更高。"),
     ["miner_poduction"] = _("每小时铁矿产量"),
 
+    -- 联盟建筑
+    ["palace"] = _("联盟的核心建筑，升级可提升联盟人数上限，向占领城市征税，更改联盟地形。"),
+    ["palace_total_members"] = _("成员总数"),
+    ["palace_alliance_power"] = _("联盟战斗力"),
 
 
 }

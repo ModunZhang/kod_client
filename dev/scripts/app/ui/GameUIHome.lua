@@ -131,7 +131,7 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         PushService:quitAlliance(NOT_HANDLE)
-        end):addTo(top_bg):align(display.LEFT_BOTTOM, 317, 106)
+    end):addTo(top_bg):align(display.LEFT_BOTTOM, 317, 106)
 
     -- 资源图片和文字
     local first_row = 60
@@ -404,10 +404,18 @@ function GameUIHome:OnBottomButtonClicked(event)
         UIKit:newGameUI('GameUIAlliance'):addToCurrentScene(true)
     elseif tag == 3 then
         UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
+    elseif tag == 1 then
+        UIKit:newGameUI('GameUIAlliancePalace',self.city,"upgarde"):addToCurrentScene(true)
+    elseif tag == 2 then
+        UIKit:newGameUI('GameUIAllianceShop',self.city,"upgarde"):addToCurrentScene(true)
+    elseif tag == 5 then
+        UIKit:newGameUI('GameUIAllianceEnter'):addToCurrentScene(true)
     end
 end
 
 return GameUIHome
+
+
 
 
 
