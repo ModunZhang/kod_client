@@ -130,7 +130,6 @@ function GameUIHome:CreateTop()
         {normal = "home/res_btn_up.png", pressed = "home/res_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        
         end):addTo(top_bg):align(display.LEFT_BOTTOM, 317, 106)
 
     -- 资源图片和文字
@@ -403,12 +402,20 @@ function GameUIHome:OnBottomButtonClicked(event)
         UIKit:newGameUI('GameUIAlliance'):addToCurrentScene(true)
     elseif tag == 3 then
         UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
+    elseif tag == 1 then
+        UIKit:newGameUI('GameUIAlliancePalace',self.city,"upgarde"):addToCurrentScene(true)
+    -- elseif tag == 2 then
+    --     UIKit:newGameUI('GameUIAllianceShop',self.city,"upgarde"):addToCurrentScene(true)
+    elseif tag == 5 then
+        UIKit:newGameUI('GameUIAllianceEnter'):addToCurrentScene(true)
     elseif tag == 2 then
         UIKit:newGameUI('GameUIReplay'):addToCurrentScene(true)
     end
 end
 
 return GameUIHome
+
+
 
 
 
