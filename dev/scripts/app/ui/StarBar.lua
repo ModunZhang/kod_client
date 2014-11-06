@@ -59,4 +59,16 @@ function StarBar:setNum(num)
 	end
 end
 
+function StarBar:align(anchorPoint, x, y)
+	display.align(self,anchorPoint,x,y)
+	local anchorPoint = display.ANCHOR_POINTS[anchorPoint]
+	local size = self:getContentSize()
+	for i,v in ipairs(self.items_) do
+		local new_x = v:getPositionX() + size.width * (v:getAnchorPoint().x - anchorPoint.x)
+		local new_y = v:getPositionY() + size.height * (v:getAnchorPoint().y - anchorPoint.y)
+		v:setPosition(cc.p(new_x,new_y))
+	end
+	return self
+end
+
 return StarBar

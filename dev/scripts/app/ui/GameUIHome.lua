@@ -251,7 +251,6 @@ function GameUIHome:CreateTop()
         dump(event)
         if event.name == "CLICKED_EVENT" then
             UIKit:newGameUI('GameUIVip', City):addToCurrentScene(true)
-            -- PushService:quitAlliance(NOT_HANDLE)
         end
     end):addTo(top_bg):pos(592, -51):scale(0.6)
 

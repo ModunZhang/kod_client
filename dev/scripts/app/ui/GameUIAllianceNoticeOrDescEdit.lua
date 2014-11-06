@@ -79,7 +79,6 @@ function GameUIAllianceNoticeOrDescEdit:onMoveInStage()
 		:align(display.RIGHT_BOTTOM,bg_node:getCascadeBoundingBox().width - 120, 20)
 end
 
---TODO: done 关闭界面 
 function GameUIAllianceNoticeOrDescEdit:onOkButtonClicked()
 	local content = self.textView:getText()
 	if self.isNotice_ then

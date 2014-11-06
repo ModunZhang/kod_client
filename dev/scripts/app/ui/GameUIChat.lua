@@ -5,7 +5,6 @@
 local GameUIChat = UIKit:createUIClass('GameUIChat')
 local UIListView = import(".UIListView")
 local WidgetBackGroundTabButtons = import('..widget.WidgetBackGroundTabButtons')
-local ChatService = import('..service.ChatService')
 local ChatCenter = app.chatCenter
 local NetService = import('..service.NetService')
 local window = import("..utils.window")
@@ -425,7 +424,7 @@ end
 function GameUIChat:CreateTextFieldBody()
 	local function onEdit(event, editbox)
         if event == "return" then
-            ChatService:sendChat({text = editbox:getText(),type=self._channelType},function(err)
+            NetManager:getSendChatPromise(self._channelType,editbox:getText()):next(function(result)
                 editbox:setText('')
             end)
         end
@@ -449,9 +448,11 @@ function GameUIChat:CreateTextFieldBody()
 
 	local emojiButton = cc.ui.UIPushButton.new({normal = "chat_expression.png",pressed = "chat_expression_highlight.png",},{scale9 = false})
 		:onButtonClicked(function(event)
-			 ChatService:sendChat({text = editbox:getText(),type=self._channelType},function(err)
-                editbox:setText('')
-            end)
+            if CONFIG_IS_DEBUG then
+                NetManager:getSendChatPromise(self._channelType,editbox:getText()):next(function(result)
+                    editbox:setText('')
+                end)
+            end
     	end)
     	:addTo(self)
     	:align(display.LEFT_TOP,self.editbox:getPositionX()+self.editbox:getContentSize().width+10, window.top - 100)

@@ -176,6 +176,7 @@ function MaterialManager:OnUserDataChanged(user_data)
     end
 end
 function MaterialManager:OnMaterialsComing(material_type, materials)
+    dump(materials,"MaterialManager:OnMaterialsComing--->")
     local changed = {}
     local old_materials = self.material_map[material_type]
     for k, new in pairs(materials) do

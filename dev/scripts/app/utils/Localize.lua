@@ -304,9 +304,6 @@ local BUILDING_DESCRIPTION = {
 
     ["miner"] = _("将城民派往矿工小屋获得持续的铁矿产出。建筑等级越高需要更多的城民，铁矿产出也会更高。"),
     ["miner_poduction"] = _("每小时铁矿产量"),
-
-
-
 }
 
 
@@ -362,6 +359,28 @@ local SOLDIER_CATEGORY_MAP = {
     ["catapult"] = "siege",
     ["ballista"] = "siege",
 }
+
+local ALLIANCE_EVENTS = {
+    donate = _("向联盟慷慨捐赠，提升荣耀值%s"),
+    promotion = _("在联盟中的职位被晋级/降级到%s"),
+    join = _("一个新成员加入联盟"),
+    kick = _("一个玩家被逐出联盟"),
+    quit = _("退出联盟"),
+    request = _("一个玩家申请加入我们的联盟"),
+    notice = _("一个新的联盟公告发布"),
+    desc = _("一个新的联盟宣言发布"),
+    diplomacy = _("将%s与我盟的外交关系改变为%s"),
+    handover = _("晋升为联盟新的盟主"),
+    tools = _("向联盟商店补充了一批新的高级道具"),
+    upgrade = _("%s 升级到 %s"),
+    name = _("最近更改联盟的名称为%s"),
+    tag = _("最近更改联盟的标签"),
+    flag = _("修改联盟旗帜"),
+    terrain = _("修改联盟地形为%s"),
+    language = _("修改联盟语言更改为%s"),
+    gve = _("激活了圣地的神秘事件"),
+}
+
 local SOLDIER_CATEGORY = {
     ["infantry"] = _("步兵"),
     ["ranger"] = _("弓手"),
@@ -382,6 +401,7 @@ local SOLDIER_STATUS = {
 }
 
 
+
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
@@ -393,6 +413,7 @@ return {
     building_description = BUILDING_DESCRIPTION,
     building_name = BUILDING_NAME,
     alliance_title = ALLIANCE_TITLE,
+    alliance_events = ALLIANCE_EVENTS,
     soldier_name = SOLDIER_NAME,
     soldier_category = SOLDIER_CATEGORY,
     soldier_status = SOLDIER_STATUS,

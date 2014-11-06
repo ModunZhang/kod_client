@@ -11,7 +11,6 @@ local GameUIAlliance = UIKit:createUIClass("GameUIAlliance","GameUIWithCommonHea
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
 local contentWidth = window.width - 80
-local AllianceManager = import("..service.AllianceManager")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIAllianceBasicSetting = import(".GameUIAllianceBasicSetting")
@@ -762,7 +761,6 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 end
 
 function GameUIAlliance:RefreshNoticeView()
-	print("RefreshNoticeView------->")
 	local textLabel = UIKit:ttfLabel({
 		dimensions = cc.size(576, 0),
 		text = string.len(Alliance_Manager:GetMyAlliance():Notice())>0 and Alliance_Manager:GetMyAlliance():Notice() or _("未设置联盟公告"),
@@ -810,27 +808,7 @@ end
 
 function GameUIAlliance:GetEventContent(event)
 	local event_type = event.type
-	local string4event = {
-		donate = _("向联盟慷慨捐赠，提升荣耀值%s"),
-		promotion = _("在联盟中的职位被晋级/降级到%s"),
-		join = _("一个新成员加入联盟"),
-		kick = _("一个玩家被逐出联盟"),
-		quit = _("退出联盟"),
-		request = _("一个玩家申请加入我们的联盟"),
-		notice = _("一个新的联盟公告发布"),
-		desc = _("一个新的联盟宣言发布"),
-		diplomacy = _("将%s与我盟的外交关系改变为%s"),
-		handover = _("晋升为联盟新的盟主"),
-		tools = _("向联盟商店补充了一批新的高级道具"),
-		upgrade = _("%s 升级到 %s"),
-		name = _("最近更改联盟的名称为%s"),
-		tag = _("最近更改联盟的标签"),
-		flag = _("修改联盟旗帜"),
-		terrain = _("修改联盟地形为%s"),
-		language = _("修改联盟语言更改为%s"),
-		gve = _("激活了圣地的神秘事件"),
-	}
-	return string.format(string4event[event_type],unpack(event.params))
+	return string.format(Localize.alliance_events[event_type],unpack(event.params))
 end
 
 
@@ -845,9 +823,7 @@ function GameUIAlliance:GetEventTitleImageByEvent(event)
 	end
 end
 
---TODO:RefreshOverView adapter
 function GameUIAlliance:RefreshOverViewUI()
-	print("RefreshOverViewUI---->")
 	self:RefreshEventListView()
 	if self.ui_overview and self.tab_buttons:GetSelectedButtonTag() == 'overview' then
 		local alliance_data = Alliance_Manager:GetMyAlliance()

@@ -191,12 +191,150 @@ end
 function NetManager:removeAllianceDataChangedEventListener(  )
     self:removeEventListener("onAllianceDataChanged")
 end
-
+---
+onSearchAlliancesSuccess_callbacks = {}
+onGetCanDirectJoinAlliancesSuccess_callbacks = {}
+onGetPlayerInfoSuccess_callbacks = {}
+onGetMailsSuccess_callbacks = {}
+onGetSavedMailsSuccess_callbacks = {}
+onGetSendMailsSuccess_callbacks = {}
+onSendChatSuccess_callbacks = {}
+onGetAllChatSuccess_callbacks = {}
+function NetManager:addOnSearchAlliancesSuccessListener()
+    self:addEventListener("onSearchAlliancesSuccess", function(success, msg)
+        if success then    
+            local callback = onSearchAlliancesSuccess_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onSearchAlliancesSuccess_callbacks = {}
+        end
+    end)
+end
+function NetManager:addOnGetCanDirectJoinAlliancesSuccessListener()
+    self:addEventListener("onGetCanDirectJoinAlliancesSuccess", function(success, msg)
+        if success then    
+            local callback = onGetCanDirectJoinAlliancesSuccess_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onGetCanDirectJoinAlliancesSuccess_callbacks = {}
+        end
+    end)
+end
+function NetManager:addOnGetPlayerInfoSuccessListener()
+    self:addEventListener("onGetPlayerInfoSuccess", function(success, msg)
+        if success then    
+            local callback = onGetPlayerInfoSuccess_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onGetPlayerInfoSuccess_callbacks = {}
+        end
+    end)
+end
+function NetManager:addOnGetMailsSuccessListener()
+    self:addEventListener("onGetMailsSuccess", function(success, msg)
+        if success then    
+            assert(#onGetMailsSuccess_callbacks <= 1, "重复请求过多了!")
+            local callback = onGetMailsSuccess_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onGetMailsSuccess_callbacks = {}
+        end
+    end)
+end
+function NetManager:addOnGetSavedMailsSuccessListener()
+    self:addEventListener("onGetSavedMailsSuccess", function(success, msg)
+        if success then    
+            assert(#onGetSavedMailsSuccess_callbacks <= 1, "重复请求过多了!")
+            local callback = onGetSavedMailsSuccess_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onGetSavedMailsSuccess_callbacks = {}
+        end
+    end)
+end
+function NetManager:addOnGetSendMailsSuccessListener()
+    self:addEventListener("onGetSendMailsSuccess", function(success, msg)
+        if success then    
+        assert(#onGetSendMailsSuccess_callbacks <= 1, "重复请求过多了!")
+            local callback = onGetSendMailsSuccess_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onGetSendMailsSuccess_callbacks = {}
+        end
+    end)
+end
+function NetManager:addOnChatListener()
+     self:addEventListener("onChat", function(success, msg)
+        if success then
+            if app.chatCenter then 
+                app.chatCenter:handleNetMessage("onChat",msg)
+            end    
+            assert(#onSendChatSuccess_callbacks <= 1, "重复请求过多了!")
+            local callback = onSendChatSuccess_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onSendChatSuccess_callbacks = {}
+        end
+    end)
+end
+function NetManager:addOnAllChatListener()
+     self:addEventListener("onAllChat", function(success, msg)
+        if success then
+            if app.chatCenter then 
+                app.chatCenter:handleNetMessage("onAllChat",msg)
+            end    
+            assert(#onGetAllChatSuccess_callbacks <= 1, "重复请求过多了!")
+            local callback = onGetAllChatSuccess_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onGetAllChatSuccess_callbacks = {}
+        end
+    end)
+end
+function NetManager:addOnBuildingLevelUpListener()
+     self:addEventListener("onBuildingLevelUp", function(success, msg)
+        if success then
+            local buildingName = UIKit:getBuildingLocalizedKeyByBuildingType(msg.buildingType)
+            GameGlobalUI:showTips(_("建筑升级完成"),string.format('%s(LV %d)',_(buildingName),msg.level))
+        end
+    end)
+end
+function NetManager:addOnHouseLevelUpListener()
+    self:addEventListener("onHouseLevelUp", function(success, msg)
+        if success then
+            local houseName = UIKit:getHouseLocalizedKeyByBuildingType(msg.houseType)
+            GameGlobalUI:showTips(_("小屋升级完成"),string.format('%s(LV %d)',_(houseName),msg.level))
+        end
+    end)
+end
+function NetManager:addOnTowerLevelUpListener()
+     self:addEventListener("onTowerLevelUp", function(success, msg)
+        if success then
+            GameGlobalUI:showTips(_("城墙升级完成"),string.format('LV %d',msg.level))
+        end
+    end)
+end
+function NetManager:addOnWallLevelUp()
+    self:addEventListener("onWallLevelUp", function(success, msg)
+        if success then
+            local buildingName = UIKit:getBuildingLocalizedKeyByBuildingType(msg.buildingType)
+            GameGlobalUI:showTips(_("建筑升级完成"),string.format('%s(LV %d)',_(buildingName),msg.level))
+        end
+    end)
+end
+------------------------------------------------------------------------------------------------
 function NetManager:addLoginEventListener()
     self:addEventListener("onPlayerLoginSuccess", function(success, msg)
         if success then
             if self.m_isDisconnect then
-                ListenerService:start()
                 self.m_netService:setDeltatime(msg.serverTime - ext.now())
                 DataManager:setUserData(msg)
             else
@@ -260,7 +398,20 @@ function NetManager:getConnectLogicServerPromise()
         self:addPlayerDataChangedEventListener()
         self:addAllianceDataChangedEventListener()
         self:addLoginEventListener()
-        ListenerService:start()
+
+        self:addOnSearchAlliancesSuccessListener()
+        self:addOnGetCanDirectJoinAlliancesSuccessListener()
+        self:addOnGetPlayerInfoSuccessListener()
+        self:addOnGetMailsSuccessListener()
+        self:addOnGetSavedMailsSuccessListener()
+        self:addOnGetSendMailsSuccessListener()
+        self:addOnChatListener()
+        self:addOnAllChatListener()
+
+        self:addOnBuildingLevelUpListener()
+        self:addOnHouseLevelUpListener()
+        self:addOnTowerLevelUpListener()
+        self:addOnWallLevelUp()
     end)
 end
 -- 登录
@@ -301,6 +452,12 @@ local function get_savedmails_callback()
 end
 local function get_sendmails_callback()
     return get_callback_promise(onGetSendMailsSuccess_callbacks, "获取发件箱邮件失败!")
+end
+local function get_sendchat_callback()
+    return get_callback_promise(onSendChatSuccess_callbacks, "发送聊天失败!")
+end
+local function get_fetchchat_callback()
+    return get_callback_promise(onGetAllChatSuccess_callbacks, "获取聊天失败!")
 end
 
 -- 建造小屋
@@ -453,7 +610,7 @@ function NetManager:getHatchDragonPromise(dragonType)
 end
 -- 装备
 function NetManager:getLoadDragonEquipmentPromise(dragonType, equipmentCategory, equipmentName)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.hatchDragon", {
+    return promise.all(get_blocking_request_promise("logic.playerHandler.setDragonEquipment", {
         dragonType = dragonType,
         equipmentCategory = equipmentCategory,
         equipmentName = equipmentName
@@ -481,10 +638,10 @@ function NetManager:getUpgradeDragonStarPromise(dragonType)
     }, "升级龙星失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 升级龙技能
-function NetManager:getUpgradeDragonDragonSkillPromise(dragonType, skillLocation)
+function NetManager:getUpgradeDragonDragonSkillPromise(dragonType, skillKey)
     return promise.all(get_blocking_request_promise("logic.playerHandler.upgradeDragonSkill", {
         dragonType = dragonType,
-        skillLocation = skillLocation
+        skillKey = skillKey
     }, "升级龙技能失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 发送个人邮件
@@ -677,12 +834,23 @@ function NetManager:getEditAllianceTitleNamePromise(title, titleName)
         titleName = titleName
     }, "修改职位名字失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
--- 发送聊天信息
+-- 发送秘籍
 function NetManager:getSendGlobalMsgPromise(text)
     return promise.all(get_blocking_request_promise("chat.chatHandler.send", {
         ["text"] = text,
         ["type"] = "global"
     }, "发送世界聊天信息失败!"))
+end
+--发送聊天信息
+function NetManager:getSendChatPromise(type,text)
+    return promise.all(get_none_blocking_request_promise("chat.chatHandler.send", {
+        ["text"] = text,
+        ["type"] = type
+    }, "发送聊天信息失败!"),get_sendchat_callback())
+end
+--获取所有聊天信息
+function NetManager:getFetchChatPromise()
+    return promise.all(get_none_blocking_request_promise("chat.chatHandler.getAll",nil, "获取聊天信息失败!"),get_fetchchat_callback())
 end
 --处理联盟的对玩家的邀请
 local function getHandleJoinAllianceInvitePromise(allianceId, agree)
