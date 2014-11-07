@@ -1,13 +1,13 @@
 local AllianceObject = class("AllianceObject")
 local allianceBuildingType = GameDatas.AllianceInitData.buildingType
 function AllianceObject:ctor(object_type, id, x, y, alliance_map)
-    assert(object_type)
     self.object_type = object_type or "none"
     self.id = id
     self.x = x or 0
     self.y = y or 0
-    self.w = allianceBuildingType[object_type].width
-    self.h = allianceBuildingType[object_type].height
+    local config = allianceBuildingType[object_type] or {width = 1, height = 1}
+    self.w = config.width
+    self.h = config.height
     self.level = 0
     self.alliance_map = alliance_map
 end
