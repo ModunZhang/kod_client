@@ -27,11 +27,27 @@ local function promiseWithCatchError(p)
     end)
 end
 
+local function promiseFilterNetError(p,need_catch)
+    return p:catch(function(err)
+        dump(err)
+        local dialog = FullScreenPopDialogUI.new():AddToCurrentScene()
+        local content, title = err:reason()
+        dialog:SetTitle(title or "")
+        dialog:SetPopMessage(content)
+        if need_catch then
+            promise.reject {"",{msg=err.errcode[1]}}
+        else
+            return {"",{msg=err.errcode[1]}}
+        end
+    end)
+end
+
 return {
     delay = delay,
     timeOut = timeOut,
     promiseWithTimeOut = promiseWithTimeOut,
-    promiseWithCatchError = promiseWithCatchError
+    promiseWithCatchError = promiseWithCatchError,
+    promiseFilterNetError = promiseFilterNetError,
 }
 
 
