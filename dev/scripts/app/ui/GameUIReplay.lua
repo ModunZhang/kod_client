@@ -12,8 +12,9 @@ local GameUIReplay = UIKit:createUIClass('GameUIReplay')
 
 local new_battle = {
     {dual = {left = "ranger", right = "lancer"}, defeat = "right"},
-    {dual = {right = "lancer"}, defeat = "left"},
-    {dual = {left = "wall"}, defeat = "right"},
+    {dual = {right = "lancer"}, defeat = "right"},
+    {dual = {right = "wall"}, defeat = "right"},
+    -- {dual = {left = "wall"}, defeat = "right"},
 }
 local function decode_battle(raw)
     local rounds = {}
@@ -106,8 +107,8 @@ function GameUIReplay:onEnter()
     local battle = display.newNode():addTo(clip)
     :pos(back_width_half - 590/2, back_height - 388 - 10)
     self.battle = battle
-    local battle_bg = cc.ui.UIImage.new("battle_bg_590x388.png")
-        :addTo(battle):align(display.LEFT_BOTTOM, 0, 0)
+    local battle_bg = cc.ui.UIImage.new("battle_bg_grass_772x388.png")
+        :addTo(battle):align(display.CENTER, rect.width / 2, rect.height / 2)
     self.battle_bg = battle_bg
 
 
@@ -326,9 +327,9 @@ function GameUIReplay:DecodeStateBySide(side, is_left)
     if state == "enter" then
         if is_left then
             if side.soldier == "wall" then
-                self.left = self:NewWall(-50)
+                self.left = self:NewWall(50)
                 action = promise.new(BattleObject:TurnRight()):next(function()
-                    return promise.new(GameUIReplay:MoveBattleBgBy(100))
+                    return promise.new(GameUIReplay:MoveBattleBgBy(90))
                         :next(function()
                             return self.left
                         end):resolve(self.battle_bg)
@@ -343,9 +344,9 @@ function GameUIReplay:DecodeStateBySide(side, is_left)
             end
         else
             if side.soldier == "wall" then
-                self.right = self:NewWall(650)
+                self.right = self:NewWall(730)
                 action = promise.new(BattleObject:TurnLeft()):next(function()
-                    return promise.new(GameUIReplay:MoveBattleBgBy(-100))
+                    return promise.new(GameUIReplay:MoveBattleBgBy(-90))
                         :next(function()
                             return self.right
                         end):resolve(self.battle_bg)
