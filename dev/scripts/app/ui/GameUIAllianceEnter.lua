@@ -46,7 +46,7 @@ local ENTER_LIST = {
                 img = "icon_upgrade.png",
                 title = _("升级"),
                 func = function (building)
-                    UIKit:newGameUI('GameUIAlliancePalace',City,"upgarde",building):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIAlliancePalace',City,"upgrade",building):addToCurrentScene(true)
                 end
             },
         },
@@ -95,7 +95,61 @@ local ENTER_LIST = {
                 img = "icon_upgrade.png",
                 title = _("升级"),
                 func = function (building)
-                    UIKit:newGameUI('GameUIAllianceShop',City,"upgarde",building):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIAllianceShop',City,"upgrade",building):addToCurrentScene(true)
+                end
+            },
+        },
+    },
+    moonGate = {
+        height = 311,
+        title = _("月门"),
+        building_image = "moonGate_200x217.png",
+        building_desc = _("本地化缺失"),
+        building_info = {
+            {
+                {_("坐标"),0x797154},
+                {_("11,11"),0x403c2f},
+            },
+            {
+                {_("驻防部队"),0x797154},
+                {_("暂无"),0x403c2f},
+            },
+            {
+                {_("占领方"),0x797154},
+                {_("暂无"),0x403c2f},
+            },
+            {
+                {_("状态"),0x797154},
+                {_("暂无"),0x403c2f},
+            },
+        },
+        enter_buttons = {
+            {
+                img = "icon_relation.png",
+                title = _("外交关系"),
+                func = function (building)
+                -- UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
+                end
+            },
+            {
+                img = "icon_other_alliance.png",
+                title = _("其他联盟"),
+                func = function (building)
+                -- UIKit:newGameUI('GameUIOrderHall',City,"village",building):addToCurrentScene(true)
+                end
+            },
+            {
+                img = "icon_info.png",
+                title = _("驻防部队"),
+                func = function (building)
+                -- UIKit:newGameUI('GameUIOrderHall',City,"upgrade",building):addToCurrentScene(true)
+                end
+            },
+            {
+                img = "icon_upgrade.png",
+                title = _("升级"),
+                func = function (building)
+                -- UIKit:newGameUI('GameUIOrderHall',City,"upgrade",building):addToCurrentScene(true)
                 end
             },
         },
@@ -138,7 +192,76 @@ local ENTER_LIST = {
                 img = "icon_upgrade.png",
                 title = _("升级"),
                 func = function (building)
-                    UIKit:newGameUI('GameUIOrderHall',City,"upgarde",building):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIOrderHall',City,"upgrade",building):addToCurrentScene(true)
+                end
+            },
+        },
+    },
+    shrine = {
+        height = 261,
+        title = _("圣地"),
+        building_image = "orderHall_277x417.png",
+        building_desc = _("本地化缺失"),
+        building_info = {
+            {
+                {_("坐标"),0x797154},
+                {_("11,11"),0x403c2f},
+            },
+            {
+                {_("正在进行的事件"),0x797154},
+                {_("暂无"),0x403c2f},
+            },
+            {
+                {_("参与部队"),0x797154},
+                {_("暂无"),0x403c2f},
+            },
+        },
+        enter_buttons = {
+            {
+                img = "icon_info.png",
+                title = _("战争事件"),
+                func = function (building)
+                -- UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
+                end
+            },
+            {
+                img = "icon_alliance_crisis.png",
+                title = _("联盟危机"),
+                func = function (building)
+                -- UIKit:newGameUI('GameUIOrderHall',City,"village",building):addToCurrentScene(true)
+                end
+            },
+            {
+                img = "icon_upgrade.png",
+                title = _("升级"),
+                func = function (building)
+                -- UIKit:newGameUI('GameUIOrderHall',City,"upgrade",building):addToCurrentScene(true)
+                end
+            },
+        },
+    },
+
+    decorate = {
+        height = 242,
+        title = _("树/湖泊/山脉"),
+        building_image = "tree_1_120x120.png",
+        building_desc = _("可拆除,需要职位在将军以上的玩家,并且花费一定的荣誉值"),
+        building_info = {
+            {
+                {_("坐标"),0x797154},
+                {_("11,11"),0x403c2f},
+            },
+            {
+                {_("占地"),0x797154},
+                {_("暂无"),0x403c2f},
+            },
+        },
+        enter_buttons = {
+            {
+                img = "icon_demolish.png",
+                title = _("拆除"),
+                func = function (building)
+                -- UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
                 end
             },
         },
@@ -148,8 +271,8 @@ local ENTER_LIST = {
 function GameUIAllianceEnter:ctor(building)
     self:setNodeEventEnabled(true)
     self.building = building
-    self.params = ENTER_LIST[building.name]
-    assert(ENTER_LIST[building.name],"联盟建筑配置为空")
+    self.params = ENTER_LIST[building.name or building:GetCategory()]
+    assert(ENTER_LIST[building.name or building:GetCategory()],"联盟建筑配置为空"..(building.name or building:GetCategory()))
     self.alliance = Alliance_Manager:GetMyAlliance()
     self:SetBuildingInfo()
     self.body = self:CreateBackGroundWithTitle(self.params)
@@ -163,15 +286,25 @@ end
 
 function GameUIAllianceEnter:SetBuildingInfo()
     local building = self.building
-    local name = self.building.name
+    local name = self.building.name or self.building:GetCategory()
     local info = ENTER_LIST[name].building_info
-    info[1][2][1] = building.location.x..","..building.location.y
+    if building.location then
+        info[1][2][1] = building.location.x..","..building.location.y
+    else
+        local x,y = self.building:GetLogicPosition()
+        info[1][2][1] = x..","..y
+    end
+
     if name == "palace" then
         info[2][2][1] = self.alliance:MemberCount()
         info[3][2][1] = _("暂无")
     elseif name == "shop" then
         info[2][2][1] = _("暂无")
     elseif name == "orderHall" then
+    elseif name == "decorate" then
+        local w,h = self.building:GetSize()
+        info[2][2][1] = w*h
+        -- ENTER_LIST[name].building_image = GameDatas.AllianceInitData.buildingType[self.building:GetType()]
     end
 end
 
@@ -258,12 +391,25 @@ function GameUIAllianceEnter:InitBuildingImage()
     building_image:setScale(125/building_image:getContentSize().width)
     local level_bg = display.newSprite("back_ground_138x34.png")
         :addTo(body):pos(96, p.height-180)
-    UIKit:ttfLabel({
-        text = _("Level").." "..self.building.level,
-        size = 20,
-        color = 0x514d3e,
-    }):align(display.CENTER, level_bg:getContentSize().width/2 , level_bg:getContentSize().height/2)
-        :addTo(level_bg)
+    if not self.building.name and self.building:GetCategory() == "decorate" then
+        display.newSprite("honour.png"):align(display.CENTER, 20, level_bg:getContentSize().height/2)
+            :addTo(level_bg)
+        local distroyNeedHonour = GameDatas.AllianceInitData.buildingType[self.building:GetType()].distroyNeedHonour
+        UIKit:ttfLabel({
+            text = distroyNeedHonour,
+            size = 20,
+            color = 0x514d3e,
+        }):align(display.CENTER, level_bg:getContentSize().width/2 , level_bg:getContentSize().height/2)
+            :addTo(level_bg)
+            print("(level_bg:getContentSize().width-40)/2=",level_bg:getContentSize().width/2)
+    else
+        UIKit:ttfLabel({
+            text = _("Level").." "..self.building.level,
+            size = 20,
+            color = 0x514d3e,
+        }):align(display.CENTER, level_bg:getContentSize().width/2 , level_bg:getContentSize().height/2)
+            :addTo(level_bg)
+    end
 end
 
 function GameUIAllianceEnter:InitEnterButton(buttons)
@@ -299,6 +445,13 @@ function GameUIAllianceEnter:onExit()
 end
 
 return GameUIAllianceEnter
+
+
+
+
+
+
+
 
 
 

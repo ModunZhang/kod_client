@@ -12,7 +12,7 @@ local Localize = import("..utils.Localize")
 
 
 function GameUIOrderHall:ctor(city,default_tab,building)
-    GameUIOrderHall.super.ctor(self, city, _("秩序大厅"))
+    GameUIOrderHall.super.ctor(self, city, _("秩序大厅"),default_tab,building)
     self.default_tab = default_tab
     self.building = building
 end

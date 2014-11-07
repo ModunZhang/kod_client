@@ -25,7 +25,7 @@ function AllianceScene:onEnter()
     home:setTouchSwallowEnabled(false)
 
 
-    
+
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(10, 10)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
 end
@@ -45,22 +45,24 @@ end
 function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
-        local building_info = building:GetEntity():GetAllianceBuildingInfo()
-        -- LuaUtils:outputTable("building:GetEntity()", building:GetEntity())
         dump(building:GetEntity())
-        if building_info then
+        local category = building:GetEntity():GetCategory()
+        if category == "building" then
+            local building_info = building:GetEntity():GetAllianceBuildingInfo()
+            LuaUtils:outputTable("building_info", building_info)
+            if building_info then
                 UIKit:newGameUI('GameUIAllianceEnter',building_info):addToCurrentScene(true)
-            -- if building_info.name == "palace" then
-            -- elseif building_info.name == "moonGate" then
-            -- elseif building_info.name == "shop" then
-            --     UIKit:newGameUI('GameUIAllianceEnter',building_info):addToCurrentScene(true)
-            -- elseif building_info.name == "orderHall" then
-            -- elseif building_info.name == "shrine" then
-            -- end
+            else
+                UIKit:newGameUI('GameUIAllianceEnter',building:GetEntity()):addToCurrentScene(true)
+            end
+        elseif category == "decorate" then
+            UIKit:newGameUI('GameUIAllianceEnter',building:GetEntity()):addToCurrentScene(true)
         end
     end
 end
 return AllianceScene
+
+
 
 
 

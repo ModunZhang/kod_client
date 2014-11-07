@@ -11,7 +11,7 @@ local Localize = import("..utils.Localize")
 
 
 function GameUIAlliancePalace:ctor(city,default_tab,building)
-    GameUIAlliancePalace.super.ctor(self, city, _("联盟宫殿"))
+    GameUIAlliancePalace.super.ctor(self, city, _("联盟宫殿"),default_tab,building)
     self.default_tab = default_tab
     self.building = building
     -- self.alliance = Alliance_Manager:GetMyAlliance()

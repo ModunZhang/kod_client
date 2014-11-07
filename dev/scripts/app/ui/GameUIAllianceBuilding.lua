@@ -13,7 +13,7 @@ function GameUIAllianceBuilding:CreateTabButtons(param, cb)
     table.insert(param,1, {
         label = _("升级"),
         tag = "upgrade",
-        default = true,
+        default = "upgrade" == self.default_tab,
     })
     return GameUIAllianceBuilding.super.CreateTabButtons(self,param,function(tag)
         if tag == "upgrade" then

@@ -68,8 +68,8 @@ function WidgetAllianceBuildingUpgrade:onEnter()
                         :SetTitle(_("提示"))
                         :SetPopMessage(ERR_MESSAGE[err])
                         :AddToCurrentScene()
-                    else
-                        NetManager:getUpgradeAllianceBuildingPromise(self.building.name)
+                else
+                    NetManager:getUpgradeAllianceBuildingPromise(self.building.name)
                 end
             end
         end):align(display.CENTER, display.cx, display.top-430):addTo(self)
@@ -152,28 +152,30 @@ end
 
 function WidgetAllianceBuildingUpgrade:InitRequirement()
     local alliance = Alliance_Manager:GetMyAlliance()
-    if #self.building_config == self.building.level then 
-        self.requirement_listview:setVisible(false)
-        return 
+    if #self.building_config == self.building.level then
+        if self.requirement_listview then
+            self.requirement_listview:setVisible(false)
+        end
+        return
     end
     local now_c = self.building_config[self.building.level+1]
     local requirements = {
-            {resource_type = _("荣耀点"),
-                isVisible = true,
-                isSatisfy = alliance:Honour()>=now_c.needHonour,
-                icon="honour.png",
-                description=alliance:Honour().."/"..now_c.needHonour},
-            {resource_type = _("联盟城堡等级"),
-                isVisible = alliance:GetMemeberById(DataManager:getUserData()._id):IsArchon(),
-                isSatisfy = City:GetFirstBuildingByType("keep"):GetLevel()>=now_c.needKeep,
-                icon="keep_760x855.png",
-                description=City:GetFirstBuildingByType("keep"):GetLevel().."/"..now_c.needKeep},
+        {resource_type = _("荣耀点"),
+            isVisible = true,
+            isSatisfy = alliance:Honour()>=now_c.needHonour,
+            icon="honour.png",
+            description=alliance:Honour().."/"..now_c.needHonour},
+        {resource_type = _("联盟城堡等级"),
+            isVisible = alliance:GetMemeberById(DataManager:getUserData()._id):IsArchon(),
+            isSatisfy = City:GetFirstBuildingByType("keep"):GetLevel()>=now_c.needKeep,
+            icon="keep_760x855.png",
+            description=City:GetFirstBuildingByType("keep"):GetLevel().."/"..now_c.needKeep},
 
-            {resource_type = _("职位"),
-                isVisible = true,
-                isSatisfy = alliance:GetMemeberById(DataManager:getUserData()._id):IsArchon() ,
-                icon="leader.png",
-                description= _("联盟盟主")},
+        {resource_type = _("职位"),
+            isVisible = true,
+            isSatisfy = alliance:GetMemeberById(DataManager:getUserData()._id):IsArchon() ,
+            icon="leader.png",
+            description= _("联盟盟主")},
     }
     if not self.requirement_listview then
         self.requirement_listview = WidgetRequirementListview.new({
@@ -229,3 +231,4 @@ function WidgetAllianceBuildingUpgrade:getNextLevelConfig__()
 end
 
 return WidgetAllianceBuildingUpgrade
+
