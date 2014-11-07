@@ -237,11 +237,11 @@ function UIScrollView:resetPosition()
 		return
 	end
 
-	-- local x, y = self.scrollNode:getPosition()
-	-- local bound = self.scrollNode:getCascadeBoundingBox()
-	-- local disY = self.viewRect_.y + self.viewRect_.height - bound.y - bound.height
-	-- y = y + disY
-	-- self.scrollNode:setPosition(x, y)
+	local x, y = self.scrollNode:getPosition()
+	local bound = self.scrollNode:getCascadeBoundingBox()
+	local disY = self.viewRect_.y + self.viewRect_.height - bound.y - bound.height
+	y = y + disY
+	self.scrollNode:setPosition(x, y)
 
 
 	local cascadeBound = self:getScrollNodeRect()

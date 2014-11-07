@@ -23,14 +23,8 @@ function AllianceScene:onEnter()
     local home = UIKit:newGameUI('GameUIAllianceHome'):addToScene(self)
     home:setTouchSwallowEnabled(false)
 
-
-
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(10, 10)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
-end
-function AllianceScene:onExit()
-    AllianceScene.super.onExit(self)
-    -- City:ResetAllListeners()
 end
 function AllianceScene:CreateSceneLayer()
     local scene = AllianceLayer.new()
@@ -38,9 +32,6 @@ function AllianceScene:CreateSceneLayer()
     :ZoomTo(1)
     return scene
 end
-function AllianceScene:onEnterTransitionFinish()
-end
-
 function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then

@@ -346,6 +346,13 @@ function GameUIHome:CreateBottom()
     ):addTo(bottom_bg)
         :pos(52, 54)
         :onButtonClicked(function(event)
+            if Alliance_Manager:GetMyAlliance():IsDefault() then
+                local dialog = FullScreenPopDialogUI.new():AddToCurrentScene()
+                dialog:SetTitle("提示")
+                dialog:SetPopMessage("未加入联盟!")
+                return
+            end
+
             app:lockInput(true)
             transition.rotateTo(arrow, {
                 rotate = 90,
@@ -404,8 +411,8 @@ function GameUIHome:OnBottomButtonClicked(event)
         UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
     elseif tag == 1 then
         UIKit:newGameUI('GameUIAlliancePalace',self.city,"upgarde"):addToCurrentScene(true)
-    -- elseif tag == 2 then
-    --     UIKit:newGameUI('GameUIAllianceShop',self.city,"upgarde"):addToCurrentScene(true)
+        -- elseif tag == 2 then
+        --     UIKit:newGameUI('GameUIAllianceShop',self.city,"upgarde"):addToCurrentScene(true)
     elseif tag == 5 then
         UIKit:newGameUI('GameUIAllianceEnter'):addToCurrentScene(true)
     elseif tag == 2 then
@@ -414,6 +421,8 @@ function GameUIHome:OnBottomButtonClicked(event)
 end
 
 return GameUIHome
+
+
 
 
 
