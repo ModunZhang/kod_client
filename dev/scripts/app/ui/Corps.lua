@@ -1,11 +1,11 @@
 local promise = import("..utils.promise")
 local UILib = import(".UILib")
-local Corps = class("Corps", function()
-    return display.newNode()
-end)
+local BattleObject = import(".BattleObject")
+local Corps = class("Corps", BattleObject)
 
 
 function Corps:ctor(soldier, row, col)
+	Corps.super.ctor(self)
     local corps = self
     local start_x, start_y = -90, -120
     local width, height = - start_x * 2, - start_y * 2
@@ -29,160 +29,18 @@ function Corps:ctor(soldier, row, col)
         v:getAnimation():setMovementEventCallFunc(handler(self, self.OnAnimationCallback))
         break
     end
-    self.callback_map = {}
-    self:setCascadeOpacityEnabled(true)
-    self:setVisible(false)
-    self:performWithDelay(function()
-        self:setVisible(true)
-    end, 0)
 end
 function Corps:PlayAnimation(ani, loop_time)
     for _, v in pairs(self.corps) do
         v:getAnimation():play(ani, -1, loop_time or -1)
     end
 end
-function Corps:OnAnimationCallback(armatureBack, movementType, movementID)
-
+function Corps:turnLeft()
+    self:setScaleX(-1)
 end
-function Corps:OnAnimationCallback(armatureBack, movementType, movementID)
-    if movementType == ccs.MovementEventType.start then
-        self:OnAnimationStart(movementID)
-    elseif movementType == ccs.MovementEventType.complete then
-        -- self:OnAnimationComplete(movementID)
-        self:OnAnimationEnded(movementID)
-    elseif movementType == ccs.MovementEventType.loopComplete then
-        self:OnAnimationEnded(movementID)
-    end
+function Corps:turnRight()
+    self:setScaleX(1)
 end
-function Corps:OnAnimationStart(animation_name)
-
-end
-function Corps:OnAnimationComplete(animation_name)
-
-end
-function Corps:OnAnimationEnded(animation_name)
-    local callbacks = self.callback_map[animation_name]
-    for k, v in pairs(callbacks or {}) do
-        v()
-        callbacks[k] = nil
-    end
-end
-function Corps:OnAnimationPlayEnd(ani_name, func)
-    assert(type(func) == "function")
-    if not self.callback_map[ani_name] then
-        self.callback_map[ani_name] = {}
-    end
-    table.insert(self.callback_map[ani_name], func)
-end
-function Corps:FadeOut()
-    return function(corps)
-        local p = promise.new()
-        transition.fadeOut(corps, {
-            time = 0.5,
-            onComplete = function()
-                p:resolve(corps)
-            end
-        })
-        return p
-    end
-end
-function Corps:MoveTo(x, y, time)
-    return function(corps)
-        corps:PlayAnimation("move_2")
-        local p = promise.new()
-        transition.moveTo(corps, {
-            x = x, y = y, time = time,
-            onComplete = function()
-                p:resolve(corps)
-            end
-        })
-        return p
-    end
-end
-function Corps:Move()
-    return function(corps)
-        corps:PlayAnimation("move_2")
-        local p = promise.new()
-        corps:OnAnimationPlayEnd("move_2", function()
-            p:resolve(corps)
-        end)
-        return p
-    end
-end
-function Corps:BreathForever()
-    return function(corps)
-        corps:PlayAnimation("idle_2")
-        local p = promise.new()
-        corps:OnAnimationPlayEnd("idle_2", function()
-            p:resolve(corps)
-        end)
-        return p
-    end
-end
-function Corps:BreathOnce()
-    return function(corps)
-        corps:PlayAnimation("idle_2", 0)
-        local p = promise.new()
-        corps:OnAnimationPlayEnd("idle_2", function()
-            p:resolve(corps)
-        end)
-        return p
-    end
-end
-function Corps:AttackOnce(right)
-    return function(corps)
-        corps:PlayAnimation("attack", 0)
-        local p = promise.new()
-        corps:OnAnimationPlayEnd("attack", function()
-            p:resolve(corps)
-        end)
-        return p
-    end
-end
-function Corps:HitOnce()
-    return function(corps)
-        corps:PlayAnimation("hurt", 0)
-        local p = promise.new()
-        corps:OnAnimationPlayEnd("hurt", function()
-            p:resolve(corps)
-        end)
-        return p
-    end
-end
-function Corps:TurnLeft()
-    return function(corps)
-        corps:setScaleX(-1)
-        local p = promise.new()
-        corps:performWithDelay(function()
-            p:resolve(corps)
-        end, 0)
-        return p
-    end
-end
-function Corps:TurnRight()
-    return function(corps)
-        corps:setScaleX(1)
-        local p = promise.new()
-        corps:performWithDelay(function()
-            p:resolve(corps)
-        end, 0)
-        return p
-    end
-end
-function Corps:Hold()
-    return function(corps)
-        local p = promise.new()
-        corps:performWithDelay(function()
-            p:resolve(corps)
-        end, 0)
-        return p
-    end
-end
--- 实例方法
-function Corps:Do(p)
-    return promise.new(p)
-end
-
 return Corps
 
 
