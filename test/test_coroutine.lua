@@ -94,23 +94,23 @@ local Game = require("Game")
 local Enum = import("app.utils.Enum")
 local E = Enum("ID", "INT")
 
-local function scan(str)
-    local ending = #str
-    local start = 1
-    local cur = 1
+-- local function scan(str)
+--     local ending = #str
+--     local start = 1
+--     local cur = 1
 
-    while true do
-        if cur <= ending then
-            cur = cur + 1
-        end
-    end
+--     while true do
+--         if cur <= ending then
+--             cur = cur + 1
+--         end
+--     end
 
-end
-module( "test_scan", lunit.testcase, package.seeall )
-function test_scan()
-    assert_equal(E.INT, scan("1"))
-    assert_equal(E.ID, scan("a1"))
-end
+-- end
+-- module( "test_scan", lunit.testcase, package.seeall )
+-- function test_scan()
+--     assert_equal(E.INT, scan("1"))
+--     assert_equal(E.ID, scan("a1"))
+-- end
 
 
 

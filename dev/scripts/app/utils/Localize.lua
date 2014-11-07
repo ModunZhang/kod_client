@@ -389,16 +389,20 @@ local ALLIANCE_EVENTS = {
 
 local SOLDIER_CATEGORY = {
     ["infantry"] = _("步兵"),
-    ["ranger"] = _("弓手"),
+    ["archer"] = _("弓手"),
     ["cavalry"] = _("骑兵"),
     ["siege"] = _("攻城"),
     ["wall"] = _("城墙"),
 }
 local SOLDIER_NAME = {
     ["swordsman"] = _("剑士"),
-    ["ranger"] = _("弓手"),
+    ["sentinel"] = _("哨兵"),
+    ["ranger"] = _("弓箭手"),
+    ["crossbowman"] = _("十字弓"),
     ["lancer"] = _("骑兵"),
-    ["catapult"] = _("投石车"),
+    ["horseArcher"] = _("骑射手"),
+    ["catapult"] = _("弩炮"),
+    ["ballista"] = _("投石车"),
 }
 local SOLDIER_STATUS = {
     ["waiting"] = _("等待"),
