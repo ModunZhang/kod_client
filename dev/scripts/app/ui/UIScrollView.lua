@@ -237,11 +237,55 @@ function UIScrollView:resetPosition()
 		return
 	end
 
+	-- local x, y = self.scrollNode:getPosition()
+	-- local bound = self.scrollNode:getCascadeBoundingBox()
+	-- local disY = self.viewRect_.y + self.viewRect_.height - bound.y - bound.height
+	-- y = y + disY
+	-- self.scrollNode:setPosition(x, y)
+
+
+	local cascadeBound = self:getScrollNodeRect()
+	local disX, disY = 0, 0
+	local viewRect = self:getViewRectInWorldSpace()
+
+	-- dump(cascadeBound, "UIScrollView - cascBoundingBox:")
+	-- dump(viewRect, "UIScrollView - viewRect:")
+	--by dannyhe 如果是单方向滑动 只改变该方向上的位移！
+	if UIScrollView.DIRECTION_VERTICAL ~= self.direction then
+		if cascadeBound.width < viewRect.width then
+			disX = viewRect.x - cascadeBound.x
+		else
+			if cascadeBound.x > viewRect.x then
+				disX = viewRect.x - cascadeBound.x
+			elseif cascadeBound.x + cascadeBound.width < viewRect.x + viewRect.width then
+				disX = viewRect.x + viewRect.width - cascadeBound.x - cascadeBound.width
+			end
+		end
+	end
+	if UIScrollView.DIRECTION_HORIZONTAL ~= self.direction then
+		if cascadeBound.height < viewRect.height then
+			disY = viewRect.y + viewRect.height - cascadeBound.y - cascadeBound.height
+		else
+			if cascadeBound.y > viewRect.y then
+				disY = viewRect.y - cascadeBound.y
+			elseif cascadeBound.y + cascadeBound.height < viewRect.y + viewRect.height then
+				disY = viewRect.y + viewRect.height - cascadeBound.y - cascadeBound.height
+			end
+		end
+	end
+
+	if 0 == disX and 0 == disY then
+		return
+	end
+	if UIScrollView.DIRECTION_VERTICAL == self.direction then
+		if disY > 0 then
+			self:callListener_{name = "SCROLLVIEW_EVENT_BOUNCE_TOP"}
+		else
+			self:callListener_{name = "SCROLLVIEW_EVENT_BOUNCE_BOTTOM"}
+		end
+	end
 	local x, y = self.scrollNode:getPosition()
-	local bound = self.scrollNode:getCascadeBoundingBox()
-	local disY = self.viewRect_.y + self.viewRect_.height - bound.y - bound.height
-	y = y + disY
-	self.scrollNode:setPosition(x, y)
+	self.scrollNode:setPosition(x + disX, y + disY)
 end
 
 --[[--
