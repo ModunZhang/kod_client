@@ -352,12 +352,15 @@ local ALLIANCE_TITLE = {
     ["elite"] = _("精英"),
     ["member"] = _("成员"),
 }
+
+
+-- local normal = GameDatas.UnitsConfig.normal
 local SOLDIER_CATEGORY_MAP = {
     ["swordsman"] = "infantry",
     ["sentinel"] = "infantry",
 
-    ["ranger"] = "ranger",
-    ["crossbowman"] = "ranger",
+    ["ranger"] = "archer",
+    ["crossbowman"] = "archer",
 
     ["lancer"] = "cavalry",
     ["horseArcher"] = "cavalry",
