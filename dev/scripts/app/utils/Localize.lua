@@ -401,11 +401,11 @@ local SOLDIER_NAME = {
     ["swordsman"] = _("剑士"),
     ["sentinel"] = _("哨兵"),
     ["ranger"] = _("弓箭手"),
-    ["crossbowman"] = _("十字弓"),
-    ["lancer"] = _("骑兵"),
-    ["horseArcher"] = _("骑射手"),
-    ["catapult"] = _("弩炮"),
-    ["ballista"] = _("投石车"),
+    ["crossbowman"] = _("弩弓手"),
+    ["lancer"] = _("枪骑兵"),
+    ["horseArcher"] = _("弓骑兵"),
+    ["catapult"] = _("投石车"),
+    ["ballista"] = _("弩车"),
 }
 local SOLDIER_STATUS = {
     ["waiting"] = _("等待"),

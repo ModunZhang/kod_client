@@ -1,5 +1,7 @@
 local UIListView = import('..ui.UIListView')
 local WidgetSlider = import('.WidgetSlider')
+local UILib = import("..ui.UILib")
+local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 
 local normal = GameDatas.UnitsConfig.normal
@@ -56,6 +58,7 @@ function WidgetSoldierDetails:ctor(soldier_type,soldier_level)
     -- 取得对应士兵配置表
     self.s_config = soldier_level and normal[soldier_type.."_"..soldier_level]
         or special[soldier_type]
+        LuaUtils:outputTable("self.s_config", self.s_config)
     self:InitSoldierDetails()
 end
 
@@ -71,7 +74,7 @@ function WidgetSoldierDetails:InitSoldierDetails()
     -- soldier_name label
     self.soldier_name_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _(sc.description),
+        text = Localize.soldier_name[string.sub(sc.name, 1, -3)],
         font = UIKit:getFontFilePath(),
         size = 24,
         color = UIKit:hex2c3b(0xffedae)
@@ -86,10 +89,10 @@ function WidgetSoldierDetails:InitSoldierDetails()
     local soldier_head_bg  = display.newSprite(STAR_BG[self.soldier_level], display.cx-230, display.top-185):addTo(self)
 
     local soldier_type_with_star = self.soldier_type..(self.soldier_level == nil and "" or string.format("_%d", self.soldier_level))
-    local soldier_ui_config = SOLDIER_TYPE[soldier_type_with_star]
+    local soldier_ui_config = UILib.soldier_image[self.soldier_type][self.soldier_level]
     
 
-    local soldier_head_icon = display.newSprite(soldier_ui_config.png):align(display.LEFT_BOTTOM,0,10)
+    local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.LEFT_BOTTOM,0,10)
     soldier_head_icon:scale(130/soldier_head_icon:getContentSize().height)
     -- soldier_head_icon:setScale(0.7)
     soldier_head_bg:addChild(soldier_head_icon)
@@ -212,23 +215,23 @@ function WidgetSoldierDetails:InitSoldierAttr()
     local  attr_table = {
         {
             name = _("对步兵攻击"),
-            value = sc.atkInfs..""
+            value = sc.infantry..""
         },
         {
             name = _("对弓箭手攻击"),
-            value = sc.atkHunter..""
+            value = sc.archer..""
         },
         {
             name = _("对骑兵攻击"),
-            value = sc.atkCavalry..""
+            value = sc.cavalry..""
         },
         {
             name = _("对投石车攻击"),
-            value = sc.atkSiege..""
+            value = sc.siege..""
         },
         {
             name = _("对城墙攻击"),
-            value = sc.atkWall..""
+            value = sc.wall..""
         },
         {
             name = _("生命值"),
@@ -240,7 +243,7 @@ function WidgetSoldierDetails:InitSoldierAttr()
         },
         {
             name = _("维护费"),
-            value = sc.upkeep..""
+            value = sc.consumeFood..""
         },
     }
 
