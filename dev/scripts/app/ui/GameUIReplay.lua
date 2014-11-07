@@ -100,8 +100,11 @@ function GameUIReplay:onEnter()
 
 
 
+    local rect = cc.rect(back_width_half - 590/2, back_height - 388 - 10, 590, 388)
+    local clip = display.newClippingRegionNode(rect):addTo(back_ground)
 
-    local battle = display.newNode():addTo(back_ground):pos(back_width_half - 590/2, back_height - 388 - 10)
+    local battle = display.newNode():addTo(clip)
+    :pos(back_width_half - 590/2, back_height - 388 - 10)
     self.battle = battle
     local battle_bg = cc.ui.UIImage.new("battle_bg_590x388.png")
         :addTo(battle):align(display.LEFT_BOTTOM, 0, 0)
