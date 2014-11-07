@@ -100,12 +100,22 @@ local SOLDIER_IMAGES = {
     }
 }
 
+DECORATOR_IMAGE = {
+    decorate_lake_1 = "lake_288x240.png", 
+    decorate_lake_2 =  "lake_220x174.png", 
+    decorate_mountain_1 =  "hill_228x146.png", 
+    decorate_mountain_2 =  "hill_312x296.png", 
+    decorate_tree_1 =  "tree_1_120x120.png", 
+    decorate_tree_2 =  "tree_2_120x120.png", 
+}
+
 return {
     soldier_bg = STAR_BG,
     soldier = SOLDIER_TYPE,
     soldier_animation_files = SOLDIER_ANIMATION_FILES,
     soldier_animation = SOLDIER_ANIMATIONS,
-    soldier_image = SOLDIER_IMAGES
+    soldier_image = SOLDIER_IMAGES,
+    decorator_image = DECORATOR_IMAGE
 }
 
 

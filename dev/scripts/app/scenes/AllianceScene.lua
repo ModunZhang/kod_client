@@ -45,21 +45,19 @@ function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
         dump(building:GetEntity())
-        local category = building:GetEntity():GetCategory()
-        if category == "building" then
+        if building:GetEntity():GetType() ~= "building" then
+            UIKit:newGameUI('GameUIAllianceEnter',building:GetEntity()):addToCurrentScene(true)
+        else
             local building_info = building:GetEntity():GetAllianceBuildingInfo()
             LuaUtils:outputTable("building_info", building_info)
-            if building_info then
-                UIKit:newGameUI('GameUIAllianceEnter',building_info):addToCurrentScene(true)
-            else
-                UIKit:newGameUI('GameUIAllianceEnter',building:GetEntity()):addToCurrentScene(true)
-            end
-        elseif category == "decorate" then
-            UIKit:newGameUI('GameUIAllianceEnter',building:GetEntity()):addToCurrentScene(true)
+            UIKit:newGameUI('GameUIAllianceEnter',building_info):addToCurrentScene(true)
         end
     end
 end
 return AllianceScene
+
+
+
 
 
 

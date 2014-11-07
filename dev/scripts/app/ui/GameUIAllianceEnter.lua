@@ -1,6 +1,8 @@
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local UIListView = import(".UIListView")
 local window = import("..utils.window")
+local UILib = import(".UILib")
+
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 
 local GameUIAllianceEnter = class("GameUIAllianceEnter", function ()
@@ -266,13 +268,42 @@ local ENTER_LIST = {
             },
         },
     },
+    --空地
+    none = {
+        height = 242,
+        title = _("空地"),
+        building_image = "tree_1_120x120.png",
+        building_desc = _("联盟将军可将联盟建筑移动到空地\n玩家可将自己的城市移动到空地处\n空地定期刷新放逐者的村落,树木,山脉和湖泊"),
+        building_info = {
+            {
+                {_("坐标"),0x797154},
+                {_("11,11"),0x403c2f},
+            },
+        },
+        enter_buttons = {
+            {
+                img = "icon_move_city.png",
+                title = _("迁移城市"),
+                func = function (building)
+                -- UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
+                end
+            },
+            {
+                img = "icon_move_alliance_building.png",
+                title = _("迁移联盟建筑"),
+                func = function (building)
+                -- UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
+                end
+            },
+        },
+    },
 }
 
 function GameUIAllianceEnter:ctor(building)
     self:setNodeEventEnabled(true)
     self.building = building
-    self.params = ENTER_LIST[building.name or building:GetCategory()]
-    assert(ENTER_LIST[building.name or building:GetCategory()],"联盟建筑配置为空"..(building.name or building:GetCategory()))
+    self.params = ENTER_LIST[building.name or (building:GetType()=="none" and "none") or building:GetCategory()]
+    assert(ENTER_LIST[building.name or (building:GetType()=="none" and "none") or building:GetCategory()],"联盟建筑配置为空"..(building.name or (building:GetType()=="none" and "none") or building:GetCategory()))
     self.alliance = Alliance_Manager:GetMyAlliance()
     self:SetBuildingInfo()
     self.body = self:CreateBackGroundWithTitle(self.params)
@@ -286,7 +317,7 @@ end
 
 function GameUIAllianceEnter:SetBuildingInfo()
     local building = self.building
-    local name = self.building.name or self.building:GetCategory()
+    local name = building.name or (building:GetType()=="none" and "none") or building:GetCategory()
     local info = ENTER_LIST[name].building_info
     if building.location then
         info[1][2][1] = building.location.x..","..building.location.y
@@ -304,7 +335,14 @@ function GameUIAllianceEnter:SetBuildingInfo()
     elseif name == "decorate" then
         local w,h = self.building:GetSize()
         info[2][2][1] = w*h
-        -- ENTER_LIST[name].building_image = GameDatas.AllianceInitData.buildingType[self.building:GetType()]
+        ENTER_LIST[name].building_image = UILib.decorator_image[self.building:GetType()]
+        if string.find(self.building:GetType(), "tree", 9) then
+            ENTER_LIST[name].title = _("树")
+        elseif string.find(self.building:GetType(), "mountain", 9) then
+            ENTER_LIST[name].title = _("山脉")
+        elseif string.find(self.building:GetType(), "lake", 9) then
+            ENTER_LIST[name].title = _("湖泊")
+        end
     end
 end
 
@@ -391,7 +429,7 @@ function GameUIAllianceEnter:InitBuildingImage()
     building_image:setScale(125/building_image:getContentSize().width)
     local level_bg = display.newSprite("back_ground_138x34.png")
         :addTo(body):pos(96, p.height-180)
-    if not self.building.name and self.building:GetCategory() == "decorate" then
+    if not self.building.name and string.find(self.building:GetType(), "decorate", 1)  then
         display.newSprite("honour.png"):align(display.CENTER, 20, level_bg:getContentSize().height/2)
             :addTo(level_bg)
         local distroyNeedHonour = GameDatas.AllianceInitData.buildingType[self.building:GetType()].distroyNeedHonour
@@ -401,7 +439,9 @@ function GameUIAllianceEnter:InitBuildingImage()
             color = 0x514d3e,
         }):align(display.CENTER, level_bg:getContentSize().width/2 , level_bg:getContentSize().height/2)
             :addTo(level_bg)
-            print("(level_bg:getContentSize().width-40)/2=",level_bg:getContentSize().width/2)
+        print("(level_bg:getContentSize().width-40)/2=",level_bg:getContentSize().width/2)
+    elseif not self.building.name and self.building:GetType()=="none" then
+        level_bg:setVisible(false)
     else
         UIKit:ttfLabel({
             text = _("Level").." "..self.building.level,
@@ -445,6 +485,8 @@ function GameUIAllianceEnter:onExit()
 end
 
 return GameUIAllianceEnter
+
+
 
 
 
