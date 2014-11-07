@@ -1,51 +1,11 @@
 local UIPushButton = cc.ui.UIPushButton
+local UILib = import("..ui.UILib")
 local WidgetPushButton = import(".WidgetPushButton")
 local WidgetSoldierBox = class("WidgetSoldierBox", function()
     return display.newNode()
 end)
 local NORMAL = GameDatas.UnitsConfig.normal
 local SPECIAL = GameDatas.UnitsConfig.special
-local STAR_BG = {
-    "star1_118x132.png",
-    "star2_118x132.png",
-    "star3_118x132.png",
-    "star4_118x132.png",
-    "star5_118x132.png",
-}
-local SOLDIER_TYPE = {
-    ["swordsman_1"] = { png = "#Infantry_1_render/idle/1/00000.png" },
-    ["swordsman_2"] = { png = "soldier_swordsman_2.png" },
-    ["swordsman_3"] = { png = "soldier_swordsman_3.png" },
-    ["sentinel_1"] = { png = "soldier_sentinel_1.png" },
-    ["sentinel_2"] = { png = "soldier_sentinel_2.png" },
-    ["sentinel_3"] = { png = "soldier_sentinel_3.png" },
-    ["archer_1"] = { png = "#Archer_1_render/idle/1/00000.png" },
-    ["archer_2"] = { png = "soldier_archer_2.png" },
-    ["archer_3"] = { png = "soldier_archer_3.png" },
-    ["crossbowman_1"] = { png = "soldier_crossbowman_1.png" },
-    ["crossbowman_2"] = { png = "soldier_crossbowman_2.png" },
-    ["crossbowman_3"] = { png = "soldier_crossbowman_2.png" },
-    ["lancer_1"] = { png = "#Cavalry_1_render/idle/1/00000.png" },
-    ["lancer_2"] = { png = "soldier_lancer_2.png" },
-    ["lancer_3"] = { png = "soldier_lancer_3.png" },
-    ["horseArcher_1"] = { png = "soldier_horseArcher_1.png" },
-    ["horseArcher_2"] = { png = "soldier_horseArcher_2.png" },
-    ["horseArcher_3"] = { png = "soldier_horseArcher_3.png" },
-    ["catapult_1"] = { png = "#Catapult_1_render/move/1/00000.png" },
-    ["catapult_2"] = { png = "soldier_catapult_2.png" },
-    ["catapult_3"] = { png = "soldier_catapult_3.png" },
-    ["ballista_1"] = { png = "soldier_ballista_1.png" },
-    ["ballista_2"] = { png = "soldier_ballista_2.png" },
-    ["ballista_3"] = { png = "soldier_ballista_3.png" },
-    ["skeletonWarrior"] = { png = "soldier_skeletonWarrior.png" },
-    ["skeletonArcher"] = { png = "soldier_skeletonArcher.png" },
-    ["deathKnight"] = { png = "soldier_deathKnight.png" },
-    ["meatWagon"] = { png = "soldier_meatWagon.png" },
--- ["priest"] = {},
--- ["demonHunter"] = {},
--- ["paladin"] = {},
--- ["steamTank"] = {},
-}
 
 local LOAD_FILES = {
     {"animations/Archer_1_render0.plist","animations/Archer_1_render0.png"},
@@ -53,8 +13,6 @@ local LOAD_FILES = {
     {"animations/Cavalry_1_render0.plist","animations/Cavalry_1_render0.png"},
     {"animations/Infantry_1_render0.plist","animations/Infantry_1_render0.png"},
 }
-
-
 function WidgetSoldierBox:ctor(soldier_png, cb)
     self:LoadSpriteFrames()
     self.soldier_bg = WidgetPushButton.new({normal = "star1_114x128.png",
@@ -80,16 +38,21 @@ function WidgetSoldierBox:LoadSpriteFrames()
     end
 end
 function WidgetSoldierBox:SetSoldier(soldier_type, star)
-    local soldier_type_with_star = soldier_type..(star == nil and "" or string.format("_%d", star))
-    local soldier_ui_config = SOLDIER_TYPE[soldier_type_with_star]
+    -- local soldier_type_with_star = soldier_type..(star == nil and "" or string.format("_%d", star))
+    print(soldier_type, star)
+    print(UILib.soldier_image[soldier_type][star])
+    local soldier_ui_config = UILib.soldier_image[soldier_type][star]
+    -- local soldier_ui_config = SOLDIER_TYPE[soldier_type_with_star]
     if soldier_ui_config then
-        local bg = STAR_BG[star]
+
+        local bg = UILib.soldier_bg[star]
+        -- local bg = STAR_BG[star]
         self.soldier_bg:setButtonImage(UIPushButton.NORMAL, bg, true)
         self.soldier_bg:setButtonImage(UIPushButton.PRESSED, bg, true)
         if self.soldier then
             self.soldier_bg:removeChild(self.soldier)
         end
-        self.soldier = display.newSprite(soldier_ui_config.png):addTo(self.soldier_bg)
+        self.soldier = display.newSprite(soldier_ui_config):addTo(self.soldier_bg)
         :align(display.CENTER, 0, 10)
         self.soldier:scale(130/self.soldier:getContentSize().height)
     end

@@ -3,6 +3,7 @@
 -- Date: 2014-08-18 14:33:28
 --
 local window = import("..utils.window")
+local Localize = import("..utils.Localize")
 local WidgetTips = import("..widget.WidgetTips")
 local WidgetSoldierBox = import("..widget.WidgetSoldierBox")
 local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
@@ -40,7 +41,7 @@ function GameUIBarracks:OnRecruiting(barracks, event, current_time)
             self.tips:setVisible(false)
         end
         local soldier_type, count = event:GetRecruitInfo()
-        local soldier_name = barracks:GetSoldierConfigByType(soldier_type).description
+        local soldier_name = Localize.soldier_name[soldier_type]
         self.timer:SetDescribe(string.format("%s%s x%d", _("招募"), _(soldier_name), count))
         self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(current_time)), event:Percent(current_time))
     end
