@@ -42,14 +42,22 @@ function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
         local building_info = building:GetEntity():GetAllianceBuildingInfo()
+        -- LuaUtils:outputTable("building:GetEntity()", building:GetEntity())
+        dump(building:GetEntity())
         if building_info then
-            if building_info.name == "palace" then
                 UIKit:newGameUI('GameUIAllianceEnter',building_info):addToCurrentScene(true)
-            end
+            -- if building_info.name == "palace" then
+            -- elseif building_info.name == "moonGate" then
+            -- elseif building_info.name == "shop" then
+            --     UIKit:newGameUI('GameUIAllianceEnter',building_info):addToCurrentScene(true)
+            -- elseif building_info.name == "orderHall" then
+            -- elseif building_info.name == "shrine" then
+            -- end
         end
     end
 end
 return AllianceScene
+
 
 
 

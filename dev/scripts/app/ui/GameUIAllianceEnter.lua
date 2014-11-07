@@ -29,7 +29,7 @@ local ENTER_LIST = {
         },
         enter_buttons = {
             {
-                img = "Icon_info.png",
+                img = "icon_info.png",
                 title = _("信息"),
                 func = function (building)
                     UIKit:newGameUI('GameUIAlliancePalace',City,"info",building):addToCurrentScene(true)
@@ -43,7 +43,7 @@ local ENTER_LIST = {
                 end
             },
             {
-                img = "Icon_upgrade.png",
+                img = "icon_upgrade.png",
                 title = _("升级"),
                 func = function (building)
                     UIKit:newGameUI('GameUIAlliancePalace',City,"upgarde",building):addToCurrentScene(true)
@@ -51,7 +51,98 @@ local ENTER_LIST = {
             },
         },
     },
-
+    shop = {
+        height = 261,
+        title = _("商店"),
+        building_image = "shop_268x274.png",
+        building_desc = _("本地化缺失"),
+        building_info = {
+            {
+                {_("坐标"),0x797154},
+                {_("11,11"),0x403c2f},
+            },
+            {
+                {_("高级道具数量"),0x797154},
+                {_("25/30"),0x403c2f},
+            },
+            {
+                {_("有新的货物补充"),0x007c23},
+            },
+        },
+        enter_buttons = {
+            {
+                img = "icon_info.png",
+                title = _("商店记录"),
+                func = function (building)
+                    UIKit:newGameUI('GameUIAllianceShop',City,"record",building):addToCurrentScene(true)
+                end
+            },
+            {
+                img = "icon_stock.png",
+                title = _("进货"),
+                func = function (building)
+                    UIKit:newGameUI('GameUIAllianceShop',City,"stock",building):addToCurrentScene(true)
+                end
+            },
+            {
+                img = "icon_tax.png",
+                title = _("购买商品"),
+                func = function (building)
+                    UIKit:newGameUI('GameUIAllianceShop',City,"goods",building):addToCurrentScene(true)
+                end
+            },
+            {
+                img = "icon_upgrade.png",
+                title = _("升级"),
+                func = function (building)
+                    UIKit:newGameUI('GameUIAllianceShop',City,"upgarde",building):addToCurrentScene(true)
+                end
+            },
+        },
+    },
+    orderHall = {
+        height = 261,
+        title = _("秩序大厅"),
+        building_image = "orderHall_277x417.png",
+        building_desc = _("本地化缺失"),
+        building_info = {
+            {
+                {_("坐标"),0x797154},
+                {_("11,11"),0x403c2f},
+            },
+            {
+                {_("当前村落数量"),0x797154},
+                {_("暂无"),0x403c2f},
+            },
+            {
+                {_("当前采集村落"),0x797154},
+                {_("暂无"),0x403c2f},
+            },
+        },
+        enter_buttons = {
+            {
+                img = "icon_info.png",
+                title = _("熟练度"),
+                func = function (building)
+                    UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
+                end
+            },
+            {
+                img = "icon_village.png",
+                title = _("村落管理"),
+                func = function (building)
+                    UIKit:newGameUI('GameUIOrderHall',City,"village",building):addToCurrentScene(true)
+                end
+            },
+            {
+                img = "icon_upgrade.png",
+                title = _("升级"),
+                func = function (building)
+                    UIKit:newGameUI('GameUIOrderHall',City,"upgarde",building):addToCurrentScene(true)
+                end
+            },
+        },
+    },
 }
 
 function GameUIAllianceEnter:ctor(building)
@@ -59,6 +150,8 @@ function GameUIAllianceEnter:ctor(building)
     self.building = building
     self.params = ENTER_LIST[building.name]
     assert(ENTER_LIST[building.name],"联盟建筑配置为空")
+    self.alliance = Alliance_Manager:GetMyAlliance()
+    self:SetBuildingInfo()
     self.body = self:CreateBackGroundWithTitle(self.params)
         :align(display.CENTER, window.cx, window.top -400)
         :addTo(self)
@@ -66,6 +159,20 @@ function GameUIAllianceEnter:ctor(building)
     self:InitBuildingDese()
     self:InitBuildingInfo(self.params.building_info)
     self:InitEnterButton(self.params.enter_buttons)
+end
+
+function GameUIAllianceEnter:SetBuildingInfo()
+    local building = self.building
+    local name = self.building.name
+    local info = ENTER_LIST[name].building_info
+    info[1][2][1] = building.location.x..","..building.location.y
+    if name == "palace" then
+        info[2][2][1] = self.alliance:MemberCount()
+        info[3][2][1] = _("暂无")
+    elseif name == "shop" then
+        info[2][2][1] = _("暂无")
+    elseif name == "orderHall" then
+    end
 end
 
 function GameUIAllianceEnter:InitBuildingDese()
@@ -146,9 +253,9 @@ function GameUIAllianceEnter:InitBuildingImage()
         :addTo(body)
 
     local building_image = display.newSprite(p.building_image)
-        :addTo(body):pos(95, p.height-90)
+        :addTo(body):pos(105, p.height-60)
     building_image:setAnchorPoint(cc.p(0.5,0.5))
-    building_image:setScale(140/building_image:getContentSize().height)
+    building_image:setScale(125/building_image:getContentSize().width)
     local level_bg = display.newSprite("back_ground_138x34.png")
         :addTo(body):pos(96, p.height-180)
     UIKit:ttfLabel({
@@ -192,6 +299,12 @@ function GameUIAllianceEnter:onExit()
 end
 
 return GameUIAllianceEnter
+
+
+
+
+
+
 
 
 

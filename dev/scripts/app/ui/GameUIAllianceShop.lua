@@ -4,26 +4,22 @@ local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
 local WidgetBuyGoods = import("..widget.WidgetBuyGoods")
 local WidgetStockGoods = import("..widget.WidgetStockGoods")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-local GameUIAllianceShop = UIKit:createUIClass('GameUIAllianceShop', "GameUIWithCommonHeader")
+local GameUIAllianceShop = UIKit:createUIClass('GameUIAllianceShop', "GameUIAllianceBuilding")
 local Flag = import("..entity.Flag")
 local UIListView = import(".UIListView")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local Localize = import("..utils.Localize")
 
 
-function GameUIAllianceShop:ctor(city,default_tab)
+function GameUIAllianceShop:ctor(city,default_tab,building)
     GameUIAllianceShop.super.ctor(self, city, _("商店"))
     self.default_tab = default_tab
+    self.building = building
 end
 
 function GameUIAllianceShop:onEnter()
     GameUIAllianceShop.super.onEnter(self)
     self:CreateTabButtons({
-        {
-            label = _("升级"),
-            tag = "upgarde",
-            default = "upgarde" == self.default_tab,
-        },
         {
             label = _("商品"),
             tag = "goods",
@@ -40,11 +36,6 @@ function GameUIAllianceShop:onEnter()
             default = "record" == self.default_tab,
         },
     }, function(tag)
-        if tag == 'upgarde' then
-            self.upgrade_layer:setVisible(true)
-        else
-            self.upgrade_layer:setVisible(false)
-        end
         if tag == 'goods' then
             self.goods_layer:setVisible(true)
         else
@@ -68,9 +59,6 @@ end
 function GameUIAllianceShop:CreateBetweenBgAndTitle()
     GameUIAllianceShop.super.CreateBetweenBgAndTitle(self)
 
-    -- upgrade_layer
-    self.upgrade_layer = display.newLayer()
-    self:addChild(self.upgrade_layer)
     -- goods_layer
     self.goods_layer = display.newLayer()
     self:addChild(self.goods_layer)

@@ -310,6 +310,14 @@ local BUILDING_DESCRIPTION = {
     ["palace_total_members"] = _("成员总数"),
     ["palace_alliance_power"] = _("联盟战斗力"),
 
+    ["shop"] = _("本地化缺失"),
+
+    ["orderHall"] = _("本地化缺失"),
+
+    ["moonGate"] = _("本地化缺失"),
+
+    ["shrine"] = _("本地化缺失"),
+
 }
 
 
