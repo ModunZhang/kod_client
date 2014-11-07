@@ -63,6 +63,10 @@ function HospitalUpgradeBuilding:CreateEvent()
     event:Init()
     return event
 end
+function HospitalUpgradeBuilding:ResetAllListeners()
+    HospitalUpgradeBuilding.super.ResetAllListeners(self)
+    self.hospital_building_observer:RemoveAllObserver()
+end
 function HospitalUpgradeBuilding:AddHospitalListener(listener)
     assert(listener.OnBeginTreat)
     assert(listener.OnTreating)

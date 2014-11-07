@@ -59,6 +59,10 @@ function TownHallUpgradeBuilding:CreateEvent()
     event:Init()
     return event
 end
+function TownHallUpgradeBuilding:ResetAllListeners()
+    TownHallUpgradeBuilding.super.ResetAllListeners(self)
+    self.townHall_building_observer:RemoveAllObserver()
+end
 function TownHallUpgradeBuilding:AddTownHallListener(listener)
     assert(listener.OnBeginImposeWithEvent)
     assert(listener.OnImposingWithEvent)
