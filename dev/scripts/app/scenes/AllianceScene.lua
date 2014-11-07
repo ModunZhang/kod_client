@@ -17,9 +17,15 @@ function AllianceScene:ctor()
     manager:addArmatureFileInfo("animations/green_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Blue_dragon.ExportJson")
+
 end
 function AllianceScene:onEnter()
     AllianceScene.super.onEnter(self)
+    local home = UIKit:newGameUI('GameUIAllianceHome'):addToScene(self)
+    home:setTouchSwallowEnabled(false)
+
+
+    
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(10, 10)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
 end
@@ -34,8 +40,6 @@ function AllianceScene:CreateSceneLayer()
     return scene
 end
 function AllianceScene:onEnterTransitionFinish()
-    local home = UIKit:newGameUI('GameUIAllianceHome'):addToScene(self)
-    home:setTouchSwallowEnabled(false)
 end
 
 function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)

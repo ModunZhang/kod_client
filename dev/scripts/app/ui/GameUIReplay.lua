@@ -1,5 +1,7 @@
 local window = import("..utils.window")
 local promise = import("..utils.promise")
+local BattleObject = import(".BattleObject")
+local Wall = import(".Wall")
 local Corps = import(".Corps")
 local UILib = import(".UILib")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -8,42 +10,54 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetSoldierInBattle = import("..widget.WidgetSoldierInBattle")
 local GameUIReplay = UIKit:createUIClass('GameUIReplay')
 
-
-local battle_data = {
-    {
-        {{soldier = "ranger", state = "enter"}, {soldier = "lancer", state = "enter"}},
-        {{state = "attack"}, {state = "defend"}},
-        {{state = "defend"}, {state = "hurt"}},
-        {{state = "defend"}, {state = "attack"}},
-        {{state = "hurt"}, {state = "defend"}},
-        {{state = "defeat"}, {state = "defend"}},
-    },
-    {
-        {{soldier = "swordsman", state = "enter"}, {state = "defend"}},
-        {{state = "attack"}, {state = "defend"}},
-        {{state = "defend"}, {state = "hurt"}},
-        {{state = "defend"}, {state = "attack"}},
-        {{state = "hurt"}, {state = "defend"}},
-        {{state = "defeat"}, {state = "defend"}},
-    },
--- {
---     {{soldier = "ranger", state = "enter"}, {state = "defend"}},
---     {{state = "attack"}, {state = "defend"}},
---     {{state = "defend"}, {state = "hurt"}},
---     {{state = "defend"}, {state = "attack"}},
---     {{state = "hurt"}, {state = "defend"}},
---     {{state = "defeat"}, {state = "defend"}},
--- },
--- {
---     {{soldier = "catapult", state = "enter"}, {state = "defend"}},
---     {{state = "defend"}, {state = "attack"}},
---     {{state = "hurt"}, {state = "defend"}},
---     {{state = "attack"}, {state = "defend"}},
---     {{state = "defend"}, {state = "hurt"}},
---     {{state = "defend"}, {state = "defeat"}},
--- },
+local new_battle = {
+    {dual = {left = "ranger", right = "lancer"}, defeat = "right"},
+    {dual = {right = "lancer"}, defeat = "left"},
+    {dual = {left = "wall"}, defeat = "right"},
 }
-
+local function decode_battle(raw)
+    local rounds = {}
+    for i, v in ipairs(raw) do
+        local r = {}
+        local left, right = v.dual.left, v.dual.right
+        if i == 1 then
+            table.insert(r, {{soldier = left, state = "enter"}, {soldier = right, state = "enter"}})
+        else
+            if left then
+                if left == "wall" then
+                    table.insert(r, {{soldier = left, state = "enter"}, {state = "move"}})
+                else
+                    table.insert(r, {{soldier = left, state = "enter"}, {state = "defend"}})
+                end
+            elseif right then
+                if right == "wall" then
+                    table.insert(r, {{state = "move"}, {soldier = right, state = "enter"}})
+                else
+                    table.insert(r, {{state = "defend"}, {soldier = right, state = "enter"}})
+                end
+            else
+                assert(false)
+            end
+        end
+        if v.defeat == "left" then
+            table.insert(r, {{state = "attack"}, {state = "defend"}})
+            table.insert(r, {{state = "defend"}, {state = "hurt"}})
+            table.insert(r, {{state = "defend"}, {state = "attack"}})
+            table.insert(r, {{state = "hurt"}, {state = "defend"}})
+            table.insert(r, {{state = "defeat"}, {state = "defend"}})
+        elseif v.defeat == "right" then
+            table.insert(r, {{state = "defend"}, {state = "attack"}})
+            table.insert(r, {{state = "hurt"}, {state = "defend"}})
+            table.insert(r, {{state = "attack"}, {state = "defend"}})
+            table.insert(r, {{state = "defend"}, {state = "hurt"}})
+            table.insert(r, {{state = "defend"}, {state = "defeat"}})
+        else
+            assert(false)
+        end
+        table.insert(rounds, r)
+    end
+    return rounds
+end
 
 function GameUIReplay:ctor()
     GameUIReplay.super.ctor(self)
@@ -56,7 +70,6 @@ function GameUIReplay:ctor()
         display.addSpriteFrames(unpack(v))
     end
     local manager = ccs.ArmatureDataManager:getInstance()
-
     for _, anis in pairs(UILib.soldier_animation_files) do
         for _, v in pairs(anis) do
             manager:addArmatureFileInfo(v)
@@ -87,9 +100,14 @@ function GameUIReplay:onEnter()
 
 
 
+    local rect = cc.rect(back_width_half - 590/2, back_height - 388 - 10, 590, 388)
+    local clip = display.newClippingRegionNode(rect):addTo(back_ground)
 
+    local battle = display.newNode():addTo(clip)
+    :pos(back_width_half - 590/2, back_height - 388 - 10)
+    self.battle = battle
     local battle_bg = cc.ui.UIImage.new("battle_bg_590x388.png")
-        :addTo(back_ground):align(display.CENTER, back_width_half, back_height - 388/2 - 10)
+        :addTo(battle):align(display.LEFT_BOTTOM, 0, 0)
     self.battle_bg = battle_bg
 
 
@@ -238,28 +256,25 @@ function GameUIReplay:onEnter()
     self.list_view = self:CreateVerticalListViewDetached(0, 80, back_ground:getContentSize().width, y - 82 / 2):addTo(back_ground)
     self.left_corps = {}
     self.right_corps = {}
-
-
-    local item, left, right = self:CreateItemWithListView(self.list_view, {"ranger", "lancer"})
-    table.insert(self.left_corps, left)
-    table.insert(self.right_corps, right)
-    self.list_view:addItem(item)
-
-    local item, left, right = self:CreateItemWithListView(self.list_view, {"swordsman", nil})
-    table.insert(self.left_corps, left)
-    table.insert(self.right_corps, right)
-    self.list_view:addItem(item)
+    self.left_round = 0
+    self.right_round = 0
+    for i, v in pairs(new_battle) do
+        local item, left, right = self:CreateItemWithListView(self.list_view, v.dual)
+        table.insert(self.left_corps, left)
+        table.insert(self.right_corps, right)
+        self.list_view:addItem(item)
+    end
 
     self.list_view:reload():resetPosition()
 
     local rounds = promise.new()
-    for i, round in ipairs(battle_data) do
+    for i, round in ipairs(decode_battle(new_battle)) do
         rounds:next(function()
             local pa
             for _, v in ipairs(round) do
                 local left, right = unpack(v)
-                local left_action = self:DecodeStateBySide(left, true, i)
-                local right_action = self:DecodeStateBySide(right, false, i)
+                local left_action = self:DecodeStateBySide(left, true)
+                local right_action = self:DecodeStateBySide(right, false)
                 if not pa then
                     pa = promise.all(left_action:resolve(self.left), right_action:resolve(self.right))
                 else
@@ -274,6 +289,21 @@ function GameUIReplay:onEnter()
     end
     rounds:resolve()
 end
+function GameUIReplay:MoveBattleBgBy(x)
+    return function(battle_bg)
+        local p = promise.new()
+        transition.moveBy(battle_bg, {
+            x = x, y = 0, time = 1,
+            onComplete = function()
+                p:resolve(battle_bg)
+            end
+        })
+        return p
+    end
+end
+function GameUIReplay:NewWall(x)
+    return Wall.new():addTo(self.battle_bg):pos(x, 150)
+end
 function GameUIReplay:NewCorps(soldier, x, y)
     local soldier_arrange = {
         swordsman = {row = 4, col = 2},
@@ -282,9 +312,9 @@ function GameUIReplay:NewCorps(soldier, x, y)
         catapult = {row = 2, col = 1},
     }
     local arrange = soldier_arrange[soldier]
-    return Corps.new(soldier, arrange.row, arrange.col):addTo(self.battle_bg):pos(x, y)
+    return Corps.new(soldier, arrange.row, arrange.col):addTo(self.battle):pos(x, y)
 end
-function GameUIReplay:DecodeStateBySide(side, is_left, round)
+function GameUIReplay:DecodeStateBySide(side, is_left)
     local height = 90
     local len = 200
     local left_start = {x = -100, y = height}
@@ -292,44 +322,65 @@ function GameUIReplay:DecodeStateBySide(side, is_left, round)
     local right_start = {x = 700, y = height}
     local right_end = {x = right_start.x - len, y = height}
     local action
-    if side.state == "enter" then
+    local state = side.state
+    if state == "enter" then
         if is_left then
-            self.left = self:NewCorps(side.soldier, left_start.x, left_start.y)
-            action = Corps:Do(function(corps)
-                self.left_corps[round]:SetUnitStatus("fighting")
-                return corps
-            end):next(Corps:MoveTo(left_end.x, left_end.y, 2))
-                :next(Corps:BreathForever())
-        else
-            self.right = self:NewCorps(side.soldier, right_start.x, right_start.y)
-            action = Corps:Do(function(corps)
-                self.right_corps[round]:SetUnitStatus("fighting")
-                return corps
-            end):next(Corps:TurnLeft()):next(Corps:MoveTo(right_end.x, right_end.y, 2)):next(Corps:BreathForever())
-        end
-    elseif side.state == "attack" then
-        action = Corps:Do(Corps:AttackOnce()):next(function(corps)
-            Corps:Do(Corps:BreathForever()):resolve(corps)
-            return corps
-        end)
-    elseif side.state == "defend" then
-        action = Corps:Do(Corps:Hold())
-    elseif side.state == "breath" then
-        action = Corps:Do(Corps:BreathForever())
-    elseif side.state == "hurt" then
-        action = Corps:Do(Corps:HitOnce()):next(function(corps)
-            Corps:Do(Corps:BreathForever()):resolve(corps)
-            return corps
-        end)
-    elseif side.state == "defeat" then
-        action = Corps:Do(function(corps)
-            if is_left then
-                self.left_corps[round]:SetUnitStatus("defeated")
+            if side.soldier == "wall" then
+                self.left = self:NewWall(-50)
+                action = promise.new(BattleObject:TurnRight()):next(function()
+                    return promise.new(GameUIReplay:MoveBattleBgBy(100))
+                        :next(function()
+                            return self.left
+                        end):resolve(self.battle_bg)
+                end)
             else
-                self.right_corps[round]:SetUnitStatus("defeated")
+                self.left = self:NewCorps(side.soldier, left_start.x, left_start.y)
+                action = BattleObject:Do(function(corps)
+                    self:NextSoldierBySide("left")
+                    return corps
+                end):next(BattleObject:MoveTo(left_end.x, left_end.y, 2))
+                    :next(BattleObject:BreathForever())
             end
+        else
+            if side.soldier == "wall" then
+                self.right = self:NewWall(650)
+                action = promise.new(BattleObject:TurnLeft()):next(function()
+                    return promise.new(GameUIReplay:MoveBattleBgBy(-100))
+                        :next(function()
+                            return self.right
+                        end):resolve(self.battle_bg)
+                end)
+            else
+                self.right = self:NewCorps(side.soldier, right_start.x, right_start.y)
+                action = BattleObject:Do(function(corps)
+                    self:NextSoldierBySide("right")
+                    return corps
+                end):next(BattleObject:TurnLeft())
+                    :next(BattleObject:MoveTo(right_end.x, right_end.y, 2))
+                    :next(BattleObject:BreathForever())
+            end
+        end
+    elseif state == "attack" then
+        action = BattleObject:Do(BattleObject:AttackOnce()):next(function(corps)
+            BattleObject:Do(BattleObject:BreathForever()):resolve(corps)
             return corps
-        end):next(Corps:FadeOut()):next(function(corps)
+        end)
+    elseif state == "defend" then
+        action = BattleObject:Do(BattleObject:Hold())
+    elseif state == "breath" then
+        action = BattleObject:Do(BattleObject:BreathForever())
+    elseif state == "hurt" then
+        action = BattleObject:Do(BattleObject:HitOnce()):next(function(corps)
+            BattleObject:Do(BattleObject:BreathForever()):resolve(corps)
+            return corps
+        end)
+    elseif state == "move" then
+        action = BattleObject:Do(BattleObject:Move())
+    elseif state == "defeat" then
+        action = BattleObject:Do(function(corps)
+            self:SetCurrentSoldierStateBySide(is_left and "left" or "right", "defeated")
+            return corps
+        end):next(BattleObject:Defeat()):next(function(corps)
             if corps == self.left then
                 self.left = nil
             elseif corps == self.right then
@@ -346,15 +397,14 @@ end
 function GameUIReplay:CreateItemWithListView(list_view, duals)
     local gap = 10
     local row_item = display.newNode()
-    local duals = duals or {true, true}
-    local left_soldier, right_soldier = unpack(duals)
+    local left_soldier, right_soldier = duals.left, duals.right
     local left, right
-    if left_soldier then
+    if left_soldier and left_soldier ~= "wall" then
         left = WidgetSoldierInBattle.new("back_ground_284x128.png",
             {side = "blue", soldier = left_soldier, star = 1}):addTo(row_item)
             :align(display.CENTER, -284/2 - gap, 0)
     end
-    if right_soldier then
+    if right_soldier and right_soldier ~= "wall" then
         right = WidgetSoldierInBattle.new("back_ground_284x128.png",
             {side = "red", soldier = right_soldier, star = 1}):addTo(row_item)
             :align(display.CENTER, 284/2 + gap, 0)
@@ -364,8 +414,54 @@ function GameUIReplay:CreateItemWithListView(list_view, duals)
     item:setItemSize(284 * 2, 128)
     return item, left, right
 end
-
+function GameUIReplay:SetCurrentSoldierStateBySide(side, status)
+    if side == "left" then
+        self.left_corps[self.left_round]:SetUnitStatus(status)
+    elseif side == "right" then
+        self.right_corps[self.right_round]:SetUnitStatus(status)
+    else
+        assert(false)
+    end
+end
+function GameUIReplay:NextSoldierBySide(side)
+    if side == "left" then
+        self.left_round = self.left_round + 1
+        self.left_corps[self.left_round]:SetUnitStatus("fighting")
+    elseif side == "right" then
+        self.right_round = self.right_round + 1
+        self.right_corps[self.right_round]:SetUnitStatus("fighting")
+    else
+        assert(false)
+    end
+end
 return GameUIReplay
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

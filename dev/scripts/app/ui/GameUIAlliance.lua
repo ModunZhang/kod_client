@@ -88,6 +88,8 @@ function GameUIAlliance:onEnter()
 	dump(Alliance_Manager:GetMyAlliance():GetAllMembers())
 	GameUIAlliance.super.onEnter(self)
 	self:RefreshMainUI()
+
+	dump(Alliance_Manager:GetMyAlliance():GetAllMembers())
 end
 
 function GameUIAlliance:RefreshMainUI()

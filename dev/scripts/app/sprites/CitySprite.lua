@@ -6,7 +6,7 @@ function CitySprite:ctor(city_layer, entity)
     -- self:CreateBase()
 end
 function CitySprite:GetSpriteFile()
-	return "keep_760x855.png", 0.1
+	return "keep_760x855.png", 0.15
 end
 function CitySprite:GetSpriteOffset()
 	return self:GetLogicMap():ConvertToLocalPosition(0, 0)
