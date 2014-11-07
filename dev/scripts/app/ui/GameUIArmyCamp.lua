@@ -192,46 +192,54 @@ function GameUIArmyCamp:CreateItemWithListView(list_view)
     local row_count = -1
     for i,soldier_name in pairs(GameUIArmyCamp.SOLDIERS_NAME) do
         print("index ===",i," soldier name = ",soldier_name)
-        -- local soldier_name = v
-        local soldier_number = soldier_map[soldier_name]
-        row_count = row_count+1
-        local soldier = WidgetSoldierBox.new("",function ()
-            if soldier_number>0 then
-                if soldier_name=="skeletonWarrior"
-                    or soldier_name=="skeletonArcher"
-                    or soldier_name=="deathKnight"
-                    or soldier_name=="meatWagon"
-                then
-                    self:OpenSoldierDetails(soldier_name)
-                else
-                    self:OpenSoldierDetails(soldier_name,City:GetSoldierManager():GetStarBySoldierType(soldier_name))
-                end
-            end
-        end):addTo(row_item)
-            :alignByPoint(cc.p(0.5,0.4), origin_x + (unit_width + gap_x) * row_count + unit_width / 2, 0)
-            :SetNumber(soldier_number)
-        if soldier_name=="skeletonWarrior"
-            or soldier_name=="skeletonArcher"
-            or soldier_name=="deathKnight"
-            or soldier_name=="meatWagon"
+        if soldier_name~="skeletonWarrior"
+            and soldier_name~="skeletonArcher"
+            and soldier_name~="deathKnight"
+            and soldier_name~="meatWagon"
         then
-            soldier:SetSoldier(soldier_name)
-        else
-            soldier:SetSoldier(soldier_name,1)
+            -- local soldier_name = v
+            local soldier_number = soldier_map[soldier_name]
+            row_count = row_count+1
+            local soldier = WidgetSoldierBox.new("",function ()
+                if soldier_number>0 then
+                    if soldier_name=="skeletonWarrior"
+                        or soldier_name=="skeletonArcher"
+                        or soldier_name=="deathKnight"
+                        or soldier_name=="meatWagon"
+                    then
+                        self:OpenSoldierDetails(soldier_name)
+                    else
+                        self:OpenSoldierDetails(soldier_name,City:GetSoldierManager():GetStarBySoldierType(soldier_name))
+                    end
+                end
+            end):addTo(row_item)
+                :alignByPoint(cc.p(0.5,0.4), origin_x + (unit_width + gap_x) * row_count + unit_width / 2, 0)
+                :SetNumber(soldier_number)
+            if soldier_name=="skeletonWarrior"
+                or soldier_name=="skeletonArcher"
+                or soldier_name=="deathKnight"
+                or soldier_name=="meatWagon"
+            then
+                soldier:SetSoldier(soldier_name)
+            else
+                soldier:SetSoldier(soldier_name,1)
+            end
+            if row_count>2 then
+                local item = list_view:newItem()
+                item:addContent(row_item)
+                item:setItemSize(547, 170)
+                list_view:addItem(item)
+                row_count=-1
+                row_item = display.newNode()
+            end
         end
-        if row_count>2 then
-            local item = list_view:newItem()
-            item:addContent(row_item)
-            item:setItemSize(547, 170)
-            list_view:addItem(item)
-            row_count=-1
-            row_item = display.newNode()
-        end
+
     end
     list_view:reload()
 end
 
 return GameUIArmyCamp
+
 
 
 

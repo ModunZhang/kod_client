@@ -40,15 +40,15 @@ function SoldierManager:GetGarrisonSoldierCount()
     return self:GetTotalSoldierCount()
 end
 function SoldierManager:GetTotalUpkeep()
-    local total_upkeep = 0
+    local total = 0
     for k, v in pairs(self.soldier_map) do
         if NORMAL[k.."_"..self:GetStarBySoldierType()] then
-            total_upkeep = total_upkeep + NORMAL[k.."_"..self:GetStarBySoldierType()].upkeep*v
+            total = total + NORMAL[k.."_"..self:GetStarBySoldierType()].consumeFood * v
         elseif SPECIAL[k] then
-            total_upkeep = total_upkeep + SPECIAL[k].upkeep*v
+            total = total + SPECIAL[k].consumeFood * v
         end
     end
-    return total_upkeep
+    return total
 end
 function SoldierManager:GetTreatResource(soldiers)
     local total_iron,total_stone,total_wood,total_food = 0,0,0,0

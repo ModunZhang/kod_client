@@ -1,4 +1,6 @@
 local GameUtils = GameUtils
+local UILib = import("..ui.UILib")
+local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetSlider = import("..widget.WidgetSlider")
@@ -19,52 +21,11 @@ local WidgetRecruitSoldier = class("WidgetRecruitSoldier", function(...)
 end)
 local NORMAL = GameDatas.UnitsConfig.normal
 local SPECIAL = GameDatas.UnitsConfig.special
-local STAR_BG = {
-    "star1_118x132.png",
-    "star2_118x132.png",
-    "star3_118x132.png",
-    "star4_118x132.png",
-    "star5_118x132.png",
-}
-local SOLDIER_TYPE = {
-    ["swordsman_1"] = { png = "#Infantry_1_render/idle/1/00000.png" },
-    ["swordsman_2"] = { png = "soldier_swordsman_2.png" },
-    ["swordsman_3"] = { png = "soldier_swordsman_3.png" },
-    ["sentinel_1"] = { png = "soldier_sentinel_1.png" },
-    ["sentinel_2"] = { png = "soldier_sentinel_2.png" },
-    ["sentinel_3"] = { png = "soldier_sentinel_3.png" },
-    ["archer_1"] = { png = "#Archer_1_render/idle/1/00000.png" },
-    ["archer_2"] = { png = "soldier_archer_2.png" },
-    ["archer_3"] = { png = "soldier_archer_3.png" },
-    ["crossbowman_1"] = { png = "soldier_crossbowman_1.png" },
-    ["crossbowman_2"] = { png = "soldier_crossbowman_2.png" },
-    ["crossbowman_3"] = { png = "soldier_crossbowman_2.png" },
-    ["lancer_1"] = { png = "#Cavalry_1_render/idle/1/00000.png" },
-    ["lancer_2"] = { png = "soldier_lancer_2.png" },
-    ["lancer_3"] = { png = "soldier_lancer_3.png" },
-    ["horseArcher_1"] = { png = "soldier_horseArcher_1.png" },
-    ["horseArcher_2"] = { png = "soldier_horseArcher_2.png" },
-    ["horseArcher_3"] = { png = "soldier_horseArcher_3.png" },
-    ["catapult_1"] = { png = "#Catapult_1_render/move/1/00000.png" },
-    ["catapult_2"] = { png = "soldier_catapult_2.png" },
-    ["catapult_3"] = { png = "soldier_catapult_3.png" },
-    ["ballista_1"] = { png = "soldier_ballista_1.png" },
-    ["ballista_2"] = { png = "soldier_ballista_2.png" },
-    ["ballista_3"] = { png = "soldier_ballista_3.png" },
-    ["skeletonWarrior"] = { png = "soldier_skeletonWarrior.png" },
-    ["skeletonArcher"] = { png = "soldier_skeletonArcher.png" },
-    ["deathKnight"] = { png = "soldier_deathKnight.png" },
-    ["meatWagon"] = { png = "meatWagon.png" },
-    ["priest"] = {},
-    ["demonHunter"] = {},
-    ["paladin"] = {},
-    ["steamTank"] = {},
-}
 local SOLDIER_CATEGORY_MAP = {
     ["swordsman"] = "infantry",
     ["sentinel"] = "infantry",
 
-    ["archer"] = "archer",
+    ["ranger"] = "archer",
     ["crossbowman"] = "archer",
 
     ["lancer"] = "cavalry",
@@ -95,18 +56,9 @@ local SOLDIER_VS_MAP = {
         weak_vs = { "siege", "infantry"}
     }
 }
-local SOLDIER_LOCALIZE_MAP = {
-    ["infantry"] = _("步兵"),
-    ["archer"] = _("弓手"),
-    ["cavalry"] = _("骑兵"),
-    ["siege"] = _("攻城"),
-    ["wall"] = _("城墙"),
-}
-
 local function return_vs_soldiers_map(soldier_type)
     return SOLDIER_VS_MAP[SOLDIER_CATEGORY_MAP[soldier_type]]
 end
-
 
 function WidgetRecruitSoldier:ctor(barracks, city, soldier_type)
     self.barracks = barracks
@@ -194,7 +146,8 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type)
     local vs_map = return_vs_soldiers_map(soldier_type)
     local strong_vs = {}
     for i, v in ipairs(vs_map.strong_vs) do
-        table.insert(strong_vs, SOLDIER_LOCALIZE_MAP[v])
+        -- table.insert(strong_vs, SOLDIER_LOCALIZE_MAP[v])
+        table.insert(strong_vs, Localize.soldier_category[v])
     end
     local soldier_name = cc.ui.UILabel.new({
         text = table.concat(strong_vs, ", "),
@@ -216,7 +169,8 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type)
 
     local weak_vs = {}
     for i, v in ipairs(vs_map.weak_vs) do
-        table.insert(weak_vs, SOLDIER_LOCALIZE_MAP[v])
+        -- table.insert(weak_vs, SOLDIER_LOCALIZE_MAP[v])
+        table.insert(weak_vs, Localize.soldier_category[v])
     end
     local soldier_name = cc.ui.UILabel.new({
         text = table.concat(weak_vs, ", "),
@@ -449,16 +403,15 @@ function WidgetRecruitSoldier:SetSoldier(soldier_type, star)
     -- title
     self.title:setString(_(soldier_config.description))
     -- bg
-    self.star_bg:setTexture(display.newSprite(STAR_BG[star]):getTexture())
+    local bg = UILib.soldier_bg[star]
+    self.star_bg:setTexture(display.newSprite(bg):getTexture())
     -- soldier
     if self.soldier then
         self.star_bg:removeChild(self.soldier)
     end
-    self.soldier = display.newSprite(soldier_ui_config.png):addTo(self.star_bg)
+    self.soldier = display.newSprite(soldier_ui_config):addTo(self.star_bg)
         :align(display.CENTER, self.star_bg:getContentSize().width/2, self.star_bg:getContentSize().height/2)
     self.soldier:scale(130/self.soldier:getContentSize().height)
-    -- self.soldier:setTexture(display.newSprite(soldier_ui_config.png):getTexture())
-    -- stars
     local star = soldier_config.star
     for i, v in ipairs(self.stars) do
         v:setVisible(i <= star)
@@ -471,7 +424,7 @@ end
 function WidgetRecruitSoldier:GetConfigBySoldierTypeAndStar(soldier_type, star)
     local soldier_type_with_star = soldier_type..(star == nil and "" or string.format("_%d", star))
     local soldier_config = NORMAL[soldier_type_with_star] == nil and SPECIAL[soldier_type] or NORMAL[soldier_type_with_star]
-    local soldier_ui_config = SOLDIER_TYPE[soldier_type_with_star]
+    local soldier_ui_config = UILib.soldier_image[soldier_type][star]
     return soldier_config, soldier_ui_config
 end
 function WidgetRecruitSoldier:align(anchorPoint, x, y)
@@ -528,7 +481,7 @@ function WidgetRecruitSoldier:OnCountChanged(count)
     local soldier_ui_config = self.soldier_ui_config
     local total_time = soldier_config.recruitTime * count
     self.soldier_current_count:setString(string.format("%d", count))
-    self.upkeep:setString(string.format("%s%d", count > 0 and "-" or "", soldier_config.upkeep * count))
+    self.upkeep:setString(string.format("%s%d", count > 0 and "-" or "", soldier_config.consumeFood * count))
     self.recruit_time:setString(GameUtils:formatTimeStyle1(total_time))
 
     -- 检查资源

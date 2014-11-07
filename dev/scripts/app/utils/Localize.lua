@@ -360,12 +360,15 @@ local ALLIANCE_TITLE = {
     ["elite"] = _("精英"),
     ["member"] = _("成员"),
 }
+
+
+-- local normal = GameDatas.UnitsConfig.normal
 local SOLDIER_CATEGORY_MAP = {
     ["swordsman"] = "infantry",
     ["sentinel"] = "infantry",
 
-    ["ranger"] = "ranger",
-    ["crossbowman"] = "ranger",
+    ["ranger"] = "archer",
+    ["crossbowman"] = "archer",
 
     ["lancer"] = "cavalry",
     ["horseArcher"] = "cavalry",
@@ -397,16 +400,20 @@ local ALLIANCE_EVENTS = {
 
 local SOLDIER_CATEGORY = {
     ["infantry"] = _("步兵"),
-    ["ranger"] = _("弓手"),
+    ["archer"] = _("弓手"),
     ["cavalry"] = _("骑兵"),
     ["siege"] = _("攻城"),
     ["wall"] = _("城墙"),
 }
 local SOLDIER_NAME = {
     ["swordsman"] = _("剑士"),
-    ["ranger"] = _("弓手"),
-    ["lancer"] = _("骑兵"),
+    ["sentinel"] = _("哨兵"),
+    ["ranger"] = _("弓箭手"),
+    ["crossbowman"] = _("弩弓手"),
+    ["lancer"] = _("枪骑兵"),
+    ["horseArcher"] = _("弓骑兵"),
     ["catapult"] = _("投石车"),
+    ["ballista"] = _("弩车"),
 }
 local SOLDIER_STATUS = {
     ["waiting"] = _("等待"),

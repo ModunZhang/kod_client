@@ -8,31 +8,49 @@ local STAR_BG = {
 local SOLDIER_ANIMATIONS = {
     ranger = {
         "Archer_1_render",
+        "Archer_1_render",
+        "Archer_1_render",
     },
     catapult = {
+        "Catapult_1_render",
+        "Catapult_1_render",
         "Catapult_1_render",
     },
     lancer = {
         "Cavalry_1_render",
+        "Cavalry_1_render",
+        "Cavalry_1_render",
     },
     swordsman = {
         "Infantry_1_render",
+        "Infantry_1_render",
+        "Infantry_1_render",
     },
     wall = {
+        "chengqiang_1",
+        "chengqiang_1",
         "chengqiang_1",
     }
 }
 local SOLDIER_ANIMATION_FILES = {
     ranger = {
         "animations/Archer_1_render.ExportJson",
+        "animations/Archer_1_render.ExportJson",
+        "animations/Archer_1_render.ExportJson",
     },
     catapult = {
+        "animations/Catapult_1_render.ExportJson",
+        "animations/Catapult_1_render.ExportJson",
         "animations/Catapult_1_render.ExportJson",
     },
     lancer = {
         "animations/Cavalry_1_render.ExportJson",
+        "animations/Cavalry_1_render.ExportJson",
+        "animations/Cavalry_1_render.ExportJson",
     },
     swordsman = {
+        "animations/Infantry_1_render.ExportJson",
+        "animations/Infantry_1_render.ExportJson",
         "animations/Infantry_1_render.ExportJson",
     },
     wall = {
@@ -42,15 +60,43 @@ local SOLDIER_ANIMATION_FILES = {
 local SOLDIER_IMAGES = {
     ranger = {
         "#Archer_1_render/idle/1/00000.png",
+        "#Archer_1_render/idle/1/00000.png",
+        "#Archer_1_render/idle/1/00000.png",
     },
     catapult = {
+        "#Catapult_1_render/move/1/00000.png",
+        "#Catapult_1_render/move/1/00000.png",
         "#Catapult_1_render/move/1/00000.png",
     },
     lancer = {
         "#Cavalry_1_render/idle/1/00000.png",
+        "#Cavalry_1_render/idle/1/00000.png",
+        "#Cavalry_1_render/idle/1/00000.png",
     },
     swordsman = {
         "#Infantry_1_render/idle/1/00000.png",
+        "#Infantry_1_render/idle/1/00000.png",
+        "#Infantry_1_render/idle/1/00000.png",
+    },
+    sentinel = {
+        "soldier_sentinel_1.png",
+        "soldier_sentinel_1.png",
+        "soldier_sentinel_1.png",
+    },
+    crossbowman = {
+        "soldier_crossbowman_1.png",
+        "soldier_crossbowman_1.png",
+        "soldier_crossbowman_1.png",
+    },
+    horseArcher = {
+        "soldier_horseArcher_1.png",
+        "soldier_horseArcher_1.png",
+        "soldier_horseArcher_1.png",
+    },
+    ballista = {
+        "soldier_ballista_1.png",
+        "soldier_ballista_1.png",
+        "soldier_ballista_1.png",
     }
 }
 
@@ -61,6 +107,10 @@ return {
     soldier_animation = SOLDIER_ANIMATIONS,
     soldier_image = SOLDIER_IMAGES
 }
+
+
+
+
 
 
 

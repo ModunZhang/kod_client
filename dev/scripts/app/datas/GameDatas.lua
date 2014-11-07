@@ -288,6 +288,8 @@ require("app.datas.SmithConfig_equipments")
 GameDatas.UnitsConfig = {
 	["normal"] = {},
 	["special"] = {},
+	["fightFix"] = {},
 }
 require("app.datas.UnitsConfig_normal")
 require("app.datas.UnitsConfig_special")
+require("app.datas.UnitsConfig_fightFix")

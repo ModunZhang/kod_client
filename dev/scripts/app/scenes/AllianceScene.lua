@@ -17,7 +17,6 @@ function AllianceScene:ctor()
     manager:addArmatureFileInfo("animations/green_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Blue_dragon.ExportJson")
-
 end
 function AllianceScene:onEnter()
     AllianceScene.super.onEnter(self)
@@ -31,7 +30,7 @@ function AllianceScene:onEnter()
 end
 function AllianceScene:onExit()
     AllianceScene.super.onExit(self)
-    City:ResetAllListeners()
+    -- City:ResetAllListeners()
 end
 function AllianceScene:CreateSceneLayer()
     local scene = AllianceLayer.new()

@@ -1,6 +1,7 @@
 local GameUtils = GameUtils
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local HospitalUpgradeBuilding = import("..entity.HospitalUpgradeBuilding")
+local UILib = import("..ui.UILib")
 local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local WidgetSlider = import("..widget.WidgetSlider")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -17,13 +18,7 @@ local WidgetTreatSoldier = class("WidgetTreatSoldier", function(...)
 end)
 local NORMAL = GameDatas.UnitsConfig.normal
 local SPECIAL = GameDatas.UnitsConfig.special
-local STAR_BG = {
-    "star1_118x132.png",
-    "star2_118x132.png",
-    "star3_118x132.png",
-    "star4_118x132.png",
-    "star5_118x132.png",
-}
+
 local SOLDIER_TYPE = {
     ["swordsman_1"] = { png = "#Infantry_1_render/idle/1/00000.png" },
     ["swordsman_2"] = { png = "soldier_swordsman_2.png" },
@@ -62,7 +57,7 @@ local SOLDIER_CATEGORY_MAP = {
     ["swordsman"] = "infantry",
     ["sentinel"] = "infantry",
 
-    ["archer"] = "archer",
+    ["ranger"] = "archer",
     ["crossbowman"] = "archer",
 
     ["lancer"] = "cavalry",
@@ -461,12 +456,12 @@ function WidgetTreatSoldier:SetSoldier(soldier_type, star)
     -- title
     self.title:setString(_(soldier_config.description))
     -- bg
-    self.star_bg:setTexture(display.newSprite(STAR_BG[star]):getTexture())
+    self.star_bg:setTexture(display.newSprite(UILib.soldier_bg[star]):getTexture())
     -- soldier
     if self.soldier then
         self.star_bg:removeChild(self.soldier)
     end
-    self.soldier = display.newSprite(soldier_ui_config.png):addTo(self.star_bg)
+    self.soldier = display.newSprite(soldier_ui_config):addTo(self.star_bg)
         :align(display.CENTER, self.star_bg:getContentSize().width/2, self.star_bg:getContentSize().height/2)
     self.soldier:scale(130/self.soldier:getContentSize().height)
     -- stars
@@ -482,7 +477,7 @@ end
 function WidgetTreatSoldier:GetConfigBySoldierTypeAndStar(soldier_type, star)
     local soldier_type_with_star = soldier_type..(star == nil and "" or string.format("_%d", star))
     local soldier_config = NORMAL[soldier_type_with_star] == nil and SPECIAL[soldier_type] or NORMAL[soldier_type_with_star]
-    local soldier_ui_config = SOLDIER_TYPE[soldier_type_with_star]
+    local soldier_ui_config = UILib.soldier_image[soldier_type][star]
     return soldier_config, soldier_ui_config
 end
 function WidgetTreatSoldier:align(anchorPoint, x, y)
@@ -522,7 +517,7 @@ function WidgetTreatSoldier:OnCountChanged(count)
     local soldier_ui_config = self.soldier_ui_config
     local total_time = soldier_config.treatTime * count
     self.soldier_current_count:setString(string.format("%d", count))
-    self.upkeep:setString(string.format("%s%d", count > 0 and "-" or "", soldier_config.upkeep * count))
+    self.upkeep:setString(string.format("%s%d", count > 0 and "-" or "", soldier_config.consumeFood * count))
     self.treat_time:setString(GameUtils:formatTimeStyle1(total_time))
 
     local total_map = self.res_total_map == nil and {} or self.res_total_map
