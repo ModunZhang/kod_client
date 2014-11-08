@@ -9,6 +9,7 @@ local UIListView = import(".UIListView")
 local UIScrollView = import(".UIScrollView")
 local NetService = import('..service.NetService')
 local AllianceMember = import('..entity.AllianceMember')
+local GameUIWriteMail = import('.GameUIWriteMail')
 
 function GameUIPlayerInfo:ctor(isOnlyMail,memberId)
 	GameUIPlayerInfo.super.ctor(self)
@@ -236,8 +237,11 @@ function GameUIPlayerInfo:OnPlayerButtonClicked( tag )
             end)
         end
 	elseif tag == 5 then
-		--TODO:打开邮件界面
-		--if self.isOnlyMail_
+		local mail = GameUIWriteMail.new()
+		mail:SetTitle(_("个人邮件"))
+		mail:SetAddressee(self.player_info.name)
+		mail:OnSendButtonClicked( GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL)
+		mail:addTo(self)
 	end
 end
 

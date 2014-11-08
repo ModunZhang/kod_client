@@ -367,6 +367,9 @@ local SOLDIER_CATEGORY_MAP = {
 
     ["catapult"] = "siege",
     ["ballista"] = "siege",
+
+
+    ["wall"] = "wall"
 }
 
 local ALLIANCE_EVENTS = {
