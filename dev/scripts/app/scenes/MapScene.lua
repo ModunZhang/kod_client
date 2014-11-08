@@ -8,6 +8,8 @@ end)
 function MapScene:ctor()
     self.event_manager = EventManager.new(self)
     self.touch_judgment = TouchJudgment.new(self)
+    City:ResetAllListeners()
+    Alliance_Manager:GetMyAlliance():ResetAllListeners()
 end
 function MapScene:onEnter()
     self.scene_layer = self:CreateSceneLayer()

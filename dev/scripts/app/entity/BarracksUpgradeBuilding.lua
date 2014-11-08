@@ -66,6 +66,10 @@ function BarracksUpgradeBuilding:CreateEvent()
     event:Init()
     return event
 end
+function BarracksUpgradeBuilding:ResetAllListeners()
+    BarracksUpgradeBuilding.super.ResetAllListeners(self)
+    self.barracks_building_observer:RemoveAllObserver()
+end
 function BarracksUpgradeBuilding:AddBarracksListener(listener)
     assert(listener.OnBeginRecruit)
     assert(listener.OnRecruiting)

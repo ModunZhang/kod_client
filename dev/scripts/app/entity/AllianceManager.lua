@@ -44,7 +44,9 @@ function AllianceManager:OnAllianceHelpDataChanged(help_event)
     self:GetMyAlliance():ReFreashOneHelpEvent(help_event)
 end
 
-
+function AllianceManager:OnTimer(current_time)
+    self:GetMyAlliance():OnTimer(current_time)
+end
 
 return AllianceManager
 

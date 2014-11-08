@@ -34,43 +34,43 @@ function CityScene:onEnter()
     self:GotoLogicPoint(6, 4)
 
 
-    Alliance_Manager:GetMyAlliance():AddListenOnType({
-        OnBasicChanged = function(this, alliance, changed_map)
-            dump(changed_map)
-        end}, Alliance.LISTEN_TYPE.BASIC)
-    Alliance_Manager:GetMyAlliance():AddListenOnType({
-        OnOperation = function(this, alliance, operation_type)
-            dump(operation_type)
-        end}, Alliance.LISTEN_TYPE.OPERATION)
-    Alliance_Manager:GetMyAlliance():AddListenOnType({
-        OnMemberChanged = function(this, alliance, changed_map)
-            dump(changed_map)
-        end}, Alliance.LISTEN_TYPE.MEMBER)
-    Alliance_Manager:GetMyAlliance():AddListenOnType({
-        OnEventsChanged = function(this, alliance, changed_map)
-            dump(changed_map)
-        end
-    }, Alliance.LISTEN_TYPE.EVENTS)
+    -- Alliance_Manager:GetMyAlliance():AddListenOnType({
+    --     OnBasicChanged = function(this, alliance, changed_map)
+    --         dump(changed_map)
+    --     end}, Alliance.LISTEN_TYPE.BASIC)
+    -- Alliance_Manager:GetMyAlliance():AddListenOnType({
+    --     OnOperation = function(this, alliance, operation_type)
+    --         dump(operation_type)
+    --     end}, Alliance.LISTEN_TYPE.OPERATION)
+    -- Alliance_Manager:GetMyAlliance():AddListenOnType({
+    --     OnMemberChanged = function(this, alliance, changed_map)
+    --         dump(changed_map)
+    --     end}, Alliance.LISTEN_TYPE.MEMBER)
+    -- Alliance_Manager:GetMyAlliance():AddListenOnType({
+    --     OnEventsChanged = function(this, alliance, changed_map)
+    --         dump(changed_map)
+    --     end
+    -- }, Alliance.LISTEN_TYPE.EVENTS)
 
-    Alliance_Manager:GetMyAlliance():AddListenOnType({
-        OnJoinEventsChanged = function(this, alliance, changed_map)
-            dump(changed_map)
-        end
-    }, Alliance.LISTEN_TYPE.JOIN_EVENTS)
+    -- Alliance_Manager:GetMyAlliance():AddListenOnType({
+    --     OnJoinEventsChanged = function(this, alliance, changed_map)
+    --         dump(changed_map)
+    --     end
+    -- }, Alliance.LISTEN_TYPE.JOIN_EVENTS)
 
 
 
-    User:AddListenOnType({
-        OnRequestAllianceEvents = function(this, user, changed_map)
-            dump(changed_map)
-        end
-    }, User.LISTEN_TYPE.REQUEST_TO_ALLIANCE)
+    -- User:AddListenOnType({
+    --     OnRequestAllianceEvents = function(this, user, changed_map)
+    --         dump(changed_map)
+    --     end
+    -- }, User.LISTEN_TYPE.REQUEST_TO_ALLIANCE)
 
-    User:AddListenOnType({
-        OnInviteAllianceEvents = function(this, user, changed_map)
-            dump(changed_map)
-        end
-    }, User.LISTEN_TYPE.INVITE_TO_ALLIANCE)
+    -- User:AddListenOnType({
+    --     OnInviteAllianceEvents = function(this, user, changed_map)
+    --         dump(changed_map)
+    --     end
+    -- }, User.LISTEN_TYPE.INVITE_TO_ALLIANCE)
 
     self:GetSceneLayer():ZoomTo(0.7)
 
@@ -80,7 +80,6 @@ function CityScene:onExit()
     self:stopAllActions()
     audio.stopMusic()
     audio.stopAllSounds()
-    City:ResetAllListeners()
 end
 -- init ui
 function CityScene:LoadAnimation()
@@ -194,11 +193,11 @@ function CityScene:GotoLogicPoint(x, y)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
 end
 function CityScene:PlayBackgroundMusic()
--- audio.playMusic("audios/music_city.mp3", true)
--- audio.playSound("audios/sfx_peace.mp3", true)
--- self:performWithDelay(function()
---     self:PlayBackgroundMusic()
--- end, 113 + 30)
+    audio.playMusic("audios/music_city.mp3", true)
+    audio.playSound("audios/sfx_peace.mp3", true)
+    self:performWithDelay(function()
+        self:PlayBackgroundMusic()
+    end, 113 + 30)
 end
 function CityScene:ChangeTerrain(terrain_type)
     self:GetSceneLayer():ChangeTerrain(terrain_type)
@@ -381,6 +380,7 @@ end
 
 
 return CityScene
+
 
 
 

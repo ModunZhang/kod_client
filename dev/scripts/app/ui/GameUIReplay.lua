@@ -1,3 +1,4 @@
+local Localize = import("..utils.Localize")
 local window = import("..utils.window")
 local promise = import("..utils.promise")
 local BattleObject = import(".BattleObject")
@@ -11,46 +12,81 @@ local WidgetSoldierInBattle = import("..widget.WidgetSoldierInBattle")
 local GameUIReplay = UIKit:createUIClass('GameUIReplay')
 
 local new_battle = {
-    {dual = {left = "ranger", right = "lancer"}, defeat = "right"},
-    {dual = {right = "lancer"}, defeat = "right"},
-    {dual = {right = "wall"}, defeat = "right"},
-    -- {dual = {left = "wall"}, defeat = "right"},
+    {
+        dual = {
+            left = {soldier = "ranger", count = 1000, damage = 90, morale = 100, decrease = 20},
+            right = {soldier = "lancer", count = 100, damage = 80, morale = 100, decrease = 80},
+            defeat = "right"
+        }
+    },
+    {
+        dual = {
+            left = {damage = 90, decrease = 10},
+            right = {soldier = "ranger", count = 100, damage = 80, morale = 100, decrease = 50},
+            defeat = "right"
+        }
+    },
+    {
+        dual = {
+            left = {damage = 90, decrease = 30},
+            right = {soldier = "wall", count = 1000, damage = 80, morale = 100, decrease = 90},
+            defeat = "right"
+        }
+    },
 }
 local function decode_battle(raw)
     local rounds = {}
     for i, v in ipairs(raw) do
         local r = {}
-        local left, right = v.dual.left, v.dual.right
+        local dual = v.dual
+        local left, right = dual.left, dual.right
         if i == 1 then
-            table.insert(r, {{soldier = left, state = "enter"}, {soldier = right, state = "enter"}})
+            table.insert(r, {
+                {soldier = left.soldier, state = "enter", count = left.count, morale = left.morale},
+                {soldier = right.soldier, state = "enter", count = right.count, morale = right.morale}
+            })
         else
-            if left then
-                if left == "wall" then
-                    table.insert(r, {{soldier = left, state = "enter"}, {state = "move"}})
+            if left.soldier then
+                local soldier = left.soldier
+                local count = left.count
+                local morale = left.morale
+                if soldier == "wall" then
+                    table.insert(r, {
+                        {soldier = soldier, state = "enter", count = count, morale = morale}, {state = "move"}
+                    })
                 else
-                    table.insert(r, {{soldier = left, state = "enter"}, {state = "defend"}})
+                    table.insert(r, {
+                        {soldier = soldier, state = "enter", count = count, morale = morale}, {state = "defend"}
+                    })
                 end
-            elseif right then
-                if right == "wall" then
-                    table.insert(r, {{state = "move"}, {soldier = right, state = "enter"}})
+            elseif right.soldier then
+                local soldier = right.soldier
+                local count = right.count
+                local morale = right.morale
+                if soldier == "wall" then
+                    table.insert(r, {
+                        {state = "move"}, {soldier = soldier, state = "enter", count = count, morale = morale}
+                    })
                 else
-                    table.insert(r, {{state = "defend"}, {soldier = right, state = "enter"}})
+                    table.insert(r, {
+                        {state = "defend"}, {soldier = soldier, state = "enter", count = count, morale = morale}
+                    })
                 end
             else
                 assert(false)
             end
         end
-        if v.defeat == "left" then
+        if dual.defeat == "left" then
             table.insert(r, {{state = "attack"}, {state = "defend"}})
-            table.insert(r, {{state = "defend"}, {state = "hurt"}})
+            table.insert(r, {{state = "defend"}, {state = "hurt", damage = right.damage, decrease = right.decrease}})
             table.insert(r, {{state = "defend"}, {state = "attack"}})
-            table.insert(r, {{state = "hurt"}, {state = "defend"}})
+            table.insert(r, {{state = "hurt", damage = left.damage, decrease = left.decrease}, {state = "defend"}})
             table.insert(r, {{state = "defeat"}, {state = "defend"}})
-        elseif v.defeat == "right" then
+        elseif dual.defeat == "right" then
             table.insert(r, {{state = "defend"}, {state = "attack"}})
-            table.insert(r, {{state = "hurt"}, {state = "defend"}})
+            table.insert(r, {{state = "hurt", damage = left.damage, decrease = left.decrease}, {state = "defend"}})
             table.insert(r, {{state = "attack"}, {state = "defend"}})
-            table.insert(r, {{state = "defend"}, {state = "hurt"}})
+            table.insert(r, {{state = "defend"}, {state = "hurt", damage = right.damage, decrease = right.decrease}})
             table.insert(r, {{state = "defend"}, {state = "defeat"}})
         else
             assert(false)
@@ -105,7 +141,7 @@ function GameUIReplay:onEnter()
     local clip = display.newClippingRegionNode(rect):addTo(back_ground)
 
     local battle = display.newNode():addTo(clip)
-    :pos(back_width_half - 590/2, back_height - 388 - 10)
+        :pos(back_width_half - 590/2, back_height - 388 - 10)
     self.battle = battle
     local battle_bg = cc.ui.UIImage.new("battle_bg_grass_772x388.png")
         :addTo(battle):align(display.CENTER, rect.width / 2, rect.height / 2)
@@ -152,8 +188,8 @@ function GameUIReplay:onEnter()
 
     local unit_bg = cc.ui.UIImage.new("unit_name_bg_blue_276x48.png")
         :addTo(back_ground):pos(7, back_height - 65 - 39)
-    cc.ui.UILabel.new({
-        text = "unitName1",
+    self.left_soldier = cc.ui.UILabel.new({
+        text = "",
         font = UIKit:getFontFilePath(),
         size = 20,
         color = UIKit:hex2c3b(0xffedae)
@@ -162,8 +198,8 @@ function GameUIReplay:onEnter()
 
     local unit_bg = cc.ui.UIImage.new("unit_name_bg_red_276x48.png")
         :addTo(back_ground):pos(back_width - 276 - 7, back_height - 65 - 39)
-    cc.ui.UILabel.new({
-        text = "unitName2",
+    self.right_soldier = cc.ui.UILabel.new({
+        text = "",
         font = UIKit:getFontFilePath(),
         size = 20,
         color = UIKit:hex2c3b(0xffedae)
@@ -179,16 +215,16 @@ function GameUIReplay:onEnter()
 
     local unit_info_bg = cc.ui.UIImage.new("background_blue_342x70.png")
         :addTo(back_ground):align(display.LEFT_TOP, 10, back_height - 388 - 13)
-    cc.ui.UILabel.new({
-        text = "40000",
+    self.left_count = cc.ui.UILabel.new({
+        text = "",
         font = UIKit:getFontFilePath(),
         size = 20,
         color = UIKit:hex2c3b(0xffedae)
     }):align(display.LEFT_CENTER, 10, 53)
         :addTo(unit_info_bg)
 
-    cc.ui.UILabel.new({
-        text = "骑兵",
+    self.left_category = cc.ui.UILabel.new({
+        text = "",
         font = UIKit:getFontFilePath(),
         size = 20,
         color = UIKit:hex2c3b(0xffedae)
@@ -199,13 +235,14 @@ function GameUIReplay:onEnter()
     local progress = WidgetProgress.new(UIKit:hex2c3b(0xffedae), "progress_bg_224x30.png", "progress_224x30.png", {
         icon_bg = "icon_bg_38x40.png",
         icon = "icon_32x34.png",
-    })
-        :addTo(unit_info_bg)
-        :align(display.LEFT_CENTER, 20, 20)
-    progress:SetProgressInfo("", 50)
+        bar_pos = {x = 0,y = 0}
+    }):addTo(unit_info_bg):align(display.LEFT_CENTER, 20, 20)
+    -- progress:SetProgressInfo("", 100)
 
-    cc.ui.UILabel.new({
-        text = "10000%",
+    self.left_progress = progress
+
+    self.left_morale = cc.ui.UILabel.new({
+        text = "",
         font = UIKit:getFontFilePath(),
         size = 20,
         color = UIKit:hex2c3b(0xffedae)
@@ -215,16 +252,16 @@ function GameUIReplay:onEnter()
     local unit_info_bg = cc.ui.UIImage.new("background_red_342x70.png")
         :addTo(back_ground):align(display.RIGHT_TOP, back_width - 10, back_height - 388 - 13)
 
-    cc.ui.UILabel.new({
-        text = "40000",
+    self.right_count = cc.ui.UILabel.new({
+        text = "",
         font = UIKit:getFontFilePath(),
         size = 20,
         color = UIKit:hex2c3b(0xffedae)
     }):align(display.RIGHT_CENTER, 342 - 10, 53)
         :addTo(unit_info_bg)
 
-    cc.ui.UILabel.new({
-        text = "骑兵",
+    self.right_category = cc.ui.UILabel.new({
+        text = "",
         font = UIKit:getFontFilePath(),
         size = 20,
         color = UIKit:hex2c3b(0xffedae)
@@ -234,14 +271,14 @@ function GameUIReplay:onEnter()
     local progress = WidgetProgress.new(UIKit:hex2c3b(0xffedae), "progress_bg_224x30.png", "progress_224x30.png", {
         icon_bg = "icon_bg_38x40.png",
         icon = "icon_32x34.png",
-    })
-        :addTo(unit_info_bg)
-        :align(display.LEFT_CENTER, 342 - 20, 20)
+        bar_pos = {x = 0,y = 0}
+    }):addTo(unit_info_bg):align(display.LEFT_CENTER, 342 - 20, 20)
     progress:SetProgressInfo("", 50)
     progress:setScaleX(-1)
+    self.right_progress = progress
 
-    cc.ui.UILabel.new({
-        text = "80000%",
+    self.right_morale = cc.ui.UILabel.new({
+        text = "",
         font = UIKit:getFontFilePath(),
         size = 20,
         color = UIKit:hex2c3b(0xffedae)
@@ -265,8 +302,13 @@ function GameUIReplay:onEnter()
         table.insert(self.right_corps, right)
         self.list_view:addItem(item)
     end
-
     self.list_view:reload():resetPosition()
+
+
+    self.left_morale_max = 0
+    self.right_morale_max = 0
+    self.left_morale_cur = self.left_morale_max
+    self.right_morale_cur = self.right_morale_max
 
     local rounds = promise.new()
     for i, round in ipairs(decode_battle(new_battle)) do
@@ -328,7 +370,10 @@ function GameUIReplay:DecodeStateBySide(side, is_left)
         if is_left then
             if side.soldier == "wall" then
                 self.left = self:NewWall(50)
-                action = promise.new(BattleObject:TurnRight()):next(function()
+                action = promise.new(function(wall)
+                    self:NextSoldierBySide("left")
+                    return wall
+                end):next(BattleObject:TurnRight()):next(function()
                     return promise.new(GameUIReplay:MoveBattleBgBy(90))
                         :next(function()
                             return self.left
@@ -342,10 +387,22 @@ function GameUIReplay:DecodeStateBySide(side, is_left)
                 end):next(BattleObject:MoveTo(left_end.x, left_end.y, 2))
                     :next(BattleObject:BreathForever())
             end
+            self.left_category:setString(Localize.getSoldierCategoryByName(side.soldier))
+            self.left_soldier:setString(Localize.soldier_name[side.soldier])
+            self.left_count:setString(side.count)
+
+            self.left_morale_max = side.morale
+            self.left_morale_cur = self.left_morale_max
+            local percent = (self.left_morale_cur / self.left_morale_max) * 100
+            self.left_morale:setString(percent.."%")
+            self.left_progress:SetProgressInfo("", percent)
         else
             if side.soldier == "wall" then
                 self.right = self:NewWall(730)
-                action = promise.new(BattleObject:TurnLeft()):next(function()
+                action = promise.new(function(wall)
+                    self:NextSoldierBySide("right")
+                    return wall
+                end):next(BattleObject:TurnLeft()):next(function()
                     return promise.new(GameUIReplay:MoveBattleBgBy(-90))
                         :next(function()
                             return self.right
@@ -360,6 +417,15 @@ function GameUIReplay:DecodeStateBySide(side, is_left)
                     :next(BattleObject:MoveTo(right_end.x, right_end.y, 2))
                     :next(BattleObject:BreathForever())
             end
+            self.right_category:setString(Localize.getSoldierCategoryByName(side.soldier))
+            self.right_soldier:setString(Localize.soldier_name[side.soldier])
+            self.right_count:setString(side.count)
+
+            self.right_morale_max = side.morale
+            self.right_morale_cur = self.right_morale_max
+            local percent = (self.right_morale_cur / self.right_morale_max) * 100
+            self.right_morale:setString(percent.."%")
+            self.right_progress:SetProgressInfo("", percent)
         end
     elseif state == "attack" then
         action = BattleObject:Do(BattleObject:AttackOnce()):next(function(corps)
@@ -371,7 +437,24 @@ function GameUIReplay:DecodeStateBySide(side, is_left)
     elseif state == "breath" then
         action = BattleObject:Do(BattleObject:BreathForever())
     elseif state == "hurt" then
-        action = BattleObject:Do(BattleObject:HitOnce()):next(function(corps)
+        action = BattleObject:Do(function(corps)
+            if is_left then
+                self.left_count:setString(tonumber(self.left_count:getString()) - side.damage)
+
+                self.left_morale_cur = self.left_morale_cur - side.decrease
+                local percent = (self.left_morale_cur / self.left_morale_max) * 100
+                self.left_morale:setString(percent.."%")
+                self.left_progress:SetProgressInfo("", percent)
+            else
+                self.right_count:setString(tonumber(self.right_count:getString()) - side.damage)
+
+                self.right_morale_cur = self.right_morale_cur - side.decrease
+                local percent = (self.right_morale_cur / self.right_morale_max) * 100
+                self.right_morale:setString(percent.."%")
+                self.right_progress:SetProgressInfo("", percent)
+            end
+            return corps
+        end):next(BattleObject:HitOnce()):next(function(corps)
             BattleObject:Do(BattleObject:BreathForever()):resolve(corps)
             return corps
         end)
@@ -395,27 +478,28 @@ function GameUIReplay:DecodeStateBySide(side, is_left)
     end
     return action
 end
-function GameUIReplay:CreateItemWithListView(list_view, duals)
+function GameUIReplay:CreateItemWithListView(list_view, dual)
     local gap = 10
     local row_item = display.newNode()
-    local left_soldier, right_soldier = duals.left, duals.right
-    local left, right
-    if left_soldier and left_soldier ~= "wall" then
-        left = WidgetSoldierInBattle.new("back_ground_284x128.png",
-            {side = "blue", soldier = left_soldier, star = 1}):addTo(row_item)
+    local left, right = dual.left, dual.right
+    local left_item, right_item
+    if left.soldier then
+        left_item = WidgetSoldierInBattle.new("back_ground_284x128.png",
+            {side = "blue", soldier = left.soldier, star = 1}):addTo(row_item)
             :align(display.CENTER, -284/2 - gap, 0)
     end
-    if right_soldier and right_soldier ~= "wall" then
-        right = WidgetSoldierInBattle.new("back_ground_284x128.png",
-            {side = "red", soldier = right_soldier, star = 1}):addTo(row_item)
+    if right.soldier then
+        right_item = WidgetSoldierInBattle.new("back_ground_284x128.png",
+            {side = "red", soldier = right.soldier, star = 1}):addTo(row_item)
             :align(display.CENTER, 284/2 + gap, 0)
     end
     local item = list_view:newItem()
     item:addContent(row_item)
     item:setItemSize(284 * 2, 128)
-    return item, left, right
+    return item, left_item, right_item
 end
 function GameUIReplay:SetCurrentSoldierStateBySide(side, status)
+    print(side, status)
     if side == "left" then
         self.left_corps[self.left_round]:SetUnitStatus(status)
     elseif side == "right" then
@@ -436,6 +520,25 @@ function GameUIReplay:NextSoldierBySide(side)
     end
 end
 return GameUIReplay
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -178,7 +178,7 @@ function UpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id,
     if is_has_no_building then return end
     --
     -- 解析
-    local finishTime = 0
+    local finishTime = self.upgrade_to_next_level_time
     local level = self:GetLevel()
     -- 先找小屋
     if sub_location_id then

@@ -83,6 +83,10 @@ function ToolShopUpgradeBuilding:CreateEvent(category)
     event:Init(category)
     return event
 end
+function ToolShopUpgradeBuilding:ResetAllListeners()
+    ToolShopUpgradeBuilding.super.ResetAllListeners(self)
+    self.toolShop_building_observer:RemoveAllObserver()
+end
 function ToolShopUpgradeBuilding:AddToolShopListener(listener)
     assert(listener.OnBeginMakeMaterialsWithEvent)
     assert(listener.OnMakingMaterialsWithEvent)

@@ -3,10 +3,11 @@ local WidgetProgress = class("WidgetProgress", function(...)
 end)
 function WidgetProgress:ctor(label_color, bg, bar, params)
     params = params or {}
+    local bar_pos = params.bar_pos or {x = -4, y = 1}
     local progress_bg = cc.ui.UIImage.new(bg or "progress_bg_311x35.png")
         :addTo(self, 2):align(display.LEFT_BOTTOM)
     self.progress_timer = display.newProgressTimer(bar or "progress_bar_315x33.png", display.PROGRESS_TIMER_BAR)
-        :align(display.LEFT_BOTTOM, 0, 0):addTo(progress_bg, 2):pos(-4, 1)
+        :align(display.LEFT_BOTTOM, 0, 0):addTo(progress_bg, 2):pos(bar_pos.x, bar_pos.y)
     self.progress_timer:setBarChangeRate(cc.p(1,0))
     self.progress_timer:setMidpoint(cc.p(0,0))
 

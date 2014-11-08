@@ -424,8 +424,9 @@ end
 function GameUIChat:CreateTextFieldBody()
 	local function onEdit(event, editbox)
         if event == "return" then
-            NetManager:getSendChatPromise(self._channelType,editbox:getText()):next(function(result)
-                editbox:setText('')
+            local msg = editbox:getText()
+            editbox:setText('')
+            NetManager:getSendChatPromise(self._channelType,msg):next(function(result)
             end)
         end
     end
@@ -449,8 +450,9 @@ function GameUIChat:CreateTextFieldBody()
 	local emojiButton = cc.ui.UIPushButton.new({normal = "chat_expression.png",pressed = "chat_expression_highlight.png",},{scale9 = false})
 		:onButtonClicked(function(event)
             if CONFIG_IS_DEBUG then
-                NetManager:getSendChatPromise(self._channelType,editbox:getText()):next(function(result)
-                    editbox:setText('')
+                local msg = editbox:getText()
+                editbox:setText('')
+                NetManager:getSendChatPromise(self._channelType,msg):next(function(result)
                 end)
             end
     	end)

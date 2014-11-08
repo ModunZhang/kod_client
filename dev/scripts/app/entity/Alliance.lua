@@ -48,7 +48,10 @@ end
 function Alliance:GetAllianceShrine()
     return self.alliance_shrine
 end
-
+function Alliance:ResetAllListeners()
+    self.alliance_map:ClearAllListener()
+    self:ClearAllListener()
+end
 function Alliance:GetAllianceMap()
     return self.alliance_map
 end
@@ -639,32 +642,7 @@ function Alliance:GetAllianceArchonMember()
     end
     return nil
 end
+function Alliance:OnTimer(current_time)
+    self:GetAllianceShrine():OnTimer(current_time)
+end
 return Alliance
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

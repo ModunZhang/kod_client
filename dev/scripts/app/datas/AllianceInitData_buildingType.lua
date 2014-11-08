@@ -3,7 +3,7 @@ local buildingType = GameDatas.AllianceInitData.buildingType
 buildingType["decorate_lake_1"] = {
 	["type"] = "decorate_lake_1",
 	["width"] = 3,
-	["height"] = 2,
+	["height"] = 3,
 	["category"] = "decorate",
 	["distroyNeedHonour"] = 120
 }
@@ -16,15 +16,15 @@ buildingType["decorate_lake_2"] = {
 }
 buildingType["decorate_mountain_1"] = {
 	["type"] = "decorate_mountain_1",
-	["width"] = 2,
-	["height"] = 1,
+	["width"] = 3,
+	["height"] = 3,
 	["category"] = "decorate",
 	["distroyNeedHonour"] = 40
 }
 buildingType["decorate_mountain_2"] = {
 	["type"] = "decorate_mountain_2",
-	["width"] = 1,
-	["height"] = 1,
+	["width"] = 2,
+	["height"] = 2,
 	["category"] = "decorate",
 	["distroyNeedHonour"] = 20
 }
