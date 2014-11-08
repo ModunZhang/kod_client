@@ -382,7 +382,7 @@ function GameUIHome:CreateBottom()
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            if DataManager:GetManager("AllianceManager"):haveAlliance() then
+            if Alliance_Manager:GetMyAlliance():IsDefault() then
                 GameUIHelp.new():AddToCurrentScene()
             else
                 FullScreenPopDialogUI.new():SetTitle(_("提示"))

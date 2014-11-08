@@ -263,7 +263,7 @@ function GameUIKeep:CreateModifyCityNameWindow()
     editbox:setFont(UIKit:getFontFilePath(),22)
     editbox:setFontColor(cc.c3b(0,0,0))
     editbox:setPlaceholderFontColor(cc.c3b(204,196,158))
-    editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)
+    editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
     editbox:align(display.LEFT_TOP,16, 420)
     layer:addToBody(editbox)
 

@@ -263,7 +263,11 @@ local ENTER_LIST = {
                 img = "icon_demolish.png",
                 title = _("拆除"),
                 func = function (building)
-                -- UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
+                    local alliacne =  Alliance_Manager:GetMyAlliance()
+                    local isEqualOrGreater = alliacne:GetMemeberById(DataManager:getUserData()._id):IsTitleEqualOrGreaterThan("general")
+                    if isEqualOrGreater then
+                        NetManager:getDistroyAllianceDecoratePromise(building:Id())
+                    end
                 end
             },
         },
@@ -439,7 +443,6 @@ function GameUIAllianceEnter:InitBuildingImage()
             color = 0x514d3e,
         }):align(display.CENTER, level_bg:getContentSize().width/2 , level_bg:getContentSize().height/2)
             :addTo(level_bg)
-        print("(level_bg:getContentSize().width-40)/2=",level_bg:getContentSize().width/2)
     elseif not self.building.name and self.building:GetType()=="none" then
         level_bg:setVisible(false)
     else

@@ -12,8 +12,12 @@ end
 function GameUIAllianceHome:onEnter()
     GameUIAllianceHome.super.onEnter(self)
     self.bottom = self:CreateBottom()
+    self.bottom = self:CreateTop()
 end
 
+function GameUIAllianceHome:CreateTop()
+    
+end
 
 function GameUIAllianceHome:CreateBottom()
     -- 底部背景

@@ -35,6 +35,20 @@ end
 function AllianceMember:IsTitleLowest()
     return self:Title() == titles_enum[1]
 end
+-- 职位权限是否大于等于某个职位
+-- @parm eq_title 比较的职位
+function AllianceMember:IsTitleEqualOrGreaterThan(eq_title)
+    local self_title_level , eq_title_level
+    for k,v in pairs(titles_enum) do
+        if self:Title()==titles_enum[k] then
+            self_title_level = k
+        end
+        if eq_title == titles_enum[k] then
+            eq_title_level = k
+        end
+    end
+    return self_title_level >= eq_title_level
+end
 function AllianceMember:TitleDegrade()
     local cur = self:Title()
     return titles_enum[titles_enum[cur] - 1] or cur
