@@ -4,6 +4,7 @@ local Localize = import("..utils.Localize")
 local AllianceMap = import("..entity.AllianceMap")
 local window = import("..utils.window")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
+local WidgetAllianceBuildingInfo = import("..widget.WidgetAllianceBuildingInfo")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 
 local WidgetAllianceBuildingUpgrade = class("WidgetAllianceBuildingUpgrade", function ()
@@ -46,9 +47,20 @@ function WidgetAllianceBuildingUpgrade:onEnter()
     cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-145, display.top-175)
         :addTo(self)
 
-    self.building_image = display.newSprite(UIKit:getImageByBuildingType( self.building.name ,1), 0, 0):addTo(self):pos(display.cx-196, display.top-158)
-    self.building_image:setAnchorPoint(cc.p(0.5,0.5))
-    self.building_image:setScale(124/self.building_image:getContentSize().width)
+    self.building_info_btn = WidgetPushButton.new({normal = UIKit:getImageByBuildingType( self.building.name ,1),
+        pressed = UIKit:getImageByBuildingType( self.building.name ,1)})
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                print("弹出建筑介绍详情")
+                WidgetAllianceBuildingInfo.new():addTo(self)
+            end
+        end):align(display.CENTER, display.cx-196, display.top-158):addTo(self)
+    self.building_info_btn:setScale(124/self.building_info_btn:getCascadeBoundingBox().size.width)
+
+    -- i image
+    display.newSprite("info_26x26.png"):align(display.CENTER, display.cx-250, display.top-225)
+        :addTo(self)
+
     self:InitBuildingIntroduces()
 
     self:InitNextLevelEfficiency()
@@ -231,4 +243,6 @@ function WidgetAllianceBuildingUpgrade:getNextLevelConfig__()
 end
 
 return WidgetAllianceBuildingUpgrade
+
+
 

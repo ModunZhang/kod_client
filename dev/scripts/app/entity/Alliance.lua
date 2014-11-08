@@ -43,6 +43,10 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     self.help_events = {}
     self.alliance_map = AllianceMap.new(self)
 end
+function Alliance:ResetAllListeners()
+    self.alliance_map:ClearAllListener()
+    self:ClearAllListener()
+end
 function Alliance:GetAllianceMap()
     return self.alliance_map
 end

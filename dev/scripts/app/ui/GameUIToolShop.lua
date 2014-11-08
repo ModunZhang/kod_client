@@ -158,7 +158,7 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
     local toolShop = self.toolShop
     local toolShop_ui = self
     local align_x, align_y = 30, 35
-    local height = 380
+    local height = 378
     local content = WidgetUIBackGround.new({height=height}):align(display.CENTER)
 
     local size = content:getContentSize()
@@ -167,6 +167,7 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
         :addTo(content, 2)
         :align(display.CENTER, size.width / 2, height - 49/2)
 
+        -- title_blue:setVisible(false)
     cc.ui.UILabel.new({
         text = title,
         size = 24,

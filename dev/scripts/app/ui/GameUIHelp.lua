@@ -158,13 +158,11 @@ function GameUIHelp:RefreshUI(help_events)
         end
 
         if flag then
-            print("删除求助事件",k)
             self:DeleteHelpItem(k)
         end
     end
     for k,event in pairs(help_events) do
         if not self.help_events_items[event.eventId] then
-            print("收到新的求助加速事件",event.eventId,event.buildingName,event.name)
             self:InsertItemToList(event)
             self.help_listview:reload()
         end
@@ -229,7 +227,6 @@ function GameUIHelp:CreateHelpItem(event)
         ):setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("帮助"), size = 18, color = UIKit:hex2c3b(0xfff3c7)}))
             :onButtonClicked(function(e)
                 if e.name == "CLICKED_EVENT" then
-                    print("===event.eventId",event.eventId,event.buildingName,event.name)
                     NetManager:getHelpAllianceMemberSpeedUpPromise(event.eventId):catch(function(err)
                         dump(err:reason())
                     end)
@@ -253,8 +250,6 @@ function GameUIHelp:CreateHelpItem(event)
     return item
 end
 function GameUIHelp:OnAllHelpEventChanged(event)
-    print("GameUIHelp:OnAllHelpEventChanged----->",event.eventName)
-    dump(event)
     self:RefreshUI(event)
 end
 function GameUIHelp:OnHelpEventChanged(changed_help_event)
@@ -278,12 +273,10 @@ function GameUIHelp:OnHelpEventChanged(changed_help_event)
         local edit = changed_help_event.edit
         for _,event in pairs(edit) do
             local item = self.help_events_items[event.eventId]
-            print(" 更新 item ",event.eventId)
             if item then
                 if self:IsHelpedByMe(event.helpedMembers) or self:IsHelpedToMaxNum(event) then
                     self:DeleteHelpItem(event.eventId)
                 else
-                    print("刷星 被帮助次数")
                     item:SetHelp(event)
                 end
             end

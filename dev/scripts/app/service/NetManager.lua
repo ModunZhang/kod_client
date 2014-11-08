@@ -431,7 +431,7 @@ function NetManager:getLoginPromise()
     local device_id
     if CONFIG_IS_DEBUG then
         if gaozhou then
-            device_id = "a"
+            device_id = "b"
         else
             device_id = device.getOpenUDID()
         end

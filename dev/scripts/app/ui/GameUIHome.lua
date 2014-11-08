@@ -346,6 +346,13 @@ function GameUIHome:CreateBottom()
     ):addTo(bottom_bg)
         :pos(52, 54)
         :onButtonClicked(function(event)
+            if Alliance_Manager:GetMyAlliance():IsDefault() then
+                local dialog = FullScreenPopDialogUI.new():AddToCurrentScene()
+                dialog:SetTitle("提示")
+                dialog:SetPopMessage("未加入联盟!")
+                return
+            end
+
             app:lockInput(true)
             transition.rotateTo(arrow, {
                 rotate = 90,
@@ -382,7 +389,7 @@ function GameUIHome:CreateBottom()
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            if Alliance_Manager:GetMyAlliance():IsDefault() then
+            if not Alliance_Manager:GetMyAlliance():IsDefault() then
                 GameUIHelp.new():AddToCurrentScene()
             else
                 FullScreenPopDialogUI.new():SetTitle(_("提示"))
@@ -408,6 +415,8 @@ function GameUIHome:OnBottomButtonClicked(event)
 end
 
 return GameUIHome
+
+
 
 
 
