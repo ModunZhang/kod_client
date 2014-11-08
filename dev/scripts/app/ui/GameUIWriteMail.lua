@@ -58,7 +58,7 @@ function GameUIWriteMail:ctor()
     editbox_addressee:setFont(UIKit:getFontFilePath(),22)
     editbox_addressee:setFontColor(cc.c3b(0,0,0))
     editbox_addressee:setPlaceholderFontColor(cc.c3b(204,196,158))
-    editbox_addressee:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)
+    editbox_addressee:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
     editbox_addressee:align(display.LEFT_TOP,150, r_size.height-70):addTo(write_mail)
     -- 主题
     local subject_title_label = cc.ui.UILabel.new(
@@ -81,7 +81,7 @@ function GameUIWriteMail:ctor()
     editbox_subject:setFont(UIKit:getFontFilePath(),22)
     editbox_subject:setFontColor(cc.c3b(0,0,0))
     editbox_subject:setPlaceholderFontColor(cc.c3b(204,196,158))
-    editbox_subject:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)
+    editbox_subject:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
     editbox_subject:align(display.LEFT_TOP,150, r_size.height-120):addTo(write_mail)
 
     -- 分割线
@@ -100,7 +100,7 @@ function GameUIWriteMail:ctor()
     self.textView = cc.DTextView:create(cc.size(580,472),display.newScale9Sprite("background_580X472.png"))
     local textView = self.textView
     textView:addTo(write_mail):align(display.CENTER_BOTTOM,r_size.width/2,76)
-    textView:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)
+    textView:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
     textView:setFont(UIKit:getFontFilePath(), 24)
 
     textView:setFontColor(cc.c3b(0,0,0))

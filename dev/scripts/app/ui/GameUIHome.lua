@@ -389,7 +389,7 @@ function GameUIHome:CreateBottom()
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            if DataManager:GetManager("AllianceManager"):haveAlliance() then
+            if not Alliance_Manager:GetMyAlliance():IsDefault() then
                 GameUIHelp.new():AddToCurrentScene()
             else
                 FullScreenPopDialogUI.new():SetTitle(_("提示"))
@@ -409,12 +409,6 @@ function GameUIHome:OnBottomButtonClicked(event)
         UIKit:newGameUI('GameUIAlliance'):addToCurrentScene(true)
     elseif tag == 3 then
         UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
-    elseif tag == 1 then
-        UIKit:newGameUI('GameUIAlliancePalace',self.city,"upgarde"):addToCurrentScene(true)
-        -- elseif tag == 2 then
-        --     UIKit:newGameUI('GameUIAllianceShop',self.city,"upgarde"):addToCurrentScene(true)
-    elseif tag == 5 then
-        UIKit:newGameUI('GameUIAllianceEnter'):addToCurrentScene(true)
     elseif tag == 2 then
         UIKit:newGameUI('GameUIReplay'):addToCurrentScene(true)
     end
