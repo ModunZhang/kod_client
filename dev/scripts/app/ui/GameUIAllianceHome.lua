@@ -1,12 +1,16 @@
 local window = import("..utils.window")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
+local Flag = import("..entity.Flag")
+local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
+
 -- local MailManager = import("..entity.MailManager")
 local GameUIAllianceHome = UIKit:createUIClass('GameUIAllianceHome')
 
 
 function GameUIAllianceHome:ctor()
     GameUIAllianceHome.super.ctor(self)
+    self.alliance = Alliance_Manager:GetMyAlliance()
 end
 
 function GameUIAllianceHome:onEnter()
@@ -16,7 +20,67 @@ function GameUIAllianceHome:onEnter()
 end
 
 function GameUIAllianceHome:CreateTop()
-    
+    local alliance = self.alliance
+    -- 顶部背景,为按钮
+    local top_self_bg = WidgetPushButton.new({normal = "allianceHome/button_blue_normal_320X94.png",
+        pressed = "allianceHome/button_blue_pressed_320X94.png"})
+        :onButtonClicked(handler(self, self.OnTopButtonClicked))
+        :align(display.TOP_RIGHT, window.cx, window.top)
+        :addTo(self)
+    top_self_bg:setTouchEnabled(true)
+    top_self_bg:setTouchSwallowEnabled(true)
+    local top_enemy_bg = WidgetPushButton.new({normal = "allianceHome/button_red_normal_320X94.png",
+        pressed = "allianceHome/button_red_pressed_320X94.png"})
+        :onButtonClicked(handler(self, self.OnTopButtonClicked))
+        :align(display.TOP_LEFT, window.cx, window.top)
+        :addTo(self)
+    top_enemy_bg:setTouchEnabled(true)
+    top_enemy_bg:setTouchSwallowEnabled(true)
+    local t_self_width,t_self_height = top_self_bg:getCascadeBoundingBox().size.width,top_self_bg:getCascadeBoundingBox().size.height
+    local t_enemy_width,t_enemy_height = top_enemy_bg:getCascadeBoundingBox().size.width,top_enemy_bg:getCascadeBoundingBox().size.height
+    -- 荣誉,忠诚,坐标,世界按钮背景框
+    local btn_bg = display.newSprite("allianceHome/back_ground_637x55.png")
+        :align(display.TOP_CENTER, 0,-t_self_height)
+        :addTo(top_self_bg)
+    -- 己方联盟名字
+    local self_name_bg = display.newSprite("allianceHome/title_green_292X32.png")
+        :align(display.LEFT_CENTER, -t_self_width+10,-26)
+        :addTo(top_self_bg):flipX(true)
+    local self_name_label = UIKit:ttfLabel(
+        {
+            text = "["..alliance:AliasName().."] "..alliance:Name(),
+            size = 18,
+            color = 0xffedae
+        }):align(display.LEFT_CENTER, 30, 20)
+        :addTo(self_name_bg)
+    -- 己方联盟旗帜
+    local ui_helper = WidgetAllianceUIHelper.new()
+    local self_flag = ui_helper:CreateFlagContentSprite(alliance:Flag()):scale(0.5)
+    self_flag:align(display.CENTER, self_name_bg:getContentSize().width-100, -30):addTo(self_name_bg)
+
+    -- 敌方联盟名字
+    local enemy_name_bg = display.newSprite("allianceHome/title_red_292X32.png")
+        :align(display.RIGHT_CENTER, t_enemy_width-10,-26)
+        :addTo(top_enemy_bg)
+    local enemy_name_label = UIKit:ttfLabel(
+        {
+            text = "["..alliance:AliasName().."] "..alliance:Name(),
+            size = 18,
+            color = 0xffedae
+        }):align(display.RIGHT_CENTER, enemy_name_bg:getContentSize().width-30, 20)
+        :addTo(enemy_name_bg)
+    -- 敌方联盟旗帜
+    local enemy_flag = ui_helper:CreateFlagContentSprite(alliance:Flag()):scale(0.5)
+    enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
+        :addTo(enemy_name_bg)
+    -- 和平期,战争期,准备期背景
+    local period_bg = display.newSprite("allianceHome/back_ground_123x102.png")
+        :align(display.TOP_CENTER, 0,0)
+        :addTo(top_enemy_bg)
+    local vs = display.newSprite("allianceHome/VS_.png")
+        :align(display.TOP_CENTER, period_bg:getContentSize().width/2,period_bg:getContentSize().height)
+        :addTo(period_bg)
+
 end
 
 function GameUIAllianceHome:CreateBottom()
@@ -91,7 +155,7 @@ function GameUIAllianceHome:CreateBottom()
         }):align(display.CENTER,self.mail_unread_num_bg:getContentSize().width/2,self.mail_unread_num_bg:getContentSize().height/2+4)
         :addTo(self.mail_unread_num_bg)
     -- if DataManager:GetManager("MailManager"):GetUnReadMailsAndReportsNum()==0 then
-        -- self.mail_unread_num_bg:setVisible(false)
+    -- self.mail_unread_num_bg:setVisible(false)
     -- end
     -- 场景切换
     display.newSprite("home/toggle_bg.png"):addTo(bottom_bg):pos(91, 52)
@@ -137,6 +201,9 @@ function GameUIAllianceHome:CreateBottom()
 
     return bottom_bg
 end
+function GameUIAllianceHome:OnTopButtonClicked(event)
+    print("OnTopButtonClicked=",event.name)
+end
 function GameUIAllianceHome:OnBottomButtonClicked(event)
     local tag = event.target:getTag()
     if not tag then return end
@@ -149,3 +216,6 @@ function GameUIAllianceHome:OnBottomButtonClicked(event)
 end
 
 return GameUIAllianceHome
+
+
+

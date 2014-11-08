@@ -34,7 +34,7 @@ function WidgetAllianceBuildingInfo:ctor()
         }):align(display.TOP_CENTER, rb_size.width/2, rb_size.height-40)
         :addTo(body)
 
-    
+
     -- 帮助列表
     local info_bg = WidgetUIBackGround.new({
         width = 568,
@@ -47,12 +47,38 @@ function WidgetAllianceBuildingInfo:ctor()
         m_height = 1,
         b_flip = true,
     }):align(display.CENTER,rb_size.width/2, rb_size.height/2-40):addTo(body)
-    self.help_listview = UIListView.new{
+    self.info_listview = UIListView.new{
         -- bgColor = UIKit:hex2c4b(0x7a000000),
         viewRect = cc.rect(9, 10, 550, 362),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(info_bg)
+
+    local list = self.info_listview
+
+    local flag = true
+    for i=1,10 do
+        local item = list:newItem()
+        item:setItemSize(548, 40)
+        local content
+        if flag then
+            content = display.newSprite("back_ground_548x40_1.png")
+        else
+            content = display.newSprite("back_ground_548x40_2.png")
+        end
+        UIKit:ttfLabel(
+            {
+                text = i.._(".   成员总数+4， 联盟战斗力+300"),
+                size = 20,
+                color = 0x403c2f
+            }):align(display.LEFT_CENTER, 10, 20)
+            :addTo(content)
+        item:addContent(content)
+        list:addItem(item)
+        flag = not flag
+    end
+    list:reload()
 end
 
 return WidgetAllianceBuildingInfo
+
 

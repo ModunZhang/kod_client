@@ -466,6 +466,7 @@ function CommonUpgradeUI:InitUpgradePart()
                         end
                         print(self.building:GetType().."---------------- upgrade  button has been  clicked ")
                     end
+                    self:getParent():leftButtonClicked()
                 end
 
                 local can_not_update_type = self.building:IsAbleToUpgrade(false)

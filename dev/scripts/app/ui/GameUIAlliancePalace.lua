@@ -51,9 +51,6 @@ end
 function GameUIAlliancePalace:CreateBetweenBgAndTitle()
     GameUIAlliancePalace.super.CreateBetweenBgAndTitle(self)
 
-    -- upgrade_layer
-    self.upgrade_layer = WidgetAllianceBuildingUpgrade.new(self.building)
-    self:addChild(self.upgrade_layer)
     -- impose_layer
     self.impose_layer = display.newLayer()
     self:addChild(self.impose_layer)
