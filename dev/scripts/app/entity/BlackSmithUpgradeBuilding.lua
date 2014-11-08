@@ -67,6 +67,10 @@ function BlackSmithUpgradeBuilding:CreateEvent()
     event:Init()
     return event
 end
+function BlackSmithUpgradeBuilding:ResetAllListeners()
+    BlackSmithUpgradeBuilding.super.ResetAllListeners(self)
+    self.black_smith_building_observer:RemoveAllObserver()
+end
 function BlackSmithUpgradeBuilding:AddBlackSmithListener(listener)
     assert(listener.OnBeginMakeEquipmentWithEvent)
     assert(listener.OnMakingEquipmentWithEvent)
