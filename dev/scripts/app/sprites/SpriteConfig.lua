@@ -140,9 +140,9 @@ create_building_config(
 )
 create_building_config(
     "hospital"
-    ,create_config(MIN_LEVEL, level(1), "hospital_1_461x458.png", offset(50, 180), scale(0.7))
-    ,create_config(level(2), level(2), "hospital_1_461x458.png", offset(50, 180), scale(0.7))
-    ,create_config(level(3), MAX_LEVEL, "hospital_1_461x458.png", offset(50, 180), scale(0.7))
+    ,create_config(MIN_LEVEL, level(1), "hospital_1_392x472.png", offset(50, 180), scale(0.7))
+    ,create_config(level(2), level(2), "hospital_1_392x472.png", offset(50, 180), scale(0.7))
+    ,create_config(level(3), MAX_LEVEL, "hospital_1_392x472.png", offset(50, 180), scale(0.7))
 )
 create_building_config(
     "townHall"
