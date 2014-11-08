@@ -1,3 +1,4 @@
+local Localize = import("..utils.Localize")
 local window = import("..utils.window")
 local promise = import("..utils.promise")
 local BattleObject = import(".BattleObject")
@@ -152,7 +153,7 @@ function GameUIReplay:onEnter()
 
     local unit_bg = cc.ui.UIImage.new("unit_name_bg_blue_276x48.png")
         :addTo(back_ground):pos(7, back_height - 65 - 39)
-    cc.ui.UILabel.new({
+    self.left_category = cc.ui.UILabel.new({
         text = "unitName1",
         font = UIKit:getFontFilePath(),
         size = 20,
@@ -162,7 +163,7 @@ function GameUIReplay:onEnter()
 
     local unit_bg = cc.ui.UIImage.new("unit_name_bg_red_276x48.png")
         :addTo(back_ground):pos(back_width - 276 - 7, back_height - 65 - 39)
-    cc.ui.UILabel.new({
+    self.right_category = cc.ui.UILabel.new({
         text = "unitName2",
         font = UIKit:getFontFilePath(),
         size = 20,
@@ -342,6 +343,8 @@ function GameUIReplay:DecodeStateBySide(side, is_left)
                 end):next(BattleObject:MoveTo(left_end.x, left_end.y, 2))
                     :next(BattleObject:BreathForever())
             end
+            end
+            self.left_category:setString(Localize.getSoldierCategoryByName(side.soldier))
         else
             if side.soldier == "wall" then
                 self.right = self:NewWall(730)
@@ -360,6 +363,7 @@ function GameUIReplay:DecodeStateBySide(side, is_left)
                     :next(BattleObject:MoveTo(right_end.x, right_end.y, 2))
                     :next(BattleObject:BreathForever())
             end
+            self.right_category:setString(Localize.getSoldierCategoryByName(side.soldier))
         end
     elseif state == "attack" then
         action = BattleObject:Do(BattleObject:AttackOnce()):next(function(corps)

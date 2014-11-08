@@ -1215,7 +1215,6 @@ function GameUIAlliance:OnAllianceJoinTypeButtonClicked(event)
                     	self.fromCancel = true
                     	self:SelectJoinType()
                     end,btn_name = _("取消")})
-                    :CreateNeeds("Topaz-icon.png",100)
                     :AddToCurrentScene()
 end
 
