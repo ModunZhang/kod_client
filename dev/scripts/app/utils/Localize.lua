@@ -409,6 +409,7 @@ local SOLDIER_NAME = {
     ["horseArcher"] = _("弓骑兵"),
     ["catapult"] = _("投石车"),
     ["ballista"] = _("弩车"),
+    ["wall"] = _("城墙"),
 }
 local SOLDIER_STATUS = {
     ["waiting"] = _("等待"),
