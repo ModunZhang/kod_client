@@ -29,6 +29,9 @@ void main(void)
 	vec4 texColor = texture2D(CC_Texture0, correct);
 	// gl_FragColor = vec4(1.0, 0.0, 0.0, height);
 	gl_FragColor = vec4(vec3(-texColor.rgb * height + texColor.rgb), texColor.a);
+
+
+	gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }
 
 // void main(void)
