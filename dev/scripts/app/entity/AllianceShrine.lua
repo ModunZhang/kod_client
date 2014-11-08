@@ -8,22 +8,27 @@ local AllianceShrine = class("AllianceShrine")
 local property = import("..utils.property")
 
 function AllianceShrine:ctor()
+end
+
+function AllianceShrine:loadStages()
 	local states_ = {}
 	table.foreach(config_shrineStage,function(key,config)
 		if string.sub(key,1,1) == tostring(state) then 
-			local state = AllianceShrineStage.new()
+			local state = AllianceShrineStage.new(false) 
 			state:loadProperty(config)
 			states_[key] = state
 		end 
 	end)
 	property(self,"states",states_)
-	dump(self)
+	dump(self:States(),"states--->")
 end
 
+function AllianceShrine:OnPropertyChange()
+end
 
 --联盟危机
 function AllianceShrine:GetStatgeByName(state_name)
-	return config_shrineStage[state_name]
+	return self:States()[state_name]
 end
 
 -- state is number

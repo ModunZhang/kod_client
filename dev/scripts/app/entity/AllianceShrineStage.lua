@@ -7,7 +7,8 @@ local AllianceShrineStage = class("AllianceShrineStage")
 local property = import("..utils.property")
 
 
-function AllianceShrineStage:ctor()
+function AllianceShrineStage:ctor(locked)
+	property(self,"isLoacked",locked)
 end
 
 function AllianceShrineStage:loadProperty(config)
@@ -28,5 +29,9 @@ function AllianceShrineStage:loadProperty(config)
 	property(self,"goldKill",config.goldKill)
 	--TODO:rewards
 end
+
+function AllianceShrine:OnPropertyChange()
+end
+
 
 return AllianceShrineStage
