@@ -97,6 +97,11 @@ local SOLDIER_IMAGES = {
         "soldier_ballista_1.png",
         "soldier_ballista_1.png",
         "soldier_ballista_1.png",
+    },
+    wall = {
+        "soldier_ballista_1.png",
+        "soldier_ballista_1.png",
+        "soldier_ballista_1.png",
     }
 }
 

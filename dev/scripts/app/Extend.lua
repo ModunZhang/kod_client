@@ -15,14 +15,14 @@ end
 
 local play_music = audio.playMusic
 function audio.playMusic(filename, isLoop)
-	if CONFIG_IS_DEBUG then
+	if not CONFIG_PLAY_AUDIO then
 		return 
 	end
 	return play_music(filename, isLoop)
 end
 local play_sound = audio.playSound
 function audio.playSound(filename, isLoop)
-	if CONFIG_IS_DEBUG then
+	if not CONFIG_PLAY_AUDIO then
 		return 
 	end
 	return play_sound(filename, isLoop)

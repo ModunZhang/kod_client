@@ -8,7 +8,7 @@ local Observer = import("..entity.Observer")
 local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLeftReverseY")
 local MapLayer = import(".MapLayer")
 local AllianceLayer = class("AllianceLayer", MapLayer)
-local ZORDER = Enum("BOTTOM", "MIDDLE", "TOP", "BUILDING")
+local ZORDER = Enum("BOTTOM", "MIDDLE", "TOP", "BUILDING", "LINE", "SOLDIER")
 local floor = math.floor
 local random = math.random
 function AllianceLayer:ctor(city)
@@ -27,6 +27,8 @@ function AllianceLayer:ctor(city)
     self:InitMiddleBackground()
     self:InitTopBackground()
     self:InitBuildingNode()
+    self:InitSoldierNode()
+    self:InitLineNode()
 
     Alliance_Manager:GetMyAlliance():GetAllianceMap():AddListenOnType({
         OnBuildingChange = function(this, alliance_map, add, remove, modify)
@@ -57,6 +59,38 @@ function AllianceLayer:ctor(city)
         objects[entity:Id()] = self:CreateObject(entity)
     end)
     self.objects = objects
+
+
+
+    local manager = ccs.ArmatureDataManager:getInstance()
+    manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
+    local soldier = display.newNode():addTo(self:GetSoldierNode()):pos(1000, 1000)
+    soldier:setScaleX(-1)
+    local armature = ccs.Armature:create("Red_dragon"):addTo(soldier):scale(0.5)
+    armature:getAnimation():play("Flying")
+
+    -- self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
+    --     local x, y = soldier:getPosition()
+    --     x = x - 0.1
+    --     y = y - 0.1
+    --     soldier:setPosition(x, y)
+    -- end)
+    -- self:scheduleUpdate()
+    -- display.newSprite("arrow_16x22.png"):addTo(self:GetLineNode()):pos(1100, 1100):rotation(90)
+
+    -- for i = 1, 50 do
+    --     local sprite = display.newSprite("arrow_16x22.png", nil, nil, {class=cc.FilteredSpriteWithOne})
+    --         :addTo(self:GetLineNode()):pos(200 + i * 20, 1100)
+    --     local f1 = filter.newFilter("CUSTOM",
+    --         json.encode({
+    --             frag = "shaders/multi_tex.fs",
+    --             shaderName = "multi_tex",
+    --         })
+    --     )
+    --     sprite:setFilter(f1)
+    --     sprite:setScaleY(100)
+    -- end
+
 end
 function AllianceLayer:CreateObject(entity)
     local category = entity:GetCategory()
@@ -141,8 +175,20 @@ end
 function AllianceLayer:InitBuildingNode()
     self.building_node = display.newNode():addTo(self, ZORDER.BUILDING)
 end
+function AllianceLayer:InitSoldierNode()
+    self.soldier_node = display.newNode():addTo(self, ZORDER.SOLDIER)
+end
+function AllianceLayer:InitLineNode()
+    self.line_node = display.newNode():addTo(self, ZORDER.LINE)
+end
 function AllianceLayer:GetBuildingNode()
     return self.building_node
+end
+function AllianceLayer:GetSoldierNode()
+    return self.soldier_node
+end
+function AllianceLayer:GetLineNode()
+    return self.line_node
 end
 function AllianceLayer:GetClickedObject(world_x, world_y)
     local point = self:GetBuildingNode():convertToNodeSpace(cc.p(world_x, world_y))
@@ -195,6 +241,8 @@ function AllianceLayer:OnSceneMove()
 end
 
 return AllianceLayer
+
+
 
 
 

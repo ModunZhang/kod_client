@@ -178,7 +178,7 @@ function UIKit:getImageByBuildingType( building_type ,level)
     elseif building_type=="stoneMason" then
         return "stoneMason_1_423x486.png"
     elseif building_type=="hospital" then
-        return "hospital_1_461x458.png"
+        return "hospital_1_392x472.png"
     elseif building_type=="townHall" then
         return "townHall_1_524x553.png"
     elseif building_type=="tradeGuild" then
