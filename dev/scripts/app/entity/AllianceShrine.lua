@@ -4,26 +4,26 @@
 --
 local config_shrineStage = GameDatas.AllianceShrine.shrineStage
 local AllianceShrineStage = import(".AllianceShrineStage")
-local AllianceShrine = class("AllianceShrine")
+local MultiObserver = import(".MultiObserver")
 local property = import("..utils.property")
+local AllianceShrine = class("AllianceShrine",MultiObserver)
 
-function AllianceShrine:ctor()
+function AllianceShrine:ctor(alliance)
+	self.alliance = alliance
+	property(self,"PassStateName","1_1")
 end
 
 function AllianceShrine:loadStages()
-	local states_ = {}
+	local stages_ = {}
 	table.foreach(config_shrineStage,function(key,config)
-		if string.sub(key,1,1) == tostring(state) then 
-			local state = AllianceShrineStage.new(false) 
-			state:loadProperty(config)
-			states_[key] = state
-		end 
+		local stage = AllianceShrineStage.new(key > self:PassStateName(),config) 
+		stages_[key] = state
 	end)
-	property(self,"states",states_)
-	dump(self:States(),"states--->")
+	property(self,"stages",stages_)
+	dump(self:Stages())
 end
 
-function AllianceShrine:OnPropertyChange()
+function AllianceShrine:OnPropertyChange(property_name, old_value, value)
 end
 
 --联盟危机
@@ -40,6 +40,15 @@ function AllianceShrine:GetStateByMainState(state_index)
 		end
 	end
 	return tempStages
+end
+
+function AllianceShrine:DecodeObjectsFromJsonMapObjects(alliance_data)
+	self:SetpassStateName("1_1")
+end
+
+function AllianceShrine:OnAllianceDataChanged(alliance_data)
+	self:DecodeObjectsFromJsonMapObjects(alliance_data)
+	dump(alliance_data)
 end
 
 return AllianceShrine
