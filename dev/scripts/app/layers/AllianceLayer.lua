@@ -78,18 +78,18 @@ function AllianceLayer:ctor(city)
     -- self:scheduleUpdate()
     -- display.newSprite("arrow_16x22.png"):addTo(self:GetLineNode()):pos(1100, 1100):rotation(90)
 
-    for i = 1, 50 do
-        local sprite = display.newSprite("arrow_16x22.png", nil, nil, {class=cc.FilteredSpriteWithOne})
-            :addTo(self:GetLineNode()):pos(200 + i * 20, 1100)
-        local f1 = filter.newFilter("CUSTOM",
-            json.encode({
-                frag = "shaders/multi_tex.fs",
-                shaderName = "multi_tex",
-            })
-        )
-        sprite:setFilter(f1)
-        sprite:setScaleY(100)
-    end
+    -- for i = 1, 50 do
+    --     local sprite = display.newSprite("arrow_16x22.png", nil, nil, {class=cc.FilteredSpriteWithOne})
+    --         :addTo(self:GetLineNode()):pos(200 + i * 20, 1100)
+    --     local f1 = filter.newFilter("CUSTOM",
+    --         json.encode({
+    --             frag = "shaders/multi_tex.fs",
+    --             shaderName = "multi_tex",
+    --         })
+    --     )
+    --     sprite:setFilter(f1)
+    --     sprite:setScaleY(100)
+    -- end
 
 end
 function AllianceLayer:CreateObject(entity)

@@ -14,6 +14,7 @@ UpgradeBuilding.NOT_ABLE_TO_UPGRADE = {
     LEVEL_NOT_ENOUGH = "等级小于0级",
     BUILDING_IS_UPGRADING = "建筑正在升级",
 }
+local NOT_ABLE_TO_UPGRADE = UpgradeBuilding.NOT_ABLE_TO_UPGRADE
 function UpgradeBuilding:ctor(building_info)
     UpgradeBuilding.super.ctor(self, building_info)
     self.config_building_levelup = GameDatas.BuildingLevelUp
@@ -294,11 +295,11 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
 
     --等级小于0级
     if level<0 then
-        return NOT_ABLE_TO_UPGRADE.LEVEL_NOT_ENOUGH
+        return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.LEVEL_NOT_ENOUGH
     end
     --建筑正在升级
     if self:IsUpgrading() then
-        return NOT_ABLE_TO_UPGRADE.BUILDING_IS_UPGRADING
+        return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDING_IS_UPGRADING
     end
     local config = self.config_building_levelup[self:GetType()]
     -- 地块是否解锁
