@@ -922,6 +922,12 @@ function NetManager:getUpgradeAllianceBuildingPromise(buildingName)
         buildingName = buildingName
     }, "升级联盟建筑失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
+-- 联盟捐赠
+function NetManager:getDonateToAlliancePromise(donateType)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.donateToAlliance", {
+        donateType = donateType
+    }, "联盟捐赠失败!"), get_alliancedata_callback()):next(get_response_msg)
+end
 --
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

@@ -35,6 +35,9 @@ end
 function AllianceMember:IsTitleLowest()
     return self:Title() == titles_enum[1]
 end
+function AllianceMember:GetDonateStatus()
+    return self.donateStatus
+end
 -- 职位权限是否大于等于某个职位
 -- @parm eq_title 比较的职位
 function AllianceMember:IsTitleEqualOrGreaterThan(eq_title)

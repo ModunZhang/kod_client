@@ -2,7 +2,10 @@ local window = import("..utils.window")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
 local Flag = import("..entity.Flag")
+local Alliance = import("..entity.Alliance")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
+local GameUIAllianceContribute = import(".GameUIAllianceContribute")
+
 
 -- local MailManager = import("..entity.MailManager")
 local GameUIAllianceHome = UIKit:createUIClass('GameUIAllianceHome')
@@ -11,12 +14,22 @@ local GameUIAllianceHome = UIKit:createUIClass('GameUIAllianceHome')
 function GameUIAllianceHome:ctor()
     GameUIAllianceHome.super.ctor(self)
     self.alliance = Alliance_Manager:GetMyAlliance()
+    self.member = self.alliance:GetMemeberById(DataManager:getUserData()._id)
 end
 
 function GameUIAllianceHome:onEnter()
     GameUIAllianceHome.super.onEnter(self)
     self.bottom = self:CreateBottom()
     self.bottom = self:CreateTop()
+
+    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
+
+end
+function GameUIAllianceHome:onExit()
+    self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
+    GameUIAllianceHome.super.onExit(self)
 end
 
 function GameUIAllianceHome:CreateTop()
@@ -38,10 +51,7 @@ function GameUIAllianceHome:CreateTop()
     top_enemy_bg:setTouchSwallowEnabled(true)
     local t_self_width,t_self_height = top_self_bg:getCascadeBoundingBox().size.width,top_self_bg:getCascadeBoundingBox().size.height
     local t_enemy_width,t_enemy_height = top_enemy_bg:getCascadeBoundingBox().size.width,top_enemy_bg:getCascadeBoundingBox().size.height
-    -- 荣誉,忠诚,坐标,世界按钮背景框
-    local btn_bg = display.newSprite("allianceHome/back_ground_637x55.png")
-        :align(display.TOP_CENTER, 0,-t_self_height)
-        :addTo(top_self_bg)
+
     -- 己方联盟名字
     local self_name_bg = display.newSprite("allianceHome/title_green_292X32.png")
         :align(display.LEFT_CENTER, -t_self_width+10,-26)
@@ -80,7 +90,158 @@ function GameUIAllianceHome:CreateTop()
     local vs = display.newSprite("allianceHome/VS_.png")
         :align(display.TOP_CENTER, period_bg:getContentSize().width/2,period_bg:getContentSize().height)
         :addTo(period_bg)
+    local time_bg = display.newSprite("allianceHome/back_ground_109x46.png")
+        :align(display.BOTTOM_CENTER, period_bg:getContentSize().width/2,12)
+        :addTo(period_bg)
+    local period_label = UIKit:ttfLabel(
+        {
+            text = _("战争期"),
+            size = 16,
+            color = 0xbdb582
+        }):align(display.TOP_CENTER, time_bg:getContentSize().width/2, time_bg:getContentSize().height)
+        :addTo(time_bg)
+    local time_label = UIKit:ttfLabel(
+        {
+            text = _("00:20:00"),
+            size = 18,
+            color = 0xffedae
+        }):align(display.BOTTOM_CENTER, time_bg:getContentSize().width/2, 0)
+        :addTo(time_bg)
+    -- 己方战力
+    display.newSprite("allianceHome/power.png"):align(display.CENTER, -t_self_width+50, -65):addTo(top_self_bg)
+    local self_power_bg = display.newSprite("allianceHome/power_background.png")
+        :align(display.LEFT_CENTER, -t_self_width+50, -65):addTo(top_self_bg)
+    local self_power_label = UIKit:ttfLabel(
+        {
+            text = string.formatnumberthousands(alliance:Power()),
+            size = 20,
+            color = 0xbdb582
+        }):align(display.LEFT_CENTER, 20, self_power_bg:getContentSize().height/2)
+        :addTo(self_power_bg)
+    -- 敌方战力
+    display.newSprite("allianceHome/power.png"):align(display.CENTER, 140, -65):addTo(top_enemy_bg)
+    local enemy_power_bg = display.newSprite("allianceHome/power_background.png")
+        :align(display.LEFT_CENTER, 140, -65):addTo(top_enemy_bg)
+    local enemy_power_label = UIKit:ttfLabel(
+        {
+            text = string.formatnumberthousands(alliance:Power()),
+            size = 20,
+            color = 0xbdb582
+        }):align(display.LEFT_CENTER, 20, enemy_power_bg:getContentSize().height/2)
+        :addTo(enemy_power_bg)
 
+    -- 荣誉,忠诚,坐标,世界按钮背景框
+    local btn_bg = display.newSprite("allianceHome/back_ground_637x55.png")
+        :align(display.TOP_CENTER, window.cx,window.top-t_self_height)
+        :addTo(self)
+    btn_bg:setTouchEnabled(true)
+    -- 荣耀按钮
+    local honour_btn = WidgetPushButton.new({normal = "allianceHome/btn_142X42.png",
+        pressed = "allianceHome/btn_142X42_light.png"})
+        :onButtonClicked(function (event)
+            if event.name == "CLICKED_EVENT" then
+                UIKit:newGameUI('GameUIAllianceContribute'):addToCurrentScene(true)
+            end
+        end)
+        :align(display.CENTER, 102, btn_bg:getContentSize().height/2-2)
+        :addTo(btn_bg)
+    -- 荣耀值
+    display.newSprite("honour.png")
+        :align(display.CENTER, -40,honour_btn:getContentSize().height/2-4)
+        :addTo(honour_btn)
+    UIKit:ttfLabel(
+        {
+            text = _("荣耀值"),
+            size = 14,
+            color = 0xbdb582
+        }):align(display.LEFT_CENTER, -15, honour_btn:getContentSize().height/2+10)
+        :addTo(honour_btn)
+    self.honour_label = UIKit:ttfLabel(
+        {
+            text = GameUtils:formatNumber(self.alliance:Honour()),
+            size = 18,
+            color = 0xf5e8c4
+        }):align(display.LEFT_CENTER, -15, honour_btn:getContentSize().height/2-10)
+        :addTo(honour_btn)
+    -- 忠诚按钮
+    local loyalty_btn = WidgetPushButton.new({normal = "allianceHome/btn_138X42.png",
+        pressed = "allianceHome/btn_138X42_light.png"})
+        :onButtonClicked(function ( ... )
+            -- body
+            end)
+        :align(display.CENTER, 248, btn_bg:getContentSize().height/2-2)
+        :addTo(btn_bg)
+    -- 忠诚值
+    display.newSprite("loyalty_1.png")
+        :align(display.CENTER, -40,loyalty_btn:getContentSize().height/2-4)
+        :addTo(loyalty_btn)
+    UIKit:ttfLabel(
+        {
+            text = _("忠诚值"),
+            size = 14,
+            color = 0xbdb582
+        }):align(display.LEFT_CENTER, -15, loyalty_btn:getContentSize().height/2+10)
+        :addTo(loyalty_btn)
+    self.loyalty_label = UIKit:ttfLabel(
+        {
+            text = GameUtils:formatNumber(self.member:Loyalty()),
+            size = 18,
+            color = 0xf5e8c4
+        }):align(display.LEFT_CENTER, -15, loyalty_btn:getContentSize().height/2-10)
+        :addTo(loyalty_btn)
+    -- 坐标按钮
+    local coordinate_btn = WidgetPushButton.new({normal = "allianceHome/btn_138X42.png",
+        pressed = "allianceHome/btn_138X42_light.png"})
+        :onButtonClicked(function ( ... )
+            -- body
+            end)
+        :align(display.CENTER, 392, btn_bg:getContentSize().height/2-2)
+        :addTo(btn_bg)
+    -- 坐标
+    display.newSprite("allianceHome/coordinate.png")
+        :align(display.CENTER, -40,coordinate_btn:getContentSize().height/2-4)
+        :addTo(coordinate_btn)
+    UIKit:ttfLabel(
+        {
+            text = _("坐标"),
+            size = 14,
+            color = 0xbdb582
+        }):align(display.LEFT_CENTER, -15, coordinate_btn:getContentSize().height/2+10)
+        :addTo(coordinate_btn)
+    local coordinate_label = UIKit:ttfLabel(
+        {
+            text = "23,21",
+            size = 18,
+            color = 0xf5e8c4
+        }):align(display.LEFT_CENTER, -15, coordinate_btn:getContentSize().height/2-10)
+        :addTo(coordinate_btn)
+    -- 世界按钮
+    local world_btn = WidgetPushButton.new({normal = "allianceHome/btn_142X42.png",
+        pressed = "allianceHome/btn_142X42_light.png"})
+        :onButtonClicked(function ( ... )
+            -- body
+            end)
+        :align(display.CENTER, 536, btn_bg:getContentSize().height/2-2)
+        :addTo(btn_bg)
+    world_btn:setRotationSkewY(180)
+    -- 世界
+    display.newSprite("allianceHome/world.png")
+        :align(display.CENTER, btn_bg:getContentSize().width-150,btn_bg:getContentSize().height/2-4)
+        :addTo(btn_bg)
+    UIKit:ttfLabel(
+        {
+            text = _("世界"),
+            size = 14,
+            color = 0xbdb582
+        }):align(display.LEFT_CENTER, btn_bg:getContentSize().width-130, btn_bg:getContentSize().height/2+10)
+        :addTo(btn_bg)
+    local world_label = UIKit:ttfLabel(
+        {
+            text = "NO.9999",
+            size = 18,
+            color = 0xf5e8c4
+        }):align(display.LEFT_CENTER, btn_bg:getContentSize().width-130, btn_bg:getContentSize().height/2-10)
+        :addTo(btn_bg)
 end
 
 function GameUIAllianceHome:CreateBottom()
@@ -215,7 +376,26 @@ function GameUIAllianceHome:OnBottomButtonClicked(event)
     end
 end
 
+function GameUIAllianceHome:OnBasicChanged(alliance,changed_map)
+    if changed_map.honour then
+        self.honour_label:setString(GameUtils:formatNumber(changed_map.honour.new))
+    end
+end
+function GameUIAllianceHome:OnMemberChanged(alliance,changed_map)
+    LuaUtils:outputTable("changed_map", changed_map)
+    for i,v in pairs(changed_map.changed) do
+            print("changed_map.loyalty=",v.loyalty,v.id)
+        if v.id == DataManager:getUserData()._id then
+            self.loyalty_label:setString("/"..GameUtils:formatNumber(v.loyalty))
+        end
+    end
+end
+
+
 return GameUIAllianceHome
+
+
+
 
 
 

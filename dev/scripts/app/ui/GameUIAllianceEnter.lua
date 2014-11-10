@@ -490,25 +490,3 @@ end
 return GameUIAllianceEnter
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
