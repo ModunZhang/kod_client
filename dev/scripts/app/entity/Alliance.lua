@@ -385,6 +385,7 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     self:OnHelpEventsChanged(alliance_data.helpEvents)
     self:OnAllianceMemberDataChanged(alliance_data.members)
     self.alliance_map:OnAllianceDataChanged(alliance_data)
+    self.alliance_shrine:OnAllianceDataChanged(alliance_data)
 end
 function Alliance:OnNewEventsComming(__events)
     if not __events then return end
