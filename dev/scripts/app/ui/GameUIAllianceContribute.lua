@@ -1,7 +1,9 @@
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local UIListView = import(".UIListView")
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local Alliance = import("..entity.Alliance")
 local window = import("..utils.window")
+
 local ResourceManager = import("..entity.ResourceManager")
 
 
@@ -58,7 +60,15 @@ function GameUIAllianceContribute:ctor()
         :align(display.CENTER,500,60)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                NetManager:getDonateToAlliancePromise(self.group:GetSelectedType())
+                if self:IsAbleToContribute() then
+                    NetManager:getDonateToAlliancePromise(self.group:GetSelectedType())
+                else
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("选择捐赠的物资不足"))
+                        :CreateOKButton(function ()
+                            end,_("确定"))
+                        :AddToCurrentScene()
+                end
             end
         end)
         :setButtonLabel("normal", UIKit:ttfLabel({
@@ -364,6 +374,8 @@ function GameUIAllianceContribute:OnMemberChanged(alliance,changed_map)
     end
 end
 return GameUIAllianceContribute
+
+
 
 
 
