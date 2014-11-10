@@ -29,7 +29,7 @@ end
 function AllianceScene:CreateSceneLayer()
     local scene = AllianceLayer.new()
     :addTo(self)
-    :ZoomTo(0.5)
+    :ZoomTo(1)
     return scene
 end
 function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)

@@ -10,7 +10,9 @@ end
 ---- 功能
 function TowerUpgradingSprite:ctor(city_layer, entity)
     TowerUpgradingSprite.super.ctor(self, city_layer, entity)
-    self.tower_sprite = display.newSprite("tower_head_78x124.png"):addTo(self, HEAD_SPRITE):pos(self:GetHeadOffset())
+    if entity:IsUnlocked() then
+        self.tower_sprite = display.newSprite("tower_head_78x124.png"):addTo(self, HEAD_SPRITE):pos(self:GetHeadOffset())
+    end
 end
 -- function TowerUpgradingSprite:GetLogicZorder(width)
 --     local x, y = self:GetLogicPosition()
@@ -166,6 +168,7 @@ function TowerUpgradingSprite:GetBottomOffset()
     assert(false)
 end
 return TowerUpgradingSprite
+
 
 
 

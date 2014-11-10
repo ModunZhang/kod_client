@@ -9,7 +9,6 @@ function AllianceManager:GetMyAlliance()
 end
 
 function AllianceManager:OnUserDataChanged(user_data, time)
-    print("OnUserDataChanged")
     local alliance = user_data.alliance
     local my_alliance = self:GetMyAlliance()
     if alliance then
@@ -40,7 +39,6 @@ function AllianceManager:OnAllianceBasicInfoAndMemberDataChanged(basic_and_membe
     -- dump(self:GetMyAlliance())
 end
 function AllianceManager:OnAllianceHelpDataChanged(help_event)
-    print("AllianceManager:OnAllianceHelpDataChanged")
     self:GetMyAlliance():ReFreashOneHelpEvent(help_event)
 end
 
