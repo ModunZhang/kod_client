@@ -5,11 +5,13 @@ precision mediump float;
 varying vec4 v_fragmentColor;
 varying vec2 v_texCoord;
 
-const float unit = 100.0;
+uniform float unit_count;
+
+// const float unit_count = 100.0;
 
 void main(void)
 {
-	float len = 1.0 / unit;
+	float len = 1.0 / unit_count;
 	float time = CC_Time[1];
 	float origin_y = mod(v_texCoord.y, len) / len;
 	float real_y = mod(origin_y + fract(time), 1.0);

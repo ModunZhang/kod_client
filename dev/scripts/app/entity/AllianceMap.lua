@@ -23,6 +23,10 @@ function AllianceMap:ctor(alliance)
     self.all_objects = {}
     self.allliance_buildings = {}
 end
+function AllianceMap:Reset()
+    self.all_objects = {}
+    self.allliance_buildings = {}
+end
 function AllianceMap:FindAllianceBuildingInfoByObjects(object)
     if object:GetType() == "building" then
         local x, y = object:GetLogicPosition()
@@ -97,7 +101,6 @@ function AllianceMap:OnAllianceBuildingInfoChange(alliance_buildings)
 end
 function AllianceMap:DecodeObjectsFromJsonMapObjects__(__mapObjects)
     if not __mapObjects then return end
-    dump(__mapObjects)
     local add = {}
     local remove = {}
     local edit = {}
@@ -131,14 +134,16 @@ function AllianceMap:DecodeObjectsFromJsonMapObjects(mapObjects)
         local location_ = v.location
         local id = v.id
         local old = self.all_objects[id]
-        if not old then
+        if old then
+            all_objects[id] = old
+            if location_.x ~= old.x or location_.y ~= old.y then
+                old:SetLogicPosition(location_.x, location_.y)
+                table.insert(modify, old)
+            end
+        else
             local object = AllianceObject.new(type_, id, location_.x, location_.y, self)
             all_objects[id] = object
             table.insert(add, object)
-        elseif location_.x ~= old.x or location_.y ~= old.y then
-            old:SetLogicPosition(location_.x, location_.y)
-            all_objects[id] = old
-            table.insert(modify, old)
         end
         self.all_objects[id] = nil
     end
@@ -151,20 +156,3 @@ function AllianceMap:DecodeObjectsFromJsonMapObjects(mapObjects)
     end)
 end
 return AllianceMap
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

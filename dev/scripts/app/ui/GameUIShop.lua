@@ -284,7 +284,7 @@ function GameUIShop:onEnter()
         :align(display.CENTER, window.left + 320, window.top - 600)
         :onButtonClicked(function(event)
             cocos_promise.promiseWithCatchError(NetManager:getSearchAllianceByTagPromsie("2"):next(function(result)
-                return NetManager:getRequestToJoinAlliancePromise(Alliance:DecodeFromJsonData(result.alliances[1]):Id())
+                return NetManager:getJoinAllianceDirectlyPromise(Alliance:DecodeFromJsonData(result.alliances[1]):Id())
             end))
         end)
 
