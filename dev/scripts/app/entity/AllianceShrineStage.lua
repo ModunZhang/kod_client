@@ -34,5 +34,13 @@ end
 function AllianceShrineStage:OnPropertyChange()
 end
 
+function AllianceShrineStage:GetDescStageName()
+	return string.gsub(self:StageName(),'_','-') .. " 本地化缺失"
+end
+
+function AllianceShrineStage:GetStageDesc()
+	return "关卡描述" .. self:StageName() .. "本地化缺失"
+end
+
 
 return AllianceShrineStage

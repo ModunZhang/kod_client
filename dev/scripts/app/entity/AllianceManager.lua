@@ -21,6 +21,7 @@ function AllianceManager:OnUserDataChanged(user_data, time)
             my_alliance:SetAliasName(alliance.tag)
         end
     end
+    my_alliance:OnUserDataChanged(user_data, time)
     -- dump(self:GetMyAlliance())
 end
 
