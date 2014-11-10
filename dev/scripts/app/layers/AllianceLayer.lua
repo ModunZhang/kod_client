@@ -13,7 +13,7 @@ local floor = math.floor
 local random = math.random
 function AllianceLayer:ctor(city)
     Observer.extend(self)
-    AllianceLayer.super.ctor(self, 0.5, 1.5)
+    AllianceLayer.super.ctor(self, 0.9, 2)
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new{
         tile_w = 80,
         tile_h = 80,
