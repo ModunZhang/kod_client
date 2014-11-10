@@ -32,6 +32,7 @@ function GameUIAlliance:ctor()
 end
 
 function GameUIAlliance:OnBasicChanged(alliance, changed_map)
+	if Alliance_Manager:GetMyAlliance():IsDefault() then return end
 	if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
 		self:RefreshOverViewUI()
 	end
@@ -85,11 +86,8 @@ function GameUIAlliance:Reset()
 end
 
 function GameUIAlliance:onEnter()
-	dump(Alliance_Manager:GetMyAlliance():GetAllMembers())
 	GameUIAlliance.super.onEnter(self)
 	self:RefreshMainUI()
-
-	dump(Alliance_Manager:GetMyAlliance():GetAllMembers())
 end
 
 function GameUIAlliance:RefreshMainUI()
@@ -378,7 +376,6 @@ end
 
 function GameUIAlliance:RefreshApplyListView()
 	local list = User:GetRequestEvents()
-	dump(list)
 	self.applyListView:removeAllItems()
 	for i,v in ipairs(list) do
 		local item = self:getCommonListItem_(self.COMMON_LIST_ITEM_TYPE.APPLY,v)
@@ -398,7 +395,6 @@ end
 
 --  listType:join appy invate
 function GameUIAlliance:getCommonListItem_(listType,alliance)
-	dump(alliance)
 	local targetListView = nil
 	local item = nil
 	local terrain,flag_info = nil,nil
@@ -792,12 +788,11 @@ function GameUIAlliance:GetEventItemByIndexAndEvent(index,event)
 		size = 18,
 		color = 0x797154
 	}):addTo(bg):align(display.LEFT_BOTTOM,10, 5)
-
 	local contentLabel = UIKit:ttfLabel({
 		text = self:GetEventContent(event),
 		size = 20,
 		color = 0x403c2f,
-		dimensions = cc.size(300, 42)
+		dimensions = cc.size(300, 60)
 	}):align(display.LEFT_CENTER,0,0)
 	contentLabel:pos(title_bg:getPositionX()+title_bg:getContentSize().width + 10,42)
 	contentLabel:addTo(bg)
@@ -834,7 +829,6 @@ function GameUIAlliance:RefreshOverViewUI()
 		if self.ui_overview.my_alliance_flag then
 			local x,y = self.ui_overview.my_alliance_flag:getPosition()
 			self.ui_overview.my_alliance_flag:removeFromParent()
-			dump(Alliance_Manager:GetMyAlliance():Flag())
 			self.ui_overview.my_alliance_flag = self.alliance_ui_helper:CreateFlagWithRhombusTerrain(Alliance_Manager:GetMyAlliance():TerrainType(),Alliance_Manager:GetMyAlliance():Flag())
 				:addTo(self.overviewNode)
 				:pos(x,y)
@@ -904,14 +898,12 @@ function GameUIAlliance:GetAllianceTitleAndLevelPng(title)
 		archon = "alliance_item_leader_39x39.png"
 	}
 	local alliance = Alliance_Manager:GetMyAlliance()
-	dump(alliance:GetTitles())
 	return alliance:GetTitles()[title],levelImages[title]
 end
 
 --title is alliance title
 function GameUIAlliance:GetMemberItem(title)
 	local item = self.memberListView:newItem()
-	dump(Alliance_Manager:GetMyAlliance():GetAllMembers())
 	local filter_data = LuaUtils:table_filter(Alliance_Manager:GetMyAlliance():GetAllMembers(),function(k,v)
 		return v:Title() == title
 	end)
@@ -919,9 +911,6 @@ function GameUIAlliance:GetMemberItem(title)
 	table.foreach(filter_data,function(k,v)
 		table.insert(data,v)
 	end)
-
-	dump(Alliance_Manager:GetMyAlliance():GetAllMembers())
-	dump(data)
 	local header_title,number_image = "",""
 
 	if title == 'archon' then
@@ -1150,7 +1139,7 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
     local button_bg = display.newSprite("alliance_info_btn_bg_513x100.png"):align(display.TOP_CENTER,304,line:getPositionY() - 30):addTo(informationNode)
     local x = 0
     local button_imags = {"alliance_sign_out_56x50.png","alliance_invitation_39x59.png","alliance_apply_55x54.png","alliance_group_mail_62x48.png"}
-    local button_texts = {_("退出联盟"),_("邀请加入"),_("申请审批"),_("群邮件")}
+    local button_texts = {_("退出联盟"),_("邀请加入"),_("审批申请"),_("群邮件")}
     for i=1,4 do
     	local button = cc.ui.UIPushButton.new({normal = 'chat_tab_button.png',pressed = "chat_tab_button_highlight.png"}):align(display.LEFT_BOTTOM,128*(i-1), 0)
     	:addTo(button_bg)

@@ -206,9 +206,10 @@ function GameUIPlayerInfo:OnPlayerButtonClicked( tag )
            		self:leftButtonClicked()
            	end)
 	elseif tag == 2 then -- 移交盟主
-		local member = AllianceMember:CreatFromData(self.player_info)
-
-            NetManager:getHandOverArchonPromise(member:Id())
+		local member = AllianceMember:DecodeFromJson(self.player_info)
+		local alliacne =  Alliance_Manager:GetMyAlliance()
+	 	local title = alliacne:GetMemeberById(member:Id()):Title()
+        NetManager:getHandOverAllianceArchonPromise(member:Id())
                 :next(function(data)
                    	self.player_info.title = title
 	 	  			self:RefreshListView()
@@ -217,9 +218,9 @@ function GameUIPlayerInfo:OnPlayerButtonClicked( tag )
                     dump(err:reason())
                 end)
 	elseif tag == 3 then --降级
-		local member = AllianceMember:CreatFromData(self.player_info)
+		local member = AllianceMember:DecodeFromJson(self.player_info)
 		 if not member:IsTitleLowest() then
-		 	  NetManager:getModifyAllianceMemberTitlePromise(member:Id(), member:TitleDegrade()):next(function(data)
+		 	  NetManager:getEditAllianceMemberTitlePromise(member:Id(), member:TitleDegrade()):next(function(data)
 	 	  		local alliacne =  Alliance_Manager:GetMyAlliance()
 	 	  		local title = alliacne:GetMemeberById(member:Id()):Title()
 	 	  		self.player_info.title = title
@@ -227,9 +228,9 @@ function GameUIPlayerInfo:OnPlayerButtonClicked( tag )
 		 	  end)
 		 end
 	elseif tag == 4 then --晋级
-		local member = AllianceMember:CreatFromData(self.player_info)
+		local member = AllianceMember:DecodeFromJson(self.player_info)
 		if not member:IsTitleHighest() then
-            NetManager:getModifyAllianceMemberTitlePromise(member:Id(), member:TitleUpgrade()):next(function(data)
+            NetManager:getEditAllianceMemberTitlePromise(member:Id(), member:TitleUpgrade()):next(function(data)
         		local alliacne =  Alliance_Manager:GetMyAlliance()
 	 	  		local title = alliacne:GetMemeberById(member:Id()):Title()
 	 	  		self.player_info.title = title
