@@ -4,6 +4,7 @@ local HospitalUpgradeBuilding = import("..entity.HospitalUpgradeBuilding")
 local UILib = import("..ui.UILib")
 local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local WidgetSlider = import("..widget.WidgetSlider")
+local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTreatSoldier = class("WidgetTreatSoldier", function(...)
     local node = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
@@ -454,7 +455,7 @@ end
 function WidgetTreatSoldier:SetSoldier(soldier_type, star)
     local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(soldier_type, star)
     -- title
-    self.title:setString(_(soldier_config.description))
+    self.title:setString(Localize.soldier_name[soldier_type])
     -- bg
     self.star_bg:setTexture(display.newSprite(UILib.soldier_bg[star]):getTexture())
     -- soldier

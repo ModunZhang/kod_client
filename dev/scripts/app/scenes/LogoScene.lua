@@ -13,7 +13,8 @@ end
 function LogoScene:onEnter()
     self.layer = display.newColorLayer(cc.c4b(255,255,255,255)):addTo(self)
     self.sprite = display.newScale9Sprite("logos/batcat.png", display.cx, display.cy):addTo(self.layer)
-    
+    -- UIKit:newGameUI('GameUIAllianceWorld'):addToCurrentScene(true)
+
     self:performWithDelay(function() self:beginAnimate() end,1)
     -- UIKit:newGameUI('GameUIReplay'):addToCurrentScene(true)
 end
@@ -36,7 +37,7 @@ function LogoScene:beginAnimate()
             end, 0.5)
         end),
     })
-self.layer:runAction(sequence)
+    self.layer:runAction(sequence)
 end
 
 
@@ -44,4 +45,5 @@ function LogoScene:onExit()
 end
 
 return LogoScene
+
 

@@ -22,6 +22,30 @@ function GameUIAllianceHome:onEnter()
     self.bottom = self:CreateBottom()
     self.bottom = self:CreateTop()
 
+ -- 底部按钮
+    local first_row = 220
+    local first_col = 177
+    local label_padding = 100
+    for i, v in ipairs({
+        {"allianceHome/enemy.png", _("敌方")},
+        {"allianceHome/help.png", _("帮助")},
+        {"allianceHome/war.png", _("战斗")},
+    }) do
+        local col = i - 1
+        local y =  first_row + col*label_padding
+        local button = WidgetPushButton.new({normal = v[1]})
+            :onButtonClicked(handler(self, self.OnMidButtonClicked))
+            :setButtonLabel("normal",cc.ui.UILabel.new({text = v[2],
+                size = 16,
+                font = UIKit:getFontFilePath(),
+                color = UIKit:hex2c3b(0xf5e8c4)}
+            )
+            )
+            :setButtonLabelOffset(0, -40)
+            :addTo(self):pos(window.right-50, y)
+        button:setTag(i)
+    end
+
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
 end
@@ -221,9 +245,11 @@ function GameUIAllianceHome:CreateTop()
     -- 世界按钮
     local world_btn = WidgetPushButton.new({normal = "allianceHome/btn_142X42.png",
         pressed = "allianceHome/btn_142X42_light.png"})
-        :onButtonClicked(function ( ... )
-            -- body
-            end)
+        :onButtonClicked(function (event)
+            if event.name == "CLICKED_EVENT" then
+                UIKit:newGameUI('GameUIAllianceWorld'):addToCurrentScene(true)
+            end
+        end)
         :align(display.CENTER, 536, btn_bg:getContentSize().height/2-2)
         :addTo(btn_bg)
     world_btn:setRotationSkewY(180)
@@ -380,6 +406,9 @@ function GameUIAllianceHome:OnBottomButtonClicked(event)
         UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
     end
 end
+function GameUIAllianceHome:OnMidButtonClicked(event)
+    
+end
 
 function GameUIAllianceHome:OnBasicChanged(alliance,changed_map)
     if changed_map.honour then
@@ -399,6 +428,8 @@ end
 
 
 return GameUIAllianceHome
+
+
 
 
 
