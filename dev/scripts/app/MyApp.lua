@@ -38,6 +38,17 @@ function MyApp:run()
     self:enterScene('LogoScene')
 end
 
+function MyApp:showDebugInfo( ... )
+    local __debugVer = require("debug_version")
+    local notifiy_Layer = display.newLayer()
+    UIKit:ttfLabel({
+        text = "Ver:" .. __debugVer .. "\nID:" .. DataManager:getUserData()._id,
+        size = 15,
+        -- color = 0xc600ff
+    }):addTo(notifiy_Layer):align(display.RIGHT_TOP,display.right, display.top)
+    cc.Director:getInstance():setNotificationNode(notifiy_Layer)
+end
+
 function MyApp:restart()
     audio.stopMusic()
     audio.stopAllSounds()
