@@ -54,10 +54,8 @@ function GameUIAllianceHome:CreateBottom()
     for i, v in ipairs({
         {"home/bottom_icon_1.png", _("任务")},
         {"home/bottom_icon_2.png", _("物品")},
-        {"home/bottom_icon_3.png", _("邮件")},
-        {"home/bottom_icon_4.png", _("联盟")},
         {"home/mail.png", _("邮件")},
-        {"home/bottom_icon_4.png", _("部队")},
+        {"home/bottom_icon_4.png", _("联盟")},
         {"home/bottom_icon_2.png", _("更多")},
     }) do
         local col = i - 1
@@ -79,16 +77,16 @@ function GameUIAllianceHome:CreateBottom()
     self.mail_unread_num_bg = display.newSprite("home/mail_unread_bg.png"):addTo(bottom_bg):pos(400, first_row+20)
     self.mail_unread_num_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
-            -- text = GameUtils:formatNumber(DataManager:GetManager("MailManager"):GetUnReadMailsAndReportsNum()),
+            text = GameUtils:formatNumber(MailManager:GetUnReadMailsAndReportsNum()),
             font = UIKit:getFontFilePath(),
             size = 16,
             -- dimensions = cc.size(200,24),
             color = UIKit:hex2c3b(0xf5f2b3)
         }):align(display.CENTER,self.mail_unread_num_bg:getContentSize().width/2,self.mail_unread_num_bg:getContentSize().height/2+4)
         :addTo(self.mail_unread_num_bg)
-    -- if DataManager:GetManager("MailManager"):GetUnReadMailsAndReportsNum()==0 then
-        -- self.mail_unread_num_bg:setVisible(false)
-    -- end
+    if MailManager:GetUnReadMailsAndReportsNum()==0 then
+        self.mail_unread_num_bg:setVisible(false)
+    end
     -- 场景切换
     display.newSprite("home/toggle_bg.png"):addTo(bottom_bg):pos(91, 52)
     display.newSprite("home/toggle_gear.png"):addTo(bottom_bg):pos(106, 49)
