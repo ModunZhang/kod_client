@@ -44,6 +44,7 @@ function GameUIAllianceHome:onEnter()
             :setButtonLabelOffset(0, -40)
             :addTo(self):pos(window.right-50, y)
         button:setTag(i)
+        button:setTouchSwallowEnabled(true)
     end
 
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
@@ -447,6 +448,7 @@ function GameUIAllianceHome:MailUnreadChanged( num )
         self.mail_unread_num_bg:setVisible(true)
         self.mail_unread_num_label:setString(GameUtils:formatNumber(num))
     end
+end
 
 return GameUIAllianceHome
 

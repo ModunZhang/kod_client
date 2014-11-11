@@ -17,20 +17,34 @@ function GameUIAllianceWorld:ctor()
         :addTo(self)
     local map = display.newSprite("allianceHome/world_map.jpg"):scale(1.8)
     local scrollView = UIScrollView.new({
-    	viewRect = cc.rect(0,0,556,541),
-        -- bgColor = UIKit:hex2c4b(0x7a000000),
-        })
+        viewRect = cc.rect(0,0,556,541),
+    -- bgColor = UIKit:hex2c4b(0x7a000000),
+    })
         :addScrollNode(map)
-        -- :setBounceable(false)
+        :setBounceable(false)
         :setDirection(UIScrollView.DIRECTION_BOTH)
         :align(display.TOP_CENTER,26, self.body:getContentSize().height-569)
-        :addTo(self.body)
-    display.newSolidCircle(100,
-    {
-        x = window.cx,
-        y = 100,
-        color = UIKit:hex2c4b(0xc5bda0ff)    
-    }):addTo(self)
+        -- :addTo(self.body)
+    
+
+    -- 遮罩效果
+    -- 模板
+    local stencil = display.newNode()
+    stencil:addChild(display.newSprite("info_26x26.png"):pos(20, 310))
+    stencil:addChild(display.newSprite("info_26x26.png"):pos(20, 852))
+    stencil:addChild(display.newSprite("info_26x26.png"):pos(588, 310))
+    stencil:addChild(display.newSprite("info_26x26.png"):pos(588, 852))
+    -- stencil
+
+    -- 初始化一个裁剪节点
+    local clippingNode = cc.ClippingNode:create(stencil)
+        :pos(16, self.body:getContentSize().height-859)
+    clippingNode:setInverted(true)
+    clippingNode:setAlphaThreshold(0.5)
+    -- 底板
+    clippingNode:addChild(scrollView)
+    self:addChild(clippingNode)
+
     local bg1 = WidgetUIBackGround.new({
         width = 572,
         height = 557,
@@ -157,5 +171,6 @@ function GameUIAllianceWorld:addToCurrentScene(anima)
 end
 
 return GameUIAllianceWorld
+
 
 
