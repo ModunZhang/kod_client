@@ -193,9 +193,11 @@ function GameUIAllianceHome:CreateTop()
     -- 坐标按钮
     local coordinate_btn = WidgetPushButton.new({normal = "allianceHome/btn_138X42.png",
         pressed = "allianceHome/btn_138X42_light.png"})
-        :onButtonClicked(function ( ... )
-            -- body
-            end)
+        :onButtonClicked(function ( event )
+            if event.name == "CLICKED_EVENT" then
+                UIKit:newGameUI('GameUIAlliancePosition'):addToCurrentScene(true)
+            end
+        end)
         :align(display.CENTER, 392, btn_bg:getContentSize().height/2-2)
         :addTo(btn_bg)
     -- 坐标
@@ -397,6 +399,7 @@ end
 
 
 return GameUIAllianceHome
+
 
 
 
