@@ -22,7 +22,7 @@ function GameUIAllianceHome:onEnter()
     self.bottom = self:CreateBottom()
     self.bottom = self:CreateTop()
 
- -- 底部按钮
+    -- 中间按钮
     local first_row = 220
     local first_col = 177
     local label_padding = 100

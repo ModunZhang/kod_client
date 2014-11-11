@@ -25,6 +25,12 @@ function GameUIAllianceWorld:ctor()
         :setDirection(UIScrollView.DIRECTION_BOTH)
         :align(display.TOP_CENTER,26, self.body:getContentSize().height-569)
         :addTo(self.body)
+    display.newSolidCircle(100,
+    {
+        x = window.cx,
+        y = 100,
+        color = UIKit:hex2c4b(0xc5bda0ff)    
+    }):addTo(self)
     local bg1 = WidgetUIBackGround.new({
         width = 572,
         height = 557,
