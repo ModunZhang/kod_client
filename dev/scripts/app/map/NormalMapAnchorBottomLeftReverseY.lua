@@ -11,6 +11,10 @@ function NormalMapAnchorBottomLeftReverseY:ctor(map_info)
     self.base_x = map_info.base_x
     self.base_y = map_info.base_y
 end
+function NormalMapAnchorBottomLeftReverseY:WrapConvertToMapPosition(x, y)
+    local x, y = self:ConvertToMapPosition(x, y)
+    return {x = x, y = y}
+end
 function NormalMapAnchorBottomLeftReverseY:ConvertToMapPosition(x, y)
     return self.base_x + self.half_w + x * self.tile_w, self.base_y - self.half_h - y * self.tile_h
 end

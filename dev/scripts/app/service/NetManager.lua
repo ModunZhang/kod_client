@@ -816,13 +816,13 @@ function NetManager:getPlayerInfoPromise(memberId)
 end
 -- 移交萌主
 function NetManager:getHandOverAllianceArchonPromise(memberId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.handOverAllianceArchon", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.handOverAllianceArchon", {
         memberId = memberId,
     }, "移交萌主失败!"), get_playerinfo_callback()):next(get_response_msg)
 end
 -- 修改成员职位
 function NetManager:getEditAllianceMemberTitlePromise(memberId, title)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.editAllianceMemberTitle", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.editAllianceMemberTitle", {
         memberId = memberId,
         title = title
     }, "修改成员职位失败!"), get_alliancedata_callback()):next(get_response_msg)
@@ -888,7 +888,7 @@ function NetManager:getCancelJoinAlliancePromise(allianceId)
 end
 --修改联盟基本信息
 function NetManager:getEditAllianceBasicInfoPromise(name, tag, language, flag)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.createAlliance", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.editAllianceBasicInfo", {
         name = name,
         tag = tag,
         language = language,
