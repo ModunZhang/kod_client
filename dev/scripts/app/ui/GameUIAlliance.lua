@@ -967,7 +967,7 @@ function GameUIAlliance:GetMemberItem(title)
 			color = 0x403c2f,
 			align = cc.TEXT_ALIGNMENT_LEFT,
 		}):addTo(title_bar):align(display.LEFT_BOTTOM,powerIcon:getPositionX()+powerIcon:getContentSize().width*0.5+10,powerIcon:getPositionY())
-		 UIKit:ttfLabel({
+		local loginLabel = UIKit:ttfLabel({
 			text = _("最后登陆时间:") .. NetService:formatTimeAsTimeAgoStyleByServerTime(data[1].lastLoginTime),
 			size = 22,
 			color = 0x403c2f,
@@ -975,6 +975,14 @@ function GameUIAlliance:GetMemberItem(title)
 		--
 		item:addContent(node)
 		item:setItemSize(608,node:getCascadeBoundingBox().height)
+		if DataManager:getUserData()._id ~= data[1].id then
+			WidgetPushButton.new({normal = "alliacne_search_29x33.png"})
+				:align(display.RIGHT_BOTTOM,588,loginLabel:getPositionY())
+				:addTo(node)
+				:onButtonClicked(function()
+					self:OnPlayerDetailButtonClicked(data[1].id)
+				end)
+			end
 		return item
 	else
 		header_title,number_image = self:GetAllianceTitleAndLevelPng(title)
@@ -1048,13 +1056,14 @@ function GameUIAlliance:GetNormalSubItem(playerName,level,power,memberId)
 			color = 0x403c2f,
 			align = cc.TEXT_ALIGNMENT_LEFT,
 		}):addTo(itemNode):align(display.LEFT_CENTER,powerIcon:getPositionX()+powerIcon:getContentSize().width*0.5+10,powerIcon:getPositionY())
-
-	WidgetPushButton.new({normal = "alliacne_search_29x33.png"})
-		:align(display.RIGHT_CENTER,588,powerLabel:getPositionY())
-		:addTo(itemNode)
-		:onButtonClicked(function()
-			self:OnPlayerDetailButtonClicked(memberId)
-		end)
+	if DataManager:getUserData()._id ~= memberId then
+		WidgetPushButton.new({normal = "alliacne_search_29x33.png"})
+			:align(display.RIGHT_CENTER,588,powerLabel:getPositionY())
+			:addTo(itemNode)
+			:onButtonClicked(function()
+				self:OnPlayerDetailButtonClicked(memberId)
+			end)
+	end
 	return itemNode
 end
 

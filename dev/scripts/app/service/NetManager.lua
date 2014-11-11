@@ -229,7 +229,8 @@ end
 function NetManager:addOnGetAllianceDataSuccess()
     self:addEventListener("onGetAllianceDataSuccess", function(success, msg)
         if success then    
-          Alliance_Manager:OnAllianceDataChanged(msg)
+            LuaUtils:outputTable("onGetAllianceDataSuccess", msg)
+            DataManager:setUserAllianceData(msg)
         end
     end)
 end
