@@ -64,7 +64,8 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type)
     self.barracks = barracks
     self.soldier_type = soldier_type
     self.star = barracks.soldier_star
-    self.recruit_max = barracks:GetMaxRecruitSoldierCount()
+    local soldier_config, aaa = self:GetConfigBySoldierTypeAndStar(soldier_type, self.star)
+    self.recruit_max = math.floor(barracks:GetMaxRecruitSoldierCount() / soldier_config.citizen)
     self.city = city
 
     local label_origin_x = 190
@@ -401,7 +402,7 @@ end
 function WidgetRecruitSoldier:SetSoldier(soldier_type, star)
     local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(soldier_type, star)
     -- title
-    self.title:setString(_(soldier_config.description))
+    self.title:setString(Localize.soldier_name[soldier_type])
     -- bg
     local bg = UILib.soldier_bg[star]
     self.star_bg:setTexture(display.newSprite(bg):getTexture())
