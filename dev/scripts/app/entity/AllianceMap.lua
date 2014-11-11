@@ -37,6 +37,13 @@ function AllianceMap:FindAllianceBuildingInfoByObjects(object)
         end
     end
 end
+function AllianceMap:FindAllianceBuildingInfoByName(name)
+    for k, v in pairs(self.allliance_buildings) do
+        if v.name == name then
+            return v
+        end
+    end
+end
 function AllianceMap:IteratorAllianceBuildings(func)
     self:IteratorByCategory("building", func)
 end
@@ -156,3 +163,4 @@ function AllianceMap:DecodeObjectsFromJsonMapObjects(mapObjects)
     end)
 end
 return AllianceMap
+

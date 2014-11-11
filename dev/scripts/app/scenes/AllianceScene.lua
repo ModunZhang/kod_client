@@ -41,6 +41,7 @@ function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
             UIKit:newGameUI('GameUIAllianceEnter',building:GetEntity()):addToCurrentScene(true)
         else
             local building_info = building:GetEntity():GetAllianceBuildingInfo()
+            print("index x y ",x,y,building_info.name)
             LuaUtils:outputTable("building_info", building_info)
             UIKit:newGameUI('GameUIAllianceEnter',building_info):addToCurrentScene(true)
         end
