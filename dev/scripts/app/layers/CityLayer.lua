@@ -803,9 +803,7 @@ function CityLayer:UpdateTowersWithCity(city)
 end
 function CityLayer:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
     local map = soldier_manager:GetSoldierMap()
-    dump(map)
     self:IteratorSoldiers(function(_, v)
-        print(v:GetSoldierType())
         local is_visible = map[v:GetSoldierType()] > 0
         v:setVisible(is_visible)
     end)
