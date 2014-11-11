@@ -22,7 +22,8 @@ City.LISTEN_TYPE = Enum("LOCK_TILE",
     "CREATE_DECORATOR",
     "OCCUPY_RUINS",
     "DESTROY_DECORATOR",
-    "UPGRADE_BUILDING")
+    "UPGRADE_BUILDING",
+    "CITY_NAME")
 City.RESOURCE_TYPE_TO_BUILDING_TYPE = {
     [ResourceManager.RESOURCE_TYPE.WOOD] = "woodcutter",
     [ResourceManager.RESOURCE_TYPE.FOOD] = "farmer",
@@ -791,6 +792,18 @@ function City:OnUserDataChanged(userData, current_time)
         local resource_refresh_time = userData.basicInfo.resourceRefreshTime / 1000
         self:IteratorResourcesByUserData(userData, resource_refresh_time)
         self.build_queue = userData.basicInfo.buildQueue
+        self:SetCityName(userData.basicInfo.cityName)
+    end
+end
+function City:GetCityName()
+    return self.cityName
+end
+function City:SetCityName(cityName)
+    if self.cityName~= cityName then
+        self.cityName = cityName
+        self:NotifyListeneOnType(City.LISTEN_TYPE.CITY_NAME, function(listener)
+            listener:OnCityNameChanged(cityName)
+        end)
     end
 end
 function City:OnCreateDecorator(current_time, building)
@@ -1085,6 +1098,7 @@ function City:OnUpgradingBuildings()
 end
 
 return City
+
 
 
 
