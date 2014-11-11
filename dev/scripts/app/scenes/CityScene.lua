@@ -1,4 +1,5 @@
 local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
+local UILib = import("..ui.UILib")
 local SpriteButton = import("..ui.SpriteButton")
 local BuildingLevelUpUINode = import("..ui.BuildingLevelUpUINode")
 local BuildingUpgradeUINode = import("..ui.BuildingUpgradeUINode")
@@ -84,20 +85,19 @@ end
 -- init ui
 function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
-    manager:removeArmatureFileInfo("animations/Archer_1_render.ExportJson")
-    manager:removeArmatureFileInfo("animations/Catapult_1_render.ExportJson")
-    manager:removeArmatureFileInfo("animations/Cavalry_1_render.ExportJson")
-    manager:removeArmatureFileInfo("animations/Infantry_1_render.ExportJson")
+    for _, animations in pairs(UILib.soldier_animation_files) do
+        for i, ani_file in pairs(animations) do
+            manager:removeArmatureFileInfo(ani_file)
+            manager:addArmatureFileInfo(ani_file)
+        end
+    end
+
     manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
     manager:removeArmatureFileInfo("animations/chuizidonghua.ExportJson")
     manager:removeArmatureFileInfo("animations/green_dragon.ExportJson")
     manager:removeArmatureFileInfo("animations/Red_dragon.ExportJson")
     manager:removeArmatureFileInfo("animations/Blue_dragon.ExportJson")
 
-    manager:addArmatureFileInfo("animations/Archer_1_render.ExportJson")
-    manager:addArmatureFileInfo("animations/Catapult_1_render.ExportJson")
-    manager:addArmatureFileInfo("animations/Cavalry_1_render.ExportJson")
-    manager:addArmatureFileInfo("animations/Infantry_1_render.ExportJson")
     manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
     manager:addArmatureFileInfo("animations/chuizidonghua.ExportJson")
     manager:addArmatureFileInfo("animations/green_dragon.ExportJson")
@@ -380,6 +380,7 @@ end
 
 
 return CityScene
+
 
 
 

@@ -1,4 +1,5 @@
 local GameUtils = GameUtils
+local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local UILib = import("..ui.UILib")
 local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -348,15 +349,22 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type)
             color = UIKit:hex2c3b(0xfff3c7)
         }))
         :onButtonClicked(function(event)
-            -- NetManager:recruitNormalSoldier(self.soldier_type, self.count, NOT_HANDLE)
-            NetManager:getRecruitNormalSoldierPromise(self.soldier_type, self.count)
-                :catch(function(err)
-                    dump(err:reason())
-                end)
-            if type(self.button_clicked) == "function" then
-                self:button_clicked()
+            local need_resource = self:GetNeedResouce(self.count)
+            dump(need_resource)
+            local required_gems = DataUtils:buyResource(need_resource, {})
+            if required_gems > 0 then
+                FullScreenPopDialogUI.new()
+                    :SetTitle(_("补充资源"))
+                    :SetPopMessage(_("您当前没有足够的资源,是否花费魔法石立即补充"))
+                    :CreateNeeds("Topaz-icon.png", required_gems)
+                    :CreateOKButton(function()
+                        NetManager:getRecruitNormalSoldierPromise(self.soldier_type, self.count)
+                        self:Close()
+                    end):AddToCurrentScene()
+            else
+                NetManager:getRecruitNormalSoldierPromise(self.soldier_type, self.count)
+                self:Close()
             end
-            self:Close()
         end)
     self.normal_button = button
 
@@ -506,9 +514,24 @@ function WidgetRecruitSoldier:CheckNeedResource(total_resouce, count)
     end
     return current_res_map
 end
+function WidgetRecruitSoldier:GetNeedResouce(count)
+    local soldier_config = self.soldier_config
+    local need_res_map = {}
+    for res_type, value in pairs(self.res_total_map) do
+        local left = value - soldier_config[res_type] * count
+        need_res_map[res_type] = left >= 0 and 0 or -left
+    end
+    return need_res_map
+end
 
 
 return WidgetRecruitSoldier
+
+
+
+
+
+
 
 
 

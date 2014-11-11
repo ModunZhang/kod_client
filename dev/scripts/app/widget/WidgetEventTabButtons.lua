@@ -743,9 +743,9 @@ function WidgetEventTabButtons:BuildingDescribe(building)
 end
 function WidgetEventTabButtons:SoldierDescribe(event)
     local soldier_type, count = event:GetRecruitInfo()
-    local soldier_name = self.barracks:GetSoldierConfigByType(soldier_type).description
+    local soldier_name = Localize.soldier_name[soldier_type]
     local current_time = timer:GetServerTime()
-    local str = string.format("%s%s x%d %s", _("招募"), _(soldier_name), count, GameUtils:formatTimeStyle1(event:LeftTime(current_time)))
+    local str = string.format("%s%s x%d %s", _("招募"), soldier_name, count, GameUtils:formatTimeStyle1(event:LeftTime(current_time)))
     return str, event:Percent(current_time)
 end
 function WidgetEventTabButtons:EquipmentDescribe(event)
@@ -760,85 +760,6 @@ function WidgetEventTabButtons:MaterialDescribe(event)
 end
 
 return WidgetEventTabButtons
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
