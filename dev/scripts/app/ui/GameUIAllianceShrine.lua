@@ -96,7 +96,8 @@ function GameUIAllianceShrine:TabEvent_stage()
 	local insight_bg = display.newScale9Sprite("back_ground_43x43.png")
 		:size(44,44):addTo(stage_node)
 		:align(display.LEFT_BOTTOM, 40, 20)
-	display.newSprite("insight_icon_36x38.png")
+	display.newScale9Sprite("insight_icon_45x45.png")
+		:size(36,38)
 		:addTo(insight_bg,2)
 		:align(display.CENTER,22,22)
 	local bar_bg = display.newScale9Sprite("insight_bar_bg_530x36.png")
@@ -223,7 +224,7 @@ function GameUIAllianceShrine:GetStageListItem(stage_obj)
 				color = 0xfff3c7
 			}))
 			:onButtonClicked(function(event)
-
+				self:OnResearchButtonClick(stage_obj)
 			end)
 			:align(display.RIGHT_BOTTOM,540,10)
 			:addTo(content_box)
@@ -257,5 +258,8 @@ function GameUIAllianceShrine:RefreshStageListView()
 	self.stage_list:reload()
 end
 
+function GameUIAllianceShrine:OnResearchButtonClick(stage_obj)
+	UIKit:newGameUI("GameUIAllianceShrineDetail",stage_obj):addToCurrentScene(true)
+end
 
 return GameUIAllianceShrine
