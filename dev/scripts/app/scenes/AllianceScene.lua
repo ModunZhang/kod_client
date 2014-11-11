@@ -21,6 +21,7 @@ end
 function AllianceScene:onEnter()
     AllianceScene.super.onEnter(self)
     local home = UIKit:newGameUI('GameUIAllianceHome'):addToScene(self)
+    self:GetSceneLayer():AddObserver(home)
     home:setTouchSwallowEnabled(false)
 
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(10, 10)

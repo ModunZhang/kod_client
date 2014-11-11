@@ -24,7 +24,6 @@ function GameUIAllianceHome:onEnter()
 
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
-
 end
 function GameUIAllianceHome:onExit()
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
@@ -208,7 +207,7 @@ function GameUIAllianceHome:CreateTop()
             color = 0xbdb582
         }):align(display.LEFT_CENTER, -15, coordinate_btn:getContentSize().height/2+10)
         :addTo(coordinate_btn)
-    local coordinate_label = UIKit:ttfLabel(
+    self.coordinate_label = UIKit:ttfLabel(
         {
             text = "23,21",
             size = 18,
@@ -363,6 +362,9 @@ function GameUIAllianceHome:CreateBottom()
 end
 function GameUIAllianceHome:OnTopButtonClicked(event)
     print("OnTopButtonClicked=",event.name)
+    if event.name == "CLICKED_EVENT" then
+        
+    end
 end
 function GameUIAllianceHome:OnBottomButtonClicked(event)
     local tag = event.target:getTag()
@@ -387,9 +389,13 @@ function GameUIAllianceHome:OnMemberChanged(alliance,changed_map)
         end
     end
 end
+function GameUIAllianceHome:OnSceneMove(logic_x, logic_y)
+    self.coordinate_label:setString(logic_x..","..logic_y)
+end
 
 
 return GameUIAllianceHome
+
 
 
 

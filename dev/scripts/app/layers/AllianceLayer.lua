@@ -68,7 +68,6 @@ function AllianceLayer:ctor(city)
     soldier:setScaleX(-1)
     local armature = ccs.Armature:create("Red_dragon"):addTo(soldier):scale(0.5)
     armature:getAnimation():play("Flying")
-
     -- self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
     --     local x, y = soldier:getPosition()
     --     x = x - 0.1
@@ -237,6 +236,11 @@ end
 function AllianceLayer:OnSceneMove()
     self:IteratorAllianceObjects(function(_, object)
         object:OnSceneMove()
+    end)
+    local point = self:GetBuildingNode():convertToNodeSpace(cc.p(display.cx, display.cy))
+    local logic_x, logic_y = self:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
+    self:NotifyObservers(function(listener)
+        listener:OnSceneMove(logic_x, logic_y)
     end)
 end
 
