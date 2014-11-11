@@ -165,9 +165,11 @@ function GameUIAllianceHome:CreateTop()
     -- 忠诚按钮
     local loyalty_btn = WidgetPushButton.new({normal = "allianceHome/btn_138X42.png",
         pressed = "allianceHome/btn_138X42_light.png"})
-        :onButtonClicked(function ( ... )
-            -- body
-            end)
+        :onButtonClicked(function (event)
+            if event.name == "CLICKED_EVENT" then
+                UIKit:newGameUI('GameUIAllianceLoyalty'):addToCurrentScene(true)
+            end
+        end)
         :align(display.CENTER, 248, btn_bg:getContentSize().height/2-2)
         :addTo(btn_bg)
     -- 忠诚值
@@ -363,7 +365,7 @@ end
 function GameUIAllianceHome:OnTopButtonClicked(event)
     print("OnTopButtonClicked=",event.name)
     if event.name == "CLICKED_EVENT" then
-        
+
     end
 end
 function GameUIAllianceHome:OnBottomButtonClicked(event)
@@ -395,6 +397,7 @@ end
 
 
 return GameUIAllianceHome
+
 
 
 
