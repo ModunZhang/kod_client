@@ -42,10 +42,10 @@ function MyApp:showDebugInfo( ... )
     local __debugVer = require("debug_version")
     local notifiy_Layer = display.newLayer()
     UIKit:ttfLabel({
-        text = "版本号:" .. __debugVer .. "\n玩家ID:" .. DataManager:getUserData()._id,
-        size = 10,
+        text = "Ver:" .. __debugVer .. "\nID:" .. DataManager:getUserData()._id,
+        size = 15,
         -- color = 0xc600ff
-    }):addTo(notifiy_Layer):align(display.RIGHT_BOTTOM,display.right, display.bottom)
+    }):addTo(notifiy_Layer):align(display.RIGHT_TOP,display.right, display.top)
     cc.Director:getInstance():setNotificationNode(notifiy_Layer)
 end
 
