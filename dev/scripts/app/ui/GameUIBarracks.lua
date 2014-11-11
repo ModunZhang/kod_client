@@ -42,7 +42,7 @@ function GameUIBarracks:OnRecruiting(barracks, event, current_time)
         end
         local soldier_type, count = event:GetRecruitInfo()
         local soldier_name = Localize.soldier_name[soldier_type]
-        self.timer:SetDescribe(string.format("%s%s x%d", _("招募"), _(soldier_name), count))
+        self.timer:SetDescribe(string.format("%s%s x%d", _("招募"), soldier_name, count))
         self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(current_time)), event:Percent(current_time))
     end
 end
@@ -100,8 +100,8 @@ function GameUIBarracks:TabButtons()
             self.tips:setVisible(event:IsEmpty())
             if event:IsRecruting() then
                 local soldier_type, count = event:GetRecruitInfo()
-                local soldier_name = self.barracks:GetSoldierConfigByType(soldier_type).description
-                self.timer:SetDescribe(string.format("%s%s x%d", _("招募"), _(soldier_name), count))
+                local soldier_name = Localize.soldier_name[soldier_type]
+                self.timer:SetDescribe(string.format("%s%s x%d", _("招募"), soldier_name, count))
                 local current_time = app.timer:GetServerTime()
                 self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(current_time)), event:Percent(current_time))
             end

@@ -5,6 +5,33 @@ local STAR_BG = {
     "star4_118x132.png",
     "star5_118x132.png",
 }
+local SOLDIER_EFFECT_ANIMATIONS = {
+    ranger = {
+        "Swordsman_effects",
+        "Swordsman_effects",
+        "Swordsman_effects",
+    },
+    catapult = {
+        "Catapult1effects",
+        "Catapult1effects",
+        "Catapult1effects",
+    },
+    lancer = {
+        "Lancer_effects",
+        "Lancer_effects",
+        "Lancer_effects",
+    },
+    swordsman = {
+        "Swordsman_effects",
+        "Swordsman_effects",
+        "Swordsman_effects",
+    },
+    wall = {
+        "Swordsman_effects",
+        "Swordsman_effects",
+        "Swordsman_effects",
+    }
+}
 local SOLDIER_ANIMATIONS = {
     ranger = {
         "Archer_1_render",
@@ -32,11 +59,28 @@ local SOLDIER_ANIMATIONS = {
         "chengqiang_1",
     }
 }
+local EFFECT_ANIMATION_FILES = {
+    ranger = {
+        "animations/swordsman_effect/Swordsman_effects.ExportJson",
+    },
+    catapult = {
+        "animations/catapult_effect/Catapult1effects.ExportJson",
+    },
+    lancer = {
+        "animations/lancer_effect/Lancer_effects.ExportJson",
+    },
+    swordsman = {
+        "animations/swordsman_effect/Swordsman_effects.ExportJson",
+    },
+    wall = {
+        "animations/swordsman_effect/Swordsman_effects.ExportJson",
+    }
+}
 local SOLDIER_ANIMATION_FILES = {
     ranger = {
         "animations/Archer_1_render.ExportJson",
-        "animations/Archer_1_render.ExportJson",
-        "animations/Archer_1_render.ExportJson",
+        "animations/Archer_2_render.ExportJson",
+        "animations/Archer_3_render.ExportJson",
     },
     catapult = {
         "animations/Catapult_1_render.ExportJson",
@@ -117,6 +161,8 @@ DECORATOR_IMAGE = {
 return {
     soldier_bg = STAR_BG,
     soldier = SOLDIER_TYPE,
+    soldier_effect = SOLDIER_EFFECT_ANIMATIONS,
+    effect_animation_files = EFFECT_ANIMATION_FILES,
     soldier_animation_files = SOLDIER_ANIMATION_FILES,
     soldier_animation = SOLDIER_ANIMATIONS,
     soldier_image = SOLDIER_IMAGES,

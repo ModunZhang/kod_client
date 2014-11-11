@@ -274,8 +274,21 @@ function GameUIAllianceHome:CreateTop()
             color = 0xf5e8c4
         }):align(display.LEFT_CENTER, btn_bg:getContentSize().width-130, btn_bg:getContentSize().height/2-10)
         :addTo(btn_bg)
+    MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
 end
 
+function GameUIAllianceHome:onExit()
+    MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
+    GameUIAllianceHome.super.onExit(self)
+end
+function GameUIAllianceHome:MailUnreadChanged( num )
+    if num==0 then
+        self.mail_unread_num_bg:setVisible(false)
+    else
+        self.mail_unread_num_bg:setVisible(true)
+        self.mail_unread_num_label:setString(GameUtils:formatNumber(num))
+    end
+end
 function GameUIAllianceHome:CreateBottom()
     -- 底部背景
     local bottom_bg = display.newSprite("bottom_bg_640x101.png")
@@ -317,7 +330,6 @@ function GameUIAllianceHome:CreateBottom()
         {"home/bottom_icon_2.png", _("物品")},
         {"home/mail.png", _("邮件")},
         {"home/bottom_icon_4.png", _("联盟")},
-        {"home/bottom_icon_4.png", _("部队")},
         {"home/bottom_icon_2.png", _("更多")},
     }) do
         local col = i - 1
