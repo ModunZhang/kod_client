@@ -12,9 +12,22 @@ end
 function GameUIAllianceHome:onEnter()
     GameUIAllianceHome.super.onEnter(self)
     self.bottom = self:CreateBottom()
+    MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
+
 end
 
-
+function GameUIAllianceHome:onExit()
+    MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
+    GameUIAllianceHome.super.onExit(self)
+end
+function GameUIAllianceHome:MailUnreadChanged( num )
+    if num==0 then
+        self.mail_unread_num_bg:setVisible(false)
+    else
+        self.mail_unread_num_bg:setVisible(true)
+        self.mail_unread_num_label:setString(GameUtils:formatNumber(num))
+    end
+end
 function GameUIAllianceHome:CreateBottom()
     -- 底部背景
     local bottom_bg = display.newSprite("bottom_bg_640x101.png")
