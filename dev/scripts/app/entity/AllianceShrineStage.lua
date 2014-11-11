@@ -8,7 +8,7 @@ local property = import("..utils.property")
 
 
 function AllianceShrineStage:ctor(locked,config)
-	property(self,"isLoacked",locked)
+	property(self,"isLocked",locked)
 	self:loadProperty(config)
 end
 
@@ -42,5 +42,12 @@ function AllianceShrineStage:GetStageDesc()
 	return "关卡描述" .. self:StageName() .. "本地化缺失"
 end
 
+function AllianceShrineStage:SetStar(star)
+	self.star_ = star
+end
+
+function AllianceShrineStage:Star()
+	return self.star_ or 0
+end
 
 return AllianceShrineStage

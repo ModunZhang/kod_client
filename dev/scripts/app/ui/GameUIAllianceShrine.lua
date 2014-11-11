@@ -194,7 +194,7 @@ function GameUIAllianceShrine:GetStageListItem(stage_obj)
        		max = 3,
        		bg = "Stars_bar_bg.png",
        		fill = "Stars_bar_highlight.png", 
-       		num = 1,
+       		num = stage_obj:Star(),
     }):addTo(title_bg,2):align(display.RIGHT_CENTER,540,15)
 
 	local content_box = UIKit:CreateBoxPanel(137):addTo(bg,2):pos(20,bottom:getPositionY()+bottom:getContentSize().height)
@@ -212,21 +212,30 @@ function GameUIAllianceShrine:GetStageListItem(stage_obj)
 		size = 20,
 		color = 0xfff3c7
 	}):align(display.LEFT_CENTER,15,13):addTo(power_bg)
+	if not stage_obj:IsLocked() then
+		cc.ui.UIPushButton.new({
+			normal = "blue_btn_up_142x39.png",
+			pressed = "blue_btn_down_142x39.png"
+			})
+			:setButtonLabel("normal",UIKit:commonButtonLable({
+				text = _("调查"),
+				size = 20,
+				color = 0xfff3c7
+			}))
+			:onButtonClicked(function(event)
 
-	cc.ui.UIPushButton.new({
-		normal = "blue_btn_up_142x39.png",
-		pressed = "blue_btn_down_142x39.png"
-		})
-		:setButtonLabel("normal",UIKit:commonButtonLable({
-			text = _("调查"),
+			end)
+			:align(display.RIGHT_BOTTOM,540,10)
+			:addTo(content_box)
+	else
+		UIKit:ttfLabel({
+			text = _("未解锁"),
 			size = 20,
-			color = 0xfff3c7
-		}))
-		:onButtonClicked(function(event)
-
-		end)
+			color = 0x403c2f,
+		})
 		:align(display.RIGHT_BOTTOM,540,10)
-		:addTo(content_box)
+			:addTo(content_box)
+	end
 	UIKit:ttfLabel({
 		text = stage_obj:GetStageDesc(),
 		size = 18,

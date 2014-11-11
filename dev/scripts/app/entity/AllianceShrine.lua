@@ -8,8 +8,12 @@ local MultiObserver = import(".MultiObserver")
 local property = import("..utils.property")
 local AllianceShrine = class("AllianceShrine",MultiObserver)
 local AutomaticUpdateResource = import(".AutomaticUpdateResource")
+local Enum = import("..utils.Enum")
+
+AllianceShrine.LISTEN_TYPE = Enum("OnPerceotionChanged")
 
 function AllianceShrine:ctor(alliance)
+	AllianceShrine.super.ctor(self)
 	self.alliance = alliance
 	property(self,"passStage","1_1")
 end
@@ -37,16 +41,37 @@ end
 function AllianceShrine:DecodeObjectsFromJsonMapObjects(alliance_data)
 	self:SetPassStage(alliance_data.passStage or self:PassStage())
 	self:loadStages()
+	--update stage star
+	if alliance_data.shrineDatas then
+		for i,v in ipairs(alliance_data.shrineDatas) do
+			-- if self:GetStatgeByName(v.)
+		end
+	end
 	if not self.perception then
-		--TODO:
+		local resource_refresh_time = alliance_data.basicInfo.perceptionRefreshTime / 1000.0
+		self.perception = AutomaticUpdateResource.new()
+		self.perception:UpdateResource(resource_refresh_time,alliance_data.basicInfo.perception)
+        self.perception:SetProductionPerHour(resource_refresh_time,400)
+        self.perception:SetValueLimit(500)
+        --TODO:从建筑里获取值
 	end
 end
 
 function AllianceShrine:OnAllianceDataChanged(alliance_data)
 	self:DecodeObjectsFromJsonMapObjects(alliance_data)
 end
---TODO:
+
 function AllianceShrine:OnTimer(current_time)
+	if self.perception then
+		self.perception:OnTimer(current_time)
+		self:OnPerceotionChanged()
+	end
+end
+
+function AllianceShrine:OnPerceotionChanged()
+	self:NotifyListeneOnType(self.LISTEN_TYPE.OnPerceotionChanged,function(lisenter)
+		lisenter.OnPerceotionChanged(lisenter)
+	end)
 end
 
 -- api
