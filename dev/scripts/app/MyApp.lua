@@ -38,6 +38,17 @@ function MyApp:run()
     self:enterScene('LogoScene')
 end
 
+function MyApp:showDebugInfo( ... )
+    local __debugVer = require("debug_version")
+    local notifiy_Layer = display.newLayer()
+    UIKit:ttfLabel({
+        text = "版本号:" .. __debugVer .. "\n玩家ID:" .. DataManager:getUserData()._id,
+        size = 10,
+        -- color = 0xc600ff
+    }):addTo(notifiy_Layer):align(display.RIGHT_BOTTOM,display.right, display.bottom)
+    cc.Director:getInstance():setNotificationNode(notifiy_Layer)
+end
+
 function MyApp:restart()
     audio.stopMusic()
     audio.stopAllSounds()
