@@ -48,10 +48,13 @@ function GameUIAllianceHome:onEnter()
 
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
+    MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
+
 end
 function GameUIAllianceHome:onExit()
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
+    MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     GameUIAllianceHome.super.onExit(self)
 end
 
@@ -425,7 +428,13 @@ end
 function GameUIAllianceHome:OnSceneMove(logic_x, logic_y)
     self.coordinate_label:setString(logic_x..","..logic_y)
 end
-
+function GameUIAllianceHome:MailUnreadChanged( num )
+    if num==0 then
+        self.mail_unread_num_bg:setVisible(false)
+    else
+        self.mail_unread_num_bg:setVisible(true)
+        self.mail_unread_num_label:setString(GameUtils:formatNumber(num))
+    end
 
 return GameUIAllianceHome
 
