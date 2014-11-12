@@ -127,31 +127,24 @@ local ENTER_LIST = {
         },
         enter_buttons = {
             {
-                img = "icon_relation.png",
-                title = _("外交关系"),
-                func = function (building)
-                -- UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
-                end
-            },
-            {
-                img = "icon_other_alliance.png",
-                title = _("其他联盟"),
-                func = function (building)
-                -- UIKit:newGameUI('GameUIOrderHall',City,"village",building):addToCurrentScene(true)
-                end
-            },
-            {
                 img = "icon_info.png",
                 title = _("驻防部队"),
                 func = function (building)
-                -- UIKit:newGameUI('GameUIOrderHall',City,"upgrade",building):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIMoonGate',City,"garrison",building):addToCurrentScene(true)
+                end
+            },
+            {
+                img = "icon_alliance_crisis.png",
+                title = _("战场"),
+                func = function (building)
+                    UIKit:newGameUI('GameUIMoonGate',City,"battlefield",building):addToCurrentScene(true)
                 end
             },
             {
                 img = "icon_upgrade.png",
                 title = _("升级"),
                 func = function (building)
-                -- UIKit:newGameUI('GameUIOrderHall',City,"upgrade",building):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIMoonGate',City,"upgrade",building):addToCurrentScene(true)
                 end
             },
         },
@@ -488,5 +481,6 @@ function GameUIAllianceEnter:onExit()
 end
 
 return GameUIAllianceEnter
+
 
 

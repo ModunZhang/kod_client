@@ -150,7 +150,7 @@ end
 
 
 function UIKit:getImageByBuildingType( building_type ,level)
-    local level_1,level_2 = 6 ,16
+    local level_1,level_2 = 2 ,3
     if building_type=="keep" then
         return "keep_760x855.png"
     elseif building_type=="dragonEyrie" then
