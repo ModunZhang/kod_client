@@ -43,20 +43,18 @@ function AllianceShrine:GetMaxStageFromServer(alliance_data)
 	local large_key = "1_1"
 	if alliance_data.shrineDatas then
 		for _,v in ipairs(alliance_data.shrineDatas) do
-			if key > v.stageName then
+			if large_key > v.stageName then
 				large_key = v.stageName
 			end
 			self:GetStatgeByName(v.stageName):SetIsLocked(false)
 		end
 	end
-	--解锁下一个Stage
-	
+	--TODO:解锁下一个Stage
 end
 
 function AllianceShrine:DecodeObjectsFromJsonAlliance(alliance_data)
-	self:SetPassStage(alliance_data.passStage or self:PassStage())
 	self:loadStages()
-	
+	self:GetMaxStageFromServer(alliance_data)
 	if not self.perception then
 		local resource_refresh_time = alliance_data.basicInfo.perceptionRefreshTime / 1000.0
 		self.perception = AutomaticUpdateResource.new()

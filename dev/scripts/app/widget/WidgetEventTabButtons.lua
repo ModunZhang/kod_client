@@ -626,6 +626,7 @@ function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
     end
 end
 function WidgetEventTabButtons:SetUpgradeBuilidingBtnLabel(building,event_item)
+    local old_status = event_item.status
     local btn_label
     local btn_images
     if self:IsAbleToFreeSpeedup(building) then
@@ -634,6 +635,7 @@ function WidgetEventTabButtons:SetUpgradeBuilidingBtnLabel(building,event_item)
             pressed = "purple_btn_down_142x39.png",
             disabled = "purple_btn_up_142x39.png",
         }
+        event_item.status = "freeSpeedup"
     else
         -- 是否已经申请过联盟加速
         local isRequested = Alliance_Manager:GetMyAlliance()
@@ -644,16 +646,20 @@ function WidgetEventTabButtons:SetUpgradeBuilidingBtnLabel(building,event_item)
                 pressed = "green_btn_down_142x39.png",
                 disabled = "blue_btn_up_142x39.png",
             }
+            event_item.status = "speedup"
         else
             btn_label = _("帮助")
             btn_images = {normal = "yellow_button_146x42.png",
                 pressed = "yellow_button_highlight_146x42.png",
                 disabled = "yellow_button_146x42.png",
             }
+            event_item.status = "help"
         end
     end
-    event_item:SetButtonLabel(btn_label)
-    event_item:SetButtonImages(btn_images)
+    if old_status~= event_item.status then
+        event_item:SetButtonLabel(btn_label)
+        event_item:SetButtonImages(btn_images)
+    end
 end
 function WidgetEventTabButtons:Load()
     for k, v in pairs(self.tab_map) do
@@ -743,9 +749,9 @@ function WidgetEventTabButtons:BuildingDescribe(building)
 end
 function WidgetEventTabButtons:SoldierDescribe(event)
     local soldier_type, count = event:GetRecruitInfo()
-    local soldier_name = self.barracks:GetSoldierConfigByType(soldier_type).description
+    local soldier_name = Localize.soldier_name[soldier_type]
     local current_time = timer:GetServerTime()
-    local str = string.format("%s%s x%d %s", _("招募"), _(soldier_name), count, GameUtils:formatTimeStyle1(event:LeftTime(current_time)))
+    local str = string.format("%s%s x%d %s", _("招募"), soldier_name, count, GameUtils:formatTimeStyle1(event:LeftTime(current_time)))
     return str, event:Percent(current_time)
 end
 function WidgetEventTabButtons:EquipmentDescribe(event)
@@ -760,85 +766,3 @@ function WidgetEventTabButtons:MaterialDescribe(event)
 end
 
 return WidgetEventTabButtons
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

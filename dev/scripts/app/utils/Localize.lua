@@ -250,7 +250,7 @@ local BUILDING_DESCRIPTION = {
     ["poduction_1"] = _("个"),
 
     ["barracks"] = _("兵营提供军事单位的招募，用于进攻敌方城市，采集资源和城墙驻防，升级建筑能够提升每次招募的最大数量"),
-    ["maxRecruit"] = _("最大招募数量"),
+    ["maxRecruit"] = _("最大招募人口数量"),
 
     ["tradeGuild"] = _("贸易行会提供玩家之间资源和材料的交易，需要消耗运输小车提出自己的资源需求，升级建筑能够提升运输小车的总量和生产速度"),
     ["maxCart"] = _("最大运输小车数量"),
@@ -309,6 +309,14 @@ local BUILDING_DESCRIPTION = {
     ["palace"] = _("联盟的核心建筑，升级可提升联盟人数上限，向占领城市征税，更改联盟地形。"),
     ["palace_total_members"] = _("成员总数"),
     ["palace_alliance_power"] = _("联盟战斗力"),
+
+    ["shop"] = _("本地化缺失"),
+
+    ["orderHall"] = _("本地化缺失"),
+
+    ["moonGate"] = _("本地化缺失"),
+
+    ["shrine"] = _("本地化缺失"),
 
 }
 

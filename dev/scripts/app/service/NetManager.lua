@@ -229,7 +229,8 @@ end
 function NetManager:addOnGetAllianceDataSuccess()
     self:addEventListener("onGetAllianceDataSuccess", function(success, msg)
         if success then    
-          Alliance_Manager:OnAllianceDataChanged(msg)
+            LuaUtils:outputTable("onGetAllianceDataSuccess", msg)
+            DataManager:setUserAllianceData(msg)
         end
     end)
 end
@@ -472,6 +473,13 @@ local function get_fetchchat_callback()
     return get_callback_promise(onGetAllChatSuccess_callbacks, "获取聊天失败!")
 end
 
+
+-- 修改城市名字
+function NetManager:getEditPlayerCityNamePromise(cityName)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.editPlayerCityName", {
+        cityName = cityName,
+    }, "修改城市名字失败!"), get_playerdata_callback()):next(get_response_msg)
+end
 -- 建造小屋
 function NetManager:getCreateHouseByLocationPromise(location, sub_location, building_type)
     return promise.all(get_blocking_request_promise("logic.playerHandler.createHouse", {
@@ -816,13 +824,13 @@ function NetManager:getPlayerInfoPromise(memberId)
 end
 -- 移交萌主
 function NetManager:getHandOverAllianceArchonPromise(memberId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.handOverAllianceArchon", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.handOverAllianceArchon", {
         memberId = memberId,
     }, "移交萌主失败!"), get_playerinfo_callback()):next(get_response_msg)
 end
 -- 修改成员职位
 function NetManager:getEditAllianceMemberTitlePromise(memberId, title)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.editAllianceMemberTitle", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.editAllianceMemberTitle", {
         memberId = memberId,
         title = title
     }, "修改成员职位失败!"), get_alliancedata_callback()):next(get_response_msg)
@@ -888,7 +896,7 @@ function NetManager:getCancelJoinAlliancePromise(allianceId)
 end
 --修改联盟基本信息
 function NetManager:getEditAllianceBasicInfoPromise(name, tag, language, flag)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.createAlliance", {
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.editAllianceBasicInfo", {
         name = name,
         tag = tag,
         language = language,
@@ -921,6 +929,18 @@ function NetManager:getActivateAllianceShrineStagePromise(stageName)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.activateAllianceShrineStage", {
         stageName = stageName
     }, "激活联盟事件失败!"),get_alliancedata_callback()):next(get_response_msg)
+end
+-- 升级联盟建筑
+function NetManager:getUpgradeAllianceBuildingPromise(buildingName)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.upgradeAllianceBuilding", {
+        buildingName = buildingName
+    }, "升级联盟建筑失败!"), get_alliancedata_callback()):next(get_response_msg)
+end
+-- 联盟捐赠
+function NetManager:getDonateToAlliancePromise(donateType)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.donateToAlliance", {
+        donateType = donateType
+    }, "联盟捐赠失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 --
 function NetManager:getUpdateFileList(cb)

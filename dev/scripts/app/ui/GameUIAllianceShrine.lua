@@ -2,15 +2,16 @@
 -- Author: Danny He
 -- Date: 2014-11-08 15:13:13
 --
-local GameUIAllianceShrine = UIKit:createUIClass("GameUIAllianceShrine","GameUIWithCommonHeader")
+local GameUIAllianceShrine = UIKit:createUIClass("GameUIAllianceShrine","GameUIAllianceBuilding")
 local window = import("..utils.window")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local StarBar = import(".StarBar")
 local UIListView = import(".UIListView")
 local AllianceShrine = import("..entity.AllianceShrine")
 
-function GameUIAllianceShrine:ctor()
-	GameUIAllianceShrine.super.ctor(self,City,_("联盟圣地"))
+function GameUIAllianceShrine:ctor(city,default_tab,building)
+	GameUIAllianceShrine.super.ctor(self, city, _("联盟圣地"),default_tab,building)
+	self.default_tab = default_tab
 	self.my_alliance = Alliance_Manager:GetMyAlliance()
 	self.allianceShrine = self.my_alliance:GetAllianceShrine()
 	self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnPerceotionChanged)
@@ -18,7 +19,7 @@ function GameUIAllianceShrine:ctor()
 end
 
 function GameUIAllianceShrine:OnPerceotionChanged()
-	local tag = self.tab_buttons:GetSelectedButtonTag()
+	local tag = self:GetSelectedButtonTag()
 	if tag ~= "stage" then return end
 	local resource = self:GetAllianceShrine():GetPerceptionResource()
 	local display_str = string.format(_("感知力:%s"),resource:GetResourceValueByCurrentTime(app.timer:GetServerTime()) .. "/" .. resource:GetValueLimit())
@@ -36,22 +37,20 @@ function GameUIAllianceShrine:onEnter()
 	GameUIAllianceShrine.super.onEnter(self)
 	self.tab_buttons = self:CreateTabButtons(
 		{
-			{
-				label = _("升级"),
-	        	tag = "upgrade",
-	        	default = true,
-	        },
 	        {
 	        	label = _("联盟危机"),
 	        	tag = "stage",
+	        	default = "stage" == self.default_tab,
 	    	},
 	    	{
 	        	label = _("战斗事件"),
 	        	tag = "fight_event",
+	        	default = "fight_event" == self.default_tab,
 	    	},
 	    	{
 	        	label = _("事件记录"),
 	        	tag = "events_history",
+	        	default = "events_history" == self.default_tab,
 	    	},
 	    },
 		function(tag)
@@ -70,13 +69,23 @@ function GameUIAllianceShrine:onEnter()
 end
 
 function GameUIAllianceShrine:CreateBetweenBgAndTitle()
+	GameUIAllianceShrine.super.CreateBetweenBgAndTitle(self)
 	self.main_content = display.newNode():addTo(self):pos(window.left,window.bottom+68)
 	self.main_content:setContentSize(cc.size(window.width,window.betweenHeaderAndTab))
 end
 
+function GameUIAllianceShrine:GetSelectedButtonTag()
+	local tag = ""
+	if self.tab_buttons then
+		tag = self.tab_buttons:GetSelectedButtonTag()
+	elseif self.default_tab then
+		tag = self.default_tab
+	end
+	return tag
+end
 
 function GameUIAllianceShrine:RefreshUI()
-	local tag = self.tab_buttons:GetSelectedButtonTag()
+	local tag = self:GetSelectedButtonTag()
 	if tag == 'stage' then
 		self:RefreshStageListView()
 	end

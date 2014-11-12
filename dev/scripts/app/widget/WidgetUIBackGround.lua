@@ -1,6 +1,17 @@
+local Enum = import("..utils.Enum")
 local WidgetUIBackGround = class("WidgetUIBackGround", function ()
     return display.newNode()
 end)
+
+-- WidgetUIBackGround.STYLE = Enum("STYLE_1","STYLE_2","STYLE_3")
+-- local ST = WidgetUIBackGround.STYLE
+-- local STYLES = {
+--     ST.STYLE_1 = {
+--         top_img = "back_ground_608x22.png",
+--         bottom_img = "back_ground_608x22.png",
+--         top_img = "back_ground_608x22.png",
+--     }  
+-- }
 
 function WidgetUIBackGround:ctor(params)
     local width = params.width or 608
@@ -16,12 +27,12 @@ function WidgetUIBackGround:ctor(params)
     self:setContentSize(cc.size(width,height))
     --top
     display.newScale9Sprite(top_img,0, height,cc.size(width,u_height)):align(display.LEFT_TOP):addTo(self)
+    local bottom = display.newScale9Sprite(bottom_img,0, 0,cc.size(width,b_height)):align(display.LEFT_BOTTOM):addTo(self)
+
     --bottom
-    local bottom = display.newSprite(bottom_img):align(display.LEFT_BOTTOM,0, 0):addTo(self)
-    bottom:setScaleX(width/bottom:getContentSize().width)
-    bottom:setScaleY(b_height/bottom:getContentSize().height)
     if params.b_flip then
-        bottom:flipY(true)
+        bottom:align(display.LEFT_TOP)
+        bottom:setRotationSkewX(180)
     end
     --center
     local need_filled_height = height-(u_height+b_height) --中间部分需要填充的高度
@@ -35,10 +46,15 @@ function WidgetUIBackGround:ctor(params)
     end
     -- 最后一块小于中间部分图片原始高度时，缩放高度
     if need_filled_height>0 then
-        display.newScale9Sprite(mid_img, 0, next_y,cc.size(width,need_filled_height)):align(display.LEFT_BOTTOM):addTo(self)
+        display.newSprite(mid_img)
+            :align(display.LEFT_BOTTOM,0, next_y)
+            :addTo(self):setScaleY(need_filled_height/m_height)
     end
 end
 
 return WidgetUIBackGround
+
+
+
 
 

@@ -8,12 +8,12 @@ local Observer = import("..entity.Observer")
 local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLeftReverseY")
 local MapLayer = import(".MapLayer")
 local AllianceLayer = class("AllianceLayer", MapLayer)
-local ZORDER = Enum("BOTTOM", "MIDDLE", "TOP", "BUILDING")
+local ZORDER = Enum("BOTTOM", "MIDDLE", "TOP", "BUILDING", "LINE", "SOLDIER")
 local floor = math.floor
 local random = math.random
 function AllianceLayer:ctor(city)
     Observer.extend(self)
-    AllianceLayer.super.ctor(self, 0.5, 1.5)
+    AllianceLayer.super.ctor(self, 0.9, 2)
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new{
         tile_w = 80,
         tile_h = 80,
@@ -27,6 +27,8 @@ function AllianceLayer:ctor(city)
     self:InitMiddleBackground()
     self:InitTopBackground()
     self:InitBuildingNode()
+    self:InitSoldierNode()
+    self:InitLineNode()
 
     Alliance_Manager:GetMyAlliance():GetAllianceMap():AddListenOnType({
         OnBuildingChange = function(this, alliance_map, add, remove, modify)
@@ -51,12 +53,50 @@ function AllianceLayer:ctor(city)
         end
     }, AllianceMap.LISTEN_TYPE.BUILDING)
 
-    ---
+
     local objects = {}
     Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorAllObjects(function(_, entity)
         objects[entity:Id()] = self:CreateObject(entity)
     end)
     self.objects = objects
+
+
+
+    local manager = ccs.ArmatureDataManager:getInstance()
+
+    manager:addArmatureFileInfo("animations/dragon_red/dragon_red.ExportJson")
+    ---
+    local timer = app.timer
+    self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function()
+        local cur_time = timer:GetServerTime()
+        for id, corps in pairs(self.corps_map) do
+            if corps then
+                local march_info = corps.march_info
+                local total_time = march_info.finish_time - march_info.start_time
+                local elapse_time = cur_time - march_info.start_time
+                if elapse_time <= total_time then
+                    local cur_vec = cc.pAdd(cc.pMul(march_info.normal, march_info.speed * elapse_time), march_info.start_info.real)
+                    corps:setPosition(cur_vec.x, cur_vec.y)
+                else
+                    self:DeleteCorpsById(id)
+                end
+            end
+        end
+    end)
+    self:scheduleUpdate()
+
+
+    local cur = timer:GetServerTime()
+    local total = 20
+
+    self:CreateCorps("1", {x = 10, y = 10}, {x = 5, y = 15}, cur, cur + total)
+    self:CreateCorps("2", {x = 10, y = 10}, {x = 5, y = 10}, cur, cur + total)
+    self:CreateCorps("3", {x = 10, y = 10}, {x = 5, y = 5}, cur, cur + total)
+    self:CreateCorps("4", {x = 10, y = 10}, {x = 10, y = 5}, cur, cur + total)
+    self:CreateCorps("5", {x = 10, y = 10}, {x = 15, y = 5}, cur, cur + total)
+    self:CreateCorps("6", {x = 10, y = 10}, {x = 15, y = 10}, cur, cur + total)
+    self:CreateCorps("7", {x = 10, y = 10}, {x = 15, y = 15}, cur, cur + total)
+    self:CreateCorps("8", {x = 10, y = 10}, {x = 10, y = 15}, cur, cur + total)
 end
 function AllianceLayer:CreateObject(entity)
     local category = entity:GetCategory()
@@ -141,8 +181,115 @@ end
 function AllianceLayer:InitBuildingNode()
     self.building_node = display.newNode():addTo(self, ZORDER.BUILDING)
 end
+function AllianceLayer:InitSoldierNode()
+    self.soldier_node = display.newNode():addTo(self, ZORDER.SOLDIER)
+    self.corps_map = {}
+end
+function AllianceLayer:InitLineNode()
+    self.line_node = display.newNode():addTo(self, ZORDER.LINE)
+    self.line_map = {}
+end
 function AllianceLayer:GetBuildingNode()
     return self.building_node
+end
+function AllianceLayer:GetSoldierNode()
+    return self.soldier_node
+end
+function AllianceLayer:GetLineNode()
+    return self.line_node
+end
+function AllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_time)
+    assert(self.corps_map[id] == nil)
+    local march_info = self:GetMarchInfoWith(id, start_pos, end_pos)
+    march_info.start_time = start_time
+    march_info.finish_time = finish_time
+    march_info.total_time = finish_time - start_time
+    march_info.speed = (march_info.length /  march_info.total_time)
+    local corps = display.newNode():addTo(self:GetSoldierNode())
+    local armature = ccs.Armature:create("dragon_red"):addTo(corps):scale(0.5)
+
+    local dir_map = {
+        {"Flying_0", -1},
+        {"Flying_1", -1},
+        {"Flying_2", -1},
+        {"Flying_2", 1},
+        {"Flying_2", 1},
+        {"Flying_1", 1},
+        {"Flying_0", 1},
+        {"Flying_0", -1},
+    }
+    local ani, scalex = unpack(dir_map[math.floor(march_info.degree / 45) + 4])
+    armature:getAnimation():play(ani)
+    corps:setScaleX(scalex)
+
+    corps.march_info = march_info
+    self.corps_map[id] = corps
+    self:CreateLine(id, march_info.start_info.logic, march_info.end_info.logic)
+    return corps
+end
+function AllianceLayer:DeleteCorpsById(id)
+    if self.corps_map[id] == nil then
+        print("部队已经被删除了!", id)
+        return
+    end
+    self.corps_map[id]:removeFromParent()
+    self.corps_map[id] = nil
+    self:DeleteLineById(id)
+end
+function AllianceLayer:DeleteAllCorps()
+    for id, _ in pairs(self.corps_map) do
+        self:DeleteCorpsById(id)
+    end
+end
+function AllianceLayer:CreateLine(id, start_pos, end_pos)
+    assert(self.line_map[id] == nil)
+    local march_info = self:GetMarchInfoWith(id, start_pos, end_pos)
+    local middle = cc.pMidpoint(march_info.start_info.real, march_info.end_info.real)
+    local scale = march_info.length / 22
+    local unit_count = math.floor(scale)
+    local sprite = display.newSprite("arrow_16x22.png", nil, nil, {class=cc.FilteredSpriteWithOne})
+        :addTo(self:GetLineNode()):pos(middle.x, middle.y):rotation(march_info.degree)
+    sprite:setFilter(filter.newFilter("CUSTOM",
+        json.encode({
+            frag = "shaders/multi_tex.fs",
+            shaderName = "lineShader"..id,
+            unit_count = unit_count
+        })
+    ))
+    sprite:setScaleY(scale)
+    self.line_map[id] = sprite
+    return sprite
+end
+function AllianceLayer:GetMarchInfoWith(id, logic_start_point, logic_end_point)
+    local logic_map = self:GetLogicMap()
+    local spt = logic_map:WrapConvertToMapPosition(logic_start_point.x, logic_start_point.y)
+    local ept = logic_map:WrapConvertToMapPosition(logic_end_point.x, logic_end_point.y)
+    local vec = cc.pSub(ept, spt)
+    local deg = math.deg(cc.pGetAngle(vec, {x = 0, y = 1}))
+    local length = cc.pGetLength(vec)
+    local scale = length / 22
+    local unit_count = math.floor(scale)
+    return {
+        start_info = {real = spt, logic = logic_start_point},
+        end_info = {real = ept, logic = logic_end_point},
+        degree = deg,
+        dir_vector = vec,
+        length = length,
+        normal = cc.pNormalize(vec)
+    }
+end
+function AllianceLayer:DeleteLineById(id)
+    if self.line_map[id] == nil then
+        print("路线已经被删除了!", id)
+        return
+    end
+    self.line_map[id]:removeFromParent()
+    self.line_map[id] = nil
+end
+function AllianceLayer:DeleteAllLines()
+    for id, _ in pairs(self.line_map) do
+        self:DeleteLineById(id)
+    end
 end
 function AllianceLayer:GetClickedObject(world_x, world_y)
     local point = self:GetBuildingNode():convertToNodeSpace(cc.p(world_x, world_y))
@@ -192,9 +339,27 @@ function AllianceLayer:OnSceneMove()
     self:IteratorAllianceObjects(function(_, object)
         object:OnSceneMove()
     end)
+    local point = self:GetBuildingNode():convertToNodeSpace(cc.p(display.cx, display.cy))
+    local logic_x, logic_y = self:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
+    self:NotifyObservers(function(listener)
+        listener:OnSceneMove(logic_x, logic_y)
+    end)
 end
 
 return AllianceLayer
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

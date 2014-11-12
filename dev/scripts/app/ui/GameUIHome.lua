@@ -64,7 +64,7 @@ end
 function GameUIHome:RefreshData()
     -- 更新数值
     local userdata = DataManager:getUserData()
-    self.name_label:setString(userdata.basicInfo.name.."id "..userdata.countInfo.deviceId)
+    self.name_label:setString(userdata.basicInfo.name)
     self.power_label:setString(userdata.basicInfo.power)
     self.level_label:setString(userdata.basicInfo.level)
     self.vip_label:setString("VIP 1")
@@ -408,8 +408,7 @@ function GameUIHome:OnBottomButtonClicked(event)
     if tag == 4 then -- tag 4 = alliance button
         UIKit:newGameUI('GameUIAlliance'):addToCurrentScene(true)
     elseif tag == 3 then
-        UIKit:newGameUI('GameUIAllianceShrine'):addToCurrentScene(true)
-        -- UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
+        UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
     elseif tag == 2 then
         UIKit:newGameUI('GameUIReplay'):addToCurrentScene(true)
     end

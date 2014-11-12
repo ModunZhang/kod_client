@@ -1,4 +1,5 @@
 local GameUtils = GameUtils
+local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local UILib = import("..ui.UILib")
 local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -64,7 +65,8 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type)
     self.barracks = barracks
     self.soldier_type = soldier_type
     self.star = barracks.soldier_star
-    self.recruit_max = barracks:GetMaxRecruitSoldierCount()
+    local soldier_config, aaa = self:GetConfigBySoldierTypeAndStar(soldier_type, self.star)
+    self.recruit_max = math.floor(barracks:GetMaxRecruitSoldierCount() / soldier_config.citizen)
     self.city = city
 
     local label_origin_x = 190
@@ -347,15 +349,22 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type)
             color = UIKit:hex2c3b(0xfff3c7)
         }))
         :onButtonClicked(function(event)
-            -- NetManager:recruitNormalSoldier(self.soldier_type, self.count, NOT_HANDLE)
-            NetManager:getRecruitNormalSoldierPromise(self.soldier_type, self.count)
-                :catch(function(err)
-                    dump(err:reason())
-                end)
-            if type(self.button_clicked) == "function" then
-                self:button_clicked()
+            local need_resource = self:GetNeedResouce(self.count)
+            dump(need_resource)
+            local required_gems = DataUtils:buyResource(need_resource, {})
+            if required_gems > 0 then
+                FullScreenPopDialogUI.new()
+                    :SetTitle(_("补充资源"))
+                    :SetPopMessage(_("您当前没有足够的资源,是否花费魔法石立即补充"))
+                    :CreateNeeds("Topaz-icon.png", required_gems)
+                    :CreateOKButton(function()
+                        NetManager:getRecruitNormalSoldierPromise(self.soldier_type, self.count)
+                        self:Close()
+                    end):AddToCurrentScene()
+            else
+                NetManager:getRecruitNormalSoldierPromise(self.soldier_type, self.count)
+                self:Close()
             end
-            self:Close()
         end)
     self.normal_button = button
 
@@ -401,7 +410,7 @@ end
 function WidgetRecruitSoldier:SetSoldier(soldier_type, star)
     local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(soldier_type, star)
     -- title
-    self.title:setString(_(soldier_config.description))
+    self.title:setString(Localize.soldier_name[soldier_type])
     -- bg
     local bg = UILib.soldier_bg[star]
     self.star_bg:setTexture(display.newSprite(bg):getTexture())
@@ -505,9 +514,24 @@ function WidgetRecruitSoldier:CheckNeedResource(total_resouce, count)
     end
     return current_res_map
 end
+function WidgetRecruitSoldier:GetNeedResouce(count)
+    local soldier_config = self.soldier_config
+    local need_res_map = {}
+    for res_type, value in pairs(self.res_total_map) do
+        local left = value - soldier_config[res_type] * count
+        need_res_map[res_type] = left >= 0 and 0 or -left
+    end
+    return need_res_map
+end
 
 
 return WidgetRecruitSoldier
+
+
+
+
+
+
 
 
 

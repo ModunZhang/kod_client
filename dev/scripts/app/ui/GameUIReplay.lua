@@ -2,6 +2,7 @@ local Localize = import("..utils.Localize")
 local window = import("..utils.window")
 local promise = import("..utils.promise")
 local BattleObject = import(".BattleObject")
+local Effect = import(".Effect")
 local Wall = import(".Wall")
 local Corps = import(".Corps")
 local UILib = import(".UILib")
@@ -14,15 +15,15 @@ local GameUIReplay = UIKit:createUIClass('GameUIReplay')
 local new_battle = {
     {
         dual = {
-            left = {soldier = "ranger", count = 1000, damage = 90, morale = 100, decrease = 20},
-            right = {soldier = "lancer", count = 100, damage = 80, morale = 100, decrease = 80},
+            left = {soldier = "lancer", count = 1000, damage = 90, morale = 100, decrease = 20},
+            right = {soldier = "catapult", count = 100, damage = 80, morale = 100, decrease = 80},
             defeat = "right"
         }
     },
     {
         dual = {
             left = {damage = 90, decrease = 10},
-            right = {soldier = "ranger", count = 100, damage = 80, morale = 100, decrease = 50},
+            right = {soldier = "swordsman", count = 100, damage = 80, morale = 100, decrease = 50},
             defeat = "right"
         }
     },
@@ -36,14 +37,17 @@ local new_battle = {
 }
 local function decode_battle(raw)
     local rounds = {}
+    local left_soldier, right_soldier
     for i, v in ipairs(raw) do
         local r = {}
         local dual = v.dual
         local left, right = dual.left, dual.right
+        left_soldier = left.soldier or left_soldier
+        right_soldier = right.soldier or right_soldier
         if i == 1 then
             table.insert(r, {
-                {soldier = left.soldier, state = "enter", count = left.count, morale = left.morale},
-                {soldier = right.soldier, state = "enter", count = right.count, morale = right.morale}
+                {soldier = left_soldier, state = "enter", count = left.count, morale = left.morale},
+                {soldier = right_soldier, state = "enter", count = right.count, morale = right.morale}
             })
         else
             if left.soldier then
@@ -77,15 +81,15 @@ local function decode_battle(raw)
             end
         end
         if dual.defeat == "left" then
-            table.insert(r, {{state = "attack"}, {state = "defend"}})
+            table.insert(r, {{state = "attack", effect = left_soldier}, {state = "defend"}})
             table.insert(r, {{state = "defend"}, {state = "hurt", damage = right.damage, decrease = right.decrease}})
-            table.insert(r, {{state = "defend"}, {state = "attack"}})
+            table.insert(r, {{state = "defend"}, {state = "attack", effect = right_soldier}})
             table.insert(r, {{state = "hurt", damage = left.damage, decrease = left.decrease}, {state = "defend"}})
             table.insert(r, {{state = "defeat"}, {state = "defend"}})
         elseif dual.defeat == "right" then
-            table.insert(r, {{state = "defend"}, {state = "attack"}})
+            table.insert(r, {{state = "defend"}, {state = "attack", effect = right_soldier}})
             table.insert(r, {{state = "hurt", damage = left.damage, decrease = left.decrease}, {state = "defend"}})
-            table.insert(r, {{state = "attack"}, {state = "defend"}})
+            table.insert(r, {{state = "attack", effect = left_soldier}, {state = "defend"}})
             table.insert(r, {{state = "defend"}, {state = "hurt", damage = right.damage, decrease = right.decrease}})
             table.insert(r, {{state = "defend"}, {state = "defeat"}})
         else
@@ -108,6 +112,11 @@ function GameUIReplay:ctor()
     end
     local manager = ccs.ArmatureDataManager:getInstance()
     for _, anis in pairs(UILib.soldier_animation_files) do
+        for _, v in pairs(anis) do
+            manager:addArmatureFileInfo(v)
+        end
+    end
+    for _, anis in pairs(UILib.effect_animation_files) do
         for _, v in pairs(anis) do
             manager:addArmatureFileInfo(v)
         end
@@ -347,15 +356,30 @@ end
 function GameUIReplay:NewWall(x)
     return Wall.new():addTo(self.battle_bg):pos(x, 150)
 end
+local soldier_arrange = {
+    swordsman = {row = 4, col = 2},
+    ranger = {row = 4, col = 2},
+    lancer = {row = 3, col = 1},
+    catapult = {row = 2, col = 1},
+}
 function GameUIReplay:NewCorps(soldier, x, y)
-    local soldier_arrange = {
-        swordsman = {row = 4, col = 2},
-        ranger = {row = 4, col = 2},
-        lancer = {row = 3, col = 1},
-        catapult = {row = 2, col = 1},
-    }
     local arrange = soldier_arrange[soldier]
     return Corps.new(soldier, arrange.row, arrange.col):addTo(self.battle):pos(x, y)
+end
+function GameUIReplay:NewEffect(soldier, is_left, x, y)
+    if soldier == "wall" then return end
+    local arrange = soldier_arrange[soldier]
+    local w = is_left and 100 or -100
+    local effect = Effect.new(soldier, arrange.row, arrange.col):addTo(self.battle):pos(x + w, y)
+    if is_left then
+        effect:turnRight()
+    else
+        effect:turnLeft()
+    end
+    effect:OnAnimationPlayEnd("attack_1", function()
+        effect:removeFromParent()
+    end)
+    effect:PlayAnimation("attack_1", 0)
 end
 function GameUIReplay:DecodeStateBySide(side, is_left)
     local height = 90
@@ -428,7 +452,10 @@ function GameUIReplay:DecodeStateBySide(side, is_left)
             self.right_progress:SetProgressInfo("", percent)
         end
     elseif state == "attack" then
-        action = BattleObject:Do(BattleObject:AttackOnce()):next(function(corps)
+        action = BattleObject:Do(function(corps)
+            self:NewEffect(side.effect, is_left, corps:getPosition())
+            return corps
+        end):next(BattleObject:AttackOnce()):next(function(corps)
             BattleObject:Do(BattleObject:BreathForever()):resolve(corps)
             return corps
         end)
@@ -520,67 +547,6 @@ function GameUIReplay:NextSoldierBySide(side)
     end
 end
 return GameUIReplay
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

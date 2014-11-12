@@ -284,7 +284,7 @@ function GameUIShop:onEnter()
         :align(display.CENTER, window.left + 320, window.top - 600)
         :onButtonClicked(function(event)
             cocos_promise.promiseWithCatchError(NetManager:getSearchAllianceByTagPromsie("2"):next(function(result)
-                return NetManager:getRequestToJoinAlliancePromise(Alliance:DecodeFromJsonData(result.alliances[1]):Id())
+                return NetManager:getJoinAllianceDirectlyPromise(Alliance:DecodeFromJsonData(result.alliances[1]):Id())
             end))
         end)
 
@@ -623,12 +623,31 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 140, window.top - 1200)
         :onButtonClicked(function(event)
-            cocos_promise.promiseWithCatchError(
-                NetManager:getDistroyAllianceDecoratePromise(
-                    "WkFMlrSqJL"
-                )
-            )
+            -- cocos_promise.promiseWithCatchError(
+            --     NetManager:getDistroyAllianceDecoratePromise(
+            --         "WkFMlrSqJL"
+            --     )
+            -- )
         end)
+
+
+
+
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = DataManager:getUserData().countInfo.deviceId,
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 320, window.top - 1200)
+        :onButtonClicked(function(event)
+            end)
+
+
 
 
     item:addContent(content)
@@ -642,6 +661,7 @@ end
 
 
 return GameUIShop
+
 
 
 

@@ -2,6 +2,7 @@ local TabButtons = import('.TabButtons')
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetUIBackGround2= import("..widget.WidgetUIBackGround2")
+local FullScreenPopDialogUI= import(".FullScreenPopDialogUI")
 local Localize = import("..utils.Localize")
 local window = import('..utils.window')
 local GameUIKeep = UIKit:createUIClass('GameUIKeep',"GameUIUpgradeBuilding")
@@ -37,8 +38,16 @@ function GameUIKeep:onEnter()
     self:CreateCanBeUnlockedBuildingBG()
     self:CreateCanBeUnlockedBuildingListView()
     self:CreateCityBasicInfo()
-end
+    self.city:AddListenOnType(self, City.LISTEN_TYPE.CITY_NAME)
 
+end
+function GameUIKeep:OnCityNameChanged(cityName)
+    self.city_name_item:SetValue(cityName)
+end
+function GameUIKeep:OnExit()
+    self.city:RemoveListenerOnType(self, City.LISTEN_TYPE.CITY_NAME)
+    GameUIKeep.super.OnExit(self)
+end
 
 function GameUIKeep:CreateCityBasicInfo()
 
@@ -57,9 +66,9 @@ function GameUIKeep:CreateCityBasicInfo()
         building_image:setScale(124/building_image:getContentSize().width)
     end
     -- 修改城市名字item
-    self:CreateLineItem({
+    self.city_name_item = self:CreateLineItem({
         title_1 =  _("城市名字"),
-        title_2 =  _("未定义"),
+        title_2 =  City:GetCityName(),
         button_label =  _("修改"),
         listener =  function ()
             self:CreateModifyCityNameWindow()
@@ -91,7 +100,7 @@ function GameUIKeep:CreateLineItem(params)
             color = UIKit:hex2c3b(0x665f49)
         }):align(display.LEFT_BOTTOM, 0, 40)
         :addTo(line)
-    self.city_name_label  = cc.ui.UILabel.new(
+    local value_label = cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = params.title_2,
@@ -113,9 +122,11 @@ function GameUIKeep:CreateLineItem(params)
         end)
         :align(display.RIGHT_BOTTOM, line_size.width, 10)
         :addTo(line)
+    function line:SetValue(value)
+        value_label:setString(value)
+    end
     return line
 end
-
 
 function GameUIKeep:CreateCanBeUnlockedBuildingBG()
     -- 主背景
@@ -258,12 +269,12 @@ function GameUIKeep:CreateModifyCityNameWindow()
         size = cc.size(576,48),
         font = UIKit:getFontFilePath(),
     })
-    editbox:setPlaceHolder(_("最多可输入140字符"))
-    editbox:setMaxLength(140)
+    editbox:setPlaceHolder(_("最多可输入14字符"))
+    editbox:setMaxLength(14)
     editbox:setFont(UIKit:getFontFilePath(),22)
     editbox:setFontColor(cc.c3b(0,0,0))
     editbox:setPlaceholderFontColor(cc.c3b(204,196,158))
-    editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)
+    editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
     editbox:align(display.LEFT_TOP,16, 420)
     layer:addToBody(editbox)
 
@@ -304,7 +315,7 @@ function GameUIKeep:CreateModifyCityNameWindow()
             color = UIKit:hex2c3b(0x797154)
         }):align(display.LEFT_TOP, 120, 70)
         :addTo(bg2)
-    -- 回复按钮
+    -- 购买使用按钮
     local buy_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = _("购买使用"),
@@ -320,10 +331,19 @@ function GameUIKeep:CreateModifyCityNameWindow()
         :addTo(bg2):align(display.CENTER, 480, 100)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
+                local cityName = string.trim(editbox:getText())
+                if string.len(cityName) == 0 then
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("请输入城市名称"))
+                        :CreateOKButton(function()end)
+                        :AddToCurrentScene()
+                    return
+                end
+                NetManager:getEditPlayerCityNamePromise(cityName)
+                layer:removeFromParent(true)
             end
         end)
 end
-
 
 function GameUIKeep:CreateChangeTerrainWindow()
     local layer = self:CreateBackGroundWithTitle(_("城市地形修改")):addTo(self)
@@ -469,6 +489,8 @@ function GameUIKeep:CreateBackGroundWithTitle(title_string)
     return leyer
 end
 return GameUIKeep
+
+
 
 
 

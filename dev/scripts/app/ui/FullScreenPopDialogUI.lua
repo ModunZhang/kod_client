@@ -51,11 +51,6 @@ function FullScreenPopDialogUI:SetTitle(title)
 end
 
 function FullScreenPopDialogUI:SetPopMessage(message)
-    -- 提示内容
-    local  listview = UIListView.new{
-        viewRect = cc.rect(display.cx-80,display.top-525, 340, 95),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
-    }:addTo(self)
     local message_label = UIKit:ttfLabel({
         text = message,
         size = 24,
@@ -63,8 +58,13 @@ function FullScreenPopDialogUI:SetPopMessage(message)
         align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
         dimensions = cc.size(340, 0),
     })
-    local item = listview:newItem()
     local w,h =  message_label:getContentSize().width,message_label:getContentSize().height
+    -- 提示内容
+    local  listview = UIListView.new{
+        viewRect = cc.rect(display.cx-80,display.top-525, w, 95),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+    }:addTo(self)
+    local item = listview:newItem()
     item:setItemSize(w,h)
     item:addContent(message_label)
     listview:addItem(item)
