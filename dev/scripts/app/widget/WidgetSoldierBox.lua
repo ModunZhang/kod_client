@@ -40,6 +40,7 @@ end
 function WidgetSoldierBox:SetSoldier(soldier_type, star)
     -- local soldier_type_with_star = soldier_type..(star == nil and "" or string.format("_%d", star))
     print(soldier_type, star)
+    star = checknumber(star)
     print(UILib.soldier_image[soldier_type][star])
     local soldier_ui_config = UILib.soldier_image[soldier_type][star]
     -- local soldier_ui_config = SOLDIER_TYPE[soldier_type_with_star]

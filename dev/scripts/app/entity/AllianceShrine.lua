@@ -3,6 +3,7 @@
 -- Date: 2014-11-07 15:21:22
 --
 local config_shrineStage = GameDatas.AllianceShrine.shrineStage
+local config_shrine = GameDatas.AllianceBuilding.shrine
 local AllianceShrineStage = import(".AllianceShrineStage")
 local MultiObserver = import(".MultiObserver")
 local property = import("..utils.property")
@@ -23,7 +24,7 @@ function AllianceShrine:loadStages()
 	local stages_ = {}
 	local large_key = "1_1"
 	table.foreach(config_shrineStage,function(key,config)
-		local stage = AllianceShrineStage.new(key > self:PassStage(),config) 
+		local stage = AllianceShrineStage.new(config) 
 		stages_[key] = stage
 		if key > large_key then
 			large_key = key
@@ -38,27 +39,47 @@ end
 function AllianceShrine:OnPropertyChange(property_name, old_value, value)
 end
 
-function AllianceShrine:DecodeObjectsFromJsonMapObjects(alliance_data)
-	self:SetPassStage(alliance_data.passStage or self:PassStage())
-	self:loadStages()
-	--update stage star
+function AllianceShrine:GetMaxStageFromServer(alliance_data)
+	local large_key = "1_1"
 	if alliance_data.shrineDatas then
-		for i,v in ipairs(alliance_data.shrineDatas) do
-			-- if self:GetStatgeByName(v.)
+		for _,v in ipairs(alliance_data.shrineDatas) do
+			if key > v.stageName then
+				large_key = v.stageName
+			end
+			self:GetStatgeByName(v.stageName):SetIsLocked(false)
 		end
 	end
+	--解锁下一个Stage
+	
+end
+
+function AllianceShrine:DecodeObjectsFromJsonAlliance(alliance_data)
+	self:SetPassStage(alliance_data.passStage or self:PassStage())
+	self:loadStages()
+	
 	if not self.perception then
 		local resource_refresh_time = alliance_data.basicInfo.perceptionRefreshTime / 1000.0
 		self.perception = AutomaticUpdateResource.new()
 		self.perception:UpdateResource(resource_refresh_time,alliance_data.basicInfo.perception)
-        self.perception:SetProductionPerHour(resource_refresh_time,400)
-        self.perception:SetValueLimit(500)
-        --TODO:从建筑里获取值
+		local shire_building = config_shrine[alliance_data.buildings.shrine.level]
+        self.perception:SetProductionPerHour(resource_refresh_time,shire_building.pRecovery)
+        self.perception:SetValueLimit(shire_building.perception)
+    else
+    	if alliance_data.buildings and alliance_data.buildings.shrine.level then
+    		self.perception:UpdateResource(resource_refresh_time,alliance_data.basicInfo.perception)
+    		local shire_building = config_shrine[alliance_data.buildings.shrine.level]
+        	self.perception:SetProductionPerHour(resource_refresh_time,shire_building.pRecovery)
+        	self.perception:SetValueLimit(shire_building.perception)
+    	end
 	end
 end
 
 function AllianceShrine:OnAllianceDataChanged(alliance_data)
-	self:DecodeObjectsFromJsonMapObjects(alliance_data)
+	self:DecodeObjectsFromJsonAlliance(alliance_data)
+end
+
+function AllianceShrine:GetPerceptionResource()
+	return self.perception
 end
 
 function AllianceShrine:OnTimer(current_time)

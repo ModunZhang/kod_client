@@ -916,6 +916,12 @@ function NetManager:getDistroyAllianceDecoratePromise(decorateId)
         decorateId = decorateId
     }, "拆除装饰物失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
+-- 激活联盟事件
+function NetManager:getActivateAllianceShrineStagePromise(stageName)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.activateAllianceShrineStage", {
+        stageName = stageName
+    }, "激活联盟事件失败!"),get_alliancedata_callback()):next(get_response_msg)
+end
 --
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

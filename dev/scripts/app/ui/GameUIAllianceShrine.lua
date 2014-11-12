@@ -7,11 +7,29 @@ local window = import("..utils.window")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local StarBar = import(".StarBar")
 local UIListView = import(".UIListView")
+local AllianceShrine = import("..entity.AllianceShrine")
 
 function GameUIAllianceShrine:ctor()
 	GameUIAllianceShrine.super.ctor(self,City,_("联盟圣地"))
-	self.allianceShrine = Alliance_Manager:GetMyAlliance():GetAllianceShrine()
+	self.my_alliance = Alliance_Manager:GetMyAlliance()
+	self.allianceShrine = self.my_alliance:GetAllianceShrine()
+	self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnPerceotionChanged)
 	assert(self.allianceShrine)
+end
+
+function GameUIAllianceShrine:OnPerceotionChanged()
+	local tag = self.tab_buttons:GetSelectedButtonTag()
+	if tag ~= "stage" then return end
+	local resource = self:GetAllianceShrine():GetPerceptionResource()
+	local display_str = string.format(_("感知力:%s"),resource:GetResourceValueByCurrentTime(app.timer:GetServerTime()) .. "/" .. resource:GetValueLimit())
+	if self.stage_ui.insight_label:getString() ~= display_str then
+		self.stage_ui.insight_label:setString(display_str)
+	end
+end
+
+function GameUIAllianceShrine:onMoveOutStage()
+	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnPerceotionChanged)
+	GameUIAllianceShrine.super.onMoveOutStage(self)
 end
 
 function GameUIAllianceShrine:onEnter()
@@ -105,13 +123,14 @@ function GameUIAllianceShrine:TabEvent_stage()
 		:addTo(stage_node,-1)
 	local progressBar = UIKit:commonProgressTimer("insight_bar_content_530x36.png"):align(display.LEFT_BOTTOM,0,1):addTo(bar_bg,2)
 	progressBar:setPercentage(100)
-
+	local resource = self:GetAllianceShrine():GetPerceptionResource()
+	local display_str = string.format(_("感知力:%s"),resource:GetResourceValueByCurrentTime(app.timer:GetServerTime()) .. "/" .. resource:GetValueLimit())
 	local insight_label = UIKit:ttfLabel({
-		text = string.format(_("感知力:%s"),"120/360"),
+		text = display_str,
 		size = 20,
 		color = 0xfff3c7
 	}):align(display.LEFT_BOTTOM,15,5):addTo(bar_bg,2)
-
+	self.stage_ui.insight_label = insight_label
 	--title
 
 	local title_bg = display.newSprite("shire_stage_title_564x58.png")
@@ -259,7 +278,7 @@ function GameUIAllianceShrine:RefreshStageListView()
 end
 
 function GameUIAllianceShrine:OnResearchButtonClick(stage_obj)
-	UIKit:newGameUI("GameUIAllianceShrineDetail",stage_obj):addToCurrentScene(true)
+	UIKit:newGameUI("GameUIAllianceShrineDetail",stage_obj,self:GetAllianceShrine()):addToCurrentScene(true)
 end
 
 return GameUIAllianceShrine
