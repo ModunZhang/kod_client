@@ -1,17 +1,34 @@
 local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
+local Enum = import("..utils.Enum")
 local Localize = import("..utils.Localize")
+local AllianceMap = import("..entity.AllianceMap")
 local window = import("..utils.window")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
+local WidgetAllianceBuildingInfo = import("..widget.WidgetAllianceBuildingInfo")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 
 local WidgetAllianceBuildingUpgrade = class("WidgetAllianceBuildingUpgrade", function ()
     return display.newLayer()
 end)
 
-function WidgetAllianceBuildingUpgrade:ctor()
-    self:setNodeEventEnabled(true)
-end
+local UPGRADE_ERR_TYPE = Enum("POSITION","KEEP","HONOUR")
 
+local ERR_MESSAGE = {
+    [UPGRADE_ERR_TYPE.POSITION] = _("只有联盟盟主才能升级联盟宫殿"),
+    [UPGRADE_ERR_TYPE.KEEP] = _("联盟盟主的城堡等级不足"),
+    [UPGRADE_ERR_TYPE.HONOUR] = _("荣耀点不足"),
+}
+
+function WidgetAllianceBuildingUpgrade:ctor(building)
+    self:setNodeEventEnabled(true)
+    self.building = building
+    self.building_config = GameDatas.AllianceBuilding[building.name]
+    self.alliance = Alliance_Manager:GetMyAlliance()
+end
+function WidgetAllianceBuildingUpgrade:RefreahBuilding(building)
+    self.building = building
+    self.building_config = GameDatas.AllianceBuilding[building.name]
+end
 -- Node Event
 function WidgetAllianceBuildingUpgrade:onEnter()
     -- building level
@@ -30,14 +47,25 @@ function WidgetAllianceBuildingUpgrade:onEnter()
     cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-145, display.top-175)
         :addTo(self)
 
-    self.building_image = display.newSprite(UIKit:getImageByBuildingType( "keep" ,1), 0, 0):addTo(self):pos(display.cx-196, display.top-158)
-    self.building_image:setAnchorPoint(cc.p(0.5,0.5))
-    self.building_image:setScale(124/self.building_image:getContentSize().width)
+    self.building_info_btn = WidgetPushButton.new({normal = UIKit:getImageByBuildingType( self.building.name ,1),
+        pressed = UIKit:getImageByBuildingType( self.building.name ,1)})
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                print("弹出建筑介绍详情")
+                WidgetAllianceBuildingInfo.new():addTo(self)
+            end
+        end):align(display.CENTER, display.cx-196, display.top-158):addTo(self)
+    self.building_info_btn:setScale(124/self.building_info_btn:getCascadeBoundingBox().size.width)
+
+    -- i image
+    display.newSprite("info_26x26.png"):align(display.CENTER, display.cx-250, display.top-225)
+        :addTo(self)
+
     self:InitBuildingIntroduces()
 
     self:InitNextLevelEfficiency()
     self:SetBuildingLevel()
-    WidgetPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
+    self.upgrade_button = WidgetPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("立即升级"),
             size = 24,
@@ -46,11 +74,23 @@ function WidgetAllianceBuildingUpgrade:onEnter()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-
+                local err = self:IsAbleToUpgrade()
+                if err then
+                    FullScreenPopDialogUI.new()
+                        :SetTitle(_("提示"))
+                        :SetPopMessage(ERR_MESSAGE[err])
+                        :AddToCurrentScene()
+                else
+                    NetManager:getUpgradeAllianceBuildingPromise(self.building.name)
+                end
             end
         end):align(display.CENTER, display.cx, display.top-430):addTo(self)
+    self:VisibleUpgradeButton()
 
     self:InitRequirement()
+
+    self.alliance:GetAllianceMap():AddListenOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_LEVEL)
+
 end
 
 function WidgetAllianceBuildingUpgrade:InitBuildingIntroduces()
@@ -66,7 +106,7 @@ end
 
 function WidgetAllianceBuildingUpgrade:SetBuildingIntroduces()
     local bd = Localize.building_description
-    self.building_introduces:setString(bd["palace"])
+    self.building_introduces:setString(bd[self.building.name])
 end
 
 function WidgetAllianceBuildingUpgrade:InitNextLevelEfficiency()
@@ -95,43 +135,60 @@ function WidgetAllianceBuildingUpgrade:InitNextLevelEfficiency()
     self:SetUpgradeEfficiency()
 end
 function WidgetAllianceBuildingUpgrade:SetBuildingLevel()
-    self.builging_level:setString(_("等级 1"))
-    -- if self.building:GetNextLevel() == self.building:GetLevel() then
-    self.next_level:setString(_("等级已满 "))
-    -- else
-    --     self.next_level:setString(_("等级 ")..self.building:GetNextLevel())
-    -- end
+    self.builging_level:setString(_("等级").." ".. self.building.level)
+    if #self.building_config == self.building.level then
+        self.next_level:setString(_("等级已满 "))
+    else
+        self.next_level:setString(_("等级 ")..self.building.level+1)
+    end
 end
 
 function WidgetAllianceBuildingUpgrade:SetUpgradeEfficiency()
     local bd = Localize.building_description
     local building = self.building
+    local now_c = self.building_config[building.level]
+    local next_c = self:getNextLevelConfig__()
     local efficiency
-    efficiency = string.format("%s+%d,%s+%d",bd.palace_total_members,"4",bd.palace_alliance_power,"300")
+    if #self.building_config == self.building.level then
+        efficiency = _("已达到最大等级")
+    else
+        if building.name == "palace" then
+            efficiency = string.format("%s+%d,%s+%d",bd.palace_total_members,next_c.memberCount-now_c.memberCount,bd.palace_alliance_power,next_c.power)
+        else
+            efficiency = _("本地化缺失")
+        end
+    end
 
     self.efficiency:setString(efficiency)
 end
 
 function WidgetAllianceBuildingUpgrade:InitRequirement()
+    local alliance = Alliance_Manager:GetMyAlliance()
+    if #self.building_config == self.building.level then
+        if self.requirement_listview then
+            self.requirement_listview:setVisible(false)
+        end
+        return
+    end
+    local now_c = self.building_config[self.building.level+1]
     local requirements = {
         {resource_type = _("荣耀点"),
             isVisible = true,
-            isSatisfy = true,
+            isSatisfy = alliance:Honour()>=now_c.needHonour,
             icon="honour.png",
-            description="200/400"},
+            description=alliance:Honour().."/"..now_c.needHonour},
         {resource_type = _("联盟城堡等级"),
-            isVisible = true,
-            isSatisfy = true,
+            isVisible = alliance:GetMemeberById(DataManager:getUserData()._id):IsArchon(),
+            isSatisfy = City:GetFirstBuildingByType("keep"):GetLevel()>=now_c.needKeep,
             icon="keep_760x855.png",
-            description="22/16"},
+            description=City:GetFirstBuildingByType("keep"):GetLevel().."/"..now_c.needKeep},
 
         {resource_type = _("职位"),
             isVisible = true,
-            isSatisfy = true ,
+            isSatisfy = alliance:GetMemeberById(DataManager:getUserData()._id):IsArchon() ,
             icon="leader.png",
-            description= "联盟盟主"},
+            description= _("联盟盟主")},
     }
-
     if not self.requirement_listview then
         self.requirement_listview = WidgetRequirementListview.new({
             title = _("升级需求"),
@@ -143,17 +200,49 @@ function WidgetAllianceBuildingUpgrade:InitRequirement()
 end
 
 function WidgetAllianceBuildingUpgrade:onExit()
-
+    self.alliance:GetAllianceMap():RemoveListenerOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_LEVEL)
 end
 
+function WidgetAllianceBuildingUpgrade:IsAbleToUpgrade()
+    local alliance = Alliance_Manager:GetMyAlliance()
+    local now_c = self.building_config[self.building.level+1]
+    if self.building.name=="palace" then
+        if not alliance:GetMemeberById(DataManager:getUserData()._id):IsArchon() then
+            return UPGRADE_ERR_TYPE.POSITION
+        else
+            if alliance:Honour()<now_c.needHonour then
+                return UPGRADE_ERR_TYPE.HONOUR
+            elseif City:GetFirstBuildingByType("keep"):GetLevel()<now_c.needKeep then
+                return UPGRADE_ERR_TYPE.KEEP
+            end
+        end
+    end
+end
+
+function WidgetAllianceBuildingUpgrade:OnBuildingLevelChange(building)
+    self:RefreahBuilding(building)
+    self:InitRequirement()
+    self:SetBuildingLevel()
+    self:SetUpgradeEfficiency()
+    self:VisibleUpgradeButton()
+end
+
+function WidgetAllianceBuildingUpgrade:VisibleUpgradeButton()
+    if #self.building_config == self.building.level then
+        self.upgrade_button:setVisible(false)
+    end
+end
+
+function WidgetAllianceBuildingUpgrade:getNextLevelConfig__()
+    self.building_config = GameDatas.AllianceBuilding[self.building.name]
+    if #self.building_config == self.building.level then
+        return self.building_config[self.building.level]
+    else
+        return self.building_config[self.building.level+1]
+    end
+end
 
 return WidgetAllianceBuildingUpgrade
-
-
-
-
-
-
 
 
 

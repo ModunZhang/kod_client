@@ -69,7 +69,7 @@ function UIPageView:ctor(params)
     self.rowSpace_ = params.rowSpace or 0
     self.padding_ = params.padding or {left = 0, right = 0, top = 0, bottom = 0}
     self.bCirc = params.bCirc or false
-
+    print("UIPageView.....",self.viewRect_.width,self.viewRect_.height)
     self:setContentSize(self.viewRect_.width,self.viewRect_.height)
     -- self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(...)
     --      self:update_(...)
@@ -295,7 +295,7 @@ function UIPageView:onTouch_(event)
     if "began" == event.name
         and not cc.rectContainsPoint(self.viewRect_, cc.p(event.x, event.y)) then
         -- printInfo("UIPageView - touch didn't in viewRect")
-        return false
+        -- return false
     end
 
     if "began" == event.name then

@@ -77,7 +77,8 @@ end
 function GameUIVip:InitVip()
     self:CreateAD():addTo(self.main_layer):align(display.CENTER_TOP, display.cx - 2, display.top-66)
     local exp_bar = self:CreateVipExpBar():addTo(self.main_layer):pos(display.cx-287, display.top-300)
-    exp_bar:LightLevelBar(9,20)
+    -- print("vip===",self:GetVipLevelByExp(95000))
+    exp_bar:LightLevelBar(self:GetVipLevelByExp(95000))
     self:CreateVIPStatus()
 end
 
@@ -116,7 +117,7 @@ function GameUIVip:CreateVipExpBar()
             color = UIKit:hex2c3b(0xffedae)}):addTo(tip):align(display.CENTER, tip:getContentSize().width/2, 50)
         cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("5000"),
+            text = vip_level_table[level]+1,
             size = 16,
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xffedae)}):addTo(tip):align(display.CENTER, tip:getContentSize().width/2, 25)
@@ -127,7 +128,7 @@ function GameUIVip:CreateVipExpBar()
         @param level 达到等级
         @param per 下一级升级当前百分比
     ]]
-    function ExpBar:LightLevelBar(level,per)
+    function ExpBar:LightLevelBar(level,per,exp)
         for i=1,level do
             self.level_images["level_image_"..i]:setVisible(true)
             self.level_bar["level_bar_"..i]:setVisible(true)
@@ -163,7 +164,7 @@ function GameUIVip:CreateVipExpBar()
                 self.vip_exp_point = display.newSprite("vip_point.png"):addTo(self)
                 cc.ui.UILabel.new({
                     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                    text = _("99999"),
+                    text = exp,
                     size = 14,
                     font = UIKit:getFontFilePath(),
                     color = UIKit:hex2c3b(0xfdfac2)}):addTo(self.vip_exp_point):align(display.LEFT_CENTER, 24, 10)
@@ -694,11 +695,13 @@ end
 
 -- 根据当前vip exp 获取对应VIP等级
 function GameUIVip:GetVipLevelByExp(exp)
-    for i=VIP_MAX_LEVEL,1 do
+    for i=VIP_MAX_LEVEL,1,-1 do
         if exp > vip_level_table[i] then
-            return i
+            local percent = math.floor((exp - vip_level_table[i])/vip_level_table[i+1]*100)
+            return i,percent,exp
         end
     end
+   
 end
 
 return GameUIVip

@@ -4,16 +4,16 @@
 --
 -- 封装常用ui工具
 import(".bit")
-UIKit = 
-{
-    Registry   = import('framework.cc.Registry'),
-    GameUIBase = import('..ui.GameUIBase'),
-}
+UIKit =
+    {
+        Registry   = import('framework.cc.Registry'),
+        GameUIBase = import('..ui.GameUIBase'),
+    }
 local CURRENT_MODULE_NAME = ...
 
 
 function UIKit:createUIClass(className, baseName)
-	return class(className, baseName == nil and self["GameUIBase"] or import('..ui.' .. baseName,CURRENT_MODULE_NAME))
+    return class(className, baseName == nil and self["GameUIBase"] or import('..ui.' .. baseName,CURRENT_MODULE_NAME))
 end
 
 function UIKit:newGameUI(gameUIName,... )
@@ -21,7 +21,7 @@ function UIKit:newGameUI(gameUIName,... )
         print("已经创建过一个Object-->",gameUIName)
         return {addToCurrentScene=function(...)end,addToScene=function(...)end} -- 适配后面的调用不报错
     end
-	local viewPackageName = app.packageRoot .. ".ui." .. gameUIName
+    local viewPackageName = app.packageRoot .. ".ui." .. gameUIName
     local viewClass = require(viewPackageName)
     local instance = viewClass.new(...)
     self.Registry.setObject(instance,gameUIName)
@@ -105,7 +105,7 @@ end
 function UIKit:getRegistry()
     return self.Registry
 end
---[[ 
+--[[
     参数和quick原函数一样
 新属性-->
     color:hex 颜色值
@@ -116,7 +116,7 @@ end
 ]]--
 function UIKit:ttfLabel( params )
     if not checktable(params) then
-         printError("%s","params must a table")
+        printError("%s","params must a table")
     end
     params.font = UIKit:getFontFilePath()
     params.UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF
@@ -131,8 +131,8 @@ function UIKit:ttfLabel( params )
         label:setAdditionalKerning(params.margin)
     end
     if params.bold then
-       --TODO:ttf字体加粗
-       printInfo("%s","字体加粗还未实现....")
+        --TODO:ttf字体加粗
+        printInfo("%s","字体加粗还未实现....")
     end
     if params.lineHeight and params.dimensions then
         label:setLineHeight(params.lineHeight)
@@ -227,6 +227,16 @@ function UIKit:getImageByBuildingType( building_type ,level)
         else
             return "miner_3_326x307.png"
         end
+    elseif building_type=="moonGate" then
+        return "moonGate_200x217.png"
+    elseif building_type=="orderHall" then
+        return "orderHall_277x417.png"
+    elseif building_type=="palace" then
+        return "palace_421x481.png"
+    elseif building_type=="shop" then
+        return "shop_268x274.png"
+    elseif building_type=="shrine" then
+        return "shrine_256x210.png"
     end
 end
 
@@ -278,7 +288,7 @@ function UIKit:commonTitleBox(height)
     local top =  display.newSprite("title_box_top_548x58.png")
     local middleHeight = height - bottom:getContentSize().height - top:getContentSize().height
     local next_y = bottom:getContentSize().height
-     while middleHeight > 0 do
+    while middleHeight > 0 do
         local middle = display.newSprite("title_box_middle_540x1.png")
             :addTo(node)
             :align(display.LEFT_BOTTOM,4, next_y)
@@ -288,3 +298,4 @@ function UIKit:commonTitleBox(height)
     top:addTo(node):align(display.LEFT_BOTTOM,0,next_y)
     return node
 end
+

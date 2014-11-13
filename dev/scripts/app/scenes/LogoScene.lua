@@ -2,7 +2,6 @@
 -- Author: dannyhe
 -- Date: 2014-08-05 17:34:54
 --
-local WidgetRecruitSoldier = import("..widget.WidgetRecruitSoldier")
 local LogoScene = class("LogoScene", function()
     return display.newScene("LogoScene")
 end)

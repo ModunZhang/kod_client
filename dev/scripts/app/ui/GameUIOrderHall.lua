@@ -4,26 +4,22 @@ local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
 local WidgetBuyGoods = import("..widget.WidgetBuyGoods")
 local WidgetStockGoods = import("..widget.WidgetStockGoods")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-local GameUIOrderHall = UIKit:createUIClass('GameUIOrderHall', "GameUIWithCommonHeader")
+local GameUIOrderHall = UIKit:createUIClass('GameUIOrderHall', "GameUIAllianceBuilding")
 local Flag = import("..entity.Flag")
 local UIListView = import(".UIListView")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local Localize = import("..utils.Localize")
 
 
-function GameUIOrderHall:ctor(city,default_tab)
-    GameUIOrderHall.super.ctor(self, city, _("秩序大厅"))
+function GameUIOrderHall:ctor(city,default_tab,building)
+    GameUIOrderHall.super.ctor(self, city, _("秩序大厅"),default_tab,building)
     self.default_tab = default_tab
+    self.building = building
 end
 
 function GameUIOrderHall:onEnter()
     GameUIOrderHall.super.onEnter(self)
     self:CreateTabButtons({
-        {
-            label = _("升级"),
-            tag = "upgarde",
-            default = "upgarde" == self.default_tab,
-        },
         {
             label = _("村落管理"),
             tag = "village",
@@ -35,11 +31,6 @@ function GameUIOrderHall:onEnter()
             default = "proficiency" == self.default_tab,
         },
     }, function(tag)
-        if tag == 'upgarde' then
-            self.upgrade_layer:setVisible(true)
-        else
-            self.upgrade_layer:setVisible(false)
-        end
         if tag == 'village' then
             self.village_layer:setVisible(true)
         else
@@ -57,9 +48,6 @@ end
 function GameUIOrderHall:CreateBetweenBgAndTitle()
     GameUIOrderHall.super.CreateBetweenBgAndTitle(self)
 
-    -- upgrade_layer
-    self.upgrade_layer = display.newLayer()
-    self:addChild(self.upgrade_layer)
     -- village_layer
     self.village_layer = display.newLayer()
     self:addChild(self.village_layer)

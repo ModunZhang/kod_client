@@ -76,19 +76,19 @@ function WidgetRequirementListview:RefreshListView(contents)
                 item:setItemSize(item_width,item_height)
                 local content = cc.ui.UIGroup.new()
                 --  筛选不同背景颜色 bg
+                if meetFlag then
+                    content.bg = display.newSprite("upgrade_resources_background_3.png", 0, 0):addTo(content)
+                else
+                    content.bg = display.newSprite("upgrade_resources_background_2.png", 0, 0):addTo(content)
+                end
+                meetFlag =  not meetFlag
                 if v.isSatisfy then
-                    if meetFlag then
-                        content.bg = display.newSprite("upgrade_resources_background_3.png", 0, 0):addTo(content)
-                    else
-                        content.bg = display.newSprite("upgrade_resources_background_2.png", 0, 0):addTo(content)
-                    end
                     -- 符合条件，添加钩钩图标
                     content.mark = display.newSprite("upgrade_mark.png", item_width/2-25, 0):addTo(content)
-                    meetFlag =  not meetFlag
                 else
-                    content.bg = display.newSprite("upgrade_resources_background_red.png", 0, 0):addTo(content)
+                    -- content.bg = display.newSprite("upgrade_resources_background_red.png", 0, 0):addTo(content)
                     -- 不符合条提案，添加X图标
-                    content.mark = display.newSprite("upgrade_prohibited.png", item_width/2-25, 0):addTo(content)
+                    content.mark = display.newSprite("upgrade_warning.png", item_width/2-25, 0):addTo(content)
                 end
                 -- 资源类型icon
                 local resource_type_icon = display.newSprite(v.icon, -item_width/2+35, 0):addTo(content)
@@ -117,4 +117,5 @@ function WidgetRequirementListview:RefreshListView(contents)
 end
 
 return WidgetRequirementListview
+
 

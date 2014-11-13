@@ -69,6 +69,7 @@ function GameUIWriteMail:ctor()
             color = UIKit:hex2c3b(0x797154)
         }):align(display.RIGHT_CENTER,120, r_size.height-140)
         :addTo(write_mail)
+   
     self.editbox_subject = cc.ui.UIInput.new({
         UIInputType = 1,
         image = "input_box.png",
@@ -190,5 +191,6 @@ return GameUIWriteMail
 
 
    
+
 
 

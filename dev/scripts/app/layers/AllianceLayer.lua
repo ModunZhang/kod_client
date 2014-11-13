@@ -63,6 +63,7 @@ function AllianceLayer:ctor(city)
 
 
     local manager = ccs.ArmatureDataManager:getInstance()
+
     manager:addArmatureFileInfo("animations/dragon_red/dragon_red.ExportJson")
     ---
     local timer = app.timer
@@ -337,6 +338,11 @@ end
 function AllianceLayer:OnSceneMove()
     self:IteratorAllianceObjects(function(_, object)
         object:OnSceneMove()
+    end)
+    local point = self:GetBuildingNode():convertToNodeSpace(cc.p(display.cx, display.cy))
+    local logic_x, logic_y = self:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
+    self:NotifyObservers(function(listener)
+        listener:OnSceneMove(logic_x, logic_y)
     end)
 end
 

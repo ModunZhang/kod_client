@@ -3,26 +3,23 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetAllianceBuildingUpgrade = import("..widget.WidgetAllianceBuildingUpgrade")
-local GameUIAlliancePalace = UIKit:createUIClass('GameUIAlliancePalace', "GameUIWithCommonHeader")
+local GameUIAlliancePalace = UIKit:createUIClass('GameUIAlliancePalace', "GameUIAllianceBuilding")
 local Flag = import("..entity.Flag")
 local UIListView = import(".UIListView")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local Localize = import("..utils.Localize")
 
 
-function GameUIAlliancePalace:ctor(city,default_tab)
-    GameUIAlliancePalace.super.ctor(self, city, _("联盟宫殿"))
+function GameUIAlliancePalace:ctor(city,default_tab,building)
+    GameUIAlliancePalace.super.ctor(self, city, _("联盟宫殿"),default_tab,building)
     self.default_tab = default_tab
+    self.building = building
+    -- self.alliance = Alliance_Manager:GetMyAlliance()
 end
 
 function GameUIAlliancePalace:onEnter()
     GameUIAlliancePalace.super.onEnter(self)
     self:CreateTabButtons({
-        {
-            label = _("升级"),
-            tag = "upgarde",
-            default = "upgarde" == self.default_tab,
-        },
         {
             label = _("征税"),
             tag = "impose",
@@ -34,11 +31,6 @@ function GameUIAlliancePalace:onEnter()
             default = "info" == self.default_tab,
         },
     }, function(tag)
-        if tag == 'upgarde' then
-            self.upgrade_layer:setVisible(true)
-        else
-            self.upgrade_layer:setVisible(false)
-        end
         if tag == 'impose' then
             self.impose_layer:setVisible(true)
         else
@@ -54,13 +46,11 @@ function GameUIAlliancePalace:onEnter()
     self:InitImposePart()
     --info_layer
     self:InitInfoPart()
+
 end
 function GameUIAlliancePalace:CreateBetweenBgAndTitle()
     GameUIAlliancePalace.super.CreateBetweenBgAndTitle(self)
 
-    -- upgrade_layer
-    self.upgrade_layer = WidgetAllianceBuildingUpgrade.new()
-    self:addChild(self.upgrade_layer)
     -- impose_layer
     self.impose_layer = display.newLayer()
     self:addChild(self.impose_layer)

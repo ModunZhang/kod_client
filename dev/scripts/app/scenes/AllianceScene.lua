@@ -6,7 +6,7 @@ local AllianceScene = class("AllianceScene", MapScene)
 
 function AllianceScene:ctor()
     AllianceScene.super.ctor(self)
-    
+
     local manager = ccs.ArmatureDataManager:getInstance()
     manager:removeArmatureFileInfo("animations/chuizidonghua.ExportJson")
     manager:removeArmatureFileInfo("animations/green_dragon.ExportJson")
@@ -21,6 +21,7 @@ end
 function AllianceScene:onEnter()
     AllianceScene.super.onEnter(self)
     local home = UIKit:newGameUI('GameUIAllianceHome'):addToScene(self)
+    self:GetSceneLayer():AddObserver(home)
     home:setTouchSwallowEnabled(false)
 
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(10, 10)
@@ -36,9 +37,24 @@ function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
         dump(building:GetEntity())
+        if building:GetEntity():GetType() ~= "building" then
+            UIKit:newGameUI('GameUIAllianceEnter',building:GetEntity()):addToCurrentScene(true)
+        else
+            local building_info = building:GetEntity():GetAllianceBuildingInfo()
+            print("index x y ",x,y,building_info.name)
+            LuaUtils:outputTable("building_info", building_info)
+            UIKit:newGameUI('GameUIAllianceEnter',building_info):addToCurrentScene(true)
+        end
     end
 end
 return AllianceScene
+
+
+
+
+
+
+
 
 
 

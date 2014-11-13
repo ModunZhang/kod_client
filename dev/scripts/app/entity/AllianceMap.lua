@@ -3,7 +3,7 @@ local AllianceObject = import(".AllianceObject")
 local MultiObserver = import(".MultiObserver")
 local AllianceMap = class("AllianceMap", MultiObserver)
 local allianceBuildingType = GameDatas.AllianceInitData.buildingType
-AllianceMap.LISTEN_TYPE = Enum("BUILDING")
+AllianceMap.LISTEN_TYPE = Enum("BUILDING","BUILDING_LEVEL")
 
 local function is_alliance_building(type_)
     return type_ == "building"
@@ -34,6 +34,13 @@ function AllianceMap:FindAllianceBuildingInfoByObjects(object)
             if v.location.x == x and v.location.y == y then
                 return v
             end
+        end
+    end
+end
+function AllianceMap:FindAllianceBuildingInfoByName(name)
+    for k, v in pairs(self.allliance_buildings) do
+        if v.name == name then
+            return v
         end
     end
 end
@@ -93,6 +100,9 @@ function AllianceMap:OnAllianceBuildingInfoChange(alliance_buildings)
         self.allliance_buildings[k] = v
         if v.level ~= old then
             print("v.level", v.level)
+            self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING_LEVEL, function(listener)
+                listener:OnBuildingLevelChange(v)
+            end)
         end
     end
 end
@@ -153,21 +163,4 @@ function AllianceMap:DecodeObjectsFromJsonMapObjects(mapObjects)
     end)
 end
 return AllianceMap
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
