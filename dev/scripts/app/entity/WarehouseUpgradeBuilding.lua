@@ -13,7 +13,7 @@ function WarehouseUpgradeBuilding:GetResourceValueLimit()
 end
 
 function WarehouseUpgradeBuilding:GetResourceNextLevelValueLimit()
-	local level = self:GetLevel()+1
+	local level = self:GetNextLevel()
 	return config_function[level].maxWood, config_function[level].maxFood, config_function[level].maxIron, config_function[level].maxStone	
 end
 

@@ -72,6 +72,9 @@ function CommonUpgradeUI:OnBuildingUpgradeFinished( buidling, finish_time )
     self:SetUpgradeTime()
     self:SetUpgradeEfficiency()
     self.building_image:setTexture(UIKit:getImageByBuildingType( self.building:GetType() ,self.building:GetLevel()))
+    if self.building:GetNextLevel() == self.building:GetLevel() then
+        self.upgrade_layer:setVisible(false)
+    end
 end
 
 function CommonUpgradeUI:OnBuildingUpgrading( buidling, current_time )
