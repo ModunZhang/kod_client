@@ -59,6 +59,7 @@ local function decode_battle(raw)
                     table.insert(r, {
                         {soldier = soldier, state = "enter", count = count, morale = morale}, {state = "move"}
                     })
+                    table.insert(r, {{state = "defend"}, {state = "breath"}})
                 else
                     table.insert(r, {
                         {soldier = soldier, state = "enter", count = count, morale = morale}, {state = "defend"}
@@ -72,6 +73,7 @@ local function decode_battle(raw)
                     table.insert(r, {
                         {state = "move"}, {soldier = soldier, state = "enter", count = count, morale = morale}
                     })
+                    table.insert(r, {{state = "breath"}, {state = "defend"}})
                 else
                     table.insert(r, {
                         {state = "defend"}, {soldier = soldier, state = "enter", count = count, morale = morale}
@@ -327,73 +329,77 @@ function GameUIReplay:onEnter()
     self.right_morale_cur = self.right_morale_max
 
     local dp = self:NewDragonBattle()
-    :next(cocos_promise.delay(0.1))
-    :next(function()
-        local p = promise.new()
-        self:Performance(0.5, function(pos)
-            self.left_dragon:SetHp(1000 - pos * 500, 1000)
-            self.right_dragon:SetHp(1000 - pos * 500, 1000)
-        end, function()
-            p:resolve()
-        end)
-        return p
-    end)
-    :next(cocos_promise.delay(0.8))
-    :next(function()
-        return promise.all(
-            self.left_dragon:ShowResult(true)
-            ,self.right_dragon:ShowResult(false)
-        )
-    end)
-    :next(cocos_promise.delay(0.8))
-    :next(function()
-        local p = promise.new()
-        self.left_dragon:ShowBuff()
-        self.right_dragon:ShowBuff()
-        self:Performance(0.5, function(pos)
-            self.left_dragon:SetBuff(string.format("BUFF + %d%%", math.floor(pos * 50)))
-            self.right_dragon:SetBuff(string.format("BUFF + %d%%", math.floor(pos * 50)))
-        end, function()
-            p:resolve()
-        end)
-        return p
-    end)
-    :next(cocos_promise.delay(0.8))
-    :next(function()
-        local p = promise.new()
-        self.dragon_battle:getAnimation():setMovementEventCallFunc(function(armatureBack, movementType, movementID)
-            if movementType == ccs.MovementEventType.complete then
-                p:resolve(self)
-            end
-        end)
-        self.dragon_battle:getAnimation():play("Animation2", -1, 0)
-        self.dragon_battle:getAnimation():setSpeedScale(0.8)
-        return p
-    end)
-    :next(cocos_promise.delay(0.8))
-    :next(function()
-        local rounds = promise.new()
-        for i, round in ipairs(decode_battle(new_battle)) do
-            rounds:next(function()
-                local pa
-                for _, v in ipairs(round) do
-                    local left, right = unpack(v)
-                    local left_action = self:DecodeStateBySide(left, true)
-                    local right_action = self:DecodeStateBySide(right, false)
-                    if not pa then
-                        pa = promise.all(left_action:resolve(self.left), right_action:resolve(self.right))
-                    else
-                        pa:next(function(result)
-                            local left, right = unpack(result)
-                            return promise.all(left_action:resolve(left), right_action:resolve(right))
-                        end)
-                    end
-                end
-                return pa
+        :next(cocos_promise.delay(0.1))
+        :next(function()
+            local p = promise.new()
+            self:Performance(0.5, function(pos)
+                self.left_dragon:SetHp(1000 - pos * 500, 1000)
+                self.right_dragon:SetHp(1000 - pos * 500, 1000)
+            end, function()
+                p:resolve()
             end)
-        end
-        rounds:resolve()
-    end)
+            return p
+        end)
+        :next(cocos_promise.delay(0.8))
+        :next(function()
+            return promise.all(
+                self.left_dragon:ShowResult(true)
+                ,self.right_dragon:ShowResult(false)
+            )
+        end)
+        :next(cocos_promise.delay(0.8))
+        :next(function()
+            local p = promise.new()
+            self.left_dragon:ShowBuff()
+            self.right_dragon:ShowBuff()
+            self:Performance(0.5, function(pos)
+                self.left_dragon:SetBuff(string.format("BUFF + %d%%", math.floor(pos * 50)))
+                self.right_dragon:SetBuff(string.format("BUFF + %d%%", math.floor(pos * 50)))
+            end, function()
+                p:resolve()
+            end)
+            return p
+        end)
+        :next(cocos_promise.delay(0.8))
+        :next(function()
+            local p = promise.new()
+            self.dragon_battle:getAnimation():setMovementEventCallFunc(function(armatureBack, movementType, movementID)
+                if movementType == ccs.MovementEventType.complete then
+                    p:resolve(self)
+                end
+            end)
+            self.dragon_battle:getAnimation():play("Animation2", -1, 0)
+            self.dragon_battle:getAnimation():setSpeedScale(0.8)
+            return p
+        end)
+        :next(cocos_promise.delay(0.8))
+        :next(function()
+            local rounds = promise.new()
+            for i, round in ipairs(decode_battle(new_battle)) do
+                rounds:next(function()
+                    local pa
+                    for _, v in ipairs(round) do
+                        local left, right = unpack(v)
+                        local left_action = self:DecodeStateBySide(left, true)
+                        local right_action = self:DecodeStateBySide(right, false)
+                        if not pa then
+                            pa = promise.all(left_action:resolve(self.left), right_action:resolve(self.right))
+                        else
+                            pa:next(function(result)
+                                local left, right = unpack(result)
+                                return promise.all(left_action:resolve(left), right_action:resolve(right))
+                            end)
+                        end
+                    end
+                    return pa
+                end)
+            end
+            rounds:resolve()
+        end)
+
+    promise.new():next(cocos_promise.delay(0.2)):next(function()
+        self.dragon_battle:getAnimation():play("Animation1", -1, 0)
+    end):resolve()
 end
 function GameUIReplay:MoveBattleBgBy(x)
     return function(battle_bg)
@@ -432,7 +438,6 @@ function GameUIReplay:NewDragonBattle()
                 p:resolve(self)
             end
         end)
-    dragon_battle:getAnimation():play("Animation1", -1, 0)
     self.dragon_battle = dragon_battle
     return p
 end
@@ -752,6 +757,7 @@ end
 
 
 return GameUIReplay
+
 
 
 
