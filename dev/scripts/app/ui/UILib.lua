@@ -148,6 +148,28 @@ local SOLDIER_IMAGES = {
         "soldier_ballista_1.png",
     }
 }
+local DRAGON_ANIMATIONS_FILES = {
+    redDragon = {
+        "animations/dragon_red/dragon_red.ExportJson"
+    },
+    blueDragon = {
+        "animations/Blue_dragon.ExportJson"
+    },
+    greenDragon = {
+        "animations/green_dragon.ExportJson"
+    }
+}
+local DRAGON_ANIMATIONS = {
+    redDragon = {
+        "dragon_red"
+    },
+    blueDragon = {
+        "Blue_dragon"
+    },
+    greenDragon = {
+        "green_dragon"
+    }
+}
 
 return {
     soldier_bg = STAR_BG,
@@ -156,8 +178,12 @@ return {
     effect_animation_files = EFFECT_ANIMATION_FILES,
     soldier_animation_files = SOLDIER_ANIMATION_FILES,
     soldier_animation = SOLDIER_ANIMATIONS,
-    soldier_image = SOLDIER_IMAGES
+    soldier_image = SOLDIER_IMAGES,
+    dragon_animations = DRAGON_ANIMATIONS,
+    dragon_animations_files = DRAGON_ANIMATIONS_FILES,
 }
+
+
 
 
 
