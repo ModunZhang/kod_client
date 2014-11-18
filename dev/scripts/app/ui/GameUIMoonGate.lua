@@ -3,6 +3,7 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUIMoonGate = UIKit:createUIClass('GameUIMoonGate', "GameUIAllianceBuilding")
 local Flag = import("..entity.Flag")
+local GameUIAllianceSendTroops = import(".GameUIAllianceSendTroops")
 local UIListView = import(".UIListView")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local Localize = import("..utils.Localize")
@@ -293,9 +294,9 @@ function GameUIMoonGate:CreateFightPlayer(params)
     -- dragon icon
     local x = params.progress_type == "blue" and size.width-100 or 100
     local dragon_bg = display.newSprite("chat_hero_background.png")
-    :align(display.CENTER, x,90)
+        :align(display.CENTER, x,90)
         :addTo(player)
-        -- :scale(0.8)
+    -- :scale(0.8)
     local dragon_img = display.newSprite(img_dir.."dragon_red.png")
         :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2+5)
         :addTo(dragon_bg)
@@ -303,7 +304,7 @@ function GameUIMoonGate:CreateFightPlayer(params)
         dragon_img:flipX(true)
     end
     -- display.newSprite(img_dir.."dragon_red_icon.png"):pos(x,90):addTo(player)
-    
+
 
     -- 联盟旗帜
     local x = params.progress_type == "blue" and 40 or 160
@@ -462,7 +463,8 @@ function GameUIMoonGate:InitGarrisonPart()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-
+                UIKit:newGameUI('GameUIAllianceSendTroops',function()end):addToCurrentScene(true)
+                self:leftButtonClicked()
             end
         end):align(display.LEFT_CENTER,window.left+50,window.top-830):addTo(layer)
     local retreat_btn = WidgetPushButton.new({normal = "red_button_146x42.png",pressed = "red_button_highlight_146x42.png"})
@@ -568,6 +570,7 @@ function GameUIMoonGate:onExit()
 end
 
 return GameUIMoonGate
+
 
 
 

@@ -39,6 +39,15 @@ end
 function SoldierManager:GetGarrisonSoldierCount()
     return self:GetTotalSoldierCount()
 end
+-- 获取派兵上限
+function SoldierManager:GetTroopPopulation()
+    local armyCamps = City:GetBuildingByType("armyCamp")
+    local troopPopulation = 0
+    for k,v in pairs(armyCamps) do
+        troopPopulation = troopPopulation + v:GetTroopPopulation()
+    end
+    return troopPopulation
+end
 function SoldierManager:GetTotalUpkeep()
     local total = 0
     for k, v in pairs(self.soldier_map) do
