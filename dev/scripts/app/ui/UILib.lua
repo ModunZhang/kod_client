@@ -1,3 +1,18 @@
+local function getAniNameFromAnimationFileName(file_name)
+    local i, j = string.find(file_name, "[%w_]*%.")
+    return string.sub(file_name, i, j - 1)
+end
+local function getAniNameFromAnimationFiles(animation_files)
+    local anis = {}
+    for i, v in pairs(animation_files) do
+        dump(v)
+        anis[i] = LuaUtils:table_map(v, function(k, file_name)
+            dump(file_name)
+            return k, getAniNameFromAnimationFileName(file_name)
+        end)
+    end
+    return anis
+end
 local STAR_BG = {
     "star1_118x132.png",
     "star2_118x132.png",
@@ -5,71 +20,29 @@ local STAR_BG = {
     "star4_118x132.png",
     "star5_118x132.png",
 }
-local SOLDIER_EFFECT_ANIMATIONS = {
-    ranger = {
-        "Swordsman_effects",
-        "Swordsman_effects",
-        "Swordsman_effects",
-    },
-    catapult = {
-        "Catapult1effects",
-        "Catapult1effects",
-        "Catapult1effects",
-    },
-    lancer = {
-        "Lancer_effects",
-        "Lancer_effects",
-        "Lancer_effects",
-    },
-    swordsman = {
-        "Swordsman_effects",
-        "Swordsman_effects",
-        "Swordsman_effects",
-    },
-    wall = {
-        "Swordsman_effects",
-        "Swordsman_effects",
-        "Swordsman_effects",
-    }
-}
-local SOLDIER_ANIMATIONS = {
-    ranger = {
-        "Archer_1_render",
-        "Archer_1_render",
-        "Archer_1_render",
-    },
-    catapult = {
-        "Catapult_1_render",
-        "Catapult_1_render",
-        "Catapult_1_render",
-    },
-    lancer = {
-        "Cavalry_1_render",
-        "Cavalry_1_render",
-        "Cavalry_1_render",
-    },
-    swordsman = {
-        "Infantry_1_render",
-        "Infantry_1_render",
-        "Infantry_1_render",
-    },
-    wall = {
-        "chengqiang_1",
-        "chengqiang_1",
-        "chengqiang_1",
-    }
-}
 local EFFECT_ANIMATION_FILES = {
     ranger = {
+        "animations/swordsman_effect/Swordsman_effects.ExportJson",
+    },
+    crossbowman = {
         "animations/swordsman_effect/Swordsman_effects.ExportJson",
     },
     catapult = {
         "animations/catapult_effect/Catapult1effects.ExportJson",
     },
+    ballista = {
+        "animations/catapult_effect/Catapult1effects.ExportJson",
+    },
     lancer = {
         "animations/lancer_effect/Lancer_effects.ExportJson",
     },
+    horseArcher = {
+        "animations/lancer_effect/Lancer_effects.ExportJson",
+    },
     swordsman = {
+        "animations/swordsman_effect/Swordsman_effects.ExportJson",
+    },
+    sentinel = {
         "animations/swordsman_effect/Swordsman_effects.ExportJson",
     },
     wall = {
@@ -82,7 +55,17 @@ local SOLDIER_ANIMATION_FILES = {
         "animations/Archer_2_render.ExportJson",
         "animations/Archer_3_render.ExportJson",
     },
+    crossbowman = {
+        "animations/Archer_1_render.ExportJson",
+        "animations/Archer_2_render.ExportJson",
+        "animations/Archer_3_render.ExportJson",
+    },
     catapult = {
+        "animations/Catapult_1_render.ExportJson",
+        "animations/Catapult_1_render.ExportJson",
+        "animations/Catapult_1_render.ExportJson",
+    },
+    ballista = {
         "animations/Catapult_1_render.ExportJson",
         "animations/Catapult_1_render.ExportJson",
         "animations/Catapult_1_render.ExportJson",
@@ -92,7 +75,17 @@ local SOLDIER_ANIMATION_FILES = {
         "animations/Cavalry_1_render.ExportJson",
         "animations/Cavalry_1_render.ExportJson",
     },
+    horseArcher = {
+        "animations/Cavalry_1_render.ExportJson",
+        "animations/Cavalry_1_render.ExportJson",
+        "animations/Cavalry_1_render.ExportJson",
+    },
     swordsman = {
+        "animations/Infantry_1_render.ExportJson",
+        "animations/Infantry_1_render.ExportJson",
+        "animations/Infantry_1_render.ExportJson",
+    },
+    sentinel = {
         "animations/Infantry_1_render.ExportJson",
         "animations/Infantry_1_render.ExportJson",
         "animations/Infantry_1_render.ExportJson",
@@ -159,32 +152,23 @@ local DRAGON_ANIMATIONS_FILES = {
         "animations/green_dragon.ExportJson"
     }
 }
-local DRAGON_ANIMATIONS = {
-    redDragon = {
-        "dragon_red"
-    },
-    blueDragon = {
-        "Blue_dragon"
-    },
-    greenDragon = {
-        "green_dragon"
-    }
-}
-
 DECORATOR_IMAGE = {
-    decorate_lake_1 = "lake_288x240.png", 
-    decorate_lake_2 =  "lake_220x174.png", 
-    decorate_mountain_1 =  "hill_228x146.png", 
-    decorate_mountain_2 =  "hill_312x296.png", 
-    decorate_tree_1 =  "tree_1_120x120.png", 
-    decorate_tree_2 =  "tree_2_120x120.png", 
+    decorate_lake_1 = "lake_288x240.png",
+    decorate_lake_2 =  "lake_220x174.png",
+    decorate_mountain_1 =  "hill_228x146.png",
+    decorate_mountain_2 =  "hill_312x296.png",
+    decorate_tree_1 =  "tree_1_120x120.png",
+    decorate_tree_2 =  "tree_2_120x120.png",
 }
-
 DRAGON_HEAD = {
     blueDragon = "Dragon_blue_113x128.png",
     redDragon = "Dragon_red_113x128.png",
     greenDragon = "Dragon_green_113x128.png"
 }
+local SOLDIER_ANIMATIONS = getAniNameFromAnimationFiles(SOLDIER_ANIMATION_FILES)
+local SOLDIER_EFFECT_ANIMATIONS = getAniNameFromAnimationFiles(EFFECT_ANIMATION_FILES)
+local DRAGON_ANIMATIONS = getAniNameFromAnimationFiles(DRAGON_ANIMATIONS_FILES)
+
 
 return {
     soldier_bg = STAR_BG,
@@ -199,6 +183,7 @@ return {
     dragon_animations_files = DRAGON_ANIMATIONS_FILES,
     decorator_image = DECORATOR_IMAGE
 }
+
 
 
 
