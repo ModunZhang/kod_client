@@ -570,33 +570,3 @@ function GameUIMoonGate:onExit()
 end
 
 return GameUIMoonGate
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

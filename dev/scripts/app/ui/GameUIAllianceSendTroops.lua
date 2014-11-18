@@ -414,12 +414,6 @@ function GameUIAllianceSendTroops:SelectSoldiers()
             table.insert(soldiers, {soldier_type = soldier_type,level = 1, max_num = soldier_num})
         end
     end
-    -- local soldiers = {
-    --     {soldier_type = "swordsman",level = 1, max_num = sm:GetCountBySoldierType("swordsman")},
-    --     {soldier_type = "ranger",level = 1, max_num = sm:GetCountBySoldierType("ranger")},
-    --     {soldier_type = "lancer",level = 1, max_num = sm:GetCountBySoldierType("lancer")},
-    --     {soldier_type = "catapult",level = 1, max_num = sm:GetCountBySoldierType("catapult")},
-    -- }
     for k,v in pairs(soldiers) do
         table.insert(self.soldiers_table, addListItem(v.soldier_type,v.level,v.max_num))
     end
