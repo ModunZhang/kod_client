@@ -1,6 +1,7 @@
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
 local promise = import("..utils.promise")
+local cocos_promise = import("..utils.cocos_promise")
 local BattleObject = import(".BattleObject")
 local Effect = import(".Effect")
 local Wall = import(".Wall")
@@ -58,6 +59,7 @@ local function decode_battle(raw)
                     table.insert(r, {
                         {soldier = soldier, state = "enter", count = count, morale = morale}, {state = "move"}
                     })
+                    table.insert(r, {{state = "defend"}, {state = "breath"}})
                 else
                     table.insert(r, {
                         {soldier = soldier, state = "enter", count = count, morale = morale}, {state = "defend"}
@@ -71,6 +73,7 @@ local function decode_battle(raw)
                     table.insert(r, {
                         {state = "move"}, {soldier = soldier, state = "enter", count = count, morale = morale}
                     })
+                    table.insert(r, {{state = "breath"}, {state = "defend"}})
                 else
                     table.insert(r, {
                         {state = "defend"}, {soldier = soldier, state = "enter", count = count, morale = morale}
@@ -121,6 +124,14 @@ function GameUIReplay:ctor()
             manager:addArmatureFileInfo(v)
         end
     end
+
+    for _, anis in pairs(UILib.dragon_animations_files) do
+        for _, v in pairs(anis) do
+            manager:addArmatureFileInfo(v)
+        end
+    end
+
+    manager:addArmatureFileInfo("animations/dragon_battle/paizi.ExportJson")
 end
 function GameUIReplay:onExit()
     GameUIReplay.super.onExit(self)
@@ -246,7 +257,6 @@ function GameUIReplay:onEnter()
         icon = "icon_32x34.png",
         bar_pos = {x = 0,y = 0}
     }):addTo(unit_info_bg):align(display.LEFT_CENTER, 20, 20)
-    -- progress:SetProgressInfo("", 100)
 
     self.left_progress = progress
 
@@ -282,7 +292,6 @@ function GameUIReplay:onEnter()
         icon = "icon_32x34.png",
         bar_pos = {x = 0,y = 0}
     }):addTo(unit_info_bg):align(display.LEFT_CENTER, 342 - 20, 20)
-    progress:SetProgressInfo("", 50)
     progress:setScaleX(-1)
     self.right_progress = progress
 
@@ -319,27 +328,78 @@ function GameUIReplay:onEnter()
     self.left_morale_cur = self.left_morale_max
     self.right_morale_cur = self.right_morale_max
 
-    local rounds = promise.new()
-    for i, round in ipairs(decode_battle(new_battle)) do
-        rounds:next(function()
-            local pa
-            for _, v in ipairs(round) do
-                local left, right = unpack(v)
-                local left_action = self:DecodeStateBySide(left, true)
-                local right_action = self:DecodeStateBySide(right, false)
-                if not pa then
-                    pa = promise.all(left_action:resolve(self.left), right_action:resolve(self.right))
-                else
-                    pa:next(function(result)
-                        local left, right = unpack(result)
-                        return promise.all(left_action:resolve(left), right_action:resolve(right))
-                    end)
-                end
-            end
-            return pa
+    local dp = self:NewDragonBattle()
+        :next(cocos_promise.delay(0.1))
+        :next(function()
+            local p = promise.new()
+            self:Performance(0.5, function(pos)
+                self.left_dragon:SetHp(1000 - pos * 500, 1000)
+                self.right_dragon:SetHp(1000 - pos * 500, 1000)
+            end, function()
+                p:resolve()
+            end)
+            return p
         end)
-    end
-    rounds:resolve()
+        :next(cocos_promise.delay(0.8))
+        :next(function()
+            return promise.all(
+                self.left_dragon:ShowResult(true)
+                ,self.right_dragon:ShowResult(false)
+            )
+        end)
+        :next(cocos_promise.delay(0.8))
+        :next(function()
+            local p = promise.new()
+            self.left_dragon:ShowBuff()
+            self.right_dragon:ShowBuff()
+            self:Performance(0.5, function(pos)
+                self.left_dragon:SetBuff(string.format("BUFF + %d%%", math.floor(pos * 50)))
+                self.right_dragon:SetBuff(string.format("BUFF + %d%%", math.floor(pos * 50)))
+            end, function()
+                p:resolve()
+            end)
+            return p
+        end)
+        :next(cocos_promise.delay(0.8))
+        :next(function()
+            local p = promise.new()
+            self.dragon_battle:getAnimation():setMovementEventCallFunc(function(armatureBack, movementType, movementID)
+                if movementType == ccs.MovementEventType.complete then
+                    p:resolve(self)
+                end
+            end)
+            self.dragon_battle:getAnimation():play("Animation2", -1, 0)
+            self.dragon_battle:getAnimation():setSpeedScale(0.8)
+            return p
+        end)
+        :next(cocos_promise.delay(0.8))
+        :next(function()
+            local rounds = promise.new()
+            for i, round in ipairs(decode_battle(new_battle)) do
+                rounds:next(function()
+                    local pa
+                    for _, v in ipairs(round) do
+                        local left, right = unpack(v)
+                        local left_action = self:DecodeStateBySide(left, true)
+                        local right_action = self:DecodeStateBySide(right, false)
+                        if not pa then
+                            pa = promise.all(left_action:resolve(self.left), right_action:resolve(self.right))
+                        else
+                            pa:next(function(result)
+                                local left, right = unpack(result)
+                                return promise.all(left_action:resolve(left), right_action:resolve(right))
+                            end)
+                        end
+                    end
+                    return pa
+                end)
+            end
+            rounds:resolve()
+        end)
+
+    promise.new():next(cocos_promise.delay(0.2)):next(function()
+        self.dragon_battle:getAnimation():play("Animation1", -1, 0)
+    end):resolve()
 end
 function GameUIReplay:MoveBattleBgBy(x)
     return function(battle_bg)
@@ -352,6 +412,132 @@ function GameUIReplay:MoveBattleBgBy(x)
         })
         return p
     end
+end
+function GameUIReplay:NewDragonBattle()
+    local dragon_battle = ccs.Armature:create("paizi"):addTo(self.battle):align(display.CENTER, 275, 155)
+
+    local left_bone = dragon_battle:getBone("Layer4")
+    local left_dragon = self:NewDragon(true):addTo(left_bone):pos(-360, -50)
+    left_bone:addDisplay(left_dragon, 0)
+    left_bone:changeDisplayWithIndex(0, true)
+    self.left_dragon = left_dragon
+    self.left_dragon:SetHp(1000, 1000)
+
+
+    local right_bone = dragon_battle:getBone("Layer5")
+    local right_dragon = self:NewDragon():addTo(right_bone):pos(238, -82)
+    right_bone:addDisplay(right_dragon, 0)
+    right_bone:changeDisplayWithIndex(0, true)
+    self.right_dragon = right_dragon
+    self.right_dragon:SetHp(1000, 1000)
+
+    local p = promise.new()
+    dragon_battle:getAnimation()
+        :setMovementEventCallFunc(function(armatureBack, movementType, movementID)
+            if movementType == ccs.MovementEventType.complete then
+                p:resolve(self)
+            end
+        end)
+    self.dragon_battle = dragon_battle
+    return p
+end
+function GameUIReplay:NewDragon(is_left)
+    local node = display.newNode()
+    function node:Init()
+        self.name = cc.ui.UILabel.new({
+            text = "红龙(等级20)",
+            font = UIKit:getFontFilePath(),
+            size = 20,
+            color = UIKit:hex2c3b(0xffedae)
+        }):align(display.CENTER, 45, 180)
+            :addTo(self)
+
+        self.hp_progress = WidgetProgress.new(UIKit:hex2c3b(0xffedae), "progress_bar_262x16.png", "progress_bar_262x16.png", {
+            label_size = 14,
+            has_icon = false,
+            has_bg = false
+        }):addTo(self)
+            :align(display.LEFT_CENTER, -82, 158):scale(0.975, 1)
+        if not is_left then
+            self.hp_progress:pos(166, 158)
+            self.hp_progress:setScaleX(-0.975)
+        end
+
+        self.hp = cc.ui.UILabel.new({
+            text = "",
+            font = UIKit:getFontFilePath(),
+            size = 14,
+            color = UIKit:hex2c3b(0xffedae)
+        }):align(display.CENTER, 45, 160)
+            :addTo(self)
+
+
+        self.result = cc.ui.UILabel.new({
+            text = "WIN",
+            font = UIKit:getFontFilePath(),
+            size = 20,
+            color = UIKit:hex2c3b(0x00be36)
+        }):align(display.CENTER, 120, -55)
+            :addTo(self):hide()
+        if not is_left then
+            self.result:pos(-35, -55)
+        end
+
+        self.buff = cc.ui.UILabel.new({
+            text = "BUFF + 100%",
+            font = UIKit:getFontFilePath(),
+            size = 20,
+            color = UIKit:hex2c3b(0x00be36)
+        }):align(display.CENTER, 20, -55)
+            :addTo(self):hide()
+        if not is_left then
+            self.buff:pos(80, -55)
+        end
+
+        local dragon = ccs.Armature:create("dragon_red")
+            :addTo(self):align(display.CENTER, 130, 60):scale(0.6)
+        dragon:getAnimation():play("Idle", -1, -1)
+        dragon:setScaleX(is_left and 0.6 or -0.6)
+        if not is_left then
+            dragon:pos(-45, 60)
+        end
+    end
+    function node:SetName()
+        return self
+    end
+    function node:SetHp(cur, total)
+        self.hp:setString(string.format("%d/%d", math.floor(cur), math.floor(total)))
+        self.hp_progress:SetProgressInfo("", cur / total * 100)
+        return self
+    end
+    function node:SetReulst(is_win)
+        local color = is_win and UIKit:hex2c3b(0x00be36) or UIKit:hex2c3b(0xff0000)
+        self.result:setColor(color)
+        self.buff:setColor(color)
+        self.result:setString(is_win and "WIN" or "LOSE")
+        return self
+    end
+    function node:ShowResult(is_win)
+        local p = promise.new()
+        self:SetReulst(is_win)
+        transition.scaleTo(self.result:scale(3):show(), {
+            scale = 1,
+            time = 0.15,
+            onComplete = function()
+                p:resolve()
+            end})
+        return p
+    end
+    function node:SetBuff(buff)
+        self.buff:setString(buff)
+        return self
+    end
+    function node:ShowBuff()
+        self.buff:show()
+        return self
+    end
+    node:Init()
+    return node
 end
 function GameUIReplay:NewWall(x)
     return Wall.new():addTo(self.battle_bg):pos(x, 150)
@@ -546,7 +732,52 @@ function GameUIReplay:NextSoldierBySide(side)
         assert(false)
     end
 end
+function GameUIReplay:Performance(time, onUpdate, onComplete)
+    if self.update_handle then
+        self:unscheduleUpdate()
+        self:removeNodeEventListener(self.update_handle)
+    end
+    local t = 0
+    self.update_handle = self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
+        t = t + dt
+        if t > time then
+            t = time
+            if type(onComplete) == "function" then
+                onComplete()
+            end
+            self:unscheduleUpdate()
+        end
+        if type(onUpdate) == "function" then
+            onUpdate(t / time)
+        end
+    end)
+    self:scheduleUpdate()
+    return self
+end
+
+
 return GameUIReplay
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
