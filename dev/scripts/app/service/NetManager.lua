@@ -942,6 +942,13 @@ function NetManager:getDonateToAlliancePromise(donateType)
         donateType = donateType
     }, "联盟捐赠失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
+function NetManager:getMarchToShrinePromose(shrineEventId,dragonType,soldiers)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.marchToShrine", {
+        dragonType = dragonType,
+        shrineEventId = shrineEventId,
+        soldiers = soldiers
+    }, "联盟捐赠失败!"), get_alliancedata_callback()):next(get_response_msg)
+end
 --
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

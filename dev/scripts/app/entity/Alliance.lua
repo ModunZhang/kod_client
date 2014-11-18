@@ -255,6 +255,7 @@ function Alliance:Reset()
     self.help_events = {}
     self:OnOperation("quit")
     self.alliance_map:Reset()
+    self.alliance_shrine:Reset()
 end
 function Alliance:OnOperation(operation_type)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OPERATION, function(listener)

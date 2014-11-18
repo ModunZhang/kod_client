@@ -158,6 +158,12 @@ DECORATOR_IMAGE = {
     decorate_tree_2 =  "tree_2_120x120.png", 
 }
 
+DRAGON_HEAD = {
+    blueDragon = "Dragon_blue_113x128.png",
+    redDragon = "Dragon_red_113x128.png",
+    greenDragon = "Dragon_green_113x128.png"
+}
+
 return {
     soldier_bg = STAR_BG,
     soldier = SOLDIER_TYPE,
@@ -166,7 +172,8 @@ return {
     soldier_animation_files = SOLDIER_ANIMATION_FILES,
     soldier_animation = SOLDIER_ANIMATIONS,
     soldier_image = SOLDIER_IMAGES,
-    decorator_image = DECORATOR_IMAGE
+    decorator_image = DECORATOR_IMAGE,
+    dragon_head  = DRAGON_HEAD
 }
 
 

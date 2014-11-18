@@ -251,7 +251,7 @@ function UIKit:GetPlayerCommonIcon()
     hero:addTo(heroBg)
     return heroBg
 end
-
+--TODO:将这个函数替换成CreateBoxPanel9来实现
 function UIKit:CreateBoxPanel(height)
     local node = display.newNode()
     local bottom = display.newSprite("alliance_box_bottom_552x12.png")
@@ -270,6 +270,15 @@ function UIKit:CreateBoxPanel(height)
     top:addTo(node)
         :align(display.LEFT_BOTTOM,0,next_y)
     return node
+    
+end
+
+function UIKit:CreateBoxPanel9(params)
+    local common_bg = display.newScale9Sprite("gray_box_574x102.png")
+    common_bg:setCapInsets(cc.rect(8,8,556,78))
+    common_bg:setAnchorPoint(cc.p(0,0))
+    common_bg:size(params.width and params.width or 552,params.height)
+    return common_bg
 end
 
 function UIKit:commonButtonLable(params)
@@ -299,3 +308,10 @@ function UIKit:commonTitleBox(height)
     return node
 end
 
+function UIKit:closeButton()
+    local closeButton = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"}, {scale9 = false})
+    display.newSprite("X_3.png")
+        :addTo(closeButton)
+        :pos(-32,30)
+    return closeButton
+end

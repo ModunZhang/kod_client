@@ -121,7 +121,7 @@ local BODY_LOCALIZE = {
 }
 
 local DRAGON_SKILL_EFFECTION = {
-    ["dragonBlood"] = _("提升龙的活力上限"),
+    ["dragonBlood"] = _("提升龙的生命值上限"),
     ["infantryEnhance"] = _("提升步兵的攻击和生命"),
     ["dragonBreath"] = _("提升龙的总攻击"),
     ["siegeEnhance"] = _("提升攻城攻击和生命"),

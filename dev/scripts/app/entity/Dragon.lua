@@ -73,7 +73,6 @@ function DragonEquipment:GetBuffData()
 end
 
 function DragonEquipment:IsReachMaxStar()
-	print("DragonEquipment:IsReachMaxStar------->",self:Name(),self:MaxStar(),self:Star())
 	return self:MaxStar() == self:Star()
 end
 

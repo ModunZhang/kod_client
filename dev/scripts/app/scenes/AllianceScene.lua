@@ -26,6 +26,7 @@ function AllianceScene:onEnter()
 
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(10, 10)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
+    
 end
 function AllianceScene:CreateSceneLayer()
     local scene = AllianceLayer.new()

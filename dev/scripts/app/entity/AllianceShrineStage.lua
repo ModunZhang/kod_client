@@ -15,8 +15,10 @@ end
 function AllianceShrineStage:loadProperty(config)
 	property(self,"stageName",config.stageName)
 	property(self,"stage",config.stage)
+	property(self,"maxStar",3) -- 最大3星
 	property(self,"subStage",config.subStage)
 	property(self,"enemyPower",config.enemyPower)
+	property(self,"index",config.index)
 	property(self,"needPerception",config.needPerception)
 	property(self,"suggestPlayer",config.suggestPlayer)
 	property(self,"suggestPower",config.suggestPower)
@@ -42,6 +44,11 @@ end
 
 function AllianceShrineStage:GetStageDesc()
 	return "关卡描述" .. self:StageName() .. "本地化缺失"
+end
+
+function AllianceShrineStage:Reset()
+	self:SetIsLocked(true)
+	self:SetStar(0)
 end
 
 --兵数量上下浮动20%
@@ -72,7 +79,9 @@ function AllianceShrineStage:formatRewards(name,rewards)
 end
 
 function AllianceShrineStage:SetStar(star)
-	self.star_ = star
+	if star >= 0 and  self:MaxStar() >= star then
+		self.star_ = star
+	end
 end
 
 function AllianceShrineStage:Star()

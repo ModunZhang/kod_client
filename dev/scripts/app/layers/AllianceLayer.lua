@@ -11,6 +11,7 @@ local AllianceLayer = class("AllianceLayer", MapLayer)
 local ZORDER = Enum("BOTTOM", "MIDDLE", "TOP", "BUILDING", "LINE", "SOLDIER")
 local floor = math.floor
 local random = math.random
+local AllianceShrine = import("..entity.AllianceShrine")
 function AllianceLayer:ctor(city)
     Observer.extend(self)
     AllianceLayer.super.ctor(self, 0.9, 2)
@@ -85,19 +86,41 @@ function AllianceLayer:ctor(city)
     end)
     self:scheduleUpdate()
 
-
-    local cur = timer:GetServerTime()
-    local total = 20
-
-    self:CreateCorps("1", {x = 10, y = 10}, {x = 5, y = 15}, cur, cur + total)
-    self:CreateCorps("2", {x = 10, y = 10}, {x = 5, y = 10}, cur, cur + total)
-    self:CreateCorps("3", {x = 10, y = 10}, {x = 5, y = 5}, cur, cur + total)
-    self:CreateCorps("4", {x = 10, y = 10}, {x = 10, y = 5}, cur, cur + total)
-    self:CreateCorps("5", {x = 10, y = 10}, {x = 15, y = 5}, cur, cur + total)
-    self:CreateCorps("6", {x = 10, y = 10}, {x = 15, y = 10}, cur, cur + total)
-    self:CreateCorps("7", {x = 10, y = 10}, {x = 15, y = 15}, cur, cur + total)
-    self:CreateCorps("8", {x = 10, y = 10}, {x = 10, y = 15}, cur, cur + total)
+    self:setNodeEventEnabled(true)
+    local alliance_shire = Alliance_Manager:GetMyAlliance():GetAllianceShrine()
+    dump(alliance_shire:GetMarchEvents())
+    table.foreachi(alliance_shire:GetMarchEvents(),function(_,merchEvent)
+        self:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
+    end)    
+    table.foreachi(alliance_shire:GetMarchReturnEvents(),function(_,merchEvent)
+        self:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
+    end)
+    alliance_shire:AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventsChanged)
+    alliance_shire:AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchReturnEventsChanged)
 end
+
+function AllianceLayer:OnMarchEventsChanged(changed_map)
+    if changed_map.removed then
+        table.foreachi(changed_map.removed,function(_,merchEvent)
+            self:DeleteCorpsById(merchEvent:Id())
+        end)
+    elseif changed_map.added then
+        table.foreachi(changed_map.added,function(_,merchEvent)
+            self:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
+        end)
+    end
+end
+
+function AllianceLayer:OnMarchReturnEventsChanged(changed_map)
+    self:OnMarchEventsChanged(changed_map)
+end
+
+function AllianceLayer:onCleanup()
+    local alliance_shire = Alliance_Manager:GetMyAlliance():GetAllianceShrine()
+    alliance_shire:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventsChanged)
+    alliance_shire:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchReturnEventsChanged)
+end
+
 function AllianceLayer:CreateObject(entity)
     local category = entity:GetCategory()
     local object

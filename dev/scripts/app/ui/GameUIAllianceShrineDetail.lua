@@ -12,20 +12,62 @@ local WidgetSoldierBox = import("..widget.WidgetSoldierBox")
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
 local AllianceShrine = import("..entity.AllianceShrine")
 
-function GameUIAllianceShrineDetail:ctor(shrineStage,allianceShrine)
+function GameUIAllianceShrineDetail:ctor(shrineStage,allianceShrine,isActivate)
 	GameUIAllianceShrineDetail.super.ctor(self)
+	self.isActivate_ = isActivate or false
 	self.shrineStage_ = shrineStage
 	self.allianceShrine_ = allianceShrine
-	self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnPerceotionChanged)
+	if self:IsActivate() then
+		self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnPerceotionChanged)
+		self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
+		self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
+	else
+		HEIGHT = 600 -- 修改背景高度
+	end
 end
 
 function GameUIAllianceShrineDetail:GetAllianceShrine()
 	return self.allianceShrine_
 end
+--是否有激活操作
+function GameUIAllianceShrineDetail:IsActivate()
+	return self.isActivate_
+end
 
 function GameUIAllianceShrineDetail:onMoveOutStage()
-	self.allianceShrine_:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnPerceotionChanged)
+	if self:IsActivate() then
+		self.allianceShrine_:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnPerceotionChanged)
+		self.allianceShrine_:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
+		self.allianceShrine_:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
+	end
 	GameUIAllianceShrineDetail.super.onMoveOutStage(self)
+end
+
+function GameUIAllianceShrineDetail:OnShrineEventsChanged( change_map )
+	self:RefreshStateLable()
+end
+
+function GameUIAllianceShrineDetail:RefreshStateLable()
+	local event = self:GetAllianceShrine():GetShrineEventByStageName(self:GetShrineStage():StageName())
+	if event then
+		self.insight_icon:hide()
+		self.state_label:setString(_("正在进行") .. "\n" .. GameUtils:formatTimeStyle1(event:GetTime()))
+	else
+		self.state_label:hide()
+	end
+end
+
+function GameUIAllianceShrineDetail:OnFightEventTimerChanged(event)
+	if event:StageName() == self:GetShrineStage():StageName() then
+		if event:GetTime() > 1 then -- 有误差 1s
+			self.insight_icon:hide()
+			self.state_label:setString(_("正在进行") .. "\n" .. GameUtils:formatTimeStyle1(event:GetTime()))
+			self.state_label:show()
+		else
+			self.insight_icon:show()
+			self.state_label:hide()
+		end
+	end
 end
 
 function GameUIAllianceShrineDetail:OnPerceotionChanged()
@@ -59,43 +101,61 @@ function GameUIAllianceShrineDetail:BuildUI()
 	   	:addTo(closeButton)
 	   	:pos(-32,30)
 	--ui
-	local desc_label = UIKit:ttfLabel({
-		text = _("注:一场战斗中,每名玩家只能派出一支部队"),
-		size = 20,
-		color = 0x980101
-	}):align(display.BOTTOM_CENTER,304,20):addTo(background)
-	local event_button = WidgetPushButton.new({
-		normal = "yellow_btn_up_185x65.png",
-		pressed = "yellow_btn_down_185x65.png",
-	},{scale9 = false},{disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}})
-		:align(display.RIGHT_BOTTOM, 570,desc_label:getPositionY() + 50)
-		:addTo(background)
-		:setButtonLabel("normal", UIKit:commonButtonLable({
-			text = _("激活事件"),
-			color = 0xfff3c7
-		}))
-		:onButtonClicked(function()
-			self:OnEventButtonClicked()
-		end)
-	self.event_button = event_button
-	local insight_icon = display.newSprite("insight_icon_45x45.png")
-		:align(display.RIGHT_BOTTOM,570 - event_button:getCascadeBoundingBox().width - 120,desc_label:getPositionY() + 60)
-		:addTo(background)
-	local need_insight_title_label = UIKit:ttfLabel({
-		text = _("需要感知力"),
-		size = 18,
-		color = 0x6d6651
-	}):addTo(insight_icon):align(display.LEFT_TOP,insight_icon:getContentSize().width,45)
+	if self:IsActivate() then
+		local desc_label = UIKit:ttfLabel({
+			text = _("注:一场战斗中,每名玩家只能派出一支部队"),
+			size = 20,
+			color = 0x980101
+		}):align(display.BOTTOM_CENTER,304,20):addTo(background)
+		local event_button = WidgetPushButton.new({
+			normal = "yellow_btn_up_185x65.png",
+			pressed = "yellow_btn_down_185x65.png",
+		},{scale9 = false},{disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}})
+			:align(display.RIGHT_BOTTOM, 570,desc_label:getPositionY() + 50)
+			:addTo(background)
+			:setButtonLabel("normal", UIKit:commonButtonLable({
+				text = _("激活事件"),
+				color = 0xfff3c7
+			}))
+			:onButtonClicked(function()
+				self:OnEventButtonClicked()
+			end)
+		self.event_button = event_button
+		local resource = self:GetAllianceShrine():GetPerceptionResource()
+		event_button:setButtonEnabled(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime()) >= self:GetShrineStage():NeedPerception())
+		local insight_icon = display.newSprite("insight_icon_45x45.png")
+			:align(display.RIGHT_BOTTOM,570 - event_button:getCascadeBoundingBox().width - 120,desc_label:getPositionY() + 60)
+			:addTo(background)
+		local need_insight_title_label = UIKit:ttfLabel({
+			text = _("需要感知力"),
+			size = 18,
+			color = 0x6d6651
+		}):addTo(insight_icon):align(display.LEFT_TOP,insight_icon:getContentSize().width,45)
 
-	local need_insight_val_title = UIKit:ttfLabel({
-		text = string.formatnumberthousands(self:GetShrineStage():NeedPerception()),
-		color = 0x403c2f,
-		size  = 24
-	}):addTo(insight_icon):align(display.LEFT_BOTTOM,insight_icon:getContentSize().width, -5)
-
+		local need_insight_val_title = UIKit:ttfLabel({
+			text = string.formatnumberthousands(self:GetShrineStage():NeedPerception()),
+			color = 0x403c2f,
+			size  = 24
+		}):addTo(insight_icon):align(display.LEFT_BOTTOM,insight_icon:getContentSize().width, -5)
+		self.insight_icon = insight_icon
+		self.state_label = UIKit:ttfLabel({
+			text = _("正在进行") .. "\n" .. "00:01:55",
+			size = 24,
+			color = 0x288400,
+		}):align(display.RIGHT_BOTTOM,event_button:getPositionX() - event_button:getCascadeBoundingBox().width - 20,event_button:getPositionY())
+			:addTo(background)
+		self:RefreshStateLable()
+	end
+	--begin listview
+	local items_box_x,items_box_y = 0,0
+	if self:IsActivate() then
+		items_box_x,items_box_y = 25,self.event_button:getPositionY()+self.event_button:getCascadeBoundingBox().height+30
+	else
+		items_box_x,items_box_y = 25,20
+	end
 	local items_box = UIKit:CreateBoxPanel(172)
 		:addTo(background)
-		:pos(25,event_button:getPositionY()+event_button:getCascadeBoundingBox().height+30)
+		:pos(items_box_x,items_box_y)
 	local bar = display.newSprite("blue_bar_548x30.png"):align(display.LEFT_TOP,2,169):addTo(items_box)
 	local label = UIKit:ttfLabel({
 		text = _("事件完成奖励"),
@@ -137,7 +197,7 @@ function GameUIAllianceShrineDetail:GetInfoData()
 	local r = {}
 	r[1] = {"dragon_strength_27x31.png",_("敌方总战斗力"),stage:EnemyPower()}
 	r[2] = {"population.png",_("建议玩家数量"),stage:SuggestPlayer()}
-	r[3] = {"dragon_strength_27x31.png",_("建议部队战斗力"),">" .. stage:SuggestPower()}
+	r[3] = {"dragon_strength_27x31.png",_("建议部队战斗力"),"> " .. stage:SuggestPower()}
 	return r
 end
 
