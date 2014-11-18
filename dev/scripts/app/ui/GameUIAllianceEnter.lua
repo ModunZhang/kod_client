@@ -216,21 +216,21 @@ local ENTER_LIST = {
                 img = "icon_info.png",
                 title = _("战争事件"),
                 func = function (building)
-                -- UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIAllianceShrine',City,"fight_event",building):addToCurrentScene(true)
                 end
             },
             {
                 img = "icon_alliance_crisis.png",
                 title = _("联盟危机"),
                 func = function (building)
-                -- UIKit:newGameUI('GameUIOrderHall',City,"village",building):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIAllianceShrine',City,"stage",building):addToCurrentScene(true)
                 end
             },
             {
                 img = "icon_upgrade.png",
                 title = _("升级"),
                 func = function (building)
-                -- UIKit:newGameUI('GameUIOrderHall',City,"upgrade",building):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIAllianceShrine',City,"upgrade",building):addToCurrentScene(true)
                 end
             },
         },

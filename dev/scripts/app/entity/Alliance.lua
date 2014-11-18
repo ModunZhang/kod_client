@@ -2,6 +2,7 @@ local Localize = import("..utils.Localize")
 local property = import("..utils.property")
 local Enum = import("..utils.Enum")
 local Flag = import(".Flag")
+local AllianceShrine = import(".AllianceShrine")
 local AllianceMap = import(".AllianceMap")
 local AllianceMember = import(".AllianceMember")
 local MultiObserver = import(".MultiObserver")
@@ -42,6 +43,10 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     self.join_events = {}
     self.help_events = {}
     self.alliance_map = AllianceMap.new(self)
+    self.alliance_shrine = AllianceShrine.new(self)
+end
+function Alliance:GetAllianceShrine()
+    return self.alliance_shrine
 end
 function Alliance:ResetAllListeners()
     self.alliance_map:ClearAllListener()
@@ -250,6 +255,7 @@ function Alliance:Reset()
     self.help_events = {}
     self:OnOperation("quit")
     self.alliance_map:Reset()
+    self.alliance_shrine:Reset()
 end
 function Alliance:OnOperation(operation_type)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OPERATION, function(listener)
@@ -381,6 +387,7 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     self:OnHelpEventsChanged(alliance_data.helpEvents)
     self:OnAllianceMemberDataChanged(alliance_data.members)
     self.alliance_map:OnAllianceDataChanged(alliance_data)
+    self.alliance_shrine:OnAllianceDataChanged(alliance_data)
 end
 function Alliance:OnNewEventsComming(__events)
     if not __events then return end
@@ -637,32 +644,7 @@ function Alliance:GetAllianceArchonMember()
     end
     return nil
 end
+function Alliance:OnTimer(current_time)
+    self:GetAllianceShrine():OnTimer(current_time)
+end
 return Alliance
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

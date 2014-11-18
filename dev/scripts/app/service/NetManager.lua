@@ -924,6 +924,12 @@ function NetManager:getDistroyAllianceDecoratePromise(decorateId)
         decorateId = decorateId
     }, "拆除装饰物失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
+-- 激活联盟事件
+function NetManager:getActivateAllianceShrineStagePromise(stageName)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.activateAllianceShrineStage", {
+        stageName = stageName
+    }, "激活联盟事件失败!"),get_alliancedata_callback()):next(get_response_msg)
+end
 -- 升级联盟建筑
 function NetManager:getUpgradeAllianceBuildingPromise(buildingName)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.upgradeAllianceBuilding", {
@@ -934,6 +940,13 @@ end
 function NetManager:getDonateToAlliancePromise(donateType)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.donateToAlliance", {
         donateType = donateType
+    }, "联盟捐赠失败!"), get_alliancedata_callback()):next(get_response_msg)
+end
+function NetManager:getMarchToShrinePromose(shrineEventId,dragonType,soldiers)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.marchToShrine", {
+        dragonType = dragonType,
+        shrineEventId = shrineEventId,
+        soldiers = soldiers
     }, "联盟捐赠失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 --

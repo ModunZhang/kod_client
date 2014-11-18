@@ -8,6 +8,7 @@ local ChatCenter = import('..entity.ChatCenter')
 return function(userData)
     User = User_.new(userData._id)
     Alliance_Manager = AllianceManager_.new()
+    app.timer:AddListener(Alliance_Manager)
     City = City_.new()
     MailManager = MailManager_.new()
     local init_buildings = {}

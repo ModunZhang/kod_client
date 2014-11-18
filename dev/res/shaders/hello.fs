@@ -18,20 +18,17 @@ float get_height()
 	vec2 mid_point = vec2(0.5);
 	float radius = distance(mid_point, vec2(0.0));
 	float alpha = 1.0 - distance(point, mid_point) / radius;
-	return pow(alpha, 6.0) * max_height;
+	return pow(alpha, 16.0) * max_height;
 }
 void main(void)
 {
 	float height = get_height();
-	// vec3 camera_dir = normalize(vec3(-1.0, 1.0, 0.0));
-	vec2 correct = v_texCoord.xy;
-	// vec2 correct = v_texCoord.xy + camera_dir.xy * height;
+	vec3 camera_dir = normalize(vec3(-1.0, 1.0, 0.0));
+	// vec2 correct = v_texCoord.xy;
+	vec2 correct = v_texCoord.xy + camera_dir.xy * height;
 	vec4 texColor = texture2D(CC_Texture0, correct);
 	// gl_FragColor = vec4(1.0, 0.0, 0.0, height);
 	gl_FragColor = vec4(vec3(-texColor.rgb * height + texColor.rgb), texColor.a);
-
-
-	gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }
 
 // void main(void)

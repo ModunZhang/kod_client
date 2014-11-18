@@ -148,6 +148,28 @@ local SOLDIER_IMAGES = {
         "soldier_ballista_1.png",
     }
 }
+local DRAGON_ANIMATIONS_FILES = {
+    redDragon = {
+        "animations/dragon_red/dragon_red.ExportJson"
+    },
+    blueDragon = {
+        "animations/Blue_dragon.ExportJson"
+    },
+    greenDragon = {
+        "animations/green_dragon.ExportJson"
+    }
+}
+local DRAGON_ANIMATIONS = {
+    redDragon = {
+        "dragon_red"
+    },
+    blueDragon = {
+        "Blue_dragon"
+    },
+    greenDragon = {
+        "green_dragon"
+    }
+}
 
 DECORATOR_IMAGE = {
     decorate_lake_1 = "lake_288x240.png", 
@@ -158,6 +180,12 @@ DECORATOR_IMAGE = {
     decorate_tree_2 =  "tree_2_120x120.png", 
 }
 
+DRAGON_HEAD = {
+    blueDragon = "Dragon_blue_113x128.png",
+    redDragon = "Dragon_red_113x128.png",
+    greenDragon = "Dragon_green_113x128.png"
+}
+
 return {
     soldier_bg = STAR_BG,
     soldier = SOLDIER_TYPE,
@@ -166,8 +194,13 @@ return {
     soldier_animation_files = SOLDIER_ANIMATION_FILES,
     soldier_animation = SOLDIER_ANIMATIONS,
     soldier_image = SOLDIER_IMAGES,
+    dragon_head  = DRAGON_HEAD,
+    dragon_animations = DRAGON_ANIMATIONS,
+    dragon_animations_files = DRAGON_ANIMATIONS_FILES,
     decorator_image = DECORATOR_IMAGE
 }
+
+
 
 
 

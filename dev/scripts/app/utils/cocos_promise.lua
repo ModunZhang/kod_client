@@ -1,16 +1,22 @@
 local promise = import(".promise")
 local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
-local function delay(time)
+
+local function delay_(time)
     local p = promise.new()
     scheduler.performWithDelayGlobal(function()
         p:resolve()
     end, time)
     return p
 end
+local function delay(time)
+    return function()
+        return delay_(time)
+    end
+end
 local function timeOut(time)
     local time = time or 0
-    return delay(time):next(function()
+    return delay_(time):next(function()
         promise.reject("timeout", time)
     end)
 end
@@ -49,6 +55,7 @@ return {
     promiseWithCatchError = promiseWithCatchError,
     promiseFilterNetError = promiseFilterNetError,
 }
+
 
 
 

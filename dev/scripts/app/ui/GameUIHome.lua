@@ -398,7 +398,7 @@ function GameUIHome:CreateBottom()
             end
         end
     end):addTo(self):pos(display.cx+280, display.top-560)
-
+        
     return bottom_bg
 end
 
