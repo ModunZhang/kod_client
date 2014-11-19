@@ -26,7 +26,7 @@ function GameUIOrderHall:onEnter()
             default = "village" == self.default_tab,
         },
         {
-            label = _("熟料度"),
+            label = _("熟练度"),
             tag = "proficiency",
             default = "proficiency" == self.default_tab,
         },
