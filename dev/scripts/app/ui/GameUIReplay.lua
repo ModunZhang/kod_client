@@ -15,33 +15,150 @@ local GameUIReplay = UIKit:createUIClass('GameUIReplay')
 
 local new_battle = {
     {
-        dual = {
-            left = {soldier = "lancer", count = 1000, damage = 90, morale = 100, decrease = 20},
-            right = {soldier = "catapult", count = 100, damage = 80, morale = 100, decrease = 80},
-            defeat = "right"
-        }
+        left = {soldier = "lancer", count = 1000, damage = 90, morale = 100, decrease = 20},
+        right = {soldier = "catapult", count = 100, damage = 80, morale = 100, decrease = 80},
+        defeat = "right"
     },
     {
-        dual = {
-            left = {damage = 90, decrease = 10},
-            right = {soldier = "swordsman", count = 100, damage = 80, morale = 100, decrease = 50},
-            defeat = "right"
-        }
+        left = {damage = 90, decrease = 10},
+        right = {soldier = "swordsman", count = 100, damage = 80, morale = 100, decrease = 50},
+        defeat = "right"
     },
     {
-        dual = {
-            left = {damage = 90, decrease = 30},
-            right = {soldier = "wall", count = 1000, damage = 80, morale = 100, decrease = 90},
-            defeat = "right"
-        }
+        left = {damage = 90, decrease = 30},
+        right = {soldier = "wall", count = 1000, damage = 80, morale = 100, decrease = 90},
+        defeat = "right"
     },
 }
+local function decode_from_json_data(json_data)
+    local data = {
+        ["stageTroopNumber"] = 1,
+        ["defenceRoundDatas"] = {
+            [1] = {
+                ["soldierStar"] = 1,
+                ["soldierCount"] = 10,
+                ["soldierName"] = "swordsman",
+                ["moraleDecreased"] = 25,
+                ["isWin"] = false,
+                ["soldierTreatedCount"] = 0,
+                ["morale"] = 100,
+                ["soldierDamagedCount"] = 5,
+            }
+            ,
+            [2] = {
+                ["soldierStar"] = 1,
+                ["soldierCount"] = 10,
+                ["soldierName"] = "sentinel",
+                ["moraleDecreased"] = 30,
+                ["isWin"] = false,
+                ["soldierTreatedCount"] = 0,
+                ["morale"] = 100,
+                ["soldierDamagedCount"] = 3,
+            }
+            ,
+            [3] = {
+                ["soldierStar"] = 1,
+                ["soldierCount"] = 10,
+                ["soldierName"] = "ranger",
+                ["moraleDecreased"] = 120,
+                ["isWin"] = true,
+                ["soldierTreatedCount"] = 0,
+                ["morale"] = 100,
+                ["soldierDamagedCount"] = 6,
+            }
+        ,
+        }
+        ,
+        ["fightResult"] = "attackWin",
+        ["playerName"] = "player_771e863f",
+        ["playerId"] = "WkpHNQnEL",
+        ["attackRoundDatas"] = {
+            [1] = {
+                ["soldierStar"] = 1,
+                ["soldierCount"] = 20,
+                ["soldierName"] = "swordsman",
+                ["moraleDecreased"] = 10,
+                ["isWin"] = true,
+                ["soldierTreatedCount"] = 2,
+                ["morale"] = 100,
+                ["soldierDamagedCount"] = 4,
+            }
+            ,
+            [2] = {
+                ["soldierStar"] = 1,
+                ["soldierCount"] = 16,
+                ["soldierName"] = "swordsman",
+                ["moraleDecreased"] = 15,
+                ["isWin"] = true,
+                ["soldierTreatedCount"] = 2,
+                ["morale"] = 90,
+                ["soldierDamagedCount"] = 3,
+            }
+            ,
+            [3] = {
+                ["soldierStar"] = 1,
+                ["soldierCount"] = 13,
+                ["soldierName"] = "swordsman",
+                ["moraleDecreased"] = 60,
+                ["isWin"] = false,
+                ["soldierTreatedCount"] = 3,
+                ["morale"] = 75,
+                ["soldierDamagedCount"] = 6,
+            }
+        ,
+        }
+    ,
+    }
+    local attacks = data.attackRoundDatas
+    local defends = data.defenceRoundDatas
+    left = {soldier = "lancer", count = 1000, damage = 90, morale = 100, decrease = 20}
+    right = {soldier = "catapult", count = 100, damage = 80, morale = 100, decrease = 80}
+    defeat = "right"
+    local battle = {}
+    local defeat
+    for i = 1, #data.attackRoundDatas do
+        local attacker = attacks[i]
+        local defender = defends[i]
+        local left
+        local right
+        if defeat == "right" then
+            left = {
+                damage = attacker.soldierDamagedCount,
+                decrease = attacker.moraleDecreased
+            }
+        else
+            left = {
+                soldier = attacker.soldierName,
+                count = attacker.soldierCount,
+                damage = attacker.soldierDamagedCount,
+                morale = attacker.morale,
+                decrease = attacker.moraleDecreased
+            }
+        end
+        if defeat == "left" then
+            right = {
+                damage = defender.soldierDamagedCount,
+                decrease = defender.moraleDecreased
+            }
+        else
+            right = {
+                soldier = defender.soldierName,
+                count = defender.soldierCount,
+                damage = defender.soldierDamagedCount,
+                morale = defender.morale,
+                decrease = defender.moraleDecreased
+            }
+        end
+        defeat = attacker.isWin and "right" or "left"
+        table.insert(battle, {left = left, right = right, defeat = defeat})
+    end
+    return battle
+end
 local function decode_battle(raw)
     local rounds = {}
     local left_soldier, right_soldier
-    for i, v in ipairs(raw) do
+    for i, dual in ipairs(raw) do
         local r = {}
-        local dual = v.dual
         local left, right = dual.left, dual.right
         left_soldier = left.soldier or left_soldier
         right_soldier = right.soldier or right_soldier
@@ -187,24 +304,24 @@ function GameUIReplay:onEnter()
 
 
     -- title
-    local player_name = cc.ui.UIImage.new("background_288x60.png")
+    self.left_name = cc.ui.UIImage.new("background_288x60.png")
         :addTo(back_ground):pos(5, back_height - 65)
     cc.ui.UILabel.new({
-        text = "playerName1",
+        text = "",
         font = UIKit:getFontFilePath(),
         size = 22,
         color = UIKit:hex2c3b(0x403c2f)
     }):align(display.CENTER, 288/2, 60/2)
-        :addTo(player_name)
-    local player_name = cc.ui.UIImage.new("background_288x60.png")
+        :addTo(self.left_name)
+    self.right_name = cc.ui.UIImage.new("background_288x60.png")
         :addTo(back_ground):pos(back_width - 288 - 5, back_height - 65):flipX(true)
     cc.ui.UILabel.new({
-        text = "playerName2",
+        text = "",
         font = UIKit:getFontFilePath(),
         size = 22,
         color = UIKit:hex2c3b(0x403c2f)
     }):align(display.CENTER, 288/2, 60/2)
-        :addTo(player_name)
+        :addTo(self.right_name)
 
     local unit_bg = cc.ui.UIImage.new("unit_name_bg_blue_276x48.png")
         :addTo(back_ground):pos(7, back_height - 65 - 39)
@@ -308,20 +425,25 @@ function GameUIReplay:onEnter()
     local bg = cc.ui.UIImage.new("back_ground_82x82.png")
         :addTo(back_ground):align(display.CENTER, back_width_half, back_height - 388 - 48)
 
+
+
+    ----
+    local battle = decode_from_json_data()
+    dump(battle)
+
     local x, y = bg:getPosition()
     self.list_view = self:CreateVerticalListViewDetached(0, 80, back_ground:getContentSize().width, y - 82 / 2):addTo(back_ground)
     self.left_corps = {}
     self.right_corps = {}
     self.left_round = 0
     self.right_round = 0
-    for i, v in pairs(new_battle) do
-        local item, left, right = self:CreateItemWithListView(self.list_view, v.dual)
+    for i, dual in pairs(battle) do
+        local item, left, right = self:CreateItemWithListView(self.list_view, dual)
         table.insert(self.left_corps, left)
         table.insert(self.right_corps, right)
         self.list_view:addItem(item)
     end
     self.list_view:reload():resetPosition()
-
 
     self.left_morale_max = 0
     self.right_morale_max = 0
@@ -375,7 +497,7 @@ function GameUIReplay:onEnter()
         :next(cocos_promise.delay(0.8))
         :next(function()
             local rounds = promise.new()
-            for i, round in ipairs(decode_battle(new_battle)) do
+            for i, round in ipairs(decode_battle(battle)) do
                 rounds:next(function()
                     local pa
                     for _, v in ipairs(round) do
@@ -544,9 +666,13 @@ function GameUIReplay:NewWall(x)
 end
 local soldier_arrange = {
     swordsman = {row = 4, col = 2},
+    sentinel = {row = 4, col = 2},
     ranger = {row = 4, col = 2},
+    crossbowman = {row = 4, col = 2},
     lancer = {row = 3, col = 1},
+    horseArcher = {row = 3, col = 1},
     catapult = {row = 2, col = 1},
+    ballista = {row = 2, col = 1},
 }
 function GameUIReplay:NewCorps(soldier, x, y)
     local arrange = soldier_arrange[soldier]
@@ -757,6 +883,14 @@ end
 
 
 return GameUIReplay
+
+
+
+
+
+
+
+
 
 
 
