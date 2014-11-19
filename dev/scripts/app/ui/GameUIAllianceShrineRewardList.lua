@@ -45,7 +45,7 @@ function GameUIAllianceShrineRewardList:BuildUI()
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         alignment = UIListView.ALIGNMENT_LEFT,
     }):addTo(background)
-
+	local line = display.newScale9Sprite("dividing_line_594x2.png"):size(595,1):align(display.LEFT_BOTTOM,0,710):addTo(background)
 	cc.ui.UIPushButton.new({
 		normal = "yellow_btn_up_185x65.png",
 		pressed = "yellow_btn_down_185x65.png"

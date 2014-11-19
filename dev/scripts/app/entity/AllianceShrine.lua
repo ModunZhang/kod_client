@@ -279,7 +279,7 @@ function AllianceShrine:RefreshEvents(alliance_data)
 			local report = ShrineReport.new()
 			report:Update(v)
 			report:SetStage(self:GetStatgeByName(report:StageName()))
-			self.shrineReports[report:Id()] = report
+			table.insert(self.shrineReports,report)
 		end
 	end
 	self:RefreshShrineReports(alliance_data.__shrineReports)
@@ -291,20 +291,21 @@ function AllianceShrine:RefreshShrineReports( __shrineReports )
 	local change_map = Event_Handler_Func(
 		__shrineReports
 		,function(event)
-			if not self.shrineReports[event.id] then
 				local report = ShrineReport.new()
 				report:Update(event)
 				report:SetStage(self:GetStatgeByName(report:StageName()))
-				self.shrineReports[report:Id()] = report
+				table.insert(self.shrineReports,report)
 				return report
-			end
-			return nil
 		end
 		,function(event) 
 			--修改事件记录?
 		end
 		,function(event)
-			--删除事件记录?
+			table.remove(self.shrineReports,#self.shrineReports)
+			local report = ShrineReport.new()
+			report:Update(event)
+			report:SetStage(self:GetStatgeByName(report:StageName()))
+			return report
 		end
 	)
 	self:OnShrineReportsChanged(pack_map(change_map))
@@ -469,14 +470,7 @@ end
 --联盟危机
 
 function AllianceShrine:GetShrineReports()
-	local r = {}
-	for _,v in pairs(self.shrineReports) do
-		table.insert(r,v)
-	end
-	table.sort( r, function(a,b)
-		return a:stageName() > b:stageName()
-	end )
-	return r
+	return self.shrineReports
 end
 
 function AllianceShrine:GetMarchReturnEventById(id)
