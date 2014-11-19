@@ -155,6 +155,7 @@ end
 
 function GameUIShrineReport:OnRePlayClicked(roundData)
 	print("TODO:圣地战斗回放")
+	UIKit:newGameUI("GameUIReplay",roundData):addToCurrentScene(true)
 end
 
 function GameUIShrineReport:RefreshUI(tag)

@@ -30,85 +30,8 @@ local new_battle = {
         defeat = "right"
     },
 }
-local function decode_from_json_data(json_data)
-    local data = {
-        ["stageTroopNumber"] = 1,
-        ["defenceRoundDatas"] = {
-            [1] = {
-                ["soldierStar"] = 1,
-                ["soldierCount"] = 10,
-                ["soldierName"] = "swordsman",
-                ["moraleDecreased"] = 25,
-                ["isWin"] = false,
-                ["soldierTreatedCount"] = 0,
-                ["morale"] = 100,
-                ["soldierDamagedCount"] = 5,
-            }
-            ,
-            [2] = {
-                ["soldierStar"] = 1,
-                ["soldierCount"] = 10,
-                ["soldierName"] = "sentinel",
-                ["moraleDecreased"] = 30,
-                ["isWin"] = false,
-                ["soldierTreatedCount"] = 0,
-                ["morale"] = 100,
-                ["soldierDamagedCount"] = 3,
-            }
-            ,
-            [3] = {
-                ["soldierStar"] = 1,
-                ["soldierCount"] = 10,
-                ["soldierName"] = "ranger",
-                ["moraleDecreased"] = 120,
-                ["isWin"] = true,
-                ["soldierTreatedCount"] = 0,
-                ["morale"] = 100,
-                ["soldierDamagedCount"] = 6,
-            }
-        ,
-        }
-        ,
-        ["fightResult"] = "attackWin",
-        ["playerName"] = "player_771e863f",
-        ["playerId"] = "WkpHNQnEL",
-        ["attackRoundDatas"] = {
-            [1] = {
-                ["soldierStar"] = 1,
-                ["soldierCount"] = 20,
-                ["soldierName"] = "swordsman",
-                ["moraleDecreased"] = 10,
-                ["isWin"] = true,
-                ["soldierTreatedCount"] = 2,
-                ["morale"] = 100,
-                ["soldierDamagedCount"] = 4,
-            }
-            ,
-            [2] = {
-                ["soldierStar"] = 1,
-                ["soldierCount"] = 16,
-                ["soldierName"] = "swordsman",
-                ["moraleDecreased"] = 15,
-                ["isWin"] = true,
-                ["soldierTreatedCount"] = 2,
-                ["morale"] = 90,
-                ["soldierDamagedCount"] = 3,
-            }
-            ,
-            [3] = {
-                ["soldierStar"] = 1,
-                ["soldierCount"] = 13,
-                ["soldierName"] = "swordsman",
-                ["moraleDecreased"] = 60,
-                ["isWin"] = false,
-                ["soldierTreatedCount"] = 3,
-                ["morale"] = 75,
-                ["soldierDamagedCount"] = 6,
-            }
-        ,
-        }
-    ,
-    }
+function decode_from_json_data(json_data)
+    local data = json_data
     local attacks = data.attackRoundDatas
     local defends = data.defenceRoundDatas
     left = {soldier = "lancer", count = 1000, damage = 90, morale = 100, decrease = 20}
@@ -220,7 +143,8 @@ local function decode_battle(raw)
     return rounds
 end
 
-function GameUIReplay:ctor()
+function GameUIReplay:ctor(json_data)
+    self.json_data = decode_from_json_data(json_data)
     GameUIReplay.super.ctor(self)
     for _, v in pairs{
         {"animations/Archer_1_render0.plist","animations/Archer_1_render0.png"},
@@ -428,7 +352,7 @@ function GameUIReplay:onEnter()
 
 
     ----
-    local battle = decode_from_json_data()
+    local battle = self.json_data
     dump(battle)
 
     local x, y = bg:getPosition()
