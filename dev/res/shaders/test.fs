@@ -20,7 +20,7 @@ struct camera_
 	vec3 front;
 	vec3 up;
 	float fov;
-} camera = camera_(vec3(0.0, 10.0, 10.0), vec3(0.0, 0.0, -1.0), vec3(0.0, 1.0, 0.0), 45.0);
+} camera = camera_(vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, -1.0), vec3(0.0, 1.0, 0.0), 45.0);
 
 ray_ getRay(vec2 pixel)
 {
@@ -35,21 +35,45 @@ ray_ getRay(vec2 pixel)
 
 void main(void)
 {
-	vec2 point = vec2(gl_FragCoord.x, gl_FragCoord.y) / iResolution;
-	// ray_ ray = getRay(point);
-	// vec3 center = vec3(0.0, 10.0, -10.0);
-	// vec3 norm = vec3(0.0, 0.0, 1.0);
-	// float t = dot((center - ray.origin), norm) / dot(norm, ray.dir);
-	// if(t > 0.0){
-	// 	vec3 intersect = ray.dir * t + ray.origin;
-	// 	float dis = distance(intersect, center);
-	// 	float e = 1.0 - step(2.0, dis);
-	// 	gl_FragColor = vec4(1.0 * e, 1.0, 1.0, 1.0);
-	// }else{
-	// 	gl_FragColor = vec4(.0);
-	// }
-	vec4 texColor = texture2D(CC_Texture0, v_texCoord);
-	gl_FragColor = texColor;
+	vec2 point = gl_FragCoord.xy / iResolution;
+	ray_ ray = getRay(point);
+	vec3 lightPos = vec3(0.0, 10.0, -55.0);
+	vec3 center = vec3(0.0, 0.0, -50.0);
+	vec3 norm = vec3(0.0, 1.0, 1.0);
+	// vec3 norm = vec3(0.0, 1.0, (sin(CC_Time[1]) + 1.0) * 0.5);
+	float radius = 10.0;
+	float t = dot((center - ray.origin), norm) / dot(norm, ray.dir);
+	if(t > 0.0){
+		vec3 intersect = ray.dir * t + ray.origin;
+
+		vec3 lightDir = vec3(0.0, -1.0, 1.0);
+		vec3 lightHalf = vec3(camera.eye + lightDir);
+		// diffuse
+		vec4 ab = vec4(0.5, 0.0, 0.0, 0.0);
+		vec4 lc = vec4(1.0, 1.0, 1.0, 0.0);
+		float dotd = dot(norm, normalize(lightDir));
+		float ndotd = dot(-norm, normalize(lightDir));
+		vec4 diffuse = vec4(0.0);
+		diffuse += step(0.0, dotd) * dotd * lc;
+		// diffuse += step(0.0, ndotd) * ndotd * lc;
+
+		float shiness = 0.5;
+		float dots = dot(norm, normalize(lightHalf));
+		float ndots = dot(-norm, normalize(lightHalf));
+		vec4 specular = vec4(0.0);
+		specular += pow(step(0.0, dots) * dots, shiness) * lc;
+		// specular += pow(step(0.0, ndots) * ndots, shiness) * lc;
+
+		float dis = distance(intersect, center);
+		// vec4 color = vec4((1.0 - vec3(ray.origin.z - intersect.z) / 80.0), 1.0);
+		vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
+		color += ab;
+		color += diffuse;
+		color += specular;
+		gl_FragColor = color * (1.0 - step(radius, dis));
+	}else{
+		gl_FragColor = vec4(.0);
+	}
 }
 
 

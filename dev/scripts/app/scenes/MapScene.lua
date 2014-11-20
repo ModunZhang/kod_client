@@ -16,7 +16,7 @@ function MapScene:onEnter()
     self:CreateMultiTouchLayer()
 end
 function MapScene:onExit()
-
+    self.touch_judgment:destructor()
 end
 function MapScene:GetSceneLayer()
     return self.scene_layer

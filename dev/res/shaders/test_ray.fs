@@ -113,10 +113,10 @@ float intersect_plane(ray_ ray, plane_ plane, inout vec4 color)
 void main(void)
 {
 	vec2 point = (2.0*gl_FragCoord.xy - iResolution.xy)/iResolution.x;
-	float r = radians(mod(CC_Time[1] * 10.0, 360.0));
+	float r = radians(mod(CC_Time[1] * 50.0, 360.0));
 	vec3 lookat = vec3(0.0, 10.0, -10.0);
 	float looklen = 30.0;
-	vec3 position = vec3(lookat.z + cos(r) * looklen, 10.0, lookat.x + sin(r) * looklen - 10.0);
+	vec3 position = vec3(lookat.z + cos(r) * looklen, sin(r) * 10.0 + 10.0, lookat.x + sin(r) * looklen - 10.0);
 	camera_ camera = camera_(position, normalize(lookat - position), vec3(0.0, 1.0, 0.0), 90.0);
 	ray_ ray = getRay(point, camera);
 	vec4 result = vec4(0.0);

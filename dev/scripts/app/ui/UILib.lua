@@ -5,9 +5,7 @@ end
 local function getAniNameFromAnimationFiles(animation_files)
     local anis = {}
     for i, v in pairs(animation_files) do
-        dump(v)
         anis[i] = LuaUtils:table_map(v, function(k, file_name)
-            dump(file_name)
             return k, getAniNameFromAnimationFileName(file_name)
         end)
     end
