@@ -12,7 +12,7 @@ local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local GameUIAllianceBattle = UIKit:createUIClass('GameUIAllianceBattle', "GameUIWithCommonHeader")
 local img_dir = "allianceHome/"
 
-function GameUIAllianceBattle:ctor(city,title)
+function GameUIAllianceBattle:ctor(city)
     GameUIAllianceBattle.super.ctor(self, city, _("联盟会战"))
     self.alliance = Alliance_Manager:GetMyAlliance()
 end
@@ -69,9 +69,7 @@ function GameUIAllianceBattle:CreateBetweenBgAndTitle()
     -- other_alliance_layer
     self.other_alliance_layer = display.newLayer()
     self:addChild(self.other_alliance_layer)
-    -- foreign_relations_layer
-    self.foreign_relations_layer = display.newLayer()
-    self:addChild(self.foreign_relations_layer)
+    
 end
 
 function GameUIAllianceBattle:InitBattleStatistics()
@@ -649,7 +647,7 @@ function GameUIAllianceBattle:CreateAllianceItem()
         :addTo(flag_bg)
 
 
-    local i_icon = display.newSprite("info_26X26.png")
+    local i_icon = display.newSprite("info_26x26.png")
         :align(display.CENTER,-flag_bg:getCascadeBoundingBox().size.width/2+15,-flag_bg:getCascadeBoundingBox().size.height/2+15)
         :addTo(flag_bg)
 
@@ -813,66 +811,66 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails()
         h =260
     }):align(display.TOP_CENTER, w/2 , h-330)
         :addTo(body)
-    -- 和平标记
-    local peace_bg = display.newSprite("back_ground_green_570x84.png")
-        :align(display.CENTER, w/2, h-650)
-        :addTo(body)
-    UIKit:ttfLabel({
-            text = _("标记和平"),
-            size = 24,
-            color = 0xffedae,
-        }):align(display.LEFT_CENTER,120,peace_bg:getContentSize().height/2)
-            :addTo(peace_bg)
-    -- 和平被标记
-    display.newSprite("upgrade_mark.png"):addTo(peace_bg):pos(30,peace_bg:getContentSize().height/2)
-    -- icon
-    display.newSprite("icon_relation.png"):addTo(peace_bg):pos(80,peace_bg:getContentSize().height/2)
+ --    -- 和平标记
+ --    local peace_bg = display.newSprite("back_ground_green_570x84.png")
+ --        :align(display.CENTER, w/2, h-650)
+ --        :addTo(body)
+ --    UIKit:ttfLabel({
+ --            text = _("标记和平"),
+ --            size = 24,
+ --            color = 0xffedae,
+ --        }):align(display.LEFT_CENTER,120,peace_bg:getContentSize().height/2)
+ --            :addTo(peace_bg)
+ --    -- 和平被标记
+ --    display.newSprite("upgrade_mark.png"):addTo(peace_bg):pos(30,peace_bg:getContentSize().height/2)
+ --    -- icon
+ --    display.newSprite("icon_relation.png"):addTo(peace_bg):pos(80,peace_bg:getContentSize().height/2)
 
-    local cancel_btn = WidgetPushButton.new({normal = "red_button_146x42.png",pressed = "red_button_highlight_146x42.png"})
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("取消"),
-            size = 24,
-            color = 0xffedae,
-            shadow= true
-        }))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
+ --    local cancel_btn = WidgetPushButton.new({normal = "red_button_146x42.png",pressed = "red_button_highlight_146x42.png"})
+ --        :setButtonLabel(UIKit:ttfLabel({
+ --            text = _("取消"),
+ --            size = 24,
+ --            color = 0xffedae,
+ --            shadow= true
+ --        }))
+ --        :onButtonClicked(function(event)
+ --            if event.name == "CLICKED_EVENT" then
 
-            end
-        end):align(display.RIGHT_CENTER,peace_bg:getContentSize().width-10,peace_bg:getContentSize().height/2):addTo(peace_bg)
-    -- 仇敌标记
-    local enemy_bg = display.newSprite("back_ground_red_570x84.png")
-        :align(display.CENTER, w/2, h-750)
-        :addTo(body)
-    UIKit:ttfLabel({
-            text = _("标记仇敌"),
-            size = 24,
-            color = 0xffedae,
-        }):align(display.LEFT_CENTER,120,enemy_bg:getContentSize().height/2)
-            :addTo(enemy_bg)
-	-- honour icon
-    display.newSprite("honour.png"):addTo(enemy_bg):pos(enemy_bg:getContentSize().width-240,enemy_bg:getContentSize().height/2)
+ --            end
+ --        end):align(display.RIGHT_CENTER,peace_bg:getContentSize().width-10,peace_bg:getContentSize().height/2):addTo(peace_bg)
+ --    -- 仇敌标记
+ --    local enemy_bg = display.newSprite("back_ground_red_570x84.png")
+ --        :align(display.CENTER, w/2, h-750)
+ --        :addTo(body)
+ --    UIKit:ttfLabel({
+ --            text = _("标记仇敌"),
+ --            size = 24,
+ --            color = 0xffedae,
+ --        }):align(display.LEFT_CENTER,120,enemy_bg:getContentSize().height/2)
+ --            :addTo(enemy_bg)
+	-- -- honour icon
+ --    display.newSprite("honour.png"):addTo(enemy_bg):pos(enemy_bg:getContentSize().width-240,enemy_bg:getContentSize().height/2)
 
-    UIKit:ttfLabel({
-            text = "100",
-            size = 20,
-            color = 0xffedae,
-        }):align(display.CENTER,enemy_bg:getContentSize().width-200,enemy_bg:getContentSize().height/2)
-            :addTo(enemy_bg)
-    -- icon
-    display.newSprite("icon_enemy.png"):addTo(enemy_bg):pos(80,enemy_bg:getContentSize().height/2)
-    local mark_btn = WidgetPushButton.new({normal = "blue_btn_up_142x39.png",pressed = "blue_btn_down_142x39.png"})
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("标记"),
-            size = 22,
-            color = 0xffedae,
-            shadow= true
-        }))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
+ --    UIKit:ttfLabel({
+ --            text = "100",
+ --            size = 20,
+ --            color = 0xffedae,
+ --        }):align(display.CENTER,enemy_bg:getContentSize().width-200,enemy_bg:getContentSize().height/2)
+ --            :addTo(enemy_bg)
+ --    -- icon
+ --    display.newSprite("icon_enemy.png"):addTo(enemy_bg):pos(80,enemy_bg:getContentSize().height/2)
+ --    local mark_btn = WidgetPushButton.new({normal = "blue_btn_up_142x39.png",pressed = "blue_btn_down_142x39.png"})
+ --        :setButtonLabel(UIKit:ttfLabel({
+ --            text = _("标记"),
+ --            size = 22,
+ --            color = 0xffedae,
+ --            shadow= true
+ --        }))
+ --        :onButtonClicked(function(event)
+ --            if event.name == "CLICKED_EVENT" then
 
-            end
-        end):align(display.RIGHT_CENTER,enemy_bg:getContentSize().width-10,enemy_bg:getContentSize().height/2):addTo(enemy_bg)
+ --            end
+ --        end):align(display.RIGHT_CENTER,enemy_bg:getContentSize().width-10,enemy_bg:getContentSize().height/2):addTo(enemy_bg)
 
 end
 
