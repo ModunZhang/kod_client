@@ -61,6 +61,27 @@ end
 function AllianceMoonGate:GetAlliance()
 	return self.alliance
 end
+function AllianceMoonGate:GetoOurTroops()
+	return self.ourTroops
+end
+function AllianceMoonGate:GetEnemyTroops()
+	return self.enemyTroops
+end
+function AllianceMoonGate:GetCurrentFightTroops()
+	return self.currentFightTroops
+end
+function AllianceMoonGate:GetFightReports()
+	return self.fightReports
+end
+function AllianceMoonGate:GetMoonGateMarchEvents()
+	return self.moonGateMarchEvents
+end
+function AllianceMoonGate:GetMoonGateMarchReturnEvents()
+	return self.moonGateMarchReturnEvents
+end
+function AllianceMoonGate:GetAlliance()
+	return self.alliance
+end
 
 function AllianceMoonGate:Reset()
 	self.ourTroops = {}
