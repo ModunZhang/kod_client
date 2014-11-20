@@ -423,7 +423,11 @@ function GameUIAllianceHome:OnBottomButtonClicked(event)
     end
 end
 function GameUIAllianceHome:OnMidButtonClicked(event)
-    
+    local tag = event.target:getTag()
+    if not tag then return end
+    if tag == 3 then -- 战斗
+       NetManager:getFindAllianceToFightPromose()
+    end
 end
 
 function GameUIAllianceHome:OnBasicChanged(alliance,changed_map)

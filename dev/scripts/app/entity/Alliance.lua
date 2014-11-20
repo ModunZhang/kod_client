@@ -3,6 +3,7 @@ local property = import("..utils.property")
 local Enum = import("..utils.Enum")
 local Flag = import(".Flag")
 local AllianceShrine = import(".AllianceShrine")
+local AllianceMoonGate = import(".AllianceMoonGate")
 local AllianceMap = import(".AllianceMap")
 local AllianceMember = import(".AllianceMember")
 local MultiObserver = import(".MultiObserver")
@@ -22,6 +23,7 @@ property(Alliance, "describe", "")
 property(Alliance, "notice", "")
 property(Alliance, "archon", "")
 property(Alliance, "memberCount", 0)
+property(Alliance, "status", "")
 function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     Alliance.super.ctor(self)
     property(self, "id", id)
@@ -44,9 +46,13 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     self.help_events = {}
     self.alliance_map = AllianceMap.new(self)
     self.alliance_shrine = AllianceShrine.new(self)
+    self.alliance_moonGate = AllianceMoonGate.new(self)
 end
 function Alliance:GetAllianceShrine()
     return self.alliance_shrine
+end
+function Alliance:GetAllianceMoonGate()
+    return self.alliance_moonGate
 end
 function Alliance:ResetAllListeners()
     self.alliance_map:ClearAllListener()
@@ -256,6 +262,7 @@ function Alliance:Reset()
     self:OnOperation("quit")
     self.alliance_map:Reset()
     self.alliance_shrine:Reset()
+    self.alliance_moonGate:Reset()
 end
 function Alliance:OnOperation(operation_type)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OPERATION, function(listener)
@@ -388,6 +395,7 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     self:OnAllianceMemberDataChanged(alliance_data.members)
     self.alliance_map:OnAllianceDataChanged(alliance_data)
     self.alliance_shrine:OnAllianceDataChanged(alliance_data)
+    self.alliance_moonGate:OnAllianceDataChanged(alliance_data)
 end
 function Alliance:OnNewEventsComming(__events)
     if not __events then return end
@@ -497,6 +505,7 @@ function Alliance:OnAllianceBasicInfoChanged(basicInfo)
     self:SetPower(basicInfo.power)
     self:SetHonour(basicInfo.honour)
     self:SetCreateTime(basicInfo.createTime)
+    self:SetStatus(basicInfo.status)
 end
 function Alliance:OnAllianceEventsChanged(events)
     if events == nil then return end
