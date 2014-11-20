@@ -125,8 +125,8 @@ end
 ----------------------------------------------------------------------------------------------------
 function Dragon:ctor(drag_type,strength,vitality,status,star,level,exp,hp)
 	property(self, "type", drag_type)
-	property(self, "strength", strength)
-	property(self, "vitality", vitality)
+	property(self, "totalStrength", strength)
+	property(self, "totalVitality", vitality)
 	property(self, "status", status)
 	property(self, "star", star)
 	property(self, "level", level)
@@ -135,6 +135,14 @@ function Dragon:ctor(drag_type,strength,vitality,status,star,level,exp,hp)
 	self.skills_ = {}
 	self.equipments_ = self:DefaultEquipments()
 	self:CheckEquipemtIfLocked_()
+end
+--自身的力量
+function Dragon:Strength()
+  	return config_dragonAttribute[self:Star()].initStrength + self:Level() * config_dragonAttribute[self:Star()].perLevelStrength 
+end
+--自身的活力
+function Dragon:Vitality()
+	return config_dragonAttribute[self:Star()].initVitality + self:Level() * config_dragonAttribute[self:Star()].perLevelVitality 
 end
 
 function Dragon:UpdateEquipmetsAndSkills(json_data)
@@ -164,8 +172,8 @@ end
 
 function Dragon:Update(json_data)
 	self:SetType(json_data.type)
-	self:SetStrength(json_data.strength)
-	self:SetVitality(json_data.vitality)
+	self:SetTotalStrength(json_data.strength)
+	self:SetTotalVitality(json_data.vitality)
 	self:SetStatus(json_data.status)
 	local star = self:Star()
 	self:SetStar(json_data.star)
@@ -258,7 +266,7 @@ function Dragon:DefaultEquipments()
 end
 
 function Dragon:GetMaxHP()
-	return self:Vitality() * 2
+	return self:TotalVitality() * 2
 end
 
 
@@ -317,6 +325,14 @@ function Dragon:GetAllSkillBuffEffect()
 		end
 	end)
 	return r
+end
+--算最强龙
+function Dragon:GetWeight()
+	if not self:Ishated() then
+		return 0
+	else 
+		return self:TotalVitality() * self:TotalStrength()
+	end
 end
 
 return Dragon

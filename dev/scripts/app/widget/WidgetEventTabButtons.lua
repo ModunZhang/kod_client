@@ -637,10 +637,10 @@ function WidgetEventTabButtons:SetUpgradeBuilidingBtnLabel(building,event_item)
         }
         event_item.status = "freeSpeedup"
     else
-        -- 是否已经申请过联盟加速
-        local isRequested = Alliance_Manager:GetMyAlliance()
-            :IsBuildingHasBeenRequestedToHelpSpeedup(building:UniqueUpgradingKey())
-        if isRequested then
+        -- 未加入联盟或者已经申请过联盟加速
+        if Alliance_Manager:GetMyAlliance():IsDefault() or 
+        Alliance_Manager:GetMyAlliance()
+            :IsBuildingHasBeenRequestedToHelpSpeedup(building:UniqueUpgradingKey()) then
             btn_label = _("加速")
             btn_images = {normal = "green_btn_up_142x39.png",
                 pressed = "green_btn_down_142x39.png",

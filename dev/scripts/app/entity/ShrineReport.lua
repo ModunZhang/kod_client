@@ -25,4 +25,11 @@ function ShrineReport:Update(json_data)
 	self:SetPlayerDatas(json_data.playerDatas)
 end
 
+--获取相应星级的声望奖励
+function ShrineReport:GetHonour()
+	if self:Stage() then
+		return self:Stage()["star" .. self:Star() .. "Honour"]
+	end
+end
+
 return ShrineReport

@@ -72,7 +72,7 @@ function AllianceShrineStage:formatRewards(name,rewards)
 	local r = {}
 	local reward_list = string.split(rewards,",")
 	for i,v in ipairs(reward_list) do
-		local reward_type,count = unpack(string.split(v,":"))
+		local reward_type,sub_type,count = unpack(string.split(v,":"))
 		table.insert(r,{type = reward_type,count = count})
 	end
 	property(self,name,r)

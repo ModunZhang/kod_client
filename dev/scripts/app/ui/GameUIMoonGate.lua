@@ -463,7 +463,11 @@ function GameUIMoonGate:InitGarrisonPart()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                UIKit:newGameUI('GameUIAllianceSendTroops',function()end):addToCurrentScene(true)
+                UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
+                    NetManager:getMarchToMoonGatePromose(dragonType,soldiers):catch(function(err)
+                        dump(err:reason())
+                    end)
+                end):addToCurrentScene(true)
                 self:leftButtonClicked()
             end
         end):align(display.LEFT_CENTER,window.left+50,window.top-830):addTo(layer)
@@ -570,3 +574,4 @@ function GameUIMoonGate:onExit()
 end
 
 return GameUIMoonGate
+

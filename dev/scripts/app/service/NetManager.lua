@@ -949,6 +949,18 @@ function NetManager:getMarchToShrinePromose(shrineEventId,dragonType,soldiers)
         soldiers = soldiers
     }, "联盟捐赠失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
+--查找合适的联盟进行战斗
+function NetManager:getFindAllianceToFightPromose()
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.findAllianceToFight", 
+        {}, "查找合适的联盟进行战斗失败!"), get_alliancedata_callback()):next(get_response_msg)
+end
+--行军到月门
+function NetManager:getMarchToMoonGatePromose(dragonType,soldiers)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.marchToMoonGate", 
+        {dragonType = dragonType,
+        soldiers = soldiers}, "行军到月门失败!"), get_alliancedata_callback()):next(get_response_msg)
+end
+
 --
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

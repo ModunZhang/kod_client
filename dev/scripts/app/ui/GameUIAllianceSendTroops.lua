@@ -34,8 +34,12 @@ function GameUIAllianceSendTroops:ctor(march_callback)
         end
     end
     self.soldier_manager = City:GetSoldierManager()
+    self.dragon_manager = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager()
     self.soldiers_table = {}
     self.march_callback = march_callback
+
+    -- 默认选中最强的龙
+    self.dragon = self.dragon_manager:GetDragon(self.dragon_manager:GetPowerfulDragonType())
 end
 
 function GameUIAllianceSendTroops:onEnter()
@@ -101,7 +105,11 @@ function GameUIAllianceSendTroops:onEnter()
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 assert(tolua.type(self.march_callback)=="function")
-                self.march_callback()
+                local dragonType = self.dragon:Type()
+                local soldiers = self:GetSelectSoldier()
+                print("派军到月门",dragonType)
+                LuaUtils:outputTable("soldiers", soldiers)
+                self.march_callback(dragonType,soldiers)
             end
         end):align(display.RIGHT_CENTER,window.right-50,window.top-920):addTo(self)
     --行军所需时间
@@ -121,6 +129,8 @@ function GameUIAllianceSendTroops:onEnter()
     }):align(display.LEFT_CENTER,window.cx+20,window.top-930):addTo(self)
 end
 function GameUIAllianceSendTroops:SelectDragonPart()
+    local dragon = self.dragon
+
     local dragon_frame = display.newSprite("alliance_item_flag_box_126X126.png")
         :align(display.LEFT_CENTER, window.left+47,window.top-425)
         :addTo(self)
@@ -136,14 +146,14 @@ function GameUIAllianceSendTroops:SelectDragonPart()
         :addTo(dragon_frame)
     -- 龙，等级
     self.dragon_name = UIKit:ttfLabel({
-        text = "红龙（LV 12）",
+        text = _(dragon:Type()).."（LV ".. dragon:Level(),
         size = 22,
         color = 0x514d3e,
     }):align(display.LEFT_CENTER,20,80)
         :addTo(box_bg)
     -- 龙活力
     self.dragon_vitality = UIKit:ttfLabel({
-        text = "生命值 1243 / 9998",
+        text = _("生命值")..dragon:Hp().."/"..dragon:GetMaxHP(),
         size = 20,
         color = 0x797154,
     }):align(display.LEFT_CENTER,20,30)
@@ -167,6 +177,7 @@ function GameUIAllianceSendTroops:RefreashDragon(dragon)
    self.dragon_img:setTexture(img_dir.."dragon_"..string.sub(dragon:Type(), 1, -7)..".png")
    self.dragon_name:setString(_(dragon:Type()).."（LV "..dragon:Level().."）")
    self.dragon_vitality:setString(_("生命值")..dragon:Hp().."/"..dragon:GetMaxHP())
+   self.dragon = dragon
 end
 
 function GameUIAllianceSendTroops:SelectDragon()
@@ -227,7 +238,7 @@ function GameUIAllianceSendTroops:SelectDragon()
         return dragon_frame
     end
 
-    local dragons = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragons()
+    local dragons = self.dragon_manager:GetDragons()
     local origin_y = rb_size.height-90
     local gap_y = 130
     local add_count = 0
@@ -423,8 +434,6 @@ end
 function GameUIAllianceSendTroops:CreateBetweenBgAndTitle()
     GameUIAllianceSendTroops.super.CreateBetweenBgAndTitle(self)
     self.show = self:CreateTroopsShow()
-
-
 end
 function GameUIAllianceSendTroops:RefreashSoldierShow()
     local soldier_show_table = {}
@@ -442,6 +451,19 @@ function GameUIAllianceSendTroops:RefreashSoldierShow()
         end
     end
     self.show:ShowOrRefreasTroops(soldier_show_table)
+end
+function GameUIAllianceSendTroops:GetSelectSoldier()
+    local soldiers = {}
+    for k,item in pairs(self.soldiers_table) do
+        local soldier_type,soldier_level,soldier_number =item:GetSoldierInfo()
+        if soldier_number>0 then
+            table.insert(soldiers, {
+                name = soldier_type,
+                count = soldier_number,
+            })
+        end
+    end
+    return soldiers
 end
 function GameUIAllianceSendTroops:CreateTroopsShow()
     local parent = self
