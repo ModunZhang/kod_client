@@ -36,6 +36,19 @@ function DragonManager:GetDragon(dragon_type)
 	return self.dragons_[dragon_type]
 end
 
+function DragonManager:GetPowerfulDragonType()
+	local dragonWidget = 0
+	local dragonType = ""
+	for k,dragon in pairs(self:GetDragons()) do
+		if dragon:GetWeight() > dragonWidget then
+			dragonWidget = dragon:GetWeight()
+			dragonType = k
+		end
+	end
+	return dragonType
+end
+
+
 function DragonManager:AddDragon(dragon)
 	self.dragons_[dragon:Type()] = dragon
 end
