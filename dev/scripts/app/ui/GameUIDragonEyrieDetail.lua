@@ -126,7 +126,7 @@ function GameUIDragonEyrieDetail:CreateHateUIIf()
 	local bg,progressTimer = GameUIDragonEyrieMain.CreateProgressTimer()
 	bg:addTo(hate_bg):align(display.LEFT_BOTTOM,10,20)
 	self.hate_progressTimer = progressTimer
-	progressTimer:setPercentage(self:GetDragon():Vitality()/100)
+	progressTimer:setPercentage(self:GetDragon():TotalVitality()/100)
 	local big_enery_icon = display.newSprite("dragon_energy_45x38.png")
 		:addTo(hate_bg)
 		:align(display.LEFT_BOTTOM,10,bg:getPositionY()+bg:getContentSize().height+20)
@@ -214,7 +214,7 @@ function GameUIDragonEyrieDetail:RefreshUI()
 	local dragon = self:GetDragon()
 	if not dragon:Ishated() then
 		if not self.hate_node then return end
-		self.hate_progressTimer:setPercentage(dragon:Vitality()/100*100)
+		self.hate_progressTimer:setPercentage(dragon:TotalVitality()/100*100)
 	else
 		-- 已孵化的界面
 		assert(self.tab_buttons)

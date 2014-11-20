@@ -83,7 +83,7 @@ function GameUIDragonEyrieMain:RefreshUI()
 		self.dragon_info:hide()
 		self.progress_content_not_hated:show()
 		self.progress_content_hated:hide()
-		self.progress_not_hated:setPercentage(dragon:Vitality()/100*100) -- 充能
+		self.progress_not_hated:setPercentage(dragon:TotalVitality()/100*100) -- 充能
 		self.strength_val_label:setString("0")
 		self.vitality_val_label:setString("0")
 	else
