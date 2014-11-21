@@ -22,6 +22,11 @@ local new_battle = {
     {
         left = {damage = 90, decrease = 10},
         right = {soldier = "swordsman", count = 100, damage = 80, morale = 100, decrease = 50},
+        defeat = "left"
+    },
+    {
+        left = {soldier = "lancer", count = 1000, damage = 90, morale = 100, decrease = 20},
+        right = {damage = 10, decrease = 10},
         defeat = "right"
     },
     {
@@ -30,7 +35,59 @@ local new_battle = {
         defeat = "right"
     },
 }
-function decode_from_json_data(json_data)
+local function decode_moon_gate_battle_from_json_data(json_data)
+    local data = json_data
+    local attacks = data.ourSoldierRoundDatas
+    local defends = data.enemySoldierRoundDatas
+    left = {soldier = "lancer", count = 1000, damage = 90, morale = 100, decrease = 20}
+    right = {soldier = "catapult", count = 100, damage = 80, morale = 100, decrease = 80}
+    defeat = "right"
+    local battle = {}
+    local defeat
+    for i = 1, #data.ourSoldierRoundDatas do
+        local attacker = attacks[i]
+        local defender = defends[i]
+        local left
+        local right
+        if defeat == "right" then
+            left = {
+                damage = attacker.soldierDamagedCount,
+                decrease = attacker.moraleDecreased
+            }
+        else
+            left = {
+                soldier = attacker.soldierName,
+                count = attacker.soldierCount,
+                damage = attacker.soldierDamagedCount,
+                morale = attacker.morale,
+                decrease = attacker.moraleDecreased
+            }
+        end
+        if defeat == "left" then
+            right = {
+                damage = defender.soldierDamagedCount,
+                decrease = defender.moraleDecreased
+            }
+        else
+            right = {
+                soldier = defender.soldierName,
+                count = defender.soldierCount,
+                damage = defender.soldierDamagedCount,
+                morale = defender.morale,
+                decrease = defender.moraleDecreased
+            }
+        end
+        defeat = attacker.isWin and "right" or "left"
+        table.insert(battle, {left = left, right = right, defeat = defeat})
+    end
+    battle.leftName = data.ourPlayerName
+    battle.rightName = data.enemyPlayerName
+    battle.leftDragon = data.ourDragonFightData.hp > 0 and data.ourDragonFightData or nil
+    battle.rightDragon = data.enemyDragonFightData.hp > 0 and data.enemyDragonFightData or nil
+    battle.hasDragonBattle = true
+    return battle
+end
+local function decode_stage_battle_from_json_data(json_data)
     local data = json_data
     local attacks = data.attackRoundDatas
     local defends = data.defenceRoundDatas
@@ -75,6 +132,9 @@ function decode_from_json_data(json_data)
         defeat = attacker.isWin and "right" or "left"
         table.insert(battle, {left = left, right = right, defeat = defeat})
     end
+    battle.leftName = data.playerName
+    battle.rightName = data.stageTroopNumber
+    battle.hasDragonBattle = false
     return battle
 end
 local function decode_battle(raw)
@@ -144,7 +204,11 @@ local function decode_battle(raw)
 end
 
 function GameUIReplay:ctor(json_data)
-    self.json_data = decode_from_json_data(json_data)
+    if json_data.stageTroopNumber then
+        self.json_data = decode_stage_battle_from_json_data(json_data)
+    else
+        self.json_data = decode_moon_gate_battle_from_json_data(json_data)
+    end
     GameUIReplay.super.ctor(self)
     for _, v in pairs{
         {"animations/Archer_1_render0.plist","animations/Archer_1_render0.png"},
@@ -228,24 +292,24 @@ function GameUIReplay:onEnter()
 
 
     -- title
-    self.left_name = cc.ui.UIImage.new("background_288x60.png")
+    local title = cc.ui.UIImage.new("background_288x60.png")
         :addTo(back_ground):pos(5, back_height - 65)
-    cc.ui.UILabel.new({
-        text = "",
+    self.left_name = cc.ui.UILabel.new({
+        text = self.json_data.leftName,
         font = UIKit:getFontFilePath(),
         size = 22,
         color = UIKit:hex2c3b(0x403c2f)
     }):align(display.CENTER, 288/2, 60/2)
-        :addTo(self.left_name)
-    self.right_name = cc.ui.UIImage.new("background_288x60.png")
+        :addTo(title)
+    local title = cc.ui.UIImage.new("background_288x60.png")
         :addTo(back_ground):pos(back_width - 288 - 5, back_height - 65):flipX(true)
-    cc.ui.UILabel.new({
-        text = "",
+    self.right_name = cc.ui.UILabel.new({
+        text = self.json_data.rightName,
         font = UIKit:getFontFilePath(),
         size = 22,
         color = UIKit:hex2c3b(0x403c2f)
     }):align(display.CENTER, 288/2, 60/2)
-        :addTo(self.right_name)
+        :addTo(title)
 
     local unit_bg = cc.ui.UIImage.new("unit_name_bg_blue_276x48.png")
         :addTo(back_ground):pos(7, back_height - 65 - 39)
@@ -353,6 +417,7 @@ function GameUIReplay:onEnter()
 
     ----
     local battle = self.json_data
+    -- local battle = new_battle
     dump(battle)
 
     local x, y = bg:getPosition()
@@ -361,26 +426,57 @@ function GameUIReplay:onEnter()
     self.right_corps = {}
     self.left_round = 0
     self.right_round = 0
-    for i, dual in pairs(battle) do
+    local dual = {left = {}, right = {}}
+    for i, v in ipairs(battle) do
+        if v.left.soldier then
+            table.insert(dual.left, v.left.soldier)
+        end
+        if v.right.soldier then
+            table.insert(dual.right, v.right.soldier)
+        end
+    end
+    local round = {}
+    while 1 do
+        local left = table.remove(dual.left, 1)
+        local right = table.remove(dual.right, 1)
+        if not left and not right then
+            break
+        end
+        table.insert(round, {left = {soldier = left}, right = {soldier = right}})
+    end
+    for i, dual in ipairs(round) do
         local item, left, right = self:CreateItemWithListView(self.list_view, dual)
         table.insert(self.left_corps, left)
         table.insert(self.right_corps, right)
         self.list_view:addItem(item)
     end
     self.list_view:reload():resetPosition()
-
     self.left_morale_max = 0
     self.right_morale_max = 0
     self.left_morale_cur = self.left_morale_max
     self.right_morale_cur = self.right_morale_max
-
-    local dp = self:NewDragonBattle()
+    if battle.hasDragonBattle then
+        self:PlayDragonBattle(battle):next(function()
+            self:PlaySoldierBattle(decode_battle(battle))
+        end)
+    else
+        self:PlaySoldierBattle(decode_battle(battle))
+    end
+end
+function GameUIReplay:PlayDragonBattle(battle)
+    local leftDragon = battle.leftDragon
+    local rightDragon = battle.rightDragon
+    local dp = self:NewDragonBattle(battle)
         :next(cocos_promise.delay(0.1))
         :next(function()
             local p = promise.new()
             self:Performance(0.5, function(pos)
-                self.left_dragon:SetHp(1000 - pos * 500, 1000)
-                self.right_dragon:SetHp(1000 - pos * 500, 1000)
+                if leftDragon then
+                    self.left_dragon:SetHp(leftDragon.hp - pos * leftDragon.hpDecreased, leftDragon.hp)
+                end
+                if rightDragon then
+                    self.right_dragon:SetHp(rightDragon.hp - pos * rightDragon.hpDecreased, rightDragon.hp)
+                end
             end, function()
                 p:resolve()
             end)
@@ -388,19 +484,34 @@ function GameUIReplay:onEnter()
         end)
         :next(cocos_promise.delay(0.8))
         :next(function()
-            return promise.all(
-                self.left_dragon:ShowResult(true)
-                ,self.right_dragon:ShowResult(false)
-            )
+            local left_p
+            if leftDragon then
+                left_p = self.left_dragon:ShowResult(leftDragon.isWin)
+            end
+            local right_p
+            if rightDragon then
+                right_p = self.right_dragon:ShowResult(rightDragon.isWin)
+            end
+            return left_p or right_p
         end)
         :next(cocos_promise.delay(0.8))
         :next(function()
             local p = promise.new()
-            self.left_dragon:ShowBuff()
-            self.right_dragon:ShowBuff()
+            if leftDragon then
+                self.left_dragon:ShowBuff()
+            end
+            if rightDragon then
+                self.right_dragon:ShowBuff()
+            end
             self:Performance(0.5, function(pos)
-                self.left_dragon:SetBuff(string.format("BUFF + %d%%", math.floor(pos * 50)))
-                self.right_dragon:SetBuff(string.format("BUFF + %d%%", math.floor(pos * 50)))
+                if leftDragon then
+                    local d = leftDragon.isWin and 100 or 50
+                    self.left_dragon:SetBuff(string.format("BUFF + %d%%", math.floor(pos * d)))
+                end
+                if rightDragon then
+                    local d = rightDragon.isWin and 100 or 50
+                    self.right_dragon:SetBuff(string.format("BUFF + %d%%", math.floor(pos * d)))
+                end
             end, function()
                 p:resolve()
             end)
@@ -419,33 +530,35 @@ function GameUIReplay:onEnter()
             return p
         end)
         :next(cocos_promise.delay(0.8))
-        :next(function()
-            local rounds = promise.new()
-            for i, round in ipairs(decode_battle(battle)) do
-                rounds:next(function()
-                    local pa
-                    for _, v in ipairs(round) do
-                        local left, right = unpack(v)
-                        local left_action = self:DecodeStateBySide(left, true)
-                        local right_action = self:DecodeStateBySide(right, false)
-                        if not pa then
-                            pa = promise.all(left_action:resolve(self.left), right_action:resolve(self.right))
-                        else
-                            pa:next(function(result)
-                                local left, right = unpack(result)
-                                return promise.all(left_action:resolve(left), right_action:resolve(right))
-                            end)
-                        end
-                    end
-                    return pa
-                end)
-            end
-            rounds:resolve()
-        end)
 
     promise.new():next(cocos_promise.delay(0.2)):next(function()
         self.dragon_battle:getAnimation():play("Animation1", -1, 0)
     end):resolve()
+
+    return dp
+end
+function GameUIReplay:PlaySoldierBattle(soldier_battle)
+    local rounds = promise.new()
+    for i, round in ipairs(soldier_battle) do
+        rounds:next(function()
+            local pa
+            for _, v in ipairs(round) do
+                local left, right = unpack(v)
+                local left_action = self:DecodeStateBySide(left, true)
+                local right_action = self:DecodeStateBySide(right, false)
+                if not pa then
+                    pa = promise.all(left_action:resolve(self.left), right_action:resolve(self.right))
+                else
+                    pa:next(function(result)
+                        local left, right = unpack(result)
+                        return promise.all(left_action:resolve(left), right_action:resolve(right))
+                    end)
+                end
+            end
+            return pa
+        end)
+    end
+    return rounds:resolve()
 end
 function GameUIReplay:MoveBattleBgBy(x)
     return function(battle_bg)
@@ -459,23 +572,29 @@ function GameUIReplay:MoveBattleBgBy(x)
         return p
     end
 end
-function GameUIReplay:NewDragonBattle()
+function GameUIReplay:NewDragonBattle(battle)
+    local leftDragon = battle.leftDragon
+    local rightDragon = battle.rightDragon
     local dragon_battle = ccs.Armature:create("paizi"):addTo(self.battle):align(display.CENTER, 275, 155)
 
-    local left_bone = dragon_battle:getBone("Layer4")
-    local left_dragon = self:NewDragon(true):addTo(left_bone):pos(-360, -50)
-    left_bone:addDisplay(left_dragon, 0)
-    left_bone:changeDisplayWithIndex(0, true)
-    self.left_dragon = left_dragon
-    self.left_dragon:SetHp(1000, 1000)
+    if leftDragon then
+        local left_bone = dragon_battle:getBone("Layer4")
+        local left_dragon = self:NewDragon(true):addTo(left_bone):pos(-360, -50)
+        left_bone:addDisplay(left_dragon, 0)
+        left_bone:changeDisplayWithIndex(0, true)
+        self.left_dragon = left_dragon
+        self.left_dragon:SetHp(leftDragon.hp, leftDragon.hp)
+    end
 
 
-    local right_bone = dragon_battle:getBone("Layer5")
-    local right_dragon = self:NewDragon():addTo(right_bone):pos(238, -82)
-    right_bone:addDisplay(right_dragon, 0)
-    right_bone:changeDisplayWithIndex(0, true)
-    self.right_dragon = right_dragon
-    self.right_dragon:SetHp(1000, 1000)
+    if rightDragon then
+        local right_bone = dragon_battle:getBone("Layer5")
+        local right_dragon = self:NewDragon():addTo(right_bone):pos(238, -82)
+        right_bone:addDisplay(right_dragon, 0)
+        right_bone:changeDisplayWithIndex(0, true)
+        self.right_dragon = right_dragon
+        self.right_dragon:SetHp(rightDragon.hp, rightDragon.hp)
+    end
 
     local p = promise.new()
     dragon_battle:getAnimation()
@@ -807,6 +926,19 @@ end
 
 
 return GameUIReplay
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
