@@ -667,7 +667,6 @@ function GameUIMoonGate:InitGarrisonPart()
         Garrison:SetEnemyAllianceFlag(Flag.new():DecodeFromJson(moonGate:GetEnemyAlliance().flag))
         Garrison:SetOurTroopsNum(moonGate:GetOurTroopsNum())
         Garrison:SetEnemyTroopsNum(moonGate:GetEnemyTroopsNum())
-        LuaUtils:outputTable("moonGate:GetOurTroops()", moonGate:GetOurTroops())
         for k,v in pairs(moonGate:GetOurTroops()) do
             Garrison:AddOurTroop(v)
         end
@@ -753,11 +752,28 @@ end
 -- 己方联盟部队改变
 function GameUIMoonGate:OnOurTroopsChanged(changed_map)
     LuaUtils:outputTable("己方联盟部队改变->", changed_map)
+    local Garrison = self.Garrison
+    local add = changed_map.add
+    local remove = changed_map.remove
+    for k,v in pairs(add) do
+        Garrison:AddOurTroop(v)
+    end
+    for k,v in pairs(remove) do
+        Garrison:RemoveFromOurTroop(v)
+    end
 end
 -- 敌方联盟部队改变
 function GameUIMoonGate:OnEnemyTroopsChanged(changed_map)
     LuaUtils:outputTable("敌方联盟部队改变->", changed_map)
-
+    local Garrison = self.Garrison
+    local add = changed_map.add
+    local remove = changed_map.remove
+    for k,v in pairs(add) do
+        Garrison:AddEnemyTroop(v)
+    end
+    for k,v in pairs(remove) do
+        Garrison:RemoveFromEnemyTroop(v)
+    end
 end
 -- 正在交战的部队改变
 function GameUIMoonGate:OnCurrentFightTroopsChanged(currentFightTroops)
