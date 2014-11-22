@@ -130,8 +130,8 @@ function SoldierManager:OnUserDataChanged(user_data)
         local soldier_map = self.soldier_map
         for k, old in pairs(soldier_map) do
             local new = soldiers[k]
-            if old ~= new then
-                soldier_map[k] = new or 0
+            if new and old ~= new then
+                soldier_map[k] = new
                 table.insert(changed, k)
             end
         end
@@ -154,8 +154,8 @@ function SoldierManager:OnUserDataChanged(user_data)
         local treatSoldiers_map = self.treatSoldiers_map
         for k, old in pairs(treatSoldiers_map) do
             local new = treatSoldiers[k]
-            if old ~= new then
-                treatSoldiers_map[k] = new or 0
+            if new and old ~= new then
+                treatSoldiers_map[k] = new
                 table.insert(treat_soldier_changed, k)
             end
         end
@@ -175,6 +175,8 @@ end
 
 
 return SoldierManager
+
+
 
 
 
