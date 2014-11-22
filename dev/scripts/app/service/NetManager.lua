@@ -204,6 +204,7 @@ onGetSavedMailsSuccess_callbacks = {}
 onGetSendMailsSuccess_callbacks = {}
 onSendChatSuccess_callbacks = {}
 onGetAllChatSuccess_callbacks = {}
+onFetchAllianceViewData_callbacks = {}
 function NetManager:addOnSearchAlliancesSuccessListener()
     self:addEventListener("onSearchAlliancesSuccess", function(success, msg)
         if success then    
@@ -342,6 +343,19 @@ function NetManager:addOnWallLevelUp()
         end
     end)
 end
+function NetManager:addOnFetchAllianceViewSuccess()
+    self:addEventListener("onGetAllianceViewDataSuccess", function(success, msg)
+        if success then
+            Alliance_Manager:SetEnemyAllianceData(msg)
+            assert(#onFetchAllianceViewData_callbacks <= 1, "重复请求过多了!")
+            local callback = onFetchAllianceViewData_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onFetchAllianceViewData_callbacks = {}
+        end
+    end)
+end
 ------------------------------------------------------------------------------------------------
 function NetManager:addLoginEventListener()
     self:addEventListener("onPlayerLoginSuccess", function(success, msg)
@@ -425,6 +439,7 @@ function NetManager:getConnectLogicServerPromise()
         self:addOnHouseLevelUpListener()
         self:addOnTowerLevelUpListener()
         self:addOnWallLevelUp()
+        self:addOnFetchAllianceViewSuccess()
     end)
 end
 -- 登录
@@ -473,7 +488,9 @@ end
 local function get_fetchchat_callback()
     return get_callback_promise(onGetAllChatSuccess_callbacks, "获取聊天失败!")
 end
-
+local function get_fetchallianceview_callback()
+    return  get_callback_promise(onFetchAllianceViewData_callbacks, "获取对方联盟数据失败!") 
+end 
 
 -- 修改城市名字
 function NetManager:getEditPlayerCityNamePromise(cityName)
@@ -961,7 +978,13 @@ function NetManager:getMarchToMoonGatePromose(dragonType,soldiers)
         {dragonType = dragonType,
         soldiers = soldiers}, "行军到月门失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
+--获取对手联盟数据
+function NetManager:getFtechAllianceViewDataPromose(targetAllianceId)
+    
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.getAllianceViewData",{targetAllianceId = targetAllianceId
 
+    },"获取对手联盟数据失败!"),get_fetchallianceview_callback()):next(get_response_msg)
+end
 --
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

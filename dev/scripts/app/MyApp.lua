@@ -77,13 +77,13 @@ end
 
 function MyApp:retryConnectServer()
     if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
-        device.showActivityIndicator()
+        -- device.showActivityIndicator()
         NetManager:getConnectLogicServerPromise():next(function()
             return NetManager:getLoginPromise()
         end):catch(function(err)
             dump(err:reason())
         end):always(function()
-            device.hideActivityIndicator()
+            -- device.hideActivityIndicator()
         end)
     end
 end
