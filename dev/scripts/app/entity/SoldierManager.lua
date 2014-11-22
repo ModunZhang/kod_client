@@ -155,7 +155,7 @@ function SoldierManager:OnUserDataChanged(user_data)
         for k, old in pairs(treatSoldiers_map) do
             local new = treatSoldiers[k]
             if old ~= new then
-                soldier_map[k] = new or 0
+                treatSoldiers_map[k] = new or 0
                 table.insert(treat_soldier_changed, k)
             end
         end
