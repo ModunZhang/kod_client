@@ -34,6 +34,9 @@ end
 function AllianceScene:GetAlliance()
     return Alliance_Manager:GetMyAlliance()
 end
+function AllianceScene:onExit()
+    AllianceScene.super.onExit(self)
+end
 function AllianceScene:CreateSceneLayer()
     local scene = AllianceLayer.new(self:GetAlliance())
     :addTo(self)

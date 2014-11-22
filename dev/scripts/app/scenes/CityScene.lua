@@ -81,6 +81,7 @@ function CityScene:onExit()
     self:stopAllActions()
     audio.stopMusic()
     audio.stopAllSounds()
+    CityScene.super.onExit(self)
 end
 -- init ui
 function CityScene:LoadAnimation()

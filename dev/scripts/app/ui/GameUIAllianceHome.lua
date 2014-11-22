@@ -435,7 +435,7 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
     elseif tag == 2 then
         
     elseif tag == 1 then
-        NetManager:getFtechAllianceViewDataPromose("7JcMLEzVWl"):next(function()
+        NetManager:getFtechAllianceViewDataPromose("mk5G9HHzfl"):next(function()
              app:lockInput(false)
                 app:enterScene("EnemyAllianceScene", {Alliance_Manager:GetEnemyAlliance()}, "custom", -1, function(scene, status)
                 local manager = ccs.ArmatureDataManager:getInstance()
