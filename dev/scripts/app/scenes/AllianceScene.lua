@@ -20,18 +20,25 @@ function AllianceScene:ctor()
 end
 function AllianceScene:onEnter()
     AllianceScene.super.onEnter(self)
+    self:CreateAllianceUI()
+    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(10, 10)
+    self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
+end
+
+function AllianceScene:CreateAllianceUI()
     local home = UIKit:newGameUI('GameUIAllianceHome'):addToScene(self)
     self:GetSceneLayer():AddObserver(home)
     home:setTouchSwallowEnabled(false)
+end
 
-    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(10, 10)
-    self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
+function AllianceScene:GetAlliance()
+    return Alliance_Manager:GetMyAlliance()
 end
 function AllianceScene:onExit()
     AllianceScene.super.onExit(self)
 end
 function AllianceScene:CreateSceneLayer()
-    local scene = AllianceLayer.new()
+    local scene = AllianceLayer.new(self:GetAlliance())
     :addTo(self)
     :ZoomTo(1)
     return scene

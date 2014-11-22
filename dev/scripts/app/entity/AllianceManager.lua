@@ -25,7 +25,6 @@ end
 
 function AllianceManager:OnAllianceDataChanged(alliance_data)
 	self:GetMyAlliance():OnAllianceDataChanged(alliance_data)
-    -- dump(self:GetMyAlliance())
 end
 function AllianceManager:OnAllianceBasicInfoAndMemberDataChanged(basic_and_member)
     local my_alliance = self:GetMyAlliance()
@@ -44,7 +43,30 @@ end
 
 function AllianceManager:OnTimer(current_time)
     self:GetMyAlliance():OnTimer(current_time)
+    if self:GetEnemyAlliance() then
+        self:GetEnemyAlliance():OnTimer(current_time)
+    end
+end
+--对手联盟
+---------------
+function AllianceManager:SetEnemyAllianceData( json_data )
+    dump(json_data)
+    if not self.enemy_alliance then
+        self.enemy_alliance = Alliance.new()
+    end
+    local enemy_alliance = self:GetEnemyAlliance()
+    enemy_alliance:SetId(json_data._id)
+    enemy_alliance:SetName(json_data.basicInfo.name)
+    enemy_alliance:SetAliasName(json_data.basicInfo.tag)
+    enemy_alliance:OnAllianceDataChanged(json_data)
 end
 
+function AllianceManager:GetEnemyAlliance()
+    return self.enemy_alliance
+end
+
+function AllianceManager:ResetEnemyAlliance()
+    self.enemy_alliance = nil
+end
 return AllianceManager
 
