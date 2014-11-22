@@ -472,10 +472,10 @@ function GameUIReplay:PlayDragonBattle(battle)
             local p = promise.new()
             self:Performance(0.5, function(pos)
                 if leftDragon then
-                    self.left_dragon:SetHp(leftDragon.hp - pos * leftDragon.hpDecreased, leftDragon.hp)
+                    self.left_dragon:SetHp(leftDragon.hp - pos * leftDragon.hpDecreased, leftDragon.hpMax)
                 end
                 if rightDragon then
-                    self.right_dragon:SetHp(rightDragon.hp - pos * rightDragon.hpDecreased, rightDragon.hp)
+                    self.right_dragon:SetHp(rightDragon.hp - pos * rightDragon.hpDecreased, rightDragon.hpMax)
                 end
             end, function()
                 p:resolve()
@@ -926,53 +926,3 @@ end
 
 
 return GameUIReplay
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
