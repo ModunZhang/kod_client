@@ -20,9 +20,18 @@ end
 function GameUIAllianceHome:onEnter()
     GameUIAllianceHome.super.onEnter(self)
     self.bottom = self:CreateBottom()
-    self.bottom = self:CreateTop()
+    self.top = self:CreateTop()
 
     -- 中间按钮
+    self:CreateOperationButton()
+
+    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
+    MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
+
+end
+
+function GameUIAllianceHome:CreateOperationButton()
     local first_row = 220
     local first_col = 177
     local label_padding = 100
@@ -46,12 +55,8 @@ function GameUIAllianceHome:onEnter()
         button:setTag(i)
         button:setTouchSwallowEnabled(true)
     end
-
-    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
-    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
-    MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
-
 end
+
 function GameUIAllianceHome:onExit()
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
@@ -427,6 +432,32 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
     if not tag then return end
     if tag == 3 then -- 战斗
        NetManager:getFindAllianceToFightPromose()
+    elseif tag == 2 then
+        
+    elseif tag == 1 then
+        NetManager:getFtechAllianceViewDataPromose("7JcMLEzVWl"):next(function()
+             app:lockInput(false)
+                app:enterScene("EnemyAllianceScene", {Alliance_Manager:GetEnemyAlliance()}, "custom", -1, function(scene, status)
+                local manager = ccs.ArmatureDataManager:getInstance()
+                if status == "onEnter" then
+                    manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+                    local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
+                    display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
+                        transition.sequence{
+                            cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
+                            cc.FadeIn:create(0.75),
+                            cc.CallFunc:create(function() scene:hideOutShowIn() end),
+                            cc.DelayTime:create(0.5),
+                            cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
+                            cc.FadeOut:create(0.75),
+                            cc.CallFunc:create(function() scene:finish() end),
+                        }
+                    )
+                elseif status == "onExit" then
+                    manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+                end
+            end)            
+        end)
     end
 end
 

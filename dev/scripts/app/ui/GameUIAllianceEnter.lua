@@ -2,12 +2,14 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local UIListView = import(".UIListView")
 local window = import("..utils.window")
 local UILib = import(".UILib")
-
+local Enum = import("..utils.Enum")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 
 local GameUIAllianceEnter = class("GameUIAllianceEnter", function ()
     return display.newColorLayer(cc.c4b(0,0,0,127))
 end)
+
+GameUIAllianceEnter.MODE = Enum("Normal","Enemy","Watch")
 
 local ENTER_LIST = {
     palace = {
@@ -29,27 +31,39 @@ local ENTER_LIST = {
                 {_("44"),0x403c2f},
             },
         },
-        enter_buttons = {
+        enter_buttons = 
+        {
+            Normal = 
             {
-                img = "icon_info.png",
-                title = _("信息"),
-                func = function (building)
-                    UIKit:newGameUI('GameUIAlliancePalace',City,"info",building):addToCurrentScene(true)
-                end
+                {
+                    img = "icon_info.png",
+                    title = _("信息"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIAlliancePalace',City,"info",building):addToCurrentScene(true)
+                    end
+                },
+                {
+                    img = "icon_tax.png",
+                    title = _("收税"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIAlliancePalace',City,"impose",building):addToCurrentScene(true)
+                    end
+                },
+                {
+                    img = "icon_upgrade.png",
+                    title = _("升级"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIAlliancePalace',City,"upgrade",building):addToCurrentScene(true)
+                    end
+                },
             },
+            Enemy = 
             {
-                img = "icon_tax.png",
-                title = _("收税"),
-                func = function (building)
-                    UIKit:newGameUI('GameUIAlliancePalace',City,"impose",building):addToCurrentScene(true)
-                end
+
             },
+            Watch = 
             {
-                img = "icon_upgrade.png",
-                title = _("升级"),
-                func = function (building)
-                    UIKit:newGameUI('GameUIAlliancePalace',City,"upgrade",building):addToCurrentScene(true)
-                end
+
             },
         },
     },
@@ -71,35 +85,47 @@ local ENTER_LIST = {
                 {_("有新的货物补充"),0x007c23},
             },
         },
-        enter_buttons = {
+        enter_buttons = 
+        {
+            Normal = 
             {
-                img = "icon_info.png",
-                title = _("商店记录"),
-                func = function (building)
-                    UIKit:newGameUI('GameUIAllianceShop',City,"record",building):addToCurrentScene(true)
-                end
+                {
+                    img = "icon_info.png",
+                    title = _("商店记录"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIAllianceShop',City,"record",building):addToCurrentScene(true)
+                    end
+                },
+                {
+                    img = "icon_stock.png",
+                    title = _("进货"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIAllianceShop',City,"stock",building):addToCurrentScene(true)
+                    end
+                },
+                {
+                    img = "icon_tax.png",
+                    title = _("购买商品"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIAllianceShop',City,"goods",building):addToCurrentScene(true)
+                    end
+                },
+                {
+                    img = "icon_upgrade.png",
+                    title = _("升级"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIAllianceShop',City,"upgrade",building):addToCurrentScene(true)
+                    end
+                },
             },
+            Enemy = 
             {
-                img = "icon_stock.png",
-                title = _("进货"),
-                func = function (building)
-                    UIKit:newGameUI('GameUIAllianceShop',City,"stock",building):addToCurrentScene(true)
-                end
+
             },
+            Watch = 
             {
-                img = "icon_tax.png",
-                title = _("购买商品"),
-                func = function (building)
-                    UIKit:newGameUI('GameUIAllianceShop',City,"goods",building):addToCurrentScene(true)
-                end
-            },
-            {
-                img = "icon_upgrade.png",
-                title = _("升级"),
-                func = function (building)
-                    UIKit:newGameUI('GameUIAllianceShop',City,"upgrade",building):addToCurrentScene(true)
-                end
-            },
+
+            }
         },
     },
     moonGate = {
@@ -126,27 +152,51 @@ local ENTER_LIST = {
             },
         },
         enter_buttons = {
+            Normal = 
             {
-                img = "icon_info.png",
-                title = _("驻防部队"),
-                func = function (building)
-                    UIKit:newGameUI('GameUIMoonGate',City,"garrison",building):addToCurrentScene(true)
-                end
+                {
+                    img = "icon_info.png",
+                    title = _("驻防部队"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIMoonGate',City,"garrison",building):addToCurrentScene(true)
+                    end
+                },
+                {
+                    img = "icon_alliance_crisis.png",
+                    title = _("战场"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIMoonGate',City,"battlefield",building):addToCurrentScene(true)
+                    end
+                },
+                {
+                    img = "icon_upgrade.png",
+                    title = _("升级"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIMoonGate',City,"upgrade",building):addToCurrentScene(true)
+                    end
+                },
             },
+            Enemy = 
             {
-                img = "icon_alliance_crisis.png",
-                title = _("战场"),
-                func = function (building)
-                    UIKit:newGameUI('GameUIMoonGate',City,"battlefield",building):addToCurrentScene(true)
-                end
+                {
+                    img = "icon_info.png",
+                    title = _("驻防部队"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIMoonGate',City,"garrison",building):addToCurrentScene(true)
+                    end
+                },
+                {
+                    img = "icon_alliance_crisis.png",
+                    title = _("战场"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIMoonGate',City,"battlefield",building):addToCurrentScene(true)
+                    end
+                },
             },
+            Watch = 
             {
-                img = "icon_upgrade.png",
-                title = _("升级"),
-                func = function (building)
-                    UIKit:newGameUI('GameUIMoonGate',City,"upgrade",building):addToCurrentScene(true)
-                end
-            },
+
+            }
         },
     },
     orderHall = {
@@ -169,27 +219,38 @@ local ENTER_LIST = {
             },
         },
         enter_buttons = {
+            Normal = 
             {
-                img = "icon_info.png",
-                title = _("熟练度"),
-                func = function (building)
-                    UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
-                end
+                {
+                    img = "icon_info.png",
+                    title = _("熟练度"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
+                    end
+                },
+                {
+                    img = "icon_village.png",
+                    title = _("村落管理"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIOrderHall',City,"village",building):addToCurrentScene(true)
+                    end
+                },
+                {
+                    img = "icon_upgrade.png",
+                    title = _("升级"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIOrderHall',City,"upgrade",building):addToCurrentScene(true)
+                    end
+                },
             },
+            Enemy = 
             {
-                img = "icon_village.png",
-                title = _("村落管理"),
-                func = function (building)
-                    UIKit:newGameUI('GameUIOrderHall',City,"village",building):addToCurrentScene(true)
-                end
+
             },
+            Watch = 
             {
-                img = "icon_upgrade.png",
-                title = _("升级"),
-                func = function (building)
-                    UIKit:newGameUI('GameUIOrderHall',City,"upgrade",building):addToCurrentScene(true)
-                end
-            },
+
+            }
         },
     },
     shrine = {
@@ -212,27 +273,38 @@ local ENTER_LIST = {
             },
         },
         enter_buttons = {
+            Normal = 
             {
-                img = "icon_info.png",
-                title = _("战争事件"),
-                func = function (building)
-                    UIKit:newGameUI('GameUIAllianceShrine',City,"fight_event",building):addToCurrentScene(true)
-                end
+                {
+                    img = "icon_info.png",
+                    title = _("战争事件"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIAllianceShrine',City,"fight_event",building):addToCurrentScene(true)
+                    end
+                },
+                {
+                    img = "icon_alliance_crisis.png",
+                    title = _("联盟危机"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIAllianceShrine',City,"stage",building):addToCurrentScene(true)
+                    end
+                },
+                {
+                    img = "icon_upgrade.png",
+                    title = _("升级"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIAllianceShrine',City,"upgrade",building):addToCurrentScene(true)
+                    end
+                },
             },
+            Enemy = 
             {
-                img = "icon_alliance_crisis.png",
-                title = _("联盟危机"),
-                func = function (building)
-                    UIKit:newGameUI('GameUIAllianceShrine',City,"stage",building):addToCurrentScene(true)
-                end
+
             },
+            Watch = 
             {
-                img = "icon_upgrade.png",
-                title = _("升级"),
-                func = function (building)
-                    UIKit:newGameUI('GameUIAllianceShrine',City,"upgrade",building):addToCurrentScene(true)
-                end
-            },
+
+            }
         },
     },
 
@@ -252,17 +324,28 @@ local ENTER_LIST = {
             },
         },
         enter_buttons = {
+            Normal = 
             {
-                img = "icon_demolish.png",
-                title = _("拆除"),
-                func = function (building)
-                    local alliacne =  Alliance_Manager:GetMyAlliance()
-                    local isEqualOrGreater = alliacne:GetMemeberById(DataManager:getUserData()._id):IsTitleEqualOrGreaterThan("general")
-                    if isEqualOrGreater then
-                        NetManager:getDistroyAllianceDecoratePromise(building:Id())
+                {
+                    img = "icon_demolish.png",
+                    title = _("拆除"),
+                    func = function (building)
+                        local alliacne =  Alliance_Manager:GetMyAlliance()
+                        local isEqualOrGreater = alliacne:GetMemeberById(DataManager:getUserData()._id):IsTitleEqualOrGreaterThan("general")
+                        if isEqualOrGreater then
+                            NetManager:getDistroyAllianceDecoratePromise(building:Id())
+                        end
                     end
-                end
+                },
             },
+            Enemy = 
+            {
+
+            },
+            Watch = 
+            {
+
+            }
         },
     },
     --空地
@@ -278,25 +361,41 @@ local ENTER_LIST = {
             },
         },
         enter_buttons = {
+            Normal = 
             {
-                img = "icon_move_city.png",
-                title = _("迁移城市"),
-                func = function (building)
-                -- UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
-                end
+                {
+                    img = "icon_move_city.png",
+                    title = _("迁移城市"),
+                    func = function (building)
+                    -- UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
+                    end
+                },
+                {
+                    img = "icon_move_alliance_building.png",
+                    title = _("迁移联盟建筑"),
+                    func = function (building)
+                    -- UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
+                    end
+                },
             },
+            Enemy = 
             {
-                img = "icon_move_alliance_building.png",
-                title = _("迁移联盟建筑"),
-                func = function (building)
-                -- UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
-                end
+
             },
+            Watch = 
+            {
+
+            }
         },
     },
 }
 
-function GameUIAllianceEnter:ctor(building)
+function GameUIAllianceEnter:GetMode()
+    return self.mode_
+end
+
+function GameUIAllianceEnter:ctor(building,mode)
+    self.mode_ = mode or self.MODE.Normal
     self:setNodeEventEnabled(true)
     self.building = building
     self.params = ENTER_LIST[building.name or (building:GetType()=="none" and "none") or building:GetCategory()]
@@ -309,7 +408,7 @@ function GameUIAllianceEnter:ctor(building)
     self:InitBuildingImage()
     self:InitBuildingDese()
     self:InitBuildingInfo(self.params.building_info)
-    self:InitEnterButton(self.params.enter_buttons)
+    self:InitEnterButton(self.params.enter_buttons[self.MODE[self:GetMode()]])
 end
 
 function GameUIAllianceEnter:SetBuildingInfo()

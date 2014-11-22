@@ -168,6 +168,7 @@ function  AllianceShrine:OnNewStageOpened(changed_map)
 end
 -- 洞察力 TODO:升级后改变生产量(alliance_data.buildings.shrine.level)
 function AllianceShrine:InitOrUpdatePerception(alliance_data)
+	if not  alliance_data.basicInfo or not alliance_data.basicInfo.perceptionRefreshTime then return end
 	if not self.perception then
 		local resource_refresh_time = alliance_data.basicInfo.perceptionRefreshTime / 1000.0
 		self.perception = AutomaticUpdateResource.new()

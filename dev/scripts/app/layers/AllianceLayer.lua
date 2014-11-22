@@ -12,7 +12,8 @@ local ZORDER = Enum("BOTTOM", "MIDDLE", "TOP", "BUILDING", "LINE", "SOLDIER")
 local floor = math.floor
 local random = math.random
 local AllianceShrine = import("..entity.AllianceShrine")
-function AllianceLayer:ctor(city)
+function AllianceLayer:ctor(alliance)
+    self.alliance_ = alliance
     Observer.extend(self)
     AllianceLayer.super.ctor(self, 0.9, 2)
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new{
@@ -31,7 +32,7 @@ function AllianceLayer:ctor(city)
     self:InitSoldierNode()
     self:InitLineNode()
 
-    Alliance_Manager:GetMyAlliance():GetAllianceMap():AddListenOnType({
+    self:GetAlliance():GetAllianceMap():AddListenOnType({
         OnBuildingChange = function(this, alliance_map, add, remove, modify)
             dump(add)
             if #add > 0 then
@@ -56,7 +57,7 @@ function AllianceLayer:ctor(city)
 
 
     local objects = {}
-    Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorAllObjects(function(_, entity)
+    self:GetAlliance():GetAllianceMap():IteratorAllObjects(function(_, entity)
         objects[entity:Id()] = self:CreateObject(entity)
     end)
     self.objects = objects
@@ -87,7 +88,7 @@ function AllianceLayer:ctor(city)
     self:scheduleUpdate()
 
     self:setNodeEventEnabled(true)
-    local alliance_shire = Alliance_Manager:GetMyAlliance():GetAllianceShrine()
+    local alliance_shire = self:GetAlliance():GetAllianceShrine()
     dump(alliance_shire:GetMarchEvents())
     table.foreachi(alliance_shire:GetMarchEvents(),function(_,merchEvent)
         self:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
@@ -97,6 +98,10 @@ function AllianceLayer:ctor(city)
     end)
     alliance_shire:AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventsChanged)
     alliance_shire:AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchReturnEventsChanged)
+end
+
+function AllianceLayer:GetAlliance()
+    return self.alliance_
 end
 
 function AllianceLayer:OnMarchEventsChanged(changed_map)
@@ -116,7 +121,7 @@ function AllianceLayer:OnMarchReturnEventsChanged(changed_map)
 end
 
 function AllianceLayer:onCleanup()
-    local alliance_shire = Alliance_Manager:GetMyAlliance():GetAllianceShrine()
+    local alliance_shire = self:GetAlliance():GetAllianceShrine()
     alliance_shire:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventsChanged)
     alliance_shire:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchReturnEventsChanged)
 end
