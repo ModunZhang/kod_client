@@ -311,9 +311,9 @@ function GameUIAllianceShop:CreateRecordItem()
     local info_bg = WidgetUIBackGround.new({
         width = 426,
         height = 96,
-        top_img = "back_ground_426X14_top.png",
-        bottom_img = "back_ground_426X14_top.png",
-        mid_img = "back_ground_426X1_mid.png",
+        top_img = "back_ground_426x14_top_1.png",
+        bottom_img = "back_ground_426x14_top_1.png",
+        mid_img = "back_ground_426x1_mid_1.png",
         u_height = 14,
         b_height = 14,
         m_height = 1,
