@@ -37,7 +37,7 @@ local ENTER_LIST = {
             Normal = 
             {
                 {
-                    img = "icon_info.png",
+                    img = "icon_info_1.png",
                     title = _("信息"),
                     func = function (building)
                         UIKit:newGameUI('GameUIAlliancePalace',City,"info",building):addToCurrentScene(true)
@@ -51,7 +51,7 @@ local ENTER_LIST = {
                     end
                 },
                 {
-                    img = "icon_upgrade.png",
+                    img = "icon_upgrade_1.png",
                     title = _("升级"),
                     func = function (building)
                         UIKit:newGameUI('GameUIAlliancePalace',City,"upgrade",building):addToCurrentScene(true)
@@ -92,7 +92,7 @@ local ENTER_LIST = {
             Normal = 
             {
                 {
-                    img = "icon_info.png",
+                    img = "icon_info_1.png",
                     title = _("商店记录"),
                     func = function (building)
                         UIKit:newGameUI('GameUIAllianceShop',City,"record",building):addToCurrentScene(true)
@@ -113,7 +113,7 @@ local ENTER_LIST = {
                     end
                 },
                 {
-                    img = "icon_upgrade.png",
+                    img = "icon_upgrade_1.png",
                     title = _("升级"),
                     func = function (building)
                         UIKit:newGameUI('GameUIAllianceShop',City,"upgrade",building):addToCurrentScene(true)
@@ -158,7 +158,7 @@ local ENTER_LIST = {
             Normal = 
             {
                 {
-                    img = "icon_info.png",
+                    img = "icon_info_1.png",
                     title = _("驻防部队"),
                     func = function (building)
                         UIKit:newGameUI('GameUIMoonGate',City,"garrison",building):addToCurrentScene(true)
@@ -172,7 +172,7 @@ local ENTER_LIST = {
                     end
                 },
                 {
-                    img = "icon_upgrade.png",
+                    img = "icon_upgrade_1.png",
                     title = _("升级"),
                     func = function (building)
                         UIKit:newGameUI('GameUIMoonGate',City,"upgrade",building):addToCurrentScene(true)
@@ -182,7 +182,7 @@ local ENTER_LIST = {
             Enemy = 
             {
                 {
-                    img = "icon_info.png",
+                    img = "icon_info_1.png",
                     title = _("驻防部队"),
                     func = function (building)
                         UIKit:newGameUI('GameUIMoonGate',City,"garrison",building):addToCurrentScene(true)
@@ -232,7 +232,7 @@ local ENTER_LIST = {
             Normal = 
             {
                 {
-                    img = "icon_info.png",
+                    img = "icon_info_1.png",
                     title = _("熟练度"),
                     func = function (building)
                         UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
@@ -246,7 +246,7 @@ local ENTER_LIST = {
                     end
                 },
                 {
-                    img = "icon_upgrade.png",
+                    img = "icon_upgrade_1.png",
                     title = _("升级"),
                     func = function (building)
                         UIKit:newGameUI('GameUIOrderHall',City,"upgrade",building):addToCurrentScene(true)
@@ -287,7 +287,7 @@ local ENTER_LIST = {
             Normal = 
             {
                 {
-                    img = "icon_info.png",
+                    img = "icon_info_1.png",
                     title = _("战争事件"),
                     func = function (building)
                         UIKit:newGameUI('GameUIAllianceShrine',City,"fight_event",building):addToCurrentScene(true)
@@ -301,7 +301,7 @@ local ENTER_LIST = {
                     end
                 },
                 {
-                    img = "icon_upgrade.png",
+                    img = "icon_upgrade_1.png",
                     title = _("升级"),
                     func = function (building)
                         UIKit:newGameUI('GameUIAllianceShrine',City,"upgrade",building):addToCurrentScene(true)
