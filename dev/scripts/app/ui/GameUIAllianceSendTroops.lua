@@ -3,6 +3,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local UIScrollView = import(".UIScrollView")
 local Localize = import("..utils.Localize")
 local UIListView = import(".UIListView")
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetSlider = import("..widget.WidgetSlider")
 local Corps = import(".Corps")
 local UILib = import(".UILib")
@@ -107,9 +108,21 @@ function GameUIAllianceSendTroops:onEnter()
                 assert(tolua.type(self.march_callback)=="function")
                 local dragonType = self.dragon:Type()
                 local soldiers = self:GetSelectSoldier()
-                print("派军到月门",dragonType)
-                LuaUtils:outputTable("soldiers", soldiers)
+                if self.dragon:Status() ~= "free" then
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("龙未处于空闲状态"))
+                        :AddToCurrentScene()
+                    return
+                end
+                if #soldiers == 0 then
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("请选择要派遣的部队"))
+                        :AddToCurrentScene()
+                    return
+                end
                 self.march_callback(dragonType,soldiers)
+                -- 确认派兵后关闭界面
+                self:leftButtonClicked()
             end
         end):align(display.RIGHT_CENTER,window.right-50,window.top-920):addTo(self)
     --行军所需时间
@@ -129,6 +142,7 @@ function GameUIAllianceSendTroops:onEnter()
     }):align(display.LEFT_CENTER,window.cx+20,window.top-930):addTo(self)
 end
 function GameUIAllianceSendTroops:SelectDragonPart()
+    if not self.dragon then return end
     local dragon = self.dragon
 
     local dragon_frame = display.newSprite("alliance_item_flag_box_126X126.png")
@@ -138,7 +152,7 @@ function GameUIAllianceSendTroops:SelectDragonPart()
     local dragon_bg = display.newSprite("chat_hero_background.png")
         :align(display.LEFT_CENTER, 7,dragon_frame:getContentSize().height/2)
         :addTo(dragon_frame)
-    self.dragon_img = cc.ui.UIImage.new(img_dir.."dragon_red.png")
+    self.dragon_img = cc.ui.UIImage.new(img_dir..dragon:Type()..".png")
         :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2+5)
         :addTo(dragon_bg)
     local box_bg = display.newSprite(img_dir.."box_426X126.png")
@@ -174,10 +188,10 @@ function GameUIAllianceSendTroops:SelectDragonPart()
 
 end
 function GameUIAllianceSendTroops:RefreashDragon(dragon)
-   self.dragon_img:setTexture(img_dir.."dragon_"..string.sub(dragon:Type(), 1, -7)..".png")
-   self.dragon_name:setString(_(dragon:Type()).."（LV "..dragon:Level().."）")
-   self.dragon_vitality:setString(_("生命值")..dragon:Hp().."/"..dragon:GetMaxHP())
-   self.dragon = dragon
+    self.dragon_img:setTexture(img_dir.."dragon_"..string.sub(dragon:Type(), 1, -7)..".png")
+    self.dragon_name:setString(_(dragon:Type()).."（LV "..dragon:Level().."）")
+    self.dragon_vitality:setString(_("生命值")..dragon:Hp().."/"..dragon:GetMaxHP())
+    self.dragon = dragon
 end
 
 function GameUIAllianceSendTroops:SelectDragon()
@@ -540,6 +554,8 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
         if soldier=="lancer" or soldier=="catapult" then
             label:setPositionX(20)
         end
+        display.newSprite("dragon_strength_27x31.png"):pos(10,label:getContentSize().height/2)
+            :addTo(label)
         UIKit:ttfLabel({
             text = soldier_number,
             size = 18,
@@ -585,7 +601,7 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
             local pre_width -- 前一个添加的节点的宽
             local total_power , total_weight, total_citizen =0,0,0
             for index,v in pairs(soldiers) do
-                local corp = self:NewCorps(v.soldier_type,v.soldier_num):addTo(self)
+                local corp = self:NewCorps(v.soldier_type,v.power):addTo(self)
                 corp:PlayAnimation("idle_2")
                 x = x - (count ~= 0 and pre_width or corp:getCascadeBoundingBox().size.width/2) -10
                 pre_width = corp:getCascadeBoundingBox().size.width
@@ -616,6 +632,9 @@ function GameUIAllianceSendTroops:onExit()
 end
 
 return GameUIAllianceSendTroops
+
+
+
 
 
 

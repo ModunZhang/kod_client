@@ -7,6 +7,8 @@ local window = import("..utils.window")
 local StarBar = import(".StarBar")
 local TAG_OF_CONTENT = 100
 local DragonManager = import("..entity.DragonManager")
+local WidgetDragons = import("..widget.WidgetDragons")
+local DragonSprite = import("..sprites.DragonSprite")
 
 function GameUIDragonEyrieMain:ctor(city,building)
 	GameUIDragonEyrieMain.super.ctor(self,city,_("龙巢"),building)
@@ -35,7 +37,13 @@ function GameUIDragonEyrieMain:OnHPChanged()
 	end
 end
 
-function GameUIDragonEyrieMain:OnDragonHatched()
+function GameUIDragonEyrieMain:OnDragonHatched(dragon)
+	local dragon_index = DragonManager.DRAGON_TYPE_INDEX[dragon:Type()]
+	dump(dragon_index,"GameUIDragonEyrieMain:OnDragonHatched--->")
+	local localIndex = dragon_index - 1
+	local eyrie = self.draongConteNode:GetItemByIndex(localIndex)
+	eyrie.dragon_image:setTexture(self:GetDraongIdeImageName(dragon:Type()))
+	eyrie.dragon_image:scale(0.7)
 	self:RefreshUI()
 end
 function GameUIDragonEyrieMain:OnBasicChanged()
@@ -141,11 +149,13 @@ function GameUIDragonEyrieMain:CreateProgressTimer(tag)
 end
 
 function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
-	if not self.dragonAnimateNode then
-		local dragonAnimateNode = display.newSprite("dragon_node_619x715.png")
-			:addTo(self.dragonNode)
-			:align(display.TOP_CENTER,window.cx,window.top)
-		self.dragonAnimateNode = dragonAnimateNode
+	if not self.draongConteNode then
+		-- local dragonAnimateNode = display.newSprite("dragon_node_619x715.png")
+		-- 	:addTo(self.dragonNode)
+		-- 	:align(display.TOP_CENTER,window.cx,window.top)
+		local dragonAnimateNode,draongConteNode = self:CreateDragonAnimateNode()
+		self.draongConteNode = draongConteNode
+		dragonAnimateNode:addTo(self.dragonNode):pos(window.cx - 304,window.top - 715)
 		--info
 		local info_bg = display.newSprite("dragon_info_bg_290x92.png")
 			:align(display.BOTTOM_CENTER, 309, 50)
@@ -252,6 +262,7 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 		})):addTo(box):align(display.RIGHT_BOTTOM,590,15):onButtonClicked(function()
 			UIKit:newGameUI("GameUIDragonEyrieDetail",self.city,self.building,self:GetCurrentDragon():Type()):addToCurrentScene(true)
 		end)
+		self.draongConteNode:OnEnterIndex(math.abs(0))
 	end
 
 end
@@ -262,6 +273,94 @@ function GameUIDragonEyrieMain:GetCurrentDragon()
 	return dragon
 end
 
+function GameUIDragonEyrieMain:CreateDragonAnimateNode()
+	local clipNode = display.newClippingRegionNode(cc.rect(0,0,611,715))
+	local contenNode = WidgetDragons.new(
+		{
+			OnFilterChangedEvent = handler(self, self.OnFilterChangedEvent),
+			OnLeaveIndexEvent = handler(self, self.OnLeaveIndexEvent),
+			OnEnterIndexEvent = handler(self, self.OnEnterIndexEvent),
+		}
+	):addTo(clipNode):pos(309,357)
+	for i,v in ipairs(contenNode:GetItems()) do
+		local dragon = self.dragon_manager:GetDragonByIndex(i)
+		if dragon:Ishated() then
+			local dragon_type = dragon:Type()
+			local image_name = self:GetDraongIdeImageName(dragon_type)
+			local dragon_image = display.newSprite(image_name, nil, nil, {class=cc.FilteredSpriteWithOne})
+				:align(display.CENTER, 360,350)
+				:addTo(v)
+			dragon_image:scale(0.7)
+			v.dragon_image = dragon_image
+    		dragon_image.resolution = {dragon_image:getContentSize().width,dragon_image:getContentSize().height}
+		else
+			local dragon_image = display.newSprite("dragon_egg_139x187.png", nil, nil, {class=cc.FilteredSpriteWithOne})
+				:align(display.CENTER, 307,307)
+				:addTo(v)
+			v.dragon_image = dragon_image
+    		dragon_image.resolution = {dragon_image:getContentSize().width,dragon_image:getContentSize().height}
+		end
+
+
+		local dragon_armature = DragonSprite.new(display.getRunningScene():GetSceneLayer(),dragon:GetTerrain())
+			:addTo(v)
+			:align(display.CENTER, 307,400)
+			:hide()
+		v.armature = dragon_armature
+	end
+	return clipNode,contenNode
+end
+
+function GameUIDragonEyrieMain:GetDraongIdeImageName(dragon_type)
+	local image_name = ""
+	if dragon_type == "redDragon" then
+		image_name = "red_dragon_ide_475x369.png"
+	elseif dragon_type == "greenDragon" then
+		image_name = "green_dragon_ide_482x378.png"
+	elseif dragon_type == "blueDragon" then
+		image_name = "blue_dragon_ide_4480x373.png"
+	end
+	return image_name
+end
+
+function GameUIDragonEyrieMain:OnEnterIndexEvent(index)
+	if self.draongConteNode then
+		self.draong_index = index + 1
+		self:RefreshUI()
+		local eyrie = self.draongConteNode:GetItemByIndex(index)
+		if not self:GetCurrentDragon():Ishated() then return end
+		eyrie.dragon_image:hide()
+		eyrie.armature:show()
+		eyrie.armature:PlayAnimation("Idle")
+	end
+end
+
+function GameUIDragonEyrieMain:OnLeaveIndexEvent(index)
+	if self.draongConteNode then
+		local eyrie = self.draongConteNode:GetItemByIndex(index)
+		if not self:GetCurrentDragon():Ishated() then return end
+		eyrie.armature:GetSprite():stop()
+		eyrie.armature:hide()
+		eyrie.dragon_image:show()
+	end
+end
+
+function GameUIDragonEyrieMain:OnFilterChangedEvent(eyrie,b,i)
+	if eyrie.dragon_image then
+		local filter_ = filter.newFilter("CUSTOM",
+            json.encode({
+                frag = "shaders/blur.fs",
+                shaderName = "dragon_image"..i,
+                resolution = eyrie.dragon_image.resolution,
+                blurRadius = b,
+                sampleNum = 2
+            })
+        )
+
+		eyrie.dragon_image:setFilter(filter_)
+	end
+end
+
 function GameUIDragonEyrieMain:ChangeDragon(direction)
 	if direction == 'next' then
 		if self.draong_index + 1 > 3 then
@@ -269,12 +368,14 @@ function GameUIDragonEyrieMain:ChangeDragon(direction)
 		else
 			self.draong_index = self.draong_index + 1
 		end
+		self.draongConteNode:Next()
 	else
 		if self.draong_index - 1 == 0 then
 			self.draong_index = 3
 		else
 			self.draong_index = self.draong_index - 1
 		end
+		self.draongConteNode:Before()
 	end
 	self:RefreshUI()
 end

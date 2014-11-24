@@ -15,7 +15,16 @@ function LogoScene:onEnter()
     self.sprite = display.newScale9Sprite("logos/batcat.png", display.cx, display.cy):addTo(self.layer)
     
     self:performWithDelay(function() self:beginAnimate() end,1)
-    -- UIKit:newGameUI('GameUIReplay'):addToCurrentScene(true)
+
+    -- local rect = cc.rect(0,0,619,715)
+    -- local clipnode = display.newClippingRegionNode(rect)
+    -- local dragonAnimateNode = display.newSprite("dragon_node_619x715.png")
+    --         :addTo(clipnode)
+    --         :align(display.LEFT_BOTTOM,20,200)
+    -- clipnode:addChild(sprite1)
+    -- clipnode:addChild(sprite2)
+
+    -- clipnode:addTo(self)
 end
 
 function LogoScene:beginAnimate()

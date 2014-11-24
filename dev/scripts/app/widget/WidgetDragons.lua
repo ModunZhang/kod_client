@@ -3,6 +3,7 @@ local TouchJudgment = import("..layers.TouchJudgment")
 local WidgetDragons = class("WidgetDragons",function()
     return display.newNode()
 end)
+local filter = filter
 
 local math = math
 local pos = {619 * 0.5, 300, 0.0}
@@ -29,11 +30,16 @@ end
 local edge = function(t, n)
     return n >= t and 1 or 0
 end
-function WidgetDragons:ctor()
+function WidgetDragons:ctor(callbacks)
+
+    self:setNodeEventEnabled(true)
+    callbacks = checktable(callbacks)
+    self.OnFilterChangedEvent = callbacks.OnFilterChangedEvent
+    self.OnLeaveIndexEvent = callbacks.OnLeaveIndexEvent
+    self.OnEnterIndexEvent = callbacks.OnEnterIndexEvent
+
     self.touch_judgment = TouchJudgment.new(self)
-
-
-    local back_node = display.newSprite("dragon_node_619x715.png", nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(self)
+    local back_node = display.newScale9Sprite("dragon_animate_bg.png"):size(619,715):addTo(self)
         :align(display.CENTER)
     back_node:setTouchEnabled(true)
     back_node:setTouchSwallowEnabled(true)
@@ -66,8 +72,10 @@ function WidgetDragons:ctor()
     table.insert(self.items, self.dragon1)
     table.insert(self.items, self.dragon2)
     table.insert(self.items, self.dragon3)
+end
 
-    self:OnEnterIndex(math.abs(0))
+function WidgetDragons:onEnter()
+    -- self:OnEnterIndex(math.abs(0))
 end
 
 function WidgetDragons:onExit()
@@ -90,17 +98,21 @@ function WidgetDragons:UpdatePosition(dt)
         end
     end
     for i, dragon in ipairs(self.items) do
-        local x, y, z, s, b = getinfo(self.angle + 120 * (i - 1))
+        local x, y, z, s, b = getinfo(self.angle - 120 * (i - 1))
         dragon:pos(x, y):scale(s):setLocalZOrder(z)
-        dragon:setFilter(filter.newFilter("CUSTOM",
+        local filter_ = filter.newFilter("CUSTOM",
             json.encode({
                 frag = "shaders/blur.fs",
                 shaderName = "blur"..i,
                 resolution = {613, 509},
                 blurRadius = b,
-                sampleNum = 4
+                sampleNum = 2
             })
-        ))
+        )
+        -- dragon:setFilter(filter_)
+        if self.OnFilterChangedEvent then
+            -- self.OnFilterChangedEvent(dragon,b,i)
+        end
     end
 end
 function WidgetDragons:RoundAngle()
@@ -115,10 +127,16 @@ end
 function WidgetDragons:OnLeaveIndex(index)
     self.cur_index = nil
     print("OnLeaveIndex", index)
+    if self.OnLeaveIndexEvent then
+        self.OnLeaveIndexEvent(index)
+    end
 end
 function WidgetDragons:OnEnterIndex(index)
     self.cur_index = index
     print("OnEnterIndex", self.cur_index)
+    if self.OnEnterIndexEvent then
+        self.OnEnterIndexEvent(self.cur_index)
+    end
 end
 function WidgetDragons:OnTouchBegan(pre_x, pre_y, x, y)
     self:StopAuto()
@@ -172,6 +190,16 @@ function WidgetDragons:AutoRotation()
         local target_angle = is_cur and math.floor(cur_angle / 120 + 1) * 120 or math.floor(cur_angle / 120) * 120
         self.target_angle = target_angle + round * 360
     end
+end
+
+--
+function WidgetDragons:GetItems()
+    return self.items
+end
+
+function WidgetDragons:GetItemByIndex(index)
+    assert(index >=0 and index < 3)
+    return self.items[index+1]
 end
 
 

@@ -13,6 +13,8 @@ local GameUIAllianceHome = UIKit:createUIClass('GameUIAllianceHome')
 
 function GameUIAllianceHome:ctor()
     GameUIAllianceHome.super.ctor(self)
+    -- 添加到全局计时器中，以便显示各个阶段的时间
+    app.timer:AddListener(self)
     self.alliance = Alliance_Manager:GetMyAlliance()
     self.member = self.alliance:GetMemeberById(DataManager:getUserData()._id)
 end
@@ -125,16 +127,17 @@ function GameUIAllianceHome:CreateTop()
     local time_bg = display.newSprite("allianceHome/back_ground_109x46.png")
         :align(display.BOTTOM_CENTER, period_bg:getContentSize().width/2,12)
         :addTo(period_bg)
-    local period_label = UIKit:ttfLabel(
+    local period_text = self:GetAlliancePeriod()
+    self.period_label = UIKit:ttfLabel(
         {
-            text = _("战争期"),
+            text = period_text,
             size = 16,
             color = 0xbdb582
         }):align(display.TOP_CENTER, time_bg:getContentSize().width/2, time_bg:getContentSize().height)
         :addTo(time_bg)
-    local time_label = UIKit:ttfLabel(
+    self.time_label = UIKit:ttfLabel(
         {
-            text = _("00:20:00"),
+            text = "",
             size = 18,
             color = 0xffedae
         }):align(display.BOTTOM_CENTER, time_bg:getContentSize().width/2, 0)
@@ -431,13 +434,13 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
     local tag = event.target:getTag()
     if not tag then return end
     if tag == 3 then -- 战斗
-       NetManager:getFindAllianceToFightPromose()
+        NetManager:getFindAllianceToFightPromose()
     elseif tag == 2 then
-        
+
     elseif tag == 1 then
         NetManager:getFtechAllianceViewDataPromose("mk5G9HHzfl"):next(function()
-             app:lockInput(false)
-                app:enterScene("EnemyAllianceScene", {Alliance_Manager:GetEnemyAlliance()}, "custom", -1, function(scene, status)
+            app:lockInput(false)
+            app:enterScene("EnemyAllianceScene", {Alliance_Manager:GetEnemyAlliance()}, "custom", -1, function(scene, status)
                 local manager = ccs.ArmatureDataManager:getInstance()
                 if status == "onEnter" then
                     manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
@@ -456,7 +459,7 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
                 elseif status == "onExit" then
                     manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
                 end
-            end)            
+            end)
         end)
     end
 end
@@ -485,7 +488,35 @@ function GameUIAllianceHome:MailUnreadChanged( num )
     end
 end
 
+function GameUIAllianceHome:OnTimer(current_time)
+    if self.alliance:Status() == "fight" then
+        local statusFinishTime = self.alliance:StatusFinishTime()
+        -- print("时间：",GameUtils:formatTimeStyle1(statusFinishTime-current_time/1000))
+    elseif self.alliance:Status() == "peace" then
+        local statusStartTime = self.alliance:StatusStartTime()
+        self.period_label:setString(_("和平期"))
+        -- print("时间：",GameUtils:formatTimeStyle1(current_time-statusStartTime/1000))
+        self.time_label:setString(GameUtils:formatTimeStyle1(current_time-statusStartTime/1000))
+    end
+end
+
+function GameUIAllianceHome:GetAlliancePeriod()
+    local period = ""
+    local status = self.alliance:Status()
+    if status == "peace" then
+        period = _("和平期")
+    elseif status == "prepare" then
+        period = _("准备期")
+    elseif status == "fight" then
+        period = _("战争期")
+    elseif status == "protect" then
+        period = _("保护期")
+    end
+    return period
+end
+
 return GameUIAllianceHome
+
 
 
 
