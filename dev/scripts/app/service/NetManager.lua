@@ -369,7 +369,7 @@ function NetManager:addLoginEventListener()
                 local InitGame = import("app.service.InitGame")
                 InitGame(msg)
                 -- app:enterScene("AllianceScene")
-                app:enterScene("CityScene")
+                app:enterScene("MyCityScene", {City})
             end
             self.m_isDisconnect = false
         end
