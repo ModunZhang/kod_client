@@ -27,7 +27,7 @@ function UpgradeBuilding:ctor(building_info)
     self.unique_upgrading_key = nil
 end
 function UpgradeBuilding:IsAbleToFreeSpeedUpByTime(time)
-    return self:GetFreeSpeedupTime() >= building:GetUpgradingLeftTimeByCurrentTime(time)
+    return self:GetFreeSpeedupTime() >= self:GetUpgradingLeftTimeByCurrentTime(time)
 end
 function UpgradeBuilding:GetFreeSpeedupTime()
     return self.freeSpeedUpTime
