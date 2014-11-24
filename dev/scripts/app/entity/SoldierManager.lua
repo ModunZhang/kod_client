@@ -8,8 +8,34 @@ SoldierManager.LISTEN_TYPE = Enum("SOLDIER_CHANGED","TREAT_SOLDIER_CHANGED")
 
 function SoldierManager:ctor()
     SoldierManager.super.ctor(self)
-    self.soldier_map = {}
-    self.treatSoldiers_map = {}
+    self.soldier_map = {
+        ["sentinel"] = 0,
+        ["deathKnight"] = 0,
+        ["lancer"] = 0,
+        ["crossbowman"] = 0,
+        ["horseArcher"] = 0,
+        ["steamTank"] = 0,
+        ["meatWagon"] = 0,
+        ["catapult"] = 0,
+        ["ballista"] = 0,
+        ["ranger"] = 0,
+        ["swordsman"] = 0,
+        ["skeletonArcher"] = 0,
+        ["demonHunter"] = 0,
+        ["paladin"] = 0,
+        ["priest"] = 0,
+        ["skeletonWarrior"] = 0,
+    }
+    self.treatSoldiers_map = {
+        ["ballista"] = 0,
+        ["ranger"] = 0,
+        ["catapult"] = 0,
+        ["crossbowman"] = 0,
+        ["horseArcher"] = 0,
+        ["swordsman"] = 0,
+        ["sentinel"] = 0,
+        ["lancer"] = 0,
+    }
 end
 function SoldierManager:IteratorSoldiers(func)
     for k, v in pairs(self:GetSoldierMap()) do
@@ -102,12 +128,19 @@ function SoldierManager:OnUserDataChanged(user_data)
         local soldiers = user_data.soldiers
         local changed = {}
         local soldier_map = self.soldier_map
-        for k, new in pairs(soldiers) do
-            if soldier_map[k] ~= new then
+        for k, old in pairs(soldier_map) do
+            local new = soldiers[k]
+            if new and old ~= new then
                 soldier_map[k] = new
                 table.insert(changed, k)
             end
         end
+        -- for k, new in pairs(soldiers) do
+        --     if soldier_map[k] ~= new then
+        --         soldier_map[k] = new
+        --         table.insert(changed, k)
+        --     end
+        -- end
         if #changed > 0 then
             self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED,function(listener)
                 listener:OnSoliderCountChanged(self, changed)
@@ -119,12 +152,19 @@ function SoldierManager:OnUserDataChanged(user_data)
         local treatSoldiers = user_data.treatSoldiers
         local treat_soldier_changed = {}
         local treatSoldiers_map = self.treatSoldiers_map
-        for k, new in pairs(treatSoldiers) do
-            if treatSoldiers_map[k] ~= new then
+        for k, old in pairs(treatSoldiers_map) do
+            local new = treatSoldiers[k]
+            if new and old ~= new then
                 treatSoldiers_map[k] = new
                 table.insert(treat_soldier_changed, k)
             end
         end
+        -- for k, new in pairs(treatSoldiers) do
+        --     if treatSoldiers_map[k] ~= new then
+        --         treatSoldiers_map[k] = new
+        --         table.insert(treat_soldier_changed, k)
+        --     end
+        -- end
         if #treat_soldier_changed > 0 then
             self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.TREAT_SOLDIER_CHANGED,function(listener)
                 listener:OnTreatSoliderCountChanged(self, treat_soldier_changed)
@@ -135,6 +175,10 @@ end
 
 
 return SoldierManager
+
+
+
+
 
 
 
