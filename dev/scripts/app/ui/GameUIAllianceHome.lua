@@ -60,6 +60,7 @@ function GameUIAllianceHome:CreateOperationButton()
 end
 
 function GameUIAllianceHome:onExit()
+    app.timer:RemoveListener(self)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
@@ -286,10 +287,6 @@ function GameUIAllianceHome:CreateTop()
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
 end
 
-function GameUIAllianceHome:onExit()
-    MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
-    GameUIAllianceHome.super.onExit(self)
-end
 function GameUIAllianceHome:MailUnreadChanged( num )
     if num==0 then
         self.mail_unread_num_bg:setVisible(false)
