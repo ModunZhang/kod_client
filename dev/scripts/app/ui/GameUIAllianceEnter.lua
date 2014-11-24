@@ -12,6 +12,7 @@ end)
 GameUIAllianceEnter.MODE = Enum("Normal","Enemy","Watch")
 
 local ENTER_LIST = {
+    --ok
     palace = {
         height = 261,
         title = _("联盟宫殿"),
@@ -59,7 +60,7 @@ local ENTER_LIST = {
             },
             Enemy = 
             {
-
+                
             },
             Watch = 
             {
@@ -67,6 +68,7 @@ local ENTER_LIST = {
             },
         },
     },
+    --ok
     shop = {
         height = 261,
         title = _("商店"),
@@ -128,6 +130,7 @@ local ENTER_LIST = {
             }
         },
     },
+    --ok
     moonGate = {
         height = 311,
         title = _("月门"),
@@ -195,10 +198,17 @@ local ENTER_LIST = {
             },
             Watch = 
             {
-
+                {
+                    img = "icon_alliance_crisis.png",
+                    title = _("战场"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIMoonGate',City,"battlefield",building):addToCurrentScene(true)
+                    end
+                }
             }
         },
     },
+    --ok
     orderHall = {
         height = 261,
         title = _("秩序大厅"),
@@ -253,6 +263,7 @@ local ENTER_LIST = {
             }
         },
     },
+    --ok
     shrine = {
         height = 261,
         title = _("圣地"),
@@ -307,7 +318,7 @@ local ENTER_LIST = {
             }
         },
     },
-
+    --ok
     decorate = {
         height = 242,
         title = _("树/湖泊/山脉"),
@@ -349,6 +360,7 @@ local ENTER_LIST = {
         },
     },
     --空地
+    --ok
     none = {
         height = 242,
         title = _("空地"),
@@ -385,6 +397,58 @@ local ENTER_LIST = {
             Watch = 
             {
 
+            }
+        },
+    },
+    --玩家城市
+    member = {
+        height = 311,
+        title = _("空地"),
+        building_image = "tree_1_120x120.png",
+        building_desc = _("联盟将军可将联盟建筑移动到空地\n玩家可将自己的城市移动到空地处\n空地定期刷新放逐者的村落,树木,山脉和湖泊"),
+        building_info = {
+            {
+                {_("坐标"),0x797154},
+                {_("11,11"),0x403c2f},
+            },
+            {
+                {_("玩家"),0x797154},
+                {_("11,11"),0x403c2f},
+            },
+            {
+                {_("占领者"),0x797154},
+                {_("11,11"),0x403c2f},
+            },
+            {
+                {_("驻防玩家"),0x797154},
+                {_("11,11"),0x403c2f},
+            },
+        },
+        enter_buttons = {
+            Normal = 
+            {
+                {
+                    img = "icon_move_city.png",
+                    title = _("迁移城市"),
+                    func = function (building)
+                    -- UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
+                    end
+                },
+                {
+                    img = "icon_move_alliance_building.png",
+                    title = _("迁移联盟建筑"),
+                    func = function (building)
+                    -- UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
+                    end
+                },
+            },
+            Enemy = 
+            {
+
+            },
+            Watch = 
+            {
+            
             }
         },
     },
