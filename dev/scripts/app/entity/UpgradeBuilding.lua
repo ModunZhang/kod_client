@@ -26,6 +26,9 @@ function UpgradeBuilding:ctor(building_info)
     self.freeSpeedUpTime=300
     self.unique_upgrading_key = nil
 end
+function UpgradeBuilding:IsAbleToFreeSpeedUpByTime(time)
+    return self:GetFreeSpeedupTime() >= building:GetUpgradingLeftTimeByCurrentTime(time)
+end
 function UpgradeBuilding:GetFreeSpeedupTime()
     return self.freeSpeedUpTime
 end
@@ -291,6 +294,7 @@ function UpgradeBuilding:GetLevelUpCitizen()
 end
 
 function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
+    local city = self:BelongCity()
     local level = self.level
 
     --等级小于0级
@@ -303,17 +307,18 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     end
     local config = self.config_building_levelup[self:GetType()]
     -- 地块是否解锁
-    -- local tile = City:GetTileWhichBuildingBelongs(self)
-    -- if not City:IsUnLockedAtIndex(tile.x,tile.y) then
+    -- local tile = city:GetTileWhichBuildingBelongs(self)
+    -- if not city:IsUnLockedAtIndex(tile.x,tile.y) then
     --     return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.TILE_NOT_UNLOCKED
     -- end
     -- 除了keep以外，被升级建筑等级不能大于keep等级
-    if self:GetType()~="keep" and City:GetBuildingByLocationId(1):GetLevel()==level then
+
+    if self:GetType()~="keep" and city:GetBuildingByLocationId(1):GetLevel()==level then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.LEVEL_CAN_NOT_HIGHER_THAN_KEEP_LEVEL
     elseif #config == level then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.IS_MAX_LEVEL
     end
-    local gem = City.resource_manager:GetGemResource():GetValue()
+    local gem = city.resource_manager:GetGemResource():GetValue()
     if isUpgradeNow then
         if gem<self:getUpgradeNowNeedGems() then
             return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH
@@ -322,19 +327,19 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     end
     -- 还未管理道具，暂时从userdata中取
     -- local m = DataManager:getUserData().materials
-    local m =City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
+    local m =city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
 
     -- 升级所需资源不足
-    local wood = City.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local iron = City.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local stone = City.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local population = City.resource_manager:GetPopulationResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local wood = city.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local iron = city.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local stone = city.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local population = city.resource_manager:GetPopulationResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local is_resource_enough = wood<config[self:GetNextLevel()].wood or population<config[self:GetNextLevel()].citizen
         or stone<config[self:GetNextLevel()].stone or iron<config[self:GetNextLevel()].iron
         or m.tiles<config[self:GetNextLevel()].tiles or m.tools<config[self:GetNextLevel()].tools
         or m.blueprints<config[self:GetNextLevel()].blueprints or m.pulley<config[self:GetNextLevel()].pulley
-    local max = City.build_queue
-    local current = max - #City:GetOnUpgradingBuildings()
+    local max = city.build_queue
+    local current = max - #city:GetOnUpgradingBuildings()
 
     if is_resource_enough and current <= 0 then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_AND_RESOURCE_NOT_ENOUGH
@@ -359,12 +364,13 @@ function UpgradeBuilding:getUpgradeNowNeedGems()
 end
 
 function UpgradeBuilding:getUpgradeRequiredGems()
+    local city = self:BelongCity()
     local required_gems = 0
     local has_resourcce = {
-        wood = City.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
-        iron = City.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
-        stone = City.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
-        citizen = City.resource_manager:GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime()),
+        wood = city.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
+        iron = city.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
+        stone = city.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
+        citizen = city.resource_manager:GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime()),
     }
 
     -- 还未管理道具，暂时从userdata中取
@@ -374,9 +380,9 @@ function UpgradeBuilding:getUpgradeRequiredGems()
     required_gems = required_gems + DataUtils:buyResource(resource_config.resources, has_resourcce)
     required_gems = required_gems + DataUtils:buyMaterial(resource_config.materials, has_materials)
     --当升级队列不足时，立即完成正在升级的建筑中所剩升级时间最少的建筑
-    if #City:GetOnUpgradingBuildings()>0 then
+    if #city:GetOnUpgradingBuildings()>0 then
         local min_time = math.huge
-        for k,v in pairs(City:GetOnUpgradingBuildings()) do
+        for k,v in pairs(city:GetOnUpgradingBuildings()) do
             local left_time = v:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime())
             if left_time<min_time then
                 min_time=left_time
