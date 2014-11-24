@@ -17,17 +17,8 @@ function DragonManager:ctor()
 	self.dragons_hp = {}
 end
 
-function DragonManager:Dragon_Index_To_Type(type_index)
-	for k,v in pairs(DragonManager.DRAGON_TYPE_INDEX) do
-		if type_index == v then
-			return k
-		end
-	end
-	return nil
-end
-
 function DragonManager:GetDragonByIndex(index)
-	local dragon_type = self:Dragon_Index_To_Type(index)
+	local dragon_type = DragonManager.DRAGON_TYPE_INDEX[index]
 	return self:GetDragon(dragon_type)
 end
 
@@ -81,7 +72,7 @@ function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recov
           		dragon:Update(v) -- include UpdateEquipmetsAndSkills
 				if dragonIsHated_ ~= dragon:Ishated() then
 					self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonHatched,function(lisenter)
-						lisenter.OnDragonHatched(lisenter)
+						lisenter.OnDragonHatched(lisenter,dragon)
 					end)
 				else
 	  				self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnBasicChanged,function(lisenter)
