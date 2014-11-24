@@ -72,9 +72,9 @@ function GameUIBuild:OnCityChanged()
 end
 function GameUIBuild:OnBuildOnItem(item)
     local max = self.build_city.build_queue
+    local current = max - #upgrading_buildings
     local current_time = app.timer:GetServerTime()
     local upgrading_buildings = self.build_city:GetUpgradingBuildingsWithOrder(current_time)
-    local current = max - #upgrading_buildings
 
     if current > 0 then
         self:BuildWithRuins(self.select_ruins, item.building.building_type)
