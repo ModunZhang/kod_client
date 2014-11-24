@@ -450,7 +450,7 @@ function NetManager:getLoginPromise()
             device_id = "b"
         else
             -- device_id = device.getOpenUDID()
-            device_id = "aj3"
+            device_id = "aj1"
         end
     else
         device_id = device.getOpenUDID()

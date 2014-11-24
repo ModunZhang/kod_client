@@ -13,8 +13,7 @@ local GameUIAllianceHome = UIKit:createUIClass('GameUIAllianceHome')
 
 function GameUIAllianceHome:ctor()
     GameUIAllianceHome.super.ctor(self)
-    -- 添加到全局计时器中，以便显示各个阶段的时间
-    app.timer:AddListener(self)
+
     self.alliance = Alliance_Manager:GetMyAlliance()
     self.member = self.alliance:GetMemeberById(DataManager:getUserData()._id)
 end
@@ -23,6 +22,7 @@ function GameUIAllianceHome:onEnter()
     GameUIAllianceHome.super.onEnter(self)
     self.bottom = self:CreateBottom()
     self.top = self:CreateTop()
+    self.top:Refresh(self.alliance:Status())
 
     -- 中间按钮
     self:CreateOperationButton()
@@ -31,6 +31,8 @@ function GameUIAllianceHome:onEnter()
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
 
+    -- 添加到全局计时器中，以便显示各个阶段的时间
+    app.timer:AddListener(self)
 end
 
 function GameUIAllianceHome:CreateOperationButton()
@@ -60,6 +62,7 @@ function GameUIAllianceHome:CreateOperationButton()
 end
 
 function GameUIAllianceHome:onExit()
+    app.timer:RemoveListener(self)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
@@ -68,6 +71,7 @@ end
 
 function GameUIAllianceHome:CreateTop()
     local alliance = self.alliance
+    local Top = {}
     -- 顶部背景,为按钮
     local top_self_bg = WidgetPushButton.new({normal = "allianceHome/button_blue_normal_320X94.png",
         pressed = "allianceHome/button_blue_pressed_320X94.png"})
@@ -113,10 +117,7 @@ function GameUIAllianceHome:CreateTop()
             color = 0xffedae
         }):align(display.RIGHT_CENTER, enemy_name_bg:getContentSize().width-30, 20)
         :addTo(enemy_name_bg)
-    -- 敌方联盟旗帜
-    local enemy_flag = ui_helper:CreateFlagContentSprite(alliance:Flag()):scale(0.5)
-    enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
-        :addTo(enemy_name_bg)
+
     -- 和平期,战争期,准备期背景
     local period_bg = display.newSprite("allianceHome/back_ground_123x102.png")
         :align(display.TOP_CENTER, 0,0)
@@ -154,9 +155,9 @@ function GameUIAllianceHome:CreateTop()
         }):align(display.LEFT_CENTER, 20, self_power_bg:getContentSize().height/2)
         :addTo(self_power_bg)
     -- 敌方战力
-    display.newSprite("allianceHome/power.png"):align(display.CENTER, 140, -65):addTo(top_enemy_bg)
     local enemy_power_bg = display.newSprite("allianceHome/power_background.png")
         :align(display.LEFT_CENTER, 140, -65):addTo(top_enemy_bg)
+    display.newSprite("allianceHome/power.png"):align(display.CENTER, 0, 0):addTo(enemy_power_bg)
     local enemy_power_label = UIKit:ttfLabel(
         {
             text = string.formatnumberthousands(alliance:Power()),
@@ -284,12 +285,30 @@ function GameUIAllianceHome:CreateTop()
         }):align(display.LEFT_CENTER, btn_bg:getContentSize().width-130, btn_bg:getContentSize().height/2-10)
         :addTo(btn_bg)
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
+
+    function Top:Refresh(status)
+        -- 和平期
+        if status=="peace" then
+            enemy_name_bg:setVisible(false)
+            enemy_power_bg:setVisible(false)
+        else
+            -- 敌方联盟旗帜
+            local moonGate = alliance:GetAllianceMoonGate()
+            local enemyAlliance = moonGate:GetEnemyAlliance()
+            if enemy_flag then
+                enemy_name_bg:removeChildByTag(201, true)
+            end
+            local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemyAlliance.flag)):scale(0.5)
+            enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
+                :addTo(enemy_name_bg)
+            enemy_flag:setTag(201)
+            enemy_name_label:setString("["..enemyAlliance.tag.."] "..enemyAlliance.name)
+        
+        end
+    end
+    return Top
 end
 
-function GameUIAllianceHome:onExit()
-    MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
-    GameUIAllianceHome.super.onExit(self)
-end
 function GameUIAllianceHome:MailUnreadChanged( num )
     if num==0 then
         self.mail_unread_num_bg:setVisible(false)
@@ -489,13 +508,12 @@ function GameUIAllianceHome:MailUnreadChanged( num )
 end
 
 function GameUIAllianceHome:OnTimer(current_time)
-    if self.alliance:Status() == "fight" then
+    local status = self.alliance:Status()
+    if status ~= "peace" then
         local statusFinishTime = self.alliance:StatusFinishTime()
-        -- print("时间：",GameUtils:formatTimeStyle1(statusFinishTime-current_time/1000))
-    elseif self.alliance:Status() == "peace" then
+        self.time_label:setString(GameUtils:formatTimeStyle1(statusFinishTime/1000-current_time))
+    else
         local statusStartTime = self.alliance:StatusStartTime()
-        self.period_label:setString(_("和平期"))
-        -- print("时间：",GameUtils:formatTimeStyle1(current_time-statusStartTime/1000))
         self.time_label:setString(GameUtils:formatTimeStyle1(current_time-statusStartTime/1000))
     end
 end
@@ -516,6 +534,7 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
 
 
 
