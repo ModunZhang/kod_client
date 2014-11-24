@@ -5,6 +5,7 @@ local GameUIMoonGate = UIKit:createUIClass('GameUIMoonGate', "GameUIAllianceBuil
 local Flag = import("..entity.Flag")
 local GameUIAllianceSendTroops = import(".GameUIAllianceSendTroops")
 local UIListView = import(".UIListView")
+local GameUIReplay = import(".GameUIReplay")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local Localize = import("..utils.Localize")
 local AllianceMoonGate = import("..entity.AllianceMoonGate")
@@ -135,11 +136,14 @@ function GameUIMoonGate:InitBattlefieldPart()
         viewRect = cc.rect(window.cx-304, window.bottom+40, 608, 424),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(layer)
-    -- self:CreateWarRecordItem(true)
-    -- self:CreateWarRecordItem()
-    -- self:CreateWarRecordItem()
-    -- self:CreateWarRecordItem()
-    -- self.war_listview:reload()
+
+    local fightReports = moon_gate:GetFightReports()
+    for i=#fightReports,1,-1  do
+        self:CreateWarRecordItem(i==#fightReports,fightReports[i])
+    end
+  
+    self.war_listview:reload()
+
 end
 
 function GameUIMoonGate:RefreshCurrentFightTroops(currentFightTroops)
@@ -197,7 +201,7 @@ function GameUIMoonGate:SetMoonGateBelong(moonGateOwner)
     end
 end
 
-function GameUIMoonGate:CreateWarRecordItem(isSelected)
+function GameUIMoonGate:CreateWarRecordItem(isSelected,fightReport,index)
     local list = self.war_listview
     local item = list:newItem()
     local item_width,item_height = 608,98
@@ -223,13 +227,13 @@ function GameUIMoonGate:CreateWarRecordItem(isSelected)
         :addTo(content)
     unselected_title_bg:setVisible(not isSelected)
     local self_name = UIKit:ttfLabel({
-        text = "己方姓名",
+        text = fightReport.ourPlayerName,
         size = 18,
         color = 0xffedae,
     }):align(display.LEFT_CENTER,-size.width/2+20,26)
         :addTo(content)
     local enemy_name = UIKit:ttfLabel({
-        text = "敌方姓名",
+        text = fightReport.enemyPlayerName,
         size = 18,
         color = 0xffedae,
     }):align(display.RIGHT_CENTER,size.width/2-20,26)
@@ -240,20 +244,25 @@ function GameUIMoonGate:CreateWarRecordItem(isSelected)
         color = 0xffedae,
     }):align(display.RIGHT_CENTER,0,26)
         :addTo(content)
+    local text_1 = fightReport.fightResult~="enemyWin" and "WIN" or "LOSE"
+    local color_1 = fightReport.fightResult~="enemyWin" and 0x007c23 or 0x7e0000
     local result_own = UIKit:ttfLabel({
-        text = "WIN X2",
+        text = text_1,
         size = 18,
-        color = 0x007c23,
+        color = color_1,
     }):align(display.LEFT_CENTER,-size.width/2+20,-15)
         :addTo(content)
+    local text_1 = fightReport.fightResult== "enemyWin" and "WIN" or "LOSE"
+    local color_1 = fightReport.fightResult== "enemyWin" and 0x007c23 or 0x7e0000
     local result_enemy = UIKit:ttfLabel({
-        text = "LOSE",
+        text = text_1,
         size = 18,
-        color = 0x7e0000,
+        color = color_1,
     }):align(display.RIGHT_CENTER,size.width/2-20,-15)
         :addTo(content)
+    -- print("战斗过去的时间",math.floor(app.timer:GetServerTime()-fightReport.fightTime/1000 ))
     local war_time_label = UIKit:ttfLabel({
-        text = "4 min ago",
+        text = GameUtils:formatTimeAsTimeAgoStyle( math.floor(app.timer:GetServerTime()-fightReport.fightTime/1000 )),
         size = 18,
         color = 0x797154,
     }):align(display.CENTER,0,-20)
@@ -270,12 +279,12 @@ function GameUIMoonGate:CreateWarRecordItem(isSelected)
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-
+                UIKit:newGameUI("GameUIReplay",fightReport):addToCurrentScene(true)   
             end
         end):align(display.CENTER,0,-20):addTo(content)
     replay_btn:setVisible(isSelected)
     item:addContent(content)
-    list:addItem(item)
+    list:addItem(item,index)
 
     function item:OnClicked(isSelected)
         selected_title_bg:setVisible(isSelected)
@@ -283,6 +292,7 @@ function GameUIMoonGate:CreateWarRecordItem(isSelected)
         replay_btn:setVisible(isSelected)
         war_time_label:setVisible(not isSelected)
     end
+    return item
 end
 
 function GameUIMoonGate:CreateFightPlayer(camp)
@@ -418,9 +428,9 @@ function GameUIMoonGate:CreateFightPlayer(camp)
     end
 
     function player:ResetFightPlayer()
-        win_num:setString("")
+        self:SetWin(0)
         power:setString("")
-        name:setString("")
+        self:SetPlayerName("")
         if self.dragon_bg then
             self:removeChildByTag(200, true)
         end
@@ -535,7 +545,7 @@ function GameUIMoonGate:InitGarrisonPart()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-
+                NetManager:getRetreatFromMoonGatePromose()
             end
         end):align(display.CENTER,window.cx,window.top-830):addTo(layer)
     local single_combat_btn = WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
@@ -547,7 +557,7 @@ function GameUIMoonGate:InitGarrisonPart()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-
+                NetManager:getChallengeMoonGateEnemyTroopPromose()
             end
         end):align(display.RIGHT_CENTER,window.right-50,window.top-830):addTo(layer)
     UIKit:ttfLabel({
@@ -675,7 +685,7 @@ function GameUIMoonGate:InitGarrisonPart()
         end
         break
     end
-    
+
 end
 
 function GameUIMoonGate:CreateItemForListView(params)
@@ -761,6 +771,7 @@ function GameUIMoonGate:OnOurTroopsChanged(changed_map)
     for k,v in pairs(remove) do
         Garrison:RemoveFromOurTroop(v)
     end
+    Garrison:SetOurTroopsNum(self.alliance_moonGate:GetOurTroopsNum())
 end
 -- 敌方联盟部队改变
 function GameUIMoonGate:OnEnemyTroopsChanged(changed_map)
@@ -774,6 +785,7 @@ function GameUIMoonGate:OnEnemyTroopsChanged(changed_map)
     for k,v in pairs(remove) do
         Garrison:RemoveFromEnemyTroop(v)
     end
+    Garrison:SetEnemyTroopsNum(self.alliance_moonGate:GetEnemyTroopsNum())
 end
 -- 正在交战的部队改变
 function GameUIMoonGate:OnCurrentFightTroopsChanged(currentFightTroops)
@@ -783,7 +795,11 @@ end
 -- 战报改变
 function GameUIMoonGate:OnFightReportsChanged(changed_map)
     LuaUtils:outputTable("战报改变->", changed_map)
-
+    local add = changed_map.add
+    for k,v in pairs(add) do
+        self:CreateWarRecordItem(false,v,1)
+    end
+    self.war_listview:reload()
 end
 -- 联盟战结束
 function GameUIMoonGate:OnMoonGateDataReset()
@@ -802,6 +818,8 @@ function GameUIMoonGate:onExit()
 end
 
 return GameUIMoonGate
+
+
 
 
 

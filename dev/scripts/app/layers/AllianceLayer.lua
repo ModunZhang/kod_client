@@ -12,6 +12,8 @@ local ZORDER = Enum("BOTTOM", "MIDDLE", "TOP", "BUILDING", "LINE", "SOLDIER")
 local floor = math.floor
 local random = math.random
 local AllianceShrine = import("..entity.AllianceShrine")
+local AllianceMoonGate = import("..entity.AllianceMoonGate")
+
 function AllianceLayer:ctor(alliance)
     self.alliance_ = alliance
     Observer.extend(self)
@@ -92,12 +94,23 @@ function AllianceLayer:ctor(alliance)
     dump(alliance_shire:GetMarchEvents())
     table.foreachi(alliance_shire:GetMarchEvents(),function(_,merchEvent)
         self:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
-    end)    
+    end)
     table.foreachi(alliance_shire:GetMarchReturnEvents(),function(_,merchEvent)
         self:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
     end)
     alliance_shire:AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventsChanged)
     alliance_shire:AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchReturnEventsChanged)
+
+    local alliance_moonGate = self:GetAlliance():GetAllianceMoonGate()
+    dump(alliance_moonGate:GetMoonGateMarchEvents())
+    table.foreachi(alliance_moonGate:GetMoonGateMarchEvents(),function(_,merchEvent)
+        self:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
+    end)
+    table.foreachi(alliance_moonGate:GetMoonGateMarchReturnEvents(),function(_,merchEvent)
+        self:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
+    end)
+    alliance_moonGate:AddListenOnType(self,AllianceMoonGate.LISTEN_TYPE.OnMoonGateMarchEventsChanged)
+    alliance_moonGate:AddListenOnType(self,AllianceMoonGate.LISTEN_TYPE.OnMoonGateMarchReturnEventsChanged)
 end
 
 function AllianceLayer:GetAlliance()
@@ -120,10 +133,31 @@ function AllianceLayer:OnMarchReturnEventsChanged(changed_map)
     self:OnMarchEventsChanged(changed_map)
 end
 
+function AllianceLayer:OnMoonGateMarchEventsChanged(changed_map)
+    if changed_map.remove then
+        table.foreachi(changed_map.remove,function(_,merchEvent)
+            self:DeleteCorpsById(merchEvent:Id())
+        end)
+    elseif changed_map.add then
+        table.foreachi(changed_map.add,function(_,merchEvent)
+            self:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
+        end)
+    end
+end
+
+function AllianceLayer:OnMoonGateMarchReturnEventsChanged(changed_map)
+    self:OnMoonGateMarchEventsChanged(changed_map)
+end
+
 function AllianceLayer:onCleanup()
     local alliance_shire = self:GetAlliance():GetAllianceShrine()
     alliance_shire:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventsChanged)
     alliance_shire:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchReturnEventsChanged)
+
+    local alliance_moonGate = self:GetAlliance():GetAllianceMoonGate()
+    alliance_moonGate:RemoveListenerOnType(self,AllianceMoonGate.LISTEN_TYPE.OnMoonGateMarchEventsChanged)
+    alliance_moonGate:RemoveListenerOnType(self,AllianceMoonGate.LISTEN_TYPE.OnMoonGateMarchReturnEventsChanged)
+
 end
 
 function AllianceLayer:CreateObject(entity)
@@ -246,7 +280,13 @@ function AllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_ti
         {"Flying_0", 1},
         {"Flying_0", -1},
     }
-    local ani, scalex = unpack(dir_map[math.floor(march_info.degree / 45) + 4])
+    print("CreateCorps",math.floor(march_info.degree / 45) + 4,march_info.degree)
+    local ani, scalex
+    if march_info.degree>=0 then
+        ani, scalex = unpack(dir_map[math.floor(march_info.degree / 45) + 4])
+    else
+        ani, scalex = unpack(dir_map[math.ceil(march_info.degree / 45) + 4])
+    end
     armature:getAnimation():play(ani)
     corps:setScaleX(scalex)
 
@@ -375,6 +415,8 @@ function AllianceLayer:OnSceneMove()
 end
 
 return AllianceLayer
+
+
 
 
 

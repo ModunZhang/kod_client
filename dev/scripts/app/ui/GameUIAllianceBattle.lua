@@ -446,7 +446,7 @@ function GameUIAllianceBattle:InitHistoryRecord()
     local layer = self.history_layer
     self.history_listview = UIListView.new{
         -- bgColor = UIKit:hex2c4b(0x7a990000),
-        viewRect = cc.rect(17, window.top-890, 608, 786),
+        viewRect = cc.rect(window.left+17, window.top-890, 608, 786),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(layer)
     local function addHistoryItem(report)
@@ -589,7 +589,7 @@ function GameUIAllianceBattle:InitOtherAlliance()
 
     --搜索
     local searchIcon = display.newSprite("alliacne_search_29x33.png"):addTo(layer)
-        :align(display.LEFT_CENTER,50,window.top-270)
+        :align(display.LEFT_CENTER,window.left+50,window.top-270)
     local function onEdit(event, editbox)
         if event == "return" then
             self:SearchAllianAction(self.editbox_tag_search:getText())
@@ -615,7 +615,7 @@ function GameUIAllianceBattle:InitOtherAlliance()
     -- 搜索结果
     self.alliance_listview = UIListView.new{
         -- bgColor = UIKit:hex2c4b(0x7a990000),
-        viewRect = cc.rect(17, window.top-890, 608, 586),
+        viewRect = cc.rect(window.left+17, window.top-890, 608, 586),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(layer)
     for i=1,10 do

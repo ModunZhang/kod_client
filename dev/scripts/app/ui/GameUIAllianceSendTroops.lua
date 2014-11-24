@@ -3,6 +3,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local UIScrollView = import(".UIScrollView")
 local Localize = import("..utils.Localize")
 local UIListView = import(".UIListView")
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetSlider = import("..widget.WidgetSlider")
 local Corps = import(".Corps")
 local UILib = import(".UILib")
@@ -107,8 +108,18 @@ function GameUIAllianceSendTroops:onEnter()
                 assert(tolua.type(self.march_callback)=="function")
                 local dragonType = self.dragon:Type()
                 local soldiers = self:GetSelectSoldier()
-                print("派军到月门",dragonType)
-                LuaUtils:outputTable("soldiers", soldiers)
+                if self.dragon:Status() ~= "free" then
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("龙未处于空闲状态"))
+                        :AddToCurrentScene()
+                    return
+                end
+                if #soldiers == 0 then
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("请选择要派遣的部队"))
+                        :AddToCurrentScene()
+                    return
+                end
                 self.march_callback(dragonType,soldiers)
                 -- 确认派兵后关闭界面
                 self:leftButtonClicked()
@@ -621,6 +632,8 @@ function GameUIAllianceSendTroops:onExit()
 end
 
 return GameUIAllianceSendTroops
+
+
 
 
 

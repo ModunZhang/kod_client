@@ -628,7 +628,7 @@ function GameUIShop:onEnter()
             --         "WkFMlrSqJL"
             --     )
             -- )
-        end)
+            end)
 
 
 
@@ -647,7 +647,217 @@ function GameUIShop:onEnter()
         :onButtonClicked(function(event)
             end)
 
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "构建月门战测试环境1",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 500, window.top - 1200)
+        :onButtonClicked(function(event)
+            -- 重置玩家和联盟数据
+            cocos_promise.promiseWithCatchError(NetManager:getSendGlobalMsgPromise("reset")
+                -- 增加宝石
+                :next(function()
+                    return NetManager:getSendGlobalMsgPromise("gem "..1000000)
+                end)
+                -- 升级城堡到4级
+                :next(function()
+                    return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
+                end)
+                :next(function()
+                    return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
+                end)
+                :next(function()
+                    return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
+                end)
+                -- 解锁军帐
+                :next(function()
+                    return NetManager:getInstantUpgradeBuildingByLocationPromise(8)
+                end)
+                -- 解锁兵营
+                :next(function()
+                    return NetManager:getInstantUpgradeBuildingByLocationPromise(7)
+                end)
+                -- 招募士兵
+                :next(function()
+                    return NetManager:getInstantRecruitNormalSoldierPromise("swordsman", 20, cb)
+                end)
+                :next(function()
+                    return NetManager:getInstantRecruitNormalSoldierPromise("ranger", 20, cb)
+                end)
+                :next(function()
+                    return NetManager:getInstantRecruitNormalSoldierPromise("catapult", 5, cb)
+                end)
+                :next(function()
+                    return NetManager:getInstantRecruitNormalSoldierPromise("lancer", 5, cb)
+                end)
+                -- 孵化龙
+                :next(function()
+                    return NetManager:getHatchDragonPromise("redDragon")
+                end)
+                :next(function()
+                    return NetManager:getHatchDragonPromise("redDragon")
+                end)
+                :next(function()
+                    return NetManager:getHatchDragonPromise("redDragon")
+                end)
+                :next(function()
+                    return NetManager:getHatchDragonPromise("redDragon")
+                end)
+                :next(function()
+                    return NetManager:getHatchDragonPromise("redDragon")
+                end)
+                -- 创建联盟
+                :next(function()
+                    return NetManager:getCreateAlliancePromise("jordan", "aj23", "all",  "grassLand", Flag:RandomFlag():EncodeToJson())
+                end)
+            )
+        end)
 
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "构建月门战测试环境2",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 140, window.top - 1300)
+        :onButtonClicked(function(event)
+            -- 重置玩家和联盟数据
+            cocos_promise.promiseWithCatchError(NetManager:getSendGlobalMsgPromise("reset")
+                -- 增加宝石
+                :next(function()
+                    return NetManager:getSendGlobalMsgPromise("gem "..1000000)
+                end)
+                -- 升级城堡到4级
+                :next(function()
+                    return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
+                end)
+                :next(function()
+                    return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
+                end)
+                :next(function()
+                    return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
+                end)
+                -- 解锁军帐
+                :next(function()
+                    return NetManager:getInstantUpgradeBuildingByLocationPromise(8)
+                end)
+                -- 解锁兵营
+                :next(function()
+                    return NetManager:getInstantUpgradeBuildingByLocationPromise(7)
+                end)
+                -- 招募士兵
+                :next(function()
+                    return NetManager:getInstantRecruitNormalSoldierPromise("swordsman", 20, cb)
+                end)
+                :next(function()
+                    return NetManager:getInstantRecruitNormalSoldierPromise("ranger", 20, cb)
+                end)
+                :next(function()
+                    return NetManager:getInstantRecruitNormalSoldierPromise("catapult", 5, cb)
+                end)
+                :next(function()
+                    return NetManager:getInstantRecruitNormalSoldierPromise("lancer", 5, cb)
+                end)
+                -- 孵化龙
+                :next(function()
+                    return NetManager:getHatchDragonPromise("blueDragon")
+                end)
+                :next(function()
+                    return NetManager:getHatchDragonPromise("blueDragon")
+                end)
+                :next(function()
+                    return NetManager:getHatchDragonPromise("blueDragon")
+                end)
+                :next(function()
+                    return NetManager:getHatchDragonPromise("blueDragon")
+                end)
+                :next(function()
+                    return NetManager:getHatchDragonPromise("blueDragon")
+                end)
+                -- 创建联盟
+                :next(function()
+                    return NetManager:getCreateAlliancePromise("iverson", "ai3", "all",  "grassLand", Flag:RandomFlag():EncodeToJson())
+                end)
+            )
+        end)
+
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "构建月门战测试环境3",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 320, window.top - 1300)
+        :onButtonClicked(function(event)
+            -- 重置玩家和联盟数据
+            cocos_promise.promiseWithCatchError(NetManager:getSendGlobalMsgPromise("reset")
+                -- 增加宝石
+                :next(function()
+                    return NetManager:getSendGlobalMsgPromise("gem "..1000000)
+                end)
+                -- 升级城堡到4级
+                :next(function()
+                    return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
+                end)
+                :next(function()
+                    return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
+                end)
+                :next(function()
+                    return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
+                end)
+                -- 解锁军帐
+                :next(function()
+                    return NetManager:getInstantUpgradeBuildingByLocationPromise(8)
+                end)
+                -- 解锁兵营
+                :next(function()
+                    return NetManager:getInstantUpgradeBuildingByLocationPromise(7)
+                end)
+                -- 招募士兵
+                :next(function()
+                    return NetManager:getInstantRecruitNormalSoldierPromise("swordsman", 20, cb)
+                end)
+                :next(function()
+                    return NetManager:getInstantRecruitNormalSoldierPromise("ranger", 20, cb)
+                end)
+                :next(function()
+                    return NetManager:getInstantRecruitNormalSoldierPromise("catapult", 5, cb)
+                end)
+                :next(function()
+                    return NetManager:getInstantRecruitNormalSoldierPromise("lancer", 5, cb)
+                end)
+                -- 孵化龙
+                :next(function()
+                    return NetManager:getHatchDragonPromise("blueDragon")
+                end)
+                :next(function()
+                    return NetManager:getHatchDragonPromise("blueDragon")
+                end)
+                :next(function()
+                    return NetManager:getHatchDragonPromise("blueDragon")
+                end)
+                :next(function()
+                    return NetManager:getHatchDragonPromise("blueDragon")
+                end)
+                :next(function()
+                    return NetManager:getHatchDragonPromise("blueDragon")
+                end)
+            )
+        end)
 
 
     item:addContent(content)
@@ -661,6 +871,9 @@ end
 
 
 return GameUIShop
+
+
+
 
 
 

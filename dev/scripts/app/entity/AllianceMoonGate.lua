@@ -1,5 +1,6 @@
 local MultiObserver = import(".MultiObserver")
 local property = import("..utils.property")
+local MoonGateMarchEvent = import(".MoonGateMarchEvent")
 local AllianceMoonGate = class("AllianceMoonGate",MultiObserver)
 local Enum = import("..utils.Enum")
 
@@ -83,17 +84,17 @@ function AllianceMoonGate:GetEnemyAlliance()
     return self.enemyAlliance
 end
 function AllianceMoonGate:GetOurTroopsNum()
-	local count = 0 
-	for k,v in pairs(self.ourTroops) do
-		count = count + 1
-	end
+    local count = 0
+    for k,v in pairs(self.ourTroops) do
+        count = count + 1
+    end
     return count
 end
 function AllianceMoonGate:GetEnemyTroopsNum()
-    local count = 0 
-	for k,v in pairs(self.enemyTroops) do
-		count = count + 1
-	end
+    local count = 0
+    for k,v in pairs(self.enemyTroops) do
+        count = count + 1
+    end
     return count
 end
 
@@ -118,8 +119,8 @@ function AllianceMoonGate:OnAllianceDataChanged(alliance_data)
         -- 联盟战结束，清空月门数据, 返回的moonGateData为空表的时候代表联盟战结束
         local isOver = true
         for k,v in pairs(alliance_data.moonGateData) do
-        	isOver = false
-        	break
+            isOver = false
+            break
         end
         if isOver then
             self:Reset()
@@ -274,21 +275,6 @@ function AllianceMoonGate:UpdateFightReports(alliance_data)
     end
 end
 
-function AllianceMoonGate:RefreshMoonGateMarchEvents(changed_map)
-    for k,v in pairs(changed_map) do
-        if k=="add" or k=="edit" then
-            for _,event in pairs(v) do
-                self.moonGateMarchEvents[event.id] = event
-            end
-        elseif k=="remove" then
-            for _,event in pairs(v) do
-                self.moonGateMarchEvents[event.id] = nil
-            end
-        end
-    end
-    self:OnMoonGateMarchEventsChanged(changed_map)
-end
-
 function AllianceMoonGate:OnMoonGateMarchEventsChanged(changed_map)
     self:NotifyListeneOnType(self.LISTEN_TYPE.OnMoonGateMarchEventsChanged,function(listener)
         listener.OnMoonGateMarchEventsChanged(listener,changed_map)
@@ -297,37 +283,48 @@ end
 
 function AllianceMoonGate:UpdateMoonGateMarchEvents(alliance_data)
     if alliance_data.moonGateMarchEvents then
-        self.moonGateMarchEvents = alliance_data.moonGateMarchEvents
+        for _,v in ipairs(alliance_data.moonGateMarchEvents) do
+            local marchEvent = MoonGateMarchEvent.new()
+            marchEvent:Update(v)
+            local moonGate_object = self:GetMoonGateObjectFromMap()
+            local from = self:GetPlayerLocation(marchEvent:PlayerData().id)
+            local to = {x = moonGate_object.location.x,y = moonGate_object.location.y}
+            marchEvent:SetLocationInfo(from,to)
+            self.moonGateMarchEvents[marchEvent:Id()] = marchEvent
+        end
     end
-    if alliance_data.__moonGateMarchEvents then
-        local changed_map = {
-            add = {},
-            edit = {},
-            remove = {}
-        }
 
-        for _,v in ipairs(alliance_data.__moonGateMarchEvents) do
-            if changed_map[v.type] then
-                table.insert(changed_map[v.type],v.data)
+    if alliance_data.__moonGateMarchEvents then
+        local changed_map = Event_Handler_Func(
+            alliance_data.__moonGateMarchEvents
+            ,function(event) --add
+                if not self.moonGateMarchEvents[event.id] then
+                    local marchEvent = MoonGateMarchEvent.new()
+                    marchEvent:Update(event)
+                    local from = self:GetPlayerLocation(marchEvent:PlayerData().id)
+                    local moonGate_object = self:GetMoonGateObjectFromMap()
+                    local to = {x = moonGate_object.location.x,y = moonGate_object.location.y}
+                    marchEvent:SetLocationInfo(from,to)
+                    self.moonGateMarchEvents[marchEvent:Id()] = marchEvent
+                    return marchEvent
             end
-        end
-        self:RefreshMoonGateMarchEvents(changed_map)
+            end
+            ,function(event)
+            --TODO:行军事件的修改 (加速道具？)
+            end
+            ,function(event) --remove
+                local marchEvent = self:GetMarchEventById(event.id)
+                if marchEvent then
+                    self.moonGateMarchEvents[event.id] = nil
+                    return marchEvent
+                end
+            end
+        )
+
+        self:OnMoonGateMarchEventsChanged(pack_map(changed_map))
     end
 end
-function AllianceMoonGate:RefreshMoonGateMarchReturnEvents(changed_map)
-    for k,v in pairs(changed_map) do
-        if k=="add" or k=="edit" then
-            for _,event in pairs(v) do
-                self.moonGateMarchReturnEvents[event.id] = event
-            end
-        elseif k=="remove" then
-            for _,event in pairs(v) do
-                self.moonGateMarchReturnEvents[event.id] = nil
-            end
-        end
-    end
-    self:OnMoonGateMarchReturnEventsChanged(changed_map)
-end
+
 function AllianceMoonGate:OnMoonGateMarchReturnEventsChanged(changed_map)
     self:NotifyListeneOnType(self.LISTEN_TYPE.OnMoonGateMarchReturnEventsChanged,function(listener)
         listener.OnMoonGateMarchReturnEventsChanged(listener,changed_map)
@@ -336,23 +333,64 @@ end
 
 function AllianceMoonGate:UpdateMoonGateMarchReturnEvents(alliance_data)
     if alliance_data.moonGateMarchReturnEvents then
-        self.moonGateMarchReturnEvents = alliance_data.moonGateMarchReturnEvents
-    end
-    if alliance_data.__moonGateMarchReturnEvents then
-        local changed_map = {
-            add = {},
-            edit = {},
-            remove = {}
-        }
-
-        for _,v in ipairs(alliance_data.__moonGateMarchReturnEvents) do
-            if changed_map[v.type] then
-                table.insert(changed_map[v.type],v.data)
-            end
+        for _,v in ipairs(alliance_data.moonGateMarchReturnEvents) do
+            local marchEvent = MoonGateMarchEvent.new()
+            marchEvent:Update(v)
+            local moonGate_object = self:GetMoonGateObjectFromMap()
+            local from = {x = moonGate_object.location.x,y = moonGate_object.location.y}
+            local to = self:GetPlayerLocation(marchEvent:PlayerData().id)
+            marchEvent:SetLocationInfo(from,to)
+            self.moonGateMarchReturnEvents[marchEvent:Id()] = marchEvent
         end
-        self:RefreshMoonGateMarchReturnEvents(changed_map)
+    end
+
+    if alliance_data.__moonGateMarchReturnEvents then
+        local changed_map = Event_Handler_Func(
+            alliance_data.__moonGateMarchReturnEvents
+            ,function(event) --add
+                if not self.moonGateMarchReturnEvents[event.id] then
+                    local marchEvent = MoonGateMarchEvent.new()
+                    marchEvent:Update(event)
+                    local moonGate_object = self:GetMoonGateObjectFromMap()
+                    local from = {x = moonGate_object.location.x,y = moonGate_object.location.y}
+                    local to = self:GetPlayerLocation(marchEvent:PlayerData().id)
+                    marchEvent:SetLocationInfo(from,to)
+                    self.moonGateMarchReturnEvents[marchEvent:Id()] = marchEvent
+                    return marchEvent
+            end
+            end
+            ,function(event)
+            --TODO:行军事件的修改 (加速道具？)
+            end
+            ,function(event) --remove
+                local marchEvent = self:GetMarchRetrunEventById(event.id)
+                if marchEvent then
+                    self.moonGateMarchReturnEvents[event.id] = nil
+                    return marchEvent
+                end
+            end
+        )
+
+        self:OnMoonGateMarchReturnEventsChanged(pack_map(changed_map))
     end
 end
 
 
+function AllianceMoonGate:GetMoonGateObjectFromMap()
+    return self:GetAlliance():GetAllianceMap():FindAllianceBuildingInfoByName("moonGate")
+end
+function AllianceMoonGate:GetPlayerLocation(playerId)
+    return self:GetAlliance():GetMemeberById(playerId).location
+end
+function AllianceMoonGate:GetMarchEventById(id)
+    return self.moonGateMarchEvents[id]
+end
+function AllianceMoonGate:GetMarchRetrunEventById(id)
+    return self.moonGateMarchReturnEvents[id]
+end
+
 return AllianceMoonGate
+
+
+
+

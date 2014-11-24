@@ -450,7 +450,7 @@ function NetManager:getLoginPromise()
             device_id = "b"
         else
             -- device_id = device.getOpenUDID()
-            device_id = "aj1"
+            device_id = "aj3"
         end
     else
         device_id = device.getOpenUDID()
@@ -984,6 +984,16 @@ function NetManager:getFtechAllianceViewDataPromose(targetAllianceId)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.getAllianceViewData",{targetAllianceId = targetAllianceId
 
     },"获取对手联盟数据失败!"),get_fetchallianceview_callback()):next(get_response_msg)
+end
+--从月门撤兵
+function NetManager:getRetreatFromMoonGatePromose()
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.retreatFromMoonGate",{},
+        "从月门撤兵失败!"),get_fetchallianceview_callback()):next(get_response_msg)
+end
+--联盟战月门挑战
+function NetManager:getChallengeMoonGateEnemyTroopPromose()
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.challengeMoonGateEnemyTroop",{},
+        "联盟战月门挑战失败!"),get_fetchallianceview_callback()):next(get_response_msg)
 end
 --
 function NetManager:getUpdateFileList(cb)
