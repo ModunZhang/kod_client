@@ -353,7 +353,7 @@ function GameUIDragonEyrieMain:OnFilterChangedEvent(eyrie,b,i)
                 shaderName = "dragon_image"..i,
                 resolution = eyrie.dragon_image.resolution,
                 blurRadius = b,
-                sampleNum = 4
+                sampleNum = 2
             })
         )
 

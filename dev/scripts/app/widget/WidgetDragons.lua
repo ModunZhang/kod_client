@@ -106,12 +106,12 @@ function WidgetDragons:UpdatePosition(dt)
                 shaderName = "blur"..i,
                 resolution = {613, 509},
                 blurRadius = b,
-                sampleNum = 4
+                sampleNum = 2
             })
         )
-        dragon:setFilter(filter_)
+        -- dragon:setFilter(filter_)
         if self.OnFilterChangedEvent then
-            self.OnFilterChangedEvent(dragon,b,i)
+            -- self.OnFilterChangedEvent(dragon,b,i)
         end
     end
 end
