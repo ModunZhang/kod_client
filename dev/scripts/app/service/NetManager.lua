@@ -205,6 +205,7 @@ onGetSendMailsSuccess_callbacks = {}
 onSendChatSuccess_callbacks = {}
 onGetAllChatSuccess_callbacks = {}
 onFetchAllianceViewData_callbacks = {}
+onGetPlayerViewDataSuccess_callbacks = {}
 function NetManager:addOnSearchAlliancesSuccessListener()
     self:addEventListener("onSearchAlliancesSuccess", function(success, msg)
         if success then    
@@ -243,6 +244,17 @@ function NetManager:addOnGetPlayerInfoSuccessListener()
                 callback(success, msg)
             end
             onGetPlayerInfoSuccess_callbacks = {}
+        end
+    end)
+end
+function NetManager:addOnGetPlayerViewDataSuccess()
+    self:addEventListener("onGetPlayerViewDataSuccess", function(success, msg)
+        if success then    
+            local callback = onGetPlayerViewDataSuccess_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onGetPlayerViewDataSuccess_callbacks = {}
         end
     end)
 end
@@ -356,6 +368,7 @@ function NetManager:addOnFetchAllianceViewSuccess()
         end
     end)
 end
+
 ------------------------------------------------------------------------------------------------
 function NetManager:addLoginEventListener()
     self:addEventListener("onPlayerLoginSuccess", function(success, msg)
@@ -428,6 +441,7 @@ function NetManager:getConnectLogicServerPromise()
         self:addOnSearchAlliancesSuccessListener()
         self:addOnGetCanDirectJoinAlliancesSuccessListener()
         self:addOnGetPlayerInfoSuccessListener()
+        self:addOnGetPlayerViewDataSuccess()
         self:addOnGetMailsSuccessListener()
         self:addOnGetSavedMailsSuccessListener()
         self:addOnGetSendMailsSuccessListener()
@@ -468,6 +482,9 @@ local function get_directjoin_callback()
 end
 local function get_playerinfo_callback()
     return get_callback_promise(onGetPlayerInfoSuccess_callbacks, "查询玩家信息失败!")
+end
+local function get_cityinfo_callback()
+    return get_callback_promise(onGetPlayerViewDataSuccess_callbacks, "查询玩家城市信息失败!")
 end
 local function get_alliancedata_callback()
     return get_callback_promise(onAllianceDataChanged_callbacks, "修改联盟信息失败!")
@@ -843,7 +860,7 @@ end
 function NetManager:getPlayerCityInfoPromise(targetPlayerId)
     return promise.all(get_blocking_request_promise("logic.playerHandler.getPlayerViewData", {
         targetPlayerId = targetPlayerId
-    }, "获取玩家城市信息失败!")):next(get_response_msg)
+    }, "获取玩家城市信息失败!"), get_cityinfo_callback()):next(get_response_msg)
 end
 -- 移交萌主
 function NetManager:getHandOverAllianceArchonPromise(memberId)
