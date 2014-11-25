@@ -987,7 +987,7 @@ function NetManager:getMarchToShrinePromose(shrineEventId,dragonType,soldiers)
         dragonType = dragonType,
         shrineEventId = shrineEventId,
         soldiers = soldiers
-    }, "联盟捐赠失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "圣地派兵失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 --查找合适的联盟进行战斗
 function NetManager:getFindAllianceToFightPromose()

@@ -5,7 +5,7 @@ local UILib = import(".UILib")
 local Enum = import("..utils.Enum")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIWriteMail = import(".GameUIWriteMail")
-
+local config_wall = GameDatas.BuildingFunction.wall
 local GameUIAllianceEnter = UIKit:createUIClass("GameUIAllianceEnter")
 local GameUIAllianceSendTroops = import(".GameUIAllianceSendTroops")
 
@@ -593,6 +593,7 @@ end
 function GameUIAllianceEnter:InitBuildingDese()
     local building_key = self:GetBuildingKey()
     local p = self.params
+    local building = self:GetBuilding()
     if building_key == 'member' then
         self.desc_label = display.newSprite("Progress_bar_1.png"):align(display.LEFT_TOP, 180, p.height-30)
                 :addTo(self.body)
@@ -600,7 +601,8 @@ function GameUIAllianceEnter:InitBuildingDese()
         self.progressTimer:setPercentage(100)
         local bg = display.newSprite("back_ground_43x43.png"):addTo(self.desc_label):pos(10,18)
         display.newSprite("wall_36x41.png"):addTo(bg):pos(21,21)
-        
+        -- print(building.player.wallHp)
+        --TODO:城墙血量显示
     else
         if p.building_desc then
             -- building desc

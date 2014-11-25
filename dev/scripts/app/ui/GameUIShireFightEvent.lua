@@ -262,14 +262,16 @@ function GameUIShireFightEvent:GetFightEvent()
 end
 
 function GameUIShireFightEvent:DispathSoliderButtonClicked()
-	local soldiers = {
-		{name = "swordsman",count = 20},
-		{name = "sentinel",count = 20},
-		{name = "ranger",count = 20},
-	}
-	NetManager:getMarchToShrinePromose(self:GetFightEvent():Id(),"redDragon",soldiers):catch(function(err)
-		dump(err:reason())
-	end)
+	-- local soldiers = {
+	-- 	{name = "swordsman",count = 20},
+	-- 	{name = "sentinel",count = 20},
+	-- 	{name = "ranger",count = 20},
+	-- }
+	UIKit:newGameUI("GameUIAllianceSendTroops",function(dragonType,soldiers)
+		NetManager:getMarchToShrinePromose(self:GetFightEvent():Id(),dragonType,soldiers):catch(function(err)
+			dump(err:reason())
+		end)
+	end):addToCurrentScene(true)
 end
 
 function GameUIShireFightEvent:InfomationButtonClicked()
