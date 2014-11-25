@@ -274,7 +274,6 @@ function AllianceShrine:RefreshEvents(alliance_data)
 	end
 	self:RefreshMarchReturnEvents(alliance_data.__shrineMarchReturnEvents)
 
-	--TODO:shrineReports
 	if alliance_data.shrineReports then
 		for _,v in ipairs(alliance_data.shrineReports) do
 			local report = ShrineReport.new()
