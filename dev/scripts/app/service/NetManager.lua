@@ -994,6 +994,24 @@ function NetManager:getChallengeMoonGateEnemyTroopPromose()
     return promise.all(get_blocking_request_promise("logic.allianceHandler.challengeMoonGateEnemyTroop",{},
         "联盟战月门挑战失败!"),get_fetchallianceview_callback()):next(get_response_msg)
 end
+--协防
+function NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, targetPlayerId)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.helpAllianceMemberDefence",
+        {
+            dragonType = dragonType,
+            soldiers   = soldiers,
+            targetPlayerId = targetPlayerId,
+        },
+        "协防玩家失败!"),get_alliancedata_callback()):next(get_response_msg)
+end
+--撤销协防
+function NetManager:getRetreatFromHelpedAllianceMemberPromise(targetPlayerId)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.retreatFromHelpedAllianceMember",
+        {
+            targetPlayerId = targetPlayerId,
+        },
+        "撤销协防失败!"),get_alliancedata_callback()):next(get_response_msg)
+end
 --
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

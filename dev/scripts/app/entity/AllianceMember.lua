@@ -10,6 +10,7 @@ property(AllianceMember, "lastLoginTime", 0)
 property(AllianceMember, "icon", "")
 property(AllianceMember, "title")
 property(AllianceMember, "name")
+property(AllianceMember, "helpTroopsCount")
 local titles_enum = Enum("member",
     "elite",
     "supervisor",
