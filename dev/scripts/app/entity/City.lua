@@ -32,7 +32,7 @@ City.RESOURCE_TYPE_TO_BUILDING_TYPE = {
     [ResourceManager.RESOURCE_TYPE.POPULATION] = "dwelling",
 }
 -- 初始化
-function City:ctor()
+function City:ctor(json_data)
     City.super.ctor(self)
     self.resource_manager = ResourceManager.new()
     self.soldier_manager = SoldierManager.new()
@@ -48,6 +48,100 @@ function City:ctor()
     self.locations_decorators = {}
     self:InitLocations()
     self:InitRuins()
+
+    if json_data then
+        self:InitWithJsonData(json_data)
+    end
+end
+function City:InitWithJsonData(userData)
+    local init_buildings = {}
+    local init_unlock_tiles = {}
+
+    local building_events = userData.buildingEvents
+    local function get_building_event_by_location(location_id)
+        for k, v in pairs(building_events) do
+            if v.location == location_id then
+                return v
+            end
+        end
+    end
+
+    table.foreach(userData.buildings, function(key, location)
+        local location_config = self:GetLocationById(location.location)
+        local event = get_building_event_by_location(location.location)
+        local finishTime = event == nil and 0 or event.finishTime / 1000
+        table.insert(init_buildings,
+            self:NewBuildingWithType(location_config.building_type,
+                location_config.x,
+                location_config.y,
+                location_config.w,
+                location_config.h,
+                location.level,
+                finishTime)
+        )
+
+
+        if location.level > 0 then
+            table.insert(init_unlock_tiles, {x = location_config.tile_x, y = location_config.tile_y})
+        end
+    end)
+    self:InitBuildings(init_buildings)
+
+
+    -- table.insert(init_unlock_tiles, {x = 1, y = 3})
+    -- table.insert(init_unlock_tiles, {x = 2, y = 3})
+    -- table.insert(init_unlock_tiles, {x = 3, y = 3})
+    -- table.insert(init_unlock_tiles, {x = 3, y = 2})
+    -- table.insert(init_unlock_tiles, {x = 3, y = 1})
+
+    -- table.insert(init_unlock_tiles, {x = 1, y = 4})
+    -- table.insert(init_unlock_tiles, {x = 2, y = 4})
+    -- table.insert(init_unlock_tiles, {x = 3, y = 4})
+    -- table.insert(init_unlock_tiles, {x = 4, y = 4})
+    -- table.insert(init_unlock_tiles, {x = 4, y = 3})
+    -- table.insert(init_unlock_tiles, {x = 4, y = 2})
+    -- table.insert(init_unlock_tiles, {x = 4, y = 1})
+
+    -- table.insert(init_unlock_tiles, {x = 1, y = 5})
+
+    self:InitTiles(5, 5, init_unlock_tiles)
+
+
+    local hosue_events = userData.houseEvents
+    local function get_house_event_by_location(building_location, sub_id)
+        for k, v in pairs(hosue_events) do
+            if v.buildingLocation == building_location and
+                v.houseLocation == sub_id then
+                return v
+            end
+        end
+    end
+
+    local init_decorators = {}
+    table.foreach(userData.buildings, function(_, location)
+        if #location.houses > 0 then
+            table.foreach(location.houses, function(_, house)
+                local city_location = self:GetLocationById(location.location)
+                local tile_x = city_location.tile_x
+                local tile_y = city_location.tile_y
+                local tile = self:GetTileByIndex(tile_x, tile_y)
+                local absolute_x, absolute_y = tile:GetAbsolutePositionByLocation(house.location)
+                local event = get_house_event_by_location(location.location, house.location)
+                local finishTime = event == nil and 0 or event.finishTime / 1000
+                table.insert(init_decorators,
+                    self:NewBuildingWithType(house.type,
+                        absolute_x,
+                        absolute_y,
+                        3,
+                        3,
+                        house.level,
+                        finishTime)
+                )
+            end)
+        end
+    end)
+    self:InitDecorators(init_decorators)
+    self:GenerateWalls()
 end
 function City:ResetAllListeners()
     self.resource_manager:RemoveAllObserver()

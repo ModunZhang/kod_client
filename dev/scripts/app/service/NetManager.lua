@@ -839,6 +839,12 @@ function NetManager:getPlayerInfoPromise(memberId)
         memberId = memberId
     }, "获取玩家信息失败!"), get_playerinfo_callback()):next(get_response_msg)
 end
+-- 获取玩家城市信息
+function NetManager:getPlayerCityInfoPromise(targetPlayerId)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.getPlayerViewData", {
+        targetPlayerId = targetPlayerId
+    }, "获取玩家城市信息失败!")):next(get_response_msg)
+end
 -- 移交萌主
 function NetManager:getHandOverAllianceArchonPromise(memberId)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.handOverAllianceArchon", {
