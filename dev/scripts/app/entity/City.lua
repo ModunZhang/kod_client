@@ -59,6 +59,7 @@ function City:InitWithJsonData(userData)
 
     local building_events = userData.buildingEvents
     local function get_building_event_by_location(location_id)
+        if not building_events then return nil end
         for k, v in pairs(building_events) do
             if v.location == location_id then
                 return v
@@ -109,6 +110,7 @@ function City:InitWithJsonData(userData)
 
     local hosue_events = userData.houseEvents
     local function get_house_event_by_location(building_location, sub_id)
+        if not hosue_events then return nil end
         for k, v in pairs(hosue_events) do
             if v.buildingLocation == building_location and
                 v.houseLocation == sub_id then
