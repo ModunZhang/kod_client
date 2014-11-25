@@ -23,7 +23,6 @@ end
 function CityScene:onEnter()
     local city = self.city
     CityScene.super.onEnter(self)
-    home_page = self:CreateHomePage()
     self:GetSceneLayer():AddObserver(self)
     self:GetSceneLayer():InitWithCity(city)
     self:PlayBackgroundMusic()
@@ -88,7 +87,6 @@ function CityScene:onEnter()
     -- end, 1)
 end
 function CityScene:onExit()
-    home_page = nil
     self:stopAllActions()
     audio.stopMusic()
     audio.stopAllSounds()
@@ -190,11 +188,6 @@ function CityScene:CreateSceneUILayer()
     end
     scene_ui_layer:Init()
     return scene_ui_layer
-end
-function CityScene:CreateHomePage()
-    local home = UIKit:newGameUI('GameUIHome', self.city):addToScene(self)
-    home:setTouchSwallowEnabled(false)
-    return home
 end
 -- function
 function CityScene:GotoLogicPoint(x, y)

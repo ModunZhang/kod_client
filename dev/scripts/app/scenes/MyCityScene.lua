@@ -8,13 +8,21 @@ function MyCityScene:onEnter()
     local city = self.city
     self.scene_ui_layer = self:CreateSceneUILayer()
     MyCityScene.super.onEnter(self)
+    home_page = self:CreateHomePage()
+
 
     self:GetSceneLayer():IteratorInnnerBuildings(function(_, building)
         self.scene_ui_layer:NewUIFromBuildingSprite(building)
     end)
     city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
 end
+function MyCityScene:CreateHomePage()
+    local home = UIKit:newGameUI('GameUIHome', self.city):addToScene(self)
+    home:setTouchSwallowEnabled(false)
+    return home
+end
 function MyCityScene:onExit()
+    home_page = nil
     MyCityScene.super.onExit(self)
 end
 function MyCityScene:OnUpgradingBegin()
