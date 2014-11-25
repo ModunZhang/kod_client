@@ -44,9 +44,9 @@ end
 function GameUIKeep:OnCityNameChanged(cityName)
     self.city_name_item:SetValue(cityName)
 end
-function GameUIKeep:OnExit()
+function GameUIKeep:onExit()
     self.city:RemoveListenerOnType(self, City.LISTEN_TYPE.CITY_NAME)
-    GameUIKeep.super.OnExit(self)
+    GameUIKeep.super.onExit(self)
 end
 
 function GameUIKeep:CreateCityBasicInfo()

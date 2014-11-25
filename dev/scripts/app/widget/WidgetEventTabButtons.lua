@@ -148,7 +148,7 @@ function WidgetEventTabButtons:ctor(city)
     -- end)
     -- self:scheduleUpdate()
 end
-function WidgetEventTabButtons:OnExit()
+function WidgetEventTabButtons:onExit()
     -- self.node:stopAllActions()
     -- self.node:unscheduleUpdate()
     -- self:unscheduleUpdate()
