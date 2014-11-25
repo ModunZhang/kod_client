@@ -23,7 +23,8 @@ City.LISTEN_TYPE = Enum("LOCK_TILE",
     "OCCUPY_RUINS",
     "DESTROY_DECORATOR",
     "UPGRADE_BUILDING",
-    "CITY_NAME")
+    "CITY_NAME",
+    "HELPED_BY_TROOPS")
 City.RESOURCE_TYPE_TO_BUILDING_TYPE = {
     [ResourceManager.RESOURCE_TYPE.WOOD] = "woodcutter",
     [ResourceManager.RESOURCE_TYPE.FOOD] = "farmer",
@@ -42,6 +43,7 @@ function City:ctor(json_data)
     self.walls = {}
     self.towers = {}
     self.decorators = {}
+    self.helpedByTroops = {}
 
     self.build_queue = 0
 
@@ -292,6 +294,9 @@ function City:GetAvailableBuildQueueCounts()
 end
 function City:BuildQueueCounts()
     return self.build_queue
+end
+function City:GetHelpedByTroops()
+    return self.helpedByTroops
 end
 function City:GetOnUpgradingBuildings()
     local builds = {}
@@ -890,6 +895,10 @@ function City:OnUserDataChanged(userData, current_time)
     -- 更新建筑信息
     self:IteratorCanUpgradeBuildingsByUserData(userData, current_time)
 
+    -- 更新协防信息
+    self:OnHelpedByTroopsDataChange(userData.helpedByTroops)
+    self:__OnHelpedByTroopsDataChange(userData.__helpedByTroops)
+
     -- 更新兵种
     self.soldier_manager:OnUserDataChanged(userData)
     -- 更新材料，这里是广义的材料，包括龙的装备
@@ -1192,8 +1201,6 @@ function City:ReloadTowers(towers)
     end
     return towers
 end
-
-
 function City:OnUpgradingBuildings()
     local upgrading_buildings = {}
     for i,v in ipairs(self.buildings) do
@@ -1203,8 +1210,79 @@ function City:OnUpgradingBuildings()
     end
     return upgrading_buildings
 end
+local function findTroopsInHelpedByTroops(helpedByTroops, troops)
+    for i, v in pairs(helpedByTroops) do
+        if v.id == troops.id then
+            return true
+        end
+    end
+end
+function City:OnHelpedByTroopsDataChange(helpedByTroops)
+    if not helpedByTroops then return end
+    local add = {}
+    local removed = {}
+    for i, v in pairs(helpedByTroops) do
+        if not findTroopsInHelpedByTroops(self.helpedByTroops, v) then
+            table.insert(add, v)
+        end
+    end
+    for i, v in pairs(self.helpedByTroops) do
+        if not findTroopsInHelpedByTroops(helpedByTroops, v) then
+            table.insert(removed, v)
+        end
+    end
+    self.helpedByTroops = helpedByTroops
+    self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_BY_TROOPS, function(listener)
+        listener:OnHelpedTroopsChanged(self, {
+            add = add,
+            removed = removed,
+            edit = {}
+        })
+    end)
+end
+function City:__OnHelpedByTroopsDataChange(__helpedByTroops)
+    if not __helpedByTroops then return end
+    if __helpedByTroops.type == "add" then
+        self:AddHelpedByTroops(__helpedByTroops.data)
+    elseif __helpedByTroops.type == "remove" then
+        self:RemoveHelpedByTroops(__helpedByTroops.data)
+    else
+        assert(false)
+    end
+end
+function City:AddHelpedByTroops(troops)
+    table.insert(self.helpedByTroops, troops)
+    self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_BY_TROOPS, function(listener)
+        listener:OnHelpedTroopsChanged(self, {
+            add = {troops},
+            removed = {},
+            edit = {}
+        })
+    end)
+    return troops
+end
+function City:RemoveHelpedByTroops(troops)
+    for i, v in pairs(self.helpedByTroops) do
+        if v.id == troops.id then
+            local removed = table.remove(self.helpedByTroops, i)
+            self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_BY_TROOPS, function(listener)
+                listener:OnHelpedTroopsChanged(self, {
+                    add = {},
+                    removed = {removed},
+                    edit = {}
+                })
+            end)
+            return removed
+        end
+    end
+end
 
 return City
+
+
+
+
+
 
 
 
