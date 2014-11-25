@@ -430,6 +430,29 @@ function GameUIAllianceEnter:InitConfig()
                     img = "playercity_66x83.png",
                     title = _("进入"),
                     func = function (building)
+                        local member = building.player
+                        NetManager:getPlayerCityInfoPromise(member:Id()):next(function(city_info)
+                        app:enterScene("CityScene", {City.new(city_info)}, "custom", -1, function(scene, status)
+                            local manager = ccs.ArmatureDataManager:getInstance()
+                            if status == "onEnter" then
+                                manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+                                local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
+                                display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
+                                    transition.sequence{
+                                        cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
+                                        cc.FadeIn:create(0.75),
+                                        cc.CallFunc:create(function() scene:hideOutShowIn() end),
+                                        cc.DelayTime:create(0.5),
+                                        cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
+                                        cc.FadeOut:create(0.75),
+                                        cc.CallFunc:create(function() scene:finish() end),
+                                    }
+                                )
+                            elseif status == "onExit" then
+                                manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+                            end
+                        end)
+                    end)
                     end
                 },
                 {
