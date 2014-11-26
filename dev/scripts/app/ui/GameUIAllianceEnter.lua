@@ -3,6 +3,7 @@ local UIListView = import(".UIListView")
 local window = import("..utils.window")
 local UILib = import(".UILib")
 local Enum = import("..utils.Enum")
+local User = import("..entity.User")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIWriteMail = import(".GameUIWriteMail")
 
@@ -432,7 +433,7 @@ function GameUIAllianceEnter:InitConfig()
                     func = function (building)
                         local member = building.player
                         NetManager:getPlayerCityInfoPromise(member:Id()):next(function(city_info)
-                        app:enterScene("CityScene", {City.new(city_info)}, "custom", -1, function(scene, status)
+                        app:enterScene("OtherCityScene", {User.new(city_info.basicInfo), City.new(city_info)}, "custom", -1, function(scene, status)
                             local manager = ccs.ArmatureDataManager:getInstance()
                             if status == "onEnter" then
                                 manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")

@@ -140,6 +140,16 @@ function GameUICityInfo:CreateBottom()
         :addTo(self)
     bottom_bg:setTouchEnabled(true)
 
+    -- 说明
+    cc.ui.UILabel.new({text = "您正在访问其他玩家的城市, 无法使用其他功能, 点击左下角返回区域地图",
+            size = 20,
+            font = UIKit:getFontFilePath(),
+            align = cc.ui.TEXT_ALIGN_CENTER,
+            valign = cc.ui.TEXT_VALIGN_CENTER,
+            dimensions = cc.size(400, 100),
+            color = UIKit:hex2c3b(0xe19319)})
+            :addTo(bottom_bg):align(display.LEFT_CENTER, 150, display.bottom + 101/2)
+
     -- 聊天背景
     local chat_bg = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
     chat_bg:setContentSize(640, 50)
