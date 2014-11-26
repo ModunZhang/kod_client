@@ -167,7 +167,7 @@ function AllianceLayer:CreateObject(entity)
         object = AllianceBuildingSprite.new(self, entity):addTo(self:GetBuildingNode())
     elseif category == "member" then
         object = CitySprite.new(self, entity):addTo(self:GetBuildingNode())
-        -- elseif category == "village" then
+    elseif category == "village" then
         -- object = CitySprite.new(self, entity):addTo(self:GetBuildingNode())
     elseif category == "decorate" then
         object = AllianceDecoratorSprite.new(self, entity):addTo(self:GetBuildingNode())

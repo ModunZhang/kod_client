@@ -8,7 +8,8 @@ local AllianceMap = import(".AllianceMap")
 local AllianceMember = import(".AllianceMember")
 local MultiObserver = import(".MultiObserver")
 local Alliance = class("Alliance", MultiObserver)
-Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS")
+local HelpDefenceMarchEvent = import(".HelpDefenceMarchEvent")
+Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS","HELP_DEFENCE_MARCHEVENT")
 local unpack = unpack
 local function pack(...)
     return {...}
@@ -49,6 +50,8 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     self.alliance_map = AllianceMap.new(self)
     self.alliance_shrine = AllianceShrine.new(self)
     self.alliance_moonGate = AllianceMoonGate.new(self)
+    --行军事件
+    self.helpDefenceMarchEvents = {}
 end
 function Alliance:GetAllianceShrine()
     return self.alliance_shrine
@@ -265,6 +268,7 @@ function Alliance:Reset()
     self.alliance_map:Reset()
     self.alliance_shrine:Reset()
     self.alliance_moonGate:Reset()
+    self:ResetHelpDefenceMarchEvent()
 end
 function Alliance:OnOperation(operation_type)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OPERATION, function(listener)
@@ -659,5 +663,81 @@ function Alliance:GetAllianceArchonMember()
 end
 function Alliance:OnTimer(current_time)
     self:GetAllianceShrine():OnTimer(current_time)
+    self:IteratorHelpDefenceMarchEvents(function(helpDefenceMarchEvent)
+        helpDefenceMarchEvent:OnTimer(current_time)
+    end)
 end
+
+--行军事件
+--------------------------------------------------------------------------------
+
+function Alliance:OnHelpDefenceMarchEventsDataChanged(helpDefenceMarchEvents)
+    for _,v in ipairs(helpDefenceMarchEvents) do
+        local helpDefenceMarchEvent = HelpDefenceMarchEvent.new()
+        helpDefenceMarchEvent:Update(v)
+        self.helpDefenceMarchEvents[helpDefenceMarchEvent:Id()] = helpDefenceMarchEvent
+        helpDefenceMarchEvent:AddObserver(self)
+    end
+end
+
+function Alliance:OnNewHelpDefenceMarchEventsComming(__helpDefenceMarchEvents)
+    if not __helpDefenceMarchEvents then return end
+    local change_map = GameUtils:Event_Handler_Func(
+        __helpDefenceMarchEvents
+        ,function(event_data)
+            local helpDefenceMarchEvent = HelpDefenceMarchEvent.new()
+            helpDefenceMarchEvent:Update(event_data)
+            self.helpDefenceMarchEvents[helpDefenceMarchEvent:Id()] = helpDefenceMarchEvent
+            helpDefenceMarchEvent:AddObserver(self)
+            return helpDefenceMarchEvent
+        end
+        ,function(event_data) 
+            --TODO:修改协助的行军事件
+        end
+        ,function(event_data)
+            if self.helpDefenceMarchEvents[event.id] then
+                local helpDefenceMarchEvent = self.helpDefenceMarchEvents[event.id]
+                helpDefenceMarchEvent:Reset()
+                self.helpDefenceMarchEvents[event.id] = nil
+                helpDefenceMarchEvent = HelpDefenceMarchEvent.new()
+                helpDefenceMarchEvent:Update(event_data)
+                return helpDefenceMarchEvent
+            end 
+        end
+    )
+    self:OnHelpDefenceMarchEventChanged(GameUtils:pack_event_table(change_map))
+end
+
+function Alliance:OnHelpDefenceMarchEventChanged(changed_map)
+     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.HELP_DEFENCE_MARCHEVENT, function(listener)
+        listener:OnHelpDefenceMarchEventsChanged(changed_map)
+    end)
+end
+
+function Alliance:OnHelpDefenceMarchEventTimer(helpDefenceMarchEvent)
+    print("OnHelpDefenceMarchEventTimer---->",helpDefenceMarchEvent:Id(),helpDefenceMarchEvent:GetTime())
+end
+
+function Alliance:IteratorHelpDefenceMarchEvents(func)
+    for k,v in pairs(self.helpDefenceMarchEvents) do
+        func(v)
+    end
+end
+
+function Alliance:GetHelpDefenceMarchEvents()
+    local r = {}
+    self:IteratorHelpDefenceMarchEvents(function(helpDefenceMarchEvent)
+        table.insert(r,helpDefenceMarchEvent)
+    end)
+    return r
+end
+
+--重置协防和撤防的行军事件
+function Alliance:ResetHelpDefenceMarchEvent()
+    self:IteratorHelpDefenceMarchEvents(function(helpDefenceMarchEvent)
+        helpDefenceMarchEvent:Reset()
+    end)
+    self.helpDefenceMarchEvents = {}
+end
+
 return Alliance
