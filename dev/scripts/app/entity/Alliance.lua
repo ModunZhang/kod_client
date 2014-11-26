@@ -9,7 +9,10 @@ local AllianceMember = import(".AllianceMember")
 local MultiObserver = import(".MultiObserver")
 local Alliance = class("Alliance", MultiObserver)
 local HelpDefenceMarchEvent = import(".HelpDefenceMarchEvent")
-Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS","HELP_DEFENCE_MARCHEVENT")
+Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS"
+    ,"HELP_DEFENCE_MARCHEVENT"
+    ,"HELP_DEFENCE_MARCHRETURNEVENT"
+    )
 local unpack = unpack
 local function pack(...)
     return {...}
@@ -402,6 +405,8 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     self.alliance_map:OnAllianceDataChanged(alliance_data)
     self.alliance_shrine:OnAllianceDataChanged(alliance_data)
     self.alliance_moonGate:OnAllianceDataChanged(alliance_data)
+    self:OnHelpDefenceMarchEventsDataChanged(alliance_data.helpDefenceMarchEvents)
+    self:OnNewHelpDefenceMarchEventsComming(alliance_data.__helpDefenceMarchEvents)
 end
 function Alliance:OnNewEventsComming(__events)
     if not __events then return end
@@ -672,9 +677,15 @@ end
 --------------------------------------------------------------------------------
 
 function Alliance:OnHelpDefenceMarchEventsDataChanged(helpDefenceMarchEvents)
+    if not helpDefenceMarchEvents then return end
     for _,v in ipairs(helpDefenceMarchEvents) do
         local helpDefenceMarchEvent = HelpDefenceMarchEvent.new()
         helpDefenceMarchEvent:Update(v)
+        local fromLocation = self:GetMemeberById(helpDefenceMarchEvent:PlayerData().id).location
+        local toLocation = self:GetMemeberById(helpDefenceMarchEvent:TargetPlayerData().id).location
+        dump(fromLocation,"fromLocation----->")
+        dump(toLocation,"toLocation----->")
+        helpDefenceMarchEvent:SetFromLocation()
         self.helpDefenceMarchEvents[helpDefenceMarchEvent:Id()] = helpDefenceMarchEvent
         helpDefenceMarchEvent:AddObserver(self)
     end
@@ -687,18 +698,22 @@ function Alliance:OnNewHelpDefenceMarchEventsComming(__helpDefenceMarchEvents)
         ,function(event_data)
             local helpDefenceMarchEvent = HelpDefenceMarchEvent.new()
             helpDefenceMarchEvent:Update(event_data)
+            local fromLocation = self:GetMemeberById(helpDefenceMarchEvent:PlayerData().id).location
+            local toLocation = self:GetMemeberById(helpDefenceMarchEvent:TargetPlayerData().id).location
+            dump(fromLocation,"fromLocation----->")
+            dump(toLocation,"toLocation----->")
             self.helpDefenceMarchEvents[helpDefenceMarchEvent:Id()] = helpDefenceMarchEvent
             helpDefenceMarchEvent:AddObserver(self)
             return helpDefenceMarchEvent
         end
         ,function(event_data) 
-            --TODO:修改协助的行军事件
+            --TODO:修改协防的行军事件
         end
         ,function(event_data)
-            if self.helpDefenceMarchEvents[event.id] then
-                local helpDefenceMarchEvent = self.helpDefenceMarchEvents[event.id]
+            if self.helpDefenceMarchEvents[event_data.id] then
+                local helpDefenceMarchEvent = self.helpDefenceMarchEvents[event_data.id]
                 helpDefenceMarchEvent:Reset()
-                self.helpDefenceMarchEvents[event.id] = nil
+                self.helpDefenceMarchEvents[event_data.id] = nil
                 helpDefenceMarchEvent = HelpDefenceMarchEvent.new()
                 helpDefenceMarchEvent:Update(event_data)
                 return helpDefenceMarchEvent
@@ -715,6 +730,7 @@ function Alliance:OnHelpDefenceMarchEventChanged(changed_map)
 end
 
 function Alliance:OnHelpDefenceMarchEventTimer(helpDefenceMarchEvent)
+    --TODO:将行军事件的计时暴露给界面
     print("OnHelpDefenceMarchEventTimer---->",helpDefenceMarchEvent:Id(),helpDefenceMarchEvent:GetTime())
 end
 

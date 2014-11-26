@@ -91,7 +91,6 @@ function AllianceLayer:ctor(alliance)
 
     self:setNodeEventEnabled(true)
     local alliance_shire = self:GetAlliance():GetAllianceShrine()
-    dump(alliance_shire:GetMarchEvents())
     table.foreachi(alliance_shire:GetMarchEvents(),function(_,merchEvent)
         self:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
     end)

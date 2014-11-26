@@ -13,6 +13,7 @@ local Enum = import("..utils.Enum")
 local ShrineFightEvent = import(".ShrineFightEvent")
 local ShrineMarchEvent = import(".ShrineMarchEvent")
 local ShrineReport = import(".ShrineReport")
+local GameUtils = GameUtils
 
 AllianceShrine.LISTEN_TYPE = Enum(
 	"OnPerceotionChanged",
@@ -24,36 +25,6 @@ AllianceShrine.LISTEN_TYPE = Enum(
 	"OnMarchEventTimerChanged",
 	"OnShrineReportsChanged"
 )
--- 数据处理函数
---------------------------------------------------------------------------------
-local Event_Handler_Func = function(events,add_func,edit_func,remove_func)
-	local not_hanler = function(...)end
-	add_func = add_func or not_hanler
-	remove_func = remove_func or not_hanler
-	edit_func = edit_func or not_hanler
-
-	local added,edited,removed = {},{},{}
-	for _,event in ipairs(events) do
-		if event.type == 'add' then
-			table.insert(added,add_func(event.data))
-		elseif event.type == 'edit' then
-			table.insert(edited,edit_func(event.data))
-		elseif event.type == 'remove' then
-			table.insert(removed,remove_func(event.data))
-		end
-	end
-	return {added,edited,removed} -- each of return is a table
-end
-
-local pack_map = function(map)
-	local ret = {}
-	local added,edited,removed = unpack(map)
-	if #added > 0 then ret.added = checktable(added) end
-	if #edited > 0 then ret.edited = checktable(edited) end
-	if #removed > 0 then ret.removed = checktable(removed) end
-	return ret
-end
---------------------------------------------------------------------------------
 
 function AllianceShrine:ctor(alliance)
 	AllianceShrine.super.ctor(self)
@@ -288,7 +259,7 @@ end
 
 function AllianceShrine:RefreshShrineReports( __shrineReports )
 	if not __shrineReports then return end
-	local change_map = Event_Handler_Func(
+	local change_map = GameUtils:Event_Handler_Func(
 		__shrineReports
 		,function(event)
 				local report = ShrineReport.new()
@@ -308,7 +279,7 @@ function AllianceShrine:RefreshShrineReports( __shrineReports )
 			return report
 		end
 	)
-	self:OnShrineReportsChanged(pack_map(change_map))
+	self:OnShrineReportsChanged(GameUtils:pack_event_table(change_map))
 end
 
 function AllianceShrine:OnShrineReportsChanged(changed_map)
@@ -319,7 +290,7 @@ end
 
 function AllianceShrine:RefreshMarchReturnEvents(__shrineMarchReturnEvents)
 	if not __shrineMarchReturnEvents then return end
-	local change_map = Event_Handler_Func(
+	local change_map = GameUtils:Event_Handler_Func(
 		__shrineMarchReturnEvents
 		,function(event) --add
 			if not self.shrineMarchReturnEvents[event.id] then
@@ -346,7 +317,7 @@ function AllianceShrine:RefreshMarchReturnEvents(__shrineMarchReturnEvents)
 			end
 		end
 	)
-	self:OnMarchReturnEventsChanged(pack_map(change_map))
+	self:OnMarchReturnEventsChanged(GameUtils:pack_event_table(change_map))
 end
 
 function AllianceShrine:OnMarchReturnEventsChanged(changed_map)
@@ -357,7 +328,7 @@ end
 
 function AllianceShrine:RefreshMarchEvents(__shrineMarchEvents)
 	if not __shrineMarchEvents then return end
-	local change_map = Event_Handler_Func(
+	local change_map = GameUtils:Event_Handler_Func(
 		__shrineMarchEvents
 		,function(event) --add
 			if not self.shrineMarchEvents[event.id] then
@@ -384,7 +355,7 @@ function AllianceShrine:RefreshMarchEvents(__shrineMarchEvents)
 			end
 		end
 	)
-	self:OnMarchEventsChanged(pack_map(change_map))
+	self:OnMarchEventsChanged(GameUtils:pack_event_table(change_map))
 end
 
 function AllianceShrine:OnMarchEventsChanged( changed_map )
@@ -395,7 +366,7 @@ end
 
 function AllianceShrine:RefreshShrineEvents(__shrineEvents)
 	if not __shrineEvents then return end
-	local change_map = Event_Handler_Func(
+	local change_map = GameUtils:Event_Handler_Func(
 		__shrineEvents
 		,function(event) --add
 			if not self.shrineEvents[event.id] then
@@ -435,7 +406,7 @@ function AllianceShrine:RefreshShrineEvents(__shrineEvents)
 			end
 		end
 	)
-	self:OnShrineEventsChanged(pack_map(change_map))
+	self:OnShrineEventsChanged(GameUtils:pack_event_table(change_map))
 end
 
 function AllianceShrine:OnShrineEventsChanged(changed_map)

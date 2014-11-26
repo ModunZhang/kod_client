@@ -278,11 +278,14 @@ function GameUtils:Event_Handler_Func(events,add_func,edit_func,remove_func)
     local added,edited,removed = {},{},{}
     for _,event in ipairs(events) do
         if event.type == 'add' then
-            table.insert(added,add_func(event.data))
+        	local result = add_func(event.data)
+        	if result then table.insert(added,result) end
         elseif event.type == 'edit' then
-            table.insert(edited,edit_func(event.data))
+        	local result = edit_func(event.data)
+            if result then table.insert(edited,result) end
         elseif event.type == 'remove' then
-            table.insert(removed,remove_func(event.data))
+        	local result = remove_func(event.data)
+            if result then  table.insert(removed,result) end
         end
     end
     return {added,edited,removed} -- each of return is a table

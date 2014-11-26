@@ -190,7 +190,7 @@ function GameUIPlayerInfo:BuildUI()
     else
 		for i=1,5 do
 			local button = self:GetPlayerButton(i)
-			button:pos((i-1)*128,window.bottom+2):addTo(self)
+			button:pos(window.left+(i-1)*128,window.bottom+2):addTo(self)
 			button:onButtonClicked(function(event)
 				self:OnPlayerButtonClicked(i)
 			end)

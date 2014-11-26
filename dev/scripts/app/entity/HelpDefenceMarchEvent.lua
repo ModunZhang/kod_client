@@ -17,6 +17,9 @@ function HelpDefenceMarchEvent:ctor()
 
 end
 
+function HelpDefenceMarchEvent:OnPropertyChange()
+end
+
 function HelpDefenceMarchEvent:Update(json_data)
 	self:SetId(json_data.id)
 	self:SetPlayerData(json_data.playerData)
