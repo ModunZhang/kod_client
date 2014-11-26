@@ -9,11 +9,17 @@ property(User, "power", 0)
 property(User, "name", "")
 property(User, "vipExp", 0)
 property(User, "icon", "")
-function User:ctor(id)
+property(User, "id", 0)
+function User:ctor(p)
     User.super.ctor(self)
-    property(self, "id", id)
     self.request_events = {}
     self.invite_events = {}
+    if type(p) == "table" then
+        self:SetId(p.id)
+        self:OnBasicInfoChanged(p)
+    else
+        self:SetId(p)
+    end
 end
 function User:CreateInviteEventFromJson(json_data)
     return json_data
