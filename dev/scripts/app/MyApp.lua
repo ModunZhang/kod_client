@@ -120,7 +120,7 @@ function MyApp:lockInput(b)
 end
 function MyApp:EnterPlayerCityScene(id)
     NetManager:getPlayerCityInfoPromise(id):next(function(city_info)
-        app:enterScene("CityScene", {City.new(city_info)}, "custom", -1, function(scene, status)
+        app:enterScene("OtherCityScene", {User.new(city_info.basicInfo), City.new(city_info)}, "custom", -1, function(scene, status)
             local manager = ccs.ArmatureDataManager:getInstance()
             if status == "onEnter" then
                 manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")

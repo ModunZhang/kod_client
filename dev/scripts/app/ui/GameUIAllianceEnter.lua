@@ -3,6 +3,7 @@ local UIListView = import(".UIListView")
 local window = import("..utils.window")
 local UILib = import(".UILib")
 local Enum = import("..utils.Enum")
+local User = import("..entity.User")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIWriteMail = import(".GameUIWriteMail")
 local config_wall = GameDatas.BuildingFunction.wall
