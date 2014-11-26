@@ -593,8 +593,13 @@ function GameUIAllianceEnter:InitBuildingDese()
         self.progressTimer:setPercentage(100)
         local bg = display.newSprite("back_ground_43x43.png"):addTo(self.desc_label):pos(10,18)
         display.newSprite("wall_36x41.png"):addTo(bg):pos(21,21)
-        -- print(building.player.wallHp)
-        --TODO:城墙血量显示
+        local str = self:GetBuilding().player:WallHp() .. "/" .. config_wall[self:GetBuilding().player:WallLevel()].wallHp
+        UIKit:ttfLabel({
+            size = 20,
+            color = 0xfff3c7,
+            shadow = true,
+            text = str
+        }):align(display.LEFT_CENTER,bg:getPositionX() + 40,bg:getPositionY()):addTo(self.desc_label)
     else
         if p.building_desc then
             -- building desc
@@ -691,8 +696,12 @@ function GameUIAllianceEnter:InitBuildingImage()
     elseif not self.building.name and self.building:GetType()=="none" then
         level_bg:setVisible(false)
     else
+        local str = _("Level").." "..self.building.level
+        if self:GetBuildingKey() == 'member' then
+            str = _("Level").." ".. self.building.player:KeepLevel()
+        end
         UIKit:ttfLabel({
-            text = _("Level").." "..self.building.level,
+            text = str,
             size = 20,
             color = 0x514d3e,
         }):align(display.CENTER, level_bg:getContentSize().width/2 , level_bg:getContentSize().height/2)

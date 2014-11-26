@@ -410,6 +410,9 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     self.alliance_moonGate:OnAllianceDataChanged(alliance_data)
     self:OnHelpDefenceMarchEventsDataChanged(alliance_data.helpDefenceMarchEvents)
     self:OnNewHelpDefenceMarchEventsComming(alliance_data.__helpDefenceMarchEvents)
+
+    self:OnHelpDefenceMarchReturnEventsDataChanged(alliance_data.helpDefenceMarchReturnEvents)
+    self:OnNewHelpDefenceMarchRetuenEventsComming(alliance_data.__helpDefenceMarchReturnEvents)
 end
 function Alliance:OnNewEventsComming(__events)
     if not __events then return end
@@ -768,8 +771,8 @@ function Alliance:OnHelpDefenceMarchReturnEventsDataChanged(helpDefenceMarchRetu
     for _,v in ipairs(helpDefenceMarchReturnEvents) do
         local helpDefenceMarchReturnEvent = HelpDefenceMarchReturnEvent.new()
         helpDefenceMarchReturnEvent:Update(v)
-        local fromLocation = self:GetMemeberById(helpDefenceMarchReturnEvent:PlayerData().id).location
-        local targetLocation = self:GetMemeberById(helpDefenceMarchReturnEvent:FromPlayerData().id).location
+        local fromLocation = self:GetMemeberById(helpDefenceMarchReturnEvent:FromPlayerData().id).location
+        local targetLocation = self:GetMemeberById(helpDefenceMarchReturnEvent:PlayerData().id).location
         helpDefenceMarchReturnEvent:SetFromLocation(fromLocation)
         helpDefenceMarchReturnEvent:SetTargetLocation(targetLocation)
         self.helpDefenceMarchReturnEvents[helpDefenceMarchReturnEvent:Id()] = helpDefenceMarchReturnEvent
@@ -783,9 +786,9 @@ function Alliance:OnNewHelpDefenceMarchRetuenEventsComming(__helpDefenceMarchRet
         __helpDefenceMarchReturnEvents
         ,function(event_data)
             local helpDefenceMarchReturnEvent = HelpDefenceMarchReturnEvent.new()
-            helpDefenceMarchReturnEvent:Update(v)
-            local fromLocation = self:GetMemeberById(helpDefenceMarchReturnEvent:PlayerData().id).location
-            local targetLocation = self:GetMemeberById(helpDefenceMarchReturnEvent:FromPlayerData().id).location
+            helpDefenceMarchReturnEvent:Update(event_data)
+            local fromLocation = self:GetMemeberById(helpDefenceMarchReturnEvent:FromPlayerData().id).location
+            local targetLocation = self:GetMemeberById(helpDefenceMarchReturnEvent:PlayerData().id).location
             helpDefenceMarchReturnEvent:SetFromLocation(fromLocation)
             helpDefenceMarchReturnEvent:SetTargetLocation(targetLocation)
             self.helpDefenceMarchReturnEvents[helpDefenceMarchReturnEvent:Id()] = helpDefenceMarchReturnEvent
@@ -809,7 +812,7 @@ function Alliance:OnNewHelpDefenceMarchRetuenEventsComming(__helpDefenceMarchRet
     self:OnHelpDefenceMarchReturnEventChanged(GameUtils:pack_event_table(change_map))
 end
 
-function Alliance:OnHelpDefenceMarchReturnEventChanged(change_map)
+function Alliance:OnHelpDefenceMarchReturnEventChanged(changed_map)
      self:NotifyListeneOnType(Alliance.LISTEN_TYPE.HELP_DEFENCE_MARCHRETURNEVENT, function(listener)
         listener:OnHelpDefenceMarchReturnEventsChanged(changed_map)
     end)

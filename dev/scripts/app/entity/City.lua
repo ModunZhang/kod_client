@@ -1297,7 +1297,7 @@ function City:__OnHelpToTroopsDataChange(__helpToTroops)
         __helpToTroops
         ,function(data)
             if not self.helpToTroops[data.targetPlayerData.id] then
-                 self.helpToTroops[data.targetPlayerData.id] = v
+                 self.helpToTroops[data.targetPlayerData.id] = data
             end
             return data
         end
@@ -1316,6 +1316,8 @@ function City:__OnHelpToTroopsDataChange(__helpToTroops)
 end
 
 function City:__OnHelpToTroopsDataChanged(changed_map)
+    dump(changed_map,"changed_map----->")
+    dump(self:GetHelpToTroops(),"self:GetHelpToTroops()------>")
      self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_TO_TROOPS, function(listener)
         listener:OnHelpToTroopsChanged(self,changed_map)
     end)
