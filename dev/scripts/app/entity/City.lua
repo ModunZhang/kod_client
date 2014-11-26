@@ -43,6 +43,8 @@ function City:ctor()
     self.towers = {}
     self.decorators = {}
 
+    self.build_queue = 0
+
     self.locations_decorators = {}
     self:InitLocations()
     self:InitRuins()
@@ -84,7 +86,7 @@ function City:InitRuins()
             }
         )
     end
-    -- GameDatas.ClientInitGame['ruins'] = {}
+    GameDatas.ClientInitGame['ruins'] = {}
 end
 function City:InitTiles(w, h, unlocked)
     self.tiles = {}
@@ -188,6 +190,12 @@ function City:GetMaterialManager()
 end
 function City:GetResourceManager()
     return self.resource_manager
+end
+function City:GetAvailableBuildQueueCounts()
+    return self:BuildQueueCounts() - #self:GetOnUpgradingBuildings()
+end
+function City:BuildQueueCounts()
+    return self.build_queue
 end
 function City:GetOnUpgradingBuildings()
     local builds = {}
@@ -318,6 +326,9 @@ function City:GetBuildingByType(build_type)
     self:IteratorFunctionBuildingsByFunc(filter)
     self:IteratorDecoratorBuildingsByFunc(filter)
     return find_buildings
+end
+function City:GetHouseByPosition(x, y)
+    return self:GetDecoratorByPosition(x, y)
 end
 function City:GetDecoratorByPosition(x, y)
     local find_decorator = nil
@@ -1098,74 +1109,6 @@ function City:OnUpgradingBuildings()
 end
 
 return City
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

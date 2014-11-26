@@ -38,12 +38,12 @@ function GameUIAllianceWorld:ctor()
 
     -- 初始化一个裁剪节点
     local clippingNode = cc.ClippingNode:create(stencil)
-        :pos(16, self.body:getContentSize().height-859)
+        :pos(0, self.body:getContentSize().height-880)
     clippingNode:setInverted(true)
     clippingNode:setAlphaThreshold(0.5)
     -- 底板
     clippingNode:addChild(scrollView)
-    self:addChild(clippingNode)
+    self.body:addChild(clippingNode)
 
     local bg1 = WidgetUIBackGround.new({
         width = 572,

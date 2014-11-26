@@ -238,6 +238,14 @@ function Tile:GetRelativePositionByLocation(location)
     local position = location_map[location]
     return position.x, position.y
 end
+function Tile:CanBuildHouses()
+    return not self:CanNotBuildHouses()
+end
+function Tile:CanNotBuildHouses()
+    return (self.x == 1 and self.y == 1)
+        or (self.x == 1 and self.y == 2)
+        or (self.x == 2 and self.y == 1)
+end
 
 
 

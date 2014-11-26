@@ -173,7 +173,6 @@ function SoldierManager:OnUserDataChanged(user_data)
     end
 end
 
-
 return SoldierManager
 
 

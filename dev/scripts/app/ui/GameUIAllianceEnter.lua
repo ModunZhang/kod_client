@@ -12,6 +12,7 @@ end)
 GameUIAllianceEnter.MODE = Enum("Normal","Enemy","Watch")
 
 local ENTER_LIST = {
+    --ok
     palace = {
         height = 261,
         title = _("联盟宫殿"),
@@ -36,7 +37,7 @@ local ENTER_LIST = {
             Normal = 
             {
                 {
-                    img = "icon_info.png",
+                    img = "icon_info_1.png",
                     title = _("信息"),
                     func = function (building)
                         UIKit:newGameUI('GameUIAlliancePalace',City,"info",building):addToCurrentScene(true)
@@ -50,7 +51,7 @@ local ENTER_LIST = {
                     end
                 },
                 {
-                    img = "icon_upgrade.png",
+                    img = "icon_upgrade_1.png",
                     title = _("升级"),
                     func = function (building)
                         UIKit:newGameUI('GameUIAlliancePalace',City,"upgrade",building):addToCurrentScene(true)
@@ -59,7 +60,7 @@ local ENTER_LIST = {
             },
             Enemy = 
             {
-
+                
             },
             Watch = 
             {
@@ -67,6 +68,7 @@ local ENTER_LIST = {
             },
         },
     },
+    --ok
     shop = {
         height = 261,
         title = _("商店"),
@@ -90,7 +92,7 @@ local ENTER_LIST = {
             Normal = 
             {
                 {
-                    img = "icon_info.png",
+                    img = "icon_info_1.png",
                     title = _("商店记录"),
                     func = function (building)
                         UIKit:newGameUI('GameUIAllianceShop',City,"record",building):addToCurrentScene(true)
@@ -111,7 +113,7 @@ local ENTER_LIST = {
                     end
                 },
                 {
-                    img = "icon_upgrade.png",
+                    img = "icon_upgrade_1.png",
                     title = _("升级"),
                     func = function (building)
                         UIKit:newGameUI('GameUIAllianceShop',City,"upgrade",building):addToCurrentScene(true)
@@ -128,6 +130,7 @@ local ENTER_LIST = {
             }
         },
     },
+    --ok
     moonGate = {
         height = 311,
         title = _("月门"),
@@ -155,7 +158,7 @@ local ENTER_LIST = {
             Normal = 
             {
                 {
-                    img = "icon_info.png",
+                    img = "icon_info_1.png",
                     title = _("驻防部队"),
                     func = function (building)
                         UIKit:newGameUI('GameUIMoonGate',City,"garrison",building):addToCurrentScene(true)
@@ -169,7 +172,7 @@ local ENTER_LIST = {
                     end
                 },
                 {
-                    img = "icon_upgrade.png",
+                    img = "icon_upgrade_1.png",
                     title = _("升级"),
                     func = function (building)
                         UIKit:newGameUI('GameUIMoonGate',City,"upgrade",building):addToCurrentScene(true)
@@ -179,7 +182,7 @@ local ENTER_LIST = {
             Enemy = 
             {
                 {
-                    img = "icon_info.png",
+                    img = "icon_info_1.png",
                     title = _("驻防部队"),
                     func = function (building)
                         UIKit:newGameUI('GameUIMoonGate',City,"garrison",building):addToCurrentScene(true)
@@ -195,10 +198,17 @@ local ENTER_LIST = {
             },
             Watch = 
             {
-
+                {
+                    img = "icon_alliance_crisis.png",
+                    title = _("战场"),
+                    func = function (building)
+                        UIKit:newGameUI('GameUIMoonGate',City,"battlefield",building):addToCurrentScene(true)
+                    end
+                }
             }
         },
     },
+    --ok
     orderHall = {
         height = 261,
         title = _("秩序大厅"),
@@ -222,7 +232,7 @@ local ENTER_LIST = {
             Normal = 
             {
                 {
-                    img = "icon_info.png",
+                    img = "icon_info_1.png",
                     title = _("熟练度"),
                     func = function (building)
                         UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
@@ -236,7 +246,7 @@ local ENTER_LIST = {
                     end
                 },
                 {
-                    img = "icon_upgrade.png",
+                    img = "icon_upgrade_1.png",
                     title = _("升级"),
                     func = function (building)
                         UIKit:newGameUI('GameUIOrderHall',City,"upgrade",building):addToCurrentScene(true)
@@ -253,6 +263,7 @@ local ENTER_LIST = {
             }
         },
     },
+    --ok
     shrine = {
         height = 261,
         title = _("圣地"),
@@ -276,7 +287,7 @@ local ENTER_LIST = {
             Normal = 
             {
                 {
-                    img = "icon_info.png",
+                    img = "icon_info_1.png",
                     title = _("战争事件"),
                     func = function (building)
                         UIKit:newGameUI('GameUIAllianceShrine',City,"fight_event",building):addToCurrentScene(true)
@@ -290,7 +301,7 @@ local ENTER_LIST = {
                     end
                 },
                 {
-                    img = "icon_upgrade.png",
+                    img = "icon_upgrade_1.png",
                     title = _("升级"),
                     func = function (building)
                         UIKit:newGameUI('GameUIAllianceShrine',City,"upgrade",building):addToCurrentScene(true)
@@ -307,7 +318,7 @@ local ENTER_LIST = {
             }
         },
     },
-
+    --ok
     decorate = {
         height = 242,
         title = _("树/湖泊/山脉"),
@@ -349,6 +360,7 @@ local ENTER_LIST = {
         },
     },
     --空地
+    --ok
     none = {
         height = 242,
         title = _("空地"),
@@ -385,6 +397,58 @@ local ENTER_LIST = {
             Watch = 
             {
 
+            }
+        },
+    },
+    --玩家城市
+    member = {
+        height = 311,
+        title = _("空地"),
+        building_image = "tree_1_120x120.png",
+        building_desc = _("联盟将军可将联盟建筑移动到空地\n玩家可将自己的城市移动到空地处\n空地定期刷新放逐者的村落,树木,山脉和湖泊"),
+        building_info = {
+            {
+                {_("坐标"),0x797154},
+                {_("11,11"),0x403c2f},
+            },
+            {
+                {_("玩家"),0x797154},
+                {_("11,11"),0x403c2f},
+            },
+            {
+                {_("占领者"),0x797154},
+                {_("11,11"),0x403c2f},
+            },
+            {
+                {_("驻防玩家"),0x797154},
+                {_("11,11"),0x403c2f},
+            },
+        },
+        enter_buttons = {
+            Normal = 
+            {
+                {
+                    img = "icon_move_city.png",
+                    title = _("迁移城市"),
+                    func = function (building)
+                    -- UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
+                    end
+                },
+                {
+                    img = "icon_move_alliance_building.png",
+                    title = _("迁移联盟建筑"),
+                    func = function (building)
+                    -- UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
+                    end
+                },
+            },
+            Enemy = 
+            {
+
+            },
+            Watch = 
+            {
+            
             }
         },
     },
