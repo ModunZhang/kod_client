@@ -2,7 +2,13 @@ local property = import("..utils.property")
 local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local User = class("User", MultiObserver)
-User.LISTEN_TYPE = Enum("INVITE_TO_ALLIANCE", "REQUEST_TO_ALLIANCE")
+User.LISTEN_TYPE = Enum("BASIC", "INVITE_TO_ALLIANCE", "REQUEST_TO_ALLIANCE")
+property(User, "level", 1)
+property(User, "levelExp", 0)
+property(User, "power", 0)
+property(User, "name", "")
+property(User, "vipExp", 0)
+property(User, "icon", "")
 function User:ctor(id)
     User.super.ctor(self)
     property(self, "id", id)
@@ -113,12 +119,28 @@ function User:OnRequestAllianceEvents(changed_map)
         listener:OnRequestAllianceEvents(self, changed_map)
     end)
 end
-
+function User:OnPropertyChange(property_name, old_value, new_value)
+    self:NotifyListeneOnType(User.LISTEN_TYPE.BASIC, function(listener)
+        listener:OnBasicChanged(self, {
+            [property_name] = {old = old_value, new = new_value}
+        })
+    end)
+end
 function User:OnUserDataChanged(userData)
+    self:OnBasicInfoChanged(userData.basicInfo)
     self:OnNewInviteAllianceEventsComming(userData.__inviteToAllianceEvents)
     self:OnNewRequestToAllianceEventsComming(userData.__requestToAllianceEvents)
     self:OnRequestToAllianceEventsChanged(userData.requestToAllianceEvents)
     self:OnInviteAllianceEventsChanged(userData.inviteToAllianceEvents)
+end
+function User:OnBasicInfoChanged(basicInfo)
+    if not basicInfo then return end
+    self:SetLevel(basicInfo.level)
+    self:SetLevelExp(basicInfo.levelExp)
+    self:SetPower(basicInfo.power)
+    self:SetName(basicInfo.name)
+    self:SetVipExp(basicInfo.vipExp)
+    self:SetIcon(basicInfo.icon)
 end
 function User:OnNewRequestToAllianceEventsComming(__requestToAllianceEvents)
     if not __requestToAllianceEvents then return end
@@ -219,6 +241,8 @@ function User:OnInviteAllianceEventsChanged(inviteToAllianceEvents)
     }
 end
 return User
+
+
 
 
 
