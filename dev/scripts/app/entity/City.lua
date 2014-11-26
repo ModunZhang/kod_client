@@ -24,7 +24,8 @@ City.LISTEN_TYPE = Enum("LOCK_TILE",
     "DESTROY_DECORATOR",
     "UPGRADE_BUILDING",
     "CITY_NAME",
-    "HELPED_BY_TROOPS")
+    "HELPED_BY_TROOPS",
+    "HELPED_TO_TROOPS")
 City.RESOURCE_TYPE_TO_BUILDING_TYPE = {
     [ResourceManager.RESOURCE_TYPE.WOOD] = "woodcutter",
     [ResourceManager.RESOURCE_TYPE.FOOD] = "farmer",
@@ -44,6 +45,7 @@ function City:ctor(json_data)
     self.towers = {}
     self.decorators = {}
     self.helpedByTroops = {}
+    self.helpToTroops = {}
 
     self.build_queue = 0
 
@@ -898,7 +900,9 @@ function City:OnUserDataChanged(userData, current_time)
     -- 更新协防信息
     self:OnHelpedByTroopsDataChange(userData.helpedByTroops)
     self:__OnHelpedByTroopsDataChange(userData.__helpedByTroops)
-
+    --更新派出的协防信息
+    self:OnHelpToTroopsDataChange(userData.helpToTroops)
+    self:__OnHelpToTroopsDataChange(userData.__helpToTroops)
     -- 更新兵种
     self.soldier_manager:OnUserDataChanged(userData)
     -- 更新材料，这里是广义的材料，包括龙的装备
@@ -1277,6 +1281,60 @@ function City:RemoveHelpedByTroops(troops)
     end
 end
 
+--helpToTroops
+function City:OnHelpToTroopsDataChange(helpToTroops)
+    if not helpToTroops then return end
+    for _,v in ipairs(helpToTroops) do
+        if not self.helpToTroops[v.targetPlayerData.id] then
+            self.helpToTroops[v.targetPlayerData.id] = v
+        end
+    end
+end
+
+function City:__OnHelpToTroopsDataChange(__helpToTroops)
+    if not __helpToTroops then return end
+    local change_map = GameUtils:Event_Handler_Func(
+        __helpToTroops
+        ,function(data)
+            if not self.helpToTroops[data.targetPlayerData.id] then
+                 self.helpToTroops[data.targetPlayerData.id] = v
+            end
+            return data
+        end
+        ,function(data) 
+            -- 会修改已经派出协防的信息?
+            return nil
+        end
+        ,function(data)
+            if self.helpToTroops[data.targetPlayerData.id] then
+                self.helpToTroops[data.targetPlayerData.id] = nil
+                return data
+            end 
+        end
+    )
+    self:__OnHelpToTroopsDataChanged(GameUtils:pack_event_table(change_map))
+end
+
+function City:__OnHelpToTroopsDataChanged(changed_map)
+     self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_TO_TROOPS, function(listener)
+        listener:OnHelpToTroopsChanged(self,changed_map)
+    end)
+end
+
+function City:IteratorHelpToTroops(func)
+    for _,v in pairs(self.helpToTroops) do
+        func(v)
+    end
+end
+
+function City:GetHelpToTroops()
+    return self.helpToTroops
+end
+
+function City:IsHelpedToTroopsWithPlayerId(id)
+    dump(id,"IsHelpedToTroopsWithPlayerId------>")
+    return self:GetHelpToTroops()[id] ~= nil
+end
 return City
 
 

@@ -420,6 +420,7 @@ function GameUIAllianceEnter:InitConfig()
                 {
                     img = "help_defense_55x69.png",
                     title = _("协防"),
+                    enable = true,
                     func = function (building)
                         UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
                             NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, building.player:Id())
@@ -545,7 +546,17 @@ function GameUIAllianceEnter:SetBuildingInfo()
                 table.remove(dataModel.enter_buttons.Normal,4)
                 table.remove(dataModel.enter_buttons.Normal,3)
                 table.remove(dataModel.enter_buttons.Normal,1)
-                dump(dataModel.enter_buttons.Normal)
+            else
+                local can_help_in_march_events = self:GetAlliance():CheckHelpDefenceMarchEventsHaveTarget(memeber:Id()) 
+                local can_help_in_city = not City:IsHelpedToTroopsWithPlayerId(memeber:Id())
+                if not can_help_in_city then
+                    dataModel.enter_buttons.Normal[1].title = _("撤防")
+                    dataModel.enter_buttons.Normal[1].func = function(building)
+                        NetManager:getRetreatFromHelpedAllianceMemberPromise(building.player:Id()):catch(function(err)
+                            dump(err:reason())
+                        end)
+                    end
+                end
             end
         end
     elseif name == "decorate" then
@@ -701,6 +712,7 @@ function GameUIAllianceEnter:InitEnterButton(buttons)
                     self:leftButtonClicked()
                 end
             end):align(display.RIGHT_TOP,width-count*btn_width, 5):addTo(self.body)
+        if type(v.enable) == 'boolean' then btn:setButtonEnabled(v.enable) end
         local s = btn:getCascadeBoundingBox().size
         display.newSprite(v.img):align(display.CENTER, -s.width/2, -s.height/2+22):addTo(btn)
         UIKit:ttfLabel({

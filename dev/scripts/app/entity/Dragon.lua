@@ -175,11 +175,14 @@ function Dragon:Update(json_data)
 	self:SetTotalStrength(json_data.strength)
 	self:SetTotalVitality(json_data.vitality)
 	self:SetStatus(json_data.status)
+
 	local star = self:Star()
 	self:SetStar(json_data.star)
 	if json_data.star ~= star then
 		self:CheckEquipemtIfLocked_()
 	end
+	self:SetExp(json_data.exp)
+	self:SetHp(json_data.hp)
 	self:SetLevel(json_data.level)
 	self:UpdateEquipmetsAndSkills(json_data)
 end
