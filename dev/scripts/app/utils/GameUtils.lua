@@ -3,7 +3,7 @@ GameUtils = {
 }
 local floor = math.floor
 function GameUtils:formatTimeStyle1(time)
-    local seconds = time % 60
+    local seconds = floor(time) % 60
     time = time / 60
     local minutes = floor(time)% 60
     time = time / 60
@@ -21,6 +21,13 @@ end
 
 function GameUtils:formatTimeStyle4(time)
 	return os.date("%y-%m-%d %H:%M",time)
+end
+function GameUtils:formatTimeStyle5(time)
+    time = time / 60
+    local minutes = floor(time)% 60
+    time = time / 60
+    local hours = floor(time)
+    return string.format("%02d:%02d", hours, minutes)
 end
 
 function GameUtils:formatNumber(number)

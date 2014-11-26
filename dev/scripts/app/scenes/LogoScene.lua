@@ -2,6 +2,8 @@
 -- Author: dannyhe
 -- Date: 2014-08-05 17:34:54
 --
+    local GameUIWarReport= import("..ui.GameUIWarReport")
+
 local LogoScene = class("LogoScene", function()
     return display.newScene("LogoScene")
 end)
@@ -15,6 +17,8 @@ function LogoScene:onEnter()
     self.sprite = display.newScale9Sprite("logos/batcat.png", display.cx, display.cy):addTo(self.layer)
     
     self:performWithDelay(function() self:beginAnimate() end,1)
+    -- GameUIWarReport.new():addTo(self)
+
 
     -- local rect = cc.rect(0,0,619,715)
     -- local clipnode = display.newClippingRegionNode(rect)

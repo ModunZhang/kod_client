@@ -11,6 +11,7 @@ local Localize = import("..utils.Localize")
 local AllianceMoonGate = import("..entity.AllianceMoonGate")
 local NORMAL = GameDatas.UnitsConfig.normal
 local SPECIAL = GameDatas.UnitsConfig.special
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local img_dir = "allianceHome/"
 
 function GameUIMoonGate:ctor(city,default_tab,building)
@@ -141,7 +142,7 @@ function GameUIMoonGate:InitBattlefieldPart()
     for i=#fightReports,1,-1  do
         self:CreateWarRecordItem(i==#fightReports,fightReports[i])
     end
-  
+
     self.war_listview:reload()
 
 end
@@ -279,7 +280,7 @@ function GameUIMoonGate:CreateWarRecordItem(isSelected,fightReport,index)
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                UIKit:newGameUI("GameUIReplay",fightReport):addToCurrentScene(true)   
+                UIKit:newGameUI("GameUIReplay",fightReport):addToCurrentScene(true)
             end
         end):align(display.CENTER,0,-20):addTo(content)
     replay_btn:setVisible(isSelected)
@@ -528,12 +529,19 @@ function GameUIMoonGate:InitGarrisonPart()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
-                    NetManager:getMarchToMoonGatePromose(dragonType,soldiers):catch(function(err)
-                        dump(err:reason())
-                    end)
-                end):addToCurrentScene(true)
-                self:leftButtonClicked()
+                print("self.alliance:Status()",self.alliance:Status())
+                if self.alliance:Status()=="fight" or self.alliance:Status()=="prepare" then
+                    UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
+                        NetManager:getMarchToMoonGatePromose(dragonType,soldiers):catch(function(err)
+                            dump(err:reason())
+                        end)
+                    end):addToCurrentScene(true)
+                    self:leftButtonClicked()
+                else
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("准备期和战争期可以往月门派兵"))
+                        :AddToCurrentScene()
+                end
             end
         end):align(display.LEFT_CENTER,window.left+50,window.top-830):addTo(layer)
     local retreat_btn = WidgetPushButton.new({normal = "red_button_146x42.png",pressed = "red_button_highlight_146x42.png"})
@@ -545,7 +553,13 @@ function GameUIMoonGate:InitGarrisonPart()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                NetManager:getRetreatFromMoonGatePromose()
+                if self.alliance:GetAllianceMoonGate():HaveSentTroops() then
+                    NetManager:getRetreatFromMoonGatePromose()
+                else
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("月门中没有您的部队"))
+                        :AddToCurrentScene()
+                end
             end
         end):align(display.CENTER,window.cx,window.top-830):addTo(layer)
     local single_combat_btn = WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
@@ -557,7 +571,33 @@ function GameUIMoonGate:InitGarrisonPart()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                NetManager:getChallengeMoonGateEnemyTroopPromose()
+                if self.alliance:Status() == "fight" then
+                    if self.alliance:GetAllianceMoonGate():HaveSentTroops() and
+                        #self.alliance:GetAllianceMoonGate():GetEnemyTroops()>0
+                    then
+                        FullScreenPopDialogUI.new():SetTitle(_("单挑"))
+                            :SetPopMessage(_("是否要挑衅敌方的一支部队,进行1vs1的单挑,输的一方将返回其出兵城市"))
+                            :CreateOKButton(function ()
+                                NetManager:getChallengeMoonGateEnemyTroopPromose()
+                            end)
+                            :AddToCurrentScene()
+                    else
+                        if not self.alliance:GetAllianceMoonGate():HaveSentTroops() then
+                            FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                                :SetPopMessage(_("您还未派兵到月门"))
+                                :AddToCurrentScene()
+                        elseif #self.alliance:GetAllianceMoonGate():GetEnemyTroops()<=0 then
+                            FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                                :SetPopMessage(_("敌方月门中没有部队"))
+                                :AddToCurrentScene()
+                        end
+                    end
+                else
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("非战争期无法挑战"))
+                        :AddToCurrentScene()
+                end
+
             end
         end):align(display.RIGHT_CENTER,window.right-50,window.top-830):addTo(layer)
     UIKit:ttfLabel({
@@ -818,6 +858,14 @@ function GameUIMoonGate:onExit()
 end
 
 return GameUIMoonGate
+
+
+
+
+
+
+
+
 
 
 

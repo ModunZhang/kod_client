@@ -11,10 +11,7 @@ local Alliance = class("Alliance", MultiObserver)
 local HelpDefenceMarchEvent = import(".HelpDefenceMarchEvent")
 local HelpDefenceMarchReturnEvent = import(".HelpDefenceMarchReturnEvent")
 
-Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS"
-    ,"HELP_DEFENCE_MARCHEVENT"
-    ,"HELP_DEFENCE_MARCHRETURNEVENT"
-    )
+Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS","HELP_DEFENCE_MARCHEVENT","HELP_DEFENCE_MARCHRETURNEVENT","FIGHT_REQUESTS","FIGHT_REPORTS")
 local unpack = unpack
 local function pack(...)
     return {...}
@@ -52,6 +49,8 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     self.events = {}
     self.join_events = {}
     self.help_events = {}
+    self.fight_requests = {}
+    self.alliance_fight_reports = {}
     self.alliance_map = AllianceMap.new(self)
     self.alliance_shrine = AllianceShrine.new(self)
     self.alliance_moonGate = AllianceMoonGate.new(self)
@@ -180,6 +179,13 @@ end
 function Alliance:GetAllMembers()
     return self.members
 end
+function Alliance:GetMembersCount()
+    local count = 0 
+    for k,v in pairs(self.members) do
+        count = count + 1
+    end
+    return count
+end
 function Alliance:AddMembersWithNotify(member)
     local mbr = self:AddMembers(member)
     self:OnMemberChanged{
@@ -223,6 +229,18 @@ function Alliance:OnMemberChanged(changed_map)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.MEMBER, function(listener)
         listener:OnMemberChanged(self, changed_map)
     end)
+end
+function Alliance:GetFightRequest()
+    return self.fight_requests
+end
+function Alliance:GetFightRequestPlayerNum()
+    return #self.fight_requests
+end
+function Alliance:GetAllianceFightReports()
+    return self.alliance_fight_reports
+end
+function Alliance:GetLastAllianceFightReports()
+    return self.alliance_fight_reports[#self.alliance_fight_reports]
 end
 function Alliance:GetAllHelpEvents()
     return self.help_events
@@ -400,17 +418,19 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     self:OnNewMemberDataComming(alliance_data.__members)
     self:OnNewJoinRequestDataComming(alliance_data.__joinRequestEvents)
     self:OnNewHelpEventsDataComming(alliance_data.__helpEvents)
-    self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
     self:OnAllianceEventsChanged(alliance_data.events)
     self:OnJoinRequestEventsChanged(alliance_data.joinRequestEvents)
     self:OnHelpEventsChanged(alliance_data.helpEvents)
     self:OnAllianceMemberDataChanged(alliance_data.members)
+    self:OnAllianceFightRequestsChanged(alliance_data)
+    self:OnAllianceFightReportsChanged(alliance_data)
     self.alliance_map:OnAllianceDataChanged(alliance_data)
     self.alliance_shrine:OnAllianceDataChanged(alliance_data)
     self.alliance_moonGate:OnAllianceDataChanged(alliance_data)
+    self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
+
     self:OnHelpDefenceMarchEventsDataChanged(alliance_data.helpDefenceMarchEvents)
     self:OnNewHelpDefenceMarchEventsComming(alliance_data.__helpDefenceMarchEvents)
-
     self:OnHelpDefenceMarchReturnEventsDataChanged(alliance_data.helpDefenceMarchReturnEvents)
     self:OnNewHelpDefenceMarchRetuenEventsComming(alliance_data.__helpDefenceMarchReturnEvents)
 end
@@ -652,6 +672,47 @@ function Alliance:OnAllianceMemberDataChanged(members)
         }
     end
 end
+function Alliance:OnAllianceFightRequestsChanged(alliance_data)
+    if alliance_data.fightRequests then
+        self.fight_requests = alliance_data.fightRequests
+    end
+    if alliance_data.__fightRequests then
+        for k,v in pairs(alliance_data.__fightRequests) do
+            if v.type == "add" then
+                table.insert(self.fight_requests,v.data)
+            end
+        end
+        self:NotifyListeneOnType(Alliance.LISTEN_TYPE.FIGHT_REQUESTS, function(listener)
+            listener:OnAllianceFightRequestsChanged(#self.fight_requests)
+        end)
+    end
+end
+function Alliance:OnAllianceFightReportsChanged(alliance_data)
+    if alliance_data.allianceFightReports then
+        self.alliance_fight_reports = alliance_data.allianceFightReports
+    end
+    if alliance_data.__allianceFightReports then
+        local add = {}
+        local remove = {}
+        for k,v in pairs(alliance_data.__allianceFightReports) do
+            if v.type == "add" then
+                table.insert(self.alliance_fight_reports,v.data)
+                table.insert(add,v.data)
+            elseif v.type == "remove" then
+                for index,old in pairs(self.alliance_fight_reports) do
+                    if old.id == v.data.id then
+                        table.remove(self.alliance_fight_reports,index)
+                        table.insert(remove,v.data)
+                    end
+                end
+            end
+        end
+        self:NotifyListeneOnType(Alliance.LISTEN_TYPE.FIGHT_REPORTS, function(listener)
+            listener:OnAllianceFightReportsChanged({add,remove})
+        end)
+    end
+end
+
 function Alliance:OnOneAllianceMemberDataChanged(member_data)
     self:ReplaceMemberWithNotify(AllianceMember:DecodeFromJson(member_data))
 end
@@ -676,6 +737,9 @@ function Alliance:OnTimer(current_time)
     self:GetAllianceShrine():OnTimer(current_time)
     self:IteratorHelpDefenceMarchEvents(function(helpDefenceMarchEvent)
         helpDefenceMarchEvent:OnTimer(current_time)
+    end)
+    self:IteratorHelpDefenceReturnMarchEvents(function(helpDefenceMarchReturnEvent)
+        helpDefenceMarchReturnEvent:OnTimer(current_time)
     end)
 end
 
@@ -775,8 +839,8 @@ function Alliance:OnHelpDefenceMarchReturnEventsDataChanged(helpDefenceMarchRetu
         local targetLocation = self:GetMemeberById(helpDefenceMarchReturnEvent:PlayerData().id).location
         helpDefenceMarchReturnEvent:SetFromLocation(fromLocation)
         helpDefenceMarchReturnEvent:SetTargetLocation(targetLocation)
-        self.helpDefenceMarchReturnEvents[helpDefenceMarchReturnEvent:Id()] = helpDefenceMarchReturnEvent
         helpDefenceMarchReturnEvent:AddObserver(self)
+        self.helpDefenceMarchReturnEvents[helpDefenceMarchReturnEvent:Id()] = helpDefenceMarchReturnEvent
     end
 end
 
@@ -791,8 +855,8 @@ function Alliance:OnNewHelpDefenceMarchRetuenEventsComming(__helpDefenceMarchRet
             local targetLocation = self:GetMemeberById(helpDefenceMarchReturnEvent:PlayerData().id).location
             helpDefenceMarchReturnEvent:SetFromLocation(fromLocation)
             helpDefenceMarchReturnEvent:SetTargetLocation(targetLocation)
-            self.helpDefenceMarchReturnEvents[helpDefenceMarchReturnEvent:Id()] = helpDefenceMarchReturnEvent
             helpDefenceMarchReturnEvent:AddObserver(self)
+            self.helpDefenceMarchReturnEvents[helpDefenceMarchReturnEvent:Id()] = helpDefenceMarchReturnEvent
             return helpDefenceMarchReturnEvent
         end
         ,function(event_data) 
@@ -839,7 +903,7 @@ end
 
 
 function Alliance:CheckHelpDefenceMarchEventsHaveTarget(targetPlayerID)
-    local player_id = User:Id()
+    local player_id = DataManager:getUserData()._id
     self:IteratorHelpDefenceMarchEvents(function(helpDefenceMarchEvent)
         if helpDefenceMarchEvent:PlayerData().id == player_id  and helpDefenceMarchEvent:TargetPlayerData().id == targetPlayerID then
             return false
@@ -848,3 +912,4 @@ function Alliance:CheckHelpDefenceMarchEventsHaveTarget(targetPlayerID)
 end
 
 return Alliance
+

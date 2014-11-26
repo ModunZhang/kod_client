@@ -3,8 +3,10 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
 local Flag = import("..entity.Flag")
 local Alliance = import("..entity.Alliance")
+local AllianceMoonGate = import("..entity.AllianceMoonGate")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local GameUIAllianceContribute = import(".GameUIAllianceContribute")
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 
 
 -- local MailManager = import("..entity.MailManager")
@@ -13,8 +15,7 @@ local GameUIAllianceHome = UIKit:createUIClass('GameUIAllianceHome')
 
 function GameUIAllianceHome:ctor()
     GameUIAllianceHome.super.ctor(self)
-    -- 添加到全局计时器中，以便显示各个阶段的时间
-    app.timer:AddListener(self)
+
     self.alliance = Alliance_Manager:GetMyAlliance()
     self.member = self.alliance:GetMemeberById(DataManager:getUserData()._id)
 end
@@ -23,14 +24,20 @@ function GameUIAllianceHome:onEnter()
     GameUIAllianceHome.super.onEnter(self)
     self.bottom = self:CreateBottom()
     self.top = self:CreateTop()
+    self.top:Refresh()
 
     -- 中间按钮
     self:CreateOperationButton()
 
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
+
+    self.alliance:GetAllianceMoonGate():AddListenOnType(self, AllianceMoonGate.LISTEN_TYPE.OnCountDataChanged)
+
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
 
+    -- 添加到全局计时器中，以便显示各个阶段的时间
+    app.timer:AddListener(self)
 end
 
 function GameUIAllianceHome:CreateOperationButton()
@@ -64,11 +71,14 @@ function GameUIAllianceHome:onExit()
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
+    self.alliance:GetAllianceMoonGate():RemoveListenerOnType(self, AllianceMoonGate.LISTEN_TYPE.OnCountDataChanged)
+
     GameUIAllianceHome.super.onExit(self)
 end
 
 function GameUIAllianceHome:CreateTop()
     local alliance = self.alliance
+    local Top = {}
     -- 顶部背景,为按钮
     local top_self_bg = WidgetPushButton.new({normal = "allianceHome/button_blue_normal_320X94.png",
         pressed = "allianceHome/button_blue_pressed_320X94.png"})
@@ -114,10 +124,14 @@ function GameUIAllianceHome:CreateTop()
             color = 0xffedae
         }):align(display.RIGHT_CENTER, enemy_name_bg:getContentSize().width-30, 20)
         :addTo(enemy_name_bg)
-    -- 敌方联盟旗帜
-    local enemy_flag = ui_helper:CreateFlagContentSprite(alliance:Flag()):scale(0.5)
-    enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
-        :addTo(enemy_name_bg)
+    local enemy_peace_label = UIKit:ttfLabel(
+        {
+            text = _("请求开战玩家"),
+            size = 18,
+            color = 0xffedae
+        }):align(display.LEFT_CENTER, 140,-26)
+        :addTo(top_enemy_bg)
+
     -- 和平期,战争期,准备期背景
     local period_bg = display.newSprite("allianceHome/back_ground_123x102.png")
         :align(display.TOP_CENTER, 0,0)
@@ -129,7 +143,7 @@ function GameUIAllianceHome:CreateTop()
         :align(display.BOTTOM_CENTER, period_bg:getContentSize().width/2,12)
         :addTo(period_bg)
     local period_text = self:GetAlliancePeriod()
-    self.period_label = UIKit:ttfLabel(
+    local period_label = UIKit:ttfLabel(
         {
             text = period_text,
             size = 16,
@@ -144,7 +158,7 @@ function GameUIAllianceHome:CreateTop()
         }):align(display.BOTTOM_CENTER, time_bg:getContentSize().width/2, 0)
         :addTo(time_bg)
     -- 己方战力
-    display.newSprite("allianceHome/power.png"):align(display.CENTER, -t_self_width+50, -65):addTo(top_self_bg)
+    local our_num_icon = cc.ui.UIImage.new("allianceHome/power.png"):align(display.CENTER, -t_self_width+50, -65):addTo(top_self_bg)
     local self_power_bg = display.newSprite("allianceHome/power_background.png")
         :align(display.LEFT_CENTER, -t_self_width+50, -65):addTo(top_self_bg)
     local self_power_label = UIKit:ttfLabel(
@@ -155,9 +169,11 @@ function GameUIAllianceHome:CreateTop()
         }):align(display.LEFT_CENTER, 20, self_power_bg:getContentSize().height/2)
         :addTo(self_power_bg)
     -- 敌方战力
-    display.newSprite("allianceHome/power.png"):align(display.CENTER, 140, -65):addTo(top_enemy_bg)
     local enemy_power_bg = display.newSprite("allianceHome/power_background.png")
         :align(display.LEFT_CENTER, 140, -65):addTo(top_enemy_bg)
+    local enemy_num_icon = cc.ui.UIImage.new("allianceHome/power.png")
+        :align(display.CENTER, 0, enemy_power_bg:getContentSize().height/2)
+        :addTo(enemy_power_bg)
     local enemy_power_label = UIKit:ttfLabel(
         {
             text = string.formatnumberthousands(alliance:Power()),
@@ -285,7 +301,63 @@ function GameUIAllianceHome:CreateTop()
         }):align(display.LEFT_CENTER, btn_bg:getContentSize().width-130, btn_bg:getContentSize().height/2-10)
         :addTo(btn_bg)
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
+    local home = self
+    function Top:Refresh()
+        local alliance = home.alliance
+        local status = alliance:Status()
+        local moonGate = alliance:GetAllianceMoonGate()
+        local enemyAlliance = moonGate:GetEnemyAlliance()
+        period_label:setString(home:GetAlliancePeriod())
+        -- 和平期
+        if status=="peace" then
+            enemy_name_bg:setVisible(false)
+            vs:setVisible(false)
+            enemy_peace_label:setVisible(true)
+        else
+            enemy_name_bg:setVisible(true)
+            vs:setVisible(true)
+            enemy_peace_label:setVisible(false)
+
+            -- 敌方联盟旗帜
+            if enemy_flag then
+                enemy_name_bg:removeChildByTag(201, true)
+            end
+            local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemyAlliance.flag)):scale(0.5)
+            enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
+                :addTo(enemy_name_bg)
+            enemy_flag:setTag(201)
+            enemy_name_label:setString("["..enemyAlliance.tag.."] "..enemyAlliance.name)
+
+        end
+        if status=="fight" then
+            our_num_icon:setTexture("battle_39x38.png")
+            enemy_num_icon:setTexture("battle_39x38.png")
+            enemy_num_icon:scale(1.0)
+            self:SetOurPowerOrKill(moonGate:GetCountData().our.kill)
+            self:SetEnemyPowerOrKill(moonGate:GetCountData().enemy.kill)
+        else
+            if status~="peace" then
+                enemy_num_icon:setTexture("allianceHome/power.png")
+                self:SetEnemyPowerOrKill(enemyAlliance.power)
+                enemy_num_icon:scale(1.0)
+            else
+                enemy_num_icon:setTexture("citizen_44x50.png")
+                enemy_num_icon:scale(0.7)
+                self:SetEnemyPowerOrKill(0)
+            end
+            our_num_icon:setTexture("allianceHome/power.png")
+            self:SetOurPowerOrKill(alliance:Power())
+        end
+    end
+    function Top:SetOurPowerOrKill(num)
+        self_power_label:setString(string.formatnumberthousands(num))
+    end
+    function Top:SetEnemyPowerOrKill(num)
+        enemy_power_label:setString(string.formatnumberthousands(num))
+    end
+    return Top
 end
+
 
 function GameUIAllianceHome:MailUnreadChanged( num )
     if num==0 then
@@ -435,35 +507,44 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
     elseif tag == 2 then
 
     elseif tag == 1 then
-        NetManager:getFtechAllianceViewDataPromose("mk5G9HHzfl"):next(function()
-            app:lockInput(false)
-            app:enterScene("EnemyAllianceScene", {Alliance_Manager:GetEnemyAlliance()}, "custom", -1, function(scene, status)
-                local manager = ccs.ArmatureDataManager:getInstance()
-                if status == "onEnter" then
-                    manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
-                    local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
-                    display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
-                        transition.sequence{
-                            cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
-                            cc.FadeIn:create(0.75),
-                            cc.CallFunc:create(function() scene:hideOutShowIn() end),
-                            cc.DelayTime:create(0.5),
-                            cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
-                            cc.FadeOut:create(0.75),
-                            cc.CallFunc:create(function() scene:finish() end),
-                        }
-                    )
-                elseif status == "onExit" then
-                    manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
-                end
+        local enemy_alliance_id = self.alliance:GetAllianceMoonGate():GetEnemyAlliance().id
+        if enemy_alliance_id and string.trim(enemy_alliance_id) ~= "" then
+            NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function()
+                app:lockInput(false)
+                app:enterScene("EnemyAllianceScene", {Alliance_Manager:GetEnemyAlliance()}, "custom", -1, function(scene, status)
+                    local manager = ccs.ArmatureDataManager:getInstance()
+                    if status == "onEnter" then
+                        manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+                        local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
+                        display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
+                            transition.sequence{
+                                cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
+                                cc.FadeIn:create(0.75),
+                                cc.CallFunc:create(function() scene:hideOutShowIn() end),
+                                cc.DelayTime:create(0.5),
+                                cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
+                                cc.FadeOut:create(0.75),
+                                cc.CallFunc:create(function() scene:finish() end),
+                            }
+                        )
+                    elseif status == "onExit" then
+                        manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+                    end
+                end)
             end)
-        end)
+        else
+            FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                :SetPopMessage(_("当前是和平期"))
+                :AddToCurrentScene()
+        end
     end
 end
 
 function GameUIAllianceHome:OnBasicChanged(alliance,changed_map)
     if changed_map.honour then
         self.honour_label:setString(GameUtils:formatNumber(changed_map.honour.new))
+    elseif changed_map.status then
+        self.top:Refresh()
     end
 end
 function GameUIAllianceHome:OnMemberChanged(alliance,changed_map)
@@ -485,15 +566,30 @@ function GameUIAllianceHome:MailUnreadChanged( num )
     end
 end
 
+function GameUIAllianceHome:OnCountDataChanged(changed_map)
+    local status = self.alliance:Status()
+    if status=="fight" then
+        if changed_map.our.kill then
+            self.top:SetOurPowerOrKill(changed_map.our.kill.new)
+        end
+        if changed_map.enemy.kill then
+            self.top:SetEnemyPowerOrKill(changed_map.enemy.kill.new)
+        end
+    end
+end
+
 function GameUIAllianceHome:OnTimer(current_time)
-    if self.alliance:Status() == "fight" then
+    local status = self.alliance:Status()
+    if status ~= "peace" then
         local statusFinishTime = self.alliance:StatusFinishTime()
-        -- print("时间：",GameUtils:formatTimeStyle1(statusFinishTime-current_time/1000))
-    elseif self.alliance:Status() == "peace" then
+        if math.floor(statusFinishTime/1000)>current_time then
+            self.time_label:setString(GameUtils:formatTimeStyle1(math.floor(statusFinishTime/1000)-current_time))
+        end
+    else
         local statusStartTime = self.alliance:StatusStartTime()
-        self.period_label:setString(_("和平期"))
-        -- print("时间：",GameUtils:formatTimeStyle1(current_time-statusStartTime/1000))
-        self.time_label:setString(GameUtils:formatTimeStyle1(current_time-statusStartTime/1000))
+        if current_time>= math.floor(statusStartTime/1000) then
+            self.time_label:setString(GameUtils:formatTimeStyle1(current_time-math.floor(statusStartTime/1000)))
+        end
     end
 end
 
@@ -513,16 +609,4 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
-
-
-
-
-
-
-
-
-
-
-
-
 

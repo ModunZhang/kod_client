@@ -559,7 +559,7 @@ function AllianceShrine:CheckPlayerCanDispathSoldiers(playerId)
 end
 
 function AllianceShrine:CheckSelfCanDispathSoldiers()
-	return self:CheckPlayerCanDispathSoldiers(User:Id())
+	return self:CheckPlayerCanDispathSoldiers(DataManager:getUserData()._id)
 end
 
 return AllianceShrine

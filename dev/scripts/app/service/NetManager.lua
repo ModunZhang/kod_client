@@ -1010,13 +1010,19 @@ end
 --从月门撤兵
 function NetManager:getRetreatFromMoonGatePromose()
     return promise.all(get_blocking_request_promise("logic.allianceHandler.retreatFromMoonGate",{},
-        "从月门撤兵失败!"),get_fetchallianceview_callback()):next(get_response_msg)
+        "从月门撤兵失败!"),get_alliancedata_callback()):next(get_response_msg)
 end
 --联盟战月门挑战
 function NetManager:getChallengeMoonGateEnemyTroopPromose()
     return promise.all(get_blocking_request_promise("logic.allianceHandler.challengeMoonGateEnemyTroop",{},
-        "联盟战月门挑战失败!"),get_fetchallianceview_callback()):next(get_response_msg)
+        "联盟战月门挑战失败!"),get_alliancedata_callback()):next(get_response_msg)
 end
+--请求联盟进行联盟战
+function NetManager:getRequestAllianceToFightPromose()
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.requestAllianceToFight",{},
+        "请求联盟进行联盟战失败!"),get_alliancedata_callback()):next(get_response_msg)
+end
+
 --协防
 function NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, targetPlayerId)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.helpAllianceMemberDefence",

@@ -178,7 +178,7 @@ function GameUIPlayerInfo:BuildUI()
 
     if self.isOnlyMail_ then 
     	cc.ui.UIPushButton.new({normal="yellow_btn_up_149x47.png",pressed = "yellow_btn_down_149x47.png"})
-    		:align(display.CENTER_BOTTOM,window.cx,10):addTo(self.bg)
+    		:align(display.CENTER_BOTTOM,304,10):addTo(self.bg)
     		:setButtonLabel("normal", UIKit:ttfLabel({
 				text = _("邮件"),
 				size = 18,

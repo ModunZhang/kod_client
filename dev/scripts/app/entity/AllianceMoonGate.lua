@@ -12,7 +12,8 @@ AllianceMoonGate.LISTEN_TYPE = Enum(
     "OnFightReportsChanged",
     "OnMoonGateMarchEventsChanged",
     "OnMoonGateMarchReturnEventsChanged",
-    "OnMoonGateDataReset"
+    "OnMoonGateDataReset",
+    "OnCountDataChanged"
 )
 -- 数据处理函数
 --------------------------------------------------------------------------------
@@ -57,6 +58,31 @@ function AllianceMoonGate:ctor(alliance)
     self.moonGateMarchEvents = {}
     self.moonGateMarchReturnEvents = {}
     self.enemyAlliance = {}
+    self.countData = {
+        ["enemy"] = {
+            ["attackFailCount"] = 0,
+            ["challengeCount"] = 0,
+            ["attackSuccessCount"] = 0,
+            ["playerKills"] = {},
+            ["routCount"] = 0,
+            ["moonGateOwnCount"] = 0,
+            ["defenceFailCount"] = 0,
+            ["kill"] = 0,
+            ["defenceSuccessCount"] = 0,
+        }
+        ,
+        ["our"] = {
+            ["attackFailCount"] = 0,
+            ["challengeCount"] = 0,
+            ["attackSuccessCount"] = 0,
+            ["playerKills"] = {},
+            ["routCount"] = 0,
+            ["moonGateOwnCount"] = 0,
+            ["defenceFailCount"] = 0,
+            ["kill"] = 0,
+            ["defenceSuccessCount"] = 0,
+        }
+    }
 end
 
 function AllianceMoonGate:GetAlliance()
@@ -64,6 +90,13 @@ function AllianceMoonGate:GetAlliance()
 end
 function AllianceMoonGate:GetOurTroops()
     return self.ourTroops
+end
+function AllianceMoonGate:HaveSentTroops()
+    for k,v in pairs(self.ourTroops) do
+        if v.id == DataManager:getUserData()._id then
+            return true
+        end
+    end
 end
 function AllianceMoonGate:GetEnemyTroops()
     return self.enemyTroops
@@ -82,6 +115,9 @@ function AllianceMoonGate:GetMoonGateMarchReturnEvents()
 end
 function AllianceMoonGate:GetEnemyAlliance()
     return self.enemyAlliance
+end
+function AllianceMoonGate:GetCountData()
+    return self.countData
 end
 function AllianceMoonGate:GetOurTroopsNum()
     local count = 0
@@ -108,6 +144,33 @@ function AllianceMoonGate:Reset()
 
     self.moonGateOwner = ""
     self.enemyAlliance = {}
+    self.countData = {
+        ["enemy"] = {
+            ["attackFailCount"] = 0,
+            ["challengeCount"] = 0,
+            ["attackSuccessCount"] = 0,
+            ["playerKills"] = {},
+            ["strikeCount"] = 0,
+            ["routCount"] = 0,
+            ["moonGateOwnCount"] = 0,
+            ["defenceFailCount"] = 0,
+            ["kill"] = 0,
+            ["defenceSuccessCount"] = 0,
+        }
+        ,
+        ["our"] = {
+            ["attackFailCount"] = 0,
+            ["challengeCount"] = 0,
+            ["attackSuccessCount"] = 0,
+            ["playerKills"] = {},
+            ["strikeCount"] = 0,
+            ["routCount"] = 0,
+            ["moonGateOwnCount"] = 0,
+            ["defenceFailCount"] = 0,
+            ["kill"] = 0,
+            ["defenceSuccessCount"] = 0,
+        }
+    }
     self.activeBy = ""
     self:NotifyListeneOnType(self.LISTEN_TYPE.OnMoonGateDataReset,function(listener)
         listener.OnMoonGateDataReset(listener)
@@ -139,6 +202,7 @@ function AllianceMoonGate:OnAllianceDataChanged(alliance_data)
         self:UpdateEnemyTroops(alliance_data)
         self:UpdateCurrentFightTroops(alliance_data)
         self:UpdateFightReports(alliance_data)
+        self:UpdateCountData(alliance_data)
     end
     self:UpdateMoonGateMarchEvents(alliance_data)
     self:UpdateMoonGateMarchReturnEvents(alliance_data)
@@ -375,6 +439,34 @@ function AllianceMoonGate:UpdateMoonGateMarchReturnEvents(alliance_data)
     end
 end
 
+function AllianceMoonGate:UpdateCountData(alliance_data)
+    if alliance_data.moonGateData.countData then
+        local countData = alliance_data.moonGateData.countData
+        local changed_map = {
+            our = {},
+            enemy = {}
+        }
+        if countData.our then
+            for k,v in pairs(countData.our) do
+                if self.countData.our[k] ~= v then
+                    changed_map.our[k] = {old= self.countData.our[k],new=v}
+                    self.countData.our[k] = v
+                end
+            end
+        end
+        if countData.enemy then
+            for k,v in pairs(countData.enemy) do
+                if self.countData.enemy[k] ~= v then
+                    changed_map.enemy[k] = {old= self.countData.enemy[k],new=v}
+                    self.countData.enemy[k] = v
+                end
+            end
+        end
+        self:NotifyListeneOnType(self.LISTEN_TYPE.OnCountDataChanged,function(listener)
+            listener.OnCountDataChanged(listener,changed_map)
+        end)
+    end
+end
 
 function AllianceMoonGate:GetMoonGateObjectFromMap()
     return self:GetAlliance():GetAllianceMap():FindAllianceBuildingInfoByName("moonGate")
@@ -390,6 +482,12 @@ function AllianceMoonGate:GetMarchRetrunEventById(id)
 end
 
 return AllianceMoonGate
+
+
+
+
+
+
 
 
 

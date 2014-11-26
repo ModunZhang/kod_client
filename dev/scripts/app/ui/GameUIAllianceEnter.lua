@@ -433,7 +433,7 @@ function GameUIAllianceEnter:InitConfig()
                     title = _("进入"),
                     func = function (building)
                         local member = building.player
-                        if member:Id() ~= User:Id() then
+                        if member:Id() ~= DataManager:getUserData()._id then
                             app:EnterPlayerCityScene(member:Id())
                         end
                     end
@@ -459,7 +459,23 @@ function GameUIAllianceEnter:InitConfig()
             },
             Enemy = 
             {
-
+                {
+                    img = "playercity_66x83.png",
+                    title = _("进入"),
+                    func = function (building)
+                        local member = building.player
+                        if member:Id() ~= DataManager:getUserData()._id then
+                            app:EnterPlayerCityScene(member:Id())
+                        end
+                    end
+                },
+                 {
+                    img = "icon_info_1.png",
+                    title = _("信息"),
+                    func = function (building)
+                        UIKit:newGameUI("GameUIPlayerInfo",true,building.player:Id()):addToCurrentScene(true)
+                    end
+                },
             },
             Watch = 
             {
@@ -541,8 +557,8 @@ function GameUIAllianceEnter:SetBuildingInfo()
         dataModel.building_info[3][2][1] = memeber.helpTroopsCount
         building.player = memeber
         if self:GetMode() == GameUIAllianceEnter.MODE.Normal then
-            print(User:Id(),memeber:Id(),User:Id() == memeber:Id())
-            if User:Id() == memeber:Id() then
+            print(DataManager:getUserData()._id,memeber:Id(),DataManager:getUserData()._id == memeber:Id())
+            if DataManager:getUserData()._id == memeber:Id() then
                 --自己的城市建筑
                 table.remove(dataModel.enter_buttons.Normal,4)
                 table.remove(dataModel.enter_buttons.Normal,3)
