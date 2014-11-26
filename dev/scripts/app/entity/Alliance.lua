@@ -684,19 +684,23 @@ function Alliance:OnAllianceFightReportsChanged(alliance_data)
         self.alliance_fight_reports = alliance_data.allianceFightReports
     end
     if alliance_data.__allianceFightReports then
+        local add = {}
+        local remove = {}
         for k,v in pairs(alliance_data.__allianceFightReports) do
             if v.type == "add" then
                 table.insert(self.alliance_fight_reports,v.data)
+                table.insert(add,v.data)
             elseif v.type == "remove" then
                 for index,old in pairs(self.alliance_fight_reports) do
                     if old.id == v.data.id then
                         table.remove(self.alliance_fight_reports,index)
+                        table.insert(remove,v.data)
                     end
                 end
             end
         end
         self:NotifyListeneOnType(Alliance.LISTEN_TYPE.FIGHT_REPORTS, function(listener)
-            listener:OnAllianceFightReportsChanged(self.alliance_fight_reports)
+            listener:OnAllianceFightReportsChanged({add,remove})
         end)
     end
 end

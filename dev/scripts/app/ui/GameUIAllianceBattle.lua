@@ -18,6 +18,8 @@ local img_dir = "allianceHome/"
 function GameUIAllianceBattle:ctor(city)
     GameUIAllianceBattle.super.ctor(self, city, _("联盟会战"))
     self.alliance = Alliance_Manager:GetMyAlliance()
+
+    self.alliance_fight_reports_table = {}
 end
 
 function GameUIAllianceBattle:onEnter()
@@ -86,6 +88,11 @@ function GameUIAllianceBattle:OnTimer(current_time)
             if current_time>= math.floor(statusStartTime/1000) then
                 self.time_label:setString(GameUtils:formatTimeStyle1(current_time-math.floor(statusStartTime/1000)))
             end
+        end
+    end
+    if self.history_layer:isVisible() then
+        for k,v in pairs(self.alliance_fight_reports_table) do
+            v:RefreshRevengeTime(current_time)
         end
     end
 end
@@ -414,9 +421,9 @@ function GameUIAllianceBattle:RefreshFightInfoList()
         local info_message = {
             {string.formatnumberthousands(our.kill),_("击杀数"),string.formatnumberthousands(enemy.kill)},
             {string.formatnumberthousands(self.alliance:Power()),_("战斗力"),string.formatnumberthousands(self.alliance:GetAllianceMoonGate():GetEnemyAlliance().power)},
-            {GameUtils:formatTimeStyle5(our.moonGateOwnCount*30),_("占领月门时间"),GameUtils:formatTimeStyle5(our.moonGateOwnCount*30)},
+            {GameUtils:formatTimeStyle1(our.moonGateOwnCount*30),_("占领月门时间"),GameUtils:formatTimeStyle1(our.moonGateOwnCount*30)},
             {our.routCount,_("击溃城市"),enemy.routCount},
-            {"33",_("突袭次数"),"22"},
+            {our.strikeCount,_("突袭次数"),enemy.strikeCount},
             {our.attackSuccessCount,_("获胜进攻"),enemy.attackSuccessCount},
             {our.attackFailCount,_("失败进攻"),enemy.attackFailCount},
             {our.defenceSuccessCount,_("成功防御"),enemy.defenceSuccessCount},
@@ -464,22 +471,23 @@ end
 
 function GameUIAllianceBattle:OpenAllianceDetails(isOur)
     local alliance = self.alliance
-    local enemy_alliance = self.alliance:GetAllianceMoonGate():GetEnemyAlliance()
+    local enemy_alliance = alliance:GetAllianceMoonGate():GetEnemyAlliance()
+    local count_data = alliance:GetAllianceMoonGate():GetCountData()
 
     local alliance_name = isOur and alliance:Name() or enemy_alliance.name
     -- 玩家联盟成员
     local palace_level = alliance:GetAllianceMap():FindAllianceBuildingInfoByName("palace").level
     local memberCount = GameDatas.AllianceBuilding.palace[palace_level].memberCount
-    local alliance_members = isOur and alliance:GetMembersCount().."/"..memberCount or "敌方联盟成员待补充"
+    local enemy_memberCount = GameDatas.AllianceBuilding.palace[enemy_alliance.palaceLevel].memberCount
+    local alliance_members = isOur and alliance:GetMembersCount().."/"..memberCount or enemy_alliance.memberCount.."/"..enemy_memberCount
     -- 联盟语言
-    local  language = isOur and alliance:DefaultLanguage() or "敌方联盟语言"
+    local  language = isOur and alliance:DefaultLanguage() or enemy_alliance.language
     -- 联盟战斗力
     local  alliance_power = isOur and alliance:Power() or enemy_alliance.power
     -- 联盟击杀
-    local  alliance_kill = isOur and alliance:Kill() or "敌方联盟语言"
+    local  alliance_kill = isOur and count_data.our.kill or count_data.enemy.kill
     -- 玩家击杀列表
-    local countData = alliance:GetAllianceMoonGate():GetCountData()
-    local  player_kill = isOur and countData.our.playerKills or countData.enemy.playerKills
+    local  player_kill = isOur and count_data.our.playerKills or count_data.enemy.playerKills
     -- 联盟旗帜
     local alliance_flag = isOur and alliance:Flag() or Flag.new():DecodeFromJson(enemy_alliance.flag)
     -- 联盟地形
@@ -686,7 +694,7 @@ function GameUIAllianceBattle:AddHistoryItem(report,index)
         :addTo(content)
         :scale(1.06)
     UIKit:ttfLabel({
-        text = GameUtils:formatTimeStyle4(fightTime),
+        text = GameUtils:formatTimeStyle2(math.floor(fightTime/1000)),
         size = 22,
         color = 0xffedae,
     }):align(display.CENTER,title_bg:getContentSize().width/2, title_bg:getContentSize().height/2)
@@ -768,7 +776,7 @@ function GameUIAllianceBattle:AddHistoryItem(report,index)
         b_height = 14,
         m_height = 1,
         b_flip = true,
-    }):align(display.BOTTOM_CENTER,w/2,20):addTo(content)
+    }):align(display.BOTTOM_CENTER,w/2,60):addTo(content)
 
     local info_message = {
         {string.formatnumberthousands(ourAlliance.kill),_("总击杀"),string.formatnumberthousands(enemyAlliance.kill)},
@@ -802,7 +810,59 @@ function GameUIAllianceBattle:AddHistoryItem(report,index)
     createItem(info_message[1],true):align(display.CENTER, 270, 33):addTo(info_bg)
     createItem(info_message[2],false):align(display.CENTER, 270, 79):addTo(info_bg)
 
+    -- 复仇按钮
+    local revenge_button = WidgetPushButton.new(
+        {normal = "resource_butter_red.png",pressed = "resource_butter_red_highlight.png"},
+        {scale9 = false},
+        {disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}}
+    ):addTo(content):align(display.RIGHT_CENTER,560,35)
+        :setButtonLabel(UIKit:ttfLabel({
+            text = _("复仇"),
+            size = 24,
+            color = 0xffedae,
+            shadow= true
+        }))
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
 
+            end
+        end)
+
+    local revenge_time_limit = GameDatas.AllianceInitData.intInit.allianceRevengeMaxTime.value + math.floor(fightTime/1000)
+    local revenge_time_label
+    if app.timer:GetServerTime()>revenge_time_limit then
+        revenge_time_label = UIKit:ttfLabel({
+            text = _("已过期"),
+            size = 24,
+            color = 0x7e0000,
+        }):align(display.LEFT_CENTER, 50, 30)
+            :addTo(content)
+        revenge_button:setButtonEnabled(false)
+    else
+        revenge_time_label = UIKit:ttfLabel({
+            text = _("剩余复仇时间:")..GameUtils:formatTimeStyle1(revenge_time_limit-app.timer:GetServerTime()),
+            size = 24,
+            color = 0x007c23,
+        }):align(display.LEFT_CENTER, 50, 30)
+            :addTo(content)
+        revenge_button:setButtonEnabled(true)
+        table.insert(self.alliance_fight_reports_table, item)
+    end
+    local parent = self
+    function item:RefreshRevengeTime(current_time)
+        if current_time>revenge_time_limit then
+            revenge_time_label:setString(_("已过期"))
+            revenge_time_label:setColor(UIKit:hex2c3b(0x7e0000))
+            revenge_button:setButtonEnabled(false)
+            for k,v in pairs(parent.alliance_fight_reports_table) do
+                if self == v then
+                    parent.alliance_fight_reports_table[k] = nil
+                end
+            end
+        else
+            revenge_time_label:setString(_("剩余复仇时间:")..GameUtils:formatTimeStyle1(revenge_time_limit-current_time))
+        end
+    end
     item:addContent(content)
     self.history_listview:addItem(item,index)
 end
@@ -1131,6 +1191,16 @@ function GameUIAllianceBattle:OnAllianceFightRequestsChanged(request_num)
         self.request_num_label:setString(request_num)
     end
 end
+function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
+    if self.request_num_label then
+        self.request_num_label:setString(request_num)
+    end
+end
 
 return GameUIAllianceBattle
+
+
+
+
+
 

@@ -464,7 +464,7 @@ function NetManager:getLoginPromise()
             device_id = "b"
         else
             -- device_id = device.getOpenUDID()
-            device_id = "aj2"
+            device_id = "aj1"
         end
     else
         device_id = device.getOpenUDID()
@@ -1018,14 +1018,12 @@ function NetManager:getChallengeMoonGateEnemyTroopPromose()
     return promise.all(get_blocking_request_promise("logic.allianceHandler.challengeMoonGateEnemyTroop",{},
         "联盟战月门挑战失败!"),get_alliancedata_callback()):next(get_response_msg)
 end
-<<<<<<< HEAD
 --请求联盟进行联盟战
 function NetManager:getRequestAllianceToFightPromose()
     return promise.all(get_blocking_request_promise("logic.allianceHandler.requestAllianceToFight",{},
         "请求联盟进行联盟战失败!"),get_alliancedata_callback()):next(get_response_msg)
 end
 
-=======
 --协防
 function NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, targetPlayerId)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.helpAllianceMemberDefence",
@@ -1044,7 +1042,6 @@ function NetManager:getRetreatFromHelpedAllianceMemberPromise(targetPlayerId)
         },
         "撤销协防失败!"),get_alliancedata_callback()):next(get_response_msg)
 end
->>>>>>> master
 --
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"
