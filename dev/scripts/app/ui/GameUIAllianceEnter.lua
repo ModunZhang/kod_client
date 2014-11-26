@@ -3,16 +3,17 @@ local UIListView = import(".UIListView")
 local window = import("..utils.window")
 local UILib = import(".UILib")
 local Enum = import("..utils.Enum")
+local User = import("..entity.User")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
+local GameUIWriteMail = import(".GameUIWriteMail")
 
-local GameUIAllianceEnter = class("GameUIAllianceEnter", function ()
-    return display.newColorLayer(cc.c4b(0,0,0,127))
-end)
+local GameUIAllianceEnter = UIKit:createUIClass("GameUIAllianceEnter")
+local GameUIAllianceSendTroops = import(".GameUIAllianceSendTroops")
 
 GameUIAllianceEnter.MODE = Enum("Normal","Enemy","Watch")
 
-local ENTER_LIST = {
-    --ok
+function GameUIAllianceEnter:InitConfig()
+    local ENTER_LIST = {
     palace = {
         height = 261,
         title = _("联盟宫殿"),
@@ -68,7 +69,6 @@ local ENTER_LIST = {
             },
         },
     },
-    --ok
     shop = {
         height = 261,
         title = _("商店"),
@@ -130,7 +130,6 @@ local ENTER_LIST = {
             }
         },
     },
-    --ok
     moonGate = {
         height = 311,
         title = _("月门"),
@@ -208,7 +207,6 @@ local ENTER_LIST = {
             }
         },
     },
-    --ok
     orderHall = {
         height = 261,
         title = _("秩序大厅"),
@@ -263,7 +261,6 @@ local ENTER_LIST = {
             }
         },
     },
-    --ok
     shrine = {
         height = 261,
         title = _("圣地"),
@@ -318,7 +315,6 @@ local ENTER_LIST = {
             }
         },
     },
-    --ok
     decorate = {
         height = 242,
         title = _("树/湖泊/山脉"),
@@ -360,12 +356,11 @@ local ENTER_LIST = {
         },
     },
     --空地
-    --ok
     none = {
         height = 242,
         title = _("空地"),
         building_image = "tree_1_120x120.png",
-        building_desc = _("联盟将军可将联盟建筑移动到空地\n玩家可将自己的城市移动到空地处\n空地定期刷新放逐者的村落,树木,山脉和湖泊"),
+        building_desc = _("联盟将军可将联盟建筑移动到空地,玩家可将自己的城市移动到空地处,空地定期刷新放逐者的村落,树木,山脉和湖泊"),
         building_info = {
             {
                 {_("坐标"),0x797154},
@@ -404,8 +399,8 @@ local ENTER_LIST = {
     member = {
         height = 311,
         title = _("空地"),
-        building_image = "tree_1_120x120.png",
-        building_desc = _("联盟将军可将联盟建筑移动到空地\n玩家可将自己的城市移动到空地处\n空地定期刷新放逐者的村落,树木,山脉和湖泊"),
+        building_image = "keep_760x855.png",
+        building_desc = _("联盟将军可将联盟建筑移动到空地,玩家可将自己的城市移动到空地处,空地定期刷新放逐者的村落,树木,山脉和湖泊"),
         building_info = {
             {
                 {_("坐标"),0x797154},
@@ -416,29 +411,67 @@ local ENTER_LIST = {
                 {_("11,11"),0x403c2f},
             },
             {
-                {_("占领者"),0x797154},
-                {_("11,11"),0x403c2f},
-            },
-            {
                 {_("驻防玩家"),0x797154},
-                {_("11,11"),0x403c2f},
+                {"10",0x403c2f},
             },
         },
         enter_buttons = {
             Normal = 
             {
                 {
-                    img = "icon_move_city.png",
-                    title = _("迁移城市"),
+                    img = "help_defense_55x69.png",
+                    title = _("协防"),
                     func = function (building)
-                    -- UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
+                        UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
+                            dump(soldiers,"协防派兵")
+                        end):addToCurrentScene(true)
                     end
                 },
                 {
-                    img = "icon_move_alliance_building.png",
-                    title = _("迁移联盟建筑"),
+                    img = "playercity_66x83.png",
+                    title = _("进入"),
                     func = function (building)
-                    -- UIKit:newGameUI('GameUIOrderHall',City,"proficiency",building):addToCurrentScene(true)
+                        local member = building.player
+                        NetManager:getPlayerCityInfoPromise(member:Id()):next(function(city_info)
+                        app:enterScene("OtherCityScene", {User.new(city_info.basicInfo), City.new(city_info)}, "custom", -1, function(scene, status)
+                            local manager = ccs.ArmatureDataManager:getInstance()
+                            if status == "onEnter" then
+                                manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+                                local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
+                                display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
+                                    transition.sequence{
+                                        cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
+                                        cc.FadeIn:create(0.75),
+                                        cc.CallFunc:create(function() scene:hideOutShowIn() end),
+                                        cc.DelayTime:create(0.5),
+                                        cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
+                                        cc.FadeOut:create(0.75),
+                                        cc.CallFunc:create(function() scene:finish() end),
+                                    }
+                                )
+                            elseif status == "onExit" then
+                                manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+                            end
+                        end)
+                    end)
+                    end
+                },
+                {
+                    img = "mail_70x55.png",
+                    title = _("邮件"),
+                    func = function (building)
+                        local mail = GameUIWriteMail.new()
+                        mail:SetTitle(_("个人邮件"))
+                        mail:SetAddressee(building.player:name())
+                        mail:OnSendButtonClicked( GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL)
+                        mail:addToCurrentScene(true)
+                    end
+                },
+                {
+                    img = "icon_info_1.png",
+                    title = _("信息"),
+                    func = function (building)
+                        UIKit:newGameUI("GameUIPlayerInfo",true,building.player:Id()):addToCurrentScene(true)
                     end
                 },
             },
@@ -453,70 +486,133 @@ local ENTER_LIST = {
         },
     },
 }
+    return ENTER_LIST
+end
 
 function GameUIAllianceEnter:GetMode()
     return self.mode_
 end
 
-function GameUIAllianceEnter:ctor(building,mode)
+function GameUIAllianceEnter:GetAlliance()
+    return self.alliance
+end
+
+function GameUIAllianceEnter:GetBuilding()
+    return self.building
+end
+
+function GameUIAllianceEnter:GetConfig()
+    return self.config_
+end
+
+function GameUIAllianceEnter:GetBuildingConfig()
+    assert(self:GetConfig()[self:GetBuildingKey()],"联盟建筑配置为空"..self:GetBuildingKey())
+    return self:GetConfig()[self:GetBuildingKey()]
+end
+function GameUIAllianceEnter:GetBuildingKey()
+    local building = self:GetBuilding()
+    local building_identity = building.name or (building:GetType()=="none" and "none") or building:GetCategory()
+    return building_identity
+end
+
+function GameUIAllianceEnter:ctor(alliance,building,mode)
+    GameUIAllianceEnter.super.ctor(self)
+    self.config_ = self:InitConfig()
     self.mode_ = mode or self.MODE.Normal
-    self:setNodeEventEnabled(true)
+    self.alliance = alliance
     self.building = building
-    self.params = ENTER_LIST[building.name or (building:GetType()=="none" and "none") or building:GetCategory()]
-    assert(ENTER_LIST[building.name or (building:GetType()=="none" and "none") or building:GetCategory()],"联盟建筑配置为空"..(building.name or (building:GetType()=="none" and "none") or building:GetCategory()))
-    self.alliance = Alliance_Manager:GetMyAlliance()
+    display.newColorLayer(cc.c4b(0,0,0,127)):addTo(self)
+    self:setNodeEventEnabled(true)
+    self.params = self:GetBuildingConfig()
     self:SetBuildingInfo()
     self.body = self:CreateBackGroundWithTitle(self.params)
-        :align(display.CENTER, window.cx, window.top -400)
+        :align(display.CENTER, window.cx, window.top - 400)
         :addTo(self)
     self:InitBuildingImage()
     self:InitBuildingDese()
     self:InitBuildingInfo(self.params.building_info)
     self:InitEnterButton(self.params.enter_buttons[self.MODE[self:GetMode()]])
 end
-
+--设置数据结构
 function GameUIAllianceEnter:SetBuildingInfo()
-    local building = self.building
-    local name = building.name or (building:GetType()=="none" and "none") or building:GetCategory()
-    local info = ENTER_LIST[name].building_info
+    local building = self:GetBuilding()
+    local building_config = self:GetBuildingConfig()
+    local info = building_config.building_info
     if building.location then
         info[1][2][1] = building.location.x..","..building.location.y
     else
         local x,y = self.building:GetLogicPosition()
         info[1][2][1] = x..","..y
     end
-
+    local name = self:GetBuildingKey()
     if name == "palace" then
-        info[2][2][1] = self.alliance:MemberCount()
+        info[2][2][1] = self:GetAlliance():MemberCount()
         info[3][2][1] = _("暂无")
     elseif name == "shop" then
         info[2][2][1] = _("暂无")
     elseif name == "orderHall" then
+    elseif name == "member" then
+        local dataModel = self:GetConfig()[name]
+        local memeber = self:GetPlayerByLocation(self.building:GetLogicPosition())
+        dataModel.title = memeber.name
+        dataModel.building_info[2][2][1] = memeber.name
+        dataModel.building_info[3][2][1] = memeber.helpTroopsCount
+        building.player = memeber
+        if self:GetMode() == GameUIAllianceEnter.MODE.Normal then
+            print(User:Id(),memeber:Id(),User:Id() == memeber:Id())
+            if User:Id() == memeber:Id() then
+                --自己的城市建筑
+                table.remove(dataModel.enter_buttons.Normal,4)
+                table.remove(dataModel.enter_buttons.Normal,3)
+                table.remove(dataModel.enter_buttons.Normal,1)
+                dump(dataModel.enter_buttons.Normal)
+            end
+        end
     elseif name == "decorate" then
         local w,h = self.building:GetSize()
         info[2][2][1] = w*h
-        ENTER_LIST[name].building_image = UILib.decorator_image[self.building:GetType()]
+        self:GetConfig()[name].building_image = UILib.decorator_image[self.building:GetType()]
         if string.find(self.building:GetType(), "tree", 9) then
-            ENTER_LIST[name].title = _("树")
+            self:GetConfig()[name].title = _("树")
         elseif string.find(self.building:GetType(), "mountain", 9) then
-            ENTER_LIST[name].title = _("山脉")
+            self:GetConfig()[name].title = _("山脉")
         elseif string.find(self.building:GetType(), "lake", 9) then
-            ENTER_LIST[name].title = _("湖泊")
+            self:GetConfig()[name].title = _("湖泊")
+        end
+    end
+end
+
+function GameUIAllianceEnter:GetPlayerByLocation( x,y )
+    for _,member in pairs(self:GetAlliance():GetAllMembers()) do
+        print(member.location.x,member.location.y)
+        if member.location.x == x and y == member.location.y then
+            return member
         end
     end
 end
 
 function GameUIAllianceEnter:InitBuildingDese()
+    local building_key = self:GetBuildingKey()
     local p = self.params
-    if p.building_desc then
-        -- building desc
-        self.desc_label = UIKit:ttfLabel({
-            text = p.building_desc,
-            size = 18,
-            color = 0x797154,
-            dimensions = cc.size(400,0)
-        }):align(display.LEFT_TOP, 180, p.height-20)
-            :addTo(self.body)
+    if building_key == 'member' then
+        self.desc_label = display.newSprite("Progress_bar_1.png"):align(display.LEFT_TOP, 180, p.height-30)
+                :addTo(self.body)
+        self.progressTimer = UIKit:commonProgressTimer("progress_bar_366x34.png"):addTo(self.desc_label):align(display.LEFT_BOTTOM,0,0):scale(386/366)
+        self.progressTimer:setPercentage(100)
+        local bg = display.newSprite("back_ground_43x43.png"):addTo(self.desc_label):pos(10,18)
+        display.newSprite("wall_36x41.png"):addTo(bg):pos(21,21)
+        
+    else
+        if p.building_desc then
+            -- building desc
+            self.desc_label = UIKit:ttfLabel({
+                text = p.building_desc,
+                size = 18,
+                color = 0x797154,
+                dimensions = cc.size(400,0)
+            }):align(display.LEFT_TOP, 180, p.height-20)
+                :addTo(self.body)
+        end
     end
 end
 
@@ -567,7 +663,7 @@ function GameUIAllianceEnter:CreateBackGroundWithTitle( params )
     self.close_btn = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                self:removeFromParent(true)
+                self:leftButtonClicked()
             end
         end):align(display.CENTER, rb_size.width-20,rb_size.height+10):addTo(body)
     self.close_btn:addChild(display.newSprite("X_3.png"))
@@ -615,12 +711,12 @@ function GameUIAllianceEnter:InitEnterButton(buttons)
     local width = 608
     local btn_width = 130
     local count = 0
-    for k,v in pairs(buttons) do
+    for _,v in ipairs(buttons) do
         local btn = WidgetPushButton.new({normal = "btn_130X104.png",pressed = "btn_pressed_130X104.png"})
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
                     v.func(self.building)
-                    self:removeFromParent(true)
+                    self:leftButtonClicked()
                 end
             end):align(display.RIGHT_TOP,width-count*btn_width, 5):addTo(self.body)
         local s = btn:getCascadeBoundingBox().size
@@ -639,11 +735,8 @@ function GameUIAllianceEnter:addToCurrentScene(anima)
     display.getRunningScene():addChild(self,3000)
     return self
 end
-function GameUIAllianceEnter:onExit()
-    UIKit:getRegistry().removeObject(self.__cname)
-end
 
-return GameUIAllianceEnter
 
 
 
+return GameUIAllianceEnter

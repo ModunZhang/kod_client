@@ -10,6 +10,7 @@ local TreeSprite = import("..sprites.TreeSprite")
 local SingleTreeSprite = import("..sprites.SingleTreeSprite")
 local CitizenSprite = import("..sprites.CitizenSprite")
 local SoldierSprite = import("..sprites.SoldierSprite")
+local HelpedTroopsSprite = import("..sprites.HelpedTroopsSprite")
 local SoldierManager = import("..entity.SoldierManager")
 local Observer = import("..entity.Observer")
 local MapLayer = import(".MapLayer")
@@ -106,6 +107,12 @@ end
 function CityLayer:OnSoliderCountChanged(soldier_manager, changed)
     self:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
 end
+function CityLayer:OnHelpedTroopsChanged(city, changed)
+    if #changed.add > 0 or #changed.removed > 0 then
+        print("协防部队发生变化")
+        self:UpdateHelpedByTroopsVisible(city:GetHelpedByTroops())
+    end
+end
 -----
 local SCENE_BACKGROUND = 1
 local BACK_NODE = 2
@@ -140,6 +147,7 @@ function CityLayer:ctor(city_scene)
     self.ruins = {}
     self.trees = {}
     self.walls = {}
+    self.helpedByTroops = {}
     self.road = nil
     self:InitBackground()
     self.back_node = display.newNode():addTo(self, BACK_NODE)
@@ -499,6 +507,18 @@ function CityLayer:InitWithCity(city)
     end
     self.soldiers = soldiers
 
+
+    -- 协防的部队
+    local helpedByTroops = {}
+    for i, v in ipairs({
+        {x = -10, y = 5},
+        {x = -10, y = 10},
+        {x = -10, y = 15},
+    }) do
+        table.insert(helpedByTroops, HelpedTroopsSprite.new(self, v.x, v.y):addTo(city_node))
+    end
+    self.helpedByTroops = helpedByTroops
+
     -- 更新其他需要动态生成的建筑
     self:UpdateAllDynamicWithCity(city)
 
@@ -685,6 +705,7 @@ function CityLayer:UpdateAllDynamicWithCity(city)
     self:UpdateWallsWithCity(city)
     self:UpdateTowersWithCity(city)
     self:UpdateSoldiersVisibleWithSoldierManager(city:GetSoldierManager())
+    self:UpdateHelpedByTroopsVisible(city:GetHelpedByTroops())
 end
 function CityLayer:UpdateRuinsVisibleWithCity(city)
     table.foreach(self.ruins, function(_, ruin)
@@ -807,6 +828,11 @@ function CityLayer:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
         local is_visible = map[v:GetSoldierType()] > 0
         v:setVisible(is_visible)
     end)
+end
+function CityLayer:UpdateHelpedByTroopsVisible(helped_by_troops)
+    for i, v in ipairs(self.helpedByTroops) do
+        v:setVisible(helped_by_troops[i] ~= nil)
+    end
 end
 function CityLayer:IteratorFunctionsBuildings(func)
     table.foreach(self.buildings, func)

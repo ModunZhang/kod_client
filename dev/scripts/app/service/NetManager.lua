@@ -205,6 +205,7 @@ onGetSendMailsSuccess_callbacks = {}
 onSendChatSuccess_callbacks = {}
 onGetAllChatSuccess_callbacks = {}
 onFetchAllianceViewData_callbacks = {}
+onGetPlayerViewDataSuccess_callbacks = {}
 function NetManager:addOnSearchAlliancesSuccessListener()
     self:addEventListener("onSearchAlliancesSuccess", function(success, msg)
         if success then    
@@ -243,6 +244,17 @@ function NetManager:addOnGetPlayerInfoSuccessListener()
                 callback(success, msg)
             end
             onGetPlayerInfoSuccess_callbacks = {}
+        end
+    end)
+end
+function NetManager:addOnGetPlayerViewDataSuccess()
+    self:addEventListener("onGetPlayerViewDataSuccess", function(success, msg)
+        if success then    
+            local callback = onGetPlayerViewDataSuccess_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onGetPlayerViewDataSuccess_callbacks = {}
         end
     end)
 end
@@ -356,6 +368,7 @@ function NetManager:addOnFetchAllianceViewSuccess()
         end
     end)
 end
+
 ------------------------------------------------------------------------------------------------
 function NetManager:addLoginEventListener()
     self:addEventListener("onPlayerLoginSuccess", function(success, msg)
@@ -369,7 +382,7 @@ function NetManager:addLoginEventListener()
                 local InitGame = import("app.service.InitGame")
                 InitGame(msg)
                 -- app:enterScene("AllianceScene")
-                app:enterScene("CityScene")
+                app:enterScene("MyCityScene", {City})
             end
             self.m_isDisconnect = false
         end
@@ -428,6 +441,7 @@ function NetManager:getConnectLogicServerPromise()
         self:addOnSearchAlliancesSuccessListener()
         self:addOnGetCanDirectJoinAlliancesSuccessListener()
         self:addOnGetPlayerInfoSuccessListener()
+        self:addOnGetPlayerViewDataSuccess()
         self:addOnGetMailsSuccessListener()
         self:addOnGetSavedMailsSuccessListener()
         self:addOnGetSendMailsSuccessListener()
@@ -469,6 +483,9 @@ local function get_directjoin_callback()
 end
 local function get_playerinfo_callback()
     return get_callback_promise(onGetPlayerInfoSuccess_callbacks, "查询玩家信息失败!")
+end
+local function get_cityinfo_callback()
+    return get_callback_promise(onGetPlayerViewDataSuccess_callbacks, "查询玩家城市信息失败!")
 end
 local function get_alliancedata_callback()
     return get_callback_promise(onAllianceDataChanged_callbacks, "修改联盟信息失败!")
@@ -840,6 +857,12 @@ function NetManager:getPlayerInfoPromise(memberId)
         memberId = memberId
     }, "获取玩家信息失败!"), get_playerinfo_callback()):next(get_response_msg)
 end
+-- 获取玩家城市信息
+function NetManager:getPlayerCityInfoPromise(targetPlayerId)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.getPlayerViewData", {
+        targetPlayerId = targetPlayerId
+    }, "获取玩家城市信息失败!"), get_cityinfo_callback()):next(get_response_msg)
+end
 -- 移交萌主
 function NetManager:getHandOverAllianceArchonPromise(memberId)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.handOverAllianceArchon", {
@@ -995,12 +1018,33 @@ function NetManager:getChallengeMoonGateEnemyTroopPromose()
     return promise.all(get_blocking_request_promise("logic.allianceHandler.challengeMoonGateEnemyTroop",{},
         "联盟战月门挑战失败!"),get_alliancedata_callback()):next(get_response_msg)
 end
+<<<<<<< HEAD
 --请求联盟进行联盟战
 function NetManager:getRequestAllianceToFightPromose()
     return promise.all(get_blocking_request_promise("logic.allianceHandler.requestAllianceToFight",{},
         "请求联盟进行联盟战失败!"),get_alliancedata_callback()):next(get_response_msg)
 end
 
+=======
+--协防
+function NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, targetPlayerId)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.helpAllianceMemberDefence",
+        {
+            dragonType = dragonType,
+            soldiers   = soldiers,
+            targetPlayerId = targetPlayerId,
+        },
+        "协防玩家失败!"),get_alliancedata_callback()):next(get_response_msg)
+end
+--撤销协防
+function NetManager:getRetreatFromHelpedAllianceMemberPromise(targetPlayerId)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.retreatFromHelpedAllianceMember",
+        {
+            targetPlayerId = targetPlayerId,
+        },
+        "撤销协防失败!"),get_alliancedata_callback()):next(get_response_msg)
+end
+>>>>>>> master
 --
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

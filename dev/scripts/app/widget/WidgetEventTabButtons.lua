@@ -148,7 +148,7 @@ function WidgetEventTabButtons:ctor(city)
     -- end)
     -- self:scheduleUpdate()
 end
-function WidgetEventTabButtons:OnExit()
+function WidgetEventTabButtons:onExit()
     -- self.node:stopAllActions()
     -- self.node:unscheduleUpdate()
     -- self:unscheduleUpdate()
@@ -585,7 +585,7 @@ function WidgetEventTabButtons:Reload()
     self:Load()
 end
 function WidgetEventTabButtons:IsAbleToFreeSpeedup(building)
-    return building:GetFreeSpeedupTime()>=building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime())
+    return building:IsAbleToFreeSpeedUpByTime(app.timer:GetServerTime())
 end
 function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
     if self:IsAbleToFreeSpeedup(building) then

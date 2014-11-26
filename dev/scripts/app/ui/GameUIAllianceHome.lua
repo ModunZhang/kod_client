@@ -457,7 +457,7 @@ function GameUIAllianceHome:CreateBottom()
                 time = 0.2,
                 onComplete = function()
                     app:lockInput(false)
-                    app:enterScene("CityScene", nil, "custom", -1, function(scene, status)
+                    app:enterScene("MyCityScene", {City}, "custom", -1, function(scene, status)
                         local manager = ccs.ArmatureDataManager:getInstance()
                         if status == "onEnter" then
                             manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")

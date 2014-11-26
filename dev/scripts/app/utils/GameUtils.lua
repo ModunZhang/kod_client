@@ -275,3 +275,32 @@ function GameUtils:getCurrentLanguage()
     }
     return mapping[cc.Application:getInstance():getCurrentLanguage() + 1]
 end
+
+function GameUtils:Event_Handler_Func(events,add_func,edit_func,remove_func)
+	local not_hanler = function(...)end
+    add_func = add_func or not_hanler
+    remove_func = remove_func or not_hanler
+    edit_func = edit_func or not_hanler
+
+    local added,edited,removed = {},{},{}
+    for _,event in ipairs(events) do
+        if event.type == 'add' then
+            table.insert(added,add_func(event.data))
+        elseif event.type == 'edit' then
+            table.insert(edited,edit_func(event.data))
+        elseif event.type == 'remove' then
+            table.insert(removed,remove_func(event.data))
+        end
+    end
+    return {added,edited,removed} -- each of return is a table
+end
+
+
+function GameUtils:pack_event_table(t)
+	local ret = {}
+    local added,edited,removed = unpack(t)
+    if #added > 0 then ret.added = checktable(added) end
+    if #edited > 0 then ret.edited = checktable(edited) end
+    if #removed > 0 then ret.removed = checktable(removed) end
+    return ret
+end
