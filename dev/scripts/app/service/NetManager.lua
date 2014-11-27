@@ -197,6 +197,8 @@ function NetManager:removeAllianceDataChangedEventListener(  )
 end
 ---
 onSearchAlliancesSuccess_callbacks = {}
+onGetNearedAllianceInfosSuccess_callbacks = {}
+onSearchAllianceInfoByTagSuccess_callbacks = {}
 onGetCanDirectJoinAlliancesSuccess_callbacks = {}
 onGetPlayerInfoSuccess_callbacks = {}
 onGetMailsSuccess_callbacks = {}
@@ -214,6 +216,28 @@ function NetManager:addOnSearchAlliancesSuccessListener()
                 callback(success, msg)
             end
             onSearchAlliancesSuccess_callbacks = {}
+        end
+    end)
+end
+function NetManager:addOnGetNearedAllianceInfosSuccessListener()
+    self:addEventListener("onGetNearedAllianceInfosSuccess", function(success, msg)
+        if success then    
+            local callback = onGetNearedAllianceInfosSuccess_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onGetNearedAllianceInfosSuccess_callbacks = {}
+        end
+    end)
+end
+function NetManager:addOnSearchAllianceInfoByTagSuccessListener()
+    self:addEventListener("onSearchAllianceInfoByTagSuccess", function(success, msg)
+        if success then    
+            local callback = onSearchAllianceInfoByTagSuccess_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onSearchAllianceInfoByTagSuccess_callbacks = {}
         end
     end)
 end
@@ -439,6 +463,8 @@ function NetManager:getConnectLogicServerPromise()
         self:addLoginEventListener()
 
         self:addOnSearchAlliancesSuccessListener()
+        self:addOnGetNearedAllianceInfosSuccessListener()
+        self:addOnSearchAllianceInfoByTagSuccessListener()
         self:addOnGetCanDirectJoinAlliancesSuccessListener()
         self:addOnGetPlayerInfoSuccessListener()
         self:addOnGetPlayerViewDataSuccess()
@@ -476,6 +502,12 @@ local function get_playerdata_callback()
 end
 local function get_searchalliance_callback()
     return get_callback_promise(onSearchAlliancesSuccess_callbacks, "搜索联盟失败!")
+end
+local function get_nearedallianceinfos_callback()
+    return get_callback_promise(onGetNearedAllianceInfosSuccess_callbacks, "查看战力相近的3个联盟的数据失败!")
+end
+local function get_searchallianceinfobytag_callback()
+    return get_callback_promise(onSearchAllianceInfoByTagSuccess_callbacks, "根据Tag搜索联盟战斗数据失败!")
 end
 local function get_directjoin_callback()
     return get_callback_promise(onGetCanDirectJoinAlliancesSuccess_callbacks, "搜索能直接加入的联盟失败!")
@@ -1041,6 +1073,27 @@ function NetManager:getRetreatFromHelpedAllianceMemberPromise(targetPlayerId)
         },
         "撤销协防失败!"),get_alliancedata_callback()):next(get_response_msg)
 end
+--复仇其他联盟
+function NetManager:getRevengeAlliancePromise(reportId)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.revengeAlliance",
+        {
+            reportId = reportId,
+        },
+        "复仇其他联盟失败!"),get_alliancedata_callback()):next(get_response_msg)
+end
+--查看战力相近的高低3个联盟的数据
+function NetManager:getNearedAllianceInfosPromise()
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.getNearedAllianceInfos",
+        {},
+        "查看战力相近的高低3个联盟的数据失败!"),get_nearedallianceinfos_callback()):next(get_response_msg)
+end
+--根据Tag搜索联盟战斗数据
+function NetManager:getSearchAllianceInfoByTagPromise(tag)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.searchAllianceInfoByTag",
+        {tag=tag},
+        "根据Tag搜索联盟战斗数据失败!"),get_searchallianceinfobytag_callback()):next(get_response_msg)
+end
+
 --
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"
