@@ -50,7 +50,7 @@ end
 --对手联盟
 ---------------
 function AllianceManager:SetEnemyAllianceData( json_data )
-    dump(json_data)
+    -- dump(json_data)
     if not self.enemy_alliance then
         self.enemy_alliance = Alliance.new()
     end
