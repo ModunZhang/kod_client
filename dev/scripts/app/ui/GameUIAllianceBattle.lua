@@ -20,6 +20,7 @@ function GameUIAllianceBattle:ctor(city)
     self.alliance = Alliance_Manager:GetMyAlliance()
 
     self.alliance_fight_reports_table = {}
+    self.history_items = {}
 end
 
 function GameUIAllianceBattle:onEnter()
@@ -51,6 +52,16 @@ function GameUIAllianceBattle:onEnter()
         end
         if tag == 'other_alliance' then
             self.other_alliance_layer:setVisible(true)
+            if not self.alliance_listview then
+                self:InitOtherAlliance()
+                NetManager:getNearedAllianceInfosPromise():next(function(data)
+                    LuaUtils:outputTable("getNearedAllianceInfosPromise", data)
+                    if #data > 0 then
+                        self:RefreshAllianceListview(data)
+                    end
+                end)
+
+            end
         else
             self.other_alliance_layer:setVisible(false)
         end
@@ -58,11 +69,12 @@ function GameUIAllianceBattle:onEnter()
 
     self:InitBattleStatistics()
     self:InitHistoryRecord()
-    self:InitOtherAlliance()
+
 
     app.timer:AddListener(self)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.FIGHT_REPORTS)
     self.alliance:GetAllianceMoonGate():AddListenOnType(self, AllianceMoonGate.LISTEN_TYPE.OnCountDataChanged)
 
 end
@@ -71,6 +83,7 @@ function GameUIAllianceBattle:onExit()
     app.timer:RemoveListener(self)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.FIGHT_REPORTS)
     self.alliance:GetAllianceMoonGate():RemoveListenerOnType(self, AllianceMoonGate.LISTEN_TYPE.OnCountDataChanged)
     GameUIAllianceBattle.super.onExit(self)
 end
@@ -115,6 +128,7 @@ end
 function GameUIAllianceBattle:InitBattleStatistics()
     local layer = self.statistics_layer
     layer:removeAllChildren()
+    self.info_listview = nil
 
     local period_label = UIKit:ttfLabel({
         text = self:GetAlliancePeriod(),
@@ -417,11 +431,10 @@ function GameUIAllianceBattle:RefreshFightInfoList()
         self.info_listview:removeAllItems()
         local our = self.alliance:GetAllianceMoonGate():GetCountData().our
         local enemy = self.alliance:GetAllianceMoonGate():GetCountData().enemy
-        print("our.moonGateOwnCount*30",our.moonGateOwnCount*30,"enemy.moonGateOwnCount*30",enemy.moonGateOwnCount*30)
         local info_message = {
             {string.formatnumberthousands(our.kill),_("击杀数"),string.formatnumberthousands(enemy.kill)},
             {string.formatnumberthousands(self.alliance:Power()),_("战斗力"),string.formatnumberthousands(self.alliance:GetAllianceMoonGate():GetEnemyAlliance().power)},
-            {GameUtils:formatTimeStyle1(our.moonGateOwnCount*30),_("占领月门时间"),GameUtils:formatTimeStyle1(our.moonGateOwnCount*30)},
+            {GameUtils:formatTimeStyle1(our.moonGateOwnCount*30),_("占领月门时间"),GameUtils:formatTimeStyle1(enemy.moonGateOwnCount*30)},
             {our.routCount,_("击溃城市"),enemy.routCount},
             {our.strikeCount,_("突袭次数"),enemy.strikeCount},
             {our.attackSuccessCount,_("获胜进攻"),enemy.attackSuccessCount},
@@ -569,7 +582,7 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
             :addTo(line)
 
         local t = UIKit:ttfLabel({
-            text = string.formatnumberthousands(v.kill),
+            text = string.formatnumberthousands(member.kill),
             size = 22,
             color = 0x403c2f,
         }):align(display.RIGHT_BOTTOM,574,10)
@@ -810,60 +823,68 @@ function GameUIAllianceBattle:AddHistoryItem(report,index)
     createItem(info_message[1],true):align(display.CENTER, 270, 33):addTo(info_bg)
     createItem(info_message[2],false):align(display.CENTER, 270, 79):addTo(info_bg)
 
-    -- 复仇按钮
-    local revenge_button = WidgetPushButton.new(
-        {normal = "resource_butter_red.png",pressed = "resource_butter_red_highlight.png"},
-        {scale9 = false},
-        {disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}}
-    ):addTo(content):align(display.RIGHT_CENTER,560,35)
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("复仇"),
-            size = 24,
-            color = 0xffedae,
-            shadow= true
-        }))
-        :onButtonClicked(function(event)
+    -- 只有权限大于将军的玩家可以请求复仇
+    local isEqualOrGreater = self.alliance:GetMemeberById(DataManager:getUserData()._id)
+        :IsTitleEqualOrGreaterThan("general")
+    if not win and isEqualOrGreater then
+        -- 复仇按钮
+        local revenge_button = WidgetPushButton.new(
+            {normal = "resource_butter_red.png",pressed = "resource_butter_red_highlight.png"},
+            {scale9 = false},
+            {disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}}
+        ):addTo(content):align(display.RIGHT_CENTER,560,35)
+            :setButtonLabel(UIKit:ttfLabel({
+                text = _("复仇"),
+                size = 24,
+                color = 0xffedae,
+                shadow= true
+            }))
+        revenge_button:onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-
+                NetManager:getRevengeAlliancePromise(report.id):done(function ()
+                    revenge_button:setButtonEnabled(false)
+                end)
             end
         end)
-
-    local revenge_time_limit = GameDatas.AllianceInitData.intInit.allianceRevengeMaxTime.value + math.floor(fightTime/1000)
-    local revenge_time_label
-    if app.timer:GetServerTime()>revenge_time_limit then
-        revenge_time_label = UIKit:ttfLabel({
-            text = _("已过期"),
-            size = 24,
-            color = 0x7e0000,
-        }):align(display.LEFT_CENTER, 50, 30)
-            :addTo(content)
-        revenge_button:setButtonEnabled(false)
-    else
-        revenge_time_label = UIKit:ttfLabel({
-            text = _("剩余复仇时间:")..GameUtils:formatTimeStyle1(revenge_time_limit-app.timer:GetServerTime()),
-            size = 24,
-            color = 0x007c23,
-        }):align(display.LEFT_CENTER, 50, 30)
-            :addTo(content)
-        revenge_button:setButtonEnabled(true)
-        table.insert(self.alliance_fight_reports_table, item)
-    end
-    local parent = self
-    function item:RefreshRevengeTime(current_time)
-        if current_time>revenge_time_limit then
-            revenge_time_label:setString(_("已过期"))
-            revenge_time_label:setColor(UIKit:hex2c3b(0x7e0000))
+        local revenge_time_limit = GameDatas.AllianceInitData.intInit.allianceRevengeMaxTime.value + math.floor(fightTime/1000)
+        local revenge_time_label
+        if app.timer:GetServerTime()>revenge_time_limit then
+            revenge_time_label = UIKit:ttfLabel({
+                text = _("已过期"),
+                size = 24,
+                color = 0x7e0000,
+            }):align(display.LEFT_CENTER, 50, 30)
+                :addTo(content)
             revenge_button:setButtonEnabled(false)
-            for k,v in pairs(parent.alliance_fight_reports_table) do
-                if self == v then
-                    parent.alliance_fight_reports_table[k] = nil
-                end
-            end
         else
-            revenge_time_label:setString(_("剩余复仇时间:")..GameUtils:formatTimeStyle1(revenge_time_limit-current_time))
+            revenge_time_label = UIKit:ttfLabel({
+                text = _("剩余复仇时间:")..GameUtils:formatTimeStyle1(revenge_time_limit-app.timer:GetServerTime()),
+                size = 24,
+                color = 0x007c23,
+            }):align(display.LEFT_CENTER, 50, 30)
+                :addTo(content)
+            revenge_button:setButtonEnabled(true)
+            table.insert(self.alliance_fight_reports_table, item)
+        end
+        local parent = self
+        function item:RefreshRevengeTime(current_time)
+            if current_time>revenge_time_limit then
+                revenge_time_label:setString(_("已过期"))
+                revenge_time_label:setColor(UIKit:hex2c3b(0x7e0000))
+                revenge_button:setButtonEnabled(false)
+                for k,v in pairs(parent.alliance_fight_reports_table) do
+                    if self == v then
+                        parent.alliance_fight_reports_table[k] = nil
+                    end
+                end
+            else
+                revenge_time_label:setString(_("剩余复仇时间:")..GameUtils:formatTimeStyle1(revenge_time_limit-current_time))
+            end
         end
     end
+
     item:addContent(content)
+    self.history_items[report.id] = item
     self.history_listview:addItem(item,index)
 end
 
@@ -904,13 +925,17 @@ function GameUIAllianceBattle:InitOtherAlliance()
         viewRect = cc.rect(window.left+17, window.top-890, 608, 586),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(layer)
-    for i=1,10 do
-        self:CreateAllianceItem()
-    end
-    self.alliance_listview:reload()
+    -- for i=1,10 do
+    --     self:CreateAllianceItem()
+    -- end
+    -- self.alliance_listview:reload()
 end
 
-function GameUIAllianceBattle:CreateAllianceItem()
+function GameUIAllianceBattle:CreateAllianceItem(alliance)
+    LuaUtils:outputTable("search alliance result", alliance)
+    local basic = alliance.basicInfo
+    local countInfo = alliance.countInfo
+
     local item = self.alliance_listview:newItem()
     local w,h = 608,160
     item:setItemSize(w, h)
@@ -921,13 +946,13 @@ function GameUIAllianceBattle:CreateAllianceItem()
     local flag_bg =  WidgetPushButton.new({normal = "alliance_item_flag_box_126X126.png",
         pressed = "alliance_item_flag_box_126X126.png"})
         :onButtonClicked(function()
-            self:OpenOtherAllianceDetails()
+            self:OpenOtherAllianceDetails(alliance)
         end)
         :align(display.CENTER,90,h/2)
         :addTo(content)
     local a_helper = WidgetAllianceUIHelper.new()
-    local flag_sprite = a_helper:CreateFlagWithRhombusTerrain(Alliance_Manager:GetMyAlliance():TerrainType()
-        ,Alliance_Manager:GetMyAlliance():Flag())
+    local flag_sprite = a_helper:CreateFlagWithRhombusTerrain(basic.terrain
+        ,Flag.new():DecodeFromJson(basic.flag))
     flag_sprite:scale(0.85)
     flag_sprite:align(display.CENTER,0,-20)
         :addTo(flag_bg)
@@ -949,22 +974,22 @@ function GameUIAllianceBattle:CreateAllianceItem()
     }):align(display.LEFT_CENTER, 10, title_bg:getContentSize().height/2):addTo(title_bg,2)
 
     -- 代表此联盟与己方联盟的关系图标
-    local s_icon = display.newSprite("allianceHome/down.png")
-        :align(display.LEFT_CENTER, index_box:getPositionX()+index_box:getContentSize().width, title_bg:getContentSize().height/2)
-        :addTo(title_bg,2)
+    -- local s_icon = display.newSprite("allianceHome/down.png")
+    --     :align(display.LEFT_CENTER, index_box:getPositionX()+index_box:getContentSize().width, title_bg:getContentSize().height/2)
+    --     :addTo(title_bg,2)
     -- 联盟tag和名字
     local index_box  = UIKit:ttfLabel({
-        text = "【KOD】iverson",
+        text = "["..basic.tag.."]"..basic.name,
         size = 22,
         color = 0xffedae,
-    }):align(display.LEFT_CENTER, s_icon:getPositionX()+s_icon:getContentSize().width, title_bg:getContentSize().height/2)
+    }):align(display.LEFT_CENTER, index_box:getPositionX()+index_box:getContentSize().width+20, title_bg:getContentSize().height/2)
         :addTo(title_bg,2)
     -- 联盟power
     display.newSprite("dragon_strength_27x31.png")
         :align(display.CENTER, 180,70)
         :addTo(content)
     local power_label  = UIKit:ttfLabel({
-        text = string.formatnumberthousands(323568321),
+        text = string.formatnumberthousands(basic.power),
         size = 20,
         color = 0x403c2f,
     }):align(display.LEFT_CENTER,200,70)
@@ -974,19 +999,12 @@ function GameUIAllianceBattle:CreateAllianceItem()
         :align(display.CENTER, 180,30)
         :addTo(content)
     local hit_label  = UIKit:ttfLabel({
-        text = string.formatnumberthousands(323568321),
+        text = string.formatnumberthousands(basic.kill),
         size = 20,
         color = 0x403c2f,
     }):align(display.LEFT_CENTER,200,30)
         :addTo(content)
 
-    -- relationship
-    local relationship_label = UIKit:ttfLabel({
-        text = _("仇敌"),
-        size = 20,
-        color = 0x853506,--007c23 盟友color
-    }):align(display.CENTER,w-93,75)
-        :addTo(content)
 
     -- 进入按钮
     local enter_btn = WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
@@ -998,7 +1016,29 @@ function GameUIAllianceBattle:CreateAllianceItem()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-
+                NetManager:getFtechAllianceViewDataPromose(alliance.id):next(function()
+                    app:lockInput(false)
+                    app:enterScene("EnemyAllianceScene", {Alliance_Manager:GetEnemyAlliance()}, "custom", -1, function(scene, status)
+                        local manager = ccs.ArmatureDataManager:getInstance()
+                        if status == "onEnter" then
+                            manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+                            local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
+                            display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
+                                transition.sequence{
+                                    cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
+                                    cc.FadeIn:create(0.75),
+                                    cc.CallFunc:create(function() scene:hideOutShowIn() end),
+                                    cc.DelayTime:create(0.5),
+                                    cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
+                                    cc.FadeOut:create(0.75),
+                                    cc.CallFunc:create(function() scene:finish() end),
+                                }
+                            )
+                        elseif status == "onExit" then
+                            manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+                        end
+                    end)
+                end)
             end
         end):align(display.RIGHT_CENTER,w-20,35):addTo(content)
 
@@ -1006,18 +1046,20 @@ function GameUIAllianceBattle:CreateAllianceItem()
     self.alliance_listview:addItem(item)
 end
 
+function GameUIAllianceBattle:RefreshAllianceListview(alliances)
+    self.alliance_listview:removeAllItems()
+    for k,v in pairs(alliances) do
+        self:CreateAllianceItem(v)
+    end
+    self.alliance_listview:reload()
+end
+
 -- tag ~= nil -->search
 function GameUIAllianceBattle:GetJoinList(tag)
-    if tag  then
-        NetManager:getSearchAllianceByTagPromsie(tag):next(function(data)
-            if #data.alliances > 0 then
-            -- self:RefreshJoinListView(data.alliances)
-            end
-        end)
-    else
-        NetManager:getFetchCanDirectJoinAlliancesPromise():next(function(data)
-            if #data.alliances > 0 then
-            -- self:RefreshJoinListView(data.alliances)
+    if tag then
+        NetManager:getSearchAllianceInfoByTagPromise(tag):next(function(data)
+            if #data > 0 then
+                self:RefreshAllianceListview(data)
             end
         end)
     end
@@ -1026,8 +1068,11 @@ function GameUIAllianceBattle:SearchAllianAction(tag)
     self:GetJoinList(tag)
 end
 
-function GameUIAllianceBattle:OpenOtherAllianceDetails()
-    local body = WidgetPopDialog.new(706,_("联盟信息")):addTo(self)
+function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
+    local basic = alliance.basicInfo
+    local countInfo = alliance.countInfo
+
+    local body = WidgetPopDialog.new(506,_("联盟信息")):addTo(self)
     local rb_size = body:getContentSize()
     local w,h = rb_size.width,rb_size.height
     -- 联盟旗帜
@@ -1035,8 +1080,8 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails()
         :align(display.CENTER,100,rb_size.height-230)
         :addTo(body)
     local a_helper = WidgetAllianceUIHelper.new()
-    local flag_sprite = a_helper:CreateFlagWithRhombusTerrain(Alliance_Manager:GetMyAlliance():TerrainType()
-        ,Alliance_Manager:GetMyAlliance():Flag())
+    local flag_sprite = a_helper:CreateFlagWithRhombusTerrain(basic.terrain
+        ,Flag.new():DecodeFromJson(basic.flag))
     flag_sprite:scale(0.85)
     flag_sprite:align(display.CENTER, flag_bg:getContentSize().width/2, flag_bg:getContentSize().height/2-20)
         :addTo(flag_bg)
@@ -1048,7 +1093,7 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails()
 
     -- 联盟tag和名字
     local index_box  = UIKit:ttfLabel({
-        text = "【KOD】iverson",
+        text = "["..basic.tag.."]"..basic.name,
         size = 22,
         color = 0xffedae,
     }):align(display.LEFT_CENTER, 20, title_bg:getContentSize().height/2)
@@ -1069,9 +1114,9 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails()
             :addTo(body)
     end
     addAttr(_("成员"),"30/50",180,h-220)
-    addAttr(_("语言"),"English",180,h-250)
-    addAttr(_("战斗力"),"9.446.842",350,h-220)
-    addAttr(_("击杀"),"9.446.842",350,h-250)
+    addAttr(_("语言"),basic.language,180,h-250)
+    addAttr(_("战斗力"),basic.power,350,h-220)
+    addAttr(_("击杀"),basic.kill,350,h-250)
     -- 进入按钮
     local enter_btn = WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
         :setButtonLabel(UIKit:ttfLabel({
@@ -1087,77 +1132,17 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails()
         end):align(display.RIGHT_CENTER,w-40,h-290):addTo(body)
     WidgetInfo.new({
         info={
-            {_("名城占领时间"),"30/50"},
-            {_("消灭的战斗力"),"30/50"},
-            {_("占领过的城市"),"30/50"},
-            {_("联盟战胜利"),"30/50"},
-            {_("联盟战失败"),"30/50"},
-            {_("胜率"),"30/50"},
+            {_("名城占领时间"),"2d 23h 4m"},
+            {_("击杀部队人口"),string.formatnumberthousands(countInfo.kill)},
+            {_("阵亡部队人口"),string.formatnumberthousands(countInfo.beKilled)},
+            {_("击溃城市"),string.formatnumberthousands(countInfo.routCount)},
+            {_("联盟战胜利"),string.formatnumberthousands(countInfo.winCount)},
+            {_("联盟战失败"),string.formatnumberthousands(countInfo.failedCount)},
+            {_("胜率"),(math.floor(countInfo.winCount/(countInfo.winCount+countInfo.failedCount)*1000)/10).."%"},
         },
-        h =260
+        h =300
     }):align(display.TOP_CENTER, w/2 , h-330)
         :addTo(body)
-    --    -- 和平标记
-    --    local peace_bg = display.newSprite("back_ground_green_570x84.png")
-    --        :align(display.CENTER, w/2, h-650)
-    --        :addTo(body)
-    --    UIKit:ttfLabel({
-    --            text = _("标记和平"),
-    --            size = 24,
-    --            color = 0xffedae,
-    --        }):align(display.LEFT_CENTER,120,peace_bg:getContentSize().height/2)
-    --            :addTo(peace_bg)
-    --    -- 和平被标记
-    --    display.newSprite("upgrade_mark.png"):addTo(peace_bg):pos(30,peace_bg:getContentSize().height/2)
-    --    -- icon
-    --    display.newSprite("icon_relation.png"):addTo(peace_bg):pos(80,peace_bg:getContentSize().height/2)
-
-    --    local cancel_btn = WidgetPushButton.new({normal = "red_button_146x42.png",pressed = "red_button_highlight_146x42.png"})
-    --        :setButtonLabel(UIKit:ttfLabel({
-    --            text = _("取消"),
-    --            size = 24,
-    --            color = 0xffedae,
-    --            shadow= true
-    --        }))
-    --        :onButtonClicked(function(event)
-    --            if event.name == "CLICKED_EVENT" then
-
-    --            end
-    --        end):align(display.RIGHT_CENTER,peace_bg:getContentSize().width-10,peace_bg:getContentSize().height/2):addTo(peace_bg)
-    --    -- 仇敌标记
-    --    local enemy_bg = display.newSprite("back_ground_red_570x84.png")
-    --        :align(display.CENTER, w/2, h-750)
-    --        :addTo(body)
-    --    UIKit:ttfLabel({
-    --            text = _("标记仇敌"),
-    --            size = 24,
-    --            color = 0xffedae,
-    --        }):align(display.LEFT_CENTER,120,enemy_bg:getContentSize().height/2)
-    --            :addTo(enemy_bg)
-    -- -- honour icon
-    --    display.newSprite("honour.png"):addTo(enemy_bg):pos(enemy_bg:getContentSize().width-240,enemy_bg:getContentSize().height/2)
-
-    --    UIKit:ttfLabel({
-    --            text = "100",
-    --            size = 20,
-    --            color = 0xffedae,
-    --        }):align(display.CENTER,enemy_bg:getContentSize().width-200,enemy_bg:getContentSize().height/2)
-    --            :addTo(enemy_bg)
-    --    -- icon
-    --    display.newSprite("icon_enemy.png"):addTo(enemy_bg):pos(80,enemy_bg:getContentSize().height/2)
-    --    local mark_btn = WidgetPushButton.new({normal = "blue_btn_up_142x39.png",pressed = "blue_btn_down_142x39.png"})
-    --        :setButtonLabel(UIKit:ttfLabel({
-    --            text = _("标记"),
-    --            size = 22,
-    --            color = 0xffedae,
-    --            shadow= true
-    --        }))
-    --        :onButtonClicked(function(event)
-    --            if event.name == "CLICKED_EVENT" then
-
-    --            end
-    --        end):align(display.RIGHT_CENTER,enemy_bg:getContentSize().width-10,enemy_bg:getContentSize().height/2):addTo(enemy_bg)
-
 end
 
 function GameUIAllianceBattle:OnBasicChanged(alliance,changed_map)
@@ -1166,8 +1151,6 @@ function GameUIAllianceBattle:OnBasicChanged(alliance,changed_map)
     end
 end
 function GameUIAllianceBattle:OnCountDataChanged(changed_map)
-    print("刷新战斗结果info~~~~~~")
-    LuaUtils:outputTable("changed_map", changed_map)
     self:RefreshFightInfoList()
 end
 
@@ -1192,12 +1175,31 @@ function GameUIAllianceBattle:OnAllianceFightRequestsChanged(request_num)
     end
 end
 function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
-    if self.request_num_label then
-        self.request_num_label:setString(request_num)
+    LuaUtils:outputTable("OnAllianceFightReportsChanged changed_map", changed_map)
+    if changed_map.add then
+        for k,v in pairs(changed_map.add) do
+            self:AddHistoryItem(v, 1)
+        end
     end
+    if changed_map.remove then
+        for _,report in pairs(changed_map.remove) do
+            if self.history_items[report.id] then
+                self.history_listview:removeItem(self.history_items[report.id])
+            end
+        end
+    end
+    self.history_listview:reload()
 end
 
 return GameUIAllianceBattle
+
+
+
+
+
+
+
+
 
 
 
