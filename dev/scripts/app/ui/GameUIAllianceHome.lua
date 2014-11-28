@@ -8,6 +8,7 @@ local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local GameUIAllianceContribute = import(".GameUIAllianceContribute")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local GameUIHelp = import(".GameUIHelp")
+local GameUIAllianceEnter = import(".GameUIAllianceEnter")
 
 
 local GameUIAllianceHome = UIKit:createUIClass('GameUIAllianceHome')
@@ -529,9 +530,10 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
     elseif tag == 1 then
         local enemy_alliance_id = self.alliance:GetAllianceMoonGate():GetEnemyAlliance().id
         if enemy_alliance_id and string.trim(enemy_alliance_id) ~= "" then
-            NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function()
+            NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function(msg)
+                local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
                 app:lockInput(false)
-                app:enterScene("EnemyAllianceScene", {Alliance_Manager:GetEnemyAlliance()}, "custom", -1, function(scene, status)
+                app:enterScene("EnemyAllianceScene", {enemyAlliance,GameUIAllianceEnter.Enemy}, "custom", -1, function(scene, status)
                     local manager = ccs.ArmatureDataManager:getInstance()
                     if status == "onEnter" then
                         manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")

@@ -10,7 +10,7 @@ local AllianceMoonGate = import("..entity.AllianceMoonGate")
 local UIListView = import(".UIListView")
 local Flag = import("..entity.Flag")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
-
+local GameUIAllianceEnter = import(".GameUIAllianceEnter")
 
 local GameUIAllianceBattle = UIKit:createUIClass('GameUIAllianceBattle', "GameUIWithCommonHeader")
 local img_dir = "allianceHome/"
@@ -1016,9 +1016,10 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance)
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                NetManager:getFtechAllianceViewDataPromose(alliance.id):next(function()
+                NetManager:getFtechAllianceViewDataPromose(alliance.id):next(function(msg)
+                    local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
                     app:lockInput(false)
-                    app:enterScene("EnemyAllianceScene", {Alliance_Manager:GetEnemyAlliance()}, "custom", -1, function(scene, status)
+                    app:enterScene("EnemyAllianceScene", {enemyAlliance,GameUIAllianceEnter.Enemy}, "custom", -1, function(scene, status)
                         local manager = ccs.ArmatureDataManager:getInstance()
                         if status == "onEnter" then
                             manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")

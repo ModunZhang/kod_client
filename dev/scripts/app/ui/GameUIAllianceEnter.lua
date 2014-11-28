@@ -460,6 +460,20 @@ function GameUIAllianceEnter:InitConfig()
             Enemy = 
             {
                 {
+                    img = "attack_80x66.png",
+                    title = _("进攻"),
+                    func = function (building)
+                        UIKit:newGameUI("GameUIAttackPlayerCity"):addToCurrentScene(true)
+                    end
+                },
+                {
+                    img = "Strike_72x72.png",
+                    title = _("突袭"),
+                    func = function (building)
+                        UIKit:newGameUI("GameUIStrikePlayer"):addToCurrentScene(true)
+                    end
+                },
+                {
                     img = "playercity_66x83.png",
                     title = _("进入"),
                     func = function (building)
@@ -469,7 +483,7 @@ function GameUIAllianceEnter:InitConfig()
                         end
                     end
                 },
-                 {
+                {
                     img = "icon_info_1.png",
                     title = _("信息"),
                     func = function (building)
@@ -479,7 +493,23 @@ function GameUIAllianceEnter:InitConfig()
             },
             Watch = 
             {
-            
+                {
+                    img = "playercity_66x83.png",
+                    title = _("进入"),
+                    func = function (building)
+                        local member = building.player
+                        if member:Id() ~= DataManager:getUserData()._id then
+                            app:EnterPlayerCityScene(member:Id())
+                        end
+                    end
+                },
+                {
+                    img = "icon_info_1.png",
+                    title = _("信息"),
+                    func = function (building)
+                        UIKit:newGameUI("GameUIPlayerInfo",true,building.player:Id()):addToCurrentScene(true)
+                    end
+                },
             }
         },
     },

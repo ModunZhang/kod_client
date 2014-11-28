@@ -382,9 +382,7 @@ end
 function NetManager:addOnFetchAllianceViewSuccess()
     self:addEventListener("onGetAllianceViewDataSuccess", function(success, msg)
         if success then
-            Alliance_Manager:SetEnemyAllianceData(msg)
-            -- LuaUtils:outputTable("addOnFetchAllianceViewSuccess", msg)
-            assert(#onFetchAllianceViewData_callbacks <= 1, "重复请求过多了!")
+            assert(#onFetchAllianceViewData_callbacks <= 1, "重复fetchAllianceView请求过多了!")
             local callback = onFetchAllianceViewData_callbacks[1]
             if type(callback) == "function" then
                 callback(success, msg)
