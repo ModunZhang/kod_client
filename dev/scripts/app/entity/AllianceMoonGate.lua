@@ -136,6 +136,13 @@ end
 function AllianceMoonGate:IsCaptured()
     return self.moonGateOwner == "our"
 end
+function AllianceMoonGate:GetMyTroop()
+    for k,v in pairs(self.ourTroops) do
+        if v.id == DataManager:getUserData()._id then
+            return v
+        end
+    end
+end
 
 function AllianceMoonGate:Reset()
     self.ourTroops = {}

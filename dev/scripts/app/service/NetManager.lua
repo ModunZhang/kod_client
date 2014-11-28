@@ -488,7 +488,8 @@ function NetManager:getLoginPromise()
         if gaozhou then
             device_id = "b"
         else
-            device_id = device.getOpenUDID()
+            -- device_id = device.getOpenUDID()
+            device_id = "aj1"
         end
     else
         device_id = device.getOpenUDID()
@@ -744,9 +745,9 @@ function NetManager:getFetchMailsPromise(fromIndex)
     }, "获取收件箱邮件失败!"), get_inboxmails_callback()):next(get_response_msg)
 end
 -- 阅读邮件
-function NetManager:getReadMailPromise(mailId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.readMail", {
-        mailId = mailId
+function NetManager:getReadMailsPromise(mailIds)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.readMails", {
+        mailIds = mailIds
     }, "阅读邮件失败!"))
 end
 -- 收藏邮件
@@ -774,9 +775,9 @@ function NetManager:getFetchSendMailsPromise(fromIndex)
     }, "获取已发送邮件失败!"), get_sendmails_callback()):next(get_response_msg)
 end
 -- 删除邮件
-function NetManager:getDeleteMailPromise(mailId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.deleteMail", {
-        mailId = mailId
+function NetManager:getDeleteMailsPromise(mailIds)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.deleteMails", {
+        mailIds = mailIds
     }, "删除邮件失败!"))
 end
 -- 发送联盟邮件
