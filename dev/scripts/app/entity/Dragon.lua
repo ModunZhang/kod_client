@@ -144,6 +144,9 @@ end
 function Dragon:Vitality()
 	return config_dragonAttribute[self:Star()].initVitality + self:Level() * config_dragonAttribute[self:Star()].perLevelVitality 
 end
+function Dragon:IsHpLow()
+	return math.floor(self.hp/self:GetMaxHP()*100)<20
+end
 
 function Dragon:UpdateEquipmetsAndSkills(json_data)
 	for k,v in pairs(json_data.equipments) do

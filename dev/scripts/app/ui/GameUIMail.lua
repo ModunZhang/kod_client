@@ -96,6 +96,7 @@ function GameUIMail:CreateMailControlBox()
         :pos(window.cx+1, window.bottom + 35)
         :addTo(self)
     self.mail_control_box:setVisible(false)
+    self.mail_control_box:setTouchEnabled(true)
 
     local box = self.mail_control_box
     local w,h = box:getContentSize().width, box:getContentSize().height
@@ -109,7 +110,7 @@ function GameUIMail:CreateMailControlBox()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-
+                self:SelectAllMailsOrReports(true)
             end
         end):align(display.LEFT_CENTER,7,h/2):addTo(box)
     local delete_btn = WidgetPushButton.new({normal = "red_button_146x42.png",pressed = "red_button_highlight_146x42.png"})
@@ -121,7 +122,19 @@ function GameUIMail:CreateMailControlBox()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-
+                FullScreenPopDialogUI.new():SetTitle(_("删除邮件"))
+                    :SetPopMessage(_("您即将删除所选邮件,删除的邮件将无法恢复,您确定要这么做吗?"))
+                    :CreateOKButton(function ()
+                        local mails = self:GetSelectMailsOrReports()
+                        local mails_id = {}
+                        for k,v in pairs(mails) do
+                            table.insert(mails_id, v.id)
+                        end
+                        NetManager:getDeleteMailsPromise(mails_id):done(function ()
+                            self:VisibleJudgeForMailControl()
+                        end)
+                    end)
+                    :AddToCurrentScene()
             end
         end):align(display.LEFT_CENTER,select_all_btn:getPositionX() + select_all_btn:getCascadeBoundingBox().size.width+10,h/2):addTo(box)
     local mark_read_btn = WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
@@ -133,6 +146,18 @@ function GameUIMail:CreateMailControlBox()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
+                local mails = self:GetSelectMailsOrReports()
+                local mails_id = {}
+                for k,v in pairs(mails) do
+                    if not v.isRead then
+                        table.insert(mails_id, v.id)
+                    end
+                end
+                LuaUtils:outputTable("mails_id", mails_id)
+                self:ReadMail(mails_id,function ()
+                    self:SelectAllMailsOrReports(false)
+                    self.manager:DecreaseUnReadMailsAndReports(#mails_id)
+                end)
             end
         end):align(display.LEFT_CENTER,delete_btn:getPositionX() + delete_btn:getCascadeBoundingBox().size.width+10,h/2):addTo(box)
     local cancel_btn = WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
@@ -144,6 +169,7 @@ function GameUIMail:CreateMailControlBox()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
+                self:SelectAllMailsOrReports(false)
             end
         end):align(display.LEFT_CENTER,mark_read_btn:getPositionX() + mark_read_btn:getCascadeBoundingBox().size.width+10,h/2):addTo(box)
 
@@ -285,7 +311,7 @@ function GameUIMail:CreateMailItem(listview,mail)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if tolua.type(mail.isRead)=="boolean" and not mail.isRead then
-                    self:ReadMail(mail.id,function ()
+                    self:ReadMail({mail.id},function ()
                         self.manager:DecreaseUnReadMailsAndReports(1)
                     end)
                 end
@@ -323,7 +349,7 @@ function GameUIMail:CreateMailItem(listview,mail)
     local from_name_label =  cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = "From:"..(mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."]"..mail.fromName) or mail.fromName,
+            text = "From:"..((mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."]"..mail.fromName) or mail.fromName),
             font = UIKit:getFontFilePath(),
             size = 22,
             dimensions = cc.size(0,24),
@@ -389,7 +415,6 @@ function GameUIMail:CreateMailItem(listview,mail)
         item.check_box = cc.ui.UICheckBoxButton.new(checkbox_image)
             :align(display.CENTER,checkbox_bg:getContentSize().width/2,checkbox_bg:getContentSize().height/2)
             :onButtonStateChanged(function(event)
-                LuaUtils:outputTable("event", event)
                 self:VisibleJudgeForMailControl()
             end)
             :addTo(checkbox_bg)
@@ -398,6 +423,7 @@ function GameUIMail:CreateMailItem(listview,mail)
     item:addContent(content)
     return item
 end
+
 function GameUIMail:VisibleJudgeForMailControl()
     if self.inbox_layer:isVisible() then
         for _,item in pairs(self.inbox_mails) do
@@ -417,6 +443,37 @@ function GameUIMail:VisibleJudgeForMailControl()
     end
     self.mail_control_box:setVisible(false)
 end
+function GameUIMail:GetSelectMailsOrReports()
+    local mail_table = {}
+    if self.inbox_layer:isVisible() then
+        for _,item in pairs(self.inbox_mails) do
+            if item.check_box:isButtonSelected() then
+                table.insert(mail_table, item.mail)
+            end
+        end
+    elseif self.report_layer:isVisible() then
+    elseif self.saved_layer:isVisible() then
+        for _,item in pairs(self.saved_mails) do
+            if item.check_box:isButtonSelected() then
+                table.insert(mail_table, item.mail)
+            end
+        end
+    end
+    return mail_table
+end
+function GameUIMail:SelectAllMailsOrReports(isSelect)
+    if self.inbox_layer:isVisible() then
+        for _,item in pairs(self.inbox_mails) do
+            item.check_box:setButtonSelected(isSelect)
+        end
+    elseif self.report_layer:isVisible() then
+    elseif self.saved_layer:isVisible() then
+        for _,item in pairs(self.saved_mails) do
+            item.check_box:setButtonSelected(isSelect)
+        end
+    end
+    self.mail_control_box:setVisible(isSelect)
+end
 function GameUIMail:SaveOrUnsaveMail(mail,target)
     if target:isButtonSelected() then
         NetManager:getSaveMailPromise(mail.id):catch(function(err)
@@ -431,8 +488,8 @@ function GameUIMail:SaveOrUnsaveMail(mail,target)
     end
 end
 
-function GameUIMail:ReadMail(mailId,cb)
-    NetManager:getReadMailPromise(mailId):done(cb):catch(function(err)
+function GameUIMail:ReadMail(mailIds,cb)
+    NetManager:getReadMailsPromise(mailIds):done(cb):catch(function(err)
         dump(err:reason())
     end)
 end
@@ -835,7 +892,7 @@ function GameUIMail:ShowMailDetails(mail)
             :addTo(bg):align(display.CENTER, 140, 50)
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
-                    NetManager:getDeleteMailPromise(mail.id):done(function ()
+                    NetManager:getDeleteMailsPromise({mail.id}):done(function ()
                         layer_bg:removeFromParent()
                     end):catch(function(err)
                         dump(err:reason())
@@ -870,7 +927,7 @@ function GameUIMail:ShowMailDetails(mail)
         on_disabled = "mail_saved_button_pressed.png",
     }):setButtonSelected(tolua.type(mail.isSaved)=="nil" or mail.isSaved,true):onButtonStateChanged(function(event)
         self:SaveOrUnsaveMail(mail,event.target)
-    end):addTo(bg):pos(bg:getContentSize().width-40, 37)
+    end):addTo(bg):pos(bg:getContentSize().width-48, bg:getContentSize().height-100)
 end
 
 -- report layer
@@ -1198,6 +1255,8 @@ function GameUIMail:SendMail(addressee,title,content)
 end
 
 return GameUIMail
+
+
 
 
 

@@ -124,10 +124,22 @@ function GameUIAllianceSendTroops:onEnter()
                         :AddToCurrentScene()
                     return
                 end
-                self.march_callback(dragonType,soldiers)
-                -- 确认派兵后关闭界面
-                self:leftButtonClicked()
+                if self.dragon:IsHpLow() then
+                    FullScreenPopDialogUI.new():SetTitle(_("行军"))
+                        :SetPopMessage(_("您的龙的HP低于20%,有很大几率阵亡,确定要派出吗?"))
+                        :CreateOKButton(function ()
+                            self.march_callback(dragonType,soldiers)
+                            -- 确认派兵后关闭界面
+                            self:leftButtonClicked()
+                        end)
+                        :AddToCurrentScene()
+                else
+                    self.march_callback(dragonType,soldiers)
+                    -- 确认派兵后关闭界面
+                    self:leftButtonClicked()
+                end
             end
+
         end):align(display.RIGHT_CENTER,window.right-50,window.top-920):addTo(self)
     --行军所需时间
     display.newSprite("upgrade_hourglass.png", window.cx, window.top-920)
@@ -637,6 +649,8 @@ function GameUIAllianceSendTroops:onExit()
 end
 
 return GameUIAllianceSendTroops
+
+
 
 
 
