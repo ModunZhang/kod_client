@@ -109,14 +109,14 @@ float intersect_plane(ray_ ray, plane_ plane, inout vec4 color)
 	}
 	return 0.0;
 }
-
-void main(void)
+vec4 aliasing(in vec2 plane_point)
 {
-	vec2 point = (2.0*gl_FragCoord.xy - iResolution.xy)/iResolution.x;
-	float r = radians(mod(CC_Time[1] * 50.0, 360.0));
+	vec2 point = plane_point;
+	float r = radians(mod(CC_Time[1] * 1.0, 360.0));
 	vec3 lookat = vec3(0.0, 10.0, -10.0);
 	float looklen = 30.0;
 	vec3 position = vec3(lookat.z + cos(r) * looklen, sin(r) * 10.0 + 10.0, lookat.x + sin(r) * looklen - 10.0);
+	// vec3 position = vec3(0.0,0.0,10.0);
 	camera_ camera = camera_(position, normalize(lookat - position), vec3(0.0, 1.0, 0.0), 90.0);
 	ray_ ray = getRay(point, camera);
 	vec4 result = vec4(0.0);
@@ -125,13 +125,35 @@ void main(void)
 	hit = intersect_plane(ray, plane_(vec3(0.0, 1.0, 0.0), vec3(0.0, -10.0, 0.0)), color);
 	if (hit > 0.0){ result = vec4(0.0);}
 	result = color * hit;
+
 	hit = intersect_sphere(ray, sp1, color);
 	if (hit > 0.0){ result = vec4(0.0);}
 	result += color * hit;
+
 	// hit = intersect_sphere(ray, sp2, color);
 	// if (hit > 0.0){ result = vec4(0.0);}
-	// result += color * hit;	
-	gl_FragColor = result;
+	// result += color * hit;
+	return result;
+}
+void main(void)
+{
+
+	vec2 point = (2.0*gl_FragCoord.xy - iResolution.xy)/iResolution.x;
+	vec4 result = aliasing(point);
+
+	point = (2.0*vec2(gl_FragCoord.x + 0.5, gl_FragCoord.y) - iResolution.xy)/iResolution.x;
+	result += aliasing(point);
+
+	point = (2.0*vec2(gl_FragCoord.x, gl_FragCoord.y + 0.5) - iResolution.xy)/iResolution.x;
+	result += aliasing(point);
+
+	point = (2.0*vec2(gl_FragCoord.x - 0.5, gl_FragCoord.y) - iResolution.xy)/iResolution.x;
+	result += aliasing(point);
+
+	point = (2.0*vec2(gl_FragCoord.x, gl_FragCoord.y - 0.5) - iResolution.xy)/iResolution.x;
+	result += aliasing(point);
+
+	gl_FragColor = result / 5.0;
 }
 
 
