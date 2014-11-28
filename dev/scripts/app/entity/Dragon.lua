@@ -144,6 +144,9 @@ end
 function Dragon:Vitality()
 	return config_dragonAttribute[self:Star()].initVitality + self:Level() * config_dragonAttribute[self:Star()].perLevelVitality 
 end
+function Dragon:IsHpLow()
+	return math.floor(self.hp/self:GetMaxHP()*100)<20
+end
 
 function Dragon:GetLocalizedStatus()
 	return Localize.dragon_status[self:Status()]
