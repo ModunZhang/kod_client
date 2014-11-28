@@ -180,7 +180,7 @@ function Alliance:GetAllMembers()
     return self.members
 end
 function Alliance:GetMembersCount()
-    local count = 0 
+    local count = 0
     for k,v in pairs(self.members) do
         count = count + 1
     end
@@ -708,9 +708,12 @@ function Alliance:OnAllianceFightReportsChanged(alliance_data)
             end
         end
         self:NotifyListeneOnType(Alliance.LISTEN_TYPE.FIGHT_REPORTS, function(listener)
-            listener:OnAllianceFightReportsChanged({add,remove})
+            listener:OnAllianceFightReportsChanged({add = add,remove=remove})
         end)
     end
+    table.sort( self.alliance_fight_reports, function(a, b)
+        return a.fightTime > b.fightTime
+    end )
 end
 
 function Alliance:OnOneAllianceMemberDataChanged(member_data)
@@ -776,8 +779,7 @@ function Alliance:OnNewHelpDefenceMarchEventsComming(__helpDefenceMarchEvents)
             helpDefenceMarchEvent:AddObserver(self)
             return helpDefenceMarchEvent
         end
-        ,function(event_data) 
-            --TODO:修改协防的行军事件
+        ,function(event_data)
         end
         ,function(event_data)
             if self.helpDefenceMarchEvents[event_data.id] then
@@ -787,14 +789,14 @@ function Alliance:OnNewHelpDefenceMarchEventsComming(__helpDefenceMarchEvents)
                 helpDefenceMarchEvent = HelpDefenceMarchEvent.new()
                 helpDefenceMarchEvent:Update(event_data)
                 return helpDefenceMarchEvent
-            end 
+            end
         end
     )
     self:OnHelpDefenceMarchEventChanged(GameUtils:pack_event_table(change_map))
 end
 
 function Alliance:OnHelpDefenceMarchEventChanged(changed_map)
-     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.HELP_DEFENCE_MARCHEVENT, function(listener)
+    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.HELP_DEFENCE_MARCHEVENT, function(listener)
         listener:OnHelpDefenceMarchEventsChanged(changed_map)
     end)
 end
@@ -912,4 +914,6 @@ function Alliance:CheckHelpDefenceMarchEventsHaveTarget(targetPlayerID)
 end
 
 return Alliance
+
+
 

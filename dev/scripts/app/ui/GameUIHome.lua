@@ -385,7 +385,7 @@ function GameUIHome:CreateBottom()
 
     -- 协助加速按钮
     local help_button = cc.ui.UIPushButton.new(
-        {normal = "loyalty.png", pressed = "loyalty.png"},
+        {normal = "allianceHome/help.png", pressed = "allianceHome/help.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then

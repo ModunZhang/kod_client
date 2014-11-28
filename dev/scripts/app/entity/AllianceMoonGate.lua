@@ -133,6 +133,9 @@ function AllianceMoonGate:GetEnemyTroopsNum()
     end
     return count
 end
+function AllianceMoonGate:IsCaptured()
+    return self.moonGateOwner == "our"
+end
 
 function AllianceMoonGate:Reset()
     self.ourTroops = {}

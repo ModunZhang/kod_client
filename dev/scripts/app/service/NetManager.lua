@@ -197,6 +197,8 @@ function NetManager:removeAllianceDataChangedEventListener(  )
 end
 ---
 onSearchAlliancesSuccess_callbacks = {}
+onGetNearedAllianceInfosSuccess_callbacks = {}
+onSearchAllianceInfoByTagSuccess_callbacks = {}
 onGetCanDirectJoinAlliancesSuccess_callbacks = {}
 onGetPlayerInfoSuccess_callbacks = {}
 onGetMailsSuccess_callbacks = {}
@@ -208,7 +210,7 @@ onFetchAllianceViewData_callbacks = {}
 onGetPlayerViewDataSuccess_callbacks = {}
 function NetManager:addOnSearchAlliancesSuccessListener()
     self:addEventListener("onSearchAlliancesSuccess", function(success, msg)
-        if success then    
+        if success then
             local callback = onSearchAlliancesSuccess_callbacks[1]
             if type(callback) == "function" then
                 callback(success, msg)
@@ -217,9 +219,31 @@ function NetManager:addOnSearchAlliancesSuccessListener()
         end
     end)
 end
+function NetManager:addOnGetNearedAllianceInfosSuccessListener()
+    self:addEventListener("onGetNearedAllianceInfosSuccess", function(success, msg)
+        if success then
+            local callback = onGetNearedAllianceInfosSuccess_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onGetNearedAllianceInfosSuccess_callbacks = {}
+        end
+    end)
+end
+function NetManager:addOnSearchAllianceInfoByTagSuccessListener()
+    self:addEventListener("onSearchAllianceInfoByTagSuccess", function(success, msg)
+        if success then
+            local callback = onSearchAllianceInfoByTagSuccess_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onSearchAllianceInfoByTagSuccess_callbacks = {}
+        end
+    end)
+end
 function NetManager:addOnGetCanDirectJoinAlliancesSuccessListener()
     self:addEventListener("onGetCanDirectJoinAlliancesSuccess", function(success, msg)
-        if success then    
+        if success then
             local callback = onGetCanDirectJoinAlliancesSuccess_callbacks[1]
             if type(callback) == "function" then
                 callback(success, msg)
@@ -230,7 +254,7 @@ function NetManager:addOnGetCanDirectJoinAlliancesSuccessListener()
 end
 function NetManager:addOnGetAllianceDataSuccess()
     self:addEventListener("onGetAllianceDataSuccess", function(success, msg)
-        if success then    
+        if success then
             LuaUtils:outputTable("onGetAllianceDataSuccess", msg)
             DataManager:setUserAllianceData(msg)
         end
@@ -238,7 +262,7 @@ function NetManager:addOnGetAllianceDataSuccess()
 end
 function NetManager:addOnGetPlayerInfoSuccessListener()
     self:addEventListener("onGetPlayerInfoSuccess", function(success, msg)
-        if success then    
+        if success then
             local callback = onGetPlayerInfoSuccess_callbacks[1]
             if type(callback) == "function" then
                 callback(success, msg)
@@ -249,7 +273,7 @@ function NetManager:addOnGetPlayerInfoSuccessListener()
 end
 function NetManager:addOnGetPlayerViewDataSuccess()
     self:addEventListener("onGetPlayerViewDataSuccess", function(success, msg)
-        if success then    
+        if success then
             local callback = onGetPlayerViewDataSuccess_callbacks[1]
             if type(callback) == "function" then
                 callback(success, msg)
@@ -260,7 +284,7 @@ function NetManager:addOnGetPlayerViewDataSuccess()
 end
 function NetManager:addOnGetMailsSuccessListener()
     self:addEventListener("onGetMailsSuccess", function(success, msg)
-        if success then    
+        if success then
             assert(#onGetMailsSuccess_callbacks <= 1, "重复请求过多了!")
             local callback = onGetMailsSuccess_callbacks[1]
             if type(callback) == "function" then
@@ -272,7 +296,7 @@ function NetManager:addOnGetMailsSuccessListener()
 end
 function NetManager:addOnGetSavedMailsSuccessListener()
     self:addEventListener("onGetSavedMailsSuccess", function(success, msg)
-        if success then    
+        if success then
             assert(#onGetSavedMailsSuccess_callbacks <= 1, "重复请求过多了!")
             local callback = onGetSavedMailsSuccess_callbacks[1]
             if type(callback) == "function" then
@@ -284,8 +308,8 @@ function NetManager:addOnGetSavedMailsSuccessListener()
 end
 function NetManager:addOnGetSendMailsSuccessListener()
     self:addEventListener("onGetSendMailsSuccess", function(success, msg)
-        if success then    
-        assert(#onGetSendMailsSuccess_callbacks <= 1, "重复请求过多了!")
+        if success then
+            assert(#onGetSendMailsSuccess_callbacks <= 1, "重复请求过多了!")
             local callback = onGetSendMailsSuccess_callbacks[1]
             if type(callback) == "function" then
                 callback(success, msg)
@@ -295,11 +319,11 @@ function NetManager:addOnGetSendMailsSuccessListener()
     end)
 end
 function NetManager:addOnChatListener()
-     self:addEventListener("onChat", function(success, msg)
+    self:addEventListener("onChat", function(success, msg)
         if success then
-            if app.chatCenter then 
+            if app.chatCenter then
                 app.chatCenter:handleNetMessage("onChat",msg)
-            end    
+            end
             assert(#onSendChatSuccess_callbacks <= 1, "重复请求过多了!")
             local callback = onSendChatSuccess_callbacks[1]
             if type(callback) == "function" then
@@ -310,11 +334,11 @@ function NetManager:addOnChatListener()
     end)
 end
 function NetManager:addOnAllChatListener()
-     self:addEventListener("onAllChat", function(success, msg)
+    self:addEventListener("onAllChat", function(success, msg)
         if success then
-            if app.chatCenter then 
+            if app.chatCenter then
                 app.chatCenter:handleNetMessage("onAllChat",msg)
-            end    
+            end
             assert(#onGetAllChatSuccess_callbacks <= 1, "重复请求过多了!")
             local callback = onGetAllChatSuccess_callbacks[1]
             if type(callback) == "function" then
@@ -325,7 +349,7 @@ function NetManager:addOnAllChatListener()
     end)
 end
 function NetManager:addOnBuildingLevelUpListener()
-     self:addEventListener("onBuildingLevelUp", function(success, msg)
+    self:addEventListener("onBuildingLevelUp", function(success, msg)
         if success then
             local buildingName = UIKit:getBuildingLocalizedKeyByBuildingType(msg.buildingType)
             GameGlobalUI:showTips(_("建筑升级完成"),string.format('%s(LV %d)',_(buildingName),msg.level))
@@ -341,7 +365,7 @@ function NetManager:addOnHouseLevelUpListener()
     end)
 end
 function NetManager:addOnTowerLevelUpListener()
-     self:addEventListener("onTowerLevelUp", function(success, msg)
+    self:addEventListener("onTowerLevelUp", function(success, msg)
         if success then
             GameGlobalUI:showTips(_("城墙升级完成"),string.format('LV %d',msg.level))
         end
@@ -359,6 +383,7 @@ function NetManager:addOnFetchAllianceViewSuccess()
     self:addEventListener("onGetAllianceViewDataSuccess", function(success, msg)
         if success then
             Alliance_Manager:SetEnemyAllianceData(msg)
+            -- LuaUtils:outputTable("addOnFetchAllianceViewSuccess", msg)
             assert(#onFetchAllianceViewData_callbacks <= 1, "重复请求过多了!")
             local callback = onFetchAllianceViewData_callbacks[1]
             if type(callback) == "function" then
@@ -439,6 +464,8 @@ function NetManager:getConnectLogicServerPromise()
         self:addLoginEventListener()
 
         self:addOnSearchAlliancesSuccessListener()
+        self:addOnGetNearedAllianceInfosSuccessListener()
+        self:addOnSearchAllianceInfoByTagSuccessListener()
         self:addOnGetCanDirectJoinAlliancesSuccessListener()
         self:addOnGetPlayerInfoSuccessListener()
         self:addOnGetPlayerViewDataSuccess()
@@ -477,6 +504,12 @@ end
 local function get_searchalliance_callback()
     return get_callback_promise(onSearchAlliancesSuccess_callbacks, "搜索联盟失败!")
 end
+local function get_nearedallianceinfos_callback()
+    return get_callback_promise(onGetNearedAllianceInfosSuccess_callbacks, "查看战力相近的3个联盟的数据失败!")
+end
+local function get_searchallianceinfobytag_callback()
+    return get_callback_promise(onSearchAllianceInfoByTagSuccess_callbacks, "根据Tag搜索联盟战斗数据失败!")
+end
 local function get_directjoin_callback()
     return get_callback_promise(onGetCanDirectJoinAlliancesSuccess_callbacks, "搜索能直接加入的联盟失败!")
 end
@@ -505,8 +538,8 @@ local function get_fetchchat_callback()
     return get_callback_promise(onGetAllChatSuccess_callbacks, "获取聊天失败!")
 end
 local function get_fetchallianceview_callback()
-    return  get_callback_promise(onFetchAllianceViewData_callbacks, "获取对方联盟数据失败!") 
-end 
+    return  get_callback_promise(onFetchAllianceViewData_callbacks, "获取对方联盟数据失败!")
+end
 
 -- 修改城市名字
 function NetManager:getEditPlayerCityNamePromise(cityName)
@@ -991,21 +1024,21 @@ function NetManager:getMarchToShrinePromose(shrineEventId,dragonType,soldiers)
 end
 --查找合适的联盟进行战斗
 function NetManager:getFindAllianceToFightPromose()
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.findAllianceToFight", 
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.findAllianceToFight",
         {}, "查找合适的联盟进行战斗失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 --行军到月门
 function NetManager:getMarchToMoonGatePromose(dragonType,soldiers)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.marchToMoonGate", 
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.marchToMoonGate",
         {dragonType = dragonType,
-        soldiers = soldiers}, "行军到月门失败!"), get_alliancedata_callback()):next(get_response_msg)
+            soldiers = soldiers}, "行军到月门失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 --获取对手联盟数据
 function NetManager:getFtechAllianceViewDataPromose(targetAllianceId)
-    
-    return promise.all(get_none_blocking_request_promise("logic.allianceHandler.getAllianceViewData",{targetAllianceId = targetAllianceId
-
-    },"获取对手联盟数据失败!"),get_fetchallianceview_callback()):next(get_response_msg)
+    return promise.all(get_none_blocking_request_promise("logic.allianceHandler.getAllianceViewData",
+        {targetAllianceId = targetAllianceId,
+            includeMoonGateData = true
+        },"获取对手联盟数据失败!"),get_fetchallianceview_callback()):next(get_response_msg)
 end
 --从月门撤兵
 function NetManager:getRetreatFromMoonGatePromose()
@@ -1041,6 +1074,27 @@ function NetManager:getRetreatFromHelpedAllianceMemberPromise(targetPlayerId)
         },
         "撤销协防失败!"),get_alliancedata_callback()):next(get_response_msg)
 end
+--复仇其他联盟
+function NetManager:getRevengeAlliancePromise(reportId)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.revengeAlliance",
+        {
+            reportId = reportId,
+        },
+        "复仇其他联盟失败!"),get_alliancedata_callback()):next(get_response_msg)
+end
+--查看战力相近的高低3个联盟的数据
+function NetManager:getNearedAllianceInfosPromise()
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.getNearedAllianceInfos",
+        {},
+        "查看战力相近的高低3个联盟的数据失败!"),get_nearedallianceinfos_callback()):next(get_response_msg)
+end
+--根据Tag搜索联盟战斗数据
+function NetManager:getSearchAllianceInfoByTagPromise(tag)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.searchAllianceInfoByTag",
+        {tag=tag},
+        "根据Tag搜索联盟战斗数据失败!"),get_searchallianceinfobytag_callback()):next(get_response_msg)
+end
+
 --
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"
@@ -1094,6 +1148,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 

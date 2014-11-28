@@ -529,7 +529,6 @@ function GameUIMoonGate:InitGarrisonPart()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                print("self.alliance:Status()",self.alliance:Status())
                 if self.alliance:Status()=="fight" or self.alliance:Status()=="prepare" then
                     UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
                         NetManager:getMarchToMoonGatePromose(dragonType,soldiers):catch(function(err)

@@ -113,8 +113,12 @@ function GameUIAllianceSendTroops:onEnter()
                         :SetPopMessage(_("龙未处于空闲状态"))
                         :AddToCurrentScene()
                     return
-                end
-                if #soldiers == 0 then
+                elseif self.dragon:Hp()<1 then
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("选择的龙已经死亡"))
+                        :AddToCurrentScene()
+                    return
+                elseif #soldiers == 0 then
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))
                         :SetPopMessage(_("请选择要派遣的部队"))
                         :AddToCurrentScene()
@@ -160,7 +164,7 @@ function GameUIAllianceSendTroops:SelectDragonPart()
         :addTo(dragon_frame)
     -- 龙，等级
     self.dragon_name = UIKit:ttfLabel({
-        text = _(dragon:Type()).."（LV ".. dragon:Level(),
+        text = _(dragon:Type()).."（LV ".. dragon:Level()..")",
         size = 22,
         color = 0x514d3e,
     }):align(display.LEFT_CENTER,20,80)
@@ -234,7 +238,8 @@ function GameUIAllianceSendTroops:SelectDragon()
             size = 22,
             color = 0x514d3e,
         }):align(display.LEFT_CENTER,20,100)
-            :addTo(box_bg)
+            :addTo(box_bg,2)
+        print(" 龙，等级",_(dragon:Type()).."（LV "..dragon:Level().."）")
         -- 总力量
         local dragon_vitality = UIKit:ttfLabel({
             text = _("总力量")..dragon:Strength(),
@@ -632,6 +637,7 @@ function GameUIAllianceSendTroops:onExit()
 end
 
 return GameUIAllianceSendTroops
+
 
 
 
