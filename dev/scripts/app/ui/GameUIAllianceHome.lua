@@ -505,7 +505,7 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
     if tag == 3 then -- 战斗
         NetManager:getFindAllianceToFightPromose()
     elseif tag == 2 then
-
+        UIKit:newGameUI("GameUIAttackPlayerCity"):addToCurrentScene(true)
     elseif tag == 1 then
         local enemy_alliance_id = self.alliance:GetAllianceMoonGate():GetEnemyAlliance().id
         if enemy_alliance_id and string.trim(enemy_alliance_id) ~= "" then

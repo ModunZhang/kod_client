@@ -425,7 +425,11 @@ local SOLDIER_STATUS = {
     ["defeated"] = _("击溃!"),
 }
 
-
+local DRAGON_STATUS = {
+    free = _("空闲"),
+    march = _("出征中"),
+    defence = _("驻防中")
+}
 
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
@@ -442,6 +446,7 @@ return {
     soldier_name = SOLDIER_NAME,
     soldier_category = SOLDIER_CATEGORY,
     soldier_status = SOLDIER_STATUS,
+    dragon_status = DRAGON_STATUS,
     getSoldierCategoryByName = function(soldier_name) return SOLDIER_CATEGORY[SOLDIER_CATEGORY_MAP[soldier_name]] end
 }
 
