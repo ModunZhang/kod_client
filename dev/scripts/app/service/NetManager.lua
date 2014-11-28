@@ -1035,7 +1035,7 @@ function NetManager:getMarchToMoonGatePromose(dragonType,soldiers)
 end
 --获取对手联盟数据
 function NetManager:getFtechAllianceViewDataPromose(targetAllianceId)
-    return promise.all(get_none_blocking_request_promise("logic.allianceHandler.getAllianceViewData",
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.getAllianceViewData",
         {targetAllianceId = targetAllianceId,
             includeMoonGateData = true
         },"获取对手联盟数据失败!"),get_fetchallianceview_callback()):next(get_response_msg)
