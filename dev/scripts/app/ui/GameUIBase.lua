@@ -156,13 +156,6 @@ function GameUIBase:CreateTitle(title)
     local head_bg = cc.ui.UIImage.new("head_bg.png")
         :align(display.TOP_CENTER, window.cx, window.top)
         :addTo(self)
-    -- return ui.newTTFLabel({
-    --     text = title,
-    --     font = UIKit:getFontFilePath(),
-    --     size = 30,
-    --     align = ui.TEXT_ALIGN_CENTER,
-    --     color = UIKit:hex2c3b(0xffedae),
-    -- })
      return UIKit:ttfLabel({
         text = title,
         size = 30,
