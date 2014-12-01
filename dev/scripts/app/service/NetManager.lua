@@ -382,9 +382,7 @@ end
 function NetManager:addOnFetchAllianceViewSuccess()
     self:addEventListener("onGetAllianceViewDataSuccess", function(success, msg)
         if success then
-            Alliance_Manager:SetEnemyAllianceData(msg)
-            -- LuaUtils:outputTable("addOnFetchAllianceViewSuccess", msg)
-            assert(#onFetchAllianceViewData_callbacks <= 1, "重复请求过多了!")
+            assert(#onFetchAllianceViewData_callbacks <= 1, "重复fetchAllianceView请求过多了!")
             local callback = onFetchAllianceViewData_callbacks[1]
             if type(callback) == "function" then
                 callback(success, msg)
@@ -490,7 +488,8 @@ function NetManager:getLoginPromise()
         if gaozhou then
             device_id = "b"
         else
-            device_id = device.getOpenUDID()
+            -- device_id = device.getOpenUDID()
+            device_id = "aj1"
         end
     else
         device_id = device.getOpenUDID()
@@ -746,9 +745,9 @@ function NetManager:getFetchMailsPromise(fromIndex)
     }, "获取收件箱邮件失败!"), get_inboxmails_callback()):next(get_response_msg)
 end
 -- 阅读邮件
-function NetManager:getReadMailPromise(mailId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.readMail", {
-        mailId = mailId
+function NetManager:getReadMailsPromise(mailIds)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.readMails", {
+        mailIds = mailIds
     }, "阅读邮件失败!"))
 end
 -- 收藏邮件
@@ -776,9 +775,9 @@ function NetManager:getFetchSendMailsPromise(fromIndex)
     }, "获取已发送邮件失败!"), get_sendmails_callback()):next(get_response_msg)
 end
 -- 删除邮件
-function NetManager:getDeleteMailPromise(mailId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.deleteMail", {
-        mailId = mailId
+function NetManager:getDeleteMailsPromise(mailIds)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.deleteMails", {
+        mailIds = mailIds
     }, "删除邮件失败!"))
 end
 -- 发送联盟邮件
@@ -1035,7 +1034,7 @@ function NetManager:getMarchToMoonGatePromose(dragonType,soldiers)
 end
 --获取对手联盟数据
 function NetManager:getFtechAllianceViewDataPromose(targetAllianceId)
-    return promise.all(get_none_blocking_request_promise("logic.allianceHandler.getAllianceViewData",
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.getAllianceViewData",
         {targetAllianceId = targetAllianceId,
             includeMoonGateData = true
         },"获取对手联盟数据失败!"),get_fetchallianceview_callback()):next(get_response_msg)

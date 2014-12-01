@@ -1,5 +1,6 @@
 local Enum = import("..utils.Enum")
 local CitySprite = import("..sprites.CitySprite")
+local VillageSprite = import("..sprites.VillageSprite")
 local AllianceDecoratorSprite = import("..sprites.AllianceDecoratorSprite")
 local AllianceBuildingSprite = import("..sprites.AllianceBuildingSprite")
 local AllianceObject = import("..entity.AllianceObject")
@@ -215,7 +216,7 @@ function AllianceLayer:CreateObject(entity)
     elseif category == "member" then
         object = CitySprite.new(self, entity):addTo(self:GetBuildingNode())
     elseif category == "village" then
-        -- object = CitySprite.new(self, entity):addTo(self:GetBuildingNode())
+        object = VillageSprite.new(self, entity):addTo(self:GetBuildingNode())
     elseif category == "decorate" then
         object = AllianceDecoratorSprite.new(self, entity):addTo(self:GetBuildingNode())
     end
