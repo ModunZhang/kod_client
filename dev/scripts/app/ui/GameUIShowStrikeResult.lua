@@ -6,11 +6,13 @@ local GameUIShowStrikeResult = UIKit:createUIClass("GameUIShowStrikeResult")
 local window = import("..utils.window")
 
 -- callback:function()
-function GameUIShowStrikeResult:ctor(interval)
+function GameUIShowStrikeResult:ctor(dragonType,enemyPlayerId,interval)
 	interval = interval or 5
 	GameUIShowStrikeResult.super.ctor(self)
 	self.interval_ = interval
 	self.total_interval = interval
+	self.dragonType = dragonType
+	self.enemyPlayerId = enemyPlayerId
 end
 
 function GameUIShowStrikeResult:onEnter()
@@ -41,7 +43,9 @@ function GameUIShowStrikeResult:OnInterval()
 		self.progress:setPercentage((self.total_interval - self.interval_)/self.total_interval * 100)
 	else
 		self.handlerOfupdate:stop()
-		--TODO:显示突袭结果界面
+		NetManager:getStrikePlayerCityPromise(self.dragonType,self.enemyPlayerId):catch(function(err)
+			dump(err:reason())
+		end)
 		self:leftButtonClicked()
 	end
 end

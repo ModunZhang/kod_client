@@ -8,9 +8,11 @@ local UIListView = import(".UIListView")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local UILib = import(".UILib")
 
-function GameUIStrikePlayer:ctor()
+function GameUIStrikePlayer:ctor(enemyPlayerId)
 	GameUIStrikePlayer.super.ctor(self,City,_("准备突袭"))
 	self.dragon_manager = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager()
+	self.enemyPlayerId = enemyPlayerId
+	assert(enemyPlayerId)
 end
 
 function GameUIStrikePlayer:GetDragonManager()
@@ -131,9 +133,8 @@ function GameUIStrikePlayer:GetSelectDragonType()
 end
 
 function GameUIStrikePlayer:OnStrikeButtonClicked()
-	print("dragon_type---->",self:GetSelectDragonType())
 	self:leftButtonClicked()
-	UIKit:newGameUI("GameUIShowStrikeResult"):addToCurrentScene(false)
+	UIKit:newGameUI("GameUIShowStrikeResult",self:GetSelectDragonType(),self.enemyPlayerId):addToCurrentScene(false)
 end
 
 return GameUIStrikePlayer
