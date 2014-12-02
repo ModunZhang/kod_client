@@ -45,4 +45,14 @@ function HelpDefenceMarchReturnEvent:GetTime()
 	return self.times or 0
 end
 
+function HelpDefenceMarchReturnEvent:GetMarchPlayerInfo(player_id)
+	if self:PlayerData().id == player_id then
+		return self.MARCH_EVENT_WITH_PLAYER.RECEIVER
+	end
+	if self:FromPlayerData().id == player_id then
+		return self.MARCH_EVENT_WITH_PLAYER.SENDER
+	end
+	return self.MARCH_EVENT_WITH_PLAYER.NOTHING
+end
+
 return HelpDefenceMarchReturnEvent

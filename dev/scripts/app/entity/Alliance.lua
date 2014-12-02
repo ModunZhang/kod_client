@@ -10,8 +10,9 @@ local MultiObserver = import(".MultiObserver")
 local Alliance = class("Alliance", MultiObserver)
 local HelpDefenceMarchEvent = import(".HelpDefenceMarchEvent")
 local HelpDefenceMarchReturnEvent = import(".HelpDefenceMarchReturnEvent")
+local QueueManager = import(".QueueManager")
 
-Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS","HELP_DEFENCE_MARCHEVENT","HELP_DEFENCE_MARCHRETURNEVENT","FIGHT_REQUESTS","FIGHT_REPORTS")
+Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS","OnHelpDefenceMarchEventsChanged","OnHelpDefenceMarchReturnEventsChanged","FIGHT_REQUESTS","FIGHT_REPORTS")
 local unpack = unpack
 local function pack(...)
     return {...}
@@ -57,6 +58,10 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     --行军事件
     self.helpDefenceMarchEvents = {}
     self.helpDefenceMarchReturnEvents = {}
+    self.queueManager = QueueManager.new(self)
+end
+function Alliance:GetQueueManager()
+    return self.queueManager
 end
 function Alliance:GetAllianceShrine()
     return self.alliance_shrine
@@ -293,6 +298,7 @@ function Alliance:Reset()
     self.alliance_shrine:Reset()
     self.alliance_moonGate:Reset()
     self:ResetHelpDefenceMarchEvent()
+    self:GetQueueManager():ResetAllianceQueue()
 end
 function Alliance:OnOperation(operation_type)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OPERATION, function(listener)
@@ -796,7 +802,7 @@ function Alliance:OnNewHelpDefenceMarchEventsComming(__helpDefenceMarchEvents)
 end
 
 function Alliance:OnHelpDefenceMarchEventChanged(changed_map)
-    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.HELP_DEFENCE_MARCHEVENT, function(listener)
+    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OnHelpDefenceMarchEventsChanged, function(listener)
         listener:OnHelpDefenceMarchEventsChanged(changed_map)
     end)
 end
@@ -879,7 +885,7 @@ function Alliance:OnNewHelpDefenceMarchRetuenEventsComming(__helpDefenceMarchRet
 end
 
 function Alliance:OnHelpDefenceMarchReturnEventChanged(changed_map)
-     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.HELP_DEFENCE_MARCHRETURNEVENT, function(listener)
+     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OnHelpDefenceMarchReturnEventsChanged, function(listener)
         listener:OnHelpDefenceMarchReturnEventsChanged(changed_map)
     end)
 end
