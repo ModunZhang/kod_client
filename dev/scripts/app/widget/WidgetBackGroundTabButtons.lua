@@ -5,7 +5,7 @@ end)
 
 function WidgetBackGroundTabButtons:ctor(buttons, listener)
     self.tabListener = listener
-    local width = 620
+    local width = 578
     local node = display.newNode():addTo(self)
     self.node = node
 
@@ -15,11 +15,11 @@ function WidgetBackGroundTabButtons:ctor(buttons, listener)
     local default
     for i, v in ipairs(buttons) do
         local widget = WidgetTab.new({
-            on = "tab_btn_down_310x64.png",
-            off = "tab_btn_up_310x64.png",
-        }, unit_width, 64)
+            on = "tab_btn_down_140x60.png", 
+            off = "tab_btn_up_140x60.png",
+        }, unit_width, 60)
             :addTo(node)
-            :align(display.LEFT_CENTER, origin_x + unit_width * (i - 1), 0)
+            :align(display.LEFT_CENTER, origin_x + unit_width * (i - 1), 18)
             :OnTabPress(handler(self, self.OnTabClicked))
 
         widget.tag = v.tag
@@ -32,8 +32,8 @@ function WidgetBackGroundTabButtons:ctor(buttons, listener)
         table.insert(tabs, widget)
     end
     self.tabs = tabs
-    cc.ui.UIImage.new("decorator_21x62.png"):addTo(node):align(display.LEFT_CENTER, -width/2, 0)
-    cc.ui.UIImage.new("decorator_21x62.png"):addTo(node):align(display.RIGHT_CENTER, width/2, 0):flipX(true)
+    -- cc.ui.UIImage.new("decorator_21x62.png"):addTo(node):align(display.LEFT_CENTER, -width/2, 0)
+    -- cc.ui.UIImage.new("decorator_21x62.png"):addTo(node):align(display.RIGHT_CENTER, width/2, 0):flipX(true)
 
     if default then
         self:PushButton(default)

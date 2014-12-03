@@ -139,7 +139,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingBG()
         u_height = 14,
         b_height = 20,
         m_height = 1,
-    }):align(display.CENTER, display.cx, display.top-844)
+    }):align(display.CENTER, display.cx, display.top-824)
         :addTo(self.info_layer)
     -- display.newScale9Sprite("keep_unlock_building_listview_bg.png", display.cx, display.top-844, cc.size(549, 551))
 
@@ -164,7 +164,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingBG()
         font = UIKit:getFontFilePath(),
         size = 18,
         color = UIKit:hex2c3b(0x403c2f)})
-        :align(display.CENTER, display.cx,display.top-870)
+        :align(display.CENTER, display.cx,display.top-850)
         :addTo(self.info_layer)
 end
 

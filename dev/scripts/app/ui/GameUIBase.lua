@@ -65,7 +65,7 @@ function GameUIBase:rightButtonClicked()
 end
 
 function GameUIBase:onMoveInStage()
-    -- app:lockInput(false)
+-- app:lockInput(false)
 end
 
 function GameUIBase:onMoveOutStage()
@@ -81,7 +81,7 @@ function GameUIBase:leftButtonClicked()
         if self.moveInAnima then
             self:UIAnimationMoveOut()
         else
-            self:onMoveOutStage() -- fix 
+            self:onMoveOutStage() -- fix
         end
     end
 end
@@ -150,13 +150,13 @@ function GameUIBase:CreateBackGround()
     --     :align(display.CENTER, display.cx, display.bottom)
     --     :addTo(node)
     -- return node:addTo(self)
-    return display.newSprite("common_bg_center.png"):align(display.LEFT_TOP, window.left,window.top-40):addTo(self)
+    return display.newSprite("common_bg_center.png"):align(display.CENTER_TOP, window.cx,window.top-40):addTo(self)
 end
 function GameUIBase:CreateTitle(title)
     local head_bg = cc.ui.UIImage.new("head_bg.png")
         :align(display.TOP_CENTER, window.cx, window.top)
         :addTo(self)
-     return UIKit:ttfLabel({
+    return UIKit:ttfLabel({
         text = title,
         size = 30,
         color = 0xffedae,
@@ -176,11 +176,13 @@ function GameUIBase:CreateHomeButton(on_clicked)
                 self:leftButtonClicked()
             end
         end)
-        :align(display.LEFT_TOP, window.left , window.top)
+        :align(display.LEFT_TOP, window.cx-314 , window.top-5)
         :addTo(self)
+
     cc.ui.UIImage.new("home_icon.png")
-        :pos(27, -72)
+        :pos(34, -50)
         :addTo(home_button)
+        :scale(0.8)
     return home_button
 end
 function GameUIBase:CreateShopButton(on_clicked)
@@ -193,20 +195,19 @@ function GameUIBase:CreateShopButton(on_clicked)
             self:leftButtonClicked()
         end
     end):addTo(self)
-    gem_button:align(display.RIGHT_TOP, window.right, window.top)
-    cc.ui.UIImage.new("home/gem.png")
+    gem_button:align(display.RIGHT_TOP, window.cx+314, window.top-5)
+    cc.ui.UIImage.new("home/gem_1.png")
         :addTo(gem_button)
-        :pos(-75, -65)
+        :pos(-55, -52)
 
-    local gem_num_bg = cc.ui.UIImage.new("gem_num_bg.png"):addTo(gem_button):pos(-85, -85)
-    local pos = gem_num_bg:getAnchorPointInPoints()
-    return ui.newTTFLabel({
-        text = ""..City.resource_manager:GetGemResource():GetValue(),
-        font = UIKit:getFontFilePath(),
-        size = 14,
-        color = UIKit:hex2c3b(0xfdfac2)})
-        :addTo(gem_num_bg)
-        :align(display.CENTER, 40, 15)
+    return UIKit:ttfLabel({
+        text = ""..string.formatnumberthousands(City.resource_manager:GetGemResource():GetValue()),
+        size = 20,
+        color = 0xffd200,
+        shadow = true
+    })
+        :addTo(gem_button)
+        :align(display.CENTER, -102, -32)
 end
 function GameUIBase:CreateTabButtons(param, func)
     return WidgetBackGroundTabButtons.new(param,
@@ -226,10 +227,12 @@ function GameUIBase:CreateVerticalListViewDetached(left_bottom_x, left_bottom_y,
     }
 end
 function GameUIBase:CreatePopupBg(height)
-   return WidgetUIBackGround.new({height=height})
+    return WidgetUIBackGround.new({height=height})
 end
 
 return GameUIBase
+
+
 
 
 
