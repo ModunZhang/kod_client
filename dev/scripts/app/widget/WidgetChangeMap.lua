@@ -2,6 +2,7 @@ local Enum = import("..utils.Enum")
 
 local WidgetPushButton = import(".WidgetPushButton")
 local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
+local GameUIAllianceEnter = import("..ui.GameUIAllianceEnter")
 
 local window = import("..utils.window")
 
@@ -140,7 +141,6 @@ function WidgetChangeMap:SetMapType( map_type )
         end)
 
         self.our_alliance_btn:onButtonClicked(function(event)
-            self:Retraction()
             if Alliance_Manager:GetMyAlliance()
 
                 :IsDefault() then
@@ -151,6 +151,7 @@ function WidgetChangeMap:SetMapType( map_type )
             end
             print("我方领地")
             self.map_frame:setPositionY(179)
+            self:Retraction()
 
             app:enterScene("AllianceScene", nil, "custom", -1,handler(self, self.CloudArmature) )
         end)
@@ -159,7 +160,7 @@ function WidgetChangeMap:SetMapType( map_type )
             local enemy_alliance_id = Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():GetEnemyAlliance().id
             if enemy_alliance_id and string.trim(enemy_alliance_id) ~= "" then
                 self.map_frame:setPositionY(289)
-
+            	self:Retraction()
                 NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function(msg)
                     local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
                     app:lockInput(false)
@@ -177,6 +178,7 @@ function WidgetChangeMap:SetMapType( map_type )
         -- 设置按钮事件
         self.our_city_btn:onButtonClicked(function(event)
             self.map_frame:setPositionY(69)
+            self:Retraction()
             app:enterScene("MyCityScene", {City}, "custom", -1, handler(self, self.CloudArmature))
         end)
 
@@ -188,6 +190,7 @@ function WidgetChangeMap:SetMapType( map_type )
             local enemy_alliance_id = Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():GetEnemyAlliance().id
             if enemy_alliance_id and string.trim(enemy_alliance_id) ~= "" then
                 self.map_frame:setPositionY(289)
+            	self:Retraction()
                 NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function(msg)
                     local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
                     app:lockInput(false)
@@ -206,11 +209,11 @@ function WidgetChangeMap:SetMapType( map_type )
         -- 设置按钮事件
         self.our_city_btn:onButtonClicked(function(event)
             self.map_frame:setPositionY(69)
+            self:Retraction()
             app:enterScene("MyCityScene", {City}, "custom", -1, handler(self, self.CloudArmature))
         end)
 
         self.our_alliance_btn:onButtonClicked(function(event)
-            self:Retraction()
             if Alliance_Manager:GetMyAlliance():IsDefault() then
                 local dialog = FullScreenPopDialogUI.new():AddToCurrentScene()
                 dialog:SetTitle("提示")
@@ -218,6 +221,7 @@ function WidgetChangeMap:SetMapType( map_type )
                 return
             end
             self.map_frame:setPositionY(179)
+            self:Retraction()
             app:enterScene("AllianceScene", nil, "custom", -1,handler(self, self.CloudArmature) )
         end)
 
