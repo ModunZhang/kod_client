@@ -27,7 +27,7 @@ function GameUIBase:onEnter()
         print(visible_count)
         visible_count = visible_count - 1
         if visible_count == 0 then
-            home_page.bottom:setVisible(false)
+            home_page:setVisible(false)
         end
     end
 end
@@ -46,7 +46,7 @@ function GameUIBase:onExit()
     if home_page then
         visible_count = visible_count + 1
         if visible_count > 0 then
-            home_page.bottom:setVisible(true)
+            home_page:setVisible(true)
         end
     end
 end

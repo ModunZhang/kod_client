@@ -1,9 +1,9 @@
 local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTab = import(".WidgetTab")
-local WIDGET_WIDTH = 491
+local WIDGET_WIDTH = 492
 local WIDGET_HEIGHT = 300
-local TAB_HEIGHT = 47
+local TAB_HEIGHT = 48
 local WidgetEventTabButtons = class("WidgetEventTabButtons", function()
     local rect = cc.rect(0, 0, WIDGET_WIDTH, WIDGET_HEIGHT + TAB_HEIGHT)
     local node = display.newClippingRegionNode(rect)
@@ -170,22 +170,23 @@ function WidgetEventTabButtons:CreateTabButtons()
         { "build", "build_39x38.png" },
     }
     local tab_map = {}
-    local unit_width = 111
+    local unit_width = 106
     local origin_x = unit_width * 4
     for i, v in ipairs(icon_map) do
         local tab_type = v[1]
         local tab_png = v[2]
         tab_map[tab_type] = WidgetTab.new({
-            on = "tab_button_down_111x47.png",
-            off = "tab_button_up_111x47.png",
+            on = "tab_button_down_112x48.png",
+            off = "tab_button_up_112x48.png",
             tab = tab_png
         }, unit_width, TAB_HEIGHT)
-            :addTo(node):align(display.LEFT_BOTTOM,origin_x + (i - 5) * unit_width, 0)
+            :addTo(node):align(display.LEFT_BOTTOM,origin_x + (i - 5) * unit_width, -2)
             :OnTabPress(handler(self, self.OnTabClicked))
+        -- tab_map[tab_type]:scale(110/112)
     end
-    local btn = cc.ui.UIPushButton.new({normal = "hide_btn_up_48x47.png",
-        pressed = "hide_btn_down_48x47.png"}):addTo(node)
-        :align(display.LEFT_BOTTOM, 111*4, 0)
+    local btn = cc.ui.UIPushButton.new({normal = "hide_btn_up_50x48.png",
+        pressed = "hide_btn_down_50x48.png"}):addTo(node)
+        :align(display.LEFT_BOTTOM, unit_width*4, -2)
         :onButtonClicked(function(event)
             if not self:IsShow() then
                 self:Show()
@@ -197,8 +198,8 @@ function WidgetEventTabButtons:CreateTabButtons()
     return node, tab_map
 end
 function WidgetEventTabButtons:CreateBackGround()
-    return cc.ui.UIImage.new("back_ground_491x105.png", {scale9 = true,
-        capInsets = cc.rect(10, 10, WIDGET_WIDTH - 20, 105 - 20)
+    return cc.ui.UIImage.new("back_ground_492X100.png", {scale9 = true,
+        capInsets = cc.rect(10, 10, WIDGET_WIDTH , 105 - 20)
     }):align(display.LEFT_BOTTOM):setLayoutSize(WIDGET_WIDTH, 50)
 end
 function WidgetEventTabButtons:CreateItem()
@@ -237,9 +238,9 @@ function WidgetEventTabButtons:CreateProgressItem()
             color = UIKit:hex2c3b(0xfff3c7)}))
         :onButtonClicked(function(event)
             end)
-
+    btn:scale(0.8)
     cc.ui.UIImage.new("divide_line_489x2.png"):addTo(progress)
-        :align(display.LEFT_BOTTOM, -4, -5)
+        :align(display.LEFT_BOTTOM, -4, -5):setScaleX(0.96)
 
 
     function progress:SetProgressInfo(str, percent)
@@ -300,13 +301,13 @@ function WidgetEventTabButtons:CreateOpenItem()
     ,{
         disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
     }):addTo(node)
-        :align(display.LEFT_CENTER, 340, 0)
-        :setButtonLabel(cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        :align(display.LEFT_CENTER, 340, 4)
+        :setButtonLabel(UIKit:ttfLabel({
             text = _("打开"),
             size = 18,
-            font = UIKit:getFontFilePath(),
-            color = UIKit:hex2c3b(0xfff3c7)}))
+            color = 0xfff3c7,
+            shadow = true
+        }))
         :onButtonClicked(function(event)
             if widget:GetCurrentTab() == "build" then
                 UIKit:newGameUI('GameUIHasBeenBuild', City):addToCurrentScene(true)
@@ -316,7 +317,7 @@ function WidgetEventTabButtons:CreateOpenItem()
                 UIKit:newGameUI('GameUIToolShop', City, self.toolShop):addToCurrentScene(true)
             end
         end)
-
+    button:scale(0.8)
 
 
     function node:SetLabel(str)
@@ -638,9 +639,9 @@ function WidgetEventTabButtons:SetUpgradeBuilidingBtnLabel(building,event_item)
         event_item.status = "freeSpeedup"
     else
         -- 未加入联盟或者已经申请过联盟加速
-        if Alliance_Manager:GetMyAlliance():IsDefault() or 
-        Alliance_Manager:GetMyAlliance()
-            :IsBuildingHasBeenRequestedToHelpSpeedup(building:UniqueUpgradingKey()) then
+        if Alliance_Manager:GetMyAlliance():IsDefault() or
+            Alliance_Manager:GetMyAlliance()
+                :IsBuildingHasBeenRequestedToHelpSpeedup(building:UniqueUpgradingKey()) then
             btn_label = _("加速")
             btn_images = {normal = "green_btn_up_142x39.png",
                 pressed = "green_btn_down_142x39.png",
@@ -766,3 +767,4 @@ function WidgetEventTabButtons:MaterialDescribe(event)
 end
 
 return WidgetEventTabButtons
+
