@@ -15,6 +15,9 @@ function AllianceObject:GetAllianceBuildingInfo()
     return self.alliance_map:FindAllianceBuildingInfoByObjects(self)
 end
 function AllianceObject:GetCategory()
+    if self:GetType() == "none" then
+        return "none"
+    end
     return allianceBuildingType[self:GetType()].category
 end
 function AllianceObject:Id()

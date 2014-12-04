@@ -7,7 +7,6 @@ local AllianceScene = import(".AllianceScene")
 local EnemyAllianceScene = class("EnemyAllianceScene", AllianceScene)
 local GameUIAllianceEnter = import("..ui.GameUIAllianceEnter")
 local REQUEST_SERVER_TIME = 30
-local Enum = import("..utils.Enum")
 
 function EnemyAllianceScene:ctor(alliance,mode)
 	self.alliance_ = alliance
@@ -18,11 +17,19 @@ function EnemyAllianceScene:ctor(alliance,mode)
 end
 
 function EnemyAllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
-
+  
 	local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
         if building:GetEntity():GetType() ~= "building" then
-            UIKit:newGameUI('GameUIAllianceEnter',self:GetAlliance(),building:GetEntity(),self:GetMode()):addToCurrentScene(true)
+            if self:GetMode() == GameUIAllianceEnter.MODE.Enemy then
+                if building:GetEntity():GetCategory() == "member" or building:GetEntity():GetCategory() == "village" then
+                    UIKit:newGameUI('GameUIAllianceEnter',self:GetAlliance(),building:GetEntity(),self:GetMode()):addToCurrentScene(true)
+                end
+            else
+                if building:GetEntity():GetCategory() == "member" then
+                    UIKit:newGameUI('GameUIAllianceEnter',self:GetAlliance(),building:GetEntity(),self:GetMode()):addToCurrentScene(true)
+                end
+            end
         else
             local building_info = building:GetEntity():GetAllianceBuildingInfo()
             print("index x y ",x,y,building_info.name)

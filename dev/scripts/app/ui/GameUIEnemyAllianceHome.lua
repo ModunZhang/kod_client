@@ -8,7 +8,9 @@ local window = import("..utils.window")
 local Alliance = import("..entity.Alliance")
 local Flag = import("..entity.Flag")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
+local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
+
 
 
 function GameUIEnemyAllianceHome:onEnter()
@@ -243,6 +245,10 @@ function GameUIEnemyAllianceHome:OnBasicChanged(alliance,changed_map)
                 :AddToCurrentScene()
         end
     end
+end
+
+function GameUIEnemyAllianceHome:AddMapChangeButton()
+    local map_node = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.ENEMY_ALLIANCE):addTo(self)
 end
 
 return GameUIEnemyAllianceHome

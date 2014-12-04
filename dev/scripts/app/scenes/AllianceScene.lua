@@ -26,11 +26,14 @@ function AllianceScene:onEnter()
 end
 
 function AllianceScene:CreateAllianceUI()
-    local home = UIKit:newGameUI('GameUIAllianceHome',Alliance_Manager:GetMyAlliance()):addToScene(self)
-    self:GetSceneLayer():AddObserver(home)
-    home:setTouchSwallowEnabled(false)
+    local home_page = UIKit:newGameUI('GameUIAllianceHome',Alliance_Manager:GetMyAlliance()):addToScene(self)
+    self:GetSceneLayer():AddObserver(home_page)
+    home_page:setTouchSwallowEnabled(false)
+    self.home_page = home_page
 end
-
+function AllianceScene:GetHomePage()
+    return self.home_page
+end
 function AllianceScene:GetAlliance()
     return Alliance_Manager:GetMyAlliance()
 end

@@ -36,7 +36,7 @@ function GameUIWarehouse:onEnter()
         else
             self.resource_layer:setVisible(false)
         end
-    end):pos(display.cx, display.top - 920)
+    end):pos(display.cx, display.top - 924)
     self:CreateResourceListView()
     self:InitAllResources()
     self.city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)

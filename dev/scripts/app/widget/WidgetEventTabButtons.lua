@@ -3,9 +3,9 @@ local cocos_promise = import("..utils.cocos_promise")
 local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTab = import(".WidgetTab")
-local WIDGET_WIDTH = 491
+local WIDGET_WIDTH = 492
 local WIDGET_HEIGHT = 300
-local TAB_HEIGHT = 47
+local TAB_HEIGHT = 48
 local WidgetEventTabButtons = class("WidgetEventTabButtons", function()
     local rect = cc.rect(0, 0, WIDGET_WIDTH, WIDGET_HEIGHT + TAB_HEIGHT)
     local node = display.newClippingRegionNode(rect)
@@ -129,6 +129,22 @@ function WidgetEventTabButtons:ctor(city)
 
     self.toolShop = city:GetFirstBuildingByType("toolShop")
     self.toolShop:AddToolShopListener(self)
+    -- 事件框下半部分,不计入裁剪区域
+    -- display.newSprite("back_ground_492X14.png"):addTo(node):pos(0,0)
+
+
+    -- self:InitAnimation()
+    -- self.event_queue = {}
+    -- -- 事件队列
+    -- self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function()
+    --     local queue = self.event_queue
+    --     if #queue > 0 and not self:IsInAnimation() then
+    --         local func = queue[1]
+    --         func()
+    --         table.remove(queue, 1)
+    --     end
+    -- end)
+    -- self:scheduleUpdate()
 end
 function WidgetEventTabButtons:onExit()
     self.toolShop:RemoveToolShopListener(self)
@@ -150,22 +166,23 @@ function WidgetEventTabButtons:CreateTabButtons()
         { "build", "build_39x38.png" },
     }
     local tab_map = {}
-    local unit_width = 111
+    local unit_width = 106
     local origin_x = unit_width * 4
     for i, v in ipairs(icon_map) do
         local tab_type = v[1]
         local tab_png = v[2]
         tab_map[tab_type] = WidgetTab.new({
-            on = "tab_button_down_111x47.png",
-            off = "tab_button_up_111x47.png",
+            on = "tab_button_down_112x48.png",
+            off = "tab_button_up_112x48.png",
             tab = tab_png
         }, unit_width, TAB_HEIGHT)
-            :addTo(node):align(display.LEFT_BOTTOM,origin_x + (i - 5) * unit_width, 0)
+            :addTo(node):align(display.LEFT_BOTTOM,origin_x + (i - 5) * unit_width, -2)
             :OnTabPress(handler(self, self.OnTabClicked))
+        -- tab_map[tab_type]:scale(110/112)
     end
-    local btn = cc.ui.UIPushButton.new({normal = "hide_btn_up_48x47.png",
-        pressed = "hide_btn_down_48x47.png"}):addTo(node)
-        :align(display.LEFT_BOTTOM, 111*4, 0)
+    local btn = cc.ui.UIPushButton.new({normal = "hide_btn_up_50x48.png",
+        pressed = "hide_btn_down_50x48.png"}):addTo(node)
+        :align(display.LEFT_BOTTOM, unit_width*4, -2)
         :onButtonClicked(function(event)
             if not self:IsShow() then
                 self:PromiseOfShow()
@@ -177,8 +194,8 @@ function WidgetEventTabButtons:CreateTabButtons()
     return node, tab_map
 end
 function WidgetEventTabButtons:CreateBackGround()
-    return cc.ui.UIImage.new("back_ground_491x105.png", {scale9 = true,
-        capInsets = cc.rect(10, 10, WIDGET_WIDTH - 20, 105 - 20)
+    return cc.ui.UIImage.new("back_ground_492X100.png", {scale9 = true,
+        capInsets = cc.rect(10, 10, WIDGET_WIDTH , 105 - 20)
     }):align(display.LEFT_BOTTOM):setLayoutSize(WIDGET_WIDTH, 50)
 end
 function WidgetEventTabButtons:CreateItem()
@@ -188,7 +205,7 @@ function WidgetEventTabButtons:CreateBottom()
     return self:CreateOpenItem():align(display.LEFT_CENTER)
 end
 function WidgetEventTabButtons:CreateProgressItem()
-    local progress = display.newProgressTimer("progress_338x43.png", display.PROGRESS_TIMER_BAR)
+    local progress = display.newProgressTimer("progress_blue_340x46.png", display.PROGRESS_TIMER_BAR)
     progress:setBarChangeRate(cc.p(1,0))
     progress:setMidpoint(cc.p(0,0))
     progress:setPercentage(100)
@@ -208,7 +225,7 @@ function WidgetEventTabButtons:CreateProgressItem()
     ,{
         disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
     }):addTo(progress)
-        :align(display.LEFT_CENTER, 340, 43/2)
+        :align(display.RIGHT_CENTER, 464, 43/2)
         :setButtonLabel(cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("加速"),
@@ -217,9 +234,9 @@ function WidgetEventTabButtons:CreateProgressItem()
             color = UIKit:hex2c3b(0xfff3c7)}))
         :onButtonClicked(function(event)
             end)
-
+    btn:scale(120/142)
     cc.ui.UIImage.new("divide_line_489x2.png"):addTo(progress)
-        :align(display.LEFT_BOTTOM, -4, -5)
+        :align(display.LEFT_BOTTOM, -4, -5):setScaleX(0.96)
 
 
     function progress:SetProgressInfo(str, percent)
@@ -274,7 +291,6 @@ function WidgetEventTabButtons:CreateOpenItem()
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xd1ca95)}):addTo(node):align(display.LEFT_CENTER, 10, 0)
 
-
     local button = WidgetPushButton.new({normal = "blue_btn_up_142x39.png",
         pressed = "blue_btn_down_142x39.png",
         disabled = "blue_btn_up_142x39.png"
@@ -283,13 +299,13 @@ function WidgetEventTabButtons:CreateOpenItem()
     ,{
         disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
     }):addTo(node)
-        :align(display.LEFT_CENTER, 340, 0)
-        :setButtonLabel(cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        :align(display.RIGHT_CENTER, 464, 0)
+        :setButtonLabel(UIKit:ttfLabel({
             text = _("打开"),
             size = 18,
-            font = UIKit:getFontFilePath(),
-            color = UIKit:hex2c3b(0xfff3c7)}))
+            color = 0xfff3c7,
+            shadow = true
+        }))
         :onButtonClicked(function(event)
             if widget:GetCurrentTab() == "build" then
                 UIKit:newGameUI('GameUIHasBeenBuild', City):addToCurrentScene(true)
@@ -299,7 +315,7 @@ function WidgetEventTabButtons:CreateOpenItem()
                 UIKit:newGameUI('GameUIToolShop', City, self.toolShop):addToCurrentScene(true)
             end
         end)
-
+    button:scale(120/142)
 
 
     function node:SetLabel(str)
@@ -643,14 +659,4 @@ function WidgetEventTabButtons:MaterialDescribe(event)
 end
 
 return WidgetEventTabButtons
-
-
-
-
-
-
-
-
-
-
 

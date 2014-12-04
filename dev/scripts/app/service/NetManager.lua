@@ -488,8 +488,7 @@ function NetManager:getLoginPromise()
         if gaozhou then
             device_id = "b"
         else
-            -- device_id = device.getOpenUDID()
-            device_id = "aj1"
+            device_id = device.getOpenUDID()
         end
     else
         device_id = device.getOpenUDID()
@@ -1093,7 +1092,12 @@ function NetManager:getSearchAllianceInfoByTagPromise(tag)
         {tag=tag},
         "根据Tag搜索联盟战斗数据失败!"),get_searchallianceinfobytag_callback()):next(get_response_msg)
 end
-
+--突袭玩家城市
+function NetManager:getStrikePlayerCityPromise(dragonType,enemyPlayerId)
+    return promise.all(get_none_blocking_request_promise("logic.allianceHandler.strikePlayerCity",
+        {dragonType=dragonType,enemyPlayerId=enemyPlayerId},
+        "突袭玩家城市失败!"),get_playerdata_callback()):next(get_response_msg)
+end
 --
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

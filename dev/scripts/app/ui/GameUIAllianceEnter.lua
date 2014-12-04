@@ -394,13 +394,86 @@ function GameUIAllianceEnter:InitConfig()
 
             }
         },
+    },    
+    --村落
+    village = {
+        height = 311,
+        title = "xxx村落",
+        building_image = "woodcutter_1_342x250.png",
+        building_desc = "none",
+        building_info = {
+            {
+                {_("坐标"),0x797154},
+                {_("11,11"),0x403c2f},
+            },
+            {
+                {_("占领者"),0x797154},
+                {_("11,11"),0x403c2f},
+            },
+            {
+                {_("力量"),0x797154},
+                {_("11,11"),0x403c2f},
+            },
+        },
+        enter_buttons = {
+            Normal = 
+            {
+                 {
+                    img = "Strike_72x72.png",
+                    title = _("突袭"),
+                    func = function (building)
+                        if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
+                            local playerId = building.player:Id()
+
+                        end
+                    end
+                },
+                {
+                    img = "village_capture_66x72.png",
+                    title = _("占领"),
+                    func = function (building)
+                        if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
+                            local playerId = building.player:Id()
+
+                        end
+                    end
+                }
+            },
+            Enemy = 
+            {
+                {
+                    img = "Strike_72x72.png",
+                    title = _("突袭"),
+                    func = function (building)
+                        if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
+                            local playerId = building.player:Id()
+                            UIKit:newGameUI("GameUIStrikePlayer",playerId):addToCurrentScene(true)
+                        end
+                    end
+                },
+                {
+                    img = "attack_80x66.png",
+                    title = _("摧毁"),
+                    func = function (building)
+                        if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
+                            local playerId = building.player:Id()
+                            UIKit:newGameUI("GameUIStrikePlayer",playerId):addToCurrentScene(true)
+                        end
+                    end
+                }
+            },
+            Watch = 
+            {
+
+            }
+        },
     },
     --玩家城市
     member = {
         height = 311,
         title = _("空地"),
         building_image = "keep_760x855.png",
-        building_desc = _("联盟将军可将联盟建筑移动到空地,玩家可将自己的城市移动到空地处,空地定期刷新放逐者的村落,树木,山脉和湖泊"),
+        building_desc = "none",
         building_info = {
             {
                 {_("坐标"),0x797154},
@@ -463,14 +536,19 @@ function GameUIAllianceEnter:InitConfig()
                     img = "attack_80x66.png",
                     title = _("进攻"),
                     func = function (building)
-                        UIKit:newGameUI("GameUIAttackPlayerCity"):addToCurrentScene(true)
+                        if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
+                            UIKit:newGameUI("GameUIAttackPlayerCity"):addToCurrentScene(true)
+                        end
                     end
                 },
                 {
                     img = "Strike_72x72.png",
                     title = _("突袭"),
                     func = function (building)
-                        UIKit:newGameUI("GameUIStrikePlayer"):addToCurrentScene(true)
+                        if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
+                            local playerId = building.player:Id()
+                            UIKit:newGameUI("GameUIStrikePlayer",playerId):addToCurrentScene(true)
+                        end
                     end
                 },
                 {
@@ -641,6 +719,20 @@ function GameUIAllianceEnter:InitBuildingDese()
         local bg = display.newSprite("back_ground_43x43.png"):addTo(self.desc_label):pos(10,18)
         display.newSprite("wall_36x41.png"):addTo(bg):pos(21,21)
         local str = self:GetBuilding().player:WallHp() .. "/" .. config_wall[self:GetBuilding().player:WallLevel()].wallHp
+        UIKit:ttfLabel({
+            size = 20,
+            color = 0xfff3c7,
+            shadow = true,
+            text = str
+        }):align(display.LEFT_CENTER,bg:getPositionX() + 40,bg:getPositionY()):addTo(self.desc_label)
+    elseif building_key == 'village' then
+        self.desc_label = display.newSprite("Progress_bar_1.png"):align(display.LEFT_TOP, 180, p.height-30)
+                :addTo(self.body)
+        self.progressTimer = UIKit:commonProgressTimer("progress_bar_366x34.png"):addTo(self.desc_label):align(display.LEFT_BOTTOM,0,0):scale(386/366)
+        self.progressTimer:setPercentage(100)
+        local bg = display.newSprite("back_ground_43x43.png"):addTo(self.desc_label):pos(10,18)
+        display.newSprite("res_food_114x100.png"):addTo(bg):pos(21,21):scale(0.4)
+        local str = "100/100"
         UIKit:ttfLabel({
             size = 20,
             color = 0xfff3c7,
