@@ -23,11 +23,13 @@ local visible_count = 1
 function GameUIBase:onEnter()
     print("onEnter->")
     -- app:lockInput(false)
-    if home_page then
+
+    local page = home_page or (display.getRunningScene().__cname == "AllianceScene" and display.getRunningScene():GetHomePage())
+    if page then
         print(visible_count)
         visible_count = visible_count - 1
         if visible_count == 0 then
-            home_page:setVisible(false)
+            page:setVisible(false)
         end
     end
 end
@@ -42,11 +44,12 @@ end
 
 function GameUIBase:onExit()
     print("onExit--->")
+    local page = home_page or (display.getRunningScene().__cname == "AllianceScene" and display.getRunningScene():GetHomePage())
     -- app:lockInput(false)
-    if home_page then
+    if page then
         visible_count = visible_count + 1
         if visible_count > 0 then
-            home_page:setVisible(true)
+            page:setVisible(true)
         end
     end
 end

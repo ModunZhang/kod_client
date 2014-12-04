@@ -429,7 +429,7 @@ function GameUIAllianceEnter:InitConfig()
                     end
                 },
                 {
-                    img = "village_ capture_66x72.png",
+                    img = "village_capture_66x72.png",
                     title = _("占领"),
                     func = function (building)
                         if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then

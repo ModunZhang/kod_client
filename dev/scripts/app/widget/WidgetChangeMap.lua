@@ -41,7 +41,7 @@ function WidgetChangeMap:ctor(map_type)
     -- 初始化一个裁剪节点
     local clippingNode = cc.ClippingNode:create(stencil)
         :pos(window.cx-260*scale_x, 90*scale_x)
-    clippingNode:setInverted(false)
+    clippingNode:setInverted(true)
     clippingNode:setAlphaThreshold(0.5)
     clippingNode:scale(scale_x)
     -- 底板
@@ -104,6 +104,7 @@ function WidgetChangeMap:ctor(map_type)
     ):addTo(self)
         :align(display.LEFT_CENTER,window.cx-335*scale_x, 50*scale_x)
         :onButtonClicked(function(event)
+        	dump(event)
             self:Move()
         end)
         :scale(scale_x)
@@ -149,7 +150,6 @@ function WidgetChangeMap:SetMapType( map_type )
                 dialog:SetPopMessage("未加入联盟!")
                 return
             end
-            print("我方领地")
             self.map_frame:setPositionY(179)
             self:Retraction()
 
