@@ -1,7 +1,9 @@
+local promise = import("..utils.promise")
 local window = import("..utils.window")
 local WidgetTab = import("..widget.WidgetTab")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
+local Arrow = import(".Arrow")
 local GameUIHelp = import(".GameUIHelp")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
@@ -289,7 +291,7 @@ function GameUIHome:CreateBottom()
     end):addTo(chat_bg):pos(31, 20)
 
 
-    local event = WidgetEventTabButtons.new(self.city)
+    self.event_tab = WidgetEventTabButtons.new(self.city)
         :addTo(bottom_bg):pos(bottom_bg:getContentSize().width - 491, bottom_bg:getContentSize().height + 50)
 
 
@@ -398,7 +400,7 @@ function GameUIHome:CreateBottom()
             end
         end
     end):addTo(self):pos(display.cx+280, display.top-560)
-        
+
     return bottom_bg
 end
 
@@ -414,7 +416,50 @@ function GameUIHome:OnBottomButtonClicked(event)
     end
 end
 
+function GameUIHome:FTE_FreeSpeedUpFirst()
+    self.tutorial_layer = self:CreateTutorialLayer()
+    local arrow
+    return self.event_tab:PromiseOfShowTab("build"):next(function()
+        return self:FindFirstItem()
+    end):next(function(item)
+        local btn = item:GetSpeedUpButton()
+        arrow = Arrow.new():addTo(self:GetTutorialLayer())
+        local rect = btn:getCascadeBoundingBox()
+        arrow:OnPositionChanged(rect.x, rect.y)
+        self:GetTutorialLayer():Enable():SetTouchObject(btn)
+        return item
+    end):next(function(item)
+        local house_type = string.split(item:GetEventKey(), "_")[1]
+        return self.city:PromiseOfFinishUpgradingByLevel(house_type)
+    end):next(function()
+        self.tutorial_layer:removeFromParent()
+        self.tutorial_layer = nil
+    end)
+end
+function GameUIHome:GetTutorialLayer()
+    return self.tutorial_layer
+end
+function GameUIHome:FindFirstItem()
+    local item
+    self.event_tab:IteratorAllItem(function(_, v)
+        item = v
+        return true
+    end)
+    return promise.new(function(item)
+        if not item then
+            promise.reject("没有找到对应item", building_type)
+        end
+        return item
+    end):resolve(item)
+end
+
 return GameUIHome
+
+
+
+
+
+
 
 
 

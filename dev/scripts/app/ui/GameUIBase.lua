@@ -17,19 +17,12 @@ function GameUIBase:ctor()
     return true
 end
 
-local visible_count = 1
+-- local visible_count = 1
 -- Node Event
 --------------------------------------
 function GameUIBase:onEnter()
     print("onEnter->")
     -- app:lockInput(false)
-    if home_page then
-        print(visible_count)
-        visible_count = visible_count - 1
-        if visible_count == 0 then
-            home_page.bottom:setVisible(false)
-        end
-    end
 end
 
 function GameUIBase:onEnterTransitionFinish()
@@ -43,12 +36,6 @@ end
 function GameUIBase:onExit()
     print("onExit--->")
     -- app:lockInput(false)
-    if home_page then
-        visible_count = visible_count + 1
-        if visible_count > 0 then
-            home_page.bottom:setVisible(true)
-        end
-    end
 end
 
 
@@ -65,7 +52,7 @@ function GameUIBase:rightButtonClicked()
 end
 
 function GameUIBase:onMoveInStage()
-    -- app:lockInput(false)
+-- app:lockInput(false)
 end
 
 function GameUIBase:onMoveOutStage()
@@ -81,7 +68,7 @@ function GameUIBase:leftButtonClicked()
         if self.moveInAnima then
             self:UIAnimationMoveOut()
         else
-            self:onMoveOutStage() -- fix 
+            self:onMoveOutStage() -- fix
         end
     end
 end
@@ -226,10 +213,85 @@ function GameUIBase:CreateVerticalListViewDetached(left_bottom_x, left_bottom_y,
     }
 end
 function GameUIBase:CreatePopupBg(height)
-   return WidgetUIBackGround.new({height=height})
+    return WidgetUIBackGround.new({height=height})
+end
+function GameUIBase:CreateTutorialLayer()
+    local node = display.newNode():addTo(self, 3000)
+    local left = display.newColorLayer(cc.c4b(255, 0, 0, 50)):addTo(node, 0)
+    local right = display.newColorLayer(cc.c4b(255, 0, 0, 50)):addTo(node, 0)
+    local top = display.newColorLayer(cc.c4b(255, 0, 0, 50)):addTo(node, 0)
+    local bottom = display.newColorLayer(cc.c4b(255, 0, 0, 50)):addTo(node, 0)
+    -- local left = display.newLayer():addTo(node, 0)
+    -- local right = display.newLayer():addTo(node, 0)
+    -- local top = display.newLayer():addTo(node, 0)
+    -- local bottom = display.newLayer():addTo(node, 0)
+    for _, v in pairs{ left, right, top, bottom } do
+        v:setContentSize(cc.size(display.width, display.height))
+        v:setTouchEnabled(true)
+    end
+    local count = 0
+    function node:Enable()
+        count = count + 1
+        if count > 0 then
+            for _, v in pairs{ left, right, top, bottom } do
+                v:setTouchEnabled(true)
+            end
+        end
+        return self
+    end
+    function node:Disable()
+        count = count - 1
+        if count <= 0 then
+            for _, v in pairs{ left, right, top, bottom } do
+                v:setTouchEnabled(false)
+            end
+        end
+        return self
+    end
+    function node:Reset()
+        count = 0
+        for _, v in pairs{ left, right, top, bottom } do
+            v:setTouchEnabled(false)
+        end
+        self.object = nil
+        self.world_rect = nil
+        return self
+    end
+    function node:SetTouchObject(obj)
+        self.object = obj
+        self:UpdateClickedRegion(self:GetClickedRect())
+        return self
+    end
+    function node:SetTouchRect(world_rect)
+        self.world_rect = world_rect
+        return self
+    end
+    function node:UpdateClickedRegion(rect)
+        left:pos(rect.x - display.width, 0)
+        right:pos(rect.x + rect.width, 0)
+        top:pos(0, rect.y + rect.height)
+        bottom:pos(0, rect.y - display.height)
+    end
+    function node:GetClickedRect()
+        if self.world_rect then
+            return self.world_rect
+        elseif self.object then
+            return self.object:getCascadeBoundingBox()
+        else
+            return cc.rect(0, 0, display.width, display.height)
+        end
+    end
+    return node:Reset()
 end
 
 return GameUIBase
+
+
+
+
+
+
+
 
 
 

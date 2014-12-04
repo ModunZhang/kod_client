@@ -12,6 +12,7 @@ local CitizenSprite = import("..sprites.CitizenSprite")
 local SoldierSprite = import("..sprites.SoldierSprite")
 local HelpedTroopsSprite = import("..sprites.HelpedTroopsSprite")
 local SoldierManager = import("..entity.SoldierManager")
+local promise = import("..utils.promise")
 local Observer = import("..entity.Observer")
 local MapLayer = import(".MapLayer")
 local CityLayer = class("CityLayer", MapLayer)
@@ -591,7 +592,7 @@ function CityLayer:InitWithCity(city)
     --             local cur = r[index]
     --             if cur:IsNearBy(v) then
     --                 -- 进一步确定是y方向上面的邻居，就要继续检出双方下面是否还有解锁的块
-    --                 -- 
+    --                 --
     --                 if cur.y ~= v.y then
     --                     local cur_next = city:GetTileByIndex(cur.x + 1, cur.y)
     --                     local v_next = city:GetTileByIndex(v.x + 1, v.y)
@@ -834,6 +835,23 @@ function CityLayer:UpdateHelpedByTroopsVisible(helped_by_troops)
         v:setVisible(helped_by_troops[i] ~= nil)
     end
 end
+-- promise
+function CityLayer:FindBuildingBy(x, y)
+    local building
+    self:IteratorClickAble(function(_, ruin)
+        local x_, y_ = ruin:GetLogicPosition()
+        if x_ == x and y_ == y then
+            building = ruin
+            return true
+        end
+    end)
+    return promise.new(function(building)
+            if not building then
+                promise.reject("没有找到对应坐标的建筑", {x = x, y = y})
+            end
+            return building
+        end):resolve(building)
+end
 function CityLayer:IteratorFunctionsBuildings(func)
     table.foreach(self.buildings, func)
 end
@@ -906,6 +924,9 @@ function CityLayer:IteratorClickAble(func)
         table.foreach(self.ruins, handle_func)
         if handle then break end
     until true
+end
+function CityLayer:IteratorRuins(func)
+    table.foreach(self.ruins, func)
 end
 function CityLayer:CreateRoadWithTile(tile)
     local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
@@ -991,15 +1012,15 @@ function CityLayer:getContentSize()
     end
     return self.content_size
 end
+local function on_move(_, sprite)
+    sprite:OnSceneMove()
+end
 function CityLayer:OnSceneMove()
-    self:IteratorCanUpgradingBuilding(function(_, building)
-        building:OnSceneMove()
-    end)
-    table.foreach(self.trees, function(k, v)
-        v:OnSceneMove()
-    end)
+    self:IteratorCanUpgradingBuilding(on_move)
+    table.foreach(self.trees, on_move)
+    table.foreach(self.ruins, on_move)
     if self.road then
-        self.road:OnSceneMove()
+        on_move(nil, self.road)
     end
 end
 function CityLayer:OnSceneScale()
@@ -1007,6 +1028,8 @@ function CityLayer:OnSceneScale()
 end
 
 return CityLayer
+
+
 
 
 

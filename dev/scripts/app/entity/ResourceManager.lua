@@ -100,7 +100,7 @@ function ResourceManager:OnResourceChanged()
         listener:OnResourceChanged(self)
     end)
 end
-function ResourceManager:OnBuildingChangedFromCity(city, current_time, building)
+function ResourceManager:OnBuildingChangedFromCity(city, current_time)
     local citizen_map = {
         [WOOD] = 0,
         [FOOD] = 0,

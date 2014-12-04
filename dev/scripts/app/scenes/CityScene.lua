@@ -28,6 +28,7 @@ function CityScene:onEnter()
     self:PlayBackgroundMusic()
     self:GotoLogicPoint(6, 4)
     self:GetSceneLayer():ZoomTo(0.7)
+
     -- local ai_create_house_array = {
     --     "woodcutter",
     --     "quarrier",
@@ -204,6 +205,51 @@ end
 function CityScene:ChangeTerrain(terrain_type)
     self:GetSceneLayer():ChangeTerrain(terrain_type)
 end
+function CityScene:CreateArrowLayer()
+    local arrow_layer = display.newLayer():addTo(self, 2)
+    arrow_layer:setTouchSwallowEnabled(false)
+    return arrow_layer
+end
+function CityScene:CreateTutorialLayer()
+    local layer = display.newLayer():addTo(self, 2000)
+    layer:setTouchSwallowEnabled(true)
+    layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        local touch_judgment = self.touch_judgment
+        if touch_judgment then
+            local touch_type, pre_x, pre_y, x, y = event.name, event.prevX, event.prevY, event.x, event.y
+            if touch_type == "began" then
+                touch_judgment:OnTouchBegan(pre_x, pre_y, x, y)
+                return true
+            elseif touch_type == "moved" then
+            -- touch_judgment:OnTouchMove(pre_x, pre_y, x, y)
+            elseif touch_type == "ended" then
+                touch_judgment:OnTouchEnd(pre_x, pre_y, x, y)
+            elseif touch_type == "cancelled" then
+                touch_judgment:OnTouchCancelled(pre_x, pre_y, x, y)
+            end
+        end
+        return true
+    end)
+    local count = 0
+    function layer:Enable()
+        count = count + 1
+        if count > 0 then
+            layer:setTouchEnabled(true)
+        end
+    end
+    function layer:Disable()
+        count = count - 1
+        if count <= 0 then
+            layer:setTouchEnabled(false)
+        end
+    end
+    function layer:Reset()
+        count = 0
+        layer:setTouchEnabled(false)
+        return self
+    end
+    return layer:Reset()
+end
 --- callback override
 function CityScene:OnCreateDecoratorSprite(building_sprite)
 end
@@ -271,6 +317,7 @@ end
 
 
 return CityScene
+
 
 
 

@@ -48,13 +48,29 @@ local function promiseFilterNetError(p,need_catch)
     end)
 end
 
+local function promiseOfMoveTo(node, x, y, time, easing)
+    local p = promise.new()
+    transition.moveTo(node, {
+        x = x, y = y, time = time or 0, easing = easing,
+        onComplete = function()
+            p:resolve(node)
+        end
+    })
+    return p
+end
+
 return {
     delay = delay,
     timeOut = timeOut,
     promiseWithTimeOut = promiseWithTimeOut,
     promiseWithCatchError = promiseWithCatchError,
     promiseFilterNetError = promiseFilterNetError,
+    promiseOfMoveTo = promiseOfMoveTo,
 }
+
+
+
+
 
 
 
