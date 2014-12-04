@@ -332,12 +332,10 @@ function GameUIHome:CreateBottom()
     end
     pv:reload()
 
-    -- 事件框下半部分
-    display.newSprite("back_ground_492X14.png"):addTo(self):pos(458, window.bottom+146)
-
+   
 
     local event = WidgetEventTabButtons.new(self.city)
-        :addTo(self):pos(window.right - 480, window.bottom+150)
+        :addTo(self):pos(window.cx - 154, display.bottom+150)
 
 
     -- 底部按钮

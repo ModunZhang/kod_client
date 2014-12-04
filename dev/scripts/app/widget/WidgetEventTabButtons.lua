@@ -135,6 +135,10 @@ function WidgetEventTabButtons:ctor(city)
     self.toolShop = city:GetFirstBuildingByType("toolShop")
     self.toolShop:AddToolShopListener(self)
 
+    -- 事件框下半部分,不计入裁剪区域
+    -- display.newSprite("back_ground_492X14.png"):addTo(node):pos(0,0)
+
+
     -- self:InitAnimation()
     -- self.event_queue = {}
     -- -- 事件队列
@@ -209,7 +213,7 @@ function WidgetEventTabButtons:CreateBottom()
     return self:CreateOpenItem():align(display.LEFT_CENTER)
 end
 function WidgetEventTabButtons:CreateProgressItem()
-    local progress = display.newProgressTimer("progress_338x43.png", display.PROGRESS_TIMER_BAR)
+    local progress = display.newProgressTimer("progress_blue_340x46.png", display.PROGRESS_TIMER_BAR)
     progress:setBarChangeRate(cc.p(1,0))
     progress:setMidpoint(cc.p(0,0))
     progress:setPercentage(100)
@@ -229,7 +233,7 @@ function WidgetEventTabButtons:CreateProgressItem()
     ,{
         disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
     }):addTo(progress)
-        :align(display.LEFT_CENTER, 340, 43/2)
+        :align(display.RIGHT_CENTER, 464, 43/2)
         :setButtonLabel(cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("加速"),
@@ -238,7 +242,7 @@ function WidgetEventTabButtons:CreateProgressItem()
             color = UIKit:hex2c3b(0xfff3c7)}))
         :onButtonClicked(function(event)
             end)
-    btn:scale(0.8)
+    btn:scale(120/142)
     cc.ui.UIImage.new("divide_line_489x2.png"):addTo(progress)
         :align(display.LEFT_BOTTOM, -4, -5):setScaleX(0.96)
 
@@ -292,7 +296,6 @@ function WidgetEventTabButtons:CreateOpenItem()
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xd1ca95)}):addTo(node):align(display.LEFT_CENTER, 10, 0)
 
-
     local button = WidgetPushButton.new({normal = "blue_btn_up_142x39.png",
         pressed = "blue_btn_down_142x39.png",
         disabled = "blue_btn_up_142x39.png"
@@ -301,7 +304,7 @@ function WidgetEventTabButtons:CreateOpenItem()
     ,{
         disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
     }):addTo(node)
-        :align(display.LEFT_CENTER, 340, 4)
+        :align(display.RIGHT_CENTER, 464, 0)
         :setButtonLabel(UIKit:ttfLabel({
             text = _("打开"),
             size = 18,
@@ -317,7 +320,7 @@ function WidgetEventTabButtons:CreateOpenItem()
                 UIKit:newGameUI('GameUIToolShop', City, self.toolShop):addToCurrentScene(true)
             end
         end)
-    button:scale(0.8)
+    button:scale(120/142)
 
 
     function node:SetLabel(str)
