@@ -7,7 +7,7 @@ local GameUISplash = UIKit:createUIClass('GameUISplash')
 local UILib = import(".UILib")
 local RandomMapUtil = class("RandomMapUtil")
 local Enum = import("..utils.Enum")
-RandomMapUtil.TILE_TYPE = Enum("BIG_MOUNTAIN","ALLIANCE_BUILDING","BIG_LAKE","SMALL_MOUNTAIN","SMALL_LAKE","PLAYER_CITY","TREE")
+RandomMapUtil.TILE_TYPE = Enum("BIG_MOUNTAIN","ALLIANCE_BUILDING","BIG_LAKE","SMALL_MOUNTAIN","SMALL_LAKE","PLAYER_CITY","TREE","FIGHT","WATCHER")
 
 function RandomMapUtil:ctor()
     self.width = 12
@@ -15,6 +15,7 @@ function RandomMapUtil:ctor()
     self.alliance_decorator_map = {
         {width = 3, height = 3},
         {width = 2, height = 2},
+        {width = 2, height = 1},
         {width = 1, height = 1},
     }
     self.rects = {}
@@ -131,14 +132,14 @@ function RandomMapUtil:Random()
     self:mark_map_with_rect(map, {w = 16, h = 2, x = 16, y = 9})
     local rects = {}
     local random_map = self:get_index_from_map(map)
-    local r_3_1 = math.floor(math.random() * 100000) % 3 
+    local r_3_1 = math.floor(math.random() * 100000) % 2 + 1 
     --大山
     self:randomRect(map,rects,random_map,1,RandomMapUtil.TILE_TYPE.BIG_MOUNTAIN,r_3_1,true)
-    local r_3_2 = math.floor(math.random() * 100000) % 3
+    local r_3_2 = math.floor(math.random() * 100000) % 2 + 1
     --联盟建筑
     self:randomRect(map,rects,random_map,1,RandomMapUtil.TILE_TYPE.ALLIANCE_BUILDING,r_3_2)
     -- 大湖
-    local r_3_3 = math.floor(math.random() * 100000) % 3
+    local r_3_3 = math.floor(math.random() * 100000) % 2 + 1
     self:randomRect(map,rects,random_map,1,RandomMapUtil.TILE_TYPE.BIG_LAKE,r_3_3,true)
     --小山
     local r_2_1 = math.floor(math.random() * 100000 % 5 + 2)
@@ -147,9 +148,15 @@ function RandomMapUtil:Random()
     local r_2_2 = math.floor(math.random() * 100000 % 5 + 2)
     self:randomRect(map,rects,random_map,2,RandomMapUtil.TILE_TYPE.SMALL_LAKE,r_2_2,true)
     --城市
-    local r_1_1 = math.floor(math.random() * 100000) % 5
-    self:randomRect(map,rects,random_map,3,RandomMapUtil.TILE_TYPE.PLAYER_CITY,r_1_1)
-    self:randomRect(map,rects,random_map,3,RandomMapUtil.TILE_TYPE.TREE,20)
+    -- local r_1_1 = math.floor(math.random() * 100000) % 5
+    --战斗士兵
+    local fight_count = math.floor(math.random() * 100000) % 3 + 2 
+    self:randomRect(map,rects,random_map,3,RandomMapUtil.TILE_TYPE.FIGHT,fight_count)
+    --玩家城市
+    -- self:randomRect(map,rects,random_map,4,RandomMapUtil.TILE_TYPE.PLAYER_CITY,r_1_1)
+    --打望的
+    self:randomRect(map,rects,random_map,4,RandomMapUtil.TILE_TYPE.WATCHER,1)
+    self:randomRect(map,rects,random_map,4,RandomMapUtil.TILE_TYPE.TREE,20)
     self.rects = rects
     if CONFIG_IS_DEBUG then
         print("大山------>",RandomMapUtil.TILE_TYPE.BIG_MOUNTAIN,r_3_1)
@@ -157,8 +164,8 @@ function RandomMapUtil:Random()
         print("大湖------>", RandomMapUtil.TILE_TYPE.BIG_LAKE,r_3_3)
         print("小山------>",RandomMapUtil.TILE_TYPE.SMALL_MOUNTAIN,r_2_1)
         print("小湖------>",RandomMapUtil.TILE_TYPE.SMALL_LAKE,r_2_2)
-        print("城市------>",RandomMapUtil.TILE_TYPE.PLAYER_CITY,r_1_1)
         print("树------>",RandomMapUtil.TILE_TYPE.TREE,20)
+        print("战斗士兵------>",RandomMapUtil.TILE_TYPE.FIGHT,fight_count)
         self:out_put_map(map)
     end
 end
@@ -207,6 +214,14 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 -- GameUISplash
 
+local building_map = {
+    {"palace_421x481.png", 160/481},
+    {"shrine_256x210.png", 160/256},
+    {"shop_268x274.png", 160/274},
+    {"orderHall_277x417.png", 160/417},
+    {"moonGate_200x217.png", 160/217},
+}
+
 local ZORDER = {
     BOTTOM = 0,
     MIDDLE = 1,
@@ -220,8 +235,10 @@ local ZORDER = {
 local MaxZorder = 10000
 local random = math.random
 local timer_val = 20
-
-
+GameUISplash.SOLDIER_2_1_TYPE = Enum("I_VS_I","C_VS_C","C_VS_I")
+GameUISplash.WATCHER_ANIMATE = {
+    {"Cavalry_1_render",80/400}, {"Infantry_1_render",80/336},{"Archer_1_render",80/340},{"Catapult_1_render",80/200}
+}
 local function random_indexes_in_rect(number, rect,perRect)
     local indexes = {}
     local count = 0
@@ -281,7 +298,7 @@ function GameUISplash:onEnter()
     layer_1:runAction(sequence)
 	self:InitSoldiersLayer():addTo(self):zorder(ZORDER.SOLDIER)
     self:InitCloudLayer()
-    self:InitUILayer():addTo(self)
+    self.ui_layer = self:InitUILayer():addTo(self)
     self.handle_ = scheduler.scheduleGlobal(function()
         self:CreateCloudSpriteAnimate()
     end, timer_val/2) 
@@ -316,34 +333,95 @@ function GameUISplash:CreateOneFullLayer()
 	self:InitBottomBackground():addTo(layer, ZORDER.BOTTOM)
 	self:InitMiddleBackground():addTo(layer, ZORDER.MIDDLE)
 	self:InitTopBackground():addTo(layer, ZORDER.TOP)
-    self:InitDecorateBackground():addTo(layer,ZORDER.DECORATE)
+    self:InitDecorateBackground():addTo(layer,ZORDER.DECORATE):pos(0,0)
 	return layer
 end
 
 function GameUISplash:InitDecorateBackground()
     local layer = display.newLayer()
     local map_data = self.random_map_util:GetRects()
+    
     self:BuildDecorateWithiOffset(map_data,layer)
-    map_data = self.random_map_util:GetRects()
     return layer
 end
 
+function GameUISplash:RandomVsSoliders(layer,postion_x,postion_y)
+    -- display.newScale9Sprite("grass_80x80_.png"):size(160,80):align(display.RIGHT_BOTTOM, postion_x,postion_y):addTo(layer)
+    local vs_type = math.floor(math.random() * 100000) % 3 + 1
+    if vs_type == self.SOLDIER_2_1_TYPE.I_VS_I then
+        local infantry_1 = ccs.Armature:create("Infantry_1_render")
+                :align(display.RIGHT_BOTTOM, postion_x - 40 ,postion_y)
+                :addTo(layer)
+                :scale(80/336)
+        infantry_1:getAnimation():play("attack", -1, -1)
+        local infantry_2 = ccs.Armature:create("Infantry_1_render")
+                :align(display.LEFT_BOTTOM, postion_x,postion_y)
+                :addTo(layer)
+        infantry_2:setScaleY(80/336)
+        infantry_2:setScaleX(-80/336)
+        self:performWithDelay(function()
+            infantry_2:getAnimation():play("attack", -1, -1)
+        end, 1)
+    elseif vs_type == self.SOLDIER_2_1_TYPE.C_VS_C then
+        local cavalry_1 = ccs.Armature:create("Cavalry_1_render")
+            :align(display.RIGHT_BOTTOM, postion_x - 40 ,postion_y)
+            :addTo(layer)
+            :scale(80/400)
+        cavalry_1:getAnimation():play("attack", -1, -1)
+        local cavalry_2 = ccs.Armature:create("Cavalry_1_render")
+            :align(display.LEFT_BOTTOM, postion_x,postion_y)
+            :addTo(layer)
+        cavalry_2:setScaleY(80/400)
+        cavalry_2:setScaleX(-80/400)
+        self:performWithDelay(function()
+            cavalry_2:getAnimation():play("attack", -1, -1)
+        end, 1)
+    elseif vs_type == self.SOLDIER_2_1_TYPE.C_VS_I then
+        local cavalry_1 = ccs.Armature:create("Cavalry_1_render")
+            :align(display.RIGHT_BOTTOM, postion_x - 40 ,postion_y)
+            :addTo(layer)
+            :scale(80/400)
+        cavalry_1:getAnimation():play("attack", -1, -1)
+        local infantry_2 = ccs.Armature:create("Infantry_1_render")
+                :align(display.LEFT_BOTTOM, postion_x,postion_y)
+                :addTo(layer)
+        infantry_2:setScaleY(80/336)
+        infantry_2:setScaleX(-80/336)
+        self:performWithDelay(function()
+            infantry_2:getAnimation():play("attack", -1, -1)
+        end, 1)
+    end
+end
+
+function GameUISplash:RandomWatcher(layer,postion_x,postion_y)
+    local index = math.floor(math.random() * 100000) % (#self.WATCHER_ANIMATE) + 1
+    local info = self.WATCHER_ANIMATE[index]
+    local watcher = ccs.Armature:create(info[1])
+            :align(display.RIGHT_BOTTOM, postion_x ,postion_y)
+            :addTo(layer)
+            :scale(info[2])
+    watcher:getAnimation():play("idle_1", -1, -1)
+end
 
 function GameUISplash:BuildDecorateWithiOffset(map_data,layer,offset_x,offset_y)
+    dump(map_data)
     for _,v in ipairs(map_data) do
         local postion_x,postion_y = unpack(self:ConvertToLocalPosition(v.x,v.y))
         postion_x = postion_x + (offset_x or 0)
         postion_y = postion_y + (offset_y or 0)
+        print("postion_x------>",postion_x,postion_y)
+        dump(layer:convertToNodeSpace(cc.p(postion_x,postion_y)))
+        local text  = v.type
+        
         if v.type == RandomMapUtil.TILE_TYPE.PLAYER_CITY then
-            display.newSprite("keep_760x855.png")
-                :align(display.RIGHT_BOTTOM,postion_x,postion_y)
-                :addTo(layer)
-                :scale(80/855)
-        elseif v.type == RandomMapUtil.TILE_TYPE.TREE then      
+            --TODO:城市暂时被丢弃
+        elseif v.type == RandomMapUtil.TILE_TYPE.TREE then   
             display.newSprite(UILib.decorator_image.decorate_tree_1)
                  :align(display.RIGHT_BOTTOM,postion_x,postion_y)
                 :addTo(layer)
                 :scale(80/120)
+        elseif v.type == RandomMapUtil.TILE_TYPE.FIGHT then  
+           self:RandomVsSoliders(layer,postion_x,postion_y)
         elseif v.type == RandomMapUtil.TILE_TYPE.SMALL_LAKE then
             local sp = display.newSprite(UILib.decorator_image.decorate_lake_2)
                 :align(display.RIGHT_BOTTOM,postion_x,postion_y)
@@ -360,6 +438,9 @@ function GameUISplash:BuildDecorateWithiOffset(map_data,layer,offset_x,offset_y)
             if v.flipX then
                 sp:setFlippedX(true)
             end
+        elseif v.type == RandomMapUtil.TILE_TYPE.WATCHER then
+            
+            self:RandomWatcher(layer,postion_x,postion_y)
         elseif v.type == RandomMapUtil.TILE_TYPE.BIG_LAKE then
             local sp = display.newSprite(UILib.decorator_image.decorate_lake_1)
                  :align(display.RIGHT_BOTTOM,postion_x,postion_y)
@@ -369,10 +450,12 @@ function GameUISplash:BuildDecorateWithiOffset(map_data,layer,offset_x,offset_y)
                 sp:setFlippedX(true)
             end
         elseif v.type == RandomMapUtil.TILE_TYPE.ALLIANCE_BUILDING then
-            local sp = display.newSprite("moonGate_200x217.png")
+            local index = math.floor(math.random() * 100000) % (#building_map) + 1 
+            local info = building_map[index]
+            local sp = display.newSprite(info[1])
                 :align(display.RIGHT_BOTTOM,postion_x,postion_y)
                 :addTo(layer)
-                :scale(160/217)
+                :scale(info[2])
         elseif v.type == RandomMapUtil.TILE_TYPE.BIG_MOUNTAIN then
             local sp = display.newSprite(UILib.decorator_image.decorate_mountain_1)
                  :align(display.RIGHT_BOTTOM,postion_x,postion_y)
@@ -381,6 +464,7 @@ function GameUISplash:BuildDecorateWithiOffset(map_data,layer,offset_x,offset_y)
             if v.flipX then
                 sp:setFlippedX(true)
             end
+
         end
      end
 end
@@ -408,7 +492,7 @@ function GameUISplash:InitMiddleBackground()
         "grass2_800x560.png",
         "grass3_800x560.png",
     }
-    local indexes = random_indexes_in_rect(4, cc.rect(0, 0, display.width*2, display.height*2),cc.rect(0,0,800,560))
+    local indexes = random_indexes_in_rect(4, cc.rect(0, 0, display.width*2, display.height),cc.rect(0,0,800,560))
     for i, v in pairs(indexes) do
         local png_index = random(123456789) % 3 + 1
         display.newSprite(png[png_index]):addTo(middle_layer)
@@ -425,7 +509,7 @@ function GameUISplash:InitTopBackground()
         "grass3_400x280.png",
     }
     local top_layer = display.newLayer()
-    local indexes = random_indexes_in_rect(8, cc.rect(0, 0, display.width*2, display.height*2),cc.rect(0,0,400,280))
+    local indexes = random_indexes_in_rect(8, cc.rect(0, 0, display.width*2, display.height),cc.rect(0,0,400,280))
     for i, v in ipairs(indexes) do
         display.newSprite(png[v.png_index]):addTo(top_layer)
             :align(display.LEFT_CENTER,v.x, v.y)
@@ -435,7 +519,7 @@ end
 
 function GameUISplash:InitSoldiersLayer()
 	local soldiers_layer = display.newLayer()
-    --骑兵
+    --骑兵 
     local x,y = unpack(self:ConvertToLocalPosition(6,9))
     local cavalry_1 = ccs.Armature:create("Cavalry_1_render"):addTo(soldiers_layer):pos(x - 40,y + 20 + 20)
     cavalry_1:getAnimation():play("move_2", -1, -1)
@@ -484,7 +568,7 @@ function GameUISplash:InitSoldiersLayer()
 end
 
 function GameUISplash:ConvertToLocalPosition(map_x, map_y)
-    return {map_x * 80,960 - map_y * 80}
+    return {map_x * 80,display.height - map_y * 80}
 end
 
 function GameUISplash:InitUILayer()
@@ -507,7 +591,7 @@ function GameUISplash:InitCloudLayer()
         local sequence = transition.sequence({
             cc.MoveTo:create(time_rand, cc.p(-display.cx, y)),
             cc.CallFunc:create(function()
-                print("sp:removeFromParent....")
+                -- print("sp:removeFromParent....")
                 sp:removeFromParent()
             end),
         })
@@ -523,7 +607,7 @@ function GameUISplash:InitCloudLayer()
          local sequence = transition.sequence({
             cc.MoveTo:create(time_rand, cc.p(-display.cx, y)),
             cc.CallFunc:create(function()
-                print("sp:removeFromParent....")
+                -- print("sp:removeFromParent....")
                 sp:removeFromParent()
             end),
         })
@@ -542,11 +626,10 @@ function GameUISplash:CreateCloudSpriteAnimate()
         local sp = display.newSprite("#Cloud.png"):addTo(self,ZORDER.CLOUD_ANIMATE_LAYER):align(display.LEFT_CENTER,x,y)
         local time_rand = math.floor(math.random() * 100000) % timer_val + timer_val/2
         local opacity_rand = math.floor(math.random() * 100000) % 255
-        print(opacity_rand)
         local sequence = transition.sequence({
             cc.MoveTo:create(time_rand, cc.p(-display.width, y)),
             cc.CallFunc:create(function()
-                print("cloud:removeFromParent....")
+                -- print("cloud:removeFromParent....")
                 sp:removeFromParent()
             end),
         })
@@ -563,7 +646,7 @@ function GameUISplash:CreateCloudSpriteAnimate()
         local sequence = transition.sequence({
             cc.MoveTo:create(time_rand, cc.p(-display.width, y)),
             cc.CallFunc:create(function()
-                print("cloud:removeFromParent....")
+                -- print("cloud:removeFromParent....")
                 sp:removeFromParent()
             end),
         })

@@ -2,29 +2,30 @@
 -- Author: dannyhe
 -- Date: 2014-08-05 20:10:36
 --
-local GameUILogin = UIKit:createUIClass('GameUILogin')
+local GameUILogin = UIKit:createUIClass('GameUILogin','GameUISplash')
 
 function GameUILogin:ctor()
     GameUILogin.super.ctor(self)
-    local bg = display.newScale9Sprite("spalshbg.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(self)
-    bg:size(display.width,bg:getContentSize().height)
-    display.newSprite("gameName.png"):pos(display.cx,display.top-150):addTo(self)
+    -- local bg = display.newScale9Sprite("spalshbg.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(self)
+    -- bg:size(display.width,bg:getContentSize().height)
+    -- display.newSprite("gameName.png"):pos(display.cx,display.top-150):addTo(self)
 end
 
 function GameUILogin:onEnter()
     GameUILogin.super.onEnter(self)
+    assert(self.ui_layer)
     self:createProgressBar()
     self:createTips()
 end
 
 
 function GameUILogin:onMoveInStage()
-    self:proLoad()
+    -- self:proLoad()
 end
 
 -- Private Methods
 function GameUILogin:createProgressBar()
-    local bar = display.newSprite("images/splash_process_bg.png"):addTo(self):pos(display.cx,display.bottom+150)
+    local bar = display.newSprite("images/splash_process_bg.png"):addTo(self.ui_layer):pos(display.cx,display.bottom+150)
     local progressFill = display.newSprite("images/splash_process_color.png")
     local ProgressTimer = cc.ProgressTimer:create(progressFill)
     ProgressTimer:setType(display.PROGRESS_TIMER_BAR)
@@ -47,7 +48,7 @@ function GameUILogin:createProgressBar()
 end
 
 function GameUILogin:createTips()
-    local bgImage = display.newSprite("images/splash_tips_bg.png"):addTo(self):pos(display.cx,display.bottom+100)
+    local bgImage = display.newSprite("images/splash_tips_bg.png"):addTo(self.ui_layer):pos(display.cx,display.bottom+100)
     local label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = _("提示:预留一定的空闲城民,兵营将他们训练成士兵"),
