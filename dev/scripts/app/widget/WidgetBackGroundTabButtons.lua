@@ -56,7 +56,7 @@ function WidgetBackGroundTabButtons:PushButton(tab)
         else
             v:Enable(false)
             v:SetStatus(true)
-            v.label:setColor(UIKit:hex2c3b(0xffffff))
+            v.label:setColor(UIKit:hex2c3b(0x00c0ff))
         end
     end
     self:OnSelectTag(tab.tag)
