@@ -2,8 +2,8 @@
 -- Author: Danny He
 -- Date: 2014-11-13 22:06:58
 --
-local Observer = import(".Observer")
-local ShrineMarchEvent = class("ShrineMarchEvent",Observer)
+local MarchEventBase = import(".MarchEventBase")
+local ShrineMarchEvent = class("ShrineMarchEvent",MarchEventBase)
 local property = import("..utils.property")
 
 function ShrineMarchEvent:OnPropertyChange()
@@ -65,4 +65,10 @@ function ShrineMarchEvent:TargetLocation()
 	return self.targetLocation
 end
 
+function ShrineMarchEvent:GetMarchPlayerInfo(player_id)
+	if self:PlayerData().id == player_id then
+		return self.MARCH_EVENT_WITH_PLAYER.SENDER
+	end
+	return self.MARCH_EVENT_WITH_PLAYER.NOTHING
+end
 return ShrineMarchEvent

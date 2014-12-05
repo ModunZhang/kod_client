@@ -1,10 +1,10 @@
 -- 0 - disable debug info, 1 - less debug info, 2 - verbose debug info
 DEBUG = 2
-DEBUG_FPS = true
+DEBUG_FPS = false
 DEBUG_MEM = false
 
 
-CONFIG_PLAY_AUDIO = false --配置是否播放音效
+CONFIG_PLAY_AUDIO = true --配置是否播放音效
 -- design resolution
 CONFIG_SCREEN_WIDTH = 640
 CONFIG_SCREEN_HEIGHT = 960

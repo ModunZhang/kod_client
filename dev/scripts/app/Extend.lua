@@ -3,13 +3,14 @@ print("加载玩家自定义函数!")
 NOT_HANDLE = function(...) print("net message not handel, please check !") end
 
 local old_ctor = cc.ui.UIPushButton.ctor
-function cc.ui.UIPushButton:ctor(...)
-    old_ctor(self, ...)
+function cc.ui.UIPushButton:ctor(images, options,music_info)
+    old_ctor(self, images, options)
+    music_info = music_info or {down = GameConfig.AUDIO.BUTTON.NORMAL_DOWN,up = GameConfig.AUDIO.BUTTON.NORMAL_UP}
     self:addButtonPressedEventListener(function(event)
-        audio.playSound("audios/ui_button_down.wav")
+        audio.playSound(music_info.down)
     end)
     self:addButtonReleaseEventListener(function(event)
-        audio.playSound("audios/ui_button_up.wav")
+        audio.playSound(music_info.up)
     end)
 end
 

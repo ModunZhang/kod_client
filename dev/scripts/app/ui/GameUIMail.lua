@@ -16,6 +16,7 @@ local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local GameUIMail = class('GameUIMail', GameUIBase)
 
 GameUIMail.ONE_TIME_LOADING_MAILS = 10
+GameUIMail.ONE_TIME_LOADING_REPORTS = 10
 
 function GameUIMail:ctor(title,city)
     GameUIMail.super.ctor(self)
@@ -25,6 +26,8 @@ function GameUIMail:ctor(title,city)
     self.inbox_mails = {}
     self.saved_mails = {}
     self.send_mails = {}
+    self.item_reports = {}
+    self.item_saved_reports = {}
 end
 
 function GameUIMail:onEnter()
@@ -60,6 +63,9 @@ function GameUIMail:onEnter()
         end
 
         if tag == 'report' then
+            if not self.report_listview then
+                self:InitReport()
+            end
             self.report_layer:setVisible(true)
         else
             self.report_layer:setVisible(false)
@@ -67,6 +73,9 @@ function GameUIMail:onEnter()
 
         if tag == 'saved' then
             self.saved_layer:setVisible(true)
+            if not self.saved_reports_listview then
+                self:InitSavedReports()
+            end
         else
             self.saved_layer:setVisible(false)
         end
@@ -79,6 +88,7 @@ function GameUIMail:onEnter()
     end):pos(window.cx, window.bottom + 34)
 
     self.manager:AddListenOnType(self,MailManager.LISTEN_TYPE.MAILS_CHANGED)
+    self.manager:AddListenOnType(self,MailManager.LISTEN_TYPE.REPORTS_CHANGED)
     local mails = self.manager:GetMails(function (...)
         local saved_mails = self.manager:GetSavedMails(function (...)
             local send_mails = self.manager:GetSendMails(function (...)end)
@@ -122,17 +132,25 @@ function GameUIMail:CreateMailControlBox()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                FullScreenPopDialogUI.new():SetTitle(_("删除邮件"))
-                    :SetPopMessage(_("您即将删除所选邮件,删除的邮件将无法恢复,您确定要这么做吗?"))
+                local control_type = self:GetCurrentSelectType()
+                local replace_text = (control_type == "mail" and _("邮件")) or (control_type == "report" and _("战报"))
+                FullScreenPopDialogUI.new():SetTitle(string.format(_("删除%s"),replace_text))
+                    :SetPopMessage(string.format(_("您即将删除所选%s,删除的%s将无法恢复,您确定要这么做吗?"),replace_text,replace_text))
                     :CreateOKButton(function ()
-                        local mails = self:GetSelectMailsOrReports()
-                        local mails_id = {}
-                        for k,v in pairs(mails) do
-                            table.insert(mails_id, v.id)
+                        local select_map = self:GetSelectMailsOrReports()
+                        local ids = {}
+                        for k,v in pairs(select_map) do
+                            table.insert(ids, v.id)
                         end
-                        NetManager:getDeleteMailsPromise(mails_id):done(function ()
-                            self:VisibleJudgeForMailControl()
-                        end)
+                        if control_type == "mail" then
+                            NetManager:getDeleteMailsPromise(ids):done(function ()
+                                self:VisibleJudgeForMailControl()
+                            end)
+                        elseif control_type == "report" then
+                            NetManager:getDeleteReportsPromise(ids):done(function ()
+                                self:VisibleJudgeForMailControl()
+                            end)
+                        end
                     end)
                     :AddToCurrentScene()
             end
@@ -146,17 +164,16 @@ function GameUIMail:CreateMailControlBox()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                local mails = self:GetSelectMailsOrReports()
-                local mails_id = {}
-                for k,v in pairs(mails) do
+                local select_map = self:GetSelectMailsOrReports()
+                local ids = {}
+                for k,v in pairs(select_map) do
                     if not v.isRead then
-                        table.insert(mails_id, v.id)
+                        table.insert(ids, v.id)
                     end
                 end
-                LuaUtils:outputTable("mails_id", mails_id)
-                self:ReadMail(mails_id,function ()
+                self:ReadMailOrReports(ids,function ()
                     self:SelectAllMailsOrReports(false)
-                    self.manager:DecreaseUnReadMailsAndReports(#mails_id)
+                    self.manager:DecreaseUnReadMailsAndReports(#ids)
                 end)
             end
         end):align(display.LEFT_CENTER,delete_btn:getPositionX() + delete_btn:getCascadeBoundingBox().size.width+10,h/2):addTo(box)
@@ -176,6 +193,7 @@ function GameUIMail:CreateMailControlBox()
 end
 function GameUIMail:onExit()
     self.manager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.MAILS_CHANGED)
+    self.manager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.REPORTS_CHANGED)
     GameUIMail.super.onExit(self)
 end
 function GameUIMail:CreateWriteMailButton()
@@ -186,10 +204,11 @@ function GameUIMail:CreateWriteMailButton()
             self:CreateWriteMail()
         end
     end):addTo(self)
-    write_mail_button:align(display.RIGHT_TOP, window.right, window.top)
+    write_mail_button:align(display.RIGHT_TOP, window.cx+314, window.top-5)
     cc.ui.UIImage.new("write_mail_58X46.png")
         :addTo(write_mail_button)
-        :pos(-75, -75)
+        :pos(-105, -48)
+        :scale(0.8)
 end
 function GameUIMail:CreateBetweenBgAndTitle()
     self.inbox_layer = display.newLayer()
@@ -208,7 +227,7 @@ end
 function GameUIMail:InitInbox(mails)
     self.inbox_listview = UIListView.new{
         -- bgColor = UIKit:hex2c4b(0x7a000000),
-        viewRect = cc.rect(display.cx-304, display.top-890, 612, 790),
+        viewRect = cc.rect(display.cx-304, display.top-870, 612, 790),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.inbox_layer)
     if mails then
@@ -233,25 +252,10 @@ function GameUIMail:InitSaveMails(mails)
 
     self.save_mails_listview = UIListView.new{
         -- bgColor = UIKit:hex2c4b(0x7a000000),
-        viewRect = cc.rect(display.cx-304, display.top-890, 612, 720),
+        viewRect = cc.rect(display.cx-304, display.top-870, 612, 710),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.saved_layer)
 
-    local dropList = WidgetDropList.new(
-        {
-            {tag = "menu_1",label = "战报",default = true},
-            {tag = "menu_2",label = "邮件"},
-        },
-        function(tag)
-            if tag == 'menu_2' then
-                self.save_mails_listview:setVisible(true)
-            end
-            if tag == 'menu_1' then
-                self.save_mails_listview:setVisible(false)
-            end
-        end
-    )
-    dropList:align(display.TOP_CENTER,display.cx,display.top-100):addTo(self.saved_layer)
 
 
 
@@ -275,7 +279,7 @@ end
 function GameUIMail:InitSendMails(mails)
     self.send_mail_listview = UIListView.new{
         -- bgColor = UIKit:hex2c4b(0x7a000000),
-        viewRect = cc.rect(display.cx-304, display.top-890, 612, 790),
+        viewRect = cc.rect(display.cx-304, display.top-870, 612, 790),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.sent_layer)
     if mails then
@@ -311,7 +315,7 @@ function GameUIMail:CreateMailItem(listview,mail)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if tolua.type(mail.isRead)=="boolean" and not mail.isRead then
-                    self:ReadMail({mail.id},function ()
+                    self:ReadMailOrReports({mail.id},function ()
                         self.manager:DecreaseUnReadMailsAndReports(1)
                     end)
                 end
@@ -400,31 +404,47 @@ function GameUIMail:CreateMailItem(listview,mail)
             self:SaveOrUnsaveMail(mail,event.target)
         end):addTo(content_title_bg):align(display.RIGHT_CENTER, content_title_bg:getContentSize().width, content_title_bg:getContentSize().height/2)
 
-        local checkbox_bg = display.newSprite("box_62X98.png")
-            :align(display.LEFT_CENTER,-c_size.width/2+14,0)
+        self:CreateCheckBox(item):align(display.LEFT_CENTER,-c_size.width/2+14,0)
             :addTo(content)
-        --  选择checkbox
-        local checkbox_image = {
-            off = "checkbox_unselected.png",
-            off_pressed = "checkbox_unselected.png",
-            off_disabled = "checkbox_unselected.png",
-            on = "checkbox_selectd.png",
-            on_pressed = "checkbox_selectd.png",
-            on_disabled = "checkbox_selectd.png",
-        }
-        item.check_box = cc.ui.UICheckBoxButton.new(checkbox_image)
-            :align(display.CENTER,checkbox_bg:getContentSize().width/2,checkbox_bg:getContentSize().height/2)
-            :onButtonStateChanged(function(event)
-                self:VisibleJudgeForMailControl()
-            end)
-            :addTo(checkbox_bg)
     end
 
     item:addContent(content)
     return item
 end
+function GameUIMail:CreateCheckBox(item)
+    local checkbox_bg = display.newSprite("box_62X98.png")
 
+    --  选择checkbox
+    local checkbox_image = {
+        off = "checkbox_unselected.png",
+        off_pressed = "checkbox_unselected.png",
+        off_disabled = "checkbox_unselected.png",
+        on = "checkbox_selectd.png",
+        on_pressed = "checkbox_selectd.png",
+        on_disabled = "checkbox_selectd.png",
+    }
+    item.check_box = cc.ui.UICheckBoxButton.new(checkbox_image)
+        :align(display.CENTER,checkbox_bg:getContentSize().width/2,checkbox_bg:getContentSize().height/2)
+        :onButtonStateChanged(function(event)
+            self:VisibleJudgeForMailControl()
+        end)
+        :addTo(checkbox_bg)
+    return checkbox_bg
+end
+function GameUIMail:GetCurrentSelectType()
+    if self.inbox_layer:isVisible()
+        or (self.saved_layer:isVisible() and self.save_mails_listview:isVisible())
+    then
+        return "mail"
+    elseif self.report_layer:isVisible()
+        or (self.saved_layer:isVisible() and self.saved_reports_listview:isVisible())
+    then
+        return "report"
+    end
+end
 function GameUIMail:VisibleJudgeForMailControl()
+    print("-----0fdf",self.saved_layer:isVisible())
+
     if self.inbox_layer:isVisible() then
         for _,item in pairs(self.inbox_mails) do
             if item.check_box:isButtonSelected() then
@@ -433,7 +453,20 @@ function GameUIMail:VisibleJudgeForMailControl()
             end
         end
     elseif self.report_layer:isVisible() then
-    elseif self.saved_layer:isVisible() then
+        for _,item in pairs(self.item_reports) do
+            if item.check_box:isButtonSelected() then
+                self.mail_control_box:setVisible(true)
+                return
+            end
+        end
+    elseif self.saved_layer:isVisible() and self.saved_reports_listview:isVisible() then
+        for _,item in pairs(self.item_saved_reports) do
+            if item.check_box:isButtonSelected() then
+                self.mail_control_box:setVisible(true)
+                return
+            end
+        end
+    elseif self.saved_layer:isVisible() and self.save_mails_listview:isVisible() then
         for _,item in pairs(self.saved_mails) do
             if item.check_box:isButtonSelected() then
                 self.mail_control_box:setVisible(true)
@@ -444,22 +477,33 @@ function GameUIMail:VisibleJudgeForMailControl()
     self.mail_control_box:setVisible(false)
 end
 function GameUIMail:GetSelectMailsOrReports()
-    local mail_table = {}
+    local select_map = {}
     if self.inbox_layer:isVisible() then
         for _,item in pairs(self.inbox_mails) do
             if item.check_box:isButtonSelected() then
-                table.insert(mail_table, item.mail)
+                table.insert(select_map, item.mail)
             end
         end
     elseif self.report_layer:isVisible() then
-    elseif self.saved_layer:isVisible() then
+        for _,item in pairs(self.item_reports) do
+            if item.check_box:isButtonSelected() then
+                table.insert(select_map, item.report)
+            end
+        end
+    elseif self.saved_layer:isVisible() and self.saved_reports_listview:isVisible() then
+        for _,item in pairs(self.item_saved_reports) do
+            if item.check_box:isButtonSelected() then
+                table.insert(select_map, item.report)
+            end
+        end
+    elseif self.saved_layer:isVisible() and self.save_mails_listview:isVisible() then
         for _,item in pairs(self.saved_mails) do
             if item.check_box:isButtonSelected() then
-                table.insert(mail_table, item.mail)
+                table.insert(select_map, item.mail)
             end
         end
     end
-    return mail_table
+    return select_map
 end
 function GameUIMail:SelectAllMailsOrReports(isSelect)
     if self.inbox_layer:isVisible() then
@@ -467,7 +511,14 @@ function GameUIMail:SelectAllMailsOrReports(isSelect)
             item.check_box:setButtonSelected(isSelect)
         end
     elseif self.report_layer:isVisible() then
-    elseif self.saved_layer:isVisible() then
+        for _,item in pairs(self.item_reports) do
+            item.check_box:setButtonSelected(isSelect)
+        end
+    elseif self.saved_layer:isVisible() and self.saved_reports_listview:isVisible()then
+        for _,item in pairs(self.item_saved_reports) do
+            item.check_box:setButtonSelected(isSelect)
+        end
+    elseif self.saved_layer:isVisible() and self.save_mails_listview:isVisible() then
         for _,item in pairs(self.saved_mails) do
             item.check_box:setButtonSelected(isSelect)
         end
@@ -488,10 +539,17 @@ function GameUIMail:SaveOrUnsaveMail(mail,target)
     end
 end
 
-function GameUIMail:ReadMail(mailIds,cb)
-    NetManager:getReadMailsPromise(mailIds):done(cb):catch(function(err)
-        dump(err:reason())
-    end)
+function GameUIMail:ReadMailOrReports(Ids,cb)
+    local control_type = self:GetCurrentSelectType()
+    if control_type == "mail" then
+        NetManager:getReadMailsPromise(Ids):done(cb):catch(function(err)
+            dump(err:reason())
+        end)
+    elseif control_type == "report" then
+        NetManager:getReadReportsPromise(Ids):done(cb):catch(function(err)
+            dump(err:reason())
+        end)
+    end
 end
 
 function GameUIMail:AddMails( listview,item,mail,index )
@@ -518,6 +576,10 @@ function GameUIMail:GetMailsTableWithMailListView( listview )
         return self.saved_mails
     elseif listview == self.send_mail_listview then
         return self.send_mails
+    elseif listview == self.report_listview then
+        return self.item_reports
+    elseif listview == self.saved_reports_listview then
+        return self.item_saved_reports
     end
 end
 
@@ -549,7 +611,7 @@ function GameUIMail:CreateLoadingMoreItem(listview)
         :align(display.CENTER, item_width/2, item_height/2)
     loading_more_button:onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            local mails = self:GetMails(listview)
+            local mails = self:GetMailsOrReports(listview)
             if mails then
                 self:AddLoadingMoreMails(listview,mails)
             end
@@ -561,13 +623,17 @@ function GameUIMail:CreateLoadingMoreItem(listview)
     listview:addItem(item)
     listview:reload()
 end
-function GameUIMail:GetMails(listview)
+function GameUIMail:GetMailsOrReports(listview)
     if listview == self.inbox_listview then
         return self.manager:GetMails(NOT_HANDLE, self:GetMailsCount(listview))
     elseif listview == self.save_mails_listview then
         return self.manager:GetSavedMails(NOT_HANDLE,self:GetMailsCount(listview))
     elseif listview == self.send_mail_listview then
         return self.manager:GetSendMails(NOT_HANDLE,self:GetMailsCount(listview))
+    elseif listview == self.report_listview then
+        return self.manager:GetReports(self:GetMailsCount(listview))
+    elseif listview == self.saved_reports_listview then
+        return self.manager:GetSavedReports(self:GetMailsCount(listview))
     end
 end
 function GameUIMail:OnServerDataEvent(event)
@@ -583,10 +649,13 @@ function GameUIMail:OnServerDataEvent(event)
     elseif event.eventType == "onSendMailSuccess" then
         local item = self:CreateMailItem(self.send_mail_listview,event.data.mail)
         self:AddMails(self.send_mail_listview,item,event.data.mail,1)
+    elseif event.eventType == "onGetReportsSuccess" then
+        self:AddLoadingMoreMails(self.report_listview,event.data.reports)
+    elseif event.eventType == "onGetSavedReportsSuccess" then
+        self:AddLoadingMoreMails(self.saved_reports_listview,event.data.reports)
     end
 end
 function GameUIMail:OnInboxMailsChanged(changed_mails)
-    LuaUtils:outputTable("OnInboxMailsChanged-changed_mails", changed_mails)
     if changed_mails.add_mails then
         for _,add_mail in pairs(changed_mails.add_mails) do
             local item = self:CreateMailItem(self.inbox_listview,add_mail)
@@ -659,8 +728,12 @@ function GameUIMail:AddLoadingMoreMails(listview,mails)
             if loaded_num>GameUIMail.ONE_TIME_LOADING_MAILS then
                 break
             end
-
-            local item_1 = self:CreateMailItem(listview,v)
+            local item_1
+            if listview == self.report_listview or listview == self.saved_reports_listview then
+                item_1= self:CreateReportItem(listview,v)
+            else
+                item_1= self:CreateMailItem(listview,v)
+            end
             self:InsertMailToListView(listview,item_1,v)
         end
     end
@@ -801,7 +874,6 @@ function GameUIMail:ShowMailDetails(mail)
     local title_bg = display.newSprite("title_blue_596x49.png"):align(display.TOP_LEFT, 6, bg:getContentSize().height-6):addTo(bg)
     -- title
     local title_string = (mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."] "..mail.fromName) or mail.fromName
-    print("ShowMailDetails",mail.fromName,mail.fromAllianceTag,title_string)
     local title_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
             text = title_string,
@@ -934,40 +1006,53 @@ end
 function GameUIMail:InitReport()
     local flag = true
     self.report_listview = UIListView.new{
-        viewRect = cc.rect(display.cx-304, display.top-890, 612, 790),
+        viewRect = cc.rect(display.cx-304, display.top-870, 612, 790),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.report_layer)
 
-    self:CreateReportItem()
-    self:CreateReportItem()
-    self:CreateReportItem()
-    self:CreateReportItem()
+    -- 一次最多只能从manager取出10封战报
+    local reports = self.manager:GetReports()
+    if reports then
+        for k,v in pairs(reports) do
+            local item = self:CreateReportItem(self.report_listview,v)
+            self:AddMailToListView(self.report_listview,item,v)
+        end
+        -- 战报数量等于10时才有可能有更多的邮件
+        if #reports == GameUIMail.ONE_TIME_LOADING_REPORTS then
+            self:CreateLoadingMoreItem(self.report_listview)
+        end
+    end
 
-    self:CreateReportItem(true)
 end
 
-function GameUIMail:CreateReportItem(flag)
-    local item = self.report_listview:newItem()
+function GameUIMail:CreateReportItem(listview,report)
+    local item = listview:newItem()
     local item_width, item_height = 612,200
+    item.report = report
     item:setItemSize(item_width, item_height)
     local content = WidgetPushButton.new({normal = "back_ground_608x196.png",pressed = "back_ground_608x196.png"})
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                if flag then
-                    GameUIWarReport.new():addTo(self)
+                if not report.isRead then
+                    self:ReadMailOrReports({report.id}, function ()
+                        self.manager:DecreaseUnReadMailsAndReports(1)
+                    end)
+                end
+                if report.type == "strikeCity" or report.type== "cityBeStriked" then
+                    GameUIStrikeReport.new(report):addTo(self)
                 else
-                    GameUIStrikeReport.new():addTo(self)
+                    GameUIWarReport.new():addTo(self)
                 end
             end
         end)
-    local c_size = content:getContentSize()
+    local c_size = content:getCascadeBoundingBox().size
     local title_bg = display.newSprite("title_red_588X30.png", 0, 66):addTo(content)
     local report_state_bg = display.newSprite("back_ground_44X44.png", 35, 16):addTo(title_bg)
     local report_state= display.newSprite("dragon_red.png", 22, 22):addTo(report_state_bg)
     local from_name_label =  cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("[KOD] Viciouss"),
+            text = self:GetReportTitle(report),
             font = UIKit:getFontFilePath(),
             size = 22,
             dimensions = cc.size(200,24),
@@ -977,7 +1062,7 @@ function GameUIMail:CreateReportItem(flag)
     local date_label =  cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("2015.5.1 13:50"),
+            text = GameUtils:formatTimeStyle2(math.floor(report.createTime/1000)),
             font = UIKit:getFontFilePath(),
             size = 16,
             color = UIKit:hex2c3b(0xffedae)
@@ -1001,7 +1086,7 @@ function GameUIMail:CreateReportItem(flag)
     local from_player_label =  cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("Viciouss"),
+            text = report[report.type].playerData.name,
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
@@ -1011,7 +1096,7 @@ function GameUIMail:CreateReportItem(flag)
     local from_alliance_label =  cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("[KOD]"),
+            text = "["..report[report.type].playerData.allianceName.."]",
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
@@ -1036,7 +1121,7 @@ function GameUIMail:CreateReportItem(flag)
     local to_player_label =  cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("Viciouss"),
+            text = report[report.type].enemyPlayerData.name,
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
@@ -1046,7 +1131,7 @@ function GameUIMail:CreateReportItem(flag)
     local to_alliance_label =  cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("[KOD]"),
+            text = "["..report[report.type].enemyPlayerData.allianceName.."]",
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
@@ -1057,13 +1142,13 @@ function GameUIMail:CreateReportItem(flag)
     local report_result_label = cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("敌方获得一封C级情报"),
+            text = self:GetReportLevel(report),
             font = UIKit:getFontFilePath(),
             size = 18,
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.CENTER, report_result_bg:getContentSize().width/2, report_result_bg:getContentSize().height/2)
         :addTo(report_result_bg)
-    local saved_button = UICheckBoxButton.new({
+    item.saved_button = UICheckBoxButton.new({
         off = "mail_saved_button_normal.png",
         off_pressed = "mail_saved_button_normal.png",
         off_disabled = "mail_saved_button_normal.png",
@@ -1071,18 +1156,53 @@ function GameUIMail:CreateReportItem(flag)
         on_pressed = "mail_saved_button_pressed.png",
         on_disabled = "mail_saved_button_pressed.png",
     }):onButtonStateChanged(function(event)
+        self:SaveOrUnsaveReport(report,event.target)
+    end):addTo(content):pos(265, -60)
+        :setButtonSelected(report.isSaved,true)
 
-        end):addTo(content):pos(265, -60)
+    self:CreateCheckBox(item):align(display.LEFT_CENTER,-c_size.width/2+14,0)
+        :addTo(content)
+
     item:addContent(content)
-    self.report_listview:addItem(item)
-    self.report_listview:reload()
+    return item
 end
 
-function GameUIMail:InitSaved()
-    self.saved_listview = UIListView.new{
-        viewRect = cc.rect(display.cx-304, display.top-890, 612, 790),
+function GameUIMail:InitSavedReports()
+    self.saved_reports_listview = UIListView.new{
+        viewRect = cc.rect(display.cx-304, display.top-870, 612, 710),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.saved_layer)
+    -- 一次最多只能从manager取出10封战报
+    local reports = self.manager:GetSavedReports()
+    if reports then
+        for k,v in pairs(reports) do
+            local item = self:CreateReportItem(self.saved_reports_listview,v)
+            self:AddMailToListView(self.saved_reports_listview,item,v)
+        end
+        -- 战报数量等于10时才有可能有更多的邮件
+        if #reports == GameUIMail.ONE_TIME_LOADING_REPORTS then
+            self:CreateLoadingMoreItem(self.saved_reports_listview)
+        end
+    end
+
+
+    local dropList = WidgetDropList.new(
+        {
+            {tag = "menu_1",label = "战报",default = true},
+            {tag = "menu_2",label = "邮件"},
+        },
+        function(tag)
+            if tag == 'menu_2' then
+                self.save_mails_listview:setVisible(true)
+                self.saved_reports_listview:setVisible(false)
+            end
+            if tag == 'menu_1' then
+                self.save_mails_listview:setVisible(false)
+                self.saved_reports_listview:setVisible(true)
+            end
+        end
+    )
+    dropList:align(display.TOP_CENTER,display.cx,display.top-100):addTo(self.saved_layer)
 end
 
 function GameUIMail:CreateReplyMail(mail)
@@ -1254,7 +1374,116 @@ function GameUIMail:SendMail(addressee,title,content)
     end)
 end
 
+function GameUIMail:OnReportsChanged( changed_map )
+    if not self.report_listview then
+        return
+    end
+    if changed_map.add then
+        for _,report in pairs(changed_map.add) do
+            local item = self:CreateReportItem(self.report_listview,report)
+            self:AddMails(self.report_listview,item,report,1)
+        end
+    end
+    if changed_map.edit then
+        for _,report in pairs(changed_map.edit) do
+            if self.item_reports[report.id] then
+                self.item_reports[report.id].report.isSaved=report.isSaved
+                self.item_reports[report.id].saved_button:setButtonSelected(report.isSaved,true)
+                if report.isRead then
+                -- self.item_reports[report.id].mail.isRead = true
+                -- self.item_reports[report.id].title_bg:setTexture("title_grey_516X30.png")
+                end
+            end
+        end
+    end
+    if changed_map.remove then
+        for _,report in pairs(changed_map.remove) do
+            self.report_listview:removeItem(self.item_reports[report.id])
+            self.item_reports[report.id]=nil
+        end
+    end
+end
+function GameUIMail:OnSavedReportsChanged( changed_map )
+    if not self.saved_reports_listview then
+        return
+    end
+    if changed_map.add then
+        for _,report in pairs(changed_map.add) do
+            local item = self:CreateReportItem(self.saved_reports_listview,report)
+            self:AddMails(self.saved_reports_listview,item,report,1)
+        end
+    end
+    if changed_map.edit then
+        for _,report in pairs(changed_map.edit) do
+            if self.item_saved_reports[report.id] then
+                -- self.item_saved_reports[report.id].report.isSaved=report.isSaved
+                -- self.item_saved_reports[report.id].saved_button:setButtonSelected(report.isSaved,true)
+                if report.isRead then
+                -- self.item_saved_reports[report.id].mail.isRead = true
+                -- self.item_saved_reports[report.id].title_bg:setTexture("title_grey_516X30.png")
+                end
+            end
+        end
+    end
+    if changed_map.remove then
+        for _,report in pairs(changed_map.remove) do
+            self.saved_reports_listview:removeItem(self.item_saved_reports[report.id])
+            self.item_saved_reports[report.id]=nil
+        end
+    end
+end
+function GameUIMail:SaveOrUnsaveReport(report,target)
+    if target:isButtonSelected() then
+        NetManager:getSaveReportPromise(report.id):catch(function(err)
+            target:setButtonSelected(false,true)
+            dump(err:reason())
+        end)
+    else
+        NetManager:getUnSaveReportPromise(report.id):catch(function(err)
+            target:setButtonSelected(true,true)
+            dump(err:reason())
+        end)
+    end
+end
+function GameUIMail:GetReportLevel(report)
+    local level = report[report.type].level
+    local report_level = level==1 and _("没有得到任何情报") or _("得到一封%s级的情报")
+    local level_map ={
+        "",
+        "D",
+        "C",
+        "B",
+        "A",
+        "S",
+    }
+    return (report.type == "cityBeStriked" and _("敌方") or "")..string.format(report_level,level_map[level])
+end
+function GameUIMail:GetReportTitle(report)
+    if report.type == "strikeCity" then
+        if report.strikeCity.level>1 then
+            return _("Strike Successful")
+        else
+            return _("Strike Failed")
+        end
+    elseif report.type== "cityBeStriked" then
+        if report.cityBeStriked.level>1 then
+            return _("Against Strike Failed")
+        else
+            return _("Against Strike Successful")
+        end
+    end
+end
 return GameUIMail
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -264,7 +264,7 @@ function GameUIAllianceEnter:InitConfig()
     shrine = {
         height = 261,
         title = _("圣地"),
-        building_image = "orderHall_277x417.png",
+        building_image = "shrine_256x210.png",
         building_desc = _("本地化缺失"),
         building_info = {
             {

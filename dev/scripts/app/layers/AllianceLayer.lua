@@ -122,7 +122,7 @@ function AllianceLayer:ctor(alliance)
             helpDefenceMarchEvent:ArriveTime()
         )
     end)
-    self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.HELP_DEFENCE_MARCHEVENT)
+    self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchEventsChanged)
 
     table.foreachi(self:GetAlliance():GetHelpDefenceReturnMarchEvents(),function(_,helpDefenceMarchReturnEvent)
         self:CreateCorps( 
@@ -134,7 +134,7 @@ function AllianceLayer:ctor(alliance)
         )
     end)
 
-    self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.HELP_DEFENCE_MARCHRETURNEVENT)
+    self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchReturnEventsChanged)
 end
 
 function AllianceLayer:GetAlliance()
@@ -204,8 +204,8 @@ function AllianceLayer:onCleanup()
     alliance_moonGate:RemoveListenerOnType(self,AllianceMoonGate.LISTEN_TYPE.OnMoonGateMarchEventsChanged)
     alliance_moonGate:RemoveListenerOnType(self,AllianceMoonGate.LISTEN_TYPE.OnMoonGateMarchReturnEventsChanged)
 
-    self:GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.HELP_DEFENCE_MARCHEVENT)
-    self:GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.HELP_DEFENCE_MARCHRETURNEVENT)
+    self:GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchEventsChanged)
+    self:GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchReturnEventsChanged)
 end
 
 function AllianceLayer:CreateObject(entity)
