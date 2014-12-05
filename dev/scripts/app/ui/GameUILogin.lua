@@ -3,12 +3,9 @@
 -- Date: 2014-08-05 20:10:36
 --
 local GameUILogin = UIKit:createUIClass('GameUILogin','GameUISplash')
-
+--TODO:这里会遇加载图片资源 应该可以解决点击start后的卡顿
 function GameUILogin:ctor()
     GameUILogin.super.ctor(self)
-    -- local bg = display.newScale9Sprite("spalshbg.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(self)
-    -- bg:size(display.width,bg:getContentSize().height)
-    -- display.newSprite("gameName.png"):pos(display.cx,display.top-150):addTo(self)
 end
 
 function GameUILogin:onEnter()
@@ -65,7 +62,7 @@ end
 function GameUILogin:createStartGame()
     local button = cc.ui.UIPushButton.new({
         normal = "start_game_481x31.png"
-    },{},{down = GameConfig.AUDIO.BUTTON.NORMAL_DOWN_START}):addTo(self.ui_layer):pos(display.cx,display.bottom+150):hide()
+    },nil,{down = GameConfig.AUDIO.BUTTON.NORMAL_DOWN_START}):addTo(self.ui_layer):pos(display.cx,display.bottom+150):hide()
     :onButtonClicked(function()
         local sp = cc.Spawn:create(cc.ScaleTo:create(1,1.5),cc.FadeOut:create(1))
         local seq = transition.sequence({sp,cc.CallFunc:create(function()
