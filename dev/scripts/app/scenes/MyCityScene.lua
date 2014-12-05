@@ -1,23 +1,87 @@
+local cocos_promise = import("..utils.cocos_promise")
+local promise = import("..utils.promise")
+local GameUINpc = import("..ui.GameUINpc")
+local Arrow = import("..ui.Arrow")
 local CityScene = import(".CityScene")
 local MyCityScene = class("MyCityScene", CityScene)
 
 function MyCityScene:ctor(city)
     MyCityScene.super.ctor(self, city)
+    self.clicked_callbacks = {}
 end
 function MyCityScene:onEnter()
     local city = self.city
     self.scene_ui_layer = self:CreateSceneUILayer()
+    self.arrow_layer = self:CreateArrowLayer()
+    self.tutorial_layer = self:CreateTutorialLayer()
     MyCityScene.super.onEnter(self)
     home_page = self:CreateHomePage()
-
-
     self:GetSceneLayer():IteratorInnnerBuildings(function(_, building)
         self.scene_ui_layer:NewUIFromBuildingSprite(building)
     end)
     city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
+
+
+    -- promise.new()
+    -- :next(function() return self:PromiseOfClickBuilding(8, 8) end)
+    -- :resolve()
+
+
+    -- promise.new()
+    --     :next(function()
+    --         return promise.all(GameUINpc:PromiseOfSay({words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"})
+    --             :next(GameUINpc:PromiseOfInput():next(self:PromiseOfClickBuilding(12, 12))))
+    --     end)
+    --     :next(function(args)
+    --         local building = args[1]
+    --         return promise.all(
+    --             GameUINpc:PromiseOfSay({words = "隐藏在迷雾深处的{大天使之剑}正在等待您的探寻。"}),
+    --             UIKit:newGameUI('GameUIBuild', city,
+    --                 building:GetEntity()):addToScene(self, true):FTE_BuildDwelling()
+    --         )
+    --     end)
+    --     :next(function()
+    --         return promise.all(GameUINpc:PromiseOfSay({words = "{pvp}, {pve}, {gvg}, {gve}, {pvg}等各种玩法随你挑战。"}),
+    --             home_page:FTE_FreeSpeedUpFirst())
+    --     end)
+    --     :next(function()
+    --         return promise.all(GameUINpc:PromiseOfSay({words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"})
+    --             :next(GameUINpc:PromiseOfInput():next(self:PromiseOfClickBuilding(15, 12))))
+    --     end)
+    --     :next(function(args)
+    --         local building = args[1]
+    --         return promise.all(
+    --             GameUINpc:PromiseOfSay({words = "隐藏在迷雾深处的{大天使之剑}正在等待您的探寻。"}),
+    --             UIKit:newGameUI('GameUIBuild', city,
+    --                 building:GetEntity()):addToScene(self, true):FTE_BuildFarmer()
+    --         )
+    --     end)
+    --     :next(function()
+    --         return promise.all(GameUINpc:PromiseOfSay({words = "{pvp}, {pve}, {gvg}, {gve}, {pvg}等各种玩法随你挑战。"}),
+    --             home_page:FTE_FreeSpeedUpFirst())
+    --     end)
+    --     :next(function()
+    --         return promise.all(GameUINpc:PromiseOfSay({words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"})
+    --             :next(GameUINpc:PromiseOfInput():next(self:PromiseOfClickBuilding(18, 12))))
+    --     end)
+    --     :next(function(args)
+    --         local building = args[1]
+    --         return promise.all(
+    --             GameUINpc:PromiseOfSay({words = "隐藏在迷雾深处的{大天使之剑}正在等待您的探寻。"}),
+    --             UIKit:newGameUI('GameUIBuild', city,
+    --                 building:GetEntity()):addToScene(self, true):FTE_BuildWoodcutter()
+    --         )
+    --     end)
+    --     :next(function()
+    --         return promise.all(GameUINpc:PromiseOfSay({words = "{pvp}, {pve}, {gvg}, {gve}, {pvg}等各种玩法随你挑战。"}),
+    --             home_page:FTE_FreeSpeedUpFirst())
+    --     end)
+    --     :next(function() return GameUINpc:PromiseOfLeave() end)
+    --     :resolve()
 end
 function MyCityScene:CreateHomePage()
     local home = UIKit:newGameUI('GameUIHome', self.city):addToScene(self)
+    home:setLocalZOrder(10)
     home:setTouchSwallowEnabled(false)
     return home
 end
@@ -25,6 +89,49 @@ function MyCityScene:onExit()
     home_page = nil
     MyCityScene.super.onExit(self)
 end
+function MyCityScene:GetTutorialLayer()
+    return self.tutorial_layer
+end
+function MyCityScene:PromiseOfClickBuilding(x, y)
+    assert(#self.clicked_callbacks == 0)
+    local arrow
+    self:GetSceneLayer():FindBuildingBy(x, y):next(function(building)
+        arrow = Arrow.new():addTo(self.arrow_layer)
+        building:AddObserver(arrow)
+        building:OnSceneMove()
+    end):catch(function(err)
+        dump(err:reason())
+    end)
+    local p = promise.new()
+    self:GetTutorialLayer():Enable()
+    table.insert(self.clicked_callbacks, function(building)
+        local x_, y_ = building:GetEntity():GetLogicPosition()
+        if x == x_ and y == y_ then
+            self:GetTutorialLayer():Disable()
+            self:GetSceneLayer():FindBuildingBy(x, y):next(function(building)
+                building:RemoveObserver(arrow)
+                arrow:removeFromParent()
+            end):catch(function(err)
+                dump(err:reason())
+            end)
+            p:resolve(building)
+            return true
+        end
+    end)
+    return p
+end
+function MyCityScene:CheckClickPromise(building)
+    if #self.clicked_callbacks > 0 then
+        if self.clicked_callbacks[1](building) then
+            table.remove(self.clicked_callbacks, 1)
+        end
+        return true
+    end
+end
+
+
+
+---
 function MyCityScene:OnUpgradingBegin()
     audio.playSound("ui_building_upgrade_start.mp3")
 end
@@ -100,10 +207,11 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     local city = self.city
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
+        if self:CheckClickPromise(building) then
+            return
+        end
         if building:GetEntity():GetType() == "ruins" then
-            local select_ruins_list = city:GetNeighbourRuinWithSpecificRuin(building:GetEntity())
-            local select_ruins = building:GetEntity()
-            UIKit:newGameUI('GameUIBuild', city, select_ruins, select_ruins_list):addToScene(self, true)
+            UIKit:newGameUI('GameUIBuild', city, building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "keep" then
             self._keep_page = UIKit:newGameUI('GameUIKeep',city,building:GetEntity())
             self._keep_page:addToScene(self, true)
@@ -149,4 +257,6 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     end
 end
 return MyCityScene
+
+
 

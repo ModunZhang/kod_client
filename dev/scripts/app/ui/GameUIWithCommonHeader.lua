@@ -1,6 +1,7 @@
 local GameUIBase = import('.GameUIBase')
 local GameUIWithCommonHeader = class('GameUIWithCommonHeader', GameUIBase)
 
+local visible_count = 1
 function GameUIWithCommonHeader:ctor(city, title)
     GameUIWithCommonHeader.super.ctor(self)
     self.title = title
@@ -16,6 +17,14 @@ function GameUIWithCommonHeader:onEnter()
     self.gem_label = self:CreateShopButton(function()
     end)
     self.city:GetResourceManager():AddObserver(self)
+
+    if home_page then
+        print(visible_count)
+        visible_count = visible_count - 1
+        if visible_count == 0 then
+            home_page.bottom:setVisible(false)
+        end
+    end
 end
 function GameUIWithCommonHeader:CreateBetweenBgAndTitle()
     print("->创建backgroud和title之间的中间层显示")
@@ -23,9 +32,16 @@ end
 function GameUIWithCommonHeader:onExit()
     self.city:GetResourceManager():RemoveObserver(self)
     GameUIWithCommonHeader.super.onExit(self)
+
+    if home_page then
+        visible_count = visible_count + 1
+        if visible_count > 0 then
+            home_page.bottom:setVisible(true)
+        end
+    end
 end
 function GameUIWithCommonHeader:OnResourceChanged(resource_manager)
-    self.gem_label:setString(resource_manager:GetGemResource():GetValue())
+    self.gem_label:setString(string.formatnumberthousands(resource_manager:GetGemResource():GetValue()))
 end
 
 

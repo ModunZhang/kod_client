@@ -1,5 +1,6 @@
 local HOUSES = GameDatas.PlayerInitData.houses[1]
 local BuildingRegister = import(".BuildingRegister")
+local promise = import("..utils.promise")
 local Enum = import("..utils.Enum")
 local Orient = import(".Orient")
 local Tile = import(".Tile")
@@ -56,6 +57,11 @@ function City:ctor(json_data)
     if json_data then
         self:InitWithJsonData(json_data)
     end
+
+
+
+    self.upgrading_building_callbacks = {}
+    self.finish_upgrading_callbacks = {}
 end
 function City:InitWithJsonData(userData)
     local init_buildings = {}
@@ -108,9 +114,7 @@ function City:InitWithJsonData(userData)
     -- table.insert(init_unlock_tiles, {x = 4, y = 1})
 
     -- table.insert(init_unlock_tiles, {x = 1, y = 5})
-
     self:InitTiles(5, 5, init_unlock_tiles)
-
 
     local hosue_events = userData.houseEvents
     local function get_house_event_by_location(building_location, sub_id)
@@ -156,9 +160,11 @@ function City:ResetAllListeners()
     self:ClearAllListener()
     self:IteratorCanUpgradeBuildings(function(building)
         building:ResetAllListeners()
-        -- building:AddUpgradeListener(self)
         self:OnInitBuilding(building)
     end)
+
+    self.upgrading_building_callbacks = {}
+    self.finish_upgrading_callbacks = {}
 end
 function City:NewBuildingWithType(building_type, x, y, w, h, level, finish_time)
     return BuildingRegister[building_type].new{
@@ -186,7 +192,6 @@ function City:InitRuins()
             }
         )
     end
-    GameDatas.ClientInitGame['ruins'] = {}
 end
 function City:InitTiles(w, h, unlocked)
     self.tiles = {}
@@ -624,21 +629,17 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time)
     end)
     self:GetGate():OnUserDataChanged(user_data, current_time)
 end
-function City:IteratorResourcesByUserData(user_data, current_time)
-    local resources = user_data.resources
-    if resources then
-        local resource_manager = self:GetResourceManager()
-        resource_manager:GetEnergyResource():UpdateResource(current_time, resources.energy)
-        resource_manager:GetWoodResource():UpdateResource(current_time, resources.wood)
-        resource_manager:GetFoodResource():UpdateResource(current_time, resources.food)
-        resource_manager:GetIronResource():UpdateResource(current_time, resources.iron)
-        resource_manager:GetStoneResource():UpdateResource(current_time, resources.stone)
-        resource_manager:GetPopulationResource():UpdateResource(current_time, resources.citizen)
-        resource_manager:GetCoinResource():SetValue(resources.coin)
-        resource_manager:GetGemResource():SetValue(resources.gem)
-        resource_manager:GetBloodResource():SetValue(resources.blood)
-        self:UpdateAllResource(current_time)
-    end
+function City:IteratorResourcesByUserData(resources, current_time)
+    local resource_manager = self:GetResourceManager()
+    resource_manager:GetEnergyResource():UpdateResource(current_time, resources.energy)
+    resource_manager:GetWoodResource():UpdateResource(current_time, resources.wood)
+    resource_manager:GetFoodResource():UpdateResource(current_time, resources.food)
+    resource_manager:GetIronResource():UpdateResource(current_time, resources.iron)
+    resource_manager:GetStoneResource():UpdateResource(current_time, resources.stone)
+    resource_manager:GetPopulationResource():UpdateResource(current_time, resources.citizen)
+    resource_manager:GetCoinResource():SetValue(resources.coin)
+    resource_manager:GetGemResource():SetValue(resources.gem)
+    resource_manager:GetBloodResource():SetValue(resources.blood)
 end
 function City:IteratorAllNeedTimerEntity(current_time)
     self:IteratorFunctionBuildingsByFunc(function(key, building)
@@ -799,7 +800,6 @@ function City:DestoryDecoratorByPosition(current_time, x, y)
             end
         end)
 
-
         self:OnDestoryDecorator(current_time, destory_decorator)
 
         self:NotifyListeneOnType(City.LISTEN_TYPE.DESTROY_DECORATOR, function(listener)
@@ -816,6 +816,7 @@ function City:OnUserDataChanged(userData, current_time)
     local unlock_table = {}
     local is_unlock_any_tiles = false
     local is_lock_any_tiles = false
+    local need_update_resouce_buildings = false
     if userData.buildings then
         table.foreach(userData.buildings, function(key, location)
             local building = self:GetBuildingByLocationId(location.location)
@@ -849,6 +850,7 @@ function City:OnUserDataChanged(userData, current_time)
                 -- 没有找到，就是已经被拆除了
                 if not building_info then
                     self:DestoryDecorator(current_time, building)
+                    need_update_resouce_buildings = true
                 end
             end)
 
@@ -880,6 +882,7 @@ function City:OnUserDataChanged(userData, current_time)
                             finishTime = 0,
                             city = self,
                         }))
+                        need_update_resouce_buildings = true
                     end
                 end)
             end
@@ -896,7 +899,6 @@ function City:OnUserDataChanged(userData, current_time)
     end
     -- 更新建筑信息
     self:IteratorCanUpgradeBuildingsByUserData(userData, current_time)
-
     -- 更新协防信息
     self:OnHelpedByTroopsDataChange(userData.helpedByTroops)
     self:__OnHelpedByTroopsDataChange(userData.__helpedByTroops)
@@ -910,9 +912,15 @@ function City:OnUserDataChanged(userData, current_time)
     -- 最后才更新资源
     if userData.basicInfo then
         local resource_refresh_time = userData.basicInfo.resourceRefreshTime / 1000
-        self:IteratorResourcesByUserData(userData, resource_refresh_time)
+        if userData.resources then
+            self:IteratorResourcesByUserData(userData.resources, resource_refresh_time)
+            need_update_resouce_buildings = true
+        end
         self.build_queue = userData.basicInfo.buildQueue
         self:SetCityName(userData.basicInfo.cityName)
+    end
+    if need_update_resouce_buildings then
+        self:UpdateAllResource(current_time)
     end
 end
 function City:GetCityName()
@@ -927,22 +935,17 @@ function City:SetCityName(cityName)
     end
 end
 function City:OnCreateDecorator(current_time, building)
-    -- building:AddUpgradeListener(self)
     self:OnInitBuilding(building)
-
-    self:UpdateResourceByBuilding(current_time, building)
 end
 function City:OnDestoryDecorator(current_time, building)
     building:RemoveUpgradeListener(self)
-
-    self:UpdateResourceByBuilding(current_time, building)
 end
 function City:OnBuildingUpgradingBegin(building, current_time)
-    self:UpdateResourceByBuilding(current_time, building)
-
     self:NotifyListeneOnType(City.LISTEN_TYPE.UPGRADE_BUILDING, function(listener)
         listener:OnUpgradingBegin(building, current_time, self)
     end)
+
+    self:CheckUpgradingBuildingPormise(building)
 end
 function City:OnBuildingUpgrading(building, current_time)
     self:NotifyListeneOnType(City.LISTEN_TYPE.UPGRADE_BUILDING, function(listener)
@@ -950,11 +953,11 @@ function City:OnBuildingUpgrading(building, current_time)
     end)
 end
 function City:OnBuildingUpgradeFinished(building, current_time)
-    self:UpdateResourceByBuilding(current_time, building)
-
     self:NotifyListeneOnType(City.LISTEN_TYPE.UPGRADE_BUILDING, function(listener)
         listener:OnUpgradingFinished(building, current_time, self)
     end)
+
+    self:CheckFinishUpgradingBuildingPormise(building)
 end
 function City:LockTilesByIndexArray(index_array)
     table.foreach(index_array, function(_, index)
@@ -1010,10 +1013,7 @@ function City:OnInitBuilding(building)
 end
 -----
 function City:UpdateAllResource(current_time)
-    self.resource_manager:OnBuildingChangedFromCity(self, current_time, nil)
-end
-function City:UpdateResourceByBuilding(current_time, building)
-    self.resource_manager:OnBuildingChangedFromCity(self, current_time, building)
+    self.resource_manager:OnBuildingChangedFromCity(self, current_time)
 end
 ---------
 function City:GenerateWalls()
@@ -1199,7 +1199,6 @@ function City:ReloadTowers(towers)
             else
                 -- 如果是新解锁的
                 self:OnInitBuilding(v)
-                -- v:AddUpgradeListener(self)
             end
         end
     end
@@ -1297,11 +1296,11 @@ function City:__OnHelpToTroopsDataChange(__helpToTroops)
         __helpToTroops
         ,function(data)
             if not self.helpToTroops[data.targetPlayerData.id] then
-                 self.helpToTroops[data.targetPlayerData.id] = data
+                self.helpToTroops[data.targetPlayerData.id] = data
             end
             return data
         end
-        ,function(data) 
+        ,function(data)
             -- 会修改已经派出协防的信息?
             return nil
         end
@@ -1309,7 +1308,7 @@ function City:__OnHelpToTroopsDataChange(__helpToTroops)
             if self.helpToTroops[data.targetPlayerData.id] then
                 self.helpToTroops[data.targetPlayerData.id] = nil
                 return data
-            end 
+            end
         end
     )
     self:__OnHelpToTroopsDataChanged(GameUtils:pack_event_table(change_map))
@@ -1318,7 +1317,7 @@ end
 function City:__OnHelpToTroopsDataChanged(changed_map)
     dump(changed_map,"changed_map----->")
     dump(self:GetHelpToTroops(),"self:GetHelpToTroops()------>")
-     self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_TO_TROOPS, function(listener)
+    self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_TO_TROOPS, function(listener)
         listener:OnHelpToTroopsChanged(self,changed_map)
     end)
 end
@@ -1337,7 +1336,47 @@ function City:IsHelpedToTroopsWithPlayerId(id)
     dump(id,"IsHelpedToTroopsWithPlayerId------>")
     return self:GetHelpToTroops()[id] ~= nil
 end
+
+-- promise
+local function promiseOfBuilding(callbacks, building_type, level)
+    assert(building_type)
+    assert(#callbacks == 0)
+    local p = promise.new()
+    table.insert(callbacks, function(building)
+        if (building:GetType() == building_type) and
+            (not level or level == building:GetLevel()) then
+            return p:resolve(building)
+        end
+    end)
+    return p
+end
+local function checkBuilding(callbacks, building)
+    if #callbacks > 0 then
+        if callbacks[1](building) then
+            table.remove(callbacks, 1)
+        end
+        return true
+    end
+end
+function City:PromiseOfUpgradingByLevel(building_type, level)
+    return promiseOfBuilding(self.upgrading_building_callbacks, building_type, level)
+end
+function City:CheckUpgradingBuildingPormise(building)
+    return checkBuilding(self.upgrading_building_callbacks, building)
+end
+function City:PromiseOfFinishUpgradingByLevel(building_type, level)
+    return promiseOfBuilding(self.finish_upgrading_callbacks, building_type, level)
+end
+function City:CheckFinishUpgradingBuildingPormise(building)
+    return checkBuilding(self.finish_upgrading_callbacks, building)
+end
+
 return City
+
+
+
+
+
 
 
 

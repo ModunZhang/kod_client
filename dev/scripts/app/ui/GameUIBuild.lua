@@ -1,3 +1,5 @@
+local Arrow = import(".Arrow")
+local promise = import("..utils.promise")
 local window = import("..utils.window")
 local BuildingRegister = import("..entity.BuildingRegister")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
@@ -12,14 +14,13 @@ local base_items = {
     { label = _("石匠小屋"), building_type = "quarrier", png = "quarrier_1_303x296.png", scale = 0.4 },
     { label = _("矿工小屋"), building_type = "miner", png = "miner_1_315x309.png", scale = 0.4 },
 }
-function GameUIBuild:ctor(city, select_ruins, select_ruins_list)
+function GameUIBuild:ctor(city, building)
     GameUIBuild.super.ctor(self, city, _("待建地基"))
     self.build_city = city
-    self.select_ruins = select_ruins
-    self.select_ruins_list = select_ruins_list
+    self.select_ruins = building
+    self.select_ruins_list = city:GetNeighbourRuinWithSpecificRuin(building)
     self.build_city:AddListenOnType(self, self.build_city.LISTEN_TYPE.UPGRADE_BUILDING)
 end
-
 function GameUIBuild:onEnter()
     GameUIBuild.super.onEnter(self)
     self.base_resource_building_items = {}
@@ -94,10 +95,10 @@ function GameUIBuild:BuildWithRuins(select_ruins, building_type)
     local w, h = select_ruins.w, select_ruins.h
     local tile = self.build_city:GetTileWhichBuildingBelongs(select_ruins)
     local house_location = tile:GetBuildingLocation(select_ruins)
-    NetManager:getCreateHouseByLocationPromise(tile.location_id, house_location, building_type):catch(function(err)
-        dump(err:reason())
-    end)
-    self:leftButtonClicked()
+    NetManager:getCreateHouseByLocationPromise(tile.location_id,
+        house_location, building_type):done(function()
+        self:leftButtonClicked()
+        end)
 end
 
 function GameUIBuild:CreateItemWithListView(list_view)
@@ -158,7 +159,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
         :align(display.LEFT_CENTER, 30, size.height/2)
 
 
-    WidgetPushButton.new(
+    local btn_info = WidgetPushButton.new(
         {normal = "build_item/info.png",pressed = "build_item/info.png"})
         :addTo(content)
         :align(display.LEFT_BOTTOM, 10, 10)
@@ -225,22 +226,64 @@ function GameUIBuild:CreateItemWithListView(list_view)
     function item:SetBuildEnable(is_enable)
         build_btn:setButtonEnabled(is_enable)
     end
+    function item:GetBuildButton()
+        return build_btn
+    end
 
     return item
 end
 
+--
+
+function GameUIBuild:FTE_BuildDwelling()
+    return self:FTE_BuildHouseByType("dwelling")
+end
+function GameUIBuild:FTE_BuildFarmer()
+    return self:FTE_BuildHouseByType("farmer")
+end
+function GameUIBuild:FTE_BuildWoodcutter()
+    return self:FTE_BuildHouseByType("woodcutter")
+end
+function GameUIBuild:FTE_BuildQuarrier()
+    return self:FTE_BuildHouseByType("quarrier")
+end
+function GameUIBuild:FTE_BuildMiner()
+    return self:FTE_BuildHouseByType("miner")
+end
+function GameUIBuild:FTE_BuildHouseByType(house_type)
+    self.tutorial_layer = self:CreateTutorialLayer()
+    local arrow
+    return self:FindItemByType(house_type):next(function(item)
+        self.base_list_view:getScrollNode():setTouchEnabled(false)
+        arrow = Arrow.new():addTo(self:GetTutorialLayer())
+        local rect = item:GetBuildButton():getCascadeBoundingBox()
+        arrow:OnPositionChanged(rect.x, rect.y)
+        self:GetTutorialLayer():Enable():SetTouchObject(item:GetBuildButton())
+    end):next(function()
+        return self.build_city:PromiseOfUpgradingByLevel(house_type, 0)
+    end)
+end
+function GameUIBuild:GetTutorialLayer()
+    return self.tutorial_layer
+end
+function GameUIBuild:FindItemByType(building_type)
+    local item
+    table.foreach(self.base_resource_building_items, function(_, v)
+        if v.building.building_type == building_type then
+            item = v
+            return true
+        end
+    end)
+    return promise.new(function(item)
+        if not item then
+            promise.reject("没有找到对应item", building_type)
+        end
+        return item
+    end):resolve(item)
+end
+
+
 return GameUIBuild
-
-
-
-
-
-
-
-
-
-
-
 
 
 

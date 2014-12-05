@@ -96,15 +96,14 @@ module( "test_promise", lunit.testcase, package.seeall )
 --         assert_equal(445, ...)
 --         return "end1222"
 --     end):done(function(...)
---         print("hello")
 --         assert_equal("end1", ...)
 --     end)
 
 --     local p3 = promise.any(p, p1)
 --         :next(function(results)
---             dump(results)
---         end):catch(function(err)
---         dump(err:reason())
+--             -- dump(results)
+--             end):catch(function(err)
+--         -- dump(err:reason())
 --         end)
 
 --     Game.new():OnUpdate(function(time)
@@ -154,7 +153,7 @@ module( "test_promise", lunit.testcase, package.seeall )
 --         assert_equal(4, ...)
 --         return 5
 --     end):catch(function(err)
---         dump(err:reason())
+--         -- dump(err:reason())
 --         return 5
 --     end):next(function(...)
 --         assert_equal(5, ...)
@@ -220,91 +219,209 @@ module( "test_promise", lunit.testcase, package.seeall )
 
 
 
-function test_promise6()
-    local p1 = promise.new(function(...)
-        promise.reject("cuowu")
+-- function test_promise6()
+--     local p1 = promise.new(function(...)
+--         -- promise.reject("cuowu")
+--         return 1
+--     end):resolve(1)
+--     local p2 = promise.new(function(...)
+--         return 2
+--     end)
+
+--     promise.any(p1, p2):catch(function()
+--         print("hhh")
+--     end)
+
+
+
+
+
+--     Game.new():OnUpdate(function(time)
+--         if time == 10 then
+--         -- p1:resolve(1)
+--         elseif time == 19 then
+--             p2:resolve(2)
+--         end
+--         return time <= 100
+--     end)
+-- end
+
+
+
+
+
+-- function test_promise7()
+--     local p1 = promise.new():resolve(1)
+
+--     promise.all(p1:next(function(...)
+--         assert_equal(1, ...)
+--     end)):next(function(...)
+--         -- promise.reject("cuowu")
+--         end):catch(function()
+--         end)
+-- end
+
+
+
+-- function test_promise8()
+--     local p1 = promise.new():resolve(1)
+--     local p2 = promise.new()
+--     -- :resolve(2)
+
+
+--     promise.all(p1):next(function(args)
+--         assert_equal(1, args[1])
+--         return p2
+--     end):catch(function()
+--         print("hello")
+--     end):next(function()
+--         end):catch(function()
+--         print("hhhhh")
+--         end):next(function()
+--         end)
+--     p1:next(function()
+--         -- print("p2")
+--         end):next(function()
+--         -- print(2)
+--         end)
+
+--     p2:resolve(2)
+
+-- end
+
+
+
+
+-- function test_promise9()
+--     local p1 = promise.new()
+--     local p2 = promise.new()
+--     local p3 = promise.new()
+--     p1.tag = 1
+--     p2.tag = 2
+--     p3.tag = 3
+--     p1:next(function(...)
+--         assert_equal(1, ...)
+--         return p2:resolve(2):next(function(...)
+--             assert_equal(2, ...)
+--             return p3
+--         end)
+--     end):next(function(...)
+--         assert_equal(p2, ...)
+--     end):catch(function(err)
+
+--     end)
+
+
+--     Game.new():OnUpdate(function(time)
+--         if time == 1 then
+--             p1:resolve(1)
+--         elseif time == 10 then
+--             p3:resolve(3)
+--         end
+--         return time <= 100
+--     end)
+-- end
+
+
+
+
+
+
+
+
+
+
+
+-- function test_promise10()
+--     local p1 = promise.new()
+--     local p2 = promise.new()
+--     local p3 = promise.new()
+--     p1.tag = 1
+--     p2.tag = 2
+--     p3.tag = 3
+--     local pp = p1:next(function()
+--         local p = p2:resolve():next(function()
+--             return p3:next(function()
+--                 print("hello1")
+--             end)
+--         end)
+--         return p
+--     end):next(function()
+--         print("hello2")
+--     end)
+
+--     local p = p1:resolve()
+--     -- p3:resolve()
+-- end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- function test_promise11()
+--     local p1 = promise.new()
+--     local p2 = promise.new()
+--     p1.tag = 1
+--     p2.tag = 2
+
+--     local p = p1:next(function()
+--         return p2
+--     end):next(function()
+--         print("test_promise11 1")
+--     end):resolve():next(function()
+--         print("test_promise11 2")
+--     end)
+
+
+--     p2:resolve()
+-- end
+
+
+
+function test_promise12()
+    local p1 = promise.new():next(function()
+        print("p1 hello")
         return 1
     end)
-    local p2 = promise.new(function(...)
+    local p2 = promise.new():next(function()
+        print("p2 hello")
         return 2
     end)
+    -- local p3 = promise.new(function() print(33333) end):resolve(3)
+    p1.tag = 1
+    p2.tag = 2
 
-
-
-    -- promise.all(promise.any(promise.all(promise.any(p1, p2):next(function(...)
-    --     print(...)
-    --     return "any"
-    -- end)):catch(function(err)
-    --     dump(err:reason())
-    -- end))):fail(function()
-    --     print("haha")
-    -- end)
-
-    promise.all(
-        promise.any(
-            promise.all(
-                promise.any(p1, p2):next(function(...)
-                    print(...)
-                    return "any"
-                end)
-            )
-            -- :catch(function(err)
-            --     dump(err:reason())
-            --     return "nil==="
-            -- end)
-        )
-        :catch(function(...)
-            dump(...)
-            return 1
+    promise.new()
+        :next(promise.all(
+            p1:next(p2):next(function()
+                return promise.new(function() print(33333) end):resolve(3)
+            end)))
+        :next(function(args)
+            dump(args)
         end)
-    )
-    :catch(function(...)
-        dump(...)
-    end)
-    :fail(function(...)
-        print("fail")
-    end)
+        :resolve()
 
-
-
+    -- GameUINpc:PromiseOfInput():next(self:PromiseOfClickBuilding(12, 12))
+    -- :next()
 
     Game.new():OnUpdate(function(time)
-        if time == 10 then
+        if time == 1 then
             p1:resolve(1)
-        elseif time == 19 then
-            p2:resolve(2)
+        elseif time == 10 then
+        -- p2:resolve(2)
         end
         return time <= 100
     end)
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

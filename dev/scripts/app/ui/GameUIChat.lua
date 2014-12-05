@@ -25,6 +25,11 @@ GameUIChat.CELL_PLAYER_ICON_VIP_BG_TAG = 109
 GameUIChat.CELL_PLAYER_ICON_VIP_LABEL_TAG = 110
 GameUIChat.CELL_PLAYER_ICON_HERO_TAG = 111
 
+function GameUIChat:ctor(default_tag)
+    GameUIChat.super.ctor(self)
+    self.default_tag = default_tag
+end
+
 function GameUIChat:onEnter()
 	GameUIChat.super.onEnter(self)
 	self:CreateBackGround()
@@ -53,11 +58,12 @@ function GameUIChat:CreateTabButtons()
         {
             label = _("世界"),
             tag = "global",
-            default = true,
+            default = self.default_tag == "global",
         },
         {
             label = _("联盟"),
             tag = "Alliance",
+            default = self.default_tag == "Alliance",
         }
     },
     function(tag)

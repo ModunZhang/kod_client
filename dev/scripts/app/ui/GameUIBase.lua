@@ -17,19 +17,11 @@ function GameUIBase:ctor()
     return true
 end
 
-local visible_count = 1
+-- local visible_count = 1
 -- Node Event
 --------------------------------------
 function GameUIBase:onEnter()
     print("onEnter->")
-    -- app:lockInput(false)
-    if home_page then
-        print(visible_count)
-        visible_count = visible_count - 1
-        if visible_count == 0 then
-            home_page.bottom:setVisible(false)
-        end
-    end
 end
 
 function GameUIBase:onEnterTransitionFinish()
@@ -42,13 +34,6 @@ end
 
 function GameUIBase:onExit()
     print("onExit--->")
-    -- app:lockInput(false)
-    if home_page then
-        visible_count = visible_count + 1
-        if visible_count > 0 then
-            home_page.bottom:setVisible(true)
-        end
-    end
 end
 
 
@@ -65,7 +50,7 @@ function GameUIBase:rightButtonClicked()
 end
 
 function GameUIBase:onMoveInStage()
-    -- app:lockInput(false)
+-- app:lockInput(false)
 end
 
 function GameUIBase:onMoveOutStage()
@@ -81,7 +66,7 @@ function GameUIBase:leftButtonClicked()
         if self.moveInAnima then
             self:UIAnimationMoveOut()
         else
-            self:onMoveOutStage() -- fix 
+            self:onMoveOutStage() -- fix
         end
     end
 end
@@ -150,13 +135,13 @@ function GameUIBase:CreateBackGround()
     --     :align(display.CENTER, display.cx, display.bottom)
     --     :addTo(node)
     -- return node:addTo(self)
-    return display.newSprite("common_bg_center.png"):align(display.LEFT_TOP, window.left,window.top-40):addTo(self)
+    return display.newSprite("common_bg_center.png"):align(display.CENTER_TOP, window.cx,window.top-40):addTo(self)
 end
 function GameUIBase:CreateTitle(title)
     local head_bg = cc.ui.UIImage.new("head_bg.png")
         :align(display.TOP_CENTER, window.cx, window.top)
         :addTo(self)
-     return UIKit:ttfLabel({
+    return UIKit:ttfLabel({
         text = title,
         size = 30,
         color = 0xffedae,
@@ -176,11 +161,13 @@ function GameUIBase:CreateHomeButton(on_clicked)
                 self:leftButtonClicked()
             end
         end)
-        :align(display.LEFT_TOP, window.left , window.top)
+        :align(display.LEFT_TOP, window.cx-314 , window.top-5)
         :addTo(self)
+
     cc.ui.UIImage.new("home_icon.png")
-        :pos(27, -72)
+        :pos(34, -50)
         :addTo(home_button)
+        :scale(0.8)
     return home_button
 end
 function GameUIBase:CreateShopButton(on_clicked)
@@ -193,20 +180,19 @@ function GameUIBase:CreateShopButton(on_clicked)
             self:leftButtonClicked()
         end
     end):addTo(self)
-    gem_button:align(display.RIGHT_TOP, window.right, window.top)
-    cc.ui.UIImage.new("home/gem.png")
+    gem_button:align(display.RIGHT_TOP, window.cx+314, window.top-5)
+    cc.ui.UIImage.new("home/gem_1.png")
         :addTo(gem_button)
-        :pos(-75, -65)
+        :pos(-55, -52)
 
-    local gem_num_bg = cc.ui.UIImage.new("gem_num_bg.png"):addTo(gem_button):pos(-85, -85)
-    local pos = gem_num_bg:getAnchorPointInPoints()
-    return ui.newTTFLabel({
-        text = ""..City.resource_manager:GetGemResource():GetValue(),
-        font = UIKit:getFontFilePath(),
-        size = 14,
-        color = UIKit:hex2c3b(0xfdfac2)})
-        :addTo(gem_num_bg)
-        :align(display.CENTER, 40, 15)
+    return UIKit:ttfLabel({
+        text = ""..string.formatnumberthousands(City.resource_manager:GetGemResource():GetValue()),
+        size = 20,
+        color = 0xffd200,
+        shadow = true
+    })
+        :addTo(gem_button)
+        :align(display.CENTER, -102, -32)
 end
 function GameUIBase:CreateTabButtons(param, func)
     return WidgetBackGroundTabButtons.new(param,
@@ -226,12 +212,77 @@ function GameUIBase:CreateVerticalListViewDetached(left_bottom_x, left_bottom_y,
     }
 end
 function GameUIBase:CreatePopupBg(height)
-   return WidgetUIBackGround.new({height=height})
+    return WidgetUIBackGround.new({height=height})
+end
+function GameUIBase:CreateTutorialLayer()
+    local node = display.newNode():addTo(self, 3000)
+    local left = display.newColorLayer(cc.c4b(255, 0, 0, 50)):addTo(node, 0)
+    local right = display.newColorLayer(cc.c4b(255, 0, 0, 50)):addTo(node, 0)
+    local top = display.newColorLayer(cc.c4b(255, 0, 0, 50)):addTo(node, 0)
+    local bottom = display.newColorLayer(cc.c4b(255, 0, 0, 50)):addTo(node, 0)
+    -- local left = display.newLayer():addTo(node, 0)
+    -- local right = display.newLayer():addTo(node, 0)
+    -- local top = display.newLayer():addTo(node, 0)
+    -- local bottom = display.newLayer():addTo(node, 0)
+    for _, v in pairs{ left, right, top, bottom } do
+        v:setContentSize(cc.size(display.width, display.height))
+        v:setTouchEnabled(true)
+    end
+    local count = 0
+    function node:Enable()
+        count = count + 1
+        if count > 0 then
+            for _, v in pairs{ left, right, top, bottom } do
+                v:setTouchEnabled(true)
+            end
+        end
+        return self
+    end
+    function node:Disable()
+        count = count - 1
+        if count <= 0 then
+            for _, v in pairs{ left, right, top, bottom } do
+                v:setTouchEnabled(false)
+            end
+        end
+        return self
+    end
+    function node:Reset()
+        count = 0
+        for _, v in pairs{ left, right, top, bottom } do
+            v:setTouchEnabled(false)
+        end
+        self.object = nil
+        self.world_rect = nil
+        return self
+    end
+    function node:SetTouchObject(obj)
+        self.object = obj
+        self:UpdateClickedRegion(self:GetClickedRect())
+        return self
+    end
+    function node:SetTouchRect(world_rect)
+        self.world_rect = world_rect
+        return self
+    end
+    function node:UpdateClickedRegion(rect)
+        left:pos(rect.x - display.width, 0)
+        right:pos(rect.x + rect.width, 0)
+        top:pos(0, rect.y + rect.height)
+        bottom:pos(0, rect.y - display.height)
+    end
+    function node:GetClickedRect()
+        if self.world_rect then
+            return self.world_rect
+        elseif self.object then
+            return self.object:getCascadeBoundingBox()
+        else
+            return cc.rect(0, 0, display.width, display.height)
+        end
+    end
+    return node:Reset()
 end
 
+
 return GameUIBase
-
-
-
-
 

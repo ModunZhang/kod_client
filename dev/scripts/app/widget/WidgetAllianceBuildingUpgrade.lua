@@ -33,12 +33,12 @@ end
 function WidgetAllianceBuildingUpgrade:onEnter()
     -- building level
     local level_bg = display.newSprite("upgrade_level_bg.png", display.cx+80, display.top-125):addTo(self)
-    self.builging_level = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+    self.builging_level = UIKit:ttfLabel({
         font = UIKit:getFontFilePath(),
         size = 26,
-        color = UIKit:hex2c3b(0xffedae)
-    }):align(display.LEFT_BOTTOM, 20, 8)
+        color = 0xffedae,
+        bold = true
+    }):align(display.LEFT_CENTER, 20, level_bg:getContentSize().height/2)
         :addTo(level_bg)
     -- 建筑功能介绍
     -- 建筑图片 放置区域左右边框
