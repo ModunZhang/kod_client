@@ -129,22 +129,6 @@ function WidgetEventTabButtons:ctor(city)
 
     self.toolShop = city:GetFirstBuildingByType("toolShop")
     self.toolShop:AddToolShopListener(self)
-    -- 事件框下半部分,不计入裁剪区域
-    -- display.newSprite("back_ground_492X14.png"):addTo(node):pos(0,0)
-
-
-    -- self:InitAnimation()
-    -- self.event_queue = {}
-    -- -- 事件队列
-    -- self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function()
-    --     local queue = self.event_queue
-    --     if #queue > 0 and not self:IsInAnimation() then
-    --         local func = queue[1]
-    --         func()
-    --         table.remove(queue, 1)
-    --     end
-    -- end)
-    -- self:scheduleUpdate()
 end
 function WidgetEventTabButtons:onExit()
     self.toolShop:RemoveToolShopListener(self)
@@ -166,7 +150,7 @@ function WidgetEventTabButtons:CreateTabButtons()
         { "build", "build_39x38.png" },
     }
     local tab_map = {}
-    local unit_width = 106
+    local unit_width = 111
     local origin_x = unit_width * 4
     for i, v in ipairs(icon_map) do
         local tab_type = v[1]
@@ -178,7 +162,6 @@ function WidgetEventTabButtons:CreateTabButtons()
         }, unit_width, TAB_HEIGHT)
             :addTo(node):align(display.LEFT_BOTTOM,origin_x + (i - 5) * unit_width, -2)
             :OnTabPress(handler(self, self.OnTabClicked))
-        -- tab_map[tab_type]:scale(110/112)
     end
     local btn = cc.ui.UIPushButton.new({normal = "hide_btn_up_50x48.png",
         pressed = "hide_btn_down_50x48.png"}):addTo(node)
@@ -194,9 +177,10 @@ function WidgetEventTabButtons:CreateTabButtons()
     return node, tab_map
 end
 function WidgetEventTabButtons:CreateBackGround()
-    return cc.ui.UIImage.new("back_ground_492X100.png", {scale9 = true,
-        capInsets = cc.rect(10, 10, WIDGET_WIDTH , 105 - 20)
+    local back = cc.ui.UIImage.new("back_ground_492x100.png", {scale9 = true,
+        capInsets = cc.rect(0, 0, WIDGET_WIDTH , 105 - 20)
     }):align(display.LEFT_BOTTOM):setLayoutSize(WIDGET_WIDTH, 50)
+    return back
 end
 function WidgetEventTabButtons:CreateItem()
     return self:CreateProgressItem():align(display.LEFT_CENTER)
@@ -225,7 +209,7 @@ function WidgetEventTabButtons:CreateProgressItem()
     ,{
         disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
     }):addTo(progress)
-        :align(display.RIGHT_CENTER, 464, 43/2)
+        :align(display.RIGHT_CENTER, 482, 43/2)
         :setButtonLabel(cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("加速"),
@@ -234,7 +218,7 @@ function WidgetEventTabButtons:CreateProgressItem()
             color = UIKit:hex2c3b(0xfff3c7)}))
         :onButtonClicked(function(event)
             end)
-    btn:scale(120/142)
+    -- btn:scale(120/142)
     cc.ui.UIImage.new("divide_line_489x2.png"):addTo(progress)
         :align(display.LEFT_BOTTOM, -4, -5):setScaleX(0.96)
 
@@ -299,7 +283,7 @@ function WidgetEventTabButtons:CreateOpenItem()
     ,{
         disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
     }):addTo(node)
-        :align(display.RIGHT_CENTER, 464, 0)
+        :align(display.RIGHT_CENTER, 482, 0)
         :setButtonLabel(UIKit:ttfLabel({
             text = _("打开"),
             size = 18,
@@ -315,7 +299,6 @@ function WidgetEventTabButtons:CreateOpenItem()
                 UIKit:newGameUI('GameUIToolShop', City, self.toolShop):addToCurrentScene(true)
             end
         end)
-    button:scale(120/142)
 
 
     function node:SetLabel(str)

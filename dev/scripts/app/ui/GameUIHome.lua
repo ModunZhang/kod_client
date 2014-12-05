@@ -42,6 +42,13 @@ function GameUIHome:onEnter()
     -- 上背景
     self:CreateTop()
     self.bottom = self:CreateBottom()
+    self.event_tab = WidgetEventTabButtons.new(self.city)
+    local rect1 = self.chat_bg:getCascadeBoundingBox()
+    local rect2 = self.event_tab:getCascadeBoundingBox()
+    local x, y = rect1.x + rect1.width - rect2.width, rect1.y + rect1.height * 0.48
+    local line = display.newSprite("back_ground_492X14.png")
+    line:addTo(self, 0):align(display.LEFT_TOP, x, y)
+    self.event_tab:addTo(self, 0):pos(x, y)
 
 
 
@@ -290,6 +297,7 @@ function GameUIHome:CreateBottom()
     cc.ui.UIImage.new("home/chat_btn.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width-60, 0)
     local index_1 = display.newSprite("chat_page_index_1.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2-10,chat_bg:getContentSize().height-10)
     local index_2 = display.newSprite("chat_page_index_2.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2+10,chat_bg:getContentSize().height-10)
+    self.chat_bg = chat_bg
 
 
     local pv = cc.ui.UIPageView.new {
@@ -333,12 +341,6 @@ function GameUIHome:CreateBottom()
         pv:addItem(item)
     end
     pv:reload()
-
-   
-
-    self.event_tab = WidgetEventTabButtons.new(self.city)
-        :addTo(bottom_bg):pos(bottom_bg:getContentSize().width - 491, bottom_bg:getContentSize().height + 50)
-
 
     -- 底部按钮
     local first_row = 60
@@ -420,6 +422,8 @@ function GameUIHome:OnBottomButtonClicked(event)
     end
 end
 
+
+-- fte
 function GameUIHome:FTE_FreeSpeedUpFirst()
     self.tutorial_layer = self:CreateTutorialLayer()
     local arrow

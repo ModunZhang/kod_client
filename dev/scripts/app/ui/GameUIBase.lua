@@ -283,3 +283,6 @@ function GameUIBase:CreateTutorialLayer()
     return node:Reset()
 end
 
+
+return GameUIBase
+

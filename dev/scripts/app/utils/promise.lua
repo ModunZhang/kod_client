@@ -212,7 +212,6 @@ function promise:next(success_func, failed_func)
     assert(type(success_func) == "function", "必须要有成功处理函数,如果不想要,请调用catch(func(err)end)")
     table.insert(self.thens, {success_func, failed_func})
     --
-
     local new_p
     if self.state_ == RESOLVED then
         new_p = repeat_resolve(self)

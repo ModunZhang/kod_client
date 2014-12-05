@@ -95,10 +95,10 @@ function GameUIBuild:BuildWithRuins(select_ruins, building_type)
     local w, h = select_ruins.w, select_ruins.h
     local tile = self.build_city:GetTileWhichBuildingBelongs(select_ruins)
     local house_location = tile:GetBuildingLocation(select_ruins)
-    NetManager:getCreateHouseByLocationPromise(tile.location_id, house_location, building_type):catch(function(err)
-        dump(err:reason())
-    end)
-    self:leftButtonClicked()
+    NetManager:getCreateHouseByLocationPromise(tile.location_id,
+        house_location, building_type):done(function()
+        self:leftButtonClicked()
+        end)
 end
 
 function GameUIBuild:CreateItemWithListView(list_view)
@@ -233,7 +233,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
     return item
 end
 
-
+--
 
 function GameUIBuild:FTE_BuildDwelling()
     return self:FTE_BuildHouseByType("dwelling")
@@ -284,6 +284,8 @@ end
 
 
 return GameUIBuild
+
+
 
 
 
