@@ -1055,7 +1055,7 @@ function GameUIMail:CreateReportItem(listview,report)
             text = self:GetReportTitle(report),
             font = UIKit:getFontFilePath(),
             size = 22,
-            dimensions = cc.size(200,24),
+            -- dimensions = cc.size(200,24),
             color = UIKit:hex2c3b(0xffedae)
         }):align(display.LEFT_CENTER, 60, 17)
         :addTo(title_bg)
