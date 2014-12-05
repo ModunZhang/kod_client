@@ -1096,7 +1096,7 @@ function GameUIMail:CreateReportItem(listview,report)
     local from_alliance_label =  cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = "["..report[report.type].playerData.allianceName.."]",
+            text = "["..report[report.type].playerData.allianceTag.."]",
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
@@ -1131,7 +1131,7 @@ function GameUIMail:CreateReportItem(listview,report)
     local to_alliance_label =  cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = "["..report[report.type].enemyPlayerData.allianceName.."]",
+            text = "["..report[report.type].enemyPlayerData.allianceTag.."]",
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
