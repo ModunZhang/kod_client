@@ -284,7 +284,7 @@ function CommonUpgradeUI:InitUpgradePart()
             end
         end):align(display.CENTER, display.cx-150, display.top-410):addTo(self.upgrade_layer)
     -- upgrade button
-    WidgetPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
+    self.upgrade_btn = WidgetPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("升级"),
             size = 24,

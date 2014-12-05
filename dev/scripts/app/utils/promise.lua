@@ -112,7 +112,6 @@ local function handle_result(p, success, result, failed_func)
     if success then
         if is_promise(result) then
             local last_p = last_promise(result)
-            -- dump(result)
             table.insert(last_p.next_promises, p)
             assert(#last_p.next_promises == 1)
             return success_promise, last_p, last_p ~= result
@@ -171,8 +170,8 @@ local function resolve(p, data)
     assert(p.state_ == PENDING, p.state_)
     p.state_ = RESOLVED
     p.result = data
-    repeat_resolve(p)
-    return p
+    local pp = repeat_resolve(p)
+    return pp or p
 end
 local function clear_promise(p)
     p.thens = {}
@@ -205,7 +204,7 @@ function promise:resolve(data)
     return resolve(self, data)
 end
 function promise:next(success_func, failed_func)
-    if is_promise(success_func) then
+    if type(success_func) ~= "function" then
         local p = success_func
         success_func = function() return p end
     end

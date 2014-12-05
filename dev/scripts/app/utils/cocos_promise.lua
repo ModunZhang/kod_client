@@ -60,6 +60,7 @@ local function promiseOfMoveTo(node, x, y, time, easing)
 end
 
 return {
+    Delay = delay_,
     delay = delay,
     timeOut = timeOut,
     promiseWithTimeOut = promiseWithTimeOut,

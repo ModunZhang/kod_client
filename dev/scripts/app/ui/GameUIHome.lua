@@ -437,8 +437,8 @@ function GameUIHome:FTE_FreeSpeedUpFirst()
         self:GetTutorialLayer():Enable():SetTouchObject(btn)
         return item
     end):next(function(item)
-        local house_type = string.split(item:GetEventKey(), "_")[1]
-        return self.city:PromiseOfFinishUpgradingByLevel(house_type)
+        local building_type = string.split(item:GetEventKey(), "_")[1]
+        return self.city:PromiseOfFinishUpgradingByLevel(building_type)
     end):next(function()
         self.tutorial_layer:removeFromParent()
         self.tutorial_layer = nil

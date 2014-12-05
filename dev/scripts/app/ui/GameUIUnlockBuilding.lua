@@ -4,6 +4,7 @@ local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
 local UpgradeBuilding = import("..entity.UpgradeBuilding")
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
+local promise = import("..utils.promise")
 local MaterialManager = import("..entity.MaterialManager")
 
 local GameUIUnlockBuilding = class("GameUIUnlockBuilding", function ()
@@ -21,6 +22,9 @@ function GameUIUnlockBuilding:ctor( city, tile )
 end
 function GameUIUnlockBuilding:OnResourceChanged(resource_manager)
     self:SetUpgradeRequirementListview()
+end
+function GameUIUnlockBuilding:onEnter()
+    UIKit:CheckOpenUI(self)
 end
 function GameUIUnlockBuilding:onExit()
     self.city:GetResourceManager():RemoveObserver(self)
@@ -82,17 +86,15 @@ function GameUIUnlockBuilding:Init()
             end
         end):align(display.CENTER, display.cx-150, display.top-380):addTo(self)
     -- upgrade button
-    cc.ui.UIPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
+    self.upgrade_btn = cc.ui.UIPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
         :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("解锁"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 local upgrade_listener = function()
-                    -- NetManager:upgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), NOT_HANDLE)
-
                     local location_id = City:GetLocationIdByBuildingType(self.building:GetType())
                     NetManager:getUpgradeBuildingByLocationPromise(location_id)
-                        :catch(function(err)
-                            dump(err:reason())
+                        :done(function(err)
+                            self:removeFromParent(true)
                         end)
                 end
 
@@ -101,7 +103,6 @@ function GameUIUnlockBuilding:Init()
                     self:PopNotSatisfyDialog(upgrade_listener,can_not_update_type)
                 else
                     upgrade_listener()
-                    self:removeFromParent(true)
                 end
             end
         end):align(display.CENTER, display.cx+180, display.top-380):addTo(self)
@@ -238,17 +239,22 @@ end
 function GameUIUnlockBuilding:SetUpgradeTime()
     self.upgrade_time:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradeTimeToNextLevel()))
 end
+
+
+---
+local Arrow = import(".Arrow")
+local TutorialLayer = import(".TutorialLayer")
+function GameUIUnlockBuilding:FTE_Unlock(building_type)
+    return promise.new():next(function(item)
+        local arrow = Arrow.new():addTo(TutorialLayer.new(self.upgrade_btn):addTo(self, 3000):Enable())
+        local rect = self.upgrade_btn:getCascadeBoundingBox()
+        arrow:OnPositionChanged(rect.x, rect.y)
+    end):next(function()
+        return self.city:PromiseOfUpgradingByLevel(building_type, 0)
+    end):resolve()
+end
+
+
 return GameUIUnlockBuilding
-
-
-
-
-
-
-
-
-
-
-
 
 

@@ -309,7 +309,7 @@ module( "test_promise", lunit.testcase, package.seeall )
 --         assert_equal(p2, ...)
 --     end):catch(function(err)
 
---     end)
+--         end)
 
 
 --     Game.new():OnUpdate(function(time)
@@ -340,18 +340,18 @@ module( "test_promise", lunit.testcase, package.seeall )
 --     p2.tag = 2
 --     p3.tag = 3
 --     local pp = p1:next(function()
---         local p = p2:resolve():next(function()
+--         local p = p2:next(function()
 --             return p3:next(function()
 --                 print("hello1")
 --             end)
---         end)
+--         end):resolve()
 --         return p
 --     end):next(function()
 --         print("hello2")
 --     end)
 
 --     local p = p1:resolve()
---     -- p3:resolve()
+--     p3:resolve()
 -- end
 
 
@@ -388,40 +388,62 @@ module( "test_promise", lunit.testcase, package.seeall )
 
 
 function test_promise12()
-    local p1 = promise.new():next(function()
-        print("p1 hello")
-        return 1
-    end)
-    local p2 = promise.new():next(function()
-        print("p2 hello")
-        return 2
-    end)
-    -- local p3 = promise.new(function() print(33333) end):resolve(3)
+    local p1 = promise.new()
+    local p2 = promise.new():next(function(...) return ... end)
+    local p3 = promise.new()
+
     p1.tag = 1
     p2.tag = 2
+    p3.tag = 3
 
-    promise.new()
-        :next(promise.all(
-            p1:next(p2):next(function()
-                return promise.new(function() print(33333) end):resolve(3)
-            end)))
-        :next(function(args)
-            dump(args)
-        end)
-        :resolve()
-
-    -- GameUINpc:PromiseOfInput():next(self:PromiseOfClickBuilding(12, 12))
-    -- :next()
-
-    Game.new():OnUpdate(function(time)
-        if time == 1 then
-            p1:resolve(1)
-        elseif time == 10 then
-        -- p2:resolve(2)
-        end
-        return time <= 100
+    local p = p1:next(p2):next(function(...)
+        print("hello1")
+        return 1
+    end):resolve()
+    p:next(function(...)
+        print("helo2")
+        return 2
     end)
+    p2:resolve()
+    -- p1:next(function()
+    --     print(1)
+    -- end)
+    --     :next(function()
+    --         local p = p2
+    --             :next(function()
+    --                 print(2)
+    --             end)
+    --             :next(p3)
+    --             :next(function()
+    --                 print("next1")
+    --             end)
+    --             :resolve()
+    --             -- :next(function()
+    --             --     print("next2")
+    --             -- end)
+    --             :next(function()
+    --                 print("next3")
+    --             end)
+    --         return p
+    --     end)
+    --     :next(function() print("end") end):resolve()
+
+
+    -- p3:resolve()
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

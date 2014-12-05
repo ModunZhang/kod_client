@@ -26,7 +26,7 @@ function CityScene:onEnter()
     self:GetSceneLayer():AddObserver(self)
     self:GetSceneLayer():InitWithCity(city)
     self:PlayBackgroundMusic()
-    self:GotoLogicPoint(6, 4)
+    self:GotoLogicPointInstant(6, 4)
     self:GetSceneLayer():ZoomTo(0.7)
 
     -- local ai_create_house_array = {
@@ -187,13 +187,21 @@ function CityScene:CreateSceneUILayer()
         self.levelup_node:fadeTo(0.5, 0)
         self.status = "hide"
     end
+    function scene_ui_layer:IteratorLockButtons(func)
+        table.foreach(self.lock_buttons, func)
+    end
     scene_ui_layer:Init()
     return scene_ui_layer
 end
 -- function
-function CityScene:GotoLogicPoint(x, y)
+function CityScene:GotoLogicPointInstant(x, y)
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(x, y)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
+end
+function CityScene:GotoLogicPoint(x, y)
+    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(x, y)
+    return self:GetSceneLayer():PromiseOfMove(point.x, point.y)
+    :next(function() print("hello") end)
 end
 function CityScene:PlayBackgroundMusic()
     audio.playMusic("audios/music_city.mp3", true)

@@ -22,6 +22,7 @@ end
 --------------------------------------
 function GameUIBase:onEnter()
     print("onEnter->")
+    UIKit:CheckOpenUI(self)
 end
 
 function GameUIBase:onEnterTransitionFinish()

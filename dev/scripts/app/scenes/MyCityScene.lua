@@ -1,5 +1,6 @@
 local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
+local TutorialLayer = import("..ui.TutorialLayer")
 local GameUINpc = import("..ui.GameUINpc")
 local Arrow = import("..ui.Arrow")
 local CityScene = import(".CityScene")
@@ -22,9 +23,17 @@ function MyCityScene:onEnter()
     city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
 
 
+    -- self:PromiseOfClickLockButton("barracks"):next(function(ui)
+    --     return ui:FTE_Unlock("barracks")
+    -- end)
+
     -- promise.new()
-    -- :next(function() return self:PromiseOfClickBuilding(8, 8) end)
-    -- :resolve()
+    --     :next(function() return self:PromiseOfClickBuilding(8, 8) end)
+    --     :next(UIKit:PromiseOfOpen("GameUIKeep"))
+    --     :next(function(ui) return ui:FTE_Upgrade() end)
+    --     :next(function() return home_page:FTE_FreeSpeedUpFirst() end)
+    --     :resolve()
+
 
 
     -- promise.new()
@@ -78,6 +87,7 @@ function MyCityScene:onEnter()
     --     end)
     --     :next(function() return GameUINpc:PromiseOfLeave() end)
     --     :resolve()
+    -- dump(self:GetLockButtonsByBuildingType("barracks"))
 end
 function MyCityScene:CreateHomePage()
     local home = UIKit:newGameUI('GameUIHome', self.city):addToScene(self)
@@ -124,9 +134,32 @@ function MyCityScene:CheckClickPromise(building)
     if #self.clicked_callbacks > 0 then
         if self.clicked_callbacks[1](building) then
             table.remove(self.clicked_callbacks, 1)
+            return true
         end
+    else
         return true
     end
+end
+function MyCityScene:PromiseOfClickLockButton(building_type)
+    local btn = self:GetLockButtonsByBuildingType("barracks")
+    local tutorial_layer = TutorialLayer.new(btn):addTo(self, 3000):Enable()
+    local rect = btn:getCascadeBoundingBox()
+    Arrow.new():addTo(tutorial_layer):OnPositionChanged(rect.x, rect.y)
+    return UIKit:PromiseOfOpen("GameUIUnlockBuilding"):next(function(ui)
+        tutorial_layer:removeFromParent()
+        return ui
+    end)
+end
+function MyCityScene:GetLockButtonsByBuildingType(building_type)
+    local lock_button
+    local location_id = self.city:GetLocationIdByBuildingType(building_type)
+    self.scene_ui_layer:IteratorLockButtons(function(_, v)
+        if v.sprite:GetEntity().location_id == location_id then
+            lock_button = v
+            return true
+        end
+    end)
+    return lock_button
 end
 
 
@@ -207,9 +240,8 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     local city = self.city
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
-        if self:CheckClickPromise(building) then
-            return
-        end
+        if not self:CheckClickPromise(building) then return end
+
         if building:GetEntity():GetType() == "ruins" then
             UIKit:newGameUI('GameUIBuild', city, building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "keep" then
@@ -257,6 +289,10 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     end
 end
 return MyCityScene
+
+
+
+
 
 
 

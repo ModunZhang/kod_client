@@ -4,6 +4,7 @@
 --
 -- 封装常用ui工具
 import(".bit")
+local promise = import(".promise")
 UIKit =
     {
         Registry   = import('framework.cc.Registry'),
@@ -11,6 +12,29 @@ UIKit =
     }
 local CURRENT_MODULE_NAME = ...
 
+UIKit.open_ui_callbacks = {}
+
+function UIKit:PromiseOfOpen(ui_name)
+    local callbacks = self.open_ui_callbacks
+    assert(#callbacks == 0)
+    local p = promise.new()
+    table.insert(callbacks, function(ui)
+        if ui_name == ui.__cname then
+            p:resolve(ui)
+            return true
+        end
+    end)
+    return p
+end
+function UIKit:CheckOpenUI(ui)
+    local callbacks = self.open_ui_callbacks
+    if #callbacks > 0 and callbacks[1](ui) then
+        table.remove(callbacks, 1)
+    end
+end
+function UIKit:ClearPromise()
+    self.open_ui_callbacks = {}
+end
 
 function UIKit:createUIClass(className, baseName)
     return class(className, baseName == nil and self["GameUIBase"] or import('..ui.' .. baseName,CURRENT_MODULE_NAME))

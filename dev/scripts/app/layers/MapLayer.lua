@@ -1,16 +1,65 @@
+local promise = import("..utils.promise")
 local MapLayer = class("MapLayer", function(...)
     local layer = display.newLayer()
     layer:setAnchorPoint(0, 0)
     return layer
 end)
-
+local speed = 10
 ----
 function MapLayer:ctor(min_scale, max_scale)
     self.min_scale = min_scale
     self.max_scale = max_scale
+
+    self.target_position = nil
+    self.move_callbacks = {}
+    local node = display.newNode():addTo(self)
+    node:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
+        local target_position = self.target_position
+        if target_position then
+            local x, y = target_position.x, target_position.y
+            local scene_mid_point = self:getParent():convertToNodeSpace(cc.p(display.cx, display.cy))
+            local new_scene_mid_point = self:ConverToParentPosition(x, y)
+            local dx, dy = scene_mid_point.x - new_scene_mid_point.x, scene_mid_point.y - new_scene_mid_point.y
+            local normal = cc.pNormalize({x = dx, y = dy})
+            local current_x, current_y = self:getPosition()
+            local new_x, new_y = current_x + normal.x * speed, current_y + normal.y * speed
+            local tx, ty = current_x + dx, current_y + dy
+            if (tx - current_x) * (tx - new_x) < 0 or (ty - current_y) * (ty - new_y) < 0 then
+                self.target_position = nil
+                new_x, new_y = tx, ty
+                local move_callbacks = self.move_callbacks
+                if #move_callbacks > 0 then
+                    (table.remove(move_callbacks, 1))()
+                end
+            end
+            self:setPosition(cc.p(new_x, new_y))
+        end
+    end)
+    node:scheduleUpdate()
+end
+function MapLayer:ConverToParentPosition(x, y)
+    local world_point = self:convertToWorldSpace(cc.p(x, y))
+    return self:getParent():convertToNodeSpace(world_point)
+end
+function MapLayer:MoveToPosition(map_x, map_y)
+    if map_x and map_y then
+        self.target_position = {x = map_x, y = map_y}
+    else
+        self.target_position = nil
+    end
 end
 function MapLayer:GetLogicMap()
     return nil
+end
+function MapLayer:PromiseOfMove(map_x, map_y)
+    local move_callbacks = self.move_callbacks
+    assert(#move_callbacks == 0)
+    local p = promise.new()
+    self:MoveToPosition(map_x, map_y)
+    table.insert(move_callbacks, function()
+        p:resolve()
+    end)
+    return p
 end
 ------zoom
 function MapLayer:ZoomBegin()
@@ -26,11 +75,11 @@ function MapLayer:ZoomTo(scale)
 end
 function MapLayer:ZoomBy(scale)
     self:setScale(math.min(math.max(self.scale_current * scale, self.min_scale), self.max_scale))
-    local scene_point = self:getParent():convertToWorldSpace(cc.p(display.cx, display.cy))
-    local world_point = self:convertToWorldSpace(cc.p(self.scale_point.x, self.scale_point.y))
-    local new_scene_point = self:getParent():convertToNodeSpace(world_point)
+    local scale_point = self.scale_point
+    local scene_mid_point = self:getParent():convertToWorldSpace(cc.p(display.cx, display.cy))
+    local new_scene_mid_point = self:ConverToParentPosition(scale_point.x, scale_point.y)
     local cur_x, cur_y = self:getPosition()
-    local new_position = cc.p(cur_x + scene_point.x - new_scene_point.x, cur_y + scene_point.y - new_scene_point.y)
+    local new_position = cc.p(cur_x + scene_mid_point.x - new_scene_mid_point.x, cur_y + scene_mid_point.y - new_scene_mid_point.y)
     self:setPosition(new_position)
     self:OnSceneScale()
     return self
@@ -44,9 +93,8 @@ end
 -------
 function MapLayer:GotoMapPositionInMiddle(x, y)
     local scene_mid_point = self:getParent():convertToNodeSpace(cc.p(display.cx, display.cy))
-    local world_point = self:convertToWorldSpace(cc.p(x, y))
-    local new_scene_point = self:getParent():convertToNodeSpace(world_point)
-    local dx, dy = scene_mid_point.x - new_scene_point.x, scene_mid_point.y - new_scene_point.y
+    local new_scene_mid_point = self:ConverToParentPosition(x, y)
+    local dx, dy = scene_mid_point.x - new_scene_mid_point.x, scene_mid_point.y - new_scene_mid_point.y
     local current_x, current_y = self:getPosition()
     self:setPosition(cc.p(current_x + dx, current_y + dy))
 end
@@ -71,7 +119,7 @@ function MapLayer:GetLeftBottomPositionWithConstrain(x, y)
     return left_bottom_pos
 end
 function MapLayer:GetRightTopPositionWithConstrain(x, y)
-        -- 右上角是否超出
+    -- 右上角是否超出
     local parent_node = self:getParent()
     local world_top_right_point = self:convertToWorldSpace(cc.p(self:getContentWidthAndHeight()))
     local scene_top_right_position = parent_node:convertToNodeSpace(world_top_right_point)
@@ -101,6 +149,13 @@ function MapLayer:OnSceneScale()
 
 end
 return MapLayer
+
+
+
+
+
+
+
 
 
 
