@@ -159,14 +159,14 @@ function RandomMapUtil:Random()
     self:randomRect(map,rects,random_map,4,RandomMapUtil.TILE_TYPE.TREE,20)
     self.rects = rects
     if CONFIG_IS_DEBUG then
-        print("大山------>",RandomMapUtil.TILE_TYPE.BIG_MOUNTAIN,r_3_1)
-        print("联盟建筑------>",RandomMapUtil.TILE_TYPE.ALLIANCE_BUILDING,r_3_2)
-        print("大湖------>", RandomMapUtil.TILE_TYPE.BIG_LAKE,r_3_3)
-        print("小山------>",RandomMapUtil.TILE_TYPE.SMALL_MOUNTAIN,r_2_1)
-        print("小湖------>",RandomMapUtil.TILE_TYPE.SMALL_LAKE,r_2_2)
-        print("树------>",RandomMapUtil.TILE_TYPE.TREE,20)
-        print("战斗士兵------>",RandomMapUtil.TILE_TYPE.FIGHT,fight_count)
-        self:out_put_map(map)
+        -- print("大山------>",RandomMapUtil.TILE_TYPE.BIG_MOUNTAIN,r_3_1)
+        -- print("联盟建筑------>",RandomMapUtil.TILE_TYPE.ALLIANCE_BUILDING,r_3_2)
+        -- print("大湖------>", RandomMapUtil.TILE_TYPE.BIG_LAKE,r_3_3)
+        -- print("小山------>",RandomMapUtil.TILE_TYPE.SMALL_MOUNTAIN,r_2_1)
+        -- print("小湖------>",RandomMapUtil.TILE_TYPE.SMALL_LAKE,r_2_2)
+        -- print("树------>",RandomMapUtil.TILE_TYPE.TREE,20)
+        -- print("战斗士兵------>",RandomMapUtil.TILE_TYPE.FIGHT,fight_count)
+        -- self:out_put_map(map)
     end
 end
 
@@ -214,12 +214,17 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 -- GameUISplash
 
+local tile_w = math.ceil(display.width/8)
+local tile_h = math.ceil(display.height/12)
+local scale_tile = math.min(tile_w,tile_h)
+local layer_offset_x = tile_w * 16 - display.width * 2
+
 local building_map = {
-    {"palace_421x481.png", 160/481},
-    {"shrine_256x210.png", 160/256},
-    {"shop_268x274.png", 160/274},
-    {"orderHall_277x417.png", 160/417},
-    {"moonGate_200x217.png", 160/217},
+    {"palace_421x481.png", scale_tile*2/481},
+    {"shrine_256x210.png", scale_tile*2/256 * 0.7},
+    {"shop_268x274.png", scale_tile*2/274 * 0.5},
+    {"orderHall_277x417.png", scale_tile*2/417},
+    {"moonGate_200x217.png", scale_tile*2/217},
 }
 
 local ZORDER = {
@@ -237,7 +242,7 @@ local random = math.random
 local timer_val = 20
 GameUISplash.SOLDIER_2_1_TYPE = Enum("I_VS_I","C_VS_C","C_VS_I")
 GameUISplash.WATCHER_ANIMATE = {
-    {"Cavalry_1_render",80/400}, {"Infantry_1_render",80/336},{"Archer_1_render",80/340},{"Catapult_1_render",80/200}
+    {"Cavalry_1_render",scale_tile/400}, {"Infantry_1_render",scale_tile/336},{"Archer_1_render",scale_tile/340} --,{"Catapult_1_render",scale_tile/200}
 }
 local function random_indexes_in_rect(number, rect,perRect)
     local indexes = {}
@@ -310,7 +315,7 @@ function GameUISplash:onCleanup()
 end
 
 function GameUISplash:AddLyaer_2()
-	local layer_2 = self:CreateOneFullLayer():addTo(self,self:GetMaxZorder()):pos(display.width-2,0)
+	local layer_2 = self:CreateOneFullLayer():addTo(self,self:GetMaxZorder()):pos(display.width + layer_offset_x - 4,0)
 	local sequence = transition.sequence({
     	cc.MoveTo:create(timer_val*2, cc.p(-display.width, 0)),
     	cc.CallFunc:create(handler(self, self.AddLyaer_2)),
@@ -328,7 +333,7 @@ function GameUISplash:GetMaxZorder()
     return ret
 end
 
-function GameUISplash:CreateOneFullLayer()
+function GameUISplash:CreateOneFullLayer(png)
 	local layer = display.newLayer()
 	self:InitBottomBackground():addTo(layer, ZORDER.BOTTOM)
 	self:InitMiddleBackground():addTo(layer, ZORDER.MIDDLE)
@@ -352,13 +357,13 @@ function GameUISplash:RandomVsSoliders(layer,postion_x,postion_y)
         local infantry_1 = ccs.Armature:create("Infantry_1_render")
                 :align(display.RIGHT_BOTTOM, postion_x - 40 ,postion_y)
                 :addTo(layer)
-                :scale(80/336)
+                :scale(scale_tile/336)
         infantry_1:getAnimation():play("attack", -1, -1)
         local infantry_2 = ccs.Armature:create("Infantry_1_render")
                 :align(display.LEFT_BOTTOM, postion_x,postion_y)
                 :addTo(layer)
-        infantry_2:setScaleY(80/336)
-        infantry_2:setScaleX(-80/336)
+        infantry_2:setScaleY(scale_tile/336)
+        infantry_2:setScaleX(-scale_tile/336)
         self:performWithDelay(function()
             infantry_2:getAnimation():play("attack", -1, -1)
         end, 1)
@@ -366,13 +371,13 @@ function GameUISplash:RandomVsSoliders(layer,postion_x,postion_y)
         local cavalry_1 = ccs.Armature:create("Cavalry_1_render")
             :align(display.RIGHT_BOTTOM, postion_x - 40 ,postion_y)
             :addTo(layer)
-            :scale(80/400)
+            :scale(scale_tile/400)
         cavalry_1:getAnimation():play("attack", -1, -1)
         local cavalry_2 = ccs.Armature:create("Cavalry_1_render")
             :align(display.LEFT_BOTTOM, postion_x,postion_y)
             :addTo(layer)
-        cavalry_2:setScaleY(80/400)
-        cavalry_2:setScaleX(-80/400)
+        cavalry_2:setScaleY(scale_tile/400)
+        cavalry_2:setScaleX(-scale_tile/400)
         self:performWithDelay(function()
             cavalry_2:getAnimation():play("attack", -1, -1)
         end, 1)
@@ -380,13 +385,13 @@ function GameUISplash:RandomVsSoliders(layer,postion_x,postion_y)
         local cavalry_1 = ccs.Armature:create("Cavalry_1_render")
             :align(display.RIGHT_BOTTOM, postion_x - 40 ,postion_y)
             :addTo(layer)
-            :scale(80/400)
+            :scale(scale_tile/400)
         cavalry_1:getAnimation():play("attack", -1, -1)
         local infantry_2 = ccs.Armature:create("Infantry_1_render")
                 :align(display.LEFT_BOTTOM, postion_x,postion_y)
                 :addTo(layer)
-        infantry_2:setScaleY(80/336)
-        infantry_2:setScaleX(-80/336)
+        infantry_2:setScaleY(scale_tile/336)
+        infantry_2:setScaleX(-scale_tile/336)
         self:performWithDelay(function()
             infantry_2:getAnimation():play("attack", -1, -1)
         end, 1)
@@ -404,13 +409,10 @@ function GameUISplash:RandomWatcher(layer,postion_x,postion_y)
 end
 
 function GameUISplash:BuildDecorateWithiOffset(map_data,layer,offset_x,offset_y)
-    dump(map_data)
     for _,v in ipairs(map_data) do
         local postion_x,postion_y = unpack(self:ConvertToLocalPosition(v.x,v.y))
         postion_x = postion_x + (offset_x or 0)
         postion_y = postion_y + (offset_y or 0)
-        print("postion_x------>",postion_x,postion_y)
-        dump(layer:convertToNodeSpace(cc.p(postion_x,postion_y)))
         local text  = v.type
         
         if v.type == RandomMapUtil.TILE_TYPE.PLAYER_CITY then
@@ -419,14 +421,14 @@ function GameUISplash:BuildDecorateWithiOffset(map_data,layer,offset_x,offset_y)
             display.newSprite(UILib.decorator_image.decorate_tree_1)
                  :align(display.RIGHT_BOTTOM,postion_x,postion_y)
                 :addTo(layer)
-                :scale(80/120)
+                :scale(scale_tile/120)
         elseif v.type == RandomMapUtil.TILE_TYPE.FIGHT then  
            self:RandomVsSoliders(layer,postion_x,postion_y)
         elseif v.type == RandomMapUtil.TILE_TYPE.SMALL_LAKE then
             local sp = display.newSprite(UILib.decorator_image.decorate_lake_2)
                 :align(display.RIGHT_BOTTOM,postion_x,postion_y)
                 :addTo(layer)
-                :scale(160/228)
+                :scale(scale_tile*2/228)
             if v.flipX then
                 sp:setFlippedX(true)
             end
@@ -434,7 +436,7 @@ function GameUISplash:BuildDecorateWithiOffset(map_data,layer,offset_x,offset_y)
             local sp = display.newSprite(UILib.decorator_image.decorate_mountain_2)
                  :align(display.RIGHT_BOTTOM,postion_x,postion_y)
                 :addTo(layer)
-                :scale(160/228)
+                :scale(scale_tile*2/228)
             if v.flipX then
                 sp:setFlippedX(true)
             end
@@ -445,7 +447,7 @@ function GameUISplash:BuildDecorateWithiOffset(map_data,layer,offset_x,offset_y)
             local sp = display.newSprite(UILib.decorator_image.decorate_lake_1)
                  :align(display.RIGHT_BOTTOM,postion_x,postion_y)
                 :addTo(layer)
-                :scale(240/288)
+                :scale(scale_tile*3/288)
             if v.flipX then
                 sp:setFlippedX(true)
             end
@@ -460,7 +462,7 @@ function GameUISplash:BuildDecorateWithiOffset(map_data,layer,offset_x,offset_y)
             local sp = display.newSprite(UILib.decorator_image.decorate_mountain_1)
                  :align(display.RIGHT_BOTTOM,postion_x,postion_y)
                 :addTo(layer)  
-                :scale(240/312)
+                :scale(scale_tile*3/312)
             if v.flipX then
                 sp:setFlippedX(true)
             end
@@ -468,18 +470,20 @@ function GameUISplash:BuildDecorateWithiOffset(map_data,layer,offset_x,offset_y)
         end
      end
 end
-
+-- grass_80x80
 function GameUISplash:InitBottomBackground()
 	local bottom_layer = display.newLayer()
-	local numOfRow = math.ceil(display.height/80) * 2
-	local numOfHor = math.ceil(display.width/80) * 2
+	local numOfRow = 12
+	local numOfHor = 16
 	local x,y = 0,0
 	for col=1,numOfRow do
 		for hor=1,numOfHor do
-			display.newSprite("grass_80x80.png"):align(display.LEFT_BOTTOM,x, y):addTo(bottom_layer)
-			x = x + 80
+			local sp = display.newSprite("grass_80x80.png"):align(display.LEFT_BOTTOM,x, y):addTo(bottom_layer)
+            sp:setScaleX(tile_w/80)
+            sp:setScaleY(tile_h/80)
+			x = x + tile_w
 		end
-		y = y + 80
+		y = y + tile_h
 		x = 0
 	end
 	return bottom_layer
@@ -523,52 +527,52 @@ function GameUISplash:InitSoldiersLayer()
     local x,y = unpack(self:ConvertToLocalPosition(6,9))
     local cavalry_1 = ccs.Armature:create("Cavalry_1_render"):addTo(soldiers_layer):pos(x - 40,y + 20 + 20)
     cavalry_1:getAnimation():play("move_2", -1, -1)
-    cavalry_1:scale(80/400)
+    cavalry_1:scale(scale_tile/400)
     x,y = unpack(self:ConvertToLocalPosition(6,8))
     local cavalry_2 = ccs.Armature:create("Cavalry_1_render"):addTo(soldiers_layer):pos(x - 40,y)
     cavalry_2:getAnimation():play("move_2", -1, -1)
-    cavalry_2:scale(80/400)
+    cavalry_2:scale(scale_tile/400)
     --步兵
     x,y = unpack(self:ConvertToLocalPosition(5,8))
     local infantry_1 = ccs.Armature:create("Infantry_1_render"):addTo(soldiers_layer):pos(x - 10,y)
     infantry_1:getAnimation():play("move_2", -1, -1)
-    infantry_1:scale(80/336)
+    infantry_1:scale(scale_tile/336)
     local infantry_2 = ccs.Armature:create("Infantry_1_render"):addTo(soldiers_layer):pos(x - 40,y)
     infantry_2:getAnimation():play("move_2", -1, -1)
-    infantry_2:scale(80/336)
+    infantry_2:scale(scale_tile/336)
     x,y = unpack(self:ConvertToLocalPosition(5,9))
     local infantry_3 = ccs.Armature:create("Infantry_1_render"):addTo(soldiers_layer):pos(x - 10,y + 20 + 20)
     infantry_3:getAnimation():play("move_2", -1, -1)
-    infantry_3:scale(80/336)
+    infantry_3:scale(scale_tile/336)
     local infantry_4 = ccs.Armature:create("Infantry_1_render"):addTo(soldiers_layer):pos(x - 40,y + 20 + 20)
     infantry_4:getAnimation():play("move_2", -1, -1)
-    infantry_4:scale(80/336)
+    infantry_4:scale(scale_tile/336)
     --弓箭手
     x,y = unpack(self:ConvertToLocalPosition(4,8))
     -- Archer_1_render
     local archer_1 = ccs.Armature:create("Archer_1_render"):addTo(soldiers_layer):pos(x - 10,y)
     archer_1:getAnimation():play("move_2", -1, -1)
-    archer_1:scale(80/340)
+    archer_1:scale(scale_tile/340)
     local archer_2 = ccs.Armature:create("Archer_1_render"):addTo(soldiers_layer):pos(x - 40,y)
     archer_2:getAnimation():play("move_2", -1, -1)
-    archer_2:scale(80/340)
+    archer_2:scale(scale_tile/340)
     x,y = unpack(self:ConvertToLocalPosition(4,9))
     local archer_3 = ccs.Armature:create("Archer_1_render"):addTo(soldiers_layer):pos(x - 10,y + 20 + 20)
     archer_3:getAnimation():play("move_2", -1, -1)
-    archer_3:scale(80/340)
+    archer_3:scale(scale_tile/340)
     local archer_4 = ccs.Armature:create("Archer_1_render"):addTo(soldiers_layer):pos(x - 40,y + 20 + 20)
     archer_4:getAnimation():play("move_2", -1, -1)
-    archer_4:scale(80/340)
+    archer_4:scale(scale_tile/340)
     --投石车
     x,y = unpack(self:ConvertToLocalPosition(3,9))
     local catapult = ccs.Armature:create("Catapult_1_render"):addTo(soldiers_layer):pos(x - 40,y + 50)
     catapult:getAnimation():play("move_2", -1, -1)
-    catapult:scale(80/200)
+    catapult:scale(scale_tile/200)
 	return soldiers_layer
 end
 
 function GameUISplash:ConvertToLocalPosition(map_x, map_y)
-    return {map_x * 80,display.height - map_y * 80}
+    return {map_x * tile_w,display.height - map_y * tile_h}
 end
 
 function GameUISplash:InitUILayer()

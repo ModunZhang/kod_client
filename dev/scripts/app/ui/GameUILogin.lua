@@ -16,11 +16,12 @@ function GameUILogin:onEnter()
     assert(self.ui_layer)
     self:createProgressBar()
     self:createTips()
+    self:createStartGame()
 end
 
 
 function GameUILogin:onMoveInStage()
-    -- self:proLoad()
+    self:proLoad()
 end
 
 -- Private Methods
@@ -45,6 +46,7 @@ function GameUILogin:createProgressBar()
     }):addTo(bar):align(display.CENTER,bar:getContentSize().width/2,bar:getContentSize().height/2)
     self.progressTips = label
     self.progressTimer = ProgressTimer
+    self.progress_bar = bar
 end
 
 function GameUILogin:createTips()
@@ -57,6 +59,22 @@ function GameUILogin:createTips()
         align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
         color = UIKit:hex2c3b(0xaaa87f),
     }):addTo(bgImage):align(display.CENTER,bgImage:getContentSize().width/2,bgImage:getContentSize().height/2)
+    self.tips_ui = bgImage
+end
+
+function GameUILogin:createStartGame()
+    local button = cc.ui.UIPushButton.new({
+        normal = "start_game_481x31.png"
+    },{},{down = GameConfig.AUDIO.BUTTON.NORMAL_DOWN_START}):addTo(self.ui_layer):pos(display.cx,display.bottom+150):hide()
+    :onButtonClicked(function()
+        local sp = cc.Spawn:create(cc.ScaleTo:create(1,1.5),cc.FadeOut:create(1))
+        local seq = transition.sequence({sp,cc.CallFunc:create(function()
+            app:EnterMyCityScene()
+            end)
+        })
+        self.start_ui:runAction(seq)
+    end)
+    self.start_ui = button
 end
 
 function GameUILogin:setProgressText(str)
@@ -115,7 +133,14 @@ end
 
 function GameUILogin:login()
     self:setProgressText(_("登陆游戏服务器...."))
-    NetManager:getLoginPromise():catch(function(err)
+    NetManager:getLoginPromise():next(function()
+        self:setProgressText(_("登录游戏成功!"))
+        self:performWithDelay(function()
+            self.progress_bar:hide()
+            self.tips_ui:hide()
+            self.start_ui:show()
+        end, 0.5)
+    end):catch(function(err)
         dump(err:reason())
         self:setProgressText(_("登录游戏失败!"))
     end)
