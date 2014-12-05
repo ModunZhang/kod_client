@@ -48,9 +48,9 @@ function GameUIStrikeReport:GetBattleCityName()
     local report = self.report
     local report_content = report[report.type]
     if report.type == "strikeCity" then
-        return string.format(_("Battle at %s (坐标-服务器无数据)"),report_content.enemyPlayerData.cityName)
+        return string.format(_("Battle at %s (%d,%d)"),report_content.enemyPlayerData.cityName,report_content.enemyPlayerData.location.x,report_content.enemyPlayerData.location.y)
     elseif report.type== "cityBeStriked" then
-        return string.format(_("Battle at %s (坐标-服务器无数据)"),report_content.playerData.cityName)
+        return string.format(_("Battle at %s (%d,%d)"),report_content.playerData.cityName,report_content.playerData.location.x,report_content.playerData.location.y)
     end
 end
 function GameUIStrikeReport:GetBooty()
