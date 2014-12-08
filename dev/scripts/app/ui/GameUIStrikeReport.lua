@@ -99,7 +99,13 @@ function GameUIStrikeReport:onEnter()
         end):align(display.CENTER, title:getContentSize().width-10, title:getContentSize().height-10)
         :addTo(title):addChild(display.newSprite("X_3.png"))
     -- 突袭结果图片
-    local strike_result_image = display.newSprite("report_victory.png")
+    local report_result_img 
+    if report.type == "strikeCity" then
+        report_result_img = report[report.type].level >1 and "report_victory.png" or "report_failure.png"
+    elseif report.type == "cityBeStriked" then
+        report_result_img = report[report.type].level >1 and "report_failure.png" or "report_victory.png"
+    end
+    local strike_result_image = display.newSprite(report_result_img)
         :align(display.CENTER_TOP, rb_size.width/2, rb_size.height-16)
         :addTo(report_body)
     local strike_result_label = cc.ui.UILabel.new(
