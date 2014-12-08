@@ -94,7 +94,7 @@ function GameUIDwelling:CreateCitizenPanel()
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = _("上限"),
         font = UIKit:getFontFilePath(),
-        size = 24,
+        size = 16,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
         color = UIKit:hex2c3b(0x29261c),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
@@ -138,13 +138,13 @@ function GameUIDwelling:CreateCitizenPanel()
 
 
     citizen_layer.citizen_number = {}
-    local end_pos = window.top - 240
+    local end_pos = window.top - 260
     local count = #citizen_layer.citizen_ui
     for i, v in pairs(citizen_layer.citizen_ui) do
 
         local item_info = return_item_info(i)
 
-        local cur_pos = end_pos - (count - i) * 110
+        local cur_pos = end_pos - (count - i) * 110 - (i~=CITIZEN and 150 or 0)
 
         local res_info_bg = cc.ui.UIImage.new("dwelling/res_info_bg.png"):addTo(citizen_layer):pos(window.left + 215, cur_pos)
 
@@ -154,7 +154,7 @@ function GameUIDwelling:CreateCitizenPanel()
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = item_info.production_text,
             font = UIKit:getFontFilePath(),
-            size = 24,
+            size = 20,
             align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
             color = UIKit:hex2c3b(0x797154),
             valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
@@ -164,7 +164,7 @@ function GameUIDwelling:CreateCitizenPanel()
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = item_info.production_per_hour_text,
             font = UIKit:getFontFilePath(),
-            size = 24,
+            size = 20,
             align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
             color = UIKit:hex2c3b(0x797154),
             valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
@@ -174,7 +174,7 @@ function GameUIDwelling:CreateCitizenPanel()
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = 100,
             font = UIKit:getFontFilePath(),
-            size = 24,
+            size = 20,
             align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
             color = UIKit:hex2c3b(0x29261c),
             valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
@@ -184,7 +184,7 @@ function GameUIDwelling:CreateCitizenPanel()
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = "100/h",
             font = UIKit:getFontFilePath(),
-            size = 24,
+            size = 20,
             align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
             color = UIKit:hex2c3b(0x29261c),
             valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
