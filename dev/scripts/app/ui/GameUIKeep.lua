@@ -200,7 +200,6 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
         viewRect = cc.rect(self.main_building_listview_bg:getContentSize().width/2-258, 10, 516, 495),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
         :addTo(self.main_building_listview_bg)
-    local allBuildings = City:GetAllBuildings()
     local buildings = GameDatas.Buildings.buildings
     for i,v in ipairs(buildings) do
         if v.location<17 then

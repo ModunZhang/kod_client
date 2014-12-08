@@ -48,9 +48,9 @@ function GameUIStrikeReport:GetBattleCityName()
     local report = self.report
     local report_content = report[report.type]
     if report.type == "strikeCity" then
-        return string.format(_("Battle at %s (坐标-服务器无数据)"),report_content.enemyPlayerData.cityName)
+        return string.format(_("Battle at %s (%d,%d)"),report_content.enemyPlayerData.cityName,report_content.enemyPlayerData.location.x,report_content.enemyPlayerData.location.y)
     elseif report.type== "cityBeStriked" then
-        return string.format(_("Battle at %s (坐标-服务器无数据)"),report_content.playerData.cityName)
+        return string.format(_("Battle at %s (%d,%d)"),report_content.playerData.cityName,report_content.playerData.location.x,report_content.playerData.location.y)
     end
 end
 function GameUIStrikeReport:GetBooty()
@@ -99,7 +99,13 @@ function GameUIStrikeReport:onEnter()
         end):align(display.CENTER, title:getContentSize().width-10, title:getContentSize().height-10)
         :addTo(title):addChild(display.newSprite("X_3.png"))
     -- 突袭结果图片
-    local strike_result_image = display.newSprite("report_victory.png")
+    local report_result_img 
+    if report.type == "strikeCity" then
+        report_result_img = report[report.type].level >1 and "report_victory.png" or "report_failure.png"
+    elseif report.type == "cityBeStriked" then
+        report_result_img = report[report.type].level >1 and "report_failure.png" or "report_victory.png"
+    end
+    local strike_result_image = display.newSprite(report_result_img)
         :align(display.CENTER_TOP, rb_size.width/2, rb_size.height-16)
         :addTo(report_body)
     local strike_result_label = cc.ui.UILabel.new(
