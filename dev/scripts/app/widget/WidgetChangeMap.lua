@@ -41,7 +41,7 @@ function WidgetChangeMap:ctor(map_type)
     -- 初始化一个裁剪节点
     local clippingNode = cc.ClippingNode:create(stencil)
         :pos(window.cx-260*scale_x, 90*scale_x)
-    clippingNode:setInverted(false)
+    clippingNode:setInverted(true)
     clippingNode:setAlphaThreshold(0.5)
     clippingNode:scale(scale_x)
     -- 底板
