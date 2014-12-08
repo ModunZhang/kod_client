@@ -17,12 +17,13 @@ function GameUIWithCommonHeader:onEnter()
     self.gem_label = self:CreateShopButton(function()
     end)
     self.city:GetResourceManager():AddObserver(self)
+    local page = home_page or (display.getRunningScene().__cname == "AllianceScene" and display.getRunningScene():GetHomePage())
 
-    if home_page then
+    if page then
         print(visible_count)
         visible_count = visible_count - 1
         if visible_count == 0 then
-            home_page.bottom:setVisible(false)
+            page:setVisible(false)
         end
     end
 end
@@ -32,11 +33,12 @@ end
 function GameUIWithCommonHeader:onExit()
     self.city:GetResourceManager():RemoveObserver(self)
     GameUIWithCommonHeader.super.onExit(self)
+    local page = home_page or (display.getRunningScene().__cname == "AllianceScene" and display.getRunningScene():GetHomePage())
 
-    if home_page then
+    if page then
         visible_count = visible_count + 1
         if visible_count > 0 then
-            home_page.bottom:setVisible(true)
+            page:setVisible(true)
         end
     end
 end

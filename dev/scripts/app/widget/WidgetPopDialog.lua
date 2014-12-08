@@ -23,7 +23,6 @@ function WidgetPopDialog:ctor(height,title_text)
                 self:removeFromParent(true)
             end
         end):align(display.CENTER, rb_size.width-20,rb_size.height+10):addTo(body)
-    self.close_btn:addChild(display.newSprite("X_3.png"))
 end
 
 return WidgetPopDialog

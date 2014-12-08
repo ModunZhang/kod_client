@@ -198,7 +198,7 @@ function GameUIMail:onExit()
 end
 function GameUIMail:CreateWriteMailButton()
     local write_mail_button = WidgetPushButton.new(
-        {normal = "gem_btn_up.png", pressed = "gem_btn_down.png"}
+        {normal = "home_btn_up.png", pressed = "home_btn_down.png"}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
             self:CreateWriteMail()
@@ -207,7 +207,7 @@ function GameUIMail:CreateWriteMailButton()
     write_mail_button:align(display.RIGHT_TOP, window.cx+314, window.top-5)
     cc.ui.UIImage.new("write_mail_58X46.png")
         :addTo(write_mail_button)
-        :pos(-105, -48)
+        :pos(-75, -48)
         :scale(0.8)
 end
 function GameUIMail:CreateBetweenBgAndTitle()
@@ -788,7 +788,7 @@ function GameUIMail:ShowSendMailDetails(mail)
             if event.name == "CLICKED_EVENT" then
                 self:removeChild(layer_bg, true)
             end
-        end):align(display.CENTER, title_bg:getContentSize().width-10, title_bg:getContentSize().height-6):addTo(title_bg):addChild(display.newSprite("X_3.png"))
+        end):align(display.CENTER, title_bg:getContentSize().width-10, title_bg:getContentSize().height-6):addTo(title_bg)
     -- 收件人
     local subject_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -893,7 +893,7 @@ function GameUIMail:ShowMailDetails(mail)
             if event.name == "CLICKED_EVENT" then
                 self:removeChild(layer_bg, true)
             end
-        end):align(display.CENTER, title_bg:getContentSize().width-10, title_bg:getContentSize().height-6):addTo(title_bg):addChild(display.newSprite("X_3.png"))
+        end):align(display.CENTER, title_bg:getContentSize().width-10, title_bg:getContentSize().height-6):addTo(title_bg)
     -- 主题
     local subject_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -1229,7 +1229,7 @@ function GameUIMail:CreateReplyMail(mail)
             if event.name == "CLICKED_EVENT" then
                 reply_mail:removeFromParent()
             end
-        end):align(display.CENTER, title_reply_mail:getContentSize().width-10, title_reply_mail:getContentSize().height-6):addTo(title_reply_mail):addChild(display.newSprite("X_3.png"))
+        end):align(display.CENTER, title_reply_mail:getContentSize().width-10, title_reply_mail:getContentSize().height-6):addTo(title_reply_mail)
 
     -- 收件人
     local addressee_title_label = cc.ui.UILabel.new(

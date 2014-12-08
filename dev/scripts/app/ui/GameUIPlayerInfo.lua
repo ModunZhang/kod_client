@@ -37,9 +37,7 @@ function GameUIPlayerInfo:onMoveInStage()
 	   	:onButtonClicked(function ()
 	   		self:leftButtonClicked()
 	   	end)
-	display.newSprite("X_3.png")
-	   	:addTo(closeButton)
-	   	:pos(-32,30)
+	
 	self.bg = bg
 	self.title_bar = title_bar
 	NetManager:getPlayerInfoPromise(self.memberId_):next(function(data)

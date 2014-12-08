@@ -34,7 +34,7 @@ function GameUIWarReport:onEnter()
         :onButtonClicked(function(event)
             self:removeFromParent()
         end):align(display.CENTER, title:getContentSize().width-10, title:getContentSize().height-10)
-        :addTo(title):addChild(display.newSprite("X_3.png"))
+        :addTo(title)
     -- 战争结果图片
     local war_result_image = display.newSprite("report_failure.png")
         :align(display.CENTER_TOP, rb_size.width/2, rb_size.height-16)

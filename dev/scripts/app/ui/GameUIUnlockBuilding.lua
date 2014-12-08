@@ -1,6 +1,7 @@
 local UIListView = import(".UIListView")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local UpgradeBuilding = import("..entity.UpgradeBuilding")
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
@@ -31,7 +32,7 @@ function GameUIUnlockBuilding:onExit()
 end
 function GameUIUnlockBuilding:Init()
     -- bg
-    local bg = display.newScale9Sprite("full_screen_dialog_bg.png",display.cx, display.top-480, cc.size(612,663)):addTo(self)
+    local bg = WidgetUIBackGround.new({height=663,widht=612}):pos(display.cx-306, display.top-810):addTo(self)
     -- title bg
     local title_bg = display.newSprite("Title_blue.png"):align(display.TOP_LEFT, 8, bg:getContentSize().height):addTo(bg,2)
     -- title label
@@ -47,7 +48,7 @@ function GameUIUnlockBuilding:Init()
     cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
         :onButtonClicked(function(event)
             self:removeFromParent(true)
-        end):align(display.CENTER, bg:getContentSize().width-15, bg:getContentSize().height-5):addTo(bg,2):addChild(display.newSprite("X_3.png"))
+        end):align(display.CENTER, bg:getContentSize().width-15, bg:getContentSize().height-5):addTo(bg,2)
     -- 建筑功能介绍
     cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-250, display.top-265)
         :addTo(self):setFlippedX(true)
