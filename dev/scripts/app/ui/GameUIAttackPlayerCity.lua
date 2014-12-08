@@ -100,11 +100,12 @@ function GameUIAttackPlayerCity:BuildUI()
         size = 18,
         color = 0x068329
     }):align(display.LEFT_TOP,self.march_time:getPositionX(),self.march_time:getPositionY()-self.march_time:getContentSize().height):addTo(bg_node)
+    self:RefreshSoldierListView()
 end
 
 
 function GameUIAttackPlayerCity:RefreshSoldierListView()
-
+	dump(Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():GetMyTroop())
 end
 
 return GameUIAttackPlayerCity

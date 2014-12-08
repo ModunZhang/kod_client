@@ -1098,6 +1098,12 @@ function NetManager:getStrikePlayerCityPromise(dragonType,enemyPlayerId)
         {dragonType=dragonType,enemyPlayerId=enemyPlayerId},
         "突袭玩家城市失败!"),get_playerdata_callback()):next(get_response_msg)
 end
+--攻打玩家城市
+function NetManager:getAttackPlayerCityPromise(enemyPlayerId)
+    return promise.all(get_none_blocking_request_promise("logic.allianceHandler.attackPlayerCity",
+        {enemyPlayerId=enemyPlayerId},"攻打玩家城市失败!"),
+        get_alliancedata_callback()):next(get_response_msg)
+end
 --
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"
