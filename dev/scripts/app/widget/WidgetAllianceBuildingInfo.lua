@@ -22,7 +22,7 @@ function WidgetAllianceBuildingInfo:ctor()
         :onButtonClicked(function(event)
             self:removeFromParent()
         end):align(display.CENTER, title:getContentSize().width-10, title:getContentSize().height-10)
-        :addTo(title):addChild(display.newSprite("X_3.png"))
+        :addTo(title)
     -- 建筑详情介绍
     UIKit:ttfLabel(
         {

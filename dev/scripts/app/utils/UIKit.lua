@@ -336,8 +336,5 @@ end
 
 function UIKit:closeButton()
     local closeButton = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"}, {scale9 = false})
-    display.newSprite("X_3.png")
-        :addTo(closeButton)
-        :pos(-32,30)
     return closeButton
 end

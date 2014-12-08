@@ -67,7 +67,7 @@ function WidgetMaterialDetails:InitMaterialDetails(material_type,material_name)
     cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
         :onButtonClicked(function(event)
             self:removeFromParent(true)
-        end):align(display.CENTER, bg_width-20, bg_height-20):addTo(bg,2):addChild(display.newSprite("X_3.png"))
+        end):align(display.CENTER, bg_width-20, bg_height-20):addTo(bg,2)
     -- 材料icon
     local materialBox = WidgetMaterialBox.new(material_type==MaterialManager.MATERIAL_TYPE.DRAGON and DRAGON_MATERIAL_PIC_MAP[material_name] or "material_blueprints.png",false)
     local num = City:GetMaterialManager():GetMaterialsByType(material_type)[material_name].."/"..City:GetBuildingByType("materialDepot")[1]:GetMaxMaterial()

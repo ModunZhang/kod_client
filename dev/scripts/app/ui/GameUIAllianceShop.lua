@@ -119,7 +119,7 @@ function GameUIAllianceShop:InitGoodsPart()
 
 
     local special_goods_body = self:CreateBackGroundWithTitle({
-        title_bg = "vip_title.png",
+        title_bg = "title_purple_600x52.png",
         height = 234,
         title_1 = _("特殊道具")
     }):align(display.BOTTOM_CENTER, window.cx, window.bottom+90):addTo(self.goods_layer)
@@ -272,7 +272,7 @@ function GameUIAllianceShop:InitStockPart()
 
 
     local special_goods_body = self:CreateBackGroundWithTitle({
-        title_bg = "vip_title.png",
+        title_bg = "title_purple_600x52.png",
         height = 234,
         title_1 = _("特殊道具")
     }):align(display.BOTTOM_CENTER, window.cx, window.bottom+90):addTo(self.stock_layer)

@@ -35,7 +35,7 @@ function GameUIWriteMail:ctor()
             if event.name == "CLICKED_EVENT" then
                 self:removeFromParent()
             end
-        end):align(display.CENTER, title_write_mail:getContentSize().width-10, title_write_mail:getContentSize().height-6):addTo(title_write_mail):addChild(display.newSprite("X_3.png"))
+        end):align(display.CENTER, title_write_mail:getContentSize().width-10, title_write_mail:getContentSize().height-6):addTo(title_write_mail)
 
     -- 收件人
     local addressee_title_label = cc.ui.UILabel.new(

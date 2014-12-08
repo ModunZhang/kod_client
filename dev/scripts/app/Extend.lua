@@ -7,10 +7,14 @@ function cc.ui.UIPushButton:ctor(images, options,music_info)
     old_ctor(self, images, options)
     music_info = music_info or {down = GameConfig.AUDIO.BUTTON.NORMAL_DOWN,up = GameConfig.AUDIO.BUTTON.NORMAL_UP}
     self:addButtonPressedEventListener(function(event)
-        audio.playSound(music_info.down)
+        if type(music_info.down) == 'string' and music_info.down ~= "" then
+            audio.playSound(music_info.down)
+        end
     end)
     self:addButtonReleaseEventListener(function(event)
-        audio.playSound(music_info.up)
+        if type(music_info.up) == 'string' and music_info.up ~= "" then
+            audio.playSound(music_info.up)
+        end
     end)
 end
 

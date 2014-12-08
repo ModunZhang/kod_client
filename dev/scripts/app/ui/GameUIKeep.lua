@@ -483,7 +483,7 @@ function GameUIKeep:CreateBackGroundWithTitle(title_string)
         :onButtonClicked(function(event)
             leyer:removeFromParent()
         end):align(display.CENTER, title:getContentSize().width-10, title:getContentSize().height-10)
-        :addTo(title):addChild(display.newSprite("X_3.png"))
+        :addTo(title)
     function leyer:addToBody(node)
         node:addTo(body)
         return node
