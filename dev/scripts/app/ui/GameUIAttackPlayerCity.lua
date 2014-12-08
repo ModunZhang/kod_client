@@ -10,8 +10,17 @@ local UILib = import(".UILib")
 local UIListView = import(".UIListView")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 
-function GameUIAttackPlayerCity:ctor(from_location,to_location)
+function GameUIAttackPlayerCity:ctor(alliance,to_location)
+	-- dump(to_location,"to_location--->")
+	self.to_location = to_location
+	self.alliance = alliance
+	print(to_location.x,to_location.y,"to_location--->")
 	GameUIAttackPlayerCity.super.ctor(self)
+end
+
+
+function GameUIAttackPlayerCity:GetAlliance()
+	return self.alliance
 end
 
 function GameUIAttackPlayerCity:onEnter()
@@ -40,7 +49,7 @@ function GameUIAttackPlayerCity:BuildUI()
    	end)
    	local box = display.newSprite("alliance_item_flag_box_126X126.png"):align(display.LEFT_TOP,30,titleBar:getPositionY()-10):addTo(bg_node):scale(0.7)
    	local head_bg = display.newSprite("chat_hero_background.png", 63, 63):addTo(box)
-	display.newSprite(UILib.dragon_head["redDragon"], 56, 60):addTo(head_bg)
+	display.newSprite(UILib.dragon_head[self:GetMyTroop().dragon.type], 56, 60):addTo(head_bg)
 
 	local line_2 = display.newScale9Sprite("dividing_line.png")
 		:align(display.LEFT_BOTTOM,box:getPositionX()+box:getContentSize().width*0.7+10,box:getPositionY()-box:getContentSize().height*0.7):size(450,2)
@@ -51,9 +60,9 @@ function GameUIAttackPlayerCity:BuildUI()
 		color= 0x797154
 	}):align(display.LEFT_BOTTOM, line_2:getPositionX()+2, line_2:getPositionY()+4):addTo(bg_node)
 
-
+	local from_location = self:GetAlliance():GetAllianceMap():FindAllianceBuildingInfoByName('moonGate').location
 	UIKit:ttfLabel({
-		text = "100,100",
+		text = from_location.x .. "," .. from_location.y,
 		size = 20,
 		color= 0x403c2f
 	}):align(display.RIGHT_BOTTOM, line_2:getPositionX()+line_2:getContentSize().width, from_label:getPositionY()):addTo(bg_node)
@@ -67,7 +76,7 @@ function GameUIAttackPlayerCity:BuildUI()
 		color = 0x797154
 	}):align(display.LEFT_BOTTOM, line_1:getPositionX()+2, line_1:getPositionY()+4):addTo(bg_node)
 	UIKit:ttfLabel({
-		text = "100,100",
+		text = self.to_location.x .. "," .. self.to_location.y,
 		size = 20,
 		color= 0x403c2f
 	}):align(display.RIGHT_BOTTOM, line_1:getPositionX()+line_1:getContentSize().width, to_label:getPositionY()):addTo(bg_node)
@@ -105,7 +114,11 @@ end
 
 
 function GameUIAttackPlayerCity:RefreshSoldierListView()
-	dump(Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():GetMyTroop())
+
+end
+
+function GameUIAttackPlayerCity:GetMyTroop()
+	return Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():GetMyTroop()
 end
 
 return GameUIAttackPlayerCity

@@ -445,20 +445,20 @@ function GameUIAllianceEnter:InitConfig()
                     img = "Strike_72x72.png",
                     title = _("突袭"),
                     func = function (building)
-                        if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
-                            local playerId = building.player:Id()
-                            UIKit:newGameUI("GameUIStrikePlayer",playerId):addToCurrentScene(true)
-                        end
+                        -- if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
+                        --     local playerId = building.player:Id()
+                        --     UIKit:newGameUI("GameUIStrikePlayer",playerId):addToCurrentScene(true)
+                        -- end
                     end
                 },
                 {
                     img = "attack_80x66.png",
                     title = _("摧毁"),
                     func = function (building)
-                        if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
-                            local playerId = building.player:Id()
-                            UIKit:newGameUI("GameUIStrikePlayer",playerId):addToCurrentScene(true)
-                        end
+                        -- if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
+                        --     local playerId = building.player:Id()
+                        --     UIKit:newGameUI("GameUIStrikePlayer",playerId):addToCurrentScene(true)
+                        -- end
                     end
                 }
             },
@@ -535,9 +535,16 @@ function GameUIAllianceEnter:InitConfig()
                 {
                     img = "attack_80x66.png",
                     title = _("进攻"),
-                    func = function (building)
+                    func = function (building,alliance)
+                        local location = "unknow"
+                        if building.location then
+                            location = building.location
+                        else
+                            local x,y = building:GetLogicPosition()
+                            location = {x = x,y = y}
+                        end
                         if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
-                            UIKit:newGameUI("GameUIAttackPlayerCity"):addToCurrentScene(true)
+                            UIKit:newGameUI("GameUIAttackPlayerCity",alliance,location):addToCurrentScene(true)
                         end
                     end
                 },
@@ -856,7 +863,7 @@ function GameUIAllianceEnter:InitEnterButton(buttons)
         local btn = WidgetPushButton.new({normal = "btn_130X104.png",pressed = "btn_pressed_130X104.png"})
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
-                    v.func(self.building)
+                    v.func(self.building,self:GetAlliance())
                     self:leftButtonClicked()
                 end
             end):align(display.RIGHT_TOP,width-count*btn_width, 5):addTo(self.body)
