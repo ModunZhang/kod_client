@@ -526,7 +526,6 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
                 layer:removeFromParent(true)
             end
         end):align(display.CENTER, rb_size.width-20,rb_size.height+10):addTo(body)
-    self.close_btn:addChild(display.newSprite("X_3.png"))
 
     -- 联盟旗帜
     local flag_bg = display.newSprite("alliance_item_flag_box_126X126.png")
@@ -620,7 +619,6 @@ function GameUIAllianceBattle:OpenWarDetails()
                 layer:removeFromParent(true)
             end
         end):align(display.CENTER, rb_size.width-20,rb_size.height+10):addTo(body)
-    self.close_btn:addChild(display.newSprite("X_3.png"))
 
     local war_introduce_table = {
         _("概述，准备期。战争期，保护期的描述。1"),

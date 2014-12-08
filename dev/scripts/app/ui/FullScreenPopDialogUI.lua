@@ -42,7 +42,6 @@ function FullScreenPopDialogUI:Init()
                 self:removeFromParent(true)
             end
         end):align(display.CENTER, display.cx + 290, display.top-320):addTo(self)
-    self.close_btn:addChild(display.newSprite("X_3.png"))
 end
 
 function FullScreenPopDialogUI:SetTitle(title)

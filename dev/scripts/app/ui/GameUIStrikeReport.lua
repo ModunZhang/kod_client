@@ -97,7 +97,7 @@ function GameUIStrikeReport:onEnter()
         :onButtonClicked(function(event)
             self:removeFromParent()
         end):align(display.CENTER, title:getContentSize().width-10, title:getContentSize().height-10)
-        :addTo(title):addChild(display.newSprite("X_3.png"))
+        :addTo(title)
     -- 突袭结果图片
     local report_result_img
     if report.type == "strikeCity" then

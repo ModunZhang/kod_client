@@ -83,7 +83,7 @@ function WidgetSoldierDetails:InitSoldierDetails()
     cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
         :onButtonClicked(function(event)
             self:removeFromParent(true)
-        end):align(display.CENTER, bg_width-20, bg_height-20):addTo(bg,2):addChild(display.newSprite("X_3.png"))
+        end):align(display.CENTER, bg_width-20, bg_height-20):addTo(bg,2)
     -- 士兵头像
     local stars_bg = display.newSprite("soldier_head_stars_bg.png", display.cx-170, display.top-185):addTo(self)
     local soldier_head_bg  = display.newSprite(STAR_BG[self.soldier_level], display.cx-230, display.top-185):addTo(self)
