@@ -99,7 +99,7 @@ function GameUIStrikeReport:onEnter()
         end):align(display.CENTER, title:getContentSize().width-10, title:getContentSize().height-10)
         :addTo(title):addChild(display.newSprite("X_3.png"))
     -- 突袭结果图片
-    local report_result_img 
+    local report_result_img
     if report.type == "strikeCity" then
         report_result_img = report[report.type].level >1 and "report_victory.png" or "report_failure.png"
     elseif report.type == "cityBeStriked" then
@@ -546,9 +546,10 @@ function GameUIStrikeReport:CreateEnemyResource()
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.LEFT_CENTER,80,18):addTo(r_item_bg)
+        local r_value = self.report[self.report.type].level < 4 and self:GetProbableNum(r_parms.value) or r_parms.value
         cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = r_parms.value,
+            text = r_value,
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
@@ -735,15 +736,17 @@ function GameUIStrikeReport:CreateGarrison()
                 size = 20,
                 color = UIKit:hex2c3b(0x403c2f)
             }):align(display.LEFT_CENTER,10,18):addTo(r_item_bg)
-            if self.report[self.report.type].level>3 then
+            local report_level = self.report[self.report.type].level
+
+            if report_level>3 then
+                local soldier_num = report_level<5 and self:GetProbableNum(r_parms.count) or r_parms.count
                 cc.ui.UILabel.new({
                     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                    text = _("数量")..r_parms.count,
+                    text = _("数量")..soldier_num,
                     font = UIKit:getFontFilePath(),
                     size = 20,
                     color = UIKit:hex2c3b(0x403c2f)
                 }):align(display.RIGHT_CENTER,group_width-30,18):addTo(r_item_bg)
-
                 StarBar.new({
                     max = 5,
                     bg = "Stars_bar_bg.png",
@@ -911,11 +914,54 @@ function GameUIStrikeReport:CreateBigBackGround(height,title)
     return r_bg
 end
 
-function GameUIStrikeReport:onExit()
-
+function GameUIStrikeReport:GetProbableNum(num)
+    if num<=20 then
+        return "0-20"
+    elseif num<=50 then
+        return "20-50"
+    elseif num<=100 then
+        return "50-100"
+    elseif num<=200 then
+        return "100-200"
+    elseif num<=500 then
+        return "200-500"
+    elseif num<=1000 then
+        return "500-1000"
+    elseif num<=2000 then
+        return "1k-2k"
+    elseif num<=5000 then
+        return "2k-5k"
+    elseif num<=10000 then
+        return "5k-10k"
+    elseif num<=20000 then
+        return "10k-20k"
+    elseif num<=50000 then
+        return "20k-50k"
+    elseif num<=100000 then
+        return "50k-100k"
+    elseif num<=200000 then
+        return "100k-200k"
+    elseif num<=500000 then
+        return "200k-500k"
+    elseif num<=1000000 then
+        return "500k-1M"
+    elseif num<=2000000 then
+        return "1M-2M"
+    elseif num<=5000000 then
+        return "2M-5M"
+    elseif num<=10000000 then
+        return "5M-10M"
+    else
+        return ">10M"
+    end
 end
 
 return GameUIStrikeReport
+
+
+
+
+
 
 
 
