@@ -1,3 +1,4 @@
+local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local window = import("..utils.window")
 local WidgetTab = import("..widget.WidgetTab")
@@ -424,28 +425,23 @@ end
 
 
 -- fte
+local TutorialLayer = import("..ui.TutorialLayer")
 function GameUIHome:FTE_FreeSpeedUpFirst()
-    self.tutorial_layer = self:CreateTutorialLayer()
-    local arrow
+    local tutorial_layer = TutorialLayer.new():addTo(self)
     return self.event_tab:PromiseOfShowTab("build"):next(function()
         return self:FindFirstItem()
     end):next(function(item)
         local btn = item:GetSpeedUpButton()
-        arrow = Arrow.new():addTo(self:GetTutorialLayer())
+        local arrow = Arrow.new():addTo(tutorial_layer:Enable():SetTouchObject(btn))
         local rect = btn:getCascadeBoundingBox()
         arrow:OnPositionChanged(rect.x, rect.y)
-        self:GetTutorialLayer():Enable():SetTouchObject(btn)
         return item
     end):next(function(item)
         local building_type = string.split(item:GetEventKey(), "_")[1]
         return self.city:PromiseOfFinishUpgradingByLevel(building_type)
     end):next(function()
-        self.tutorial_layer:removeFromParent()
-        self.tutorial_layer = nil
+        tutorial_layer:removeFromParent()
     end)
-end
-function GameUIHome:GetTutorialLayer()
-    return self.tutorial_layer
 end
 function GameUIHome:FindFirstItem()
     local item
@@ -453,12 +449,12 @@ function GameUIHome:FindFirstItem()
         item = v
         return true
     end)
-    return promise.new(function(item)
+    return cocos_promise.deffer(function()
         if not item then
-            promise.reject("没有找到对应item", building_type)
+            promise.reject("没有找到对应item")
         end
         return item
-    end):resolve(item)
+    end)
 end
 
 return GameUIHome

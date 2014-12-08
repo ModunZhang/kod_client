@@ -495,9 +495,10 @@ end
 
 
 ---
+local TutorialLayer = import("..ui.TutorialLayer")
 function GameUIKeep:FTE_Upgrade()
     return self:FindUpgradeBtn():next(function(btn)
-        local arrow = Arrow.new():addTo(self:CreateTutorialLayer():Enable():SetTouchObject(btn))
+        local arrow = Arrow.new():addTo(TutorialLayer.new(btn):addTo(self):Enable():SetTouchObject(btn))
         local rect = btn:getCascadeBoundingBox()
         arrow:OnPositionChanged(rect.x, rect.y)
     end):next(function()
@@ -505,7 +506,7 @@ function GameUIKeep:FTE_Upgrade()
     end)
 end
 function GameUIKeep:FindUpgradeBtn()
-    return cocos_promise.Delay(0):next(function()
+    return cocos_promise.deffer(function()
         return self.upgrade_layer.upgrade_btn
     end)
 end

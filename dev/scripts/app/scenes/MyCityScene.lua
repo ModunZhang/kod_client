@@ -26,20 +26,22 @@ function MyCityScene:onEnter()
     -- self:PromiseOfClickLockButton("barracks"):next(function(ui)
     --     return ui:FTE_Unlock("barracks")
     -- end)
-
-    -- promise.new()
+    -- cocos_promise.deffer()
     --     :next(function() return self:PromiseOfClickBuilding(8, 8) end)
     --     :next(UIKit:PromiseOfOpen("GameUIKeep"))
     --     :next(function(ui) return ui:FTE_Upgrade() end)
     --     :next(function() return home_page:FTE_FreeSpeedUpFirst() end)
-    --     :resolve()
-
-
-
-    -- promise.new()
+end
+function MyCityScene:onEnterTransitionFinish()
+    -- local city = self.city
+    -- cocos_promise.deffer()
     --     :next(function()
-    --         return promise.all(GameUINpc:PromiseOfSay({words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"})
-    --             :next(GameUINpc:PromiseOfInput():next(self:PromiseOfClickBuilding(12, 12))))
+    --         return promise.all(
+    --             GameUINpc:PromiseOfSay({
+    --                 words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"
+    --             }):next(function() return GameUINpc:PromiseOfInput() end)
+    --                 :next(function() return self:PromiseOfClickBuilding(12, 12) end)
+    --         )
     --     end)
     --     :next(function(args)
     --         local building = args[1]
@@ -50,12 +52,18 @@ function MyCityScene:onEnter()
     --         )
     --     end)
     --     :next(function()
-    --         return promise.all(GameUINpc:PromiseOfSay({words = "{pvp}, {pve}, {gvg}, {gve}, {pvg}等各种玩法随你挑战。"}),
-    --             home_page:FTE_FreeSpeedUpFirst())
+    --         return promise.all(
+    --             GameUINpc:PromiseOfSay({words = "{pvp}, {pve}, {gvg}, {gve}, {pvg}等各种玩法随你挑战。"}),
+    --             home_page:FTE_FreeSpeedUpFirst()
+    --         )
     --     end)
     --     :next(function()
-    --         return promise.all(GameUINpc:PromiseOfSay({words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"})
-    --             :next(GameUINpc:PromiseOfInput():next(self:PromiseOfClickBuilding(15, 12))))
+    --         return promise.all(
+    --             GameUINpc:PromiseOfSay({
+    --                 words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"
+    --             }):next(function() return GameUINpc:PromiseOfInput() end)
+    --                 :next(function() return self:PromiseOfClickBuilding(15, 12) end)
+    --         )
     --     end)
     --     :next(function(args)
     --         local building = args[1]
@@ -70,8 +78,12 @@ function MyCityScene:onEnter()
     --             home_page:FTE_FreeSpeedUpFirst())
     --     end)
     --     :next(function()
-    --         return promise.all(GameUINpc:PromiseOfSay({words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"})
-    --             :next(GameUINpc:PromiseOfInput():next(self:PromiseOfClickBuilding(18, 12))))
+    --         return promise.all(
+    --             GameUINpc:PromiseOfSay({
+    --                 words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"
+    --             }):next(function() return GameUINpc:PromiseOfInput() end)
+    --                 :next(function() return self:PromiseOfClickBuilding(18, 12) end)
+    --         )
     --     end)
     --     :next(function(args)
     --         local building = args[1]
@@ -86,8 +98,6 @@ function MyCityScene:onEnter()
     --             home_page:FTE_FreeSpeedUpFirst())
     --     end)
     --     :next(function() return GameUINpc:PromiseOfLeave() end)
-    --     :resolve()
-    -- dump(self:GetLockButtonsByBuildingType("barracks"))
 end
 function MyCityScene:CreateHomePage()
     local home = UIKit:newGameUI('GameUIHome', self.city):addToScene(self)
@@ -142,7 +152,7 @@ function MyCityScene:CheckClickPromise(building)
 end
 function MyCityScene:PromiseOfClickLockButton(building_type)
     local btn = self:GetLockButtonsByBuildingType("barracks")
-    local tutorial_layer = TutorialLayer.new(btn):addTo(self, 3000):Enable()
+    local tutorial_layer = TutorialLayer.new(btn):addTo(self):Enable()
     local rect = btn:getCascadeBoundingBox()
     Arrow.new():addTo(tutorial_layer):OnPositionChanged(rect.x, rect.y)
     return UIKit:PromiseOfOpen("GameUIUnlockBuilding"):next(function(ui)
@@ -289,6 +299,20 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     end
 end
 return MyCityScene
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -12,6 +12,7 @@ local CitizenSprite = import("..sprites.CitizenSprite")
 local SoldierSprite = import("..sprites.SoldierSprite")
 local HelpedTroopsSprite = import("..sprites.HelpedTroopsSprite")
 local SoldierManager = import("..entity.SoldierManager")
+local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local Observer = import("..entity.Observer")
 local MapLayer = import(".MapLayer")
@@ -845,12 +846,12 @@ function CityLayer:FindBuildingBy(x, y)
             return true
         end
     end)
-    return promise.new(function(building)
-            if not building then
-                promise.reject("没有找到对应坐标的建筑", {x = x, y = y})
-            end
-            return building
-        end):resolve(building)
+    return cocos_promise.deffer(function()
+        if not building then
+            promise.reject({x = x, y = y}, "没有找到对应坐标的建筑")
+        end
+        return building
+    end)
 end
 function CityLayer:IteratorFunctionsBuildings(func)
     table.foreach(self.buildings, func)
@@ -1028,6 +1029,7 @@ function CityLayer:OnSceneScale()
 end
 
 return CityLayer
+
 
 
 

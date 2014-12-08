@@ -178,7 +178,7 @@ function WidgetEventTabButtons:CreateTabButtons()
 end
 function WidgetEventTabButtons:CreateBackGround()
     local back = cc.ui.UIImage.new("back_ground_492x100.png", {scale9 = true,
-        capInsets = cc.rect(0, 0, WIDGET_WIDTH , 105 - 20)
+        capInsets = cc.rect(0, 0, WIDGET_WIDTH , 100 - 20)
     }):align(display.LEFT_BOTTOM):setLayoutSize(WIDGET_WIDTH, 50)
     return back
 end
