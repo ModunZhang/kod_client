@@ -649,11 +649,11 @@ function GameUIVip:OpenVIPDetails(show_vip_level)
 end
 
 function GameUIVip:CreateVIPPageItem(title_string,parent,isReach,vip_level)
-    local layer = display.newColorLayer(cc.c4b(math.random(250),
-                math.random(250),
-                math.random(250),
-                200))
-    -- local layer = display.newLayer()
+    -- local layer = display.newColorLayer(cc.c4b(math.random(250),
+    --             math.random(250),
+    --             math.random(250),
+    --             200))
+    local layer = display.newLayer()
 
     local body = WidgetUIBackGround.new({height=920}):addTo(layer)
         :align(display.CENTER, 304, display.top-510)

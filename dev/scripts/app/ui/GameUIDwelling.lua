@@ -84,7 +84,7 @@ function GameUIDwelling:CreateCitizenPanel()
     local citizen_layer = display.newNode():addTo(self)
 
     local iconBg = cc.ui.UIImage.new("dwelling/citizen_bg.png")
-        :pos(window.left + 45, window.top - 150)
+        :pos(window.left + 45, window.top - 140)
         :addTo(citizen_layer)
 
     cc.ui.UIImage.new("home/res_citizen.png")
@@ -99,7 +99,7 @@ function GameUIDwelling:CreateCitizenPanel()
         color = UIKit:hex2c3b(0x29261c),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
     }):addTo(citizen_layer)
-        :align(display.LEFT_CENTER, window.left + 100, window.top - 110)
+        :align(display.LEFT_CENTER, window.left + 100, window.top - 100)
 
     local max_citizen_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -110,7 +110,7 @@ function GameUIDwelling:CreateCitizenPanel()
         color = UIKit:hex2c3b(0x29261c),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
     }):addTo(citizen_layer)
-        :align(display.LEFT_CENTER, window.left + 100, window.top - 134)
+        :align(display.LEFT_CENTER, window.left + 100, window.top - 124)
 
     local citizen_num_bg = cc.ui.UIImage.new("dwelling/citizen_num_bg.png")
         :addTo(citizen_layer)
@@ -144,61 +144,61 @@ function GameUIDwelling:CreateCitizenPanel()
 
         local item_info = return_item_info(i)
 
-        local cur_pos = end_pos - (count - i) * 100
+        local cur_pos = end_pos - (count - i) * 110
 
-        local res_info_bg = cc.ui.UIImage.new("dwelling/res_info_bg.png"):addTo(citizen_layer):pos(window.left + 205, cur_pos)
+        local res_info_bg = cc.ui.UIImage.new("dwelling/res_info_bg.png"):addTo(citizen_layer):pos(window.left + 215, cur_pos)
 
-        cc.ui.UIImage.new("dwelling/dividing_line.png"):addTo(res_info_bg):pos(0, 43)
+        cc.ui.UIImage.new("dwelling/dividing_line.png"):addTo(res_info_bg):pos(0, 53)
 
         cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = item_info.production_text,
             font = UIKit:getFontFilePath(),
-            size = 30,
+            size = 24,
             align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
             color = UIKit:hex2c3b(0x797154),
             valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
-        }):addTo(res_info_bg):align(display.LEFT_CENTER, 45, 65)
+        }):addTo(res_info_bg):align(display.LEFT_CENTER, 50, 70)
 
         cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = item_info.production_per_hour_text,
             font = UIKit:getFontFilePath(),
-            size = 30,
+            size = 24,
             align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
             color = UIKit:hex2c3b(0x797154),
             valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
-        }):addTo(res_info_bg):align(display.LEFT_CENTER, 45, 20)
+        }):addTo(res_info_bg):align(display.LEFT_CENTER, 50, 25)
 
         local production = cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = 100,
             font = UIKit:getFontFilePath(),
-            size = 30,
+            size = 24,
             align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
             color = UIKit:hex2c3b(0x29261c),
             valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
-        }):addTo(res_info_bg):align(display.RIGHT_CENTER, 350, 65)
+        }):addTo(res_info_bg):align(display.RIGHT_CENTER, 350, 70)
 
         local productionPerHour = cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = "100/h",
             font = UIKit:getFontFilePath(),
-            size = 30,
+            size = 24,
             align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
             color = UIKit:hex2c3b(0x29261c),
             valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
-        }):addTo(res_info_bg):align(display.RIGHT_CENTER, 350, 20)
+        }):addTo(res_info_bg):align(display.RIGHT_CENTER, 350, 25)
 
-        local head = cc.ui.UIImage.new(item_info.tag_color):addTo(res_info_bg):pos(0, 2)
-        local res_bg = cc.ui.UIImage.new("dwelling/res_bg.png"):addTo(head):align(display.CENTER, 20, 40)
+        local head = cc.ui.UIImage.new(item_info.tag_color):addTo(res_info_bg):pos(4, 4)
+        local res_bg = cc.ui.UIImage.new("dwelling/res_bg.png"):addTo(head):align(display.CENTER, 20, 53)
         local res_bg_pos = res_bg:getAnchorPointInPoints()
         cc.ui.UIImage.new(item_info.tag_icon):addTo(res_bg):scale(item_info.tag_icon_scale):align(display.CENTER, res_bg_pos.x, res_bg_pos.y)
 
         if i == CITIZEN then
             local add_btn = cc.ui.UIPushButton.new(
                 {normal = "dwelling/add_btn_up.png",pressed = "dwelling/add_btn_down.png"})
-                :addTo(res_info_bg):pos(375, 43)
+                :addTo(res_info_bg):pos(375, 53)
             cc.ui.UIImage.new("dwelling/add.png"):addTo(add_btn):align(display.CENTER, 0, 0)
         end
 
@@ -228,7 +228,7 @@ function GameUIDwelling:CreateCitizenPanel()
             if number > 0 then
                 bar_ui:setVisible(true)
                 local current_length = (number / self.citizen_max) * actual_length
-                bar_ui:setLayoutSize(140, current_length):pos(8, current_height)
+                bar_ui:setLayoutSize(130, current_length):pos(20, current_height)
                 current_height = current_height + current_length + self:GetCitizenUIGap()
             else
                 bar_ui:setVisible(false)
