@@ -27,12 +27,6 @@ local empty_func = function(...) return ... end
 local function is_promise(obj)
     return getmetatable(obj) == promise
 end
-local function last_promise(p)
-    while p.next_promises[1] do
-        p = p.next_promises[1]
-    end
-    return p
-end
 local function pop_head(array)
     assert(type(array) == "table")
     return table.remove(array, 1)
@@ -78,9 +72,6 @@ local function do_promise(p)
     p.result = result
     return success, result, failed_func
 end
-local function ignore_error(p)
-    p.ignore_error = true
-end
 local function handle_next_failed(p, err)
     -- 当前任务里面找
     local thens = p.thens
@@ -92,8 +83,11 @@ local function handle_next_failed(p, err)
     if type(failed_func) == "function" then
         local success, err_ = do_function_with_protect(failed_func, err)
         p.result = err_
-        if success then return p end
-        return handle_next_failed(p, err_)
+        if success then
+            return p
+        else
+            return handle_next_failed(p, err_)
+        end
     end
     -- 没有找到,就应该完成这个promise并在子promise里面找
     local next_promise = complete_and_pop_promise(p)
@@ -109,15 +103,13 @@ local function handle_next_failed(p, err)
     end
     return handle_next_failed(next_promise, err)
 end
-local success_promise = true
-local not_success_promise = false
+local has_a_new_promise = true
+local has_no_promise = false
 local function handle_result(p, success, result, failed_func)
     if success then
         if is_promise(result) then
-            local last_p = last_promise(result)
-            table.insert(last_p.next_promises, p)
-            assert(#last_p.next_promises == 1)
-            return success_promise, last_p, last_p ~= result
+            table.insert(result.next_promises, p)
+            return has_a_new_promise, p
         end
     else
         -- 如果当前任务有错误处理函数,捕获并继续传入下一个任务进行处理
@@ -129,45 +121,53 @@ local function handle_result(p, success, result, failed_func)
             local success_, result_ = do_function_with_protect(failed_func, err)
             p.result = result_
             if success_ then
-                return not_success_promise, p
+                return has_no_promise, p
             else
-                return not_success_promise, handle_next_failed(p, result_)
+                return has_no_promise, handle_next_failed(p, result_)
             end
         else
-            return not_success_promise, handle_next_failed(p, result)
+            return has_no_promise, handle_next_failed(p, result)
         end
     end
-    return not_success_promise, p
+    return has_no_promise, p
 end
 local function repeat_resolve(p)
     while is_not_complete(p) do
-        local is_success_promise, cp, has_parent = handle_result(p, do_promise(p))
-        if is_success_promise and (cp.state_ == PENDING or has_parent) then
-            return cp
+        local is_has_a_new_promise, cp = handle_result(p, do_promise(p))
+        if is_has_a_new_promise then
+            return
         end
         -- 当前promise改变了
-        if cp ~= p then p = cp end
+        if cp ~= p then
+            p = cp
+        end
     end
     local state_, result_ = p:state(), p.result
     local next_promise = complete_and_pop_promise(p)
     while true do
         if not next_promise then return end
+
         next_promise.result = result_
+
         if is_not_complete(next_promise) then break end
-        state_, result_ = next_promise:state(), next_promise.result
+
         next_promise = complete_and_pop_promise(next_promise)
     end
     return repeat_resolve(next_promise)
 end
 local function catch_resolve(p, data)
+    assert(p.state_ == PENDING)
     p.state_ = REJECTED
     p.result = data
-    return repeat_resolve(p)
+    repeat_resolve(p)
+    return p
 end
 local function failed_resolve(p, data)
+    assert(p.state_ == PENDING)
     p.state_ = REJECTED
     p.result = data
-    return repeat_resolve(handle_next_failed(p, data))
+    repeat_resolve(handle_next_failed(p, data))
+    return p
 end
 local function resolve(p, data)
     assert(p.state_ == PENDING, p.state_)
@@ -180,11 +180,15 @@ local function clear_promise(p)
     p.thens = {}
     p.dones = {}
     p.fails = {}
+    -- p.always_ = {}
     p.next_promises = {}
 end
 -- 因为某种原因取消了promise对象
 local function cancel_promise(p)
     clear_promise(p)
+end
+local function ignore_error(p)
+    p.ignore_error = true
 end
 function promise.new(data)
     local r = {}
@@ -193,6 +197,7 @@ function promise.new(data)
     return r
 end
 function promise:ctor(resolver)
+    self.ignore_error = false
     self.state_ = PENDING
     clear_promise(self)
     self:next(resolver or empty_func)
@@ -207,12 +212,12 @@ function promise:resolve(data)
     return resolve(self, data)
 end
 function promise:next(success_func, failed_func)
-    assert(self.state_ == PENDING)
-    if type(success_func) ~= "function" then
+    if is_promise(success_func) then
         local p = success_func
         success_func = function() return p end
     end
     assert(type(success_func) == "function", "必须要有成功处理函数,如果不想要,请调用catch(func(err)end)")
+    assert(self.state_ == PENDING, "暂不支持完成之后再次添加任务!")
     table.insert(self.thens, {success_func, failed_func})
     return self
 end
@@ -227,20 +232,17 @@ function promise:done(func)
     local func = func or empty_func
     assert(type(func) == "function", "done的函数不能为空!")
     table.insert(self.dones, func)
-    if self.state_ ~= PENDING and self.state_ ~= REJECTED then
-        done_promise(self)
-    end
     return self
 end
 function promise:fail(func)
     assert(type(func) == "function", "fail的函数不能为空!")
     table.insert(self.fails, func)
-    if self.state_ == REJECTED then
-        fail_promise(self)
-    end
     return self
 end
 function promise:always(func)
+    -- assert(type(func) == "function", "always的函数不能为空!")
+    -- table.insert(self.always_, func)
+    -- return self
     return self:done(func):fail(func)
 end
 function promise.reject(...)
@@ -320,12 +322,6 @@ end
 
 
 return promise
-
-
-
-
-
-
 
 
 
