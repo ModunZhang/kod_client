@@ -3,10 +3,10 @@ local TutorialLayer = class('TutorialLayer', function()
 end)
 
 function TutorialLayer:ctor(obj)
-    self.left = display.newColorLayer(cc.c4b(255, 0, 0, 50)):addTo(self, 0)
-    self.right = display.newColorLayer(cc.c4b(255, 0, 0, 50)):addTo(self, 0)
-    self.top = display.newColorLayer(cc.c4b(255, 0, 0, 50)):addTo(self, 0)
-    self.bottom = display.newColorLayer(cc.c4b(255, 0, 0, 50)):addTo(self, 0)
+    self.left = display.newColorLayer(cc.c4b(255, 0, 0, 255)):addTo(self, 0)
+    self.right = display.newColorLayer(cc.c4b(255, 0, 0, 255)):addTo(self, 0)
+    self.top = display.newColorLayer(cc.c4b(255, 0, 0, 255)):addTo(self, 0)
+    self.bottom = display.newColorLayer(cc.c4b(255, 0, 0, 255)):addTo(self, 0)
     -- self.left = display.newLayer():addTo(self, 0)
     -- self.right = display.newLayer():addTo(self, 0)
     -- self.top = display.newLayer():addTo(self, 0)
@@ -17,6 +17,7 @@ function TutorialLayer:ctor(obj)
     end
     self:Reset()
     self:SetTouchObject(obj)
+    self:setLocalZOrder(3000)
 end
 function TutorialLayer:Enable()
     self.count = self.count + 1

@@ -78,6 +78,9 @@ local function do_promise(p)
     p.result = result
     return success, result, failed_func
 end
+local function ignore_error(p)
+    p.ignore_error = true
+end
 local function handle_next_failed(p, err)
     -- 当前任务里面找
     local thens = p.thens
@@ -95,12 +98,12 @@ local function handle_next_failed(p, err)
     -- 没有找到,就应该完成这个promise并在子promise里面找
     local next_promise = complete_and_pop_promise(p)
     if next_promise == nil then
-        -- 这个地方不好做优化，因为在解决之后还能添加新的节点，就不能报错
-        -- 所以这个地方就不做信息打印了
-        -- 容易漏掉bug，小心小心!!!!!!!!!!!!!!
-        dump(err, "你应该捕获这个错误")
-        p.result = err
-        return p
+        if p.ignore_error then
+            p.result = err
+            return p
+        end
+        dump(err)
+        assert(false, "你应该捕获这个错误!")
     else
         next_promise.state_ = REJECTED
     end
@@ -170,8 +173,8 @@ local function resolve(p, data)
     assert(p.state_ == PENDING, p.state_)
     p.state_ = RESOLVED
     p.result = data
-    local pp = repeat_resolve(p)
-    return pp or p
+    repeat_resolve(p)
+    return p
 end
 local function clear_promise(p)
     p.thens = {}
@@ -204,25 +207,14 @@ function promise:resolve(data)
     return resolve(self, data)
 end
 function promise:next(success_func, failed_func)
+    assert(self.state_ == PENDING)
     if type(success_func) ~= "function" then
         local p = success_func
         success_func = function() return p end
     end
     assert(type(success_func) == "function", "必须要有成功处理函数,如果不想要,请调用catch(func(err)end)")
     table.insert(self.thens, {success_func, failed_func})
-    --
-    local new_p
-    if self.state_ == RESOLVED then
-        new_p = repeat_resolve(self)
-    elseif self.state_ == REJECTED then
-        local result = self.result
-        if is_error(result) then
-            new_p = failed_resolve(self, result)
-        else
-            new_p = catch_resolve(self, result)
-        end
-    end
-    return new_p or self
+    return self
 end
 function promise:catch(func)
     assert(type(func) == "function")
@@ -265,7 +257,7 @@ local function foreach_promise(func, ...)
                 table.insert(other_promises, ov)
             end
         end
-        -- ignore_error(v)
+        ignore_error(v)
         func(i, v, p, other_promises)
     end
     return p
@@ -328,6 +320,7 @@ end
 
 
 return promise
+
 
 
 

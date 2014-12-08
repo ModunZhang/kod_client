@@ -1,4 +1,4 @@
-local Arrow = import(".Arrow")
+local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local window = import("..utils.window")
 local BuildingRegister = import("..entity.BuildingRegister")
@@ -234,7 +234,8 @@ function GameUIBuild:CreateItemWithListView(list_view)
 end
 
 --
-
+local Arrow = import(".Arrow")
+local TutorialLayer = import(".TutorialLayer")
 function GameUIBuild:FTE_BuildDwelling()
     return self:FTE_BuildHouseByType("dwelling")
 end
@@ -251,20 +252,14 @@ function GameUIBuild:FTE_BuildMiner()
     return self:FTE_BuildHouseByType("miner")
 end
 function GameUIBuild:FTE_BuildHouseByType(house_type)
-    self.tutorial_layer = self:CreateTutorialLayer()
-    local arrow
     return self:FindItemByType(house_type):next(function(item)
         self.base_list_view:getScrollNode():setTouchEnabled(false)
-        arrow = Arrow.new():addTo(self:GetTutorialLayer())
+        local arrow = Arrow.new():addTo(TutorialLayer.new(item:GetBuildButton()):addTo(self))
         local rect = item:GetBuildButton():getCascadeBoundingBox()
         arrow:OnPositionChanged(rect.x, rect.y)
-        self:GetTutorialLayer():Enable():SetTouchObject(item:GetBuildButton())
     end):next(function()
         return self.build_city:PromiseOfUpgradingByLevel(house_type, 0)
     end)
-end
-function GameUIBuild:GetTutorialLayer()
-    return self.tutorial_layer
 end
 function GameUIBuild:FindItemByType(building_type)
     local item
@@ -274,16 +269,18 @@ function GameUIBuild:FindItemByType(building_type)
             return true
         end
     end)
-    return promise.new(function(item)
+    return cocos_promise.deffer(function()
         if not item then
             promise.reject("没有找到对应item", building_type)
         end
         return item
-    end):resolve(item)
+    end)
 end
 
 
 return GameUIBuild
+
+
 
 
 

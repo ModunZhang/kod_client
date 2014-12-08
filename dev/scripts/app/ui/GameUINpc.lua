@@ -126,6 +126,9 @@ end
 function GameUINpc:onEnter()
     GameUINpc.super.onEnter(self)
     self:setLocalZOrder(99999999)
+    self:setTouchSwallowEnabled(true)
+    self:EnableReceiveClickMsg(true)
+    
     local middle_x = display.cx - 100
     self.dialog_bg = display.newSprite("pop_tip_bg.png")
         :addTo(self):align(display.LEFT_BOTTOM, middle_x, 0)
@@ -134,8 +137,8 @@ function GameUINpc:onEnter()
     self:StartDialog()
 end
 function GameUINpc:onExit()
-    self:OnLeave()
     GameUINpc.super.onExit(self)
+    self:OnLeave()
 end
 function GameUINpc:StartDialog()
     self:ShowWords(self:CurrentDialog())
@@ -217,25 +220,25 @@ function GameUINpc:PromiseOfActive()
     if UIKit:getRegistry().isObjectExists("GameUINpc") then
         UIKit:getRegistry().getObject("GameUINpc"):EnableReceiveClickMsg(true)
     end
-    return promise.new():resolve()
+    return cocos_promise.deffer()
 end
 function GameUINpc:PromiseOfInActive()
     if UIKit:getRegistry().isObjectExists("GameUINpc") then
         UIKit:getRegistry().getObject("GameUINpc"):EnableReceiveClickMsg(false)
     end
-    return promise.new():resolve()
+    return cocos_promise.deffer()
 end
 function GameUINpc:PromiseOfInput()
     if UIKit:getRegistry().isObjectExists("GameUINpc") then
         UIKit:getRegistry().getObject("GameUINpc"):setTouchSwallowEnabled(false)
     end
-    return promise.new():resolve()
+    return cocos_promise.deffer()
 end
 function GameUINpc:PromiseOfLockInput()
     if UIKit:getRegistry().isObjectExists("GameUINpc") then
         UIKit:getRegistry().getObject("GameUINpc"):setTouchSwallowEnabled(true)
     end
-    return promise.new():resolve()
+    return cocos_promise.deffer()
 end
 function GameUINpc:PromiseOfDialogEnded(index)
     local p = promise.new()
@@ -259,6 +262,7 @@ function GameUINpc:PromiseOfSay(...)
         instance:StartDialog()
     else
         instance = UIKit:newGameUI('GameUINpc', ...):addToCurrentScene(true)
+        UIKit:newGameUI('GameUINpc', {words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"}):addToScene(self, true)
     end
     return instance:PromiseOfDialogEnded(#{...})
 end
@@ -281,13 +285,19 @@ function GameUINpc:PromiseOfLeave()
         instance:leftButtonClicked()
         return p
     end
-    return promise.new():resolve()
+    return cocos_promise.deffer()
 end
 function GameUINpc:PromiseOfEnter()
     assert(false)
 end
 
 return GameUINpc
+
+
+
+
+
+
 
 
 
