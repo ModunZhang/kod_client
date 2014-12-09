@@ -117,7 +117,6 @@ function QueueManager:OnMarchEventsChanged(changed_map)
       	end)
     end
     self:UpdateEvnetCountOffset_(self.EVENT_NAME.SHIRE_MARCH_EVENT,add+sub)
-    dump(self:IsReachLimit(self.QUEUE_TYPE.MARCH_EVENT),"QueueManager:OnMarchEventsChanged---xxxx-->")
 end
 
 function QueueManager:OnHelpDefenceMarchReturnEventsChanged(changed_map)

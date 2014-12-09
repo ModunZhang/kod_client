@@ -1,3 +1,4 @@
+local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local window = import("..utils.window")
 local WidgetTab = import("..widget.WidgetTab")
@@ -93,10 +94,9 @@ function GameUIHome:CreateTop()
         {normal = "home/player_btn_up.png", pressed = "home/player_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        -- NetManager:sendMsg("reset", NOT_HANDLE)
-        NetManager:getSendGlobalMsgPromise("reset"):catch(function(err)
-            dump(err:reason())
-        end)
+        if event.name == "CLICKED_EVENT" then
+            UIKit:newGameUI('GameUIVip', City,"info"):addToCurrentScene(true)
+        end
     end):addTo(top_bg):align(display.LEFT_CENTER, top_bg:getContentSize().width/2-2, top_bg:getContentSize().height/2+10)
     button:setRotationSkewY(180)
 
@@ -178,14 +178,13 @@ function GameUIHome:CreateTop()
     local player_bg = display.newSprite("home/player_bg.png")
         :addTo(top_bg, 2)
         :align(display.LEFT_BOTTOM, 64, 0)
+
     display.newSprite("home/player_icon.png")
         :addTo(player_bg)
         :pos(60, 71)
-        :setTouchEnabled(true)
     display.newSprite("home/level_bg.png")
         :addTo(player_bg)
         :pos(61, 33)
-        :setTouchEnabled(true)
     self.level_label =
         UIKit:ttfLabel({text = "10000",
             size = 20,
@@ -196,14 +195,13 @@ function GameUIHome:CreateTop()
     display.newSprite("home/player_exp_bar.png")
         :addTo(player_bg)
         :pos(61, 60)
-        :setTouchEnabled(true)
     -- vip
     local vip_btn = cc.ui.UIPushButton.new(
         {normal = "home/vip_bg.png", pressed = "home/vip_bg.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI('GameUIVip', City):addToCurrentScene(true)
+            UIKit:newGameUI('GameUIVip', City,"VIP"):addToCurrentScene(true)
         end
     end):addTo(top_bg):align(display.LEFT_TOP, 63, 33)
 
@@ -389,7 +387,7 @@ function GameUIHome:CreateBottom()
     -- 场景切换
 
     local map_node = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_CITY):addTo(self)
-   
+
 
     -- 协助加速按钮
     local help_button = cc.ui.UIPushButton.new(
@@ -424,28 +422,23 @@ end
 
 
 -- fte
+local TutorialLayer = import("..ui.TutorialLayer")
 function GameUIHome:FTE_FreeSpeedUpFirst()
-    self.tutorial_layer = self:CreateTutorialLayer()
-    local arrow
+    local tutorial_layer = TutorialLayer.new():addTo(self)
     return self.event_tab:PromiseOfShowTab("build"):next(function()
         return self:FindFirstItem()
     end):next(function(item)
         local btn = item:GetSpeedUpButton()
-        arrow = Arrow.new():addTo(self:GetTutorialLayer())
+        local arrow = Arrow.new():addTo(tutorial_layer:Enable():SetTouchObject(btn))
         local rect = btn:getCascadeBoundingBox()
         arrow:OnPositionChanged(rect.x, rect.y)
-        self:GetTutorialLayer():Enable():SetTouchObject(btn)
         return item
     end):next(function(item)
-        local house_type = string.split(item:GetEventKey(), "_")[1]
-        return self.city:PromiseOfFinishUpgradingByLevel(house_type)
+        local building_type = string.split(item:GetEventKey(), "_")[1]
+        return self.city:PromiseOfFinishUpgradingByLevel(building_type)
     end):next(function()
-        self.tutorial_layer:removeFromParent()
-        self.tutorial_layer = nil
+        tutorial_layer:removeFromParent()
     end)
-end
-function GameUIHome:GetTutorialLayer()
-    return self.tutorial_layer
 end
 function GameUIHome:FindFirstItem()
     local item
@@ -453,14 +446,17 @@ function GameUIHome:FindFirstItem()
         item = v
         return true
     end)
-    return promise.new(function(item)
+    return cocos_promise.deffer(function()
         if not item then
-            promise.reject("没有找到对应item", building_type)
+            promise.reject("没有找到对应item")
         end
         return item
-    end):resolve(item)
+    end)
 end
 
 return GameUIHome
+
+
+
 
 

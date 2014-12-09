@@ -41,7 +41,7 @@ function test_build_dwelling()
 
             City:CreateDecorator(time, decorator_building)
 
-            assert_equal(20, population_resource:GetProductionPerHour())
+            assert_equal(0, population_resource:GetProductionPerHour())
 
             assert_equal(0, population_resource:GetResourceValueByCurrentTime(time))
 

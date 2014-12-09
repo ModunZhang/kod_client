@@ -237,12 +237,12 @@ function AllianceLayer:OnMarchReturnEventsChanged(changed_map)
 end
 
 function AllianceLayer:OnMoonGateMarchEventsChanged(changed_map)
-    if changed_map.remove then
-        table.foreachi(changed_map.remove,function(_,merchEvent)
+    if changed_map.removed then
+        table.foreachi(changed_map.removed,function(_,merchEvent)
             self:DeleteCorpsById(merchEvent:Id())
         end)
-    elseif changed_map.add then
-        table.foreachi(changed_map.add,function(_,merchEvent)
+    elseif changed_map.added then
+        table.foreachi(changed_map.added,function(_,merchEvent)
             self:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
         end)
     end
@@ -413,6 +413,9 @@ function AllianceLayer:DeleteAllCorps()
     for id, _ in pairs(self.corps_map) do
         self:DeleteCorpsById(id)
     end
+end
+function AllianceLayer:IsExistCorps(id)
+    return self.corps_map[id] ~= nil
 end
 function AllianceLayer:CreateLine(id, start_pos, end_pos)
     assert(self.line_map[id] == nil)

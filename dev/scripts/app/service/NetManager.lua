@@ -204,6 +204,8 @@ onGetPlayerInfoSuccess_callbacks = {}
 onGetMailsSuccess_callbacks = {}
 onGetSavedMailsSuccess_callbacks = {}
 onGetSendMailsSuccess_callbacks = {}
+onGetReportsSuccess_callbacks = {}
+onGetSavedReportsSuccess_callbacks = {}
 onSendChatSuccess_callbacks = {}
 onGetAllChatSuccess_callbacks = {}
 onFetchAllianceViewData_callbacks = {}
@@ -286,6 +288,9 @@ function NetManager:addOnGetMailsSuccessListener()
     self:addEventListener("onGetMailsSuccess", function(success, msg)
         if success then
             assert(#onGetMailsSuccess_callbacks <= 1, "重复请求过多了!")
+
+            LuaUtils:outputTable("onGetMailsSuccess", msg)
+            MailManager:dispatchMailServerData( "onGetMailsSuccess",msg )
             local callback = onGetMailsSuccess_callbacks[1]
             if type(callback) == "function" then
                 callback(success, msg)
@@ -298,6 +303,7 @@ function NetManager:addOnGetSavedMailsSuccessListener()
     self:addEventListener("onGetSavedMailsSuccess", function(success, msg)
         if success then
             assert(#onGetSavedMailsSuccess_callbacks <= 1, "重复请求过多了!")
+            MailManager:dispatchMailServerData( "onGetSavedMailsSuccess",msg )
             local callback = onGetSavedMailsSuccess_callbacks[1]
             if type(callback) == "function" then
                 callback(success, msg)
@@ -310,6 +316,7 @@ function NetManager:addOnGetSendMailsSuccessListener()
     self:addEventListener("onGetSendMailsSuccess", function(success, msg)
         if success then
             assert(#onGetSendMailsSuccess_callbacks <= 1, "重复请求过多了!")
+            MailManager:dispatchMailServerData( "onGetSendMailsSuccess",msg )
             local callback = onGetSendMailsSuccess_callbacks[1]
             if type(callback) == "function" then
                 callback(success, msg)
@@ -318,6 +325,34 @@ function NetManager:addOnGetSendMailsSuccessListener()
         end
     end)
 end
+function NetManager:addOnGetReportsSuccessListener()
+    self:addEventListener("onGetReportsSuccess", function(success, msg)
+        if success then
+            assert(#onGetReportsSuccess_callbacks <= 1, "重复请求过多了!")
+            MailManager:dispatchMailServerData( "onGetReportsSuccess",msg )
+            local callback = onGetReportsSuccess_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onGetReportsSuccess_callbacks = {}
+        end
+    end)
+end
+function NetManager:addOnGetSavedReportsSuccessListener()
+    self:addEventListener("onGetSavedReportsSuccess", function(success, msg)
+        if success then
+            assert(#onGetSavedReportsSuccess_callbacks <= 1, "重复请求过多了!")
+            MailManager:dispatchMailServerData( "onGetSavedReportsSuccess",msg )
+            local callback = onGetSavedReportsSuccess_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onGetSavedReportsSuccess_callbacks = {}
+        end
+    end)
+end
+
+
 function NetManager:addOnChatListener()
     self:addEventListener("onChat", function(success, msg)
         if success then
@@ -470,6 +505,8 @@ function NetManager:getConnectLogicServerPromise()
         self:addOnGetMailsSuccessListener()
         self:addOnGetSavedMailsSuccessListener()
         self:addOnGetSendMailsSuccessListener()
+        self:addOnGetReportsSuccessListener()
+        self:addOnGetSavedReportsSuccessListener()
         self:addOnChatListener()
         self:addOnAllChatListener()
         self:addOnGetAllianceDataSuccess()
@@ -528,6 +565,12 @@ local function get_savedmails_callback()
 end
 local function get_sendmails_callback()
     return get_callback_promise(onGetSendMailsSuccess_callbacks, "获取发件箱邮件失败!")
+end
+local function get_reports_callback()
+    return get_callback_promise(onGetReportsSuccess_callbacks, "获取玩家失败!")
+end
+local function get_savedreports_callback()
+    return get_callback_promise(onGetSavedReportsSuccess_callbacks, "获取玩家收藏战报失败!")
 end
 local function get_sendchat_callback()
     return get_callback_promise(onSendChatSuccess_callbacks, "发送聊天失败!")
@@ -785,6 +828,42 @@ function NetManager:getSendAllianceMailPromise(title, content)
         title = title,
         content = content,
     }, "发送联盟邮件失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 阅读战报
+function NetManager:getReadReportsPromise(reportIds)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.readReports", {
+        reportIds = reportIds
+    }, "阅读战报失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 收藏战报
+function NetManager:getSaveReportPromise(reportId)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.saveReport", {
+        reportId = reportId
+    }, "收藏战报失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 取消收藏战报
+function NetManager:getUnSaveReportPromise(reportId)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.unSaveReport", {
+        reportId = reportId
+    }, "取消收藏战报失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 获取玩家战报
+function NetManager:getReportsPromise(fromIndex)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.getReports", {
+        fromIndex = fromIndex
+    }, "获取玩家战报失败!"), get_reports_callback()):next(get_response_msg)
+end
+-- 获取玩家已存战报
+function NetManager:getSavedReportsPromise(fromIndex)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.getSavedReports", {
+        fromIndex = fromIndex
+    }, "获取玩家已存战报失败!"), get_savedreports_callback()):next(get_response_msg)
+end
+-- 删除战报
+function NetManager:getDeleteReportsPromise(reportIds)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.deleteReports", {
+        reportIds = reportIds
+    }, "删除战报失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 请求加速
 function NetManager:getRequestAllianceToSpeedUpPromise(eventType, eventId)
@@ -1103,6 +1182,13 @@ function NetManager:getAttackPlayerCityPromise(enemyPlayerId)
     return promise.all(get_none_blocking_request_promise("logic.allianceHandler.attackPlayerCity",
         {enemyPlayerId=enemyPlayerId},"攻打玩家城市失败!"),
         get_alliancedata_callback()):next(get_response_msg)
+end
+
+--设置驻防使用的龙
+function NetManager:getSetDefenceDragonPromise(dragonType)
+    return promise.all(get_none_blocking_request_promise("logic.playerHandler.setDefenceDragon",
+        {dragonType=dragonType},
+        "设置驻防使用的龙失败!"),get_playerdata_callback()):next(get_response_msg)
 end
 --
 function NetManager:getUpdateFileList(cb)

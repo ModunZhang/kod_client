@@ -2,12 +2,15 @@ local promise = import(".promise")
 local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 
-local function delay_(time)
-    local p = promise.new()
+local function delay_(time, func)
+    local p = promise.new(func)
     scheduler.performWithDelayGlobal(function()
         p:resolve()
     end, time)
     return p
+end
+local function deffer(func)
+    return delay_(0, func)
 end
 local function delay(time)
     return function()
@@ -60,6 +63,8 @@ local function promiseOfMoveTo(node, x, y, time, easing)
 end
 
 return {
+    deffer = deffer,
+    Delay = delay_,
     delay = delay,
     timeOut = timeOut,
     promiseWithTimeOut = promiseWithTimeOut,

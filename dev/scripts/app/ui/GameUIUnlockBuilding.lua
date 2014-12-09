@@ -1,9 +1,11 @@
 local UIListView = import(".UIListView")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local UpgradeBuilding = import("..entity.UpgradeBuilding")
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
+local promise = import("..utils.promise")
 local MaterialManager = import("..entity.MaterialManager")
 
 local GameUIUnlockBuilding = class("GameUIUnlockBuilding", function ()
@@ -22,12 +24,15 @@ end
 function GameUIUnlockBuilding:OnResourceChanged(resource_manager)
     self:SetUpgradeRequirementListview()
 end
+function GameUIUnlockBuilding:onEnter()
+    UIKit:CheckOpenUI(self)
+end
 function GameUIUnlockBuilding:onExit()
     self.city:GetResourceManager():RemoveObserver(self)
 end
 function GameUIUnlockBuilding:Init()
     -- bg
-    local bg = display.newScale9Sprite("full_screen_dialog_bg.png",display.cx, display.top-480, cc.size(612,663)):addTo(self)
+    local bg = WidgetUIBackGround.new({height=663,widht=612}):pos(display.cx-306, display.top-810):addTo(self)
     -- title bg
     local title_bg = display.newSprite("Title_blue.png"):align(display.TOP_LEFT, 8, bg:getContentSize().height):addTo(bg,2)
     -- title label
@@ -43,7 +48,7 @@ function GameUIUnlockBuilding:Init()
     cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
         :onButtonClicked(function(event)
             self:removeFromParent(true)
-        end):align(display.CENTER, bg:getContentSize().width-15, bg:getContentSize().height-5):addTo(bg,2):addChild(display.newSprite("X_3.png"))
+        end):align(display.CENTER, bg:getContentSize().width-15, bg:getContentSize().height-5):addTo(bg,2)
     -- 建筑功能介绍
     cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-250, display.top-265)
         :addTo(self):setFlippedX(true)
@@ -56,20 +61,19 @@ function GameUIUnlockBuilding:Init()
     self:InitBuildingIntroduces()
 
     -- upgrade now button
-    cc.ui.UIPushButton.new({normal = "upgrade_green_button_normal.png",pressed = "upgrade_green_button_pressed.png"})
-        :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("立即解锁"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
+    local btn_bg = UIKit:commonButtonWithBG(
+        {
+            w=250,
+            h=65,
+            style = UIKit.BTN_COLOR.GREEN,
+            labelParams = {text = _("立即解锁")},
+            listener = function ()
                 local upgrade_listener = function()
-
-                    -- NetManager:instantUpgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), NOT_HANDLE)
-
                     local location_id = City:GetLocationIdByBuildingType(self.building:GetType())
                     NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
                         :catch(function(err)
                             dump(err:reason())
                         end)
-                    -- print(self.building:GetType().."---------------- 立即解锁 button has been  clicked ")
                 end
 
                 local can_not_update_type = self.building:IsAbleToUpgrade(true)
@@ -79,21 +83,23 @@ function GameUIUnlockBuilding:Init()
                     upgrade_listener()
                     self:removeFromParent(true)
                 end
-            end
-        end):align(display.CENTER, display.cx-150, display.top-380):addTo(self)
-    -- upgrade button
-    cc.ui.UIPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
-        :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("解锁"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                local upgrade_listener = function()
-                    -- NetManager:upgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), NOT_HANDLE)
+            end,
+        }
+    ):pos(display.cx-150, display.top-380)
+        :addTo(self)
 
+
+    local btn_bg = UIKit:commonButtonWithBG(
+        {
+            w=185,
+            h=65,
+            style = UIKit.BTN_COLOR.YELLOW,
+            labelParams = {text = _("解锁")},
+            listener = function ()
+                local upgrade_listener = function()
                     local location_id = City:GetLocationIdByBuildingType(self.building:GetType())
                     NetManager:getUpgradeBuildingByLocationPromise(location_id)
-                        :catch(function(err)
-                            dump(err:reason())
-                        end)
+                    self:removeFromParent(true)
                 end
 
                 local can_not_update_type = self.building:IsAbleToUpgrade(false)
@@ -101,10 +107,12 @@ function GameUIUnlockBuilding:Init()
                     self:PopNotSatisfyDialog(upgrade_listener,can_not_update_type)
                 else
                     upgrade_listener()
-                    self:removeFromParent(true)
                 end
-            end
-        end):align(display.CENTER, display.cx+180, display.top-380):addTo(self)
+            end,
+        }
+    ):pos(display.cx+180, display.top-380)
+        :addTo(self)
+
     -- 立即升级所需宝石
     display.newSprite("Topaz-icon.png", display.cx-260, display.top-440):addTo(self):setScale(0.5)
     self.upgrade_now_need_gems_label = cc.ui.UILabel.new({
@@ -238,17 +246,22 @@ end
 function GameUIUnlockBuilding:SetUpgradeTime()
     self.upgrade_time:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradeTimeToNextLevel()))
 end
+
+
+---
+local Arrow = import(".Arrow")
+local TutorialLayer = import(".TutorialLayer")
+function GameUIUnlockBuilding:FTE_Unlock(building_type)
+    return promise.new():next(function(item)
+        local arrow = Arrow.new():addTo(TutorialLayer.new(self.upgrade_btn):addTo(self):Enable())
+        local rect = self.upgrade_btn:getCascadeBoundingBox()
+        arrow:OnPositionChanged(rect.x, rect.y)
+    end):next(function()
+        return self.city:PromiseOfUpgradingByLevel(building_type, 0)
+    end):resolve()
+end
+
+
 return GameUIUnlockBuilding
-
-
-
-
-
-
-
-
-
-
-
 
 

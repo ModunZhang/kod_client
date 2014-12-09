@@ -264,7 +264,7 @@ function GameUIAllianceEnter:InitConfig()
     shrine = {
         height = 261,
         title = _("圣地"),
-        building_image = "orderHall_277x417.png",
+        building_image = "shrine_256x210.png",
         building_desc = _("本地化缺失"),
         building_info = {
             {
@@ -810,7 +810,6 @@ function GameUIAllianceEnter:CreateBackGroundWithTitle( params )
                 self:leftButtonClicked()
             end
         end):align(display.CENTER, rb_size.width-20,rb_size.height+10):addTo(body)
-    self.close_btn:addChild(display.newSprite("X_3.png"))
     return body
 end
 

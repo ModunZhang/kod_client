@@ -230,7 +230,6 @@ function GameUIAllianceSendTroops:SelectDragon()
                 layer:removeFromParent(true)
             end
         end):align(display.CENTER, rb_size.width-20,rb_size.height+10):addTo(body)
-    self.close_btn:addChild(display.newSprite("X_3.png"))
     local function createDragonFrame(dragon)
         local dragon_frame = display.newSprite("alliance_item_flag_box_126X126.png")
 
