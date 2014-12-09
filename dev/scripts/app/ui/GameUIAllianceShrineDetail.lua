@@ -97,9 +97,9 @@ function GameUIAllianceShrineDetail:BuildUI()
 	   	:onButtonClicked(function ()
 	   		self:leftButtonClicked()
 	   	end)
-	display.newSprite("X_3.png")
-	   	:addTo(closeButton)
-	   	:pos(-32,30)
+	-- display.newSprite("X_3.png")
+	--    	:addTo(closeButton)
+	--    	:pos(-32,30)
 	--ui
 	if self:IsActivate() then
 		local desc_label = UIKit:ttfLabel({

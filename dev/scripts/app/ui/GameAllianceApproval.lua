@@ -21,9 +21,9 @@ function GameAllianceApproval:onMoveInStage()
 	   	:onButtonClicked(function ()
 	   		self:leftButtonClicked()
 	   	end)
-	display.newSprite("X_3.png")
-	   	:addTo(closeButton)
-	   	:pos(-32,30)
+	-- display.newSprite("X_3.png")
+	--    	:addTo(closeButton)
+	--    	:pos(-32,30)
 	UIKit:ttfLabel({
 		text = _("申请审批"),
 		color = 0xffedae,
