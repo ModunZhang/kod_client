@@ -143,7 +143,10 @@ function GameUIHome:CreateTop()
         {normal = "home/player_btn_up.png", pressed = "home/player_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        end):addTo(top_bg):align(display.LEFT_CENTER, top_bg:getContentSize().width/2+2, top_bg:getContentSize().height/2+10)
+        if event.name == "CLICKED_EVENT" then
+            UIKit:newGameUI("GameUIResourceOverview",self.city):addToCurrentScene(true)
+        end
+    end):addTo(top_bg):align(display.LEFT_CENTER, top_bg:getContentSize().width/2+2, top_bg:getContentSize().height/2+10)
 
     -- 资源图片和文字
     local first_row = 18
@@ -455,6 +458,7 @@ function GameUIHome:FindFirstItem()
 end
 
 return GameUIHome
+
 
 
 

@@ -85,7 +85,7 @@ function GameUIAllianceShrineDetail:BuildUI()
 	local background = WidgetUIBackGround.new({height = HEIGHT})
 		:addTo(layer)
 		:pos(window.left+22,window.top - 101 - HEIGHT)
-	local title_bar = display.newSprite("red_title_600x42.png"):align(display.LEFT_BOTTOM, 0,HEIGHT - 15):addTo(background)
+	local title_bar = display.newSprite("red_title_600x52.png"):align(display.LEFT_BOTTOM, 0,HEIGHT - 15):addTo(background)
 	UIKit:ttfLabel({
 		text = self:GetShrineStage():GetStageDesc(),
 		size = 22,
