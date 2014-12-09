@@ -5,6 +5,9 @@
 -- 封装常用ui工具
 import(".bit")
 local promise = import(".promise")
+local Enum = import("..utils.Enum")
+local WidgetPushButton = import("..widget.WidgetPushButton")
+
 UIKit =
     {
         Registry   = import('framework.cc.Registry'),
@@ -12,6 +15,7 @@ UIKit =
     }
 local CURRENT_MODULE_NAME = ...
 
+UIKit.BTN_COLOR = Enum("YELLOW","BLUE","GREEN","RED","PURPLE")
 UIKit.open_ui_callbacks = {}
 
 function UIKit:PromiseOfOpen(ui_name)
@@ -296,7 +300,7 @@ function UIKit:CreateBoxPanel(height)
     top:addTo(node)
         :align(display.LEFT_BOTTOM,0,next_y)
     return node
-    
+
 end
 
 function UIKit:CreateBoxPanel9(params)
@@ -338,3 +342,38 @@ function UIKit:closeButton()
     local closeButton = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"}, {scale9 = false})
     return closeButton
 end
+
+-- 带按钮文字的黄，绿，红，紫，蓝，按钮
+function UIKit:commonButtonWithBG(options)
+    local BTN_COLOR = {
+        "yellow",
+        "blue",
+        "green",
+        "red",
+        "purple",
+    }
+    -- display.newScale9Sprite("btn_bg_148x58.png",nil,nil,cc.size(options.w, options.h))
+    local btn_bg = cc.ui.UIImage.new("btn_bg_148x58.png", {scale9 = true,
+        capInsets = cc.rect(0, 0, 144 , 54)
+    }):align(display.CENTER):setLayoutSize(options.w, options.h)
+    btn_bg.button = WidgetPushButton.new(
+        {normal = BTN_COLOR[options.style].."_btn_up_148x58.png",pressed = BTN_COLOR[options.style].."_btn_down_148x58.png",disabled="gray_btn_148x58.png"},
+        {scale9 = true}
+    ):setButtonSize(options.w-2,options.h-2)
+        :setButtonLabel(self:commonButtonLable(options.labelParams))
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                if options.listener then
+                    options.listener()
+                end
+            end
+        end)
+        :align(display.CENTER,btn_bg:getContentSize().width/2,btn_bg:getContentSize().height/2):addTo(btn_bg)
+
+    return btn_bg
+end
+
+
+
+
+

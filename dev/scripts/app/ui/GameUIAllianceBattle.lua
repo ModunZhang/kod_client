@@ -658,18 +658,19 @@ function GameUIAllianceBattle:OpenWarDetails()
     }):align(display.CENTER, rb_size.width/2,rb_size.height-50)
         :addTo(body)
 
-    local know_button =  WidgetPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("明白"),
-            size = 24,
-            color = 0xffedae,
-            shadow= true
-        }))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
+    local btn_bg = UIKit:commonButtonWithBG(
+        {
+            w=185,
+            h=65,
+            style = UIKit.BTN_COLOR.YELLOW,
+            labelParams = {text = _("明白")},
+            listener = function ()
                 layer:removeFromParent(true)
-            end
-        end):align(display.CENTER, rb_size.width/2, 50):addTo(body)
+            end,
+        }
+    ):pos(rb_size.width/2, 50)
+        :addTo(body)
+   
 end
 
 function GameUIAllianceBattle:InitHistoryRecord()
