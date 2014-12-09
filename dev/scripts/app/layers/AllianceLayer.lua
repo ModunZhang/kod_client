@@ -135,10 +135,67 @@ function AllianceLayer:ctor(alliance)
     end)
 
     self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchReturnEventsChanged)
+
+    self:GetAlliance():IteratorCityBeAttackedMarchEvents(function(cityBeAttackedMarchEvent)
+         self:CreateCorps( 
+            cityBeAttackedMarchEvent:Id(),
+            cityBeAttackedMarchEvent:FromLocation(),
+            cityBeAttackedMarchEvent:TargetLocation(),
+            cityBeAttackedMarchEvent:StartTime(),
+            cityBeAttackedMarchEvent:ArriveTime()
+        )
+    end)
+    self:GetAlliance():IteratorCityBeAttackedMarchReturnEvents(function(cityBeAttackedMarchReturnEvent)
+        self:CreateCorps( 
+            cityBeAttackedMarchReturnEvent:Id(),
+            cityBeAttackedMarchReturnEvent:FromLocation(),
+            cityBeAttackedMarchReturnEvent:TargetLocation(),
+            cityBeAttackedMarchReturnEvent:StartTime(),
+            cityBeAttackedMarchReturnEvent:ArriveTime()
+        )
+    end)
+    self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnCityBeAttackedMarchEventChanged)
+    self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnCityCityBeAttackedMarchReturnEventChanged)
 end
 
 function AllianceLayer:GetAlliance()
     return self.alliance_
+end
+
+function AllianceLayer:OnCityBeAttackedMarchEventChanged(changed_map)
+    if changed_map.removed then
+        table.foreachi(changed_map.removed,function(_,cityBeAttackedMarchEvent)
+            self:DeleteCorpsById(cityBeAttackedMarchEvent:Id())
+        end)
+    elseif changed_map.added then
+        table.foreachi(changed_map.added,function(_,cityBeAttackedMarchEvent)
+            self:CreateCorps( 
+                cityBeAttackedMarchEvent:Id(),
+                cityBeAttackedMarchEvent:FromLocation(),
+                cityBeAttackedMarchEvent:TargetLocation(),
+                cityBeAttackedMarchEvent:StartTime(),
+                cityBeAttackedMarchEvent:ArriveTime()
+            )
+        end)
+    end
+end
+
+function AllianceLayer:OnCityCityBeAttackedMarchReturnEventChanged(changed_map)
+    if changed_map.removed then
+        table.foreachi(changed_map.removed,function(_,cityBeAttackedMarchReturnEvent)
+            self:DeleteCorpsById(cityBeAttackedMarchReturnEvent:Id())
+        end)
+    elseif changed_map.added then
+        table.foreachi(changed_map.added,function(_,cityBeAttackedMarchReturnEvent)
+            self:CreateCorps( 
+                cityBeAttackedMarchReturnEvent:Id(),
+                cityBeAttackedMarchReturnEvent:FromLocation(),
+                cityBeAttackedMarchReturnEvent:TargetLocation(),
+                cityBeAttackedMarchReturnEvent:StartTime(),
+                cityBeAttackedMarchReturnEvent:ArriveTime()
+            )
+        end)
+    end
 end
 
 function AllianceLayer:OnHelpDefenceMarchEventsChanged(changed_map)

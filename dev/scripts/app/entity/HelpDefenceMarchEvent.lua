@@ -38,10 +38,6 @@ function HelpDefenceMarchEvent:OnTimer(current_time)
 	end
 end
 
-function HelpDefenceMarchEvent:Reset()
-	self:RemoveAllObserver()
-end
-
 function HelpDefenceMarchEvent:GetTime()
 	return self.times or 0
 end

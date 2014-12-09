@@ -544,7 +544,7 @@ function GameUIAllianceEnter:InitConfig()
                             location = {x = x,y = y}
                         end
                         if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
-                            UIKit:newGameUI("GameUIAttackPlayerCity",alliance,location):addToCurrentScene(true)
+                            UIKit:newGameUI("GameUIAttackPlayerCity",alliance,location,building.player:Id()):addToCurrentScene(true)
                         end
                     end
                 },

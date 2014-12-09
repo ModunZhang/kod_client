@@ -9,12 +9,14 @@ local content_height = 400
 local UILib = import(".UILib")
 local UIListView = import(".UIListView")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local WidgetSoldierBox = import("..widget.WidgetSoldierBox")
 
-function GameUIAttackPlayerCity:ctor(alliance,to_location)
+function GameUIAttackPlayerCity:ctor(alliance,to_location,enemyPlayerId)
 	-- dump(to_location,"to_location--->")
+	self.enemyPlayerId = enemyPlayerId
+	assert(enemyPlayerId)
 	self.to_location = to_location
 	self.alliance = alliance
-	print(to_location.x,to_location.y,"to_location--->")
 	GameUIAttackPlayerCity.super.ctor(self)
 end
 
@@ -81,20 +83,28 @@ function GameUIAttackPlayerCity:BuildUI()
 		color= 0x403c2f
 	}):align(display.RIGHT_BOTTOM, line_1:getPositionX()+line_1:getContentSize().width, to_label:getPositionY()):addTo(bg_node)
 	local left_bottom_x,left_bottom_y = box:getPositionX(),100
-	local right_top_x,right_top_y = line_2:getPositionX()+line_2:getContentSize().width,line_2:getPositionY()-20
+	local right_top_x,right_top_y = line_2:getPositionX()+line_2:getContentSize().width,line_2:getPositionY()-5
 	local width, height = right_top_x - left_bottom_x, right_top_y - left_bottom_y
 	self.list_view = UIListView.new ({
-		bgColor = UIKit:hex2c4b(0x7a000000),
         viewRect = cc.rect(left_bottom_x,left_bottom_y,width,height),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        alignment = UIListView.ALIGNMENT_LEFT
+        direction = cc.ui.UIScrollView.DIRECTION_HORIZONTAL,
     }):addTo(self.bg_node)
+
+	self.next_tip = display.newSprite("solider_nex_28x42.png"):align(display.LEFT_CENTER,
+		 line_2:getPositionX()+line_2:getContentSize().width-10,
+		 right_top_y - height/2):addTo(self.bg_node)
+	self.pre_tip = display.newSprite("solider_nex_28x42.png")
+	self.pre_tip:setFlippedX(true)
+	self.pre_tip:align(display.RIGHT_CENTER, box:getPositionX()+10,self.next_tip:getPositionY())
+	self.pre_tip:addTo(self.bg_node)
 	local button = WidgetPushButton.new({
 		normal = "yellow_btn_up_185x65.png",
+		pressed = "yellow_btn_down_185x65.png",
 	}):align(display.RIGHT_TOP, right_top_x, left_bottom_y - 20):addTo(bg_node)
 	:setButtonLabel("normal", UIKit:commonButtonLable({text = _("进攻"),}))
+	:onButtonClicked(handler(self, self.OnAttackButtonClicked))
 	
-     --行军所需时间
+     -- 行军所需时间
     local icon = display.newSprite("upgrade_hourglass.png"):align(display.LEFT_TOP,260,button:getPositionY()-20)
         :addTo(bg_node):scale(0.6)
     self.march_time = UIKit:ttfLabel({
@@ -114,11 +124,26 @@ end
 
 
 function GameUIAttackPlayerCity:RefreshSoldierListView()
-
+	local soldiers = self:GetMyTroop().soldiers
+	self.list_view:removeAllItems()
+	for _,v in ipairs(soldiers) do
+		local item = self.list_view:newItem()
+		local content = WidgetSoldierBox.new("",function()end)
+		content:SetSoldier(v.name,v.star) -- 这里 name == type??
+		content:SetNumber(v.count)
+		item:addContent(content)
+		item:setItemSize(content:getCascadeBoundingBox().width+20,content:getCascadeBoundingBox().height)
+		self.list_view:addItem(item)
+	end
+	self.list_view:reload()
 end
 
 function GameUIAttackPlayerCity:GetMyTroop()
 	return Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():GetMyTroop()
+end
+
+function GameUIAttackPlayerCity:OnAttackButtonClicked(event)
+	NetManager:getAttackPlayerCityPromise(self.enemyPlayerId)
 end
 
 return GameUIAttackPlayerCity
