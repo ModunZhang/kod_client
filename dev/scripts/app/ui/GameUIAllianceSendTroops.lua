@@ -106,6 +106,12 @@ function GameUIAllianceSendTroops:onEnter()
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 assert(tolua.type(self.march_callback)=="function")
+                if not self.dragon then
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("您还没有龙,快去孵化一只巨龙吧"))
+                        :AddToCurrentScene()
+                    return
+                end
                 local dragonType = self.dragon:Type()
                 local soldiers = self:GetSelectSoldier()
                 if self.dragon:Status() ~= "free" then
@@ -204,7 +210,7 @@ function GameUIAllianceSendTroops:SelectDragonPart()
 
 end
 function GameUIAllianceSendTroops:RefreashDragon(dragon)
-    self.dragon_img:setTexture(img_dir.."dragon_"..string.sub(dragon:Type(), 1, -7)..".png")
+    self.dragon_img:setTexture(img_dir..dragon:Type()..".png")
     self.dragon_name:setString(_(dragon:Type()).."（LV "..dragon:Level().."）")
     self.dragon_vitality:setString(_("生命值")..dragon:Hp().."/"..dragon:GetMaxHP())
     self.dragon = dragon
@@ -237,7 +243,7 @@ function GameUIAllianceSendTroops:SelectDragon()
         local dragon_bg = display.newSprite("chat_hero_background.png")
             :align(display.LEFT_CENTER, 7,dragon_frame:getContentSize().height/2)
             :addTo(dragon_frame)
-        local dragon_img = display.newSprite(img_dir.."dragon_"..string.sub(dragon:Type(), 1, -7)..".png")
+        local dragon_img = display.newSprite(img_dir..dragon:Type()..".png")
             :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2+5)
             :addTo(dragon_bg)
         local box_bg = display.newSprite(img_dir.."box_426X126.png")

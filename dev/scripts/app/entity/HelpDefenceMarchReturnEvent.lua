@@ -2,8 +2,8 @@
 -- Author: Danny He
 -- Date: 2014-11-26 09:49:34
 --
-local Observer = import(".Observer")
-local HelpDefenceMarchReturnEvent = class("HelpDefenceMarchReturnEvent", Observer)
+local MarchEventBase = import(".MarchEventBase")
+local HelpDefenceMarchReturnEvent = class("HelpDefenceMarchReturnEvent", MarchEventBase)
 local property = import("..utils.property")
 
 function HelpDefenceMarchReturnEvent:OnPropertyChange()
@@ -35,10 +35,6 @@ function HelpDefenceMarchReturnEvent:OnTimer(current_time)
 			listener:OnHelpDefenceReturnMarchEventTimer(self)
 		end)
 	end
-end
-
-function HelpDefenceMarchReturnEvent:Reset()
-	self:RemoveAllObserver()
 end
 
 function HelpDefenceMarchReturnEvent:GetTime()

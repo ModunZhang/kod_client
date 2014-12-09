@@ -40,10 +40,6 @@ function ShrineMarchEvent:GetTime()
 	return self.times or 0
 end
 
-function ShrineMarchEvent:Reset()
-	self:RemoveAllObserver()
-end
-
 function ShrineMarchEvent:SetLocationInfo(from,target)
 	self:SetFromLocation(from)
 	self:SetTargetLocation(target)

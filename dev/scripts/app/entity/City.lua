@@ -631,15 +631,33 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time)
 end
 function City:IteratorResourcesByUserData(resources, current_time)
     local resource_manager = self:GetResourceManager()
-    resource_manager:GetEnergyResource():UpdateResource(current_time, resources.energy)
-    resource_manager:GetWoodResource():UpdateResource(current_time, resources.wood)
-    resource_manager:GetFoodResource():UpdateResource(current_time, resources.food)
-    resource_manager:GetIronResource():UpdateResource(current_time, resources.iron)
-    resource_manager:GetStoneResource():UpdateResource(current_time, resources.stone)
-    resource_manager:GetPopulationResource():UpdateResource(current_time, resources.citizen)
-    resource_manager:GetCoinResource():SetValue(resources.coin)
-    resource_manager:GetGemResource():SetValue(resources.gem)
-    resource_manager:GetBloodResource():SetValue(resources.blood)
+    if resources.energy then
+        resource_manager:GetEnergyResource():UpdateResource(current_time, resources.energy)
+    end
+    if resources.wood then
+        resource_manager:GetWoodResource():UpdateResource(current_time, resources.wood)
+    end
+    if resources.food then
+        resource_manager:GetFoodResource():UpdateResource(current_time, resources.food)
+    end
+    if resources.iron then
+        resource_manager:GetIronResource():UpdateResource(current_time, resources.iron)
+    end
+    if resources.stone then
+        resource_manager:GetStoneResource():UpdateResource(current_time, resources.stone)
+    end
+    if resources.citizen then
+        resource_manager:GetPopulationResource():UpdateResource(current_time, resources.citizen)
+    end
+    if resources.coin then
+        resource_manager:GetCoinResource():SetValue(resources.coin)
+    end
+    if resources.gem then
+        resource_manager:GetGemResource():SetValue(resources.gem)
+    end
+    if resources.blood then
+        resource_manager:GetBloodResource():SetValue(resources.blood)
+    end
 end
 function City:IteratorAllNeedTimerEntity(current_time)
     self:IteratorFunctionBuildingsByFunc(function(key, building)

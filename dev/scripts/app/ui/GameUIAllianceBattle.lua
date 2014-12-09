@@ -670,7 +670,7 @@ function GameUIAllianceBattle:OpenWarDetails()
         }
     ):pos(rb_size.width/2, 50)
         :addTo(body)
-   
+
 end
 
 function GameUIAllianceBattle:InitHistoryRecord()
@@ -840,6 +840,12 @@ function GameUIAllianceBattle:AddHistoryItem(report,index)
             }))
         revenge_button:onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
+                if self.alliance:Status()~="peace" then
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("已经处于联盟战期间"))
+                        :AddToCurrentScene()
+                    return
+                end
                 NetManager:getRevengeAlliancePromise(report.id):done(function ()
                     revenge_button:setButtonEnabled(false)
                 end)
@@ -1192,6 +1198,7 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
 
 
 
