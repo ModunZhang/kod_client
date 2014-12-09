@@ -61,20 +61,19 @@ function GameUIUnlockBuilding:Init()
     self:InitBuildingIntroduces()
 
     -- upgrade now button
-    cc.ui.UIPushButton.new({normal = "upgrade_green_button_normal.png",pressed = "upgrade_green_button_pressed.png"})
-        :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("立即解锁"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
+    local btn_bg = UIKit:commonButtonWithBG(
+        {
+            w=250,
+            h=65,
+            style = UIKit.BTN_COLOR.GREEN,
+            labelParams = {text = _("立即解锁")},
+            listener = function ()
                 local upgrade_listener = function()
-
-                    -- NetManager:instantUpgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), NOT_HANDLE)
-
                     local location_id = City:GetLocationIdByBuildingType(self.building:GetType())
                     NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
                         :catch(function(err)
                             dump(err:reason())
                         end)
-                    -- print(self.building:GetType().."---------------- 立即解锁 button has been  clicked ")
                 end
 
                 local can_not_update_type = self.building:IsAbleToUpgrade(true)
@@ -84,19 +83,23 @@ function GameUIUnlockBuilding:Init()
                     upgrade_listener()
                     self:removeFromParent(true)
                 end
-            end
-        end):align(display.CENTER, display.cx-150, display.top-380):addTo(self)
-    -- upgrade button
-    self.upgrade_btn = cc.ui.UIPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
-        :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("解锁"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
+            end,
+        }
+    ):pos(display.cx-150, display.top-380)
+        :addTo(self)
+
+
+    local btn_bg = UIKit:commonButtonWithBG(
+        {
+            w=185,
+            h=65,
+            style = UIKit.BTN_COLOR.YELLOW,
+            labelParams = {text = _("解锁")},
+            listener = function ()
                 local upgrade_listener = function()
                     local location_id = City:GetLocationIdByBuildingType(self.building:GetType())
                     NetManager:getUpgradeBuildingByLocationPromise(location_id)
-                        :done(function(err)
-                            self:removeFromParent(true)
-                        end)
+                    self:removeFromParent(true)
                 end
 
                 local can_not_update_type = self.building:IsAbleToUpgrade(false)
@@ -105,8 +108,11 @@ function GameUIUnlockBuilding:Init()
                 else
                     upgrade_listener()
                 end
-            end
-        end):align(display.CENTER, display.cx+180, display.top-380):addTo(self)
+            end,
+        }
+    ):pos(display.cx+180, display.top-380)
+        :addTo(self)
+
     -- 立即升级所需宝石
     display.newSprite("Topaz-icon.png", display.cx-260, display.top-440):addTo(self):setScale(0.5)
     self.upgrade_now_need_gems_label = cc.ui.UILabel.new({

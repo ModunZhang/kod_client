@@ -133,19 +133,19 @@ function WidgetStockGoods:ctor(buy_max)
         color = 0x403c2f,
     }):addTo(honour_bg):align(display.CENTER,honour_bg:getContentSize().width/2,honour_bg:getContentSize().height/2)
     -- 购买按钮
-    WidgetPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("购买"),
-            size = 24,
-            color = 0xffedae,
-            shadow= true
-        }))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-
-            end
-        end):align(display.CENTER, 500, 50):addTo(back_ground)
-
+    local btn_bg = UIKit:commonButtonWithBG(
+        {
+            w=185,
+            h=65,
+            style = UIKit.BTN_COLOR.YELLOW,
+            labelParams ={
+                text = _("购买")
+            },
+            listener = function ()
+            end,
+        }
+    ):pos(500, 50)
+        :addTo(back_ground)
 end
 
 function WidgetStockGoods:align(anchorPoint, x, y)

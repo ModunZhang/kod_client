@@ -15,36 +15,7 @@ AllianceMoonGate.LISTEN_TYPE = Enum(
     "OnMoonGateDataReset",
     "OnCountDataChanged"
 )
--- 数据处理函数
---------------------------------------------------------------------------------
-local Event_Handler_Func = function(events,add_func,edit_func,remove_func)
-    local not_hanler = function(...)end
-    add_func = add_func or not_hanler
-    remove_func = remove_func or not_hanler
-    edit_func = edit_func or not_hanler
 
-    local add,edit,remove = {},{},{}
-    for _,event in ipairs(events) do
-        if event.type == 'add' then
-            table.insert(add,add_func(event.data))
-        elseif event.type == 'edit' then
-            table.insert(edit,edit_func(event.data))
-        elseif event.type == 'remove' then
-            table.insert(remove,remove_func(event.data))
-        end
-    end
-    return {add,edit,remove} -- each of return is a table
-end
-
-local pack_map = function(map)
-    local ret = {}
-    local add,edit,remove = unpack(map)
-    if #add > 0 then ret.add = checktable(add) end
-    if #edit > 0 then ret.edit = checktable(edit) end
-    if #remove > 0 then ret.remove = checktable(remove) end
-    return ret
-end
---------------------------------------------------------------------------------
 property(AllianceMoonGate, "moonGateOwner", "")
 property(AllianceMoonGate, "activeBy", "")
 
@@ -369,7 +340,7 @@ function AllianceMoonGate:UpdateMoonGateMarchEvents(alliance_data)
     end
 
     if alliance_data.__moonGateMarchEvents then
-        local changed_map = Event_Handler_Func(
+        local changed_map = GameUtils:Event_Handler_Func(
             alliance_data.__moonGateMarchEvents
             ,function(event) --add
                 if not self.moonGateMarchEvents[event.id] then
@@ -395,7 +366,7 @@ function AllianceMoonGate:UpdateMoonGateMarchEvents(alliance_data)
             end
         )
 
-        self:OnMoonGateMarchEventsChanged(pack_map(changed_map))
+        self:OnMoonGateMarchEventsChanged(GameUtils:pack_event_table(changed_map))
     end
 end
 
@@ -419,7 +390,7 @@ function AllianceMoonGate:UpdateMoonGateMarchReturnEvents(alliance_data)
     end
 
     if alliance_data.__moonGateMarchReturnEvents then
-        local changed_map = Event_Handler_Func(
+        local changed_map = GameUtils:Event_Handler_Func(
             alliance_data.__moonGateMarchReturnEvents
             ,function(event) --add
                 if not self.moonGateMarchReturnEvents[event.id] then
@@ -445,7 +416,7 @@ function AllianceMoonGate:UpdateMoonGateMarchReturnEvents(alliance_data)
             end
         )
 
-        self:OnMoonGateMarchReturnEventsChanged(pack_map(changed_map))
+        self:OnMoonGateMarchReturnEventsChanged(GameUtils:pack_event_table(changed_map))
     end
 end
 

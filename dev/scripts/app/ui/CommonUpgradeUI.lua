@@ -229,15 +229,13 @@ function CommonUpgradeUI:InitUpgradePart()
     self.upgrade_layer:setContentSize(cc.size(display.width,575))
     self:addChild(self.upgrade_layer)
     -- upgrade now button
-    WidgetPushButton.new({normal = "upgrade_green_button_normal.png",pressed = "upgrade_green_button_pressed.png"})
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("立即升级"),
-            size = 24,
-            color = 0xffedae,
-            shadow= true
-        }))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
+    local btn_bg = UIKit:commonButtonWithBG(
+        {
+            w=250,
+            h=65,
+            style = UIKit.BTN_COLOR.GREEN,
+            labelParams = {text = _("立即升级")},
+            listener = function ()
                 local upgrade_listener = function()
                     if self.building:GetType()=="tower" then
                         -- NetManager:instantUpgradeTowerByLocation(self.building:IsUnlocked(), function(...) end)
@@ -281,18 +279,19 @@ function CommonUpgradeUI:InitUpgradePart()
                 else
                     upgrade_listener()
                 end
-            end
-        end):align(display.CENTER, display.cx-150, display.top-410):addTo(self.upgrade_layer)
+            end,
+        }
+    ):pos(display.cx-150, display.top-410)
+        :addTo(self.upgrade_layer)
+    
     -- upgrade button
-    self.upgrade_btn = WidgetPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("升级"),
-            size = 24,
-            color = 0xffedae,
-            shadow= true
-        }))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
+    local btn_bg = UIKit:commonButtonWithBG(
+        {
+            w=185,
+            h=65,
+            style = UIKit.BTN_COLOR.YELLOW,
+            labelParams={text = _("升级")},
+            listener = function ()
                 local upgrade_listener = function()
                     if self.building:GetType()=="tower" then
                         -- NetManager:upgradeTowerByLocation(self.building:IsUnlocked(), function(...) end)
@@ -325,20 +324,25 @@ function CommonUpgradeUI:InitUpgradePart()
                                     dump(err:reason())
                                 end)
                         end
-                        print(self.building:GetType().."---------------- upgrade  button has been  clicked ")
+                        -- print(self.building:GetType().."---------------- upgrade  button has been  clicked ")
                     end
                     self:getParent():leftButtonClicked()
                 end
 
                 local can_not_update_type = self.building:IsAbleToUpgrade(false)
-                print("can_not_update_type====",can_not_update_type)
+                -- print("can_not_update_type====",can_not_update_type)
                 if can_not_update_type then
                     self:PopNotSatisfyDialog(upgrade_listener,can_not_update_type)
                 else
                     upgrade_listener()
                 end
-            end
-        end):align(display.CENTER, display.cx+180, display.top-410):addTo(self.upgrade_layer)
+            end,
+        }
+    ):pos(display.cx+180, display.top-410)
+        :addTo(self.upgrade_layer)
+
+    self.upgrade_btn = btn_bg.button
+
     -- 立即升级所需宝石
     display.newSprite("Topaz-icon.png", display.cx - 260, display.top-470):addTo(self.upgrade_layer):setScale(0.5)
     self.upgrade_now_need_gems_label = cc.ui.UILabel.new({
@@ -514,22 +518,22 @@ function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
             text = _("免费加速"),
             size = 24,
         })):onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                local eventType = ""
-                if self.city:IsFunctionBuilding(self.building) then
-                    eventType = "buildingEvents"
-                elseif self.city:IsHouse(self.building) then
-                    eventType = "houseEvents"
-                elseif self.city:IsGate(self.building) then
-                    eventType = "wallEvents"
-                elseif self.city:IsTower(self.building) then
-                    eventType = "towerEvents"
-                end
-                NetManager:getFreeSpeedUpPromise(eventType,self.building:UniqueUpgradingKey())
-                    :catch(function(err)
-                        dump(err:reason())
-                    end)
+        if event.name == "CLICKED_EVENT" then
+            local eventType = ""
+            if self.city:IsFunctionBuilding(self.building) then
+                eventType = "buildingEvents"
+            elseif self.city:IsHouse(self.building) then
+                eventType = "houseEvents"
+            elseif self.city:IsGate(self.building) then
+                eventType = "wallEvents"
+            elseif self.city:IsTower(self.building) then
+                eventType = "towerEvents"
             end
+            NetManager:getFreeSpeedUpPromise(eventType,self.building:UniqueUpgradingKey())
+                :catch(function(err)
+                    dump(err:reason())
+                end)
+        end
         end):align(display.CENTER, display.cx+185, display.top - 435):addTo(self.acc_layer)
     self.acc_layer.acc_button:setButtonEnabled(false)
 
@@ -681,6 +685,13 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
+
+
+
+
+
 
 
 
