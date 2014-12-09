@@ -13,4 +13,16 @@ function MarchEventBase:GetMarchPlayerInfo(palyer_id)
 	assert(false,"必须在子类实现GetMarchPlayerInfo方法，并返回MarchEventBase.MARCH_EVENT_WITH_PLAYER中的枚举类型")
 end
 
+function MarchEventBase:Reset()
+	self:RemoveAllObserver()
+end
+
+function MarchEventBase:OnTimer(current_time)
+	assert(false,"必须在子类实现OnTimer方法，用于计算行军还需要的时间")
+end
+
+function MarchEventBase:GetTime()
+	assert(false,"必须在子类实现GetTime方法，用于返回行军还需的时间")
+end
+
 return MarchEventBase
