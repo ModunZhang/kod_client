@@ -35,9 +35,9 @@ function GameUIAllianceShrineRewardList:BuildUI()
 	   	:onButtonClicked(function ()
 	   		self:leftButtonClicked()
 	   	end)
-	display.newSprite("X_3.png")
-	   	:addTo(closeButton)
-	   	:pos(-32,30)
+	-- display.newSprite("X_3.png")
+	--    	:addTo(closeButton)
+	--    	:pos(-32,30)
 
 	self.rewards_listView = UIListView.new({
         -- bgColor = UIKit:hex2c4b(0x7a000000),

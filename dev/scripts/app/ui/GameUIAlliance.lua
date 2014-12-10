@@ -188,9 +188,9 @@ function GameUIAlliance:CreateAllianceTips()
         :onButtonClicked(function ()
             shadowLayer:removeFromParent(true)
         end)
-    display.newSprite("X_3.png")
-        :addTo(closeButton)
-        :pos(-32,30)
+    -- display.newSprite("X_3.png")
+    --     :addTo(closeButton)
+    --     :pos(-32,30)
 
     local title_bg = display.newSprite("alliance_green_title_639x69.png")
         :addTo(backgroundImage)
@@ -221,7 +221,7 @@ function GameUIAlliance:CreateAllianceTips()
     ):pos(backgroundImage:getContentSize().width/2,50)
         :addTo(backgroundImage)
     closeButton = btn_bg.button
-
+  
     local scrollView = UIListView.new {
         viewRect = cc.rect(0, 5, 552,250),
         direction = UIScrollView.DIRECTION_VERTICAL,
@@ -494,46 +494,33 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
             size = 22,
             color = 0x403c2f
         }):addTo(bg):align(display.LEFT_TOP,leaderIcon:getPositionX()+leaderIcon:getContentSize().width+15, languageTitleLabel:getPositionY()-30)
-        local style,buttonText
+        local buttonNormalPng,buttonHighlightPng,buttonText
         if alliance.joinType == 'all' then
-            style = UIKit.BTN_COLOR.YELLOW
+            buttonNormalPng = "yellow_button_146x42.png"
+            buttonHighlightPng = "yellow_button_highlight_146x42.png"
             buttonText = _("加入")
 
         else
-            style = UIKit.BTN_COLOR.BLUE
+            buttonNormalPng = "blue_btn_up_142x39.png"
+            buttonHighlightPng = "blue_btn_down_142x39.png"
             buttonText = _("申请")
         end
-        UIKit:commonButtonWithBG(
-            {
-                w=147,
-                h=45,
-                style = style,
-                labelParams ={
+
+        WidgetPushButton.new({normal = buttonNormalPng,pressed = buttonHighlightPng},{scale9 = true})
+            :setButtonLabel(
+                UIKit:ttfLabel({
                     text = buttonText,
                     size = 20,
-                    color = 0xfff3c7,
-                },
-                listener = function ()
-                    self:commonListItemAction(listType,item,alliance)
-                end,
-            }
-        ):align(display.RIGHT_TOP,titleBg:getPositionX(),languageTitleLabel:getPositionY()-25)
+                    shadow = true,
+                    color = 0xfff3c7
+                })
+            )
+            :setButtonSize(147,45)
+            :align(display.RIGHT_TOP,titleBg:getPositionX(),languageTitleLabel:getPositionY()-25)
+            :onButtonClicked(function(event)
+                self:commonListItemAction(listType,item,alliance)
+            end)
             :addTo(bg)
-        -- WidgetPushButton.new({normal = buttonNormalPng,pressed = buttonHighlightPng},{scale9 = true})
-        --     :setButtonLabel(
-        --         UIKit:ttfLabel({
-        --             text = buttonText,
-        --             size = 20,
-        --             shadow = true,
-        --             color = 0xfff3c7
-        --         })
-        --     )
-        --     :setButtonSize(147,45)
-        --     :align(display.RIGHT_TOP,titleBg:getPositionX(),languageTitleLabel:getPositionY()-25)
-        --     :onButtonClicked(function(event)
-        --         self:commonListItemAction(listType,item,alliance)
-        --     end)
-        --     :addTo(bg)
         nameLabel:setString(alliance.name)
         memberValLabel:setString(alliance.members .. "/50")
         fightingValLabel:setString(alliance.power)
@@ -1275,9 +1262,9 @@ function GameUIAlliance:CreateInvateUI()
         :onButtonClicked(function ()
             layer:removeFromParent(true)
         end)
-    display.newSprite("X_3.png")
-        :addTo(closeButton)
-        :pos(-32,30)
+    -- display.newSprite("X_3.png")
+    --     :addTo(closeButton)
+    --     :pos(-32,30)
     UIKit:ttfLabel({
         text = _("邀请加入联盟"),
         size = 22,
@@ -1338,5 +1325,4 @@ end
 
 
 return GameUIAlliance
-
 
