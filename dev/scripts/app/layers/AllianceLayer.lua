@@ -92,71 +92,88 @@ function AllianceLayer:ctor(alliance)
     self:scheduleUpdate()
 
     self:setNodeEventEnabled(true)
+    self:CreateCorpsFromMrachEventsIf()
     local alliance_shire = self:GetAlliance():GetAllianceShrine()
-    table.foreachi(alliance_shire:GetMarchEvents(),function(_,merchEvent)
-        self:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
-    end)
-    table.foreachi(alliance_shire:GetMarchReturnEvents(),function(_,merchEvent)
-        self:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
-    end)
+    local alliance_moonGate = self:GetAlliance():GetAllianceMoonGate()
     alliance_shire:AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventsChanged)
     alliance_shire:AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchReturnEventsChanged)
-
-    local alliance_moonGate = self:GetAlliance():GetAllianceMoonGate()
-    dump(alliance_moonGate:GetMoonGateMarchEvents())
-    table.foreachi(alliance_moonGate:GetMoonGateMarchEvents(),function(_,merchEvent)
-        self:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
-    end)
-    table.foreachi(alliance_moonGate:GetMoonGateMarchReturnEvents(),function(_,merchEvent)
-        self:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
-    end)
     alliance_moonGate:AddListenOnType(self,AllianceMoonGate.LISTEN_TYPE.OnMoonGateMarchEventsChanged)
     alliance_moonGate:AddListenOnType(self,AllianceMoonGate.LISTEN_TYPE.OnMoonGateMarchReturnEventsChanged)
-
-    table.foreachi(self:GetAlliance():GetHelpDefenceMarchEvents(),function(_,helpDefenceMarchEvent)
-        self:CreateCorps( 
-            helpDefenceMarchEvent:Id(),
-            helpDefenceMarchEvent:FromLocation(),
-            helpDefenceMarchEvent:TargetLocation(),
-            helpDefenceMarchEvent:StartTime(),
-            helpDefenceMarchEvent:ArriveTime()
-        )
-    end)
     self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchEventsChanged)
+    self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchReturnEventsChanged)
+    self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnCityBeAttackedMarchEventChanged)
+    self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnCityCityBeAttackedMarchReturnEventChanged)
+end
+
+function AllianceLayer:CreateCorpsFromMrachEventsIf()
+    local alliance_shire = self:GetAlliance():GetAllianceShrine()
+    table.foreachi(alliance_shire:GetMarchEvents(),function(_,merchEvent)
+        self:CreateCorpsIf(merchEvent)
+    end)
+    table.foreachi(alliance_shire:GetMarchReturnEvents(),function(_,merchEvent)
+        self:CreateCorpsIf(merchEvent)
+    end)
+    local alliance_moonGate = self:GetAlliance():GetAllianceMoonGate()
+    table.foreach(alliance_moonGate:GetMoonGateMarchEvents(),function(_,merchEvent)
+        self:CreateCorpsIf(merchEvent)
+    end)
+    table.foreach(alliance_moonGate:GetMoonGateMarchReturnEvents(),function(_,merchEvent)
+        self:CreateCorpsIf(merchEvent)
+    end)
+    table.foreachi(self:GetAlliance():GetHelpDefenceMarchEvents(),function(_,helpDefenceMarchEvent)
+        self:CreateCorpsIf(helpDefenceMarchEvent)
+    end)
 
     table.foreachi(self:GetAlliance():GetHelpDefenceReturnMarchEvents(),function(_,helpDefenceMarchReturnEvent)
-        self:CreateCorps( 
-            helpDefenceMarchReturnEvent:Id(),
-            helpDefenceMarchReturnEvent:FromLocation(),
-            helpDefenceMarchReturnEvent:TargetLocation(),
-            helpDefenceMarchReturnEvent:StartTime(),
-            helpDefenceMarchReturnEvent:ArriveTime()
-        )
+       self:CreateCorpsIf(helpDefenceMarchReturnEvent)
     end)
 
-    self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchReturnEventsChanged)
+    self:GetAlliance():IteratorCityBeAttackedMarchEvents(function(cityBeAttackedMarchEvent)
+        self:CreateCorpsIf(cityBeAttackedMarchEvent)
+    end)
+    self:GetAlliance():IteratorCityBeAttackedMarchReturnEvents(function(cityBeAttackedMarchReturnEvent)
+        self:CreateCorpsIf(cityBeAttackedMarchReturnEvent)
+    end)
+end
+
+function AllianceLayer:CreateCorpsIf(marchEvent)
+    if not self:IsExistCorps(marchEvent:Id()) then
+        self:CreateCorps( 
+            marchEvent:Id(),
+            marchEvent:FromLocation(),
+            marchEvent:TargetLocation(),
+            marchEvent:StartTime(),
+            marchEvent:ArriveTime()
+        )
+    end
+end
+
+function AllianceLayer:ManagerCorpsFromChangedMap(changed_map)
+    if changed_map.removed then
+        table.foreachi(changed_map.removed,function(_,marchEvent)
+            self:DeleteCorpsById(marchEvent:Id())
+        end)
+    elseif changed_map.added then
+        table.foreachi(changed_map.added,function(_,marchEvent)
+            self:CreateCorpsIf(marchEvent)
+        end)
+    end
 end
 
 function AllianceLayer:GetAlliance()
     return self.alliance_
 end
 
+function AllianceLayer:OnCityBeAttackedMarchEventChanged(changed_map)
+   self:ManagerCorpsFromChangedMap(changed_map)
+end
+
+function AllianceLayer:OnCityCityBeAttackedMarchReturnEventChanged(changed_map)
+    self:ManagerCorpsFromChangedMap(changed_map)
+end
+
 function AllianceLayer:OnHelpDefenceMarchEventsChanged(changed_map)
-     if changed_map.removed then
-        table.foreachi(changed_map.removed,function(_,helpDefenceMarchEvent)
-            self:DeleteCorpsById(helpDefenceMarchEvent:Id())
-        end)
-    elseif changed_map.added then
-        table.foreachi(changed_map.added,function(_,helpDefenceMarchEvent)
-            self:CreateCorps( 
-                helpDefenceMarchEvent:Id(),
-                helpDefenceMarchEvent:FromLocation(),
-                helpDefenceMarchEvent:TargetLocation(),
-                helpDefenceMarchEvent:StartTime(),
-                helpDefenceMarchEvent:ArriveTime()
-            )
-        end)
-    end
+    self:ManagerCorpsFromChangedMap(changed_map)
 end
 
 function AllianceLayer:OnHelpDefenceMarchReturnEventsChanged(changed_map)
@@ -164,15 +181,7 @@ function AllianceLayer:OnHelpDefenceMarchReturnEventsChanged(changed_map)
 end
 
 function AllianceLayer:OnMarchEventsChanged(changed_map)
-    if changed_map.removed then
-        table.foreachi(changed_map.removed,function(_,merchEvent)
-            self:DeleteCorpsById(merchEvent:Id())
-        end)
-    elseif changed_map.added then
-        table.foreachi(changed_map.added,function(_,merchEvent)
-            self:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
-        end)
-    end
+    self:ManagerCorpsFromChangedMap(changed_map)
 end
 
 function AllianceLayer:OnMarchReturnEventsChanged(changed_map)
@@ -180,15 +189,7 @@ function AllianceLayer:OnMarchReturnEventsChanged(changed_map)
 end
 
 function AllianceLayer:OnMoonGateMarchEventsChanged(changed_map)
-    if changed_map.remove then
-        table.foreachi(changed_map.remove,function(_,merchEvent)
-            self:DeleteCorpsById(merchEvent:Id())
-        end)
-    elseif changed_map.add then
-        table.foreachi(changed_map.add,function(_,merchEvent)
-            self:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
-        end)
-    end
+     self:ManagerCorpsFromChangedMap(changed_map)
 end
 
 function AllianceLayer:OnMoonGateMarchReturnEventsChanged(changed_map)
@@ -206,6 +207,9 @@ function AllianceLayer:onCleanup()
 
     self:GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchEventsChanged)
     self:GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchReturnEventsChanged)
+
+    self:GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnCityBeAttackedMarchEventChanged)
+    self:GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnCityCityBeAttackedMarchReturnEventChanged)
 end
 
 function AllianceLayer:CreateObject(entity)
@@ -356,6 +360,9 @@ function AllianceLayer:DeleteAllCorps()
     for id, _ in pairs(self.corps_map) do
         self:DeleteCorpsById(id)
     end
+end
+function AllianceLayer:IsExistCorps(id)
+    return self.corps_map[id] ~= nil
 end
 function AllianceLayer:CreateLine(id, start_pos, end_pos)
     assert(self.line_map[id] == nil)

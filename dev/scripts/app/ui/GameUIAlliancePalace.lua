@@ -79,19 +79,18 @@ function GameUIAlliancePalace:InitImposePart()
         color = 0x403c2f,
     }):addTo(honour_bg):align(display.CENTER,honour_bg:getContentSize().width/2,honour_bg:getContentSize().height/2)
     -- 全部收取按钮
-    WidgetPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("全部收取"),
-            size = 24,
-            color = 0xffedae,
-            shadow= true
-        }))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-
-            end
-        end):align(display.CENTER, window.right-150, window.top-850):addTo(self.impose_layer)
-
+    local btn_bg = UIKit:commonButtonWithBG(
+        {
+            w=185,
+            h=65,
+            style = UIKit.BTN_COLOR.YELLOW,
+            labelParams = {text = _("全部收取")},
+            listener = function ()
+            end,
+        }
+    ):pos(window.right-150, window.top-850)
+        :addTo(self.impose_layer)
+    
 
     self.impose_listview:addItem(self:CreateHonourItem())
     self.impose_listview:reload()

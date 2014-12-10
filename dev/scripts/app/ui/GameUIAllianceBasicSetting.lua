@@ -50,9 +50,9 @@ function GameUIAllianceBasicSetting:BuildModifyUI()
 	   	:onButtonClicked(function ()
 	   		self:leftButtonClicked()
 	   	end)
-	display.newSprite("X_3.png")
-	   	:addTo(closeButton)
-	   	:pos(-32,30)
+	-- display.newSprite("X_3.png")
+	--    	:addTo(closeButton)
+	--    	:pos(-32,30)
 	UIKit:ttfLabel({
 		text = _("联盟设置"),
 		size = 22,

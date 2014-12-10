@@ -64,17 +64,17 @@ function QueueManager:IsReachLimit(queue_type)
 end
 
 function QueueManager:InitWithAlliance_(alliacne)
-	self.alliacne_ = alliacne
-	self:GetAlliance_():GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventsChanged)
-	self:GetAlliance_():GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchReturnEventsChanged)
-	self:GetAlliance_():AddListenOnType(self,self:GetAlliance_().LISTEN_TYPE.OnHelpDefenceMarchEventsChanged)
-	self:GetAlliance_():AddListenOnType(self,self:GetAlliance_().LISTEN_TYPE.OnHelpDefenceMarchReturnEventsChanged)
+  	self.alliacne_ = alliacne
+  	self:GetAlliance_():GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventsChanged)
+  	self:GetAlliance_():GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchReturnEventsChanged)
+  	self:GetAlliance_():AddListenOnType(self,self:GetAlliance_().LISTEN_TYPE.OnHelpDefenceMarchEventsChanged)
+  	self:GetAlliance_():AddListenOnType(self,self:GetAlliance_().LISTEN_TYPE.OnHelpDefenceMarchReturnEventsChanged)
 end
 
 function QueueManager:ResetAllianceQueue()
-	self:GetAlliance_():GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventsChanged)
-	self:GetAlliance_():GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchReturnEventsChanged)
-	self:GetAlliance_():RemoveListenerOnType(self,self:GetAlliance_().LISTEN_TYPE.OnHelpDefenceMarchEventsChanged)
+	  self:GetAlliance_():GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventsChanged)
+	  self:GetAlliance_():GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchReturnEventsChanged)
+	  self:GetAlliance_():RemoveListenerOnType(self,self:GetAlliance_().LISTEN_TYPE.OnHelpDefenceMarchEventsChanged)
     self:GetAlliance_():RemoveListenerOnType(self,self:GetAlliance_().LISTEN_TYPE.OnHelpDefenceMarchReturnEventsChanged)
 end
 
@@ -117,7 +117,6 @@ function QueueManager:OnMarchEventsChanged(changed_map)
       	end)
     end
     self:UpdateEvnetCountOffset_(self.EVENT_NAME.SHIRE_MARCH_EVENT,add+sub)
-    dump(self:IsReachLimit(self.QUEUE_TYPE.MARCH_EVENT),"QueueManager:OnMarchEventsChanged---xxxx-->")
 end
 
 function QueueManager:OnHelpDefenceMarchReturnEventsChanged(changed_map)
@@ -143,7 +142,7 @@ function QueueManager:OnHelpDefenceMarchEventsChanged(changed_map)
 	if changed_map.removed then
       	table.foreachi(changed_map.removed,function(key,event)
       		if event:GetMarchPlayerInfo(DataManager:getUserData()._id) == event.MARCH_EVENT_WITH_PLAYER.SENDER then
-      			sub = sub - 1
+      			 sub = sub - 1
       		end
       	end)
     elseif changed_map.added then

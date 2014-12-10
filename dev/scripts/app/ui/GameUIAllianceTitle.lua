@@ -46,9 +46,9 @@ function GameUIAllianceTitle:BuildUI()
 	   	:onButtonClicked(function ()
 	   		self:leftButtonClicked()
 	   	end)
-	display.newSprite("X_3.png")
-	   	:addTo(closeButton)
-	   	:pos(-32,30)
+	-- display.newSprite("X_3.png")
+	--    	:addTo(closeButton)
+	--    	:pos(-32,30)
 	self.title_label = UIKit:ttfLabel({
 		text = _("联盟权限"),
 		size = 24,

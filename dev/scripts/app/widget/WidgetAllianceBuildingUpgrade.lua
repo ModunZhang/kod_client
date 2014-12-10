@@ -65,15 +65,14 @@ function WidgetAllianceBuildingUpgrade:onEnter()
 
     self:InitNextLevelEfficiency()
     self:SetBuildingLevel()
-    self.upgrade_button = WidgetPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"})
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("立即升级"),
-            size = 24,
-            color = 0xffedae,
-            shadow= true
-        }))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
+
+    local btn_bg = UIKit:commonButtonWithBG(
+        {
+            w=185,
+            h=65,
+            style = UIKit.BTN_COLOR.YELLOW,
+            labelParams = {text = _("立即升级")},
+            listener = function ()
                 local err = self:IsAbleToUpgrade()
                 if err then
                     FullScreenPopDialogUI.new()
@@ -83,8 +82,12 @@ function WidgetAllianceBuildingUpgrade:onEnter()
                 else
                     NetManager:getUpgradeAllianceBuildingPromise(self.building.name)
                 end
-            end
-        end):align(display.CENTER, display.cx, display.top-430):addTo(self)
+            end,
+        }
+    ):pos(display.cx, display.top-430)
+        :addTo(self)
+    self.upgrade_button = btn_bg.button
+   
     self:VisibleUpgradeButton()
 
     self:InitRequirement()

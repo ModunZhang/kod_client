@@ -16,6 +16,10 @@ function EnemyAllianceScene:ctor(alliance,mode)
     app.timer:AddListener(self)
 end
 
+function EnemyAllianceScene:onEnter()
+    EnemyAllianceScene.super.onEnter(self)
+end
+
 function EnemyAllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
   
 	local building = self:GetSceneLayer():GetClickedObject(x, y)
@@ -64,7 +68,17 @@ end
 
 -- per 30s request server
 function EnemyAllianceScene:TimerRequestServer()
-    print("request data from server")
+    print("请求联盟数据--->" .. os.time(),self:GetAlliance():Id())
+    NetManager:getFtechAllianceViewDataPromose(self:GetAlliance():Id()):next(function(msg)
+        local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
+        --用新联盟刷新layer
+        self.alliance_ = enemyAlliance
+        self:RefreshAllianceMarchLine()
+    end)
+end
+--特殊刷新行军路线-->服务器需要添加缺失的行军事件
+function EnemyAllianceScene:RefreshAllianceMarchLine()
+    self:GetSceneLayer():CreateCorpsFromMrachEventsIf()
 end
 
 function EnemyAllianceScene:OnTimer(current_time)

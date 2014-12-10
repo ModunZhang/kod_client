@@ -148,28 +148,35 @@ function GameUIHospital:CreateHealAllSoldierItem()
     end
 
     -- 立即治疗和治疗按钮
-    self.treat_all_now_button = WidgetPushButton.new({normal = "upgrade_green_button_normal.png",pressed = "upgrade_green_button_pressed.png"}
-        ,{}
-        ,{
-            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
-        })
-        :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("立即治疗"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
+    local btn_bg = UIKit:commonButtonWithBG(
+        {
+            w=250,
+            h=65,
+            style = UIKit.BTN_COLOR.GREEN,
+            labelParams = {text = _("立即治疗")},
+            listener = function ()
                 self:TreatNowListener()
-            end
-        end):align(display.CENTER, bg_size.width/2-150, 110):addTo(self.treate_all_soldiers_item)
-    self.treat_all_button = WidgetPushButton.new({normal = "upgrade_yellow_button_normal.png",pressed = "upgrade_yellow_button_pressed.png"}
-        ,{}
-        ,{
-            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
-        })
-        :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("治疗"), size = 24, color = UIKit:hex2c3b(0xffedae)}))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
+            end,
+        }
+    ):pos(bg_size.width/2-150, 110)
+        :addTo(self.treate_all_soldiers_item)
+
+    self.treat_all_now_button = btn_bg.button
+    
+    local btn_bg = UIKit:commonButtonWithBG(
+        {
+            w=185,
+            h=65,
+            style = UIKit.BTN_COLOR.YELLOW,
+            labelParams = {text = _("治疗")},
+            listener = function ()
                 self:TreatListener()
-            end
-        end):align(display.CENTER, bg_size.width/2+180, 110):addTo(self.treate_all_soldiers_item)
+            end,
+        }
+    ):pos(bg_size.width/2+180, 110)
+        :addTo(self.treate_all_soldiers_item)
+    self.treat_all_button = btn_bg.button
+    
     self.treat_all_now_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
     self.treat_all_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
     -- 立即治疗所需宝石
@@ -478,6 +485,7 @@ function GameUIHospital:OnTreatSoliderCountChanged(soldier_manager, treat_soldie
 end
 
 return GameUIHospital
+
 
 
 
