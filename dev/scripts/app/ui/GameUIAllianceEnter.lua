@@ -9,6 +9,7 @@ local GameUIWriteMail = import(".GameUIWriteMail")
 local config_wall = GameDatas.BuildingFunction.wall
 local GameUIAllianceEnter = UIKit:createUIClass("GameUIAllianceEnter")
 local GameUIAllianceSendTroops = import(".GameUIAllianceSendTroops")
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 
 GameUIAllianceEnter.MODE = Enum("Normal","Enemy","Watch")
 
@@ -543,9 +544,21 @@ function GameUIAllianceEnter:InitConfig()
                             local x,y = building:GetLogicPosition()
                             location = {x = x,y = y}
                         end
-                        if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
-                            UIKit:newGameUI("GameUIAttackPlayerCity",alliance,location,building.player:Id()):addToCurrentScene(true)
+                        if not Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
+                            local dialog = FullScreenPopDialogUI.new()
+                            dialog:SetTitle(_("提示"))
+                            dialog:SetPopMessage(string.format(_("月门还未被攻破."),alliance.name))
+                            dialog:AddToCurrentScene()
+                            return
                         end
+                        if not Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():GetMyTroop() then
+                            local dialog = FullScreenPopDialogUI.new()
+                            dialog:SetTitle(_("提示"))
+                            dialog:SetPopMessage(string.format(_("月门中没有你的部队."),alliance.name))
+                            dialog:AddToCurrentScene()
+                            return
+                        end
+                        UIKit:newGameUI("GameUIAttackPlayerCity",alliance,location,building.player:Id()):addToCurrentScene(true)
                     end
                 },
                 {

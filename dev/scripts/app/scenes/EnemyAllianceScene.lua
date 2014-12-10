@@ -18,7 +18,6 @@ end
 
 function EnemyAllianceScene:onEnter()
     EnemyAllianceScene.super.onEnter(self)
-    self:RefreshAllianceMarchLine() --第一次进入 手动刷新行军路线
 end
 
 function EnemyAllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
@@ -69,82 +68,17 @@ end
 
 -- per 30s request server
 function EnemyAllianceScene:TimerRequestServer()
-    print("请求联盟数据--->",self:GetAlliance():Id())
-    NetManager:getFtechAllianceViewDataPromose(self:GetAlliance():Id()):next(function()
+    print("请求联盟数据--->" .. os.time(),self:GetAlliance():Id())
+    NetManager:getFtechAllianceViewDataPromose(self:GetAlliance():Id()):next(function(msg)
+        local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
+        --用新联盟刷新layer
+        self.alliance_ = enemyAlliance
         self:RefreshAllianceMarchLine()
     end)
 end
---特殊刷新行军路线
+--特殊刷新行军路线-->服务器需要添加缺失的行军事件
 function EnemyAllianceScene:RefreshAllianceMarchLine()
-    local alliance_layer = self:GetSceneLayer()
-    local alliance_shire = self:GetAlliance():GetAllianceShrine()
-    table.foreachi(alliance_shire:GetMarchEvents(),function(_,merchEvent)
-        if not alliance_layer:IsExistCorps(merchEvent:Id()) then
-            alliance_layer:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
-        end
-    end)
-    table.foreachi(alliance_shire:GetMarchReturnEvents(),function(_,merchEvent)
-        if not alliance_layer:IsExistCorps(merchEvent:Id()) then
-            alliance_layer:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
-        end
-    end)
-    local alliance_moonGate = self:GetAlliance():GetAllianceMoonGate()
-    table.foreachi(alliance_moonGate:GetMoonGateMarchEvents(),function(_,merchEvent)
-        if not alliance_layer:IsExistCorps(merchEvent:Id()) then
-            alliance_layer:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
-        end
-    end)
-    table.foreachi(alliance_moonGate:GetMoonGateMarchReturnEvents(),function(_,merchEvent)
-        if not alliance_layer:IsExistCorps(merchEvent:Id()) then
-            alliance_layer:CreateCorps(merchEvent:Id(), merchEvent:FromLocation(), merchEvent:TargetLocation(), merchEvent:StartTime(), merchEvent:ArriveTime())
-        end
-    end)
-    table.foreachi(self:GetAlliance():GetHelpDefenceMarchEvents(),function(_,helpDefenceMarchEvent)
-        if not alliance_layer:IsExistCorps(helpDefenceMarchEvent:Id()) then
-            alliance_layer:CreateCorps( 
-                helpDefenceMarchEvent:Id(),
-                helpDefenceMarchEvent:FromLocation(),
-                helpDefenceMarchEvent:TargetLocation(),
-                helpDefenceMarchEvent:StartTime(),
-                helpDefenceMarchEvent:ArriveTime()
-            )
-        end
-    end)
-
-    table.foreachi(self:GetAlliance():GetHelpDefenceReturnMarchEvents(),function(_,helpDefenceMarchReturnEvent)
-        if not alliance_layer:IsExistCorps(helpDefenceMarchReturnEvent:Id()) then
-            alliance_layer:CreateCorps( 
-                helpDefenceMarchReturnEvent:Id(),
-                helpDefenceMarchReturnEvent:FromLocation(),
-                helpDefenceMarchReturnEvent:TargetLocation(),
-                helpDefenceMarchReturnEvent:StartTime(),
-                helpDefenceMarchReturnEvent:ArriveTime()
-            )
-        end
-    end)
-
-    self:GetAlliance():IteratorCityBeAttackedMarchEvents(function(cityBeAttackedMarchEvent)
-        if not alliance_layer:IsExistCorps(cityBeAttackedMarchEvent:Id()) then
-            alliance_layer:CreateCorps( 
-                cityBeAttackedMarchEvent:Id(),
-                cityBeAttackedMarchEvent:FromLocation(),
-                cityBeAttackedMarchEvent:TargetLocation(),
-                cityBeAttackedMarchEvent:StartTime(),
-                cityBeAttackedMarchEvent:ArriveTime()
-            )
-        end
-    end)
-    self:GetAlliance():IteratorCityBeAttackedMarchReturnEvents(function(cityBeAttackedMarchReturnEvent)
-        if not alliance_layer:IsExistCorps(cityBeAttackedMarchReturnEvent:Id()) then
-            self:CreateCorps( 
-                cityBeAttackedMarchReturnEvent:Id(),
-                cityBeAttackedMarchReturnEvent:FromLocation(),
-                cityBeAttackedMarchReturnEvent:TargetLocation(),
-                cityBeAttackedMarchReturnEvent:StartTime(),
-                cityBeAttackedMarchReturnEvent:ArriveTime()
-            )
-        end
-    end)
+    self:GetSceneLayer():CreateCorpsFromMrachEventsIf()
 end
 
 function EnemyAllianceScene:OnTimer(current_time)
