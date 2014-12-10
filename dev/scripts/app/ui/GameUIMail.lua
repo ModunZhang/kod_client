@@ -1086,7 +1086,7 @@ function GameUIMail:CreateReportItem(listview,report)
     local from_player_label =  cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = report[report.type].playerData.name,
+            text = self:GetMyName(report),
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
@@ -1096,7 +1096,7 @@ function GameUIMail:CreateReportItem(listview,report)
     local from_alliance_label =  cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = "["..report[report.type].playerData.allianceTag.."]",
+            text = "["..self:GetMyAllianceTag(report).."]",
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
@@ -1121,7 +1121,7 @@ function GameUIMail:CreateReportItem(listview,report)
     local to_player_label =  cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = report[report.type].enemyPlayerData.name,
+            text = self:GetEnemyName(report),
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
@@ -1131,7 +1131,7 @@ function GameUIMail:CreateReportItem(listview,report)
     local to_alliance_label =  cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = "["..report[report.type].enemyPlayerData.allianceTag.."]",
+            text = "["..self:GetEnemyAllianceTag(report).."]",
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
@@ -1446,17 +1446,20 @@ function GameUIMail:SaveOrUnsaveReport(report,target)
     end
 end
 function GameUIMail:GetReportLevel(report)
-    local level = report[report.type].level
-    local report_level = level==1 and _("没有得到任何情报") or _("得到一封%s级的情报")
-    local level_map ={
-        "",
-        "D",
-        "C",
-        "B",
-        "A",
-        "S",
-    }
-    return (report.type == "cityBeStriked" and _("敌方") or "")..string.format(report_level,level_map[level])
+    if report.type == "strikeCity" or report.type== "cityBeStriked" then
+        local level = report[report.type].level
+        local report_level = level==1 and _("没有得到任何情报") or _("得到一封%s级的情报")
+        local level_map ={
+            "",
+            "D",
+            "C",
+            "B",
+            "A",
+            "S",
+        }
+        return (report.type == "cityBeStriked" and _("敌方") or "")..string.format(report_level,level_map[level])
+    end
+    return ""
 end
 function GameUIMail:GetReportTitle(report)
     if report.type == "strikeCity" then
@@ -1479,4 +1482,54 @@ function GameUIMail:GetReportTitle(report)
         end
     end
 end
+function GameUIMail:GetMyName(report)
+    if report.type == "strikeCity" or report.type== "cityBeStriked" then
+        return report.strikeCity.playerData.name
+    elseif report.type=="attackCity" then
+        if report.attackCity.attackPlayerData.id == DataManager:getUserData()._id then
+            return report.attackCity.attackPlayerData.name
+        elseif report.attackCity.defencePlayerData.id == DataManager:getUserData()._id then
+            return report.attackCity.defencePlayerData.name
+        end
+    end
+end
+function GameUIMail:GetMyAllianceTag(report)
+    if report.type == "strikeCity" or report.type== "cityBeStriked" then
+        return report.strikeCity.playerData.allianceTag
+    elseif report.type=="attackCity" then
+        if report.attackCity.attackPlayerData.id == DataManager:getUserData()._id then
+            return "服务器没有推送联盟tag"
+            -- return report.attackCity.attackPlayerData.allianceName
+        elseif report.attackCity.defencePlayerData.id == DataManager:getUserData()._id then
+            return "服务器没有推送联盟tag"
+            -- return report.attackCity.defencePlayerData.allianceName
+        end
+    end
+end
+function GameUIMail:GetEnemyName(report)
+    if report.type == "strikeCity" or report.type== "cityBeStriked" then
+        return report.strikeCity.enemyPlayerData.name
+    elseif report.type=="attackCity" then
+        if report.attackCity.attackPlayerData.id ~= DataManager:getUserData()._id then
+            return report.attackCity.attackPlayerData.name
+        elseif report.attackCity.defencePlayerData.id ~= DataManager:getUserData()._id then
+            return report.attackCity.defencePlayerData.name
+        end
+    end
+end
+function GameUIMail:GetEnemyAllianceTag(report)
+    if report.type == "strikeCity" or report.type== "cityBeStriked" then
+        return report.strikeCity.enemyPlayerData.allianceTag
+    elseif report.type=="attackCity" then
+        if report.attackCity.attackPlayerData.id ~= DataManager:getUserData()._id then
+            -- return report.attackCity.attackPlayerData.allianceName
+            return "服务器没有推送联盟tag"
+        elseif report.attackCity.defencePlayerData.id ~= DataManager:getUserData()._id then
+            return "服务器没有推送联盟tag"
+            -- return report.attackCity.defencePlayerData.allianceName
+        end
+    end
+end
+
 return GameUIMail
+

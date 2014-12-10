@@ -7,24 +7,25 @@ local window = import("..utils.window")
 local UILib = import("..ui.UILib")
 
 
+local GameUIWarReport = UIKit:createUIClass("GameUIWarReport", "UIAutoClose")
 
-local GameUIWarReport = class("GameUIWarReport", function ()
-    return display.newColorLayer(UIKit:hex2c4b(0x7a000000))
-end)
 
 function GameUIWarReport:ctor(report)
+    local report_body = WidgetUIBackGround.new({height=800}):addTo(self):align(display.TOP_CENTER,display.cx,display.top-100)
+    GameUIWarReport.super.ctor(self,report_body)
     self:setNodeEventEnabled(true)
     self.report = report
 end
 
 function GameUIWarReport:onEnter()
-    local report_body = WidgetUIBackGround.new({height=800}):addTo(self):align(display.TOP_CENTER,display.cx,display.top-100)
+    local report = self.reprot
+    local report_body = self.body
     local rb_size = report_body:getContentSize()
     local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height)
         :addTo(report_body)
     local title_label = UIKit:ttfLabel(
         {
-            text = _("Attack Successful"),
+            text =self:GetReportTitle(report),
             size = 22,
             color = 0xffedae
         }):align(display.CENTER, title:getContentSize().width/2, title:getContentSize().height/2)
@@ -33,9 +34,10 @@ function GameUIWarReport:onEnter()
     cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
         :onButtonClicked(function(event)
             self:removeFromParent()
-        end):align(display.CENTER, title:getContentSize().width-10, title:getContentSize().height-10)
+        end):align(display.CENTER, title:getContentSize().width-20, title:getContentSize().height-15)
         :addTo(title)
     -- 战争结果图片
+
     local war_result_image = display.newSprite("report_failure.png")
         :align(display.CENTER_TOP, rb_size.width/2, rb_size.height-16)
         :addTo(report_body)
@@ -256,6 +258,110 @@ function GameUIWarReport:CreateWarStatisticsPart()
     self:CreateArmyGroup()
 end
 
+function GameUIWarReport:CreateArmyGroup()
+    local group = cc.ui.UIGroup.new()
+
+    local group_width,group_height = 540,268
+    local self_army_item = self:CreateArmyItem(_("你的部队"))
+        :align(display.CENTER, -group_width/2+129, 0)
+
+    group:addWidget(self_army_item)
+
+    local enemy_army_item = self:CreateArmyItem(_("敌方部队"))
+        :align(display.CENTER, group_width/2-129, 0)
+    group:addWidget(enemy_army_item)
+    local item = self.details_view:newItem()
+    item:setItemSize(group_width,group_height)
+    item:addContent(group)
+    self.details_view:addItem(item)
+end
+
+function GameUIWarReport:CreateArmyItem(title)
+    local w,h = 258,256
+    local army_item = display.newSprite("back_ground_258x256.png")
+
+    local t_bg = display.newSprite("report_title_252X30.png"):align(display.CENTER_TOP, w/2, h-3)
+        :addTo(army_item)
+    UIKit:ttfLabel({
+        text = title ,
+        size = 20,
+        color = 0xffedae
+    }):align(display.CENTER,t_bg:getContentSize().width/2, 15):addTo(t_bg)
+
+    local function createInfoItem(params)
+        local item  = display.newSprite(params.bg_image)
+        local title = UIKit:ttfLabel({
+            text = params.title ,
+            size = 18,
+            color = params.color or 0x615b44
+        }):addTo(item)
+        if params.value then
+            UIKit:ttfLabel({
+                text = params.value ,
+                size = 20,
+                color = 0x403c2f
+            }):align(display.RIGHT_CENTER,item:getContentSize().width, item:getContentSize().height/2):addTo(item)
+            title:align(display.LEFT_CENTER,0, item:getContentSize().height/2)
+
+        else
+            title:align(display.CENTER,item:getContentSize().width/2, item:getContentSize().height/2)
+        end
+
+        return item
+    end
+
+    local army_info = {
+        {
+            bg_image = "back_ground_254x28_1.png",
+            title = "Troops",
+            value = "2454",
+        },
+        {
+            bg_image = "back_ground_254x28_2.png",
+            title = "Survived",
+            value = "2454",
+        },
+        {
+            bg_image = "back_ground_254x28_1.png",
+            title = "Wounded",
+            value = "2454",
+        },
+        {
+            bg_image = "back_ground_254x28_2.png",
+            title = "Killed",
+            value = "2454",
+            color = 0x7e0000,
+        },
+        {
+            bg_image = "back_ground_254x28_1.png",
+            title = "Red Dragon",
+        },
+        {
+            bg_image = "back_ground_254x28_2.png",
+            title = "Level",
+            value = "11",
+        },
+        {
+            bg_image = "back_ground_254x28_1.png",
+            title = "XP",
+            value = "+665",
+        },
+        {
+            bg_image = "back_ground_254x28_2.png",
+            title = "HP",
+            value = "20000/-500",
+        },
+    }
+
+    local gap_y = 28
+    local y_postion = h -30
+    for k,v in pairs(army_info) do
+        createInfoItem(v):addTo(army_item)
+            :align(display.TOP_CENTER, w/2, y_postion)
+        y_postion = y_postion - gap_y
+    end
+    return army_item
+end
 -- 交战双方信息
 function GameUIWarReport:CreateBelligerents()
     local group = cc.ui.UIGroup.new()
@@ -608,6 +714,24 @@ function GameUIWarReport:onExit()
 
 end
 
+function GameUIWarReport:GetReportTitle(report)
+   if report.type=="attackCity" then
+        if report.attackCity.attackPlayerData.id == DataManager:getUserData()._id then
+            return report.attackCity.attackStar > 0 and _("进攻城市成功") or _("进攻城市失败")
+        elseif report.attackCity.defencePlayerData.id == DataManager:getUserData()._id then
+            return report.attackCity.defenceStar > 0 and _("防守城市成功") or _("防守城市失败")
+        end
+    end
+end
+function GameUIWarReport:GetWarResult(report)
+    if report.type=="attackCity" then
+        if report.attackCity.attackPlayerData.id == DataManager:getUserData()._id then
+            return report.attackCity.attackStar 
+        elseif report.attackCity.defencePlayerData.id == DataManager:getUserData()._id then
+            return report.attackCity.defenceStar
+        end
+    end
+end
 return GameUIWarReport
 
 
