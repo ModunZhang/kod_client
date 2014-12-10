@@ -148,6 +148,7 @@ function GameUIAttackPlayerCity:OnAttackButtonClicked(event)
 		local current_scene = display.getRunningScene()
 		if type(current_scene.TimerRequestServer) == 'function' then
 			current_scene:TimerRequestServer()
+			print("GameUIAttackPlayerCity:OnAttackButtonClicked--->")
 		end
 	end)
 end
