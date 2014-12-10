@@ -430,7 +430,13 @@ local DRAGON_STATUS = {
     march = _("出征中"),
     defence = _("驻防中")
 }
-
+local FIGHT_REWARD = {
+    food = _("粮食"),
+    wood = _("木材"),
+    stone = _("石料"),
+    iron = _("铁矿"),
+    coin = _("银币"),
+}
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
@@ -447,8 +453,10 @@ return {
     soldier_category = SOLDIER_CATEGORY,
     soldier_status = SOLDIER_STATUS,
     dragon_status = DRAGON_STATUS,
+    fight_reward = FIGHT_REWARD,
     getSoldierCategoryByName = function(soldier_name) return SOLDIER_CATEGORY[SOLDIER_CATEGORY_MAP[soldier_name]] end
 }
+
 
 
 

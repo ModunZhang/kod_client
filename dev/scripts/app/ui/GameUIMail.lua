@@ -1479,6 +1479,9 @@ function GameUIMail:GetReportTitle(report)
             return report.attackCity.attackStar > 0 and _("进攻城市成功") or _("进攻城市失败")
         elseif report.attackCity.defencePlayerData.id == DataManager:getUserData()._id then
             return report.attackCity.defenceStar > 0 and _("防守城市成功") or _("防守城市失败")
+        elseif report.attackCity.helpDefencePlayerData and
+            report.attackCity.helpDefencePlayerData.id == DataManager:getUserData()._id then
+            return report.attackCity.defenceStar > 0 and _("协助防守城市成功") or _("协助防守城市失败")
         end
     end
 end
@@ -1490,6 +1493,8 @@ function GameUIMail:GetMyName(report)
             return report.attackCity.attackPlayerData.name
         elseif report.attackCity.defencePlayerData.id == DataManager:getUserData()._id then
             return report.attackCity.defencePlayerData.name
+        elseif report.attackCity.helpDefencePlayerData and report.attackCity.helpDefencePlayerData.id == DataManager:getUserData()._id then
+            return report.attackCity.helpDefencePlayerData.name
         end
     end
 end
@@ -1499,10 +1504,13 @@ function GameUIMail:GetMyAllianceTag(report)
     elseif report.type=="attackCity" then
         if report.attackCity.attackPlayerData.id == DataManager:getUserData()._id then
             return "服务器没有推送联盟tag"
-            -- return report.attackCity.attackPlayerData.allianceName
+                -- return report.attackCity.attackPlayerData.allianceTag
         elseif report.attackCity.defencePlayerData.id == DataManager:getUserData()._id then
             return "服务器没有推送联盟tag"
-            -- return report.attackCity.defencePlayerData.allianceName
+                -- return report.attackCity.defencePlayerData.allianceTag
+        elseif report.attackCity.helpDefencePlayerData and report.attackCity.helpDefencePlayerData.id == DataManager:getUserData()._id then
+            return "服务器没有推送联盟tag"
+                -- return report.attackCity.helpDefencePlayerData.allianceTag
         end
     end
 end
@@ -1510,10 +1518,12 @@ function GameUIMail:GetEnemyName(report)
     if report.type == "strikeCity" or report.type== "cityBeStriked" then
         return report.strikeCity.enemyPlayerData.name
     elseif report.type=="attackCity" then
-        if report.attackCity.attackPlayerData.id ~= DataManager:getUserData()._id then
-            return report.attackCity.attackPlayerData.name
-        elseif report.attackCity.defencePlayerData.id ~= DataManager:getUserData()._id then
+        if report.attackCity.attackPlayerData.id == DataManager:getUserData()._id then
             return report.attackCity.defencePlayerData.name
+        elseif report.attackCity.defencePlayerData.id == DataManager:getUserData()._id
+            or (report.attackCity.helpDefencePlayerData and report.attackCity.helpDefencePlayerData.id == DataManager:getUserData()._id)
+        then
+            return report.attackCity.attackPlayerData.name
         end
     end
 end
@@ -1521,15 +1531,18 @@ function GameUIMail:GetEnemyAllianceTag(report)
     if report.type == "strikeCity" or report.type== "cityBeStriked" then
         return report.strikeCity.enemyPlayerData.allianceTag
     elseif report.type=="attackCity" then
-        if report.attackCity.attackPlayerData.id ~= DataManager:getUserData()._id then
-            -- return report.attackCity.attackPlayerData.allianceName
+        if report.attackCity.attackPlayerData.id == DataManager:getUserData()._id then
+            -- return report.attackCity.defencePlayerData.allianceTag
             return "服务器没有推送联盟tag"
-        elseif report.attackCity.defencePlayerData.id ~= DataManager:getUserData()._id then
+        elseif report.attackCity.defencePlayerData.id == DataManager:getUserData()._id
+            or (report.attackCity.helpDefencePlayerData and report.attackCity.helpDefencePlayerData.id == DataManager:getUserData()._id)
+        then
             return "服务器没有推送联盟tag"
-            -- return report.attackCity.defencePlayerData.allianceName
+                -- return report.attackCity.attackPlayerData.allianceTag
         end
     end
 end
 
 return GameUIMail
+
 
