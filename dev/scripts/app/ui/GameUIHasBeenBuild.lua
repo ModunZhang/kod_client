@@ -69,7 +69,7 @@ function GameUIHasBeenBuild:OnUpgradingBegin(building, current_time, city)
 
     local is_house = self.build_city:IsHouse(building)
     if self.function_list_view and not is_house then
-        self.function_list_view:UpdateItemsByBuildings(self.build_city:GetFunctionBuildingsWhichIsUnlocked())
+        self.function_list_view:UpdateItemsByBuildings(self.build_city:GetBuildingsIsUnlocked())
     elseif self.house_list_view and is_house then
         self.house_list_view:UpdateItemsByBuildings(self.build_city:GetHousesWhichIsBuilded())
     end
@@ -88,7 +88,7 @@ function GameUIHasBeenBuild:OnUpgradingFinished(building, current_time, city)
 
     local is_house = self.build_city:IsHouse(building)
     if self.function_list_view and not is_house then
-        self.function_list_view:UpdateItemsByBuildings(self.build_city:GetFunctionBuildingsWhichIsUnlocked())
+        self.function_list_view:UpdateItemsByBuildings(self.build_city:GetBuildingsIsUnlocked())
         local item = self.function_list_view:GetItemByUniqueKey(building:UniqueKey())
         if item then
             item:UpdateIcon(building)
@@ -168,7 +168,7 @@ end
 -- function
 function GameUIHasBeenBuild:LoadFunctionListView()
     if not self.function_list_view then
-        self.function_list_view = self:CreateListView(self.build_city:GetFunctionBuildingsWhichIsUnlocked())
+        self.function_list_view = self:CreateListView(self.build_city:GetBuildingsIsUnlocked())
         self.function_list_view:reload():resetPosition()
     end
 end
@@ -618,66 +618,6 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
 end
 
 return GameUIHasBeenBuild
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

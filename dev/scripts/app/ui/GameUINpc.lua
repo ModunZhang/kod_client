@@ -125,7 +125,7 @@ function GameUINpc:InitDialog(...)
 end
 function GameUINpc:onEnter()
     GameUINpc.super.onEnter(self)
-    self:setLocalZOrder(99999999)
+    self:setLocalZOrder(3001)
     self:setTouchSwallowEnabled(true)
     self:EnableReceiveClickMsg(true)
     

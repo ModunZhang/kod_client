@@ -1,0 +1,10 @@
+deffer
+.check(1)->all[move(12, 12), say("欢迎来到kod的世界, 在这里您将带头{冲锋}!").input.click(12, 12)]->wait(GameUIBuild)->delay->lock->find(dwelling)->arrowOn->upgrade(dwelling)->arrowOff
+.check(2)->show(build)->find()->arrowOn->finish(dwelling)->arrowOff
+.quit
+.check(3)->say("欢迎来到kod的世界, 在这里您将带头{冲锋}!")->input->click(15, 12)->wait(GameUIBuild)->delay->lock->find(farmer)->arrowOn->upgrade(farmer)->arrowOff
+.check(4)->show(build)->find()->arrowOn->finish(farmer)->arrowOff
+.quit
+.check(5)->say("欢迎来到kod的世界, 在这里您将带头{冲锋}!")->input->click(18, 12)->wait(GameUIBuild)->delay->lock->find(woodcutter)->arrowOn->upgrade(woodcutter)->arrowOff
+.check(6)->show(build)->find()->arrowOn->finish(woodcutter)->arrowOff
+.quit

@@ -233,39 +233,16 @@ function GameUIBuild:CreateItemWithListView(list_view)
     return item
 end
 
---
-local Arrow = import(".Arrow")
-local TutorialLayer = import(".TutorialLayer")
-function GameUIBuild:FTE_BuildDwelling()
-    return self:FTE_BuildHouseByType("dwelling")
+--- fte
+function GameUIBuild:Lock()
+    self.base_list_view:getScrollNode():setTouchEnabled(false)
+    return cocos_promise.deffer(function() return self end)
 end
-function GameUIBuild:FTE_BuildFarmer()
-    return self:FTE_BuildHouseByType("farmer")
-end
-function GameUIBuild:FTE_BuildWoodcutter()
-    return self:FTE_BuildHouseByType("woodcutter")
-end
-function GameUIBuild:FTE_BuildQuarrier()
-    return self:FTE_BuildHouseByType("quarrier")
-end
-function GameUIBuild:FTE_BuildMiner()
-    return self:FTE_BuildHouseByType("miner")
-end
-function GameUIBuild:FTE_BuildHouseByType(house_type)
-    return self:FindItemByType(house_type):next(function(item)
-        self.base_list_view:getScrollNode():setTouchEnabled(false)
-        local arrow = Arrow.new():addTo(TutorialLayer.new(item:GetBuildButton()):addTo(self))
-        local rect = item:GetBuildButton():getCascadeBoundingBox()
-        arrow:OnPositionChanged(rect.x, rect.y)
-    end):next(function()
-        return self.build_city:PromiseOfUpgradingByLevel(house_type, 0)
-    end)
-end
-function GameUIBuild:FindItemByType(building_type)
+function GameUIBuild:Find(building_type)
     local item
     table.foreach(self.base_resource_building_items, function(_, v)
         if v.building.building_type == building_type then
-            item = v
+            item = v:GetBuildButton()
             return true
         end
     end)
