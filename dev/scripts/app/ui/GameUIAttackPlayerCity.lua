@@ -143,7 +143,13 @@ function GameUIAttackPlayerCity:GetMyTroop()
 end
 
 function GameUIAttackPlayerCity:OnAttackButtonClicked(event)
-	NetManager:getAttackPlayerCityPromise(self.enemyPlayerId)
+	NetManager:getAttackPlayerCityPromise(self.enemyPlayerId):next(function(msg)
+		self:leftButtonClicked()
+		local current_scene = display.getRunningScene()
+		if type(current_scene.TimerRequestServer) == 'function' then
+			current_scene:TimerRequestServer()
+		end
+	end)
 end
 
 return GameUIAttackPlayerCity
