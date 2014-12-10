@@ -1041,7 +1041,7 @@ function GameUIMail:CreateReportItem(listview,report)
                 if report.type == "strikeCity" or report.type== "cityBeStriked" then
                     GameUIStrikeReport.new(report):addTo(self)
                 else
-                    GameUIWarReport.new():addTo(self)
+                    GameUIWarReport.new(report):addTo(self)
                 end
             end
         end)
@@ -1461,45 +1461,22 @@ end
 function GameUIMail:GetReportTitle(report)
     if report.type == "strikeCity" then
         if report.strikeCity.level>1 then
-            return _("Strike Successful")
+            return _("突袭成功")
         else
-            return _("Strike Failed")
+            return _("突袭失败")
         end
     elseif report.type== "cityBeStriked" then
         if report.cityBeStriked.level>1 then
-            return _("Against Strike Failed")
+            return _("防守突袭失败")
         else
-            return _("Against Strike Successful")
+            return _("防守突袭成功")
+        end
+    elseif report.type=="attackCity" then
+        if report.attackCity.attackPlayerData.id == DataManager:getUserData()._id then
+            return report.attackCity.attackStar > 0 and _("进攻城市成功") or _("进攻城市失败")
+        elseif report.attackCity.defencePlayerData.id == DataManager:getUserData()._id then
+            return report.attackCity.defenceStar > 0 and _("防守城市成功") or _("防守城市失败")
         end
     end
 end
 return GameUIMail
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
