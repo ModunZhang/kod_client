@@ -11,6 +11,13 @@ local function getAniNameFromAnimationFiles(animation_files)
     end
     return anis
 end
+local RESOURCE = {
+    food = "food_icon.png",
+    wood = "wood_icon.png",
+    stone = "stone_icon.png",
+    iron = "iron_icon.png",
+    coin = "coin_icon_1.png",
+}
 local STAR_BG = {
     "star1_118x132.png",
     "star2_118x132.png",
@@ -169,6 +176,7 @@ local DRAGON_ANIMATIONS = getAniNameFromAnimationFiles(DRAGON_ANIMATIONS_FILES)
 
 
 return {
+    resource = RESOURCE,
     soldier_bg = STAR_BG,
     soldier = SOLDIER_TYPE,
     soldier_effect = SOLDIER_EFFECT_ANIMATIONS,
