@@ -58,6 +58,9 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			token_stream.append(''.join(cur_word).strip())
 		return token_stream
 
+	def emit(*code):
+		lua_file.write(*code)
+
 	def look_token():
 		try:
 			return tokens[cur_token_index]
@@ -79,22 +82,22 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 		return match(look_token())
 
 	def match_next():
-		lua_file.write(":next(function(result)\n")
-		lua_file.write("\treturn\t")
+		emit(":next(function(result)\n")
+		emit("\treturn\t")
 		match_token()
-		lua_file.write("\nend)")
+		emit("\nend)")
 
 	def match_sub():
 		match(next_symbol)
 		match_next()
 
 	def match_check_next():
-		lua_file.write(":next(function(result)\n")
+		emit(":next(function(result)\n")
 		match_check()
-		lua_file.write("\n\treturn\t")
+		emit("\n\treturn\t")
 		match(next_symbol)
 		match_token()
-		lua_file.write("\nend)")	
+		emit("\nend)")	
 
 	def match_dot():
 		match(".")
@@ -113,7 +116,7 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			traceback.print_exc()
 			print "progress 必须传入 0 ~ 100"
 			return
-		lua_file.write("City:PromiseOfRecruitSoldier(\"%s\")" % soldier_type)
+		emit("City:PromiseOfRecruitSoldier(\"%s\")" % soldier_type)
 		match(")")
 
 	def match_progress():
@@ -126,7 +129,7 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			traceback.print_exc()
 			print "progress 必须传入 0 ~ 100"
 			return
-		lua_file.write("result:PromiseOfProgress(%s)" % percent)
+		emit("result:PromiseOfProgress(%s)" % percent)
 		match(")")
 
 	def match_unlock():
@@ -139,7 +142,7 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			traceback.print_exc()
 			print "unlock 必须传入建筑类型"
 			return
-		lua_file.write("self:GetLockButtonsByBuildingType(\"%s\")" % building_type)
+		emit("self:GetLockButtonsByBuildingType(\"%s\")" % building_type)
 		match(")")
 
 	def match_check():
@@ -152,7 +155,7 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			traceback.print_exc()
 			print "check 必须传入数字"
 			return
-		lua_file.write("\tif check(%s) then return cocos_promise.deffer(function() return result end) end" % step)
+		emit("\tif check(%s) then return cocos_promise.deffer(function() return result end) end" % step)
 		match(")")
 
 	def match_finish():
@@ -168,7 +171,7 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 		if look_ahead(","):
 			match(",")
 		else:
-			lua_file.write("City:PromiseOfFinishUpgradingByLevel(\"%s\")" % building_type)
+			emit("City:PromiseOfFinishUpgradingByLevel(\"%s\")" % building_type)
 			match(")")
 			return
 
@@ -180,7 +183,7 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			traceback.print_exc()
 			print "finish building_type building_level"
 			return
-		lua_file.write("City:PromiseOfFinishUpgradingByLevel(\"%s\", %s)" % (building_type, building_level))
+		emit("City:PromiseOfFinishUpgradingByLevel(\"%s\", %s)" % (building_type, building_level))
 		match(")")
 
 	def match_upgrade():
@@ -196,7 +199,7 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 		if look_ahead(","):
 			match(",")
 		else:
-			lua_file.write("City:PromiseOfUpgradingByLevel(\"%s\")" % building_type)
+			emit("City:PromiseOfUpgradingByLevel(\"%s\")" % building_type)
 			match(")")
 			return
 
@@ -208,43 +211,43 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			traceback.print_exc()
 			print "upgrade building_type building_level"
 			return
-		lua_file.write("City:PromiseOfUpgradingByLevel(\"%s\", %s)" % (building_type, building_level))
+		emit("City:PromiseOfUpgradingByLevel(\"%s\", %s)" % (building_type, building_level))
 		match(")")
 
 	def match_show():
 		match("show")
 		match("(")
 		if not look_ahead(")"):
-			lua_file.write("scene:GetHomePage():DefferShow(\"%s\")" % match_current())
+			emit("scene:GetHomePage():DefferShow(\"%s\")" % match_current())
 		match(")")
 
 	def match_arrowOn():
 		match("arrowOn")
-		lua_file.write("scene:GetArrowTutorial():DefferShow(result)")
+		emit("scene:GetArrowTutorial():DefferShow(result)")
 
 	def match_arrowOff():
 		match("arrowOff")
-		lua_file.write("scene:DestoryArrowTutorial(function() return result end)")
+		emit("scene:DestoryArrowTutorial(function() return result end)")
 
 	def match_setup():
 		match("setup")
-		lua_file.write("cocos_promise.deffer(function() return result end)")
+		emit("cocos_promise.deffer(function() return result end)")
 
 	def match_delay():
 		match("delay")
-		lua_file.write("cocos_promise.deffer(function() return result end)")
+		emit("cocos_promise.deffer(function() return result end)")
 
 	def match_quit():
 		match("quit")
-		lua_file.write("GameUINpc:PromiseOfLeave()")
+		emit("GameUINpc:PromiseOfLeave()")
 
 	def match_find():
 		match("find")
 		match("(")
 		if not look_ahead(")"):
-			lua_file.write("result:Find(\"%s\")" % match_current())
+			emit("result:Find(\"%s\")" % match_current())
 		else:
-			lua_file.write("result:Find()")
+			emit("result:Find()")
 		match(")")
 
 
@@ -261,19 +264,19 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			traceback.print_exc()
 			print "waitTag 必须传入 ui 名字, tag 名字"
 			return
-		lua_file.write("UIKit:GetUIInstance(\"%s\"):WaitTag(\"%s\")" % (ui_name, tag_name))
+		emit("UIKit:GetUIInstance(\"%s\"):WaitTag(\"%s\")" % (ui_name, tag_name))
 		match(")")
 
 	def match_wait():
 		match("wait")
 		match("(")
 		if not look_ahead(")"):
-			lua_file.write("UIKit:PromiseOfOpen(\"%s\")" % match_current())
+			emit("UIKit:PromiseOfOpen(\"%s\")" % match_current())
 		match(")")
 
 	def match_lock():
 		match("lock")
-		lua_file.write("result:Lock()")
+		emit("result:Lock()")
 
 	def match_click():
 		match("click")
@@ -288,12 +291,12 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			traceback.print_exc()
 			print "click 必须传入数字"
 			return
-		lua_file.write("scene:PromiseOfClickBuilding(%s, %s)" % (x, y))
+		emit("scene:PromiseOfClickBuilding(%s, %s)" % (x, y))
 		match(")")
 
 	def match_input():
 		match("input")
-		lua_file.write("GameUINpc:PromiseOfInput()")
+		emit("GameUINpc:PromiseOfInput()")
 
 	def match_move():
 		match("move")
@@ -308,19 +311,19 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			traceback.print_exc()
 			print "move 必须传入数字"
 			return
-		lua_file.write("scene:GotoLogicPoint(%s, %s)" % (x, y))
+		emit("scene:GotoLogicPoint(%s, %s)" % (x, y))
 		match(")")
 
 	def match_say():
 		match("say")
 		match("(")
 		match("\"")
-		lua_file.write("GameUINpc:PromiseOfSay({")
-		lua_file.write("words = \"")
+		emit("GameUINpc:PromiseOfSay({")
+		emit("words = \"")
 		if not look_ahead("\""):
-			lua_file.write(match_current())
-		lua_file.write("\"")
-		lua_file.write("})")
+			emit(match_current())
+		emit("\"")
+		emit("})")
 		match("\"")
 		match(")")
 
@@ -328,20 +331,20 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 	def match_all():
 		match("all")
 		match("[")
-		lua_file.write("promise.all(")
+		emit("promise.all(")
 		match_any()
-		lua_file.write(")")
+		emit(")")
 		match("]")
 
 	def match_deffer():
 		match("deffer")
-		lua_file.write("cocos_promise.deffer()")
+		emit("cocos_promise.deffer()")
 
 	def match_any():
 		match_in_all()
 		if look_ahead(","):
 			match(",")
-			lua_file.write(", ")
+			emit(", ")
 			match_any()
 
 
