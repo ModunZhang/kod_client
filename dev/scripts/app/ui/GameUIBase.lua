@@ -188,7 +188,7 @@ function GameUIBase:CreateShopButton(on_clicked)
         :pos(-55, -52)
 
     return UIKit:ttfLabel({
-        -- text = ""..string.formatnumberthousands(City.resource_manager:GetGemResource():GetValue()),
+        text = ""..string.formatnumberthousands(City.resource_manager:GetGemResource():GetValue()),
         size = 20,
         color = 0xffd200,
         shadow = true
