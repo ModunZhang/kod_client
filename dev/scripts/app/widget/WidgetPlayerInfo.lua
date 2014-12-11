@@ -327,7 +327,7 @@ end
 
 
 function WidgetPlayerInfo:AddIconOption(icon)
-	local list =  self.head_icon_list
+    local list =  self.head_icon_list
     local item =list:newItem()
 
     item:setItemSize(600, 138)
@@ -356,28 +356,39 @@ function WidgetPlayerInfo:AddIconOption(icon)
     }):align(display.LEFT_CENTER,10,40)
         :addTo(bg_2)
 
+    if self.basicInfo.icon ~= icon then
+        WidgetPushButton.new(
+            {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"},
+            {scale9 = false},
+            {
+                disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+            }
+        ):setButtonLabel(UIKit:ttfLabel({
+            text = _("选择"),
+            size = 24,
+            color = 0xffedae,
+            shadow= true
+        }))
+            :onButtonClicked(function(event)
+                if event.name == "CLICKED_EVENT" then
+                end
+            end):addTo(bg_2):align(display.RIGHT_CENTER, bg_2:getContentSize().width-10,40)
+            :setButtonEnabled(false)
+    else
+        UIKit:ttfLabel({
+            text = _("已装备"),
+            size = 24,
+            color = 0xffedae,
+        }):addTo(bg_2):align(display.RIGHT_CENTER, bg_2:getContentSize().width-10,40)
+    end
 
-    WidgetPushButton.new(
-        {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"},
-        {scale9 = false},
-        {
-            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
-        }
-    ):setButtonLabel(UIKit:ttfLabel({
-        text = _("选择"),
-        size = 24,
-        color = 0xffedae,
-        shadow= true
-    }))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-            end
-        end):addTo(bg_2):align(display.RIGHT_CENTER, bg_2:getContentSize().width-10,40)
 
     item:addContent(content)
     list:addItem(item)
 end
 return WidgetPlayerInfo
+
+
 
 
 
