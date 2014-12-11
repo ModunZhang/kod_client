@@ -257,7 +257,6 @@ function GameUIAlliance:NoAllianceTabEvent_createIf()
 
     local scrollView = UIScrollView.new({
         viewRect = cc.rect(0,0,window.width,window.betweenHeaderAndTab),
-    -- bgColor = UIKit:hex2c4b(0x7a000000),
     })
         :addScrollNode(basic_setting:GetContentNode():pos(55,0))
         :setDirection(UIScrollView.DIRECTION_VERTICAL)
