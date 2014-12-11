@@ -163,8 +163,8 @@ function City:ResetAllListeners()
         self:OnInitBuilding(building)
     end)
 
-    self.upgrading_building_callbacks = {}
-    self.finish_upgrading_callbacks = {}
+    -- self.upgrading_building_callbacks = {}
+    -- self.finish_upgrading_callbacks = {}
 end
 function City:NewBuildingWithType(building_type, x, y, w, h, level, finish_time)
     return BuildingRegister[building_type].new{
@@ -215,8 +215,13 @@ function City:InitBuildings(buildings)
     self.buildings = buildings
 
     table.foreach(buildings, function(key, building)
-        if building:GetType() == "keep" then
+        local type_ = building:GetType()
+        if type_ == "keep" then
+            assert(not self.keep)
             self.keep = building
+        elseif type_ == "barracks" then
+            assert(not self.barracks)
+            self.barracks = building
         end
         -- building.city = self
         -- building:AddUpgradeListener(self)
@@ -248,6 +253,9 @@ end
 -- 取值函数
 function City:GetKeep()
     return self.keep
+end
+function City:GetBarracks()
+    return self.barracks
 end
 function City:GetHousesAroundFunctionBuildingByType(building, building_type, len)
     return self:GetHousesAroundFunctionBuildingWithFilter(building, len, function(house)
@@ -352,16 +360,22 @@ end
 function City:GetLeftBuildingCountsByType(building_type)
     return self:GetBuildingMaxCountsByType(building_type) - #self:GetBuildingByType(building_type)
 end
-function City:GetFunctionBuildingsWhichIsUnlocked()
+local function get_unlock_buildings(buildings)
     local r = {}
-    for i, v in ipairs(self:GetFunctionBuildings()) do
+    for i, v in ipairs(buildings) do
         if v:IsUnlocked() or v:IsUnlocking() then
             table.insert(r, v)
         end
     end
     return r
 end
-function City:GetFunctionBuildings()
+function City:GetBuildingsIsUnlocked()
+    return get_unlock_buildings(self:GetNeedUnlockBuildings())
+end
+function City:GetUnlockedFunctionBuildings()
+    return get_unlock_buildings(self:GetAllBuildings())
+end
+function City:GetNeedUnlockBuildings()
     local r = {}
     for i, v in pairs(self:GetAllBuildings()) do
         table.insert(r, v)
@@ -1372,11 +1386,8 @@ local function promiseOfBuilding(callbacks, building_type, level)
     return p
 end
 local function checkBuilding(callbacks, building)
-    if #callbacks > 0 then
-        if callbacks[1](building) then
-            table.remove(callbacks, 1)
-        end
-        return true
+    if #callbacks > 0 and callbacks[1](building) then
+        table.remove(callbacks, 1)
     end
 end
 function City:PromiseOfUpgradingByLevel(building_type, level)
@@ -1390,6 +1401,13 @@ function City:PromiseOfFinishUpgradingByLevel(building_type, level)
 end
 function City:CheckFinishUpgradingBuildingPormise(building)
     return checkBuilding(self.finish_upgrading_callbacks, building)
+end
+--
+function City:PromiseOfRecruitSoldier(soldier_type)
+    return self:GetBarracks():PromiseOfRecruitSoldier(soldier_type)
+end
+function City:PromiseOfFinishSoldier(soldier_type)
+    return self:GetBarracks():PromiseOfFinishSoldier(soldier_type)
 end
 
 return City

@@ -1,4 +1,5 @@
 local GameUtils = GameUtils
+local cocos_promise = import("..utils.cocos_promise")
 local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local UILib = import("..ui.UILib")
 local Localize = import("..utils.Localize")
@@ -62,6 +63,7 @@ local function return_vs_soldiers_map(soldier_type)
 end
 
 function WidgetRecruitSoldier:ctor(barracks, city, soldier_type)
+    UIKit.Registry.setObject(self, "WidgetRecruitSoldier")
     self.barracks = barracks
     self.soldier_type = soldier_type
     self.star = barracks.soldier_star
@@ -215,6 +217,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type)
         :onSliderValueChanged(function(event)
             self:OnCountChanged(math.floor(event.value))
         end)
+    assert(not self.slider)
     self.slider = slider
 
 
@@ -350,7 +353,6 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type)
         }))
         :onButtonClicked(function(event)
             local need_resource = self:GetNeedResouce(self.count)
-            dump(need_resource)
             local required_gems = DataUtils:buyResource(need_resource, {})
             if required_gems > 0 then
                 FullScreenPopDialogUI.new()
@@ -366,6 +368,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type)
                 self:Close()
             end
         end)
+    assert(not self.normal_button)
     self.normal_button = button
 
     -- 时间glass
@@ -402,6 +405,8 @@ function WidgetRecruitSoldier:onEnter()
 
     self:OnResourceChanged(self.city:GetResourceManager())
     self.slider:setSliderValue(self.count)
+
+    UIKit:CheckOpenUI(self)
 end
 function WidgetRecruitSoldier:onExit()
     self.barracks:RemoveBarracksListener(self)
@@ -525,38 +530,24 @@ function WidgetRecruitSoldier:GetNeedResouce(count)
 end
 
 
+-- fte
+function WidgetRecruitSoldier:Lock()
+    return cocos_promise.deffer(function() return self end)
+end
+function WidgetRecruitSoldier:Find(control_type)
+    if control_type == "progress" then
+        return cocos_promise.deffer(function()
+            return self.slider
+        end)
+    elseif control_type == "recruit" then
+        return cocos_promise.deffer(function()
+            return self.normal_button
+        end)
+    end
+end
+
+
 return WidgetRecruitSoldier
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

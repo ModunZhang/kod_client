@@ -428,8 +428,8 @@ end
 local TutorialLayer = import("..ui.TutorialLayer")
 function GameUIHome:FTE_FreeSpeedUpFirst()
     local tutorial_layer = TutorialLayer.new():addTo(self)
-    return self.event_tab:PromiseOfShowTab("build"):next(function()
-        return self:FindFirstItem()
+    return self:DefferShow("build"):next(function()
+        return self:Find()
     end):next(function(item)
         local btn = item:GetSpeedUpButton()
         local arrow = Arrow.new():addTo(tutorial_layer:Enable():SetTouchObject(btn))
@@ -443,10 +443,13 @@ function GameUIHome:FTE_FreeSpeedUpFirst()
         tutorial_layer:removeFromParent()
     end)
 end
-function GameUIHome:FindFirstItem()
+function GameUIHome:DefferShow(tab_type)
+    return self.event_tab:PromiseOfShowTab(tab_type):next(function() return self end)
+end
+function GameUIHome:Find()
     local item
     self.event_tab:IteratorAllItem(function(_, v)
-        item = v
+        item = v:GetSpeedUpButton()
         return true
     end)
     return cocos_promise.deffer(function()

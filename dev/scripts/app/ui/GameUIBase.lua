@@ -2,6 +2,7 @@
 -- Author: dannyhe
 -- Date: 2014-08-01 16:18:16
 -- GameUIBase is a CCLayer
+local cocos_promise = import("..utils.cocos_promise")
 local window = import("..utils.window")
 local UIListView = import(".UIListView")
 local WidgetBackGroundTabButtons = import('..widget.WidgetBackGroundTabButtons')
@@ -284,6 +285,14 @@ function GameUIBase:CreateTutorialLayer()
     return node:Reset()
 end
 
+function GameUIBase:Lock()
+    return cocos_promise.deffer(function()
+        return self
+    end)
+end
+function GameUIBase:Find()
+    assert(false)
+end
 
 return GameUIBase
 

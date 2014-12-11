@@ -21,83 +21,329 @@ function MyCityScene:onEnter()
         self.scene_ui_layer:NewUIFromBuildingSprite(building)
     end)
     city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
-
-
-    -- self:PromiseOfClickLockButton("barracks"):next(function(ui)
-    --     return ui:FTE_Unlock("barracks")
-    -- end)
-    -- cocos_promise.deffer()
-    --     :next(function() return self:PromiseOfClickBuilding(8, 8) end)
-    --     :next(UIKit:PromiseOfOpen("GameUIKeep"))
-    --     :next(function(ui) return ui:FTE_Upgrade() end)
-    --     :next(function() return home_page:FTE_FreeSpeedUpFirst() end)
+end
+function MyCityScene:GetArrowTutorial()
+    if not self.arrow_tutorial then
+        local arrow_tutorial = TutorialLayer.new():addTo(self)
+        self.arrow_tutorial = arrow_tutorial
+    end
+    return self.arrow_tutorial
+end
+function MyCityScene:DestoryArrowTutorial(func)
+    if self.arrow_tutorial then
+        self.arrow_tutorial:removeFromParent()
+        self.arrow_tutorial = nil
+    end
+    return cocos_promise.deffer(func)
+end
+function MyCityScene:GetHomePage()
+    return home_page
 end
 function MyCityScene:onEnterTransitionFinish()
-    -- local city = self.city
-    -- cocos_promise.deffer()
-    --     :next(function()
-    --         return promise.all(
-    --             GameUINpc:PromiseOfSay({
-    --                 words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"
-    --             }):next(function() return GameUINpc:PromiseOfInput() end)
-    --                 :next(function() return self:PromiseOfClickBuilding(12, 12) end)
-    --         )
-    --     end)
-    --     :next(function(args)
-    --         local building = args[1]
-    --         return promise.all(
-    --             GameUINpc:PromiseOfSay({words = "隐藏在迷雾深处的{大天使之剑}正在等待您的探寻。"}),
-    --             UIKit:newGameUI('GameUIBuild', city,
-    --                 building:GetEntity()):addToScene(self, true):FTE_BuildDwelling()
-    --         )
-    --     end)
-    --     :next(function()
-    --         return promise.all(
-    --             GameUINpc:PromiseOfSay({words = "{pvp}, {pve}, {gvg}, {gve}, {pvg}等各种玩法随你挑战。"}),
-    --             home_page:FTE_FreeSpeedUpFirst()
-    --         )
-    --     end)
-    --     :next(function()
-    --         return promise.all(
-    --             GameUINpc:PromiseOfSay({
-    --                 words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"
-    --             }):next(function() return GameUINpc:PromiseOfInput() end)
-    --                 :next(function() return self:PromiseOfClickBuilding(15, 12) end)
-    --         )
-    --     end)
-    --     :next(function(args)
-    --         local building = args[1]
-    --         return promise.all(
-    --             GameUINpc:PromiseOfSay({words = "隐藏在迷雾深处的{大天使之剑}正在等待您的探寻。"}),
-    --             UIKit:newGameUI('GameUIBuild', city,
-    --                 building:GetEntity()):addToScene(self, true):FTE_BuildFarmer()
-    --         )
-    --     end)
-    --     :next(function()
-    --         return promise.all(GameUINpc:PromiseOfSay({words = "{pvp}, {pve}, {gvg}, {gve}, {pvg}等各种玩法随你挑战。"}),
-    --             home_page:FTE_FreeSpeedUpFirst())
-    --     end)
-    --     :next(function()
-    --         return promise.all(
-    --             GameUINpc:PromiseOfSay({
-    --                 words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"
-    --             }):next(function() return GameUINpc:PromiseOfInput() end)
-    --                 :next(function() return self:PromiseOfClickBuilding(18, 12) end)
-    --         )
-    --     end)
-    --     :next(function(args)
-    --         local building = args[1]
-    --         return promise.all(
-    --             GameUINpc:PromiseOfSay({words = "隐藏在迷雾深处的{大天使之剑}正在等待您的探寻。"}),
-    --             UIKit:newGameUI('GameUIBuild', city,
-    --                 building:GetEntity()):addToScene(self, true):FTE_BuildWoodcutter()
-    --         )
-    --     end)
-    --     :next(function()
-    --         return promise.all(GameUINpc:PromiseOfSay({words = "{pvp}, {pve}, {gvg}, {gve}, {pvg}等各种玩法随你挑战。"}),
-    --             home_page:FTE_FreeSpeedUpFirst())
-    --     end)
-    --     :next(function() return GameUINpc:PromiseOfLeave() end)
+    local city = self.city
+    local scene = self
+    local check_map = {
+        [1] = function()
+            if #City:GetUnlockedFunctionBuildings() <= 4 then
+                return City:GetHouseByPosition(12, 12)
+            end
+            return true
+        end,
+        [2] = function()
+            if #City:GetUnlockedFunctionBuildings() <= 4 then
+                local building = City:GetHouseByPosition(12, 12)
+                return not building:IsUpgrading() and building:GetLevel() == 1
+            end
+            return true
+        end,
+        [3] = function()
+            if #City:GetUnlockedFunctionBuildings() <= 4 then
+                return City:GetHouseByPosition(15, 12)
+            end
+            return true
+        end,
+        [4] = function()
+            if #City:GetUnlockedFunctionBuildings() <= 4 then
+                local building = City:GetHouseByPosition(15, 12)
+                return not building:IsUpgrading() and building:GetLevel() == 1
+            end
+            return true
+        end,
+        [5] = function()
+            if #City:GetUnlockedFunctionBuildings() <= 4 then
+                return City:GetHouseByPosition(18, 12)
+            end
+            return true
+        end,
+        [6] = function()
+            if #City:GetUnlockedFunctionBuildings() <= 4 then
+                local building = City:GetHouseByPosition(18, 12)
+                return not building:IsUpgrading() and building:GetLevel() == 1
+            end
+            return true
+        end,
+        [7] = function()
+            if #City:GetUnlockedFunctionBuildings() <= 4 then
+                local building = City:GetFirstBuildingByType("keep")
+                return building:GetLevel() == 2 or (building:IsUpgrading() and building:GetLevel() == 1)
+            end
+            return true
+        end,
+        [8] = function()
+            if #City:GetUnlockedFunctionBuildings() <= 4 then
+                local building = City:GetFirstBuildingByType("keep")
+                return not building:IsUpgrading() and building:GetLevel() == 2
+            end
+            return true
+        end,
+        [9] = function()
+            if #City:GetUnlockedFunctionBuildings() <= 4 then
+                return false
+            end
+            return true
+        end,
+        [10] = function()
+            if #City:GetUnlockedFunctionBuildings() <= 5 then
+                local building = City:GetFirstBuildingByType("barracks")
+                return not building:IsUpgrading() and building:GetLevel() == 1
+            end
+            return true
+        end,
+        [11] = function()
+            local count = City:GetSoldierManager():GetCountBySoldierType("swordsman")
+            local barracks = City:GetFirstBuildingByType("barracks")
+            if count > 0 or barracks:IsRecruting() then
+                return true
+            end
+        end,
+    }
+    local function check(step)
+        local check_func = check_map[step]
+        return not check_func and true or check_func()
+    end
+cocos_promise.deffer():next(function(result)
+    if check(1) then return cocos_promise.deffer(function() return result end) end
+    return  promise.all(scene:GotoLogicPoint(12, 12), GameUINpc:PromiseOfSay({words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"}):next(function(result)
+        return  GameUINpc:PromiseOfInput()
+    end):next(function(result)
+        return  scene:PromiseOfClickBuilding(12, 12)
+    end)):next(function(result)
+        return  UIKit:PromiseOfOpen("GameUIBuild"):next(function(result)
+            return  cocos_promise.deffer(function() return result end):next(function(result)
+                return  result:Lock():next(function(result)
+                    return  result:Find("dwelling"):next(function(result)
+                        return  scene:GetArrowTutorial():DefferShow(result):next(function(result)
+                            return  City:PromiseOfUpgradingByLevel("dwelling"):next(function(result)
+                                return  scene:DestoryArrowTutorial(function() return result end)
+                            end)
+                        end)
+                    end)
+                end)
+            end)
+        end)
+    end)
+end):next(function(result)
+    if check(2) then return cocos_promise.deffer(function() return result end) end
+    return  scene:GetHomePage():DefferShow("build"):next(function(result)
+        return  result:Find():next(function(result)
+            return  scene:GetArrowTutorial():DefferShow(result):next(function(result)
+                return  City:PromiseOfFinishUpgradingByLevel("dwelling"):next(function(result)
+                    return  scene:DestoryArrowTutorial(function() return result end)
+                end)
+            end)
+        end)
+    end)
+end):next(function(result)
+    return  GameUINpc:PromiseOfLeave()
+end):next(function(result)
+    if check(3) then return cocos_promise.deffer(function() return result end) end
+    return  GameUINpc:PromiseOfSay({words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"}):next(function(result)
+        return  GameUINpc:PromiseOfInput():next(function(result)
+            return  scene:PromiseOfClickBuilding(15, 12):next(function(result)
+                return  UIKit:PromiseOfOpen("GameUIBuild"):next(function(result)
+                    return  cocos_promise.deffer(function() return result end):next(function(result)
+                        return  result:Lock():next(function(result)
+                            return  result:Find("farmer"):next(function(result)
+                                return  scene:GetArrowTutorial():DefferShow(result):next(function(result)
+                                    return  City:PromiseOfUpgradingByLevel("farmer"):next(function(result)
+                                        return  scene:DestoryArrowTutorial(function() return result end)
+                                    end)
+                                end)
+                            end)
+                        end)
+                    end)
+                end)
+            end)
+        end)
+    end)
+end):next(function(result)
+    if check(4) then return cocos_promise.deffer(function() return result end) end
+    return  scene:GetHomePage():DefferShow("build"):next(function(result)
+        return  result:Find():next(function(result)
+            return  scene:GetArrowTutorial():DefferShow(result):next(function(result)
+                return  City:PromiseOfFinishUpgradingByLevel("farmer"):next(function(result)
+                    return  scene:DestoryArrowTutorial(function() return result end)
+                end)
+            end)
+        end)
+    end)
+end):next(function(result)
+    return  GameUINpc:PromiseOfLeave()
+end):next(function(result)
+    if check(5) then return cocos_promise.deffer(function() return result end) end
+    return  GameUINpc:PromiseOfSay({words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"}):next(function(result)
+        return  GameUINpc:PromiseOfInput():next(function(result)
+            return  scene:PromiseOfClickBuilding(18, 12):next(function(result)
+                return  UIKit:PromiseOfOpen("GameUIBuild"):next(function(result)
+                    return  cocos_promise.deffer(function() return result end):next(function(result)
+                        return  result:Lock():next(function(result)
+                            return  result:Find("woodcutter"):next(function(result)
+                                return  scene:GetArrowTutorial():DefferShow(result):next(function(result)
+                                    return  City:PromiseOfUpgradingByLevel("woodcutter"):next(function(result)
+                                        return  scene:DestoryArrowTutorial(function() return result end)
+                                    end)
+                                end)
+                            end)
+                        end)
+                    end)
+                end)
+            end)
+        end)
+    end)
+end):next(function(result)
+    if check(6) then return cocos_promise.deffer(function() return result end) end
+    return  scene:GetHomePage():DefferShow("build"):next(function(result)
+        return  result:Find():next(function(result)
+            return  scene:GetArrowTutorial():DefferShow(result):next(function(result)
+                return  City:PromiseOfFinishUpgradingByLevel("woodcutter"):next(function(result)
+                    return  scene:DestoryArrowTutorial(function() return result end)
+                end)
+            end)
+        end)
+    end)
+end):next(function(result)
+    return  GameUINpc:PromiseOfLeave()
+end):next(function(result)
+    if check(7) then return cocos_promise.deffer(function() return result end) end
+    return  GameUINpc:PromiseOfSay({words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"}):next(function(result)
+        return  GameUINpc:PromiseOfInput():next(function(result)
+            return  scene:PromiseOfClickBuilding(8, 8):next(function(result)
+                return  UIKit:PromiseOfOpen("GameUIKeep"):next(function(result)
+                    return  cocos_promise.deffer(function() return result end):next(function(result)
+                        return  result:Lock():next(function(result)
+                            return  result:Find():next(function(result)
+                                return  scene:GetArrowTutorial():DefferShow(result):next(function(result)
+                                    return  City:PromiseOfUpgradingByLevel("keep"):next(function(result)
+                                        return  scene:DestoryArrowTutorial(function() return result end)
+                                    end)
+                                end)
+                            end)
+                        end)
+                    end)
+                end)
+            end)
+        end)
+    end)
+end):next(function(result)
+    if check(8) then return cocos_promise.deffer(function() return result end) end
+    return  scene:GetHomePage():DefferShow("build"):next(function(result)
+        return  result:Find():next(function(result)
+            return  scene:GetArrowTutorial():DefferShow(result):next(function(result)
+                return  City:PromiseOfFinishUpgradingByLevel("keep"):next(function(result)
+                    return  scene:DestoryArrowTutorial(function() return result end)
+                end)
+            end)
+        end)
+    end)
+end):next(function(result)
+    return  GameUINpc:PromiseOfLeave()
+end):next(function(result)
+    if check(9) then return cocos_promise.deffer(function() return result end) end
+    return  scene:GotoLogicPoint(19, 12):next(function(result)
+        return  GameUINpc:PromiseOfSay({words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"}):next(function(result)
+            return  GameUINpc:PromiseOfInput():next(function(result)
+                return  self:GetLockButtonsByBuildingType("barracks"):next(function(result)
+                    return  scene:GetArrowTutorial():DefferShow(result):next(function(result)
+                        return  UIKit:PromiseOfOpen("GameUIUnlockBuilding"):next(function(result)
+                            return  cocos_promise.deffer(function() return result end):next(function(result)
+                                return  result:Find():next(function(result)
+                                    return  scene:GetArrowTutorial():DefferShow(result):next(function(result)
+                                        return  City:PromiseOfUpgradingByLevel("barracks"):next(function(result)
+                                            return  scene:DestoryArrowTutorial(function() return result end)
+                                        end)
+                                    end)
+                                end)
+                            end)
+                        end)
+                    end)
+                end)
+            end)
+        end)
+    end)
+end):next(function(result)
+    return  GameUINpc:PromiseOfLeave()
+end):next(function(result)
+    if check(10) then return cocos_promise.deffer(function() return result end) end
+    return  scene:GetHomePage():DefferShow("build"):next(function(result)
+        return  result:Find():next(function(result)
+            return  scene:GetArrowTutorial():DefferShow(result):next(function(result)
+                return  City:PromiseOfFinishUpgradingByLevel("barracks"):next(function(result)
+                    return  scene:DestoryArrowTutorial(function() return result end)
+                end)
+            end)
+        end)
+    end)
+end):next(function(result)
+    if check(11) then return cocos_promise.deffer(function() return result end) end
+    return  scene:GotoLogicPoint(26, 19):next(function(result)
+        return  scene:PromiseOfClickBuilding(26, 19):next(function(result)
+            return  UIKit:PromiseOfOpen("GameUIBarracks"):next(function(result)
+                return  cocos_promise.deffer(function() return result end):next(function(result)
+                    return  result:Lock():next(function(result)
+                        return  result:Find("recruit"):next(function(result)
+                            return  scene:GetArrowTutorial():DefferShow(result):next(function(result)
+                                return  UIKit:GetUIInstance("GameUIBarracks"):WaitTag("recruit"):next(function(result)
+                                    return  scene:DestoryArrowTutorial(function() return result end):next(function(result)
+                                        return  result:Find("swordsman"):next(function(result)
+                                            return  scene:GetArrowTutorial():DefferShow(result):next(function(result)
+                                                return  UIKit:PromiseOfOpen("WidgetRecruitSoldier"):next(function(result)
+                                                    return  scene:DestoryArrowTutorial(function() return result end):next(function(result)
+                                                        return  result:Find("progress"):next(function(result)
+                                                            return  scene:GetArrowTutorial():DefferShow(result):next(function(result)
+                                                                return  result:PromiseOfProgress(100):next(function(result)
+                                                                    return  scene:DestoryArrowTutorial(function() return result end):next(function(result)
+                                                                        return  UIKit:PromiseOfOpen("WidgetRecruitSoldier"):next(function(result)
+                                                                            return  result:Find("recruit"):next(function(result)
+                                                                                return  scene:GetArrowTutorial():DefferShow(result):next(function(result)
+                                                                                    return  City:PromiseOfRecruitSoldier("swordsman"):next(function(result)
+                                                                                        return  scene:DestoryArrowTutorial(function() return result end)
+                                                                                    end)
+                                                                                end)
+                                                                            end)
+                                                                        end)
+                                                                    end)
+                                                                end)
+                                                            end)
+                                                        end)
+                                                    end)
+                                                end)
+                                            end)
+                                        end)
+                                    end)
+                                end)
+                            end)
+                        end)
+                    end)
+                end)
+            end)
+        end)
+    end)
+end):next(function(result)
+    return  GameUINpc:PromiseOfLeave()
+end)
+
+
+
 end
 function MyCityScene:CreateHomePage()
     local home = UIKit:newGameUI('GameUIHome', self.city):addToScene(self)
@@ -144,9 +390,8 @@ function MyCityScene:CheckClickPromise(building)
     if #self.clicked_callbacks > 0 then
         if self.clicked_callbacks[1](building) then
             table.remove(self.clicked_callbacks, 1)
-            return true
+            return
         end
-    else
         return true
     end
 end
@@ -169,7 +414,7 @@ function MyCityScene:GetLockButtonsByBuildingType(building_type)
             return true
         end
     end)
-    return lock_button
+    return cocos_promise.deffer(function() return lock_button end)
 end
 
 
@@ -250,7 +495,7 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     local city = self.city
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
-        if not self:CheckClickPromise(building) then return end
+        if self:CheckClickPromise(building) then return end
 
         if building:GetEntity():GetType() == "ruins" then
             UIKit:newGameUI('GameUIBuild', city, building:GetEntity()):addToScene(self, true)
@@ -299,11 +544,6 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     end
 end
 return MyCityScene
-
-
-
-
-
 
 
 

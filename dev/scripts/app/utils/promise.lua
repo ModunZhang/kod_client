@@ -109,7 +109,7 @@ local function handle_result(p, success, result, failed_func)
     if success then
         if is_promise(result) then
             table.insert(result.next_promises, p)
-            return has_a_new_promise, p
+            return has_a_new_promise, result
         end
     else
         -- 如果当前任务有错误处理函数,捕获并继续传入下一个任务进行处理
@@ -134,7 +134,7 @@ end
 local function repeat_resolve(p)
     while is_not_complete(p) do
         local is_has_a_new_promise, cp = handle_result(p, do_promise(p))
-        if is_has_a_new_promise then
+        if is_has_a_new_promise and cp.state_ == PENDING then
             return
         end
         -- 当前promise改变了

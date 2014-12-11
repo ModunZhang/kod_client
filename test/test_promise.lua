@@ -311,10 +311,35 @@ function test_promise11()
     promise.all(p1, p2):next(function(args)
         dump(args)
     end)
-
-    p1:resolve()
-    p2:resolve()
 end
+
+
+function test_promise11()
+    local p1 = promise.new(function() print(1) end)
+    local p2 = promise.new(function() print(2) end)
+    local p3 = promise.new()
+    p1.tag = 1
+    p2.tag = 2
+    p3.tag = 3
+    p3:next(function()
+        return p1
+    end):next(function()
+        return p2
+    end):next(function()
+        print("end")
+    end):resolve()
+
+    Game.new():OnUpdate(function(time)
+        if time == 10 then
+            p2:resolve()
+        elseif time == 19 then
+            p1:resolve()
+            -- dump(p3)
+        end
+        return time <= 100
+    end)
+end
+
 
 
 

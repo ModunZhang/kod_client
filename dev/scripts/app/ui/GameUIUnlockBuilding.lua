@@ -5,6 +5,7 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local UpgradeBuilding = import("..entity.UpgradeBuilding")
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
+local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local MaterialManager = import("..entity.MaterialManager")
 
@@ -19,7 +20,6 @@ function GameUIUnlockBuilding:ctor( city, tile )
     self:setNodeEventEnabled(true)
     self:Init()
     self.city:GetResourceManager():AddObserver(self)
-
 end
 function GameUIUnlockBuilding:OnResourceChanged(resource_manager)
     self:SetUpgradeRequirementListview()
@@ -89,7 +89,7 @@ function GameUIUnlockBuilding:Init()
         :addTo(self)
 
 
-    local btn_bg = UIKit:commonButtonWithBG(
+    self.upgrade_btn = UIKit:commonButtonWithBG(
         {
             w=185,
             h=65,
@@ -248,17 +248,11 @@ function GameUIUnlockBuilding:SetUpgradeTime()
 end
 
 
----
-local Arrow = import(".Arrow")
-local TutorialLayer = import(".TutorialLayer")
-function GameUIUnlockBuilding:FTE_Unlock(building_type)
-    return promise.new():next(function(item)
-        local arrow = Arrow.new():addTo(TutorialLayer.new(self.upgrade_btn):addTo(self):Enable())
-        local rect = self.upgrade_btn:getCascadeBoundingBox()
-        arrow:OnPositionChanged(rect.x, rect.y)
-    end):next(function()
-        return self.city:PromiseOfUpgradingByLevel(building_type, 0)
-    end):resolve()
+-- fte
+function GameUIUnlockBuilding:Find()
+    return cocos_promise.deffer(function()
+        return self.upgrade_btn
+    end)
 end
 
 
