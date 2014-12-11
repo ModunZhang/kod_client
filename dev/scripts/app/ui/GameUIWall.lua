@@ -9,8 +9,10 @@ local UIListView = import(".UIListView")
 local WidgetSelectDragon = import("..widget.WidgetSelectDragon")
 local timer = app.timer
 function GameUIWall:ctor(city,building)
+	self.city = city
     GameUIWall.super.ctor(self,city,Localize.building_name[building:GetType()],building)
-    self.dragon_manager = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager()
+    self.dragon_manager = city:GetFirstBuildingByType("dragonEyrie"):GetDragonManager()
+    self.dragon_manager:AddListenOnType(self,self.dragon_manager.LISTEN_TYPE.OnHPChanged)
 end
 
 function GameUIWall:onEnter()
@@ -31,6 +33,10 @@ function GameUIWall:onEnter()
     end):pos(window.cx, window.bottom + 34)
 end
 
+function GameUIWall:onMoveOutStage()
+	GameUIWall.super.onMoveOutStage(self)
+	self.dragon_manager:RemoveListenerOnType(self,self.dragon_manager.LISTEN_TYPE.OnHPChanged)
+end
 
 function GameUIWall:CreateMilitaryUIIf()
 	if self.military_node then return self.military_node end
@@ -71,7 +77,7 @@ function GameUIWall:CreateMilitaryUIIf()
 		:addTo(top_bg)
 		:align(display.LEFT_BOTTOM, list_bg:getPositionX(), list_bg:getPositionY()+list_bg:getContentSize().height + 10)
 	local dragon_bg = display.newSprite("dragon_bg_114x114.png", 63, 63):addTo(draogn_box)
-	self.dragon_head = display.newSprite(UILib.dragon_head.redDragon):addTo(dragon_bg):pos(57,60)
+	self.dragon_head = display.newSprite(UILib.dragon_head[dragon:Type()]):addTo(dragon_bg):pos(57,60)
 	if not dragon then
 		self.dragon_head:hide()
 	end
@@ -143,7 +149,7 @@ function GameUIWall:CreateMilitaryUIIf()
 		size = 24,
 		color= 0x403c2f
 	}):align(display.CENTER_TOP,window.cx,top_bg:getPositionY()-10):addTo(military_node)
-	local wallHpResource = City:GetResourceManager():GetWallHpResource()
+	local wallHpResource = self.city:GetResourceManager():GetWallHpResource()
 	local string = string.format("%d/%d",wallHpResource:GetResourceValueByCurrentTime(timer:GetServerTime()),wallHpResource:GetValueLimit())
 
 	local process_wall_bg = display.newSprite("process_bar_540x40.png")
@@ -194,33 +200,42 @@ end
 
 function GameUIWall:RefreshListView()
 	self.info_list:removeAllItems()
-	for i = 1,10 do
-		local item = self:GetListItem(i)
+	for i,v in ipairs(self:GetListData()) do	
+		local item = self:GetListItem(i,v)
 		self.info_list:addItem(item)
 	end
 	self.info_list:reload()
 end
 
-function GameUIWall:GetListItem(index)
+function GameUIWall:GetListData()
+	local troops_count = self.city:GetFirstBuildingByType("armyCamp"):GetTroopPopulation()
+	local data = {
+		{title = _("龙的经验"),val = 100,buffer = 200},
+		{title = _("最大兵量"),val = troops_count},
+	}
+	return data
+end
+
+function GameUIWall:GetListItem(index,data)
 	local item = self.info_list:newItem()
 	local imageName = string.format("box_bg_item_520x48_%d.png",index%2)
 	local content = display.newScale9Sprite(imageName):size(546,42)
 	UIKit:ttfLabel({
-		text = _("龙的经验"),
+		text = data.title,
 		size = 20,
 		color= 0x797154
 	}):align(display.LEFT_CENTER, 20, 21):addTo(content)
 	local val_x = 540
-	if true then --buffer
+	if data.buffer then --buffer
 		local buff_label = UIKit:ttfLabel({
-			text = "+9800",
+			text = "+ " .. data.buffer,
 			size = 20,
 			color= 0x007c23
 		}):align(display.RIGHT_CENTER, val_x, 21):addTo(content)
 		val_x = val_x - buff_label:getContentSize().width - 10
 	end
 	UIKit:ttfLabel({
-		text = "62326",
+		text = data.val,
 		size = 20,
 		color= 0x403c2f
 	}):align(display.RIGHT_CENTER, val_x, 21):addTo(content)
@@ -246,25 +261,34 @@ function GameUIWall:OnResourceChanged(resource_manager)
 end
 
 function GameUIWall:OnSelectDragonButtonClicked()
-	-- function (selectDragon)
- --        self:OnDragonSelected(selectDragon)
-	-- end
-	-- WidgetSelectDragon.new({
-	-- 	title = _("选择驻防巨龙"),
-	-- 	btns  = {
-	-- 		{btn_label = _("")}
-	-- 	}
-	-- }):addTo(self)
+	WidgetSelectDragon.new({
+		title = _("选择驻防巨龙"),
+		btns  = {
+			{
+				btn_label = _("选择"),
+				btn_callback = function(dragon)
+					self:OnDragonSelected(dragon)
+				end
+			},
+			{
+				btn_label = _("不驻防"),
+				btn_callback = function()
+					self:OnDragonSelected()
+				end
+			}
+		}
+	}):addTo(self)
 end
 
 function GameUIWall:OnDragonSelected(dragon)
-
-	self:RefreshUIAfterSelectDragon(dragon)
+	local dragon_type = dragon and dragon:Type() or ""
+	NetManager:getSetDefenceDragonPromise(dragon_type):next(function()
+		self:RefreshUIAfterSelectDragon(dragon)
+	end)
 end
 
 function GameUIWall:RefreshUIAfterSelectDragon(dragon)
 	if dragon then
-		-- NetManager:getSetDefenceDragonPromise(dragon:Type())
 		self.dragon_info_panel:show()
 		self.tips_panel:hide()
 		self.lv_label:setString(Localize.dragon[dragon:Type()] .. " ( LV " .. dragon:Level() .. " )")
@@ -276,7 +300,6 @@ function GameUIWall:RefreshUIAfterSelectDragon(dragon)
 		self.dragon_head:show()
 		self:RefreshListView()
 	else
-		-- NetManager:getSetDefenceDragonPromise("") -- 取消驻防
 		self.dragon_info_panel:hide()
 		self.tips_panel:show()
 		self.lv_label:setString(_("请选择一个巨龙驻防"))
@@ -284,6 +307,15 @@ function GameUIWall:RefreshUIAfterSelectDragon(dragon)
 		self.hp_label:hide()
 		self.dragon_hp_progress:setPercentage(0)
 		self.dragon_head:hide()
+	end
+end
+
+function GameUIWall:OnHPChanged()
+	local dragon = self:GetDragon()
+	if not dragon or not dragon:Ishated() then return end
+	if self.hp_label and self.hp_label:isVisible() then
+		self.hp_label:setString(dragon:Hp() .. "/" .. dragon:GetMaxHP())
+		self.dragon_hp_progress:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
 	end
 end
 return GameUIWall
