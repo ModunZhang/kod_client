@@ -94,6 +94,7 @@ function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recov
           	self:checkHPRecoveryIf_(dragon,resource_refresh_time,hp_recovery_perHour)
         end
 	end
+	self:CheckFinishEquipementDragonPormise()
 end
 
 

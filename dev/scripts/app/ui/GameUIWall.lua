@@ -246,9 +246,15 @@ function GameUIWall:OnResourceChanged(resource_manager)
 end
 
 function GameUIWall:OnSelectDragonButtonClicked()
-	WidgetSelectDragon.new(function (selectDragon)
-        self:OnDragonSelected(selectDragon)
-	end):addTo(self)
+	-- function (selectDragon)
+ --        self:OnDragonSelected(selectDragon)
+	-- end
+	-- WidgetSelectDragon.new({
+	-- 	title = _("选择驻防巨龙"),
+	-- 	btns  = {
+	-- 		{btn_label = _("")}
+	-- 	}
+	-- }):addTo(self)
 end
 
 function GameUIWall:OnDragonSelected(dragon)
