@@ -14,5 +14,16 @@ function UIAutoClose:addTouchAbleChild(body)
     body:setTouchEnabled(true)
     self:addChild(body)
 end
+function UIAutoClose:addToScene(scene,anima)
+    print("addToScene->",tolua.type(scene))
+    anima = false
+    if scene and tolua.type(scene) == 'cc.Scene' then
+        scene:addChild(self, 2000)
+    end
+    return self
+end
 
+function UIAutoClose:addToCurrentScene( anima )
+    return self:addToScene(display.getRunningScene(),anima)
+end
 return UIAutoClose
