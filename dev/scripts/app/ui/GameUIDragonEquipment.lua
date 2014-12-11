@@ -10,6 +10,7 @@ local config_category = GameDatas.DragonEyrie
 local WidgetDragonEquipIntensify = import("..widget.WidgetDragonEquipIntensify")
 local BODY_HEIGHT = 664
 local LISTVIEW_WIDTH = 546
+local cocos_promise = import("..utils.cocos_promise")
 local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local DragonManager = import("..entity.DragonManager")

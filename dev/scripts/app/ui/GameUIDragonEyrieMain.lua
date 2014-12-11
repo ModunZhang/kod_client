@@ -4,6 +4,7 @@
 --
 local GameUIDragonEyrieMain = UIKit:createUIClass("GameUIDragonEyrieMain","GameUIUpgradeBuilding")
 local window = import("..utils.window")
+local cocos_promise = import("..utils.cocos_promise")
 local StarBar = import(".StarBar")
 local TAG_OF_CONTENT = 100
 local DragonManager = import("..entity.DragonManager")
@@ -381,9 +382,19 @@ function GameUIDragonEyrieMain:ChangeDragon(direction)
 	self:RefreshUI()
 end
 
-function GameUIDragonEyrieMain:Find()
+function GameUIDragonEyrieMain:Find(type_)
+	if type_ == "dragon" then
+		return cocos_promise.deffer(function()
+            return self.tabButton:GetTabByTag("dragon")
+        end)
+	end
     return cocos_promise.deffer(function()
         return self.detailButton
+    end)
+end
+function GameUIDragonEyrieMain:WaitTag(type_)
+    return self.tabButton:PromiseOfTag(type_):next(function()
+        return self
     end)
 end
 return GameUIDragonEyrieMain

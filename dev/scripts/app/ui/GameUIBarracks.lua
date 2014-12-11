@@ -158,8 +158,8 @@ function GameUIBarracks:Find(control_type)
         end)
     end
 end
-function GameUIBarracks:WaitTag()
-    return self.tab_buttons:PromiseOfTag("recruit"):next(function()
+function GameUIBarracks:WaitTag(type_)
+    return self.tab_buttons:PromiseOfTag(type_):next(function()
         return self
     end)
 end

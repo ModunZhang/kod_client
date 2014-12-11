@@ -73,7 +73,8 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 
 	def match(token):
 		if not look_ahead(token):
-			print "%s 不匹配" % token
+			s = "%s 不匹配" % token
+			raise Exception(s)
 		global cur_token_index
 		cur_token_index += 1
 		return token
@@ -105,6 +106,10 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			match_check_next()
 		else:			
 			match_next()
+
+	def match_equip():
+		match("equip")
+		emit("City:PromiseOfFinishEquipementDragon()")
 
 	def match_recruit():
 		match("recruit")
@@ -452,10 +457,12 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			match_progress()
 		elif look_ahead("recruit"):
 			match_recruit()
+		elif look_ahead("equip"):
+			match_equip()
 		if look_ahead(next_symbol):
 			match_sub()
 
-	def match_main():
+	def match_start():
 		while 1:
 			if look_token() == None:
 				return
@@ -467,7 +474,7 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 		with codecs.open('./test.fte', 'r', 'utf-8') as f:
 			tokens = parse_tokens(f.read())
 			# print tokens
-			match_main()
+			match_start()
 
 	except IOError, e:
 		print "未找到文件!"
