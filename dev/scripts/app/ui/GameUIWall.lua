@@ -33,6 +33,10 @@ function GameUIWall:onEnter()
     end):pos(window.cx, window.bottom + 34)
 end
 
+function GameUIWall:onMoveOutStage()
+	GameUIWall.super.onMoveOutStage(self)
+	self.dragon_manager:RemoveListenerOnType(self,self.dragon_manager.LISTEN_TYPE.OnHPChanged)
+end
 
 function GameUIWall:CreateMilitaryUIIf()
 	if self.military_node then return self.military_node end
