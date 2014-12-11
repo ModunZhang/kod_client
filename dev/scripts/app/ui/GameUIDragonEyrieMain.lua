@@ -262,6 +262,7 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 		})):addTo(box):align(display.RIGHT_BOTTOM,590,15):onButtonClicked(function()
 			UIKit:newGameUI("GameUIDragonEyrieDetail",self.city,self.building,self:GetCurrentDragon():Type()):addToCurrentScene(true)
 		end)
+		self.detailButton = detailButton
 		self.draongConteNode:OnEnterIndex(math.abs(0))
 	end
 
@@ -378,5 +379,11 @@ function GameUIDragonEyrieMain:ChangeDragon(direction)
 		self.draongConteNode:Before()
 	end
 	self:RefreshUI()
+end
+
+function GameUIDragonEyrieMain:Find()
+    return cocos_promise.deffer(function()
+        return self.detailButton
+    end)
 end
 return GameUIDragonEyrieMain

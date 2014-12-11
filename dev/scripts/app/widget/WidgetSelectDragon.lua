@@ -5,18 +5,17 @@ local WidgetSelectDragon = UIKit:createUIClass("WidgetSelectDragon", "UIAutoClos
 
 local img_dir = "allianceHome/"
 
-function WidgetSelectDragon:ctor(callback)
+function WidgetSelectDragon:ctor(params)
     local dragon_manager = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager()
 
-	local body = WidgetUIBackGround.new({height=516}):align(display.TOP_CENTER,display.cx,display.top-200)
-        :addTo(self)
-	WidgetSelectDragon.super.ctor(self,body)
-	
+    local body = WidgetUIBackGround.new({height=516}):align(display.TOP_CENTER,display.cx,display.top-200)
+    self:addTouchAbleChild(body)
+
     local rb_size = body:getContentSize()
     local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+5)
         :addTo(body)
     local title_label = UIKit:ttfLabel({
-        text = _("选中出战的巨龙"),
+        text = params.title,
         size = 22,
         color = 0xffedae,
     }):align(display.CENTER, title:getContentSize().width/2, title:getContentSize().height/2+2)
@@ -99,28 +98,66 @@ function WidgetSelectDragon:ctor(callback)
         :align(display.TOP_CENTER, 500 , 110)
     group:getButtonAtIndex(1):setButtonSelected(true)
 
-    local ok_btn = WidgetPushButton.new({normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"})
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("确定"),
-            size = 24,
-            color = 0xffedae,
-            shadow= true
-        }))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                for i=1,group:getButtonsCount() do
-                    print("group:getButtonsCount()：",i)
 
-                    if group:getButtonAtIndex(i):isButtonSelected() then
-                    	assert(tolua.type(callback)=="function","选择出战龙回调错误")
-                    	print("点击确定选择了龙：",optional_dragon[i]:Type())
-                        callback(optional_dragon[i])
-                        break
+    if #params.btns == 1 then
+        WidgetPushButton.new({normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"})
+            :setButtonLabel(UIKit:ttfLabel({
+                text = params.btns[1].btn_label,
+                size = 24,
+                color = 0xffedae,
+                shadow= true
+            }))
+            :onButtonClicked(function(event)
+                if event.name == "CLICKED_EVENT" then
+                    for i=1,group:getButtonsCount() do
+                        if group:getButtonAtIndex(i):isButtonSelected() then
+                            params.btns[1].btn_callback(optional_dragon[i])
+                            break
+                        end
                     end
+                    self:removeFromParent(true)
                 end
-                self:removeFromParent(true)
-            end
-        end):align(display.CENTER,rb_size.width/2,50):addTo(body)
+            end):align(display.CENTER,rb_size.width/2,50):addTo(body)
+    elseif #params.btns == 2 then
+        WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
+            :setButtonLabel(UIKit:ttfLabel({
+                text = params.btns[1].btn_label,
+                size = 24,
+                color = 0xffedae,
+                shadow= true
+            }))
+            :onButtonClicked(function(event)
+                if event.name == "CLICKED_EVENT" then
+                    for i=1,group:getButtonsCount() do
+                        if group:getButtonAtIndex(i):isButtonSelected() then
+                            params.btns[1].btn_callback(optional_dragon[i])
+                            break
+                        end
+                    end
+                    self:removeFromParent(true)
+                end
+            end):align(display.CENTER,rb_size.width/2+150,50):addTo(body)
+
+        WidgetPushButton.new({normal = "red_button_146x42.png",pressed = "red_button_highlight_146x42.png"})
+            :setButtonLabel(UIKit:ttfLabel({
+                text = params.btns[2].btn_label,
+                size = 24,
+                color = 0xffedae,
+                shadow= true
+            }))
+            :onButtonClicked(function(event)
+                if event.name == "CLICKED_EVENT" then
+                    for i=1,group:getButtonsCount() do
+                        if group:getButtonAtIndex(i):isButtonSelected() then
+                            params.btns[2].btn_callback(optional_dragon[i])
+                            break
+                        end
+                    end
+                    self:removeFromParent(true)
+                end
+            end):align(display.CENTER,rb_size.width/2-150,50):addTo(body)
+    end
 end
 
 return WidgetSelectDragon
+

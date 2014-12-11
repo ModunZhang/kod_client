@@ -456,6 +456,7 @@ function GameUIDragonEquipment:AdornOrResetButtonClicked()
     local equipment = self:GetEquipment()
     if not equipment:IsLoaded() then --来自配置 装备
       NetManager:getLoadDragonEquipmentPromise(equipment:Type(),equipment:Body(),equipment:GetCanLoadConfig().name):next(function()
+          self.dragon_manager:CheckFinishEquipementDragonPormise()
           self:RefreshInfoUI()
       end)
     else -- 重置
@@ -609,6 +610,12 @@ function GameUIDragonEquipment:RefreshInfoListView()
     self.info_ui.listView:addItem(item)
   end)
   self.info_ui.listView:reload()
+end
+
+function GameUIDragonEquipment:Find()
+    return cocos_promise.deffer(function()
+        return self.adornOrResetButton
+    end)
 end
 
 return GameUIDragonEquipment
