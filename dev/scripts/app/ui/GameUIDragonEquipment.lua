@@ -466,10 +466,6 @@ function GameUIDragonEquipment:AdornOrResetButtonClicked()
   else -- 强化界面
       self:IntensifyEvent()
   end
-
-  -- City:GetMaterialManager():IteratorEquipmentMaterialsByType(function(k,v)
-  --     print("k------->",k,"v------->",v)
-  -- end)
 end
 
 function GameUIDragonEquipment:GetCurrentEquipmentCount()
