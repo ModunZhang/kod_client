@@ -1,14 +1,14 @@
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-local WidgetPopDialog = class("WidgetPopDialog", function ()
-    return display.newColorLayer(cc.c4b(0,0,0,127))
-end)
+
+local WidgetPopDialog = UIKit:createUIClass("WidgetPopDialog", "UIAutoClose")
 
 function WidgetPopDialog:ctor(height,title_text)
-    local body = WidgetUIBackGround.new({height=height}):align(display.TOP_CENTER,display.cx,display.top-140)
-        :addTo(self)
+    self.body = WidgetUIBackGround.new({height=height}):align(display.TOP_CENTER,display.cx,display.top-140)
+    local body = self.body
+    self:addTouchAbleChild(body)
     local rb_size = body:getContentSize()
-    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+5)
+    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+10)
         :addTo(body)
     local title_label = UIKit:ttfLabel({
         text = title_text,
@@ -22,7 +22,11 @@ function WidgetPopDialog:ctor(height,title_text)
             if event.name == "CLICKED_EVENT" then
                 self:removeFromParent(true)
             end
-        end):align(display.CENTER, rb_size.width-20,rb_size.height+10):addTo(body)
+        end):align(display.CENTER, rb_size.width-36,rb_size.height+12):addTo(body)
 end
 
+function WidgetPopDialog:GetBody()
+    return self.body
+end
 return WidgetPopDialog
+
