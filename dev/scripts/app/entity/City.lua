@@ -672,6 +672,9 @@ function City:IteratorResourcesByUserData(resources, current_time)
     if resources.blood then
         resource_manager:GetBloodResource():SetValue(resources.blood)
     end
+    if resources.wallHp then
+        resource_manager:GetWallHpResource():UpdateResource(current_time, resources.wallHp)
+    end
 end
 function City:IteratorAllNeedTimerEntity(current_time)
     self:IteratorFunctionBuildingsByFunc(function(key, building)

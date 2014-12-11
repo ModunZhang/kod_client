@@ -1243,15 +1243,3 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
-
-
-
-
-
-
-
-
-
-
-
-

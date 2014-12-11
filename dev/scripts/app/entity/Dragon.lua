@@ -246,6 +246,11 @@ function Dragon:Ishated()
 	return self:Star() > 0
 end
 
+--是否是在驻防
+function Dragon:IsDefenced()
+	return self:Status() == 'defence'
+end
+
 function Dragon:GetEquipmentByBody( category )
 	local arg_type = type(category)
 	if arg_type == 'number' then

@@ -29,6 +29,15 @@ function DragonManager:GetDragon(dragon_type)
 	if not dragon_type then return nil end
 	return self.dragons_[dragon_type]
 end
+--获取驻防的龙
+function DragonManager:GetDefenceDragon()
+	for k,dragon in pairs(self:GetDragons()) do
+		if dragon:IsDefenced() then
+			return dragon
+		end
+	end
+	return nil
+end
 
 function DragonManager:GetPowerfulDragonType()
 	local dragonWidget = 0
@@ -85,6 +94,7 @@ function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recov
           	self:checkHPRecoveryIf_(dragon,resource_refresh_time,hp_recovery_perHour)
         end
 	end
+	self:CheckFinishEquipementDragonPormise()
 end
 
 

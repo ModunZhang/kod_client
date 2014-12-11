@@ -104,7 +104,7 @@ function GameUIAlliance:RefreshMainUI()
 end
 
 function GameUIAlliance:CreateBetweenBgAndTitle()
-    self.main_content = display.newNode():addTo(self):pos(window.left,window.bottom+68)
+    self.main_content = display.newNode():addTo(self):pos(window.left,window.bottom_top)
     self.main_content:setContentSize(cc.size(window.width,window.betweenHeaderAndTab))
 end
 
