@@ -2,6 +2,7 @@
 -- Author: gaozhou
 -- Date: 2014-08-18 14:33:28
 --
+local cocos_promise = import("..utils.cocos_promise")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
 local WidgetTips = import("..widget.WidgetTips")
@@ -85,7 +86,7 @@ function GameUIBarracks:CreateSoldierUI()
     return recruit
 end
 function GameUIBarracks:TabButtons()
-    self:CreateTabButtons({
+    self.tab_buttons = self:CreateTabButtons({
         {
             label = _("招募"),
             tag = "recruit",
@@ -141,26 +142,29 @@ function GameUIBarracks:OnSoliderCountChanged(...)
     end
 end
 
-
+--fte
+function GameUIBarracks:Lock()
+    self.list_view:getScrollNode():setTouchEnabled(false)
+    return cocos_promise.deffer(function() return self end)
+end
+function GameUIBarracks:Find(control_type)
+    if control_type == "recruit" then
+        return cocos_promise.deffer(function()
+            return self.tab_buttons:GetTabByTag("recruit")
+        end)
+    elseif control_type == "swordsman" then
+        return cocos_promise.deffer(function()
+            return self.soldier_map["swordsman"]
+        end)
+    end
+end
+function GameUIBarracks:WaitTag()
+    return self.tab_buttons:PromiseOfTag("recruit"):next(function()
+        return self
+    end)
+end
 
 
 return GameUIBarracks
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

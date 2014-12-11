@@ -4,6 +4,7 @@
 --
 -- 封装常用ui工具
 import(".bit")
+local cocos_promise = import(".cocos_promise")
 local promise = import(".promise")
 local Enum = import("..utils.Enum")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -19,6 +20,9 @@ UIKit.BTN_COLOR = Enum("YELLOW","BLUE","GREEN","RED","PURPLE")
 UIKit.open_ui_callbacks = {}
 
 function UIKit:PromiseOfOpen(ui_name)
+    if UIKit:GetUIInstance(ui_name) then
+        return cocos_promise.deffer(function() return UIKit:GetUIInstance(ui_name) end )
+    end
     local callbacks = self.open_ui_callbacks
     assert(#callbacks == 0)
     local p = promise.new()
@@ -38,6 +42,11 @@ function UIKit:CheckOpenUI(ui)
 end
 function UIKit:ClearPromise()
     self.open_ui_callbacks = {}
+end
+function UIKit:GetUIInstance(ui_name)
+    if self:getRegistry().isObjectExists(ui_name) then
+        return self:getRegistry().getObject(ui_name)
+    end
 end
 
 function UIKit:createUIClass(className, baseName)
