@@ -1,6 +1,8 @@
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetBackGroundLucid = import("..widget.WidgetBackGroundLucid")
+local WidgetPlayerInfo = import("..widget.WidgetPlayerInfo")
+local UIAutoClose = import(".UIAutoClose")
 local window = import("..utils.window")
 local UIPageView = import(".UIPageView")
 
@@ -67,7 +69,7 @@ end
 
 function GameUIVip:CreateBetweenBgAndTitle()
     GameUIVip.super.CreateBetweenBgAndTitle(self)
-    self.player_info_layer = display.newLayer():addTo(self)
+    self.player_info_layer = WidgetPlayerInfo.new():addTo(self)
     self.vip_layer = display.newLayer():addTo(self)
 end
 
@@ -354,7 +356,7 @@ end
 
 function GameUIVip:CreateVIPButtons(level)
     local button_group = display.newLayer()
-    button_group:setContentSize(cc.size(560,240))
+    button_group:setContentSize(cc.size(560,210))
 
     local gap_x = 112
     for i=1,VIP_MAX_LEVEL do
@@ -421,8 +423,8 @@ function GameUIVip:CreateDividing(prams)
 end
 
 function GameUIVip:OpenIncreaseVIPPoint()
-    local body,leyer = self:CreateBackGroundWithTitle(_("增加VIP点数"))
-    leyer:addTo(self)
+    local body,layer = self:CreateBackGroundWithTitle(_("增加VIP点数"))
+    layer:addTo(self)
 
     local rb_size = body:getContentSize()
 
@@ -445,7 +447,7 @@ function GameUIVip:OpenIncreaseVIPPoint()
         listener = function (  )
             print("USE")
         end,
-    }):addTo(body):pos(rb_size.width/2-290, rb_size.height-290)
+    }):addTo(body):pos(rb_size.width/2-290, rb_size.height-300)
     self:CreateVIPItem({
         value = "OWN 2",
         gem = false,
@@ -455,12 +457,12 @@ function GameUIVip:OpenIncreaseVIPPoint()
         listener = function (  )
             print("USE")
         end,
-    }):addTo(body):pos(rb_size.width/2-290, rb_size.height-420)
+    }):addTo(body):pos(rb_size.width/2-290, rb_size.height-440)
 end
 
 function GameUIVip:OpenActiveVIP()
-    local body,leyer = self:CreateBackGroundWithTitle(_("激活VIP"))
-    leyer:addTo(self)
+    local body,layer = self:CreateBackGroundWithTitle(_("激活VIP"))
+    layer:addTo(self)
 
     local rb_size = body:getContentSize()
     cc.ui.UILabel.new(
@@ -506,11 +508,11 @@ function GameUIVip:OpenActiveVIP()
 end
 
 function GameUIVip:CreateBackGroundWithTitle(title_string)
-    local leyer = display.newColorLayer(cc.c4b(0,0,0,127))
+    local layer = UIAutoClose.new()
     local body = WidgetUIBackGround.new({height=643}):align(display.TOP_CENTER,display.cx,display.top-200)
-        :addTo(leyer)
+    layer:addTouchAbleChild(body)
     local rb_size = body:getContentSize()
-    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height)
+    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+10)
         :addTo(body)
     local title_label = cc.ui.UILabel.new(
         {
@@ -524,16 +526,16 @@ function GameUIVip:CreateBackGroundWithTitle(title_string)
     -- close button
     cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
         :onButtonClicked(function(event)
-            leyer:removeFromParent()
-        end):align(display.CENTER, title:getContentSize().width-10, title:getContentSize().height-10)
+            layer:removeFromParent()
+        end):align(display.CENTER, title:getContentSize().width-20, title:getContentSize().height-20)
         :addTo(title)
-    return body,leyer
+    return body,layer
 end
 
 function GameUIVip:CreateVIPItem(params)
     local body = display.newColorLayer(cc.c4b(0,0,0,0))
-    body:setContentSize(cc.size(580,126))
-    local prop_bg = display.newSprite("vip_bg_1.png"):align(display.LEFT_BOTTOM, 0,0):addTo(body)
+    body:setContentSize(cc.size(580,138))
+    local prop_bg = display.newSprite("box_136x138.png"):align(display.LEFT_BOTTOM, 0,0):addTo(body)
     local prop_icon = display.newSprite("vip_tool_icon.png")
         :align(display.CENTER, prop_bg:getContentSize().width/2,prop_bg:getContentSize().height/2)
         :addTo(prop_bg)
@@ -550,13 +552,13 @@ function GameUIVip:CreateVIPItem(params)
         })
         :addTo(num_bg)
     if params.gem then
-        local gem_icon = display.newSprite("gem_66x56.png"):align(display.RIGHT_CENTER, 42,num_bg:getContentSize().height/2):addTo(num_bg):scale(0.5)
+        local gem_icon = display.newSprite("home/gem_1.png"):align(display.RIGHT_CENTER, 42,num_bg:getContentSize().height/2):addTo(num_bg):scale(0.5)
         num_label:align(display.LEFT_CENTER, 45, num_bg:getContentSize().height/2)
     else
         num_label:align(display.CENTER, num_bg:getContentSize().width/2, num_bg:getContentSize().height/2)
     end
 
-    local des_bg = display.newSprite("vip_bg_3.png"):align(display.LEFT_BOTTOM, 126,0):addTo(body)
+    local des_bg = display.newSprite("vip_bg_3.png"):align(display.LEFT_BOTTOM, 126,6):addTo(body)
 
     local eff_label_1 = cc.ui.UILabel.new(
         {

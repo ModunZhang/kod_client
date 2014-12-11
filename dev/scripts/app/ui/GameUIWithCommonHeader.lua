@@ -16,7 +16,7 @@ function GameUIWithCommonHeader:onEnter()
     self.home_btn = self:CreateHomeButton()
     self.gem_label = self:CreateShopButton(function()
     end)
-    self.city:GetResourceManager():AddObserver(self)
+    -- self.city:GetResourceManager():AddObserver(self)
     local page = home_page or (display.getRunningScene().__cname == "AllianceScene" and display.getRunningScene():GetHomePage())
 
     if page then

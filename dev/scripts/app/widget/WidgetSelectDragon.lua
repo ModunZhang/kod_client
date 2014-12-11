@@ -9,8 +9,7 @@ function WidgetSelectDragon:ctor(callback)
     local dragon_manager = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager()
 
 	local body = WidgetUIBackGround.new({height=516}):align(display.TOP_CENTER,display.cx,display.top-200)
-        :addTo(self)
-	WidgetSelectDragon.super.ctor(self,body)
+    self:addTouchAbleChild(body)
 	
     local rb_size = body:getContentSize()
     local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+5)
@@ -109,11 +108,8 @@ function WidgetSelectDragon:ctor(callback)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 for i=1,group:getButtonsCount() do
-                    print("group:getButtonsCount()：",i)
-
                     if group:getButtonAtIndex(i):isButtonSelected() then
                     	assert(tolua.type(callback)=="function","选择出战龙回调错误")
-                    	print("点击确定选择了龙：",optional_dragon[i]:Type())
                         callback(optional_dragon[i])
                         break
                     end
