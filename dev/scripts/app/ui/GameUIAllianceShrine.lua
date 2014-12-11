@@ -178,7 +178,7 @@ function GameUIAllianceShrine:TabEvent_stage()
 	--title
 
 	local title_bg = display.newSprite("shire_stage_title_564x58.png")
-		:align(display.LEFT_TOP,40,window.betweenHeaderAndTab - 5)
+		:align(display.LEFT_TOP,40,window.betweenHeaderAndTab+25)
 		:addTo(stage_node)
 
 	local left_button = WidgetPushButton.new(
