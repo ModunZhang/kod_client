@@ -13,7 +13,7 @@ local GameUIWarReport = UIKit:createUIClass("GameUIWarReport", "UIAutoClose")
 
 function GameUIWarReport:ctor(report)
     local report_body = WidgetUIBackGround.new({height=800}):addTo(self):align(display.TOP_CENTER,display.cx,display.top-100)
-    GameUIWarReport.super.ctor(self,report_body)
+    self:addTouchAbleChild(report_body)
     self:setNodeEventEnabled(true)
     self.report = report
 end

@@ -10,9 +10,9 @@ local UIAutoClose = class("UIAutoClose", function()
     return node
 end)
 
-function UIAutoClose:ctor(body)
+function UIAutoClose:addTouchAbleChild(body)
     body:setTouchEnabled(true)
-    self.body = body
+    self:addChild(body)
 end
 
 return UIAutoClose

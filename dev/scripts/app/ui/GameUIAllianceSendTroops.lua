@@ -218,9 +218,20 @@ function GameUIAllianceSendTroops:RefreashDragon(dragon)
 end
 
 function GameUIAllianceSendTroops:SelectDragon()
-    WidgetSelectDragon.new(function (selectDragon)
-        self:RefreashDragon(selectDragon)
-    end):addTo(self)
+    WidgetSelectDragon.new(
+        {
+            title = _("选中出战的巨龙"),
+            btns = {
+                {
+                    btn_label = _("确定"),
+                    btn_callback = function (selectDragon)
+                        self:RefreashDragon(selectDragon)
+                    end,
+                },
+            },
+
+        }
+    ):addTo(self)
 end
 function GameUIAllianceSendTroops:SelectSoldiers()
     local body = display.newSprite(img_dir.."back_ground_538x396.png")
@@ -548,6 +559,10 @@ function GameUIAllianceSendTroops:onExit()
 end
 
 return GameUIAllianceSendTroops
+
+
+
+
 
 
 
