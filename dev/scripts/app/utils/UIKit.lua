@@ -48,6 +48,9 @@ function UIKit:GetUIInstance(ui_name)
         return self:getRegistry().getObject(ui_name)
     end
 end
+function UIKit:RegistUI(ui)
+    self.Registry.setObject(ui, ui.__cname)
+end
 
 function UIKit:createUIClass(className, baseName)
     return class(className, baseName == nil and self["GameUIBase"] or import('..ui.' .. baseName,CURRENT_MODULE_NAME))

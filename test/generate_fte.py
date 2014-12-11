@@ -223,7 +223,57 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 
 	def match_arrowOn():
 		match("arrowOn")
-		emit("scene:GetArrowTutorial():DefferShow(result)")
+		if look_ahead("("):
+			match("(")
+		else:
+			emit("scene:GetArrowTutorial():DefferShow(result)")
+			return
+
+		try:
+			angle = int(look_token())
+			match_current()
+		except ValueError, e:
+			if look_ahead(")"):
+				emit("scene:GetArrowTutorial():DefferShow(result)")
+				match(")")
+				return
+			traceback.print_exc()
+			print "arrowOn angle offsetx offsety"
+			return
+
+		if look_ahead(","):
+			match(",")
+		elif look_ahead(")"):
+			match(")")
+			emit("scene:GetArrowTutorial():DefferShow(result, %s)" % angle)
+			return
+
+		try:
+			x = int(look_token())
+			match_current()
+		except ValueError, e:
+			traceback.print_exc()
+			print "arrowOn angle offsetx offsety"
+			return
+
+		if look_ahead(","):
+			match(",")
+		elif look_ahead(")"):
+			match(")")
+			emit("scene:GetArrowTutorial():DefferShow(result, %s, %s)" % (angle, x))
+			return
+
+		try:
+			y = int(look_token())
+			match_current()
+		except ValueError, e:
+			traceback.print_exc()
+			print "arrowOn angle offsetx offsety"
+			return
+		emit("scene:GetArrowTutorial():DefferShow(result, %s, %s, %s)" % (angle, x, y))
+		match(")")
+	
+		
 
 	def match_arrowOff():
 		match("arrowOff")

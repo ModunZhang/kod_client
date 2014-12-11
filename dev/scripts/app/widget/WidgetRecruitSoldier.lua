@@ -63,7 +63,7 @@ local function return_vs_soldiers_map(soldier_type)
 end
 
 function WidgetRecruitSoldier:ctor(barracks, city, soldier_type)
-    UIKit.Registry.setObject(self, "WidgetRecruitSoldier")
+    UIKit:RegistUI(self)
     self.barracks = barracks
     self.soldier_type = soldier_type
     self.star = barracks.soldier_star
