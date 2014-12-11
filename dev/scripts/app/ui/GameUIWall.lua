@@ -1,12 +1,16 @@
 
 local Localize = import("..utils.Localize")
+local UILib = import(".UILib")
 local GameUIWall = UIKit:createUIClass('GameUIWall',"GameUIUpgradeBuilding")
 local window = import("..utils.window")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-
+local WidgetPushButton = import("..widget.WidgetPushButton")
+local UIListView = import(".UIListView")
+local WidgetSelectDragon = import("..widget.WidgetSelectDragon")
+local timer = app.timer
 function GameUIWall:ctor(city,building)
-    local bn = Localize.building_name
-    GameUIWall.super.ctor(self,city,bn[building:GetType()],building)
+    GameUIWall.super.ctor(self,city,Localize.building_name[building:GetType()],building)
+    self.dragon_manager = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager()
 end
 
 function GameUIWall:onEnter()
@@ -30,16 +34,250 @@ end
 
 function GameUIWall:CreateMilitaryUIIf()
 	if self.military_node then return self.military_node end
+	local dragon = self:GetDragon()
 	local military_node = display.newNode()
 	local top_bg = WidgetUIBackGround.new({height = 332})
 		:addTo(military_node)
 		:pos(15,window.betweenHeaderAndTab - 220)
+	local title_bar = display.newSprite("title_bar_586x34.png"):align(display.LEFT_TOP,10,320):addTo(top_bg)
+	UIKit:ttfLabel({
+		text = _("驻防部队"),
+		size = 22,
+		color = 0xffedae
+	}):align(display.CENTER, 293, 17):addTo(title_bar)
 	local list_bg = display.newScale9Sprite("box_bg_546x214.png")
+			:addTo(top_bg)
+			:align(display.LEFT_BOTTOM,22,30)
+			:size(568, 100)
+	self.info_list = UIListView.new({
+			bgColor = UIKit:hex2c4b(0x7a000000),
+	        viewRect = cc.rect(11,10, 546, 80),
+	        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+		}):addTo(list_bg)
+	
+	local tips_panel = self:GetTipsBoxWithTipsContent({
+			_("・防御敌方进攻时，可能会损失城墙的生命值。"),
+			_("・防御敌方进攻时，可能会损失城墙的生命值。"),
+			_("・防御敌方进攻时，可能会损失城墙的生命值。")
+		}):addTo(top_bg):align(display.LEFT_BOTTOM,22,30)
+	if dragon then
+		tips_panel:hide()
+	else
+		list_bg:hide()
+	end
+	self.tips_panel = tips_panel
+	self.dragon_info_panel = list_bg
+	local draogn_box = display.newSprite("alliance_item_flag_box_126X126.png")
 		:addTo(top_bg)
-		:align(display.LEFT_BOTTOM,25,30)
-		:size(568, 100)
+		:align(display.LEFT_BOTTOM, list_bg:getPositionX(), list_bg:getPositionY()+list_bg:getContentSize().height + 10)
+	local dragon_bg = display.newSprite("dragon_bg_114x114.png", 63, 63):addTo(draogn_box)
+	self.dragon_head = display.newSprite(UILib.dragon_head.redDragon):addTo(dragon_bg):pos(57,60)
+	if not dragon then
+		self.dragon_head:hide()
+	end
+	local select_button = WidgetPushButton.new({
+			normal = "yellow_btn_up_148x58.png",
+			pressed = "yellow_btn_down_148x58.png",
+			disabled = "gray_btn_148x58.png"
+		})
+		:addTo(top_bg)
+		:align(display.RIGHT_TOP, title_bar:getPositionX()+title_bar:getContentSize().width,draogn_box:getPositionY()+draogn_box:getContentSize().height)
+		:setButtonLabel("normal", UIKit:ttfLabel({text = _("选择")}))
+		:onButtonClicked(function()
+			self:OnSelectDragonButtonClicked()
+		end)
+	local progressTimer_bg = display.newSprite("process_bar_410x40.png")
+		:align(display.LEFT_BOTTOM, draogn_box:getPositionX()+draogn_box:getContentSize().width + 30, draogn_box:getPositionY()+20)
+		:addTo(top_bg)
+	local progressTimer = UIKit:commonProgressTimer("bar_color_410x40.png"):addTo(progressTimer_bg):align(display.LEFT_BOTTOM,0,0)
+	self.dragon_hp_progress = progressTimer
+	local iconbg = display.newSprite("drgon_process_icon_bg.png")
+     		:addTo(progressTimer_bg)
+     		:align(display.LEFT_BOTTOM, -15,0)
+    display.newSprite("dragon_lv_icon.png")
+     		:addTo(iconbg)
+     		:pos(iconbg:getContentSize().width/2,iconbg:getContentSize().height/2)
+    self.hp_label = UIKit:ttfLabel({
+    	text = "",
+    	size = 22,
+    	color= 0xfff3c7
+   	}):align(display.LEFT_CENTER, iconbg:getPositionX()+iconbg:getContentSize().width+20,20):addTo(progressTimer_bg)
+    if dragon then
+    	progressTimer:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
+    	self.hp_label:setString(dragon:Hp() .. "/" .. dragon:GetMaxHP())
+    else
+    	progressTimer:setPercentage(0)
+    	self.hp_label:hide()
+    end
+
+   	local button = WidgetPushButton.new({normal = 'add_button_normal_50x50.png',pressed = 'add_button_light_50x50.png'})
+   		:addTo(progressTimer_bg):align(display.RIGHT_CENTER, 410, 20)
+   	local lv_str,strength = _("请选择一个巨龙驻防"),0
+   	if dragon then
+   		lv_str = Localize.dragon[dragon:Type()] .. " ( LV " .. dragon:Level() .. " )"
+   		strength = dragon:Strength()
+   	end
+	local lv_label = UIKit:ttfLabel({
+		text = lv_str,
+		size = 22,
+		color= 0x514d3e
+		})
+		:addTo(top_bg)
+		:align(display.LEFT_TOP,draogn_box:getPositionX()+draogn_box:getContentSize().width + 30, draogn_box:getPositionY() + draogn_box:getContentSize().height)
+	self.lv_label = lv_label
+	local strength_label = UIKit:ttfLabel({
+		text = _("力量"),
+		size = 20,
+		color= 0x797154
+	}):align(display.LEFT_BOTTOM,lv_label:getPositionX(), progressTimer_bg:getPositionY()+progressTimer_bg:getContentSize().height+10):addTo(top_bg)
+
+	self.dragon_strength_label = UIKit:ttfLabel({
+		text = strength,
+		color= 0x514d3e,
+		size = 20 
+	}):addTo(top_bg):align(display.LEFT_BOTTOM,strength_label:getPositionX()+strength_label:getContentSize().width + 10, strength_label:getPositionY())
+	--bottom
+
+	local wall_label = UIKit:ttfLabel({
+		text = _("城墙耐久度"),
+		size = 24,
+		color= 0x403c2f
+	}):align(display.CENTER_TOP,window.cx,top_bg:getPositionY()-10):addTo(military_node)
+	local wallHpResource = City:GetResourceManager():GetWallHpResource()
+	local string = string.format("%d/%d",wallHpResource:GetResourceValueByCurrentTime(timer:GetServerTime()),wallHpResource:GetValueLimit())
+
+	local process_wall_bg = display.newSprite("process_bar_540x40.png")
+		:align(display.CENTER_TOP, window.cx, wall_label:getPositionY() - wall_label:getContentSize().height - 10) 
+		:addTo(military_node)
+	local progressTimer_wall = UIKit:commonProgressTimer("bar_color_540x40.png"):addTo(process_wall_bg):align(display.LEFT_BOTTOM,0,0)
+	progressTimer_wall:setPercentage(wallHpResource:GetResourceValueByCurrentTime(timer:GetServerTime())/wallHpResource:GetValueLimit()*100)
+	self.progressTimer_wall = progressTimer_wall
+	self.wall_hp_process_label = UIKit:ttfLabel({
+		text = string,
+		size = 22,
+		color= 0xfff3c7,
+		shadow= true
+	}):align(display.LEFT_CENTER,50,20):addTo(process_wall_bg)
+
+	self.wall_hp_recovery_label = UIKit:ttfLabel({
+		text = "+" .. wallHpResource:GetProductionPerHour() .. "/H",
+		size = 22,
+		color= 0xfff3c7
+	}):align(display.RIGHT_CENTER, 530, 20):addTo(process_wall_bg)
+	local iconbg = display.newSprite("drgon_process_icon_bg.png")
+     		:addTo(process_wall_bg)
+     		:align(display.LEFT_BOTTOM, -15,0)
+    display.newSprite("wall_icon_40x40.png")
+     		:addTo(iconbg)
+     		:pos(iconbg:getContentSize().width/2,iconbg:getContentSize().height/2)
+	local tips_bg = self:GetTipsBoxWithTipsContent({_("・防御敌方进攻时，可能会损失城墙的生命值。"),_("・防御敌方进攻时，可能会损失城墙的生命值。")})
+	tips_bg:align(display.CENTER_TOP,window.cx,process_wall_bg:getPositionY()-process_wall_bg:getContentSize().height - 10):addTo(military_node)
+
 	self.military_node = military_node
+	if dragon then 
+		self:RefreshListView()
+	end
 	return self.military_node
 end
 
+function GameUIWall:GetTipsBoxWithTipsContent(content)
+	local tips_bg = display.newSprite("box_panel_556x106.png")
+	local y = 100
+	for _,v in ipairs(content) do
+		local tips_label = UIKit:ttfLabel({text = v,size = 18,color = 0x403c2f})
+			:align(display.LEFT_TOP, 10, y)
+			:addTo(tips_bg)
+		y = y - 10 - tips_label:getContentSize().height
+	end
+	return tips_bg
+end
+
+function GameUIWall:RefreshListView()
+	self.info_list:removeAllItems()
+	for i = 1,10 do
+		local item = self:GetListItem(i)
+		self.info_list:addItem(item)
+	end
+	self.info_list:reload()
+end
+
+function GameUIWall:GetListItem(index)
+	local item = self.info_list:newItem()
+	local imageName = string.format("box_bg_item_520x48_%d.png",index%2)
+	local content = display.newScale9Sprite(imageName):size(546,42)
+	UIKit:ttfLabel({
+		text = _("龙的经验"),
+		size = 20,
+		color= 0x797154
+	}):align(display.LEFT_CENTER, 20, 21):addTo(content)
+	local val_x = 540
+	if true then --buffer
+		local buff_label = UIKit:ttfLabel({
+			text = "+9800",
+			size = 20,
+			color= 0x007c23
+		}):align(display.RIGHT_CENTER, val_x, 21):addTo(content)
+		val_x = val_x - buff_label:getContentSize().width - 10
+	end
+	UIKit:ttfLabel({
+		text = "62326",
+		size = 20,
+		color= 0x403c2f
+	}):align(display.RIGHT_CENTER, val_x, 21):addTo(content)
+	item:addContent(content)
+	item:setItemSize(546,42)
+	return item
+end
+
+function GameUIWall:GetDragon()
+	return self.dragon_manager:GetDefenceDragon()
+end
+
+function GameUIWall:OnResourceChanged(resource_manager)
+	GameUIWall.super.OnResourceChanged(self,resource_manager)
+	local wallHpResource = resource_manager:GetWallHpResource()
+	--更新城墙hp
+	if self.military_node:isVisible() then
+		local string = string.format("%d/%d",wallHpResource:GetResourceValueByCurrentTime(timer:GetServerTime()),wallHpResource:GetValueLimit())
+		self.wall_hp_process_label:setString(string)
+		self.wall_hp_recovery_label:setString("+" .. wallHpResource:GetProductionPerHour() .. "/H")
+		self.progressTimer_wall:setPercentage(wallHpResource:GetResourceValueByCurrentTime(timer:GetServerTime())/wallHpResource:GetValueLimit()*100)
+	end
+end
+
+function GameUIWall:OnSelectDragonButtonClicked()
+	WidgetSelectDragon.new(function (selectDragon)
+        self:OnDragonSelected(selectDragon)
+	end):addTo(self)
+end
+
+function GameUIWall:OnDragonSelected(dragon)
+
+	self:RefreshUIAfterSelectDragon(dragon)
+end
+
+function GameUIWall:RefreshUIAfterSelectDragon(dragon)
+	if dragon then
+		-- NetManager:getSetDefenceDragonPromise(dragon:Type())
+		self.dragon_info_panel:show()
+		self.tips_panel:hide()
+		self.lv_label:setString(Localize.dragon[dragon:Type()] .. " ( LV " .. dragon:Level() .. " )")
+		self.dragon_strength_label:setString(dragon:Strength())
+		self.hp_label:setString(dragon:Hp() .. "/" .. dragon:GetMaxHP())
+		self.hp_label:show()
+		self.dragon_hp_progress:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
+		self.dragon_head:setTexture(UILib.dragon_head[dragon:Type()])
+		self.dragon_head:show()
+		self:RefreshListView()
+	else
+		-- NetManager:getSetDefenceDragonPromise("") -- 取消驻防
+		self.dragon_info_panel:hide()
+		self.tips_panel:show()
+		self.lv_label:setString(_("请选择一个巨龙驻防"))
+		self.dragon_strength_label:setString("0")
+		self.hp_label:hide()
+		self.dragon_hp_progress:setPercentage(0)
+		self.dragon_head:hide()
+	end
+end
 return GameUIWall

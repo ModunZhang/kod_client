@@ -26,6 +26,15 @@ function DragonManager:GetDragon(dragon_type)
 	if not dragon_type then return nil end
 	return self.dragons_[dragon_type]
 end
+--获取驻防的龙
+function DragonManager:GetDefenceDragon()
+	for k,dragon in pairs(self:GetDragons()) do
+		if dragon:IsDefenced() then
+			return dragon
+		end
+	end
+	return nil
+end
 
 function DragonManager:GetPowerfulDragonType()
 	local dragonWidget = 0

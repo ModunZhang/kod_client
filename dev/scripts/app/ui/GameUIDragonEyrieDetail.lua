@@ -181,7 +181,6 @@ end
 function GameUIDragonEyrieDetail:OnResourceChanged(resource_manager)
     GameUIDragonEyrieDetail.super.OnResourceChanged(self,resource_manager)
     if self:GetDragon():Ishated() then return end
-    local energy = resource_manager:GetEnergyResource()
     if self.hate_node and self.hate_node:isVisible() then
     	self.hate_nextEneryLabel:setString(self:GetHatchEneryLabelString())
     end

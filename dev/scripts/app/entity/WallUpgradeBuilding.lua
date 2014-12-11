@@ -1,6 +1,7 @@
 local Orient = import("..entity.Orient")
 local UpgradeBuilding = import(".UpgradeBuilding")
 local WallUpgradeBuilding = class("WallUpgradeBuilding", UpgradeBuilding)
+local config_wall = GameDatas.BuildingFunction.wall
 function WallUpgradeBuilding:ctor(wall_info)
     WallUpgradeBuilding.super.ctor(self, wall_info)
     self.len = wall_info.len
@@ -109,7 +110,9 @@ function WallUpgradeBuilding:OnUserDataChanged(user_data, current_time)
         self:OnHandle(wall_info.level, finishTime)
     end
 end
-
+function WallUpgradeBuilding:GetWallConfig()
+    return config_wall[self:GetLevel()]
+end
 
 
 return WallUpgradeBuilding
