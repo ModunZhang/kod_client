@@ -331,6 +331,7 @@ function GameUIDragonEyrieDetail:UpgradeDragonStar()
 end
 
 function GameUIDragonEyrieDetail:HandleEquipments(dragon)
+	self.equipment_nodes = {}
 	self.equipment_ui.equipment_box:removeAllChildren()
 	local eqs = self.equipment_ui.equipment_box
 	for i=1,6 do
@@ -346,6 +347,7 @@ function GameUIDragonEyrieDetail:HandleEquipments(dragon)
             equipment:addTo(eqs)
         end
         i = i + 1 
+        table.insert(self.equipment_nodes,equipment)
     end     
 
 end
@@ -621,5 +623,14 @@ function GameUIDragonEyrieDetail:GetInfoListItem(index,title,val)
 	 }):align(display.RIGHT_CENTER, 510, 24):addTo(bg)
 	 return bg
 end
-
+-- dragon_body ==> Dragon.DRAGON_BODY.XXX
+function GameUIDragonEyrieDetail:Find(dragon_body)
+	dragon_body = checknumber(dragon_body)
+    return cocos_promise.deffer(function()
+    	if not self.equipment_nodes[dragon_body] then
+    		promise.reject("没有找到对应item", building_type)
+    	end
+        return self.equipment_nodes[dragon_body] 
+    end)
+end
 return GameUIDragonEyrieDetail
