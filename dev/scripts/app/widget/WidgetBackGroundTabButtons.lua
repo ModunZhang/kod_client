@@ -1,9 +1,11 @@
+local promise = import("..utils.promise")
 local WidgetTab = import(".WidgetTab")
 local WidgetBackGroundTabButtons = class("WidgetBackGroundTabButtons", function()
     return display.newNode()
 end)
 
 function WidgetBackGroundTabButtons:ctor(buttons, listener)
+    self.callbacks = {}
     self.tabListener = listener
     local width = 578
     local node = display.newNode():addTo(self)
@@ -68,6 +70,7 @@ function WidgetBackGroundTabButtons:OnSelectTag(tag)
     if type(self.tabListener) == "function" then
         self.tabListener(tag)
     end
+    self:CheckTag(tag)
 end
 
 function WidgetBackGroundTabButtons:GetSelectedButtonTag()
@@ -77,56 +80,33 @@ function WidgetBackGroundTabButtons:GetSelectedButtonTag()
         end
     end
 end
+function WidgetBackGroundTabButtons:GetTabByTag(tag)
+    for _, v in pairs(self.tabs) do
+        if v.tag == tag then
+            return v
+        end
+    end
+    return nil
+end
+function WidgetBackGroundTabButtons:CheckTag(tag)
+    local callbacks = self.callbacks
+    if #callbacks > 0 and callbacks[1](tag) then
+        table.remove(callbacks, 1)
+    end
+end
+function WidgetBackGroundTabButtons:PromiseOfTag(tag)
+    local callbacks = self.callbacks
+    assert(#callbacks == 0)
+    local p = promise.new()
+    table.insert(callbacks, function(tag_)
+        if tag == tag_ then
+            p:resolve()
+            return true
+        end
+    end)
+    return p
+end
 
 return WidgetBackGroundTabButtons
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

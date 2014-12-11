@@ -1,5 +1,6 @@
 local barracks_config = GameDatas.BuildingFunction.barracks
 local NORMAL = GameDatas.UnitsConfig.normal
+local promise = import("..utils.promise")
 local Observer = import(".Observer")
 local UpgradeBuilding = import(".UpgradeBuilding")
 local BarracksUpgradeBuilding = class("BarracksUpgradeBuilding", UpgradeBuilding)
@@ -9,6 +10,10 @@ function BarracksUpgradeBuilding:ctor(...)
     self.soldier_star = 1
     self.recruit_event = self:CreateEvent()
     BarracksUpgradeBuilding.super.ctor(self, ...)
+
+
+    self.recruit_soldier_callbacks = {}
+    self.finish_soldier_callbacks = {}
 end
 function BarracksUpgradeBuilding:CreateEvent()
     local barracks = self
@@ -94,6 +99,8 @@ function BarracksUpgradeBuilding:RecruitSoldiersWithFinishTime(soldier_type, cou
     self.barracks_building_observer:NotifyObservers(function(lisenter)
         lisenter:OnBeginRecruit(self, event)
     end)
+
+    self:CheckRecruit(soldier_type)
 end
 function BarracksUpgradeBuilding:EndRecruitSoldiersWithCurrentTime(current_time)
     local event = self.recruit_event
@@ -103,6 +110,8 @@ function BarracksUpgradeBuilding:EndRecruitSoldiersWithCurrentTime(current_time)
     self.barracks_building_observer:NotifyObservers(function(lisenter)
         lisenter:OnEndRecruit(self, event, soldier_type, soldier_count, current_time)
     end)
+
+    self:CheckFinish(soldier_type)
 end
 function BarracksUpgradeBuilding:GetRecruitingTimeByTypeWithCount(soldier_type, count)
     return self:GetSoldierConfigByType(soldier_type).recruitTime * count
@@ -147,20 +156,37 @@ function BarracksUpgradeBuilding:OnUserDataChanged(...)
     end
 end
 
+-- fte
+local function promiseOfSoldier(callbacks, soldier_type)
+    assert(soldier_type)
+    assert(#callbacks == 0)
+    local p = promise.new()
+    table.insert(callbacks, function(type_)
+        if soldier_type == type_ then
+            return p:resolve(soldier_type)
+        end
+    end)
+    return p
+end
+local function checkSoldier(callbacks, soldier_type)
+    if #callbacks > 0 and callbacks[1](soldier_type) then
+        table.remove(callbacks, 1)
+    end
+end
+function BarracksUpgradeBuilding:CheckRecruit(soldier_type)
+    checkSoldier(self.recruit_soldier_callbacks, soldier_type)
+end
+function BarracksUpgradeBuilding:PromiseOfRecruitSoldier(soldier_type)
+    return promiseOfSoldier(self.recruit_soldier_callbacks, soldier_type)
+end
+function BarracksUpgradeBuilding:CheckFinish(soldier_type)
+    checkSoldier(self.finish_soldier_callbacks, soldier_type)
+end
+function BarracksUpgradeBuilding:PromiseOfFinishSoldier(soldier_type)
+    return promiseOfSoldier(self.finish_soldier_callbacks, soldier_type)
+end
+
 return BarracksUpgradeBuilding
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

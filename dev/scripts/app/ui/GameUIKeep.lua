@@ -1,6 +1,5 @@
 local cocos_promise = import('..utils.cocos_promise')
 local promise = import('..utils.promise')
-local Arrow = import('.Arrow')
 local TabButtons = import('.TabButtons')
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
@@ -494,17 +493,7 @@ end
 
 
 ---
-local TutorialLayer = import("..ui.TutorialLayer")
-function GameUIKeep:FTE_Upgrade()
-    return self:FindUpgradeBtn():next(function(btn)
-        local arrow = Arrow.new():addTo(TutorialLayer.new(btn):addTo(self):Enable():SetTouchObject(btn))
-        local rect = btn:getCascadeBoundingBox()
-        arrow:OnPositionChanged(rect.x, rect.y)
-    end):next(function()
-        return self.upgrade_city:PromiseOfUpgradingByLevel("keep")
-    end)
-end
-function GameUIKeep:FindUpgradeBtn()
+function GameUIKeep:Find()
     return cocos_promise.deffer(function()
         return self.upgrade_layer.upgrade_btn
     end)

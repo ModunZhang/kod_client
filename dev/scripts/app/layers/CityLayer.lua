@@ -839,10 +839,10 @@ end
 -- promise
 function CityLayer:FindBuildingBy(x, y)
     local building
-    self:IteratorClickAble(function(_, ruin)
-        local x_, y_ = ruin:GetLogicPosition()
+    self:IteratorClickAble(function(_, v)
+        local x_, y_ = v:GetLogicPosition()
         if x_ == x and y_ == y then
-            building = ruin
+            building = v
             return true
         end
     end)

@@ -103,6 +103,45 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 		else:			
 			match_next()
 
+	def match_recruit():
+		match("recruit")
+		match("(")
+		try:
+			soldier_type = str(look_token())
+			match_current()
+		except ValueError, e:
+			traceback.print_exc()
+			print "progress 必须传入 0 ~ 100"
+			return
+		lua_file.write("City:PromiseOfRecruitSoldier(\"%s\")" % soldier_type)
+		match(")")
+
+	def match_progress():
+		match("progress")
+		match("(")
+		try:
+			percent = int(look_token())
+			match_current()
+		except ValueError, e:
+			traceback.print_exc()
+			print "progress 必须传入 0 ~ 100"
+			return
+		lua_file.write("result:PromiseOfProgress(%s)" % percent)
+		match(")")
+
+	def match_unlock():
+		match("unlock")
+		match("(")
+		try:
+			building_type = str(look_token())
+			match_current()
+		except ValueError, e:
+			traceback.print_exc()
+			print "unlock 必须传入建筑类型"
+			return
+		lua_file.write("self:GetLockButtonsByBuildingType(\"%s\")" % building_type)
+		match(")")
+
 	def match_check():
 		match("check")
 		match("(")
@@ -185,7 +224,7 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 
 	def match_arrowOff():
 		match("arrowOff")
-		lua_file.write("scene:DestoryArrowTutorial()")
+		lua_file.write("scene:DestoryArrowTutorial(function() return result end)")
 
 	def match_setup():
 		match("setup")
@@ -206,6 +245,23 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			lua_file.write("result:Find(\"%s\")" % match_current())
 		else:
 			lua_file.write("result:Find()")
+		match(")")
+
+
+	def match_waitTag():
+		match("waitTag")
+		match("(")
+		try:
+			ui_name = str(look_token())
+			match_current()
+			match(",")
+			tag_name = str(look_token())
+			match_current()
+		except ValueError, e:
+			traceback.print_exc()
+			print "waitTag 必须传入 ui 名字, tag 名字"
+			return
+		lua_file.write("UIKit:GetUIInstance(\"%s\"):WaitTag(\"%s\")" % (ui_name, tag_name))
 		match(")")
 
 	def match_wait():
@@ -313,6 +369,8 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			match_click()
 		elif look_ahead("wait"):
 			match_wait()
+		elif look_ahead("waitTag"):
+			match_waitTag()
 		elif look_ahead("lock"):
 			match_lock()
 		elif look_ahead("find"):
@@ -335,6 +393,12 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			match_show()
 		elif look_ahead("check"):
 			match_check()
+		elif look_ahead("unlock"):
+			match_unlock()
+		elif look_ahead("progress"):
+			match_progress()
+		elif look_ahead("recruit"):
+			match_recruit()
 		if look_ahead(next_symbol):
 			match_sub()
 
