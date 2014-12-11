@@ -1190,6 +1190,12 @@ function NetManager:getSetDefenceDragonPromise(dragonType)
         {dragonType=dragonType},
         "设置驻防使用的龙失败!"),get_playerdata_callback()):next(get_response_msg)
 end
+--取消龙驻防
+function NetManager:getCancelDefenceDragonPromise()
+     return promise.all(get_none_blocking_request_promise("logic.playerHandler.cancelDefenceDragon",
+        nil,
+        "取消龙驻防失败!"),get_playerdata_callback()):next(get_response_msg)
+end
 --
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

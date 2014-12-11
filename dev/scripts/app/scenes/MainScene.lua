@@ -11,7 +11,7 @@ function MainScene:onEnter()
 end
 
 function MainScene:onExit()
-    self.ui = nil
+    self.ui:removeFromParent()
 end
 
 return MainScene
