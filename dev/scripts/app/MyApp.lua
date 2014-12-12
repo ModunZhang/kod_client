@@ -1,6 +1,5 @@
 
 require("config")
-require("app.utils.GameConfig")
 require("framework.init")
 require("app.Extend")
 require("app.utils.PlatformAdapter")
@@ -27,8 +26,7 @@ function MyApp:ctor()
     self.timer = Timer.new()
     local fileutils = cc.FileUtils:getInstance()
     if device.platform == "ios" then
-        -- fileutils:addSearchPath("res/")
-        -- fileutils:addSearchPath("res/images/")
+        
     elseif device.platform == "mac" then
         fileutils:addSearchPath("dev/res/")
         fileutils:addSearchPath("dev/res/fonts/")
