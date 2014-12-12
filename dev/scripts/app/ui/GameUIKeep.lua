@@ -111,7 +111,7 @@ function GameUIKeep:CreateLineItem(params)
             color = UIKit:hex2c3b(0x29261c)
         }):align(display.LEFT_BOTTOM, 0, 10)
         :addTo(line)
-    local button = WidgetPushButton.new({normal = "green_button_normal.png",pressed = "green_button_pressed.png"})
+    local button = WidgetPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = params.button_label,
             size = 20,
@@ -122,7 +122,7 @@ function GameUIKeep:CreateLineItem(params)
                 params.listener()
             end
         end)
-        :align(display.RIGHT_BOTTOM, line_size.width, 10)
+        :align(display.RIGHT_BOTTOM, line_size.width, 5)
         :addTo(line)
     function line:SetValue(value)
         value_label:setString(value)
@@ -132,37 +132,37 @@ end
 
 function GameUIKeep:CreateCanBeUnlockedBuildingBG()
     -- 主背景
-    self.main_building_listview_bg = WidgetUIBackGround.new({
-        width = 538,
-        height = 508,
-        top_img = "back_ground_538x14_top.png",
-        bottom_img = "back_ground_538x20_bottom.png",
-        mid_img = "back_ground_538x1_mid.png",
-        u_height = 14,
-        b_height = 20,
-        m_height = 1,
-    }):align(display.CENTER, display.cx, display.top-824)
-        :addTo(self.info_layer)
-    -- display.newScale9Sprite("keep_unlock_building_listview_bg.png", display.cx, display.top-844, cc.size(549, 551))
+    -- self.main_building_listview_bg = WidgetUIBackGround.new({
+    --     width = 538,
+    --     height = 508,
+    --     top_img = "back_ground_538x14_top.png",
+    --     bottom_img = "back_ground_538x20_bottom.png",
+    --     mid_img = "back_ground_538x1_mid.png",
+    --     u_height = 14,
+    --     b_height = 20,
+    --     m_height = 1,
+    -- }):align(display.CENTER, display.cx, display.top-824)
+    --     :addTo(self.info_layer)
+    -- -- display.newScale9Sprite("keep_unlock_building_listview_bg.png", display.cx, display.top-844, cc.size(549, 551))
 
-    self.main_building_listview_bg:setAnchorPoint(cc.p(0.5,0))
-    -- title 背景
-    local title_bg = cc.ui.UIImage.new("alliance_evnets_title_548x50.png")
-        :align(display.LEFT_BOTTOM, -5, self.main_building_listview_bg:getContentSize().height)
-        :addTo(self.main_building_listview_bg,10)
+    -- self.main_building_listview_bg:setAnchorPoint(cc.p(0.5,0))
+    -- -- title 背景
+    -- local title_bg = cc.ui.UIImage.new("alliance_evnets_title_548x50.png")
+    --     :align(display.LEFT_BOTTOM, -5, self.main_building_listview_bg:getContentSize().height)
+    --     :addTo(self.main_building_listview_bg,10)
     -- title label
     cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = _("可解锁建筑"),
         font = UIKit:getFontFilePath(),
         size = 24,
-        color = UIKit:hex2c3b(0xffedae)})
-        :align(display.CENTER, title_bg:getCascadeBoundingBox().size.width/2,title_bg:getCascadeBoundingBox().size.height/2)
-        :addTo(title_bg)
+        color = UIKit:hex2c3b(0x403c2f)})
+        :align(display.CENTER,window.cx, window.bottom_top+600)
+        :addTo(self.info_layer)
     -- tips
     cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("提示:升级瞭望塔等级,可以获得更详细的敌军部队信息"),
+        text = _("提示:升级城堡获得解锁建筑机会!"),
         font = UIKit:getFontFilePath(),
         size = 18,
         color = UIKit:hex2c3b(0x403c2f)})
@@ -193,44 +193,73 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
     }
 
     -- unlock building listview
-    self.building_listview = cc.ui.UIListView.new{
-        -- bg = "common_tips_bg.png",
-        bgScale9 = true,
-        viewRect = cc.rect(self.main_building_listview_bg:getContentSize().width/2-258, 10, 516, 495),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
-        :addTo(self.main_building_listview_bg)
+    -- self.building_listview = cc.ui.UIListView.new{
+    --     -- bg = "common_tips_bg.png",
+    --     bgScale9 = true,
+    --     viewRect = cc.rect(self.main_building_listview_bg:getContentSize().width/2-258, 10, 516, 495),
+    --     direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
+    --     :addTo(self.main_building_listview_bg)
+    self.building_listview ,self.listnode=  UIKit:commonListView({
+        -- bgColor = UIKit:hex2c4b(0x7a100000),
+        viewRect = cc.rect(0, 0, 568, 495),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+    })
+    self.listnode:addTo(self.info_layer):pos(window.cx,window.bottom_top + 60)
+    self.listnode:align(display.BOTTOM_CENTER)
     local buildings = GameDatas.Buildings.buildings
     for i,v in ipairs(buildings) do
         if v.location<17 then
             local unlock_building = City:GetBuildingByLocationId(v.location)
+            local b_x,b_y =City:GetTileWhichBuildingBelongs(unlock_building).x,City:GetTileWhichBuildingBelongs(unlock_building).y
             -- 建筑是否可解锁
-            if City:IsTileCanbeUnlockAt(City:GetTileWhichBuildingBelongs(unlock_building).x,City:GetTileWhichBuildingBelongs(unlock_building).y) then
+            local canUnlock = City:IsTileCanbeUnlockAt(b_x,b_y)
+            -- 建筑已经解锁
+            local isUnlocked = City:IsUnLockedAtIndex(b_x,b_y)
+            if canUnlock or  isUnlocked then
                 local item = self.building_listview:newItem()
-                item:setItemSize(516, 140)
+                item:setItemSize(568, 144)
                 local item_width, item_height = item:getItemSize()
                 local content = cc.ui.UIGroup.new()
-                WidgetPushButton.new({normal = "keep_unlocked_button_normal.png",pressed = "keep_unlocked_button_pressed.png"})
-                    :setButtonLabel(UIKit:ttfLabel({
-                        text = _("可解锁"),
-                        size = 24,
-                        color = 0xffedae,
-                    }))
-                    :onButtonClicked(function(event)
-                        if event.name == "CLICKED_EVENT" then
-                            self:leftButtonClicked()
-                            display.getRunningScene():GotoLogicPoint(unlock_building:GetLogicPosition())
-                        end
-                    end):align(display.CENTER, 170, 35):addTo(content, 10)
-
-                content:addWidget(display.newSprite("back_ground_516x138.png",  0, 0))
+                content:addWidget( WidgetUIBackGround.new({
+                    width = 568,
+                    height = 142,
+                    top_img = "back_ground_568x16_top.png",
+                    bottom_img = "back_ground_568x80_bottom.png",
+                    mid_img = "back_ground_568x28_mid.png",
+                    u_height = 16,
+                    b_height = 80,
+                    m_height = 28,
+                }):align(display.CENTER))
+                local title_bg = display.newSprite("title_blue_412x30.png"):pos(70,50)
+                content:addWidget(title_bg)
                 -- building name
-                content:addWidget(cc.ui.UILabel.new({
-                    UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+                UIKit:ttfLabel({
                     text = _(Localize.building_name[unlock_building:GetType()]),
-                    font = UIKit:getFontFilePath(),
-                    size = 24,
-                    dimensions = cc.size(384, 35),
-                    color = UIKit:hex2c3b(0x403c2f)}):align(display.CENTER_LEFT, -120, 40))
+                    size = 22,
+                    color = 0xffedae}):align(display.CENTER_LEFT, 10, title_bg:getContentSize().height/2)
+                    :addTo(title_bg)
+                if canUnlock then
+
+                    WidgetPushButton.new({normal = "dragon_next_icon_28x31.png",pressed = "dragon_next_icon_28x31.png"})
+                        -- :setButtonLabel(UIKit:ttfLabel({
+                        --     text = _("可解锁"),
+                        --     size = 24,
+                        --     color = 0xffedae,
+                        -- }))
+                        :onButtonClicked(function(event)
+                            if event.name == "CLICKED_EVENT" then
+                                self:leftButtonClicked()
+                                display.getRunningScene():GotoLogicPoint(unlock_building:GetLogicPosition())
+                            end
+                        end):align(display.CENTER, 260, 0):addTo(content, 10)
+                end
+
+                UIKit:ttfLabel({
+                    text = canUnlock and _("未解锁") or _("已解锁"),
+                    size = 22,
+                    color = canUnlock and 0xffedae or 0x0db13c}):align(display.CENTER_RIGHT, title_bg:getContentSize().width-30, title_bg:getContentSize().height/2)
+                    :addTo(title_bg)
+
                 -- building introduce
                 local building_tip = cc.ui.UILabel.new({
                     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -252,8 +281,8 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                 building_image:setScale(133/building_image:getContentSize().height)
                 content:addWidget(building_image)
                 -- 边框
-                local bg_1 =display.newScale9Sprite("vip_bg_3.png", -item_width/2+135, 0,cc.size(376,126)):align(display.LEFT_CENTER)
-                content:addWidget(bg_1)
+                -- local bg_1 =display.newScale9Sprite("vip_bg_3.png", -item_width/2+135, 0,cc.size(376,126)):align(display.LEFT_CENTER)
+                -- content:addWidget(bg_1)
                 item:addContent(content)
                 self.building_listview:addItem(item)
             end
@@ -270,7 +299,7 @@ function GameUIKeep:CreateModifyCityNameWindow()
         size = cc.size(576,48),
         font = UIKit:getFontFilePath(),
     })
-    editbox:setPlaceHolder(_("最多可输入14字符"))
+    editbox:setPlaceHolder(_("输入新的城市名字"))
     editbox:setMaxLength(14)
     editbox:setFont(UIKit:getFontFilePath(),22)
     editbox:setFontColor(cc.c3b(0,0,0))
@@ -506,6 +535,13 @@ end
 
 
 return GameUIKeep
+
+
+
+
+
+
+
 
 
 
