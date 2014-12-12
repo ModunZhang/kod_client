@@ -200,7 +200,7 @@ function GameUIHasBeenBuild:CreateListView(buildings)
     -- local list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 180)
     local list_view ,listnode=  UIKit:commonListView({
         -- bgColor = UIKit:hex2c4b(0x7a100000),
-        viewRect = cc.rect(0, 0, 568, 700),
+        viewRect = cc.rect(0, 0, 568, 706),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     })
     listnode:addTo(self):align(display.BOTTOM_CENTER,window.cx,window.bottom_top + 20)
