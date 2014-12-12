@@ -9,7 +9,7 @@ local GameUIHasBeenBuild = UIKit:createUIClass('GameUIHasBeenBuild', "GameUIWith
 local NOT_ABLE_TO_UPGRADE = UpgradeBuilding.NOT_ABLE_TO_UPGRADE
 
 local building_config_map = {
-    ["keep"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["keep"] = {scale = 0.15, offset = {x = 10, y = -20}},
     ["watchTower"] = {scale = 0.2, offset = {x = 10, y = -10}},
     ["warehouse"] = {scale = 0.2, offset = {x = 10, y = -10}},
     ["dragonEyrie"] = {scale = 0.2, offset = {x = 0, y = -10}},
@@ -102,7 +102,7 @@ function GameUIHasBeenBuild:OnUpgradingFinished(building, current_time, city)
     end
 end
 function GameUIHasBeenBuild:LoadBuildingQueue()
-    local back_ground = cc.ui.UIImage.new("back_ground_534x46.png"):align(display.CENTER, window.cx, window.top - 150)
+    local back_ground = cc.ui.UIImage.new("back_ground_534x46.png"):align(display.CENTER, window.cx, window.top - 120)
     local check = cc.ui.UICheckBoxButton.new({on = "yes_40x40.png", off = "wow_40x40.png" })
         :addTo(back_ground)
         :align(display.CENTER, 30, back_ground:getContentSize().height/2)
@@ -117,13 +117,13 @@ function GameUIHasBeenBuild:LoadBuildingQueue()
         :align(display.LEFT_CENTER, 60, back_ground:getContentSize().height/2)
 
     WidgetPushButton.new(
-        {normal = "add_btn_up_38x39.png",pressed = "add_btn_down_38x39.png"}
+        {normal = "add_btn_up_50x50.png",pressed = "add_btn_down_50x50.png"}
         ,{}
         ,{
             disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
         })
         :addTo(back_ground)
-        :align(display.CENTER, back_ground:getContentSize().width - 30, back_ground:getContentSize().height/2)
+        :align(display.CENTER, back_ground:getContentSize().width - 25, back_ground:getContentSize().height/2)
         :setButtonEnabled(false)
 
 
@@ -168,33 +168,42 @@ end
 -- function
 function GameUIHasBeenBuild:LoadFunctionListView()
     if not self.function_list_view then
-        self.function_list_view = self:CreateListView(self.build_city:GetBuildingsIsUnlocked())
+        self.function_list_view , self.function_list_node= self:CreateListView(self.build_city:GetBuildingsIsUnlocked())
         self.function_list_view:reload():resetPosition()
     end
 end
 function GameUIHasBeenBuild:UnloadFunctionListView()
     if self.function_list_view then
         self.function_list_view:removeFromParentAndCleanup(true)
+        self.function_list_node:removeFromParentAndCleanup(true)
     end
     self.function_list_view = nil
+    self.function_list_node = nil
 end
 -- house
 function GameUIHasBeenBuild:LoadHouseListView()
     if not self.house_list_view then
-        self.house_list_view = self:CreateListView(self.build_city:GetHousesWhichIsBuilded())
+        self.house_list_view, self.house_list_node= self:CreateListView(self.build_city:GetHousesWhichIsBuilded())
         self.house_list_view:reload():resetPosition()
     end
 end
 function GameUIHasBeenBuild:UnloadHouseListView()
     if self.house_list_view then
         self.house_list_view:removeFromParentAndCleanup(true)
+        self.house_list_node:removeFromParentAndCleanup(true)
     end
     self.house_list_view = nil
+    self.house_list_node = nil
 end
 ---
 function GameUIHasBeenBuild:CreateListView(buildings)
-    local list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 180)
-
+    -- local list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 180)
+    local list_view ,listnode=  UIKit:commonListView({
+        -- bgColor = UIKit:hex2c4b(0x7a100000),
+        viewRect = cc.rect(0, 0, 568, 700),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+    })
+    listnode:addTo(self):align(display.BOTTOM_CENTER,window.cx,window.bottom_top + 20)
     -- 初始化item
     local unique_map = {}
     for i, v in pairs(buildings) do
@@ -220,20 +229,29 @@ function GameUIHasBeenBuild:CreateListView(buildings)
             item:UpdateByBuilding(building)
         end
     end
-    return list_view
+    return list_view,listnode
 end
 --
 function GameUIHasBeenBuild:CreateItemWithListView(list_view)
     local city = self.build_city
 
     local item = list_view:newItem()
-    local back_ground = WidgetUIBackGround.new({height=170})
+    local back_ground = WidgetUIBackGround.new({
+                    width = 568,
+                    height = 142,
+                    top_img = "back_ground_568x16_top.png",
+                    bottom_img = "back_ground_568x80_bottom.png",
+                    mid_img = "back_ground_568x28_mid.png",
+                    u_height = 16,
+                    b_height = 80,
+                    m_height = 28,
+                })
     item:addContent(back_ground)
 
     local w, h = back_ground:getContentSize().width, back_ground:getContentSize().height
     item:setItemSize(w, h)
 
-    local left_x, right_x = 15, 160
+    local left_x, right_x = 5, 150
     local left = display.newSprite("building_frame_36x136.png")
         :addTo(back_ground):align(display.LEFT_CENTER, left_x, h/2):flipX(true)
 
@@ -243,16 +261,16 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
     WidgetPushButton.new(
         {normal = "info_26x26.png",pressed = "info_26x26.png"})
         :addTo(left)
-        :align(display.CENTER, 6, 6)
+        :align(display.CENTER, 16, 16)
 
 
     local building_icon = display.newSprite("keep_131x164.png")
         :addTo(back_ground):align(display.BOTTOM_CENTER, (left_x + right_x) / 2, 30)
 
 
-    local title_blue = cc.ui.UIImage.new("title_blue_402x48.png", {scale9 = true})
-        :addTo(back_ground):align(display.LEFT_CENTER, right_x, h - 33)
-    title_blue:setContentSize(cc.size(435, 48))
+    local title_blue = cc.ui.UIImage.new("title_blue_412x30.png", {scale9 = true})
+        :addTo(back_ground):align(display.LEFT_CENTER, right_x, h - 23)
+    -- title_blue:setContentSize(cc.size(435, 48))
     local size = title_blue:getContentSize()
     local title_label = cc.ui.UILabel.new({
         size = 22,
@@ -283,7 +301,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
 
 
     local instant_build = WidgetPushButton.new(
-        {normal = "green_btn_up_142x39.png",pressed = "green_btn_down_142x39.png"})
+        {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
         :addTo(back_ground)
         :align(display.CENTER, w - 90, 40)
         :setButtonLabel(cc.ui.UILabel.new({
@@ -345,7 +363,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
 
 
     local normal_build = WidgetPushButton.new(
-        {normal = "yellow_btn_up_149x47.png",pressed = "yellow_btn_down_149x47.png"}
+        {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"}
         ,{}
         ,{
             disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
@@ -397,7 +415,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         :align(display.LEFT_CENTER, 185, h/2)
 
     local speed_up = WidgetPushButton.new(
-        {normal = "green_btn_up_142x39.png",pressed = "green_btn_down_142x39.png"}
+        {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"}
         ,{}
         ,{
             disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }

@@ -9,6 +9,39 @@ local Localize = import("..utils.Localize")
 local window = import('..utils.window')
 local GameUIKeep = UIKit:createUIClass('GameUIKeep',"GameUIUpgradeBuilding")
 
+local building_config_map = {
+    ["keep"] = {scale = 0.15, offset = {x = 10, y = -10}},
+    ["watchTower"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["warehouse"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["dragonEyrie"] = {scale = 0.2, offset = {x = 0, y = -10}},
+    ["toolShop"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["materialDepot"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["armyCamp"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["barracks"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["blackSmith"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["foundry"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["stoneMason"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["lumbermill"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["mill"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["hospital"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["townHall"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["tradeGuild"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["academy"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["prison"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["hunterHall"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["trainingGround"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["stable"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["workShop"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["wall"] = {scale = 0.4, offset = {x = 0, y = -10}},
+    ["tower"] = {scale = 1, offset = {x = 0, y = -10}},
+    --
+    ["dwelling"] = {scale = 0.35, offset = {x = 0, y = -10}},
+    ["farmer"] = {scale = 0.35, offset = {x = 0, y = -10}},
+    ["woodcutter"] = {scale = 0.35, offset = {x = 0, y = -10}},
+    ["quarrier"] = {scale = 0.35, offset = {x = 0, y = -10}},
+    ["miner"] = {scale = 0.35, offset = {x = 0, y = -10}},
+}
+
 function GameUIKeep:ctor(city,building)
     GameUIKeep.super.ctor(self,city,_("城堡"),building)
     -- self.city = city
@@ -278,7 +311,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                 content:addWidget(filp_bg)
                 content:addWidget(cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, -item_width/2+115, 0))
                 local building_image = display.newScale9Sprite(UIKit:getImageByBuildingType( unlock_building:GetType() ,unlock_building:GetLevel()), -item_width/2+70, 0)
-                building_image:setScale(133/building_image:getContentSize().height)
+                    :scale(building_config_map[unlock_building:GetType()].scale)
                 content:addWidget(building_image)
                 -- 边框
                 -- local bg_1 =display.newScale9Sprite("vip_bg_3.png", -item_width/2+135, 0,cc.size(376,126)):align(display.LEFT_CENTER)
@@ -535,6 +568,7 @@ end
 
 
 return GameUIKeep
+
 
 
 
