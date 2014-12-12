@@ -62,7 +62,7 @@ end
 function GameUILogin:createStartGame()
     local button = cc.ui.UIPushButton.new({
         normal = "start_game_481x31.png"
-    },nil,{down = GameConfig.AUDIO.BUTTON.NORMAL_DOWN_START}):addTo(self.ui_layer):pos(display.cx,display.bottom+150):hide()
+    },nil,{down = "SPLASH_BUTTON_START"}):addTo(self.ui_layer):pos(display.cx,display.bottom+150):hide()
     :onButtonClicked(function()
         local sp = cc.Spawn:create(cc.ScaleTo:create(1,1.5),cc.FadeOut:create(1))
         local seq = transition.sequence({sp,cc.CallFunc:create(function()

@@ -47,8 +47,7 @@ function GameUIBlackSmith:OnBeginMakeEquipmentWithEvent(black_smith, event)
     self.tips:setVisible(false)
     self.timer:setVisible(true)
     self:OnMakingEquipmentWithEvent(black_smith, event, app.timer:GetServerTime())
-
-    audio.playSound("ui_blacksmith_forge.mp3")
+    AudioManager:PlayeEffectSoundWithKey("UI_BLACKSMITH_FORGE")
 end
 function GameUIBlackSmith:OnMakingEquipmentWithEvent(black_smith, event, current_time)
     if self.title:isVisible() then

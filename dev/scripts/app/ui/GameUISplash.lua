@@ -274,7 +274,6 @@ function GameUISplash:ctor()
     self.random_map_util = RandomMapUtil.new()
     --加载动画信息
     local manager = ccs.ArmatureDataManager:getInstance()
-    audio.playMusic("audios/music_begin.mp3", true)
     local soldier_anmations = {
         {"animations/Infantry_1_render0.plist","animations/Infantry_1_render0.png","animations/Infantry_1_render.ExportJson"},
         {"animations/Cavalry_1_render0.plist","animations/Cavalry_1_render0.png","animations/Cavalry_1_render.ExportJson"},
@@ -291,6 +290,7 @@ end
 
 function GameUISplash:onEnter()
 	GameUISplash.super.onEnter(self)
+    AudioManager:PlayGameMusic("MainScene")
 	local layer_1 = self:CreateOneFullLayer():addTo(self,self:GetMaxZorder())
     local sequence = transition.sequence({
         cc.MoveTo:create(timer_val, cc.p(-display.width, 0)),

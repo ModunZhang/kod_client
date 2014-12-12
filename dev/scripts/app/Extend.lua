@@ -5,33 +5,20 @@ NOT_HANDLE = function(...) print("net message not handel, please check !") end
 local old_ctor = cc.ui.UIPushButton.ctor
 function cc.ui.UIPushButton:ctor(images, options,music_info)
     old_ctor(self, images, options)
-    music_info = music_info or {down = GameConfig.AUDIO.BUTTON.NORMAL_DOWN,up = GameConfig.AUDIO.BUTTON.NORMAL_UP}
+    music_info = music_info or {down = "NORMAL_DOWN",up = "NORMAL_UP"}
     self:addButtonPressedEventListener(function(event)
         if type(music_info.down) == 'string' and music_info.down ~= "" then
-            audio.playSound(music_info.down)
+            AudioManager:PlayeEffectSoundWithKey(music_info.down)
         end
     end)
     self:addButtonReleaseEventListener(function(event)
         if type(music_info.up) == 'string' and music_info.up ~= "" then
-            audio.playSound(music_info.up)
+            AudioManager:PlayeEffectSoundWithKey(music_info.up)
         end
     end)
 end
 
-local play_music = audio.playMusic
-function audio.playMusic(filename, isLoop)
-	if not CONFIG_PLAY_AUDIO then
-		return 
-	end
-	return play_music(filename, isLoop)
-end
-local play_sound = audio.playSound
-function audio.playSound(filename, isLoop)
-	if not CONFIG_PLAY_AUDIO then
-		return 
-	end
-	return play_sound(filename, isLoop)
-end
+
 
 --[[--
 
