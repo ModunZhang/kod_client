@@ -11,6 +11,8 @@ function ShrineReport:ctor()
 	property(self,"stageName","")
 	property(self,"fightDatas",{})
 	property(self,"playerDatas",{})
+	property(self,"playerAvgPower",{})
+	property(self,"playerCount",{})
 	property(self,"stage",{}) -- will be set in
 end
 
@@ -23,6 +25,8 @@ function ShrineReport:Update(json_data)
 	self:SetStageName(json_data.stageName)
 	self:SetFightDatas(json_data.fightDatas)
 	self:SetPlayerDatas(json_data.playerDatas)
+	self:SetPlayerAvgPower(json_data.playerAvgPower)
+	self:SetPlayerCount(json_data.playerCount)
 end
 
 --获取相应星级的声望奖励
