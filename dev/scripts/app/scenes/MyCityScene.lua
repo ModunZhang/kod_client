@@ -424,7 +424,7 @@ end
 
 ---
 function MyCityScene:OnUpgradingBegin()
-    AudioManager:PlayeEffectSoundWithKey("UI_BUILDING_UPGRADE_START")
+    app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_UPGRADE_START")
 end
 function MyCityScene:OnUpgrading()
 

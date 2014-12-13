@@ -134,9 +134,8 @@ end
 function UpgradeBuilding:GeneralLocalPush()
     if ext and ext.localpush then
         local pushIdentity = self.x .. self.y .. self.w .. self.h .. self.orient
-        ext.localpush.cancelNotification(pushIdentity)
         local title = UIKit:getLocaliedKeyByType(self.building_type) .. _("升级完成")
-        ext.localpush.addNotification("BUILDING_PUSH_UPGRADE", self.upgrade_to_next_level_time,title,pushIdentity)
+        app:GetPushManager():AddLocalPush(self.upgrade_to_next_level_time,title,pushIdentity)
     end
 end
 

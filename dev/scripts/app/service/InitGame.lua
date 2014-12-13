@@ -18,11 +18,6 @@ return function(userData)
     timer:AddListener(City)
     timer:AddListener(Alliance_Manager)
     timer:Start()
-
-    ext.localpush.cancelAll()
-    --read userdefaults about local push
-    ext.localpush.switchNotification('BUILDING_PUSH_UPGRADE',true)
-
     local chatCenter = ChatCenter.new()
     chatCenter:requestAllMessage()
     app.chatCenter = chatCenter

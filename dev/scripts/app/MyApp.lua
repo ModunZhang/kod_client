@@ -3,7 +3,6 @@ require("config")
 require("framework.init")
 require("app.Extend")
 require("app.utils.PlatformAdapter")
-require("app.utils.AudioManager")
 require("app.datas.GameDatas")
 require("app.utils.LuaUtils")
 require("app.utils.GameUtils")
@@ -14,15 +13,17 @@ require("app.service.NetManager")
 require("app.service.DataManager")
 import('app.ui.GameGlobalUIUtils')
 
+local GameDefautlt = import("app.utils.GameDefautlt")
+local AudioManager = import("app.utils.AudioManager")
+local LocalPushManager = import("app.utils.LocalPushManager")
 local Timer = import('.utils.Timer')
 local MyApp = class("MyApp", cc.mvc.AppBase)
 
-
 function MyApp:ctor()
-    self:initI18N()
+    self:InitGameBase()
+    self:InitI18N()
     NetManager:init()
     MyApp.super.ctor(self)
-    AudioManager:Init()
     self.timer = Timer.new()
     local fileutils = cc.FileUtils:getInstance()
     if device.platform == "ios" then
@@ -51,15 +52,15 @@ function MyApp:showDebugInfo( ... )
 end
 
 function MyApp:restart()
-    audio.stopMusic()
-    audio.stopAllSounds()
+    self:GetAudioManager():StopMusic()
+    self:GetAudioManager():StopEffectSound()
     NetManager:disconnect()
     self.timer:Stop()
     ext.restart()
 end
 
-function MyApp:initI18N()
-    local currentLanFile = string.format("i18n/%s.mo", GameUtils:getCurrentLanguage())
+function MyApp:InitI18N()
+    local currentLanFile = string.format("i18n/%s.mo", self.gameLanguage_)
     local currentLanFilePath = cc.FileUtils:getInstance():fullPathForFilename(currentLanFile)
 
     function _(text)
@@ -70,6 +71,34 @@ function MyApp:initI18N()
     end
 end
 
+function MyApp:GetGameLanguage()
+    return self.gameLanguage_
+end
+
+function MyApp:SetGameLanguage(lang)
+    self:GetGameDefautlt():setBasicInfoValueForKey("GAME_LANGUAGE",lang)
+    self:GetGameDefautlt():flush()
+    self:restart()
+end
+
+function MyApp:InitGameBase()
+    self.GameDefautlt_ = GameDefautlt.new()
+    self.AudioManager_ = AudioManager.new(self:GetGameDefautlt())
+    self.LocalPushManager_ = LocalPushManager.new(self:GetGameDefautlt())
+    self.gameLanguage_ = self:GetGameDefautlt():getBasicInfoValueForKey("GAME_LANGUAGE",GameUtils:getCurrentLanguage())
+end
+
+function MyApp:GetAudioManager()
+    return self.AudioManager_
+end
+
+function MyApp:GetPushManager()
+    return self.LocalPushManager_
+end
+
+function MyApp:GetGameDefautlt()
+    return self.GameDefautlt_
+end
 function MyApp:flushIf()
     if self.chatCenter then
         self.chatCenter:flush()

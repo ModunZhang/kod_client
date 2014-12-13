@@ -204,7 +204,7 @@ function CityScene:GotoLogicPoint(x, y)
     :next(function() print("hello") end)
 end
 function CityScene:PlayBackgroundMusic()
-    AudioManager:PlayGameMusic("CityScene")
+    app:GetAudioManager():PlayGameMusic("MyCityScene")
     self:performWithDelay(function()
         self:PlayBackgroundMusic()
     end, 113 + 30)

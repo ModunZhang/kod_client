@@ -290,7 +290,7 @@ end
 
 function GameUISplash:onEnter()
 	GameUISplash.super.onEnter(self)
-    AudioManager:PlayGameMusic("MainScene")
+    app:GetAudioManager():PlayGameMusic("MainScene")
 	local layer_1 = self:CreateOneFullLayer():addTo(self,self:GetMaxZorder())
     local sequence = transition.sequence({
         cc.MoveTo:create(timer_val, cc.p(-display.width, 0)),

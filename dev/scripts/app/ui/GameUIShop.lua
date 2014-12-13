@@ -874,6 +874,72 @@ function GameUIShop:onEnter()
                 NetManager:getSetDefenceDragonPromise("redDragon")
             )
             end)
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "音乐开关->"  .. (app:GetAudioManager():GetBackgroundMusicState() and "on" or "off"),
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 140, window.top - 1400)
+        :onButtonClicked(function(event)
+          app:GetAudioManager():SwitchBackgroundMusicState(not app:GetAudioManager():GetBackgroundMusicState())
+           event.target:setButtonLabelString("音乐开关->" .. (app:GetAudioManager():GetBackgroundMusicState() and "on" or "off"))
+        end)
+    WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "音效开关->" .. (app:GetAudioManager():GetEffectSoundState() and "on" or "off"),
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 320, window.top - 1400)
+        :onButtonClicked(function(event)
+          app:GetAudioManager():SwitchEffectSoundState(not app:GetAudioManager():GetEffectSoundState())
+          event.target:setButtonLabelString("音效开关->" .. (app:GetAudioManager():GetEffectSoundState() and "on" or "off"))
+        end)
+     WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "本地推送->" .. (app:GetPushManager():IsNotificationIsOn() and "on" or "off"),
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 500, window.top - 1400)
+        :onButtonClicked(function(event)
+          app:GetPushManager():SwitchNotification(not app:GetPushManager():IsNotificationIsOn())
+          event.target:setButtonLabelString("本地推送->" .. (app:GetPushManager():IsNotificationIsOn() and "on" or "off"))
+        end)
+
+     WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "语言->"  .. app:GetGameLanguage(),
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(content)
+        :align(display.CENTER, window.left + 140, window.top - 1500)
+        :onButtonClicked(function(event)
+            if app:GetGameLanguage() == 'zh_Hans' then
+                app:SetGameLanguage("en_US")
+            else
+                app:SetGameLanguage("zh_Hans")
+            end
+        end)
+
+
 
     item:addContent(content)
     item:setItemSize(640, 1000)

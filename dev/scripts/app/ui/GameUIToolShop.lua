@@ -41,7 +41,7 @@ end
 function GameUIToolShop:OnBeginMakeMaterialsWithEvent(tool_shop, event)
     self:UpdateEvent(event)
     self:UpdateNeedStatus()
-    AudioManager:PlayeEffectSoundWithKey("UI_TOOLSHOP_CRAFT_START")
+    app:GetAudioManager():PlayeEffectSoundWithKey("UI_TOOLSHOP_CRAFT_START")
 end
 function GameUIToolShop:OnMakingMaterialsWithEvent(tool_shop, event, current_time)
     self:UpdateEvent(event)

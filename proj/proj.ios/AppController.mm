@@ -58,7 +58,7 @@ static AppDelegate s_sharedApplication;
     viewController.view = eaglView;
     //启用本地通知的BadgeNumber权限 后面会加入远程通知
     if (IS_IOS8) {
-        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge categories:nil];
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge|UIUserNotificationTypeAlert categories:nil];
         [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
     }
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0]; //清空红圈
@@ -132,5 +132,10 @@ static AppDelegate s_sharedApplication;
     [super dealloc];
 }
 
+#pragma mark -
+#pragma mark Local Push
+-(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification{
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0]; //清空红圈
+}
 @end
 

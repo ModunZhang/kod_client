@@ -15,16 +15,16 @@ function PlatformAdapter:android()
 end
 
 function PlatformAdapter:mac()
-    ext.localpush = {
-        switchNotification = function(...)
-        end,
-        addNotification = function(...)
-        end,
-        cancelAll = function(...)
-        end,
-        cancelNotification = function(...)
-        end
-    }
+    -- ext.localpush = {
+    --     switchNotification = function(...)
+    --     end,
+    --     addNotification = function(...)
+    --     end,
+    --     cancelAll = function(...)
+    --     end,
+    --     cancelNotification = function(...)
+    --     end
+    -- }
     cc.DTextView = {}
     setmetatable(cc.DTextView,{
         __index= function( ... )
@@ -36,7 +36,7 @@ end
 --[[
     模拟器和真机支持cc.DTextView 
     函数名和参数同EditBox 构造函数不同
-    player 不支持
+    player/android 不支持
     
     local textView = cc.DTextView:create(cc.size(549,379),display.newScale9Sprite("chat_setting_listview_bg.png"))
     textView:addTo(self):center()

@@ -8,12 +8,12 @@ function cc.ui.UIPushButton:ctor(images, options,music_info)
     music_info = music_info or {down = "NORMAL_DOWN",up = "NORMAL_UP"}
     self:addButtonPressedEventListener(function(event)
         if type(music_info.down) == 'string' and music_info.down ~= "" then
-            AudioManager:PlayeEffectSoundWithKey(music_info.down)
+            app:GetAudioManager():PlayeEffectSoundWithKey(music_info.down)
         end
     end)
     self:addButtonReleaseEventListener(function(event)
         if type(music_info.up) == 'string' and music_info.up ~= "" then
-            AudioManager:PlayeEffectSoundWithKey(music_info.up)
+            app:GetAudioManager():PlayeEffectSoundWithKey(music_info.up)
         end
     end)
 end
