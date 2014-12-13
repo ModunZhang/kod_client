@@ -1,7 +1,7 @@
 local window = import("..utils.window")
 local WidgetDropList = import("..widget.WidgetDropList")
-local WidgetToolMaterialBox = import("..widget.WidgetToolMaterialBox")
 local WidgetMaterials = import("..widget.WidgetMaterials")
+local WidgetCitizen = import("..widget.WidgetCitizen")
 local UIListView = import(".UIListView")
 
 
@@ -19,11 +19,11 @@ function GameUIResourceOverview:onEnter()
         {
             label = _("资源"),
             tag = "resource",
+            default = true
         },
         {
             label = _("材料"),
             tag = "material",
-            default = true
         },
         {
             label = _("城民"),
@@ -57,7 +57,7 @@ function GameUIResourceOverview:CreateBetweenBgAndTitle()
     self.material_layer = WidgetMaterials.new(self.city,self.city:GetFirstBuildingByType("materialDepot"))
     self:addChild(self.material_layer)
     -- 城民
-    self.citizen_layer = display.newLayer()
+    self.citizen_layer = WidgetCitizen.new(self.city)
     self:addChild(self.citizen_layer)
 end
 function GameUIResourceOverview:onExit()
