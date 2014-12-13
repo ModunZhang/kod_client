@@ -1,4 +1,9 @@
 local window = import("..utils.window")
+local WidgetDropList = import("..widget.WidgetDropList")
+local WidgetToolMaterialBox = import("..widget.WidgetToolMaterialBox")
+local WidgetMaterials = import("..widget.WidgetMaterials")
+local UIListView = import(".UIListView")
+
 
 local WidgetResources = import('..widget.WidgetResources')
 
@@ -10,15 +15,15 @@ end
 
 function GameUIResourceOverview:onEnter()
     GameUIResourceOverview.super.onEnter(self)
-     self:CreateTabButtons({
+    self:CreateTabButtons({
         {
             label = _("资源"),
             tag = "resource",
-            default = true
         },
         {
             label = _("材料"),
             tag = "material",
+            default = true
         },
         {
             label = _("城民"),
@@ -43,13 +48,13 @@ function GameUIResourceOverview:onEnter()
     end):pos(window.cx, window.bottom + 34)
 end
 function GameUIResourceOverview:CreateBetweenBgAndTitle()
-	GameUIResourceOverview.super.CreateBetweenBgAndTitle(self)
+    GameUIResourceOverview.super.CreateBetweenBgAndTitle(self.material_layer)
 
     -- 资源
     self.resource_layer = WidgetResources.new()
     self:addChild(self.resource_layer)
     -- 材料
-    self.material_layer = display.newLayer()
+    self.material_layer = WidgetMaterials.new(self.city,self.city:GetFirstBuildingByType("materialDepot"))
     self:addChild(self.material_layer)
     -- 城民
     self.citizen_layer = display.newLayer()
@@ -57,10 +62,13 @@ function GameUIResourceOverview:CreateBetweenBgAndTitle()
 end
 function GameUIResourceOverview:onExit()
     GameUIResourceOverview.super.onExit(self)
-    
+
 end
 function GameUIResourceOverview:OnResourceChanged(resource_manager)
     GameUIResourceOverview.super.OnResourceChanged(self,resource_manager)
 end
 
 return GameUIResourceOverview
+
+
+
