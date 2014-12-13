@@ -1,3 +1,4 @@
+local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local UILib = import(".UILib")
 local BattleObject = class("BattleObject", function()
@@ -150,9 +151,9 @@ function BattleObject:Move()
     return function(object)
         object:PlayAnimation("move_2")
         local p = promise.new()
-        object:performWithDelay(function()
+        object:OnAnimationPlayEnd("move_2", function()
             p:resolve(object)
-        end, 0)
+        end)
         return p
     end
 end
@@ -171,6 +172,9 @@ function BattleObject:Do(p)
 end
 
 return BattleObject
+
+
+
 
 
 
