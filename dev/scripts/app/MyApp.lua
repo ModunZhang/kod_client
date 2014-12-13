@@ -56,7 +56,11 @@ function MyApp:restart()
     self:GetAudioManager():StopEffectSound()
     NetManager:disconnect()
     self.timer:Stop()
-    ext.restart()
+    if device.platform == 'mac' then
+        PlayerProtocol:getInstance():relaunch()
+    else    
+        ext.restart()
+    end
 end
 
 function MyApp:InitI18N()
