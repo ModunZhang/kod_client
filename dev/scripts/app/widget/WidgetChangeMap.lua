@@ -155,8 +155,8 @@ function WidgetChangeMap:SetMapType( map_type )
             self.map_frame:setPositionY(179)
             self:Retraction()
 
-            app:enterScene("AllianceBattleScene", nil, "custom", -1,handler(self, self.CloudArmature) )
-            -- app:enterScene("AllianceScene", nil, "custom", -1,handler(self, self.CloudArmature) )
+            -- app:enterScene("AllianceBattleScene", nil, "custom", -1,handler(self, self.CloudArmature) )
+            app:enterScene("AllianceScene", nil, "custom", -1,handler(self, self.CloudArmature) )
         end)
 
         self.enemy_btn:onButtonClicked(function(event)

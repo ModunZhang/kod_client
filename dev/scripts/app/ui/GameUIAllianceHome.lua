@@ -691,8 +691,16 @@ function GameUIAllianceHome:OnMemberChanged(alliance,changed_map)
         end
     end
 end
-function GameUIAllianceHome:OnSceneMove(logic_x, logic_y)
-    self.coordinate_label:setString(logic_x..","..logic_y)
+function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
+    local coordinate_str
+    if alliance_view then
+        local is_mine = alliance_view:GetAlliance():Id() == self.alliance:Id()
+        local tag = is_mine and "我方" or "敌方"
+        coordinate_str = string.format("(%s)%d, %d", tag, logic_x, logic_y)
+    else
+        coordinate_str = string.format("%d, %d", logic_x, logic_y)
+    end
+    self.coordinate_label:setString(coordinate_str)
 end
 function GameUIAllianceHome:MailUnreadChanged( num )
     if num==0 then
