@@ -1,14 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# deffer
-# move
-# say
-# input
-# click
-# wait
-# find
-# all
-# quit
 
 import codecs
 import traceback

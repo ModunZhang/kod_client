@@ -226,11 +226,12 @@ function AllianceLayer:CreateObject(entity)
     end
     return object
 end
-function AllianceLayer:GetMapSize()
-    return 21, 21
-end
 function AllianceLayer:GetLogicMap()
     return self.normal_map
+end
+function AllianceLayer:GetZOrderBy(sprite, x, y)
+    local width, _ = self:GetLogicMap():GetSize()
+    return x + y * width + 100
 end
 function AllianceLayer:ConvertLogicPositionToMapPosition(lx, ly)
     local map_pos = cc.p(self.normal_map:ConvertToMapPosition(lx, ly))
@@ -470,46 +471,4 @@ function AllianceLayer:OnSceneMove()
 end
 
 return AllianceLayer
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

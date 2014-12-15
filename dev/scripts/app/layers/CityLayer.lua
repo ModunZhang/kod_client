@@ -181,6 +181,10 @@ end
 function CityLayer:GetLogicMap()
     return self.iso_map
 end
+function CityLayer:GetZOrderBy(sprite, x, y)
+    local width, _ = self:GetLogicMap():GetSize()
+    return x + y * width + 100
+end
 function CityLayer:ConvertLogicPositionToMapPosition(lx, ly)
     local map_pos = cc.p(self.iso_map:ConvertToMapPosition(lx, ly))
     return self:convertToNodeSpace(self:GetCityNode():convertToWorldSpace(map_pos))

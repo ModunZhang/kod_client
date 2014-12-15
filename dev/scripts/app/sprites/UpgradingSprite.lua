@@ -137,7 +137,7 @@ end
 function UpgradingSprite:GetLogicZorder(width)
     if self:GetEntity():GetType() == "watchTower" then
         local x, y = self:GetLogicPosition()
-        return x + y * width + 200
+        return self:GetMapLayer():GetZOrderBy(self, x, y) + 100
     else
         return UpgradingSprite.super.GetLogicZorder(self, width)
     end
