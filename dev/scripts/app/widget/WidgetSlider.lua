@@ -11,10 +11,8 @@ function WidgetSlider:ctor(direction, images, options)
         :addTo(self, 1):align(display.CENTER, rect.x + rect.width/2, rect.y + rect.height/2)
         self.progress:setBarChangeRate(cc.p(1,0))
         self.progress:setMidpoint(cc.p(0,0))
-        -- self.progress:hide()
         self.buttonSprite_:setLocalZOrder(2)
     end
-            -- print("self.buttonSprite_===",self.buttonSprite_:getLocalZOrder(),self.buttonSprite_:getGlobalZOrder())
 
 end
 function WidgetSlider:onSliderValueChanged(callback)
@@ -22,8 +20,6 @@ function WidgetSlider:onSliderValueChanged(callback)
         local percent = math.floor(event.value / (self.max_ - self.min_) * 100)
         if self.progress then
             self.progress:setPercentage(percent)
-            -- print("self.progress===",self.progress:getLocalZOrder(),self.progress:getGlobalZOrder())
-            -- print("self.buttonSprite_===",self.buttonSprite_:getLocalZOrder(),self.buttonSprite_:getGlobalZOrder())
         end
         callback(event)
         self:CheckProgress(percent)

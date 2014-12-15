@@ -6,16 +6,18 @@ end)
 
 function WidgetSliderWithInput:ctor(params)
     local max = params.max
+    local min = params.min or 0
     -- progress
     self.slider = WidgetSlider.new(display.LEFT_TO_RIGHT,  {bar = "slider_bg_461x24.png",
         progress = "slider_progress_445x14.png",
         button = "slider_btn_66x66.png"}, {max = max}):addTo(self)
     local slider = self.slider
 
+
     local function edit(event, editbox)
-        local text = tonumber(editbox:getText()) or 0
+        local text = tonumber(editbox:getText()) or min
         if event == "began" then
-            if 0==text then
+            if min==text then
                 editbox:setText("")
             end
         elseif event == "changed" then
@@ -23,8 +25,8 @@ function WidgetSliderWithInput:ctor(params)
                 editbox:setText(max)
             end
         elseif event == "ended" then
-            if text=="" or 0==text then
-                editbox:setText(0)
+            if text=="" or min==text then
+                editbox:setText(min)
             end
             local edit_value = tonumber(editbox:getText())
             editbox:setText(edit_value)
@@ -50,7 +52,7 @@ function WidgetSliderWithInput:ctor(params)
     })
     local editbox = self.editbox
     editbox:setMaxLength(10)
-    editbox:setText(0)
+    editbox:setText(min)
     editbox:setFont(UIKit:getFontFilePath(),20)
     editbox:setFontColor(cc.c3b(0,0,0))
     editbox:setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC)
@@ -61,6 +63,7 @@ function WidgetSliderWithInput:ctor(params)
     slider:onSliderValueChanged(function(event)
         editbox:setText(math.floor(event.value))
     end)
+    slider:setSliderValue(min)
 
 
     local soldier_total_count = UIKit:ttfLabel({

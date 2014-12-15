@@ -23,6 +23,7 @@ function WidgetUIBackGround:ctor(params)
     local u_height = params.u_height or 22
     local m_height = params.m_height or 98
     local b_height = params.b_height or 62
+    local is_have_frame = params.isFrame or "yes"
 
     self:setContentSize(cc.size(width,height))
     --top
@@ -51,8 +52,8 @@ function WidgetUIBackGround:ctor(params)
             :addTo(self):setScaleY(need_filled_height/m_height)
     end
 
-    -- 默认的style，并且宽度为608时添加边框
-    if top_img == "back_ground_608x22.png" and  width==608 then
+    -- 添加边框
+    if is_have_frame == "yes" and top_img=="back_ground_608x22.png" then
         display.newSprite("shrie_state_item_line_606_16.png"):addTo(self):align(display.LEFT_TOP,0, height-4)
         display.newSprite("shrie_state_item_line_606_16.png"):addTo(self):align(display.LEFT_BOTTOM,0, 4):flipY(true)
     end

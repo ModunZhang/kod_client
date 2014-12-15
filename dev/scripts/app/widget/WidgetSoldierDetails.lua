@@ -3,6 +3,13 @@ local WidgetSlider = import('.WidgetSlider')
 local UILib = import("..ui.UILib")
 local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
+local WidgetSliderWithInput = import("..widget.WidgetSliderWithInput")
+local WidgetInfo = import("..widget.WidgetInfo")
+local window = import("..utils.window")
+local UIAutoClose = import("..ui.UIAutoClose")
+
+
 
 local normal = GameDatas.UnitsConfig.normal
 local special = GameDatas.UnitsConfig.special
@@ -48,9 +55,7 @@ local SOLDIER_TYPE = {
     ["steamTank"] = {},
 }
 
-local WidgetSoldierDetails = class("WidgetSoldierDetails", function ()
-    return display.newColorLayer(cc.c4b(0,0,0,127))
-end)
+local WidgetSoldierDetails = class("WidgetSoldierDetails", UIAutoClose)
 
 function WidgetSoldierDetails:ctor(soldier_type,soldier_level)
     self.soldier_type = soldier_type
@@ -58,7 +63,7 @@ function WidgetSoldierDetails:ctor(soldier_type,soldier_level)
     -- 取得对应士兵配置表
     self.s_config = soldier_level and normal[soldier_type.."_"..soldier_level]
         or special[soldier_type]
-        LuaUtils:outputTable("self.s_config", self.s_config)
+    -- LuaUtils:outputTable("self.s_config", self.s_config)
     self:InitSoldierDetails()
 end
 
@@ -67,30 +72,38 @@ function WidgetSoldierDetails:InitSoldierDetails()
     local sc = self.s_config
 
     -- bg
-    local bg = display.newScale9Sprite("full_screen_dialog_bg.png", display.cx, display.top-480,cc.size(610,675)):addTo(self)
+    local bg = WidgetUIBackGround.new({height=675,isFrame="no"}):align(display.CENTER, window.cx, window.top-520)
+    self:addTouchAbleChild(bg)
+
     local bg_width,bg_height = bg:getContentSize().width,bg:getContentSize().height
     -- title bg
-    display.newSprite("Title_blue.png", bg_width/2,bg_height-30):addTo(bg,2)
+    local title_bg = display.newSprite("report_title.png", bg_width/2,bg_height+10):addTo(bg,2)
+    local title_label = UIKit:ttfLabel({
+        text = _("兵种详情"),
+        size = 24,
+        color = 0xffedae 
+    }):align(display.CENTER, title_bg:getContentSize().width/2, title_bg:getContentSize().height/2)
+        :addTo(title_bg)
     -- soldier_name label
     self.soldier_name_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = Localize.soldier_name[string.sub(sc.name, 1, -3)],
         font = UIKit:getFontFilePath(),
         size = 24,
-        color = UIKit:hex2c3b(0xffedae)
-    }):align(display.LEFT_CENTER,180,bg_height-30):addTo(bg,2)
+        color = UIKit:hex2c3b(0x5a5544)
+    }):align(display.LEFT_CENTER,180,bg_height-50):addTo(bg,2)
     -- close button
     cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
         :onButtonClicked(function(event)
             self:removeFromParent(true)
-        end):align(display.CENTER, bg_width-20, bg_height-20):addTo(bg,2)
+        end):align(display.CENTER, bg_width-30, bg_height+10):addTo(bg,2)
     -- 士兵头像
-    local stars_bg = display.newSprite("soldier_head_stars_bg.png", display.cx-170, display.top-185):addTo(self)
-    local soldier_head_bg  = display.newSprite(STAR_BG[self.soldier_level], display.cx-230, display.top-185):addTo(self)
+    local stars_bg = display.newSprite("soldier_head_stars_bg.png"):align(display.LEFT_TOP,100, bg_height-30):addTo(bg)
+    local soldier_head_bg  = display.newSprite(STAR_BG[self.soldier_level],-30,stars_bg:getContentSize().height/2):addTo(stars_bg)
 
     local soldier_type_with_star = self.soldier_type..(self.soldier_level == nil and "" or string.format("_%d", self.soldier_level))
     local soldier_ui_config = UILib.soldier_image[self.soldier_type][self.soldier_level]
-    
+
 
     local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.LEFT_BOTTOM,0,10)
     soldier_head_icon:scale(130/soldier_head_icon:getContentSize().height)
@@ -110,13 +123,13 @@ function WidgetSoldierDetails:InitSoldierDetails()
         end
     end
 
-    cc.ui.UILabel.new({
+    local num_title_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = _("数量"),
         font = UIKit:getFontFilePath(),
         size = 22,
         color = UIKit:hex2c3b(0x5a5544)
-    }):align(display.LEFT_CENTER,180,bg_height-70):addTo(bg,2)
+    }):align(display.LEFT_CENTER,180,bg_height-90):addTo(bg,2)
 
     self.total_soldier = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -124,7 +137,7 @@ function WidgetSoldierDetails:InitSoldierDetails()
         font = UIKit:getFontFilePath(),
         size = 22,
         color = UIKit:hex2c3b(0x5a5544)
-    }):align(display.LEFT_CENTER,180,bg_height-96):addTo(bg,2)
+    }):align(display.LEFT_CENTER,num_title_label:getPositionX()+num_title_label:getContentSize().width+10,bg_height-90):addTo(bg,2)
 
     -- 调整解散士兵数量silder
     self:CreateDismissSoldierSilder()
@@ -133,46 +146,52 @@ function WidgetSoldierDetails:InitSoldierDetails()
 end
 
 function WidgetSoldierDetails:CreateDismissSoldierSilder()
-    display.newSprite("dismiss_soldier_bg.png", display.cx + 233, display.top - 280):addTo(self)
-    local dismiss_value = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("0"),
-        font = UIKit:getFontFilePath(),
-        size = 20,
-        color = UIKit:hex2c3b(0x000000)})
-        :align(display.CENTER, display.cx + 235, display.top - 282)
-        :addTo(self)
-    -- 士兵总数
-    cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("/ "..City:GetSoldierManager():GetCountBySoldierType(self.soldier_type)),
-        font = UIKit:getFontFilePath(),
-        size = 20,
-        color = UIKit:hex2c3b(0x403c2f)})
-        :align(display.CENTER, display.cx + 230, display.top - 310)
-        :addTo(self)
-    -- 返还城民
-    -- icon
-    display.newSprite("population.png", display.cx-255, display.top-370):addTo(self)
+    -- display.newSprite("dismiss_soldier_bg.png", display.cx + 233, display.top - 280):addTo(self)
+    -- local dismiss_value = cc.ui.UILabel.new({
+    --     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+    --     text = _("0"),
+    --     font = UIKit:getFontFilePath(),
+    --     size = 20,
+    --     color = UIKit:hex2c3b(0x000000)})
+    --     :align(display.CENTER, display.cx + 235, display.top - 282)
+    --     :addTo(self)
+    -- -- 士兵总数
+    -- cc.ui.UILabel.new({
+    --     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+    --     text = _("/ "..City:GetSoldierManager():GetCountBySoldierType(self.soldier_type)),
+    --     font = UIKit:getFontFilePath(),
+    --     size = 20,
+    --     color = UIKit:hex2c3b(0x403c2f)})
+    --     :align(display.CENTER, display.cx + 230, display.top - 310)
+    --     :addTo(self)
+    -- -- 返还城民
+    -- -- icon
+    display.newSprite("population.png", display.cx-110, display.top-312):addTo(self)
     local citizen_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = _("0"),
         font = UIKit:getFontFilePath(),
         size = 20,
         color = UIKit:hex2c3b(0x403c2f)})
-        :align(display.CENTER, display.cx - 215, display.top - 378)
+        :align(display.CENTER, display.cx - 70, display.top - 320)
         :addTo(self)
-    -- sliderbar
-    WidgetSlider.new(display.LEFT_TO_RIGHT,  {bar = "slider_bg_461x24.png",
-        progress = "slider_progress_445x14.png",
-        button = "slider_btn_66x66.png"},{max = City:GetSoldierManager():GetCountBySoldierType(self.soldier_type)}):addTo(self)
-        :align(display.LEFT_BOTTOM, display.cx - 280, display.top - 310)
-        :onSliderValueChanged(function(event)
-            dismiss_value:setString(string.format("%d", math.floor(event.value)))
+    -- -- sliderbar
+    -- WidgetSlider.new(display.LEFT_TO_RIGHT,  {bar = "slider_bg_461x24.png",
+    --     progress = "slider_progress_445x14.png",
+    --     button = "slider_btn_66x66.png"},{max = City:GetSoldierManager():GetCountBySoldierType(self.soldier_type)}):addTo(self)
+    --     :align(display.LEFT_BOTTOM, display.cx - 280, display.top - 310)
+    --     :onSliderValueChanged(function(event)
+    --         dismiss_value:setString(string.format("%d", math.floor(event.value)))
+    --         citizen_label:setString(string.format("%d", math.floor(event.value)*self.s_config.citizen))
+    --     end)
+    --     :setSliderValue(0)
+    self.slider = WidgetSliderWithInput.new({max = City:GetSoldierManager():GetCountBySoldierType(self.soldier_type)})
+    :addTo(self)
+    :align(display.LEFT_CENTER, 30, window.top - 360)
+    :OnSliderValueChanged(function(event)
             citizen_label:setString(string.format("%d", math.floor(event.value)*self.s_config.citizen))
         end)
-        :setSliderValue(0)
- 
+
     local dismiss_soldier_button = WidgetPushButton.new({normal = "resource_butter_red.png",pressed = "resource_butter_red_highlight.png"},{}
         ,{
             disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
@@ -180,7 +199,7 @@ function WidgetSoldierDetails:CreateDismissSoldierSilder()
         :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("解散"), size = 24, color = display.COLOR_WHITE}))
         :onButtonClicked(function(event)
             print("解散士兵 =================")
-        end):align(display.CENTER, display.cx + 205, display.top-370):addTo(self)
+        end):align(display.CENTER, display.cx + 205, display.top-440):addTo(self)
         :setButtonEnabled(false)
 
 end
@@ -188,90 +207,95 @@ end
 function WidgetSoldierDetails:InitSoldierAttr()
     local sc = self.s_config
     -- bg
-    local bg = display.newSprite("back_ground_549X379.png", display.cx, display.top-600):addTo(self)
-    -- upgrade_resources_background_3
-    local function createAttrItem(name,value,bg_image)
-        -- bg
-        local attr_item = display.newSprite(bg_image)
-        local width,height = attr_item:getContentSize().width,attr_item:getContentSize().height
-        cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = name,
-            font = UIKit:getFontFilePath(),
-            size = 20,
-            color = UIKit:hex2c3b(0x615b44)})
-            :align(display.LEFT_CENTER, 10, 20)
-            :addTo(attr_item)
-        cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = value,
-            font = UIKit:getFontFilePath(),
-            size = 20,
-            color = UIKit:hex2c3b(0x403c2f)})
-            :align(display.CENTER_RIGHT, width-10, 20)
-            :addTo(attr_item)
-        return attr_item
-    end
+    -- local bg = display.newSprite("back_ground_549X379.png", display.cx, display.top-600):addTo(self)
+    -- -- upgrade_resources_background_3
+    -- local function createAttrItem(name,value,bg_image)
+    --     -- bg
+    --     local attr_item = display.newSprite(bg_image)
+    --     local width,height = attr_item:getContentSize().width,attr_item:getContentSize().height
+    --     cc.ui.UILabel.new({
+    --         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+    --         text = name,
+    --         font = UIKit:getFontFilePath(),
+    --         size = 20,
+    --         color = UIKit:hex2c3b(0x615b44)})
+    --         :align(display.LEFT_CENTER, 10, 20)
+    --         :addTo(attr_item)
+    --     cc.ui.UILabel.new({
+    --         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+    --         text = value,
+    --         font = UIKit:getFontFilePath(),
+    --         size = 20,
+    --         color = UIKit:hex2c3b(0x403c2f)})
+    --         :align(display.CENTER_RIGHT, width-10, 20)
+    --         :addTo(attr_item)
+    --     return attr_item
+    -- end
     local  attr_table = {
         {
-            name = _("对步兵攻击"),
-            value = sc.infantry..""
+             _("对步兵攻击"),
+             sc.infantry..""
         },
         {
-            name = _("对弓箭手攻击"),
-            value = sc.archer..""
+             _("对弓箭手攻击"),
+             sc.archer..""
         },
         {
-            name = _("对骑兵攻击"),
-            value = sc.cavalry..""
+             _("对骑兵攻击"),
+             sc.cavalry..""
         },
         {
-            name = _("对投石车攻击"),
-            value = sc.siege..""
+             _("对投石车攻击"),
+             sc.siege..""
         },
         {
-            name = _("对城墙攻击"),
-            value = sc.wall..""
+             _("对城墙攻击"),
+             sc.wall..""
         },
         {
-            name = _("生命值"),
-            value = sc.hp..""
+             _("生命值"),
+             sc.hp..""
         },
         {
-            name = _("人口"),
-            value = sc.citizen..""
+             _("人口"),
+             sc.citizen..""
         },
         {
-            name = _("维护费"),
-            value = sc.consumeFood..""
+             _("维护费"),
+             sc.consumeFood..""
         },
     }
 
-    self.attr_listview = UIListView.new{
-        -- bg = "common_tips_bg.png",
-        -- bgColor = cc.c4b(200, 200, 200, 120),
-        bgScale9 = true,
-        viewRect = cc.rect(1, 0, 547, 377),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
-        :addTo(bg,2)
-    local bg_flag = true
-    for k,v in pairs(attr_table) do
-        print("==============================",k,v.name)
-        local item = self.attr_listview:newItem()
-        item:setItemSize(547,47)
-        if bg_flag then
-            --todo
-            item:addContent(createAttrItem(v.name,v.value,"upgrade_resources_background_3.png"))
-            bg_flag = false
+    -- self.attr_listview = UIListView.new{
+    --     -- bg = "common_tips_bg.png",
+    --     -- bgColor = cc.c4b(200, 200, 200, 120),
+    --     bgScale9 = true,
+    --     viewRect = cc.rect(1, 0, 547, 377),
+    --     direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
+    --     :addTo(bg,2)
+    -- local bg_flag = true
+    -- for k,v in pairs(attr_table) do
+    --     print("==============================",k,v.name)
+    --     local item = self.attr_listview:newItem()
+    --     item:setItemSize(547,47)
+    --     if bg_flag then
+    --         --todo
+    --         item:addContent(createAttrItem(v.name,v.value,"upgrade_resources_background_3.png"))
+    --         bg_flag = false
 
-        else
-            item:addContent(createAttrItem(v.name,v.value,"upgrade_resources_background_2.png"))
-            bg_flag = true
-        end
-        self.attr_listview:addItem(item)
-    end
-    self.attr_listview:reload()
+    --     else
+    --         item:addContent(createAttrItem(v.name,v.value,"upgrade_resources_background_2.png"))
+    --         bg_flag = true
+    --     end
+    --     self.attr_listview:addItem(item)
+    -- end
+    -- self.attr_listview:reload()
+    WidgetInfo.new({
+        info=attr_table,
+        h =300,
+    }):align(display.TOP_CENTER, window.cx, window.top-500):addTo(self)
 end
 
 return WidgetSoldierDetails
+
 

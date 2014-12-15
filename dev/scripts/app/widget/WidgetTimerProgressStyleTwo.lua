@@ -20,7 +20,7 @@ function WidgetTimerProgressStyleTwo:ctor(height,title)
     self.progress = WidgetProgress.new():addTo(back_ground_351x96, 2):align(display.LEFT_CENTER, 50, 70)
 
     self.button = WidgetPushButton.new(
-        {normal = "green_btn_up_148x58.png", pressed = "green_btn_down_148x58.png"},
+        {normal = "green_btn_up_148x76.png", pressed = "green_btn_down_148x76.png"},
         {scale9 = false},
         {
             disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}

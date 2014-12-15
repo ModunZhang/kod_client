@@ -103,9 +103,9 @@ function GameUIHospital:OnTreating(hospital, event, current_time)
     self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(current_time)),event:Percent(current_time))
     -- TODO 测试数据，小于5分钟可免费加速治疗   
     if math.floor(event:LeftTime(current_time))<=300 and self.timer:GetButtonStatus() ~= "freeSpeedup" then
-        self.timer:SetButtonImages({normal = "purple_btn_up_148x58.png",
-                pressed = "purple_btn_down_148x58.png",
-                disabled = "purple_btn_up_148x58.png",
+        self.timer:SetButtonImages({normal = "purple_btn_up_148x76.png",
+                pressed = "purple_btn_down_148x76.png",
+                disabled = "purple_btn_up_148x76.png",
             }):SetButtonLabel(_("免费加速"))
         :SetButtonStatus("freeSpeedup")
     end

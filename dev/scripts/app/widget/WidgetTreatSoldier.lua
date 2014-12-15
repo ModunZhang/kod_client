@@ -234,6 +234,41 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
     }):addTo(back_ground, 2)
         :align(display.CENTER, size.width - 60, size.height - 110)
 
+   
+    -- local slider = WidgetSlider.new(display.LEFT_TO_RIGHT,  {bar = "slider_bg_461x24.png",
+    --     progress = "slider_progress_445x14.png",
+    --     button = "slider_btn_66x66.png"}, {max = treat_max}):addTo(back_ground, 2)
+    --     :align(display.LEFT_CENTER, 25, slider_height)
+    --     :onSliderValueChanged(function(event)
+    --         self:OnCountChanged(math.floor(event.value))
+    --     end)
+
+
+    -- -- soldier count bg
+    -- local bg = cc.ui.UIImage.new("back_ground_83x32.png"):addTo(back_ground, 2)
+    --     :align(display.CENTER, size.width - 70, label_height)
+
+    -- -- soldier current
+    -- local pos = bg:getAnchorPointInPoints()
+    -- self.soldier_current_count = cc.ui.UILabel.new({
+    --     text = "0",
+    --     size = 20,
+    --     font = UIKit:getFontFilePath(),
+    --     align = cc.ui.TEXT_ALIGN_RIGHT,
+    --     color = UIKit:hex2c3b(0x403c2f)
+    -- }):addTo(bg, 2)
+    --     :align(display.CENTER, pos.x, pos.y)
+
+    -- -- soldier total count
+    -- self.soldier_total_count = cc.ui.UILabel.new({
+    --     text = string.format("/ %d", treat_max),
+    --     size = 20,
+    --     font = UIKit:getFontFilePath(),
+    --     align = cc.ui.TEXT_ALIGN_RIGHT,
+    --     color = UIKit:hex2c3b(0x403c2f)
+    -- }):addTo(back_ground, 2)
+    --     :align(display.CENTER, size.width - 70, label_height - 35)
+
     -- progress
     WidgetSliderWithInput.new({max = treat_max}):addTo(back_ground):align(display.LEFT_CENTER, 25, 330)
     :OnSliderValueChanged(function(event)
@@ -242,8 +277,18 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
 
 
     -- need bg
-    local need = cc.ui.UIImage.new("back_ground_583x107.png"):addTo(back_ground, 2)
-        :align(display.CENTER, size.width/2, size.height/2 - 40)
+    local need = WidgetUIBackGround.new({
+        width = 556,
+        height = 106,
+        top_img = "back_ground_426x14_top_1.png",
+        bottom_img = "back_ground_426x14_top_1.png",
+        mid_img = "back_ground_426x1_mid_1.png",
+        u_height = 14,
+        b_height = 14,
+        m_height = 1,
+        b_flip = true,
+    }):align(display.CENTER,size.width/2, size.height/2 - 40):addTo(back_ground)
+
 
     -- needs
     local size = need:getContentSize()
