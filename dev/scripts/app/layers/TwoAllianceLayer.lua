@@ -20,6 +20,7 @@ local Alliance = import("..entity.Alliance")
 
 function TwoAllianceLayer:ctor(alliance1, alliance2, arrange)
     Observer.extend(self)
+
     self.alliances = {alliance1, alliance2}
     self.arrange = arrange or TwoAllianceLayer.ARRANGE.H
     TwoAllianceLayer.super.ctor(self, 0.9, 2)

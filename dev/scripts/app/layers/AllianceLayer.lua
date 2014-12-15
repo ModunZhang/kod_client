@@ -7,9 +7,10 @@ local AllianceObject = import("..entity.AllianceObject")
 local AllianceMap = import("..entity.AllianceMap")
 local Observer = import("..entity.Observer")
 local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLeftReverseY")
+local AllianceView = import(".AllianceView")
 local MapLayer = import(".MapLayer")
 local AllianceLayer = class("AllianceLayer", MapLayer)
-local ZORDER = Enum("BOTTOM", "MIDDLE", "TOP", "BUILDING", "LINE", "SOLDIER")
+local ZORDER = Enum("BACKGROUND", "ALLIANCE_TERRAIN_BOTTOM", "ALLIANCE_TERRAIN_TOP", "BUILDING", "LINE", "CORPS")
 local floor = math.floor
 local random = math.random
 local AllianceShrine = import("..entity.AllianceShrine")
@@ -17,59 +18,19 @@ local AllianceMoonGate = import("..entity.AllianceMoonGate")
 local Alliance = import("..entity.Alliance")
 
 function AllianceLayer:ctor(alliance)
-    self.alliance_ = alliance
     Observer.extend(self)
     AllianceLayer.super.ctor(self, 0.9, 2)
-    self.normal_map = NormalMapAnchorBottomLeftReverseY.new{
-        tile_w = 80,
-        tile_h = 80,
-        map_width = 21,
-        map_height = 21,
-        base_x = 0,
-        base_y = 23 * 80
-    }
-    math.randomseed(1985423439857)
+
     self:InitBackground()
-    self:InitMiddleBackground()
-    self:InitTopBackground()
+    self:InitTerrianBottomNode()
+    self:InitTerrianTopNode()
     self:InitBuildingNode()
-    self:InitSoldierNode()
+    self:InitCorpsNode()
     self:InitLineNode()
 
-    self:GetAlliance():GetAllianceMap():AddListenOnType({
-        OnBuildingChange = function(this, alliance_map, add, remove, modify)
-            dump(add)
-            if #add > 0 then
-                for _, v in pairs(add) do
-                    self.objects[v:Id()] = self:CreateObject(v)
-                end
-            end
-            dump(remove)
-            if #remove > 0 then
-                for _, v in pairs(remove) do
-                    self.objects[v:Id()]:removeFromParent()
-                    self.objects[v:Id()] = nil
-                end
-            end
-            if #modify > 0 then
-                for _, v in pairs(modify) do
-                    self.objects[v:Id()]:SetPositionWithZOrder(self:GetLogicMap():ConvertToMapPosition(v:GetLogicPosition()))
-                end
-            end
-        end
-    }, AllianceMap.LISTEN_TYPE.BUILDING)
-
-
-    local objects = {}
-    self:GetAlliance():GetAllianceMap():IteratorAllObjects(function(_, entity)
-        objects[entity:Id()] = self:CreateObject(entity)
-    end)
-    self.objects = objects
-
-
+    self.alliance_view = AllianceView.new(self, alliance, 0):addTo(self)
 
     local manager = ccs.ArmatureDataManager:getInstance()
-
     manager:addArmatureFileInfo("animations/dragon_red/dragon_red.ExportJson")
     ---
     local timer = app.timer
@@ -104,7 +65,41 @@ function AllianceLayer:ctor(alliance)
     self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnCityBeAttackedMarchEventChanged)
     self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnCityCityBeAttackedMarchReturnEventChanged)
 end
-
+function AllianceLayer:InitBackground()
+    self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_h.tmx"):addTo(self, ZORDER.BACKGROUND)
+end
+function AllianceLayer:InitTerrianBottomNode()
+    self.terrain_bottom = display.newNode():addTo(self, ZORDER.ALLIANCE_TERRAIN_BOTTOM)
+end
+function AllianceLayer:InitTerrianTopNode()
+    self.terrain_top = display.newNode():addTo(self, ZORDER.ALLIANCE_TERRAIN_TOP)
+end
+function AllianceLayer:InitBuildingNode()
+    self.building = display.newNode():addTo(self, ZORDER.BUILDING)
+end
+function AllianceLayer:InitCorpsNode()
+    self.corps = display.newNode():addTo(self, ZORDER.CORPS)
+    self.corps_map = {}
+end
+function AllianceLayer:InitLineNode()
+    self.lines = display.newNode():addTo(self, ZORDER.LINE)
+    self.lines_map = {}
+end
+function AllianceLayer:GetBottomTerrain()
+    return self.terrain_bottom
+end
+function AllianceLayer:GetTopTerrain()
+    return self.terrain_top
+end
+function AllianceLayer:GetBuildingNode()
+    return self.building
+end
+function AllianceLayer:GetCorpsNode()
+    return self.corps
+end
+function AllianceLayer:GetLineNode()
+    return self.lines
+end
 function AllianceLayer:CreateCorpsFromMrachEventsIf()
     local alliance_shire = self:GetAlliance():GetAllianceShrine()
     table.foreachi(alliance_shire:GetMarchEvents(),function(_,merchEvent)
@@ -159,11 +154,9 @@ function AllianceLayer:ManagerCorpsFromChangedMap(changed_map)
         end)
     end
 end
-
 function AllianceLayer:GetAlliance()
-    return self.alliance_
+    return self.alliance_view:GetAlliance()
 end
-
 function AllianceLayer:OnCityBeAttackedMarchEventChanged(changed_map)
    self:ManagerCorpsFromChangedMap(changed_map)
 end
@@ -211,107 +204,12 @@ function AllianceLayer:onCleanup()
     self:GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnCityBeAttackedMarchEventChanged)
     self:GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnCityCityBeAttackedMarchReturnEventChanged)
 end
-
-function AllianceLayer:CreateObject(entity)
-    local category = entity:GetCategory()
-    local object
-    if category == "building" then
-        object = AllianceBuildingSprite.new(self, entity):addTo(self:GetBuildingNode())
-    elseif category == "member" then
-        object = CitySprite.new(self, entity):addTo(self:GetBuildingNode())
-    elseif category == "village" then
-        object = VillageSprite.new(self, entity):addTo(self:GetBuildingNode())
-    elseif category == "decorate" then
-        object = AllianceDecoratorSprite.new(self, entity):addTo(self:GetBuildingNode())
-    end
-    return object
-end
 function AllianceLayer:GetLogicMap()
-    return self.normal_map
-end
-function AllianceLayer:GetZOrderBy(sprite, x, y)
-    local width, _ = self:GetLogicMap():GetSize()
-    return x + y * width + 100
+    return self.alliance_view:GetLogicMap()
 end
 function AllianceLayer:ConvertLogicPositionToMapPosition(lx, ly)
-    local map_pos = cc.p(self.normal_map:ConvertToMapPosition(lx, ly))
+    local map_pos = cc.p(self:GetLogicMap():ConvertToMapPosition(lx, ly))
     return self:convertToNodeSpace(self.background:convertToWorldSpace(map_pos))
-end
-function AllianceLayer:InitBackground()
-    self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background1.tmx"):addTo(self, ZORDER.BOTTOM)
-end
-function AllianceLayer:InitMiddleBackground()
-    local bottom_layer = display.newNode():addTo(self, ZORDER.MIDDLE)
-    local png = {
-        "grass1_800x560.png",
-        "grass2_800x560.png",
-        "grass3_800x560.png",
-    }
-    for i, v in pairs{
-        {x = 4.5, y = 4.5},
-        {x = 4.5, y = 14.5},
-        {x = 14.5, y = 4.5},
-        {x = 14.5, y = 14.5},
-    } do
-        local png_index = random(123456789) % 3 + 1
-        display.newSprite(png[png_index]):addTo(bottom_layer)
-            :align(display.CENTER, self.normal_map:ConvertToMapPosition(v.x, v.y))
-    end
-    self.middle_background = bottom_layer
-end
-function AllianceLayer:InitTopBackground()
-    local function random_indexes_in_rect(number, rect)
-        local indexes = {}
-        local count = 0
-        local random_map = {}
-        repeat
-            local x = random(123456789) % (rect.width + 1)
-            if not random_map[x] then
-                random_map[x] = {}
-            end
-            local y = random(123456789) % (rect.height + 1)
-            if not random_map[x][y] then
-                random_map[x][y] = true
-
-                local png_index = random(123456789) % 3 + 1
-                table.insert(indexes, {x = x + rect.x, y = y + rect.y, png_index = png_index})
-                count = count + 1
-            end
-        until number < count
-        return indexes
-    end
-    local png = {
-        "grass1_400x280.png",
-        "grass2_400x280.png",
-        "grass3_400x280.png",
-    }
-    local middle_layer = display.newNode():addTo(self, ZORDER.TOP)
-    local indexes = random_indexes_in_rect(20, cc.rect(0, 0, 21, 21))
-    for i, v in ipairs(indexes) do
-        display.newSprite(png[v.png_index]):addTo(middle_layer)
-            :align(display.CENTER, self.normal_map:ConvertToMapPosition(v.x, v.y))
-    end
-    self.top_background = middle_layer
-end
-function AllianceLayer:InitBuildingNode()
-    self.building_node = display.newNode():addTo(self, ZORDER.BUILDING)
-end
-function AllianceLayer:InitSoldierNode()
-    self.soldier_node = display.newNode():addTo(self, ZORDER.SOLDIER)
-    self.corps_map = {}
-end
-function AllianceLayer:InitLineNode()
-    self.line_node = display.newNode():addTo(self, ZORDER.LINE)
-    self.line_map = {}
-end
-function AllianceLayer:GetBuildingNode()
-    return self.building_node
-end
-function AllianceLayer:GetSoldierNode()
-    return self.soldier_node
-end
-function AllianceLayer:GetLineNode()
-    return self.line_node
 end
 function AllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_time)
     assert(self.corps_map[id] == nil)
@@ -373,10 +271,11 @@ function AllianceLayer:CreateLine(id, start_pos, end_pos)
     local unit_count = math.floor(scale)
     local sprite = display.newSprite("arrow_16x22.png", nil, nil, {class=cc.FilteredSpriteWithOne})
         :addTo(self:GetLineNode()):pos(middle.x, middle.y):rotation(march_info.degree)
+    local line_id = math.floor(march_info.length)
     sprite:setFilter(filter.newFilter("CUSTOM",
         json.encode({
             frag = "shaders/multi_tex.fs",
-            shaderName = "lineShader"..id,
+            shaderName = "lineShader"..line_id,
             unit_count = unit_count
         })
     ))
@@ -416,39 +315,7 @@ function AllianceLayer:DeleteAllLines()
     end
 end
 function AllianceLayer:GetClickedObject(world_x, world_y)
-    local point = self:GetBuildingNode():convertToNodeSpace(cc.p(world_x, world_y))
-    local logic_x, logic_y = self:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
-    local clicked_list = {
-        logic_clicked = {},
-        sprite_clicked = {}
-    }
-    self:IteratorAllianceObjects(function(_, v)
-        local check = v:IsContainPointWithFullCheck(logic_x, logic_y, world_x, world_y)
-        if check.logic_clicked then
-            table.insert(clicked_list.logic_clicked, v)
-            return true
-        elseif check.sprite_clicked then
-            table.insert(clicked_list.sprite_clicked, v)
-        end
-    end)
-    table.sort(clicked_list.logic_clicked, function(a, b)
-        return a:getLocalZOrder() > b:getLocalZOrder()
-    end)
-    table.sort(clicked_list.sprite_clicked, function(a, b)
-        return a:getLocalZOrder() > b:getLocalZOrder()
-    end)
-    local clicked_object = clicked_list.logic_clicked[1] or clicked_list.sprite_clicked[1]
-    return clicked_object or self:EmptyGround(logic_x, logic_y)
-end
-function AllianceLayer:EmptyGround(x, y)
-    return {
-        GetEntity = function()
-            return AllianceObject.new(nil, nil, x, y)
-        end
-    }
-end
-function AllianceLayer:IteratorAllianceObjects(func)
-    table.foreach(self.objects, func)
+    return self.alliance_view:GetClickedObject(world_x, world_y)
 end
 
 ----- override
@@ -460,9 +327,8 @@ function AllianceLayer:getContentSize()
     return self.content_size
 end
 function AllianceLayer:OnSceneMove()
-    self:IteratorAllianceObjects(function(_, object)
-        object:OnSceneMove()
-    end)
+    self.alliance_view:OnSceneMove()
+
     local point = self:GetBuildingNode():convertToNodeSpace(cc.p(display.cx, display.cy))
     local logic_x, logic_y = self:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
     self:NotifyObservers(function(listener)
