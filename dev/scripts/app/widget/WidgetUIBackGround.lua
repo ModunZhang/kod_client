@@ -50,6 +50,12 @@ function WidgetUIBackGround:ctor(params)
             :align(display.LEFT_BOTTOM,0, next_y)
             :addTo(self):setScaleY(need_filled_height/m_height)
     end
+
+    -- 默认的style，并且宽度为608时添加边框
+    if top_img == "back_ground_608x22.png" and  width==608 then
+        display.newSprite("shrie_state_item_line_606_16.png"):addTo(self):align(display.LEFT_TOP,0, height-4)
+        display.newSprite("shrie_state_item_line_606_16.png"):addTo(self):align(display.LEFT_BOTTOM,0, 4):flipY(true)
+    end
 end
 
 return WidgetUIBackGround

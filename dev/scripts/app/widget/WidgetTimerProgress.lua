@@ -59,10 +59,34 @@ function WidgetTimerProgress:align(anchorPoint, x, y)
     if x and y then self:setPosition(x, y) end
     return self
 end
-
-
+function WidgetTimerProgress:SetButtonImages( images )
+    local btn = self.button
+    btn:setButtonImage(cc.ui.UIPushButton.NORMAL, images["normal"], true)
+    btn:setButtonImage(cc.ui.UIPushButton.PRESSED, images["pressed"], true)
+    btn:setButtonImage(cc.ui.UIPushButton.DISABLED, images["disabled"], true)
+    return self
+end
+function WidgetTimerProgress:SetButtonLabel(str)
+    local btn = self.button
+    btn:setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = str,
+        size = 24,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+    return self
+end
+function WidgetTimerProgress:SetButtonStatus(status)
+    self.button.status = status
+    return self
+end
+function WidgetTimerProgress:GetButtonStatus()
+    return self.button.status
+end
 
 return WidgetTimerProgress
+
+
 
 
 
