@@ -1,12 +1,22 @@
 local WidgetPushButton = import(".WidgetPushButton")
 local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetPopDialog = import(".WidgetPopDialog")
+local WidgetInfo = import(".WidgetInfo")
 local window = import("..utils.window")
 local UIListView = import("..ui.UIListView")
 
 local WidgetPlayerInfo = class("WidgetPlayerInfo", function ()
     return display.newLayer()
 end)
+
+local function __getPlayerIcons()
+    return {
+        "head_dragon.png",
+        "Hero_1.png",
+        "playerIcon_default.png",
+    }
+end
+
 function WidgetPlayerInfo:ctor()
     self.basicInfo = DataManager:getUserData().basicInfo
     -- self.basicInfo = {
@@ -68,6 +78,16 @@ end
 function WidgetPlayerInfo:OpenSelectHeadIcon()
     local pd = WidgetPopDialog.new(644,_("选择头像")):addToCurrentScene()
     local body = pd:GetBody()
+    self.head_icon_list = UIListView.new{
+        -- bgColor = UIKit:hex2c4b(0x7a100000),
+        viewRect = cc.rect(4, 10, 600, 600),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+    }:addTo(body)
+    for _,icon in pairs(__getPlayerIcons()) do
+        self:AddIconOption(icon)
+    end
+    self.head_icon_list:reload()
+
 end
 -- 玩家姓名，提供更改玩家姓名接口
 function WidgetPlayerInfo:AddNameBar()
@@ -145,87 +165,31 @@ function WidgetPlayerInfo:AddPowerAndID()
 end
 -- 玩家信息
 function WidgetPlayerInfo:AddPlayerInfo()
-    local info_bg = WidgetUIBackGround.new({
-        width = 546,
-        height = 260,
-        top_img = "back_ground_568X14_top.png",
-        bottom_img = "back_ground_568X14_top.png",
-        mid_img = "back_ground_568X1_mid.png",
-        u_height = 14,
-        b_height = 14,
-        m_height = 1,
-        b_flip = true,
-    }):align(display.CENTER,0,0)
-        :pos(window.cx, window.top-390)
+    WidgetInfo.new({
+        info=self:GetInfos(),
+        h =260
+    }):align(display.CENTER,window.cx, window.top-390)
         :addTo(self)
-
-    -- WidgetUIBackGround.new({
-    --     width = 548,
-    --     height = 260,
-    --     top_img = "back_ground_548x62_top.png",
-    --     bottom_img = "back_ground_548x18_bottom.png",
-    --     mid_img = "back_ground_548x1_mid.png",
-    --     u_height = 62,
-    --     b_height = 18,
-    --     m_height = 1,
-    --     -- b_flip = true,
-    -- }):align(display.CENTER,0,0)
-    --     :pos(window.cx, window.top-690)
-    --     :addTo(self,2)
-
-    self.info_listview = UIListView.new{
-        -- bgColor = UIKit:hex2c4b(0x7a100000),
-        viewRect = cc.rect(9, 10, 526, 240),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
-    }:addTo(info_bg)
-    local list = self.info_listview
-    local infos = self:GetInfos()
-    local flag = true
-    for _,v in pairs(infos) do
-        local item = list:newItem()
-        local w,h = 528,48
-        item:setItemSize(w, h)
-        local content = display.newNode()
-        content:setContentSize(cc.size(w, h))
-        display.newScale9Sprite(flag and "upgrade_resources_background_2.png" or "upgrade_resources_background_3.png",264,24,cc.size(w,h))
-            :addTo(content)
-        UIKit:ttfLabel({
-            text = v[1],
-            size = 20,
-            color = 0x615b44
-        }):align(display.LEFT_CENTER,6, h/2)
-            :addTo(content)
-        UIKit:ttfLabel({
-            text = v[2],
-            size = 20,
-            color = 0x403c2f
-        }):align(display.RIGHT_CENTER,w-6, h/2)
-            :addTo(content)
-        item:addContent(content)
-        list:addItem(item)
-        flag = not flag
-    end
-    list:reload()
 end
 function WidgetPlayerInfo:GetInfos()
-	local infos = {}
-	local basicInfo = self.basicInfo
-	local alliance = Alliance_Manager:GetMyAlliance()
-	if alliance then
-		local member = alliance:GetMemeberById(DataManager:getUserData()._id)
-		table.insert(infos,{_("职位"),member:Title()})
-		table.insert(infos,{_("联盟"),alliance:Name()})
-		table.insert(infos,{_("忠诚值"),member:Loyalty()})
-		table.insert(infos,{_("击杀"),member:Kill()})
-		table.insert(infos,{_("胜率"),"假的"})
-		table.insert(infos,{_("进攻胜利"),"假的"})
-		table.insert(infos,{_("防御胜利"),"假的"})
-		table.insert(infos,{_("采集木材熟练度"),"假的"})
-		table.insert(infos,{_("采集石料熟练度"),"假的"})
-		table.insert(infos,{_("采集铁矿熟练度"),"假的"})
-		table.insert(infos,{_("采集粮食熟练度"),"假的"})
-	end
-	return infos
+    local infos = {}
+    local basicInfo = self.basicInfo
+    local alliance = Alliance_Manager:GetMyAlliance()
+    if not alliance:IsDefault() then
+        local member = alliance:GetMemeberById(DataManager:getUserData()._id)
+        table.insert(infos,{_("职位"),member:Title()})
+        table.insert(infos,{_("联盟"),alliance:Name()})
+        table.insert(infos,{_("忠诚值"),member:Loyalty()})
+        table.insert(infos,{_("击杀"),member:Kill()})
+        table.insert(infos,{_("胜率"),"假的"})
+        table.insert(infos,{_("进攻胜利"),"假的"})
+        table.insert(infos,{_("防御胜利"),"假的"})
+        table.insert(infos,{_("采集木材熟练度"),"假的"})
+        table.insert(infos,{_("采集石料熟练度"),"假的"})
+        table.insert(infos,{_("采集铁矿熟练度"),"假的"})
+        table.insert(infos,{_("采集粮食熟练度"),"假的"})
+    end
+    return infos
 end
 -- 勋章
 function WidgetPlayerInfo:AddMedal()
@@ -305,7 +269,75 @@ function WidgetPlayerInfo:AddDamnation()
     end
     list:reload()
 end
+
+
+function WidgetPlayerInfo:AddIconOption(icon)
+    local list =  self.head_icon_list
+    local item =list:newItem()
+
+    item:setItemSize(600, 138)
+
+    local content = display.newNode()
+    content:setContentSize(cc.size(600, 126))
+
+    local bg_1 = display.newSprite("alliance_item_flag_box_126X126.png")
+        :addTo(content):pos(75,63)
+    local size = bg_1:getContentSize()
+    local head_bg = display.newSprite("player_head_bg.png"):addTo(bg_1)
+        :pos(size.width/2,size.height/2)
+    display.newSprite(icon):addTo(head_bg):pos(head_bg:getContentSize().width/2,head_bg:getContentSize().height/2)
+    local bg_2 = display.newSprite("alliance_approval_box_450x126.png"):addTo(bg_1)
+        :align(display.LEFT_CENTER,size.width,size.height/2)
+    UIKit:ttfLabel({
+        text = _("头像")..icon,
+        size = 24,
+        color = 0x403c2f
+    }):align(display.LEFT_CENTER,10,80)
+        :addTo(bg_2)
+    UIKit:ttfLabel({
+        text = _("解锁条件").."XXXXXX",
+        size = 24,
+        color = 0x403c2f
+    }):align(display.LEFT_CENTER,10,40)
+        :addTo(bg_2)
+
+    if self.basicInfo.icon ~= icon then
+        WidgetPushButton.new(
+            {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"},
+            {scale9 = false},
+            {
+                disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+            }
+        ):setButtonLabel(UIKit:ttfLabel({
+            text = _("选择"),
+            size = 24,
+            color = 0xffedae,
+            shadow= true
+        }))
+            :onButtonClicked(function(event)
+                if event.name == "CLICKED_EVENT" then
+                end
+            end):addTo(bg_2):align(display.RIGHT_CENTER, bg_2:getContentSize().width-10,40)
+            :setButtonEnabled(false)
+    else
+        UIKit:ttfLabel({
+            text = _("已装备"),
+            size = 24,
+            color = 0xffedae,
+        }):addTo(bg_2):align(display.RIGHT_CENTER, bg_2:getContentSize().width-10,40)
+    end
+
+
+    item:addContent(content)
+    list:addItem(item)
+end
 return WidgetPlayerInfo
+
+
+
+
+
+
 
 
 

@@ -98,8 +98,7 @@ end
 
 function GameUIAllianceShrine:CreateBetweenBgAndTitle()
 	GameUIAllianceShrine.super.CreateBetweenBgAndTitle(self)
-	self.main_content = display.newNode():addTo(self):pos(window.left,window.bottom+68)
-	self.main_content:setContentSize(cc.size(window.width,window.betweenHeaderAndTab))
+	self.main_content = display.newNode():addTo(self):pos(window.left,window.bottom_top)
 end
 
 function GameUIAllianceShrine:GetSelectedButtonTag()
@@ -178,7 +177,7 @@ function GameUIAllianceShrine:TabEvent_stage()
 	--title
 
 	local title_bg = display.newSprite("shire_stage_title_564x58.png")
-		:align(display.LEFT_TOP,40,window.betweenHeaderAndTab - 5)
+		:align(display.LEFT_TOP,40,window.betweenHeaderAndTab)
 		:addTo(stage_node)
 
 	local left_button = WidgetPushButton.new(

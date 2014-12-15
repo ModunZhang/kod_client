@@ -65,6 +65,9 @@ function WidgetSelectDragon:ctor(params)
     end
 
     local dragons = dragon_manager:GetDragons()
+    if LuaUtils:table_size(dragons)==0 then
+        return
+    end
     local origin_y = rb_size.height-90
     local gap_y = 130
     local add_count = 0
@@ -160,4 +163,6 @@ function WidgetSelectDragon:ctor(params)
 end
 
 return WidgetSelectDragon
+
+
 

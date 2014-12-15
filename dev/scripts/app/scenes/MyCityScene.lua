@@ -40,6 +40,9 @@ function MyCityScene:GetHomePage()
     return home_page
 end
 function MyCityScene:onEnterTransitionFinish()
+    if device.platform == "mac" then
+        return
+    end
     local city = self.city
     local scene = self
     local check_map = {

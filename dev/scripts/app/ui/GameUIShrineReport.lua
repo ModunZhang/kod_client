@@ -178,7 +178,7 @@ function GameUIShrineReport:CreateIf_data_statistics()
 		color = 0xffedae
 	}):align(display.RIGHT_CENTER,honour_icon:getPositionX()-20,honour_icon:getPositionY()):addTo(logo)
 	UIKit:ttfLabel({
-		text = self:GetShrineReport():GetHonour(),
+		text = self:GetShrineReport():GetHonour() or 0,
 		size = 20,
 		color = 0xffedae
 	}):align(display.LEFT_CENTER, honour_icon:getPositionX()+20, honour_icon:getPositionY()):addTo(logo)

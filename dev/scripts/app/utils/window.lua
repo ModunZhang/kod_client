@@ -16,6 +16,7 @@ window.bottom 				= display.bottom + height_diff
 
 window.cx 					= window.left + window.width / 2
 window.cy                 	= window.bottom + window.height / 2
-window.bottom_top           = 94 -- 底部tab按钮的上端y值
-window.betweenHeaderAndTab = window.height - window.bottom_top - 101 -- 101是顶部的计算高度
+window.top_bottom           = window.height - 91 
+window.bottom_top           = window.bottom + 68 + 10 -- 底部tab按钮的上端y值
+window.betweenHeaderAndTab = window.height - window.bottom_top - 91 -- 101是顶部的计算高度
 return window

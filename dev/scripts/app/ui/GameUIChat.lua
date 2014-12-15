@@ -40,17 +40,17 @@ end
 
 function GameUIChat:CreateSettingButton()
 	--right button
-	local rightbutton = cc.ui.UIPushButton.new({normal = "common_back_button.png",pressed = "common_back_button_highlight.png"}, {scale9 = false})
+	local rightbutton = cc.ui.UIPushButton.new({normal = "home_btn_up.png",pressed = "home_btn_down.png"}, {scale9 = false})
 		:onButtonClicked(function(event)
 			self:CreatShieldView()
     	end)
-    	:align(display.TOP_LEFT, 0, 0)
+    	:align(display.TOP_RIGHT, 0, 0)
     	:addTo(self)
-    rightbutton:setRotation(90)
-    rightbutton:pos(window.right,window.top)
+    rightbutton:pos(window.right-5,window.top-5)
    	display.newSprite("chat_setting.png")
-   		:addTo(self)
-   		:pos(window.right-45, window.top-50)
+   		:addTo(rightbutton):scale(0.8)
+        :pos(-49,-30)
+
 end
 
 function GameUIChat:CreateTabButtons()

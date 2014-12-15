@@ -44,7 +44,7 @@ function GameUIWall:CreateMilitaryUIIf()
 	local military_node = display.newNode()
 	local top_bg = WidgetUIBackGround.new({height = 332})
 		:addTo(military_node)
-		:pos(15,window.betweenHeaderAndTab - 220)
+		:pos(15,window.top_bottom - 332)
 	local title_bar = display.newSprite("title_bar_586x34.png"):align(display.LEFT_TOP,10,320):addTo(top_bg)
 	UIKit:ttfLabel({
 		text = _("驻防部队"),
@@ -77,7 +77,7 @@ function GameUIWall:CreateMilitaryUIIf()
 		:addTo(top_bg)
 		:align(display.LEFT_BOTTOM, list_bg:getPositionX(), list_bg:getPositionY()+list_bg:getContentSize().height + 10)
 	local dragon_bg = display.newSprite("dragon_bg_114x114.png", 63, 63):addTo(draogn_box)
-	self.dragon_head = display.newSprite(UILib.dragon_head[dragon:Type()]):addTo(dragon_bg):pos(57,60)
+	self.dragon_head = display.newSprite(UILib.dragon_head['redDragon']):addTo(dragon_bg):pos(57,60)
 	if not dragon then
 		self.dragon_head:hide()
 	end
@@ -281,10 +281,15 @@ function GameUIWall:OnSelectDragonButtonClicked()
 end
 
 function GameUIWall:OnDragonSelected(dragon)
-	local dragon_type = dragon and dragon:Type() or ""
-	NetManager:getSetDefenceDragonPromise(dragon_type):next(function()
-		self:RefreshUIAfterSelectDragon(dragon)
-	end)
+	if dragon then
+		NetManager:getSetDefenceDragonPromise(dragon:Type()):next(function()
+			self:RefreshUIAfterSelectDragon(dragon)
+		end)
+	else
+		NetManager:getCancelDefenceDragonPromise():next(function()
+			self:RefreshUIAfterSelectDragon()
+		end)
+	end
 end
 
 function GameUIWall:RefreshUIAfterSelectDragon(dragon)

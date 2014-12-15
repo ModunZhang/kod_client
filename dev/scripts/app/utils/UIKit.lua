@@ -8,6 +8,7 @@ local cocos_promise = import(".cocos_promise")
 local promise = import(".promise")
 local Enum = import("..utils.Enum")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local UIListView = import("..ui.UIListView")
 
 UIKit =
     {
@@ -385,6 +386,19 @@ function UIKit:commonButtonWithBG(options)
     return btn_bg
 end
 
+function UIKit:commonListView(params)
+    assert(params.direction==cc.ui.UIScrollView.DIRECTION_VERTICAL,"错误！只支持上下滑动")
+    local viewRect = params.viewRect
+    viewRect.x = 0
+    viewRect.y = 0
+    local list_node = display.newNode()
+    list_node:ignoreAnchorPointForPosition(false)
+    list_node:setContentSize(cc.size(viewRect.width,viewRect.height))
+    local list = UIListView.new(params):addTo(list_node)
+    cc.ui.UIImage.new("listview_edging.png"):addTo(list_node):pos(0,viewRect.height-6)
+    cc.ui.UIImage.new("listview_edging.png"):addTo(list_node):pos(0,-11):flipY(true)
+    return list,list_node
+end
 
 
 
