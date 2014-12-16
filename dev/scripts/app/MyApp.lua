@@ -20,20 +20,11 @@ local Timer = import('.utils.Timer')
 local MyApp = class("MyApp", cc.mvc.AppBase)
 
 function MyApp:ctor()
+    MyApp.super.ctor(self)
     self:InitGameBase()
     self:InitI18N()
     NetManager:init()
-    MyApp.super.ctor(self)
     self.timer = Timer.new()
-    local fileutils = cc.FileUtils:getInstance()
-    if device.platform == "ios" then
-        
-    elseif device.platform == "mac" then
-        fileutils:addSearchPath("dev/res/")
-        fileutils:addSearchPath("dev/res/fonts/")
-        fileutils:addSearchPath("dev/res/images/")
-        fileutils:addSearchPath("dev/res/fonts/")
-    end
 end
 
 function MyApp:run()
@@ -64,7 +55,7 @@ function MyApp:restart()
 end
 
 function MyApp:InitI18N()
-    local currentLanFile = string.format("i18n/%s.mo", self.gameLanguage_)
+    local currentLanFile = string.format("i18n/%s.mo", self:GetGameLanguage())
     local currentLanFilePath = cc.FileUtils:getInstance():fullPathForFilename(currentLanFile)
 
     function _(text)
@@ -201,15 +192,3 @@ function MyApp:EnterMyCityScene()
     end)
 end
 return MyApp
-
-
-
-
-
-
-
-
-
-
-
-

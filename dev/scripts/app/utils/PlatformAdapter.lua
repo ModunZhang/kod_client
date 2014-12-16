@@ -21,6 +21,12 @@ function PlatformAdapter:mac()
             assert(false,"\n--- cc.DTextView not support for Player!\n")
         end
     })
+    --search path
+    local fileutils = cc.FileUtils:getInstance()
+    fileutils:addSearchPath("dev/res/")
+    fileutils:addSearchPath("dev/res/fonts/")
+    fileutils:addSearchPath("dev/res/images/")
+    fileutils:addSearchPath("dev/res/fonts/")
 end
 
 --[[
