@@ -1,5 +1,6 @@
 local WidgetPushButton = import(".WidgetPushButton")
 local WidgetProgress = import(".WidgetProgress")
+local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetTimerProgress = class("WidgetTimerProgress", function(...)
     return display.newNode(...)
 end)
@@ -7,20 +8,29 @@ end)
 function WidgetTimerProgress:ctor(width, height)
     local width = width == nil and 549 or width
     local height = height == nil and 100 or height
-    local back_ground_351x96 = cc.ui.UIImage.new("back_ground_351x96.png", {scale9 = true})
-        :setLayoutSize(width, height)
+    local back_ground_351x96 = WidgetUIBackGround.new({
+        width = 556,
+        height = 106,
+        top_img = "back_ground_426x14_top_1.png",
+        bottom_img = "back_ground_426x14_top_1.png",
+        mid_img = "back_ground_426x1_mid_1.png",
+        u_height = 14,
+        b_height = 14,
+        m_height = 1,
+        b_flip = true,
+    })
     self.describe = cc.ui.UILabel.new({
         size = 22,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
         color = UIKit:hex2c3b(0x403c2f)
-    }):addTo(back_ground_351x96, 2):align(display.LEFT_CENTER, 15, height - 20)
+    }):addTo(back_ground_351x96, 2):align(display.LEFT_CENTER, 20, height - 25)
 
 
-    self.progress = WidgetProgress.new():addTo(back_ground_351x96, 2):align(display.LEFT_CENTER, 35, 40)
+    self.progress = WidgetProgress.new():addTo(back_ground_351x96, 2):align(display.LEFT_CENTER, 35, 36)
 
     self.button = WidgetPushButton.new(
-        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {normal = "green_btn_up_148x76.png", pressed = "green_btn_down_148x76.png"},
         {scale9 = false},
         {
             disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
@@ -32,7 +42,7 @@ function WidgetTimerProgress:ctor(width, height)
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
         :addTo(back_ground_351x96, 2)
-        :align(display.CENTER, width - 100, height / 2)
+        :align(display.CENTER, width - 74, height / 2)
 
     back_ground_351x96:addTo(self)
     self.back_ground = back_ground_351x96
@@ -59,10 +69,34 @@ function WidgetTimerProgress:align(anchorPoint, x, y)
     if x and y then self:setPosition(x, y) end
     return self
 end
-
-
+function WidgetTimerProgress:SetButtonImages( images )
+    local btn = self.button
+    btn:setButtonImage(cc.ui.UIPushButton.NORMAL, images["normal"], true)
+    btn:setButtonImage(cc.ui.UIPushButton.PRESSED, images["pressed"], true)
+    btn:setButtonImage(cc.ui.UIPushButton.DISABLED, images["disabled"], true)
+    return self
+end
+function WidgetTimerProgress:SetButtonLabel(str)
+    local btn = self.button
+    btn:setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = str,
+        size = 24,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+    return self
+end
+function WidgetTimerProgress:SetButtonStatus(status)
+    self.button.status = status
+    return self
+end
+function WidgetTimerProgress:GetButtonStatus()
+    return self.button.status
+end
 
 return WidgetTimerProgress
+
+
 
 
 

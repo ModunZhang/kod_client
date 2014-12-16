@@ -60,7 +60,7 @@ function SoldierManager:GetMarchSoldierCount()
     return 0
 end
 function SoldierManager:GetStarBySoldierType(soldier_type)
-    return 1
+    return SPECIAL[soldier_type] and SPECIAL[soldier_type].star or 1
 end
 function SoldierManager:GetGarrisonSoldierCount()
     return self:GetTotalSoldierCount()

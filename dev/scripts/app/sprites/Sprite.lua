@@ -46,22 +46,21 @@ end
 -----position
 function Sprite:SetPositionWithZOrder(x, y)
     self:setPosition(x, y)
-    self:setLocalZOrder(self:GetLogicZorder(self.width))
+    self:setLocalZOrder(self:GetLogicZorder())
 end
 function Sprite:setPosition(x, y)
     assert(getmetatable(self).setPosition)
     getmetatable(self).setPosition(self, x, y)
-    self:setLocalZOrder(self:GetLogicZorder(self.width))
+    self:setLocalZOrder(self:GetLogicZorder())
 end
-function Sprite:GetLogicZorder(width)
+function Sprite:GetLogicZorder()
     local x, y = self:GetMidLogicPosition()
-    return x + y * width + 100
+    return self:GetMapLayer():GetZOrderBy(self, x, y)
 end
 ---- 功能
 function Sprite:ctor(city_layer, entity, x, y)
     self.city_layer = city_layer
     self.logic_map = city_layer:GetLogicMap()
-    self.width = (city_layer:GetMapSize())
     self.entity = entity
     self.sprite = self:CreateSprite():addTo(self, SPRITE):pos(self:GetSpriteOffset())
     self:SetPositionWithZOrder(x, y)

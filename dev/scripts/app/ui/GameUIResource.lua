@@ -4,6 +4,7 @@
 --
 local GameUIResource = UIKit:createUIClass("GameUIResource","GameUIUpgradeBuilding")
 local ResourceManager = import("..entity.ResourceManager")
+local WidgetInfoWithTitle = import("..widget.WidgetInfoWithTitle")
 local City = City
 local MAX_COUNT_DECORATOR = 5
 local UIListView = import(".UIListView")
@@ -139,29 +140,30 @@ function GameUIResource:CreateInfomation()
     }):addTo(infomationLayer)
         :align(display.RIGHT_BOTTOM,chaiButton:getPositionX(),secondLabel:getPositionY())
 
-    local listHeader = display.newScale9Sprite("resources_background_header.png")
-        :addTo(infomationLayer)
-        :align(display.TOP_LEFT, window.left+45,secondLine:getPositionY()-30)
+    -- local listHeader = display.newScale9Sprite("resources_background_header.png")
+    --     :addTo(infomationLayer)
+    --     :align(display.TOP_LEFT, window.left+45,secondLine:getPositionY()-30)
 
-    cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("总计"),
-        font = UIKit:getFontFilePath(),
-        size = 24,
-        align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-        -- dimensions = cc.size(listHeader:getContentSize().width, listHeader:getContentSize().height),
-        color = UIKit:hex2c3b(0x403c2f),
-        valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
-    })
-        :addTo(listHeader,5)
-        :pos(listHeader:getContentSize().width/2,listHeader:getContentSize().height/2)
+    -- cc.ui.UILabel.new({
+    --     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+    --     text = _("总计"),
+    --     font = UIKit:getFontFilePath(),
+    --     size = 24,
+    --     align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
+    --     -- dimensions = cc.size(listHeader:getContentSize().width, listHeader:getContentSize().height),
+    --     color = UIKit:hex2c3b(0x403c2f),
+    --     valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
+    -- })
+    -- :addTo(listHeader,5)
+    -- :pos(listHeader:getContentSize().width/2,listHeader:getContentSize().height/2)
 
-    self.listView = UIListView.new {
-        viewRect = cc.rect(listHeader:getPositionX(), listHeader:getPositionY()-listHeader:getContentSize().height-500, listHeader:getContentSize().width,500),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        alignment = cc.ui.UIListView.ALIGNMENT_LEFT
-    }
-        :addTo(self.infomationLayer)
+    self.info = WidgetInfoWithTitle.new({
+        title = _("总计"),
+        h = 226
+    }):addTo(self.infomationLayer)
+        :align(display.TOP_CENTER, window.cx,secondLine:getPositionY()-30)
+
+    self.listView = self.info:GetListView()
     self.infomationLayer:setVisible(false)
 end
 
@@ -196,12 +198,13 @@ function GameUIResource:GetListItem(index,title,val)
 end
 
 function GameUIResource:RefreshListView()
-    self.listView:removeAllItems()
-    for i,v in ipairs(self.dataSource) do
-        local newItem = self:GetListItem(i,v[1],v[2])
-        self.listView:addItem(newItem)
-    end
-    self.listView:reload()
+    -- self.listView:removeAllItems()
+    -- for i,v in ipairs(self.dataSource) do
+    --     local newItem = self:GetListItem(i,v[1],v[2])
+    --     self.listView:addItem(newItem)
+    -- end
+    -- self.listView:reload()
+    self.info:CreateInfoItems(self.dataSource)
 end
 
 function GameUIResource:GetDataSource()
@@ -274,7 +277,7 @@ function GameUIResource:ChaiButtonAction( event )
     end
     local tile = self.city:GetTileWhichBuildingBelongs(self.building)
     local house_location = tile:GetBuildingLocation(self.building)
-    
+
     -- NetManager:destroyHouseByLocation(tile.location_id, house_location,
     --     NOT_HANDLE)
 
@@ -299,4 +302,5 @@ function GameUIResource:OnResourceChanged(resource_manager)
 end
 
 return GameUIResource
+
 

@@ -7,6 +7,9 @@ function IsoMapAnchorBottomLeft:ctor(map_info)
     self.base_x = map_info.base_x + self.tile_w / 2
     self.base_y = map_info.base_y + self.tile_h
 end
+function IsoMapAnchorBottomLeft:GetSize()
+    return self.map_width, self.map_height
+end
 function IsoMapAnchorBottomLeft:ConvertToMapPosition(x, y)
     return (x - y) * self.tile_w * 0.5 + self.base_x, self.base_y - (y + x + 1) * self.tile_h * 0.5
 end

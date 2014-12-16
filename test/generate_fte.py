@@ -1,14 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# deffer
-# move
-# say
-# input
-# click
-# wait
-# find
-# all
-# quit
 
 import codecs
 import traceback
@@ -73,7 +64,8 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 
 	def match(token):
 		if not look_ahead(token):
-			print "%s 不匹配" % token
+			s = "%s 不匹配" % token
+			raise Exception(s)
 		global cur_token_index
 		cur_token_index += 1
 		return token
@@ -105,6 +97,10 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			match_check_next()
 		else:			
 			match_next()
+
+	def match_equip():
+		match("equip")
+		emit("City:PromiseOfFinishEquipementDragon()")
 
 	def match_recruit():
 		match("recruit")
@@ -223,7 +219,57 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 
 	def match_arrowOn():
 		match("arrowOn")
-		emit("scene:GetArrowTutorial():DefferShow(result)")
+		if look_ahead("("):
+			match("(")
+		else:
+			emit("scene:GetArrowTutorial():DefferShow(result)")
+			return
+
+		try:
+			angle = int(look_token())
+			match_current()
+		except ValueError, e:
+			if look_ahead(")"):
+				emit("scene:GetArrowTutorial():DefferShow(result)")
+				match(")")
+				return
+			traceback.print_exc()
+			print "arrowOn angle offsetx offsety"
+			return
+
+		if look_ahead(","):
+			match(",")
+		elif look_ahead(")"):
+			match(")")
+			emit("scene:GetArrowTutorial():DefferShow(result, %s)" % angle)
+			return
+
+		try:
+			x = int(look_token())
+			match_current()
+		except ValueError, e:
+			traceback.print_exc()
+			print "arrowOn angle offsetx offsety"
+			return
+
+		if look_ahead(","):
+			match(",")
+		elif look_ahead(")"):
+			match(")")
+			emit("scene:GetArrowTutorial():DefferShow(result, %s, %s)" % (angle, x))
+			return
+
+		try:
+			y = int(look_token())
+			match_current()
+		except ValueError, e:
+			traceback.print_exc()
+			print "arrowOn angle offsetx offsety"
+			return
+		emit("scene:GetArrowTutorial():DefferShow(result, %s, %s, %s)" % (angle, x, y))
+		match(")")
+	
+		
 
 	def match_arrowOff():
 		match("arrowOff")
@@ -402,10 +448,12 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			match_progress()
 		elif look_ahead("recruit"):
 			match_recruit()
+		elif look_ahead("equip"):
+			match_equip()
 		if look_ahead(next_symbol):
 			match_sub()
 
-	def match_main():
+	def match_start():
 		while 1:
 			if look_token() == None:
 				return
@@ -417,7 +465,7 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 		with codecs.open('./test.fte', 'r', 'utf-8') as f:
 			tokens = parse_tokens(f.read())
 			# print tokens
-			match_main()
+			match_start()
 
 	except IOError, e:
 		print "未找到文件!"

@@ -11,7 +11,9 @@ function WidgetSlider:ctor(direction, images, options)
         :addTo(self, 1):align(display.CENTER, rect.x + rect.width/2, rect.y + rect.height/2)
         self.progress:setBarChangeRate(cc.p(1,0))
         self.progress:setMidpoint(cc.p(0,0))
+        self.buttonSprite_:setLocalZOrder(2)
     end
+
 end
 function WidgetSlider:onSliderValueChanged(callback)
     return WidgetSlider.super.onSliderValueChanged(self, function(event)

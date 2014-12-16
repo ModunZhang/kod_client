@@ -1,6 +1,7 @@
 local WidgetPushButton = import(".WidgetPushButton")
 local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetPopDialog = import(".WidgetPopDialog")
+local WidgetInfo = import(".WidgetInfo")
 local window = import("..utils.window")
 local UIListView = import("..ui.UIListView")
 
@@ -164,67 +165,11 @@ function WidgetPlayerInfo:AddPowerAndID()
 end
 -- 玩家信息
 function WidgetPlayerInfo:AddPlayerInfo()
-    local info_bg = WidgetUIBackGround.new({
-        width = 546,
-        height = 260,
-        top_img = "back_ground_568X14_top.png",
-        bottom_img = "back_ground_568X14_top.png",
-        mid_img = "back_ground_568X1_mid.png",
-        u_height = 14,
-        b_height = 14,
-        m_height = 1,
-        b_flip = true,
-    }):align(display.CENTER,0,0)
-        :pos(window.cx, window.top-390)
+    WidgetInfo.new({
+        info=self:GetInfos(),
+        h =260
+    }):align(display.CENTER,window.cx, window.top-390)
         :addTo(self)
-
-    -- WidgetUIBackGround.new({
-    --     width = 548,
-    --     height = 260,
-    --     top_img = "back_ground_548x62_top.png",
-    --     bottom_img = "back_ground_548x18_bottom.png",
-    --     mid_img = "back_ground_548x1_mid.png",
-    --     u_height = 62,
-    --     b_height = 18,
-    --     m_height = 1,
-    --     -- b_flip = true,
-    -- }):align(display.CENTER,0,0)
-    --     :pos(window.cx, window.top-690)
-    --     :addTo(self,2)
-
-    self.info_listview = UIListView.new{
-        -- bgColor = UIKit:hex2c4b(0x7a100000),
-        viewRect = cc.rect(9, 10, 526, 240),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
-    }:addTo(info_bg)
-    local list = self.info_listview
-    local infos = self:GetInfos()
-    local flag = true
-    for _,v in pairs(infos) do
-        local item = list:newItem()
-        local w,h = 528,48
-        item:setItemSize(w, h)
-        local content = display.newNode()
-        content:setContentSize(cc.size(w, h))
-        display.newScale9Sprite(flag and "upgrade_resources_background_2.png" or "upgrade_resources_background_3.png",264,24,cc.size(w,h))
-            :addTo(content)
-        UIKit:ttfLabel({
-            text = v[1],
-            size = 20,
-            color = 0x615b44
-        }):align(display.LEFT_CENTER,6, h/2)
-            :addTo(content)
-        UIKit:ttfLabel({
-            text = v[2],
-            size = 20,
-            color = 0x403c2f
-        }):align(display.RIGHT_CENTER,w-6, h/2)
-            :addTo(content)
-        item:addContent(content)
-        list:addItem(item)
-        flag = not flag
-    end
-    list:reload()
 end
 function WidgetPlayerInfo:GetInfos()
     local infos = {}

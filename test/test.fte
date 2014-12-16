@@ -1,5 +1,5 @@
 deffer
-.check(1)->all[move(12, 12), say("欢迎来到kod的世界, 在这里您将带头{冲锋}!").input.click(12, 12)]->wait(GameUIBuild)->delay->lock->find(dwelling)->arrowOn->upgrade(dwelling)->arrowOff
+.check(1)->all[move(12, 12), say("欢迎来到kod的世界, 在这里您将带头{冲锋}!").input.click(12, 12)]->wait(GameUIBuild)->delay->lock->find(dwelling)->arrowOn(10, 10, 100)->upgrade(dwelling)->arrowOff
 .check(2)->show(build)->find()->arrowOn->finish(dwelling)->arrowOff
 .quit
 .check(3)->say("欢迎来到kod的世界, 在这里您将带头{冲锋}!")->input->click(15, 12)->wait(GameUIBuild)->delay->lock->find(farmer)->arrowOn->upgrade(farmer)->arrowOff
@@ -15,4 +15,5 @@ deffer
 .quit
 .check(10)->show(build)->find()->arrowOn->finish(barracks)->arrowOff
 .check(11)->move(26, 19)->click(26, 19)->wait(GameUIBarracks)->delay->lock->find(recruit)->arrowOn->waitTag(GameUIBarracks, recruit)->arrowOff->find(swordsman)->arrowOn->wait(WidgetRecruitSoldier)->arrowOff->find(progress)->arrowOn->progress(100)->arrowOff->wait(WidgetRecruitSoldier)->find(recruit)->arrowOn->recruit(swordsman)->arrowOff
+.move(18, 8)->click(18, 8)->wait(GameUIDragonEyrieMain)->delay->lock->find(dragon)->arrowOn->waitTag(GameUIDragonEyrieMain, dragon)->arrowOff->find()->arrowOn->wait(GameUIDragonEyrieDetail)->arrowOff->find(1)->arrowOn->wait(GameUIDragonEquipment)->delay->lock->arrowOff->find()->arrowOn->equip->arrowOff
 .quit

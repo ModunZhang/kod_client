@@ -3,6 +3,11 @@
 -- Date: 2014-08-05 20:10:36
 --
 local GameUILogin = UIKit:createUIClass('GameUILogin','GameUISplash')
+local gaozhou
+if CONFIG_IS_DEBUG then
+    local result
+    gaozhou, result = pcall(require, "app.service.gaozhou")
+end
 --TODO:这里会遇加载图片资源 应该可以解决点击start后的卡顿
 function GameUILogin:ctor()
     GameUILogin.super.ctor(self)
@@ -61,16 +66,16 @@ end
 
 function GameUILogin:createStartGame()
     local button = cc.ui.UIPushButton.new({
-        normal = "start_game_481x31.png"
+         normal = "start_game_481x31.png"
     },nil,{down = "SPLASH_BUTTON_START"}):addTo(self.ui_layer):pos(display.cx,display.bottom+150):hide()
     :onButtonClicked(function()
         local sp = cc.Spawn:create(cc.ScaleTo:create(1,1.5),cc.FadeOut:create(1))
         local seq = transition.sequence({sp,cc.CallFunc:create(function()
             app:EnterMyCityScene()
             end)
-        })
-        self.start_ui:runAction(seq)
-    end)
+            })
+            self.start_ui:runAction(seq)
+        end)
     self.start_ui = button
 end
 
@@ -140,10 +145,17 @@ function GameUILogin:login()
     end):catch(function(err)
         dump(err:reason())
         self:setProgressText(_("登录游戏失败!"))
+    end):done(function()
+        if CONFIG_IS_DEBUG then
+            if gaozhou then
+                return app:EnterMyCityScene()
+            end
+        end
     end)
 end
 
 return GameUILogin
+
 
 
 

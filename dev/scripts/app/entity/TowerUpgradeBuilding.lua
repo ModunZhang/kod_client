@@ -81,7 +81,13 @@ function TowerUpgradeBuilding:OnUserDataChanged(user_data, current_time)
         self:OnHandle(tower_info.level, finishTime)
     end
 end
-
+-- 获取对各兵种攻击力
+function TowerUpgradeBuilding:GetAtk()
+    local config = self.config_building_function[self:GetType()]
+    local level = self.level
+    local c = config[level]
+    return c.atkinfs,c.atkarcs,c.atkcavs,c.atkcats
+end
 
 
 

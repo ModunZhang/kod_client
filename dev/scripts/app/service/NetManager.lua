@@ -717,6 +717,20 @@ end
 function NetManager:getInstantRecruitNormalSoldierPromise(soldierName, count, cb)
     return promise.all(get_recruitNormalSoldier_promise(soldierName, count, true), get_playerdata_callback()):next(get_response_msg)
 end
+-- 招募特殊士兵
+local function get_recruitSpecialSoldier_promise(soldierName, count, finish_now)
+    return get_blocking_request_promise("logic.playerHandler.recruitSpecialSoldier", {
+        soldierName = soldierName,
+        count = count,
+        finishNow = finish_now or false
+    }, "招募特殊士兵失败!")
+end
+function NetManager:getRecruitSpecialSoldierPromise(soldierName, count)
+    return promise.all(get_recruitSpecialSoldier_promise(soldierName, count), get_playerdata_callback()):next(get_response_msg)
+end
+function NetManager:getInstantRecruitSpecialSoldierPromise(soldierName, count)
+    return promise.all(get_recruitSpecialSoldier_promise(soldierName, count, true), get_playerdata_callback()):next(get_response_msg)
+end
 -- 普通治疗士兵
 local function get_treatSoldier_promise(soldiers, finish_now)
     return get_blocking_request_promise("logic.playerHandler.treatSoldier", {

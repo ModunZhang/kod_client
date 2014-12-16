@@ -425,24 +425,6 @@ end
 
 
 -- fte
-local TutorialLayer = import("..ui.TutorialLayer")
-function GameUIHome:FTE_FreeSpeedUpFirst()
-    local tutorial_layer = TutorialLayer.new():addTo(self)
-    return self:DefferShow("build"):next(function()
-        return self:Find()
-    end):next(function(item)
-        local btn = item:GetSpeedUpButton()
-        local arrow = Arrow.new():addTo(tutorial_layer:Enable():SetTouchObject(btn))
-        local rect = btn:getCascadeBoundingBox()
-        arrow:OnPositionChanged(rect.x, rect.y)
-        return item
-    end):next(function(item)
-        local building_type = string.split(item:GetEventKey(), "_")[1]
-        return self.city:PromiseOfFinishUpgradingByLevel(building_type)
-    end):next(function()
-        tutorial_layer:removeFromParent()
-    end)
-end
 function GameUIHome:DefferShow(tab_type)
     return self.event_tab:PromiseOfShowTab(tab_type):next(function() return self end)
 end

@@ -18,6 +18,133 @@ local RESOURCE = {
     iron = "iron_icon.png",
     coin = "coin_icon_1.png",
 }
+local MATERIALS = {
+    blueprints = "blueprints_112x112.png",
+    tools =  "tools_112x112.png",
+    tiles = "tiles_112x112.png",
+    pulley = "pulley_112x112.png",
+    trainingFigure = "trainingFigure_112x112.png",
+    bowTarget = "bowTarget_112x112.png",
+    saddle = "saddle_112x112.png",
+    ironPart = "ironPart_112x112.png",
+}
+local DRAGON_MATERIAL_PIC_MAP = {
+    ["ironIngot"] = "ironIngot_92x92.png",
+    ["steelIngot"] = "steelIngot_92x92.png",
+    ["mithrilIngot"] = "mithrilIngot_92x92.png",
+    ["blackIronIngot"] = "blackIronIngot_92x92.png",
+    ["arcaniteIngot"] = "arcaniteIngot_92x92.png",
+    ["wispOfFire"] = "wispOfFire_92x92.png",
+    ["wispOfCold"] = "wispOfCold_92x92.png",
+    ["wispOfWind"] = "wispOfWind_92x92.png",
+    ["lavaSoul"] = "lavaSoul_92x92.png",
+    ["iceSoul"] = "iceSoul_92x92.png",
+    ["forestSoul"] = "forestSoul_92x92.png",
+    ["infernoSoul"] = "infernoSoul_92x92.png",
+    ["blizzardSoul"] = "blizzardSoul_92x92.png",
+    ["fairySoul"] = "fairySoul_92x92.png",
+    ["moltenShard"] = "moltenShard_92x92.png",
+    ["glacierShard"] = "glacierShard_92x92.png",
+    ["chargedShard"] = "chargedShard_92x92.png",
+    ["moltenShiver"] = "moltenShiver_92x92.png",
+    ["glacierShiver"] = "glacierShiver_92x92.png",
+    ["chargedShiver"] = "chargedShiver_92x92.png",
+    ["moltenCore"] = "moltenCore_92x92.png",
+    ["glacierCore"] = "glacierCore_92x92.png",
+    ["chargedCore"] = "chargedCore_92x92.png",
+    ["moltenMagnet"] = "moltenMagnet_92x92.png",
+    ["glacierMagnet"] = "glacierMagnet_92x92.png",
+    ["chargedMagnet"] = "chargedMagnet_92x92.png",
+    ["challengeRune"] = "challengeRune_92x92.png",
+    ["suppressRune"] = "suppressRune_92x92.png",
+    ["rageRune"] = "rageRune_92x92.png",
+    ["guardRune"] = "guardRune_92x92.png",
+    ["poisonRune"] = "poisonRune_92x92.png",
+    ["giantRune"] = "giantRune_92x92.png",
+    ["dolanRune"] = "dolanRune_92x92.png",
+    ["warsongRune"] = "warsongRune_92x92.png",
+    ["infernoRune"] = "infernoRune_92x92.png",
+    ["arcanaRune"] = "arcanaRune_92x92.png",
+    ["eternityRune"] = "eternityRune_92x92.png"
+}
+local SOLDIER_METARIAL = {
+    ["heroBones"] = "insight_icon_45x45.png",
+    ["magicBox"] = "insight_icon_45x45.png",
+    ["holyBook"] = "insight_icon_45x45.png",
+    ["brightAlloy"] = "insight_icon_45x45.png",
+    ["soulStone"] = "insight_icon_45x45.png",
+    ["deathHand"] = "insight_icon_45x45.png",
+    ["confessionHood"] = "insight_icon_45x45.png",
+    ["brightRing"] = "insight_icon_45x45.png",
+}
+local EQUIPMENT = {
+    ["fireSuppressChest"] = "rageRune_92x92.png",
+    ["rageSting"] = "rageRune_92x92.png",
+    ["frostChest"] = "rageRune_92x92.png",
+    ["moltenArmguard"] = "rageRune_92x92.png",
+    ["eternitySting"] = "rageRune_92x92.png",
+    ["rageArmguard"] = "rageRune_92x92.png",
+    ["poisonChest"] = "rageRune_92x92.png",
+    ["blizzardArmguard"] = "rageRune_92x92.png",
+    ["infernoCrown"] = "rageRune_92x92.png",
+    ["dolanSting"] = "rageRune_92x92.png",
+    ["frostCrown"] = "rageRune_92x92.png",
+    ["glacierCrown"] = "rageRune_92x92.png",
+    ["windSuppressSting"] = "rageRune_92x92.png",
+    ["warsongChest"] = "rageRune_92x92.png",
+    ["frostOrb"] = "rageRune_92x92.png",
+    ["poisonArmguard"] = "rageRune_92x92.png",
+    ["coldSuppressArmguard"] = "rageRune_92x92.png",
+    ["eternityOrb"] = "rageRune_92x92.png",
+    ["rageChest"] = "rageRune_92x92.png",
+    ["fireSuppressArmguard"] = "rageRune_92x92.png",
+    ["windSuppressChest"] = "rageRune_92x92.png",
+    ["windSuppressOrb"] = "rageRune_92x92.png",
+    ["blizzardSting"] = "rageRune_92x92.png",
+    ["giantSting"] = "rageRune_92x92.png",
+    ["warsongSting"] = "rageRune_92x92.png",
+    ["dolanChest"] = "rageRune_92x92.png",
+    ["giantArmguard"] = "rageRune_92x92.png",
+    ["poisonCrown"] = "rageRune_92x92.png",
+    ["moltenCrown"] = "rageRune_92x92.png",
+    ["dolanArmguard"] = "rageRune_92x92.png",
+    ["dolanCrown"] = "rageRune_92x92.png",
+    ["blizzardCrown"] = "rageRune_92x92.png",
+    ["giantChest"] = "rageRune_92x92.png",
+    ["fireSuppressOrb"] = "rageRune_92x92.png",
+    ["eternityChest"] = "rageRune_92x92.png",
+    ["infernoSting"] = "rageRune_92x92.png",
+    ["giantCrown"] = "rageRune_92x92.png",
+    ["warsongCrown"] = "rageRune_92x92.png",
+    ["blizzardOrb"] = "rageRune_92x92.png",
+    ["coldSuppressOrb"] = "rageRune_92x92.png",
+    ["infernoOrb"] = "rageRune_92x92.png",
+    ["fireSuppressCrown"] = "rageRune_92x92.png",
+    ["dolanOrb"] = "rageRune_92x92.png",
+    ["giantOrb"] = "rageRune_92x92.png",
+    ["chargedCrown"] = "rageRune_92x92.png",
+    ["eternityArmguard"] = "rageRune_92x92.png",
+    ["rageOrb"] = "rageRune_92x92.png",
+    ["frostArmguard"] = "rageRune_92x92.png",
+    ["warsongOrb"] = "rageRune_92x92.png",
+    ["warsongArmguard"] = "rageRune_92x92.png",
+    ["glacierArmguard"] = "rageRune_92x92.png",
+    ["coldSuppressCrown"] = "rageRune_92x92.png",
+    ["windSuppressCrown"] = "rageRune_92x92.png",
+    ["coldSuppressChest"] = "rageRune_92x92.png",
+    ["fireSuppressSting"] = "rageRune_92x92.png",
+    ["poisonOrb"] = "rageRune_92x92.png",
+    ["infernoChest"] = "rageRune_92x92.png",
+    ["coldSuppressSting"] = "rageRune_92x92.png",
+    ["infernoArmguard"] = "rageRune_92x92.png",
+    ["eternityCrown"] = "rageRune_92x92.png",
+    ["chargedArmguard"] = "rageRune_92x92.png",
+    ["frostSting"] = "rageRune_92x92.png",
+    ["rageCrown"] = "rageRune_92x92.png",
+    ["blizzardChest"] = "rageRune_92x92.png",
+    ["windSuppressArmguard"] = "rageRune_92x92.png",
+    ["poisonSting"] = "rageRune_92x92.png",
+}
 local STAR_BG = {
     "star1_118x132.png",
     "star2_118x132.png",
@@ -140,12 +267,55 @@ local SOLDIER_IMAGES = {
         "soldier_ballista_1.png",
         "soldier_ballista_1.png",
     },
+
+    skeletonWarrior = {
+        "soldier_skeletonWarrior.png",
+        "soldier_skeletonWarrior.png",
+        "soldier_skeletonWarrior.png",
+    },
+    skeletonArcher = {
+        "soldier_skeletonArcher.png",
+        "soldier_skeletonArcher.png",
+        "soldier_skeletonArcher.png",
+    },
+    deathKnight = {
+        "soldier_deathKnight.png",
+        "soldier_deathKnight.png",
+        "soldier_deathKnight.png",
+    },
+    meatWagon = {
+        "soldier_meatWagon.png",
+        "soldier_meatWagon.png",
+        "soldier_meatWagon.png",
+    },
+    priest = {
+        "soldier_skeletonWarrior.png",
+        "soldier_skeletonWarrior.png",
+        "soldier_skeletonWarrior.png",
+    },
+    demonHunter = {
+        "soldier_skeletonArcher.png",
+        "soldier_skeletonArcher.png",
+        "soldier_skeletonArcher.png",
+    },
+    paladin = {
+        "soldier_deathKnight.png",
+        "soldier_deathKnight.png",
+        "soldier_deathKnight.png",
+    },
+    steamTank = {
+        "soldier_meatWagon.png",
+        "soldier_meatWagon.png",
+        "soldier_meatWagon.png",
+    },
+
     wall = {
         "soldier_ballista_1.png",
         "soldier_ballista_1.png",
         "soldier_ballista_1.png",
     }
 }
+
 local DRAGON_ANIMATIONS_FILES = {
     redDragon = {
         "animations/dragon_red/dragon_red.ExportJson"
@@ -170,6 +340,7 @@ DRAGON_HEAD = {
     redDragon = "Dragon_red_113x128.png",
     greenDragon = "Dragon_green_113x128.png"
 }
+
 local SOLDIER_ANIMATIONS = getAniNameFromAnimationFiles(SOLDIER_ANIMATION_FILES)
 local SOLDIER_EFFECT_ANIMATIONS = getAniNameFromAnimationFiles(EFFECT_ANIMATION_FILES)
 local DRAGON_ANIMATIONS = getAniNameFromAnimationFiles(DRAGON_ANIMATIONS_FILES)
@@ -187,8 +358,16 @@ return {
     dragon_head  = DRAGON_HEAD,
     dragon_animations = DRAGON_ANIMATIONS,
     dragon_animations_files = DRAGON_ANIMATIONS_FILES,
-    decorator_image = DECORATOR_IMAGE
+    decorator_image = DECORATOR_IMAGE,
+    materials = MATERIALS,
+    dragon_material_pic_map = DRAGON_MATERIAL_PIC_MAP,
+    soldier_metarial = SOLDIER_METARIAL,
+    equipment =EQUIPMENT,
 }
+
+
+
+
 
 
 

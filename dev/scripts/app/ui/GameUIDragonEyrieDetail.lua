@@ -3,6 +3,7 @@
 -- Date: 2014-10-31 15:08:59
 --
 local GameUIDragonEyrieDetail = UIKit:createUIClass("GameUIDragonEyrieDetail","GameUIWithCommonHeader")
+local cocos_promise = import('..utils.cocos_promise')
 local window = import('..utils.window')
 local StarBar = import(".StarBar")
 local DragonSprite = import("..sprites.DragonSprite")

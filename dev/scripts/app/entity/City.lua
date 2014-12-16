@@ -222,6 +222,9 @@ function City:InitBuildings(buildings)
         elseif type_ == "barracks" then
             assert(not self.barracks)
             self.barracks = building
+        elseif type_ == "dragonEyrie" then
+            assert(not self.dragonEyrie)
+            self.dragonEyrie = building
         end
         -- building.city = self
         -- building:AddUpgradeListener(self)
@@ -256,6 +259,9 @@ function City:GetKeep()
 end
 function City:GetBarracks()
     return self.barracks
+end
+function City:GetDragonEyrie()
+    return self.dragonEyrie
 end
 function City:GetHousesAroundFunctionBuildingByType(building, building_type, len)
     return self:GetHousesAroundFunctionBuildingWithFilter(building, len, function(house)
@@ -1408,6 +1414,10 @@ function City:PromiseOfRecruitSoldier(soldier_type)
 end
 function City:PromiseOfFinishSoldier(soldier_type)
     return self:GetBarracks():PromiseOfFinishSoldier(soldier_type)
+end
+--
+function City:PromiseOfFinishEquipementDragon()
+    return self:GetDragonEyrie():GetDragonManager():PromiseOfFinishEquipementDragon()
 end
 
 return City

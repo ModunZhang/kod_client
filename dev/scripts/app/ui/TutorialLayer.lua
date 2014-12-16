@@ -76,10 +76,12 @@ function TutorialLayer:GetClickedRect()
         return cc.rect(0, 0, display.width, display.height)
     end
 end
-function TutorialLayer:DefferShow(control)
+function TutorialLayer:DefferShow(control, angle, offset_x, offset_y)
     local rect = control:getCascadeBoundingBox()
-    self.arrow:OnPositionChanged(rect.x, rect.y)
-    self.arrow:show()
+    local x = rect.x + rect.width * 0.5
+    local y = rect.y + rect.height * 0.5
+    self.arrow:OnPositionChanged(x, y)
+    self.arrow:Set(angle, offset_x, offset_y):show()
     self:Enable():SetTouchObject(control)
     return cocos_promise.deffer(function() return control end)
 end
