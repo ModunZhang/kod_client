@@ -16,11 +16,15 @@
 #include "crc/crc32.c"
 #include "io/FileOperation.h"
 #include "time/Time.h"
-#ifdef OS_ANDROID
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include "jni/jni_CommonUtils.h"
 #else
 #include "common/CommonUtils.h"
 #include "LocalNotification/LocalNotification.h"
+#endif
+
+#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+#include "GameCenter/GameCenter.h"
 #endif
 using namespace std;
 
@@ -422,7 +426,7 @@ static int tolua_ext_now(lua_State* tolua_S){
     {
         
           double now;
-#ifdef OS_ANDROID
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
         now = getCurrentTime();
 #else
         now = Time::getTime();
@@ -629,7 +633,7 @@ static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
     tolua_function(tolua_S, "copyText", tolua_ext_copyText);
     tolua_function(tolua_S, "disableIdleTimer", tolua_ext_disableIdleTimer);
     
-#ifdef OS_ANDROID
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
     tolua_function(tolua_S,"getOpenUDID",tolua_ext_getOpenUDID);
 #endif
 
@@ -637,8 +641,9 @@ static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
 
 static void RegisterExtModules(lua_State* tolua_S)
 {
-#ifndef OS_ANDROID
-     tolua_ext_module_localpush(tolua_S); //local push
+#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+    tolua_ext_module_localpush(tolua_S); //local push
+    tolua_ext_module_gamecenter(tolua_S);
 #endif
 }
 

@@ -15,16 +15,6 @@ function PlatformAdapter:android()
 end
 
 function PlatformAdapter:mac()
-    -- ext.localpush = {
-    --     switchNotification = function(...)
-    --     end,
-    --     addNotification = function(...)
-    --     end,
-    --     cancelAll = function(...)
-    --     end,
-    --     cancelNotification = function(...)
-    --     end
-    -- }
     cc.DTextView = {}
     setmetatable(cc.DTextView,{
         __index= function( ... )

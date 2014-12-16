@@ -26,6 +26,8 @@
 		3F185E2B19B9EC8C000A75D0 /* Time.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3F1857BA19B9EC89000A75D0 /* Time.mm */; };
 		3F49B18319BE869A0023C33B /* res in Resources */ = {isa = PBXBuildFile; fileRef = 3F49B18119BE869A0023C33B /* res */; };
 		3F49B18419BE869A0023C33B /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = 3F49B18219BE869A0023C33B /* scripts */; };
+		3F9090F01A3FB7770019442B /* GameCenter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3F9090EE1A3FB7770019442B /* GameCenter.mm */; };
+		3F9090F21A3FB9200019442B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F9090F11A3FB9200019442B /* GameKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		3FEC8CA71A011A02000B8BF5 /* Droid Sans Faliback.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3FEC8CA61A011A02000B8BF5 /* Droid Sans Faliback.ttf */; };
 		9FC0E165195418CB0064626D /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FC0E164195418CB0064626D /* CoreMotion.framework */; };
 		DAF28FC1196D31EB00959DA1 /* liblibquick.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF28FC0196D315A00959DA1 /* liblibquick.a */; };
@@ -94,6 +96,9 @@
 		3F1857BA19B9EC89000A75D0 /* Time.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Time.mm; sourceTree = "<group>"; };
 		3F49B18119BE869A0023C33B /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; name = res; path = ../../../update/res; sourceTree = "<group>"; };
 		3F49B18219BE869A0023C33B /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = scripts; path = ../../../update/scripts; sourceTree = "<group>"; };
+		3F9090EE1A3FB7770019442B /* GameCenter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameCenter.mm; sourceTree = "<group>"; };
+		3F9090EF1A3FB7770019442B /* GameCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameCenter.h; sourceTree = "<group>"; };
+		3F9090F11A3FB9200019442B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		3FEC8CA61A011A02000B8BF5 /* Droid Sans Faliback.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Droid Sans Faliback.ttf"; path = "../../../dev/res/fonts/Droid Sans Faliback.ttf"; sourceTree = "<group>"; };
 		9FC0E164195418CB0064626D /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		DAF28BDB196D03DD00959DA1 /* libquick.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libquick.xcodeproj; path = quick/lib/proj.ios/libquick.xcodeproj; sourceTree = QUICK_V3_ROOT; };
@@ -122,6 +127,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F9090F21A3FB9200019442B /* GameKit.framework in Frameworks */,
 				DAF28FC1196D31EB00959DA1 /* liblibquick.a in Frameworks */,
 				9FC0E165195418CB0064626D /* CoreMotion.framework in Frameworks */,
 				F452BFD01687F0F200DC5BCC /* UIKit.framework in Frameworks */,
@@ -186,6 +192,7 @@
 		3F18501D19B9EC83000A75D0 /* sources */ = {
 			isa = PBXGroup;
 			children = (
+				3F9090ED1A3FB75F0019442B /* GameCenter */,
 				3F18501E19B9EC83000A75D0 /* AppDelegate.cpp */,
 				3F18501F19B9EC83000A75D0 /* AppDelegate.h */,
 				3F18502019B9EC83000A75D0 /* common */,
@@ -254,6 +261,15 @@
 			path = time;
 			sourceTree = "<group>";
 		};
+		3F9090ED1A3FB75F0019442B /* GameCenter */ = {
+			isa = PBXGroup;
+			children = (
+				3F9090EE1A3FB7770019442B /* GameCenter.mm */,
+				3F9090EF1A3FB7770019442B /* GameCenter.h */,
+			);
+			path = GameCenter;
+			sourceTree = "<group>";
+		};
 		DAF28EF4196D2D5400959DA1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -285,6 +301,7 @@
 		F456ECC415EE018E00FCF3E2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3F9090F11A3FB9200019442B /* GameKit.framework */,
 				9FC0E164195418CB0064626D /* CoreMotion.framework */,
 				F4949C781699553B00DB561E /* AddressBook.framework */,
 				F456ECCB15EE018E00FCF3E2 /* AudioToolbox.framework */,
@@ -336,6 +353,11 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0600;
+				TargetAttributes = {
+					F456ECC015EE018E00FCF3E2 = {
+						DevelopmentTeam = YQRHUJ495Q;
+					};
+				};
 			};
 			buildConfigurationList = F456ECBB15EE018E00FCF3E2 /* Build configuration list for PBXProject "kod" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -417,6 +439,7 @@
 				3F1857BF19B9EC89000A75D0 /* FileOperation.cpp in Sources */,
 				3F185E2B19B9EC8C000A75D0 /* Time.mm in Sources */,
 				3F1857C319B9EC89000A75D0 /* LocalNotification.mm in Sources */,
+				3F9090F01A3FB7770019442B /* GameCenter.mm in Sources */,
 				2EDD2799191B639C004F9539 /* AppController.mm in Sources */,
 				3F1857BD19B9EC89000A75D0 /* CommonUtils.mm in Sources */,
 				3F1857BE19B9EC89000A75D0 /* crc32.c in Sources */,
@@ -540,8 +563,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Zhang XueMin (4Y8HV55RC2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Zhang XueMin (4Y8HV55RC2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -597,7 +620,7 @@
 					"-lpomelo",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0f9b9ae7-4eab-4a68-a7b8-9b5826c19433";
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0f9b9ae7-4eab-4a68-a7b8-9b5826c19433";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../sources\"/**";
@@ -612,8 +635,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Zhang XueMin (YQRHUJ495Q)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Zhang XueMin (YQRHUJ495Q)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -667,7 +690,7 @@
 					"-lpomelo",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "667787b3-a74c-43fe-9a7b-65de0d72ea54";
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "667787b3-a74c-43fe-9a7b-65de0d72ea54";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../sources\"/**";
