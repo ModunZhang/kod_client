@@ -1,5 +1,6 @@
 local barracks_config = GameDatas.BuildingFunction.barracks
 local NORMAL = GameDatas.UnitsConfig.normal
+local SPECIAL = GameDatas.UnitsConfig.special
 local promise = import("..utils.promise")
 local Observer = import(".Observer")
 local UpgradeBuilding = import(".UpgradeBuilding")
@@ -118,7 +119,7 @@ function BarracksUpgradeBuilding:GetRecruitingTimeByTypeWithCount(soldier_type, 
 end
 function BarracksUpgradeBuilding:GetSoldierConfigByType(soldier_type)
     local soldier_name = string.format("%s_%d", soldier_type, self.soldier_star)
-    return NORMAL[soldier_name]
+    return NORMAL[soldier_name] or SPECIAL[soldier_type]
 end
 function BarracksUpgradeBuilding:GetNextLevelMaxRecruitSoldierCount()
     return barracks_config[self:GetNextLevel()].maxRecruit

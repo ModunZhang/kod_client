@@ -3,26 +3,35 @@ local WidgetUIBackGround = class("WidgetUIBackGround", function ()
     return display.newNode()
 end)
 
--- WidgetUIBackGround.STYLE = Enum("STYLE_1","STYLE_2","STYLE_3")
--- local ST = WidgetUIBackGround.STYLE
--- local STYLES = {
---     ST.STYLE_1 = {
---         top_img = "back_ground_608x22.png",
---         bottom_img = "back_ground_608x22.png",
---         top_img = "back_ground_608x22.png",
---     }  
--- }
+WidgetUIBackGround.STYLE_TYPE = Enum("STYLE_1","STYLE_2")
 
-function WidgetUIBackGround:ctor(params)
+local STYLES = {
+    [1]= {
+        top_img = "back_ground_608x22.png",
+        bottom_img = "back_ground_608x62.png",
+        mid_img = "back_ground_608X98.png",
+    },
+    [2] = {
+        top_img = "back_ground_568x16_top.png",
+        bottom_img = "back_ground_568x80_bottom.png",
+        mid_img = "back_ground_568x28_mid.png",
+        u_height =16,
+        m_height=28,
+        b_height=80,
+    },
+}
+
+function WidgetUIBackGround:ctor(params,style)
     local width = params.width or 608
     local height = params.height or 100
-    local top_img = params.top_img or "back_ground_608x22.png"
-    local bottom_img = params.bottom_img or "back_ground_608x62.png"
-    local mid_img = params.mid_img or "back_ground_608X98.png"
+    local st = STYLES[style]
+    local top_img = st and st.top_img or params.top_img or "back_ground_608x22.png"
+    local bottom_img = st and st.bottom_img or params.bottom_img or "back_ground_608x62.png"
+    local mid_img = st and st.mid_img or params.mid_img or "back_ground_608X98.png"
     -- 上中下三段的图片高度
-    local u_height = params.u_height or 22
-    local m_height = params.m_height or 98
-    local b_height = params.b_height or 62
+    local u_height = st and st.u_height or params.u_height or 22
+    local m_height = st and st.m_height or params.m_height or 98
+    local b_height = st and st.b_height or params.b_height or 62
     local is_have_frame = params.isFrame or "yes"
 
     self:setContentSize(cc.size(width,height))
@@ -60,6 +69,8 @@ function WidgetUIBackGround:ctor(params)
 end
 
 return WidgetUIBackGround
+
+
 
 
 

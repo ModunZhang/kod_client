@@ -68,14 +68,14 @@ local DRAGON_MATERIAL_PIC_MAP = {
     ["eternityRune"] = "eternityRune_92x92.png"
 }
 local SOLDIER_METARIAL = {
-    ["heroBones"] = "rageRune_92x92.png",
-    ["magicBox"] = "rageRune_92x92.png",
-    ["holyBook"] = "rageRune_92x92.png",
-    ["brightAlloy"] = "rageRune_92x92.png",
-    ["soulStone"] = "rageRune_92x92.png",
-    ["deathHand"] = "rageRune_92x92.png",
-    ["confessionHood"] = "rageRune_92x92.png",
-    ["brightRing"] = "rageRune_92x92.png",
+    ["heroBones"] = "insight_icon_45x45.png",
+    ["magicBox"] = "insight_icon_45x45.png",
+    ["holyBook"] = "insight_icon_45x45.png",
+    ["brightAlloy"] = "insight_icon_45x45.png",
+    ["soulStone"] = "insight_icon_45x45.png",
+    ["deathHand"] = "insight_icon_45x45.png",
+    ["confessionHood"] = "insight_icon_45x45.png",
+    ["brightRing"] = "insight_icon_45x45.png",
 }
 local EQUIPMENT = {
     ["fireSuppressChest"] = "rageRune_92x92.png",
@@ -267,12 +267,55 @@ local SOLDIER_IMAGES = {
         "soldier_ballista_1.png",
         "soldier_ballista_1.png",
     },
+
+    skeletonWarrior = {
+        "soldier_skeletonWarrior.png",
+        "soldier_skeletonWarrior.png",
+        "soldier_skeletonWarrior.png",
+    },
+    skeletonArcher = {
+        "soldier_skeletonArcher.png",
+        "soldier_skeletonArcher.png",
+        "soldier_skeletonArcher.png",
+    },
+    deathKnight = {
+        "soldier_deathKnight.png",
+        "soldier_deathKnight.png",
+        "soldier_deathKnight.png",
+    },
+    meatWagon = {
+        "soldier_meatWagon.png",
+        "soldier_meatWagon.png",
+        "soldier_meatWagon.png",
+    },
+    priest = {
+        "soldier_skeletonWarrior.png",
+        "soldier_skeletonWarrior.png",
+        "soldier_skeletonWarrior.png",
+    },
+    demonHunter = {
+        "soldier_skeletonArcher.png",
+        "soldier_skeletonArcher.png",
+        "soldier_skeletonArcher.png",
+    },
+    paladin = {
+        "soldier_deathKnight.png",
+        "soldier_deathKnight.png",
+        "soldier_deathKnight.png",
+    },
+    steamTank = {
+        "soldier_meatWagon.png",
+        "soldier_meatWagon.png",
+        "soldier_meatWagon.png",
+    },
+
     wall = {
         "soldier_ballista_1.png",
         "soldier_ballista_1.png",
         "soldier_ballista_1.png",
     }
 }
+
 local DRAGON_ANIMATIONS_FILES = {
     redDragon = {
         "animations/dragon_red/dragon_red.ExportJson"
@@ -297,6 +340,7 @@ DRAGON_HEAD = {
     redDragon = "Dragon_red_113x128.png",
     greenDragon = "Dragon_green_113x128.png"
 }
+
 local SOLDIER_ANIMATIONS = getAniNameFromAnimationFiles(SOLDIER_ANIMATION_FILES)
 local SOLDIER_EFFECT_ANIMATIONS = getAniNameFromAnimationFiles(EFFECT_ANIMATION_FILES)
 local DRAGON_ANIMATIONS = getAniNameFromAnimationFiles(DRAGON_ANIMATIONS_FILES)
@@ -320,6 +364,8 @@ return {
     soldier_metarial = SOLDIER_METARIAL,
     equipment =EQUIPMENT,
 }
+
+
 
 
 
