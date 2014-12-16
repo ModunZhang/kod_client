@@ -417,6 +417,16 @@ local SOLDIER_NAME = {
     ["horseArcher"] = _("弓骑兵"),
     ["catapult"] = _("投石车"),
     ["ballista"] = _("弩车"),
+
+    ["skeletonWarrior"] = _("骷髅勇士"),
+    ["skeletonArcher"] = _("骷髅射手"),
+    ["deathKnight"] = _("死亡骑士"),
+    ["meatWagon"] = _("绞肉机"),
+    ["priest"] = _("牧师"),
+    ["demonHunter"] = _("猎魔人"),
+    ["paladin"] = _("圣骑士"),
+    ["steamTank"] = _("蒸汽坦克"),
+
     ["wall"] = _("城墙"),
 }
 local SOLDIER_STATUS = {
