@@ -14,6 +14,32 @@ function PlatformAdapter:android()
     end
 end
 
+--[[
+    模拟器和真机支持cc.DTextView 
+    函数名和参数同EditBox 构造函数不同
+    player/android 不支持
+    
+    local textView = cc.DTextView:create(cc.size(549,379),display.newScale9Sprite("chat_setting_listview_bg.png"))
+    textView:addTo(self):center()
+    textView:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)    
+    textView:setFont(UIKit:getFontFilePath(), 24)
+    textView:registerScriptTextViewHandler(function(event,textView)
+
+ end)
+]]--
+
+function PlatformAdapter:ios()
+    if ext.gamecenter.isGameCenterEnabled() then
+        ext.gamecenter.authenticate(function(Name,PlayerID)
+            if Name and PlayerID then
+                print("GameCenter启动成功",Name,PlayerID)
+                ext.gamecenter.showAchivevementController()
+            end
+        end)
+    end
+end
+
+
 function PlatformAdapter:mac()
     cc.DTextView = {}
     setmetatable(cc.DTextView,{
@@ -28,20 +54,6 @@ function PlatformAdapter:mac()
     fileutils:addSearchPath("dev/res/images/")
     fileutils:addSearchPath("dev/res/fonts/")
 end
-
---[[
-    模拟器和真机支持cc.DTextView 
-    函数名和参数同EditBox 构造函数不同
-    player/android 不支持
-    
-    local textView = cc.DTextView:create(cc.size(549,379),display.newScale9Sprite("chat_setting_listview_bg.png"))
-    textView:addTo(self):center()
-    textView:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)    
-    textView:setFont(UIKit:getFontFilePath(), 24)
-    textView:registerScriptTextViewHandler(function(event,textView)
-
- end)
-]]--
 
 
 function PlatformAdapter:common()
