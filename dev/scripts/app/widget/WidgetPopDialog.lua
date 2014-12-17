@@ -3,8 +3,8 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 
 local WidgetPopDialog = UIKit:createUIClass("WidgetPopDialog", "UIAutoClose")
 
-function WidgetPopDialog:ctor(height,title_text)
-    self.body = WidgetUIBackGround.new({height=height}):align(display.TOP_CENTER,display.cx,display.top-140)
+function WidgetPopDialog:ctor(height,title_text,y)
+    self.body = WidgetUIBackGround.new({height=height,isFrame="no"}):align(display.TOP_CENTER,display.cx,y or display.top-140)
     local body = self.body
     self:addTouchAbleChild(body)
     local rb_size = body:getContentSize()

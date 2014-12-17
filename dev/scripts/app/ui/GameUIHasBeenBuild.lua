@@ -2,8 +2,10 @@ local UpgradeBuilding = import("..entity.UpgradeBuilding")
 local Localize = import("..utils.Localize")
 local SpriteConfig = import("..sprites.SpriteConfig")
 local window = import("..utils.window")
-local WidgetProgress = import("..widget.WidgetProgress")
+local WidgetTimeBar = import("..widget.WidgetTimeBar")
+local WidgetBuildingIntroduce = import("..widget.WidgetBuildingIntroduce")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
+local WidgetBuyBuildingQueue = import("..widget.WidgetBuyBuildingQueue")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUIHasBeenBuild = UIKit:createUIClass('GameUIHasBeenBuild', "GameUIWithCommonHeader")
 local NOT_ABLE_TO_UPGRADE = UpgradeBuilding.NOT_ABLE_TO_UPGRADE
@@ -124,7 +126,12 @@ function GameUIHasBeenBuild:LoadBuildingQueue()
         })
         :addTo(back_ground)
         :align(display.CENTER, back_ground:getContentSize().width - 25, back_ground:getContentSize().height/2)
-        :setButtonEnabled(false)
+        -- :setButtonEnabled(false)
+        :onButtonClicked(function ( event )
+            if event.name == "CLICKED_EVENT" then
+                WidgetBuyBuildingQueue.new():addToCurrentScene()
+            end
+        end)
 
 
     function back_ground:SetBuildingQueue(current, max)
@@ -258,10 +265,11 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
     display.newSprite("building_frame_36x136.png")
         :addTo(back_ground):align(display.RIGHT_CENTER, right_x, h/2)
 
-    WidgetPushButton.new(
+    local info_btn = WidgetPushButton.new(
         {normal = "info_26x26.png",pressed = "info_26x26.png"})
         :addTo(left)
         :align(display.CENTER, 16, 16)
+        
 
 
     local building_icon = display.newSprite("keep_131x164.png")
@@ -346,7 +354,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
 
     local gem_bg = display.newSprite("back_ground_97x20.png")
         :addTo(back_ground, 2)
-        :align(display.CENTER, w - 90, h/2)
+        :align(display.CENTER, w - 90, h/2+10)
 
     display.newSprite("gem_66x56.png")
         :addTo(gem_bg, 2)
@@ -411,7 +419,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
 
 
 
-    local progress = WidgetProgress.new(UIKit:hex2c3b(0xfff3c7), "progress_bg_402x36.png", "progress_bar_404x34.png"):addTo(back_ground, 2)
+    local progress = WidgetTimeBar.new(nil, "back_ground_138x34.png"):addTo(back_ground, 2)
         :align(display.LEFT_CENTER, 185, h/2)
 
     local speed_up = WidgetPushButton.new(
@@ -440,6 +448,11 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         building_icon:setTexture(png)
         building_icon:scale(config.scale)
         building_icon:pos(base_x + config.offset.x, base_y + config.offset.y)
+        info_btn:onButtonClicked(function (event)
+            if event.name == "CLICKED_EVENT" then
+                WidgetBuildingIntroduce.new(City:GetFirstBuildingByType(building_type)):addToCurrentScene()
+            end
+        end)
         return self
     end
     function item:SetTitleLabel(label)
