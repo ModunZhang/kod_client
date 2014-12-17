@@ -21,9 +21,6 @@ return function(userData)
     local chatCenter = ChatCenter.new()
     chatCenter:requestAllMessage()
     app.chatCenter = chatCenter
-    if CONFIG_IS_DEBUG then
-        app:showDebugInfo()
-    end
 end
 
 

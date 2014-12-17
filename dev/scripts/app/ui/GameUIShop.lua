@@ -645,7 +645,7 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 320, window.top - 1200)
         :onButtonClicked(function(event)
-            end)
+        end)
 
     WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
@@ -937,6 +937,22 @@ function GameUIShop:onEnter()
             else
                 app:SetGameLanguage("zh_Hans")
             end
+        end)
+
+     WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "版本信息",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color =  cc.c3b(255,0,0)
+    }))
+        :addTo(content)
+        :align(display.CENTER, window.left + 320, window.top - 1500)
+        :onButtonClicked(function(event)
+            device.showAlert("版本信息", app:showDebugInfo(),{_("确定")})
         end)
 
 
