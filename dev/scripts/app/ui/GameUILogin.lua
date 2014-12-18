@@ -155,7 +155,3 @@ function GameUILogin:login()
 end
 
 return GameUILogin
-
-
-
-

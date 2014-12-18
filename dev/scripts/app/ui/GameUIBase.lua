@@ -22,7 +22,7 @@ end
 -- Node Event
 --------------------------------------
 function GameUIBase:onEnter()
-    print("onEnter->")
+    print("onEnter->",self.__cname)
     UIKit:CheckOpenUI(self)
 end
 

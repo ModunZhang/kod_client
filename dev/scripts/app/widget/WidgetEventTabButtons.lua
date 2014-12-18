@@ -295,6 +295,8 @@ function WidgetEventTabButtons:CreateOpenItem()
                 UIKit:newGameUI('GameUIHasBeenBuild', City):addToCurrentScene(true)
             elseif widget:GetCurrentTab() == "soldier" then
                 UIKit:newGameUI('GameUIBarracks', City, self.barracks):addToCurrentScene(true)
+            elseif widget:GetCurrentTab() == "technology" then
+                UIKit:newGameUI('GameUIQuickTechnology', City, self.barracks):addToCurrentScene(true)
             elseif widget:GetCurrentTab() == "material" then
                 UIKit:newGameUI('GameUIToolShop', City, self.toolShop):addToCurrentScene(true)
             end
@@ -308,7 +310,7 @@ function WidgetEventTabButtons:CreateOpenItem()
         return self
     end
     function node:onEnter()
-        button:setButtonEnabled(widget:GetCurrentTab() ~= "technology")
+        -- button:setButtonEnabled(widget:GetCurrentTab() ~= "technology")
     end
     node:setNodeEventEnabled(true)
 
@@ -458,6 +460,8 @@ function WidgetEventTabButtons:OnBeforeShow()
     elseif tab == "soldier" and self.barracks:IsUnlocked() then
         return true
     elseif tab == "material" and self.toolShop:IsUnlocked() then
+        return true
+    elseif tab == "technology" then
         return true
     end
     return false
