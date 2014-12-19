@@ -16,6 +16,9 @@ local app = app
 local timer = app.timer
 local DEBUG = false
 function CityScene:ctor(city)
+    City:ResetAllListeners()
+    Alliance_Manager:GetMyAlliance():ResetAllListeners()
+    
     self.city = city
     CityScene.super.ctor(self)
     self:LoadAnimation()

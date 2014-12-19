@@ -13,8 +13,8 @@ local function deffer(func)
     return delay_(0, func)
 end
 local function delay(time)
-    return function()
-        return delay_(time)
+    return function(obj)
+        return delay_(time, function() return obj end)
     end
 end
 local function timeOut(time)

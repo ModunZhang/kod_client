@@ -139,8 +139,8 @@ local ROADS_MAP = {
     icefield = {"road1_800x560.png", "road2_800x560.png", "ground_766x558.png"},
 }
 function CityLayer:ctor(city_scene)
-    CityLayer.super.ctor(self, 0.3, 1)
     Observer.extend(self)
+    CityLayer.super.ctor(self, 0.3, 1)
     self.city_scene = city_scene
     self.terrain_type = "grass"
     self.buildings = {}

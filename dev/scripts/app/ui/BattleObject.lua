@@ -11,11 +11,9 @@ function BattleObject:ctor()
     self:performWithDelay(function()
         self:setVisible(true)
     end, 0)
+    self:setCascadeColorEnabled(true)
 end
 function BattleObject:PlayAnimation(ani, loop_time)
-    assert(false)
-end
-function BattleObject:OnAnimationCallback(armatureBack, movementType, movementID)
     assert(false)
 end
 function BattleObject:OnAnimationCallback(armatureBack, movementType, movementID)
@@ -76,7 +74,7 @@ function BattleObject:breath(is_forever)
     end)
     return p
 end
-function BattleObject:move(x, y, time)
+function BattleObject:move(time, x, y)
     self:PlayAnimation("move_2")
     local p = promise.new()
     transition.moveTo(self, {
@@ -102,9 +100,9 @@ function BattleObject:Defeat()
         return object:defeat()
     end
 end
-function BattleObject:MoveTo(x, y, time)
+function BattleObject:MoveTo(time, x, y)
     return function(object)
-        return object:move(x, y, time)
+        return object:move(time, x, y)
     end
 end
 function BattleObject:BreathForever()

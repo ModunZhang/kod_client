@@ -4,10 +4,12 @@ local BattleObject = import(".BattleObject")
 local Corps = class("Corps", BattleObject)
 
 
-function Corps:ctor(soldier, row, col)
+function Corps:ctor(soldier, row, col, width, height)
 	Corps.super.ctor(self)
     local corps = self
-    local start_x, start_y = -90, -120
+    width = width or 90
+    height = height or 120
+    local start_x, start_y = - width, - height
     local width, height = - start_x * 2, - start_y * 2
     local function return_x_y_by_index(row_max, col_max, index)
         local unit_height = height / row_max

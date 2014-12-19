@@ -61,18 +61,24 @@
 --     printResult(p)
 -- end
 
--- require "socket"
--- host = "www.w3.org"
--- file = "/TR/REC-html32.html"
--- c = assert(socket.connect(host, 80))
--- c:send("GET" .. file .. " HTTP/1.0\r\n\r\n")
--- while true do
---     local s, status, partial = c:receive(2^10)
---     io.write(s or partial)
---     if status == "closed" then break end
--- end
--- c:close()
 
+require "socket"
+host = "www.w3.org"
+file = "/TR/REC-html32.html"
+c = assert(socket.connect(host, 80))
+c:send("GET" .. file .. " HTTP/1.0\r\n\r\n")
+while true do
+    local s, status, partial = c:receive(2^10)
+    io.write(s or partial)
+    if status == "closed" then break end
+end
+c:close()
+
+
+function download(host, file)
+
+
+--[[
 local socket = require("socket")
 local host = "www.baidu.com"
 local file = "/"
@@ -86,36 +92,51 @@ repeat
 until status ~= "closed"
 -- 关闭 TCP 连接
 sock:close()
+--]]
 
--- local http = require("socket.http")
--- local response = http.request("http://www.baidu.com/")
--- print(response)
+--[[
+local http = require("socket.http")
+local response = http.request("http://www.baidu.com/")
+print(response)
+--]]
 
 
 
--- local Game = require("Game")
--- local Enum = import("app.utils.Enum")
--- local E = Enum("ID", "INT")
 
--- local function scan(str)
---     local ending = #str
---     local start = 1
---     local cur = 1
 
---     while true do
---         if cur <= ending then
---             cur = cur + 1
---         end
---     end
+-- for_ = coroutine.create(function(arg)
+-- 	print(arg)
+-- 	while true do
+-- 		local index, is_loop_end = coroutine.yield()
+-- 		print(index)
+-- 		if is_loop_end then
+-- 			break
+-- 		end
+-- 	end
+-- end)
 
--- end
--- module( "test_scan", lunit.testcase, package.seeall )
--- function test_scan()
---     assert_equal(E.INT, scan("1"))
---     assert_equal(E.ID, scan("a1"))
+-- for i = 1, 100 do
+-- 	coroutine.resume(for_, i, i == 100)
 -- end
 
+-- for k, v in pairs(coroutine) do
+-- 	print(k, v)
+-- end
 
+-- coroutine.wrap(function(arg)
+-- 	print(arg)
+-- 	while true do
+-- 		local index = coroutine.yield()
+-- 		print(index)
+-- 	end
+-- end)
+
+-- print("status", coroutine.status(for_))
+-- print("resume", coroutine.resume(for_, 1))
+-- print("status", coroutine.status(for_))
+-- print("resume", coroutine.resume(for_, 2))
+-- print("status", coroutine.status(for_))
+-- print("resume", coroutine.resume(for_, 1))
 
 
 

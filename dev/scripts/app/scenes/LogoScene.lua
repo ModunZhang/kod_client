@@ -2,7 +2,8 @@
 -- Author: dannyhe
 -- Date: 2014-08-05 17:34:54
 --
-
+local RichText = import("..widget.RichText")
+local utf8 = import("..utils.utf8")
 local LogoScene = class("LogoScene", function()
     return display.newScene("LogoScene")
 end)
