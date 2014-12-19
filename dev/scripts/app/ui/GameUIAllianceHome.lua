@@ -642,37 +642,37 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
                 :AddToCurrentScene()
         end
     elseif tag == 1 then
-        local enemy_alliance_id = self.alliance:GetAllianceMoonGate():GetEnemyAlliance().id
-        if enemy_alliance_id and string.trim(enemy_alliance_id) ~= "" then
-            NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function(msg)
-                local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
-                app:lockInput(false)
-                app:enterScene("EnemyAllianceScene", {enemyAlliance,GameUIAllianceEnter.Enemy}, "custom", -1, function(scene, status)
-                    local manager = ccs.ArmatureDataManager:getInstance()
-                    if status == "onEnter" then
-                        manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
-                        local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
-                        display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
-                            transition.sequence{
-                                cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
-                                cc.FadeIn:create(0.75),
-                                cc.CallFunc:create(function() scene:hideOutShowIn() end),
-                                cc.DelayTime:create(0.5),
-                                cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
-                                cc.FadeOut:create(0.75),
-                                cc.CallFunc:create(function() scene:finish() end),
-                            }
-                        )
-                    elseif status == "onExit" then
-                        manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
-                    end
-                end)
-            end)
-        else
-            FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                :SetPopMessage(_("当前是和平期"))
-                :AddToCurrentScene()
-        end
+        -- local enemy_alliance_id = self.alliance:GetAllianceMoonGate():GetEnemyAlliance().id
+        -- if enemy_alliance_id and string.trim(enemy_alliance_id) ~= "" then
+        --     NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function(msg)
+        --         local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
+        --         app:lockInput(false)
+        --         app:enterScene("EnemyAllianceScene", {enemyAlliance,GameUIAllianceEnter.Enemy}, "custom", -1, function(scene, status)
+        --             local manager = ccs.ArmatureDataManager:getInstance()
+        --             if status == "onEnter" then
+        --                 manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+        --                 local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
+        --                 display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
+        --                     transition.sequence{
+        --                         cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
+        --                         cc.FadeIn:create(0.75),
+        --                         cc.CallFunc:create(function() scene:hideOutShowIn() end),
+        --                         cc.DelayTime:create(0.5),
+        --                         cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
+        --                         cc.FadeOut:create(0.75),
+        --                         cc.CallFunc:create(function() scene:finish() end),
+        --                     }
+        --                 )
+        --             elseif status == "onExit" then
+        --                 manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+        --             end
+        --         end)
+        --     end)
+        -- else
+        --     FullScreenPopDialogUI.new():SetTitle(_("提示"))
+        --         :SetPopMessage(_("当前是和平期"))
+        --         :AddToCurrentScene()
+        -- end
     end
 end
 

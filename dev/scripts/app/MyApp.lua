@@ -33,7 +33,7 @@ end
 
 function MyApp:showDebugInfo()
     local __debugVer = require("debug_version")
-    return "Client Ver:" .. __debugVer .. "\nPlayerID:" .. DataManager:getUserData()._id
+    return "Client Ver:" .. __debugVer .. "\nPlayerID:" .. DataManager:getUserData()._id .. "\nDeviceID:" .. DataManager:getUserData().countInfo.deviceId
 end
 
 function MyApp:restart()

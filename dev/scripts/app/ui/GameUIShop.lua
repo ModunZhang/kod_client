@@ -638,13 +638,14 @@ function GameUIShop:onEnter()
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = DataManager:getUserData().countInfo.deviceId,
+        text = "联盟洞察力500",
         size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
         :addTo(content)
         :align(display.CENTER, window.left + 320, window.top - 1200)
         :onButtonClicked(function(event)
+            NetManager:getSendGlobalMsgPromise("allianceperception "..500)
         end)
 
     WidgetPushButton.new(
