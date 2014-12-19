@@ -326,13 +326,13 @@ function GameUIDragonEyrieDetail:HandleEquipments(dragon)
 	for i=1,6 do
         local equipment = self:GetEquipmentItem(dragon:GetEquipmentByBody(i),true)
         if i < 4 then
-            local x = (i - 1)*(equipment:getContentSize().width*equipment:getScale() + 0)
+            local x = (i - 1)*(equipment:getContentSize().width*equipment:getScale() + 10)
             equipment:setAnchorPoint(cc.p(0,0))
-            equipment:setPosition(cc.p(x,equipment:getContentSize().height*equipment:getScale() + 0))
+            equipment:setPosition(cc.p(x,equipment:getContentSize().height*equipment:getScale() + 10))
             equipment:addTo(eqs)
         else
             equipment:setAnchorPoint(cc.p(0,0))
-            equipment:setPosition(cc.p((i - 4)*(equipment:getContentSize().width*equipment:getScale() + 0),0))
+            equipment:setPosition(cc.p((i - 4)*(equipment:getContentSize().width*equipment:getScale() + 10),0))
             equipment:addTo(eqs)
         end
         i = i + 1 
@@ -344,9 +344,9 @@ end
 function GameUIDragonEyrieDetail:GetEquipmentItem(equipment_obj,needInfoIcon)
 	needInfoIcon = needInfoIcon or false
 	local bgImage,bodyImage,equipmentImage = self:GetEquipmentItemImageInfo(equipment_obj)
-	local equipment_node = display.newSprite(bgImage):scale(0.753)
+	local equipment_node = display.newSprite(bgImage):scale(0.71)
 	if equipment_obj:IsLocked() then
-		equipment_node = display.newSprite(bgImage):scale(0.753)
+		equipment_node = display.newSprite(bgImage):scale(0.71)
 		local icon = display.newFilteredSprite(bodyImage,"GRAY", {0.2, 0.3, 0.5, 0.1}):addTo(equipment_node):pos(73,73)
 		icon:setOpacity(25)
 		display.newSprite("dragon_eq_lock_80x104.png", 73, 73):addTo(equipment_node)
