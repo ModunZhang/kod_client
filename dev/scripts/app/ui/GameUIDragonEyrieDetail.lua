@@ -35,6 +35,7 @@ function GameUIDragonEyrieDetail:CreateBetweenBgAndTitle()
 	local star_bg = display.newSprite("dragon_title_bg_534x16.png")
 		:align(display.CENTER_TOP,window.cx,window.top - 100)
 		:addTo(self.content_node)
+	self.star_bg = star_bg
 	local nameLabel = UIKit:ttfLabel({
 		text = self:GetDragon():GetLocalizedName(),
 		color = 0xebdba0,
@@ -48,23 +49,10 @@ function GameUIDragonEyrieDetail:CreateBetweenBgAndTitle()
        		num = self:GetDragon():Star(),
     }):addTo(star_bg):align(display.RIGHT_BOTTOM,480,5)
 	self.star_bar = star_bar
-    self.dragon_button_line = display.newSprite("dragon_line_620x27.png")
-    	:align(display.CENTER_BOTTOM,307,0)
-    	:addTo(self.dragon_base)
-
-    self.back_button = cc.ui.UIPushButton.new({
-    	normal = "draong_back_button_normal_122x54.png",
-    	pressed = "draong_back_button_light_122x54.png"
-    }):align(display.LEFT_BOTTOM,20, 2)
-      :addTo(self.dragon_button_line)
-      :onButtonClicked(function(event)
-      		self:leftButtonClicked()
-      end)
-    local back_icon = display.newSprite("dragon_next_icon_28x31.png"):addTo(self.back_button):pos(61,27)
-	back_icon:setRotation(180)
 	self.tab_buttons = WidgetDragonTabButtons.new(function(tag)
 		self:OnTabButtonClicked(tag)
-	end):addTo(self.dragon_button_line):pos(self.back_button:getPositionX()+97,2)
+	end):addTo(self.dragon_base):pos(-4,-42)
+	
 end
 
 function GameUIDragonEyrieDetail:onMoveInStage()
@@ -78,13 +66,20 @@ function GameUIDragonEyrieDetail:onMoveOutStage()
 	GameUIDragonEyrieDetail.super.onMoveOutStage(self)
 end
 
+function GameUIDragonEyrieDetail:VisibleStarBar(v)
+	self.star_bg:setVisible(v)
+end
+
 function GameUIDragonEyrieDetail:BuildUI()
 	if self:GetDragon():Ishated() then
-		self.tab_buttons:show()
+		self.tab_buttons:VisibleFunctionButtons(true)
 		self.tab_buttons:SelectButtonByTag("equipment")
+		self:VisibleStarBar(true)
 	else -- 未孵化
-		self.tab_buttons:hide()
+		self.tab_buttons:SetTitleString(self:GetDragon():GetLocalizedName())
+		self.tab_buttons:VisibleFunctionButtons(false)
 		self:CreateHateUIIf()
+		self:VisibleStarBar(false)
 	end
 end
 
@@ -110,57 +105,51 @@ function GameUIDragonEyrieDetail:CreateHateUIIf()
 		return
 	end
 	local hate_node = display.newNode():addTo(self)
-	local hate_bg = UIKit:CreateBoxPanel(162)
-		:addTo(hate_node)
-		:pos(window.left+45,self.dragon_base:getPositionY()-self.dragon_base:getContentSize().height - 20 - 162)
-	UIKit:ttfLabel({
-		text = _("消耗能量，为龙蛋补充活力，活力补充道100时，可以获得巨龙"),
-		size = 20,
-		color = 0x403c2f
-	}):addTo(hate_node):align(display.CENTER,window.cx,hate_bg:getPositionY() - 40)
-
-	UIKit:ttfLabel({
-		text = _("孵化巨龙"),
-		size = 22,
-		color = 0x403c2f,
-	}):addTo(hate_bg):align(display.CENTER,276,140)
-	local bg,progressTimer = GameUIDragonEyrieMain.CreateProgressTimer()
-	bg:addTo(hate_bg):align(display.LEFT_BOTTOM,10,20)
-	self.hate_progressTimer = progressTimer
-	progressTimer:setPercentage(self:GetDragon():Hp()/100)
-	local big_enery_icon = display.newSprite("dragon_energy_45x38.png")
-		:addTo(hate_bg)
-		:align(display.LEFT_BOTTOM,10,bg:getPositionY()+bg:getContentSize().height+20)
-	self.hate_nextEneryLabel = UIKit:ttfLabel({
-		size = 20,
-		color = 0x403c2f,
-		text  = self:GetHatchEneryLabelString()
-	}):addTo(hate_bg)
-	:align(display.LEFT_CENTER, big_enery_icon:getPositionX()+big_enery_icon:getContentSize().width+10, big_enery_icon:getPositionY()+big_enery_icon:getContentSize().height/2)
-
-	local cost_enery_bg = display.newSprite("LV_background.png")
-		:align(display.RIGHT_CENTER,552-20,self.hate_nextEneryLabel:getPositionY())
-		:addTo(hate_bg)
-	local small_enery_icon = display.newSprite("dragon_energy_45x38.png"):scale(0.8)
-		:addTo(cost_enery_bg):align(display.LEFT_CENTER, 0, cost_enery_bg:getContentSize().height/2)
-
-	WidgetPushButton.new({
-		normal = "yellow_button_146x42.png",
-		pressed = "yellow_button_highlight_146x42.png"
-	},{scale9 = true})
-		:align(display.RIGHT_BOTTOM,552-10, bg:getPositionY())
-		:addTo(hate_bg)
-		:setButtonLabel("normal", UIKit:commonButtonLable({
-			text = _("充能")
-		}))
-		:onButtonClicked(function(event)
+	local hate_button = WidgetPushButton.new({
+			normal = "dragon_yellow_button.png",pressed = "dragon_yellow_button_h.png"
+		}):setButtonLabel("normal",UIKit:ttfLabel({
+			text = _("开始孵化"),
+			size = 24,
+			color = 0xffedae,
+			shadow = true
+		})):addTo(hate_node):align(display.CENTER_BOTTOM,window.cx,window.bottom + 20):onButtonClicked(function()
 			self:OnEnergyButtonClicked()
 		end)
+	local hate_bg = UIKit:CreateBoxPanel9({width = 556,height = 78})
+		:addTo(hate_node)
+		:align(display.CENTER_BOTTOM,window.cx,hate_button:getPositionY()+hate_button:getCascadeBoundingBox().height+6)
 	UIKit:ttfLabel({
-		text = self.dragon_manager:GetEnergyCost(),
+		text = "孵化红龙需要80个小时",
+		size = 20,
+		color= 0x403c2f
+	}):align(display.TOP_CENTER, 278, 70):addTo(hate_bg)
+	UIKit:ttfLabel({
+		text = _("龙巢同一时间只能孵化一只巨龙"),
+		size = 20,
+		color= 0x403c2f
+	}):align(display.BOTTOM_CENTER, 278, 18):addTo(hate_bg)
+	local icon_bg = display.newSprite("hate_dragon_icon_bg_232x188.png")	
+		:addTo(hate_node)
+		:align(display.CENTER_BOTTOM,window.cx,hate_bg:getPositionY()+hate_bg:getContentSize().height+8):scale(0.9)
+	display.newSprite("redDragon_icon_151x133.png", 96,114):addTo(icon_bg)
+
+	local tip_label = UIKit:ttfLabel({
+		text = "红龙能提升部队在草地上的作战能力。",
 		size = 18,
-		color = 0x403c2f,
-	}):align(display.LEFT_CENTER, small_enery_icon:getPositionX()+small_enery_icon:getContentSize().width*0.8+10,small_enery_icon:getPositionY()):addTo(cost_enery_bg)
+		color= 0x797154,
+		align= cc.TEXT_ALIGNMENT_CENTER
+	})
+		:addTo(hate_node)
+		:align(display.CENTER_BOTTOM, window.cx, icon_bg:getPositionY()+icon_bg:getCascadeBoundingBox().height + 10)
+	local title_bar = display.newSprite("cyan_title_bar_570x30.png")
+		:addTo(hate_node)
+		:align(display.BOTTOM_CENTER, window.cx, tip_label:getPositionY()+tip_label:getContentSize().height+15)
+	UIKit:ttfLabel({
+		text = "孵化红龙",
+		size = 22,
+		color= 0xffedae
+	}):align(display.CENTER,285,15):addTo(title_bar)
+	
 	self.hate_node = hate_node
 	self:RefreshUI()
 	return self.hate_node
@@ -182,13 +171,12 @@ end
 function GameUIDragonEyrieDetail:OnResourceChanged(resource_manager)
     GameUIDragonEyrieDetail.super.OnResourceChanged(self,resource_manager)
     if self:GetDragon():Ishated() then return end
-    if self.hate_node and self.hate_node:isVisible() then
-    	self.hate_nextEneryLabel:setString(self:GetHatchEneryLabelString())
-    end
-    if self.skill_node and self.skill_node:isVisible() then
-    	
-    	self.skill_ui.timeLabel:setString(self:GetHatchEneryLabelString())
-    end
+    -- if self.hate_node and self.hate_node:isVisible() then
+    -- 	self.hate_nextEneryLabel:setString(self:GetHatchEneryLabelString())
+    -- end
+    -- if self.skill_node and self.skill_node:isVisible() then
+    -- 	self.skill_ui.timeLabel:setString(self:GetHatchEneryLabelString())
+    -- end
 end
 
 function GameUIDragonEyrieDetail:GetDragon()
@@ -214,8 +202,7 @@ function GameUIDragonEyrieDetail:RefreshUI()
 	local dragon = self:GetDragon()
 	if not dragon:Ishated() then
 		if not self.hate_node then return end
-		print("GameUIDragonEyrieDetail:RefreshUI----->",dragon:Hp())
-		self.hate_progressTimer:setPercentage(dragon:Hp()/100*100)
+		--TODO:刷新孵化界面
 	else
 		-- 已孵化的界面
 		assert(self.tab_buttons)
@@ -243,7 +230,9 @@ function GameUIDragonEyrieDetail:OnDragonHatched()
 	end
 	self:BuildDragonContent()
 	self:BuildUI()
+	self:VisibleStarBar(true)
 	self.tab_buttons:SelectButtonByTag("equipment")
+	self.tab_buttons:VisibleFunctionButtons(true)
 	self:RefreshUI()
 end
 --装备
@@ -360,7 +349,7 @@ function GameUIDragonEyrieDetail:GetEquipmentItem(equipment_obj,needInfoIcon)
 		equipment_node = display.newSprite(bgImage):scale(0.753)
 		local icon = display.newFilteredSprite(bodyImage,"GRAY", {0.2, 0.3, 0.5, 0.1}):addTo(equipment_node):pos(73,73)
 		icon:setOpacity(25)
-		display.newSprite("eq_lock_119x146.png", 73, 73):addTo(equipment_node):scale(0.9)
+		display.newSprite("dragon_eq_lock_80x104.png", 73, 73):addTo(equipment_node)
 
 	else
 		equipment_node:setTouchEnabled(true)
@@ -416,6 +405,10 @@ function GameUIDragonEyrieDetail:OnBasicChanged()
 end
 
 function GameUIDragonEyrieDetail:OnTabButtonClicked(tag)
+	if tag == 'back' then
+		self:leftButtonClicked()
+		return
+	end
 	if not self:GetDragon():Ishated() then return end
 	if self['CreateNodeIf_' .. tag] then
 		if self.current_node then 
@@ -448,17 +441,17 @@ function GameUIDragonEyrieDetail:CreateNodeIf_skill()
     }:addTo(list_bg)
 
     self.skill_ui.listView = list
-    local star = display.newSprite("dragon_star.png")
-    	:addTo(skill_node)
-    	:align(display.LEFT_BOTTOM,window.left+45,list_bg:getPositionY()+320+5)
-    local timeLabel = UIKit:ttfLabel({
-    		text = self:GetHatchEneryLabelString(),
-    		size = 20,
-    		color = 0x403c2f
-    	})
-    	:align(display.LEFT_BOTTOM,star:getPositionX()+star:getContentSize().width+2,star:getPositionY())
-    	:addTo(skill_node)
-    self.skill_ui.timeLabel  = timeLabel
+    -- local star = display.newSprite("dragon_star.png")
+    -- 	:addTo(skill_node)
+    -- 	:align(display.LEFT_BOTTOM,window.left+45,list_bg:getPositionY()+320+5)
+    -- local timeLabel = UIKit:ttfLabel({
+    -- 		text = self:GetHatchEneryLabelString(),
+    -- 		size = 20,
+    -- 		color = 0x403c2f
+    -- 	})
+    -- 	:align(display.LEFT_BOTTOM,star:getPositionX()+star:getContentSize().width+2,star:getPositionY())
+    -- 	:addTo(skill_node)
+    -- self.skill_ui.timeLabel  = timeLabel
 
     local blood_label = UIKit:ttfLabel({
     		text = "",
@@ -467,11 +460,11 @@ function GameUIDragonEyrieDetail:CreateNodeIf_skill()
     		align = cc.TEXT_ALIGNMENT_LEFT
     	})
     	:addTo(skill_node)
-    	:align(display.RIGHT_BOTTOM,window.right - 50,star:getPositionY())
+    	:align(display.RIGHT_BOTTOM,window.right - 50,list_bg:getPositionY()+320+5)
 
     self.skill_ui.blood_label = blood_label
     local magic_bottle = display.newSprite("dragon_magic_bottle.png")
-     	:align(display.RIGHT_BOTTOM,blood_label:getPositionX()-100, timeLabel:getPositionY()-2)
+     	:align(display.RIGHT_BOTTOM,blood_label:getPositionX()-100, list_bg:getPositionY()+320+5-2)
      	:addTo(skill_node)
     self.skill_ui.magic_bottle = magic_bottle
 	self.skill_node = skill_node
