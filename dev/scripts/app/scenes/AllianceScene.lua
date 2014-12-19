@@ -5,6 +5,9 @@ local MapScene = import(".MapScene")
 local AllianceScene = class("AllianceScene", MapScene)
 
 function AllianceScene:ctor()
+    City:ResetAllListeners()
+    Alliance_Manager:GetMyAlliance():ResetAllListeners()
+
     AllianceScene.super.ctor(self)
 
     local manager = ccs.ArmatureDataManager:getInstance()

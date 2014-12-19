@@ -2,9 +2,10 @@ local promise = import("..utils.promise")
 local MapLayer = class("MapLayer", function(...)
     local layer = display.newLayer()
     layer:setAnchorPoint(0, 0)
+    layer:setNodeEventEnabled(true)
     return layer
 end)
-local speed = 10
+local SPEED = 10
 ----
 function MapLayer:ctor(min_scale, max_scale)
     self.min_scale = min_scale
@@ -16,7 +17,7 @@ function MapLayer:ctor(min_scale, max_scale)
     node:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
         local target_position = self.target_position
         if target_position then
-            local x, y = target_position.x, target_position.y
+            local x, y, speed = target_position.x, target_position.y, target_position.speed
             local scene_mid_point = self:getParent():convertToNodeSpace(cc.p(display.cx, display.cy))
             local new_scene_mid_point = self:ConverToParentPosition(x, y)
             local dx, dy = scene_mid_point.x - new_scene_mid_point.x, scene_mid_point.y - new_scene_mid_point.y
@@ -24,7 +25,7 @@ function MapLayer:ctor(min_scale, max_scale)
             local current_x, current_y = self:getPosition()
             local new_x, new_y = current_x + normal.x * speed, current_y + normal.y * speed
             local tx, ty = current_x + dx, current_y + dy
-            if (tx - current_x) * (tx - new_x) < 0 or (ty - current_y) * (ty - new_y) < 0 then
+            if (tx - current_x) * (tx - new_x) <= 0 and (ty - current_y) * (ty - new_y) <= 0 then
                 self.target_position = nil
                 new_x, new_y = tx, ty
                 local move_callbacks = self.move_callbacks
@@ -41,9 +42,9 @@ function MapLayer:ConverToParentPosition(x, y)
     local world_point = self:convertToWorldSpace(cc.p(x, y))
     return self:getParent():convertToNodeSpace(world_point)
 end
-function MapLayer:MoveToPosition(map_x, map_y)
+function MapLayer:MoveToPosition(map_x, map_y, speed_)
     if map_x and map_y then
-        self.target_position = {x = map_x, y = map_y}
+        self.target_position = {x = map_x, y = map_y, speed = speed_ or SPEED}
     else
         self.target_position = nil
     end
@@ -51,11 +52,11 @@ end
 function MapLayer:GetLogicMap()
     return nil
 end
-function MapLayer:PromiseOfMove(map_x, map_y)
+function MapLayer:PromiseOfMove(map_x, map_y, speed_)
     local move_callbacks = self.move_callbacks
     assert(#move_callbacks == 0)
     local p = promise.new()
-    self:MoveToPosition(map_x, map_y)
+    self:MoveToPosition(map_x, map_y, speed_)
     table.insert(move_callbacks, function()
         p:resolve()
     end)
@@ -140,7 +141,7 @@ function MapLayer:getContentWidthAndHeight()
     return self.content_width, self.content_height
 end
 function MapLayer:getContentSize()
-    assert(false, "你应该在子类实现这个函数 GetLeftBottomPositionWithConstrain")
+    assert(false, "你应该在子类实现这个函数 getContentSize")
 end
 function MapLayer:OnSceneMove()
 

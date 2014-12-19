@@ -763,7 +763,7 @@ function GameUIReplay:DecodeStateBySide(side, is_left)
                 action = BattleObject:Do(function(corps)
                     self:NextSoldierBySide("left")
                     return corps
-                end):next(BattleObject:MoveTo(left_end.x, left_end.y, 2))
+                end):next(BattleObject:MoveTo(2, left_end.x, left_end.y))
                     :next(BattleObject:BreathForever())
             end
             self.left_category:setString(Localize.getSoldierCategoryByName(side.soldier))
@@ -793,7 +793,7 @@ function GameUIReplay:DecodeStateBySide(side, is_left)
                     self:NextSoldierBySide("right")
                     return corps
                 end):next(BattleObject:TurnLeft())
-                    :next(BattleObject:MoveTo(right_end.x, right_end.y, 2))
+                    :next(BattleObject:MoveTo(2, right_end.x, right_end.y))
                     :next(BattleObject:BreathForever())
             end
             self.right_category:setString(Localize.getSoldierCategoryByName(side.soldier))

@@ -14,18 +14,21 @@ key_map = {
     ",": 1,
     "&": 1,
 }
+next_symbol = '&'
+replace_map = {
+	'->': next_symbol,
+	'\t': '',
+	'\n': '',
+}
 tokens = []
 cur_token_index = 0
-next_symbol = '&'
 with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 	def parse_tokens(fte_str):
-		fte_str = fte_str.replace('->',next_symbol)
-		fte_str = fte_str.replace('\t','')
-		fte_str = fte_str.replace('\n','')
+		for k, v in replace_map.iteritems():
+			fte_str = fte_str.replace(k, v)
 		token_stream = []
 		cur_word = []
 		in_comma = False
-		is_next = False
 		for i, letter in enumerate(fte_str):
 			try:
 				if letter == "\"":
@@ -281,7 +284,22 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 
 	def match_delay():
 		match("delay")
-		emit("cocos_promise.deffer(function() return result end)")
+		if look_ahead("("):
+			match("(")
+		else:
+			emit("cocos_promise.deffer(function() return result end)")
+			return
+
+		try:
+			t = int(look_token())
+			match_current()
+		except ValueError, e:
+			traceback.print_exc()
+			print "delay 秒"
+			return
+		emit("cocos_promise.Delay(%s, function() return result end)" % t)
+		match(")")
+		
 
 	def match_quit():
 		match("quit")
@@ -355,9 +373,27 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			match_current()
 		except ValueError, e:
 			traceback.print_exc()
-			print "move 必须传入数字"
+			print "move x, y"
 			return
-		emit("scene:GotoLogicPoint(%s, %s)" % (x, y))
+
+		if look_ahead(","):
+			match(",")
+		else:
+			emit("scene:GotoLogicPoint(%s, %s)" % (x, y))
+			match(")")
+			return
+
+		try:
+			s = int(look_token())
+			match_current()
+		except ValueError, e:
+			traceback.print_exc()
+			print "move x, y, speed"
+			return
+		if s <= 0:
+			emit("scene:GotoLogicPointInstant(%s, %s)" % (x, y))
+		else:
+			emit("scene:GotoLogicPoint(%s, %s, %s)" % (x, y, s))
 		match(")")
 
 	def match_say():
@@ -450,8 +486,76 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			match_recruit()
 		elif look_ahead("equip"):
 			match_equip()
+			## 
+		elif look_ahead("corps"):
+			match_corps()
+		elif look_ahead("moveTo"):
+			match_moveTo()
+		elif look_ahead("idle"):
+			match_idle()
+		elif look_ahead("speak"):
+			match_speak()
+		elif look_ahead("shoutUp"):
+			match_shoutUp()
 		if look_ahead(next_symbol):
 			match_sub()
+
+
+	def match_corps():
+		match("corps")
+		match("(")
+		try:
+			index = int(look_token())
+			match_current()
+		except ValueError, e:
+			traceback.print_exc()
+			print "corps 必须传入 1 ~ 6"
+			return
+		emit("self:DefferGetCorps(%s)" % index)
+		match(")")
+
+	def match_moveTo():
+		match("moveTo")
+		match("(")
+		try:
+			x = int(look_token())
+			match_current()
+			match(",")
+			y = int(look_token())
+			match_current()
+			match(",")
+			t = int(look_token())
+			match_current()
+		except ValueError, e:
+			traceback.print_exc()
+			print "moveTo 必须传入数字"
+			return
+
+		emit("result:move(%s, self.normal_map:ConvertToMapPosition(%s, %s))" % (x, y, t))
+		match(")")
+
+
+	def match_idle():
+		match("idle")
+		emit("result:breath(true)")
+
+
+	def match_speak():
+		match("speak")
+		match("(")
+		match("\"")
+		emit("result:PromiseOfSay({")
+		emit("words = \"")
+		if not look_ahead("\""):
+			emit(match_current())
+		emit("\"")
+		emit("})")
+		match("\"")
+		match(")")
+
+	def match_shoutUp():
+		match("shoutUp")
+		emit("result:PromiseOfShoutUp()")
 
 	def match_start():
 		while 1:
@@ -462,7 +566,7 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 				match_dot()
 		
 	try:
-		with codecs.open('./test.fte', 'r', 'utf-8') as f:
+		with codecs.open('./test1.fte', 'r', 'utf-8') as f:
 			tokens = parse_tokens(f.read())
 			# print tokens
 			match_start()
