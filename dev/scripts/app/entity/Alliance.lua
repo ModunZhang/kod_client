@@ -12,7 +12,7 @@ local MarchAttackReturnEvent = import(".MarchAttackReturnEvent")
 local Alliance = class("Alliance", MultiObserver)
 
 Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS","FIGHT_REQUESTS","FIGHT_REPORTS",
-    "OnAttackMarchEventDataChanged","OnAttackMarchEventTimerChanged","OnAttackMarchReturnEventDataChanged")
+    "OnAttackMarchEventDataChanged","OnAttackMarchEventTimerChanged","OnAttackMarchReturnEventDataChanged","ALLIANCE_FIGHT")
 local unpack = unpack
 local function pack(...)
     return {...}
@@ -52,9 +52,11 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     self.help_events = {}
     self.fight_requests = {}
     self.alliance_fight_reports = {}
+    self.countInfo = {}
+    self.allianceFight = {}
     self.alliance_map = AllianceMap.new(self)
     self.alliance_shrine = AllianceShrine.new(self)
-    self.alliance_moonGate = AllianceMoonGate.new(self)
+    -- self.alliance_moonGate = AllianceMoonGate.new(self)
     --行军事件
     self.attackMarchEvents = {}
     self.attackMarchReturnEvents = {}
@@ -63,8 +65,11 @@ end
 function Alliance:GetAllianceShrine()
     return self.alliance_shrine
 end
-function Alliance:GetAllianceMoonGate()
-    return self.alliance_moonGate
+-- function Alliance:GetAllianceMoonGate()
+--     return self.alliance_moonGate
+-- end
+function Alliance:GetAllianceFight()
+    return self.allianceFight
 end
 function Alliance:ResetAllListeners()
     self.alliance_map:ClearAllListener()
@@ -293,7 +298,7 @@ function Alliance:Reset()
     self:OnOperation("quit")
     self.alliance_map:Reset()
     self.alliance_shrine:Reset()
-    self.alliance_moonGate:Reset()
+    -- self.alliance_moonGate:Reset()
     self:ResetMarchEvent()
 end
 function Alliance:OnOperation(operation_type)
@@ -424,11 +429,13 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     self:OnJoinRequestEventsChanged(alliance_data.joinRequestEvents)
     self:OnHelpEventsChanged(alliance_data.helpEvents)
     self:OnAllianceMemberDataChanged(alliance_data.members)
+    self:OnAllianceCountInfoChanged(alliance_data.countInfo)
+    self:OnAllianceFightChanged(alliance_data.allianceFight)
     self:OnAllianceFightRequestsChanged(alliance_data)
     self:OnAllianceFightReportsChanged(alliance_data)
     self.alliance_map:OnAllianceDataChanged(alliance_data)
     self.alliance_shrine:OnAllianceDataChanged(alliance_data)
-    self.alliance_moonGate:OnAllianceDataChanged(alliance_data)
+    -- self.alliance_moonGate:OnAllianceDataChanged(alliance_data)
     self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
 
     self:OnAttackMarchEventsDataChanged(alliance_data.attackMarchEvents)
@@ -804,7 +811,7 @@ function Alliance:OnAttackMarchEventsDataChanged(attackMarchEvents)
         attackMarchEvent:UpdateData(v)
         self.attackMarchEvents[attackMarchEvent:Id()] = attackMarchEvent
         attackMarchEvent:AddObserver(self)
-    end    
+    end
 end
 
 function Alliance:OnAttackMarchEventsComming(__attackMarchEvents)
@@ -819,13 +826,13 @@ function Alliance:OnAttackMarchEventsComming(__attackMarchEvents)
             return attackMarchEvent
         end
         ,function(event_data)
-            --TODO:修改行军事件
-         end
+        --TODO:修改行军事件
+        end
         ,function(event_data)
             if self.attackMarchEvents[event_data.id] then
                 local attackMarchEvent = self.attackMarchEvents[event_data.id]
                 attackMarchEvent:Reset()
-                self.attackMarchEvents[event_data.id] = nil 
+                self.attackMarchEvents[event_data.id] = nil
                 attackMarchEvent = MarchAttackEvent.new()
                 attackMarchEvent:UpdateData(event_data)
                 return attackMarchEvent
@@ -864,13 +871,13 @@ function Alliance:OnAttackMarchReturnEventsCommoing(__attackMarchReturnEvents)
             return attackMarchReturnEvent
         end
         ,function(event_data)
-            --TODO:修改行军事件
-         end
+        --TODO:修改行军事件
+        end
         ,function(event_data)
             if self.attackMarchReturnEvents[event_data.id] then
                 local attackMarchReturnEvent = self.attackMarchReturnEvents[event_data.id]
                 attackMarchReturnEvent:Reset()
-                self.attackMarchReturnEvents[event_data.id] = nil 
+                self.attackMarchReturnEvents[event_data.id] = nil
                 attackMarchReturnEvent = MarchAttackReturnEvent.new()
                 attackMarchReturnEvent:UpdateData(event_data)
                 return attackMarchReturnEvent
@@ -898,4 +905,34 @@ function Alliance:ResetMarchEvent()
     self.attackMarchReturnEvents = {}
 end
 
+function Alliance:OnAllianceCountInfoChanged(countInfo)
+    self.countInfo = countInfo or {}
+end
+function Alliance:OnAllianceFightChanged(allianceFight)
+    if not allianceFight then return end
+    for k,v in pairs(allianceFight) do
+        self.allianceFight[k] = v
+    end
+    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.ALLIANCE_FIGHT, function(listener)
+        listener:OnAllianceFightChanged(self,self.allianceFight)
+    end)
+end
+function Alliance:GetMyAllianceFightCountData()
+    local allianceFight = self.allianceFight
+    return self.id == allianceFight.attackAllianceId and allianceFight.attackAllianceCountData or allianceFight.defenceAllianceCountData
+end
+function Alliance:GetEnemyAllianceFightCountData()
+    local allianceFight = self.allianceFight
+    return self.id == allianceFight.attackAllianceId and allianceFight.defenceAllianceCountData or allianceFight.attackAllianceCountData
+end
+function Alliance:GetMyAllianceFightPlayerKills()
+    local allianceFight = self.allianceFight
+    return self.id == allianceFight.attackAllianceId and allianceFight.attackPlayerKills or allianceFight.defencePlayerKills
+end
+function Alliance:GetEnemyAllianceFightPlayerKills()
+    local allianceFight = self.allianceFight
+    return self.id == allianceFight.attackAllianceId and allianceFight.defencePlayerKills or allianceFight.attackPlayerKills
+end
+
 return Alliance
+

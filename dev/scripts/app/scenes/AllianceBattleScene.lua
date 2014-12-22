@@ -61,7 +61,6 @@ function AllianceBattleScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building,isMyAlliance = self:GetSceneLayer():GetClickedObject(x, y)
     print(isMyAlliance,"isMyAlliance--->")
     if building then
-        dump(building:GetEntity())
         if building:GetEntity():GetType() ~= "building" then
             UIKit:newGameUI('GameUIAllianceEnter'
                 ,isMyAlliance and self:GetAlliance() or self:GetEnemyAlliance()
@@ -69,11 +68,10 @@ function AllianceBattleScene:OnTouchClicked(pre_x, pre_y, x, y)
             ):addToCurrentScene(true)
         else
             local building_info = building:GetEntity():GetAllianceBuildingInfo()
-            print("index x y ",x,y,building_info.name)
             LuaUtils:outputTable("building_info", building_info)
             UIKit:newGameUI('GameUIAllianceEnter'
                 ,isMyAlliance and self:GetAlliance() or  self:GetEnemyAlliance() 
-                ,Alliance_Manager:GetMyAlliance(),building_info):addToCurrentScene(true)
+                ,building_info):addToCurrentScene(true)
         end
     end
 end
