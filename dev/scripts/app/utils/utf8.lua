@@ -18,6 +18,10 @@ local function chsize(char)
     end
 end
 
+local function utf8charLen(c)
+    return chsize(string.byte(c, 1))
+end
+
 -- 计算utf8字符串字符数, 各种字符都按一个字符计算
 -- 例如utf8len("1你好") => 3
 local function utf8len(str)
@@ -61,8 +65,26 @@ local function utf8find(str, t, start)
     return l + 1, len, b, e
 end
 
+local function utf8iterator(str)
+    local len = 0
+    local currentIndex = 1
+    return function()
+        local char = string.byte(str, currentIndex)
+        if not char then return nil end
+        local char_len = chsize(char)
+        local next_index = currentIndex + char_len
+        local real_char = string.sub(str, currentIndex, next_index - 1)
+        currentIndex = next_index
+        len = len + 1
+        return len , real_char
+    end
+end
+
+
 return {
+    charLen = utf8charLen,
     len = utf8len,
     sub = utf8sub,
-    find = utf8find
+    find = utf8find,
+    iterator = utf8iterator
 }

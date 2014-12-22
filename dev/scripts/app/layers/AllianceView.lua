@@ -188,6 +188,13 @@ function AllianceView:GetClickedObject(world_x, world_y)
     local clicked_object = clicked_list.logic_clicked[1] or clicked_list.sprite_clicked[1]
     return clicked_object or self:EmptyGround(logic_x, logic_y)
 end
+function AllianceView:EmptyGround(x, y)
+    return {
+        GetEntity = function()
+            return AllianceObject.new(nil, nil, x, y)
+        end
+    }
+end
 
 
 
