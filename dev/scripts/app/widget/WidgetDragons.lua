@@ -39,7 +39,7 @@ function WidgetDragons:ctor(callbacks)
     self.OnEnterIndexEvent = callbacks.OnEnterIndexEvent
 
     self.touch_judgment = TouchJudgment.new(self)
-    local back_node = display.newScale9Sprite("dragon_animate_bg.png"):size(619,715):addTo(self)
+    local back_node = display.newScale9Sprite("dragon_animate_bg.png"):size(619,596):addTo(self)
         :align(display.CENTER)
     back_node:setTouchEnabled(true)
     back_node:setTouchSwallowEnabled(true)

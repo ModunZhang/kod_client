@@ -135,7 +135,7 @@ end
 function GameUIDragonSkill:GetListItem(index,key,val)
 	local bg = display.newSprite(string.format("box_bg_item_520x48_%d.png",index%2))
 	local imageIcon = "dragon_energy_45x38.png"
-	local title = _("能量")
+	local title = ""
 	if key == "blood" then
 		title = _("英雄之血")
 		imageIcon = "dragonskill_blood_51x63.png"
@@ -168,7 +168,6 @@ end
 function GameUIDragonSkill:GetUpgradeSkillCost()
     local config = self.skill:GetSkillConfig()
     local r = {
-        {"energy",config.energyCostPerLevel},
         {"blood",math.pow(self.skill:Level()+1,2) * config.heroBloodCostPerLevel},
         {"dragonLevel",1}, --TODO: 升级龙技能需要的龙等级配置表未配置暂时写死
     }

@@ -171,12 +171,6 @@ function UIKit:ttfLabel( params )
     if params.margin then
         label:setAdditionalKerning(params.margin)
     end
-    -- if params.bold then
-    --     params.boldSize = 1
-    -- else
-    --     params.boldSize = 0
-    -- end
-    -- printInfo("%s","字体加粗-->" .. params.boldSize)
     if params.lineHeight and params.dimensions then
         label:setLineHeight(params.lineHeight)
     end

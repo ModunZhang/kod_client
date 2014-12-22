@@ -6,10 +6,10 @@ local GameUIDragonEyrieMain = UIKit:createUIClass("GameUIDragonEyrieMain","GameU
 local window = import("..utils.window")
 local cocos_promise = import("..utils.cocos_promise")
 local StarBar = import(".StarBar")
-local TAG_OF_CONTENT = 100
 local DragonManager = import("..entity.DragonManager")
 local WidgetDragons = import("..widget.WidgetDragons")
 local DragonSprite = import("..sprites.DragonSprite")
+local Localize = import("..utils.Localize")
 
 function GameUIDragonEyrieMain:ctor(city,building)
 	GameUIDragonEyrieMain.super.ctor(self,city,_("龙巢"),building)
@@ -91,8 +91,8 @@ function GameUIDragonEyrieMain:RefreshUI()
 	if not self:GetCurrentDragon():Ishated() then
 		self.dragon_info:hide()
 		self.progress_content_not_hated:show()
+		self.progress_content_not_hated_timer:show()
 		self.progress_content_hated:hide()
-		self.progress_not_hated:setPercentage(dragon:Hp()/100*100) -- 充能
 		self.strength_val_label:setString("0")
 		self.vitality_val_label:setString("0")
 	else
@@ -100,6 +100,7 @@ function GameUIDragonEyrieMain:RefreshUI()
 		self.draong_info_lv_label:setString("LV " .. dragon:Level() .. "/" .. dragon:GetMaxLevel())
 		self.draong_info_xp_label:setString(dragon:Exp() .. "/" .. dragon:GetMaxExp())
 		self.progress_content_not_hated:hide()
+		self.progress_content_not_hated_timer:hide()
 		self.progress_content_hated:show()
 		self.strength_val_label:setString(dragon:Strength())
 		self.vitality_val_label:setString(dragon:Vitality())
@@ -107,56 +108,46 @@ function GameUIDragonEyrieMain:RefreshUI()
 		self.progress_hated:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
 	end
 	self.nameLabel:setString(dragon:GetLocalizedName())
-	self.state_label:setString(dragon:Status())
+	self.state_label:setString(Localize.dragon_status[dragon:Status()])
 	self.star_bar:setNum(dragon:Star())
 end
 
-function GameUIDragonEyrieMain:CreateProgressTimer(tag)
+function GameUIDragonEyrieMain:CreateProgressTimer()
 	local bg,progressTimer = nil,nil
-	if "hated" ~= tag then
-		bg = display.newSprite("dragon_energy_bar_bg_366x40.png")
-		progressTimer = UIKit:commonProgressTimer("dragon_energy_bar_366x40.png"):align(display.LEFT_BOTTOM,0,0):addTo(bg)
-		progressTimer:setPercentage(0)
-		display.newSprite("dragon_energy_bar_box_366x40.png"):align(display.LEFT_BOTTOM,0,0):addTo(bg)
-	else
-		bg = display.newSprite("drgon_lvbar_bg.png"):scale(0.9)
-    	progressTimer = UIKit:commonProgressTimer("drgon_lvbar_color.png"):addTo(bg):align(display.LEFT_BOTTOM,0,0)
-    	progressTimer:setPercentage(0)
-    	local iconbg = display.newSprite("drgon_process_icon_bg.png")
-     		:addTo(bg)
-     		:align(display.LEFT_BOTTOM, -13,-5)
-    	display.newSprite("dragon_lv_icon.png")
-     		:addTo(iconbg)
-     		:pos(iconbg:getContentSize().width/2,iconbg:getContentSize().height/2)
-     	self.dragon_hp_label = UIKit:ttfLabel({
-     		 text = "120/360",
-     		 color = 0xfff3c7,
-     		 shadow = true,
-     		 size = 20
-     	}):addTo(bg):align(display.LEFT_BOTTOM, 40, 5)
+	bg = display.newSprite("process_bar_540x40.png")
+	progressTimer = UIKit:commonProgressTimer("progress_bar_540x40_2.png"):addTo(bg):align(display.LEFT_CENTER,0,20)
+	progressTimer:setPercentage(0)
+	local iconbg = display.newSprite("drgon_process_icon_bg.png")
+ 		:addTo(bg)
+ 		:align(display.LEFT_BOTTOM, -13,-2)
+	display.newSprite("dragon_lv_icon.png")
+ 		:addTo(iconbg)
+ 		:pos(iconbg:getContentSize().width/2,iconbg:getContentSize().height/2)
+ 	self.dragon_hp_label = UIKit:ttfLabel({
+ 		 text = "120/360",
+ 		 color = 0xfff3c7,
+ 		 shadow = true,
+ 		 size = 20
+ 	}):addTo(bg):align(display.LEFT_CENTER, 40, 20)
 
-     	UIKit:ttfLabel({
-     		 text = "+" .. self.building:GetHPRecoveryPerHour() .. "/h",
-     		 color = 0xfff3c7,
-     		 shadow = true,
-     		 size = 20
-     	}):addTo(bg):align(display.RIGHT_BOTTOM, bg:getContentSize().width - 50, 5)
-     	local add_button = cc.ui.UIPushButton.new({normal = "dragon_add_button_normal.png",pressed = "dragon_add_button_highlight.png"})
-     		:addTo(bg)
-     		:align(display.TOP_RIGHT,bg:getContentSize().width,bg:getContentSize().height)
-	end
-	bg:setTag(TAG_OF_CONTENT)
+ 	UIKit:ttfLabel({
+ 		 text = "+" .. self.building:GetHPRecoveryPerHour() .. "/h",
+ 		 color = 0xfff3c7,
+ 		 shadow = true,
+ 		 size = 20
+ 	}):addTo(bg):align(display.RIGHT_CENTER, bg:getContentSize().width - 50, 20)
+ 	local add_button = cc.ui.UIPushButton.new({normal = "add_button_normal_50x50.png",pressed = "add_button_light_50x50.png"})
+ 		:addTo(bg)
+ 		:align(display.CENTER_RIGHT,bg:getContentSize().width+10,20)
 	return bg,progressTimer
+
 end
 
 function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 	if not self.draongConteNode then
-		-- local dragonAnimateNode = display.newSprite("dragon_node_619x715.png")
-		-- 	:addTo(self.dragonNode)
-		-- 	:align(display.TOP_CENTER,window.cx,window.top)
 		local dragonAnimateNode,draongConteNode = self:CreateDragonAnimateNode()
 		self.draongConteNode = draongConteNode
-		dragonAnimateNode:addTo(self.dragonNode):pos(window.cx - 304,window.top - 715)
+		dragonAnimateNode:addTo(self.dragonNode):pos(window.cx - 304,window.top_bottom - 576)
 		--info
 		local info_bg = display.newSprite("dragon_info_bg_290x92.png")
 			:align(display.BOTTOM_CENTER, 309, 50)
@@ -199,59 +190,62 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 			end)
 		self.preButton:setRotation(180)
 
-		local box = display.newSprite("dragon_main_box_624x226.png")
-			:align(display.LEFT_BOTTOM, window.left+10,window.bottom+66)
-			:addTo(self.dragonNode)
+		local info_layer = UIKit:shadowLayer():size(619,40):pos(window.left+10,dragonAnimateNode:getPositionY()):addTo(self.dragonNode)
+		display.newSprite("dragon_main_line_624x58.png"):align(display.LEFT_TOP,0,20):addTo(info_layer)
 		local nameLabel = UIKit:ttfLabel({
 			text = "",
 			color = 0xffedae,
 			size  = 24
-		}):addTo(box):align(display.LEFT_TOP,70, box:getContentSize().height - 10)
+		}):addTo(info_layer):align(display.LEFT_CENTER,20, 20)
 		local star_bar = StarBar.new({
        		max = self:GetCurrentDragon():MaxStar(),
        		bg = "Stars_bar_bg.png",
        		fill = "Stars_bar_highlight.png", 
        		num = self:GetCurrentDragon():Star(),
        		margin = 0,
-    	}):addTo(box):align(display.RIGHT_BOTTOM, 570,box:getContentSize().height - 40)
-    	self.content_bg = box
+    	}):addTo(info_layer):align(display.RIGHT_CENTER, 610,20)
     	self.nameLabel = nameLabel
     	self.star_bar = star_bar
-
-    	self.progress_content_hated,self.progress_hated = self:CreateProgressTimer("hated")
-    	self.progress_content_hated:align(display.CENTER_BOTTOM,box:getContentSize().width/2,120):addTo(box)
-
-    	self.progress_content_not_hated,self.progress_not_hated = self:CreateProgressTimer()
-    	self.progress_content_not_hated:align(display.CENTER_BOTTOM,box:getContentSize().width/2,120):addTo(box)
-
+    	--
+    	self.progress_content_hated,self.progress_hated = self:CreateProgressTimer()
+    	self.progress_content_hated:align(display.CENTER_TOP,window.cx,info_layer:getPositionY()-18):addTo(self.dragonNode)
+    	
+		local info_panel = UIKit:CreateBoxPanel9({width = 548, height = 136})
+			:addTo(self.dragonNode)
+			:align(display.CENTER_TOP,window.cx,self.progress_content_hated:getPositionY() - self.progress_content_hated:getContentSize().height - 12)
+		self.progress_content_not_hated,self.progress_content_not_hated_timer = self:GetHateLabel()
+		self.progress_content_not_hated:align(display.CENTER_TOP,window.cx,info_layer:getPositionY()-10):addTo(self.dragonNode)
+		self.progress_content_not_hated_timer:align(display.CENTER_TOP,window.cx,info_layer:getPositionY()-36):addTo(self.dragonNode)
+    	-- self.progress_content_not_hated = self:CreateProgressTimer()
+    	-- self.progress_content_not_hated:align(display.CENTER_BOTTOM,box:getContentSize().width/2,120):addTo(box)
     	local strength_title_label =  UIKit:ttfLabel({
 			text = _("力量"),
 			color = 0x797154,
 			size  = 20
-		}):addTo(box):align(display.LEFT_BOTTOM,50,80)
+		}):addTo(info_panel):align(display.LEFT_BOTTOM,20,80)
 		self.strength_val_label =  UIKit:ttfLabel({
 			text = "",
 			color = 0x403c2f,
 			size  = 20
-		}):addTo(box):align(display.LEFT_BOTTOM, 130, 80)
+		}):addTo(info_panel):align(display.LEFT_BOTTOM, 80, 80)
 
 		local vitality_title_label =  UIKit:ttfLabel({
 			text = _("活力"),
 			color = 0x797154,
 			size  = 20
-		}):addTo(box):align(display.LEFT_BOTTOM,50,40)
+		}):addTo(info_panel):align(display.LEFT_BOTTOM,20,36)
 
 		self.vitality_val_label =  UIKit:ttfLabel({
 			text = "",
 			color = 0x403c2f,
 			size  = 20
-		}):addTo(box):align(display.LEFT_BOTTOM, 130, 40)
+		}):addTo(info_panel):align(display.LEFT_BOTTOM, 80, 36)
 
 		self.state_label = UIKit:ttfLabel({
 			text = "",
 			color = 0x403c2f,
 			size  = 20
-		}):addTo(box):align(display.RIGHT_BOTTOM,540,80)
+		}):addTo(info_panel):align(display.CENTER_BOTTOM,540 - 92,90)
 
 		local detailButton = cc.ui.UIPushButton.new({
 			normal = "dragon_yellow_button.png",pressed = "dragon_yellow_button_h.png"
@@ -260,13 +254,19 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 			size = 24,
 			color = 0xffedae,
 			shadow = true
-		})):addTo(box):align(display.RIGHT_BOTTOM,590,15):onButtonClicked(function()
+		})):addTo(info_panel):align(display.RIGHT_BOTTOM,540,10):onButtonClicked(function()
 			UIKit:newGameUI("GameUIDragonEyrieDetail",self.city,self.building,self:GetCurrentDragon():Type()):addToCurrentScene(true)
 		end)
 		self.detailButton = detailButton
 		self.draongConteNode:OnEnterIndex(math.abs(0))
 	end
 
+end
+
+function GameUIDragonEyrieMain:GetHateLabel()
+	local label_1 = UIKit:ttfLabel({text = "正在孵化,剩余时间",size = 20,color = 0x403c2f})
+	local label_2 = UIKit:ttfLabel({text = "00:20:00",size = 22,color = 0x068329})
+	return label_1,label_2
 end
 
 function GameUIDragonEyrieMain:GetCurrentDragon()
@@ -276,14 +276,14 @@ function GameUIDragonEyrieMain:GetCurrentDragon()
 end
 
 function GameUIDragonEyrieMain:CreateDragonAnimateNode()
-	local clipNode = display.newClippingRegionNode(cc.rect(0,0,611,715))
+	local clipNode = display.newClippingRegionNode(cc.rect(0,0,611,596))
 	local contenNode = WidgetDragons.new(
 		{
 			OnFilterChangedEvent = handler(self, self.OnFilterChangedEvent),
 			OnLeaveIndexEvent = handler(self, self.OnLeaveIndexEvent),
 			OnEnterIndexEvent = handler(self, self.OnEnterIndexEvent),
 		}
-	):addTo(clipNode):pos(309,357)
+	):addTo(clipNode):pos(309,298)
 	for i,v in ipairs(contenNode:GetItems()) do
 		local dragon = self.dragon_manager:GetDragonByIndex(i)
 		if dragon:Ishated() then
