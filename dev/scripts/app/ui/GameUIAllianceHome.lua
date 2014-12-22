@@ -36,7 +36,7 @@ function GameUIAllianceHome:onEnter()
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
 
-    self.alliance:GetAllianceMoonGate():AddListenOnType(self, AllianceMoonGate.LISTEN_TYPE.OnCountDataChanged)
+    -- self.alliance:GetAllianceMoonGate():AddListenOnType(self, AllianceMoonGate.LISTEN_TYPE.OnCountDataChanged)
 
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
 
@@ -75,7 +75,7 @@ function GameUIAllianceHome:onExit()
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
-    self.alliance:GetAllianceMoonGate():RemoveListenerOnType(self, AllianceMoonGate.LISTEN_TYPE.OnCountDataChanged)
+    -- self.alliance:GetAllianceMoonGate():RemoveListenerOnType(self, AllianceMoonGate.LISTEN_TYPE.OnCountDataChanged)
 
     GameUIAllianceHome.super.onExit(self)
 end
@@ -322,8 +322,9 @@ function GameUIAllianceHome:CreateTop()
     function Top:Refresh()
         local alliance = home.alliance
         local status = alliance:Status()
-        local moonGate = alliance:GetAllianceMoonGate()
-        local enemyAlliance = moonGate:GetEnemyAlliance()
+        -- local moonGate = alliance:GetAllianceMoonGate()
+        -- local enemyAlliance = moonGate:GetEnemyAlliance()
+        local enemyAlliance = Alliance_Manager:GetEnemyAlliance()
         period_label:setString(home:GetAlliancePeriod())
         -- 和平期
         if status=="peace" then
@@ -339,23 +340,23 @@ function GameUIAllianceHome:CreateTop()
             if enemy_flag then
                 enemy_name_bg:removeChildByTag(201, true)
             end
-            local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemyAlliance.flag)):scale(0.5)
+            local enemy_flag = ui_helper:CreateFlagContentSprite(enemyAlliance:Flag()):scale(0.5)
             enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
                 :addTo(enemy_name_bg)
             enemy_flag:setTag(201)
-            enemy_name_label:setString("["..enemyAlliance.tag.."] "..enemyAlliance.name)
+            enemy_name_label:setString("["..enemyAlliance:AliasName().."] "..enemyAlliance:Name())
 
         end
         if status=="fight" then
             our_num_icon:setTexture("battle_39x38.png")
             enemy_num_icon:setTexture("battle_39x38.png")
             enemy_num_icon:scale(1.0)
-            self:SetOurPowerOrKill(moonGate:GetCountData().our.kill)
-            self:SetEnemyPowerOrKill(moonGate:GetCountData().enemy.kill)
+            self:SetOurPowerOrKill(alliance:GetMyAllianceFightCountData().kill)
+            self:SetEnemyPowerOrKill(alliance:GetEnemyAllianceFightCountData().kill)
         else
             if status~="peace" then
                 enemy_num_icon:setTexture("allianceHome/power.png")
-                self:SetEnemyPowerOrKill(enemyAlliance.power)
+                self:SetEnemyPowerOrKill(enemyAlliance:Power())
                 enemy_num_icon:scale(1.0)
             else
                 enemy_num_icon:setTexture("citizen_44x50.png")
@@ -642,7 +643,7 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
                 :AddToCurrentScene()
         end
     elseif tag == 1 then
-        -- local enemy_alliance_id = self.alliance:GetAllianceMoonGate():GetEnemyAlliance().id
+        local enemy_alliance_id = self.alliance:GetAllianceMoonGate():GetEnemyAlliance().id
         -- if enemy_alliance_id and string.trim(enemy_alliance_id) ~= "" then
         --     NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function(msg)
         --         local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
