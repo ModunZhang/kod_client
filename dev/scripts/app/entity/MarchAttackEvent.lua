@@ -3,29 +3,27 @@
 -- Date: 2014-12-02 09:26:02
 --
 local Observer = import(".Observer")
-local MarchEventBase = class("MarchEventBase",Observer)
+local MarchAttackEvent = class("MarchAttackEvent",Observer)
 local Enum = import("..utils.Enum")
 local property = import("..utils.property")
 
-MarchEventBase.MARCH_EVENT_PLAYER_ROLE = Enum("SENDER","RECEIVER","NOTHING")
+MarchAttackEvent.MARCH_EVENT_PLAYER_ROLE = Enum("SENDER","RECEIVER","NOTHING")
 
 --判断该玩家是这个事件的发送者/接受者/无关
-function MarchEventBase:GetPlayerRole()
+function MarchAttackEvent:GetPlayerRole()
 	local Me_Id = DataManager:getUserData()._id
 	if Me_Id == self:AttackPlayerData().id then
 		return self.MARCH_EVENT_PLAYER_ROLE.SENDER 
-	elseif self:GetDefenceData().id and Me_Id == self:GetDefenceData().id then
-		return self.MARCH_EVENT_PLAYER_ROLE.RECEIVER 
 	else
 		return self.MARCH_EVENT_PLAYER_ROLE.NOTHING 
 	end
 end
 
-function MarchEventBase:Reset()
+function MarchAttackEvent:Reset()
 	self:RemoveAllObserver()
 end
 
-function MarchEventBase:OnTimer(current_time)
+function MarchAttackEvent:OnTimer(current_time)
 	self.times_ = math.ceil(self:ArriveTime() - current_time)
 	if self.times_ >= 0 then
 		self:NotifyObservers(function(listener)
@@ -34,23 +32,23 @@ function MarchEventBase:OnTimer(current_time)
 	end
 end
 
-function MarchEventBase:GetTime()
+function MarchAttackEvent:GetTime()
 	return self.times_ or 0
 end
 
 
-function MarchEventBase:FromLocation()
+function MarchAttackEvent:FromLocation()
 	return self:AttackPlayerData().location
 end
-function MarchEventBase:TargetLocation()
+function MarchAttackEvent:TargetLocation()
 	return self:GetDefenceData().location
 end
 
-function MarchEventBase:OnPropertyChange()
+function MarchAttackEvent:OnPropertyChange()
 end
 
-function MarchEventBase:ctor()
-	MarchEventBase.super.ctor(self)
+function MarchAttackEvent:ctor()
+	MarchAttackEvent.super.ctor(self)
 	property(self,"id","")
 	property(self,"startTime","")
 	property(self,"arriveTime","")
@@ -61,7 +59,7 @@ function MarchEventBase:ctor()
 	property(self,"defenceShrineData",{})
 end
 
-function MarchEventBase:GetDefenceData()
+function MarchAttackEvent:GetDefenceData()
 	if self:MarchType() == "village" then
 		return self:DefenceVillageData()
 	elseif self:MarchType() == "city" or  self:MarchType() == "helpDefence" then
@@ -73,7 +71,7 @@ function MarchEventBase:GetDefenceData()
 	end
 end
 
-function MarchEventBase:UpdateData(json_data)
+function MarchAttackEvent:UpdateData(json_data)
 	self:SetId(json_data.id or "")
 	self:SetStartTime(json_data.startTime and json_data.startTime/1000.0 or "")
 	self:SetArriveTime(json_data.arriveTime and json_data.arriveTime/1000.0 or "")
@@ -84,4 +82,4 @@ function MarchEventBase:UpdateData(json_data)
 	self:SetDefenceShrineData(json_data.defenceShrineData or {})
 end
 
-return MarchEventBase
+return MarchAttackEvent

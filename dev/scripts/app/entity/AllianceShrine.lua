@@ -11,7 +11,6 @@ local AllianceShrine = class("AllianceShrine",MultiObserver)
 local AutomaticUpdateResource = import(".AutomaticUpdateResource")
 local Enum = import("..utils.Enum")
 local ShrineFightEvent = import(".ShrineFightEvent")
-local ShrineMarchEvent = import(".ShrineMarchEvent")
 local ShrineReport = import(".ShrineReport")
 local GameUtils = GameUtils
 
@@ -30,8 +29,6 @@ function AllianceShrine:ctor(alliance)
 	AllianceShrine.super.ctor(self)
 	self.alliance = alliance
 	self.shrineEvents = {} -- 关卡事件
-	-- self.shrineMarchEvents = {} -- 部队出征
-	-- self.shrineMarchReturnEvents = {} -- 部队返回圣地
 	self.shrineReports = {}
 	self:loadStages()
 end
@@ -65,17 +62,7 @@ function AllianceShrine:Reset()
 	table.foreach(self.shrineEvents,function(_,shrineEvent)
 		shrineEvent:Reset()
 	end)
-	-- table.foreach(self.shrineMarchEvents,function(_,marchEvent)
-	-- 	marchEvent:Reset()
-	-- end)
-
-	-- table.foreach(self.shrineMarchReturnEvents,function(_,marchEvent)
-	-- 	marchEvent:Reset()
-	-- end)
-
 	self.shrineEvents = {}
-	-- self.shrineMarchEvents = {}
-	-- self.shrineMarchReturnEvents = {}
 	self.shrineReports = {}
 	self.maxCountOfStage = nil
 	self.perception = nil
@@ -163,9 +150,6 @@ function AllianceShrine:OnTimer(current_time)
 	for _,shrineEvent in pairs(self.shrineEvents) do
 		shrineEvent:OnTimer(current_time)
 	end
-	-- for _,marchEvent in pairs(self.shrineMarchEvents) do
-	-- 	marchEvent:OnTimer(current_time)
-	-- end
 end
 
 function AllianceShrine:OnPerceotionChanged()
@@ -217,34 +201,6 @@ function AllianceShrine:RefreshEvents(alliance_data)
 	end
 	self:RefreshShrineEvents(alliance_data.__shrineEvents)
 
-	-- if alliance_data.shrineMarchEvents then
-	-- 	for _,v in ipairs(alliance_data.shrineMarchEvents) do
-	-- 		local marchEvent = ShrineMarchEvent.new()
-	-- 		marchEvent:Update(v)
-	-- 		local from = self:GetPlayerLocation(marchEvent:PlayerData().id)
-	-- 		local shire_object = self:GetShireObjectFromMap()
-	-- 		local to = {x = shire_object.location.x,y = shire_object.location.y}
-	-- 		marchEvent:SetLocationInfo(from,to)
-	-- 		self.shrineMarchEvents[marchEvent:Id()] = marchEvent
-	-- 		marchEvent:AddObserver(self)
-	-- 	end
-	-- end
-	-- self:RefreshMarchEvents(alliance_data.__shrineMarchEvents)
-
-	-- if alliance_data.shrineMarchReturnEvents then
-	-- 	for _,v in ipairs(alliance_data.shrineMarchReturnEvents) do
-	-- 		local marchEvent = ShrineMarchEvent.new()
-	-- 		marchEvent:Update(v)
-	-- 		local shire_object = self:GetShireObjectFromMap()
-	-- 		local to = self:GetPlayerLocation(marchEvent:PlayerData().id)
-	-- 		local from = {x = shire_object.location.x,y = shire_object.location.y}
-	-- 		marchEvent:SetLocationInfo(from,to)
-	-- 		self.shrineMarchReturnEvents[marchEvent:Id()] = marchEvent
-	-- 		marchEvent:AddObserver(self)
-	-- 	end
-	-- end
-	-- self:RefreshMarchReturnEvents(alliance_data.__shrineMarchReturnEvents)
-
 	if alliance_data.shrineReports then
 		for _,v in ipairs(alliance_data.shrineReports) do
 			local report = ShrineReport.new()
@@ -287,82 +243,6 @@ function AllianceShrine:OnShrineReportsChanged(changed_map)
 		listener.OnShrineReportsChanged(listener,changed_map)
 	end)
 end
-
--- function AllianceShrine:RefreshMarchReturnEvents(__shrineMarchReturnEvents)
--- 	if not __shrineMarchReturnEvents then return end
--- 	local change_map = GameUtils:Event_Handler_Func(
--- 		__shrineMarchReturnEvents
--- 		,function(event) --add
--- 			if not self.shrineMarchReturnEvents[event.id] then
--- 				local marchEvent = ShrineMarchEvent.new()
--- 				marchEvent:Update(event)
--- 				local shire_object = self:GetShireObjectFromMap()
--- 				local to = self:GetPlayerLocation(marchEvent:PlayerData().id)
--- 				local from = {x = shire_object.location.x,y = shire_object.location.y}
--- 				marchEvent:SetLocationInfo(from,to)
--- 				self.shrineMarchReturnEvents[marchEvent:Id()] = marchEvent
--- 				marchEvent:AddObserver(self)
--- 				return marchEvent
--- 			end
--- 		end
--- 		,function(event) 
--- 			--TODO:行军返回事件的修改 (加速道具？)
--- 		end
--- 		,function(event) --remove
--- 			local marchEvent = self:GetMarchReturnEventById(event.id)
--- 			if marchEvent then
--- 				marchEvent:RemoveObserver(self)
--- 				self.shrineMarchReturnEvents[event.id] = nil
--- 				return marchEvent
--- 			end
--- 		end
--- 	)
--- 	self:OnMarchReturnEventsChanged(GameUtils:pack_event_table(change_map))
--- end
-
--- function AllianceShrine:OnMarchReturnEventsChanged(changed_map)
--- 	self:NotifyListeneOnType(self.LISTEN_TYPE.OnMarchReturnEventsChanged,function(listener)
--- 		listener.OnMarchReturnEventsChanged(listener,changed_map)
--- 	end)
--- end
-
--- function AllianceShrine:RefreshMarchEvents(__shrineMarchEvents)
--- 	if not __shrineMarchEvents then return end
--- 	local change_map = GameUtils:Event_Handler_Func(
--- 		__shrineMarchEvents
--- 		,function(event) --add
--- 			if not self.shrineMarchEvents[event.id] then
--- 				local marchEvent = ShrineMarchEvent.new()
--- 				marchEvent:Update(event)
--- 				local from = self:GetPlayerLocation(marchEvent:PlayerData().id)
--- 				local shire_object = self:GetShireObjectFromMap()
--- 				local to = {x = shire_object.location.x,y = shire_object.location.y}
--- 				marchEvent:SetLocationInfo(from,to)
--- 				self.shrineMarchEvents[marchEvent:Id()] = marchEvent
--- 				marchEvent:AddObserver(self)
--- 				return marchEvent
--- 			end
--- 		end
--- 		,function(event) 
--- 			--TODO:行军事件的修改 (加速道具？)
--- 		end
--- 		,function(event) --remove
--- 			local marchEvent = self:GetMarchEventById(event.id)
--- 			if marchEvent then
--- 				marchEvent:RemoveObserver(self)
--- 				self.shrineMarchEvents[event.id] = nil
--- 				return marchEvent
--- 			end
--- 		end
--- 	)
--- 	self:OnMarchEventsChanged(GameUtils:pack_event_table(change_map))
--- end
-
--- function AllianceShrine:OnMarchEventsChanged( changed_map )
--- 	self:NotifyListeneOnType(self.LISTEN_TYPE.OnMarchEventsChanged,function(listener)
--- 		listener.OnMarchEventsChanged(listener,changed_map)
--- 	end)
--- end
 
 function AllianceShrine:RefreshShrineEvents(__shrineEvents)
 	if not __shrineEvents then return end
@@ -443,36 +323,6 @@ end
 function AllianceShrine:GetShrineReports()
 	return self.shrineReports
 end
-
--- function AllianceShrine:GetMarchReturnEventById(id)
--- 	return self.shrineMarchReturnEvents[id]
--- end
-
--- function AllianceShrine:GetMarchReturnEvents()
--- 	local r = {}
--- 	for _,v in pairs(self.shrineMarchReturnEvents) do
--- 		table.insert(r,v)
--- 	end
--- 	table.sort( r, function(a,b)
--- 		return a:ArriveTime() < b:ArriveTime()
--- 	end )
--- 	return r
--- end
-
--- function AllianceShrine:GetMarchEventById(id)
--- 	return self.shrineMarchEvents[id]
--- end
-
--- function AllianceShrine:GetMarchEvents()
--- 	local r = {}
--- 	for _,v in pairs(self.shrineMarchEvents) do
--- 		table.insert(r,v)
--- 	end
--- 	table.sort( r, function(a,b)
--- 		return a:ArriveTime() < b:ArriveTime()
--- 	end )
--- 	return r
--- end
 
 function AllianceShrine:GetShrineEventById(id)
 	return self.shrineEvents[id]
