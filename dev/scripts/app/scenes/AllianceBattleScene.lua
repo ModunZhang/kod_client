@@ -3,6 +3,8 @@ local TwoAllianceLayer = import("..layers.TwoAllianceLayer")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local MapScene = import(".MapScene")
 local AllianceBattleScene = class("AllianceBattleScene", MapScene)
+local GameUIAllianceHome = import("..ui.GameUIAllianceHome")
+local Alliance = import("..entity.Alliance")
 
 function AllianceBattleScene:ctor()
     City:ResetAllListeners()
@@ -24,10 +26,12 @@ function AllianceBattleScene:onEnter()
     self:CreateAllianceUI()
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(10, 10)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
+    self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
 end
 
 function AllianceBattleScene:CreateAllianceUI()
-    local home_page = UIKit:newGameUI('GameUIAllianceHome',Alliance_Manager:GetMyAlliance()):addToScene(self)
+    -- local home_page = UIKit:newGameUI('GameUIAllianceHome',Alliance_Manager:GetMyAlliance()):addToScene(self)
+    local home_page = GameUIAllianceHome.new(self:GetAlliance()):addTo(self)
     self:GetSceneLayer():AddObserver(home_page)
     home_page:setTouchSwallowEnabled(false)
     self.home_page = home_page
@@ -38,27 +42,44 @@ end
 function AllianceBattleScene:GetAlliance()
     return Alliance_Manager:GetMyAlliance()
 end
+
+function AllianceBattleScene:GetEnemyAlliance()
+    return Alliance_Manager:GetEnemyAlliance()
+end
+
 function AllianceBattleScene:onExit()
+    self:GetAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     AllianceBattleScene.super.onExit(self)
 end
 function AllianceBattleScene:CreateSceneLayer()
-    local scene = TwoAllianceLayer.new(self:GetAlliance(), self:GetAlliance())
+    local scene = TwoAllianceLayer.new(self:GetAlliance(),self:GetEnemyAlliance())
     :addTo(self)
     :ZoomTo(1)
     return scene
 end
 function AllianceBattleScene:OnTouchClicked(pre_x, pre_y, x, y)
-    local building = self:GetSceneLayer():GetClickedObject(x, y)
+    local building,isMyAlliance = self:GetSceneLayer():GetClickedObject(x, y)
+    print(isMyAlliance,"isMyAlliance--->")
     if building then
         dump(building:GetEntity())
         if building:GetEntity():GetType() ~= "building" then
-            UIKit:newGameUI('GameUIAllianceEnter',Alliance_Manager:GetMyAlliance(),building:GetEntity()):addToCurrentScene(true)
+            UIKit:newGameUI('GameUIAllianceEnter'
+                ,isMyAlliance and self:GetAlliance() or self:GetEnemyAlliance()
+                ,building:GetEntity()
+            ):addToCurrentScene(true)
         else
             local building_info = building:GetEntity():GetAllianceBuildingInfo()
             print("index x y ",x,y,building_info.name)
             LuaUtils:outputTable("building_info", building_info)
-            UIKit:newGameUI('GameUIAllianceEnter',Alliance_Manager:GetMyAlliance(),building_info):addToCurrentScene(true)
+            UIKit:newGameUI('GameUIAllianceEnter'
+                ,isMyAlliance and self:GetAlliance() or  self:GetEnemyAlliance() 
+                ,Alliance_Manager:GetMyAlliance(),building_info):addToCurrentScene(true)
         end
+    end
+end
+function AllianceBattleScene:OnBasicChanged(alliance,changed_map)
+    if changed_map.status and changed_map.status.new == 'protect' then
+        app:EnterMyAllianceScene()
     end
 end
 return AllianceBattleScene

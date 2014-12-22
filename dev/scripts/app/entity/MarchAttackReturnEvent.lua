@@ -15,11 +15,11 @@ function MarchAttackReturnEvent:GetPlayerRole()
 end
 
 function MarchAttackReturnEvent:FromLocation()
-	return self:GetDefenceData().location
+	return self:GetDefenceData().location,self:GetDefenceData().alliance.id
 end
 
 function MarchAttackReturnEvent:TargetLocation()
-	return self:AttackPlayerData().location
+	return self:AttackPlayerData().location,self:AttackPlayerData().alliance.id
 end
 
 return MarchAttackReturnEvent

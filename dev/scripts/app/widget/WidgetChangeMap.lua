@@ -156,7 +156,8 @@ function WidgetChangeMap:SetMapType( map_type )
             self:Retraction()
 
             -- app:enterScene("AllianceBattleScene", nil, "custom", -1,handler(self, self.CloudArmature) )
-            app:enterScene("AllianceScene", nil, "custom", -1,handler(self, self.CloudArmature) )
+            -- app:enterScene("AllianceScene", nil, "custom", -1,handler(self, self.CloudArmature) )
+            app:EnterMyAllianceScene()
         end)
 
         self.enemy_btn:onButtonClicked(function(event)
@@ -182,7 +183,8 @@ function WidgetChangeMap:SetMapType( map_type )
         self.our_city_btn:onButtonClicked(function(event)
             self.map_frame:setPositionY(69)
             self:Retraction()
-            app:enterScene("MyCityScene", {City}, "custom", -1, handler(self, self.CloudArmature))
+            -- app:enterScene("MyCityScene", {City}, "custom", -1, handler(self, self.CloudArmature))
+            app:EnterMyCityScene()
         end)
 
         self.our_alliance_btn:onButtonClicked(function(event)
@@ -210,53 +212,53 @@ function WidgetChangeMap:SetMapType( map_type )
         y = 179
     elseif map_type == WidgetChangeMap.MAP_TYPE.ENEMY_ALLIANCE then
         -- 设置按钮事件
-        self.our_city_btn:onButtonClicked(function(event)
-            self.map_frame:setPositionY(69)
-            self:Retraction()
-            app:enterScene("MyCityScene", {City}, "custom", -1, handler(self, self.CloudArmature))
-        end)
+        -- self.our_city_btn:onButtonClicked(function(event)
+        --     self.map_frame:setPositionY(69)
+        --     self:Retraction()
+        --     app:enterScene("MyCityScene", {City}, "custom", -1, handler(self, self.CloudArmature))
+        -- end)
 
-        self.our_alliance_btn:onButtonClicked(function(event)
-            if Alliance_Manager:GetMyAlliance():IsDefault() then
-                local dialog = FullScreenPopDialogUI.new():AddToCurrentScene()
-                dialog:SetTitle("提示")
-                dialog:SetPopMessage("未加入联盟!")
-                return
-            end
-            self.map_frame:setPositionY(179)
-            self:Retraction()
-            app:enterScene("AllianceScene", nil, "custom", -1,handler(self, self.CloudArmature) )
-        end)
+        -- self.our_alliance_btn:onButtonClicked(function(event)
+        --     if Alliance_Manager:GetMyAlliance():IsDefault() then
+        --         local dialog = FullScreenPopDialogUI.new():AddToCurrentScene()
+        --         dialog:SetTitle("提示")
+        --         dialog:SetPopMessage("未加入联盟!")
+        --         return
+        --     end
+        --     self.map_frame:setPositionY(179)
+        --     self:Retraction()
+        --     app:enterScene("AllianceScene", nil, "custom", -1,handler(self, self.CloudArmature) )
+        -- end)
 
-        self.enemy_btn:onButtonClicked(function(event)
-            self:Retraction()
-        end)
+        -- self.enemy_btn:onButtonClicked(function(event)
+        --     self:Retraction()
+        -- end)
 
         y = 289
     end
     
     self.map_frame = display.newSprite("map_frame.png"):addTo(self.map_bg):align(display.CENTER,50, y)
 end
-function WidgetChangeMap:CloudArmature(scene, status)
-    local manager = ccs.ArmatureDataManager:getInstance()
-    if status == "onEnter" then
-        manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
-        local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
-        display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
-            transition.sequence{
-                cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
-                cc.FadeIn:create(0.75),
-                cc.CallFunc:create(function() scene:hideOutShowIn() end),
-                cc.DelayTime:create(0.5),
-                cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
-                cc.FadeOut:create(0.75),
-                cc.CallFunc:create(function() scene:finish() end),
-            }
-        )
-    elseif status == "onExit" then
-        manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
-    end
-end
+-- function WidgetChangeMap:CloudArmature(scene, status)
+--     local manager = ccs.ArmatureDataManager:getInstance()
+--     if status == "onEnter" then
+--         manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+--         local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
+--         display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
+--             transition.sequence{
+--                 cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
+--                 cc.FadeIn:create(0.75),
+--                 cc.CallFunc:create(function() scene:hideOutShowIn() end),
+--                 cc.DelayTime:create(0.5),
+--                 cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
+--                 cc.FadeOut:create(0.75),
+--                 cc.CallFunc:create(function() scene:finish() end),
+--             }
+--         )
+--     elseif status == "onExit" then
+--         manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+--     end
+-- end
 return WidgetChangeMap
 
 

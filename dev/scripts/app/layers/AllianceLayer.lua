@@ -53,16 +53,6 @@ function AllianceLayer:ctor(alliance)
 
     self:setNodeEventEnabled(true)
     self:CreateCorpsFromMrachEventsIf()
-    -- local alliance_shire = self:GetAlliance():GetAllianceShrine()
-    -- local alliance_moonGate = self:GetAlliance():GetAllianceMoonGate()
-    -- alliance_shire:AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventsChanged)
-    -- alliance_shire:AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchReturnEventsChanged)
-    -- alliance_moonGate:AddListenOnType(self,AllianceMoonGate.LISTEN_TYPE.OnMoonGateMarchEventsChanged)
-    -- alliance_moonGate:AddListenOnType(self,AllianceMoonGate.LISTEN_TYPE.OnMoonGateMarchReturnEventsChanged)
-    -- self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchEventsChanged)
-    -- self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchReturnEventsChanged)
-    -- self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnCityBeAttackedMarchEventChanged)
-    -- self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnCityCityBeAttackedMarchReturnEventChanged)
 end
 function AllianceLayer:InitBackground()
     self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_h.tmx"):addTo(self, ZORDER.BACKGROUND)
@@ -122,10 +112,12 @@ end
 
 function AllianceLayer:CreateCorpsIf(marchEvent)
     if not self:IsExistCorps(marchEvent:Id()) then
+        local from,_ = marchEvent:FromLocation()
+        local to,_   = marchEvent:TargetLocation()
         self:CreateCorps( 
             marchEvent:Id(),
-            marchEvent:FromLocation(),
-            marchEvent:TargetLocation(),
+            from,
+            to,
             marchEvent:StartTime(),
             marchEvent:ArriveTime()
         )
@@ -152,7 +144,6 @@ function AllianceLayer:onCleanup()
     local alliance = self:GetAlliance()
     alliance:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
     alliance:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
-    AllianceLayer.super.onCleanup(self)
 end
 function AllianceLayer:GetLogicMap()
     return self.alliance_view:GetLogicMap()

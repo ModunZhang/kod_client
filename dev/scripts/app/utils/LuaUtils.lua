@@ -20,6 +20,10 @@ function LuaUtils:table_size(t)
     return r
 end
 
+function LuaUtils:table_empty(t)
+    return not next(t)
+end
+
 function LuaUtils:printValue(v, depth)
     if type(v) == 'string' then
         io.write(string.format('%q', v))

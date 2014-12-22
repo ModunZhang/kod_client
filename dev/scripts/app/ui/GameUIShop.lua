@@ -964,7 +964,7 @@ function GameUIShop:onEnter()
         text = "匹配联盟战",
         size = 20,
         font = UIKit:getFontFilePath(),
-        color =  cc.c3b(255,0,0)
+        color =  UIKit:hex2c3b(0xfff3c7)
     }))
         :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 1500)

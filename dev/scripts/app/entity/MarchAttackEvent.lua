@@ -38,10 +38,10 @@ end
 
 
 function MarchAttackEvent:FromLocation()
-	return self:AttackPlayerData().location
+	return self:AttackPlayerData().location,self:AttackPlayerData().alliance.id
 end
 function MarchAttackEvent:TargetLocation()
-	return self:GetDefenceData().location
+	return self:GetDefenceData().location,self:GetDefenceData().alliance.id
 end
 
 function MarchAttackEvent:OnPropertyChange()

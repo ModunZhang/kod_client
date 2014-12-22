@@ -323,7 +323,7 @@ function GameUIAllianceHome:CreateTop()
         local alliance = home.alliance
         local status = alliance:Status()
         local moonGate = alliance:GetAllianceMoonGate()
-        local enemyAlliance = moonGate:GetEnemyAlliance()
+        local enemyAlliance = Alliance_Manager:GetEnemyAlliance()
         period_label:setString(home:GetAlliancePeriod())
         -- 和平期
         if status=="peace" then
@@ -339,11 +339,11 @@ function GameUIAllianceHome:CreateTop()
             if enemy_flag then
                 enemy_name_bg:removeChildByTag(201, true)
             end
-            local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemyAlliance.flag)):scale(0.5)
-            enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
-                :addTo(enemy_name_bg)
-            enemy_flag:setTag(201)
-            enemy_name_label:setString("["..enemyAlliance.tag.."] "..enemyAlliance.name)
+            -- local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemyAlliance.flag)):scale(0.5)
+            -- enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
+            --     :addTo(enemy_name_bg)
+            -- enemy_flag:setTag(201)
+            -- enemy_name_label:setString("["..enemyAlliance.tag.."] "..enemyAlliance.name)
 
         end
         if status=="fight" then
