@@ -25,6 +25,7 @@ end
 
 function AllianceManager:OnAllianceDataChanged(alliance_data)
 	self:GetMyAlliance():OnAllianceDataChanged(alliance_data)
+    self:UpdateEnemyAlliance(alliance_data.enemyAllianceDoc)
 end
 function AllianceManager:OnAllianceBasicInfoAndMemberDataChanged(basic_and_member)
     local my_alliance = self:GetMyAlliance()
@@ -55,5 +56,17 @@ function AllianceManager:DecodeAllianceFromJson( json_data )
     return enemy_alliance
 end
 
+function AllianceManager:GetEnemyAlliance()
+    return self.enemyAlliance
+end
+
+function AllianceManager:UpdateEnemyAlliance(json_Data)
+    if not json_Data then return end
+    if not self.enemyAlliance then 
+        self.enemyAlliance = self:DecodeAllianceFromJson(json_Data)
+    else
+        self:GetEnemyAlliance():OnAllianceDataChanged(json_Data)
+    end
+end
 return AllianceManager
 

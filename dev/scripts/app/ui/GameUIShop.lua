@@ -956,7 +956,21 @@ function GameUIShop:onEnter()
             device.showAlert("版本信息", app:showDebugInfo(),{_("确定")})
         end)
 
-
+     WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "匹配联盟战",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color =  cc.c3b(255,0,0)
+    }))
+        :addTo(content)
+        :align(display.CENTER, window.left + 500, window.top - 1500)
+        :onButtonClicked(function(event)
+            NetManager:getFindAllianceToFightPromose()            
+        end)
 
     item:addContent(content)
     item:setItemSize(640, 1000)
