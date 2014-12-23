@@ -10,16 +10,17 @@ local window = import("..utils.window")
 local WidgetTips = import("..widget.WidgetTips")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetMakeEquip = import("..widget.WidgetMakeEquip")
 local GameUIBlackSmith = UIKit:createUIClass("GameUIBlackSmith", "GameUIUpgradeBuilding")
 
 
 local STAR_BG = {
-    "star1_105x104.png",
-    "star2_105x104.png",
-    "star3_105x104.png",
-    "star4_105x104.png",
-    "star5_105x104.png",
+    "box_100x100_1.png",
+    "box_100x100_2.png",
+    "box_100x100_3.png",
+    "box_100x100_4.png",
+    "box_100x100_5.png",
 }
 local function return_map_of_list_view_and_ui_map(list_view, ui_map)
     return { list_view = list_view, ui_map = ui_map}
@@ -138,11 +139,11 @@ end
 function GameUIBlackSmith:InitEquipmentTitle()
     local node = display.newNode():addTo(self)
     self.tips = WidgetTips.new(_("建造队列空闲"), _("请选择一个装备进行制造")):addTo(node)
-        :align(display.CENTER, display.cx, display.top - 160)
+        :align(display.CENTER, display.cx, display.top - 140)
         :show()
 
     self.timer = WidgetTimerProgress.new(549, 108):addTo(node)
-        :align(display.CENTER, display.cx, display.top - 160)
+        :align(display.CENTER, display.cx, display.top - 140)
         :hide()
         :OnButtonClicked(function(event)
             print("hello")
@@ -169,7 +170,14 @@ end
 function GameUIBlackSmith:CreateDragonEquipmentsByType(dragon_type)
     local equip_map = {}
     local red_dragon_equipments = self:GetDragonEquipmentsByType(dragon_type)
-    local list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 230)
+    local list_view ,listnode=  UIKit:commonListView({
+        -- bgColor = UIKit:hex2c4b(0x7a100000),
+        viewRect = cc.rect(0, 0, 568, 650),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+    })
+    listnode:addTo(self):align(display.BOTTOM_CENTER,window.cx,window.bottom_top + 20)
+   
+    -- = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 230)
     for i, v in ipairs(red_dragon_equipments) do
         local item = self:CreateItemWithListViewByEquipments(list_view, v.equipments, v.title, equip_map)
         list_view:addItem(item)
@@ -207,12 +215,13 @@ end
 function GameUIBlackSmith:CreateItemWithListViewByEquipments(list_view, equipments, title, equip_map)
     local equip_map = equip_map == nil and {} or equip_map
     -- 背景
-    local back_ground = cc.ui.UIImage.new("back_ground_608x227.png"):align(display.CENTER)
+    local back_ground = WidgetUIBackGround.new({width=568,height=188},WidgetUIBackGround.STYLE_TYPE.STYLE_2):align(display.CENTER)
+    -- cc.ui.UIImage.new("back_ground_608x227.png"):align(display.CENTER)
 
     -- title blue
     local pos = back_ground:getAnchorPointInPoints()
-    local title_blue = cc.ui.UIImage.new("title_blue_596x49.png"):addTo(back_ground)
-    title_blue:align(display.CENTER, pos.x, back_ground:getContentSize().height - title_blue:getContentSize().height/2)
+    local title_blue = cc.ui.UIImage.new("title_blue_558x34.png"):addTo(back_ground)
+    title_blue:align(display.CENTER, pos.x, back_ground:getContentSize().height - title_blue:getContentSize().height/2-6)
 
     -- title label
     local title_label = cc.ui.UILabel.new({
@@ -222,9 +231,9 @@ function GameUIBlackSmith:CreateItemWithListViewByEquipments(list_view, equipmen
         align = cc.ui.TEXT_ALIGN_LEFT,
         color = UIKit:hex2c3b(0xffedae)
     }):addTo(title_blue)
-        :align(display.LEFT_CENTER, 15, title_blue:getContentSize().height/2)
+        :align(display.CENTER, title_blue:getContentSize().width/2, title_blue:getContentSize().height/2)
 
-    local unit_len, origin_y, gap_x = 105, 115, 10
+    local unit_len, origin_y, gap_x = 105, 90, 10
     local len = #equipments
     local total_len = len * unit_len + (len - 1) * gap_x
     local origin_x = pos.x - total_len / 2 + unit_len / 2
@@ -261,8 +270,8 @@ function GameUIBlackSmith:CreateEquipmentByType(equip_type)
     -- 详细按钮
     local info_clicked = nil
     local info_btn = WidgetPushButton.new(
-        {normal = "info_46x45.png", pressed = "info_46x45.png"})
-        :addTo(equipment_btn):align(display.CENTER, 105/2 - 46/2, - 104/2 + 45/2)
+        {normal = "i_icon_20x20.png", pressed = "i_icon_20x20.png"})
+        :addTo(equipment_btn):align(display.CENTER, 105/2 - 46/2+8, - 104/2 + 45/2-4)
         :onButtonClicked(function(event)
             if type(info_clicked) == "function" then
                 info_clicked(event)
@@ -271,17 +280,17 @@ function GameUIBlackSmith:CreateEquipmentByType(equip_type)
         end)
 
     -- number bg
-    local back_ground_97x20 = cc.ui.UIImage.new("back_ground_97x20.png"):addTo(equipment_btn)
-        :align(display.CENTER, 0, - 104 / 2 - 25)
+    local number_bg_100x40 = cc.ui.UIImage.new("number_bg_100x40.png"):addTo(equipment_btn)
+        :align(display.CENTER, 0, - 104 / 2 - 12)
 
     -- number label
-    local pos = back_ground_97x20:getAnchorPointInPoints()
+    local pos = number_bg_100x40:getAnchorPointInPoints()
     local number_label = cc.ui.UILabel.new({
         size = 18,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_CENTER,
         color = UIKit:hex2c3b(0x403c2f)
-    }):addTo(back_ground_97x20)
+    }):addTo(number_bg_100x40)
         :align(display.CENTER, pos.x, pos.y)
 
 
@@ -293,8 +302,8 @@ function GameUIBlackSmith:CreateEquipmentByType(equip_type)
     end
 
     equip_clicked = function(event)
-        WidgetMakeEquip.new(equip_type, self.black_smith, self.black_smith_city):addTo(self)
-            :align(display.CENTER, display.cx, display.cy)
+        WidgetMakeEquip.new(equip_type, self.black_smith, self.black_smith_city):addToCurrentScene()
+            -- :align(display.CENTER, display.cx, display.cy)
     end
     info_clicked = function(event)
         print("info_clicked", equip_type)
@@ -304,6 +313,8 @@ function GameUIBlackSmith:CreateEquipmentByType(equip_type)
 end
 
 return GameUIBlackSmith
+
+
 
 
 

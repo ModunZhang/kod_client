@@ -4,22 +4,26 @@ local MaterialManager = import("..entity.MaterialManager")
 local WidgetPushButton = import(".WidgetPushButton")
 local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetUIBackGround2 = import(".WidgetUIBackGround2")
-local WidgetMakeEquip = class("WidgetMakeEquip", function()
-    local node = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
-    node:setNodeEventEnabled(true)
-    return node
-end)
+local WidgetPopDialog = import(".WidgetPopDialog")
+
+local WidgetMakeEquip = class("WidgetMakeEquip", WidgetPopDialog
+    --     function()
+    --     local node = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
+    --     node:setNodeEventEnabled(true)
+    --     return node
+    -- end
+    )
 local STAR_BG = {
-    "star1_105x104.png",
-    "star2_105x104.png",
-    "star3_105x104.png",
-    "star4_105x104.png",
-    "star5_105x104.png",
+    "box_100x100_1.png",
+    "box_100x100_2.png",
+    "box_100x100_3.png",
+    "box_100x100_4.png",
+    "box_100x100_5.png",
 }
 local DRAGON_BG = {
-    redDragon = "star4_105x104.png",
-    blueDragon = "star3_105x104.png",
-    greenDragon = "star2_105x104.png",
+    redDragon = "box_100x100_1.png",
+    blueDragon = "box_100x100_2.png",
+    greenDragon = "box_100x100_3.png",
 }
 local MATERIAL_MAP = {
     ["ironIngot"] = "ironIngot_92x92.png",
@@ -65,6 +69,7 @@ local EQUIP_LOCALIZE = Localize.equip
 local DRAGON_LOCALIZE = Localize.dragon
 local BODY_LOCALIZE = Localize.body
 function WidgetMakeEquip:ctor(equip_type, black_smith, city)
+    WidgetMakeEquip.super.ctor(self,862,_("制造装备"),display.top-80)
     self.equip_type = equip_type
     self.black_smith = black_smith
     self.city = city
@@ -74,39 +79,57 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
     end)
     self.equip_config = equip_config
     -- back_ground
-    local back_ground = WidgetUIBackGround.new({height=650}):addTo(self)
+    local back_ground = self:GetBody()
+    -- WidgetUIBackGround.new({height=650}):addTo(self)
 
     -- title
     local size = back_ground:getContentSize()
-    local title_blue = cc.ui.UIImage.new("title_blue_596x49.png"):addTo(back_ground, 2)
-        :align(display.CENTER, size.width/2, size.height - 49/2)
+    -- local title_blue = cc.ui.UIImage.new("title_blue_596x49.png"):addTo(back_ground, 2)
+    --     :align(display.CENTER, size.width/2, size.height - 49/2)
 
     -- title label
-    local size = title_blue:getContentSize()
-    self.title = cc.ui.UILabel.new({
-        text = _("制造装备"),
-        size = 24,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0xffedae)
-    }):addTo(title_blue)
-        :align(display.LEFT_CENTER, 20, size.height/2)
+    -- local size = title_blue:getContentSize()
+    -- self.title = cc.ui.UILabel.new({
+    --     text = _("制造装备"),
+    --     size = 24,
+    --     font = UIKit:getFontFilePath(),
+    --     align = cc.ui.TEXT_ALIGN_RIGHT,
+    --     color = UIKit:hex2c3b(0xffedae)
+    -- }):addTo(title_blue)
+    --     :align(display.LEFT_CENTER, 20, size.height/2)
 
-    -- X
-    local x_btn = cc.ui.UIPushButton.new({normal = "x_up_66x66.png",
-        pressed = "x_down_66x66.png"}):addTo(title_blue, 2)
-        :align(display.CENTER, size.width - 15, size.height - 15)
-        :onButtonClicked(function(event)
-            self:Close()
-        end)
-    cc.ui.UIImage.new("x_31x28.png"):addTo(x_btn, 2):align(display.CENTER, 0, 0)
+    -- -- X
+    -- local x_btn = cc.ui.UIPushButton.new({normal = "x_up_66x66.png",
+    --     pressed = "x_down_66x66.png"}):addTo(title_blue, 2)
+    --     :align(display.CENTER, size.width - 15, size.height - 15)
+    --     :onButtonClicked(function(event)
+    --         self:Close()
+    --     end)
+    -- cc.ui.UIImage.new("x_31x28.png"):addTo(x_btn, 2):align(display.CENTER, 0, 0)
 
+    local make_eq_bg_2 = display.newSprite("make_eq_bg_2.png"):addTo(back_ground):pos(size.width/2, size.height - 436/2-20)
+    local make_eq_bg_4 = display.newSprite("make_eq_bg_4.png"):addTo(back_ground):pos(size.width/2, size.height - 436/2-20)
+    local make_eq_bg_3 = display.newSprite("make_eq_bg_3.png"):addTo(back_ground):pos(size.width/2, size.height - 436/2-20)
+    local make_eq_bg_1 = display.newSprite("make_eq_bg_1.png"):addTo(back_ground):pos(size.width/2, size.height - 436/2-20)
+    local action_1 = cc.RotateTo:create(20, -180)
+    local action_2 = cc.RotateTo:create(20, -360)
+    local action_3 = cc.RotateTo:create(20, 180)
+    local action_4 = cc.RotateTo:create(20, 360)
 
+    local seq_1 = transition.sequence{
+        action_1,action_2
+    }
+    local seq_2 = transition.sequence{
+        action_3,action_4
+    }
+    make_eq_bg_2:runAction(cc.RepeatForever:create(seq_1))
+    make_eq_bg_4:runAction(cc.RepeatForever:create(seq_2))
     -- 装备星级背景
     local bg = STAR_BG[equip_config.maxStar]
     local size = back_ground:getContentSize()
-    local star_bg = cc.ui.UIImage.new(bg):addTo(back_ground, 2)
-        :align(display.CENTER, 80, size.height - 115)
+    local star_bg = cc.ui.UIImage.new(bg):addTo(make_eq_bg_3, 2)
+        :align(display.CENTER, make_eq_bg_3:getContentSize().width/2+3, make_eq_bg_3:getContentSize().height/2+3)
+
 
 
     -- 装备图标
@@ -115,8 +138,8 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
         :align(display.CENTER, pos.x, pos.y):scale(0.8)
 
     -- 装备的数量背景
-    local back_ground_97x20 = cc.ui.UIImage.new("back_ground_97x20.png"):addTo(star_bg, 2)
-        :align(display.CENTER, pos.x, pos.y - 10 - 128/2)
+    local back_ground_97x20 = cc.ui.UIImage.new("back_ground_138x34.png"):addTo(star_bg, 2)
+        :align(display.CENTER, pos.x, pos.y - 10 - 128/2+6):scale(0.7)
 
     -- 装备数量label
     local pos = back_ground_97x20:getAnchorPointInPoints()
@@ -129,49 +152,52 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
     }):addTo(back_ground_97x20)
         :align(display.CENTER, pos.x, pos.y)
 
+    -- 装备信息背景框
+    local  eq_info_bg = cc.ui.UIImage.new("back_ground_314x108.png"):addTo(make_eq_bg_1)
+        :align(display.CENTER, make_eq_bg_1:getContentSize().width/2,90)
 
     -- 装备名字
     cc.ui.UILabel.new({
         text = EQUIP_LOCALIZE[equip_type],
-        size = 24,
+        size = 20,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0x29261c)
-    }):addTo(back_ground)
-        :align(display.LEFT_CENTER, 150, size.height - 70)
+        color = UIKit:hex2c3b(0xffedae)
+    }):addTo(eq_info_bg)
+        :align(display.BOTTOM_CENTER, eq_info_bg:getContentSize().width/2, 70)
 
 
     -- used for dragon
     cc.ui.UILabel.new({
         text = string.format("%s%s%s", _("仅供"), DRAGON_LOCALIZE[equip_config.usedFor], _("装备")),
-        size = 24,
+        size = 18,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0x403c2f)
-    }):addTo(back_ground)
-        :align(display.LEFT_CENTER, 150, size.height - 110)
+        color = UIKit:hex2c3b(0xffedae)
+    }):addTo(eq_info_bg)
+        :align(display.BOTTOM_CENTER, eq_info_bg:getContentSize().width/2, 42)
 
-    cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(back_ground, 2)
-        :setLayoutSize(430, 2):align(display.LEFT_CENTER, 150, size.height - 130)
+    -- cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(back_ground, 2)
+    --     :setLayoutSize(430, 2):align(display.LEFT_CENTER, 150, size.height - 130)
 
     -- used for dragon category
     cc.ui.UILabel.new({
         text = BODY_LOCALIZE[equip_config.category],
-        size = 24,
+        size = 18,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0x403c2f)
-    }):addTo(back_ground)
-        :align(display.LEFT_CENTER, 150, size.height - 150)
+        color = UIKit:hex2c3b(0xffedae)
+    }):addTo(eq_info_bg)
+        :align(display.BOTTOM_CENTER, eq_info_bg:getContentSize().width/2, 14)
 
-    cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(back_ground, 2)
-        :setLayoutSize(430, 2):align(display.LEFT_CENTER, 150, size.height - 170)
+    -- cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(back_ground, 2)
+    --     :setLayoutSize(430, 2):align(display.LEFT_CENTER, 150, size.height - 170)
 
     -- 立即建造
     local size = back_ground:getContentSize()
     local instant_button = cc.ui.UIPushButton.new({normal = "green_btn_up_250x65.png",
         pressed = "green_btn_down_250x65.png"}):addTo(back_ground)
-        :align(display.CENTER, 150, size.height - 250)
+        :align(display.CENTER, 150, 100)
         :setButtonLabel(cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("立即制造"),
@@ -210,7 +236,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
         disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
     }
     ):addTo(back_ground)
-        :align(display.CENTER, size.width - 130, size.height - 250)
+        :align(display.CENTER, size.width - 130, 100)
         :setButtonLabel(cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("制造"),
@@ -250,60 +276,79 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
         :align(display.CENTER, center, -70)
 
 
-    -- 需求框
-    local size = back_ground:getContentSize()
-    local need_bg = WidgetUIBackGround2.new(200):addTo(back_ground)
-        :align(display.CENTER, size.width / 2, size.height - 440)
+    -- -- 需求框
+    -- local size = back_ground:getContentSize()
+    -- local need_bg = WidgetUIBackGround2.new(200):addTo(back_ground)
+    --     :align(display.CENTER, size.width / 2, size.height - 440)
 
-    -- 需求title
-    local size = need_bg:getContentSize()
-    local title_bg = cc.ui.UIImage.new("title_bg_566x36.png"):addTo(need_bg, 2)
-        :align(display.CENTER, size.width / 2, size.height - 36/2 - 2)
+    -- -- 需求title
+    -- local size = need_bg:getContentSize()
+    -- local title_bg = cc.ui.UIImage.new("title_bg_566x36.png"):addTo(need_bg, 2)
+    --     :align(display.CENTER, size.width / 2, size.height - 36/2 - 2)
 
-    -- 需求label
-    local pos = title_bg:getAnchorPointInPoints()
-    cc.ui.UILabel.new({
-        text = _("需要材料"),
-        size = 24,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_CENTER,
-        color = UIKit:hex2c3b(0x403c2f)
-    }):addTo(title_bg, 2)
-        :align(display.CENTER, pos.x, pos.y)
+    -- -- 需求label
+    -- local pos = title_bg:getAnchorPointInPoints()
+    -- cc.ui.UILabel.new({
+    --     text = _("需要材料"),
+    --     size = 24,
+    --     font = UIKit:getFontFilePath(),
+    --     align = cc.ui.TEXT_ALIGN_CENTER,
+    --     color = UIKit:hex2c3b(0x403c2f)
+    -- }):addTo(title_bg, 2)
+    --     :align(display.CENTER, pos.x, pos.y)
 
 
     -- 需求列表
-    local pos = need_bg:getAnchorPointInPoints()
-    local unit_len, origin_y, gap_x = 105, 95, 80
+    -- local pos = need_bg:getAnchorPointInPoints()
+    local unit_len, origin_y, gap_x = 105, 350, 80
     local len = #self.matrials
     local total_len = len * unit_len + (len - 1) * gap_x
-    local origin_x = pos.x - total_len / 2 + unit_len / 2
+    local origin_x = total_len / 2 + unit_len / 2 -170
     local materials_map = {}
     for i, v in ipairs(self.matrials) do
         local material_type = v[1]
         -- 材料背景根据龙的颜色来
-        local material = cc.ui.UIImage.new(DRAGON_BG[equip_config.usedFor]):addTo(need_bg, 2)
+        local material = cc.ui.UIImage.new(DRAGON_BG[equip_config.usedFor]):addTo(back_ground, 2)
             :align(display.CENTER, origin_x + (unit_len + gap_x) * (i - 1), origin_y)
         -- 材料icon
         local pos = material:getAnchorPointInPoints()
         local material_image = MATERIAL_MAP[material_type]
-        cc.ui.UIImage.new(material_image):addTo(material, 2)
+        local image = cc.ui.UIImage.new(material_image):addTo(material, 2)
             :align(display.CENTER, pos.x, pos.y)
-        -- 材料数量
-        materials_map[i] = cc.ui.UILabel.new({
-            size = 18,
-            font = UIKit:getFontFilePath(),
-            align = cc.ui.TEXT_ALIGN_CENTER,
-            -- color = display.COLOR_RED
-            color = UIKit:hex2c3b(0x403c2f)
-        }):addTo(material, 2)
+        image:scale(80/math.max(image:getContentSize().width,image:getContentSize().height))
+        -- 数量背景框
+        local materials_bg =  cc.ui.UIImage.new("back_ground_96x30.png"):addTo(material, 2)
             :align(display.CENTER, pos.x, pos.y - material:getContentSize().height / 2 - 18)
+        -- 材料数量
+        materials_map[i] = UIKit:ttfLabel({
+            text ="",
+            size = 20,
+            color = 0xffedae
+        }):addTo(materials_bg, 2)
+            :align(display.CENTER, materials_bg:getContentSize().width / 2, materials_bg:getContentSize().height / 2)
     end
     self.materials_map = materials_map
 
+
+    -- 制造条件
+    local condition_bg = WidgetUIBackGround.new({
+        width = 568,
+        height = 100,
+        top_img = "back_ground_568X14_top.png",
+        bottom_img = "back_ground_568X14_top.png",
+        mid_img = "back_ground_568X1_mid.png",
+        u_height = 14,
+        b_height = 14,
+        m_height = 1,
+        b_flip = true,
+    }):addTo(back_ground)
+        :align(display.CENTER, size.width/2, 200)
     -- 建造队列
-    cc.ui.UIImage.new("hammer_31x33.png"):addTo(back_ground, 2)
-        :align(display.CENTER, 30, 80)
+    local  condition_bg_1 = display.newSprite("back_ground_548x40_1.png")
+        :addTo(condition_bg)
+        :align(display.TOP_CENTER, 284, 90)
+    cc.ui.UIImage.new("hammer_31x33.png"):addTo(condition_bg_1, 2)
+        :align(display.CENTER, 30, 20)
 
     self.build_label = cc.ui.UILabel.new({
         text = _("制造队列"),
@@ -311,22 +356,26 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_CENTER,
         color = UIKit:hex2c3b(0x403c2f)
-    }):addTo(back_ground, 2)
-        :align(display.LEFT_CENTER, 60, 80)
+    }):addTo(condition_bg_1, 2)
+        :align(display.LEFT_CENTER, 60, 20)
 
     local size = back_ground:getContentSize()
     self.build_check_box = cc.ui.UICheckBoxButton.new({on = "yes_40x40.png", off = "no_40x40.png" })
-        :addTo(back_ground)
-        :align(display.LEFT_CENTER, size.width - 60, 80)
+        :addTo(condition_bg_1)
+        :align(display.LEFT_CENTER, 500, 20)
         :setButtonSelected(true)
     self.build_check_box:setTouchEnabled(false)
 
-    cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(back_ground, 2)
-        :setLayoutSize(570, 2):align(display.CENTER, size.width / 2, 80 - 22)
+    -- cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(back_ground, 2)
+    --     :setLayoutSize(570, 2):align(display.CENTER, size.width / 2, 80 - 22)
 
     -- 需要银币
-    cc.ui.UIImage.new("coin_icon.png"):addTo(back_ground, 2)
-        :align(display.CENTER, 30, 40):scale(0.3)
+    local  condition_bg_2 = display.newSprite("back_ground_548x40_2.png")
+        :addTo(condition_bg)
+        :align(display.BOTTOM_CENTER, 284, 10)
+
+    cc.ui.UIImage.new("coin_icon.png"):addTo(condition_bg_2, 2)
+        :align(display.CENTER, 30, 20):scale(0.3)
 
     self.coin_label = cc.ui.UILabel.new({
         text = _("银币"),
@@ -334,19 +383,17 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_CENTER,
         color = UIKit:hex2c3b(0x403c2f)
-    }):addTo(back_ground, 2)
-        :align(display.LEFT_CENTER, 60, 40)
+    }):addTo(condition_bg_2, 2)
+        :align(display.LEFT_CENTER, 60, 20)
 
-    local size = back_ground:getContentSize()
     self.coin_check_box = cc.ui.UICheckBoxButton.new({on = "yes_40x40.png", off = "no_40x40.png" })
-        :addTo(back_ground)
-        :align(display.LEFT_CENTER, size.width - 60, 40)
+        :addTo(condition_bg_2)
+        :align(display.LEFT_CENTER, 500, 20)
         :setButtonSelected(true)
     self.coin_check_box:setTouchEnabled(false)
 
-    local size = back_ground:getContentSize()
-    cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(back_ground, 2)
-        :setLayoutSize(570, 2):align(display.CENTER, size.width / 2, 40 - 22)
+    -- cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(back_ground, 2)
+    --     :setLayoutSize(570, 2):align(display.CENTER, size.width / 2, 40 - 22)
 
     self.back_ground = back_ground
 end
@@ -413,7 +460,7 @@ function WidgetMakeEquip:UpdateMaterials()
         local current = materials[material_type]
         ui:setString(string.format("%d/%d", current, matrials_need))
         local un_reached = matrials_need > current
-        ui:setColor(un_reached and display.COLOR_RED or UIKit:hex2c3b(0x403c2f))
+        ui:setColor(un_reached and display.COLOR_RED or UIKit:hex2c3b(0xffedae))
     end
 end
 -- 更新建筑队列
@@ -481,6 +528,7 @@ end
 
 
 return WidgetMakeEquip
+
 
 
 
