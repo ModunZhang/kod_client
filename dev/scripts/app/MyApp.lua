@@ -37,10 +37,9 @@ function MyApp:showDebugInfo()
 end
 
 function MyApp:restart()
-    self:GetAudioManager():StopMusic()
-    self:GetAudioManager():StopEffectSound()
     NetManager:disconnect()
     self.timer:Stop()
+    self:GetAudioManager():StopAll()
     if device.platform == 'mac' then
         PlayerProtocol:getInstance():relaunch()
     else    
