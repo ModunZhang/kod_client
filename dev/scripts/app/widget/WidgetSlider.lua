@@ -8,16 +8,26 @@ function WidgetSlider:ctor(direction, images, options)
     if images.progress then
         local rect = self.barSprite_:getBoundingBox()
         self.progress = display.newProgressTimer(images.progress, display.PROGRESS_TIMER_BAR)
-        :addTo(self, 1):align(display.CENTER, rect.x + rect.width/2, rect.y + rect.height/2)
+            :addTo(self, 1):align(display.CENTER, rect.x + rect.width/2, rect.y + rect.height/2)
         self.progress:setBarChangeRate(cc.p(1,0))
         self.progress:setMidpoint(cc.p(0,0))
         self.buttonSprite_:setLocalZOrder(2)
     end
 
 end
+function WidgetSlider:setSliderSize(width, height)
+    WidgetSlider.super.setSliderSize(self,width, height)
+    self:updateButtonPosition_()
+    self.progress:setScaleX(width/self.progress:getContentSize().width)
+    self.progress:setScaleY(height/self.progress:getContentSize().height)
+end
+function WidgetSlider:align(align, x, y)
+    WidgetSlider.super.align(self,align, x, y)
+    self.progress:align(align)
+end
 function WidgetSlider:onSliderValueChanged(callback)
     return WidgetSlider.super.onSliderValueChanged(self, function(event)
-        local percent = math.floor(event.value / (self.max_ - self.min_) * 100)
+        local percent = math.floor((event.value- self.min_)/ (self.max_ - self.min_) * 100)
         if self.progress then
             self.progress:setPercentage(percent)
         end
@@ -65,6 +75,7 @@ end
 
 
 return WidgetSlider
+
 
 
 

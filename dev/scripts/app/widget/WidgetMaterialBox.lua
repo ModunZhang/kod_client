@@ -22,8 +22,10 @@ function WidgetMaterialBox:ctor(material_type,material_name,cb,is_has_i_icon)
     --         :align(display.BOTTOM_RIGHT, rect.width, 0)
     -- end
 
-    local number_bg = cc.ui.UIImage.new("box_number_bg_124x53.png"):addTo(self.material_bg)
+    self.number_bg = cc.ui.UIImage.new("box_number_bg_124x53.png"):addTo(self.material_bg)
         :align(display.LEFT_BOTTOM, 0, -42)
+        :hide()
+    local number_bg = self.number_bg 
 
     local size = number_bg:getContentSize()
     self.number = UIKit:ttfLabel({
@@ -41,6 +43,7 @@ function WidgetMaterialBox:ctor(material_type,material_name,cb,is_has_i_icon)
     }):addTo(self.material_bg):align(display.CENTER, size.width / 2, rect.height-16)
 end
 function WidgetMaterialBox:SetNumber(number)
+    self.number_bg:show()
     self.number:setString(number)
     return self
 end

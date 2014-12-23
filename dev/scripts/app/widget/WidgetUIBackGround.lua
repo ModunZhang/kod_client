@@ -3,7 +3,7 @@ local WidgetUIBackGround = class("WidgetUIBackGround", function ()
     return display.newNode()
 end)
 
-WidgetUIBackGround.STYLE_TYPE = Enum("STYLE_1","STYLE_2")
+WidgetUIBackGround.STYLE_TYPE = Enum("STYLE_1","STYLE_2","STYLE_3","STYLE_4")
 
 local STYLES = {
     [1]= {
@@ -18,6 +18,22 @@ local STYLES = {
         u_height =16,
         m_height=28,
         b_height=80,
+    },
+    [3] = {
+        top_img = "back_ground_258X12_top.png",
+        bottom_img = "back_ground_258X12_bottom.png",
+        mid_img = "back_ground_258X1_mid.png",
+        u_height =12,
+        m_height=1,
+        b_height=12,
+    },
+    [4] = {
+        top_img = "back_ground_580x12_top.png",
+        bottom_img = "back_ground_580X12_bottom.png",
+        mid_img = "back_ground_580X1_mid.png",
+        u_height =12,
+        m_height=1,
+        b_height=12,
     },
 }
 
