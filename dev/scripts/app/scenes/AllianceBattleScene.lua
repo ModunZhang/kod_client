@@ -5,6 +5,7 @@ local MapScene = import(".MapScene")
 local AllianceBattleScene = class("AllianceBattleScene", MapScene)
 local GameUIAllianceHome = import("..ui.GameUIAllianceHome")
 local Alliance = import("..entity.Alliance")
+local GameUIAllianceEnter = import("..ui.GameUIAllianceEnter")
 
 function AllianceBattleScene:ctor()
     City:ResetAllListeners()
@@ -30,7 +31,6 @@ function AllianceBattleScene:onEnter()
 end
 
 function AllianceBattleScene:CreateAllianceUI()
-    -- local home_page = UIKit:newGameUI('GameUIAllianceHome',Alliance_Manager:GetMyAlliance()):addToScene(self)
     local home_page = GameUIAllianceHome.new(self:GetAlliance()):addTo(self)
     self:GetSceneLayer():AddObserver(home_page)
     home_page:setTouchSwallowEnabled(false)
@@ -61,17 +61,20 @@ function AllianceBattleScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building,isMyAlliance = self:GetSceneLayer():GetClickedObject(x, y)
     print(isMyAlliance,"isMyAlliance--->")
     if building then
+        local mode = isMyAlliance and GameUIAllianceEnter.MODE.Normal or GameUIAllianceEnter.MODE.Enemy
         if building:GetEntity():GetType() ~= "building" then
             UIKit:newGameUI('GameUIAllianceEnter'
                 ,isMyAlliance and self:GetAlliance() or self:GetEnemyAlliance()
                 ,building:GetEntity()
+                ,mode
             ):addToCurrentScene(true)
         else
             local building_info = building:GetEntity():GetAllianceBuildingInfo()
-            LuaUtils:outputTable("building_info", building_info)
             UIKit:newGameUI('GameUIAllianceEnter'
                 ,isMyAlliance and self:GetAlliance() or  self:GetEnemyAlliance() 
-                ,building_info):addToCurrentScene(true)
+                ,building_info
+                ,mode
+            ):addToCurrentScene(true)
         end
     end
 end

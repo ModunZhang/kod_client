@@ -10,9 +10,10 @@ local MultiObserver = import(".MultiObserver")
 local MarchAttackEvent = import(".MarchAttackEvent")
 local MarchAttackReturnEvent = import(".MarchAttackReturnEvent")
 local Alliance = class("Alliance", MultiObserver)
-
+-- 突袭用的MarchAttackEvent 所以 OnAttackMarchEventTimerChanged
 Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS","FIGHT_REQUESTS","FIGHT_REPORTS",
-    "OnAttackMarchEventDataChanged","OnAttackMarchEventTimerChanged","OnAttackMarchReturnEventDataChanged","ALLIANCE_FIGHT")
+    "OnAttackMarchEventDataChanged","OnAttackMarchEventTimerChanged","OnAttackMarchReturnEventDataChanged","ALLIANCE_FIGHT"
+    ,"OnStrikeMarchEventDataChanged","OnStrikeMarchReturnEventDataChanged")
 local unpack = unpack
 local function pack(...)
     return {...}
@@ -60,6 +61,8 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     --行军事件
     self.attackMarchEvents = {}
     self.attackMarchReturnEvents = {}
+    self.strikeMarchEvents = {}
+    self.strikeMarchReturnEvents = {}
 
 end
 function Alliance:GetAllianceShrine()
@@ -435,13 +438,16 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     self:OnAllianceFightReportsChanged(alliance_data)
     self.alliance_map:OnAllianceDataChanged(alliance_data)
     self.alliance_shrine:OnAllianceDataChanged(alliance_data)
-    -- self.alliance_moonGate:OnAllianceDataChanged(alliance_data)
     self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
 
     self:OnAttackMarchEventsDataChanged(alliance_data.attackMarchEvents)
     self:OnAttackMarchEventsComming(alliance_data.__attackMarchEvents)
     self:OnAttackMarchReturnEventsDataChanged(alliance_data.attackMarchReturnEvents)
     self:OnAttackMarchReturnEventsCommoing(alliance_data.__attackMarchReturnEvents)
+    self:OnStrikeMarchEventsDataChanged(alliance_data.strikeMarchEvents)
+    self:OnStrikeMarchEventsComming(alliance_data.__strikeMarchEvents)
+    self:OnStrikeMarchReturnEventsDataChanged(alliance_data.strikeMarchReturnEvents)
+    self:OnStrikeMarchReturnEventsComming(alliance_data.__strikeMarchReturnEvents)
 end
 
 function Alliance:OnNewEventsComming(__events)
@@ -479,10 +485,10 @@ function Alliance:OnNewMemberDataComming(__members)
             table.insert(remove_members, self:RemoveMemberById(member_json.id))
         elseif type_ == "edit" then
             local member = AllianceMember:DecodeFromJson(member_json)
-            if member:IsDifferentWith(self:GetMemeberById(member_json.id)) then
+            -- if member:IsDifferentWith(self:GetMemeberById(member_json.id)) then
                 self:ReplaceMember(member)
                 table.insert(update_members, member)
-            end
+            -- end
         else
             assert(false, "还有新类型?")
         end
@@ -755,6 +761,12 @@ function Alliance:OnTimer(current_time)
     self:IteratorAttackMarchReturnEvents(function(attackMarchReturnEvent)
         attackMarchReturnEvent:OnTimer(current_time)
     end)
+    self:IteratorStrikeMarchEvents(function(strikeMarchEvent)
+        strikeMarchEvent:OnTimer(current_time)
+    end)
+    self:IteratorStrikeMarchReturnEvents(function(strikeMarchReturnEvent)
+        strikeMarchReturnEvent:OnTimer(current_time)
+    end)
 end
 
 --行军事件
@@ -795,8 +807,8 @@ function Alliance:GetAttackMarchReturnEvents(march_type)
             table.insert(r,attackMarchReturnEvent)
         end)
     else
-        self:IteratorAttackMarchEvents(function(attackMarchReturnEvent)
-            if IteratorAttackMarchReturnEvents:MarchType() == march_type then
+        self:IteratorAttackMarchReturnEvents(function(attackMarchReturnEvent)
+            if attackMarchReturnEvent:MarchType() == march_type then
                 table.insert(r,attackMarchReturnEvent)
             end
         end)
@@ -903,6 +915,15 @@ function Alliance:ResetMarchEvent()
         attackMarchReturnEvent:Reset()
     end)
     self.attackMarchReturnEvents = {}
+
+    self:IteratorStrikeMarchEvents(function(strikeMarchEvent)
+        strikeMarchEvent:Reset()
+    end)
+    self.strikeMarchEvents = {}
+    self:IteratorStrikeMarchReturnEvents(function(strikeMarchReturnEvent)
+        strikeMarchReturnEvent:Reset()
+    end)
+    self.strikeMarchReturnEvents = {}
 end
 
 function Alliance:OnAllianceCountInfoChanged(countInfo)
@@ -934,5 +955,141 @@ function Alliance:GetEnemyAllianceFightPlayerKills()
     return self.id == allianceFight.attackAllianceId and allianceFight.defencePlayerKills or allianceFight.attackPlayerKills
 end
 
-return Alliance
+function Alliance:OnStrikeMarchEventsDataChanged(strikeMarchEvents)
+    if not strikeMarchEvents then return end
+    for _,v in ipairs(strikeMarchEvents) do
+        local strikeMarchEvent = MarchAttackEvent.new()
+        strikeMarchEvent:UpdateData(v)
+        self.strikeMarchEvents[strikeMarchEvent:Id()] = strikeMarchEvent
+        strikeMarchEvent:AddObserver(self)
+    end
+end
 
+function Alliance:OnStrikeMarchEventsComming(__strikeMarchEvents)
+    if not __strikeMarchEvents then return end
+    local changed_map = GameUtils:Event_Handler_Func(
+        __strikeMarchEvents
+        ,function(event_data)
+            local strikeMarchEvent = MarchAttackEvent.new()
+            strikeMarchEvent:UpdateData(event_data)
+            self.strikeMarchEvents[strikeMarchEvent:Id()] = strikeMarchEvent
+            strikeMarchEvent:AddObserver(self)
+            return strikeMarchEvent
+        end
+        ,function(event_data)
+        --TODO:修改行军事件
+        end
+        ,function(event_data)
+            if self.strikeMarchEvents[event_data.id] then
+                local strikeMarchEvent = self.strikeMarchEvents[event_data.id]
+                strikeMarchEvent:Reset()
+                self.strikeMarchEvents[event_data.id] = nil
+                strikeMarchEvent = MarchAttackEvent.new()
+                strikeMarchEvent:UpdateData(event_data)
+                return strikeMarchEvent
+            end
+        end
+    )
+    self:CallEventsChangedListeners(Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged,GameUtils:pack_event_table(changed_map))
+end
+
+function Alliance:IteratorStrikeMarchEvents(func)
+    for _,v in pairs(self.strikeMarchEvents) do
+        func(v)
+    end
+end
+
+function Alliance:OnStrikeMarchReturnEventsDataChanged(strikeMarchReturnEvents)
+    if not strikeMarchReturnEvents then return end
+    for _,v in ipairs(strikeMarchReturnEvents) do
+        local strikeMarchReturnEvent = MarchAttackReturnEvent.new()
+        strikeMarchReturnEvent:UpdateData(v)
+        self.strikeMarchReturnEvents[strikeMarchReturnEvent:Id()] = strikeMarchReturnEvent
+        strikeMarchReturnEvent:AddObserver(self)
+    end
+end
+
+function Alliance:OnStrikeMarchReturnEventsComming(__strikeMarchReturnEvents)
+    if not __strikeMarchReturnEvents then return end
+    local changed_map = GameUtils:Event_Handler_Func(
+        __strikeMarchReturnEvents
+        ,function(event_data)
+            local strikeMarchReturnEvent = MarchAttackReturnEvent.new()
+            strikeMarchReturnEvent:UpdateData(event_data)
+            self.strikeMarchReturnEvents[strikeMarchReturnEvent:Id()] = strikeMarchReturnEvent
+            strikeMarchReturnEvent:AddObserver(self)
+            return strikeMarchReturnEvent
+        end
+        ,function(event_data)
+        --TODO:修改行军事件
+        end
+        ,function(event_data)
+            if self.strikeMarchReturnEvents[event_data.id] then
+                local strikeMarchReturnEvent = self.strikeMarchReturnEvents[event_data.id]
+                strikeMarchReturnEvent:Reset()
+                self.strikeMarchReturnEvents[event_data.id] = nil
+                strikeMarchReturnEvent = MarchAttackReturnEvent.new()
+                strikeMarchReturnEvent:UpdateData(event_data)
+                return strikeMarchReturnEvent
+            end
+        end
+    )
+    self:CallEventsChangedListeners(Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged,GameUtils:pack_event_table(changed_map))
+end
+
+function Alliance:IteratorStrikeMarchReturnEvents(func)
+    for _,v in pairs(self.strikeMarchReturnEvents) do
+        func(v)
+    end
+end
+
+function Alliance:GetStrikeMarchEvents(march_type)
+    local r = {}
+    if not march_type then
+        self:IteratorStrikeMarchEvents(function(strikeMarchEvent)
+            table.insert(r,strikeMarchEvent)
+        end)
+    else
+        self:IteratorStrikeMarchEvents(function(strikeMarchEvent)
+            if strikeMarchEvent:MarchType() == march_type then
+                table.insert(r,strikeMarchEvent)
+            end
+        end)
+    end
+    return r
+end
+
+function Alliance:GetStrikeMarchReturnEvents(march_type)
+    local r = {}
+    if not march_type then
+        self:IteratorStrikeMarchReturnEvents(function(strikeMarchReturnEvent)
+            table.insert(r,strikeMarchReturnEvent)
+        end)
+    else
+         self:IteratorStrikeMarchReturnEvents(function(strikeMarchReturnEvent)
+            if strikeMarchReturnEvent:MarchType() == march_type then
+                table.insert(r,strikeMarchReturnEvent)
+            end
+        end)
+    end
+    return r
+end
+
+function Alliance:CheckHelpDefenceMarchEventsHaveTarget(memeberId)
+    local helpEvents = self:GetAttackMarchEvents("helpDefence")
+    for _,attackEvent in ipairs(helpEvents) do
+        if attackEvent:GetPlayerRole() == attackEvent.MARCH_EVENT_PLAYER_ROLE.SENDER 
+            and attackEvent:GetDefenceData().id == memeberId then
+            return true
+        end
+    end
+    local helpReturnEvents = self:GetAttackMarchReturnEvents("helpDefence")
+    for _,attackEvent in ipairs(helpReturnEvents) do
+        if attackEvent:GetPlayerRole() == attackEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER 
+            and attackEvent:GetDefenceData().id == memeberId then
+            return true
+        end
+    end
+    return false
+end
+return Alliance

@@ -375,7 +375,7 @@ function GameUIHome:CreateBottom()
     self.mail_unread_num_bg = display.newSprite("home/mail_unread_bg.png"):addTo(bottom_bg):pos(460, first_row+20)
     self.mail_unread_num_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = GameUtils:formatNumber(MailManager:GetUnReadMailsAndReportsNum()),
+            text = GameUtils:formatNumber(MailManager:GetUnReadMailsAndReportsNum() or 0),
             font = UIKit:getFontFilePath(),
             size = 16,
             -- dimensions = cc.size(200,24),

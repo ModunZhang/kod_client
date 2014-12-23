@@ -120,11 +120,22 @@ function TwoAllianceLayer:AddOrRemoveAllianceEvent(isAdd)
         self:GetMyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
         self:GetEnemyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
         self:GetEnemyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
+
+        self:GetMyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+        self:GetMyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
+        self:GetEnemyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+        self:GetEnemyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
+
     else
         self:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
         self:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
         self:GetEnemyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
-        self:GetEnemyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
+        self:GetEnemyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)  
+
+        self:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+        self:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)  
+        self:GetEnemyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+        self:GetEnemyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
     end
 end
 
@@ -135,6 +146,13 @@ function TwoAllianceLayer:CreateAllianceCorps(alliance)
     table.foreachi(alliance:GetAttackMarchReturnEvents(),function(_,event)
         self:CreateCorpsIf(event)
     end)
+    table.foreachi(alliance:GetStrikeMarchEvents(),function(_,event)
+        self:CreateCorpsIf(event)
+    end)
+    table.foreachi(alliance:GetStrikeMarchReturnEvents(),function(_,event)
+        self:CreateCorpsIf(event)
+    end)
+
 end
 --changed of marchevent
 function TwoAllianceLayer:OnAttackMarchEventDataChanged(changed_map)
@@ -142,6 +160,16 @@ function TwoAllianceLayer:OnAttackMarchEventDataChanged(changed_map)
 end
 
 function TwoAllianceLayer:OnAttackMarchReturnEventDataChanged(changed_map)
+    self:ManagerCorpsFromChangedMap(changed_map)
+end
+
+function TwoAllianceLayer:OnStrikeMarchEventDataChanged(changed_map)
+    dump(changed_map,"OnStrikeMarchEventDataChanged-->")
+    self:ManagerCorpsFromChangedMap(changed_map)
+end
+
+function TwoAllianceLayer:OnStrikeMarchReturnEventDataChanged(changed_map)
+     dump(changed_map,"OnStrikeMarchReturnEventDataChanged-->")
     self:ManagerCorpsFromChangedMap(changed_map)
 end
 

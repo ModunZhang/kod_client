@@ -1286,12 +1286,14 @@ function City:OnHelpedByTroopsDataChange(helpedByTroops)
 end
 function City:__OnHelpedByTroopsDataChange(__helpedByTroops)
     if not __helpedByTroops then return end
-    if __helpedByTroops.type == "add" then
-        self:AddHelpedByTroops(__helpedByTroops.data)
-    elseif __helpedByTroops.type == "remove" then
-        self:RemoveHelpedByTroops(__helpedByTroops.data)
-    else
-        assert(false)
+    for _,v in ipairs(__helpedByTroops) do
+        if v.type == "add" then
+            self:AddHelpedByTroops(v.data)
+        elseif v.type == "remove" then
+            self:RemoveHelpedByTroops(v.data)
+        else
+            assert(false)
+        end
     end
 end
 function City:AddHelpedByTroops(troops)
@@ -1325,8 +1327,8 @@ end
 function City:OnHelpToTroopsDataChange(helpToTroops)
     if not helpToTroops then return end
     for _,v in ipairs(helpToTroops) do
-        if not self.helpToTroops[v.targetPlayerData.id] then
-            self.helpToTroops[v.targetPlayerData.id] = v
+        if not self.helpToTroops[v.beHelpedPlayerData.id] then
+            self.helpToTroops[v.beHelpedPlayerData.id] = v
         end
     end
 end
@@ -1336,8 +1338,8 @@ function City:__OnHelpToTroopsDataChange(__helpToTroops)
     local change_map = GameUtils:Event_Handler_Func(
         __helpToTroops
         ,function(data)
-            if not self.helpToTroops[data.targetPlayerData.id] then
-                self.helpToTroops[data.targetPlayerData.id] = data
+            if not self.helpToTroops[data.beHelpedPlayerData.id] then
+                self.helpToTroops[data.beHelpedPlayerData.id] = data
             end
             return data
         end
@@ -1346,8 +1348,8 @@ function City:__OnHelpToTroopsDataChange(__helpToTroops)
             return nil
         end
         ,function(data)
-            if self.helpToTroops[data.targetPlayerData.id] then
-                self.helpToTroops[data.targetPlayerData.id] = nil
+            if self.helpToTroops[data.beHelpedPlayerData.id] then
+                self.helpToTroops[data.beHelpedPlayerData.id] = nil
                 return data
             end
         end
@@ -1374,7 +1376,6 @@ function City:GetHelpToTroops()
 end
 
 function City:IsHelpedToTroopsWithPlayerId(id)
-    dump(id,"IsHelpedToTroopsWithPlayerId------>")
     return self:GetHelpToTroops()[id] ~= nil
 end
 

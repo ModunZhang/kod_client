@@ -214,4 +214,12 @@ function MyApp:EnterMyAllianceScene()
         end
     end)
 end
+
+function MyApp:pushScene(sceneName, args, transitionType, time, more)
+    local scenePackageName = "app.scenes." .. sceneName
+    local sceneClass = require(scenePackageName)
+    local scene = sceneClass.new(unpack(checktable(args)))
+    display.pushScene(scene, transitionType, time, more)
+end
+
 return MyApp

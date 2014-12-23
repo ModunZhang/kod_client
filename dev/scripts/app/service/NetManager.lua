@@ -1158,10 +1158,10 @@ function NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, ta
         "协防玩家失败!"),get_alliancedata_callback()):next(get_response_msg)
 end
 --撤销协防
-function NetManager:getRetreatFromHelpedAllianceMemberPromise(targetPlayerId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.retreatFromHelpedAllianceMember",
+function NetManager:getRetreatFromHelpedAllianceMemberPromise(beHelpedPlayerId)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.retreatFromBeHelpedAllianceMember",
         {
-            targetPlayerId = targetPlayerId,
+            beHelpedPlayerId = beHelpedPlayerId,
         },
         "撤销协防失败!"),get_alliancedata_callback()):next(get_response_msg)
 end
@@ -1186,15 +1186,15 @@ function NetManager:getSearchAllianceInfoByTagPromise(tag)
         "根据Tag搜索联盟战斗数据失败!"),get_searchallianceinfobytag_callback()):next(get_response_msg)
 end
 --突袭玩家城市
-function NetManager:getStrikePlayerCityPromise(dragonType,enemyPlayerId)
-    return promise.all(get_none_blocking_request_promise("logic.allianceHandler.strikePlayerCity",
-        {dragonType=dragonType,enemyPlayerId=enemyPlayerId},
-        "突袭玩家城市失败!"),get_playerdata_callback()):next(get_response_msg)
+function NetManager:getStrikePlayerCityPromise(dragonType,defencePlayerId)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.strikePlayerCity",
+        {dragonType=dragonType,defencePlayerId=defencePlayerId},
+        "突袭玩家城市失败!"),get_alliancedata_callback()):next(get_response_msg)
 end
 --攻打玩家城市
-function NetManager:getAttackPlayerCityPromise(enemyPlayerId)
-    return promise.all(get_none_blocking_request_promise("logic.allianceHandler.attackPlayerCity",
-        {enemyPlayerId=enemyPlayerId},"攻打玩家城市失败!"),
+function NetManager:getAttackPlayerCityPromise(dragonType, soldiers,defencePlayerId)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.attackPlayerCity",
+        {defencePlayerId=defencePlayerId,dragonType=dragonType,soldiers = soldiers},"攻打玩家城市失败!"),
         get_alliancedata_callback()):next(get_response_msg)
 end
 
