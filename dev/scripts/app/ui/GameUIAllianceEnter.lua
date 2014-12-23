@@ -787,7 +787,7 @@ end
 function GameUIAllianceEnter:CreateBackGroundWithTitle( params )
     local body = WidgetUIBackGround.new({height=params.height,isFrame = "no"}):align(display.TOP_CENTER,display.cx,display.top-200)
     local rb_size = body:getContentSize()
-    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+5)
+    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+8)
         :addTo(body)
     local title_label = UIKit:ttfLabel({
         text = params.title,
@@ -801,7 +801,7 @@ function GameUIAllianceEnter:CreateBackGroundWithTitle( params )
             if event.name == "CLICKED_EVENT" then
                 self:leftButtonClicked()
             end
-        end):align(display.CENTER, rb_size.width-20,rb_size.height+10):addTo(body)
+        end):align(display.CENTER_RIGHT, rb_size.width,rb_size.height+10):addTo(body)
     return body
 end
 
