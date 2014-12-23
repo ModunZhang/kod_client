@@ -506,7 +506,6 @@ function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
         {
             disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
         })
-        :setButtonSize(169, 86)
         :setButtonLabel(ui.newTTFLabel({
             text = _("免费加速"),
             size = 24,
