@@ -261,9 +261,11 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type,soldier_star)
     -- }):addTo(back_ground, 2)
     --     :align(display.CENTER, size.width - 70, label_height - 35)
     WidgetSliderWithInput.new({max = self.recruit_max,min=1}):addTo(back_ground):align(display.LEFT_CENTER, 25, 330)
+        :SetSliderSize(445, 24)
         :OnSliderValueChanged(function(event)
             self:OnCountChanged(math.floor(event.value))
         end)
+
 
 
     -- need bg
@@ -669,6 +671,7 @@ end
 
 
 return WidgetRecruitSoldier
+
 
 
 

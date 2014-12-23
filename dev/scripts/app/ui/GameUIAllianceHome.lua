@@ -178,7 +178,7 @@ function GameUIAllianceHome:TopTabButtons()
     display.newSprite("allianceHome/coordinate.png")
         :align(display.CENTER, -40,coordinate_btn:getContentSize().height/2-4)
         :addTo(coordinate_btn)
-    UIKit:ttfLabel(
+    self.coordinate_title_label = UIKit:ttfLabel(
         {
             text = _("坐标"),
             size = 14,
@@ -340,11 +340,11 @@ function GameUIAllianceHome:CreateTop()
             if enemy_flag then
                 enemy_name_bg:removeChildByTag(201, true)
             end
-            -- local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemyAlliance.flag)):scale(0.5)
-            -- enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
-            --     :addTo(enemy_name_bg)
-            -- enemy_flag:setTag(201)
-            -- enemy_name_label:setString("["..enemyAlliance.tag.."] "..enemyAlliance.name)
+            local enemy_flag = ui_helper:CreateFlagContentSprite(enemyAlliance:Flag()):scale(0.5)
+            enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
+                :addTo(enemy_name_bg)
+            enemy_flag:setTag(201)
+            enemy_name_label:setString("["..enemyAlliance:AliasName().."] "..enemyAlliance:Name())
 
         end
         if status=="fight" then
@@ -693,15 +693,15 @@ function GameUIAllianceHome:OnMemberChanged(alliance,changed_map)
     end
 end
 function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
-    local coordinate_str
+    local coordinate_str = string.format("%d, %d", logic_x, logic_y)
+    local is_mine
     if alliance_view then
-        local is_mine = alliance_view:GetAlliance():Id() == self.alliance:Id()
-        local tag = is_mine and "我方" or "敌方"
-        coordinate_str = string.format("(%s)%d, %d", tag, logic_x, logic_y)
+        is_mine = alliance_view:GetAlliance():Id() == self.alliance:Id() and _("我方") or _("敌方")
     else
-        coordinate_str = string.format("%d, %d", logic_x, logic_y)
+        is_mine = _("坐标")
     end
     self.coordinate_label:setString(coordinate_str)
+    self.coordinate_title_label:setString(is_mine)
 end
 function GameUIAllianceHome:MailUnreadChanged( num )
     if num==0 then

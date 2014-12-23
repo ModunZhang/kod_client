@@ -41,7 +41,9 @@ end
 
 function GameUIBase:onCleanup()
     print("onCleanup->",self.__cname)
-    UIKit:getRegistry().removeObject(self.__cname)
+    if UIKit:getRegistry().isObjectExists(self.__cname) then
+        UIKit:getRegistry().removeObject(self.__cname)
+    end
     -- app:lockInput(false)
 end
 
@@ -295,4 +297,5 @@ function GameUIBase:Find()
 end
 
 return GameUIBase
+
 

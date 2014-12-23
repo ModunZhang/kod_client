@@ -263,13 +263,13 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                     b_height = 80,
                     m_height = 28,
                 }):align(display.CENTER))
-                local title_bg = display.newSprite("title_blue_412x30.png"):pos(70,50)
+                local title_bg = display.newSprite("title_blue_412x30.png"):pos(70,46)
                 content:addWidget(title_bg)
                 -- building name
                 UIKit:ttfLabel({
                     text = _(Localize.building_name[unlock_building:GetType()]),
                     size = 22,
-                    color = 0xffedae}):align(display.CENTER_LEFT, 10, title_bg:getContentSize().height/2)
+                    color = 0xffedae}):align(display.CENTER_LEFT, 14, title_bg:getContentSize().height/2)
                     :addTo(title_bg)
                 if canUnlock then
 
@@ -289,7 +289,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
 
                 UIKit:ttfLabel({
                     text = canUnlock and _("未解锁") or _("已解锁"),
-                    size = 22,
+                    size = 18,
                     color = canUnlock and 0xffedae or 0x0db13c}):align(display.CENTER_RIGHT, title_bg:getContentSize().width-30, title_bg:getContentSize().height/2)
                     :addTo(title_bg)
 
@@ -306,11 +306,11 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                 content:addWidget(building_tip)
 
                 -- 建筑图片 放置区域左右边框
-                local filp_bg = cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, -item_width/2+20, 0)
+                local filp_bg = cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, -item_width/2+30, 0):scale(0.9)
                 filp_bg:setFlippedX(true)
                 content:addWidget(filp_bg)
-                content:addWidget(cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, -item_width/2+115, 0))
-                local building_image = display.newScale9Sprite(UIKit:getImageByBuildingType( unlock_building:GetType() ,unlock_building:GetLevel()), -item_width/2+70, 0)
+                content:addWidget(cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, -item_width/2+125, 0):scale(0.9))
+                local building_image = display.newScale9Sprite(UIKit:getImageByBuildingType( unlock_building:GetType() ,unlock_building:GetLevel()), -item_width/2+80, 0)
                     :scale(building_config_map[unlock_building:GetType()].scale)
                 content:addWidget(building_image)
                 -- 边框

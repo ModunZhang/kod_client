@@ -2,6 +2,7 @@ local UIListView = import(".UIListView")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
+local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local UpgradeBuilding = import("..entity.UpgradeBuilding")
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
@@ -9,11 +10,10 @@ local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local MaterialManager = import("..entity.MaterialManager")
 
-local GameUIUnlockBuilding = class("GameUIUnlockBuilding", function ()
-    return display.newColorLayer(cc.c4b(0,0,0,127))
-end)
+local GameUIUnlockBuilding = class("GameUIUnlockBuilding", WidgetPopDialog)
 
 function GameUIUnlockBuilding:ctor( city, tile )
+    GameUIUnlockBuilding.super.ctor(self,650,_("解锁建筑"),display.top-160) 
     self.city = city
     self.tile = tile
     self.building = city:GetBuildingByLocationId(tile.location_id)
@@ -32,23 +32,7 @@ function GameUIUnlockBuilding:onExit()
 end
 function GameUIUnlockBuilding:Init()
     -- bg
-    local bg = WidgetUIBackGround.new({height=663,widht=612}):pos(display.cx-306, display.top-810):addTo(self)
-    -- title bg
-    local title_bg = display.newSprite("Title_blue.png"):align(display.TOP_LEFT, 8, bg:getContentSize().height):addTo(bg,2)
-    -- title label
-    self.title = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text =  _("解锁建筑"),
-        font = UIKit:getFontFilePath(),
-        size = 24,
-        color = UIKit:hex2c3b(0xffedae)
-    }):align(display.CENTER,title_bg:getContentSize().width/2,title_bg:getContentSize().height/2):addTo(title_bg)
-
-    -- close button
-    cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
-        :onButtonClicked(function(event)
-            self:removeFromParent(true)
-        end):align(display.CENTER, bg:getContentSize().width-15, bg:getContentSize().height-5):addTo(bg,2)
+    local bg = self.body
     -- 建筑功能介绍
     cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-250, display.top-265)
         :addTo(self):setFlippedX(true)
@@ -173,7 +157,7 @@ function GameUIUnlockBuilding:SetUpgradeRequirementListview()
     -- local userData = DataManager:getUserData()
     local has_materials =City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
 
-    requirements = {
+    local requirements = {
         {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetOnUpgradingBuildings()<1,
             icon="hammer_31x33.png",description=GameUtils:formatNumber(#City:GetOnUpgradingBuildings()).."/1"},
         {resource_type = _("木材"),isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
