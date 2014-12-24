@@ -3,8 +3,10 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetBackGroundLucid = import("..widget.WidgetBackGroundLucid")
 local WidgetPlayerInfo = import("..widget.WidgetPlayerInfo")
 local UIAutoClose = import(".UIAutoClose")
+local WidgetPopDialog = import("..widget.WidgetPopDialog")
+local WidgetPages = import("..widget.WidgetPages")
+local WidgetInfo = import("..widget.WidgetInfo")
 local window = import("..utils.window")
-local UIPageView = import(".UIPageView")
 
 local GameUIVip = UIKit:createUIClass('GameUIVip',"GameUIWithCommonHeader")
 
@@ -604,155 +606,76 @@ function GameUIVip:CreateVIPItem(params)
 
     return body
 end
-
-function GameUIVip:OpenVIPDetails(show_vip_level)
-    if self:getChildByTag(101) then
-        return
+function GameUIVip:GetVIPInfoByLevel(level)
+    local info ={}
+    for k,v in pairs(VIP_EFFECIVE_VALUE[level]) do
+        local tmp_tip = VIP_EFFECIVE_ALL[k]..v
+        table.insert(info, {tmp_tip})
     end
-    local layer = display.newColorLayer(cc.c4b(0,0,0,127)):addTo(self,1,101)
-
-    -- 左右是否还有下一页提示条
-    local function createTipSlip()
-        local slip = display.newSprite("next_30x68.png")
-        local action = cc.ScaleTo:create(0.6,0.5)
-        local action_back = cc.ScaleTo:create(0.6,1)
-        local seq = transition.sequence({action,action_back})
-        slip:runAction(cc.RepeatForever:create(seq))
-        return slip
-    end
-    local left_tip = createTipSlip():addTo(layer,10):pos(window.left+40,window.top-480):flipX(true)
-    local right_tip = createTipSlip():addTo(layer,10):pos(window.right-40,window.top-480)
-    right_tip:setVisible(show_vip_level~=VIP_MAX_LEVEL)
-    left_tip:setVisible(show_vip_level~=1)
-
-    self.pv = cc.ui.UIPageView.new {
-        viewRect = cc.rect(window.cx-304, 0, 608, display.height),
-        column = 1, row = 1,
-        -- padding = {left = 20, right = 20, top = 20, bottom = 20},
-        columnSpace = 10, rowSapce = 10}
-        :onTouch(function ( event )
-            right_tip:setVisible(event.pageIdx~=VIP_MAX_LEVEL)
-            left_tip:setVisible(event.pageIdx~=1)
-        end)
-        :addTo(layer)
-
-    -- add items
-    for i=1,VIP_MAX_LEVEL do
-        local item = self.pv:newItem()
-        local content = self:CreateVIPPageItem("VIP"..i,layer,math.mod(i,2)==0,i)
-        -- content:align(display.CENTER, display.cx-content:getContentSize().width/2, display.top-400)
-        content:setContentSize(608, display.height)
-        content:setTouchEnabled(false)
-        item:addChild(content)
-        self.pv:addItem(item)
-    end
-    self.pv:reload()
-    self.pv:gotoPage(show_vip_level)
+    return info
 end
-
-function GameUIVip:CreateVIPPageItem(title_string,parent,isReach,vip_level)
-    -- local layer = display.newColorLayer(cc.c4b(math.random(250),
-    --             math.random(250),
-    --             math.random(250),
-    --             200))
-    local layer = display.newLayer()
-
-    local body = WidgetUIBackGround.new({height=920}):addTo(layer)
-        :align(display.CENTER, 304, display.top-510)
-    local rb_size = body:getContentSize()
-    local title = display.newSprite("title_purple_600x52.png"):align(display.CENTER, rb_size.width/2, rb_size.height+10)
+function GameUIVip:SetVIPInfo(level)
+    local info = self:GetVIPInfoByLevel(level)
+    self.widget_info:SetInfo(info)
+end
+function GameUIVip:OpenVIPDetails(show_vip_level)
+    local layer = WidgetPopDialog.new(737,_("VIP"),display.top-140,"title_purple_600x52.png")
+        :addToCurrentScene()
+    local body = layer:GetBody()
+    local size = body:getContentSize()
+    local widget_page = WidgetPages.new({
+        page = 10, -- 页数
+        titles =  {"VIP 1","VIP 2","VIP 3","VIP 4","VIP 5","VIP 6","VIP 7","VIP 8","VIP 9","VIP 10",}, -- 标题 type -> table
+        cb = function (page)
+            self:SetVIPInfo(page)
+        end,
+        current_page = show_vip_level,
+        icon = "vip_king_icon.png"
+    }):align(display.CENTER, size.width/2, size.height-50)
         :addTo(body)
-    local title_label = cc.ui.UILabel.new(
+    local info = self:GetVIPInfoByLevel(show_vip_level)
+    self.widget_info = WidgetInfo.new({info=info,h=500}):align(display.TOP_CENTER, size.width/2, size.height-90)
+        :addTo(body)
+
+    self.reach_bg = display.newSprite("vip_bg_4.png")
+    local reach_bg = self.reach_bg
+
+    reach_bg:hide()
+
+    reach_bg:align(display.CENTER, size.width/2, 40)
+        :addTo(body)
+    cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = title_string,
+            text = _("已达成"),
             font = UIKit:getFontFilePath(),
-            size = 22,
-            color = UIKit:hex2c3b(0xffedae)
-        }):align(display.LEFT_CENTER, title:getContentSize().width/2, title:getContentSize().height/2)
-        :addTo(title)
-    local title_icon = display.newSprite("vip_king_icon.png")
-        :align(display.CENTER, title:getContentSize().width/2-20, title:getContentSize().height/2)
-        :addTo(title)
-    -- close button
-    cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
-        :onButtonClicked(function(event)
-            parent:removeFromParent()
-        end):align(display.CENTER, title:getContentSize().width-30, title:getContentSize().height-20)
-        :addTo(title)
-    local function createTisItem(string,flag)
-        local content
-        if flag then
-            content = display.newSprite("back_ground_548x40_1.png")
-        else
-            content = display.newSprite("back_ground_548x40_2.png")
-        end
-        UIKit:ttfLabel({
-            text = string,
             size = 20,
-            color = 0x403c2f,
-        }):align(display.LEFT_CENTER, 10, 20):addTo(content)
-        return content
-    end
-    local vip_tips_count = #VIP_EFFECIVE_VALUE[vip_level]
-    local info_bg = WidgetUIBackGround.new({
-            width = 568,
-            height = vip_tips_count*40+16,
-            top_img = "back_ground_568X14_top.png",
-            bottom_img = "back_ground_568X14_top.png",
-            mid_img = "back_ground_568X1_mid.png",
-            u_height = 14,
-            b_height = 14,
-            m_height = 1,
-            b_flip = true,
-        }):align(display.TOP_CENTER,304,rb_size.height-27):addTo(body)
-
-    local gap_y = 40
-    local flag = true
-    for k,v in pairs(VIP_EFFECIVE_VALUE[vip_level]) do
-        local tmp_tip = VIP_EFFECIVE_ALL[k]..v
-        createTisItem(tmp_tip,flag):addTo(info_bg):align(display.TOP_CENTER, 284, vip_tips_count*40+8-gap_y*(k-1))
-        flag = not flag
-    end
-
-    if isReach then
-        local reach_bg = display.newSprite("vip_bg_4.png")
-        reach_bg:align(display.CENTER, rb_size.width/2, 40)
-            :addTo(body)
-        cc.ui.UILabel.new(
-            {
-                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                text = _("已达成"),
-                font = UIKit:getFontFilePath(),
-                size = 20,
-                color = UIKit:hex2c3b(0x403c2f)
-            }):align(display.CENTER, reach_bg:getContentSize().width/2, reach_bg:getContentSize().height/2)
-            :addTo(reach_bg)
-    else
-        local reach_bg = display.newSprite("vip_bg_5.png")
-        reach_bg:align(display.CENTER, rb_size.width/2, 80)
-            :addTo(body)
-        cc.ui.UILabel.new(
-            {
-                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                text = _("到达等级赠送"),
-                font = UIKit:getFontFilePath(),
-                size = 20,
-                color = UIKit:hex2c3b(0xefdea3)
-            }):align(display.LEFT_CENTER, 120, 70)
-            :addTo(reach_bg)
-        cc.ui.UILabel.new(
-            {
-                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                text = _("7 DAY"),
-                font = UIKit:getFontFilePath(),
-                size = 18,
-                color = UIKit:hex2c3b(0x403c2f)
-            }):align(display.CENTER, 70, 12)
-            :addTo(reach_bg)
-    end
-
-    return layer
+            color = UIKit:hex2c3b(0x403c2f)
+        }):align(display.CENTER, reach_bg:getContentSize().width/2, reach_bg:getContentSize().height/2)
+        :addTo(reach_bg)
+    self.not_reach_bg  = display.newSprite("vip_bg_5.png")
+    local not_reach_bg = self.not_reach_bg
+    not_reach_bg:align(display.CENTER, size.width/2, 80)
+        :addTo(body)
+    cc.ui.UILabel.new(
+        {
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = _("到达等级赠送"),
+            font = UIKit:getFontFilePath(),
+            size = 20,
+            color = UIKit:hex2c3b(0xefdea3)
+        }):align(display.LEFT_CENTER, 120, 70)
+        :addTo(not_reach_bg)
+    cc.ui.UILabel.new(
+        {
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = _("7 DAY"),
+            font = UIKit:getFontFilePath(),
+            size = 18,
+            color = UIKit:hex2c3b(0x403c2f)
+        }):align(display.CENTER, 70, 12)
+        :addTo(not_reach_bg)
+    
 end
 
 -- 根据当前vip exp 获取对应VIP等级
@@ -767,6 +690,11 @@ function GameUIVip:GetVipLevelByExp(exp)
 end
 
 return GameUIVip
+
+
+
+
+
 
 
 
