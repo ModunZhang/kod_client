@@ -48,7 +48,7 @@ local function utf8sub(str, startChar, numChars)
     end
 
     local currentIndex = startIndex
-
+    numChars = numChars or #str
     while numChars > 0 and currentIndex <= #str do
         local char = string.byte(str, currentIndex)
         currentIndex = currentIndex + chsize(char)
@@ -56,6 +56,12 @@ local function utf8sub(str, startChar, numChars)
     end
     return str:sub(startIndex, currentIndex - 1)
 end
+
+local function utf8substr(str, startChar, endChar)
+    local numChars = endChar and endChar - startChar + 1 or nil
+    return utf8sub(str, startChar, numChars)
+end
+
 
 local function utf8find(str, t, start)
     local b, e = string.find(str, t, start)
@@ -80,11 +86,17 @@ local function utf8iterator(str)
     end
 end
 
+local function utf8index(str, index)
+    return utf8sub(str, index, 1)
+end
+
 
 return {
     charLen = utf8charLen,
     len = utf8len,
     sub = utf8sub,
+    substr = utf8substr,
     find = utf8find,
-    iterator = utf8iterator
+    iterator = utf8iterator,
+    index = utf8index
 }

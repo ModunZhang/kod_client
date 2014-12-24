@@ -63,20 +63,6 @@
 			remoteGlobalIDString = DAF28FBE196D314100959DA1;
 			remoteInfo = libquick;
 		};
-		DB173F291A42D1290009960D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DB173F241A42D1290009960D /* lwf.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8190970D18E2264A003E0BB0;
-			remoteInfo = "lwf Mac";
-		};
-		DB173F2B1A42D1290009960D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DB173F241A42D1290009960D /* lwf.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 819096E018E2259A003E0BB0;
-			remoteInfo = "lwf iOS";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -116,7 +102,6 @@
 		3FEC8CA61A011A02000B8BF5 /* Droid Sans Faliback.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Droid Sans Faliback.ttf"; path = "../../../dev/res/fonts/Droid Sans Faliback.ttf"; sourceTree = "<group>"; };
 		9FC0E164195418CB0064626D /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		DAF28BDB196D03DD00959DA1 /* libquick.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libquick.xcodeproj; path = quick/lib/proj.ios/libquick.xcodeproj; sourceTree = QUICK_V3_ROOT; };
-		DB173F241A42D1290009960D /* lwf.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = lwf.xcodeproj; path = ../lwf/project.ios_mac/lwf.xcodeproj; sourceTree = "<group>"; };
 		F452BFC41687EEF900DC5BCC /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		F452BFCF1687F0F200DC5BCC /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F456ECC115EE018E00FCF3E2 /* kod.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kod.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -293,19 +278,9 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		DB173F251A42D1290009960D /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				DB173F2A1A42D1290009960D /* liblwf Mac.a */,
-				DB173F2C1A42D1290009960D /* liblwf iOS.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		F456ECB615EE018E00FCF3E2 = {
 			isa = PBXGroup;
 			children = (
-				DB173F241A42D1290009960D /* lwf.xcodeproj */,
 				DAF28BDB196D03DD00959DA1 /* libquick.xcodeproj */,
 				3F18501D19B9EC83000A75D0 /* sources */,
 				2EDD2792191B6392004F9539 /* ios */,
@@ -400,10 +375,6 @@
 					ProductGroup = DAF28EF4196D2D5400959DA1 /* Products */;
 					ProjectRef = DAF28BDB196D03DD00959DA1 /* libquick.xcodeproj */;
 				},
-				{
-					ProductGroup = DB173F251A42D1290009960D /* Products */;
-					ProjectRef = DB173F241A42D1290009960D /* lwf.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -418,20 +389,6 @@
 			fileType = archive.ar;
 			path = liblibquick.a;
 			remoteRef = DAF28FBF196D315A00959DA1 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DB173F2A1A42D1290009960D /* liblwf Mac.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "liblwf Mac.a";
-			remoteRef = DB173F291A42D1290009960D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DB173F2C1A42D1290009960D /* liblwf iOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "liblwf iOS.a";
-			remoteRef = DB173F2B1A42D1290009960D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
