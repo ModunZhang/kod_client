@@ -18,6 +18,7 @@ local img_dir = "allianceHome/"
 function GameUIAllianceBattle:ctor(city)
     GameUIAllianceBattle.super.ctor(self, city, _("联盟会战"))
     self.alliance = Alliance_Manager:GetMyAlliance()
+    self.enemy_alliance = Alliance_Manager:GetEnemyAlliance()
 
     self.alliance_fight_reports_table = {}
     self.history_items = {}
@@ -75,7 +76,8 @@ function GameUIAllianceBattle:onEnter()
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.FIGHT_REPORTS)
-    self.alliance:GetAllianceMoonGate():AddListenOnType(self, AllianceMoonGate.LISTEN_TYPE.OnCountDataChanged)
+    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
+    -- self.alliance:GetAllianceMoonGate():AddListenOnType(self, AllianceMoonGate.LISTEN_TYPE.OnCountDataChanged)
 
 end
 
@@ -84,7 +86,8 @@ function GameUIAllianceBattle:onExit()
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.FIGHT_REPORTS)
-    self.alliance:GetAllianceMoonGate():RemoveListenerOnType(self, AllianceMoonGate.LISTEN_TYPE.OnCountDataChanged)
+    self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
+    -- self.alliance:GetAllianceMoonGate():RemoveListenerOnType(self, AllianceMoonGate.LISTEN_TYPE.OnCountDataChanged)
     GameUIAllianceBattle.super.onExit(self)
 end
 
@@ -281,7 +284,9 @@ function GameUIAllianceBattle:InitBattleStatistics()
         end
     else
         local our_alliance = self.alliance
-        local enemy_alliance = self.alliance:GetAllianceMoonGate():GetEnemyAlliance()
+        -- local enemy_alliance = self.alliance:GetAllianceMoonGate():GetEnemyAlliance()
+        local enemy_alliance = Alliance_Manager:GetEnemyAlliance()
+
         local self_alliance_bg = WidgetPushButton.new({normal = "allianceHome/button_blue_normal_320X94.png",
             pressed = "allianceHome/button_blue_pressed_320X94.png"})
             :onButtonClicked(function()
@@ -307,7 +312,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             :align(display.CENTER,-180,0)
         -- 敌方联盟名字
         UIKit:ttfLabel({
-            text = enemy_alliance.name,
+            text = enemy_alliance:Name(),
             size = 22,
             color = 0xffedae,
         }):addTo(enemy_alliance_bg)
@@ -429,12 +434,12 @@ end
 function GameUIAllianceBattle:RefreshFightInfoList()
     if self.info_listview then
         self.info_listview:removeAllItems()
-        local our = self.alliance:GetAllianceMoonGate():GetCountData().our
-        local enemy = self.alliance:GetAllianceMoonGate():GetCountData().enemy
+        local our = self.alliance:GetMyAllianceFightCountData()
+        local enemy = self.alliance:GetEnemyAllianceFightCountData()
+
         local info_message = {
             {string.formatnumberthousands(our.kill),_("击杀数"),string.formatnumberthousands(enemy.kill)},
-            {string.formatnumberthousands(self.alliance:Power()),_("战斗力"),string.formatnumberthousands(self.alliance:GetAllianceMoonGate():GetEnemyAlliance().power)},
-            {GameUtils:formatTimeStyle1(our.moonGateOwnCount*30),_("占领月门时间"),GameUtils:formatTimeStyle1(enemy.moonGateOwnCount*30)},
+            -- {string.formatnumberthousands(self.alliance:Power()),_("战斗力"),string.formatnumberthousands(self.alliance:GetAllianceMoonGate():GetEnemyAlliance().power)},
             {our.routCount,_("击溃城市"),enemy.routCount},
             {our.strikeCount,_("突袭次数"),enemy.strikeCount},
             {our.attackSuccessCount,_("获胜进攻"),enemy.attackSuccessCount},
@@ -484,27 +489,31 @@ end
 
 function GameUIAllianceBattle:OpenAllianceDetails(isOur)
     local alliance = self.alliance
-    local enemy_alliance = alliance:GetAllianceMoonGate():GetEnemyAlliance()
-    local count_data = alliance:GetAllianceMoonGate():GetCountData()
+    -- local enemy_alliance = alliance:GetAllianceMoonGate():GetEnemyAlliance()
+    -- local count_data = alliance:GetAllianceMoonGate():GetCountData()
 
-    local alliance_name = isOur and alliance:Name() or enemy_alliance.name
+    local enemy_alliance = Alliance_Manager:GetEnemyAlliance()
+    local count_data = isOur and alliance:GetMyAllianceFightCountData() or alliance:GetEnemyAllianceFightCountData()
+    local our_player_kills = alliance:GetMyAllianceFightPlayerKills()
+    local enemy_player_kills = alliance:GetEnemyAllianceFightPlayerKills()
+    local alliance_name = isOur and alliance:Name() or enemy_alliance:Name()
     -- 玩家联盟成员
     local palace_level = alliance:GetAllianceMap():FindAllianceBuildingInfoByName("palace").level
     local memberCount = GameDatas.AllianceBuilding.palace[palace_level].memberCount
-    local enemy_memberCount = GameDatas.AllianceBuilding.palace[enemy_alliance.palaceLevel].memberCount
-    local alliance_members = isOur and alliance:GetMembersCount().."/"..memberCount or enemy_alliance.memberCount.."/"..enemy_memberCount
+    local enemy_memberCount = GameDatas.AllianceBuilding.palace[enemy_alliance:GetAllianceMap():FindAllianceBuildingInfoByName("palace").level].memberCount
+    local alliance_members = isOur and alliance:GetMembersCount().."/"..memberCount or enemy_alliance:GetMembersCount().."/"..enemy_memberCount
     -- 联盟语言
-    local  language = isOur and alliance:DefaultLanguage() or enemy_alliance.language
+    local  language = isOur and alliance:DefaultLanguage() or enemy_alliance:DefaultLanguage()
     -- 联盟战斗力
-    local  alliance_power = isOur and alliance:Power() or enemy_alliance.power
+    local  alliance_power = isOur and alliance:Power() or enemy_alliance:Power()
     -- 联盟击杀
-    local  alliance_kill = isOur and count_data.our.kill or count_data.enemy.kill
+    local  alliance_kill = isOur and count_data.kill or count_data.kill
     -- 玩家击杀列表
-    local  player_kill = isOur and count_data.our.playerKills or count_data.enemy.playerKills
+    local  player_kill = isOur and our_player_kills or enemy_player_kills
     -- 联盟旗帜
-    local alliance_flag = isOur and alliance:Flag() or Flag.new():DecodeFromJson(enemy_alliance.flag)
+    local alliance_flag = isOur and alliance:Flag() or enemy_alliance:Flag()
     -- 联盟地形
-    local alliance_terrain = isOur and alliance:TerrainType() or enemy_alliance.terrain
+    local alliance_terrain = isOur and alliance:TerrainType() or enemy_alliance:TerrainType()
 
 
     local layer = display.newColorLayer(cc.c4b(0,0,0,127)):addTo(self)
@@ -690,11 +699,13 @@ function GameUIAllianceBattle:InitHistoryRecord()
 end
 
 function GameUIAllianceBattle:AddHistoryItem(report,index)
+    LuaUtils:outputTable("report", report)
+    local alliance = self.alliance
     -- 各项数据
-    local win = report.fightResult == "ourWin"
+    local win = (report.attackAlliance.id == alliance:Id() and  report.fightResult == "attackWin") or (report.defenceAlliance.id == alliance:Id() and  report.fightResult == "defenceWin") or false
     local fightTime = report.fightTime
-    local ourAlliance = report.ourAlliance
-    local enemyAlliance = report.enemyAlliance
+    local ourAlliance = report.attackAlliance.id == alliance:Id() and report.attackAlliance or report.defenceAlliance
+    local enemyAlliance = report.attackAlliance.id == alliance:Id() and report.defenceAlliance or report.attackAlliance
 
 
     local item = self.history_listview:newItem()
@@ -1020,32 +1031,32 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance)
             shadow= true
         }))
         :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                NetManager:getFtechAllianceViewDataPromose(alliance.id):next(function(msg)
-                    local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
-                    app:lockInput(false)
-                    app:enterScene("EnemyAllianceScene", {enemyAlliance,GameUIAllianceEnter.Enemy}, "custom", -1, function(scene, status)
-                        local manager = ccs.ArmatureDataManager:getInstance()
-                        if status == "onEnter" then
-                            manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
-                            local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
-                            display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
-                                transition.sequence{
-                                    cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
-                                    cc.FadeIn:create(0.75),
-                                    cc.CallFunc:create(function() scene:hideOutShowIn() end),
-                                    cc.DelayTime:create(0.5),
-                                    cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
-                                    cc.FadeOut:create(0.75),
-                                    cc.CallFunc:create(function() scene:finish() end),
-                                }
-                            )
-                        elseif status == "onExit" then
-                            manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
-                        end
-                    end)
-                end)
-            end
+            -- if event.name == "CLICKED_EVENT" then
+            --     NetManager:getFtechAllianceViewDataPromose(alliance.id):next(function(msg)
+            --         local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
+            --         app:lockInput(false)
+            --         app:enterScene("EnemyAllianceScene", {enemyAlliance,GameUIAllianceEnter.Enemy}, "custom", -1, function(scene, status)
+            --             local manager = ccs.ArmatureDataManager:getInstance()
+            --             if status == "onEnter" then
+            --                 manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+            --                 local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
+            --                 display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
+            --                     transition.sequence{
+            --                         cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
+            --                         cc.FadeIn:create(0.75),
+            --                         cc.CallFunc:create(function() scene:hideOutShowIn() end),
+            --                         cc.DelayTime:create(0.5),
+            --                         cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
+            --                         cc.FadeOut:create(0.75),
+            --                         cc.CallFunc:create(function() scene:finish() end),
+            --                     }
+            --                 )
+            --             elseif status == "onExit" then
+            --                 manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+            --             end
+            --         end)
+            --     end)
+            -- end
         end):align(display.RIGHT_CENTER,w-20,35):addTo(content)
 
     item:addContent(content)
@@ -1156,9 +1167,13 @@ function GameUIAllianceBattle:OnBasicChanged(alliance,changed_map)
         self:InitBattleStatistics()
     end
 end
-function GameUIAllianceBattle:OnCountDataChanged(changed_map)
+-- function GameUIAllianceBattle:OnCountDataChanged(changed_map)
+--     self:RefreshFightInfoList()
+-- end
+function GameUIAllianceBattle:OnAllianceFightChanged(alliance,alliance_fight)
     self:RefreshFightInfoList()
 end
+
 
 function GameUIAllianceBattle:GetAlliancePeriod()
     local period = ""

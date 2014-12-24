@@ -166,7 +166,7 @@ function GameUIAllianceEnter:InitConfig()
                 },
                 {
                     img = "icon_alliance_crisis.png",
-                    title = _("战场"),
+                    title = _("王城"),
                     func = function (building)
                         UIKit:newGameUI('GameUIMoonGate',City,"battlefield",building):addToCurrentScene(true)
                     end
@@ -181,30 +181,9 @@ function GameUIAllianceEnter:InitConfig()
             },
             Enemy = 
             {
-                {
-                    img = "icon_info_1.png",
-                    title = _("驻防部队"),
-                    func = function (building)
-                        UIKit:newGameUI('GameUIMoonGate',City,"garrison",building):addToCurrentScene(true)
-                    end
-                },
-                {
-                    img = "icon_alliance_crisis.png",
-                    title = _("战场"),
-                    func = function (building)
-                        UIKit:newGameUI('GameUIMoonGate',City,"battlefield",building):addToCurrentScene(true)
-                    end
-                },
             },
             Watch = 
-            {
-                {
-                    img = "icon_alliance_crisis.png",
-                    title = _("战场"),
-                    func = function (building)
-                        UIKit:newGameUI('GameUIMoonGate',City,"battlefield",building):addToCurrentScene(true)
-                    end
-                }
+            {  
             }
         },
     },
@@ -266,7 +245,7 @@ function GameUIAllianceEnter:InitConfig()
         height = 261,
         title = _("圣地"),
         building_image = "shrine_256x210.png",
-        building_desc = _("本地化缺失"),
+        building_desc = "本地化缺失",
         building_info = {
             {
                 {_("坐标"),0x797154},
@@ -419,16 +398,16 @@ function GameUIAllianceEnter:InitConfig()
         enter_buttons = {
             Normal = 
             {
-                 {
-                    img = "Strike_72x72.png",
-                    title = _("突袭"),
-                    func = function (building)
-                        if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
-                            local playerId = building.player:Id()
+                --  {
+                --     img = "Strike_72x72.png",
+                --     title = _("突袭"),
+                --     func = function (building)
+                --         if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
+                --             local playerId = building.player:Id()
 
-                        end
-                    end
-                },
+                --         end
+                --     end
+                -- },
                 {
                     img = "village_capture_66x72.png",
                     title = _("占领"),
@@ -496,10 +475,19 @@ function GameUIAllianceEnter:InitConfig()
                     img = "help_defense_55x69.png",
                     title = _("协防"),
                     enable = true,
-                    func = function (building)
-                        UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
-                            NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, building.player:Id())
-                        end):addToCurrentScene(true)
+                    func = function (building,alliance)
+                        local playerId = building.player:Id()
+                        if not alliance:CheckHelpDefenceMarchEventsHaveTarget(playerId) then
+                            UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
+                                NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, playerId)
+                            end):addToCurrentScene(true)
+                        else
+                            local dialog = FullScreenPopDialogUI.new()
+                            dialog:SetTitle(_("错误"))
+                            dialog:SetPopMessage(_("已有协防部队正在行军"))
+                            dialog:AddToCurrentScene()
+                            return
+                        end
                     end
                 },
                 {
@@ -544,31 +532,17 @@ function GameUIAllianceEnter:InitConfig()
                             local x,y = building:GetLogicPosition()
                             location = {x = x,y = y}
                         end
-                        if not Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
-                            local dialog = FullScreenPopDialogUI.new()
-                            dialog:SetTitle(_("提示"))
-                            dialog:SetPopMessage(string.format(_("月门还未被攻破."),alliance.name))
-                            dialog:AddToCurrentScene()
-                            return
-                        end
-                        if not Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():GetMyTroop() then
-                            local dialog = FullScreenPopDialogUI.new()
-                            dialog:SetTitle(_("提示"))
-                            dialog:SetPopMessage(string.format(_("月门中没有你的部队."),alliance.name))
-                            dialog:AddToCurrentScene()
-                            return
-                        end
-                        UIKit:newGameUI("GameUIAttackPlayerCity",alliance,location,building.player:Id()):addToCurrentScene(true)
+                        UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
+                            NetManager:getAttackPlayerCityPromise(dragonType, soldiers, building.player:Id())
+                        end):addToCurrentScene(true)
                     end
                 },
                 {
                     img = "Strike_72x72.png",
                     title = _("突袭"),
-                    func = function (building)
-                        if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
-                            local playerId = building.player:Id()
-                            UIKit:newGameUI("GameUIStrikePlayer",playerId):addToCurrentScene(true)
-                        end
+                    func = function (building,alliance)
+                        local playerId = building.player:Id()
+                        UIKit:newGameUI("GameUIStrikePlayer",playerId):addToCurrentScene(true)
                     end
                 },
                 {
@@ -674,6 +648,12 @@ function GameUIAllianceEnter:SetBuildingInfo()
     if name == "palace" then
         info[2][2][1] = self:GetAlliance():MemberCount()
         info[3][2][1] = _("暂无")
+    elseif name == "shrine" then -- 圣地
+        local events = self:GetAlliance():GetAllianceShrine():GetShrineEvents()
+        local running_event = #events > 0 and events[1]:StageName() or _("暂无")
+        info[2][2][1] = running_event
+        local people_count =   #events > 0 and  #events[1]:PlayerTroops() .. "/" .. events[1]:Stage():SuggestPlayer() or _("暂无")
+        info[3][2][1] = people_count
     elseif name == "shop" then
         info[2][2][1] = _("暂无")
     elseif name == "orderHall" then
@@ -682,7 +662,7 @@ function GameUIAllianceEnter:SetBuildingInfo()
         local memeber = self:GetPlayerByLocation(self.building:GetLogicPosition())
         dataModel.title = memeber.name
         dataModel.building_info[2][2][1] = memeber.name
-        dataModel.building_info[3][2][1] = memeber.helpTroopsCount
+        dataModel.building_info[3][2][1] = memeber.helpedByTroopsCount
         building.player = memeber
         if self:GetMode() == GameUIAllianceEnter.MODE.Normal then
             print(DataManager:getUserData()._id,memeber:Id(),DataManager:getUserData()._id == memeber:Id())
@@ -692,9 +672,8 @@ function GameUIAllianceEnter:SetBuildingInfo()
                 table.remove(dataModel.enter_buttons.Normal,3)
                 table.remove(dataModel.enter_buttons.Normal,1)
             else
-                local can_help_in_march_events = self:GetAlliance():CheckHelpDefenceMarchEventsHaveTarget(memeber:Id()) 
-                local can_help_in_city = not City:IsHelpedToTroopsWithPlayerId(memeber:Id())
-                if not can_help_in_city then
+                local can_not_help_in_city = City:IsHelpedToTroopsWithPlayerId(memeber:Id())
+                if can_not_help_in_city then
                     dataModel.enter_buttons.Normal[1].title = _("撤防")
                     dataModel.enter_buttons.Normal[1].func = function(building)
                         NetManager:getRetreatFromHelpedAllianceMemberPromise(building.player:Id()):catch(function(err)
@@ -806,9 +785,9 @@ function GameUIAllianceEnter:CreateItemWithLine(params)
 end
 
 function GameUIAllianceEnter:CreateBackGroundWithTitle( params )
-    local body = WidgetUIBackGround.new({height=params.height}):align(display.TOP_CENTER,display.cx,display.top-200)
+    local body = WidgetUIBackGround.new({height=params.height,isFrame = "no"}):align(display.TOP_CENTER,display.cx,display.top-200)
     local rb_size = body:getContentSize()
-    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+5)
+    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+8)
         :addTo(body)
     local title_label = UIKit:ttfLabel({
         text = params.title,
@@ -822,7 +801,7 @@ function GameUIAllianceEnter:CreateBackGroundWithTitle( params )
             if event.name == "CLICKED_EVENT" then
                 self:leftButtonClicked()
             end
-        end):align(display.CENTER, rb_size.width-20,rb_size.height+10):addTo(body)
+        end):align(display.CENTER_RIGHT, rb_size.width,rb_size.height+10):addTo(body)
     return body
 end
 

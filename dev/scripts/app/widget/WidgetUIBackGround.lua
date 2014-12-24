@@ -3,7 +3,7 @@ local WidgetUIBackGround = class("WidgetUIBackGround", function ()
     return display.newNode()
 end)
 
-WidgetUIBackGround.STYLE_TYPE = Enum("STYLE_1","STYLE_2")
+WidgetUIBackGround.STYLE_TYPE = Enum("STYLE_1","STYLE_2","STYLE_3","STYLE_4")
 
 local STYLES = {
     [1]= {
@@ -19,6 +19,22 @@ local STYLES = {
         m_height=28,
         b_height=80,
     },
+    [3] = {
+        top_img = "back_ground_258X12_top.png",
+        bottom_img = "back_ground_258X12_bottom.png",
+        mid_img = "back_ground_258X1_mid.png",
+        u_height =12,
+        m_height=1,
+        b_height=12,
+    },
+    [4] = {
+        top_img = "back_ground_580x12_top.png",
+        bottom_img = "back_ground_580X12_bottom.png",
+        mid_img = "back_ground_580X1_mid.png",
+        u_height =12,
+        m_height=1,
+        b_height=12,
+    },
 }
 
 function WidgetUIBackGround:ctor(params,style)
@@ -32,7 +48,7 @@ function WidgetUIBackGround:ctor(params,style)
     local u_height = st and st.u_height or params.u_height or 22
     local m_height = st and st.m_height or params.m_height or 98
     local b_height = st and st.b_height or params.b_height or 62
-    local is_have_frame = params.isFrame or "yes"
+    local is_have_frame = params.isFrame or "no"
 
     self:setContentSize(cc.size(width,height))
     --top
@@ -63,7 +79,7 @@ function WidgetUIBackGround:ctor(params,style)
 
     -- 添加边框
     if is_have_frame == "yes" and top_img=="back_ground_608x22.png" then
-        display.newSprite("shrie_state_item_line_606_16.png"):addTo(self):align(display.LEFT_TOP,0, height-4)
+        display.newSprite("shrie_state_item_line_606_16.png"):addTo(self):align(display.LEFT_TOP,0, height-2)
         display.newSprite("shrie_state_item_line_606_16.png"):addTo(self):align(display.LEFT_BOTTOM,0, 4):flipY(true)
     end
 end

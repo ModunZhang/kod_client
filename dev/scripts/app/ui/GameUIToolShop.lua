@@ -7,18 +7,18 @@ local MaterialManager = import("..entity.MaterialManager")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetNeedBox = import("..widget.WidgetNeedBox")
-local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
+local WidgetTimerProgressStyleThree = import("..widget.WidgetTimerProgressStyleThree")
 local GameUIToolShop = UIKit:createUIClass("GameUIToolShop", "GameUIUpgradeBuilding")
 
 local MATERIALS_MAP = {
-    blueprints = { "blueprints_112x112.png",  _("建筑图纸"), 1},
-    tools = { "tools_112x112.png",  _("建筑工具"), 2},
-    tiles = { "tiles_112x112.png",  _("砖石瓦片"), 3},
-    pulley = { "pulley_112x112.png",  _("滑轮组"), 4},
-    trainingFigure = { "trainingFigure_112x112.png",  _("木人桩"), 1},
-    bowTarget = { "bowTarget_112x112.png", _("箭靶"), 2},
-    saddle = { "saddle_112x112.png",  _("马鞍"), 3},
-    ironPart = { "ironPart_112x112.png",  _("精铁零件"), 4},
+    blueprints = { "blueprints_103x103.png",  _("建筑图纸"), 1},
+    tools = { "tools_103x103.png",  _("建筑工具"), 2},
+    tiles = { "tiles_103x103.png",  _("砖石瓦片"), 3},
+    pulley = { "pulley_103x103.png",  _("滑轮组"), 4},
+    trainingFigure = { "trainingFigure_103x103.png",  _("木人桩"), 1},
+    bowTarget = { "bowTarget_103x103.png", _("箭靶"), 2},
+    saddle = { "saddle_103x103.png",  _("马鞍"), 3},
+    ironPart = { "ironPart_103x103.png",  _("精铁零件"), 4},
 }
 
 function GameUIToolShop:ctor(city, toolShop)
@@ -83,7 +83,10 @@ function GameUIToolShop:UpdateNeedStatus()
         :setButtonEnabled(self:IsQueueEmpty())
 end
 function GameUIToolShop:Manufacture()
-    self.list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 100)
+    local material_manager = self.tool_shop_city:GetMaterialManager()
+    local materials = material_manager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
+
+    self.list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 90, window.right - 20, window.top - 80)
     local item = self:CreateMaterialItemWithListView(self.list_view,
         _("生产建筑所需材料"),
         {
@@ -104,6 +107,8 @@ function GameUIToolShop:Manufacture()
             dump(err:reason())
         end)
     end)
+    item:SetStoreMaterials(materials)
+
     item:UpdateByEvent(self.toolShop:GetMakeMaterialsEventByCategory("building"))
     self.building_item = item
 
@@ -128,15 +133,17 @@ function GameUIToolShop:Manufacture()
             dump(err:reason())
         end)
     end)
+    item:SetStoreMaterials(materials)
+
     item:UpdateByEvent(self.toolShop:GetMakeMaterialsEventByCategory("technology"))
     self.technology_event = item
 
     self.list_view:reload():resetPosition()
-    local material_manager = self.tool_shop_city:GetMaterialManager()
-    local materials = material_manager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
-    dump(materials)
-    self.building_item:SetStoreMaterials(materials)
-    self.technology_event:SetStoreMaterials(materials)
+    -- local material_manager = self.tool_shop_city:GetMaterialManager()
+    -- local materials = material_manager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
+    -- dump(materials)
+    -- self.building_item:SetStoreMaterials(materials)
+    -- self.technology_event:SetStoreMaterials(materials)
 end
 function GameUIToolShop:TabButtons()
     self:CreateTabButtons({
@@ -162,27 +169,25 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
     local content = WidgetUIBackGround.new({height=height}):align(display.CENTER)
 
     local size = content:getContentSize()
-    local title_blue = cc.ui.UIImage.new("title_blue_596x49.png",
+    local title_blue = cc.ui.UIImage.new("title_blue_586x34.png",
         {scale9 = true})
         :addTo(content, 2)
-        :align(display.CENTER, size.width / 2, height - 49/2)
+        :align(display.CENTER, size.width / 2, height - 40)
 
-        -- title_blue:setVisible(false)
-    cc.ui.UILabel.new({
+    -- title_blue:setVisible(false)
+    UIKit:ttfLabel({
         text = title,
-        size = 24,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0xffedae)
-    }):addTo(title_blue, 2):align(display.LEFT_BOTTOM, align_x, 10)
+        size = 22,
+        color = 0xffedae
+    }):addTo(title_blue):align(display.CENTER, title_blue:getContentSize().width/2, title_blue:getContentSize().height/2)
 
     local function new_material(type)
-        local origin_x, origin_y, gap_x = 90, height - 150, 143
+        local origin_x, origin_y, gap_x = 90, height - 140, 143
         local png = MATERIALS_MAP[type][1]
         local describe = MATERIALS_MAP[type][2]
         local index = MATERIALS_MAP[type][3]
 
-        local back_ground = cc.ui.UIImage.new("material_back_ground_120x120.png")
+        local back_ground = cc.ui.UIImage.new("box_blue_124x124.png")
             :align(display.CENTER, origin_x + gap_x * (index - 1), origin_y)
 
         local pos = back_ground:getAnchorPointInPoints()
@@ -192,18 +197,15 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
             :align(display.CENTER, pos.x, pos.y)
 
 
-        local num_bg = display.newColorLayer(UIKit:hex2c4b(0x7d000000))
-            :addTo(material):pos(0, 0)
-        num_bg:setContentSize(material:getContentSize().width, 24)
-        num_bg:setTouchEnabled(false)
+        local num_bg = cc.ui.UIImage.new("number_bg_116x46.png")
+            :addTo(back_ground):align(display.TOP_LEFT,4,10)
 
-        local store_label = cc.ui.UILabel.new({
-            size = 18,
-            font = UIKit:getFontFilePath(),
-            align = cc.ui.TEXT_ALIGN_LEFT,
-            color = UIKit:hex2c3b(0x0e7600)
+        local store_label = UIKit:ttfLabel({
+            text = "",
+            size = 20,
+            color = 0x403c2f
         }):addTo(num_bg)
-            :align(display.CENTER, material:getContentSize().width / 2, 12)
+            :align(display.CENTER, num_bg:getContentSize().width / 2, num_bg:getContentSize().height / 2)
 
 
         local name_label = cc.ui.UILabel.new({
@@ -213,15 +215,14 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
             align = cc.ui.TEXT_ALIGN_RIGHT,
             color = UIKit:hex2c3b(0x403c2f)
         }):addTo(back_ground, 2)
-            :align(display.CENTER, pos.x, pos.y + 78)
+            :align(display.CENTER, pos.x, pos.y + 68)
 
-        local num_label = cc.ui.UILabel.new({
-            size = 18,
-            font = UIKit:getFontFilePath(),
-            align = cc.ui.TEXT_ALIGN_RIGHT,
-            color = display.COLOR_GREEN
-        }):addTo(back_ground, 2)
-            :align(display.CENTER, pos.x, pos.y - 78)
+        local num_label = UIKit:ttfLabel({
+            text = "",
+            size = 20,
+            color = 0x007c23
+        }):addTo(num_bg)
+            :align(display.LEFT_CENTER, 0,num_bg:getContentSize().height / 2)
             :hide()
         function back_ground:SetStoreNumber(number)
             store_label:setString(number)
@@ -230,10 +231,20 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
         function back_ground:ShowNumber(number)
             num_label:show()
             num_label:setString(number == nil and "" or ("+"..number))
+            if number then
+                local margin_x =5
+                local width = store_label:getContentSize().width + num_label:getContentSize().width
+                store_label:setPositionX(num_bg:getContentSize().width/2-width/2)
+                store_label:align(display.LEFT_CENTER)
+                num_label:setPositionX(store_label:getPositionX()+store_label:getContentSize().width+margin_x)
+            else
+                store_label:align(display.CENTER, num_bg:getContentSize().width / 2, num_bg:getContentSize().height / 2)
+            end
             return self
         end
         function back_ground:Reset()
             num_label:hide()
+            store_label:align(display.CENTER, num_bg:getContentSize().width / 2, num_bg:getContentSize().height / 2)
             return self
         end
         function back_ground:Index()
@@ -264,19 +275,19 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
             align = cc.ui.TEXT_ALIGN_RIGHT,
             color = UIKit:hex2c3b(0x403c2f)
         }):addTo(need_box, 2)
-            :align(display.LEFT_CENTER, 0, height + 22)
+            :align(display.LEFT_CENTER, 0, -22)
 
         local button = WidgetPushButton.new(
-            {normal = "yellow_btn_up.png", pressed = "yellow_btn_down.png"},
+            {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"},
             {scale9 = false},
             {
                 disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
             }
         ):addTo(need_box, 2)
-            :align(display.CENTER, width + 100, height / 2)
+            :align(display.CENTER, width-74 , -30)
             :setButtonLabel(cc.ui.UILabel.new({
                 UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                text = _("建造"),
+                text = _("生产"),
                 size = 24,
                 font = UIKit:getFontFilePath(),
                 color = UIKit:hex2c3b(0xfff3c7)}))
@@ -310,10 +321,10 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
             font = UIKit:getFontFilePath(),
             align = cc.ui.TEXT_ALIGN_RIGHT,
             color = UIKit:hex2c3b(0x403c2f)
-        }):addTo(material, 2):align(display.LEFT_CENTER, 0, height)
+        }):addTo(material, 2):align(display.LEFT_CENTER, 10, height)
 
         local button = WidgetPushButton.new(
-            {normal = "yellow_btn_up.png", pressed = "yellow_btn_down.png"},
+            {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"},
             {scale9 = false}
         ):setButtonLabel(cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -321,7 +332,7 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
             size = 24,
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xfff3c7)}))
-            :addTo(material, 2):align(display.CENTER, 351 + 105, height)
+            :addTo(material, 2):align(display.CENTER, 351 + 120, height)
 
         function material:SetNumber(number)
             describe:setString(_("制造材料")..string.format(" %d ", number).._("完成!"))
@@ -336,10 +347,10 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
         return material
     end
 
-    local back_ground_351x96 = new_need_box():addTo(content, 2):pos(align_x, align_y):hide()
-    local progress_box = WidgetTimerProgress.new()
+    local back_ground_351x96 = new_need_box():addTo(content, 2):pos(align_x, align_y+40):hide()
+    local progress_box = WidgetTimerProgressStyleThree.new()
         :addTo(content, 2)
-        :pos(align_x, align_y)
+        :pos(size.width/2, 110)
         :hide()
         :OnButtonClicked(function(event)
             print("hello")
@@ -424,6 +435,9 @@ end
 
 
 return GameUIToolShop
+
+
+
 
 
 

@@ -9,6 +9,7 @@ local HEIGHT = 846
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local UIListView = import(".UIListView")
 local AllianceShrine = import("..entity.AllianceShrine")
+local Alliance = import("..entity.Alliance")
 local Dragon_head_image = import(".UILib").dragon_head
 
 function GameUIShireFightEvent:ctor(fight_event,allianceShrine)
@@ -16,8 +17,8 @@ function GameUIShireFightEvent:ctor(fight_event,allianceShrine)
 	self.fight_event = fight_event
 	self.allianceShrine_ = allianceShrine
 	self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
-	self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventTimerChanged)
-	self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventsChanged)
+	self:GetAllianceShrine():GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+	self:GetAllianceShrine():GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
 	self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
 	self.event_bind_to_label = {}
 end
@@ -33,7 +34,7 @@ function GameUIShireFightEvent:OnFightEventTimerChanged(event)
 	end
 end
 
-function GameUIShireFightEvent:OnMarchEventsChanged(change_map)
+function GameUIShireFightEvent:OnAttackMarchEventDataChanged(change_map)
 	if change_map.added or change_map.removed then
 		self.dispath_button:setButtonEnabled(self:GetAllianceShrine():CheckSelfCanDispathSoldiers())
 		self.popultaion_label:setString(#self:GetFightEvent():PlayerTroops() .. "/" .. self:GetFightEvent():Stage():SuggestPlayer())
@@ -53,17 +54,17 @@ function GameUIShireFightEvent:OnShrineEventsChanged(change_map)
 	end
 end
 
-function GameUIShireFightEvent:OnMarchEventTimerChanged(event)
+function GameUIShireFightEvent:OnAttackMarchEventTimerChanged(event)
 	if self.event_bind_to_label[event:Id()] then
 		self.event_bind_to_label[event:Id()]:setString(GameUtils:formatTimeStyle1(event:GetTime()) .. "后到达")
 	end
 end
 
 function GameUIShireFightEvent:onMoveOutStage()
-	self.allianceShrine_:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
-	self.allianceShrine_:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventTimerChanged)
-	self.allianceShrine_:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventsChanged)
-	self.allianceShrine_:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
+	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
+	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
+	self:GetAllianceShrine():GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+	self:GetAllianceShrine():GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
 	self.event_bind_to_label = nil
 	GameUIShireFightEvent.super.onMoveOutStage(self)
 end
@@ -160,8 +161,8 @@ function GameUIShireFightEvent:RefreshListView()
 		self.info_list:addItem(item)
 	end
 
-	dump(self:GetAllianceShrine():GetMarchEvents())
-	for i,v in ipairs(self:GetAllianceShrine():GetMarchEvents()) do
+	dump(self:GetAllianceShrine():GetAlliance():GetAttackMarchEvents("shrine"))
+	for i,v in ipairs(self:GetAllianceShrine():GetAlliance():GetAttackMarchEvents("shrine")) do
 		local content = self:GetListItem(false,v)
 		local item = self.info_list:newItem()
 		item:addContent(content)
@@ -184,13 +185,13 @@ function GameUIShireFightEvent:GetListItem(arrived,obj)
 	if arrived then
 		playerName = obj.name
 	else
-		playerName = obj:PlayerData().name
+		playerName = obj:AttackPlayerData().name
 	end
 	local dragon_image = ""
 	if arrived then
 		dragon_image = Dragon_head_image[obj.dragon.type]
 	else
-		dragon_image = Dragon_head_image[obj:PlayerData().dragon.type]
+		dragon_image = Dragon_head_image[obj:AttackPlayerData().dragon.type]
 	end
 	display.newSprite(dragon_image):align(display.CENTER,63,63):addTo(icon)
 	UIKit:ttfLabel({
@@ -247,7 +248,7 @@ function GameUIShireFightEvent:GetListItem(arrived,obj)
 		size = 20,
 		color = 0x797154
 	}):align(display.LEFT_BOTTOM,line_1:getPositionX(),line_1:getPositionY() + 8):addTo(bg)
-	local city_name = arrived and obj.cityName or obj:PlayerData().cityName
+	local city_name = arrived and obj.cityName or obj:AttackPlayerData().cityName
 	local dragon_val_label =  UIKit:ttfLabel({
 		text = city_name,
 		size = 20,
@@ -262,11 +263,6 @@ function GameUIShireFightEvent:GetFightEvent()
 end
 
 function GameUIShireFightEvent:DispathSoliderButtonClicked()
-	-- local soldiers = {
-	-- 	{name = "swordsman",count = 20},
-	-- 	{name = "sentinel",count = 20},
-	-- 	{name = "ranger",count = 20},
-	-- }
 	UIKit:newGameUI("GameUIAllianceSendTroops",function(dragonType,soldiers)
 		NetManager:getMarchToShrinePromose(self:GetFightEvent():Id(),dragonType,soldiers):catch(function(err)
 			dump(err:reason())

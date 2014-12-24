@@ -40,7 +40,7 @@ function GameUIStrikePlayer:BuildUI()
 	}):align(display.CENTER, 310, 27):addTo(black_layer)
 	display.newSprite("black_line_624x4.png"):align(display.LEFT_BOTTOM,0,0):addTo(black_layer)
 	self.list_view = UIListView.new ({
-        viewRect = cc.rect(black_layer:getPositionX()+30,80,window.width-80,window.height - 340),
+        viewRect = cc.rect(black_layer:getPositionX()+30,window.bottom + 80,window.width-80,window.height - 340),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         alignment = UIListView.ALIGNMENT_LEFT
     }):addTo(self.content_node)
@@ -49,7 +49,7 @@ function GameUIStrikePlayer:BuildUI()
 		normal = "yellow_btn_up_149x47.png",
 		pressed = "yellow_btn_down_149x47.png"
 		})
-		:align(display.CENTER_BOTTOM,window.cx,20)
+		:align(display.CENTER_BOTTOM,window.cx,window.bottom + 20)
 		:addTo(self.content_node)
 		:setButtonLabel("normal",UIKit:commonButtonLable({
 			text = _("突袭")
@@ -133,8 +133,10 @@ function GameUIStrikePlayer:GetSelectDragonType()
 end
 
 function GameUIStrikePlayer:OnStrikeButtonClicked()
-	self:leftButtonClicked()
-	UIKit:newGameUI("GameUIShowStrikeResult",self:GetSelectDragonType(),self.enemyPlayerId):addToCurrentScene(false)
+	
+		NetManager:getStrikePlayerCityPromise(self:GetSelectDragonType(),self.enemyPlayerId):next(function()
+			self:leftButtonClicked()
+		end)
 end
 
 return GameUIStrikePlayer

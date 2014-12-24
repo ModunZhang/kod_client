@@ -1,16 +1,22 @@
 local WidgetSlider = import("..widget.WidgetSlider")
+local Enum = import("..utils.Enum")
 
 local WidgetSliderWithInput = class("WidgetSliderWithInput", function ( ... )
     return display.newNode(...)
 end)
+WidgetSliderWithInput.STYLE_LAYOUT = Enum("LEFT","RIGHT","TOP","BOTTOM")
+
 
 function WidgetSliderWithInput:ctor(params)
     local max = params.max
     local min = params.min or 0
+    local unit = params.unit or ""
+    local bar = params.bar or "slider_bg_554x24.png"
+    local progress = params.progress or "slider_progress_538x24.png"
     -- progress
-    self.slider = WidgetSlider.new(display.LEFT_TO_RIGHT,  {bar = "slider_bg_461x24.png",
-        progress = "slider_progress_445x14.png",
-        button = "slider_btn_66x66.png"}, {max = max}):addTo(self)
+    self.slider = WidgetSlider.new(display.LEFT_TO_RIGHT,  {bar = bar,
+        progress = progress,
+        button = "slider_btn_66x66.png"}, {max = max,min = min}):addTo(self)
     local slider = self.slider
 
 
@@ -21,11 +27,13 @@ function WidgetSliderWithInput:ctor(params)
                 editbox:setText("")
             end
         elseif event == "changed" then
-            if text and text > max then
-                editbox:setText(max)
+            if text then
+                if text > max then
+                    editbox:setText(max)
+                end
             end
         elseif event == "ended" then
-            if text=="" or min==text then
+            if text=="" or min>text then
                 editbox:setText(min)
             end
             local edit_value = tonumber(editbox:getText())
@@ -37,7 +45,7 @@ function WidgetSliderWithInput:ctor(params)
                 slider:setSliderValue(edit_value)
                 slider.fsm_:doEvent("release")
                 if self.sliderReleaseEventListener then
-                	self.sliderReleaseEventListener()
+                    self.sliderReleaseEventListener()
                 end
             end
         end
@@ -65,35 +73,53 @@ function WidgetSliderWithInput:ctor(params)
     end)
     slider:setSliderValue(min)
 
-
     local soldier_total_count = UIKit:ttfLabel({
-        text = string.format("/ %d", max),
+        text = string.format(unit.."/ %d"..unit, max),
         size = 20,
         color = 0x403c2f
-    }):addTo(self)
-        :align(display.LEFT_CENTER, slider:getCascadeBoundingBox().size.width+20,-10)
+    }):addTo(slider)
+        :align(display.LEFT_CENTER, slider:getCascadeBoundingBox().size.width+30,0)
     self:setContentSize(cc.size(slider:getCascadeBoundingBox().size.width,slider:getCascadeBoundingBox().size.height))
-
+    self.soldier_total_count = soldier_total_count
 end
 
 function WidgetSliderWithInput:GetValue()
-    return math.floor(slider:getSliderValue())
+    return tonumber(self.editbox:getText())
 end
 function WidgetSliderWithInput:AddSliderReleaseEventListener(func)
-	self.sliderReleaseEventListener = func
+    self.sliderReleaseEventListener = func
     self.slider:addSliderReleaseEventListener(function(event)
         func(event)
     end)
     return self
 end
 function WidgetSliderWithInput:OnSliderValueChanged(func)
-	self.slider:onSliderValueChanged(function(event)
+    self.slider:onSliderValueChanged(function(event)
         self.editbox:setText(math.floor(event.value))
         func(event)
     end)
     return self
 end
+function WidgetSliderWithInput:LayoutValueLabel(layout,offset)
+    if WidgetSliderWithInput.STYLE_LAYOUT.TOP == layout then
+        self.soldier_total_count:setPosition(self:getContentSize().width-self.soldier_total_count:getContentSize().width-10,offset)
+        self.editbox:setPosition(self:getContentSize().width-self.soldier_total_count:getContentSize().width-10-60,offset)
+    end
+    return self
+end
+function WidgetSliderWithInput:SetSliderSize(width, height)
+    self.slider:setSliderSize(width, height)
+    return self
+end
+function WidgetSliderWithInput:GetEditBoxPostion()
+    return self.editbox:getPosition()
+end
+
 return WidgetSliderWithInput
+
+
+
+
 
 
 

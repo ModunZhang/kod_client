@@ -33,14 +33,13 @@ end
 
 function MyApp:showDebugInfo()
     local __debugVer = require("debug_version")
-    return "Client Ver:" .. __debugVer .. "\nPlayerID:" .. DataManager:getUserData()._id
+    return "Client Ver:" .. __debugVer .. "\nPlayerID:" .. DataManager:getUserData()._id .. "\nDeviceID:" .. DataManager:getUserData().countInfo.deviceId
 end
 
 function MyApp:restart()
-    self:GetAudioManager():StopMusic()
-    self:GetAudioManager():StopEffectSound()
     NetManager:disconnect()
     self.timer:Stop()
+    self:GetAudioManager():StopAll()
     if device.platform == 'mac' then
         PlayerProtocol:getInstance():relaunch()
     else    
@@ -185,4 +184,41 @@ function MyApp:EnterMyCityScene()
         end
     end)
 end
+
+function MyApp:EnterMyAllianceScene()
+    local alliance_name = "AllianceScene" 
+    local my_status = Alliance_Manager:GetMyAlliance():Status()
+    if my_status == "prepare" or  my_status == "fight" then
+        alliance_name = "AllianceBattleScene"
+    end
+    print("MyApp:EnterMyAllianceScene--->",alliance_name)
+    app:enterScene(alliance_name, {City}, "custom", -1, function(scene, status)
+        local manager = ccs.ArmatureDataManager:getInstance()
+        if status == "onEnter" then
+            manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+            local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
+            display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
+                transition.sequence{
+                    cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
+                    cc.FadeIn:create(0.75),
+                    cc.CallFunc:create(function() scene:hideOutShowIn() end),
+                    cc.DelayTime:create(0.5),
+                    cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
+                    cc.FadeOut:create(0.75),
+                    cc.CallFunc:create(function() scene:finish() end),
+                }
+            )
+        elseif status == "onExit" then
+            manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+        end
+    end)
+end
+
+function MyApp:pushScene(sceneName, args, transitionType, time, more)
+    local scenePackageName = "app.scenes." .. sceneName
+    local sceneClass = require(scenePackageName)
+    local scene = sceneClass.new(unpack(checktable(args)))
+    display.pushScene(scene, transitionType, time, more)
+end
+
 return MyApp

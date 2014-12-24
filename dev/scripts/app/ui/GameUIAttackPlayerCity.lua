@@ -145,11 +145,11 @@ end
 function GameUIAttackPlayerCity:OnAttackButtonClicked(event)
 	NetManager:getAttackPlayerCityPromise(self.enemyPlayerId):next(function(msg)
 		self:leftButtonClicked()
-		local current_scene = display.getRunningScene()
-		if type(current_scene.TimerRequestServer) == 'function' then
-			current_scene:TimerRequestServer()
-			print("GameUIAttackPlayerCity:OnAttackButtonClicked--->")
-		end
+		-- local current_scene = display.getRunningScene()
+		-- if type(current_scene.TimerRequestServer) == 'function' then
+		-- 	current_scene:TimerRequestServer()
+		-- 	print("GameUIAttackPlayerCity:OnAttackButtonClicked--->")
+		-- end
 	end)
 end
 

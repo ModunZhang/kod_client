@@ -97,7 +97,7 @@ function GameUIHome:CreateTop()
         if event.name == "CLICKED_EVENT" then
             UIKit:newGameUI('GameUIVip', City,"info"):addToCurrentScene(true)
         end
-    end):addTo(top_bg):align(display.LEFT_CENTER, top_bg:getContentSize().width/2-2, top_bg:getContentSize().height/2+10)
+    end):addTo(top_bg):align(display.LEFT_CENTER,top_bg:getContentSize().width/2-2, top_bg:getContentSize().height/2+10)
     button:setRotationSkewY(180)
 
 
@@ -180,7 +180,7 @@ function GameUIHome:CreateTop()
     -- 玩家信息背景
     local player_bg = display.newSprite("home/player_bg.png")
         :addTo(top_bg, 2)
-        :align(display.LEFT_BOTTOM, 64, 0)
+        :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 0)
 
     display.newSprite("home/player_icon.png")
         :addTo(player_bg)
@@ -206,7 +206,7 @@ function GameUIHome:CreateTop()
         if event.name == "CLICKED_EVENT" then
             UIKit:newGameUI('GameUIVip', City,"VIP"):addToCurrentScene(true)
         end
-    end):addTo(top_bg):align(display.LEFT_TOP, 63, 33)
+    end):addTo(top_bg):align(display.LEFT_TOP, display.width>640 and 56 or 63, 33)
 
     self.vip_label =
         UIKit:ttfLabel({text = "VIP 1",
@@ -375,7 +375,7 @@ function GameUIHome:CreateBottom()
     self.mail_unread_num_bg = display.newSprite("home/mail_unread_bg.png"):addTo(bottom_bg):pos(460, first_row+20)
     self.mail_unread_num_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = GameUtils:formatNumber(MailManager:GetUnReadMailsAndReportsNum()),
+            text = GameUtils:formatNumber(MailManager:GetUnReadMailsAndReportsNum() or 0),
             font = UIKit:getFontFilePath(),
             size = 16,
             -- dimensions = cc.size(200,24),

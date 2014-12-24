@@ -50,16 +50,17 @@ function WidgetInfo:CreateInfoItem(info_message)
             size = 20,
             color = 0x797154,
         }):align(display.LEFT_CENTER, 10, item_height/2):addTo(content)
-        -- UIKit:ttfLabel({
-        --     text = v[2],
-        --     size = 20,
-        --     color = 0x5d563f,
-        -- }):align(display.CENTER, item_width/2, item_height/2):addTo(content)
-        UIKit:ttfLabel({
+        
+        local text_2 = UIKit:ttfLabel({
             text = v[2],
             size = 20,
             color = 0x403c2f,
         }):align(display.RIGHT_CENTER, item_width-10, item_height/2):addTo(content)
+
+        if v[3] then
+            display.newSprite(v[3]):align(display.RIGHT_CENTER, item_width-15, item_height/2):addTo(content)
+            text_2:setPositionX(item_width-60)
+        end
 
         meetFlag =  not meetFlag
         item:addContent(content)

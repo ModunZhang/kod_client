@@ -5,6 +5,9 @@ local WidgetSoldierDetails = import('..widget.WidgetSoldierDetails')
 local WidgetUIBackGround = import('..widget.WidgetUIBackGround')
 local WidgetUIBackGround2 = import('..widget.WidgetUIBackGround2')
 local WidgetSoldierBox = import('..widget.WidgetSoldierBox')
+local WidgetInfoWithTitle = import('..widget.WidgetInfoWithTitle')
+local WidgetInfo = import('..widget.WidgetInfo')
+local Localize = import('..utils.Localize')
 local GameUIPResourceBuilding = UIKit:createUIClass('GameUIPResourceBuilding',"GameUIUpgradeBuilding")
 local P_RESOURCE_BUILDING_TYPE = {
     "foundry",
@@ -59,90 +62,35 @@ end
 
 -- 构建对应资源生产加成条件是否达成部分
 function GameUIPResourceBuilding:ProduceIncreasePart()
-    -- bg
-    local bg = WidgetUIBackGround.new({height=158}):align(display.CENTER, display.cx, display.top-180):addTo(self.info_layer)
-    local bg_size = bg:getContentSize()
-
-    -- title bg
-    local title_bg = display.newSprite("title_green_596X49.png"):align(display.TOP_CENTER, bg_size.width/2, bg_size.height-7):addTo(bg)
-    local title_bg_size = title_bg:getContentSize()
-
-    -- title label
-    cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = string.format(_("周围2格范围的%s数量"),self.building:GetHouseType()),
-            font = UIKit:getFontFilePath(),
-            size = 22,
-            color = UIKit:hex2c3b(0xffedae)
-        }):align(display.LEFT_CENTER, 10 ,title_bg_size.height/2)
-        :addTo(title_bg)
-
-    -- 分割线
-    display.newScale9Sprite("dividing_line.png", bg_size.width/2, 58, cc.size(594,2)):addTo(bg)
-
-    
-
-
     -- 是否达成标识
     local building_x,building_y = self.building:GetLogicPosition()
-    
+
     -- 匹配对应关系的小屋数量
     local house_count = #self.city:GetHousesAroundFunctionBuildingByType(self.building , self.building:GetHouseType(), 2)
-    
-    print(" 满足 数量 ",house_count,self.building:GetHouseType())
-    if house_count>2 then
-        display.newSprite("upgrade_mark.png", bg_size.width-50 ,78):addTo(bg)
-    else
-        display.newSprite("upgrade_prohibited.png", bg_size.width-50 ,78):addTo(bg)
-    end
-    if house_count>5 then
-        display.newSprite("upgrade_mark.png", bg_size.width-50 ,32):addTo(bg)
-    else
-        display.newSprite("upgrade_prohibited.png", bg_size.width-50 ,32):addTo(bg)
-    end
 
     -- 周围小屋数量 3/6 是否达成
     local first_count = house_count>3 and 3 or house_count
-    cc.ui.UILabel.new(
+    local info = {
         {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("达到")..first_count.."/3",
-            font = UIKit:getFontFilePath(),
-            size = 22,
-            color = UIKit:hex2c3b(0x5a5544)
-        }):align(display.LEFT_CENTER, 15 ,78)
-        :addTo(bg)
-    cc.ui.UILabel.new(
+            _("达到")..first_count.."/3",string.format(_("+5%%%s"),
+                P_RESOURCE_BUILDING_TYPE_TO_RESOURCE[self.building:GetType()]),
+            house_count>2 and "upgrade_mark.png" or "upgrade_prohibited.png"
+        },
         {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = string.format(_("+5%%%s"),P_RESOURCE_BUILDING_TYPE_TO_RESOURCE[self.building:GetType()]),
-            font = UIKit:getFontFilePath(),
-            size = 22,
-            color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.RIGHT_CENTER, bg_size.width-80 ,78)
-        :addTo(bg)
+            _("达到")..first_count.."/6",string.format(_("+5%%%s"),
+                P_RESOURCE_BUILDING_TYPE_TO_RESOURCE[self.building:GetType()]),
+            house_count>5 and "upgrade_mark.png" or "upgrade_prohibited.png"
+        },
+    }
+    -- bg
+    local bg = WidgetInfoWithTitle.new({
+        title = string.format(_("周围2格范围的%s数量"),self.building:GetHouseType()),
+        h = 146,
+        info = info
+    }):align(display.CENTER, display.cx, display.top-180):addTo(self.info_layer)
 
+    local bg_size = bg:getContentSize()
 
-    -- 周围小屋数量 6/6 是否达成
-    cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("达到")..first_count.."/6",
-            font = UIKit:getFontFilePath(),
-            size = 22,
-            color = UIKit:hex2c3b(0x5a5544)
-        }):align(display.LEFT_CENTER, 15 ,32)
-        :addTo(bg)
-    cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = string.format(_("+5%%%s"),P_RESOURCE_BUILDING_TYPE_TO_RESOURCE[self.building:GetType()]),
-            font = UIKit:getFontFilePath(),
-            size = 22,
-            color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.RIGHT_CENTER, bg_size.width-80 ,32)
-        :addTo(bg)
 end
 
 
@@ -151,39 +99,43 @@ function GameUIPResourceBuilding:RebuildPart()
     local bg = WidgetUIBackGround.new({height=584}):align(display.CENTER, display.cx, display.top-570):addTo(self.info_layer)
     local bg_size = bg:getContentSize()
     -- title bg
-    local title_bg = display.newSprite("title_green_596X49.png"):align(display.TOP_CENTER, bg_size.width/2, bg_size.height-7):addTo(bg)
+    local title_bg = display.newSprite("title_blue_586x34.png"):align(display.TOP_CENTER, bg_size.width/2, bg_size.height-24):addTo(bg)
     local title_bg_size = title_bg:getContentSize()
 
     -- title label
-    cc.ui.UILabel.new(
+    UIKit:ttfLabel(
         {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("改建"),
-            font = UIKit:getFontFilePath(),
             size = 22,
-            color = UIKit:hex2c3b(0xffedae)
-        }):align(display.LEFT_CENTER, 10 ,title_bg_size.height/2)
+            color =0xffedae,
+            shadow= true
+        }):align(display.CENTER, title_bg_size.width/2 ,title_bg_size.height/2)
         :addTo(title_bg)
     -- 可改建为其他三个类型
     -- 建筑iamge
-    local building_image_width = 150
+    local building_image_width = 120
     local gap_x = (bg_size.width - building_image_width*3)/4
     local add_count = 0
     local rebuild_list = {}
     for k,r_type in pairs(P_RESOURCE_BUILDING_TYPE) do
         if self.building:GetType()~= r_type then
             local next_x =  gap_x*(add_count+1) + building_image_width/2+add_count*building_image_width
-            local builing_icon = display.newSprite(UIKit:getImageByBuildingType( r_type ,self.building:GetLevel())):align(display.CENTER, next_x, 450):addTo(bg)
+            local item_flag = display.newSprite("alliance_item_flag_box_126X126.png"):align(display.CENTER, next_x, 450):addTo(bg)
+            local builing_icon = display.newSprite(UIKit:getImageByBuildingType( r_type ,self.building:GetLevel()))
+                :align(display.CENTER, item_flag:getContentSize().width/2, item_flag:getContentSize().height/2)
+                :addTo(item_flag)
             -- building name label
-            cc.ui.UILabel.new(
-                {
-                    UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                    text = _(r_type),
-                    font = UIKit:getFontFilePath(),
-                    size = 20,
-                    color = UIKit:hex2c3b(0x797154)
-                }):align(display.CENTER, next_x ,350)
+            local name_bg = display.newSprite("back_ground_134x30.png")
+                :align(display.CENTER, next_x ,350)
                 :addTo(bg)
+
+            UIKit:ttfLabel(
+                {
+                    text = Localize.building_name[r_type],
+                    size = 20,
+                    color = 0xffedae
+                }):align(display.CENTER, name_bg:getContentSize().width/2 ,name_bg:getContentSize().height/2)
+                :addTo(name_bg)
             rebuild_list[add_count+1] = r_type
             builing_icon:setScale(building_image_width/builing_icon:getContentSize().width)
             add_count = add_count + 1
@@ -204,85 +156,50 @@ function GameUIPResourceBuilding:RebuildPart()
             :align(display.LEFT_CENTER))
         :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
             :align(display.LEFT_CENTER))
-        :setButtonsLayoutMargin(0, 130, 0, 0)
+        :setButtonsLayoutMargin(0, 125, 0, 0)
         :onButtonSelectChanged(function(event)
             self.selected_rebuild_to_building = rebuild_list[event.selected]
             -- printf("Option %d selected, Option %d unselected", event.selected, event.last)
             -- print( self.selected_rebuild_to_building,"选中")
         end)
-        :align(display.CENTER, 80 , 270)
+        :align(display.CENTER, 95 , 270)
         :addTo(bg)
     group:getButtonAtIndex(1):setButtonSelected(true)
 
-    local bg2 = WidgetUIBackGround2.new(78):align(display.CENTER, bg_size.width/2, 220):addTo(bg)
+    -- local bg2 = WidgetUIBackGround2.new(78):align(display.CENTER, bg_size.width/2, 220):addTo(bg)
     cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = string.format(_("满足下列条件,可将 %s改建成以上建筑,改建后该建筑的等级保留"),_(self.building:GetType())),
+            text = string.format(_("满足下列条件,可将%s改建成以上建筑,改建后该建筑的等级保留"),Localize.building_name[self.building:GetType()] ),
             font = UIKit:getFontFilePath(),
-            size = 20,
-            dimensions = cc.size(560,0),
+            size = 18,
+            dimensions = cc.size(500,0),
             color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.LEFT_CENTER, 10 ,38)
-        :addTo(bg2)
-    -- 分割线
-    display.newScale9Sprite("dividing_line.png", bg_size.width/2, 130, cc.size(594,2)):addTo(bg)
-    cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = string.format(_("%s数量"),_(self.building:GetHouseType())),
-            font = UIKit:getFontFilePath(),
-            size = 22,
-            -- dimensions = cc.size(560,70),
-            color = UIKit:hex2c3b(0x5a5544)
-        }):align(display.LEFT_CENTER, 20 ,150)
+        }):align(display.CENTER, bg_size.width/2 ,230)
         :addTo(bg)
-    cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("魔法石"),
-            font = UIKit:getFontFilePath(),
-            size = 22,
-            -- dimensions = cc.size(560,70),
-            color = UIKit:hex2c3b(0x5a5544)
-        }):align(display.LEFT_CENTER, 20 ,112)
-        :addTo(bg)
-    -- 小屋数量是否满足转换条件
+
     local after_rebuild_max_house_num = City:GetMaxHouseCanBeBuilt(self.building:GetHouseType())-self.building:GetMaxHouseNum()
-    print("after_rebuild_max_house_num   转换后最大数量" ,after_rebuild_max_house_num)
-    cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = string.format(_("≤%d"),after_rebuild_max_house_num),
-            font = UIKit:getFontFilePath(),
-            size = 22,
-            -- dimensions = cc.size(560,70),
-            color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.RIGHT_CENTER, bg_size.width - 60 ,150)
-        :addTo(bg)
-        print("当前小屋数量",#City:GetBuildingByType(self.building:GetHouseType()))
-    if #City:GetBuildingByType(self.building:GetHouseType())>after_rebuild_max_house_num then
-        display.newSprite("upgrade_prohibited.png", bg_size.width - 40 ,150):addTo(bg)
-    else
-        display.newSprite("upgrade_mark.png", bg_size.width - 40 ,150):addTo(bg)
-    end
-    cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = string.format("%d/100",City:GetResourceManager():GetGemResource():GetValue()),
-            font = UIKit:getFontFilePath(),
-            size = 22,
-            -- dimensions = cc.size(560,70),
-            color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.RIGHT_CENTER, bg_size.width - 60 ,112)
-        :addTo(bg)
     -- 魔法石数量是否满足转换条件
     local need_gems = 100
-    if City:GetResourceManager():GetGemResource():GetValue()>need_gems then
-        display.newSprite("upgrade_mark.png", bg_size.width - 40 ,112):addTo(bg)
-    else
-        display.newSprite("upgrade_prohibited.png", bg_size.width - 40 ,112):addTo(bg)
-    end
+    local info = {
+        {
+            string.format(_("%s数量"),Localize.building_name[self.building:GetHouseType()]),
+            string.format(_("≤%d"),after_rebuild_max_house_num),
+            #City:GetBuildingByType(self.building:GetHouseType())<=after_rebuild_max_house_num and "upgrade_mark.png" or "upgrade_prohibited.png"
+        },
+        {
+            _("魔法石"),
+            string.format("%d/100",City:GetResourceManager():GetGemResource():GetValue()),
+            City:GetResourceManager():GetGemResource():GetValue()>need_gems and "upgrade_mark.png" or "upgrade_prohibited.png"
+        },
+    }
+    -- bg
+    local bg = WidgetInfo.new({
+        h = 100,
+        info = info
+    }):align(display.CENTER, bg_size.width/2, 140):addTo(bg)
+
+
     cc.ui.UIPushButton.new({normal = "green_btn_up_250x65.png",pressed = "green_btn_down_250x65.png"})
         :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("立即转换"), size = 20, color = display.COLOR_WHITE}))
         :onButtonClicked(function(event)
@@ -292,28 +209,3 @@ function GameUIPResourceBuilding:RebuildPart()
         :addTo(bg)
 end
 return GameUIPResourceBuilding
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

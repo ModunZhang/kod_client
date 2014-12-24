@@ -2,7 +2,7 @@
 -- Author: Danny He
 -- Date: 2014-11-21 09:57:42
 --
-local GameUIEnemyAllianceHome = UIKit:createUIClass("GameUIEnemyAllianceHome", "GameUIAllianceHome")
+local GameUIOtherAllianceHome = UIKit:createUIClass("GameUIOtherAllianceHome", "GameUIAllianceHome")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local window = import("..utils.window")
 local Alliance = import("..entity.Alliance")
@@ -13,16 +13,16 @@ local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 
 
 
-function GameUIEnemyAllianceHome:onEnter()
-    GameUIEnemyAllianceHome.super.onEnter(self)
+function GameUIOtherAllianceHome:onEnter()
+    GameUIOtherAllianceHome.super.onEnter(self)
    
     Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
 end
 
-function GameUIEnemyAllianceHome:onExit()
+function GameUIOtherAllianceHome:onExit()
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
 
-    GameUIEnemyAllianceHome.super.onExit(self)
+    GameUIOtherAllianceHome.super.onExit(self)
 end
 
 function GameUIEnemyAllianceHome:TopBg()
@@ -43,7 +43,7 @@ function GameUIEnemyAllianceHome:TopBg()
     return top_self_bg,top_enemy_bg
 end
 
-function GameUIEnemyAllianceHome:TopTabButtons()
+function GameUIOtherAllianceHome:TopTabButtons()
 
     -- 荣誉,忠诚,坐标,世界按钮背景框
     local btn_bg = display.newSprite("allianceHome/back_ground_637x55.png")
@@ -82,7 +82,7 @@ function GameUIEnemyAllianceHome:TopTabButtons()
 
 end
 
-function GameUIEnemyAllianceHome:CreateTop()
+function GameUIOtherAllianceHome:CreateTop()
     local alliance = self.alliance
     local moonGate = alliance:GetAllianceMoonGate()
     local enemyAlliance = moonGate:GetEnemyAlliance()
@@ -174,17 +174,17 @@ function GameUIEnemyAllianceHome:CreateTop()
     self:TopTabButtons()
 end
 
-function GameUIEnemyAllianceHome:OnMidButtonClicked(event)
+function GameUIOtherAllianceHome:OnMidButtonClicked(event)
     local tag = event.target:getTag()
     if not tag then return end
     if tag == 1 then
         self:ComeBackToOurAlliance()
     else
-        GameUIEnemyAllianceHome.super.OnMidButtonClicked(self,event)
+        GameUIOtherAllianceHome.super.OnMidButtonClicked(self,event)
     end
 end
 
-function GameUIEnemyAllianceHome:CreateOperationButton()
+function GameUIOtherAllianceHome:CreateOperationButton()
     local first_row = 220
     local first_col = 177
     local label_padding = 100
@@ -210,7 +210,7 @@ function GameUIEnemyAllianceHome:CreateOperationButton()
     end
 end
 
-function GameUIEnemyAllianceHome:ComeBackToOurAlliance()
+function GameUIOtherAllianceHome:ComeBackToOurAlliance()
     app:lockInput(false)
     app:enterScene("AllianceScene", nil, "custom", -1, function(scene, status)
         local manager = ccs.ArmatureDataManager:getInstance()
@@ -234,7 +234,7 @@ function GameUIEnemyAllianceHome:ComeBackToOurAlliance()
     end)
 end
 
-function GameUIEnemyAllianceHome:OnBasicChanged(alliance,changed_map)
+function GameUIOtherAllianceHome:OnBasicChanged(alliance,changed_map)
     if changed_map.status then
         if changed_map.status.new ~="fight" then
             FullScreenPopDialogUI.new():SetTitle(_("提示"))
@@ -247,11 +247,11 @@ function GameUIEnemyAllianceHome:OnBasicChanged(alliance,changed_map)
     end
 end
 
-function GameUIEnemyAllianceHome:AddMapChangeButton()
+function GameUIOtherAllianceHome:AddMapChangeButton()
     local map_node = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.ENEMY_ALLIANCE):addTo(self)
 end
 
-return GameUIEnemyAllianceHome
+return GameUIOtherAllianceHome
 
 
 

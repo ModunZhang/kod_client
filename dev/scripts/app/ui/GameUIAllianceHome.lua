@@ -36,7 +36,7 @@ function GameUIAllianceHome:onEnter()
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
 
-    self.alliance:GetAllianceMoonGate():AddListenOnType(self, AllianceMoonGate.LISTEN_TYPE.OnCountDataChanged)
+    -- self.alliance:GetAllianceMoonGate():AddListenOnType(self, AllianceMoonGate.LISTEN_TYPE.OnCountDataChanged)
 
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
 
@@ -75,7 +75,7 @@ function GameUIAllianceHome:onExit()
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
-    self.alliance:GetAllianceMoonGate():RemoveListenerOnType(self, AllianceMoonGate.LISTEN_TYPE.OnCountDataChanged)
+    -- self.alliance:GetAllianceMoonGate():RemoveListenerOnType(self, AllianceMoonGate.LISTEN_TYPE.OnCountDataChanged)
 
     GameUIAllianceHome.super.onExit(self)
 end
@@ -178,7 +178,7 @@ function GameUIAllianceHome:TopTabButtons()
     display.newSprite("allianceHome/coordinate.png")
         :align(display.CENTER, -40,coordinate_btn:getContentSize().height/2-4)
         :addTo(coordinate_btn)
-    UIKit:ttfLabel(
+    self.coordinate_title_label = UIKit:ttfLabel(
         {
             text = _("坐标"),
             size = 14,
@@ -322,8 +322,9 @@ function GameUIAllianceHome:CreateTop()
     function Top:Refresh()
         local alliance = home.alliance
         local status = alliance:Status()
-        local moonGate = alliance:GetAllianceMoonGate()
-        local enemyAlliance = moonGate:GetEnemyAlliance()
+        -- local moonGate = alliance:GetAllianceMoonGate()
+        -- local enemyAlliance = moonGate:GetEnemyAlliance()
+        local enemyAlliance = Alliance_Manager:GetEnemyAlliance()
         period_label:setString(home:GetAlliancePeriod())
         -- 和平期
         if status=="peace" then
@@ -339,23 +340,23 @@ function GameUIAllianceHome:CreateTop()
             if enemy_flag then
                 enemy_name_bg:removeChildByTag(201, true)
             end
-            local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemyAlliance.flag)):scale(0.5)
+            local enemy_flag = ui_helper:CreateFlagContentSprite(enemyAlliance:Flag()):scale(0.5)
             enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
                 :addTo(enemy_name_bg)
             enemy_flag:setTag(201)
-            enemy_name_label:setString("["..enemyAlliance.tag.."] "..enemyAlliance.name)
+            enemy_name_label:setString("["..enemyAlliance:AliasName().."] "..enemyAlliance:Name())
 
         end
         if status=="fight" then
             our_num_icon:setTexture("battle_39x38.png")
             enemy_num_icon:setTexture("battle_39x38.png")
             enemy_num_icon:scale(1.0)
-            self:SetOurPowerOrKill(moonGate:GetCountData().our.kill)
-            self:SetEnemyPowerOrKill(moonGate:GetCountData().enemy.kill)
+            self:SetOurPowerOrKill(alliance:GetMyAllianceFightCountData().kill)
+            self:SetEnemyPowerOrKill(alliance:GetEnemyAllianceFightCountData().kill)
         else
             if status~="peace" then
                 enemy_num_icon:setTexture("allianceHome/power.png")
-                self:SetEnemyPowerOrKill(enemyAlliance.power)
+                self:SetEnemyPowerOrKill(enemyAlliance:Power())
                 enemy_num_icon:scale(1.0)
             else
                 enemy_num_icon:setTexture("citizen_44x50.png")
@@ -643,36 +644,36 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
         end
     elseif tag == 1 then
         local enemy_alliance_id = self.alliance:GetAllianceMoonGate():GetEnemyAlliance().id
-        if enemy_alliance_id and string.trim(enemy_alliance_id) ~= "" then
-            NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function(msg)
-                local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
-                app:lockInput(false)
-                app:enterScene("EnemyAllianceScene", {enemyAlliance,GameUIAllianceEnter.Enemy}, "custom", -1, function(scene, status)
-                    local manager = ccs.ArmatureDataManager:getInstance()
-                    if status == "onEnter" then
-                        manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
-                        local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
-                        display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
-                            transition.sequence{
-                                cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
-                                cc.FadeIn:create(0.75),
-                                cc.CallFunc:create(function() scene:hideOutShowIn() end),
-                                cc.DelayTime:create(0.5),
-                                cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
-                                cc.FadeOut:create(0.75),
-                                cc.CallFunc:create(function() scene:finish() end),
-                            }
-                        )
-                    elseif status == "onExit" then
-                        manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
-                    end
-                end)
-            end)
-        else
-            FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                :SetPopMessage(_("当前是和平期"))
-                :AddToCurrentScene()
-        end
+        -- if enemy_alliance_id and string.trim(enemy_alliance_id) ~= "" then
+        --     NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function(msg)
+        --         local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
+        --         app:lockInput(false)
+        --         app:enterScene("EnemyAllianceScene", {enemyAlliance,GameUIAllianceEnter.Enemy}, "custom", -1, function(scene, status)
+        --             local manager = ccs.ArmatureDataManager:getInstance()
+        --             if status == "onEnter" then
+        --                 manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+        --                 local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
+        --                 display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
+        --                     transition.sequence{
+        --                         cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
+        --                         cc.FadeIn:create(0.75),
+        --                         cc.CallFunc:create(function() scene:hideOutShowIn() end),
+        --                         cc.DelayTime:create(0.5),
+        --                         cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
+        --                         cc.FadeOut:create(0.75),
+        --                         cc.CallFunc:create(function() scene:finish() end),
+        --                     }
+        --                 )
+        --             elseif status == "onExit" then
+        --                 manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+        --             end
+        --         end)
+        --     end)
+        -- else
+        --     FullScreenPopDialogUI.new():SetTitle(_("提示"))
+        --         :SetPopMessage(_("当前是和平期"))
+        --         :AddToCurrentScene()
+        -- end
     end
 end
 
@@ -692,15 +693,15 @@ function GameUIAllianceHome:OnMemberChanged(alliance,changed_map)
     end
 end
 function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
-    local coordinate_str
+    local coordinate_str = string.format("%d, %d", logic_x, logic_y)
+    local is_mine
     if alliance_view then
-        local is_mine = alliance_view:GetAlliance():Id() == self.alliance:Id()
-        local tag = is_mine and "我方" or "敌方"
-        coordinate_str = string.format("(%s)%d, %d", tag, logic_x, logic_y)
+        is_mine = alliance_view:GetAlliance():Id() == self.alliance:Id() and _("我方") or _("敌方")
     else
-        coordinate_str = string.format("%d, %d", logic_x, logic_y)
+        is_mine = _("坐标")
     end
     self.coordinate_label:setString(coordinate_str)
+    self.coordinate_title_label:setString(is_mine)
 end
 function GameUIAllianceHome:MailUnreadChanged( num )
     if num==0 then

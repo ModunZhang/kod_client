@@ -101,3 +101,19 @@ function display.newTTFLabel(params)
 
     return label
 end
+
+function display.pushScene(newScene, transitionType, time, more)
+    local sharedDirector = cc.Director:getInstance()
+    if sharedDirector:getRunningScene() then
+        if transitionType then
+            newScene = display.wrapSceneWithTransition(newScene, transitionType, time, more)
+        end
+        sharedDirector:pushScene(newScene)
+    else
+        sharedDirector:runWithScene(newScene)
+    end
+end
+
+function display.popScene()
+    cc.Director:getInstance():popScene()
+end

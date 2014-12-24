@@ -394,6 +394,30 @@ function UIKit:commonListView(params)
     return list,list_node
 end
 
-
+function UIKit:createLineItem(params)
+    -- 分割线
+    local line = display.newScale9Sprite("dividing_line.png")
+    line:size(params.width,2)
+    local line_size = line:getContentSize()
+    self:ttfLabel(
+        {
+            text = params.text_1,
+            size = 20,
+            color = 0x797154
+        }):align(display.LEFT_BOTTOM, 0, 0)
+        :addTo(line)
+    local value_label = self:ttfLabel(
+        {
+            text = params.text_2,
+            size = 22,
+            color = 0x403c2f
+        }):align(display.RIGHT_BOTTOM, line_size.width, 0)
+        :addTo(line)
+    
+    function line:SetValue(value)
+        value_label:setString(value)
+    end
+    return line
+end
 
 

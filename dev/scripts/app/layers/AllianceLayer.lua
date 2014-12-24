@@ -53,16 +53,6 @@ function AllianceLayer:ctor(alliance)
 
     self:setNodeEventEnabled(true)
     self:CreateCorpsFromMrachEventsIf()
-    local alliance_shire = self:GetAlliance():GetAllianceShrine()
-    local alliance_moonGate = self:GetAlliance():GetAllianceMoonGate()
-    alliance_shire:AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventsChanged)
-    alliance_shire:AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchReturnEventsChanged)
-    alliance_moonGate:AddListenOnType(self,AllianceMoonGate.LISTEN_TYPE.OnMoonGateMarchEventsChanged)
-    alliance_moonGate:AddListenOnType(self,AllianceMoonGate.LISTEN_TYPE.OnMoonGateMarchReturnEventsChanged)
-    self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchEventsChanged)
-    self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchReturnEventsChanged)
-    self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnCityBeAttackedMarchEventChanged)
-    self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnCityCityBeAttackedMarchReturnEventChanged)
 end
 function AllianceLayer:InitBackground()
     self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_h.tmx"):addTo(self, ZORDER.BACKGROUND)
@@ -100,42 +90,34 @@ function AllianceLayer:GetLineNode()
     return self.lines
 end
 function AllianceLayer:CreateCorpsFromMrachEventsIf()
-    local alliance_shire = self:GetAlliance():GetAllianceShrine()
-    table.foreachi(alliance_shire:GetMarchEvents(),function(_,merchEvent)
-        self:CreateCorpsIf(merchEvent)
+    local alliance = self:GetAlliance()
+    table.foreachi(alliance:GetAttackMarchEvents(),function(_,event)
+        self:CreateCorpsIf(event)
     end)
-    table.foreachi(alliance_shire:GetMarchReturnEvents(),function(_,merchEvent)
-        self:CreateCorpsIf(merchEvent)
+    table.foreachi(alliance:GetAttackMarchReturnEvents(),function(_,event)
+        self:CreateCorpsIf(event)
     end)
-    local alliance_moonGate = self:GetAlliance():GetAllianceMoonGate()
-    table.foreach(alliance_moonGate:GetMoonGateMarchEvents(),function(_,merchEvent)
-        self:CreateCorpsIf(merchEvent)
-    end)
-    table.foreach(alliance_moonGate:GetMoonGateMarchReturnEvents(),function(_,merchEvent)
-        self:CreateCorpsIf(merchEvent)
-    end)
-    table.foreachi(self:GetAlliance():GetHelpDefenceMarchEvents(),function(_,helpDefenceMarchEvent)
-        self:CreateCorpsIf(helpDefenceMarchEvent)
-    end)
-
-    table.foreachi(self:GetAlliance():GetHelpDefenceReturnMarchEvents(),function(_,helpDefenceMarchReturnEvent)
-       self:CreateCorpsIf(helpDefenceMarchReturnEvent)
-    end)
-
-    self:GetAlliance():IteratorCityBeAttackedMarchEvents(function(cityBeAttackedMarchEvent)
-        self:CreateCorpsIf(cityBeAttackedMarchEvent)
-    end)
-    self:GetAlliance():IteratorCityBeAttackedMarchReturnEvents(function(cityBeAttackedMarchReturnEvent)
-        self:CreateCorpsIf(cityBeAttackedMarchReturnEvent)
-    end)
+    alliance:AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+    alliance:AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
 end
+
+function AllianceLayer:OnAttackMarchEventDataChanged(changed_map)
+    self:ManagerCorpsFromChangedMap(changed_map)
+end
+
+function AllianceLayer:OnAttackMarchReturnEventDataChanged(changed_map)
+    self:ManagerCorpsFromChangedMap(changed_map)
+end
+
 
 function AllianceLayer:CreateCorpsIf(marchEvent)
     if not self:IsExistCorps(marchEvent:Id()) then
+        local from,_ = marchEvent:FromLocation()
+        local to,_   = marchEvent:TargetLocation()
         self:CreateCorps( 
             marchEvent:Id(),
-            marchEvent:FromLocation(),
-            marchEvent:TargetLocation(),
+            from,
+            to,
             marchEvent:StartTime(),
             marchEvent:ArriveTime()
         )
@@ -153,55 +135,15 @@ function AllianceLayer:ManagerCorpsFromChangedMap(changed_map)
         end)
     end
 end
+
 function AllianceLayer:GetAlliance()
     return self.alliance_view:GetAlliance()
 end
-function AllianceLayer:OnCityBeAttackedMarchEventChanged(changed_map)
-   self:ManagerCorpsFromChangedMap(changed_map)
-end
-
-function AllianceLayer:OnCityCityBeAttackedMarchReturnEventChanged(changed_map)
-    self:ManagerCorpsFromChangedMap(changed_map)
-end
-
-function AllianceLayer:OnHelpDefenceMarchEventsChanged(changed_map)
-    self:ManagerCorpsFromChangedMap(changed_map)
-end
-
-function AllianceLayer:OnHelpDefenceMarchReturnEventsChanged(changed_map)
-    self:OnHelpDefenceMarchEventsChanged(changed_map)
-end
-
-function AllianceLayer:OnMarchEventsChanged(changed_map)
-    self:ManagerCorpsFromChangedMap(changed_map)
-end
-
-function AllianceLayer:OnMarchReturnEventsChanged(changed_map)
-    self:OnMarchEventsChanged(changed_map)
-end
-
-function AllianceLayer:OnMoonGateMarchEventsChanged(changed_map)
-     self:ManagerCorpsFromChangedMap(changed_map)
-end
-
-function AllianceLayer:OnMoonGateMarchReturnEventsChanged(changed_map)
-    self:OnMoonGateMarchEventsChanged(changed_map)
-end
 
 function AllianceLayer:onCleanup()
-    local alliance_shire = self:GetAlliance():GetAllianceShrine()
-    alliance_shire:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventsChanged)
-    alliance_shire:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchReturnEventsChanged)
-
-    local alliance_moonGate = self:GetAlliance():GetAllianceMoonGate()
-    alliance_moonGate:RemoveListenerOnType(self,AllianceMoonGate.LISTEN_TYPE.OnMoonGateMarchEventsChanged)
-    alliance_moonGate:RemoveListenerOnType(self,AllianceMoonGate.LISTEN_TYPE.OnMoonGateMarchReturnEventsChanged)
-
-    self:GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchEventsChanged)
-    self:GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchReturnEventsChanged)
-
-    self:GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnCityBeAttackedMarchEventChanged)
-    self:GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnCityCityBeAttackedMarchReturnEventChanged)
+    local alliance = self:GetAlliance()
+    alliance:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+    alliance:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
 end
 function AllianceLayer:GetLogicMap()
     return self.alliance_view:GetLogicMap()
@@ -217,7 +159,7 @@ function AllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_ti
     march_info.finish_time = finish_time
     march_info.total_time = finish_time - start_time
     march_info.speed = (march_info.length /  march_info.total_time)
-    local corps = display.newNode():addTo(self:GetSoldierNode())
+    local corps = display.newNode():addTo(self:GetCorpsNode())
     local armature = ccs.Armature:create("dragon_red"):addTo(corps):scale(0.5)
 
     local dir_map = {
@@ -263,7 +205,7 @@ function AllianceLayer:IsExistCorps(id)
     return self.corps_map[id] ~= nil
 end
 function AllianceLayer:CreateLine(id, start_pos, end_pos)
-    assert(self.line_map[id] == nil)
+    assert(self.lines_map[id] == nil)
     local march_info = self:GetMarchInfoWith(id, start_pos, end_pos)
     local middle = cc.pMidpoint(march_info.start_info.real, march_info.end_info.real)
     local scale = march_info.length / 22
@@ -279,7 +221,7 @@ function AllianceLayer:CreateLine(id, start_pos, end_pos)
         })
     ))
     sprite:setScaleY(scale)
-    self.line_map[id] = sprite
+    self.lines_map[id] = sprite
     return sprite
 end
 function AllianceLayer:GetMarchInfoWith(id, logic_start_point, logic_end_point)
@@ -301,15 +243,15 @@ function AllianceLayer:GetMarchInfoWith(id, logic_start_point, logic_end_point)
     }
 end
 function AllianceLayer:DeleteLineById(id)
-    if self.line_map[id] == nil then
+    if self.lines_map[id] == nil then
         print("路线已经被删除了!", id)
         return
     end
-    self.line_map[id]:removeFromParent()
-    self.line_map[id] = nil
+    self.lines_map[id]:removeFromParent()
+    self.lines_map[id] = nil
 end
 function AllianceLayer:DeleteAllLines()
-    for id, _ in pairs(self.line_map) do
+    for id, _ in pairs(self.lines_map) do
         self:DeleteLineById(id)
     end
 end

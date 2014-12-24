@@ -17,6 +17,8 @@ local random = math.random
 local AllianceShrine = import("..entity.AllianceShrine")
 local AllianceMoonGate = import("..entity.AllianceMoonGate")
 local Alliance = import("..entity.Alliance")
+TwoAllianceLayer.VIEW_INDEX = Enum("MyAlliance","EnemyAlliance")
+
 
 function TwoAllianceLayer:ctor(alliance1, alliance2, arrange)
     Observer.extend(self)
@@ -32,8 +34,8 @@ function TwoAllianceLayer:ctor(alliance1, alliance2, arrange)
     self:InitCorpsNode()
     self:InitLineNode()
 
-    local alliance_view1 = AllianceView.new(self, alliance1, 0):addTo(self)
-    local alliance_view2 = AllianceView.new(self, alliance2, 51):addTo(self)
+    local alliance_view1 = AllianceView.new(self, alliance1,TwoAllianceLayer.VIEW_INDEX.MyAlliance, 0):addTo(self)
+    local alliance_view2 = AllianceView.new(self, alliance2,TwoAllianceLayer.VIEW_INDEX.EnemyAlliance, 51):addTo(self)
     self.alliance_views = {alliance_view1, alliance_view2}
 
     -- 
@@ -58,17 +60,11 @@ function TwoAllianceLayer:ctor(alliance1, alliance2, arrange)
     self:scheduleUpdate()
 
     self:setNodeEventEnabled(true)
-    -- self:CreateCorpsFromMrachEventsIf()
-    -- local alliance_shire = self:GetAlliance():GetAllianceShrine()
-    -- local alliance_moonGate = self:GetAlliance():GetAllianceMoonGate()
-    -- alliance_shire:AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventsChanged)
-    -- alliance_shire:AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchReturnEventsChanged)
-    -- alliance_moonGate:AddListenOnType(self,AllianceMoonGate.LISTEN_TYPE.OnMoonGateMarchEventsChanged)
-    -- alliance_moonGate:AddListenOnType(self,AllianceMoonGate.LISTEN_TYPE.OnMoonGateMarchReturnEventsChanged)
-    -- self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchEventsChanged)
-    -- self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchReturnEventsChanged)
-    -- self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnCityBeAttackedMarchEventChanged)
-    -- self:GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnCityCityBeAttackedMarchReturnEventChanged)
+    --行军事件
+    self:CreateAllianceCorps(self:GetMyAlliance())
+    self:CreateAllianceCorps(self:GetEnemyAlliance())
+    self:AddOrRemoveAllianceEvent(true)
+  
 end
 function TwoAllianceLayer:InitBackground()
     self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_h.tmx"):addTo(self, ZORDER.BACKGROUND)
@@ -105,47 +101,78 @@ end
 function TwoAllianceLayer:GetLineNode()
     return self.lines
 end
-function TwoAllianceLayer:CreateCorpsFromMrachEventsIf()
-    local alliance_shire = self:GetAlliance():GetAllianceShrine()
-    table.foreachi(alliance_shire:GetMarchEvents(),function(_,merchEvent)
-        self:CreateCorpsIf(merchEvent)
-    end)
-    table.foreachi(alliance_shire:GetMarchReturnEvents(),function(_,merchEvent)
-        self:CreateCorpsIf(merchEvent)
-    end)
-    local alliance_moonGate = self:GetAlliance():GetAllianceMoonGate()
-    table.foreach(alliance_moonGate:GetMoonGateMarchEvents(),function(_,merchEvent)
-        self:CreateCorpsIf(merchEvent)
-    end)
-    table.foreach(alliance_moonGate:GetMoonGateMarchReturnEvents(),function(_,merchEvent)
-        self:CreateCorpsIf(merchEvent)
-    end)
-    table.foreachi(self:GetAlliance():GetHelpDefenceMarchEvents(),function(_,helpDefenceMarchEvent)
-        self:CreateCorpsIf(helpDefenceMarchEvent)
-    end)
 
-    table.foreachi(self:GetAlliance():GetHelpDefenceReturnMarchEvents(),function(_,helpDefenceMarchReturnEvent)
-        self:CreateCorpsIf(helpDefenceMarchReturnEvent)
-    end)
-
-    self:GetAlliance():IteratorCityBeAttackedMarchEvents(function(cityBeAttackedMarchEvent)
-        self:CreateCorpsIf(cityBeAttackedMarchEvent)
-    end)
-    self:GetAlliance():IteratorCityBeAttackedMarchReturnEvents(function(cityBeAttackedMarchReturnEvent)
-        self:CreateCorpsIf(cityBeAttackedMarchReturnEvent)
-    end)
+function TwoAllianceLayer:GetAlliances()
+    return self.alliances
 end
-function TwoAllianceLayer:CreateCorpsIf(marchEvent)
-    if not self:IsExistCorps(marchEvent:Id()) then
-        self:CreateCorps(
-            marchEvent:Id(),
-            marchEvent:FromLocation(),
-            marchEvent:TargetLocation(),
-            marchEvent:StartTime(),
-            marchEvent:ArriveTime()
-        )
+
+function TwoAllianceLayer:GetMyAlliance()
+    return self.alliances[TwoAllianceLayer.VIEW_INDEX.MyAlliance]
+end
+
+function TwoAllianceLayer:GetEnemyAlliance()
+    return self.alliances[TwoAllianceLayer.VIEW_INDEX.EnemyAlliance]
+end
+
+function TwoAllianceLayer:AddOrRemoveAllianceEvent(isAdd)
+    if isAdd then
+        self:GetMyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+        self:GetMyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
+        self:GetEnemyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+        self:GetEnemyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
+
+        self:GetMyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+        self:GetMyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
+        self:GetEnemyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+        self:GetEnemyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
+
+    else
+        self:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+        self:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
+        self:GetEnemyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+        self:GetEnemyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)  
+
+        self:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+        self:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)  
+        self:GetEnemyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+        self:GetEnemyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
     end
 end
+
+function TwoAllianceLayer:CreateAllianceCorps(alliance)
+    table.foreachi(alliance:GetAttackMarchEvents(),function(_,event)
+        self:CreateCorpsIf(event)
+    end)
+    table.foreachi(alliance:GetAttackMarchReturnEvents(),function(_,event)
+        self:CreateCorpsIf(event)
+    end)
+    table.foreachi(alliance:GetStrikeMarchEvents(),function(_,event)
+        self:CreateCorpsIf(event)
+    end)
+    table.foreachi(alliance:GetStrikeMarchReturnEvents(),function(_,event)
+        self:CreateCorpsIf(event)
+    end)
+
+end
+--changed of marchevent
+function TwoAllianceLayer:OnAttackMarchEventDataChanged(changed_map)
+    self:ManagerCorpsFromChangedMap(changed_map)
+end
+
+function TwoAllianceLayer:OnAttackMarchReturnEventDataChanged(changed_map)
+    self:ManagerCorpsFromChangedMap(changed_map)
+end
+
+function TwoAllianceLayer:OnStrikeMarchEventDataChanged(changed_map)
+    dump(changed_map,"OnStrikeMarchEventDataChanged-->")
+    self:ManagerCorpsFromChangedMap(changed_map)
+end
+
+function TwoAllianceLayer:OnStrikeMarchReturnEventDataChanged(changed_map)
+     dump(changed_map,"OnStrikeMarchReturnEventDataChanged-->")
+    self:ManagerCorpsFromChangedMap(changed_map)
+end
+
 function TwoAllianceLayer:ManagerCorpsFromChangedMap(changed_map)
     if changed_map.removed then
         table.foreachi(changed_map.removed,function(_,marchEvent)
@@ -157,56 +184,35 @@ function TwoAllianceLayer:ManagerCorpsFromChangedMap(changed_map)
         end)
     end
 end
-function TwoAllianceLayer:GetAlliances()
-    return self.alliances
-end
-function TwoAllianceLayer:OnCityBeAttackedMarchEventChanged(changed_map)
-    self:ManagerCorpsFromChangedMap(changed_map)
-end
 
-function TwoAllianceLayer:OnCityCityBeAttackedMarchReturnEventChanged(changed_map)
-    self:ManagerCorpsFromChangedMap(changed_map)
-end
-
-function TwoAllianceLayer:OnHelpDefenceMarchEventsChanged(changed_map)
-    self:ManagerCorpsFromChangedMap(changed_map)
-end
-
-function TwoAllianceLayer:OnHelpDefenceMarchReturnEventsChanged(changed_map)
-    self:OnHelpDefenceMarchEventsChanged(changed_map)
-end
-
-function TwoAllianceLayer:OnMarchEventsChanged(changed_map)
-    self:ManagerCorpsFromChangedMap(changed_map)
-end
-
-function TwoAllianceLayer:OnMarchReturnEventsChanged(changed_map)
-    self:OnMarchEventsChanged(changed_map)
-end
-
-function TwoAllianceLayer:OnMoonGateMarchEventsChanged(changed_map)
-    self:ManagerCorpsFromChangedMap(changed_map)
-end
-
-function TwoAllianceLayer:OnMoonGateMarchReturnEventsChanged(changed_map)
-    self:OnMoonGateMarchEventsChanged(changed_map)
+function TwoAllianceLayer:CreateCorpsIf(marchEvent)
+    if not self:IsExistCorps(marchEvent:Id()) then
+        local from,allianceId = marchEvent:FromLocation()
+        if allianceId == self:GetMyAlliance():Id() then
+            from.index = TwoAllianceLayer.VIEW_INDEX.MyAlliance
+        else
+            from.index = TwoAllianceLayer.VIEW_INDEX.EnemyAlliance
+        end
+        local to,allianceId   = marchEvent:TargetLocation()
+        if allianceId == self:GetMyAlliance():Id() then
+            to.index = TwoAllianceLayer.VIEW_INDEX.MyAlliance
+        else
+            to.index = TwoAllianceLayer.VIEW_INDEX.EnemyAlliance
+        end
+        self:CreateCorps( 
+            marchEvent:Id(),
+            from,
+            to,
+            marchEvent:StartTime(),
+            marchEvent:ArriveTime()
+        )
+    end
 end
 
 function TwoAllianceLayer:onCleanup()
-    local alliance_shire = self:GetAlliance():GetAllianceShrine()
-    alliance_shire:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchEventsChanged)
-    alliance_shire:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnMarchReturnEventsChanged)
-
-    local alliance_moonGate = self:GetAlliance():GetAllianceMoonGate()
-    alliance_moonGate:RemoveListenerOnType(self,AllianceMoonGate.LISTEN_TYPE.OnMoonGateMarchEventsChanged)
-    alliance_moonGate:RemoveListenerOnType(self,AllianceMoonGate.LISTEN_TYPE.OnMoonGateMarchReturnEventsChanged)
-
-    self:GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchEventsChanged)
-    self:GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnHelpDefenceMarchReturnEventsChanged)
-
-    self:GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnCityBeAttackedMarchEventChanged)
-    self:GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnCityCityBeAttackedMarchReturnEventChanged)
+    self:AddOrRemoveAllianceEvent(false)
 end
+
 function TwoAllianceLayer:ConvertLogicPositionToMapPosition(lx, ly)
     local map_pos = cc.p(self.alliance_views[1]:GetLogicMap():ConvertToMapPosition(lx , ly))
     return self:convertToNodeSpace(self.background:convertToWorldSpace(map_pos))
@@ -218,7 +224,7 @@ function TwoAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish
     march_info.finish_time = finish_time
     march_info.total_time = finish_time - start_time
     march_info.speed = (march_info.length /  march_info.total_time)
-    local corps = display.newNode():addTo(self:GetSoldierNode())
+    local corps = display.newNode():addTo(self:GetCorpsNode())
     local armature = ccs.Armature:create("dragon_red"):addTo(corps):scale(0.5)
 
     local dir_map = {
@@ -264,7 +270,7 @@ function TwoAllianceLayer:IsExistCorps(id)
     return self.corps_map[id] ~= nil
 end
 function TwoAllianceLayer:CreateLine(id, start_pos, end_pos)
-    assert(self.line_map[id] == nil)
+    assert(self.lines_map[id] == nil)
     local march_info = self:GetMarchInfoWith(id, start_pos, end_pos)
     local middle = cc.pMidpoint(march_info.start_info.real, march_info.end_info.real)
     local scale = march_info.length / 22
@@ -281,13 +287,13 @@ function TwoAllianceLayer:CreateLine(id, start_pos, end_pos)
         })
     ))
     sprite:setScaleY(scale)
-    self.line_map[id] = sprite
+    self.lines_map[id] = sprite
     return sprite
 end
 function TwoAllianceLayer:GetMarchInfoWith(id, logic_start_point, logic_end_point)
-    local logic_map = self:GetLogicMap()
-    local spt = logic_map:WrapConvertToMapPosition(logic_start_point.x, logic_start_point.y)
-    local ept = logic_map:WrapConvertToMapPosition(logic_end_point.x, logic_end_point.y)
+    assert(logic_start_point.index and logic_end_point.index,"")
+    local spt = self.alliance_views[logic_start_point.index]:GetLogicMap():WrapConvertToMapPosition(logic_start_point.x, logic_start_point.y)
+    local ept = self.alliance_views[logic_end_point.index]:GetLogicMap():WrapConvertToMapPosition(logic_end_point.x, logic_end_point.y)
     local vec = cc.pSub(ept, spt)
     local deg = math.deg(cc.pGetAngle(vec, {x = 0, y = 1}))
     local length = cc.pGetLength(vec)
@@ -303,21 +309,21 @@ function TwoAllianceLayer:GetMarchInfoWith(id, logic_start_point, logic_end_poin
     }
 end
 function TwoAllianceLayer:DeleteLineById(id)
-    if self.line_map[id] == nil then
+    if self.lines_map[id] == nil then
         print("路线已经被删除了!", id)
         return
     end
-    self.line_map[id]:removeFromParent()
-    self.line_map[id] = nil
+    self.lines_map[id]:removeFromParent()
+    self.lines_map[id] = nil
 end
 function TwoAllianceLayer:DeleteAllLines()
-    for id, _ in pairs(self.line_map) do
+    for id, _ in pairs(self.lines_map) do
         self:DeleteLineById(id)
     end
 end
 function TwoAllianceLayer:GetClickedObject(world_x, world_y)
     local logic_x, logic_y, current_view_alliance = self:GetCurrentViewAllianceCoordinate()
-    return current_view_alliance:GetClickedObject(world_x, world_y)
+    return current_view_alliance:GetClickedObject(world_x, world_y),current_view_alliance:GetViewIndex() == TwoAllianceLayer.VIEW_INDEX.MyAlliance
 end
 function TwoAllianceLayer:EmptyGround(x, y)
     return {

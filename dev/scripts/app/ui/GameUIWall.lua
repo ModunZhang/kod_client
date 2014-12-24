@@ -42,10 +42,10 @@ function GameUIWall:CreateMilitaryUIIf()
 	if self.military_node then return self.military_node end
 	local dragon = self:GetDragon()
 	local military_node = display.newNode()
-	local top_bg = WidgetUIBackGround.new({height = 332})
+	local top_bg = WidgetUIBackGround.new({height = 332,isFrame = "yes"})
 		:addTo(military_node)
 		:pos(15,window.top_bottom - 332)
-	local title_bar = display.newSprite("title_bar_586x34.png"):align(display.LEFT_TOP,10,320):addTo(top_bg)
+	local title_bar = display.newSprite("title_bar_586x34.png"):align(display.LEFT_TOP,10,312):addTo(top_bg)
 	UIKit:ttfLabel({
 		text = _("驻防部队"),
 		size = 22,

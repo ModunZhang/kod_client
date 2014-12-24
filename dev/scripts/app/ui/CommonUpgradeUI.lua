@@ -7,9 +7,7 @@ local UpgradeBuilding = import("..entity.UpgradeBuilding")
 local MaterialManager = import("..entity.MaterialManager")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-
-
-
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 
 
 local CommonUpgradeUI = class("CommonUpgradeUI", function ()
@@ -283,7 +281,7 @@ function CommonUpgradeUI:InitUpgradePart()
         }
     ):pos(display.cx-150, display.top-410)
         :addTo(self.upgrade_layer)
-    
+
     -- upgrade button
     local btn_bg = UIKit:commonButtonWithBG(
         {
@@ -451,8 +449,8 @@ function CommonUpgradeUI:InitAccelerationPart()
         :addTo(self.acc_layer)
     -- 升级倒数时间进度条
     --进度条
-    local bar = display.newSprite("upgrade_progress_bar_1.png"):addTo(self.acc_layer):pos(display.cx-90, display.top - 460)
-    local progressFill = display.newSprite("upgrade_progress_bar_2.png")
+    local bar = display.newSprite("progress_bar_364x40_1.png"):addTo(self.acc_layer):pos(display.cx-90, display.top - 460)
+    local progressFill = display.newSprite("progress_bar_364x40_2.png")
     self.acc_layer.ProgressTimer = cc.ProgressTimer:create(progressFill)
     local pro = self.acc_layer.ProgressTimer
     pro:setType(display.PROGRESS_TIMER_BAR)
@@ -469,20 +467,21 @@ function CommonUpgradeUI:InitAccelerationPart()
         color = UIKit:hex2c3b(0xfff3c7),
     }):addTo(bar)
     self.acc_layer.upgrade_time_label:setAnchorPoint(cc.p(0,0.5))
-    self.acc_layer.upgrade_time_label:pos(self.acc_layer.upgrade_time_label:getContentSize().width/2+10, bar:getContentSize().height/2)
+    self.acc_layer.upgrade_time_label:pos(self.acc_layer.upgrade_time_label:getContentSize().width/2+40, bar:getContentSize().height/2)
     if self.building:IsUpgrading() then
         pro:setPercentage(self.building:GetElapsedTimeByCurrentTime(app.timer:GetServerTime())/self.building:GetUpgradeTimeToNextLevel()*100)
         self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime())))
     end
 
     -- 进度条头图标
-    display.newSprite("upgrade_progress_bar_icon_bg.png", display.cx - 256, display.top - 460):addTo(self.acc_layer)
-    display.newSprite("upgrade_hourglass.png", display.cx - 256, display.top - 460):addTo(self.acc_layer):setScale(0.8)
+    display.newSprite("upgrade_progress_bar_icon_bg.png", display.cx - 260, display.top - 460):addTo(self.acc_layer)
+    display.newSprite("upgrade_hourglass.png", display.cx - 260, display.top - 460):addTo(self.acc_layer):setScale(0.8)
     -- 免费加速按钮
     self:CreateFreeSpeedUpBuildingUpgradeButton()
     -- 可免费加速提示
     -- 背景框
-    display.newSprite("upgrade_introduce_bg.png", display.cx, display.top - 540):addTo(self.acc_layer)
+    WidgetUIBackGround.new({width = 546,height=90},WidgetUIBackGround.STYLE_TYPE.STYLE_3):align(display.CENTER,  display.cx, display.top - 540):addTo(self.acc_layer)
+    -- display.newSprite("upgrade_introduce_bg.png", display.cx, display.top - 540):addTo(self.acc_layer)
     self.acc_tip_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
@@ -500,40 +499,35 @@ end
 
 function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
     local  IMAGES  = {
-        normal = "upgrade_free_1.png",
-        pressed = "upgrade_free_2.png",
-        disabled = "upgrade_free_3.png",
+        normal = "purple_btn_up_148x76.png",
+        pressed = "purple_btn_down_148x76.png",
     }
-    self.acc_layer.acc_button = WidgetPushButton.new(IMAGES, {scale9 = true})
-        :setButtonSize(169, 86)
-        :setButtonLabel("normal", ui.newTTFLabel({
-            text = _("免费加速"),
-            size = 24
-        }))
-        :setButtonLabel("pressed", ui.newTTFLabel({
+    self.acc_layer.acc_button = WidgetPushButton.new(IMAGES, {scale9 = false},
+        {
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+        })
+        :setButtonLabel(ui.newTTFLabel({
             text = _("免费加速"),
             size = 24,
+            color = 0xffedae
         }))
-        :setButtonLabel("disabled", ui.newTTFLabel({
-            text = _("免费加速"),
-            size = 24,
-        })):onButtonClicked(function(event)
-        if event.name == "CLICKED_EVENT" then
-            local eventType = ""
-            if self.city:IsFunctionBuilding(self.building) then
-                eventType = "buildingEvents"
-            elseif self.city:IsHouse(self.building) then
-                eventType = "houseEvents"
-            elseif self.city:IsGate(self.building) then
-                eventType = "wallEvents"
-            elseif self.city:IsTower(self.building) then
-                eventType = "towerEvents"
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                local eventType = ""
+                if self.city:IsFunctionBuilding(self.building) then
+                    eventType = "buildingEvents"
+                elseif self.city:IsHouse(self.building) then
+                    eventType = "houseEvents"
+                elseif self.city:IsGate(self.building) then
+                    eventType = "wallEvents"
+                elseif self.city:IsTower(self.building) then
+                    eventType = "towerEvents"
+                end
+                NetManager:getFreeSpeedUpPromise(eventType,self.building:UniqueUpgradingKey())
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
             end
-            NetManager:getFreeSpeedUpPromise(eventType,self.building:UniqueUpgradingKey())
-                :catch(function(err)
-                    dump(err:reason())
-                end)
-        end
         end):align(display.CENTER, display.cx+185, display.top - 435):addTo(self.acc_layer)
     self.acc_layer.acc_button:setButtonEnabled(false)
 
@@ -562,7 +556,8 @@ function CommonUpgradeUI:CreateAccButtons()
         -- 按钮背景框
         display.newSprite("upgrade_props_box.png", display.cx-220 + gap_x*math.mod(i,4), display.top-640-gap_y*math.floor((i-1)/4)):addTo(self.acc_layer)
         -- 花销数值背景
-        local cost_bg = display.newSprite("upgrade_number.png", display.cx-220 + gap_x*math.mod(i,4), display.top-710-gap_y*math.floor((i-1)/4)):addTo(self.acc_layer)
+        -- WidgetUIBackGround.new({width=89,height=26},WidgetUIBackGround.STYLE_TYPE.STYLE_3):align(display.CENTER, display.cx-220 + gap_x*math.mod(i,4), display.top-710-gap_y*math.floor((i-1)/4)):addTo(self.acc_layer)
+        local cost_bg = display.newSprite("back_ground_138x34.png", display.cx-220 + gap_x*math.mod(i,4), display.top-710-gap_y*math.floor((i-1)/4)):addTo(self.acc_layer):scale(0.8)
         -- 花销数值
         cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -576,7 +571,8 @@ function CommonUpgradeUI:CreateAccButtons()
         local time_button = WidgetPushButton.new({normal = "upgrade_time_"..i..".png"},{scale9 = false}
             ,{
                 disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
-            }):setButtonEnabled(false)
+            })
+            :setButtonEnabled(false)
             :SetFilter({
                 disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
             })
@@ -685,6 +681,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
 
 

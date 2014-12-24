@@ -7,12 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2EDD2787191B62CA004F9539 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EDD2780191B62CA004F9539 /* Default-568h@2x.png */; };
-		2EDD2788191B62CA004F9539 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EDD2781191B62CA004F9539 /* Default.png */; };
-		2EDD2789191B62CA004F9539 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EDD2782191B62CA004F9539 /* Default@2x.png */; };
-		2EDD278A191B62CA004F9539 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EDD2783191B62CA004F9539 /* Icon-72.png */; };
-		2EDD278B191B62CA004F9539 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EDD2784191B62CA004F9539 /* Icon.png */; };
-		2EDD278C191B62CA004F9539 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EDD2785191B62CA004F9539 /* Icon@2x.png */; };
 		2EDD2799191B639C004F9539 /* AppController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2EDD2794191B639C004F9539 /* AppController.mm */; };
 		2EDD279A191B639C004F9539 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EDD2795191B639C004F9539 /* main.m */; };
 		2EDD279B191B639C004F9539 /* RootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2EDD2798191B639C004F9539 /* RootViewController.mm */; };
@@ -24,6 +18,7 @@
 		3F1857C419B9EC89000A75D0 /* LuaExtension.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F18503319B9EC83000A75D0 /* LuaExtension.cpp */; };
 		3F1857C519B9EC89000A75D0 /* CCPomelo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F18503619B9EC83000A75D0 /* CCPomelo.cpp */; };
 		3F185E2B19B9EC8C000A75D0 /* Time.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3F1857BA19B9EC89000A75D0 /* Time.mm */; };
+		3F44E3341A49197E00B8E5F2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F44E3331A49197E00B8E5F2 /* Images.xcassets */; };
 		3F49B18319BE869A0023C33B /* res in Resources */ = {isa = PBXBuildFile; fileRef = 3F49B18119BE869A0023C33B /* res */; };
 		3F49B18419BE869A0023C33B /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = 3F49B18219BE869A0023C33B /* scripts */; };
 		3F9090F01A3FB7770019442B /* GameCenter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3F9090EE1A3FB7770019442B /* GameCenter.mm */; };
@@ -66,12 +61,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2EDD2780191B62CA004F9539 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		2EDD2781191B62CA004F9539 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		2EDD2782191B62CA004F9539 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		2EDD2783191B62CA004F9539 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
-		2EDD2784191B62CA004F9539 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
-		2EDD2785191B62CA004F9539 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		2EDD2786191B62CA004F9539 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2EDD2793191B639C004F9539 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
 		2EDD2794191B639C004F9539 /* AppController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppController.mm; sourceTree = "<group>"; };
@@ -94,6 +83,7 @@
 		3F18503719B9EC83000A75D0 /* CCPomelo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCPomelo.h; sourceTree = "<group>"; };
 		3F1857B919B9EC89000A75D0 /* Time.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Time.h; sourceTree = "<group>"; };
 		3F1857BA19B9EC89000A75D0 /* Time.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Time.mm; sourceTree = "<group>"; };
+		3F44E3331A49197E00B8E5F2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = kod/Images.xcassets; sourceTree = SOURCE_ROOT; };
 		3F49B18119BE869A0023C33B /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; name = res; path = ../../../update/res; sourceTree = "<group>"; };
 		3F49B18219BE869A0023C33B /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = scripts; path = ../../../update/scripts; sourceTree = "<group>"; };
 		3F9090EE1A3FB7770019442B /* GameCenter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameCenter.mm; sourceTree = "<group>"; };
@@ -154,6 +144,7 @@
 		2EDD277F191B62CA004F9539 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3F44E3331A49197E00B8E5F2 /* Images.xcassets */,
 				3FEC8CA61A011A02000B8BF5 /* Droid Sans Faliback.ttf */,
 				3F49B18119BE869A0023C33B /* res */,
 				3F49B18219BE869A0023C33B /* scripts */,
@@ -178,12 +169,6 @@
 		2EDD279C191B641B004F9539 /* ios */ = {
 			isa = PBXGroup;
 			children = (
-				2EDD2780191B62CA004F9539 /* Default-568h@2x.png */,
-				2EDD2781191B62CA004F9539 /* Default.png */,
-				2EDD2782191B62CA004F9539 /* Default@2x.png */,
-				2EDD2783191B62CA004F9539 /* Icon-72.png */,
-				2EDD2784191B62CA004F9539 /* Icon.png */,
-				2EDD2785191B62CA004F9539 /* Icon@2x.png */,
 				2EDD2786191B62CA004F9539 /* Info.plist */,
 			);
 			name = ios;
@@ -398,14 +383,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EDD2789191B62CA004F9539 /* Default@2x.png in Resources */,
-				2EDD278C191B62CA004F9539 /* Icon@2x.png in Resources */,
-				2EDD278A191B62CA004F9539 /* Icon-72.png in Resources */,
-				2EDD278B191B62CA004F9539 /* Icon.png in Resources */,
+				3F44E3341A49197E00B8E5F2 /* Images.xcassets in Resources */,
 				3F49B18319BE869A0023C33B /* res in Resources */,
 				3FEC8CA71A011A02000B8BF5 /* Droid Sans Faliback.ttf in Resources */,
-				2EDD2787191B62CA004F9539 /* Default-568h@2x.png in Resources */,
-				2EDD2788191B62CA004F9539 /* Default.png in Resources */,
 				3F49B18419BE869A0023C33B /* scripts in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -541,6 +521,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -613,6 +595,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
