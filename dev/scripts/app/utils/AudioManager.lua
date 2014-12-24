@@ -25,22 +25,6 @@ local effect_sound_map = {
 local BACKGROUND_MUSIC_KEY = "BACKGROUND_MUSIC_KEY"
 local EFFECT_MUSIC_KEY = "EFFECT_MUSIC_KEY"
 
---over
-local play_music = audio.playMusic
-function audio.playMusic(filename, isLoop)
-	if not CONFIG_PLAY_AUDIO then
-		return 
-	end
-	return play_music(filename, isLoop)
-end
-local play_sound = audio.playSound
-function audio.playSound(filename, isLoop)
-	if not CONFIG_PLAY_AUDIO then
-		return 
-	end
-	return play_sound(filename, isLoop)
-end
-
 -------------------------------------------------------------------------
 
 function AudioManager:ctor(game_default)
@@ -139,5 +123,9 @@ function AudioManager:GetEffectSoundState()
 	return self.is_effect_audio_on
 end
 
+function AudioManager:StopAll()
+	self:StopMusic()
+	self:StopEffectSound()
+end
 
 return AudioManager

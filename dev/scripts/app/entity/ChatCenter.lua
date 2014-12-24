@@ -78,7 +78,7 @@ function ChatCenter:limitDataSource(source,s,e)
 end
 
 function ChatCenter:requestAllMessage()
-	-- NetManager:getFetchChatPromise()
+	NetManager:getFetchChatPromise()
 end
 
 -- Private
