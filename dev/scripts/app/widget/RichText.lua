@@ -32,6 +32,7 @@ function RichText:ctor(params)
     assert(params.width)
     self.width = params.width
     self.size = params.size or 30
+    self.color = params.color or 0xffffff
     self.lineHeight = params.lineHeight or self.size
 end
 
@@ -78,6 +79,7 @@ function RichText:Text(str)
         elseif v.type == "text" then
             local head, tail, is_newline = v.value, ""
             local size = v.size or self.size
+            local color = v.color or self.color
             repeat
                 local cur_width = width - cur_x
                 if cur_width < size then
@@ -88,7 +90,7 @@ function RichText:Text(str)
                 local label = UIKit:ttfLabel({
                     text = head,
                     size = size,
-                    color = 0x403c2f,
+                    color = color,
                     align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
                 }):align(display.LEFT_CENTER)
                 head, tail, is_newline = get_first_line(label, width - cur_x)
@@ -97,7 +99,7 @@ function RichText:Text(str)
                 local label = UIKit:ttfLabel({
                     text = head,
                     size = size,
-                    color = 0x403c2f,
+                    color = color,
                     align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
                 }):align(display.LEFT_CENTER, 0 + cur_x, 0)
                 local size = label:getContentSize()
