@@ -9,14 +9,20 @@ function WidgetPages:ctor(params)
     self.titles = params.titles -- 标题 type -> table
     self.cb = params.cb or function ()end -- 回调
     self.current_page = params.current_page or 1
+    local icon_image = params.icon
 
-
+    -- 标题icon
+    local icon
+    if icon_image then
+        icon = cc.ui.UIImage.new(icon_image):addTo(self)
+            :align(display.LEFT_CENTER, 70, 28)
+    end
     self.title_label = UIKit:ttfLabel({
         text = "",
         size = 20,
         color = 0x5d563f
     })
-        :align(display.LEFT_BOTTOM,70,15)
+        :align(display.LEFT_BOTTOM,icon and icon:getContentSize().width + 80 or 70,15)
         :addTo(self)
     local page_label = UIKit:ttfLabel({
         text = "/"..self.page,
@@ -86,6 +92,7 @@ function WidgetPages:SelectPage_(page)
     self.current_page = page
 end
 return WidgetPages
+
 
 
 
