@@ -24,6 +24,9 @@ end
 function GameUIBase:onEnter()
     print("onEnter->",self.__cname)
     UIKit:CheckOpenUI(self)
+    if type(display.getRunningScene().BlurRenderScene) == "function" then
+        display.getRunningScene():BlurRenderScene()
+    end
 end
 
 function GameUIBase:onEnterTransitionFinish()
@@ -36,6 +39,9 @@ end
 
 function GameUIBase:onExit()
     print("onExit--->")
+    if type(display.getRunningScene().ResetRenderState) == "function" then
+        display.getRunningScene():ResetRenderState()
+    end
 end
 
 

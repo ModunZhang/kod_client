@@ -6,15 +6,58 @@ local MapScene = class("MapScene", function()
 end)
 
 function MapScene:ctor()
+    self.blur_count = 1
     self.event_manager = EventManager.new(self)
     self.touch_judgment = TouchJudgment.new(self)
+    self.scene_node = display.newClippingRegionNode(cc.rect(0, 0, display.width, display.height)):addTo(self)
+    self.scene_node:setContentSize(cc.size(display.width, display.height))
+    self.scene_layer = self:CreateSceneLayer():addTo(self:GetSceneNode(), 0)
+    self.touch_layer = self:CreateMultiTouchLayer():addTo(self:GetSceneNode(), 1)
+    self.scene_ui_layer = self:CreateSceneUILayer():addTo(self:GetSceneNode(), 2)
 end
 function MapScene:onEnter()
-    self.scene_layer = self:CreateSceneLayer()
-    self.touch_layer = self:CreateMultiTouchLayer()
+
 end
 function MapScene:onExit()
     self.touch_judgment:destructor()
+end
+function MapScene:BlurRenderScene()
+    self.blur_count = self.blur_count - 1
+    if self.blur_count ~= 0 then
+        return
+    end
+    if self.render_scene then
+        self.render_scene:removeFromParent()
+        self.render_scene = nil
+    end
+    self.render_scene = self:DumpScene():addTo(self):pos(display.cx, display.cy)
+    self:GetSceneNode():hide()
+end
+function MapScene:DumpScene()
+    local director = cc.Director:getInstance()
+    local params = {filters = "CUSTOM", filterParams = json.encode({
+        frag = "shaders/blur.fs",
+        shaderName = "blur_scene",
+        resolution = {display.width, display.height},
+        blurRadius = 8,
+        sampleNum = 4,
+        time = director:getTotalFrames() * director:getAnimationInterval()
+    })}
+    return display.printscreen(self:GetSceneNode(), params)
+end
+function MapScene:ResetRenderState()
+    self.blur_count = self.blur_count + 1
+    if self.blur_count ~= 1 then
+        return
+    end
+    self.render_scene:hide()
+    self:GetSceneNode():show()
+end
+function MapScene:GetSceneNode()
+    return self.scene_node
+end
+function MapScene:GetSceneUILayer()
+    return self.scene_ui_layer
 end
 function MapScene:GetSceneLayer()
     return self.scene_layer
@@ -23,7 +66,7 @@ function MapScene:CreateSceneLayer()
     assert(false, "必须在子类实现生成场景的方法")
 end
 function MapScene:CreateMultiTouchLayer()
-    local touch_layer = display.newLayer():addTo(self)
+    local touch_layer = display.newLayer()
     touch_layer:setTouchEnabled(true)
     touch_layer:setTouchSwallowEnabled(true)
     touch_layer:setTouchMode(cc.TOUCH_MODE_ALL_AT_ONCE)

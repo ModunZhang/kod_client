@@ -8,16 +8,22 @@ varying vec2 v_texCoord;
 uniform vec2 resolution;
 uniform float blurRadius;
 uniform float sampleNum;
+uniform float time;
+const float ani_time = 0.2;
 
 vec4 blur(vec2 p)
 {
-    if (blurRadius > 0.0 && sampleNum > 1.0)
+    float cur_time = CC_Time[1];
+    float ratio = clamp((cur_time - time) / ani_time, 0.0, 1.0);
+    float cur_sampleNum = sampleNum * ratio;
+    float cur_blurRadius = blurRadius * ratio;
+    if (cur_blurRadius > 0.0 && cur_sampleNum > 1.0)
     {
         vec4 col = vec4(0.0);
         vec2 unit = 1.0 / resolution.xy;
         
-        float r = blurRadius;
-        float sampleStep = r / sampleNum;
+        float r = cur_blurRadius;
+        float sampleStep = r / cur_sampleNum;
         
         float count = 0.0;
         
