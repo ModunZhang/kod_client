@@ -6,18 +6,20 @@ local MapLayer = class("MapLayer", function(...)
     return layer
 end)
 local SPEED = 10
+local abs = math.abs
 ----
 function MapLayer:ctor(min_scale, max_scale)
     self.min_scale = min_scale
     self.max_scale = max_scale
 
     self.target_position = nil
+    self.target_scale = nil
     self.move_callbacks = {}
     local node = display.newNode():addTo(self)
     node:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
         local target_position = self.target_position
         if target_position then
-            local x, y, speed = target_position.x, target_position.y, target_position.speed
+            local x, y, speed = unpack(target_position)
             local scene_mid_point = self:getParent():convertToNodeSpace(cc.p(display.cx, display.cy))
             local new_scene_mid_point = self:ConverToParentPosition(x, y)
             local dx, dy = scene_mid_point.x - new_scene_mid_point.x, scene_mid_point.y - new_scene_mid_point.y
@@ -35,6 +37,19 @@ function MapLayer:ctor(min_scale, max_scale)
             end
             self:setPosition(cc.p(new_x, new_y))
         end
+        local target_scale = self.target_scale
+        if target_scale then
+            local start_scale, end_scale = unpack(target_scale)
+            local dt = end_scale - start_scale
+            local old_scale = self:getScale()
+            local newscale = old_scale + 0.01 * (dt > 0 and 1 or -1)
+            if (newscale - old_scale) * dt <= 0 then
+                self:ZoomTo(end_scale)
+                target_scale = nil
+            else
+                self:ZoomTo(newscale)
+            end
+        end
     end)
     node:scheduleUpdate()
 end
@@ -44,7 +59,7 @@ function MapLayer:ConverToParentPosition(x, y)
 end
 function MapLayer:MoveToPosition(map_x, map_y, speed_)
     if map_x and map_y then
-        self.target_position = {x = map_x, y = map_y, speed = speed_ or SPEED}
+        self.target_position = {map_x, map_y, speed_ or SPEED}
     else
         self.target_position = nil
     end
@@ -61,6 +76,12 @@ function MapLayer:PromiseOfMove(map_x, map_y, speed_)
         p:resolve()
     end)
     return p
+end
+function MapLayer:StopScaleAnimation()
+    self.target_scale = nil
+end
+function MapLayer:ZoomToByAnimation(scale)
+    self.target_scale = { self:getScale(), scale }
 end
 ------zoom
 function MapLayer:ZoomBegin()
