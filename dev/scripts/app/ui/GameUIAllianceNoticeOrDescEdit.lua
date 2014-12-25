@@ -10,7 +10,7 @@ local GameUIAllianceNoticeOrDescEdit = UIKit:createUIClass("GameUIAllianceNotice
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 GameUIAllianceNoticeOrDescEdit.EDIT_TYPE = Enum("ALLIANCE_NOTICE","ALLIANCE_DESC")
 
-local content_height = 470
+local content_height = 348
 
 function GameUIAllianceNoticeOrDescEdit:ctor(edit_type)
 	GameUIAllianceNoticeOrDescEdit.super.ctor(self)
@@ -21,7 +21,7 @@ function GameUIAllianceNoticeOrDescEdit:onMoveInStage()
 	--base UI
 	local shadowLayer = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
 		:addTo(self)
-	local bg_node = WidgetUIBackGround.new({height=content_height}):addTo(shadowLayer):pos(window.left+20,window.bottom + 250)
+	local bg_node = WidgetUIBackGround.new({height=content_height}):addTo(shadowLayer):pos(window.left+20,window.bottom + 400)
 	local titleBar = display.newScale9Sprite("alliance_blue_title_600x42.png")
 		:size(bg_node:getCascadeBoundingBox().width,42)
 		:align(display.LEFT_BOTTOM, -2,content_height - 15)
@@ -34,8 +34,8 @@ function GameUIAllianceNoticeOrDescEdit:onMoveInStage()
 	}):align(display.CENTER,300,21):addTo(titleBar,2)
 	
 
-	local textView = cc.DTextView:create(cc.size(584,364),display.newScale9Sprite("alliance_edit_bg_576x354.png"))
-    textView:addTo(bg_node):align(display.LEFT_TOP,10, titleBar:getPositionY() - 20)
+	local textView = cc.DTextView:create(cc.size(555,238),display.newScale9Sprite("alliance_edit_bg_555x238.png"))
+    textView:addTo(bg_node):align(display.CENTER_TOP,bg_node:getContentSize().width/2, titleBar:getPositionY() - 10)
     textView:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)    
     textView:setFont(UIKit:getFontFilePath(), 24)
     textView:setPlaceHolder(_("最多输入600个字符"))
@@ -46,10 +46,9 @@ function GameUIAllianceNoticeOrDescEdit:onMoveInStage()
     	textView:setText(Alliance_Manager:GetMyAlliance():Describe() or "")
     end
     self.textView = textView
- 	display.newSprite("alliance_edit_box_584x364.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(textView,2)
 
 
-	local cancelButton = WidgetPushButton.new({normal = "red_button_146x42.png",pressed = "red_button_highlight_146x42.png"},{scale9 = true})
+	local cancelButton = WidgetPushButton.new({normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"})
         :setButtonLabel(
         	UIKit:ttfLabel({
 				text = _("取消"),
@@ -61,10 +60,9 @@ function GameUIAllianceNoticeOrDescEdit:onMoveInStage()
 		:onButtonClicked(function()
 			self:leftButtonClicked()
 		end)
-		:setButtonSize(146,42)
 		:addTo(bg_node)
 		:align(display.LEFT_BOTTOM,25, 20)
-	local okButton = WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"},{scale9 = true})
+	local okButton = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
         :setButtonLabel(
         	UIKit:ttfLabel({
 				text = _("确认"),
@@ -74,7 +72,6 @@ function GameUIAllianceNoticeOrDescEdit:onMoveInStage()
 			})
 		)
 		:onButtonClicked(handler(self, self.onOkButtonClicked))
-		:setButtonSize(146,42)
 		:addTo(bg_node)
 		:align(display.RIGHT_BOTTOM,bg_node:getCascadeBoundingBox().width - 120, 20)
 end

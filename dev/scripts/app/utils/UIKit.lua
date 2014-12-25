@@ -284,9 +284,13 @@ end
 -- TODO: 玩家头像
 function UIKit:GetPlayerCommonIcon()
     local heroBg = display.newSprite("chat_hero_background.png")
-    local hero = display.newSprite("Hero_1.png"):align(display.CENTER, math.floor(heroBg:getContentSize().width/2), math.floor(heroBg:getContentSize().height/2)+5)
-    hero:addTo(heroBg)
+    self:GetPlayerIconOnly():addTo(heroBg)
+        :align(display.CENTER, math.floor(heroBg:getContentSize().width/2), math.floor(heroBg:getContentSize().height/2)+5)
     return heroBg
+end
+
+function UIKit:GetPlayerIconOnly()
+    return display.newSprite("Hero_1.png")
 end
 --TODO:将这个函数替换成CreateBoxPanel9来实现
 function UIKit:CreateBoxPanel(height)
@@ -316,6 +320,13 @@ function UIKit:CreateBoxPanel9(params)
     common_bg:setAnchorPoint(cc.p(0,0))
     common_bg:size(params.width and params.width or 552,params.height)
     return common_bg
+end
+
+function UIKit:CreateBoxPanelWithBorder(params)
+    local node = display.newScale9Sprite("panel_556x120.png")
+    node:setAnchorPoint(cc.p(0,0))
+    node:size(params.width or 556,params.height or 120)
+    return node
 end
 
 function UIKit:commonButtonLable(params)

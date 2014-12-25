@@ -50,9 +50,6 @@ function GameUIAllianceBasicSetting:BuildModifyUI()
 	   	:onButtonClicked(function ()
 	   		self:leftButtonClicked()
 	   	end)
-	-- display.newSprite("X_3.png")
-	--    	:addTo(closeButton)
-	--    	:pos(-32,30)
 	UIKit:ttfLabel({
 		text = _("联盟设置"),
 		size = 22,
@@ -114,20 +111,23 @@ end
 function GameUIAllianceBasicSetting:createFlagPanel_()
 	local node = display.newNode()
 	-- graphic
-	local bottom = display.newSprite("alliance_flag_bg_bottom_386x18.png")
+	local bottom = display.newSprite("alliance_flag_bg_bottom_354x16.png")
 		:align(display.RIGHT_BOTTOM, contentWidth - 10,0):addTo(node)
-	local header = display.newSprite("alliance_flag_bg_header_386x38.png")
-	local middle = display.newScale9Sprite("alliance_flag_bg_middle_386x1.png")
-		:size(386,210 - 36*2)
+	local header = display.newSprite("alliance_flag_bg_header_354x40.png")
+	local middle = display.newScale9Sprite("alliance_flag_bg_middle_354x1.png")
+		:size(354,210 - 36*2)
 		:addTo(node)
 		:align(display.RIGHT_BOTTOM,bottom:getPositionX(),bottom:getPositionY()+bottom:getContentSize().height)
 	header:addTo(node)
 		:align(display.RIGHT_BOTTOM, middle:getPositionX(), middle:getPositionY()+middle:getContentSize().height)
+	local title = display.newSprite("alliance_panel_bg_348x22.png")
+		:addTo(header)
+		:align(display.CENTER_TOP, header:getContentSize().width/2, header:getContentSize().height - 3)
 	UIKit:ttfLabel({
 		text = _("图案"),
 		size = 20,
 		color = 0xffedae
-	}):addTo(header):align(display.CENTER,header:getContentSize().width/2,header:getContentSize().height/2+2)
+	}):addTo(title):align(display.CENTER,title:getContentSize().width/2,title:getContentSize().height/2)
 	local colorButton_right = WidgetSequenceButton.new(
 		{normal = "alliance_flag_button_normal.png",pressed = "alliance_flag_button_highlight.png"},
 		{scale9 = false},
@@ -145,7 +145,7 @@ function GameUIAllianceBasicSetting:createFlagPanel_()
 		{{image="alliance_flag_color_44x44.png"}},
 		self.alliance_ui_helper:GetFlagColors(),
 		self:GetFlagInfomation():GetFrontImageColors()[1]
-	):addTo(node):pos(colorButton_right:getPositionX()-135,colorButton_right:getPositionY())
+	):addTo(node):pos(colorButton_right:getPositionX()-115,colorButton_right:getPositionY())
 	:onSeqStateChange(handler(self, self.OnGraphicTypeButtonClicked))
 	self.colorButton_left = colorButton_left
 	local graphic_right_button = WidgetSequenceButton.new(
@@ -177,27 +177,30 @@ function GameUIAllianceBasicSetting:createFlagPanel_()
 		nil,
 		self:GetFlagInfomation():GetFrontStyle()
 		):addTo(node)
-		:pos(colorButton_left:getPositionX() - 135,colorButton_right:getPositionY()+80)
+		:pos(colorButton_left:getPositionX() - 115,colorButton_right:getPositionY()+80)
 		:onSeqStateChange(handler(self, self.OnGraphicTypeButtonClicked))
 	self.graphic_type_button =  graphic_type_button
 
 	-- color body
 	--118
-	local color_bottom = display.newSprite("alliance_flag_bg_bottom_386x18.png")
+	local color_bottom = display.newSprite("alliance_flag_bg_bottom_354x16.png")
 		:align(display.RIGHT_BOTTOM, contentWidth - 10,header:getPositionY()+header:getContentSize().height+20)
 		:addTo(node)
-	local color_header = display.newSprite("alliance_flag_bg_header_386x38.png")
-	local color_middle = display.newScale9Sprite("alliance_flag_bg_middle_386x1.png")
-		:size(386,130 - 36*2)
+	local color_header = display.newSprite("alliance_flag_bg_header_354x40.png")
+	local color_middle = display.newScale9Sprite("alliance_flag_bg_middle_354x1.png")
+		:size(354,130 - 36*2)
 		:addTo(node)
 		:align(display.RIGHT_BOTTOM,color_bottom:getPositionX(),color_bottom:getPositionY()+color_bottom:getContentSize().height)
 	color_header:addTo(node)
 		:align(display.RIGHT_BOTTOM, color_middle:getPositionX(), color_middle:getPositionY()+color_middle:getContentSize().height)
+	local title = display.newSprite("alliance_panel_bg_348x22.png")
+		:addTo(color_header)
+		:align(display.CENTER_TOP, color_header:getContentSize().width/2, color_header:getContentSize().height - 3)
 	UIKit:ttfLabel({
 		text = _("颜色"),
 		size = 20,
 		color = 0xffedae
-	}):addTo(color_header):pos(color_header:getContentSize().width/2 - 10,color_header:getContentSize().height/2+2)
+	}):addTo(title):align(display.CENTER, title:getContentSize().width/2, title:getContentSize().height/2)
 
 	local color_rightColor_button = WidgetSequenceButton.new(
 		{normal = "alliance_flag_button_normal.png",pressed = "alliance_flag_button_highlight.png"}, 
@@ -216,7 +219,7 @@ function GameUIAllianceBasicSetting:createFlagPanel_()
 		self.alliance_ui_helper:GetFlagColors(),
 		self:GetFlagInfomation():GetBackColors()[1]
 		)
-		:addTo(node):pos(color_rightColor_button:getPositionX()-135,color_rightColor_button:getPositionY())
+		:addTo(node):pos(color_rightColor_button:getPositionX()-115,color_rightColor_button:getPositionY())
 		:onSeqStateChange(handler(self, self.OnFlagTypeButtonClicked))
 	self.color_middleColor_button = color_middleColor_button
 	local flag_type_button = WidgetSequenceButton.new(
@@ -226,7 +229,7 @@ function GameUIAllianceBasicSetting:createFlagPanel_()
 		nil,
 		self:GetFlagInfomation():GetBackStyle()
 	):addTo(node)
-	:pos(color_middleColor_button:getPositionX() - 135,color_rightColor_button:getPositionY())
+	:pos(color_middleColor_button:getPositionX() - 115,color_rightColor_button:getPositionY())
 	:onSeqStateChange(handler(self, self.OnFlagTypeButtonClicked))
 	self.flag_type_button = flag_type_button
 
@@ -240,16 +243,11 @@ function GameUIAllianceBasicSetting:createFlagPanel_()
 		text = _("联盟旗帜"),
 		size = 22,
 		color = 0x403c2f
-	}):addTo(node):pos(color_header:getPositionX()-320+10,color_header:getPositionY()+color_header:getContentSize().height+15)
-	local random_bg = display.newSprite("alliance_flag_random_bg_182x58.png")
-		:align(display.RIGHT_BOTTOM, bottom:getPositionX() - bottom:getContentSize().width - 15, bottom:getPositionY()+10)
-		:addTo(node)
-		:scale(0.9)
+	}):addTo(node):pos(color_header:getPositionX()-320+10,color_header:getPositionY()+color_header:getContentSize().height+20)
 	local randomButton = WidgetPushButton.new({normal = "alliance_sieve_51x45.png"})
-		:addTo(random_bg)
-		:pos(random_bg:getContentSize().width/2,random_bg:getContentSize().height/2)
+		:addTo(node)
+		:align(display.CENTER_BOTTOM, bottom:getPositionX() - bottom:getContentSize().width - 120, bottom:getPositionY()+10)
 		:onButtonClicked(function()
-			-- self:RandomFlag()
 			self.flag_info = self:GetFlagInfomation():RandomFlag()
 			self:RefreshButtonState()
 			self:RefrshFlagSprite()
@@ -266,7 +264,15 @@ function GameUIAllianceBasicSetting:createCheckAllianeGroup_()
 				color = 0x797154,
 				dimensions = cc.size(552, 0),
 		}):addTo(groupNode):align(display.LEFT_BOTTOM, 0, 0)
-		local landSelect = self.CreateBoxPanel(60):addTo(groupNode):pos(0,tipsLabel:getContentSize().height+10)
+		local landSelect = UIKit:CreateBoxPanelWithBorder({}):addTo(groupNode):pos(0,tipsLabel:getContentSize().height+10)
+		local title = display.newSprite("alliance_panel_bg_544x32.png")
+			:align(display.CENTER_TOP,landSelect:getContentSize().width/2, landSelect:getContentSize().height - 6)
+			:addTo(landSelect)
+		UIKit:ttfLabel({
+			text = _("联盟地形"),
+			size = 20,
+			color = 0xffedae
+		}):addTo(title):align(display.CENTER,272, 16)
 		local checkbox_image = {
 	        off = "checkbox_unselected.png",
 	        off_pressed = "checkbox_unselected.png",
@@ -294,17 +300,14 @@ function GameUIAllianceBasicSetting:createCheckAllianeGroup_()
 	            self.terrain_info = event.selected
 	            self:RefrshFlagSprite(3)
 	        end)
-	        :addTo(landSelect)
-	    local landLabel = UIKit:ttfLabel({
-			text = _("联盟地形"),
-			size = 22,
-			color = 0x403c2f
-		}):addTo(groupNode):align(display.CENTER,window.cx-30, landSelect:getPositionY()+landSelect:getCascadeBoundingBox().height+20)
+	        :addTo(landSelect):pos(0,10)
+		
 
-	    self.languageSelected  = WidgetAllianceLanguagePanel.new(260):addTo(groupNode):pos(0,landLabel:getPositionY()+20)
+	    self.languageSelected  = WidgetAllianceLanguagePanel.new():addTo(groupNode)
+	    	:pos(0,landSelect:getCascadeBoundingBox().height+landSelect:getPositionY()+20)
     	self:SelectLandCheckButton(self.terrain_info,true)
 	else
-   		self.languageSelected  = WidgetAllianceLanguagePanel.new(260):addTo(groupNode):pos(0,0)
+   		self.languageSelected  = WidgetAllianceLanguagePanel.new():addTo(groupNode):pos(0,0)
    	end
     return groupNode
 end
@@ -489,24 +492,5 @@ end
 
 -- no instance
 -----------------------------------------------------------------------
-function GameUIAllianceBasicSetting.CreateBoxPanel(height)
-	local node = display.newNode()
-	local bottom = display.newSprite("alliance_box_bottom_552x12.png")
-		:addTo(node)
-		:align(display.LEFT_BOTTOM,0,0)
-	local top =  display.newSprite("alliance_box_top_552x12.png")
-	local middleHeight = height - bottom:getContentSize().height - top:getContentSize().height
-	local next_y = bottom:getContentSize().height
-	while middleHeight > 0 do
-		local middle = display.newSprite("alliance_box_middle_552x1.png")
-			:addTo(node)
-			:align(display.LEFT_BOTTOM,0, next_y)
-		middleHeight = middleHeight - middle:getContentSize().height
-		next_y = next_y + middle:getContentSize().height
-	end
-	top:addTo(node)
-		:align(display.LEFT_BOTTOM,0,next_y)
-	return node
-end
 
 return GameUIAllianceBasicSetting
