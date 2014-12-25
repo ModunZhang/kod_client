@@ -684,7 +684,6 @@ function GameUIMail:OnInboxMailsChanged(changed_mails)
     end
 end
 function GameUIMail:OnSavedMailsChanged(changed_mails)
-    LuaUtils:outputTable("OnSavedMailsChanged-changed_mails", changed_mails)
     if changed_mails.add_mails then
         for _,add_mail in pairs(changed_mails.add_mails) do
             -- 收藏成功，收藏夹添加此封邮件
@@ -702,7 +701,6 @@ function GameUIMail:OnSavedMailsChanged(changed_mails)
     end
 end
 function GameUIMail:OnSendMailsChanged(changed_mails)
-    LuaUtils:outputTable("OnSendMailsChanged-changed_mails", changed_mails)
     if changed_mails.add_mails then
         for _,add_mail in pairs(changed_mails.add_mails) do
             local item = self:CreateMailItem(self.send_mail_listview,add_mail)
@@ -1033,16 +1031,17 @@ function GameUIMail:CreateReportItem(listview,report)
     local content = WidgetPushButton.new({normal = "back_ground_608x196.png",pressed = "back_ground_608x196.png"})
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                if not report.isRead then
-                    self:ReadMailOrReports({report.id}, function ()
+                if not report:IsRead() then
+                    self:ReadMailOrReports({report:Id()}, function ()
                         self.manager:DecreaseUnReadMailsAndReports(1)
                     end)
                 end
-                if report.type == "strikeCity" or report.type== "cityBeStriked" then
-                    GameUIStrikeReport.new(report):addTo(self)
+                if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" then
+                    GameUIStrikeReport.new(report):addToCurrentScene()
                 else
-                    GameUIWarReport.new(report):addTo(self)
+                    GameUIWarReport.new(report):addToCurrentScene()
                 end
+
             end
         end)
     local c_size = content:getCascadeBoundingBox().size
@@ -1052,7 +1051,7 @@ function GameUIMail:CreateReportItem(listview,report)
     local from_name_label =  cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = self:GetReportTitle(report),
+            text = report:GetReportTitle(),
             font = UIKit:getFontFilePath(),
             size = 22,
             -- dimensions = cc.size(200,24),
@@ -1158,7 +1157,7 @@ function GameUIMail:CreateReportItem(listview,report)
     }):onButtonStateChanged(function(event)
         self:SaveOrUnsaveReport(report,event.target)
     end):addTo(content):pos(265, -60)
-        :setButtonSelected(report.isSaved,true)
+        :setButtonSelected(report:IsSaved(),true)
 
     self:CreateCheckBox(item):align(display.LEFT_CENTER,-c_size.width/2+14,0)
         :addTo(content)
@@ -1386,20 +1385,20 @@ function GameUIMail:OnReportsChanged( changed_map )
     end
     if changed_map.edit then
         for _,report in pairs(changed_map.edit) do
-            if self.item_reports[report.id] then
-                self.item_reports[report.id].report.isSaved=report.isSaved
-                self.item_reports[report.id].saved_button:setButtonSelected(report.isSaved,true)
-                if report.isRead then
-                -- self.item_reports[report.id].mail.isRead = true
-                -- self.item_reports[report.id].title_bg:setTexture("title_grey_516X30.png")
+            if self.item_reports[report:Id()] then
+                self.item_reports[report:Id()].report:SetIsSaved(report:IsSaved())
+                self.item_reports[report:Id()].saved_button:setButtonSelected(report:IsSaved(),true)
+                if report:IsRead() then
+                    self.item_reports[report:Id()].report:SetIsRead(true)
+                    -- self.item_reports[report:Id()].title_bg:setTexture("title_grey_516X30.png")
                 end
             end
         end
     end
     if changed_map.remove then
         for _,report in pairs(changed_map.remove) do
-            self.report_listview:removeItem(self.item_reports[report.id])
-            self.item_reports[report.id]=nil
+            self.report_listview:removeItem(self.item_reports[report:Id()])
+            self.item_reports[report:Id()]=nil
         end
     end
 end
@@ -1415,39 +1414,39 @@ function GameUIMail:OnSavedReportsChanged( changed_map )
     end
     if changed_map.edit then
         for _,report in pairs(changed_map.edit) do
-            if self.item_saved_reports[report.id] then
-                -- self.item_saved_reports[report.id].report.isSaved=report.isSaved
-                -- self.item_saved_reports[report.id].saved_button:setButtonSelected(report.isSaved,true)
-                if report.isRead then
-                -- self.item_saved_reports[report.id].mail.isRead = true
-                -- self.item_saved_reports[report.id].title_bg:setTexture("title_grey_516X30.png")
+            if self.item_saved_reports[report:Id()] then
+                -- self.item_saved_reports[report:Id()].report:IsSaved()=report:IsSaved()
+                -- self.item_saved_reports[report:Id()].saved_button:setButtonSelected(report:IsSaved(),true)
+                if report:IsRead() then
+                -- self.item_saved_reports[report:Id()].mail.isRead = true
+                -- self.item_saved_reports[report:Id()].title_bg:setTexture("title_grey_516X30.png")
                 end
             end
         end
     end
     if changed_map.remove then
         for _,report in pairs(changed_map.remove) do
-            self.saved_reports_listview:removeItem(self.item_saved_reports[report.id])
-            self.item_saved_reports[report.id]=nil
+            self.saved_reports_listview:removeItem(self.item_saved_reports[report:Id()])
+            self.item_saved_reports[report:Id()]=nil
         end
     end
 end
 function GameUIMail:SaveOrUnsaveReport(report,target)
     if target:isButtonSelected() then
-        NetManager:getSaveReportPromise(report.id):catch(function(err)
+        NetManager:getSaveReportPromise(report:Id()):catch(function(err)
             target:setButtonSelected(false,true)
             dump(err:reason())
         end)
     else
-        NetManager:getUnSaveReportPromise(report.id):catch(function(err)
+        NetManager:getUnSaveReportPromise(report:Id()):catch(function(err)
             target:setButtonSelected(true,true)
             dump(err:reason())
         end)
     end
 end
 function GameUIMail:GetReportLevel(report)
-    if report.type == "strikeCity" or report.type== "cityBeStriked" then
-        local level = report[report.type].level
+    if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" then
+        local level = report:GetStrikeLevel()
         local report_level = level==1 and _("没有得到任何情报") or _("得到一封%s级的情报")
         local level_map ={
             "",
@@ -1457,92 +1456,126 @@ function GameUIMail:GetReportLevel(report)
             "A",
             "S",
         }
-        return (report.type == "cityBeStriked" and _("敌方") or "")..string.format(report_level,level_map[level])
+        return (report:Type() == "cityBeStriked" and _("敌方") or "")..string.format(report_level,level_map[level])
     end
     return ""
 end
-function GameUIMail:GetReportTitle(report)
-    if report.type == "strikeCity" then
-        if report.strikeCity.level>1 then
-            return _("突袭成功")
-        else
-            return _("突袭失败")
-        end
-    elseif report.type== "cityBeStriked" then
-        if report.cityBeStriked.level>1 then
-            return _("防守突袭失败")
-        else
-            return _("防守突袭成功")
-        end
-    elseif report.type=="attackCity" then
-        if report.attackCity.attackPlayerData.id == DataManager:getUserData()._id then
-            return report.attackCity.attackStar > 0 and _("进攻城市成功") or _("进攻城市失败")
-        elseif report.attackCity.defencePlayerData.id == DataManager:getUserData()._id then
-            return report.attackCity.defenceStar > 0 and _("防守城市成功") or _("防守城市失败")
-        elseif report.attackCity.helpDefencePlayerData and
-            report.attackCity.helpDefencePlayerData.id == DataManager:getUserData()._id then
-            return report.attackCity.defenceStar > 0 and _("协助防守城市成功") or _("协助防守城市失败")
-        end
-    end
-end
+
 function GameUIMail:GetMyName(report)
-    if report.type == "strikeCity" or report.type== "cityBeStriked" then
-        return report.strikeCity.playerData.name
-    elseif report.type=="attackCity" then
-        if report.attackCity.attackPlayerData.id == DataManager:getUserData()._id then
-            return report.attackCity.attackPlayerData.name
-        elseif report.attackCity.defencePlayerData.id == DataManager:getUserData()._id then
-            return report.attackCity.defencePlayerData.name
-        elseif report.attackCity.helpDefencePlayerData and report.attackCity.helpDefencePlayerData.id == DataManager:getUserData()._id then
-            return report.attackCity.helpDefencePlayerData.name
+    if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" then
+        local data = report:GetData()
+        if data.attackPlayerData.id == DataManager:getUserData()._id then
+            return data.attackPlayerData.name
+        elseif data.helpDefencePlayerData and data.helpDefencePlayerData.id == DataManager:getUserData()._id then
+            return data.helpDefencePlayerData.name
+        elseif data.defencePlayerData and data.defencePlayerData.id == DataManager:getUserData()._id then
+            return data.defencePlayerData.name
+        end
+        -- 被突袭时只有协防方发生战斗时
+        if report:Type()== "cityBeStriked" then
+            if data.helpDefencePlayerData then
+                return data.helpDefencePlayerData.name
+            end
+        end
+    elseif report:Type()=="attackCity" then
+        if report:GetData().attackPlayerData.id == DataManager:getUserData()._id then
+            return report:GetData().attackPlayerData.name
+        elseif report:GetData().defencePlayerData.id == DataManager:getUserData()._id then
+            return report:GetData().defencePlayerData.name
+        elseif report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.id == DataManager:getUserData()._id then
+            return report:GetData().helpDefencePlayerData.name
         end
     end
 end
 function GameUIMail:GetMyAllianceTag(report)
-    if report.type == "strikeCity" or report.type== "cityBeStriked" then
-        return report.strikeCity.playerData.allianceTag
-    elseif report.type=="attackCity" then
-        if report.attackCity.attackPlayerData.id == DataManager:getUserData()._id then
-            return "服务器没有推送联盟tag"
-                -- return report.attackCity.attackPlayerData.allianceTag
-        elseif report.attackCity.defencePlayerData.id == DataManager:getUserData()._id then
-            return "服务器没有推送联盟tag"
-                -- return report.attackCity.defencePlayerData.allianceTag
-        elseif report.attackCity.helpDefencePlayerData and report.attackCity.helpDefencePlayerData.id == DataManager:getUserData()._id then
-            return "服务器没有推送联盟tag"
-                -- return report.attackCity.helpDefencePlayerData.allianceTag
+    if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" then
+        local data = report:GetData()
+        if data.attackPlayerData.id == DataManager:getUserData()._id then
+            return data.attackPlayerData.alliance.tag
+        elseif data.helpDefencePlayerData and data.helpDefencePlayerData.id == DataManager:getUserData()._id then
+            return data.helpDefencePlayerData.alliance.tag
+        elseif data.defencePlayerData and data.defencePlayerData.id == DataManager:getUserData()._id then
+            return data.defencePlayerData.alliance.tag
+        end
+        -- 被突袭时只有协防方发生战斗时使用协防方数据
+        print("被突袭时只有协防方发生战斗时使用协防方数据",report:Type())
+        LuaUtils:outputTable("data.helpDefencePlayerData", data.helpDefencePlayerData)
+        if report:Type()== "cityBeStriked" then
+            if data.helpDefencePlayerData then
+                return data.helpDefencePlayerData.alliance.tag
+            end
+        end
+    elseif report:Type()=="attackCity" then
+        if report:GetData().attackPlayerData.id == DataManager:getUserData()._id then
+            -- return "服务器没有推送联盟tag"
+            return report:GetData().attackPlayerData.alliance.tag
+        elseif report:GetData().defencePlayerData.id == DataManager:getUserData()._id then
+            -- return "服务器没有推送联盟tag"
+            return report:GetData().defencePlayerData.alliance.tag
+        elseif report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.id == DataManager:getUserData()._id then
+            -- return "服务器没有推送联盟tag"
+            return report:GetData().helpDefencePlayerData.alliance.tag
         end
     end
 end
 function GameUIMail:GetEnemyName(report)
-    if report.type == "strikeCity" or report.type== "cityBeStriked" then
-        return report.strikeCity.enemyPlayerData.name
-    elseif report.type=="attackCity" then
-        if report.attackCity.attackPlayerData.id == DataManager:getUserData()._id then
-            return report.attackCity.defencePlayerData.name
-        elseif report.attackCity.defencePlayerData.id == DataManager:getUserData()._id
-            or (report.attackCity.helpDefencePlayerData and report.attackCity.helpDefencePlayerData.id == DataManager:getUserData()._id)
+    if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" then
+        local data = report:GetData()
+        if data.attackPlayerData.id == DataManager:getUserData()._id then
+            return (data.defencePlayerData and data.defencePlayerData.name) or (data.helpDefencePlayerData and data.helpDefencePlayerData.name)
+        elseif data.helpDefencePlayerData and data.helpDefencePlayerData.id == DataManager:getUserData()._id then
+            return data.attackPlayerData.name
+        elseif data.defencePlayerData and data.defencePlayerData.id == DataManager:getUserData()._id then
+            return data.attackPlayerData.name
+        end
+        -- 被突袭时只有协防方发生战斗时
+        if report:Type()== "cityBeStriked" then
+            if data.attackPlayerData then
+                return data.attackPlayerData.name
+            end
+        end
+    elseif report:Type()=="attackCity" then
+        if report:GetData().attackPlayerData.id == DataManager:getUserData()._id then
+            return report:GetData().defencePlayerData.name
+        elseif report:GetData().defencePlayerData.id == DataManager:getUserData()._id
+            or (report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.id == DataManager:getUserData()._id)
         then
-            return report.attackCity.attackPlayerData.name
+            return report:GetData().attackPlayerData.name
         end
     end
 end
 function GameUIMail:GetEnemyAllianceTag(report)
-    if report.type == "strikeCity" or report.type== "cityBeStriked" then
-        return report.strikeCity.enemyPlayerData.allianceTag
-    elseif report.type=="attackCity" then
-        if report.attackCity.attackPlayerData.id == DataManager:getUserData()._id then
-            -- return report.attackCity.defencePlayerData.allianceTag
-            return "服务器没有推送联盟tag"
-        elseif report.attackCity.defencePlayerData.id == DataManager:getUserData()._id
-            or (report.attackCity.helpDefencePlayerData and report.attackCity.helpDefencePlayerData.id == DataManager:getUserData()._id)
+    if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" then
+        local data = report:GetData()
+        if data.attackPlayerData.id == DataManager:getUserData()._id then
+            return (data.defencePlayerData and data.defencePlayerData.alliance.tag) or (data.helpDefencePlayerData and data.helpDefencePlayerData.alliance.tag)
+        elseif data.helpDefencePlayerData and data.helpDefencePlayerData.id == DataManager:getUserData()._id then
+            return data.attackPlayerData.alliance.tag
+        elseif data.defencePlayerData and data.defencePlayerData.id == DataManager:getUserData()._id then
+            return data.attackPlayerData.alliance.tag
+        end
+        -- 被突袭时只有协防方发生战斗时
+        if report:Type()== "cityBeStriked" then
+            if data.attackPlayerData then
+                return data.attackPlayerData.alliance.tag
+            end
+        end
+    elseif report:Type()=="attackCity" then
+        if report:GetData().attackPlayerData.id == DataManager:getUserData()._id then
+            return report:GetData().defencePlayerData.alliance.tag
+                -- return "服务器没有推送联盟tag"
+        elseif report:GetData().defencePlayerData.id == DataManager:getUserData()._id
+            or (report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.id == DataManager:getUserData()._id)
         then
-            return "服务器没有推送联盟tag"
-                -- return report.attackCity.attackPlayerData.allianceTag
+            -- return "服务器没有推送联盟tag"
+            return report:GetData().attackPlayerData.alliance.tag
         end
     end
 end
 
 return GameUIMail
+
+
+
 
 

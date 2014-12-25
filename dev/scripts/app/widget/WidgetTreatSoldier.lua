@@ -110,7 +110,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
 
     -- bg
     local back_ground = WidgetUIBackGround.new({height=500}):addTo(self)
- 
+
     back_ground:setTouchEnabled(true)
 
     -- title
@@ -234,7 +234,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
     }):addTo(back_ground, 2)
         :align(display.CENTER, size.width - 60, size.height - 110)
 
-   
+
     -- local slider = WidgetSlider.new(display.LEFT_TO_RIGHT,  {bar = "slider_bg_461x24.png",
     --     progress = "slider_progress_445x14.png",
     --     button = "slider_btn_66x66.png"}, {max = treat_max}):addTo(back_ground, 2)
@@ -271,9 +271,12 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
 
     -- progress
     WidgetSliderWithInput.new({max = treat_max}):addTo(back_ground):align(display.LEFT_CENTER, 25, 330)
-    :OnSliderValueChanged(function(event)
+        :SetSliderSize(445, 24)
+        :OnSliderValueChanged(function(event)
             self:OnCountChanged(math.floor(event.value))
         end)
+        :LayoutValueLabel(WidgetSliderWithInput.STYLE_LAYOUT.RIGHT,0)
+
 
 
     -- need bg
@@ -563,6 +566,7 @@ function WidgetTreatSoldier:OnCountChanged(count)
     self.gem_label:setString(self.treat_now_gems)
 end
 return WidgetTreatSoldier
+
 
 
 

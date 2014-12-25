@@ -441,6 +441,7 @@ local DRAGON_STATUS = {
     defence = _("驻防中")
 }
 local FIGHT_REWARD = {
+    blood = _("英雄之血"),
     food = _("粮食"),
     wood = _("木材"),
     stone = _("石料"),
