@@ -104,6 +104,9 @@ function WidgetSliderWithInput:LayoutValueLabel(layout,offset)
     if WidgetSliderWithInput.STYLE_LAYOUT.TOP == layout then
         self.soldier_total_count:setPosition(self:getContentSize().width-self.soldier_total_count:getContentSize().width-10,offset)
         self.editbox:setPosition(self:getContentSize().width-self.soldier_total_count:getContentSize().width-10-60,offset)
+    else
+        self.soldier_total_count:setPosition(self.slider.scale9Size_[1]+30,0)
+        self.editbox:setPosition(self.slider.scale9Size_[1]+60,30)
     end
     return self
 end

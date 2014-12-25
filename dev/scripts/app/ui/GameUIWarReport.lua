@@ -3,6 +3,7 @@ local UIListView = import(".UIListView")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetSoldierBox = import("..widget.WidgetSoldierBox")
 local WidgetClickPageView = import("..widget.WidgetClickPageView")
+local UICheckBoxButton = import(".UICheckBoxButton")
 local window = import("..utils.window")
 local UILib = import("..ui.UILib")
 local Localize = import("..utils.Localize")
@@ -12,8 +13,8 @@ local GameUIWarReport = UIKit:createUIClass("GameUIWarReport", "UIAutoClose")
 
 
 function GameUIWarReport:ctor(report)
-    local report_body = WidgetUIBackGround.new({height=800}):addTo(self):align(display.TOP_CENTER,display.cx,display.top-100)
-    self:addTouchAbleChild(report_body)
+    self.body = WidgetUIBackGround.new({height=800}):align(display.TOP_CENTER,display.cx,display.top-100)
+    self:addTouchAbleChild(self.body)
     self:setNodeEventEnabled(true)
     self.report = report
 end
@@ -140,7 +141,7 @@ function GameUIWarReport:onEnter()
             end)
         end)
     -- 收藏按钮
-    local saved_button = cc.ui.UICheckBoxButton.new({
+    local saved_button = UICheckBoxButton.new({
         off = "mail_saved_button_normal.png",
         off_pressed = "mail_saved_button_normal.png",
         off_disabled = "mail_saved_button_normal.png",
@@ -161,7 +162,7 @@ function GameUIWarReport:onEnter()
             end)
         end
     end):addTo(report_body):pos(rb_size.width-48, 37)
-        :setButtonSelected(report.isSaved,true)
+        :setButtonSelected(report:IsSaved(),true)
 
 end
 
@@ -181,7 +182,8 @@ function GameUIWarReport:CreateBootyPart()
     local item_width = 540
     -- 战利品列表部分高度
     local booty_count = #self:GetBooty()
-    local booty_group = cc.ui.UIGroup.new()
+    local booty_group = display.newNode()
+    -- cc.ui.UIGroup.new()
     local booty_list_bg
     if booty_count>0 then
         local item_height = 46
@@ -198,9 +200,9 @@ function GameUIWarReport:CreateBootyPart()
             b_height = 14,
             m_height = 1,
             b_flip = true,
-        }):align(display.CENTER,0,0)
+        }):align(display.CENTER,0,-25)
         local booty_list_bg_size = booty_list_bg:getContentSize()
-        booty_group:addWidget(booty_list_bg)
+        booty_group:addChild(booty_list_bg)
 
         -- 构建所有战利品标签项
         local booty_item_bg_color_flag = true
@@ -220,7 +222,7 @@ function GameUIWarReport:CreateBootyPart()
             UIKit:ttfLabel({
                 text = booty_parms.value,
                 size = 22,
-                color = 0x288400
+                color = booty_parms.value>0 and 0x288400 or 0x7e0000
             }):align(display.RIGHT_CENTER,booty_list_bg_size.width-30,23):addTo(booty_item_bg)
 
             added_booty_item_count = added_booty_item_count + 1
@@ -228,9 +230,9 @@ function GameUIWarReport:CreateBootyPart()
         end
     end
     local booty_title_bg = display.newSprite("upgrade_resources_title.png")
-        :align(display.CENTER_BOTTOM, 0,booty_list_bg and booty_list_bg:getContentSize().height/2 or 0)
+        :align(display.CENTER_BOTTOM, 0,booty_list_bg and booty_list_bg:getContentSize().height/2-25 or 0)
 
-    booty_group:addWidget(booty_title_bg)
+    booty_group:addChild(booty_title_bg)
 
 
     UIKit:ttfLabel({
@@ -239,7 +241,7 @@ function GameUIWarReport:CreateBootyPart()
         color = 0xffedae
     }):align(display.CENTER,booty_title_bg:getContentSize().width/2, 25):addTo(booty_title_bg)
     local item = self.details_view:newItem()
-    item:setItemSize(item_width, (booty_list_bg and booty_list_bg:getContentSize().height or 0) +booty_title_bg:getContentSize().height+50)
+    item:setItemSize(item_width, (booty_list_bg and booty_list_bg:getContentSize().height or 0) +booty_title_bg:getContentSize().height)
     item:addContent(booty_group)
     self.details_view:addItem(item)
 end
@@ -251,25 +253,30 @@ end
 
 function GameUIWarReport:FightWithHelpDefencePlayerReports()
     local report = self.report
-    if report.attackCity.helpDefencePlayerData then
+    if report:IsHasHelpDefencePlayer() then
         local war_s_label_item = self.details_view:newItem()
-        war_s_label_item:setItemSize(540,22)
+        war_s_label_item:setItemSize(540,40)
         local g = cc.ui.UIGroup.new()
         g:addWidget(UIKit:ttfLabel({
             text = _("与协防方战斗统计") ,
             size = 22,
             color = 0x403c2f
-        }):align(display.CENTER, 0, 20))
+        }):align(display.CENTER, 0, 0))
         war_s_label_item:addContent(g)
         self.details_view:addItem(war_s_label_item)
         -- 交战双方信息
-        local left_player = self:IsAttackCamp() and report.attackCity.attackPlayerData or report.attackCity.helpDefencePlayerData
-        local right_player = self:IsAttackCamp() and report.attackCity.helpDefencePlayerData or report.attackCity.attackPlayerData
+        local left_player = report:GetMyHelpFightPlayerData()
+        local right_player = report:GetEnemyHelpFightPlayerData()
         self:CreateBelligerents(left_player,right_player)
         -- 部队信息
-        local left_player_troop = left_player.troopData
-        local right_player_troop = right_player.troopData
-        self:CreateArmyGroup(left_player_troop,right_player_troop)
+        local left_player_troop = report:GetMyHelpFightTroop()
+
+        local right_player_troop = report:GetEnemyHelpFightTroop()
+        local left_player_dragon = report:GetMyHelpFightDragon()
+
+        local right_player_dragon = report:GetEnemyHelpFightDragon()
+
+        self:CreateArmyGroup(left_player_troop,right_player_troop,left_player_dragon,right_player_dragon)
         -- 击杀敌方
         if right_player_troop then
             self:KillEnemy(right_player_troop)
@@ -283,7 +290,7 @@ end
 function GameUIWarReport:FightWithDefencePlayerReports()
     local report = self.report
     local war_s_label_item = self.details_view:newItem()
-    war_s_label_item:setItemSize(540,60)
+    war_s_label_item:setItemSize(540,40)
     local g = cc.ui.UIGroup.new()
     g:addWidget(UIKit:ttfLabel({
         text = _("防守方战斗统计") ,
@@ -293,14 +300,19 @@ function GameUIWarReport:FightWithDefencePlayerReports()
     war_s_label_item:addContent(g)
     self.details_view:addItem(war_s_label_item)
     -- 交战双方信息
-    local left_player = self:IsAttackCamp() and report.attackCity.attackPlayerData or report.attackCity.defencePlayerData
-    local right_player = self:IsAttackCamp() and report.attackCity.defencePlayerData or report.attackCity.attackPlayerData
+    local left_player = report:GetMyDefenceFightPlayerData()
+    local right_player = report:GetEnemyDefenceFightPlayerData()
     self:CreateBelligerents(left_player,right_player)
     -- 部队信息
-    local left_player_troop = left_player.troopData
-    local right_player_troop = right_player.troopData
+    local left_player_troop = report:GetMyDefenceFightTroop()
 
-    self:CreateArmyGroup(left_player_troop,right_player_troop)
+    local right_player_troop = report:GetEnemyDefenceFightTroop()
+    -- 龙信息
+    local left_player_dragon = report:GetMyDefenceFightDragon()
+
+    local right_player_dragon = report:GetEnemyDefenceFightDragon()
+
+    self:CreateArmyGroup(left_player_troop,right_player_troop,left_player_dragon,right_player_dragon)
     -- 击杀敌方
     if right_player_troop then
         self:KillEnemy(right_player_troop)
@@ -310,16 +322,16 @@ function GameUIWarReport:FightWithDefencePlayerReports()
         self:OurLose(left_player_troop)
     end
 end
-function GameUIWarReport:CreateArmyGroup(l_troop,r_troop)
+function GameUIWarReport:CreateArmyGroup(l_troop,r_troop,l_dragon,r_dragon)
     local group = cc.ui.UIGroup.new()
 
     local group_width,group_height = 540,268
-    local self_army_item = self:CreateArmyItem(_("你的部队"),l_troop)
+    local self_army_item = self:CreateArmyItem(_("你的部队"),l_troop,l_dragon,r_troop)
         :align(display.CENTER, -group_width/2+129, 0)
 
     group:addWidget(self_army_item)
 
-    local enemy_army_item = self:CreateArmyItem(_("敌方部队"),r_troop)
+    local enemy_army_item = self:CreateArmyItem(_("敌方部队"),r_troop,r_dragon,l_troop)
         :align(display.CENTER, group_width/2-129, 0)
     group:addWidget(enemy_army_item)
     local item = self.details_view:newItem()
@@ -328,7 +340,7 @@ function GameUIWarReport:CreateArmyGroup(l_troop,r_troop)
     self.details_view:addItem(item)
 end
 
-function GameUIWarReport:CreateArmyItem(title,troop)
+function GameUIWarReport:CreateArmyItem(title,troop,dragon,enemy_troop)
     local w,h = 258,256
     local army_item = display.newSprite("back_ground_258x256.png")
 
@@ -363,16 +375,25 @@ function GameUIWarReport:CreateArmyItem(title,troop)
     end
     local army_info
     if troop then
+        local troopTotal,totalDecreased,killed = 0,0,0
+
+        for k,v in pairs(troop) do
+            troopTotal=troopTotal+v.count
+            totalDecreased=totalDecreased+v.countDecreased
+        end
+        for k,v in pairs(enemy_troop) do
+            killed = killed+v.countDecreased
+        end
         army_info = {
             {
                 bg_image = "back_ground_254x28_1.png",
                 title = _("Troops"),
-                value = troop.troopTotal,
+                value = troopTotal,
             },
             {
                 bg_image = "back_ground_254x28_2.png",
                 title = _("Survived"),
-                value = troop.troopSurvived,
+                value = troopTotal-totalDecreased,
             },
             {
                 bg_image = "back_ground_254x28_1.png",
@@ -382,27 +403,27 @@ function GameUIWarReport:CreateArmyItem(title,troop)
             {
                 bg_image = "back_ground_254x28_2.png",
                 title = _("Killed"),
-                value = troop.kill,
+                value = killed,
                 color = 0x7e0000,
             },
             {
                 bg_image = "back_ground_254x28_1.png",
-                title = Localize.dragon[troop.dragon.type],
+                title = Localize.dragon[dragon.type],
             },
             {
                 bg_image = "back_ground_254x28_2.png",
                 title = _("Level"),
-                value = troop.dragon.level,
+                value = dragon.level,
             },
             {
                 bg_image = "back_ground_254x28_1.png",
                 title = _("XP"),
-                value = "+"..troop.dragon.xpAdd,
+                value = "+"..dragon.expAdd,
             },
             {
                 bg_image = "back_ground_254x28_2.png",
                 title = _("HP"),
-                value = troop.dragon.hp.."/-"..troop.dragon.hpDecreased,
+                value = dragon.hp.."/-"..dragon.hpDecreased,
             },
         }
     else
@@ -460,7 +481,7 @@ function GameUIWarReport:CreateBelligerentsItem(player)
         :addTo(player_item)
 
     UIKit:ttfLabel({
-        text = player.allianceName ,
+        text = player.alliance.name ,
         size = 18,
         color = 0x403c2f
     }):align(display.LEFT_CENTER,110,  height-70)
@@ -636,7 +657,7 @@ function GameUIWarReport:KillEnemy(troop)
     war_s_label_item:addContent(g)
     self.details_view:addItem(war_s_label_item)
 
-    self:CreateSoldierInfo(troop.soldiers)
+    self:CreateSoldierInfo(troop)
 end
 -- 我方损失
 function GameUIWarReport:OurLose(troop)
@@ -651,7 +672,7 @@ function GameUIWarReport:OurLose(troop)
     war_s_label_item:addContent(g)
     self.details_view:addItem(war_s_label_item)
 
-    self:CreateSoldierInfo(troop.soldiers)
+    self:CreateSoldierInfo(troop)
 
 end
 
@@ -721,8 +742,8 @@ function GameUIWarReport:CreateSoldiersInfo(soldier)
 end
 
 function GameUIWarReport:CreateWallPart()
-    local wall = self.report.attackCity.defencePlayerData.wall
-    if not wall then
+    local wall_data = self.report:GetWallData()
+    if not wall_data then
         return
     end
     local war_s_label_item = self.details_view:newItem()
@@ -765,13 +786,13 @@ function GameUIWarReport:CreateWallPart()
     }):align(display.LEFT_CENTER, 140, 30)
         :addTo(bg)
     UIKit:ttfLabel({
-        text = wall.hp ,
+        text = wall_data.wall.hp ,
         size = 22,
         color = 0x403c2f
     }):align(display.RIGHT_CENTER, 500, 70)
         :addTo(bg)
     UIKit:ttfLabel({
-        text = "-"..wall.hpDecreased ,
+        text = "-"..wall_data.wall.hpDecreased ,
         size = 22,
         color = 0x7e0000
     }):align(display.RIGHT_CENTER, 500, 30)
@@ -779,6 +800,11 @@ function GameUIWarReport:CreateWallPart()
 
     item:addContent(bg)
     self.details_view:addItem(item)
+    if self.report:IsAttackCamp() then
+        self:OurLose(wall_data.soldiers)
+    else
+        self:KillEnemy(wall_data.soldiers)
+    end
 end
 
 -- 创建 宽度为258的 UI框
@@ -831,52 +857,26 @@ function GameUIWarReport:IsAttackCamp()
         return false
     end
 end
-function GameUIWarReport:GetMyReportData()
-    local report = self.report
-    if report.type=="attackCity" then
-        if report.attackCity.attackPlayerData.id == DataManager:getUserData()._id then
-            return report.attackCity.attackPlayerData
-        elseif report.attackCity.defencePlayerData.id == DataManager:getUserData()._id then
-            return report.attackCity.defencePlayerData
-        elseif report.attackCity.helpDefencePlayerData and report.attackCity.helpDefencePlayerData.id == DataManager:getUserData()._id then
-            return report.attackCity.helpDefencePlayerData
-        end
-    end
-end
+
 function GameUIWarReport:GetReportTitle()
-    local report = self.report
-    if report.type=="attackCity" then
-        if report.attackCity.attackPlayerData.id == DataManager:getUserData()._id then
-            return report.attackCity.attackStar > 0 and _("进攻城市成功") or _("进攻城市失败")
-        elseif report.attackCity.defencePlayerData.id == DataManager:getUserData()._id then
-            return report.attackCity.defenceStar > 0 and _("防守城市成功") or _("防守城市失败")
-        elseif report.attackCity.helpDefencePlayerData and report.attackCity.helpDefencePlayerData.id == DataManager:getUserData()._id then
-            return report.attackCity.defenceStar > 0 and _("协助防守城市成功") or _("协助防守城市失败")
-        end
-    end
+    return self.report:GetReportTitle()
+
 end
 function GameUIWarReport:GetWarResult()
-    local report = self.report
-    if report.type=="attackCity" then
-        if report.attackCity.attackPlayerData.id == DataManager:getUserData()._id then
-            return report.attackCity.attackStar
-        elseif report.attackCity.defencePlayerData.id == DataManager:getUserData()._id then
-            return report.attackCity.defenceStar
-        elseif report.attackCity.helpDefencePlayerData and report.attackCity.helpDefencePlayerData.id == DataManager:getUserData()._id then
-            return report.attackCity.defenceStar
-        end
-    end
+    return self.report:GetReportStar()
+
 end
 function GameUIWarReport:GetFightTarget()
-    local report = self.report
-    local t = report.attackCity.attackTarget
+    local t = self.report:GetAttackTarget()
     return _("Battle at ")..t.cityName.." ("..t.location.x..","..t.location.y..")"
 end
 function GameUIWarReport:GetRewards()
-    local report = self.report
-    return self:GetMyReportData().rewards
+    return  self.report:GetMyRewards()
 end
 return GameUIWarReport
+
+
+
 
 
 

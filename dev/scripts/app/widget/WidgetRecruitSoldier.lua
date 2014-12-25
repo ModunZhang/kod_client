@@ -265,6 +265,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type,soldier_star)
         :OnSliderValueChanged(function(event)
             self:OnCountChanged(math.floor(event.value))
         end)
+        :LayoutValueLabel(WidgetSliderWithInput.STYLE_LAYOUT.RIGHT,0)
 
 
 

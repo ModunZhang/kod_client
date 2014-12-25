@@ -12,6 +12,7 @@ local function getAniNameFromAnimationFiles(animation_files)
     return anis
 end
 local RESOURCE = {
+    blood = "dragonskill_blood_51x63.png",
     food = "food_icon.png",
     wood = "wood_icon.png",
     stone = "stone_icon.png",
