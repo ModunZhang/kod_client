@@ -6,6 +6,8 @@ local window = import("..utils.window")
 local WidgetProgress = import("..widget.WidgetProgress")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetWithBlueTitle = import("..widget.WidgetWithBlueTitle")
+local WidgetInfoWithTitle = import("..widget.WidgetInfoWithTitle")
+local WidgetInfo = import("..widget.WidgetInfo")
 local GameUITownHall = UIKit:createUIClass("GameUITownHall", "GameUIUpgradeBuilding")
 function GameUITownHall:ctor(city, townHall)
     GameUITownHall.super.ctor(self, city, _("市政厅"), townHall)
@@ -114,16 +116,22 @@ function GameUITownHall:CreateAdministration()
 end
 
 function GameUITownHall:CreateDwellingItemWithListView(list_view)
-    local widget = WidgetWithBlueTitle.new(160, _("周围2格范围的住宅数量")):align(display.CENTER)
+    local widget = WidgetInfoWithTitle.new({
+        title = _("周围2格范围的住宅数量"),
+        h = 146,
+        info = info
+    }):align(display.CENTER)
+    -- WidgetWithBlueTitle.new(160, _("周围2格范围的住宅数量")):align(display.CENTER)
     local size = widget:getContentSize()
     local lineItems = {}
     for i, v in ipairs({1,2}) do
-        table.insert(lineItems, self:CreateDwellingLineItem(size.width):addTo(widget, 2)
-            :pos(size.width/2, size.height - 80 - (i-1) * 40))
+    print("size=======",i)
+        table.insert(lineItems, self:CreateDwellingLineItem(520,i==1):addTo(widget, 2)
+            :pos(0, -42+(i-1)*40))
     end
     local item = list_view:newItem()
     item:addContent(widget)
-    item:setItemSize(size.width, size.height + 10)
+    item:setItemSize(size.width,156)
 
 
     function item:GetLineByIndex(index)
@@ -136,14 +144,18 @@ function GameUITownHall:CreateImposeItemWithListView(list_view)
     local townHall = self
     local widget = WidgetWithBlueTitle.new(260, _("税收")):align(display.CENTER)
     local size = widget:getContentSize()
+    local info = WidgetInfo.new({
+        h = 140,
+        w = 368
+    }):align(display.CENTER,200,size.height/2-20):addTo(widget)
     local lineItems = {}
     for i, v in ipairs({
         { icon = "citizen_44x50.png", scale = 0.6, title =_("损失城民") },
         { icon = "coin_icon.png", scale = 0.25, title =_("获得银币") },
         { icon = "hourglass_39x46.png", scale = 0.6, title =_("时间") }
     }) do
-        table.insert(lineItems, self:CreateTaxLineItem(size.width, v):addTo(widget, 2)
-            :pos(size.width/2, size.height - 80 - (i-1) * 40))
+        table.insert(lineItems, self:CreateTaxLineItem(348, v,i%2==0):addTo(info, 2)
+            :pos(200, 150-(i-1) * 40))
     end
     WidgetPushButton.new(
         {normal = "yellow_btn_up_185x65.png", pressed = "yellow_btn_down_185x65.png"},
@@ -154,7 +166,7 @@ function GameUITownHall:CreateImposeItemWithListView(list_view)
         size = 24,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(widget, 2):align(display.CENTER, size.width - 110, 50)
+        :addTo(widget, 2):align(display.CENTER, size.width - 110, 70)
         :onButtonClicked(function(event)
             -- NetManager:impose(NOT_HANDLE)
             NetManager:getImposePromise():catch(function(err)
@@ -179,7 +191,8 @@ function GameUITownHall:CreateImposeItemWithListView(list_view)
 end
 
 function GameUITownHall:CreateTimerItemWithListView(list_view)
-    local widget = WidgetWithBlueTitle.new(180, _("税收")):align(display.CENTER)
+    local widget = WidgetWithBlueTitle.new(242, _("税收")):align(display.CENTER)
+    WidgetUIBackGround
     local size = widget:getContentSize()
     cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -203,7 +216,7 @@ function GameUITownHall:CreateTimerItemWithListView(list_view)
     local progress = WidgetProgress.new():addTo(widget, 2)
         :align(display.LEFT_CENTER, 60, size.height - 125)
 
-    WidgetPushButton.new({normal = "green_btn_up_169x86.png", pressed = "green_btn_down_169x86.png"})
+    WidgetPushButton.new({normal = "green_btn_up_148x56.png", pressed = "green_btn_down_148x56.png"})
         :setButtonLabel(cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("加速"),
@@ -295,15 +308,16 @@ end
 --     return item
 -- end
 
-function GameUITownHall:CreateDwellingLineItem(width)
-    local left, right = -width/2, width/2
-    local node = display.newNode()
+function GameUITownHall:CreateDwellingLineItem(width,flag)
+    local left, right = 0, width
+    local node =   display.newScale9Sprite(flag and "back_ground_548x40_1.png" or "back_ground_548x40_2.png")
+    node:size(524,40)
     local condition = cc.ui.UILabel.new({
         size = 20,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
         color = UIKit:hex2c3b(0x615b44)
-    }):addTo(node, 2):align(display.LEFT_CENTER, left + 30, 0)
+    }):addTo(node, 2):align(display.LEFT_CENTER, left + 10, 20)
 
     cc.ui.UILabel.new({
         text = string.format("%s%%5%s", _("增加"), _("城民增长")),
@@ -311,16 +325,16 @@ function GameUITownHall:CreateDwellingLineItem(width)
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
         color = UIKit:hex2c3b(0x615b44)
-    }):addTo(node, 2):align(display.RIGHT_CENTER, right - 70, 0)
+    }):addTo(node, 2):align(display.RIGHT_CENTER, right - 70, 20)
 
     local check = cc.ui.UICheckBoxButton.new({on = "yes_40x40.png", off = "no_40x40.png" })
         :addTo(node)
-        :align(display.CENTER, right - 40, 0)
+        :align(display.CENTER, right - 20, 20)
         :setButtonSelected(true)
     check:setTouchEnabled(false)
 
-    cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(node, 2)
-        :setLayoutSize(570, 3):align(display.CENTER, 0, -20)
+    -- cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(node, 2)
+    --     :setLayoutSize(570, 3):align(display.CENTER, 0, -20)
 
 
     function node:align()
@@ -336,18 +350,19 @@ function GameUITownHall:CreateDwellingLineItem(width)
     end
     return node
 end
-function GameUITownHall:CreateTaxLineItem(width, param)
-    local left, right = -width/2, width/2
-    local node = display.newNode()
+function GameUITownHall:CreateTaxLineItem(width, param,flag)
+    local left, right = 0, width
+    local node = display.newScale9Sprite(flag and "back_ground_548x40_1.png" or "back_ground_548x40_2.png")
+    node:size(348,40)
     cc.ui.UIImage.new(param.icon):addTo(node, 2)
-        :align(display.BOTTOM_CENTER, left + 40, 0):scale(param.scale)
+        :align(display.CENTER, left + 40, 20):scale(param.scale)
     cc.ui.UILabel.new({
         text = param.title,
         size = 20,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
         color = UIKit:hex2c3b(0x615b44)
-    }):addTo(node, 2):align(display.LEFT_BOTTOM, left + 70, 0)
+    }):addTo(node, 2):align(display.LEFT_CENTER, left + 70, 20)
 
     local label = cc.ui.UILabel.new({
         text = "增加 5% 城民增长",
@@ -355,10 +370,10 @@ function GameUITownHall:CreateTaxLineItem(width, param)
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
         color = UIKit:hex2c3b(0x615b44)
-    }):addTo(node, 2):align(display.RIGHT_BOTTOM, right - 30, 0)
+    }):addTo(node, 2):align(display.RIGHT_CENTER, right - 30, 20)
 
-    cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(node, 2)
-        :setLayoutSize(570, 3):align(display.CENTER, 0, -5)
+    -- cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(node, 2)
+    --     :setLayoutSize(570, 3):align(display.CENTER, 0, -5)
 
     function node:align()
         assert("you should not use this function for any purpose!")

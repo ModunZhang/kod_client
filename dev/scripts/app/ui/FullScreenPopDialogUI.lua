@@ -1,8 +1,7 @@
 local UIListView = import(".UIListView")
+local UIAutoClose = import(".UIAutoClose")
 
-local FullScreenPopDialogUI = class("FullScreenPopDialogUI", function ()
-    return display.newColorLayer(cc.c4b(0,0,0,127))
-end)
+local FullScreenPopDialogUI = class("FullScreenPopDialogUI", UIAutoClose)
 
 function FullScreenPopDialogUI:ctor()
     self:Init()
@@ -10,9 +9,11 @@ end
 
 function FullScreenPopDialogUI:Init()
     -- bg
-    display.newSprite("full_screen_dialog_bg.png", display.cx, display.top - 480):addTo(self)
+    local bg = display.newSprite("back_ground_608x350.png", display.cx, display.top - 480)
+    self:addTouchAbleChild(bg)
+    local size = bg:getContentSize()
     -- title bg
-    display.newSprite("Title_blue.png", display.cx, display.top-340):addTo(self)
+    local title_bg =display.newSprite("report_title.png", size.width/2, size.height+10):addTo(bg)
     -- title label
     self.title = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -20,20 +21,20 @@ function FullScreenPopDialogUI:Init()
         font = UIKit:getFontFilePath(),
         size = 24,
         color = UIKit:hex2c3b(0xffedae)
-    }):align(display.CENTER,display.cx,display.top-340):addTo(self)
+    }):align(display.CENTER,title_bg:getContentSize().width/2,title_bg:getContentSize().height/2):addTo(title_bg)
     -- npc image
-    display.newSprite("Npc.png", display.cx - 205, display.top-470):addTo(self)
+    display.newSprite("Npc.png"):align(display.LEFT_BOTTOM, -50, -14):addTo(bg)
     -- 对话框 bg
-    display.newSprite("pop_tip_bg.png", display.cx+80, display.top-460):addTo(self)
-
+    local tip_bg = display.newSprite("back_ground_342x228.png", 406,210):addTo(bg)
+    self.tip_bg= tip_bg
     -- 称谓label
     cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("陛下，"),
+        text = _("主人").."!",
         font = UIKit:getFontFilePath(),
         size = 24,
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER,display.cx-80,display.top-410):addTo(self)
+    }):align(display.LEFT_TOP,14,210):addTo(tip_bg)
 
     -- close button
     self.close_btn = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
@@ -41,7 +42,7 @@ function FullScreenPopDialogUI:Init()
             if event.name == "CLICKED_EVENT" then
                 self:removeFromParent(true)
             end
-        end):align(display.CENTER, display.cx + 290, display.top-320):addTo(self)
+        end):align(display.CENTER, size.width-30, size.height+16):addTo(bg)
 end
 
 function FullScreenPopDialogUI:SetTitle(title)
@@ -52,17 +53,18 @@ end
 function FullScreenPopDialogUI:SetPopMessage(message)
     local message_label = UIKit:ttfLabel({
         text = message,
-        size = 24,
+        size = 20,
         color = 0x403c2f,
         align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-        dimensions = cc.size(340, 0),
+        dimensions = cc.size(310, 0),
     })
     local w,h =  message_label:getContentSize().width,message_label:getContentSize().height
     -- 提示内容
     local  listview = UIListView.new{
-        viewRect = cc.rect(display.cx-80,display.top-525, w, 95),
+        -- bgColor = UIKit:hex2c4b(0x7a100000),
+        viewRect = cc.rect(14,10, w, 170),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
-    }:addTo(self)
+    }:addTo(self.tip_bg)
     local item = listview:newItem()
     item:setItemSize(w,h)
     item:addContent(message_label)
@@ -73,25 +75,8 @@ end
 
 function FullScreenPopDialogUI:CreateOKButton(listener,btn_name)
     local name = btn_name or _("确定")
-    local ok_button = cc.ui.UIPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
-        :setButtonLabel(UIKit:ttfLabel({text =name, size = 26, color = 0xffedae,shadow=true}))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                if listener then
-                    listener()
-                end
-                self:removeFromParent(true)
-            end
-        end):align(display.CENTER, display.cx, display.top-610):addTo(self)
-    return self
-end
-
-function FullScreenPopDialogUI:CreateCancelButton(params)
-    local params = params or {}
-    local listener,btn_name = params.listener,params.btn_name
-    local name = btn_name or _("取消")
-    local ok_button = cc.ui.UIPushButton.new({normal = "red_button_146x42.png",pressed = "red_button_highlight_146x42.png"})
-        :setButtonLabel(UIKit:ttfLabel({text =name, size = 26, color = 0xffedae,shadow=true}))
+    local ok_button = cc.ui.UIPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
+        :setButtonLabel(UIKit:ttfLabel({text =name, size = 24, color = 0xffedae,shadow=true}))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if listener then
@@ -100,6 +85,23 @@ function FullScreenPopDialogUI:CreateCancelButton(params)
                 self:removeFromParent(true)
             end
         end):align(display.CENTER, display.cx+200, display.top-610):addTo(self)
+    return self
+end
+
+function FullScreenPopDialogUI:CreateCancelButton(params)
+    local params = params or {}
+    local listener,btn_name = params.listener,params.btn_name
+    local name = btn_name or _("取消")
+    local ok_button = cc.ui.UIPushButton.new({normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"})
+        :setButtonLabel(UIKit:ttfLabel({text =name, size = 24, color = 0xffedae,shadow=true}))
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                if listener then
+                    listener()
+                end
+                self:removeFromParent(true)
+            end
+        end):align(display.CENTER, display.cx+6, display.top-610):addTo(self)
 
     self.close_btn:onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
@@ -113,15 +115,15 @@ function FullScreenPopDialogUI:CreateCancelButton(params)
 end
 
 function FullScreenPopDialogUI:CreateNeeds(icon,value)
-    local icon_image = display.newScale9Sprite(icon, display.cx-30, display.top-560):addTo(self)
+    local icon_image = display.newScale9Sprite(icon, display.cx-30, display.top-610):addTo(self)
     icon_image:setScale(30/icon_image:getContentSize().height)
     self.needs_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = value.."",
         font = UIKit:getFontFilePath(),
         size = 24,
-        color = UIKit:hex2c3b(0xfdfac2)
-    }):align(display.LEFT_CENTER,display.cx+10,display.top-560):addTo(self)
+        color = UIKit:hex2c3b(0x403c2f)
+    }):align(display.LEFT_CENTER,display.cx+10,display.top-610):addTo(self)
     return self
 end
 function FullScreenPopDialogUI:SetNeedsValue(value)
