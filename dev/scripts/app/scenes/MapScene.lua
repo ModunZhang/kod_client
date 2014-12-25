@@ -39,14 +39,9 @@ function MapScene:DumpScene()
         filters = "CUSTOM",
         filterParams = json.encode({
             vert = "shaders/fastblur.vs",
-            -- frag = "shaders/montecarloblur.fs",
-            -- frag = "shaders/poissonblur.fs",
             frag = "shaders/fastblur.fs",
             shaderName = "blur_scene",
-            -- u_resolution = {display.widthInPixels, display.heightInPixels},
-            -- u_unit = {1 / display.width, 1 / display.height},
-            u_radius = 0.001,
-            -- u_sampleNum = 1,
+            u_radius = 0.003,
             u_time = director:getTotalFrames() * director:getAnimationInterval()
         })
     }
