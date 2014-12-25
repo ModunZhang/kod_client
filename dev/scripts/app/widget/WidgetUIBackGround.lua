@@ -49,11 +49,12 @@ function WidgetUIBackGround:ctor(params,style)
     local m_height = st and st.m_height or params.m_height or 98
     local b_height = st and st.b_height or params.b_height or 62
     local is_have_frame = params.isFrame or "no"
+    local capInsets = params.capInsets
 
     self:setContentSize(cc.size(width,height))
     --top
-    display.newScale9Sprite(top_img,0, height,cc.size(width,u_height)):align(display.LEFT_TOP):addTo(self)
-    local bottom = display.newScale9Sprite(bottom_img,0, 0,cc.size(width,b_height)):align(display.LEFT_BOTTOM):addTo(self)
+    display.newScale9Sprite(top_img,0, height,cc.size(width,u_height),capInsets):align(display.LEFT_TOP):addTo(self)
+    local bottom = display.newScale9Sprite(bottom_img,0, 0,cc.size(width,b_height),capInsets):align(display.LEFT_BOTTOM):addTo(self)
 
     --bottom
     if params.b_flip then
