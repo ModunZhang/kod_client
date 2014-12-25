@@ -6,6 +6,8 @@ local MapLayer = class("MapLayer", function(...)
     return layer
 end)
 local SPEED = 10
+local min = math.min
+local max = math.max
 local abs = math.abs
 ----
 function MapLayer:ctor(min_scale, max_scale)
@@ -43,7 +45,7 @@ function MapLayer:ctor(min_scale, max_scale)
             local dt = end_scale - start_scale
             local old_scale = self:getScale()
             local newscale = old_scale + 0.01 * (dt > 0 and 1 or -1)
-            if (newscale - old_scale) * dt <= 0 then
+            if (end_scale - newscale) * dt <= 0 then
                 self:ZoomTo(end_scale)
                 target_scale = nil
             else
@@ -96,7 +98,7 @@ function MapLayer:ZoomTo(scale)
     return self
 end
 function MapLayer:ZoomBy(scale)
-    self:setScale(math.min(math.max(self.scale_current * scale, self.min_scale), self.max_scale))
+    self:setScale(min(max(self.scale_current * scale, self.min_scale), self.max_scale))
     local scale_point = self.scale_point
     local scene_mid_point = self:getParent():convertToWorldSpace(cc.p(display.cx, display.cy))
     local new_scene_mid_point = self:ConverToParentPosition(scale_point.x, scale_point.y)
@@ -127,8 +129,8 @@ function MapLayer:setPosition(position)
     super.setPosition(self, position)
     local left_bottom_pos = self:GetLeftBottomPositionWithConstrain(x, y)
     local right_top_pos = self:GetRightTopPositionWithConstrain(x, y)
-    local rx = x >= 0 and math.min(left_bottom_pos.x, right_top_pos.x) or math.max(left_bottom_pos.x, right_top_pos.x)
-    local ry = y >= 0 and math.min(left_bottom_pos.y, right_top_pos.y) or math.max(left_bottom_pos.y, right_top_pos.y)
+    local rx = x >= 0 and min(left_bottom_pos.x, right_top_pos.x) or max(left_bottom_pos.x, right_top_pos.x)
+    local ry = y >= 0 and min(left_bottom_pos.y, right_top_pos.y) or max(left_bottom_pos.y, right_top_pos.y)
     super.setPosition(self, cc.p(rx, ry))
     self:OnSceneMove()
 end

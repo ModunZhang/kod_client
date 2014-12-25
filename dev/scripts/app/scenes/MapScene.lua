@@ -35,14 +35,21 @@ function MapScene:BlurRenderScene()
 end
 function MapScene:DumpScene()
     local director = cc.Director:getInstance()
-    local params = {filters = "CUSTOM", filterParams = json.encode({
-        frag = "shaders/blur.fs",
-        shaderName = "blur_scene",
-        resolution = {display.width, display.height},
-        blurRadius = 8,
-        sampleNum = 4,
-        time = director:getTotalFrames() * director:getAnimationInterval()
-    })}
+    local params = {
+        filters = "CUSTOM",
+        filterParams = json.encode({
+            vert = "shaders/fastblur.vs",
+            -- frag = "shaders/montecarloblur.fs",
+            -- frag = "shaders/poissonblur.fs",
+            frag = "shaders/fastblur.fs",
+            shaderName = "blur_scene",
+            -- u_resolution = {display.widthInPixels, display.heightInPixels},
+            -- u_unit = {1 / display.width, 1 / display.height},
+            u_radius = 0.001,
+            -- u_sampleNum = 1,
+            u_time = director:getTotalFrames() * director:getAnimationInterval()
+        })
+    }
     return display.printscreen(self:GetSceneNode(), params)
 end
 function MapScene:ResetRenderState()
@@ -103,8 +110,8 @@ function MapScene:OnTwoTouch(x1, y1, x2, y2, event_type)
     elseif event_type == "ended" then
         scene:ZoomEnd()
         self.distance = nil
-        local low = scene.min_scale + 0.2
-        local high = scene.max_scale + 0.2
+        local low = scene.min_scale + 0.1
+        local high = scene.max_scale - 0.1
         if scene:getScale() <= low then
             scene:ZoomToByAnimation(low)
         elseif scene:getScale() >= high then
@@ -133,7 +140,7 @@ function MapScene:OnTouchMove(pre_x, pre_y, x, y)
     self.scene_layer:setPosition(cc.p(old_x + diffX, old_y + diffY))
 end
 function MapScene:OnTouchClicked(pre_x, pre_y, x, y)
-    
+
 end
 function MapScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed_y, millisecond)
     local parent = self.scene_layer:getParent()
@@ -147,3 +154,5 @@ function MapScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed
 end
 
 return MapScene
+
+
