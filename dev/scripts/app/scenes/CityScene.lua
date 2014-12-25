@@ -18,7 +18,6 @@ local DEBUG = false
 function CityScene:ctor(city)
     City:ResetAllListeners()
     Alliance_Manager:GetMyAlliance():ResetAllListeners()
-    
     self.city = city
     CityScene.super.ctor(self)
     self:LoadAnimation()
@@ -89,6 +88,8 @@ function CityScene:onEnter()
     --     -- 最后检查有没有免费加速的建筑物如果有则加速
 
     -- end, 1)
+
+    -- self:GetSceneLayer():hide()
 end
 function CityScene:onExit()
     self:stopAllActions()
@@ -119,7 +120,7 @@ function CityScene:LoadAnimation()
     manager:addArmatureFileInfo("animations/Blue_dragon.ExportJson")
 end
 function CityScene:CreateSceneLayer()
-    local scene = CityLayer.new(self):addTo(self, 0)
+    local scene = CityLayer.new(self)
     local origin_point = scene:GetPositionIndex(0, 0)
     self.iso_map = IsoMapAnchorBottomLeft.new({
         tile_w = 80, tile_h = 56, map_width = 50, map_height = 50, base_x = origin_point.x, base_y = origin_point.y
@@ -128,7 +129,8 @@ function CityScene:CreateSceneLayer()
 end
 function CityScene:CreateSceneUILayer()
     local city = self.city
-    local scene_ui_layer = display.newLayer():addTo(self, 1)
+    local scene_ui_layer = display.newLayer()
+    scene_ui_layer:setTouchEnabled(true)
     scene_ui_layer:setTouchSwallowEnabled(false)
     function scene_ui_layer:Init()
         self.levelup_node = display.newNode():addTo(self)
@@ -204,7 +206,7 @@ end
 function CityScene:GotoLogicPoint(x, y)
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(x, y)
     return self:GetSceneLayer():PromiseOfMove(point.x, point.y)
-    :next(function() print("hello") end)
+        :next(function() print("hello") end)
 end
 function CityScene:PlayBackgroundMusic()
     app:GetAudioManager():PlayGameMusic("MyCityScene")
@@ -223,8 +225,8 @@ end
 function CityScene:CreateTutorialLayer()
     local layer = display.newLayer():addTo(self, 2000)
     layer:setTouchSwallowEnabled(true)
+    local touch_judgment = self.touch_judgment
     layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-        local touch_judgment = self.touch_judgment
         if touch_judgment then
             local touch_type, pre_x, pre_y, x, y = event.name, event.prevX, event.prevY, event.x, event.y
             if touch_type == "began" then
@@ -327,51 +329,5 @@ end
 
 
 return CityScene
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

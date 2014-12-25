@@ -24,14 +24,15 @@ function WidgetInfoWithTitle:ctor(params)
         color = 0xffedae
     }):align(display.CENTER,self.info_bg:getContentSize().width/2, self.info_bg:getContentSize().height-25)
         :addTo(self.info_bg)
+    if info then
+        self.info_listview = UIListView.new{
+            -- bgColor = UIKit:hex2c4b(0x7a000000),
+            viewRect = cc.rect(13, 10, 524, height-66),
+            direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+        }:addTo(self.info_bg)
 
-    self.info_listview = UIListView.new{
-        -- bgColor = UIKit:hex2c4b(0x7a000000),
-        viewRect = cc.rect(13, 10, 524, height-66),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
-    }:addTo(self.info_bg)
-
-    self:CreateInfoItems(info)
+        self:CreateInfoItems(info)
+    end
 end
 
 function WidgetInfoWithTitle:align(align,x,y)
@@ -40,10 +41,10 @@ function WidgetInfoWithTitle:align(align,x,y)
 end
 
 function WidgetInfoWithTitle:CreateInfoItems(info_message)
-	if not info_message then
-		return
-	end
-	self.info_listview:removeAllItems()
+    if not info_message then
+        return
+    end
+    self.info_listview:removeAllItems()
     local meetFlag = true
 
     local item_width, item_height = 548,40
@@ -79,8 +80,9 @@ function WidgetInfoWithTitle:CreateInfoItems(info_message)
     self.info_listview:reload()
 end
 function WidgetInfoWithTitle:GetListView()
-	return self.info_listview
+    return self.info_listview
 end
 return WidgetInfoWithTitle
+
 
 

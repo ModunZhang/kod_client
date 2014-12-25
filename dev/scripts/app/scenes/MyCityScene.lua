@@ -3,6 +3,7 @@ local promise = import("..utils.promise")
 local TutorialLayer = import("..ui.TutorialLayer")
 local GameUINpc = import("..ui.GameUINpc")
 local Arrow = import("..ui.Arrow")
+local City = import("..entity.City")
 local CityScene = import(".CityScene")
 local MyCityScene = class("MyCityScene", CityScene)
 
@@ -11,16 +12,14 @@ function MyCityScene:ctor(city)
     self.clicked_callbacks = {}
 end
 function MyCityScene:onEnter()
-    local city = self.city
-    self.scene_ui_layer = self:CreateSceneUILayer()
+    MyCityScene.super.onEnter(self)
     self.arrow_layer = self:CreateArrowLayer()
     self.tutorial_layer = self:CreateTutorialLayer()
-    MyCityScene.super.onEnter(self)
     home_page = self:CreateHomePage()
     self:GetSceneLayer():IteratorInnnerBuildings(function(_, building)
-        self.scene_ui_layer:NewUIFromBuildingSprite(building)
+        self:GetSceneUILayer():NewUIFromBuildingSprite(building)
     end)
-    city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
+    self.city:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
 end
 function MyCityScene:GetArrowTutorial()
     if not self.arrow_tutorial then
@@ -124,58 +123,6 @@ function MyCityScene:onEnterTransitionFinish()
         local check_func = check_map[step]
         return not check_func and true or check_func()
     end
-
-cocos_promise.deffer():next(function(result)
-    return  scene:GotoLogicPoint(18, 8):next(function(result)
-    return  scene:PromiseOfClickBuilding(18, 8):next(function(result)
-    return  UIKit:PromiseOfOpen("GameUIDragonEyrieMain"):next(function(result)
-    return  cocos_promise.deffer(function() return result end):next(function(result)
-    return  result:Lock():next(function(result)
-    return  result:Find("dragon"):next(function(result)
-    return  scene:GetArrowTutorial():DefferShow(result):next(function(result)
-    return  UIKit:GetUIInstance("GameUIDragonEyrieMain"):WaitTag("dragon"):next(function(result)
-    return  scene:DestoryArrowTutorial(function() return result end):next(function(result)
-    return  result:Find():next(function(result)
-    return  scene:GetArrowTutorial():DefferShow(result):next(function(result)
-    return  UIKit:PromiseOfOpen("GameUIDragonEyrieDetail"):next(function(result)
-    return  scene:DestoryArrowTutorial(function() return result end):next(function(result)
-    return  result:Find("1"):next(function(result)
-    return  scene:GetArrowTutorial():DefferShow(result):next(function(result)
-    return  UIKit:PromiseOfOpen("GameUIDragonEquipment"):next(function(result)
-    return  cocos_promise.deffer(function() return result end):next(function(result)
-    return  result:Lock():next(function(result)
-    return  scene:DestoryArrowTutorial(function() return result end):next(function(result)
-    return  result:Find():next(function(result)
-    return  scene:GetArrowTutorial():DefferShow(result):next(function(result)
-    return  City:PromiseOfFinishEquipementDragon():next(function(result)
-    return  scene:DestoryArrowTutorial(function() return result end)
-end)
-end)
-end)
-end)
-end)
-end)
-end)
-end)
-end)
-end)
-end)
-end)
-end)
-end)
-end)
-end)
-end)
-end)
-end)
-end)
-end)
-end)
-end):next(function(result)
-    return  GameUINpc:PromiseOfLeave()
-end)
-
-
 end
 function MyCityScene:CreateHomePage()
     local home = UIKit:newGameUI('GameUIHome', self.city):addToScene(self)
@@ -228,7 +175,7 @@ function MyCityScene:CheckClickPromise(building)
     end
 end
 function MyCityScene:PromiseOfClickLockButton(building_type)
-    local btn = self:GetLockButtonsByBuildingType("barracks")
+    local btn = self:GetLockButtonsByBuildingType(building_type)
     local tutorial_layer = TutorialLayer.new(btn):addTo(self):Enable()
     local rect = btn:getCascadeBoundingBox()
     Arrow.new():addTo(tutorial_layer):OnPositionChanged(rect.x, rect.y)
@@ -240,7 +187,7 @@ end
 function MyCityScene:GetLockButtonsByBuildingType(building_type)
     local lock_button
     local location_id = self.city:GetLocationIdByBuildingType(building_type)
-    self.scene_ui_layer:IteratorLockButtons(function(_, v)
+    self:GetSceneUILayer():IteratorLockButtons(function(_, v)
         if v.sprite:GetEntity().location_id == location_id then
             lock_button = v
             return true
@@ -262,19 +209,19 @@ function MyCityScene:OnUpgradingFinished()
 
 end
 function MyCityScene:OnCreateDecoratorSprite(building_sprite)
-    self.scene_ui_layer:NewUIFromBuildingSprite(building_sprite)
+    self:GetSceneUILayer():NewUIFromBuildingSprite(building_sprite)
 end
 function MyCityScene:OnDestoryDecoratorSprite(building_sprite)
-    self.scene_ui_layer:RemoveUIFromBuildingSprite(building_sprite)
+    self:GetSceneUILayer():RemoveUIFromBuildingSprite(building_sprite)
 end
 function MyCityScene:OnTreesChanged(trees, road)
     local city = self.city
-    self.scene_ui_layer:RemoveAllLockButtons()
+    self:GetSceneUILayer():RemoveAllLockButtons()
     table.foreach(trees, function(_, tree_)
         if tree_:GetEntity().location_id then
             local building = city:GetBuildingByLocationId(tree_:GetEntity().location_id)
             if building and not building:IsUpgrading() then
-                self.scene_ui_layer:NewLockButtonFromBuildingSprite(tree_)
+                self:GetSceneUILayer():NewLockButtonFromBuildingSprite(tree_)
             end
         end
     end)
@@ -282,45 +229,41 @@ function MyCityScene:OnTreesChanged(trees, road)
         if road:GetEntity().location_id then
             local building = city:GetBuildingByLocationId(road:GetEntity().location_id)
             if building and not building:IsUpgrading() then
-                self.scene_ui_layer:NewLockButtonFromBuildingSprite(road)
+                self:GetSceneUILayer():NewLockButtonFromBuildingSprite(road)
             end
         end
     end
 end
 function MyCityScene:OnTowersChanged(old_towers, new_towers)
-    if self.scene_ui_layer then
-        table.foreach(old_towers, function(k, tower)
-            if tower:GetEntity():IsUnlocked() then
-                self.scene_ui_layer:RemoveUIFromBuildingSprite(tower)
-            end
-        end)
-        table.foreach(new_towers, function(k, tower)
-            if tower:GetEntity():IsUnlocked() then
-                self.scene_ui_layer:NewUIFromBuildingSprite(tower)
-            end
-        end)
-    end
+    table.foreach(old_towers, function(k, tower)
+        if tower:GetEntity():IsUnlocked() then
+            self:GetSceneUILayer():RemoveUIFromBuildingSprite(tower)
+        end
+    end)
+    table.foreach(new_towers, function(k, tower)
+        if tower:GetEntity():IsUnlocked() then
+            self:GetSceneUILayer():NewUIFromBuildingSprite(tower)
+        end
+    end)
 end
 function MyCityScene:OnGateChanged(old_walls, new_walls)
-    if self.scene_ui_layer then
-        table.foreach(old_walls, function(k, wall)
-            if wall:GetEntity():IsGate() then
-                self.scene_ui_layer:RemoveUIFromBuildingSprite(wall)
-            end
-        end)
+    table.foreach(old_walls, function(k, wall)
+        if wall:GetEntity():IsGate() then
+            self:GetSceneUILayer():RemoveUIFromBuildingSprite(wall)
+        end
+    end)
 
-        table.foreach(new_walls, function(k, wall)
-            if wall:GetEntity():IsGate() then
-                self.scene_ui_layer:NewUIFromBuildingSprite(wall)
-            end
-        end)
-    end
+    table.foreach(new_walls, function(k, wall)
+        if wall:GetEntity():IsGate() then
+            self:GetSceneUILayer():NewUIFromBuildingSprite(wall)
+        end
+    end)
 end
 function MyCityScene:OnSceneScale(scene_layer)
     if scene_layer:getScale() < 0.5 then
-        self.scene_ui_layer:HideLevelUpNode()
+        self:GetSceneUILayer():HideLevelUpNode()
     else
-        self.scene_ui_layer:ShowLevelUpNode()
+        self:GetSceneUILayer():ShowLevelUpNode()
     end
 end
 function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
@@ -328,7 +271,6 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
         if self:CheckClickPromise(building) then return end
-
         if building:GetEntity():GetType() == "ruins" then
             UIKit:newGameUI('GameUIBuild', city, building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "keep" then
@@ -376,6 +318,9 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     end
 end
 return MyCityScene
+
+
+
 
 
 

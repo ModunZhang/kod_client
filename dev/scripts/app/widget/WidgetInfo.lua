@@ -8,7 +8,7 @@ function WidgetInfo:ctor(params)
     local info = params.info -- 显示信息
 
     self.info_bg = WidgetUIBackGround.new({
-        width = 568,
+        width = params.w or 568,
         height = params.h or #info*40+20,
         top_img = "back_ground_568X14_top.png",
         bottom_img = "back_ground_568X14_top.png",
@@ -17,19 +17,26 @@ function WidgetInfo:ctor(params)
         b_height = 14,
         m_height = 1,
         b_flip = true,
+        capInsets = cc.rect(8,2,552,10)
     }):addTo(self)
-    self.info_listview = UIListView.new{
-        -- bgColor = UIKit:hex2c4b(0x7a000000),
-        viewRect = cc.rect(10, 10, 548, (params.h or #info*40+20)-20),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
-    }:addTo(self.info_bg)
+    if info then
+        self.info_listview = UIListView.new{
+            -- bgColor = UIKit:hex2c4b(0x7a000000),
+            viewRect = cc.rect(10, 10, 548, (params.h or #info*40+20)-20),
+            direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+        }:addTo(self.info_bg)
 
-    self:CreateInfoItem(info)
+        self:CreateInfoItem(info)
+    end
 end
-
+function WidgetInfo:SetInfo(info)
+    self.info_listview:removeAllItems()
+    self:CreateInfoItem(info)
+    return self
+end
 function WidgetInfo:align(align,x,y)
-	self.info_bg:align(align, x, y)
-	return self
+    self.info_bg:align(align, x, y)
+    return self
 end
 
 function WidgetInfo:CreateInfoItem(info_message)
@@ -50,16 +57,17 @@ function WidgetInfo:CreateInfoItem(info_message)
             size = 20,
             color = 0x797154,
         }):align(display.LEFT_CENTER, 10, item_height/2):addTo(content)
-        
-        local text_2 = UIKit:ttfLabel({
-            text = v[2],
-            size = 20,
-            color = 0x403c2f,
-        }):align(display.RIGHT_CENTER, item_width-10, item_height/2):addTo(content)
+        if v[2] then
+            local text_2 = UIKit:ttfLabel({
+                text = v[2],
+                size = 20,
+                color = 0x403c2f,
+            }):align(display.RIGHT_CENTER, item_width-10, item_height/2):addTo(content)
 
-        if v[3] then
-            display.newSprite(v[3]):align(display.RIGHT_CENTER, item_width-15, item_height/2):addTo(content)
-            text_2:setPositionX(item_width-60)
+            if v[3] then
+                display.newSprite(v[3]):align(display.RIGHT_CENTER, item_width-15, item_height/2):addTo(content)
+                text_2:setPositionX(item_width-60)
+            end
         end
 
         meetFlag =  not meetFlag
@@ -69,4 +77,6 @@ function WidgetInfo:CreateInfoItem(info_message)
     self.info_listview:reload()
 end
 return WidgetInfo
+
+
 

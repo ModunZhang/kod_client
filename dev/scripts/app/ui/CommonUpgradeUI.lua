@@ -509,7 +509,7 @@ function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
         :setButtonLabel(ui.newTTFLabel({
             text = _("免费加速"),
             size = 24,
-            color = 0xffedae
+            color = UIKit:hex2c3b(0xffedae)
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then

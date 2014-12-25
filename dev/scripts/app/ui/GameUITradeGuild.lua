@@ -40,7 +40,7 @@ end
 
 function GameUITradeGuild:ctor(city,building)
     local bn = Localize.building_name
-    GameUITradeGuild.super.ctor(self,city,"bn[building:GetType()]",building)
+    GameUITradeGuild.super.ctor(self,city,bn[building:GetType()],building)
 end
 
 function GameUITradeGuild:CreateBetweenBgAndTitle()
@@ -64,7 +64,6 @@ function GameUITradeGuild:onEnter()
         {
             label = _("我的商品"),
             tag = "myGoods",
-            default = true
         },
     }, function(tag)
         self.buy_layer:setVisible(tag == 'buy')

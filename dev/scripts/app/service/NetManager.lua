@@ -164,7 +164,7 @@ onPlayerDataChanged_callbacks = {}
 function NetManager:addPlayerDataChangedEventListener()
     self:addEventListener("onPlayerDataChanged", function(success, msg)
         if success then
-            LuaUtils:outputTable("onPlayerDataChanged", msg)
+            dump(msg)
             DataManager:setUserData(msg)
         end
         local callback = onPlayerDataChanged_callbacks[1]

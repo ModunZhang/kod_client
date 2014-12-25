@@ -16,10 +16,16 @@ function WidgetSlider:ctor(direction, images, options)
 
 end
 function WidgetSlider:setSliderSize(width, height)
+    local rect = self.barSprite_:getBoundingBox()
+
+    local old_widht = rect.width 
     WidgetSlider.super.setSliderSize(self,width, height)
     self:updateButtonPosition_()
-    self.progress:setScaleX(width/self.progress:getContentSize().width)
-    self.progress:setScaleY(height/self.progress:getContentSize().height)
+    self.progress:setScaleX(width*(self.progress:getContentSize().width/old_widht)/self.progress:getContentSize().width)
+    local rect = self.barSprite_:getBoundingBox()
+    self.progress:align(display.CENTER, rect.x + rect.width/2, rect.y + rect.height/2)
+
+    -- self.progress:setScaleY(height/self.progress:getContentSize().height)
 end
 function WidgetSlider:align(align, x, y)
     WidgetSlider.super.align(self,align, x, y)

@@ -95,6 +95,7 @@ function WidgetEventTabButtons:OnMakingMaterialsWithEvent(tool_shop, event, curr
     end
 end
 function WidgetEventTabButtons:OnEndMakeMaterialsWithEvent(tool_shop, event, current_time)
+    self:EventChangeOn("material")
 end
 function WidgetEventTabButtons:OnGetMaterialsWithEvent(tool_shop, event)
     self:EventChangeOn("material")
