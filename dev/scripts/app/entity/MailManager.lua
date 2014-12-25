@@ -1,5 +1,6 @@
 local Enum = import("..utils.Enum")
 local MultiObserver = import("..entity.MultiObserver")
+local Report = import("..entity.Report")
 
 local MailManager = class("MailManager", MultiObserver)
 MailManager.LISTEN_TYPE = Enum("MAILS_CHANGED","UNREAD_MAILS_CHANGED","REPORTS_CHANGED")
@@ -289,10 +290,14 @@ function MailManager:OnUserDataChanged(userData,timer)
 end
 
 function MailManager:OnReportsChanged( reports )
-    self.reports = reports
+    for k,v in pairs(reports) do
+        table.insert(self.reports, Report:DecodeFromJsonData(v))
+    end
 end
 function MailManager:OnSavedReportsChanged( savedReports )
-    self.savedReports = savedReports
+    for k,v in pairs(savedReports) do
+        table.insert(self.savedReports, Report:DecodeFromJsonData(v))
+    end
 end
 function MailManager:OnNewReportsChanged( __reports )
     local add_reports = {}
@@ -300,22 +305,18 @@ function MailManager:OnNewReportsChanged( __reports )
     local edit_reports = {}
     for _,rp in pairs(__reports) do
         if rp.type == "add" then
-            table.insert(add_reports, rp.data)
-            table.insert(self.reports, rp.data)
+            table.insert(add_reports, Report:DecodeFromJsonData(rp.data))
+            table.insert(self.reports, Report:DecodeFromJsonData(rp.data))
             self:IncreaseUnReadMailsAndReports(1)
         elseif rp.type == "remove" then
-            table.insert(remove_reports, rp.data)
+            table.insert(remove_reports, Report:DecodeFromJsonData(rp.data))
             self:DeleteReport(rp.data)
         elseif rp.type == "edit" then
-            table.insert(edit_reports, rp.data)
+            table.insert(edit_reports, Report:DecodeFromJsonData(rp.data))
             self:ModifyReport(rp.data)
         end
     end
-    LuaUtils:outputTable("OnReportsChanged", {
-        add = add_reports,
-        remove = remove_reports,
-        edit = edit_reports,
-    })
+ 
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.REPORTS_CHANGED,function(listener)
         listener:OnReportsChanged({
             add = add_reports,
@@ -330,22 +331,18 @@ function MailManager:OnNewSavedReportsChanged( __savedReports )
     local edit_reports = {}
     for _,rp in pairs(__savedReports) do
         if rp.type == "add" then
-            table.insert(add_reports, rp.data)
-            table.insert(self.savedReports, rp.data)
+            table.insert(add_reports, Report:DecodeFromJsonData(rp.data))
+            table.insert(self.savedReports, Report:DecodeFromJsonData(rp.data))
             self:IncreaseUnReadMailsAndReports(1)
         elseif rp.type == "remove" then
-            table.insert(remove_reports, rp.data)
+            table.insert(remove_reports, Report:DecodeFromJsonData(rp.data))
             self:DeleteSavedReport(rp.data)
         elseif rp.type == "edit" then
-            table.insert(edit_reports, rp.data)
+            table.insert(edit_reports, Report:DecodeFromJsonData(rp.data))
             self:ModifySavedReport(rp.data)
         end
     end
-    LuaUtils:outputTable("OnSavedReportsChanged", {
-        add_reports = add_reports,
-        remove_reports = remove_reports,
-        edit_reports = edit_reports,
-    })
+
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.REPORTS_CHANGED,function(listener)
         listener:OnSavedReportsChanged({
             add = add_reports,
@@ -356,29 +353,29 @@ function MailManager:OnNewSavedReportsChanged( __savedReports )
 end
 function MailManager:DeleteReport( report )
     for k,v in pairs(self.reports) do
-        if v.id == report.id then
+        if v:Id() == report.id then
             table.remove(self.reports,k)
         end
     end
 end
 function MailManager:ModifyReport( report )
     for k,v in pairs(self.reports) do
-        if v.id == report.id then
-            self.reports[k] = report
+        if v:Id() == report.id then
+            self.reports[k] = Report:DecodeFromJsonData(report)
         end
     end
 end
 function MailManager:DeleteSavedReport( report )
     for k,v in pairs(self.savedReports) do
-        if v.id == report.id then
+        if v:Id() == report.id then
             table.remove(self.savedReports,k)
         end
     end
 end
 function MailManager:ModifySavedReport( report )
     for k,v in pairs(self.savedReports) do
-        if v.id == report.id then
-            self.savedReports[k] = report
+        if v:Id() == report.id then
+            self.savedReports[k] = Report:DecodeFromJsonData(report)
         end
     end
 end
@@ -419,6 +416,7 @@ function MailManager:GetSavedReports(fromIndex)
     end
 end
 return MailManager
+
 
 
 

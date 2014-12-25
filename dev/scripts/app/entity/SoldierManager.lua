@@ -147,9 +147,9 @@ function SoldierManager:OnUserDataChanged(user_data)
             end)
         end
     end
-    if user_data.treatSoldiers then
+    if user_data.woundedSoldiers then
         -- 伤兵列表
-        local treatSoldiers = user_data.treatSoldiers
+        local treatSoldiers = user_data.woundedSoldiers
         local treat_soldier_changed = {}
         local treatSoldiers_map = self.treatSoldiers_map
         for k, old in pairs(treatSoldiers_map) do
