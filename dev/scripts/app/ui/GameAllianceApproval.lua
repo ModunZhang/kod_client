@@ -1,4 +1,4 @@
---
+	--
 -- Author: Danny He
 -- Date: 2014-10-24 11:41:10
 --
@@ -7,34 +7,30 @@ local window = import("..utils.window")
 local UIListView = import(".UIListView")
 local UIScrollView = import(".UIScrollView")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 function GameAllianceApproval:onMoveInStage()
 	GameAllianceApproval.super.onMoveInStage(self)
 	local layer = UIKit:shadowLayer():addTo(self)
-	local bg = self:CreatePopupBg(820):addTo(layer):pos(window.left+10,window.bottom+50)
+	local bg = self:CreatePopupBg(754):addTo(layer):pos(window.left+10,window.bottom+50)
 	local title_bar = display.newSprite("alliance_blue_title_600x42.png")
 		:addTo(bg)
-		:align(display.LEFT_BOTTOM, 0, 820 - 15)
-	local closeButton = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"}, {scale9 = false})
-	   	:addTo(title_bar)
-	   	:align(display.BOTTOM_RIGHT,title_bar:getContentSize().width+10, 0)
-	   	:onButtonClicked(function ()
+		:align(display.LEFT_BOTTOM, 2, 754 - 20)
+	UIKit:closeButton():align(display.BOTTOM_RIGHT,title_bar:getContentSize().width, 0)
+		:onButtonClicked(function ()
 	   		self:leftButtonClicked()
 	   	end)
-	-- display.newSprite("X_3.png")
-	--    	:addTo(closeButton)
-	--    	:pos(-32,30)
+	   	:addTo(title_bar)
 	UIKit:ttfLabel({
 		text = _("申请审批"),
 		color = 0xffedae,
 		size = 22,
-	}):align(display.LEFT_BOTTOM, 50, 10):addTo(title_bar)
-	self.listView = UIListView.new {
-    	viewRect = cc.rect(15, 20,580,780),
+	}):align(display.CENTER, 300, 21):addTo(title_bar)
+	local list,list_node = UIKit:commonListView({
+		viewRect = cc.rect(0, 0,568,687),
         direction = UIScrollView.DIRECTION_VERTICAL,
-        -- bgColor = UIKit:hex2c4b(0x7a000000),
-        alignment = UIListView.ALIGNMENT_LEFT,
-    }:addTo(bg)
+	})
+	list_node:addTo(bg):pos(20,30)
+	self.listView = list
 	self:RefreshListView()
 end
 
@@ -50,64 +46,61 @@ end
 
 function GameAllianceApproval:GetListItem(player)
 	local item = self.listView:newItem()
-	local node = display.newNode()
-	local icon_box = display.newSprite("alliance_item_flag_box_126X126.png"):align(display.LEFT_BOTTOM, 0,0)
-		:addTo(node)
-	local content_box = display.newSprite("alliance_approval_box_450x126.png")
-		:align(display.LEFT_BOTTOM,icon_box:getPositionX()+icon_box:getContentSize().width, icon_box:getPositionY())
-		:addTo(node)
-	local line = display.newScale9Sprite("dividing_line.png"):align(display.LEFT_CENTER,0,content_box:getContentSize().height/2):addTo(content_box)
-		:size(450,2)
+	local bg = WidgetUIBackGround.new({width = 568,height = 152},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
+	local icon_box = display.newSprite("alliance_item_flag_box_126X126.png"):align(display.LEFT_BOTTOM, 10,15):addTo(bg)
 	UIKit:GetPlayerCommonIcon():addTo(icon_box):pos(icon_box:getContentSize().width/2,icon_box:getContentSize().height/2)
+	local line = display.newScale9Sprite("dividing_line.png")
+		:align(display.LEFT_CENTER,icon_box:getPositionX()+icon_box:getContentSize().width + 5,icon_box:getPositionY() + icon_box:getContentSize().height/2)
+		:addTo(bg)
+		:size(416,2)
 	--name
 	UIKit:ttfLabel({
 		text = player.name or " ",
 		size = 22,
 		color = 0x403c2f
-	}):align(display.LEFT_TOP,20,110):addTo(content_box)
-	--lv
+	}):align(display.LEFT_BOTTOM,line:getPositionX(),line:getPositionY() + 20):addTo(bg)
+	-- --lv
 	UIKit:ttfLabel({
 		text = "LV " .. player.level,
 		size = 20,
 		color = 0x403c2f
-	}):align(display.LEFT_TOP,190,105):addTo(content_box)
-	--
-	local icon = display.newSprite("upgrade_power_icon.png"):scale(0.5):align(display.LEFT_TOP,250,110):addTo(content_box)
-	--power label
+	}):align(display.LEFT_BOTTOM,line:getPositionX() + 170,line:getPositionY() + 20):addTo(bg)
+	local power_icon = display.newSprite("dragon_strength_27x31.png")
+        :align(display.LEFT_BOTTOM, line:getPositionX() + 260,line:getPositionY() + 20)
+        :addTo(bg)
 	UIKit:ttfLabel({
 		text = string.formatnumberthousands(player.power),
 		size = 22,
 		color = 0x403c2f,
 		align = cc.TEXT_ALIGNMENT_LEFT,
-	}):align(display.LEFT_TOP,icon:getPositionX()+icon:getContentSize().width*0.5+10,110):addTo(content_box)
-	local agreeButton = WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
-		:align(display.RIGHT_BOTTOM,430,10)
-		:onButtonClicked(function()
-			self:OnAgreeButtonClicked(player.id)
-		end)
-		:setButtonLabel("normal", UIKit:ttfLabel({
-			text = _("同意"),
-			size = 22,
-			color = 0xfff3c7,
-			shadow = true
-		}))
-		:addTo(content_box)
+	}):align(display.LEFT_BOTTOM,power_icon:getPositionX()+power_icon:getContentSize().width + 2,power_icon:getPositionY()):addTo(bg)
 
-	WidgetPushButton.new({normal = "red_button_146x42.png",pressed = "red_button_highlight_146x42.png"})
-		:align(display.RIGHT_BOTTOM,agreeButton:getPositionX() - 146 - 10,10)
-		:onButtonClicked(function()
-			self:OnRefuseButtonClicked(player.id)
-		end)
-		:setButtonLabel("normal", UIKit:ttfLabel({
-			text = _("拒绝"),
-			size = 22,
-			color = 0xfff3c7,
-			shadow = true
-		}))
-		:addTo(content_box)
-
-	item:addContent(node)
-	item:setItemSize(580,node:getCascadeBoundingBox().height+10)
+    local rejectButton = WidgetPushButton.new({normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"})
+        :setButtonLabel(
+            UIKit:commonButtonLable({
+            	color = 0xfff3c7,
+            	text  = _("拒绝")
+            })
+        )
+        :align(display.LEFT_TOP,line:getPositionX(), line:getPositionY() - 5)
+        :onButtonClicked(function(event)
+            self:OnRefuseButtonClicked(player.id)
+        end)
+        :addTo(bg)
+	 local argreeButton = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
+            :setButtonLabel(
+                UIKit:commonButtonLable({
+                    text = _("同意"),
+                    color = 0xfff3c7
+                })
+            )
+            :align(display.LEFT_TOP,power_icon:getPositionX(),line:getPositionY() - 5)
+            :onButtonClicked(function(event)
+                self:OnAgreeButtonClicked(player.id)
+            end)
+            :addTo(bg)
+	item:addContent(bg)
+	item:setItemSize(568,152)
 	return item
 end
 

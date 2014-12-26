@@ -106,7 +106,10 @@ end
 function AllianceMember:IsTheSameId(id)
     return self:Id() == id
 end
-
+function AllianceMember:GetTitleLevel()
+    return titles_enum[self:Title()]
+end
+--权限help函数
 
 
 return AllianceMember

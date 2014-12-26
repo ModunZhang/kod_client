@@ -123,7 +123,7 @@ function WidgetAllianceUIHelper:GetAllRectangleTerrains()
 	if not self.terrains then
 		self.terrains = {}
 		for i=1,3 do
-    		self.terrains[i] = "rectangle_terrain_184x270.png"
+    		self.terrains[i] = "rectangle_terrain_216x282.png"
 		end
 	end
 	return self.terrains
@@ -299,7 +299,6 @@ function WidgetAllianceUIHelper:CreateFlagContentSprite(obj_flag)
 end
 --带地形(菱形)的旗帜
 function WidgetAllianceUIHelper:CreateFlagWithRhombusTerrain(terrain_info,obj_flag)
-    print("terrain_info-------->",terrain_info)
     local node = display.newNode()
     if type(terrain_info) == 'string' then terrain_info = self.LANDFORM_TYPE[terrain_info] end
     local terrain = self:GetAllRhombusTerrains()[terrain_info]
@@ -340,7 +339,7 @@ function WidgetAllianceUIHelper:CreateFlagWithRectangleTerrain(terrain_info,obj_
     local flag_node = self:CreateFlagContentSprite(obj_flag):addTo(node)
         :align(display.RIGHT_BOTTOM, terrain_sprite:getPositionX() - 55, terrain_sprite:getPositionY()-45)
         :scale(0.9)
-    local box = display.newSprite("rectangle_terrain_box_184x270.png")
+    local box = display.newSprite("rectangle_terrain_box_216x282.png")
         :addTo(node)
         :scale(0.9)
 

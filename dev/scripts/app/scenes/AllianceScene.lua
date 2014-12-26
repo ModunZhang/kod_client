@@ -28,6 +28,8 @@ function AllianceScene:onEnter()
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(10, 10)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
+
+    self:GetSceneLayer():ZoomTo(1)
 end
 
 function AllianceScene:CreateAllianceUI()
@@ -48,10 +50,7 @@ function AllianceScene:onExit()
     AllianceScene.super.onExit(self)
 end
 function AllianceScene:CreateSceneLayer()
-    local scene = AllianceLayer.new(self:GetAlliance())
-    :addTo(self)
-    :ZoomTo(1)
-    return scene
+    return AllianceLayer.new(self:GetAlliance())
 end
 function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building = self:GetSceneLayer():GetClickedObject(x, y)

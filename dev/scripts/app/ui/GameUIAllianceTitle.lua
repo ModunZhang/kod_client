@@ -46,9 +46,6 @@ function GameUIAllianceTitle:BuildUI()
 	   	:onButtonClicked(function ()
 	   		self:leftButtonClicked()
 	   	end)
-	-- display.newSprite("X_3.png")
-	--    	:addTo(closeButton)
-	--    	:pos(-32,30)
 	self.title_label = UIKit:ttfLabel({
 		text = _("联盟权限"),
 		size = 24,
@@ -79,7 +76,7 @@ function GameUIAllianceTitle:BuildUI()
     editbox:setText(display_title)
     editbox:setMaxLength(140)
     editbox:setFont(UIKit:getFontFilePath(),18)
-    editbox:setFontColor(UIKit:hex2c3b(0xccc49e))
+    editbox:setFontColor(cc.c3b(0,0,0))
     editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
     editbox:align(display.LEFT_TOP,icon:getPositionX()+50,icon:getPositionY()+20):addTo(bg)
     local pageLabel = UIKit:ttfLabel({
