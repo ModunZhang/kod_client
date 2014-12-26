@@ -276,7 +276,15 @@ function GameUIHome:CreateTop()
         end
     end):addTo(top_bg):pos(630, -81):scale(0.6)
 
-
+ -- BUFF按钮
+    local help_button = cc.ui.UIPushButton.new(
+        {normal = "buff_1_128x128.png", pressed = "buff_1_128x128.png"}
+    ):onButtonClicked(function(event)
+        if event.name == "CLICKED_EVENT" then
+            UIKit:newGameUI("GameUIBuff",self.city):addToCurrentScene()
+        end
+    end):addTo(self):pos(display.cx-280, display.top-260)
+    :scale(0.5)
 
     return top_bg
 end

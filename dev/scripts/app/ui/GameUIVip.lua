@@ -1,8 +1,9 @@
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetBackGroundLucid = import("..widget.WidgetBackGroundLucid")
-local WidgetPlayerInfo = import("..widget.WidgetPlayerInfo")
+local WidgetPlayerNode = import("..widget.WidgetPlayerNode")
 local UIAutoClose = import(".UIAutoClose")
+local UIListView = import(".UIListView")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetPages = import("..widget.WidgetPages")
 local WidgetInfo = import("..widget.WidgetInfo")
@@ -14,6 +15,13 @@ local BUY_AND_USE = 1
 local USE = 2
 local VIP_MAX_LEVEL = 10
 
+local function __getPlayerIcons()
+    return {
+        "head_dragon.png",
+        "Hero_1.png",
+        "playerIcon_default.png",
+    }
+end
 -- vip 经验对应 等级
 local vip_level_table = {
     [1]= -1,
@@ -67,14 +75,173 @@ local VIP_EFFECIVE_VALUE = {
 function GameUIVip:ctor(city,default_tag)
     GameUIVip.super.ctor(self,city,_("PLAYER INFO"))
     self.default_tag = default_tag
+    self.basicInfo = DataManager:getUserData().basicInfo
 end
 
 function GameUIVip:CreateBetweenBgAndTitle()
     GameUIVip.super.CreateBetweenBgAndTitle(self)
-    self.player_info_layer = WidgetPlayerInfo.new():addTo(self)
+    self.player_node = WidgetPlayerNode.new(cc.size(564,760),self)
+        :addTo(self):pos(window.cx-564/2,window.bottom_top+30)
     self.vip_layer = display.newLayer():addTo(self)
+    self:RefreshListView()
 end
 
+function GameUIVip:RefreshListView()
+    self.player_node:RefreshUI()
+end
+
+function GameUIVip:AdapterPlayerList()
+    local infos = {}
+    local basicInfo = self.basicInfo
+    local alliance = Alliance_Manager:GetMyAlliance()
+    if not alliance:IsDefault() then
+        local member = alliance:GetMemeberById(DataManager:getUserData()._id)
+    end
+    table.insert(infos,{_("职位"),member and member:Title() or ""})
+    table.insert(infos,{_("联盟"),alliance and alliance:Name() or ""})
+    table.insert(infos,{_("忠诚值"),member and member:Loyalty() or ""})
+    table.insert(infos,{_("击杀"),member and member:Kill() or ""})
+    table.insert(infos,{_("胜率"),"假的"})
+    table.insert(infos,{_("进攻胜利"),"假的"})
+    table.insert(infos,{_("防御胜利"),"假的"})
+    table.insert(infos,{_("采集木材熟练度"),"假的"})
+    table.insert(infos,{_("采集石料熟练度"),"假的"})
+    table.insert(infos,{_("采集铁矿熟练度"),"假的"})
+    table.insert(infos,{_("采集粮食熟练度"),"假的"})
+    return infos
+end
+-- 选择新头像弹出框
+function GameUIVip:OpenSelectHeadIcon()
+    local pd = WidgetPopDialog.new(644,_("选择头像")):addToCurrentScene()
+    local body = pd:GetBody()
+    self.head_icon_list = UIListView.new{
+        -- bgColor = UIKit:hex2c4b(0x7a100000),
+        viewRect = cc.rect(4, 10, 600, 600),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+    }:addTo(body)
+    for _,icon in pairs(__getPlayerIcons()) do
+        self:AddIconOption(icon)
+    end
+    self.head_icon_list:reload()
+
+end
+
+function GameUIVip:AddIconOption(icon)
+    local list =  self.head_icon_list
+    local item =list:newItem()
+
+    item:setItemSize(600, 138)
+
+    local content = display.newNode()
+    content:setContentSize(cc.size(600, 126))
+
+    local bg_1 = display.newSprite("alliance_item_flag_box_126X126.png")
+        :addTo(content):pos(75,63)
+    local size = bg_1:getContentSize()
+    local head_bg = display.newSprite("player_head_bg.png"):addTo(bg_1)
+        :pos(size.width/2,size.height/2)
+    display.newSprite(icon):addTo(head_bg):pos(head_bg:getContentSize().width/2,head_bg:getContentSize().height/2)
+    local bg_2 = display.newSprite("alliance_approval_box_450x126.png"):addTo(bg_1)
+        :align(display.LEFT_CENTER,size.width,size.height/2)
+    UIKit:ttfLabel({
+        text = _("头像")..icon,
+        size = 24,
+        color = 0x403c2f
+    }):align(display.LEFT_CENTER,10,80)
+        :addTo(bg_2)
+    UIKit:ttfLabel({
+        text = _("解锁条件").."XXXXXX",
+        size = 24,
+        color = 0x403c2f
+    }):align(display.LEFT_CENTER,10,40)
+        :addTo(bg_2)
+
+    if self.basicInfo.icon ~= icon then
+        WidgetPushButton.new(
+            {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"},
+            {scale9 = false},
+            {
+                disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+            }
+        ):setButtonLabel(UIKit:ttfLabel({
+            text = _("选择"),
+            size = 24,
+            color = 0xffedae,
+            shadow= true
+        }))
+            :onButtonClicked(function(event)
+                if event.name == "CLICKED_EVENT" then
+                end
+            end):addTo(bg_2):align(display.RIGHT_CENTER, bg_2:getContentSize().width-10,40)
+            :setButtonEnabled(false)
+    else
+        UIKit:ttfLabel({
+            text = _("已装备"),
+            size = 24,
+            color = 0xffedae,
+        }):addTo(bg_2):align(display.RIGHT_CENTER, bg_2:getContentSize().width-10,40)
+    end
+
+
+    item:addContent(content)
+    list:addItem(item)
+end
+--WidgetPlayerNode的回调方法
+--点击勋章
+function GameUIVip:WidgetPlayerNode_OnMedalButtonClicked(index)
+    print("OnMedalButtonClicked-->",index)
+end
+-- 点击头衔
+function GameUIVip:WidgetPlayerNode_OnTitleButtonClicked()
+    print("OnTitleButtonClicked-->")
+end
+--修改头像
+function GameUIVip:WidgetPlayerNode_OnPlayerIconCliked()
+    print("WidgetPlayerNode_OnPlayerIconCliked-->")
+    self:OpenSelectHeadIcon()
+end
+--修改玩家名
+function GameUIVip:WidgetPlayerNode_OnPlayerNameCliked()
+    print("WidgetPlayerNode_OnPlayerNameCliked-->")
+end
+--决定按钮是否可以点击
+function GameUIVip:WidgetPlayerNode_PlayerCanClickedButton(name,args)
+    print("WidgetPlayerNode_PlayerCanClickedButton-->",name)
+    if name == 'Medal' then --点击勋章
+        return false
+    elseif name == 'PlayerIcon' then --修改头像
+        return true
+    elseif name == 'PlayerTitle' then -- 点击头衔
+        return false
+    elseif name == 'PlayerName' then --修改玩家名
+        return true
+    end
+
+end
+--数据回调
+function GameUIVip:WidgetPlayerNode_DataSource(name)
+    if name == 'BasicInfoData' then
+        local basicInfo = self.basicInfo
+        local exp_config = GameDatas.PlayerInitData.playerLevel[basicInfo.level]
+        local levelUpExp = exp_config.expTo - exp_config.expFrom
+        return {
+            name = basicInfo.name,
+            lv = basicInfo.level,
+            currentExp = basicInfo.levelExp,
+            maxExp = levelUpExp,
+            power = basicInfo.power,
+            playerId = DataManager:getUserData()._id,
+            playerIcon = basicInfo.icon,
+            vip = "88"
+        }
+    elseif name == "MedalData"  then
+        return {} -- {"xx.png","xx.png"}
+    elseif name == "TitleData"  then
+        return {} -- {image = "xxx.png",desc = "我是头衔"}
+    elseif name == "DataInfoData"  then
+        return self:AdapterPlayerList() -- {{"职位","将军"},{"职位","将军"},{"职位","将军"}}
+    end
+end
 function GameUIVip:onEnter()
     GameUIVip.super.onEnter(self)
     self:CreateTabButtons({
@@ -90,9 +257,9 @@ function GameUIVip:onEnter()
         },
     }, function(tag)
         if tag == 'info' then
-            self.player_info_layer:setVisible(true)
+            self.player_node:setVisible(true)
         else
-            self.player_info_layer:setVisible(false)
+            self.player_node:setVisible(false)
         end
         if tag == 'VIP' then
             self.vip_layer:setVisible(true)
@@ -623,6 +790,8 @@ function GameUIVip:OpenVIPDetails(show_vip_level)
         :addToCurrentScene()
     local body = layer:GetBody()
     local size = body:getContentSize()
+    self.widget_info = WidgetInfo.new({info={},h=500}):align(display.TOP_CENTER, size.width/2, size.height-90)
+        :addTo(body)
     local widget_page = WidgetPages.new({
         page = 10, -- 页数
         titles =  {"VIP 1","VIP 2","VIP 3","VIP 4","VIP 5","VIP 6","VIP 7","VIP 8","VIP 9","VIP 10",}, -- 标题 type -> table
@@ -632,9 +801,6 @@ function GameUIVip:OpenVIPDetails(show_vip_level)
         current_page = show_vip_level,
         icon = "vip_king_icon.png"
     }):align(display.CENTER, size.width/2, size.height-50)
-        :addTo(body)
-    local info = self:GetVIPInfoByLevel(show_vip_level)
-    self.widget_info = WidgetInfo.new({info=info,h=500}):align(display.TOP_CENTER, size.width/2, size.height-90)
         :addTo(body)
 
     self.reach_bg = display.newSprite("vip_bg_4.png")
@@ -675,7 +841,7 @@ function GameUIVip:OpenVIPDetails(show_vip_level)
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.CENTER, 70, 12)
         :addTo(not_reach_bg)
-    
+
 end
 
 -- 根据当前vip exp 获取对应VIP等级
@@ -690,6 +856,8 @@ function GameUIVip:GetVipLevelByExp(exp)
 end
 
 return GameUIVip
+
+
 
 
 

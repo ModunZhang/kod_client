@@ -341,6 +341,26 @@ DRAGON_HEAD = {
     redDragon = "Dragon_red_113x128.png",
     greenDragon = "Dragon_green_113x128.png"
 }
+BUFF = {
+    buff1 = "buff_1_128x128.png",
+    buff2 =  "buff_2_128x128.png",
+    buff3 =  "buff_3_128x128.png",
+    buff4 =  "buff_4_128x128.png",
+    buff5 =  "buff_5_128x128.png",
+    buff6 =  "buff_6_128x128.png",
+    buff7 = "buff_7_128x128.png",
+    buff8 =  "buff_8_128x128.png",
+    buff9 =  "buff_9_128x128.png",
+    buff10 =  "buff_1_128x128.png",
+    buff11 =  "buff_2_128x128.png",
+    buff12 =  "buff_3_128x128.png",
+    buff13 = "buff_4_128x128.png",
+    buff14 =  "buff_5_128x128.png",
+    buff15 =  "buff_6_128x128.png",
+    buff16 =  "buff_7_128x128.png",
+    buff17 =  "buff_8_128x128.png",
+    buff18 =  "buff_9_128x128.png",
+}
 
 local SOLDIER_ANIMATIONS = getAniNameFromAnimationFiles(SOLDIER_ANIMATION_FILES)
 local SOLDIER_EFFECT_ANIMATIONS = getAniNameFromAnimationFiles(EFFECT_ANIMATION_FILES)
@@ -364,7 +384,10 @@ return {
     dragon_material_pic_map = DRAGON_MATERIAL_PIC_MAP,
     soldier_metarial = SOLDIER_METARIAL,
     equipment =EQUIPMENT,
+    buff = BUFF,
 }
+
+
 
 
 

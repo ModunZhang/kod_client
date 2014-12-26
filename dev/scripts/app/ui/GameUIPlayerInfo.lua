@@ -13,6 +13,7 @@ local GameUIWriteMail = import('.GameUIWriteMail')
 local WidgetPlayerNode = import("..widget.WidgetPlayerNode")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local Localize = import("..utils.Localize")
+
 function GameUIPlayerInfo:ctor(isOnlyMail,memberId)
 	GameUIPlayerInfo.super.ctor(self)
 	self.isOnlyMail_ = isOnlyMail or false

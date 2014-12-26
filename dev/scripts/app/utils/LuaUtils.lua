@@ -156,6 +156,12 @@ function LuaUtils:table_slice(t,star_index,end_index)
     return r
 end
 
+function LuaUtils:string_foreach(str,func)
+    str:gsub(".", function(c)
+       func(c)
+    end)
+end
+
 function LuaUtils:isString(str)
     return str and type(str) == 'string'
 end

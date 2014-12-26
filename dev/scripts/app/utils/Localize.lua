@@ -448,6 +448,44 @@ local FIGHT_REWARD = {
     iron = _("铁矿"),
     coin = _("银币"),
 }
+local ALLIANCE_AUTHORITY_LIST = {
+    {
+        _("从联盟商店购买低级道具"),
+        _("接受联盟礼物"),
+        _("向联盟捐赠资源，增加联盟荣耀值，增加自己的忠诚值"),
+    },
+    {
+        _("从联盟商店购买高级道具"),
+    }, -- 2 
+    {
+        _("发送联盟邀请"),
+        _("管理联盟申请"),
+        _("剔出成员"),
+        _("提升成员职位"),
+        _("降职成员职位"),
+        _("改联盟描述"),
+    }, -- 3
+    {
+        _("在联盟商店的道具目录中补充高级道具"),
+        _("修改联盟公告"),
+        _("发送联盟群邮件"),
+        _("升级联盟建筑"),
+    }, -- 4
+    {
+        _("移动联盟建筑位置"),
+        _("移除联盟中的树林/山脉/湖波"),
+        _("激活圣地的联盟危机事件"),
+        _("激活联盟GvG会战"),
+    }, -- 5
+    {
+        _("更改联盟名称/联盟简称"),
+        _("更改联盟旗帜"),
+        _("更改联盟地形"),
+        _("设置联盟语言"),
+        _("移交联盟盟主职位"),
+        _("更改职位名称"),
+    }, -- 
+}
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
@@ -465,11 +503,14 @@ return {
     soldier_status = SOLDIER_STATUS,
     dragon_status = DRAGON_STATUS,
     fight_reward = FIGHT_REWARD,
-    getSoldierCategoryByName = function(soldier_name) return SOLDIER_CATEGORY[SOLDIER_CATEGORY_MAP[soldier_name]] end
+    getSoldierCategoryByName = function(soldier_name) return SOLDIER_CATEGORY[SOLDIER_CATEGORY_MAP[soldier_name]] end,
+    alliance_authority_list = ALLIANCE_AUTHORITY_LIST,
 }
 
 
 
+
+ 
 
 
 
