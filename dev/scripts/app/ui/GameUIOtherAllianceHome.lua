@@ -15,7 +15,7 @@ local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 
 function GameUIOtherAllianceHome:onEnter()
     GameUIOtherAllianceHome.super.onEnter(self)
-   
+
     Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
 end
 
@@ -239,9 +239,13 @@ function GameUIOtherAllianceHome:OnBasicChanged(alliance,changed_map)
         if changed_map.status.new ~="fight" then
             FullScreenPopDialogUI.new():SetTitle(_("提示"))
                 :SetPopMessage(_("联盟会战已经结束,请返回我方联盟"))
-                :CreateOKButton(function ()
-                    self:ComeBackToOurAlliance()
-                end,_("确定"))
+                :CreateOKButton(
+                    {
+                        listener = function ()
+                            self:ComeBackToOurAlliance()
+                        end
+                    }
+                )
                 :AddToCurrentScene()
         end
     end
@@ -252,6 +256,7 @@ function GameUIOtherAllianceHome:AddMapChangeButton()
 end
 
 return GameUIOtherAllianceHome
+
 
 
 

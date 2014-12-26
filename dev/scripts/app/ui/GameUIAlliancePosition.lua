@@ -76,7 +76,9 @@ function GameUIAlliancePosition:ctor()
                 if string.len(x) == 0 or string.len(y) == 0 then
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))
                         :SetPopMessage(_("请输入坐标"))
-                        :CreateOKButton(function()end)
+                        :CreateOKButton({
+                            listener =  function()end
+                        })
                         :AddToCurrentScene()
                     return
                 end

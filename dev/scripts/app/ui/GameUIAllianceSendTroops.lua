@@ -134,11 +134,15 @@ function GameUIAllianceSendTroops:onEnter()
                 if self.dragon:IsHpLow() then
                     FullScreenPopDialogUI.new():SetTitle(_("行军"))
                         :SetPopMessage(_("您的龙的HP低于20%,有很大几率阵亡,确定要派出吗?"))
-                        :CreateOKButton(function ()
-                            self.march_callback(dragonType,soldiers)
-                            -- 确认派兵后关闭界面
-                            self:leftButtonClicked()
-                        end)
+                        :CreateOKButton(
+                            {
+                                listener =  function ()
+                                    self.march_callback(dragonType,soldiers)
+                                    -- 确认派兵后关闭界面
+                                    self:leftButtonClicked()
+                                end
+                            }
+                        )
                         :AddToCurrentScene()
                 else
                     self.march_callback(dragonType,soldiers)
@@ -559,6 +563,7 @@ function GameUIAllianceSendTroops:onExit()
 end
 
 return GameUIAllianceSendTroops
+
 
 
 

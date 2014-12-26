@@ -34,7 +34,7 @@ end
 function GameUIAlliance:OnBasicChanged(alliance, changed_map)
     if Alliance_Manager:GetMyAlliance():IsDefault() then return end
     if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
-        if changed_map.flag then 
+        if changed_map.flag then
             self:RefreshFlag()
         else
             self:RefreshOverViewUI()
@@ -177,10 +177,10 @@ function GameUIAlliance:CreateAllianceTips()
         :pos(backgroundImage:getContentSize().width/2, backgroundImage:getContentSize().height+8)
         :addTo(backgroundImage)
     local mainTitleLabel = UIKit:ttfLabel({
-            text = _("创建联盟"),
-            size = 24,
-            color= 0xffedae
-        })
+        text = _("创建联盟"),
+        size = 24,
+        color= 0xffedae
+    })
         :addTo(titleBar)
         :align(display.CENTER,titleBar:getContentSize().width/2,titleBar:getContentSize().height/2)
     UIKit:closeButton()
@@ -220,7 +220,7 @@ function GameUIAlliance:CreateAllianceTips()
     ):pos(backgroundImage:getContentSize().width/2,50)
         :addTo(backgroundImage)
     closeButton = btn_bg.button
-  
+
     local scrollView = UIListView.new {
         viewRect = cc.rect(13,10, 546, 334),
         direction = UIScrollView.DIRECTION_VERTICAL,
@@ -301,8 +301,8 @@ function GameUIAlliance:NoAllianceTabEvent_joinIf()
     editbox_tag_search:align(display.LEFT_TOP,searchIcon:getPositionX()+searchIcon:getContentSize().width+10,self.main_content:getCascadeBoundingBox().height - 10):addTo(joinNode)
     self.editbox_tag_search = editbox_tag_search
     local list,list_node = UIKit:commonListView({
-         direction = UIScrollView.DIRECTION_VERTICAL,
-         viewRect = cc.rect(20, 0,608,680),
+        direction = UIScrollView.DIRECTION_VERTICAL,
+        viewRect = cc.rect(20, 0,608,680),
     })
     list_node:addTo(joinNode):pos(15,30)
     self.joinListView = list
@@ -439,7 +439,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
         :size(100,100)
         :addTo(bg)
         :align(display.LEFT_TOP, 6, bg:getContentSize().height - 10)
-    
+
     local flag_sprite = self.alliance_ui_helper:CreateFlagWithRhombusTerrain(terrain,Flag.new():DecodeFromJson(flag_info))
     flag_sprite:addTo(flag_box):scale(0.6)
     flag_sprite:pos(50,40)
@@ -715,7 +715,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
     local noticeView = UIListView.new {
         viewRect =  cc.rect(21,14,537,123),
         direction = UIScrollView.DIRECTION_VERTICAL,
-        -- bgColor = UIKit:hex2c4b(0x7a000000),
+    -- bgColor = UIKit:hex2c4b(0x7a000000),
     }:addTo(notice_bg)
     self.ui_overview.noticeView = noticeView
 
@@ -735,7 +735,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
         :addTo(notice_bg)
         :align(display.TOP_CENTER,292,181)
     display.newSprite("alliance_notice_icon_26x26.png"):addTo(notice_button):pos(70,-18)
-    
+
 
     local line_2 = display.newSprite("dividing_line.png")
         :addTo(headerBg)
@@ -745,7 +745,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
         size = 22,
         color = 0x797154,
     }):addTo(headerBg):align(display.LEFT_BOTTOM,line_2:getPositionX()+5,line_2:getPositionY() + 5)
-    
+
     local languageLabelVal =  UIKit:ttfLabel({
         text = Alliance_Manager:GetMyAlliance():DefaultLanguage(),
         size = 22,
@@ -758,13 +758,13 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
     local line_1 = display.newSprite("dividing_line.png")
         :addTo(headerBg)
         :align(display.LEFT_TOP,titileBar:getPositionX() - titileBar:getContentSize().width + 10,titileBar:getPositionY() - titileBar:getContentSize().height - 50)
-   
+
     local tagLabel = UIKit:ttfLabel({
         text = _("标签"),
         size = 22,
         color = 0x797154,
     }):addTo(headerBg)
-    :align(display.LEFT_BOTTOM,languageLabel:getPositionX(),line_1:getPositionY() + 5)
+        :align(display.LEFT_BOTTOM,languageLabel:getPositionX(),line_1:getPositionY() + 5)
 
     local tagLabelVal = UIKit:ttfLabel({
         text = Alliance_Manager:GetMyAlliance():AliasName(),
@@ -846,8 +846,8 @@ function GameUIAlliance:GetEventTitleImageByEvent(event)
 end
 
 function GameUIAlliance:RefreshFlag()
-     if not self.flag_box then return end
-     if self.ui_overview and self.tab_buttons:GetSelectedButtonTag() == 'overview'  then
+    if not self.flag_box then return end
+    if self.ui_overview and self.tab_buttons:GetSelectedButtonTag() == 'overview'  then
         local alliance_data = Alliance_Manager:GetMyAlliance()
         if self.ui_overview.my_alliance_flag then
             local x,y = self.ui_overview.my_alliance_flag:getPosition()
@@ -893,7 +893,7 @@ function GameUIAlliance:HaveAlliaceUI_membersIf()
     local listView = UIListView.new {
         viewRect = cc.rect(10, 10, 548,764),
         direction = UIScrollView.DIRECTION_VERTICAL,
-        -- bgColor = UIKit:hex2c4b(0x7a000000),
+    -- bgColor = UIKit:hex2c4b(0x7a000000),
     }:addTo(member_list_bg)
     self.memberListView = listView
     self.member_list_bg = member_list_bg
@@ -1021,12 +1021,12 @@ function GameUIAlliance:GetMemberItem(title)
     local node = display.newNode():size(548,height)
     local title_bar = display.newSprite("alliance_member_title_548x38.png"):align(display.LEFT_TOP, 0, height):addTo(node)
     local button = WidgetPushButton.new({normal = "alliance_member_i_n_34x34.png",pressed = "alliance_member_i_h_34x34.png"})
-            :align(display.RIGHT_CENTER,540,19)
-            :addTo(title_bar)
-            :onButtonClicked(function(event)
-                self:OnAllianceTitleClicked(title)
-            end)
-        WidgetPushTransparentButton.new(cc.rect(0,0,548,38),button):addTo(title_bar):align(display.LEFT_BOTTOM,0,0)
+        :align(display.RIGHT_CENTER,540,19)
+        :addTo(title_bar)
+        :onButtonClicked(function(event)
+            self:OnAllianceTitleClicked(title)
+        end)
+    WidgetPushTransparentButton.new(cc.rect(0,0,548,38),button):addTo(title_bar):align(display.LEFT_BOTTOM,0,0)
     local title_label= UIKit:ttfLabel({
         text = header_title,
         size = 22,
@@ -1034,7 +1034,7 @@ function GameUIAlliance:GetMemberItem(title)
     }):addTo(title_bar):align(display.CENTER,274, 19)
     local num = display.newSprite(number_image):addTo(title_bar)
         :align(display.RIGHT_CENTER,title_label:getPositionX() - title_label:getContentSize().width/2 - 10,19)
-    local y = height - 38 
+    local y = height - 38
     for i,v in ipairs(data) do
         self:GetNormalSubItem(i,v.name,v.level,v.power,v.id):addTo(node):align(display.LEFT_TOP, 0, y)
         y = y - 68
@@ -1060,11 +1060,11 @@ function GameUIAlliance:GetNormalSubItem(index,playerName,level,power,memberId)
     local powerIcon = display.newSprite("dragon_strength_27x31.png"):align(display.LEFT_CENTER,icon:getPositionX()+icon:getContentSize().width*0.5+266,34)
         :addTo(item)
     local powerLabel = UIKit:ttfLabel({
-            text = string.formatnumberthousands(power),
-            size = 22,
-            color = 0x403c2f,
-            align = cc.TEXT_ALIGNMENT_LEFT,
-        }):addTo(item):align(display.LEFT_CENTER,icon:getPositionX()+icon:getContentSize().width*0.5+300,34)
+        text = string.formatnumberthousands(power),
+        size = 22,
+        color = 0x403c2f,
+        align = cc.TEXT_ALIGNMENT_LEFT,
+    }):addTo(item):align(display.LEFT_CENTER,icon:getPositionX()+icon:getContentSize().width*0.5+300,34)
     if DataManager:getUserData()._id ~= memberId then
         WidgetPushButton.new({normal = "alliacne_search_29x33.png"})
             :align(display.RIGHT_CENTER,524,34)
@@ -1198,13 +1198,17 @@ function GameUIAlliance:OnAllianceJoinTypeButtonClicked(event)
     end
     FullScreenPopDialogUI.new():SetTitle(_("提示"))
         :SetPopMessage(_("你将设置联盟加入方式为") .. title)
-        :CreateOKButton(function ()
-            NetManager:getEditAllianceJoinTypePromise(join_type):catch(function(err)
-                dump(err:reason())
-            end):done(function(result)
-                self:RefreshInfomationView()
-            end)
-        end,_("确定"))
+        :CreateOKButton(
+            {
+                listener =  function ()
+                    NetManager:getEditAllianceJoinTypePromise(join_type):catch(function(err)
+                        dump(err:reason())
+                    end):done(function(result)
+                        self:RefreshInfomationView()
+                    end)
+                end
+            }
+        )
         :CreateCancelButton({listener = function ()
             self.fromCancel = true
             self:SelectJoinType()
@@ -1222,9 +1226,13 @@ function GameUIAlliance:OnInfoButtonClicked(tag)
     if tag == 1 then
         FullScreenPopDialogUI.new():SetTitle(_("退出联盟"))
             :SetPopMessage(_("您必须在没有部队在外行军的情况下，才可以退出联盟。退出联盟会损失当前未打开的联盟礼物。"))
-            :CreateOKButton(function()
-                NetManager:getQuitAlliancePromise():done()
-            end)
+            :CreateOKButton(
+                {
+                    listener =  function()
+                        NetManager:getQuitAlliancePromise():done()
+                    end
+                }
+            )
             :AddToCurrentScene()
     elseif tag == 2 then
         self:CreateInvateUI()
@@ -1274,41 +1282,53 @@ function GameUIAlliance:CreateInvateUI()
     editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
     editbox:align(display.RIGHT_TOP,588,120):addTo(bg)
     WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
-            :setButtonLabel(
-                UIKit:commonButtonLable({
-                    text = _("发送"),
-                    color = 0xffedae
-                })
-            )
-            :onButtonClicked(function(event)
-                local playerName = string.trim(editbox:getText())
-                if string.len(playerName) == 0 then
+        :setButtonLabel(
+            UIKit:commonButtonLable({
+                text = _("发送"),
+                color = 0xffedae
+            })
+        )
+        :onButtonClicked(function(event)
+            local playerName = string.trim(editbox:getText())
+            if string.len(playerName) == 0 then
+                FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                    :SetPopMessage(_("请输入邀请的玩家名称"))
+                    :CreateOKButton(
+                        {
+                            listener =  function()end
+                        }
+                    )
+                    :AddToCurrentScene()
+                return
+            end
+            NetManager:getInviteToJoinAlliancePromise(playerName)
+                :next(function(result)
+                    layer:removeFromParent(true)
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("请输入邀请的玩家名称"))
-                        :CreateOKButton(function()end)
+                        :SetPopMessage(_("邀请发送成功"))
+                        :CreateOKButton({
+                            listener =  function()end
+                        })
                         :AddToCurrentScene()
-                    return
-                end
-                NetManager:getInviteToJoinAlliancePromise(playerName)
-                    :next(function(result)
-                        layer:removeFromParent(true)
-                        FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                            :SetPopMessage(_("邀请发送成功"))
-                            :CreateOKButton(function()end)
-                            :AddToCurrentScene()
-                    end)
-                    :catch(function(err)
-                        FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                            :SetPopMessage(err:reason())
-                            :CreateOKButton(function()end)
-                            :AddToCurrentScene()
-                    end)
-            end)
-            :addTo(bg):align(display.RIGHT_BOTTOM,editbox:getPositionX(), 20)
+                end)
+                :catch(function(err)
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(err:reason())
+                        :CreateOKButton({
+                            listener =  function()end
+                        })
+                        :AddToCurrentScene()
+                end)
+        end)
+        :addTo(bg):align(display.RIGHT_BOTTOM,editbox:getPositionX(), 20)
 
     layer:addTo(self)
 end
 
 
 return GameUIAlliance
+
+
+
+
 
