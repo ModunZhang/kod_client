@@ -623,6 +623,8 @@ function GameUIVip:OpenVIPDetails(show_vip_level)
         :addToCurrentScene()
     local body = layer:GetBody()
     local size = body:getContentSize()
+    self.widget_info = WidgetInfo.new({info={},h=500}):align(display.TOP_CENTER, size.width/2, size.height-90)
+        :addTo(body)
     local widget_page = WidgetPages.new({
         page = 10, -- 页数
         titles =  {"VIP 1","VIP 2","VIP 3","VIP 4","VIP 5","VIP 6","VIP 7","VIP 8","VIP 9","VIP 10",}, -- 标题 type -> table
@@ -632,9 +634,6 @@ function GameUIVip:OpenVIPDetails(show_vip_level)
         current_page = show_vip_level,
         icon = "vip_king_icon.png"
     }):align(display.CENTER, size.width/2, size.height-50)
-        :addTo(body)
-    local info = self:GetVIPInfoByLevel(show_vip_level)
-    self.widget_info = WidgetInfo.new({info=info,h=500}):align(display.TOP_CENTER, size.width/2, size.height-90)
         :addTo(body)
 
     self.reach_bg = display.newSprite("vip_bg_4.png")
