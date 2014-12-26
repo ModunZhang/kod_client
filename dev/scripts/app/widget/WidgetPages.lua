@@ -66,7 +66,7 @@ function WidgetPages:ctor(params)
     display.newSprite("shrine_page_control_26x34.png")
         :addTo(self.right_button)
         :pos(-26,0)
-    self:SelectPage_(self.current_page)
+    self:SelectPage(self.current_page)
 end
 --翻页 false ->left true->right
 function WidgetPages:ChangePage_(page_change)
@@ -85,11 +85,19 @@ function WidgetPages:ChangePage_(page_change)
     self.current_page_label:setString(to_page)
     self.cb(to_page)
 end
-function WidgetPages:SelectPage_(page)
+function WidgetPages:SelectPage(page)
     self.title_label:setString(self.titles[page])
     self.left_button:setButtonEnabled(page ~= 1)
     self.right_button:setButtonEnabled(page ~= self.page)
     self.current_page = page
+    self.cb(page)
+end
+function WidgetPages:ResetOneTitle(title,index)
+    self.titles[index] = title
+    if index == self.current_page then
+        self.title_label:setString(title)
+    end
+    return self
 end
 return WidgetPages
 
