@@ -251,7 +251,6 @@ function WidgetPlayerNode:SetDelegate(delegate)
 	self.delegate_ = delegate
 end
 --- events
-
 function WidgetPlayerNode:CallDelegate_(methodName,args)
 	if not self:GetDelegate() then return  end
 	args = args or {}
