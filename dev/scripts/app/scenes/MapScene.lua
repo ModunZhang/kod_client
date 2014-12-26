@@ -13,7 +13,9 @@ function MapScene:ctor()
     self.scene_node:setContentSize(cc.size(display.width, display.height))
     self.scene_layer = self:CreateSceneLayer():addTo(self:GetSceneNode(), 0)
     self.touch_layer = self:CreateMultiTouchLayer():addTo(self:GetSceneNode(), 1)
-    self.scene_ui_layer = self:CreateSceneUILayer():addTo(self:GetSceneNode(), 2)
+    if type(self.CreateSceneUILayer) == "function" then
+        self.scene_ui_layer = self:CreateSceneUILayer():addTo(self:GetSceneNode(), 2)
+    end
 end
 function MapScene:onEnter()
 
