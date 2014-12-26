@@ -34,7 +34,11 @@ end
 function GameUIAlliance:OnBasicChanged(alliance, changed_map)
     if Alliance_Manager:GetMyAlliance():IsDefault() then return end
     if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
-        self:RefreshOverViewUI()
+        if changed_map.flag then 
+            self:RefreshFlag()
+        else
+            self:RefreshOverViewUI()
+        end
     end
     if self.tab_buttons:GetSelectedButtonTag() == 'members' then
         self:RefreshMemberList()
@@ -61,6 +65,7 @@ function GameUIAlliance:OnMemberChanged(alliance,changed_map)
 end
 
 function GameUIAlliance:OnOperation(alliance,operation_type)
+    dump(operation_type,"OnOperation---->")
     self:RefreshMainUI()
 end
 
@@ -434,7 +439,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
         :size(100,100)
         :addTo(bg)
         :align(display.LEFT_TOP, 6, bg:getContentSize().height - 10)
-    self.flag_box = flag_box
+    
     local flag_sprite = self.alliance_ui_helper:CreateFlagWithRhombusTerrain(terrain,Flag.new():DecodeFromJson(flag_info))
     flag_sprite:addTo(flag_box):scale(0.6)
     flag_sprite:pos(50,40)
@@ -687,6 +692,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
         :addTo(headerBg):align(display.TOP_RIGHT, headerBg:getContentSize().width - 10, headerBg:getContentSize().height - 20)
     local flag_box = display.newScale9Sprite("alliance_item_flag_box_126X126.png"):size(134,134)
         :align(display.TOP_LEFT,20, headerBg:getContentSize().height - 20):addTo(headerBg)
+    self.flag_box = flag_box
     self.ui_overview.nameLabel = UIKit:ttfLabel({
         text = Alliance_Manager:GetMyAlliance():Name(),
         size = 24,
@@ -839,14 +845,10 @@ function GameUIAlliance:GetEventTitleImageByEvent(event)
     end
 end
 
-function GameUIAlliance:RefreshOverViewUI()
-    if not self.flag_box then return end
-    self:RefreshEventListView()
-    if self.ui_overview and self.tab_buttons:GetSelectedButtonTag() == 'overview'  then
+function GameUIAlliance:RefreshFlag()
+     if not self.flag_box then return end
+     if self.ui_overview and self.tab_buttons:GetSelectedButtonTag() == 'overview'  then
         local alliance_data = Alliance_Manager:GetMyAlliance()
-        self.ui_overview.nameLabel:setString(alliance_data:Name())
-        self.ui_overview.tagLabel:setString(alliance_data:AliasName())
-        self.ui_overview.languageLabel:setString(alliance_data:DefaultLanguage())
         if self.ui_overview.my_alliance_flag then
             local x,y = self.ui_overview.my_alliance_flag:getPosition()
             self.ui_overview.my_alliance_flag:removeFromParent()
@@ -854,6 +856,15 @@ function GameUIAlliance:RefreshOverViewUI()
                 :addTo(self.flag_box)
                 :pos(x,y)
         end
+    end
+end
+
+function GameUIAlliance:RefreshOverViewUI()
+    if self.ui_overview and self.tab_buttons:GetSelectedButtonTag() == 'overview'  then
+        local alliance_data = Alliance_Manager:GetMyAlliance()
+        self.ui_overview.nameLabel:setString(alliance_data:Name())
+        self.ui_overview.tagLabel:setString(alliance_data:AliasName())
+        self.ui_overview.languageLabel:setString(alliance_data:DefaultLanguage())
         self:RefreshNoticeView()
     end
 end
