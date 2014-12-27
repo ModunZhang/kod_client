@@ -192,7 +192,6 @@ end
 
 function GameUITownHall:CreateTimerItemWithListView(list_view)
     local widget = WidgetWithBlueTitle.new(242, _("税收")):align(display.CENTER)
-    WidgetUIBackGround
     local size = widget:getContentSize()
     cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,

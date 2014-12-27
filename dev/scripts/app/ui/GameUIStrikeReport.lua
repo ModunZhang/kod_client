@@ -5,8 +5,6 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local UICheckBoxButton = import(".UICheckBoxButton")
 local Localize = import("..utils.Localize")
 
-
-
 local GameUIStrikeReport = UIKit:createUIClass("GameUIStrikeReport", "UIAutoClose")
 
 function GameUIStrikeReport:ctor(report)
@@ -141,8 +139,8 @@ function GameUIStrikeReport:onEnter()
     -- 战斗统计部分
     self:CreateWarStatisticsPart()
     if report:Type() == "strikeCity" and report:GetStrikeLevel()>1 then
-    -- 敌方情报部分
-    -- self:CreateReportOfEnemy()
+        -- 敌方情报部分
+        self:CreateReportOfEnemy()
     end
 
     self.details_view:reload()
@@ -521,10 +519,15 @@ function GameUIStrikeReport:CreateReportOfEnemy()
     end
 end
 function GameUIStrikeReport:CreateEnemyResource()
+    local resources = self.report:GetStrikeIntelligence().resources
+    if not resources then
+        return
+    end
     local r_tip_height = 36
 
     -- 敌方资源列表部分高度
-    local r_count = #self:GetEnemyResource()
+    local unpack_resources = self:GetEnemyResource(resources)
+    local r_count = #unpack_resources
     local r_list_height = r_count * r_tip_height
 
     -- 敌方资源列表
@@ -534,7 +537,7 @@ function GameUIStrikeReport:CreateEnemyResource()
     -- 构建所有资源标签项
     local r_item_bg_color_flag = true
     local added_r_item_count = 0
-    for k,r_parms in pairs(self:GetEnemyResource()) do
+    for k,r_parms in pairs(unpack_resources) do
         local r_item_bg_image = r_item_bg_color_flag and "back_ground_546X36_1.png" or "back_ground_546X36_2.png"
         local r_item_bg = display.newSprite(r_item_bg_image)
             :align(display.TOP_CENTER, group_width/2, r_list_height-r_tip_height*added_r_item_count+4)
@@ -567,30 +570,17 @@ function GameUIStrikeReport:CreateEnemyResource()
     item:addContent(group)
     self.details_view:addItem(item)
 end
-function GameUIStrikeReport:GetEnemyResource()
-    local resources = self.report[self.report:Type()].enemyPlayerData.resources
-    return {
-        {
-            resource_type = _("粮食"),
-            icon="food_icon.png",
-            value = resources.food,
-        },
-        {
-            resource_type = _("木材"),
-            icon="wood_icon.png",
-            value = resources.wood,
-        },
-        {
-            resource_type = _("石料"),
-            icon="stone_icon.png",
-            value = resources.stone,
-        },
-        {
-            resource_type = _("铁矿"),
-            icon="iron_icon.png",
-            value = resources.iron,
-        },
-    }
+function GameUIStrikeReport:GetEnemyResource(resources)
+    local unpack_resources = {}
+    for k,v in pairs(resources) do
+        table.insert(unpack_resources, {
+                resource_type = Localize.fight_reward[k],
+                icon= UILib.resource[k],
+                value = v,
+            }
+        )
+    end
+    return unpack_resources
 end
 
 function GameUIStrikeReport:CreateEnemyTechnology()
@@ -658,7 +648,7 @@ function GameUIStrikeReport:GetTextEnemyTechnology()
     }
 end
 function GameUIStrikeReport:CreateDragonSkills()
-    local dragon = self.report[self.report:Type()].enemyPlayerData.dragon
+    local dragon = self.report:GetStrikeIntelligence().dragon
     if not dragon then
         return
     end
@@ -709,7 +699,8 @@ function GameUIStrikeReport:CreateDragonSkills()
     self.details_view:addItem(item)
 end
 function GameUIStrikeReport:CreateGarrison()
-    local soldiers = self.report[self.report:Type()].enemyPlayerData.soldiers
+    -- local soldiers = self.report[self.report:Type()].enemyPlayerData.soldiers
+    local soldiers = self.report:GetStrikeIntelligence().soldiers
 
     local r_tip_height = 36
 
@@ -772,7 +763,9 @@ function GameUIStrikeReport:CreateGarrison()
     self.details_view:addItem(item)
 end
 function GameUIStrikeReport:CreateDragonEquipments()
-    local dragon = self.report:GetData().enemyPlayerData.dragon
+    local dragon = self.report:GetStrikeIntelligence().dragon
+
+    -- local dragon = self.report:GetData().enemyPlayerData.dragon
     local equipments = dragon and dragon.equipments
 
     local r_tip_height = 36
