@@ -447,6 +447,7 @@ local FIGHT_REWARD = {
     stone = _("石料"),
     iron = _("铁矿"),
     coin = _("银币"),
+    wallHp = _("城墙血量")
 }
 local ALLIANCE_AUTHORITY_LIST = {
     {
