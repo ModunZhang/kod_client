@@ -515,7 +515,7 @@ function GameUIAllianceEnter:InitConfig()
                     img = "icon_info_1.png",
                     title = _("信息"),
                     func = function (building)
-                        UIKit:newGameUI("GameUIPlayerInfo",true,building.player:Id()):addToCurrentScene(true)
+                        UIKit:newGameUI("GameUIAllianceMemberInfo",true,building.player:Id()):addToCurrentScene(true)
                     end
                 },
             },
@@ -559,7 +559,7 @@ function GameUIAllianceEnter:InitConfig()
                     img = "icon_info_1.png",
                     title = _("信息"),
                     func = function (building)
-                        UIKit:newGameUI("GameUIPlayerInfo",true,building.player:Id()):addToCurrentScene(true)
+                        UIKit:newGameUI("GameUIAllianceMemberInfo",true,building.player:Id()):addToCurrentScene(true)
                     end
                 },
             },
@@ -579,7 +579,7 @@ function GameUIAllianceEnter:InitConfig()
                     img = "icon_info_1.png",
                     title = _("信息"),
                     func = function (building)
-                        UIKit:newGameUI("GameUIPlayerInfo",true,building.player:Id()):addToCurrentScene(true)
+                        UIKit:newGameUI("GameUIAllianceMemberInfo",true,building.player:Id()):addToCurrentScene(true)
                     end
                 },
             }

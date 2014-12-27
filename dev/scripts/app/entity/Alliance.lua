@@ -1092,4 +1092,8 @@ function Alliance:CheckHelpDefenceMarchEventsHaveTarget(memeberId)
     end
     return false
 end
+
+function Alliance:GetSelf()
+    return self:GetMemeberById(DataManager:getUserData()._id)
+end
 return Alliance
