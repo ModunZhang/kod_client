@@ -101,13 +101,13 @@ function GameUIHospital:OnTreating(hospital, event, current_time)
     end
     self:SetTreatingSoldierNum(treat_count)
     self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(current_time)),event:Percent(current_time))
-    -- TODO 测试数据，小于5分钟可免费加速治疗   
+    -- TODO 测试数据，小于5分钟可免费加速治疗
     if math.floor(event:LeftTime(current_time))<=300 and self.timer:GetButtonStatus() ~= "freeSpeedup" then
         self.timer:SetButtonImages({normal = "purple_btn_up_148x76.png",
-                pressed = "purple_btn_down_148x76.png",
-                disabled = "purple_btn_up_148x76.png",
-            }):SetButtonLabel(_("免费加速"))
-        :SetButtonStatus("freeSpeedup")
+            pressed = "purple_btn_down_148x76.png",
+            disabled = "purple_btn_up_148x76.png",
+        }):SetButtonLabel(_("免费加速"))
+            :SetButtonStatus("freeSpeedup")
     end
     self.treate_all_soldiers_item:hide()
     self.timer:show()
@@ -173,7 +173,7 @@ function GameUIHospital:CreateHealAllSoldierItem()
         :addTo(self.treate_all_soldiers_item)
 
     self.treat_all_now_button = btn_bg.button
-    
+
     local btn_bg = UIKit:commonButtonWithBG(
         {
             w=185,
@@ -187,7 +187,7 @@ function GameUIHospital:CreateHealAllSoldierItem()
     ):pos(bg_size.width/2+180, 110)
         :addTo(self.treate_all_soldiers_item)
     self.treat_all_button = btn_bg.button
-    
+
     self.treat_all_now_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
     self.treat_all_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
     -- 立即治愈所需宝石
@@ -243,17 +243,25 @@ function GameUIHospital:TreatListener()
     elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING_AND_LACK_RESOURCE then
         local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("正在治愈，资源不足"))
-            :CreateOKButton(treat_fun)
+            :CreateOKButton(
+                {
+                    listener = treat_fun
+                }
+            )
             :CreateNeeds("Topaz-icon.png",self.building:GetTreatGems(soldiers)):AddToCurrentScene()
     elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.LACK_RESOURCE then
         local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("资源不足，是否花费宝石补足"))
-            :CreateOKButton(treat_fun)
+            :CreateOKButton({
+                    listener = treat_fun
+                })
             :CreateNeeds("Topaz-icon.png",self.building:GetTreatGems(soldiers)):AddToCurrentScene()
     elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING then
         local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("正在治愈，是否花费魔法石立即完成"))
-            :CreateOKButton(treat_fun)
+            :CreateOKButton({
+                    listener = treat_fun
+                })
             :CreateNeeds("Topaz-icon.png",self.building:GetTreatGems(soldiers)):AddToCurrentScene()
     else
         treat_fun()
@@ -388,7 +396,7 @@ function GameUIHospital:CreateItemWithListView(list_view)
             if soldier_number>0 then
                 local widget = WidgetTreatSoldier.new(soldier_name,
                     1,
-                    soldier_number) 
+                    soldier_number)
                     :addTo(self)
                     :align(display.CENTER, window.cx, 500 / 2)
                     :OnBlankClicked(function(widget)
@@ -496,6 +504,7 @@ function GameUIHospital:OnTreatSoliderCountChanged(soldier_manager, treat_soldie
 end
 
 return GameUIHospital
+
 
 
 

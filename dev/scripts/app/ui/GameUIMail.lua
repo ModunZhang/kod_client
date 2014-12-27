@@ -136,22 +136,26 @@ function GameUIMail:CreateMailControlBox()
                 local replace_text = (control_type == "mail" and _("邮件")) or (control_type == "report" and _("战报"))
                 FullScreenPopDialogUI.new():SetTitle(string.format(_("删除%s"),replace_text))
                     :SetPopMessage(string.format(_("您即将删除所选%s,删除的%s将无法恢复,您确定要这么做吗?"),replace_text,replace_text))
-                    :CreateOKButton(function ()
-                        local select_map = self:GetSelectMailsOrReports()
-                        local ids = {}
-                        for k,v in pairs(select_map) do
-                            table.insert(ids, v.id)
-                        end
-                        if control_type == "mail" then
-                            NetManager:getDeleteMailsPromise(ids):done(function ()
-                                self:VisibleJudgeForMailControl()
-                            end)
-                        elseif control_type == "report" then
-                            NetManager:getDeleteReportsPromise(ids):done(function ()
-                                self:VisibleJudgeForMailControl()
-                            end)
-                        end
-                    end)
+                    :CreateOKButton(
+                        {
+                            listener =function ()
+                                local select_map = self:GetSelectMailsOrReports()
+                                local ids = {}
+                                for k,v in pairs(select_map) do
+                                    table.insert(ids, v.id)
+                                end
+                                if control_type == "mail" then
+                                    NetManager:getDeleteMailsPromise(ids):done(function ()
+                                        self:VisibleJudgeForMailControl()
+                                    end)
+                                elseif control_type == "report" then
+                                    NetManager:getDeleteReportsPromise(ids):done(function ()
+                                        self:VisibleJudgeForMailControl()
+                                    end)
+                                end
+                            end
+                        }
+                    )
                     :AddToCurrentScene()
             end
         end):align(display.LEFT_CENTER,select_all_btn:getPositionX() + select_all_btn:getCascadeBoundingBox().size.width+10,h/2):addTo(box)
@@ -1574,6 +1578,7 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
 
 
 

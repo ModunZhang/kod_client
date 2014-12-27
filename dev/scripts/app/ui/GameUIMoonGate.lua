@@ -576,9 +576,13 @@ function GameUIMoonGate:InitGarrisonPart()
                     then
                         FullScreenPopDialogUI.new():SetTitle(_("单挑"))
                             :SetPopMessage(_("是否要挑衅敌方的一支部队,进行1vs1的单挑,输的一方将返回其出兵城市"))
-                            :CreateOKButton(function ()
-                                NetManager:getChallengeMoonGateEnemyTroopPromose()
-                            end)
+                            :CreateOKButton(
+                                {
+                                    listener =function ()
+                                        NetManager:getChallengeMoonGateEnemyTroopPromose()
+                                    end
+                                }
+                            )
                             :AddToCurrentScene()
                     else
                         if not self.alliance:GetAllianceMoonGate():HaveSentTroops() then
@@ -857,6 +861,7 @@ function GameUIMoonGate:onExit()
 end
 
 return GameUIMoonGate
+
 
 
 
