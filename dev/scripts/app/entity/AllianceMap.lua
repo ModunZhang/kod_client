@@ -3,7 +3,7 @@ local AllianceObject = import(".AllianceObject")
 local MultiObserver = import(".MultiObserver")
 local AllianceMap = class("AllianceMap", MultiObserver)
 local allianceBuildingType = GameDatas.AllianceInitData.buildingType
-AllianceMap.LISTEN_TYPE = Enum("BUILDING","BUILDING_LEVEL")
+AllianceMap.LISTEN_TYPE = Enum("BUILDING","BUILDING_LEVEL","OnVillagesDataChanged")
 
 local function is_alliance_building(type_)
     return type_ == "building"
@@ -22,10 +22,14 @@ function AllianceMap:ctor(alliance)
     self.alliance = alliance
     self.all_objects = {}
     self.allliance_buildings = {}
+    self.alliance_villages = {}
+    alliance:AddListenOnType(self,alliance.LISTEN_TYPE.OnVillageEventTimer)
 end
 function AllianceMap:Reset()
     self.all_objects = {}
     self.allliance_buildings = {}
+    self.alliance_villages = {}
+    self:GetAlliance():RemoveListenerOnType(self,self:GetAlliance().LISTEN_TYPE.OnVillageEventTimer)
 end
 function AllianceMap:FindAllianceBuildingInfoByObjects(object)
     if object:GetType() == "building" then
@@ -92,7 +96,59 @@ function AllianceMap:OnAllianceDataChanged(alliance_data)
     self:DecodeObjectsFromJsonMapObjects(alliance_data.mapObjects)
     self:DecodeObjectsFromJsonMapObjects__(alliance_data.__mapObjects)
     self:OnAllianceBuildingInfoChange(alliance_data.buildings)
+    self:DecodeAllianceVillages(alliance_data.villages)
+    self:DecodeAllianceVillages__(alliance_data.__villages)
 end
+function AllianceMap:DecodeAllianceVillages(villages)
+    if not villages then return end
+    for _,v in ipairs(villages) do
+        self.alliance_villages[v.id] = v
+    end
+end
+
+function AllianceMap:DecodeAllianceVillages__(__villages)
+    if not __villages then return end
+    local changed_map = GameUtils:Event_Handler_Func(
+        __villages
+        ,function(event_data)
+            self.alliance_villages[v.id] = event_data
+            return event_data
+        end
+        ,function(event_data)
+            if self.alliance_villages[event_data.id] then
+                self.alliance_villages[event_data.id] = event_data
+            end
+        end
+        ,function(event_data)
+            if self.alliance_villages[event_data.id] then
+                self.alliance_villages[event_data.id] = nil
+                return event_data
+            end
+        end
+    )
+    self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.OnVillagesDataChanged, function(listener)
+        listener:OnVillagesDataChanged(GameUtils:pack_event_table(changed_map))
+    end)
+end
+
+function AllianceMap:IteratorAllianceVillageInfo(func)
+    for _,v in pairs(self.alliance_villages) do
+        func(v)
+    end
+end
+
+function AllianceMap:FindAllianceVillagesInfoByObject(object)
+    if is_village(object:GetType()) then
+        local x, y = object:GetLogicPosition()
+        for _,village_info in pairs(self.alliance_villages) do
+            print(village_info.location.x,village_info.location.y,x,y,object:GetType(),"FindAllianceVillagesInfoByObject-->")
+            if village_info.location.x == x and village_info.location.y == y then 
+               return village_info
+            end
+        end
+    end
+end
+
 function AllianceMap:OnAllianceBuildingInfoChange(alliance_buildings)
     if not alliance_buildings then return end
     for k, v in pairs(alliance_buildings) do
@@ -161,6 +217,16 @@ function AllianceMap:DecodeObjectsFromJsonMapObjects(mapObjects)
     self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING, function(listener)
         listener:OnBuildingChange(self, add, remove, modify)
     end)
+end
+
+function AllianceMap:OnVillageEventTimer(villageEvent)
+    if self.alliance_villages[villageEvent:VillageData().id] then
+        local village = self.alliance_villages[villageEvent:VillageData().id]
+        village.resource = village.resource - villageEvent:GetCollectSpeed()
+        self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.OnVillagesDataChanged, function(listener)
+            listener:OnVillagesDataChanged(GameUtils:pack_event_table({},{village},{}))
+        end)
+    end
 end
 return AllianceMap
 

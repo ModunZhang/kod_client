@@ -10,8 +10,25 @@ local config_wall = GameDatas.BuildingFunction.wall
 local GameUIAllianceEnter = UIKit:createUIClass("GameUIAllianceEnter")
 local GameUIAllianceSendTroops = import(".GameUIAllianceSendTroops")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
-
+local VillageEvent = import("..entity.VillageEvent")
+local Alliance_Manager = Alliance_Manager
 GameUIAllianceEnter.MODE = Enum("Normal","Enemy","Watch")
+local allianceBuildingType = GameDatas.AllianceInitData.buildingType
+local Localize = import("..utils.Localize")
+
+local function is_alliance_building(type_)
+    return type_ == "building"
+end
+local function is_city(type_)
+    return type_ == "member"
+end
+local function is_village(type_)
+    return allianceBuildingType[type_].category == "village"
+end
+local function is_decorator(type_)
+    return allianceBuildingType[type_].category == "decorate"
+end
+
 
 function GameUIAllianceEnter:InitConfig()
     local ENTER_LIST = {
@@ -23,7 +40,7 @@ function GameUIAllianceEnter:InitConfig()
         building_info = {
             {
                 {_("坐标"),0x797154},
-                {_("11,11"),0x403c2f},
+                {"11,11",0x403c2f},
             },
             {
                 {_("成员"),0x797154},
@@ -78,7 +95,7 @@ function GameUIAllianceEnter:InitConfig()
         building_info = {
             {
                 {_("坐标"),0x797154},
-                {_("11,11"),0x403c2f},
+                {"11,11",0x403c2f},
             },
             {
                 {_("高级道具数量"),0x797154},
@@ -139,7 +156,7 @@ function GameUIAllianceEnter:InitConfig()
         building_info = {
             {
                 {_("坐标"),0x797154},
-                {_("11,11"),0x403c2f},
+                {"11,11",0x403c2f},
             },
             {
                 {_("驻防部队"),0x797154},
@@ -195,7 +212,7 @@ function GameUIAllianceEnter:InitConfig()
         building_info = {
             {
                 {_("坐标"),0x797154},
-                {_("11,11"),0x403c2f},
+                {"11,11",0x403c2f},
             },
             {
                 {_("当前村落数量"),0x797154},
@@ -249,7 +266,7 @@ function GameUIAllianceEnter:InitConfig()
         building_info = {
             {
                 {_("坐标"),0x797154},
-                {_("11,11"),0x403c2f},
+                {"11,11",0x403c2f},
             },
             {
                 {_("正在进行的事件"),0x797154},
@@ -303,7 +320,7 @@ function GameUIAllianceEnter:InitConfig()
         building_info = {
             {
                 {_("坐标"),0x797154},
-                {_("11,11"),0x403c2f},
+                {"11,11",0x403c2f},
             },
             {
                 {_("占地"),0x797154},
@@ -344,7 +361,7 @@ function GameUIAllianceEnter:InitConfig()
         building_info = {
             {
                 {_("坐标"),0x797154},
-                {_("11,11"),0x403c2f},
+                {"11,11",0x403c2f},
             },
         },
         enter_buttons = {
@@ -384,63 +401,22 @@ function GameUIAllianceEnter:InitConfig()
         building_info = {
             {
                 {_("坐标"),0x797154},
-                {_("11,11"),0x403c2f},
+                {"11,11",0x403c2f},
+
             },
-            {
+             {
                 {_("占领者"),0x797154},
-                {_("11,11"),0x403c2f},
-            },
-            {
-                {_("力量"),0x797154},
-                {_("11,11"),0x403c2f},
+                {_("暂无"),0x403c2f},
             },
         },
         enter_buttons = {
             Normal = 
             {
-                --  {
-                --     img = "Strike_72x72.png",
-                --     title = _("突袭"),
-                --     func = function (building)
-                --         if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
-                --             local playerId = building.player:Id()
-
-                --         end
-                --     end
-                -- },
-                {
-                    img = "village_capture_66x72.png",
-                    title = _("占领"),
-                    func = function (building)
-                        if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
-                            local playerId = building.player:Id()
-
-                        end
-                    end
-                }
+              
             },
             Enemy = 
             {
-                {
-                    img = "Strike_72x72.png",
-                    title = _("突袭"),
-                    func = function (building)
-                        -- if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
-                        --     local playerId = building.player:Id()
-                        --     UIKit:newGameUI("GameUIStrikePlayer",playerId):addToCurrentScene(true)
-                        -- end
-                    end
-                },
-                {
-                    img = "attack_80x66.png",
-                    title = _("摧毁"),
-                    func = function (building)
-                        -- if Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():IsCaptured() then
-                        --     local playerId = building.player:Id()
-                        --     UIKit:newGameUI("GameUIStrikePlayer",playerId):addToCurrentScene(true)
-                        -- end
-                    end
-                }
+              
             },
             Watch = 
             {
@@ -457,14 +433,14 @@ function GameUIAllianceEnter:InitConfig()
         building_info = {
             {
                 {_("坐标"),0x797154},
-                {_("11,11"),0x403c2f},
+                { "11,11",0x403c2f},
             },
             {
                 {_("玩家"),0x797154},
-                {_("11,11"),0x403c2f},
+                {"11,11",0x403c2f},
             },
             {
-                {_("驻防玩家"),0x797154},
+                {_("协防玩家"),0x797154},
                 {"10",0x403c2f},
             },
         },
@@ -592,7 +568,7 @@ end
 function GameUIAllianceEnter:GetMode()
     return self.mode_
 end
-
+--我的联盟
 function GameUIAllianceEnter:GetAlliance()
     return self.alliance
 end
@@ -665,7 +641,6 @@ function GameUIAllianceEnter:SetBuildingInfo()
         dataModel.building_info[3][2][1] = memeber.helpedByTroopsCount
         building.player = memeber
         if self:GetMode() == GameUIAllianceEnter.MODE.Normal then
-            print(DataManager:getUserData()._id,memeber:Id(),DataManager:getUserData()._id == memeber:Id())
             if DataManager:getUserData()._id == memeber:Id() then
                 --自己的城市建筑
                 table.remove(dataModel.enter_buttons.Normal,4)
@@ -682,6 +657,76 @@ function GameUIAllianceEnter:SetBuildingInfo()
                     end
                 end
             end
+        end
+    elseif name == "village" then
+        self.village_info = self.building:GetAllianceVillageInfo()
+        local village_id = self.village_info.id
+        local dataModel = self:GetConfig()[name]
+        dataModel.title = Localize.village_name[self.building:GetType()]
+        if self:GetMode() == GameUIAllianceEnter.MODE.Normal then
+            local villageEvent = self:GetAlliance():FindVillageEventByVillageId(village_id)
+            if villageEvent then  --有人占领
+                info[2][2][1] = villageEvent:PlayerData().name
+                local current_cillect_percent,current_cillect_val = villageEvent:GetCurrentCollect()
+                table.insert(info, {
+                    {_("当前采集"),0x797154},
+                    {current_cillect_val .. "(" .. current_cillect_percent .. "%)",0x403c2f},
+                })
+                table.insert(info, {
+                    {_("完成时间"),0x797154},
+                    {
+                        villageEvent:GetTime() == 0 and _("已完成") or GameUtils:formatTimeStyle1(villageEvent:GetTime()),
+                        0x403c2f
+                    },
+                })
+                local buttons = {}
+                if villageEvent:GetPlayerRole() == villageEvent.EVENT_PLAYER_ROLE.Me then --自己占领
+                    buttons =  {
+                        {
+                            img = "village_capture_66x72.png",
+                            title = _("撤军"),
+                            func = function (building,alliance)
+                                NetManager:getRetreatFromVillagePromise(alliance:Id(),villageEvent:Id())
+                            end
+                        },
+                    }
+                elseif villageEvent:GetPlayerRole() ==   villageEvent.EVENT_PLAYER_ROLE.Ally then --盟友占领
+                    buttons =  {
+                        {
+                            img = "village_capture_66x72.png",
+                            title = _("换防"),
+                            func = function (building,alliance)
+                                UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
+                                    NetManager:getAttackVillagePromise(dragonType,soldiers,alliance:Id(),village_id)
+                                end):addToCurrentScene(true)
+                            end
+                        },
+                    }
+                end
+                dataModel.enter_buttons.Normal = buttons
+            else --没人占领
+                local buttons =  {
+                    {
+                        img = "village_capture_66x72.png",
+                        title = _("占领"),
+                        func = function (building,alliance)
+                            UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
+                                NetManager:getAttackVillagePromise(dragonType,soldiers,alliance:Id(),village_id)
+                            end):addToCurrentScene(true)
+                        end
+                    },
+                    {
+                        img = "Strike_72x72.png",
+                        title = _("突袭"),
+                        func = function (building)
+                           
+                        end
+                    },
+                }
+                dataModel.enter_buttons.Normal = buttons
+            end
+        elseif self:GetMode() == GameUIAllianceEnter.MODE.Enemy then
+
         end
     elseif name == "decorate" then
         local w,h = self.building:GetSize()
@@ -725,13 +770,14 @@ function GameUIAllianceEnter:InitBuildingDese()
             text = str
         }):align(display.LEFT_CENTER,bg:getPositionX() + 40,bg:getPositionY()):addTo(self.desc_label)
     elseif building_key == 'village' then
+        local village_info = self.building:GetAllianceVillageInfo()
         self.desc_label = display.newSprite("Progress_bar_1.png"):align(display.LEFT_TOP, 180, p.height-30)
                 :addTo(self.body)
         self.progressTimer = UIKit:commonProgressTimer("progress_bar_366x34.png"):addTo(self.desc_label):align(display.LEFT_BOTTOM,0,0):scale(386/366)
-        self.progressTimer:setPercentage(100)
+        self.progressTimer:setPercentage(village_info.resource/VillageEvent.GetVillageConfig(village_info.type,village_info.level).production*100)
         local bg = display.newSprite("back_ground_43x43.png"):addTo(self.desc_label):pos(10,18)
-        display.newSprite("res_food_114x100.png"):addTo(bg):pos(21,21):scale(0.4)
-        local str = "100/100"
+        display.newSprite("res_food_114x100.png"):addTo(bg):pos(21,21):scale(0.4) --TODO:村落图标
+        local str = village_info.resource .. "/" .. VillageEvent.GetVillageConfig(village_info.type,village_info.level).production
         UIKit:ttfLabel({
             size = 20,
             color = 0xfff3c7,
@@ -836,6 +882,9 @@ function GameUIAllianceEnter:InitBuildingImage()
         local str = _("Level").." "..self.building.level
         if self:GetBuildingKey() == 'member' then
             str = _("Level").." ".. self.building.player:KeepLevel()
+        end
+        if is_village(self.building:GetType()) then
+            str = _("Level").." ".. self.building:GetAllianceVillageInfo().level
         end
         UIKit:ttfLabel({
             text = str,

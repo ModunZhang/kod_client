@@ -487,6 +487,14 @@ local ALLIANCE_AUTHORITY_LIST = {
         _("更改职位名称"),
     }, -- 
 }
+
+local VILLAGE_NAME = {
+     woodVillage = _("木材村落"),
+     stoneVillage= _("矿石村落"),
+     ironVillage = _("银矿村落"),
+     foodVillage = _("粮食村落"),
+     coinVillage = _("硬币村落"),
+}
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
@@ -506,6 +514,7 @@ return {
     fight_reward = FIGHT_REWARD,
     getSoldierCategoryByName = function(soldier_name) return SOLDIER_CATEGORY[SOLDIER_CATEGORY_MAP[soldier_name]] end,
     alliance_authority_list = ALLIANCE_AUTHORITY_LIST,
+    village_name = VILLAGE_NAME,
 }
 
 

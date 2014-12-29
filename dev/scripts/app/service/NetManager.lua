@@ -1210,6 +1210,19 @@ function NetManager:getCancelDefenceDragonPromise()
         nil,
         "取消龙驻防失败!"),get_playerdata_callback()):next(get_response_msg)
 end
+--攻击村落
+function NetManager:getAttackVillagePromise(dragonType,soldiers,defenceAllianceId,defenceVillageId)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.attackVillage",
+        {defenceVillageId = defenceVillageId,defenceAllianceId=defenceAllianceId,dragonType=dragonType,soldiers = soldiers},"攻打村落失败!"),
+        get_alliancedata_callback()):next(get_response_msg)
+end
+--从村落撤退
+
+function NetManager:getRetreatFromVillagePromise(allianceId,eventId)
+      return promise.all(get_blocking_request_promise("logic.allianceHandler.retreatFromVillage",
+        {allianceId = allianceId,eventId = eventId},"村落撤退失败!"),
+        get_alliancedata_callback()):next(get_response_msg)
+end
 --
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

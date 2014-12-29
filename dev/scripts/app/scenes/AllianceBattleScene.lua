@@ -58,19 +58,18 @@ function AllianceBattleScene:CreateSceneLayer()
 end
 function AllianceBattleScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building,isMyAlliance = self:GetSceneLayer():GetClickedObject(x, y)
-    print(isMyAlliance,"isMyAlliance--->")
     if building then
         local mode = isMyAlliance and GameUIAllianceEnter.MODE.Normal or GameUIAllianceEnter.MODE.Enemy
         if building:GetEntity():GetType() ~= "building" then
             UIKit:newGameUI('GameUIAllianceEnter'
-                ,isMyAlliance and self:GetAlliance() or self:GetEnemyAlliance()
+                ,isMyAlliance and Alliance_Manager:GetMyAlliance() or Alliance:GetEnemyAlliance()
                 ,building:GetEntity()
                 ,mode
             ):addToCurrentScene(true)
         else
             local building_info = building:GetEntity():GetAllianceBuildingInfo()
             UIKit:newGameUI('GameUIAllianceEnter'
-                ,isMyAlliance and self:GetAlliance() or  self:GetEnemyAlliance() 
+                ,isMyAlliance and Alliance_Manager:GetMyAlliance() or Alliance:GetEnemyAlliance()
                 ,building_info
                 ,mode
             ):addToCurrentScene(true)

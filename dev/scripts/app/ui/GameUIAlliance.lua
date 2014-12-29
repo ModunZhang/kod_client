@@ -1151,14 +1151,12 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
             :setButtonLabel(UIKit:ttfLabel({text = _("允许玩家立即加入联盟"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
             :align(display.LEFT_CENTER)
-            :setButtonSelected(Alliance_Manager:GetMyAlliance():JoinType() == "all")
-            :onCheckIfSelectButton(handler(self, self.OnCheckIfSelectButton)))
+            :setButtonSelected(Alliance_Manager:GetMyAlliance():JoinType() == "all"))
         :addButton(UICheckBoxButton.new(checkbox_image)
             :setButtonLabel(UIKit:ttfLabel({text = _("玩家仅能通过申请或者邀请的方式加入"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
             :align(display.LEFT_CENTER)
-            :setButtonSelected(Alliance_Manager:GetMyAlliance():JoinType() ~= "all")
-            :onCheckIfSelectButton(handler(self, self.OnCheckIfSelectButton)))
+            :setButtonSelected(Alliance_Manager:GetMyAlliance():JoinType() ~= "all"))
         :onButtonSelectChanged(handler(self, self.OnAllianceJoinTypeButtonClicked))
         :addTo(informationNode)
         :setButtonsLayoutMargin(26,0,0,0)
@@ -1220,11 +1218,6 @@ function GameUIAlliance:RefreshDescView()
     textItem:setItemSize(537,content:getContentSize().height)
     self.descListView:addItem(textItem)
     self.descListView:reload()
-end
-
-function GameUIAlliance:OnCheckIfSelectButton(checkButton)
-    checkButton:setButtonSelected(true,true)
-    return false
 end
 
 function GameUIAlliance:OnAllianceJoinTypeButtonClicked(event)
