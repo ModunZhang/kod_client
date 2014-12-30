@@ -242,6 +242,16 @@ function Report:GetStrikeTarget()
     local data = self:GetData()
     return data.strikeTarget
 end
+-- 获取突袭情报的对象
+function Report:GetStrikeIntelligence()
+    assert(self.type == Report.REPORT_TYPE[CITYBESTRIKED] or Report.REPORT_TYPE[STRIKECITY],"非突袭战报")
+    local data = self:GetData()
+    if data.helpDefencePlayerData then
+        return data.helpDefencePlayerData
+    elseif data.defencePlayerData then
+        return data.defencePlayerData
+    end
+end
 -- 突袭战报api END --
 
 
