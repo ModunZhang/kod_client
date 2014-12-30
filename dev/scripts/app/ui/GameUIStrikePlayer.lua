@@ -136,7 +136,7 @@ function GameUIStrikePlayer:GetSelectDragonType()
 end
 
 function GameUIStrikePlayer:OnStrikeButtonClicked()
-	if self.strike_type == self.STRIKE_TYPE then
+	if self.strike_type == self.STRIKE_TYPE.CITY then
 		NetManager:getStrikePlayerCityPromise(self:GetSelectDragonType(),self.params):next(function()
 			self:leftButtonClicked()
 		end)
