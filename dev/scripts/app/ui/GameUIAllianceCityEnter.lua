@@ -24,7 +24,7 @@ function GameUIAllianceCityEnter:GetMember()
 end
 
 function GameUIAllianceCityEnter:GetLevelLabelText()
-	return "LEVEL " .. self:GetMember():KeepLevel()
+	return _("等级") .. self:GetMember():KeepLevel()
 end
 
 function GameUIAllianceCityEnter:GetProcessLabelText()

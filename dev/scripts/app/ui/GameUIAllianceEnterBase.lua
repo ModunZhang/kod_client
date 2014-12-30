@@ -130,7 +130,7 @@ function GameUIAllianceEnterBase:GetLevelBg()
 end
 
 function GameUIAllianceEnterBase:GetLevelLabelText()
-	return self:GetBuilding().level and "LEVEL " .. self:GetBuilding().level or ""
+	return self:GetBuilding().level and _("等级") .. self:GetBuilding().level or ""
 end
 
 function GameUIAllianceEnterBase:GetHonourLabelText()
@@ -153,8 +153,6 @@ function GameUIAllianceEnterBase:FixedUI()
 	self:GetLevelBg():hide()
     self.process_bar_bg:hide()
 end
-
-
 
 function GameUIAllianceEnterBase:InitBuildingDese()
     local body = self:GetBody()

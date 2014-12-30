@@ -74,7 +74,7 @@ function VillageEvent:GetCollectSpeed()
 end
 
 function VillageEvent:GetTime()
-	return math.max(self.times_,0)
+	return math.max(self.times_ or 0,0)
 end
 
 function VillageEvent:GetVillageConfig()

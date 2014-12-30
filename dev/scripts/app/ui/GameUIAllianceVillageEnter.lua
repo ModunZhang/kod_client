@@ -103,6 +103,8 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
 				local percent = (self:GetVillageInfo().resource - current_cillect_val)/VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
 				self:GetProgressTimer():setPercentage(percent*100)
 				self:GetProcessLabel():setString(str)
+				local alliance_map = self:GetEnemyAlliance():GetAllianceMap()
+				alliance_map:AddListenOnType(self,alliance_map.LISTEN_TYPE.OnVillagesDataChanged)
 		    else --没人占领
 		    	local no_one_label = {
 		            {_("占领者"),0x797154},
@@ -160,6 +162,10 @@ function GameUIAllianceVillageEnter:OnVillagesDataChanged(village_event)
 		self:GetProgressTimer():setPercentage(percent*100)
 		self:GetProcessLabel():setString(str)
 	end
+end
+
+function GameUIAllianceVillageEnter:GetLevelLabelText()
+	return _("等级") .. self:GetVillageInfo().level
 end
 
 function GameUIAllianceVillageEnter:GetEnterButtons()
