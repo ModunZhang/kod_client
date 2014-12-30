@@ -86,25 +86,25 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
             		{_("占领者"),0x797154},
             		{villageEvent:PlayerData().name,0x403c2f}
         		}
-        		local current_cillect_percent,current_cillect_val = villageEvent:GetCurrentCollect()
         		local current_collect_label =  {
 		            {_("当前采集"),0x797154},
-		            {current_cillect_val .. "(" .. current_cillect_percent .. "%)",0x403c2f},
+		            {villageEvent:CollectCount() .. "(" .. villageEvent:CollectPercent()  .. "%)",0x403c2f,900},
         		}
         		local end_time_label = {
 		            {_("完成时间"),0x797154},
 		            {
 		                villageEvent:GetTime() == 0 and _("已完成") or GameUtils:formatTimeStyle1(villageEvent:GetTime()),
-		                0x403c2f
+		                0x403c2f,
+		                1000
 		            },
         		}
         		labels = {location,occupy_label,current_collect_label,end_time_label}
-        		local str = self:GetVillageInfo().resource - current_cillect_val .. "/" .. VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
-				local percent = (self:GetVillageInfo().resource - current_cillect_val)/VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
+        		local str = self:GetVillageInfo().resource - villageEvent:CollectCount() .. "/" .. VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
+				local percent = (self:GetVillageInfo().resource - villageEvent:CollectCount())/VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
 				self:GetProgressTimer():setPercentage(percent*100)
 				self:GetProcessLabel():setString(str)
-				local alliance_map = self:GetEnemyAlliance():GetAllianceMap()
-				alliance_map:AddListenOnType(self,alliance_map.LISTEN_TYPE.OnVillagesDataChanged)
+				self:GetEnemyAlliance():AddListenOnType(self,self:GetEnemyAlliance().LISTEN_TYPE.OnVillageEventTimer)
+				self:GetEnemyAlliance():AddListenOnType(self,self:GetEnemyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
 		    else --没人占领
 		    	local no_one_label = {
 		            {_("占领者"),0x797154},
@@ -132,35 +132,53 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
             		{_("占领者"),0x797154},
             		{villageEvent:PlayerData().name,0x403c2f}
         		}
-		local current_cillect_percent,current_cillect_val = villageEvent:GetCurrentCollect()
 		local current_collect_label =  {
             {_("当前采集"),0x797154},
-            {current_cillect_val .. "(" .. current_cillect_percent .. "%)",0x403c2f},
+             {villageEvent:CollectCount() .. "(" .. villageEvent:CollectPercent()  .. "%)",0x403c2f,900},
 		}
 		local end_time_label = {
             {_("完成时间"),0x797154},
             {
                 villageEvent:GetTime() == 0 and _("已完成") or GameUtils:formatTimeStyle1(villageEvent:GetTime()),
-                0x403c2f
+                0x403c2f,
+                1000
             },
 		}
 		labels = {location,occupy_label,current_collect_label,end_time_label}
-		local str = self:GetVillageInfo().resource - current_cillect_val .. "/" .. VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
-		local percent = (self:GetVillageInfo().resource - current_cillect_val)/VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
+		local str = self:GetVillageInfo().resource - villageEvent:CollectCount() .. "/" .. VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
+		local percent = (self:GetVillageInfo().resource - villageEvent:CollectCount())/VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
 		self:GetProgressTimer():setPercentage(percent*100)
 		self:GetProcessLabel():setString(str)
-		local alliance_map = self:GetMyAlliance():GetAllianceMap()
-		alliance_map:AddListenOnType(self,alliance_map.LISTEN_TYPE.OnVillagesDataChanged)
+		self:GetMyAlliance():AddListenOnType(self,self:GetMyAlliance().LISTEN_TYPE.OnVillageEventTimer)
+		self:GetMyAlliance():AddListenOnType(self,self:GetMyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
  	end
   	return labels
 end
 
-function GameUIAllianceVillageEnter:OnVillagesDataChanged(village_event)
+function GameUIAllianceVillageEnter:OnVillageEventTimer(village_event,left_resource)
 	if village_event:VillageData().id == self:GetVillageInfo().id then
-		local str = self:GetVillageInfo().resource - current_cillect_val .. "/" .. VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
-		local percent = (self:GetVillageInfo().resource - current_cillect_val)/VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
+		local str = left_resource .. "/" .. VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
+		local percent = left_resource/VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
 		self:GetProgressTimer():setPercentage(percent*100)
 		self:GetProcessLabel():setString(str)
+		local label = self:GetInfoLabelByTag(900)
+		if label then
+			label:setString(village_event:CollectCount() .. "(" .. village_event:CollectPercent() .. "%)")
+		end
+		local label = self:GetInfoLabelByTag(1000)
+		if label then
+			label:setString(GameUtils:formatTimeStyle1(village_event:GetTime()))
+		end
+	end
+end
+
+function GameUIAllianceVillageEnter:OnVillageEventsDataChanged(changed_map)
+	if changed_map.removed then
+		for _,v in ipairs(changed_map.removed) do
+			if v:VillageData().id == self:GetVillageInfo().id then
+				self:leftButtonClicked()
+			end
+		end
 	end
 end
 
@@ -236,13 +254,12 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 end
 
 function GameUIAllianceVillageEnter:onMoveOutStage()
-	local alliance_map = self:GetMyAlliance():GetAllianceMap()
-	alliance_map:RemoveListenerOnType(self,alliance_map.LISTEN_TYPE.OnVillagesDataChanged)
+	self:GetMyAlliance():RemoveListenerOnType(self,self:GetMyAlliance().LISTEN_TYPE.OnVillageEventTimer)
+	self:GetMyAlliance():RemoveListenerOnType(self,self:GetMyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
 	if self:HasEnemyAlliance() then
-		alliance_map = self:GetEnemyAlliance():GetAllianceMap()
-		alliance_map:RemoveListenerOnType(self,alliance_map.LISTEN_TYPE.OnVillagesDataChanged)
+		self:GetEnemyAlliance():RemoveListenerOnType(self,self:GetEnemyAlliance().LISTEN_TYPE.OnVillageEventTimer)
+		self:GetEnemyAlliance():RemoveListenerOnType(self,self:GetEnemyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
 	end
 	GameUIAllianceVillageEnter.super.onMoveOutStage(self)
 end
-
 return GameUIAllianceVillageEnter

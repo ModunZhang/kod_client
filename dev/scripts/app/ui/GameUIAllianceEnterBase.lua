@@ -7,7 +7,6 @@ local GameUIAllianceEnterBase = UIKit:createUIClass("GameUIAllianceEnterBase")
 local window = import("..utils.window")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local Localize = import("..utils.Localize")
-
 -- building is allianceobject
 function GameUIAllianceEnterBase:ctor(building,my_alliance)
 	GameUIAllianceEnterBase.super.ctor(self)
@@ -212,14 +211,27 @@ function GameUIAllianceEnterBase:CreateItemWithLine(params)
     }):align(display.LEFT_BOTTOM, 0, 6)
         :addTo(line)
     if params[2] then
-        UIKit:ttfLabel({
+        local label = UIKit:ttfLabel({
             text = params[2][1],
             size = 20,
             color = params[2][2],
         }):align(display.RIGHT_BOTTOM, size.width, 6)
             :addTo(line)
+        label:setTag(100)
+    end
+    if params[2][3] then
+        line:setTag(params[2][3])
     end
     return line
+end
+
+function GameUIAllianceEnterBase:GetInfoLabelByTag(tag)
+    local line = self:GetBody():getChildByTag(tag)
+    if line then
+        return line:getChildByTag(100)
+    else
+        return nil
+    end
 end
 
 function GameUIAllianceEnterBase:InitEnterButton()
