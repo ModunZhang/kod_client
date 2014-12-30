@@ -24,6 +24,7 @@ local Flag = import("..entity.Flag")
 local GameUIWriteMail = import('.GameUIWriteMail')
 local UILib = import(".UILib")
 local UICheckBoxButton = import(".UICheckBoxButton")
+local UICanCanelCheckBoxButtonGroup = import('.UICanCanelCheckBoxButtonGroup')
 GameUIAlliance.COMMON_LIST_ITEM_TYPE = Enum("JOIN","INVATE","APPLY")
 
 --
@@ -1146,7 +1147,7 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
         on_disabled = "checkbox_selectd.png",
 
     }
-    self.joinTypeButton = cc.ui.UICheckBoxButtonGroup.new(display.TOP_TO_BOTTOM)
+    self.joinTypeButton = UICanCanelCheckBoxButtonGroup.new(display.TOP_TO_BOTTOM)
         :addButton(UICheckBoxButton.new(checkbox_image)
             :setButtonLabel(UIKit:ttfLabel({text = _("允许玩家立即加入联盟"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
@@ -1162,6 +1163,34 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
         :setButtonsLayoutMargin(26,0,0,0)
         :setLayoutSize(557, 54)
         :pos(notice_bg:getPositionX() - notice_bg:getContentSize().width/2,notice_bg:getPositionY() - notice_bg:getContentSize().height/2 - 118)
+        :setCheckButtonStateChangeFunction(function(group,currentSelectedIndex,oldIndex)
+             if  not Alliance_Manager:GetMyAlliance():GetSelf():CanEditAllianceJoinType() then
+                local dialog = FullScreenPopDialogUI.new()
+                dialog:SetTitle(_("提示"))
+                dialog:SetPopMessage(_("您没有此操作权限"))
+                dialog:AddToCurrentScene()
+                return false
+            end
+            if currentSelectedIndex ~= oldIndex then
+                local title = _("允许玩家立即加入联盟")
+                if currentSelectedIndex ~= 1 then
+                        title = _("玩家仅能通过申请或者邀请的方式加入")
+                end
+                FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                    :SetPopMessage(_("你将设置联盟加入方式为") .. title)
+                    :CreateOKButton(
+                        {
+                            listener =  function ()
+                                self.joinTypeButton:sureSelectedButtonIndex(currentSelectedIndex)
+                            end
+                        }
+                    )
+                    :CreateCancelButton({listener = function ()
+                    end,btn_name = _("取消")})
+                    :AddToCurrentScene()
+            end
+            return false
+        end)
 
     local x,y = 37,-125
     local button_imags = {"alliance_sign_out_60x54.png","alliance_invitation_60x54.png","alliance_apply_60x54.png","alliance_group_mail_60x54.png"}
@@ -1195,9 +1224,9 @@ end
 
 function GameUIAlliance:SelectJoinType()
     if Alliance_Manager:GetMyAlliance():JoinType() == "all" then
-        self.joinTypeButton:getButtonAtIndex(1):setButtonSelected(true,true)
+        self.joinTypeButton:sureSelectedButtonIndex(1,true)
     else
-        self.joinTypeButton:getButtonAtIndex(2):setButtonSelected(true,true)
+        self.joinTypeButton:setButtonSelected(2,true)
     end
 end
 
@@ -1220,42 +1249,17 @@ function GameUIAlliance:RefreshDescView()
     self.descListView:reload()
 end
 
-function GameUIAlliance:OnAllianceJoinTypeButtonClicked(event)
-    -- if self.fromCancel then
-    --     self.fromCancel = nil
-    --     return
-    -- end
-    if  not Alliance_Manager:GetMyAlliance():GetSelf():CanEditAllianceJoinType() then
-        local dialog = FullScreenPopDialogUI.new()
-        dialog:SetTitle(_("提示"))
-        dialog:SetPopMessage(_("您没有此操作权限"))
-        dialog:AddToCurrentScene()
-        return
-    end
-    local title,join_type = _("允许玩家立即加入联盟"),"all"
-
+function GameUIAlliance:OnAllianceJoinTypeButtonClicked(event)  
+    print("OnAllianceJoinTypeButtonClicked---->",event.selected)
+    local join_type = "all"
     if event.selected ~= 1 then
-        title = _("玩家仅能通过申请或者邀请的方式加入")
         join_type = "audit"
-    end
-    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-        :SetPopMessage(_("你将设置联盟加入方式为") .. title)
-        :CreateOKButton(
-            {
-                listener =  function ()
-                    NetManager:getEditAllianceJoinTypePromise(join_type):catch(function(err)
-                        dump(err:reason())
-                    end):done(function(result)
-                        self:RefreshInfomationView()
-                    end)
-                end
-            }
-        )
-        :CreateCancelButton({listener = function ()
-            -- self.fromCancel = true
-            -- self:SelectJoinType()
-        end,btn_name = _("取消")})
-        :AddToCurrentScene()
+    end 
+    NetManager:getEditAllianceJoinTypePromise(join_type):catch(function(err)
+        dump(err:reason())
+    end):done(function(result)
+        -- self:RefreshInfomationView()
+    end)
 end
 
 

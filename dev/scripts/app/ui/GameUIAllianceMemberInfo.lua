@@ -300,9 +300,11 @@ function GameUIAllianceMemberInfo:ShowSureDialog(msg,ok_func,cancel_func)
 	local dialog = FullScreenPopDialogUI.new()
     dialog:SetTitle(_("提示"))
     dialog:SetPopMessage(msg)
-    dialog:CreateOKButton(function()
-    	ok_func()
-    end)
+    dialog:CreateOKButton( {
+        listener =  function ()
+          	ok_func()
+        end
+	})
     dialog:CreateCancelButton({
     	listener = function()
     		cancel_func()
