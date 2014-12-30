@@ -1,4 +1,5 @@
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local UIListView = import(".UIListView")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local Alliance = import("..entity.Alliance")
@@ -17,16 +18,12 @@ local CON_TYPE = {
     coin = ResourceManager.RESOURCE_TYPE.COIN,
     gem = ResourceManager.RESOURCE_TYPE.GEM,
 }
-local GameUIAllianceContribute = class("GameUIAllianceContribute", function ()
-    return display.newColorLayer(cc.c4b(0,0,0,127))
-end)
+local GameUIAllianceContribute = class("GameUIAllianceContribute", WidgetPopDialog)
 
 function GameUIAllianceContribute:ctor()
+    GameUIAllianceContribute.super.ctor(self,398,_("联盟捐献"),window.top-200)
     self:setNodeEventEnabled(true)
     self.alliance = Alliance_Manager:GetMyAlliance()
-    self.body = self:CreateBackGroundWithTitle()
-        :align(display.CENTER, window.cx, window.top -400)
-        :addTo(self)
 
     self.group = self:CreateContributeGroup()
 
@@ -313,26 +310,7 @@ function GameUIAllianceContribute:IsAbleToContribute()
     end
     return r_count>=count
 end
-function GameUIAllianceContribute:CreateBackGroundWithTitle(  )
-    local body = WidgetUIBackGround.new({height=398}):align(display.TOP_CENTER,display.cx,display.top-200)
-    local rb_size = body:getContentSize()
-    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+5)
-        :addTo(body)
-    local title_label = UIKit:ttfLabel({
-        text = _("联盟捐献"),
-        size = 22,
-        color = 0xffedae,
-    }):align(display.CENTER, title:getContentSize().width/2, title:getContentSize().height/2+2)
-        :addTo(title)
-    -- close button
-    self.close_btn = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                self:removeFromParent(true)
-            end
-        end):align(display.CENTER, rb_size.width-20,rb_size.height+10):addTo(body)
-    return body
-end
+
 
 function GameUIAllianceContribute:addToCurrentScene(anima)
     display.getRunningScene():addChild(self,3000)
@@ -374,15 +352,3 @@ function GameUIAllianceContribute:OnMemberChanged(alliance,changed_map)
     end
 end
 return GameUIAllianceContribute
-
-
-
-
-
-
-
-
-
-
-
-
