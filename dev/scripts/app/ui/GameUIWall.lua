@@ -17,7 +17,7 @@ end
 
 function GameUIWall:onEnter()
 	GameUIWall.super.onEnter(self)
-	self:CreateMilitaryUIIf():addTo(self):hide()
+	self:CreateMilitaryUIIf():addTo(self):hide():pos(window.left,window.bottom)
 	self:CreateTabButtons({
         {
             label = _("驻防"),
@@ -41,10 +41,10 @@ end
 function GameUIWall:CreateMilitaryUIIf()
 	if self.military_node then return self.military_node end
 	local dragon = self:GetDragon()
-	local military_node = display.newNode()
+	local military_node = display.newNode():size(window.width,window.height)
 	local top_bg = WidgetUIBackGround.new({height = 332,isFrame = "yes"})
 		:addTo(military_node)
-		:pos(15,window.top_bottom - 332)
+		:pos((window.width - 608)/2,window.top_bottom - 332)
 	local title_bar = display.newSprite("title_bar_586x34.png"):align(display.LEFT_TOP,10,312):addTo(top_bg)
 	UIKit:ttfLabel({
 		text = _("驻防部队"),
@@ -148,12 +148,12 @@ function GameUIWall:CreateMilitaryUIIf()
 		text = _("城墙耐久度"),
 		size = 24,
 		color= 0x403c2f
-	}):align(display.CENTER_TOP,window.cx,top_bg:getPositionY()-10):addTo(military_node)
+	}):align(display.CENTER_TOP,military_node:getContentSize().width/2,top_bg:getPositionY()-10):addTo(military_node)
 	local wallHpResource = self.city:GetResourceManager():GetWallHpResource()
 	local string = string.format("%d/%d",wallHpResource:GetResourceValueByCurrentTime(timer:GetServerTime()),wallHpResource:GetValueLimit())
 
 	local process_wall_bg = display.newSprite("process_bar_540x40.png")
-		:align(display.CENTER_TOP, window.cx, wall_label:getPositionY() - wall_label:getContentSize().height - 10) 
+		:align(display.CENTER_TOP,military_node:getContentSize().width/2, wall_label:getPositionY() - wall_label:getContentSize().height - 10) 
 		:addTo(military_node)
 	local progressTimer_wall = UIKit:commonProgressTimer("bar_color_540x40.png"):addTo(process_wall_bg):align(display.LEFT_BOTTOM,0,0)
 	progressTimer_wall:setPercentage(wallHpResource:GetResourceValueByCurrentTime(timer:GetServerTime())/wallHpResource:GetValueLimit()*100)
@@ -177,7 +177,7 @@ function GameUIWall:CreateMilitaryUIIf()
      		:addTo(iconbg)
      		:pos(iconbg:getContentSize().width/2,iconbg:getContentSize().height/2)
 	local tips_bg = self:GetTipsBoxWithTipsContent({_("・防御敌方进攻时，可能会损失城墙的生命值。"),_("・防御敌方进攻时，可能会损失城墙的生命值。")})
-	tips_bg:align(display.CENTER_TOP,window.cx,process_wall_bg:getPositionY()-process_wall_bg:getContentSize().height - 10):addTo(military_node)
+	tips_bg:align(display.CENTER_TOP,military_node:getContentSize().width/2,process_wall_bg:getPositionY()-process_wall_bg:getContentSize().height - 10):addTo(military_node)
 
 	self.military_node = military_node
 	if dragon then 
