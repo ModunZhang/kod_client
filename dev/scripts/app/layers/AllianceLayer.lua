@@ -99,6 +99,22 @@ function AllianceLayer:CreateCorpsFromMrachEventsIf()
     end)
     alliance:AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
     alliance:AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
+    table.foreachi(alliance:GetStrikeMarchEvents(),function(_,event)
+        self:CreateCorpsIf(event)
+    end)
+    table.foreachi(alliance:GetStrikeMarchReturnEvents(),function(_,event)
+        self:CreateCorpsIf(event)
+    end)
+    alliance:AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+    alliance:AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
+end
+
+function AllianceLayer:OnStrikeMarchEventDataChanged(changed_map)
+    self:ManagerCorpsFromChangedMap(changed_map)
+end
+
+function AllianceLayer:OnStrikeMarchReturnEventDataChanged(changed_map)
+    self:ManagerCorpsFromChangedMap(changed_map)
 end
 
 function AllianceLayer:OnAttackMarchEventDataChanged(changed_map)
@@ -144,6 +160,8 @@ function AllianceLayer:onCleanup()
     local alliance = self:GetAlliance()
     alliance:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
     alliance:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
+    alliance:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+    alliance:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
 end
 function AllianceLayer:GetLogicMap()
     return self.alliance_view:GetLogicMap()
@@ -278,4 +296,5 @@ function AllianceLayer:OnSceneMove()
 end
 
 return AllianceLayer
+
 

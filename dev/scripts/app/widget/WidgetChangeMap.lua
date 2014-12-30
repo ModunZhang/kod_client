@@ -2,7 +2,7 @@ local Enum = import("..utils.Enum")
 
 local WidgetPushButton = import(".WidgetPushButton")
 local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
-local GameUIAllianceEnter = import("..ui.GameUIAllianceEnter")
+-- local GameUIAllianceEnter = import("..ui.GameUIAllianceEnter")
 
 local window = import("..utils.window")
 

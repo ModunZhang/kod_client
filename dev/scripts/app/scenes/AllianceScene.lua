@@ -56,11 +56,9 @@ function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
         if building:GetEntity():GetType() ~= "building" then
-            UIKit:newGameUI('GameUIAllianceEnter',Alliance_Manager:GetMyAlliance(),building:GetEntity()):addToCurrentScene(true)
+            self:EnterNotAllianceBuilding(building:GetEntity())
         else
-            local building_info = building:GetEntity():GetAllianceBuildingInfo()
-            print("index x y ",x,y,building_info.name)
-            UIKit:newGameUI('GameUIAllianceEnter',Alliance_Manager:GetMyAlliance(),building_info):addToCurrentScene(true)
+            self:EnterAllianceBuilding(building:GetEntity())
         end
     end
 end
@@ -68,6 +66,44 @@ function AllianceScene:OnBasicChanged(alliance,changed_map)
     if changed_map.status and changed_map.status.new == 'prepare' then
         app:EnterMyAllianceScene()
     end
+end
+
+function AllianceScene:EnterAllianceBuilding(entity)
+    local building_info = entity:GetAllianceBuildingInfo()
+    local building_name = building_info.name
+    local class_name = ""
+    if building_name == 'shrine' then
+        class_name = "GameUIAllianceShrineEnter"
+    elseif building_name == 'palace' then
+        class_name = "GameUIAlliancePalaceEnter"
+    elseif building_name == 'shop' then
+        class_name = "GameUIAllianceShopEnter"    
+    elseif building_name == 'orderHall' then
+        class_name = "GameUIAllianceOrderHallEnter"
+    else
+        print("没有此建筑--->",building_name)
+        return
+    end
+    UIKit:newGameUI(class_name,entity,self:GetAlliance()):addToCurrentScene(true)
+end
+
+function AllianceScene:EnterNotAllianceBuilding(entity)
+    local category = entity:GetCategory()
+    local class_name = ""
+    if category == 'none' then
+        class_name = "GameUIAllianceEnterBase"
+    elseif category == 'member' then -- TODO:
+        class_name = "GameUIAllianceCityEnter"
+        UIKit:newGameUI(class_name,entity,true,self:GetAlliance()):addToCurrentScene(true)
+        return 
+    elseif category == 'decorate' then 
+         class_name = "GameUIAllianceDecorateEnter"
+    elseif category == 'village' then -- TODO:
+        class_name = "GameUIAllianceVillageEnter"
+        UIKit:newGameUI(class_name,entity,true,self:GetAlliance()):addToCurrentScene(true)
+        return 
+    end
+    UIKit:newGameUI(class_name,entity,self:GetAlliance()):addToCurrentScene(true)
 end
 return AllianceScene
 

@@ -65,8 +65,8 @@ end
 function VillageEvent:GetCurrentCollect()
 	local total_time = self:FinishTime() - self:StartTime()
 	local collectTime = app.timer:GetServerTime() - self:StartTime()
-	local collectPercent = math.min(collectTime/total_time,1) 
-	return collectPercent*100,self:VillageData().collectTotal * collectPercent
+	local collectPercent = math.floor(math.min(collectTime/total_time,1))
+	return collectPercent*100,math.floor(self:VillageData().collectTotal * collectPercent)
 end
 
 function VillageEvent:GetCollectSpeed()

@@ -181,6 +181,11 @@ function GameUIWriteMail:OnSendButtonClicked( send_type )
     return self
 end
 
+function GameUIWriteMail:addToCurrentScene()
+    return self:addTo(display.getRunningScene())
+end
+
+
 return GameUIWriteMail
 
 

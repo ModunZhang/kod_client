@@ -1217,10 +1217,15 @@ function NetManager:getAttackVillagePromise(dragonType,soldiers,defenceAllianceI
         get_alliancedata_callback()):next(get_response_msg)
 end
 --从村落撤退
-
 function NetManager:getRetreatFromVillagePromise(allianceId,eventId)
       return promise.all(get_blocking_request_promise("logic.allianceHandler.retreatFromVillage",
         {allianceId = allianceId,eventId = eventId},"村落撤退失败!"),
+        get_alliancedata_callback()):next(get_response_msg)
+end
+--突袭村落
+function NetManager:getStrikeVillagePromise(dragonType,defenceAllianceId,defenceVillageId)
+      return promise.all(get_blocking_request_promise("logic.allianceHandler.strikeVillage",
+        {dragonType = dragonType,defenceAllianceId = defenceAllianceId,defenceVillageId=defenceVillageId},"突袭村落失败!"),
         get_alliancedata_callback()):next(get_response_msg)
 end
 --
