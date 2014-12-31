@@ -6,4 +6,9 @@ function GameUIWatchTower:ctor(city,building)
     GameUIWatchTower.super.ctor(self,city,bn[building:GetType()],building)
 end
 
+function GameUIWatchTower:onEnter()
+	GameUIWatchTower.super.onEnter(self)
+	Alliance_Manager:GetMyAlliance():GetAllianceBelvedere():GetMyEvents()
+end
+
 return GameUIWatchTower

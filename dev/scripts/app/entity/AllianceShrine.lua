@@ -19,9 +19,6 @@ AllianceShrine.LISTEN_TYPE = Enum(
 	"OnNewStageOpened",
 	"OnFightEventTimerChanged",
 	"OnShrineEventsChanged",
-	"OnMarchEventsChanged",
-	"OnMarchReturnEventsChanged",
-	"OnMarchEventTimerChanged",
 	"OnShrineReportsChanged"
 )
 
@@ -173,16 +170,6 @@ function AllianceShrine:OnFightEventTimerChanged(fightEvent)
 	end)
 end
 
-function  AllianceShrine:OnMarchEventTimer(marchEvent)
-	self:OnMarchEventTimerChanged(marchEvent)
-end
-
-function AllianceShrine:OnMarchEventTimerChanged(marchEvent)
-	self:NotifyListeneOnType(self.LISTEN_TYPE.OnMarchEventTimerChanged,function(listener)
-		listener.OnMarchEventTimerChanged(listener,marchEvent)
-	end)
-end
-
 function AllianceShrine:RefreshEvents(alliance_data)
 	if alliance_data.shrineEvents then
 		for _,v in ipairs(alliance_data.shrineEvents) do
@@ -290,7 +277,6 @@ function AllianceShrine:RefreshShrineEvents(__shrineEvents)
 end
 
 function AllianceShrine:OnShrineEventsChanged(changed_map)
-	printInfo("%s","AllianceShrine:OnShrineEventsChanged---->")
 	self:NotifyListeneOnType(self.LISTEN_TYPE.OnShrineEventsChanged,function(listener)
 		listener.OnShrineEventsChanged(listener,changed_map)
 	end)
@@ -390,13 +376,17 @@ end
 
 function AllianceShrine:CheckPlayerCanDispathSoldiers(playerId)
 	--check 已经驻防的部队
-	for _,shireEvent in ipairs(self:GetShrineEvents()) do
-		for _,shireEventPlayer in ipairs(shireEvent:PlayerTroops()) do
-			if shireEventPlayer.id == playerId then
-				printInfo("%s","已经驻防的部队检查到玩家信息")
-				return false
-			end
-		end
+	-- for _,shireEvent in ipairs(self:GetShrineEvents()) do
+	-- 	for _,shireEventPlayer in ipairs(shireEvent:PlayerTroops()) do
+	-- 		if shireEventPlayer.id == playerId then
+	-- 			printInfo("%s","已经驻防的部队检查到玩家信息")
+	-- 			return false
+	-- 		end
+	-- 	end
+	-- end
+	if self:GetShrineEventByPlayerId(playerId) then 
+		printInfo("%s","已经驻防的部队检查到玩家信息")
+		return false
 	end
 	--check 正在行军的部队
 	for _,marchEvent in ipairs(self:GetAlliance():GetAttackMarchEvents("shrine")) do
@@ -410,6 +400,21 @@ end
 
 function AllianceShrine:CheckSelfCanDispathSoldiers()
 	return self:CheckPlayerCanDispathSoldiers(DataManager:getUserData()._id)
+end
+
+function AllianceShrine:GetSelfJoinedShrineEvent()
+	return self:GetShrineEventByPlayerId(DataManager:getUserData()._id)
+end
+
+function AllianceShrine:GetShrineEventByPlayerId(playerId)
+	for _,shireEvent in ipairs(self:GetShrineEvents()) do
+		for _,shireEventPlayer in ipairs(shireEvent:PlayerTroops()) do
+			if shireEventPlayer.id == playerId then
+				return shireEvent
+			end
+		end
+	end
+	return nil
 end
 
 return AllianceShrine

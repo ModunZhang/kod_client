@@ -11,6 +11,7 @@ local MarchAttackEvent = import(".MarchAttackEvent")
 local MarchAttackReturnEvent = import(".MarchAttackReturnEvent")
 local Alliance = class("Alliance", MultiObserver)
 local VillageEvent = import(".VillageEvent")
+local AllianceBelvedere = import(".AllianceBelvedere")
 --注意:突袭用的MarchAttackEvent 所以使用OnAttackMarchEventTimerChanged
 Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS","FIGHT_REQUESTS","FIGHT_REPORTS",
     "OnAttackMarchEventDataChanged","OnAttackMarchEventTimerChanged","OnAttackMarchReturnEventDataChanged","ALLIANCE_FIGHT"
@@ -66,6 +67,18 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     --村落采集
     self.villageEvents = {}
     self.alliance_villages = {}
+    self.alliance_belvedere = AllianceBelvedere.new(self)
+
+
+    self:AddListenOnType(self:GetAllianceBelvedere(),self.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+    self:AddListenOnType(self:GetAllianceBelvedere(),self.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
+    self:AddListenOnType(self:GetAllianceBelvedere(),self.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+    self:AddListenOnType(self:GetAllianceBelvedere(),self.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
+    self:AddListenOnType(self:GetAllianceBelvedere(),self.LISTEN_TYPE.OnVillageEventsDataChanged)
+    self:AddListenOnType(self:GetAllianceBelvedere(),self.LISTEN_TYPE.OnVillageEventTimer)
+end
+function Alliance:GetAllianceBelvedere()
+    return self.alliance_belvedere
 end
 function Alliance:GetAllianceShrine()
     return self.alliance_shrine
@@ -1224,16 +1237,4 @@ end
 function Alliance:GetAllianceVillageInfos()
     return self.alliance_villages
 end
-
--- function AllianceMap:OnVillageEventTimer(villageEvent)
---     print("AllianceMap:OnVillageEventTimer---->")
-    -- if self.alliance_villages[villageEvent:VillageData().id] then
-    --     local village = self.alliance_villages[villageEvent:VillageData().id]
-    --     village.resource = village.resource - villageEvent:GetCollectSpeed()
-    --     self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.OnVillagesDataChanged, function(listener)
-    --         print("AllianceMap:OnVillagesDataChanged---->")
-    --         listener:OnVillagesDataChanged(GameUtils:pack_event_table({},{village},{}))
-    --     end)
-    -- end
--- end
 return Alliance
