@@ -57,29 +57,25 @@ function AllianceBelvedere:GetMyEvents()
 	dump(marching_out_return_events,"marching_out_return_events-->")
 end
 
-function AllianceBelvedere:Reset()
-
-end
-
-function AllianceBelvedere:OnAttackMarchEventTimerChanged()
+function AllianceBelvedere:OnAttackMarchEventTimerChanged(attackMarchEvent)
 	print("AllianceBelvedere:OnAttackMarchEventTimerChanged--->")
 end
-function AllianceBelvedere:OnAttackMarchReturnEventDataChanged()
+function AllianceBelvedere:OnAttackMarchReturnEventDataChanged(changed_map)
 	print("AllianceBelvedere:OnAttackMarchReturnEventDataChanged--->")
 end
-function AllianceBelvedere:OnStrikeMarchEventDataChanged()
+function AllianceBelvedere:OnStrikeMarchEventDataChanged(changed_map)
 	print("AllianceBelvedere:OnStrikeMarchEventDataChanged--->")
 end
-function AllianceBelvedere:OnStrikeMarchReturnEventDataChanged()
+function AllianceBelvedere:OnStrikeMarchReturnEventDataChanged(changed_map)
 	print("AllianceBelvedere:OnStrikeMarchReturnEventDataChanged--->")
 end
-function AllianceBelvedere:OnVillageEventsDataChanged()
+function AllianceBelvedere:OnVillageEventsDataChanged(changed_map)
 	print("AllianceBelvedere:OnVillageEventsDataChanged--->")
 end
-function AllianceBelvedere:OnVillageEventTimer()
+function AllianceBelvedere:OnVillageEventTimer(villageEvent,left_resource)
 	print("AllianceBelvedere:OnVillageEventTimer--->")
 end
-function AllianceBelvedere:OnAttackMarchEventDataChanged()
+function AllianceBelvedere:OnAttackMarchEventDataChanged(changed_map)
 	print("AllianceBelvedere:OnAttackMarchEventDataChanged--->")
 end
 

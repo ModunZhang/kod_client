@@ -54,6 +54,10 @@ function AllianceManager:DecodeAllianceFromJson( json_data )
     return alliance
 end
 
+function AllianceManager:HaveEnemyAlliance()
+    return self:GetEnemyAlliance():IsDefault()
+end
+
 function AllianceManager:GetEnemyAlliance()
     return self.enemyAlliance
 end

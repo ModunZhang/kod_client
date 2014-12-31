@@ -68,14 +68,6 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     self.villageEvents = {}
     self.alliance_villages = {}
     self.alliance_belvedere = AllianceBelvedere.new(self)
-
-
-    self:AddListenOnType(self:GetAllianceBelvedere(),self.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
-    self:AddListenOnType(self:GetAllianceBelvedere(),self.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
-    self:AddListenOnType(self:GetAllianceBelvedere(),self.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
-    self:AddListenOnType(self:GetAllianceBelvedere(),self.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
-    self:AddListenOnType(self:GetAllianceBelvedere(),self.LISTEN_TYPE.OnVillageEventsDataChanged)
-    self:AddListenOnType(self:GetAllianceBelvedere(),self.LISTEN_TYPE.OnVillageEventTimer)
 end
 function Alliance:GetAllianceBelvedere()
     return self.alliance_belvedere
@@ -794,11 +786,13 @@ end
 --行军事件
 --------------------------------------------------------------------------------
 function Alliance:OnMarchEventTimer(attackMarchEvent)
-    print("OnMarchEventTimer-->",attackMarchEvent:Id())
     self:CallEventsChangedListeners(Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged,attackMarchEvent)
 end
 
 function Alliance:CallEventsChangedListeners(LISTEN_TYPE,changed_map)
+    if self:GetAllianceBelvedere()[Alliance.LISTEN_TYPE[LISTEN_TYPE]] then
+        self:GetAllianceBelvedere()[Alliance.LISTEN_TYPE[LISTEN_TYPE]](self:GetAllianceBelvedere(),changed_map)
+    end
     self:NotifyListeneOnType(LISTEN_TYPE, function(listener)
         listener[Alliance.LISTEN_TYPE[LISTEN_TYPE]](listener,changed_map)
     end)
@@ -1125,6 +1119,9 @@ function Alliance:OnVillageEventTimer(villageEvent)
             self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OnVillageEventTimer, function(listener)
                 listener:OnVillageEventTimer(villageEvent,left_resource)
             end)
+            if self:GetAllianceBelvedere()['OnVillageEventTimer'] then
+                self:GetAllianceBelvedere():OnVillageEventTimer(villageEvent,left_resource)
+            end
         end
     end
 end

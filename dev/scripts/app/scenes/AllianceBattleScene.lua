@@ -101,6 +101,14 @@ function AllianceBattleScene:EnterNotAllianceBuilding(entity,isMyAlliance)
         class_name = "GameUIAllianceVillageEnter"
         UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance(),self:GetEnemyAlliance()):addToCurrentScene(true)
     end
+    if isMyAlliance then
+        if category == 'none' then
+            class_name = "GameUIAllianceEnterBase"
+        elseif category == 'decorate' then 
+             class_name = "GameUIAllianceDecorateEnter"
+        end
+        UIKit:newGameUI(class_name,entity,self:GetAlliance()):addToCurrentScene(true)
+    end
 end
 return AllianceBattleScene
 
