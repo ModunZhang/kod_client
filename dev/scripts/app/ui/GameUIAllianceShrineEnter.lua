@@ -4,10 +4,14 @@
 --
 local GameUIAllianceShrineEnter = UIKit:createUIClass("GameUIAllianceShrineEnter","GameUIAllianceEnterBase")
 
-function GameUIAllianceShrineEnter:ctor(building,alliance)
-	GameUIAllianceShrineEnter.super.ctor(self,building,alliance)
+function GameUIAllianceShrineEnter:ctor(building,isMyAlliance,alliance)
+	GameUIAllianceShrineEnter.super.ctor(self,building,isMyAlliance,alliance)
 	self.building = building:GetAllianceBuildingInfo()
 end
+
+-- function GameUIAllianceShrineEnter:IsMyAlliance()
+-- 	return self.isMyAlliance
+-- end
 
 function GameUIAllianceShrineEnter:GetLocation()
 	return self:GetBuilding().location.x .. "," .. self:GetBuilding().location.y
@@ -40,9 +44,14 @@ function GameUIAllianceShrineEnter:FixedUI()
 end
 
 function GameUIAllianceShrineEnter:GetBuildingInfo()
-	 local events = self:GetMyAlliance():GetAllianceShrine():GetShrineEvents()
-        local running_event = #events > 0 and events[1]:StageName() or _("暂无")
-        local people_count =   #events > 0 and  #events[1]:PlayerTroops() .. "/" .. events[1]:Stage():SuggestPlayer() or _("暂无")
+	local events = _("未知")
+    local running_event = _("未知")
+    local people_count =   _("未知")
+    if self:IsMyAlliance() then
+	 	events = self:GetMyAlliance():GetAllianceShrine():GetShrineEvents()
+		running_event = #events > 0 and events[1]:StageName() or _("暂无")
+		people_count =   #events > 0 and  #events[1]:PlayerTroops() .. "/" .. events[1]:Stage():SuggestPlayer() or _("暂无")
+	end
 	local location = {
         {_("坐标"),0x797154},
         {self:GetLocation(),0x403c2f},
@@ -60,18 +69,22 @@ function GameUIAllianceShrineEnter:GetBuildingInfo()
 end
 
 function GameUIAllianceShrineEnter:GetEnterButtons()
-	local fight_event_button = self:BuildOneButton("icon_info_1.png",_("战争事件")):onButtonClicked(function()
-		UIKit:newGameUI('GameUIAllianceShrine',City,"fight_event",self:GetBuilding()):addToCurrentScene(true)
-		self:leftButtonClicked()
-	end)
-	local alliance_shirine_event_button = self:BuildOneButton("icon_alliance_crisis.png",_("联盟危机")):onButtonClicked(function()
-		 UIKit:newGameUI('GameUIAllianceShrine',City,"stage",self:GetBuilding()):addToCurrentScene(true)
-		self:leftButtonClicked()
-	end)
-	local upgrade_button = self:BuildOneButton("icon_upgrade_1.png",_("升级")):onButtonClicked(function()
-		UIKit:newGameUI('GameUIAllianceShrine',City,"upgrade",self:GetBuilding()):addToCurrentScene(true)
-		self:leftButtonClicked()
-	end)
-    return {fight_event_button,alliance_shirine_event_button,upgrade_button}
+	if self:IsMyAlliance() then
+		local fight_event_button = self:BuildOneButton("icon_info_1.png",_("战争事件")):onButtonClicked(function()
+			UIKit:newGameUI('GameUIAllianceShrine',City,"fight_event",self:GetBuilding()):addToCurrentScene(true)
+			self:leftButtonClicked()
+		end)
+		local alliance_shirine_event_button = self:BuildOneButton("icon_alliance_crisis.png",_("联盟危机")):onButtonClicked(function()
+			 UIKit:newGameUI('GameUIAllianceShrine',City,"stage",self:GetBuilding()):addToCurrentScene(true)
+			self:leftButtonClicked()
+		end)
+		local upgrade_button = self:BuildOneButton("icon_upgrade_1.png",_("升级")):onButtonClicked(function()
+			UIKit:newGameUI('GameUIAllianceShrine',City,"upgrade",self:GetBuilding()):addToCurrentScene(true)
+			self:leftButtonClicked()
+		end)
+	    return {fight_event_button,alliance_shirine_event_button,upgrade_button}
+	else
+		return {}
+	end
 end
 return GameUIAllianceShrineEnter

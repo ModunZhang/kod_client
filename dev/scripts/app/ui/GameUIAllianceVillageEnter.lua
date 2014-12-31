@@ -8,17 +8,17 @@ local VillageEvent = import("..entity.VillageEvent")
 local GameUIStrikePlayer = import(".GameUIStrikePlayer")
 
 function GameUIAllianceVillageEnter:ctor(building,isMyAlliance,my_alliance,enemy_alliance)
-	GameUIAllianceVillageEnter.super.ctor(self,building,my_alliance)
+	GameUIAllianceVillageEnter.super.ctor(self,building,isMyAlliance,my_alliance)
 	self.enemy_alliance = enemy_alliance
-	self.isMyAlliance   = isMyAlliance
+	-- self.isMyAlliance   = isMyAlliance
 	self.village_info = building:GetAllianceVillageInfo()
 	dump(self.village_info,"self.village_info--->")
 end
 
 
-function GameUIAllianceVillageEnter:IsMyAlliance()
-	return self.isMyAlliance
-end
+-- function GameUIAllianceVillageEnter:IsMyAlliance()
+-- 	return self.isMyAlliance
+-- end
 
 function GameUIAllianceVillageEnter:GetVillageInfo()
 	return self.village_info

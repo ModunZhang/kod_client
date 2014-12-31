@@ -28,17 +28,6 @@ function AllianceManager:OnAllianceDataChanged(alliance_data)
     self:GetMyAlliance():OnAllianceDataChanged(alliance_data)
 end
 
--- function AllianceManager:OnAllianceBasicInfoAndMemberDataChanged(basic_and_member)
---     local my_alliance = self:GetMyAlliance()
---     if my_alliance:IsDefault() then return end
---     if basic_and_member.basicInfo then
---         my_alliance:OnAllianceBasicInfoChanged(basic_and_member.basicInfo)
---     end
---     if basic_and_member.memberDoc then
---         my_alliance:OnOneAllianceMemberDataChanged(basic_and_member.memberDoc)
---     end
--- end
-
 function AllianceManager:OnTimer(current_time)
     self:GetMyAlliance():OnTimer(current_time)
     self:GetEnemyAlliance():OnTimer(current_time)
