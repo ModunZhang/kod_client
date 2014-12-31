@@ -30,6 +30,8 @@ function VillageEvent:ctor()
 	property(self,"finishTime","")
 	property(self,"playerData","")
 	property(self,"villageData","")
+	property(self,"collectPercent",0)
+	property(self,"collectCount",0)
 end
 
 function VillageEvent:UpdateData(json_data)
@@ -56,6 +58,12 @@ end
 function VillageEvent:OnTimer(current_time)
 	self.times_ = math.ceil(self:FinishTime() - current_time)
 	if self.times_ >= 0 then
+		local total_time = self:FinishTime() - self:StartTime()
+		local collectTime = app.timer:GetServerTime() - self:StartTime()
+		local collectPercent = math.floor(math.min(collectTime/total_time*100,100))
+		local collectCount = math.floor(collectPercent/100 * self:VillageData().collectTotal)
+		self:SetCollectPercent(collectPercent)
+		self:SetCollectCount(collectCount)
 		self:NotifyObservers(function(listener)
 			listener:OnVillageEventTimer(self)
 		end)
@@ -63,10 +71,7 @@ function VillageEvent:OnTimer(current_time)
 end
 
 function VillageEvent:GetCurrentCollect()
-	local total_time = self:FinishTime() - self:StartTime()
-	local collectTime = app.timer:GetServerTime() - self:StartTime()
-	local collectPercent = math.floor(math.min(collectTime/total_time,1))
-	return collectPercent*100,math.floor(self:VillageData().collectTotal * collectPercent)
+	return "",""
 end
 
 function VillageEvent:GetCollectSpeed()
