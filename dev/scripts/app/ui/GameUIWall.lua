@@ -44,7 +44,7 @@ function GameUIWall:CreateMilitaryUIIf()
 	local military_node = display.newNode():size(window.width,window.height)
 	local top_bg = WidgetUIBackGround.new({height = 332,isFrame = "yes"})
 		:addTo(military_node)
-		:pos((window.width - 608)/2,window.top_bottom - 332)
+		:pos((window.width - 608)/2,window.height - 332 - 91)
 	local title_bar = display.newSprite("title_bar_586x34.png"):align(display.LEFT_TOP,10,312):addTo(top_bg)
 	UIKit:ttfLabel({
 		text = _("驻防部队"),
