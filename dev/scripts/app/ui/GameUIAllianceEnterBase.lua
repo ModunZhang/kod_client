@@ -219,7 +219,7 @@ function GameUIAllianceEnterBase:CreateItemWithLine(params)
             :addTo(line)
         label:setTag(100)
     end
-    if params[2][3] then
+    if params[2] and params[2][3] then
         line:setTag(params[2][3])
     end
     return line

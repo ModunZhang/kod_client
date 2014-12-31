@@ -5,9 +5,9 @@
 local LogoScene = class("LogoScene", function()
     return display.newScene("LogoScene")
 end)
-
+--提前加载splash需要的资源
 function LogoScene:ctor()
-    self:PreLoadResource()
+    -- self:PreLoadResource()
 end
 
 function LogoScene:onEnter()
