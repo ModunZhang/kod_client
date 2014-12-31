@@ -63,7 +63,7 @@ function GameUIAllianceCityEnter:GetUIHeight()
 end
 
 function GameUIAllianceCityEnter:GetUITitle()
-	return self:GetMember().name
+	return self:GetMember():Name()
 end
 
 function GameUIAllianceCityEnter:GetBuildingImage()

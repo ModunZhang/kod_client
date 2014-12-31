@@ -536,7 +536,7 @@ function GameUIStrikeReport:CreateEnemyResource()
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.LEFT_CENTER,80,18):addTo(r_item_bg)
-        local r_value = self.report[self.report:Type()].level < 4 and self:GetProbableNum(r_parms.value) or r_parms.value
+        local r_value = self.report:GetStrikeLevel() < 4 and self:GetProbableNum(r_parms.value) or r_parms.value
         cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = r_value,
