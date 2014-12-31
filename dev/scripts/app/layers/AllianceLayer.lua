@@ -18,7 +18,7 @@ local Alliance = import("..entity.Alliance")
 
 function AllianceLayer:ctor(alliance)
     Observer.extend(self)
-    AllianceLayer.super.ctor(self, 0.9, 2)
+    AllianceLayer.super.ctor(self, 0.4, 1.2)
 
     self:InitBackground()
     self:InitTerrianBottomNode()
