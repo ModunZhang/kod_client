@@ -496,6 +496,11 @@ local VILLAGE_NAME = {
      foodVillage = _("粮食村落"),
      coinVillage = _("硬币村落"),
 }
+local TERRAIN = {
+     grassLand = _("草地"),
+     desert= _("沙漠"),
+     iceField = _("雪地"),
+}
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
@@ -516,6 +521,7 @@ return {
     getSoldierCategoryByName = function(soldier_name) return SOLDIER_CATEGORY[SOLDIER_CATEGORY_MAP[soldier_name]] end,
     alliance_authority_list = ALLIANCE_AUTHORITY_LIST,
     village_name = VILLAGE_NAME,
+    terrain = TERRAIN,
 }
 
 

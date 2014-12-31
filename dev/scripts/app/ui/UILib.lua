@@ -371,7 +371,13 @@ local ALLIANCE_TITLE_ICON = {
     member = "1_11x24.png",
     archon = "alliance_item_leader_39x39.png"
 }
-
+local VILLAGE = {
+    woodVillage = "woodcutter_1_342x250.png",
+    stoneVillage="woodcutter_1_342x250.png",
+    ironVillage = "woodcutter_1_342x250.png",
+    foodVillage = "woodcutter_1_342x250.png",
+    coinVillage = "woodcutter_1_342x250.png",
+}
 
 local SOLDIER_ANIMATIONS = getAniNameFromAnimationFiles(SOLDIER_ANIMATION_FILES)
 local SOLDIER_EFFECT_ANIMATIONS = getAniNameFromAnimationFiles(EFFECT_ANIMATION_FILES)
@@ -397,7 +403,9 @@ return {
     equipment =EQUIPMENT,
     alliance_title_icon =ALLIANCE_TITLE_ICON,
     buff = BUFF,
+    village = VILLAGE,
 }
+
 
 
 
