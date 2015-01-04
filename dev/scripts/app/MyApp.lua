@@ -25,6 +25,9 @@ function MyApp:ctor()
     self:InitI18N()
     NetManager:init()
     self.timer = Timer.new()
+
+    local manager = ccs.ArmatureDataManager:getInstance()
+    manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
 end
 
 function MyApp:run()
@@ -139,9 +142,7 @@ end
 function MyApp:EnterPlayerCityScene(id)
     NetManager:getPlayerCityInfoPromise(id):next(function(city_info)
         app:enterScene("OtherCityScene", {User.new(city_info.basicInfo), City.new(city_info)}, "custom", -1, function(scene, status)
-            local manager = ccs.ArmatureDataManager:getInstance()
             if status == "onEnter" then
-                manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
                 local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
                 display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
                     transition.sequence{
@@ -155,7 +156,6 @@ function MyApp:EnterPlayerCityScene(id)
                     }
                 )
             elseif status == "onExit" then
-                manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
             end
         end)
     end)
@@ -164,9 +164,7 @@ end
 
 function MyApp:EnterMyCityScene()
    app:enterScene("MyCityScene", {City}, "custom", -1, function(scene, status)
-        local manager = ccs.ArmatureDataManager:getInstance()
         if status == "onEnter" then
-            manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
             local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
             display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
                 transition.sequence{
@@ -180,7 +178,6 @@ function MyApp:EnterMyCityScene()
                 }
             )
         elseif status == "onExit" then
-            manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
         end
     end)
 end
@@ -193,9 +190,7 @@ function MyApp:EnterMyAllianceScene()
     end
     print("MyApp:EnterMyAllianceScene--->",alliance_name)
     app:enterScene(alliance_name, {City}, "custom", -1, function(scene, status)
-        local manager = ccs.ArmatureDataManager:getInstance()
         if status == "onEnter" then
-            manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
             local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
             display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
                 transition.sequence{
@@ -209,7 +204,6 @@ function MyApp:EnterMyAllianceScene()
                 }
             )
         elseif status == "onExit" then
-            manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
         end
     end)
 end

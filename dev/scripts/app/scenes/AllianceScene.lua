@@ -21,6 +21,9 @@ function AllianceScene:ctor()
     manager:addArmatureFileInfo("animations/green_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Blue_dragon.ExportJson")
+
+    
+    self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.OPERATION)
 end
 function AllianceScene:onEnter()
     AllianceScene.super.onEnter(self)
@@ -65,6 +68,11 @@ end
 function AllianceScene:OnBasicChanged(alliance,changed_map)
     if changed_map.status and changed_map.status.new == 'prepare' then
         app:EnterMyAllianceScene()
+    end
+end
+function AllianceScene:OnOperation(alliance,operation_type)
+    if operation_type == "quit" then
+        app:EnterMyCityScene()
     end
 end
 
