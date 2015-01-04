@@ -93,7 +93,7 @@ end
 function UpgradingSprite:DestorySelf()
     self:GetEntity():RemoveBaseListener(self)
     self:GetEntity():RemoveUpgradeListener(self)
-    self:removeFromParentAndCleanup(true)
+    self:removeFromParent()
 end
 function UpgradingSprite:InitLabel(entity)
     local label = ui.newTTFLabel({ text = "text" , x = 0, y = 0 })

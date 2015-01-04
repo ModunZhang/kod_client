@@ -509,7 +509,7 @@ function WidgetMakeEquip:Close()
     if type(self.on_closed) == "function" then
         self.on_closed(self)
     end
-    self:removeFromParentAndCleanup(true)
+    self:removeFromParent()
 end
 function WidgetMakeEquip:OnClosed(func)
     self.on_closed = func

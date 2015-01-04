@@ -10,7 +10,7 @@ function WidgetPopDialog:ctor(height,title_text,y,title_bg)
     local rb_size = body:getContentSize()
     local title = display.newSprite(title_bg or "report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+10)
         :addTo(body)
-    local title_label = UIKit:ttfLabel({
+    self.title_label = UIKit:ttfLabel({
         text = title_text,
         size = 22,
         color = 0xffedae,
@@ -22,11 +22,15 @@ function WidgetPopDialog:ctor(height,title_text,y,title_bg)
             if event.name == "CLICKED_EVENT" then
                 self:removeFromParent(true)
             end
-        end):align(display.CENTER, rb_size.width-36,rb_size.height+12):addTo(body)
+        end):align(display.CENTER, rb_size.width-34,rb_size.height+14):addTo(body)
 end
 
 function WidgetPopDialog:GetBody()
     return self.body
+end
+function WidgetPopDialog:SetTitle(title)
+    self.title_label:setString(title)
+    return self
 end
 return WidgetPopDialog
 

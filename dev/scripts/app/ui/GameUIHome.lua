@@ -38,7 +38,7 @@ function GameUIHome:ctor(city)
 end
 
 function GameUIHome:onEnter()
-    GameUIHome.super.onEnter(self)
+    -- GameUIHome.super.onEnter(self)
     local city = self.city
     -- 上背景
     self:CreateTop()
@@ -46,7 +46,8 @@ function GameUIHome:onEnter()
     self.event_tab = WidgetEventTabButtons.new(self.city)
     local rect1 = self.chat_bg:getCascadeBoundingBox()
     local rect2 = self.event_tab:getCascadeBoundingBox()
-    local x, y = rect1.x + rect1.width - rect2.width, rect1.y + rect1.height * 0.48
+    local ratio = self.bottom:getScale()
+    local x, y = rect1.x + rect1.width - rect2.width - 5 * ratio, rect1.y + rect1.height - 2 * ratio
     local line = display.newSprite("back_ground_492X14.png")
     line:addTo(self, 0):align(display.LEFT_TOP, x, y)
     self.event_tab:addTo(self, 0):pos(x, y)
@@ -62,7 +63,7 @@ end
 function GameUIHome:onExit()
     self.city:GetResourceManager():RemoveObserver(self)
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
-    GameUIHome.super.onExit(self)
+    -- GameUIHome.super.onExit(self)
 end
 function GameUIHome:MailUnreadChanged( num )
     if num==0 then
@@ -276,7 +277,7 @@ function GameUIHome:CreateTop()
         end
     end):addTo(top_bg):pos(630, -81):scale(0.6)
 
- -- BUFF按钮
+    -- BUFF按钮
     local help_button = cc.ui.UIPushButton.new(
         {normal = "buff_1_128x128.png", pressed = "buff_1_128x128.png"}
     ):onButtonClicked(function(event)
@@ -284,7 +285,7 @@ function GameUIHome:CreateTop()
             UIKit:newGameUI("GameUIBuff",self.city):addToCurrentScene()
         end
     end):addTo(self):pos(display.cx-280, display.top-260)
-    :scale(0.5)
+        :scale(0.5)
 
     return top_bg
 end
@@ -308,9 +309,9 @@ function GameUIHome:CreateBottom()
     local index_2 = display.newSprite("chat_page_index_2.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2+10,chat_bg:getContentSize().height-10)
     self.chat_bg = chat_bg
 
-
+    local size = chat_bg:getContentSize()
     local pv = cc.ui.UIPageView.new {
-        viewRect = cc.rect(10, 4, 540, 120)}
+        viewRect = cc.rect(10, 4, size.width, size.height)}
         :onTouch(function (event)
             dump(event,"UIPageView event")
             if event.name == "pageChange" then
@@ -427,7 +428,26 @@ function GameUIHome:OnBottomButtonClicked(event)
     elseif tag == 3 then
         UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
     elseif tag == 2 then
-        UIKit:newGameUI('GameUIReplay'):addToCurrentScene(true)
+        app:enterScene("PVEScene", nil, "custom", -1, function(scene, status)
+            local manager = ccs.ArmatureDataManager:getInstance()
+            if status == "onEnter" then
+                manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+                local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
+                display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
+                    transition.sequence{
+                        cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
+                        cc.FadeIn:create(0.75),
+                        cc.CallFunc:create(function() scene:hideOutShowIn() end),
+                        cc.DelayTime:create(0.5),
+                        cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
+                        cc.FadeOut:create(0.75),
+                        cc.CallFunc:create(function() scene:finish() end),
+                    }
+                )
+            elseif status == "onExit" then
+                manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+            end
+        end)
     end
 end
 
@@ -451,6 +471,7 @@ function GameUIHome:Find()
 end
 
 return GameUIHome
+
 
 
 

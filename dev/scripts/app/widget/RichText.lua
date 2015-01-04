@@ -47,7 +47,7 @@ function RichText:Text(str)
     end)
     local width = self.width
     local cur_x = 0
-    local cur_y = 1
+    local cur_y = 0
     local lines = {}
     local function getLine(line_number)
         if not lines[line_number] then
@@ -58,35 +58,32 @@ function RichText:Text(str)
     local function curLine()
         return getLine(cur_y)
     end
-    curLine()
+    local function newLine()
+        cur_x = 0
+        cur_y = cur_y + 1
+        curLine()
+    end
+    newLine()
     for i, v in ipairs(items) do
         if v.type == "image" then
             local img = display.newSprite(v.value)
+
             local size = img:getContentSize()
-            if size.width + cur_x - width > 5 then
-                cur_x = 0
-                cur_y = cur_y + 1
-                curLine()
-            end
-            img:align(display.CENTER, cur_x + size.width * 0.5, 0)
-                :addTo(curLine())
+            
+            if size.width > 5 + width - cur_x then newLine() end
+
+            img:align(display.CENTER, cur_x + size.width * 0.5, 0):addTo(curLine())
+
             cur_x = cur_x + size.width
-            if cur_x > width then
-                cur_x = 0
-                cur_y = cur_y + 1
-                curLine()
-            end
+
+            if cur_x > width then newLine() end
         elseif v.type == "text" then
             local head, tail, is_newline = v.value, ""
             local size = v.size or self.size
             local color = v.color or self.color
+            
             repeat
-                local cur_width = width - cur_x
-                if cur_width < size then
-                    cur_x = 0
-                    cur_y = cur_y + 1
-                    curLine()
-                end
+                if width - cur_x < size then newLine() end
                 local label = UIKit:ttfLabel({
                     text = head,
                     size = size,
@@ -108,19 +105,25 @@ function RichText:Text(str)
                 else
                     label:addTo(curLine())
                 end
+
                 cur_x = cur_x + size.width
                 head, tail = tail, ""
-                if #head > 0 or cur_x > width or is_newline then
-                    cur_x = 0
-                    cur_y = cur_y + 1
-                    curLine()
-                end
+
+                if #head > 0 or cur_x > width or is_newline then newLine() end
             until #head == 0
         end
     end
     self.lines = lines
     return self
 end
+-- function RichText:HandleElement(item)
+--     if item.type == "image" then
+--         return self:HandleImage(item)
+--     end
+-- end
+-- function RichText:HandleImage(item)
+--     return display.newSprite(item.value)
+-- end
 
 function RichText:align(anchorPoint, x, y)
     assert(self.lines, "必须先生成富文本!")
@@ -142,6 +145,7 @@ end
 
 
 return RichText
+
 
 
 

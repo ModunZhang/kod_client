@@ -1,20 +1,17 @@
 
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
+local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local UIListView = import(".UIListView")
 local UIScrollView = import(".UIScrollView")
 local window = import("..utils.window")
 
-local GameUIAllianceWorld = class("GameUIAllianceWorld", function ()
-    return display.newColorLayer(cc.c4b(0,0,0,127))
-end)
+local GameUIAllianceWorld = class("GameUIAllianceWorld", WidgetPopDialog)
 
 function GameUIAllianceWorld:ctor()
-    self:setNodeEventEnabled(true)
-    self.body = self:CreateBackGroundWithTitle()
-        :align(display.CENTER, window.cx, window.top -500)
-        :addTo(self)
+    GameUIAllianceWorld.super.ctor(self,880,_("世界地图"),window.top-60)
+
     local map = display.newSprite("allianceHome/world_map.jpg"):scale(1.8)
     local scrollView = UIScrollView.new({
         viewRect = cc.rect(0,0,556,541),
@@ -141,32 +138,6 @@ end
 
 function GameUIAllianceWorld:onExit()
     UIKit:getRegistry().removeObject(self.__cname)
-end
-
-function GameUIAllianceWorld:CreateBackGroundWithTitle(  )
-    local body = WidgetUIBackGround.new({height=880}):align(display.TOP_CENTER,display.cx,display.top-200)
-    local rb_size = body:getContentSize()
-    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+5)
-        :addTo(body)
-    local title_label = UIKit:ttfLabel({
-        text = _("世界地图"),
-        size = 22,
-        color = 0xffedae,
-    }):align(display.CENTER, title:getContentSize().width/2, title:getContentSize().height/2+2)
-        :addTo(title)
-    -- close button
-    self.close_btn = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                self:removeFromParent(true)
-            end
-        end):align(display.CENTER, rb_size.width-20,rb_size.height+10):addTo(body)
-    return body
-end
-
-function GameUIAllianceWorld:addToCurrentScene(anima)
-    display.getRunningScene():addChild(self,3000)
-    return self
 end
 
 return GameUIAllianceWorld
