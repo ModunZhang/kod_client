@@ -657,7 +657,7 @@ end
 -- 新加接口
 ------------------------------------------------------------------------------------------------------------------------------------------ 
 function UIListView:removeAllItems()
-	self.container:removeAllChildrenWithCleanup(true)
+	self.container:removeAllChildren()
 	self.items_ = {}
 	UIListViewItem.ID_COUNTER = 0 
 end
