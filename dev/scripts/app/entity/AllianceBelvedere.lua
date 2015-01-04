@@ -118,7 +118,6 @@ function AllianceBelvedere:OnVillageEventsDataChanged(changed_map)
 	self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnVillageEventsDataChanged,{changed_map})
 end
 function AllianceBelvedere:OnVillageEventTimer(villageEvent,left_resource)
-	if villageEvent:GetPlayerRole() == villageEvent.EVENT_PLAYER_ROLE.NOTHING then return end
 	self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnVillageEventTimer,{villageEvent,left_resource})
 end
 function AllianceBelvedere:OnAttackMarchEventDataChanged(changed_map)
