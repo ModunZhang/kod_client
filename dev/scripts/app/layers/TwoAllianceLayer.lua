@@ -17,7 +17,6 @@ local random = math.random
 local AllianceShrine = import("..entity.AllianceShrine")
 local AllianceMoonGate = import("..entity.AllianceMoonGate")
 local Alliance = import("..entity.Alliance")
-TwoAllianceLayer.VIEW_INDEX = Enum("MyAlliance","EnemyAlliance")
 
 
 function TwoAllianceLayer:ctor(alliance1, alliance2, arrange)
@@ -36,8 +35,8 @@ function TwoAllianceLayer:ctor(alliance1, alliance2, arrange)
         local alliance_view1 = AllianceView.new(self, alliance1, 0):addTo(self)
         local alliance_view2 = AllianceView.new(self, alliance2, 51):addTo(self)
         self.alliance_views = {alliance_view1, alliance_view2}
-        local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(51.5, -3.5)
-        local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(51.5, 51.5)
+        local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(50.5, -3.5)
+        local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(50.5, 51.5)
         display.newLine({{sx, sy}, {ex, ey}},
         {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
         borderWidth = 5}):addTo(self.building)
