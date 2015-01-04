@@ -33,8 +33,9 @@ property(Alliance, "memberCount", 0)
 property(Alliance, "status", "")
 property(Alliance, "statusStartTime", 0)
 property(Alliance, "statusFinishTime", 0)
+property(Alliance, "fightPosition", "")
 function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
-    Alliance.super.ctor(self)
+    Alliance.super.ctor(self) 
     property(self, "id", id)
     property(self, "name", name)
     property(self, "aliasName", aliasName)
@@ -949,10 +950,34 @@ function Alliance:OnAllianceFightChanged(allianceFight)
     for k,v in pairs(allianceFight) do
         self.allianceFight[k] = v
     end
+    if not LuaUtils:table_empty(allianceFight) then
+        local mergeStyle = self:GetAllianceFight()['mergeStyle']
+        local isAttacker = self:Id() == self:GetAllianceFight()['attackAllianceId'] 
+        if isAttacker then
+            self:SetFightPosition(mergeStyle)
+        else
+            self:SetFightPosition(self:GetReversedPosition(mergeStyle))
+        end
+    else
+        self.allianceFight = {}
+        self:SetFightPosition("")
+    end
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.ALLIANCE_FIGHT, function(listener)
         listener:OnAllianceFightChanged(self,self.allianceFight)
     end)
 end
+function Alliance:GetReversedPosition(p)
+    if p == 'left' then
+        return 'right'
+    elseif p == 'right' then
+        return 'left'
+    elseif p == 'top' then
+        return 'bottom'
+    elseif p == 'bottom' then
+        return 'top'
+    end
+end
+
 function Alliance:GetMyAllianceFightCountData()
     local allianceFight = self.allianceFight
     return self.id == allianceFight.attackAllianceId and allianceFight.attackAllianceCountData or allianceFight.defenceAllianceCountData
