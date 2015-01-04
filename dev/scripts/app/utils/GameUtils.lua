@@ -348,8 +348,9 @@ function GameUtils:parseRichText(str)
     return items
 end
 
+function GameUtils:EvaluateApp()
+    
+end
+
 
 return GameUtils
-
-
-

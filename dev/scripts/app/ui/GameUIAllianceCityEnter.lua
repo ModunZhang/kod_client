@@ -8,15 +8,10 @@ local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local GameUIWriteMail = import(".GameUIWriteMail")
 
 function GameUIAllianceCityEnter:ctor(building,isMyAlliance,my_alliance,enemy_alliance)
-	GameUIAllianceCityEnter.super.ctor(self,building,my_alliance)
-	self.isMyAlliance = isMyAlliance
+	GameUIAllianceCityEnter.super.ctor(self,building,isMyAlliance,my_alliance)
 	self.enemy_alliance = enemy_alliance
 	local x,y = self:GetBuilding():GetLogicPosition()
 	self.member = self:GetPlayerByLocation(x,y)
-end
-
-function GameUIAllianceCityEnter:IsMyAlliance()
-	return self.isMyAlliance
 end
 
 function GameUIAllianceCityEnter:GetMember()

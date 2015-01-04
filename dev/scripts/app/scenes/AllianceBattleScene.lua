@@ -72,7 +72,6 @@ function AllianceBattleScene:OnBasicChanged(alliance,changed_map)
     end
 end
 function AllianceBattleScene:EnterAllianceBuilding(entity,isMyAlliance)
-    if not isMyAlliance then return end
     local building_info = entity:GetAllianceBuildingInfo()
     local building_name = building_info.name
     local class_name = ""
@@ -88,27 +87,22 @@ function AllianceBattleScene:EnterAllianceBuilding(entity,isMyAlliance)
         print("没有此建筑--->",building_name)
         return
     end
-    UIKit:newGameUI(class_name,entity,self:GetAlliance()):addToCurrentScene(true)
+    UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance(),self:GetEnemyAlliance()):addToCurrentScene(true)
 end
 
 function AllianceBattleScene:EnterNotAllianceBuilding(entity,isMyAlliance)
     local category = entity:GetCategory()
     local class_name = ""
-    if category == 'member' then -- TODO:
+    if category == 'none' then
+        class_name = "GameUIAllianceEnterBase"
+    elseif category == 'member' then 
         class_name = "GameUIAllianceCityEnter"
-        UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance(),self:GetEnemyAlliance()):addToCurrentScene(true)
-    elseif category == 'village' then -- TODO:
+    elseif category == 'decorate' then 
+         class_name = "GameUIAllianceDecorateEnter"
+    elseif category == 'village' then 
         class_name = "GameUIAllianceVillageEnter"
-        UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance(),self:GetEnemyAlliance()):addToCurrentScene(true)
     end
-    if isMyAlliance then
-        if category == 'none' then
-            class_name = "GameUIAllianceEnterBase"
-        elseif category == 'decorate' then 
-             class_name = "GameUIAllianceDecorateEnter"
-        end
-        UIKit:newGameUI(class_name,entity,self:GetAlliance()):addToCurrentScene(true)
-    end
+    UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance(),self:GetEnemyAlliance()):addToCurrentScene(true)
 end
 return AllianceBattleScene
 

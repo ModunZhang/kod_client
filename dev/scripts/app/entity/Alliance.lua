@@ -308,6 +308,7 @@ function Alliance:Reset()
     self:ResetMarchEvent()
     self:ResetVillageEvents()
     self.alliance_villages = {}
+    self:GetAllianceBelvedere():Reset()
 end
 function Alliance:OnOperation(operation_type)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OPERATION, function(listener)
