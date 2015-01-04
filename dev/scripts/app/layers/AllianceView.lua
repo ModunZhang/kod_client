@@ -35,7 +35,7 @@ end
 
 
 
-function AllianceView:ctor(layer, alliance,view_index, logic_base_x, logic_base_y)
+function AllianceView:ctor(layer, alliance, logic_base_x, logic_base_y)
     self:setNodeEventEnabled(true)
     Observer.extend(self)
     self.layer = layer
@@ -50,7 +50,6 @@ function AllianceView:ctor(layer, alliance,view_index, logic_base_x, logic_base_
         base_x = logic_base_x * 80,
         base_y = logic_base_y * 80
     }
-    self:SetViewIndex(view_index)
 end
 function AllianceView:onEnter()
     math.randomseed(self:RandomSeed())
@@ -195,14 +194,6 @@ function AllianceView:EmptyGround(x, y)
             return AllianceObject.new(nil, nil, x, y)
         end
     }
-end
-
-function AllianceView:SetViewIndex(index)
-    self.view_index = index
-end
-
-function AllianceView:GetViewIndex()
-    return self.view_index
 end
 
 
