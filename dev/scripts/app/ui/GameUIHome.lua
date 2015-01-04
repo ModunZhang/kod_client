@@ -332,6 +332,7 @@ function GameUIHome:CreateBottom()
         end)
         :addTo(chat_bg)
     pv:setTouchEnabled(true)
+    pv:setTouchSwallowEnabled(false)
     -- add items
     for i=1,2 do
         local item = pv:newItem()
