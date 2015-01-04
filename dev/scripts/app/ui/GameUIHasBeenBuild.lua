@@ -181,8 +181,8 @@ function GameUIHasBeenBuild:LoadFunctionListView()
 end
 function GameUIHasBeenBuild:UnloadFunctionListView()
     if self.function_list_view then
-        self.function_list_view:removeFromParentAndCleanup(true)
-        self.function_list_node:removeFromParentAndCleanup(true)
+        self.function_list_view:removeFromParent()
+        self.function_list_node:removeFromParent()
     end
     self.function_list_view = nil
     self.function_list_node = nil
@@ -196,8 +196,8 @@ function GameUIHasBeenBuild:LoadHouseListView()
 end
 function GameUIHasBeenBuild:UnloadHouseListView()
     if self.house_list_view then
-        self.house_list_view:removeFromParentAndCleanup(true)
-        self.house_list_node:removeFromParentAndCleanup(true)
+        self.house_list_view:removeFromParent()
+        self.house_list_node:removeFromParent()
     end
     self.house_list_view = nil
     self.house_list_node = nil

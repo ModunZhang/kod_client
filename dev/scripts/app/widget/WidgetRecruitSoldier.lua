@@ -590,7 +590,7 @@ function WidgetRecruitSoldier:OnBlankClicked(func)
     return self
 end
 function WidgetRecruitSoldier:Close()
-    self:removeFromParentAndCleanup(true)
+    self:removeFromParent()
     return self
 end
 function WidgetRecruitSoldier:OnCountChanged(count)

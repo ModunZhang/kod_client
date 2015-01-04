@@ -93,7 +93,7 @@ function CityLayer:OnDestoryDecorator(destory_decorator, release_ruins)
 
             table.remove(self.houses, i)
             -- house:DestoryShadow()
-            house:removeFromParentAndCleanup(true)
+            house:removeFromParent()
             break
         end
     end
