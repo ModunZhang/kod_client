@@ -242,8 +242,9 @@ function TwoAllianceLayer:onCleanup()
     self:AddOrRemoveAllianceEvent(false)
 end
 
-function TwoAllianceLayer:ConvertLogicPositionToMapPosition(lx, ly)
-    local map_pos = cc.p(self.alliance_views[1]:GetLogicMap():ConvertToMapPosition(lx , ly))
+function TwoAllianceLayer:ConvertLogicPositionToMapPosition(lx, ly, alliance_id)
+    local alliance_vew = self.alliance_views[1]:GetAlliance():Id() == alliance_id and self.alliance_views[1] or self.alliance_views[2]
+    local map_pos = cc.p(alliance_vew:GetLogicMap():ConvertToMapPosition(lx, ly))
     return self:convertToNodeSpace(self.background:convertToWorldSpace(map_pos))
 end
 function TwoAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_time)
