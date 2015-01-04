@@ -443,6 +443,10 @@ function Report:GetFightDefenceName()
         or data.defencePlayerData and data.defencePlayerData.name 
         or data.defenceVillageData and Localize.village_name[data.defenceVillageData.type].." Lv "..data.defenceVillageData.level
 end
+function Report:IsDragonFight()
+    local data = self:GetFightReports()
+    return data.attackPlayerDragonFightData
+end
 function Report:GetFightAttackDragonRoundData()
     local data = self:GetFightReports()
     return data.attackPlayerDragonFightData or {}
