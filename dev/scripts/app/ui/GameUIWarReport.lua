@@ -117,6 +117,7 @@ function GameUIWarReport:onEnter()
     ):setButtonLabel(replay_label)
         :addTo(report_body):align(display.CENTER, report_body:getContentSize().width-120, rb_size.height-186)
         :onButtonClicked(function(event)
+                UIKit:newGameUI("GameUIReplay",report):addToCurrentScene(true)
             end)
 
     -- 删除按钮

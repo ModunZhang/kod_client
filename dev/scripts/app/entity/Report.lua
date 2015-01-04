@@ -445,36 +445,36 @@ function Report:GetFightDefenceName()
 end
 function Report:GetFightAttackDragonRoundData()
     local data = self:GetFightReports()
-    return data.attackPlayerDragonFightData
+    return data.attackPlayerDragonFightData or {}
 end
 function Report:GetFightDefenceDragonRoundData()
     local data = self:GetFightReports()
-    return data.defencePlayerDragonFightData or data.defenceVillageDragonFightData
+    return data.defencePlayerDragonFightData or data.defenceVillageDragonFightData or {}
 end
 function Report:GetFightAttackSoldierRoundData()
     local data = self:GetFightReports()
-    return data.attackPlayerSoldierRoundDatas
+    return data.attackPlayerSoldierRoundDatas or {}
 end
 function Report:GetFightDefenceSoldierRoundData()
     local data = self:GetFightReports()
-    return data.defenceVillageSoldierRoundDatas or data.defencePlayerSoldierRoundDatas
+    return data.defenceVillageSoldierRoundDatas or data.defencePlayerSoldierRoundDatas or {}
 end
 function Report:IsFightWall()
     local data = self:GetFightReports()
-    return data.attackPlayerWallRoundDatas
+    return data.attackPlayerWallRoundDatas or {}
 end
 function Report:GetFightAttackWallRoundData()
     local data = self:GetFightReports()
-    return data.attackPlayerWallRoundDatas
+    return data.attackPlayerWallRoundDatas or {}
 end
 function Report:GetFightDefenceWallRoundData()
     local data = self:GetFightReports()
-    return data.defencePlayerWallRoundDatas
+    return data.defencePlayerWallRoundDatas or {}
 end
 function Report:GetFightReports()
     local data = self:GetData()
     return data.fightWithHelpDefencePlayerReports or data.fightWithDefencePlayerReports
-        or data.fightWithDefenceVillageReports
+        or data.fightWithDefenceVillageReports or {}
 end
 return Report
 
