@@ -423,6 +423,8 @@ function Report:GetReportTitle()
             end
             return round[#round].isWin and _("防守村落成功") or _("防守村落失败")
         end
+    elseif report_type=="collectResource" then
+        return _("采集报告！！！未适配")
     end
 end
 function Report:IsHasHelpDefencePlayer()
