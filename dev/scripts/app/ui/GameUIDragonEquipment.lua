@@ -356,7 +356,7 @@ end
 
 
 function GameUIDragonEquipment:RefreshEquipmentItem()
-    self.mainEquipment:removeFromParentAndCleanup(true)
+    self.mainEquipment:removeFromParent()
     local mainEquipment = self:GetEquipmentItem()
     :addTo(self.background)
     :align(display.LEFT_TOP,(self.background:getContentSize().width-LISTVIEW_WIDTH)/2,self.titleBar:getPositionY() - 10)

@@ -93,7 +93,7 @@ function CityLayer:OnDestoryDecorator(destory_decorator, release_ruins)
 
             table.remove(self.houses, i)
             -- house:DestoryShadow()
-            house:removeFromParentAndCleanup(true)
+            house:removeFromParent()
             break
         end
     end
@@ -122,6 +122,7 @@ local CITY_LAYER = 3
 local CITY_BACKGROUND = 1
 local ROAD_NODE = 2
 local BUILDING_NODE = 3
+local WEATHER_NODE = 4
 ----
 local TERRAIN_MAP = {
     ["grass"] = {background = "tmxmaps/grass_background1.tmx"},
@@ -166,6 +167,9 @@ function CityLayer:ctor(city_scene)
     self:InitCityBackgroundsWithRandom()
     randomseed(DataManager:getUserData().countInfo.registerTime)
     self:InitRoadsWithRandom()
+
+    self:InitWeather()
+
 
 
     local origin_point = self:GetPositionIndex(0, 0)
@@ -357,6 +361,23 @@ function CityLayer:GetCityBackgrounds()
     return self.city_backgrounds
 end
 --
+function CityLayer:InitWeather()
+    -- local sprite = display.newSprite("logos/batcat.png", 0, 0, {class=cc.FilteredSpriteWithOne})
+    --     :addTo(self, WEATHER_NODE):align(display.LEFT_BOTTOM, 0, 0)
+    -- local size1 = self:getContentSize()
+    -- local size2 = sprite:getContentSize()
+    -- sprite:setScale(size1.width / size2.width, size1.height / size2.height)
+    -- sprite:setFilter(filter.newFilter("CUSTOM",
+    --     json.encode({
+    --         frag = "shaders/snow.fs",
+    --         u_resolution = {size1.width, size1.height},
+    --         u_position = {0.5, 0.5},
+    --     })
+    -- ))
+    -- self.weather = sprite
+    -- self.weather_glstate = self.weather:getFilter(0):getGLProgramState()
+    -- self:UpdateWeather()
+end
 function CityLayer:InitRoadsWithRandom()
     local roads_map = {}
     for row_index = 1, 5 do
@@ -1027,6 +1048,12 @@ function CityLayer:OnSceneMove()
     if self.road then
         on_move(nil, self.road)
     end
+    -- self:UpdateWeather()
+end
+function CityLayer:UpdateWeather()
+    local size = self:getContentSize()
+    local pos = self:convertToNodeSpace(cc.p(display.cx, display.cy))
+    self.weather_glstate:setUniformVec2("u_position", {x = pos.x / size.width, y = pos.y / size.height})
 end
 function CityLayer:OnSceneScale()
     self.city_scene:OnSceneScale(self)

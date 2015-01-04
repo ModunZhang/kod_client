@@ -1,17 +1,13 @@
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
+local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local window = import("..utils.window")
 
-local GameUIAlliancePosition = class("GameUIAlliancePosition", function ()
-    return display.newColorLayer(cc.c4b(0,0,0,127))
-end)
+local GameUIAlliancePosition = class("GameUIAlliancePosition",WidgetPopDialog)
 
 function GameUIAlliancePosition:ctor()
-    self:setNodeEventEnabled(true)
-    self.body = self:CreateBackGroundWithTitle()
-        :align(display.CENTER, window.cx, window.top -400)
-        :addTo(self)
+    GameUIAlliancePosition.super.ctor(self,258,_("定位坐标"),window.top-200)
 
     -- 联盟名字
     UIKit:ttfLabel({
@@ -103,32 +99,6 @@ end
 
 function GameUIAlliancePosition:onExit()
     UIKit:getRegistry().removeObject(self.__cname)
-end
-
-function GameUIAlliancePosition:CreateBackGroundWithTitle(  )
-    local body = WidgetUIBackGround.new({height=258}):align(display.TOP_CENTER,display.cx,display.top-200)
-    local rb_size = body:getContentSize()
-    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+5)
-        :addTo(body)
-    local title_label = UIKit:ttfLabel({
-        text = _("定位坐标"),
-        size = 22,
-        color = 0xffedae,
-    }):align(display.CENTER, title:getContentSize().width/2, title:getContentSize().height/2+2)
-        :addTo(title)
-    -- close button
-    self.close_btn = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                self:removeFromParent(true)
-            end
-        end):align(display.CENTER, rb_size.width-20,rb_size.height+10):addTo(body)
-    return body
-end
-
-function GameUIAlliancePosition:addToCurrentScene(anima)
-    display.getRunningScene():addChild(self,3000)
-    return self
 end
 
 return GameUIAlliancePosition
