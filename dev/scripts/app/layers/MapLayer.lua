@@ -70,6 +70,7 @@ function MapLayer:GetLogicMap()
     return nil
 end
 function MapLayer:PromiseOfMove(map_x, map_y, speed_)
+    self.move_callbacks = {}
     local move_callbacks = self.move_callbacks
     assert(#move_callbacks == 0)
     local p = promise.new()

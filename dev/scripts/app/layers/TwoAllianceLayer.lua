@@ -48,7 +48,7 @@ function TwoAllianceLayer:ctor(alliance1, alliance2, arrange)
                 local march_info = corps.march_info
                 local total_time = march_info.finish_time - march_info.start_time
                 local elapse_time = cur_time - march_info.start_time
-                if elapse_time <= total_time then
+                if elapse_time < total_time then
                     local cur_vec = cc.pAdd(cc.pMul(march_info.normal, march_info.speed * elapse_time), march_info.start_info.real)
                     corps:setPosition(cur_vec.x, cur_vec.y)
                 else

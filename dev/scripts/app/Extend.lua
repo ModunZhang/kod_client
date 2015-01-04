@@ -18,7 +18,79 @@ function cc.ui.UIPushButton:ctor(images, options,music_info)
     end)
 end
 
+display.SCENE_TRANSITIONS = {
+    CROSSFADE       = {cc.TransitionCrossFade, 2},
+    FADE            = {cc.TransitionFade, 3, cc.c3b(0, 0, 0)},
+    FADEBL          = {cc.TransitionFadeBL, 2},
+    FADEDOWN        = {cc.TransitionFadeDown, 2},
+    FADETR          = {cc.TransitionFadeTR, 2},
+    FADEUP          = {cc.TransitionFadeUp, 2},
+    FLIPANGULAR     = {cc.TransitionFlipAngular, 3, cc.TRANSITION_ORIENTATION_LEFT_OVER},
+    FLIPX           = {cc.TransitionFlipX, 3, cc.TRANSITION_ORIENTATION_LEFT_OVER},
+    FLIPY           = {cc.TransitionFlipY, 3, cc.TRANSITION_ORIENTATION_UP_OVER},
+    JUMPZOOM        = {cc.TransitionJumpZoom, 2},
+    MOVEINB         = {cc.TransitionMoveInB, 2},
+    MOVEINL         = {cc.TransitionMoveInL, 2},
+    MOVEINR         = {cc.TransitionMoveInR, 2},
+    MOVEINT         = {cc.TransitionMoveInT, 2},
+    PAGETURN        = {cc.TransitionPageTurn, 3, false},
+    ROTOZOOM        = {cc.TransitionRotoZoom, 2},
+    SHRINKGROW      = {cc.TransitionShrinkGrow, 2},
+    SLIDEINB        = {cc.TransitionSlideInB, 2},
+    SLIDEINL        = {cc.TransitionSlideInL, 2},
+    SLIDEINR        = {cc.TransitionSlideInR, 2},
+    SLIDEINT        = {cc.TransitionSlideInT, 2},
+    SPLITCOLS       = {cc.TransitionSplitCols, 2},
+    SPLITROWS       = {cc.TransitionSplitRows, 2},
+    TURNOFFTILES    = {cc.TransitionTurnOffTiles, 2},
+    ZOOMFLIPANGULAR = {cc.TransitionZoomFlipAngular, 2},
+    ZOOMFLIPX       = {cc.TransitionZoomFlipX, 3, cc.TRANSITION_ORIENTATION_LEFT_OVER},
+    ZOOMFLIPY       = {cc.TransitionZoomFlipY, 3, cc.TRANSITION_ORIENTATION_UP_OVER},
 
+    CUSTOM          = {ext.TransitionCustom, 2},
+}
+
+
+
+function display.wrapSceneWithTransition(scene, transitionType, time, more)
+    print("displ------->")
+    local key = string.upper(tostring(transitionType))
+    if string.sub(key, 1, 12) == "CCTRANSITION" then
+        key = string.sub(key, 13)
+    end
+
+    if key == "RANDOM" then
+        local keys = table.keys(display.SCENE_TRANSITIONS)
+        key = keys[math.random(1, #keys)]
+    end
+
+    if display.SCENE_TRANSITIONS[key] then
+        local cls, count, default = unpack(display.SCENE_TRANSITIONS[key])
+        time = time or 0.2
+
+        if count == 3 then
+            scene = cls:create(time, scene, more or default)
+        else
+            scene = cls:create(time, scene)
+        end
+        if key == "CUSTOM" then
+            scene:setNodeEventEnabled(true)
+            function scene:onEnter()
+                if type(more) == "function" then
+                    more(self, "onEnter")
+                end
+            end
+            function scene:onExit()
+                if type(more) == "function" then
+                    more(self, "onExit")
+                end
+            end
+        end
+    else
+        printError("display.wrapSceneWithTransition() - invalid transitionType %s", tostring(transitionType))
+    end
+    return scene
+end
 
 --[[--
 
@@ -72,6 +144,7 @@ local label = display.newTTFLabel({
 @return UILabel UILabel对象
 
 ]]
+
 function display.newTTFLabel(params)
     assert(type(params) == "table",
         "[framework.display] newTTFLabel() invalid params")
@@ -89,7 +162,7 @@ function display.newTTFLabel(params)
         "[framework.display] newTTFLabel() invalid params.size")
     local label
     if cc.FileUtils:getInstance():isFileExist(font) then
-        label = cc.Label:createWithTTF(text, font, size, dimensions, textAlign, textValign,boldSize)
+        label = cc.Label:createWithTTF(text, font, size, dimensions, textAlign, textValign)
     else
         label = cc.Label:createWithSystemFont(text, font, size, dimensions, textAlign, textValign)
     end
