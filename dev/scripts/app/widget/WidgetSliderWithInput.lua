@@ -16,7 +16,7 @@ function WidgetSliderWithInput:ctor(params)
     -- progress
     self.slider = WidgetSlider.new(display.LEFT_TO_RIGHT,  {bar = bar,
         progress = progress,
-        button = "slider_btn_66x66.png"}, {max = max,min = min}):addTo(self)
+        button = "slider_btn_66x66.png"}, {max = max,min = min,scale9=true}):addTo(self)
     local slider = self.slider
 
 

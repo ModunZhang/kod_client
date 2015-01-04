@@ -3,7 +3,7 @@ local WidgetUIBackGround = class("WidgetUIBackGround", function ()
     return display.newNode()
 end)
 
-WidgetUIBackGround.STYLE_TYPE = Enum("STYLE_1","STYLE_2","STYLE_3","STYLE_4")
+WidgetUIBackGround.STYLE_TYPE = Enum("STYLE_1","STYLE_2","STYLE_3","STYLE_4","STYLE_5")
 
 local STYLES = {
     [1]= {
@@ -30,10 +30,19 @@ local STYLES = {
     [4] = {
         top_img = "back_ground_580x12_top.png",
         bottom_img = "back_ground_580X12_bottom.png",
-        mid_img = "back_ground_580X1_mid.png",
+        mid_img = "back_ground_426x1_mid_1.png",
         u_height =12,
         m_height=1,
         b_height=12,
+    },
+    [5] = {
+        top_img = "back_ground_426x14_top_1.png",
+        bottom_img = "back_ground_426x14_top_1.png",
+        mid_img = "back_ground_426x1_mid_1.png",
+        u_height =14,
+        m_height=1,
+        b_height=14,
+        b_flip = true
     },
 }
 
@@ -48,6 +57,7 @@ function WidgetUIBackGround:ctor(params,style)
     local u_height = st and st.u_height or params.u_height or 22
     local m_height = st and st.m_height or params.m_height or 98
     local b_height = st and st.b_height or params.b_height or 62
+    local b_flip = st and st.b_flip or params.b_flip
     local is_have_frame = params.isFrame or "no"
     local capInsets = params.capInsets
 
@@ -57,7 +67,7 @@ function WidgetUIBackGround:ctor(params,style)
     local bottom = display.newScale9Sprite(bottom_img,0, 0,cc.size(width,b_height),capInsets):align(display.LEFT_BOTTOM):addTo(self)
 
     --bottom
-    if params.b_flip then
+    if b_flip then
         bottom:align(display.LEFT_TOP)
         bottom:setRotationSkewX(180)
     end

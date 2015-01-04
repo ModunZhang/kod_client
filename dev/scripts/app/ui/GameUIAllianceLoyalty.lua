@@ -1,17 +1,14 @@
 
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
+local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local window = import("..utils.window")
 
-local GameUIAllianceLoyalty = class("GameUIAllianceLoyalty", function ()
-    return display.newColorLayer(cc.c4b(0,0,0,127))
-end)
+local GameUIAllianceLoyalty = class("GameUIAllianceLoyalty", WidgetPopDialog)
 
 function GameUIAllianceLoyalty:ctor()
-    self:setNodeEventEnabled(true)
-    self.body = self:CreateBackGroundWithTitle()
-        :align(display.CENTER, window.cx, window.top -400)
-        :addTo(self)
+    GameUIAllianceLoyalty.super.ctor(self,340,_("忠诚值"),window.top-200)
+
     local go_shop_btn = WidgetPushButton.new({normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"})
         :align(display.CENTER,self.body:getContentSize().width/2,60)
         :onButtonClicked(function(event)
@@ -22,7 +19,7 @@ function GameUIAllianceLoyalty:ctor()
             end
         end)
         :setButtonLabel("normal", UIKit:ttfLabel({
-            text = _("   前往\n联盟商店"),
+            text = "    ".._("前往").."\n".._("联盟商店"),
             size = 20,
             color = 0xfff3c7,
             shadow = true
@@ -32,13 +29,7 @@ function GameUIAllianceLoyalty:ctor()
     local bg = WidgetUIBackGround.new({
         width = 572,
         height = 178,
-        top_img = "back_ground_top_2.png",
-        bottom_img = "back_ground_bottom_2.png",
-        mid_img = "back_ground_mid_2.png",
-        u_height = 10,
-        b_height = 10,
-        m_height = 1,
-    }):align(display.TOP_CENTER, self.body:getContentSize().width/2, self.body:getContentSize().height-30)
+    },WidgetUIBackGround.STYLE_TYPE.STYLE_5):align(display.TOP_CENTER, self.body:getContentSize().width/2, self.body:getContentSize().height-30)
         :addTo(self.body)
     local tips = {
         _("忠诚值是玩家自己的属性，退出联盟后依然保留"),
@@ -70,32 +61,6 @@ end
 
 function GameUIAllianceLoyalty:onExit()
     UIKit:getRegistry().removeObject(self.__cname)
-end
-
-function GameUIAllianceLoyalty:CreateBackGroundWithTitle(  )
-    local body = WidgetUIBackGround.new({height=340}):align(display.TOP_CENTER,display.cx,display.top-200)
-    local rb_size = body:getContentSize()
-    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+5)
-        :addTo(body)
-    local title_label = UIKit:ttfLabel({
-        text = _("忠诚值"),
-        size = 22,
-        color = 0xffedae,
-    }):align(display.CENTER, title:getContentSize().width/2, title:getContentSize().height/2+2)
-        :addTo(title)
-    -- close button
-    self.close_btn = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                self:removeFromParent(true)
-            end
-        end):align(display.CENTER, rb_size.width-20,rb_size.height+10):addTo(body)
-    return body
-end
-
-function GameUIAllianceLoyalty:addToCurrentScene(anima)
-    display.getRunningScene():addChild(self,3000)
-    return self
 end
 
 return GameUIAllianceLoyalty

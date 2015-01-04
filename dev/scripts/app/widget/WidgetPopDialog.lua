@@ -22,7 +22,7 @@ function WidgetPopDialog:ctor(height,title_text,y,title_bg)
             if event.name == "CLICKED_EVENT" then
                 self:removeFromParent(true)
             end
-        end):align(display.CENTER, rb_size.width-36,rb_size.height+12):addTo(body)
+        end):align(display.CENTER, rb_size.width-34,rb_size.height+14):addTo(body)
 end
 
 function WidgetPopDialog:GetBody()
