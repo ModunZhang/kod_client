@@ -500,9 +500,14 @@ function GameUIReplay:onEnter()
     self.right_morale_cur = self.right_morale_max
 
     -- self:PlaySoldierBattle(decode_battle(battle))
-    self:PlayDragonBattle():next(function()
+    if self.report:IsDragonFight() then
+        self:PlayDragonBattle():next(function()
+            self:PlaySoldierBattle(decode_battle(battle))
+        end)
+    else
         self:PlaySoldierBattle(decode_battle(battle))
-    end)
+    end
+
 end
 function GameUIReplay:PlayDragonBattle()
     local report = self.report
@@ -964,6 +969,7 @@ end
 
 
 return GameUIReplay
+
 
 
 
