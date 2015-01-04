@@ -1234,7 +1234,7 @@ function Alliance:DecodeAllianceVillages__(__villages)
     local changed_map = GameUtils:Event_Handler_Func(
         __villages
         ,function(event_data)
-            self.alliance_villages[v.id] = event_data
+            self.alliance_villages[event_data.id] = event_data
             return event_data
         end
         ,function(event_data)
