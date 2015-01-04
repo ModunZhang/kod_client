@@ -87,7 +87,7 @@ function AllianceBattleScene:EnterAllianceBuilding(entity,isMyAlliance)
         print("没有此建筑--->",building_name)
         return
     end
-    UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance()):addToCurrentScene(true)
+    UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance(),self:GetEnemyAlliance()):addToCurrentScene(true)
 end
 
 function AllianceBattleScene:EnterNotAllianceBuilding(entity,isMyAlliance)
@@ -102,7 +102,7 @@ function AllianceBattleScene:EnterNotAllianceBuilding(entity,isMyAlliance)
     elseif category == 'village' then 
         class_name = "GameUIAllianceVillageEnter"
     end
-    UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance()):addToCurrentScene(true)
+    UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance(),self:GetEnemyAlliance()):addToCurrentScene(true)
 end
 return AllianceBattleScene
 
