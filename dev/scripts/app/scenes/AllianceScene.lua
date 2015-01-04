@@ -27,7 +27,7 @@ function AllianceScene:onEnter()
     self:CreateAllianceUI()
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(10, 10)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
-    self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    -- self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
 
     self:GetSceneLayer():ZoomTo(1)
 end
@@ -46,7 +46,7 @@ function AllianceScene:GetAlliance()
     return Alliance_Manager:GetMyAlliance()
 end
 function AllianceScene:onExit()
-    self:GetAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    -- self:GetAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     AllianceScene.super.onExit(self)
 end
 function AllianceScene:CreateSceneLayer()
@@ -62,11 +62,11 @@ function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
         end
     end
 end
-function AllianceScene:OnBasicChanged(alliance,changed_map)
-    if changed_map.status and changed_map.status.new == 'prepare' then
-        app:EnterMyAllianceScene()
-    end
-end
+-- function AllianceScene:OnBasicChanged(alliance,changed_map)
+--     if changed_map.status and changed_map.status.new == 'prepare' then
+--         app:EnterMyAllianceScene()
+--     end
+-- end
 
 function AllianceScene:EnterAllianceBuilding(entity)
     local isMyAlliance = true

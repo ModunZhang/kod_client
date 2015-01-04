@@ -26,6 +26,7 @@ end
 function AllianceManager:OnAllianceDataChanged(alliance_data)
     self:UpdateEnemyAlliance(alliance_data.enemyAllianceDoc)
     self:GetMyAlliance():OnAllianceDataChanged(alliance_data)
+    self:RefreshAllianceSceneIf()
 end
 
 function AllianceManager:OnTimer(current_time)
@@ -75,5 +76,16 @@ function AllianceManager:UpdateEnemyAlliance(json_data)
         enemy_alliance:OnAllianceDataChanged(json_data)
     end
 end
+
+function AllianceManager:RefreshAllianceSceneIf()
+    local my_alliance = self:GetMyAlliance()
+    if my_alliance:Status() == 'protect' and display.getRunningScene().__cname == 'AllianceBattleScene' then
+        app:EnterMyAllianceScene()
+    end
+    if my_alliance:Status() == 'prepare' and display.getRunningScene().__cname == 'AllianceScene' then
+        app:EnterMyAllianceScene()
+    end
+end
+
 return AllianceManager
 

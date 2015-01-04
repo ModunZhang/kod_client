@@ -4,4 +4,5 @@
 //copy text to Pasteboard
 extern "C" void CopyText(const char * text);
 extern "C" void DisableIdleTimer(bool disable=false);
+extern "C" void CloseKeyboard();
 #endif

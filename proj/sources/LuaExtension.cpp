@@ -551,8 +551,10 @@ static int tolua_ext_disableIdleTimer(lua_State* tolua_S)
     else
 #endif
     {
+#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
         bool disable = tolua_toboolean(tolua_S, 1, 0);
         DisableIdleTimer(disable);
+#endif
     }
     return 0;
 #ifndef TOLUA_RELEASE
@@ -622,6 +624,13 @@ tolua_lerror:
 #endif
 }
 
+static int tolua_ext_close_keyboard(lua_State* tolua_S)
+{
+#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+    CloseKeyboard();
+#endif
+    return 0;
+}
 static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
 {
     tolua_function(tolua_S, "now", tolua_ext_now);
@@ -632,7 +641,7 @@ static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
     tolua_function(tolua_S, "restart", tolua_ext_restart);
     tolua_function(tolua_S, "copyText", tolua_ext_copyText);
     tolua_function(tolua_S, "disableIdleTimer", tolua_ext_disableIdleTimer);
-    
+    tolua_function(tolua_S, "closeKeyboard", tolua_ext_close_keyboard);
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
     tolua_function(tolua_S,"getOpenUDID",tolua_ext_getOpenUDID);
 #endif
