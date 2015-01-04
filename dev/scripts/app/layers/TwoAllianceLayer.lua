@@ -24,8 +24,19 @@ function TwoAllianceLayer:ctor(alliance1, alliance2, arrange)
     Observer.extend(self)
 
     self.alliances = {alliance1, alliance2}
-    self.arrange = arrange or TwoAllianceLayer.ARRANGE.H
+    local pos = alliance1:FightPosition()
+    if pos == "top" then
+        self.arrange = TwoAllianceLayer.ARRANGE.V
+    elseif pos == "bottom" then
+        self.arrange = TwoAllianceLayer.ARRANGE.V
+    elseif pos == "left" then
+        self.arrange = TwoAllianceLayer.ARRANGE.H
+    elseif pos == "right" then
+        self.arrange = TwoAllianceLayer.ARRANGE.H
+    end
     TwoAllianceLayer.super.ctor(self, 0.4, 1.2)
+
+
 
     self:InitBackground()
     self:InitTerrianBottomNode()
@@ -33,12 +44,27 @@ function TwoAllianceLayer:ctor(alliance1, alliance2, arrange)
     self:InitBuildingNode()
     self:InitCorpsNode()
     self:InitLineNode()
+    if TwoAllianceLayer.ARRANGE.H == self.arrange then
+        local alliance_view1 = AllianceView.new(self, alliance1,TwoAllianceLayer.VIEW_INDEX.MyAlliance, pos == "left" and 0 or 51):addTo(self)
+        local alliance_view2 = AllianceView.new(self, alliance2,TwoAllianceLayer.VIEW_INDEX.EnemyAlliance, pos == "left" and 51 or 0):addTo(self)
+        self.alliance_views = {alliance_view1, alliance_view2}
+        local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(51.5, -0.5)
+        local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(51.5, 51.5)
+        display.newLine({{sx, sy}, {ex, ey}},
+        {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
+        borderWidth = 5}):addTo(self.terrain_top)
+    else
+        local alliance_view1 = AllianceView.new(self, alliance1,TwoAllianceLayer.VIEW_INDEX.MyAlliance, 0, pos == "top" and 104 or 53):addTo(self)
+        local alliance_view2 = AllianceView.new(self, alliance2,TwoAllianceLayer.VIEW_INDEX.EnemyAlliance, 0, pos == "top" and 53 or 104):addTo(self)
+        self.alliance_views = {alliance_view1, alliance_view2}
 
-    local alliance_view1 = AllianceView.new(self, alliance1,TwoAllianceLayer.VIEW_INDEX.MyAlliance, 0):addTo(self)
-    local alliance_view2 = AllianceView.new(self, alliance2,TwoAllianceLayer.VIEW_INDEX.EnemyAlliance, 51):addTo(self)
-    self.alliance_views = {alliance_view1, alliance_view2}
-
-    -- 
+        local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(-0.5, 51.5)
+        local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(51.5, 51.5)
+        display.newLine({{sx, sy}, {ex, ey}},
+        {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
+        borderWidth = 5}):addTo(self.terrain_top)
+    end
+    --
     ccs.ArmatureDataManager:getInstance():addArmatureFileInfo("animations/dragon_red/dragon_red.ExportJson")
     local timer = app.timer
     self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function()
@@ -64,10 +90,13 @@ function TwoAllianceLayer:ctor(alliance1, alliance2, arrange)
     self:CreateAllianceCorps(self:GetMyAlliance())
     self:CreateAllianceCorps(self:GetEnemyAlliance())
     self:AddOrRemoveAllianceEvent(true)
-  
 end
 function TwoAllianceLayer:InitBackground()
-    self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_h.tmx"):addTo(self, ZORDER.BACKGROUND)
+    if TwoAllianceLayer.ARRANGE.H == self.arrange then
+        self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_h.tmx"):addTo(self, ZORDER.BACKGROUND)
+    else
+        self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_v.tmx"):addTo(self, ZORDER.BACKGROUND)
+    end
 end
 function TwoAllianceLayer:InitTerrianBottomNode()
     self.terrain_bottom = display.newNode():addTo(self, ZORDER.ALLIANCE_TERRAIN_BOTTOM)
@@ -130,10 +159,10 @@ function TwoAllianceLayer:AddOrRemoveAllianceEvent(isAdd)
         self:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
         self:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
         self:GetEnemyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
-        self:GetEnemyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)  
+        self:GetEnemyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
 
         self:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
-        self:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)  
+        self:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
         self:GetEnemyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
         self:GetEnemyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
     end
@@ -169,7 +198,7 @@ function TwoAllianceLayer:OnStrikeMarchEventDataChanged(changed_map)
 end
 
 function TwoAllianceLayer:OnStrikeMarchReturnEventDataChanged(changed_map)
-     dump(changed_map,"OnStrikeMarchReturnEventDataChanged-->")
+    dump(changed_map,"OnStrikeMarchReturnEventDataChanged-->")
     self:ManagerCorpsFromChangedMap(changed_map)
 end
 
@@ -199,7 +228,7 @@ function TwoAllianceLayer:CreateCorpsIf(marchEvent)
         else
             to.index = TwoAllianceLayer.VIEW_INDEX.EnemyAlliance
         end
-        self:CreateCorps( 
+        self:CreateCorps(
             marchEvent:Id(),
             from,
             to,
@@ -361,11 +390,21 @@ function TwoAllianceLayer:GetCurrentViewAllianceCoordinate()
             logic_x, logic_y = left_allaince:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
             current_view_alliance = left_allaince
         end
+    else
+        local up_alliance, down_alliance = unpack(self.alliance_views)
+        logic_x, logic_y = down_alliance:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
+        current_view_alliance = down_alliance
+        if logic_y < 0 then
+            logic_x, logic_y = up_alliance:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
+            current_view_alliance = up_alliance
+        end
     end
     return logic_x, logic_y, current_view_alliance
 end
 
 return TwoAllianceLayer
+
+
 
 
 
