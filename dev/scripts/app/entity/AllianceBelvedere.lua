@@ -48,19 +48,6 @@ end
 --其他人对于我的事件
 function AllianceBelvedere:GetOtherEvents()
 	--敌方联盟
-	if Alliance_Manager:HaveEnemyAlliance() then
-		local enemy_alliance = self:GetEnemyAlliance()
-		local enemy_belvedere = enemy_alliance:GetAllianceBelvedere()
-		enemy_belvedere:AddListenOnType(self, enemy_belvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
-		enemy_belvedere:AddListenOnType(self, enemy_belvedere.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
-		enemy_belvedere:AddListenOnType(self, enemy_belvedere.LISTEN_TYPE.OnAttackMarchEventDataChanged)
-		--瞭望塔coming不需要知道敌方对自己联盟的村落事件和返回事件
-		-- enemy_belvedere:AddListenOnType(self, enemy_belvedere.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
-		-- enemy_belvedere:AddListenOnType(self, enemy_belvedere.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
-		-- enemy_belvedere:AddListenOnType(self, enemy_belvedere.LISTEN_TYPE.OnVillageEventsDataChanged)
-		-- enemy_belvedere:AddListenOnType(self, enemy_belvedere.LISTEN_TYPE.OnVillageEventTimer)
-	end
-
 	local marching_in_events = LuaUtils:table_filteri(self:GetEnemyAlliance():GetAttackMarchEvents(),function(_,marchAttackEvent)
 		return marchAttackEvent:GetPlayerRole() == marchAttackEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER 
 	end)
@@ -115,19 +102,19 @@ function AllianceBelvedere:OnAttackMarchEventTimerChanged(attackMarchEvent)
 	self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged,{attackMarchEvent})
 end
 function AllianceBelvedere:OnAttackMarchReturnEventDataChanged(changed_map)
-	local changed_map = self:FilterEvent(changed_map)
+	-- local changed_map = self:FilterEvent(changed_map)
 	self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged,{changed_map})
 end
 function AllianceBelvedere:OnStrikeMarchEventDataChanged(changed_map)
-	local changed_map = self:FilterEvent(changed_map)
+	-- local changed_map = self:FilterEvent(changed_map)
 	self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnStrikeMarchEventDataChanged,{changed_map})
 end
 function AllianceBelvedere:OnStrikeMarchReturnEventDataChanged(changed_map)
-	local changed_map = self:FilterEvent(changed_map)
+	-- local changed_map = self:FilterEvent(changed_map)
 	self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged,{changed_map})
 end
 function AllianceBelvedere:OnVillageEventsDataChanged(changed_map)
-	local changed_map = self:FilterEvent(changed_map)
+	-- local changed_map = self:FilterEvent(changed_map)
 	self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnVillageEventsDataChanged,{changed_map})
 end
 function AllianceBelvedere:OnVillageEventTimer(villageEvent,left_resource)
@@ -135,7 +122,7 @@ function AllianceBelvedere:OnVillageEventTimer(villageEvent,left_resource)
 	self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnVillageEventTimer,{villageEvent,left_resource})
 end
 function AllianceBelvedere:OnAttackMarchEventDataChanged(changed_map)
-	local changed_map = self:FilterEvent(changed_map)
+	-- local changed_map = self:FilterEvent(changed_map)
 	self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnAttackMarchEventDataChanged,{changed_map})
 end
 function AllianceBelvedere:CallEventsChangedListeners(LISTEN_TYPE,args)
