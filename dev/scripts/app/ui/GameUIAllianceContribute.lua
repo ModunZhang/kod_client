@@ -65,8 +65,9 @@ function GameUIAllianceContribute:ctor()
                 else
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))
                         :SetPopMessage(_("选择捐赠的物资不足"))
-                        :CreateOKButton(function ()
-                            end,_("确定"))
+                        :CreateOKButton({
+                            listener =  function()end
+                        })
                         :AddToCurrentScene()
                 end
             end

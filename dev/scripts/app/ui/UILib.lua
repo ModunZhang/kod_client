@@ -18,6 +18,7 @@ local RESOURCE = {
     stone = "stone_icon.png",
     iron = "iron_icon.png",
     coin = "coin_icon_1.png",
+    wallHp = "gate_292x302.png",
 }
 local MATERIALS = {
     blueprints = "blueprints_112x112.png",
@@ -328,7 +329,7 @@ local DRAGON_ANIMATIONS_FILES = {
         "animations/green_dragon.ExportJson"
     }
 }
-DECORATOR_IMAGE = {
+local DECORATOR_IMAGE = {
     decorate_lake_1 = "lake_288x240.png",
     decorate_lake_2 =  "lake_220x174.png",
     decorate_mountain_2 =  "hill_228x146.png",
@@ -336,7 +337,7 @@ DECORATOR_IMAGE = {
     decorate_tree_1 =  "tree_1_120x120.png",
     decorate_tree_2 =  "tree_2_120x120.png",
 }
-DRAGON_HEAD = {
+local DRAGON_HEAD = {
     blueDragon = "Dragon_blue_113x128.png",
     redDragon = "Dragon_red_113x128.png",
     greenDragon = "Dragon_green_113x128.png"
@@ -362,6 +363,22 @@ BUFF = {
     buff18 =  "buff_9_128x128.png",
 }
 
+local ALLIANCE_TITLE_ICON = {
+    general = "5_23x24.png",
+    quartermaster = "4_32x24.png",
+    supervisor = "3_35x24.png",
+    elite = "2_23x24.png",
+    member = "1_11x24.png",
+    archon = "alliance_item_leader_39x39.png"
+}
+local VILLAGE = {
+    woodVillage = "woodcutter_1_342x250.png",
+    stoneVillage="woodcutter_1_342x250.png",
+    ironVillage = "woodcutter_1_342x250.png",
+    foodVillage = "woodcutter_1_342x250.png",
+    coinVillage = "woodcutter_1_342x250.png",
+}
+
 local SOLDIER_ANIMATIONS = getAniNameFromAnimationFiles(SOLDIER_ANIMATION_FILES)
 local SOLDIER_EFFECT_ANIMATIONS = getAniNameFromAnimationFiles(EFFECT_ANIMATION_FILES)
 local DRAGON_ANIMATIONS = getAniNameFromAnimationFiles(DRAGON_ANIMATIONS_FILES)
@@ -384,8 +401,11 @@ return {
     dragon_material_pic_map = DRAGON_MATERIAL_PIC_MAP,
     soldier_metarial = SOLDIER_METARIAL,
     equipment =EQUIPMENT,
+    alliance_title_icon =ALLIANCE_TITLE_ICON,
     buff = BUFF,
+    village = VILLAGE,
 }
+
 
 
 

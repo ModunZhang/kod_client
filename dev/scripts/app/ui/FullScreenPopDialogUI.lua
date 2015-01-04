@@ -73,7 +73,9 @@ function FullScreenPopDialogUI:SetPopMessage(message)
     return self
 end
 
-function FullScreenPopDialogUI:CreateOKButton(listener,btn_name)
+function FullScreenPopDialogUI:CreateOKButton(params)
+    local params = params or {}
+    local listener,btn_name = params.listener,params.btn_name
     local name = btn_name or _("确定")
     local ok_button = cc.ui.UIPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
         :setButtonLabel(UIKit:ttfLabel({text =name, size = 24, color = 0xffedae,shadow=true}))

@@ -5,6 +5,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetUIBackGround2= import("..widget.WidgetUIBackGround2")
 local FullScreenPopDialogUI= import(".FullScreenPopDialogUI")
+local WidgetPopDialog= import("..widget.WidgetPopDialog")
 local Localize = import("..utils.Localize")
 local window = import('..utils.window')
 local GameUIKeep = UIKit:createUIClass('GameUIKeep',"GameUIUpgradeBuilding")
@@ -325,7 +326,9 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
 end
 
 function GameUIKeep:CreateModifyCityNameWindow()
-    local layer = self:CreateBackGroundWithTitle(_("城市名称修改")):addTo(self)
+    -- local layer = self:CreateBackGroundWithTitle(_("城市名称修改")):addTo(self)
+    local layer = WidgetPopDialog.new(450,_("城市名称修改")):addTo(self)
+    local body = layer:GetBody()
     local editbox = cc.ui.UIInput.new({
         UIInputType = 1,
         image = "input_box.png",
@@ -339,10 +342,10 @@ function GameUIKeep:CreateModifyCityNameWindow()
     editbox:setPlaceholderFontColor(cc.c3b(204,196,158))
     editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
     editbox:align(display.LEFT_TOP,16, 420)
-    layer:addToBody(editbox)
+    editbox:addTo(body)
 
     local bg2 = WidgetUIBackGround2.new(140)
-    layer:addToBody(bg2):align(display.CENTER, 304, 280)
+    bg2:addTo(body):align(display.CENTER, 304, 280)
 
     local prop_bg = display.newSprite("background_prop_100_100.png")
         :align(display.LEFT_CENTER, 10, 82):addTo(bg2)
@@ -398,7 +401,10 @@ function GameUIKeep:CreateModifyCityNameWindow()
                 if string.len(cityName) == 0 then
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))
                         :SetPopMessage(_("请输入城市名称"))
-                        :CreateOKButton(function()end)
+                        :CreateOKButton(
+                            {
+                                listener = function()end
+                            })
                         :AddToCurrentScene()
                     return
                 end
@@ -409,7 +415,9 @@ function GameUIKeep:CreateModifyCityNameWindow()
 end
 
 function GameUIKeep:CreateChangeTerrainWindow()
-    local layer = self:CreateBackGroundWithTitle(_("城市地形修改")):addTo(self)
+    -- local layer = self:CreateBackGroundWithTitle(_("城市地形修改")):addTo(self)
+    local layer = WidgetPopDialog.new(450,_("城市地形修改")):addTo(self)
+    local body = layer:GetBody()
     local bg1 = WidgetUIBackGround.new({
         width = 580,
         height = 264,
@@ -421,7 +429,7 @@ function GameUIKeep:CreateChangeTerrainWindow()
         m_height = 1,
     }):align(display.CENTER,304, 294)
 
-    layer:addToBody(bg1)
+    bg1:addTo(body)
 
     self.terrain_eff_label = cc.ui.UILabel.new({
         size = 18,
@@ -465,7 +473,7 @@ function GameUIKeep:CreateChangeTerrainWindow()
     group:getButtonAtIndex(1):setButtonSelected(true)
 
     local bg2 = WidgetUIBackGround2.new(140)
-    layer:addToBody(bg2):align(display.CENTER, 304, 84)
+    bg2:addTo(body):align(display.CENTER, 304, 84)
 
     local prop_bg = display.newSprite("background_prop_100_100.png")
         :align(display.LEFT_CENTER, 10, 82):addTo(bg2)
@@ -568,6 +576,7 @@ end
 
 
 return GameUIKeep
+
 
 
 

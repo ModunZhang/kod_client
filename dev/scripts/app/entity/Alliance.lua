@@ -10,10 +10,11 @@ local MultiObserver = import(".MultiObserver")
 local MarchAttackEvent = import(".MarchAttackEvent")
 local MarchAttackReturnEvent = import(".MarchAttackReturnEvent")
 local Alliance = class("Alliance", MultiObserver)
--- 突袭用的MarchAttackEvent 所以 OnAttackMarchEventTimerChanged
+local VillageEvent = import(".VillageEvent")
+--注意:突袭用的MarchAttackEvent 所以使用OnAttackMarchEventTimerChanged
 Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS","FIGHT_REQUESTS","FIGHT_REPORTS",
     "OnAttackMarchEventDataChanged","OnAttackMarchEventTimerChanged","OnAttackMarchReturnEventDataChanged","ALLIANCE_FIGHT"
-    ,"OnStrikeMarchEventDataChanged","OnStrikeMarchReturnEventDataChanged")
+    ,"OnStrikeMarchEventDataChanged","OnStrikeMarchReturnEventDataChanged","OnVillageEventsDataChanged","OnVillageEventTimer")
 local unpack = unpack
 local function pack(...)
     return {...}
@@ -57,20 +58,18 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     self.allianceFight = {}
     self.alliance_map = AllianceMap.new(self)
     self.alliance_shrine = AllianceShrine.new(self)
-    -- self.alliance_moonGate = AllianceMoonGate.new(self)
     --行军事件
     self.attackMarchEvents = {}
     self.attackMarchReturnEvents = {}
     self.strikeMarchEvents = {}
     self.strikeMarchReturnEvents = {}
-
+    --村落采集
+    self.villageEvents = {}
+    self.alliance_villages = {}
 end
 function Alliance:GetAllianceShrine()
     return self.alliance_shrine
 end
--- function Alliance:GetAllianceMoonGate()
---     return self.alliance_moonGate
--- end
 function Alliance:GetAllianceFight()
     return self.allianceFight
 end
@@ -301,8 +300,9 @@ function Alliance:Reset()
     self:OnOperation("quit")
     self.alliance_map:Reset()
     self.alliance_shrine:Reset()
-    -- self.alliance_moonGate:Reset()
     self:ResetMarchEvent()
+    self:ResetVillageEvents()
+    self.alliance_villages = {}
 end
 function Alliance:OnOperation(operation_type)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OPERATION, function(listener)
@@ -448,6 +448,12 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     self:OnStrikeMarchEventsComming(alliance_data.__strikeMarchEvents)
     self:OnStrikeMarchReturnEventsDataChanged(alliance_data.strikeMarchReturnEvents)
     self:OnStrikeMarchReturnEventsComming(alliance_data.__strikeMarchReturnEvents)
+
+    self:OnVillageEventsDataChanged(alliance_data.villageEvents)
+    self:OnVillageEventsDataComming(alliance_data.__villageEvents)
+
+    self:DecodeAllianceVillages(alliance_data.villages)
+    self:DecodeAllianceVillages__(alliance_data.__villages)
 end
 
 function Alliance:OnNewEventsComming(__events)
@@ -767,15 +773,16 @@ function Alliance:OnTimer(current_time)
     self:IteratorStrikeMarchReturnEvents(function(strikeMarchReturnEvent)
         strikeMarchReturnEvent:OnTimer(current_time)
     end)
+    self:IteratorVillageEvents(function(villageEvent)
+        villageEvent:OnTimer(current_time)
+    end)
 end
 
 --行军事件
 --------------------------------------------------------------------------------
 function Alliance:OnMarchEventTimer(attackMarchEvent)
     print("OnMarchEventTimer-->",attackMarchEvent:Id())
-    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged, function(listener)
-        listener:OnAttackMarchEventTimerChanged(attackMarchEvent)
-    end)
+    self:CallEventsChangedListeners(Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged,attackMarchEvent)
 end
 
 function Alliance:CallEventsChangedListeners(LISTEN_TYPE,changed_map)
@@ -1092,4 +1099,141 @@ function Alliance:CheckHelpDefenceMarchEventsHaveTarget(memeberId)
     end
     return false
 end
+
+function Alliance:GetSelf()
+    return self:GetMemeberById(DataManager:getUserData()._id)
+end
+
+function Alliance:OnVillageEventTimer(villageEvent)
+    if self.alliance_villages[villageEvent:VillageData().id] then
+        local village = self.alliance_villages[villageEvent:VillageData().id]
+        if villageEvent:GetTime() > 0 then
+            local left_resource = village.resource - villageEvent:CollectCount()
+            self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OnVillageEventTimer, function(listener)
+                listener:OnVillageEventTimer(villageEvent,left_resource)
+            end)
+        end
+    end
+end
+
+--村落采集事件
+function Alliance:OnVillageEventsDataChanged(villageEvents)
+    if not villageEvents then return end
+    for _,v in ipairs(villageEvents) do
+        local villageEvent = VillageEvent.new()
+        villageEvent:UpdateData(v)
+        self.villageEvents[villageEvent:Id()] = villageEvent
+        villageEvent:AddObserver(self)
+    end
+end
+
+function Alliance:OnVillageEventsDataComming(__villageEvents)
+    if not __villageEvents then return end
+    local changed_map = GameUtils:Event_Handler_Func(
+        __villageEvents
+        ,function(event_data)
+            local villageEvent = VillageEvent.new()
+            villageEvent:UpdateData(event_data)
+            self.villageEvents[villageEvent:Id()] = villageEvent
+            villageEvent:AddObserver(self)
+            return villageEvent
+        end
+        ,function(event_data)
+        --TODO:修改采集事件
+        end
+        ,function(event_data)
+            if self.villageEvents[event_data.id] then
+                local villageEvent = self.villageEvents[event_data.id]
+                villageEvent:Reset()
+                self.villageEvents[villageEvent:Id()] = nil
+                villageEvent = VillageEvent.new()
+                villageEvent:UpdateData(event_data)
+                return villageEvent
+            end
+        end
+    )
+    self:CallEventsChangedListeners(Alliance.LISTEN_TYPE.OnVillageEventsDataChanged,GameUtils:pack_event_table(changed_map))
+end
+
+function Alliance:IteratorVillageEvents(func)
+    for _,v in pairs(self.villageEvents) do
+        func(v)
+    end
+end
+function Alliance:ResetVillageEvents()
+    self:IteratorVillageEvents(function(villageEvent)
+        villageEvent:Reset()
+    end)
+    self.villageEvents = {}
+end
+--有id为指定事件 没有id时获取所有采集事件
+function Alliance:GetVillageEvent(id)
+    if id then 
+        return self.villageEvents[id]
+    else
+        local r = {}
+        self:IteratorVillageEvents(function(villageEvent)
+            table.insert(r, villageEvent)
+        end)
+        return r
+    end
+end
+function Alliance:FindVillageEventByVillageId(village_id)
+    for _,v in pairs(self.villageEvents) do
+        if v:VillageData().id == village_id then 
+            return v
+        end
+    end
+    return nil
+end
+function Alliance:DecodeAllianceVillages(villages)
+    if not villages then return end
+    for _,v in ipairs(villages) do
+        self.alliance_villages[v.id] = v
+    end
+end
+
+function Alliance:DecodeAllianceVillages__(__villages)
+    if not __villages then return end
+    local changed_map = GameUtils:Event_Handler_Func(
+        __villages
+        ,function(event_data)
+            self.alliance_villages[v.id] = event_data
+            return event_data
+        end
+        ,function(event_data)
+            if self.alliance_villages[event_data.id] then
+                self.alliance_villages[event_data.id] = event_data
+            end
+        end
+        ,function(event_data)
+            if self.alliance_villages[event_data.id] then
+                self.alliance_villages[event_data.id] = nil
+                return event_data
+            end
+        end
+    )
+end
+
+function Alliance:IteratorAllianceVillageInfo(func)
+    for _,v in pairs(self.alliance_villages) do
+        func(v)
+    end
+end
+
+function Alliance:GetAllianceVillageInfos()
+    return self.alliance_villages
+end
+
+-- function AllianceMap:OnVillageEventTimer(villageEvent)
+--     print("AllianceMap:OnVillageEventTimer---->")
+    -- if self.alliance_villages[villageEvent:VillageData().id] then
+    --     local village = self.alliance_villages[villageEvent:VillageData().id]
+    --     village.resource = village.resource - villageEvent:GetCollectSpeed()
+    --     self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.OnVillagesDataChanged, function(listener)
+    --         print("AllianceMap:OnVillagesDataChanged---->")
+    --         listener:OnVillagesDataChanged(GameUtils:pack_event_table({},{village},{}))
+    --     end)
+    -- end
+-- end
 return Alliance

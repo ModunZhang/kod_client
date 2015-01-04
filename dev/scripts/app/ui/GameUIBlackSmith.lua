@@ -22,8 +22,8 @@ local STAR_BG = {
     "box_100x100_4.png",
     "box_100x100_5.png",
 }
-local function return_map_of_list_view_and_ui_map(list_view, ui_map)
-    return { list_view = list_view, ui_map = ui_map}
+local function return_map_of_list_view_and_ui_map(list_view, ui_map,list_node)
+    return { list_view = list_view, ui_map = ui_map,list_node=list_node}
 end
 function GameUIBlackSmith:ctor(city, black_smith)
     GameUIBlackSmith.super.ctor(self, city, _("铁匠铺"), black_smith)
@@ -100,6 +100,7 @@ function GameUIBlackSmith:TabButtons()
             self.title:setVisible(false)
             for _, v in pairs(self.dragon_map) do
                 v.list_view:setVisible(false)
+                v.list_node:setVisible(false)
             end
         else
             self:SwitchToDragon(tag)
@@ -122,8 +123,10 @@ function GameUIBlackSmith:SwitchToDragon(dragon_type)
     for k, v in pairs(self.dragon_map) do
         if k == dragon_type then
             v.list_view:setVisible(true)
+            v.list_node:setVisible(true)
         else
             v.list_view:setVisible(false)
+            v.list_node:setVisible(false)
         end
     end
 
@@ -183,7 +186,7 @@ function GameUIBlackSmith:CreateDragonEquipmentsByType(dragon_type)
         list_view:addItem(item)
     end
     list_view:reload():resetPosition()
-    return list_view, equip_map
+    return list_view, equip_map,listnode
 end
 function GameUIBlackSmith:GetDragonEquipmentsByType(dragon_type)
     local sort_map = {

@@ -1,42 +1,22 @@
 local Enum = import("..utils.Enum")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 
 
-local GameUIWriteMail = class("GameUIWriteMail", function ()
-    return display.newColorLayer(cc.c4b(0,0,0,127))
-end)
+local GameUIWriteMail = class("GameUIWriteMail",WidgetPopDialog)
 GameUIWriteMail.SEND_TYPE = Enum("PERSONAL_MAIL","ALLIANCE_MAIL")
 
 local PERSONAL_MAIL = GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL
 local ALLIANCE_MAIL = GameUIWriteMail.SEND_TYPE.ALLIANCE_MAIL
 
 function GameUIWriteMail:ctor()
+    GameUIWriteMail.super.ctor(self,768,_("发邮件"))
     -- bg
-    local write_mail = WidgetUIBackGround.new({height=768}):addTo(self)
-    write_mail:pos((display.width-write_mail:getContentSize().width)/2,display.top - write_mail:getContentSize().height - 120)
+    local write_mail = self.body
     local r_size = write_mail:getContentSize()
-    -- title write_mail
-    local title_write_mail = display.newSprite("title_blue_596x49.png"):align(display.TOP_LEFT, 6, write_mail:getContentSize().height-6):addTo(write_mail)
-    -- title
-    self.title_label = cc.ui.UILabel.new(
-        {cc.ui.UILabel.LABEL_TYPE_TTF,
-            font = UIKit:getFontFilePath(),
-            size = 22,
-            dimensions = cc.size(200,24),
-            color = UIKit:hex2c3b(0xffedae)
-        }):align(display.LEFT_CENTER,30, 25)
-        :addTo(title_write_mail)
-
-    --close button
-    cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                self:removeFromParent()
-            end
-        end):align(display.CENTER, title_write_mail:getContentSize().width-10, title_write_mail:getContentSize().height-6):addTo(title_write_mail)
-
+  
     -- 收件人
     local addressee_title_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -44,7 +24,7 @@ function GameUIWriteMail:ctor()
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x797154)
-        }):align(display.RIGHT_CENTER,120, r_size.height-90)
+        }):align(display.RIGHT_CENTER,120, r_size.height-70)
         :addTo(write_mail)
     self.editbox_addressee = cc.ui.UIInput.new({
         UIInputType = 1,
@@ -59,7 +39,7 @@ function GameUIWriteMail:ctor()
     editbox_addressee:setFontColor(cc.c3b(0,0,0))
     editbox_addressee:setPlaceholderFontColor(cc.c3b(204,196,158))
     editbox_addressee:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
-    editbox_addressee:align(display.LEFT_TOP,150, r_size.height-70):addTo(write_mail)
+    editbox_addressee:align(display.LEFT_TOP,150, r_size.height-50):addTo(write_mail)
     -- 主题
     local subject_title_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -67,7 +47,7 @@ function GameUIWriteMail:ctor()
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x797154)
-        }):align(display.RIGHT_CENTER,120, r_size.height-140)
+        }):align(display.RIGHT_CENTER,120, r_size.height-120)
         :addTo(write_mail)
    
     self.editbox_subject = cc.ui.UIInput.new({
@@ -83,10 +63,10 @@ function GameUIWriteMail:ctor()
     editbox_subject:setFontColor(cc.c3b(0,0,0))
     editbox_subject:setPlaceholderFontColor(cc.c3b(204,196,158))
     editbox_subject:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
-    editbox_subject:align(display.LEFT_TOP,150, r_size.height-120):addTo(write_mail)
+    editbox_subject:align(display.LEFT_TOP,150, r_size.height-100):addTo(write_mail)
 
     -- 分割线
-    display.newScale9Sprite("dividing_line_584x1.png", r_size.width/2, r_size.height-180,cc.size(594,1)):addTo(write_mail)
+    display.newScale9Sprite("dividing_line_584x1.png", r_size.width/2, r_size.height-160,cc.size(594,1)):addTo(write_mail)
     -- 内容
     cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -95,7 +75,7 @@ function GameUIWriteMail:ctor()
             size = 18,
             dimensions = cc.size(410,24),
             color = UIKit:hex2c3b(0x797154)
-        }):align(display.LEFT_CENTER,30,r_size.height-200)
+        }):align(display.LEFT_CENTER,30,r_size.height-180)
         :addTo(write_mail)
     -- 回复的邮件内容
     self.textView = cc.DTextView:create(cc.size(580,472),display.newScale9Sprite("background_580X472.png"))
@@ -150,11 +130,7 @@ function GameUIWriteMail:SendMail(send_type,addressee,title,content)
     end
 end
 
--- 发送的邮件类型title ， 默认为 ‘发邮件’
-function GameUIWriteMail:SetTitle( title )
-    self.title_label:setString(title)
-    return self
-end
+
 -- 收件人
 function GameUIWriteMail:SetAddressee( addressee )
     self.editbox_addressee:setText(addressee)
@@ -180,6 +156,11 @@ function GameUIWriteMail:OnSendButtonClicked( send_type )
     end)
     return self
 end
+
+function GameUIWriteMail:addToCurrentScene()
+    return self:addTo(display.getRunningScene())
+end
+
 
 return GameUIWriteMail
 

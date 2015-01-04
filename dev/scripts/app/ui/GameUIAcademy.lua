@@ -6,7 +6,6 @@
 ------------------------------------------------------------------------------------------------
 local TreeNode = class("TreeNode")
 local property = import("app.utils.property")
-local TestNode = class("TestNode")
 function TreeNode:ctor(child_id,pos,data)
 	property(self,"child",child_id) -- one child
 	property(self,"pos",pos or {x = 0,y = 0})
@@ -123,7 +122,7 @@ function GameUIAcademy:BuildTechnologyUI(height)
 	height = height or window.betweenHeaderAndTab
 	local technology_node = display.newNode():size(window.width,height)
 	self:BuildTipsUI(technology_node,height)
-		display.newSprite("technology_magic_549x538.png", window.cx, height/2):addTo(technology_node)
+	display.newSprite("technology_magic_549x538.png"):align(display.LEFT_CENTER,40, height/2):addTo(technology_node)
 	self.scrollView = UIScrollView.new({
         viewRect = cc.rect(40,0,window.width - 80, height - 116), -- 116 = 106 + 10
     })
@@ -138,7 +137,6 @@ function GameUIAcademy:CreateScrollNode()
 	local node = display.newNode():size(window.width - 80,(math.ceil(LuaUtils:table_size(self.techNodes)/3) - 1) *(142+46) + 142)
 	for _,v in pairs(self.techNodes) do
 		local item = self:GetItem(v:Data()):align(display.CENTER,v:Pos().x,v:Pos().y):addTo(node)
-		-- UIKit:ttfLabel({text = v:Data().name,size = 12}):addTo(item)
 		if v:hasChild() then
 			if v:CheckDirection(self:GetNodeForKey(v:Child())) == 1 then
 				local line = display.newSprite("technology_line_normal_72x12.png")

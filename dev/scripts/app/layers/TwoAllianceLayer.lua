@@ -25,7 +25,7 @@ function TwoAllianceLayer:ctor(alliance1, alliance2, arrange)
 
     self.alliances = {alliance1, alliance2}
     self.arrange = arrange or TwoAllianceLayer.ARRANGE.H
-    TwoAllianceLayer.super.ctor(self, 0.9, 2)
+    TwoAllianceLayer.super.ctor(self, 0.4, 1.2)
 
     self:InitBackground()
     self:InitTerrianBottomNode()

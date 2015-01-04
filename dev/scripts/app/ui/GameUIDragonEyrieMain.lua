@@ -364,6 +364,8 @@ function GameUIDragonEyrieMain:OnFilterChangedEvent(eyrie,b,i)
 end
 
 function GameUIDragonEyrieMain:ChangeDragon(direction)
+	if self.isChanging  then return end
+	self.isChanging = true
 	if direction == 'next' then
 		if self.draong_index + 1 > 3 then
 			self.draong_index = 1
@@ -371,6 +373,7 @@ function GameUIDragonEyrieMain:ChangeDragon(direction)
 			self.draong_index = self.draong_index + 1
 		end
 		self.draongConteNode:Next()
+		self.isChanging = false
 	else
 		if self.draong_index - 1 == 0 then
 			self.draong_index = 3
@@ -378,6 +381,7 @@ function GameUIDragonEyrieMain:ChangeDragon(direction)
 			self.draong_index = self.draong_index - 1
 		end
 		self.draongConteNode:Before()
+		self.isChanging = false
 	end
 	self:RefreshUI()
 end

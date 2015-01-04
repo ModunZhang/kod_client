@@ -13,7 +13,7 @@ local MaterialManager = import("..entity.MaterialManager")
 local GameUIUnlockBuilding = class("GameUIUnlockBuilding", WidgetPopDialog)
 
 function GameUIUnlockBuilding:ctor( city, tile )
-    GameUIUnlockBuilding.super.ctor(self,650,_("解锁建筑"),display.top-160) 
+    GameUIUnlockBuilding.super.ctor(self,650,_("解锁建筑"),display.top-160)
     self.city = city
     self.tile = tile
     self.building = city:GetBuildingByLocationId(tile.location_id)
@@ -202,20 +202,27 @@ function GameUIUnlockBuilding:PopNotSatisfyDialog(listener,can_not_update_type)
             dialog:SetTitle(_("提示"))
             dialog:SetPopMessage(UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH)
         else
-            dialog:CreateOKButton(function()
-                listener()
-                self:removeFromParent(true)
-            end)
+            dialog:CreateOKButton(
+                {
+                    listener = function()
+                        listener()
+                        self:removeFromParent(true)
+                    end
+                }
+            )
             dialog:SetTitle(_("补充资源"))
             dialog:SetPopMessage(_("您当前没有足够的资源,是否花费魔法石立即补充"))
             dialog:CreateNeeds("Topaz-icon.png",required_gems)
         end
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH then
         local required_gems =self.building:getUpgradeRequiredGems()
-        dialog:CreateOKButton(function(sender,type)
-            listener()
-            self:removeFromParent(true)
-        end)
+        dialog:CreateOKButton(
+            {
+                listener = function(sender,type)
+                    listener()
+                    self:removeFromParent(true)
+                end
+            })
         dialog:SetTitle(_("立即开始"))
         dialog:SetPopMessage(_("您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"))
         dialog:CreateNeeds("Topaz-icon.png",required_gems)
@@ -241,5 +248,7 @@ end
 
 
 return GameUIUnlockBuilding
+
+
 
 

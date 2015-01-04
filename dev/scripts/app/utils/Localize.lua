@@ -447,12 +447,13 @@ local FIGHT_REWARD = {
     stone = _("石料"),
     iron = _("铁矿"),
     coin = _("银币"),
+    wallHp = _("城墙血量")
 }
 local ALLIANCE_AUTHORITY_LIST = {
     {
         _("从联盟商店购买低级道具"),
         _("接受联盟礼物"),
-        _("向联盟捐赠资源，增加联盟荣耀值，增加自己的忠诚值"),
+        _("向联盟捐赠资源"),
     },
     {
         _("从联盟商店购买高级道具"),
@@ -464,6 +465,7 @@ local ALLIANCE_AUTHORITY_LIST = {
         _("提升成员职位"),
         _("降职成员职位"),
         _("改联盟描述"),
+        _("修改联盟加入方式"),
     }, -- 3
     {
         _("在联盟商店的道具目录中补充高级道具"),
@@ -486,6 +488,19 @@ local ALLIANCE_AUTHORITY_LIST = {
         _("更改职位名称"),
     }, -- 
 }
+
+local VILLAGE_NAME = {
+     woodVillage = _("木材村落"),
+     stoneVillage= _("矿石村落"),
+     ironVillage = _("银矿村落"),
+     foodVillage = _("粮食村落"),
+     coinVillage = _("硬币村落"),
+}
+local TERRAIN = {
+     grassLand = _("草地"),
+     desert= _("沙漠"),
+     iceField = _("雪地"),
+}
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
@@ -505,6 +520,8 @@ return {
     fight_reward = FIGHT_REWARD,
     getSoldierCategoryByName = function(soldier_name) return SOLDIER_CATEGORY[SOLDIER_CATEGORY_MAP[soldier_name]] end,
     alliance_authority_list = ALLIANCE_AUTHORITY_LIST,
+    village_name = VILLAGE_NAME,
+    terrain = TERRAIN,
 }
 
 

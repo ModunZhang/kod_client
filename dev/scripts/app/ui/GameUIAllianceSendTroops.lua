@@ -10,6 +10,7 @@ local Corps = import(".Corps")
 local UILib = import(".UILib")
 local window = import("..utils.window")
 local normal = GameDatas.UnitsConfig.normal
+local SPECIAL = GameDatas.UnitsConfig.special
 
 local GameUIAllianceSendTroops = UIKit:createUIClass("GameUIAllianceSendTroops","GameUIWithCommonHeader")
 local soldier_arrange = {
@@ -17,6 +18,21 @@ local soldier_arrange = {
     ranger = {row = 4, col = 2},
     lancer = {row = 3, col = 1},
     catapult = {row = 2, col = 1},
+
+    horseArcher = {row = 4, col = 2},
+    ballista = {row = 4, col = 2},
+    skeletonWarrior = {row = 3, col = 1},
+    skeletonArcher = {row = 2, col = 1},
+
+    deathKnight = {row = 4, col = 2},
+    meatWagon = {row = 4, col = 2},
+    priest = {row = 3, col = 1},
+    demonHunter = {row = 2, col = 1},
+
+    paladin = {row = 4, col = 2},
+    steamTank = {row = 4, col = 2},
+    sentinel = {row = 4, col = 2},
+    crossbowman = {row = 4, col = 2},
 }
 local STAR_BG = {
     "star1_118x132.png",
@@ -50,6 +66,11 @@ function GameUIAllianceSendTroops:onEnter()
     self:SelectDragonPart()
     self:SelectSoldiers()
 
+    local function __getSoldierConfig(soldier_type,level)
+        local level = level or 1
+        return normal[soldier_type.."_"..level] or SPECIAL[soldier_type]
+    end
+
     local max_btn = WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("最大"),
@@ -62,27 +83,27 @@ function GameUIAllianceSendTroops:onEnter()
                 local max_soldiers_citizen = 0
                 for k,item in pairs(self.soldiers_table) do
                     local soldier_type,level,_,max_num = item:GetSoldierInfo()
-                    max_soldiers_citizen=max_soldiers_citizen+max_num*normal[soldier_type.."_"..level].citizen
+                    max_soldiers_citizen=max_soldiers_citizen+max_num*__getSoldierConfig(soldier_type,level).citizen
                 end
                 if self.soldier_manager:GetTroopPopulation()<max_soldiers_citizen then
                     -- 拥有士兵数量大于派兵数量上限时，首先选取power最高的兵种，依次到达最大派兵上限为止
                     local s_table = self.soldiers_table
                     table.sort(s_table, function(a, b)
                         local soldier_type,level = a:GetSoldierInfo()
-                        local a_power = normal[soldier_type.."_"..level].power
+                        local a_power = __getSoldierConfig(soldier_type,level).power
                         local soldier_type,level = b:GetSoldierInfo()
-                        local b_power = normal[soldier_type.."_"..level].power
+                        local b_power = __getSoldierConfig(soldier_type,level).power
                         return a_power > b_power
                     end)
                     local max_troop_num = self.soldier_manager:GetTroopPopulation()
                     for k,item in ipairs(s_table) do
                         local soldier_type,level,_,max_num = item:GetSoldierInfo()
-                        local max_citizen = normal[soldier_type.."_"..level].citizen*max_num
+                        local max_citizen = __getSoldierConfig(soldier_type,level).citizen*max_num
                         if max_citizen<=max_troop_num then
                             max_troop_num = max_troop_num - max_citizen
                             item:SetSoldierCount(max_num)
                         else
-                            local num = math.floor(max_troop_num/normal[soldier_type.."_"..level].citizen)
+                            local num = math.floor(max_troop_num/__getSoldierConfig(soldier_type,level).citizen)
                             item:SetSoldierCount(num)
                             break
                         end
@@ -134,11 +155,15 @@ function GameUIAllianceSendTroops:onEnter()
                 if self.dragon:IsHpLow() then
                     FullScreenPopDialogUI.new():SetTitle(_("行军"))
                         :SetPopMessage(_("您的龙的HP低于20%,有很大几率阵亡,确定要派出吗?"))
-                        :CreateOKButton(function ()
-                            self.march_callback(dragonType,soldiers)
-                            -- 确认派兵后关闭界面
-                            self:leftButtonClicked()
-                        end)
+                        :CreateOKButton(
+                            {
+                                listener =  function ()
+                                    self.march_callback(dragonType,soldiers)
+                                    -- 确认派兵后关闭界面
+                                    self:leftButtonClicked()
+                                end
+                            }
+                        )
                         :AddToCurrentScene()
                 else
                     self.march_callback(dragonType,soldiers)
@@ -280,6 +305,20 @@ function GameUIAllianceSendTroops:SelectSoldiers()
                     editbox:setText(0)
                 end
                 local edit_value = tonumber(editbox:getText())
+
+                local usable_citizen=self.soldier_manager:GetTroopPopulation()
+                for k,item in pairs(self.soldiers_table) do
+                    local soldier_t,soldier_l,soldier_n =item:GetSoldierInfo()
+                    local soldier_config = normal[soldier_t.."_"..soldier_l] or SPECIAL[soldier_t]
+                    if soldier_type~=soldier_t then
+                        usable_citizen =usable_citizen-soldier_config.citizen*soldier_n
+                    end
+                end
+                local soldier_config = normal[soldier_type.."_"..soldier_level] or SPECIAL[soldier_type]
+                if soldier_config.citizen*edit_value > usable_citizen then
+                    edit_value = math.floor(usable_citizen/soldier_config.citizen)
+                end
+
                 editbox:setText(edit_value)
 
                 local slider_value = slider:getSliderValue()
@@ -313,6 +352,21 @@ function GameUIAllianceSendTroops:SelectSoldiers()
             -- print(slider:getSliderValue())
             self:RefreashSoldierShow()
         end)
+        slider:setDynamicMaxCallBakc(function (value)
+            local usable_citizen=self.soldier_manager:GetTroopPopulation()
+            for k,item in pairs(self.soldiers_table) do
+                local soldier_t,soldier_l,soldier_n =item:GetSoldierInfo()
+                local soldier_config = normal[soldier_t.."_"..soldier_l] or SPECIAL[soldier_t]
+                if soldier_type~=soldier_t then
+                    usable_citizen =usable_citizen-soldier_config.citizen*soldier_n
+                end
+            end
+            local soldier_config = normal[soldier_type.."_"..soldier_level] or SPECIAL[soldier_type]
+            if soldier_config.citizen*math.floor(value)< usable_citizen+1 then
+                return true
+            end
+        end)
+
 
         local soldier_total_count = UIKit:ttfLabel({
             text = string.format("/ %d", max_soldier),
@@ -363,7 +417,7 @@ function GameUIAllianceSendTroops:SelectSoldiers()
     local soldiers = {}
     for soldier_type,soldier_num in pairs(sm:GetSoldierMap()) do
         if soldier_num>0 then
-            table.insert(soldiers, {soldier_type = soldier_type,level = 1, max_num = soldier_num})
+            table.insert(soldiers, {soldier_type = soldier_type,level = sm:GetStarBySoldierType(soldier_type), max_num = soldier_num})
         end
     end
     for k,v in pairs(soldiers) do
@@ -380,7 +434,8 @@ function GameUIAllianceSendTroops:RefreashSoldierShow()
     local soldier_show_table = {}
     for k,item in pairs(self.soldiers_table) do
         local soldier_type,soldier_level,soldier_number =item:GetSoldierInfo()
-        local soldier_config = normal[soldier_type.."_"..soldier_level]
+        -- print("--soldier_type,soldier_level,soldier_number----",soldier_type,soldier_level,soldier_number)
+        local soldier_config = normal[soldier_type.."_"..soldier_level] or SPECIAL[soldier_type]
         if soldier_number>0 then
             table.insert(soldier_show_table, {
                 soldier_type = soldier_type,
@@ -393,6 +448,7 @@ function GameUIAllianceSendTroops:RefreashSoldierShow()
     end
     self.show:ShowOrRefreasTroops(soldier_show_table)
 end
+
 function GameUIAllianceSendTroops:GetSelectSoldier()
     local soldiers = {}
     for k,item in pairs(self.soldiers_table) do
@@ -559,6 +615,10 @@ function GameUIAllianceSendTroops:onExit()
 end
 
 return GameUIAllianceSendTroops
+
+
+
+
 
 
 

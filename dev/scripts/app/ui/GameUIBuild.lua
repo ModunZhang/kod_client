@@ -85,9 +85,13 @@ function GameUIBuild:OnBuildOnItem(item)
         dialog:SetTitle(_("提示"))
         dialog:SetPopMessage(_("您当前没有空闲的建筑队列,是否花费魔法石立即完成上一个队列"))
         dialog:CreateNeeds("Topaz-icon.png", required_gems)
-        dialog:CreateOKButton(function()
-            self:BuildWithRuins(self.select_ruins, item.building.building_type)
-        end)
+        dialog:CreateOKButton(
+            {
+                listener =  function()
+                    self:BuildWithRuins(self.select_ruins, item.building.building_type)
+                end
+            }
+        )
     end
 end
 function GameUIBuild:BuildWithRuins(select_ruins, building_type)
@@ -256,6 +260,7 @@ end
 
 
 return GameUIBuild
+
 
 
 

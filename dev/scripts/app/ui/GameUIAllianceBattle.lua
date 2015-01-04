@@ -10,7 +10,7 @@ local AllianceMoonGate = import("..entity.AllianceMoonGate")
 local UIListView = import(".UIListView")
 local Flag = import("..entity.Flag")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
-local GameUIAllianceEnter = import(".GameUIAllianceEnter")
+-- local GameUIAllianceEnter = import(".GameUIAllianceEnter")
 
 local GameUIAllianceBattle = UIKit:createUIClass('GameUIAllianceBattle', "GameUIWithCommonHeader")
 local img_dir = "allianceHome/"

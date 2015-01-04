@@ -5,7 +5,7 @@ local MapScene = import(".MapScene")
 local AllianceBattleScene = class("AllianceBattleScene", MapScene)
 local GameUIAllianceHome = import("..ui.GameUIAllianceHome")
 local Alliance = import("..entity.Alliance")
-local GameUIAllianceEnter = import("..ui.GameUIAllianceEnter")
+-- local GameUIAllianceEnter = import("..ui.GameUIAllianceEnter")
 
 function AllianceBattleScene:ctor()
     City:ResetAllListeners()
@@ -58,28 +58,48 @@ function AllianceBattleScene:CreateSceneLayer()
 end
 function AllianceBattleScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building,isMyAlliance = self:GetSceneLayer():GetClickedObject(x, y)
-    print(isMyAlliance,"isMyAlliance--->")
     if building then
-        local mode = isMyAlliance and GameUIAllianceEnter.MODE.Normal or GameUIAllianceEnter.MODE.Enemy
         if building:GetEntity():GetType() ~= "building" then
-            UIKit:newGameUI('GameUIAllianceEnter'
-                ,isMyAlliance and self:GetAlliance() or self:GetEnemyAlliance()
-                ,building:GetEntity()
-                ,mode
-            ):addToCurrentScene(true)
+            self:EnterNotAllianceBuilding(building:GetEntity(),isMyAlliance)
         else
-            local building_info = building:GetEntity():GetAllianceBuildingInfo()
-            UIKit:newGameUI('GameUIAllianceEnter'
-                ,isMyAlliance and self:GetAlliance() or  self:GetEnemyAlliance() 
-                ,building_info
-                ,mode
-            ):addToCurrentScene(true)
+            self:EnterAllianceBuilding(building:GetEntity(),isMyAlliance)
         end
     end
 end
 function AllianceBattleScene:OnBasicChanged(alliance,changed_map)
     if changed_map.status and changed_map.status.new == 'protect' then
         app:EnterMyAllianceScene()
+    end
+end
+function AllianceBattleScene:EnterAllianceBuilding(entity,isMyAlliance)
+    if not isMyAlliance then return end
+    local building_info = entity:GetAllianceBuildingInfo()
+    local building_name = building_info.name
+    local class_name = ""
+    if building_name == 'shrine' then
+        class_name = "GameUIAllianceShrineEnter"
+    elseif building_name == 'palace' then
+        class_name = "GameUIAlliancePalaceEnter"
+    elseif building_name == 'shop' then
+        class_name = "GameUIAllianceShopEnter"    
+    elseif building_name == 'orderHall' then
+        class_name = "GameUIAllianceOrderHallEnter"
+    else
+        print("没有此建筑--->",building_name)
+        return
+    end
+    UIKit:newGameUI(class_name,entity,self:GetAlliance()):addToCurrentScene(true)
+end
+
+function AllianceBattleScene:EnterNotAllianceBuilding(entity,isMyAlliance)
+    local category = entity:GetCategory()
+    local class_name = ""
+    if category == 'member' then -- TODO:
+        class_name = "GameUIAllianceCityEnter"
+        UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance(),self:GetEnemyAlliance()):addToCurrentScene(true)
+    elseif category == 'village' then -- TODO:
+        class_name = "GameUIAllianceVillageEnter"
+        UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance(),self:GetEnemyAlliance()):addToCurrentScene(true)
     end
 end
 return AllianceBattleScene

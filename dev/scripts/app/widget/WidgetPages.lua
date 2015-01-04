@@ -9,13 +9,15 @@ function WidgetPages:ctor(params)
     self.titles = params.titles -- 标题 type -> table
     self.cb = params.cb or function ()end -- 回调
     self.current_page = params.current_page or 1
-    local icon_image = params.icon
+    self.icon_image = params.icon
 
     -- 标题icon
     local icon
-    if icon_image then
-        icon = cc.ui.UIImage.new(icon_image):addTo(self)
+    if self.icon_image then
+        local image_name = type(self.icon_image) == 'table' and self.icon_image[self.current_page] or self.icon_image
+        icon = cc.ui.UIImage.new(image_name):addTo(self)
             :align(display.LEFT_CENTER, 70, 28)
+        self.icon = icon
     end
     self.title_label = UIKit:ttfLabel({
         text = "",
@@ -24,6 +26,9 @@ function WidgetPages:ctor(params)
     })
         :align(display.LEFT_BOTTOM,icon and icon:getContentSize().width + 80 or 70,15)
         :addTo(self)
+    if params.fixed_title_position then
+        self.title_label:pos(params.fixed_title_position.x,params.fixed_title_position.y)
+    end
     local page_label = UIKit:ttfLabel({
         text = "/"..self.page,
         size = 20,
@@ -83,6 +88,9 @@ function WidgetPages:ChangePage_(page_change)
     self.title_label:setString(self.titles[to_page])
     self.current_page = to_page
     self.current_page_label:setString(to_page)
+    if self.icon and type(self.icon_image) == 'table' then
+        self.icon:setTexture(self.icon_image[to_page])
+    end
     self.cb(to_page)
 end
 function WidgetPages:SelectPage(page)
@@ -99,6 +107,11 @@ function WidgetPages:ResetOneTitle(title,index)
     end
     return self
 end
+
+function WidgetPages:GetTitleLabel()
+    return self.title_label
+end
+
 return WidgetPages
 
 

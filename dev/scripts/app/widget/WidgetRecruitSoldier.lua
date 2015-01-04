@@ -457,10 +457,14 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type,soldier_star)
                         :SetTitle(_("补充资源"))
                         :SetPopMessage(_("您当前没有足够的资源,是否花费魔法石立即补充"))
                         :CreateNeeds("Topaz-icon.png", required_gems)
-                        :CreateOKButton(function()
-                            NetManager:getRecruitNormalSoldierPromise(self.soldier_type, self.count)
-                            self:Close()
-                        end):AddToCurrentScene()
+                        :CreateOKButton(
+                            {
+                                listener =  function()
+                                    NetManager:getRecruitNormalSoldierPromise(self.soldier_type, self.count)
+                                    self:Close()
+                                end
+                            }
+                        ):AddToCurrentScene()
                 else
                     NetManager:getRecruitNormalSoldierPromise(self.soldier_type, self.count)
                     self:Close()
@@ -672,6 +676,7 @@ end
 
 
 return WidgetRecruitSoldier
+
 
 
 
