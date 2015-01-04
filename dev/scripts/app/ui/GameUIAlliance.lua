@@ -22,6 +22,9 @@ local Alliance = import("..entity.Alliance")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local Flag = import("..entity.Flag")
 local GameUIWriteMail = import('.GameUIWriteMail')
+local UILib = import(".UILib")
+local UICheckBoxButton = import(".UICheckBoxButton")
+local UICanCanelCheckBoxButtonGroup = import('.UICanCanelCheckBoxButtonGroup')
 GameUIAlliance.COMMON_LIST_ITEM_TYPE = Enum("JOIN","INVATE","APPLY")
 
 --
@@ -293,10 +296,10 @@ function GameUIAlliance:NoAllianceTabEvent_joinIf()
     })
 
     editbox_tag_search:setPlaceHolder(_("搜索联盟标签"))
+    editbox_tag_search:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))
     editbox_tag_search:setMaxLength(600)
     editbox_tag_search:setFont(UIKit:getFontFilePath(),18)
     editbox_tag_search:setFontColor(cc.c3b(0,0,0))
-    editbox_tag_search:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))
     editbox_tag_search:setReturnType(cc.KEYBOARD_RETURNTYPE_SEARCH)
     editbox_tag_search:align(display.LEFT_TOP,searchIcon:getPositionX()+searchIcon:getContentSize().width+10,self.main_content:getCascadeBoundingBox().height - 10):addTo(joinNode)
     self.editbox_tag_search = editbox_tag_search
@@ -729,6 +732,13 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
         })
         )
         :onButtonClicked(function(event)
+            if not Alliance_Manager:GetMyAlliance():GetSelf():CanEditAllianceNotice() then
+                local dialog = FullScreenPopDialogUI.new()
+                dialog:SetTitle(_("提示"))
+                dialog:SetPopMessage(_("您没有此操作权限"))
+                dialog:AddToCurrentScene()
+                return
+            end
             UIKit:newGameUI('GameUIAllianceNoticeOrDescEdit',GameUIAllianceNoticeOrDescEdit.EDIT_TYPE.ALLIANCE_NOTICE)
                 :addToCurrentScene(true)
         end)
@@ -830,7 +840,14 @@ end
 
 function GameUIAlliance:GetEventContent(event)
     local event_type = event.type
-    return string.format(Localize.alliance_events[event_type],unpack(event.params))
+    local params_,params = event.params,{}
+    for _,v in ipairs(params_) do
+        if Localize.alliance_title[v] then
+            v = Localize.alliance_title[v]
+        end
+        table.insert(params, v)
+    end
+    return string.format(Localize.alliance_events[event_type],unpack(params))
 end
 
 
@@ -880,6 +897,13 @@ function GameUIAlliance:RefreshEventListView()
 end
 
 function GameUIAlliance:OnAllianceSettingButtonClicked(event)
+    if not Alliance_Manager:GetMyAlliance():GetSelf():CanEditAlliance() then
+        local dialog = FullScreenPopDialogUI.new()
+        dialog:SetTitle(_("提示"))
+        dialog:SetPopMessage(_("您没有此操作权限"))
+        dialog:AddToCurrentScene()
+        return
+    end
     UIKit:newGameUI('GameUIAllianceBasicSetting',true):addToCurrentScene(true)
 end
 
@@ -902,7 +926,7 @@ function GameUIAlliance:HaveAlliaceUI_membersIf()
 end
 
 function GameUIAlliance:RefreshMemberList()
-    assert(self.memberListView)
+    if not self.memberListView then return end
     self.memberListView:removeAllItems()
 
     local item = self:GetMemberItem("archon")
@@ -925,16 +949,8 @@ function GameUIAlliance:RefreshMemberList()
 end
 
 function GameUIAlliance:GetAllianceTitleAndLevelPng(title)
-    local levelImages = {
-        general = "5_23x24.png",
-        quartermaster = "4_32x24.png",
-        supervisor = "3_35x24.png",
-        elite = "2_23x24.png",
-        member = "1_11x24.png",
-        archon = "alliance_item_leader_39x39.png"
-    }
     local alliance = Alliance_Manager:GetMyAlliance()
-    return alliance:GetTitles()[title],levelImages[title]
+    return alliance:GetTitles()[title],UILib.alliance_title_icon[title]
 end
 
 --title is alliance title
@@ -1081,7 +1097,7 @@ function GameUIAlliance:OnAllianceTitleClicked( title )
 end
 
 function GameUIAlliance:OnPlayerDetailButtonClicked(memberId)
-    UIKit:newGameUI('GameUIPlayerInfo',false,memberId):addToCurrentScene(true)
+    UIKit:newGameUI('GameUIAllianceMemberInfo',memberId):addToCurrentScene(true)
 end
 -- 信息
 function GameUIAlliance:HaveAlliaceUI_infomationIf()
@@ -1109,6 +1125,13 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
         })
         )
         :onButtonClicked(function(event)
+            if not Alliance_Manager:GetMyAlliance():GetSelf():CanEditAllianceDesc() then
+                local dialog = FullScreenPopDialogUI.new()
+                dialog:SetTitle(_("提示"))
+                dialog:SetPopMessage(_("您没有此操作权限"))
+                dialog:AddToCurrentScene()
+                return
+            end
             UIKit:newGameUI('GameUIAllianceNoticeOrDescEdit',GameUIAllianceNoticeOrDescEdit.EDIT_TYPE.ALLIANCE_DESC)
                 :addToCurrentScene(true)
         end)
@@ -1124,13 +1147,13 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
         on_disabled = "checkbox_selectd.png",
 
     }
-    self.joinTypeButton = cc.ui.UICheckBoxButtonGroup.new(display.TOP_TO_BOTTOM)
-        :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
+    self.joinTypeButton = UICanCanelCheckBoxButtonGroup.new(display.TOP_TO_BOTTOM)
+        :addButton(UICheckBoxButton.new(checkbox_image)
             :setButtonLabel(UIKit:ttfLabel({text = _("允许玩家立即加入联盟"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
             :align(display.LEFT_CENTER)
             :setButtonSelected(Alliance_Manager:GetMyAlliance():JoinType() == "all"))
-        :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
+        :addButton(UICheckBoxButton.new(checkbox_image)
             :setButtonLabel(UIKit:ttfLabel({text = _("玩家仅能通过申请或者邀请的方式加入"),size = 20,color = 0x797154}))
             :setButtonLabelOffset(40, 0)
             :align(display.LEFT_CENTER)
@@ -1140,6 +1163,34 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
         :setButtonsLayoutMargin(26,0,0,0)
         :setLayoutSize(557, 54)
         :pos(notice_bg:getPositionX() - notice_bg:getContentSize().width/2,notice_bg:getPositionY() - notice_bg:getContentSize().height/2 - 118)
+        :setCheckButtonStateChangeFunction(function(group,currentSelectedIndex,oldIndex)
+             if  not Alliance_Manager:GetMyAlliance():GetSelf():CanEditAllianceJoinType() then
+                local dialog = FullScreenPopDialogUI.new()
+                dialog:SetTitle(_("提示"))
+                dialog:SetPopMessage(_("您没有此操作权限"))
+                dialog:AddToCurrentScene()
+                return false
+            end
+            if currentSelectedIndex ~= oldIndex then
+                local title = _("允许玩家立即加入联盟")
+                if currentSelectedIndex ~= 1 then
+                        title = _("玩家仅能通过申请或者邀请的方式加入")
+                end
+                FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                    :SetPopMessage(_("你将设置联盟加入方式为") .. title)
+                    :CreateOKButton(
+                        {
+                            listener =  function ()
+                                self.joinTypeButton:sureSelectedButtonIndex(currentSelectedIndex)
+                            end
+                        }
+                    )
+                    :CreateCancelButton({listener = function ()
+                    end,btn_name = _("取消")})
+                    :AddToCurrentScene()
+            end
+            return false
+        end)
 
     local x,y = 37,-125
     local button_imags = {"alliance_sign_out_60x54.png","alliance_invitation_60x54.png","alliance_apply_60x54.png","alliance_group_mail_60x54.png"}
@@ -1158,11 +1209,24 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
     return self.informationNode
 end
 
+function GameUIAlliance:IsOperateButtonEnable(index)
+    local member = Alliance_Manager:GetMyAlliance():GetSelf()
+    local enable = true
+    if index == 2 then
+        enable = member:CanInvatePlayer()
+    elseif index == 3 then
+        enable = member:CanHandleAllianceApply()
+    elseif index == 4 then
+        enable = member:CanSendAllianceMail()
+    end
+    return enable
+end
+
 function GameUIAlliance:SelectJoinType()
     if Alliance_Manager:GetMyAlliance():JoinType() == "all" then
-        self.joinTypeButton:getButtonAtIndex(1):setButtonSelected(true)
+        self.joinTypeButton:sureSelectedButtonIndex(1,true)
     else
-        self.joinTypeButton:getButtonAtIndex(2):setButtonSelected(true)
+        self.joinTypeButton:setButtonSelected(2,true)
     end
 end
 
@@ -1185,35 +1249,17 @@ function GameUIAlliance:RefreshDescView()
     self.descListView:reload()
 end
 
-function GameUIAlliance:OnAllianceJoinTypeButtonClicked(event)
-    if self.fromCancel then
-        self.fromCancel = nil
-        return
-    end
-    local title,join_type = _("允许玩家立即加入联盟"),"all"
-
+function GameUIAlliance:OnAllianceJoinTypeButtonClicked(event)  
+    print("OnAllianceJoinTypeButtonClicked---->",event.selected)
+    local join_type = "all"
     if event.selected ~= 1 then
-        title = _("玩家仅能通过申请或者邀请的方式加入")
         join_type = "audit"
-    end
-    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-        :SetPopMessage(_("你将设置联盟加入方式为") .. title)
-        :CreateOKButton(
-            {
-                listener =  function ()
-                    NetManager:getEditAllianceJoinTypePromise(join_type):catch(function(err)
-                        dump(err:reason())
-                    end):done(function(result)
-                        self:RefreshInfomationView()
-                    end)
-                end
-            }
-        )
-        :CreateCancelButton({listener = function ()
-            self.fromCancel = true
-            self:SelectJoinType()
-        end,btn_name = _("取消")})
-        :AddToCurrentScene()
+    end 
+    NetManager:getEditAllianceJoinTypePromise(join_type):catch(function(err)
+        dump(err:reason())
+    end):done(function(result)
+        -- self:RefreshInfomationView()
+    end)
 end
 
 
@@ -1223,6 +1269,13 @@ function GameUIAlliance:RefreshInfomationView()
 end
 
 function GameUIAlliance:OnInfoButtonClicked(tag)
+    if not self:IsOperateButtonEnable(tag) then
+        local dialog = FullScreenPopDialogUI.new()
+        dialog:SetTitle(_("提示"))
+        dialog:SetPopMessage(_("您没有此操作权限"))
+        dialog:AddToCurrentScene()
+        return
+    end
     if tag == 1 then
         FullScreenPopDialogUI.new():SetTitle(_("退出联盟"))
             :SetPopMessage(_("您必须在没有部队在外行军的情况下，才可以退出联盟。退出联盟会损失当前未打开的联盟礼物。"))
@@ -1254,9 +1307,9 @@ function GameUIAlliance:CreateInvateUI()
         :addTo(bg)
         :align(display.LEFT_BOTTOM, 0,150-15)
 
-    local closeButton = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"}, {scale9 = false})
+    local closeButton = UIKit:closeButton()
         :addTo(title_bar)
-        :align(display.BOTTOM_RIGHT,title_bar:getContentSize().width+10, 0)
+        :align(display.BOTTOM_RIGHT,title_bar:getContentSize().width, 0)
         :onButtonClicked(function ()
             layer:removeFromParent(true)
         end)

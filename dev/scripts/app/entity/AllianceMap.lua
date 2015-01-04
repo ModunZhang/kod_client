@@ -22,6 +22,7 @@ function AllianceMap:ctor(alliance)
     self.alliance = alliance
     self.all_objects = {}
     self.allliance_buildings = {}
+    
 end
 function AllianceMap:Reset()
     self.all_objects = {}
@@ -93,6 +94,19 @@ function AllianceMap:OnAllianceDataChanged(alliance_data)
     self:DecodeObjectsFromJsonMapObjects__(alliance_data.__mapObjects)
     self:OnAllianceBuildingInfoChange(alliance_data.buildings)
 end
+
+function AllianceMap:FindAllianceVillagesInfoByObject(object)
+    if is_village(object:GetType()) then
+        local x, y = object:GetLogicPosition()
+        for _,village_info in pairs(self:GetAlliance():GetAllianceVillageInfos()) do
+            print(village_info.location.x,village_info.location.y,x,y,object:GetType(),"FindAllianceVillagesInfoByObject-->")
+            if village_info.location.x == x and village_info.location.y == y then 
+               return village_info
+            end
+        end
+    end
+end
+
 function AllianceMap:OnAllianceBuildingInfoChange(alliance_buildings)
     if not alliance_buildings then return end
     for k, v in pairs(alliance_buildings) do
@@ -162,5 +176,7 @@ function AllianceMap:DecodeObjectsFromJsonMapObjects(mapObjects)
         listener:OnBuildingChange(self, add, remove, modify)
     end)
 end
+
+
 return AllianceMap
 

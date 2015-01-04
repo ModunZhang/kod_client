@@ -25,7 +25,77 @@ function WidgetSlider:setSliderSize(width, height)
     local rect = self.barSprite_:getBoundingBox()
     self.progress:align(display.CENTER, rect.x + rect.width/2, rect.y + rect.height/2)
 
-    -- self.progress:setScaleY(height/self.progress:getContentSize().height)
+end
+-- function WidgetSlider:setSliderValue(value)
+--     assert(value >= self.min_ and value <= self.max_, "UISlider:setSliderValue() - invalid value")
+--     if self.value_ ~= value then
+--         self.value_ = value
+--         self:dispatchEvent({name = UISlider.VALUE_CHANGED_EVENT, value = self.value_})
+--         self:updateButtonPosition_()
+--     end
+--     return self
+-- end
+
+function WidgetSlider:onTouch_(event, x, y)
+     if event == "began" then
+        if not self:checkTouchInButton_(x, y) then return false end
+        local posx, posy = self.buttonSprite_:getPosition()
+        local buttonPosition = self:convertToWorldSpace(cc.p(posx, posy))
+        self.buttonPositionOffset_.x = buttonPosition.x - x
+        self.buttonPositionOffset_.y = buttonPosition.y - y
+        self.fsm_:doEvent("press")
+        self:dispatchEvent({name = UISlider.PRESSED_EVENT, x = x, y = y, touchInTarget = true})
+        return true
+    end
+
+    local touchInTarget = self:checkTouchInButton_(x, y)
+    x = x + self.buttonPositionOffset_.x
+    y = y + self.buttonPositionOffset_.y
+    local buttonPosition = self:convertToNodeSpace(cc.p(x, y))
+    x = buttonPosition.x
+    y = buttonPosition.y
+    local offset = 0
+
+    if self.isHorizontal_ then
+        if x < self.buttonPositionRange_.min then
+            x = self.buttonPositionRange_.min
+        elseif x > self.buttonPositionRange_.max then
+            x = self.buttonPositionRange_.max
+        end
+        if self.direction_ == display.LEFT_TO_RIGHT then
+            offset = (x - self.buttonPositionRange_.min) / self.buttonPositionRange_.length
+        else
+            offset = (self.buttonPositionRange_.max - x) / self.buttonPositionRange_.length
+        end
+    else
+        if y < self.buttonPositionRange_.min then
+            y = self.buttonPositionRange_.min
+        elseif y > self.buttonPositionRange_.max then
+            y = self.buttonPositionRange_.max
+        end
+        if self.direction_ == display.TOP_TO_BOTTOM then
+            offset = (self.buttonPositionRange_.max - y) / self.buttonPositionRange_.length
+        else
+            offset = (y - self.buttonPositionRange_.min) / self.buttonPositionRange_.length
+        end
+    end
+    if self.dynamic_cb then
+        if self.dynamic_cb(offset * (self.max_ - self.min_) + self.min_) then
+            self:setSliderValue(offset * (self.max_ - self.min_) + self.min_)
+        end
+    else
+        self:setSliderValue(offset * (self.max_ - self.min_) + self.min_)
+    end
+
+    if event ~= "moved" and self.fsm_:canDoEvent("release") then
+        self.fsm_:doEvent("release")
+        self:dispatchEvent({name = UISlider.RELEASE_EVENT, x = x, y = y, touchInTarget = touchInTarget})
+    end
+end
+-- 是否达到动态最大值
+function WidgetSlider:setDynamicMaxCallBakc(cb)
+    self.dynamic_cb = cb
+    return self
 end
 function WidgetSlider:align(align, x, y)
     WidgetSlider.super.align(self,align, x, y)

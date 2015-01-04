@@ -32,8 +32,8 @@ function MapScene:BlurRenderScene()
         self.render_scene:removeFromParent()
         self.render_scene = nil
     end
-    self.render_scene = self:DumpScene():addTo(self):pos(display.cx, display.cy)
-    self:GetSceneNode():hide()
+    -- self.render_scene = self:DumpScene():addTo(self):pos(display.cx, display.cy)
+    -- self:GetSceneNode():hide()
 end
 function MapScene:DumpScene()
     local director = cc.Director:getInstance()
@@ -54,8 +54,8 @@ function MapScene:ResetRenderState()
     if self.blur_count ~= 1 then
         return
     end
-    self.render_scene:hide()
-    self:GetSceneNode():show()
+    -- self.render_scene:hide()
+    -- self:GetSceneNode():show()
 end
 function MapScene:GetSceneNode()
     return self.scene_node
@@ -107,8 +107,8 @@ function MapScene:OnTwoTouch(x1, y1, x2, y2, event_type)
     elseif event_type == "ended" then
         scene:ZoomEnd()
         self.distance = nil
-        local low = scene.min_scale + 0.1
-        local high = scene.max_scale - 0.1
+        local low = scene.min_scale * 1.1
+        local high = scene.max_scale * 0.9
         if scene:getScale() <= low then
             scene:ZoomToByAnimation(low)
         elseif scene:getScale() >= high then

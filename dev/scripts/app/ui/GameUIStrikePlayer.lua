@@ -7,12 +7,15 @@ local window = import("..utils.window")
 local UIListView = import(".UIListView")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local UILib = import(".UILib")
+local Enum = import("..utils.Enum")
 
-function GameUIStrikePlayer:ctor(enemyPlayerId)
+GameUIStrikePlayer.STRIKE_TYPE = Enum("CITY","VILLAGE")
+function GameUIStrikePlayer:ctor(params,strike_type)
 	GameUIStrikePlayer.super.ctor(self,City,_("准备突袭"))
 	self.dragon_manager = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager()
-	self.enemyPlayerId = enemyPlayerId
-	assert(enemyPlayerId)
+	self.params = params
+	self.strike_type = strike_type or self.STRIKE_TYPE.CITY
+	assert(params)
 end
 
 function GameUIStrikePlayer:GetDragonManager()
@@ -133,10 +136,15 @@ function GameUIStrikePlayer:GetSelectDragonType()
 end
 
 function GameUIStrikePlayer:OnStrikeButtonClicked()
-	
-		NetManager:getStrikePlayerCityPromise(self:GetSelectDragonType(),self.enemyPlayerId):next(function()
+	if self.strike_type == self.STRIKE_TYPE.CITY then
+		NetManager:getStrikePlayerCityPromise(self:GetSelectDragonType(),self.params):next(function()
 			self:leftButtonClicked()
 		end)
+	else
+		NetManager:getStrikeVillagePromise(self:GetSelectDragonType(),self.params.defenceAllianceId,self.params.defenceVillageId):next(function()
+			self:leftButtonClicked()
+		end)
+	end
 end
 
 return GameUIStrikePlayer

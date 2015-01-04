@@ -305,8 +305,10 @@ function MailManager:OnNewReportsChanged( __reports )
     local edit_reports = {}
     for _,rp in pairs(__reports) do
         if rp.type == "add" then
+            print(" before  self.reports == ",#self.reports)
             table.insert(add_reports, Report:DecodeFromJsonData(rp.data))
-            table.insert(self.reports, Report:DecodeFromJsonData(rp.data))
+            table.insert(self.reports,1, Report:DecodeFromJsonData(rp.data))
+            print(" after  self.reports == ",#self.reports)
             self:IncreaseUnReadMailsAndReports(1)
         elseif rp.type == "remove" then
             table.insert(remove_reports, Report:DecodeFromJsonData(rp.data))
@@ -316,7 +318,7 @@ function MailManager:OnNewReportsChanged( __reports )
             self:ModifyReport(rp.data)
         end
     end
- 
+    LuaUtils:outputTable("__reports", __reports)
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.REPORTS_CHANGED,function(listener)
         listener:OnReportsChanged({
             add = add_reports,

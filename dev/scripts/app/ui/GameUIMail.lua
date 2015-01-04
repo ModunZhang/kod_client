@@ -1040,10 +1040,13 @@ function GameUIMail:CreateReportItem(listview,report)
                         self.manager:DecreaseUnReadMailsAndReports(1)
                     end)
                 end
-                if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" then
+                if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" 
+                    or report:Type() == "villageBeStriked" or report:Type()== "strikeVillage" then
                     GameUIStrikeReport.new(report):addToCurrentScene()
-                else
+                elseif report:Type() == "attackCity" or report:Type() == "attackVillage" then
                     GameUIWarReport.new(report):addToCurrentScene()
+                -- elseif report:Type() == "villageBeStriked" or report:Type()== "strikeVillage" then
+                -- elseif report:Type() == "attackVillage" then
                 end
 
             end
@@ -1385,6 +1388,8 @@ function GameUIMail:OnReportsChanged( changed_map )
         for _,report in pairs(changed_map.add) do
             local item = self:CreateReportItem(self.report_listview,report)
             self:AddMails(self.report_listview,item,report,1)
+            print("--OnReportsChanged  add----")
+            LuaUtils:outputTable("report:GetData()", report:GetData())
         end
     end
     if changed_map.edit then
@@ -1484,11 +1489,13 @@ function GameUIMail:GetMyName(report)
     elseif report:Type()=="attackCity" then
         if report:GetData().attackPlayerData.id == DataManager:getUserData()._id then
             return report:GetData().attackPlayerData.name
-        elseif report:GetData().defencePlayerData.id == DataManager:getUserData()._id then
+        elseif report:GetData().defencePlayerData and report:GetData().defencePlayerData.id == DataManager:getUserData()._id then
             return report:GetData().defencePlayerData.name
         elseif report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.id == DataManager:getUserData()._id then
             return report:GetData().helpDefencePlayerData.name
         end
+    else
+        return "xxxxx"
     end
 end
 function GameUIMail:GetMyAllianceTag(report)
@@ -1502,8 +1509,6 @@ function GameUIMail:GetMyAllianceTag(report)
             return data.defencePlayerData.alliance.tag
         end
         -- 被突袭时只有协防方发生战斗时使用协防方数据
-        print("被突袭时只有协防方发生战斗时使用协防方数据",report:Type())
-        LuaUtils:outputTable("data.helpDefencePlayerData", data.helpDefencePlayerData)
         if report:Type()== "cityBeStriked" then
             if data.helpDefencePlayerData then
                 return data.helpDefencePlayerData.alliance.tag
@@ -1511,15 +1516,14 @@ function GameUIMail:GetMyAllianceTag(report)
         end
     elseif report:Type()=="attackCity" then
         if report:GetData().attackPlayerData.id == DataManager:getUserData()._id then
-            -- return "服务器没有推送联盟tag"
             return report:GetData().attackPlayerData.alliance.tag
-        elseif report:GetData().defencePlayerData.id == DataManager:getUserData()._id then
-            -- return "服务器没有推送联盟tag"
+        elseif report:GetData().defencePlayerData and report:GetData().defencePlayerData.id == DataManager:getUserData()._id then
             return report:GetData().defencePlayerData.alliance.tag
         elseif report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.id == DataManager:getUserData()._id then
-            -- return "服务器没有推送联盟tag"
             return report:GetData().helpDefencePlayerData.alliance.tag
         end
+    else
+        return "xxxxx"
     end
 end
 function GameUIMail:GetEnemyName(report)
@@ -1540,19 +1544,21 @@ function GameUIMail:GetEnemyName(report)
         end
     elseif report:Type()=="attackCity" then
         if report:GetData().attackPlayerData.id == DataManager:getUserData()._id then
-            return report:GetData().defencePlayerData.name
-        elseif report:GetData().defencePlayerData.id == DataManager:getUserData()._id
+            return report:GetData().defencePlayerData and report:GetData().defencePlayerData.name or report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.name
+        elseif report:GetData().defencePlayerData and report:GetData().defencePlayerData.id == DataManager:getUserData()._id
             or (report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.id == DataManager:getUserData()._id)
         then
             return report:GetData().attackPlayerData.name
         end
+    else
+        return "xxxxx"
     end
 end
 function GameUIMail:GetEnemyAllianceTag(report)
     if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" then
         local data = report:GetData()
         if data.attackPlayerData.id == DataManager:getUserData()._id then
-            return (data.defencePlayerData and data.defencePlayerData.alliance.tag) or (data.helpDefencePlayerData and data.helpDefencePlayerData.alliance.tag)
+            return data.strikeTarget.alliance.tag
         elseif data.helpDefencePlayerData and data.helpDefencePlayerData.id == DataManager:getUserData()._id then
             return data.attackPlayerData.alliance.tag
         elseif data.defencePlayerData and data.defencePlayerData.id == DataManager:getUserData()._id then
@@ -1566,18 +1572,19 @@ function GameUIMail:GetEnemyAllianceTag(report)
         end
     elseif report:Type()=="attackCity" then
         if report:GetData().attackPlayerData.id == DataManager:getUserData()._id then
-            return report:GetData().defencePlayerData.alliance.tag
-                -- return "服务器没有推送联盟tag"
-        elseif report:GetData().defencePlayerData.id == DataManager:getUserData()._id
+            return report:GetData().defencePlayerData and report:GetData().defencePlayerData.alliance.tag or report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.alliance.tag
+        elseif report:GetData().defencePlayerData and report:GetData().defencePlayerData.id == DataManager:getUserData()._id
             or (report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.id == DataManager:getUserData()._id)
         then
-            -- return "服务器没有推送联盟tag"
             return report:GetData().attackPlayerData.alliance.tag
         end
+    else
+        return "xxxxx"
     end
 end
 
 return GameUIMail
+
 
 
 

@@ -109,17 +109,76 @@ end
 function AllianceMember:GetTitleLevel()
     return titles_enum[self:Title()]
 end
---权限help函数
+function AllianceMember.Title2Level(title)
+    return titles_enum[title]
+end
 
+--权限判定函数
+--------------------------------------------------------------------------
+--名称 简称 旗帜 地形 语言 
+function AllianceMember:CanEditAlliance()
+    return self:IsArchon()
+end
+--移交盟主
+function AllianceMember:CanGiveUpArchon()
+    return self:IsArchon()
+end
+--修改职位名称
+function AllianceMember:CanEditAllianceMemeberTitle()
+    return self:IsArchon()
+end
+--移动/拆除联盟地图上的东东
+function AllianceMember:CanEditAllianceObject()
+    return self:GetTitleLevel() >= self.Title2Level('general')
+end
+--圣地事件
+function AllianceMember:CanActivateShirneEvent()
+    return self:GetTitleLevel() >= self.Title2Level('general')
+end
+--联盟GVG
+function AllianceMember:CanActivateGVSG()
+    return self:GetTitleLevel() >= self.Title2Level('general')
+end
+--在联盟商店的道具目录中补充高级道具
+function AllianceMember:CanAddAdvancedItemsToAllianceShop()
+    return self:GetTitleLevel() >= self.Title2Level('quartermaster')
+end
 
+function AllianceMember:CanEditAllianceNotice()
+    return self:GetTitleLevel() >= self.Title2Level('quartermaster')
+end
+
+function AllianceMember:CanSendAllianceMail()
+    return self:GetTitleLevel() >= self.Title2Level('quartermaster')
+end
+
+function AllianceMember:CanUpgradeAllianceBuilding()
+    return self:GetTitleLevel() >= self.Title2Level('quartermaster')
+end
+
+function AllianceMember:CanInvatePlayer()
+    return self:GetTitleLevel() >= self.Title2Level('supervisor')
+end
+
+function AllianceMember:CanHandleAllianceApply()
+    return self:GetTitleLevel() >= self.Title2Level('supervisor')
+end
+function AllianceMember:CanKickOutMember(target_current_title)
+    return self:GetTitleLevel() >= self.Title2Level('supervisor'),self:GetTitleLevel() > self.Title2Level(target_current_title)
+end
+function AllianceMember:CanUpgradeMemberLevel(target_target_title)
+    return self:GetTitleLevel() >= self.Title2Level('supervisor'),self:GetTitleLevel() > self.Title2Level(target_target_title)
+end
+function AllianceMember:CanDemotionMemberLevel(target_current_title)
+    return self:GetTitleLevel() >= self.Title2Level('supervisor'),self:GetTitleLevel() > self.Title2Level(target_current_title)
+end
+function AllianceMember:CanEditAllianceDesc()
+    return self:GetTitleLevel() >= self.Title2Level('supervisor') 
+end
+function AllianceMember:CanEditAllianceJoinType()
+    return self:GetTitleLevel() >= self.Title2Level('supervisor') 
+end
+function AllianceMember:CanBuyAdvancedItemsFromAllianceShop()
+    return self:GetTitleLevel() >= self.Title2Level('elite') 
+end
 return AllianceMember
-
-
-
-
-
-
-
-
-
-
