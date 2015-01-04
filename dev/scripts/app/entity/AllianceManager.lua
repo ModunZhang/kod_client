@@ -28,17 +28,6 @@ function AllianceManager:OnAllianceDataChanged(alliance_data)
     self:GetMyAlliance():OnAllianceDataChanged(alliance_data)
 end
 
--- function AllianceManager:OnAllianceBasicInfoAndMemberDataChanged(basic_and_member)
---     local my_alliance = self:GetMyAlliance()
---     if my_alliance:IsDefault() then return end
---     if basic_and_member.basicInfo then
---         my_alliance:OnAllianceBasicInfoChanged(basic_and_member.basicInfo)
---     end
---     if basic_and_member.memberDoc then
---         my_alliance:OnOneAllianceMemberDataChanged(basic_and_member.memberDoc)
---     end
--- end
-
 function AllianceManager:OnTimer(current_time)
     self:GetMyAlliance():OnTimer(current_time)
     self:GetEnemyAlliance():OnTimer(current_time)
@@ -54,6 +43,10 @@ function AllianceManager:DecodeAllianceFromJson( json_data )
     return alliance
 end
 
+function AllianceManager:HaveEnemyAlliance()
+    return not self:GetEnemyAlliance():IsDefault()
+end
+
 function AllianceManager:GetEnemyAlliance()
     return self.enemyAlliance
 end
@@ -64,6 +57,14 @@ function AllianceManager:UpdateEnemyAlliance(json_data)
         self:GetEnemyAlliance():Reset()
     else
         local enemy_alliance = self:GetEnemyAlliance()
+        if enemy_alliance:IsDefault() then
+            local my_belvedere = self:GetMyAlliance():GetAllianceBelvedere()
+            local enemy_belvedere = enemy_alliance:GetAllianceBelvedere()
+            enemy_belvedere:AddListenOnType(my_belvedere, enemy_belvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+            enemy_belvedere:AddListenOnType(my_belvedere, enemy_belvedere.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+            enemy_belvedere:AddListenOnType(my_belvedere, enemy_belvedere.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+            --瞭望塔coming不需要知道敌方对自己联盟的村落事件和返回事件 reset 会自动去掉所有监听
+        end
         if json_data._id then
             enemy_alliance:SetId(json_data._id)
         end

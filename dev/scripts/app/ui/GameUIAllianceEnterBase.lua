@@ -8,10 +8,15 @@ local window = import("..utils.window")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local Localize = import("..utils.Localize")
 -- building is allianceobject
-function GameUIAllianceEnterBase:ctor(building,my_alliance)
+function GameUIAllianceEnterBase:ctor(building,isMyAlliance,my_alliance)
 	GameUIAllianceEnterBase.super.ctor(self)
 	self.building = building
 	self.my_alliance = my_alliance
+    self.isMyAlliance = isMyAlliance
+end
+
+function GameUIAllianceEnterBase:IsMyAlliance()
+    return self.isMyAlliance
 end
 
 function GameUIAllianceEnterBase:GetBuilding()
@@ -219,7 +224,7 @@ function GameUIAllianceEnterBase:CreateItemWithLine(params)
             :addTo(line)
         label:setTag(100)
     end
-    if params[2][3] then
+    if params[2] and params[2][3] then
         line:setTag(params[2][3])
     end
     return line
@@ -246,13 +251,17 @@ function GameUIAllianceEnterBase:InitEnterButton()
 end
 
 function GameUIAllianceEnterBase:GetEnterButtons()
-	local move_city_button = self:BuildOneButton("icon_move_city.png",_("迁移城市")):onButtonClicked(function()
-		self:leftButtonClicked()
-	end)
-	local move_building_button = self:BuildOneButton("icon_move_alliance_building.png",_("迁移联盟建筑")):onButtonClicked(function()
-		self:leftButtonClicked()
-	end)
-    return {move_city_button,move_building_button}
+    if self:IsMyAlliance() then
+    	local move_city_button = self:BuildOneButton("icon_move_city.png",_("迁移城市")):onButtonClicked(function()
+    		self:leftButtonClicked()
+    	end)
+    	local move_building_button = self:BuildOneButton("icon_move_alliance_building.png",_("迁移联盟建筑")):onButtonClicked(function()
+    		self:leftButtonClicked()
+    	end)
+        return {move_city_button,move_building_button}
+    else
+        return {}
+    end
 end
 
 

@@ -9,6 +9,8 @@ function MarchAttackReturnEvent:GetPlayerRole()
 	local Me_Id = DataManager:getUserData()._id
 	if Me_Id == self:AttackPlayerData().id then
 		return self.MARCH_EVENT_PLAYER_ROLE.RECEIVER
+	elseif Me_Id == self:GetDefenceData().id then
+		return self.MARCH_EVENT_PLAYER_ROLE.SENDER
 	else
 		return self.MARCH_EVENT_PLAYER_ROLE.NOTHING 
 	end
