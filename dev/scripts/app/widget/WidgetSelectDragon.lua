@@ -1,32 +1,17 @@
 local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetPushButton = import(".WidgetPushButton")
+local WidgetPopDialog = import(".WidgetPopDialog")
 
-local WidgetSelectDragon = UIKit:createUIClass("WidgetSelectDragon", "UIAutoClose")
+local WidgetSelectDragon = class("WidgetSelectDragon", WidgetPopDialog)
 
 local img_dir = "allianceHome/"
 
 function WidgetSelectDragon:ctor(params)
+    WidgetSelectDragon.super.ctor(self,516,params.title)
+    local body = self.body
+    local rb_size = body:getContentSize()
     local dragon_manager = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager()
 
-    local body = WidgetUIBackGround.new({height=516}):align(display.TOP_CENTER,display.cx,display.top-200)
-    self:addTouchAbleChild(body)
-
-    local rb_size = body:getContentSize()
-    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+5)
-        :addTo(body)
-    local title_label = UIKit:ttfLabel({
-        text = params.title,
-        size = 22,
-        color = 0xffedae,
-    }):align(display.CENTER, title:getContentSize().width/2, title:getContentSize().height/2+2)
-        :addTo(title)
-    -- close button
-    self.close_btn = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                self:removeFromParent(true)
-            end
-        end):align(display.CENTER, rb_size.width-20,rb_size.height+10):addTo(body)
     local function createDragonFrame(dragon)
         local dragon_frame = display.newSprite("alliance_item_flag_box_126X126.png")
 

@@ -7,7 +7,12 @@ local window = import("..utils.window")
 local GameUIAlliancePosition = class("GameUIAlliancePosition",WidgetPopDialog)
 
 function GameUIAlliancePosition:ctor()
-    GameUIAlliancePosition.super.ctor(self,258,_("定位坐标"),window.top-200)
+    -- 根据是否处于联盟战状态构建不同UI
+    local enemy_alliance = Alliance_Manager:GetEnemyAlliance()
+    print("enemy_alliance:IsDefault()=",enemy_alliance:IsDefault())
+    if enemy_alliance:IsDefault() then
+        GameUIAlliancePosition.super.ctor(self,258,_("定位坐标"),window.top-200)
+    end
 
     -- 联盟名字
     UIKit:ttfLabel({
@@ -63,8 +68,8 @@ function GameUIAlliancePosition:ctor()
     editbox_y:align(display.LEFT_CENTER,330, 140)
     editbox_y:addTo(self.body)
 
-    local go_shop_btn = WidgetPushButton.new({normal = "yellow_btn_up_149x47.png",pressed = "yellow_btn_down_149x47.png"})
-        :align(display.CENTER,self.body:getContentSize().width-90,40)
+    local go_shop_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
+        :align(display.CENTER,self.body:getContentSize().width/2,40)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
             	local x = string.trim(editbox_x:getText())
