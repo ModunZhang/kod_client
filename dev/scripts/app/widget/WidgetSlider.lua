@@ -5,6 +5,8 @@ local WidgetSlider = class("WidgetSlider", UISlider)
 function WidgetSlider:ctor(direction, images, options)
     self.callbacks = {}
     WidgetSlider.super.ctor(self, direction, images, options)
+    self:setTouchSwallowEnabled(false)
+
     if images.progress then
         local rect = self.barSprite_:getBoundingBox()
         self.progress = display.newProgressTimer(images.progress, display.PROGRESS_TIMER_BAR)
@@ -26,15 +28,6 @@ function WidgetSlider:setSliderSize(width, height)
     self.progress:align(display.CENTER, rect.x + rect.width/2, rect.y + rect.height/2)
 
 end
--- function WidgetSlider:setSliderValue(value)
---     assert(value >= self.min_ and value <= self.max_, "UISlider:setSliderValue() - invalid value")
---     if self.value_ ~= value then
---         self.value_ = value
---         self:dispatchEvent({name = UISlider.VALUE_CHANGED_EVENT, value = self.value_})
---         self:updateButtonPosition_()
---     end
---     return self
--- end
 
 function WidgetSlider:onTouch_(event, x, y)
      if event == "began" then

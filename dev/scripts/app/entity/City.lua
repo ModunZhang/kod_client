@@ -1358,8 +1358,6 @@ function City:__OnHelpToTroopsDataChange(__helpToTroops)
 end
 
 function City:__OnHelpToTroopsDataChanged(changed_map)
-    dump(changed_map,"changed_map----->")
-    dump(self:GetHelpToTroops(),"self:GetHelpToTroops()------>")
     self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_TO_TROOPS, function(listener)
         listener:OnHelpToTroopsChanged(self,changed_map)
     end)
@@ -1371,12 +1369,20 @@ function City:IteratorHelpToTroops(func)
     end
 end
 
-function City:GetHelpToTroops()
-    return self.helpToTroops
+function City:GetHelpToTroops(playerId)
+    if playerId then
+        return self.helpToTroops[playerId]
+    else
+        local r = {}
+        self:IteratorHelpToTroops(function(v)
+            table.insert(r, v)
+        end)
+        return r
+    end
 end
 
 function City:IsHelpedToTroopsWithPlayerId(id)
-    return self:GetHelpToTroops()[id] ~= nil
+    return self:GetHelpToTroops(id) ~= nil
 end
 
 -- promise

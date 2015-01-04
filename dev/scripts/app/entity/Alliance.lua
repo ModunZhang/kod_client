@@ -11,6 +11,7 @@ local MarchAttackEvent = import(".MarchAttackEvent")
 local MarchAttackReturnEvent = import(".MarchAttackReturnEvent")
 local Alliance = class("Alliance", MultiObserver)
 local VillageEvent = import(".VillageEvent")
+local AllianceBelvedere = import(".AllianceBelvedere")
 --注意:突袭用的MarchAttackEvent 所以使用OnAttackMarchEventTimerChanged
 Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS","FIGHT_REQUESTS","FIGHT_REPORTS",
     "OnAttackMarchEventDataChanged","OnAttackMarchEventTimerChanged","OnAttackMarchReturnEventDataChanged","ALLIANCE_FIGHT"
@@ -66,6 +67,10 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     --村落采集
     self.villageEvents = {}
     self.alliance_villages = {}
+    self.alliance_belvedere = AllianceBelvedere.new(self)
+end
+function Alliance:GetAllianceBelvedere()
+    return self.alliance_belvedere
 end
 function Alliance:GetAllianceShrine()
     return self.alliance_shrine
@@ -303,6 +308,7 @@ function Alliance:Reset()
     self:ResetMarchEvent()
     self:ResetVillageEvents()
     self.alliance_villages = {}
+    self:GetAllianceBelvedere():Reset()
 end
 function Alliance:OnOperation(operation_type)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OPERATION, function(listener)
@@ -781,11 +787,13 @@ end
 --行军事件
 --------------------------------------------------------------------------------
 function Alliance:OnMarchEventTimer(attackMarchEvent)
-    print("OnMarchEventTimer-->",attackMarchEvent:Id())
     self:CallEventsChangedListeners(Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged,attackMarchEvent)
 end
 
 function Alliance:CallEventsChangedListeners(LISTEN_TYPE,changed_map)
+    if self:GetAllianceBelvedere()[Alliance.LISTEN_TYPE[LISTEN_TYPE]] then
+        self:GetAllianceBelvedere()[Alliance.LISTEN_TYPE[LISTEN_TYPE]](self:GetAllianceBelvedere(),changed_map)
+    end
     self:NotifyListeneOnType(LISTEN_TYPE, function(listener)
         listener[Alliance.LISTEN_TYPE[LISTEN_TYPE]](listener,changed_map)
     end)
@@ -1112,6 +1120,9 @@ function Alliance:OnVillageEventTimer(villageEvent)
             self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OnVillageEventTimer, function(listener)
                 listener:OnVillageEventTimer(villageEvent,left_resource)
             end)
+            if self:GetAllianceBelvedere()['OnVillageEventTimer'] then
+                self:GetAllianceBelvedere():OnVillageEventTimer(villageEvent,left_resource)
+            end
         end
     end
 end
@@ -1224,16 +1235,4 @@ end
 function Alliance:GetAllianceVillageInfos()
     return self.alliance_villages
 end
-
--- function AllianceMap:OnVillageEventTimer(villageEvent)
---     print("AllianceMap:OnVillageEventTimer---->")
-    -- if self.alliance_villages[villageEvent:VillageData().id] then
-    --     local village = self.alliance_villages[villageEvent:VillageData().id]
-    --     village.resource = village.resource - villageEvent:GetCollectSpeed()
-    --     self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.OnVillagesDataChanged, function(listener)
-    --         print("AllianceMap:OnVillagesDataChanged---->")
-    --         listener:OnVillagesDataChanged(GameUtils:pack_event_table({},{village},{}))
-    --     end)
-    -- end
--- end
 return Alliance

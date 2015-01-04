@@ -30,32 +30,41 @@ function GameUIAlliancePalaceEnter:GetBuildingInfo()
         {_("坐标"),0x797154},
         {self:GetLocation(),0x403c2f},
     }
+    local member_count,cities = _("未知"),_("未知")
+    if self:IsMyAlliance() then
+    	member_count = self:GetMyAlliance():MemberCount()
+    	cities = 10 
+    end
     local label_2 = {
         {_("成员"),0x797154},
-        {self:GetMyAlliance():MemberCount(),0x403c2f},
+        {member_count,0x403c2f},
     } 
     local label_3 = 
     {
 	    {_("占领城市"),0x797154},
-	    {"10",0x403c2f},
+	    {cities,0x403c2f},
     }
   	return {location,label_2}
 end
 
 function GameUIAlliancePalaceEnter:GetEnterButtons()
-	local info_button = self:BuildOneButton("icon_info_1.png",_("信息")):onButtonClicked(function()
-		UIKit:newGameUI('GameUIAlliancePalace',City,"info",self:GetBuilding()):addToCurrentScene(true)
-		self:leftButtonClicked()
-	end)
-	local tax_button = self:BuildOneButton("icon_tax.png",_("收税")):onButtonClicked(function()
-		 UIKit:newGameUI('GameUIAlliancePalace',City,"impose",self:GetBuilding()):addToCurrentScene(true)
-		self:leftButtonClicked()
-	end)
-	local upgrade_button = self:BuildOneButton("icon_upgrade_1.png",_("升级")):onButtonClicked(function()
-		UIKit:newGameUI('GameUIAlliancePalace',City,"upgrade",self:GetBuilding()):addToCurrentScene(true)
-		self:leftButtonClicked()
-	end)
-    return {info_button,tax_button,upgrade_button}
+	if self:IsMyAlliance() then
+		local info_button = self:BuildOneButton("icon_info_1.png",_("信息")):onButtonClicked(function()
+			UIKit:newGameUI('GameUIAlliancePalace',City,"info",self:GetBuilding()):addToCurrentScene(true)
+			self:leftButtonClicked()
+		end)
+		local tax_button = self:BuildOneButton("icon_tax.png",_("收税")):onButtonClicked(function()
+			 UIKit:newGameUI('GameUIAlliancePalace',City,"impose",self:GetBuilding()):addToCurrentScene(true)
+			self:leftButtonClicked()
+		end)
+		local upgrade_button = self:BuildOneButton("icon_upgrade_1.png",_("升级")):onButtonClicked(function()
+			UIKit:newGameUI('GameUIAlliancePalace',City,"upgrade",self:GetBuilding()):addToCurrentScene(true)
+			self:leftButtonClicked()
+		end)
+	    return {info_button,tax_button,upgrade_button}
+	else
+		return {}
+	end
 end
 
 return GameUIAlliancePalaceEnter

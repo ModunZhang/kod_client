@@ -13,7 +13,9 @@ MarchAttackEvent.MARCH_EVENT_PLAYER_ROLE = Enum("SENDER","RECEIVER","NOTHING")
 function MarchAttackEvent:GetPlayerRole()
 	local Me_Id = DataManager:getUserData()._id
 	if Me_Id == self:AttackPlayerData().id then
-		return self.MARCH_EVENT_PLAYER_ROLE.SENDER 
+		return self.MARCH_EVENT_PLAYER_ROLE.SENDER
+	elseif  Me_Id == self:GetDefenceData().id then
+		return self.MARCH_EVENT_PLAYER_ROLE.RECEIVER
 	else
 		return self.MARCH_EVENT_PLAYER_ROLE.NOTHING 
 	end

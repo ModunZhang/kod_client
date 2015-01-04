@@ -17,7 +17,9 @@ function cc.ui.UIPushButton:ctor(images, options,music_info)
         end
     end)
 end
-
+if cc.TransitionCustom then
+    ext.TransitionCustom = cc.TransitionCustom
+end
 display.SCENE_TRANSITIONS = {
     CROSSFADE       = {cc.TransitionCrossFade, 2},
     FADE            = {cc.TransitionFade, 3, cc.c3b(0, 0, 0)},
