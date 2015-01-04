@@ -23,7 +23,7 @@ end
 function SpriteUINode:InitWidget()
 end
 function SpriteUINode:DestorySelf()
-    self:removeFromParentAndCleanup(true)
+    self:removeFromParent()
 end
 
 

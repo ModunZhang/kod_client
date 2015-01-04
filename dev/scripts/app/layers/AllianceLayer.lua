@@ -55,7 +55,7 @@ function AllianceLayer:ctor(alliance)
     self:CreateCorpsFromMrachEventsIf()
 end
 function AllianceLayer:InitBackground()
-    self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_h.tmx"):addTo(self, ZORDER.BACKGROUND)
+    self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background.tmx"):addTo(self, ZORDER.BACKGROUND)
 end
 function AllianceLayer:InitTerrianBottomNode()
     self.terrain_bottom = display.newNode():addTo(self, ZORDER.ALLIANCE_TERRAIN_BOTTOM)

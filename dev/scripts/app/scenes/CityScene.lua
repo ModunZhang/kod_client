@@ -149,7 +149,7 @@ function CityScene:CreateSceneUILayer()
     end
     function scene_ui_layer:RemoveAllLockButtons()
         for _, v in pairs(self.lock_buttons) do
-            v:removeFromParentAndCleanup(true)
+            v:removeFromParent()
             city:RemoveListenerOnType(v, city.LISTEN_TYPE.UPGRADE_BUILDING)
         end
         self.lock_buttons = {}
@@ -171,7 +171,7 @@ function CityScene:CreateSceneUILayer()
             table.foreachi(self.ui, function(i, v)
                 if ob == v then
                     table.remove(self.ui, i)
-                    v:removeFromParentAndCleanup(true)
+                    v:removeFromParent()
                 end
             end)
         end)
