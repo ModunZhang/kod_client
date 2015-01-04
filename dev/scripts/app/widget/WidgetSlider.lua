@@ -73,9 +73,9 @@ function WidgetSlider:onTouch_(event, x, y)
         end
     end
     if self.dynamic_cb then
-        if self.dynamic_cb(offset * (self.max_ - self.min_) + self.min_) then
-            self:setSliderValue(offset * (self.max_ - self.min_) + self.min_)
-        end
+        local value = self.dynamic_cb(offset * (self.max_ - self.min_) + self.min_)
+        local final_value = tolua.type(value) == "number" and value or offset * (self.max_ - self.min_) + self.min_
+        self:setSliderValue(final_value)
     else
         self:setSliderValue(offset * (self.max_ - self.min_) + self.min_)
     end
