@@ -429,6 +429,51 @@ function Report:IsHasHelpDefencePlayer()
     local data = self:GetData()
     return data.helpDefencePlayerData
 end
+
+-- 战斗回放相关获取数据方法
+function Report:GetFightAttackName()
+    local data = self:GetData()
+    return data.attackPlayerData.name
+end
+function Report:GetFightDefenceName()
+    local data = self:GetData()
+    return data.helpDefencePlayerData and data.helpDefencePlayerData.name 
+        or data.defencePlayerData and data.defencePlayerData.name 
+        or data.defenceVillageData and Localize.village_name[data.defenceVillageData.type].." Lv "..data.defenceVillageData.level
+end
+function Report:GetFightAttackDragonRoundData()
+    local data = self:GetFightReports()
+    return data.attackPlayerDragonFightData
+end
+function Report:GetFightDefenceDragonRoundData()
+    local data = self:GetFightReports()
+    return data.defencePlayerDragonFightData or data.defenceVillageDragonFightData
+end
+function Report:GetFightAttackSoldierRoundData()
+    local data = self:GetFightReports()
+    return data.attackPlayerSoldierRoundDatas
+end
+function Report:GetFightDefenceSoldierRoundData()
+    local data = self:GetFightReports()
+    return data.defenceVillageSoldierRoundDatas or data.defencePlayerSoldierRoundDatas
+end
+function Report:IsFightWall()
+    local data = self:GetFightReports()
+    return data.attackPlayerWallRoundDatas
+end
+function Report:GetFightAttackWallRoundData()
+    local data = self:GetFightReports()
+    return data.attackPlayerWallRoundDatas
+end
+function Report:GetFightDefenceWallRoundData()
+    local data = self:GetFightReports()
+    return data.defencePlayerWallRoundDatas
+end
+function Report:GetFightReports()
+    local data = self:GetData()
+    return data.fightWithHelpDefencePlayerReports or data.fightWithDefencePlayerReports
+        or data.fightWithDefenceVillageReports
+end
 return Report
 
 
