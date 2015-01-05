@@ -25,6 +25,7 @@
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
 #include "GameCenter/GameCenter.h"
+#include "ext_uservoice.h"
 #endif
 using namespace std;
 
@@ -631,6 +632,17 @@ static int tolua_ext_close_keyboard(lua_State* tolua_S)
 #endif
     return 0;
 }
+extern void OpenUserVoice();
+static int tolua_ext_open_user_voice(lua_State* tolua_S)
+{
+#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+    
+    OpenUserVoice();
+
+#endif
+    return 0;
+}
+
 static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
 {
     tolua_function(tolua_S, "now", tolua_ext_now);
@@ -642,11 +654,12 @@ static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
     tolua_function(tolua_S, "copyText", tolua_ext_copyText);
     tolua_function(tolua_S, "disableIdleTimer", tolua_ext_disableIdleTimer);
     tolua_function(tolua_S, "closeKeyboard", tolua_ext_close_keyboard);
+    tolua_function(tolua_S, "userVoice", tolua_ext_open_user_voice);
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
     tolua_function(tolua_S,"getOpenUDID",tolua_ext_getOpenUDID);
 #endif
-
 }
+
 
 static void RegisterExtModules(lua_State* tolua_S)
 {

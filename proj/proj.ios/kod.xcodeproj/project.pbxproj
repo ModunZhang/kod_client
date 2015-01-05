@@ -23,6 +23,15 @@
 		3F49B18419BE869A0023C33B /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = 3F49B18219BE869A0023C33B /* scripts */; };
 		3F9090F01A3FB7770019442B /* GameCenter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3F9090EE1A3FB7770019442B /* GameCenter.mm */; };
 		3F9090F21A3FB9200019442B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F9090F11A3FB9200019442B /* GameKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		3FA74CAF1A597FC000FB8904 /* ext_uservoice.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3FA74C801A597FC000FB8904 /* ext_uservoice.mm */; };
+		3FA74CB01A597FC000FB8904 /* libUserVoice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FA74C811A597FC000FB8904 /* libUserVoice.a */; };
+		3FA74CB11A597FC000FB8904 /* UserVoice.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3FA74C881A597FC000FB8904 /* UserVoice.strings */; };
+		3FA74CB21A597FC000FB8904 /* uv_article.png in Resources */ = {isa = PBXBuildFile; fileRef = 3FA74CA61A597FC000FB8904 /* uv_article.png */; };
+		3FA74CB31A597FC000FB8904 /* uv_article@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3FA74CA71A597FC000FB8904 /* uv_article@2x.png */; };
+		3FA74CB41A597FC000FB8904 /* uv_heart.png in Resources */ = {isa = PBXBuildFile; fileRef = 3FA74CA81A597FC000FB8904 /* uv_heart.png */; };
+		3FA74CB51A597FC000FB8904 /* uv_heart@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3FA74CA91A597FC000FB8904 /* uv_heart@2x.png */; };
+		3FA74CB61A597FC000FB8904 /* uv_idea.png in Resources */ = {isa = PBXBuildFile; fileRef = 3FA74CAA1A597FC000FB8904 /* uv_idea.png */; };
+		3FA74CB71A597FC000FB8904 /* uv_idea@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3FA74CAB1A597FC000FB8904 /* uv_idea@2x.png */; };
 		3FEC8CA71A011A02000B8BF5 /* Droid Sans Faliback.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3FEC8CA61A011A02000B8BF5 /* Droid Sans Faliback.ttf */; };
 		9FC0E165195418CB0064626D /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FC0E164195418CB0064626D /* CoreMotion.framework */; };
 		DAF28FC1196D31EB00959DA1 /* liblibquick.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF28FC0196D315A00959DA1 /* liblibquick.a */; };
@@ -89,6 +98,51 @@
 		3F9090EE1A3FB7770019442B /* GameCenter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameCenter.mm; sourceTree = "<group>"; };
 		3F9090EF1A3FB7770019442B /* GameCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameCenter.h; sourceTree = "<group>"; };
 		3F9090F11A3FB9200019442B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		3FA74C7F1A597FC000FB8904 /* ext_uservoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ext_uservoice.h; sourceTree = "<group>"; };
+		3FA74C801A597FC000FB8904 /* ext_uservoice.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ext_uservoice.mm; sourceTree = "<group>"; };
+		3FA74C811A597FC000FB8904 /* libUserVoice.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libUserVoice.a; sourceTree = "<group>"; };
+		3FA74C831A597FC000FB8904 /* UserVoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserVoice.h; sourceTree = "<group>"; };
+		3FA74C841A597FC000FB8904 /* UVConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UVConfig.h; sourceTree = "<group>"; };
+		3FA74C851A597FC000FB8904 /* UVDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UVDelegate.h; sourceTree = "<group>"; };
+		3FA74C861A597FC000FB8904 /* UVStyleSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UVStyleSheet.h; sourceTree = "<group>"; };
+		3FA74C891A597FC000FB8904 /* ca */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C8A1A597FC000FB8904 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C8B1A597FC000FB8904 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C8C1A597FC000FB8904 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C8D1A597FC000FB8904 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C8E1A597FC000FB8904 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/UserVoice.strings"; sourceTree = "<group>"; };
+		3FA74C8F1A597FC000FB8904 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C901A597FC000FB8904 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C911A597FC000FB8904 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C921A597FC000FB8904 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C931A597FC000FB8904 /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C941A597FC000FB8904 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C951A597FC000FB8904 /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C961A597FC000FB8904 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C971A597FC000FB8904 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C981A597FC000FB8904 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C991A597FC000FB8904 /* ms */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ms; path = ms.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C9A1A597FC000FB8904 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C9B1A597FC000FB8904 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C9C1A597FC000FB8904 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C9D1A597FC000FB8904 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/UserVoice.strings"; sourceTree = "<group>"; };
+		3FA74C9E1A597FC000FB8904 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74C9F1A597FC000FB8904 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74CA01A597FC000FB8904 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74CA11A597FC000FB8904 /* sk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sk; path = sk.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74CA21A597FC000FB8904 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74CA31A597FC000FB8904 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74CA41A597FC000FB8904 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74CA51A597FC000FB8904 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74CA61A597FC000FB8904 /* uv_article.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = uv_article.png; sourceTree = "<group>"; };
+		3FA74CA71A597FC000FB8904 /* uv_article@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "uv_article@2x.png"; sourceTree = "<group>"; };
+		3FA74CA81A597FC000FB8904 /* uv_heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = uv_heart.png; sourceTree = "<group>"; };
+		3FA74CA91A597FC000FB8904 /* uv_heart@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "uv_heart@2x.png"; sourceTree = "<group>"; };
+		3FA74CAA1A597FC000FB8904 /* uv_idea.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = uv_idea.png; sourceTree = "<group>"; };
+		3FA74CAB1A597FC000FB8904 /* uv_idea@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "uv_idea@2x.png"; sourceTree = "<group>"; };
+		3FA74CAC1A597FC000FB8904 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/UserVoice.strings; sourceTree = "<group>"; };
+		3FA74CAD1A597FC000FB8904 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/UserVoice.strings"; sourceTree = "<group>"; };
+		3FA74CAE1A597FC000FB8904 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/UserVoice.strings"; sourceTree = "<group>"; };
 		3FEC8CA61A011A02000B8BF5 /* Droid Sans Faliback.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Droid Sans Faliback.ttf"; path = "../../../dev/res/fonts/Droid Sans Faliback.ttf"; sourceTree = "<group>"; };
 		9FC0E164195418CB0064626D /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		DAF28BDB196D03DD00959DA1 /* libquick.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libquick.xcodeproj; path = quick/lib/proj.ios/libquick.xcodeproj; sourceTree = QUICK_V3_ROOT; };
@@ -135,6 +189,7 @@
 				F456ECCC15EE018E00FCF3E2 /* AudioToolbox.framework in Frameworks */,
 				F456ECCE15EE018E00FCF3E2 /* AVFoundation.framework in Frameworks */,
 				F456ECD215EE018E00FCF3E2 /* Foundation.framework in Frameworks */,
+				3FA74CB01A597FC000FB8904 /* libUserVoice.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -177,6 +232,7 @@
 		3F18501D19B9EC83000A75D0 /* sources */ = {
 			isa = PBXGroup;
 			children = (
+				3FA74C7E1A597FC000FB8904 /* uservoice */,
 				3F9090ED1A3FB75F0019442B /* GameCenter */,
 				3F18501E19B9EC83000A75D0 /* AppDelegate.cpp */,
 				3F18501F19B9EC83000A75D0 /* AppDelegate.h */,
@@ -253,6 +309,44 @@
 				3F9090EF1A3FB7770019442B /* GameCenter.h */,
 			);
 			path = GameCenter;
+			sourceTree = "<group>";
+		};
+		3FA74C7E1A597FC000FB8904 /* uservoice */ = {
+			isa = PBXGroup;
+			children = (
+				3FA74C7F1A597FC000FB8904 /* ext_uservoice.h */,
+				3FA74C801A597FC000FB8904 /* ext_uservoice.mm */,
+				3FA74C811A597FC000FB8904 /* libUserVoice.a */,
+				3FA74C821A597FC000FB8904 /* UVHeaders */,
+				3FA74C871A597FC000FB8904 /* UVResources */,
+			);
+			name = uservoice;
+			path = ../sdk/ios/uservoice;
+			sourceTree = "<group>";
+		};
+		3FA74C821A597FC000FB8904 /* UVHeaders */ = {
+			isa = PBXGroup;
+			children = (
+				3FA74C831A597FC000FB8904 /* UserVoice.h */,
+				3FA74C841A597FC000FB8904 /* UVConfig.h */,
+				3FA74C851A597FC000FB8904 /* UVDelegate.h */,
+				3FA74C861A597FC000FB8904 /* UVStyleSheet.h */,
+			);
+			path = UVHeaders;
+			sourceTree = "<group>";
+		};
+		3FA74C871A597FC000FB8904 /* UVResources */ = {
+			isa = PBXGroup;
+			children = (
+				3FA74C881A597FC000FB8904 /* UserVoice.strings */,
+				3FA74CA61A597FC000FB8904 /* uv_article.png */,
+				3FA74CA71A597FC000FB8904 /* uv_article@2x.png */,
+				3FA74CA81A597FC000FB8904 /* uv_heart.png */,
+				3FA74CA91A597FC000FB8904 /* uv_heart@2x.png */,
+				3FA74CAA1A597FC000FB8904 /* uv_idea.png */,
+				3FA74CAB1A597FC000FB8904 /* uv_idea@2x.png */,
+			);
+			path = UVResources;
 			sourceTree = "<group>";
 		};
 		DAF28EF4196D2D5400959DA1 /* Products */ = {
@@ -351,6 +445,36 @@
 			knownRegions = (
 				en,
 				"zh-Hans",
+				ca,
+				cs,
+				da,
+				de,
+				el,
+				"en-GB",
+				es,
+				fi,
+				fr,
+				hr,
+				hu,
+				id,
+				it,
+				ja,
+				ko,
+				ms,
+				nb,
+				nl,
+				pl,
+				"pt-PT",
+				pt,
+				ro,
+				ru,
+				sk,
+				sv,
+				th,
+				tr,
+				uk,
+				vi,
+				"zh-Hant",
 			);
 			mainGroup = F456ECB615EE018E00FCF3E2;
 			productRefGroup = F456ECC215EE018E00FCF3E2 /* Products */;
@@ -383,8 +507,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3FA74CB11A597FC000FB8904 /* UserVoice.strings in Resources */,
+				3FA74CB61A597FC000FB8904 /* uv_idea.png in Resources */,
+				3FA74CB31A597FC000FB8904 /* uv_article@2x.png in Resources */,
+				3FA74CB71A597FC000FB8904 /* uv_idea@2x.png in Resources */,
+				3FA74CB21A597FC000FB8904 /* uv_article.png in Resources */,
+				3FA74CB51A597FC000FB8904 /* uv_heart@2x.png in Resources */,
 				3F44E3341A49197E00B8E5F2 /* Images.xcassets in Resources */,
 				3F49B18319BE869A0023C33B /* res in Resources */,
+				3FA74CB41A597FC000FB8904 /* uv_heart.png in Resources */,
 				3FEC8CA71A011A02000B8BF5 /* Droid Sans Faliback.ttf in Resources */,
 				3F49B18419BE869A0023C33B /* scripts in Resources */,
 			);
@@ -414,6 +545,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3F1857BB19B9EC89000A75D0 /* AppDelegate.cpp in Sources */,
+				3FA74CAF1A597FC000FB8904 /* ext_uservoice.mm in Sources */,
 				2EDD279B191B639C004F9539 /* RootViewController.mm in Sources */,
 				2EDD279A191B639C004F9539 /* main.m in Sources */,
 				3F1857BF19B9EC89000A75D0 /* FileOperation.cpp in Sources */,
@@ -437,6 +569,48 @@
 			targetProxy = DAF28EF9196D2D9A00959DA1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		3FA74C881A597FC000FB8904 /* UserVoice.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3FA74C891A597FC000FB8904 /* ca */,
+				3FA74C8A1A597FC000FB8904 /* cs */,
+				3FA74C8B1A597FC000FB8904 /* da */,
+				3FA74C8C1A597FC000FB8904 /* de */,
+				3FA74C8D1A597FC000FB8904 /* el */,
+				3FA74C8E1A597FC000FB8904 /* en-GB */,
+				3FA74C8F1A597FC000FB8904 /* en */,
+				3FA74C901A597FC000FB8904 /* es */,
+				3FA74C911A597FC000FB8904 /* fi */,
+				3FA74C921A597FC000FB8904 /* fr */,
+				3FA74C931A597FC000FB8904 /* hr */,
+				3FA74C941A597FC000FB8904 /* hu */,
+				3FA74C951A597FC000FB8904 /* id */,
+				3FA74C961A597FC000FB8904 /* it */,
+				3FA74C971A597FC000FB8904 /* ja */,
+				3FA74C981A597FC000FB8904 /* ko */,
+				3FA74C991A597FC000FB8904 /* ms */,
+				3FA74C9A1A597FC000FB8904 /* nb */,
+				3FA74C9B1A597FC000FB8904 /* nl */,
+				3FA74C9C1A597FC000FB8904 /* pl */,
+				3FA74C9D1A597FC000FB8904 /* pt-PT */,
+				3FA74C9E1A597FC000FB8904 /* pt */,
+				3FA74C9F1A597FC000FB8904 /* ro */,
+				3FA74CA01A597FC000FB8904 /* ru */,
+				3FA74CA11A597FC000FB8904 /* sk */,
+				3FA74CA21A597FC000FB8904 /* sv */,
+				3FA74CA31A597FC000FB8904 /* th */,
+				3FA74CA41A597FC000FB8904 /* tr */,
+				3FA74CA51A597FC000FB8904 /* uk */,
+				3FA74CAC1A597FC000FB8904 /* vi */,
+				3FA74CAD1A597FC000FB8904 /* zh-Hans */,
+				3FA74CAE1A597FC000FB8904 /* zh-Hant */,
+			);
+			name = UserVoice.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		F456EFBB15EE019300FCF3E2 /* Debug */ = {
@@ -559,18 +733,23 @@
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				LIBRARY_SEARCH_PATHS = "$(QUICK_V3_ROOT)/quick/lib/proj.ios/build/Debug-iphoneos";
+				LIBRARY_SEARCH_PATHS = (
+					"$(QUICK_V3_ROOT)/quick/lib/proj.ios/build/Debug-iphoneos",
+					"$(SRCROOT)/../sdk/ios/uservoice",
+				);
 				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
 					"$(QUICK_V3_ROOT)/quick/lib/proj.ios/build/Debug-iphoneos",
 					"\"$(SRCROOT)/../sources/pomelo/libpomelo/build/Default-iphoneos\"",
 					"\"$(SRCROOT)/../sources/pomelo/libpomelo/deps/uv/build/Default-iphoneos\"",
 					"\"$(SRCROOT)/../sources/pomelo/libpomelo/deps/jansson/build/Default-iphoneos\"",
+					"$(SRCROOT)/../sdk/ios/uservoice",
 				);
 				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = (
 					"$(QUICK_V3_ROOT)/quick/lib/proj.ios/build/Debug-iphoneos",
 					"\"$(SRCROOT)/../sources/pomelo/libpomelo/build/Default-iphonesimulator\"",
 					"\"$(SRCROOT)/../sources/pomelo/libpomelo/deps/uv/build/Default-iphonesimulator\"",
 					"\"$(SRCROOT)/../sources/pomelo/libpomelo/deps/jansson/build/Default-iphonesimulator\"",
+					"$(SRCROOT)/../sdk/ios/uservoice",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
@@ -631,18 +810,23 @@
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				LIBRARY_SEARCH_PATHS = "$(QUICK_V3_ROOT)/quick/lib/proj.ios/build/Debug-iphoneos";
+				LIBRARY_SEARCH_PATHS = (
+					"$(QUICK_V3_ROOT)/quick/lib/proj.ios/build/Debug-iphoneos",
+					/Volumes/WorkSpace/kod_client/proj/sdk/ios/uservoice,
+				);
 				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
 					"$(QUICK_V3_ROOT)/quick/lib/proj.ios/build/Debug-iphoneos",
 					"\"$(SRCROOT)/../sources/pomelo/libpomelo/build/Default-iphoneos\"",
 					"\"$(SRCROOT)/../sources/pomelo/libpomelo/deps/uv/build/Default-iphoneos\"",
 					"\"$(SRCROOT)/../sources/pomelo/libpomelo/deps/jansson/build/Default-iphoneos\"",
+					"$(SRCROOT)/../sdk/ios/uservoice",
 				);
 				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = (
 					"$(QUICK_V3_ROOT)/quick/lib/proj.ios/build/Debug-iphoneos",
 					"\"$(SRCROOT)/../sources/pomelo/libpomelo/build/Default-iphonesimulator\"",
 					"\"$(SRCROOT)/../sources/pomelo/libpomelo/deps/uv/build/Default-iphonesimulator\"",
 					"\"$(SRCROOT)/../sources/pomelo/libpomelo/deps/jansson/build/Default-iphonesimulator\"",
+					"$(SRCROOT)/../sdk/ios/uservoice",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
