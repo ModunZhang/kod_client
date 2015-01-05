@@ -5,12 +5,12 @@ local Enum = import("..utils.Enum")
 local MapLayer = import(".MapLayer")
 local PVELayer = class("PVELayer", MapLayer)
 local ZORDER = Enum("BACKGROUND", "OBJECT", "FOG")
-
 function PVELayer:ctor()
     PVELayer.super.ctor(self, 0.3, 1)
-    self.background = cc.TMXTiledMap:create("tmxmaps/pve_background.tmx"):addTo(self, ZORDER.BACKGROUND)
-    self.object_layer = display.newNode():addTo(self, ZORDER.OBJECT)
-    self.war_fog = cc.TMXTiledMap:create("tmxmaps/pve.tmx"):addTo(self, ZORDER.FOG):pos(-80, -80)
+    self.scene_node = display.newNode():addTo(self):pos(500, 500)
+    self.background = cc.TMXTiledMap:create("tmxmaps/pve_background.tmx"):addTo(self.scene_node, ZORDER.BACKGROUND)
+    self.object_layer = display.newNode():addTo(self.scene_node, ZORDER.OBJECT)
+    self.war_fog = cc.TMXTiledMap:create("tmxmaps/pve.tmx"):addTo(self.scene_node, ZORDER.FOG):pos(-80, -80)
     self.war_fog_layer = self.war_fog:getLayer("layer1")
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new({
         tile_w = 80,
@@ -24,6 +24,9 @@ end
 function PVELayer:onEnter()
     self:WalkOn(10, 10)
     self.object = display.newSprite("add_btn_down_50x50.png"):addTo(self.object_layer):pos(self:GetLogicMap():ConvertToMapPosition(10, 10))
+end
+function PVELayer:GetSceneNode()
+    return self.scene_node
 end
 function PVELayer:GetLogicMap()
     return self.normal_map
@@ -40,7 +43,7 @@ function PVELayer:WalkOn(x, y)
         {x, y - 1},
         {x + 1, y - 1},
         {x - 1, y + 1},
-        } do
+    } do
         local x_, y_ = unpack(v)
         if x_ >= 0 and x_ < width and y_ >= 0 and y_ < height then
             self.war_fog_layer:getTileAt(cc.p(x_, y_)):hide()
@@ -64,6 +67,8 @@ function PVELayer:getContentSize()
     if not self.content_size then
         local layer = self.background:getLayer("layer1")
         self.content_size = layer:getContentSize()
+        self.content_size.width = self.content_size.width * 1.3
+        self.content_size.height = self.content_size.height * 1.3
     end
     return self.content_size
 end
@@ -82,14 +87,9 @@ function PVELayer:GotoLogicPoint(x, y, s)
     local point = self:ConvertLogicPositionToMapPosition(x, y)
     return self:PromiseOfMove(point.x, point.y, s)
 end
-function PVELayer:setPosition(position)
-    local super = getmetatable(self)
-    super.setPosition(self, position)
-end
-
-
 
 return PVELayer
+
 
 
 

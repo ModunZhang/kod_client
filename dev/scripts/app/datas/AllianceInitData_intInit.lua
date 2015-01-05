@@ -72,7 +72,3 @@ intInit["collectedCoinCountPerExp"] = {
 	["type"] = "collectedCoinCountPerExp",
 	["value"] = 50
 }
-intInit["playerHatchDragonNeedHours"] = {
-	["type"] = "playerHatchDragonNeedHours",
-	["value"] = 80
-}
