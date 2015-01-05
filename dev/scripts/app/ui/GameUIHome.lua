@@ -47,7 +47,7 @@ function GameUIHome:onEnter()
     local rect1 = self.chat_bg:getCascadeBoundingBox()
     local rect2 = self.event_tab:getCascadeBoundingBox()
     local ratio = self.bottom:getScale()
-    local x, y = rect1.x + rect1.width - rect2.width - 5 * ratio, rect1.y + rect1.height - 2 * ratio
+    local x, y = rect1.x + rect1.width - rect2.width - 8 * ratio, rect1.y + rect1.height - 2 * ratio
     local line = display.newSprite("back_ground_492X14.png")
     line:addTo(self, 0):align(display.LEFT_TOP, x, y)
     self.event_tab:addTo(self, 0):pos(x, y)
