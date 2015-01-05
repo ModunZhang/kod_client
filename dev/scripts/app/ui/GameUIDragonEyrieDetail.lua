@@ -15,7 +15,7 @@ local WidgetDragonTabButtons = import("..widget.WidgetDragonTabButtons")
 local Dragon = import("..entity.Dragon")
 local UIListView = import(".UIListView")
 local Localize = import("..utils.Localize")
-
+local config_floatInit = GameDatas.AllianceInitData.floatInit
 -- building = DragonEyrie
 function GameUIDragonEyrieDetail:ctor(city,building,dragon_type)
 	GameUIDragonEyrieDetail.super.ctor(self,city,_("龙巢"))
@@ -24,6 +24,21 @@ function GameUIDragonEyrieDetail:ctor(city,building,dragon_type)
 	self.dragon = self.dragon_manager:GetDragon(dragon_type)
 	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
 	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonHatched)
+	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventTimer)
+	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventChanged)
+end
+
+function GameUIDragonEyrieDetail:OnDragonEventChanged()
+	local dragonEvent = self.dragon_manager:GetDragonEventByDragonType(self:GetDragon():Type())
+ 	if dragonEvent then
+ 		self:RefreshUI()
+ 	end
+end
+function GameUIDragonEyrieDetail:OnDragonEventTimer(dragonEvent)
+	if self:GetDragon():Type() == dragonEvent:DragonType() and self.hate_label_2 and self.hate_label_2:isVisible() then
+		self.hate_label_2:setString(GameUtils:formatTimeStyleDayHour(dragonEvent:GetTime()))
+		self.hate_button:setButtonEnabled(false)
+	end
 end
 
 function GameUIDragonEyrieDetail:CreateBetweenBgAndTitle()
@@ -63,6 +78,8 @@ end
 function GameUIDragonEyrieDetail:onMoveOutStage()
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonHatched)
+	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventTimer)
+	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventChanged)
 	GameUIDragonEyrieDetail.super.onMoveOutStage(self)
 end
 
@@ -98,6 +115,16 @@ function GameUIDragonEyrieDetail:BuildDragonContent()
 		dragon:setTag(101)
 	end
 end
+
+function GameUIDragonEyrieDetail:GetHateLabelText()
+	local dragonEvent = self.dragon_manager:GetDragonEventByDragonType(self:GetDragon():Type())
+	if dragonEvent then
+		return _("正在孵化,剩余时间"),GameUtils:formatTimeStyleDayHour(dragonEvent:GetTime())
+	else
+		return string.format(Localize.hate_dragon[self:GetDragon():Type()] .. _("需要%.1f个小时"),
+			config_floatInit['playerHatchDragonNeedHours']['value']),_("龙巢同一时间只能孵化一只巨龙")
+	end
+end
 --孵化界面
 function GameUIDragonEyrieDetail:CreateHateUIIf()
 	if self.hate_node then
@@ -115,16 +142,18 @@ function GameUIDragonEyrieDetail:CreateHateUIIf()
 		})):addTo(hate_node):align(display.CENTER_BOTTOM,window.cx,window.bottom + 20):onButtonClicked(function()
 			self:OnEnergyButtonClicked()
 		end)
+	self.hate_button = hate_button
 	local hate_bg = UIKit:CreateBoxPanel9({width = 556,height = 78})
 		:addTo(hate_node)
 		:align(display.CENTER_BOTTOM,window.cx,hate_button:getPositionY()+hate_button:getCascadeBoundingBox().height+6)
-	UIKit:ttfLabel({
-		text = "孵化红龙需要80个小时",
+	local label_text_1,label_text_2 = self:GetHateLabelText()
+	self.hate_label_1 = UIKit:ttfLabel({
+		text = label_text_1,
 		size = 20,
 		color= 0x403c2f
 	}):align(display.TOP_CENTER, 278, 70):addTo(hate_bg)
-	UIKit:ttfLabel({
-		text = _("龙巢同一时间只能孵化一只巨龙"),
+	self.hate_label_2 = UIKit:ttfLabel({
+		text = label_text_2,
 		size = 20,
 		color= 0x403c2f
 	}):align(display.BOTTOM_CENTER, 278, 18):addTo(hate_bg)
@@ -134,7 +163,7 @@ function GameUIDragonEyrieDetail:CreateHateUIIf()
 	display.newSprite("redDragon_icon_151x133.png", 96,114):addTo(icon_bg)
 
 	local tip_label = UIKit:ttfLabel({
-		text = "红龙能提升部队在草地上的作战能力。",
+		text = Localize.dragon_buffer[self:GetDragon():Type()],
 		size = 18,
 		color= 0x797154,
 		align= cc.TEXT_ALIGNMENT_CENTER
@@ -145,7 +174,7 @@ function GameUIDragonEyrieDetail:CreateHateUIIf()
 		:addTo(hate_node)
 		:align(display.BOTTOM_CENTER, window.cx, tip_label:getPositionY()+tip_label:getContentSize().height+15)
 	UIKit:ttfLabel({
-		text = "孵化红龙",
+		text = Localize.hate_dragon[self:GetDragon():Type()],
 		size = 22,
 		color= 0xffedae
 	}):align(display.CENTER,285,15):addTo(title_bar)
@@ -155,28 +184,9 @@ function GameUIDragonEyrieDetail:CreateHateUIIf()
 	return self.hate_node
 end
 
---计算获取下一点能量的剩余时间
-function GameUIDragonEyrieDetail:GetHatchEneryLabelString()
-    local energy = City.resource_manager:GetEnergyResource()
-    local __,decimals = math.modf(energy:GetReallyTotalResource())
-    local string = string.format(_("%s 下一点能量 %s"),
-            energy:GetResourceValueByCurrentTime(app.timer:GetServerTime()) .. "/" .. energy:GetValueLimit(),
-            GameUtils:formatTimeStyle1((1-decimals)*self.building:GetTimePerEnergy()))
-    if decimals == 0 then 
-        string = string.format(_("%s 能量已满"),energy:GetResourceValueByCurrentTime(app.timer:GetServerTime()) .. "/" .. energy:GetValueLimit())
-    end
-    return string
-end
-
 function GameUIDragonEyrieDetail:OnResourceChanged(resource_manager)
     GameUIDragonEyrieDetail.super.OnResourceChanged(self,resource_manager)
     if self:GetDragon():Ishated() then return end
-    -- if self.hate_node and self.hate_node:isVisible() then
-    -- 	self.hate_nextEneryLabel:setString(self:GetHatchEneryLabelString())
-    -- end
-    -- if self.skill_node and self.skill_node:isVisible() then
-    -- 	self.skill_ui.timeLabel:setString(self:GetHatchEneryLabelString())
-    -- end
 end
 
 function GameUIDragonEyrieDetail:GetDragon()
@@ -184,14 +194,6 @@ function GameUIDragonEyrieDetail:GetDragon()
 end
 --充能
 function GameUIDragonEyrieDetail:OnEnergyButtonClicked()
-	local energy =  City.resource_manager:GetEnergyResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    if energy < self.dragon_manager:GetEnergyCost() then 
-        local dialog = FullScreenPopDialogUI.new()
-        dialog:SetTitle(_("提示"))
-        dialog:SetPopMessage(_("能量不足!"))
-        dialog:AddToCurrentScene()
-        return 
-    end
     local dragon = self:GetDragon()
     NetManager:getHatchDragonPromise(dragon:Type()):catch(function(err)
     	dump(err:reason())
@@ -441,18 +443,6 @@ function GameUIDragonEyrieDetail:CreateNodeIf_skill()
     }:addTo(list_bg)
 
     self.skill_ui.listView = list
-    -- local star = display.newSprite("dragon_star.png")
-    -- 	:addTo(skill_node)
-    -- 	:align(display.LEFT_BOTTOM,window.left+45,list_bg:getPositionY()+320+5)
-    -- local timeLabel = UIKit:ttfLabel({
-    -- 		text = self:GetHatchEneryLabelString(),
-    -- 		size = 20,
-    -- 		color = 0x403c2f
-    -- 	})
-    -- 	:align(display.LEFT_BOTTOM,star:getPositionX()+star:getContentSize().width+2,star:getPositionY())
-    -- 	:addTo(skill_node)
-    -- self.skill_ui.timeLabel  = timeLabel
-
     local blood_label = UIKit:ttfLabel({
     		text = "",
     		size = 20,

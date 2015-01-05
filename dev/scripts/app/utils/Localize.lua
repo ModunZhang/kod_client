@@ -501,6 +501,16 @@ local TERRAIN = {
      desert= _("沙漠"),
      iceField = _("雪地"),
 }
+local HATE_DRAGON = {
+    ["redDragon"] = _("孵化红龙"),
+    ["blueDragon"] = _("孵化蓝龙"),
+    ["greenDragon"] = _("孵化绿龙"),
+}
+local DRAGON_BUFFER = {
+    ["redDragon"] = _("红龙能提升部队在草地上的作战能力。"),
+    ["blueDragon"] = _("蓝龙能提升部队在草地上的作战能力。"),
+    ["greenDragon"] = _("绿龙能提升部队在草地上的作战能力。"),
+}
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
@@ -522,6 +532,8 @@ return {
     alliance_authority_list = ALLIANCE_AUTHORITY_LIST,
     village_name = VILLAGE_NAME,
     terrain = TERRAIN,
+    hate_dragon = HATE_DRAGON,
+    dragon_buffer = DRAGON_BUFFER,
 }
 
 

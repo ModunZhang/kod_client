@@ -451,3 +451,14 @@ function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback)
         dialog:AddToCurrentScene()
         return dialog
 end
+
+function UIKit:showEvaluateDialog()
+    UIKit:showMessageDialog(
+        nil,
+        "是否去app store评价我们?",
+        function()
+            device.openURL("http://dualface.github.com/quick-cocos2d-x/")
+        end,
+        function()
+        end)
+end

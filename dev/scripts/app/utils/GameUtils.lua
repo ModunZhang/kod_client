@@ -348,8 +348,13 @@ function GameUtils:parseRichText(str)
     return items
 end
 
-function GameUtils:EvaluateApp()
-    
+function GameUtils:formatTimeStyleDayHour(time,min_day)
+    min_day = min_day or 1
+    if time > 86400*min_day then
+        return string.format(_("%d天%d小时"),math.floor(time/86400),math.floor(time%86400/3600))
+    else
+        return GameUtils:formatTimeStyle1(time)
+    end
 end
 
 

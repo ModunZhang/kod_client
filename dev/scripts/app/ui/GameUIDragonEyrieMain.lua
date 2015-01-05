@@ -19,6 +19,8 @@ function GameUIDragonEyrieMain:ctor(city,building)
 	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnHPChanged)
 	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
 	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonHatched)
+	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventTimer)
+	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventChanged)
 	self.draong_index = 1
 end
 
@@ -40,7 +42,6 @@ end
 
 function GameUIDragonEyrieMain:OnDragonHatched(dragon)
 	local dragon_index = DragonManager.DRAGON_TYPE_INDEX[dragon:Type()]
-	dump(dragon_index,"GameUIDragonEyrieMain:OnDragonHatched--->")
 	local localIndex = dragon_index - 1
 	local eyrie = self.draongConteNode:GetItemByIndex(localIndex)
 	eyrie.dragon_image:setTexture(self:GetDraongIdeImageName(dragon:Type()))
@@ -57,10 +58,25 @@ function GameUIDragonEyrieMain:onMoveInStage()
 	self:CreateUI()
 end
 
+function GameUIDragonEyrieMain:OnDragonEventChanged()
+	local dragonEvent = self.dragon_manager:GetDragonEventByDragonType(self:GetCurrentDragon():Type())
+ 	if dragonEvent then
+ 		self:RefreshUI()
+ 	end
+end
+
+function GameUIDragonEyrieMain:OnDragonEventTimer(dragonEvent)
+	if self:GetCurrentDragon():Type() == dragonEvent:DragonType() and self.progress_content_not_hated_timer:isVisible() then
+		self.progress_content_not_hated_timer:setString(GameUtils:formatTimeStyleDayHour(dragonEvent:GetTime()))
+	end
+end
+
 function GameUIDragonEyrieMain:onMoveOutStage()
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnHPChanged)
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonHatched)
+	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventTimer)
+	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventChanged)
 	GameUIDragonEyrieMain.super.onMoveOutStage(self)
 end
 
@@ -90,11 +106,21 @@ function GameUIDragonEyrieMain:RefreshUI()
 	local dragon = self:GetCurrentDragon()
 	if not self:GetCurrentDragon():Ishated() then
 		self.dragon_info:hide()
-		self.progress_content_not_hated:show()
-		self.progress_content_not_hated_timer:show()
+		local dragonEvent = self.dragon_manager:GetDragonEventByDragonType(self:GetCurrentDragon():Type())
+ 		if dragonEvent then
+			self.progress_content_not_hated:show()
+			self.progress_content_not_hated_timer:show()
+ 			self.progress_content_not_hated:setString(_("正在孵化,剩余时间"))
+ 			self.progress_content_not_hated_timer:setString(GameUtils:formatTimeStyleDayHour(dragonEvent:GetTime()))
+ 		else
+ 			self.progress_content_not_hated:show()
+ 			self.progress_content_not_hated:setString(_("未孵化"))
+ 			self.progress_content_not_hated_timer:hide()
+ 		end
 		self.progress_content_hated:hide()
 		self.strength_val_label:setString("0")
 		self.vitality_val_label:setString("0")
+		self.state_label:setString(_("未孵化"))
 	else
 		self.dragon_info:show()
 		self.draong_info_lv_label:setString("LV " .. dragon:Level() .. "/" .. dragon:GetMaxLevel())
@@ -106,9 +132,10 @@ function GameUIDragonEyrieMain:RefreshUI()
 		self.vitality_val_label:setString(dragon:Vitality())
 		self.dragon_hp_label:setString(dragon:Hp() .. "/" .. dragon:GetMaxHP())
 		self.progress_hated:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
+		self.state_label:setString(Localize.dragon_status[dragon:Status()])
 	end
 	self.nameLabel:setString(dragon:GetLocalizedName())
-	self.state_label:setString(Localize.dragon_status[dragon:Status()])
+	
 	self.star_bar:setNum(dragon:Star())
 end
 
@@ -216,8 +243,6 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 		self.progress_content_not_hated,self.progress_content_not_hated_timer = self:GetHateLabel()
 		self.progress_content_not_hated:align(display.CENTER_TOP,window.cx,info_layer:getPositionY()-10):addTo(self.dragonNode)
 		self.progress_content_not_hated_timer:align(display.CENTER_TOP,window.cx,info_layer:getPositionY()-36):addTo(self.dragonNode)
-    	-- self.progress_content_not_hated = self:CreateProgressTimer()
-    	-- self.progress_content_not_hated:align(display.CENTER_BOTTOM,box:getContentSize().width/2,120):addTo(box)
     	local strength_title_label =  UIKit:ttfLabel({
 			text = _("力量"),
 			color = 0x797154,
@@ -383,7 +408,7 @@ function GameUIDragonEyrieMain:ChangeDragon(direction)
 		self.draongConteNode:Before()
 		self.isChanging = false
 	end
-	self:RefreshUI()
+	-- self:RefreshUI()
 end
 
 function GameUIDragonEyrieMain:Find(type_)

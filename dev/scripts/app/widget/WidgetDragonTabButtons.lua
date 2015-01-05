@@ -112,6 +112,9 @@ function WidgetDragonTabButtons:SelectButtonByTag(tag)
 end
 
 function WidgetDragonTabButtons:VisibleFunctionButtons(visible)
+	if self.titleLabel then
+		self.titleLabel:setVisible(not visible)
+	end
 	for _,v in ipairs(self.buttons) do
 		if v.tag ~= 'back' then
 			v:setVisible(visible)

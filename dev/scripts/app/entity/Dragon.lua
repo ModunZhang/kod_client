@@ -14,7 +14,7 @@ local config_dragonSkill = GameDatas.DragonEyrie.dragonSkill
 local Localize = import("..utils.Localize")
 local config_equipment_buffs = GameDatas.DragonEyrie.equipmentBuff
 local config_dragoneyrie = GameDatas.DragonEyrie
-
+local config_alliance_initData_int = GameDatas.AllianceInitData.intInit
 --装备类别/身体部位:左护甲，头盔，右护甲，法球，胸甲，尾刺
 Dragon.DRAGON_BODY = Enum("armguardLeft","crown","armguardRight","orb","chest","sting")
 
@@ -136,6 +136,15 @@ function Dragon:ctor(drag_type,strength,vitality,status,star,level,exp,hp)
 	self.equipments_ = self:DefaultEquipments()
 	self:CheckEquipemtIfLocked_()
 end
+--领导力
+function Dragon:Leadership()
+	return config_dragonAttribute[self:Star()].initLeadership + self:Level() * config_dragonAttribute[self:Star()].perLevelLeadership 
+end
+--带兵量
+function Dragon:LeadCitizen()
+	return self:Leadership() * config_alliance_initData_int.citizenPerLeadership.value
+end
+
 --自身的力量
 function Dragon:Strength()
   	return config_dragonAttribute[self:Star()].initStrength + self:Level() * config_dragonAttribute[self:Star()].perLevelStrength 
@@ -283,12 +292,6 @@ end
 function Dragon:GetMaxHP()
 	return self:TotalVitality() * 2
 end
-
-
---该等级下的
--- function Dragon:GetMaxHP()
-	 -- return config_dragonAttribute[self:Star()].initVitality + self:Level() * config_dragonAttribute[self:Star()].perLevelVitality 
--- end
 
 --升级需要的经验值
 function Dragon:GetMaxExp()
