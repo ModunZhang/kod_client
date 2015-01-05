@@ -13,7 +13,7 @@ local WidgetChangeMap = class("WidgetChangeMap", function ()
     layer:setTouchSwallowEnabled(false)
     layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function (event)
         if event.name == "began" then
-            layer:Retraction()
+        -- layer:Retraction()
         end
         return true
     end)
@@ -106,14 +106,27 @@ function WidgetChangeMap:ctor(map_type)
     ):addTo(self)
         :align(display.LEFT_CENTER,window.cx-335*scale_x, 50*scale_x)
         :onButtonClicked(function(event)
-        	dump(event)
-            self:Move()
+            -- dump(event)
+            -- self:Move()
+            if map_type == WidgetChangeMap.MAP_TYPE.OUR_CITY then
+                if Alliance_Manager:GetMyAlliance()
+
+                    :IsDefault() then
+                    local dialog = FullScreenPopDialogUI.new():AddToCurrentScene()
+                    dialog:SetTitle("提示")
+                    dialog:SetPopMessage("未加入联盟!")
+                    return
+                end
+                app:EnterMyAllianceScene()
+            elseif map_type == WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE then
+                app:EnterMyCityScene()
+            end
         end)
         :scale(scale_x)
     display.newSprite("change_map_icon.png"):addTo(btn):align(display.CENTER, 73, 0)
     btn:setTouchSwallowEnabled(true)
 
-    self:SetMapType(map_type)
+    -- self:SetMapType(map_type)
 end
 
 function WidgetChangeMap:Move()
@@ -136,8 +149,10 @@ function WidgetChangeMap:Retraction()
     end
 end
 function WidgetChangeMap:SetMapType( map_type )
+    self.map_type = map_type
     local y = 0
     if map_type == WidgetChangeMap.MAP_TYPE.OUR_CITY then
+
         -- 设置按钮事件
         self.our_city_btn:onButtonClicked(function(event)
             self:Retraction()
@@ -160,25 +175,26 @@ function WidgetChangeMap:SetMapType( map_type )
             app:EnterMyAllianceScene()
         end)
 
-        self.enemy_btn:onButtonClicked(function(event)
-            -- local enemy_alliance_id = Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():GetEnemyAlliance().id
-            -- if enemy_alliance_id and string.trim(enemy_alliance_id) ~= "" then
-            --     self.map_frame:setPositionY(289)
-            -- 	self:Retraction()
-            --     NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function(msg)
-            --         local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
-            --         app:lockInput(false)
-            --         app:enterScene("EnemyAllianceScene", {enemyAlliance,GameUIAllianceEnter.Enemy}, "custom", -1, handler(self, self.CloudArmature))
-            --     end)
-            -- else
-            --     FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            --         :SetPopMessage(_("当前是和平期"))
-            --         :AddToCurrentScene()
-            -- end
-        end)
+        -- self.enemy_btn:onButtonClicked(function(event)
+        -- local enemy_alliance_id = Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():GetEnemyAlliance().id
+        -- if enemy_alliance_id and string.trim(enemy_alliance_id) ~= "" then
+        --     self.map_frame:setPositionY(289)
+        --  self:Retraction()
+        --     NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function(msg)
+        --         local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
+        --         app:lockInput(false)
+        --         app:enterScene("EnemyAllianceScene", {enemyAlliance,GameUIAllianceEnter.Enemy}, "custom", -1, handler(self, self.CloudArmature))
+        --     end)
+        -- else
+        --     FullScreenPopDialogUI.new():SetTitle(_("提示"))
+        --         :SetPopMessage(_("当前是和平期"))
+        --         :AddToCurrentScene()
+        -- end
+        -- end)
 
         y = 69
     elseif map_type == WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE then
+
         -- 设置按钮事件
         self.our_city_btn:onButtonClicked(function(event)
             self.map_frame:setPositionY(69)
@@ -195,7 +211,7 @@ function WidgetChangeMap:SetMapType( map_type )
             -- local enemy_alliance_id = Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():GetEnemyAlliance().id
             -- if enemy_alliance_id and string.trim(enemy_alliance_id) ~= "" then
             --     self.map_frame:setPositionY(289)
-            -- 	self:Retraction()
+            --  self:Retraction()
             --     NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function(msg)
             --         local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
             --         app:lockInput(false)
@@ -206,7 +222,7 @@ function WidgetChangeMap:SetMapType( map_type )
             --         :SetPopMessage(_("当前是和平期"))
             --         :AddToCurrentScene()
             -- end
-        end)
+            end)
 
 
         y = 179
@@ -236,30 +252,13 @@ function WidgetChangeMap:SetMapType( map_type )
 
         y = 289
     end
-    
-    self.map_frame = display.newSprite("map_frame.png"):addTo(self.map_bg):align(display.CENTER,50, y)
+
+    -- self.map_frame = display.newSprite("map_frame.png"):addTo(self.map_bg):align(display.CENTER,50, y)
 end
--- function WidgetChangeMap:CloudArmature(scene, status)
---     local manager = ccs.ArmatureDataManager:getInstance()
---     if status == "onEnter" then
---         manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
---         local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
---         display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
---             transition.sequence{
---                 cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
---                 cc.FadeIn:create(0.75),
---                 cc.CallFunc:create(function() scene:hideOutShowIn() end),
---                 cc.DelayTime:create(0.5),
---                 cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
---                 cc.FadeOut:create(0.75),
---                 cc.CallFunc:create(function() scene:finish() end),
---             }
---         )
---     elseif status == "onExit" then
---         manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
---     end
--- end
+
 return WidgetChangeMap
+
+
 
 
 
