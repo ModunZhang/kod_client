@@ -1,5 +1,6 @@
 local window = import("..utils.window")
-local AllianceLayer = import("..layers.AllianceLayer")
+-- local AllianceLayer = import("..layers.AllianceLayer")
+local MultiAllianceLayer = import("..layers.MultiAllianceLayer")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local MapScene = import(".MapScene")
 local AllianceScene = class("AllianceScene", MapScene)
@@ -53,7 +54,7 @@ function AllianceScene:onExit()
     AllianceScene.super.onExit(self)
 end
 function AllianceScene:CreateSceneLayer()
-    return AllianceLayer.new(self:GetAlliance())
+    return MultiAllianceLayer.new(nil, self:GetAlliance())
 end
 function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building = self:GetSceneLayer():GetClickedObject(x, y)

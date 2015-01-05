@@ -1,20 +1,11 @@
 local Enum = import("..utils.Enum")
-local CitySprite = import("..sprites.CitySprite")
-local VillageSprite = import("..sprites.VillageSprite")
-local AllianceDecoratorSprite = import("..sprites.AllianceDecoratorSprite")
-local AllianceBuildingSprite = import("..sprites.AllianceBuildingSprite")
-local AllianceObject = import("..entity.AllianceObject")
-local AllianceMap = import("..entity.AllianceMap")
 local Observer = import("..entity.Observer")
 local AllianceView = import(".AllianceView")
 local MapLayer = import(".MapLayer")
 local AllianceLayer = class("AllianceLayer", MapLayer)
 local ZORDER = Enum("BACKGROUND", "ALLIANCE_TERRAIN_BOTTOM", "ALLIANCE_TERRAIN_TOP", "BUILDING", "LINE", "CORPS")
-local floor = math.floor
-local random = math.random
-local AllianceShrine = import("..entity.AllianceShrine")
-local AllianceMoonGate = import("..entity.AllianceMoonGate")
 local Alliance = import("..entity.Alliance")
+local floor = math.floor
 
 function AllianceLayer:ctor(alliance)
     Observer.extend(self)

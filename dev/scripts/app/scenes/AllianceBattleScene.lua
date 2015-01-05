@@ -1,5 +1,5 @@
 local window = import("..utils.window")
-local TwoAllianceLayer = import("..layers.TwoAllianceLayer")
+local MultiAllianceLayer = import("..layers.MultiAllianceLayer")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local MapScene = import(".MapScene")
 local AllianceBattleScene = class("AllianceBattleScene", MapScene)
@@ -55,11 +55,11 @@ function AllianceBattleScene:onExit()
 end
 function AllianceBattleScene:CreateSceneLayer()
     local pos = self:GetAlliance():FightPosition()
-    local arrange = (pos == "top" or pos == "bottom") and TwoAllianceLayer.ARRANGE.H or TwoAllianceLayer.ARRANGE.V
+    local arrange = (pos == "top" or pos == "bottom") and MultiAllianceLayer.ARRANGE.H or MultiAllianceLayer.ARRANGE.V
     if pos == "top" or pos == "left" then
-        return TwoAllianceLayer.new(self:GetAlliance(), self:GetEnemyAlliance(), arrange)
+        return MultiAllianceLayer.new(arrange, self:GetAlliance(), self:GetEnemyAlliance())
     else
-        return TwoAllianceLayer.new(self:GetEnemyAlliance(), self:GetAlliance(),arrange)
+        return MultiAllianceLayer.new(arrange, self:GetEnemyAlliance(), self:GetAlliance())
     end
 end
 function AllianceBattleScene:OnTouchClicked(pre_x, pre_y, x, y)

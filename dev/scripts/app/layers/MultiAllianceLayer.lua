@@ -1,57 +1,32 @@
 local Enum = import("..utils.Enum")
-local CitySprite = import("..sprites.CitySprite")
-local VillageSprite = import("..sprites.VillageSprite")
-local AllianceDecoratorSprite = import("..sprites.AllianceDecoratorSprite")
-local AllianceBuildingSprite = import("..sprites.AllianceBuildingSprite")
-local AllianceObject = import("..entity.AllianceObject")
-local AllianceMap = import("..entity.AllianceMap")
+local Alliance = import("..entity.Alliance")
 local Observer = import("..entity.Observer")
-local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLeftReverseY")
 local AllianceView = import(".AllianceView")
 local MapLayer = import(".MapLayer")
-local TwoAllianceLayer = class("TwoAllianceLayer", MapLayer)
-TwoAllianceLayer.ARRANGE = Enum("H", "V")
-local ZORDER = Enum("BACKGROUND", "ALLIANCE_TERRAIN_BOTTOM", "TOP", "ALLIANCE_TERRAIN_TOP", "BUILDING", "LINE", "CORPS")
+local MultiAllianceLayer = class("MultiAllianceLayer", MapLayer)
+local ZORDER = Enum("BACKGROUND", "ALLIANCE_TERRAIN_BOTTOM", "ALLIANCE_TERRAIN_TOP", "BUILDING", "LINE", "CORPS")
 local floor = math.floor
-local random = math.random
-local AllianceShrine = import("..entity.AllianceShrine")
-local AllianceMoonGate = import("..entity.AllianceMoonGate")
-local Alliance = import("..entity.Alliance")
+
+MultiAllianceLayer.ARRANGE = Enum("H", "V")
+
+function MultiAllianceLayer:ctor(arrange, ...)
+    local manager = ccs.ArmatureDataManager:getInstance()
+    manager:addArmatureFileInfo("animations/dragon_red/dragon_red.ExportJson")
 
 
-function TwoAllianceLayer:ctor(alliance1, alliance2, arrange)
     Observer.extend(self)
-    self.alliances = {alliance1, alliance2}
-    self.arrange = arrange or TwoAllianceLayer.ARRANGE.H
-    TwoAllianceLayer.super.ctor(self, 0.4, 1.2)
-
+    MultiAllianceLayer.super.ctor(self, 0.4, 1.2)
+    self.arrange = arrange
+    self.alliances = {...}
     self:InitBackground()
     self:InitTerrianBottomNode()
     self:InitTerrianTopNode()
     self:InitBuildingNode()
     self:InitCorpsNode()
     self:InitLineNode()
-    if TwoAllianceLayer.ARRANGE.H == self.arrange then
-        local alliance_view1 = AllianceView.new(self, alliance1, 0):addTo(self)
-        local alliance_view2 = AllianceView.new(self, alliance2, 51):addTo(self)
-        self.alliance_views = {alliance_view1, alliance_view2}
-        local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(50.5, -3.5)
-        local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(50.5, 51.5)
-        display.newLine({{sx, sy}, {ex, ey}},
-        {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
-        borderWidth = 5}):addTo(self.building)
-    else
-        local alliance_view1 = AllianceView.new(self, alliance1, 0, 104):addTo(self)
-        local alliance_view2 = AllianceView.new(self, alliance2, 0, 53):addTo(self)
-        self.alliance_views = {alliance_view1, alliance_view2}
-        local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(-0.5, 51.5)
-        local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(51.5, 51.5)
-        display.newLine({{sx, sy}, {ex, ey}},
-        {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
-        borderWidth = 5}):addTo(self.building)
-    end
-    --
-    ccs.ArmatureDataManager:getInstance():addArmatureFileInfo("animations/dragon_red/dragon_red.ExportJson")
+    self:InitAllianceView()
+    self:InitAllianceEvent()
+    ---
     local timer = app.timer
     self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function()
         local cur_time = timer:GetServerTime()
@@ -60,7 +35,7 @@ function TwoAllianceLayer:ctor(alliance1, alliance2, arrange)
                 local march_info = corps.march_info
                 local total_time = march_info.finish_time - march_info.start_time
                 local elapse_time = cur_time - march_info.start_time
-                if elapse_time < total_time then
+                if elapse_time <= total_time then
                     local cur_vec = cc.pAdd(cc.pMul(march_info.normal, march_info.speed * elapse_time), march_info.start_info.real)
                     corps:setPosition(cur_vec.x, cur_vec.y)
                 else
@@ -70,97 +45,128 @@ function TwoAllianceLayer:ctor(alliance1, alliance2, arrange)
         end
     end)
     self:scheduleUpdate()
-
-    self:setNodeEventEnabled(true)
-    --行军事件
-    self:CreateAllianceCorps(self:GetMyAlliance())
-    self:CreateAllianceCorps(self:GetEnemyAlliance())
+    self:InitAllianceEvent()
     self:AddOrRemoveAllianceEvent(true)
 end
-function TwoAllianceLayer:InitBackground()
-    if TwoAllianceLayer.ARRANGE.H == self.arrange then
+function MultiAllianceLayer:onCleanup()
+    self:AddOrRemoveAllianceEvent(false)
+end
+function MultiAllianceLayer:InitBackground()
+    if #self.alliances == 1 then
+        self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background.tmx"):addTo(self, ZORDER.BACKGROUND)
+    elseif MultiAllianceLayer.ARRANGE.H == self.arrange then
         self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_h.tmx"):addTo(self, ZORDER.BACKGROUND)
     else
         self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_v.tmx"):addTo(self, ZORDER.BACKGROUND)
     end
 end
-function TwoAllianceLayer:InitTerrianBottomNode()
+function MultiAllianceLayer:InitTerrianBottomNode()
     self.terrain_bottom = display.newNode():addTo(self, ZORDER.ALLIANCE_TERRAIN_BOTTOM)
 end
-function TwoAllianceLayer:InitTerrianTopNode()
+function MultiAllianceLayer:InitTerrianTopNode()
     self.terrain_top = display.newNode():addTo(self, ZORDER.ALLIANCE_TERRAIN_TOP)
 end
-function TwoAllianceLayer:InitBuildingNode()
+function MultiAllianceLayer:InitBuildingNode()
     self.building = display.newNode():addTo(self, ZORDER.BUILDING)
 end
-function TwoAllianceLayer:InitCorpsNode()
+function MultiAllianceLayer:InitCorpsNode()
     self.corps = display.newNode():addTo(self, ZORDER.CORPS)
     self.corps_map = {}
 end
-function TwoAllianceLayer:InitLineNode()
+function MultiAllianceLayer:InitLineNode()
     self.lines = display.newNode():addTo(self, ZORDER.LINE)
     self.lines_map = {}
 end
-function TwoAllianceLayer:GetBottomTerrain()
+function MultiAllianceLayer:GetBottomTerrain()
     return self.terrain_bottom
 end
-function TwoAllianceLayer:GetTopTerrain()
+function MultiAllianceLayer:GetTopTerrain()
     return self.terrain_top
 end
-function TwoAllianceLayer:GetBuildingNode()
+function MultiAllianceLayer:GetBuildingNode()
     return self.building
 end
-function TwoAllianceLayer:GetCorpsNode()
+function MultiAllianceLayer:GetCorpsNode()
     return self.corps
 end
-function TwoAllianceLayer:GetLineNode()
+function MultiAllianceLayer:GetLineNode()
     return self.lines
 end
-function TwoAllianceLayer:GetAllianceViewIndexById(id)
+function MultiAllianceLayer:InitAllianceView()
+    local alliance_view1, alliance_view2
+    if #self.alliances == 1 then
+        alliance_view1 = AllianceView.new(self, self.alliances[1]):addTo(self)
+        self.alliance_views = {alliance_view1}
+        return
+    end
+    if MultiAllianceLayer.ARRANGE.H == self.arrange then
+        alliance_view1 = AllianceView.new(self, self.alliances[1], 0):addTo(self)
+        alliance_view2 = AllianceView.new(self, self.alliances[2], 51):addTo(self)
+        local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(50.5, -3.5)
+        local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(50.5, 51.5)
+        display.newLine({{sx, sy}, {ex, ey}},
+            {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
+                borderWidth = 5}):addTo(self.building)
+    else
+        alliance_view1 = AllianceView.new(self, self.alliances[1], 0, 104):addTo(self)
+        alliance_view2 = AllianceView.new(self, self.alliances[2], 0, 53):addTo(self)
+        local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(-0.5, 51.5)
+        local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(51.5, 51.5)
+        display.newLine({{sx, sy}, {ex, ey}},
+            {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
+                borderWidth = 5}):addTo(self.building)
+    end
+    self.alliance_views = {alliance_view1, alliance_view2}
+end
+function MultiAllianceLayer:AddOrRemoveAllianceEvent(isAdd)
+    if isAdd then
+        for _, v in ipairs(self.alliances) do
+            v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+            v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
+            v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+            v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
+        end
+    else
+        for _, v in ipairs(self.alliances) do
+            v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+            v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
+            v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+            v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
+        end
+    end
+end
+function MultiAllianceLayer:ConvertLogicPositionToMapPosition(lx, ly, alliance_id)
+    local alliance_vew = self.alliance_views[self:GetAllianceViewIndexById(alliance_id)]
+    local map_pos = cc.p(alliance_vew:GetLogicMap():ConvertToMapPosition(lx, ly))
+    return self:convertToNodeSpace(self.background:convertToWorldSpace(map_pos))
+end
+function MultiAllianceLayer:GetAllianceViewIndexById(id)
     for i, v in ipairs(self.alliances) do
         if v:Id() == id then
             return i
         end
     end
+    return 1
 end
-function TwoAllianceLayer:GetAlliances()
+function MultiAllianceLayer:GetAlliances()
     return self.alliances
 end
 
-function TwoAllianceLayer:GetMyAlliance()
+function MultiAllianceLayer:GetMyAlliance()
     return Alliance_Manager:GetMyAlliance()
 end
 
-function TwoAllianceLayer:GetEnemyAlliance()
+function MultiAllianceLayer:GetEnemyAlliance()
     return Alliance_Manager:GetEnemyAlliance()
 end
 
-function TwoAllianceLayer:AddOrRemoveAllianceEvent(isAdd)
-    if isAdd then
-        self:GetMyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
-        self:GetMyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
-        self:GetEnemyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
-        self:GetEnemyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
 
-        self:GetMyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
-        self:GetMyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
-        self:GetEnemyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
-        self:GetEnemyAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
-
-    else
-        self:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
-        self:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
-        self:GetEnemyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
-        self:GetEnemyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
-
-        self:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
-        self:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
-        self:GetEnemyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
-        self:GetEnemyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
+function MultiAllianceLayer:InitAllianceEvent()
+    for _, v in ipairs(self.alliances) do
+        self:CreateAllianceCorps(v)
     end
 end
-
-function TwoAllianceLayer:CreateAllianceCorps(alliance)
+function MultiAllianceLayer:CreateAllianceCorps(alliance)
     table.foreachi(alliance:GetAttackMarchEvents(),function(_,event)
         self:CreateCorpsIf(event)
     end)
@@ -175,26 +181,27 @@ function TwoAllianceLayer:CreateAllianceCorps(alliance)
     end)
 
 end
+
+
 --changed of marchevent
-function TwoAllianceLayer:OnAttackMarchEventDataChanged(changed_map)
+function MultiAllianceLayer:OnAttackMarchEventDataChanged(changed_map)
     self:ManagerCorpsFromChangedMap(changed_map)
 end
 
-function TwoAllianceLayer:OnAttackMarchReturnEventDataChanged(changed_map)
+function MultiAllianceLayer:OnAttackMarchReturnEventDataChanged(changed_map)
     self:ManagerCorpsFromChangedMap(changed_map)
 end
 
-function TwoAllianceLayer:OnStrikeMarchEventDataChanged(changed_map)
+function MultiAllianceLayer:OnStrikeMarchEventDataChanged(changed_map)
     dump(changed_map,"OnStrikeMarchEventDataChanged-->")
     self:ManagerCorpsFromChangedMap(changed_map)
 end
 
-function TwoAllianceLayer:OnStrikeMarchReturnEventDataChanged(changed_map)
+function MultiAllianceLayer:OnStrikeMarchReturnEventDataChanged(changed_map)
     dump(changed_map,"OnStrikeMarchReturnEventDataChanged-->")
     self:ManagerCorpsFromChangedMap(changed_map)
 end
-
-function TwoAllianceLayer:ManagerCorpsFromChangedMap(changed_map)
+function MultiAllianceLayer:ManagerCorpsFromChangedMap(changed_map)
     if changed_map.removed then
         table.foreachi(changed_map.removed,function(_,marchEvent)
             self:DeleteCorpsById(marchEvent:Id())
@@ -206,7 +213,7 @@ function TwoAllianceLayer:ManagerCorpsFromChangedMap(changed_map)
     end
 end
 
-function TwoAllianceLayer:CreateCorpsIf(marchEvent)
+function MultiAllianceLayer:CreateCorpsIf(marchEvent)
     if not self:IsExistCorps(marchEvent:Id()) then
         local from,allianceId = marchEvent:FromLocation()
         from.index = self:GetAllianceViewIndexById(allianceId)
@@ -221,17 +228,7 @@ function TwoAllianceLayer:CreateCorpsIf(marchEvent)
         )
     end
 end
-
-function TwoAllianceLayer:onCleanup()
-    self:AddOrRemoveAllianceEvent(false)
-end
-
-function TwoAllianceLayer:ConvertLogicPositionToMapPosition(lx, ly, alliance_id)
-    local alliance_vew = self.alliance_views[1]:GetAlliance():Id() == alliance_id and self.alliance_views[1] or self.alliance_views[2]
-    local map_pos = cc.p(alliance_vew:GetLogicMap():ConvertToMapPosition(lx, ly))
-    return self:convertToNodeSpace(self.background:convertToWorldSpace(map_pos))
-end
-function TwoAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_time)
+function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_time)
     assert(self.corps_map[id] == nil)
     local march_info = self:GetMarchInfoWith(id, start_pos, end_pos)
     march_info.start_time = start_time
@@ -266,7 +263,7 @@ function TwoAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish
     self:CreateLine(id, march_info.start_info.logic, march_info.end_info.logic)
     return corps
 end
-function TwoAllianceLayer:DeleteCorpsById(id)
+function MultiAllianceLayer:DeleteCorpsById(id)
     if self.corps_map[id] == nil then
         print("部队已经被删除了!", id)
         return
@@ -275,15 +272,15 @@ function TwoAllianceLayer:DeleteCorpsById(id)
     self.corps_map[id] = nil
     self:DeleteLineById(id)
 end
-function TwoAllianceLayer:DeleteAllCorps()
+function MultiAllianceLayer:DeleteAllCorps()
     for id, _ in pairs(self.corps_map) do
         self:DeleteCorpsById(id)
     end
 end
-function TwoAllianceLayer:IsExistCorps(id)
+function MultiAllianceLayer:IsExistCorps(id)
     return self.corps_map[id] ~= nil
 end
-function TwoAllianceLayer:CreateLine(id, start_pos, end_pos)
+function MultiAllianceLayer:CreateLine(id, start_pos, end_pos)
     assert(self.lines_map[id] == nil)
     local march_info = self:GetMarchInfoWith(id, start_pos, end_pos)
     local middle = cc.pMidpoint(march_info.start_info.real, march_info.end_info.real)
@@ -304,7 +301,7 @@ function TwoAllianceLayer:CreateLine(id, start_pos, end_pos)
     self.lines_map[id] = sprite
     return sprite
 end
-function TwoAllianceLayer:GetMarchInfoWith(id, logic_start_point, logic_end_point)
+function MultiAllianceLayer:GetMarchInfoWith(id, logic_start_point, logic_end_point)
     assert(logic_start_point.index and logic_end_point.index,"")
     local spt = self.alliance_views[logic_start_point.index]:GetLogicMap():WrapConvertToMapPosition(logic_start_point.x, logic_start_point.y)
     local ept = self.alliance_views[logic_end_point.index]:GetLogicMap():WrapConvertToMapPosition(logic_end_point.x, logic_end_point.y)
@@ -322,7 +319,7 @@ function TwoAllianceLayer:GetMarchInfoWith(id, logic_start_point, logic_end_poin
         normal = cc.pNormalize(vec)
     }
 end
-function TwoAllianceLayer:DeleteLineById(id)
+function MultiAllianceLayer:DeleteLineById(id)
     if self.lines_map[id] == nil then
         print("路线已经被删除了!", id)
         return
@@ -330,59 +327,70 @@ function TwoAllianceLayer:DeleteLineById(id)
     self.lines_map[id]:removeFromParent()
     self.lines_map[id] = nil
 end
-function TwoAllianceLayer:DeleteAllLines()
+function MultiAllianceLayer:DeleteAllLines()
     for id, _ in pairs(self.lines_map) do
         self:DeleteLineById(id)
     end
 end
-function TwoAllianceLayer:GetClickedObject(world_x, world_y)
-    local logic_x, logic_y, current_view_alliance = self:GetCurrentViewAllianceCoordinate()
-    return current_view_alliance:GetClickedObject(world_x, world_y), self:GetMyAlliance():Id() == current_view_alliance:GetAlliance():Id()
+function MultiAllianceLayer:GetClickedObject(world_x, world_y)
+    local logic_x, logic_y, alliance_view = self:GetAllianceCoordWithPoint(world_x, world_y)
+    return alliance_view:GetClickedObject(world_x, world_y), self:GetMyAlliance():Id() == alliance_view:GetAlliance():Id()
 end
 
-
 ----- override
-function TwoAllianceLayer:getContentSize()
+function MultiAllianceLayer:getContentSize()
     if not self.content_size then
         local layer = self.background:getLayer("layer1")
         self.content_size = layer:getContentSize()
     end
     return self.content_size
 end
-function TwoAllianceLayer:OnSceneMove()
+function MultiAllianceLayer:OnSceneMove()
     for _, v in ipairs(self.alliance_views) do
         v:OnSceneMove()
     end
-    local logic_x, logic_y, current_view_alliance = self:GetCurrentViewAllianceCoordinate()
+    local logic_x, logic_y, alliance_view = self:GetCurrentViewAllianceCoordinate()
     self:NotifyObservers(function(listener)
-        listener:OnSceneMove(logic_x, logic_y, current_view_alliance)
+        listener:OnSceneMove(logic_x, logic_y, alliance_view)
     end)
 end
-function TwoAllianceLayer:GetCurrentViewAllianceCoordinate()
-    local point = self:GetBuildingNode():convertToNodeSpace(cc.p(display.cx, display.cy))
-    local logic_x, logic_y, current_view_alliance
-    if self.arrange == TwoAllianceLayer.ARRANGE.H then
+function MultiAllianceLayer:GetCurrentViewAllianceCoordinate()
+    local logic_x, logic_y, alliance_view = self:GetAllianceCoordWithPoint(display.cx, display.cy)
+    return logic_x, logic_y, alliance_view
+end
+function MultiAllianceLayer:GetAllianceCoordWithPoint(x, y)
+    local point = self:GetBuildingNode():convertToNodeSpace(cc.p(x, y))
+    local logic_x, logic_y, alliance_view
+    if #self.alliances == 1 then
+        logic_x, logic_y = self.alliances[1]:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
+        return logic_x, logic_y, unpack(self.alliance_views)
+    end
+    if self.arrange == MultiAllianceLayer.ARRANGE.H then
         local left_allaince, right_alliance = unpack(self.alliance_views)
         logic_x, logic_y = right_alliance:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
-        current_view_alliance = right_alliance
+        alliance_view = right_alliance
         if logic_x < 0 then
             logic_x, logic_y = left_allaince:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
-            current_view_alliance = left_allaince
+            alliance_view = left_allaince
         end
     else
         local up_alliance, down_alliance = unpack(self.alliance_views)
         logic_x, logic_y = down_alliance:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
-        current_view_alliance = down_alliance
+        alliance_view = down_alliance
         if logic_y < 0 then
             logic_x, logic_y = up_alliance:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
-            current_view_alliance = up_alliance
+            alliance_view = up_alliance
         end
     end
-    return logic_x, logic_y, current_view_alliance
+    return logic_x, logic_y, alliance_view
 end
 
-return TwoAllianceLayer
 
+
+
+
+
+return MultiAllianceLayer
 
 
 
