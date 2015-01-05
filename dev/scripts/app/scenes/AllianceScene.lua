@@ -21,6 +21,9 @@ function AllianceScene:ctor()
     manager:addArmatureFileInfo("animations/green_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Blue_dragon.ExportJson")
+
+    
+    self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.OPERATION)
 end
 function AllianceScene:onEnter()
     AllianceScene.super.onEnter(self)
@@ -67,6 +70,11 @@ end
 --         app:EnterMyAllianceScene()
 --     end
 -- end
+function AllianceScene:OnOperation(alliance,operation_type)
+    if operation_type == "quit" then
+        app:EnterMyCityScene()
+    end
+end
 
 function AllianceScene:EnterAllianceBuilding(entity)
     local isMyAlliance = true

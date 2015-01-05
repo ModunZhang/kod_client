@@ -423,11 +423,62 @@ function Report:GetReportTitle()
             end
             return round[#round].isWin and _("防守村落成功") or _("防守村落失败")
         end
+    elseif report_type=="collectResource" then
+        return _("采集报告！！！未适配")
     end
 end
 function Report:IsHasHelpDefencePlayer()
     local data = self:GetData()
     return data.helpDefencePlayerData
+end
+
+-- 战斗回放相关获取数据方法
+function Report:GetFightAttackName()
+    local data = self:GetData()
+    return data.attackPlayerData.name
+end
+function Report:GetFightDefenceName()
+    local data = self:GetData()
+    return data.helpDefencePlayerData and data.helpDefencePlayerData.name 
+        or data.defencePlayerData and data.defencePlayerData.name 
+        or data.defenceVillageData and Localize.village_name[data.defenceVillageData.type].." Lv "..data.defenceVillageData.level
+end
+function Report:IsDragonFight()
+    local data = self:GetFightReports()
+    return data.attackPlayerDragonFightData
+end
+function Report:GetFightAttackDragonRoundData()
+    local data = self:GetFightReports()
+    return data.attackPlayerDragonFightData or {}
+end
+function Report:GetFightDefenceDragonRoundData()
+    local data = self:GetFightReports()
+    return data.defencePlayerDragonFightData or data.defenceVillageDragonFightData or {}
+end
+function Report:GetFightAttackSoldierRoundData()
+    local data = self:GetFightReports()
+    return data.attackPlayerSoldierRoundDatas or {}
+end
+function Report:GetFightDefenceSoldierRoundData()
+    local data = self:GetFightReports()
+    return data.defenceVillageSoldierRoundDatas or data.defencePlayerSoldierRoundDatas or {}
+end
+function Report:IsFightWall()
+    local data = self:GetFightReports()
+    return data.attackPlayerWallRoundDatas or {}
+end
+function Report:GetFightAttackWallRoundData()
+    local data = self:GetFightReports()
+    return data.attackPlayerWallRoundDatas or {}
+end
+function Report:GetFightDefenceWallRoundData()
+    local data = self:GetFightReports()
+    return data.defencePlayerWallRoundDatas or {}
+end
+function Report:GetFightReports()
+    local data = self:GetData()
+    return data.fightWithHelpDefencePlayerReports or data.fightWithDefencePlayerReports
+        or data.fightWithDefenceVillageReports or {}
 end
 return Report
 

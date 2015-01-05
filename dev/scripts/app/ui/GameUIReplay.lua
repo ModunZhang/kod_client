@@ -19,16 +19,16 @@ local new_battle = {
         right = {soldier = "catapult", count = 100, damage = 80, morale = 100, decrease = 80},
         defeat = "right"
     },
-    {
-        left = {damage = 90, decrease = 10},
-        right = {soldier = "swordsman", count = 100, damage = 80, morale = 100, decrease = 50},
-        defeat = "left"
-    },
-    {
-        left = {soldier = "lancer", count = 1000, damage = 90, morale = 100, decrease = 20},
-        right = {damage = 10, decrease = 10},
-        defeat = "right"
-    },
+    -- {
+    --     left = {damage = 90, decrease = 10},
+    --     right = {soldier = "swordsman", count = 100, damage = 80, morale = 100, decrease = 50},
+    --     defeat = "left"
+    -- },
+    -- {
+    --     left = {soldier = "lancer", count = 1000, damage = 90, morale = 100, decrease = 20},
+    --     right = {damage = 10, decrease = 10},
+    --     defeat = "right"
+    -- },
     {
         left = {damage = 90, decrease = 30},
         right = {soldier = "wall", count = 1000, damage = 80, morale = 100, decrease = 90},
@@ -87,13 +87,11 @@ local function decode_moon_gate_battle_from_json_data(json_data)
     battle.hasDragonBattle = true
     return battle
 end
-local function decode_stage_battle_from_json_data(json_data)
+local function decode_city_battle_from_json_data(json_data)
     local data = json_data
+    local attackCity = data.attackCity
     local attacks = data.attackRoundDatas
     local defends = data.defenceRoundDatas
-    left = {soldier = "lancer", count = 1000, damage = 90, morale = 100, decrease = 20}
-    right = {soldier = "catapult", count = 100, damage = 80, morale = 100, decrease = 80}
-    defeat = "right"
     local battle = {}
     local defeat
     for i = 1, #data.attackRoundDatas do
@@ -135,6 +133,57 @@ local function decode_stage_battle_from_json_data(json_data)
     battle.leftName = data.playerName
     battle.rightName = data.stageTroopNumber
     battle.hasDragonBattle = false
+    return battle
+end
+local function decode_battle_from_report(report)
+    local attacks = report:GetFightAttackSoldierRoundData()
+    local defends = report:GetFightDefenceSoldierRoundData()
+    if report:IsFightWall() then
+        for i, v in ipairs(report:GetFightAttackWallRoundData()) do
+            attacks[#attacks + 1] = v
+        end
+        for i, v in ipairs(report:GetFightDefenceWallRoundData()) do
+            defends[#defends + 1] = v
+        end
+    end
+    local battle = {}
+    local defeat
+    for i = 1, #attacks do
+        local attacker = attacks[i]
+        local defender = defends[i]
+        local left
+        local right
+        if defeat == "right" then
+            left = {
+                damage = attacker.soldierDamagedCount or attacker.wallDamagedHp,
+                decrease = attacker.moraleDecreased or 0,
+            }
+        else
+            left = {
+                soldier = attacker.soldierName or "wall",
+                count = attacker.soldierCount or attacker.wallHp,
+                damage = attacker.soldierDamagedCount or attacker.wallDamagedHp,
+                morale = attacker.morale or 100,
+                decrease = attacker.moraleDecreased or 0,
+            }
+        end
+        if defeat == "left" then
+            right = {
+                damage = defender.soldierDamagedCount or defender.wallDamagedHp,
+                decrease = defender.moraleDecreased or 0,
+            }
+        else
+            right = {
+                soldier = defender.soldierName or "wall",
+                count = defender.soldierCount or defender.wallHp,
+                damage = defender.soldierDamagedCount or defender.wallDamagedHp,
+                morale = defender.morale or 100,
+                decrease = defender.moraleDecreased or 0,
+            }
+        end
+        defeat = attacker.isWin and "right" or "left"
+        table.insert(battle, {left = left, right = right, defeat = defeat})
+    end
     return battle
 end
 local function decode_battle(raw)
@@ -203,12 +252,8 @@ local function decode_battle(raw)
     return rounds
 end
 
-function GameUIReplay:ctor(json_data)
-    if json_data.stageTroopNumber then
-        self.json_data = decode_stage_battle_from_json_data(json_data)
-    else
-        self.json_data = decode_moon_gate_battle_from_json_data(json_data)
-    end
+function GameUIReplay:ctor(report)
+    self.report = report
     GameUIReplay.super.ctor(self)
     for _, v in pairs{
         {"animations/Archer_1_render0.plist","animations/Archer_1_render0.png"},
@@ -295,7 +340,7 @@ function GameUIReplay:onEnter()
     local title = cc.ui.UIImage.new("background_288x60.png")
         :addTo(back_ground):pos(5, back_height - 65)
     self.left_name = cc.ui.UILabel.new({
-        text = self.json_data.leftName,
+        text = self.report:GetFightAttackName(),
         font = UIKit:getFontFilePath(),
         size = 22,
         color = UIKit:hex2c3b(0x403c2f)
@@ -304,7 +349,7 @@ function GameUIReplay:onEnter()
     local title = cc.ui.UIImage.new("background_288x60.png")
         :addTo(back_ground):pos(back_width - 288 - 5, back_height - 65):flipX(true)
     self.right_name = cc.ui.UILabel.new({
-        text = self.json_data.rightName,
+        text = self.report:GetFightDefenceName(),
         font = UIKit:getFontFilePath(),
         size = 22,
         color = UIKit:hex2c3b(0x403c2f)
@@ -414,9 +459,7 @@ function GameUIReplay:onEnter()
         :addTo(back_ground):align(display.CENTER, back_width_half, back_height - 388 - 48)
 
 
-
-    ----
-    local battle = self.json_data
+    local battle = decode_battle_from_report(self.report)
     -- local battle = new_battle
     dump(battle)
 
@@ -455,27 +498,31 @@ function GameUIReplay:onEnter()
     self.right_morale_max = 0
     self.left_morale_cur = self.left_morale_max
     self.right_morale_cur = self.right_morale_max
-    if battle.hasDragonBattle then
-        self:PlayDragonBattle(battle):next(function()
+
+    -- self:PlaySoldierBattle(decode_battle(battle))
+    if self.report:IsDragonFight() then
+        self:PlayDragonBattle():next(function()
             self:PlaySoldierBattle(decode_battle(battle))
         end)
     else
         self:PlaySoldierBattle(decode_battle(battle))
     end
+
 end
-function GameUIReplay:PlayDragonBattle(battle)
-    local leftDragon = battle.leftDragon
-    local rightDragon = battle.rightDragon
-    local dp = self:NewDragonBattle(battle)
+function GameUIReplay:PlayDragonBattle()
+    local report = self.report
+    local attack_dragon = report:GetFightAttackDragonRoundData()
+    local defend_dragon = report:GetFightDefenceDragonRoundData()
+    local dp = self:NewDragonBattle()
         :next(cocos_promise.delay(0.1))
         :next(function()
             local p = promise.new()
             self:Performance(0.5, function(pos)
-                if leftDragon then
-                    self.left_dragon:SetHp(leftDragon.hp - pos * leftDragon.hpDecreased, leftDragon.hpMax)
+                if attack_dragon then
+                    self.left_dragon:SetHp(attack_dragon.hp - pos * attack_dragon.hpDecreased, attack_dragon.hpMax)
                 end
-                if rightDragon then
-                    self.right_dragon:SetHp(rightDragon.hp - pos * rightDragon.hpDecreased, rightDragon.hpMax)
+                if defend_dragon then
+                    self.right_dragon:SetHp(defend_dragon.hp - pos * defend_dragon.hpDecreased, defend_dragon.hpMax)
                 end
             end, function()
                 p:resolve()
@@ -485,31 +532,31 @@ function GameUIReplay:PlayDragonBattle(battle)
         :next(cocos_promise.delay(0.8))
         :next(function()
             local left_p
-            if leftDragon then
-                left_p = self.left_dragon:ShowResult(leftDragon.isWin)
+            if attack_dragon then
+                left_p = self.left_dragon:ShowResult(attack_dragon.isWin)
             end
             local right_p
-            if rightDragon then
-                right_p = self.right_dragon:ShowResult(rightDragon.isWin)
+            if defend_dragon then
+                right_p = self.right_dragon:ShowResult(defend_dragon.isWin)
             end
             return left_p or right_p
         end)
         :next(cocos_promise.delay(0.8))
         :next(function()
             local p = promise.new()
-            if leftDragon then
+            if attack_dragon then
                 self.left_dragon:ShowBuff()
             end
-            if rightDragon then
+            if defend_dragon then
                 self.right_dragon:ShowBuff()
             end
             self:Performance(0.5, function(pos)
-                if leftDragon then
-                    local d = leftDragon.isWin and 100 or 50
+                if attack_dragon then
+                    local d = attack_dragon.isWin and 100 or 50
                     self.left_dragon:SetBuff(string.format("BUFF + %d%%", math.floor(pos * d)))
                 end
-                if rightDragon then
-                    local d = rightDragon.isWin and 100 or 50
+                if defend_dragon then
+                    local d = defend_dragon.isWin and 100 or 50
                     self.right_dragon:SetBuff(string.format("BUFF + %d%%", math.floor(pos * d)))
                 end
             end, function()
@@ -573,28 +620,24 @@ function GameUIReplay:MoveBattleBgBy(x)
     end
 end
 function GameUIReplay:NewDragonBattle(battle)
-    local leftDragon = battle.leftDragon
-    local rightDragon = battle.rightDragon
+    local report = self.report
+    local attack_dragon = report:GetFightAttackDragonRoundData()
+    local defend_dragon = report:GetFightDefenceDragonRoundData()
     local dragon_battle = ccs.Armature:create("paizi"):addTo(self.battle):align(display.CENTER, 275, 155)
 
-    if leftDragon then
-        local left_bone = dragon_battle:getBone("Layer4")
-        local left_dragon = self:NewDragon(true):addTo(left_bone):pos(-360, -50)
-        left_bone:addDisplay(left_dragon, 0)
-        left_bone:changeDisplayWithIndex(0, true)
-        self.left_dragon = left_dragon
-        self.left_dragon:SetHp(leftDragon.hp, leftDragon.hp)
-    end
+    local left_bone = dragon_battle:getBone("Layer4")
+    local left_dragon = self:NewDragon(true):addTo(left_bone):pos(-360, -50)
+    left_bone:addDisplay(left_dragon, 0)
+    left_bone:changeDisplayWithIndex(0, true)
+    self.left_dragon = left_dragon
+    self.left_dragon:SetHp(attack_dragon.hp, attack_dragon.hp)
 
-
-    if rightDragon then
-        local right_bone = dragon_battle:getBone("Layer5")
-        local right_dragon = self:NewDragon():addTo(right_bone):pos(238, -82)
-        right_bone:addDisplay(right_dragon, 0)
-        right_bone:changeDisplayWithIndex(0, true)
-        self.right_dragon = right_dragon
-        self.right_dragon:SetHp(rightDragon.hp, rightDragon.hp)
-    end
+    local right_bone = dragon_battle:getBone("Layer5")
+    local right_dragon = self:NewDragon():addTo(right_bone):pos(238, -82)
+    right_bone:addDisplay(right_dragon, 0)
+    right_bone:changeDisplayWithIndex(0, true)
+    self.right_dragon = right_dragon
+    self.right_dragon:SetHp(defend_dragon.hp, defend_dragon.hp)
 
     local p = promise.new()
     dragon_battle:getAnimation()
@@ -926,3 +969,7 @@ end
 
 
 return GameUIReplay
+
+
+
+

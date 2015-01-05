@@ -363,7 +363,9 @@ function GameUIAllianceSendTroops:SelectSoldiers()
             end
             local soldier_config = normal[soldier_type.."_"..soldier_level] or SPECIAL[soldier_type]
             if soldier_config.citizen*math.floor(value)< usable_citizen+1 then
-                return true
+                return math.floor(value)
+            else
+                return math.floor(usable_citizen/soldier_config.citizen)
             end
         end)
 

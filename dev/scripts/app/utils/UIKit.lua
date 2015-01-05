@@ -449,4 +449,5 @@ function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback)
                 end,btn_name = _("取消")})
         end
         dialog:AddToCurrentScene()
+        return dialog
 end

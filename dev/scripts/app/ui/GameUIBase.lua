@@ -23,6 +23,9 @@ end
 --------------------------------------
 function GameUIBase:onEnter()
     print("onEnter->",self.__cname)
+    if ext.closeKeyboard then
+        ext.closeKeyboard()
+    end
     UIKit:CheckOpenUI(self)
     if type(display.getRunningScene().BlurRenderScene) == "function" then
         display.getRunningScene():BlurRenderScene()

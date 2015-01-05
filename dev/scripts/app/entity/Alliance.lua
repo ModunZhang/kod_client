@@ -1140,7 +1140,7 @@ end
 function Alliance:OnVillageEventTimer(villageEvent)
     if self.alliance_villages[villageEvent:VillageData().id] then
         local village = self.alliance_villages[villageEvent:VillageData().id]
-        if villageEvent:GetTime() > 0 then
+        if villageEvent:GetTime() >= 0 then
             local left_resource = village.resource - villageEvent:CollectCount()
             self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OnVillageEventTimer, function(listener)
                 listener:OnVillageEventTimer(villageEvent,left_resource)
@@ -1234,7 +1234,7 @@ function Alliance:DecodeAllianceVillages__(__villages)
     local changed_map = GameUtils:Event_Handler_Func(
         __villages
         ,function(event_data)
-            self.alliance_villages[v.id] = event_data
+            self.alliance_villages[event_data.id] = event_data
             return event_data
         end
         ,function(event_data)

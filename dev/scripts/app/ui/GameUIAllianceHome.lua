@@ -322,8 +322,6 @@ function GameUIAllianceHome:CreateTop()
     function Top:Refresh()
         local alliance = home.alliance
         local status = alliance:Status()
-        -- local moonGate = alliance:GetAllianceMoonGate()
-        -- local enemyAlliance = moonGate:GetEnemyAlliance()
         local enemyAlliance = Alliance_Manager:GetEnemyAlliance()
         period_label:setString(home:GetAlliancePeriod())
         -- 和平期
@@ -337,7 +335,7 @@ function GameUIAllianceHome:CreateTop()
             enemy_peace_label:setVisible(false)
 
             -- 敌方联盟旗帜
-            if enemy_flag then
+            if enemy_name_bg:getChildByTag(201) then
                 enemy_name_bg:removeChildByTag(201, true)
             end
             local enemy_flag = ui_helper:CreateFlagContentSprite(enemyAlliance:Flag()):scale(0.5)

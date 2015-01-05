@@ -10,7 +10,7 @@ local Alliance = import("..entity.Alliance")
 function AllianceBattleScene:ctor()
     City:ResetAllListeners()
     Alliance_Manager:GetMyAlliance():ResetAllListeners()
-    
+
     AllianceBattleScene.super.ctor(self)
 
     local manager = ccs.ArmatureDataManager:getInstance()
@@ -25,7 +25,7 @@ end
 function AllianceBattleScene:onEnter()
     AllianceBattleScene.super.onEnter(self)
     self:CreateAllianceUI()
-    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(10, 10)
+    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(10, 10, self:GetAlliance():Id())
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
     -- self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
 
@@ -54,7 +54,13 @@ function AllianceBattleScene:onExit()
     AllianceBattleScene.super.onExit(self)
 end
 function AllianceBattleScene:CreateSceneLayer()
-    return TwoAllianceLayer.new(self:GetAlliance(),self:GetEnemyAlliance())
+    local pos = self:GetAlliance():FightPosition()
+    local arrange = (pos == "top" or pos == "bottom") and TwoAllianceLayer.ARRANGE.H or TwoAllianceLayer.ARRANGE.V
+    if pos == "top" or pos == "left" then
+        return TwoAllianceLayer.new(self:GetAlliance(), self:GetEnemyAlliance(), arrange)
+    else
+        return TwoAllianceLayer.new(self:GetEnemyAlliance(), self:GetAlliance(),arrange)
+    end
 end
 function AllianceBattleScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building,isMyAlliance = self:GetSceneLayer():GetClickedObject(x, y)
@@ -80,7 +86,7 @@ function AllianceBattleScene:EnterAllianceBuilding(entity,isMyAlliance)
     elseif building_name == 'palace' then
         class_name = "GameUIAlliancePalaceEnter"
     elseif building_name == 'shop' then
-        class_name = "GameUIAllianceShopEnter"    
+        class_name = "GameUIAllianceShopEnter"
     elseif building_name == 'orderHall' then
         class_name = "GameUIAllianceOrderHallEnter"
     else
@@ -95,16 +101,18 @@ function AllianceBattleScene:EnterNotAllianceBuilding(entity,isMyAlliance)
     local class_name = ""
     if category == 'none' then
         class_name = "GameUIAllianceEnterBase"
-    elseif category == 'member' then 
+    elseif category == 'member' then
         class_name = "GameUIAllianceCityEnter"
-    elseif category == 'decorate' then 
-         class_name = "GameUIAllianceDecorateEnter"
-    elseif category == 'village' then 
+    elseif category == 'decorate' then
+        class_name = "GameUIAllianceDecorateEnter"
+    elseif category == 'village' then
         class_name = "GameUIAllianceVillageEnter"
     end
     UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance(),self:GetEnemyAlliance()):addToCurrentScene(true)
 end
 return AllianceBattleScene
+
+
 
 
 
