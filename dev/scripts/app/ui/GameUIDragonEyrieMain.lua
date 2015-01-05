@@ -120,6 +120,7 @@ function GameUIDragonEyrieMain:RefreshUI()
 		self.progress_content_hated:hide()
 		self.strength_val_label:setString("0")
 		self.vitality_val_label:setString("0")
+		self.state_label:setString(_("未孵化"))
 	else
 		self.dragon_info:show()
 		self.draong_info_lv_label:setString("LV " .. dragon:Level() .. "/" .. dragon:GetMaxLevel())
@@ -131,9 +132,10 @@ function GameUIDragonEyrieMain:RefreshUI()
 		self.vitality_val_label:setString(dragon:Vitality())
 		self.dragon_hp_label:setString(dragon:Hp() .. "/" .. dragon:GetMaxHP())
 		self.progress_hated:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
+		self.state_label:setString(Localize.dragon_status[dragon:Status()])
 	end
 	self.nameLabel:setString(dragon:GetLocalizedName())
-	self.state_label:setString(Localize.dragon_status[dragon:Status()])
+	
 	self.star_bar:setNum(dragon:Star())
 end
 
