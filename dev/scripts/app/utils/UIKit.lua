@@ -9,6 +9,7 @@ local promise = import(".promise")
 local Enum = import("..utils.Enum")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local UIListView = import("..ui.UIListView")
+local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 
 UIKit =
     {
@@ -431,4 +432,21 @@ function UIKit:createLineItem(params)
     return line
 end
 
-
+function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback)
+    title = title or _("提示")
+    local dialog = FullScreenPopDialogUI.new():SetTitle(title):SetPopMessage(tips)
+        :CreateOKButton({
+            listener =  function ()
+                if ok_callback then
+                    ok_callback()
+                end
+            end
+        })
+        if cancel_callback then
+            dialog:CreateCancelButton({
+                listener = function ()
+                    cancel_callback()
+                end,btn_name = _("取消")})
+        end
+        dialog:AddToCurrentScene()
+end

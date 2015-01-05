@@ -80,10 +80,10 @@ end
 function AllianceManager:RefreshAllianceSceneIf()
     local my_alliance = self:GetMyAlliance()
     if my_alliance:Status() == 'protect' and display.getRunningScene().__cname == 'AllianceBattleScene' then
-        app:EnterMyAllianceScene()
+        app:EnterMyAllianceSceneWithTips(_("联盟对战已结束，您将进入自己联盟领地。"))
     end
     if my_alliance:Status() == 'prepare' and display.getRunningScene().__cname == 'AllianceScene' then
-        app:EnterMyAllianceScene()
+        app:EnterMyAllianceSceneWithTips(_("联盟对战已开始，您将进入自己联盟对战地图。"))
     end
 end
 

@@ -185,6 +185,14 @@ function MyApp:EnterMyCityScene()
     end)
 end
 
+function MyApp:EnterMyAllianceSceneWithTips(tips)
+    UIKit:showMessageDialog(nil,tips,function()
+        self:EnterMyAllianceScene()
+    end,function()
+        self:EnterMyAllianceScene()
+    end)
+end
+
 function MyApp:EnterMyAllianceScene()
     local alliance_name = "AllianceScene" 
     local my_status = Alliance_Manager:GetMyAlliance():Status()
