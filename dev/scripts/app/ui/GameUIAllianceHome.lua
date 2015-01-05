@@ -322,8 +322,6 @@ function GameUIAllianceHome:CreateTop()
     function Top:Refresh()
         local alliance = home.alliance
         local status = alliance:Status()
-        -- local moonGate = alliance:GetAllianceMoonGate()
-        -- local enemyAlliance = moonGate:GetEnemyAlliance()
         local enemyAlliance = Alliance_Manager:GetEnemyAlliance()
         period_label:setString(home:GetAlliancePeriod())
         -- 和平期

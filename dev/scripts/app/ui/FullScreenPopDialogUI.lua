@@ -134,6 +134,10 @@ function FullScreenPopDialogUI:SetNeedsValue(value)
     end
     return self
 end
+function FullScreenPopDialogUI:VisibleXButton(visible)
+    self.close_btn:setVisible(visible)
+    return self
+end
 function FullScreenPopDialogUI:AddToCurrentScene(anima)
     display.getRunningScene():addChild(self,3000)
     return self
