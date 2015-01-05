@@ -18,7 +18,6 @@ local GameUIAllianceHome = UIKit:createUIClass('GameUIAllianceHome')
 
 function GameUIAllianceHome:ctor(alliance)
     GameUIAllianceHome.super.ctor(self)
-
     self.alliance = alliance
 end
 
