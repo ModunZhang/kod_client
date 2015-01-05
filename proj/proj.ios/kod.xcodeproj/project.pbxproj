@@ -32,6 +32,9 @@
 		3FA74CB51A597FC000FB8904 /* uv_heart@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3FA74CA91A597FC000FB8904 /* uv_heart@2x.png */; };
 		3FA74CB61A597FC000FB8904 /* uv_idea.png in Resources */ = {isa = PBXBuildFile; fileRef = 3FA74CAA1A597FC000FB8904 /* uv_idea.png */; };
 		3FA74CB71A597FC000FB8904 /* uv_idea@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3FA74CAB1A597FC000FB8904 /* uv_idea@2x.png */; };
+		3FD563371A5A2E8A00E84E41 /* Sysmail.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3FD563361A5A2E8A00E84E41 /* Sysmail.mm */; };
+		3FD5633A1A5A2F4900E84E41 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FD563391A5A2F4900E84E41 /* MessageUI.framework */; };
+		3FD5633D1A5A341F00E84E41 /* ext_sysmail.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FD5633B1A5A341F00E84E41 /* ext_sysmail.cpp */; };
 		3FEC8CA71A011A02000B8BF5 /* Droid Sans Faliback.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3FEC8CA61A011A02000B8BF5 /* Droid Sans Faliback.ttf */; };
 		9FC0E165195418CB0064626D /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FC0E164195418CB0064626D /* CoreMotion.framework */; };
 		DAF28FC1196D31EB00959DA1 /* liblibquick.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF28FC0196D315A00959DA1 /* liblibquick.a */; };
@@ -143,6 +146,11 @@
 		3FA74CAC1A597FC000FB8904 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/UserVoice.strings; sourceTree = "<group>"; };
 		3FA74CAD1A597FC000FB8904 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/UserVoice.strings"; sourceTree = "<group>"; };
 		3FA74CAE1A597FC000FB8904 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/UserVoice.strings"; sourceTree = "<group>"; };
+		3FD563361A5A2E8A00E84E41 /* Sysmail.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Sysmail.mm; sourceTree = "<group>"; };
+		3FD563381A5A2E9E00E84E41 /* Sysmail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sysmail.h; sourceTree = "<group>"; };
+		3FD563391A5A2F4900E84E41 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		3FD5633B1A5A341F00E84E41 /* ext_sysmail.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ext_sysmail.cpp; sourceTree = "<group>"; };
+		3FD5633C1A5A341F00E84E41 /* ext_sysmail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ext_sysmail.h; sourceTree = "<group>"; };
 		3FEC8CA61A011A02000B8BF5 /* Droid Sans Faliback.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Droid Sans Faliback.ttf"; path = "../../../dev/res/fonts/Droid Sans Faliback.ttf"; sourceTree = "<group>"; };
 		9FC0E164195418CB0064626D /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		DAF28BDB196D03DD00959DA1 /* libquick.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libquick.xcodeproj; path = quick/lib/proj.ios/libquick.xcodeproj; sourceTree = QUICK_V3_ROOT; };
@@ -171,6 +179,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3FD5633A1A5A2F4900E84E41 /* MessageUI.framework in Frameworks */,
 				3F9090F21A3FB9200019442B /* GameKit.framework in Frameworks */,
 				DAF28FC1196D31EB00959DA1 /* liblibquick.a in Frameworks */,
 				9FC0E165195418CB0064626D /* CoreMotion.framework in Frameworks */,
@@ -232,6 +241,7 @@
 		3F18501D19B9EC83000A75D0 /* sources */ = {
 			isa = PBXGroup;
 			children = (
+				3FD563351A5A2E5500E84E41 /* sysmail */,
 				3FA74C7E1A597FC000FB8904 /* uservoice */,
 				3F9090ED1A3FB75F0019442B /* GameCenter */,
 				3F18501E19B9EC83000A75D0 /* AppDelegate.cpp */,
@@ -349,6 +359,17 @@
 			path = UVResources;
 			sourceTree = "<group>";
 		};
+		3FD563351A5A2E5500E84E41 /* sysmail */ = {
+			isa = PBXGroup;
+			children = (
+				3FD563361A5A2E8A00E84E41 /* Sysmail.mm */,
+				3FD563381A5A2E9E00E84E41 /* Sysmail.h */,
+				3FD5633B1A5A341F00E84E41 /* ext_sysmail.cpp */,
+				3FD5633C1A5A341F00E84E41 /* ext_sysmail.h */,
+			);
+			path = sysmail;
+			sourceTree = "<group>";
+		};
 		DAF28EF4196D2D5400959DA1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -380,6 +401,7 @@
 		F456ECC415EE018E00FCF3E2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3FD563391A5A2F4900E84E41 /* MessageUI.framework */,
 				3F9090F11A3FB9200019442B /* GameKit.framework */,
 				9FC0E164195418CB0064626D /* CoreMotion.framework */,
 				F4949C781699553B00DB561E /* AddressBook.framework */,
@@ -546,8 +568,10 @@
 			files = (
 				3F1857BB19B9EC89000A75D0 /* AppDelegate.cpp in Sources */,
 				3FA74CAF1A597FC000FB8904 /* ext_uservoice.mm in Sources */,
+				3FD563371A5A2E8A00E84E41 /* Sysmail.mm in Sources */,
 				2EDD279B191B639C004F9539 /* RootViewController.mm in Sources */,
 				2EDD279A191B639C004F9539 /* main.m in Sources */,
+				3FD5633D1A5A341F00E84E41 /* ext_sysmail.cpp in Sources */,
 				3F1857BF19B9EC89000A75D0 /* FileOperation.cpp in Sources */,
 				3F185E2B19B9EC8C000A75D0 /* Time.mm in Sources */,
 				3F1857C319B9EC89000A75D0 /* LocalNotification.mm in Sources */,

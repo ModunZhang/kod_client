@@ -221,4 +221,11 @@ function MyApp:pushScene(sceneName, args, transitionType, time, more)
     display.pushScene(scene, transitionType, time, more)
 end
 
+function MyApp:getSupportMailFormat()
+    local UTCTime    = "UTC Time:" .. os.date('!%Y-%m-%d %H:%M:%S', self.timer:GetServerTime())
+    print(UTCTime)
+    print(ext.getOSVersion())
+    print(ext.getDeviceModel())
+end
+
 return MyApp
