@@ -35,7 +35,7 @@ property(Alliance, "statusStartTime", 0)
 property(Alliance, "statusFinishTime", 0)
 property(Alliance, "fightPosition", "")
 function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
-    Alliance.super.ctor(self) 
+    Alliance.super.ctor(self)
     property(self, "id", id)
     property(self, "name", name)
     property(self, "aliasName", aliasName)
@@ -499,8 +499,8 @@ function Alliance:OnNewMemberDataComming(__members)
         elseif type_ == "edit" then
             local member = AllianceMember:DecodeFromJson(member_json)
             -- if member:IsDifferentWith(self:GetMemeberById(member_json.id)) then
-                self:ReplaceMember(member)
-                table.insert(update_members, member)
+            self:ReplaceMember(member)
+            table.insert(update_members, member)
             -- end
         else
             assert(false, "还有新类型?")
@@ -948,11 +948,26 @@ end
 function Alliance:OnAllianceFightChanged(allianceFight)
     if not allianceFight then return end
     for k,v in pairs(allianceFight) do
-        self.allianceFight[k] = v
+        if string.find(k,"__") then
+            local key = string.sub(k,3,-1)
+            for _,change in pairs(v) do
+                if change.type == "add" then
+                    table.insert(self.allianceFight[key], change.data)
+                elseif change.type == "edit" then
+                    for index,playerKill in pairs(self.allianceFight[key]) do
+                        if playerKill.id==change.data.id then
+                            self.allianceFight[key][index] = change.data
+                        end
+                    end
+                end
+            end
+        else
+            self.allianceFight[k] = v
+        end
     end
     if not LuaUtils:table_empty(allianceFight) then
         local mergeStyle = self:GetAllianceFight()['mergeStyle']
-        local isAttacker = self:Id() == self:GetAllianceFight()['attackAllianceId'] 
+        local isAttacker = self:Id() == self:GetAllianceFight()['attackAllianceId']
         if isAttacker then
             self:SetFightPosition(mergeStyle)
         else
@@ -1106,7 +1121,7 @@ function Alliance:GetStrikeMarchReturnEvents(march_type)
             table.insert(r,strikeMarchReturnEvent)
         end)
     else
-         self:IteratorStrikeMarchReturnEvents(function(strikeMarchReturnEvent)
+        self:IteratorStrikeMarchReturnEvents(function(strikeMarchReturnEvent)
             if strikeMarchReturnEvent:MarchType() == march_type then
                 table.insert(r,strikeMarchReturnEvent)
             end
@@ -1118,14 +1133,14 @@ end
 function Alliance:CheckHelpDefenceMarchEventsHaveTarget(memeberId)
     local helpEvents = self:GetAttackMarchEvents("helpDefence")
     for _,attackEvent in ipairs(helpEvents) do
-        if attackEvent:GetPlayerRole() == attackEvent.MARCH_EVENT_PLAYER_ROLE.SENDER 
+        if attackEvent:GetPlayerRole() == attackEvent.MARCH_EVENT_PLAYER_ROLE.SENDER
             and attackEvent:GetDefenceData().id == memeberId then
             return true
         end
     end
     local helpReturnEvents = self:GetAttackMarchReturnEvents("helpDefence")
     for _,attackEvent in ipairs(helpReturnEvents) do
-        if attackEvent:GetPlayerRole() == attackEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER 
+        if attackEvent:GetPlayerRole() == attackEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER
             and attackEvent:GetDefenceData().id == memeberId then
             return true
         end
@@ -1204,7 +1219,7 @@ function Alliance:ResetVillageEvents()
 end
 --有id为指定事件 没有id时获取所有采集事件
 function Alliance:GetVillageEvent(id)
-    if id then 
+    if id then
         return self.villageEvents[id]
     else
         local r = {}
@@ -1216,7 +1231,7 @@ function Alliance:GetVillageEvent(id)
 end
 function Alliance:FindVillageEventByVillageId(village_id)
     for _,v in pairs(self.villageEvents) do
-        if v:VillageData().id == village_id then 
+        if v:VillageData().id == village_id then
             return v
         end
     end
@@ -1261,3 +1276,4 @@ function Alliance:GetAllianceVillageInfos()
     return self.alliance_villages
 end
 return Alliance
+
