@@ -10,14 +10,16 @@ local AutomaticUpdateResource = import(".AutomaticUpdateResource")
 local Dragon = import(".Dragon")
 local promise = import("..utils.promise")
 DragonManager.promise_callbacks = {}
+local DragonEvent = import(".DragonEvent")
 
 DragonManager.DRAGON_TYPE_INDEX = Enum("redDragon","greenDragon","blueDragon")
-DragonManager.LISTEN_TYPE = Enum("OnHPChanged","OnBasicChanged","OnDragonHatched")
+DragonManager.LISTEN_TYPE = Enum("OnHPChanged","OnBasicChanged","OnDragonHatched","OnDragonEventChanged","OnDragonEventTimer")
 
 
 function DragonManager:ctor()
 	DragonManager.super.ctor(self)
 	self.dragons_hp = {}
+	self.dragon_events = {}
 end
 
 function DragonManager:GetDragonByIndex(index)
@@ -61,8 +63,67 @@ end
 
 function DragonManager:OnUserDataChanged(user_data, current_time, location_id, sub_location_id,hp_recovery_perHour)
     self:RefreshDragonData(user_data.dragons,current_time,hp_recovery_perHour)
+	self:RefreshDragonEvents(user_data.dragonEvents)
+	self:RefreshDragonEvents__(user_data.__dragonEvents)
 end
 
+function DragonManager:GetDragonEventByDragonType(dragon_type)
+	return self.dragon_events[dragon_type]
+end
+
+function DragonManager:RefreshDragonEvents(dragonEvents)
+	if not dragonEvents then return end
+	for _,v in ipairs(dragonEvents) do
+		if not self.dragon_events[v.dragonType] then
+			local dragonEvent = DragonEvent.new()
+			dragonEvent:UpdateData(v)
+			self.dragon_events[dragonEvent:DragonType()] = dragonEvent
+			dragonEvent:AddObserver(self)
+		end
+	end
+end
+
+function DragonManager:IteratorDragonEvents(func)
+	for _,dragonEvent in pairs(self.dragon_events) do
+		func(dragonEvent)
+	end
+end
+
+function DragonManager:RefreshDragonEvents__(__dragonEvents)
+	if not __dragonEvents then return end
+    local changed_map = GameUtils:Event_Handler_Func(
+        __dragonEvents
+        ,function(event_data)
+           	local dragonEvent = DragonEvent.new()
+			dragonEvent:UpdateData(event_data)
+			self.dragon_events[dragonEvent:DragonType()] = dragonEvent
+			dragonEvent:AddObserver(self)
+			return dragonEvent
+        end
+        ,function(event_data)
+        --TODO:修改孵化事件
+        end
+        ,function(event_data)
+            if self.dragon_events[event_data.dragonType] then
+                local dragonEvent = self.dragon_events[event_data.dragonType]
+                dragonEvent:Reset()
+                self.dragon_events[event_data.dragonType] = nil
+                dragonEvent = DragonEvent.new()
+                dragonEvent:UpdateData(event_data)
+                return dragonEvent
+            end
+        end
+    )
+    self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonEventChanged,function(lisenter)
+		lisenter.OnDragonEventChanged(lisenter,GameUtils:pack_event_table(changed_map))
+	end)
+end
+
+function DragonManager:OnDragonEventTimer(dragonEvent)
+	self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonEventTimer,function(lisenter)
+		lisenter.OnDragonEventTimer(lisenter,dragonEvent)
+	end)
+end
 
 function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recovery_perHour)
 	if not self.dragons_ then -- 初始化龙信息
@@ -136,6 +197,9 @@ end
 function DragonManager:OnTimer(current_time)
     self:UpdateHPResourceByTime(current_time)
     self:OnHPChanged()
+    self:IteratorDragonEvents(function(dragonEvent)
+    	dragonEvent:OnTimer(current_time)
+    end)
 end
 
 function DragonManager:OnHPChanged()

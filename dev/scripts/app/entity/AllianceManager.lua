@@ -54,7 +54,8 @@ end
 
 function AllianceManager:UpdateEnemyAlliance(json_data)
     if not json_data then return end
-    if LuaUtils:table_empty(json_data) then
+    --TODO:测试并修改bug
+    if LuaUtils:table_empty(json_data) and (self:GetMyAlliance():Status() == 'protect' or self:GetMyAlliance():Status() == 'peace') then
         self:GetEnemyAlliance():Reset()
     else
         local enemy_alliance = self:GetEnemyAlliance()

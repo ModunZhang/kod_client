@@ -155,28 +155,9 @@ function GameUIDragonEyrieDetail:CreateHateUIIf()
 	return self.hate_node
 end
 
---计算获取下一点能量的剩余时间
-function GameUIDragonEyrieDetail:GetHatchEneryLabelString()
-    local energy = City.resource_manager:GetEnergyResource()
-    local __,decimals = math.modf(energy:GetReallyTotalResource())
-    local string = string.format(_("%s 下一点能量 %s"),
-            energy:GetResourceValueByCurrentTime(app.timer:GetServerTime()) .. "/" .. energy:GetValueLimit(),
-            GameUtils:formatTimeStyle1((1-decimals)*self.building:GetTimePerEnergy()))
-    if decimals == 0 then 
-        string = string.format(_("%s 能量已满"),energy:GetResourceValueByCurrentTime(app.timer:GetServerTime()) .. "/" .. energy:GetValueLimit())
-    end
-    return string
-end
-
 function GameUIDragonEyrieDetail:OnResourceChanged(resource_manager)
     GameUIDragonEyrieDetail.super.OnResourceChanged(self,resource_manager)
     if self:GetDragon():Ishated() then return end
-    -- if self.hate_node and self.hate_node:isVisible() then
-    -- 	self.hate_nextEneryLabel:setString(self:GetHatchEneryLabelString())
-    -- end
-    -- if self.skill_node and self.skill_node:isVisible() then
-    -- 	self.skill_ui.timeLabel:setString(self:GetHatchEneryLabelString())
-    -- end
 end
 
 function GameUIDragonEyrieDetail:GetDragon()
@@ -184,14 +165,6 @@ function GameUIDragonEyrieDetail:GetDragon()
 end
 --充能
 function GameUIDragonEyrieDetail:OnEnergyButtonClicked()
-	local energy =  City.resource_manager:GetEnergyResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    if energy < self.dragon_manager:GetEnergyCost() then 
-        local dialog = FullScreenPopDialogUI.new()
-        dialog:SetTitle(_("提示"))
-        dialog:SetPopMessage(_("能量不足!"))
-        dialog:AddToCurrentScene()
-        return 
-    end
     local dragon = self:GetDragon()
     NetManager:getHatchDragonPromise(dragon:Type()):catch(function(err)
     	dump(err:reason())
@@ -441,18 +414,6 @@ function GameUIDragonEyrieDetail:CreateNodeIf_skill()
     }:addTo(list_bg)
 
     self.skill_ui.listView = list
-    -- local star = display.newSprite("dragon_star.png")
-    -- 	:addTo(skill_node)
-    -- 	:align(display.LEFT_BOTTOM,window.left+45,list_bg:getPositionY()+320+5)
-    -- local timeLabel = UIKit:ttfLabel({
-    -- 		text = self:GetHatchEneryLabelString(),
-    -- 		size = 20,
-    -- 		color = 0x403c2f
-    -- 	})
-    -- 	:align(display.LEFT_BOTTOM,star:getPositionX()+star:getContentSize().width+2,star:getPositionY())
-    -- 	:addTo(skill_node)
-    -- self.skill_ui.timeLabel  = timeLabel
-
     local blood_label = UIKit:ttfLabel({
     		text = "",
     		size = 20,
