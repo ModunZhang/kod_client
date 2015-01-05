@@ -12,6 +12,8 @@ local WidgetBackGroudWhite = import("..widget.WidgetBackGroudWhite")
 local WidgetDropList = import("..widget.WidgetDropList")
 local WidgetBackGroundLucid = import("..widget.WidgetBackGroundLucid")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
+local GameUICollectReport = import(".GameUICollectReport")
+
 
 local GameUIMail = class('GameUIMail', GameUIBase)
 
@@ -1047,6 +1049,8 @@ function GameUIMail:CreateReportItem(listview,report)
                     GameUIWarReport.new(report):addToCurrentScene()
                 -- elseif report:Type() == "villageBeStriked" or report:Type()== "strikeVillage" then
                 -- elseif report:Type() == "attackVillage" then
+                elseif report:Type() == "collectResource" then
+                    GameUICollectReport.new(report):addToCurrentScene()
                 end
 
             end

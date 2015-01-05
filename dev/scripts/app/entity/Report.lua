@@ -4,8 +4,8 @@ local Localize = import("..utils.Localize")
 
 
 local Report = class("Report")
-Report.REPORT_TYPE = Enum("strikeCity","cityBeStriked","strikeVillage","villageBeStriked","attackCity","attackVillage")
-local STRIKECITY,CITYBESTRIKED,STRIKEVILLAGE,VILLAGEBESTRIKED,ATTACKCITY,ATTACKVILLAGE = 1,2,3,4,5,6
+Report.REPORT_TYPE = Enum("strikeCity","cityBeStriked","strikeVillage","villageBeStriked","attackCity","attackVillage","collectResource")
+local STRIKECITY,CITYBESTRIKED,STRIKEVILLAGE,VILLAGEBESTRIKED,ATTACKCITY,ATTACKVILLAGE,COLLECTRESOURCE = 1,2,3,4,5,6,7
 function Report:ctor(id,type,createTime,isRead,isSaved)
     property(self, "id", id)
     property(self, "type", type)
@@ -265,19 +265,15 @@ function Report:GetEnemyRoundDatas()
 end
 function Report:GetMyRewards()
     local data = self:GetData()
-    -- if self.type == Report.REPORT_TYPE[ATTACKCITY]
-    --     or self.type == Report.REPORT_TYPE[CITYBESTRIKED]
-    --     or self.type == Report.REPORT_TYPE[STRIKECITY]
-    --     or self.type == Report.REPORT_TYPE[ATTACKCITY]
-    -- then
-    if data.attackPlayerData.id == self.player_id then
+    if data.attackPlayerData and data.attackPlayerData.id == self.player_id then
         return data.attackPlayerData.rewards
     elseif data.helpDefencePlayerData and data.helpDefencePlayerData.id == self.player_id then
         return data.helpDefencePlayerData.rewards
     elseif data.defencePlayerData and data.defencePlayerData.id == self.player_id then
         return data.defencePlayerData.rewards
+    elseif self.type == Report.REPORT_TYPE[COLLECTRESOURCE] then
+        return data.rewards
     end
-    -- end
 end
 function Report:GetWallData()
     local data = self:GetData()
@@ -333,6 +329,8 @@ function Report:GetBattleAt()
         return Localize.village_name[data.strikeTarget.type]
     elseif self.type == Report.REPORT_TYPE[ATTACKVILLAGE] then
         return Localize.village_name[data.attackTarget.type]
+    elseif self.type == Report.REPORT_TYPE[COLLECTRESOURCE] then
+        return Localize.village_name[data.collectTarget.type]
     end
 end
 function Report:GetBattleLocation()
@@ -345,6 +343,8 @@ function Report:GetBattleLocation()
     elseif self.type == Report.REPORT_TYPE[ATTACKCITY]
         or self.type == Report.REPORT_TYPE[ATTACKVILLAGE] then
         return data.attackTarget.location
+    elseif self.type == Report.REPORT_TYPE[COLLECTRESOURCE] then
+        return data.collectTarget.location
     end
 end
 
@@ -424,7 +424,7 @@ function Report:GetReportTitle()
             return round[#round].isWin and _("防守村落成功") or _("防守村落失败")
         end
     elseif report_type=="collectResource" then
-        return _("采集报告！！！未适配")
+        return _("采集报告")
     end
 end
 function Report:IsHasHelpDefencePlayer()
@@ -439,8 +439,8 @@ function Report:GetFightAttackName()
 end
 function Report:GetFightDefenceName()
     local data = self:GetData()
-    return data.helpDefencePlayerData and data.helpDefencePlayerData.name 
-        or data.defencePlayerData and data.defencePlayerData.name 
+    return data.helpDefencePlayerData and data.helpDefencePlayerData.name
+        or data.defencePlayerData and data.defencePlayerData.name
         or data.defenceVillageData and Localize.village_name[data.defenceVillageData.type].." Lv "..data.defenceVillageData.level
 end
 function Report:IsDragonFight()
@@ -481,6 +481,7 @@ function Report:GetFightReports()
         or data.fightWithDefenceVillageReports or {}
 end
 return Report
+
 
 
 
