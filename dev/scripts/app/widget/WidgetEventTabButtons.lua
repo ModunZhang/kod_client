@@ -9,7 +9,7 @@ local TAB_HEIGHT = 48
 local WidgetEventTabButtons = class("WidgetEventTabButtons", function()
     local rect = cc.rect(0, 0, WIDGET_WIDTH, WIDGET_HEIGHT + TAB_HEIGHT)
     local node = display.newClippingRegionNode(rect)
-    node:setTouchEnabled(true)
+    -- node:setTouchEnabled(true)
     node.view_rect = rect
     node.locked = false
     node:addNodeEventListener(cc.NODE_TOUCH_CAPTURE_EVENT, function (event)
