@@ -88,20 +88,19 @@ function MapLayer:ZoomToByAnimation(scale)
 end
 ------zoom
 function MapLayer:ZoomBegin()
-    self.scale_point = self:convertToNodeSpace(cc.p(display.cx, display.cy))
     self.scale_current = self:getScale()
     return self
 end
-function MapLayer:ZoomTo(scale)
+function MapLayer:ZoomTo(scale, x1, y1, x2, y2)
     self:ZoomBegin()
-    self:ZoomBy(scale / self:getScale())
+    self:ZoomBy(scale / self:getScale(), (x1 and x2) and (x1 + x2) * 0.5 or display.cx, (y1 and y2) and (y1 + y2) * 0.5 or display.cy)
     self:ZoomEnd()
     return self
 end
-function MapLayer:ZoomBy(scale)
+function MapLayer:ZoomBy(scale, x, y)
+    local scale_point = self:convertToNodeSpace(cc.p(x, y))
     self:setScale(min(max(self.scale_current * scale, self.min_scale), self.max_scale))
-    local scale_point = self.scale_point
-    local scene_mid_point = self:getParent():convertToWorldSpace(cc.p(display.cx, display.cy))
+    local scene_mid_point = self:getParent():convertToWorldSpace(cc.p(x, y))
     local new_scene_mid_point = self:ConverToParentPosition(scale_point.x, scale_point.y)
     local cur_x, cur_y = self:getPosition()
     local new_position = cc.p(cur_x + scene_mid_point.x - new_scene_mid_point.x, cur_y + scene_mid_point.y - new_scene_mid_point.y)
@@ -110,7 +109,6 @@ function MapLayer:ZoomBy(scale)
     return self
 end
 function MapLayer:ZoomEnd()
-    self.scale_point = nil
     self.scale_current = self:getScale()
     return self
 end
