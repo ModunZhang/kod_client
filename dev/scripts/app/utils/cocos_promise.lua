@@ -29,7 +29,12 @@ end
 local function promiseWithCatchError(p)
     return p:catch(function(err)
         dump(err)
-        local dialog = FullScreenPopDialogUI.new():AddToCurrentScene()
+        local dialog = FullScreenPopDialogUI.new():AddToCurrentScene():VisibleXButton(false):CreateOKButton(
+            {
+                listener = function()
+                    app:retryConnectServer()
+                end
+            })
         local content, title = err:reason()
         dialog:SetTitle(title or "")
         dialog:SetPopMessage(content)
@@ -72,6 +77,8 @@ return {
     promiseFilterNetError = promiseFilterNetError,
     promiseOfMoveTo = promiseOfMoveTo,
 }
+
+
 
 
 

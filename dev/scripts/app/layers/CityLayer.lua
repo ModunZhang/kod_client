@@ -457,6 +457,7 @@ function CityLayer:InitWithCity(city)
     city:AddListenOnType(self, city.LISTEN_TYPE.OCCUPY_RUINS)
     city:AddListenOnType(self, city.LISTEN_TYPE.CREATE_DECORATOR)
     city:AddListenOnType(self, city.LISTEN_TYPE.DESTROY_DECORATOR)
+    city:AddListenOnType(self, city.LISTEN_TYPE.HELPED_BY_TROOPS)
     city:GetSoldierManager():AddListenOnType(self, SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
 
     local city_node = self:GetCityNode()
