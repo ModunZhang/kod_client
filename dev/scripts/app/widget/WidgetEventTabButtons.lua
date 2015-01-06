@@ -13,7 +13,6 @@ local WidgetEventTabButtons = class("WidgetEventTabButtons", function()
     node.view_rect = rect
     node.locked = false
     node:addNodeEventListener(cc.NODE_TOUCH_CAPTURE_EVENT, function (event)
-        dump(event)
         if node.locked then
             return false
         end

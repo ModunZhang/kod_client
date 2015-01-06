@@ -1,6 +1,7 @@
 local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local window = import("..utils.window")
+local UIPageView = import("..ui.UIPageView")
 local WidgetTab = import("..widget.WidgetTab")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
@@ -310,7 +311,7 @@ function GameUIHome:CreateBottom()
     self.chat_bg = chat_bg
 
     local size = chat_bg:getContentSize()
-    local pv = cc.ui.UIPageView.new {
+    local pv = UIPageView.new {
         viewRect = cc.rect(10, 4, size.width, size.height)}
         :onTouch(function (event)
             dump(event,"UIPageView event")
