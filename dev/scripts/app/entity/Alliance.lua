@@ -775,7 +775,6 @@ function Alliance:GetAllianceArchonMember()
 end
 
 function Alliance:OnTimer(current_time)
-    print("Alliance:OnTimer--->",self:Name())
     self:GetAllianceShrine():OnTimer(current_time)
     self:IteratorAttackMarchEvents(function(attackMarchEvent)
         attackMarchEvent:OnTimer(current_time)
@@ -790,6 +789,7 @@ function Alliance:OnTimer(current_time)
         strikeMarchReturnEvent:OnTimer(current_time)
     end)
     self:IteratorVillageEvents(function(villageEvent)
+        print("timer->village->",self:Name())
         villageEvent:OnTimer(current_time)
     end)
 end
