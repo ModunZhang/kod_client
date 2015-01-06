@@ -28,8 +28,8 @@ function AllianceBattleScene:onEnter()
     local location = self:GetAlliance():GetSelf().location
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(location.x, location.y, self:GetAlliance():Id())
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
-    -- self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
-
+    self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    app:GetAudioManager():PlayGameMusic("AllianceBattleScene")
     self:GetSceneLayer():ZoomTo(1)
 end
 
@@ -51,7 +51,7 @@ function AllianceBattleScene:GetEnemyAlliance()
 end
 
 function AllianceBattleScene:onExit()
-    -- self:GetAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    self:GetAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     AllianceBattleScene.super.onExit(self)
 end
 function AllianceBattleScene:CreateSceneLayer()
@@ -73,11 +73,11 @@ function AllianceBattleScene:OnTouchClicked(pre_x, pre_y, x, y)
         end
     end
 end
--- function AllianceBattleScene:OnBasicChanged(alliance,changed_map)
---     if changed_map.status and changed_map.status.new == 'protect' then
---         app:EnterMyAllianceScene()
---     end
--- end
+function AllianceBattleScene:OnBasicChanged(alliance,changed_map)
+    if changed_map.status and changed_map.status.new == 'protect' then
+        app:GetAudioManager():PlayGameMusic("AllianceScene")
+    end
+end
 function AllianceBattleScene:EnterAllianceBuilding(entity,isMyAlliance)
     local building_info = entity:GetAllianceBuildingInfo()
     local building_name = building_info.name

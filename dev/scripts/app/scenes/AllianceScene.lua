@@ -33,7 +33,7 @@ function AllianceScene:onEnter()
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(location.x, location.y)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
     -- self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
-
+    app:GetAudioManager():PlayGameMusic("AllianceScene")
     self:GetSceneLayer():ZoomTo(1)
 end
 

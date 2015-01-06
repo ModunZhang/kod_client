@@ -7,6 +7,8 @@ AudioManager = class("AudioManager")
 local bg_music_map = {
 	MainScene = "music_begin.mp3",
 	MyCityScene = "music_city.mp3",
+	AllianceScene = "bgm_peace.mp3",
+	AllianceBattleScene = "bgm_battle.mp3",
 }
 
 local bg_sound_map = {
