@@ -630,10 +630,21 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
     if can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH then
         local required_gems =self.building:getUpgradeRequiredGems()
         local owen_gem = City.resource_manager:GetGemResource():GetValue()
+        dialog:SetTitle(_("补充资源"))
+        dialog:SetPopMessage(_("您当前没有足够的资源,是否花费魔法石立即补充"))
+
         if owen_gem<required_gems then
-            dialog:SetTitle(_("提示"))
-            dialog:SetPopMessage(UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH)
+            dialog:CreateNeeds("Topaz-icon.png",required_gems,0x7e0000)
+            dialog:CreateOKButton(
+                {
+                    listener = function()
+                        UIKit:newGameUI('GameUIShop', City):addToCurrentScene(true)
+                        self:getParent():leftButtonClicked()
+                    end
+                }
+            )
         else
+            dialog:CreateNeeds("Topaz-icon.png",required_gems)
             dialog:CreateOKButton(
                 {
                     listener = function()
@@ -642,9 +653,6 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
                     end
                 }
             )
-            dialog:SetTitle(_("补充资源"))
-            dialog:SetPopMessage(_("您当前没有足够的资源,是否花费魔法石立即补充"))
-            dialog:CreateNeeds("Topaz-icon.png",required_gems)
         end
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH then
         local required_gems = self.building:getUpgradeRequiredGems()
@@ -677,6 +685,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
 
 
