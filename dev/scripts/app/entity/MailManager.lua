@@ -14,22 +14,50 @@ function MailManager:ctor()
     self.savedReports = {}
 end
 
-function MailManager:IncreaseUnReadMailsAndReports(num)
-    self.unread_num = self.unread_num + num
+function MailManager:IncreaseUnReadMailsNum(num)
+    self.unread_mail = self.unread_mail + num
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED,function(listener)
-        listener:MailUnreadChanged(self.unread_num)
+        listener:MailUnreadChanged({mail=self.unread_mail})
     end)
 end
 
-function MailManager:DecreaseUnReadMailsAndReports(num)
-    self.unread_num = self.unread_num - num
+function MailManager:IncreaseUnReadReportNum(num)
+    self.unread_report = self.unread_report + num
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED,function(listener)
-        listener:MailUnreadChanged(self.unread_num)
+        listener:MailUnreadChanged({report=self.unread_report})
+    end)
+end
+
+function MailManager:DecreaseUnReadMailsNum(num)
+    self.unread_mail = self.unread_mail - num
+    self:NotifyListeneOnType(MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED,function(listener)
+        listener:MailUnreadChanged(
+            {
+                mail=self.unread_mail
+            }
+        )
+    end)
+end
+
+function MailManager:DecreaseUnReadReportsNum(num)
+    self.unread_report = self.unread_report - num
+    self:NotifyListeneOnType(MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED,function(listener)
+        listener:MailUnreadChanged(
+            {
+                report=self.unread_report
+            }
+        )
     end)
 end
 
 function MailManager:GetUnReadMailsAndReportsNum()
-    return self.unread_num
+    return self.unread_mail + self.unread_report
+end
+function MailManager:GetUnReadMailsNum()
+    return self.unread_mail
+end
+function MailManager:GetUnReadReportsNum()
+    return self.unread_report
 end
 function MailManager:AddSavedMail(mail)
     table.insert(self.savedMails,1, mail)
@@ -85,11 +113,11 @@ function MailManager:dispatchMailServerData( eventName,msg )
         end
     elseif eventName == "onGetReportsSuccess" then
         for _,report in pairs(msg.reports) do
-            table.insert(self.reports, report)
+            table.insert(self.reports, Report:DecodeFromJsonData(report))
         end
     elseif eventName == "onGetSavedReportsSuccess" then
         for _,report in pairs(msg.reports) do
-            table.insert(self.savedReports, report)
+            table.insert(self.savedReports,Report:DecodeFromJsonData(report))
         end
     else
         return
@@ -172,9 +200,16 @@ function MailManager:GetSendMails(cb,fromIndex)
     end
 end
 function MailManager:OnMailStatusChanged( mailStatus )
-    self.unread_num = mailStatus.unreadMails + mailStatus.unreadReports
+    LuaUtils:outputTable("mailStatus", mailStatus)
+    self.unread_mail = mailStatus.unreadMails
+    self.unread_report = mailStatus.unreadReports
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED,function(listener)
-        listener:MailUnreadChanged(self.unread_num)
+        listener:MailUnreadChanged(
+            {
+                mail=self.unread_mail,
+                report=self.unread_report
+            }
+        )
     end)
 end
 function MailManager:OnMailsChanged( mails )
@@ -195,7 +230,7 @@ function MailManager:OnNewMailsChanged( mails )
         if mail.type == "add" then
             table.insert(add_mails, mail.data)
             table.insert(self.mails, mail.data)
-            self:IncreaseUnReadMailsAndReports(1)
+            self:IncreaseUnReadMailsNum(1)
         elseif mail.type == "remove" then
             table.insert(remove_mails, mail.data)
             self:DeleteMail(mail.data)
@@ -305,11 +340,9 @@ function MailManager:OnNewReportsChanged( __reports )
     local edit_reports = {}
     for _,rp in pairs(__reports) do
         if rp.type == "add" then
-            print(" before  self.reports == ",#self.reports)
             table.insert(add_reports, Report:DecodeFromJsonData(rp.data))
             table.insert(self.reports,1, Report:DecodeFromJsonData(rp.data))
-            print(" after  self.reports == ",#self.reports)
-            self:IncreaseUnReadMailsAndReports(1)
+            self:IncreaseUnReadReportNum(1)
         elseif rp.type == "remove" then
             table.insert(remove_reports, Report:DecodeFromJsonData(rp.data))
             self:DeleteReport(rp.data)
@@ -335,7 +368,6 @@ function MailManager:OnNewSavedReportsChanged( __savedReports )
         if rp.type == "add" then
             table.insert(add_reports, Report:DecodeFromJsonData(rp.data))
             table.insert(self.savedReports, Report:DecodeFromJsonData(rp.data))
-            self:IncreaseUnReadMailsAndReports(1)
         elseif rp.type == "remove" then
             table.insert(remove_reports, Report:DecodeFromJsonData(rp.data))
             self:DeleteSavedReport(rp.data)
@@ -418,6 +450,8 @@ function MailManager:GetSavedReports(fromIndex)
     end
 end
 return MailManager
+
+
 
 
 

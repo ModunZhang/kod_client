@@ -339,19 +339,38 @@ function GameUIAllianceHome:CreateTop()
             if enemy_name_bg:getChildByTag(201) then
                 enemy_name_bg:removeChildByTag(201, true)
             end
-            local enemy_flag = ui_helper:CreateFlagContentSprite(enemyAlliance:Flag()):scale(0.5)
-            enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
-                :addTo(enemy_name_bg)
-            enemy_flag:setTag(201)
-            enemy_name_label:setString("["..enemyAlliance:AliasName().."] "..enemyAlliance:Name())
-
+            if status=="fight"  then
+                local enemy_flag = ui_helper:CreateFlagContentSprite(enemyAlliance:Flag()):scale(0.5)
+                enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
+                    :addTo(enemy_name_bg)
+                enemy_flag:setTag(201)
+                enemy_name_label:setString("["..enemyAlliance:AliasName().."] "..enemyAlliance:Name())
+            elseif status=="protect" then
+                local enemy_reprot_data = alliance:GetEnemyLastAllianceFightReportsData()
+                local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemy_reprot_data.flag)):scale(0.5)
+                enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
+                    :addTo(enemy_name_bg)
+                enemy_flag:setTag(201)
+                enemy_name_label:setString("["..enemy_reprot_data.tag.."] "..enemy_reprot_data.name)
+            end
         end
-        if status=="fight" then
+        if status=="fight"  then
             our_num_icon:setTexture("battle_39x38.png")
             enemy_num_icon:setTexture("battle_39x38.png")
             enemy_num_icon:scale(1.0)
-            self:SetOurPowerOrKill(alliance:GetMyAllianceFightCountData().kill)
-            self:SetEnemyPowerOrKill(alliance:GetEnemyAllianceFightCountData().kill)
+
+            self:SetOurPowerOrKill(alliance:GetMyAllianceFightCountData().kill or our_reprot_data_kill)
+            self:SetEnemyPowerOrKill(alliance:GetEnemyAllianceFightCountData().kill or enemy_reprot_data_kill)
+        elseif status=="protect" then
+            our_num_icon:setTexture("battle_39x38.png")
+            enemy_num_icon:setTexture("battle_39x38.png")
+            enemy_num_icon:scale(1.0)
+            local our_reprot_data_kill = alliance:GetOurLastAllianceFightReportsData().kill
+            local enemy_reprot_data_kill = alliance:GetEnemyLastAllianceFightReportsData().kill
+            self:SetOurPowerOrKill(our_reprot_data_kill)
+
+            self:SetEnemyPowerOrKill(enemy_reprot_data_kill)
+
         else
             if status~="peace" then
                 enemy_num_icon:setTexture("allianceHome/power.png")
@@ -376,7 +395,8 @@ function GameUIAllianceHome:CreateTop()
 end
 
 
-function GameUIAllianceHome:MailUnreadChanged( num )
+function GameUIAllianceHome:MailUnreadChanged(...)
+    local num =MailManager:GetUnReadMailsNum()+MailManager:GetUnReadReportsNum()
     if num==0 then
         self.mail_unread_num_bg:setVisible(false)
     else
@@ -702,14 +722,6 @@ function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
     self.coordinate_label:setString(coordinate_str)
     self.coordinate_title_label:setString(is_mine)
 end
-function GameUIAllianceHome:MailUnreadChanged( num )
-    if num==0 then
-        self.mail_unread_num_bg:setVisible(false)
-    else
-        self.mail_unread_num_bg:setVisible(true)
-        self.mail_unread_num_label:setString(GameUtils:formatNumber(num))
-    end
-end
 
 function GameUIAllianceHome:OnCountDataChanged(changed_map)
     local status = self.alliance:Status()
@@ -755,6 +767,11 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
+
+
+
+
 
 
 

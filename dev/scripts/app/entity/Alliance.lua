@@ -257,6 +257,14 @@ end
 function Alliance:GetLastAllianceFightReports()
     return self.alliance_fight_reports[#self.alliance_fight_reports]
 end
+function Alliance:GetOurLastAllianceFightReportsData()
+    local last = self.alliance_fight_reports[#self.alliance_fight_reports]
+    return DataManager:getUserData()._id == last.attackAllianceId and last.attackAlliance or last.defenceAlliance
+end
+function Alliance:GetEnemyLastAllianceFightReportsData()
+    local last = self.alliance_fight_reports[#self.alliance_fight_reports]
+    return DataManager:getUserData()._id == last.attackAllianceId and last.defenceAlliance or last.attackAlliance
+end
 function Alliance:GetAllHelpEvents()
     return self.help_events
 end
@@ -789,7 +797,7 @@ function Alliance:OnTimer(current_time)
         strikeMarchReturnEvent:OnTimer(current_time)
     end)
     self:IteratorVillageEvents(function(villageEvent)
-        print("timer->village->",self:Name())
+        -- print("timer->village->",self:Name())
         villageEvent:OnTimer(current_time)
     end)
 end
