@@ -361,8 +361,8 @@ end
 function MultiAllianceLayer:GetAllianceCoordWithPoint(x, y)
     local point = self:GetBuildingNode():convertToNodeSpace(cc.p(x, y))
     local logic_x, logic_y, alliance_view
-    if #self.alliances == 1 then
-        logic_x, logic_y = self.alliances[1]:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
+    if #self.alliance_views == 1 then
+        logic_x, logic_y = self.alliance_views[1]:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
         return logic_x, logic_y, unpack(self.alliance_views)
     end
     if self.arrange == MultiAllianceLayer.ARRANGE.H then
