@@ -10,7 +10,6 @@ local AllianceMoonGate = import("..entity.AllianceMoonGate")
 local UIListView = import(".UIListView")
 local Flag = import("..entity.Flag")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
--- local GameUIAllianceEnter = import(".GameUIAllianceEnter")
 
 local GameUIAllianceBattle = UIKit:createUIClass('GameUIAllianceBattle', "GameUIWithCommonHeader")
 local img_dir = "allianceHome/"
@@ -313,14 +312,14 @@ function GameUIAllianceBattle:InitBattleStatistics()
             :addTo(top_bg)
             :scale(0.8)
         -- 己方联盟名字
-        UIKit:ttfLabel({
+        local our_alliance_name = UIKit:ttfLabel({
             text = "["..our_alliance:AliasName().."]".. our_alliance:Name(),
             size = 26,
             color = 0xffedae,
         }):addTo(self_alliance_bg)
             :align(display.CENTER,-180,0)
         -- 敌方联盟名字
-        UIKit:ttfLabel({
+        local enemy_alliance_name = UIKit:ttfLabel({
             text = "["..enemy_alliance:AliasName().."]"..enemy_alliance:Name(),
             size = 26,
             color = 0xffedae,
@@ -343,22 +342,33 @@ function GameUIAllianceBattle:InitBattleStatistics()
             enemy_alliance_bg:setButtonEnabled(false)
 
             local fight_result =  our_alliance:GetLastAllianceFightReports().fightResult == "ourWin"
+            local our_reprot_data = our_alliance:GetOurLastAllianceFightReportsData()
+            local enemy_reprot_data = our_alliance:GetEnemyLastAllianceFightReportsData()
+            our_alliance_name:setString("["..our_reprot_data.tag.."]"..our_reprot_data.name)
+            enemy_alliance_name:setString("["..enemy_reprot_data.tag.."]"..enemy_reprot_data.name)
+
             local text_1 = fight_result and "WIN" or "LOSE"
             local color_1 = fight_result and 0x007c23 or 0x7e0000
+            local result_own_bg = display.newSprite("back_ground_130x30.png")
+                :align(display.LEFT_CENTER,window.left+60,window.top-240)
+                :addTo(layer)
             local result_own = UIKit:ttfLabel({
                 text = text_1,
                 size = 20,
                 color = color_1,
-            }):align(display.LEFT_CENTER,window.left+50,window.top-240)
-                :addTo(layer)
+            }):align(display.CENTER,result_own_bg:getContentSize().width/2,result_own_bg:getContentSize().height/2)
+                :addTo(result_own_bg)
             local text_1 = not fight_result and "WIN" or "LOSE"
             local color_1 = not fight_result and 0x007c23 or 0x7e0000
+            local result_enemy_bg = display.newSprite("back_ground_130x30.png")
+                :align(display.RIGHT_CENTER,window.right-60,window.top-240)
+                :addTo(layer)
             local result_enemy = UIKit:ttfLabel({
                 text = text_1,
                 size = 20,
                 color = color_1,
-            }):align(display.RIGHT_CENTER,window.right-50,window.top-240)
-                :addTo(layer)
+            }):align(display.RIGHT_CENTER,result_enemy_bg:getContentSize().width/2,result_enemy_bg:getContentSize().height/2)
+                :addTo(result_enemy_bg)
 
 
             local isEqualOrGreater = self.alliance:GetMemeberById(DataManager:getUserData()._id)
@@ -450,8 +460,7 @@ function GameUIAllianceBattle:RefreshFightInfoList()
         self.info_listview:removeAllItems()
         local our, enemy
         if self.alliance:Status() == "protect" then
-            local fight_reports = self.alliance:GetAllianceFightReports()
-            local report = fight_reports[#fight_reports]
+            local report = self.alliance:GetLastAllianceFightReports()
             our = self.alliance:Id() == report.attackAllianceId and report.attackAlliance or report.defenceAlliance
             enemy = self.alliance:Id() == report.attackAllianceId and report.defenceAlliance or report.attackAlliance
         else
@@ -719,11 +728,12 @@ function GameUIAllianceBattle:GetFightRequestsInfo()
 end
 function GameUIAllianceBattle:InitHistoryRecord()
     local layer = self.history_layer
-    self.history_listview = UIListView.new{
-        -- bgColor = UIKit:hex2c4b(0x7a990000),
-        viewRect = cc.rect(window.left+17, window.top-890, 608, 786),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
-    }:addTo(layer)
+    local list,list_node = UIKit:commonListView({
+        viewRect = cc.rect(0, 0,608, 786),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
+    },false)
+    list_node:addTo(layer):align(display.BOTTOM_CENTER, window.cx, window.bottom_top+20)
+    self.history_listview = list
 
     local fight_reports = self.alliance:GetAllianceFightReports()
     for k,v in pairs(fight_reports) do
@@ -743,22 +753,19 @@ function GameUIAllianceBattle:AddHistoryItem(report,index)
 
 
     local item = self.history_listview:newItem()
-    local w,h = 608,314
+    local w,h = 568,294
     item:setItemSize(w,h)
-    local content = WidgetUIBackGround.new({height=314})
-
-    local title_bg = display.newSprite("blue_bar_548x30.png"):align(display.CENTER, w/2, h-30)
-        :addTo(content)
-        :scale(1.06)
+    local content = WidgetUIBackGround.new({height=294,width=568},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
+    -- 战斗发生时间
     UIKit:ttfLabel({
         text = GameUtils:formatTimeStyle2(math.floor(fightTime/1000)),
-        size = 22,
-        color = 0xffedae,
-    }):align(display.CENTER,title_bg:getContentSize().width/2, title_bg:getContentSize().height/2)
-        :addTo(title_bg)
+        size = 20,
+        color = 0x797154,
+    }):align(display.LEFT_CENTER,30, 60)
+        :addTo(content)
 
     local fight_bg = display.newSprite("report_back_ground.png")
-        :align(display.TOP_CENTER, w/2,h-50)
+        :align(display.TOP_CENTER, w/2,h-10)
         :addTo(content)
         :scale(0.95)
     local win_text = win and _("胜利") or _("失败")
@@ -833,7 +840,7 @@ function GameUIAllianceBattle:AddHistoryItem(report,index)
         b_height = 14,
         m_height = 1,
         b_flip = true,
-    }):align(display.BOTTOM_CENTER,w/2,60):addTo(content)
+    }):align(display.BOTTOM_CENTER,w/2,80):addTo(content)
 
     local info_message = {
         {string.formatnumberthousands(ourAlliance.kill),_("总击杀"),string.formatnumberthousands(enemyAlliance.kill)},
@@ -873,10 +880,10 @@ function GameUIAllianceBattle:AddHistoryItem(report,index)
     if not win and isEqualOrGreater then
         -- 复仇按钮
         local revenge_button = WidgetPushButton.new(
-            {normal = "resource_butter_red.png",pressed = "resource_butter_red_highlight.png"},
+            {normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"},
             {scale9 = false},
             {disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}}
-        ):addTo(content):align(display.RIGHT_CENTER,560,35)
+        ):addTo(content):align(display.RIGHT_CENTER,560,40)
             :setButtonLabel(UIKit:ttfLabel({
                 text = _("复仇"),
                 size = 24,
@@ -896,22 +903,31 @@ function GameUIAllianceBattle:AddHistoryItem(report,index)
                 end)
             end
         end)
+
+
         local revenge_time_limit = GameDatas.AllianceInitData.intInit.allianceRevengeMaxTime.value + math.floor(fightTime/1000)
         local revenge_time_label
+        local title_label
         if app.timer:GetServerTime()>revenge_time_limit then
             revenge_time_label = UIKit:ttfLabel({
                 text = _("已过期"),
-                size = 24,
+                size = 20,
                 color = 0x7e0000,
-            }):align(display.LEFT_CENTER, 50, 30)
+            }):align(display.LEFT_CENTER, 30, 30)
                 :addTo(content)
             revenge_button:setButtonEnabled(false)
         else
-            revenge_time_label = UIKit:ttfLabel({
-                text = _("剩余复仇时间:")..GameUtils:formatTimeStyle1(revenge_time_limit-app.timer:GetServerTime()),
+            title_label = UIKit:ttfLabel({
+                text = _("剩余复仇时间:"),
                 size = 24,
-                color = 0x007c23,
-            }):align(display.LEFT_CENTER, 50, 30)
+                color = 0x797154,
+            }):align(display.LEFT_CENTER, 30, 30)
+                :addTo(content)
+            revenge_time_label = UIKit:ttfLabel({
+                text = GameUtils:formatTimeStyle1(revenge_time_limit-app.timer:GetServerTime()),
+                size = 24,
+                color = 0x248a00,
+            }):align(display.LEFT_CENTER, title_label:getPositionX()+title_label:getContentSize().width+10, 30)
                 :addTo(content)
             revenge_button:setButtonEnabled(true)
             table.insert(self.alliance_fight_reports_table, item)
@@ -919,7 +935,9 @@ function GameUIAllianceBattle:AddHistoryItem(report,index)
         local parent = self
         function item:RefreshRevengeTime(current_time)
             if current_time>revenge_time_limit then
+                title_label:setString("")
                 revenge_time_label:setString(_("已过期"))
+                revenge_time_label:setPositionX(30)
                 revenge_time_label:setColor(UIKit:hex2c3b(0x7e0000))
                 revenge_button:setButtonEnabled(false)
                 for k,v in pairs(parent.alliance_fight_reports_table) do
@@ -928,7 +946,7 @@ function GameUIAllianceBattle:AddHistoryItem(report,index)
                     end
                 end
             else
-                revenge_time_label:setString(_("剩余复仇时间:")..GameUtils:formatTimeStyle1(revenge_time_limit-current_time))
+                revenge_time_label:setString(GameUtils:formatTimeStyle1(revenge_time_limit-current_time))
             end
         end
     end
@@ -1248,6 +1266,10 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
+
+
+
 
 
 

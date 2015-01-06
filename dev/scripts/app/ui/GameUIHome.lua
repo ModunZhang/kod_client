@@ -66,7 +66,8 @@ function GameUIHome:onExit()
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     -- GameUIHome.super.onExit(self)
 end
-function GameUIHome:MailUnreadChanged( num )
+function GameUIHome:MailUnreadChanged(...)
+    local num =MailManager:GetUnReadMailsNum()+MailManager:GetUnReadReportsNum()
     if num==0 then
         self.mail_unread_num_bg:setVisible(false)
     else
