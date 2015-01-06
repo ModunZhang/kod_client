@@ -24,8 +24,8 @@ function AllianceManager:OnUserDataChanged(user_data, time)
 end
 
 function AllianceManager:OnAllianceDataChanged(alliance_data)
-    self:UpdateEnemyAlliance(alliance_data.enemyAllianceDoc)
     self:GetMyAlliance():OnAllianceDataChanged(alliance_data)
+    self:UpdateEnemyAlliance(alliance_data.enemyAllianceDoc)
     self:RefreshAllianceSceneIf()
 end
 
