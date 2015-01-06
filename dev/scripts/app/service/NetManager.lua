@@ -1219,7 +1219,7 @@ end
 --从村落撤退
 function NetManager:getRetreatFromVillagePromise(allianceId,eventId)
       return promise.all(get_blocking_request_promise("logic.allianceHandler.retreatFromVillage",
-        {allianceId = allianceId,eventId = eventId},"村落撤退失败!"),
+        {villageEventId = eventId},"村落撤退失败!"),
         get_alliancedata_callback()):next(get_response_msg)
 end
 --突袭村落
