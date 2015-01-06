@@ -25,7 +25,8 @@ end
 function AllianceBattleScene:onEnter()
     AllianceBattleScene.super.onEnter(self)
     self:CreateAllianceUI()
-    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(10, 10, self:GetAlliance():Id())
+    local location = self:GetAlliance():GetSelf().location
+    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(location.x, location.y, self:GetAlliance():Id())
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
     -- self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
 
