@@ -93,7 +93,7 @@ function CityScene:onEnter()
 end
 function CityScene:onExit()
     self:stopAllActions()
-    audio.stopMusic()
+    --TODO:注意：这里因为主城现在播放两个音乐文件 所以这里要关掉鸟叫的sound音效
     audio.stopAllSounds()
     CityScene.super.onExit(self)
 end
