@@ -24,14 +24,17 @@ function AllianceManager:OnUserDataChanged(user_data, time)
 end
 
 function AllianceManager:OnAllianceDataChanged(alliance_data)
+    self:UpdateEnemyAlliance(alliance_data.enemyAllianceDoc,alliance_data.basicInfo.status)
     self:GetMyAlliance():OnAllianceDataChanged(alliance_data)
-    self:UpdateEnemyAlliance(alliance_data.enemyAllianceDoc)
     self:RefreshAllianceSceneIf()
 end
 
 function AllianceManager:OnTimer(current_time)
     self:GetMyAlliance():OnTimer(current_time)
-    self:GetEnemyAlliance():OnTimer(current_time)
+    local enemy_alliance = self:GetEnemyAlliance()
+    if not enemy_alliance:IsDefault() then
+        enemy_alliance:OnTimer(current_time)
+    end
 end
 
 ---------------
@@ -52,9 +55,9 @@ function AllianceManager:GetEnemyAlliance()
     return self.enemyAlliance
 end
 
-function AllianceManager:UpdateEnemyAlliance(json_data)
+function AllianceManager:UpdateEnemyAlliance(json_data,my_alliance_status)
     if not json_data then return end
-    if self:GetMyAlliance():Status() == 'protect' or self:GetMyAlliance():Status() == 'peace' then
+    if my_alliance_status == 'protect' or my_alliance_status == 'peace' then
         self:GetEnemyAlliance():Reset()
     else
         local enemy_alliance = self:GetEnemyAlliance()

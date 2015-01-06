@@ -297,6 +297,13 @@ function Alliance:IsBuildingHasBeenRequestedToHelpSpeedup(eventId)
 end
 
 function Alliance:Reset()
+    for k,v in pairs(self) do
+        if type(v) == 'string' then
+            self[k] = ""
+        elseif type(v) == 'number' then
+            self[k] = 0
+        end
+    end
     self:SetId(nil)
     self:SetJoinType("all")
     self.members = {}
@@ -310,6 +317,7 @@ function Alliance:Reset()
     self:ResetVillageEvents()
     self.alliance_villages = {}
     self:GetAllianceBelvedere():Reset()
+    print("Alliance:Reset--->",self:Name())
 end
 function Alliance:OnOperation(operation_type)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OPERATION, function(listener)
@@ -767,6 +775,7 @@ function Alliance:GetAllianceArchonMember()
 end
 
 function Alliance:OnTimer(current_time)
+    print("Alliance:OnTimer--->",self:Name())
     self:GetAllianceShrine():OnTimer(current_time)
     self:IteratorAttackMarchEvents(function(attackMarchEvent)
         attackMarchEvent:OnTimer(current_time)
