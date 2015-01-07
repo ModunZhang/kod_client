@@ -109,7 +109,7 @@ function GameUIHome:CreateTop()
         :align(display.TOP_RIGHT,top_bg:getContentSize().width/2, top_bg:getContentSize().height-10)
     self.name_label =
         cc.ui.UILabel.new({
-            text = "有背",
+            text = "",
             size = 20,
             font = UIKit:getFontFilePath(),
             align = cc.ui.TEXT_ALIGN_RIGHT,
@@ -132,7 +132,7 @@ function GameUIHome:CreateTop()
     -- 玩家战斗值数字
     self.power_label =
         UIKit:ttfLabel({
-            text = "2000000",
+            text = "",
             size = 20,
             color = 0xf3f0b6,
             shadow = true
@@ -170,7 +170,7 @@ function GameUIHome:CreateTop()
         local x, y = first_col + col * padding_width, first_row - (row * padding_height)
         display.newSprite(v[1]):addTo(button):pos(x, y):scale(i == 3 and 0.65 or 0.25)
         self[v[2]] =
-            UIKit:ttfLabel({text = "2k",
+            UIKit:ttfLabel({text = "",
                 size = 18,
                 color = 0xf3f0b6,
                 shadow = true
@@ -431,26 +431,6 @@ function GameUIHome:OnBottomButtonClicked(event)
     elseif tag == 3 then
         UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
     elseif tag == 2 then
-        app:enterScene("PVEScene", nil, "custom", -1, function(scene, status)
-            local manager = ccs.ArmatureDataManager:getInstance()
-            if status == "onEnter" then
-                manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
-                local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
-                display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
-                    transition.sequence{
-                        cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
-                        cc.FadeIn:create(0.75),
-                        cc.CallFunc:create(function() scene:hideOutShowIn() end),
-                        cc.DelayTime:create(0.5),
-                        cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
-                        cc.FadeOut:create(0.75),
-                        cc.CallFunc:create(function() scene:finish() end),
-                    }
-                )
-            elseif status == "onExit" then
-                manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
-            end
-        end)
     end
 end
 

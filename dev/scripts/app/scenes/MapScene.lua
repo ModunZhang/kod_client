@@ -107,7 +107,7 @@ function MapScene:OnTwoTouch(x1, y1, x2, y2, event_type)
     elseif event_type == "ended" then
         scene:ZoomEnd()
         self.distance = nil
-        local low = scene.min_scale * 1.1
+        local low = scene.min_scale * 1.2
         local high = scene.max_scale * 0.9
         if scene:getScale() <= low then
             scene:ZoomToByAnimation(low)

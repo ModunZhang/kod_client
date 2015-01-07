@@ -215,7 +215,6 @@ function GameUIOtherAllianceHome:ComeBackToOurAlliance()
     app:enterScene("AllianceScene", nil, "custom", -1, function(scene, status)
         local manager = ccs.ArmatureDataManager:getInstance()
         if status == "onEnter" then
-            manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
             local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
             display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
                 transition.sequence{
@@ -229,7 +228,6 @@ function GameUIOtherAllianceHome:ComeBackToOurAlliance()
                 }
             )
         elseif status == "onExit" then
-            manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
         end
     end)
 end

@@ -151,12 +151,12 @@ function UpgradingSprite:GetBeforeConfig()
     end
 end
 function UpgradingSprite:GetLogicZorder(width)
-    if self:GetEntity():GetType() == "watchTower" then
-        local x, y = self:GetLogicPosition()
-        return self:GetMapLayer():GetZOrderBy(self, x, y) + 100
-    else
-        return UpgradingSprite.super.GetLogicZorder(self, width)
-    end
+    -- if self:GetEntity():GetType() == "watchTower" then
+    --     local x, y = self:GetLogicPosition()
+    --     return self:GetMapLayer():GetZOrderBy(self, x, y) + 100
+    -- else
+    return UpgradingSprite.super.GetLogicZorder(self, width)
+    -- end
 end
 function UpgradingSprite:GetCenterPosition()
     return self:GetLogicMap():ConvertToMapPosition(self:GetEntity():GetMidLogicPosition())
