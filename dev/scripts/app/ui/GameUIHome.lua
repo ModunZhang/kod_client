@@ -9,6 +9,9 @@ local Arrow = import(".Arrow")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local GameUIHelp = import(".GameUIHelp")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
+local Alliance = import("..entity.Alliance")
+
+
 local GameUIHome = UIKit:createUIClass('GameUIHome')
 
 
@@ -59,12 +62,20 @@ function GameUIHome:onEnter()
     city:GetResourceManager():AddObserver(self)
     city:GetResourceManager():OnResourceChanged()
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
+    Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
 
 end
 function GameUIHome:onExit()
     self.city:GetResourceManager():RemoveObserver(self)
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
+    Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     -- GameUIHome.super.onExit(self)
+end
+function GameUIHome:OnBasicChanged(alliance,changed_map)
+    if changed_map.id then
+        local flag = changed_map.id.new~=nil or changed_map.id.old~=""
+        self.help_button:setVisible(flag)
+    end
 end
 function GameUIHome:MailUnreadChanged(...)
     local num =MailManager:GetUnReadMailsNum()+MailManager:GetUnReadReportsNum()
@@ -280,7 +291,7 @@ function GameUIHome:CreateTop()
     end):addTo(top_bg):pos(630, -81):scale(0.6)
 
     -- BUFF按钮
-    local help_button = cc.ui.UIPushButton.new(
+    local buff_button = cc.ui.UIPushButton.new(
         {normal = "buff_1_128x128.png", pressed = "buff_1_128x128.png"}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
@@ -288,7 +299,6 @@ function GameUIHome:CreateTop()
         end
     end):addTo(self):pos(display.cx-280, display.top-260)
         :scale(0.5)
-
     return top_bg
 end
 
@@ -419,7 +429,8 @@ function GameUIHome:CreateBottom()
             end
         end
     end):addTo(self):pos(display.cx+280, display.top-560)
-
+    help_button:setVisible(not Alliance_Manager:GetMyAlliance():IsDefault())
+    self.help_button = help_button
     return bottom_bg
 end
 
