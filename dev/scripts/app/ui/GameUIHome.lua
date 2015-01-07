@@ -323,7 +323,7 @@ function GameUIHome:CreateBottom()
 
     local size = chat_bg:getContentSize()
     local pv = UIPageView.new {
-        viewRect = cc.rect(10, 4, size.width, size.height)}
+        viewRect = cc.rect(10, 4, size.width-80, size.height)}
         :onTouch(function (event)
             dump(event,"UIPageView event")
             if event.name == "pageChange" then

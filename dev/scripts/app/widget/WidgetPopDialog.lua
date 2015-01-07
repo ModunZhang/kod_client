@@ -32,5 +32,11 @@ function WidgetPopDialog:SetTitle(title)
     self.title_label:setString(title)
     return self
 end
+function WidgetPopDialog:onEnter()
+    WidgetPopDialog.super.onEnter(self)
+end
+function WidgetPopDialog:onExit()
+    WidgetPopDialog.super.onExit(self)
+end
 return WidgetPopDialog
 

@@ -25,8 +25,52 @@ function UIAutoClose:addToScene(scene,anima)
     end
     return self
 end
-
+function UIAutoClose:onEnter()
+    
+end
+function UIAutoClose:onExit()
+   
+end
+function UIAutoClose:onCleanup()
+    if UIKit:getRegistry().isObjectExists(self.__cname) then
+        UIKit:getRegistry().removeObject(self.__cname)
+    end
+end
 function UIAutoClose:addToCurrentScene( anima )
     return self:addToScene(display.getRunningScene(),anima)
+end
+function UIAutoClose:leftButtonClicked()
+    if self:isVisible() then
+        if self.moveInAnima then
+            self:UIAnimationMoveOut()
+        else
+            self:onMoveOutStage() -- fix
+        end
+    end
+end
+-- ui入场动画
+function UIAutoClose:UIAnimationMoveIn()
+    self:pos(0,-self:getContentSize().height)
+    transition.execute(self, cc.MoveTo:create(0.5, cc.p(0, 0)),
+        {
+            easing = "sineIn",
+            onComplete = function()
+                self:onMoveInStage()
+            end
+        })
+end
+
+-- ui 出场动画
+function UIAutoClose:UIAnimationMoveOut()
+    transition.execute(self, cc.MoveTo:create(0.5, cc.p(0, -self:getContentSize().height)),
+        {
+            easing = "sineIn",
+            onComplete = function()
+                self:onMoveOutStage()
+            end
+        })
+end
+function UIAutoClose:onMoveOutStage()
+    self:removeFromParent(true)
 end
 return UIAutoClose
