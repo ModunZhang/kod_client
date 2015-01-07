@@ -51,7 +51,6 @@ function WidgetAllianceBuildingUpgrade:onEnter()
         pressed = UIKit:getImageByBuildingType( self.building.name ,1)})
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                print("弹出建筑介绍详情")
                 WidgetAllianceBuildingInfo.new():addTo(self)
             end
         end):align(display.CENTER, display.cx-196, display.top-158):addTo(self)

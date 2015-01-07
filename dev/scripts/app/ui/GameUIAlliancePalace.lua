@@ -21,7 +21,7 @@ function GameUIAlliancePalace:onEnter()
     GameUIAlliancePalace.super.onEnter(self)
     self:CreateTabButtons({
         {
-            label = _("征税"),
+            label = _("奖励"),
             tag = "impose",
             default = "impose" == self.default_tab,
         },

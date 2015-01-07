@@ -21,7 +21,6 @@ end
 
 function WidgetMaterials:onExit()
     City:GetMaterialManager():RemoveObserver(self)
-    WidgetMaterials.super.onExit(self)
 end
 
 function WidgetMaterials:onEnter()

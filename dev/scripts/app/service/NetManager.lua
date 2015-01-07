@@ -800,7 +800,7 @@ function NetManager:getFetchMailsPromise(fromIndex)
 end
 -- 阅读邮件
 function NetManager:getReadMailsPromise(mailIds)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.readMails", {
+    return promise.all(get_none_blocking_request_promise("logic.playerHandler.readMails", {
         mailIds = mailIds
     }, "阅读邮件失败!"))
 end
@@ -843,7 +843,7 @@ function NetManager:getSendAllianceMailPromise(title, content)
 end
 -- 阅读战报
 function NetManager:getReadReportsPromise(reportIds)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.readReports", {
+    return promise.all(get_none_blocking_request_promise("logic.playerHandler.readReports", {
         reportIds = reportIds
     }, "阅读战报失败!"), get_playerdata_callback()):next(get_response_msg)
 end
