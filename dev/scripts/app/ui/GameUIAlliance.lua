@@ -612,13 +612,17 @@ end
 function GameUIAlliance:commonListItemAction( listType,item,alliance,tag)
     if listType == self.COMMON_LIST_ITEM_TYPE.JOIN then
         if  alliance.joinType == 'all' then --如果是直接加入
-            NetManager:getJoinAllianceDirectlyPromise(alliance.id):done()
+            NetManager:getJoinAllianceDirectlyPromise(alliance.id):catch(function(err)
+                self:SearchAllianAction(self.editbox_tag_search:getText())
+            end)
         else
             NetManager:getRequestToJoinAlliancePromise(alliance.id):next(function()
                 local dialog = FullScreenPopDialogUI.new()
                 dialog:SetTitle(_("申请成功"))
                 dialog:SetPopMessage(string.format(_("您的申请已发送至%s,如果被接受将加入该联盟,如果被拒绝,将收到一封通知邮件."),alliance.name))
                 dialog:AddToCurrentScene()
+            end):catch(function(err)
+                self:SearchAllianAction(self.editbox_tag_search:getText())
             end)
         end
     elseif  listType == self.COMMON_LIST_ITEM_TYPE.APPLY then

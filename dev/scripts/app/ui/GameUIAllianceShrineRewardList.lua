@@ -23,29 +23,25 @@ function GameUIAllianceShrineRewardList:BuildUI()
 	local background = WidgetUIBackGround.new({height = HEIGHT})
 		:addTo(layer)
 		:pos(window.left+22,window.top - 101 - HEIGHT)
-	local title_bar = display.newSprite("alliance_blue_title_600x42.png"):align(display.LEFT_BOTTOM, 0,HEIGHT - 15):addTo(background)
+	local title_bar = display.newSprite("alliance_blue_title_600x42.png"):align(display.CENTER_BOTTOM, 304,HEIGHT - 15):addTo(background)
 	UIKit:ttfLabel({
 		text = _("事件完成奖励"),
 		size = 22,
 		color = 0xffedae
 	}):align(display.CENTER,300,21):addTo(title_bar)
-	local closeButton = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"}, {scale9 = false})
+	local closeButton = UIKit:closeButton()
 	   	:addTo(title_bar)
-	   	:align(display.BOTTOM_RIGHT,title_bar:getContentSize().width+10, 0)
+	   	:align(display.BOTTOM_RIGHT,title_bar:getContentSize().width, 0)
 	   	:onButtonClicked(function ()
 	   		self:leftButtonClicked()
 	   	end)
-	-- display.newSprite("X_3.png")
-	--    	:addTo(closeButton)
-	--    	:pos(-32,30)
 
 	self.rewards_listView = UIListView.new({
-        -- bgColor = UIKit:hex2c4b(0x7a000000),
         viewRect = cc.rect(7, 100,595, 610),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         alignment = UIListView.ALIGNMENT_LEFT,
     }):addTo(background)
-	local line = display.newScale9Sprite("dividing_line_594x2.png"):size(595,1):align(display.LEFT_BOTTOM,0,710):addTo(background)
+	local line = display.newScale9Sprite("dividing_line_594x2.png"):size(590,1):align(display.LEFT_BOTTOM,10,710):addTo(background)
 	cc.ui.UIPushButton.new({
 		normal = "yellow_btn_up_185x65.png",
 		pressed = "yellow_btn_down_185x65.png"

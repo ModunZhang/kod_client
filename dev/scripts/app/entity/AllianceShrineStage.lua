@@ -54,16 +54,20 @@ end
 --兵数量上下浮动20%
 function AllianceShrineStage:formatTroops(str)
 	local r = {}
-	local troops_temp = string.split(str,"&")
+	local troops_temp = string.split(str,",")
 	for i,suntroops in ipairs(troops_temp) do
-		local troops = string.split(suntroops,",")
-		for _,v in ipairs(troops) do
-			local desc,count = unpack(string.split(v,":"))
-			local troop_type,star =  unpack(string.split(desc,"_"))
-			count = checknumber(count)
-			local count_str = math.ceil(count*0.8) .. "-" .. math.ceil(count*1.2)
-			table.insert(r,{type = troop_type,count = count_str,star = star})
-		end
+		local troops = string.split(suntroops,"_")
+		-- for _,v in ipairs(troops) do
+		-- 	local desc,count = unpack(string.split(v,":"))
+		-- 	local troop_type,star =  unpack(string.split(desc,"_"))
+		-- 	count = checknumber(count)
+		-- 	local count_str = math.ceil(count*0.8) .. "-" .. math.ceil(count*1.2)
+		-- 	table.insert(r,{type = troop_type,count = count_str,star = star})
+		-- end
+		local troop_type,star = troops[1],troops[2]
+		local count =  checknumber(troops[3])
+		local count_str = math.ceil(count*0.8) .. "-" .. math.ceil(count*1.2)
+		table.insert(r,{type = troop_type,count = count_str,star = star})
 	end
 	property(self,"troops",r)
 end

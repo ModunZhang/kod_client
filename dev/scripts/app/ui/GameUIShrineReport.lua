@@ -26,13 +26,12 @@ function GameUIShrineReport:GetShrineReport()
 end
 
 function GameUIShrineReport:BuildUI()
-	local shadowLayer = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
+	local shadowLayer = UIKit:shadowLayer()
 		:addTo(self)
 	local bg_node = WidgetUIBackGround.new({height=content_height}):addTo(shadowLayer):pos(window.left+20,window.bottom+140)
 	self.bg_node = bg_node
 	local titleBar = display.newScale9Sprite("alliance_blue_title_600x42.png")
-		:size(bg_node:getCascadeBoundingBox().width,42)
-		:align(display.LEFT_BOTTOM, -2,content_height - 15)
+		:align(display.CENTER_BOTTOM, 304,content_height - 15)
 		:addTo(bg_node)
 	local titleLabel = UIKit:ttfLabel({
 		text = _("事件详情"),
@@ -40,7 +39,7 @@ function GameUIShrineReport:BuildUI()
 		color = 0xffedae
 	}):align(display.CENTER,300,21):addTo(titleBar)
 	local closeButton = UIKit:closeButton():addTo(titleBar)
-   		:align(display.BOTTOM_RIGHT,titleBar:getContentSize().width+10, 0)
+   		:align(display.BOTTOM_RIGHT,titleBar:getContentSize().width, 0)
    		:onButtonClicked(function ()
    		self:leftButtonClicked()
    	end)
@@ -155,7 +154,7 @@ end
 
 function GameUIShrineReport:OnRePlayClicked(roundData)
 	print("TODO:圣地战斗回放")
-	UIKit:newGameUI("GameUIReplay",roundData):addToCurrentScene(true)
+	UIKit:newGameUI("GameUIReplay",self:GetShrineReport():GetFightReportObjectWithJson(roundData)):addToCurrentScene(true)
 end
 
 function GameUIShrineReport:RefreshUI(tag)

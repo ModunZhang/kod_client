@@ -85,22 +85,18 @@ function GameUIAllianceShrineDetail:BuildUI()
 	local background = WidgetUIBackGround.new({height = HEIGHT})
 		:addTo(layer)
 		:pos(window.left+22,window.top - 101 - HEIGHT)
-	local title_bar = display.newSprite("red_title_600x52.png"):align(display.LEFT_BOTTOM, 0,HEIGHT - 15):addTo(background)
+	local title_bar = display.newSprite("red_title_600x52.png"):align(display.CENTER_BOTTOM, 304,HEIGHT - 15):addTo(background)
 	UIKit:ttfLabel({
 		text = self:GetShrineStage():GetStageDesc(),
 		size = 22,
 		color = 0xffedae
 	}):align(display.CENTER,300,21):addTo(title_bar)
-	local closeButton = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"}, {scale9 = false})
+	local closeButton = UIKit:closeButton()
 	   	:addTo(title_bar)
-	   	:align(display.BOTTOM_RIGHT,title_bar:getContentSize().width+10, 0)
+	   	:align(display.BOTTOM_RIGHT,title_bar:getContentSize().width, 0)
 	   	:onButtonClicked(function ()
 	   		self:leftButtonClicked()
 	   	end)
-	-- display.newSprite("X_3.png")
-	--    	:addTo(closeButton)
-	--    	:pos(-32,30)
-	--ui
 	if self:IsActivate() then
 		local desc_label = UIKit:ttfLabel({
 			text = _("注:一场战斗中,每名玩家只能派出一支部队"),
@@ -252,17 +248,30 @@ function GameUIAllianceShrineDetail:RefreshItemListView()
 	self.item_list:reload()
 end
 
+function GameUIAllianceShrineDetail:IsNotDragon(stageTroop)
+	local name = stageTroop.type or ""
+	if name == 'blueDragon' 
+		or "redDragon" == name 
+		or "greenDragon" == name then
+		return false
+	end
+	return true
+end
+
 
 function GameUIAllianceShrineDetail:RefreshSoldierListView()
 	self.soldier_list:removeAllItems()
+	dump(self:GetShrineStage():Troops(),"self:GetShrineStage():Troops()--->")
 	for _,v in ipairs(self:GetShrineStage():Troops()) do
-		local item = self.soldier_list:newItem()
-		local content = WidgetSoldierBox.new("",function()end)
-		content:SetSoldier(v.type,v.star)
-		content:SetNumber(v.count)
-		item:addContent(content)
-		item:setItemSize(content:getCascadeBoundingBox().width+20,content:getCascadeBoundingBox().height)
-		self.soldier_list:addItem(item)
+		if self:IsNotDragon(v) then
+			local item = self.soldier_list:newItem()
+			local content = WidgetSoldierBox.new("",function()end)
+			content:SetSoldier(v.type,v.star)
+			content:SetNumber(v.count)
+			item:addContent(content)
+			item:setItemSize(content:getCascadeBoundingBox().width+20,content:getCascadeBoundingBox().height)
+			self.soldier_list:addItem(item)
+		end
 	end
 	self.soldier_list:reload()
 end
@@ -276,9 +285,14 @@ function GameUIAllianceShrineDetail:ShowRewardsButtonClicked()
 end
 
 function GameUIAllianceShrineDetail:OnEventButtonClicked()
-	NetManager:getActivateAllianceShrineStagePromise(self:GetShrineStage():StageName()):catch(function(err)
-		dump(err:reason())
-	end)
+	local member = self:GetAllianceShrine():GetAlliance():GetSelf()
+	if member:CanActivateShirneEvent() then
+		NetManager:getActivateAllianceShrineStagePromise(self:GetShrineStage():StageName()):catch(function(err)
+			dump(err:reason())
+		end)
+	else
+		UIKit:showMessageDialog(_("提示"),_("您没有此操作权限"), function()end)
+	end
 end
 
 return GameUIAllianceShrineDetail
