@@ -10,7 +10,8 @@ end)
 
 function WidgetDragonTabButtons:ctor(listener)
 	self.listener_ = listener or function(tag)end
-	UIKit:shadowLayer():addTo(self,-2):size(600,58):pos(16,42)
+	-- UIKit:shadowLayer():addTo(self,-2):size(600,58):pos(16,42)
+	display.newColorLayer(cc.c4b(0,0,0,255)):addTo(self,-2):size(600,58):pos(16,42)
 	local bg = display.newSprite("dragon_tab_bg_624x102.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(self)
 	local buttons = {}
 	local back_button = cc.ui.UIPushButton.new({
@@ -34,7 +35,7 @@ function WidgetDragonTabButtons:ctor(listener)
 		:setButtonLabel("normal",UIKit:ttfLabel({
     		text = _("装备"),
     		size = 20,
-    		color = 0x403c2f
+    		color = 0xffedae
 		}))
 		button1.tag = "equipment"
 	table.insert(buttons,button1)
@@ -43,13 +44,13 @@ function WidgetDragonTabButtons:ctor(listener)
 			disabled = "dragon_tab_buttons_light_172x54.png",
 			pressed = "dragon_tab_buttons_light_172x54.png",
 		})
-		:align(display.LEFT_TOP,button1:getPositionX()+172,96)
-		:addTo(bg)
+		:align(display.LEFT_TOP,button1:getPositionX()+173,96)
+		:addTo(bg,-1)
 		:onButtonClicked(handler(self, self.onButtonAction))
 		:setButtonLabel("normal",UIKit:ttfLabel({
     		text = _("技能"),
     		size = 20,
-    		color = 0x403c2f
+    		color = 0xffedae
 		}))
 		button2.tag = "skill"
 	table.insert(buttons,button2)
@@ -59,14 +60,14 @@ function WidgetDragonTabButtons:ctor(listener)
 			disabled = "dragon_tab_buttons_light_172x54.png",
 			pressed = "dragon_tab_buttons_light_172x54.png",
 		})
-		:align(display.LEFT_TOP,button2:getPositionX()+172,96)
+		:align(display.LEFT_TOP,button2:getPositionX()+173,96)
 		:onButtonClicked(handler(self, self.onButtonAction))
 		:setButtonLabel("normal",UIKit:ttfLabel({
     		text = _("信息"),
     		size = 20,
-    		color = 0x403c2f
+    		color = 0xffedae
 		}))
-		:addTo(bg)
+		:addTo(bg,-1)
 		button3.tag = "info"
 	table.insert(buttons,button3)
 	self.buttons = buttons
