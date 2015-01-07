@@ -34,8 +34,8 @@ function GameUIAllianceHome:onEnter()
 
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
+    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
 
-    -- self.alliance:GetAllianceMoonGate():AddListenOnType(self, AllianceMoonGate.LISTEN_TYPE.OnCountDataChanged)
 
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
 
@@ -48,7 +48,7 @@ function GameUIAllianceHome:CreateOperationButton()
     local first_col = 177
     local label_padding = 100
     for i, v in ipairs({
-        {"allianceHome/enemy.png", _("敌方")},
+        -- {"allianceHome/enemy.png", _("敌方")},
         {"allianceHome/help.png", _("帮助")},
         {"allianceHome/war.png", _("战斗")},
     }) do
@@ -73,8 +73,8 @@ function GameUIAllianceHome:onExit()
     app.timer:RemoveListener(self)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
+    self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
-    -- self.alliance:GetAllianceMoonGate():RemoveListenerOnType(self, AllianceMoonGate.LISTEN_TYPE.OnCountDataChanged)
 
     GameUIAllianceHome.super.onExit(self)
 end
@@ -98,15 +98,11 @@ function GameUIAllianceHome:TopBg()
         :onButtonClicked(handler(self, self.OnTopButtonClicked))
         :align(display.TOP_CENTER, t_size.width/2-160, t_size.height-4)
         :addTo(top_bg)
-    -- top_self_bg:setTouchEnabled(true)
-    -- top_self_bg:setTouchSwallowEnabled(true)
     local top_enemy_bg = WidgetPushButton.new({normal = "allianceHome/button_red_normal_314X88.png",
         pressed = "allianceHome/button_red_pressed_314X88.png"})
         :onButtonClicked(handler(self, self.OnTopButtonClicked))
         :align(display.TOP_CENTER, t_size.width/2+160, t_size.height-4)
         :addTo(top_bg)
-    -- top_enemy_bg:setTouchEnabled(true)
-    -- top_enemy_bg:setTouchSwallowEnabled(true)
 
     return top_self_bg,top_enemy_bg
 end
@@ -359,8 +355,8 @@ function GameUIAllianceHome:CreateTop()
             enemy_num_icon:setTexture("battle_39x38.png")
             enemy_num_icon:scale(1.0)
 
-            self:SetOurPowerOrKill(alliance:GetMyAllianceFightCountData().kill or our_reprot_data_kill)
-            self:SetEnemyPowerOrKill(alliance:GetEnemyAllianceFightCountData().kill or enemy_reprot_data_kill)
+            self:SetOurPowerOrKill(alliance:GetMyAllianceFightCountData().kill)
+            self:SetEnemyPowerOrKill(alliance:GetEnemyAllianceFightCountData().kill)
         elseif status=="protect" then
             our_num_icon:setTexture("battle_39x38.png")
             enemy_num_icon:setTexture("battle_39x38.png")
@@ -651,9 +647,9 @@ end
 function GameUIAllianceHome:OnMidButtonClicked(event)
     local tag = event.target:getTag()
     if not tag then return end
-    if tag == 3 then -- 战斗
+    if tag == 2 then -- 战斗
     -- NetManager:getFindAllianceToFightPromose()
-    elseif tag == 2 then
+    elseif tag == 1 then
         if not self.alliance:IsDefault() then
             GameUIHelp.new():AddToCurrentScene()
         else
@@ -661,43 +657,10 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
                 :SetPopMessage(_("加入联盟才能激活帮助功能"))
                 :AddToCurrentScene()
         end
-    elseif tag == 1 then
-        local enemy_alliance_id = self.alliance:GetAllianceMoonGate():GetEnemyAlliance().id
-        -- if enemy_alliance_id and string.trim(enemy_alliance_id) ~= "" then
-        --     NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function(msg)
-        --         local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
-        --         app:lockInput(false)
-        --         app:enterScene("EnemyAllianceScene", {enemyAlliance,GameUIAllianceEnter.Enemy}, "custom", -1, function(scene, status)
-        --             local manager = ccs.ArmatureDataManager:getInstance()
-        --             if status == "onEnter" then
-        --                 manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
-        --                 local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
-        --                 display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
-        --                     transition.sequence{
-        --                         cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
-        --                         cc.FadeIn:create(0.75),
-        --                         cc.CallFunc:create(function() scene:hideOutShowIn() end),
-        --                         cc.DelayTime:create(0.5),
-        --                         cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
-        --                         cc.FadeOut:create(0.75),
-        --                         cc.CallFunc:create(function() scene:finish() end),
-        --                     }
-        --                 )
-        --             elseif status == "onExit" then
-        --                 manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
-        --             end
-        --         end)
-        --     end)
-        -- else
-        --     FullScreenPopDialogUI.new():SetTitle(_("提示"))
-        --         :SetPopMessage(_("当前是和平期"))
-        --         :AddToCurrentScene()
-        -- end
     end
 end
 
 function GameUIAllianceHome:OnBasicChanged(alliance,changed_map)
-    print("-------GameUIAllianceHome:OnBasicChanged-----")
     if changed_map.honour then
         self.honour_label:setString(GameUtils:formatNumber(changed_map.honour.new))
     elseif changed_map.status then
@@ -711,6 +674,21 @@ function GameUIAllianceHome:OnMemberChanged(alliance,changed_map)
         end
     end
 end
+-- function GameUIAllianceHome:OnAllianceCountInfoChanged(alliance,countInfo)
+--     self.count = 0
+--     local status = self.alliance:Status()
+--     if status=="fight" or status=="protect" then
+--         print("self.count",self.count)
+--         LuaUtils:outputTable("GameUIAllianceHome:OnAllianceCountInfoChanged==countInfo", countInfo)
+--         self.count = self.count + 1
+--         if countInfo.kill then
+--             self.top:SetOurPowerOrKill(countInfo.kill)
+--         end
+--         if countInfo.beKilled then
+--             self.top:SetEnemyPowerOrKill(countInfo.beKilled)
+--         end
+--     end
+-- end
 function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
     local coordinate_str = string.format("%d, %d", logic_x, logic_y)
     local is_mine
@@ -722,19 +700,23 @@ function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
     self.coordinate_label:setString(coordinate_str)
     self.coordinate_title_label:setString(is_mine)
 end
-
-function GameUIAllianceHome:OnCountDataChanged(changed_map)
+function GameUIAllianceHome:OnAllianceFightChanged(alliance,allianceFight)
     local status = self.alliance:Status()
     if status=="fight" then
-        if changed_map.our.kill then
-            self.top:SetOurPowerOrKill(changed_map.our.kill.new)
+        local our , enemy
+        if self.alliance:Id() == allianceFight.attackAllianceId  then
+            our = allianceFight.attackAllianceCountData
+            enemy = allianceFight.defenceAllianceCountData
+        else
+            our = allianceFight.defenceAllianceCountData
+            enemy = allianceFight.attackAllianceCountData
         end
-        if changed_map.enemy.kill then
-            self.top:SetEnemyPowerOrKill(changed_map.enemy.kill.new)
+        if our and enemy then
+            self.top:SetOurPowerOrKill(our.kill)
+            self.top:SetEnemyPowerOrKill(enemy.kill)
         end
     end
 end
-
 function GameUIAllianceHome:OnTimer(current_time)
     local status = self.alliance:Status()
     if status ~= "peace" then
@@ -767,6 +749,10 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
+
+
+
 
 
 

@@ -116,15 +116,13 @@ function FullScreenPopDialogUI:CreateCancelButton(params)
     return self
 end
 
-function FullScreenPopDialogUI:CreateNeeds(icon,value)
+function FullScreenPopDialogUI:CreateNeeds(icon,value,color)
     local icon_image = display.newScale9Sprite(icon, display.cx-30, display.top-610):addTo(self)
     icon_image:setScale(30/icon_image:getContentSize().height)
-    self.needs_label = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+    self.needs_label = UIKit:ttfLabel({
         text = value.."",
-        font = UIKit:getFontFilePath(),
         size = 24,
-        color = UIKit:hex2c3b(0x403c2f)
+        color = color or 0x403c2f
     }):align(display.LEFT_CENTER,display.cx+10,display.top-610):addTo(self)
     return self
 end

@@ -22,7 +22,6 @@ end
 
 -- Node Event
 function CommonUpgradeUI:onEnter()
-    -- print("CommonUpgradeUI onEnter->")
     self:InitCommonPart()
     self:InitUpgradePart()
     self:InitAccelerationPart()
@@ -32,7 +31,6 @@ function CommonUpgradeUI:onEnter()
 end
 
 function CommonUpgradeUI:onExit()
-    -- print("CommonUpgradeUI onExit--->")
     self.city:GetResourceManager():RemoveObserver(self)
     self:RemoveUpgradeListener()
 end
@@ -43,7 +41,6 @@ function CommonUpgradeUI:OnResourceChanged(resource_manager)
     end
     self.upgrade_layer:isVisible()
     if self.upgrade_layer:isVisible() then
-        -- print("资源更行，刷新相关数据， 现在是升级需求listview")
         self:SetUpgradeRequirementListview()
     end
 end
@@ -218,8 +215,6 @@ end
 
 function CommonUpgradeUI:InitUpgradePart()
     -- 升级页
-    -- local color_layer = display.newColorLayer(cc.c4b(255,0,0,255)):addTo(self)
-    -- color_layer:setContentSize(cc.size(display.width,display.height-385))
     if self.building:GetNextLevel() == self.building:GetLevel() then
         return
     end
@@ -236,13 +231,11 @@ function CommonUpgradeUI:InitUpgradePart()
             listener = function ()
                 local upgrade_listener = function()
                     if self.building:GetType()=="tower" then
-                        -- NetManager:instantUpgradeTowerByLocation(self.building:IsUnlocked(), function(...) end)
                         NetManager:getInstantUpgradeTowerByLocationPromise(self.building:TowerId())
                             :catch(function(err)
                                 dump(err:reason())
                             end)
                     elseif self.building:GetType()=="wall" then
-                        -- NetManager:instantUpgradeWallByLocation(function(...) end)
                         NetManager:getInstantUpgradeWallByLocationPromise()
                             :catch(function(err)
                                 dump(err:reason())
@@ -250,7 +243,6 @@ function CommonUpgradeUI:InitUpgradePart()
                     else
                         local location = City:GetLocationIdByBuildingType(self.building:GetType())
                         if location then
-                            -- NetManager:instantUpgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
 
                             local location_id = City:GetLocationIdByBuildingType(self.building:GetType())
                             NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
@@ -260,14 +252,12 @@ function CommonUpgradeUI:InitUpgradePart()
                         else
                             local tile = City:GetTileWhichBuildingBelongs(self.building)
                             local house_location = tile:GetBuildingLocation(self.building)
-                            -- NetManager:instantUpgradeHouseByLocation(tile.location_id, house_location, function(...) end)
 
                             NetManager:getInstantUpgradeHouseByLocationPromise(tile.location_id, house_location)
                                 :catch(function(err)
                                     dump(err:reason())
                                 end)
                         end
-                        print(self.building:GetType().."---------------- upgrade now button has been  clicked ")
                     end
                 end
 
@@ -292,13 +282,11 @@ function CommonUpgradeUI:InitUpgradePart()
             listener = function ()
                 local upgrade_listener = function()
                     if self.building:GetType()=="tower" then
-                        -- NetManager:upgradeTowerByLocation(self.building:IsUnlocked(), function(...) end)
                         NetManager:getUpgradeTowerByLocationPromise(self.building:TowerId())
                             :catch(function(err)
                                 dump(err:reason())
                             end)
                     elseif self.building:GetType()=="wall" then
-                        -- NetManager:upgradeWallByLocation(function(...) end)
                         NetManager:getUpgradeWallByLocationPromise()
                             :catch(function(err)
                                 dump(err:reason())
@@ -306,7 +294,6 @@ function CommonUpgradeUI:InitUpgradePart()
                     else
                         local location = City:GetLocationIdByBuildingType(self.building:GetType())
                         if location then
-                            -- NetManager:upgradeBuildingByLocation(City:GetLocationIdByBuildingType(self.building:GetType()), function(...) end)
                             local location_id = City:GetLocationIdByBuildingType(self.building:GetType())
                             NetManager:getUpgradeBuildingByLocationPromise(location_id)
                                 :catch(function(err)
@@ -315,20 +302,17 @@ function CommonUpgradeUI:InitUpgradePart()
                         else
                             local tile = City:GetTileWhichBuildingBelongs(self.building)
                             local house_location = tile:GetBuildingLocation(self.building)
-                            -- NetManager:upgradeHouseByLocation(tile.location_id, house_location, function(...) end)
 
                             NetManager:getUpgradeHouseByLocationPromise(tile.location_id, house_location)
                                 :catch(function(err)
                                     dump(err:reason())
                                 end)
                         end
-                        -- print(self.building:GetType().."---------------- upgrade  button has been  clicked ")
                     end
                     self:getParent():leftButtonClicked()
                 end
 
                 local can_not_update_type = self.building:IsAbleToUpgrade(false)
-                -- print("can_not_update_type====",can_not_update_type)
                 if can_not_update_type then
                     self:PopNotSatisfyDialog(upgrade_listener,can_not_update_type)
                 else
@@ -646,10 +630,21 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
     if can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH then
         local required_gems =self.building:getUpgradeRequiredGems()
         local owen_gem = City.resource_manager:GetGemResource():GetValue()
+        dialog:SetTitle(_("补充资源"))
+        dialog:SetPopMessage(_("您当前没有足够的资源,是否花费魔法石立即补充"))
+
         if owen_gem<required_gems then
-            dialog:SetTitle(_("提示"))
-            dialog:SetPopMessage(UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH)
+            dialog:CreateNeeds("Topaz-icon.png",required_gems,0x7e0000)
+            dialog:CreateOKButton(
+                {
+                    listener = function()
+                        UIKit:newGameUI('GameUIShop', City):addToCurrentScene(true)
+                        self:getParent():leftButtonClicked()
+                    end
+                }
+            )
         else
+            dialog:CreateNeeds("Topaz-icon.png",required_gems)
             dialog:CreateOKButton(
                 {
                     listener = function()
@@ -658,9 +653,6 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
                     end
                 }
             )
-            dialog:SetTitle(_("补充资源"))
-            dialog:SetPopMessage(_("您当前没有足够的资源,是否花费魔法石立即补充"))
-            dialog:CreateNeeds("Topaz-icon.png",required_gems)
         end
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH then
         local required_gems = self.building:getUpgradeRequiredGems()
@@ -693,6 +685,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
 
 

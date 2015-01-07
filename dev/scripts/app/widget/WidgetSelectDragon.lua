@@ -49,7 +49,7 @@ function WidgetSelectDragon:ctor(params)
         return dragon_frame
     end
 
-    local dragons = dragon_manager:GetDragons()
+    local dragons = dragon_manager:GetDragonsSortWithPowerful()
     if LuaUtils:table_size(dragons)==0 then
         return
     end
@@ -57,12 +57,18 @@ function WidgetSelectDragon:ctor(params)
     local gap_y = 130
     local add_count = 0
     local optional_dragon = {}
-    for k,dragon in pairs(dragons) do
+    -- 默认选中最强的并且可以出战的龙,如果都不能出战,则默认最强龙
+    local default_dragon_type = dragon_manager:GetCanFightPowerfulDragonType() ~= "" and dragon_manager:GetCanFightPowerfulDragonType() or dragon_manager:GetPowerfulDragonType()
+    local default_select_dragon_indecx
+    for k,dragon in ipairs(dragons) do
         if dragon:Level()>0 then
             createDragonFrame(dragon):align(display.LEFT_CENTER, 30,origin_y-add_count*gap_y)
                 :addTo(body)
             add_count = add_count + 1
             table.insert(optional_dragon, dragon)
+            if dragon:Type() == default_dragon_type then
+                default_select_dragon_indecx = k
+            end
         end
     end
 
@@ -84,7 +90,7 @@ function WidgetSelectDragon:ctor(params)
     group:setButtonsLayoutMargin(80, 0, 0, 0)
         :setLayoutSize(100, 500)
         :align(display.TOP_CENTER, 500 , 110)
-    group:getButtonAtIndex(1):setButtonSelected(true)
+    group:getButtonAtIndex(default_select_dragon_indecx):setButtonSelected(true)
 
 
     if #params.btns == 1 then

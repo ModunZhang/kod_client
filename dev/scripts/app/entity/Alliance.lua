@@ -15,7 +15,7 @@ local AllianceBelvedere = import(".AllianceBelvedere")
 --注意:突袭用的MarchAttackEvent 所以使用OnAttackMarchEventTimerChanged
 Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS","FIGHT_REQUESTS","FIGHT_REPORTS",
     "OnAttackMarchEventDataChanged","OnAttackMarchEventTimerChanged","OnAttackMarchReturnEventDataChanged","ALLIANCE_FIGHT"
-    ,"OnStrikeMarchEventDataChanged","OnStrikeMarchReturnEventDataChanged","OnVillageEventsDataChanged","OnVillageEventTimer")
+    ,"OnStrikeMarchEventDataChanged","OnStrikeMarchReturnEventDataChanged","OnVillageEventsDataChanged","OnVillageEventTimer","COUNT_INFO")
 local unpack = unpack
 local function pack(...)
     return {...}
@@ -259,11 +259,11 @@ function Alliance:GetLastAllianceFightReports()
 end
 function Alliance:GetOurLastAllianceFightReportsData()
     local last = self.alliance_fight_reports[#self.alliance_fight_reports]
-    return DataManager:getUserData()._id == last.attackAllianceId and last.attackAlliance or last.defenceAlliance
+    return self.id == last.attackAllianceId and last.attackAlliance or last.defenceAlliance
 end
 function Alliance:GetEnemyLastAllianceFightReportsData()
     local last = self.alliance_fight_reports[#self.alliance_fight_reports]
-    return DataManager:getUserData()._id == last.attackAllianceId and last.defenceAlliance or last.attackAlliance
+    return self.id == last.attackAllianceId and last.defenceAlliance or last.attackAlliance
 end
 function Alliance:GetAllHelpEvents()
     return self.help_events
@@ -375,6 +375,9 @@ function Alliance:CreateEventFromJsonData(json_data)
 end
 function Alliance:CreateEvent(key, type, category, time, params)
     return {key = key, type = type, category = category, time = time, params = params}
+end
+function Alliance:GetCountInfo()
+    return self.countInfo
 end
 function Alliance:OnEventsChanged(changed_map)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.EVENTS, function(listener)
@@ -960,7 +963,13 @@ function Alliance:ResetMarchEvent()
 end
 
 function Alliance:OnAllianceCountInfoChanged(countInfo)
-    self.countInfo = countInfo or {}
+    if not countInfo then
+        return
+    end
+    self.countInfo = countInfo
+    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.COUNT_INFO, function(listener)
+        listener:OnAllianceCountInfoChanged(self,self.countInfo)
+    end)
 end
 function Alliance:OnAllianceFightChanged(allianceFight)
     if not allianceFight then return end

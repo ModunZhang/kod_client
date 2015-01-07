@@ -660,50 +660,48 @@ function GameUIShop:onEnter()
         :align(display.CENTER, window.left + 500, window.top - 1200)
         :onButtonClicked(function(event)
             -- 重置玩家和联盟数据
-            cocos_promise.promiseWithCatchError(NetManager:getSendGlobalMsgPromise("reset")
+            cocos_promise.promiseWithCatchError(
                 -- 增加宝石
-                :next(function()
-                    return NetManager:getSendGlobalMsgPromise("gem "..1000000)
-                end)
-                -- 升级城堡到4级
-                :next(function()
-                    return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
-                end)
-                :next(function()
-                    return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
-                end)
-                :next(function()
-                    return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
-                end)
-                -- 解锁军帐
-                :next(function()
-                    return NetManager:getInstantUpgradeBuildingByLocationPromise(8)
-                end)
-                -- 解锁兵营
-                :next(function()
-                    return NetManager:getInstantUpgradeBuildingByLocationPromise(7)
-                end)
-                -- 招募士兵
-                :next(function()
-                    return NetManager:getInstantRecruitNormalSoldierPromise("swordsman", 20, cb)
-                end)
-                :next(function()
-                    return NetManager:getInstantRecruitNormalSoldierPromise("ranger", 20, cb)
-                end)
-                :next(function()
-                    return NetManager:getInstantRecruitNormalSoldierPromise("catapult", 5, cb)
-                end)
-                :next(function()
-                    return NetManager:getInstantRecruitNormalSoldierPromise("lancer", 5, cb)
-                end)
-                -- 孵化龙
-                :next(function()
-                    return NetManager:getSendGlobalMsgPromise("dragonstar redDragon 3 ")
-                end)
-                -- 创建联盟
-                :next(function()
-                    return NetManager:getCreateAlliancePromise("jordan", "aj23", "all",  "grassLand", Flag:RandomFlag():EncodeToJson())
-                end)
+                NetManager:getSendGlobalMsgPromise("gem "..1000000)
+                    -- 升级城堡到4级
+                    :next(function()
+                        return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
+                    end)
+                    :next(function()
+                        return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
+                    end)
+                    :next(function()
+                        return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
+                    end)
+                    -- 解锁军帐
+                    :next(function()
+                        return NetManager:getInstantUpgradeBuildingByLocationPromise(8)
+                    end)
+                    -- 解锁兵营
+                    :next(function()
+                        return NetManager:getInstantUpgradeBuildingByLocationPromise(7)
+                    end)
+                    -- 招募士兵
+                    :next(function()
+                        return NetManager:getInstantRecruitNormalSoldierPromise("swordsman", 20, cb)
+                    end)
+                    :next(function()
+                        return NetManager:getInstantRecruitNormalSoldierPromise("ranger", 20, cb)
+                    end)
+                    :next(function()
+                        return NetManager:getInstantRecruitNormalSoldierPromise("catapult", 5, cb)
+                    end)
+                    :next(function()
+                        return NetManager:getInstantRecruitNormalSoldierPromise("lancer", 5, cb)
+                    end)
+                    -- 孵化龙
+                    :next(function()
+                        return NetManager:getSendGlobalMsgPromise("dragonstar redDragon 3 ")
+                    end)
+                    -- 创建联盟
+                    :next(function()
+                        return NetManager:getCreateAlliancePromise("jordan", "aj23", "all",  "grassLand", Flag:RandomFlag():EncodeToJson())
+                    end)
             )
         end)
 
@@ -720,51 +718,49 @@ function GameUIShop:onEnter()
         :align(display.CENTER, window.left + 140, window.top - 1300)
         :onButtonClicked(function(event)
             -- 重置玩家和联盟数据
-            cocos_promise.promiseWithCatchError(NetManager:getSendGlobalMsgPromise("reset")
+            cocos_promise.promiseWithCatchError(
                 -- 增加宝石
-                :next(function()
-                    return NetManager:getSendGlobalMsgPromise("gem "..1000000)
-                end)
-                -- 升级城堡到4级
-                :next(function()
-                    return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
-                end)
-                :next(function()
-                    return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
-                end)
-                :next(function()
-                    return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
-                end)
-                -- 解锁军帐
-                :next(function()
-                    return NetManager:getInstantUpgradeBuildingByLocationPromise(8)
-                end)
-                -- 解锁兵营
-                :next(function()
-                    return NetManager:getInstantUpgradeBuildingByLocationPromise(7)
-                end)
-                -- 招募士兵
-                :next(function()
-                    return NetManager:getInstantRecruitNormalSoldierPromise("swordsman", 20, cb)
-                end)
-                :next(function()
-                    return NetManager:getInstantRecruitNormalSoldierPromise("ranger", 20, cb)
-                end)
-                :next(function()
-                    return NetManager:getInstantRecruitNormalSoldierPromise("catapult", 5, cb)
-                end)
-                :next(function()
-                    return NetManager:getInstantRecruitNormalSoldierPromise("lancer", 5, cb)
-                end)
-                -- 孵化龙
-                :next(function()
-                    return NetManager:getSendGlobalMsgPromise("dragonstar blueDragon 3 ")
-                end)
-              
-                -- 创建联盟
-                :next(function()
-                    return NetManager:getCreateAlliancePromise("iverson", "ai3", "all",  "grassLand", Flag:RandomFlag():EncodeToJson())
-                end)
+                NetManager:getSendGlobalMsgPromise("gem "..1000000)
+                    -- 升级城堡到4级
+                    :next(function()
+                        return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
+                    end)
+                    :next(function()
+                        return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
+                    end)
+                    :next(function()
+                        return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
+                    end)
+                    -- 解锁军帐
+                    :next(function()
+                        return NetManager:getInstantUpgradeBuildingByLocationPromise(8)
+                    end)
+                    -- 解锁兵营
+                    :next(function()
+                        return NetManager:getInstantUpgradeBuildingByLocationPromise(7)
+                    end)
+                    -- 招募士兵
+                    :next(function()
+                        return NetManager:getInstantRecruitNormalSoldierPromise("swordsman", 20, cb)
+                    end)
+                    :next(function()
+                        return NetManager:getInstantRecruitNormalSoldierPromise("ranger", 20, cb)
+                    end)
+                    :next(function()
+                        return NetManager:getInstantRecruitNormalSoldierPromise("catapult", 5, cb)
+                    end)
+                    :next(function()
+                        return NetManager:getInstantRecruitNormalSoldierPromise("lancer", 5, cb)
+                    end)
+                    -- 孵化龙
+                    :next(function()
+                        return NetManager:getSendGlobalMsgPromise("dragonstar blueDragon 3 ")
+                    end)
+
+                    -- 创建联盟
+                    :next(function()
+                        return NetManager:getCreateAlliancePromise("iverson", "ai3", "all",  "grassLand", Flag:RandomFlag():EncodeToJson())
+                    end)
             )
         end)
 
@@ -781,11 +777,9 @@ function GameUIShop:onEnter()
         :align(display.CENTER, window.left + 320, window.top - 1300)
         :onButtonClicked(function(event)
             -- 重置玩家和联盟数据
-            cocos_promise.promiseWithCatchError(NetManager:getSendGlobalMsgPromise("reset")
+            cocos_promise.promiseWithCatchError(
                 -- 增加宝石
-                :next(function()
-                    return NetManager:getSendGlobalMsgPromise("gem "..1000000)
-                end)
+                NetManager:getSendGlobalMsgPromise("gem "..1000000)
                 -- 升级城堡到4级
                 :next(function()
                     return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
@@ -821,7 +815,7 @@ function GameUIShop:onEnter()
                 :next(function()
                     return NetManager:getSendGlobalMsgPromise("dragonstar blueDragon 3 ")
                 end)
-              
+
 
             )
         end)
@@ -837,10 +831,10 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 1300)
         :onButtonClicked(function(event)
-           cocos_promise.promiseWithCatchError(
+            cocos_promise.promiseWithCatchError(
                 NetManager:getSetDefenceDragonPromise("redDragon")
             )
-            end)
+        end)
     WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
         {scale9 = false}
@@ -853,8 +847,8 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 140, window.top - 1400)
         :onButtonClicked(function(event)
-          app:GetAudioManager():SwitchBackgroundMusicState(not app:GetAudioManager():GetBackgroundMusicState())
-           event.target:setButtonLabelString("音乐开关->" .. (app:GetAudioManager():GetBackgroundMusicState() and "on" or "off"))
+            app:GetAudioManager():SwitchBackgroundMusicState(not app:GetAudioManager():GetBackgroundMusicState())
+            event.target:setButtonLabelString("音乐开关->" .. (app:GetAudioManager():GetBackgroundMusicState() and "on" or "off"))
         end)
     WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
@@ -868,10 +862,10 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 320, window.top - 1400)
         :onButtonClicked(function(event)
-          app:GetAudioManager():SwitchEffectSoundState(not app:GetAudioManager():GetEffectSoundState())
-          event.target:setButtonLabelString("音效开关->" .. (app:GetAudioManager():GetEffectSoundState() and "on" or "off"))
+            app:GetAudioManager():SwitchEffectSoundState(not app:GetAudioManager():GetEffectSoundState())
+            event.target:setButtonLabelString("音效开关->" .. (app:GetAudioManager():GetEffectSoundState() and "on" or "off"))
         end)
-     WidgetPushButton.new(
+    WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
@@ -883,11 +877,11 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 1400)
         :onButtonClicked(function(event)
-          app:GetPushManager():SwitchNotification(not app:GetPushManager():IsNotificationIsOn())
-          event.target:setButtonLabelString("本地推送->" .. (app:GetPushManager():IsNotificationIsOn() and "on" or "off"))
+            app:GetPushManager():SwitchNotification(not app:GetPushManager():IsNotificationIsOn())
+            event.target:setButtonLabelString("本地推送->" .. (app:GetPushManager():IsNotificationIsOn() and "on" or "off"))
         end)
 
-     WidgetPushButton.new(
+    WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
@@ -906,7 +900,7 @@ function GameUIShop:onEnter()
             end
         end)
 
-     WidgetPushButton.new(
+    WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
@@ -922,7 +916,7 @@ function GameUIShop:onEnter()
             device.showAlert("版本信息", app:showDebugInfo(),{_("确定")})
         end)
 
-     WidgetPushButton.new(
+    WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
@@ -935,7 +929,7 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 1500)
         :onButtonClicked(function(event)
-            NetManager:getFindAllianceToFightPromose()            
+            NetManager:getFindAllianceToFightPromose()
         end)
 
     item:addContent(content)
@@ -949,6 +943,7 @@ end
 
 
 return GameUIShop
+
 
 
 
