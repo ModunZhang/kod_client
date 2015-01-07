@@ -11,7 +11,7 @@ function RuinSprite:GetSpriteFile()
     return ruin_png
 end
 function RuinSprite:GetSpriteOffset()
-    return 0, 60
+    return 0, 40
 end
 
 
