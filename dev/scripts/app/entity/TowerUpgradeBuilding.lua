@@ -86,19 +86,7 @@ function TowerUpgradeBuilding:GetAtk()
     local config = self.config_building_function[self:GetType()]
     local level = self.level
     local c = config[level]
-    return c.atkinfs,c.atkarcs,c.atkcavs,c.atkcats
+    return c.infantry,c.archer,c.cavalry,c.siege
 end
 
-
-
 return TowerUpgradeBuilding
-
-
-
-
-
-
-
-
-
-
