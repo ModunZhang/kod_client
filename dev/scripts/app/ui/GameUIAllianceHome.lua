@@ -35,7 +35,7 @@ function GameUIAllianceHome:onEnter()
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
-
+    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
 
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
 
@@ -74,6 +74,7 @@ function GameUIAllianceHome:onExit()
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
+    self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
 
     GameUIAllianceHome.super.onExit(self)
@@ -375,7 +376,7 @@ function GameUIAllianceHome:CreateTop()
             else
                 enemy_num_icon:setTexture("citizen_44x50.png")
                 enemy_num_icon:scale(0.7)
-                self:SetEnemyPowerOrKill(0)
+                self:SetEnemyPowerOrKill(alliance:GetFightRequestPlayerNum())
             end
             our_num_icon:setTexture("allianceHome/power.png")
             self:SetOurPowerOrKill(alliance:Power())
@@ -390,9 +391,14 @@ function GameUIAllianceHome:CreateTop()
     return Top
 end
 
+function GameUIAllianceHome:OnAllianceFightRequestsChanged(request_num)
+    if self.alliance:Status() == "peace" then
+        self.top:SetEnemyPowerOrKill(request_num)
+    end
+end
 
 function GameUIAllianceHome:MailUnreadChanged(...)
-    local num =MailManager:GetUnReadMailsNum()+MailManager:GetUnReadReportsNum()
+    local num =MailManager:GetUnReadMailsNum() + MailManager:GetUnReadReportsNum()
     if num==0 then
         self.mail_unread_num_bg:setVisible(false)
     else
