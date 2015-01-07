@@ -17,7 +17,7 @@ local img_dir = "allianceHome/"
 function GameUIAllianceBattle:ctor(city)
     GameUIAllianceBattle.super.ctor(self, city, _("联盟会战"))
     self.alliance = Alliance_Manager:GetMyAlliance()
-    self.enemy_alliance = Alliance_Manager:GetEnemyAlliance()
+    self.enemy_alliance = Alliance_Manager:GetMyAlliance():GetEnemyAlliance()
 
     self.alliance_fight_reports_table = {}
     self.history_items = {}
@@ -284,7 +284,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
     else
         local our_alliance = self.alliance
         -- local enemy_alliance = self.alliance:GetAllianceMoonGate():GetEnemyAlliance()
-        local enemy_alliance = Alliance_Manager:GetEnemyAlliance()
+        local enemy_alliance = Alliance_Manager:GetMyAlliance():GetEnemyAlliance()
         local top_bg = display.newSprite(img_dir.."back_ground_580x118.png")
             :align(display.TOP_CENTER, window.cx, window.top-120)
             :addTo(layer)
@@ -516,7 +516,7 @@ end
 function GameUIAllianceBattle:OpenAllianceDetails(isOur)
     local alliance = self.alliance
 
-    local enemy_alliance = Alliance_Manager:GetEnemyAlliance()
+    local enemy_alliance = Alliance_Manager:GetMyAlliance():GetEnemyAlliance()
     local count_data = isOur and alliance:GetMyAllianceFightCountData() or alliance:GetEnemyAllianceFightCountData()
     local our_player_kills = alliance:GetMyAllianceFightPlayerKills()
     local enemy_player_kills = alliance:GetEnemyAllianceFightPlayerKills()

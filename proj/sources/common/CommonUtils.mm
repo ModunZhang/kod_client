@@ -64,3 +64,26 @@ extern "C" const char* GetDeviceModel()
     return [[NSString stringWithCString:systemInfo.machine
                                encoding:NSUTF8StringEncoding]UTF8String];
 }
+
+static NSFileHandle *outFile = NULL;
+static NSString *logFilePath = NULL;
+static dispatch_queue_t aDQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+extern "C" void WriteLog_(const char *str)
+{
+    if (logFilePath == NULL)
+    {
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"MM_dd-HH_mm"];
+        logFilePath = [[NSString stringWithFormat:@"%@/Documents/%@.log",NSHomeDirectory(),[dateFormatter stringFromDate:[NSDate date]]]retain];
+    }
+    if(outFile == NULL)
+    {
+        [[NSFileManager defaultManager] createFileAtPath:logFilePath contents:nil attributes:nil] ;
+        outFile = [[NSFileHandle fileHandleForWritingAtPath:logFilePath]retain];
+    }
+    dispatch_async(aDQueue, ^{
+        NSData * data = [[NSString stringWithCString:str  encoding:NSUTF8StringEncoding] dataUsingEncoding:NSUTF8StringEncoding];
+        [outFile writeData:data];
+        //outFile close
+    });
+}
