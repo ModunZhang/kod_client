@@ -2,7 +2,6 @@ local Enum = import("..utils.Enum")
 
 local WidgetPushButton = import(".WidgetPushButton")
 local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
--- local GameUIAllianceEnter = import("..ui.GameUIAllianceEnter")
 
 local window = import("..utils.window")
 
@@ -180,11 +179,11 @@ function WidgetChangeMap:SetMapType( map_type )
         -- if enemy_alliance_id and string.trim(enemy_alliance_id) ~= "" then
         --     self.map_frame:setPositionY(289)
         --  self:Retraction()
-        --     NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function(msg)
-        --         local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
-        --         app:lockInput(false)
-        --         app:enterScene("EnemyAllianceScene", {enemyAlliance,GameUIAllianceEnter.Enemy}, "custom", -1, handler(self, self.CloudArmature))
-        --     end)
+            -- NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function(msg)
+            --     local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
+            --     app:lockInput(false)
+            --     app:enterScene("EnemyAllianceScene", {enemyAlliance,GameUIAllianceEnter.Enemy}, "custom", -1, handler(self, self.CloudArmature))
+            -- end)
         -- else
         --     FullScreenPopDialogUI.new():SetTitle(_("提示"))
         --         :SetPopMessage(_("当前是和平期"))

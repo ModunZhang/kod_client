@@ -7,7 +7,7 @@ local AllianceScene = import(".AllianceScene")
 local OtherAllianceScene = class("OtherAllianceScene", AllianceScene)
 local REQUEST_SERVER_TIME = 30
 
-function OtherAllianceScene:ctor(alliance,mode)
+function OtherAllianceScene:ctor(alliance)
 	self.alliance_ = alliance
     self.time_intval = 0
 	OtherAllianceScene.super.ctor(self)
@@ -50,7 +50,7 @@ function OtherAllianceScene:TimerRequestServer()
 end
 --特殊刷新行军路线-->服务器需要添加缺失的行军事件
 function OtherAllianceScene:RefreshAllianceMarchLine()
-    self:GetSceneLayer():CreateCorpsFromMrachEventsIf()
+    -- self:GetSceneLayer():CreateCorpsFromMrachEventsIf()
 end
 
 function OtherAllianceScene:OnTimer(current_time)

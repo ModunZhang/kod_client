@@ -912,7 +912,7 @@ end
 function GameUIAlliance:HaveAlliaceUI_membersIf()
     if self.member_list_bg then self:RefreshMemberList() return self.member_list_bg end
     local member_list_bg = display.newSprite("alliance_member_bg_568x784.png")
-        :align(display.CENTER_TOP, window.cx, window.betweenHeaderAndTab)
+        :align(display.CENTER_TOP, window.width/2, window.betweenHeaderAndTab)
         :addTo(self.main_content)
     local listView = UIListView.new {
         viewRect = cc.rect(10, 10, 548,764),

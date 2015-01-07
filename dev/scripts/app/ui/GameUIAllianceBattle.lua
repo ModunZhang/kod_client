@@ -967,7 +967,7 @@ function GameUIAllianceBattle:InitOtherAlliance()
 
     --搜索
     local searchIcon = display.newSprite("alliacne_search_29x33.png"):addTo(layer)
-        :align(display.LEFT_CENTER,window.left+50,window.top-270)
+        :align(display.LEFT_CENTER,window.left+50,window.top-260)
     local function onEdit(event, editbox)
         if event == "return" then
             self:SearchAllianAction(self.editbox_tag_search:getText())
@@ -987,26 +987,27 @@ function GameUIAllianceBattle:InitOtherAlliance()
     editbox_tag_search:setFontColor(cc.c3b(0,0,0))
     editbox_tag_search:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))
     editbox_tag_search:setReturnType(cc.KEYBOARD_RETURNTYPE_SEARCH)
-    editbox_tag_search:align(display.CENTER,window.cx+20,window.top-270):addTo(layer)
+    editbox_tag_search:align(display.CENTER,window.cx+20,window.top-260):addTo(layer)
     self.editbox_tag_search = editbox_tag_search
 
     -- 搜索结果
-    self.alliance_listview = UIListView.new{
-        viewRect = cc.rect(window.left+17, window.top-890, 608, 586),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
-    }:addTo(layer)
+    local list,list_node = UIKit:commonListView({
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
+        viewRect = cc.rect(0, 0,608,550),
+    })
+    list_node:addTo(layer):align(display.BOTTOM_CENTER, window.cx, window.bottom_top+20)
+    self.alliance_listview = list
 
 end
 
 function GameUIAllianceBattle:CreateAllianceItem(alliance)
-    LuaUtils:outputTable("search alliance result", alliance)
     local basic = alliance.basicInfo
     local countInfo = alliance.countInfo
 
     local item = self.alliance_listview:newItem()
-    local w,h = 608,160
+    local w,h = 568,154
     item:setItemSize(w, h)
-    local content = WidgetUIBackGround.new({height=h})
+    local content = WidgetUIBackGround.new({width=w,height=h},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
 
 
     -- 联盟旗帜
@@ -1015,7 +1016,7 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance)
         :onButtonClicked(function()
             self:OpenOtherAllianceDetails(alliance)
         end)
-        :align(display.CENTER,90,h/2)
+        :align(display.CENTER,80,h/2)
         :addTo(content)
     local a_helper = WidgetAllianceUIHelper.new()
     local flag_sprite = a_helper:CreateFlagWithRhombusTerrain(basic.terrain
@@ -1030,7 +1031,7 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance)
         :addTo(flag_bg)
 
 
-    local title_bg = display.newScale9Sprite("title_blue_588X30.png", w-10, h-30,cc.size(438,30))
+    local title_bg = display.newSprite("title_blue_412x30.png", w-10, h-30)
         :align(display.RIGHT_CENTER)
         :addTo(content)
     -- 搜索出的条目index
@@ -1070,7 +1071,7 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance)
 
 
     -- 进入按钮
-    local enter_btn = WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
+    local enter_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("进入"),
             size = 24,
@@ -1079,7 +1080,7 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance)
         }))
         :onButtonClicked(function(event)
 
-            end):align(display.RIGHT_CENTER,w-20,35):addTo(content)
+            end):align(display.RIGHT_CENTER,w-20,45):addTo(content)
 
     item:addContent(content)
     self.alliance_listview:addItem(item)
@@ -1110,23 +1111,25 @@ end
 function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
     local basic = alliance.basicInfo
     local countInfo = alliance.countInfo
+    LuaUtils:outputTable("alliance===", alliance)
 
-    local body = WidgetPopDialog.new(506,_("联盟信息")):addTo(self)
+    local body = WidgetPopDialog.new(524,_("联盟信息")):addTo(self):GetBody()
     local rb_size = body:getContentSize()
     local w,h = rb_size.width,rb_size.height
     -- 联盟旗帜
     local flag_bg = display.newSprite("alliance_item_flag_box_126X126.png")
-        :align(display.CENTER,100,rb_size.height-230)
+        :align(display.CENTER,78,h-78)
         :addTo(body)
+        :scale(0.8)
     local a_helper = WidgetAllianceUIHelper.new()
     local flag_sprite = a_helper:CreateFlagWithRhombusTerrain(basic.terrain
         ,Flag.new():DecodeFromJson(basic.flag))
-    flag_sprite:scale(0.85)
+    flag_sprite:scale(0.8)
     flag_sprite:align(display.CENTER, flag_bg:getContentSize().width/2, flag_bg:getContentSize().height/2-20)
         :addTo(flag_bg)
 
     -- 联盟名字和tag
-    local title_bg = display.newScale9Sprite("title_blue_588X30.png", w-30, h-180,cc.size(438,30))
+    local title_bg = display.newScale9Sprite("title_blue_430x30.png", w-30, h-45,cc.size(438,30),cc.rect(15,10,400,10))
         :align(display.RIGHT_CENTER)
         :addTo(body)
 
@@ -1137,6 +1140,19 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
         color = 0xffedae,
     }):align(display.LEFT_CENTER, 20, title_bg:getContentSize().height/2)
         :addTo(title_bg,2)
+    -- 盟主名字
+    display.newSprite("leader.png"):addTo(body):pos(178,h-100)
+    UIKit:ttfLabel({
+        text = "盟主名字",
+        size = 22,
+        color = 0x403c2f,
+    }):align(display.LEFT_CENTER, 198,h-100)
+        :addTo(body)
+    -- 属性背景
+    local attr_bg = WidgetUIBackGround.new({height=82,width=556},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
+    :addTo(body)
+    :align(display.CENTER, w/2, h-180)
+
 
     local function addAttr(title,value,x,y)
         local attr_title = UIKit:ttfLabel({
@@ -1144,20 +1160,20 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
             size = 20,
             color = 0x797154,
         }):align(display.LEFT_CENTER, x, y)
-            :addTo(body)
+            :addTo(attr_bg)
         UIKit:ttfLabel({
             text = value,
             size = 20,
             color = 0x403c2f,
         }):align(display.LEFT_CENTER,x + attr_title:getContentSize().width+20,y)
-            :addTo(body)
+            :addTo(attr_bg)
     end
-    addAttr(_("成员"),"30/50",180,h-220)
-    addAttr(_("语言"),basic.language,180,h-250)
-    addAttr(_("战斗力"),basic.power,350,h-220)
-    addAttr(_("击杀"),basic.kill,350,h-250)
+    addAttr(_("成员"),"30/50",10,60)
+    addAttr(_("语言"),basic.language,10,20)
+    addAttr(_("战斗力"),basic.power,350,60)
+    addAttr(_("击杀"),basic.kill,350,20)
     -- 进入按钮
-    local enter_btn = WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
+    local enter_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("进入"),
             size = 24,
@@ -1168,10 +1184,10 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
             if event.name == "CLICKED_EVENT" then
 
             end
-        end):align(display.RIGHT_CENTER,w-40,h-290):addTo(body)
+        end):align(display.RIGHT_CENTER,w-35,h-100):addTo(body)
     WidgetInfo.new({
         info={
-            {_("名城占领时间"),"2d 23h 4m"},
+            -- {_("名城占领时间"),"2d 23h 4m"},
             {_("击杀部队人口"),string.formatnumberthousands(countInfo.kill)},
             {_("阵亡部队人口"),string.formatnumberthousands(countInfo.beKilled)},
             {_("击溃城市"),string.formatnumberthousands(countInfo.routCount)},
@@ -1179,8 +1195,8 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
             {_("联盟战失败"),string.formatnumberthousands(countInfo.failedCount)},
             {_("胜率"),(math.floor(countInfo.winCount/(countInfo.winCount+countInfo.failedCount)*1000)/10).."%"},
         },
-        h =300
-    }):align(display.TOP_CENTER, w/2 , h-330)
+        h =260
+    }):align(display.BOTTOM_CENTER, w/2 , 20)
         :addTo(body)
 end
 

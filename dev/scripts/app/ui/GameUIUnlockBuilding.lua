@@ -9,6 +9,8 @@ local window = import("..utils.window")
 local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local MaterialManager = import("..entity.MaterialManager")
+local SpriteConfig = import("..sprites.SpriteConfig")
+
 
 local GameUIUnlockBuilding = class("GameUIUnlockBuilding", WidgetPopDialog)
 
@@ -38,8 +40,9 @@ function GameUIUnlockBuilding:Init()
         :addTo(self):setFlippedX(true)
     cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-145, display.top-265)
         :addTo(self)
-    -- local building_introduces_bg = display.newSprite("upgrade_introduce_bg.png", display.cx, display.top-290):addTo(self)
-    self.building_image = display.newScale9Sprite(UIKit:getImageByBuildingType( self.building:GetType()), display.cx-197, display.top-245):addTo(self)
+
+    local build_png = SpriteConfig[self.building:GetType()]:GetConfigByLevel(self.building:GetLevel()).png
+    self.building_image = display.newScale9Sprite(build_png, display.cx-197, display.top-245):addTo(self)
     self.building_image:setAnchorPoint(cc.p(0.5,0.5))
     self.building_image:setScale(124/self.building_image:getContentSize().width)
     self:InitBuildingIntroduces()

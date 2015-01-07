@@ -5,7 +5,6 @@ local MapScene = import(".MapScene")
 local AllianceBattleScene = class("AllianceBattleScene", MapScene)
 local GameUIAllianceHome = import("..ui.GameUIAllianceHome")
 local Alliance = import("..entity.Alliance")
--- local GameUIAllianceEnter = import("..ui.GameUIAllianceEnter")
 
 function AllianceBattleScene:ctor()
     City:ResetAllListeners()
