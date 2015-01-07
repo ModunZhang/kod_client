@@ -12,16 +12,12 @@ function TreeSprite:ReloadSpriteCauseTerrainChanged()
     self.sprite:removeFromParent()
     self.sprite = self:CreateSprite():addTo(self, SPRITE)
 end
--- function TreeSprite:GetLogicZorder(width)
---     local x, y = self:GetLogicPosition()
---     return x + y * width + 100
--- end
 local random = math.random
 function TreeSprite:GetSpriteFile()
     if not self.png_index then
         self.png_index = random(123456789) % 2 + 1
     end
-    return TREE_MAP[self:GetMapLayer():CurrentTerrain()][self.png_index], 0.8
+    return TREE_MAP[self:GetMapLayer():CurrentTerrain()][self.png_index], 0.7
 end
 function TreeSprite:GetSpriteOffset()
     return 0, 0

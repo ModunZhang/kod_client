@@ -118,10 +118,10 @@ function UpgradingSprite:CreateSprite()
     local sprite = display.newSprite(sprite_file)
         :scale(scale == nil and 1 or scale)
         :flipX(self:GetFlipX())
-
+    local p = sprite:getAnchorPointInPoints()
     for _, v in ipairs(config.decorator) do
         if v.deco_type == "image" then
-            display.newSprite(v.deco_name):addTo(sprite):pos(v.offset.x, v.offset.y)
+            display.newSprite(v.deco_name):addTo(sprite):pos(p.x + v.offset.x, p.y + v.offset.y)
         else
             assert(false)
         end

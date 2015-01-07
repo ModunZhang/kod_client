@@ -14,7 +14,7 @@ local CityScene = class("CityScene", MapScene)
 
 local app = app
 local timer = app.timer
-local DEBUG = false
+local DEBUG_LOCAL = false
 function CityScene:ctor(city)
     City:ResetAllListeners()
     Alliance_Manager:GetMyAlliance():ResetAllListeners()
@@ -29,7 +29,7 @@ function CityScene:onEnter()
     self:GetSceneLayer():InitWithCity(city)
     self:PlayBackgroundMusic()
     self:GotoLogicPointInstant(6, 4)
-    self:GetSceneLayer():ZoomTo(1.0)
+    self:GetSceneLayer():ZoomTo(0.7)
 
     -- local ai_create_house_array = {
     --     "woodcutter",
@@ -274,7 +274,7 @@ end
 function CityScene:OnSceneScale(scene_layer)
 end
 function CityScene:OnTouchBegan(pre_x, pre_y, x, y)
-    if not DEBUG then return end
+    if not DEBUG_LOCAL then return end
     local citynode = self:GetSceneLayer():GetCityNode()
     local point = citynode:convertToNodeSpace(cc.p(x, y))
     local tx, ty = self.iso_map:ConvertToLogicPosition(point.x, point.y)
@@ -290,7 +290,7 @@ function CityScene:OnTouchBegan(pre_x, pre_y, x, y)
     end
 end
 function CityScene:OnTouchEnd(pre_x, pre_y, x, y)
-    if not DEBUG then return end
+    if not DEBUG_LOCAL then return end
     local citynode = self:GetSceneLayer():GetCityNode()
     local point = citynode:convertToNodeSpace(cc.p(x, y))
     local tx, ty = self.iso_map:ConvertToLogicPosition(point.x, point.y)
@@ -307,7 +307,7 @@ function CityScene:OnTouchCancelled(pre_x, pre_y, x, y)
 
 end
 function CityScene:OnTouchMove(pre_x, pre_y, x, y)
-    if DEBUG then
+    if DEBUG_LOCAL then
         if self.building then
             local citynode = self:GetSceneLayer():GetCityNode()
             local point = citynode:convertToNodeSpace(cc.p(x, y))

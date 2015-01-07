@@ -155,14 +155,14 @@ function GameUICityInfo:CreateBottom()
     end
 
 
-    cc.ui.UILabel.new({text = "您正在访问其他玩家的城市, 无法使用其他功能, 点击左下角返回区域地图",
+    cc.ui.UILabel.new({text = "您正在访问其他玩家的城市, 无法使用其他功能, 点击左下角返回城市",
         size = 20,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_CENTER,
         valign = cc.ui.TEXT_VALIGN_CENTER,
         dimensions = cc.size(400, 100),
         color = UIKit:hex2c3b(0xe19319)})
-        :addTo(bottom_bg):align(display.LEFT_CENTER, 150, display.bottom + 101/2)
+        :addTo(bottom_bg):align(display.LEFT_CENTER, 250, display.bottom + 101/2)
 
     local map_node = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE):addTo(self)
 end

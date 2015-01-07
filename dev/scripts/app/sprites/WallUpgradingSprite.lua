@@ -10,6 +10,7 @@ end
 ----
 function WallUpgradingSprite:ctor(city_layer, entity)
     WallUpgradingSprite.super.ctor(self, city_layer, entity)
+    self:hide()
 end
 function WallUpgradingSprite:GetSpriteFile()
     local entity = self:GetEntity()

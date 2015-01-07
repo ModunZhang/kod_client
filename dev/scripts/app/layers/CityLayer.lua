@@ -124,7 +124,7 @@ local BUILDING_NODE = 3
 local WEATHER_NODE = 4
 function CityLayer:ctor(city_scene)
     Observer.extend(self)
-    CityLayer.super.ctor(self, 0.7, 1.5)
+    CityLayer.super.ctor(self, 0.6, 1.5)
     self.city_scene = city_scene
     self.terrain_type = "grass"
     self.buildings = {}

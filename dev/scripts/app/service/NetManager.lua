@@ -130,7 +130,7 @@ function NetManager:addKickEventListener()
     self:addEventListener("onKick", function(success, msg)
         print("addKickEventListener----->onKick")
         device.showAlert(nil, _("和服务器的连接已断开!"), {_("确定")}, function(event)
-            LuaUtils:outputTable("msg", msg)
+            dump("msg", msg)
             app:restart()
         end)
     end)
@@ -182,7 +182,7 @@ onAllianceDataChanged_callbacks = {}
 function NetManager:addAllianceDataChangedEventListener()
     self:addEventListener("onAllianceDataChanged", function(success, msg)
         if success then
-            LuaUtils:outputTable("onAllianceDataChanged", msg)
+            dump("onAllianceDataChanged", msg)
             DataManager:setUserAllianceData(msg)
         end
         local callback = onAllianceDataChanged_callbacks[1]
@@ -257,7 +257,7 @@ end
 function NetManager:addOnGetAllianceDataSuccess()
     self:addEventListener("onGetAllianceDataSuccess", function(success, msg)
         if success then
-            LuaUtils:outputTable("onGetAllianceDataSuccess", msg)
+            dump("onGetAllianceDataSuccess", msg)
             DataManager:setUserAllianceData(msg)
         end
     end)
@@ -289,7 +289,7 @@ function NetManager:addOnGetMailsSuccessListener()
         if success then
             assert(#onGetMailsSuccess_callbacks <= 1, "重复请求过多了!")
 
-            LuaUtils:outputTable("onGetMailsSuccess", msg)
+            dump("onGetMailsSuccess", msg)
             MailManager:dispatchMailServerData( "onGetMailsSuccess",msg )
             local callback = onGetMailsSuccess_callbacks[1]
             if type(callback) == "function" then
@@ -435,12 +435,10 @@ function NetManager:addLoginEventListener()
                 self.m_netService:setDeltatime(msg.serverTime - ext.now())
                 DataManager:setUserData(msg)
             else
-                LuaUtils:outputTable("onPlayerLoginSuccess", msg)
+                dump("onPlayerLoginSuccess", msg)
                 self.m_netService:setDeltatime(msg.serverTime - ext.now())
                 local InitGame = import("app.service.InitGame")
                 InitGame(msg)
-                -- app:enterScene("AllianceScene")
-                -- app:enterScene("MyCityScene", {City})
             end
             self.m_isDisconnect = false
         end
