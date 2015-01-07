@@ -671,7 +671,9 @@ end
 
 --总览
 function GameUIAlliance:HaveAlliaceUI_overviewIf()
-    if self.overviewNode then return self.overviewNode end
+    if self.overviewNode then 
+        self:RefreshEventListView()
+        return self.overviewNode end
     self.ui_overview = {}
     local overviewNode = display.newNode():addTo(self.main_content)
 
