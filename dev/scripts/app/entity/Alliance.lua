@@ -1148,6 +1148,16 @@ function Alliance:GetStrikeMarchEvents(march_type)
     return r
 end
 
+function Alliance:CheckStrikeVillageHaveTarget(village_id)
+    local strikeEvents = self:GetStrikeMarchEvents("village")
+    for _,strikeEvent in ipairs(strikeEvents) do
+        if strikeEvent:GetPlayerRole() == strikeEvent.MARCH_EVENT_PLAYER_ROLE.SENDER then
+            return true
+        end
+    end
+    return false
+end
+
 function Alliance:GetStrikeMarchReturnEvents(march_type)
     local r = {}
     if not march_type then
@@ -1172,13 +1182,13 @@ function Alliance:CheckHelpDefenceMarchEventsHaveTarget(memeberId)
             return true
         end
     end
-    local helpReturnEvents = self:GetAttackMarchReturnEvents("helpDefence")
-    for _,attackEvent in ipairs(helpReturnEvents) do
-        if attackEvent:GetPlayerRole() == attackEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER
-            and attackEvent:GetDefenceData().id == memeberId then
-            return true
-        end
-    end
+    -- local helpReturnEvents = self:GetAttackMarchReturnEvents("helpDefence")
+    -- for _,attackEvent in ipairs(helpReturnEvents) do
+    --     if attackEvent:GetPlayerRole() == attackEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER
+    --         and attackEvent:GetDefenceData().id == memeberId then
+    --         return true
+    --     end
+    -- end
     return false
 end
 
@@ -1254,6 +1264,18 @@ function Alliance:ResetVillageEvents()
     end)
     self.villageEvents = {}
 end
+
+function Alliance:CheckVillageMarchEventHaveTarget(village_Id)
+    local villageEvents = self:GetAttackMarchEvents("village")
+    for _,attackEvent in ipairs(villageEvents) do
+        if attackEvent:GetPlayerRole() == attackEvent.MARCH_EVENT_PLAYER_ROLE.SENDER
+            and attackEvent:GetDefenceData().id == village_Id then
+            return true
+        end
+    end
+    return false
+end
+
 --有id为指定事件 没有id时获取所有采集事件
 function Alliance:GetVillageEvent(id)
     if id then
