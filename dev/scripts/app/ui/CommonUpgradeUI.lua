@@ -8,6 +8,7 @@ local MaterialManager = import("..entity.MaterialManager")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
+local SpriteConfig = import("..sprites.SpriteConfig")
 
 
 local CommonUpgradeUI = class("CommonUpgradeUI", function ()
@@ -66,7 +67,8 @@ function CommonUpgradeUI:OnBuildingUpgradeFinished( buidling, finish_time )
     self:SetBuildingIntroduces()
     self:SetUpgradeTime()
     self:SetUpgradeEfficiency()
-    self.building_image:setTexture(UIKit:getImageByBuildingType( self.building:GetType() ,self.building:GetLevel()))
+    local build_png = SpriteConfig[self.building:GetType()]:GetConfigByLevel(self.building:GetLevel()).png
+    self.building_image:setTexture(build_png)
     if self.building:GetNextLevel() == self.building:GetLevel() then
         self.upgrade_layer:setVisible(false)
     end
@@ -98,8 +100,9 @@ function CommonUpgradeUI:InitCommonPart()
         :addTo(self):setFlippedX(true)
     cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-145, display.top-175)
         :addTo(self)
+    local build_png = SpriteConfig[self.building:GetType()]:GetConfigByLevel(self.building:GetLevel()).png
 
-    self.building_image = display.newSprite(UIKit:getImageByBuildingType( self.building:GetType() ,self.building:GetLevel()), 0, 0):addTo(self):pos(display.cx-196, display.top-158)
+    self.building_image = display.newSprite(build_png, 0, 0):addTo(self):pos(display.cx-196, display.top-158)
     self.building_image:setAnchorPoint(cc.p(0.5,0.5))
     if self.building:GetType()=="watchTower" or self.building:GetType()=="tower" then
         self.building_image:setScale(150/self.building_image:getContentSize().height)

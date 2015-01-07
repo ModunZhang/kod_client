@@ -1001,7 +1001,6 @@ function GameUIAllianceBattle:InitOtherAlliance()
 end
 
 function GameUIAllianceBattle:CreateAllianceItem(alliance)
-    -- LuaUtils:outputTable("search alliance result", alliance)
     local basic = alliance.basicInfo
     local countInfo = alliance.countInfo
 
