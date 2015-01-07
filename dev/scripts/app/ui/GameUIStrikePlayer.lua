@@ -65,8 +65,11 @@ end
 
 function GameUIStrikePlayer:RefreshListView()
 	local dragons = self:GetDragonManager():GetDragons()
-	local power_dragon_type = self:GetDragonManager():GetPowerfulDragonType()
-	for k,dragon in pairs(dragons) do
+	local power_dragon_type = self:GetDragonManager():GetCanFightPowerfulDragonType()
+	if power_dragon_type == "" then
+		power_dragon_type = self:GetDragonManager():GetPowerfulDragonType()
+	end
+ 	for k,dragon in pairs(dragons) do
 		if dragon:Ishated() then
 			local item = self:GetItem(dragon,power_dragon_type)
 			self.list_view:addItem(item)
