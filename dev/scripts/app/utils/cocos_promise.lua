@@ -48,7 +48,12 @@ local function promiseFilterNetError(p,need_catch)
         local dialog = FullScreenPopDialogUI.new():AddToCurrentScene()
         local content, title = err:reason()
         dialog:SetTitle(title or "")
-        dialog:SetPopMessage(content)
+        dialog:SetPopMessage(content):CreateOKButton(
+            {
+                btn_name = _("确定"),
+                listener = function()
+                end
+            })
         if need_catch then
             promise.reject {"",{msg=err.errcode[1]}}
         else

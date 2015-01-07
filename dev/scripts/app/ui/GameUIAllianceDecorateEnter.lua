@@ -54,9 +54,11 @@ end
 function GameUIAllianceDecorateEnter:GetEnterButtons()
 	local chai_button = self:BuildOneButton("icon_demolish.png",_("拆除")):onButtonClicked(function()
 		local alliacne =  self:GetMyAlliance()
-        local isEqualOrGreater = alliacne:GetMemeberById(DataManager:getUserData()._id):IsTitleEqualOrGreaterThan("general")
+        local isEqualOrGreater = alliacne:GetSelf():CanEditAllianceObject()
         if isEqualOrGreater then
-            NetManager:getDistroyAllianceDecoratePromise(building:Id())
+            NetManager:getDistroyAllianceDecoratePromise(self:GetBuilding():Id())
+        else
+        	UIKit:showMessageDialog(nil, _("您没有此操作权限"),function()end)
         end
 		self:leftButtonClicked()
 	end)

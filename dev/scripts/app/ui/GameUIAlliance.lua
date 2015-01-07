@@ -1230,7 +1230,7 @@ function GameUIAlliance:SelectJoinType()
     if Alliance_Manager:GetMyAlliance():JoinType() == "all" then
         self.joinTypeButton:sureSelectedButtonIndex(1,true)
     else
-        self.joinTypeButton:setButtonSelected(2,true)
+        self.joinTypeButton:sureSelectedButtonIndex(2,true)
     end
 end
 
