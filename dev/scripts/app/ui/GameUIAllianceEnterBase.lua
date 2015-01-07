@@ -3,13 +3,14 @@
 -- Date: 2014-12-29 11:34:54
 --
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-local GameUIAllianceEnterBase = UIKit:createUIClass("GameUIAllianceEnterBase")
+local WidgetPopDialog = import("..widget.WidgetPopDialog")
+local GameUIAllianceEnterBase = class("GameUIAllianceEnterBase",WidgetPopDialog)
 local window = import("..utils.window")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local Localize = import("..utils.Localize")
 -- building is allianceobject
 function GameUIAllianceEnterBase:ctor(building,isMyAlliance,my_alliance)
-	GameUIAllianceEnterBase.super.ctor(self)
+	GameUIAllianceEnterBase.super.ctor(self,self:GetUIHeight(),"",display.top-200)
 	self.building = building
 	self.my_alliance = my_alliance
     self.isMyAlliance = isMyAlliance
@@ -45,36 +46,14 @@ end
 
 function GameUIAllianceEnterBase:onEnter()
 	GameUIAllianceEnterBase.super.onEnter(self)
-	UIKit:shadowLayer():addTo(self)
-	self.body = self:BuildBackground()
+	self.body = self:GetBody()
+    self:SetTitle(self:GetUITitle())
 	self:InitBuildingImage()
 	self:InitBuildingDese()
 	self:InitBuildingInfo()
 	self:InitEnterButton()
 	self:FixedUI()
 end
-
-function GameUIAllianceEnterBase:BuildBackground()
-	local body = WidgetUIBackGround.new({height=self:GetUIHeight(),isFrame = "no"}):align(display.TOP_CENTER,display.cx,display.top-200)
-    local rb_size = body:getContentSize()
-    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+8)
-        :addTo(body)
-    local title_label = UIKit:ttfLabel({
-        text = self:GetUITitle(),
-        size = 22,
-        color = 0xffedae,
-    }):align(display.CENTER, title:getContentSize().width/2, title:getContentSize().height/2+2)
-        :addTo(title)
-    self.close_btn = UIKit:closeButton():onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                self:leftButtonClicked()
-            end
-        end):align(display.CENTER_RIGHT, rb_size.width,rb_size.height+10):addTo(body)
-    body:align(display.CENTER, window.cx, window.top - 400)
-        :addTo(self)
-    return body
-end
-
 
 function GameUIAllianceEnterBase:GetBuildingInfo()
   	return {
@@ -242,10 +221,10 @@ end
 function GameUIAllianceEnterBase:InitEnterButton()
 	local buttons = self:GetEnterButtons()
     local width = 608
-    local btn_width = 130
+    local btn_width = 124
     local count = 0
     for _,v in ipairs(buttons) do
-        local btn = v:align(display.RIGHT_TOP,width-count*btn_width, 5):addTo(self:GetBody())
+        local btn = v:align(display.RIGHT_TOP,width-count*btn_width, 10):addTo(self:GetBody())
         count = count + 1
     end
 end
@@ -266,7 +245,7 @@ end
 
 
 function GameUIAllianceEnterBase:BuildOneButton(image,title)
-	local btn = WidgetPushButton.new({normal = "btn_130X104.png",pressed = "btn_pressed_130X104.png"})
+	local btn = WidgetPushButton.new({normal = "btn_138x110.png",pressed = "btn_pressed_138X110.png"})
     local s = btn:getCascadeBoundingBox().size
     display.newSprite(image):align(display.CENTER, -s.width/2, -s.height/2+22):addTo(btn)
     UIKit:ttfLabel({

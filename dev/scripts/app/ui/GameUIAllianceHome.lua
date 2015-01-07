@@ -1,6 +1,7 @@
 local window = import("..utils.window")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
+local UIPageView = import("..ui.UIPageView")
 local Flag = import("..entity.Flag")
 local Alliance = import("..entity.Alliance")
 local AllianceMoonGate = import("..entity.AllianceMoonGate")
@@ -536,10 +537,9 @@ function GameUIAllianceHome:CreateBottom()
     local index_1 = display.newSprite("chat_page_index_1.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2-10,chat_bg:getContentSize().height-10)
     local index_2 = display.newSprite("chat_page_index_2.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2+10,chat_bg:getContentSize().height-10)
 
-
     local size = chat_bg:getContentSize()
-    local pv = cc.ui.UIPageView.new {
-        viewRect =  cc.rect(10, 4, size.width, size.height)}
+    local pv = UIPageView.new {
+        viewRect =  cc.rect(10, 4, size.width-80, size.height)}
         :onTouch(function (event)
             dump(event,"UIPageView event")
             if event.name == "pageChange" then
@@ -560,6 +560,7 @@ function GameUIAllianceHome:CreateBottom()
         end)
         :addTo(chat_bg)
     pv:setTouchEnabled(true)
+    pv:setTouchSwallowEnabled(false)
     -- add items
     for i=1,2 do
         local item = pv:newItem()

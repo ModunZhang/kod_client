@@ -1,28 +1,13 @@
-local WidgetPushButton = import("..widget.WidgetPushButton")
+local WidgetPushButton = import(".WidgetPushButton")
 local UIListView = import("..ui.UIListView")
-local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-local WidgetAllianceBuildingInfo = class("WidgetAllianceBuildingInfo", function ()
-    return display.newColorLayer(cc.c4b(0,0,0,127))
-end)
+local WidgetUIBackGround = import(".WidgetUIBackGround")
+local WidgetPopDialog = import(".WidgetPopDialog")
+local WidgetAllianceBuildingInfo = class("WidgetAllianceBuildingInfo", WidgetPopDialog)
 
 function WidgetAllianceBuildingInfo:ctor()
-    local body = WidgetUIBackGround.new({height=544}):addTo(self):align(display.TOP_CENTER,display.cx,display.top-150)
+    WidgetAllianceBuildingInfo.super.ctor(self,544, _("建筑详情"),display.top-150)
+    local body = self.body
     local rb_size = body:getContentSize()
-    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height)
-        :addTo(body)
-    local title_label = UIKit:ttfLabel(
-        {
-            text = _("建筑详情"),
-            size = 22,
-            color = 0xffedae
-        }):align(display.CENTER, title:getContentSize().width/2, title:getContentSize().height/2)
-        :addTo(title)
-    -- close button
-    WidgetPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
-        :onButtonClicked(function(event)
-            self:removeFromParent()
-        end):align(display.CENTER, title:getContentSize().width-10, title:getContentSize().height-10)
-        :addTo(title)
     -- 建筑详情介绍
     UIKit:ttfLabel(
         {
