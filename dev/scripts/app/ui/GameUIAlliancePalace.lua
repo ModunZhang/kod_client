@@ -168,28 +168,20 @@ function GameUIAlliancePalace:CreateHonourItem()
 end
 
 function GameUIAlliancePalace:InitInfoPart()
-    local terrain = self:CreateBackGroundWithTitle({title_1=_("地形定义"),title_2=_("需要职位是联盟盟主"),
-        height=400}):align(display.CENTER, window.cx, window.top-320):addTo(self.info_layer)
     local bg1 = WidgetUIBackGround.new({
-        width = 580,
-        height = 314,
-        top_img = "back_ground_580x12_top.png",
-        bottom_img = "back_ground_580X12_bottom.png",
-        mid_img = "back_ground_580X1_mid.png",
-        u_height = 12,
-        b_height = 12,
-        m_height = 1,
-    }):align(display.CENTER,304, 220):addTo(terrain)
+        width = 548,
+        height = 322,
+    },WidgetUIBackGround.STYLE_TYPE.STYLE_3):align(display.TOP_CENTER,window.cx, window.top-100):addTo(self.info_layer)
 
     -- 草地
     display.newSprite("grass_ground1_800x560.png")
-        :align(display.CENTER, 110, 250):addTo(bg1):scale(0.2)
+        :align(display.CENTER, 85, 250):addTo(bg1):scale(0.2)
     -- 雪地
-    display.newSprite("desert1_800x560.png")
-        :align(display.CENTER, 295, 250):addTo(bg1):scale(0.2)
-    -- 沙漠
     display.newSprite("icefield1_800x560.png")
-        :align(display.CENTER, 485, 250):addTo(bg1):scale(0.2)
+        :align(display.CENTER, 270, 250):addTo(bg1):scale(0.2)
+    -- 沙漠
+    display.newSprite("desert1_800x560.png")
+        :align(display.CENTER, 460, 250):addTo(bg1):scale(0.2)
 
     local checkbox_image = {
         off = "checkbox_unselected.png",
@@ -210,21 +202,21 @@ function GameUIAlliancePalace:InitInfoPart()
         :onButtonSelectChanged(function(event)
             -- self.selected_rebuild_to_building = rebuild_list[event.selected]
             end)
-        :align(display.CENTER, 80 , 120)
+        :align(display.CENTER, 55 , 120)
         :addTo(bg1)
     group:getButtonAtIndex(1):setButtonSelected(true)
 
     -- 介绍
-    local intro_bg = WidgetUIBackGround2.new(98):align(display.BOTTOM_CENTER, 290, 5):addTo(bg1)
+    -- local intro_bg = WidgetUIBackGround2.new(98):align(display.BOTTOM_CENTER, 290, 5):addTo(bg1)
     UIKit:ttfLabel({
         text = _("草地地形能产出绿龙装备材料，每当在自己的领土上完成任务，或者击杀一点战斗力的敌方单位，就由一定几率获得装备材料。"),
         size = 18,
         color = 0x514d3e,
-        dimensions = cc.size(566, 0),
-    }):align(display.LEFT_CENTER, 4, intro_bg:getContentSize().height/2):addTo(intro_bg)
+        dimensions = cc.size(520, 0),
+    }):align(display.CENTER, bg1:getContentSize().width/2, 20):addTo(bg1)
     -- 消耗荣耀值更换地形
-    display.newSprite("honour.png"):align(display.CENTER, 274, 35):addTo(terrain)
-    local honour_bg = display.newSprite("back_ground_114x36.png"):align(display.CENTER, 354, 35):addTo(terrain)
+    display.newSprite("honour.png"):align(display.CENTER, 274, 35):addTo(bg1)
+    local honour_bg = display.newSprite("back_ground_114x36.png"):align(display.CENTER, 354, 35):addTo(bg1)
     self.levy_honour = UIKit:ttfLabel({
         text = "10000",
         size = 20,
@@ -242,7 +234,7 @@ function GameUIAlliancePalace:InitInfoPart()
             if event.name == "CLICKED_EVENT" then
 
             end
-        end):align(display.CENTER, 520, 35):addTo(terrain)
+        end):align(display.CENTER, 520, 35):addTo(bg1)
 
     local info = self:CreateBackGroundWithTitle({title_1=_("信息"),
         height=334}):align(display.CENTER, window.cx, window.top-720):addTo(self.info_layer)

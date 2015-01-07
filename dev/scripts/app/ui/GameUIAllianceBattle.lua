@@ -1143,7 +1143,7 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
     -- 盟主名字
     display.newSprite("leader.png"):addTo(body):pos(178,h-100)
     UIKit:ttfLabel({
-        text = "盟主名字",
+        text = alliance.archon,
         size = 22,
         color = 0x403c2f,
     }):align(display.LEFT_CENTER, 198,h-100)
@@ -1229,7 +1229,6 @@ function GameUIAllianceBattle:OnAllianceFightRequestsChanged(request_num)
     if self.request_num_label then
         self.request_num_label:setString(request_num)
     end
-
 end
 function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
     LuaUtils:outputTable("OnAllianceFightReportsChanged changed_map", changed_map)

@@ -182,10 +182,12 @@ function GameUIMail:CreateMailControlBox()
                                     table.insert(ids, v.id)
                                 end
                                 if control_type == "mail" then
+                                    MailManager:DecreaseUnReadMailsNumByIds(ids)
                                     NetManager:getDeleteMailsPromise(ids):done(function ()
                                         self:VisibleJudgeForMailControl()
                                     end)
                                 elseif control_type == "report" then
+                                    MailManager:DecreaseUnReadReportsNumByIds(ids)
                                     NetManager:getDeleteReportsPromise(ids):done(function ()
                                         self:VisibleJudgeForMailControl()
                                     end)
@@ -1426,8 +1428,8 @@ end
 
 
 function GameUIMail:CreateWriteMail()
-    return GameUIWriteMail.new():SetTitle(_("写邮件"))
-        :OnSendButtonClicked(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL)
+    return GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL):SetTitle(_("写邮件"))
+        -- :OnSendButtonClicked(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL)
         :addTo(self)
 end
 

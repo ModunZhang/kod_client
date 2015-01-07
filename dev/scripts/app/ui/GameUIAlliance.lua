@@ -1298,10 +1298,10 @@ function GameUIAlliance:OnInfoButtonClicked(tag)
     elseif tag == 3 then
         UIKit:newGameUI("GameAllianceApproval"):addToCurrentScene(true)
     elseif tag == 4 then -- 邮件
-        local mail = GameUIWriteMail.new()
+        local mail = GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.ALLIANCE_MAIL)
         mail:SetTitle(_("联盟邮件"))
         mail:SetAddressee(_("发送联盟所有成员"))
-        mail:OnSendButtonClicked( GameUIWriteMail.SEND_TYPE.ALLIANCE_MAIL)
+        -- mail:OnSendButtonClicked( GameUIWriteMail.SEND_TYPE.ALLIANCE_MAIL)
         mail:addTo(self)
     end
 end
