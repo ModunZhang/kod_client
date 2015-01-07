@@ -19,6 +19,7 @@ local LocalPushManager = import("app.utils.LocalPushManager")
 local Timer = import('.utils.Timer')
 local MyApp = class("MyApp", cc.mvc.AppBase)
 
+
 local function transition_(scene, status)
     if status == "onEnter" then
         local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)

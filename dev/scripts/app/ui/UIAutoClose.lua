@@ -7,6 +7,9 @@ local UIAutoClose = class("UIAutoClose", function()
         end
         return true
     end)
+    if ext.closeKeyboard then
+        ext.closeKeyboard()
+    end
     return node
 end)
 

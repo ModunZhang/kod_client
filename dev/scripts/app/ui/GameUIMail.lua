@@ -13,6 +13,7 @@ local WidgetDropList = import("..widget.WidgetDropList")
 local WidgetBackGroundLucid = import("..widget.WidgetBackGroundLucid")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local GameUICollectReport = import(".GameUICollectReport")
+local Report = import("..entity.Report")
 
 
 local GameUIMail = class('GameUIMail', GameUIBase)
@@ -91,6 +92,7 @@ function GameUIMail:onEnter()
 
     self.manager:AddListenOnType(self,MailManager.LISTEN_TYPE.MAILS_CHANGED)
     self.manager:AddListenOnType(self,MailManager.LISTEN_TYPE.REPORTS_CHANGED)
+    self.manager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     local mails = self.manager:GetMails(function (...)
         local saved_mails = self.manager:GetSavedMails(function (...)
             local send_mails = self.manager:GetSendMails(function (...)end)
@@ -101,6 +103,31 @@ function GameUIMail:onEnter()
     self:InitInbox(mails)
 
     self:CreateMailControlBox()
+    self:InitUnreadMark()
+end
+function GameUIMail:InitUnreadMark()
+    self.mail_unread_num_bg = display.newSprite("home/mail_unread_bg.png"):addTo(self)
+        :pos(window.left+154, window.bottom_top)
+    self.mail_unread_num_label = UIKit:ttfLabel(
+        {
+            text = MailManager:GetUnReadMailsNum(),
+            size = 16,
+            color = 0xf5f2b3
+        }):align(display.CENTER,self.mail_unread_num_bg:getContentSize().width/2,self.mail_unread_num_bg:getContentSize().height/2+4)
+        :addTo(self.mail_unread_num_bg)
+
+
+    self.report_unread_num_bg = display.newSprite("home/mail_unread_bg.png"):addTo(self)
+        :pos(window.left+300, window.bottom_top)
+    self.report_unread_num_label = UIKit:ttfLabel(
+        {
+            text = MailManager:GetUnReadReportsNum(),
+            size = 16,
+            color = 0xf5f2b3
+        }):align(display.CENTER,self.report_unread_num_bg:getContentSize().width/2,self.report_unread_num_bg:getContentSize().height/2+4)
+        :addTo(self.report_unread_num_bg)
+    self.mail_unread_num_bg:setVisible(MailManager:GetUnReadMailsNum()>0)
+    self.report_unread_num_bg:setVisible(MailManager:GetUnReadReportsNum()>0)
 end
 function GameUIMail:CreateMailControlBox()
     -- 标记邮件，已读，删除多封邮件
@@ -170,7 +197,7 @@ function GameUIMail:CreateMailControlBox()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                local select_map = self:GetSelectMailsOrReports()
+                local select_map,select_type = self:GetSelectMailsOrReports()
                 local ids = {}
                 for k,v in pairs(select_map) do
                     if not v.isRead then
@@ -179,7 +206,11 @@ function GameUIMail:CreateMailControlBox()
                 end
                 self:ReadMailOrReports(ids,function ()
                     self:SelectAllMailsOrReports(false)
-                    self.manager:DecreaseUnReadMailsAndReports(#ids)
+                    if select_type=="mail" then
+                        self.manager:DecreaseUnReadMailsNum(#ids)
+                    elseif select_type=="report" then
+                        self.manager:DecreaseUnReadReportsNum(#ids)
+                    end
                 end)
             end
         end):align(display.LEFT_CENTER,delete_btn:getPositionX() + delete_btn:getCascadeBoundingBox().size.width+10,h/2):addTo(box)
@@ -200,6 +231,7 @@ end
 function GameUIMail:onExit()
     self.manager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.MAILS_CHANGED)
     self.manager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.REPORTS_CHANGED)
+    self.manager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     GameUIMail.super.onExit(self)
 end
 function GameUIMail:CreateWriteMailButton()
@@ -322,7 +354,7 @@ function GameUIMail:CreateMailItem(listview,mail)
             if event.name == "CLICKED_EVENT" then
                 if tolua.type(mail.isRead)=="boolean" and not mail.isRead then
                     self:ReadMailOrReports({mail.id},function ()
-                        self.manager:DecreaseUnReadMailsAndReports(1)
+                        self.manager:DecreaseUnReadMailsNum(1)
                     end)
                 end
                 --如果是发送邮件
@@ -484,32 +516,37 @@ function GameUIMail:VisibleJudgeForMailControl()
 end
 function GameUIMail:GetSelectMailsOrReports()
     local select_map = {}
+    local select_type
     if self.inbox_layer:isVisible() then
         for _,item in pairs(self.inbox_mails) do
             if item.check_box:isButtonSelected() then
                 table.insert(select_map, item.mail)
             end
         end
+        select_type = "mail"
     elseif self.report_layer:isVisible() then
         for _,item in pairs(self.item_reports) do
             if item.check_box:isButtonSelected() then
                 table.insert(select_map, item.report)
             end
         end
+        select_type = "report"
     elseif self.saved_layer:isVisible() and self.saved_reports_listview:isVisible() then
         for _,item in pairs(self.item_saved_reports) do
             if item.check_box:isButtonSelected() then
                 table.insert(select_map, item.report)
             end
         end
+        select_type = "report"
     elseif self.saved_layer:isVisible() and self.save_mails_listview:isVisible() then
         for _,item in pairs(self.saved_mails) do
             if item.check_box:isButtonSelected() then
                 table.insert(select_map, item.mail)
             end
         end
+        select_type = "mail"
     end
-    return select_map
+    return select_map,select_type
 end
 function GameUIMail:SelectAllMailsOrReports(isSelect)
     if self.inbox_layer:isVisible() then
@@ -722,7 +759,26 @@ function GameUIMail:OnSendMailsChanged(changed_mails)
         end
     end
 end
-
+function GameUIMail:MailUnreadChanged(unreads)
+    local mail_bg = self.mail_unread_num_bg
+    local mail_label = self.mail_unread_num_label
+    local report_bg = self.report_unread_num_bg
+    local report_label = self.report_unread_num_label
+    if unreads.mail and  unreads.mail>0 then
+        mail_bg:setVisible(true)
+        mail_label:setString(unreads.mail)
+    else
+        mail_bg:setVisible(false)
+        mail_label:setString("")
+    end
+    if unreads.report and  unreads.report>0 then
+        report_bg:setVisible(true)
+        report_label:setString(unreads.report)
+    else
+        report_bg:setVisible(false)
+        report_label:setString("")
+    end
+end
 function GameUIMail:AddLoadingMoreMails(listview,mails)
     local loaded_num = 0
     local now_showed_count = self:GetMailsCount(listview)
@@ -734,9 +790,9 @@ function GameUIMail:AddLoadingMoreMails(listview,mails)
             end
             local item_1
             if listview == self.report_listview or listview == self.saved_reports_listview then
-                item_1= self:CreateReportItem(listview,v)
+                item_1= self:CreateReportItem(listview,Report:DecodeFromJsonData(v))
             else
-                item_1= self:CreateMailItem(listview,v)
+                item_1= self:CreateMailItem(listview,Report:DecodeFromJsonData(v))
             end
             self:InsertMailToListView(listview,item_1,v)
         end
@@ -1039,16 +1095,16 @@ function GameUIMail:CreateReportItem(listview,report)
             if event.name == "CLICKED_EVENT" then
                 if not report:IsRead() then
                     self:ReadMailOrReports({report:Id()}, function ()
-                        self.manager:DecreaseUnReadMailsAndReports(1)
+                        self.manager:DecreaseUnReadReportsNum(1)
                     end)
                 end
-                if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" 
+                if report:Type() == "strikeCity" or report:Type()== "cityBeStriked"
                     or report:Type() == "villageBeStriked" or report:Type()== "strikeVillage" then
                     GameUIStrikeReport.new(report):addToCurrentScene()
                 elseif report:Type() == "attackCity" or report:Type() == "attackVillage" then
                     GameUIWarReport.new(report):addToCurrentScene()
-                -- elseif report:Type() == "villageBeStriked" or report:Type()== "strikeVillage" then
-                -- elseif report:Type() == "attackVillage" then
+                    -- elseif report:Type() == "villageBeStriked" or report:Type()== "strikeVillage" then
+                    -- elseif report:Type() == "attackVillage" then
                 elseif report:Type() == "collectResource" then
                     GameUICollectReport.new(report):addToCurrentScene()
                 end
@@ -1392,8 +1448,6 @@ function GameUIMail:OnReportsChanged( changed_map )
         for _,report in pairs(changed_map.add) do
             local item = self:CreateReportItem(self.report_listview,report)
             self:AddMails(self.report_listview,item,report,1)
-            print("--OnReportsChanged  add----")
-            LuaUtils:outputTable("report:GetData()", report:GetData())
         end
     end
     if changed_map.edit then
@@ -1588,6 +1642,12 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
+
+
+
+
+
 
 
 

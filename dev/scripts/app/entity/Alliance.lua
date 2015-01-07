@@ -15,7 +15,7 @@ local AllianceBelvedere = import(".AllianceBelvedere")
 --注意:突袭用的MarchAttackEvent 所以使用OnAttackMarchEventTimerChanged
 Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS","FIGHT_REQUESTS","FIGHT_REPORTS",
     "OnAttackMarchEventDataChanged","OnAttackMarchEventTimerChanged","OnAttackMarchReturnEventDataChanged","ALLIANCE_FIGHT"
-    ,"OnStrikeMarchEventDataChanged","OnStrikeMarchReturnEventDataChanged","OnVillageEventsDataChanged","OnVillageEventTimer")
+    ,"OnStrikeMarchEventDataChanged","OnStrikeMarchReturnEventDataChanged","OnVillageEventsDataChanged","OnVillageEventTimer","COUNT_INFO")
 local unpack = unpack
 local function pack(...)
     return {...}
@@ -69,6 +69,7 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     self.villageEvents = {}
     self.alliance_villages = {}
     self.alliance_belvedere = AllianceBelvedere.new(self)
+    self:SetNeedUpdateEnemyAlliance(false)
 end
 function Alliance:GetAllianceBelvedere()
     return self.alliance_belvedere
@@ -257,6 +258,14 @@ end
 function Alliance:GetLastAllianceFightReports()
     return self.alliance_fight_reports[#self.alliance_fight_reports]
 end
+function Alliance:GetOurLastAllianceFightReportsData()
+    local last = self.alliance_fight_reports[#self.alliance_fight_reports]
+    return self.id == last.attackAllianceId and last.attackAlliance or last.defenceAlliance
+end
+function Alliance:GetEnemyLastAllianceFightReportsData()
+    local last = self.alliance_fight_reports[#self.alliance_fight_reports]
+    return self.id == last.attackAllianceId and last.defenceAlliance or last.attackAlliance
+end
 function Alliance:GetAllHelpEvents()
     return self.help_events
 end
@@ -297,6 +306,9 @@ function Alliance:IsBuildingHasBeenRequestedToHelpSpeedup(eventId)
 end
 
 function Alliance:Reset()
+    if self:NeedUpdateEnemyAlliance() then
+        self:GetEnemyAlliance():Reset()
+    end
     for k,v in pairs(self) do
         if type(v) == 'string' then
             self[k] = ""
@@ -317,7 +329,6 @@ function Alliance:Reset()
     self:ResetVillageEvents()
     self.alliance_villages = {}
     self:GetAllianceBelvedere():Reset()
-    print("Alliance:Reset--->",self:Name())
 end
 function Alliance:OnOperation(operation_type)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OPERATION, function(listener)
@@ -367,6 +378,9 @@ function Alliance:CreateEventFromJsonData(json_data)
 end
 function Alliance:CreateEvent(key, type, category, time, params)
     return {key = key, type = type, category = category, time = time, params = params}
+end
+function Alliance:GetCountInfo()
+    return self.countInfo
 end
 function Alliance:OnEventsChanged(changed_map)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.EVENTS, function(listener)
@@ -430,6 +444,9 @@ function Alliance:OnJoinEventsChanged(changed_map)
     end)
 end
 function Alliance:OnAllianceDataChanged(alliance_data)
+    if self:NeedUpdateEnemyAlliance() then
+        self:UpdateEnemyAlliance(alliance_data.enemyAllianceDoc,alliance_data.basicInfo and alliance_data.basicInfo.status or nil)
+    end
     if alliance_data.notice then
         self:SetNotice(alliance_data.notice)
     end
@@ -789,9 +806,11 @@ function Alliance:OnTimer(current_time)
         strikeMarchReturnEvent:OnTimer(current_time)
     end)
     self:IteratorVillageEvents(function(villageEvent)
-        print("timer->village->",self:Name())
         villageEvent:OnTimer(current_time)
     end)
+    if self:NeedUpdateEnemyAlliance() then
+        self:GetEnemyAlliance():OnTimer(current_time)
+    end
 end
 
 --行军事件
@@ -952,7 +971,13 @@ function Alliance:ResetMarchEvent()
 end
 
 function Alliance:OnAllianceCountInfoChanged(countInfo)
-    self.countInfo = countInfo or {}
+    if not countInfo then
+        return
+    end
+    self.countInfo = countInfo
+    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.COUNT_INFO, function(listener)
+        listener:OnAllianceCountInfoChanged(self,self.countInfo)
+    end)
 end
 function Alliance:OnAllianceFightChanged(allianceFight)
     if not allianceFight then return end
@@ -1162,8 +1187,11 @@ function Alliance:GetSelf()
 end
 
 function Alliance:OnVillageEventTimer(villageEvent)
-    if self.alliance_villages[villageEvent:VillageData().id] then
-        local village = self.alliance_villages[villageEvent:VillageData().id]
+    local village = self:GetAllianceVillageInfos()[villageEvent:VillageData().id]
+    if not village then
+        village = self:GetEnemyAlliance():GetAllianceVillageInfos()[villageEvent:VillageData().id]
+    end 
+    if village then
         if villageEvent:GetTime() >= 0 then
             local left_resource = village.resource - villageEvent:CollectCount()
             self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OnVillageEventTimer, function(listener)
@@ -1284,5 +1312,59 @@ end
 function Alliance:GetAllianceVillageInfos()
     return self.alliance_villages
 end
+
+--敌方联盟
+function Alliance:GetEnemyAlliance()
+    return self.enemyAlliance
+end
+
+function Alliance:SetEnemyAlliance(alliance)
+    self.enemyAlliance = alliance
+end
+
+function Alliance:HaveEnemyAlliance()
+    return not self:GetEnemyAlliance():IsDefault()
+end
+
+function Alliance:InitEnemyAlliance()
+    local enemy_alliance = Alliance.new()
+    enemy_alliance:SetEnemyAlliance(self)
+    self:SetEnemyAlliance(enemy_alliance)
+end
+
+function Alliance:UpdateEnemyAlliance(json_data,my_alliance_status)
+    if not json_data then return end
+    if my_alliance_status == 'protect' or my_alliance_status == 'peace' then
+        self:GetEnemyAlliance():Reset()
+    else
+        local enemy_alliance = self:GetEnemyAlliance()
+        if enemy_alliance:IsDefault() then
+            local my_belvedere = self:GetAllianceBelvedere()
+            local enemy_belvedere = enemy_alliance:GetAllianceBelvedere()
+            enemy_belvedere:AddListenOnType(my_belvedere, enemy_belvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+            enemy_belvedere:AddListenOnType(my_belvedere, enemy_belvedere.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+            enemy_belvedere:AddListenOnType(my_belvedere, enemy_belvedere.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+            --瞭望塔coming不需要知道敌方对自己联盟的村落事件和返回事件 reset 会自动去掉所有监听
+            --TODO:这里应该可以移到初始化敌方联盟的地方
+        end
+        if json_data._id then
+            enemy_alliance:SetId(json_data._id)
+        end
+        if json_data.basicInfo then
+            enemy_alliance:SetName(json_data.basicInfo.name)
+            enemy_alliance:SetAliasName(json_data.basicInfo.tag)
+        end
+        enemy_alliance:OnAllianceDataChanged(json_data)
+    end
+end
+
+function Alliance:SetNeedUpdateEnemyAlliance(need)
+    self.needUpdateEnemyAlliance = need
+end
+
+function Alliance:NeedUpdateEnemyAlliance()
+    return self.needUpdateEnemyAlliance 
+end
+
 return Alliance
 

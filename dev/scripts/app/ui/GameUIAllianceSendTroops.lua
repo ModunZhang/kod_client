@@ -56,8 +56,8 @@ function GameUIAllianceSendTroops:ctor(march_callback)
     self.soldiers_table = {}
     self.march_callback = march_callback
 
-    -- 默认选中最强的龙
-    self.dragon = self.dragon_manager:GetDragon(self.dragon_manager:GetPowerfulDragonType())
+    -- 默认选中最强的并且可以出战的龙,如果都不能出战，则默认最强龙
+    self.dragon = self.dragon_manager:GetDragon(self.dragon_manager:GetCanFightPowerfulDragonType()) or self.dragon_manager:GetDragon(self.dragon_manager:GetPowerfulDragonType())
 end
 
 function GameUIAllianceSendTroops:onEnter()

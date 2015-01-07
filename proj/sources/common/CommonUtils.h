@@ -7,4 +7,5 @@ extern "C" void DisableIdleTimer(bool disable=false);
 extern "C" void CloseKeyboard();
 extern "C" const char* GetOSVersion();
 extern "C" const char* GetDeviceModel();
+extern "C" void WriteLog_(const char *str);
 #endif

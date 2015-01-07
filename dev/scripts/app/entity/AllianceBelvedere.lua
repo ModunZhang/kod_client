@@ -39,7 +39,7 @@ function AllianceBelvedere:IsReachEventLimit()
 end
 
 function AllianceBelvedere:GetEnemyAlliance()
-	return Alliance_Manager:GetEnemyAlliance()
+	return Alliance_Manager:GetMyAlliance():GetEnemyAlliance()
 end
 
 function AllianceBelvedere:GetAlliance()
