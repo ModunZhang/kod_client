@@ -50,6 +50,46 @@ function MailManager:DecreaseUnReadReportsNum(num)
     end)
 end
 
+function MailManager:DecreaseUnReadMailsNumByIds(ids)
+    local mails = self.mails
+    local num = 0
+    for _,mail in pairs(mails) do
+        for _,id in pairs(ids) do
+            if id==mail.id and not mail.isRead then
+                num = num + 1
+            end
+        end
+    end
+    self.unread_mail = self.unread_mail - num
+    self:NotifyListeneOnType(MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED,function(listener)
+        listener:MailUnreadChanged(
+            {
+                mail=self.unread_mail
+            }
+        )
+    end)
+end
+
+function MailManager:DecreaseUnReadReportsNumByIds(ids)
+    local reports = self.reports
+    local num = 0
+    for _,report in pairs(reports) do
+        for _,id in pairs(ids) do
+            if id==report.id and not report.isRead then
+                num = num + 1
+            end
+        end
+    end
+    self.unread_report = self.unread_report - num
+    self:NotifyListeneOnType(MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED,function(listener)
+        listener:MailUnreadChanged(
+            {
+                report=self.unread_report
+            }
+        )
+    end)
+end
+
 function MailManager:GetUnReadMailsAndReportsNum()
     return self.unread_mail + self.unread_report
 end
@@ -196,7 +236,7 @@ function MailManager:OnMailStatusChanged( mailStatus )
         self.unread_mail = mailStatus.unreadMails
     end
     if mailStatus.unreadReports then
-        self.unread_report = mailStatus.unreadMails
+        self.unread_report = mailStatus.unreadReports
     end
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED,function(listener)
         listener:MailUnreadChanged(

@@ -152,10 +152,10 @@ function GameUIAllianceMemberInfo:SendToServerWithTag(tag,member)
             end)
         end
 	elseif tag == 5 then
-		local mail = GameUIWriteMail.new()
+		local mail = GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL)
 		mail:SetTitle(_("个人邮件"))
 		mail:SetAddressee(self.player_info.name)
-		mail:OnSendButtonClicked( GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL)
+		-- mail:OnSendButtonClicked( GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL)
 		mail:addTo(self)
 	end
 end
