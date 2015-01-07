@@ -158,13 +158,13 @@ function CityLayer:InitBackground()
     self:ReloadSceneBackground()
 end
 function CityLayer:InitCity()
-    self.city_layer = display.newLayer():addTo(self, CITY_LAYER):align(display.BOTTOM_LEFT, 360, 360):scale(0.5)
-    self.position_node = cc.TMXTiledMap:create("tmxmaps/city_road.tmx"):addTo(self.city_layer):hide()
+    self.city_layer = display.newLayer():addTo(self, CITY_LAYER):align(display.BOTTOM_LEFT, 47, 158)
+    self.position_node = cc.TMXTiledMap:create("tmxmaps/city_road2.tmx"):addTo(self.city_layer):hide()
     self.city_node = display.newLayer():addTo(self.city_layer, BUILDING_NODE):align(display.BOTTOM_LEFT)
     local origin_point = self:GetPositionIndex(0, 0)
     self.iso_map = IsoMapAnchorBottomLeft.new({
-        tile_w = 80,
-        tile_h = 56,
+        tile_w = 51,
+        tile_h = 31,
         map_width = 50,
         map_height = 50,
         base_x = origin_point.x,
@@ -314,9 +314,8 @@ function CityLayer:InitWithCity(city)
     -- 协防的部队
     local helpedByTroops = {}
     for i, v in ipairs({
-        {x = -10, y = 5},
-        {x = -10, y = 10},
-        {x = -10, y = 15},
+        {x = 15, y = 55},
+        {x = 35, y = 55},
     }) do
         table.insert(helpedByTroops, HelpedTroopsSprite.new(self, v.x, v.y):addTo(city_node))
     end

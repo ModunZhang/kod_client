@@ -17,7 +17,8 @@ function FunctionUpgradingSprite:OnTileUnlocked(city)
     self:OnTileChanged(city)
 end
 function FunctionUpgradingSprite:OnTileChanged(city)
-    local current_tile = city:GetTileWhichBuildingBelongs(self:GetEntity())
+    local location_id = city:GetLocationIdByBuilding(self:GetEntity())
+    local current_tile = city:GetTileByLocationId(location_id)
     if current_tile:IsUnlocked() then
         self:TranslateToUnlock()
     elseif self:GetEntity():IsUpgrading() then 

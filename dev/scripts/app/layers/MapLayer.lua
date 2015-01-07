@@ -112,6 +112,9 @@ function MapLayer:ZoomEnd()
     self.scale_current = self:getScale()
     return self
 end
+function MapLayer:GetScaleRange()
+    return self.min_scale, self.max_scale
+end
 
 -------
 function MapLayer:GotoMapPositionInMiddle(x, y)

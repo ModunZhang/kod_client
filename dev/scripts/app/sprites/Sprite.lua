@@ -143,7 +143,7 @@ function Sprite:newBatchNode(w, h)
     local map = self:GetLogicMap()
     for ix = start_x, end_x do
         for iy = start_y, end_y do
-            local sprite = display.newSprite(base_node:getTexture(), cc.rect(0, 0, 80, 56))
+            local sprite = display.newSprite(base_node:getTexture(), cc.rect(0, 0, 51, 31))
             sprite:setPosition(cc.p(map:ConvertToLocalPosition(ix, iy)))
             base_node:addChild(sprite)
         end

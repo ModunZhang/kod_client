@@ -419,8 +419,14 @@ function City:GetDecoratorsByLocationId(location_id)
     return self.locations_decorators[location_id]
 end
 function City:GetLocationIdByBuilding(building)
-    local tile = self:GetTileWhichBuildingBelongs(building)
-    return tile.location_id
+    local x, y = building:GetLogicPosition()
+    local building_type = building:GetType()
+    for i, v in ipairs(self.locations) do
+        if building_type == v.building_type and v.x == x and v.y == y then
+            return i
+        end
+    end
+    return nil
 end
 function City:GetLocationIdByBuildingType(building_type)
     for i, v in ipairs(self.locations) do
@@ -642,7 +648,7 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time)
         building:OnUserDataChanged(user_data, current_time, tile.location_id, tile:GetBuildingLocation(building))
     end)
     self:IteratorFunctionBuildingsByFunc(function(key, building)
-        building:OnUserDataChanged(user_data, current_time, self:GetTileWhichBuildingBelongs(building).location_id)
+        building:OnUserDataChanged(user_data, current_time, self:GetLocationIdByBuilding(building))
     end)
     self:IteratorTowersByFunc(function(key, building)
         building:OnUserDataChanged(user_data, current_time)

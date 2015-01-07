@@ -61,6 +61,10 @@ function GameUIMail:onEnter()
     }, function(tag)
         if tag == 'inbox' then
             self.inbox_layer:setVisible(true)
+            if not self.inbox_listview then
+                local mails = self.manager:GetMails()
+                self:InitInbox(mails)
+            end
         else
             self.inbox_layer:setVisible(false)
         end
@@ -85,6 +89,10 @@ function GameUIMail:onEnter()
 
         if tag == 'sent' then
             self.sent_layer:setVisible(true)
+            if not self.send_mail_listview then
+                local send_mails = self.manager:GetSendMails()
+                self:InitSendMails(send_mails)
+            end
         else
             self.sent_layer:setVisible(false)
         end
@@ -93,14 +101,14 @@ function GameUIMail:onEnter()
     self.manager:AddListenOnType(self,MailManager.LISTEN_TYPE.MAILS_CHANGED)
     self.manager:AddListenOnType(self,MailManager.LISTEN_TYPE.REPORTS_CHANGED)
     self.manager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
-    local mails = self.manager:GetMails(function (...)
-        local saved_mails = self.manager:GetSavedMails(function (...)
-            local send_mails = self.manager:GetSendMails(function (...)end)
-            self:InitSendMails(send_mails)
-        end)
-        self:InitSaveMails(saved_mails)
-    end)
-    self:InitInbox(mails)
+    -- local mails = self.manager:GetMails(function (...)
+    --     local saved_mails = self.manager:GetSavedMails(function (...)
+    --         local send_mails = self.manager:GetSendMails(function (...)end)
+    --         self:InitSendMails(send_mails)
+    --     end)
+    --     self:InitSaveMails(saved_mails)
+    -- end)
+    -- self:InitInbox(mails)
 
     self:CreateMailControlBox()
     self:InitUnreadMark()
@@ -345,6 +353,7 @@ end
 -- end
 
 function GameUIMail:CreateMailItem(listview,mail)
+    if not listview then return end
     local item = listview:newItem()
     local item_width, item_height = 608,126
     item.mail = mail
@@ -471,7 +480,7 @@ function GameUIMail:CreateCheckBox(item)
 end
 function GameUIMail:GetCurrentSelectType()
     if self.inbox_layer:isVisible()
-        or (self.saved_layer:isVisible() and self.save_mails_listview:isVisible())
+        or (self.saved_layer:isVisible() and self.save_mails_listview and self.save_mails_listview:isVisible())
     then
         return "mail"
     elseif self.report_layer:isVisible()
@@ -481,8 +490,6 @@ function GameUIMail:GetCurrentSelectType()
     end
 end
 function GameUIMail:VisibleJudgeForMailControl()
-    print("-----0fdf",self.saved_layer:isVisible())
-
     if self.inbox_layer:isVisible() then
         for _,item in pairs(self.inbox_mails) do
             if item.check_box:isButtonSelected() then
@@ -605,6 +612,7 @@ function GameUIMail:AddMails( listview,item,mail,index )
 end
 
 function GameUIMail:AddMailToListView(listview,item,mail)
+    if not listview then return end
     local mails_table = self:GetMailsTableWithMailListView(listview)
     local id = mail.id or mail.toId
     mails_table[id] = item
@@ -615,9 +623,9 @@ end
 function GameUIMail:GetMailsTableWithMailListView( listview )
     if listview == self.inbox_listview then
         return self.inbox_mails
-    elseif listview == self.save_mails_listview then
+    elseif self.save_mails_listview and listview == self.save_mails_listview then
         return self.saved_mails
-    elseif listview == self.send_mail_listview then
+    elseif self.send_mail_listview and listview == self.send_mail_listview then
         return self.send_mails
     elseif listview == self.report_listview then
         return self.item_reports
@@ -668,11 +676,11 @@ function GameUIMail:CreateLoadingMoreItem(listview)
 end
 function GameUIMail:GetMailsOrReports(listview)
     if listview == self.inbox_listview then
-        return self.manager:GetMails(NOT_HANDLE, self:GetMailsCount(listview))
-    elseif listview == self.save_mails_listview then
-        return self.manager:GetSavedMails(NOT_HANDLE,self:GetMailsCount(listview))
-    elseif listview == self.send_mail_listview then
-        return self.manager:GetSendMails(NOT_HANDLE,self:GetMailsCount(listview))
+        return self.manager:GetMails(self:GetMailsCount(listview))
+    elseif self.save_mails_listview and listview == self.save_mails_listview then
+        return self.manager:GetSavedMails(self:GetMailsCount(listview))
+    elseif self.send_mail_listview and listview == self.send_mail_listview then
+        return self.manager:GetSendMails(self:GetMailsCount(listview))
     elseif listview == self.report_listview then
         return self.manager:GetReports(self:GetMailsCount(listview))
     elseif listview == self.saved_reports_listview then
@@ -738,8 +746,10 @@ function GameUIMail:OnSavedMailsChanged(changed_mails)
     if changed_mails.remove_mails then
         for _,remove_mail in pairs(changed_mails.remove_mails) do
             -- 取消收藏成功，从收藏夹删除这封邮件
-            self.save_mails_listview:removeItem(self.saved_mails[remove_mail.id])
-            self.saved_mails[remove_mail.id] = nil
+            if self.save_mails_listview then
+                self.save_mails_listview:removeItem(self.saved_mails[remove_mail.id])
+                self.saved_mails[remove_mail.id] = nil
+            end
         end
     end
 end
@@ -754,8 +764,10 @@ function GameUIMail:OnSendMailsChanged(changed_mails)
     if changed_mails.remove_mails then
         for _,remove_mail in pairs(changed_mails.remove_mails) do
             -- 取消收藏成功，从收藏夹删除这封邮件
-            self.send_mail_listview:removeItem(self.send_mails[remove_mail.id])
-            self.send_mails[remove_mail.id] = nil
+            if self.send_mail_listview then
+                self.send_mail_listview:removeItem(self.send_mails[remove_mail.id])
+                self.send_mails[remove_mail.id] = nil
+            end
         end
     end
 end
@@ -780,6 +792,7 @@ function GameUIMail:MailUnreadChanged(unreads)
     end
 end
 function GameUIMail:AddLoadingMoreMails(listview,mails)
+    if not listview then return end
     local loaded_num = 0
     local now_showed_count = self:GetMailsCount(listview)
     if mails then
@@ -1259,11 +1272,17 @@ function GameUIMail:InitSavedReports()
         },
         function(tag)
             if tag == 'menu_2' then
+                if not self.save_mails_listview then
+                    local saved_mails = self.manager:GetSavedMails()
+                    self:InitSaveMails(saved_mails)
+                end
                 self.save_mails_listview:setVisible(true)
                 self.saved_reports_listview:setVisible(false)
             end
             if tag == 'menu_1' then
-                self.save_mails_listview:setVisible(false)
+                if self.save_mails_listview then
+                    self.save_mails_listview:setVisible(false)
+                end
                 self.saved_reports_listview:setVisible(true)
             end
         end
@@ -1642,6 +1661,8 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
+
 
 
 

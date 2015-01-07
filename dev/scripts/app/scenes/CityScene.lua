@@ -29,7 +29,7 @@ function CityScene:onEnter()
     self:GetSceneLayer():InitWithCity(city)
     self:PlayBackgroundMusic()
     self:GotoLogicPointInstant(6, 4)
-    self:GetSceneLayer():ZoomTo(1.3)
+    self:GetSceneLayer():ZoomTo(1.0)
 
     -- local ai_create_house_array = {
     --     "woodcutter",
@@ -107,13 +107,11 @@ function CityScene:LoadAnimation()
         end
     end
 
-    manager:removeArmatureFileInfo("animations/Cloud_Animation.ExportJson")
     manager:removeArmatureFileInfo("animations/chuizidonghua.ExportJson")
     manager:removeArmatureFileInfo("animations/green_dragon.ExportJson")
     manager:removeArmatureFileInfo("animations/Red_dragon.ExportJson")
     manager:removeArmatureFileInfo("animations/Blue_dragon.ExportJson")
 
-    manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
     manager:addArmatureFileInfo("animations/chuizidonghua.ExportJson")
     manager:addArmatureFileInfo("animations/green_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
