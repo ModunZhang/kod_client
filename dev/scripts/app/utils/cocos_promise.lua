@@ -31,6 +31,7 @@ local function promiseWithCatchError(p)
         dump(err)
         local dialog = FullScreenPopDialogUI.new():AddToCurrentScene():VisibleXButton(false):CreateOKButton(
             {
+                btn_name = _("确定"),
                 listener = function()
                     app:retryConnectServer()
                 end

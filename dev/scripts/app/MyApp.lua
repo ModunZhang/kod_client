@@ -19,6 +19,24 @@ local LocalPushManager = import("app.utils.LocalPushManager")
 local Timer = import('.utils.Timer')
 local MyApp = class("MyApp", cc.mvc.AppBase)
 
+local function transition_(scene, status)
+    if status == "onEnter" then
+        local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
+        display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
+            transition.sequence{
+                cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
+                cc.FadeIn:create(0.75),
+                cc.CallFunc:create(function() scene:hideOutShowIn() end),
+                cc.DelayTime:create(0.5),
+                cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
+                cc.FadeOut:create(0.75),
+                cc.CallFunc:create(function() scene:finish() end),
+            }
+        )
+    elseif status == "onExit" then
+    end
+end
+
 function MyApp:ctor()
     MyApp.super.ctor(self)
     self:InitGameBase()
@@ -32,6 +50,7 @@ end
 
 function MyApp:run()
     self:enterScene('LogoScene')
+    -- self:EnterPVEScene()
 end
 
 function MyApp:showDebugInfo()
@@ -45,7 +64,7 @@ function MyApp:restart()
     self:GetAudioManager():StopAll()
     if device.platform == 'mac' then
         PlayerProtocol:getInstance():relaunch()
-    else    
+    else
         ext.restart()
     end
 end
@@ -105,7 +124,7 @@ function MyApp:retryConnectServer()
             dump(err:reason())
         end):always(function()
             -- device.hideActivityIndicator()
-        end)
+            end)
     end
 end
 
@@ -141,79 +160,29 @@ function MyApp:lockInput(b)
 end
 function MyApp:EnterPlayerCityScene(id)
     NetManager:getPlayerCityInfoPromise(id):next(function(city_info)
-        app:enterScene("OtherCityScene", {User.new(city_info.basicInfo), City.new(city_info)}, "custom", -1, function(scene, status)
-            if status == "onEnter" then
-                local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
-                display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
-                    transition.sequence{
-                        cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
-                        cc.FadeIn:create(0.75),
-                        cc.CallFunc:create(function() scene:hideOutShowIn() end),
-                        cc.DelayTime:create(0.5),
-                        cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
-                        cc.FadeOut:create(0.75),
-                        cc.CallFunc:create(function() scene:finish() end),
-                    }
-                )
-            elseif status == "onExit" then
-            end
-        end)
+        app:enterScene("OtherCityScene", {User.new(city_info.basicInfo), City.new(city_info)}, "custom", -1, transition_)
     end)
 end
-
-
 function MyApp:EnterMyCityScene()
-   app:enterScene("MyCityScene", {City}, "custom", -1, function(scene, status)
-        if status == "onEnter" then
-            local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
-            display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
-                transition.sequence{
-                    cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
-                    cc.FadeIn:create(0.75),
-                    cc.CallFunc:create(function() scene:hideOutShowIn() end),
-                    cc.DelayTime:create(0.5),
-                    cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
-                    cc.FadeOut:create(0.75),
-                    cc.CallFunc:create(function() scene:finish() end),
-                }
-            )
-        elseif status == "onExit" then
-        end
-    end)
+    app:enterScene("MyCityScene", {City}, "custom", -1, transition_)
 end
-
 function MyApp:EnterMyAllianceSceneWithTips(tips)
     UIKit:showMessageDialog(nil,tips,function()
         self:EnterMyAllianceScene()
     end):VisibleXButton(false)
 end
-
 function MyApp:EnterMyAllianceScene()
-    local alliance_name = "AllianceScene" 
+    local alliance_name = "AllianceScene"
     local my_status = Alliance_Manager:GetMyAlliance():Status()
     if my_status == "prepare" or  my_status == "fight" then
         alliance_name = "AllianceBattleScene"
     end
     print("MyApp:EnterMyAllianceScene--->",alliance_name)
-    app:enterScene(alliance_name, {City}, "custom", -1, function(scene, status)
-        if status == "onEnter" then
-            local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
-            display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
-                transition.sequence{
-                    cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
-                    cc.FadeIn:create(0.75),
-                    cc.CallFunc:create(function() scene:hideOutShowIn() end),
-                    cc.DelayTime:create(0.5),
-                    cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
-                    cc.FadeOut:create(0.75),
-                    cc.CallFunc:create(function() scene:finish() end),
-                }
-            )
-        elseif status == "onExit" then
-        end
-    end)
+    app:enterScene(alliance_name, {City}, "custom", -1, transition_)
 end
-
+function MyApp:EnterPVEScene()
+    app:enterScene("PVEScene", nil, "custom", -1, transition_)
+end
 function MyApp:pushScene(sceneName, args, transitionType, time, more)
     local scenePackageName = "app.scenes." .. sceneName
     local sceneClass = require(scenePackageName)
@@ -229,3 +198,4 @@ function MyApp:getSupportMailFormat()
 end
 
 return MyApp
+

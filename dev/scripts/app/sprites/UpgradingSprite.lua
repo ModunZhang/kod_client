@@ -112,6 +112,22 @@ function UpgradingSprite:GetSpriteOffset()
     local offset = self:GetCurrentConfig().offset
     return offset.x, offset.y
 end
+function UpgradingSprite:CreateSprite()
+    local config = self:GetCurrentConfig()
+    local sprite_file, scale = self:GetSpriteFile()
+    local sprite = display.newSprite(sprite_file)
+        :scale(scale == nil and 1 or scale)
+        :flipX(self:GetFlipX())
+
+    for _, v in ipairs(config.decorator) do
+        if v.deco_type == "image" then
+            display.newSprite(v.deco_name):addTo(sprite):pos(v.offset.x, v.offset.y)
+        else
+            assert(false)
+        end
+    end
+    return sprite
+end
 -- function UpgradingSprite:GetShadowConfig()
 --     local config = self:GetCurrentConfig()
 --     if config then
@@ -148,6 +164,7 @@ end
 
 
 return UpgradingSprite
+
 
 
 

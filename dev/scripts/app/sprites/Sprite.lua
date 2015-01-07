@@ -4,7 +4,7 @@ local Sprite = class("Sprite", function(...)
     return Observer.extend(display.newNode(), ...)
 end)
 
-local SPRITE = -1
+local SPRITE = 0
 ---- 回调
 function Sprite:OnSceneMove()
     local world_point = self:GetWorldPosition()

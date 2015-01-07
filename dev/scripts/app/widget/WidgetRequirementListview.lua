@@ -1,7 +1,7 @@
 -- 需求列表控件
 local UIListView = import("..ui.UIListView")
 local WidgetRequirementListview = class("WidgetRequirementListview", function ()
-    return display.newLayer()
+    return cc.Layer:create()
 end)
 
 function WidgetRequirementListview:ctor(parms)

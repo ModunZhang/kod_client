@@ -1128,11 +1128,12 @@ function City:GenerateWalls()
             break
         end
     end
+
     -- 重新生成城门的监听
     self.walls = self:ReloadWalls(sort_walls)
 
     -- 生成防御塔
-    self:GenerateTowers(self.walls)
+    self:GenerateTowers(sort_walls)
 end
 -- 因为重新生成了城墙，所以必须把添加的listener都转移到新的城门上去
 function City:ReloadWalls(walls)
@@ -1155,11 +1156,17 @@ function City:ReloadWalls(walls)
         old_gate:CopyValueFrom(new_gate)
     else
         -- 如果是第一次生成
-        local gate = self:GetGateInWalls(walls)
-        self:OnInitBuilding(gate)
-        -- self:GetGateInWalls(walls):AddUpgradeListener(self)
+        self:OnInitBuilding(self:GetGateInWalls(walls))
     end
-    return walls
+    local t = {}
+    for _, v in ipairs(walls) do
+        local x, y = v:GetLogicPosition()
+        if x > 0 and y > 0 then
+            table.insert(t, v)
+        end
+    end
+    return t
+    -- return walls
 end
 function City:GenerateTowers(walls)
     local towers = {}
@@ -1218,7 +1225,16 @@ function City:GenerateTowers(walls)
     for tower_id, tower_index in ipairs(t) do
         towers[tower_index]:SetTowerId(tower_id)
     end
-    self.towers = self:ReloadTowers(towers)
+    local t = {}
+    for _, v in ipairs(towers) do
+        if (v:GetOrient() ~= Orient.NEG_X and
+            v:GetOrient() ~= Orient.NEG_Y and
+            v:GetOrient() ~= Orient.UP) or
+            v:TowerId() then
+            table.insert(t, v)
+        end
+    end
+    self.towers = self:ReloadTowers(t)
 end
 function City:ReloadTowers(towers)
     local old_towers = self.towers
@@ -1428,6 +1444,7 @@ function City:PromiseOfFinishEquipementDragon()
 end
 
 return City
+
 
 
 
