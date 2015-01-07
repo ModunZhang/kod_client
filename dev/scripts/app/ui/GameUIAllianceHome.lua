@@ -537,8 +537,9 @@ function GameUIAllianceHome:CreateBottom()
     local index_2 = display.newSprite("chat_page_index_2.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2+10,chat_bg:getContentSize().height-10)
 
 
+    local size = chat_bg:getContentSize()
     local pv = cc.ui.UIPageView.new {
-        viewRect = cc.rect(10, 4, 540, 120)}
+        viewRect =  cc.rect(10, 4, size.width, size.height)}
         :onTouch(function (event)
             dump(event,"UIPageView event")
             if event.name == "pageChange" then

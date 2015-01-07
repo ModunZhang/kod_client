@@ -130,7 +130,7 @@ function MailManager:dispatchMailServerData( eventName,msg )
     end)
 end
 
-function MailManager:GetMails(cb,fromIndex)
+function MailManager:GetMails(fromIndex)
     -- 首先检查本地MailManager是否缓存有之前获取到的邮件
     local fromIndex = fromIndex or 0
     if self.mails[fromIndex+1] then
@@ -142,21 +142,19 @@ function MailManager:GetMails(cb,fromIndex)
                 break
             end
         end
-        cb()
         return mails
     else
         -- 本地没有缓存，则从服务器获取
-        NetManager:getFetchMailsPromise(fromIndex):always(function ()
-            cb()
-        end):catch(function(err)
+        NetManager:getFetchMailsPromise(fromIndex):catch(function(err)
             dump(err:reason())
         end)
     end
 end
 
-function MailManager:GetSavedMails(cb,fromIndex)
+function MailManager:GetSavedMails(fromIndex)
     -- 首先检查本地MailManager是否缓存有之前获取到的邮件
     local fromIndex = fromIndex or 0
+
     if self.savedMails[fromIndex+1] then
         local savedMails = {}
         for i=fromIndex+1,fromIndex+10 do
@@ -166,19 +164,16 @@ function MailManager:GetSavedMails(cb,fromIndex)
                 break
             end
         end
-        cb()
         return savedMails
     else
         -- 本地没有缓存，则从服务器获取
-        NetManager:getFetchSavedMailsPromise(fromIndex):always(function ()
-            cb()
-        end):catch(function(err)
+        NetManager:getFetchSavedMailsPromise(fromIndex):catch(function(err)
             dump(err:reason())
         end)
     end
 end
 
-function MailManager:GetSendMails(cb,fromIndex)
+function MailManager:GetSendMails(fromIndex)
     -- 首先检查本地MailManager是否缓存有之前获取到的邮件
     local fromIndex = fromIndex or 0
     if self.sendMails[fromIndex+1] then
@@ -188,21 +183,21 @@ function MailManager:GetSendMails(cb,fromIndex)
                 table.insert(sendMails, self.sendMails[i])
             end
         end
-        cb()
         return sendMails
     else
         -- 本地没有缓存，则从服务器获取
-        NetManager:getFetchSendMailsPromise(fromIndex):always(function ()
-            cb()
-        end):catch(function(err)
+        NetManager:getFetchSendMailsPromise(fromIndex):catch(function(err)
             dump(err:reason())
         end)
     end
 end
 function MailManager:OnMailStatusChanged( mailStatus )
-    LuaUtils:outputTable("mailStatus", mailStatus)
-    self.unread_mail = mailStatus.unreadMails
-    self.unread_report = mailStatus.unreadReports
+    if mailStatus.unreadMails then
+        self.unread_mail = mailStatus.unreadMails
+    end
+    if mailStatus.unreadReports then
+        self.unread_report = mailStatus.unreadMails
+    end
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED,function(listener)
         listener:MailUnreadChanged(
             {
@@ -351,7 +346,6 @@ function MailManager:OnNewReportsChanged( __reports )
             self:ModifyReport(rp.data)
         end
     end
-    LuaUtils:outputTable("__reports", __reports)
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.REPORTS_CHANGED,function(listener)
         listener:OnReportsChanged({
             add = add_reports,
@@ -450,12 +444,3 @@ function MailManager:GetSavedReports(fromIndex)
     end
 end
 return MailManager
-
-
-
-
-
-
-
-
-
