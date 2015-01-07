@@ -37,6 +37,18 @@ function PlatformAdapter:ios()
             end
         end)
     end
+    if CONFIG_LOG_DEBUG_FILE then
+        local print__ = print
+         print = function ( ... )
+            print__(...)
+            local t = {}
+            for i,v in ipairs({...}) do
+                if not v then v = "nil" end
+                table.insert(t,tostring(v))
+            end
+            ext.__logFile(table.concat(t,"\t") .. "\n")
+        end
+    end
 end
 
 

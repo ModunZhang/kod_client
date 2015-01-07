@@ -658,6 +658,30 @@ static int tolua_ext_get_device_model(lua_State* tolua_S)
     return 1;
 }
 
+static int tolua_ext_log_file(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (
+        !tolua_isstring(tolua_S,1,0,&tolua_err) ||
+        !tolua_isnoobj(tolua_S,2,&tolua_err)
+        )
+        goto tolua_lerror;
+    else
+#endif
+    {
+        const char* log = tolua_tostring(tolua_S, 1, 0);
+        WriteLog_(log);
+    }
+    return 0;
+#ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'crc32'.",&tolua_err);
+    return 0;
+#endif
+
+}
+
 static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
 {
     tolua_function(tolua_S, "now", tolua_ext_now);
@@ -672,6 +696,7 @@ static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
     tolua_function(tolua_S, "userVoice", tolua_ext_open_user_voice);
     tolua_function(tolua_S, "getOSVersion", tolua_ext_get_os_version);
     tolua_function(tolua_S, "getDeviceModel", tolua_ext_get_device_model);
+    tolua_function(tolua_S, "__logFile", tolua_ext_log_file);
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
     tolua_function(tolua_S,"getOpenUDID",tolua_ext_getOpenUDID);
 #endif

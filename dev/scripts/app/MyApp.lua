@@ -18,7 +18,6 @@ local AudioManager = import("app.utils.AudioManager")
 local LocalPushManager = import("app.utils.LocalPushManager")
 local Timer = import('.utils.Timer')
 local MyApp = class("MyApp", cc.mvc.AppBase)
-
 function MyApp:ctor()
     MyApp.super.ctor(self)
     self:InitGameBase()

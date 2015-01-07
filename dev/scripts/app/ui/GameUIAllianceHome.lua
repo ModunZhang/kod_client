@@ -325,7 +325,7 @@ function GameUIAllianceHome:CreateTop()
     function Top:Refresh()
         local alliance = home.alliance
         local status = alliance:Status()
-        local enemyAlliance = Alliance_Manager:GetEnemyAlliance()
+        local enemyAlliance = Alliance_Manager:GetMyAlliance():GetEnemyAlliance()
         period_label:setString(home:GetAlliancePeriod())
         -- 和平期
         if status=="peace" then

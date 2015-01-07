@@ -157,7 +157,7 @@ function MultiAllianceLayer:GetMyAlliance()
 end
 
 function MultiAllianceLayer:GetEnemyAlliance()
-    return Alliance_Manager:GetEnemyAlliance()
+    return self:GetMyAlliance():GetEnemyAlliance()
 end
 
 

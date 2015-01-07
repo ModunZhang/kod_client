@@ -132,7 +132,7 @@ function TwoAllianceLayer:GetMyAlliance()
 end
 
 function TwoAllianceLayer:GetEnemyAlliance()
-    return Alliance_Manager:GetEnemyAlliance()
+    return self:GetMyAlliance():GetEnemyAlliance()
 end
 
 function TwoAllianceLayer:AddOrRemoveAllianceEvent(isAdd)
