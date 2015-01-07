@@ -109,7 +109,9 @@ Begin;
 if [ ${#@} -gt 0 ]; then
 	for png_name in ${@}
 	do
-		ScanPng1 $png_name
+		if [ ${png_name##*.} != "sh" ]; then
+			ScanPng1 $png_name
+		fi
 	done
 else
 	echo "无效文件名"

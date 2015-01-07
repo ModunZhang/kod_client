@@ -105,11 +105,15 @@ function ScanPng2()
 # done
 
 
+
+
 Begin;
 if [ ${#@} -gt 0 ]; then
 	for png_name in ${@}
 	do
-		ScanPng2 $png_name
+		if [ ${png_name##*.} != "sh" ]; then
+			ScanPng2 $png_name
+		fi
 	done
 else
 	echo "无效文件名"
@@ -117,6 +121,7 @@ else
 	exit 1
 fi
 End;
+
 
 # while read LINE
 # do
