@@ -227,4 +227,27 @@ function MyApp:getSupportMailFormat()
     print(ext.getDeviceModel())
 end
 
+function MyApp:EnterViewModelAllianceScene(alliance_id)
+    NetManager:getFtechAllianceViewDataPromose(alliance_id):next(function(msg)
+        local alliance = Alliance_Manager:DecodeAllianceFromJson(msg)
+        app:enterScene("OtherAllianceScene", {alliance}, "custom", -1, function(scene, status)
+         if status == "onEnter" then
+            local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
+            display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
+                transition.sequence{
+                    cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
+                    cc.FadeIn:create(0.75),
+                    cc.CallFunc:create(function() scene:hideOutShowIn() end),
+                    cc.DelayTime:create(0.5),
+                    cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
+                    cc.FadeOut:create(0.75),
+                    cc.CallFunc:create(function() scene:finish() end),
+                }
+            )
+        elseif status == "onExit" then
+        end
+    end)
+    end)
+end
+
 return MyApp

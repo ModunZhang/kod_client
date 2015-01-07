@@ -8,7 +8,6 @@ local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local GameUIAllianceContribute = import(".GameUIAllianceContribute")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local GameUIHelp = import(".GameUIHelp")
-local GameUIAllianceEnter = import(".GameUIAllianceEnter")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
 
 
