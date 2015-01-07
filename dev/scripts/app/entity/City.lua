@@ -287,8 +287,9 @@ function City:GetHousesAroundFunctionBuildingWithFilter(building, len, filter)
 end
 function City:IsFunctionBuilding(building)
     local location_id = self:GetLocationIdByBuilding(building)
-    local b = self:GetBuildingByLocationId(location_id)
-    return b:IsSamePositionWith(building)
+    if location_id then
+        return self:GetBuildingByLocationId(location_id):IsSamePositionWith(building)
+    end
 end
 function City:IsHouse(building)
     return not self:IsFunctionBuilding(building) and not self:IsTower(building) and not self:IsGate(building)

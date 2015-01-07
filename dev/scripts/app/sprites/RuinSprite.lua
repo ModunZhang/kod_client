@@ -7,7 +7,7 @@ function RuinSprite:ctor(city_layer, entity)
 end
 function RuinSprite:GetSpriteFile()
     local index = random(123456789) % 2 + 1
-    local ruin_png = index == 1 and "ruin_1_193x151.png" or "ruin_2_190x149.png"
+    local ruin_png = index == 1 and "ruin_1_235x159.png" or "ruin_2_235x160.png"
     return ruin_png
 end
 function RuinSprite:GetSpriteOffset()

@@ -162,7 +162,7 @@ function GameUICityInfo:CreateBottom()
         valign = cc.ui.TEXT_VALIGN_CENTER,
         dimensions = cc.size(400, 100),
         color = UIKit:hex2c3b(0xe19319)})
-        :addTo(bottom_bg):align(display.LEFT_CENTER, 150, display.bottom + 101/2)
+        :addTo(bottom_bg):align(display.LEFT_CENTER, 250, display.bottom + 101/2)
 
     local map_node = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE):addTo(self)
 end
