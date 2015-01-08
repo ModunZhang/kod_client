@@ -100,7 +100,7 @@ create_building_config(
 )
 create_building_config(
     "blackSmith"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "blackSmith_208x244.png", offset(20, 120), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "blackSmith_208x244.png", offset(20, 100), scale(1))
 )
 create_building_config(
     "foundry"
@@ -128,7 +128,7 @@ create_building_config(
 )
 create_building_config(
     "tradeGuild"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "tradeGuild_248x176.png", offset(20, 100), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "tradeGuild_248x176.png", offset(20, 80), scale(1))
 )
 create_building_config(
     "academy"
