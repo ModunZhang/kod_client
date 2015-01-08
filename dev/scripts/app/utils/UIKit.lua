@@ -409,9 +409,9 @@ function UIKit:commonListView(params,topEnding)
         isTopEnding = true
     end
     if isTopEnding then
-        cc.ui.UIImage.new("listview_edging.png"):addTo(list_node):pos(0,viewRect.height-6)
+        cc.ui.UIImage.new("listview_edging.png"):addTo(list_node):align(display.BOTTOM_CENTER,viewRect.width/2,viewRect.height-6)
     end
-    cc.ui.UIImage.new("listview_edging.png"):addTo(list_node):pos(0,-11):flipY(true)
+    cc.ui.UIImage.new("listview_edging.png"):addTo(list_node):align(display.BOTTOM_CENTER,viewRect.width/2,-11):flipY(true)
     return list,list_node
 end
 

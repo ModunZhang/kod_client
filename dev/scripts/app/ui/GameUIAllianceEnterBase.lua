@@ -245,7 +245,7 @@ end
 
 
 function GameUIAllianceEnterBase:BuildOneButton(image,title)
-	local btn = WidgetPushButton.new({normal = "btn_138x110.png",pressed = "btn_pressed_138X110.png"})
+	local btn = WidgetPushButton.new({normal = "btn_138x110.png",pressed = "btn_pressed_138x110.png"})
     local s = btn:getCascadeBoundingBox().size
     display.newSprite(image):align(display.CENTER, -s.width/2, -s.height/2+22):addTo(btn)
     UIKit:ttfLabel({

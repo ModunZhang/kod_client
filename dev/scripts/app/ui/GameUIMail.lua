@@ -1663,18 +1663,3 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

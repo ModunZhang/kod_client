@@ -6,9 +6,11 @@ local WidgetInfo = class("WidgetInfo", function ()
 end)
 function WidgetInfo:ctor(params)
     local info = params.info -- 显示信息
+    local width = params.w or 568
+    self.width = width
 
     self.info_bg = WidgetUIBackGround.new({
-        width = params.w or 568,
+        width = width,
         height = params.h or #info*40+20,
         top_img = "back_ground_568X14_top.png",
         bottom_img = "back_ground_568X14_top.png",
@@ -21,7 +23,7 @@ function WidgetInfo:ctor(params)
     }):addTo(self)
     self.info_listview = UIListView.new{
         -- bgColor = UIKit:hex2c4b(0x7a000000),
-        viewRect = cc.rect(10, 10, 548, (params.h or #info*40+20)-20),
+        viewRect = cc.rect(10, 10, width-20, (params.h or #info*40+20)-20),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.info_bg)
 
@@ -44,15 +46,15 @@ end
 function WidgetInfo:CreateInfoItem(info_message)
     local meetFlag = true
 
-    local item_width, item_height = 548,40
+    local item_width, item_height = self.width-20,40
     for k,v in pairs(info_message) do
         local item = self.info_listview:newItem()
         item:setItemSize(item_width, item_height)
         local content
         if meetFlag then
-            content = display.newSprite("back_ground_548x40_1.png")
+            content = display.newScale9Sprite("back_ground_548x40_1.png",0,0,cc.size(self.width-20,40),cc.rect(10,10,528,20))
         else
-            content = display.newSprite("back_ground_548x40_2.png")
+            content = display.newScale9Sprite("back_ground_548x40_2.png",0,0,cc.size(self.width-20,40),cc.rect(10,10,528,20))
         end
         UIKit:ttfLabel({
             text = v[1],
