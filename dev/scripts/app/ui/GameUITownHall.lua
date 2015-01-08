@@ -20,23 +20,13 @@ function GameUITownHall:onEnter()
     self:TabButtons()
     self.town_hall:AddTownHallListener(self)
     self.town_hall:AddUpgradeListener(self)
-    -- self.town_hall_city:AddListenOnType(self, self.town_hall_city.LISTEN_TYPE.UPGRADE_BUILDING)
     self:UpdateDwellingCondition()
 end
 function GameUITownHall:onExit()
-    -- self.town_hall_city:RemoveListenerOnType(self, self.town_hall_city.LISTEN_TYPE.UPGRADE_BUILDING)
     self.town_hall:RemoveTownHallListener(self)
     self.town_hall:RemoveUpgradeListener(self)
     GameUITownHall.super.onExit(self)
 end
--- function GameUITownHall:OnUpgradingBegin()
---     self:UpdateDwellingCondition()
--- end
--- function GameUITownHall:OnUpgrading()
-
--- end
--- function GameUITownHall:OnUpgradingFinished()
--- end
 
 function GameUITownHall:OnBuildingUpgradingBegin()
 end

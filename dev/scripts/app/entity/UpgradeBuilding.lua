@@ -13,6 +13,7 @@ UpgradeBuilding.NOT_ABLE_TO_UPGRADE = {
     GEM_NOT_ENOUGH = "宝石不足",
     LEVEL_NOT_ENOUGH = "等级小于0级",
     BUILDING_IS_UPGRADING = "建筑正在升级",
+    FREE_CITIZEN_ERROR = "升级小屋会造成可用城民小于0",
 }
 local NOT_ABLE_TO_UPGRADE = UpgradeBuilding.NOT_ABLE_TO_UPGRADE
 function UpgradeBuilding:ctor(building_info)
