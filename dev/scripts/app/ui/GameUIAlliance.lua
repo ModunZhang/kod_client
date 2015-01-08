@@ -532,7 +532,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
             buttonText = _("申请")
         end
 
-        WidgetPushButton.new({normal = buttonNormalPng,pressed = buttonHighlightPng},{scale9 = true})
+        WidgetPushButton.new({normal = buttonNormalPng,pressed = buttonHighlightPng})
             :setButtonLabel(
                 UIKit:ttfLabel({
                     text = buttonText,
@@ -1386,8 +1386,3 @@ end
 
 
 return GameUIAlliance
-
-
-
-
-
