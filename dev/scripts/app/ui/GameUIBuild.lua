@@ -5,14 +5,15 @@ local BuildingRegister = import("..entity.BuildingRegister")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local SpriteConfig = import("..sprites.SpriteConfig")
 local GameUIBuild = UIKit:createUIClass('GameUIBuild', "GameUIWithCommonHeader")
 
 local base_items = {
-    { label = _("住宅"), building_type = "dwelling", png = "dwelling_1_297x365.png", scale = 0.4 },
-    { label = _("农夫小屋"), building_type = "farmer", png = "farmer_1_315x281.png", scale = 0.4 },
-    { label = _("木工小屋"), building_type = "woodcutter", png = "woodcutter_1_342x250.png", scale = 0.4 },
-    { label = _("石匠小屋"), building_type = "quarrier", png = "quarrier_1_303x296.png", scale = 0.4 },
-    { label = _("矿工小屋"), building_type = "miner", png = "miner_1_315x309.png", scale = 0.4 },
+    { label = _("住宅"), building_type = "dwelling", png = SpriteConfig["dwelling"]:GetConfigByLevel(1).png, scale = 1 },
+    { label = _("农夫小屋"), building_type = "farmer", png = SpriteConfig["farmer"]:GetConfigByLevel(1).png, scale = 1 },
+    { label = _("木工小屋"), building_type = "woodcutter", png = SpriteConfig["woodcutter"]:GetConfigByLevel(1).png, scale = 1 },
+    { label = _("石匠小屋"), building_type = "quarrier", png = SpriteConfig["quarrier"]:GetConfigByLevel(1).png, scale = 1 },
+    { label = _("矿工小屋"), building_type = "miner", png = SpriteConfig["miner"]:GetConfigByLevel(1).png, scale = 1 },
 }
 function GameUIBuild:ctor(city, building)
     GameUIBuild.super.ctor(self, city, _("待建地基"))
@@ -128,7 +129,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
         :align(display.CENTER, 6, 6)
 
 
-    local building_icon = display.newSprite("dwelling_1_297x365.png")
+    local building_icon = display.newSprite(SpriteConfig["dwelling"]:GetConfigByLevel(1).png)
         :addTo(content):align(display.BOTTOM_CENTER, (left_x + right_x) / 2, 30)
 
 
