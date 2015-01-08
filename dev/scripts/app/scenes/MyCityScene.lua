@@ -260,7 +260,7 @@ function MyCityScene:OnGateChanged(old_walls, new_walls)
     -- end)
 end
 function MyCityScene:OnSceneScale(scene_layer)
-    if scene_layer:getScale() < (scene_layer:GetScaleRange()) * 1.2 then
+    if scene_layer:getScale() < (scene_layer:GetScaleRange()) * 1.3 then
         self:GetSceneUILayer():HideLevelUpNode()
     else
         self:GetSceneUILayer():ShowLevelUpNode()
