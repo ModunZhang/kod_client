@@ -134,7 +134,7 @@ function CityLayer:ctor(city_scene)
     self.trees = {}
     self.walls = {}
     self.helpedByTroops = {}
-    self.road = nil
+    -- self.road = nil
     self:InitBackground()
     self:InitCity()
     self:InitWeather()
@@ -281,9 +281,9 @@ function CityLayer:InitWithCity(city)
         end
         local grounds = tile:RandomGrounds(random(123456789))
         for _, v in pairs(grounds) do
-            local tree = self:CreateSingleTree(v.x, v.y):addTo(city_node)
-            table.insert(single_tree, tree)
-            tree:setVisible(tile:IsUnlocked())
+            -- local tree = self:CreateSingleTree(v.x, v.y):addTo(city_node)
+            -- table.insert(single_tree, tree)
+            -- tree:setVisible(tile:IsUnlocked())
         end
     end)
     self.single_tree = single_tree
@@ -524,9 +524,9 @@ end
 function CityLayer:UpdateTreesWithCity(city)
     local city_node = self:GetCityNode()
 
-    if self.road then
-        city_node:removeChild(self.road, true)
-    end
+    -- if self.road then
+    --     city_node:removeChild(self.road, true)
+    -- end
     if self.trees then
         for k, v in pairs(self.trees) do
             city_node:removeChild(v, true)
@@ -534,14 +534,15 @@ function CityLayer:UpdateTreesWithCity(city)
     end
 
     self.trees = {}
-    self.road = nil
+    -- self.road = nil
 
-    local face_tile = city:GetTileFaceToGate()
-    self.road = self:CreateRoadWithTile(face_tile)
-    city_node:addChild(self.road)
+    -- local face_tile = city:GetTileFaceToGate()
+    -- self.road = self:CreateRoadWithTile(face_tile)
+    -- city_node:addChild(self.road)
 
     city:IteratorTilesByFunc(function(x, y, tile)
-        if face_tile ~= tile and tile.locked then
+        if tile.locked then
+        -- if face_tile ~= tile and tile.locked then
             local tree = self:CreateTreeWithTile(tile)
             city_node:addChild(tree)
             table.insert(self.trees, tree)
@@ -549,8 +550,9 @@ function CityLayer:UpdateTreesWithCity(city)
     end)
 
     self:NotifyObservers(function(listener)
-        local road = city:GetTileByIndex(face_tile.x, face_tile.y) and self.road or nil
-        listener:OnTreesChanged(self.trees, road)
+        -- local road = city:GetTileByIndex(face_tile.x, face_tile.y) and self.road or nil
+        listener:OnTreesChanged(self.trees)
+        -- listener:OnTreesChanged(self.trees, road)
     end)
 end
 function CityLayer:UpdateWallsWithCity(city)
@@ -753,9 +755,9 @@ function CityLayer:OnSceneMove()
     self:IteratorCanUpgradingBuilding(on_move)
     table.foreach(self.trees, on_move)
     table.foreach(self.ruins, on_move)
-    if self.road then
-        on_move(nil, self.road)
-    end
+    -- if self.road then
+    --     on_move(nil, self.road)
+    -- end
     -- self:UpdateWeather()
 end
 function CityLayer:UpdateWeather()

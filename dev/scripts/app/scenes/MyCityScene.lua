@@ -225,14 +225,14 @@ function MyCityScene:OnTreesChanged(trees, road)
             end
         end
     end)
-    if road then
-        if road:GetEntity().location_id then
-            local building = city:GetBuildingByLocationId(road:GetEntity().location_id)
-            if building and not building:IsUpgrading() then
-                self:GetSceneUILayer():NewLockButtonFromBuildingSprite(road)
-            end
-        end
-    end
+    -- if road then
+    --     if road:GetEntity().location_id then
+    --         local building = city:GetBuildingByLocationId(road:GetEntity().location_id)
+    --         if building and not building:IsUpgrading() then
+    --             self:GetSceneUILayer():NewLockButtonFromBuildingSprite(road)
+    --         end
+    --     end
+    -- end
 end
 function MyCityScene:OnTowersChanged(old_towers, new_towers)
     -- table.foreach(old_towers, function(k, tower)

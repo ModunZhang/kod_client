@@ -7,7 +7,7 @@ function Array2String()
 		if [ "$str" = "" ]; then
 			str=$item
 		else
-			str=$str".*"$item
+			str=$str"_"$item
 		fi
 	done
 	echo $str
