@@ -91,6 +91,7 @@ function PVELayer:GetLogicMap()
 end
 function PVELayer:LightOn(x, y, size)
     local width, height = self:GetLogicMap():GetSize()
+    size = size or 1
     local sx, sy, ex, ey = x - size, y - size, x + size, y + size
     for x_ = sx, ex do
         for y_ = sy, ey do
