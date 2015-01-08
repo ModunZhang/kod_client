@@ -1032,7 +1032,7 @@ function GameUIMail:ShowMailDetails(mail)
             color = UIKit:hex2c3b(0xfff3c7)})
         delete_label:enableShadow()
 
-        WidgetPushButton.new(
+        local del_btn = WidgetPushButton.new(
             {normal = "resource_butter_red.png", pressed = "resource_butter_red_highlight.png"},
             {scale9 = false}
         ):setButtonLabel(delete_label)
@@ -1046,23 +1046,27 @@ function GameUIMail:ShowMailDetails(mail)
                     end)
                 end
             end)
-        -- 回复按钮
-        local replay_label = cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("回复"),
-            size = 20,
-            font = UIKit:getFontFilePath(),
-            color = UIKit:hex2c3b(0xfff3c7)})
+        if mail.fromId ~="__system" then
+            -- 回复按钮
+            local replay_label = cc.ui.UILabel.new({
+                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+                text = _("回复"),
+                size = 20,
+                font = UIKit:getFontFilePath(),
+                color = UIKit:hex2c3b(0xfff3c7)})
 
-        replay_label:enableShadow()
-        WidgetPushButton.new(
-            {normal = "keep_unlocked_button_normal.png", pressed = "keep_unlocked_button_pressed.png"},
-            {scale9 = false}
-        ):setButtonLabel(replay_label)
-            :addTo(bg):align(display.CENTER, bg:getContentSize().width-140, 50)
-            :onButtonClicked(function(event)
-                self:CreateReplyMail(mail):addTo(layer_bg)
-            end)
+            replay_label:enableShadow()
+            WidgetPushButton.new(
+                {normal = "keep_unlocked_button_normal.png", pressed = "keep_unlocked_button_pressed.png"},
+                {scale9 = false}
+            ):setButtonLabel(replay_label)
+                :addTo(bg):align(display.CENTER, bg:getContentSize().width-140, 50)
+                :onButtonClicked(function(event)
+                    self:CreateReplyMail(mail):addTo(layer_bg)
+                end)
+        else
+            del_btn:setPositionX(bg:getContentSize().width/2)
+        end
     end
     -- 收藏按钮
     local saved_button = UICheckBoxButton.new({
@@ -1663,3 +1667,4 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+

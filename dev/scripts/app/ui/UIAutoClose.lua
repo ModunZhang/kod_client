@@ -3,7 +3,7 @@ local UIAutoClose = class("UIAutoClose", function()
     node:setNodeEventEnabled(true)
     node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         if event.name == "began" then
-            node:removeFromParent()
+            node:leftButtonClicked()
         end
         return true
     end)

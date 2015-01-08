@@ -14,6 +14,9 @@ function User:ctor(p)
     User.super.ctor(self)
     self.request_events = {}
     self.invite_events = {}
+    -- 每日任务
+    self.dailyQuests = {}
+    self.dailyQuestEvents = {}
     if type(p) == "table" then
         self:SetId(p.id)
         self:OnBasicInfoChanged(p)
@@ -29,6 +32,12 @@ function User:CreateInviteEvent(requestTime)
 end
 function User:GetInviteEvents()
     return self.invite_events
+end
+function User:GetDailyQuests()
+    return self.dailyQuests
+end
+function User:GetDailyQuestEvents()
+    return self.dailyQuestEvents
 end
 function User:AddInviteEventWithNotify(req)
     local invite = self:AddInviteEventWithOrder(req)
@@ -138,6 +147,11 @@ function User:OnUserDataChanged(userData)
     self:OnNewRequestToAllianceEventsComming(userData.__requestToAllianceEvents)
     self:OnRequestToAllianceEventsChanged(userData.requestToAllianceEvents)
     self:OnInviteAllianceEventsChanged(userData.inviteToAllianceEvents)
+    -- 每日任务
+    self:OnDailyQuestsChanged(userData.dailyQuests)
+    self:OnDailyQuestsEventsChanged(userData.dailyQuestEvents)
+    self:OnNewDailyQuestsComming(userData.__dailyQuests)
+    self:OnNewDailyQuestsEventsComming(userData.__dailyQuestEvents)
 end
 function User:OnBasicInfoChanged(basicInfo)
     if not basicInfo then return end
@@ -245,6 +259,24 @@ function User:OnInviteAllianceEventsChanged(inviteToAllianceEvents)
         added = add_invites,
         removed = remove_invites
     }
+end
+function User:OnDailyQuestsChanged(dailyQuests)
+    if not dailyQuests then return end
+    self.dailyQuests = dailyQuests
+end
+function User:OnDailyQuestsEventsChanged(dailyQuestEvents)
+    if not dailyQuestEvents then return end
+    self.dailyQuestEvents = dailyQuestEvents
+end
+function User:OnNewDailyQuestsComming(__dailyQuests)
+    if not __dailyQuests then return end
+    for k,v in pairs(__dailyQuests) do
+        print(k,v)
+    end
+end
+function User:OnNewDailyQuestsEventsComming(__dailyQuestEvents)
+    if not __dailyQuestEvents then return end
+    
 end
 return User
 
