@@ -44,7 +44,7 @@ OBJECT_IMAGE[OBJECT_TYPE.TREE] = "tree_2_120x120.png"
 OBJECT_IMAGE[OBJECT_TYPE.HILL] = "hill_228x146.png"
 OBJECT_IMAGE[OBJECT_TYPE.LAKE] = "lake_220x174.png"
 
-    
+
 
 function PVELayer:ctor()
     PVELayer.super.ctor(self, 0.5, 1)
@@ -71,7 +71,7 @@ function PVELayer:ctor()
     self.scene_node:pos(x, y)
 end
 function PVELayer:onEnter()
-    self:WalkOn(10, 10)
+    self:LightOn(10, 10, 4)
     local size = self.pve_layer:getLayerSize()
     for x = 0, size.width - 1 do
         for y = 0, size.height - 1 do
@@ -89,22 +89,14 @@ end
 function PVELayer:GetLogicMap()
     return self.normal_map
 end
-function PVELayer:WalkOn(x, y)
+function PVELayer:LightOn(x, y, size)
     local width, height = self:GetLogicMap():GetSize()
-    for _, v in pairs{
-        {x, y},
-        {x + 1, y + 1},
-        {x, y + 1},
-        {x + 1, y},
-        {x - 1, y - 1},
-        {x - 1, y},
-        {x, y - 1},
-        {x + 1, y - 1},
-        {x - 1, y + 1},
-    } do
-        local x_, y_ = unpack(v)
-        if x_ >= 0 and x_ < width and y_ >= 0 and y_ < height then
-            self.war_fog_layer:getTileAt(cc.p(x_, y_)):hide()
+    local sx, sy, ex, ey = x - size, y - size, x + size, y + size
+    for x_ = sx, ex do
+        for y_ = sy, ey do
+            if x_ >= 1 and x_ < width - 1 and y_ >= 1 and y_ < height - 1 then
+                self.war_fog_layer:getTileAt(cc.p(x_, y_)):hide()
+            end
         end
     end
 end
@@ -147,6 +139,7 @@ function PVELayer:GotoLogicPoint(x, y, s)
 end
 
 return PVELayer
+
 
 
 

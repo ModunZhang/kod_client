@@ -43,7 +43,7 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
     local tx, ty = old_x + offset_x, old_y + offset_y
     local width, height = logic_map:GetSize()
     if tx >= 2 and tx < width - 2 and ty >= 2 and ty < height - 2 then
-        self:GetSceneLayer():WalkOn(tx, ty)
+        self:GetSceneLayer():LightOn(tx, ty)
         object:pos(logic_map:ConvertToMapPosition(tx, ty))
         self:GetSceneLayer():GotoLogicPoint(tx, ty, 10)
     end
