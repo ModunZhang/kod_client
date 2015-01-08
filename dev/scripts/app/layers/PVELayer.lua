@@ -72,16 +72,19 @@ function PVELayer:ctor()
 end
 function PVELayer:onEnter()
     self:LightOn(10, 10, 4)
-    local size = self.pve_layer:getLayerSize()
-    for x = 0, size.width - 1 do
-        for y = 0, size.height - 1 do
-            local gid = (self.pve_layer:getTileGIDAt(cc.p(x, y)))
-            if gid > 0 then
-                display.newSprite(OBJECT_IMAGE[gid]):addTo(self.building_layer):pos(self:GetLogicMap():ConvertToMapPosition(x, y))
-            end
-        end
-    end
-    self.object = display.newSprite("pve_char_bg_104x106.png"):addTo(self.object_layer):pos(self:GetLogicMap():ConvertToMapPosition(10, 10))
+    -- local size = self.pve_layer:getLayerSize()
+    -- for x = 0, size.width - 1 do
+    --     for y = 0, size.height - 1 do
+    --         local gid = (self.pve_layer:getTileGIDAt(cc.p(x, y)))
+    --         if gid > 0 then
+    --             display.newSprite(OBJECT_IMAGE[gid]):addTo(self.building_layer):pos(self:GetLogicMap():ConvertToMapPosition(x, y))
+    --         end
+    --     end
+    -- end
+    self.object = display.newSprite("pve_char_bg_104x106.png")
+    :addTo(self.object_layer):pos(self:GetLogicMap():ConvertToMapPosition(10, 10))
+    
+    display.newSprite("Hero_1.png"):addTo(self.object):pos(104*0.5, 106*0.5):scale(0.8)
 end
 function PVELayer:GetSceneNode()
     return self.scene_node

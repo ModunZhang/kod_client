@@ -66,10 +66,11 @@ function GameUIPVEHome:CreateBottom()
     end
 
 
-    display.newSprite("chat_hero_background.png")
+    local char_bg = display.newSprite("chat_hero_background.png")
     :addTo(bottom_bg, 1):pos(250, display.bottom + 50):scale(0.65)
+    display.newSprite("Hero_1.png"):addTo(char_bg):pos(55, 55):scale(0.9)
 
-    self.exploring = UIKit:ttfLabel({text = "[KOD] 高舟",
+    self.exploring = UIKit:ttfLabel({text = string.format("[%s] %s", "", User:Name()),
         size = 20,
         color = 0xffedae,
     }):addTo(bottom_bg):align(display.LEFT_CENTER, 300, display.bottom + 65)
