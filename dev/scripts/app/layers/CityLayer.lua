@@ -158,7 +158,7 @@ function CityLayer:InitBackground()
     self:ReloadSceneBackground()
 end
 function CityLayer:InitCity()
-    self.city_layer = display.newLayer():addTo(self, CITY_LAYER):align(display.BOTTOM_LEFT, 47, 158 + 25)
+    self.city_layer = display.newLayer():addTo(self, CITY_LAYER):align(display.BOTTOM_LEFT, 47, 158)
     self.position_node = cc.TMXTiledMap:create("tmxmaps/city_road2.tmx"):addTo(self.city_layer):hide()
     self.city_node = display.newLayer():addTo(self.city_layer, BUILDING_NODE):align(display.BOTTOM_LEFT)
     local origin_point = self:GetPositionIndex(0, 0)
@@ -295,7 +295,7 @@ function CityLayer:InitWithCity(city)
         {x = 6, y = 18, soldier_type = "skeletonWarrior"},
         {x = 4, y = 18, soldier_type = "skeletonArcher"},
         {x = 2, y = 18, soldier_type = "meatWagon"},
-        
+
         {x = 8, y = 16, soldier_type = "lancer"},
         {x = 6, y = 16, soldier_type = "swordsman"},
         {x = 4, y = 16, soldier_type = "ranger"},
@@ -307,7 +307,10 @@ function CityLayer:InitWithCity(city)
         {x = 2, y = 14, soldier_type = "ballista"},
 
     }) do
-        table.insert(soldiers, self:CreateSoldier(v.soldier_type, v.x, v.y):addTo(city_node))
+        local soldier = self:CreateSoldier(v.soldier_type, v.x, v.y):addTo(city_node)
+        local x, y = soldier:getPosition()
+        soldier:pos(x, y + 25)
+        table.insert(soldiers, soldier)
     end
     self.soldiers = soldiers
 
