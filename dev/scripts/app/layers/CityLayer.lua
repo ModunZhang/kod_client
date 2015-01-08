@@ -158,7 +158,7 @@ function CityLayer:InitBackground()
     self:ReloadSceneBackground()
 end
 function CityLayer:InitCity()
-    self.city_layer = display.newLayer():addTo(self, CITY_LAYER):align(display.BOTTOM_LEFT, 47, 158)
+    self.city_layer = display.newLayer():addTo(self, CITY_LAYER):align(display.BOTTOM_LEFT, 47, 158 + 25)
     self.position_node = cc.TMXTiledMap:create("tmxmaps/city_road2.tmx"):addTo(self.city_layer):hide()
     self.city_node = display.newLayer():addTo(self.city_layer, BUILDING_NODE):align(display.BOTTOM_LEFT)
     local origin_point = self:GetPositionIndex(0, 0)
@@ -291,20 +291,21 @@ function CityLayer:InitWithCity(city)
     -- 兵种
     local soldiers = {}
     for i, v in ipairs({
-        {x = 2, y = 11, soldier_type = "swordsman"},
-        {x = 4, y = 11, soldier_type = "ranger"},
-        {x = 6, y = 12, soldier_type = "lancer"},
-        {x = 9, y = 12, soldier_type = "catapult"},
+        {x = 8, y = 18, soldier_type = "deathKnight"},
+        {x = 6, y = 18, soldier_type = "skeletonWarrior"},
+        {x = 4, y = 18, soldier_type = "skeletonArcher"},
+        {x = 2, y = 18, soldier_type = "meatWagon"},
+        
+        {x = 8, y = 16, soldier_type = "lancer"},
+        {x = 6, y = 16, soldier_type = "swordsman"},
+        {x = 4, y = 16, soldier_type = "ranger"},
+        {x = 2, y = 16, soldier_type = "catapult"},
 
-        {x = 2, y = 13, soldier_type = "sentinel"},
-        {x = 4, y = 13, soldier_type = "crossbowman"},
-        {x = 6, y = 15, soldier_type = "horseArcher"},
-        {x = 9, y = 15, soldier_type = "ballista"},
+        {x = 8, y = 14, soldier_type = "horseArcher"},
+        {x = 6, y = 14, soldier_type = "sentinel"},
+        {x = 4, y = 14, soldier_type = "crossbowman"},
+        {x = 2, y = 14, soldier_type = "ballista"},
 
-    -- {x = 1, y = 15, soldier_type = "sentinel"},
-    -- {x = 3, y = 15, soldier_type = "crossbowman"},
-    -- {x = 6, y = 18, soldier_type = "horseArcher"},
-    -- {x = 9, y = 18, soldier_type = "ballista"},
     }) do
         table.insert(soldiers, self:CreateSoldier(v.soldier_type, v.x, v.y):addTo(city_node))
     end

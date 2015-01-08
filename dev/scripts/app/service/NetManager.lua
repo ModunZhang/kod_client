@@ -130,7 +130,7 @@ function NetManager:addKickEventListener()
     self:addEventListener("onKick", function(success, msg)
         print("addKickEventListener----->onKick")
         device.showAlert(nil, _("和服务器的连接已断开!"), {_("确定")}, function(event)
-            dump("msg", msg)
+            dump(msg, "msg")
             app:restart()
         end)
     end)
@@ -164,7 +164,7 @@ onPlayerDataChanged_callbacks = {}
 function NetManager:addPlayerDataChangedEventListener()
     self:addEventListener("onPlayerDataChanged", function(success, msg)
         if success then
-            dump(msg)
+            dump(msg, "onPlayerDataChanged")
             DataManager:setUserData(msg)
         end
         local callback = onPlayerDataChanged_callbacks[1]
@@ -182,7 +182,7 @@ onAllianceDataChanged_callbacks = {}
 function NetManager:addAllianceDataChangedEventListener()
     self:addEventListener("onAllianceDataChanged", function(success, msg)
         if success then
-            dump("onAllianceDataChanged", msg)
+            dump(msg, "onAllianceDataChanged")
             DataManager:setUserAllianceData(msg)
         end
         local callback = onAllianceDataChanged_callbacks[1]
@@ -257,7 +257,7 @@ end
 function NetManager:addOnGetAllianceDataSuccess()
     self:addEventListener("onGetAllianceDataSuccess", function(success, msg)
         if success then
-            dump("onGetAllianceDataSuccess", msg)
+            dump(msg, "onGetAllianceDataSuccess")
             DataManager:setUserAllianceData(msg)
         end
     end)
@@ -289,7 +289,7 @@ function NetManager:addOnGetMailsSuccessListener()
         if success then
             assert(#onGetMailsSuccess_callbacks <= 1, "重复请求过多了!")
 
-            dump("onGetMailsSuccess", msg)
+            dump(msg, "onGetMailsSuccess")
             MailManager:dispatchMailServerData( "onGetMailsSuccess",msg )
             local callback = onGetMailsSuccess_callbacks[1]
             if type(callback) == "function" then
@@ -435,7 +435,7 @@ function NetManager:addLoginEventListener()
                 self.m_netService:setDeltatime(msg.serverTime - ext.now())
                 DataManager:setUserData(msg)
             else
-                dump("onPlayerLoginSuccess", msg)
+                dump(msg, "onPlayerLoginSuccess")
                 self.m_netService:setDeltatime(msg.serverTime - ext.now())
                 local InitGame = import("app.service.InitGame")
                 InitGame(msg)

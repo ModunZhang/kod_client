@@ -29,7 +29,7 @@ function CityScene:onEnter()
     self:GetSceneLayer():InitWithCity(city)
     self:PlayBackgroundMusic()
     self:GotoLogicPointInstant(6, 4)
-    self:GetSceneLayer():ZoomTo(0.7)
+    self:GetSceneLayer():ZoomTo(1)
 
     -- local ai_create_house_array = {
     --     "woodcutter",
