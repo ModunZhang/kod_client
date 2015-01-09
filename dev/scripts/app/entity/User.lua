@@ -35,10 +35,26 @@ function User:GetInviteEvents()
     return self.invite_events
 end
 function User:GetDailyQuests()
-    return self.dailyQuests
+    if self:GetNextDailyQuestsRefreshTime() <= app.timer:GetServerTime() then
+        -- 达成刷新每日任务条件
+        NetManager:getDailyQuestsPromise()
+    else
+        return self.dailyQuests
+    end
+end
+-- 下次刷新任务时间
+function User:GetNextDailyQuestsRefreshTime()
+    return GameDatas.PlayerInitData.floatInit.dailyQuestsRefreshHours.value * 60 * 60 * 1000 + self.dailyQuestsRefreshTime
 end
 function User:GetDailyQuestEvents()
     return self.dailyQuestEvents
+end
+function User:IsQuestStarted(quest)
+    for k,v in pairs(self.dailyQuestEvents) do
+        if v.index == quest.index then
+            return true
+        end
+    end
 end
 function User:AddInviteEventWithNotify(req)
     local invite = self:AddInviteEventWithOrder(req)

@@ -5,8 +5,8 @@
 local window = import("..utils.window")
 local WidgetProgress = import("..widget.WidgetProgress")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-local WidgetWithBlueTitle = import("..widget.WidgetWithBlueTitle")
 local WidgetInfoWithTitle = import("..widget.WidgetInfoWithTitle")
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local StarBar = import("..ui.StarBar")
 local WidgetInfo = import("..widget.WidgetInfo")
 local GameUITownHall = UIKit:createUIClass("GameUITownHall", "GameUIUpgradeBuilding")
@@ -17,11 +17,12 @@ function GameUITownHall:ctor(city, townHall)
 end
 function GameUITownHall:onEnter()
     GameUITownHall.super.onEnter(self)
-    self.admin_layer = self:CreateAdministration()
+    self:CreateDwelling()
     self:TabButtons()
     self:UpdateDwellingCondition()
 end
 function GameUITownHall:onExit()
+    app.timer:RemoveListener(self)
     GameUITownHall.super.onExit(self)
 end
 
@@ -80,15 +81,23 @@ function GameUITownHall:TabButtons()
             self.admin_layer:setVisible(false)
         elseif tag == "administration" then
             self.admin_layer:setVisible(true)
+            if not self.quest_list_view then
+                self:CreateAdministration()
+            end
         end
     end):pos(window.cx, window.bottom + 34)
 end
-function GameUITownHall:CreateAdministration()
-    -- local admin_layer = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 100)
+function GameUITownHall:CreateDwelling()
     local admin_layer = display.newLayer():addTo(self):pos(window.left+20,window.bottom_top+10)
-    local layer_width,layer_height = 600,window.betweenHeaderAndTab
     admin_layer:setContentSize(cc.size(layer_width,layer_height))
+    local layer_width,layer_height = 600,window.betweenHeaderAndTab
     self.dwelling = self:CreateDwellingItemWithListView():addTo(admin_layer):align(display.TOP_CENTER,layer_width/2,layer_height-20)
+    self.admin_layer = admin_layer
+end
+function GameUITownHall:CreateAdministration()
+    local admin_layer = self.admin_layer
+
+    local layer_width,layer_height = 600,window.betweenHeaderAndTab
     -- self.dwelling
     -- admin_layer:addItem(self.dwelling)
 
@@ -96,24 +105,30 @@ function GameUITownHall:CreateAdministration()
 
     -- 每日任务
     UIKit:ttfLabel({
-            text = _("每日任务"),
-            size = 22,
-            color = 0x403c2f,
-        }):align(display.RIGHT_CENTER, layer_width/2+30, 600):addTo(admin_layer)
+        text = _("每日任务"),
+        size = 22,
+        color = 0x403c2f,
+    }):align(display.RIGHT_CENTER, layer_width/2+30, 600):addTo(admin_layer)
     display.newSprite("info_26x26.png"):align(display.CENTER, layer_width/2+50, 600)
         :addTo(admin_layer)
+
+
     -- 刷新倒计时
     UIKit:ttfLabel({
-            text = _("刷新时间"),
-            size = 22,
-            color = 0x00900e,
-        }):align(display.RIGHT_CENTER, layer_width/2-10, 570):addTo(admin_layer)
-    local refresh_time = UIKit:ttfLabel({
-            text = _("05:57:38"),
-            size = 22,
-            color = 0x00900e,
-        }):align(display.LEFT_CENTER, layer_width/2+10, 570):addTo(admin_layer)
+        text = _("刷新时间"),
+        size = 22,
+        color = 0x00900e,
+    }):align(display.RIGHT_CENTER, layer_width/2-10, 570):addTo(admin_layer)
 
+    -- 把上次刷新时间缓存到UI
+    local dailyQuestsRefreshTime = User:DailyQuestsRefreshTime()
+    self.dailyQuestsRefreshTime = dailyQuestsRefreshTime
+    local refresh_time = UIKit:ttfLabel({
+        text = "",
+        size = 22,
+        color = 0x00900e,
+    }):align(display.LEFT_CENTER, layer_width/2+10, 570):addTo(admin_layer)
+    self.refresh_time = refresh_time
     local list_view ,listnode=  UIKit:commonListView({
         -- bgColor = UIKit:hex2c4b(0x7a100000),
         viewRect = cc.rect(0,0, layer_width, layer_height-280),
@@ -121,16 +136,31 @@ function GameUITownHall:CreateAdministration()
     })
     listnode:align(display.BOTTOM_CENTER, layer_width/2, 20):addTo(admin_layer)
     self.quest_list_view = list_view
-    return admin_layer
+
+    -- 获取任务
+    local daily_quest = User:GetDailyQuests()
+    for _,quest in pairs(daily_quest) do
+        self:CreateQuestItem(quest)
+    end
+    list_view:reload()
+
+    -- 添加到全局计时器中
+    app.timer:AddListener(self)
 end
 
-function GameUITownHall:CreateQuestItem()
-    
-    local body = WidgetUIBackGround.new({width=568,height=218},WidgetUIBackGround.STYLE_TYPE.STYLE_2):addTo(self)
+function GameUITownHall:CreateQuestItem(quest)
+    LuaUtils:outputTable("CreateQuestItem  quest", quest)
+    local quest_config = GameDatas.DailyQuests.dailyQuests[quest.index]
+    local list = self.quest_list_view
+    local item = list:newItem()
+    local item_width,item_height = 568,218
+    item:setItemSize(item_width,item_height)
+
+    local body = WidgetUIBackGround.new({width=item_width,height=item_height},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
     local b_size = body:getContentSize()
     local title_bg = display.newSprite("title_blue_558x34.png"):addTo(body):align(display.CENTER,b_size.width/2 , b_size.height-24)
     local quest_name = UIKit:ttfLabel({
-        text = _("QuestName"),
+        text = quest_config.name,
         size = 22,
         color = 0xffedae,
     }):align(display.LEFT_CENTER, 15, title_bg:getContentSize().height/2):addTo(title_bg)
@@ -138,28 +168,57 @@ function GameUITownHall:CreateQuestItem()
         max = 5,
         bg = "Stars_bar_bg.png",
         fill = "Stars_bar_highlight.png",
-        num = 3,
+        num = quest.star,
         margin = 0,
         direction = StarBar.DIRECTION_HORIZONTAL,
-    -- scale = 0.6,
     }):addTo(title_bg):align(display.RIGHT_CENTER,title_bg:getContentSize().width-10, title_bg:getContentSize().height/2)
-    -- 未开始的任务可以提高任务星级
-    if true then
-        local btn = WidgetPushButton.new(
-            {normal = "add_btn_up_50x50.png", pressed = "add_btn_down_50x50.png"},
-            {scale9 = false}
-        )
-            :addTo(title_bg):align(display.RIGHT_CENTER, title_bg:getContentSize().width-10, title_bg:getContentSize().height/2)
-            :onButtonClicked(function(event)
-               
-            end):scale(0.6)
-        star_bar:setPositionX(title_bg:getContentSize().width-50)
-    end
 
     -- 任务icon
-    local icon_bg = display.newSprite("box_100x100.png"):addTo(body):pos(60,120)
+    local icon_bg = display.newSprite("box_100x100.png"):addTo(body):pos(55,120)
 
+    local status_label = UIKit:ttfLabel({
+        text = "111",
+        size = 20,
+        color = 0x403c2f,
+    }):align(display.LEFT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width -20, icon_bg:getPositionY()+20):addTo(body)
+    local add_star_btn = WidgetPushButton.new(
+        {normal = "add_btn_up_50x50.png", pressed = "add_btn_down_50x50.png"},
+        {scale9 = false}
+    )
+        :addTo(title_bg):align(display.RIGHT_CENTER, title_bg:getContentSize().width-10, title_bg:getContentSize().height/2)
+        :onButtonClicked(function(event)
+
+            end):scale(0.6)
+    star_bar:setPositionX(title_bg:getContentSize().width-50)
+
+    local glass_icon = display.newSprite("hourglass_39x46.png")
+    :align(display.RIGHT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width, icon_bg:getPositionY()-20)
+    :addTo(body)
+    :scale(0.8)
+
+    local need_time_label = UIKit:ttfLabel({
+        text = "222",
+        size = 20,
+        color = 0x403c2f,
+    }):align(display.LEFT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width-20, icon_bg:getPositionY()-20):addTo(body)
     
+    local progress = WidgetProgress.new(UIKit:hex2c3b(0xffedae), "progress_bar_272x40_1.png", "progress_bar_272x40_2.png", {
+        icon_bg = "progress_bg_head_43x43.png",
+        icon = "hourglass_39x46.png",
+        bar_pos = {x = 0,y = 0}
+    }):addTo(body):align(display.LEFT_CENTER, icon_bg:getPositionX()+ icon_bg:getContentSize().width-25, icon_bg:getPositionY()-20)
+
+    local control_btn = WidgetPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
+        :align(display.RIGHT_CENTER,item_width-10,108)
+        :addTo(body)
+
+    local reward_bg = display.newSprite("back_ground_548x52.png"):pos(item_width/2,34):addTo(body)
+    
+    function body:()
+        
+    end
+    item:addContent(body)
+    list:addItem(item)
 end
 
 function GameUITownHall:CreateDwellingItemWithListView()
@@ -256,9 +315,16 @@ end
 --     end
 --     return node
 -- end
-
+function GameUITownHall:OnTimer(current_time)
+    if self.refresh_time then
+        self.refresh_time:setString(GameUtils:formatTimeStyle1(current_time-User:GetNextDailyQuestsRefreshTime()/1000))
+    end
+end
 
 return GameUITownHall
+
+
+
 
 
 
