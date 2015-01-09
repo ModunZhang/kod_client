@@ -100,7 +100,7 @@ create_building_config(
 )
 create_building_config(
     "blackSmith"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "blackSmith_208x244.png", offset(20, 120), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "blackSmith_208x244.png", offset(20, 100), scale(1))
 )
 create_building_config(
     "foundry"
@@ -128,7 +128,7 @@ create_building_config(
 )
 create_building_config(
     "tradeGuild"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "tradeGuild_248x176.png", offset(20, 100), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "tradeGuild_248x176.png", offset(20, 80), scale(1))
 )
 create_building_config(
     "academy"
@@ -139,7 +139,7 @@ create_building_config(
     "dwelling"
     ,create_config(MIN_LEVEL, level(1), "dwelling_1_100x124.png", offset(0, 50), scale(1))
     ,create_config(level(2), level(2), "dwelling_2_128x144.png", offset(0, 60), scale(1))
-    ,create_config(level(3), MAX_LEVEL, "dwelling_132x150.png", offset(0, 60), scale(1))
+    ,create_config(level(3), MAX_LEVEL, "dwelling_3_132x150.png", offset(0, 60), scale(1))
 )
 create_building_config(
     "farmer"
@@ -150,14 +150,14 @@ create_building_config(
 create_building_config(
     "woodcutter"
     ,create_config(MIN_LEVEL, level(1), "woodcutter_1_150x108.png", offset(0, 50), scale(1))
-    ,create_config(level(2), level(2), "woodcutter_2_146x136.png", offset(0, 50), scale(1))
-    ,create_config(level(3), MAX_LEVEL, "woodcutter_3_148x146.png", offset(0, 50), scale(1))
+    ,create_config(level(2), level(2), "woodcutter_2_146x136.png", offset(0, 60), scale(1))
+    ,create_config(level(3), MAX_LEVEL, "woodcutter_3_148x146.png", offset(0, 70), scale(1))
 )
 create_building_config(
     "quarrier"
     ,create_config(MIN_LEVEL, level(1), "quarrier_1_118x112.png", offset(0, 50), scale(1))
-    ,create_config(level(2), level(2), "quarrier_2_144x130.png", offset(0, 50), scale(1))
-    ,create_config(level(3), MAX_LEVEL, "quarrier_3_150x158.png", offset(0, 50), scale(1))
+    ,create_config(level(2), level(2), "quarrier_2_144x130.png", offset(0, 60), scale(1))
+    ,create_config(level(3), MAX_LEVEL, "quarrier_3_150x158.png", offset(0, 70), scale(1))
 )
 create_building_config(
     "miner"

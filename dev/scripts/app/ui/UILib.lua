@@ -186,13 +186,13 @@ local EFFECT_ANIMATION_FILES = {
 local SOLDIER_ANIMATION_FILES = {
     ranger = {
         "animations/Archer_1_render.ExportJson",
-        "animations/Archer_2_render.ExportJson",
-        "animations/Archer_3_render.ExportJson",
+        "animations/Archer_1_render.ExportJson",
+        "animations/Archer_1_render.ExportJson",
     },
     crossbowman = {
         "animations/Archer_1_render.ExportJson",
-        "animations/Archer_2_render.ExportJson",
-        "animations/Archer_3_render.ExportJson",
+        "animations/Archer_1_render.ExportJson",
+        "animations/Archer_1_render.ExportJson",
     },
     catapult = {
         "animations/Catapult_1_render.ExportJson",
@@ -372,11 +372,11 @@ local ALLIANCE_TITLE_ICON = {
     archon = "alliance_item_leader_39x39.png"
 }
 local VILLAGE = {
-    woodVillage = "woodcutter_1_342x250.png",
-    stoneVillage="woodcutter_1_342x250.png",
-    ironVillage = "woodcutter_1_342x250.png",
-    foodVillage = "woodcutter_1_342x250.png",
-    coinVillage = "woodcutter_1_342x250.png",
+    woodVillage = "woodcutter_1_150x108.png",
+    stoneVillage="woodcutter_1_150x108.png",
+    ironVillage = "woodcutter_1_150x108.png",
+    foodVillage = "woodcutter_1_150x108.png",
+    coinVillage = "woodcutter_1_150x108.png",
 }
 
 local SOLDIER_ANIMATIONS = getAniNameFromAnimationFiles(SOLDIER_ANIMATION_FILES)

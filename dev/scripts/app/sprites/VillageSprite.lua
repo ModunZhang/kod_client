@@ -10,7 +10,7 @@ function VillageSprite:ctor(city_layer, entity)
     -- self:CreateBase()
 end
 function VillageSprite:GetSpriteFile()
-	return "woodcutter_1_342x250.png",0.33
+	return "woodcutter_1_150x108.png"
 end
 function VillageSprite:GetSpriteOffset()
 	return self:GetLogicMap():ConvertToLocalPosition(0, 0)

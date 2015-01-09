@@ -3,28 +3,43 @@ local SoldierSprite = class("SoldierSprite", PeopleSprite)
 local soldier_config = {
     {
         ["swordsman"] = {
-            animation = "Infantry_1_render", count = 4, scale = 0.5, offset = {x = 0, y = 50}
+            animation = "Infantry_1_render", count = 4, scale = 0.3, offset = {x = 0, y = 50}
         },
         ["ranger"] = {
-            animation = "Archer_1_render", count = 4, scale = 0.5, offset = {x = 30, y = 50}
+            animation = "Archer_1_render", count = 4, scale = 0.3, offset = {x = 30, y = 50}
         },
         ["lancer"] = {
-            animation = "Cavalry_1_render", count = 2, scale = 0.5, offset = {x = 20, y = 50}
+            animation = "Cavalry_1_render", count = 2, scale = 0.3, offset = {x = 20, y = 50}
         },
         ["catapult"] = {
-            animation = "Catapult_1_render", count = 1, scale = 0.7, offset = {x = -20, y = 80}
+            animation = "Catapult_1_render", count = 1, scale = 0.4, offset = {x = -10, y = 50}
         },
+--
         ["sentinel"] = {
-            animation = "Infantry_1_render", count = 4, scale = 0.5, offset = {x = 0, y = 50}
+            animation = "Infantry_1_render", count = 4, scale = 0.3, offset = {x = 0, y = 50}
         },
         ["crossbowman"] = {
-            animation = "Archer_1_render", count = 4, scale = 0.5, offset = {x = 30, y = 50}
+            animation = "Archer_1_render", count = 4, scale = 0.3, offset = {x = 30, y = 50}
         },
         ["horseArcher"] = {
-            animation = "Cavalry_1_render", count = 2, scale = 0.5, offset = {x = 20, y = 50}
+            animation = "Cavalry_1_render", count = 2, scale = 0.3, offset = {x = 20, y = 50}
         },
         ["ballista"] = {
-            animation = "Catapult_1_render", count = 1, scale = 0.7, offset = {x = -20, y = 80}
+            animation = "Catapult_1_render", count = 1, scale = 0.4, offset = {x = -10, y = 50}
+        },
+
+--
+        ["skeletonWarrior"] = {
+            animation = "Infantry_1_render", count = 4, scale = 0.3, offset = {x = 0, y = 50}
+        },
+        ["skeletonArcher"] = {
+            animation = "Archer_1_render", count = 4, scale = 0.3, offset = {x = 30, y = 50}
+        },
+        ["deathKnight"] = {
+            animation = "Cavalry_1_render", count = 2, scale = 0.3, offset = {x = 20, y = 50}
+        },
+        ["meatWagon"] = {
+            animation = "Catapult_1_render", count = 1, scale = 0.4, offset = {x = -10, y = 50}
         },
     },
 }
@@ -33,14 +48,14 @@ local position_map = {
 		{x = 0, y = 0}
 	},
 	[2] = {
-		{x = 30, y = 15},
-		{x = 0, y = -15},
+		{x = 10, y = -10},
+		{x = -15, y = -25},
 	},
 	[4] = {
-		{x = 0, y = 30},
-		{x = -30, y = 0},
-		{x = 30, y = 0},
-		{x = 0, y = -30},
+		{x = 0, y = -5},
+		{x = -25, y = -20},
+		{x = 25, y = -20},
+		{x = 0, y = -35},
 	}
 }
 function SoldierSprite:ctor(city_layer, soldier_type, x, y)

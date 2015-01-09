@@ -81,7 +81,7 @@ function GameUIOrderHall:CreateVillageItem()
     cc.ui.UIImage.new("building_image_box.png"):align(display.RIGHT_CENTER, 163, 120)
         :addTo(content)
 
-    local building_image = display.newSprite("farmer_1_315x281.png")
+    local building_image = display.newSprite("farmer_1_142x122.png")
         :addTo(content):pos(95, 120)
     building_image:setAnchorPoint(cc.p(0.5,0.5))
     building_image:setScale(113/building_image:getContentSize().height)
