@@ -124,7 +124,7 @@ function GameUIPResourceBuilding:RebuildPart()
             local item_flag = display.newSprite("alliance_item_flag_box_126X126.png"):align(display.CENTER, next_x, 450):addTo(bg)
 
             local build_png = SpriteConfig[r_type]:GetConfigByLevel(self.building:GetLevel()).png
-            local builing_icon = display.newSprite(UIKit:getImageByBuildingType( r_type ,self.building:GetLevel()))
+            local builing_icon = display.newSprite(build_png)
                 :align(display.CENTER, item_flag:getContentSize().width/2, item_flag:getContentSize().height/2)
                 :addTo(item_flag)
             -- building name label

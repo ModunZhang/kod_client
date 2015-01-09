@@ -26,7 +26,7 @@ function ResourceUpgradeBuilding:GetCitizen()
 	local current_config = self:IsUpgrading() and config[self:GetNextLevel()] or config[self:GetLevel()]
 	return current_config.citizen
 end
-function ResourceUpgradeBuilding:GetNextLevelCitizen()
+function ResourceUpgradeBuilding:GetNextLevelLevelCitizen()
     local config = config_house_levelup[self:GetType()]
     return config[self:GetNextLevel()].citizen
 end
@@ -70,16 +70,18 @@ function ResourceUpgradeBuilding:getUpgradeRequiredGems()
     local resource_config = DataUtils:getHouseUpgradeRequired(self.building_type, self.level+1)
     required_gems = required_gems + DataUtils:buyResource(resource_config.resources, has_resourcce)
     required_gems = required_gems + DataUtils:buyMaterial(resource_config.materials, has_materials)
+    print("required_gems",required_gems)
     return required_gems
 end
 
 function ResourceUpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
-    ResourceUpgradeBuilding.super.IsAbleToUpgrade(self,isUpgradeNow)
     -- 升级是否使空闲城民小于0
     local resource_manager = City:GetResourceManager()
     local free_citizen = resource_manager:GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
-    if self:GetNextLevelCitizen()>free_citizen then
+    local next_level_citizen = self:GetNextLevelLevelCitizen()
+    if next_level_citizen>free_citizen then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.FREE_CITIZEN_ERROR
     end
+    return ResourceUpgradeBuilding.super.IsAbleToUpgrade(self,isUpgradeNow)
 end
 return ResourceUpgradeBuilding

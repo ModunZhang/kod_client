@@ -24,13 +24,13 @@ function WidgetInfoWithTitle:ctor(params)
         color = 0xffedae
     }):align(display.CENTER,self.info_bg:getContentSize().width/2, self.info_bg:getContentSize().height-25)
         :addTo(self.info_bg)
-    if info then
-        self.info_listview = UIListView.new{
-            -- bgColor = UIKit:hex2c4b(0x7a000000),
-            viewRect = cc.rect(13, 10, 524, height-66),
-            direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
-        }:addTo(self.info_bg)
+    self.info_listview = UIListView.new{
+        -- bgColor = UIKit:hex2c4b(0x7a000000),
+        viewRect = cc.rect(13, 10, 524, height-66),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+    }:addTo(self.info_bg)
 
+    if info then
         self:CreateInfoItems(info)
     end
 end
@@ -83,6 +83,7 @@ function WidgetInfoWithTitle:GetListView()
     return self.info_listview
 end
 return WidgetInfoWithTitle
+
 
 
 
