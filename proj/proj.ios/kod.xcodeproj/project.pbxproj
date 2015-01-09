@@ -786,7 +786,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0f9b9ae7-4eab-4a68-a7b8-9b5826c19433";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "70193a56-4f5e-4440-b87f-7516865c77f0";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../sources\"/**";
 				VALID_ARCHS = armv7;
@@ -863,7 +863,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0f9b9ae7-4eab-4a68-a7b8-9b5826c19433";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "bd94f179-8fd3-4e30-ba12-7762576b1847";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../sources\"/**";
 				VALIDATE_PRODUCT = YES;
