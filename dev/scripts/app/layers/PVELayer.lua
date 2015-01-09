@@ -1,51 +1,14 @@
-local SpriteConfig = import("..sprites.SpriteConfig")
 local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLeftReverseY")
 local Enum = import("..utils.Enum")
+local PVEDefine = import(".PVEDefine")
 local MapLayer = import(".MapLayer")
 local PVELayer = class("PVELayer", MapLayer)
 local ZORDER = Enum("BACKGROUND", "BUILDING", "OBJECT", "FOG")
 
-local OBJECT_TYPE =
-    Enum("START_AIRSHIP",
-        "WOODCUTTER",
-        "QUARRIER",
-        "MINER",
-        "FARMER",
-        "CAMP",
-        "CRASHED_AIRSHIP",
-        "CONSTRUCTION_RUINS",
-        "KEEL",
-        "WARRIORS_TOMB",
-        "OBELISK",
-        "ANCIENT_RUINS",
-        "ENTRANCE_DOOR",
-        "TREE",
-        "HILL",
-        "LAKE")
-
-local OBJECT_IMAGE = {}
-print(SpriteConfig["woodcutter"]:GetConfigByLevel(1).png)
-OBJECT_IMAGE[OBJECT_TYPE.START_AIRSHIP] = "airship_106x81.png"
-OBJECT_IMAGE[OBJECT_TYPE.WOODCUTTER] = SpriteConfig["woodcutter"]:GetConfigByLevel(1).png
-OBJECT_IMAGE[OBJECT_TYPE.QUARRIER] = SpriteConfig["quarrier"]:GetConfigByLevel(1).png
-OBJECT_IMAGE[OBJECT_TYPE.MINER] = SpriteConfig["miner"]:GetConfigByLevel(1).png
-OBJECT_IMAGE[OBJECT_TYPE.FARMER] = SpriteConfig["farmer"]:GetConfigByLevel(1).png
-OBJECT_IMAGE[OBJECT_TYPE.CAMP] = "camp_137x80.png"
-OBJECT_IMAGE[OBJECT_TYPE.CRASHED_AIRSHIP] = "crashed_airship_94x80.png"
-OBJECT_IMAGE[OBJECT_TYPE.CONSTRUCTION_RUINS] = "ruin_1_136x92.png"
-OBJECT_IMAGE[OBJECT_TYPE.KEEL] = "keel_95x80.png"
-OBJECT_IMAGE[OBJECT_TYPE.WARRIORS_TOMB] = "warriors_tomb.png"
-OBJECT_IMAGE[OBJECT_TYPE.OBELISK] = "obelisk.png"
-OBJECT_IMAGE[OBJECT_TYPE.ANCIENT_RUINS] = "ancient_ruins.png"
-OBJECT_IMAGE[OBJECT_TYPE.ENTRANCE_DOOR] = "entrance_door.png"
-OBJECT_IMAGE[OBJECT_TYPE.TREE] = "tree_2_120x120.png"
-OBJECT_IMAGE[OBJECT_TYPE.HILL] = "hill_228x146.png"
-OBJECT_IMAGE[OBJECT_TYPE.LAKE] = "lake_220x174.png"
-
-
-
+local OBJECT_TYPE = PVEDefine.object_type
+local OBJECT_IMAGE = PVEDefine.object_image
 function PVELayer:ctor()
     PVELayer.super.ctor(self, 0.5, 1)
     self.scene_node = display.newNode():addTo(self)
@@ -71,18 +34,18 @@ function PVELayer:ctor()
     self.scene_node:pos(x, y)
 end
 function PVELayer:onEnter()
-    self:LightOn(10, 10, 4)
-    -- local size = self.pve_layer:getLayerSize()
-    -- for x = 0, size.width - 1 do
-    --     for y = 0, size.height - 1 do
-    --         local gid = (self.pve_layer:getTileGIDAt(cc.p(x, y)))
-    --         if gid > 0 then
-    --             display.newSprite(OBJECT_IMAGE[gid]):addTo(self.building_layer):pos(self:GetLogicMap():ConvertToMapPosition(x, y))
-    --         end
-    --     end
-    -- end
+    self:LightOn(12, 12, 4)
+    local size = self.pve_layer:getLayerSize()
+    for x = 0, size.width - 1 do
+        for y = 0, size.height - 1 do
+            local gid = (self.pve_layer:getTileGIDAt(cc.p(x, y)))
+            if gid > 0 then
+                display.newSprite(OBJECT_IMAGE[gid]):addTo(self.building_layer):pos(self:GetLogicMap():ConvertToMapPosition(x, y))
+            end
+        end
+    end
     self.object = display.newSprite("pve_char_bg_104x106.png")
-    :addTo(self.object_layer):pos(self:GetLogicMap():ConvertToMapPosition(10, 10))
+    :addTo(self.object_layer):pos(self:GetLogicMap():ConvertToMapPosition(12, 12))
     
     display.newSprite("Hero_1.png"):addTo(self.object):pos(104*0.5, 106*0.5):scale(0.8)
 end
@@ -91,6 +54,10 @@ function PVELayer:GetSceneNode()
 end
 function PVELayer:GetLogicMap()
     return self.normal_map
+end
+function PVELayer:GetTileInfo(x, y)
+    local gid = (self.pve_layer:getTileGIDAt(cc.p(x, y)))
+    return gid > 0 and gid or nil
 end
 function PVELayer:LightOn(x, y, size)
     local width, height = self:GetLogicMap():GetSize()
@@ -117,6 +84,8 @@ function PVELayer:ConvertLogicPositionToMapPosition(lx, ly)
     local map_pos = cc.p(self.normal_map:ConvertToMapPosition(lx, ly))
     return self:convertToNodeSpace(self.background:convertToWorldSpace(map_pos))
 end
+
+---
 function PVELayer:getContentSize()
     if not self.content_size then
         local layer = self.background:getLayer("layer1")

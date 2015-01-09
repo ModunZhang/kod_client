@@ -1,6 +1,14 @@
+local WidgetPVEDialog = import("..widget.WidgetPVEDialog")
 local PVELayer = import("..layers.PVELayer")
+local PVEDefine = import("..layers.PVEDefine")
 local MapScene = import(".MapScene")
 local PVEScene = class("PVEScene", MapScene)
+
+local OBJECT_TYPE = PVEDefine.object_type
+local OBJECT_IMAGE = PVEDefine.object_image
+local OBJECT_DESC = PVEDefine.object_desc
+local OBJECT_TITLE = PVEDefine.object_title
+local OBJECT_OP = PVEDefine.object_op
 function PVEScene:ctor()
     -- City:ResetAllListeners()
     -- Alliance_Manager:GetMyAlliance():ResetAllListeners()
@@ -9,12 +17,9 @@ end
 function PVEScene:onEnter()
     PVEScene.super.onEnter(self)
     UIKit:newGameUI('GameUIPVEHome'):addToScene(self, true):setTouchSwallowEnabled(false)
-
-
-
-    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(10, 10)
+    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(12, 12)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
-    self:GetSceneLayer():ZoomTo(0.5)
+    self:GetSceneLayer():ZoomTo(0.8)
 end
 function PVEScene:CreateSceneLayer()
     return PVELayer.new()
@@ -46,26 +51,20 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
         self:GetSceneLayer():LightOn(tx, ty)
         object:pos(logic_map:ConvertToMapPosition(tx, ty))
         self:GetSceneLayer():GotoLogicPoint(tx, ty, 10)
+
+        local gid = self:GetSceneLayer():GetTileInfo(tx, ty)
+
+        if gid then
+            WidgetPVEDialog.new({
+                btn = OBJECT_OP[gid],
+                image = OBJECT_IMAGE[gid],
+                desc = OBJECT_DESC[gid],
+                title = "我是"..OBJECT_TITLE[gid],
+            }, 250, _("飞艇"), display.cy + 150):addToScene(self, true)
+        end
     end
 end
 return PVEScene
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
