@@ -120,7 +120,7 @@ function GameUIAllianceHome:TopTabButtons()
         pressed = "allianceHome/btn_144x44_light.png"})
         :onButtonClicked(function (event)
             if event.name == "CLICKED_EVENT" then
-                UIKit:newGameUI('GameUIAllianceContribute'):addToCurrentScene(true)
+               GameUIAllianceContribute.new():addToCurrentScene(true)
             end
         end)
         :align(display.CENTER, 124, btn_bg:getContentSize().height/2-2)
