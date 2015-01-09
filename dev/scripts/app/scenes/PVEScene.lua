@@ -60,7 +60,7 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
                 image = OBJECT_IMAGE[gid],
                 desc = OBJECT_DESC[gid],
                 title = "我是"..OBJECT_TITLE[gid],
-            }, 250, _("飞艇"), display.cy + 150):addToScene(self, true)
+            }, 250, OBJECT_TITLE[gid], display.cy + 150):addToScene(self, true)
         end
     end
 end
