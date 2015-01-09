@@ -24,9 +24,7 @@ end
 
 
 function GameUILogin:onMoveInStage()
-    if not CONFIG_IS_DEBUG then
-        self:showVersion()
-    end
+    self:showVersion()
     self:proLoad()
 end
 
@@ -159,14 +157,19 @@ function GameUILogin:login()
 end
 
 function GameUILogin:showVersion()
-    local jsonPath = cc.FileUtils:getInstance():fullPathForFilename("fileList.json")
-    local file = io.open(jsonPath)
-    local jsonString = file:read("*a")
-    file:close()
+    if not CONFIG_IS_DEBUG then
+        local jsonPath = cc.FileUtils:getInstance():fullPathForFilename("fileList.json")
+        local file = io.open(jsonPath)
+        local jsonString = file:read("*a")
+        file:close()
 
-    local tag = json.decode(jsonString).tag
-    local version =string.format(_("版本:%s(%s)"), CONFIG_APP_VERSION, tag)
-    self.verLabel:setString(version)
+        local tag = json.decode(jsonString).tag
+        local version =string.format(_("版本:%s(%s)"), CONFIG_APP_VERSION, tag)
+        self.verLabel:setString(version)
+    else
+        local __debugVer = require("debug_version")
+        self.verLabel:setString(string.format(_("版本:%s(%s)"), CONFIG_APP_VERSION, __debugVer))
+    end
 end
 
 function GameUILogin:createVerLabel()
@@ -176,7 +179,7 @@ function GameUILogin:createVerLabel()
         font = UIKit:getFontFilePath(),
         size = 18,
         align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
-        color = UIKit:hex2c3b(0xaaa87f),
+        color = cc.c3b(0,0,0),
     }):addTo(self.ui_layer,2)
     :align(display.RIGHT_BOTTOM,display.right-2,display.bottom)
 end
