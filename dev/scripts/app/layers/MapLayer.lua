@@ -66,6 +66,9 @@ function MapLayer:MoveToPosition(map_x, map_y, speed_)
         self.target_position = nil
     end
 end
+function MapLayer:StopMoveAnimation()
+    self.target_position = nil
+end
 function MapLayer:GetLogicMap()
     return nil
 end

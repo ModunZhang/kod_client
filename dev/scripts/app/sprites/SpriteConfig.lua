@@ -150,14 +150,14 @@ create_building_config(
 create_building_config(
     "woodcutter"
     ,create_config(MIN_LEVEL, level(1), "woodcutter_1_150x108.png", offset(0, 50), scale(1))
-    ,create_config(level(2), level(2), "woodcutter_2_146x136.png", offset(0, 50), scale(1))
-    ,create_config(level(3), MAX_LEVEL, "woodcutter_3_148x146.png", offset(0, 50), scale(1))
+    ,create_config(level(2), level(2), "woodcutter_2_146x136.png", offset(0, 60), scale(1))
+    ,create_config(level(3), MAX_LEVEL, "woodcutter_3_148x146.png", offset(0, 70), scale(1))
 )
 create_building_config(
     "quarrier"
     ,create_config(MIN_LEVEL, level(1), "quarrier_1_118x112.png", offset(0, 50), scale(1))
-    ,create_config(level(2), level(2), "quarrier_2_144x130.png", offset(0, 50), scale(1))
-    ,create_config(level(3), MAX_LEVEL, "quarrier_3_150x158.png", offset(0, 50), scale(1))
+    ,create_config(level(2), level(2), "quarrier_2_144x130.png", offset(0, 60), scale(1))
+    ,create_config(level(3), MAX_LEVEL, "quarrier_3_150x158.png", offset(0, 70), scale(1))
 )
 create_building_config(
     "miner"
