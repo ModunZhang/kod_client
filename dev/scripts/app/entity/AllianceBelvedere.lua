@@ -7,7 +7,7 @@ local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local AllianceBelvedere = class("AllianceBelvedere",MultiObserver)
 local BelvedereEntity = import(".BelvedereEntity")
-AllianceBelvedere.LISTEN_TYPE = Enum("OnCommingDataChanged","OnMarchDataChanged","OnAttackMarchEventTimerChanged","OnVillageEventTimer")
+AllianceBelvedere.LISTEN_TYPE = Enum("OnCommingDataChanged","OnMarchDataChanged","OnAttackMarchEventTimerChanged","OnVillageEventTimer","OnFightEventTimerChanged")
 function AllianceBelvedere:ctor(alliance)
 	AllianceBelvedere.super.ctor(self)
 	self.alliance = alliance
@@ -67,33 +67,30 @@ function AllianceBelvedere:GetMyEvents()
 	local marching_out_events = LuaUtils:table_filteri(self:GetAlliance():GetAttackMarchEvents(),function(_,marchAttackEvent)
 		return marchAttackEvent:GetPlayerRole() == marchAttackEvent.MARCH_EVENT_PLAYER_ROLE.SENDER 
 	end)
-	table.insertto(my_events,marching_out_events,1)
+	self:Handler2BelvedereEntity(my_events,marching_out_events,BelvedereEntity.ENTITY_TYPE.MARCH_OUT)
 	--已出去采集村落、协防、圣地打仗
 	local village_ing = LuaUtils:table_filteri(self:GetAlliance():GetVillageEvent(),function(_,villageEvent)
 		return villageEvent:GetPlayerRole() == villageEvent.EVENT_PLAYER_ROLE.Me
 	end)
-	-- table.insertto(my_events,village_ing,1)
 	self:Handler2BelvedereEntity(my_events,village_ing,BelvedereEntity.ENTITY_TYPE.COLLECT)
 	local helpToTroops = City:GetHelpToTroops()
-	-- table.insertto(my_events,helpToTroops,1)
 	self:Handler2BelvedereEntity(my_events,helpToTroops,BelvedereEntity.ENTITY_TYPE.HELPTO)
 	local shrine_Event = self:GetAlliance():GetAllianceShrine():GetSelfJoinedShrineEvent()
-	table.insert(my_events,shrine_Event)
+	self:Handler2BelvedereEntity(my_events,{shrine_Event},BelvedereEntity.ENTITY_TYPE.SHIRNE)
 	--所有正在进行的返回行军
 	local marching_out_return_events = LuaUtils:table_filteri(self:GetAlliance():GetAttackMarchReturnEvents(),function(_,marchAttackEvent)
 		return marchAttackEvent:GetPlayerRole() == marchAttackEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER 
 	end)
-	table.insertto(my_events,marching_out_return_events,1)
+	self:Handler2BelvedereEntity(my_events,marching_out_return_events,BelvedereEntity.ENTITY_TYPE.MARCH_RETURN)
 	--突袭
 	local marching_strike_events = LuaUtils:table_filteri(self:GetAlliance():GetStrikeMarchEvents(),function(_,strikeMarchEvent)
 		return strikeMarchEvent:GetPlayerRole() == strikeMarchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER 
 	end)
-	table.insertto(my_events,marching_strike_events,1)
+	self:Handler2BelvedereEntity(my_events,marching_strike_events,BelvedereEntity.ENTITY_TYPE.STRIKE_OUT)
 	local marching_strike_events_return = LuaUtils:table_filteri(self:GetAlliance():GetStrikeMarchReturnEvents(),function(_,strikeMarchReturnEvent)
 		return strikeMarchReturnEvent:GetPlayerRole() == strikeMarchReturnEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER 
 	end)
-	table.insertto(my_events,marching_strike_events_return,1)
-	dump(my_events,"my_events------>")
+	self:Handler2BelvedereEntity(my_events,marching_strike_events_return,BelvedereEntity.ENTITY_TYPE.STRIKE_RETURN)
 	return my_events
 end
 
@@ -204,8 +201,17 @@ function AllianceBelvedere:OnAttackMarchEventDataChanged(changed_map)
 		self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnCommingDataChanged,{})
 	end
 end
+
+function AllianceBelvedere:OnShrineEventsChanged(changed_map)
+	self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnMarchDataChanged,{})
+end
+
+function AllianceBelvedere:OnFightEventTimerChanged(fightEvent)
+	self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnFightEventTimerChanged,{fightEvent}) 
+end
+
 function AllianceBelvedere:CallEventsChangedListeners(LISTEN_TYPE,args)
-	print("AllianceBelvedere:CallEventsChangedListeners--->",self:GetAlliance():Name(),AllianceBelvedere.LISTEN_TYPE[LISTEN_TYPE])
+	-- print("AllianceBelvedere:CallEventsChangedListeners--->",self:GetAlliance():Name(),AllianceBelvedere.LISTEN_TYPE[LISTEN_TYPE])
     self:NotifyListeneOnType(LISTEN_TYPE, function(listener)
         listener[AllianceBelvedere.LISTEN_TYPE[LISTEN_TYPE]](listener,unpack(args))
     end)

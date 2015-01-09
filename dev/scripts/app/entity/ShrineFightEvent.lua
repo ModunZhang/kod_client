@@ -22,7 +22,7 @@ function ShrineFightEvent:Update(json_data)
 	self:SetStageName(json_data.stageName)
 	self:SetStartTime(json_data.startTime/1000.0)
 	self:SetId(json_data.id)
-	-- self:SetPlayerTroops(json_data.playerTroops)
+	self:SetPlayerTroops(json_data.playerTroops)
 end
 
 

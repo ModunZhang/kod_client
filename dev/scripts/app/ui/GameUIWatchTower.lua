@@ -14,6 +14,7 @@ function GameUIWatchTower:ctor(city,building)
 end
 
 function GameUIWatchTower:onEnter()
+	self:ResetTimerNodeTable()
 	GameUIWatchTower.super.onEnter(self)
 	self:AddOrRemoveListener(true)
 	self:CreateUI()
@@ -67,18 +68,21 @@ function GameUIWatchTower:AddOrRemoveListener(isAdd)
 		self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnMarchDataChanged)
 		self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
 		self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnVillageEventTimer)
+		self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnFightEventTimerChanged)
 	else
 		City:RemoveListenerOnType(self,City.LISTEN_TYPE.HELPED_TO_TROOPS)
 		self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnCommingDataChanged)
 		self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnMarchDataChanged)
 		self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
 		self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnVillageEventTimer)
+		self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnFightEventTimerChanged)
 	end
 end
 
 
 --ui
 function GameUIWatchTower:RefreshListView(tag)
+	self:ResetTimerNodeTable()
 	self.listView:removeAllItems()
 	if tag == 'march' then
 		self:RefreshMyEvents()
@@ -88,9 +92,17 @@ function GameUIWatchTower:RefreshListView(tag)
 	self.listView:reload()
 end
 
+function GameUIWatchTower:ResetTimerNodeTable()
+	self.village_process = {}
+	self.village_labels  = {}
+	self.march_timer_label={}
+	self.shrine_timer_label={}
+end
+
 
 function GameUIWatchTower:RefreshMyEvents()
 	local my_events = self:GetAllianceBelvedere():GetMyEvents()
+	print("GameUIWatchTower:RefreshMyEvents-->",#my_events)
 	for index = 1,2 do
 		local item
 		if index == 1 then
@@ -217,8 +229,62 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 		                	end
 		                end)
 		            end)
+		        local icon = display.newSprite("woodcutter_1_342x250.png", 67, 67):addTo(event_bg)
+		        icon:setScale(120/342)
+		        local process_bg = display.newSprite("process_bg_village_collect_326x40.png"):align(display.LEFT_BOTTOM,164, 20):addTo(bg)
+		        local progress_timer = UIKit:commonProgressTimer("process_color_village_collect_326x40.png"):align(display.LEFT_CENTER, 0, 20):addTo(process_bg)
+		        progress_timer:setPercentage(entity:WithObject():CollectPercent())
+		        local process_label = UIKit:ttfLabel({
+		        	text =  math.floor(entity:WithObject():CollectPercent()/100 * entity:WithObject():CollectCount()) .. "/" .. entity:WithObject():VillageData().collectTotal,
+		        	size = 20,
+		        	color= 0xfff3c7,
+		        	shadow= true
+		        }):align(display.LEFT_CENTER, 20, 20):addTo(process_bg)
+		        self.village_process[entity:WithObject():Id()] = progress_timer
+		        self.village_labels[entity:WithObject():Id()] = process_label
+			elseif entity:GetTypeStr() == 'MARCH_OUT' 
+				or entity:GetTypeStr() == 'MARCH_RETURN' 
+				or entity:GetTypeStr() == 'STRIKE_OUT' 
+				or entity:GetTypeStr() == 'STRIKE_RETURN' 
+				or entity:GetTypeStr() == 'SHIRNE' 
+				then
+				local dragon_png = UILib.dragon_head[entity:GetDragonType()]
+		     	if dragon_png then
+		     		local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
+		     		display.newSprite(dragon_png, 57, 60):addTo(icon_bg)
+		     	end
+		     	local icon_bg = display.newSprite("progress_bg_head_43x43.png")
+					:align(display.LEFT_BOTTOM,164, 20):addTo(bg):scale(0.7)
+				display.newSprite("hourglass_39x46.png"):align(display.CENTER, 22, 22):addTo(icon_bg)
+
+				local timer_label = UIKit:ttfLabel({
+					text = GameUtils:formatTimeStyle1(entity:WithObject():GetTime()),
+					size = 22,
+					color= 0x403c2f
+				}):addTo(bg):align(display.LEFT_BOTTOM,164+ icon_bg:getCascadeBoundingBox().width+8, 20)
+				if "SHIRNE" ~= entity:GetTypeStr() then
+					self.march_timer_label[entity:WithObject():Id()] = timer_label
+					WidgetPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"}):setButtonLabel(
+		               	UIKit:commonButtonLable({
+		               		text = _("加速")
+		               	}))
+		            	:align(display.RIGHT_BOTTOM,555,10):addTo(bg)
+		            	:onButtonClicked(function(event)
+		            	end)
+		        else
+		        	self.shrine_timer_label[entity:WithObject():Id()] = timer_label
+		        end
+	            if entity:GetTypeStr() ~= "MARCH_RETURN" and "STRIKE_RETURN" ~= entity:GetTypeStr() and entity:GetTypeStr() ~= 'SHIRNE' then
+					self:GetRedRetreatButton():pos(397,10):addTo(bg)
+		            	:onButtonClicked(function(event)
+			                entity:RetreatAction(function(success)
+			                	if success then
+			                	end
+			                end)
+			            end)
+			    end
+
 			end
-			--display data info
 			--TODO:
 		end
 	end
@@ -229,6 +295,13 @@ end
 
 function GameUIWatchTower:GetYellowRetreatButton()
 	local button = WidgetPushButton.new({normal = "retreat_yellow_button_n_52x50.png",pressed = "retreat_yellow_button_h_52x50.png"})
+		:align(display.RIGHT_BOTTOM,0,0)
+	display.newSprite("retreat_button_icon_22x18.png", -26,25):addTo(button)
+	return button
+end
+
+function GameUIWatchTower:GetRedRetreatButton()
+	local button = WidgetPushButton.new({normal = "retreat_red_button_n_52x50.png",pressed = "retreat_red_button_h_52x50.png"})
 		:align(display.RIGHT_BOTTOM,0,0)
 	display.newSprite("retreat_button_icon_22x18.png", -26,25):addTo(button)
 	return button
@@ -256,23 +329,41 @@ end
 
 --Observer Methods
 function GameUIWatchTower:OnHelpToTroopsChanged(changed_map)
-	print("GameUIWatchTower:OnHelpToTroopsChanged--->")
+	-- print("GameUIWatchTower:OnHelpToTroopsChanged--->")
+	self:RefreshCurrentList()
 end
 
 function GameUIWatchTower:OnCommingDataChanged()
-	print("GameUIWatchTower:OnCommingDataChanged-->")
+	-- print("GameUIWatchTower:OnCommingDataChanged-->")
+	self:RefreshCurrentList()
 end
 
 function GameUIWatchTower:OnMarchDataChanged()
-	print("GameUIWatchTower:OnMarchDataChanged-->")
+	self:RefreshCurrentList()
+	-- print("GameUIWatchTower:OnMarchDataChanged-->")
 end
 
+function GameUIWatchTower:OnFightEventTimerChanged(fightEvent)
+	-- print("GameUIWatchTower:OnFightEventTimerChanged-->")
+	if self.shrine_timer_label[fightEvent:Id()] then
+		self.shrine_timer_label[fightEvent:Id()]:setString(GameUtils:formatTimeStyle1(fightEvent:GetTime()))
+	end
+end
 function GameUIWatchTower:OnAttackMarchEventTimerChanged(attackMarchEvent)
-	print("GameUIWatchTower:OnAttackMarchEventTimerChanged-->")
+	-- print("GameUIWatchTower:OnAttackMarchEventTimerChanged-->")
+	if self.march_timer_label[attackMarchEvent:Id()] then
+		self.march_timer_label[attackMarchEvent:Id()]:setString(GameUtils:formatTimeStyle1(attackMarchEvent:GetTime()))
+	end
 end
 
 function GameUIWatchTower:OnVillageEventTimer(villageEvent)
-	print("GameUIWatchTower:OnVillageEventTimer-->")
+	-- print("GameUIWatchTower:OnVillageEventTimer-->")
+	if self.village_process[villageEvent:Id()] then
+		self.village_process[villageEvent:Id()]:setPercentage(villageEvent:CollectPercent())
+	end
+	if self.village_labels[villageEvent:Id()] then
+		self.village_labels[villageEvent:Id()]:setString(math.floor(villageEvent:CollectPercent()/100 * villageEvent:CollectCount()) .. "/" .. villageEvent:VillageData().collectTotal)
+	end
 end
 
 function GameUIWatchTower:onCleanup()
