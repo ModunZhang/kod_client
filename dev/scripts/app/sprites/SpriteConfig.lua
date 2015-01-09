@@ -139,7 +139,7 @@ create_building_config(
     "dwelling"
     ,create_config(MIN_LEVEL, level(1), "dwelling_1_100x124.png", offset(0, 50), scale(1))
     ,create_config(level(2), level(2), "dwelling_2_128x144.png", offset(0, 60), scale(1))
-    ,create_config(level(3), MAX_LEVEL, "dwelling_132x150.png", offset(0, 60), scale(1))
+    ,create_config(level(3), MAX_LEVEL, "dwelling_3_132x150.png", offset(0, 60), scale(1))
 )
 create_building_config(
     "farmer"
