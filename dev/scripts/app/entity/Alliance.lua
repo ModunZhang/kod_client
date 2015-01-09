@@ -1362,7 +1362,7 @@ function Alliance:UpdateEnemyAlliance(json_data,my_alliance_status)
         if enemy_alliance:IsDefault() then
             local my_belvedere = self:GetAllianceBelvedere()
             local enemy_belvedere = enemy_alliance:GetAllianceBelvedere()
-            enemy_belvedere:AddListenOnType(my_belvedere, enemy_belvedere.LISTEN_TYPE.g1207)
+            enemy_belvedere:AddListenOnType(my_belvedere, enemy_belvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
             enemy_belvedere:AddListenOnType(my_belvedere, enemy_belvedere.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
             enemy_belvedere:AddListenOnType(my_belvedere, enemy_belvedere.LISTEN_TYPE.OnAttackMarchEventDataChanged)
             --瞭望塔coming不需要知道敌方对自己联盟的村落事件和返回事件 reset 会自动去掉所有监听

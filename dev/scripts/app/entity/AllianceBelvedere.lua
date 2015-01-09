@@ -7,7 +7,7 @@ local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local AllianceBelvedere = class("AllianceBelvedere",MultiObserver)
 local BelvedereEntity = import(".BelvedereEntity")
-AllianceBelvedere.LISTEN_TYPE = Enum("OnCommingDataChanged","OnMarchDataChanged","OnAttackMarchEventTimerChanged","OnVillageEventTimer","OnFightEventTimerChanged")
+AllianceBelvedere.LISTEN_TYPE = Enum("OnCommingDataChanged","OnMarchDataChanged","OnAttackMarchEventTimerChanged","OnVillageEventTimer","OnFightEventTimerChanged","OnStrikeMarchEventDataChanged","OnAttackMarchEventDataChanged")
 function AllianceBelvedere:ctor(alliance)
 	AllianceBelvedere.super.ctor(self)
 	self.alliance = alliance
@@ -51,12 +51,14 @@ function AllianceBelvedere:GetOtherEvents()
 	local marching_in_events = LuaUtils:table_filteri(self:GetEnemyAlliance():GetAttackMarchEvents(),function(_,marchAttackEvent)
 		return marchAttackEvent:GetPlayerRole() == marchAttackEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER 
 	end)
-	table.insertto(other_events,marching_in_events,1)
+	-- table.insertto(other_events,marching_in_events,1)
+	self:Handler2BelvedereEntity(other_events,marching_in_events,BelvedereEntity.ENTITY_TYPE.MARCH_OUT)
 	--突袭
 	local marching_strike_events = LuaUtils:table_filteri(self:GetEnemyAlliance():GetStrikeMarchEvents(),function(_,strikeMarchEvent)
 		return strikeMarchEvent:GetPlayerRole() == strikeMarchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER 
 	end)
-	table.insertto(other_events,marching_strike_events,1)
+	-- table.insertto(other_events,marching_strike_events,1)
+	self:Handler2BelvedereEntity(other_events,marching_strike_events,BelvedereEntity.ENTITY_TYPE.STRIKE_OUT)
 	dump(other_events,"other_events--->")
 	return other_events
 end
@@ -124,25 +126,29 @@ function AllianceBelvedere:OnAttackMarchReturnEventDataChanged(changed_map)
 	end
 end
 function AllianceBelvedere:OnStrikeMarchEventDataChanged(changed_map)
-	local showMarch,showComming = false,false
-	for _,data in pairs(changed_map) do
-		if showMarch or showComming then break end
-		for _,strikeMarchEvent in ipairs(data) do
-			if strikeMarchEvent:GetPlayerRole() == strikeMarchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER then
-				showComming = true
-				break
-			end
-			if strikeMarchEvent:GetPlayerRole() == strikeMarchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER then
-				showMarch = true
-				break
+	if self:GetAlliance():NeedUpdateEnemyAlliance() then --my alliance
+		local showMarch,showComming = false,false
+		for _,data in pairs(changed_map) do
+			if showMarch or showComming then break end
+			for _,strikeMarchEvent in ipairs(data) do
+				if strikeMarchEvent:GetPlayerRole() == strikeMarchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER then
+					showComming = true
+					break
+				end
+				if strikeMarchEvent:GetPlayerRole() == strikeMarchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER then
+					showMarch = true
+					break
+				end
 			end
 		end
-	end
-	if showMarch then
-		self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnMarchDataChanged,{})
-	end
-	if showComming then
-		self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnCommingDataChanged,{})
+		if showMarch then
+			self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnMarchDataChanged,{})
+		end
+		if showComming then
+			self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnCommingDataChanged,{})
+		end
+	else
+		self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnStrikeMarchEventDataChanged,{changed_map})
 	end
 end
 function AllianceBelvedere:OnStrikeMarchReturnEventDataChanged(changed_map)
@@ -180,25 +186,29 @@ function AllianceBelvedere:OnVillageEventTimer(villageEvent,left_resource)
 	self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnVillageEventTimer,{villageEvent,left_resource})
 end
 function AllianceBelvedere:OnAttackMarchEventDataChanged(changed_map)
-	local showMarch,showComming = false,false
-	for _,data in pairs(changed_map) do
-		if showMarch or showComming then break end
-		for _,marchEvent in ipairs(data) do
-			if marchEvent:GetPlayerRole() == marchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER then
-				showComming = true
-				break
-			end
-			if marchEvent:GetPlayerRole() == marchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER then
-				showMarch = true
-				break
+	if self:GetAlliance():NeedUpdateEnemyAlliance() then --my alliance
+		local showMarch,showComming = false,false
+		for _,data in pairs(changed_map) do
+			if showMarch or showComming then break end
+			for _,marchEvent in ipairs(data) do
+				if marchEvent:GetPlayerRole() == marchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER then
+					showComming = true
+					break
+				end
+				if marchEvent:GetPlayerRole() == marchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER then
+					showMarch = true
+					break
+				end
 			end
 		end
-	end
-	if showMarch then
-		self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnMarchDataChanged,{})
-	end
-	if showComming then
-		self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnCommingDataChanged,{})
+		if showMarch then
+			self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnMarchDataChanged,{})
+		end
+		if showComming then
+			self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnCommingDataChanged,{})
+		end
+	else
+		self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnAttackMarchEventDataChanged,{changed_map})
 	end
 end
 

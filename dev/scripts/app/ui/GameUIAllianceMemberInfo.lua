@@ -15,9 +15,9 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local Localize = import("..utils.Localize")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 
-function GameUIAllianceMemberInfo:ctor(memberId)
+function GameUIAllianceMemberInfo:ctor(isMyAlliance,memberId)
 	GameUIAllianceMemberInfo.super.ctor(self)
-	self.isOnlyMail_ = isOnlyMail or false
+	self.isMyAlliance = isMyAlliance or false
 	self.memberId_ = memberId
 end
 
@@ -51,7 +51,7 @@ function GameUIAllianceMemberInfo:onMoveInStage()
 end
 
 function GameUIAllianceMemberInfo:BuildUI()
-	if  not Alliance_Manager:GetMyAlliance():GetSelf():CanHandleAllianceApply() then
+	if not self.isMyAlliance or not Alliance_Manager:GetMyAlliance():GetSelf():CanHandleAllianceApply() then
 		  WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
             :setButtonLabel(
                 UIKit:ttfLabel({

@@ -1103,7 +1103,7 @@ function GameUIAlliance:OnAllianceTitleClicked( title )
 end
 
 function GameUIAlliance:OnPlayerDetailButtonClicked(memberId)
-    UIKit:newGameUI('GameUIAllianceMemberInfo',memberId):addToCurrentScene(true)
+    UIKit:newGameUI('GameUIAllianceMemberInfo',true,memberId):addToCurrentScene(true)
 end
 -- 信息
 function GameUIAlliance:HaveAlliaceUI_infomationIf()
