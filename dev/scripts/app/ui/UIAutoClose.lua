@@ -21,7 +21,7 @@ function UIAutoClose:addToScene(scene,anima)
     print("addToScene->",tolua.type(scene),scene)
     anima = false
     if scene and tolua.type(scene) == 'cc.Scene' then
-        scene:addChild(self, 100)
+        scene:addChild(self, 2000)
     end
     return self
 end
