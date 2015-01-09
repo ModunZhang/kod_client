@@ -75,8 +75,8 @@ end
 
 function MarchAttackEvent:UpdateData(json_data)
 	self:SetId(json_data.id or "")
-	self:SetStartTime(json_data.startTime and json_data.startTime/1000.0 or "")
-	self:SetArriveTime(json_data.arriveTime and json_data.arriveTime/1000.0 or "")
+	self:SetStartTime(json_data.startTime and json_data.startTime/1000.0 or 0)
+	self:SetArriveTime(json_data.arriveTime and json_data.arriveTime/1000.0 or 0)
 	self:SetMarchType(json_data.marchType or "")
 	self:SetAttackPlayerData(json_data.attackPlayerData or {})
 	self:SetDefencePlayerData(json_data.defencePlayerData or {})

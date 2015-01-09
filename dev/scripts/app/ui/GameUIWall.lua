@@ -34,8 +34,8 @@ function GameUIWall:onEnter()
 end
 
 function GameUIWall:onMoveOutStage()
-	GameUIWall.super.onMoveOutStage(self)
 	self.dragon_manager:RemoveListenerOnType(self,self.dragon_manager.LISTEN_TYPE.OnHPChanged)
+	GameUIWall.super.onMoveOutStage(self)
 end
 
 function GameUIWall:CreateMilitaryUIIf()

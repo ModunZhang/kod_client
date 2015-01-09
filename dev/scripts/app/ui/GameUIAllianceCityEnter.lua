@@ -164,7 +164,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
 			self:leftButtonClicked()
 		end)
 		local info_button = self:BuildOneButton("icon_info_1.png",_("信息")):onButtonClicked(function()
-			UIKit:newGameUI("GameUIAllianceMemberInfo",true,member:Id()):addToCurrentScene(true)
+			UIKit:newGameUI("GameUIAllianceMemberInfo",false,member:Id()):addToCurrentScene(true)
 			self:leftButtonClicked()
 		end)
 		buttons = {attack_button,strike_button,enter_button,info_button}

@@ -67,6 +67,9 @@ function VillageEvent:OnTimer(current_time)
 		self:NotifyObservers(function(listener)
 			listener:OnVillageEventTimer(self)
 		end)
+	else
+		self:SetCollectPercent(100)
+		self:SetCollectCount(self:VillageData().collectTotal)
 	end
 end
 

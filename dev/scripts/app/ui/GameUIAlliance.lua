@@ -532,7 +532,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
             buttonText = _("申请")
         end
 
-        WidgetPushButton.new({normal = buttonNormalPng,pressed = buttonHighlightPng},{scale9 = true})
+        WidgetPushButton.new({normal = buttonNormalPng,pressed = buttonHighlightPng})
             :setButtonLabel(
                 UIKit:ttfLabel({
                     text = buttonText,
@@ -1103,7 +1103,7 @@ function GameUIAlliance:OnAllianceTitleClicked( title )
 end
 
 function GameUIAlliance:OnPlayerDetailButtonClicked(memberId)
-    UIKit:newGameUI('GameUIAllianceMemberInfo',memberId):addToCurrentScene(true)
+    UIKit:newGameUI('GameUIAllianceMemberInfo',true,memberId):addToCurrentScene(true)
 end
 -- 信息
 function GameUIAlliance:HaveAlliaceUI_infomationIf()
@@ -1386,8 +1386,3 @@ end
 
 
 return GameUIAlliance
-
-
-
-
-

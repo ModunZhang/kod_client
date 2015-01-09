@@ -15,9 +15,9 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local Localize = import("..utils.Localize")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 
-function GameUIAllianceMemberInfo:ctor(memberId)
+function GameUIAllianceMemberInfo:ctor(isMyAlliance,memberId)
 	GameUIAllianceMemberInfo.super.ctor(self)
-	self.isOnlyMail_ = isOnlyMail or false
+	self.isMyAlliance = isMyAlliance or false
 	self.memberId_ = memberId
 end
 
@@ -51,38 +51,55 @@ function GameUIAllianceMemberInfo:onMoveInStage()
 end
 
 function GameUIAllianceMemberInfo:BuildUI()
-	if  not Alliance_Manager:GetMyAlliance():GetSelf():CanHandleAllianceApply() then
-		  WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
-            :setButtonLabel(
-                UIKit:ttfLabel({
-                    text = _("邮件"),
-                    size = 20,
-                    shadow = true,
-                    color = 0xfff3c7
-                })
-            )
-            :align(display.CENTER_BOTTOM,self.bg:getContentSize().width/2,15)
-            :onButtonClicked(function(event)
-            	self:OnPlayerButtonClicked(5)
-            end)
-            :addTo(self.bg)
-	else
-		local titles =  {_("逐出"),_("移交盟主"),_("降级"),_("晋级"),_("邮件"),}
-		local x,y = 15,15
-		for i = 1,5 do
-			WidgetPushButton.new({normal = "player_operate_n_116x64.png",pressed = "player_operate_h_116x64.png"})
-				:align(display.LEFT_BOTTOM, x + (i - 1)*116, y)
-				:addTo(self.bg)
-				:setButtonLabel("normal", UIKit:ttfLabel({
-	               	text = titles[i],
-	               	size = 18,
-	               	color= 0xffedae,
-	               	shadow= true
-				}))
-				:onButtonClicked(function()
-					self:OnPlayerButtonClicked(i)
-				end)
+	if self.isMyAlliance then
+		if not Alliance_Manager:GetMyAlliance():GetSelf():CanHandleAllianceApply() then
+			  WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
+	            :setButtonLabel(
+	                UIKit:ttfLabel({
+	                    text = _("邮件"),
+	                    size = 20,
+	                    shadow = true,
+	                    color = 0xfff3c7
+	                })
+	            )
+	            :align(display.CENTER_BOTTOM,self.bg:getContentSize().width/2,15)
+	            :onButtonClicked(function(event)
+	            	self:OnPlayerButtonClicked(5)
+	            end)
+	            :addTo(self.bg)
+		else
+			local titles =  {_("逐出"),_("移交盟主"),_("降级"),_("晋级"),_("邮件"),}
+			local x,y = 15,15
+			for i = 1,5 do
+				WidgetPushButton.new({normal = "player_operate_n_116x64.png",pressed = "player_operate_h_116x64.png"})
+					:align(display.LEFT_BOTTOM, x + (i - 1)*116, y)
+					:addTo(self.bg)
+					:setButtonLabel("normal", UIKit:ttfLabel({
+		               	text = titles[i],
+		               	size = 18,
+		               	color= 0xffedae,
+		               	shadow= true
+					}))
+					:onButtonClicked(function()
+						self:OnPlayerButtonClicked(i)
+					end)
+			end
 		end
+	else
+		WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
+	            :setButtonLabel(
+	                UIKit:ttfLabel({
+	                    text = _("邮件"),
+	                    size = 20,
+	                    shadow = true,
+	                    color = 0xfff3c7
+	                })
+	            )
+	            :align(display.CENTER_BOTTOM,self.bg:getContentSize().width/2,15)
+	            :onButtonClicked(function(event)
+	            	self:OnPlayerButtonClicked(5)
+	            end)
+	            :addTo(self.bg)
 	end
 	local player_node = WidgetPlayerNode.new(cc.size(564,760),self)
 		:addTo(self.bg):pos(22,79)
