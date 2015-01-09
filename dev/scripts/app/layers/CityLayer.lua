@@ -305,7 +305,6 @@ function CityLayer:InitWithCity(city)
         {x = 6, y = 14, soldier_type = "sentinel"},
         {x = 4, y = 14, soldier_type = "crossbowman"},
         {x = 2, y = 14, soldier_type = "ballista"},
-
     }) do
         local soldier = self:CreateSoldier(v.soldier_type, v.x, v.y):addTo(city_node)
         local x, y = soldier:getPosition()
