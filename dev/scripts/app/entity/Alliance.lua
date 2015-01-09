@@ -328,7 +328,7 @@ function Alliance:Reset()
     self:ResetMarchEvent()
     self:ResetVillageEvents()
     self.alliance_villages = {}
-    self:GetAllianceBelvedere():Reset()
+    -- self:GetAllianceBelvedere():Reset()
 end
 function Alliance:OnOperation(operation_type)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OPERATION, function(listener)
@@ -456,6 +456,7 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     if alliance_data.titles then
         self:SetTitleNames(alliance_data.titles)
     end
+    self:GetAllianceBelvedere():OnAllianceDataChanged(alliance_data)
     self:OnNewEventsComming(alliance_data.__events)
     self:OnNewMemberDataComming(alliance_data.__members)
     self:OnNewJoinRequestDataComming(alliance_data.__joinRequestEvents)
@@ -817,15 +818,18 @@ end
 --------------------------------------------------------------------------------
 function Alliance:OnMarchEventTimer(attackMarchEvent)
     self:CallEventsChangedListeners(Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged,attackMarchEvent)
+    if self:GetAllianceBelvedere()['OnAttackMarchEventTimerChanged'] then
+        self:GetAllianceBelvedere():OnAttackMarchEventTimerChanged(attackMarchEvent)
+    end
 end
 
 function Alliance:CallEventsChangedListeners(LISTEN_TYPE,changed_map)
-    if self:GetAllianceBelvedere()[Alliance.LISTEN_TYPE[LISTEN_TYPE]] then
-        self:GetAllianceBelvedere()[Alliance.LISTEN_TYPE[LISTEN_TYPE]](self:GetAllianceBelvedere(),changed_map)
-    end
     self:NotifyListeneOnType(LISTEN_TYPE, function(listener)
         listener[Alliance.LISTEN_TYPE[LISTEN_TYPE]](listener,changed_map)
     end)
+    if self:GetAllianceBelvedere()[Alliance.LISTEN_TYPE[LISTEN_TYPE]] then
+        self:GetAllianceBelvedere()[Alliance.LISTEN_TYPE[LISTEN_TYPE]](self:GetAllianceBelvedere(),changed_map)
+    end
 end
 
 function Alliance:GetAttackMarchEvents(march_type)
@@ -1182,13 +1186,6 @@ function Alliance:CheckHelpDefenceMarchEventsHaveTarget(memeberId)
             return true
         end
     end
-    -- local helpReturnEvents = self:GetAttackMarchReturnEvents("helpDefence")
-    -- for _,attackEvent in ipairs(helpReturnEvents) do
-    --     if attackEvent:GetPlayerRole() == attackEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER
-    --         and attackEvent:GetDefenceData().id == memeberId then
-    --         return true
-    --     end
-    -- end
     return false
 end
 
@@ -1196,6 +1193,8 @@ function Alliance:GetSelf()
     return self:GetMemeberById(DataManager:getUserData()._id)
 end
 
+--这里会取敌方的的村落信息，因为可能是占领的敌方村落
+------------------------------------------------------------------------------------------
 function Alliance:OnVillageEventTimer(villageEvent)
     local village = self:GetAllianceVillageInfos()[villageEvent:VillageData().id]
     if not village then

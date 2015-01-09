@@ -47,11 +47,14 @@ local function promiseFilterNetError(p,need_catch)
         dump(err)
         local dialog = FullScreenPopDialogUI.new():AddToCurrentScene()
         local content, title = err:reason()
-        dialog:SetTitle(title or "")
+        dialog:SetTitle(title or ""):VisibleXButton(false)
         dialog:SetPopMessage(content):CreateOKButton(
             {
                 btn_name = _("确定"),
                 listener = function()
+                    if title == 'timeout' then
+                        app:retryConnectServer()
+                    end
                 end
             })
         if need_catch then
