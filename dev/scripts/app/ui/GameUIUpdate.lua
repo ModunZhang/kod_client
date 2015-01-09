@@ -14,49 +14,14 @@ function GameUIUpdate:ctor()
     self.m_currentSize = 0
 end
 
-
-function GameUIUpdate:onEnter()
-	GameUIUpdate.super.onEnter(self)
-	self:createVerLabel()
-end
-
-
-function GameUIUpdate:createVerLabel()
-	self.verLabel = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "版本:1.0.0(ddf3d)",
-        font = UIKit:getFontFilePath(),
-        size = 18,
-        align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
-        -- dimensions = cc.size(569, 43),
-        color = UIKit:hex2c3b(0xaaa87f),
-    }):addTo(self,2)
-    :align(display.RIGHT_BOTTOM,display.right-2,display.bottom)
-end
-
 -- 复写UILogin方法
 function GameUIUpdate:onMoveInStage()
 	self:showVersion()
 	self:loadLocalJson()
 	self:loadServerJson()
 end
--- auto update
-
-
 
 -- Auto Update
-
-function GameUIUpdate:showVersion()
-	local jsonPath = cc.FileUtils:getInstance():fullPathForFilename("fileList.json")
-    local file = io.open(jsonPath)
-    local jsonString = file:read("*a")
-    file:close()
-
-    local tag = json.decode(jsonString).tag
-    local version =string.format(_("版本:%s(%s)"), CONFIG_APP_VERSION, tag)
-  	self.verLabel:setString(version)
-end
-
 function GameUIUpdate:loadLocalJson()
     local jsonPath = cc.FileUtils:getInstance():fullPathForFilename(self.m_jsonFileName)
     local file = io.open(jsonPath)

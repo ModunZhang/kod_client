@@ -19,10 +19,14 @@ function GameUILogin:onEnter()
     self:createProgressBar()
     self:createTips()
     self:createStartGame()
+    self:createVerLabel()
 end
 
 
 function GameUILogin:onMoveInStage()
+    if not CONFIG_IS_DEBUG then
+        self:showVersion()
+    end
     self:proLoad()
 end
 
@@ -152,6 +156,29 @@ function GameUILogin:login()
             end
         end
     end)
+end
+
+function GameUILogin:showVersion()
+    local jsonPath = cc.FileUtils:getInstance():fullPathForFilename("fileList.json")
+    local file = io.open(jsonPath)
+    local jsonString = file:read("*a")
+    file:close()
+
+    local tag = json.decode(jsonString).tag
+    local version =string.format(_("版本:%s(%s)"), CONFIG_APP_VERSION, tag)
+    self.verLabel:setString(version)
+end
+
+function GameUILogin:createVerLabel()
+    self.verLabel = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "版本:1.0.0(ddf3d)",
+        font = UIKit:getFontFilePath(),
+        size = 18,
+        align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
+        color = UIKit:hex2c3b(0xaaa87f),
+    }):addTo(self.ui_layer,2)
+    :align(display.RIGHT_BOTTOM,display.right-2,display.bottom)
 end
 
 return GameUILogin
