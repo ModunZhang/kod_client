@@ -8,6 +8,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetInfoWithTitle = import("..widget.WidgetInfoWithTitle")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local StarBar = import("..ui.StarBar")
+local UILib = import(".UILib")
 local WidgetInfo = import("..widget.WidgetInfo")
 local GameUITownHall = UIKit:createUIClass("GameUITownHall", "GameUIUpgradeBuilding")
 function GameUITownHall:ctor(city, townHall)
@@ -192,16 +193,16 @@ function GameUITownHall:CreateQuestItem(quest)
     star_bar:setPositionX(title_bg:getContentSize().width-50)
 
     local glass_icon = display.newSprite("hourglass_39x46.png")
-    :align(display.RIGHT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width, icon_bg:getPositionY()-20)
-    :addTo(body)
-    :scale(0.8)
+        :align(display.RIGHT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width, icon_bg:getPositionY()-20)
+        :addTo(body)
+        :scale(0.8)
 
     local need_time_label = UIKit:ttfLabel({
         text = "222",
         size = 20,
         color = 0x403c2f,
     }):align(display.LEFT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width-20, icon_bg:getPositionY()-20):addTo(body)
-    
+
     local progress = WidgetProgress.new(UIKit:hex2c3b(0xffedae), "progress_bar_272x40_1.png", "progress_bar_272x40_2.png", {
         icon_bg = "progress_bg_head_43x43.png",
         icon = "hourglass_39x46.png",
@@ -213,10 +214,67 @@ function GameUITownHall:CreateQuestItem(quest)
         :addTo(body)
 
     local reward_bg = display.newSprite("back_ground_548x52.png"):pos(item_width/2,34):addTo(body)
-    
-    function body:()
-        
+
+
+    function body:SetStar(star)
+        star_bar:setNum(star)
+        return self
     end
+    function body:SetStatus(quest)
+        local status = ""
+        if User:IsQuestStarted(quest) then
+            if User:IsQuestFinished(quest) then
+                progress:setVisible(false)
+                status = _("任务完成")
+            else
+                progress:setVisible(true)
+                status = _("正在处理政务")
+            end
+            need_time_label:setVisible(false)
+        else
+            status = _("需要")
+            need_time_label:setString(GameUtils:formatTimeStyle1(GameDatas.DailyQuests.dailyQuestStar[quest.star].needMinutes*60))
+            progress:setVisible(false)
+        end
+        status_label:setString(status)
+        return self
+    end
+    function body:SetStatus(status)
+        status_label:setString(status)
+        return self
+    end
+    function body:SetProgress(time_label, percent)
+        progress:SetProgressInfo(time_label, percent)
+        return self
+    end
+    function body:SetReward(quest)
+        reward_bg:removeAllChildren()
+
+        local re_label = UIKit:ttfLabel({
+            text = _("奖励"),
+            size = 20,
+            color = 0x403c2f,
+        }):align(display.LEFT_CENTER,10,reward_bg:getContentSize().height/2):addTo(reward_bg)
+        local rewards = GameDatas.DailyQuests.dailyQuests[quest.index].rewards
+        local origin_x = re_label:getPositionX()+re_label:getContentSize().width + 30
+        for k,v in pairs(string.split(rewards,",")) do
+            local re = string.split(v,":")
+            for k,v in pairs(re) do
+                print("-----rewards=",k,v)
+            end
+            local reward_icon = display.newSprite(UILib.resource[re[2]]):addTo(reward_bg):pos(origin_x+(k-1)*180,reward_bg:getContentSize().height/2)
+            local max = math.max(reward_icon:getContentSize().width,reward_icon:getContentSize().height)
+            reward_icon:scale(40/max)
+
+            UIKit:ttfLabel({
+                text = re[3],
+                size = 20,
+                color = 0x403c2f,
+            }):align(display.LEFT_CENTER,reward_icon:getPositionX()+20,reward_bg:getContentSize().height/2):addTo(reward_bg)
+        end
+        return self
+    end
+    body:SetReward(quest)
     item:addContent(body)
     list:addItem(item)
 end
@@ -322,6 +380,8 @@ function GameUITownHall:OnTimer(current_time)
 end
 
 return GameUITownHall
+
+
 
 
 

@@ -56,6 +56,13 @@ function User:IsQuestStarted(quest)
         end
     end
 end
+function User:IsQuestFinished(quest)
+    for k,v in pairs(self.dailyQuestEvents) do
+        if v.index == quest.index then
+            return v.finishTime == 0
+        end
+    end
+end
 function User:AddInviteEventWithNotify(req)
     local invite = self:AddInviteEventWithOrder(req)
     self:OnRequestAllianceEvents{
