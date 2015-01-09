@@ -60,12 +60,7 @@ function GameUIAllianceContribute:ctor()
                 if self:IsAbleToContribute() then
                     NetManager:getDonateToAlliancePromise(self.group:GetSelectedType())
                 else
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("选择捐赠的物资不足"))
-                        :CreateOKButton({
-                            listener =  function()end
-                        })
-                        :AddToCurrentScene()
+
                 end
             end
         end)
@@ -84,7 +79,7 @@ function GameUIAllianceContribute:onEnter()
 end
 
 function GameUIAllianceContribute:onExit()
-    UIKit:getRegistry().removeObject(self.__cname)
+    -- UIKit:getRegistry().removeObject(self.__cname)
     City:GetResourceManager():RemoveObserver(self)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
 end
@@ -301,6 +296,13 @@ function GameUIAllianceContribute:CreateContributeItem(params)
 end
 function GameUIAllianceContribute:IsAbleToContribute()
     local r_type = self.group:GetSelectedType()
+    if not r_type then
+        FullScreenPopDialogUI.new():SetTitle(_("提示"))
+            :SetPopMessage(_("请选择一种资源"))
+            :CreateCancelButton()
+            :AddToCurrentScene()
+        return false
+    end
     local count  = self:GetDonateValueByType(r_type).count
     local r_count
     if r_type ~= "gem" and r_type ~= "coin" then
@@ -308,13 +310,16 @@ function GameUIAllianceContribute:IsAbleToContribute()
     else
         r_count = City.resource_manager:GetResourceByType(CON_TYPE[r_type]):GetValue()
     end
-    return r_count>=count
-end
-
-
-function GameUIAllianceContribute:addToCurrentScene(anima)
-    display.getRunningScene():addChild(self,3000)
-    return self
+    if r_count<count then
+        FullScreenPopDialogUI.new():SetTitle(_("提示"))
+            :SetPopMessage(_("选择捐赠的物资不足"))
+            :CreateOKButton({
+                listener =  function()end
+            })
+            :AddToCurrentScene()
+        return false
+    end
+    return true
 end
 
 function GameUIAllianceContribute:OnResourceChanged(resource_manager)
@@ -352,3 +357,4 @@ function GameUIAllianceContribute:OnMemberChanged(alliance,changed_map)
     end
 end
 return GameUIAllianceContribute
+
