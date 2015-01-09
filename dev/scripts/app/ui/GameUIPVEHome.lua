@@ -70,7 +70,7 @@ function GameUIPVEHome:CreateBottom()
     :addTo(bottom_bg, 1):pos(250, display.bottom + 50):scale(0.65)
     display.newSprite("Hero_1.png"):addTo(char_bg):pos(55, 55):scale(0.9)
 
-    self.exploring = UIKit:ttfLabel({text = string.format("[%s] %s", "", User:Name()),
+    self.exploring = UIKit:ttfLabel({text = string.format("[%s] %s", "", User and User:Name() or "gaozhou"),
         size = 20,
         color = 0xffedae,
     }):addTo(bottom_bg):align(display.LEFT_CENTER, 300, display.bottom + 65)

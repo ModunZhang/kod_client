@@ -86,6 +86,7 @@ end
 function MapScene:OneTouch(pre_x, pre_y, x, y, touch_type)
     if touch_type == "began" then
         self.touch_judgment:OnTouchBegan(pre_x, pre_y, x, y)
+        self.scene_layer:StopMoveAnimation()
         return true
     elseif touch_type == "moved" then
         self.touch_judgment:OnTouchMove(pre_x, pre_y, x, y)
