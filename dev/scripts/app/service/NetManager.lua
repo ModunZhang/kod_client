@@ -518,10 +518,9 @@ function NetManager:getConnectLogicServerPromise()
 end
 local function getOpenUDID()
     local device_id
-    local file = io.open(device.writablePath.."/udid")
-    local line = file:read("*l")
-    if line and #line > 0 then
-        device_id = line
+    local udid = cc.UserDefault:getInstance():getStringForKey("udid")
+    if udid and #udid > 0 then
+        device_id = udid
     else
         device_id = device.getOpenUDID()
     end
