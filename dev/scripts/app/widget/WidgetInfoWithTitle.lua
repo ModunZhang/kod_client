@@ -6,9 +6,11 @@ local WidgetInfoWithTitle = class("WidgetInfoWithTitle", function ()
 end)
 function WidgetInfoWithTitle:ctor(params)
     local info = params.info -- 显示信息
+    local width = params.w or 548
     local height = params.h or 266
+    self:setContentSize(cc.size(width,height))
     self.info_bg = WidgetUIBackGround.new({
-        width = 548,
+        width = width,
         height = height,
         top_img = "back_ground_548x62_top.png",
         bottom_img = "back_ground_548x18_bottom.png",

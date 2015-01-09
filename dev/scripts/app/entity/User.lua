@@ -9,6 +9,7 @@ property(User, "power", 0)
 property(User, "name", "")
 property(User, "vipExp", 0)
 property(User, "icon", "")
+property(User, "dailyQuestsRefreshTime", 0)
 property(User, "id", 0)
 function User:ctor(p)
     User.super.ctor(self)
@@ -161,6 +162,7 @@ function User:OnBasicInfoChanged(basicInfo)
     self:SetName(basicInfo.name)
     self:SetVipExp(basicInfo.vipExp)
     self:SetIcon(basicInfo.icon)
+    self:SetDailyQuestsRefreshTime(basicInfo.dailyQuestsRefreshTime)
 end
 function User:OnNewRequestToAllianceEventsComming(__requestToAllianceEvents)
     if not __requestToAllianceEvents then return end
@@ -262,20 +264,35 @@ function User:OnInviteAllianceEventsChanged(inviteToAllianceEvents)
 end
 function User:OnDailyQuestsChanged(dailyQuests)
     if not dailyQuests then return end
-    self.dailyQuests = dailyQuests
+    LuaUtils:outputTable("dailyQuests", dailyQuests)
+    for k,v in pairs(dailyQuests) do
+        self.dailyQuests[v.id] = v
+    end
 end
 function User:OnDailyQuestsEventsChanged(dailyQuestEvents)
     if not dailyQuestEvents then return end
+    LuaUtils:outputTable("dailyQuestEvents", dailyQuestEvents)
     self.dailyQuestEvents = dailyQuestEvents
+    for k,v in pairs(dailyQuestEvents) do
+        self.dailyQuestEvents[v.id] = v
+    end
 end
 function User:OnNewDailyQuestsComming(__dailyQuests)
     if not __dailyQuests then return end
+    LuaUtils:outputTable("__dailyQuests", __dailyQuests)
+    local edit = {}
     for k,v in pairs(__dailyQuests) do
-        print(k,v)
+        if v.type == "edit" then
+            if self.dailyQuests[v.data.id] then
+                self.dailyQuests[v.data.id] = v.data
+                table.insert(edit,v.data)
+            end
+        end
     end
 end
 function User:OnNewDailyQuestsEventsComming(__dailyQuestEvents)
     if not __dailyQuestEvents then return end
+    LuaUtils:outputTable("__dailyQuestEvents", __dailyQuestEvents)
     
 end
 return User
