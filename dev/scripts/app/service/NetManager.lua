@@ -41,6 +41,7 @@ local function get_blocking_request_promise(request_route, data, m,need_catch)
     --默认后面的处理需要主动catch错误
     need_catch = type(need_catch) == 'boolean' and need_catch or true
     local loading = UIKit:newGameUI("GameUIWatiForNetWork"):addToCurrentScene(true)
+    loading:setLocalZOrder(2001)
     local p =  cocos_promise.promiseWithTimeOut(get_request_promise(request_route, data, m), TIME_OUT):always(function()
         loading:removeFromParent()
     end)
