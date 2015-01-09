@@ -1,5 +1,4 @@
 local window = import("..utils.window")
--- local AllianceLayer = import("..layers.AllianceLayer")
 local MultiAllianceLayer = import("..layers.MultiAllianceLayer")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local MapScene = import(".MapScene")
