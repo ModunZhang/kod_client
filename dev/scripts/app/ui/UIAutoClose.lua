@@ -3,6 +3,9 @@ local UIAutoClose = class("UIAutoClose", function()
     node:setNodeEventEnabled(true)
     node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         if event.name == "began" then
+            if node.disable then
+                return 
+            end
             node:leftButtonClicked()
         end
         return true
@@ -47,6 +50,9 @@ function UIAutoClose:leftButtonClicked()
             self:onMoveOutStage() -- fix
         end
     end
+end
+function UIAutoClose:DisableAutoClose()
+    self.disable = true
 end
 -- ui入场动画
 function UIAutoClose:UIAnimationMoveIn()
