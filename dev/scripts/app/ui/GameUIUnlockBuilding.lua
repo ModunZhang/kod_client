@@ -200,7 +200,7 @@ function GameUIUnlockBuilding:PopNotSatisfyDialog(listener,can_not_update_type)
     self:getParent():addChild(dialog,2002)
     if can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH then
         local required_gems =self.building:getUpgradeRequiredGems()
-        local owen_gem = City.resource_manager:GetGemResource():GetValue()
+        local owen_gem = City:GetUser():GetGemResource():GetValue()
         if owen_gem<required_gems then
             dialog:SetTitle(_("提示"))
             dialog:SetPopMessage(UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH)

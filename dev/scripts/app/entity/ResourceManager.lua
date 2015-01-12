@@ -20,7 +20,7 @@ ResourceManager.RESOURCE_TYPE = Enum(
     "BERYL",            -- 绿宝石
     "SAPPHIRE",         -- 蓝宝石
     "TOPAZ",            -- 黄宝石
-    "GEM",
+    -- "GEM",
     "WALLHP")              -- 玩家宝石
 
 local ENERGY = ResourceManager.RESOURCE_TYPE.ENERGY
@@ -30,7 +30,7 @@ local IRON = ResourceManager.RESOURCE_TYPE.IRON
 local STONE = ResourceManager.RESOURCE_TYPE.STONE
 local POPULATION = ResourceManager.RESOURCE_TYPE.POPULATION
 local COIN = ResourceManager.RESOURCE_TYPE.COIN
-local GEM = ResourceManager.RESOURCE_TYPE.GEM
+-- local GEM = ResourceManager.RESOURCE_TYPE.GEM
 local BLOOD = ResourceManager.RESOURCE_TYPE.BLOOD
 local WALLHP = ResourceManager.RESOURCE_TYPE.WALLHP
 
@@ -44,11 +44,11 @@ function ResourceManager:ctor()
         [STONE] = AutomaticUpdateResource.new(),
         [POPULATION] = PopulationAutomaticUpdateResource.new(),
         [COIN] = Resource.new(),
-        [GEM] = Resource.new(),
+        -- [GEM] = Resource.new(),
         [BLOOD] = Resource.new(),
         [WALLHP] = AutomaticUpdateResource.new(),
     }
-    self:GetGemResource():SetValueLimit(math.huge) -- 会有人充值这么多的宝石吗？
+    -- self:GetGemResource():SetValueLimit(math.huge) -- 会有人充值这么多的宝石吗？
     self:GetCoinResource():SetValueLimit(math.huge) -- 会有人充值这么多的宝石吗？
 
     self.resource_citizen = {
@@ -70,34 +70,34 @@ function ResourceManager:UpdateResourceByTime(current_time)
     end
 end
 function ResourceManager:GetWallHpResource()
-    return self:GetResourceByType(WALLHP)
+    return self.resources[WALLHP]
 end
 function ResourceManager:GetEnergyResource()
-    return self:GetResourceByType(ENERGY)
+    return self.resources[ENERGY]
 end
 function ResourceManager:GetWoodResource()
-    return self:GetResourceByType(WOOD)
+    return self.resources[WOOD]
 end
 function ResourceManager:GetFoodResource()
-    return self:GetResourceByType(FOOD)
+    return self.resources[FOOD]
 end
 function ResourceManager:GetIronResource()
-    return self:GetResourceByType(IRON)
+    return self.resources[IRON]
 end
 function ResourceManager:GetStoneResource()
-    return self:GetResourceByType(STONE)
+    return self.resources[STONE]
 end
 function ResourceManager:GetPopulationResource()
-    return self:GetResourceByType(POPULATION)
+    return self.resources[POPULATION]
 end
-function ResourceManager:GetGemResource()
-    return self:GetResourceByType(GEM)
-end
+-- function ResourceManager:GetGemResource()
+--     return self.resources[GEM]
+-- end
 function ResourceManager:GetCoinResource()
-    return self:GetResourceByType(COIN)
+    return self.resources[COIN]
 end
 function ResourceManager:GetBloodResource()
-    return self:GetResourceByType(BLOOD)
+    return self.resources[BLOOD]
 end
 function ResourceManager:GetResourceByType(RESOURCE_TYPE)
     return self.resources[RESOURCE_TYPE]

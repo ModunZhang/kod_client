@@ -10,6 +10,7 @@ local INVITE_TO_ALLIANCE = User.LISTEN_TYPE.INVITE_TO_ALLIANCE
 local REQUEST_TO_ALLIANCE = User.LISTEN_TYPE.REQUEST_TO_ALLIANCE
 
 User.RESOURCE_TYPE = Enum("BLOOD", "COIN", "STRENGTH", "GEM", "RUBY", "BERYL", "SAPPHIRE", "TOPAZ")
+local GEM = User.RESOURCE_TYPE.GEM
 local STRENGTH = User.RESOURCE_TYPE.STRENGTH
 
 property(User, "level", 1)
@@ -21,6 +22,13 @@ property(User, "icon", "")
 property(User, "id", 0)
 function User:ctor(p)
     User.super.ctor(self)
+    self.resources = {
+        [GEM] = Resource.new(),
+        [STRENGTH] = AutomaticUpdateResource.new(),
+    }
+    self:GetGemResource():SetValueLimit(math.huge) -- 会有人充值这么多的宝石吗？
+
+    
     self.request_events = {}
     self.invite_events = {}
     -- 每日任务
@@ -32,9 +40,9 @@ function User:ctor(p)
     else
         self:SetId(p)
     end
-    self.resources = {
-        [STRENGTH] = AutomaticUpdateResource.new(),
-    }
+end
+function ResourceManager:GetGemResource()
+    return self.resources[GEM]
 end
 function User:GetStrengthResource()
     return self.resources[STRENGTH]
@@ -53,7 +61,6 @@ function User:OnResourceChanged()
         listener:OnResourceChanged(self)
     end)
 end
-
 function User:CreateInviteEventFromJson(json_data)
     return json_data
 end

@@ -23,6 +23,8 @@ function AutomaticUpdateResource:ReduceResourceByCurrentTime(current_time, value
 	local left_resource = self:GetResourceValueByCurrentTime(current_time) - value
 	if left_resource >= 0 then
 		self:UpdateResource(current_time, left_resource)
+    else
+        assert(false, "扣除值错误")
 	end
 end
 function AutomaticUpdateResource:UpdateResource(current_time, value)

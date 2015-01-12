@@ -375,7 +375,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type,soldier_star)
             color = UIKit:hex2c3b(0xfff3c7)
         }))
         :onButtonClicked(function(event)
-            if City:GetResourceManager():GetGemResource():GetValue()< tonumber(self.gem_label:getString())then
+            if City:GetUser():GetGemResource():GetValue()< tonumber(self.gem_label:getString())then
                 FullScreenPopDialogUI.new()
                     :SetTitle(_("提示"))
                     :SetPopMessage(_("您当前没有足够宝石"))

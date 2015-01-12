@@ -43,7 +43,7 @@ function GameUIWithCommonHeader:onExit()
     end
 end
 function GameUIWithCommonHeader:OnResourceChanged(resource_manager)
-    self.gem_label:setString(string.formatnumberthousands(resource_manager:GetGemResource():GetValue()))
+    self.gem_label:setString(string.formatnumberthousands(self.city:GetUser():GetGemResource():GetValue()))
 end
 
 
