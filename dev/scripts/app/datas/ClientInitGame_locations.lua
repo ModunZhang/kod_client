@@ -162,7 +162,7 @@ locations[16] = {
 }
 locations[17] = {
 	["index"] = 17,
-	["building_type"] = "materialDepot",
+	["building_type"] = "workShop",
 	["x"] = 6,
 	["y"] = 49,
 	["w"] = 6,
@@ -172,7 +172,7 @@ locations[17] = {
 }
 locations[18] = {
 	["index"] = 18,
-	["building_type"] = "warehouse",
+	["building_type"] = "trainingGround",
 	["x"] = 16,
 	["y"] = 49,
 	["w"] = 6,
@@ -182,7 +182,7 @@ locations[18] = {
 }
 locations[19] = {
 	["index"] = 19,
-	["building_type"] = "academy",
+	["building_type"] = "hunterHall",
 	["x"] = 26,
 	["y"] = 49,
 	["w"] = 6,
@@ -192,7 +192,7 @@ locations[19] = {
 }
 locations[20] = {
 	["index"] = 20,
-	["building_type"] = "armyCamp",
+	["building_type"] = "stable",
 	["x"] = 36,
 	["y"] = 49,
 	["w"] = 6,
