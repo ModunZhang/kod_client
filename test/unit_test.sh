@@ -80,7 +80,7 @@ function Clean()
 function ScanDirForAll()
 {
 	local detail=$2
-    for filename in `ls $1`
+    for filename in `ls *.lua`
     do
         if [ -d $1'/'$filename ] ; then
                 ScanDirForAll $1'/'$filename $detail;

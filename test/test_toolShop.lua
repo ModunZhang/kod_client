@@ -45,8 +45,8 @@ function test_toolShop()
             assert_true(not toolShop:IsMaterialsEmptyByCategory("building"))
             assert_true(not toolShop:IsStoredMaterialsByCategory("building", time))
             assert_equal(1, toolShop:GetMakeMaterialsEventByCategory("building"):ElapseTime(time))
-            assert_equal(299, toolShop:GetMakeMaterialsEventByCategory("building"):LeftTime(time))
-            assert_equal(300, toolShop:GetMakingTimeByCategory("building"))
+            assert_equal(9, toolShop:GetMakeMaterialsEventByCategory("building"):LeftTime(time))
+            assert_equal(10, toolShop:GetMakingTimeByCategory("building"))
         elseif time == toolShop:GetMakingTimeByCategory("building") then
             toolShop:EndMakeMaterialsByCategoryWithCurrentTime("building", {1}, time)
         elseif time == toolShop:GetMakingTimeByCategory("building") + 1 then

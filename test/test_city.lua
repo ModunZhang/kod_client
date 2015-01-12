@@ -4,7 +4,8 @@ local UpgradeBuilding = import("app.entity.UpgradeBuilding")
 local KeepUpgradeBuilding = import("app.entity.KeepUpgradeBuilding")
 local WarehouseUpgradeBuilding = import("app.entity.WarehouseUpgradeBuilding")
 local DragonEyrieUpgradeBuilding = import("app.entity.DragonEyrieUpgradeBuilding")
-local City = import("app.entity.City").new()
+local City_ = import("app.entity.City")
+local City = City_.new()
 
 
 
@@ -147,6 +148,7 @@ end
 
 module( "test_city_up", lunit.testcase, package.seeall )
 function setup()
+    City = City_.new()
     City:InitTiles(5, 5, {
         { x = 1, y = 1},
         { x = 1, y = 2},
@@ -178,6 +180,7 @@ end
 
 module( "test_unlock", lunit.testcase, package.seeall )
 function setup()
+    City = City_.new()
     City:InitTiles(5, 5, {
         { x = 1, y = 1},
         { x = 1, y = 2},
@@ -203,6 +206,7 @@ end
 
 module( "test_unlock_around", lunit.testcase, package.seeall )
 function setup()
+    City = City_.new()
     City:InitTiles(5, 5, {
         { x = 1, y = 1},
         { x = 1, y = 2},
@@ -272,6 +276,7 @@ end
 
 module( "test_walls", lunit.testcase, package.seeall )
 function setup()
+    City = City_.new()
     City:InitTiles(5, 5, {
         { x = 1, y = 1},
         { x = 1, y = 2},
@@ -423,6 +428,7 @@ end
 
 module( "test_tower", lunit.testcase, package.seeall )
 function setup()
+    City = City_.new()
     City:InitTiles(5, 5, {
         { x = 1, y = 1},
         { x = 1, y = 2},
@@ -443,6 +449,7 @@ end
 
 module( "test_position", lunit.testcase, package.seeall )
 function setup()
+    City = City_.new()
     City:InitTiles(5, 5, {
         { x = 1, y = 1},
         { x = 1, y = 2},
@@ -476,6 +483,7 @@ end
 
 module( "test_tiles", lunit.testcase, package.seeall )
 function setup()
+    City = City_.new()
     City:InitTiles(5, 5, {
         { x = 1, y = 1},
         { x = 1, y = 2},
@@ -513,6 +521,7 @@ end
 
 module( "test_city_ruins", lunit.testcase, package.seeall )
 function setup()
+    City = City_.new()
     City:InitTiles(5, 5, {
         { x = 1, y = 1},
         { x = 1, y = 2},
@@ -584,6 +593,7 @@ end
 
 module( "test_city_listener", lunit.testcase, package.seeall )
 function setup()
+    City = City_.new()
     City:InitTiles(5, 5, {
         { x = 1, y = 1},
         { x = 1, y = 2},
@@ -653,6 +663,7 @@ end
 
 module( "test_building_listener", lunit.testcase, package.seeall )
 function setup()
+    City = City_.new()
     City:InitTiles(5, 5, {
         { x = 1, y = 1},
         { x = 1, y = 2},
