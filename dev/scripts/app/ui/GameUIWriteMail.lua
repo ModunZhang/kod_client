@@ -130,15 +130,18 @@ function GameUIWriteMail:SendMail(addressee,title,content)
         return
     end
     if self.send_type == PERSONAL_MAIL then
-        NetManager:getSendPersonalMailPromise(addressee, title, content):catch(function(err)
+        NetManager:getSendPersonalMailPromise(addressee, title, content):next(function (result)
+            self:removeFromParent()
+        end):catch(function(err)
             dump(err:reason())
         end)
     elseif self.send_type == ALLIANCE_MAIL then
-        NetManager:getSendAllianceMailPromise(title, content):catch(function(err)
+        NetManager:getSendAllianceMailPromise(title, content):next(function (result)
+            self:removeFromParent()
+        end):catch(function(err)
             dump(err:reason())
         end)
     end
-    self:removeFromParent()
 end
 
 

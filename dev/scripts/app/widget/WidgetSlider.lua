@@ -28,7 +28,10 @@ function WidgetSlider:setSliderSize(width, height)
     self.progress:align(display.CENTER, rect.x + rect.width/2, rect.y + rect.height/2)
 
 end
-
+function WidgetSlider:SetMax( max )
+    self.max_ = max
+    return self
+end
 function WidgetSlider:onTouch_(event, x, y)
      if event == "began" then
         if not self:checkTouchInButton_(x, y) then return false end

@@ -8,4 +8,6 @@ extern "C" void CloseKeyboard();
 extern "C" const char* GetOSVersion();
 extern "C" const char* GetDeviceModel();
 extern "C" void WriteLog_(const char *str);
+extern "C" const char* GetAppVersion();
+extern "C" const char* GetAppBundleVersion();
 #endif
