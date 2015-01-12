@@ -1,3 +1,4 @@
+local Resource = import(".Resource")
 local AutomaticUpdateResource = import(".AutomaticUpdateResource")
 local property = import("..utils.property")
 local Enum = import("..utils.Enum")
@@ -41,7 +42,7 @@ function User:ctor(p)
         self:SetId(p)
     end
 end
-function ResourceManager:GetGemResource()
+function User:GetGemResource()
     return self.resources[GEM]
 end
 function User:GetStrengthResource()
