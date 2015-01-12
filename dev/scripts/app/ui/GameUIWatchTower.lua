@@ -218,7 +218,7 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 		     		local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
 		     		display.newSprite(dragon_png, 57, 60):addTo(icon_bg)
 		     	else
-		     		display.newSprite("unknown_dragon_icon_112x112.png", 57, 60):addTo(event_bg)
+		     		display.newSprite("unknown_dragon_icon_112x112.png", 67, 67):addTo(event_bg)
 		     	end
 			elseif entity:GetTypeStr() == 'COLLECT' then
 				self:GetYellowRetreatButton():pos(558,15):addTo(bg)
@@ -254,7 +254,7 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 		     		local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
 		     		display.newSprite(dragon_png, 57, 60):addTo(icon_bg)
 		     	else
-		     		display.newSprite("unknown_dragon_icon_112x112.png", 57, 60):addTo(event_bg)
+		     		display.newSprite("unknown_dragon_icon_112x112.png", 67, 67):addTo(event_bg)
 		     	end
 		     	local icon_bg = display.newSprite("progress_bg_head_43x43.png")
 					:align(display.LEFT_BOTTOM,164, 20):addTo(bg):scale(0.7)
@@ -339,7 +339,7 @@ function GameUIWatchTower:GetOtherEventItem(entity)
  		local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
  		display.newSprite(dragon_png, 57, 60):addTo(icon_bg)
  	else
- 		display.newSprite("unknown_dragon_icon_112x112.png", 57, 60):addTo(event_bg)
+ 		display.newSprite("unknown_dragon_icon_112x112.png", 67, 67):addTo(event_bg)
  	end	
 	local icon_bg = display.newSprite("progress_bg_head_43x43.png")
 					:align(display.LEFT_BOTTOM,164, 20):addTo(bg):scale(0.7)
@@ -365,7 +365,20 @@ end
 
 function GameUIWatchTower:OnEventDetailButtonClicked(entity)
 	print("查看事件详情----->")
-	
+	local strEntityType = entity:GetType()
+	if strEntityType == entity.ENTITY_TYPE.MARCH_OUT then
+		NetManager:getAttackMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
+			dump(msg)
+		end)
+	elseif strEntityType == entity.ENTITY_TYPE.STRIKE_OUT then
+		NetManager:getStrikeMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
+			dump(msg)
+		end)
+	elseif strEntityType == entity.ENTITY_TYPE.HELPTO then
+		NetManager:getHelpDefenceMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
+			dump(msg)
+		end)
+	end
 end
 
 function GameUIWatchTower:GetYellowRetreatButton()
