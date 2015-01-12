@@ -795,6 +795,35 @@ function NetManager:getUpgradeDragonDragonSkillPromise(dragonType, skillKey)
         skillKey = skillKey
     }, "升级龙技能失败!"), get_playerdata_callback()):next(get_response_msg)
 end
+-- 获取每日任务列表
+function NetManager:getDailyQuestsPromise()
+    return promise.all(get_blocking_request_promise("logic.playerHandler.getDailyQuests", {},
+     "获取每日任务列表失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 为每日任务中某个任务增加星级
+function NetManager:getAddDailyQuestStarPromise(questId)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.addDailyQuestStar", 
+        {
+            questId = questId
+        },
+     "为每日任务中某个任务增加星级失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 开始一个每日任务
+function NetManager:getStartDailyQuestPromise(questId)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.startDailyQuest", 
+        {
+            questId = questId
+        },
+     "开始一个每日任务失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 领取每日任务奖励
+function NetManager:getDailyQeustRewardPromise(questEventId)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.getDailyQeustReward", 
+        {
+            questEventId = questEventId
+        },
+     "领取每日任务奖励失败!"), get_playerdata_callback()):next(get_response_msg)
+end
 -- 发送个人邮件
 function NetManager:getSendPersonalMailPromise(memberName, title, content)
     return promise.all(get_blocking_request_promise("logic.playerHandler.sendMail", {
@@ -1237,6 +1266,8 @@ function NetManager:getStrikeVillagePromise(dragonType,defenceAllianceId,defence
         {dragonType = dragonType,defenceAllianceId = defenceAllianceId,defenceVillageId=defenceVillageId},"突袭村落失败!"),
     get_alliancedata_callback()):next(get_response_msg)
 end
+
+
 --
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

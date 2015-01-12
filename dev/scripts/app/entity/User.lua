@@ -4,7 +4,7 @@ local property = import("..utils.property")
 local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local User = class("User", MultiObserver)
-User.LISTEN_TYPE = Enum("BASIC", "RESOURCE", "INVITE_TO_ALLIANCE", "REQUEST_TO_ALLIANCE")
+User.LISTEN_TYPE = Enum("BASIC", "INVITE_TO_ALLIANCE", "REQUEST_TO_ALLIANCE","DALIY_QUEST_REFRESH","NEW_DALIY_QUEST","NEW_DALIY_QUEST_EVENT")
 local BASIC = User.LISTEN_TYPE.BASIC
 local RESOURCE = User.LISTEN_TYPE.RESOURCE
 local INVITE_TO_ALLIANCE = User.LISTEN_TYPE.INVITE_TO_ALLIANCE
@@ -20,6 +20,7 @@ property(User, "power", 0)
 property(User, "name", "")
 property(User, "vipExp", 0)
 property(User, "icon", "")
+property(User, "dailyQuestsRefreshTime", 0)
 property(User, "id", 0)
 function User:ctor(p)
     User.super.ctor(self)
@@ -72,10 +73,35 @@ function User:GetInviteEvents()
     return self.invite_events
 end
 function User:GetDailyQuests()
-    return self.dailyQuests
+    if self:GetNextDailyQuestsRefreshTime() <= app.timer:GetServerTime() then
+        -- 达成刷新每日任务条件
+        NetManager:getDailyQuestsPromise()
+    else
+        local quests = {}
+        for k,v in pairs(self.dailyQuestEvents) do
+            table.insert(quests, v)
+        end
+        table.sort( quests, function( a,b )
+            return a.finishTime < b.finishTime
+        end )
+        for k,v in pairs(self.dailyQuests) do
+            table.insert(quests, v)
+        end
+        return quests
+    end
+end
+-- 下次刷新任务时间
+function User:GetNextDailyQuestsRefreshTime()
+    return GameDatas.PlayerInitData.floatInit.dailyQuestsRefreshHours.value * 60 * 60 + self.dailyQuestsRefreshTime/1000
 end
 function User:GetDailyQuestEvents()
     return self.dailyQuestEvents
+end
+function User:IsQuestStarted(quest)
+    return quest.finishTime ~= nil
+end
+function User:IsQuestFinished(quest)
+   return quest.finishTime==0
 end
 function User:AddInviteEventWithNotify(req)
     local invite = self:AddInviteEventWithOrder(req)
@@ -199,6 +225,7 @@ function User:OnBasicInfoChanged(basicInfo)
     self:SetName(basicInfo.name)
     self:SetVipExp(basicInfo.vipExp)
     self:SetIcon(basicInfo.icon)
+    self:SetDailyQuestsRefreshTime(basicInfo.dailyQuestsRefreshTime)
 end
 function User:OnNewRequestToAllianceEventsComming(__requestToAllianceEvents)
     if not __requestToAllianceEvents then return end
@@ -300,23 +327,104 @@ function User:OnInviteAllianceEventsChanged(inviteToAllianceEvents)
 end
 function User:OnDailyQuestsChanged(dailyQuests)
     if not dailyQuests then return end
-    self.dailyQuests = dailyQuests
+    LuaUtils:outputTable("OnDailyQuestsChanged", dailyQuests)
+    self.dailyQuests= {}
+    for k,v in pairs(dailyQuests) do
+        self.dailyQuests[v.id] = v
+    end
+    self:OnDailyQuestsRefresh()
 end
 function User:OnDailyQuestsEventsChanged(dailyQuestEvents)
     if not dailyQuestEvents then return end
-    self.dailyQuestEvents = dailyQuestEvents
+    LuaUtils:outputTable("dailyQuestEvents", dailyQuestEvents)
+    for k,v in pairs(dailyQuestEvents) do
+        self.dailyQuestEvents[v.id] = v
+    end
 end
 function User:OnNewDailyQuestsComming(__dailyQuests)
     if not __dailyQuests then return end
+    LuaUtils:outputTable("__dailyQuests", __dailyQuests)
+    local add = {}
+    local edit = {}
+    local remove = {}
     for k,v in pairs(__dailyQuests) do
-        print(k,v)
+        if v.type == "add" then
+            self.dailyQuests[v.data.id] = v.data
+            table.insert(add,v.data)
+        end
+        if v.type == "edit" then
+            if self.dailyQuests[v.data.id] then
+                self.dailyQuests[v.data.id] = v.data
+                table.insert(edit,v.data)
+            end
+        end
+        if v.type == "remove" then
+            if self.dailyQuests[v.data.id] then
+                self.dailyQuests[v.data.id] = nil
+                table.insert(remove,v.data)
+            end
+        end
     end
+    self:OnNewDailyQuests(
+        {
+            add= add,
+            edit= edit,
+            remove= remove,
+        }
+    )
 end
 function User:OnNewDailyQuestsEventsComming(__dailyQuestEvents)
     if not __dailyQuestEvents then return end
-    
+    LuaUtils:outputTable("__dailyQuestEvents", __dailyQuestEvents)
+    local add = {}
+    local edit = {}
+    local remove = {}
+    for k,v in pairs(__dailyQuestEvents) do
+        if v.type == "add" then
+            self.dailyQuestEvents[v.data.id] = v.data
+            table.insert(add,v.data)
+        end
+        if v.type == "edit" then
+            if self.dailyQuestEvents[v.data.id] then
+                self.dailyQuestEvents[v.data.id] = v.data
+                table.insert(edit,v.data)
+            end
+        end
+        if v.type == "remove" then
+            if self.dailyQuestEvents[v.data.id] then
+                self.dailyQuestEvents[v.data.id] = nil
+                table.insert(remove,v.data)
+            end
+        end
+    end
+    self:OnNewDailyQuestsEvent(
+        {
+            add= add,
+            edit= edit,
+            remove= remove,
+        }
+    )
+end
+
+function User:OnDailyQuestsRefresh()
+    self:NotifyListeneOnType(User.LISTEN_TYPE.DALIY_QUEST_REFRESH, function(listener)
+        listener:OnDailyQuestsRefresh(self:GetDailyQuests())
+    end)
+end
+function User:OnNewDailyQuests(changed_map)
+    self:NotifyListeneOnType(User.LISTEN_TYPE.NEW_DALIY_QUEST, function(listener)
+        listener:OnNewDailyQuests(changed_map)
+    end)
+end
+function User:OnNewDailyQuestsEvent(changed_map)
+    self:NotifyListeneOnType(User.LISTEN_TYPE.NEW_DALIY_QUEST_EVENT, function(listener)
+        listener:OnNewDailyQuestsEvent(changed_map)
+    end)
 end
 return User
+
+
+
 
 
 
