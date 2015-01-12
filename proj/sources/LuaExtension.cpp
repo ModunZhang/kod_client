@@ -16,6 +16,8 @@
 #include "crc/crc32.c"
 #include "io/FileOperation.h"
 #include "time/Time.h"
+#include <stdio.h>
+#define LOG_BUFFER_SIZE 1024 * 10 * 2
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include "jni/jni_CommonUtils.h"
 #else
@@ -26,6 +28,7 @@
 #if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
 #include "GameCenter/GameCenter.h"
 #include "ext_uservoice.h"
+#define KODLOG(format, ...)      CCLOG(format, ##__VA_ARGS__);Kodlog__(format, ##__VA_ARGS__);
 #endif
 #include "ext_sysmail.h"
 using namespace std;
@@ -41,6 +44,18 @@ static long getCurrentTime()
 static void tolua_reg_pomelo_type(lua_State* tolua_S)
 {
     tolua_usertype(tolua_S, "CCPomelo");
+}
+
+void Kodlog__(const char * format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    char buf[LOG_BUFFER_SIZE];
+    
+    vsnprintf(buf, LOG_BUFFER_SIZE-3, format, args);
+    strcat(buf, "\n");
+    WriteLog_(buf);
+    va_end(args);
 }
 
 static int tolua_CCPomelo_getInstance(lua_State* tolua_S)
@@ -108,9 +123,9 @@ static int tolua_CCPomelo_connect(lua_State* tolua_S)
         const char* addr = tolua_tostring(tolua_S, 2, 0);
         int port = tolua_tonumber(tolua_S, 3, 0);
         LUA_FUNCTION func = toluafix_ref_function(tolua_S, 4, 0);
-        CCLOG("trying connect %s:%d", addr, port);
+        KODLOG("trying connect %s:%d", addr, port);
         int status = pomelo->connect(addr, port);
-        CCLOG("connect status:%d", status);
+        KODLOG("connect status:%d", status);
         auto stack = LuaEngine::getInstance()->getLuaStack();
         stack->pushBoolean(status == 0);
         stack->executeFunctionByHandler(func, 1);
@@ -147,9 +162,9 @@ static int tolua_CCPomelo_asyncConnect(lua_State* tolua_S)
         const char* addr = tolua_tostring(tolua_S, 2, 0);
         int port = tolua_tonumber(tolua_S, 3, 0);
         LUA_FUNCTION func = toluafix_ref_function(tolua_S, 4, 0);
-        CCLOG("trying connect %s:%d", addr, port);
+        KODLOG("trying connect %s:%d", addr, port);
         pomelo->asyncConnect(addr, port, [=](const CCPomeloReponse& resp){
-            CCLOG("connect status:%d", resp.status);
+            KODLOG("connect status:%d", resp.status);
             auto stack = LuaEngine::getInstance()->getLuaStack();
             stack->pushBoolean(resp.status == 0);
             stack->executeFunctionByHandler(func, 1);
@@ -182,7 +197,7 @@ static int tolua_CCPomelo_stop(lua_State* tolua_S)
             return 0;
         }
 #endif
-        CCLOG("disconnect from server");
+        KODLOG("disconnect from server");
         pomelo->stop();
     }
     return 0;
@@ -219,12 +234,12 @@ static int tolua_CCPomelo_request(lua_State* tolua_S)
         json_error_t err;
         json_t* msgj = json_loads(msg, JSON_COMPACT, &err);
         LUA_FUNCTION func = toluafix_ref_function(tolua_S, 4, 0);
-        CCLOG("request route:%s", route);
-        CCLOG("request message:%s", msg);
+        KODLOG("request route:%s", route);
+        KODLOG("request message:%s", msg);
         pomelo->request(route, msgj, [=](const CCPomeloReponse& resp){
             char* msg = json_dumps(resp.docs, JSON_COMPACT);
-            CCLOG("response status:%d", resp.status);
-            CCLOG("response data:%s", msg);
+            KODLOG("response status:%d", resp.status);
+            KODLOG("response data:%s", msg);
             auto stack = LuaEngine::getInstance()->getLuaStack();
             stack->pushBoolean(resp.status == 0);
             stack->pushString(msg);
@@ -265,10 +280,10 @@ static int tolua_CCPomelo_notify(lua_State* tolua_S)
         json_error_t err;
         json_t* msgj = json_loads(msg, JSON_COMPACT, &err);
         LUA_FUNCTION func = toluafix_ref_function(tolua_S, 4, 0);
-        CCLOG("notify route:%s", route);
-        CCLOG("notify message:%s", msg);
+        KODLOG("notify route:%s", route);
+        KODLOG("notify message:%s", msg);
         pomelo->notify(route, msgj, [=](const CCPomeloReponse& resp){
-            CCLOG("notify status:%d", resp.status);
+            KODLOG("notify status:%d", resp.status);
             auto stack = LuaEngine::getInstance()->getLuaStack();
             
             stack->pushBoolean(resp.status == 0);
@@ -305,11 +320,11 @@ static int tolua_CCPomelo_addListener(lua_State* tolua_S)
 #endif
         const char* event = tolua_tostring(tolua_S, 2, 0);
         LUA_FUNCTION func = toluafix_ref_function(tolua_S, 3, 0);
-        CCLOG("add event listener:%s", event);
+        KODLOG("add event listener:%s", event);
         pomelo->addListener(event, [=](const CCPomeloReponse& resp){
             char* msg = json_dumps(resp.docs, JSON_COMPACT);
-            CCLOG("event status:%d", resp.status);
-            CCLOG("event data:%s", msg);
+            KODLOG("event status:%d", resp.status);
+            KODLOG("event data:%s", msg);
             auto stack = LuaEngine::getInstance()->getLuaStack();
             stack->pushBoolean(resp.status == 0);
             stack->pushString(msg);
@@ -344,7 +359,7 @@ static int tolua_CCPomelo_removeListener(lua_State* tolua_S)
         }
 #endif
         const char* event = tolua_tostring(tolua_S, 2, 0);
-        CCLOG("remove event listener:%s", event);
+        KODLOG("remove event listener:%s", event);
         pomelo->removeListener(event);
     }
     return 0;
@@ -373,7 +388,7 @@ static int tolua_CCPomelo_cleanup(lua_State* tolua_S)
             return 0;
         }
 #endif
-        CCLOG("pomelo cleanup");
+        KODLOG("pomelo cleanup");
         pomelo->cleanup();
     }
     return 0;
