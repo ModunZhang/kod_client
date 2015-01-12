@@ -213,10 +213,12 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 		                	end
 		                end)
 		            end)
-		     	local dragon_png = UILib.dragon_head[entity:GetDragonType()]
+		     	local dragon_png = UILib.dragon_head[self:GetEntityDragonType(entity)]
+		     	local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
 		     	if dragon_png then
-		     		local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
 		     		display.newSprite(dragon_png, 57, 60):addTo(icon_bg)
+		     	else
+		     		display.newSprite("unknown_dragon_icon_112x112.png", 57, 60):addTo(icon_bg)
 		     	end
 			elseif entity:GetTypeStr() == 'COLLECT' then
 				self:GetYellowRetreatButton():pos(558,15):addTo(bg)
@@ -247,10 +249,12 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 				or entity:GetTypeStr() == 'STRIKE_RETURN' 
 				or entity:GetTypeStr() == 'SHIRNE' 
 				then
-				local dragon_png = UILib.dragon_head[entity:GetDragonType()]
+				local dragon_png = UILib.dragon_head[self:GetEntityDragonType(entity)]
+		     	local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
 		     	if dragon_png then
-		     		local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
 		     		display.newSprite(dragon_png, 57, 60):addTo(icon_bg)
+		     	else
+		     		display.newSprite("unknown_dragon_icon_112x112.png", 57, 60):addTo(icon_bg)
 		     	end
 		     	local icon_bg = display.newSprite("progress_bg_head_43x43.png")
 					:align(display.LEFT_BOTTOM,164, 20):addTo(bg):scale(0.7)
@@ -280,9 +284,8 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 			                	if success then
 			                	end
 			                end)
-			            end)
+			        end)
 			    end
-
 			end
 			--TODO:?
 		end
@@ -316,7 +319,7 @@ function GameUIWatchTower:GetOtherEventItem(entity)
 				}):align(display.LEFT_TOP,164,153):addTo(bg)
 	local line_1 = display.newScale9Sprite("dividing_line.png"):size(390,2):addTo(bg):align(display.LEFT_TOP,164, 125)
 	local desctition_label_val =  UIKit:ttfLabel({
-			text = entity:GetFromCityName(),
+			text = self:GetEntityFromCityName(entity),
 			size = 20,
 			color= 0x797154
 		}):align(display.RIGHT_TOP,554,153):addTo(bg)
@@ -327,14 +330,16 @@ function GameUIWatchTower:GetOtherEventItem(entity)
 		}):align(display.LEFT_TOP,164,115):addTo(bg)
 	local line_2 = display.newScale9Sprite("dividing_line.png"):size(390,2):addTo(bg):align(display.LEFT_TOP,164, 87)
 	local localtion_label_val =  UIKit:ttfLabel({
-			text = entity:GetAttackPlayerName(),
+			text = self:GetEntityAttackPlayerName(entity),
 			size = 20,
 			color= 0x797154
 		}):align(display.RIGHT_TOP,554,115):addTo(bg)
-    local dragon_png = UILib.dragon_head[entity:GetDragonType()]
+    local dragon_png = UILib.dragon_head[self:GetEntityDragonType(entity)]
+ 	local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
  	if dragon_png then
- 		local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
  		display.newSprite(dragon_png, 57, 60):addTo(icon_bg)
+ 	else
+ 		display.newSprite("unknown_dragon_icon_112x112.png", 57, 60):addTo(icon_bg)
  	end	
 	local icon_bg = display.newSprite("progress_bg_head_43x43.png")
 					:align(display.LEFT_BOTTOM,164, 20):addTo(bg):scale(0.7)
@@ -360,6 +365,7 @@ end
 
 function GameUIWatchTower:OnEventDetailButtonClicked(entity)
 	print("查看事件详情----->")
+	
 end
 
 function GameUIWatchTower:GetYellowRetreatButton()
@@ -391,45 +397,31 @@ function GameUIWatchTower:RefreshCurrentList()
 	end
 end
 
--- function GameUIWatchTower:GetItem()
--- 	local item = self.listView:newItem()
--- 	local bg = WidgetUIBackGround.new({width = 568,height = 204},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
--- 	item:addContent(bg)
--- 	item:setItemSize(568, 204)
--- 	return item
--- end
-
 --Observer Methods
 function GameUIWatchTower:OnHelpToTroopsChanged(changed_map)
-	-- print("GameUIWatchTower:OnHelpToTroopsChanged--->")
 	self:RefreshCurrentList()
 end
 
 function GameUIWatchTower:OnCommingDataChanged()
-	-- print("GameUIWatchTower:OnCommingDataChanged-->")
 	self:RefreshCurrentList()
 end
 
 function GameUIWatchTower:OnMarchDataChanged()
 	self:RefreshCurrentList()
-	-- print("GameUIWatchTower:OnMarchDataChanged-->")
 end
 
 function GameUIWatchTower:OnFightEventTimerChanged(fightEvent)
-	-- print("GameUIWatchTower:OnFightEventTimerChanged-->")
 	if self.shrine_timer_label[fightEvent:Id()] then
 		self.shrine_timer_label[fightEvent:Id()]:setString(GameUtils:formatTimeStyle1(fightEvent:GetTime()))
 	end
 end
 function GameUIWatchTower:OnAttackMarchEventTimerChanged(attackMarchEvent)
-	-- print("GameUIWatchTower:OnAttackMarchEventTimerChanged-->")
 	if self.march_timer_label[attackMarchEvent:Id()] then
 		self.march_timer_label[attackMarchEvent:Id()]:setString(GameUtils:formatTimeStyle1(attackMarchEvent:GetTime()))
 	end
 end
 
 function GameUIWatchTower:OnVillageEventTimer(villageEvent)
-	-- print("GameUIWatchTower:OnVillageEventTimer-->")
 	if self.village_process[villageEvent:Id()] then
 		self.village_process[villageEvent:Id()]:setPercentage(villageEvent:CollectPercent())
 	end
@@ -448,8 +440,36 @@ function GameUIWatchTower:GetAllianceBelvedere()
 end
 
 --event
-
+--签到按钮
 function GameUIWatchTower:OnSignButtonClikced()
+end
+
+--内容过滤
+function GameUIWatchTower:GetEntityFromCityName(entity)
+	local level = self:GetBuilding():GetLevel()
+	if not self:GetAllianceBelvedere():CanDisplayCommingCityName(level) then
+		return '?'
+	else
+		return entity:GetFromCityName()
+	end
+end
+
+function GameUIWatchTower:GetEntityAttackPlayerName(entity)
+	local level = self:GetBuilding():GetLevel()
+	if not self:GetAllianceBelvedere():CanDisplayCommingPlayerName(level) then
+		return '?'
+	else
+		return entity:GetAttackPlayerName()
+	end
+end
+
+function GameUIWatchTower:GetEntityDragonType(entity)
+	local level = self:GetBuilding():GetLevel()
+	if not self:GetAllianceBelvedere():CanDisplayCommingDragonType(level) then
+		return '?'
+	else
+		return entity:GetDragonType()
+	end
 end
 
 return GameUIWatchTower

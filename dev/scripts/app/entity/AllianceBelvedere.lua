@@ -9,12 +9,13 @@ local AllianceBelvedere = class("AllianceBelvedere",MultiObserver)
 local BelvedereEntity = import(".BelvedereEntity")
 local client_config_watchTower = GameDatas.ClientInitGame.watchTower
 AllianceBelvedere.LISTEN_TYPE = Enum("OnCommingDataChanged","OnMarchDataChanged","OnAttackMarchEventTimerChanged","OnVillageEventTimer","OnFightEventTimerChanged","OnStrikeMarchEventDataChanged","OnAttackMarchEventDataChanged")
+
 function AllianceBelvedere:ctor(alliance)
 	AllianceBelvedere.super.ctor(self)
 	self.alliance = alliance
 end
 
--- read limt or somethiong
+-- read limt or somethiong from alliance data
 function AllianceBelvedere:OnAllianceDataChanged(alliance_data)
 	print("AllianceBelvedere:OnAllianceDataChanged--->")
 	self.limit = 1 -- 自己部队的队列限制数
@@ -45,7 +46,7 @@ function AllianceBelvedere:Handler2BelvedereEntity(dis,src,entity_type)
 	end
 end
 
---其他人对于我的事件
+--其他人对于我的行军事件
 function AllianceBelvedere:GetOtherEvents()
 	local other_events = {}
 	--敌方联盟
@@ -58,10 +59,9 @@ function AllianceBelvedere:GetOtherEvents()
 		return strikeMarchEvent:GetPlayerRole() == strikeMarchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER and strikeMarchEvent:GetTime() <= self:GetWarningTime()
 	end)
 	self:Handler2BelvedereEntity(other_events,marching_strike_events,BelvedereEntity.ENTITY_TYPE.STRIKE_OUT)
-	dump(other_events,"other_events--->")
 	return other_events
 end
---自己操作的所有事件
+--自己操作的所有事件(攻打玩家、攻打村落、圣地、突袭)
 function AllianceBelvedere:GetMyEvents()
 	local my_events = {}
 	--所有正在进行的出去行军
@@ -99,7 +99,7 @@ function AllianceBelvedere:Reset()
 	self:ClearAllListener()
 end
 
---TODO:返回是否有瞭望塔事件发生!
+--TODO:返回是否有瞭望塔事件发生
 function AllianceBelvedere:HasEvent()
 	if self:GetAlliance():IsDefault() then return false end
 
@@ -240,42 +240,51 @@ function AllianceBelvedere:NotifyCommingDataChanged()
 end
 
 function AllianceBelvedere:CallEventsChangedListeners(LISTEN_TYPE,args)
-	-- print("AllianceBelvedere:CallEventsChangedListeners--->",self:GetAlliance():Name(),AllianceBelvedere.LISTEN_TYPE[LISTEN_TYPE])
     self:NotifyListeneOnType(LISTEN_TYPE, function(listener)
         listener[AllianceBelvedere.LISTEN_TYPE[LISTEN_TYPE]](listener,unpack(args))
     end)
 end
 
---- 瞭望塔功能函数
+--- 瞭望塔等级功能
 ------------------------------------------------------------------------------------
-function AllianceBelvedere:CanDisplayMarchEventInMap()
-	return City:GetWatchTowerLevel() >= 1
+function AllianceBelvedere:GetWatchTowerLevel()
+	return City:GetWatchTowerLevel()
 end
 
-function AllianceBelvedere:GetWarningTime()
-	local level = City:GetWatchTowerLevel()
-	return client_config_watchTower[level].waringMinute * 60
+function AllianceBelvedere:CanDisplayMarchEventInMap(level)
+	local watcher_level = level or self:GetWatchTowerLevel()
+	return  watcher_level >= 1 
 end
 
-function AllianceBelvedere:CanDisplayCommingPlayerName()
-	return City:GetWatchTowerLevel() >= 2
+function AllianceBelvedere:GetWarningTime(level)
+	local watcher_level = level or self:GetWatchTowerLevel()
+	return client_config_watchTower[watcher_level].waringMinute * 60
 end
 
-function AllianceBelvedere:CanDisplayCommingCityName()
-	return City:GetWatchTowerLevel() >= 4
+function AllianceBelvedere:CanDisplayCommingPlayerName(level)
+	local watcher_level = level or self:GetWatchTowerLevel()
+	return watcher_level >= 2
+end
+
+function AllianceBelvedere:CanDisplayCommingCityName(level)
+	local watcher_level = level or self:GetWatchTowerLevel()
+	return watcher_level >= 4
 end
 
 
-function AllianceBelvedere:CanDisplayCommingDragonType()
-	return City:GetWatchTowerLevel() >= 6
+function AllianceBelvedere:CanDisplayCommingDragonType(level)
+	local watcher_level = level or self:GetWatchTowerLevel()
+	return watcher_level >= 6
 end
 
-function AllianceBelvedere:CanViewEnemyPlayerCity()
-	return City:GetWatchTowerLevel() >= 8
+function AllianceBelvedere:CanViewEnemyPlayerCity(level)
+	local watcher_level = level or self:GetWatchTowerLevel()
+	return watcher_level >= 8
 end
 
-function AllianceBelvedere:CanViewEventDetail()
-	return City:GetWatchTowerLevel() >= 10
+function AllianceBelvedere:CanViewEventDetail(level)
+	local watcher_level = level or self:GetWatchTowerLevel()
+	return watcher_level >= 10
 end
 
 return AllianceBelvedere

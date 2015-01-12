@@ -99,6 +99,7 @@ function BelvedereEntity:GetDestination()
 end
 
 function BelvedereEntity:GetDestinationLocation()
+	
 	if self:GetType() == self.ENTITY_TYPE.COLLECT then
 		local location = self:WithObject():TargetLocation()
 		return location.x .. "," .. location.y
