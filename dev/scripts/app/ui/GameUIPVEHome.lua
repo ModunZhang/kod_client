@@ -80,7 +80,7 @@ function GameUIPVEHome:CreateBottom()
     :addTo(bottom_bg, 1):pos(250, display.bottom + 50):scale(0.65)
     display.newSprite("Hero_1.png"):addTo(char_bg):pos(55, 55):scale(0.9)
 
-    self.tag = UIKit:ttfLabel({text = string.format("[%s] %s", "", User and User:Name() or "gaozhou"),
+    self.tag = UIKit:ttfLabel({text = string.format("[%s] %s", "", self.user:Name() and "gaozhou"),
         size = 20,
         color = 0xffedae,
     }):addTo(bottom_bg):align(display.LEFT_CENTER, 300, display.bottom + 65)
@@ -104,7 +104,7 @@ function GameUIPVEHome:CreateBottom()
     local label_bg = display.newSprite("label_background_146x25.png")
     :addTo(bottom_bg):align(display.LEFT_CENTER, 515, display.bottom + 25)
 
-    self.strenth = UIKit:ttfLabel({text = "100/100",
+    self.strenth = UIKit:ttfLabel({text = "",
         size = 20,
         color = 0xbdb582,
     }):addTo(label_bg):align(display.LEFT_CENTER, 20, 13)

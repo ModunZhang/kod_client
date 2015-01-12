@@ -62,7 +62,7 @@ locations[6] = {
 }
 locations[7] = {
 	["index"] = 7,
-	["building_type"] = "armyCamp",
+	["building_type"] = "academy",
 	["x"] = 26,
 	["y"] = 29,
 	["w"] = 6,
