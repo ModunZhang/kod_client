@@ -164,6 +164,15 @@ GameDatas.Buildings = {
 }
 require("app.datas.Buildings_buildings")
 
+GameDatas.DailyQuests = {
+	["dailyQuests"] = {},
+	["dailyQuestStar"] = {},
+	["dailyQuestStyle"] = {},
+}
+require("app.datas.DailyQuests_dailyQuests")
+require("app.datas.DailyQuests_dailyQuestStar")
+require("app.datas.DailyQuests_dailyQuestStyle")
+
 GameDatas.DragonEyrie = {
 	["crown"] = {},
 	["armguardLeft"] = {},
@@ -252,7 +261,49 @@ GameDatas.Houses = {
 }
 require("app.datas.Houses_houses")
 
+GameDatas.MilitaryTechLevelUp = {
+	["infantry_infantry"] = {},
+	["infantry_archer"] = {},
+	["infantry_cavalry"] = {},
+	["infantry_siege"] = {},
+	["archer_infantry"] = {},
+	["archer_archer"] = {},
+	["archer_cavalry"] = {},
+	["archer_siege"] = {},
+	["cavalry_infantry"] = {},
+	["cavalry_archer"] = {},
+	["cavalry_cavalry"] = {},
+	["cavalry_siege"] = {},
+	["siege_infantry"] = {},
+	["siege_archer"] = {},
+	["siege_cavalry"] = {},
+	["siege_siege"] = {},
+}
+require("app.datas.MilitaryTechLevelUp_infantry_infantry")
+require("app.datas.MilitaryTechLevelUp_infantry_archer")
+require("app.datas.MilitaryTechLevelUp_infantry_cavalry")
+require("app.datas.MilitaryTechLevelUp_infantry_siege")
+require("app.datas.MilitaryTechLevelUp_archer_infantry")
+require("app.datas.MilitaryTechLevelUp_archer_archer")
+require("app.datas.MilitaryTechLevelUp_archer_cavalry")
+require("app.datas.MilitaryTechLevelUp_archer_siege")
+require("app.datas.MilitaryTechLevelUp_cavalry_infantry")
+require("app.datas.MilitaryTechLevelUp_cavalry_archer")
+require("app.datas.MilitaryTechLevelUp_cavalry_cavalry")
+require("app.datas.MilitaryTechLevelUp_cavalry_siege")
+require("app.datas.MilitaryTechLevelUp_siege_infantry")
+require("app.datas.MilitaryTechLevelUp_siege_archer")
+require("app.datas.MilitaryTechLevelUp_siege_cavalry")
+require("app.datas.MilitaryTechLevelUp_siege_siege")
+
+GameDatas.MilitaryTechs = {
+	["militaryTechs"] = {},
+}
+require("app.datas.MilitaryTechs_militaryTechs")
+
 GameDatas.PlayerInitData = {
+	["intInit"] = {},
+	["floatInit"] = {},
 	["resources"] = {},
 	["materials"] = {},
 	["soldierMaterials"] = {},
@@ -262,6 +313,8 @@ GameDatas.PlayerInitData = {
 	["vipLevel"] = {},
 	["collectLevel"] = {},
 }
+require("app.datas.PlayerInitData_intInit")
+require("app.datas.PlayerInitData_floatInit")
 require("app.datas.PlayerInitData_resources")
 require("app.datas.PlayerInitData_materials")
 require("app.datas.PlayerInitData_soldierMaterials")
@@ -285,6 +338,32 @@ require("app.datas.PlayerVillageExp_stone")
 require("app.datas.PlayerVillageExp_iron")
 require("app.datas.PlayerVillageExp_food")
 require("app.datas.PlayerVillageExp_coin")
+
+GameDatas.ProductionTechLevelUp = {
+	["crane"] = {},
+	["fastFix"] = {},
+	["reinforcing"] = {},
+	["stoneCarving"] = {},
+	["ironSmelting"] = {},
+	["seniorTower"] = {},
+	["forestation"] = {},
+	["cropResearch"] = {},
+	["beerSupply"] = {},
+}
+require("app.datas.ProductionTechLevelUp_crane")
+require("app.datas.ProductionTechLevelUp_fastFix")
+require("app.datas.ProductionTechLevelUp_reinforcing")
+require("app.datas.ProductionTechLevelUp_stoneCarving")
+require("app.datas.ProductionTechLevelUp_ironSmelting")
+require("app.datas.ProductionTechLevelUp_seniorTower")
+require("app.datas.ProductionTechLevelUp_forestation")
+require("app.datas.ProductionTechLevelUp_cropResearch")
+require("app.datas.ProductionTechLevelUp_beerSupply")
+
+GameDatas.ProductionTechs = {
+	["productionTechs"] = {},
+}
+require("app.datas.ProductionTechs_productionTechs")
 
 GameDatas.SmithConfig = {
 	["equipments"] = {},
