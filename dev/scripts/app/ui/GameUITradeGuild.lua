@@ -119,7 +119,7 @@ function GameUITradeGuild:LoadBuyPage()
     self.resource_drop_list:align(display.TOP_CENTER,window.cx,window.top-80):addTo(layer,2)
 end
 function GameUITradeGuild:LoadResource(goods_details,goods_type)
-    local layer =self:CreateLayer():addTo(self.buy_layer)
+    local layer = self:CreateLayer():addTo(self.buy_layer)
     -- self.resource_layer = self:CreateLayer():addTo(self.buy_layer)
     -- local layer = self.resource_layer
     local size = layer:getContentSize()
@@ -243,22 +243,23 @@ function GameUITradeGuild:GetGoodsIcon(listView,icon)
 end
 function GameUITradeGuild:GetGoodsDetailsByType(goods_type)
     if goods_type==RESOURCE_TYPE then
+        local manager = City:GetResourceManager()
         return {
             {
                 UILib.resource.wood,
-                12
+                manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
             },
             {
                 UILib.resource.stone,
-                20000
+                manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
             },
             {
                 UILib.resource.iron,
-                100000
+                manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
             },
             {
                 UILib.resource.food,
-                3399
+                manager:GetFoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
             },
         }
     elseif goods_type==BUILD_MATERIAL_TYPE then
@@ -596,8 +597,8 @@ function GameUITradeGuild:OpenDollyIntro()
 
      WidgetInfo.new({
         info={
-            {_("容纳资源"),"1000"},
-            {_("容纳材料"),"1"},
+            {_("容纳资源"),GameDatas.PlayerInitData.intInit.resourcesPerCart.value},
+            {_("容纳材料"),GameDatas.PlayerInitData.intInit.materialsPerCart.value},
         },
         h =100
     }):align(display.TOP_CENTER, w/2 , h-160)
