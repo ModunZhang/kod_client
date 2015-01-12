@@ -214,11 +214,11 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 		                end)
 		            end)
 		     	local dragon_png = UILib.dragon_head[self:GetEntityDragonType(entity)]
-		     	local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
 		     	if dragon_png then
+		     		local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
 		     		display.newSprite(dragon_png, 57, 60):addTo(icon_bg)
 		     	else
-		     		display.newSprite("unknown_dragon_icon_112x112.png", 57, 60):addTo(icon_bg)
+		     		display.newSprite("unknown_dragon_icon_112x112.png", 57, 60):addTo(event_bg)
 		     	end
 			elseif entity:GetTypeStr() == 'COLLECT' then
 				self:GetYellowRetreatButton():pos(558,15):addTo(bg)
@@ -250,11 +250,11 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 				or entity:GetTypeStr() == 'SHIRNE' 
 				then
 				local dragon_png = UILib.dragon_head[self:GetEntityDragonType(entity)]
-		     	local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
 		     	if dragon_png then
+		     		local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
 		     		display.newSprite(dragon_png, 57, 60):addTo(icon_bg)
 		     	else
-		     		display.newSprite("unknown_dragon_icon_112x112.png", 57, 60):addTo(icon_bg)
+		     		display.newSprite("unknown_dragon_icon_112x112.png", 57, 60):addTo(event_bg)
 		     	end
 		     	local icon_bg = display.newSprite("progress_bg_head_43x43.png")
 					:align(display.LEFT_BOTTOM,164, 20):addTo(bg):scale(0.7)
@@ -335,11 +335,11 @@ function GameUIWatchTower:GetOtherEventItem(entity)
 			color= 0x797154
 		}):align(display.RIGHT_TOP,554,115):addTo(bg)
     local dragon_png = UILib.dragon_head[self:GetEntityDragonType(entity)]
- 	local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
  	if dragon_png then
+ 		local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
  		display.newSprite(dragon_png, 57, 60):addTo(icon_bg)
  	else
- 		display.newSprite("unknown_dragon_icon_112x112.png", 57, 60):addTo(icon_bg)
+ 		display.newSprite("unknown_dragon_icon_112x112.png", 57, 60):addTo(event_bg)
  	end	
 	local icon_bg = display.newSprite("progress_bg_head_43x43.png")
 					:align(display.LEFT_BOTTOM,164, 20):addTo(bg):scale(0.7)
