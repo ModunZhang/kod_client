@@ -7,6 +7,7 @@ local WidgetProgress = import("..widget.WidgetProgress")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetInfoWithTitle = import("..widget.WidgetInfoWithTitle")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local StarBar = import("..ui.StarBar")
 local UILib = import(".UILib")
 local WidgetInfo = import("..widget.WidgetInfo")
@@ -24,6 +25,9 @@ function GameUITownHall:onEnter()
 end
 function GameUITownHall:onExit()
     app.timer:RemoveListener(self)
+    User:RemoveListenerOnType(self, User.LISTEN_TYPE.DALIY_QUEST_REFRESH)
+    User:RemoveListenerOnType(self, User.LISTEN_TYPE.NEW_DALIY_QUEST)
+    User:RemoveListenerOnType(self, User.LISTEN_TYPE.NEW_DALIY_QUEST_EVENT)
     GameUITownHall.super.onExit(self)
 end
 
@@ -96,6 +100,8 @@ function GameUITownHall:CreateDwelling()
     self.admin_layer = admin_layer
 end
 function GameUITownHall:CreateAdministration()
+
+    self.quest_items = {}
     local admin_layer = self.admin_layer
 
     local layer_width,layer_height = 600,window.betweenHeaderAndTab
@@ -139,14 +145,22 @@ function GameUITownHall:CreateAdministration()
     self.quest_list_view = list_view
 
     -- 获取任务
-    local daily_quest = User:GetDailyQuests()
-    for _,quest in pairs(daily_quest) do
-        self:CreateQuestItem(quest)
-    end
-    list_view:reload()
-
+    local daily_quests = User:GetDailyQuests()
+    self:CreateAllQuests(daily_quests)
     -- 添加到全局计时器中
     app.timer:AddListener(self)
+    User:AddListenOnType(self, User.LISTEN_TYPE.DALIY_QUEST_REFRESH)
+    User:AddListenOnType(self, User.LISTEN_TYPE.NEW_DALIY_QUEST)
+    User:AddListenOnType(self, User.LISTEN_TYPE.NEW_DALIY_QUEST_EVENT)
+end
+
+function GameUITownHall:CreateAllQuests(daily_quests )
+    if daily_quests then
+        for _,quest in pairs(daily_quests) do
+            self:CreateQuestItem(quest)
+        end
+        self.quest_list_view:reload()
+    end
 end
 
 function GameUITownHall:CreateQuestItem(quest)
@@ -188,9 +202,8 @@ function GameUITownHall:CreateQuestItem(quest)
     )
         :addTo(title_bg):align(display.RIGHT_CENTER, title_bg:getContentSize().width-10, title_bg:getContentSize().height/2)
         :onButtonClicked(function(event)
-
-            end):scale(0.6)
-    star_bar:setPositionX(title_bg:getContentSize().width-50)
+            NetManager:getAddDailyQuestStarPromise(quest.id)
+        end):scale(0.6)
 
     local glass_icon = display.newSprite("hourglass_39x46.png")
         :align(display.RIGHT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width, icon_bg:getPositionY()-20)
@@ -201,7 +214,7 @@ function GameUITownHall:CreateQuestItem(quest)
         text = "222",
         size = 20,
         color = 0x403c2f,
-    }):align(display.LEFT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width-20, icon_bg:getPositionY()-20):addTo(body)
+    }):align(display.LEFT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width, icon_bg:getPositionY()-20):addTo(body)
 
     local progress = WidgetProgress.new(UIKit:hex2c3b(0xffedae), "progress_bar_272x40_1.png", "progress_bar_272x40_2.png", {
         icon_bg = "progress_bg_head_43x43.png",
@@ -209,7 +222,7 @@ function GameUITownHall:CreateQuestItem(quest)
         bar_pos = {x = 0,y = 0}
     }):addTo(body):align(display.LEFT_CENTER, icon_bg:getPositionX()+ icon_bg:getContentSize().width-25, icon_bg:getPositionY()-20)
 
-    local control_btn = WidgetPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
+    local control_btn = WidgetPushButton.new()
         :align(display.RIGHT_CENTER,item_width-10,108)
         :addTo(body)
 
@@ -226,20 +239,52 @@ function GameUITownHall:CreateQuestItem(quest)
             if User:IsQuestFinished(quest) then
                 progress:setVisible(false)
                 status = _("任务完成")
+                control_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, "yellow_btn_up_148x58.png", true)
+                control_btn:setButtonImage(cc.ui.UIPushButton.PRESSED,"yellow_btn_down_148x58.png", true)
+                control_btn:setButtonLabel(
+                    UIKit:commonButtonLable({
+                        color = 0xfff3c7,
+                        text  = _("获取奖励")
+                    })
+                ):onButtonClicked(function(event)
+                    NetManager:getDailyQeustRewardPromise(quest.id)
+                end)
             else
                 progress:setVisible(true)
                 status = _("正在处理政务")
+                control_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, "green_btn_up_148x58.png", true)
+                control_btn:setButtonImage(cc.ui.UIPushButton.PRESSED,"green_btn_down_148x58.png", true)
+                control_btn:setButtonLabel(
+                    UIKit:commonButtonLable({
+                        color = 0xfff3c7,
+                        text  = _("加速")
+                    })
+                ):onButtonClicked(function(event)
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("暂无加速功能"))
+                        :AddToCurrentScene()
+                end)
             end
             need_time_label:setVisible(false)
+            add_star_btn:setVisible(false)
         else
+            control_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, "yellow_btn_up_148x58.png", true)
+            control_btn:setButtonImage(cc.ui.UIPushButton.PRESSED,"yellow_btn_down_148x58.png", true)
+            control_btn:setButtonLabel(
+                UIKit:commonButtonLable({
+                    color = 0xfff3c7,
+                    text  = _("开始")
+                })
+            ):onButtonClicked(function(event)
+                NetManager:getStartDailyQuestPromise(quest.id)
+            end)
+
+            add_star_btn:setVisible(true)
+            star_bar:setPositionX(title_bg:getContentSize().width-50)
             status = _("需要")
             need_time_label:setString(GameUtils:formatTimeStyle1(GameDatas.DailyQuests.dailyQuestStar[quest.star].needMinutes*60))
             progress:setVisible(false)
         end
-        status_label:setString(status)
-        return self
-    end
-    function body:SetStatus(status)
         status_label:setString(status)
         return self
     end
@@ -259,9 +304,6 @@ function GameUITownHall:CreateQuestItem(quest)
         local origin_x = re_label:getPositionX()+re_label:getContentSize().width + 30
         for k,v in pairs(string.split(rewards,",")) do
             local re = string.split(v,":")
-            for k,v in pairs(re) do
-                print("-----rewards=",k,v)
-            end
             local reward_icon = display.newSprite(UILib.resource[re[2]]):addTo(reward_bg):pos(origin_x+(k-1)*180,reward_bg:getContentSize().height/2)
             local max = math.max(reward_icon:getContentSize().width,reward_icon:getContentSize().height)
             reward_icon:scale(40/max)
@@ -274,9 +316,15 @@ function GameUITownHall:CreateQuestItem(quest)
         end
         return self
     end
-    body:SetReward(quest)
+    function body:Init()
+        body:SetReward(quest)
+        body:SetStatus(quest)
+    end
+    body:Init()
     item:addContent(body)
     list:addItem(item)
+
+    self.quest_items[quest.id] = body
 end
 
 function GameUITownHall:CreateDwellingItemWithListView()
@@ -375,57 +423,28 @@ end
 -- end
 function GameUITownHall:OnTimer(current_time)
     if self.refresh_time then
-        self.refresh_time:setString(GameUtils:formatTimeStyle1(current_time-User:GetNextDailyQuestsRefreshTime()/1000))
+        self.refresh_time:setString(GameUtils:formatTimeStyle1(User:GetNextDailyQuestsRefreshTime()-current_time))
     end
 end
 
+function GameUITownHall:ResetQuest()
+    self.quest_items = {}
+    self.quest_list_view:removeAllItems()
+end
+function GameUITownHall:GetQuestItemById( questId )
+    return self.quest_items[questId]
+end
+function GameUITownHall:OnDailyQuestsRefresh(dailyQuests)
+    print("获取到新的任务")
+    self:ResetQuest()
+    self:CreateAllQuests(dailyQuests)
+end
+function GameUITownHall:OnNewDailyQuests(changed_map)
+end
+function GameUITownHall:OnNewDailyQuestsEvent(changed_map)
+
+end
+
 return GameUITownHall
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
