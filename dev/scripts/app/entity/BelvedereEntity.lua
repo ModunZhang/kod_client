@@ -26,9 +26,6 @@ function BelvedereEntity:GetType()
 	return self.entity_type
 end
 
-function BelvedereEntity:GetFrom()
-end
-
 function BelvedereEntity:GetTitle()
 	if self:GetType() == self.ENTITY_TYPE.HELPTO then
 		return  string.format(_("正在协防玩家%s"),self:WithObject().beHelpedPlayerData.name)
@@ -145,6 +142,24 @@ function BelvedereEntity:FindShrinePlayerTroops()
 			end
 		end
 
+	end
+end
+
+function BelvedereEntity:GetFromCityName()
+	if self:GetType() == self.ENTITY_TYPE.MARCH_OUT  
+		or self:GetType() == self.ENTITY_TYPE.STRIKE_OUT 
+		or self:GetType() == self.ENTITY_TYPE.HELPTO 
+		then
+		return self:WithObject():AttackPlayerData().cityName
+	end
+end
+
+function BelvedereEntity:GetAttackPlayerName()
+	if self:GetType() == self.ENTITY_TYPE.MARCH_OUT  
+		or self:GetType() == self.ENTITY_TYPE.STRIKE_OUT 
+		or self:GetType() == self.ENTITY_TYPE.HELPTO 
+		then
+		return self:WithObject():AttackPlayerData().name
 	end
 end
 

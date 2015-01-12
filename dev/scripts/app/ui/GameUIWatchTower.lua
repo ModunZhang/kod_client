@@ -102,7 +102,6 @@ end
 
 function GameUIWatchTower:RefreshMyEvents()
 	local my_events = self:GetAllianceBelvedere():GetMyEvents()
-	print("GameUIWatchTower:RefreshMyEvents-->",#my_events)
 	for index = 1,2 do
 		local item
 		if index == 1 then
@@ -285,12 +284,82 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 			    end
 
 			end
-			--TODO:
+			--TODO:?
 		end
 	end
 	item:addContent(bg)
 	item:setItemSize(568, 204)
 	return item
+end
+
+function GameUIWatchTower:GetOtherEventItem(entity)
+	local item = self.listView:newItem()
+	local bg = WidgetUIBackGround.new({width = 568,height = 204},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
+	local title_image = entity:WithObject():MarchType() == 'helpDefence' and 'title_green_558x34.png' or 'title_red_558x34.png'
+	local title_bg  = display.newSprite(title_image)
+			:align(display.TOP_CENTER,284, 198)
+			:addTo(bg)
+	local tile_label = UIKit:ttfLabel({
+			text = entity:GetTitle(),
+			size = 20,
+			color= 0xffedae,
+		}):addTo(title_bg):align(display.LEFT_CENTER, 20, 17)
+    local event_bg = display.newScale9Sprite("alliance_item_flag_box_126X126.png")
+    	:size(134,134)
+    	:addTo(bg)
+    	:align(display.LEFT_BOTTOM, 10, 19)	
+
+    local desctition_label = UIKit:ttfLabel({
+					text = _("来自"),
+					size = 20,
+					color= 0x797154
+				}):align(display.LEFT_TOP,164,153):addTo(bg)
+	local line_1 = display.newScale9Sprite("dividing_line.png"):size(390,2):addTo(bg):align(display.LEFT_TOP,164, 125)
+	local desctition_label_val =  UIKit:ttfLabel({
+			text = entity:GetFromCityName(),
+			size = 20,
+			color= 0x797154
+		}):align(display.RIGHT_TOP,554,153):addTo(bg)
+	local localtion_label = UIKit:ttfLabel({
+			text = _("玩家"),
+			size = 20,
+			color= 0x797154
+		}):align(display.LEFT_TOP,164,115):addTo(bg)
+	local line_2 = display.newScale9Sprite("dividing_line.png"):size(390,2):addTo(bg):align(display.LEFT_TOP,164, 87)
+	local localtion_label_val =  UIKit:ttfLabel({
+			text = entity:GetAttackPlayerName(),
+			size = 20,
+			color= 0x797154
+		}):align(display.RIGHT_TOP,554,115):addTo(bg)
+    local dragon_png = UILib.dragon_head[entity:GetDragonType()]
+ 	if dragon_png then
+ 		local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
+ 		display.newSprite(dragon_png, 57, 60):addTo(icon_bg)
+ 	end	
+	local icon_bg = display.newSprite("progress_bg_head_43x43.png")
+					:align(display.LEFT_BOTTOM,164, 20):addTo(bg):scale(0.7)
+	display.newSprite("hourglass_39x46.png"):align(display.CENTER, 22, 22):addTo(icon_bg)
+
+	local timer_label = UIKit:ttfLabel({
+		text = GameUtils:formatTimeStyle1(entity:WithObject():GetTime()),
+		size = 22,
+		color= 0x403c2f
+	}):addTo(bg):align(display.LEFT_BOTTOM,164+ icon_bg:getCascadeBoundingBox().width+8, 20)
+	self.march_timer_label[entity:WithObject():Id()] = timer_label
+	WidgetPushButton.new({normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"})
+		:setButtonLabel(UIKit:commonButtonLable({text = _("详情")}))
+    	:align(display.RIGHT_BOTTOM,555,10):addTo(bg)
+    	:onButtonClicked(function(event)
+    		self:OnEventDetailButtonClicked(entity)
+    	end)
+ 	--end
+	item:addContent(bg)
+	item:setItemSize(568, 204)
+	return item
+end
+
+function GameUIWatchTower:OnEventDetailButtonClicked(entity)
+	print("查看事件详情----->")
 end
 
 function GameUIWatchTower:GetYellowRetreatButton()
@@ -309,7 +378,10 @@ end
 
 function GameUIWatchTower:RefreshOtherEvents()
 	local other_events = self:GetAllianceBelvedere():GetOtherEvents()
-
+	for _,entity in ipairs(other_events) do
+		local item = self:GetOtherEventItem(entity)
+		self.listView:addItem(item)
+	end
 end
 
 function GameUIWatchTower:RefreshCurrentList()
@@ -319,13 +391,13 @@ function GameUIWatchTower:RefreshCurrentList()
 	end
 end
 
-function GameUIWatchTower:GetItem()
-	local item = self.listView:newItem()
-	local bg = WidgetUIBackGround.new({width = 568,height = 204},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
-	item:addContent(bg)
-	item:setItemSize(568, 204)
-	return item
-end
+-- function GameUIWatchTower:GetItem()
+-- 	local item = self.listView:newItem()
+-- 	local bg = WidgetUIBackGround.new({width = 568,height = 204},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
+-- 	item:addContent(bg)
+-- 	item:setItemSize(568, 204)
+-- 	return item
+-- end
 
 --Observer Methods
 function GameUIWatchTower:OnHelpToTroopsChanged(changed_map)

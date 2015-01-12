@@ -16,7 +16,7 @@ end
 -- read limt or somethiong
 function AllianceBelvedere:OnAllianceDataChanged(alliance_data)
 	print("AllianceBelvedere:OnAllianceDataChanged--->")
-	self.limit = 2 -- 3支部队
+	self.limit = 2 -- 自己部队的队列限制数
 end
 
 function AllianceBelvedere:GetMarchLimit()
@@ -24,7 +24,7 @@ function AllianceBelvedere:GetMarchLimit()
 end
 
 function AllianceBelvedere:IsReachEventLimit()
-	return self:GetMarchLimit() == 2
+	return self:GetMarchLimit() >= #self:GetMyEvents()
 end
 
 function AllianceBelvedere:GetEnemyAlliance()
@@ -35,12 +35,14 @@ function AllianceBelvedere:GetAlliance()
 	return self.alliance
 end
 
-function AllianceBelvedere:Handler2BelvedereEntity(dis,src,entity_type)
+function AllianceBelvedere:Handler2BelvedereEntity(dis,src,entity_type,filter_func)
 	for _,v in ipairs(src) do
-		local belvedereEntity = BelvedereEntity.new(v)
-		belvedereEntity:SetType(entity_type)
-		-- table.insertto(dis,belvedereEntity,1)
-		table.insert(dis, 1,belvedereEntity)
+		if filter_func  and not filter_func(v) then 
+		else
+			local belvedereEntity = BelvedereEntity.new(v)
+			belvedereEntity:SetType(entity_type)
+			table.insert(dis, 1,belvedereEntity)
+		end
 	end
 end
 
@@ -51,13 +53,11 @@ function AllianceBelvedere:GetOtherEvents()
 	local marching_in_events = LuaUtils:table_filteri(self:GetEnemyAlliance():GetAttackMarchEvents(),function(_,marchAttackEvent)
 		return marchAttackEvent:GetPlayerRole() == marchAttackEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER 
 	end)
-	-- table.insertto(other_events,marching_in_events,1)
 	self:Handler2BelvedereEntity(other_events,marching_in_events,BelvedereEntity.ENTITY_TYPE.MARCH_OUT)
 	--突袭
 	local marching_strike_events = LuaUtils:table_filteri(self:GetEnemyAlliance():GetStrikeMarchEvents(),function(_,strikeMarchEvent)
 		return strikeMarchEvent:GetPlayerRole() == strikeMarchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER 
 	end)
-	-- table.insertto(other_events,marching_strike_events,1)
 	self:Handler2BelvedereEntity(other_events,marching_strike_events,BelvedereEntity.ENTITY_TYPE.STRIKE_OUT)
 	dump(other_events,"other_events--->")
 	return other_events
@@ -100,7 +100,7 @@ function AllianceBelvedere:Reset()
 	self:ClearAllListener()
 end
 
---TODO:返回是否有瞭望塔事件发生
+--TODO:返回是否有瞭望塔事件发生!
 function AllianceBelvedere:HasEvent()
 	if self:GetAlliance():IsDefault() then return false end
 
@@ -226,4 +226,15 @@ function AllianceBelvedere:CallEventsChangedListeners(LISTEN_TYPE,args)
         listener[AllianceBelvedere.LISTEN_TYPE[LISTEN_TYPE]](listener,unpack(args))
     end)
 end
+
+--- 瞭望塔功能函数
+function AllianceBelvedere:DisplayMarchEventInMap()
+	return City:GetWatchTowerLevel() > 1
+end
+
+function AllianceBelvedere:GetWarningTime()
+	local level = City:GetWatchTowerLevel()
+	
+end
+
 return AllianceBelvedere

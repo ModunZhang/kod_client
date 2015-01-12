@@ -1450,6 +1450,11 @@ function City:PromiseOfFinishEquipementDragon()
     return self:GetDragonEyrie():GetDragonManager():PromiseOfFinishEquipementDragon()
 end
 
+function City:GetWatchTowerLevel()
+    local watch_tower = self:GetFirstBuildingByType("watchTower")
+    return watch_tower and watch_tower:GetLevel() or 0
+end
+
 return City
 
 

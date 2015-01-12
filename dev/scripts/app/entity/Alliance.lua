@@ -309,6 +309,7 @@ function Alliance:Reset()
     if self:NeedUpdateEnemyAlliance() then
         self:GetEnemyAlliance():Reset()
     end
+    self:GetAllianceBelvedere():Reset()
     for k,v in pairs(self) do
         if type(v) == 'string' then
             self[k] = ""
@@ -322,13 +323,12 @@ function Alliance:Reset()
     self.events = {}
     self.join_events = {}
     self.help_events = {}
+    self.alliance_villages = {}
     self:OnOperation("quit")
     self.alliance_map:Reset()
     self.alliance_shrine:Reset()
     self:ResetMarchEvent()
     self:ResetVillageEvents()
-    self.alliance_villages = {}
-    -- self:GetAllianceBelvedere():Reset()
 end
 function Alliance:OnOperation(operation_type)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OPERATION, function(listener)
@@ -1366,7 +1366,6 @@ function Alliance:UpdateEnemyAlliance(json_data,my_alliance_status)
             enemy_belvedere:AddListenOnType(my_belvedere, enemy_belvedere.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
             enemy_belvedere:AddListenOnType(my_belvedere, enemy_belvedere.LISTEN_TYPE.OnAttackMarchEventDataChanged)
             --瞭望塔coming不需要知道敌方对自己联盟的村落事件和返回事件 reset 会自动去掉所有监听
-            --TODO:这里应该可以移到初始化敌方联盟的地方
         end
         if json_data._id then
             enemy_alliance:SetId(json_data._id)
