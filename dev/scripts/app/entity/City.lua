@@ -687,7 +687,6 @@ function City:IteratorResourcesByUserData(resources, current_time)
         resource_manager:GetCoinResource():SetValue(resources.coin)
     end
     if resources.gem then
-        -- resource_manager:GetGemResource():SetValue(resources.gem)
         self.belong_user:GetGemResource():SetValue(resources.gem)
     end
     if resources.blood then
