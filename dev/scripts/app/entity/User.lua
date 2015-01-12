@@ -1,8 +1,17 @@
+local AutomaticUpdateResource = import(".AutomaticUpdateResource")
 local property = import("..utils.property")
 local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local User = class("User", MultiObserver)
-User.LISTEN_TYPE = Enum("BASIC", "INVITE_TO_ALLIANCE", "REQUEST_TO_ALLIANCE")
+User.LISTEN_TYPE = Enum("BASIC", "RESOURCE", "INVITE_TO_ALLIANCE", "REQUEST_TO_ALLIANCE")
+local BASIC = User.LISTEN_TYPE.BASIC
+local RESOURCE = User.LISTEN_TYPE.RESOURCE
+local INVITE_TO_ALLIANCE = User.LISTEN_TYPE.INVITE_TO_ALLIANCE
+local REQUEST_TO_ALLIANCE = User.LISTEN_TYPE.REQUEST_TO_ALLIANCE
+
+User.RESOURCE_TYPE = Enum("BLOOD", "COIN", "STRENGTH", "GEM", "RUBY", "BERYL", "SAPPHIRE", "TOPAZ")
+local STRENGTH = User.RESOURCE_TYPE.STRENGTH
+
 property(User, "level", 1)
 property(User, "levelExp", 0)
 property(User, "power", 0)
@@ -23,7 +32,28 @@ function User:ctor(p)
     else
         self:SetId(p)
     end
+    self.resources = {
+        [STRENGTH] = AutomaticUpdateResource.new(),
+    }
 end
+function User:GetStrengthResource()
+    return self.resources[STRENGTH]
+end
+function User:OnTimer(current_time)
+    self:UpdateResourceByTime(current_time)
+    self:OnResourceChanged()
+end
+function User:UpdateResourceByTime(current_time)
+    for _, v in pairs(self.resources) do
+        v:OnTimer(current_time)
+    end
+end
+function User:OnResourceChanged()
+    self:NotifyListeneOnType(RESOURCE, function(listener)
+        listener:OnResourceChanged(self)
+    end)
+end
+
 function User:CreateInviteEventFromJson(json_data)
     return json_data
 end
@@ -78,7 +108,7 @@ function User:SortInvites()
     end)
 end
 function User:OnInviteAllianceEvents(changed_map)
-    self:NotifyListeneOnType(User.LISTEN_TYPE.INVITE_TO_ALLIANCE, function(listener)
+    self:NotifyListeneOnType(INVITE_TO_ALLIANCE, function(listener)
         listener:OnInviteAllianceEvents(self, changed_map)
     end)
 end
@@ -130,12 +160,12 @@ function User:DeleteRequestWith(req)
     end
 end
 function User:OnRequestAllianceEvents(changed_map)
-    self:NotifyListeneOnType(User.LISTEN_TYPE.REQUEST_TO_ALLIANCE, function(listener)
+    self:NotifyListeneOnType(REQUEST_TO_ALLIANCE, function(listener)
         listener:OnRequestAllianceEvents(self, changed_map)
     end)
 end
 function User:OnPropertyChange(property_name, old_value, new_value)
-    self:NotifyListeneOnType(User.LISTEN_TYPE.BASIC, function(listener)
+    self:NotifyListeneOnType(BASIC, function(listener)
         listener:OnBasicChanged(self, {
             [property_name] = {old = old_value, new = new_value}
         })

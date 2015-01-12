@@ -44,13 +44,13 @@ function AutomaticUpdateResource:OnTimer(current_time)
         self:UpdateResource(current_time, current_resource)
     end
 end
-
+local floor = math.floor
 function AutomaticUpdateResource:GetResourceValueByCurrentTimeWithoutLimit(current_time)
     local elapse_time = current_time - self.last_update_time
     local has_been_producted_from_last_update_time = elapse_time * self.resource_production_per_hour / 3600
     local total_resource_value = self:GetValue() + has_been_producted_from_last_update_time
     self.really_total_resource_value = total_resource_value
-    return math.floor(total_resource_value)
+    return floor(total_resource_value)
 end
 
 function AutomaticUpdateResource:GetReallyTotalResource()

@@ -9,14 +9,18 @@ local OBJECT_IMAGE = PVEDefine.object_image
 local OBJECT_DESC = PVEDefine.object_desc
 local OBJECT_TITLE = PVEDefine.object_title
 local OBJECT_OP = PVEDefine.object_op
-function PVEScene:ctor()
+
+
+
+function PVEScene:ctor(user)
     -- City:ResetAllListeners()
     -- Alliance_Manager:GetMyAlliance():ResetAllListeners()
     PVEScene.super.ctor(self)
+    self.user = user
 end
 function PVEScene:onEnter()
     PVEScene.super.onEnter(self)
-    UIKit:newGameUI('GameUIPVEHome'):addToScene(self, true):setTouchSwallowEnabled(false)
+    UIKit:newGameUI('GameUIPVEHome', self.user):addToScene(self, true):setTouchSwallowEnabled(false)
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(12, 12)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
     self:GetSceneLayer():ZoomTo(0.8)

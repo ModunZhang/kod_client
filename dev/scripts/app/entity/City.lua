@@ -58,8 +58,6 @@ function City:ctor(json_data)
         self:InitWithJsonData(json_data)
     end
 
-
-
     self.upgrading_building_callbacks = {}
     self.finish_upgrading_callbacks = {}
 end
