@@ -13,6 +13,7 @@ local ALLIANCE_MAIL = GameUIWriteMail.SEND_TYPE.ALLIANCE_MAIL
 
 function GameUIWriteMail:ctor(send_type)
     GameUIWriteMail.super.ctor(self,768,_("发邮件"))
+    self:DisableAutoClose()
     self.send_type = send_type
     -- bg
     local write_mail = self.body
@@ -107,7 +108,6 @@ function GameUIWriteMail:ctor(send_type)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 self:SendMail(self.editbox_addressee:getText(), self.editbox_subject:getText(), self.textView:getText())
-                self:removeFromParent()
             end
         end)
 
@@ -138,6 +138,7 @@ function GameUIWriteMail:SendMail(addressee,title,content)
             dump(err:reason())
         end)
     end
+    self:removeFromParent()
 end
 
 

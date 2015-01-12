@@ -266,7 +266,7 @@ function GameUIResource:ChaiButtonAction( event )
         display.getRunningScene():addChild(dialog,1000000)
         return
     end
-    if tonumber(City:GetResourceManager():GetGemResource():GetValue()) < 100 then
+    if tonumber(City:GetUser():GetGemResource():GetValue()) < 100 then
         local message = "宝石不足"
         local dialog = PopDialogUI.new()
         dialog:setTitle("提示")

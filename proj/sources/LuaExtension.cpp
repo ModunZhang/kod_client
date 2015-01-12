@@ -694,7 +694,21 @@ tolua_lerror:
     tolua_error(tolua_S,"#ferror in function 'crc32'.",&tolua_err);
     return 0;
 #endif
+}
 
+static int tolua_ext_get_app_version(lua_State* tolua_S)
+{
+    const char * app_ver =  GetAppVersion();
+    lua_pushstring(tolua_S, app_ver);
+    return 1;
+
+}
+
+static int tolua_ext_get_app_build_version(lua_State* tolua_S)
+{
+    const char * build_ver =  GetAppBundleVersion();
+    lua_pushstring(tolua_S, build_ver);
+    return 1;
 }
 
 static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
@@ -711,6 +725,8 @@ static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
     tolua_function(tolua_S, "userVoice", tolua_ext_open_user_voice);
     tolua_function(tolua_S, "getOSVersion", tolua_ext_get_os_version);
     tolua_function(tolua_S, "getDeviceModel", tolua_ext_get_device_model);
+    tolua_function(tolua_S, "getAppVersion", tolua_ext_get_app_version);
+    tolua_function(tolua_S, "getAppBuildVersion", tolua_ext_get_app_build_version);
     tolua_function(tolua_S, "__logFile", tolua_ext_log_file);
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
     tolua_function(tolua_S,"getOpenUDID",tolua_ext_getOpenUDID);

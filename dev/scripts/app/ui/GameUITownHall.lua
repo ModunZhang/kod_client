@@ -5,8 +5,11 @@
 local window = import("..utils.window")
 local WidgetProgress = import("..widget.WidgetProgress")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-local WidgetWithBlueTitle = import("..widget.WidgetWithBlueTitle")
 local WidgetInfoWithTitle = import("..widget.WidgetInfoWithTitle")
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
+local StarBar = import("..ui.StarBar")
+local UILib = import(".UILib")
 local WidgetInfo = import("..widget.WidgetInfo")
 local GameUITownHall = UIKit:createUIClass("GameUITownHall", "GameUIUpgradeBuilding")
 function GameUITownHall:ctor(city, townHall)
@@ -16,61 +19,25 @@ function GameUITownHall:ctor(city, townHall)
 end
 function GameUITownHall:onEnter()
     GameUITownHall.super.onEnter(self)
-    self.list_view = self:CreateAdministration()
+    self:CreateDwelling()
     self:TabButtons()
-    self.town_hall:AddTownHallListener(self)
-    self.town_hall:AddUpgradeListener(self)
     self:UpdateDwellingCondition()
 end
 function GameUITownHall:onExit()
-    self.town_hall:RemoveTownHallListener(self)
-    self.town_hall:RemoveUpgradeListener(self)
+    app.timer:RemoveListener(self)
+    User:RemoveListenerOnType(self, User.LISTEN_TYPE.DALIY_QUEST_REFRESH)
+    User:RemoveListenerOnType(self, User.LISTEN_TYPE.NEW_DALIY_QUEST)
+    User:RemoveListenerOnType(self, User.LISTEN_TYPE.NEW_DALIY_QUEST_EVENT)
     GameUITownHall.super.onExit(self)
 end
 
-function GameUITownHall:OnBuildingUpgradingBegin()
-end
-function GameUITownHall:OnBuildingUpgradeFinished()
-end
-function GameUITownHall:OnBuildingUpgrading()
-    if self.impose then
-        self.impose:RefreshImpose()
-    end
-end
-function GameUITownHall:OnBeginImposeWithEvent(building, event)
-    -- 前置条件
-    assert(self.impose)
-    assert(self.timer == nil)
-    local list_view = self.list_view
-    self.timer = self:CreateTimerItemWithListView(list_view):RefreshByEvent(event, app.timer:GetServerTime())
-    list_view:replaceItem(self.timer, self.impose)
-    self.impose = nil
-    -- 重置列表
-    list_view:reload()
-end
-function GameUITownHall:OnImposingWithEvent(building, event, current_time)
-    assert(self.impose == nil)
-    assert(self.timer)
-    self.timer:RefreshByEvent(event, current_time)
-end
-function GameUITownHall:OnEndImposeWithEvent(building, event, current_time)
-    assert(self.impose == nil)
-    assert(self.timer)
 
-    local list_view = self.list_view
-    self.impose = self:CreateImposeItemWithListView(list_view):RefreshImpose()
-    list_view:replaceItem(self.impose, self.timer)
-    self.timer = nil
-
-    -- 重置列表
-    list_view:reload()
-end
 function GameUITownHall:UpdateDwellingCondition()
     local cur = #self.town_hall_city:GetHousesAroundFunctionBuildingByType(self.town_hall, "dwelling", 2)
     self.dwelling:GetLineByIndex(1):SetCondition(cur, 3)
     self.dwelling:GetLineByIndex(2):SetCondition(cur, 6)
 end
----
+
 function GameUITownHall:TabButtons()
     self:CreateTabButtons({
         {
@@ -80,222 +47,302 @@ function GameUITownHall:TabButtons()
     },
     function(tag)
         if tag == 'upgrade' then
-            self.list_view:setVisible(false)
+            self.admin_layer:setVisible(false)
         elseif tag == "administration" then
-            self.list_view:setVisible(true)
+            self.admin_layer:setVisible(true)
+            if not self.quest_list_view then
+                self:CreateAdministration()
+            end
         end
     end):pos(window.cx, window.bottom + 34)
 end
+function GameUITownHall:CreateDwelling()
+    local admin_layer = display.newLayer():addTo(self):pos(window.left+20,window.bottom_top+10)
+    admin_layer:setContentSize(cc.size(layer_width,layer_height))
+    local layer_width,layer_height = 600,window.betweenHeaderAndTab
+    self.dwelling = self:CreateDwellingItemWithListView():addTo(admin_layer):align(display.TOP_CENTER,layer_width/2,layer_height-20)
+    self.admin_layer = admin_layer
+end
 function GameUITownHall:CreateAdministration()
-    local list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 100)
 
-    self.dwelling = self:CreateDwellingItemWithListView(list_view)
-    list_view:addItem(self.dwelling)
+    self.quest_items = {}
+    local admin_layer = self.admin_layer
 
-    if self.town_hall:IsEmpty() then
-        self.impose = self:CreateImposeItemWithListView(list_view):RefreshImpose()
-        list_view:addItem(self.impose)
-    elseif self.town_hall:IsInImposing() then
-        self.timer = self:CreateTimerItemWithListView(list_view)
-            :RefreshByEvent(self.town_hall:GetTaxEvent(), app.timer:GetServerTime())
-        list_view:addItem(self.timer)
-    end
+    local layer_width,layer_height = 600,window.betweenHeaderAndTab
+  
 
-    list_view:reload()
-    return list_view
+    -- 每日任务
+    UIKit:ttfLabel({
+        text = _("每日任务"),
+        size = 22,
+        color = 0x403c2f,
+    }):align(display.RIGHT_CENTER, layer_width/2+30, 600):addTo(admin_layer)
+    display.newSprite("info_26x26.png"):align(display.CENTER, layer_width/2+50, 600)
+        :addTo(admin_layer)
+
+
+    -- 刷新倒计时
+    UIKit:ttfLabel({
+        text = _("刷新时间"),
+        size = 22,
+        color = 0x00900e,
+    }):align(display.RIGHT_CENTER, layer_width/2-10, 570):addTo(admin_layer)
+
+    -- 把上次刷新时间缓存到UI
+    local dailyQuestsRefreshTime = User:DailyQuestsRefreshTime()
+    self.dailyQuestsRefreshTime = dailyQuestsRefreshTime
+    local refresh_time = UIKit:ttfLabel({
+        text = "",
+        size = 22,
+        color = 0x00900e,
+    }):align(display.LEFT_CENTER, layer_width/2+10, 570):addTo(admin_layer)
+    self.refresh_time = refresh_time
+    local list_view ,listnode=  UIKit:commonListView({
+        viewRect = cc.rect(0,0, layer_width, layer_height-280),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+    })
+    listnode:align(display.BOTTOM_CENTER, layer_width/2, 20):addTo(admin_layer)
+    self.quest_list_view = list_view
+
+    -- 获取任务
+    local daily_quests = User:GetDailyQuests()
+    self:CreateAllQuests(daily_quests)
+    -- 添加到全局计时器中
+    app.timer:AddListener(self)
+    User:AddListenOnType(self, User.LISTEN_TYPE.DALIY_QUEST_REFRESH)
+    User:AddListenOnType(self, User.LISTEN_TYPE.NEW_DALIY_QUEST)
+    User:AddListenOnType(self, User.LISTEN_TYPE.NEW_DALIY_QUEST_EVENT)
+    self.town_hall:AddUpgradeListener(self)
 end
 
-function GameUITownHall:CreateDwellingItemWithListView(list_view)
-    local widget = WidgetInfoWithTitle.new({
-        title = _("周围2格范围的住宅数量"),
-        h = 146,
-        info = info
-    }):align(display.CENTER)
-    -- WidgetWithBlueTitle.new(160, _("周围2格范围的住宅数量")):align(display.CENTER)
-    local size = widget:getContentSize()
-    local lineItems = {}
-    for i, v in ipairs({1,2}) do
-    print("size=======",i)
-        table.insert(lineItems, self:CreateDwellingLineItem(520,i==1):addTo(widget, 2)
-            :pos(0, -42+(i-1)*40))
+function GameUITownHall:CreateAllQuests(daily_quests )
+    if daily_quests then
+        for _,quest in pairs(daily_quests) do
+            self:CreateQuestItem(quest)
+        end
+        self.quest_list_view:reload()
     end
-    local item = list_view:newItem()
-    item:addContent(widget)
-    item:setItemSize(size.width,156)
-
-
-    function item:GetLineByIndex(index)
-        return lineItems[index]
-    end
-    return item
 end
 
-function GameUITownHall:CreateImposeItemWithListView(list_view)
-    local townHall = self
-    local widget = WidgetWithBlueTitle.new(260, _("税收")):align(display.CENTER)
-    local size = widget:getContentSize()
-    local info = WidgetInfo.new({
-        h = 140,
-        w = 368
-    }):align(display.CENTER,200,size.height/2-20):addTo(widget)
-    local lineItems = {}
-    for i, v in ipairs({
-        { icon = "citizen_44x50.png", scale = 0.6, title =_("损失城民") },
-        { icon = "coin_icon.png", scale = 0.25, title =_("获得银币") },
-        { icon = "hourglass_39x46.png", scale = 0.6, title =_("时间") }
-    }) do
-        table.insert(lineItems, self:CreateTaxLineItem(348, v,i%2==0):addTo(info, 2)
-            :pos(200, 150-(i-1) * 40))
-    end
-    WidgetPushButton.new(
-        {normal = "yellow_btn_up_185x65.png", pressed = "yellow_btn_down_185x65.png"},
+function GameUITownHall:CreateQuestItem(quest,index)
+    LuaUtils:outputTable("CreateQuestItem  quest", quest)
+    local quest_config = GameDatas.DailyQuests.dailyQuests[quest.index]
+    local list = self.quest_list_view
+    local item = list:newItem()
+    local item_width,item_height = 568,218
+    item:setItemSize(item_width,item_height)
+
+    local body = WidgetUIBackGround.new({width=item_width,height=item_height},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
+    local b_size = body:getContentSize()
+    local title_bg = display.newSprite("title_blue_558x34.png"):addTo(body):align(display.CENTER,b_size.width/2 , b_size.height-24)
+    local quest_name = UIKit:ttfLabel({
+        text = quest_config.name,
+        size = 22,
+        color = 0xffedae,
+    }):align(display.LEFT_CENTER, 15, title_bg:getContentSize().height/2):addTo(title_bg)
+    local star_bar = StarBar.new({
+        max = 5,
+        bg = "Stars_bar_bg.png",
+        fill = "Stars_bar_highlight.png",
+        num = quest.star,
+        margin = 0,
+        direction = StarBar.DIRECTION_HORIZONTAL,
+    }):addTo(title_bg):align(display.RIGHT_CENTER,title_bg:getContentSize().width-10, title_bg:getContentSize().height/2)
+
+    -- 任务icon
+    local icon_bg = display.newSprite("box_100x100.png"):addTo(body):pos(55,120)
+
+    local status_label = UIKit:ttfLabel({
+        text = "111",
+        size = 20,
+        color = 0x403c2f,
+    }):align(display.LEFT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width -20, icon_bg:getPositionY()+20):addTo(body)
+    local add_star_btn = WidgetPushButton.new(
+        {normal = "add_btn_up_50x50.png", pressed = "add_btn_down_50x50.png"},
         {scale9 = false}
-    ):setButtonLabel(cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("增税"),
-        size = 24,
-        font = UIKit:getFontFilePath(),
-        color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(widget, 2):align(display.CENTER, size.width - 110, 70)
+    )
+        :addTo(title_bg):align(display.RIGHT_CENTER, title_bg:getContentSize().width-10, title_bg:getContentSize().height/2)
         :onButtonClicked(function(event)
-            -- NetManager:impose(NOT_HANDLE)
-            NetManager:getImposePromise():catch(function(err)
-                dump(err:reason())
-            end)
-        end)
-    local item = list_view:newItem()
-    item:addContent(widget)
-    item:setItemSize(widget:getContentSize().width, widget:getContentSize().height + 10)
+            NetManager:getAddDailyQuestStarPromise(quest.id)
+        end):scale(0.6)
 
-    function item:GetLineByIndex(index)
-        return lineItems[index]
-    end
-    function item:RefreshImpose()
-        local citizen, tax, time = townHall.town_hall:GetImposeInfo()
-        self:GetLineByIndex(1):SetLabel(tostring(citizen))
-        self:GetLineByIndex(2):SetLabel(tostring(tax))
-        self:GetLineByIndex(3):SetLabel(GameUtils:formatTimeStyle1(time))
-        return self
-    end
-    return item
-end
+    local glass_icon = display.newSprite("hourglass_39x46.png")
+        :align(display.RIGHT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width, icon_bg:getPositionY()-20)
+        :addTo(body)
+        :scale(0.8)
 
-function GameUITownHall:CreateTimerItemWithListView(list_view)
-    local widget = WidgetWithBlueTitle.new(242, _("税收")):align(display.CENTER)
-    local size = widget:getContentSize()
-    cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("获得银币"),
+    local need_time_label = UIKit:ttfLabel({
+        text = "222",
         size = 20,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0x403c2f)
-    }):addTo(widget, 2):align(display.LEFT_CENTER, 40, size.height - 80)
-    cc.ui.UIImage.new("coin_icon.png"):addTo(widget, 2):align(display.CENTER, 300, size.height - 80):scale(0.25)
-    local label = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "20000",
-        size = 20,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0x403c2f)
-    }):addTo(widget, 2):align(display.LEFT_CENTER, 300 + 20, size.height - 80)
+        color = 0x403c2f,
+    }):align(display.LEFT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width, icon_bg:getPositionY()-20):addTo(body)
 
+    local progress = WidgetProgress.new(UIKit:hex2c3b(0xffedae), "progress_bar_272x40_1.png", "progress_bar_272x40_2.png", {
+        icon_bg = "progress_bg_head_43x43.png",
+        icon = "hourglass_39x46.png",
+        bar_pos = {x = 0,y = 0}
+    }):addTo(body):align(display.LEFT_CENTER, icon_bg:getPositionX()+ icon_bg:getContentSize().width-25, icon_bg:getPositionY()-20)
 
-    local progress = WidgetProgress.new():addTo(widget, 2)
-        :align(display.LEFT_CENTER, 60, size.height - 125)
+    local control_btn = WidgetPushButton.new()
+        :align(display.RIGHT_CENTER,item_width-10,108)
+        :addTo(body)
 
-    WidgetPushButton.new({normal = "green_btn_up_148x56.png", pressed = "green_btn_down_148x56.png"})
-        :setButtonLabel(cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("加速"),
-            size = 24,
-            font = UIKit:getFontFilePath(),
-            color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(widget, 2):align(display.CENTER, size.width - 120, size.height - 110)
-        :onButtonClicked(function(event)
-            end)
+    local reward_bg = display.newSprite("back_ground_548x52.png"):pos(item_width/2,34):addTo(body)
 
-    local item = list_view:newItem()
-    item:addContent(widget)
-    item:setItemSize(widget:getContentSize().width, widget:getContentSize().height + 10)
-
-    function item:SetProgressInfo(label, percent)
-        progress:SetProgressInfo(label, percent)
-        return self
-    end
-    function item:SetNumberLabel(str)
-        if label:getString() ~= str then
-            label:setString(str)
+    local TownHallUI = self
+    function item:SetStar(quest)
+        star_bar:setNum(quest.star)
+        if quest.star == 5 then
+            add_star_btn:setVisible(false)
+            star_bar:setPositionX(title_bg:getContentSize().width-10)
         end
         return self
     end
-    function item:RefreshByEvent(event, current_time)
-        return self:SetNumberLabel(event:Value())
-            :SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(current_time)),
-                event:Percent(current_time))
+    function item:SetStatus(quest)
+        local status = ""
+        if User:IsQuestStarted(quest) then
+            if User:IsQuestFinished(quest) then
+                progress:setVisible(false)
+                glass_icon:setVisible(false)
+                status = _("任务完成")
+                control_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, "yellow_btn_up_148x58.png", true)
+                control_btn:setButtonImage(cc.ui.UIPushButton.PRESSED,"yellow_btn_down_148x58.png", true)
+                control_btn:setButtonLabel(
+                    UIKit:commonButtonLable({
+                        color = 0xfff3c7,
+                        text  = _("获取奖励")
+                    })
+                ):onButtonClicked(function(event)
+                    NetManager:getDailyQeustRewardPromise(quest.id)
+                    TownHallUI.isFinishedQuest = false
+                end)
+            else
+                progress:setVisible(true)
+                status = _("正在处理政务")
+                control_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, "green_btn_up_148x58.png", true)
+                control_btn:setButtonImage(cc.ui.UIPushButton.PRESSED,"green_btn_down_148x58.png", true)
+                control_btn:setButtonLabel(
+                    UIKit:commonButtonLable({
+                        color = 0xfff3c7,
+                        text  = _("加速")
+                    })
+                ):onButtonClicked(function(event)
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("暂无加速功能"))
+                        :AddToCurrentScene()
+                end)
+            end
+            need_time_label:setVisible(false)
+            add_star_btn:setVisible(false)
+        else
+            control_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, "yellow_btn_up_148x58.png", true)
+            control_btn:setButtonImage(cc.ui.UIPushButton.PRESSED,"yellow_btn_down_148x58.png", true)
+            control_btn:setButtonLabel(
+                UIKit:commonButtonLable({
+                    color = 0xfff3c7,
+                    text  = _("开始")
+                })
+            ):onButtonClicked(function(event)
+                if TownHallUI.isFinishedQuest then
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("请先领取已经完成的任务的奖励"))
+                        :AddToCurrentScene()
+                    return
+                end
+                if TownHallUI.started_quest_item then
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("已经有一个任务正在进行中"))
+                        :AddToCurrentScene()
+                    return
+                end
+                NetManager:getStartDailyQuestPromise(quest.id)
+            end)
+
+            add_star_btn:setVisible(true)
+            star_bar:setPositionX(title_bg:getContentSize().width-50)
+            status = _("需要")
+            need_time_label:setString(GameUtils:formatTimeStyle1(GameDatas.DailyQuests.dailyQuestStar[quest.star].needMinutes*60))
+            progress:setVisible(false)
+        end
+        status_label:setString(status)
+        return self
     end
-    return item
+    function item:SetProgress(time_label, percent)
+        progress:SetProgressInfo(time_label, percent)
+        return self
+    end
+    function item:SetReward(quest)
+        reward_bg:removeAllChildren()
+        local quest = quest or self:GetQuest()
+        local re_label = UIKit:ttfLabel({
+            text = _("奖励"),
+            size = 20,
+            color = 0x403c2f,
+        }):align(display.LEFT_CENTER,10,reward_bg:getContentSize().height/2):addTo(reward_bg)
+        local rewards = GameDatas.DailyQuests.dailyQuests[quest.index].rewards
+        local origin_x = re_label:getPositionX()+re_label:getContentSize().width + 30
+        for k,v in pairs(string.split(rewards,",")) do
+            local re = string.split(v,":")
+            local reward_icon = display.newSprite(UILib.resource[re[2]]):addTo(reward_bg):pos(origin_x+(k-1)*180,reward_bg:getContentSize().height/2)
+            local max = math.max(reward_icon:getContentSize().width,reward_icon:getContentSize().height)
+            reward_icon:scale(40/max)
+
+            UIKit:ttfLabel({
+                text = re[3]*quest.star*(1+0.2*TownHallUI.town_hall:GetLevel()),
+                size = 20,
+                color = 0x403c2f,
+            }):align(display.LEFT_CENTER,reward_icon:getPositionX()+20,reward_bg:getContentSize().height/2):addTo(reward_bg)
+        end
+        return self
+    end
+    function item:BindQuest(quest )
+        self.quest = quest
+    end
+    function item:GetQuest()
+        return self.quest
+    end
+    function item:Init(quest)
+        self:BindQuest(quest)
+        self:SetReward(quest)
+        self:SetStar(quest)
+        need_time_label:setString(GameUtils:formatTimeStyle1(GameDatas.DailyQuests.dailyQuestStar[quest.star].needMinutes*60))
+        if User:IsQuestStarted(quest) then
+            if User:IsQuestFinished(quest) then
+                TownHallUI.isFinishedQuest = true
+            else
+                TownHallUI.started_quest_item = self
+            end
+        end
+    end
+    item:Init(quest)
+    item:SetStatus(quest)
+
+    item:addContent(body)
+    list:addItem(item,index)
+
+    self.quest_items[quest.id] = item
 end
 
--- function GameUITownHall:CreateGetItemWithListView(list_view)
---     local widget = WidgetWithBlueTitle.new(180, _("税收")):align(display.CENTER)
---     local size = widget:getContentSize()
-
---     cc.ui.UILabel.new({
---         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
---         text = "征收银币完成",
---         size = 24,
---         font = UIKit:getFontFilePath(),
---         align = cc.ui.TEXT_ALIGN_RIGHT,
---         color = UIKit:hex2c3b(0x403c2f)
---     }):addTo(widget, 2):align(display.LEFT_CENTER, 40, size.height - 90)
-
---     cc.ui.UILabel.new({
---         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
---         text = "获得银币",
---         size = 20,
---         font = UIKit:getFontFilePath(),
---         align = cc.ui.TEXT_ALIGN_RIGHT,
---         color = UIKit:hex2c3b(0x615b44)
---     }):addTo(widget, 2):align(display.LEFT_CENTER, 40, size.height - 135)
---     cc.ui.UIImage.new("coin_icon.png"):addTo(widget, 2):align(display.CENTER, 200, size.height - 135):scale(0.25)
---     local get_label = cc.ui.UILabel.new({
---         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
---         size = 20,
---         font = UIKit:getFontFilePath(),
---         align = cc.ui.TEXT_ALIGN_RIGHT,
---         color = UIKit:hex2c3b(0x403c2f)
---     }):addTo(widget, 2):align(display.LEFT_CENTER, 200 + 20, size.height - 135)
-
---     WidgetPushButton.new(
---         {normal = "yellow_btn_up_185x65.png", pressed = "yellow_btn_down_185x65.png"},
---         {scale9 = false}
---     ):setButtonLabel(cc.ui.UILabel.new({
---         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
---         text = _("获得"),
---         size = 24,
---         font = UIKit:getFontFilePath(),
---         color = UIKit:hex2c3b(0xfff3c7)}))
---         :addTo(widget, 2):align(display.CENTER, size.width - 120, size.height - 120)
---         :onButtonClicked(function(event)
---             -- self.town_hall:GetTax()
---         end)
-
---     local item = list_view:newItem()
---     item:addContent(widget)
---     item:setItemSize(widget:getContentSize().width, widget:getContentSize().height + 10)
+function GameUITownHall:CreateDwellingItemWithListView()
+    local widget = WidgetInfoWithTitle.new({
+        title = _("周围2格范围的住宅数量"),
+        h = 146,
+    }):align(display.CENTER)
+    local size = widget:getContentSize()
+    local lineItems = {}
+    for i, v in ipairs({1,2}) do
+        table.insert(lineItems, self:CreateDwellingLineItem(520,i==1):addTo(widget.info_bg, 2)
+            :pos(size.width/2, 32+(i-1)*40))
+    end
 
 
---     function item:SetGetLabel(str)
---         if get_label:getString() ~= str then
---             get_label:setString(str)
---         end
---         return self
---     end
 
---     return item
--- end
+    function widget:GetLineByIndex(index)
+        return lineItems[index]
+    end
+    return widget
+end
+
 
 function GameUITownHall:CreateDwellingLineItem(width,flag)
     local left, right = 0, width
@@ -322,10 +369,6 @@ function GameUITownHall:CreateDwellingLineItem(width,flag)
         :setButtonSelected(true)
     check:setTouchEnabled(false)
 
-    -- cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(node, 2)
-    --     :setLayoutSize(570, 3):align(display.CENTER, 0, -20)
-
-
     function node:align()
         assert("you should not use this function for any purpose!")
     end
@@ -339,84 +382,105 @@ function GameUITownHall:CreateDwellingLineItem(width,flag)
     end
     return node
 end
-function GameUITownHall:CreateTaxLineItem(width, param,flag)
-    local left, right = 0, width
-    local node = display.newScale9Sprite(flag and "back_ground_548x40_1.png" or "back_ground_548x40_2.png")
-    node:size(348,40)
-    cc.ui.UIImage.new(param.icon):addTo(node, 2)
-        :align(display.CENTER, left + 40, 20):scale(param.scale)
-    cc.ui.UILabel.new({
-        text = param.title,
-        size = 20,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0x615b44)
-    }):addTo(node, 2):align(display.LEFT_CENTER, left + 70, 20)
 
-    local label = cc.ui.UILabel.new({
-        text = "增加 5% 城民增长",
-        size = 20,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0x615b44)
-    }):addTo(node, 2):align(display.RIGHT_CENTER, right - 30, 20)
-
-    -- cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(node, 2)
-    --     :setLayoutSize(570, 3):align(display.CENTER, 0, -5)
-
-    function node:align()
-        assert("you should not use this function for any purpose!")
-    end
-    function node:SetLabel(str)
-        if label:getString() ~= str then
-            label:setString(str)
+function GameUITownHall:OnTimer(current_time)
+    if self.refresh_time then
+        if User:GetNextDailyQuestsRefreshTime()-current_time<=0 then
+            self:ResetQuest()
+        else
+            self.refresh_time:setString(GameUtils:formatTimeStyle1(User:GetNextDailyQuestsRefreshTime()-current_time))
         end
-        return self
     end
-    return node
+
+    if self.started_quest_item then
+        local quest = self.started_quest_item:GetQuest()
+        if User:IsQuestFinished(quest) then
+            self.started_quest_item = nil
+            return
+        end
+        self.started_quest_item:SetProgress(GameUtils:formatTimeStyle1(quest.finishTime/1000-current_time), 100-(quest.finishTime-current_time*1000)/(quest.finishTime-quest.startTime)*100 )
+    end
+end
+function GameUITownHall:GetQuestItemById( questId )
+    return self.quest_items[questId]
+end
+function GameUITownHall:RemoveQuestItemById( questId )
+    local item = self.quest_items[questId]
+    self.quest_list_view:removeItem(item)
+    self.quest_items[questId]  = nil
+end
+function GameUITownHall:ResetQuest()
+    self.quest_items = {}
+    self.quest_list_view:removeAllItems()
+    local daily_quests = User:GetDailyQuests()
+    self:CreateAllQuests(daily_quests)
+end
+function GameUITownHall:OnDailyQuestsRefresh()
+    print("获取到新的任务")
+    self:ResetQuest()
+end
+function GameUITownHall:OnNewDailyQuests(changed_map)
+    if changed_map.add then
+        for k,v in pairs(changed_map.add) do
+            self:CreateQuestItem(v)
+        end
+        self.quest_list_view:reload()
+    end
+    if changed_map.edit then
+        for k,v in pairs(changed_map.edit) do
+            local quest_item = self:GetQuestItemById(v.id)
+            quest_item:Init(v)
+        end
+    end
+    if changed_map.remove then
+        for k,v in pairs(changed_map.remove) do
+            self:RemoveQuestItemById(v.id)
+        end
+    end
+end
+function GameUITownHall:OnNewDailyQuestsEvent(changed_map)
+    if changed_map.add then
+        local finished_quest_num = 0
+        for k,v in pairs(self.quest_items) do
+            if User:IsQuestFinished(v:GetQuest()) then
+                finished_quest_num = finished_quest_num + 1
+            end
+        end
+        for k,v in pairs(changed_map.add) do
+            self:CreateQuestItem(v,finished_quest_num+1)
+        end
+        self.quest_list_view:reload()
+    end
+    if changed_map.edit then
+        for k,v in pairs(changed_map.edit) do
+            local quest_item = self:GetQuestItemById(v.id)
+            quest_item:Init(v)
+        end
+    end
+    if changed_map.remove then
+        for k,v in pairs(changed_map.remove) do
+            self:RemoveQuestItemById(v.id)
+        end
+    end
+end
+
+function GameUITownHall:OnBuildingUpgradingBegin()
+
+end
+function GameUITownHall:OnBuildingUpgradeFinished()
+    for k,v in pairs(self.quest_items) do
+        v:SetReward()
+    end
+end
+function GameUITownHall:OnBuildingUpgrading()
+
 end
 
 
+
+
+
 return GameUITownHall
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

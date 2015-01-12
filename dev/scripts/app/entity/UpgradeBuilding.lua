@@ -318,7 +318,7 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     elseif #config == level then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.IS_MAX_LEVEL
     end
-    local gem = city.resource_manager:GetGemResource():GetValue()
+    local gem = city:GetUser():GetGemResource():GetValue()
     if isUpgradeNow then
         if gem<self:getUpgradeNowNeedGems() then
             return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH

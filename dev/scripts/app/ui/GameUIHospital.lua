@@ -237,7 +237,7 @@ function GameUIHospital:TreatListener()
     if #soldiers<1 then
         local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("没有伤兵需要治愈")):AddToCurrentScene()
-    elseif City:GetResourceManager():GetGemResource():GetValue()< self.building:GetTreatGems(soldiers) then
+    elseif City:GetUser():GetGemResource():GetValue()< self.building:GetTreatGems(soldiers) then
         local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("没有足够的宝石补充资源")):AddToCurrentScene()
     elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING_AND_LACK_RESOURCE then
@@ -284,7 +284,7 @@ function GameUIHospital:TreatNowListener()
     if #soldiers<1 then
         local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("没有伤兵需要治愈")):AddToCurrentScene()
-    elseif self.treat_all_now_need_gems>City:GetResourceManager():GetGemResource():GetValue() then
+    elseif self.treat_all_now_need_gems>City:GetUser():GetGemResource():GetValue() then
         local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("宝石补足")):AddToCurrentScene()
     else

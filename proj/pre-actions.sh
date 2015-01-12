@@ -4,7 +4,26 @@ export LocalBin="/usr/local/bin/"
 export PATH=$LocalBin:$PATH
 
 DOCROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+VERSION_FILE=$DOCROOT/../dev/scripts/debug_version.lua
 DESTROOT=$DOCROOT/../update
+#clean
+echo "------------------------------------"
+echo "->Clean the update folder"
+cd $DESTROOT
+rm -rf *
+cd $DOCROOT/
+echo "------------------------------------"
+echo "->Clean Success!"
+cd $DOCROOT/../
+#获取内部版本
+TIME_VERSION=`git log -n 1 --pretty=format:'%ad' --date=raw | awk '{print $1}'`
+echo "------------------------------------"
+echo "->Debug Version: " $TIME_VERSION
+echo "local __debugVer = ${TIME_VERSION}
+return __debugVer
+" > $VERSION_FILE
+cd $DOCROOT
+
 RESOURCEROOT=$DOCROOT/../dev
 
 # $QUICK_COCOS2DX_ROOT/bin/compile_scripts.sh  -i ${SRCROOT}/../scripts  -m files -o ${SRCROOT}/../target/scripts -e xxtea_chunk -ek "Cbcm78HuH60MCfA7"

@@ -3,16 +3,26 @@ local UIPageView = import("..ui.UIPageView")
 local window = import("..utils.window")
 local GameUIPVEHome = UIKit:createUIClass('GameUIPVEHome')
 
-function GameUIPVEHome:ctor()
+local timer = app.timer
+function GameUIPVEHome:ctor(user)
+    self.user = user
     GameUIPVEHome.super.ctor(self)
 end
 function GameUIPVEHome:onEnter()
     self:CreateTop()
     self:CreateBottom()
+    self.user:AddListenOnType(self, self.user.LISTEN_TYPE.RESOURCE)
+    self:OnResourceChanged(self.user)
 end
 function GameUIPVEHome:onExit()
+    self.user:RemoveListenerOnType(self, self.user.LISTEN_TYPE.RESOURCE)
 end
-
+function GameUIPVEHome:OnResourceChanged(user)
+    local strength_resouce = user:GetStrengthResource()
+    local current_strength = strength_resouce:GetResourceValueByCurrentTime(timer:GetServerTime())
+    local limit = strength_resouce:GetValueLimit()
+    self.strenth:setString(string.format("%d/%d", current_strength, limit))
+end
 function GameUIPVEHome:CreateTop()
     local top_bg = display.newSprite("head_bg.png")
         :align(display.TOP_CENTER, window.cx, window.top)
@@ -70,7 +80,7 @@ function GameUIPVEHome:CreateBottom()
     :addTo(bottom_bg, 1):pos(250, display.bottom + 50):scale(0.65)
     display.newSprite("Hero_1.png"):addTo(char_bg):pos(55, 55):scale(0.9)
 
-    self.exploring = UIKit:ttfLabel({text = string.format("[%s] %s", "", User and User:Name() or "gaozhou"),
+    self.tag = UIKit:ttfLabel({text = string.format("[%s] %s", "", User and User:Name() or "gaozhou"),
         size = 20,
         color = 0xffedae,
     }):addTo(bottom_bg):align(display.LEFT_CENTER, 300, display.bottom + 65)
@@ -81,7 +91,7 @@ function GameUIPVEHome:CreateBottom()
     local label_bg = display.newSprite("label_background_146x25.png")
     :addTo(bottom_bg):align(display.LEFT_CENTER, 315, display.bottom + 25)
 
-    self.exploring = UIKit:ttfLabel({text = "9,999,999",
+    self.gem = UIKit:ttfLabel({text = "9,999,999",
         size = 20,
         color = 0xbdb582,
     }):addTo(label_bg):align(display.LEFT_CENTER, 20, 13)
@@ -94,7 +104,7 @@ function GameUIPVEHome:CreateBottom()
     local label_bg = display.newSprite("label_background_146x25.png")
     :addTo(bottom_bg):align(display.LEFT_CENTER, 515, display.bottom + 25)
 
-    self.exploring = UIKit:ttfLabel({text = "100/100",
+    self.strenth = UIKit:ttfLabel({text = "100/100",
         size = 20,
         color = 0xbdb582,
     }):addTo(label_bg):align(display.LEFT_CENTER, 20, 13)

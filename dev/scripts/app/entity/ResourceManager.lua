@@ -9,7 +9,7 @@ local ResourceManager = class("ResourceManager", Observer)
 
 ResourceManager.RESOURCE_TYPE = Enum(
     "BLOOD",
-    "ENERGY",
+    -- "ENERGY",
     "WOOD",
     "FOOD",
     "IRON",
@@ -20,7 +20,6 @@ ResourceManager.RESOURCE_TYPE = Enum(
     "BERYL",            -- 绿宝石
     "SAPPHIRE",         -- 蓝宝石
     "TOPAZ",            -- 黄宝石
-    "GEM",
     "WALLHP")              -- 玩家宝石
 
 local ENERGY = ResourceManager.RESOURCE_TYPE.ENERGY
@@ -30,26 +29,23 @@ local IRON = ResourceManager.RESOURCE_TYPE.IRON
 local STONE = ResourceManager.RESOURCE_TYPE.STONE
 local POPULATION = ResourceManager.RESOURCE_TYPE.POPULATION
 local COIN = ResourceManager.RESOURCE_TYPE.COIN
-local GEM = ResourceManager.RESOURCE_TYPE.GEM
 local BLOOD = ResourceManager.RESOURCE_TYPE.BLOOD
 local WALLHP = ResourceManager.RESOURCE_TYPE.WALLHP
 
 function ResourceManager:ctor()
     ResourceManager.super.ctor(self)
     self.resources = {
-        [ENERGY] = AutomaticUpdateResource.new(),
+        -- [ENERGY] = AutomaticUpdateResource.new(),
         [WOOD] = AutomaticUpdateResource.new(),
         [FOOD] = AutomaticUpdateResource.new(),
         [IRON] = AutomaticUpdateResource.new(),
         [STONE] = AutomaticUpdateResource.new(),
         [POPULATION] = PopulationAutomaticUpdateResource.new(),
         [COIN] = Resource.new(),
-        [GEM] = Resource.new(),
         [BLOOD] = Resource.new(),
         [WALLHP] = AutomaticUpdateResource.new(),
     }
-    self:GetGemResource():SetValueLimit(math.huge) -- 会有人充值这么多的宝石吗？
-    self:GetCoinResource():SetValueLimit(math.huge) -- 会有人充值这么多的宝石吗？
+    self:GetCoinResource():SetValueLimit(math.huge)
 
     self.resource_citizen = {
         [WOOD] = 0,
@@ -70,34 +66,31 @@ function ResourceManager:UpdateResourceByTime(current_time)
     end
 end
 function ResourceManager:GetWallHpResource()
-    return self:GetResourceByType(WALLHP)
+    return self.resources[WALLHP]
 end
-function ResourceManager:GetEnergyResource()
-    return self:GetResourceByType(ENERGY)
-end
+-- function ResourceManager:GetEnergyResource()
+--     return self.resources[ENERGY]
+-- end
 function ResourceManager:GetWoodResource()
-    return self:GetResourceByType(WOOD)
+    return self.resources[WOOD]
 end
 function ResourceManager:GetFoodResource()
-    return self:GetResourceByType(FOOD)
+    return self.resources[FOOD]
 end
 function ResourceManager:GetIronResource()
-    return self:GetResourceByType(IRON)
+    return self.resources[IRON]
 end
 function ResourceManager:GetStoneResource()
-    return self:GetResourceByType(STONE)
+    return self.resources[STONE]
 end
 function ResourceManager:GetPopulationResource()
-    return self:GetResourceByType(POPULATION)
-end
-function ResourceManager:GetGemResource()
-    return self:GetResourceByType(GEM)
+    return self.resources[POPULATION]
 end
 function ResourceManager:GetCoinResource()
-    return self:GetResourceByType(COIN)
+    return self.resources[COIN]
 end
 function ResourceManager:GetBloodResource()
-    return self:GetResourceByType(BLOOD)
+    return self.resources[BLOOD]
 end
 function ResourceManager:GetResourceByType(RESOURCE_TYPE)
     return self.resources[RESOURCE_TYPE]
@@ -118,11 +111,11 @@ function ResourceManager:OnBuildingChangedFromCity(city, current_time)
     }
     local dragonEyrie = city:GetFirstBuildingByType("dragonEyrie")
     local wallBuilding = city:GetGate()
-    local energy_production_per_hour = dragonEyrie:GetProductionPerHour()
+    -- local energy_production_per_hour = dragonEyrie:GetProductionPerHour()
     local wall_hp_production_per_hour = wallBuilding:GetWallConfig().wallRecovery
 
     local total_production_map = {
-        [ENERGY] = energy_production_per_hour or 0,
+        -- [ENERGY] = energy_production_per_hour or 0,
         [WOOD] = 0,
         [FOOD] = 0,
         [IRON] = 0,
@@ -131,11 +124,11 @@ function ResourceManager:OnBuildingChangedFromCity(city, current_time)
         [WALLHP] = wall_hp_production_per_hour or 0,
     }
 
-    local max_energy = dragonEyrie:EnergyMax()
+    -- local max_energy = dragonEyrie:EnergyMax()
     local max_wood, max_food, max_iron, max_stone = city:GetFirstBuildingByType("warehouse"):GetResourceValueLimit()
     local wall_max_hp = wallBuilding:GetWallConfig().wallHp
     local total_limit_map = {
-        [ENERGY] = max_energy,
+        -- [ENERGY] = max_energy,
         [WOOD] = max_wood,
         [FOOD] = max_food,
         [IRON] = max_iron,

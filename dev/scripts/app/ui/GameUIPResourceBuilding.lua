@@ -192,8 +192,8 @@ function GameUIPResourceBuilding:RebuildPart()
         },
         {
             _("魔法石"),
-            string.format("%d/100",City:GetResourceManager():GetGemResource():GetValue()),
-            City:GetResourceManager():GetGemResource():GetValue()>need_gems and "upgrade_mark.png" or "upgrade_prohibited.png"
+            string.format("%d/100",City:GetUser():GetGemResource():GetValue()),
+            City:GetUser():GetGemResource():GetValue()>need_gems and "upgrade_mark.png" or "upgrade_prohibited.png"
         },
     }
     -- bg

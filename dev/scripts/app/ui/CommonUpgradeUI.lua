@@ -199,7 +199,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
     elseif self.building:GetType()=="hospital" then
         efficiency = string.format("%s%d,%s+%d",bd.maxCasualty,building:GetNextLevelMaxCasualty(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="townHall" then
-        efficiency = string.format("%s%d,%s%d",bd.townHall_dwelling,building:GetNextLevelDwellingNum(),bd.totalTax,building:GetNextLevelTotalTax())
+        efficiency = string.format("%s%d",bd.townHall_dwelling,building:GetNextLevelDwellingNum())
     elseif self.building:GetType()=="dwelling" then
         efficiency = string.format("%s%d,%s+%d,%s+%d",bd.dwelling_citizen,building:GetNextLevelCitizen(),bd.recoveryCitizen,building:GetNextLevelRecoveryCitizen(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="woodcutter" then
@@ -632,7 +632,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
     self:getParent():addChild(dialog,100,101)
     if can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH then
         local required_gems =self.building:getUpgradeRequiredGems()
-        local owen_gem = City.resource_manager:GetGemResource():GetValue()
+        local owen_gem = City:GetUser():GetGemResource():GetValue()
         dialog:SetTitle(_("补充资源"))
         dialog:SetPopMessage(_("您当前没有足够的资源,是否花费魔法石立即补充"))
 
