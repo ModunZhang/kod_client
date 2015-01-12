@@ -4,7 +4,7 @@ local Observer = import("..entity.Observer")
 local AllianceView = import(".AllianceView")
 local MapLayer = import(".MapLayer")
 local MultiAllianceLayer = class("MultiAllianceLayer", MapLayer)
-local ZORDER = Enum("BACKGROUND", "ALLIANCE_TERRAIN_BOTTOM", "ALLIANCE_TERRAIN_TOP", "BUILDING", "LINE", "CORPS")
+local ZORDER = Enum("BACKGROUND", "BUILDING", "LINE", "CORPS")
 local floor = math.floor
 
 MultiAllianceLayer.ARRANGE = Enum("H", "V")
@@ -19,8 +19,6 @@ function MultiAllianceLayer:ctor(arrange, ...)
     self.arrange = arrange
     self.alliances = {...}
     self:InitBackground()
-    self:InitTerrianBottomNode()
-    self:InitTerrianTopNode()
     self:InitBuildingNode()
     self:InitCorpsNode()
     self:InitLineNode()
@@ -60,12 +58,6 @@ function MultiAllianceLayer:InitBackground()
         self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_v.tmx"):addTo(self, ZORDER.BACKGROUND)
     end
 end
-function MultiAllianceLayer:InitTerrianBottomNode()
-    self.terrain_bottom = display.newNode():addTo(self, ZORDER.ALLIANCE_TERRAIN_BOTTOM)
-end
-function MultiAllianceLayer:InitTerrianTopNode()
-    self.terrain_top = display.newNode():addTo(self, ZORDER.ALLIANCE_TERRAIN_TOP)
-end
 function MultiAllianceLayer:InitBuildingNode()
     self.building = display.newNode():addTo(self, ZORDER.BUILDING)
 end
@@ -76,12 +68,6 @@ end
 function MultiAllianceLayer:InitLineNode()
     self.lines = display.newNode():addTo(self, ZORDER.LINE)
     self.lines_map = {}
-end
-function MultiAllianceLayer:GetBottomTerrain()
-    return self.terrain_bottom
-end
-function MultiAllianceLayer:GetTopTerrain()
-    return self.terrain_top
 end
 function MultiAllianceLayer:GetBuildingNode()
     return self.building
