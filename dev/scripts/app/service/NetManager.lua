@@ -817,10 +817,10 @@ function NetManager:getStartDailyQuestPromise(questId)
      "开始一个每日任务失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 领取每日任务奖励
-function NetManager:getDailyQeustRewardPromise(questId)
+function NetManager:getDailyQeustRewardPromise(questEventId)
     return promise.all(get_blocking_request_promise("logic.playerHandler.getDailyQeustReward", 
         {
-            questId = questId
+            questEventId = questEventId
         },
      "领取每日任务奖励失败!"), get_playerdata_callback()):next(get_response_msg)
 end
