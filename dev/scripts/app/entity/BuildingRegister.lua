@@ -11,13 +11,13 @@ local BuildingRegister = {
     quarrier 		= import("..entity.StoneResourceUpgradeBuilding"),
     dwelling 		= import("..entity.PopulationResourceUpgradeBuilding"),
     dragonEyrie     = import("..entity.DragonEyrieUpgradeBuilding"),
-    armyCamp        = import("..entity.ArmyCampUpgradeBuilding"),
     materialDepot   = import("..entity.MaterialDepotUpgradeBuilding"),
     foundry         = import("..entity.PResourceUpgradeBuilding"),
     stoneMason      = import("..entity.PResourceUpgradeBuilding"),
     lumbermill      = import("..entity.PResourceUpgradeBuilding"),
     mill            = import("..entity.PResourceUpgradeBuilding"),
     townHall 	    = import("..entity.TownHallUpgradeBuilding"),
+    academy         = import("..entity.UpgradeBuilding"),
     hospital 	    = import("..entity.HospitalUpgradeBuilding"),
 }
 setmetatable(BuildingRegister, {__index = function(t, k)

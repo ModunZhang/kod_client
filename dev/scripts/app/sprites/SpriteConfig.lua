@@ -134,6 +134,22 @@ create_building_config(
     "academy"
     ,create_config(MIN_LEVEL, MAX_LEVEL, "academy_214x220.png", offset(20, 120), scale(1))
 )
+create_building_config(
+    "workShop"
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "academy_214x220.png", offset(20, 120), scale(1))
+)
+create_building_config(
+    "trainingGround"
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "academy_214x220.png", offset(20, 120), scale(1))
+)
+create_building_config(
+    "hunterHall"
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "academy_214x220.png", offset(20, 120), scale(1))
+)
+create_building_config(
+    "stable"
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "academy_214x220.png", offset(20, 120), scale(1))
+)
 -- 装饰小屋
 create_building_config(
     "dwelling"
