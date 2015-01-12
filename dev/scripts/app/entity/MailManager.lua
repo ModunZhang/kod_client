@@ -254,7 +254,7 @@ function MailManager:OnSavedMailsChanged( savedMails )
     self.savedMails = savedMails
 end
 function MailManager:OnSendMailsChanged( sendMails )
-    self.sendMails =  sendMails
+    self.sendMails = sendMails
 end
 
 function MailManager:OnNewMailsChanged( mails )
