@@ -502,10 +502,16 @@ function GameUIReplay:onEnter()
     -- self:PlaySoldierBattle(decode_battle(battle))
     if self.report:IsDragonFight() then
         self:PlayDragonBattle():next(function()
-            self:PlaySoldierBattle(decode_battle(battle))
+            self:PlaySoldierBattle(decode_battle(battle)):catch(function(err)
+            dump(err:reason())
+        end)
+        end):catch(function(err)
+            dump(err:reason())
         end)
     else
-        self:PlaySoldierBattle(decode_battle(battle))
+        self:PlaySoldierBattle(decode_battle(battle)):catch(function(err)
+            dump(err:reason())
+        end)
     end
 
 end
