@@ -36,7 +36,7 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 320, window.top - 500)
         :onButtonClicked(function()
-            local current = self.shop_city:GetResourceManager():GetGemResource():GetValue() + add_gem
+            local current = self.shop_city:GetUser():GetGemResource():GetValue() + add_gem
             -- NetManager:sendMsg("gem "..current, NOT_HANDLE)
             cocos_promise.promiseWithCatchError(NetManager:getSendGlobalMsgPromise("gem "..current))
         end)
@@ -57,9 +57,9 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 500)
         :onButtonClicked(function()
-            cocos_promise.promiseWithCatchError(NetManager:getSendGlobalMsgPromise("reset"):next(function()
-                return NetManager:getQuitAlliancePromise()
-            end))
+            cc.UserDefault:getInstance():setStringForKey("udid", math.random(1234567890))
+            cc.UserDefault:getInstance():flush()
+            app:restart()
         end)
 
 
@@ -68,7 +68,7 @@ function GameUIShop:onEnter()
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "帧率",
+        text = "显示帧率",
         size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
@@ -780,41 +780,41 @@ function GameUIShop:onEnter()
             cocos_promise.promiseWithCatchError(
                 -- 增加宝石
                 NetManager:getSendGlobalMsgPromise("gem "..1000000)
-                -- 升级城堡到4级
-                :next(function()
-                    return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
-                end)
-                :next(function()
-                    return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
-                end)
-                :next(function()
-                    return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
-                end)
-                -- 解锁军帐
-                :next(function()
-                    return NetManager:getInstantUpgradeBuildingByLocationPromise(8)
-                end)
-                -- 解锁兵营
-                :next(function()
-                    return NetManager:getInstantUpgradeBuildingByLocationPromise(7)
-                end)
-                -- 招募士兵
-                :next(function()
-                    return NetManager:getInstantRecruitNormalSoldierPromise("swordsman", 20, cb)
-                end)
-                :next(function()
-                    return NetManager:getInstantRecruitNormalSoldierPromise("ranger", 20, cb)
-                end)
-                :next(function()
-                    return NetManager:getInstantRecruitNormalSoldierPromise("catapult", 5, cb)
-                end)
-                :next(function()
-                    return NetManager:getInstantRecruitNormalSoldierPromise("lancer", 5, cb)
-                end)
-                -- 孵化龙
-                :next(function()
-                    return NetManager:getSendGlobalMsgPromise("dragonstar blueDragon 3 ")
-                end)
+                    -- 升级城堡到4级
+                    :next(function()
+                        return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
+                    end)
+                    :next(function()
+                        return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
+                    end)
+                    :next(function()
+                        return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
+                    end)
+                    -- 解锁军帐
+                    :next(function()
+                        return NetManager:getInstantUpgradeBuildingByLocationPromise(8)
+                    end)
+                    -- 解锁兵营
+                    :next(function()
+                        return NetManager:getInstantUpgradeBuildingByLocationPromise(7)
+                    end)
+                    -- 招募士兵
+                    :next(function()
+                        return NetManager:getInstantRecruitNormalSoldierPromise("swordsman", 20, cb)
+                    end)
+                    :next(function()
+                        return NetManager:getInstantRecruitNormalSoldierPromise("ranger", 20, cb)
+                    end)
+                    :next(function()
+                        return NetManager:getInstantRecruitNormalSoldierPromise("catapult", 5, cb)
+                    end)
+                    :next(function()
+                        return NetManager:getInstantRecruitNormalSoldierPromise("lancer", 5, cb)
+                    end)
+                    -- 孵化龙
+                    :next(function()
+                        return NetManager:getSendGlobalMsgPromise("dragonstar blueDragon 3 ")
+                    end)
 
 
             )
@@ -943,6 +943,7 @@ end
 
 
 return GameUIShop
+
 
 
 

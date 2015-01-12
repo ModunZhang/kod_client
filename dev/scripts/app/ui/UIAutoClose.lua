@@ -3,7 +3,10 @@ local UIAutoClose = class("UIAutoClose", function()
     node:setNodeEventEnabled(true)
     node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         if event.name == "began" then
-            node:removeFromParent()
+            if node.disable then
+                return 
+            end
+            node:leftButtonClicked()
         end
         return true
     end)
@@ -18,7 +21,7 @@ function UIAutoClose:addTouchAbleChild(body)
     self:addChild(body)
 end
 function UIAutoClose:addToScene(scene,anima)
-    print("addToScene->",tolua.type(scene))
+    print("addToScene->",tolua.type(scene),scene)
     anima = false
     if scene and tolua.type(scene) == 'cc.Scene' then
         scene:addChild(self, 2000)
@@ -47,6 +50,9 @@ function UIAutoClose:leftButtonClicked()
             self:onMoveOutStage() -- fix
         end
     end
+end
+function UIAutoClose:DisableAutoClose()
+    self.disable = true
 end
 -- ui入场动画
 function UIAutoClose:UIAnimationMoveIn()

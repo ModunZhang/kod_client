@@ -164,6 +164,15 @@ GameDatas.Buildings = {
 }
 require("app.datas.Buildings_buildings")
 
+GameDatas.DailyQuests = {
+	["dailyQuests"] = {},
+	["dailyQuestStar"] = {},
+	["dailyQuestStyle"] = {},
+}
+require("app.datas.DailyQuests_dailyQuests")
+require("app.datas.DailyQuests_dailyQuestStar")
+require("app.datas.DailyQuests_dailyQuestStyle")
+
 GameDatas.DragonEyrie = {
 	["crown"] = {},
 	["armguardLeft"] = {},
@@ -253,6 +262,8 @@ GameDatas.Houses = {
 require("app.datas.Houses_houses")
 
 GameDatas.PlayerInitData = {
+	["intInit"] = {},
+	["floatInit"] = {},
 	["resources"] = {},
 	["materials"] = {},
 	["soldierMaterials"] = {},
@@ -262,6 +273,8 @@ GameDatas.PlayerInitData = {
 	["vipLevel"] = {},
 	["collectLevel"] = {},
 }
+require("app.datas.PlayerInitData_intInit")
+require("app.datas.PlayerInitData_floatInit")
 require("app.datas.PlayerInitData_resources")
 require("app.datas.PlayerInitData_materials")
 require("app.datas.PlayerInitData_soldierMaterials")

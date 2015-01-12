@@ -25,7 +25,7 @@ function GameUIHome:OnResourceChanged(resource_manager)
     local stone_number = resource_manager:GetStoneResource():GetResourceValueByCurrentTime(timer:GetServerTime())
     local citizen_number = resource_manager:GetPopulationResource():GetNoneAllocatedByTime(timer:GetServerTime())
     local coin_number = resource_manager:GetCoinResource():GetValue()
-    local gem_number = resource_manager:GetGemResource():GetValue()
+    local gem_number = self.city:GetUser():GetGemResource():GetValue()
     self.wood_label:setString(GameUtils:formatNumber(wood_number))
     self.food_label:setString(GameUtils:formatNumber(food_number))
     self.iron_label:setString(GameUtils:formatNumber(iron_number))
@@ -51,7 +51,7 @@ function GameUIHome:onEnter()
     local rect1 = self.chat_bg:getCascadeBoundingBox()
     local rect2 = self.event_tab:getCascadeBoundingBox()
     local ratio = self.bottom:getScale()
-    local x, y = rect1.x + rect1.width - rect2.width - 8 * ratio, rect1.y + rect1.height - 2 * ratio
+    local x, y = rect1.x + rect1.width - rect2.width + 2 * ratio, rect1.y + rect1.height - 2 * ratio
     local line = display.newSprite("back_ground_492X14.png")
     line:addTo(self, 0):align(display.LEFT_TOP, x, y)
     self.event_tab:addTo(self, 0):pos(x, y)
@@ -442,6 +442,7 @@ function GameUIHome:OnBottomButtonClicked(event)
     elseif tag == 3 then
         UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
     elseif tag == 2 then
+        app:EnterPVEScene()
     end
 end
 

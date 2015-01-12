@@ -6,9 +6,11 @@ local WidgetInfoWithTitle = class("WidgetInfoWithTitle", function ()
 end)
 function WidgetInfoWithTitle:ctor(params)
     local info = params.info -- 显示信息
+    local width = params.w or 548
     local height = params.h or 266
+    self:setContentSize(cc.size(width,height))
     self.info_bg = WidgetUIBackGround.new({
-        width = 548,
+        width = width,
         height = height,
         top_img = "back_ground_548x62_top.png",
         bottom_img = "back_ground_548x18_bottom.png",
@@ -24,13 +26,13 @@ function WidgetInfoWithTitle:ctor(params)
         color = 0xffedae
     }):align(display.CENTER,self.info_bg:getContentSize().width/2, self.info_bg:getContentSize().height-25)
         :addTo(self.info_bg)
-    if info then
-        self.info_listview = UIListView.new{
-            -- bgColor = UIKit:hex2c4b(0x7a000000),
-            viewRect = cc.rect(13, 10, 524, height-66),
-            direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
-        }:addTo(self.info_bg)
+    self.info_listview = UIListView.new{
+        -- bgColor = UIKit:hex2c4b(0x7a000000),
+        viewRect = cc.rect(13, 10, 524, height-66),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+    }:addTo(self.info_bg)
 
+    if info then
         self:CreateInfoItems(info)
     end
 end
@@ -83,6 +85,7 @@ function WidgetInfoWithTitle:GetListView()
     return self.info_listview
 end
 return WidgetInfoWithTitle
+
 
 
 

@@ -41,6 +41,7 @@ local function get_blocking_request_promise(request_route, data, m,need_catch)
     --默认后面的处理需要主动catch错误
     need_catch = type(need_catch) == 'boolean' and need_catch or true
     local loading = UIKit:newGameUI("GameUIWatiForNetWork"):addToCurrentScene(true)
+    loading:setLocalZOrder(2001)
     local p =  cocos_promise.promiseWithTimeOut(get_request_promise(request_route, data, m), TIME_OUT):always(function()
         loading:removeFromParent()
     end)
@@ -130,7 +131,7 @@ function NetManager:addKickEventListener()
     self:addEventListener("onKick", function(success, msg)
         print("addKickEventListener----->onKick")
         device.showAlert(nil, _("和服务器的连接已断开!"), {_("确定")}, function(event)
-            dump("msg", msg)
+            dump(msg, "msg")
             app:restart()
         end)
     end)
@@ -164,7 +165,7 @@ onPlayerDataChanged_callbacks = {}
 function NetManager:addPlayerDataChangedEventListener()
     self:addEventListener("onPlayerDataChanged", function(success, msg)
         if success then
-            dump(msg)
+            dump(msg, "onPlayerDataChanged")
             DataManager:setUserData(msg)
         end
         local callback = onPlayerDataChanged_callbacks[1]
@@ -182,7 +183,7 @@ onAllianceDataChanged_callbacks = {}
 function NetManager:addAllianceDataChangedEventListener()
     self:addEventListener("onAllianceDataChanged", function(success, msg)
         if success then
-            dump("onAllianceDataChanged", msg)
+            dump(msg, "onAllianceDataChanged")
             DataManager:setUserAllianceData(msg)
         end
         local callback = onAllianceDataChanged_callbacks[1]
@@ -257,7 +258,7 @@ end
 function NetManager:addOnGetAllianceDataSuccess()
     self:addEventListener("onGetAllianceDataSuccess", function(success, msg)
         if success then
-            dump("onGetAllianceDataSuccess", msg)
+            dump(msg, "onGetAllianceDataSuccess")
             DataManager:setUserAllianceData(msg)
         end
     end)
@@ -289,7 +290,7 @@ function NetManager:addOnGetMailsSuccessListener()
         if success then
             assert(#onGetMailsSuccess_callbacks <= 1, "重复请求过多了!")
 
-            dump("onGetMailsSuccess", msg)
+            dump(msg, "onGetMailsSuccess")
             MailManager:dispatchMailServerData( "onGetMailsSuccess",msg )
             local callback = onGetMailsSuccess_callbacks[1]
             if type(callback) == "function" then
@@ -435,7 +436,7 @@ function NetManager:addLoginEventListener()
                 self.m_netService:setDeltatime(msg.serverTime - ext.now())
                 DataManager:setUserData(msg)
             else
-                dump("onPlayerLoginSuccess", msg)
+                dump(msg, "onPlayerLoginSuccess")
                 self.m_netService:setDeltatime(msg.serverTime - ext.now())
                 local InitGame = import("app.service.InitGame")
                 InitGame(msg)
@@ -516,14 +517,24 @@ function NetManager:getConnectLogicServerPromise()
         self:addOnFetchAllianceViewSuccess()
     end)
 end
+local function getOpenUDID()
+    local device_id
+    local udid = cc.UserDefault:getInstance():getStringForKey("udid")
+    if udid and #udid > 0 then
+        device_id = udid
+    else
+        device_id = device.getOpenUDID()
+    end
+    return device_id
+end
 -- 登录
 function NetManager:getLoginPromise()
     local device_id
     if CONFIG_IS_DEBUG then
         if gaozhou then
-            device_id = "b"
+            device_id = getOpenUDID()
         else
-            device_id = device.getOpenUDID()
+            device_id = getOpenUDID()
         end
     else
         device_id = device.getOpenUDID()
@@ -783,6 +794,35 @@ function NetManager:getUpgradeDragonDragonSkillPromise(dragonType, skillKey)
         dragonType = dragonType,
         skillKey = skillKey
     }, "升级龙技能失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 获取每日任务列表
+function NetManager:getDailyQuestsPromise()
+    return promise.all(get_blocking_request_promise("logic.playerHandler.getDailyQuests", {},
+     "获取每日任务列表失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 为每日任务中某个任务增加星级
+function NetManager:getAddDailyQuestStarPromise(questId)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.addDailyQuestStar", 
+        {
+            questId = questId
+        },
+     "为每日任务中某个任务增加星级失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 开始一个每日任务
+function NetManager:getStartDailyQuestPromise(questId)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.startDailyQuest", 
+        {
+            questId = questId
+        },
+     "开始一个每日任务失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 领取每日任务奖励
+function NetManager:getDailyQeustRewardPromise(questEventId)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.getDailyQeustReward", 
+        {
+            questEventId = questEventId
+        },
+     "领取每日任务奖励失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 发送个人邮件
 function NetManager:getSendPersonalMailPromise(memberName, title, content)
@@ -1193,7 +1233,7 @@ end
 function NetManager:getAttackPlayerCityPromise(dragonType, soldiers,defencePlayerId)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.attackPlayerCity",
         {defencePlayerId=defencePlayerId,dragonType=dragonType,soldiers = soldiers},"攻打玩家城市失败!"),
-        get_alliancedata_callback()):next(get_response_msg)
+    get_alliancedata_callback()):next(get_response_msg)
 end
 
 --设置驻防使用的龙
@@ -1204,7 +1244,7 @@ function NetManager:getSetDefenceDragonPromise(dragonType)
 end
 --取消龙驻防
 function NetManager:getCancelDefenceDragonPromise()
-     return promise.all(get_none_blocking_request_promise("logic.playerHandler.cancelDefenceDragon",
+    return promise.all(get_none_blocking_request_promise("logic.playerHandler.cancelDefenceDragon",
         nil,
         "取消龙驻防失败!"),get_playerdata_callback()):next(get_response_msg)
 end
@@ -1212,20 +1252,22 @@ end
 function NetManager:getAttackVillagePromise(dragonType,soldiers,defenceAllianceId,defenceVillageId)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.attackVillage",
         {defenceVillageId = defenceVillageId,defenceAllianceId=defenceAllianceId,dragonType=dragonType,soldiers = soldiers},"攻打村落失败!"),
-        get_alliancedata_callback()):next(get_response_msg)
+    get_alliancedata_callback()):next(get_response_msg)
 end
 --从村落撤退
 function NetManager:getRetreatFromVillagePromise(allianceId,eventId)
-      return promise.all(get_blocking_request_promise("logic.allianceHandler.retreatFromVillage",
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.retreatFromVillage",
         {villageEventId = eventId},"村落撤退失败!"),
-        get_alliancedata_callback()):next(get_response_msg)
+    get_alliancedata_callback()):next(get_response_msg)
 end
 --突袭村落
 function NetManager:getStrikeVillagePromise(dragonType,defenceAllianceId,defenceVillageId)
-      return promise.all(get_blocking_request_promise("logic.allianceHandler.strikeVillage",
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.strikeVillage",
         {dragonType = dragonType,defenceAllianceId = defenceAllianceId,defenceVillageId=defenceVillageId},"突袭村落失败!"),
-        get_alliancedata_callback()):next(get_response_msg)
+    get_alliancedata_callback()):next(get_response_msg)
 end
+
+
 --
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"
@@ -1279,3 +1321,4 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+

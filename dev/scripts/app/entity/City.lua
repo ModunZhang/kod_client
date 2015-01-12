@@ -41,6 +41,7 @@ function City:ctor(json_data)
     self.soldier_manager = SoldierManager.new()
     self.material_manager = MaterialManager.new()
 
+    self.belong_user = nil
     self.buildings = {}
     self.walls = {}
     self.towers = {}
@@ -58,10 +59,15 @@ function City:ctor(json_data)
         self:InitWithJsonData(json_data)
     end
 
-
-
     self.upgrading_building_callbacks = {}
     self.finish_upgrading_callbacks = {}
+end
+function City:GetUser(user)
+    return self.belong_user
+end
+function City:SetUser(user)
+    assert(not self.belong_user, "用户一经指定就不可更改")
+    self.belong_user = user
 end
 function City:InitWithJsonData(userData)
     local init_buildings = {}
@@ -657,6 +663,7 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time)
     self:GetGate():OnUserDataChanged(user_data, current_time)
 end
 function City:IteratorResourcesByUserData(resources, current_time)
+    assert(self.belong_user, "未指定用户")
     local resource_manager = self:GetResourceManager()
     if resources.energy then
         resource_manager:GetEnergyResource():UpdateResource(current_time, resources.energy)
@@ -680,7 +687,7 @@ function City:IteratorResourcesByUserData(resources, current_time)
         resource_manager:GetCoinResource():SetValue(resources.coin)
     end
     if resources.gem then
-        resource_manager:GetGemResource():SetValue(resources.gem)
+        self.belong_user:GetGemResource():SetValue(resources.gem)
     end
     if resources.blood then
         resource_manager:GetBloodResource():SetValue(resources.blood)
