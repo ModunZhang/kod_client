@@ -1,6 +1,7 @@
 local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetPushButton = import(".WidgetPushButton")
 local WidgetPopDialog = import(".WidgetPopDialog")
+local Localize = import("..utils.Localize")
 
 local WidgetSelectDragon = class("WidgetSelectDragon", WidgetPopDialog)
 
@@ -27,7 +28,7 @@ function WidgetSelectDragon:ctor(params)
             :addTo(dragon_frame)
         -- 龙，等级
         local dragon_name = UIKit:ttfLabel({
-            text = _(dragon:Type()).."（LV "..dragon:Level().."）",
+            text = Localize.dragon[dragon:Type()] .."（LV "..dragon:Level().."）",
             size = 22,
             color = 0x514d3e,
         }):align(display.LEFT_CENTER,20,100)
@@ -46,6 +47,16 @@ function WidgetSelectDragon:ctor(params)
             color = 0x797154,
         }):align(display.LEFT_CENTER,20,20)
             :addTo(box_bg)
+        -- 龙状态
+        local d_status = dragon:GetLocalizedStatus()
+        local s_color = dragon:IsFree() and 0x007c23 or 0x7e0000
+        local dragon_status = UIKit:ttfLabel({
+            text = d_status,
+            size = 20,
+            color = s_color,
+        }):align(display.RIGHT_CENTER,300,100)
+            :addTo(box_bg)
+        
         return dragon_frame
     end
 
@@ -58,7 +69,7 @@ function WidgetSelectDragon:ctor(params)
     local add_count = 0
     local optional_dragon = {}
     -- 默认选中最强的并且可以出战的龙,如果都不能出战,则默认最强龙
-    local default_dragon_type = dragon_manager:GetCanFightPowerfulDragonType() ~= "" and dragon_manager:GetCanFightPowerfulDragonType() or dragon_manager:GetPowerfulDragonType()
+    local default_dragon_type = params.default_dragon_type or dragon_manager:GetCanFightPowerfulDragonType() ~= "" and dragon_manager:GetCanFightPowerfulDragonType() or dragon_manager:GetPowerfulDragonType()
     local default_select_dragon_indecx
     for k,dragon in ipairs(dragons) do
         if dragon:Level()>0 then
