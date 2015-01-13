@@ -4,6 +4,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetPages = import("..widget.WidgetPages")
 local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetInfo = import("..widget.WidgetInfo")
 local Alliance = import("..entity.Alliance")
 local AllianceMoonGate = import("..entity.AllianceMoonGate")
@@ -201,6 +202,12 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 }))
                 :onButtonClicked(function(event)
                     if event.name == "CLICKED_EVENT" then
+                        if self.alliance:IsRequested() then
+                            FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                                :SetPopMessage(_("已经发送过开战请求"))
+                                :AddToCurrentScene()
+                            return
+                        end
                         NetManager:getRequestAllianceToFightPromose()
                     end
                 end):align(display.RIGHT_CENTER,window.right-50,window.top-280):addTo(layer)
@@ -1150,8 +1157,8 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
         :addTo(body)
     -- 属性背景
     local attr_bg = WidgetUIBackGround.new({height=82,width=556},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
-    :addTo(body)
-    :align(display.CENTER, w/2, h-180)
+        :addTo(body)
+        :align(display.CENTER, w/2, h-180)
 
 
     local function addAttr(title,value,x,y)
@@ -1248,4 +1255,5 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
 
