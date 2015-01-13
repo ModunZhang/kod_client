@@ -214,6 +214,8 @@ onGetPlayerViewDataSuccess_callbacks = {}
 onGetStrikeMarchEventDetail_callbacks = {}
 onGetAttackMarchEventDetail_callbacks = {}
 onGetHelpDefenceMarchEventDetail_callbacks = {}
+onGetHelpDefenceTroopDetail_callbacks = {}
+
 function NetManager:addOnSearchAlliancesSuccessListener()
     self:addEventListener("onSearchAlliancesSuccess", function(success, msg)
         if success then
@@ -466,6 +468,20 @@ function NetManager:addOnGetHelpDefenceMarchEventDetail()
         end
     end)
 end
+function NetManager:addOnGetHelpDefenceTroopDetail()
+    self:addEventListener("onGetHelpDefenceTroopDetail", function(success, msg)
+        if success then
+            assert(#onGetHelpDefenceTroopDetail_callbacks <= 1, "重复getHelpDefenceTroopDetail请求过多了!")
+            local callback = onGetHelpDefenceTroopDetail_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onGetHelpDefenceTroopDetail_callbacks = {}
+        end
+    end)
+end
+
+-- 
 --
 ------------------------------------------------------------------------------------------------
 function NetManager:addLoginEventListener()
@@ -557,6 +573,7 @@ function NetManager:getConnectLogicServerPromise()
         self:addOnGetStrikeMarchEventDetail()
         self:addOnGetAttackMarchEventDetail()
         self:addOnGetHelpDefenceMarchEventDetail()
+        self:addOnGetHelpDefenceTroopDetail()
     end)
 end
 local function getOpenUDID()
@@ -641,7 +658,9 @@ end
 local function get_gethelpdefencemarcheventdetail_callback()
     return  get_callback_promise(onGetHelpDefenceMarchEventDetail_callbacks, "获取协防事件数据失败!")
 end
-
+local function get_gethelpdefencetroopdetail_callback()
+    return  get_callback_promise(onGetHelpDefenceTroopDetail_callbacks, "获取协防事件数据失败!")
+end
 -- 修改城市名字
 function NetManager:getEditPlayerCityNamePromise(cityName)
     return promise.all(get_blocking_request_promise("logic.playerHandler.editPlayerCityName", {
@@ -1332,6 +1351,11 @@ end
 function NetManager:getHelpDefenceMarchEventDetailPromise(eventId)
      return promise.all(get_blocking_request_promise("logic.allianceHandler.getHelpDefenceMarchEventDetail",
         {eventId = eventId},"获取协防事件数据失败!"),get_gethelpdefencemarcheventdetail_callback()):next(get_response_msg)
+end
+--查看协防部队详细信息
+function NetManager:getHelpDefenceTroopDetailPromise(playerId,helpedByPlayerId)
+      return promise.all(get_blocking_request_promise("logic.allianceHandler.getHelpDefenceTroopDetail",
+        {playerId = playerId,helpedByPlayerId = helpedByPlayerId},"查看协防部队详细信息失败!"),get_gethelpdefencetroopdetail_callback()):next(get_response_msg)
 end
 --
 ----------------------------------------------------------------------------------------------------------------

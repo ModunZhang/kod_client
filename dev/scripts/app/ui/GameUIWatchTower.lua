@@ -5,6 +5,7 @@ local window = import("..utils.window")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local UILib = import(".UILib")
+local GameUIWatchTowerTroopDetail = import(".GameUIWatchTowerTroopDetail")
 
 function GameUIWatchTower:ctor(city,building)
     local bn = Localize.building_name
@@ -50,10 +51,8 @@ function GameUIWatchTower:CreateUI()
 end
 
 function GameUIWatchTower:TabButtonsAction(tag)
-	if tag == 'comming' then
-		self.list_node:show()
-		self:RefreshListView(tag)
-	elseif tag == 'march' then
+	if tag == 'comming' 
+		or tag == 'march' then
 		self.list_node:show()
 		self:RefreshListView(tag)
 	else
@@ -351,13 +350,14 @@ function GameUIWatchTower:GetOtherEventItem(entity)
 		color= 0x403c2f
 	}):addTo(bg):align(display.LEFT_BOTTOM,164+ icon_bg:getCascadeBoundingBox().width+8, 20)
 	self.march_timer_label[entity:WithObject():Id()] = timer_label
-	WidgetPushButton.new({normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"})
-		:setButtonLabel(UIKit:commonButtonLable({text = _("详情")}))
-    	:align(display.RIGHT_BOTTOM,555,10):addTo(bg)
-    	:onButtonClicked(function(event)
-    		self:OnEventDetailButtonClicked(entity)
-    	end)
- 	--end
+	if self:CanViewEventDetail() then
+		WidgetPushButton.new({normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"})
+			:setButtonLabel(UIKit:commonButtonLable({text = _("详情")}))
+	    	:align(display.RIGHT_BOTTOM,555,10):addTo(bg)
+	    	:onButtonClicked(function(event)
+	    		self:OnEventDetailButtonClicked(entity)
+	    	end)  
+ 	end
 	item:addContent(bg)
 	item:setItemSize(568, 204)
 	return item
@@ -370,12 +370,14 @@ function GameUIWatchTower:OnEventDetailButtonClicked(entity)
 		if entity:WithObject():MarchType() == "helpDefence" then
 			NetManager:getHelpDefenceMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
 				dump(msg,"msg--->")
-				UIKit:newGameUI("GameUIWatchTowerTroopDetail",self:GetAllianceBelvedere(),msg):addToCurrentScene(true)
+				UIKit:newGameUI("GameUIWatchTowerTroopDetail",msg,GameUIWatchTowerTroopDetail.DATA_TYPE.MARCH,true)
+					:addToCurrentScene(true)
 			end)
 		else
 			NetManager:getAttackMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
 				dump(msg,"msg--->")
-				UIKit:newGameUI("GameUIWatchTowerTroopDetail",self:GetAllianceBelvedere(),msg):addToCurrentScene(true)
+				UIKit:newGameUI("GameUIWatchTowerTroopDetail",msg,GameUIWatchTowerTroopDetail.DATA_TYPE.HELP_DEFENCE,true)
+					:addToCurrentScene(true)
 			end)
 		end
 	elseif strEntityType == entity.ENTITY_TYPE.STRIKE_OUT then
@@ -500,6 +502,11 @@ function GameUIWatchTower:GetEntityDragonType(entity)
 	else
 		return entity:GetDragonType()
 	end
+end
+
+function GameUIWatchTower:CanViewEventDetail()
+	local level = self:GetBuilding():GetLevel()
+	return self:GetAllianceBelvedere():CanViewEventDetail(level)
 end
 
 return GameUIWatchTower
