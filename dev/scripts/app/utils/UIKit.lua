@@ -74,10 +74,10 @@ function UIKit:getFontFilePath()
     return "Droid Sans Faliback.ttf"
 end
 
-function UIKit:getBuildingLocalizedKeyByBuildingType(type)
+function UIKit:getBuildingLocalizedKeyByBuildingType(name)
     local building_config = GameDatas.Buildings.buildings
     for _,v in ipairs(building_config) do
-        if v.type == type then
+        if v.name == name then
             return v.desc
         end
     end
