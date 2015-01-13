@@ -53,8 +53,8 @@ function AllianceView:ctor(layer, alliance, logic_base_x, logic_base_y)
 end
 function AllianceView:onEnter()
     math.randomseed(self:RandomSeed())
-    self:InitAllianceTerrainBottom()
-    self:InitAllianceTerrainTop()
+    -- self:InitAllianceTerrainBottom()
+    -- self:InitAllianceTerrainTop()
     self:InitAlliance()
 end
 function AllianceView:onExit()

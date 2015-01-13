@@ -86,7 +86,7 @@ OBJECT_TITLE[OBJECT_TYPE.ENTRANCE_DOOR] = _('异界之门')
 
 local OBJECT_OP = {}
 OBJECT_OP[OBJECT_TYPE.START_AIRSHIP] = { {label = _("传送")}, {label = _("离开")} }
-OBJECT_OP[OBJECT_TYPE.WOODCUTTER] = { {label = _("进攻")}, {label = _("离开")} }
+OBJECT_OP[OBJECT_TYPE.WOODCUTTER] = { {label = _("进攻"), callback = function(ui) print("hello") ui:removeFromParent() end}, {label = _("离开")} }
 OBJECT_OP[OBJECT_TYPE.QUARRIER] = { {label = _("进攻")}, {label = _("离开")} }
 OBJECT_OP[OBJECT_TYPE.MINER] = { {label = _("进攻")}, {label = _("离开")} }
 OBJECT_OP[OBJECT_TYPE.FARMER] = { {label = _("进攻")}, {label = _("离开")} }
