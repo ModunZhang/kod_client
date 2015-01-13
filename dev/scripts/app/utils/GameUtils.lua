@@ -1,7 +1,13 @@
 GameUtils = {
 
     }
+local pow = math.pow
+local ceil = math.ceil
+local sqrt = math.sqrt
 local floor = math.floor
+local round = function(v)
+    return floor(v + 0.5)
+end
 function GameUtils:formatTimeStyle1(time)
     local seconds = floor(time) % 60
     time = time / 60
@@ -202,15 +208,15 @@ end
 
 function GameUtils:ConvertLocaleToBaiduCode()
     --[[
-	中文	zh	英语	en
-	日语	jp	韩语	kor
-	西班牙语	spa	法语	fra
-	泰语	th	阿拉伯语	ara
-	俄罗斯语	ru	葡萄牙语	pt
-	粤语	yue	文言文	wyw
-	白话文	zh	自动检测	auto
-	德语	de	意大利语	it
-	]]--
+    中文  zh  英语  en
+    日语  jp  韩语  kor
+    西班牙语    spa 法语  fra
+    泰语  th  阿拉伯语    ara
+    俄罗斯语    ru  葡萄牙语    pt
+    粤语  yue 文言文 wyw
+    白话文 zh  自动检测    auto
+    德语  de  意大利语    it
+    ]]--
 
     local localCode  = self:getCurrentLanguage()
     if localCode == 'en_US'  or localCode == 'zh_Hant' then
@@ -358,4 +364,172 @@ function GameUtils:formatTimeStyleDayHour(time,min_day)
 end
 
 
+
+local normal_soldier = GameDatas.UnitsConfig.normal
+local function createSoldiers(name, star, count)
+    return {name = name, star = star, morale = 100, currentCount = count, totalCount = count, woundedCount = 0, round = 0}
+end
+function GameUtils:SoldierSoldierBattle(attackSoldiers, attackWoundedSoldierPercent, defenceSoldiers, defenceWoundedSoldierPercent)
+    local attackResults = {}
+    local defenceResults = {}
+    while #attackSoldiers > 0 and #defenceSoldiers > 0 do
+        local attackSoldier = attackSoldiers[1]
+        local attackSoldierType = string.format("%s_%d", attackSoldier.name, attackSoldier.star)
+        local attackSoldierConfig = normal_soldier[attackSoldierType]
+
+        local defenceSoldier = defenceSoldiers[1]
+        local defenceSoldierType = string.format("%s_%d", defenceSoldier.name, defenceSoldier.star)
+        local defenceSoldierConfig = normal_soldier[defenceSoldierType]
+        --
+        local attackSoldierHp = attackSoldierConfig.hp
+        local attackTotalPower = attackSoldierConfig[defenceSoldierConfig.type] * attackSoldier.currentCount
+
+        local defenceSoldierHp = defenceSoldierConfig.hp
+        local defenceTotalPower = defenceSoldierConfig[attackSoldierConfig.type] * defenceSoldier.currentCount
+        --计算
+        local attackDamagedSoldierCount
+        local defenceDamagedSoldierCount
+        if attackTotalPower >= defenceTotalPower then
+            attackDamagedSoldierCount = round(defenceTotalPower * 0.5 / attackSoldierHp)
+            defenceDamagedSoldierCount = round(sqrt(attackTotalPower * defenceTotalPower) * 0.5 / defenceSoldierHp)
+        else
+            attackDamagedSoldierCount = round(sqrt(attackTotalPower * defenceTotalPower) * 0.5 / attackSoldierHp)
+            defenceDamagedSoldierCount = round(attackTotalPower * 0.5 / defenceSoldierHp)
+        end
+        -- 修正
+        if attackDamagedSoldierCount > attackSoldier.currentCount * 0.7 then
+            attackDamagedSoldierCount = floor(attackSoldier.currentCount * 0.7)
+        end
+        if defenceDamagedSoldierCount > defenceSoldier.currentCount * 0.7 then
+            defenceDamagedSoldierCount = floor(defenceSoldier.currentCount * 0.7)
+        end
+        --
+        local attackMoraleDecreased = ceil(attackDamagedSoldierCount * pow(2, attackSoldier.round - 1) / attackSoldier.totalCount * 100)
+        local attackWoundedSoldierCount = ceil(attackDamagedSoldierCount * attackWoundedSoldierPercent)
+        table.insert(attackResults, {
+            soldierName = attackSoldier.name,
+            soldierStar = attackSoldier.star,
+            soldierCount = attackSoldier.currentCount,
+            soldierDamagedCount = attackDamagedSoldierCount,
+            soldierWoundedCount = attackWoundedSoldierCount,
+            morale = attackSoldier.morale,
+            moraleDecreased = attackMoraleDecreased > attackSoldier.morale and attackSoldier.morale or attackMoraleDecreased,
+            isWin = attackTotalPower >= defenceTotalPower
+        })
+        attackSoldier.round = attackSoldier.round + 1
+        attackSoldier.currentCount = attackSoldier.currentCount - attackDamagedSoldierCount
+        attackSoldier.woundedCount = attackSoldier.woundedCount + attackWoundedSoldierCount
+        attackSoldier.morale = attackSoldier.morale - attackMoraleDecreased
+
+
+        local dfenceMoraleDecreased = ceil(defenceDamagedSoldierCount * pow(2, attackSoldier.round - 1) / defenceSoldier.totalCount * 100)
+        local defenceWoundedSoldierCount = ceil(defenceDamagedSoldierCount * defenceWoundedSoldierPercent)
+        table.insert(defenceResults, {
+            soldierName = defenceSoldier.name,
+            soldierStar = defenceSoldier.star,
+            soldierCount = defenceSoldier.currentCount,
+            soldierDamagedCount = defenceDamagedSoldierCount,
+            soldierWoundedCount = defenceWoundedSoldierCount,
+            morale = defenceSoldier.morale,
+            moraleDecreased = dfenceMoraleDecreased > defenceSoldier.morale and defenceSoldier.morale or dfenceMoraleDecreased,
+            isWin = attackTotalPower < defenceTotalPower
+        })
+        defenceSoldier.round = defenceSoldier.round + 1
+        defenceSoldier.currentCount = defenceSoldier.currentCount - defenceDamagedSoldierCount
+        defenceSoldier.woundedCount = defenceSoldier.woundedCount + defenceWoundedSoldierCount
+        defenceSoldier.morale = defenceSoldier.morale - dfenceMoraleDecreased
+
+
+        if attackTotalPower < defenceTotalPower or attackSoldier.morale <= 20 or attackSoldier.currentCount == 0 then
+            table.remove(attackSoldiers, 1)
+        end
+        if attackTotalPower >= defenceTotalPower or defenceSoldier.morale <= 20 or defenceSoldier.currentCount == 0 then
+            table.remove(defenceSoldiers, 1)
+        end
+    end
+    return attackResults, defenceResults
+end
+
+function GameUtils:DragonDragonBattle(attackDragon, defenceDragon, effect)
+    assert(attackDragon.hpMax)
+    assert(attackDragon.strength)
+    assert(attackDragon.vitality)
+    assert(attackDragon.currentHp)
+    local attackDragonPower = attackDragon.strength * attackDragon.vitality
+    attackDragon.totalHp = attackDragon.currentHp
+
+    local defenceDragonPower = defenceDragon.strength * defenceDragon.vitality
+    defenceDragon.totalHp = defenceDragon.currentHp
+
+    if effect >= 0 then
+        defenceDragonPower = defenceDragonPower * (1 - effect)
+    else
+        attackDragonPower = attackDragonPower * (1 + effect)
+    end
+
+    local attackDragonHpDecreased = round(defenceDragonPower * 0.02)
+    attackDragon.currentHp = attackDragonHpDecreased > attackDragon.currentHp and 0 or attackDragon.currentHp - attackDragonHpDecreased
+
+    local defenceDragonHpDecreased = round(attackDragonPower * 0.02)
+    defenceDragon.currentHp = defenceDragonHpDecreased > defenceDragon.currentHp and 0 or defenceDragon.currentHp - defenceDragonHpDecreased
+
+    return {
+        hp = attackDragon.totalHp,
+        hpDecreased = attackDragon.totalHp - attackDragon.currentHp,
+        hpMax = attackDragon.hpMax,
+        isWin = attackDragonPower >= defenceDragonPower
+    }, {
+        hp = defenceDragon.totalHp,
+        hpDecreased = defenceDragon.totalHp - defenceDragon.currentHp,
+        hpMax = defenceDragon.hpMax,
+        isWin = attackDragonPower < defenceDragonPower
+    }
+end
+
+
+function GameUtils:DoBattle(attacker, defencer)
+    defencer.dragon = {
+        currentHp = 1000,
+        hpMax = 1000,
+        strength = 700,
+        vitality = 200,
+    }
+    local attack_dragon, defence_dragon = GameUtils:DragonDragonBattle(attacker.dragon, defencer.dragon, 0)
+    local attack_soldier, defence_soldier = GameUtils:SoldierSoldierBattle(attacker.soldiers, 0.4, defencer.soldiers, 0.4)
+
+    local report = {}
+    function report:GetFightAttackName()
+        return "进攻方"
+    end
+    function report:GetFightDefenceName()
+        return "防守方"
+    end 
+    function report:IsDragonFight()
+        return true
+    end
+    function report:GetFightAttackDragonRoundData()
+        return attack_dragon
+    end
+    function report:GetFightDefenceDragonRoundData()
+        return defence_dragon
+    end
+    function report:GetFightAttackSoldierRoundData()
+        return attack_soldier
+    end
+    function report:GetFightDefenceSoldierRoundData()
+        return defence_soldier
+    end
+    function report:IsFightWall()
+        return false
+    end
+    return report
+end
+
+
 return GameUtils
+
+
+
+
+
+

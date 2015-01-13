@@ -12,6 +12,10 @@ end
 local function deffer(func)
     return delay_(0, func)
 end
+local function defferPromise(p)
+    deffer(function() p:resolve() end)
+    return p
+end
 local function delay(time)
     return function(obj)
         return delay_(time, function() return obj end)
@@ -78,6 +82,7 @@ end
 
 return {
     deffer = deffer,
+    defferPromise = defferPromise,
     Delay = delay_,
     delay = delay,
     timeOut = timeOut,
@@ -86,6 +91,7 @@ return {
     promiseFilterNetError = promiseFilterNetError,
     promiseOfMoveTo = promiseOfMoveTo,
 }
+
 
 
 
