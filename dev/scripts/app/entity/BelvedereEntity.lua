@@ -107,9 +107,10 @@ function BelvedereEntity:GetDestinationLocation()
 		or self:GetType() == self.ENTITY_TYPE.MARCH_RETURN 
 		or self:GetType() == self.ENTITY_TYPE.STRIKE_OUT 
 		or self:GetType() == self.ENTITY_TYPE.STRIKE_RETURN 
-		or self:GetType() == self.ENTITY_TYPE.HELPTO
 		then
 		return self:WithObject():GetDefenceData().location.x .. "," .. self:WithObject():GetDefenceData().location.y
+	elseif self:GetType() == self.ENTITY_TYPE.HELPTO then
+		return self:WithObject().beHelpedPlayerData.location.x .. "," .. self:WithObject().beHelpedPlayerData.location.y
 	elseif self:GetType() == self.ENTITY_TYPE.SHIRNE then
 		local location =  self:FindShrinePlayerTroops().location
 		return location.x .. "," .. location.y

@@ -8,7 +8,7 @@ local MultiObserver = import(".MultiObserver")
 local AllianceBelvedere = class("AllianceBelvedere",MultiObserver)
 local BelvedereEntity = import(".BelvedereEntity")
 local client_config_watchTower = GameDatas.ClientInitGame.watchTower
-AllianceBelvedere.LISTEN_TYPE = Enum("OnCommingDataChanged","OnMarchDataChanged","OnAttackMarchEventTimerChanged","OnVillageEventTimer","OnFightEventTimerChanged","OnStrikeMarchEventDataChanged","OnAttackMarchEventDataChanged")
+AllianceBelvedere.LISTEN_TYPE = Enum("OnCommingDataChanged","OnMarchDataChanged","OnAttackMarchEventTimerChanged","OnVillageEventTimer","OnFightEventTimerChanged","OnStrikeMarchEventDataChanged","OnAttackMarchEventDataChanged","CheckNotHaveTheEventIf")
 
 function AllianceBelvedere:ctor(alliance)
 	AllianceBelvedere.super.ctor(self)
@@ -59,6 +59,11 @@ function AllianceBelvedere:GetOtherEvents()
 		return strikeMarchEvent:GetPlayerRole() == strikeMarchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER and strikeMarchEvent:GetTime() <= self:GetWarningTime()
 	end)
 	self:Handler2BelvedereEntity(other_events,marching_strike_events,BelvedereEntity.ENTITY_TYPE.STRIKE_OUT)
+	local help_events = self:GetAlliance():GetAttackMarchEvents("helpDefence")
+	local helpByOhters = LuaUtils:table_filteri(help_events,function(_,marchAttackEvent)
+		return marchAttackEvent:GetPlayerRole() == marchAttackEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER 
+	end)
+	self:Handler2BelvedereEntity(other_events,helpByOhters,BelvedereEntity.ENTITY_TYPE.MARCH_OUT)
 	return other_events
 end
 --自己操作的所有事件(攻打玩家、攻打村落、圣地、突袭)
@@ -106,8 +111,21 @@ function AllianceBelvedere:HasEvent()
 end
 
 function AllianceBelvedere:OnAttackMarchEventTimerChanged(attackMarchEvent)
-	if attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.NOTHING then return end
-	self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged,{attackMarchEvent})
+	if attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER and attackMarchEvent:GetTime() <= self:GetWarningTime() then
+		local showComming = false
+		self:NotifyListeneOnType(self.LISTEN_TYPE.CheckNotHaveTheEventIf,function(listener)
+			if listener.CheckNotHaveTheEventIf then
+				showComming = listener:CheckNotHaveTheEventIf(attackMarchEvent)
+			end
+		end)
+		if showComming then
+			self:NotifyCommingDataChanged()
+		else
+			self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged,{attackMarchEvent})
+		end
+	elseif attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER then
+		self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged,{attackMarchEvent})
+	end
 end
 
 
@@ -117,9 +135,14 @@ function AllianceBelvedere:OnAttackMarchEventDataChanged(changed_map)
 		for _,data in pairs(changed_map) do
 			if showMarch or showComming then break end
 			for _,marchEvent in ipairs(data) do
-				if marchEvent:GetPlayerRole() == marchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER and marchEvent:GetTime() <= self:GetWarningTime() then
-					showComming = true
-					break
+				if marchEvent:GetPlayerRole() == marchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER then
+					if marchEvent:MarchType() == "helpDefence" then 
+						showComming = true
+						break
+					elseif marchEvent:GetTime() <= self:GetWarningTime() then
+						showComming = true
+						break
+					end
 				end
 				if marchEvent:GetPlayerRole() == marchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER then
 					showMarch = true
@@ -255,7 +278,7 @@ function AllianceBelvedere:CanDisplayMarchEventInMap(level)
 	local watcher_level = level or self:GetWatchTowerLevel()
 	return  watcher_level >= 1 
 end
-
+--获取显示进攻事件的最大时间
 function AllianceBelvedere:GetWarningTime(level)
 	local watcher_level = level or self:GetWatchTowerLevel()
 	return client_config_watchTower[watcher_level].waringMinute * 60

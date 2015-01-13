@@ -64,6 +64,7 @@ end
 function GameUIWatchTower:AddOrRemoveListener(isAdd)
 	if isAdd then
 		City:AddListenOnType(self,City.LISTEN_TYPE.HELPED_TO_TROOPS)
+		self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.CheckNotHaveTheEventIf)
 		self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnCommingDataChanged)
 		self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnMarchDataChanged)
 		self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
@@ -71,6 +72,7 @@ function GameUIWatchTower:AddOrRemoveListener(isAdd)
 		self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnFightEventTimerChanged)
 	else
 		City:RemoveListenerOnType(self,City.LISTEN_TYPE.HELPED_TO_TROOPS)
+		self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.CheckNotHaveTheEventIf)
 		self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnCommingDataChanged)
 		self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnMarchDataChanged)
 		self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
@@ -208,12 +210,11 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 	            	:onButtonClicked(function(event)
 		                entity:RetreatAction(function(success)
 		                	if success then
-		                		-- self:RefreshCurrentList()
 		                		self:RefreshListView('march')
 		                	end
 		                end)
 		            end)
-		     	local dragon_png = UILib.dragon_head[self:GetEntityDragonType(entity)]
+		     	local dragon_png = UILib.dragon_head[entity:GetDragonType()]
 		     	if dragon_png then
 		     		local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
 		     		display.newSprite(dragon_png, 57, 60):addTo(icon_bg)
@@ -225,13 +226,12 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 	            	:onButtonClicked(function(event)
 		                entity:RetreatAction(function(success)
 		                	if success then
-		                		-- self:RefreshCurrentList()
 		                		self:RefreshListView('march')
 		                	end
 		                end)
 		            end)
-		        local icon = display.newSprite("woodcutter_1_342x250.png", 67, 67):addTo(event_bg)
-		        icon:setScale(120/342)
+		        local icon = display.newSprite("woodcutter_1_150x108.png", 67, 67):addTo(event_bg)
+		        icon:setScale(120/150)
 		        local process_bg = display.newSprite("process_bg_village_collect_326x40.png"):align(display.LEFT_BOTTOM,164, 20):addTo(bg)
 		        local progress_timer = UIKit:commonProgressTimer("process_color_village_collect_326x40.png"):align(display.LEFT_CENTER, 0, 20):addTo(process_bg)
 		        progress_timer:setPercentage(entity:WithObject():CollectPercent())
@@ -249,7 +249,7 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 				or entity:GetTypeStr() == 'STRIKE_RETURN' 
 				or entity:GetTypeStr() == 'SHIRNE' 
 				then
-				local dragon_png = UILib.dragon_head[self:GetEntityDragonType(entity)]
+				local dragon_png = UILib.dragon_head[entity:GetDragonType()]
 		     	if dragon_png then
 		     		local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
 		     		display.newSprite(dragon_png, 57, 60):addTo(icon_bg)
@@ -367,15 +367,19 @@ function GameUIWatchTower:OnEventDetailButtonClicked(entity)
 	print("查看事件详情----->")
 	local strEntityType = entity:GetType()
 	if strEntityType == entity.ENTITY_TYPE.MARCH_OUT then
-		NetManager:getAttackMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
-			dump(msg)
-		end)
+		if entity:WithObject():MarchType() == "helpDefence" then
+			NetManager:getHelpDefenceMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
+				dump(msg,"msg--->")
+				UIKit:newGameUI("GameUIWatchTowerTroopDetail",self:GetAllianceBelvedere(),msg):addToCurrentScene(true)
+			end)
+		else
+			NetManager:getAttackMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
+				dump(msg,"msg--->")
+				UIKit:newGameUI("GameUIWatchTowerTroopDetail",self:GetAllianceBelvedere(),msg):addToCurrentScene(true)
+			end)
+		end
 	elseif strEntityType == entity.ENTITY_TYPE.STRIKE_OUT then
 		NetManager:getStrikeMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
-			dump(msg)
-		end)
-	elseif strEntityType == entity.ENTITY_TYPE.HELPTO then
-		NetManager:getHelpDefenceMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
 			dump(msg)
 		end)
 	end
@@ -411,6 +415,10 @@ function GameUIWatchTower:RefreshCurrentList()
 end
 
 --Observer Methods
+function GameUIWatchTower:CheckNotHaveTheEventIf(event)
+	return self.march_timer_label[event:Id()] == nil
+end
+
 function GameUIWatchTower:OnHelpToTroopsChanged(changed_map)
 	self:RefreshCurrentList()
 end
@@ -459,6 +467,9 @@ end
 
 --内容过滤
 function GameUIWatchTower:GetEntityFromCityName(entity)
+	if entity:GetType() == entity.ENTITY_TYPE.MARCH_OUT and entity:WithObject():MarchType() == "helpDefence" then
+		return entity:GetFromCityName()
+	end
 	local level = self:GetBuilding():GetLevel()
 	if not self:GetAllianceBelvedere():CanDisplayCommingCityName(level) then
 		return '?'
@@ -468,6 +479,9 @@ function GameUIWatchTower:GetEntityFromCityName(entity)
 end
 
 function GameUIWatchTower:GetEntityAttackPlayerName(entity)
+	if entity:GetType() == entity.ENTITY_TYPE.MARCH_OUT and entity:WithObject():MarchType() == "helpDefence" then
+		return entity:GetAttackPlayerName()
+	end
 	local level = self:GetBuilding():GetLevel()
 	if not self:GetAllianceBelvedere():CanDisplayCommingPlayerName(level) then
 		return '?'
@@ -477,6 +491,9 @@ function GameUIWatchTower:GetEntityAttackPlayerName(entity)
 end
 
 function GameUIWatchTower:GetEntityDragonType(entity)
+	if entity:GetType() == entity.ENTITY_TYPE.MARCH_OUT and entity:WithObject():MarchType() == "helpDefence" then
+		return entity:GetDragonType()
+	end
 	local level = self:GetBuilding():GetLevel()
 	if not self:GetAllianceBelvedere():CanDisplayCommingDragonType(level) then
 		return '?'
