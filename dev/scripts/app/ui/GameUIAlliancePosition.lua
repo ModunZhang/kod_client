@@ -76,9 +76,9 @@ function GameUIAlliancePosition:ctor()
     local function edit(event, editbox)
         local text = tonumber(editbox:getText()) or min
         if event == "began" then
-            if min==text then
-                editbox:setText("1")
-            end
+            -- if min==text then
+            --     editbox:setText("1")
+            -- end
         elseif event == "changed" then
             if text then
                 if text > max then

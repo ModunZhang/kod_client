@@ -33,13 +33,14 @@ function WidgetSliderWithInput:ctor(params)
                 end
             end
         elseif event == "ended" then
-            if text=="" or min>text then
+            if editbox:getText()=="" or min>text then
                 editbox:setText(min)
             end
             local edit_value = tonumber(editbox:getText())
             editbox:setText(edit_value)
 
             local slider_value = slider:getSliderValue()
+            print("edit_value=",edit_value,"slider_value=",slider_value)
             if edit_value ~= slider_value then
                 slider.fsm_:doEvent("press")
                 slider:setSliderValue(edit_value)
