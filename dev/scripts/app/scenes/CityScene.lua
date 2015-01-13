@@ -21,15 +21,17 @@ function CityScene:ctor(city)
     self.city = city
     CityScene.super.ctor(self)
     self:LoadAnimation()
-end
-function CityScene:onEnter()
-    local city = self.city
-    CityScene.super.onEnter(self)
+
     self:GetSceneLayer():AddObserver(self)
     self:GetSceneLayer():InitWithCity(city)
     self:PlayBackgroundMusic()
     self:GotoLogicPointInstant(6, 4)
     self:GetSceneLayer():ZoomTo(1)
+end
+function CityScene:onEnter()
+    CityScene.super.onEnter(self)
+    -- local city = self.city
+    
 
     -- local ai_create_house_array = {
     --     "woodcutter",
