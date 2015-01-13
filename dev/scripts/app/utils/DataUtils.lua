@@ -85,8 +85,10 @@ function DataUtils:buyMaterial(need, has)
     local usedGem = 0
     table.foreach(need,function( key,value )
         local payment = GemsPayment.material[1]
-        if type(has[key]) == "number" then
-            value = value - has[key]
+        if has then
+            if type(has[key]) == "number" then
+                value = value - has[key]
+            end
         end
         -- print(" 需要 购买 ",key,value)
         if value>0 then
@@ -115,6 +117,7 @@ function DataUtils:getGemByTimeInterval(interval)
     end
     return gem
 end
+
 
 
 

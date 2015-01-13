@@ -721,7 +721,7 @@ function GameUIAllianceHome:OnAllianceFightChanged(alliance,allianceFight)
         if our and enemy then
             self.top:SetOurPowerOrKill(our.kill)
             self.top:SetEnemyPowerOrKill(enemy.kill)
-        end
+    end
     end
 end
 function GameUIAllianceHome:OnTimer(current_time)

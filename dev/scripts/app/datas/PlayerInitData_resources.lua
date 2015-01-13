@@ -10,6 +10,5 @@ resources[1] = {
 	["citizen"] = 0,
 	["coin"] = 50000,
 	["cart"] = 0,
-	["energy"] = 100,
 	["blood"] = 1000
 }

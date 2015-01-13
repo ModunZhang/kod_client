@@ -286,7 +286,7 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
             UIKit:newGameUI('GameUIMaterialDepot', city, building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "barracks" then
             UIKit:newGameUI('GameUIBarracks', city, building:GetEntity()):addToScene(self, true)
-        elseif building:GetEntity():GetType() == "armyCamp" then
+        elseif building:GetEntity():GetType() == "academy" then
             self._armyCamp_page = UIKit:newGameUI('GameUIAcademy',city,building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "townHall" then
             self._armyCamp_page = UIKit:newGameUI('GameUITownHall',city,building:GetEntity()):addToScene(self, true)

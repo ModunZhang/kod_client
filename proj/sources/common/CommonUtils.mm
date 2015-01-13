@@ -64,7 +64,7 @@ extern "C" const char* GetDeviceModel()
     return [[NSString stringWithCString:systemInfo.machine
                                encoding:NSUTF8StringEncoding]UTF8String];
 }
-
+//log
 static NSFileHandle *outFile = NULL;
 static NSString *logFilePath = NULL;
 static dispatch_queue_t aDQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -86,4 +86,13 @@ extern "C" void WriteLog_(const char *str)
         [outFile writeData:data];
         //outFile close
     });
+}
+
+extern "C" const char* GetAppVersion()
+{
+    return [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]UTF8String];
+}
+extern "C" const char* GetAppBundleVersion()
+{
+    return [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]UTF8String];;
 }

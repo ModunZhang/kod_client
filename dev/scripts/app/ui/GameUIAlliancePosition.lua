@@ -9,7 +9,7 @@ local GameUIAlliancePosition = class("GameUIAlliancePosition",WidgetPopDialog)
 function GameUIAlliancePosition:ctor()
     -- 根据是否处于联盟战状态构建不同UI
     local my_alliance = Alliance_Manager:GetMyAlliance()
-    local enemy_alliance = Alliance_Manager:GetEnemyAlliance()
+    local enemy_alliance = my_alliance:GetEnemyAlliance()
     print("enemy_alliance:IsDefault()=",enemy_alliance:IsDefault())
     local isFight = enemy_alliance:IsDefault()
     local height = isFight and 258 or 386
@@ -76,9 +76,9 @@ function GameUIAlliancePosition:ctor()
     local function edit(event, editbox)
         local text = tonumber(editbox:getText()) or min
         if event == "began" then
-            if min==text then
-                editbox:setText("1")
-            end
+            -- if min==text then
+            --     editbox:setText("1")
+            -- end
         elseif event == "changed" then
             if text then
                 if text > max then
@@ -133,7 +133,7 @@ function GameUIAlliancePosition:ctor()
     editbox_y:align(display.LEFT_CENTER,330, 140)
     editbox_y:addTo(body)
 
-    local go_shop_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
+    WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
         :align(display.CENTER,body:getContentSize().width/2,46)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
@@ -149,13 +149,16 @@ function GameUIAlliancePosition:ctor()
                     return
                 end
                 local map_layer = display.getRunningScene():GetSceneLayer()
-                local select_index = self.check_boxes:getButtonAtIndex(1):isButtonSelected() and 1 or self.check_boxes:getButtonAtIndex(2):isButtonSelected() and 2
                 local alliance_id
-                if select_index == 1 then
-                    alliance_id = my_alliance:Id()
-                else
-                    alliance_id = enemy_alliance:Id()
+                if self.check_boxes then
+                    local select_index = self.check_boxes:getButtonAtIndex(1):isButtonSelected() and 1 or self.check_boxes:getButtonAtIndex(2):isButtonSelected() and 2
+                    if select_index == 1 then
+                        alliance_id = my_alliance:Id()
+                    else
+                        alliance_id = enemy_alliance:Id()
+                    end
                 end
+
                 local point = map_layer:ConvertLogicPositionToMapPosition(editbox_x:getText(),editbox_y:getText(),alliance_id)
                 map_layer:GotoMapPositionInMiddle(point.x,point.y)
                 self:removeFromParent(true)
@@ -179,6 +182,7 @@ function GameUIAlliancePosition:onExit()
 end
 
 return GameUIAlliancePosition
+
 
 
 

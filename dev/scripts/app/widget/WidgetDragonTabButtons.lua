@@ -10,8 +10,8 @@ end)
 
 function WidgetDragonTabButtons:ctor(listener)
 	self.listener_ = listener or function(tag)end
-	-- UIKit:shadowLayer():addTo(self,-2):size(600,58):pos(16,42)
-	display.newColorLayer(cc.c4b(0,0,0,255)):addTo(self,-2):size(600,58):pos(16,42)
+	self.shadow_layer = UIKit:shadowLayer():addTo(self,-2):size(600,58):pos(16,42)
+	self.back_layer = display.newColorLayer(cc.c4b(0,0,0,255)):addTo(self,-2):size(600,58):pos(16,42)
 	local bg = display.newSprite("dragon_tab_bg_624x102.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(self)
 	local buttons = {}
 	local back_button = cc.ui.UIPushButton.new({
@@ -115,6 +115,9 @@ end
 function WidgetDragonTabButtons:VisibleFunctionButtons(visible)
 	if self.titleLabel then
 		self.titleLabel:setVisible(not visible)
+	end
+	if self.back_layer then
+		self.back_layer:setVisible(visible)
 	end
 	for _,v in ipairs(self.buttons) do
 		if v.tag ~= 'back' then

@@ -176,9 +176,8 @@ end
 
 function GameUIDragonSkill:CanUpgrade()
   local requires = self:GetUpgradeSkillCost()
-  local flag = City:GetResourceManager():GetEnergyResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()) >= requires[1][2]
-    and City:GetResourceManager():GetBloodResource():GetValue() >= requires[2][2]
-    and self:GetDragon():Level() >= requires[3][2]
+  local flag = City:GetResourceManager():GetBloodResource():GetValue() >= requires[2][2]
+    and self:GetDragon():Level() >= requires[2][2]
   return flag
 end
 

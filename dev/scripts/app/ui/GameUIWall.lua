@@ -208,7 +208,7 @@ function GameUIWall:RefreshListView()
 end
 
 function GameUIWall:GetListData()
-	local troops_count = self.city:GetFirstBuildingByType("armyCamp"):GetTroopPopulation()
+	local troops_count = self:GetDragon():LeadCitizen()
 	local data = {
 		{title = _("龙的经验"),val = 100,buffer = 200},
 		{title = _("最大兵量"),val = troops_count},
@@ -276,7 +276,8 @@ function GameUIWall:OnSelectDragonButtonClicked()
 					self:OnDragonSelected()
 				end
 			}
-		}
+		},
+		default_dragon_type = self.dragon_manager:GetDefenceDragon() and self.dragon_manager:GetDefenceDragon():Type()
 	}):addTo(self)
 end
 

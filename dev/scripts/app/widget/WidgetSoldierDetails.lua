@@ -20,40 +20,7 @@ local STAR_BG = {
     "star4_118x132.png",
     "star5_118x132.png",
 }
--- local SOLDIER_TYPE = {
---     ["swordsman_1"] = { png = "#Infantry_1_render/idle/1/00000.png" },
---     ["swordsman_2"] = { png = "soldier_swordsman_2.png" },
---     ["swordsman_3"] = { png = "soldier_swordsman_3.png" },
---     ["sentinel_1"] = { png = "soldier_sentinel_1.png" },
---     ["sentinel_2"] = { png = "soldier_sentinel_2.png" },
---     ["sentinel_3"] = { png = "soldier_sentinel_3.png" },
---     ["archer_1"] = { png = "#Archer_1_render/idle/1/00000.png" },
---     ["archer_2"] = { png = "soldier_archer_2.png" },
---     ["archer_3"] = { png = "soldier_archer_3.png" },
---     ["crossbowman_1"] = { png = "soldier_crossbowman_1.png" },
---     ["crossbowman_2"] = { png = "soldier_crossbowman_2.png" },
---     ["crossbowman_3"] = { png = "soldier_crossbowman_2.png" },
---     ["lancer_1"] = { png = "#Cavalry_1_render/idle/1/00000.png" },
---     ["lancer_2"] = { png = "soldier_lancer_2.png" },
---     ["lancer_3"] = { png = "soldier_lancer_3.png" },
---     ["horseArcher_1"] = { png = "soldier_horseArcher_1.png" },
---     ["horseArcher_2"] = { png = "soldier_horseArcher_2.png" },
---     ["horseArcher_3"] = { png = "soldier_horseArcher_3.png" },
---     ["catapult_1"] = { png = "#Catapult_1_render/move/1/00000.png" },
---     ["catapult_2"] = { png = "soldier_catapult_2.png" },
---     ["catapult_3"] = { png = "soldier_catapult_3.png" },
---     ["ballista_1"] = { png = "soldier_ballista_1.png" },
---     ["ballista_2"] = { png = "soldier_ballista_2.png" },
---     ["ballista_3"] = { png = "soldier_ballista_3.png" },
---     ["skeletonWarrior"] = { png = "soldier_skeletonWarrior.png" },
---     ["skeletonArcher"] = { png = "soldier_skeletonArcher.png" },
---     ["deathKnight"] = { png = "soldier_deathKnight.png" },
---     ["meatWagon"] = { png = "meatWagon.png" },
---     ["priest"] = {},
---     ["demonHunter"] = {},
---     ["paladin"] = {},
---     ["steamTank"] = {},
--- }
+
 
 local WidgetSoldierDetails = class("WidgetSoldierDetails", UIAutoClose)
 
@@ -186,11 +153,13 @@ function WidgetSoldierDetails:CreateDismissSoldierSilder()
     --     end)
     --     :setSliderValue(0)
     self.slider = WidgetSliderWithInput.new({max = City:GetSoldierManager():GetCountBySoldierType(self.soldier_type)})
+    :SetSliderSize(445, 24)
     :addTo(self)
     :align(display.LEFT_CENTER, 30, window.top - 360)
     :OnSliderValueChanged(function(event)
             citizen_label:setString(string.format("%d", math.floor(event.value)*self.s_config.citizen))
         end)
+    :LayoutValueLabel(WidgetSliderWithInput.STYLE_LAYOUT.RIGHT,0)
 
     local dismiss_soldier_button = WidgetPushButton.new({normal = "resource_butter_red.png",pressed = "resource_butter_red_highlight.png"},{}
         ,{

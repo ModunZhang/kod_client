@@ -805,9 +805,9 @@ function GameUIMail:AddLoadingMoreMails(listview,mails)
             end
             local item_1
             if listview == self.report_listview or listview == self.saved_reports_listview then
-                item_1= self:CreateReportItem(listview,Report:DecodeFromJsonData(v))
+                item_1= self:CreateReportItem(listview,v)
             else
-                item_1= self:CreateMailItem(listview,Report:DecodeFromJsonData(v))
+                item_1= self:CreateMailItem(listview,v)
             end
             self:InsertMailToListView(listview,item_1,v)
         end

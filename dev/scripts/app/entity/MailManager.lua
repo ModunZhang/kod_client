@@ -254,7 +254,7 @@ function MailManager:OnSavedMailsChanged( savedMails )
     self.savedMails = savedMails
 end
 function MailManager:OnSendMailsChanged( sendMails )
-    self.sendMails =  sendMails
+    self.sendMails = sendMails
 end
 
 function MailManager:OnNewMailsChanged( mails )
@@ -375,8 +375,9 @@ function MailManager:OnNewReportsChanged( __reports )
     local edit_reports = {}
     for _,rp in pairs(__reports) do
         if rp.type == "add" then
-            table.insert(add_reports, Report:DecodeFromJsonData(rp.data))
-            table.insert(self.reports,1, Report:DecodeFromJsonData(rp.data))
+            local c_report = Report:DecodeFromJsonData(rp.data)
+            table.insert(add_reports, c_report)
+            table.insert(self.reports,1, c_report)
             self:IncreaseUnReadReportNum(1)
         elseif rp.type == "remove" then
             table.insert(remove_reports, Report:DecodeFromJsonData(rp.data))
