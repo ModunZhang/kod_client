@@ -56,8 +56,9 @@ local function complete_and_pop_promise(p)
     return pop_head(p.next_promises)
 end
 local function do_function_with_protect(func, param)
-    local success, result = xpcall(func, function() print(debug.traceback()) end, param)
+    local success, result = pcall(func, param)
     if not success then
+        print(debug.traceback())
         result = not is_error(result) and err_class.new(result) or result
     end
     return success, result
@@ -180,7 +181,6 @@ local function clear_promise(p)
     p.thens = {}
     p.dones = {}
     p.fails = {}
-    -- p.always_ = {}
     p.next_promises = {}
 end
 -- 因为某种原因取消了promise对象
@@ -240,9 +240,6 @@ function promise:fail(func)
     return self
 end
 function promise:always(func)
-    -- assert(type(func) == "function", "always的函数不能为空!")
-    -- table.insert(self.always_, func)
-    -- return self
     return self:done(func):fail(func)
 end
 function promise.reject(...)
