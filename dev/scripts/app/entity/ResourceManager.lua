@@ -14,6 +14,7 @@ ResourceManager.RESOURCE_TYPE = Enum(
     "FOOD",
     "IRON",
     "STONE",
+    "CART",
     "POPULATION",
     "COIN",
     "RUBY",             -- 红宝石
@@ -27,6 +28,7 @@ local WOOD = ResourceManager.RESOURCE_TYPE.WOOD
 local FOOD = ResourceManager.RESOURCE_TYPE.FOOD
 local IRON = ResourceManager.RESOURCE_TYPE.IRON
 local STONE = ResourceManager.RESOURCE_TYPE.STONE
+local CART = ResourceManager.RESOURCE_TYPE.CART
 local POPULATION = ResourceManager.RESOURCE_TYPE.POPULATION
 local COIN = ResourceManager.RESOURCE_TYPE.COIN
 local BLOOD = ResourceManager.RESOURCE_TYPE.BLOOD
@@ -40,6 +42,7 @@ function ResourceManager:ctor()
         [FOOD] = AutomaticUpdateResource.new(),
         [IRON] = AutomaticUpdateResource.new(),
         [STONE] = AutomaticUpdateResource.new(),
+        [CART] = AutomaticUpdateResource.new(),
         [POPULATION] = PopulationAutomaticUpdateResource.new(),
         [COIN] = Resource.new(),
         [BLOOD] = Resource.new(),
@@ -82,6 +85,9 @@ function ResourceManager:GetIronResource()
 end
 function ResourceManager:GetStoneResource()
     return self.resources[STONE]
+end
+function ResourceManager:GetCartResource()
+    return self.resources[CART]
 end
 function ResourceManager:GetPopulationResource()
     return self.resources[POPULATION]
@@ -126,6 +132,7 @@ function ResourceManager:OnBuildingChangedFromCity(city, current_time)
 
     -- local max_energy = dragonEyrie:EnergyMax()
     local max_wood, max_food, max_iron, max_stone = city:GetFirstBuildingByType("warehouse"):GetResourceValueLimit()
+
     local wall_max_hp = wallBuilding:GetWallConfig().wallHp
     local total_limit_map = {
         -- [ENERGY] = max_energy,
@@ -162,9 +169,20 @@ function ResourceManager:OnBuildingChangedFromCity(city, current_time)
         resource:SetValueLimit(total_limit_map[resource_type])
     end
 
+
+
     LuaUtils:outputTable("citizen_map", citizen_map)
     LuaUtils:outputTable("total_production_map", total_production_map)
     LuaUtils:outputTable("total_limit_map", total_limit_map)
+
+    local tradeGuild =  city:GetFirstBuildingByType("tradeGuild")
+    if tradeGuild:GetLevel()>0 then
+        local cart_recovery = tradeGuild:GetCartRecovery()
+        local max_cart = tradeGuild:GetMaxCart()
+        local cart_resource = self.resources[CART]
+        cart_resource:SetProductionPerHour(current_time, cart_recovery)
+        cart_resource:SetValueLimit(max_cart)
+    end
 end
 function ResourceManager:GetCitizenAllocInfo()
     return self.resource_citizen
@@ -179,6 +197,8 @@ end
 
 
 return ResourceManager
+
+
 
 
 
