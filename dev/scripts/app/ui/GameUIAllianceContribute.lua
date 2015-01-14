@@ -305,10 +305,12 @@ function GameUIAllianceContribute:IsAbleToContribute()
     end
     local count  = self:GetDonateValueByType(r_type).count
     local r_count
-    if r_type ~= "gem" and r_type ~= "coin" then
-        r_count = City.resource_manager:GetResourceByType(CON_TYPE[r_type]):GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    else
+    if r_type == "coin" then
         r_count = City.resource_manager:GetResourceByType(CON_TYPE[r_type]):GetValue()
+    elseif r_type == "gem" then
+        r_count = User:GetGemResource():GetValue()
+    else
+        r_count = City.resource_manager:GetResourceByType(CON_TYPE[r_type]):GetResourceValueByCurrentTime(app.timer:GetServerTime())
     end
     if r_count<count then
         FullScreenPopDialogUI.new():SetTitle(_("提示"))

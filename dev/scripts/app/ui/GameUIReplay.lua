@@ -402,9 +402,7 @@ function GameUIReplay:onEnter()
     -- self:PlaySoldierBattle(decode_battle(battle))
     if self.report:IsDragonFight() then
         self:PlayDragonBattle():next(function()
-            self:PlaySoldierBattle(decode_battle(battle)):catch(function(err)
-            dump(err:reason())
-        end)
+            self:PlaySoldierBattle(decode_battle(battle))
         end):catch(function(err)
             dump(err:reason())
         end)
@@ -488,6 +486,12 @@ function GameUIReplay:PlayDragonBattle()
         self.dragon_battle:getAnimation():play("Animation1", -1, 0)
     end):resolve()
 
+    self.dragon_battle:getAnimation():setMovementEventCallFunc(function(armatureBack, movementType, movementID)
+        if movementType == ccs.MovementEventType.complete then
+            dp:resolve(self)
+        end
+    end)
+
     return dp
 end
 function GameUIReplay:PlaySoldierBattle(soldier_battle)
@@ -511,7 +515,7 @@ function GameUIReplay:PlaySoldierBattle(soldier_battle)
             return pa
         end)
     end
-    return rounds:resolve()
+    return cocos_promise.defferPromise(rounds)
 end
 function GameUIReplay:MoveBattleBgBy(x)
     return function(battle_bg)
@@ -545,15 +549,8 @@ function GameUIReplay:NewDragonBattle(battle)
     self.right_dragon = right_dragon
     self.right_dragon:SetHp(defend_dragon.hp, defend_dragon.hp)
 
-    local p = promise.new()
-    dragon_battle:getAnimation()
-        :setMovementEventCallFunc(function(armatureBack, movementType, movementID)
-            if movementType == ccs.MovementEventType.complete then
-                p:resolve(self)
-            end
-        end)
     self.dragon_battle = dragon_battle
-    return p
+    return promise.new()
 end
 function GameUIReplay:NewDragon(is_left)
     local node = display.newNode()
@@ -875,6 +872,8 @@ end
 
 
 return GameUIReplay
+
+
 
 
 

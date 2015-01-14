@@ -56,7 +56,7 @@ local function complete_and_pop_promise(p)
     return pop_head(p.next_promises)
 end
 local function do_function_with_protect(func, param)
-    local success, result = pcall(func, param)
+    local success, result = xpcall(func, function() print(debug.traceback()) end, param)
     if not success then
         result = not is_error(result) and err_class.new(result) or result
     end

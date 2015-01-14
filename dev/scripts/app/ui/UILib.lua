@@ -330,12 +330,12 @@ local DRAGON_ANIMATIONS_FILES = {
     }
 }
 local DECORATOR_IMAGE = {
-    decorate_lake_1 = "lake_288x240.png",
-    decorate_lake_2 =  "lake_220x174.png",
-    decorate_mountain_2 =  "hill_228x146.png",
-    decorate_mountain_1 =  "hill_312x296.png",
-    decorate_tree_1 =  "tree_1_120x120.png",
-    decorate_tree_2 =  "tree_2_120x120.png",
+    decorate_lake_1 = "lake_272x158.png",
+    decorate_lake_2 =  "lake_244x142.png",
+    decorate_mountain_2 =  "hill_160x106.png",
+    decorate_mountain_1 =  "hill_254x240.png",
+    decorate_tree_1 =  "tree_2_138x110.png",
+    decorate_tree_2 =  "tree_1_112x114.png",
 }
 local DRAGON_HEAD = {
     blueDragon = "Dragon_blue_113x128.png",

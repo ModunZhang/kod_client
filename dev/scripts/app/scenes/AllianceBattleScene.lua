@@ -55,7 +55,7 @@ function AllianceBattleScene:onExit()
 end
 function AllianceBattleScene:CreateSceneLayer()
     local pos = self:GetAlliance():FightPosition()
-    local arrange = (pos == "top" or pos == "bottom") and MultiAllianceLayer.ARRANGE.H or MultiAllianceLayer.ARRANGE.V
+    local arrange = (pos == "top" or pos == "bottom") and MultiAllianceLayer.ARRANGE.V or MultiAllianceLayer.ARRANGE.H
     if pos == "top" or pos == "left" then
         return MultiAllianceLayer.new(arrange, self:GetAlliance(), self:GetEnemyAlliance())
     else

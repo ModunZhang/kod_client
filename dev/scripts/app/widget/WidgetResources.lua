@@ -54,11 +54,11 @@ function WidgetResources:RefreshSpecifyResource(resource,item,maxvalue,occupy_ci
         item.occupy_citizen.value:setString(occupy_citizen.."")
     else
         item.resource_label:setString(resource:GetValue())
-         local townHall = self.city:GetFirstBuildingByType("townHall")
-        local title_value = townHall:IsInImposing() and _("正在征税") or _("当前没有进行征税")
-        item.tax.title:setString(title_value)
-        local tax_time = townHall:IsInImposing() and GameUtils:formatTimeStyle1(townHall:GetTaxEvent():LeftTime(app.timer:GetServerTime())) or ""
-        item.tax.value:setString(tax_time)
+        --  local townHall = self.city:GetFirstBuildingByType("townHall")
+        -- local title_value = townHall:IsInImposing() and _("正在征税") or _("当前没有进行征税")
+        -- item.tax.title:setString(title_value)
+        -- local tax_time = townHall:IsInImposing() and GameUtils:formatTimeStyle1(townHall:GetTaxEvent():LeftTime(app.timer:GetServerTime())) or ""
+        -- item.tax.value:setString(tax_time)
         item.free_citizen.value:setString(self.city:GetResourceManager():GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime()))
     end
 end
@@ -230,18 +230,18 @@ function WidgetResources:AddResourceItem(parms)
         -- item.resource_label:setAnchorPoint(cc.p(0,0.5))
         -- item.resource_label:pos(-125, 40)
         -- 是否在征税
-        local townHall = self.city:GetFirstBuildingByType("townHall")
-        local title_value = townHall:IsInImposing() and _("正在征税") or _("当前没有进行征税")
-        local tax_time = townHall:IsInImposing() and GameUtils:formatTimeStyle1(townHall:GetTaxEvent():LeftTime(app.timer:GetServerTime())) or ""
-        item.tax = createTipItem({
-            title = title_value,
-            title_color = UIKit:hex2c3b(0x797154),
-            value = tax_time ,
-            value_color = UIKit:hex2c3b(0x403c2f),
-            x = 40,
-            y = -10
-        })
-        content:addWidget(item.tax)
+        -- local townHall = self.city:GetFirstBuildingByType("townHall")
+        -- local title_value = townHall:IsInImposing() and _("正在征税") or _("当前没有进行征税")
+        -- local tax_time = townHall:IsInImposing() and GameUtils:formatTimeStyle1(townHall:GetTaxEvent():LeftTime(app.timer:GetServerTime())) or ""
+        -- item.tax = createTipItem({
+        --     title = title_value,
+        --     title_color = UIKit:hex2c3b(0x797154),
+        --     value = tax_time ,
+        --     value_color = UIKit:hex2c3b(0x403c2f),
+        --     x = 40,
+        --     y = -10
+        -- })
+        -- content:addWidget(item.tax)
         --  空闲人口
         item.free_citizen = createTipItem({
             title = _("空闲人口"),

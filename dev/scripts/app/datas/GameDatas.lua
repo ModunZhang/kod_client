@@ -127,7 +127,7 @@ GameDatas.BuildingLevelUp = {
 	["foundry"] = {},
 	["mill"] = {},
 	["townHall"] = {},
-	["acdemy"] = {},
+	["academy"] = {},
 	["hospital"] = {},
 	["tradeGuild"] = {},
 	["prison"] = {},
@@ -152,7 +152,7 @@ require("app.datas.BuildingLevelUp_stoneMason")
 require("app.datas.BuildingLevelUp_foundry")
 require("app.datas.BuildingLevelUp_mill")
 require("app.datas.BuildingLevelUp_townHall")
-require("app.datas.BuildingLevelUp_acdemy")
+require("app.datas.BuildingLevelUp_academy")
 require("app.datas.BuildingLevelUp_hospital")
 require("app.datas.BuildingLevelUp_tradeGuild")
 require("app.datas.BuildingLevelUp_prison")

@@ -260,6 +260,11 @@ function Dragon:IsDefenced()
 	return self:Status() == 'defence'
 end
 
+--是否空闲
+function Dragon:IsFree()
+	return self:Status() == 'free'
+end
+
 function Dragon:GetEquipmentByBody( category )
 	local arg_type = type(category)
 	if arg_type == 'number' then

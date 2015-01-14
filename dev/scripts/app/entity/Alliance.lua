@@ -252,6 +252,14 @@ end
 function Alliance:GetFightRequestPlayerNum()
     return #self.fight_requests
 end
+function Alliance:IsRequested()
+    for k,v in pairs(self.fight_requests) do
+        print("User:Id()=",User:Id(),"fight request=",v)
+        if v == User:Id() then
+            return true
+        end
+    end
+end
 function Alliance:GetAllianceFightReports()
     return self.alliance_fight_reports
 end
