@@ -130,7 +130,7 @@ end
 function NetManager:addKickEventListener()
     self:addEventListener("onKick", function(success, msg)
         print("addKickEventListener----->onKick")
-        device.showAlert(nil, _("和服务器的连接已断开!"), {_("确定")}, function(event)
+        device.showAlert(nil, _("您的账号在别处登陆,您被强制下线!"), {_("确定")}, function(event)
             dump(msg, "msg")
             app:restart()
         end)

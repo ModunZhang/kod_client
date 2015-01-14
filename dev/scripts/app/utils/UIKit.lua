@@ -462,12 +462,16 @@ function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback)
 end
 
 function UIKit:showEvaluateDialog()
-    UIKit:showMessageDialog(
-        nil,
-        "是否去app store评价我们?",
-        function()
-            device.openURL("http://dualface.github.com/quick-cocos2d-x/")
-        end,
-        function()
-        end)
+    local dialog = FullScreenPopDialogUI.new():SetTitle(_("亲")):SetPopMessage("是否去app store评价我们?")
+        :CreateOKButton({
+            listener =  function ()
+                device.openURL("http://www.baidu.com")
+            end,btn_name = _("支持一个")
+        })
+        :CreateCancelButton({
+                listener = function ()
+                    cancel_callback()
+                end,btn_name = _("残忍的拒绝")
+        })dialog:AddToCurrentScene()
+    return dialog
 end
