@@ -284,6 +284,12 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 }))
                 :onButtonClicked(function(event)
                     if event.name == "CLICKED_EVENT" then
+                        if self.alliance:Status()=="fight" or self.alliance:Status()=="prepare" then
+                            FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                                :SetPopMessage(_("联盟正在战争准备期或战争期"))
+                                :AddToCurrentScene()
+                            return
+                        end
                         NetManager:getFindAllianceToFightPromose()
                     end
                 end):align(display.RIGHT_CENTER,window.right-50,window.top-740):addTo(layer)
@@ -1254,6 +1260,7 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
 
 
 
