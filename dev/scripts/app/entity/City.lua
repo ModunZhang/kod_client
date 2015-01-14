@@ -680,6 +680,9 @@ function City:IteratorResourcesByUserData(resources, current_time)
     if resources.stone then
         resource_manager:GetStoneResource():UpdateResource(current_time, resources.stone)
     end
+    if resources.cart then
+        resource_manager:GetCartResource():UpdateResource(current_time, resources.cart)
+    end
     if resources.citizen then
         resource_manager:GetPopulationResource():UpdateResource(current_time, resources.citizen)
     end

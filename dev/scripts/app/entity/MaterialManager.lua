@@ -1,9 +1,10 @@
 local Enum = import("..utils.Enum")
 local Observer = import(".Observer")
 local MaterialManager = class("MaterialManager", Observer)
-MaterialManager.MATERIAL_TYPE = Enum("BUILD", "DRAGON", "SOLDIER", "EQUIPMENT")
+MaterialManager.MATERIAL_TYPE = Enum("BUILD", "TECHNOLOGY","DRAGON", "SOLDIER", "EQUIPMENT")
 local MATERIAL_TYPE = MaterialManager.MATERIAL_TYPE
 local BUILD = MATERIAL_TYPE.BUILD
+local TECHNOLOGY = MATERIAL_TYPE.TECHNOLOGY
 local DRAGON = MATERIAL_TYPE.DRAGON
 local SOLDIER = MATERIAL_TYPE.SOLDIER
 local EQUIPMENT = MATERIAL_TYPE.EQUIPMENT
@@ -12,12 +13,14 @@ function MaterialManager:ctor()
     self.material_map = {}
     self.material_map[MaterialManager.MATERIAL_TYPE.BUILD] = {
         ["tiles"] = 0,
-        ["saddle"] = 0,
-        ["bowTarget"] = 0,
         ["pulley"] = 0,
         ["tools"] = 0,
-        ["ironPart"] = 0,
         ["blueprints"] = 0,
+    }
+    self.material_map[MaterialManager.MATERIAL_TYPE.TECHNOLOGY] = {
+        ["saddle"] = 0,
+        ["bowTarget"] = 0,
+        ["ironPart"] = 0,
         ["trainingFigure"] = 0,
     }
     self.material_map[MaterialManager.MATERIAL_TYPE.DRAGON] = {
@@ -163,7 +166,8 @@ function MaterialManager:IteratorMaterialsByType(material_type, func)
 end
 function MaterialManager:OnUserDataChanged(user_data)
     local user_map = {
-        [BUILD] = "materials",
+        [BUILD] = "buildingMaterials",
+        [TECHNOLOGY] = "technologyMaterials",
         [DRAGON] = "dragonMaterials",
         [SOLDIER] = "soldierMaterials",
         [EQUIPMENT] = "dragonEquipments",

@@ -18,7 +18,7 @@ local function check_response(m)
         if result.success then
             return result
         end
-        promise.reject(m)
+        promise.reject(m, m)
     end
 end
 local function check_request(m)
@@ -211,6 +211,7 @@ onSendChatSuccess_callbacks = {}
 onGetAllChatSuccess_callbacks = {}
 onFetchAllianceViewData_callbacks = {}
 onGetPlayerViewDataSuccess_callbacks = {}
+onGetSellItemsSuccess_callbacks = {}
 function NetManager:addOnSearchAlliancesSuccessListener()
     self:addEventListener("onSearchAlliancesSuccess", function(success, msg)
         if success then
@@ -285,6 +286,19 @@ function NetManager:addOnGetPlayerViewDataSuccess()
         end
     end)
 end
+function NetManager:addOnGetSellItemsSuccess()
+    self:addEventListener("onGetSellItemsSuccess", function(success, msg)
+        if success then
+            local callback = onGetSellItemsSuccess_callbacks[1]
+            LuaUtils:outputTable("onGetSellItemsSuccess", msg)
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onGetSellItemsSuccess_callbacks = {}
+        end
+    end)
+end
+
 function NetManager:addOnGetMailsSuccessListener()
     self:addEventListener("onGetMailsSuccess", function(success, msg)
         if success then
@@ -501,6 +515,7 @@ function NetManager:getConnectLogicServerPromise()
         self:addOnGetCanDirectJoinAlliancesSuccessListener()
         self:addOnGetPlayerInfoSuccessListener()
         self:addOnGetPlayerViewDataSuccess()
+        self:addOnGetSellItemsSuccess()
         self:addOnGetMailsSuccessListener()
         self:addOnGetSavedMailsSuccessListener()
         self:addOnGetSendMailsSuccessListener()
@@ -562,6 +577,9 @@ local function get_playerinfo_callback()
 end
 local function get_cityinfo_callback()
     return get_callback_promise(onGetPlayerViewDataSuccess_callbacks, "查询玩家城市信息失败!")
+end
+local function get_sellitems_callback()
+    return get_callback_promise(onGetSellItemsSuccess_callbacks, "获取出售列表失败!")
 end
 local function get_alliancedata_callback()
     return get_callback_promise(onAllianceDataChanged_callbacks, "修改联盟信息失败!")
@@ -1266,7 +1284,40 @@ function NetManager:getStrikeVillagePromise(dragonType,defenceAllianceId,defence
         {dragonType = dragonType,defenceAllianceId = defenceAllianceId,defenceVillageId=defenceVillageId},"突袭村落失败!"),
     get_alliancedata_callback()):next(get_response_msg)
 end
-
+-- 出售商品
+function NetManager:getSellItemPromise(type,name,count,price)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.sellItem", {
+        type = type,
+        name = name,
+        count = count,
+        price = price,
+    }, "出售商品失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 获取商品列表
+function NetManager:getGetSellItemsPromise(type,name)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.getSellItems", {
+        type = type,
+        name = name,
+    }, "获取商品列表失败!"), get_sellitems_callback()):next(get_response_msg)
+end
+-- 购买出售的商品
+function NetManager:getBuySellItemPromise(itemId)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.buySellItem", {
+        itemId = itemId
+    }, "购买出售的商品失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 获取出售后赚取的银币
+function NetManager:getGetMyItemSoldMoneyPromise(itemId)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.getMyItemSoldMoney", {
+        itemId = itemId
+    }, "获取出售后赚取的银币失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+-- 下架商品
+function NetManager:getRemoveMySellItemPromise(itemId)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.removeMySellItem", {
+        itemId = itemId
+    }, "下架商品失败!"), get_playerdata_callback()):next(get_response_msg)
+end
 
 --
 function NetManager:getUpdateFileList(cb)

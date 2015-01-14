@@ -25,5 +25,12 @@ function TradeGuildUpgradeBuilding:GetCartRecovery()
 	local config = config_function[self:GetLevel()]
 	return config.cartRecovery
 end
+function TradeGuildUpgradeBuilding:GetUnlockSellQueueLevel(queueIndex)
+	for k,v in pairs(config_function) do
+		if v.maxSellQueue==queueIndex then
+			return k
+		end
+	end
+end
 
 return TradeGuildUpgradeBuilding
