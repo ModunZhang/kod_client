@@ -6,7 +6,8 @@ stoneCarving[1] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 95
 }
 stoneCarving[2] = {
 	["level"] = 2,
@@ -14,7 +15,8 @@ stoneCarving[2] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 155
 }
 stoneCarving[3] = {
 	["level"] = 3,
@@ -22,7 +24,8 @@ stoneCarving[3] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 258
 }
 stoneCarving[4] = {
 	["level"] = 4,
@@ -30,7 +33,8 @@ stoneCarving[4] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 413
 }
 stoneCarving[5] = {
 	["level"] = 5,
@@ -38,7 +42,8 @@ stoneCarving[5] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 774
 }
 stoneCarving[6] = {
 	["level"] = 6,
@@ -46,7 +51,8 @@ stoneCarving[6] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 1548
 }
 stoneCarving[7] = {
 	["level"] = 7,
@@ -54,7 +60,8 @@ stoneCarving[7] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 2322
 }
 stoneCarving[8] = {
 	["level"] = 8,
@@ -62,7 +69,8 @@ stoneCarving[8] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 3096
 }
 stoneCarving[9] = {
 	["level"] = 9,
@@ -70,7 +78,8 @@ stoneCarving[9] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 4644
 }
 stoneCarving[10] = {
 	["level"] = 10,
@@ -78,7 +87,8 @@ stoneCarving[10] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 6192
 }
 stoneCarving[11] = {
 	["level"] = 11,
@@ -86,7 +96,8 @@ stoneCarving[11] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 12384
 }
 stoneCarving[12] = {
 	["level"] = 12,
@@ -94,7 +105,8 @@ stoneCarving[12] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 18576
 }
 stoneCarving[13] = {
 	["level"] = 13,
@@ -102,7 +114,8 @@ stoneCarving[13] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 24768
 }
 stoneCarving[14] = {
 	["level"] = 14,
@@ -110,7 +123,8 @@ stoneCarving[14] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 37152
 }
 stoneCarving[15] = {
 	["level"] = 15,
@@ -118,5 +132,6 @@ stoneCarving[15] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 49536
 }
