@@ -5,6 +5,7 @@ local window = import("..utils.window")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local UILib = import(".UILib")
+local GameUIWatchTowerTroopDetail = import(".GameUIWatchTowerTroopDetail")
 
 function GameUIWatchTower:ctor(city,building)
     local bn = Localize.building_name
@@ -50,10 +51,8 @@ function GameUIWatchTower:CreateUI()
 end
 
 function GameUIWatchTower:TabButtonsAction(tag)
-	if tag == 'comming' then
-		self.list_node:show()
-		self:RefreshListView(tag)
-	elseif tag == 'march' then
+	if tag == 'comming' 
+		or tag == 'march' then
 		self.list_node:show()
 		self:RefreshListView(tag)
 	else
@@ -64,6 +63,7 @@ end
 function GameUIWatchTower:AddOrRemoveListener(isAdd)
 	if isAdd then
 		City:AddListenOnType(self,City.LISTEN_TYPE.HELPED_TO_TROOPS)
+		self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.CheckNotHaveTheEventIf)
 		self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnCommingDataChanged)
 		self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnMarchDataChanged)
 		self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
@@ -71,6 +71,7 @@ function GameUIWatchTower:AddOrRemoveListener(isAdd)
 		self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnFightEventTimerChanged)
 	else
 		City:RemoveListenerOnType(self,City.LISTEN_TYPE.HELPED_TO_TROOPS)
+		self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.CheckNotHaveTheEventIf)
 		self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnCommingDataChanged)
 		self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnMarchDataChanged)
 		self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
@@ -102,7 +103,6 @@ end
 
 function GameUIWatchTower:RefreshMyEvents()
 	local my_events = self:GetAllianceBelvedere():GetMyEvents()
-	print("GameUIWatchTower:RefreshMyEvents-->",#my_events)
 	for index = 1,2 do
 		local item
 		if index == 1 then
@@ -209,7 +209,6 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 	            	:onButtonClicked(function(event)
 		                entity:RetreatAction(function(success)
 		                	if success then
-		                		-- self:RefreshCurrentList()
 		                		self:RefreshListView('march')
 		                	end
 		                end)
@@ -218,19 +217,20 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 		     	if dragon_png then
 		     		local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
 		     		display.newSprite(dragon_png, 57, 60):addTo(icon_bg)
+		     	else
+		     		display.newSprite("unknown_dragon_icon_112x112.png", 67, 67):addTo(event_bg)
 		     	end
 			elseif entity:GetTypeStr() == 'COLLECT' then
 				self:GetYellowRetreatButton():pos(558,15):addTo(bg)
 	            	:onButtonClicked(function(event)
 		                entity:RetreatAction(function(success)
 		                	if success then
-		                		-- self:RefreshCurrentList()
 		                		self:RefreshListView('march')
 		                	end
 		                end)
 		            end)
-		        local icon = display.newSprite("woodcutter_1_342x250.png", 67, 67):addTo(event_bg)
-		        icon:setScale(120/342)
+		        local icon = display.newSprite("woodcutter_1_150x108.png", 67, 67):addTo(event_bg)
+		        icon:setScale(120/150)
 		        local process_bg = display.newSprite("process_bg_village_collect_326x40.png"):align(display.LEFT_BOTTOM,164, 20):addTo(bg)
 		        local progress_timer = UIKit:commonProgressTimer("process_color_village_collect_326x40.png"):align(display.LEFT_CENTER, 0, 20):addTo(process_bg)
 		        progress_timer:setPercentage(entity:WithObject():CollectPercent())
@@ -252,6 +252,8 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 		     	if dragon_png then
 		     		local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
 		     		display.newSprite(dragon_png, 57, 60):addTo(icon_bg)
+		     	else
+		     		display.newSprite("unknown_dragon_icon_112x112.png", 67, 67):addTo(event_bg)
 		     	end
 		     	local icon_bg = display.newSprite("progress_bg_head_43x43.png")
 					:align(display.LEFT_BOTTOM,164, 20):addTo(bg):scale(0.7)
@@ -281,16 +283,109 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 			                	if success then
 			                	end
 			                end)
-			            end)
+			        end)
 			    end
-
 			end
-			--TODO:
+			--TODO:?
 		end
 	end
 	item:addContent(bg)
 	item:setItemSize(568, 204)
 	return item
+end
+
+function GameUIWatchTower:GetOtherEventItem(entity)
+	local item = self.listView:newItem()
+	local bg = WidgetUIBackGround.new({width = 568,height = 204},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
+	local title_image = entity:WithObject():MarchType() == 'helpDefence' and 'title_green_558x34.png' or 'title_red_558x34.png'
+	local title_bg  = display.newSprite(title_image)
+			:align(display.TOP_CENTER,284, 198)
+			:addTo(bg)
+	local tile_label = UIKit:ttfLabel({
+			text = entity:GetTitle(),
+			size = 20,
+			color= 0xffedae,
+		}):addTo(title_bg):align(display.LEFT_CENTER, 20, 17)
+    local event_bg = display.newScale9Sprite("alliance_item_flag_box_126X126.png")
+    	:size(134,134)
+    	:addTo(bg)
+    	:align(display.LEFT_BOTTOM, 10, 19)	
+
+    local desctition_label = UIKit:ttfLabel({
+					text = _("来自"),
+					size = 20,
+					color= 0x797154
+				}):align(display.LEFT_TOP,164,153):addTo(bg)
+	local line_1 = display.newScale9Sprite("dividing_line.png"):size(390,2):addTo(bg):align(display.LEFT_TOP,164, 125)
+	local desctition_label_val =  UIKit:ttfLabel({
+			text = self:GetEntityFromCityName(entity),
+			size = 20,
+			color= 0x797154
+		}):align(display.RIGHT_TOP,554,153):addTo(bg)
+	local localtion_label = UIKit:ttfLabel({
+			text = _("玩家"),
+			size = 20,
+			color= 0x797154
+		}):align(display.LEFT_TOP,164,115):addTo(bg)
+	local line_2 = display.newScale9Sprite("dividing_line.png"):size(390,2):addTo(bg):align(display.LEFT_TOP,164, 87)
+	local localtion_label_val =  UIKit:ttfLabel({
+			text = self:GetEntityAttackPlayerName(entity),
+			size = 20,
+			color= 0x797154
+		}):align(display.RIGHT_TOP,554,115):addTo(bg)
+    local dragon_png = UILib.dragon_head[self:GetEntityDragonType(entity)]
+ 	if dragon_png then
+ 		local icon_bg = display.newSprite("dragon_bg_114x114.png", 67, 67):addTo(event_bg)
+ 		display.newSprite(dragon_png, 57, 60):addTo(icon_bg)
+ 	else
+ 		display.newSprite("unknown_dragon_icon_112x112.png", 67, 67):addTo(event_bg)
+ 	end	
+	local icon_bg = display.newSprite("progress_bg_head_43x43.png")
+					:align(display.LEFT_BOTTOM,164, 20):addTo(bg):scale(0.7)
+	display.newSprite("hourglass_39x46.png"):align(display.CENTER, 22, 22):addTo(icon_bg)
+
+	local timer_label = UIKit:ttfLabel({
+		text = GameUtils:formatTimeStyle1(entity:WithObject():GetTime()),
+		size = 22,
+		color= 0x403c2f
+	}):addTo(bg):align(display.LEFT_BOTTOM,164+ icon_bg:getCascadeBoundingBox().width+8, 20)
+	self.march_timer_label[entity:WithObject():Id()] = timer_label
+	if self:CanViewEventDetail() then
+		WidgetPushButton.new({normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"})
+			:setButtonLabel(UIKit:commonButtonLable({text = _("详情")}))
+	    	:align(display.RIGHT_BOTTOM,555,10):addTo(bg)
+	    	:onButtonClicked(function(event)
+	    		self:OnEventDetailButtonClicked(entity)
+	    	end)  
+ 	end
+	item:addContent(bg)
+	item:setItemSize(568, 204)
+	return item
+end
+
+function GameUIWatchTower:OnEventDetailButtonClicked(entity)
+	print("查看事件详情----->")
+	local strEntityType = entity:GetType()
+	if strEntityType == entity.ENTITY_TYPE.MARCH_OUT then
+		if entity:WithObject():MarchType() == "helpDefence" then
+			NetManager:getHelpDefenceMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
+				dump(msg,"msg--->")
+				UIKit:newGameUI("GameUIWatchTowerTroopDetail",msg,GameUIWatchTowerTroopDetail.DATA_TYPE.MARCH,true)
+					:addToCurrentScene(true)
+			end)
+		else
+			NetManager:getAttackMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
+				dump(msg,"msg--->")
+				UIKit:newGameUI("GameUIWatchTowerTroopDetail",msg,GameUIWatchTowerTroopDetail.DATA_TYPE.HELP_DEFENCE,true)
+					:addToCurrentScene(true)
+			end)
+		end
+	elseif strEntityType == entity.ENTITY_TYPE.STRIKE_OUT then
+		NetManager:getStrikeMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
+			UIKit:newGameUI("GameUIWatchTowerTroopDetail",msg,GameUIWatchTowerTroopDetail.DATA_TYPE.STRIKE,true)
+					:addToCurrentScene(true)
+		end)
+	end
 end
 
 function GameUIWatchTower:GetYellowRetreatButton()
@@ -309,7 +404,10 @@ end
 
 function GameUIWatchTower:RefreshOtherEvents()
 	local other_events = self:GetAllianceBelvedere():GetOtherEvents()
-
+	for _,entity in ipairs(other_events) do
+		local item = self:GetOtherEventItem(entity)
+		self.listView:addItem(item)
+	end
 end
 
 function GameUIWatchTower:RefreshCurrentList()
@@ -319,45 +417,35 @@ function GameUIWatchTower:RefreshCurrentList()
 	end
 end
 
-function GameUIWatchTower:GetItem()
-	local item = self.listView:newItem()
-	local bg = WidgetUIBackGround.new({width = 568,height = 204},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
-	item:addContent(bg)
-	item:setItemSize(568, 204)
-	return item
+--Observer Methods
+function GameUIWatchTower:CheckNotHaveTheEventIf(event)
+	return self.march_timer_label[event:Id()] == nil
 end
 
---Observer Methods
 function GameUIWatchTower:OnHelpToTroopsChanged(changed_map)
-	-- print("GameUIWatchTower:OnHelpToTroopsChanged--->")
 	self:RefreshCurrentList()
 end
 
 function GameUIWatchTower:OnCommingDataChanged()
-	-- print("GameUIWatchTower:OnCommingDataChanged-->")
 	self:RefreshCurrentList()
 end
 
 function GameUIWatchTower:OnMarchDataChanged()
 	self:RefreshCurrentList()
-	-- print("GameUIWatchTower:OnMarchDataChanged-->")
 end
 
 function GameUIWatchTower:OnFightEventTimerChanged(fightEvent)
-	-- print("GameUIWatchTower:OnFightEventTimerChanged-->")
 	if self.shrine_timer_label[fightEvent:Id()] then
 		self.shrine_timer_label[fightEvent:Id()]:setString(GameUtils:formatTimeStyle1(fightEvent:GetTime()))
 	end
 end
 function GameUIWatchTower:OnAttackMarchEventTimerChanged(attackMarchEvent)
-	-- print("GameUIWatchTower:OnAttackMarchEventTimerChanged-->")
 	if self.march_timer_label[attackMarchEvent:Id()] then
 		self.march_timer_label[attackMarchEvent:Id()]:setString(GameUtils:formatTimeStyle1(attackMarchEvent:GetTime()))
 	end
 end
 
 function GameUIWatchTower:OnVillageEventTimer(villageEvent)
-	-- print("GameUIWatchTower:OnVillageEventTimer-->")
 	if self.village_process[villageEvent:Id()] then
 		self.village_process[villageEvent:Id()]:setPercentage(villageEvent:CollectPercent())
 	end
@@ -376,8 +464,50 @@ function GameUIWatchTower:GetAllianceBelvedere()
 end
 
 --event
-
+--签到按钮
 function GameUIWatchTower:OnSignButtonClikced()
+end
+
+--内容过滤
+function GameUIWatchTower:GetEntityFromCityName(entity)
+	if entity:GetType() == entity.ENTITY_TYPE.MARCH_OUT and entity:WithObject():MarchType() == "helpDefence" then
+		return entity:GetFromCityName()
+	end
+	local level = self:GetBuilding():GetLevel()
+	if not self:GetAllianceBelvedere():CanDisplayCommingCityName(level) then
+		return '?'
+	else
+		return entity:GetFromCityName()
+	end
+end
+
+function GameUIWatchTower:GetEntityAttackPlayerName(entity)
+	if entity:GetType() == entity.ENTITY_TYPE.MARCH_OUT and entity:WithObject():MarchType() == "helpDefence" then
+		return entity:GetAttackPlayerName()
+	end
+	local level = self:GetBuilding():GetLevel()
+	if not self:GetAllianceBelvedere():CanDisplayCommingPlayerName(level) then
+		return '?'
+	else
+		return entity:GetAttackPlayerName()
+	end
+end
+
+function GameUIWatchTower:GetEntityDragonType(entity)
+	if entity:GetType() == entity.ENTITY_TYPE.MARCH_OUT and entity:WithObject():MarchType() == "helpDefence" then
+		return entity:GetDragonType()
+	end
+	local level = self:GetBuilding():GetLevel()
+	if not self:GetAllianceBelvedere():CanDisplayCommingDragonType(level) then
+		return '?'
+	else
+		return entity:GetDragonType()
+	end
+end
+
+function GameUIWatchTower:CanViewEventDetail()
+	local level = self:GetBuilding():GetLevel()
+	return self:GetAllianceBelvedere():CanViewEventDetail(level)
 end
 
 return GameUIWatchTower

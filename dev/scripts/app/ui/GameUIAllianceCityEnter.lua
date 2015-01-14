@@ -159,15 +159,19 @@ function GameUIAllianceCityEnter:GetEnterButtons()
 			UIKit:newGameUI("GameUIStrikePlayer",member:Id()):addToCurrentScene(true)
 			self:leftButtonClicked()
 		end)
-		local enter_button = self:BuildOneButton("playercity_66x83.png",_("进入")):onButtonClicked(function()
-			app:EnterPlayerCityScene(member:Id())
-			self:leftButtonClicked()
-		end)
+		buttons = {attack_button,strike_button}
+		if self:GetMyAlliance():GetAllianceBelvedere():CanEnterEnemyCity() then
+			local enter_button = self:BuildOneButton("playercity_66x83.png",_("进入")):onButtonClicked(function()
+				app:EnterPlayerCityScene(member:Id())
+				self:leftButtonClicked()
+			end)
+			table.insert(buttons, enter_button)
+		end
 		local info_button = self:BuildOneButton("icon_info_1.png",_("信息")):onButtonClicked(function()
 			UIKit:newGameUI("GameUIAllianceMemberInfo",false,member:Id()):addToCurrentScene(true)
 			self:leftButtonClicked()
 		end)
-		buttons = {attack_button,strike_button,enter_button,info_button}
+		table.insert(buttons,info_button)
 	end
  	return buttons
 end

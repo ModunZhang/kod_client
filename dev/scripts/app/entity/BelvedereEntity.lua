@@ -26,9 +26,6 @@ function BelvedereEntity:GetType()
 	return self.entity_type
 end
 
-function BelvedereEntity:GetFrom()
-end
-
 function BelvedereEntity:GetTitle()
 	if self:GetType() == self.ENTITY_TYPE.HELPTO then
 		return  string.format(_("正在协防玩家%s"),self:WithObject().beHelpedPlayerData.name)
@@ -94,19 +91,16 @@ function BelvedereEntity:GetDestination()
 			local village_data = self:WithObject():GetDefenceData() 
 			return Localize.village_name[village_data.type] .. "Lv" .. village_data.level
 		elseif self:WithObject():MarchType() == 'shrine' then
-			return _("攻打联盟圣地")
+			return _("圣地")
 		end
 	elseif self:GetType() == self.ENTITY_TYPE.SHIRNE then
-		return _("圣地事件")
+		return _("圣地")
 	end
 end
 
 function BelvedereEntity:GetDestinationLocation()
-	if self:GetType() == self.ENTITY_TYPE.HELPTO then
-
-		return "0,0"
-	elseif self:GetType() == self.ENTITY_TYPE.COLLECT then
-
+	
+	if self:GetType() == self.ENTITY_TYPE.COLLECT then
 		local location = self:WithObject():TargetLocation()
 		return location.x .. "," .. location.y
 	elseif self:GetType() == self.ENTITY_TYPE.MARCH_OUT  
@@ -114,8 +108,9 @@ function BelvedereEntity:GetDestinationLocation()
 		or self:GetType() == self.ENTITY_TYPE.STRIKE_OUT 
 		or self:GetType() == self.ENTITY_TYPE.STRIKE_RETURN 
 		then
-
 		return self:WithObject():GetDefenceData().location.x .. "," .. self:WithObject():GetDefenceData().location.y
+	elseif self:GetType() == self.ENTITY_TYPE.HELPTO then
+		return self:WithObject().beHelpedPlayerData.location.x .. "," .. self:WithObject().beHelpedPlayerData.location.y
 	elseif self:GetType() == self.ENTITY_TYPE.SHIRNE then
 		local location =  self:FindShrinePlayerTroops().location
 		return location.x .. "," .. location.y
@@ -145,6 +140,24 @@ function BelvedereEntity:FindShrinePlayerTroops()
 			end
 		end
 
+	end
+end
+
+function BelvedereEntity:GetFromCityName()
+	if self:GetType() == self.ENTITY_TYPE.MARCH_OUT  
+		or self:GetType() == self.ENTITY_TYPE.STRIKE_OUT 
+		or self:GetType() == self.ENTITY_TYPE.HELPTO 
+		then
+		return self:WithObject():AttackPlayerData().cityName
+	end
+end
+
+function BelvedereEntity:GetAttackPlayerName()
+	if self:GetType() == self.ENTITY_TYPE.MARCH_OUT  
+		or self:GetType() == self.ENTITY_TYPE.STRIKE_OUT 
+		or self:GetType() == self.ENTITY_TYPE.HELPTO 
+		then
+		return self:WithObject():AttackPlayerData().name
 	end
 end
 

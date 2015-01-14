@@ -31,6 +31,9 @@ function GameUIUpgradeBuilding:CreateTabButtons(param, cb)
     end)
 end
 
+function GameUIUpgradeBuilding:GetBuilding()
+    return self.building
+end
 
 return GameUIUpgradeBuilding
 

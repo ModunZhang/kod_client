@@ -81,7 +81,7 @@ extern "C" void WriteLog_(const char *str)
         [[NSFileManager defaultManager] createFileAtPath:logFilePath contents:nil attributes:nil] ;
         outFile = [[NSFileHandle fileHandleForWritingAtPath:logFilePath]retain];
     }
-    dispatch_async(aDQueue, ^{
+    dispatch_sync(aDQueue, ^{
         NSData * data = [[NSString stringWithCString:str  encoding:NSUTF8StringEncoding] dataUsingEncoding:NSUTF8StringEncoding];
         [outFile writeData:data];
         //outFile close

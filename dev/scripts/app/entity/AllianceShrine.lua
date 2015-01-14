@@ -168,7 +168,7 @@ function AllianceShrine:OnFightEventTimerChanged(fightEvent)
 	self:NotifyListeneOnType(self.LISTEN_TYPE.OnFightEventTimerChanged,function(listener)
 		listener.OnFightEventTimerChanged(listener,fightEvent)
 	end)
-	if self:GetAlliance():NeedUpdateEnemyAlliance() and self:GetAlliance():GetAllianceBelvedere()['OnFightEventTimerChanged'] then
+	if self:GetAlliance():GetAllianceBelvedere()['OnFightEventTimerChanged'] then
 		self:GetAlliance():GetAllianceBelvedere():OnFightEventTimerChanged(fightEvent)
 	end
 end
@@ -283,7 +283,7 @@ function AllianceShrine:OnShrineEventsChanged(changed_map)
 	self:NotifyListeneOnType(self.LISTEN_TYPE.OnShrineEventsChanged,function(listener)
 		listener.OnShrineEventsChanged(listener,changed_map)
 	end)
-	if self:GetAlliance():NeedUpdateEnemyAlliance() and self:GetAlliance():GetAllianceBelvedere()['OnShrineEventsChanged'] then
+	if self:GetAlliance():GetAllianceBelvedere()['OnShrineEventsChanged'] then
 		self:GetAlliance():GetAllianceBelvedere():OnShrineEventsChanged(changed_map)
 	end
 end

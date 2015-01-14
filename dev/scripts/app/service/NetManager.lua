@@ -211,6 +211,11 @@ onSendChatSuccess_callbacks = {}
 onGetAllChatSuccess_callbacks = {}
 onFetchAllianceViewData_callbacks = {}
 onGetPlayerViewDataSuccess_callbacks = {}
+onGetStrikeMarchEventDetail_callbacks = {}
+onGetAttackMarchEventDetail_callbacks = {}
+onGetHelpDefenceMarchEventDetail_callbacks = {}
+onGetHelpDefenceTroopDetail_callbacks = {}
+
 function NetManager:addOnSearchAlliancesSuccessListener()
     self:addEventListener("onSearchAlliancesSuccess", function(success, msg)
         if success then
@@ -427,7 +432,57 @@ function NetManager:addOnFetchAllianceViewSuccess()
         end
     end)
 end
+function NetManager:addOnGetStrikeMarchEventDetail()
+     self:addEventListener("onGetStrikeMarchEventDetail", function(success, msg)
+        if success then
+            assert(#onGetStrikeMarchEventDetail_callbacks <= 1, "重复getStrikeMarchEventDetail请求过多了!")
+            local callback = onGetStrikeMarchEventDetail_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onGetStrikeMarchEventDetail_callbacks = {}
+        end
+    end)
+end
+function NetManager:addOnGetAttackMarchEventDetail()
+    self:addEventListener("onGetAttackMarchEventDetail", function(success, msg)
+        if success then
+            assert(#onGetAttackMarchEventDetail_callbacks <= 1, "重复getAttackMarchEventDetail请求过多了!")
+            local callback = onGetAttackMarchEventDetail_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onGetAttackMarchEventDetail_callbacks = {}
+        end
+    end)
+end
+function NetManager:addOnGetHelpDefenceMarchEventDetail()
+    self:addEventListener("onGetHelpDefenceMarchEventDetail", function(success, msg)
+        if success then
+            assert(#onGetHelpDefenceMarchEventDetail_callbacks <= 1, "重复getHelpDefenceMarchEventDetail请求过多了!")
+            local callback = onGetHelpDefenceMarchEventDetail_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onGetHelpDefenceMarchEventDetail_callbacks = {}
+        end
+    end)
+end
+function NetManager:addOnGetHelpDefenceTroopDetail()
+    self:addEventListener("onGetHelpDefenceTroopDetail", function(success, msg)
+        if success then
+            assert(#onGetHelpDefenceTroopDetail_callbacks <= 1, "重复getHelpDefenceTroopDetail请求过多了!")
+            local callback = onGetHelpDefenceTroopDetail_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onGetHelpDefenceTroopDetail_callbacks = {}
+        end
+    end)
+end
 
+-- 
+--
 ------------------------------------------------------------------------------------------------
 function NetManager:addLoginEventListener()
     self:addEventListener("onPlayerLoginSuccess", function(success, msg)
@@ -515,6 +570,10 @@ function NetManager:getConnectLogicServerPromise()
         self:addOnTowerLevelUpListener()
         self:addOnWallLevelUp()
         self:addOnFetchAllianceViewSuccess()
+        self:addOnGetStrikeMarchEventDetail()
+        self:addOnGetAttackMarchEventDetail()
+        self:addOnGetHelpDefenceMarchEventDetail()
+        self:addOnGetHelpDefenceTroopDetail()
     end)
 end
 local function getOpenUDID()
@@ -590,7 +649,18 @@ end
 local function get_fetchallianceview_callback()
     return  get_callback_promise(onFetchAllianceViewData_callbacks, "获取对方联盟数据失败!")
 end
-
+local function get_strikemarcheventdetail_callback()
+    return  get_callback_promise(onGetStrikeMarchEventDetail_callbacks, "获取突袭事件数据失败!")
+end
+local function get_attackmarcheventdetail_callback()
+    return  get_callback_promise(onGetAttackMarchEventDetail_callbacks, "获取行军事件数据失败!")
+end
+local function get_gethelpdefencemarcheventdetail_callback()
+    return  get_callback_promise(onGetHelpDefenceMarchEventDetail_callbacks, "获取协防事件数据失败!")
+end
+local function get_gethelpdefencetroopdetail_callback()
+    return  get_callback_promise(onGetHelpDefenceTroopDetail_callbacks, "获取协防事件数据失败!")
+end
 -- 修改城市名字
 function NetManager:getEditPlayerCityNamePromise(cityName)
     return promise.all(get_blocking_request_promise("logic.playerHandler.editPlayerCityName", {
@@ -1267,8 +1337,28 @@ function NetManager:getStrikeVillagePromise(dragonType,defenceAllianceId,defence
     get_alliancedata_callback()):next(get_response_msg)
 end
 
-
+--查看敌方进攻行军事件详细信息
+function NetManager:getAttackMarchEventDetailPromise(eventId)
+     return promise.all(get_blocking_request_promise("logic.allianceHandler.getAttackMarchEventDetail",
+        {eventId = eventId},"获取行军事件数据失败!"),get_attackmarcheventdetail_callback()):next(get_response_msg)
+end
+--查看敌方突袭行军事件详细信息
+function NetManager:getStrikeMarchEventDetailPromise(eventId)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.getStrikeMarchEventDetail",
+        {eventId = eventId},"获取突袭事件数据失败!"),get_strikemarcheventdetail_callback()):next(get_response_msg)
+end
+--查看协助部队行军事件详细信息
+function NetManager:getHelpDefenceMarchEventDetailPromise(eventId)
+     return promise.all(get_blocking_request_promise("logic.allianceHandler.getHelpDefenceMarchEventDetail",
+        {eventId = eventId},"获取协防事件数据失败!"),get_gethelpdefencemarcheventdetail_callback()):next(get_response_msg)
+end
+--查看协防部队详细信息
+function NetManager:getHelpDefenceTroopDetailPromise(playerId,helpedByPlayerId)
+      return promise.all(get_blocking_request_promise("logic.allianceHandler.getHelpDefenceTroopDetail",
+        {playerId = playerId,helpedByPlayerId = helpedByPlayerId},"查看协防部队详细信息失败!"),get_gethelpdefencetroopdetail_callback()):next(get_response_msg)
+end
 --
+----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"
     self.m_netService:get(updateServer, nil, function(success, statusCode, msg)
