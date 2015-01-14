@@ -464,6 +464,8 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     if alliance_data.titles then
         self:SetTitleNames(alliance_data.titles)
     end
+    self:OnAllianceBasicInfoChangedFirst(alliance_data.basicInfo)
+    
     self:GetAllianceBelvedere():OnAllianceDataChanged(alliance_data)
     self:OnNewEventsComming(alliance_data.__events)
     self:OnNewMemberDataComming(alliance_data.__members)
@@ -477,9 +479,8 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     self:OnAllianceFightChanged(alliance_data.allianceFight)
     self:OnAllianceFightRequestsChanged(alliance_data)
     self:OnAllianceFightReportsChanged(alliance_data)
-    self.alliance_map:OnAllianceDataChanged(alliance_data)
     self.alliance_shrine:OnAllianceDataChanged(alliance_data)
-    self:OnAllianceBasicInfoChanged(alliance_data.basicInfo)
+    self.alliance_map:OnAllianceDataChanged(alliance_data)
 
     self:OnAttackMarchEventsDataChanged(alliance_data.attackMarchEvents)
     self:OnAttackMarchEventsComming(alliance_data.__attackMarchEvents)
@@ -593,7 +594,7 @@ function Alliance:OnNewHelpEventsDataComming(__helpEvents)
         edit = edit,
     }
 end
-function Alliance:OnAllianceBasicInfoChanged(basicInfo)
+function Alliance:OnAllianceBasicInfoChangedFirst(basicInfo)
     if basicInfo == nil then return end
     self:SetName(basicInfo.name)
     self:SetAliasName(basicInfo.tag)

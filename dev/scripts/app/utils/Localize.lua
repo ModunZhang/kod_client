@@ -438,7 +438,8 @@ local SOLDIER_STATUS = {
 local DRAGON_STATUS = {
     free = _("空闲"),
     march = _("出征中"),
-    defence = _("驻防中")
+    defence = _("驻防中"),
+    dead = _("死亡")
 }
 local FIGHT_REWARD = {
     blood = _("英雄之血"),
