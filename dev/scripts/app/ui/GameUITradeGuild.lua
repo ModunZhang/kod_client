@@ -9,9 +9,6 @@ local WidgetInfo = import("..widget.WidgetInfo")
 local WidgetSliderWithInput = import("..widget.WidgetSliderWithInput")
 local MaterialManager = import("..entity.MaterialManager")
 local TradeManager = import("..entity.TradeManager")
-
-
-
 local UILib = import(".UILib")
 
 
@@ -41,9 +38,9 @@ local function get_goods_unit(goods_name)
         or goods_name=="stone"
         or goods_name=="iron"
         or goods_name=="food" then
-        return 1000
+        return "k"
     else
-            return 1
+        return ""
     end
 end
 
@@ -89,11 +86,13 @@ function GameUITradeGuild:onEnter()
 
     self.building:AddUpgradeListener(self)
     self.trade_manager:AddListenOnType(self, TradeManager.LISTEN_TYPE.DEAL_CHANGED)
+    self.city:GetMaterialManager():AddObserver(self)
 end
 
 function GameUITradeGuild:onExit()
     self.trade_manager:RemoveListenerOnType(self, TradeManager.LISTEN_TYPE.DEAL_CHANGED)
     self.building:RemoveUpgradeListener(self)
+    self.city:GetMaterialManager():RemoveObserver(self)
     GameUITradeGuild.super.onExit(self)
 end
 
@@ -189,19 +188,12 @@ function GameUITradeGuild:RefreshSellListView(goods_type,selected)
     list_view:removeAllItems()
     NetManager:getGetSellItemsPromise(self:GetGoodsTypeMapToString(goods_type),goods_type[selected]):next(function(data)
         for k,v in pairs(data) do
-            self:CreateSellItemForListView(list_view,
-                {
-                    icon=v.itemData.name,
-                    num=v.itemData.count,
-                    amount=v.itemData.price,
-                    unit_price=v.itemData.price/v.itemData.count*get_goods_unit(v.itemData.name),
-                }
-            )
+            self:CreateSellItemForListView(list_view,v)
         end
         list_view:reload()
     end)
 end
-function GameUITradeGuild:CreateSellItemForListView(listView,params)
+function GameUITradeGuild:CreateSellItemForListView(listView,goods)
     local item = listView:newItem()
     local item_width,item_height = 568,64
     item:setItemSize(item_width, item_height)
@@ -212,7 +204,7 @@ function GameUITradeGuild:CreateSellItemForListView(listView,params)
     local icon_bg = display.newSprite("back_ground_58x54.png")
         :align(display.LEFT_CENTER, 6, content:getContentSize().height/2)
         :addTo(content)
-    local icon_image = display.newSprite(self:GetGoodsIcon(listView,params.icon))
+    local icon_image = display.newSprite(self:GetGoodsIcon(listView,goods.itemData.name))
         :align(display.CENTER, icon_bg:getContentSize().width/2, icon_bg:getContentSize().height/2)
         :addTo(icon_bg)
     -- 缩放icon到合适大小
@@ -221,15 +213,15 @@ function GameUITradeGuild:CreateSellItemForListView(listView,params)
     -- 商品数量
     UIKit:ttfLabel(
         {
-            text = GameUtils:formatNumber(params.num),
+            text = goods.itemData.count..get_goods_unit(goods.itemData.name),
             size = 20,
             color = 0x403c2f
         }):align(display.CENTER, 120 ,content:getContentSize().height/2)
         :addTo(content)
-    -- 需要资源小车数量
+    -- 商品单价
     UIKit:ttfLabel(
         {
-            text = params.unit_price,
+            text = goods.itemData.price,
             size = 20,
             color = 0x403c2f
         }):align(display.CENTER, 230 ,content:getContentSize().height/2)
@@ -241,7 +233,7 @@ function GameUITradeGuild:CreateSellItemForListView(listView,params)
     -- 总价
     UIKit:ttfLabel(
         {
-            text = string.formatnumberthousands(params.amount),
+            text = string.formatnumberthousands(goods.itemData.price*goods.itemData.count),
             size = 20,
             color = 0x403c2f
         }):align(display.LEFT_CENTER, 330 ,content:getContentSize().height/2)
@@ -258,7 +250,15 @@ function GameUITradeGuild:CreateSellItemForListView(listView,params)
             shadow = true
         }))
         :onButtonClicked(function(event)
-            listView:removeItem(item)
+            if City:GetResourceManager():GetCoinResource():GetValue()<goods.itemData.price*goods.itemData.count then
+                FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                    :SetPopMessage(_("银币不足"))
+                    :AddToCurrentScene()
+                return
+            end
+            NetManager:getBuySellItemPromise(goods._id):next(function ( ... )
+                listView:removeItem(item)
+            end)
         end)
 end
 function GameUITradeGuild:GetGoodsIcon(listView,icon)
@@ -382,7 +382,6 @@ function GameUITradeGuild:CreateOptions(params)
             local new_value = GameUtils:formatNumber(num)
             if new_value ~= num_value:getString() then
                 num_value:setString(new_value)
-                -- print("SetValue")
             end
         end
     end
@@ -446,7 +445,6 @@ function GameUITradeGuild:LoadMyGoodsPage()
 
     -- 我的商品列表
     local list_view ,listnode=  UIKit:commonListView({
-        -- bgColor = UIKit:hex2c4b(0x7a101000),
         viewRect = cc.rect(0, 0, 568, 625),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     })
@@ -494,9 +492,9 @@ function GameUITradeGuild:CreateSellItem(list,index)
 
     local goods = self:GetOnSellGoods()[index]
     if goods then
-        title_label:setString(_("出售")..Localize.fight_reward[goods.goods_type])
+        title_label:setString(_("出售")..Localize.sell_type[goods.goods_type])
         -- goods icon
-        local goods_icon = display.newSprite(UILib.resource[goods.goods_type])
+        local goods_icon = display.newSprite(UILib.resource[goods.goods_type] or UILib.materials[goods.goods_type])
             :align(display.CENTER, goods_bg:getContentSize().width/2, goods_bg:getContentSize().height/2)
             :addTo(goods_bg)
         goods_icon:scale(84/math.max(goods_icon:getContentSize().width,goods_icon:getContentSize().height))
@@ -506,7 +504,7 @@ function GameUITradeGuild:CreateSellItem(list,index)
             :addTo(goods_bg)
         UIKit:ttfLabel(
             {
-                text = GameUtils:formatNumber(goods.good_num),
+                text = goods.good_num..get_goods_unit(goods.goods_type),
                 size = 18,
                 color = 0xfff9b5
             }):align(display.CENTER,goods_num_bg:getContentSize().width/2, goods_num_bg:getContentSize().height/2)
@@ -529,7 +527,7 @@ function GameUITradeGuild:CreateSellItem(list,index)
         -- 总价
         UIKit:ttfLabel(
             {
-                text = string.formatnumberthousands(goods.good_price),
+                text = string.formatnumberthousands(goods.good_price*goods.good_num),
                 size = 20,
                 color = 0x403c2f
             }):align(display.LEFT_CENTER, 170 ,item_height-120)
@@ -549,6 +547,7 @@ function GameUITradeGuild:CreateSellItem(list,index)
             }))
             :onButtonClicked(function(event)
                 if goods.goods_status then
+                    NetManager:getGetMyItemSoldMoneyPromise(goods.good_id)
                 else
                     NetManager:getRemoveMySellItemPromise(goods.good_id)
                 end
@@ -806,12 +805,6 @@ function GameUITradeGuild:OpenSellDialog()
                     goods_type = MARTIAL_MATERIAL_TYPE
                 end
                 local selected = options.currentSelectedIndex_
-                print("---------tag==",tag)
-                print("-------selected",selected)
-                print("-------GetTotalPrice",self:GetTotalPrice())
-                print("-------goods_type",goods_type[selected])
-                print("-------count",self.sell_num_item:GetCount())
-                print("-------value",self.sell_num_item:GetValue())
                 -- 判定小车是否足够
                 if self.sell_num_item:GetValue()>City:GetResourceManager():GetCartResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()) then
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))
@@ -819,7 +812,7 @@ function GameUITradeGuild:OpenSellDialog()
                         :AddToCurrentScene()
                     return
                 end
-                NetManager:getSellItemPromise(type,goods_type[selected],self.sell_num_item:GetCount(),self:GetTotalPrice())
+                NetManager:getSellItemPromise(type,goods_type[selected],self.sell_num_item:GetValue(),self.sell_price_item:GetValue())
                     :next(function(result)
                         self:getParent():leftButtonClicked()
                     end)
@@ -830,13 +823,7 @@ function GameUITradeGuild:OpenSellDialog()
         local options = tradeGuildUI:CreateOptions(goods_details)
             :pos(26, h-120):addTo(layer)
             :onButtonSelectChanged(function(event)
-                -- printf("Option %d selected, Option %d unselected", event.selected, event.last)
-                -- dump(event.target)
-                -- print("--",event.target:getButtonAtIndex(event.selected):SetValue(9191919))
-
-
                 local max_num,min_num,min_unit_price,max_unit_price,unit = self:GetPriceAndNum(goods_type,event.selected)
-                print("goods_icon====",self:GetGoodsIcon(goods_type,event.selected))
                 self:CreateOrRefreshSliders(
                     {
                         max_num=max_num,
@@ -956,9 +943,6 @@ function GameUITradeGuild:OpenSellDialog()
 
     -- body 方法
 
-
-
-
     local body_width,body_height = 608,624
     body.drop_list =  WidgetDropList.new(
         {
@@ -1016,15 +1000,54 @@ end
 function GameUITradeGuild:OnDealChanged(changed_map)
     self:LoadMyGoodsList()
 end
-
+function GameUITradeGuild:OnResourceChanged(resource_manager)
+    GameUITradeGuild.super.OnResourceChanged(self,resource_manager)
+    local tradeGuild = City:GetFirstBuildingByType("tradeGuild")
+    if self.cart_num then
+        self.cart_num:SetValue(resource_manager:GetCartResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()).. "/"..tradeGuild:GetMaxCart())
+    end
+    if self.resource_options then
+        local options =  self.resource_options
+        local resources = self:GetGoodsDetailsByType(RESOURCE_TYPE)
+        for i=1,4 do
+            local item = options:getButtonAtIndex(i)
+            item:SetValue(resources[i][2])
+        end
+    end
+end
+function GameUITradeGuild:OnMaterialsChanged(material_manager, material_type, changed)
+    if material_type == MaterialManager.MATERIAL_TYPE.BUILD then
+        if self.build_material_options then
+            local options =  self.build_material_options
+            for k,v in pairs(changed) do
+                local index = self:GetMaterialIndexByName(k)
+                options:getButtonAtIndex(index):SetValue(v.new)
+            end
+        end
+    elseif material_type == MaterialManager.MATERIAL_TYPE.TECHNOLOGY then
+        if self.martial_material_options then
+            local options =  self.martial_material_options
+            for k,v in pairs(changed) do
+                local index = self:GetMaterialIndexByName(k)
+                options:getButtonAtIndex(index):SetValue(v.new)
+            end
+        end
+    end
+end
+-- 通过材料类别取的UI初始化的材料index
+function GameUITradeGuild:GetMaterialIndexByName(material_type)
+    local build_temp = {
+        blueprints = 1,
+        tools = 2,
+        tiles = 3,
+        pulley = 4,
+    }
+    local teach_temp = {
+        trainingFigure = 1,
+        bowTarget = 2,
+        saddle = 3,
+        ironPart = 4,
+    }
+    return build_temp[material_type] or teach_temp[material_type]
+end
 return GameUITradeGuild
-
-
-
-
-
-
-
-
-
-
