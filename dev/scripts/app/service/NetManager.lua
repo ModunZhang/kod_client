@@ -211,15 +211,11 @@ onSendChatSuccess_callbacks = {}
 onGetAllChatSuccess_callbacks = {}
 onFetchAllianceViewData_callbacks = {}
 onGetPlayerViewDataSuccess_callbacks = {}
-<<<<<<< HEAD
 onGetStrikeMarchEventDetail_callbacks = {}
 onGetAttackMarchEventDetail_callbacks = {}
 onGetHelpDefenceMarchEventDetail_callbacks = {}
 onGetHelpDefenceTroopDetail_callbacks = {}
-
-=======
 onGetSellItemsSuccess_callbacks = {}
->>>>>>> trade
 function NetManager:addOnSearchAlliancesSuccessListener()
     self:addEventListener("onSearchAlliancesSuccess", function(success, msg)
         if success then
