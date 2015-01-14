@@ -80,32 +80,10 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
     self.equip_config = equip_config
     -- back_ground
     local back_ground = self:GetBody()
-    -- WidgetUIBackGround.new({height=650}):addTo(self)
 
     -- title
     local size = back_ground:getContentSize()
-    -- local title_blue = cc.ui.UIImage.new("title_blue_596x49.png"):addTo(back_ground, 2)
-    --     :align(display.CENTER, size.width/2, size.height - 49/2)
 
-    -- title label
-    -- local size = title_blue:getContentSize()
-    -- self.title = cc.ui.UILabel.new({
-    --     text = _("制造装备"),
-    --     size = 24,
-    --     font = UIKit:getFontFilePath(),
-    --     align = cc.ui.TEXT_ALIGN_RIGHT,
-    --     color = UIKit:hex2c3b(0xffedae)
-    -- }):addTo(title_blue)
-    --     :align(display.LEFT_CENTER, 20, size.height/2)
-
-    -- -- X
-    -- local x_btn = cc.ui.UIPushButton.new({normal = "x_up_66x66.png",
-    --     pressed = "x_down_66x66.png"}):addTo(title_blue, 2)
-    --     :align(display.CENTER, size.width - 15, size.height - 15)
-    --     :onButtonClicked(function(event)
-    --         self:Close()
-    --     end)
-    -- cc.ui.UIImage.new("x_31x28.png"):addTo(x_btn, 2):align(display.CENTER, 0, 0)
 
     local make_eq_bg_2 = display.newSprite("make_eq_bg_2.png"):addTo(back_ground):pos(size.width/2, size.height - 436/2-20)
     local make_eq_bg_4 = display.newSprite("make_eq_bg_4.png"):addTo(back_ground):pos(size.width/2, size.height - 436/2-20)
@@ -177,9 +155,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
     }):addTo(eq_info_bg)
         :align(display.BOTTOM_CENTER, eq_info_bg:getContentSize().width/2, 42)
 
-    -- cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(back_ground, 2)
-    --     :setLayoutSize(430, 2):align(display.LEFT_CENTER, 150, size.height - 130)
-
+ 
     -- used for dragon category
     cc.ui.UILabel.new({
         text = BODY_LOCALIZE[equip_config.category],
@@ -190,8 +166,6 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
     }):addTo(eq_info_bg)
         :align(display.BOTTOM_CENTER, eq_info_bg:getContentSize().width/2, 14)
 
-    -- cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(back_ground, 2)
-    --     :setLayoutSize(430, 2):align(display.LEFT_CENTER, 150, size.height - 170)
 
     -- 立即建造
     local size = back_ground:getContentSize()
@@ -205,7 +179,6 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
             color = UIKit:hex2c3b(0xfff3c7)
         }))
         :onButtonClicked(function(event)
-            -- NetManager:instantMakeDragonEquipment(equip_type, NOT_HANDLE)
             NetManager:getInstantMakeDragonEquipmentPromise(equip_type):catch(function(err)
                 dump(err:reason())
             end)
@@ -275,35 +248,11 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
     }):addTo(button, 2)
         :align(display.CENTER, center, -70)
 
-
-    -- -- 需求框
-    -- local size = back_ground:getContentSize()
-    -- local need_bg = WidgetUIBackGround2.new(200):addTo(back_ground)
-    --     :align(display.CENTER, size.width / 2, size.height - 440)
-
-    -- -- 需求title
-    -- local size = need_bg:getContentSize()
-    -- local title_bg = cc.ui.UIImage.new("title_bg_566x36.png"):addTo(need_bg, 2)
-    --     :align(display.CENTER, size.width / 2, size.height - 36/2 - 2)
-
-    -- -- 需求label
-    -- local pos = title_bg:getAnchorPointInPoints()
-    -- cc.ui.UILabel.new({
-    --     text = _("需要材料"),
-    --     size = 24,
-    --     font = UIKit:getFontFilePath(),
-    --     align = cc.ui.TEXT_ALIGN_CENTER,
-    --     color = UIKit:hex2c3b(0x403c2f)
-    -- }):addTo(title_bg, 2)
-    --     :align(display.CENTER, pos.x, pos.y)
-
-
     -- 需求列表
-    -- local pos = need_bg:getAnchorPointInPoints()
     local unit_len, origin_y, gap_x = 105, 350, 80
     local len = #self.matrials
     local total_len = len * unit_len + (len - 1) * gap_x
-    local origin_x = total_len / 2 + unit_len / 2 -170
+    local origin_x = (size.width - total_len) / 2 + unit_len / 2
     local materials_map = {}
     for i, v in ipairs(self.matrials) do
         local material_type = v[1]
@@ -366,8 +315,6 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
         :setButtonSelected(true)
     self.build_check_box:setTouchEnabled(false)
 
-    -- cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(back_ground, 2)
-    --     :setLayoutSize(570, 2):align(display.CENTER, size.width / 2, 80 - 22)
 
     -- 需要银币
     local  condition_bg_2 = display.newSprite("back_ground_548x40_2.png")
@@ -391,9 +338,6 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
         :align(display.LEFT_CENTER, 500, 20)
         :setButtonSelected(true)
     self.coin_check_box:setTouchEnabled(false)
-
-    -- cc.ui.UIImage.new("dividing_line_594x2.png"):addTo(back_ground, 2)
-    --     :setLayoutSize(570, 2):align(display.CENTER, size.width / 2, 40 - 22)
 
     self.back_ground = back_ground
 end
