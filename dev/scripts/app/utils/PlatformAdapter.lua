@@ -65,6 +65,7 @@ function PlatformAdapter:mac()
     fileutils:addSearchPath("dev/res/fonts/")
     fileutils:addSearchPath("dev/res/images/")
     fileutils:addSearchPath("dev/res/fonts/")
+    ext.getDeviceToken = function ()end
 end
 
 

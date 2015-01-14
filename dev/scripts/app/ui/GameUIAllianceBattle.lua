@@ -1075,20 +1075,19 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance)
         color = 0x403c2f,
     }):align(display.LEFT_CENTER,200,30)
         :addTo(content)
+    if alliance._id ~= Alliance_Manager:GetMyAlliance():Id() then
+        -- 进入按钮
+        local enter_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
+            :setButtonLabel(UIKit:ttfLabel({
+                text = _("进入"),
+                size = 24,
+                color = 0xffedae,
+                shadow= true
+            }))
+            :onButtonClicked(function(event)
 
-
-    -- 进入按钮
-    local enter_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("进入"),
-            size = 24,
-            color = 0xffedae,
-            shadow= true
-        }))
-        :onButtonClicked(function(event)
-
-            end):align(display.RIGHT_CENTER,w-20,45):addTo(content)
-
+                end):align(display.RIGHT_CENTER,w-20,45):addTo(content)
+    end
     item:addContent(content)
     self.alliance_listview:addItem(item)
 end
@@ -1255,5 +1254,6 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
 
 
