@@ -382,7 +382,8 @@ function GameUIWatchTower:OnEventDetailButtonClicked(entity)
 		end
 	elseif strEntityType == entity.ENTITY_TYPE.STRIKE_OUT then
 		NetManager:getStrikeMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
-			dump(msg)
+			UIKit:newGameUI("GameUIWatchTowerTroopDetail",msg,GameUIWatchTowerTroopDetail.DATA_TYPE.STRIKE,true)
+					:addToCurrentScene(true)
 		end)
 	end
 end
