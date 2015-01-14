@@ -31,7 +31,7 @@
 #import "RootViewController.h"
 
 @implementation AppController
-
+@synthesize remoteDeviceToken;
 #pragma mark -
 #pragma mark Application lifecycle
 
@@ -56,11 +56,19 @@ static AppDelegate s_sharedApplication;
     viewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
     viewController.wantsFullScreenLayout = YES;
     viewController.view = eaglView;
+    //
+    [self setRemoteDeviceToken:@""];
     //启用本地通知的BadgeNumber权限 后面会加入远程通知
-    if (IS_IOS8) {
-        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge|UIUserNotificationTypeAlert categories:nil];
+    if (IOS_VERSION >= 8) {
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge|UIUserNotificationTypeAlert|UIUserNotificationTypeSound categories:nil];
         [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
     }
+    else
+    {
+        [[UIApplication sharedApplication]registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+    }
+    
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0]; //清空红圈
     // Set RootViewController to window
     if ([[UIDevice currentDevice].systemVersion floatValue] < 6.0)
@@ -76,7 +84,6 @@ static AppDelegate s_sharedApplication;
     cocos2d::Director::getInstance()->setOpenGLView(glview);
     
     cocos2d::Application::getInstance()->run();
-    
     return YES;
 }
 
@@ -129,6 +136,7 @@ static AppDelegate s_sharedApplication;
 }
 
 - (void)dealloc {
+    [self setRemoteDeviceToken:nil];
     [super dealloc];
 }
 
@@ -136,6 +144,18 @@ static AppDelegate s_sharedApplication;
 #pragma mark Local Push
 -(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification{
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0]; //清空红圈
+}
+
+#pragma mark -
+#pragma mark Remote Push
+-(void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    [self setRemoteDeviceToken:[NSString stringWithFormat:@"%@",deviceToken]];
+    NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken-->%@",deviceToken);
+}
+
+-(void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    NSLog(@"didFailToRegisterForRemoteNotificationsWithError-->%@",[error localizedDescription]);
 }
 @end
 

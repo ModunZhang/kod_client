@@ -711,6 +711,14 @@ static int tolua_ext_get_app_build_version(lua_State* tolua_S)
     return 1;
 }
 
+static int tolua_ext_get_device_token(lua_State* tolua_S)
+{
+    const char * token =  GetDeviceToken();
+    lua_pushstring(tolua_S, token);
+    return 1;
+    
+}
+
 static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
 {
     tolua_function(tolua_S, "now", tolua_ext_now);
@@ -728,6 +736,7 @@ static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
     tolua_function(tolua_S, "getAppVersion", tolua_ext_get_app_version);
     tolua_function(tolua_S, "getAppBuildVersion", tolua_ext_get_app_build_version);
     tolua_function(tolua_S, "__logFile", tolua_ext_log_file);
+    tolua_function(tolua_S, "getDeviceToken", tolua_ext_get_device_token);
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
     tolua_function(tolua_S,"getOpenUDID",tolua_ext_getOpenUDID);
 #endif

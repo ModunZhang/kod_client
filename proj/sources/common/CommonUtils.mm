@@ -1,6 +1,7 @@
 #import <UIKit/UIKit.h>
 #include "CommonUtils.h"
 #include <sys/utsname.h>
+#import "AppController.h"
 
 extern "C" void CopyText(const char * text)
 {
@@ -95,4 +96,9 @@ extern "C" const char* GetAppVersion()
 extern "C" const char* GetAppBundleVersion()
 {
     return [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]UTF8String];;
+}
+extern "C" const char* GetDeviceToken()
+{
+    AppController * appController = (AppController *)[[UIApplication sharedApplication]delegate];
+    return [[appController remoteDeviceToken] UTF8String];
 }
