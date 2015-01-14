@@ -310,4 +310,9 @@ function AllianceBelvedere:CanViewEventDetail(level)
 	return watcher_level >= 10
 end
 
+function AllianceBelvedere:CanEnterEnemyCity(level)
+	local watcher_level = level or self:GetWatchTowerLevel()
+	return watcher_level >= 8
+end
+
 return AllianceBelvedere
