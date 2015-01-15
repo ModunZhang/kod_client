@@ -112,8 +112,6 @@ end
 function AllianceMember.Title2Level(title)
     return titles_enum[title]
 end
---TODO:将联盟权限抽离到配置表
---TODO:复仇权限
 --权限判定函数
 --------------------------------------------------------------------------
 --名称 简称 旗帜 地形 语言 
@@ -137,7 +135,7 @@ function AllianceMember:CanActivateShirneEvent()
     return self:GetTitleLevel() >= self.Title2Level('general')
 end
 --联盟GVG
-function AllianceMember:CanActivateGVSG()
+function AllianceMember:CanActivateGVG()
     return self:GetTitleLevel() >= self.Title2Level('general')
 end
 --在联盟商店的道具目录中补充高级道具
@@ -181,5 +179,9 @@ function AllianceMember:CanEditAllianceJoinType()
 end
 function AllianceMember:CanBuyAdvancedItemsFromAllianceShop()
     return self:GetTitleLevel() >= self.Title2Level('elite') 
+end
+--TODO:复仇权限
+function AllianceMember:CanActivateAllianceRevenge()
+    return true
 end
 return AllianceMember
