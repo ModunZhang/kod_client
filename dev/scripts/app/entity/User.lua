@@ -243,7 +243,7 @@ function User:OnUserDataChanged(userData)
     self.trade_manager:OnUserDataChanged(userData)
 end
 function User:OnGemChanged(resources)
-    if resources.gem then
+    if resources and resources.gem then
         self:GetGemResource():SetValue(resources.gem)
     end
 end

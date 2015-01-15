@@ -66,7 +66,7 @@ function GameUIDragonEyrieMain:OnDragonEventChanged()
 end
 
 function GameUIDragonEyrieMain:OnDragonEventTimer(dragonEvent)
-	if self:GetCurrentDragon():Type() == dragonEvent:DragonType() and self.progress_content_not_hated_timer:isVisible() then
+	if self:GetCurrentDragon():Type() == dragonEvent:DragonType() and self.progress_content_not_hated_timer and self.progress_content_not_hated_timer:isVisible() then
 		self.progress_content_not_hated_timer:setString(GameUtils:formatTimeStyleDayHour(dragonEvent:GetTime()))
 	end
 end
