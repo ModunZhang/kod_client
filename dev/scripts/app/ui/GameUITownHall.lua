@@ -116,7 +116,7 @@ function GameUITownHall:CreateAdministration()
     self.town_hall:AddUpgradeListener(self)
 end
 
-function GameUITownHall:CreateAllQuests(daily_quests )
+function GameUITownHall:CreateAllQuests(daily_quests)
     if daily_quests then
         for _,quest in pairs(daily_quests) do
             self:CreateQuestItem(quest)
@@ -126,7 +126,6 @@ function GameUITownHall:CreateAllQuests(daily_quests )
 end
 
 function GameUITownHall:CreateQuestItem(quest,index)
-    LuaUtils:outputTable("CreateQuestItem  quest", quest)
     local quest_config = GameDatas.DailyQuests.dailyQuests[quest.index]
     local list = self.quest_list_view
     local item = list:newItem()
@@ -319,7 +318,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
     item:SetStatus(quest)
 
     item:addContent(body)
-    list:addItem(item,index)
+    list:insertItemAndRefresh(item,index)
 
     self.quest_items[quest.id] = item
 end
@@ -402,7 +401,7 @@ function GameUITownHall:OnTimer(current_time)
         self.started_quest_item:SetProgress(GameUtils:formatTimeStyle1(quest.finishTime/1000-current_time), 100-(quest.finishTime-current_time*1000)/(quest.finishTime-quest.startTime)*100 )
     end
 end
-function GameUITownHall:GetQuestItemById( questId )
+function GameUITownHall:GetQuestItemById(questId)
     return self.quest_items[questId]
 end
 function GameUITownHall:RemoveQuestItemById( questId )
@@ -417,15 +416,15 @@ function GameUITownHall:ResetQuest()
     self:CreateAllQuests(daily_quests)
 end
 function GameUITownHall:OnDailyQuestsRefresh()
-    print("获取到新的任务")
     self:ResetQuest()
 end
 function GameUITownHall:OnNewDailyQuests(changed_map)
+    LuaUtils:outputTable("OnNewDailyQuestschanged_map", changed_map)
+
     if changed_map.add then
         for k,v in pairs(changed_map.add) do
             self:CreateQuestItem(v)
         end
-        self.quest_list_view:reload()
     end
     if changed_map.edit then
         for k,v in pairs(changed_map.edit) do
@@ -440,6 +439,7 @@ function GameUITownHall:OnNewDailyQuests(changed_map)
     end
 end
 function GameUITownHall:OnNewDailyQuestsEvent(changed_map)
+    LuaUtils:outputTable("OnNewDailyQuestsEvent", changed_map)
     if changed_map.add then
         local finished_quest_num = 0
         for k,v in pairs(self.quest_items) do
@@ -450,12 +450,12 @@ function GameUITownHall:OnNewDailyQuestsEvent(changed_map)
         for k,v in pairs(changed_map.add) do
             self:CreateQuestItem(v,finished_quest_num+1)
         end
-        self.quest_list_view:reload()
     end
     if changed_map.edit then
         for k,v in pairs(changed_map.edit) do
             local quest_item = self:GetQuestItemById(v.id)
             quest_item:Init(v)
+            self.quest_items[v.id]:SetStatus(v)
         end
     end
     if changed_map.remove then
@@ -466,7 +466,6 @@ function GameUITownHall:OnNewDailyQuestsEvent(changed_map)
 end
 
 function GameUITownHall:OnBuildingUpgradingBegin()
-
 end
 function GameUITownHall:OnBuildingUpgradeFinished()
     for k,v in pairs(self.quest_items) do
@@ -474,16 +473,6 @@ function GameUITownHall:OnBuildingUpgradeFinished()
     end
 end
 function GameUITownHall:OnBuildingUpgrading()
-
 end
 
-
-
-
-
 return GameUITownHall
-
-
-
-
-
