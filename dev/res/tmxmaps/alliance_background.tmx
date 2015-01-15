@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="17" height="17" tilewidth="240" tileheight="240">
+<map version="1.0" orientation="orthogonal" width="17" height="19" tilewidth="240" tileheight="240">
  <tileset firstgid="1" name="Grass_under0000" tilewidth="240" tileheight="240">
   <image source="Grass_under0000.png" width="480" height="480"/>
  </tileset>
- <layer name="layer1" width="17" height="17">
+ <layer name="layer1" width="17" height="19">
   <data encoding="base64" compression="zlib">
-   eJx1k0kOBCEMA0nI/988cwCpumQOUUNnt82stfpv+1jrvnGfcx74SvFz/t1vhdxBDmPdn/mFXgVj3RvLmVu17yxbfbZ8nPkVl3zemTuN4ogR9xpY6Uy8Z30xJyeckTVaeZ7xxSPrpTPncj/OYD5avcifsUm6acRM8LF+PXq+uCFGCQfubT7dzzyQv4SdeTc3SSPWIGPIb9o/vZOkqaSRpAHi7H2tux98WgLj
+   eJx9lEESxCAIBAH9/5uTQ6jqbXEPlEqGAQbNjoh6bX1WOi+c97ffsBS+fb3mJbb9qTPzp3DmTfE2ljWXuM3L2ppn8i98yzhrYFwKT27itzg61joZ67ylnNbmn16pvOz9VqP1Jic1mPRjb3Xhdf/soQZsKk8pP2dC7E0PGzk9P+tr/VacNe34vR/T3Gy+V5O53ludK059/d5z8HklzrzWxW/CcZyB95w9515DHr6ZGsz/CN6fBxCIAyE=
   </data>
  </layer>
 </map>

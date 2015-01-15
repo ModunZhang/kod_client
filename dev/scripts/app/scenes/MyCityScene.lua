@@ -8,11 +8,9 @@ local CityScene = import(".CityScene")
 local MyCityScene = class("MyCityScene", CityScene)
 
 function MyCityScene:ctor(city)
-    MyCityScene.super.ctor(self, city)
     self.clicked_callbacks = {}
-end
-function MyCityScene:onEnter()
-    MyCityScene.super.onEnter(self)
+    MyCityScene.super.ctor(self, city)
+    
     self.arrow_layer = self:CreateArrowLayer()
     self.tutorial_layer = self:CreateTutorialLayer()
     home_page = self:CreateHomePage()
