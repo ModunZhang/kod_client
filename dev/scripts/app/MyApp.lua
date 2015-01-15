@@ -174,6 +174,11 @@ function MyApp:EnterMyAllianceSceneWithTips(tips)
     end):VisibleXButton(false)
 end
 function MyApp:EnterMyAllianceScene()
+     if Alliance_Manager:GetMyAlliance():IsDefault() then
+        UIKit:showMessageDialog(_("提示"),_("未加入联盟!"),function()end)
+        return
+    end
+
     local alliance_name = "AllianceScene"
     local my_status = Alliance_Manager:GetMyAlliance():Status()
     if my_status == "prepare" or  my_status == "fight" then
