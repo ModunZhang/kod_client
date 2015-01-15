@@ -943,7 +943,7 @@ function GameUITradeGuild:OpenSellDialog()
 
     -- body 方法
 
-    local body_width,body_height = 608,624
+    local body_width,body_height = 608,654
     body.drop_list =  WidgetDropList.new(
         {
             {tag = "resource",label = "基本资源",default = true},
