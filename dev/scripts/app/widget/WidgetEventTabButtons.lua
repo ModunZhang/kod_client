@@ -132,8 +132,16 @@ function WidgetEventTabButtons:ctor(city)
     self.toolShop = city:GetFirstBuildingByType("toolShop")
     self.toolShop:AddToolShopListener(self)
 
-
-    -- #self.city:GetUpgradingBuildings() 
+    self:ShowEvent()
+end
+function WidgetEventTabButtons:ShowEvent()
+    if #self.city:GetUpgradingBuildings() > 0 then
+        return self:PromiseOfShowTab("build")
+    elseif self.barracks:IsRecruting() then
+        return self:PromiseOfShowTab("soldier")
+    elseif self.barracks:IsRecruting() then
+        return self:PromiseOfShowTab("material")
+    end
 end
 function WidgetEventTabButtons:onExit()
     self.toolShop:RemoveToolShopListener(self)
