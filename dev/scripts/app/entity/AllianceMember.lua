@@ -22,6 +22,22 @@ local titles_enum = Enum("member",
     "quartermaster",
     "general",
     "archon")
+local collect_type  = {"woodExp",
+    "stoneExp",
+    "ironExp",
+    "foodExp",
+    "coinExp"}
+local collect_exp_config  = {"wood",
+    "stone",
+    "iron",
+    "food",
+    "coin"}
+AllianceMember.COLLECT_TYPE = Enum("WOOD",
+    "STONE",
+    "IRON",
+    "FOOD",
+    "COIN")
+
 function AllianceMember:ctor(id)
     self.id = id
     self.location = {x = 0, y = 0}
@@ -43,6 +59,57 @@ function AllianceMember:IsTitleLowest()
 end
 function AllianceMember:GetDonateStatus()
     return self.donateStatus
+end
+function AllianceMember:GetAllianceExp()
+    return self.allianceExp
+end
+function AllianceMember:GetWoodCollectLevel()
+    return self:GetCollectLevelByType(AllianceMember.COLLECT_TYPE.WOOD)
+end
+function AllianceMember:GetStoneCollectLevel()
+    return self:GetCollectLevelByType(AllianceMember.COLLECT_TYPE.STONE)
+end
+function AllianceMember:GetIronCollectLevel()
+    return self:GetCollectLevelByType(AllianceMember.COLLECT_TYPE.IRON)
+end
+function AllianceMember:GetFoodCollectLevel()
+    return self:GetCollectLevelByType(AllianceMember.COLLECT_TYPE.FOOD)
+end
+function AllianceMember:GetCoinCollectLevel()
+    return self:GetCollectLevelByType(AllianceMember.COLLECT_TYPE.COIN)
+end
+function AllianceMember:GetCollectLevelByType(collectType)
+    local exp = self.allianceExp[collect_type[collectType]]
+    local config = GameDatas.PlayerVillageExp[collect_exp_config[collectType]]
+    for i = #config,1,-1 do
+        if exp>=config[i].expFrom then
+            return i
+        end
+    end
+end
+function AllianceMember:GetWoodCollectLevelUpExp()
+    return self:GetCollectLevelUpExpByType(AllianceMember.COLLECT_TYPE.WOOD)
+end
+function AllianceMember:GetStoneCollectLevelUpExp()
+    return self:GetCollectLevelUpExpByType(AllianceMember.COLLECT_TYPE.STONE)
+end
+function AllianceMember:GetIronCollectLevelUpExp()
+    return self:GetCollectLevelUpExpByType(AllianceMember.COLLECT_TYPE.IRON)
+end
+function AllianceMember:GetFoodCollectLevelUpExp()
+    return self:GetCollectLevelUpExpByType(AllianceMember.COLLECT_TYPE.FOOD)
+end
+function AllianceMember:GetCoinCollectLevelUpExp()
+    return self:GetCollectLevelUpExpByType(AllianceMember.COLLECT_TYPE.COIN)
+end
+function AllianceMember:GetCollectLevelUpExpByType(collectType)
+    local exp = self.allianceExp[collect_type[collectType]]
+    local config = GameDatas.PlayerVillageExp[collect_exp_config[collectType]]
+    for i = #config,1,-1 do
+        if exp>=config[i].expFrom then
+            return config[i].expTo
+        end
+    end
 end
 -- 职位权限是否大于等于某个职位
 -- @parm eq_title 比较的职位

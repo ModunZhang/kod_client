@@ -15,7 +15,8 @@ local AllianceBelvedere = import(".AllianceBelvedere")
 --注意:突袭用的MarchAttackEvent 所以使用OnAttackMarchEventTimerChanged
 Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS","FIGHT_REQUESTS","FIGHT_REPORTS",
     "OnAttackMarchEventDataChanged","OnAttackMarchEventTimerChanged","OnAttackMarchReturnEventDataChanged","ALLIANCE_FIGHT"
-    ,"OnStrikeMarchEventDataChanged","OnStrikeMarchReturnEventDataChanged","OnVillageEventsDataChanged","OnVillageEventTimer","COUNT_INFO")
+    ,"OnStrikeMarchEventDataChanged","OnStrikeMarchReturnEventDataChanged","OnVillageEventsDataChanged","OnVillageEventTimer","COUNT_INFO",
+    "VILLAGE_LEVELS_CHANGED")
 local unpack = unpack
 local function pack(...)
     return {...}
@@ -60,6 +61,8 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     self.allianceFight = {}
     self.alliance_map = AllianceMap.new(self)
     self.alliance_shrine = AllianceShrine.new(self)
+    -- 村落等级
+    self.villageLevels = {}
     --行军事件
     self.attackMarchEvents = {}
     self.attackMarchReturnEvents = {}
@@ -79,6 +82,9 @@ function Alliance:GetAllianceShrine()
 end
 function Alliance:GetAllianceFight()
     return self.allianceFight
+end
+function Alliance:GetVillageLevels()
+    return self.villageLevels
 end
 function Alliance:ResetAllListeners()
     self.alliance_map:ClearAllListener()
@@ -268,11 +274,15 @@ function Alliance:GetLastAllianceFightReports()
 end
 function Alliance:GetOurLastAllianceFightReportsData()
     local last = self.alliance_fight_reports[#self.alliance_fight_reports]
-    return self.id == last.attackAllianceId and last.attackAlliance or last.defenceAlliance
+    if last then
+        return self.id == last.attackAllianceId and last.attackAlliance or last.defenceAlliance
+    end
 end
 function Alliance:GetEnemyLastAllianceFightReportsData()
     local last = self.alliance_fight_reports[#self.alliance_fight_reports]
-    return self.id == last.attackAllianceId and last.defenceAlliance or last.attackAlliance
+    if last then
+        return self.id == last.attackAllianceId and last.defenceAlliance or last.attackAlliance
+    end
 end
 function Alliance:GetAllHelpEvents()
     return self.help_events
@@ -332,6 +342,7 @@ function Alliance:Reset()
     self.join_events = {}
     self.help_events = {}
     self.alliance_villages = {}
+    self.villageLevels = {}
     self:OnOperation("quit")
     self.alliance_map:Reset()
     self.alliance_shrine:Reset()
@@ -465,7 +476,7 @@ function Alliance:OnAllianceDataChanged(alliance_data)
         self:SetTitleNames(alliance_data.titles)
     end
     self:OnAllianceBasicInfoChangedFirst(alliance_data.basicInfo)
-    
+
     self:GetAllianceBelvedere():OnAllianceDataChanged(alliance_data)
     self:OnNewEventsComming(alliance_data.__events)
     self:OnNewMemberDataComming(alliance_data.__members)
@@ -477,6 +488,7 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     self:OnAllianceMemberDataChanged(alliance_data.members)
     self:OnAllianceCountInfoChanged(alliance_data.countInfo)
     self:OnAllianceFightChanged(alliance_data.allianceFight)
+    self:OnVillageLevelsChanged(alliance_data.villageLevels)
     self:OnAllianceFightRequestsChanged(alliance_data)
     self:OnAllianceFightReportsChanged(alliance_data)
     self.alliance_shrine:OnAllianceDataChanged(alliance_data)
@@ -1028,6 +1040,17 @@ function Alliance:OnAllianceFightChanged(allianceFight)
         listener:OnAllianceFightChanged(self,self.allianceFight)
     end)
 end
+function Alliance:OnVillageLevelsChanged(villageLevels)
+    if not villageLevels then return end
+    local changed_map = {}
+    for k,v in pairs(villageLevels) do
+        self.villageLevels[k] = v
+        changed_map[k] = v
+    end
+    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.VILLAGE_LEVELS_CHANGED, function(listener)
+        listener:OnVillageLevelsChanged(self,changed_map)
+    end)
+end
 function Alliance:GetReversedPosition(p)
     if p == 'left' then
         return 'right'
@@ -1208,7 +1231,7 @@ function Alliance:OnVillageEventTimer(villageEvent)
     local village = self:GetAllianceVillageInfos()[villageEvent:VillageData().id]
     if not village then
         village = self:GetEnemyAlliance():GetAllianceVillageInfos()[villageEvent:VillageData().id]
-    end 
+    end
     if village then
         if villageEvent:GetTime() >= 0 then
             local left_resource = village.resource - villageEvent:CollectCount()
@@ -1392,8 +1415,10 @@ function Alliance:SetNeedUpdateEnemyAlliance(need)
 end
 
 function Alliance:NeedUpdateEnemyAlliance()
-    return self.needUpdateEnemyAlliance 
+    return self.needUpdateEnemyAlliance
 end
 
 return Alliance
+
+
 

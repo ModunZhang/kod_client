@@ -1224,6 +1224,12 @@ function NetManager:getUpgradeAllianceBuildingPromise(buildingName)
         buildingName = buildingName
     }, "升级联盟建筑失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
+-- 升级联盟村落
+function NetManager:getUpgradeAllianceVillagePromise(villageType)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.upgradeAllianceVillage", {
+        villageType = villageType
+    }, "升级联盟村落失败!"), get_alliancedata_callback()):next(get_response_msg)
+end
 -- 联盟捐赠
 function NetManager:getDonateToAlliancePromise(donateType)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.donateToAlliance", {
