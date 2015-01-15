@@ -54,6 +54,7 @@ function PVELayer:ctor(user)
     self.scene_node:pos(x, y)
 end
 function PVELayer:onEnter()
+    PVELayer.super.onEnter(self)
     local w, h = self.normal_map:GetSize()
     -- 点亮中心
     self:LightOn((w - 1) * 0.5, (h - 1) * 0.5, 4)
