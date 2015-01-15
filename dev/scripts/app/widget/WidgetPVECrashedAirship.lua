@@ -1,22 +1,22 @@
 local SpriteConfig = import("..sprites.SpriteConfig")
 local WidgetPVEDialog = import("..widget.WidgetPVEDialog")
-local WidgetPVEWoodcutter = class("WidgetPVEWoodcutter", WidgetPVEDialog)
+local WidgetPVECrashedAirship = class("WidgetPVECrashedAirship", WidgetPVEDialog)
 
-function WidgetPVEWoodcutter:ctor(...)
-    WidgetPVEWoodcutter.super.ctor(self, ...)
+function WidgetPVECrashedAirship:ctor(...)
+    WidgetPVECrashedAirship.super.ctor(self, ...)
 end
-function WidgetPVEWoodcutter:GetIcon()
-    return SpriteConfig["woodcutter"]:GetConfigByLevel(1).png
+function WidgetPVECrashedAirship:GetIcon()
+    return "crashed_airship_94x80.png"
 end
-function WidgetPVEWoodcutter:GetTitle()
-    return string.format("%s %s%d", _('废弃的木工小屋'), _('等级'), self:GetPVEMap():GetIndex())
+function WidgetPVECrashedAirship:GetTitle()
+    return string.format("%s %s%d", _('坠毁的飞艇'), _('等级'), self:GetPVEMap():GetIndex())
 end
-function WidgetPVEWoodcutter:GetDesc()
+function WidgetPVECrashedAirship:GetDesc()
     return self:GetObject():IsSearched() 
-    and _('你已经除掉了这里的叛军, 这里的居民都向你表示感激!') 
-    or _('这里被叛军占领, 居民希望你能将他们赶走并愿意向你提供一些报酬。')
+    and _('一艘飞艇的残骸, 可惜里面的物资早已被人洗劫一空')
+    or _('你发现了一艘坠毁的飞艇, 其中的有大量的物资, 但当你走近时却发现那里已经被强盗占领。')
 end
-function WidgetPVEWoodcutter:SetUpButtons()
+function WidgetPVECrashedAirship:SetUpButtons()
     return self:GetObject():IsSearched() and
         { { label = _("离开") } } or
         { { label = _("进攻"), callback = function()
@@ -70,7 +70,7 @@ function WidgetPVEWoodcutter:SetUpButtons()
         end }, { label = _("离开") } }
 end
 
-return WidgetPVEWoodcutter
+return WidgetPVECrashedAirship
 
 
 

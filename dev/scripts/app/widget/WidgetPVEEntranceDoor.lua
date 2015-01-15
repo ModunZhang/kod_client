@@ -1,24 +1,24 @@
 local SpriteConfig = import("..sprites.SpriteConfig")
 local WidgetPVEDialog = import("..widget.WidgetPVEDialog")
-local WidgetPVEWoodcutter = class("WidgetPVEWoodcutter", WidgetPVEDialog)
+local WidgetPVEEntranceDoor = class("WidgetPVEEntranceDoor", WidgetPVEDialog)
 
-function WidgetPVEWoodcutter:ctor(...)
-    WidgetPVEWoodcutter.super.ctor(self, ...)
+function WidgetPVEEntranceDoor:ctor(...)
+    WidgetPVEEntranceDoor.super.ctor(self, ...)
 end
-function WidgetPVEWoodcutter:GetIcon()
-    return SpriteConfig["woodcutter"]:GetConfigByLevel(1).png
+function WidgetPVEEntranceDoor:GetIcon()
+    return "entrance_door.png"
 end
-function WidgetPVEWoodcutter:GetTitle()
-    return string.format("%s %s%d", _('废弃的木工小屋'), _('等级'), self:GetPVEMap():GetIndex())
+function WidgetPVEEntranceDoor:GetTitle()
+    return string.format("%s %s%d", _('异界之门'), _('等级'), self:GetPVEMap():GetIndex())
 end
-function WidgetPVEWoodcutter:GetDesc()
+function WidgetPVEEntranceDoor:GetDesc()
     return self:GetObject():IsSearched() 
-    and _('你已经除掉了这里的叛军, 这里的居民都向你表示感激!') 
-    or _('这里被叛军占领, 居民希望你能将他们赶走并愿意向你提供一些报酬。')
+    and _('在没有什么能阻挡你前进了, 你可以直接前往下一个关卡')
+    or _('你能感觉到一个一场强大的生物驻守在这里, 阻挡着你继续前进, 但想要前往下一关卡必须击败它。')
 end
-function WidgetPVEWoodcutter:SetUpButtons()
+function WidgetPVEEntranceDoor:SetUpButtons()
     return self:GetObject():IsSearched() and
-        { { label = _("离开") } } or
+        { { label = _("传送") }, { label = _("离开") } } or
         { { label = _("进攻"), callback = function()
             UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType, soldiers)
                 local dargon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
@@ -70,7 +70,7 @@ function WidgetPVEWoodcutter:SetUpButtons()
         end }, { label = _("离开") } }
 end
 
-return WidgetPVEWoodcutter
+return WidgetPVEEntranceDoor
 
 
 

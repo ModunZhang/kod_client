@@ -7,6 +7,7 @@ local GameUIAllianceHome = import("..ui.GameUIAllianceHome")
 local Alliance = import("..entity.Alliance")
 
 function AllianceBattleScene:ctor()
+    User:ResetAllListeners()
     City:ResetAllListeners()
     Alliance_Manager:GetMyAlliance():ResetAllListeners()
 

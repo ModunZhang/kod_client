@@ -17,6 +17,7 @@ local GameDefautlt = import("app.utils.GameDefautlt")
 local AudioManager = import("app.utils.AudioManager")
 local LocalPushManager = import("app.utils.LocalPushManager")
 local Timer = import('.utils.Timer')
+local User_ = import('.entity.User')
 local MyApp = class("MyApp", cc.mvc.AppBase)
 
 
@@ -161,7 +162,7 @@ function MyApp:lockInput(b)
 end
 function MyApp:EnterPlayerCityScene(id)
     NetManager:getPlayerCityInfoPromise(id):next(function(city_info)
-        app:enterScene("OtherCityScene", {User.new(city_info.basicInfo), City.new(city_info)}, "custom", -1, transition_)
+        app:enterScene("OtherCityScene", {User_.new(city_info.basicInfo), City.new(city_info)}, "custom", -1, transition_)
     end)
 end
 function MyApp:EnterMyCityScene()
@@ -182,7 +183,10 @@ function MyApp:EnterMyAllianceScene()
     app:enterScene(alliance_name, {City}, "custom", -1, transition_)
 end
 function MyApp:EnterPVEScene()
-    app:enterScene("PVEScene", nil, "custom", -1, transition_)
+    User:GetStrengthResource():UpdateResource(self.timer:GetServerTime(), 100)
+    User:GetStrengthResource():SetProductionPerHour(self.timer:GetServerTime(), 1000)
+    User:GetStrengthResource():SetValueLimit(100)
+    app:enterScene("PVEScene", {User}, "custom", -1, transition_)
 end
 function MyApp:pushScene(sceneName, args, transitionType, time, more)
     local scenePackageName = "app.scenes." .. sceneName

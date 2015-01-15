@@ -16,6 +16,7 @@ return function(userData)
 
     DataManager:setUserData(userData)
 
+    timer:AddListener(User)
     timer:AddListener(City)
     timer:AddListener(Alliance_Manager)
     timer:Start()

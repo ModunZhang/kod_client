@@ -523,6 +523,10 @@ function GameUtils:DoBattle(attacker, defencer)
     function report:IsFightWall()
         return false
     end
+    function report:IsAttackWin()
+        local round = self:GetFightAttackSoldierRoundData()
+        return round[#round].isWin
+    end
     return report
 end
 

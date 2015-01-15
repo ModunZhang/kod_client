@@ -59,6 +59,7 @@ function GameUIShop:onEnter()
         :onButtonClicked(function()
             cc.UserDefault:getInstance():setStringForKey("udid", math.random(1234567890))
             cc.UserDefault:getInstance():flush()
+            User:GetPVEDatabase():Reset()
             app:restart()
         end)
 

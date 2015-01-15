@@ -58,7 +58,6 @@ end
 local function do_function_with_protect(func, param)
     local success, result = pcall(func, param)
     if not success then
-        print(debug.traceback())
         result = not is_error(result) and err_class.new(result) or result
     end
     return success, result

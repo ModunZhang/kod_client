@@ -1,22 +1,22 @@
 local SpriteConfig = import("..sprites.SpriteConfig")
 local WidgetPVEDialog = import("..widget.WidgetPVEDialog")
-local WidgetPVEWoodcutter = class("WidgetPVEWoodcutter", WidgetPVEDialog)
+local WidgetPVECamp = class("WidgetPVECamp", WidgetPVEDialog)
 
-function WidgetPVEWoodcutter:ctor(...)
-    WidgetPVEWoodcutter.super.ctor(self, ...)
+function WidgetPVECamp:ctor(...)
+    WidgetPVECamp.super.ctor(self, ...)
 end
-function WidgetPVEWoodcutter:GetIcon()
-    return SpriteConfig["woodcutter"]:GetConfigByLevel(1).png
+function WidgetPVECamp:GetIcon()
+    return "camp_137x80.png"
 end
-function WidgetPVEWoodcutter:GetTitle()
-    return string.format("%s %s%d", _('废弃的木工小屋'), _('等级'), self:GetPVEMap():GetIndex())
+function WidgetPVECamp:GetTitle()
+    return string.format("%s %s%d", _('野外营地'), _('等级'), self:GetPVEMap():GetIndex())
 end
-function WidgetPVEWoodcutter:GetDesc()
+function WidgetPVECamp:GetDesc()
     return self:GetObject():IsSearched() 
-    and _('你已经除掉了这里的叛军, 这里的居民都向你表示感激!') 
-    or _('这里被叛军占领, 居民希望你能将他们赶走并愿意向你提供一些报酬。')
+    and _('你看到营地有火光, 走到近前却是空空荡荡。你感觉纳闷, 这里怎么如此眼熟')
+    or _('你大胆地闯入了一支不明身份部队的营地, 一场战斗一触即发。')
 end
-function WidgetPVEWoodcutter:SetUpButtons()
+function WidgetPVECamp:SetUpButtons()
     return self:GetObject():IsSearched() and
         { { label = _("离开") } } or
         { { label = _("进攻"), callback = function()
@@ -70,7 +70,7 @@ function WidgetPVEWoodcutter:SetUpButtons()
         end }, { label = _("离开") } }
 end
 
-return WidgetPVEWoodcutter
+return WidgetPVECamp
 
 
 
