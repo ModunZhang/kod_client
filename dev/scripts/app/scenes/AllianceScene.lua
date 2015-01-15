@@ -91,6 +91,8 @@ function AllianceScene:EnterAllianceBuilding(entity)
         class_name = "GameUIAllianceShopEnter"    
     elseif building_name == 'orderHall' then
         class_name = "GameUIAllianceOrderHallEnter"
+    elseif building_name == 'moonGate' then
+        class_name = "GameUIAllianceMoonGateEnter"
     else
         print("没有此建筑--->",building_name)
         return

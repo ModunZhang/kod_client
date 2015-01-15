@@ -253,6 +253,11 @@ GameDatas.Houses = {
 }
 require("app.datas.Houses_houses")
 
+GameDatas.Items = {
+	["items"] = {},
+}
+require("app.datas.Items_items")
+
 GameDatas.MilitaryTechLevelUp = {
 	["infantry_infantry"] = {},
 	["infantry_archer"] = {},
