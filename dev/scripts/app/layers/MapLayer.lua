@@ -55,6 +55,12 @@ function MapLayer:ctor(min_scale, max_scale)
     end)
     node:scheduleUpdate()
 end
+function MapLayer:onEnter()
+
+end
+function MapLayer:onExit()
+
+end
 function MapLayer:ConverToParentPosition(x, y)
     local world_point = self:convertToWorldSpace(cc.p(x, y))
     return self:getParent():convertToNodeSpace(world_point)
