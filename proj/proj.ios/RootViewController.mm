@@ -50,7 +50,7 @@
 - (NSUInteger) supportedInterfaceOrientations
 {
 #ifdef __IPHONE_6_0
-    return UIInterfaceOrientationMaskPortrait;
+    return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
 #endif
 }
 

@@ -242,12 +242,12 @@ end
 function City:InitDecorators(decorators)
     self.decorators = decorators
     table.foreach(decorators, function(key, building)
-            self:OnInitBuilding(building)
+        self:OnInitBuilding(building)
 
-            local tile = self:GetTileWhichBuildingBelongs(building)
-            local sub_location = tile:GetBuildingLocation(building)
-            assert(sub_location)
-            self:GetDecoratorsByLocationId(tile.location_id)[sub_location] = building
+        local tile = self:GetTileWhichBuildingBelongs(building)
+        local sub_location = tile:GetBuildingLocation(building)
+        assert(sub_location)
+        self:GetDecoratorsByLocationId(tile.location_id)[sub_location] = building
     end)
     self:CheckIfDecoratorsIntersectWithRuins()
 end
@@ -310,7 +310,7 @@ function City:GetResourceManager()
     return self.resource_manager
 end
 function City:GetAvailableBuildQueueCounts()
-    return self:BuildQueueCounts() - #self:GetOnUpgradingBuildings()
+    return self:BuildQueueCounts() - #self:GetUpgradingBuildings()
 end
 function City:BuildQueueCounts()
     return self.build_queue
@@ -318,26 +318,28 @@ end
 function City:GetHelpedByTroops()
     return self.helpedByTroops
 end
-function City:GetOnUpgradingBuildings()
+function City:GetUpgradingBuildings(need_sort)
     local builds = {}
     self:IteratorCanUpgradeBuildings(function(building)
         if building:IsUpgrading() then
             table.insert(builds, building)
         end
     end)
-    table.sort(builds, function(a, b)
-        local a_index = self:GetLocationIdByBuildingType(a:GetType())
-        local b_index = self:GetLocationIdByBuildingType(b:GetType())
-        if a_index and b_index then
-            return a_index < b_index
-        elseif a_index == nil and b_index then
-            return false
-        elseif a_index and b_index == nil then
-            return true
-        else
-            return a:GetType() < b:GetType()
-        end
-    end)
+    if need_sort then
+        table.sort(builds, function(a, b)
+            local a_index = self:GetLocationIdByBuildingType(a:GetType())
+            local b_index = self:GetLocationIdByBuildingType(b:GetType())
+            if a_index and b_index then
+                return a_index < b_index
+            elseif a_index == nil and b_index then
+                return false
+            elseif a_index and b_index == nil then
+                return true
+            else
+                return a:GetType() == b:GetType() and a:IsAheadOfBuilding(b) or a:IsImportantThanBuilding(b)
+            end
+        end)
+    end
     return builds
 end
 function City:GetUpgradingBuildingsWithOrder(current_time)
@@ -352,18 +354,24 @@ function City:GetUpgradingBuildingsWithOrder(current_time)
     end)
     return builds
 end
-function City:GetBuildingMaxCountsByType(building_type)
-    local building_map = {
-        dwelling = "townHall",
-        woodcutter = "lumbermill",
-        farmer = "mill",
-        quarrier = "stoneMason",
-        miner = "foundry",
-    }
-    return HOUSES[building_type] + self:GetFirstBuildingByType(building_map[building_type]):GetMaxHouseNum()
-end
 function City:GetLeftBuildingCountsByType(building_type)
-    return self:GetBuildingMaxCountsByType(building_type) - #self:GetBuildingByType(building_type)
+    return self:GetMaxHouseCanBeBuilt(building_type) - #self:GetBuildingByType(building_type)
+end
+-- 取得小屋最大建造数量
+local BUILDING_MAP = {
+    dwelling = "townHall",
+    woodcutter = "lumbermill",
+    farmer = "mill",
+    quarrier = "stoneMason",
+    miner = "foundry",
+}
+function City:GetMaxHouseCanBeBuilt(house_type)
+    --基础值
+    local max = HOUSES[house_type]
+    for _, v in pairs(self:GetBuildingByType(BUILDING_MAP[house_type])) do
+        max = max + v:GetMaxHouseNum()
+    end
+    return max
 end
 local function get_unlock_buildings(buildings)
     local r = {}
@@ -504,30 +512,6 @@ function City:GetLocationById(location_id)
 end
 function City:GetTileByIndex(x, y)
     return self.tiles[y] and self.tiles[y][x] or nil
-end
--- 取得小屋最大建造数量
-function City:GetMaxHouseCanBeBuilt(house_type)
-    local max = GameDatas.PlayerInitData.houses[1][house_type] --基础值
-
-    if house_type=="farmer" then
-        for _,mill in pairs(self:GetBuildingByType("mill")) do
-            max = max + mill:GetMaxHouseNum()
-        end
-    elseif house_type=="woodcutter" then
-        for _,lumbermill in pairs(self:GetBuildingByType("lumbermill")) do
-            max = max + lumbermill:GetMaxHouseNum()
-        end
-    elseif house_type=="quarrier" then
-        for _,stoneMason in pairs(self:GetBuildingByType("stoneMason")) do
-            max = max + stoneMason:GetMaxHouseNum()
-        end
-    elseif house_type=="miner" then
-        for _,foundry in pairs(self:GetBuildingByType("foundry")) do
-            max = max + foundry:GetMaxHouseNum()
-        end
-    end
-
-    return max
 end
 function City:IsUnLockedAtIndex(x, y)
     return not self.tiles[y][x].locked
@@ -1139,7 +1123,7 @@ function City:ReloadWalls(walls)
         end
     end
     return t
-    -- return walls
+        -- return walls
 end
 function City:GenerateTowers(walls)
     local towers = {}
@@ -1233,15 +1217,6 @@ function City:ReloadTowers(towers)
         end
     end
     return towers
-end
-function City:OnUpgradingBuildings()
-    local upgrading_buildings = {}
-    for i,v in ipairs(self.buildings) do
-        if v:IsUpgrading() then
-            upgrading_buildings[i] = v
-        end
-    end
-    return upgrading_buildings
 end
 local function findTroopsInHelpedByTroops(helpedByTroops, troops)
     for i, v in pairs(helpedByTroops) do
@@ -1422,6 +1397,8 @@ function City:GetWatchTowerLevel()
 end
 
 return City
+
+
 
 
 
