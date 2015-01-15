@@ -65,14 +65,12 @@ function PVEMap:IsSearched()
     return #self.searched_fogs > 0 or #self.searched_objects > 0
 end
 function PVEMap:Load(str_code)
-    print("str_code", str_code)
     str_code = str_code or ""
     str_code = #str_code == 0 and "{fog={},object={}}" or str_code
     local f = loadstring(string.format("return %s", str_code))
     local data = assert(f)()
     self.searched_fogs = data.fog
     for _, v in ipairs(data.object) do
-        print(unpack(v))
         self:ModifyObject(unpack(v))
     end
 end

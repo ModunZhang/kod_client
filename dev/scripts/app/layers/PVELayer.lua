@@ -2,13 +2,31 @@ local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLeftReverseY")
 local Enum = import("..utils.Enum")
-local PVEDefine = import(".PVEDefine")
+local PVEDefine = import("..entity.PVEDefine")
+local SpriteConfig = import("..sprites.SpriteConfig")
 local MapLayer = import(".MapLayer")
 local PVELayer = class("PVELayer", MapLayer)
 local ZORDER = Enum("BACKGROUND", "BUILDING", "OBJECT", "FOG")
 
-local OBJECT_TYPE = PVEDefine.object_type
-local OBJECT_IMAGE = PVEDefine.object_image
+local OBJECT_IMAGE = {}
+OBJECT_IMAGE[PVEDefine.START_AIRSHIP] = "airship_106x81.png"
+OBJECT_IMAGE[PVEDefine.WOODCUTTER] = SpriteConfig["woodcutter"]:GetConfigByLevel(1).png
+OBJECT_IMAGE[PVEDefine.QUARRIER] = SpriteConfig["quarrier"]:GetConfigByLevel(1).png
+OBJECT_IMAGE[PVEDefine.MINER] = SpriteConfig["miner"]:GetConfigByLevel(1).png
+OBJECT_IMAGE[PVEDefine.FARMER] = SpriteConfig["farmer"]:GetConfigByLevel(1).png
+OBJECT_IMAGE[PVEDefine.CAMP] = "camp_137x80.png"
+OBJECT_IMAGE[PVEDefine.CRASHED_AIRSHIP] = "crashed_airship_94x80.png"
+OBJECT_IMAGE[PVEDefine.CONSTRUCTION_RUINS] = "ruin_1_136x92.png"
+OBJECT_IMAGE[PVEDefine.KEEL] = "keel_95x80.png"
+OBJECT_IMAGE[PVEDefine.WARRIORS_TOMB] = "warriors_tomb.png"
+OBJECT_IMAGE[PVEDefine.OBELISK] = "obelisk.png"
+OBJECT_IMAGE[PVEDefine.ANCIENT_RUINS] = "ancient_ruins.png"
+OBJECT_IMAGE[PVEDefine.ENTRANCE_DOOR] = "entrance_door.png"
+OBJECT_IMAGE[PVEDefine.TREE] = "tree_2_120x120.png"
+OBJECT_IMAGE[PVEDefine.HILL] = "hill_228x146.png"
+OBJECT_IMAGE[PVEDefine.LAKE] = "lake_220x174.png"
+
+
 function PVELayer:ctor(user)
     PVELayer.super.ctor(self, 0.5, 1)
     self.user = user
