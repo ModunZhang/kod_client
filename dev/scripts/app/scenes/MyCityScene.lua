@@ -1,5 +1,6 @@
 local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
+local GameUIWatchTowerTroopDetail = import("..ui.GameUIWatchTowerTroopDetail")
 local TutorialLayer = import("..ui.TutorialLayer")
 local GameUINpc = import("..ui.GameUINpc")
 local Arrow = import("..ui.Arrow")
@@ -269,6 +270,16 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
         if self:CheckClickPromise(building) then return end
+
+        if iskindof(building, "HelpedTroopsSprite") then
+            local helped = self.city:GetHelpedByTroops()[building:GetIndex()]
+            local type_ = GameUIWatchTowerTroopDetail.DATA_TYPE.HELP_DEFENCE
+            UIKit:newGameUI("GameUIWatchTowerTroopDetail", helped, type_, false):addToCurrentScene(true)
+            return
+        end
+
+
+
         if building:GetEntity():GetType() == "ruins" then
             UIKit:newGameUI('GameUIBuild', city, building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "keep" then

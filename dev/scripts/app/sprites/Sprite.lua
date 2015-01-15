@@ -19,11 +19,14 @@ function Sprite:GetCenterPosition()
     return self:getPosition()
 end
 -- 委托
-function Sprite:IsContainPoint(x, y, world_x, world_y)
+function Sprite:IsContainPointWithFullCheck(x, y, world_x, world_y)
+    return { logic_clicked = self:IsContainPoint(x, y), sprite_clicked = self:IsContainRealPoint(world_x, world_y)}
+end
+function Sprite:IsContainPoint(x, y)
     return self:GetEntity():IsContainPoint(x, y)
 end
-function Sprite:IsContainPointWithFullCheck(x, y, world_x, world_y)
-    return { logic_clicked = self:GetEntity():IsContainPoint(x, y), sprite_clicked = cc.rectContainsPoint(self:GetSprite():getBoundingBox(), self:convertToNodeSpace(cc.p(world_x, world_y)))}
+function Sprite:IsContainRealPoint(world_x, world_y)
+    return cc.rectContainsPoint(self:GetSprite():getBoundingBox(), self:convertToNodeSpace(cc.p(world_x, world_y)))
 end
 function Sprite:SetLogicPosition(logic_x, logic_y)
     self:GetEntity():SetLogicPosition(logic_x, logic_y)
