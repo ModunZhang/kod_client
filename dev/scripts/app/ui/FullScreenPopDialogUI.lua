@@ -81,10 +81,10 @@ function FullScreenPopDialogUI:CreateOKButton(params)
         :setButtonLabel(UIKit:ttfLabel({text =name, size = 24, color = 0xffedae,shadow=true}))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
+                self:removeFromParent()
                 if listener then
                     listener()
                 end
-                self:removeFromParent(true)
             end
         end):align(display.CENTER, display.cx+200, display.top-610):addTo(self)
     return self
@@ -98,10 +98,10 @@ function FullScreenPopDialogUI:CreateCancelButton(params)
         :setButtonLabel(UIKit:ttfLabel({text =name, size = 24, color = 0xffedae,shadow=true}))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
+                self:removeFromParent()
                 if listener then
                     listener()
                 end
-                self:removeFromParent(true)
             end
         end):align(display.CENTER, display.cx+6, display.top-610):addTo(self)
 
