@@ -120,6 +120,7 @@ end
 function MyApp:retryConnectServer()
     if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
         -- device.showActivityIndicator()
+        NetManager:disconnect()
         NetManager:getConnectLogicServerPromise():next(function()
             return NetManager:getLoginPromise()
         end):catch(function(err)
