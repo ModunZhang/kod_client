@@ -385,6 +385,8 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
     local requirements = {
         {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetUpgradingBuildings()<1,
             icon="hammer_31x33.png",description=GameUtils:formatNumber(#City:GetUpgradingBuildings()).."/1"},
+        {resource_type = _("城堡等级"),isVisible = self.building:GetType()~="keep", isSatisfy =  self.building:GetLevel()<=City:GetFirstBuildingByType("keep"):GetLevel(),
+            icon="hammer_31x33.png",description=self.building:GetLevel().."/"..City:GetFirstBuildingByType("keep"):GetLevel()},
         {resource_type = _("木材"),isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
             icon="wood_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpWood()).."/"..GameUtils:formatNumber(wood)},
 
