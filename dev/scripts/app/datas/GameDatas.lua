@@ -3,9 +3,11 @@ GameDatas = {}
 GameDatas.ClientInitGame = {
 	["ruins"] = {},
 	["locations"] = {},
+	["allianceRight"] = {},
 }
 require("app.datas.ClientInitGame_ruins")
 require("app.datas.ClientInitGame_locations")
+require("app.datas.ClientInitGame_allianceRight")
 
 GameDatas.AllianceBuilding = {
 	["palace"] = {},
