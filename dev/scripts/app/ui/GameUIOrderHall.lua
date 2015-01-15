@@ -14,7 +14,7 @@ local Alliance = import("..entity.Alliance")
 local Localize = import("..utils.Localize")
 
 -- 联盟成员采集熟练度列表一次加载条数
-local LOADING_NUM = 2
+local LOADING_NUM = 3
 
 local GameUIOrderHall = UIKit:createUIClass('GameUIOrderHall', "GameUIAllianceBuilding")
 
@@ -219,12 +219,12 @@ end
 function GameUIOrderHall:LoadMember()
     local sortByPostionMember = self.sortByPostionMember
     local current_index = self.current_loading_num
-    local load_to_index = current_index+LOADING_NUM-1
+    local load_to_index = current_index+LOADING_NUM-1<#sortByPostionMember and current_index+LOADING_NUM-1 or #sortByPostionMember
     for i = current_index,load_to_index do
         self:CreateProficiencyItem(sortByPostionMember[i],i)
     end
     self.current_loading_num = load_to_index + 1
-    if self.current_loading_num==#sortByPostionMember then
+    if (self.current_loading_num-1) == #sortByPostionMember then
         local listview =self.proficiency_listview
         listview:removeItem(self.loading_more_item)
         local _,pre_y = listview.container:getPosition()
@@ -233,6 +233,9 @@ function GameUIOrderHall:LoadMember()
     end
 end
 function GameUIOrderHall:CreateProficiencyItem(member,index)
+    if not member then
+        return
+    end
     local item = self.proficiency_listview:newItem()
     local item_width,item_height = 568 , 210
     item:setItemSize(item_width, item_height)
