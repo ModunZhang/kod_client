@@ -59,6 +59,7 @@ function City:ctor(json_data)
         self:InitWithJsonData(json_data)
     end
 
+    --
     self.upgrading_building_callbacks = {}
     self.finish_upgrading_callbacks = {}
 end
@@ -168,9 +169,6 @@ function City:ResetAllListeners()
         building:ResetAllListeners()
         self:OnInitBuilding(building)
     end)
-
-    -- self.upgrading_building_callbacks = {}
-    -- self.finish_upgrading_callbacks = {}
 end
 function City:NewBuildingWithType(building_type, x, y, w, h, level, finish_time)
     return BuildingRegister[building_type].new{
@@ -232,8 +230,6 @@ function City:InitBuildings(buildings)
             assert(not self.dragonEyrie)
             self.dragonEyrie = building
         end
-        -- building.city = self
-        -- building:AddUpgradeListener(self)
         self:OnInitBuilding(building)
     end)
 end
@@ -246,10 +242,6 @@ end
 function City:InitDecorators(decorators)
     self.decorators = decorators
     table.foreach(decorators, function(key, building)
-
-            -- building.city = self
-            -- building:AddUpgradeListener(self)
-
             self:OnInitBuilding(building)
 
             local tile = self:GetTileWhichBuildingBelongs(building)
@@ -662,43 +654,6 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time)
     end)
     self:GetGate():OnUserDataChanged(user_data, current_time)
 end
-function City:IteratorResourcesByUserData(resources, current_time)
-    assert(self.belong_user, "未指定用户")
-    local resource_manager = self:GetResourceManager()
-    if resources.energy then
-        resource_manager:GetEnergyResource():UpdateResource(current_time, resources.energy)
-    end
-    if resources.wood then
-        resource_manager:GetWoodResource():UpdateResource(current_time, resources.wood)
-    end
-    if resources.food then
-        resource_manager:GetFoodResource():UpdateResource(current_time, resources.food)
-    end
-    if resources.iron then
-        resource_manager:GetIronResource():UpdateResource(current_time, resources.iron)
-    end
-    if resources.stone then
-        resource_manager:GetStoneResource():UpdateResource(current_time, resources.stone)
-    end
-    if resources.cart then
-        resource_manager:GetCartResource():UpdateResource(current_time, resources.cart)
-    end
-    if resources.citizen then
-        resource_manager:GetPopulationResource():UpdateResource(current_time, resources.citizen)
-    end
-    if resources.coin then
-        resource_manager:GetCoinResource():SetValue(resources.coin)
-    end
-    if resources.gem then
-        self.belong_user:GetGemResource():SetValue(resources.gem)
-    end
-    if resources.blood then
-        resource_manager:GetBloodResource():SetValue(resources.blood)
-    end
-    if resources.wallHp then
-        resource_manager:GetWallHpResource():UpdateResource(current_time, resources.wallHp)
-    end
-end
 function City:IteratorAllNeedTimerEntity(current_time)
     self:IteratorFunctionBuildingsByFunc(function(key, building)
         building:OnTimer(current_time)
@@ -968,17 +923,22 @@ function City:OnUserDataChanged(userData, current_time)
     -- 更新材料，这里是广义的材料，包括龙的装备
     self.material_manager:OnUserDataChanged(userData)
     -- 最后才更新资源
-    if userData.basicInfo then
-        local resource_refresh_time = userData.basicInfo.resourceRefreshTime / 1000
+    local basicInfo = userData.basicInfo
+    local resource_refresh_time = current_time
+    if basicInfo then
+        resource_refresh_time = basicInfo.resourceRefreshTime / 1000
+
+        self.build_queue = basicInfo.buildQueue
+        self:SetCityName(basicInfo.cityName)
+
         if userData.resources then
-            self:IteratorResourcesByUserData(userData.resources, resource_refresh_time)
+            self.resource_manager:UpdateFromUserDataByTime(userData.resources, resource_refresh_time)
             need_update_resouce_buildings = true
         end
-        self.build_queue = userData.basicInfo.buildQueue
-        self:SetCityName(userData.basicInfo.cityName)
     end
     if need_update_resouce_buildings then
-        self:UpdateAllResource(current_time)
+        self.resource_manager:UpdateByCity(self, resource_refresh_time)
+        self.resource_manager:UpdateResourceByTime(current_time)
     end
 end
 function City:GetCityName()
@@ -1068,10 +1028,6 @@ end
 function City:OnInitBuilding(building)
     building.city = self
     building:AddUpgradeListener(self)
-end
------
-function City:UpdateAllResource(current_time)
-    self.resource_manager:OnBuildingChangedFromCity(self, current_time)
 end
 ---------
 function City:GenerateWalls()
