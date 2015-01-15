@@ -28,6 +28,7 @@ function GameUITownHall:onExit()
     User:RemoveListenerOnType(self, User.LISTEN_TYPE.DALIY_QUEST_REFRESH)
     User:RemoveListenerOnType(self, User.LISTEN_TYPE.NEW_DALIY_QUEST)
     User:RemoveListenerOnType(self, User.LISTEN_TYPE.NEW_DALIY_QUEST_EVENT)
+    self.town_hall:RemoveUpgradeListener(self)
     GameUITownHall.super.onExit(self)
 end
 

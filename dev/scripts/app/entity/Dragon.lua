@@ -158,7 +158,7 @@ function Dragon:IsHpLow()
 end
 
 function Dragon:GetLocalizedStatus()
-	return Localize.dragon_status[self:Status()]
+	return self:IsDead() and Localize.dragon_status.dead or Localize.dragon_status[self:Status()]
 end
 
 function Dragon:UpdateEquipmetsAndSkills(json_data)
@@ -264,7 +264,10 @@ end
 function Dragon:IsFree()
 	return self:Status() == 'free'
 end
-
+--是否死亡
+function Dragon:IsDead()
+	return self:Hp() == 0
+end
 function Dragon:GetEquipmentByBody( category )
 	local arg_type = type(category)
 	if arg_type == 'number' then
@@ -354,7 +357,7 @@ function Dragon:GetWeight()
 	if not self:Ishated() then
 		return 0
 	else 
-		return self:TotalVitality() * self:TotalStrength()
+		return self:TotalStrength()
 	end
 end
 

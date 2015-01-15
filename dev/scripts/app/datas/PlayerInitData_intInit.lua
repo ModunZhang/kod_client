@@ -12,7 +12,15 @@ intInit["materialsPerCart"] = {
 	["type"] = "materialsPerCart",
 	["value"] = 1
 }
-intInit["technologyMaxLevel"] = {
-	["type"] = "technologyMaxLevel",
+intInit["productionTechnologyMaxLevel"] = {
+	["type"] = "productionTechnologyMaxLevel",
 	["value"] = 15
+}
+intInit["militaryTechnologyMaxLevel"] = {
+	["type"] = "militaryTechnologyMaxLevel",
+	["value"] = 15
+}
+intInit["buildingMaxLevel"] = {
+	["type"] = "buildingMaxLevel",
+	["value"] = 40
 }

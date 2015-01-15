@@ -438,7 +438,8 @@ local SOLDIER_STATUS = {
 local DRAGON_STATUS = {
     free = _("空闲"),
     march = _("出征中"),
-    defence = _("驻防中")
+    defence = _("驻防中"),
+    dead = _("死亡")
 }
 local FIGHT_REWARD = {
     blood = _("英雄之血"),
@@ -448,6 +449,22 @@ local FIGHT_REWARD = {
     iron = _("铁矿"),
     coin = _("银币"),
     wallHp = _("城墙血量")
+}
+local SELL_TYPE = {
+    food = _("粮食"),
+    wood = _("木材"),
+    stone = _("石料"),
+    iron = _("铁矿"),
+
+    blueprints = _("建筑图纸"),
+    tools = _("建筑工具"),
+    tiles = _("砖石瓦片"),
+    pulley = _("滑轮组"),
+
+    trainingFigure = _("木人桩"),
+    bowTarget = _("箭靶"),
+    saddle = _("马鞍"),
+    ironPart = _("精铁零件"),
 }
 local ALLIANCE_AUTHORITY_LIST = {
     {
@@ -534,6 +551,7 @@ return {
     terrain = TERRAIN,
     hate_dragon = HATE_DRAGON,
     dragon_buffer = DRAGON_BUFFER,
+    sell_type = SELL_TYPE
 }
 
 

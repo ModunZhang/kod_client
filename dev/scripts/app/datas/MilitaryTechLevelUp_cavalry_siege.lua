@@ -6,7 +6,8 @@ cavalry_siege[1] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 95
 }
 cavalry_siege[2] = {
 	["level"] = 2,
@@ -14,7 +15,8 @@ cavalry_siege[2] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 155
 }
 cavalry_siege[3] = {
 	["level"] = 3,
@@ -22,7 +24,8 @@ cavalry_siege[3] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 258
 }
 cavalry_siege[4] = {
 	["level"] = 4,
@@ -30,7 +33,8 @@ cavalry_siege[4] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 413
 }
 cavalry_siege[5] = {
 	["level"] = 5,
@@ -38,7 +42,8 @@ cavalry_siege[5] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 774
 }
 cavalry_siege[6] = {
 	["level"] = 6,
@@ -46,7 +51,8 @@ cavalry_siege[6] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 1548
 }
 cavalry_siege[7] = {
 	["level"] = 7,
@@ -54,7 +60,8 @@ cavalry_siege[7] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 2322
 }
 cavalry_siege[8] = {
 	["level"] = 8,
@@ -62,7 +69,8 @@ cavalry_siege[8] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 3096
 }
 cavalry_siege[9] = {
 	["level"] = 9,
@@ -70,7 +78,8 @@ cavalry_siege[9] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 4644
 }
 cavalry_siege[10] = {
 	["level"] = 10,
@@ -78,7 +87,8 @@ cavalry_siege[10] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 6192
 }
 cavalry_siege[11] = {
 	["level"] = 11,
@@ -86,7 +96,8 @@ cavalry_siege[11] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 12384
 }
 cavalry_siege[12] = {
 	["level"] = 12,
@@ -94,7 +105,8 @@ cavalry_siege[12] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 18576
 }
 cavalry_siege[13] = {
 	["level"] = 13,
@@ -102,7 +114,8 @@ cavalry_siege[13] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 24768
 }
 cavalry_siege[14] = {
 	["level"] = 14,
@@ -110,7 +123,8 @@ cavalry_siege[14] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 37152
 }
 cavalry_siege[15] = {
 	["level"] = 15,
@@ -118,5 +132,6 @@ cavalry_siege[15] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 49536
 }

@@ -2,6 +2,7 @@ local PVEDatabase = import(".PVEDatabase")
 local Resource = import(".Resource")
 local AutomaticUpdateResource = import(".AutomaticUpdateResource")
 local property = import("..utils.property")
+local TradeManager = import("..entity.TradeManager")
 local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local User = class("User", MultiObserver)
@@ -42,6 +43,8 @@ function User:ctor(p)
     -- 每日任务
     self.dailyQuests = {}
     self.dailyQuestEvents = {}
+    -- 交易管理器
+    self.trade_manager = TradeManager.new()
     if type(p) == "table" then
         self:SetId(p.id)
         self:OnBasicInfoChanged(p)
@@ -64,6 +67,9 @@ function User:GetGemResource()
 end
 function User:GetStrengthResource()
     return self.resources[STRENGTH]
+end
+function User:GetTradeManager()
+    return self.trade_manager
 end
 function User:OnTimer(current_time)
     self:UpdateResourceByTime(current_time)
@@ -232,6 +238,8 @@ function User:OnUserDataChanged(userData)
     self:OnDailyQuestsEventsChanged(userData.dailyQuestEvents)
     self:OnNewDailyQuestsComming(userData.__dailyQuests)
     self:OnNewDailyQuestsEventsComming(userData.__dailyQuestEvents)
+    -- 交易
+    self.trade_manager:OnUserDataChanged(userData)
 end
 function User:OnBasicInfoChanged(basicInfo)
     if not basicInfo then return end

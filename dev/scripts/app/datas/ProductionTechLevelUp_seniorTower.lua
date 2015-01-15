@@ -6,7 +6,8 @@ seniorTower[1] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 95
 }
 seniorTower[2] = {
 	["level"] = 2,
@@ -14,7 +15,8 @@ seniorTower[2] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 155
 }
 seniorTower[3] = {
 	["level"] = 3,
@@ -22,7 +24,8 @@ seniorTower[3] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 258
 }
 seniorTower[4] = {
 	["level"] = 4,
@@ -30,7 +33,8 @@ seniorTower[4] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 413
 }
 seniorTower[5] = {
 	["level"] = 5,
@@ -38,7 +42,8 @@ seniorTower[5] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 774
 }
 seniorTower[6] = {
 	["level"] = 6,
@@ -46,7 +51,8 @@ seniorTower[6] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 1548
 }
 seniorTower[7] = {
 	["level"] = 7,
@@ -54,7 +60,8 @@ seniorTower[7] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 2322
 }
 seniorTower[8] = {
 	["level"] = 8,
@@ -62,7 +69,8 @@ seniorTower[8] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 3096
 }
 seniorTower[9] = {
 	["level"] = 9,
@@ -70,7 +78,8 @@ seniorTower[9] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 4644
 }
 seniorTower[10] = {
 	["level"] = 10,
@@ -78,7 +87,8 @@ seniorTower[10] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 6192
 }
 seniorTower[11] = {
 	["level"] = 11,
@@ -86,7 +96,8 @@ seniorTower[11] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 12384
 }
 seniorTower[12] = {
 	["level"] = 12,
@@ -94,7 +105,8 @@ seniorTower[12] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 18576
 }
 seniorTower[13] = {
 	["level"] = 13,
@@ -102,7 +114,8 @@ seniorTower[13] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 24768
 }
 seniorTower[14] = {
 	["level"] = 14,
@@ -110,7 +123,8 @@ seniorTower[14] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 37152
 }
 seniorTower[15] = {
 	["level"] = 15,
@@ -118,5 +132,6 @@ seniorTower[15] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 49536
 }

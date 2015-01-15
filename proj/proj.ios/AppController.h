@@ -33,6 +33,6 @@
     UIWindow *window;
     @public RootViewController *viewController;
 }
-
+@property(retain,nonatomic) NSString *remoteDeviceToken;
 @end
 

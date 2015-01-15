@@ -11,11 +11,10 @@ local WidgetAllianceBuildingUpgrade = class("WidgetAllianceBuildingUpgrade", fun
     return display.newLayer()
 end)
 
-local UPGRADE_ERR_TYPE = Enum("POSITION","KEEP","HONOUR")
+local UPGRADE_ERR_TYPE = Enum("POSITION","HONOUR")
 
 local ERR_MESSAGE = {
-    [UPGRADE_ERR_TYPE.POSITION] = _("只有联盟盟主才能升级联盟宫殿"),
-    [UPGRADE_ERR_TYPE.KEEP] = _("联盟盟主的城堡等级不足"),
+    [UPGRADE_ERR_TYPE.POSITION] = _("权限不足"),
     [UPGRADE_ERR_TYPE.HONOUR] = _("荣耀点不足"),
 }
 
@@ -86,7 +85,7 @@ function WidgetAllianceBuildingUpgrade:onEnter()
     ):pos(display.cx, display.top-430)
         :addTo(self)
     self.upgrade_button = btn_bg.button
-   
+
     self:VisibleUpgradeButton()
 
     self:InitRequirement()
@@ -179,17 +178,12 @@ function WidgetAllianceBuildingUpgrade:InitRequirement()
             isSatisfy = alliance:Honour()>=now_c.needHonour,
             icon="honour.png",
             description=alliance:Honour().."/"..now_c.needHonour},
-        {resource_type = _("联盟城堡等级"),
-            isVisible = alliance:GetMemeberById(DataManager:getUserData()._id):IsArchon(),
-            isSatisfy = City:GetFirstBuildingByType("keep"):GetLevel()>=now_c.needKeep,
-            icon="keep_760x855.png",
-            description=City:GetFirstBuildingByType("keep"):GetLevel().."/"..now_c.needKeep},
 
-        {resource_type = _("职位"),
+        {resource_type = _("职位大于等于")..Localize.alliance_title.quartermaster,
             isVisible = true,
-            isSatisfy = alliance:GetMemeberById(DataManager:getUserData()._id):IsArchon() ,
+            isSatisfy = alliance:GetSelf():CanUpgradeAllianceBuilding() ,
             icon="leader.png",
-            description= _("联盟盟主")},
+            description= ""},
     }
     if not self.requirement_listview then
         self.requirement_listview = WidgetRequirementListview.new({
@@ -208,16 +202,10 @@ end
 function WidgetAllianceBuildingUpgrade:IsAbleToUpgrade()
     local alliance = Alliance_Manager:GetMyAlliance()
     local now_c = self.building_config[self.building.level+1]
-    if self.building.name=="palace" then
-        if not alliance:GetMemeberById(DataManager:getUserData()._id):IsArchon() then
-            return UPGRADE_ERR_TYPE.POSITION
-        else
-            if alliance:Honour()<now_c.needHonour then
-                return UPGRADE_ERR_TYPE.HONOUR
-            elseif City:GetFirstBuildingByType("keep"):GetLevel()<now_c.needKeep then
-                return UPGRADE_ERR_TYPE.KEEP
-            end
-        end
+    if not alliance:GetSelf():CanUpgradeAllianceBuilding() then
+        return UPGRADE_ERR_TYPE.POSITION
+    elseif alliance:Honour()<now_c.needHonour then
+        return UPGRADE_ERR_TYPE.HONOUR
     end
 end
 
@@ -245,6 +233,8 @@ function WidgetAllianceBuildingUpgrade:getNextLevelConfig__()
 end
 
 return WidgetAllianceBuildingUpgrade
+
+
 
 
 

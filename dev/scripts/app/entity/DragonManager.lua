@@ -57,9 +57,11 @@ function DragonManager:GetCanFightPowerfulDragonType()
     local dragonWidget = 0
     local dragonType = ""
     for k,dragon in pairs(self:GetDragons()) do
-        if dragon:GetWeight() > dragonWidget and dragon:Status()=="free" then
-            dragonWidget = dragon:GetWeight()
-            dragonType = k
+        if dragon:Status()=="free" and not dragon:IsDead() then
+            if dragon:GetWeight() > dragonWidget then
+                dragonWidget = dragon:GetWeight()
+                dragonType = k
+            end
         end
     end
     return dragonType
@@ -76,7 +78,9 @@ end
 function DragonManager:GetDragonsSortWithPowerful()
     local dragon_list = {}
     for k,v in pairs(self.dragons_) do
-        table.insert(dragon_list, v)
+        if v:Ishated() then
+            table.insert(dragon_list, v)
+        end
     end
     table.sort( dragon_list, function(a,b)
         return a:GetWeight() > b:GetWeight()

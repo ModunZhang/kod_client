@@ -6,7 +6,8 @@ siege_infantry[1] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 95
 }
 siege_infantry[2] = {
 	["level"] = 2,
@@ -14,7 +15,8 @@ siege_infantry[2] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 155
 }
 siege_infantry[3] = {
 	["level"] = 3,
@@ -22,7 +24,8 @@ siege_infantry[3] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 258
 }
 siege_infantry[4] = {
 	["level"] = 4,
@@ -30,7 +33,8 @@ siege_infantry[4] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 413
 }
 siege_infantry[5] = {
 	["level"] = 5,
@@ -38,7 +42,8 @@ siege_infantry[5] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 774
 }
 siege_infantry[6] = {
 	["level"] = 6,
@@ -46,7 +51,8 @@ siege_infantry[6] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 1548
 }
 siege_infantry[7] = {
 	["level"] = 7,
@@ -54,7 +60,8 @@ siege_infantry[7] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 2322
 }
 siege_infantry[8] = {
 	["level"] = 8,
@@ -62,7 +69,8 @@ siege_infantry[8] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 3096
 }
 siege_infantry[9] = {
 	["level"] = 9,
@@ -70,7 +78,8 @@ siege_infantry[9] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 4644
 }
 siege_infantry[10] = {
 	["level"] = 10,
@@ -78,7 +87,8 @@ siege_infantry[10] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 6192
 }
 siege_infantry[11] = {
 	["level"] = 11,
@@ -86,7 +96,8 @@ siege_infantry[11] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 12384
 }
 siege_infantry[12] = {
 	["level"] = 12,
@@ -94,7 +105,8 @@ siege_infantry[12] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 18576
 }
 siege_infantry[13] = {
 	["level"] = 13,
@@ -102,7 +114,8 @@ siege_infantry[13] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 24768
 }
 siege_infantry[14] = {
 	["level"] = 14,
@@ -110,7 +123,8 @@ siege_infantry[14] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 37152
 }
 siege_infantry[15] = {
 	["level"] = 15,
@@ -118,5 +132,6 @@ siege_infantry[15] = {
 	["trainingFigure"] = 1,
 	["bowTarget"] = 1,
 	["saddle"] = 1,
-	["ironPart"] = 1
+	["ironPart"] = 1,
+	["buildTime"] = 49536
 }

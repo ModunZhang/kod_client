@@ -785,7 +785,7 @@
 					"-lpomelo",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "70193a56-4f5e-4440-b87f-7516865c77f0";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "70193a56-4f5e-4440-b87f-7516865c77f0";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../sources\"/**";
@@ -802,7 +802,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Zhang XueMin (4Y8HV55RC2)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Zhang XueMin (YQRHUJ495Q)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Zhang XueMin (YQRHUJ495Q)";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -862,7 +862,7 @@
 					"-lpomelo",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "70193a56-4f5e-4440-b87f-7516865c77f0";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "bd94f179-8fd3-4e30-ba12-7762576b1847";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../sources\"/**";
