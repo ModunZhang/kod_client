@@ -40,7 +40,7 @@ function FullScreenPopDialogUI:Init()
     self.close_btn = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                self:removeFromParent(true)
+                self:removeFromParent()
             end
         end):align(display.CENTER, size.width-30, size.height+16):addTo(bg)
 end
@@ -107,10 +107,10 @@ function FullScreenPopDialogUI:CreateCancelButton(params)
 
     self.close_btn:onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
+            self:removeFromParent()
             if listener then
                 listener()
             end
-            self:removeFromParent(true)
         end
     end)
     return self

@@ -25,6 +25,19 @@ local randomseed = math.randomseed
 function CityLayer:GetClickedObject(world_x, world_y)
     local point = self:GetCityNode():convertToNodeSpace(cc.p(world_x, world_y))
     local logic_x, logic_y = self:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
+
+    local clicked_helped_troops
+    self:IteratorHelpedTroops(function(_, v)
+        if v:isVisible() then
+            local x, y = v:GetLogicPosition()
+            if (logic_x == x and logic_y == y) or v:IsContainRealPoint(world_x, world_y) then
+                clicked_helped_troops = v
+                return true
+            end
+        end
+    end)
+    if clicked_helped_troops then return clicked_helped_troops end
+
     local clicked_list = {
         logic_clicked = {},
         sprite_clicked = {}
@@ -185,21 +198,21 @@ function CityLayer:GetCityNode()
 end
 --
 function CityLayer:InitWeather()
-    -- local sprite = display.newSprite("logos/batcat.png", 0, 0, {class=cc.FilteredSpriteWithOne})
-    --     :addTo(self, WEATHER_NODE):align(display.LEFT_BOTTOM, 0, 0)
-    -- local size1 = self:getContentSize()
-    -- local size2 = sprite:getContentSize()
-    -- sprite:setScale(size1.width / size2.width, size1.height / size2.height)
-    -- sprite:setFilter(filter.newFilter("CUSTOM",
-    --     json.encode({
-    --         frag = "shaders/snow.fs",
-    --         u_resolution = {size1.width, size1.height},
-    --         u_position = {0.5, 0.5},
-    --     })
-    -- ))
-    -- self.weather = sprite
-    -- self.weather_glstate = self.weather:getFilter(0):getGLProgramState()
-    -- self:UpdateWeather()
+-- local sprite = display.newSprite("logos/batcat.png", 0, 0, {class=cc.FilteredSpriteWithOne})
+--     :addTo(self, WEATHER_NODE):align(display.LEFT_BOTTOM, 0, 0)
+-- local size1 = self:getContentSize()
+-- local size2 = sprite:getContentSize()
+-- sprite:setScale(size1.width / size2.width, size1.height / size2.height)
+-- sprite:setFilter(filter.newFilter("CUSTOM",
+--     json.encode({
+--         frag = "shaders/snow.fs",
+--         u_resolution = {size1.width, size1.height},
+--         u_position = {0.5, 0.5},
+--     })
+-- ))
+-- self.weather = sprite
+-- self.weather_glstate = self.weather:getFilter(0):getGLProgramState()
+-- self:UpdateWeather()
 end
 function CityLayer:ChangeTerrain(terrain_type)
     if self.terrain_type ~= terrain_type then
@@ -285,9 +298,9 @@ function CityLayer:InitWithCity(city)
         end
         local grounds = tile:RandomGrounds(random(123456789))
         for _, v in pairs(grounds) do
-            -- local tree = self:CreateSingleTree(v.x, v.y):addTo(city_node)
-            -- table.insert(single_tree, tree)
-            -- tree:setVisible(tile:IsUnlocked())
+        -- local tree = self:CreateSingleTree(v.x, v.y):addTo(city_node)
+        -- table.insert(single_tree, tree)
+        -- tree:setVisible(tile:IsUnlocked())
         end
     end)
     self.single_tree = single_tree
@@ -324,7 +337,7 @@ function CityLayer:InitWithCity(city)
         {x = 15, y = 55},
         {x = 35, y = 55},
     }) do
-        table.insert(helpedByTroops, HelpedTroopsSprite.new(self, v.x, v.y):addTo(city_node))
+        table.insert(helpedByTroops, HelpedTroopsSprite.new(self, i, v.x, v.y):addTo(city_node))
     end
     self.helpedByTroops = helpedByTroops
 
@@ -549,7 +562,7 @@ function CityLayer:UpdateTreesWithCity(city)
 
     city:IteratorTilesByFunc(function(x, y, tile)
         if tile.locked then
-        -- if face_tile ~= tile and tile.locked then
+            -- if face_tile ~= tile and tile.locked then
             local tree = self:CreateTreeWithTile(tile)
             city_node:addChild(tree)
             table.insert(self.trees, tree)
@@ -615,9 +628,12 @@ function CityLayer:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
     end)
 end
 function CityLayer:UpdateHelpedByTroopsVisible(helped_by_troops)
-    for i, v in ipairs(self.helpedByTroops) do
-        v:setVisible(helped_by_troops[i] ~= nil)
-    end
+    self:IteratorHelpedTroops(function(i, v)
+       v:setVisible(helped_by_troops[i] ~= nil)
+    end)
+end
+function CityLayer:IteratorHelpedTroops(func)
+    table.foreach(self.helpedByTroops, func)
 end
 -- promise
 function CityLayer:FindBuildingBy(x, y)
@@ -777,6 +793,7 @@ function CityLayer:OnSceneScale()
 end
 
 return CityLayer
+
 
 
 

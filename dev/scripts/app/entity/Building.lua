@@ -20,7 +20,7 @@ local sort_map = Enum(
     "dragonEyrie",
     "toolShop",
     "materialDepot",
-    "armyCamp",
+    "academy",
     "barracks",
     "blackSmith",
     "foundry",
@@ -30,14 +30,18 @@ local sort_map = Enum(
     "hospital",
     "townHall",
     "tradeGuild",
-    "academy",
-    "prison",
-    "hunterHall",
-    "trainingGround",
-    "stable",
     "workShop",
+    "trainingGround",
+    "hunterHall",
+    "stable",
+    "dwelling",
+    "woodcutter",
+    "farmer",
+    "quarrier",
+    "miner",
     "wall",
-    "tower")
+    "tower"
+)
 function Building:ctor(building_info)
     assert(building_info)
     self.x = building_info.x and building_info.x or 0
@@ -241,6 +245,7 @@ function Building:GetGlobalRegion()
     return start_x, end_x, start_y, end_y
 end
 return Building
+
 
 
 

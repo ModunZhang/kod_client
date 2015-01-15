@@ -59,6 +59,7 @@ function City:ctor(json_data)
         self:InitWithJsonData(json_data)
     end
 
+    --
     self.upgrading_building_callbacks = {}
     self.finish_upgrading_callbacks = {}
 end
@@ -168,9 +169,6 @@ function City:ResetAllListeners()
         building:ResetAllListeners()
         self:OnInitBuilding(building)
     end)
-
-    -- self.upgrading_building_callbacks = {}
-    -- self.finish_upgrading_callbacks = {}
 end
 function City:NewBuildingWithType(building_type, x, y, w, h, level, finish_time)
     return BuildingRegister[building_type].new{
@@ -232,8 +230,6 @@ function City:InitBuildings(buildings)
             assert(not self.dragonEyrie)
             self.dragonEyrie = building
         end
-        -- building.city = self
-        -- building:AddUpgradeListener(self)
         self:OnInitBuilding(building)
     end)
 end
@@ -246,16 +242,12 @@ end
 function City:InitDecorators(decorators)
     self.decorators = decorators
     table.foreach(decorators, function(key, building)
+        self:OnInitBuilding(building)
 
-            -- building.city = self
-            -- building:AddUpgradeListener(self)
-
-            self:OnInitBuilding(building)
-
-            local tile = self:GetTileWhichBuildingBelongs(building)
-            local sub_location = tile:GetBuildingLocation(building)
-            assert(sub_location)
-            self:GetDecoratorsByLocationId(tile.location_id)[sub_location] = building
+        local tile = self:GetTileWhichBuildingBelongs(building)
+        local sub_location = tile:GetBuildingLocation(building)
+        assert(sub_location)
+        self:GetDecoratorsByLocationId(tile.location_id)[sub_location] = building
     end)
     self:CheckIfDecoratorsIntersectWithRuins()
 end
@@ -318,7 +310,7 @@ function City:GetResourceManager()
     return self.resource_manager
 end
 function City:GetAvailableBuildQueueCounts()
-    return self:BuildQueueCounts() - #self:GetOnUpgradingBuildings()
+    return self:BuildQueueCounts() - #self:GetUpgradingBuildings()
 end
 function City:BuildQueueCounts()
     return self.build_queue
@@ -326,26 +318,28 @@ end
 function City:GetHelpedByTroops()
     return self.helpedByTroops
 end
-function City:GetOnUpgradingBuildings()
+function City:GetUpgradingBuildings(need_sort)
     local builds = {}
     self:IteratorCanUpgradeBuildings(function(building)
         if building:IsUpgrading() then
             table.insert(builds, building)
         end
     end)
-    table.sort(builds, function(a, b)
-        local a_index = self:GetLocationIdByBuildingType(a:GetType())
-        local b_index = self:GetLocationIdByBuildingType(b:GetType())
-        if a_index and b_index then
-            return a_index < b_index
-        elseif a_index == nil and b_index then
-            return false
-        elseif a_index and b_index == nil then
-            return true
-        else
-            return a:GetType() < b:GetType()
-        end
-    end)
+    if need_sort then
+        table.sort(builds, function(a, b)
+            local a_index = self:GetLocationIdByBuildingType(a:GetType())
+            local b_index = self:GetLocationIdByBuildingType(b:GetType())
+            if a_index and b_index then
+                return a_index < b_index
+            elseif a_index == nil and b_index then
+                return false
+            elseif a_index and b_index == nil then
+                return true
+            else
+                return a:GetType() == b:GetType() and a:IsAheadOfBuilding(b) or a:IsImportantThanBuilding(b)
+            end
+        end)
+    end
     return builds
 end
 function City:GetUpgradingBuildingsWithOrder(current_time)
@@ -360,18 +354,24 @@ function City:GetUpgradingBuildingsWithOrder(current_time)
     end)
     return builds
 end
-function City:GetBuildingMaxCountsByType(building_type)
-    local building_map = {
-        dwelling = "townHall",
-        woodcutter = "lumbermill",
-        farmer = "mill",
-        quarrier = "stoneMason",
-        miner = "foundry",
-    }
-    return HOUSES[building_type] + self:GetFirstBuildingByType(building_map[building_type]):GetMaxHouseNum()
-end
 function City:GetLeftBuildingCountsByType(building_type)
-    return self:GetBuildingMaxCountsByType(building_type) - #self:GetBuildingByType(building_type)
+    return self:GetMaxHouseCanBeBuilt(building_type) - #self:GetBuildingByType(building_type)
+end
+-- 取得小屋最大建造数量
+local BUILDING_MAP = {
+    dwelling = "townHall",
+    woodcutter = "lumbermill",
+    farmer = "mill",
+    quarrier = "stoneMason",
+    miner = "foundry",
+}
+function City:GetMaxHouseCanBeBuilt(house_type)
+    --基础值
+    local max = HOUSES[house_type]
+    for _, v in pairs(self:GetBuildingByType(BUILDING_MAP[house_type])) do
+        max = max + v:GetMaxHouseNum()
+    end
+    return max
 end
 local function get_unlock_buildings(buildings)
     local r = {}
@@ -513,30 +513,6 @@ end
 function City:GetTileByIndex(x, y)
     return self.tiles[y] and self.tiles[y][x] or nil
 end
--- 取得小屋最大建造数量
-function City:GetMaxHouseCanBeBuilt(house_type)
-    local max = GameDatas.PlayerInitData.houses[1][house_type] --基础值
-
-    if house_type=="farmer" then
-        for _,mill in pairs(self:GetBuildingByType("mill")) do
-            max = max + mill:GetMaxHouseNum()
-        end
-    elseif house_type=="woodcutter" then
-        for _,lumbermill in pairs(self:GetBuildingByType("lumbermill")) do
-            max = max + lumbermill:GetMaxHouseNum()
-        end
-    elseif house_type=="quarrier" then
-        for _,stoneMason in pairs(self:GetBuildingByType("stoneMason")) do
-            max = max + stoneMason:GetMaxHouseNum()
-        end
-    elseif house_type=="miner" then
-        for _,foundry in pairs(self:GetBuildingByType("foundry")) do
-            max = max + foundry:GetMaxHouseNum()
-        end
-    end
-
-    return max
-end
 function City:IsUnLockedAtIndex(x, y)
     return not self.tiles[y][x].locked
 end
@@ -661,43 +637,6 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time)
         building:OnUserDataChanged(user_data, current_time)
     end)
     self:GetGate():OnUserDataChanged(user_data, current_time)
-end
-function City:IteratorResourcesByUserData(resources, current_time)
-    assert(self.belong_user, "未指定用户")
-    local resource_manager = self:GetResourceManager()
-    if resources.energy then
-        resource_manager:GetEnergyResource():UpdateResource(current_time, resources.energy)
-    end
-    if resources.wood then
-        resource_manager:GetWoodResource():UpdateResource(current_time, resources.wood)
-    end
-    if resources.food then
-        resource_manager:GetFoodResource():UpdateResource(current_time, resources.food)
-    end
-    if resources.iron then
-        resource_manager:GetIronResource():UpdateResource(current_time, resources.iron)
-    end
-    if resources.stone then
-        resource_manager:GetStoneResource():UpdateResource(current_time, resources.stone)
-    end
-    if resources.cart then
-        resource_manager:GetCartResource():UpdateResource(current_time, resources.cart)
-    end
-    if resources.citizen then
-        resource_manager:GetPopulationResource():UpdateResource(current_time, resources.citizen)
-    end
-    if resources.coin then
-        resource_manager:GetCoinResource():SetValue(resources.coin)
-    end
-    if resources.gem then
-        self.belong_user:GetGemResource():SetValue(resources.gem)
-    end
-    if resources.blood then
-        resource_manager:GetBloodResource():SetValue(resources.blood)
-    end
-    if resources.wallHp then
-        resource_manager:GetWallHpResource():UpdateResource(current_time, resources.wallHp)
-    end
 end
 function City:IteratorAllNeedTimerEntity(current_time)
     self:IteratorFunctionBuildingsByFunc(function(key, building)
@@ -968,17 +907,22 @@ function City:OnUserDataChanged(userData, current_time)
     -- 更新材料，这里是广义的材料，包括龙的装备
     self.material_manager:OnUserDataChanged(userData)
     -- 最后才更新资源
-    if userData.basicInfo then
-        local resource_refresh_time = userData.basicInfo.resourceRefreshTime / 1000
+    local basicInfo = userData.basicInfo
+    local resource_refresh_time = current_time
+    if basicInfo then
+        resource_refresh_time = basicInfo.resourceRefreshTime / 1000
+
+        self.build_queue = basicInfo.buildQueue
+        self:SetCityName(basicInfo.cityName)
+
         if userData.resources then
-            self:IteratorResourcesByUserData(userData.resources, resource_refresh_time)
+            self.resource_manager:UpdateFromUserDataByTime(userData.resources, resource_refresh_time)
             need_update_resouce_buildings = true
         end
-        self.build_queue = userData.basicInfo.buildQueue
-        self:SetCityName(userData.basicInfo.cityName)
     end
     if need_update_resouce_buildings then
-        self:UpdateAllResource(current_time)
+        self.resource_manager:UpdateByCity(self, resource_refresh_time)
+        self.resource_manager:UpdateResourceByTime(current_time)
     end
 end
 function City:GetCityName()
@@ -1068,10 +1012,6 @@ end
 function City:OnInitBuilding(building)
     building.city = self
     building:AddUpgradeListener(self)
-end
------
-function City:UpdateAllResource(current_time)
-    self.resource_manager:OnBuildingChangedFromCity(self, current_time)
 end
 ---------
 function City:GenerateWalls()
@@ -1183,7 +1123,7 @@ function City:ReloadWalls(walls)
         end
     end
     return t
-    -- return walls
+        -- return walls
 end
 function City:GenerateTowers(walls)
     local towers = {}
@@ -1277,15 +1217,6 @@ function City:ReloadTowers(towers)
         end
     end
     return towers
-end
-function City:OnUpgradingBuildings()
-    local upgrading_buildings = {}
-    for i,v in ipairs(self.buildings) do
-        if v:IsUpgrading() then
-            upgrading_buildings[i] = v
-        end
-    end
-    return upgrading_buildings
 end
 local function findTroopsInHelpedByTroops(helpedByTroops, troops)
     for i, v in pairs(helpedByTroops) do
@@ -1466,6 +1397,8 @@ function City:GetWatchTowerLevel()
 end
 
 return City
+
+
 
 
 

@@ -46,7 +46,6 @@ local function get_blocking_request_promise(request_route, data, m,need_catch)
         loading:removeFromParent()
     end)
     return cocos_promise.promiseFilterNetError(p,need_catch)
-
 end
 local function get_none_blocking_request_promise(request_route, data, m)
     return cocos_promise.promiseWithTimeOut(get_request_promise(request_route, data, m), TIME_OUT)

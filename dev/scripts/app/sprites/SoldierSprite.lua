@@ -108,6 +108,9 @@ function SoldierSprite:CreateSprite()
     end
     return node
 end
+function SoldierSprite:GetLogicPosition()
+    return self.x, self.y
+end
 function SoldierSprite:GetSpriteOffset()
     local offset = self:GetConfig().offset
     return offset.x, offset.y

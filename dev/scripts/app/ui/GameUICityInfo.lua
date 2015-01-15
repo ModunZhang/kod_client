@@ -1,4 +1,5 @@
 local window = import("..utils.window")
+local UIPageView = import("..ui.UIPageView")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUICityInfo = UIKit:createUIClass('GameUICityInfo')
@@ -153,6 +154,60 @@ function GameUICityInfo:CreateBottom()
     if display.width >640 then
         bottom_bg:scale(display.width/768)
     end
+
+
+    -- 聊天背景
+    local chat_bg = display.newSprite("chat_background.png")
+        :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-10)
+        :addTo(bottom_bg)
+    cc.ui.UIImage.new("home/chat_btn.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width-60, 0)
+    local index_1 = display.newSprite("chat_page_index_1.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2-10,chat_bg:getContentSize().height-10)
+    local index_2 = display.newSprite("chat_page_index_2.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2+10,chat_bg:getContentSize().height-10)
+    self.chat_bg = chat_bg
+
+    local size = chat_bg:getContentSize()
+    local pv = UIPageView.new {
+        viewRect = cc.rect(10, 4, size.width-80, size.height)}
+        :onTouch(function (event)
+            dump(event,"UIPageView event")
+            if event.name == "pageChange" then
+                if 1 == event.pageIdx then
+                    index_1:setPositionX(chat_bg:getContentSize().width/2-10)
+                    index_2:setPositionX(chat_bg:getContentSize().width/2+10)
+                elseif 2 == event.pageIdx then
+                    index_1:setPositionX(chat_bg:getContentSize().width/2+10)
+                    index_2:setPositionX(chat_bg:getContentSize().width/2-10)
+                end
+            elseif event.name == "clicked" then
+                if event.pageIdx == 1 then
+                    UIKit:newGameUI('GameUIChat',"global"):addToCurrentScene(true)
+                elseif event.pageIdx == 2 then
+                    UIKit:newGameUI('GameUIChat',"Alliance"):addToCurrentScene(true)
+                end
+            end
+        end)
+        :addTo(chat_bg)
+    pv:setTouchEnabled(true)
+    pv:setTouchSwallowEnabled(false)
+    -- add items
+    for i=1,2 do
+        local item = pv:newItem()
+        local content
+
+        content = display.newLayer()
+        content:setContentSize(540, 40)
+        content:setTouchEnabled(false)
+        local text_tag = i==1 and "世界聊天" or "联盟聊天"
+        UIKit:ttfLabel(
+            {text = text_tag,
+                size = 24,
+                color = 0xf3f0b6})
+            :addTo(content)
+            :align(display.CENTER, content:getContentSize().width/2, content:getContentSize().height/2)
+        item:addChild(content)
+        pv:addItem(item)
+    end
+    pv:reload()
 
 
     cc.ui.UILabel.new({text = "您正在访问其他玩家的城市, 无法使用其他功能, 点击左下角返回城市",

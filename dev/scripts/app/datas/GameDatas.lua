@@ -3,9 +3,13 @@ GameDatas = {}
 GameDatas.ClientInitGame = {
 	["ruins"] = {},
 	["locations"] = {},
+	["allianceRight"] = {},
+	["watchTower"] = {},
 }
 require("app.datas.ClientInitGame_ruins")
 require("app.datas.ClientInitGame_locations")
+require("app.datas.ClientInitGame_allianceRight")
+require("app.datas.ClientInitGame_watchTower")
 
 GameDatas.AllianceBuilding = {
 	["palace"] = {},
@@ -252,6 +256,11 @@ GameDatas.Houses = {
 	["houses"] = {},
 }
 require("app.datas.Houses_houses")
+
+GameDatas.Items = {
+	["items"] = {},
+}
+require("app.datas.Items_items")
 
 GameDatas.MilitaryTechLevelUp = {
 	["infantry_infantry"] = {},

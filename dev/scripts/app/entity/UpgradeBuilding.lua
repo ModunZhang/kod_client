@@ -339,7 +339,7 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
         or m.tiles<config[self:GetNextLevel()].tiles or m.tools<config[self:GetNextLevel()].tools
         or m.blueprints<config[self:GetNextLevel()].blueprints or m.pulley<config[self:GetNextLevel()].pulley
     local max = city.build_queue
-    local current = max - #city:GetOnUpgradingBuildings()
+    local current = max - #city:GetUpgradingBuildings()
 
     if is_resource_enough and current <= 0 then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_AND_RESOURCE_NOT_ENOUGH
@@ -380,9 +380,9 @@ function UpgradeBuilding:getUpgradeRequiredGems()
     required_gems = required_gems + DataUtils:buyResource(resource_config.resources, has_resourcce)
     required_gems = required_gems + DataUtils:buyMaterial(resource_config.materials, has_materials)
     --当升级队列不足时，立即完成正在升级的建筑中所剩升级时间最少的建筑
-    if #city:GetOnUpgradingBuildings()>0 then
+    if #city:GetUpgradingBuildings()>0 then
         local min_time = math.huge
-        for k,v in pairs(city:GetOnUpgradingBuildings()) do
+        for k,v in pairs(city:GetUpgradingBuildings()) do
             local left_time = v:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime())
             if left_time<min_time then
                 min_time=left_time

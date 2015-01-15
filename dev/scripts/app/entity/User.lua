@@ -123,7 +123,7 @@ function User:IsQuestStarted(quest)
     return quest.finishTime ~= nil
 end
 function User:IsQuestFinished(quest)
-   return quest.finishTime==0
+    return quest.finishTime==0
 end
 function User:AddInviteEventWithNotify(req)
     local invite = self:AddInviteEventWithOrder(req)
@@ -228,6 +228,7 @@ function User:OnPropertyChange(property_name, old_value, new_value)
     end)
 end
 function User:OnUserDataChanged(userData)
+    self:OnGemChanged(userData.resources)
     self:OnBasicInfoChanged(userData.basicInfo)
     self:OnNewInviteAllianceEventsComming(userData.__inviteToAllianceEvents)
     self:OnNewRequestToAllianceEventsComming(userData.__requestToAllianceEvents)
@@ -240,6 +241,11 @@ function User:OnUserDataChanged(userData)
     self:OnNewDailyQuestsEventsComming(userData.__dailyQuestEvents)
     -- 交易
     self.trade_manager:OnUserDataChanged(userData)
+end
+function User:OnGemChanged(resources)
+    if resources and resources.gem then
+        self:GetGemResource():SetValue(resources.gem)
+    end
 end
 function User:OnBasicInfoChanged(basicInfo)
     if not basicInfo then return end
@@ -446,6 +452,7 @@ function User:OnNewDailyQuestsEvent(changed_map)
     end)
 end
 return User
+
 
 
 

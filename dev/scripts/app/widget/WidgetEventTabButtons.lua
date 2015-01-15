@@ -131,6 +131,17 @@ function WidgetEventTabButtons:ctor(city)
 
     self.toolShop = city:GetFirstBuildingByType("toolShop")
     self.toolShop:AddToolShopListener(self)
+
+    self:ShowEvent()
+end
+function WidgetEventTabButtons:ShowEvent()
+    if #self.city:GetUpgradingBuildings() > 0 then
+        return self:PromiseOfShowTab("build")
+    elseif self.barracks:IsRecruting() then
+        return self:PromiseOfShowTab("soldier")
+    elseif self.barracks:IsRecruting() then
+        return self:PromiseOfShowTab("material")
+    end
 end
 function WidgetEventTabButtons:onExit()
     self.toolShop:RemoveToolShopListener(self)
@@ -565,7 +576,7 @@ function WidgetEventTabButtons:Load()
             if k == "build" then
                 self:InsertItem(self:CreateBottom():SetLabel(_("查看已拥有的建筑")))
 
-                local buildings = self.city:GetOnUpgradingBuildings()
+                local buildings = self.city:GetUpgradingBuildings(true)
                 local items = {}
                 for i, v in ipairs(buildings) do
                     local event_item = self:CreateItem()
