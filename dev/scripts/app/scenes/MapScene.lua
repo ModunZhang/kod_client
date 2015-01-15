@@ -96,26 +96,33 @@ function MapScene:OneTouch(pre_x, pre_y, x, y, touch_type)
         self.touch_judgment:OnTouchCancelled(pre_x, pre_y, x, y)
     end
 end
+local sqrt = math.sqrt
+local floor = math.floor
 function MapScene:OnTwoTouch(x1, y1, x2, y2, event_type)
     local scene = self.scene_layer
     if event_type == "began" then
         scene:StopScaleAnimation()
-        self.distance = math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
+        self.distance = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
         scene:ZoomBegin(x1, y1, x2, y2)
     elseif event_type == "moved" then
-        local new_distance = math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
+        local new_distance = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
         scene:ZoomBy(new_distance / self.distance, (x1 + x2) * 0.5, (y1 + y2) * 0.5)
     elseif event_type == "ended" then
         scene:ZoomEnd()
         self.distance = nil
-        local min_s, max_s = scene:GetScaleRange()
-        local low = min_s * 1.2
-        local high = max_s * 0.9
-        if scene:getScale() <= low then
-            scene:ZoomToByAnimation(low)
-        elseif scene:getScale() >= high then
-            scene:ZoomToByAnimation(high)
-        end
+        -- 皮筋效果
+        self:MakeElastic()
+    end
+end
+function MapScene:MakeElastic()
+    local scene = self.scene_layer
+    local min_s, max_s = scene:GetScaleRange()
+    local low = min_s * 1.2
+    local high = max_s * 0.9
+    if scene:getScale() <= low then
+        scene:ZoomToByAnimation(low)
+    elseif scene:getScale() >= high then
+        scene:ZoomToByAnimation(high)
     end
 end
 -- TouchJudgment
@@ -153,5 +160,6 @@ function MapScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed
 end
 
 return MapScene
+
 
 
