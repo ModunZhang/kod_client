@@ -6,7 +6,8 @@ cropResearch[1] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 95
 }
 cropResearch[2] = {
 	["level"] = 2,
@@ -14,7 +15,8 @@ cropResearch[2] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 155
 }
 cropResearch[3] = {
 	["level"] = 3,
@@ -22,7 +24,8 @@ cropResearch[3] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 258
 }
 cropResearch[4] = {
 	["level"] = 4,
@@ -30,7 +33,8 @@ cropResearch[4] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 413
 }
 cropResearch[5] = {
 	["level"] = 5,
@@ -38,7 +42,8 @@ cropResearch[5] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 774
 }
 cropResearch[6] = {
 	["level"] = 6,
@@ -46,7 +51,8 @@ cropResearch[6] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 1548
 }
 cropResearch[7] = {
 	["level"] = 7,
@@ -54,7 +60,8 @@ cropResearch[7] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 2322
 }
 cropResearch[8] = {
 	["level"] = 8,
@@ -62,7 +69,8 @@ cropResearch[8] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 3096
 }
 cropResearch[9] = {
 	["level"] = 9,
@@ -70,7 +78,8 @@ cropResearch[9] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 4644
 }
 cropResearch[10] = {
 	["level"] = 10,
@@ -78,7 +87,8 @@ cropResearch[10] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 6192
 }
 cropResearch[11] = {
 	["level"] = 11,
@@ -86,7 +96,8 @@ cropResearch[11] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 12384
 }
 cropResearch[12] = {
 	["level"] = 12,
@@ -94,7 +105,8 @@ cropResearch[12] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 18576
 }
 cropResearch[13] = {
 	["level"] = 13,
@@ -102,7 +114,8 @@ cropResearch[13] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 24768
 }
 cropResearch[14] = {
 	["level"] = 14,
@@ -110,7 +123,8 @@ cropResearch[14] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 37152
 }
 cropResearch[15] = {
 	["level"] = 15,
@@ -118,5 +132,6 @@ cropResearch[15] = {
 	["blueprints"] = 1,
 	["tools"] = 1,
 	["tiles"] = 1,
-	["pulley"] = 1
+	["pulley"] = 1,
+	["buildTime"] = 49536
 }

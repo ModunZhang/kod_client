@@ -185,14 +185,6 @@ function GameUIReplay:ctor(report)
 end
 function GameUIReplay:onExit()
     GameUIReplay.super.onExit(self)
-    for _, v in pairs{
-        {"animations/Archer_1_render0.plist","animations/Archer_1_render0.png"},
-        {"animations/Catapult_1_render0.plist","animations/Catapult_1_render0.png"},
-        {"animations/Cavalry_1_render0.plist","animations/Cavalry_1_render0.png"},
-        {"animations/Infantry_1_render0.plist","animations/Infantry_1_render0.png"},
-    } do
-        display.removeSpriteFramesWithFile(unpack(v))
-    end
 end
 function GameUIReplay:onEnter()
     GameUIReplay.super.onEnter(self)

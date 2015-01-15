@@ -1,3 +1,4 @@
+local PVEDatabase = import(".PVEDatabase")
 local Resource = import(".Resource")
 local AutomaticUpdateResource = import(".AutomaticUpdateResource")
 local property = import("..utils.property")
@@ -31,7 +32,12 @@ function User:ctor(p)
     }
     self:GetGemResource():SetValueLimit(math.huge) -- 会有人充值这么多的宝石吗？
 
-    
+    self.pve_database = PVEDatabase.new():Load()
+    local _,_, index = self.pve_database:GetCharPosition()
+    self.cur_pve_map = self.pve_database:GetMapByIndex(index)
+
+
+
     self.request_events = {}
     self.invite_events = {}
     -- 每日任务
@@ -45,6 +51,16 @@ function User:ctor(p)
     else
         self:SetId(p)
     end
+end
+function User:ResetAllListeners()
+    self.cur_pve_map:RemoveAllObserver()
+    self:ClearAllListener()
+end
+function User:GetCurrentPVEMap()
+    return self.cur_pve_map
+end
+function User:GetPVEDatabase()
+    return self.pve_database
 end
 function User:GetGemResource()
     return self.resources[GEM]

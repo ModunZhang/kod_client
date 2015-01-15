@@ -106,13 +106,13 @@ buildings[18] = {
 	["location"] = 18,
 	["name"] = "trainingGround",
 	["hasHouse"] = true,
-	["desc"] = "猎手大厅"
+	["desc"] = "训练场"
 }
 buildings[19] = {
 	["location"] = 19,
 	["name"] = "hunterHall",
 	["hasHouse"] = true,
-	["desc"] = "学院"
+	["desc"] = "猎手大厅"
 }
 buildings[20] = {
 	["location"] = 20,

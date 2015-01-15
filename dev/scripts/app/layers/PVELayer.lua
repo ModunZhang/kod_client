@@ -9,8 +9,10 @@ local ZORDER = Enum("BACKGROUND", "BUILDING", "OBJECT", "FOG")
 
 local OBJECT_TYPE = PVEDefine.object_type
 local OBJECT_IMAGE = PVEDefine.object_image
-function PVELayer:ctor()
+function PVELayer:ctor(user)
     PVELayer.super.ctor(self, 0.5, 1)
+    self.user = user
+    self.pve_map = user:GetCurrentPVEMap()
     self.scene_node = display.newNode():addTo(self)
     self.background = cc.TMXTiledMap:create("tmxmaps/pve_background.tmx"):addTo(self.scene_node, ZORDER.BACKGROUND)
     self.building_layer = display.newNode():addTo(self.scene_node, ZORDER.BUILDING)
@@ -34,20 +36,70 @@ function PVELayer:ctor()
     self.scene_node:pos(x, y)
 end
 function PVELayer:onEnter()
-    self:LightOn(12, 12, 4)
+    local w, h = self.normal_map:GetSize()
+    -- 点亮中心
+    self:LightOn((w - 1) * 0.5, (h - 1) * 0.5, 4)
+    self:LoadFog()
+    -- 加载地图数据
+    local objects = {}
     local size = self.pve_layer:getLayerSize()
     for x = 0, size.width - 1 do
         for y = 0, size.height - 1 do
             local gid = (self.pve_layer:getTileGIDAt(cc.p(x, y)))
             if gid > 0 then
-                display.newSprite(OBJECT_IMAGE[gid]):addTo(self.building_layer):pos(self:GetLogicMap():ConvertToMapPosition(x, y))
+                local obj = display.newSprite(OBJECT_IMAGE[gid]):addTo(self.building_layer)
+                :pos(self:GetLogicMap():ConvertToMapPosition(x, y))
+                objects[#objects + 1] = {sprite = obj, x = x, y = y}
             end
         end
     end
-    self.object = display.newSprite("pve_char_bg_104x106.png")
-    :addTo(self.object_layer):pos(self:GetLogicMap():ConvertToMapPosition(12, 12))
-    
-    display.newSprite("Hero_1.png"):addTo(self.object):pos(104*0.5, 106*0.5):scale(0.8)
+    self.objects = objects
+
+    -- 加载玩家
+    self.char = display.newSprite("pve_char_bg_104x106.png"):addTo(self.object_layer)
+    display.newSprite("Hero_1.png"):addTo(self.char):pos(104*0.5, 106*0.5):scale(0.8)
+
+    -- 加载标记
+    self.pve_map:IteratorObjects(handler(self, self.OnObjectChanged))
+
+    self.pve_map:AddObserver(self)
+end
+function PVELayer:onExit()
+    PVELayer.super.onExit(self)
+    self.pve_map:RemoveObserver(self)
+end
+function PVELayer:OnObjectChanged(object)
+    if not object:Type() then
+        object:SetType(self:GetTileInfo(object:Position()))
+    end
+    if object:IsSearched() then
+        local sprite = self:GetSpriteBy(object:Position())
+        if sprite then
+            local size1 = sprite:getContentSize()
+            local flag = display.newSprite("alliacne_search_29x33.png")
+            local size2 = flag:getContentSize()
+            local x = size1.width - size2.width*0.5
+            local y = size2.height*0.5
+            flag:pos(x, y):addTo(sprite)
+        end
+    end
+end
+function PVELayer:GetSpriteBy(x, y)
+    for _, v in pairs(self.objects) do
+        if v.x == x and v.y == y then
+            return v.sprite
+        end
+    end
+end
+function PVELayer:GetChar()
+    return self.char
+end
+function PVELayer:MoveCharTo(x, y)
+    self:LightOn(x, y)
+    self.char:pos(self:GetLogicMap():ConvertToMapPosition(x, y))
+    self:GotoLogicPoint(x, y, 10)
+
+    self.user:GetPVEDatabase():SetCharPosition(x, y)
 end
 function PVELayer:GetSceneNode()
     return self.scene_node
@@ -56,8 +108,7 @@ function PVELayer:GetLogicMap()
     return self.normal_map
 end
 function PVELayer:GetTileInfo(x, y)
-    local gid = (self.pve_layer:getTileGIDAt(cc.p(x, y)))
-    return gid > 0 and gid or nil
+    return (self.pve_layer:getTileGIDAt(cc.p(x, y)))
 end
 function PVELayer:LightOn(x, y, size)
     local width, height = self:GetLogicMap():GetSize()
@@ -67,9 +118,16 @@ function PVELayer:LightOn(x, y, size)
         for y_ = sy, ey do
             if x_ >= 1 and x_ < width - 1 and y_ >= 1 and y_ < height - 1 then
                 self.war_fog_layer:getTileAt(cc.p(x_, y_)):hide()
+                self.pve_map:InsertFog(x_, y_)
             end
         end
     end
+end
+function PVELayer:LoadFog()
+    local war_fog_layer = self.war_fog_layer
+    self.pve_map:IteratorFogs(function(x, y)
+        war_fog_layer:getTileAt(cc.p(x, y)):hide()
+    end)
 end
 function PVELayer:LockTileAt(x, y)
     self.war_fog_layer:getTileAt(cc.p(x, y)):show()

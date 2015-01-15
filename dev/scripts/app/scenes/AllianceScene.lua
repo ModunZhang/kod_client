@@ -6,6 +6,7 @@ local AllianceScene = class("AllianceScene", MapScene)
 local Alliance = import("..entity.Alliance")
 local GameUIAllianceHome = import("..ui.GameUIAllianceHome")
 function AllianceScene:ctor()
+    User:ResetAllListeners()
     City:ResetAllListeners()
     Alliance_Manager:GetMyAlliance():ResetAllListeners()
 
@@ -90,6 +91,8 @@ function AllianceScene:EnterAllianceBuilding(entity)
         class_name = "GameUIAllianceShopEnter"    
     elseif building_name == 'orderHall' then
         class_name = "GameUIAllianceOrderHallEnter"
+    elseif building_name == 'moonGate' then
+        class_name = "GameUIAllianceMoonGateEnter"
     else
         print("没有此建筑--->",building_name)
         return

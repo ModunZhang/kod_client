@@ -50,6 +50,9 @@ function WidgetSelectDragon:ctor(params)
         -- 龙状态
         local d_status = dragon:GetLocalizedStatus()
         local s_color = dragon:IsFree() and 0x007c23 or 0x7e0000
+        if dragon:IsDead() then
+            s_color = 0x7e0000
+        end
         local dragon_status = UIKit:ttfLabel({
             text = d_status,
             size = 20,
@@ -70,7 +73,7 @@ function WidgetSelectDragon:ctor(params)
     local optional_dragon = {}
     -- 默认选中最强的并且可以出战的龙,如果都不能出战,则默认最强龙
     local default_dragon_type = params.default_dragon_type or dragon_manager:GetCanFightPowerfulDragonType() ~= "" and dragon_manager:GetCanFightPowerfulDragonType() or dragon_manager:GetPowerfulDragonType()
-    local default_select_dragon_indecx
+    local default_select_dragon_index
     for k,dragon in ipairs(dragons) do
         if dragon:Level()>0 then
             createDragonFrame(dragon):align(display.LEFT_CENTER, 30,origin_y-add_count*gap_y)
@@ -78,7 +81,7 @@ function WidgetSelectDragon:ctor(params)
             add_count = add_count + 1
             table.insert(optional_dragon, dragon)
             if dragon:Type() == default_dragon_type then
-                default_select_dragon_indecx = k
+                default_select_dragon_index = k
             end
         end
     end
@@ -101,7 +104,7 @@ function WidgetSelectDragon:ctor(params)
     group:setButtonsLayoutMargin(80, 0, 0, 0)
         :setLayoutSize(100, 500)
         :align(display.TOP_CENTER, 500 , 110)
-    group:getButtonAtIndex(default_select_dragon_indecx):setButtonSelected(true)
+    group:getButtonAtIndex(default_select_dragon_index):setButtonSelected(true)
 
 
     if #params.btns == 1 then

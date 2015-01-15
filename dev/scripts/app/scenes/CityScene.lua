@@ -16,6 +16,7 @@ local app = app
 local timer = app.timer
 local DEBUG_LOCAL = false
 function CityScene:ctor(city)
+    User:ResetAllListeners()
     City:ResetAllListeners()
     Alliance_Manager:GetMyAlliance():ResetAllListeners()
     self.city = city
