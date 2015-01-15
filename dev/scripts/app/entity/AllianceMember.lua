@@ -112,7 +112,8 @@ end
 function AllianceMember.Title2Level(title)
     return titles_enum[title]
 end
-
+--TODO:将联盟权限抽离到配置表
+--TODO:复仇权限
 --权限判定函数
 --------------------------------------------------------------------------
 --名称 简称 旗帜 地形 语言 
