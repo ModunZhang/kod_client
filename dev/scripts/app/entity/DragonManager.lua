@@ -153,6 +153,7 @@ function DragonManager:OnDragonEventTimer(dragonEvent)
 end
 
 function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recovery_perHour)
+    if not dragons then return end
     if not self.dragons_ then -- 初始化龙信息
         self.dragons_ = {}
         for k,v in pairs(dragons) do

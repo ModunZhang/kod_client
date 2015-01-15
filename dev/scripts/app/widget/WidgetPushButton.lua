@@ -163,6 +163,9 @@ function WidgetPushButton:onTouch_(event)
             self:dispatchEvent({name = UIPushButton.RELEASE_EVENT, x = x, y = y, touchInTarget = touchInTarget})
         end
         if name == "ended" and is_pressed and touchInTarget then
+            self:setTouchEnabled(false)
+            self:performWithDelay(function() self:setTouchEnabled(true) end, 0.5)
+
             self:dispatchEvent({name = UIPushButton.CLICKED_EVENT, x = x, y = y, touchInTarget = true})
         end
     end

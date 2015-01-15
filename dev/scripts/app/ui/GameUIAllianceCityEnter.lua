@@ -131,7 +131,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
 				end)
 		    end
 		    local enter_button = self:BuildOneButton("playercity_66x83.png",_("进入")):onButtonClicked(function()
-                app:EnterPlayerCityScene(member:Id())
+                app:EnterFriendCityScene(member:Id())
 				self:leftButtonClicked()
 			end)
 			local mail_button = self:BuildOneButton("mail_70x55.png",_("邮件")):onButtonClicked(function()

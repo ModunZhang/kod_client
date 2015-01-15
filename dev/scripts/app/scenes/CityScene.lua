@@ -326,6 +326,8 @@ function CityScene:OnTouchMove(pre_x, pre_y, x, y)
     CityScene.super.OnTouchMove(self, pre_x, pre_y, x, y)
 end
 function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
+    -- local building = self:GetSceneLayer():GetClickedObject(x, y)
+    
 end
 
 
