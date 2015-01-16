@@ -1410,10 +1410,8 @@ function City:OnProductionTechsDataChanged(productionTechs)
             self.productionTechs[productionTechnology:Index()] = productionTechnology
         end
     end
-    dump(productionTechs,"productionTechs--->")
+    self:FastUpdateAllTechsLockState()
     self:DumpAllTechs()
-    -- self:FastUpdateAllTechsLockState()
-    -- self:DumpAllTechs()
 end
 
 function City:IteratorTechs(func)
@@ -1477,9 +1475,10 @@ end
 
 function City:FastUpdateAllTechsLockState()
    self:IteratorTechs(function(index,tech)
-        print("tech:UnlockBy()---->",tech:UnlockBy())
         local unLockByTech = self:FindTechByIndex(tech:UnlockBy())
-        tech:SetIsLock(tech:UnlockLevel() <= unLockByTech:Level())
+        if unLockByTech then
+            tech:SetIsLock(tech:UnlockLevel() <= unLockByTech:Level())
+        end
    end)
 end
 
