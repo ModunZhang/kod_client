@@ -677,6 +677,21 @@ end
 local function get_gethelpdefencetroopdetail_callback()
     return  get_callback_promise(onGetHelpDefenceTroopDetail_callbacks, "获取协防事件数据失败!")
 end
+-- 个人修改地形
+local function get_changeTerrain_promise(terrain)
+    return get_blocking_request_promise("logic.playerHandler.setTerrain", {
+        terrain = terrain
+    }, "修改地形失败!")
+end
+function NetManager:getChangeToGrassPromise()
+    return promise.all(get_changeTerrain_promise("grassLand"), get_playerdata_callback()):next(get_response_msg)
+end
+function NetManager:getChangeToDesertPromise()
+    return promise.all(get_changeTerrain_promise("desert"), get_playerdata_callback()):next(get_response_msg)
+end
+function NetManager:getChangeToIceFieldPromise()
+    return promise.all(get_changeTerrain_promise("iceField"), get_playerdata_callback()):next(get_response_msg)
+end
 -- 修改城市名字
 function NetManager:getEditPlayerCityNamePromise(cityName)
     return promise.all(get_blocking_request_promise("logic.playerHandler.editPlayerCityName", {

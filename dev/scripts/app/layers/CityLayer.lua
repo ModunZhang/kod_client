@@ -139,7 +139,7 @@ function CityLayer:ctor(city_scene)
     Observer.extend(self)
     CityLayer.super.ctor(self, 0.6, 1.5)
     self.city_scene = city_scene
-    self.terrain_type = "grass"
+    self.terrain_type = self.city_scene:GetCity():GetUser():Terrain()
     self.buildings = {}
     self.houses = {}
     self.towers = {}
@@ -157,7 +157,7 @@ function CityLayer:GetLogicMap()
 end
 function CityLayer:GetZOrderBy(sprite, x, y)
     local width, _ = self:GetLogicMap():GetSize()
-    return x + y * width + 100
+    return x + y * width
 end
 function CityLayer:ConvertLogicPositionToMapPosition(lx, ly)
     local map_pos = cc.p(self.iso_map:ConvertToMapPosition(lx, ly))
@@ -298,9 +298,9 @@ function CityLayer:InitWithCity(city)
         end
         local grounds = tile:RandomGrounds(random(123456789))
         for _, v in pairs(grounds) do
-        -- local tree = self:CreateSingleTree(v.x, v.y):addTo(city_node)
-        -- table.insert(single_tree, tree)
-        -- tree:setVisible(tile:IsUnlocked())
+            local tree = self:CreateSingleTree(v.x, v.y):addTo(city_node)
+            table.insert(single_tree, tree)
+            tree:setVisible(tile:IsUnlocked())
         end
     end)
     self.single_tree = single_tree
@@ -629,7 +629,7 @@ function CityLayer:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
 end
 function CityLayer:UpdateHelpedByTroopsVisible(helped_by_troops)
     self:IteratorHelpedTroops(function(i, v)
-       v:setVisible(helped_by_troops[i] ~= nil)
+        v:setVisible(helped_by_troops[i] ~= nil)
     end)
 end
 function CityLayer:IteratorHelpedTroops(func)
@@ -793,6 +793,7 @@ function CityLayer:OnSceneScale()
 end
 
 return CityLayer
+
 
 
 

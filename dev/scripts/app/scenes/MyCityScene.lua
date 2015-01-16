@@ -5,12 +5,13 @@ local TutorialLayer = import("..ui.TutorialLayer")
 local GameUINpc = import("..ui.GameUINpc")
 local Arrow = import("..ui.Arrow")
 local City = import("..entity.City")
+local User = import("..entity.User")
 local CityScene = import(".CityScene")
 local MyCityScene = class("MyCityScene", CityScene)
 
-function MyCityScene:ctor(city)
+function MyCityScene:ctor(...)
     self.clicked_callbacks = {}
-    MyCityScene.super.ctor(self, city)
+    MyCityScene.super.ctor(self, ...)
     
     self.arrow_layer = self:CreateArrowLayer()
     self.tutorial_layer = self:CreateTutorialLayer()
@@ -18,7 +19,9 @@ function MyCityScene:ctor(city)
     self:GetSceneLayer():IteratorInnnerBuildings(function(_, building)
         self:GetSceneUILayer():NewUIFromBuildingSprite(building)
     end)
-    self.city:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
+
+    self:GetCity():AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
+    self:GetCity():GetUser():AddListenOnType(self, User.LISTEN_TYPE.BASIC)
 end
 function MyCityScene:GetArrowTutorial()
     if not self.arrow_tutorial then
@@ -41,7 +44,7 @@ function MyCityScene:onEnterTransitionFinish()
     if device.platform == "mac" then
         return
     end
-    local city = self.city
+    local city = self:GetCity()
     local scene = self
     local check_map = {
         [1] = function()
@@ -124,12 +127,13 @@ function MyCityScene:onEnterTransitionFinish()
     end
 end
 function MyCityScene:CreateHomePage()
-    local home = UIKit:newGameUI('GameUIHome', self.city):addToScene(self)
+    local home = UIKit:newGameUI('GameUIHome', self:GetCity()):addToScene(self)
     home:setLocalZOrder(10)
     home:setTouchSwallowEnabled(false)
     return home
 end
 function MyCityScene:onExit()
+    self:GetCity():GetUser():RemoveListenerOnType(self, City.LISTEN_TYPE.BASIC)
     home_page = nil
     MyCityScene.super.onExit(self)
 end
@@ -185,7 +189,7 @@ function MyCityScene:PromiseOfClickLockButton(building_type)
 end
 function MyCityScene:GetLockButtonsByBuildingType(building_type)
     local lock_button
-    local location_id = self.city:GetLocationIdByBuildingType(building_type)
+    local location_id = self:GetCity():GetLocationIdByBuildingType(building_type)
     self:GetSceneUILayer():IteratorLockButtons(function(_, v)
         if v.sprite:GetEntity().location_id == location_id then
             lock_button = v
@@ -198,6 +202,11 @@ end
 
 
 ---
+function MyCityScene:OnBasicChanged(user, changed)
+    if changed.terrain then
+        self:ChangeTerrain(changed.terrain.new)
+    end
+end
 function MyCityScene:OnUpgradingBegin()
     app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_UPGRADE_START")
 end
@@ -214,7 +223,7 @@ function MyCityScene:OnDestoryDecoratorSprite(building_sprite)
     self:GetSceneUILayer():RemoveUIFromBuildingSprite(building_sprite)
 end
 function MyCityScene:OnTreesChanged(trees, road)
-    local city = self.city
+    local city = self:GetCity()
     self:GetSceneUILayer():RemoveAllLockButtons()
     table.foreach(trees, function(_, tree_)
         if tree_:GetEntity().location_id then
@@ -266,13 +275,13 @@ function MyCityScene:OnSceneScale(scene_layer)
     end
 end
 function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
-    local city = self.city
+    local city = self:GetCity()
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
         if self:CheckClickPromise(building) then return end
 
         if iskindof(building, "HelpedTroopsSprite") then
-            local helped = self.city:GetHelpedByTroops()[building:GetIndex()]
+            local helped = city:GetHelpedByTroops()[building:GetIndex()]
             local type_ = GameUIWatchTowerTroopDetail.DATA_TYPE.HELP_DEFENCE
             UIKit:newGameUI("GameUIWatchTowerTroopDetail", type_, helped, self.user:Id()):addToCurrentScene(true)
             return

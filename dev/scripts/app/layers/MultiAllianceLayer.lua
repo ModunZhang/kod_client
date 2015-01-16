@@ -170,6 +170,9 @@ end
 
 
 --changed of marchevent
+function MultiAllianceLayer:ChangeTerrain(terrain_type)
+    self.terrain_type = terrain_type
+end
 function MultiAllianceLayer:OnAttackMarchEventDataChanged(changed_map)
     self:ManagerCorpsFromChangedMap(changed_map)
 end

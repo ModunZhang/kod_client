@@ -244,8 +244,8 @@ function Dragon:GetTerrain()
 	local terrains = 
 	{
         redDragon = "desert",
-        greenDragon = "grass",
-        blueDragon = "icefield"
+        greenDragon = "grassLand",
+        blueDragon = "iceField"
     }
     return terrains[self:Type()]
 end

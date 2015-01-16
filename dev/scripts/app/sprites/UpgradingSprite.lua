@@ -88,7 +88,7 @@ function UpgradingSprite:ctor(city_layer, entity)
 
     self.handle = self:schedule(function() self:CheckCondition() end, 1)
     -- self:InitLabel(entity)
-    -- self:CreateBase()
+    self:CreateBase()
 end
 function UpgradingSprite:DestorySelf()
     self:GetEntity():RemoveBaseListener(self)
@@ -150,13 +150,9 @@ function UpgradingSprite:GetBeforeConfig()
         return nil
     end
 end
-function UpgradingSprite:GetLogicZorder(width)
-    -- if self:GetEntity():GetType() == "watchTower" then
-    --     local x, y = self:GetLogicPosition()
-    --     return self:GetMapLayer():GetZOrderBy(self, x, y) + 100
-    -- else
-    return UpgradingSprite.super.GetLogicZorder(self, width)
-    -- end
+function UpgradingSprite:GetLogicZorder()
+    local x, y = self:GetLogicPosition()
+    return self:GetMapLayer():GetZOrderBy(self, x, y)
 end
 function UpgradingSprite:GetCenterPosition()
     return self:GetLogicMap():ConvertToMapPosition(self:GetEntity():GetMidLogicPosition())

@@ -12,20 +12,20 @@ function DragonSprite:GetLogicZorder()
     return 1
 end
 function DragonSprite:ReloadSpriteCauseTerrainChanged(terrain)
-    if self.sprite then
-        self.sprite:removeFromParent()
-    end
-    self.sprite = self:CreateSprite(terrain):addTo(self)
-    self:AddAnimationCallbackTo(self.sprite)
-    self:PlayAnimation("Idle")
+    -- if self.sprite then
+    --     self.sprite:removeFromParent()
+    -- end
+    -- self.sprite = self:CreateSprite(terrain):addTo(self)
+    -- self:AddAnimationCallbackTo(self.sprite)
+    -- self:PlayAnimation("Idle")
 end
 function DragonSprite:CreateSprite(terrain)
     local dragon_animation
-    if terrain == "grass" then
+    if terrain == "grassLand" then
         dragon_animation = "green_dragon"
     elseif terrain == "desert" then
         dragon_animation = "Red_dragon"
-    elseif terrain == "icefield" then
+    elseif terrain == "iceField" then
         dragon_animation = "Blue_dragon"
     end
     local armature = ccs.Armature:create(dragon_animation)

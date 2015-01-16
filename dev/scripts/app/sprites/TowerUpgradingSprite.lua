@@ -94,7 +94,7 @@ function TowerUpgradingSprite:GetFlipX()
     end
     assert(false)
 end
-function TowerUpgradingSprite:GetLogicZorder(width)
+function TowerUpgradingSprite:GetLogicZorder()
     local entity = self:GetEntity()
     local x, y
     if entity:GetOrient() == Orient.X then

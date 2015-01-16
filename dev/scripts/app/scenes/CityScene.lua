@@ -29,6 +29,9 @@ function CityScene:ctor(city)
     self:GotoLogicPointInstant(6, 4)
     self:GetSceneLayer():ZoomTo(1)
 end
+function CityScene:GetCity()
+    return self.city
+end
 function CityScene:onEnter()
     CityScene.super.onEnter(self)
     -- local city = self.city

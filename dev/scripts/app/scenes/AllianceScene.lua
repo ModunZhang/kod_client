@@ -72,6 +72,9 @@ end
 --         app:EnterMyAllianceScene()
 --     end
 -- end
+function AllianceScene:ChangeTerrain(terrain_type)
+    self:GetSceneLayer():ChangeTerrain(terrain_type)
+end
 function AllianceScene:OnOperation(alliance,operation_type)
     if operation_type == "quit" then
         app:EnterMyCityScene()
