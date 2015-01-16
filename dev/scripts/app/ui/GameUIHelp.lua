@@ -7,39 +7,21 @@ local Alliance = import("..entity.Alliance")
 local Localize = import("..utils.Localize")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetBackGroundLucid = import("..widget.WidgetBackGroundLucid")
+local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local HELP_EVENTS = "help_events"
-local GameUIHelp = class("GameUIHelp", function ()
-    return display.newColorLayer(cc.c4b(0,0,0,127))
-end)
+local GameUIHelp = class("GameUIHelp", WidgetPopDialog)
 
 function GameUIHelp:ctor()
-    self:setNodeEventEnabled(true)
+    GameUIHelp.super.ctor(self,756,_("协助加速"),display.top-100)
     self.alliance = Alliance_Manager:GetMyAlliance()
     self.help_events_items = {}
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
 end
 
 function GameUIHelp:onEnter()
-    local body = WidgetUIBackGround.new({height=756}):addTo(self):align(display.TOP_CENTER,display.cx,display.top-100)
+    local body = self.body
     local rb_size = body:getContentSize()
-    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height)
-        :addTo(body)
-    local title_label = cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("协助加速"),
-            font = UIKit:getFontFilePath(),
-            size = 22,
-            -- dimensions = cc.size(200,0),
-            color = UIKit:hex2c3b(0xffedae)
-        }):align(display.CENTER, title:getContentSize().width/2, title:getContentSize().height/2)
-        :addTo(title)
-    -- close button
-    cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
-        :onButtonClicked(function(event)
-            self:removeFromParent()
-        end):align(display.CENTER, title:getContentSize().width-10, title:getContentSize().height-10)
-        :addTo(title)
+    
     -- 协助加速介绍
     cc.ui.UILabel.new(
         {

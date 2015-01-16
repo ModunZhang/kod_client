@@ -1091,7 +1091,7 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance)
                 shadow= true
             }))
             :onButtonClicked(function(event)
-
+                    app:EnterViewModelAllianceScene(alliance._id)
                 end):align(display.RIGHT_CENTER,w-20,45):addTo(content)
     end
     item:addContent(content)
@@ -1194,7 +1194,7 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-
+                app:EnterViewModelAllianceScene(alliance._id)
             end
         end):align(display.RIGHT_CENTER,w-35,h-100):addTo(body)
     WidgetInfo.new({
@@ -1205,7 +1205,7 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
             {_("击溃城市"),string.formatnumberthousands(countInfo.routCount)},
             {_("联盟战胜利"),string.formatnumberthousands(countInfo.winCount)},
             {_("联盟战失败"),string.formatnumberthousands(countInfo.failedCount)},
-            {_("胜率"),(math.floor(countInfo.winCount/(countInfo.winCount+countInfo.failedCount)*1000)/10).."%"},
+            {_("胜率"),(countInfo.winCount+countInfo.failedCount==0 and 0 or math.floor(countInfo.winCount/(countInfo.winCount+countInfo.failedCount)*1000)/10).."%"},
         },
         h =260
     }):align(display.BOTTOM_CENTER, w/2 , 20)

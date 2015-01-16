@@ -32,7 +32,10 @@ function OtherAllianceScene:CreateAllianceUI()
     self:GetSceneLayer():AddObserver(home)
     home:setTouchSwallowEnabled(false)
 end
-
+function OtherAllianceScene:GotoCurrectPosition()
+    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(10, 10)
+    self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
+end
 function OtherAllianceScene:onExit()
     app.timer:RemoveListener(self)
     OtherAllianceScene.super.onExit(self)
