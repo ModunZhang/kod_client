@@ -1,4 +1,4 @@
-local chest = GameDatas.DragonEyrie.chest
+local chest = GameDatas.DragonEquipments.chest
 
 chest["2_0"] = {
 	["star"] = "2_0",

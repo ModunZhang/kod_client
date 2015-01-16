@@ -11,8 +11,8 @@ local UIAutoClose = import("..ui.UIAutoClose")
 
 
 
-local normal = GameDatas.UnitsConfig.normal
-local special = GameDatas.UnitsConfig.special
+local normal = GameDatas.Soldiers.normal
+local special = GameDatas.Soldiers.special
 local STAR_BG = {
     "star1_118x132.png",
     "star2_118x132.png",

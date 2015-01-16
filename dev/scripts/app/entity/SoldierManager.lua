@@ -1,5 +1,5 @@
-local NORMAL = GameDatas.UnitsConfig.normal
-local SPECIAL = GameDatas.UnitsConfig.special
+local NORMAL = GameDatas.Soldiers.normal
+local SPECIAL = GameDatas.Soldiers.special
 local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local SoldierManager = class("SoldierManager", MultiObserver)

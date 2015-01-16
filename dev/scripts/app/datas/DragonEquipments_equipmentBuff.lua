@@ -1,4 +1,4 @@
-local equipmentBuff = GameDatas.DragonEyrie.equipmentBuff
+local equipmentBuff = GameDatas.DragonEquipments.equipmentBuff
 
 equipmentBuff["addInfantryAtk"] = {
 	["buff"] = "addInfantryAtk",

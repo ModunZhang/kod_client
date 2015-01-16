@@ -1,4 +1,4 @@
-local dragons = GameDatas.DragonEyrie.dragons
+local dragons = GameDatas.Dragons.dragons
 
 dragons["redDragon"] = {
 	["dragonType"] = "redDragon",

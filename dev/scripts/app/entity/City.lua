@@ -1478,7 +1478,7 @@ end
 function City:FastUpdateAllTechsLockState()
    self:IteratorTechs(function(index,tech)
         local unLockByTech = self:FindTechByIndex(tech:UnlockBy())
-        if unLockByTech then
+        if unLockByTech and tech:Index() < 10 then --暂时不开放
             tech:SetIsLock(tech:UnlockLevel() <= unLockByTech:Level())
         end
    end)

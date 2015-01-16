@@ -1,4 +1,4 @@
-local fightFix = GameDatas.DragonEyrie.fightFix
+local fightFix = GameDatas.Dragons.fightFix
 
 fightFix[0] = {
 	["index"] = 0,

@@ -3,7 +3,7 @@
 -- Date: 2014-09-23 17:03:17
 --
 local Button = import(".WidgetPushButton")
-local config_equipments = GameDatas.SmithConfig.equipments
+local config_equipments = GameDatas.DragonEquipments.equipments
 local WidgetDragonEquipIntensify = class("WidgetDragonEquipIntensify",Button)
 
 -- equipment 为配置表 count为服务器拥有值

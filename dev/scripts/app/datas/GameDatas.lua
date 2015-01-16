@@ -169,30 +169,35 @@ require("app.datas.DailyQuests_dailyQuests")
 require("app.datas.DailyQuests_dailyQuestStar")
 require("app.datas.DailyQuests_dailyQuestStyle")
 
-GameDatas.DragonEyrie = {
+GameDatas.DragonEquipments = {
 	["crown"] = {},
 	["armguardLeft"] = {},
 	["armguardRight"] = {},
 	["chest"] = {},
 	["sting"] = {},
 	["orb"] = {},
+	["equipments"] = {},
 	["equipmentBuff"] = {},
-	["dragonAttribute"] = {},
+}
+require("app.datas.DragonEquipments_crown")
+require("app.datas.DragonEquipments_armguardLeft")
+require("app.datas.DragonEquipments_armguardRight")
+require("app.datas.DragonEquipments_chest")
+require("app.datas.DragonEquipments_sting")
+require("app.datas.DragonEquipments_orb")
+require("app.datas.DragonEquipments_equipments")
+require("app.datas.DragonEquipments_equipmentBuff")
+
+GameDatas.Dragons = {
 	["dragons"] = {},
-	["dragonSkill"] = {},
+	["dragonAttributes"] = {},
+	["dragonSkills"] = {},
 	["fightFix"] = {},
 }
-require("app.datas.DragonEyrie_crown")
-require("app.datas.DragonEyrie_armguardLeft")
-require("app.datas.DragonEyrie_armguardRight")
-require("app.datas.DragonEyrie_chest")
-require("app.datas.DragonEyrie_sting")
-require("app.datas.DragonEyrie_orb")
-require("app.datas.DragonEyrie_equipmentBuff")
-require("app.datas.DragonEyrie_dragonAttribute")
-require("app.datas.DragonEyrie_dragons")
-require("app.datas.DragonEyrie_dragonSkill")
-require("app.datas.DragonEyrie_fightFix")
+require("app.datas.Dragons_dragons")
+require("app.datas.Dragons_dragonAttributes")
+require("app.datas.Dragons_dragonSkills")
+require("app.datas.Dragons_fightFix")
 
 GameDatas.GemsPayment = {
 	["time"] = {},
@@ -258,9 +263,15 @@ GameDatas.Houses = {
 require("app.datas.Houses_houses")
 
 GameDatas.Items = {
-	["items"] = {},
+	["special"] = {},
+	["buff"] = {},
+	["resource"] = {},
+	["speedUp"] = {},
 }
-require("app.datas.Items_items")
+require("app.datas.Items_special")
+require("app.datas.Items_buff")
+require("app.datas.Items_resource")
+require("app.datas.Items_speedUp")
 
 GameDatas.MilitaryTechLevelUp = {
 	["infantry_infantry"] = {},
@@ -366,14 +377,9 @@ GameDatas.ProductionTechs = {
 }
 require("app.datas.ProductionTechs_productionTechs")
 
-GameDatas.SmithConfig = {
-	["equipments"] = {},
-}
-require("app.datas.SmithConfig_equipments")
-
-GameDatas.UnitsConfig = {
+GameDatas.Soldiers = {
 	["normal"] = {},
 	["special"] = {},
 }
-require("app.datas.UnitsConfig_normal")
-require("app.datas.UnitsConfig_special")
+require("app.datas.Soldiers_normal")
+require("app.datas.Soldiers_special")

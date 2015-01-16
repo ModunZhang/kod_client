@@ -366,7 +366,7 @@ end
 
 
 
-local normal_soldier = GameDatas.UnitsConfig.normal
+local normal_soldier = GameDatas.Soldiers.normal
 local function createSoldiers(name, star, count)
     return {name = name, star = star, morale = 100, currentCount = count, totalCount = count, woundedCount = 0, round = 0}
 end

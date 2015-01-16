@@ -1,4 +1,4 @@
-local sting = GameDatas.DragonEyrie.sting
+local sting = GameDatas.DragonEquipments.sting
 
 sting["2_0"] = {
 	["star"] = "2_0",

@@ -1,6 +1,14 @@
-local dragonSkill = GameDatas.DragonEyrie.dragonSkill
+local dragonSkills = GameDatas.Dragons.dragonSkills
 
-dragonSkill["dragonBlood"] = {
+dragonSkills["infantryEnhance"] = {
+	["dragonSkill"] = "infantryEnhance",
+	["unlockStar"] = 1,
+	["IntiLevel"] = 0,
+	["maxLevel"] = 30,
+	["heroBloodCostPerLevel"] = 360,
+	["effection"] = 0.010000
+}
+dragonSkills["dragonBlood"] = {
 	["dragonSkill"] = "dragonBlood",
 	["unlockStar"] = 1,
 	["IntiLevel"] = 0,
@@ -8,15 +16,7 @@ dragonSkill["dragonBlood"] = {
 	["heroBloodCostPerLevel"] = 120,
 	["effection"] = 0.010000
 }
-dragonSkill["infantryEnhance"] = {
-	["dragonSkill"] = "infantryEnhance",
-	["unlockStar"] = 2,
-	["IntiLevel"] = 0,
-	["maxLevel"] = 30,
-	["heroBloodCostPerLevel"] = 360,
-	["effection"] = 0.010000
-}
-dragonSkill["dragonBreath"] = {
+dragonSkills["dragonBreath"] = {
 	["dragonSkill"] = "dragonBreath",
 	["unlockStar"] = 2,
 	["IntiLevel"] = 0,
@@ -24,7 +24,7 @@ dragonSkill["dragonBreath"] = {
 	["heroBloodCostPerLevel"] = 500,
 	["effection"] = 0.010000
 }
-dragonSkill["siegeEnhance"] = {
+dragonSkills["siegeEnhance"] = {
 	["dragonSkill"] = "siegeEnhance",
 	["unlockStar"] = 3,
 	["IntiLevel"] = 0,
@@ -32,7 +32,7 @@ dragonSkill["siegeEnhance"] = {
 	["heroBloodCostPerLevel"] = 1000,
 	["effection"] = 0.010000
 }
-dragonSkill["cavalryEnhance"] = {
+dragonSkills["cavalryEnhance"] = {
 	["dragonSkill"] = "cavalryEnhance",
 	["unlockStar"] = 3,
 	["IntiLevel"] = 0,
@@ -40,7 +40,7 @@ dragonSkill["cavalryEnhance"] = {
 	["heroBloodCostPerLevel"] = 1000,
 	["effection"] = 0.010000
 }
-dragonSkill["hunterEnhance"] = {
+dragonSkills["hunterEnhance"] = {
 	["dragonSkill"] = "hunterEnhance",
 	["unlockStar"] = 3,
 	["IntiLevel"] = 0,
@@ -48,7 +48,7 @@ dragonSkill["hunterEnhance"] = {
 	["heroBloodCostPerLevel"] = 1000,
 	["effection"] = 0.010000
 }
-dragonSkill["rapidity"] = {
+dragonSkills["rapidity"] = {
 	["dragonSkill"] = "rapidity",
 	["unlockStar"] = 4,
 	["IntiLevel"] = 0,
@@ -56,7 +56,7 @@ dragonSkill["rapidity"] = {
 	["heroBloodCostPerLevel"] = 1200,
 	["effection"] = 0.010000
 }
-dragonSkill["frenzied"] = {
+dragonSkills["frenzied"] = {
 	["dragonSkill"] = "frenzied",
 	["unlockStar"] = 4,
 	["IntiLevel"] = 0,
@@ -64,7 +64,7 @@ dragonSkill["frenzied"] = {
 	["heroBloodCostPerLevel"] = 2400,
 	["effection"] = 0.010000
 }
-dragonSkill["insensitive"] = {
+dragonSkills["insensitive"] = {
 	["dragonSkill"] = "insensitive",
 	["unlockStar"] = 4,
 	["IntiLevel"] = 0,
@@ -72,7 +72,7 @@ dragonSkill["insensitive"] = {
 	["heroBloodCostPerLevel"] = 2400,
 	["effection"] = 0.010000
 }
-dragonSkill["leadership"] = {
+dragonSkills["leadership"] = {
 	["dragonSkill"] = "leadership",
 	["unlockStar"] = 5,
 	["IntiLevel"] = 0,
@@ -80,7 +80,7 @@ dragonSkill["leadership"] = {
 	["heroBloodCostPerLevel"] = 3600,
 	["effection"] = 0.010000
 }
-dragonSkill["earthquake"] = {
+dragonSkills["earthquake"] = {
 	["dragonSkill"] = "earthquake",
 	["unlockStar"] = 5,
 	["IntiLevel"] = 0,
@@ -88,7 +88,7 @@ dragonSkill["earthquake"] = {
 	["heroBloodCostPerLevel"] = 7200,
 	["effection"] = 0.010000
 }
-dragonSkill["greedy"] = {
+dragonSkills["greedy"] = {
 	["dragonSkill"] = "greedy",
 	["unlockStar"] = 5,
 	["IntiLevel"] = 0,
@@ -96,7 +96,7 @@ dragonSkill["greedy"] = {
 	["heroBloodCostPerLevel"] = 7200,
 	["effection"] = 0.010000
 }
-dragonSkill["scheme"] = {
+dragonSkills["scheme"] = {
 	["dragonSkill"] = "scheme",
 	["unlockStar"] = 5,
 	["IntiLevel"] = 0,
@@ -104,7 +104,7 @@ dragonSkill["scheme"] = {
 	["heroBloodCostPerLevel"] = 9600,
 	["effection"] = 0.010000
 }
-dragonSkill["recover"] = {
+dragonSkills["recover"] = {
 	["dragonSkill"] = "recover",
 	["unlockStar"] = 5,
 	["IntiLevel"] = 0,

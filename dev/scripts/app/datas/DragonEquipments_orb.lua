@@ -1,4 +1,4 @@
-local orb = GameDatas.DragonEyrie.orb
+local orb = GameDatas.DragonEquipments.orb
 
 orb["2_0"] = {
 	["star"] = "2_0",

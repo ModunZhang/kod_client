@@ -1,4 +1,4 @@
-local special = GameDatas.UnitsConfig.special
+local special = GameDatas.Soldiers.special
 
 special["skeletonWarrior"] = {
 	["name"] = "skeletonWarrior",

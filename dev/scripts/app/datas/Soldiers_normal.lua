@@ -1,4 +1,4 @@
-local normal = GameDatas.UnitsConfig.normal
+local normal = GameDatas.Soldiers.normal
 
 normal["swordsman_1"] = {
 	["key"] = "swordsman_1",

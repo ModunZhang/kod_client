@@ -9,8 +9,8 @@ local GameUIReplay = import(".GameUIReplay")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local Localize = import("..utils.Localize")
 local AllianceMoonGate = import("..entity.AllianceMoonGate")
-local NORMAL = GameDatas.UnitsConfig.normal
-local SPECIAL = GameDatas.UnitsConfig.special
+local NORMAL = GameDatas.Soldiers.normal
+local SPECIAL = GameDatas.Soldiers.special
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local img_dir = "allianceHome/"
 

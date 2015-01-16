@@ -1,4 +1,4 @@
-local crown = GameDatas.DragonEyrie.crown
+local crown = GameDatas.DragonEquipments.crown
 
 crown["1_0"] = {
 	["star"] = "1_0",

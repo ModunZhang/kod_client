@@ -4,7 +4,7 @@
 --
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIDragonSkill = UIKit:createUIClass("GameUIDragonSkill")
-local config_dragonSkill = GameDatas.DragonEyrie.dragonSkill
+local config_dragonSkill = GameDatas.Dragons.dragonSkill
 local BODY_HEIGHT = 450
 local LISTVIEW_WIDTH = 547
 local UIListView = import(".UIListView")

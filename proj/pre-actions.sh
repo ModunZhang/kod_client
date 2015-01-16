@@ -16,7 +16,7 @@ echo "------------------------------------"
 echo "->Clean Success!"
 cd $DOCROOT/../
 #获取内部版本
-TIME_VERSION=`git log -n 1 --pretty=format:'%ad' --date=raw | awk '{print $1}'`
+TIME_VERSION=`git rev-list HEAD | wc -l | tr -d "  " | awk '{print $0}'`
 echo "------------------------------------"
 echo "->Debug Version: " $TIME_VERSION
 echo "local __debugVer = ${TIME_VERSION}

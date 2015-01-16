@@ -4,8 +4,8 @@ local WidgetPushButton = import(".WidgetPushButton")
 local WidgetSoldierBox = class("WidgetSoldierBox", function()
     return display.newNode()
 end)
-local NORMAL = GameDatas.UnitsConfig.normal
-local SPECIAL = GameDatas.UnitsConfig.special
+local NORMAL = GameDatas.Soldiers.normal
+local SPECIAL = GameDatas.Soldiers.special
 
 local LOAD_FILES = {
     {"animations/Archer_1_render0.plist","animations/Archer_1_render0.png"},

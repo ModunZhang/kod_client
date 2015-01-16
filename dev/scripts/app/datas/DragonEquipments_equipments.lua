@@ -1,4 +1,4 @@
-local equipments = GameDatas.SmithConfig.equipments
+local equipments = GameDatas.DragonEquipments.equipments
 
 equipments["moltenCrown"] = {
 	["name"] = "moltenCrown",

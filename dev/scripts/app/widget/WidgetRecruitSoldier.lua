@@ -21,8 +21,8 @@ local WidgetRecruitSoldier = class("WidgetRecruitSoldier", function(...)
     end)
     return node
 end)
-local NORMAL = GameDatas.UnitsConfig.normal
-local SPECIAL = GameDatas.UnitsConfig.special
+local NORMAL = GameDatas.Soldiers.normal
+local SPECIAL = GameDatas.Soldiers.special
 local SOLDIER_CATEGORY_MAP = {
     ["swordsman"] = "infantry",
     ["sentinel"] = "infantry",
