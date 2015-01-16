@@ -34,6 +34,11 @@ function GameUIWatchTowerTroopDetail:IsMyAlliance()
 	return self.isMyAlliance
 end
 
+
+function GameUIWatchTowerTroopDetail:GetUserId()
+	return self.user_id
+end
+
 function GameUIWatchTowerTroopDetail:IsDataFromMyCity()
 	return self.isDataFromMyCity 
 end
@@ -99,7 +104,7 @@ function GameUIWatchTowerTroopDetail:onEnter()
 end
 
 function GameUIWatchTowerTroopDetail:RequestPlayerHelpedByTroops()
-	NetManager:getHelpDefenceTroopDetailPromise(DataManager:getUserData()._id,self:GetEventData().id):next(function(msg)
+	NetManager:getHelpDefenceTroopDetailPromise(self:GetUserId(),self:GetEventData().id):next(function(msg)
 		self.event_data = msg 
 		self:RefreshListView()
     end)
