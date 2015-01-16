@@ -1,3 +1,4 @@
+local cocos_promise = import("..utils.cocos_promise")
 local window = import("..utils.window")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetPVEDialog = class("WidgetPVEDialog", WidgetPopDialog)
@@ -77,7 +78,9 @@ function WidgetPVEDialog:Refresh()
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
                     if type(param[i].callback) == "function" then
-                        param[i].callback()
+                        cocos_promise.deffer(function()
+                            param[i].callback()
+                        end)
                     else
                         self:removeFromParent()
                     end
@@ -131,6 +134,8 @@ end
 
 
 return WidgetPVEDialog
+
+
 
 
 

@@ -13,8 +13,8 @@ function WidgetPVEWarriorsTomb:GetTitle()
 end
 function WidgetPVEWarriorsTomb:GetDesc()
     return self:GetObject():IsSearched()
-        and _('"我已经把一切都给了你, "虚空中灵魂道, "你还是快走吧!"')
-        or _('你发现了一具阵亡的巨龙骸骨, 恍惚间, 有声音在低语, "你想获得我的知识, 还是我的生命?"')
+        and _('陵墓之中仿佛有几个人形虚影正在向你招手, 你不禁背心一凉, 还是赶紧离开吧')
+        or _('你发现一些未被安葬的战士的遗骸, 是否花费10个宝石将他们安葬?')
 end
 function WidgetPVEWarriorsTomb:SetUpButtons()
     return self:GetObject():IsSearched() and

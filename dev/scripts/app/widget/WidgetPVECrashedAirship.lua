@@ -13,11 +13,11 @@ function WidgetPVECrashedAirship:GetTitle()
 end
 function WidgetPVECrashedAirship:GetDesc()
     if self:GetObject():IsSearched() then
-        return _('你发现了一艘坠毁的飞艇, 其中的有大量的物资, 但当你走近时却发现那里已经被强盗占领。')
+        return _('一艘飞艇的残骸, 可惜里面的物资早已被人洗劫一空。')
     elseif self:GetObject():Searched() == 1 then
         return _('强盗眼看不是你的对手, 想要烧毁这里的物资, 如果不阻拦他们那就得不到任何东西。')
     end
-    return _('一艘飞艇的残骸, 可惜里面的物资早已被人洗劫一空。')
+    return _('你发现了一艘坠毁的飞艇, 其中的有大量的物资, 但当你走近时却发现那里已经被强盗占领。')
 end
 function WidgetPVECrashedAirship:SetUpButtons()
     return self:GetObject():IsSearched() and
