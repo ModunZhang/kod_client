@@ -60,10 +60,14 @@ end
 function AllianceView:onExit()
     self:GetAlliance():GetAllianceMap():RemoveListenerOnType(self, AllianceMap.LISTEN_TYPE.BUILDING)
 end
-function AllianceView:ChangeTerrain(terrain_type)
+function AllianceView:ChangeTerrain()
+    local terrain = self:Terrain()
     self:IteratorAllianceObjects(function(_, v)
-        v:ReloadSpriteCauseTerrainChanged(terrain_type)
+        v:ReloadSpriteCauseTerrainChanged(terrain)
     end)
+end
+function AllianceView:Terrain()
+    return self.alliance:Terrain()
 end
 function AllianceView:RandomSeed()
     return 1985423439857

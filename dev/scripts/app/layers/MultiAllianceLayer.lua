@@ -31,12 +31,21 @@ function MultiAllianceLayer:onCleanup()
     self:AddOrRemoveAllianceEvent(false)
 end
 function MultiAllianceLayer:InitBackground()
-    if #self.alliances == 1 then
-        self:ChangeTerrain(self.alliances[1]:Terrain())
-    elseif MultiAllianceLayer.ARRANGE.H == self.arrange then
-        self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_h.tmx"):addTo(self, ZORDER.BACKGROUND)
-    else
-        self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_v.tmx"):addTo(self, ZORDER.BACKGROUND)
+    self:ChangeTerrain()
+    -- if #self.alliances == 1 then
+    --     self:ChangeTerrain()
+    -- elseif MultiAllianceLayer.ARRANGE.H == self.arrange then
+    --     -- self:ChangeTerrain()
+    --     self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_h.tmx"):addTo(self, ZORDER.BACKGROUND)
+    -- else
+    --     -- self:ChangeTerrain()
+    --     self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_v.tmx"):addTo(self, ZORDER.BACKGROUND)
+    -- end
+end
+function MultiAllianceLayer:ChangeTerrain()
+    self:ReloadBackGround()
+    for _, v in ipairs(self.alliance_views) do
+        v:ChangeTerrain()
     end
 end
 function MultiAllianceLayer:ReloadBackGround()
@@ -44,11 +53,23 @@ function MultiAllianceLayer:ReloadBackGround()
         self.background:removeFromParent()
     end
     if #self.alliances == 1 then
-        self.background = cc.TMXTiledMap:create(string.format("tmxmaps/alliance_%s.tmx", self:Terrain())):addTo(self, ZORDER.BACKGROUND)
+        self.background = cc.TMXTiledMap:create(string.format("tmxmaps/alliance_%s.tmx", self.alliances[1]:Terrain())):addTo(self, ZORDER.BACKGROUND)
+    elseif MultiAllianceLayer.ARRANGE.H == self.arrange then
+        print(self:GetMapFileByArrangeAndTerrain())
+        self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_h.tmx"):addTo(self, ZORDER.BACKGROUND)
+    else
+        print(self:GetMapFileByArrangeAndTerrain())
+        self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_v.tmx"):addTo(self, ZORDER.BACKGROUND)
     end
 end
-function MultiAllianceLayer:Terrain()
-    return self.terrain_type
+function MultiAllianceLayer:GetMapFileByArrangeAndTerrain()
+    assert(self.arrange)
+    local first, second = unpack(self.alliances)
+    if MultiAllianceLayer.ARRANGE.H == self.arrange then
+        return string.format("tmxmaps/alliance_%s_%s_%s.tmx", first, second, "h")
+    else
+        return string.format("tmxmaps/alliance_%s_%s_%s.tmx", first, second, "v")
+    end
 end
 function MultiAllianceLayer:InitBuildingNode()
     self.building = display.newNode():addTo(self, ZORDER.BUILDING)
@@ -181,13 +202,6 @@ end
 
 
 --changed of marchevent
-function MultiAllianceLayer:ChangeTerrain(terrain_type)
-    self.terrain_type = terrain_type
-    self:ReloadBackGround()
-    for _, v in ipairs(self.alliance_views) do
-        v:ChangeTerrain(terrain_type)
-    end
-end
 function MultiAllianceLayer:OnAttackMarchEventDataChanged(changed_map)
     self:ManagerCorpsFromChangedMap(changed_map)
 end

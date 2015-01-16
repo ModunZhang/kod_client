@@ -43,7 +43,7 @@ function AllianceDecoratorSprite:ctor(city_layer, entity)
     -- self:GetSprite():setVisible(false)
 end
 function AllianceDecoratorSprite:GetSpriteFile()
-    local terrain = self:GetMapLayer():GetLayer():Terrain()
+    local terrain = self:GetMapLayer():Terrain()
     local deco_type = self:GetEntity():GetType()
     return DECORATOR_IMAGE[terrain][deco_type], decorator_map[terrain][deco_type]
 end

@@ -66,9 +66,8 @@ function AllianceScene:OnBasicChanged(alliance,changed_map)
     --     app:EnterMyAllianceScene()
     -- end
     if changed_map.terrain then
-        self:ChangeTerrain(changed_map.terrain.new)
+        app:EnterMyAllianceScene()
     end
-
 end
 function AllianceScene:ChangeTerrain(terrain_type)
     self:GetSceneLayer():ChangeTerrain(terrain_type)
