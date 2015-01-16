@@ -1,24 +1,24 @@
-local SpriteConfig = import("..sprites.SpriteConfig")
 local WidgetPVEDialog = import("..widget.WidgetPVEDialog")
-local WidgetPVEEntranceDoor = class("WidgetPVEEntranceDoor", WidgetPVEDialog)
+local WidgetPVEResource = class("WidgetPVEResource", WidgetPVEDialog)
 
-function WidgetPVEEntranceDoor:ctor(...)
-    WidgetPVEEntranceDoor.super.ctor(self, ...)
+function WidgetPVEResource:ctor(...)
+    WidgetPVEResource.super.ctor(self, ...)
 end
-function WidgetPVEEntranceDoor:GetIcon()
-    return "entrance_door.png"
+function WidgetPVEResource:GetDesc()
+    if self:GetObject():IsSearched() then
+        return _('你已经除掉了这里的叛军, 这里的居民都向你表示感激!') 
+    elseif self:GetObject():Searched() == 1 then
+        return _('你已经突破了叛军第一层的防御, 你感觉到前方有更强大的敌人...')
+    elseif self:GetObject():Searched() == 2 then
+        return _('胜利就在眼前, 前方就是叛军的将领, 将击败你便能永久占领此地!')
+    elseif self:GetObject():Searched() == 3 then
+        return _('这里被叛军占领, 居民希望你能将他们赶走并愿意向你提供一些报酬。')
+    end
+    return _("这里被叛军占领, 居民希望你能将他们赶走并愿意向你提供一些报酬。")
 end
-function WidgetPVEEntranceDoor:GetTitle()
-    return string.format("%s %s%d", _('异界之门'), _('等级'), self:GetPVEMap():GetIndex())
-end
-function WidgetPVEEntranceDoor:GetDesc()
-    return self:GetObject():IsSearched() 
-    and _('在没有什么能阻挡你前进了, 你可以直接前往下一个关卡。')
-    or _('你能感觉到一个一场强大的生物驻守在这里, 阻挡着你继续前进, 但想要前往下一关卡必须击败它。')
-end
-function WidgetPVEEntranceDoor:SetUpButtons()
+function WidgetPVEResource:SetUpButtons()
     return self:GetObject():IsSearched() and
-        { { label = _("传送") }, { label = _("离开") } } or
+        { { label = _("离开") } } or
         { { label = _("进攻"), callback = function()
             UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType, soldiers)
                 local dargon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
@@ -70,7 +70,7 @@ function WidgetPVEEntranceDoor:SetUpButtons()
         end }, { label = _("离开") } }
 end
 
-return WidgetPVEEntranceDoor
+return WidgetPVEResource
 
 
 

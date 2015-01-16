@@ -39,9 +39,6 @@ function PVEScene:CreateSceneLayer()
     return PVELayer.new(self.user)
 end
 function PVEScene:CheckObject(x, y, type)
-    if type == PVEDefine.START_AIRSHIP then
-        return
-    end
     if not self.user:GetCurrentPVEMap():GetObject(x, y) then
         self.user:GetCurrentPVEMap():ModifyObject(x, y, 0, type)
     end

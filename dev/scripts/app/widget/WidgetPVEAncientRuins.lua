@@ -6,10 +6,10 @@ function WidgetPVEAncientRuins:ctor(...)
     WidgetPVEAncientRuins.super.ctor(self, ...)
 end
 function WidgetPVEAncientRuins:GetIcon()
-    return "warriors_tomb.png"
+    return "ancient_ruins.png"
 end
 function WidgetPVEAncientRuins:GetTitle()
-    return string.format("%s %s%d", _('勇士之墓'), _('等级'), self:GetPVEMap():GetIndex())
+    return string.format("%s %s%d", _('上古遗迹'), _('等级'), self:GetPVEMap():GetIndex())
 end
 function WidgetPVEAncientRuins:GetDesc()
     return self:GetObject():IsSearched()

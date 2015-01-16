@@ -14,6 +14,9 @@ end
 function WidgetPVEStartAirship:GetDesc()
     return _('手下向你汇报, 飞艇一切准备就绪, "长官希望前往何处?"')
 end
+function WidgetPVEStartAirship:GetBrief()
+    return _("起点")
+end
 function WidgetPVEStartAirship:SetUpButtons()
     return
         {

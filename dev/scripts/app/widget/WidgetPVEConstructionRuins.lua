@@ -13,7 +13,7 @@ function WidgetPVEConstructionRuins:GetTitle()
 end
 function WidgetPVEConstructionRuins:GetDesc()
     return self:GetObject():IsSearched() 
-    and _('你又花费了数小时搜索建筑废墟, 却一无所获')
+    and _('你又花费了数小时搜索建筑废墟, 却一无所获。')
     or _('废弃的建筑残骸, 不知道是否能找到一些有价值的东西, 是否愿意花费3点体力搜索这里?')
 end
 function WidgetPVEConstructionRuins:SetUpButtons()
