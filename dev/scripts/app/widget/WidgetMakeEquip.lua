@@ -1,4 +1,4 @@
-local EQUIPMENTS = GameDatas.SmithConfig.equipments
+local EQUIPMENTS = GameDatas.DragonEquipments.equipments
 local Localize = import("..utils.Localize")
 local MaterialManager = import("..entity.MaterialManager")
 local WidgetPushButton = import(".WidgetPushButton")

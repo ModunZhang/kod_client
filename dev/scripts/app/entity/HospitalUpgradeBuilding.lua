@@ -1,5 +1,5 @@
 
-local NORMAL = GameDatas.UnitsConfig.normal
+local NORMAL = GameDatas.Soldiers.normal
 local config_function = GameDatas.BuildingFunction.hospital
 local Observer = import(".Observer")
 local Enum = import("..utils.Enum")

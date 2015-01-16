@@ -1,4 +1,4 @@
-local config_equipments = GameDatas.SmithConfig.equipments
+local config_equipments = GameDatas.DragonEquipments.equipments
 local config_function = GameDatas.BuildingFunction.blackSmith
 local config_levelup = GameDatas.BuildingLevelUp.blackSmith
 

@@ -2,7 +2,7 @@
 -- Author: gaozhou
 -- Date: 2014-08-18 14:33:28
 --
-local EQUIPMENTS = GameDatas.SmithConfig.equipments
+local EQUIPMENTS = GameDatas.DragonEquipments.equipments
 local Localize = import("..utils.Localize")
 local MaterialManager = import("..entity.MaterialManager")
 local UIPushButton = cc.ui.UIPushButton

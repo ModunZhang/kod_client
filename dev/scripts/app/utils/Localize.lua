@@ -362,7 +362,7 @@ local ALLIANCE_TITLE = {
 }
 
 
--- local normal = GameDatas.UnitsConfig.normal
+-- local normal = GameDatas.Soldiers.normal
 local SOLDIER_CATEGORY_MAP = {
     ["swordsman"] = "infantry",
     ["sentinel"] = "infantry",

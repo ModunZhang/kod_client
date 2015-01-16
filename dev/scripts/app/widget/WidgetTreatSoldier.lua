@@ -18,8 +18,8 @@ local WidgetTreatSoldier = class("WidgetTreatSoldier", function(...)
     end)
     return node
 end)
-local NORMAL = GameDatas.UnitsConfig.normal
-local SPECIAL = GameDatas.UnitsConfig.special
+local NORMAL = GameDatas.Soldiers.normal
+local SPECIAL = GameDatas.Soldiers.special
 
 local SOLDIER_TYPE = {
     ["swordsman_1"] = { png = "#Infantry_1_render/idle/1/00000.png" },

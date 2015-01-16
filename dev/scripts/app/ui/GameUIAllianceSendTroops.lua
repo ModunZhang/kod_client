@@ -11,8 +11,8 @@ local SoldierManager = import("..entity.SoldierManager")
 local Corps = import(".Corps")
 local UILib = import(".UILib")
 local window = import("..utils.window")
-local normal = GameDatas.UnitsConfig.normal
-local SPECIAL = GameDatas.UnitsConfig.special
+local normal = GameDatas.Soldiers.normal
+local SPECIAL = GameDatas.Soldiers.special
 
 local GameUIAllianceSendTroops = UIKit:createUIClass("GameUIAllianceSendTroops","GameUIWithCommonHeader")
 local soldier_arrange = {
