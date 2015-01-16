@@ -79,12 +79,18 @@ function GameUIMoonGate:InitKingCity()
             size = 24,
             color = 0xfff3c7
         }))
-        :setButtonEnabled(false)
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+    			UIKit:newGameUI('GameUIKingCity',City):addToCurrentScene(true)
+    			self:leftButtonClicked()
+            end
+        end)
+
     WidgetInfo.new({
         info={
-        	{_("统治者"),_("黑龙军团")},
-        	{_("开启时间"),_("未知")},
-        	{_("状态"),_("保护期")},
+            {_("统治者"),_("黑龙军团")},
+            {_("开启时间"),_("未知")},
+            {_("状态"),_("保护期")},
         },
         w = 546
     }):align(display.BOTTOM_CENTER, window.cx, window.top - 770)
@@ -106,7 +112,7 @@ function GameUIMoonGate:InitKingCity()
 end
 
 function GameUIMoonGate:InitGarrison()
-	local layer = self.garrison_layer
+    local layer = self.garrison_layer
     local fight_bg = display.newSprite("report_back_ground.png")
         :align(display.TOP_CENTER, window.cx, window.top-110)
         :addTo(layer)
@@ -162,18 +168,18 @@ function GameUIMoonGate:InitGarrison()
     }):align(display.CENTER,80,enemy_citizen_bg:getContentSize().height/2)
         :addTo(enemy_citizen_bg)
 
-     local list,list_node = UIKit:commonListView({
+    local list,list_node = UIKit:commonListView({
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         viewRect = cc.rect(20, 0,608,540),
     })
     list_node:addTo(layer):pos(15,window.bottom_top+110)
-	
-	UIKit:ttfLabel({
+
+    UIKit:ttfLabel({
         text = _("当前没有开战"),
         size = 20,
         color = 0x403c2f,
     }):align(display.CENTER,window.cx,window.top-480)
-    :addTo(layer)
+        :addTo(layer)
     WidgetPushButton.new(
         {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"}
         ,{}
@@ -195,3 +201,4 @@ function GameUIMoonGate:onExit()
 end
 
 return GameUIMoonGate
+

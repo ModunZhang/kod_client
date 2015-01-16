@@ -169,10 +169,8 @@ function MyApp:EnterPlayerCityScene(id)
 end
 function MyApp:EnterCitySceneByPlayerAndAlliance(id, is_my_alliance)
     NetManager:getPlayerCityInfoPromise(id):next(function(user_data)
-        local user = User_.new(user_data.basicInfo)
-        user:OnUserDataChanged(user_data)
-        local city = City.new(user_data)
-        city:OnUserDataChanged(user_data)
+        local user = User_.new(user_data):OnUserDataChanged(user_data)
+        local city = City.new(user_data):SetUser(user):OnUserDataChanged(user_data)
         if is_my_alliance then
             app:enterScene("FriendCityScene", {user, city}, "custom", -1, transition_)
         else

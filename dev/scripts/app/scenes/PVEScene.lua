@@ -9,6 +9,7 @@ local WidgetPVEWoodcutter = import("..widget.WidgetPVEWoodcutter")
 local WidgetPVEAncientRuins = import("..widget.WidgetPVEAncientRuins")
 local WidgetPVEWarriorsTomb = import("..widget.WidgetPVEWarriorsTomb")
 local WidgetPVEEntranceDoor = import("..widget.WidgetPVEEntranceDoor")
+local WidgetPVEStartAirship = import("..widget.WidgetPVEStartAirship")
 local WidgetPVECrashedAirship = import("..widget.WidgetPVECrashedAirship")
 local WidgetPVEConstructionRuins = import("..widget.WidgetPVEConstructionRuins")
 local PVEDefine = import("..entity.PVEDefine")
@@ -38,6 +39,9 @@ function PVEScene:CreateSceneLayer()
     return PVELayer.new(self.user)
 end
 function PVEScene:CheckObject(x, y, type)
+    if type == PVEDefine.START_AIRSHIP then
+        return
+    end
     if not self.user:GetCurrentPVEMap():GetObject(x, y) then
         self.user:GetCurrentPVEMap():ModifyObject(x, y, 0, type)
     end
@@ -79,7 +83,7 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
             self:CheckObject(tx, ty, gid)
         end
         if gid == PVEDefine.START_AIRSHIP then
-            -- WidgetPVEWoodcutter.new(tx, ty, self.user):addToScene(self, true)
+            WidgetPVEStartAirship.new(tx, ty, self.user):addToScene(self, true)
         elseif gid == PVEDefine.WOODCUTTER then
             WidgetPVEWoodcutter.new(tx, ty, self.user):addToScene(self, true)
         elseif gid == PVEDefine.QUARRIER then

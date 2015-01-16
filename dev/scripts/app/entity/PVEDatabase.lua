@@ -6,6 +6,8 @@ function PVEDatabase:ctor()
 	self.char_x = 12
 	self.char_y = 12
 	self.char_floor = 1
+	self.next_enemy_step = 10
+	self.next_gem_step = 10
 	local pve_maps = {}
 	for i = 1, MAX_FLOOR do
 		pve_maps[i] = PVEMap.new(self, i)

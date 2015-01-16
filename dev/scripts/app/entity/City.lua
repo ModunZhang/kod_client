@@ -71,6 +71,7 @@ end
 function City:SetUser(user)
     assert(not self.belong_user, "用户一经指定就不可更改")
     self.belong_user = user
+    return self
 end
 function City:InitWithJsonData(userData)
     local init_buildings = {}
@@ -929,6 +930,7 @@ function City:OnUserDataChanged(userData, current_time)
         self.resource_manager:UpdateByCity(self, resource_refresh_time)
         self.resource_manager:UpdateResourceByTime(current_time)
     end
+    return self
 end
 function City:GetCityName()
     return self.cityName
