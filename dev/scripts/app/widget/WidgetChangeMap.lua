@@ -18,7 +18,7 @@ local WidgetChangeMap = class("WidgetChangeMap", function ()
     end)
     return layer
 end)
-WidgetChangeMap.MAP_TYPE = Enum("OUR_CITY","OUR_ALLIANCE","ENEMY_ALLIANCE")
+WidgetChangeMap.MAP_TYPE = Enum("OUR_CITY","OUR_ALLIANCE","OTHER_ALLIANCE")
 
 function WidgetChangeMap:ctor(map_type)
     -- 设置位置位移参数
@@ -119,6 +119,8 @@ function WidgetChangeMap:ctor(map_type)
                 app:EnterMyAllianceScene()
             elseif map_type == WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE then
                 app:EnterMyCityScene()
+            elseif map_type == WidgetChangeMap.MAP_TYPE.OTHER_ALLIANCE then
+                app:EnterMyAllianceScene()
             end
         end)
         :scale(scale_x)

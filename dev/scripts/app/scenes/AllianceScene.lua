@@ -24,14 +24,17 @@ function AllianceScene:onEnter()
     AllianceScene.super.onEnter(self)
     
     self:CreateAllianceUI()
-    local location = self:GetAlliance():GetSelf().location
-    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(location.x, location.y)
-    self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
+    self:GotoCurrectPosition()
     -- self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     app:GetAudioManager():PlayGameMusic("AllianceScene")
     self:GetSceneLayer():ZoomTo(1)
 
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.OPERATION)
+end
+function AllianceScene:GotoCurrectPosition()
+    local location = self:GetAlliance():GetSelf().location
+    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(location.x, location.y)
+    self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
 end
 
 function AllianceScene:CreateAllianceUI()

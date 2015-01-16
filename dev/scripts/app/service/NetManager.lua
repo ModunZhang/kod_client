@@ -1251,6 +1251,13 @@ function NetManager:getDonateToAlliancePromise(donateType)
         donateType = donateType
     }, "联盟捐赠失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
+-- 编辑联盟地形
+function NetManager:getEditAllianceTerrianPromise(terrain)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.editAllianceTerrian", {
+        terrain = terrain
+    }, "编辑联盟地形失败!"), get_alliancedata_callback()):next(get_response_msg)
+end
+
 function NetManager:getMarchToShrinePromose(shrineEventId,dragonType,soldiers)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.attackAllianceShrine", {
         dragonType = dragonType,

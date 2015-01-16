@@ -24,19 +24,38 @@ function GameUIOtherAllianceHome:onExit()
 
     GameUIOtherAllianceHome.super.onExit(self)
 end
-
-function GameUIEnemyAllianceHome:TopBg()
-    -- 顶部背景,为按钮
-    local top_self_bg = WidgetPushButton.new({normal = "allianceHome/button_blue_normal_320X94.png",
-        pressed = "allianceHome/button_blue_normal_320X94.png"})
-        :align(display.TOP_CENTER, window.cx-160, window.top)
+function GameUIOtherAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
+    local coordinate_str = string.format("%d, %d", logic_x, logic_y)
+    local is_mine
+    if alliance_view then
+        is_mine = alliance_view:GetAlliance():Id() == self.alliance:Id() and "["..self.alliance:AliasName().."]" or "["..self.alliance:GetEnemyAlliance():AliasName().."]"
+    else
+        is_mine = _("坐标")
+    end
+    self.coordinate_label:setString(coordinate_str)
+    self.coordinate_title_label:setString(is_mine)
+end
+function GameUIOtherAllianceHome:TopBg()
+    local top_bg = display.newSprite("allianceHome/alliance_home_top_bg.png")
+        :align(display.TOP_CENTER, window.cx, window.top)
         :addTo(self)
+    if display.width >640 then
+        top_bg:scale(display.width/768)
+    end
+    top_bg:setTouchEnabled(true)
+    local t_size = top_bg:getContentSize()
+    self.top_bg = top_bg
+    -- 顶部背景,为按钮
+    local top_self_bg = WidgetPushButton.new({normal = "allianceHome/button_blue_normal_314X88.png",
+        pressed = "allianceHome/button_blue_normal_314X88.png"})
+        :align(display.TOP_CENTER, t_size.width/2-160, t_size.height-4)
+        :addTo(top_bg)
     top_self_bg:setTouchEnabled(true)
     top_self_bg:setTouchSwallowEnabled(true)
-    local top_enemy_bg = WidgetPushButton.new({normal = "allianceHome/button_red_normal_320X94.png",
-        pressed = "allianceHome/button_blue_normal_320X94.png"})
-        :align(display.TOP_CENTER, window.cx+160, window.top)
-        :addTo(self)
+    local top_enemy_bg = WidgetPushButton.new({normal = "allianceHome/button_red_normal_314X88.png",
+        pressed = "allianceHome/button_red_normal_314X88.png"})
+        :align(display.TOP_CENTER, t_size.width/2+160, t_size.height-4)
+        :addTo(top_bg)
     top_enemy_bg:setTouchEnabled(true)
     top_enemy_bg:setTouchSwallowEnabled(true)
 
@@ -44,144 +63,33 @@ function GameUIEnemyAllianceHome:TopBg()
 end
 
 function GameUIOtherAllianceHome:TopTabButtons()
-
-    -- 荣誉,忠诚,坐标,世界按钮背景框
-    local btn_bg = display.newSprite("allianceHome/back_ground_637x55.png")
-        :align(display.TOP_CENTER, window.cx,window.top-94)
-        :addTo(self)
-    btn_bg:setTouchEnabled(true)
-
     -- 坐标按钮
-    local coordinate_btn = WidgetPushButton.new({normal = "allianceHome/btn_138X42.png",
-        pressed = "allianceHome/btn_138X42_light.png"})
+    local coordinate_btn = WidgetPushButton.new({normal = "allianceHome/btn_100x52.png",
+        pressed = "allianceHome/btn_100x52_light.png"})
         :onButtonClicked(function ( event )
             if event.name == "CLICKED_EVENT" then
                 UIKit:newGameUI('GameUIAlliancePosition'):addToCurrentScene(true)
             end
         end)
-        :align(display.CENTER, 392, btn_bg:getContentSize().height/2-2)
-        :addTo(btn_bg)
+        :align(display.TOP_CENTER, window.cx,window.top-94)
+        :addTo(self)
     -- 坐标
-    display.newSprite("allianceHome/coordinate.png")
-        :align(display.CENTER, -40,coordinate_btn:getContentSize().height/2-4)
-        :addTo(coordinate_btn)
-    UIKit:ttfLabel(
+   local size = coordinate_btn:getCascadeBoundingBox().size
+    self.coordinate_title_label = UIKit:ttfLabel(
         {
             text = _("坐标"),
             size = 14,
             color = 0xbdb582
-        }):align(display.LEFT_CENTER, -15, coordinate_btn:getContentSize().height/2+10)
+        }):align(display.CENTER, 0,  -size.height/2+10)
         :addTo(coordinate_btn)
     self.coordinate_label = UIKit:ttfLabel(
         {
             text = "23,21",
             size = 18,
             color = 0xf5e8c4
-        }):align(display.LEFT_CENTER, -15, coordinate_btn:getContentSize().height/2-10)
+        }):align(display.CENTER,0, -size.height/2-10)
         :addTo(coordinate_btn)
 
-end
-
-function GameUIOtherAllianceHome:CreateTop()
-    local alliance = self.alliance
-    local moonGate = alliance:GetAllianceMoonGate()
-    local enemyAlliance = moonGate:GetEnemyAlliance()
-    local top_self_bg,top_enemy_bg = self:TopBg()
-    local t_self_width,t_self_height = top_self_bg:getCascadeBoundingBox().size.width,top_self_bg:getCascadeBoundingBox().size.height
-    local t_enemy_width,t_enemy_height = top_enemy_bg:getCascadeBoundingBox().size.width,top_enemy_bg:getCascadeBoundingBox().size.height
-
-    -- 己方联盟名字
-    local self_name_bg = display.newSprite("allianceHome/title_green_292X32.png")
-        :align(display.LEFT_CENTER, -t_self_width/2+10,-26)
-        :addTo(top_self_bg):flipX(true)
-    local self_name_label = UIKit:ttfLabel(
-        {
-            text = "["..enemyAlliance.tag.."] "..enemyAlliance.name,
-            size = 18,
-            color = 0xffedae
-        }):align(display.LEFT_CENTER, 30, 20)
-        :addTo(self_name_bg)
-    -- 己方联盟旗帜
-    local ui_helper = WidgetAllianceUIHelper.new()
-    local self_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemyAlliance.flag)):scale(0.5)
-    self_flag:align(display.CENTER, self_name_bg:getContentSize().width-100, -30):addTo(self_name_bg)
-
-    -- 敌方联盟名字
-    local enemy_name_bg = display.newSprite("allianceHome/title_red_292X32.png")
-        :align(display.RIGHT_CENTER, t_enemy_width/2-10,-26)
-        :addTo(top_enemy_bg)
-    local enemy_name_label = UIKit:ttfLabel(
-        {
-            text = "["..alliance:AliasName().."] "..alliance:Name(),
-            size = 18,
-            color = 0xffedae
-        }):align(display.RIGHT_CENTER, enemy_name_bg:getContentSize().width-30, 20)
-        :addTo(enemy_name_bg)
-
-    local enemy_flag = ui_helper:CreateFlagContentSprite(alliance:Flag()):scale(0.5)
-    enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
-        :addTo(enemy_name_bg)
-
-    -- 和平期,战争期,准备期背景
-    local period_bg = display.newSprite("allianceHome/back_ground_123x102.png")
-        :align(display.TOP_CENTER, window.cx,window.top)
-        :addTo(self)
-    local vs = display.newSprite("allianceHome/VS_.png")
-        :align(display.TOP_CENTER, period_bg:getContentSize().width/2,period_bg:getContentSize().height)
-        :addTo(period_bg)
-    local time_bg = display.newSprite("allianceHome/back_ground_109x46.png")
-        :align(display.BOTTOM_CENTER, period_bg:getContentSize().width/2,12)
-        :addTo(period_bg)
-    local period_label = UIKit:ttfLabel(
-        {
-            text = _("战争期"),
-            size = 16,
-            color = 0xbdb582
-        }):align(display.TOP_CENTER, time_bg:getContentSize().width/2, time_bg:getContentSize().height)
-        :addTo(time_bg)
-    self.time_label = UIKit:ttfLabel(
-        {
-            text = "",
-            size = 18,
-            color = 0xffedae
-        }):align(display.BOTTOM_CENTER, time_bg:getContentSize().width/2, 0)
-        :addTo(time_bg)
-    -- 己方击杀
-    local our_num_icon = cc.ui.UIImage.new("battle_39x38.png"):align(display.CENTER, -t_self_width/2+50, -65):addTo(top_self_bg)
-    local self_power_bg = display.newSprite("allianceHome/power_background.png")
-        :align(display.LEFT_CENTER, -t_self_width/2+50, -65):addTo(top_self_bg)
-    local self_power_label = UIKit:ttfLabel(
-        {
-            text = string.formatnumberthousands(moonGate:GetCountData().our.kill),
-            size = 20,
-            color = 0xbdb582
-        }):align(display.LEFT_CENTER, 20, self_power_bg:getContentSize().height/2)
-        :addTo(self_power_bg)
-    -- 敌方击杀
-    local enemy_power_bg = display.newSprite("allianceHome/power_background.png")
-        :align(display.LEFT_CENTER, -20, -65):addTo(top_enemy_bg)
-    local enemy_num_icon = cc.ui.UIImage.new("battle_39x38.png")
-        :align(display.CENTER, 0, enemy_power_bg:getContentSize().height/2)
-        :addTo(enemy_power_bg)
-    local enemy_power_label = UIKit:ttfLabel(
-        {
-            text = string.formatnumberthousands(moonGate:GetCountData().enemy.kill),
-            size = 20,
-            color = 0xbdb582
-        }):align(display.LEFT_CENTER, 20, enemy_power_bg:getContentSize().height/2)
-        :addTo(enemy_power_bg)
-
-    self:TopTabButtons()
-end
-
-function GameUIOtherAllianceHome:OnMidButtonClicked(event)
-    local tag = event.target:getTag()
-    if not tag then return end
-    if tag == 1 then
-        self:ComeBackToOurAlliance()
-    else
-        GameUIOtherAllianceHome.super.OnMidButtonClicked(self,event)
-    end
 end
 
 function GameUIOtherAllianceHome:CreateOperationButton()
@@ -189,7 +97,6 @@ function GameUIOtherAllianceHome:CreateOperationButton()
     local first_col = 177
     local label_padding = 100
     for i, v in ipairs({
-        {"allianceHome/enemy.png", _("我方")},
         {"allianceHome/help.png", _("帮助")},
         {"allianceHome/war.png", _("战斗")},
     }) do
@@ -232,25 +139,25 @@ function GameUIOtherAllianceHome:ComeBackToOurAlliance()
     end)
 end
 
-function GameUIOtherAllianceHome:OnBasicChanged(alliance,changed_map)
-    if changed_map.status then
-        if changed_map.status.new ~="fight" then
-            FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                :SetPopMessage(_("联盟会战已经结束,请返回我方联盟"))
-                :CreateOKButton(
-                    {
-                        listener = function ()
-                            self:ComeBackToOurAlliance()
-                        end
-                    }
-                )
-                :AddToCurrentScene()
-        end
-    end
-end
+-- function GameUIOtherAllianceHome:OnBasicChanged(alliance,changed_map)
+--     if changed_map.status then
+--         if changed_map.status.new ~="fight" then
+--             FullScreenPopDialogUI.new():SetTitle(_("提示"))
+--                 :SetPopMessage(_("联盟会战已经结束,请返回我方联盟"))
+--                 :CreateOKButton(
+--                     {
+--                         listener = function ()
+--                             self:ComeBackToOurAlliance()
+--                         end
+--                     }
+--                 )
+--                 :AddToCurrentScene()
+--         end
+--     end
+-- end
 
 function GameUIOtherAllianceHome:AddMapChangeButton()
-    local map_node = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.ENEMY_ALLIANCE):addTo(self)
+    local map_node = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OTHER_ALLIANCE):addTo(self)
 end
 
 return GameUIOtherAllianceHome
