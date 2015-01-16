@@ -265,7 +265,7 @@ function GameUIAlliancePalace:InitInfoPart()
         end)
         :align(display.CENTER, 57 , 90)
         :addTo(bg1)
-    self.select_terrian_index = self:MapTerrianToIndex(self.alliance:TerrainType())
+    self.select_terrian_index = self:MapTerrianToIndex(self.alliance:Terrain())
     group:getButtonAtIndex(self.select_terrian_index):setButtonSelected(true)
 
     -- 介绍
