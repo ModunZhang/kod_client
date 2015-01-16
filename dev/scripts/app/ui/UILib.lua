@@ -330,6 +330,36 @@ local DRAGON_ANIMATIONS_FILES = {
     }
 }
 local DECORATOR_IMAGE = {
+    grassLand = {
+        decorate_lake_1 = "grass_lake_272x158.png",
+        decorate_lake_2 =  "grass_lake_244x142.png",
+        decorate_mountain_2 =  "grass_hill_160x106.png",
+        decorate_mountain_1 =  "grass_hill_254x240.png",
+        decorate_tree_1 =  "grass_tree_1_138x110.png",
+        decorate_tree_2 =  "grass_tree_2_124x122.png",
+        decorate_tree_3 =  "grass_tree_3_112x114.png",
+        decorate_tree_4 =  "grass_tree_4_100x106.png",
+    },
+    iceField = {
+        decorate_lake_1 = "ice_lake_280x166.png",
+        decorate_lake_2 =  "ice_lake_252x150.png",
+        decorate_mountain_2 =  "ice_hill_230x150.png",
+        decorate_mountain_1 =  "ice_hill_314x296.png",
+        decorate_tree_1 =  "ice_tree_1_126x110.png",
+        decorate_tree_2 =  "ice_tree_2_124x106.png",
+        decorate_tree_3 =  "ice_tree_3_102x96.png",
+        decorate_tree_4 =  "ice_tree_4_102x98.png",
+    },
+    desert = {
+        decorate_lake_1 = "desert_lake_276x162.png",
+        decorate_lake_2 =  "desert_lake_248x146.png",
+        decorate_mountain_2 =  "desert_hill_226x148.png",
+        decorate_mountain_1 =  "desert_hill_314x298.png",
+        decorate_tree_1 =  "desert_tree_1_148x104.png",
+        decorate_tree_2 =  "desert_tree_2_128x106.png",
+        decorate_tree_3 =  "desert_tree_3_98x96.png",
+        decorate_tree_4 =  "desert_tree_4_106x102.png",
+    },
     decorate_lake_1 = "lake_272x158.png",
     decorate_lake_2 =  "lake_244x142.png",
     decorate_mountain_2 =  "hill_160x106.png",
@@ -405,6 +435,7 @@ return {
     buff = BUFF,
     village = VILLAGE,
 }
+
 
 
 

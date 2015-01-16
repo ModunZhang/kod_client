@@ -7,7 +7,9 @@ local AllianceMap = import("..entity.AllianceMap")
 local Observer = import("..entity.Observer")
 local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLeftReverseY")
 local AllianceView = class("AllianceView", function()
-    return display.newNode()
+    local node = display.newNode()
+    node:setNodeEventEnabled(true)
+    return node
 end)
 local floor = math.floor
 local random = math.random
@@ -36,7 +38,6 @@ end
 
 
 function AllianceView:ctor(layer, alliance, logic_base_x, logic_base_y)
-    self:setNodeEventEnabled(true)
     Observer.extend(self)
     self.layer = layer
     self.alliance = alliance
@@ -50,49 +51,22 @@ function AllianceView:ctor(layer, alliance, logic_base_x, logic_base_y)
         base_x = logic_base_x * 80,
         base_y = logic_base_y * 80
     }
+    math.randomseed(self:RandomSeed())
+    self:InitAlliance()
 end
 function AllianceView:onEnter()
-    math.randomseed(self:RandomSeed())
-    -- self:InitAllianceTerrainBottom()
-    -- self:InitAllianceTerrainTop()
-    self:InitAlliance()
+    self:GetAlliance():GetAllianceMap():AddListenOnType(self, AllianceMap.LISTEN_TYPE.BUILDING)
 end
 function AllianceView:onExit()
     self:GetAlliance():GetAllianceMap():RemoveListenerOnType(self, AllianceMap.LISTEN_TYPE.BUILDING)
 end
+function AllianceView:ChangeTerrain(terrain_type)
+    self:IteratorAllianceObjects(function(_, v)
+        v:ReloadSpriteCauseTerrainChanged(terrain_type)
+    end)
+end
 function AllianceView:RandomSeed()
     return 1985423439857
-end
-function AllianceView:InitAllianceTerrainBottom()
-    local layer = self.layer
-    local png = {
-        "grass1_800x560.png",
-        "grass2_800x560.png",
-        "grass3_800x560.png",
-    }
-    for _, v in pairs{
-        {x = 4.5, y = 4.5},
-        {x = 4.5, y = 14.5},
-        {x = 14.5, y = 4.5},
-        {x = 14.5, y = 14.5},
-    } do
-        local png_index = random(123456789) % 3 + 1
-        display.newSprite(png[png_index]):addTo(self.layer:GetBottomTerrain())
-            :align(display.CENTER, self:GetLogicMap():ConvertToMapPosition(v.x, v.y))
-    end
-end
-function AllianceView:InitAllianceTerrainTop()
-    local layer = self.layer
-    local png = {
-        "grass1_400x280.png",
-        "grass2_400x280.png",
-        "grass3_400x280.png",
-    }
-    local indexes = random_indexes_in_rect(20, cc.rect(0, 0, self:GetLogicMap():GetSize()))
-    for _, v in ipairs(indexes) do
-        display.newSprite(png[v.png_index]):addTo(self.layer:GetTopTerrain())
-            :align(display.CENTER, self:GetLogicMap():ConvertToMapPosition(v.x, v.y))
-    end
 end
 function AllianceView:InitAlliance()
     local objects = {}
@@ -100,7 +74,6 @@ function AllianceView:InitAlliance()
         objects[entity:Id()] = self:CreateObject(entity)
     end)
     self.objects = objects
-    self:GetAlliance():GetAllianceMap():AddListenOnType(self, AllianceMap.LISTEN_TYPE.BUILDING)
 end
 function AllianceView:GetBuildingNode()
     return self.layer:GetBuildingNode()
@@ -110,6 +83,9 @@ function AllianceView:GetCorpsNode()
 end
 function AllianceView:GetLineNode()
     return self.layer:GetLineNode()
+end
+function AllianceView:GetLayer()
+    return self.layer
 end
 function AllianceView:GetAlliance()
     return self.alliance

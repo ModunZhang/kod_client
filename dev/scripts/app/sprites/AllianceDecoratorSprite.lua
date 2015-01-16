@@ -2,14 +2,40 @@ local Sprite = import(".Sprite")
 local UILib = import("..ui.UILib")
 local AllianceDecoratorSprite = class("AllianceDecoratorSprite", Sprite)
 local allianceBuildingType = GameDatas.AllianceInitData.buildingType
+local DECORATOR_IMAGE = UILib.decorator_image
 local decorator_map = {
-    decorate_lake_1 = { UILib.decorator_image.decorate_lake_1, 1 },
-    decorate_lake_2 = { UILib.decorator_image.decorate_lake_2, 1 },
-    decorate_mountain_1 = { UILib.decorator_image.decorate_mountain_1, 1 },
-    decorate_mountain_2 = { UILib.decorator_image.decorate_mountain_2, 1 },
-    decorate_tree_1 = { UILib.decorator_image.decorate_tree_1, 0.8 },
-    decorate_tree_2 = { UILib.decorator_image.decorate_tree_2, 0.8 },
+    grassLand = {
+        decorate_lake_1 =  1,
+        decorate_lake_2 =  1,
+        decorate_mountain_1 =  1,
+        decorate_mountain_2 =  1,
+        decorate_tree_1 =  0.8,
+        decorate_tree_2 =  0.8,
+        decorate_tree_3 =  0.8,
+        decorate_tree_4 =  0.8,
+    },
+    desert = {
+        decorate_lake_1 =  1,
+        decorate_lake_2 =  1,
+        decorate_mountain_1 =  1,
+        decorate_mountain_2 =  1,
+        decorate_tree_1 =  0.8,
+        decorate_tree_2 =  0.8,
+        decorate_tree_3 =  0.8,
+        decorate_tree_4 =  0.8,
+    },
+    iceField = {
+        decorate_lake_1 =  1,
+        decorate_lake_2 =  1,
+        decorate_mountain_1 =  1,
+        decorate_mountain_2 =  1,
+        decorate_tree_1 =  0.8,
+        decorate_tree_2 =  0.8,
+        decorate_tree_3 =  0.8,
+        decorate_tree_4 =  0.8,
+    },
 }
+
 function AllianceDecoratorSprite:ctor(city_layer, entity)
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     AllianceDecoratorSprite.super.ctor(self, city_layer, entity, x, y)
@@ -17,13 +43,17 @@ function AllianceDecoratorSprite:ctor(city_layer, entity)
     -- self:GetSprite():setVisible(false)
 end
 function AllianceDecoratorSprite:GetSpriteFile()
-    return unpack(decorator_map[self:GetEntity():GetType()])
+    local terrain = self:GetMapLayer():GetLayer():Terrain()
+    local deco_type = self:GetEntity():GetType()
+    return DECORATOR_IMAGE[terrain][deco_type], decorator_map[terrain][deco_type]
 end
 function AllianceDecoratorSprite:GetSpriteOffset()
     local w, h = self:GetSize()
     return self:GetLogicMap():ConvertToLocalPosition((w - 1)/2, (h - 1)/2)
 end
-
+function AllianceDecoratorSprite:ReloadSpriteCauseTerrainChanged(terrain_type)
+    self:RefreshSprite()
+end
 
 
 
@@ -43,6 +73,7 @@ function AllianceDecoratorSprite:newBatchNode(w, h)
     return base_node
 end
 return AllianceDecoratorSprite
+
 
 
 

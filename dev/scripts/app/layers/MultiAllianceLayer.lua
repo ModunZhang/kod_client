@@ -17,6 +17,7 @@ function MultiAllianceLayer:ctor(arrange, ...)
     MultiAllianceLayer.super.ctor(self, 0.4, 1.2)
     self.arrange = arrange
     self.alliances = {...}
+    self.alliance_views = {}
     self:InitBackground()
     self:InitBuildingNode()
     self:InitCorpsNode()
@@ -32,7 +33,6 @@ end
 function MultiAllianceLayer:InitBackground()
     if #self.alliances == 1 then
         self:ChangeTerrain(self.alliances[1]:Terrain())
-        self:ReloadBackGround()
     elseif MultiAllianceLayer.ARRANGE.H == self.arrange then
         self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_h.tmx"):addTo(self, ZORDER.BACKGROUND)
     else
@@ -184,6 +184,9 @@ end
 function MultiAllianceLayer:ChangeTerrain(terrain_type)
     self.terrain_type = terrain_type
     self:ReloadBackGround()
+    for _, v in ipairs(self.alliance_views) do
+        v:ChangeTerrain(terrain_type)
+    end
 end
 function MultiAllianceLayer:OnAttackMarchEventDataChanged(changed_map)
     self:ManagerCorpsFromChangedMap(changed_map)

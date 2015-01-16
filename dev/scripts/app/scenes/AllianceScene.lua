@@ -45,7 +45,7 @@ function AllianceScene:GetAlliance()
     return Alliance_Manager:GetMyAlliance()
 end
 function AllianceScene:onExit()
-    -- self:GetAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    self:GetAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     AllianceScene.super.onExit(self)
 end
 function AllianceScene:CreateSceneLayer()
@@ -65,8 +65,8 @@ function AllianceScene:OnBasicChanged(alliance,changed_map)
     -- if changed_map.status and changed_map.status.new == 'prepare' then
     --     app:EnterMyAllianceScene()
     -- end
-    if changed_map.terrainType then
-        self:ChangeTerrain(changed_map.terrainType.new)
+    if changed_map.terrain then
+        self:ChangeTerrain(changed_map.terrain.new)
     end
 
 end
