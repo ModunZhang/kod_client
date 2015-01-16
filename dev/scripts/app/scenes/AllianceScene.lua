@@ -6,12 +6,9 @@ local AllianceScene = class("AllianceScene", MapScene)
 local Alliance = import("..entity.Alliance")
 local GameUIAllianceHome = import("..ui.GameUIAllianceHome")
 function AllianceScene:ctor()
-    User:ResetAllListeners()
-    City:ResetAllListeners()
-    Alliance_Manager:GetMyAlliance():ResetAllListeners()
-
     AllianceScene.super.ctor(self)
-
+end
+function AllianceScene:onEnter()
     local manager = ccs.ArmatureDataManager:getInstance()
     manager:removeArmatureFileInfo("animations/chuizidonghua.ExportJson")
     manager:removeArmatureFileInfo("animations/green_dragon.ExportJson")
@@ -23,11 +20,9 @@ function AllianceScene:ctor()
     manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Blue_dragon.ExportJson")
 
-    
-    self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.OPERATION)
-end
-function AllianceScene:onEnter()
+
     AllianceScene.super.onEnter(self)
+    
     self:CreateAllianceUI()
     local location = self:GetAlliance():GetSelf().location
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(location.x, location.y)
@@ -35,6 +30,8 @@ function AllianceScene:onEnter()
     -- self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     app:GetAudioManager():PlayGameMusic("AllianceScene")
     self:GetSceneLayer():ZoomTo(1)
+
+    self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.OPERATION)
 end
 
 function AllianceScene:CreateAllianceUI()

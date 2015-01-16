@@ -10,9 +10,11 @@ local CityScene = import(".CityScene")
 local MyCityScene = class("MyCityScene", CityScene)
 
 function MyCityScene:ctor(...)
-    self.clicked_callbacks = {}
     MyCityScene.super.ctor(self, ...)
-    
+    self.clicked_callbacks = {}
+end
+function MyCityScene:onEnter()
+    MyCityScene.super.onEnter(self)
     self.arrow_layer = self:CreateArrowLayer()
     self.tutorial_layer = self:CreateTutorialLayer()
     home_page = self:CreateHomePage()
@@ -22,6 +24,9 @@ function MyCityScene:ctor(...)
 
     self:GetCity():AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
     self:GetCity():GetUser():AddListenOnType(self, User.LISTEN_TYPE.BASIC)
+end
+function MyCityScene:onExit()
+    MyCityScene.super.onExit(self)
 end
 function MyCityScene:GetArrowTutorial()
     if not self.arrow_tutorial then
@@ -133,7 +138,7 @@ function MyCityScene:CreateHomePage()
     return home
 end
 function MyCityScene:onExit()
-    self:GetCity():GetUser():RemoveListenerOnType(self, City.LISTEN_TYPE.BASIC)
+    self:GetCity():GetUser():RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
     home_page = nil
     MyCityScene.super.onExit(self)
 end

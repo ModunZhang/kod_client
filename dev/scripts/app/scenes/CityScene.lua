@@ -16,24 +16,18 @@ local app = app
 local timer = app.timer
 local DEBUG_LOCAL = false
 function CityScene:ctor(city)
-    User:ResetAllListeners()
-    City:ResetAllListeners()
-    Alliance_Manager:GetMyAlliance():ResetAllListeners()
-    self.city = city
     CityScene.super.ctor(self)
+    self.city = city
+end
+function CityScene:onEnter()
     self:LoadAnimation()
-
+    CityScene.super.onEnter(self)
     self:GetSceneLayer():AddObserver(self)
-    self:GetSceneLayer():InitWithCity(city)
+    self:GetSceneLayer():InitWithCity(self:GetCity())
     self:PlayBackgroundMusic()
     self:GotoLogicPointInstant(6, 4)
     self:GetSceneLayer():ZoomTo(1)
-end
-function CityScene:GetCity()
-    return self.city
-end
-function CityScene:onEnter()
-    CityScene.super.onEnter(self)
+
     -- local city = self.city
     
 
@@ -122,6 +116,9 @@ function CityScene:LoadAnimation()
     manager:addArmatureFileInfo("animations/green_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Blue_dragon.ExportJson")
+end
+function CityScene:GetCity()
+    return self.city
 end
 function CityScene:CreateSceneLayer()
     local scene = CityLayer.new(self)
