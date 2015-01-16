@@ -3,6 +3,7 @@
 -- Date: 2014-08-05 20:10:36
 --
 local GameUILogin = UIKit:createUIClass('GameUILogin','GameUISplash')
+local WidgetPushButton = import("..widget.WidgetPushButton")
 local gaozhou
 if CONFIG_IS_DEBUG then
     local result
@@ -67,7 +68,7 @@ function GameUILogin:createTips()
 end
 
 function GameUILogin:createStartGame()
-    local button = cc.ui.UIPushButton.new({
+    local button = WidgetPushButton.new({
          normal = "start_game_481x31.png"
     },nil,{down = "SPLASH_BUTTON_START"}):addTo(self.ui_layer):pos(display.cx,display.bottom+150):hide()
     :onButtonClicked(function()
