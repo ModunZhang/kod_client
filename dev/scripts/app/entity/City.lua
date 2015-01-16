@@ -11,6 +11,7 @@ local Building = import(".Building")
 local TowerUpgradeBuilding = import(".TowerUpgradeBuilding")
 local MultiObserver = import(".MultiObserver")
 local City = class("City", MultiObserver)
+local ProductionTechnology = import(".ProductionTechnology")
 -- 枚举定义
 City.RETURN_CODE = Enum("INNER_ROUND_NOT_UNLOCKED",
     "EDGE_BESIDE_NOT_UNLOCKED",
@@ -26,7 +27,8 @@ City.LISTEN_TYPE = Enum("LOCK_TILE",
     "UPGRADE_BUILDING",
     "CITY_NAME",
     "HELPED_BY_TROOPS",
-    "HELPED_TO_TROOPS")
+    "HELPED_TO_TROOPS",
+    "PRODUCTION_DATA_CHANGED")
 City.RESOURCE_TYPE_TO_BUILDING_TYPE = {
     [ResourceManager.RESOURCE_TYPE.WOOD] = "woodcutter",
     [ResourceManager.RESOURCE_TYPE.FOOD] = "farmer",
@@ -48,7 +50,7 @@ function City:ctor(json_data)
     self.decorators = {}
     self.helpedByTroops = {}
     self.helpToTroops = {}
-
+    self.productionTechs = {}
     self.build_queue = 0
 
     self.locations_decorators = {}
@@ -902,6 +904,9 @@ function City:OnUserDataChanged(userData, current_time)
     --更新派出的协防信息
     self:OnHelpToTroopsDataChange(userData.helpToTroops)
     self:__OnHelpToTroopsDataChange(userData.__helpToTroops)
+    --科技
+    self:OnProductionTechsDataChanged(userData.productionTechs)
+    self:__OnProductionTechsDataChanged(userData.__productionTechs)
     -- 更新兵种
     self.soldier_manager:OnUserDataChanged(userData)
     -- 更新材料，这里是广义的材料，包括龙的装备
@@ -1394,6 +1399,92 @@ end
 function City:GetWatchTowerLevel()
     local watch_tower = self:GetFirstBuildingByType("watchTower")
     return watch_tower and watch_tower:GetLevel() or 0
+end
+
+function City:OnProductionTechsDataChanged(productionTechs)
+    if not productionTechs then return end
+    for name,v in pairs(productionTechs) do
+        local productionTechnology = ProductionTechnology.new()
+        productionTechnology:UpdateData(name,v)
+        if not self.productionTechs[productionTechnology:Index()] then
+            self.productionTechs[productionTechnology:Index()] = productionTechnology
+        end
+    end
+    dump(productionTechs,"productionTechs--->")
+    self:DumpAllTechs()
+    -- self:FastUpdateAllTechsLockState()
+    -- self:DumpAllTechs()
+end
+
+function City:IteratorTechs(func)
+    for index,v in pairs(self.productionTechs) do
+        func(k,v)
+    end
+end
+
+function City:FindTechByName(name)
+    self:IteratorTechs(function(index,tech)
+        if tech:Name() == name then 
+            return name
+        end
+    end)
+end
+
+function City:FindTechByIndex(index)
+    index = checkint(index)
+    return self.productionTechs[index]
+end
+
+function City:__OnProductionTechsDataChanged(__productionTechs)
+    if not __productionTechs then return end
+    local changed_map = GameUtils:Event_Handler_Func(
+        __productionTechs
+        ,function(data)
+            assert(false,"会添加科技?")
+        end
+        ,function(data)
+            local productionTechnology = self:FindTechByIndex(data.index)
+            if productionTechnology then
+                productionTechnology:SetLevel(data.level)
+                self:CheckDependTechsLockState(productionTechnology)
+            end
+        end
+        ,function(data)
+            assert(false,"会删除科技?")
+        end
+    )
+    self:NotifyListeneOnType(City.LISTEN_TYPE.PRODUCTION_DATA_CHANGED, function(listener)
+        listener:OnProductionTechsDataChanged(self,changed_map)
+    end)
+end
+--查找依赖于此科技的所有科技
+function City:FindDependOnTheTechs(tech)
+    local r = {}
+    self:IteratorTechs(function(_,tech_)
+        if tech_:UnlockBy() == tech:Index() then
+            table.insert(r, tech_)
+        end
+    end)
+    return r
+end
+--更新依赖于此科技的科技的解锁状态
+function City:CheckDependTechsLockState(tech)
+    local targetTechs = self:FindDependOnTheTechs(tech)
+    for _,tech_ in ipairs(targetTechs) do
+        tech_:SetIsLock(tech:Level() >= tech_:UnlockLevel())
+    end
+end
+
+function City:FastUpdateAllTechsLockState()
+   self:IteratorTechs(function(index,tech)
+        print("tech:UnlockBy()---->",tech:UnlockBy())
+        local unLockByTech = self:FindTechByIndex(tech:UnlockBy())
+        tech:SetIsLock(tech:UnlockLevel() <= unLockByTech:Level())
+   end)
+end
+
+function City:DumpAllTechs()
+    dump(self.productionTechs,"productionTechs-->" .. os.time())
 end
 
 return City
