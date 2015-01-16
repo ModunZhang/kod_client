@@ -46,7 +46,7 @@ function User:ctor(p)
     -- 交易管理器
     self.trade_manager = TradeManager.new()
     if type(p) == "table" then
-        self:SetId(p.id)
+        self:SetId(p._id)
         self:OnBasicInfoChanged(p)
     else
         self:SetId(p)
@@ -241,6 +241,7 @@ function User:OnUserDataChanged(userData)
     self:OnNewDailyQuestsEventsComming(userData.__dailyQuestEvents)
     -- 交易
     self.trade_manager:OnUserDataChanged(userData)
+    return self
 end
 function User:OnGemChanged(resources)
     if resources and resources.gem then

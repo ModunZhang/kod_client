@@ -11,8 +11,7 @@ return function(userData)
     User = User_.new(userData._id)
     Alliance_Manager = AllianceManager_.new()
     MailManager = MailManager_.new()
-    City = City_.new(userData)
-    City:SetUser(User)
+    City = City_.new(userData):SetUser(User)
 
     DataManager:setUserData(userData)
 

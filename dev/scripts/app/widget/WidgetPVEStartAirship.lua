@@ -1,0 +1,51 @@
+local SpriteConfig = import("..sprites.SpriteConfig")
+local WidgetPVEDialog = import("..widget.WidgetPVEDialog")
+local WidgetPVEStartAirship = class("WidgetPVEStartAirship", WidgetPVEDialog)
+
+function WidgetPVEStartAirship:ctor(...)
+    WidgetPVEStartAirship.super.ctor(self, ...)
+end
+function WidgetPVEStartAirship:GetIcon()
+    return "airship_106x81.png"
+end
+function WidgetPVEStartAirship:GetTitle()
+    return _("飞艇")
+end
+function WidgetPVEStartAirship:GetDesc()
+    return _('手下向你汇报, 飞艇一切准备就绪, "长官希望前往何处?"')
+end
+function WidgetPVEStartAirship:SetUpButtons()
+    return
+        {
+            {
+                label = _("传送"), callback = function()
+                    self:removeFromParent()
+                end
+            },
+            {
+                label = _("离开")
+            }
+        }
+end
+
+return WidgetPVEStartAirship
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
