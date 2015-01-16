@@ -20,21 +20,22 @@ local titles = {
 	SOLIDERS = _("军事单位"),
 }
 
-function GameUIWatchTowerTroopDetail:ctor(data,data_type,isMyCity,watchTower_level)
+function GameUIWatchTowerTroopDetail:ctor(data_type,data,user_id)
 	GameUIWatchTowerTroopDetail.super.ctor(self)
 	self.belvedere = Alliance_Manager:GetMyAlliance():GetAllianceBelvedere()
 	self.event_data = data
 	self.data_type = data_type
-	self.watchTower_level = watchTower_level
-	if type(isMyCity) == 'boolean' then
-		self.isMyCity =  isMyCity
-	else
-		self.isMyCity = true
-	end
+	self.user_id = user_id
+	self.isMyAlliance =  Alliance_Manager:GetMyAlliance():GetMemeberById(user_id) ~= nil
+	self.isDataFromMyCity = user_id == DataManager:getUserData()._id
 end
 
-function GameUIWatchTowerTroopDetail:IsMyCity()
-	return self.isMyCity
+function GameUIWatchTowerTroopDetail:IsMyAlliance()
+	return self.isMyAlliance
+end
+
+function GameUIWatchTowerTroopDetail:IsDataFromMyCity()
+	return self.isDataFromMyCity 
 end
 
 function GameUIWatchTowerTroopDetail:GetWatchTowerLevel()
@@ -90,7 +91,7 @@ function GameUIWatchTowerTroopDetail:onEnter()
     	viewRect = cc.rect(10, 12, 548,730),
         direction = UIScrollView.DIRECTION_VERTICAL,
     }:addTo(listBg)
-    if self:IsMyCity() then
+    if self:IsDataFromMyCity() then
     	self:RefreshListView()
     else
     	self:RequestPlayerHelpedByTroops()
@@ -274,105 +275,137 @@ end
 
 --数据过滤
 function GameUIWatchTowerTroopDetail:CanShowDragonType()
-	if self:IsMyCity() then
+	if self:IsDataFromMyCity() then
 		if self:IsHelpDefence() then 
 			return true 
 		else
 			return self:GetBelvedere():CanDisplayCommingDragonType(self:GetWatchTowerLevel())
 		end
 	else
-		return self:GetWatchTowerLevel() >= 32
+		if self:IsMyAlliance() then
+			return true
+		else
+			return self:GetWatchTowerLevel() >= 32
+		end
 	end
 end
 
 function GameUIWatchTowerTroopDetail:CanShowDragonLevelAndStar()
-	if self:IsMyCity() then
+	if self:IsDataFromMyCity() then
 		if self:IsHelpDefence() then 
 			return true 
 		else
 			return self:GetWatchTowerLevel() >= 10
 		end
 	else
-		return self:GetWatchTowerLevel() >= 32
+		if self:IsMyAlliance() then
+			return true
+		else
+			return self:GetWatchTowerLevel() >= 32
+		end
 	end
 end
 
 
 function GameUIWatchTowerTroopDetail:CanShowDragonHP()
-	if self:IsMyCity() then
+	if self:IsDataFromMyCity() then
 		if self:IsHelpDefence() then 
 			return true 
 		else
 			return self:GetWatchTowerLevel() >= 12
 		end
 	else
-		return self:GetWatchTowerLevel() >= 32
+		if self:IsMyAlliance() then
+			return true
+		else
+			return self:GetWatchTowerLevel() >= 32
+		end
 	end
 end
 
 function GameUIWatchTowerTroopDetail:CanShowDragonStrength()
-	if self:IsMyCity() then
+	if self:IsDataFromMyCity() then
 		if self:IsHelpDefence() then 
 			return true 
 		else
 			return self:GetWatchTowerLevel() >= 16
 		end
 	else
-		return self:GetWatchTowerLevel() >= 36
+		if self:IsMyAlliance() then
+			return true
+		else
+			return self:GetWatchTowerLevel() >= 36
+		end
 	end
 end
 
 function GameUIWatchTowerTroopDetail:CanShowDragonSkill()
-	if self:IsMyCity() then
+	if self:IsDataFromMyCity() then
 		if self:IsHelpDefence() then 
 			return true 
 		else
 			return self:GetWatchTowerLevel() >= 28
 		end
 	else
-		return self:GetWatchTowerLevel() >= 40
+		if self:IsMyAlliance() then
+			return true
+		else
+			return self:GetWatchTowerLevel() >= 40
+		end
 	end
 end
 
 function GameUIWatchTowerTroopDetail:CanShowSoliderName()
-	if self:IsMyCity() then
+	if self:IsDataFromMyCity() then
 		if self:IsHelpDefence() then 
 			return true 
 		else
 			return self:GetWatchTowerLevel() >= 14
 		end
 	else
-		return self:GetWatchTowerLevel() >= 34
+		if self:IsMyAlliance() then
+			return true
+		else
+			return self:GetWatchTowerLevel() >= 34
+		end
 	end
 end
 
 function GameUIWatchTowerTroopDetail:CanShowSoliderStar()
-	if self:IsMyCity() then
+	if self:IsDataFromMyCity() then
 		if self:IsHelpDefence() then 
 			return true 
 		else
 			return self:GetWatchTowerLevel() >= 18
 		end
 	else
-		return self:GetWatchTowerLevel() >= 34
+		if self:IsMyAlliance() then
+			return true
+		else
+			return self:GetWatchTowerLevel() >= 34
+		end
 	end
 end
 
 
 function GameUIWatchTowerTroopDetail:CanShowDragonEquipment()
-	if self:IsMyCity() then
+	if self:IsDataFromMyCity() then
 		if self:IsHelpDefence() then 
 			return true 
 		else
 			return self:GetWatchTowerLevel() >= 20
 		end
 	else
-		return self:GetWatchTowerLevel() >= 36
+		if self:IsMyAlliance() then
+			return true
+		else
+			return self:GetWatchTowerLevel() >= 36
+		end
 	end
 end
 function GameUIWatchTowerTroopDetail:FileterSoliderCount(count)
 	local watchTower = self:GetWatchTowerLevel()
-	if self:IsMyCity() then
+	if self:IsDataFromMyCity() then
 		if self:IsHelpDefence() then 
 			return GameUtils:formatNumber(count)
 		else
@@ -385,12 +418,16 @@ function GameUIWatchTowerTroopDetail:FileterSoliderCount(count)
 			end
 		end
 	else
-		if watchTower >= 40 then 
-			return GameUtils:formatNumber(count)
-		elseif watchTower >= 38 then
-			return self:FuzzyCount(count)
+		if self:IsMyAlliance() then
+			return true
 		else
-			return "?"
+			if watchTower >= 40 then 
+				return GameUtils:formatNumber(count)
+			elseif watchTower >= 38 then
+				return self:FuzzyCount(count)
+			else
+				return "?"
+			end
 		end
 	end
 end
