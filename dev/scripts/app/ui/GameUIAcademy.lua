@@ -6,6 +6,7 @@
 ------------------------------------------------------------------------------------------------
 local TreeNode = class("TreeNode")
 local property = import("app.utils.property")
+local productionTechs = GameDatas.ProductionTechs.productionTechs
 function TreeNode:ctor(child_id,pos,data)
 	property(self,"child",child_id) -- one child
 	property(self,"pos",pos or {x = 0,y = 0})
@@ -30,27 +31,16 @@ local UIScrollView = import(".UIScrollView")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 
 function GameUIAcademy:GetTempData()
-	local temp = {
-		{key = "1",data = {name = "1",enable = true,need = nil}},
-		{key = "2",data = {name = "2",enable = false,need = "3"}},
-		{key = "3",data = {name = "3",enable = false,need = nil}},
-		{key = "4",data = {name = "4",enable = false,need = "1"}},
-		{key = "5",data = {name = "5",enable = false,need = "2"}},
-		{key = "6",data = {name = "6",enable = false,need = "5"}},
-		{key = "7",data = {name = "7",enable = false,need = "4"}},
-		{key = "8",data = {name = "8",enable = false,need = "7"}},
-		{key = "9",data = {name = "9",enable = false,need = "6"}},
-		{key = "10",data = {name = "10",enable = false,need = "7"}},
-		{key = "11",data = {name = "11",enable = false,need = "8"}},
-		{key = "12",data = {name = "12",enable = false,need = "9"}},
-		{key = "13",data = {name = "13",enable = false,need = "10"}},
-		{key = "14",data = {name = "14",enable = false,need = "15"}},
-		{key = "15",data = {name = "15",enable = false,need = "12"}},
-		{key = "16",data = {name = "16",enable = false,need = "13"}},
-		{key = "17",data = {name = "17",enable = false,need = "14"}},
-		{key = "18",data = {name = "18",enable = false,need = "17"}},
-	}
-	return temp
+	local r = {}
+	for k,v in pairs(productionTechs) do
+		local item = {key = tostring(v.index),data = {enable = true,name = v.name}}
+		if v.unlockBy ~= v.index then
+			item.data.need = tostring(v.unlockBy)
+		end
+		table.insert(r, item)
+	end
+	table.sort( r, function(a,b) return tonumber(a.key) <  tonumber(b.key) end)
+	return r
 end
 
 function GameUIAcademy:ctor(city,building)

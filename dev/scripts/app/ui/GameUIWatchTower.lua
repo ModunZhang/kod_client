@@ -25,7 +25,6 @@ function GameUIWatchTower:GetTabButton()
 	return self.tabButton
 end
 
-
 function GameUIWatchTower:CreateUI()
 	local list,list_node = UIKit:commonListView({
         viewRect = cc.rect(0,0,window.width - 70, window.betweenHeaderAndTab - 10),
@@ -364,25 +363,22 @@ function GameUIWatchTower:GetOtherEventItem(entity)
 end
 
 function GameUIWatchTower:OnEventDetailButtonClicked(entity)
-	print("查看事件详情----->")
 	local strEntityType = entity:GetType()
 	if strEntityType == entity.ENTITY_TYPE.MARCH_OUT then
 		if entity:WithObject():MarchType() == "helpDefence" then
 			NetManager:getHelpDefenceMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
-				dump(msg,"msg--->")
-				UIKit:newGameUI("GameUIWatchTowerTroopDetail",msg,GameUIWatchTowerTroopDetail.DATA_TYPE.MARCH,true)
+				UIKit:newGameUI("GameUIWatchTowerTroopDetail",GameUIWatchTowerTroopDetail.DATA_TYPE.MARCH,msg,DataManager:getUserData()._id)
 					:addToCurrentScene(true)
 			end)
 		else
 			NetManager:getAttackMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
-				dump(msg,"msg--->")
-				UIKit:newGameUI("GameUIWatchTowerTroopDetail",msg,GameUIWatchTowerTroopDetail.DATA_TYPE.HELP_DEFENCE,true)
+				UIKit:newGameUI("GameUIWatchTowerTroopDetail",GameUIWatchTowerTroopDetail.DATA_TYPE.HELP_DEFENCE,msg,DataManager:getUserData()._id)
 					:addToCurrentScene(true)
 			end)
 		end
 	elseif strEntityType == entity.ENTITY_TYPE.STRIKE_OUT then
 		NetManager:getStrikeMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
-			UIKit:newGameUI("GameUIWatchTowerTroopDetail",msg,GameUIWatchTowerTroopDetail.DATA_TYPE.STRIKE,true)
+			UIKit:newGameUI("GameUIWatchTowerTroopDetail",GameUIWatchTowerTroopDetail.DATA_TYPE.STRIKE,msg,DataManager:getUserData()._id)
 					:addToCurrentScene(true)
 		end)
 	end
