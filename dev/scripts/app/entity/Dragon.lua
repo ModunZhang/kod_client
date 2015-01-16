@@ -12,8 +12,8 @@ local config_dragonAttribute = GameDatas.Dragons.dragonAttributes
 local config_equipments = GameDatas.DragonEquipments.equipments
 local config_dragonSkill = GameDatas.Dragons.dragonSkills
 local Localize = import("..utils.Localize")
-local config_equipment_buffs = GameDatas.Dragons.equipmentBuff
-local config_dragoneyrie = GameDatas.DragonEyrie
+local config_equipment_buffs = GameDatas.DragonEquipments.equipmentBuff
+local config_dragoneyrie = GameDatas.DragonEquipments
 local config_alliance_initData_int = GameDatas.AllianceInitData.intInit
 --装备类别/身体部位:左护甲，头盔，右护甲，法球，胸甲，尾刺
 Dragon.DRAGON_BODY = Enum("armguardLeft","crown","armguardRight","orb","chest","sting")
