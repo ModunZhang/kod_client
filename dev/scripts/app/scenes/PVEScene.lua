@@ -20,11 +20,8 @@ local PVEScene = class("PVEScene", MapScene)
 
 local timer = app.timer
 function PVEScene:ctor(user)
-    User:ResetAllListeners()
-    City:ResetAllListeners()
-    Alliance_Manager:GetMyAlliance():ResetAllListeners()
-    self.user = user
     PVEScene.super.ctor(self)
+    self.user = user
 end
 function PVEScene:onEnter()
     PVEScene.super.onEnter(self)
@@ -39,7 +36,8 @@ function PVEScene:CreateSceneLayer()
     return PVELayer.new(self.user)
 end
 function PVEScene:CheckObject(x, y, type)
-    if not self.user:GetCurrentPVEMap():GetObject(x, y) then
+    local object = self.user:GetCurrentPVEMap():GetObject(x, y)
+    if not object or not object:Type() then
         self.user:GetCurrentPVEMap():ModifyObject(x, y, 0, type)
     end
 end
