@@ -551,7 +551,7 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
     -- 联盟旗帜
     local alliance_flag = isOur and alliance:Flag() or enemy_alliance:Flag()
     -- 联盟地形
-    local alliance_terrain = isOur and alliance:TerrainType() or enemy_alliance:TerrainType()
+    local alliance_terrain = isOur and alliance:Terrain() or enemy_alliance:Terrain()
 
 
     local body = WidgetPopDialog.new(726,_("联盟详情")):addToCurrentScene():GetBody()

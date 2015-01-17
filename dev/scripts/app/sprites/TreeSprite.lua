@@ -1,9 +1,9 @@
 local Sprite = import(".Sprite")
 local TreeSprite = class("TreeSprite", Sprite)
 local TREE_MAP = {
-    grass = {"tree_1_510x362.png", "tree_2_510x412.png"},
+    grassLand = {"tree_1_510x362.png", "tree_2_510x412.png"},
     desert = {"tree_1_510x362.png", "tree_2_510x412.png"},
-    icefield = {"tree_1_510x362.png", "tree_2_510x412.png"},
+    iceField = {"tree_1_510x362.png", "tree_2_510x412.png"},
 }
 function TreeSprite:ctor(city_layer, entity, x, y)
     TreeSprite.super.ctor(self, city_layer, entity, x, y)

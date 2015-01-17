@@ -7,12 +7,9 @@ local GameUIAllianceHome = import("..ui.GameUIAllianceHome")
 local Alliance = import("..entity.Alliance")
 
 function AllianceBattleScene:ctor()
-    User:ResetAllListeners()
-    City:ResetAllListeners()
-    Alliance_Manager:GetMyAlliance():ResetAllListeners()
-
     AllianceBattleScene.super.ctor(self)
-
+end
+function AllianceBattleScene:onEnter()
     local manager = ccs.ArmatureDataManager:getInstance()
     manager:removeArmatureFileInfo("animations/green_dragon.ExportJson")
     manager:removeArmatureFileInfo("animations/Red_dragon.ExportJson")
@@ -21,8 +18,7 @@ function AllianceBattleScene:ctor()
     manager:addArmatureFileInfo("animations/green_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Blue_dragon.ExportJson")
-end
-function AllianceBattleScene:onEnter()
+    
     AllianceBattleScene.super.onEnter(self)
     self:CreateAllianceUI()
     local location = self:GetAlliance():GetSelf().location

@@ -13,7 +13,6 @@ function MultiAllianceLayer:ctor(arrange, ...)
     local manager = ccs.ArmatureDataManager:getInstance()
     manager:addArmatureFileInfo("animations/dragon_red/dragon_red.ExportJson")
 
-
     Observer.extend(self)
     MultiAllianceLayer.super.ctor(self, 0.4, 1.2)
     self.arrange = arrange
@@ -24,39 +23,32 @@ function MultiAllianceLayer:ctor(arrange, ...)
     self:InitLineNode()
     self:InitAllianceView()
     self:InitAllianceEvent()
-    ---
-    local timer = app.timer
-    self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function()
-        local cur_time = timer:GetServerTime()
-        for id, corps in pairs(self.corps_map) do
-            if corps then
-                local march_info = corps.march_info
-                local total_time = march_info.finish_time - march_info.start_time
-                local elapse_time = cur_time - march_info.start_time
-                if elapse_time <= total_time then
-                    local cur_vec = cc.pAdd(cc.pMul(march_info.normal, march_info.speed * elapse_time), march_info.start_info.real)
-                    corps:setPosition(cur_vec.x, cur_vec.y)
-                else
-                    self:DeleteCorpsById(id)
-                end
-            end
-        end
-    end)
-    self:scheduleUpdate()
-    self:InitAllianceEvent()
     self:AddOrRemoveAllianceEvent(true)
+    self:StartCorpsTimer()
 end
 function MultiAllianceLayer:onCleanup()
     self:AddOrRemoveAllianceEvent(false)
 end
 function MultiAllianceLayer:InitBackground()
     if #self.alliances == 1 then
-        self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background.tmx"):addTo(self, ZORDER.BACKGROUND)
+        self:ChangeTerrain(self.alliances[1]:Terrain())
+        self:ReloadBackGround()
     elseif MultiAllianceLayer.ARRANGE.H == self.arrange then
         self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_h.tmx"):addTo(self, ZORDER.BACKGROUND)
     else
         self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_v.tmx"):addTo(self, ZORDER.BACKGROUND)
     end
+end
+function MultiAllianceLayer:ReloadBackGround()
+    if self.background then
+        self.background:removeFromParent()
+    end
+    if #self.alliances == 1 then
+        self.background = cc.TMXTiledMap:create(string.format("tmxmaps/alliance_%s.tmx", self:Terrain())):addTo(self, ZORDER.BACKGROUND)
+    end
+end
+function MultiAllianceLayer:Terrain()
+    return self.terrain_type
 end
 function MultiAllianceLayer:InitBuildingNode()
     self.building = display.newNode():addTo(self, ZORDER.BUILDING)
@@ -146,11 +138,30 @@ function MultiAllianceLayer:GetEnemyAlliance()
     return self:GetMyAlliance():GetEnemyAlliance()
 end
 
-
 function MultiAllianceLayer:InitAllianceEvent()
     for _, v in ipairs(self.alliances) do
         self:CreateAllianceCorps(v)
     end
+end
+function MultiAllianceLayer:StartCorpsTimer()
+    local timer = app.timer
+    self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function()
+        local cur_time = timer:GetServerTime()
+        for id, corps in pairs(self.corps_map) do
+            if corps then
+                local march_info = corps.march_info
+                local total_time = march_info.finish_time - march_info.start_time
+                local elapse_time = cur_time - march_info.start_time
+                if elapse_time <= total_time then
+                    local cur_vec = cc.pAdd(cc.pMul(march_info.normal, march_info.speed * elapse_time), march_info.start_info.real)
+                    corps:setPosition(cur_vec.x, cur_vec.y)
+                else
+                    self:DeleteCorpsById(id)
+                end
+            end
+        end
+    end)
+    self:scheduleUpdate()
 end
 function MultiAllianceLayer:CreateAllianceCorps(alliance)
     table.foreachi(alliance:GetAttackMarchEvents(),function(_,event)
@@ -170,6 +181,10 @@ end
 
 
 --changed of marchevent
+function MultiAllianceLayer:ChangeTerrain(terrain_type)
+    self.terrain_type = terrain_type
+    self:ReloadBackGround()
+end
 function MultiAllianceLayer:OnAttackMarchEventDataChanged(changed_map)
     self:ManagerCorpsFromChangedMap(changed_map)
 end
