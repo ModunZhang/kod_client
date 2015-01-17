@@ -28,7 +28,13 @@ local function transition_(scene, status)
             transition.sequence{
                 cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
                 cc.FadeIn:create(0.75),
-                cc.CallFunc:create(function() scene:hideOutShowIn() end),
+                cc.CallFunc:create(function() 
+                    if scene.hideOutEnterShow then
+                        scene:hideOutEnterShow()
+                    else
+                        scene:hideOutShowIn() 
+                    end
+                end),
                 cc.DelayTime:create(0.5),
                 cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
                 cc.FadeOut:create(0.75),
@@ -134,7 +140,6 @@ end
 function MyApp:onEnterBackground()
     LuaUtils:outputTable("onEnterBackground", {})
     self:flushIf()
-    NetManager:disconnect()
 end
 
 function MyApp:onEnterForeground()
@@ -187,7 +192,7 @@ function MyApp:EnterMyAllianceSceneWithTips(tips)
     end):VisibleXButton(false)
 end
 function MyApp:EnterMyAllianceScene()
-     if Alliance_Manager:GetMyAlliance():IsDefault() then
+    if Alliance_Manager:GetMyAlliance():IsDefault() then
         UIKit:showMessageDialog(_("提示"),_("未加入联盟!"),function()end)
         return
     end
@@ -244,4 +249,5 @@ function MyApp:EnterViewModelAllianceScene(alliance_id)
 end
 
 return MyApp
+
 
