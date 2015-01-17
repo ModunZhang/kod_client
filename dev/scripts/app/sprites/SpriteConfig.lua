@@ -112,7 +112,7 @@ create_building_config(
 )
 create_building_config(
     "lumbermill"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "lumbermill_269x232.png", offset(20, 100), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "lumbermill_270x232.png", offset(20, 100), scale(1))
 )
 create_building_config(
     "mill"
@@ -136,19 +136,19 @@ create_building_config(
 )
 create_building_config(
     "workShop"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "academy_214x220.png", offset(20, 120), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "workShop_230x240.png", offset(20, 130), scale(1))
 )
 create_building_config(
     "trainingGround"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "academy_214x220.png", offset(20, 120), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "trainingGround_270x194.png", offset(20, 100), scale(1))
 )
 create_building_config(
     "hunterHall"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "academy_214x220.png", offset(20, 120), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "hunterHall_246x234.png", offset(20, 100), scale(1))
 )
 create_building_config(
     "stable"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "academy_214x220.png", offset(20, 120), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "stable_252x250.png", offset(20, 130), scale(1))
 )
 -- 装饰小屋
 create_building_config(

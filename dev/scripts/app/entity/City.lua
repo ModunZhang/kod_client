@@ -123,7 +123,10 @@ function City:InitWithJsonData(userData)
     -- table.insert(init_unlock_tiles, {x = 4, y = 2})
     -- table.insert(init_unlock_tiles, {x = 4, y = 1})
 
-    -- table.insert(init_unlock_tiles, {x = 1, y = 5})
+    table.insert(init_unlock_tiles, {x = 1, y = 5})
+    table.insert(init_unlock_tiles, {x = 2, y = 5})
+    table.insert(init_unlock_tiles, {x = 3, y = 5})
+    table.insert(init_unlock_tiles, {x = 4, y = 5})
     self:InitTiles(5, 5, init_unlock_tiles)
 
     local hosue_events = userData.houseEvents
