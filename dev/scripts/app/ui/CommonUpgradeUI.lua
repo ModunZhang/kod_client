@@ -8,6 +8,8 @@ local MaterialManager = import("..entity.MaterialManager")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
+local WidgetAccelerateGroup = import("..widget.WidgetAccelerateGroup")
+
 local SpriteConfig = import("..sprites.SpriteConfig")
 
 
@@ -529,81 +531,7 @@ end
 
 function CommonUpgradeUI:CreateAccButtons()
     -- 8个加速按钮单独放置在一个layer上方便处理事件
-    self.acc_button_layer = display.newLayer()
-    self.acc_button_layer:addTo(self)
-    self.acc_button_layer:setTouchSwallowEnabled(false)
-    self.acc_button_layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function ( event )
-        if event.name=="began" then
-            self:ResetAccButtons()
-        end
-        return true
-    end, 1)
-    local gap_x , gap_y= 148,140
-    self.acc_button_table = {}
-    self.time_button_tbale = {}
-    for i=1,8 do
-        -- 按钮背景框
-        display.newSprite("upgrade_props_box.png", display.cx-220 + gap_x*math.mod(i,4), display.top-640-gap_y*math.floor((i-1)/4)):addTo(self.acc_layer)
-        -- 花销数值背景
-        -- WidgetUIBackGround.new({width=89,height=26},WidgetUIBackGround.STYLE_TYPE.STYLE_3):align(display.CENTER, display.cx-220 + gap_x*math.mod(i,4), display.top-710-gap_y*math.floor((i-1)/4)):addTo(self.acc_layer)
-        local cost_bg = display.newSprite("back_ground_138x34.png", display.cx-220 + gap_x*math.mod(i,4), display.top-710-gap_y*math.floor((i-1)/4)):addTo(self.acc_layer):scale(0.8)
-        -- 花销数值
-        cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = "X 600",
-            font = UIKit:getFontFilePath(),
-            size = 20,
-            color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.CENTER, display.cx-220+gap_x*math.mod(i,4), display.top-710-gap_y*math.floor((i-1)/4))
-            :addTo(self.acc_layer)
-        -- 时间按钮
-        local time_button = WidgetPushButton.new({normal = "upgrade_time_"..i..".png"},{scale9 = false}
-            ,{
-                disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
-            })
-            :setButtonEnabled(false)
-            :SetFilter({
-                disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
-            })
-        -- 确认加速按钮
-        local acc_button = WidgetPushButton.new({normal = "upgrade_acc_button_1.png",pressed="upgrade_acc_button_2.png"})
-        time_button:onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                self:ResetAccButtons()
-                acc_button:setVisible(true)
-                time_button:setVisible(false)
-                self:getParent():addChild(SmallDialogUI.new(
-                    {
-                        listener = function ()
-                            acc_button:setVisible(false)
-                            time_button:setVisible(true)
-                        end,
-                        x = math.floor((i-1)/4)==0 and cost_bg:getPositionX() or
-                        math.floor((i-1)/4)==1 and acc_button:getPositionX(),
-                        y = math.floor((i-1)/4)==0 and cost_bg:getPositionY()-cost_bg:getContentSize().height/2 or
-                        math.floor((i-1)/4)==1 and acc_button:getPositionY()+acc_button:getCascadeBoundingBox().size.height/2,
-                        tips1 = _("使用立即减少升级时间"),
-                        tips2 = _("使用立即减少5Min时间消耗"),
-                        direction = math.floor((i-1)/4), -- 0表示dialog的箭头指向上方，1反之
-                    }
-                ),2)
-            end
-        end):align(display.CENTER, display.cx-220+gap_x*math.mod(i,4), display.top-640-gap_y*math.floor((i-1)/4)):addTo(self.acc_button_layer)
-        time_button:setScale(0.7)
-        acc_button:onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-
-                acc_button:setVisible(false)
-                time_button:setVisible(true)
-
-                -- print("确定按钮呗点中")
-            end
-        end):align(display.CENTER, display.cx-220+gap_x*math.mod(i,4), display.top-640-gap_y*math.floor((i-1)/4)):addTo(self.acc_button_layer)
-        acc_button:setVisible(false)
-        self.acc_button_table[i] = acc_button
-        self.time_button_tbale[i] = time_button
-    end
-
+    self.acc_button_layer = WidgetAccelerateGroup.new(WidgetAccelerateGroup.SPEEDUP_TYPE.BUILDING):addTo(self.acc_layer):align(display.BOTTOM_CENTER,window.cx,window.bottom_top+10)
     self:visibleChildLayers()
 end
 
@@ -690,21 +618,3 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
