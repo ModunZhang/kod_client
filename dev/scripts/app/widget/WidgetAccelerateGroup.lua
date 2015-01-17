@@ -25,7 +25,7 @@ end)
 
 WidgetAccelerateGroup.SPEEDUP_TYPE = Enum("BUILDING","TECHNOLOGY")
 
-function WidgetAccelerateGroup:ctor(speed_type)
+function WidgetAccelerateGroup:ctor(speed_type,speed_up_callback)
 	local width,height = 640,500
 	self.acc_button_layer = display.newNode()
 	self.acc_button_layer:setContentSize(cc.size(width,height))
@@ -94,6 +94,7 @@ function WidgetAccelerateGroup:ctor(speed_type)
             if event.name == "CLICKED_EVENT" then
                 acc_button:setVisible(false)
                 time_button:setVisible(true)
+                speed_up_callback(i)
             end
         end):align(display.CENTER, width/2-220+gap_x*math.mod(i-1,4), 230-gap_y*math.floor((i-1)/4)):addTo(self.acc_button_layer)
         acc_button:setVisible(false)
