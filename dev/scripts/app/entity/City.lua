@@ -1485,7 +1485,7 @@ function City:FastUpdateAllTechsLockState()
 end
 
 function City:DumpAllTechs()
-    dump(self.productionTechs,"productionTechs-->" .. os.time())
+    -- dump(self.productionTechs,"productionTechs-->" .. os.time())
 end
 
 return City

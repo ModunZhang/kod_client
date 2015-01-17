@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="34" height="19" tilewidth="240" tileheight="240">
+ <tileset firstgid="1" name="terrain" tilewidth="240" tileheight="240">
+  <image source="terrain.png" width="960" height="1440"/>
+ </tileset>
+ <layer name="layer1" width="34" height="19">
+  <data encoding="base64" compression="zlib">
+   eJyNlsFygzAMRHWFxjTQmvK5/fTaE+/M60YkHDTYxrFepJVMjYjabG+2DdN8xbrvWcfzaHaL+F3as9vUbB42wfq8jHFJ9uj8fYwrxhvGK7gq1r6a3QcHGUo8c2hcMNc+xmCFbfAr2+I5bp3js3Ho3AU+3Pc7Dvkhh+dB78m3gUM+yLHENY7F8s1YKP7yz3hx/BMPfUx2rnNQPxkH9cg8uD/mhvH6joc+SlzjWBKO+eR8xoN5YHxYL65T55BvcbBWpOnNjPVDf3rHPXXE4wadkmOG31ccqtvV/DIv9Om109e6PlQvJd5zcI0cfrbrlrXC/GncOT6GTov50ZiacA7pyuPBOt6TdWqm2zE4yot4OAdj5/2jwh/rhPNqJo57Eg/Pi5tzZLpwXTorx7pf6NNrk/6994vZ+7f/3yw+ZFT/cF9nHFlPn+J/TXj/YJ3wjuVTfZ25cA6PwRkHe1h2v/jdR1bqgxxZLrJ86Xf83373uj6ZJ/axLB6ZNlk7Hjv3QRbv69S03h0XOXjHsMaVK+8Vfrf5XezfB/we85jzjnUO9vg+/wMPUzA+
+  </data>
+ </layer>
+</map>

@@ -31,16 +31,7 @@ function MultiAllianceLayer:onCleanup()
     self:AddOrRemoveAllianceEvent(false)
 end
 function MultiAllianceLayer:InitBackground()
-    self:ChangeTerrain()
-    -- if #self.alliances == 1 then
-    --     self:ChangeTerrain()
-    -- elseif MultiAllianceLayer.ARRANGE.H == self.arrange then
-    --     -- self:ChangeTerrain()
-    --     self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_h.tmx"):addTo(self, ZORDER.BACKGROUND)
-    -- else
-    --     -- self:ChangeTerrain()
-    --     self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_v.tmx"):addTo(self, ZORDER.BACKGROUND)
-    -- end
+    self:ReloadBackGround()
 end
 function MultiAllianceLayer:ChangeTerrain()
     self:ReloadBackGround()
@@ -52,24 +43,16 @@ function MultiAllianceLayer:ReloadBackGround()
     if self.background then
         self.background:removeFromParent()
     end
-    if #self.alliances == 1 then
-        self.background = cc.TMXTiledMap:create(string.format("tmxmaps/alliance_%s.tmx", self.alliances[1]:Terrain())):addTo(self, ZORDER.BACKGROUND)
-    elseif MultiAllianceLayer.ARRANGE.H == self.arrange then
-        print(self:GetMapFileByArrangeAndTerrain())
-        self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_h.tmx"):addTo(self, ZORDER.BACKGROUND)
-    else
-        print(self:GetMapFileByArrangeAndTerrain())
-        self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_v.tmx"):addTo(self, ZORDER.BACKGROUND)
-    end
+    self.background = cc.TMXTiledMap:create(self:GetMapFileByArrangeAndTerrain()):addTo(self, ZORDER.BACKGROUND)
 end
 function MultiAllianceLayer:GetMapFileByArrangeAndTerrain()
-    assert(self.arrange)
-    local first, second = unpack(self.alliances)
-    if MultiAllianceLayer.ARRANGE.H == self.arrange then
-        return string.format("tmxmaps/alliance_%s_%s_%s.tmx", first, second, "h")
-    else
-        return string.format("tmxmaps/alliance_%s_%s_%s.tmx", first, second, "v")
+    if #self.alliances == 1 then
+        return string.format("tmxmaps/alliance_%s.tmx", self.alliances[1]:Terrain())
     end
+    local first, second = unpack(self.alliances)
+    local terrain1, terrain2 = first:Terrain(), second:Terrain()
+    local arrange = MultiAllianceLayer.ARRANGE.H == self.arrange and "h" or "v"
+    return string.format("tmxmaps/alliance_%s_%s_%s.tmx", arrange, terrain1, terrain2)
 end
 function MultiAllianceLayer:InitBuildingNode()
     self.building = display.newNode():addTo(self, ZORDER.BUILDING)
@@ -101,19 +84,19 @@ function MultiAllianceLayer:InitAllianceView()
     if MultiAllianceLayer.ARRANGE.H == self.arrange then
         alliance_view1 = AllianceView.new(self, self.alliances[1], 0):addTo(self)
         alliance_view2 = AllianceView.new(self, self.alliances[2], 51):addTo(self)
-        local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(50.5, -3.5)
-        local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(50.5, 51.5)
-        display.newLine({{sx, sy}, {ex, ey}},
-            {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
-                borderWidth = 5}):addTo(self.building)
+        -- local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(50.5, -3.5)
+        -- local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(50.5, 51.5)
+        -- display.newLine({{sx, sy}, {ex, ey}},
+        --     {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
+        --         borderWidth = 5}):addTo(self.building)
     else
-        alliance_view1 = AllianceView.new(self, self.alliances[1], 0, 104):addTo(self)
-        alliance_view2 = AllianceView.new(self, self.alliances[2], 0, 53):addTo(self)
-        local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(-0.5, 51.5)
-        local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(51.5, 51.5)
-        display.newLine({{sx, sy}, {ex, ey}},
-            {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
-                borderWidth = 5}):addTo(self.building)
+        alliance_view1 = AllianceView.new(self, self.alliances[1], 0, 105):addTo(self)
+        alliance_view2 = AllianceView.new(self, self.alliances[2], 0, 54):addTo(self)
+        -- local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(-0.5, 51.5)
+        -- local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(51.5, 51.5)
+        -- display.newLine({{sx, sy}, {ex, ey}},
+        --     {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
+        --         borderWidth = 5}):addTo(self.building)
     end
     self.alliance_views = {alliance_view1, alliance_view2}
 end
@@ -409,6 +392,7 @@ end
 
 
 return MultiAllianceLayer
+
 
 
 
