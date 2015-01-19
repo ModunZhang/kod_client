@@ -528,6 +528,47 @@ local DRAGON_BUFFER = {
     ["blueDragon"] = _("蓝龙能提升部队在草地上的作战能力。"),
     ["greenDragon"] = _("绿龙能提升部队在草地上的作战能力。"),
 }
+local PRODUCTIONTECHNOLOGY_NAME = {
+    crane = _("起重机"),
+    fastFix = _("快速维修"), 
+    reinforcing = _("钢筋加固"),
+    rescueTent = _("急救帐篷"),
+    colonization = _("殖民地"),
+    negotiation = _("谈判技巧"),
+    stoneCarving = _("石雕技巧"),
+    ironSmelting = _("冶炼技巧"),
+    seniorTower = _("高级箭塔"),
+    trap = _("陷阱"),
+    hideout = _("暗仓建设"),
+    logistics = _("后勤学"),
+    forestation = _("造林技巧"),
+    cropResearch = _("种植技巧"),
+    beerSupply = _("啤酒供应"),
+    healingAgent = _("再生药剂"),
+    sketching = _("工程绘图"),
+    mintedCoin = _("铸造钱币"),
+}
+
+local PRODUCTIONTECHNOLOGY_BUFFER = {
+    crane = _("增加建筑速度"),
+    fastFix = _("增加城墙维修速度"), 
+    reinforcing = _("增加城墙的单位血量防御值"),
+    rescueTent = _("增加医院的伤兵容量"),
+    colonization = _("增加占领村落时采集资源的速度"),
+    negotiation = _("增加劝降敌军的几率"),
+    stoneCarving = _("增加石料产量"),
+    ironSmelting = _("增加铁矿产量"),
+    seniorTower = _("增加防御箭塔的攻击力"),
+    trap = _("增加监狱的抓捕士兵的上限"),
+    hideout = _("增加资源保护比例"),
+    logistics = _("增加马车的资源和材料容量的上限"),
+    forestation = _("增加木材产量"),
+    cropResearch = _("增加粮食产量"),
+    beerSupply = _("住宅城民上限加成"),
+    healingAgent = _("增加治愈伤兵速度"),
+    sketching = _("增加生产材料速度"),
+    mintedCoin = _("提升市政厅获得银币产量"),
+}
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
@@ -551,7 +592,9 @@ return {
     terrain = TERRAIN,
     hate_dragon = HATE_DRAGON,
     dragon_buffer = DRAGON_BUFFER,
-    sell_type = SELL_TYPE
+    sell_type = SELL_TYPE,
+    productiontechnology_name = PRODUCTIONTECHNOLOGY_NAME,
+    productiontechnology_buffer = PRODUCTIONTECHNOLOGY_BUFFER,
 }
 
 

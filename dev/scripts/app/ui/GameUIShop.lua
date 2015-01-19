@@ -932,6 +932,23 @@ function GameUIShop:onEnter()
         :onButtonClicked(function(event)
             NetManager:getFindAllianceToFightPromose()
         end)
+     WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "升级学院生产科技",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color =  UIKit:hex2c3b(0xfff3c7)
+    }))
+        :addTo(content)
+        :align(display.CENTER, window.left + 140, window.top - 1600)
+        :onButtonClicked(function(event)
+            NetManager:getUpgradeProductionTechPromise("crane",false):next(function(msg)
+                dump(msg)
+            end)
+        end)
 
     item:addContent(content)
     item:setItemSize(640, 1000)
