@@ -1434,6 +1434,19 @@ function NetManager:getRemoveMySellItemPromise(itemId)
         itemId = itemId
     }, "下架商品失败!"), get_playerdata_callback()):next(get_response_msg)
 end
+-- 升级军事科技
+local function upgrade_military_tech_promise(techName,finishNow)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.upgradeMilitaryTech", {
+        techName = techName,
+        finishNow = finishNow,
+    }, "升级军事科技失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+function NetManager:getInstantUpgradeMilitaryTechPromise(techName)
+    return upgrade_military_tech_promise(techName,true)
+end
+function NetManager:getUpgradeMilitaryTechPromise(techName)
+    return upgrade_military_tech_promise(techName,false)
+end
 
 --
 ----------------------------------------------------------------------------------------------------------------

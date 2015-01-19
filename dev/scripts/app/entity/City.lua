@@ -28,7 +28,8 @@ City.LISTEN_TYPE = Enum("LOCK_TILE",
     "CITY_NAME",
     "HELPED_BY_TROOPS",
     "HELPED_TO_TROOPS",
-    "PRODUCTION_DATA_CHANGED")
+    "PRODUCTION_DATA_CHANGED",
+    "MILITARY_TECHS_DATA_CHANGED")
 City.RESOURCE_TYPE_TO_BUILDING_TYPE = {
     [ResourceManager.RESOURCE_TYPE.WOOD] = "woodcutter",
     [ResourceManager.RESOURCE_TYPE.FOOD] = "farmer",
@@ -51,6 +52,7 @@ function City:ctor(json_data)
     self.helpedByTroops = {}
     self.helpToTroops = {}
     self.productionTechs = {}
+    self.militaryTechs = {}
     self.build_queue = 0
 
     self.locations_decorators = {}
@@ -524,7 +526,7 @@ function City:IsUnLockedAtIndex(x, y)
 end
 function City:IsTileCanbeUnlockAt(x, y)
     -- 没有第五圈
-    if x == 5 or y == 5 then
+    if x == 5 then
         return false
     end
     -- 是否解锁
@@ -911,6 +913,9 @@ function City:OnUserDataChanged(userData, current_time)
     --科技
     self:OnProductionTechsDataChanged(userData.productionTechs)
     self:__OnProductionTechsDataChanged(userData.__productionTechs)
+    --军事科技
+    self:OnMilitaryTechsDataChanged(userData.militaryTechs)
+    self:__OnMilitaryTechsDataChanged(userData.__militaryTechs)
     -- 更新兵种
     self.soldier_manager:OnUserDataChanged(userData)
     -- 更新材料，这里是广义的材料，包括龙的装备
@@ -1427,7 +1432,7 @@ end
 
 function City:FindTechByName(name)
     self:IteratorTechs(function(index,tech)
-        if tech:Name() == name then 
+        if tech:Name() == name then
             return name
         end
     end)
@@ -1479,19 +1484,59 @@ function City:CheckDependTechsLockState(tech)
 end
 
 function City:FastUpdateAllTechsLockState()
-   self:IteratorTechs(function(index,tech)
+    self:IteratorTechs(function(index,tech)
         local unLockByTech = self:FindTechByIndex(tech:UnlockBy())
         if unLockByTech and tech:Index() < 10 then --暂时不开放
             tech:SetIsLock(tech:UnlockLevel() <= unLockByTech:Level())
         end
-   end)
+    end)
 end
 
 function City:DumpAllTechs()
-    -- dump(self.productionTechs,"productionTechs-->" .. os.time())
+-- dump(self.productionTechs,"productionTechs-->" .. os.time())
+end
+
+function City:OnMilitaryTechsDataChanged(militaryTechs)
+    if not militaryTechs then return end
+    for name,v in pairs(militaryTechs) do
+        self.militaryTechs[name] = v
+    end
+end
+function City:IteratorMilitaryTechs(func)
+    for name,v in pairs(self.militaryTechs) do
+        func(k,v)
+    end
+end
+function City:FindMilitaryTechsByBuildingType(building_type)
+    local techs = {}
+    self.IteratorMilitaryTechs(function ( name,v )
+        if building_type == v.building then
+            table.insert(techs, v)
+        end
+    end)
+    return techs
+end
+function City:__OnMilitaryTechsDataChanged(__militaryTechs)
+    if not __militaryTechs then return end
+    local changed_map = GameUtils:Event_Handler_Func(
+        __militaryTechs
+        ,function(data)
+            assert(false,"会添加军事科技?")
+        end
+        ,function(data)
+            return data
+        end
+        ,function(data)
+            assert(false,"会删除军事科技?")
+        end
+    )
+    self:NotifyListeneOnType(City.LISTEN_TYPE.MILITARY_TECHS_DATA_CHANGED, function(listener)
+        listener:OnMilitaryTechsDataChanged(self,changed_map)
+    end)
 end
 
 return City
+
 
 
 

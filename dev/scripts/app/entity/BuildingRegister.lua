@@ -20,6 +20,10 @@ local BuildingRegister = {
     hospital        = import("..entity.HospitalUpgradeBuilding"),
     tradeGuild 	    = import("..entity.TradeGuildUpgradeBuilding"),
     academy         = import("..entity.UpgradeBuilding"),
+    trainingGround  = import("..entity.UpgradeBuilding"),
+    stable          = import("..entity.UpgradeBuilding"),
+    hunterHall      = import("..entity.UpgradeBuilding"),
+    workshop        = import("..entity.UpgradeBuilding"),
 }
 setmetatable(BuildingRegister, {__index = function(t, k)
 	return UpgradeBuilding
