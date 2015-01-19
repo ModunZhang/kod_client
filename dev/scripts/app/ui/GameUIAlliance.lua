@@ -1348,10 +1348,10 @@ function GameUIAlliance:CreateInvateUI()
             })
         )
         :onButtonClicked(function(event)
-            local playerName = string.trim(editbox:getText())
-            if string.len(playerName) == 0 then
+            local playerID = string.trim(editbox:getText())
+            if string.len(playerID) == 0 then
                 FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("请输入邀请的玩家名称"))
+                    :SetPopMessage(_("请输入邀请的玩家ID"))
                     :CreateOKButton(
                         {
                             listener =  function()end
@@ -1360,7 +1360,7 @@ function GameUIAlliance:CreateInvateUI()
                     :AddToCurrentScene()
                 return
             end
-            NetManager:getInviteToJoinAlliancePromise(playerName)
+            NetManager:getInviteToJoinAlliancePromise(playerID)
                 :next(function(result)
                     layer:removeFromParent(true)
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))
