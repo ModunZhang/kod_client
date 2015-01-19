@@ -12,7 +12,7 @@ function SingleTreeSprite:ctor(city_layer, x, y)
     local ax, ay = city_layer:GetLogicMap():ConvertToMapPosition(x, y)
     SingleTreeSprite.super.ctor(self, city_layer, nil, ax, ay)
     self:GetSprite():align(display.BOTTOM_CENTER)
-    self:CreateBase()
+    -- self:CreateBase()
 end
 function SingleTreeSprite:ReloadSpriteCauseTerrainChanged()
 	self.sprite:removeFromParent()
