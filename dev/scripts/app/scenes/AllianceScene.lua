@@ -6,35 +6,29 @@ local AllianceScene = class("AllianceScene", MapScene)
 local Alliance = import("..entity.Alliance")
 local GameUIAllianceHome = import("..ui.GameUIAllianceHome")
 function AllianceScene:ctor()
-    User:ResetAllListeners()
-    City:ResetAllListeners()
-    Alliance_Manager:GetMyAlliance():ResetAllListeners()
-
     AllianceScene.super.ctor(self)
-
+end
+function AllianceScene:onEnter()
     local manager = ccs.ArmatureDataManager:getInstance()
-    manager:removeArmatureFileInfo("animations/chuizidonghua.ExportJson")
-    manager:removeArmatureFileInfo("animations/green_dragon.ExportJson")
-    manager:removeArmatureFileInfo("animations/Red_dragon.ExportJson")
-    manager:removeArmatureFileInfo("animations/Blue_dragon.ExportJson")
-
-    manager:addArmatureFileInfo("animations/chuizidonghua.ExportJson")
     manager:addArmatureFileInfo("animations/green_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Blue_dragon.ExportJson")
 
+
+    AllianceScene.super.onEnter(self)
     
+    self:CreateAllianceUI()
+    self:GotoCurrectPosition()
+    app:GetAudioManager():PlayGameMusic("AllianceScene")
+    self:GetSceneLayer():ZoomTo(1)
+
+    self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.OPERATION)
 end
-function AllianceScene:onEnter()
-    AllianceScene.super.onEnter(self)
-    self:CreateAllianceUI()
+function AllianceScene:GotoCurrectPosition()
     local location = self:GetAlliance():GetSelf().location
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(location.x, location.y)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
-    -- self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
-    app:GetAudioManager():PlayGameMusic("AllianceScene")
-    self:GetSceneLayer():ZoomTo(1)
 end
 
 function AllianceScene:CreateAllianceUI()
@@ -51,7 +45,7 @@ function AllianceScene:GetAlliance()
     return Alliance_Manager:GetMyAlliance()
 end
 function AllianceScene:onExit()
-    -- self:GetAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    self:GetAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     AllianceScene.super.onExit(self)
 end
 function AllianceScene:CreateSceneLayer()
@@ -67,11 +61,17 @@ function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
         end
     end
 end
--- function AllianceScene:OnBasicChanged(alliance,changed_map)
---     if changed_map.status and changed_map.status.new == 'prepare' then
---         app:EnterMyAllianceScene()
---     end
--- end
+function AllianceScene:OnBasicChanged(alliance,changed_map)
+    -- if changed_map.status and changed_map.status.new == 'prepare' then
+    --     app:EnterMyAllianceScene()
+    -- end
+    if changed_map.terrain then
+        app:EnterMyAllianceScene()
+    end
+end
+function AllianceScene:ChangeTerrain(terrain_type)
+    self:GetSceneLayer():ChangeTerrain(terrain_type)
+end
 function AllianceScene:OnOperation(alliance,operation_type)
     if operation_type == "quit" then
         app:EnterMyCityScene()

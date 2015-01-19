@@ -46,25 +46,49 @@ function GameUIUpgradeTechnology:RefreshUI()
         self.next_effect_val_label:setString(self:GetProductionTechnology():GetNextLevelBuffEffectVal() * 100  .. "%")
         self.time_label:setString(GameUtils:formatTimeStyle1(self:GetProductionTechnology():GetLevelUpCost().buildTime))
         self.need_gems_label:setString(self:GetUpgradeNowGems())
+        self.buff_time_label:show()
+        self.need_gems_icon:show()
+        self.time_icon:show()
+        self.upgrade_button:show()
+        self.upgradeNowButton:show()
         self:RefreshRequirementList()
     else
         self.time_label:hide()
         self.need_gems_label:hide()
         self.next_effect_val_label:hide()
-        self.next_effect_desc_label:hide()
+        self.next_effect_desc_label:setString("等级已满")
+        self.buff_time_label:hide()
+        self.need_gems_icon:hide()
+        self.time_icon:hide()
+        self.upgrade_button:hide()
+        self.upgradeNowButton:hide()
     end
 end
 
 function GameUIUpgradeTechnology:GetTechIcon()
     local bg = display.newSprite("technology_bg_116x116.png"):scale(0.95)
     local icon_image = self:GetProductionTechnology():GetImageName()
-    display.newSprite(icon_image):addTo(bg):pos(58,58):scale(0.85)
+    bg.enable_icon = display.newSprite(icon_image):addTo(bg):pos(58,58):scale(0.85)
+    bg.unable_icon = display.newFilteredSprite(icon_image,"GRAY", {0.2,0.5,0.1,0.1}):addTo(bg):pos(58,58):scale(0.85)
+    bg.lock_icon = display.newSprite("technology_lock_40x54.png"):addTo(bg):pos(58,58)
+    bg.changeState = function(enable)
+        if enable then
+            bg.enable_icon:show()
+            bg.unable_icon:hide()
+            bg.lock_icon:hide()
+        else
+            bg.enable_icon:hide()
+            bg.unable_icon:show()
+            bg.lock_icon:show()
+        end
+    end
+    bg.changeState(self:GetProductionTechnology():Enable())
     return bg
 end
 
 function GameUIUpgradeTechnology:BuildUI()
 	UIKit:shadowLayer():addTo(self)
-	local bg_node =  WidgetUIBackGround.new({height = HEIGHT,isFrame = "no"}):addTo(self):align(display.TOP_CENTER, window.cx, window.top_bottom)
+	local bg_node =  WidgetUIBackGround.new({height = HEIGHT,isFrame = "no"}):addTo(self):align(display.TOP_CENTER, window.cx, window.top_bottom - 100)
 	local title_bar = display.newSprite("alliance_blue_title_600x42.png"):align(display.BOTTOM_CENTER,304,HEIGHT - 15):addTo(bg_node)
 	UIKit:closeButton():align(display.RIGHT_BOTTOM,600, 0):addTo(title_bar):onButtonClicked(function()
 		self:leftButtonClicked()
@@ -142,7 +166,7 @@ function GameUIUpgradeTechnology:BuildUI()
     	:addTo(bg_node)
     	:scale(0.5)
     	:align(display.LEFT_TOP, btn_now:getPositionX(), btn_now:getPositionY() - 65 - 10)
-
+    self.need_gems_icon = gem
     self.need_gems_label = UIKit:ttfLabel({
     	text = "",--self:GetUpgradeNowGems(),
     	size = 20,
@@ -155,7 +179,7 @@ function GameUIUpgradeTechnology:BuildUI()
     	:addTo(bg_node)
     	:scale(0.6)
     	:align(display.LEFT_TOP, btn_bg:getPositionX() - 185,btn_bg:getPositionY() - 65 - 10)
-
+    self.time_icon = time_icon
     self.time_label = UIKit:ttfLabel({
     	text = "",--GameUtils:formatTimeStyle1(self:GetProductionTechnology():GetLevelUpCost().buildTime),
     	size = 18,
@@ -186,8 +210,21 @@ end
 
 function GameUIUpgradeTechnology:GetUpgradeRequirements()
     local requirements = {}
-    local cost =  self:GetProductionTechnology():GetLevelUpCost()
+    local current_tech = self:GetProductionTechnology()
+    local unLockByTech = City:FindTechByIndex(current_tech:UnlockBy())
+    local cost =  current_tech:GetLevelUpCost()
     local coin = City.resource_manager:GetCoinResource():GetValue()
+
+    if unLockByTech:Index() ~= current_tech:Index() then
+        table.insert(requirements, 
+            {
+                resource_type = unLockByTech:GetLocalizedName(),
+                isVisible = true,
+                isSatisfy = unLockByTech:Level() >= current_tech:UnlockLevel(),
+                icon= unLockByTech:GetImageName(),
+                description= _("等级达到") .. current_tech:UnlockLevel()
+            })
+    end
     table.insert(requirements, 
         {
             resource_type = _("银币"),
@@ -228,6 +265,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             icon="pulley_112x112.png",
             description= GameUtils:formatNumber(cost.pulley).."/"..GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"])
         })
+  
     return requirements
 end
 
@@ -244,7 +282,9 @@ end
 
 function GameUIUpgradeTechnology:OnUpgradButtonClicked()
     local gems_cost,msg = self:CheckCanUpgradeActionReturnGems()
-    if gems_cost == 0 then
+    if gems_cost < 0 then
+        UIKit:showMessageDialog(_("提示"), msg, function()end)
+    elseif gems_cost == 0 then
         NetManager:getUpgradeProductionTechPromise(self:GetProductionTechnology():Name(),false):next(function(msg)
             self:leftButtonClicked()
         end)
@@ -296,6 +336,9 @@ function GameUIUpgradeTechnology:GetUpgradeNowGems()
 end
 
 function GameUIUpgradeTechnology:CheckCanUpgradeNow()
+    if not self:GetProductionTechnology():IsOpen() then
+        return false,self:GetProductionTechnology():GetLocalizedName() ..  _("暂时还未开放")
+    end
     if City:HaveProductionTechEvent() then
         local event = City:GetProductionTechEventsArray()[1]
         if event and event:Name() == self:GetProductionTechnology():Name() then
@@ -325,15 +368,23 @@ function GameUIUpgradeTechnology:GetUpgradeGemsIfQueueNotEnough()
 end
 
 function GameUIUpgradeTechnology:CheckCanUpgradeActionReturnGems()
+    local current_tech = self:GetProductionTechnology()
+    local unLockByTech = City:FindTechByIndex(current_tech:UnlockBy())
+    if not current_tech:IsOpen() then
+        return -2,current_tech:GetLocalizedName()  .. _("暂时还未开放")
+    end
+    if unLockByTech:Level() < current_tech:UnlockLevel() then
+        return -1,unLockByTech:GetLocalizedName() .. _("未达到等级") .. current_tech:UnlockLevel()
+    end
     local gems_cost,msg = 0,0,""
     if City:HaveProductionTechEvent() then
         gems_cost = self:GetUpgradeGemsIfQueueNotEnough()
-        msg = _("已有科技升级队列,如需升级此科技需加速完成该队列花费宝石") .. gems_cost
+        msg = _("已有科技升级队列,需加速完成该队列花费宝石") .. gems_cost
     end
     local resource_gems = self:GetUpgradeGemsIfResourceNotEnough()
     if resource_gems ~= 0 then
         gems_cost = resource_gems + gems_cost
-        msg = msg .. "\n" .. _("升级所需物品不足,如需升级此科技需要花费宝石购买所缺物品") .. resource_gems
+        msg = msg .. "\n" .. _("升级所需物品不足,购买所缺物品需花费宝石") .. resource_gems
     end
     return gems_cost,msg
 end

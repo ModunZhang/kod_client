@@ -129,6 +129,9 @@ function City:InitWithJsonData(userData)
     -- table.insert(init_unlock_tiles, {x = 4, y = 1})
 
     -- table.insert(init_unlock_tiles, {x = 1, y = 5})
+    -- table.insert(init_unlock_tiles, {x = 2, y = 5})
+    -- table.insert(init_unlock_tiles, {x = 3, y = 5})
+    -- table.insert(init_unlock_tiles, {x = 4, y = 5})
     self:InitTiles(5, 5, init_unlock_tiles)
 
     local hosue_events = userData.houseEvents
@@ -1474,7 +1477,7 @@ function City:CheckDependTechsLockState(tech)
     local changed = {}
     local targetTechs = self:FindDependOnTheTechs(tech)
     for _,tech_ in ipairs(targetTechs) do
-        tech_:SetEnable(tech:Level() >= tech_:UnlockLevel())
+        tech_:SetEnable(tech:Level() >= tech_:UnlockLevel() and tech_:IsOpen())
         table.insert(changed,tech_)
     end
     return changed
@@ -1484,10 +1487,11 @@ function City:FastUpdateAllTechsLockState()
    self:IteratorTechs(function(index,tech)
         local unLockByTech = self:FindTechByIndex(tech:UnlockBy())
         if unLockByTech then 
-            tech:SetEnable(tech:UnlockLevel() <= unLockByTech:Level())
+            tech:SetEnable(tech:UnlockLevel() <= unLockByTech:Level() and tech:IsOpen())
         end
    end)
 end
+
 
 function City:OnProductionTechEventsDataChaned(productionTechEvents)
     if not productionTechEvents then return end

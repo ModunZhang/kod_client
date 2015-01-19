@@ -6,9 +6,15 @@ local MapScene = class("MapScene", function()
 end)
 
 function MapScene:ctor()
+    User:ResetAllListeners()
+    City:ResetAllListeners()
+    Alliance_Manager:GetMyAlliance():ResetAllListeners()
+    
     self.blur_count = 1
     self.event_manager = EventManager.new(self)
     self.touch_judgment = TouchJudgment.new(self)
+end
+function MapScene:onEnter()
     self.scene_node = display.newClippingRegionNode(cc.rect(0, 0, display.width, display.height)):addTo(self)
     self.scene_node:setContentSize(cc.size(display.width, display.height))
     self.scene_layer = self:CreateSceneLayer():addTo(self:GetSceneNode(), 0)
@@ -16,9 +22,6 @@ function MapScene:ctor()
     if type(self.CreateSceneUILayer) == "function" then
         self.scene_ui_layer = self:CreateSceneUILayer():addTo(self:GetSceneNode(), 2)
     end
-end
-function MapScene:onEnter()
-
 end
 function MapScene:onExit()
     self.touch_judgment:destructor()

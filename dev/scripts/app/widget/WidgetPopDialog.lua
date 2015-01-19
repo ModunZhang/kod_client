@@ -28,6 +28,10 @@ end
 function WidgetPopDialog:GetBody()
     return self.body
 end
+function WidgetPopDialog:DisableCloseBtn()
+    self.close_btn:setVisible(false)
+    return self
+end
 function WidgetPopDialog:SetTitle(title)
     self.title_label:setString(title)
     return self

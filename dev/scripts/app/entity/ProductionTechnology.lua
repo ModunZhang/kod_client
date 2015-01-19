@@ -31,7 +31,7 @@ function ProductionTechnology:OnPropertyChange()
 end
 
 function ProductionTechnology:GetLevelUpCost()
-	if self:IsOpen() and config_productiontechlevelup[self:Name()] and config_productiontechlevelup[self:Name()][self:GetNextLevel()] then
+	if config_productiontechlevelup[self:Name()] and config_productiontechlevelup[self:Name()][self:GetNextLevel()] then
 		return config_productiontechlevelup[self:Name()][self:GetNextLevel()]
 	end
 	return nil

@@ -551,7 +551,7 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
     -- 联盟旗帜
     local alliance_flag = isOur and alliance:Flag() or enemy_alliance:Flag()
     -- 联盟地形
-    local alliance_terrain = isOur and alliance:TerrainType() or enemy_alliance:TerrainType()
+    local alliance_terrain = isOur and alliance:Terrain() or enemy_alliance:Terrain()
 
 
     local body = WidgetPopDialog.new(726,_("联盟详情")):addToCurrentScene():GetBody()
@@ -1091,7 +1091,7 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance)
                 shadow= true
             }))
             :onButtonClicked(function(event)
-
+                    app:EnterViewModelAllianceScene(alliance._id)
                 end):align(display.RIGHT_CENTER,w-20,45):addTo(content)
     end
     item:addContent(content)
@@ -1194,7 +1194,7 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-
+                app:EnterViewModelAllianceScene(alliance._id)
             end
         end):align(display.RIGHT_CENTER,w-35,h-100):addTo(body)
     WidgetInfo.new({
@@ -1205,7 +1205,7 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
             {_("击溃城市"),string.formatnumberthousands(countInfo.routCount)},
             {_("联盟战胜利"),string.formatnumberthousands(countInfo.winCount)},
             {_("联盟战失败"),string.formatnumberthousands(countInfo.failedCount)},
-            {_("胜率"),(math.floor(countInfo.winCount/(countInfo.winCount+countInfo.failedCount)*1000)/10).."%"},
+            {_("胜率"),(countInfo.winCount+countInfo.failedCount==0 and 0 or math.floor(countInfo.winCount/(countInfo.winCount+countInfo.failedCount)*1000)/10).."%"},
         },
         h =260
     }):align(display.BOTTOM_CENTER, w/2 , 20)

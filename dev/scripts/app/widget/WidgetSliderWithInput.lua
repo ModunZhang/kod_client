@@ -1,4 +1,6 @@
 local WidgetSlider = import("..widget.WidgetSlider")
+local WidgetPushButton = import("..widget.WidgetPushButton")
+local WidgetInput = import("..widget.WidgetInput")
 local Enum = import("..utils.Enum")
 
 local WidgetSliderWithInput = class("WidgetSliderWithInput", function ( ... )
@@ -51,26 +53,38 @@ function WidgetSliderWithInput:ctor(params)
             end
         end
     end
-    -- soldier current
-    self.editbox = cc.ui.UIInput.new({
-        UIInputType = 1,
-        image = "back_ground_83x32.png",
-        size = cc.size(100,32),
-        font = UIKit:getFontFilePath(),
-        listener = edit
-    })
-    local editbox = self.editbox
-    editbox:setMaxLength(10)
-    editbox:setText(min)
-    editbox:setFont(UIKit:getFontFilePath(),20)
-    editbox:setFontColor(cc.c3b(0,0,0))
-    editbox:setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC)
-    editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
-    editbox:align(display.CENTER, slider:getCascadeBoundingBox().size.width+60,30):addTo(self)
 
+    local text_btn = WidgetPushButton.new({normal = "back_ground_83x32.png",pressed = "back_ground_83x32.png"})
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                local p = {
+                    current = math.floor(slider:getSliderValue()),
+                    max=max,
+                    min=min,
+                    unit=unit,
+                    callback = function ( edit_value )
+                        if edit_value ~= slider_value then
+                            slider.fsm_:doEvent("press")
+                            slider:setSliderValue(edit_value)
+                            slider.fsm_:doEvent("release")
+                            if self.sliderReleaseEventListener then
+                                self.sliderReleaseEventListener()
+                            end
+                        end
+                    end
+                }
+                WidgetInput.new(p):addToCurrentScene()
+            end
+        end):align(display.CENTER, slider:getCascadeBoundingBox().size.width+60,30):addTo(self)
+    self.btn_text = UIKit:ttfLabel({
+        text = min,
+        size = 22,
+        color = 0x403c2f,
+    }):addTo(text_btn):align(display.CENTER)
+    self.text_btn = text_btn
 
     slider:onSliderValueChanged(function(event)
-        editbox:setText(math.floor(event.value))
+        self.btn_text:setString(math.floor(event.value))
     end)
     slider:setSliderValue(min)
 
@@ -85,7 +99,7 @@ function WidgetSliderWithInput:ctor(params)
 end
 
 function WidgetSliderWithInput:GetValue()
-    return tonumber(self.editbox:getText())
+    return tonumber(math.floor(self.slider:getSliderValue()))
 end
 function WidgetSliderWithInput:AddSliderReleaseEventListener(func)
     self.sliderReleaseEventListener = func
@@ -96,7 +110,7 @@ function WidgetSliderWithInput:AddSliderReleaseEventListener(func)
 end
 function WidgetSliderWithInput:OnSliderValueChanged(func)
     self.slider:onSliderValueChanged(function(event)
-        self.editbox:setText(math.floor(event.value))
+        self.btn_text:setString(math.floor(event.value))
         func(event)
     end)
     return self
@@ -104,10 +118,10 @@ end
 function WidgetSliderWithInput:LayoutValueLabel(layout,offset)
     if WidgetSliderWithInput.STYLE_LAYOUT.TOP == layout then
         self.soldier_total_count:setPosition(self:getContentSize().width-self.soldier_total_count:getContentSize().width-10,offset)
-        self.editbox:setPosition(self:getContentSize().width-self.soldier_total_count:getContentSize().width-10-60,offset)
+        self.text_btn:setPosition(self:getContentSize().width-self.soldier_total_count:getContentSize().width-10-60,offset)
     else
         self.soldier_total_count:setPosition(self.slider.scale9Size_[1]+30,0)
-        self.editbox:setPosition(self.slider.scale9Size_[1]+60,30)
+        self.text_btn:setPosition(self.slider.scale9Size_[1]+60,30)
     end
     return self
 end
@@ -116,10 +130,13 @@ function WidgetSliderWithInput:SetSliderSize(width, height)
     return self
 end
 function WidgetSliderWithInput:GetEditBoxPostion()
-    return self.editbox:getPosition()
+    return self.text_btn:getPosition()
 end
 
 return WidgetSliderWithInput
+
+
+
 
 
 

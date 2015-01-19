@@ -2,9 +2,9 @@ local Sprite = import(".Sprite")
 local SingleTreeSprite = class("SingleTreeSprite", Sprite)
 
 local TREE_MAP = {
-	grass = {"tree_grass_148x246.png", "tree_grass_109x172.png"},
+	grassLand = {"tree_grass_148x246.png", "tree_grass_109x172.png"},
 	desert = {"tree_desert_183x171.png", "tree_desert_182x175.png"},
-	icefield = {"tree_icefield_150x209.png", "tree_icefield_166x221.png"},
+	iceField = {"tree_icefield_150x209.png", "tree_icefield_166x221.png"},
 }
 
 function SingleTreeSprite:ctor(city_layer, x, y)
@@ -12,6 +12,7 @@ function SingleTreeSprite:ctor(city_layer, x, y)
     local ax, ay = city_layer:GetLogicMap():ConvertToMapPosition(x, y)
     SingleTreeSprite.super.ctor(self, city_layer, nil, ax, ay)
     self:GetSprite():align(display.BOTTOM_CENTER)
+    -- self:CreateBase()
 end
 function SingleTreeSprite:ReloadSpriteCauseTerrainChanged()
 	self.sprite:removeFromParent()

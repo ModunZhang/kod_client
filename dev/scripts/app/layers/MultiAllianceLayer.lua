@@ -13,50 +13,46 @@ function MultiAllianceLayer:ctor(arrange, ...)
     local manager = ccs.ArmatureDataManager:getInstance()
     manager:addArmatureFileInfo("animations/dragon_red/dragon_red.ExportJson")
 
-
     Observer.extend(self)
     MultiAllianceLayer.super.ctor(self, 0.4, 1.2)
     self.arrange = arrange
     self.alliances = {...}
+    self.alliance_views = {}
     self:InitBackground()
     self:InitBuildingNode()
     self:InitCorpsNode()
     self:InitLineNode()
     self:InitAllianceView()
     self:InitAllianceEvent()
-    ---
-    local timer = app.timer
-    self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function()
-        local cur_time = timer:GetServerTime()
-        for id, corps in pairs(self.corps_map) do
-            if corps then
-                local march_info = corps.march_info
-                local total_time = march_info.finish_time - march_info.start_time
-                local elapse_time = cur_time - march_info.start_time
-                if elapse_time <= total_time then
-                    local cur_vec = cc.pAdd(cc.pMul(march_info.normal, march_info.speed * elapse_time), march_info.start_info.real)
-                    corps:setPosition(cur_vec.x, cur_vec.y)
-                else
-                    self:DeleteCorpsById(id)
-                end
-            end
-        end
-    end)
-    self:scheduleUpdate()
-    self:InitAllianceEvent()
     self:AddOrRemoveAllianceEvent(true)
+    self:StartCorpsTimer()
 end
 function MultiAllianceLayer:onCleanup()
     self:AddOrRemoveAllianceEvent(false)
 end
 function MultiAllianceLayer:InitBackground()
-    if #self.alliances == 1 then
-        self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background.tmx"):addTo(self, ZORDER.BACKGROUND)
-    elseif MultiAllianceLayer.ARRANGE.H == self.arrange then
-        self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_h.tmx"):addTo(self, ZORDER.BACKGROUND)
-    else
-        self.background = cc.TMXTiledMap:create("tmxmaps/alliance_background_v.tmx"):addTo(self, ZORDER.BACKGROUND)
+    self:ReloadBackGround()
+end
+function MultiAllianceLayer:ChangeTerrain()
+    self:ReloadBackGround()
+    for _, v in ipairs(self.alliance_views) do
+        v:ChangeTerrain()
     end
+end
+function MultiAllianceLayer:ReloadBackGround()
+    if self.background then
+        self.background:removeFromParent()
+    end
+    self.background = cc.TMXTiledMap:create(self:GetMapFileByArrangeAndTerrain()):addTo(self, ZORDER.BACKGROUND)
+end
+function MultiAllianceLayer:GetMapFileByArrangeAndTerrain()
+    if #self.alliances == 1 then
+        return string.format("tmxmaps/alliance_%s.tmx", self.alliances[1]:Terrain())
+    end
+    local first, second = unpack(self.alliances)
+    local terrain1, terrain2 = first:Terrain(), second:Terrain()
+    local arrange = MultiAllianceLayer.ARRANGE.H == self.arrange and "h" or "v"
+    return string.format("tmxmaps/alliance_%s_%s_%s.tmx", arrange, terrain1, terrain2)
 end
 function MultiAllianceLayer:InitBuildingNode()
     self.building = display.newNode():addTo(self, ZORDER.BUILDING)
@@ -88,19 +84,19 @@ function MultiAllianceLayer:InitAllianceView()
     if MultiAllianceLayer.ARRANGE.H == self.arrange then
         alliance_view1 = AllianceView.new(self, self.alliances[1], 0):addTo(self)
         alliance_view2 = AllianceView.new(self, self.alliances[2], 51):addTo(self)
-        local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(50.5, -3.5)
-        local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(50.5, 51.5)
-        display.newLine({{sx, sy}, {ex, ey}},
-            {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
-                borderWidth = 5}):addTo(self.building)
+        -- local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(50.5, -3.5)
+        -- local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(50.5, 51.5)
+        -- display.newLine({{sx, sy}, {ex, ey}},
+        --     {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
+        --         borderWidth = 5}):addTo(self.building)
     else
-        alliance_view1 = AllianceView.new(self, self.alliances[1], 0, 104):addTo(self)
-        alliance_view2 = AllianceView.new(self, self.alliances[2], 0, 53):addTo(self)
-        local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(-0.5, 51.5)
-        local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(51.5, 51.5)
-        display.newLine({{sx, sy}, {ex, ey}},
-            {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
-                borderWidth = 5}):addTo(self.building)
+        alliance_view1 = AllianceView.new(self, self.alliances[1], 0, 105):addTo(self)
+        alliance_view2 = AllianceView.new(self, self.alliances[2], 0, 54):addTo(self)
+        -- local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(-0.5, 51.5)
+        -- local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(51.5, 51.5)
+        -- display.newLine({{sx, sy}, {ex, ey}},
+        --     {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
+        --         borderWidth = 5}):addTo(self.building)
     end
     self.alliance_views = {alliance_view1, alliance_view2}
 end
@@ -146,11 +142,30 @@ function MultiAllianceLayer:GetEnemyAlliance()
     return self:GetMyAlliance():GetEnemyAlliance()
 end
 
-
 function MultiAllianceLayer:InitAllianceEvent()
     for _, v in ipairs(self.alliances) do
         self:CreateAllianceCorps(v)
     end
+end
+function MultiAllianceLayer:StartCorpsTimer()
+    local timer = app.timer
+    self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function()
+        local cur_time = timer:GetServerTime()
+        for id, corps in pairs(self.corps_map) do
+            if corps then
+                local march_info = corps.march_info
+                local total_time = march_info.finish_time - march_info.start_time
+                local elapse_time = cur_time - march_info.start_time
+                if elapse_time <= total_time then
+                    local cur_vec = cc.pAdd(cc.pMul(march_info.normal, march_info.speed * elapse_time), march_info.start_info.real)
+                    corps:setPosition(cur_vec.x, cur_vec.y)
+                else
+                    self:DeleteCorpsById(id)
+                end
+            end
+        end
+    end)
+    self:scheduleUpdate()
 end
 function MultiAllianceLayer:CreateAllianceCorps(alliance)
     table.foreachi(alliance:GetAttackMarchEvents(),function(_,event)
@@ -377,6 +392,7 @@ end
 
 
 return MultiAllianceLayer
+
 
 
 

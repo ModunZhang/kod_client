@@ -9,6 +9,7 @@ local UIListView = import(".UIListView")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local WidgetInfoWithTitle = import("..widget.WidgetInfoWithTitle")
 local Localize = import("..utils.Localize")
+local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetInfo = import("..widget.WidgetInfo")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetSliderWithInput = import("..widget.WidgetSliderWithInput")
@@ -92,7 +93,7 @@ function GameUIAlliancePalace:CreateAwardMemberItem(member)
     local item = list:newItem()
     local item_width,item_height = 568,168
     item:setItemSize(item_width,item_height)
-     local content = WidgetUIBackGround.new({width=item_width,height=item_height},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
+    local content = WidgetUIBackGround.new({width=item_width,height=item_height},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
     local title_bg = display.newScale9Sprite("title_blue_430x30.png",item_width/2,item_height-30,cc.size(550,30),cc.rect(15,10,400,10))
         :addTo(content)
     -- 玩家头像
@@ -105,7 +106,7 @@ function GameUIAlliancePalace:CreateAwardMemberItem(member)
         color = 0xffedae,
     }):align(display.LEFT_CENTER, 60, title_bg:getContentSize().height/2):addTo(title_bg)
     -- 过去时间
-     UIKit:ttfLabel({
+    UIKit:ttfLabel({
         text = "1 day(s) ago",
         size = 20,
         color = 0xc0b694,
@@ -183,18 +184,34 @@ function GameUIAlliancePalace:OpenAwardDialog(member)
             end
         end):align(display.BOTTOM_RIGHT, body_size.width-20,30):addTo(body)
 end
-function GameUIAlliancePalace:GetHonourNode()
+function GameUIAlliancePalace:GetHonourNode(honour)
     local node = display.newNode()
     node:setContentSize(cc.size(160,36))
     -- 荣耀值
     display.newSprite("honour.png"):align(display.CENTER, 0, 0):addTo(node):scale(1.2)
     local honour_bg = display.newSprite("back_ground_114x36.png"):align(display.CENTER,80, 0):addTo(node)
     UIKit:ttfLabel({
-        text = self.alliance:Honour(),
+        text = honour or self.alliance:Honour(),
         size = 20,
         color = 0x403c2f,
     }):addTo(honour_bg):align(display.CENTER,honour_bg:getContentSize().width/2,honour_bg:getContentSize().height/2)
     return node
+end
+function GameUIAlliancePalace:MapTerrianToIndex(terrian)
+    local terrian_type = {
+        grassLand=1,
+        iceField=2,
+        desert=3,
+    }
+    return terrian_type[terrian]
+end
+function GameUIAlliancePalace:MapIndexToTerrian(index)
+    local terrian_type = {
+        "grassLand",
+        "iceField",
+        "desert",
+    }
+    return terrian_type[index]
 end
 function GameUIAlliancePalace:InitInfoPart()
     local layer = self.info_layer
@@ -244,10 +261,12 @@ function GameUIAlliancePalace:InitInfoPart()
         :setButtonsLayoutMargin(0, 130, 0, 0)
         :onButtonSelectChanged(function(event)
             -- self.selected_rebuild_to_building = rebuild_list[event.selected]
-            end)
+            self.select_terrian_index = event.selected
+        end)
         :align(display.CENTER, 57 , 90)
         :addTo(bg1)
-    group:getButtonAtIndex(1):setButtonSelected(true)
+    self.select_terrian_index = self:MapTerrianToIndex(self.alliance:Terrain())
+    group:getButtonAtIndex(self.select_terrian_index):setButtonSelected(true)
 
     -- 介绍
     UIKit:ttfLabel({
@@ -257,7 +276,8 @@ function GameUIAlliancePalace:InitInfoPart()
         dimensions = cc.size(520, 0),
     }):align(display.BOTTOM_CENTER, bg1:getContentSize().width/2, 10):addTo(bg1)
     -- 消耗荣耀值更换地形
-    self:GetHonourNode():addTo(layer):align(display.CENTER,window.cx+30, window.top-454)
+    local need_honour = GameDatas.AllianceInitData.intInit.editAllianceTerrianHonour.value
+    self:GetHonourNode(need_honour):addTo(layer):align(display.CENTER,window.cx+30, window.top-454)
 
     -- 购买使用按钮
     WidgetPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
@@ -269,6 +289,19 @@ function GameUIAlliancePalace:InitInfoPart()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
+                if need_honour>self.alliance:Honour() then
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("联盟荣耀值不足"))
+                        :AddToCurrentScene()
+                else
+                    if self.alliance:GetSelf():CanEditAlliance() then
+                        NetManager:getEditAllianceTerrianPromise(self:MapIndexToTerrian(self.select_terrian_index))
+                    else
+                        FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                            :SetPopMessage(_("权限不足"))
+                            :AddToCurrentScene()
+                    end
+                end
 
             end
         end):align(display.CENTER, window.right -120, window.top-470):addTo(layer)
@@ -291,3 +324,7 @@ function GameUIAlliancePalace:InitInfoPart()
 end
 
 return GameUIAlliancePalace
+
+
+
+

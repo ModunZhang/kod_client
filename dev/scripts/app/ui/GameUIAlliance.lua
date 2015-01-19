@@ -91,6 +91,7 @@ function GameUIAlliance:Reset()
     self.memberListView = nil
     self.informationNode = nil
     self.currentContent = nil
+    self.member_list_bg = nil
 end
 
 function GameUIAlliance:onEnter()
@@ -708,7 +709,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
         color = 0xffedae,
     }):align(display.LEFT_CENTER,10,15):addTo(titileBar)
 
-    self.ui_overview.my_alliance_flag = self.alliance_ui_helper:CreateFlagWithRhombusTerrain(Alliance_Manager:GetMyAlliance():TerrainType(),Alliance_Manager:GetMyAlliance():Flag())
+    self.ui_overview.my_alliance_flag = self.alliance_ui_helper:CreateFlagWithRhombusTerrain(Alliance_Manager:GetMyAlliance():Terrain(),Alliance_Manager:GetMyAlliance():Flag())
         :addTo(flag_box)
         :pos(70,50):scale(0.8)
     display.newSprite("info_26x26.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(flag_box)
@@ -875,7 +876,7 @@ function GameUIAlliance:RefreshFlag()
         if self.ui_overview.my_alliance_flag then
             local x,y = self.ui_overview.my_alliance_flag:getPosition()
             self.ui_overview.my_alliance_flag:removeFromParent()
-            self.ui_overview.my_alliance_flag = self.alliance_ui_helper:CreateFlagWithRhombusTerrain(Alliance_Manager:GetMyAlliance():TerrainType(),Alliance_Manager:GetMyAlliance():Flag())
+            self.ui_overview.my_alliance_flag = self.alliance_ui_helper:CreateFlagWithRhombusTerrain(Alliance_Manager:GetMyAlliance():Terrain(),Alliance_Manager:GetMyAlliance():Flag())
                 :addTo(self.flag_box)
                 :pos(x,y)
         end
@@ -1348,10 +1349,10 @@ function GameUIAlliance:CreateInvateUI()
             })
         )
         :onButtonClicked(function(event)
-            local playerName = string.trim(editbox:getText())
-            if string.len(playerName) == 0 then
+            local playerID = string.trim(editbox:getText())
+            if string.len(playerID) == 0 then
                 FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("请输入邀请的玩家名称"))
+                    :SetPopMessage(_("请输入邀请的玩家ID"))
                     :CreateOKButton(
                         {
                             listener =  function()end
@@ -1360,7 +1361,7 @@ function GameUIAlliance:CreateInvateUI()
                     :AddToCurrentScene()
                 return
             end
-            NetManager:getInviteToJoinAlliancePromise(playerName)
+            NetManager:getInviteToJoinAlliancePromise(playerID)
                 :next(function(result)
                     layer:removeFromParent(true)
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))
