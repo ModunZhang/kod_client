@@ -258,28 +258,16 @@ function GameUIResource:onMoveInStage()
 end
 
 function GameUIResource:ChaiButtonAction( event )
-    if self.building:IsUpgrading() then
-        local message = "正在升级"
-        local dialog = PopDialogUI.new()
-        dialog:setTitle("提示")
-        dialog:setPopMessage(message)
-        display.getRunningScene():addChild(dialog,1000000)
+    if self.building:IsUpgrading() or self.building:IsBuilding() then
+        UIKit:showMessageDialog(_("提示"), _("正在建造或者升级小屋,不能拆除!"), function()end)
         return
     end
     if tonumber(City:GetUser():GetGemResource():GetValue()) < 100 then
-        local message = "宝石不足"
-        local dialog = PopDialogUI.new()
-        dialog:setTitle("提示")
-        dialog:setPopMessage(message)
-        dialog:setNeedGems(100)
-        display.getRunningScene():addChild(dialog,1000000)
+        UIKit:showMessageDialog(_("提示"), _("宝石不足"), function()end)
         return
     end
     local tile = self.city:GetTileWhichBuildingBelongs(self.building)
     local house_location = tile:GetBuildingLocation(self.building)
-
-    -- NetManager:destroyHouseByLocation(tile.location_id, house_location,
-    --     NOT_HANDLE)
 
     NetManager:getDestroyHouseByLocationPromise(tile.location_id, house_location)
         :catch(function(err)
