@@ -1113,7 +1113,7 @@ end
 function NetManager:getHandOverAllianceArchonPromise(memberId)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.handOverAllianceArchon", {
         memberId = memberId,
-    }, "移交萌主失败!"), get_playerinfo_callback()):next(get_response_msg)
+    }, "移交萌主失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 -- 修改成员职位
 function NetManager:getEditAllianceMemberTitlePromise(memberId, title)

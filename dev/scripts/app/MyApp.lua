@@ -127,12 +127,13 @@ function MyApp:retryConnectServer()
     if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
         NetManager:disconnect()
         app:lockInput(true)
-        local loading = UIKit:newGameUI("GameUIWatiForNetWork")
+        local loading
         local need_show,showed = true,false
         scheduler.performWithDelayGlobal(function()
             if need_show then
+                loading = UIKit:newGameUI("GameUIWatiForNetWork")
                 loading:addToCurrentScene(true)
-                loading:setLocalZOrder(2001)
+                loading:zorder(2001)
                 showed = true
                 need_show = false
             end
