@@ -1080,7 +1080,9 @@ function City:GenerateWalls()
                 end
             end
         end
-        return t[math.ceil((#t + 1) / 2)]
+        -- return t[math.floor((#t + 1) / 2)]
+        -- 固定城门在倒数第二格
+        return t[#t - 1]
     end
 
     -- 找出所有块的边,去除重复边
