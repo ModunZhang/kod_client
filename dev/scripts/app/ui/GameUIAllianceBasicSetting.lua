@@ -307,7 +307,7 @@ function GameUIAllianceBasicSetting:createCheckAllianeGroup_()
 	    	:pos(0,landSelect:getCascadeBoundingBox().height+landSelect:getPositionY()+20)
     	self:SelectLandCheckButton(self.terrain_info,true)
 	else
-   		self.languageSelected  = WidgetAllianceLanguagePanel.new():addTo(groupNode):pos(0,0)
+   		self.languageSelected  = WidgetAllianceLanguagePanel.new(Alliance_Manager:GetMyAlliance():DefaultLanguage()):addTo(groupNode):pos(0,0)
    	end
     return groupNode
 end
@@ -464,9 +464,18 @@ function GameUIAllianceBasicSetting:CreateAllianceButtonClicked()
 	if self.isCreateAction_ then
 		NetManager:getCreateAlliancePromise(data.name,data.tag,data.language,data.terrain,data.flag):done()
 	else
-		NetManager:getEditAllianceBasicInfoPromise(data.name,data.tag,data.language,data.flag):done(function(result)
-			dump(result)
-		end)
+		local my_alliance = Alliance_Manager:GetMyAlliance()
+		if not self:GetFlagInfomation():IsDifferentWith(Alliance_Manager:GetMyAlliance():Flag()) 
+			and my_alliance:AliasName() == data.tag 
+			and my_alliance:Name() == data.name 
+			and my_alliance:DefaultLanguage() == data.language 
+			then
+			UIKit:showMessageDialog(_("提示"),_("联盟信息当前没有任何改动!"))
+		else
+			NetManager:getEditAllianceBasicInfoPromise(data.name,data.tag,data.language,data.flag):done(function(result)
+				self:leftButtonClicked()
+			end)
+		end
 	end
 end
 
