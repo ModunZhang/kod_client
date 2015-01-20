@@ -20,8 +20,13 @@ local titles = {
 	SOLIDERS = _("军事单位"),
 }
 
-function GameUIWatchTowerTroopDetail:ctor(data_type,data,user_id)
+function GameUIWatchTowerTroopDetail:ctor(data_type,data,user_id,isFromWathTower)
 	GameUIWatchTowerTroopDetail.super.ctor(self)
+	if type(isFromWathTower) == 'boolean' then
+		self.isFromWathTower = isFromWathTower
+	else
+		self.isFromWathTower = true
+	end
 	self.belvedere = Alliance_Manager:GetMyAlliance():GetAllianceBelvedere()
 	self.event_data = data
 	self.data_type = data_type
@@ -32,6 +37,10 @@ end
 
 function GameUIWatchTowerTroopDetail:IsMyAlliance()
 	return self.isMyAlliance
+end
+
+function GameUIWatchTowerTroopDetail:IsFromWathTower()
+	return self.isFromWathTower
 end
 
 
@@ -96,7 +105,7 @@ function GameUIWatchTowerTroopDetail:onEnter()
     	viewRect = cc.rect(10, 12, 548,730),
         direction = UIScrollView.DIRECTION_VERTICAL,
     }:addTo(listBg)
-    if self:IsDataFromMyCity() then
+    if self:IsDataFromMyCity() and self:IsFromWathTower() then
     	self:RefreshListView()
     else
     	self:RequestPlayerHelpedByTroops()

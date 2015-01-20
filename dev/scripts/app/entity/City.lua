@@ -70,7 +70,7 @@ function City:ctor(json_data)
     self.upgrading_building_callbacks = {}
     self.finish_upgrading_callbacks = {}
 end
-function City:GetUser(user)
+function City:GetUser()
     return self.belong_user
 end
 function City:SetUser(user)
