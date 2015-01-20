@@ -8,11 +8,10 @@ function RoadSprite:ReloadSpriteCauseTerrainChanged()
     self.sprite = self:CreateSprite():addTo(self, SPRITE)
 end
 function RoadSprite:GetSpriteFile()
-	print(string.format("road_%s.png", self:GetMapLayer():Terrain()))
     return string.format("road_%s.png", self:GetMapLayer():Terrain())
 end
 function RoadSprite:GetSpriteOffset()
-    return -400, -400
+    return -400, -300
 end
 function RoadSprite:GetLogicZorder()
     local x, y = self:GetMidLogicPosition()

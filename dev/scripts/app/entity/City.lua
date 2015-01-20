@@ -1070,7 +1070,7 @@ function City:GenerateWalls()
             if v.orient == Orient.Y then
                 local dup = false
                 for _, w in pairs(t) do
-                    if w.y == v.y then
+                    if w.x == v.x then
                         dup = true
                         break
                     end
