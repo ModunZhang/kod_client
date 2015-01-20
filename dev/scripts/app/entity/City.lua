@@ -1,4 +1,5 @@
 local HOUSES = GameDatas.PlayerInitData.houses[1]
+local productionTechs = GameDatas.ProductionTechs.productionTechs
 local BuildingRegister = import(".BuildingRegister")
 local promise = import("..utils.promise")
 local Enum = import("..utils.Enum")
@@ -12,6 +13,7 @@ local TowerUpgradeBuilding = import(".TowerUpgradeBuilding")
 local MultiObserver = import(".MultiObserver")
 local City = class("City", MultiObserver)
 local ProductionTechnology = import(".ProductionTechnology")
+local ProductionTechnologyEvent = import(".ProductionTechnologyEvent")
 -- 枚举定义
 City.RETURN_CODE = Enum("INNER_ROUND_NOT_UNLOCKED",
     "EDGE_BESIDE_NOT_UNLOCKED",
@@ -28,7 +30,9 @@ City.LISTEN_TYPE = Enum("LOCK_TILE",
     "CITY_NAME",
     "HELPED_BY_TROOPS",
     "HELPED_TO_TROOPS",
-    "PRODUCTION_DATA_CHANGED")
+    "PRODUCTION_DATA_CHANGED",
+    "PRODUCTION_EVENT_CHANGED",
+    "PRODUCTION_EVENT_TIMER")
 City.RESOURCE_TYPE_TO_BUILDING_TYPE = {
     [ResourceManager.RESOURCE_TYPE.WOOD] = "woodcutter",
     [ResourceManager.RESOURCE_TYPE.FOOD] = "farmer",
@@ -51,6 +55,7 @@ function City:ctor(json_data)
     self.helpedByTroops = {}
     self.helpToTroops = {}
     self.productionTechs = {}
+    self.productionTechEvents = {}
     self.build_queue = 0
 
     self.locations_decorators = {}
@@ -722,6 +727,9 @@ end
 -- 功能函数
 function City:OnTimer(time)
     self:IteratorAllNeedTimerEntity(time)
+    self:IteratorProductionTechEvents(function(v)
+        v:OnTimer(time)
+    end)
 end
 function City:CreateDecorator(current_time, decorator_building)
     table.insert(self.decorators, decorator_building)
@@ -910,7 +918,9 @@ function City:OnUserDataChanged(userData, current_time)
     self:__OnHelpToTroopsDataChange(userData.__helpToTroops)
     --科技
     self:OnProductionTechsDataChanged(userData.productionTechs)
-    self:__OnProductionTechsDataChanged(userData.__productionTechs)
+    self:__OnProductionTechsDataChanged(userData.productionTechs)
+    self:OnProductionTechEventsDataChaned(userData.productionTechEvents)
+    self:__OnProductionTechEventsDataChaned(userData.__productionTechEvents)
     -- 更新兵种
     self.soldier_manager:OnUserDataChanged(userData)
     -- 更新材料，这里是广义的材料，包括龙的装备
@@ -1409,14 +1419,13 @@ end
 function City:OnProductionTechsDataChanged(productionTechs)
     if not productionTechs then return end
     for name,v in pairs(productionTechs) do
-        local productionTechnology = ProductionTechnology.new()
-        productionTechnology:UpdateData(name,v)
-        if not self.productionTechs[productionTechnology:Index()] then
+        if not self.productionTechs[v.index] then
+            local productionTechnology = ProductionTechnology.new()
+            productionTechnology:UpdateData(name,v)
             self.productionTechs[productionTechnology:Index()] = productionTechnology
         end
     end
     self:FastUpdateAllTechsLockState()
-    self:DumpAllTechs()
 end
 
 function City:IteratorTechs(func)
@@ -1426,11 +1435,10 @@ function City:IteratorTechs(func)
 end
 
 function City:FindTechByName(name)
-    self:IteratorTechs(function(index,tech)
-        if tech:Name() == name then 
-            return name
-        end
-    end)
+    local index = productionTechs[name].index 
+    if index then
+        return self:FindTechByIndex(index)
+    end
 end
 
 function City:FindTechByIndex(index)
@@ -1440,24 +1448,18 @@ end
 
 function City:__OnProductionTechsDataChanged(__productionTechs)
     if not __productionTechs then return end
-    local changed_map = GameUtils:Event_Handler_Func(
-        __productionTechs
-        ,function(data)
-            assert(false,"会添加科技?")
+    local edited = {}
+    for name,data in pairs(__productionTechs) do
+        local productionTechnology = self:FindTechByIndex(data.index)
+        if productionTechnology and productionTechnology:Level() ~= data.level then
+            productionTechnology:SetLevel(data.level)
+            local changed = self:CheckDependTechsLockState(productionTechnology)
+            table.insert(edited, productionTechnology)
+            table.insertto(edited,changed)
         end
-        ,function(data)
-            local productionTechnology = self:FindTechByIndex(data.index)
-            if productionTechnology then
-                productionTechnology:SetLevel(data.level)
-                self:CheckDependTechsLockState(productionTechnology)
-            end
-        end
-        ,function(data)
-            assert(false,"会删除科技?")
-        end
-    )
+    end
     self:NotifyListeneOnType(City.LISTEN_TYPE.PRODUCTION_DATA_CHANGED, function(listener)
-        listener:OnProductionTechsDataChanged(self,changed_map)
+        listener:OnProductionTechsDataChanged({edited = edited})
     end)
 end
 --查找依赖于此科技的所有科技
@@ -1472,40 +1474,102 @@ function City:FindDependOnTheTechs(tech)
 end
 --更新依赖于此科技的科技的解锁状态
 function City:CheckDependTechsLockState(tech)
+    local changed = {}
     local targetTechs = self:FindDependOnTheTechs(tech)
     for _,tech_ in ipairs(targetTechs) do
-        tech_:SetIsLock(tech:Level() >= tech_:UnlockLevel())
+        tech_:SetEnable(tech:Level() >= tech_:UnlockLevel() and tech_:IsOpen())
+        table.insert(changed,tech_)
     end
+    return changed
 end
 
 function City:FastUpdateAllTechsLockState()
    self:IteratorTechs(function(index,tech)
         local unLockByTech = self:FindTechByIndex(tech:UnlockBy())
-        if unLockByTech and tech:Index() < 10 then --暂时不开放
-            tech:SetIsLock(tech:UnlockLevel() <= unLockByTech:Level())
+        if unLockByTech then 
+            tech:SetEnable(tech:UnlockLevel() <= unLockByTech:Level() and tech:IsOpen())
         end
    end)
 end
 
-function City:DumpAllTechs()
-    -- dump(self.productionTechs,"productionTechs-->" .. os.time())
+
+function City:OnProductionTechEventsDataChaned(productionTechEvents)
+    if not productionTechEvents then return end
+    for _,v in ipairs(productionTechEvents) do
+        if not self:FindProductionTechEventById(v.id) then
+            local productionTechnologyEvent = ProductionTechnologyEvent.new()
+            productionTechnologyEvent:UpdateData(v)
+            productionTechnologyEvent:SetEntity(self:FindTechByName(productionTechnologyEvent:Name()))
+            self.productionTechEvents[productionTechnologyEvent:Id()] = productionTechnologyEvent
+            productionTechnologyEvent:AddObserver(self)
+        end
+    end
+end
+
+function City:IteratorProductionTechEvents(func)
+    for _,v in pairs(self.productionTechEvents) do
+        func(v)
+    end
+end
+
+function City:__OnProductionTechEventsDataChaned(__productionTechEvents)
+    if not __productionTechEvents then return end
+     local changed_map = GameUtils:Event_Handler_Func(
+        __productionTechEvents
+        ,function(data)
+            if not self:FindProductionTechEventById(data.id) then
+                local productionTechnologyEvent = ProductionTechnologyEvent.new()
+                productionTechnologyEvent:UpdateData(data)
+                productionTechnologyEvent:SetEntity(self:FindTechByName(productionTechnologyEvent:Name()))
+                productionTechnologyEvent:AddObserver(self)
+                self.productionTechEvents[productionTechnologyEvent:Id()] = productionTechnologyEvent
+                return productionTechnologyEvent
+            end
+        end
+        ,function(data)
+            local productionTechnologyEvent = self:FindProductionTechEventById(data.id)
+            if productionTechnologyEvent then
+                productionTechnologyEvent:UpdateData(data)
+                return productionTechnologyEvent
+            end
+        end
+        ,function(data)
+            local productionTechnologyEvent = self:FindProductionTechEventById(data.id)
+            if productionTechnologyEvent then
+                productionTechnologyEvent:Reset()
+                self.productionTechEvents[productionTechnologyEvent:Id()] = nil
+                productionTechnologyEvent = ProductionTechnologyEvent.new()
+                productionTechnologyEvent:UpdateData(data)
+                productionTechnologyEvent:SetEntity(self:FindTechByName(productionTechnologyEvent:Name()))
+                return productionTechnologyEvent
+            end
+        end
+    )
+    self:NotifyListeneOnType(City.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED, function(listener)
+        listener:OnProductionTechnologyEventDataChanged(changed_map)
+    end)
+end
+
+function City:OnProductionTechnologyEventTimer(productionTechnologyEvent)
+    self:NotifyListeneOnType(City.LISTEN_TYPE.PRODUCTION_EVENT_TIMER, function(listener)
+        listener:OnProductionTechnologyEventTimer(productionTechnologyEvent)
+    end)
+end
+
+function City:HaveProductionTechEvent()
+    return not LuaUtils:table_empty(self.productionTechEvents)
+end
+
+function City:GetProductionTechEventsArray()
+    local r = {}
+    self:IteratorProductionTechEvents(function(event)
+        table.insert(r, event)
+    end)
+    return r
+end
+
+function City:FindProductionTechEventById(_id)
+    return self.productionTechEvents[_id]
 end
 
 return City
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

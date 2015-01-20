@@ -15,6 +15,7 @@ function ProductionTechnologyEvent:ctor()
 	property(self,"name","")
 	property(self,"startTime","")
 	property(self,"finishTime","")
+	property(self,"entity","")
 end
 
 function ProductionTechnologyEvent:OnTimer(current_time)
@@ -39,6 +40,11 @@ end
 
 function ProductionTechnologyEvent:Reset()
 	self:RemoveAllObserver()
+end
+--TODO:
+function ProductionTechnologyEvent:GetPercent()
+	local totalTime = app.timer:GetServerTime() - self:StartTime()
+	return totalTime/self:Entity():GetLevelUpCost().buildTime * 100
 end
 
 return ProductionTechnologyEvent

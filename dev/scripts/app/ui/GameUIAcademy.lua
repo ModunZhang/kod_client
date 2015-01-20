@@ -29,23 +29,22 @@ local GameUIAcademy = UIKit:createUIClass("GameUIAcademy","GameUIUpgradeBuilding
 local window = import("..utils.window")
 local UIScrollView = import(".UIScrollView")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local WidgetSpeedUp = import("..widget.WidgetSpeedUp")
+local GameUITechnologySpeedUp = import(".GameUITechnologySpeedUp")
 
-function GameUIAcademy:GetTempData()
+
+function GameUIAcademy:GetTechsData()
 	local r = {}
-	for k,v in pairs(productionTechs) do
-		local item = {key = tostring(v.index),data = {enable = true,name = v.name}}
-		if v.unlockBy ~= v.index then
-			item.data.need = tostring(v.unlockBy)
-		end
-		table.insert(r, item)
-	end
-	table.sort( r, function(a,b) return tonumber(a.key) <  tonumber(b.key) end)
+	City:IteratorTechs(function(index,tech)
+			table.insert(r, tech)
+	end)
+	table.sort( r, function(a,b) return tonumber(a:Index()) <  tonumber(b:Index()) end)
 	return r
 end
 
 function GameUIAcademy:ctor(city,building)
 	GameUIAcademy.super.ctor(self,city,_("学院"),building)
-	local tree_data = self:GetTempData()
+	local tree_data = self:GetTechsData()
 	local max_y = (math.ceil(#tree_data/3) - 1) * (142+46) + 71
 	local techNodes = {}
 	local x,y = 0,max_y
@@ -55,18 +54,18 @@ function GameUIAcademy:ctor(city,building)
 		else
 			x = (i % 3 - 1) * (142+46) + 71 + 20
 		end
-		local treeNode = TreeNode.new(data.data.need,{x = x,y = y},{name = data.data.name ,enable = data.data.enable})
-		techNodes[data.key] = treeNode
+		local need = data:UnlockBy() ~= data:Index() and data:UnlockBy() or nil
+		local treeNode = TreeNode.new(need,{x = x,y = y},data)
+		techNodes[data:Index()] = treeNode
 		if i % 3 == 0 then
 			y = y - (142+46)
 		end
 	end
-	dump(techNodes,"testData-->")
 	self.techNodes = techNodes
 end
 
 function GameUIAcademy:GetNodeForKey(key)
-	return self.techNodes[tostring(key)]
+	return self.techNodes[key]
 end
 
 function GameUIAcademy:onEnter()
@@ -83,29 +82,90 @@ function GameUIAcademy:onEnter()
             self.technology_node:hide()
         end
     end):pos(window.cx, window.bottom + 34)
+    City:AddListenOnType(self,City.LISTEN_TYPE.PRODUCTION_DATA_CHANGED)
+    City:AddListenOnType(self,City.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
+    City:AddListenOnType(self,City.LISTEN_TYPE.PRODUCTION_EVENT_TIMER)
+end
+
+function GameUIAcademy:OnProductionTechsDataChanged(changed_map)
+	for _,tech in ipairs(changed_map.edited or {}) do
+		local item = self:GetItemByTag(tech:Index())
+		if item and item.levelLabel then
+			item.levelLabel:setString("Lv " .. tech:Level())
+		end
+		if item and item.changeState then
+			item.changeState(tech:Enable())
+		end
+	end
+end
+
+function GameUIAcademy:OnProductionTechnologyEventDataChanged(changed_map)
+	self:CheckUIChanged()
+end
+
+function GameUIAcademy:OnProductionTechnologyEventTimer(event)
+	if self.time_label and self.time_label:isVisible() then
+		self.process_timer:setPercentage(event:GetPercent())
+		self.time_label:setString(GameUtils:formatTimeStyle1(event:GetTime()))
+	end
+end
+
+function GameUIAcademy:onMoveOutStage()
+	GameUIAcademy.super.onMoveOutStage(self)
+	City:RemoveListenerOnType(self,City.LISTEN_TYPE.PRODUCTION_DATA_CHANGED)
+	City:RemoveListenerOnType(self,City.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
+	City:RemoveListenerOnType(self,City.LISTEN_TYPE.PRODUCTION_EVENT_TIMER)
 end
 
 function GameUIAcademy:CreateBetweenBgAndTitle()
     GameUIAcademy.super.CreateBetweenBgAndTitle(self)
 	self.technology_node = self:BuildTechnologyUI():addTo(self):pos(window.left,window.bottom_top)
-
 end
 
 function GameUIAcademy:BuildTipsUI(technology_node,y)
 	local tips_bg = display.newSprite("box_panel_556x106.png")
 		:addTo(technology_node):align(display.LEFT_TOP,40,y)
-	if true then
-		UIKit:ttfLabel({
-			text = _("研发队列空闲"),
-			size = 22,
-			color= 0x403c2f
-		}):align(display.TOP_CENTER,278,90):addTo(tips_bg)
-		UIKit:ttfLabel({
-			text = _("选择一个技能进行研发"),
-			size = 20,
-			color= 0x797154
-		}):align(display.BOTTOM_CENTER,278,30):addTo(tips_bg)
-	end
+	local no_event_label_1 = UIKit:ttfLabel({
+		text = _("研发队列空闲"),
+		size = 22,
+		color= 0x403c2f
+	}):align(display.TOP_CENTER,278,90):addTo(tips_bg)
+	self.no_event_label_1 = no_event_label_1
+	local no_event_label_2 = UIKit:ttfLabel({
+		text = _("选择一个技能进行研发"),
+		size = 20,
+		color= 0x797154
+	}):align(display.BOTTOM_CENTER,278,30):addTo(tips_bg)
+	self.no_event_label_2 = no_event_label_2
+	local upgrade_label = UIKit:ttfLabel({
+		text = "",
+		size = 20,
+		color= 0x403c2f
+	}):align(display.LEFT_TOP,10,96):addTo(tips_bg)
+	self.upgrade_label = upgrade_label
+	local icon_bg = display.newSprite("progress_bg_head_43x43.png"):align(display.LEFT_BOTTOM, 10, 15):addTo(tips_bg,2)
+	display.newSprite("hourglass_39x46.png"):align(display.CENTER, 22, 22):addTo(icon_bg):scale(0.8)
+	self.icon_bg = icon_bg
+	local process_bg = display.newSprite("progress_bar_364x40_1.png")
+		:align(display.LEFT_BOTTOM,icon_bg:getPositionX()+icon_bg:getCascadeBoundingBox().width/2, 15):addTo(tips_bg,1)
+	local process_timer = UIKit:commonProgressTimer("progress_bar_364x40_2.png"):align(display.LEFT_CENTER, 0, 20):addTo(process_bg)
+	process_timer:setPercentage(100)
+	self.process_bg = process_bg
+	self.process_timer = process_timer
+	local time_label = UIKit:ttfLabel({
+		text = "00:00:00",
+		size = 22,
+		color= 0xfff3c7
+	}):align(display.LEFT_CENTER,30,20):addTo(process_bg)
+	self.time_label = time_label
+	local speedButton = WidgetPushButton.new({normal = "green_btn_up_148x76.png",pressed = "green_btn_down_148x76.png"})
+		:align(display.RIGHT_BOTTOM, 546, 10)
+		:addTo(tips_bg)
+		:setButtonLabel("normal",UIKit:commonButtonLable({text = _("加速")}))
+		:onButtonClicked(function()
+			GameUITechnologySpeedUp.new():addToCurrentScene(true)
+		end)
+	self.speedButton = speedButton
 end
 
 function GameUIAcademy:BuildTechnologyUI(height)
@@ -120,7 +180,34 @@ function GameUIAcademy:BuildTechnologyUI(height)
         :setDirection(UIScrollView.DIRECTION_VERTICAL)
         :addTo(technology_node)
     self.scrollView:fixResetPostion(-30)
+    self:CheckUIChanged()
 	return technology_node
+end
+
+function GameUIAcademy:CheckUIChanged()
+	if City:HaveProductionTechEvent() then
+		self.no_event_label_1:hide()
+		self.no_event_label_2:hide()
+		self.upgrade_label:show()
+		self.icon_bg:show()
+		self.process_bg:show()
+		self.time_label:show()
+		self.speedButton:show()
+		local event = City:GetProductionTechEventsArray()[1]
+		if event then
+			self.upgrade_label:setString(string.format(_("正在研发%s到 Level %d"),event:Entity():GetLocalizedName(),event:Entity():GetNextLevel()))
+			self.process_timer:setPercentage(event:GetPercent())
+			self.time_label:setString(GameUtils:formatTimeStyle1(event:GetTime()))
+		end
+	else
+		self.no_event_label_1:show()
+		self.no_event_label_2:show()
+		self.upgrade_label:hide()
+		self.icon_bg:hide()
+		self.process_bg:hide()
+		self.time_label:hide()
+		self.speedButton:hide()
+	end
 end
 
 function GameUIAcademy:CreateScrollNode()
@@ -145,24 +232,38 @@ function GameUIAcademy:CreateScrollNode()
 	return node
 end
 
-
-function GameUIAcademy:GetItem(data)
+function GameUIAcademy:GetItem(tech)
 	local item = WidgetPushButton.new({normal = "technology_bg_normal_142x142.png"})
-	if data.enable then
-		display.newSprite("technology_icon_123x123.png"):addTo(item):scale(0.8)
-	else
-		display.newFilteredSprite("technology_icon_123x123.png","GRAY", {0.2,0.5,0.1,0.1}):addTo(item):scale(0.8)
-	end
+	local icon_image = tech:GetImageName()
+	item.enable_icon = display.newSprite(icon_image):addTo(item):scale(0.8)
+	item.unable_icon = display.newFilteredSprite(icon_image,"GRAY", {0.2,0.5,0.1,0.1}):addTo(item):scale(0.8)
 	local lv_bg = display.newSprite("technology_lv_bg_117x40.png"):align(display.BOTTOM_CENTER, 0, -51):addTo(item)
-	if data.enable then
-		UIKit:ttfLabel({text = "LV 0",size = 22,color = 0xfff3c7}):align(display.CENTER_BOTTOM, 58, 0):addTo(lv_bg)
-	else
-		display.newSprite("technology_lock_40x54.png"):align(display.BOTTOM_CENTER, 0, -55):addTo(item)
+	item.levelLabel = UIKit:ttfLabel({text = "LV " .. tech:Level() ,size = 22,color = 0xfff3c7}):align(display.CENTER_BOTTOM, 58, 0):addTo(lv_bg)
+	item.lock_icon = display.newSprite("technology_lock_40x54.png"):align(display.BOTTOM_CENTER, 0, -55):addTo(item)
+	item.changeState = function(enable)
+		if enable then
+			item.enable_icon:show()
+			item.unable_icon:hide()
+			item.levelLabel:show()
+			item.lock_icon:hide()
+		else
+			item.enable_icon:hide()
+			item.unable_icon:show()
+			item.levelLabel:hide()
+			item.lock_icon:show()
+		end
 	end
+	item.changeState(tech:Enable())
 	item:onButtonClicked(function(event)
-        UIKit:newGameUI("GameUIUpgradeTechnology"):addToCurrentScene(true)
+        UIKit:newGameUI("GameUIUpgradeTechnology",tech):addToCurrentScene(true)
 	end)
+	item:setTag(tech:Index())
 	return item
+end
+
+function GameUIAcademy:GetItemByTag(tag)
+	local scrollNode = self.scrollView:getScrollNode()
+	return scrollNode:getChildByTag(tag)
 end
 
 return GameUIAcademy

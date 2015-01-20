@@ -91,6 +91,7 @@ function GameUIAlliance:Reset()
     self.memberListView = nil
     self.informationNode = nil
     self.currentContent = nil
+    self.member_list_bg = nil
 end
 
 function GameUIAlliance:onEnter()
@@ -1283,6 +1284,10 @@ function GameUIAlliance:OnInfoButtonClicked(tag)
         return
     end
     if tag == 1 then
+        if Alliance_Manager:GetMyAlliance():GetSelf():IsArchon() and Alliance_Manager:GetMyAlliance():GetMembersCount() > 1 then 
+            UIKit:showMessageDialog(_("提示"),_("仅当联盟成员为空时,盟主才能退出联盟"), function()end)
+            return
+        end
         FullScreenPopDialogUI.new():SetTitle(_("退出联盟"))
             :SetPopMessage(_("您必须在没有部队在外行军的情况下，才可以退出联盟。退出联盟会损失当前未打开的联盟礼物。"))
             :CreateOKButton(
@@ -1348,10 +1353,10 @@ function GameUIAlliance:CreateInvateUI()
             })
         )
         :onButtonClicked(function(event)
-            local playerName = string.trim(editbox:getText())
-            if string.len(playerName) == 0 then
+            local playerID = string.trim(editbox:getText())
+            if string.len(playerID) == 0 then
                 FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("请输入邀请的玩家名称"))
+                    :SetPopMessage(_("请输入邀请的玩家ID"))
                     :CreateOKButton(
                         {
                             listener =  function()end
@@ -1360,7 +1365,7 @@ function GameUIAlliance:CreateInvateUI()
                     :AddToCurrentScene()
                 return
             end
-            NetManager:getInviteToJoinAlliancePromise(playerName)
+            NetManager:getInviteToJoinAlliancePromise(playerID)
                 :next(function(result)
                     layer:removeFromParent(true)
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))

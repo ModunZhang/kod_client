@@ -51,9 +51,8 @@ function WidgetSpeedUp:ctor()
         color = 0x403c2f
     }):align(display.LEFT_CENTER, 10,self.tip_bg:getContentSize().height/2)
         :addTo(self.tip_bg)
-
-
 end
+
 function WidgetSpeedUp:SetProgressInfo(time_label, percent)
     self.progress:SetProgressInfo(time_label, percent)
     return self

@@ -12,12 +12,12 @@ function DragonSprite:GetLogicZorder()
     return 1
 end
 function DragonSprite:ReloadSpriteCauseTerrainChanged(terrain)
-    -- if self.sprite then
-    --     self.sprite:removeFromParent()
-    -- end
-    -- self.sprite = self:CreateSprite(terrain):addTo(self)
-    -- self:AddAnimationCallbackTo(self.sprite)
-    -- self:PlayAnimation("Idle")
+    if self.sprite then
+        self.sprite:removeFromParent()
+    end
+    self.sprite = self:CreateSprite(terrain):addTo(self)
+    self:AddAnimationCallbackTo(self.sprite)
+    self:PlayAnimation("Idle")
 end
 function DragonSprite:CreateSprite(terrain)
     local dragon_animation

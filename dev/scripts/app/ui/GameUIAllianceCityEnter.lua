@@ -151,11 +151,21 @@ function GameUIAllianceCityEnter:GetEnterButtons()
 	else -- 敌方玩家
 		local attack_button = self:BuildOneButton("attack_80x66.png",_("进攻")):onButtonClicked(function()
 			UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
+				if member:IsProtected() then
+					UIKit:showMessageDialog(_("提示"),_("玩家处于保护状态,不能进攻或突袭"), function()end)
+					self:leftButtonClicked()
+					return
+				end
                 NetManager:getAttackPlayerCityPromise(dragonType, soldiers, member:Id())
             end):addToCurrentScene(true)
 			self:leftButtonClicked()
 		end)
 		local strike_button = self:BuildOneButton("Strike_72x72.png",_("突袭")):onButtonClicked(function()
+			if member:IsProtected() then
+					UIKit:showMessageDialog(_("提示"),_("玩家处于保护状态,不能进攻或突袭"), function()end)
+					self:leftButtonClicked()
+					return
+			end
 			UIKit:newGameUI("GameUIStrikePlayer",member:Id()):addToCurrentScene(true)
 			self:leftButtonClicked()
 		end)

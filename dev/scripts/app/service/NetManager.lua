@@ -1434,7 +1434,13 @@ function NetManager:getRemoveMySellItemPromise(itemId)
         itemId = itemId
     }, "下架商品失败!"), get_playerdata_callback()):next(get_response_msg)
 end
-
+--升级生产科技
+function NetManager:getUpgradeProductionTechPromise(techName,finishNow)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.upgradeProductionTech", {
+        techName = techName,
+        finishNow = finishNow,
+    }, "升级生产科技失败!"), get_playerdata_callback()):next(get_response_msg)
+end
 --
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)

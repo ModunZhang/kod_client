@@ -16,6 +16,8 @@ property(AllianceMember, "helpTroopsCount")
 property(AllianceMember, "wallHp")
 property(AllianceMember, "wallLevel")
 property(AllianceMember, "keepLevel")
+property(AllianceMember, "isProtected")
+
 local titles_enum = Enum("member",
     "elite",
     "supervisor",
@@ -149,7 +151,8 @@ function AllianceMember:IsDifferentWith(member)
         "lastlogintime",
         "icon",
         "title",
-        "name"
+        "name",
+        "isProtected"
     } do
         if self[v] ~= member[v] then
             return true

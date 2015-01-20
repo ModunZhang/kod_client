@@ -110,6 +110,7 @@ function GameUIWriteMail:ctor(send_type)
                 self:SendMail(self.editbox_addressee:getText(), self.editbox_subject:getText(), self.textView:getText())
             end
         end)
+    textView:setRectTrackedNode(self.send_button)
 
 end
 function GameUIWriteMail:SendMail(addressee,title,content)

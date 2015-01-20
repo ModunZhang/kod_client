@@ -353,24 +353,42 @@ require("app.datas.PlayerVillageExp_coin")
 
 GameDatas.ProductionTechLevelUp = {
 	["crane"] = {},
-	["fastFix"] = {},
-	["reinforcing"] = {},
 	["stoneCarving"] = {},
-	["ironSmelting"] = {},
-	["seniorTower"] = {},
 	["forestation"] = {},
+	["fastFix"] = {},
+	["ironSmelting"] = {},
 	["cropResearch"] = {},
+	["reinforcing"] = {},
+	["seniorTower"] = {},
 	["beerSupply"] = {},
+	["rescueTent"] = {},
+	["colonization"] = {},
+	["negotiation"] = {},
+	["trap"] = {},
+	["hideout"] = {},
+	["logistics"] = {},
+	["healingAgent"] = {},
+	["sketching"] = {},
+	["mintedCoin"] = {},
 }
 require("app.datas.ProductionTechLevelUp_crane")
-require("app.datas.ProductionTechLevelUp_fastFix")
-require("app.datas.ProductionTechLevelUp_reinforcing")
 require("app.datas.ProductionTechLevelUp_stoneCarving")
-require("app.datas.ProductionTechLevelUp_ironSmelting")
-require("app.datas.ProductionTechLevelUp_seniorTower")
 require("app.datas.ProductionTechLevelUp_forestation")
+require("app.datas.ProductionTechLevelUp_fastFix")
+require("app.datas.ProductionTechLevelUp_ironSmelting")
 require("app.datas.ProductionTechLevelUp_cropResearch")
+require("app.datas.ProductionTechLevelUp_reinforcing")
+require("app.datas.ProductionTechLevelUp_seniorTower")
 require("app.datas.ProductionTechLevelUp_beerSupply")
+require("app.datas.ProductionTechLevelUp_rescueTent")
+require("app.datas.ProductionTechLevelUp_colonization")
+require("app.datas.ProductionTechLevelUp_negotiation")
+require("app.datas.ProductionTechLevelUp_trap")
+require("app.datas.ProductionTechLevelUp_hideout")
+require("app.datas.ProductionTechLevelUp_logistics")
+require("app.datas.ProductionTechLevelUp_healingAgent")
+require("app.datas.ProductionTechLevelUp_sketching")
+require("app.datas.ProductionTechLevelUp_mintedCoin")
 
 GameDatas.ProductionTechs = {
 	["productionTechs"] = {},
