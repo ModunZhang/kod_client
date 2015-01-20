@@ -22,7 +22,7 @@ function SingleTreeSprite:GetSpriteFile()
 	if not self.png_index then
     	self.png_index = (math.floor(math.random() * 1000) % 2) + 1
 	end
-    return TREE_MAP[self:GetMapLayer():CurrentTerrain()][self.png_index], 0.6
+    return TREE_MAP[self:GetMapLayer():Terrain()][self.png_index], 0.6
 end
 function SingleTreeSprite:GetSpriteOffset()
     return 5, -55

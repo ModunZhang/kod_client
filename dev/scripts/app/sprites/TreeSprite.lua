@@ -1,10 +1,5 @@
 local Sprite = import(".Sprite")
 local TreeSprite = class("TreeSprite", Sprite)
-local TREE_MAP = {
-    grassLand = {"tree_1_510x362.png", "tree_2_510x412.png"},
-    desert = {"tree_1_510x362.png", "tree_2_510x412.png"},
-    iceField = {"tree_1_510x362.png", "tree_2_510x412.png"},
-}
 function TreeSprite:ctor(city_layer, entity, x, y)
     TreeSprite.super.ctor(self, city_layer, entity, x, y)
 end
@@ -17,7 +12,7 @@ function TreeSprite:GetSpriteFile()
     if not self.png_index then
         self.png_index = random(123456789) % 2 + 1
     end
-    return TREE_MAP[self:GetMapLayer():CurrentTerrain()][self.png_index]
+    return string.format("unlock_trees_%d_%s.png", self.png_index, self:GetMapLayer():Terrain())
 end
 function TreeSprite:GetSpriteOffset()
     return 0, 0

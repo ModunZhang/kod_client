@@ -69,8 +69,8 @@ function AllianceScene:OnBasicChanged(alliance,changed_map)
         app:EnterMyAllianceScene()
     end
 end
-function AllianceScene:ChangeTerrain(terrain_type)
-    self:GetSceneLayer():ChangeTerrain(terrain_type)
+function AllianceScene:ChangeTerrain()
+    self:GetSceneLayer():ChangeTerrain()
 end
 function AllianceScene:OnOperation(alliance,operation_type)
     if operation_type == "quit" then

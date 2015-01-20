@@ -139,7 +139,6 @@ function CityLayer:ctor(city_scene)
     Observer.extend(self)
     CityLayer.super.ctor(self, 0.6, 1.5)
     self.city_scene = city_scene
-    self.terrain_type = self.city_scene:GetCity():GetUser():Terrain()
     self.buildings = {}
     self.houses = {}
     self.towers = {}
@@ -147,7 +146,7 @@ function CityLayer:ctor(city_scene)
     self.trees = {}
     self.walls = {}
     self.helpedByTroops = {}
-    -- self.road = nil
+    self.road = nil
     self:InitBackground()
     self:InitCity()
     self:InitWeather()
@@ -163,8 +162,8 @@ function CityLayer:ConvertLogicPositionToMapPosition(lx, ly)
     local map_pos = cc.p(self.iso_map:ConvertToMapPosition(lx, ly))
     return self:convertToNodeSpace(self:GetCityNode():convertToWorldSpace(map_pos))
 end
-function CityLayer:CurrentTerrain()
-    return self.terrain_type
+function CityLayer:Terrain()
+    return self.city_scene:GetCity():GetUser():Terrain()
 end
 --
 function CityLayer:InitBackground()
@@ -214,19 +213,19 @@ function CityLayer:InitWeather()
 -- self.weather_glstate = self.weather:getFilter(0):getGLProgramState()
 -- self:UpdateWeather()
 end
-function CityLayer:ChangeTerrain(terrain_type)
-    if self.terrain_type ~= terrain_type then
-        self.terrain_type = terrain_type
-        self:ReloadSceneBackground()
-        table.foreach(self.trees, function(_, v)
-            v:ReloadSpriteCauseTerrainChanged()
-        end)
-        table.foreach(self.single_tree, function(_, v)
-            v:ReloadSpriteCauseTerrainChanged()
-        end)
-        table.foreach(self.buildings, function(_, v)
-            v:ReloadSpriteCauseTerrainChanged()
-        end)
+function CityLayer:ChangeTerrain()
+    self:ReloadSceneBackground()
+    table.foreach(self.trees, function(_, v)
+        v:ReloadSpriteCauseTerrainChanged()
+    end)
+    table.foreach(self.single_tree, function(_, v)
+        v:ReloadSpriteCauseTerrainChanged()
+    end)
+    table.foreach(self.buildings, function(_, v)
+        v:ReloadSpriteCauseTerrainChanged()
+    end)
+    if self.road then
+        self.road:ReloadSpriteCauseTerrainChanged()
     end
 end
 --
@@ -235,12 +234,15 @@ function CityLayer:ReloadSceneBackground()
         self.background:removeFromParent()
     end
     self.background = display.newNode():addTo(self, SCENE_BACKGROUND)
-    local left1 = display.newSprite("left_background_1.jpg"):addTo(self.background):align(display.LEFT_BOTTOM)
-    local left2 = display.newSprite("left_background_2.jpg"):addTo(self.background):align(display.LEFT_BOTTOM, 0, left1:getContentSize().height)
-    local left3 = display.newSprite("left_background_3.jpg"):addTo(self.background):align(display.LEFT_BOTTOM, 0, left1:getContentSize().height + left2:getContentSize().height)
-    local right1 = display.newSprite("right_background_1.jpg"):addTo(self.background):align(display.LEFT_BOTTOM, left2:getContentSize().width, 0)
-    local right2 = display.newSprite("right_background_2.jpg"):addTo(self.background):align(display.LEFT_BOTTOM, left2:getContentSize().width, right1:getContentSize().height)
-    local right3 = display.newSprite("right_background_3.jpg"):addTo(self.background):align(display.LEFT_BOTTOM, left2:getContentSize().width, right1:getContentSize().height + right2:getContentSize().height)
+    local terrain = self:Terrain()
+    local left_1 = string.format("left_background_1_%s.jpg", terrain)
+    local left_2 = string.format("left_background_2_%s.jpg", terrain)
+    local right_1 = string.format("right_background_1_%s.jpg", terrain)
+    local right_2 = string.format("right_background_2_%s.jpg", terrain)
+    local left1 = display.newSprite(left_1):addTo(self.background):align(display.LEFT_BOTTOM)
+    local left2 = display.newSprite(left_2):addTo(self.background):align(display.LEFT_BOTTOM, 0, left1:getContentSize().height)
+    local right1 = display.newSprite(right_1):addTo(self.background):align(display.LEFT_BOTTOM, left2:getContentSize().width, 0)
+    local right2 = display.newSprite(right_2):addTo(self.background):align(display.LEFT_BOTTOM, left2:getContentSize().width, right1:getContentSize().height)
 end
 function CityLayer:InitWithCity(city)
     city:AddListenOnType(self, city.LISTEN_TYPE.UNLOCK_TILE)
@@ -544,35 +546,32 @@ end
 function CityLayer:UpdateTreesWithCity(city)
     local city_node = self:GetCityNode()
 
-    -- if self.road then
-    --     city_node:removeChild(self.road, true)
-    -- end
+    if self.road then
+        self.road:removeFromParent()
+    end
     if self.trees then
         for k, v in pairs(self.trees) do
-            city_node:removeChild(v, true)
+            v:removeFromParent()
         end
     end
 
     self.trees = {}
-    -- self.road = nil
+    self.road = nil
 
-    -- local face_tile = city:GetTileFaceToGate()
-    -- self.road = self:CreateRoadWithTile(face_tile)
-    -- city_node:addChild(self.road)
+    local face_tile = city:GetTileFaceToGate()
+    self.road = self:CreateRoadWithTile(face_tile):addTo(city_node)
 
     city:IteratorTilesByFunc(function(x, y, tile)
-        if tile.locked then
-            -- if face_tile ~= tile and tile.locked then
-            local tree = self:CreateTreeWithTile(tile)
-            city_node:addChild(tree)
-            table.insert(self.trees, tree)
+        if face_tile ~= tile and tile.locked then
+        -- if tile.locked then
+            table.insert(self.trees, self:CreateTreeWithTile(tile):addTo(city_node))
         end
     end)
 
     self:NotifyObservers(function(listener)
-        -- local road = city:GetTileByIndex(face_tile.x, face_tile.y) and self.road or nil
-        listener:OnTreesChanged(self.trees)
-        -- listener:OnTreesChanged(self.trees, road)
+        local road = city:GetTileByIndex(face_tile.x, face_tile.y) and self.road or nil
+        listener:OnTreesChanged(self.trees, road)
+        -- listener:OnTreesChanged(self.trees, nil)
     end)
 end
 function CityLayer:UpdateWallsWithCity(city)
@@ -778,9 +777,9 @@ function CityLayer:OnSceneMove()
     self:IteratorCanUpgradingBuilding(on_move)
     table.foreach(self.trees, on_move)
     table.foreach(self.ruins, on_move)
-    -- if self.road then
-    --     on_move(nil, self.road)
-    -- end
+    if self.road then
+        on_move(nil, self.road)
+    end
     -- self:UpdateWeather()
 end
 function CityLayer:UpdateWeather()
@@ -793,6 +792,8 @@ function CityLayer:OnSceneScale()
 end
 
 return CityLayer
+
+
 
 
 

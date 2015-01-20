@@ -215,8 +215,8 @@ function CityScene:PlayBackgroundMusic()
         self:PlayBackgroundMusic()
     end, 113 + 30)
 end
-function CityScene:ChangeTerrain(terrain_type)
-    self:GetSceneLayer():ChangeTerrain(terrain_type)
+function CityScene:ChangeTerrain()
+    self:GetSceneLayer():ChangeTerrain()
 end
 function CityScene:CreateArrowLayer()
     local arrow_layer = display.newLayer():addTo(self, 2)

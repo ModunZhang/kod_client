@@ -1046,7 +1046,7 @@ function City:GenerateWalls()
     local find_gate = function(walls)
         local t = {}
         for i, v in ipairs(walls) do
-            if v.orient == Orient.X then
+            if v.orient == Orient.Y then
                 local dup = false
                 for _, w in pairs(t) do
                     if w.y == v.y then
