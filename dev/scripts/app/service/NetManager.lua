@@ -130,11 +130,11 @@ end
 function NetManager:removeDisConnectEventListener(  )
     self:removeEventListener("disconnect")
 end
---TODO:显示服务器返回的提示信息
+
 function NetManager:addKickEventListener()
     self:addEventListener("onKick", function(success, msg)
         self:disconnect()
-        UIKit:showMessageDialog(_("提示"), _("连接服务器失败,请检测你的网络环境!"), function()
+        UIKit:showMessageDialog(_("提示"), _("服务器已断开与你的连接!"), function()
             app:restart()
         end,nil,false)
     end)
