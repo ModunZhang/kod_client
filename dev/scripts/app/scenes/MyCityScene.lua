@@ -288,7 +288,8 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
         if iskindof(building, "HelpedTroopsSprite") then
             local helped = city:GetHelpedByTroops()[building:GetIndex()]
             local type_ = GameUIWatchTowerTroopDetail.DATA_TYPE.HELP_DEFENCE
-            UIKit:newGameUI("GameUIWatchTowerTroopDetail", type_, helped, self.user:Id()):addToCurrentScene(true)
+            local user = self.city:GetUser()
+            UIKit:newGameUI("GameUIWatchTowerTroopDetail", type_, helped, user:Id(),false):addToCurrentScene(true)
             return
         end
 
