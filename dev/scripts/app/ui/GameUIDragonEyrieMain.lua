@@ -104,6 +104,7 @@ end
 
 function GameUIDragonEyrieMain:RefreshUI()
 	local dragon = self:GetCurrentDragon()
+	if not self.dragon_info then return end
 	if not self:GetCurrentDragon():Ishated() then
 		self.dragon_info:hide()
 		local dragonEvent = self.dragon_manager:GetDragonEventByDragonType(self:GetCurrentDragon():Type())
