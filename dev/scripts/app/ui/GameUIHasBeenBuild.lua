@@ -32,7 +32,7 @@ local building_config_map = {
     ["hunterHall"] = {scale = 0.2, offset = {x = 10, y = -10}},
     ["trainingGround"] = {scale = 0.2, offset = {x = 10, y = -10}},
     ["stable"] = {scale = 0.2, offset = {x = 10, y = -10}},
-    ["workShop"] = {scale = 0.2, offset = {x = 10, y = -10}},
+    ["workshop"] = {scale = 0.2, offset = {x = 10, y = -10}},
     ["wall"] = {scale = 0.4, offset = {x = 0, y = -10}},
     ["tower"] = {scale = 1, offset = {x = 0, y = -10}},
     --

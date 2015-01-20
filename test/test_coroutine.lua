@@ -1,3 +1,4 @@
+local Game = require("Game")
 -- function send(x)
 --     coroutine.yield(x)
 -- end
@@ -62,20 +63,20 @@
 -- end
 
 
-require "socket"
-host = "www.w3.org"
-file = "/TR/REC-html32.html"
-c = assert(socket.connect(host, 80))
-c:send("GET" .. file .. " HTTP/1.0\r\n\r\n")
-while true do
-    local s, status, partial = c:receive(2^10)
-    io.write(s or partial)
-    if status == "closed" then break end
-end
-c:close()
+-- require "socket"
+-- host = "www.w3.org"
+-- file = "/TR/REC-html32.html"
+-- c = assert(socket.connect(host, 80))
+-- c:send("GET" .. file .. " HTTP/1.0\r\n\r\n")
+-- while true do
+--     local s, status, partial = c:receive(2^10)
+--     io.write(s or partial)
+--     if status == "closed" then break end
+-- end
+-- c:close()
 
 
-function download(host, file)
+-- function download(host, file)
 
 
 --[[
@@ -138,7 +139,49 @@ print(response)
 -- print("status", coroutine.status(for_))
 -- print("resume", coroutine.resume(for_, 1))
 
+local function zip(...)
+    local t = {...}
+    local val = {}
+    local cur_i = 1
+    return function()
+        if cur_i > #t[1] then return nil end
+        for index, v in ipairs(t) do
+            val[index] = v[cur_i]
+        end
+        cur_i = cur_i + 1
+        return cur_i - 1, unpack(val)
+    end
+end
 
+-- local function cat(...)
+--     local t = {...}
+--     local ti = 1
+--     return function()
+--         local len = 0
+--         for i, v in ipairs(t) do
+--             len = len + #v
+--             if ti < len then
+--                 ti - len
+--             end
+--         end
+--         return ti, v
+--     end
+-- end
+
+-- for i, v in pairs({1,2,3,4}) do
+-- 	print(i, v)
+-- end
+
+for i, v1, v2, v3 in zip({1, 2, 3, 4}, {10, 9, 8, 7}, {11, 9, 8, 7}) do
+	print(i, v1, v2, v3)
+end
+
+
+
+a = {1,2,3,4,5}
+b = {6,7,8,9,10}
+
+dump({unpack(a), unpack(b)})
 
 
 

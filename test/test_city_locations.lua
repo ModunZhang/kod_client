@@ -92,6 +92,6 @@ function test_city_locations()
     -- assert_equal("stable", test_city:GetBuildingByLocationId(24):GetType())
     -- assert_equal(24, test_city:GetLocationIdByBuilding(test_city:GetBuildingByLocationId(24)))
 
-    -- assert_equal("workShop", test_city:GetBuildingByLocationId(25):GetType())
+    -- assert_equal("workshop", test_city:GetBuildingByLocationId(25):GetType())
     -- assert_equal(24, test_city:GetLocationIdByBuilding(test_city:GetBuildingByLocationId(25)))
 end

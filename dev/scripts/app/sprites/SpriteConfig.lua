@@ -135,7 +135,7 @@ create_building_config(
     ,create_config(MIN_LEVEL, MAX_LEVEL, "academy_214x220.png", offset(20, 120), scale(1))
 )
 create_building_config(
-    "workShop"
+    "workshop"
     ,create_config(MIN_LEVEL, MAX_LEVEL, "workShop_230x240.png", offset(20, 130), scale(1))
 )
 create_building_config(
