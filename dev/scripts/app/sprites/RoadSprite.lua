@@ -5,7 +5,7 @@ function RoadSprite:ctor(city_layer, entity, x, y)
 end
 function RoadSprite:ReloadSpriteCauseTerrainChanged()
     self.sprite:removeFromParent()
-    self.sprite = self:CreateSprite():addTo(self, SPRITE)
+    self.sprite = self:CreateSprite():addTo(self, SPRITE):pos(self:GetSpriteOffset())
 end
 function RoadSprite:GetSpriteFile()
     return string.format("road_%s.png", self:GetMapLayer():Terrain())
