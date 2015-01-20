@@ -19,7 +19,7 @@ local LocalPushManager = import("app.utils.LocalPushManager")
 local Timer = import('.utils.Timer')
 local User_ = import('.entity.User')
 local MyApp = class("MyApp", cc.mvc.AppBase)
-
+local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 
 local function transition_(scene, status)
     if status == "onEnter" then
@@ -125,15 +125,34 @@ end
 
 function MyApp:retryConnectServer()
     if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
-        -- device.showActivityIndicator()
         NetManager:disconnect()
-        NetManager:getConnectLogicServerPromise():next(function()
-            return NetManager:getLoginPromise()
-        end):catch(function(err)
-            dump(err:reason())
-        end):always(function()
-            -- device.hideActivityIndicator()
-            end)
+        app:lockInput(true)
+        local loading = UIKit:newGameUI("GameUIWatiForNetWork")
+        local need_show,showed = true,false
+        scheduler.performWithDelayGlobal(function()
+            if need_show then
+                loading:addToCurrentScene(true)
+                loading:setLocalZOrder(2001)
+                showed = true
+                need_show = false
+            end
+        end,2)
+        scheduler.performWithDelayGlobal(function()
+            NetManager:getConnectLogicServerPromise():next(function()
+                return NetManager:getLoginPromise()
+            end):catch(function(err)
+                UIKit:showMessageDialog(_("错误"), _("连接服务器失败,请检测你的网络环境!"), function()
+                    app:retryConnectServer()
+                end,nil,false)
+            end):always(function()
+                app:lockInput(false)
+                need_show = false
+                if showed then
+                    loading:removeFromParent(true)
+                end
+            end)        
+        end,1)
+       
     end
 end
 

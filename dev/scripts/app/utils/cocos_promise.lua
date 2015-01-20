@@ -51,7 +51,13 @@ local function promiseFilterNetError(p,need_catch)
         dump(err)
         local dialog = FullScreenPopDialogUI.new():AddToCurrentScene()
         local content, title = err:reason()
-        dialog:SetTitle(title or ""):VisibleXButton(false)
+        title = title or ""
+        if title == 'timeout' then
+            content = _("请求超时")
+            dialog:DisableAutoClose()
+            dialog:VisibleXButton(false)
+        end
+        dialog:SetTitle(title == 'timeout' and _("错误") or title)
         dialog:SetPopMessage(content):CreateOKButton(
             {
                 btn_name = _("确定"),
