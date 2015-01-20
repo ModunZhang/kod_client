@@ -492,6 +492,17 @@ function City:GetDecoratorByPosition(x, y)
     end)
     return find_decorator
 end
+function City:GetTilesFaceToGate()
+    local r = {}
+    local tile = self:GetTileFaceToGate()
+    if tile then
+        local x = tile.x
+        for i = tile.y, 5 do
+            table.insert(r, self:GetTileByIndex(x, i))
+        end
+    end
+    return r
+end
 function City:GetTileFaceToGate()
     for k, v in pairs(self.walls) do
         if v:IsGate() then

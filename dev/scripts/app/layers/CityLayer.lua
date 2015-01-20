@@ -561,9 +561,17 @@ function CityLayer:UpdateTreesWithCity(city)
     local face_tile = city:GetTileFaceToGate()
     self.road = self:CreateRoadWithTile(face_tile):addTo(city_node)
 
+    local face_tiles = city:GetTilesFaceToGate()
+
     city:IteratorTilesByFunc(function(x, y, tile)
-        if face_tile ~= tile and tile.locked then
-        -- if tile.locked then
+        local find = false
+        for i, v in ipairs(face_tiles) do
+            if x == v.x and y == v.y then
+                find = true
+                break
+            end
+        end
+        if not find and tile.locked then
             table.insert(self.trees, self:CreateTreeWithTile(tile):addTo(city_node))
         end
     end)
