@@ -57,7 +57,6 @@ local function get_none_blocking_request_promise(request_route, data, m)
 end
 local function get_callback_promise(callbacks, m)
     local p = promise.new(check_response(m or ""))
-    callbacks = {}
     table.insert(callbacks, 1, function(success, msg)
         p:resolve({success = success, msg = msg})
     end)
