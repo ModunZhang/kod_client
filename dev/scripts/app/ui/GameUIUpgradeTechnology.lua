@@ -336,15 +336,23 @@ function GameUIUpgradeTechnology:GetUpgradeNowGems()
 end
 
 function GameUIUpgradeTechnology:CheckCanUpgradeNow()
-    if not self:GetProductionTechnology():IsOpen() then
+    local current_tech = self:GetProductionTechnology()
+    local unLockByTech = City:FindTechByIndex(current_tech:UnlockBy())
+    if not current_tech:IsOpen() then
         return false,self:GetProductionTechnology():GetLocalizedName() ..  _("暂时还未开放")
     end
+
     if City:HaveProductionTechEvent() then
         local event = City:GetProductionTechEventsArray()[1]
-        if event and event:Name() == self:GetProductionTechnology():Name() then
+        if event and event:Name() == current_tech:Name() then
             return false,_("该科技正在升级中，如需立即完成请对其加速")
         end
     end
+
+    if unLockByTech:Level() < current_tech:UnlockLevel() then
+         return false,unLockByTech:GetLocalizedName() .. _("未达到等级") .. current_tech:UnlockLevel()
+    end
+
     return User:GetGemResource():GetValue() >= self:GetUpgradeNowGems(),_("宝石不足")
 end
 
