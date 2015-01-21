@@ -349,7 +349,7 @@ function GameUIWatchTower:GetOtherEventItem(entity)
 		color= 0x403c2f
 	}):addTo(bg):align(display.LEFT_BOTTOM,164+ icon_bg:getCascadeBoundingBox().width+8, 20)
 	self.march_timer_label[entity:WithObject():Id()] = timer_label
-	if self:CanViewEventDetail() then
+	if self:CanViewEventDetail() or entity:GetTypeStr() == 'HELPTO' then
 		WidgetPushButton.new({normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"})
 			:setButtonLabel(UIKit:commonButtonLable({text = _("详情")}))
 	    	:align(display.RIGHT_BOTTOM,555,10):addTo(bg)
@@ -371,16 +371,26 @@ function GameUIWatchTower:OnEventDetailButtonClicked(entity)
 					:addToCurrentScene(true)
 			end)
 		else
-			NetManager:getAttackMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
-				UIKit:newGameUI("GameUIWatchTowerTroopDetail",GameUIWatchTowerTroopDetail.DATA_TYPE.HELP_DEFENCE,msg,DataManager:getUserData()._id)
-					:addToCurrentScene(true)
-			end)
+			local my_status = Alliance_Manager:GetMyAlliance():Status()
+    		if my_status == "prepare" or  my_status == "fight" then
+				NetManager:getAttackMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
+					UIKit:newGameUI("GameUIWatchTowerTroopDetail",GameUIWatchTowerTroopDetail.DATA_TYPE.HELP_DEFENCE,msg,DataManager:getUserData()._id)
+						:addToCurrentScene(true)
+				end)
+			else
+				UIKit:showMessageDialog(_("错误"),_("联盟未处于战争期"),function()end)
+    		end
 		end
 	elseif strEntityType == entity.ENTITY_TYPE.STRIKE_OUT then
-		NetManager:getStrikeMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
-			UIKit:newGameUI("GameUIWatchTowerTroopDetail",GameUIWatchTowerTroopDetail.DATA_TYPE.STRIKE,msg,DataManager:getUserData()._id)
-					:addToCurrentScene(true)
-		end)
+		local my_status = Alliance_Manager:GetMyAlliance():Status()
+    	if my_status == "prepare" or  my_status == "fight" then
+			NetManager:getStrikeMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
+				UIKit:newGameUI("GameUIWatchTowerTroopDetail",GameUIWatchTowerTroopDetail.DATA_TYPE.STRIKE,msg,DataManager:getUserData()._id)
+						:addToCurrentScene(true)
+			end)
+		else
+			UIKit:showMessageDialog(_("错误"),_("联盟未处于战争期"),function()end)
+		end
 	end
 end
 

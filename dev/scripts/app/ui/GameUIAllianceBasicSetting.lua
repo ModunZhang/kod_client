@@ -25,12 +25,9 @@ function GameUIAllianceBasicSetting:ctor(isModify)
 	if self.isCreateAction_ then
 		self.flag_info = Flag.new():RandomFlag()
 		self.terrain_info = self.alliance_ui_helper:SetTerrain(Alliance_Manager:GetMyAlliance():Terrain()):RandomTerrain()
-		dump(self.flag_info)
-		dump(self.terrain_info)
 	else
 		self.flag_info  = clone(Alliance_Manager:GetMyAlliance():Flag())
 		self.terrain_info = Alliance_Manager:GetMyAlliance():Terrain()
-		dump(self.terrain_info)
 	end
 end
 

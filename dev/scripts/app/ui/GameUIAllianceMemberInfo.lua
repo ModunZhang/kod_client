@@ -148,6 +148,7 @@ function GameUIAllianceMemberInfo:SendToServerWithTag(tag,member)
 	 	  			local title = alliacne:GetMemeberById(member:Id()):Title()
                    	self.player_info.title = title
 	 	  			self:RefreshListView()
+	 	  			self:leftButtonClicked()	
                 end)
                 :catch(function(err)
                     dump(err:reason())
