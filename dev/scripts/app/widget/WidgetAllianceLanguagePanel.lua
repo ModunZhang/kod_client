@@ -31,10 +31,19 @@ local checkbox_image = {
 }
 WidgetAllianceLanguagePanel.BUTTON_SELECT_CHANGED = "BUTTON_SELECT_CHANGED"
 
-function WidgetAllianceLanguagePanel:ctor()
+function WidgetAllianceLanguagePanel:ctor(selectLanguage)
     cc(self):addComponent("components.behavior.EventProtocol"):exportMethods()
 	self:setNodeEventEnabled(true)
-	self.currentSelectedIndex_ = 0
+	self.currentSelectedIndex_ = selectLanguage ~= nil and  self:FindIndexByLanguage(selectLanguage) or 1
+end
+
+function WidgetAllianceLanguagePanel:FindIndexByLanguage(language)
+    if not language then return 1 end
+    for i,v in ipairs(ALL_LANGUAGE) do
+        if v == language then
+            return i
+        end
+    end
 end
 
 function WidgetAllianceLanguagePanel:onEnter()
@@ -47,7 +56,7 @@ function WidgetAllianceLanguagePanel:onEnter()
     }):addTo(title):align(display.CENTER,272,16)
 	self:createCheckBoxButtons_()
     self:buttonEvents_()
-    self:getButtonByIndex()
+    self:selectButtonByIndex(self.currentSelectedIndex_)
 end
 
 
@@ -147,8 +156,8 @@ function WidgetAllianceLanguagePanel:onButtonStateChanged_(event)
     self:updateButtonState_(event.target)
 end
 
-function WidgetAllianceLanguagePanel:getButtonByIndex( index )
-    self:getChildByTag(1):setButtonSelected(true)
+function WidgetAllianceLanguagePanel:selectButtonByIndex( index )
+    self:getChildByTag(index):setButtonSelected(true)
 end
 
 function WidgetAllianceLanguagePanel:updateButtonState_(clickedButton)

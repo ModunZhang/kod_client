@@ -144,8 +144,11 @@ function GameUIAllianceMemberInfo:SendToServerWithTag(tag,member)
 	elseif tag == 2 then -- 移交盟主
         NetManager:getHandOverAllianceArchonPromise(member:Id())
                 :next(function(data)
+                	local alliacne =  Alliance_Manager:GetMyAlliance()
+	 	  			local title = alliacne:GetMemeberById(member:Id()):Title()
                    	self.player_info.title = title
 	 	  			self:RefreshListView()
+	 	  			self:leftButtonClicked()	
                 end)
                 :catch(function(err)
                     dump(err:reason())

@@ -13,7 +13,7 @@ DragonManager.promise_callbacks = {}
 local DragonEvent = import(".DragonEvent")
 
 DragonManager.DRAGON_TYPE_INDEX = Enum("redDragon","greenDragon","blueDragon")
-DragonManager.LISTEN_TYPE = Enum("OnHPChanged","OnBasicChanged","OnDragonHatched","OnDragonEventChanged","OnDragonEventTimer")
+DragonManager.LISTEN_TYPE = Enum("OnHPChanged","OnBasicChanged","OnDragonHatched","OnDragonEventChanged","OnDragonEventTimer","OnDefencedDragonChanged")
 
 
 function DragonManager:ctor()
@@ -165,11 +165,16 @@ function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recov
     else
         --遍历更新龙信息
         if not dragons then return end
+        local need_notify_defence = false
         for k,v in pairs(dragons) do
             local dragon = self:GetDragon(k)
             if dragon then
                 local dragonIsHated_ = dragon:Ishated()
+                local isDefenced = dragon:IsDefenced()
                 dragon:Update(v) -- include UpdateEquipmetsAndSkills
+                if not need_notify_defence then
+                    need_notify_defence = isDefenced ~= dragon:IsDefenced()
+                end
                 if dragonIsHated_ ~= dragon:Ishated() then
                     self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonHatched,function(lisenter)
                         lisenter.OnDragonHatched(lisenter,dragon)
@@ -181,6 +186,11 @@ function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recov
                 end
             end
             self:checkHPRecoveryIf_(dragon,resource_refresh_time,hp_recovery_perHour)
+        end
+        if need_notify_defence then
+            self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDefencedDragonChanged,function(lisenter)
+                    lisenter.OnDefencedDragonChanged(lisenter,self:GetDefenceDragon())
+            end)
         end
     end
     self:CheckFinishEquipementDragonPormise()

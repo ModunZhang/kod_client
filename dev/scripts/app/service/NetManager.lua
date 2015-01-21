@@ -8,7 +8,7 @@ end
 NetManager = {}
 local SUCCESS_CODE = 200
 local FAILED_CODE = 500
-local TIME_OUT = 10
+local TIME_OUT = 15
 -- 过滤器
 local function get_response_msg(results)
     return results[2].msg
@@ -24,7 +24,12 @@ end
 local function check_request(m)
     return function(result)
         if not result.success or result.msg.code ~= SUCCESS_CODE then
-            promise.reject(result.msg.message, m)
+            print("check_request", m)
+            if result.msg.code == 0 then
+                promise.reject(result.msg.message, "timeout")
+            else
+                promise.reject(result.msg.message, m)
+            end
         end
         return result
     end
@@ -86,7 +91,7 @@ function NetManager:getServerTime()
 end
 
 function NetManager:disconnect()
-    self.m_isDisconnect = true
+    self.m_was_inited_game = true
     self:removeDisConnectEventListener()
     self.m_netService:disconnect()
 end
@@ -103,23 +108,23 @@ end
 
 function NetManager:addTimeoutEventListener()
     self:addEventListener("timeout", function(success, msg)
-        device.showAlert(nil, _("连接服务器超时!"), {_("确定")}, function(event)
-            app:enterScene("MainScene")
-        end)
+        -- print("addTimeoutEventListener----->timeout")
     end)
 end
 
-function NetManager:removeTimeoutEventListener(  )
+function NetManager:removeTimeoutEventListener()
+    -- print("removeTimeoutEventListener----->timeout")
     self:removeEventListener("timeout")
 end
 
 function NetManager:addDisconnectEventListener()
--- self:addEventListener("disconnect", function(success, msg)
---     device.showAlert(nil, _("和服务器的连接已断开!"), {_("确定")}, function(event)
---         app:restart()
---     end)
---     print("addDisconnectEventListener----->disconnect")
--- end)
+    self:addEventListener("disconnect", function(success, msg)
+        if self.m_netService:isConnected() then
+            UIKit:showMessageDialog(_("错误"), _("连接服务器失败,请检测你的网络环境!"), function()
+                app:retryConnectServer()
+            end,nil,false)
+        end
+    end)
 end
 
 function NetManager:removeDisConnectEventListener(  )
@@ -128,37 +133,16 @@ end
 
 function NetManager:addKickEventListener()
     self:addEventListener("onKick", function(success, msg)
-        print("addKickEventListener----->onKick")
-        device.showAlert(nil, _("您的账号在别处登陆,您被强制下线!"), {_("确定")}, function(event)
-            dump(msg, "msg")
+        self:disconnect()
+        UIKit:showMessageDialog(_("提示"), _("服务器已断开与你的连接!"), function()
             app:restart()
-        end)
+        end,nil,false)
     end)
 end
 
 function NetManager:removeKickEventListener(  )
     self:removeEventListener("onKick")
 end
-
-
--- local event_map = {}
--- function NetManager:addEventHandle(event_name, handle)
---     event_map[event_name] = {handle = handle, callbacks = {}}
---     self:addEventListener("onPlayerDataChanged", function(...)
---         local event = event_map[event_name]
---         handle(...)
---         assert(#event.callbacks <= 1, "重复请求过多了")
---         local callback = event.callbacks[1]
---         if type(callback) == "function" then
---             callback(success, msg)
---         end
---         event.callbacks = {}
---     end)
--- end
--- function NetManager:removeEventHandle(event_name)
---     self:removeEventListener(event_name)
---     event_map[event_name] = nil
--- end
 
 onPlayerDataChanged_callbacks = {}
 function NetManager:addPlayerDataChangedEventListener()
@@ -499,7 +483,7 @@ end
 function NetManager:addLoginEventListener()
     self:addEventListener("onPlayerLoginSuccess", function(success, msg)
         if success then
-            if self.m_isDisconnect then
+            if self.m_was_inited_game then
                 self.m_netService:setDeltatime(msg.serverTime - ext.now())
                 DataManager:setUserData(msg)
             else
@@ -508,7 +492,7 @@ function NetManager:addLoginEventListener()
                 local InitGame = import("app.service.InitGame")
                 InitGame(msg)
             end
-            self.m_isDisconnect = false
+            self.m_was_inited_game = false
         end
     end)
 end
@@ -1132,7 +1116,7 @@ end
 function NetManager:getHandOverAllianceArchonPromise(memberId)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.handOverAllianceArchon", {
         memberId = memberId,
-    }, "移交萌主失败!"), get_playerinfo_callback()):next(get_response_msg)
+    }, "移交萌主失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 -- 修改成员职位
 function NetManager:getEditAllianceMemberTitlePromise(memberId, title)

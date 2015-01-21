@@ -441,8 +441,9 @@ function UIKit:createLineItem(params)
     return line
 end
 
-function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback)
+function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_x_button)
     title = title or _("提示")
+    if type(visible_x_button) ~= 'boolean' then visible_x_button = true end
     local dialog = FullScreenPopDialogUI.new():SetTitle(title):SetPopMessage(tips)
         :CreateOKButton({
             listener =  function ()
@@ -456,6 +457,10 @@ function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback)
                 listener = function ()
                     cancel_callback()
                 end,btn_name = _("取消")})
+        end
+        dialog:VisibleXButton(visible_x_button)
+        if not visible_x_button then
+            dialog:DisableAutoClose()
         end
         dialog:AddToCurrentScene()
         return dialog

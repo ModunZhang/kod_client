@@ -25,12 +25,9 @@ function GameUIAllianceBasicSetting:ctor(isModify)
 	if self.isCreateAction_ then
 		self.flag_info = Flag.new():RandomFlag()
 		self.terrain_info = self.alliance_ui_helper:SetTerrain(Alliance_Manager:GetMyAlliance():Terrain()):RandomTerrain()
-		dump(self.flag_info)
-		dump(self.terrain_info)
 	else
 		self.flag_info  = clone(Alliance_Manager:GetMyAlliance():Flag())
 		self.terrain_info = Alliance_Manager:GetMyAlliance():Terrain()
-		dump(self.terrain_info)
 	end
 end
 
@@ -307,13 +304,12 @@ function GameUIAllianceBasicSetting:createCheckAllianeGroup_()
 	    	:pos(0,landSelect:getCascadeBoundingBox().height+landSelect:getPositionY()+20)
     	self:SelectLandCheckButton(self.terrain_info,true)
 	else
-   		self.languageSelected  = WidgetAllianceLanguagePanel.new():addTo(groupNode):pos(0,0)
+   		self.languageSelected  = WidgetAllianceLanguagePanel.new(Alliance_Manager:GetMyAlliance():DefaultLanguage()):addTo(groupNode):pos(0,0)
    	end
     return groupNode
 end
 
 function GameUIAllianceBasicSetting:SelectLandCheckButton( type,selected)
-	print("GameUIAlliance:SelectLandCheckButton---->",type,selected)
 	self.landTypeButton:getButtonAtIndex(type):setButtonSelected(selected)
 end
 
@@ -420,17 +416,15 @@ end
 
 function GameUIAllianceBasicSetting:RefreshButtonState()
 	local flag = self:GetFlagInfomation()
-	self.flag_type_button:setSeqState(flag:GetBackStyle())
-	self.color_middleColor_button:setSeqState(flag:GetBackColors()[1])
-	self.color_rightColor_button:setSeqState(flag:GetBackColors()[2])
+	self.flag_type_button:setSeqState(flag:GetBackStyle(),false)
+	self.color_middleColor_button:setSeqState(flag:GetBackColors()[1],false)
+	self.color_rightColor_button:setSeqState(flag:GetBackColors()[2],false)
 	self.color_rightColor_button:setButtonEnabled(flag:GetBackStyle() ~= self.alliance_ui_helper.FLAG_LOCATION_TYPE.ONE)
-
-	self.graphic_type_button:setSeqState(flag:GetFrontStyle())
-	self.colorButton_right:setSeqState(flag:GetFrontImageColors()[2])
-	self.colorButton_left:setSeqState(flag:GetFrontImageColors()[1])
-	
-	self.graphic_middle_button:setSeqState(flag:GetFrontImagesStyle()[1])
-	self.graphic_right_button:setSeqState(flag:GetFrontImagesStyle()[2])
+	self.graphic_type_button:setSeqState(flag:GetFrontStyle(),false)
+	self.colorButton_right:setSeqState(flag:GetFrontImageColors()[2],false)
+	self.colorButton_left:setSeqState(flag:GetFrontImageColors()[1],false)
+	self.graphic_middle_button:setSeqState(flag:GetFrontImagesStyle()[1],false)
+	self.graphic_right_button:setSeqState(flag:GetFrontImagesStyle()[2],false)
 	self.colorButton_right:setButtonEnabled(flag:GetFrontStyle() ~= self.alliance_ui_helper.FLAG_LOCATION_TYPE.ONE)
 	self.graphic_right_button:setButtonEnabled(flag:GetFrontStyle() ~= self.alliance_ui_helper.FLAG_LOCATION_TYPE.ONE)
 end
@@ -451,7 +445,7 @@ function GameUIAllianceBasicSetting:CreateAllianceButtonClicked()
 	if string.utf8len(data.name) < 3 or string.utf8len(data.name) > 20 or string.find(data.name,"%p") then
 		errMsg = _("联盟名称不合法")
 	end 
-	if string.utf8len(data.tag) < 3 or string.utf8len(data.tag) > 20 or string.find(data.name,"%p") then
+	if string.utf8len(data.tag) < 3 or string.utf8len(data.tag) > 20 or string.find(data.tag,"%p") then
 		errMsg = _("联盟标签不合法")
 	end
 	if errMsg ~= "" then
@@ -464,9 +458,18 @@ function GameUIAllianceBasicSetting:CreateAllianceButtonClicked()
 	if self.isCreateAction_ then
 		NetManager:getCreateAlliancePromise(data.name,data.tag,data.language,data.terrain,data.flag):done()
 	else
-		NetManager:getEditAllianceBasicInfoPromise(data.name,data.tag,data.language,data.flag):done(function(result)
-			dump(result)
-		end)
+		local my_alliance = Alliance_Manager:GetMyAlliance()
+		if not self:GetFlagInfomation():IsDifferentWith(Alliance_Manager:GetMyAlliance():Flag()) 
+			and my_alliance:AliasName() == data.tag 
+			and my_alliance:Name() == data.name 
+			and my_alliance:DefaultLanguage() == data.language 
+			then
+			UIKit:showMessageDialog(_("提示"),_("联盟信息当前没有任何改动!"))
+		else
+			NetManager:getEditAllianceBasicInfoPromise(data.name,data.tag,data.language,data.flag):done(function(result)
+				self:leftButtonClicked()
+			end)
+		end
 	end
 end
 
