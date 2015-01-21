@@ -80,6 +80,8 @@ function GameUIWall:CreateMilitaryUIIf()
 	self.dragon_head = display.newSprite(UILib.dragon_head['redDragon']):addTo(dragon_bg):pos(57,60)
 	if not dragon then
 		self.dragon_head:hide()
+	else
+		self.dragon_head:setTexture(UILib.dragon_head[dragon:Type()])
 	end
 	local select_button = WidgetPushButton.new({
 			normal = "yellow_btn_up_148x58.png",

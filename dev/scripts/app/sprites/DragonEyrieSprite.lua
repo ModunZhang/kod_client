@@ -1,16 +1,43 @@
 local DragonSprite = import(".DragonSprite")
 local FunctionUpgradingSprite = import(".FunctionUpgradingSprite")
 local DragonEyrieSprite = class("DragonEyrieSprite", FunctionUpgradingSprite)
+local DragonManager = import("..entity.DragonManager")
+local DRAGON_ZORDER = 1
 
-local DRAGON = 1
+
 function DragonEyrieSprite:ctor(...)
     DragonEyrieSprite.super.ctor(self, ...)
-    local x, y = self:GetSpriteOffset()
-    self.dragon_sprite = DragonSprite.new(self:GetMapLayer(), self:GetMapLayer():Terrain())
-    :addTo(self, DRAGON):scale(0.7):pos(x+20, y+110)
+    local dragon_manget = City:GetDragonEyrie():GetDragonManager()
+    dragon_manget:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDefencedDragonChanged)
+    self:ReloadSpriteCaseDragonDefencedChanged(dragon_manget:GetDefenceDragon())
 end
+
 function DragonEyrieSprite:ReloadSpriteCauseTerrainChanged()
-    self.dragon_sprite:ReloadSpriteCauseTerrainChanged(self:GetMapLayer():Terrain())
+end
+
+function DragonEyrieSprite:ReloadSpriteCaseDragonDefencedChanged(dragon)
+	if self.dragon_sprite and not dragon then
+		self.dragon_sprite:removeSelf()
+	elseif dragon then
+		if not self.dragon_sprite then
+		    local x, y = self:GetSpriteOffset()
+		    self.dragon_sprite = DragonSprite.new(self:GetMapLayer(),dragon:GetTerrain()):addTo(self, DRAGON_ZORDER):scale(0.7):pos(x+20, y+110)
+		else
+			self.dragon_sprite:ReloadSpriteCauseTerrainChanged(dragon:GetTerrain())
+		end
+	end
+end
+
+function DragonEyrieSprite:OnDefencedDragonChanged(dragon)
+	self:ReloadSpriteCaseDragonDefencedChanged(dragon)
+end
+
+
+function DragonEyrieSprite:onCleanup()
+	City:GetDragonEyrie():GetDragonManager():RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDefencedDragonChanged)
+	if DragonEyrieSprite.super.onCleanup then
+		DragonEyrieSprite.super.onCleanup(self)
+	end
 end
 
 return DragonEyrieSprite
