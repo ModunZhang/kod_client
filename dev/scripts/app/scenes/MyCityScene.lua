@@ -338,6 +338,12 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
             UIKit:newGameUI('GameUIWall', city, building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "tower" then
             UIKit:newGameUI('GameUITower', city, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "trainingGround" 
+            or building:GetEntity():GetType() == "stable" 
+            or building:GetEntity():GetType() == "hunterHall" 
+            or building:GetEntity():GetType() == "workshop" 
+            then
+            UIKit:newGameUI('GameUIMilitaryTechBuilding', city, building:GetEntity()):addToScene(self, true)
         end
     end
 end

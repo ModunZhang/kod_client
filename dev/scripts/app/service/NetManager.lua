@@ -1427,6 +1427,33 @@ function NetManager:getUpgradeProductionTechPromise(techName,finishNow)
         techName = techName,
         finishNow = finishNow,
     }, "升级生产科技失败!"), get_playerdata_callback()):next(get_response_msg)
+-- 升级军事科技
+local function upgrade_military_tech_promise(techName,finishNow)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.upgradeMilitaryTech", {
+        techName = techName,
+        finishNow = finishNow,
+    }, "升级军事科技失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+
+
+function NetManager:getInstantUpgradeMilitaryTechPromise(techName)
+    return upgrade_military_tech_promise(techName,true)
+end
+function NetManager:getUpgradeMilitaryTechPromise(techName)
+    return upgrade_military_tech_promise(techName,false)
+end
+-- 士兵晋级
+local function upgrade_soldier_star_promise(soldierName,finishNow)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.upgradeSoldierStar", {
+        soldierName = soldierName,
+        finishNow = finishNow,
+    }, "士兵晋级失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+function NetManager:getInstantUpgradeSoldierStarPromise(soldierName)
+    return upgrade_soldier_star_promise(soldierName,true)
+end
+function NetManager:getUpgradeSoldierStarPromise(soldierName)
+    return upgrade_soldier_star_promise(soldierName,false)
 end
 --
 ----------------------------------------------------------------------------------------------------------------
