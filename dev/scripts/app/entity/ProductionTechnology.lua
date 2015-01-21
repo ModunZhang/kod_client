@@ -37,9 +37,18 @@ function ProductionTechnology:GetLevelUpCost()
 	return nil
 end
 
+function ProductionTechnology:GetNextLevelUpCost()
+	if config_productiontechlevelup[self:Name()] and config_productiontechlevelup[self:Name()][self:GetNextLevel() + 1] then
+		return config_productiontechlevelup[self:Name()][self:GetNextLevel() + 1]
+	end
+	return nil
+end
+
 function ProductionTechnology:GetNextLevel()
 	if self:Level() < 15 then
 		return self:Level() + 1
+	else
+		return 15
 	end
 end
 
@@ -58,6 +67,11 @@ end
 function ProductionTechnology:GetBuffEffectVal()
 	return self:Level() * self:EffectPerLevel()
 end
+function ProductionTechnology:GetNextNexLevelBuffEffectVal()
+	if self:GetNextLevel() then
+		return (self:GetNextLevel() + 1) * self:EffectPerLevel()
+	end
+end
 function ProductionTechnology:GetNextLevelBuffEffectVal()
 	if self:GetNextLevel() then
 		return self:GetNextLevel() * self:EffectPerLevel()
@@ -65,6 +79,9 @@ function ProductionTechnology:GetNextLevelBuffEffectVal()
 end
 function ProductionTechnology:IsReachLimitLevel()
 	return self:Level() >= 15
+end
+function ProductionTechnology:MaxLevel()
+	return 15
 end
 
 function ProductionTechnology:IsOpen()

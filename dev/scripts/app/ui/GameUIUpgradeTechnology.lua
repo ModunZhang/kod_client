@@ -23,6 +23,7 @@ function GameUIUpgradeTechnology:onEnter()
 	GameUIUpgradeTechnology.super.onEnter(self)
 	self:BuildUI()
     City:AddListenOnType(self,City.LISTEN_TYPE.PRODUCTION_DATA_CHANGED)
+    self:RefreshButtonState()
 end
 
 function GameUIUpgradeTechnology:onMoveOutStage()
@@ -38,13 +39,52 @@ function GameUIUpgradeTechnology:OnProductionTechsDataChanged(changed_map)
     end
 end
 
+function GameUIUpgradeTechnology:GetTechLevelStr()
+    if self:CheckIsMeUpgrade() and not self:CheckMeIsReachLimitLevel() then
+        return self:GetProductionTechnology():GetLocalizedName() .. " " .. _("等级") .. " " .. self:GetProductionTechnology():GetNextLevel()
+    end
+    return self:GetProductionTechnology():GetLocalizedName() .. " " .. _("等级") .. " " .. self:GetProductionTechnology():Level()
+end
+
+function GameUIUpgradeTechnology:GetResourceCost()
+    if self:CheckIsMeUpgrade() and not self:CheckMeIsReachLimitLevel() then
+        return self:GetProductionTechnology():GetNextLevelUpCost()
+    end
+    return self:GetProductionTechnology():GetLevelUpCost()
+end
+
+function GameUIUpgradeTechnology:GetLevelUpTimeStr()
+    if self:CheckIsMeUpgrade() and not self:CheckMeIsReachLimitLevel() then
+        return GameUtils:formatTimeStyle1(self:GetProductionTechnology():GetNextLevelUpCost().buildTime)
+    end
+    return GameUtils:formatTimeStyle1(self:GetProductionTechnology():GetLevelUpCost().buildTime)
+end
+
+function GameUIUpgradeTechnology:GetBuffEffectStr()
+    if self:CheckIsMeUpgrade() and not self:CheckMeIsReachLimitLevel() then
+        return self:GetProductionTechnology():GetNextLevelBuffEffectVal() * 100  .. "%"
+    end
+    return self:GetProductionTechnology():GetBuffEffectVal() * 100  .. "%"
+end
+
+function GameUIUpgradeTechnology:GetNextLevelBuffEffectStr()
+     if self:CheckIsMeUpgrade() and not self:CheckMeIsReachLimitLevel() then
+        if self:GetProductionTechnology():GetNextNexLevelBuffEffectVal() then
+            return  self:GetProductionTechnology():GetNextNexLevelBuffEffectVal()  * 100  .. "%"
+        else
+            return ""
+        end
+    end
+    return self:GetProductionTechnology():GetNextLevelBuffEffectVal() * 100  .. "%"
+end
+
 function GameUIUpgradeTechnology:RefreshUI()
     local tech = self:GetProductionTechnology()
-    self.lv_label:setString(self:GetProductionTechnology():GetLocalizedName() .. " " .. _("等级") .. " " .. self:GetProductionTechnology():Level())
-    self.current_effect_val_label:setString(self:GetProductionTechnology():GetBuffEffectVal() * 100  .. "%")
+    self.lv_label:setString(self:GetTechLevelStr())
+    self.current_effect_val_label:setString(self:GetBuffEffectStr())
     if not tech:IsReachLimitLevel() then
-        self.next_effect_val_label:setString(self:GetProductionTechnology():GetNextLevelBuffEffectVal() * 100  .. "%")
-        self.time_label:setString(GameUtils:formatTimeStyle1(self:GetProductionTechnology():GetLevelUpCost().buildTime))
+        self.next_effect_val_label:setString(self:GetNextLevelBuffEffectStr())
+        self.time_label:setString(self:GetLevelUpTimeStr())
         self.need_gems_label:setString(self:GetUpgradeNowGems())
         self.buff_time_label:show()
         self.need_gems_icon:show()
@@ -62,6 +102,9 @@ function GameUIUpgradeTechnology:RefreshUI()
         self.time_icon:hide()
         self.upgrade_button:hide()
         self.upgradeNowButton:hide()
+        if self.listView then
+            self.listView:hide()
+        end
     end
 end
 
@@ -103,7 +146,7 @@ function GameUIUpgradeTechnology:BuildUI()
     	:align(display.LEFT_TOP,box:getPositionX()+box:getContentSize().width + 10, box:getPositionY())
     	:addTo(bg_node)
     self.lv_label = UIKit:ttfLabel({
-    	text = self:GetProductionTechnology():GetLocalizedName() .. " " .. _("等级") .. " " .. self:GetProductionTechnology():Level(),
+    	text = self:GetTechLevelStr(),
     	size = 22,
     	color= 0xffedae
     }):align(display.LEFT_CENTER, 20, 15):addTo(title)
@@ -212,9 +255,16 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
     local requirements = {}
     local current_tech = self:GetProductionTechnology()
     local unLockByTech = City:FindTechByIndex(current_tech:UnlockBy())
-    local cost =  current_tech:GetLevelUpCost()
+    local cost =  self:GetResourceCost()
     local coin = City.resource_manager:GetCoinResource():GetValue()
-
+    table.insert(requirements, 
+        {
+            resource_type = _("升级队列"),
+            isVisible = true,
+            isSatisfy = not City:HaveProductionTechEvent(),
+            icon="hammer_31x33.png",
+            description= City:HaveProductionTechEvent() and "1/1" or "0/1"
+        })
     if unLockByTech:Index() ~= current_tech:Index() then
         table.insert(requirements, 
             {
@@ -283,7 +333,7 @@ end
 function GameUIUpgradeTechnology:OnUpgradButtonClicked()
     local gems_cost,msg = self:CheckCanUpgradeActionReturnGems()
     if gems_cost < 0 then
-        UIKit:showMessageDialog(_("提示"), msg, function()end)
+        return
     elseif gems_cost == 0 then
         NetManager:getUpgradeProductionTechPromise(self:GetProductionTechnology():Name(),false):next(function(msg)
             self:leftButtonClicked()
@@ -313,7 +363,7 @@ end
 ----------------------------------------------------------------------------------------------------------------
 
 function GameUIUpgradeTechnology:GetNeedResourceAndMaterialsAndTime(tech)
-    local cost = tech:GetLevelUpCost() 
+    local cost = self:GetResourceCost() 
     if not cost then return {},{},0 end
     return 
         {
@@ -328,7 +378,7 @@ function GameUIUpgradeTechnology:GetNeedResourceAndMaterialsAndTime(tech)
 end
 
 function GameUIUpgradeTechnology:GetUpgradeNowGems()
-    local resource,material,time = self:GetNeedResourceAndMaterialsAndTime(self:GetProductionTechnology())
+    local resource,material,time = self:GetNeedResourceAndMaterialsAndTime()
     local resource_gems = DataUtils:buyResource(resource,{})
     local material_gems = DataUtils:buyMaterial(material,{})
     local time_gems = DataUtils:getGemByTimeInterval(time)
@@ -336,30 +386,16 @@ function GameUIUpgradeTechnology:GetUpgradeNowGems()
 end
 
 function GameUIUpgradeTechnology:CheckCanUpgradeNow()
-    local current_tech = self:GetProductionTechnology()
-    local unLockByTech = City:FindTechByIndex(current_tech:UnlockBy())
-    if not current_tech:IsOpen() then
-        return false,self:GetProductionTechnology():GetLocalizedName() ..  _("暂时还未开放")
+    if not self:CheckUpgradeNowButtonState() then 
+        return false
     end
-
-    if City:HaveProductionTechEvent() then
-        local event = City:GetProductionTechEventsArray()[1]
-        if event and event:Name() == current_tech:Name() then
-            return false,_("该科技正在升级中，如需立即完成请对其加速")
-        end
-    end
-
-    if unLockByTech:Level() < current_tech:UnlockLevel() then
-         return false,unLockByTech:GetLocalizedName() .. _("未达到等级") .. current_tech:UnlockLevel()
-    end
-
     return User:GetGemResource():GetValue() >= self:GetUpgradeNowGems(),_("宝石不足")
 end
 
 function GameUIUpgradeTechnology:GetUpgradeGemsIfResourceNotEnough()
     local coin = City.resource_manager:GetCoinResource():GetValue()
     local materialManager = City:GetMaterialManager()
-    local resource,material,__ = self:GetNeedResourceAndMaterialsAndTime(self:GetProductionTechnology())
+    local resource,material,__ = self:GetNeedResourceAndMaterialsAndTime()
     local resource_gems = DataUtils:buyResource(resource,{coin = coin})
     local blueprints = materialManager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"]
     local tools = materialManager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"]
@@ -376,13 +412,8 @@ function GameUIUpgradeTechnology:GetUpgradeGemsIfQueueNotEnough()
 end
 
 function GameUIUpgradeTechnology:CheckCanUpgradeActionReturnGems()
-    local current_tech = self:GetProductionTechnology()
-    local unLockByTech = City:FindTechByIndex(current_tech:UnlockBy())
-    if not current_tech:IsOpen() then
-        return -2,current_tech:GetLocalizedName()  .. _("暂时还未开放")
-    end
-    if unLockByTech:Level() < current_tech:UnlockLevel() then
-        return -1,unLockByTech:GetLocalizedName() .. _("未达到等级") .. current_tech:UnlockLevel()
+    if not self:CheckUpgradeButtonState() then
+        return -1
     end
     local gems_cost,msg = 0,0,""
     if City:HaveProductionTechEvent() then
@@ -395,6 +426,61 @@ function GameUIUpgradeTechnology:CheckCanUpgradeActionReturnGems()
         msg = msg .. "\n" .. _("升级所需物品不足,购买所缺物品需花费宝石") .. resource_gems
     end
     return gems_cost,msg
+end
+
+function GameUIUpgradeTechnology:RefreshButtonState()
+    self.upgradeNowButton.button:setButtonEnabled(self:CheckUpgradeNowButtonState())
+    self.upgrade_button.button:setButtonEnabled(self:CheckUpgradeButtonState())
+end
+
+function GameUIUpgradeTechnology:CheckUpgradeButtonState()
+    if not self:CheckMeIsOpened() or not self:CheckMeDependTechIsUnlock() then
+        return false
+    end
+    return true
+end
+
+function GameUIUpgradeTechnology:CheckUpgradeNowButtonState()
+    if not self:CheckMeIsOpened() or not self:CheckMeDependTechIsUnlock() or self:CheckIsMeUpgrade() then
+        return false
+    end
+    return true
+end
+
+function GameUIUpgradeTechnology:CheckIsMeUpgrade()
+    local current_tech = self:GetProductionTechnology()
+    local event = self:GetEventInUpgradeQueue()
+    if event then
+        if event and event:Name() == current_tech:Name() then
+            return true
+        end
+    end
+    return false
+end
+
+function GameUIUpgradeTechnology:CheckMeIsOpened()
+    return self:GetProductionTechnology():IsOpen()
+end
+
+function GameUIUpgradeTechnology:CheckMeDependTechIsUnlock()
+    local current_tech = self:GetProductionTechnology()
+    local unLockByTech = City:FindTechByIndex(current_tech:UnlockBy())
+    return unLockByTech:Level() >= current_tech:UnlockLevel()
+end
+
+function GameUIUpgradeTechnology:GetEventInUpgradeQueue()
+    if City:HaveProductionTechEvent() then
+        return City:GetProductionTechEventsArray()[1]
+    end
+end
+
+function GameUIUpgradeTechnology:CheckMeIsReachLimitLevel()
+    local current_tech = self:GetProductionTechnology()
+    if self:CheckIsMeUpgrade() then
+        return current_tech:Level() + 1 >= current_tech:MaxLevel()
+    else
+        return current_tech:IsReachLimitLevel()
+    end
 end
 
 return GameUIUpgradeTechnology
