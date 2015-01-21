@@ -926,6 +926,7 @@ function GameUIShop:onEnter()
             NetManager:getFindAllianceToFightPromose()
         end)
 
+
     item:addContent(content)
     item:setItemSize(640, 1000)
     list_view:addItem(item)

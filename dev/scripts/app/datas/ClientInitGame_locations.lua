@@ -162,7 +162,7 @@ locations[16] = {
 }
 locations[17] = {
 	["index"] = 17,
-	["building_type"] = "workShop",
+	["building_type"] = "workshop",
 	["x"] = 6,
 	["y"] = 49,
 	["w"] = 6,
@@ -242,7 +242,7 @@ locations[24] = {
 }
 locations[25] = {
 	["index"] = 25,
-	["building_type"] = "workShop",
+	["building_type"] = "workshop",
 	["x"] = 46,
 	["y"] = 9,
 	["w"] = 6,

@@ -33,7 +33,7 @@ local building_config_map = {
     ["hunterHall"] = {scale = 0.4, offset = {x = 80, y = 80}},
     ["trainingGround"] = {scale = 0.4, offset = {x = 80, y = 80}},
     ["stable"] = {scale = 0.4, offset = {x = 80, y = 80}},
-    ["workShop"] = {scale = 0.4, offset = {x = 80, y = 80}},
+    ["workshop"] = {scale = 0.4, offset = {x = 80, y = 80}},
 }
 
 function GameUIKeep:ctor(city,building)

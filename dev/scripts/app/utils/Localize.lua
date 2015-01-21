@@ -218,7 +218,7 @@ local BUILDING_DESCRIPTION = {
     ["trainingGround_efficiency"] = _("步兵招募速度"),
 
 
-    ["hunterhall"] = _("猎手大厅提供弓手的相关科技，增强弓手的各方面属性，建筑等级越高招募弓手的速度越快"),
+    ["hunterHall"] = _("猎手大厅提供弓手的相关科技，增强弓手的各方面属性，建筑等级越高招募弓手的速度越快"),
     ["hunterhall_efficiency"] = _("弓手招募速度"),
 
     ["stable"] = _("马厩提供骑兵的相关科技，增强骑兵的各方面属性，建筑等级越高招募骑兵的速度越快"),
@@ -326,7 +326,7 @@ local BUILDING_NAME = {
     ["watchTower"] = _("瞭望塔"),
     ["acdemy"] = _("学院"),
     ["trainingGround"] = _("训练营地"),
-    ["hunterhall"] = _("猎手大厅"),
+    ["hunterHall"] = _("猎手大厅"),
     ["stable"] = _("马厩"),
     ["workshop"] = _("车间"),
     ["wall"] = _("城墙"),

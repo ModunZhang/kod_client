@@ -55,6 +55,12 @@ function WidgetSpeedUp:ctor()
 
 end
 function WidgetSpeedUp:SetProgressInfo(time_label, percent)
+	print("WidgetSpeedUp:SetProgressInfo percent=",percent)
+
+	if math.ceil(percent) ==100 then
+		self:leftButtonClicked()
+		return
+	end
     self.progress:SetProgressInfo(time_label, percent)
     return self
 end

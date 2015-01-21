@@ -30,7 +30,7 @@ local sort_map = Enum(
     "hospital",
     "townHall",
     "tradeGuild",
-    "workShop",
+    "workshop",
     "trainingGround",
     "hunterHall",
     "stable",
