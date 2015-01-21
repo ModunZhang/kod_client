@@ -181,7 +181,7 @@ end
 function PVELayer:GotoLogicPointInstant(x, y)
     local point = self:ConvertLogicPositionToMapPosition(x, y)
     self:GotoMapPositionInMiddle(point.x, point.y)
-    return cocos_promise.deffer()
+    return cocos_promise.defer()
 end
 function PVELayer:GotoLogicPoint(x, y, s)
     local point = self:ConvertLogicPositionToMapPosition(x, y)

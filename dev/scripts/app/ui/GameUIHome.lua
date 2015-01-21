@@ -457,7 +457,7 @@ function GameUIHome:Find()
         item = v:GetSpeedUpButton()
         return true
     end)
-    return cocos_promise.deffer(function()
+    return cocos_promise.defer(function()
         if not item then
             promise.reject("没有找到对应item")
         end

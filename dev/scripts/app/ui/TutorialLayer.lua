@@ -83,11 +83,11 @@ function TutorialLayer:DefferShow(control, angle, offset_x, offset_y)
     self.arrow:OnPositionChanged(x, y)
     self.arrow:Set(angle, offset_x, offset_y):show()
     self:Enable():SetTouchObject(control)
-    return cocos_promise.deffer(function() return control end)
+    return cocos_promise.defer(function() return control end)
 end
 function TutorialLayer:DefferHide()
     self.arrow:hide()
-    return cocos_promise.deffer()
+    return cocos_promise.defer()
 end
 
 return TutorialLayer

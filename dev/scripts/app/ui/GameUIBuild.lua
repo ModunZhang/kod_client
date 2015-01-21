@@ -241,7 +241,7 @@ end
 --- fte
 function GameUIBuild:Lock()
     self.base_list_view:getScrollNode():setTouchEnabled(false)
-    return cocos_promise.deffer(function() return self end)
+    return cocos_promise.defer(function() return self end)
 end
 function GameUIBuild:Find(building_type)
     local item
@@ -251,7 +251,7 @@ function GameUIBuild:Find(building_type)
             return true
         end
     end)
-    return cocos_promise.deffer(function()
+    return cocos_promise.defer(function()
         if not item then
             promise.reject("没有找到对应item", building_type)
         end

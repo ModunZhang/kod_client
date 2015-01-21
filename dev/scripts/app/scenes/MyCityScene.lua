@@ -40,7 +40,7 @@ function MyCityScene:DestoryArrowTutorial(func)
         self.arrow_tutorial:removeFromParent()
         self.arrow_tutorial = nil
     end
-    return cocos_promise.deffer(func)
+    return cocos_promise.defer(func)
 end
 function MyCityScene:GetHomePage()
     return home_page
@@ -201,7 +201,7 @@ function MyCityScene:GetLockButtonsByBuildingType(building_type)
             return true
         end
     end)
-    return cocos_promise.deffer(function() return lock_button end)
+    return cocos_promise.defer(function() return lock_button end)
 end
 
 

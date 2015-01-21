@@ -44,7 +44,7 @@ end
 
 function NetService:request(route, lmsg, cb)
     if self.net_state == self.NET_STATE.DISCONNECT then 
-        cocos_promise.deffer(function()
+        cocos_promise.defer(function()
             cb(false,{message = _("连接服务器失败,请检测你的网络环境!"),code = 0}) 
         end)
         return 
@@ -59,7 +59,7 @@ end
 
 function NetService:notify( route, lmsg, cb )
     if self.net_state == self.NET_STATE.DISCONNECT then 
-        cocos_promise.deffer(function()
+        cocos_promise.defer(function()
             cb(false,{message = _("连接服务器失败,请检测你的网络环境!"),code = 0}) 
         end)
     return end

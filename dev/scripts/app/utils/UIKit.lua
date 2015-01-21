@@ -23,7 +23,7 @@ UIKit.open_ui_callbacks = {}
 
 function UIKit:PromiseOfOpen(ui_name)
     if UIKit:GetUIInstance(ui_name) then
-        return cocos_promise.deffer(function() return UIKit:GetUIInstance(ui_name) end )
+        return cocos_promise.defer(function() return UIKit:GetUIInstance(ui_name) end )
     end
     local callbacks = self.open_ui_callbacks
     assert(#callbacks == 0)

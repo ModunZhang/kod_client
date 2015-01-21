@@ -414,11 +414,11 @@ end
 
 function GameUIDragonEyrieMain:Find(type_)
 	if type_ == "dragon" then
-		return cocos_promise.deffer(function()
+		return cocos_promise.defer(function()
             return self.tabButton:GetTabByTag("dragon")
         end)
 	end
-    return cocos_promise.deffer(function()
+    return cocos_promise.defer(function()
         return self.detailButton
     end)
 end

@@ -609,7 +609,7 @@ function GameUIDragonEquipment:RefreshInfoListView()
 end
 
 function GameUIDragonEquipment:Find()
-    return cocos_promise.deffer(function()
+    return cocos_promise.defer(function()
         return self.adornOrResetButton
     end)
 end

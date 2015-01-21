@@ -453,7 +453,7 @@ function WidgetEventTabButtons:PromiseOfHide()
 end
 function WidgetEventTabButtons:PromiseOfShow()
     if not self:OnBeforeShow() then
-        return cocos_promise.deffer()
+        return cocos_promise.defer()
     end
     local size = self.back_ground:getContentSize()
     self.back_ground:setContentSize(cc.size(size.width, size.height))

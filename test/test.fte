@@ -1,4 +1,4 @@
-deffer
+defer
 .check(1)->all[move(12, 12), say("欢迎来到kod的世界, 在这里您将带头{冲锋}!").input.click(12, 12)]->wait(GameUIBuild)->delay->lock->find(dwelling)->arrowOn(10, 10, 100)->upgrade(dwelling)->arrowOff
 .check(2)->show(build)->find()->arrowOn->finish(dwelling)->arrowOff
 .quit

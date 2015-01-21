@@ -609,7 +609,7 @@ end
 -- dragon_body ==> Dragon.DRAGON_BODY.XXX
 function GameUIDragonEyrieDetail:Find(dragon_body)
 	dragon_body = checknumber(dragon_body)
-    return cocos_promise.deffer(function()
+    return cocos_promise.defer(function()
     	if not self.equipment_nodes[dragon_body] then
     		promise.reject("没有找到对应item", building_type)
     	end

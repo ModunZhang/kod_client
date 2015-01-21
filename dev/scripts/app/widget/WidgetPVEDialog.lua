@@ -78,7 +78,7 @@ function WidgetPVEDialog:Refresh()
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
                     if type(param[i].callback) == "function" then
-                        cocos_promise.deffer(function()
+                        cocos_promise.defer(function()
                             param[i].callback()
                         end)
                     else
