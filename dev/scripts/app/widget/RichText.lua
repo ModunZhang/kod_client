@@ -41,7 +41,7 @@ function RichText:Text(str)
     local items = LuaUtils:table_map(GameUtils:parseRichText(str), function(k, v)
         local type_ = type(v)
         if type_ == "string" then
-            return k, {type = "text", value = v, size = 20}
+            return k, {type = "text", value = v, size = self.size}
         end
         return k, v
     end)
