@@ -13,11 +13,8 @@ local TowerUpgradeBuilding = import(".TowerUpgradeBuilding")
 local MultiObserver = import(".MultiObserver")
 local City = class("City", MultiObserver)
 local ProductionTechnology = import(".ProductionTechnology")
-<<<<<<< HEAD
 local ProductionTechnologyEvent = import(".ProductionTechnologyEvent")
-=======
 
->>>>>>> army
 -- 枚举定义
 City.RETURN_CODE = Enum("INNER_ROUND_NOT_UNLOCKED",
     "EDGE_BESIDE_NOT_UNLOCKED",
@@ -933,14 +930,10 @@ function City:OnUserDataChanged(userData, current_time)
     self:__OnHelpToTroopsDataChange(userData.__helpToTroops)
     --科技
     self:OnProductionTechsDataChanged(userData.productionTechs)
-<<<<<<< HEAD
     self:__OnProductionTechsDataChanged(userData.productionTechs)
     self:OnProductionTechEventsDataChaned(userData.productionTechEvents)
     self:__OnProductionTechEventsDataChaned(userData.__productionTechEvents)
-=======
-    self:__OnProductionTechsDataChanged(userData.__productionTechs)
 
->>>>>>> army
     -- 更新兵种
     self.soldier_manager:OnUserDataChanged(userData)
     -- 更新材料，这里是广义的材料，包括龙的装备
@@ -1457,18 +1450,10 @@ function City:IteratorTechs(func)
 end
 
 function City:FindTechByName(name)
-<<<<<<< HEAD
     local index = productionTechs[name].index 
     if index then
         return self:FindTechByIndex(index)
     end
-=======
-    self:IteratorTechs(function(index,tech)
-        if tech:Name() == name then
-            return name
-        end
-    end)
->>>>>>> army
 end
 
 function City:FindTechByIndex(index)
