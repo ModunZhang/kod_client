@@ -83,14 +83,17 @@ function WidgetSequenceButton:onSeqStateChange(func)
 end
 
 
-function WidgetSequenceButton:onSeqStateChange_()
+function WidgetSequenceButton:onSeqStateChange_(dispath_event)
+	if type(dispath_event) ~= 'boolean' then dispath_event = true end
 	-- if self:isRunning() then
 		if self.isImageState then
         	self:updateSeqButtonImage_()
         else
         	self:updateSeqButtonImage_(self.currentSeqImage_)
         end
-        self:dispatchEvent({name = "onSeqStateChange",state = self:GetSeqState()})
+        if dispath_event then
+        	self:dispatchEvent({name = "onSeqStateChange",state = self:GetSeqState()})
+        end
     -- end
 end
 
@@ -171,8 +174,8 @@ function WidgetSequenceButton:onButtonClicked_(event)
 		self:onSeqStateChange_()
 end
 
-function WidgetSequenceButton:setSeqState( state )
-	self:doEvent(state)
+function WidgetSequenceButton:setSeqState( state,dispath_event)
+	self:doEvent(state,dispath_event)
 end
 
 
@@ -214,7 +217,7 @@ function WidgetSequenceButton:getNextEvent()
 	return self:getCurrentEvent()
 end
 
-function WidgetSequenceButton:doEvent(state)
+function WidgetSequenceButton:doEvent(state,dispath_event)
 	local indexOfState = -1
 	for i,v in ipairs(self.events_) do
 	 	if v.name == state then
@@ -224,7 +227,7 @@ function WidgetSequenceButton:doEvent(state)
 	 end
 	 if indexOfState > 0 and indexOfState ~= self:getCurrentIndex_() then
 	 	self:setCurrentIndex_(indexOfState)
-	 	self:onSeqStateChange_()
+	 	self:onSeqStateChange_(dispath_event)
 	 end
 end
 

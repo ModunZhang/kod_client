@@ -74,10 +74,16 @@ function Flag:RandomFlag()
     local flag = Flag.new()
     math.randomseed(tostring(os.time()):reverse():sub(1, 6))
     flag:SetBackStyle(math.random(4))
-    flag:SetBackColors(flag_color_map[math.random(#flag_color_map)], flag_color_map[math.random(#flag_color_map)])
+    local oneColor = math.random(0,#flag_color_map - 1) + 1
+    local otherColor = math.random(#flag_color_map)
+    flag:SetBackColors(flag_color_map[oneColor], flag_color_map[otherColor])
     flag:SetFrontStyle(math.random(4))
-    flag:SetFrontImagesStyle(math.random(17), math.random(17))
-    flag:SetFrontImageColors(flag_color_map[math.random(#flag_color_map)], flag_color_map[math.random(#flag_color_map)])
+    local imageName = math.random(0,16) + 1
+    local otherName = math.random(17)
+    flag:SetFrontImagesStyle(imageName, otherName)
+    oneColor = math.random(0,#flag_color_map - 2) + 2
+    otherColor = math.random(#flag_color_map)
+    flag:SetFrontImageColors(flag_color_map[oneColor], flag_color_map[otherColor])
     return flag
 end
 function Flag:EncodeToJson()

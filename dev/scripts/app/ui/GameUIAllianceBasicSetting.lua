@@ -313,7 +313,6 @@ function GameUIAllianceBasicSetting:createCheckAllianeGroup_()
 end
 
 function GameUIAllianceBasicSetting:SelectLandCheckButton( type,selected)
-	print("GameUIAlliance:SelectLandCheckButton---->",type,selected)
 	self.landTypeButton:getButtonAtIndex(type):setButtonSelected(selected)
 end
 
@@ -420,17 +419,15 @@ end
 
 function GameUIAllianceBasicSetting:RefreshButtonState()
 	local flag = self:GetFlagInfomation()
-	self.flag_type_button:setSeqState(flag:GetBackStyle())
-	self.color_middleColor_button:setSeqState(flag:GetBackColors()[1])
-	self.color_rightColor_button:setSeqState(flag:GetBackColors()[2])
+	self.flag_type_button:setSeqState(flag:GetBackStyle(),false)
+	self.color_middleColor_button:setSeqState(flag:GetBackColors()[1],false)
+	self.color_rightColor_button:setSeqState(flag:GetBackColors()[2],false)
 	self.color_rightColor_button:setButtonEnabled(flag:GetBackStyle() ~= self.alliance_ui_helper.FLAG_LOCATION_TYPE.ONE)
-
-	self.graphic_type_button:setSeqState(flag:GetFrontStyle())
-	self.colorButton_right:setSeqState(flag:GetFrontImageColors()[2])
-	self.colorButton_left:setSeqState(flag:GetFrontImageColors()[1])
-	
-	self.graphic_middle_button:setSeqState(flag:GetFrontImagesStyle()[1])
-	self.graphic_right_button:setSeqState(flag:GetFrontImagesStyle()[2])
+	self.graphic_type_button:setSeqState(flag:GetFrontStyle(),false)
+	self.colorButton_right:setSeqState(flag:GetFrontImageColors()[2],false)
+	self.colorButton_left:setSeqState(flag:GetFrontImageColors()[1],false)
+	self.graphic_middle_button:setSeqState(flag:GetFrontImagesStyle()[1],false)
+	self.graphic_right_button:setSeqState(flag:GetFrontImagesStyle()[2],false)
 	self.colorButton_right:setButtonEnabled(flag:GetFrontStyle() ~= self.alliance_ui_helper.FLAG_LOCATION_TYPE.ONE)
 	self.graphic_right_button:setButtonEnabled(flag:GetFrontStyle() ~= self.alliance_ui_helper.FLAG_LOCATION_TYPE.ONE)
 end
