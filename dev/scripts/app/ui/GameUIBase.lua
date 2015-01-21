@@ -297,7 +297,7 @@ function GameUIBase:CreateTutorialLayer()
 end
 
 function GameUIBase:Lock()
-    return cocos_promise.deffer(function()
+    return cocos_promise.defer(function()
         return self
     end)
 end

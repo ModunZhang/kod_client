@@ -34,7 +34,7 @@ function MultiCorps:PromiseOfShoutUp()
         self.dialog:removeFromParent()
         self.dialog = nil
     end
-    return cocos_promise.deffer(function() return self end)
+    return cocos_promise.defer(function() return self end)
 end
 function MultiCorps:PlayAnimation(ani, loop_time)
     for _, v in pairs(self.corps) do

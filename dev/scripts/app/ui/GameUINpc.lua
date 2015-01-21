@@ -220,25 +220,25 @@ function GameUINpc:PromiseOfActive()
     if UIKit:getRegistry().isObjectExists("GameUINpc") then
         UIKit:getRegistry().getObject("GameUINpc"):EnableReceiveClickMsg(true)
     end
-    return cocos_promise.deffer()
+    return cocos_promise.defer()
 end
 function GameUINpc:PromiseOfInActive()
     if UIKit:getRegistry().isObjectExists("GameUINpc") then
         UIKit:getRegistry().getObject("GameUINpc"):EnableReceiveClickMsg(false)
     end
-    return cocos_promise.deffer()
+    return cocos_promise.defer()
 end
 function GameUINpc:PromiseOfInput()
     if UIKit:getRegistry().isObjectExists("GameUINpc") then
         UIKit:getRegistry().getObject("GameUINpc"):setTouchSwallowEnabled(false)
     end
-    return cocos_promise.deffer()
+    return cocos_promise.defer()
 end
 function GameUINpc:PromiseOfLockInput()
     if UIKit:getRegistry().isObjectExists("GameUINpc") then
         UIKit:getRegistry().getObject("GameUINpc"):setTouchSwallowEnabled(true)
     end
-    return cocos_promise.deffer()
+    return cocos_promise.defer()
 end
 function GameUINpc:PromiseOfDialogEnded(index)
     local p = promise.new()
@@ -285,7 +285,7 @@ function GameUINpc:PromiseOfLeave()
         instance:leftButtonClicked()
         return p
     end
-    return cocos_promise.deffer()
+    return cocos_promise.defer()
 end
 function GameUINpc:PromiseOfEnter()
     assert(false)

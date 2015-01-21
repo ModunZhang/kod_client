@@ -660,15 +660,15 @@ end
 
 -- fte
 function WidgetRecruitSoldier:Lock()
-    return cocos_promise.deffer(function() return self end)
+    return cocos_promise.defer(function() return self end)
 end
 function WidgetRecruitSoldier:Find(control_type)
     if control_type == "progress" then
-        return cocos_promise.deffer(function()
+        return cocos_promise.defer(function()
             return self.slider
         end)
     elseif control_type == "recruit" then
-        return cocos_promise.deffer(function()
+        return cocos_promise.defer(function()
             return self.normal_button
         end)
     end

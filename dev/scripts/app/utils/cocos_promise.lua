@@ -9,11 +9,11 @@ local function delay_(time, func)
     end, time)
     return p
 end
-local function deffer(func)
+local function defer(func)
     return delay_(0, func)
 end
 local function defferPromise(p)
-    deffer(function() p:resolve() end)
+    defer(function() p:resolve() end)
     return p
 end
 local function delay(time)
@@ -87,7 +87,7 @@ local function promiseOfMoveTo(node, x, y, time, easing)
 end
 
 return {
-    deffer = deffer,
+    defer = defer,
     defferPromise = defferPromise,
     Delay = delay_,
     delay = delay,

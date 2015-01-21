@@ -584,7 +584,10 @@ local function getOpenUDID()
     return device_id
 end
 -- 登录
-function NetManager:getLoginPromise()
+function NetManager:getLoginPromise(deviceId)
+    if deviceId then
+        return get_none_blocking_request_promise("logic.entryHandler.login", {deviceId = deviceId})
+    end
     local device_id
     if CONFIG_IS_DEBUG then
         if gaozhou then

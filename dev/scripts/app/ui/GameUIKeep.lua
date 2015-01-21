@@ -524,7 +524,7 @@ end
 
 ---
 function GameUIKeep:Find()
-    return cocos_promise.deffer(function()
+    return cocos_promise.defer(function()
         return self.upgrade_layer.upgrade_btn
     end)
 end

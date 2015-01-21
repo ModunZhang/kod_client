@@ -154,7 +154,7 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 			traceback.print_exc()
 			print "check 必须传入数字"
 			return
-		emit("\tif check(%s) then return cocos_promise.deffer(function() return result end) end" % step)
+		emit("\tif check(%s) then return cocos_promise.defer(function() return result end) end" % step)
 		match(")")
 
 	def match_finish():
@@ -280,14 +280,14 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 
 	def match_setup():
 		match("setup")
-		emit("cocos_promise.deffer(function() return result end)")
+		emit("cocos_promise.defer(function() return result end)")
 
 	def match_delay():
 		match("delay")
 		if look_ahead("("):
 			match("(")
 		else:
-			emit("cocos_promise.deffer(function() return result end)")
+			emit("cocos_promise.defer(function() return result end)")
 			return
 
 		try:
@@ -419,8 +419,8 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 		match("]")
 
 	def match_deffer():
-		match("deffer")
-		emit("cocos_promise.deffer()")
+		match("defer")
+		emit("cocos_promise.defer()")
 
 	def match_any():
 		match_in_all()
@@ -440,7 +440,7 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 				match_in_all()
 
 	def match_token():
-		if look_ahead("deffer"):
+		if look_ahead("defer"):
 			match_deffer()
 		elif look_ahead("all"):
 			match_all()

@@ -44,7 +44,7 @@ function DemoLayer:onEnter()
 	self:test()
 end
 function DemoLayer:DefferGetCorps(index)
-    return cocos_promise.deffer(function()
+    return cocos_promise.defer(function()
         return self.corps[index]:show()
     end)
 end
@@ -68,7 +68,7 @@ end
 function DemoLayer:GotoLogicPointInstant(x, y)
     local point = self:ConvertLogicPositionToMapPosition(x, y)
     self:GotoMapPositionInMiddle(point.x, point.y)
-    return cocos_promise.deffer()
+    return cocos_promise.defer()
 end
 function DemoLayer:GotoLogicPoint(x, y, s)
     local point = self:ConvertLogicPositionToMapPosition(x, y)

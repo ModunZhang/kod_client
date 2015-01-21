@@ -261,15 +261,15 @@ end
 --fte
 function GameUIBarracks:Lock()
     self.list_view:getScrollNode():setTouchEnabled(false)
-    return cocos_promise.deffer(function() return self end)
+    return cocos_promise.defer(function() return self end)
 end
 function GameUIBarracks:Find(control_type)
     if control_type == "recruit" then
-        return cocos_promise.deffer(function()
+        return cocos_promise.defer(function()
             return self.tab_buttons:GetTabByTag("recruit")
         end)
     elseif control_type == "swordsman" then
-        return cocos_promise.deffer(function()
+        return cocos_promise.defer(function()
             return self.soldier_map["swordsman"]
         end)
     end
