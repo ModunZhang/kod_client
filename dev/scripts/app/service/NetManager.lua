@@ -109,7 +109,7 @@ end
 function NetManager:addTimeoutEventListener()
     self:addEventListener("timeout", function(success, msg)
         -- print("addTimeoutEventListener----->timeout")
-    end)
+        end)
 end
 
 function NetManager:removeTimeoutEventListener()
@@ -429,7 +429,7 @@ function NetManager:addOnFetchAllianceViewSuccess()
     end)
 end
 function NetManager:addOnGetStrikeMarchEventDetail()
-     self:addEventListener("onGetStrikeMarchEventDetail", function(success, msg)
+    self:addEventListener("onGetStrikeMarchEventDetail", function(success, msg)
         if success then
             assert(#onGetStrikeMarchEventDetail_callbacks <= 1, "重复getStrikeMarchEventDetail请求过多了!")
             local callback = onGetStrikeMarchEventDetail_callbacks[1]
@@ -477,7 +477,7 @@ function NetManager:addOnGetHelpDefenceTroopDetail()
     end)
 end
 
--- 
+--
 --
 ------------------------------------------------------------------------------------------------
 function NetManager:addLoginEventListener()
@@ -886,31 +886,31 @@ end
 -- 获取每日任务列表
 function NetManager:getDailyQuestsPromise()
     return promise.all(get_blocking_request_promise("logic.playerHandler.getDailyQuests", {},
-     "获取每日任务列表失败!"), get_playerdata_callback()):next(get_response_msg)
+        "获取每日任务列表失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 为每日任务中某个任务增加星级
 function NetManager:getAddDailyQuestStarPromise(questId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.addDailyQuestStar", 
+    return promise.all(get_blocking_request_promise("logic.playerHandler.addDailyQuestStar",
         {
             questId = questId
         },
-     "为每日任务中某个任务增加星级失败!"), get_playerdata_callback()):next(get_response_msg)
+        "为每日任务中某个任务增加星级失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 开始一个每日任务
 function NetManager:getStartDailyQuestPromise(questId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.startDailyQuest", 
+    return promise.all(get_blocking_request_promise("logic.playerHandler.startDailyQuest",
         {
             questId = questId
         },
-     "开始一个每日任务失败!"), get_playerdata_callback()):next(get_response_msg)
+        "开始一个每日任务失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 领取每日任务奖励
 function NetManager:getDailyQeustRewardPromise(questEventId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getDailyQeustReward", 
+    return promise.all(get_blocking_request_promise("logic.playerHandler.getDailyQeustReward",
         {
             questEventId = questEventId
         },
-     "领取每日任务奖励失败!"), get_playerdata_callback()):next(get_response_msg)
+        "领取每日任务奖励失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 发送个人邮件
 function NetManager:getSendPersonalMailPromise(memberName, title, content)
@@ -1369,7 +1369,7 @@ function NetManager:getStrikeVillagePromise(dragonType,defenceAllianceId,defence
 end
 --查看敌方进攻行军事件详细信息
 function NetManager:getAttackMarchEventDetailPromise(eventId)
-     return promise.all(get_blocking_request_promise("logic.allianceHandler.getAttackMarchEventDetail",
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.getAttackMarchEventDetail",
         {eventId = eventId},"获取行军事件数据失败!"),get_attackmarcheventdetail_callback()):next(get_response_msg)
 end
 --查看敌方突袭行军事件详细信息
@@ -1379,12 +1379,12 @@ function NetManager:getStrikeMarchEventDetailPromise(eventId)
 end
 --查看协助部队行军事件详细信息
 function NetManager:getHelpDefenceMarchEventDetailPromise(eventId)
-     return promise.all(get_blocking_request_promise("logic.allianceHandler.getHelpDefenceMarchEventDetail",
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.getHelpDefenceMarchEventDetail",
         {eventId = eventId},"获取协防事件数据失败!"),get_gethelpdefencemarcheventdetail_callback()):next(get_response_msg)
 end
 --查看协防部队详细信息
 function NetManager:getHelpDefenceTroopDetailPromise(playerId,helpedByPlayerId)
-      return promise.all(get_blocking_request_promise("logic.allianceHandler.getHelpDefenceTroopDetail",
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.getHelpDefenceTroopDetail",
         {playerId = playerId,helpedByPlayerId = helpedByPlayerId},"查看协防部队详细信息失败!"),get_gethelpdefencetroopdetail_callback()):next(get_response_msg)
 end
 -- 出售商品
@@ -1427,6 +1427,7 @@ function NetManager:getUpgradeProductionTechPromise(techName,finishNow)
         techName = techName,
         finishNow = finishNow,
     }, "升级生产科技失败!"), get_playerdata_callback()):next(get_response_msg)
+end
 -- 升级军事科技
 local function upgrade_military_tech_promise(techName,finishNow)
     return promise.all(get_blocking_request_promise("logic.playerHandler.upgradeMilitaryTech", {
@@ -1509,4 +1510,5 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
