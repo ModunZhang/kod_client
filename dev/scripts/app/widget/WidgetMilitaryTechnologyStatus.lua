@@ -20,6 +20,7 @@ local WidgetMilitaryTechnologyStatus = class("WidgetMilitaryTechnologyStatus", f
 end)
 
 function WidgetMilitaryTechnologyStatus:ctor()
+    self.soldier_manager = City:GetSoldierManager()
     local width , height = 556,106
     -- 描述
     self.top_bg = display.newScale9Sprite("back_ground_398x97.png", 0, 0,cc.size(556,106),cc.rect(15,10,368,77))
@@ -81,6 +82,14 @@ function WidgetMilitaryTechnologyStatus:CreateUpgradingStatus()
                 end)
                 :SetAccTips(_("小于5分钟时，可使用免费加速.激活VIP X后，小于5分钟时可使用免费加速"))
                 :SetUpgradeTip(self.upgrading_node:GetUpgradeTip())
+            self.speedUp:OnFreeButtonClicked(function ()
+
+                    if math.floor(self.soldier_manager:GetUpgradingMitiTaryTechLeftTimeByCurrentTime(app.timer:GetServerTime())) < 300 then
+                        NetManager:getFreeSpeedUpPromise(self.event.type,self.event.id):next(function()
+                            self.speedUp:leftButtonClicked()
+                        end)
+                    end
+            end)
         end)
         :align(display.CENTER, 474, 44):addTo(upgrading_node)
 
@@ -104,24 +113,28 @@ function WidgetMilitaryTechnologyStatus:CreateUpgradingStatus()
     return upgrading_node
 end
 function WidgetMilitaryTechnologyStatus:RefreshTop()
-    local military_tech_event = City:GetSoldierManager():GetLatestMilitaryTechEvents()
-    local soldier_star_event = City:GetSoldierManager():GetLatestSoldierStarEvents()
-    if City:GetSoldierManager():IsUpgradingMilitaryTech() then
+    local soldier_manager = self.soldier_manager
+    local military_tech_event = soldier_manager:GetLatestMilitaryTechEvents()
+    local soldier_star_event = soldier_manager:GetLatestSoldierStarEvents()
+    if soldier_manager:IsUpgradingMilitaryTech() then
         local upgrade_node = self.upgrading_node
         upgrade_node:setVisible(true)
         self.normal_node:setVisible(false)
         local tech_start_time = military_tech_event and military_tech_event.startTime or 0
         local soldier_star_start_time = soldier_star_event and soldier_star_event.startTime or 0
         local event = tech_start_time>soldier_star_start_time and military_tech_event or soldier_star_event
+        self.event = event
         if military_tech_event == event then
             local name = military_tech_event.name
-            local level = City:GetSoldierManager():GetMilitaryTechsLevelByName(name)
+            local level = soldier_manager:GetMilitaryTechsLevelByName(name)
             upgrade_node:SetUpgradeTip(string.format(_("研发对%s的攻击 Lv %d"),Localize.soldier_category[string.split(name, "_")[2]],level+1))
+            self.event.type = "militaryTechEvents"
         end
         if soldier_star_event == event then
             local name = soldier_star_event.name
-            local star = City:GetSoldierManager():GetStarBySoldierType(name)
+            local star = soldier_manager:GetStarBySoldierType(name)
             upgrade_node:SetUpgradeTip(string.format(_("晋升%s的星级 star %d"),Localize.soldier_name[name],star+1))
+            self.event.type = "soldierStarEvents"
         end
     else
         self.normal_node:setVisible(true)
@@ -130,26 +143,31 @@ function WidgetMilitaryTechnologyStatus:RefreshTop()
     end
 end
 function WidgetMilitaryTechnologyStatus:onEnter()
+    local soldier_manager = self.soldier_manager
     -- 添加到全局计时器中，以便显示各个阶段的时间
     app.timer:AddListener(self)
-    City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
-    City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+    soldier_manager:AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
+    soldier_manager:AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
 end
 function WidgetMilitaryTechnologyStatus:onExit()
+    local soldier_manager = self.soldier_manager
     app.timer:RemoveListener(self)
-    City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
-    City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+    soldier_manager:RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
+    soldier_manager:RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
 end
 function WidgetMilitaryTechnologyStatus:OnTimer(current_time)
-    local military_tech_event = City:GetSoldierManager():GetLatestMilitaryTechEvents()
-    local soldier_star_event = City:GetSoldierManager():GetLatestSoldierStarEvents()
+    local soldier_manager = self.soldier_manager
+    local military_tech_event = soldier_manager:GetLatestMilitaryTechEvents()
+    local soldier_star_event = soldier_manager:GetLatestSoldierStarEvents()
     local tech_start_time = military_tech_event and military_tech_event.startTime or 0
     local soldier_star_start_time = soldier_star_event and soldier_star_event.startTime or 0
     local event = tech_start_time>soldier_star_start_time and military_tech_event or soldier_star_event
     if event then
         self.upgrading_node:SetProgressInfo(GameUtils:formatTimeStyle1(event.finishTime/1000-current_time), (current_time*1000-event.startTime)/(event.finishTime-event.startTime)*100)
         if self.speedUp and self.speedUp.SetProgressInfo then
-        	self.speedUp:SetProgressInfo(GameUtils:formatTimeStyle1(event.finishTime/1000-current_time), (current_time*1000-event.startTime)/(event.finishTime-event.startTime)*100)
+            self.speedUp:SetProgressInfo(GameUtils:formatTimeStyle1(event.finishTime/1000-current_time), (current_time*1000-event.startTime)/(event.finishTime-event.startTime)*100)
+            self.speedUp:SetFreeButtonEnabled(math.floor(soldier_manager:GetUpgradingMitiTaryTechLeftTimeByCurrentTime(app.timer:GetServerTime())) < 300)
+
         end
     end
 end
@@ -160,6 +178,10 @@ function WidgetMilitaryTechnologyStatus:OnSoldierStarEventsChanged( soldier_mana
     self:RefreshTop()
 end
 return WidgetMilitaryTechnologyStatus
+
+
+
+
 
 
 

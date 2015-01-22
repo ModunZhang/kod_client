@@ -267,7 +267,7 @@ function WidgetPromoteSoldier:GetUpgradeGems()
     local config = self:GetNextLevelConfig()
     local current_coin = City:GetResourceManager():GetCoinResource():GetValue()
     -- 正在升级的军事科技剩余升级时间
-    local left_time = City:GetSoldierManager():GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime())
+    local left_time = City:GetSoldierManager():GetUpgradingMitiTaryTechLeftTimeByCurrentTime(app.timer:GetServerTime())
     return DataUtils:buyResource({coin = config.upgradeCoinNeed}, {coin=current_coin}) + DataUtils:getGemByTimeInterval(left_time)
 
 end

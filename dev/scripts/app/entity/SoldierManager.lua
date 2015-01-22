@@ -263,16 +263,19 @@ end
 function SoldierManager:IsUpgradingMilitaryTech()
     return LuaUtils:table_size(self.militaryTechEvents)>0 or LuaUtils:table_size(self.soldierStarEvents)>0
 end
-function SoldierManager:GetSoldierMaxStar()
-    return 3
-end
-function SoldierManager:GetUpgradingLeftTimeByCurrentTime(current_time)
-    local  left_time = 0
+function SoldierManager:GetUpgradingMilitaryTech()
     local military_tech_event = self:GetLatestMilitaryTechEvents()
     local soldier_star_event = self:GetLatestSoldierStarEvents()
     local tech_start_time = military_tech_event and military_tech_event.startTime or 0
     local soldier_star_start_time = soldier_star_event and soldier_star_event.startTime or 0
-    local event = tech_start_time>soldier_star_start_time and military_tech_event or soldier_star_event
+    return  tech_start_time>soldier_star_start_time and military_tech_event or soldier_star_event
+end
+function SoldierManager:GetSoldierMaxStar()
+    return 3
+end
+function SoldierManager:GetUpgradingMitiTaryTechLeftTimeByCurrentTime(current_time)
+    local left_time = 0
+    local event = self:GetUpgradingMilitaryTech()
     if event then
         left_time = left_time + event.finishTime/1000 - current_time
     end
@@ -280,7 +283,7 @@ function SoldierManager:GetUpgradingLeftTimeByCurrentTime(current_time)
 end
 function SoldierManager:OnMilitaryTechEventsChanged(militaryTechEvents)
     if not militaryTechEvents then return end
-    LuaUtils:outputTable("OnMilitaryTechEventsChanged", militaryTechEvents)
+    -- LuaUtils:outputTable("OnMilitaryTechEventsChanged", militaryTechEvents)
     self.militaryTechEvents = militaryTechEvents
 end
 function SoldierManager:__OnMilitaryTechEventsChanged(__militaryTechEvents)

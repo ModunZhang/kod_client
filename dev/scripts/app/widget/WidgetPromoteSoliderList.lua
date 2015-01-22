@@ -195,10 +195,8 @@ function WidgetPromoteSoliderList:onExit()
     City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
 end
 function WidgetPromoteSoliderList:OnSoliderStarCountChanged(soldier_manager,changed_map)
-    LuaUtils:outputTable("OnSoliderStarCountChanged", changed_map)
     for i,v in ipairs(changed_map) do
         for _,box in ipairs(self.boxes) do
-            print("v=",v,"box:GetSoldierType()",box:GetSoldierType())
             if v == box:GetSoldierType() then
                 box:Refresh(City:GetSoldierManager():GetStarBySoldierType(v))
             end
@@ -206,10 +204,15 @@ function WidgetPromoteSoliderList:OnSoliderStarCountChanged(soldier_manager,chan
     end
 end
 function WidgetPromoteSoliderList:OnSoldierStarEventsChanged(soldier_manager,changed_map)
-    LuaUtils:outputTable("OnSoldierStarEventsChanged", changed_map)
     for i,v in ipairs(changed_map[1]) do
         for _,box in ipairs(self.boxes) do
-            print("v.name=",v.name,"box:GetSoldierType()",box:GetSoldierType())
+            if v.name == box:GetSoldierType() then
+                box:Refresh(City:GetSoldierManager():GetStarBySoldierType(v.name))
+            end
+        end
+    end
+    for i,v in ipairs(changed_map[3]) do
+        for _,box in ipairs(self.boxes) do
             if v.name == box:GetSoldierType() then
                 box:Refresh(City:GetSoldierManager():GetStarBySoldierType(v.name))
             end
