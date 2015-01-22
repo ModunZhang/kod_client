@@ -170,23 +170,23 @@ require("app.datas.DailyQuests_dailyQuestStar")
 require("app.datas.DailyQuests_dailyQuestStyle")
 
 GameDatas.DragonEquipments = {
+	["equipments"] = {},
+	["equipmentBuff"] = {},
 	["crown"] = {},
 	["armguardLeft"] = {},
 	["armguardRight"] = {},
 	["chest"] = {},
 	["sting"] = {},
 	["orb"] = {},
-	["equipments"] = {},
-	["equipmentBuff"] = {},
 }
+require("app.datas.DragonEquipments_equipments")
+require("app.datas.DragonEquipments_equipmentBuff")
 require("app.datas.DragonEquipments_crown")
 require("app.datas.DragonEquipments_armguardLeft")
 require("app.datas.DragonEquipments_armguardRight")
 require("app.datas.DragonEquipments_chest")
 require("app.datas.DragonEquipments_sting")
 require("app.datas.DragonEquipments_orb")
-require("app.datas.DragonEquipments_equipments")
-require("app.datas.DragonEquipments_equipmentBuff")
 
 GameDatas.Dragons = {
 	["dragons"] = {},
@@ -266,12 +266,14 @@ GameDatas.Items = {
 	["special"] = {},
 	["buff"] = {},
 	["resource"] = {},
-	["speedUp"] = {},
+	["speedup"] = {},
+	["buffTypes"] = {},
 }
 require("app.datas.Items_special")
 require("app.datas.Items_buff")
 require("app.datas.Items_resource")
-require("app.datas.Items_speedUp")
+require("app.datas.Items_speedup")
+require("app.datas.Items_buffTypes")
 
 GameDatas.MilitaryTechLevelUp = {
 	["infantry_infantry"] = {},

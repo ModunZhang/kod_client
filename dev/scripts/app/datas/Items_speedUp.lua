@@ -1,89 +1,89 @@
-local speedUp = GameDatas.Items.speedUp
+local speedup = GameDatas.Items.speedup
 
-speedUp["speedup_1"] = {
+speedup["speedup_1"] = {
 	["name"] = "speedup_1",
-	["effect"] = "1.0",
+	["effect"] = 1.000000,
 	["order"] = 1,
 	["isSell"] = true,
 	["price"] = 10,
 	["isSellInAlliance"] = false,
 	["priceInAlliance"] = 200
 }
-speedUp["speedup_2"] = {
+speedup["speedup_2"] = {
 	["name"] = "speedup_2",
-	["effect"] = "5.0",
+	["effect"] = 5.000000,
 	["order"] = 2,
 	["isSell"] = true,
 	["price"] = 10,
 	["isSellInAlliance"] = false,
 	["priceInAlliance"] = 200
 }
-speedUp["speedup_3"] = {
+speedup["speedup_3"] = {
 	["name"] = "speedup_3",
-	["effect"] = "15.0",
+	["effect"] = 15.000000,
 	["order"] = 3,
 	["isSell"] = true,
 	["price"] = 10,
 	["isSellInAlliance"] = true,
 	["priceInAlliance"] = 200
 }
-speedUp["speedup_4"] = {
+speedup["speedup_4"] = {
 	["name"] = "speedup_4",
-	["effect"] = "60.0",
+	["effect"] = 60.000000,
 	["order"] = 4,
 	["isSell"] = true,
 	["price"] = 10,
 	["isSellInAlliance"] = true,
 	["priceInAlliance"] = 200
 }
-speedUp["speedup_5"] = {
+speedup["speedup_5"] = {
 	["name"] = "speedup_5",
-	["effect"] = "180.0",
+	["effect"] = 180.000000,
 	["order"] = 5,
 	["isSell"] = true,
 	["price"] = 10,
 	["isSellInAlliance"] = true,
 	["priceInAlliance"] = 200
 }
-speedUp["speedup_6"] = {
+speedup["speedup_6"] = {
 	["name"] = "speedup_6",
-	["effect"] = "480.0",
+	["effect"] = 480.000000,
 	["order"] = 6,
 	["isSell"] = true,
 	["price"] = 10,
 	["isSellInAlliance"] = true,
 	["priceInAlliance"] = 200
 }
-speedUp["speedup_7"] = {
+speedup["speedup_7"] = {
 	["name"] = "speedup_7",
-	["effect"] = "900.0",
+	["effect"] = 900.000000,
 	["order"] = 7,
 	["isSell"] = true,
 	["price"] = 10,
 	["isSellInAlliance"] = false,
 	["priceInAlliance"] = 200
 }
-speedUp["speedup_8"] = {
+speedup["speedup_8"] = {
 	["name"] = "speedup_8",
-	["effect"] = "1440.0",
+	["effect"] = 1440.000000,
 	["order"] = 8,
 	["isSell"] = true,
 	["price"] = 10,
 	["isSellInAlliance"] = false,
 	["priceInAlliance"] = 200
 }
-speedUp["warSpeedupClass_1"] = {
+speedup["warSpeedupClass_1"] = {
 	["name"] = "warSpeedupClass_1",
-	["effect"] = "0.25",
+	["effect"] = 0.250000,
 	["order"] = 9,
 	["isSell"] = true,
 	["price"] = 10,
 	["isSellInAlliance"] = true,
 	["priceInAlliance"] = 200
 }
-speedUp["warSpeedupClass_2"] = {
+speedup["warSpeedupClass_2"] = {
 	["name"] = "warSpeedupClass_2",
-	["effect"] = "0.5",
+	["effect"] = 0.500000,
 	["order"] = 10,
 	["isSell"] = true,
 	["price"] = 10,
