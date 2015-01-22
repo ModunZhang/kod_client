@@ -362,7 +362,6 @@ function GameUIKeep:CreateModifyCityNameWindow()
                         :AddToCurrentScene()
                     return
                 end
-                NetManager:getEditPlayerCityNamePromise(cityName)
                 layer:removeFromParent(true)
             end
         end)

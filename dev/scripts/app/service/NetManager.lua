@@ -679,12 +679,6 @@ end
 function NetManager:getChangeToIceFieldPromise()
     return promise.all(get_changeTerrain_promise("iceField"), get_playerdata_callback()):next(get_response_msg)
 end
--- 修改城市名字
-function NetManager:getEditPlayerCityNamePromise(cityName)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.editPlayerCityName", {
-        cityName = cityName,
-    }, "修改城市名字失败!"), get_playerdata_callback()):next(get_response_msg)
-end
 -- 建造小屋
 function NetManager:getCreateHouseByLocationPromise(location, sub_location, building_type)
     return promise.all(get_blocking_request_promise("logic.playerHandler.createHouse", {
