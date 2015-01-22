@@ -48,7 +48,6 @@ end
 -- basic info
 function GameDefautlt:setBasicInfoBoolValueForKey(key,val)
 	val = checkbool(val)
-	print("GameDefautlt:setBasicInfoBoolValueForKey-->",key,val)
 	self.game_base_info[key] = val
 end
 
@@ -57,12 +56,10 @@ function GameDefautlt:getBasicInfoValueForKey(key,default)
 		self.game_base_info[key] = default
 		self:flush()
 	end
-	print("GameDefautlt:getBasicInfoValueForKey-->",key,self.game_base_info[key])
 	return self.game_base_info[key]
 end
 
 function GameDefautlt:setBasicInfoValueForKey(key,val)
-	print("GameDefautlt:setBasicInfoValueForKey-->",key,val)
 	self.game_base_info[key] = val
 end
 

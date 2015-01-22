@@ -2,7 +2,7 @@
 -- Author: Danny He
 -- Date: 2014-12-12 10:41:06
 --
-AudioManager = class("AudioManager")
+local AudioManager = class("AudioManager")
 
 local bg_music_map = {
 	MainScene = "music_begin.mp3",
@@ -39,7 +39,7 @@ end
 function AudioManager:GetGameDefault()
 	return self.game_default
 end
---预加载音乐到内存
+--预加载音乐到内存(android)
 function AudioManager:PreLoadAudio()
 
 end

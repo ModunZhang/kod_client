@@ -2,11 +2,11 @@ local MOVE_EVENT = "MOVE_EVENT"
 local UIPushButton = cc.ui.UIPushButton
 local WidgetPushButton = class("WidgetPushButton", UIPushButton)
 local my_filter = filter
-function WidgetPushButton:ctor(images, options, filters)
+function WidgetPushButton:ctor(images, options, filters,music_info)
     self.pre_pos = nil
     self.filters = filters ~= nil and filters or nil
 
-    WidgetPushButton.super.ctor(self, images, options)
+    WidgetPushButton.super.ctor(self, images, options,music_info)
     self:onButtonPressed(function(event)
         self.pre_pos = event.target:convertToWorldSpace(cc.p(event.target:getPosition()))
     end)
