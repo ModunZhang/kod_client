@@ -1457,6 +1457,12 @@ function NetManager:getUpgradeSoldierStarPromise(soldierName)
     return upgrade_soldier_star_promise(soldierName,false)
 end
 --
+--设置pve数据
+function NetManager:getSetPveDataPromise(pveData)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.setPveData", {
+        pveData = pveData,
+    }, "设置pve数据失败!"), get_playerdata_callback()):next(get_response_msg)
+end
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

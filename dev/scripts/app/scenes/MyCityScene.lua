@@ -248,29 +248,29 @@ function MyCityScene:OnTreesChanged(trees, road)
     end
 end
 function MyCityScene:OnTowersChanged(old_towers, new_towers)
-    -- table.foreach(old_towers, function(k, tower)
-    --     if tower:GetEntity():IsUnlocked() then
-    --         self:GetSceneUILayer():RemoveUIFromBuildingSprite(tower)
-    --     end
-    -- end)
-    -- table.foreach(new_towers, function(k, tower)
-    --     if tower:GetEntity():IsUnlocked() then
-    --         self:GetSceneUILayer():NewUIFromBuildingSprite(tower)
-    --     end
-    -- end)
+    table.foreach(old_towers, function(k, tower)
+        if tower:GetEntity():IsUnlocked() then
+            self:GetSceneUILayer():RemoveUIFromBuildingSprite(tower)
+        end
+    end)
+    table.foreach(new_towers, function(k, tower)
+        if tower:GetEntity():IsUnlocked() then
+            self:GetSceneUILayer():NewUIFromBuildingSprite(tower)
+        end
+    end)
 end
 function MyCityScene:OnGateChanged(old_walls, new_walls)
-    -- table.foreach(old_walls, function(k, wall)
-    --     if wall:GetEntity():IsGate() then
-    --         self:GetSceneUILayer():RemoveUIFromBuildingSprite(wall)
-    --     end
-    -- end)
+    table.foreach(old_walls, function(k, wall)
+        if wall:GetEntity():IsGate() then
+            self:GetSceneUILayer():RemoveUIFromBuildingSprite(wall)
+        end
+    end)
 
-    -- table.foreach(new_walls, function(k, wall)
-    --     if wall:GetEntity():IsGate() then
-    --         self:GetSceneUILayer():NewUIFromBuildingSprite(wall)
-    --     end
-    -- end)
+    table.foreach(new_walls, function(k, wall)
+        if wall:GetEntity():IsGate() then
+            self:GetSceneUILayer():NewUIFromBuildingSprite(wall)
+        end
+    end)
 end
 function MyCityScene:OnSceneScale(scene_layer)
     if scene_layer:getScale() < (scene_layer:GetScaleRange()) * 1.3 then

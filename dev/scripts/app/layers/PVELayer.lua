@@ -67,7 +67,7 @@ function PVELayer:onEnter()
             local gid = (self.pve_layer:getTileGIDAt(cc.p(x, y)))
             if gid > 0 then
                 local obj = display.newSprite(OBJECT_IMAGE[gid]):addTo(self.building_layer)
-                :pos(self:GetLogicMap():ConvertToMapPosition(x, y))
+                    :pos(self:GetLogicMap():ConvertToMapPosition(x, y))
                 objects[#objects + 1] = {sprite = obj, x = x, y = y}
             end
         end
@@ -79,8 +79,7 @@ function PVELayer:onEnter()
     display.newSprite("Hero_1.png"):addTo(self.char):pos(104*0.5, 106*0.5):scale(0.8)
 
     -- 加载标记
-    self.pve_map:IteratorObjects(handler(self, self.OnObjectChanged))
-
+    self.pve_map:IteratorObjects(handler(self, self.SetObjectStatus))
     self.pve_map:AddObserver(self)
 end
 function PVELayer:onExit()
@@ -88,6 +87,16 @@ function PVELayer:onExit()
     self.pve_map:RemoveObserver(self)
 end
 function PVELayer:OnObjectChanged(object)
+    self:SetObjectStatus(object)
+    if object:Searched() > 0 then
+        NetManager:getSetPveDataPromise(self.user:EncodePveData()):next(function(result)
+            dump(result)
+        end):catch(function(err)
+            dump(err:reason())
+        end)
+    end   
+end
+function PVELayer:SetObjectStatus(object)
     if not object:Type() then
         object:SetType(self:GetTileInfo(object:Position()))
     end
@@ -117,7 +126,6 @@ function PVELayer:MoveCharTo(x, y)
     self:LightOn(x, y)
     self.char:pos(self:GetLogicMap():ConvertToMapPosition(x, y))
     self:GotoLogicPoint(x, y, 10)
-
     self.user:GetPVEDatabase():SetCharPosition(x, y)
 end
 function PVELayer:GetSceneNode()
@@ -189,6 +197,8 @@ function PVELayer:GotoLogicPoint(x, y, s)
 end
 
 return PVELayer
+
+
 
 
 
