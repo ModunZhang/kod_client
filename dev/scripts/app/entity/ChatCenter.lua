@@ -107,13 +107,13 @@ function ChatCenter:_notifyObservers( event,data)
 end
 
 function ChatCenter:_insertMessage(v )
-	if not v.fromType then return end
-	if string.lower(v.fromType) ~='system' then
-		if not self._messageQueue_[string.lower(v.fromType)] then
-			self._messageQueue_[string.lower(v.fromType)] = {}
+	if not v.fromChannel then return end
+	if string.lower(v.fromChannel) ~='system' then
+		if not self._messageQueue_[string.lower(v.fromChannel)] then
+			self._messageQueue_[string.lower(v.fromChannel)] = {}
 		end
 		if not self:_isBlockedChat(v) then
-			table.insert(self._messageQueue_[string.lower(v.fromType)],v)
+			table.insert(self._messageQueue_[string.lower(v.fromChannel)],v)
 			return true
 		end
 	else
@@ -148,9 +148,9 @@ function ChatCenter:add2BlockedList(chat)
 	end
 	if isIn then return end
 	table.insert(self._blockedIdList_,chat)
-	for i,v in ipairs(self._messageQueue_[chat.fromType]) do
+	for i,v in ipairs(self._messageQueue_[chat.fromChannel]) do
 		if v.fromId == chat.fromId then 
-			table.remove(self._messageQueue_[chat.fromType],i)
+			table.remove(self._messageQueue_[chat.fromChannel],i)
 		end
 	end
 	LuaUtils:outputTable("self._blockedIdList_", self._blockedIdList_)

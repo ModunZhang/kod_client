@@ -14,6 +14,7 @@ local MultiObserver = import(".MultiObserver")
 local City = class("City", MultiObserver)
 local ProductionTechnology = import(".ProductionTechnology")
 local ProductionTechnologyEvent = import(".ProductionTechnologyEvent")
+
 -- 枚举定义
 City.RETURN_CODE = Enum("INNER_ROUND_NOT_UNLOCKED",
     "EDGE_BESIDE_NOT_UNLOCKED",
@@ -540,7 +541,7 @@ function City:IsUnLockedAtIndex(x, y)
 end
 function City:IsTileCanbeUnlockAt(x, y)
     -- 没有第五圈
-    if x == 5 or y == 5 then
+    if x == 5 then
         return false
     end
     -- 是否解锁
@@ -932,6 +933,7 @@ function City:OnUserDataChanged(userData, current_time)
     self:__OnProductionTechsDataChanged(userData.productionTechs)
     self:OnProductionTechEventsDataChaned(userData.productionTechEvents)
     self:__OnProductionTechEventsDataChaned(userData.__productionTechEvents)
+
     -- 更新兵种
     self.soldier_manager:OnUserDataChanged(userData)
     -- 更新材料，这里是广义的材料，包括龙的装备
@@ -1497,12 +1499,12 @@ function City:CheckDependTechsLockState(tech)
 end
 
 function City:FastUpdateAllTechsLockState()
-   self:IteratorTechs(function(index,tech)
+    self:IteratorTechs(function(index,tech)
         local unLockByTech = self:FindTechByIndex(tech:UnlockBy())
         if unLockByTech then 
             tech:SetEnable(tech:UnlockLevel() <= unLockByTech:Level() and tech:IsOpen())
         end
-   end)
+    end)
 end
 
 
@@ -1584,5 +1586,6 @@ end
 function City:FindProductionTechEventById(_id)
     return self.productionTechEvents[_id]
 end
+
 
 return City

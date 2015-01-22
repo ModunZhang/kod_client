@@ -266,7 +266,7 @@ function Dragon:IsFree()
 end
 --是否死亡
 function Dragon:IsDead()
-	return self:Hp() == 0
+	return math.floor(self:Hp()) == 0
 end
 function Dragon:GetEquipmentByBody( category )
 	local arg_type = type(category)
