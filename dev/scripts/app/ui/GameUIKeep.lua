@@ -220,16 +220,16 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                 item:setItemSize(568, 144)
                 local item_width, item_height = item:getItemSize()
                 local content = cc.ui.UIGroup.new()
-                content:addWidget( WidgetUIBackGround.new({
-                    width = 568,
-                    height = 142,
-                    top_img = "back_ground_568x16_top.png",
-                    bottom_img = "back_ground_568x80_bottom.png",
-                    mid_img = "back_ground_568x28_mid.png",
-                    u_height = 16,
-                    b_height = 80,
-                    m_height = 28,
-                }):align(display.CENTER))
+
+                content:addWidget(WidgetPushButton.new({normal = "back_ground_568X142.png",pressed = "back_ground_568X142.png"})
+                    :onButtonClicked(function(event)
+                        if event.name == "CLICKED_EVENT" then
+                            if canUnlock then
+                                self:leftButtonClicked()
+                                display.getRunningScene():GotoLogicPoint(unlock_building:GetLogicPosition())
+                            end
+                        end
+                    end))
                 local title_bg = display.newSprite("title_blue_412x30.png"):pos(70,46)
                 content:addWidget(title_bg)
                 -- building name
@@ -239,14 +239,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                     color = 0xffedae}):align(display.CENTER_LEFT, 14, title_bg:getContentSize().height/2)
                     :addTo(title_bg)
                 if canUnlock then
-
-                    WidgetPushButton.new({normal = "dragon_next_icon_28x31.png",pressed = "dragon_next_icon_28x31.png"})
-                        :onButtonClicked(function(event)
-                            if event.name == "CLICKED_EVENT" then
-                                self:leftButtonClicked()
-                                display.getRunningScene():GotoLogicPoint(unlock_building:GetLogicPosition())
-                            end
-                        end):align(display.CENTER, 260, 0):addTo(content, 10)
+                    display.newSprite("dragon_next_icon_28x31.png"):align(display.CENTER, 260, 0):addTo(content, 10)
                 end
 
                 UIKit:ttfLabel({
@@ -532,6 +525,8 @@ end
 
 
 return GameUIKeep
+
+
 
 
 
