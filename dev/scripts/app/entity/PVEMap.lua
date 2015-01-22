@@ -64,27 +64,29 @@ end
 function PVEMap:IsSearched()
     return #self.searched_fogs > 0 or #self.searched_objects > 0
 end
-function PVEMap:Load(str_code)
-    str_code = str_code or ""
-    str_code = #str_code == 0 and "{fog={},object={}}" or str_code
-    local f = loadstring(string.format("return %s", str_code))
+function PVEMap:Load(floor)
+    local f = loadstring(string.format("return {fogs=%s, objects=%s}", floor.fogs, floor.objects))
     local data = assert(f)()
-    self.searched_fogs = data.fog
-    for _, v in ipairs(data.object) do
+    self.searched_fogs = data.fogs
+    for _, v in ipairs(data.objects) do
         self:ModifyObject(unpack(v))
     end
 end
-function PVEMap:Dump()
-    return string.format("{fog=%s,object=%s}", self:DumpFog(), self:DumpMap())
+function PVEMap:EncodeMap()
+    return {
+        level = self.index,
+        fogs = self:DumpFogs(),
+        objects = self:DumpObjects()
+    }
 end
-function PVEMap:DumpFog()
+function PVEMap:DumpFogs()
     local fogs = {}
     for _, v in ipairs(self.searched_fogs) do
         fogs[#fogs + 1] = string.format("%d", v)
     end
     return string.format("{%s}", table.concat(fogs, ","))
 end
-function PVEMap:DumpMap()
+function PVEMap:DumpObjects()
     local objects = {}
     for _, v in ipairs(self.searched_objects) do
         if v:Searched() > 0 then
@@ -95,5 +97,7 @@ function PVEMap:DumpMap()
 end
 
 return PVEMap
+
+
 
 

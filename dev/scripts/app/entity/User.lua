@@ -33,7 +33,7 @@ function User:ctor(p)
     }
     self:GetGemResource():SetValueLimit(math.huge) -- 会有人充值这么多的宝石吗？
 
-    self.pve_database = PVEDatabase.new():Load()
+    self.pve_database = PVEDatabase.new(self)
     local _,_, index = self.pve_database:GetCharPosition()
     self.cur_pve_map = self.pve_database:GetMapByIndex(index)
 
@@ -52,6 +52,13 @@ function User:ctor(p)
     else
         self:SetId(p)
     end
+end
+function User:EncodePveData()
+    return {
+        staminaUsed = 1,
+        location = self.pve_database:EncodeLocation(),
+        floor = self.cur_pve_map:EncodeMap(),
+    }
 end
 function User:ResetAllListeners()
     self.cur_pve_map:RemoveAllObserver()
@@ -229,6 +236,7 @@ function User:OnPropertyChange(property_name, old_value, new_value)
     end)
 end
 function User:OnUserDataChanged(userData)
+
     self:OnGemChanged(userData.resources)
     self:OnBasicInfoChanged(userData.basicInfo)
     self:OnNewInviteAllianceEventsComming(userData.__inviteToAllianceEvents)
@@ -242,6 +250,7 @@ function User:OnUserDataChanged(userData)
     self:OnNewDailyQuestsEventsComming(userData.__dailyQuestEvents)
     -- 交易
     self.trade_manager:OnUserDataChanged(userData)
+    self:GetPVEDatabase():OnUserDataChanged(userData)
     return self
 end
 function User:OnGemChanged(resources)
@@ -455,6 +464,7 @@ function User:OnNewDailyQuestsEvent(changed_map)
     end)
 end
 return User
+
 
 
 

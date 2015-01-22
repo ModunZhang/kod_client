@@ -1428,6 +1428,13 @@ function NetManager:getUpgradeProductionTechPromise(techName,finishNow)
         finishNow = finishNow,
     }, "升级生产科技失败!"), get_playerdata_callback()):next(get_response_msg)
 end
+
+--设置pve数据
+function NetManager:getSetPveDataPromise(pveData)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.setPveData", {
+        pveData = pveData,
+    }, "设置pve数据失败!"), get_playerdata_callback()):next(get_response_msg)
+end
 --
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)

@@ -15,7 +15,7 @@ function RoadSprite:GetSpriteOffset()
 end
 function RoadSprite:GetLogicZorder()
     local x, y = self:GetMidLogicPosition()
-    return self:GetMapLayer():GetZOrderBy(self, x, y) - 200
+    return self:GetMapLayer():GetZOrderBy(self, x, y) - 10000
 end
 
 
