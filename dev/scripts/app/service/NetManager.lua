@@ -1148,14 +1148,14 @@ end
 function NetManager:getSendGlobalMsgPromise(text)
     return promise.all(get_blocking_request_promise("chat.chatHandler.send", {
         ["text"] = text,
-        ["type"] = "global"
+        ["channel"] = "global"
     }, "发送世界聊天信息失败!"))
 end
 --发送聊天信息
-function NetManager:getSendChatPromise(type,text)
+function NetManager:getSendChatPromise(channel,text)
     return promise.all(get_none_blocking_request_promise("chat.chatHandler.send", {
         ["text"] = text,
-        ["type"] = type
+        ["channel"] = channel
     }, "发送聊天信息失败!"),get_sendchat_callback())
 end
 --获取所有聊天信息
