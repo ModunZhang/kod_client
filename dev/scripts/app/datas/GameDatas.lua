@@ -5,11 +5,19 @@ GameDatas.ClientInitGame = {
 	["locations"] = {},
 	["allianceRight"] = {},
 	["watchTower"] = {},
+	["pve_normal"] = {},
+	["pve_elite"] = {},
+	["pve_boss"] = {},
+	["pve_npc"] = {},
 }
 require("app.datas.ClientInitGame_ruins")
 require("app.datas.ClientInitGame_locations")
 require("app.datas.ClientInitGame_allianceRight")
 require("app.datas.ClientInitGame_watchTower")
+require("app.datas.ClientInitGame_pve_normal")
+require("app.datas.ClientInitGame_pve_elite")
+require("app.datas.ClientInitGame_pve_boss")
+require("app.datas.ClientInitGame_pve_npc")
 
 GameDatas.AllianceBuilding = {
 	["palace"] = {},
