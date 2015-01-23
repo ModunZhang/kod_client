@@ -226,9 +226,6 @@ function MyApp:EnterMyAllianceScene()
     app:enterScene(alliance_name, {City}, "custom", -1, transition_)
 end
 function MyApp:EnterPVEScene()
-    User:GetStrengthResource():UpdateResource(self.timer:GetServerTime(), 100)
-    User:GetStrengthResource():SetProductionPerHour(self.timer:GetServerTime(), 1000)
-    User:GetStrengthResource():SetValueLimit(100)
     app:enterScene("PVEScene", {User}, "custom", -1, transition_)
 end
 function MyApp:pushScene(sceneName, args, transitionType, time, more)
