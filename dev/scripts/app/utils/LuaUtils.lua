@@ -20,6 +20,13 @@ function LuaUtils:table_size(t)
     return r
 end
 
+function LuaUtils:table_insert_top(dest,src)
+    local temp_table = self:table_reverse(src)
+    for _,v in ipairs(temp_table) do
+        table.insert(dest, 1,v)
+    end
+end
+
 function LuaUtils:table_empty(t)
     return not next(t)
 end
