@@ -136,10 +136,12 @@ function RichText:align(anchorPoint, x, y)
     local offset_y = (1-ANCHOR_POINTSint.y) * size.height
     local cur_height = 0
     local line_height = self.lineHeight
-    for _, v in ipairs(self.lines) do
+    for i, v in ipairs(self.lines) do
         v:pos(- offset_x, - cur_height + offset_y)
-        local line_h = v:getCascadeBoundingBox().height
-        cur_height = cur_height + line_h > line_height and line_h or line_height
+        local h = v:getCascadeBoundingBox().height
+        h = h > line_height and h or line_height
+        h = h == 0 and 10 or h
+        cur_height = cur_height + h
     end
     return self:pos(x, y)
 end
