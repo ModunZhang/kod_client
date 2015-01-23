@@ -475,6 +475,7 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     if alliance_data.titles then
         self:SetTitleNames(alliance_data.titles)
     end
+    self:OnAllianceFightReportsChanged(alliance_data)
     self:OnAllianceBasicInfoChangedFirst(alliance_data.basicInfo)
 
     self:GetAllianceBelvedere():OnAllianceDataChanged(alliance_data)
@@ -490,7 +491,6 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     self:OnAllianceFightChanged(alliance_data.allianceFight)
     self:OnVillageLevelsChanged(alliance_data.villageLevels)
     self:OnAllianceFightRequestsChanged(alliance_data)
-    self:OnAllianceFightReportsChanged(alliance_data)
     self.alliance_shrine:OnAllianceDataChanged(alliance_data)
     self.alliance_map:OnAllianceDataChanged(alliance_data)
 

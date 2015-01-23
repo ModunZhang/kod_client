@@ -207,6 +207,8 @@ function GameUITownHall:CreateQuestItem(quest,index)
                 status = _("任务完成")
                 control_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, "yellow_btn_up_148x58.png", true)
                 control_btn:setButtonImage(cc.ui.UIPushButton.PRESSED,"yellow_btn_down_148x58.png", true)
+                control_btn:removeAllEventListeners()
+
                 control_btn:setButtonLabel(
                     UIKit:commonButtonLable({
                         color = 0xfff3c7,
