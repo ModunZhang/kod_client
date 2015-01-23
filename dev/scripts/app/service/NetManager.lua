@@ -358,9 +358,7 @@ end
 function NetManager:addOnChatListener()
     self:addEventListener("onChat", function(success, msg)
         if success then
-            if app.chatCenter then
-                app.chatCenter:handleNetMessage("onChat",msg)
-            end
+            app:GetChatManager():HandleNetMessage("onChat",msg)
             assert(#onSendChatSuccess_callbacks <= 1, "重复请求过多了!")
             local callback = onSendChatSuccess_callbacks[1]
             if type(callback) == "function" then
@@ -373,9 +371,6 @@ end
 function NetManager:addOnAllChatListener()
     self:addEventListener("onAllChat", function(success, msg)
         if success then
-            if app.chatCenter then
-                app.chatCenter:handleNetMessage("onAllChat",msg)
-            end
             assert(#onGetAllChatSuccess_callbacks <= 1, "重复请求过多了!")
             local callback = onGetAllChatSuccess_callbacks[1]
             if type(callback) == "function" then
@@ -387,32 +382,32 @@ function NetManager:addOnAllChatListener()
 end
 function NetManager:addOnBuildingLevelUpListener()
     self:addEventListener("onBuildingLevelUp", function(success, msg)
-        if success then
-            local buildingName = UIKit:getBuildingLocalizedKeyByBuildingType(msg.buildingType)
-            GameGlobalUI:showTips(_("建筑升级完成"),string.format('%s(LV %d)',_(buildingName),msg.level))
-        end
+        -- if success then
+        --     local buildingName = Localize.getBuildingLocalizedKeyByBuildingType(msg.buildingType)
+        --     GameGlobalUI:showTips(_("建筑升级完成"),string.format('%s(LV %d)',_(buildingName),msg.level))
+        -- end
     end)
 end
 function NetManager:addOnHouseLevelUpListener()
     self:addEventListener("onHouseLevelUp", function(success, msg)
-        if success then
-            local houseName = UIKit:getHouseLocalizedKeyByBuildingType(msg.houseType)
-            GameGlobalUI:showTips(_("小屋升级完成"),string.format('%s(LV %d)',_(houseName),msg.level))
-        end
+        -- if success then
+        --     local houseName = Localize.getHouseLocalizedKeyByBuildingType(msg.houseType)
+        --     GameGlobalUI:showTips(_("小屋升级完成"),string.format('%s(LV %d)',_(houseName),msg.level))
+        -- end
     end)
 end
 function NetManager:addOnTowerLevelUpListener()
     self:addEventListener("onTowerLevelUp", function(success, msg)
-        if success then
-            GameGlobalUI:showTips(_("城墙升级完成"),string.format('LV %d',msg.level))
-        end
+        -- if success then
+        --     GameGlobalUI:showTips(_("城墙升级完成"),string.format('LV %d',msg.level))
+        -- end
     end)
 end
 function NetManager:addOnWallLevelUp()
     self:addEventListener("onWallLevelUp", function(success, msg)
         if success then
-            local buildingName = UIKit:getBuildingLocalizedKeyByBuildingType(msg.buildingType)
-            GameGlobalUI:showTips(_("建筑升级完成"),string.format('%s(LV %d)',_(buildingName),msg.level))
+            -- local buildingName = Localize.getBuildingLocalizedKeyByBuildingType(msg.buildingType)
+            -- GameGlobalUI:showTips(_("建筑升级完成"),string.format('%s(LV %d)',_(buildingName),msg.level))
         end
     end)
 end
@@ -1160,7 +1155,7 @@ function NetManager:getSendChatPromise(channel,text)
 end
 --获取所有聊天信息
 function NetManager:getFetchChatPromise()
-    return promise.all(get_none_blocking_request_promise("chat.chatHandler.getAll",nil, "获取聊天信息失败!"),get_fetchchat_callback())
+    return promise.all(get_none_blocking_request_promise("chat.chatHandler.getAll",nil, "获取聊天信息失败!"),get_fetchchat_callback()):next(get_response_msg)
 end
 --处理联盟的对玩家的邀请
 local function getHandleJoinAllianceInvitePromise(allianceId, agree)

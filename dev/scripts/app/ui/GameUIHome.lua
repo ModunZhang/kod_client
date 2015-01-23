@@ -338,7 +338,7 @@ function GameUIHome:CreateBottom()
                 if event.pageIdx == 1 then
                     UIKit:newGameUI('GameUIChatChannel',"global"):addToCurrentScene(true)
                 elseif event.pageIdx == 2 then
-                    UIKit:newGameUI('GameUIChat',"Alliance"):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIChat',"alliance"):addToCurrentScene(true)
                 end
             end
         end)

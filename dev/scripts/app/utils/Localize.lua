@@ -569,6 +569,36 @@ local PRODUCTIONTECHNOLOGY_BUFFER = {
     sketching = _("增加生产材料速度"),
     mintedCoin = _("提升市政厅获得银币产量"),
 }
+local  getBuildingLocalizedKeyByBuildingType = function(name)
+    local building_config = GameDatas.Buildings.buildings
+    for _,v in ipairs(building_config) do
+        if v.name == name then
+            return v.desc
+        end
+    end
+    return "buidling localized string not found"
+end
+
+local  getHouseLocalizedKeyByBuildingType = function(type)
+    local house_config = GameDatas.Houses.houses
+    for _,v in pairs(house_config) do
+        if v.type == type then
+            return v.desc
+        end
+    end
+    return "house localized string not found"
+end
+
+--通过type获取建筑或者小屋的本地化名称
+local getLocaliedKeyByType = function(type)
+    local house_config = GameDatas.Houses.houses
+    if house_config[type] then
+        return getHouseLocalizedKeyByBuildingType(type)
+    else
+        return self:getBuildingLocalizedKeyByBuildingType(type)
+    end
+end
+
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
@@ -595,9 +625,10 @@ return {
     sell_type = SELL_TYPE,
     productiontechnology_name = PRODUCTIONTECHNOLOGY_NAME,
     productiontechnology_buffer = PRODUCTIONTECHNOLOGY_BUFFER,
+    getBuildingLocalizedKeyByBuildingType = getBuildingLocalizedKeyByBuildingType,
+    getHouseLocalizedKeyByBuildingType = getHouseLocalizedKeyByBuildingType,
+    getLocaliedKeyByType = getLocaliedKeyByType,
 }
-
-
 
 
  
