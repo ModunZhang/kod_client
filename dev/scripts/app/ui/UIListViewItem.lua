@@ -152,5 +152,4 @@ end
 function UIListViewItem:setDirction(dir)
 	self.lvDirection_ = dir
 end
-
 return UIListViewItem

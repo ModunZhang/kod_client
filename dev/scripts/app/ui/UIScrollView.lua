@@ -34,6 +34,7 @@ local UIScrollView = class("UIScrollView", function()
 end)
 
 UIScrollView.BG_ZORDER 				= -100
+UIScrollView.TOUCH_ZORDER 			= -99
 
 UIScrollView.DIRECTION_BOTH			= 0
 UIScrollView.DIRECTION_VERTICAL		= 1
@@ -83,6 +84,10 @@ function UIScrollView:ctor(params)
 	if params.scrollbarImgV then
 		self.sbV = display.newScale9Sprite(params.scrollbarImgV, 100):addTo(self)
 	end
+
+	-- touchOnContent true:当触摸在滚动内容上才有效 false:当触摸在显示区域(viewRect_)就有效
+	-- 当内容小于显示区域时，两者就有区别了
+	self:setTouchType(params.touchOnContent or true)
 
 	self:addBgColorIf(params)
 	self:addBgGradientColorIf(params)
@@ -229,6 +234,24 @@ end
 
 --[[--
 
+设置触摸响应方式
+true:当触摸在滚动内容上才有效 false:当触摸在显示区域(viewRect_)就有效
+内容大于显示区域时，两者无差别
+内容小于显示区域时，true:在空白区域触摸无效,false:在空白区域触摸也可滚动内容
+
+@param boolean bTouchOnContent 是否触控到滚动内容上才有效
+
+@return UIScrollView
+
+]]
+function UIScrollView:setTouchType(bTouchOnContent)
+	self.touchOnContent = bTouchOnContent
+
+	return self
+end
+
+--[[--
+
 重置位置,主要用在纵向滚动时
 
 ]]
@@ -242,50 +265,6 @@ function UIScrollView:resetPosition()
 	local disY = self.viewRect_.y + self.viewRect_.height - bound.y - bound.height
 	y = y + disY
 	self.scrollNode:setPosition(x, y)
-
-
-	local cascadeBound = self:getScrollNodeRect()
-	local disX, disY = 0, 0
-	local viewRect = self:getViewRectInWorldSpace()
-
-	-- dump(cascadeBound, "UIScrollView - cascBoundingBox:")
-	-- dump(viewRect, "UIScrollView - viewRect:")
-	--by dannyhe 如果是单方向滑动 只改变该方向上的位移！
-	if UIScrollView.DIRECTION_VERTICAL ~= self.direction then
-		if cascadeBound.width < viewRect.width then
-			disX = viewRect.x - cascadeBound.x
-		else
-			if cascadeBound.x > viewRect.x then
-				disX = viewRect.x - cascadeBound.x
-			elseif cascadeBound.x + cascadeBound.width < viewRect.x + viewRect.width then
-				disX = viewRect.x + viewRect.width - cascadeBound.x - cascadeBound.width
-			end
-		end
-	end
-	if UIScrollView.DIRECTION_HORIZONTAL ~= self.direction then
-		if cascadeBound.height < viewRect.height then
-			disY = viewRect.y + viewRect.height - cascadeBound.y - cascadeBound.height
-		else
-			if cascadeBound.y > viewRect.y then
-				disY = viewRect.y - cascadeBound.y
-			elseif cascadeBound.y + cascadeBound.height < viewRect.y + viewRect.height then
-				disY = viewRect.y + viewRect.height - cascadeBound.y - cascadeBound.height
-			end
-		end
-	end
-
-	if 0 == disX and 0 == disY then
-		return
-	end
-	if UIScrollView.DIRECTION_VERTICAL == self.direction then
-		if disY > 0 then
-			self:callListener_{name = "SCROLLVIEW_EVENT_BOUNCE_TOP"}
-		else
-			self:callListener_{name = "SCROLLVIEW_EVENT_BOUNCE_BOTTOM"}
-		end
-	end
-	local x, y = self.scrollNode:getPosition()
-	self.scrollNode:setPosition(x + disX, y + disY)
 end
 
 --[[--
@@ -339,14 +318,15 @@ function UIScrollView:addScrollNode(node)
 		self.viewRect_ = self.scrollNode:getCascadeBoundingBox()
 		self:setViewRect(self.viewRect_)
 	end
-	node:setTouchSwallowEnabled(true)
+	node:setTouchSwallowEnabled(false)
 	node:setTouchEnabled(true)
-	node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function (event)
-        return self:onTouch_(event)
-    end)
+	-- node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function (event)
+ --        return self:onTouch_(event)
+ --    end)
     node:addNodeEventListener(cc.NODE_TOUCH_CAPTURE_EVENT, function (event)
         return self:onTouchCapture_(event)
     end)
+	self:addTouchNode()
 
     return self
 end
@@ -407,6 +387,13 @@ function UIScrollView:onTouch_(event)
 	if "began" == event.name and not self:isTouchInViewRect(event) then
 		printInfo("UIScrollView - touch didn't in viewRect")
 		return false
+	end
+
+	if "began" == event.name and self.touchOnContent then
+		local cascadeBound = self.scrollNode:getCascadeBoundingBox()
+		if not cc.rectContainsPoint(cascadeBound, cc.p(event.x, event.y)) then
+			return false
+		end
 	end
 
 	if "began" == event.name then
@@ -578,7 +565,7 @@ function UIScrollView:elasticScroll()
 
 	-- dump(cascadeBound, "UIScrollView - cascBoundingBox:")
 	-- dump(viewRect, "UIScrollView - viewRect:")
-	--by dannyhe 如果是单方向滑动 只改变该方向上的位移！
+	--修改quick:如果是单方向滑动 只改变该方向上的位移！加上判断
 	if UIScrollView.DIRECTION_VERTICAL ~= self.direction then
 		if cascadeBound.width < viewRect.width then
 			disX = viewRect.x - cascadeBound.x
@@ -601,10 +588,10 @@ function UIScrollView:elasticScroll()
 			end
 		end
 	end
-
 	if 0 == disX and 0 == disY then
 		return
 	end
+	--修改quick 添加滑动到顶部或者的底部的通知
 	if UIScrollView.DIRECTION_VERTICAL == self.direction then
 		if disY > 0 then
 			self:callListener_{name = "SCROLLVIEW_EVENT_BOUNCE_TOP"}
@@ -687,7 +674,7 @@ function UIScrollView:enableScrollBar()
 		if self.viewRect_.width < bound.width then
 			local barW = self.viewRect_.width*self.viewRect_.width/bound.width
 			if barW < size.height then
-				barw = size.height
+				barW = size.height
 			end
 			self.sbH:setContentSize(barW, size.height)
 			self.sbH:setPosition(self.viewRect_.x + barW/2,
@@ -792,6 +779,191 @@ function UIScrollView:scaleToParent_()
 	return scale
 end
 
+--[[--
+
+加一个大小为viewRect的touch node
+
+]]
+function UIScrollView:addTouchNode()
+	local node
+
+	if self.touchNode_ then
+		node = self.touchNode_
+	else
+		node = display.newNode()
+		self.touchNode_ = node
+
+		node:setLocalZOrder(UIScrollView.TOUCH_ZORDER)
+		node:setTouchSwallowEnabled(true)
+		node:setTouchEnabled(true)
+		node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function (event)
+	        return self:onTouch_(event)
+	    end)
+
+	    self:addChild(node)
+	end
+
+	node:setContentSize(self.viewRect_.width, self.viewRect_.height)
+	node:setPosition(self.viewRect_.x, self.viewRect_.y)
+
+    return self
+end
+
+--[[--
+
+scrollView的填充方法，可以自动把一个table里的node有序的填充到scrollview里。
+
+~~~ lua
+
+--填充100个相同大小的图片。
+    local view =  cc.ui.UIScrollView.new(
+        {viewRect = cc.rect(100,100, 400, 400), direction = 2})
+    self:addChild(view);
+
+    local t = {}
+    for i = 1, 100 do
+        local png  = cc.ui.UIImage.new("GreenButton.png")
+        t[#t+1] = png
+        cc.ui.UILabel.new({text = i, size = 24, color = cc.c3b(100,100,100)})
+            :align(display.CENTER, png:getContentSize().width/2, png:getContentSize().height/2)
+            :addTo(png)
+    end
+    view:fill(t, {itemSize = (t[#t]):getContentSize()})
+~~~
+
+注意：参数nodes 是table结构，且一定要是{node1,node2,node3,...}不能是{a=node1,b=node2,c=node3,...}
+
+@param nodes node集
+@param params 参见fill函数头定义。  -- params = extend({ ...
+
+]]
+
+function UIScrollView:fill(nodes,params)
+  --参数的继承用法,把param2的参数增加覆盖到param1中。
+  local extend = function(param1,param2)
+    if not param2 then
+      return param1
+    end
+    for k , v in pairs(param2) do
+      param1[k] = param2[k]
+    end
+    return param1
+  end
+
+  local params = extend({
+    --自动间距
+    autoGap = true,
+    --宽间距
+    widthGap = 0,
+    --高间距
+    heightGap = 0,
+    --自动行列
+    autoTable = true,
+    --行数目
+    rowCount = 3,
+    --列数目
+    cellCount = 3,
+    --填充项大小
+    itemSize = cc.size(50 , 50)
+  },params)
+
+  if #nodes == 0 then
+    return nil
+  end
+
+  --基本坐标工具方法
+  local SIZE = function(node) return node:getContentSize() end
+  local W = function(node) return node:getContentSize().width end
+  local H = function(node) return node:getContentSize().height end
+  local S_SIZE = function(node , w , h) return node:setContentSize(cc.size(w , h)) end
+  local S_XY = function(node , x , y) node:setPosition(x,y) end
+  local AX = function(node) return node:getAnchorPoint().x end
+  local AY = function(node) return node:getAnchorPoint().y end
+
+  --创建一个容器node
+  local innerContainer = display.newNode()
+  --初始容器大小为视图大小
+  S_SIZE(innerContainer , self:getViewRect().width , self:getViewRect().height)
+  self:addScrollNode(innerContainer)
+  S_XY(innerContainer , self.viewRect_.x , self.viewRect_.y)
+
+  --如果是纵向布局
+  if self.direction == cc.ui.UIScrollView.DIRECTION_VERTICAL then
+
+    --自动布局
+    if params.autoTable then
+      params.cellCount = math.floor(self.viewRect_.width / params.itemSize.width)
+    end
+
+    --自动间隔
+    if params.autoGap then
+      params.widthGap = (self.viewRect_.width - (params.cellCount * params.itemSize.width)) / (params.cellCount + 1)
+      params.heightGap = params.widthGap
+    end
+
+    --填充量
+    params.rowCount = math.ceil(#nodes / params.cellCount)
+    --避免动态尺寸少于设计尺寸
+    local v_h = (params.itemSize.height + params.heightGap) * params.rowCount + params.heightGap
+    if v_h < self.viewRect_.height then v_h = self.viewRect_.height end
+    S_SIZE(innerContainer , self.viewRect_.width , v_h)
+
+    for i = 1 , #nodes do
+
+      local n = nodes[i]
+      local x = 0.0
+      local y = 0.0
+
+      --不管描点如何，总是有标准居中方式设置坐标。
+      x = params.widthGap + math.floor((i - 1) % params.cellCount) * (params.widthGap + params.itemSize.width)
+      y = H(innerContainer) - (math.floor((i - 1) / params.cellCount) + 1) * (params.heightGap + params.itemSize.height)
+      x = x + W(n) * AX(n)
+      y = y + H(n) * AY(n)
+
+      S_XY(n , x ,y)
+      n:addTo(innerContainer)
+
+    end
+    --如果是横向布局
+    --  elseif(self.direction==cc.ui.UIScrollView.DIRECTION_HORIZONTAL) then
+  else
+    if params.autoTable then
+      params.rowCount = math.floor(self.viewRect_.height / params.itemSize.height)
+    end
+
+    if params.autoGap then
+      params.heightGap = (self.viewRect_.height - (params.rowCount * params.itemSize.height)) / (params.rowCount + 1)
+      params.widthGap = params.heightGap
+    end
+
+    params.cellCount = math.ceil(#nodes / params.rowCount)
+    --避免动态尺寸少于设计尺寸。
+    local v_w = (params.itemSize.width + params.widthGap) * params.cellCount + params.widthGap
+    if v_w < self.viewRect_.width then v_h = self.viewRect_.width end
+    S_SIZE(innerContainer , v_w ,self.viewRect_.height)
+
+    for i = 1, #nodes do
+
+      local n = nodes[i]
+      local x = 0.0
+      local y = 0.0
+
+      --不管描点如何，总是有标准居中方式设置坐标。
+      x = params.widthGap +  math.floor((i - 1) / params.rowCount ) * (params.widthGap + params.itemSize.width)
+      y = H(innerContainer) - (math.floor((i - 1) % params.rowCount ) +1 ) * (params.heightGap + params.itemSize.height)
+      x = x + W(n) * AX(n)
+      y = y + H(n) * AY(n)
+
+      S_XY(n , x , y)
+      n:addTo(innerContainer)
+
+    end
+
+  end
+
+end
+--修改quick:添加函数
+----------------------------------------------------------------------------------------------------
 function UIScrollView:fixResetPostion(fixNum)
 	if UIScrollView.DIRECTION_VERTICAL ~= self.direction then
 		return
@@ -803,4 +975,5 @@ function UIScrollView:fixResetPostion(fixNum)
 	-- y = y + disY
 	self.scrollNode:setPosition(x, self.viewRect_.height - bound.height + fixNum)
 end
+----------------------------------------------------------------------------------------------------
 return UIScrollView

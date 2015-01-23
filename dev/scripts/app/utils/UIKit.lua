@@ -74,34 +74,7 @@ function UIKit:getFontFilePath()
     return "Droid Sans Faliback.ttf"
 end
 
-function UIKit:getBuildingLocalizedKeyByBuildingType(name)
-    local building_config = GameDatas.Buildings.buildings
-    for _,v in ipairs(building_config) do
-        if v.name == name then
-            return v.desc
-        end
-    end
-    return "buidling localized string not found"
-end
 
-function UIKit:getHouseLocalizedKeyByBuildingType(type)
-    local house_config = GameDatas.Houses.houses
-    for _,v in pairs(house_config) do
-        if v.type == type then
-            return v.desc
-        end
-    end
-    return "house localized string not found"
-end
---通过type获取建筑或者小屋的本地化名称
-function UIKit:getLocaliedKeyByType(type)
-    local house_config = GameDatas.Houses.houses
-    if house_config[type] then
-        return self:getHouseLocalizedKeyByBuildingType(type)
-    else
-        return self:getBuildingLocalizedKeyByBuildingType(type)
-    end
-end
 
 function UIKit:hex2rgba(hexNum)
     local a = bit:_rshift(hexNum,24)

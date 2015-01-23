@@ -18,6 +18,7 @@ end
 function DragonEyrieSprite:ReloadSpriteCaseDragonDefencedChanged(dragon)
 	if self.dragon_sprite and not dragon then
 		self.dragon_sprite:removeSelf()
+		self.dragon_sprite = nil
 	elseif dragon then
 		if not self.dragon_sprite then
 		    local x, y = self:GetSpriteOffset()

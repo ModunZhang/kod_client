@@ -16,6 +16,7 @@ import('app.ui.GameGlobalUIUtils')
 local GameDefautlt = import("app.utils.GameDefautlt")
 local AudioManager = import("app.utils.AudioManager")
 local LocalPushManager = import("app.utils.LocalPushManager")
+local ChatManager = import("app.entity.ChatManager")
 local Timer = import('.utils.Timer')
 local User_ = import('.entity.User')
 local MyApp = class("MyApp", cc.mvc.AppBase)
@@ -70,6 +71,7 @@ function MyApp:restart()
     NetManager:disconnect()
     self.timer:Stop()
     self:GetAudioManager():StopAll()
+    self:GetChatManager():Reset()
     if device.platform == 'mac' then
         PlayerProtocol:getInstance():relaunch()
     else
@@ -104,6 +106,11 @@ function MyApp:InitGameBase()
     self.AudioManager_ = AudioManager.new(self:GetGameDefautlt())
     self.LocalPushManager_ = LocalPushManager.new(self:GetGameDefautlt())
     self.gameLanguage_ = self:GetGameDefautlt():getBasicInfoValueForKey("GAME_LANGUAGE",GameUtils:getCurrentLanguage())
+    self.ChatManager_  = ChatManager.new(self:GetGameDefautlt())
+end
+
+function MyApp:GetChatManager()
+    return self.ChatManager_
 end
 
 function MyApp:GetAudioManager()
@@ -118,8 +125,8 @@ function MyApp:GetGameDefautlt()
     return self.GameDefautlt_
 end
 function MyApp:flushIf()
-    if self.chatCenter then
-        self.chatCenter:flush()
+    if self:GetGameDefautlt() then
+        self:GetGameDefautlt():flush()
     end
 end
 
@@ -222,7 +229,6 @@ function MyApp:EnterMyAllianceScene()
     if my_status == "prepare" or  my_status == "fight" then
         alliance_name = "AllianceBattleScene"
     end
-    print("MyApp:EnterMyAllianceScene--->",alliance_name)
     app:enterScene(alliance_name, {City}, "custom", -1, transition_)
 end
 function MyApp:EnterPVEScene()
@@ -231,6 +237,7 @@ function MyApp:EnterPVEScene()
     User:GetStrengthResource():SetValueLimit(100)
     app:enterScene("PVEScene", {User}, "custom", -1, transition_)
 end
+
 function MyApp:pushScene(sceneName, args, transitionType, time, more)
     local scenePackageName = "app.scenes." .. sceneName
     local sceneClass = require(scenePackageName)
@@ -248,23 +255,7 @@ end
 function MyApp:EnterViewModelAllianceScene(alliance_id)
     NetManager:getFtechAllianceViewDataPromose(alliance_id):next(function(msg)
         local alliance = Alliance_Manager:DecodeAllianceFromJson(msg)
-        app:enterScene("OtherAllianceScene", {alliance}, "custom", -1, function(scene, status)
-            if status == "onEnter" then
-                local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
-                display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
-                    transition.sequence{
-                        cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
-                        cc.FadeIn:create(0.75),
-                        cc.CallFunc:create(function() scene:hideOutShowIn() end),
-                        cc.DelayTime:create(0.5),
-                        cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
-                        cc.FadeOut:create(0.75),
-                        cc.CallFunc:create(function() scene:finish() end),
-                    }
-                )
-            elseif status == "onExit" then
-            end
-        end)
+        app:enterScene("OtherAllianceScene", {alliance}, "custom", -1,transition_)
     end)
 end
 
