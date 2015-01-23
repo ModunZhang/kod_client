@@ -67,14 +67,17 @@ function RichText:Text(str)
     for i, v in ipairs(items) do
         if v.type == "image" then
             local img = display.newSprite(v.value)
-
             local size = img:getContentSize()
-            
-            if size.width > 5 + width - cur_x then newLine() end
+            local w = v.width or self.size
+            local h = v.height or self.lineHeight
+            img:setScaleX(w / size.width)
+            img:setScaleY(h / size.height)
 
-            img:align(display.CENTER, cur_x + size.width * 0.5, 0):addTo(curLine())
+            if w > 5 + width - cur_x then newLine() end
 
-            cur_x = cur_x + size.width
+            img:align(display.CENTER, cur_x + w * 0.5, 0):addTo(curLine())
+
+            cur_x = cur_x + w
 
             if cur_x > width then newLine() end
         elseif v.type == "text" then
@@ -133,11 +136,10 @@ function RichText:align(anchorPoint, x, y)
     local offset_y = (1-ANCHOR_POINTSint.y) * size.height
     local cur_height = 0
     local line_height = self.lineHeight
-    for i, v in ipairs(self.lines) do
+    for _, v in ipairs(self.lines) do
         v:pos(- offset_x, - cur_height + offset_y)
-        local h = v:getCascadeBoundingBox().height
-        h = h == 0 and 10 or h
-        cur_height = cur_height + h
+        local line_h = v:getCascadeBoundingBox().height
+        cur_height = cur_height + line_h > line_height and line_h or line_height
     end
     return self:pos(x, y)
 end
