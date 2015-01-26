@@ -1,152 +1,50 @@
 local pve_npc = GameDatas.ClientInitGame.pve_npc
 
-pve_npc[1] = {
-	["index"] = 1,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,100",
-	["soldiers"] = "swordsman_1,100;sentinel_1,100",
+pve_npc["WOODCUTTER"] = {
+	["type"] = "WOODCUTTER",
 	["rewards"] = "resources,wood,12;"
 }
-pve_npc[2] = {
-	["index"] = 2,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,101",
-	["soldiers"] = "swordsman_1,100;sentinel_1,101",
+pve_npc["QUARRIER"] = {
+	["type"] = "QUARRIER",
 	["rewards"] = "resources,wood,13;"
 }
-pve_npc[3] = {
-	["index"] = 3,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,102",
-	["soldiers"] = "swordsman_1,100;sentinel_1,102",
+pve_npc["MINER"] = {
+	["type"] = "MINER",
 	["rewards"] = "resources,wood,14;"
 }
-pve_npc[4] = {
-	["index"] = 4,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,103",
-	["soldiers"] = "swordsman_1,100;sentinel_1,103",
+pve_npc["FARMER"] = {
+	["type"] = "FARMER",
 	["rewards"] = "resources,wood,15;"
 }
-pve_npc[5] = {
-	["index"] = 5,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,104",
-	["soldiers"] = "swordsman_1,100;sentinel_1,104",
+pve_npc["CAMP"] = {
+	["type"] = "CAMP",
 	["rewards"] = "resources,wood,16;"
 }
-pve_npc[6] = {
-	["index"] = 6,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,105",
-	["soldiers"] = "swordsman_1,100;sentinel_1,105",
+pve_npc["CRASHED_AIRSHIP"] = {
+	["type"] = "CRASHED_AIRSHIP",
 	["rewards"] = "resources,wood,17;"
 }
-pve_npc[7] = {
-	["index"] = 7,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,106",
-	["soldiers"] = "swordsman_1,100;sentinel_1,106",
+pve_npc["CONSTRUCTION_RUINS"] = {
+	["type"] = "CONSTRUCTION_RUINS",
 	["rewards"] = "resources,wood,18;"
 }
-pve_npc[8] = {
-	["index"] = 8,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,107",
-	["soldiers"] = "swordsman_1,100;sentinel_1,107",
+pve_npc["KEEL"] = {
+	["type"] = "KEEL",
 	["rewards"] = "resources,wood,19;"
 }
-pve_npc[9] = {
-	["index"] = 9,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,108",
-	["soldiers"] = "swordsman_1,100;sentinel_1,108",
+pve_npc["WARRIORS_TOMB"] = {
+	["type"] = "WARRIORS_TOMB",
 	["rewards"] = "resources,wood,20;"
 }
-pve_npc[10] = {
-	["index"] = 10,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,109",
-	["soldiers"] = "swordsman_1,100;sentinel_1,109",
+pve_npc["OBELISK"] = {
+	["type"] = "OBELISK",
 	["rewards"] = "resources,wood,21;"
 }
-pve_npc[11] = {
-	["index"] = 11,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,110",
-	["soldiers"] = "swordsman_1,100;sentinel_1,110",
+pve_npc["ANCIENT_RUINS"] = {
+	["type"] = "ANCIENT_RUINS",
 	["rewards"] = "resources,wood,22;"
 }
-pve_npc[12] = {
-	["index"] = 12,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,111",
-	["soldiers"] = "swordsman_1,100;sentinel_1,111",
+pve_npc["ENTRANCE_DOOR"] = {
+	["type"] = "ENTRANCE_DOOR",
 	["rewards"] = "resources,wood,23;"
-}
-pve_npc[13] = {
-	["index"] = 13,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,112",
-	["soldiers"] = "swordsman_1,100;sentinel_1,112",
-	["rewards"] = "resources,wood,24;"
-}
-pve_npc[14] = {
-	["index"] = 14,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,113",
-	["soldiers"] = "swordsman_1,100;sentinel_1,113",
-	["rewards"] = "resources,wood,25;"
-}
-pve_npc[15] = {
-	["index"] = 15,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,114",
-	["soldiers"] = "swordsman_1,100;sentinel_1,114",
-	["rewards"] = "resources,wood,26;"
-}
-pve_npc[16] = {
-	["index"] = 16,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,115",
-	["soldiers"] = "swordsman_1,100;sentinel_1,115",
-	["rewards"] = "resources,wood,27;"
-}
-pve_npc[17] = {
-	["index"] = 17,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,116",
-	["soldiers"] = "swordsman_1,100;sentinel_1,116",
-	["rewards"] = "resources,wood,28;"
-}
-pve_npc[18] = {
-	["index"] = 18,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,117",
-	["soldiers"] = "swordsman_1,100;sentinel_1,117",
-	["rewards"] = "resources,wood,29;"
-}
-pve_npc[19] = {
-	["index"] = 19,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,118",
-	["soldiers"] = "swordsman_1,100;sentinel_1,118",
-	["rewards"] = "resources,wood,30;"
-}
-pve_npc[20] = {
-	["index"] = 20,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,119",
-	["soldiers"] = "swordsman_1,100;sentinel_1,119",
-	["rewards"] = "resources,wood,31;"
-}
-pve_npc[21] = {
-	["index"] = 21,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,120",
-	["soldiers"] = "swordsman_1,100;sentinel_1,120",
-	["rewards"] = "resources,wood,32;"
-}
-pve_npc[22] = {
-	["index"] = 22,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,121",
-	["soldiers"] = "swordsman_1,100;sentinel_1,121",
-	["rewards"] = "resources,wood,33;"
-}
-pve_npc[23] = {
-	["index"] = 23,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,122",
-	["soldiers"] = "swordsman_1,100;sentinel_1,122",
-	["rewards"] = "resources,wood,34;"
-}
-pve_npc[24] = {
-	["index"] = 24,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,123",
-	["soldiers"] = "swordsman_1,100;sentinel_1,123",
-	["rewards"] = "resources,wood,35;"
-}
-pve_npc[25] = {
-	["index"] = 25,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,124",
-	["soldiers"] = "swordsman_1,100;sentinel_1,124",
-	["rewards"] = "resources,wood,36;"
 }
