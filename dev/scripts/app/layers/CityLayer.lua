@@ -158,7 +158,7 @@ function CityLayer:GetLogicMap()
 end
 function CityLayer:GetZOrderBy(sprite, x, y)
     local width, _ = self:GetLogicMap():GetSize()
-    return x + y * width + 100
+    return x * width + y + 100
 end
 function CityLayer:ConvertLogicPositionToMapPosition(lx, ly)
     local map_pos = cc.p(self.iso_map:ConvertToMapPosition(lx, ly))
@@ -590,7 +590,7 @@ function CityLayer:UpdateTreesWithCity(city)
         --     end
         -- end
         -- if not find and tile.locked then
-        if tile.locked and tile.x ~= 2 then
+        if tile.locked then
             table.insert(self.trees, self:CreateTreeWithTile(tile):addTo(city_node))
         end
     end)

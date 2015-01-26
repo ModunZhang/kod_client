@@ -92,7 +92,7 @@ function RichText:Text(str)
                     size = size,
                     color = color,
                     align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-                }):align(display.LEFT_TOP)
+                }):align(display.LEFT_CENTER)
                 head, tail, is_newline = get_first_line(label, width - cur_x)
                 label:removeFromParent()
 
@@ -101,7 +101,7 @@ function RichText:Text(str)
                     size = size,
                     color = color,
                     align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-                }):align(display.LEFT_TOP, 0 + cur_x, 0)
+                }):align(display.LEFT_CENTER, 0 + cur_x, 0)
                 local size = label:getContentSize()
                 if size.width == 0 or size.height == 0 then
                     label:removeFromParent()
@@ -132,14 +132,14 @@ function RichText:align(anchorPoint, x, y)
     assert(self.lines, "必须先生成富文本!")
     local cur_height = 0
     local line_height = self.lineHeight
-    for i, v in ipairs(self.lines) do
-        v:pos(0, - cur_height)
+    for _, v in ipairs(self.lines) do
         local h = v:getCascadeBoundingBox().height
+        v:pos(0, - cur_height - h * 0.5)
         h = h > line_height and h or line_height
         h = h == 0 and 10 or h
         cur_height = cur_height + h
     end
-    --
+
     local ANCHOR_POINTSint = display.ANCHOR_POINTS[anchorPoint]
     local size = self:getCascadeBoundingBox()
     local offset_x = ANCHOR_POINTSint.x * size.width
