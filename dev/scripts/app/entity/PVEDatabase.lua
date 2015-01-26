@@ -34,7 +34,8 @@ function PVEDatabase:OnUserDataChanged(user_data)
         for _, v in ipairs(pve.__floors) do
             local type_ = v.type
             if type_ == "add" then
-                assert(false)
+                local data = v.data
+                self.pve_maps[data.level]:Load(data)
             elseif type_ == "edit" then
                 local data = v.data
                 self.pve_maps[data.level]:Load(data)
