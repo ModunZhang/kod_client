@@ -6,7 +6,7 @@ function WidgetPVEResource:ctor(...)
 end
 function WidgetPVEResource:GetDesc()
     if self:GetObject():IsSearched() then
-        return _('你已经除掉了这里的叛军, 这里的居民都向你表示感激!') 
+        return _('你已经除掉了这里的叛军, 这里的居民都向你表示感激!')
     elseif self:GetObject():Searched() == 1 then
         return _('你已经突破了叛军第一层的防御, 你感觉到前方有更强大的敌人...')
     elseif self:GetObject():Searched() == 2 then
@@ -23,8 +23,10 @@ function WidgetPVEResource:SetUpButtons()
             UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType, soldiers)
                 local dargon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
                 local attack_dragon = {
+                    dragonType = dragonType,
                     currentHp = dargon:Hp(),
                     hpMax = dargon:GetMaxHP(),
+                    totalHp = dargon:Hp(),
                     strength = dargon:TotalStrength(),
                     vitality = dargon:TotalVitality(),
                 }
@@ -39,10 +41,12 @@ function WidgetPVEResource:SetUpButtons()
                 end)
 
                 local defence_dragon = {
-                    currentHp = 1000,
-                    hpMax = 1000,
-                    strength = 700,
-                    vitality = 200,
+                    dragonType = "redDragon",
+                    currentHp = 100,
+                    totalHp = 100,
+                    hpMax = 100,
+                    strength = 100,
+                    vitality = 100,
                 }
                 local defence_soldier = {
                     {
@@ -61,8 +65,15 @@ function WidgetPVEResource:SetUpButtons()
                     ,{dragon = defence_dragon, soldiers = defence_soldier}
                 )
 
+                self.user:SetPveData(report:GetAttackKDA())
                 if report:IsAttackWin() then
                     self:Search()
+                else
+                    NetManager:getSetPveDataPromise(self.user:EncodePveData()):next(function(result)
+                        dump(result)
+                    end):catch(function(err)
+                        dump(err:reason())
+                    end)
                 end
 
                 UIKit:newGameUI("GameUIReplay",report):addToCurrentScene(true)
@@ -71,6 +82,7 @@ function WidgetPVEResource:SetUpButtons()
 end
 
 return WidgetPVEResource
+
 
 
 

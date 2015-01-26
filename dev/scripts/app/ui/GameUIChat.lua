@@ -651,7 +651,7 @@ function GameUIChat:CreatePlayerMenu(chat,cell)
             color = UIKit:hex2c3b(0x403c2f)
         }))
         :onButtonClicked(function(event)
-            
+            UIKit:newGameUI('GameUIAllianceMemberInfo',false,chat.fromId):addToCurrentScene(true)
         end)
         :align(display.LEFT_BOTTOM, tabBg:getContentSize().width/5, 2)
         :addTo(tabBg)

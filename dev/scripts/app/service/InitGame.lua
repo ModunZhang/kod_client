@@ -19,7 +19,7 @@ return function(userData)
     timer:AddListener(City)
     timer:AddListener(Alliance_Manager)
     timer:Start()
-    app:GetChatManager():FetchAllChatMessage()
+    app:GetChatManager():FetchAllChatMessageFromServer()
     -- local chatCenter = ChatCenter.new()
     -- chatCenter:requestAllMessage()
     -- app.chatCenter = chatCenter

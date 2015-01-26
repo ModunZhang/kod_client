@@ -34,11 +34,13 @@ function RichText:ctor(params)
     self.size = params.size or 30
     self.color = params.color or 0xffffff
     self.lineHeight = params.lineHeight or self.size
+    self.display_text = ""
 end
 
 function RichText:Text(str)
     -- assert(not self.lines, "富文本不可变!")
     self:removeAllChildren()
+    self.display_text = str
     local items = LuaUtils:table_map(GameUtils:parseRichText(str), function(k, v)
         local type_ = type(v)
         if type_ == "string" then
@@ -76,7 +78,7 @@ function RichText:Text(str)
 
             if w > 5 + width - cur_x then newLine() end
 
-            img:align(display.CENTER, cur_x + w * 0.5, 0):addTo(curLine())
+            img:align(display.LEFT_TOP, cur_x + w, 0):addTo(curLine())
 
             cur_x = cur_x + w
 
@@ -93,7 +95,7 @@ function RichText:Text(str)
                     size = size,
                     color = color,
                     align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-                }):align(display.LEFT_CENTER)
+                }):align(display.LEFT_TOP)
                 head, tail, is_newline = get_first_line(label, width - cur_x)
                 label:removeFromParent()
 
@@ -102,7 +104,7 @@ function RichText:Text(str)
                     size = size,
                     color = color,
                     align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-                }):align(display.LEFT_CENTER, 0 + cur_x, 0)
+                }):align(display.LEFT_TOP, 0 + cur_x, 0)
                 local size = label:getContentSize()
                 if size.width == 0 or size.height == 0 then
                     label:removeFromParent()
@@ -130,7 +132,6 @@ end
 -- end
 
 function RichText:align(anchorPoint, x, y)
-    assert(self.lines, "必须先生成富文本!")
     local ANCHOR_POINTSint 
     if not anchorPoint and not x and not y then
         ANCHOR_POINTSint = self:getAnchorPoint()
@@ -139,22 +140,29 @@ function RichText:align(anchorPoint, x, y)
     else 
         ANCHOR_POINTSint = display.ANCHOR_POINTS[anchorPoint]
     end
-    local size = self:getCascadeBoundingBox()
-    local offset_x = ANCHOR_POINTSint.x * size.width
-    local offset_y = (1-ANCHOR_POINTSint.y) * size.height
     local cur_height = 0
     local line_height = self.lineHeight
     for i, v in ipairs(self.lines) do
-        v:pos(- offset_x, - cur_height + offset_y)
+        v:pos(0, - cur_height)
         local h = v:getCascadeBoundingBox().height
         h = h > line_height and h or line_height
         h = h == 0 and 10 or h
         cur_height = cur_height + h
     end
+    --
+    local size = self:getCascadeBoundingBox()
+    local offset_x = ANCHOR_POINTSint.x * size.width
+    local offset_y = (1-ANCHOR_POINTSint.y) * size.height
+    for _, v in ipairs(self.lines) do
+        local x, y = v:getPosition()
+        v:pos(x - offset_x, y + offset_y)
+    end
     return self:pos(x, y)
 end
 
-
+function RichText:GetDisplayText()
+    return self.display_text or ""
+end
 
 return RichText
 

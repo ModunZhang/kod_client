@@ -6,6 +6,7 @@ local RuinSprite = import("..sprites.RuinSprite")
 local TowerUpgradingSprite = import("..sprites.TowerUpgradingSprite")
 local WallUpgradingSprite = import("..sprites.WallUpgradingSprite")
 local RoadSprite = import("..sprites.RoadSprite")
+local TileSprite = import("..sprites.TileSprite")
 local TreeSprite = import("..sprites.TreeSprite")
 local SingleTreeSprite = import("..sprites.SingleTreeSprite")
 local CitizenSprite = import("..sprites.CitizenSprite")
@@ -144,9 +145,10 @@ function CityLayer:ctor(city_scene)
     self.towers = {}
     self.ruins = {}
     self.trees = {}
+    self.tiles = {}
     self.walls = {}
     self.helpedByTroops = {}
-    self.road = nil
+    -- self.road = nil
     self:InitBackground()
     self:InitCity()
     self:InitWeather()
@@ -156,7 +158,7 @@ function CityLayer:GetLogicMap()
 end
 function CityLayer:GetZOrderBy(sprite, x, y)
     local width, _ = self:GetLogicMap():GetSize()
-    return x + y * width
+    return x + y * width + 100
 end
 function CityLayer:ConvertLogicPositionToMapPosition(lx, ly)
     local map_pos = cc.p(self.iso_map:ConvertToMapPosition(lx, ly))
@@ -218,15 +220,18 @@ function CityLayer:ChangeTerrain()
     table.foreach(self.trees, function(_, v)
         v:ReloadSpriteCauseTerrainChanged()
     end)
+    table.foreach(self.tiles, function(_, v)
+        v:ReloadSpriteCauseTerrainChanged()
+    end)
     table.foreach(self.single_tree, function(_, v)
         v:ReloadSpriteCauseTerrainChanged()
     end)
     table.foreach(self.buildings, function(_, v)
         v:ReloadSpriteCauseTerrainChanged()
     end)
-    if self.road then
-        self.road:ReloadSpriteCauseTerrainChanged()
-    end
+    -- if self.road then
+    --     self.road:ReloadSpriteCauseTerrainChanged()
+    -- end
 end
 --
 function CityLayer:ReloadSceneBackground()
@@ -521,6 +526,7 @@ function CityLayer:InitWithCity(city)
 end
 ---
 function CityLayer:UpdateAllDynamicWithCity(city)
+    self:UpdateTilesWithCity(city)
     self:UpdateTreesWithCity(city)
     self:UpdateWallsWithCity(city)
     self:UpdateTowersWithCity(city)
@@ -543,12 +549,24 @@ function CityLayer:UpdateSingleTreeVisibleWithCity(city)
         tree:setVisible(city:GetTileByBuildingPosition(tree.x, tree.y):IsUnlocked())
     end)
 end
+function CityLayer:UpdateTilesWithCity(city)
+    local city_node = self:GetCityNode()
+    for _, v in pairs(self.tiles) do
+        v:removeFromParent()
+    end
+    self.tiles = {}
+    city:IteratorTilesByFunc(function(x, y, tile)
+        if tile.locked then
+            table.insert(self.tiles, self:CreateTileWithTile(tile):addTo(city_node))
+        end
+    end)
+end
 function CityLayer:UpdateTreesWithCity(city)
     local city_node = self:GetCityNode()
 
-    if self.road then
-        self.road:removeFromParent()
-    end
+    -- if self.road then
+    --     self.road:removeFromParent()
+    -- end
     if self.trees then
         for k, v in pairs(self.trees) do
             v:removeFromParent()
@@ -556,30 +574,31 @@ function CityLayer:UpdateTreesWithCity(city)
     end
 
     self.trees = {}
-    self.road = nil
+    -- self.road = nil
 
-    local face_tile = city:GetTileFaceToGate()
-    self.road = self:CreateRoadWithTile(face_tile):addTo(city_node)
+    -- local face_tile = city:GetTileFaceToGate()
+    -- self.road = self:CreateRoadWithTile(face_tile):addTo(city_node)
 
     local face_tiles = city:GetTilesFaceToGate()
 
     city:IteratorTilesByFunc(function(x, y, tile)
-        local find = false
-        for i, v in ipairs(face_tiles) do
-            if x == v.x and y == v.y then
-                find = true
-                break
-            end
-        end
-        if not find and tile.locked then
+        -- local find = false
+        -- for i, v in ipairs(face_tiles) do
+        --     if x == v.x and y == v.y then
+        --         find = true
+        --         break
+        --     end
+        -- end
+        -- if not find and tile.locked then
+        if tile.locked and tile.x ~= 2 then
             table.insert(self.trees, self:CreateTreeWithTile(tile):addTo(city_node))
         end
     end)
 
     self:NotifyObservers(function(listener)
-        local road = city:GetTileByIndex(face_tile.x, face_tile.y) and self.road or nil
-        listener:OnTreesChanged(self.trees, road)
-        -- listener:OnTreesChanged(self.trees, nil)
+        -- local road = city:GetTileByIndex(face_tile.x, face_tile.y) and self.road or nil
+        -- listener:OnTreesChanged(self.trees, road)
+        listener:OnTreesChanged(self.trees)
     end)
 end
 function CityLayer:UpdateWallsWithCity(city)
@@ -739,6 +758,10 @@ function CityLayer:CreateRoadWithTile(tile)
     local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
     return RoadSprite.new(self, tile, x, y)
 end
+function CityLayer:CreateTileWithTile(tile)
+    local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
+    return TileSprite.new(self, tile, x, y)
+end
 function CityLayer:CreateTreeWithTile(tile)
     local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
     return TreeSprite.new(self, tile, x, y)
@@ -785,9 +808,9 @@ function CityLayer:OnSceneMove()
     self:IteratorCanUpgradingBuilding(on_move)
     table.foreach(self.trees, on_move)
     table.foreach(self.ruins, on_move)
-    if self.road then
-        on_move(nil, self.road)
-    end
+    -- if self.road then
+    --     on_move(nil, self.road)
+    -- end
     -- self:UpdateWeather()
 end
 function CityLayer:UpdateWeather()
@@ -800,6 +823,7 @@ function CityLayer:OnSceneScale()
 end
 
 return CityLayer
+
 
 
 

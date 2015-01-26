@@ -10,11 +10,6 @@ end
 ---- 功能
 function TowerUpgradingSprite:ctor(city_layer, entity)
     TowerUpgradingSprite.super.ctor(self, city_layer, entity)
-    -- if entity:IsUnlocked() then
-    --     self.tower_sprite = display.newSprite("tower_head_78x124.png"):addTo(self, HEAD_SPRITE):pos(self:GetHeadOffset())
-    -- end
-    -- self:hide()
-    self:CreateBase()
 end
 function TowerUpgradingSprite:GetSpriteFile()
     local entity = self:GetEntity()

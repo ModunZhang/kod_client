@@ -9,10 +9,7 @@ local GameDefautlt = class("GameDefautlt")
 function GameDefautlt:ctor()
 	self.game_base_info = self:getTableForKey("GAME_BASE") or {}
 	self.ver_info = self:getStringForKey("GAMEDEFAUTLT_VERSION") == "" and "0.0.1" or self:getStringForKey("GAMEDEFAUTLT_VERSION")
-	print("===========================================================================")
 	dump(self.game_base_info,"GameDefautlt-->game_base_info")
-	dump(self.ver_info,"GameDefautlt-->ver_info")
-	print("===========================================================================")
 end
 
 function GameDefautlt:flush()
@@ -21,12 +18,19 @@ function GameDefautlt:flush()
 	cc.UserDefault:getInstance():flush()
 end
 
-function GameDefautlt:getTableForKey(key)
+function GameDefautlt:getTableForKey(key,default)
 	local jsonString = self:getStringForKey(key)
 	if jsonString and string.len(jsonString) > 0 then
 		local t = json.decode(jsonString)
 		if type(t) == 'table' then
 			return t
+		end
+	else
+		if default then
+			default = checktable(default)
+			self:setTableForKey(key,default)
+			self:flush()
+			return default
 		end
 	end
 	return nil

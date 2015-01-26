@@ -20,7 +20,7 @@ function DataManager:getUserData(  )
 end
 
 function DataManager:OnUserDataChanged(userData,timer)
-	User:OnUserDataChanged(userData)
+	User:OnUserDataChanged(userData, timer)
 	City:OnUserDataChanged(userData, timer)
 	Alliance_Manager:OnUserDataChanged(userData, timer)
 	MailManager:OnUserDataChanged(userData, timer)

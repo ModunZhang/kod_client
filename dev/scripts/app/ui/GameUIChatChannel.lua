@@ -9,6 +9,10 @@ local window = import("..utils.window")
 local UIListView = import(".UIListView")
 local ChatManager = import("..entity.ChatManager")
 local RichText = import("..widget.RichText")
+local GameUIWriteMail = import('.GameUIWriteMail')
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
+local EmojiTable = import("..utils.EmojiTable")
+local WidgetPushButton = import("..widget.WidgetPushButton")
 
 GameUIChatChannel.LISTVIEW_WIDTH = 549
 GameUIChatChannel.PLAYERMENU_ZORDER = 2
@@ -63,11 +67,8 @@ function GameUIChatChannel:TO_TOP(data)
     if #self:GetDataSource() == 0 or isLastMessageInViewRect then
         self:RefreshListView()
     else
-        -- table.insertto(data,self.dataSource_)
-        -- self.dataSource_ = data
         LuaUtils:table_insert_top(self.dataSource_,data)
         self.listView:offsetItemsIdx(#data)
-        -- self.listView:updateAllItemInViewRect(#data)
     end
 end
 
@@ -107,6 +108,22 @@ function GameUIChatChannel:CreateTextFieldBody()
 	local emojiButton = cc.ui.UIPushButton.new({normal = "chat_expression.png",pressed = "chat_expression_highlight.png",},{scale9 = false})
 		:onButtonClicked(function(event)
             if CONFIG_IS_DEBUG then
+                -- local msg = editbox:getText()
+                -- if not msg or string.len(string.trim(msg)) == 0 then 
+                --     UIKit:showMessageDialog(_("错误"), _("聊天内容不能为空"),function()end)
+                --     return 
+                -- end  
+                -- editbox:setText('')
+                -- self:GetChatManager():SendChat(self._channelType,msg)
+                self:CreateEmojiPanel()
+            end
+    	end)
+    	:addTo(self)
+    	:align(display.LEFT_TOP,self.editbox:getPositionX()+self.editbox:getContentSize().width+10, window.top - 100)
+        :zorder(2)
+    local plusButton = cc.ui.UIPushButton.new({normal = "chat_add.png",pressed = "chat_add_highlight.png",}, {scale9 = false})
+    	:onButtonClicked(function(event)
+            if CONFIG_IS_DEBUG then
                 local msg = editbox:getText()
                 if not msg or string.len(string.trim(msg)) == 0 then 
                     UIKit:showMessageDialog(_("错误"), _("聊天内容不能为空"),function()end)
@@ -115,13 +132,6 @@ function GameUIChatChannel:CreateTextFieldBody()
                 editbox:setText('')
                 self:GetChatManager():SendChat(self._channelType,msg)
             end
-    	end)
-    	:addTo(self)
-    	:align(display.LEFT_TOP,self.editbox:getPositionX()+self.editbox:getContentSize().width+10, window.top - 100)
-        :zorder(2)
-    local plusButton = cc.ui.UIPushButton.new({normal = "chat_add.png",pressed = "chat_add_highlight.png",}, {scale9 = false})
-    	:onButtonClicked(function(event)
-
 		end)
 		:addTo(self)
 		:align(display.LEFT_TOP, emojiButton:getPositionX()+emojiButton:getCascadeBoundingBox().size.width+10,emojiButton:getPositionY()-2)
@@ -175,14 +185,12 @@ function GameUIChatChannel:GetChatIcon()
 	hero:addTo(heroBg)
 	hero:setTag(self.CELL_PLAYER_ICON_HERO_TAG)
 	local vipBg = display.newSprite("chat_vip_background.png"):addTo(hero):align(display.CENTER, math.floor(heroBg:getContentSize().width/2)-4, 12)
-	local vipLabel = cc.ui.UILabel.new({
-			UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = 'VIP ',
-            size = 15,
-            color = UIKit:hex2c3b(0xff9200),
-            align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-            valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
-            font = UIKit:getFontFilePath(),
+    local vipLabel = UIKit:ttfLabel({
+         text = '',
+         size = 15,
+         color = 0xff9200,
+         align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
+         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
     }):addTo(vipBg):align(display.CENTER, math.floor(vipBg:getContentSize().width/2), math.floor(vipBg:getContentSize().height/2))
     vipLabel:setScale(1)
 	heroBg:setScale(0.7)
@@ -200,20 +208,12 @@ function GameUIChatChannel:GetChatItemCell()
 	local middle = display.newScale9Sprite("chat_bubble_middle.png"):addTo(content):align(display.RIGHT_BOTTOM, 549, bottom:getContentSize().height)
 	middle:setTag(self.CELL_MIDDLE_TAG)
 	local labelText = "内容x"
-	local contentLable = cc.ui.UILabel.new({
-		UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = labelText,
-        size = 20,
-    	color = UIKit:hex2c3b(0x403c2f),
-        align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-        valign = cc.ui.UILabel.TEXT_VALIGN_TOP,
-        dimensions = cc.size(430, 0),
-        font = UIKit:getFontFilePath(),
-	})
-	contentLable:setTag(self.CELL_CONTENT_LABEL_TAG)
-	--1
-	middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getContentSize().height))
+    local contentLable = RichText.new({width = 430,size = 20,color = 0x403c2f})
+    contentLable:Text("")
 	contentLable:align(display.LEFT_BOTTOM, 25, 0):addTo(middle,2)
+    contentLable:setTag(self.CELL_CONTENT_LABEL_TAG)
+    --1
+    middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getCascadeBoundingBox().height))
 	local header = display.newScale9Sprite("chat_bubble_header.png"):addTo(content):align(display.RIGHT_BOTTOM, 549, bottom:getContentSize().height+middle:getContentSize().height)
 	header:setTag(self.CELL_HEADER_TAG)
 	local imageName = isVip and "chat_green.png" or "chat_gray.png"
@@ -231,8 +231,8 @@ function GameUIChatChannel:GetChatItemCell()
         font = UIKit:getFontFilePath(),
     }):align(display.LEFT_BOTTOM, 10, 0):addTo(titleBg,2)
     titleLabel:setTag(self.CELL_TITLE_LABEL_TAG)
-	 local playerIcon = self:GetChatIcon()
-	 playerIcon:setTag(self.CELL_PLAYER_ICON_TAG)
+	local playerIcon = self:GetChatIcon()
+	playerIcon:setTag(self.CELL_PLAYER_ICON_TAG)
     local timeLabel =  cc.ui.UILabel.new({
     		UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = "聊天时间",
@@ -246,6 +246,11 @@ function GameUIChatChannel:GetChatItemCell()
     local translateButton = cc.ui.UIPushButton.new({normal = "chat_translation.png"}, {scale9 = false})
     	:addTo(header,3)
         :align(display.RIGHT_BOTTOM,header:getContentSize().width-10,titleLabel:getPositionY()+titleLabel:getContentSize().height/2)
+        :onButtonClicked(function()
+            if main.transition_action then
+                main.transition_action()
+            end
+        end)
 	playerIcon:addTo(content):align(display.LEFT_TOP, 1, bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
 	translateButton:setTag(self.CELL_TRANSLATEBUTTON)
 	main.other = content
@@ -256,19 +261,11 @@ function GameUIChatChannel:GetChatItemCell()
 	local middle = display.newScale9Sprite("chat_bubble_middle.png"):addTo(selfContent):align(display.LEFT_BOTTOM, -10, bottom:getContentSize().height)
 	bottom:setTag(self.CELL_BOTTM_TAG)
 	middle:setTag(self.CELL_MIDDLE_TAG)
-	local contentLable = cc.ui.UILabel.new({
-			UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = "聊天信息",
-            size = 20,
-            color = UIKit:hex2c3b(0x403c2f),
-            align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-            valign = cc.ui.UILabel.TEXT_VALIGN_TOP,
-            dimensions = cc.size(430, 0),
-            font = UIKit:getFontFilePath(),
-    })
+    local contentLable = RichText.new({width = 430,size = 20,color = 0x403c2f})
+    contentLable:Text("")
+    contentLable:align(display.LEFT_BOTTOM, 25, 0):addTo(middle,2)
     contentLable:setTag(self.CELL_CONTENT_LABEL_TAG)
-	middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getContentSize().height))
-	contentLable:align(display.LEFT_BOTTOM, 25, 0):addTo(middle,2)
+	middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getCascadeBoundingBox().height))
 	local header = display.newSprite("chat_bubble_header.png"):addTo(selfContent)
 	header:setFlippedX(true)
 	header:align(display.LEFT_BOTTOM, -1, bottom:getContentSize().height+middle:getContentSize().height)
@@ -314,7 +311,7 @@ function GameUIChatChannel:CreateListView()
         async = true
     }:onTouch(handler(self, self.listviewListener)):addTo(self)
     self.listView:setDelegate(handler(self, self.sourceDelegate))
-    self.listView:setUpdateItemDelegate(handler(self, self.updateItemDelegate))
+    -- self.listView:setUpdateItemDelegate(handler(self, self.updateItemDelegate))
 end
 
 function GameUIChatChannel:RefreshListView()
@@ -326,13 +323,13 @@ function GameUIChatChannel:RefreshListView()
     return item
 end
 
-function GameUIChatChannel:updateItemDelegate(item,idx)
-    local content = item:getContent()
-    local data = self.dataSource_[idx]
-    local height = self:HandleCellUIData(content,data)
-    item:setItemSize(549,83 + height)
+-- function GameUIChatChannel:updateItemDelegate(item,idx)
+--     local content = item:getContent()
+--     local data = self.dataSource_[idx]
+--     local height = self:HandleCellUIData(content,data)
+--     item:setItemSize(549,83 + height)
 
-end
+-- end
 
 function GameUIChatChannel:sourceDelegate(listView, tag, idx)
  if cc.ui.UIListView.COUNT_TAG == tag then
@@ -404,55 +401,326 @@ function GameUIChatChannel:HandleCellUIData(mainContent,chat)
     if chat._translate_ and chat._translateMode_ then
         labelText = chat._translate_
     end
-
-    contentLable:setString(labelText) -- 聊天信息
+    labelText = self:GetChatManager():GetEmojiUtil():ConvertEmojiToRichText(labelText)
+    contentLable:Text(labelText) -- 聊天信息
+    contentLable:align(display.LEFT_BOTTOM, 25, 0)
     if not isSelf then
         --重新布局
-        middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getContentSize().height))
-        header:align(display.RIGHT_BOTTOM, 549, bottom:getContentSize().height+middle:getContentSize().height)
-        palyerIcon:pos(palyerIcon:getPositionX(),bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
+        local adjustFunc = function()
+            local height = contentLable:getCascadeBoundingBox().height or 0
+            middle:setContentSize(cc.size(middle:getContentSize().width,height))
+            header:align(display.RIGHT_BOTTOM, 549, bottom:getContentSize().height+middle:getContentSize().height)
+            palyerIcon:pos(palyerIcon:getPositionX(),bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
+            mainContent.other:size(549,83 + height)
+            mainContent.self:size(549,83 + height)
+            mainContent:size(549,83 + height)
+            return height
+        end
+        mainContent.transition_action = function()
+            if not chat._translate_ then
+                    GameUtils:Translate(chat.text,function(result,errText)
+                        if result then
+                            chat._translate_ = result
+                            chat._translateMode_ = true
+                            contentLable:Text(chat._translate_) -- 聊天信息
+                            contentLable:align(display.LEFT_BOTTOM, 25, 0)
+                            adjustFunc()
+                        else
+                            print('Translate error------->',errText)
+                        end
+                    end)
+                else
+                    if chat._translateMode_ then
+                        chat._translateMode_ = false
+                        contentLable:Text(chat.text) -- 聊天信息
+                        contentLable:align(display.LEFT_BOTTOM, 25, 0)
+                    else
+                        chat._translateMode_ = true
+                        contentLable:Text(chat._translate_) -- 聊天信息
+                        contentLable:align(display.LEFT_BOTTOM, 25, 0)
+                    end
+                    adjustFunc()
+                end
+        end
+        return adjustFunc()
     else
-        middle:setContentSize(cc.size(middle:getContentSize().width,contentLable:getContentSize().height))
+        local height = contentLable:getCascadeBoundingBox().height or 0
+        middle:setContentSize(cc.size(middle:getContentSize().width,height))
+        header:align(display.LEFT_BOTTOM, -1, bottom:getContentSize().height+middle:getContentSize().height)
+        palyerIcon:align(display.RIGHT_TOP, 549, bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
+        mainContent.other:size(549,83 + height)
+        mainContent.self:size(549,83 + height)
+        mainContent:size(549,83 + height)
+        return height
     end
-    local height = contentLable:getContentSize().height or 0
-    mainContent.other:size(549,83 + height)
-    mainContent.self:size(549,83 + height)
-    mainContent:size(549,83 + height)
-    return height
 end
 
 function GameUIChatChannel:CreatShieldView()
-    self.listView:dumpListView()
-    dump(self.dataSource_,"self.dataSource_")
+    local shieldView = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
+        :addTo(self,self.PLAYERMENU_ZORDER)
+    local bg =  WidgetUIBackGround.new({height=608}):addTo(shieldView):pos(window.left+20,window.bottom+150)
+    local header = display.newSprite("alliance_blue_title_600x42.png")
+        :addTo(bg)
+        :align(display.CENTER_BOTTOM, 304, 594)
+    UIKit:closeButton():addTo(header)
+        :align(display.BOTTOM_RIGHT,header:getContentSize().width, 0)
+        :onButtonClicked(function ()
+            shieldView:removeFromParent(true)
+        end)
+    local title_label = UIKit:ttfLabel({
+        text = _("设置"),
+        size = 24,
+        color = 0xffedae,
+    }):align(display.CENTER,header:getContentSize().width/2, header:getContentSize().height/2):addTo(header)
+   local translation = display.newSprite("chat_translation.png")
+        :addTo(bg)
+        :pos(50,508)
+
+    local descLabel = UIKit:ttfLabel({
+         text = _("点击后，会根据你的系统语言，将其他玩家发言翻译成你熟悉的语种。若要修改翻译的语种，请修改你当前的系统语种。"),
+            size = 20,
+            color=0x403c2f,
+            dimensions = cc.size(bg:getContentSize().width - translation:getPositionX() - 50 - translation:getContentSize().width, 0),
+    }):addTo(bg):pos(translation:getPositionX() + 50,translation:getPositionY())
+    local line = display.newScale9Sprite("dividing_line.png")
+        :addTo(bg)
+        line:size(bg:getContentSize().width - 40,line:getContentSize().height)
+        :align(display.TOP_LEFT, 20, translation:getPositionY() - descLabel:getContentSize().height)
+
+    local heightOfList,widthOfList = line:getPositionY() - 30,bg:getContentSize().width - 40
+    self.blackListView = UIListView.new({
+        bg = "chat_setting_listview_bg.png",
+        bgScale9 = true,
+        viewRect = cc.rect(20, 20, bg:getContentSize().width - 40,heightOfList),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
+        alignment = cc.ui.UIListView.ALIGNMENT_LEFT
+    }):addTo(bg)
+    self:RefreshBlockedList(widthOfList)
+end
+
+
+function GameUIChatChannel:RefreshBlockedList(widthOfList)
+    self.blackListView:removeAllItems()
+    local blockListDataSource = self:GetChatManager():GetBlockList()
+    for _,v in pairs(blockListDataSource) do
+        local newItem = self:GetBlackListItem(v,widthOfList)
+        self.blackListView:addItem(newItem)
+    end
+    self.blackListView:reload()
+end
+
+
+function GameUIChatChannel:GetBlackListItem(chat,width)
+    local item = self.blackListView:newItem()
+    local bg = display.newScale9Sprite("chat_setting_item_bg.png")
+    bg:size(width,bg:getContentSize().height)
+    --content
+    local iconBg = UIKit:GetPlayerCommonIcon():scale(0.8):addTo(bg,2):pos(60,math.floor(bg:getContentSize().height/2))
+    local nameLabel = cc.ui.UILabel.new({
+        UILabelType = 2,
+        text = chat.fromName or "player" ,
+        size = 22,
+        color = UIKit:hex2c3b(0x403c2f),
+        align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
+    }):addTo(bg,2)
+      :pos(iconBg:getPositionX()+50,iconBg:getPositionY()+20)
+
+    local allianceLabel = cc.ui.UILabel.new({
+        UILabelType = 2,
+        text = chat.fromAlliance or "",
+        size = 16,
+        color = UIKit:hex2c3b(0x403c2f),
+        align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
+    }):addTo(bg,2)
+      :pos(iconBg:getPositionX()+50,iconBg:getPositionY()-10)
+
+    cc.ui.UIPushButton.new({normal="chat_setting_item_yellow.png",pressed="chat_setting_item_yellow_h.png"}, {scale9 = false})
+        :onButtonClicked(function(event)
+            local success = self:GetChatManager():RemoveItemFromBlockList(chat)
+            if success then
+                self.blackListView:removeItem(item,false)
+            end
+        end)
+        :setButtonLabel("normal",cc.ui.UILabel.new({
+            UILabelType = 2,
+            text = _("取消屏蔽"),
+            size = 22,
+            color = UIKit:hex2c3b(0xfff3c7),
+            align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
+        }))
+        :align(display.RIGHT_TOP,bg:getContentSize().width - 30, allianceLabel:getPositionY()+10)
+        :addTo(bg,2)
+    ---
+    item:addContent(bg)
+    item:setItemSize(width,bg:getContentSize().height)
+    return item
 end
 
 function GameUIChatChannel:listviewListener(event)
-	-- if event.name == 'SCROLLVIEW_EVENT_BOUNCE_BOTTOM' then
-	-- 	  print('get more message!')
- --            self.page = self.page + 1
- --            local data = ChatCenter:getAllMessages(self._channelType,self.page)
- --            if #data == 0 and self.page > 1 then
- --                self.page = self.page - 1
- --                return
- --            end
- --            for i,v in ipairs(data) do
- --                local newItem  = self:getChatItem(v)
- --                self.listView:addItem(newItem)
- --            end
- --            self.listView:resetPosition()
- --            self.listView:reload()
- --            self.listView:resetPosition()
-	-- 	return
-	-- end
-	-- if not event.listView:isItemInViewRect(event.itemPos) then
- --        return
- --    end
+	if not event.listView:isItemInViewRect(event.itemPos) then
+        return
+    end
+    local listView = event.listView
+    if "clicked" == event.name then
+    	self:CreatePlayerMenu(event)
+    end
+end
 
- --    print("GameUIChat:listviewListener event:" .. event.name .. " pos:" .. event.itemPos)
- --    local listView = event.listView
- --    if "clicked" == event.name then
- --    	self:CreatePlayerMenu(event)
- --    end
+
+function GameUIChatChannel:CreatePlayerMenu(event)
+    local item = event.item
+    local chat = self.dataSource_[item.idx_]
+    if DataManager:getUserData()._id == chat.fromId then return end -- if self return 
+    local menuLayer = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
+    menuLayer:setTouchEnabled(true)
+    menuLayer:addTo(self,self.PLAYERMENU_ZORDER):pos(0, 0)
+    local tabBg = display.newSprite("chat_tab_backgroud.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(menuLayer)
+    menuLayer:addNodeEventListener(cc.NODE_TOUCH_EVENT,function()
+        menuLayer:removeFromParent(true)
+    end)
+    local x,y = item:getPosition()
+    local p = item:getParent():convertToWorldSpace(cc.p(x,y))
+    local targetP = menuLayer:convertToNodeSpace(p)
+    local newItem = self:GetChatItemCell()
+    self:HandleCellUIData(newItem,chat)
+    newItem.transition_action = nil
+    newItem:setPosition(targetP)
+    newItem:addTo(menuLayer)
+    --copy
+    local copyButton = cc.ui.UIPushButton.new({normal="chat_tab_button.png",pressed="chat_tab_button_highlight.png"}, {scale9 = false})
+        :setButtonLabel("normal", cc.ui.UILabel.new({
+            UILabelType = 2,
+            text = _("复制"),
+            size = 20,
+            color = UIKit:hex2c3b(0x403c2f)
+        }))
+        :onButtonClicked(function(event)
+            local labelText = chat.text
+            if chat._translate_ and chat._translateMode_ then
+                labelText = chat._translate_
+            end
+            ext.copyText(labelText)
+            menuLayer:removeFromParent(true)
+        end)
+        :align(display.LEFT_BOTTOM, 0, 2)
+        :addTo(tabBg)
+    local label = copyButton:getButtonLabel()
+    display.newSprite("chat_copy.png"):align(display.CENTER,label:getPositionX(), label:getPositionY()+20):addTo(copyButton)
+    copyButton:setButtonLabelOffset(0,-30)
+
+    --chat_check_out
+    local checkButton = cc.ui.UIPushButton.new({normal="chat_tab_button.png",pressed="chat_tab_button_highlight.png"}, {scale9 = false})
+        :setButtonLabel("normal", cc.ui.UILabel.new({
+            UILabelType = 2,
+            text = _("查看信息"),
+            size = 20,
+            color = UIKit:hex2c3b(0x403c2f)
+        }))
+        :onButtonClicked(function(event)
+            menuLayer:removeFromParent(true)
+            UIKit:newGameUI("GameUIAllianceMemberInfo",false,chat.fromId):addToCurrentScene(true)
+        end)
+        :align(display.LEFT_BOTTOM, tabBg:getContentSize().width/5, 2)
+        :addTo(tabBg)
+    local label = checkButton:getButtonLabel()
+    display.newSprite("chat_check_out.png"):align(display.CENTER,label:getPositionX(), label:getPositionY()+20):addTo(checkButton)
+    checkButton:setButtonLabelOffset(0,-30)
+
+    --chat_shield
+    local shieldButton = cc.ui.UIPushButton.new({normal="chat_tab_button.png",pressed="chat_tab_button_highlight.png"}, {scale9 = false})
+        :setButtonLabel("normal", cc.ui.UILabel.new({
+            UILabelType = 2,
+            text = _("屏蔽"),
+            size = 20,
+            color = UIKit:hex2c3b(0x403c2f)
+        }))
+        :onButtonClicked(function(event)
+            self:GetChatManager():AddBlockChat(chat)
+            menuLayer:removeFromParent(true)
+            self:RefreshListView()
+        end)
+        :align(display.LEFT_BOTTOM, tabBg:getContentSize().width/5 * 2 , 2)
+        :addTo(tabBg)
+    local label = shieldButton:getButtonLabel()
+    display.newSprite("chat_shield.png"):align(display.CENTER,label:getPositionX(), label:getPositionY()+20):addTo(shieldButton)
+    shieldButton:setButtonLabelOffset(0,-30)
+
+    --chat_report
+    local reportButton = cc.ui.UIPushButton.new({normal="chat_tab_button.png",pressed="chat_tab_button_highlight.png"}, {scale9 = false})
+        :setButtonLabel("normal", cc.ui.UILabel.new({
+            UILabelType = 2,
+            text = _("举报"),
+            size = 20,
+            color = UIKit:hex2c3b(0x403c2f)
+        }))
+        :onButtonClicked(function(event)
+            menuLayer:removeFromParent(true)
+        end)
+        :align(display.LEFT_BOTTOM, tabBg:getContentSize().width/5 * 3 , 2)
+        :addTo(tabBg)
+    local label = reportButton:getButtonLabel()
+    display.newSprite("chat_report.png"):align(display.CENTER,label:getPositionX(), label:getPositionY()+20):addTo(reportButton)
+    reportButton:setButtonLabelOffset(0,-30)
+    --chat_mail
+    local mailButton = cc.ui.UIPushButton.new({normal="chat_tab_button.png",pressed="chat_tab_button_highlight.png"}, {scale9 = false})
+        :setButtonLabel("normal", cc.ui.UILabel.new({
+            UILabelType = 2,
+            text = _("邮件"),
+            size = 20,
+            color = UIKit:hex2c3b(0x403c2f)
+        }))
+        :onButtonClicked(function(event)
+            menuLayer:removeFromParent(true)
+            local mail = GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL)
+            mail:SetTitle(_("个人邮件"))
+            mail:SetAddressee(chat.fromName)
+            mail:addTo(self)
+        end)
+        :align(display.LEFT_BOTTOM, tabBg:getContentSize().width/5 * 4 , 2)
+        :addTo(tabBg)
+    local label = mailButton:getButtonLabel()
+    display.newSprite("chat_mail.png"):align(display.CENTER,label:getPositionX(), label:getPositionY()+20):addTo(mailButton)
+    mailButton:setButtonLabelOffset(0,-30)
+end
+
+function GameUIChatChannel:CreateEmojiPanel()
+    local shieldView = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
+        :addTo(self,self.PLAYERMENU_ZORDER)
+    local bg =  WidgetUIBackGround.new({height=608}):addTo(shieldView):pos(window.left+20,window.bottom+150)
+    local header = display.newSprite("alliance_blue_title_600x42.png")
+        :addTo(bg)
+        :align(display.CENTER_BOTTOM, 304, 594)
+    UIKit:closeButton():addTo(header)
+        :align(display.BOTTOM_RIGHT,header:getContentSize().width, 0)
+        :onButtonClicked(function ()
+            shieldView:removeFromParent(true)
+        end)
+    local title_label = UIKit:ttfLabel({
+        text = _("表情"),
+        size = 24,
+        color = 0xffedae,
+    }):align(display.CENTER,header:getContentSize().width/2, header:getContentSize().height/2):addTo(header)
+    local x,y = 40,580
+    for i,v in ipairs(EmojiTable:GetGetSmileyImages()) do
+        local img = "#" .. v
+        local __,e = string.find(v,"%.")
+        local key = string.sub(v,1,e - 1)
+        WidgetPushButton.new({normal = img,pressed = img})
+            :align(display.LEFT_TOP, x,y):addTo(bg)
+            :scale(0.5)
+            :onButtonClicked(function()
+                print("key---->","[/" .. key .. "]")
+                local text = self.editbox:getText()
+                self.editbox:setText(string.trim(text) .. "[/" .. key .. "]")
+                shieldView:removeFromParent(true)
+            end)
+        x = x + 20 + 32
+        if i % 10 == 0 then
+            y = y - 52
+            x = 40
+        end
+    end
+
 end
 
 return GameUIChatChannel

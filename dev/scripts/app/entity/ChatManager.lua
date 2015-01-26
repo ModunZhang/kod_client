@@ -28,9 +28,9 @@ function EmojiUtil:ConvertEmojiToRichText(chatmsg)
 	for i,v in ipairs(dest) do
 		local result,count = string.gsub(v,"%[/([%P]+)%]", "%1")
 		if count == 0 then
-			dest[i] = string.format('{type = "text", value = "%s", size = 30}', v)
+			dest[i] = string.format('{type = "text", value = "%s"}', v)
 		else
-			dest[i] = string.format('{type = "image", value = "%s"}',string.format("#%s.png", result))
+			dest[i] = string.format('{type = "image", value = "%s"}',string.format("#%s.png", string.upper(result)))
 		end
 	end
 	return table.concat(dest)
@@ -46,7 +46,7 @@ local PUSH_INTVAL = 10 -- 推送的时间间隔
 local SIZE_MUST_PUSH = 10 -- 如果队列中数量达到指定条数立即推送
 ChatManager.LISTEN_TYPE = Enum("TO_TOP","TO_REFRESH")
 ChatManager.CHANNNEL_TYPE = {GLOBAL = 1 ,ALLIANCE = 2}
-
+local BLOCK_LIST_KEY = "CHAT_BLOCK_LIST"
 
 function ChatManager:ctor(gameDefault)
 	ChatManager.super.ctor(self)
@@ -56,6 +56,7 @@ function ChatManager:ctor(gameDefault)
 	self.alliance_channel = {}
 	self.push_buff_queue = {}
 	self.___handle___ = scheduler.scheduleGlobal(handler(self, self.__checkNotifyIf),PUSH_INTVAL)
+	self._blockedIdList_ = self:GetGameDefault():getBasicInfoValueForKey(BLOCK_LIST_KEY,{})
 end
 
 function ChatManager:GetEmojiUtil()
@@ -71,7 +72,15 @@ function ChatManager:sortMessage_(t)
 end
 
 function ChatManager:__checkIsBlocked(msg)
-	return false
+	return self._blockedIdList_[msg.fromId] ~= nil
+end
+
+function ChatManager:__getMessageWithChannel(channel)
+	if channel == self.CHANNNEL_TYPE.GLOBAL then
+		return self.global_channel
+	elseif channel == self.CHANNNEL_TYPE.ALLIANCE then
+		return self.alliance_channel
+	end
 end
 
 function ChatManager:insertNormalMessage_(msg)
@@ -88,7 +97,6 @@ function ChatManager:insertNormalMessage_(msg)
 			return true
 		end
 	end
-	dump(msg,"插入聊天信息失败")
 	return false
 end
 
@@ -143,14 +151,13 @@ function ChatManager:HandleNetMessage(eventName,msg)
 end
 
 function ChatManager:FetchChannelMessage(channel)
-	if channel == self.CHANNNEL_TYPE.GLOBAL then
-		return self.global_channel
-	elseif channel == self.CHANNNEL_TYPE.ALLIANCE then
-		return self.alliance_channel
-	end
+	local messages = self:__getMessageWithChannel(channel)
+	return LuaUtils:table_filteri(messages,function(_,v)
+		return not self:__checkIsBlocked(v)
+	end)
 end
 
-function ChatManager:FetchAllChatMessage()
+function ChatManager:FetchAllChatMessageFromServer()
 	NetManager:getFetchChatPromise():next(function(messages)
 		self:HandleNetMessage('onAllChat',messages)
 	end)
@@ -169,6 +176,31 @@ function ChatManager:Reset()
 	if self.___handle___ then
 		scheduler.unscheduleGlobal(self.___handle___)
 	end
+end
+
+function ChatManager:AddBlockChat(chat)
+	if self:__checkIsBlocked(chat) then return true end
+	self._blockedIdList_[chat.fromId] = chat
+	self:__flush()
+	return true
+end
+
+function ChatManager:GetBlockList()
+	return self._blockedIdList_
+end
+
+function ChatManager:RemoveItemFromBlockList(chat)
+	if self:__checkIsBlocked(chat) then 
+		self._blockedIdList_[chat.fromId] = nil
+		self:__flush()
+		return true
+	end
+	return true
+end
+
+function ChatManager:__flush()
+	self:GetGameDefault():setBasicInfoValueForKey(BLOCK_LIST_KEY,self._blockedIdList_)
+	self:GetGameDefault():flush()
 end
 
 return ChatManager

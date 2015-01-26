@@ -2,14 +2,6 @@ local Orient = import(".Orient")
 local WallUpgradeBuilding = import(".WallUpgradeBuilding")
 local Tile = class("Tile")
 
-
-local location_map = {
-    [1] = { x = 2, y = 2 },
-    [2] = { x = 5, y = 2 },
-    [3] = { x = 8, y = 2 },
-}
-
-
 function Tile:ctor(tile_info)
     assert(tile_info)
     assert(type(tile_info.x) == "number")
@@ -221,6 +213,11 @@ end
 function Tile:GetBuildingLocation(building)
     return self:GetBuildingLocationByRelativePos(self:GetRelativePositionByBuilding(building))
 end
+local location_map = {
+    [1] = { x = 2, y = 2 },
+    [2] = { x = 5, y = 2 },
+    [3] = { x = 8, y = 2 },
+}
 function Tile:GetBuildingLocationByRelativePos(x, y)
     for k, v in pairs(location_map) do
         if x == v.x and y == v.y then

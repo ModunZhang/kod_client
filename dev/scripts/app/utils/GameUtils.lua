@@ -367,6 +367,7 @@ end
 
 
 local normal_soldier = GameDatas.Soldiers.normal
+local special_soldier = GameDatas.Soldiers.special
 local function createSoldiers(name, star, count)
     return {name = name, star = star, morale = 100, currentCount = count, totalCount = count, woundedCount = 0, round = 0}
 end
@@ -455,24 +456,34 @@ function GameUtils:DragonDragonBattle(attackDragon, defenceDragon, effect)
     assert(attackDragon.hpMax)
     assert(attackDragon.strength)
     assert(attackDragon.vitality)
+    assert(attackDragon.totalHp)
     assert(attackDragon.currentHp)
-    local attackDragonPower = attackDragon.strength * attackDragon.vitality
-    attackDragon.totalHp = attackDragon.currentHp
-
-    local defenceDragonPower = defenceDragon.strength * defenceDragon.vitality
-    defenceDragon.totalHp = defenceDragon.currentHp
-
+    assert(defenceDragon.hpMax)
+    assert(defenceDragon.strength)
+    assert(defenceDragon.vitality)
+    assert(defenceDragon.totalHp)
+    assert(defenceDragon.currentHp)
+    local attackDragonPower = attackDragon.strength
+    local defenceDragonPower = defenceDragon.strength
     if effect >= 0 then
         defenceDragonPower = defenceDragonPower * (1 - effect)
     else
         attackDragonPower = attackDragonPower * (1 + effect)
     end
+    local attackDragonHpDecreased
+    local defenceDragonHpDecreased
+    if attackDragonPower >= defenceDragonPower then
+        attackDragonHpDecreased = floor(defenceDragonPower * 0.5)
+        defenceDragonHpDecreased = floor(pow(attackDragonPower * defenceDragonPower, 2) * 0.5)
+    else
+        attackDragonHpDecreased = floor(pow(attackDragonPower * defenceDragonPower, 2) * 0.5)
+        defenceDragonHpDecreased = floor(attackDragonPower * 0.5)
+    end
 
-    local attackDragonHpDecreased = round(defenceDragonPower * 0.02)
     attackDragon.currentHp = attackDragonHpDecreased > attackDragon.currentHp and 0 or attackDragon.currentHp - attackDragonHpDecreased
-
-    local defenceDragonHpDecreased = round(attackDragonPower * 0.02)
     defenceDragon.currentHp = defenceDragonHpDecreased > defenceDragon.currentHp and 0 or defenceDragon.currentHp - defenceDragonHpDecreased
+    attackDragon.isWin = attackDragonPower >= defenceDragonPower
+    defenceDragon.isWin = attackDragonPower < defenceDragonPower
 
     return {
         hp = attackDragon.totalHp,
@@ -487,24 +498,56 @@ function GameUtils:DragonDragonBattle(attackDragon, defenceDragon, effect)
     }
 end
 
-
+local floatInit = GameDatas.AllianceInitData.floatInit
 function GameUtils:DoBattle(attacker, defencer)
-    defencer.dragon = {
-        currentHp = 1000,
-        hpMax = 1000,
-        strength = 700,
-        vitality = 200,
-    }
     local attack_dragon, defence_dragon = GameUtils:DragonDragonBattle(attacker.dragon, defencer.dragon, 0)
     local attack_soldier, defence_soldier = GameUtils:SoldierSoldierBattle(attacker.soldiers, 0.4, defencer.soldiers, 0.4)
 
     local report = {}
+    function report:GetAttackKDA()
+        -- 龙战损
+        local r = {}
+        for _, v in ipairs(defence_soldier) do
+            local key = string.format("%s_%d", v.soldierName, v.soldierStar)
+            r[key] = 0
+        end
+        for _, v in ipairs(defence_soldier) do
+            local key = string.format("%s_%d", v.soldierName, v.soldierStar)
+            r[key] = r[key] + v.soldierDamagedCount
+        end
+        local killed = 0
+        for k, v in pairs(r) do
+            local config = normal_soldier[k] or special_soldier[k]
+            assert(config, "查无此类兵种。")
+            killed = killed + v * config.citizen
+        end
+        local dragon = {
+            type = attacker.dragon.dragonType,
+            hpDecreased = attack_dragon.hpDecreased,
+            expAdd = floor(killed * floatInit.dragonExpByKilledCitizen.value)
+        }
+        -- 兵种战损
+        local r = {}
+        for _, v in ipairs(attack_soldier) do
+            r[v.soldierName] = {damagedCount = 0, woundedCount = 0}
+        end
+        for _, v in ipairs(attack_soldier) do
+            local soldier = r[v.soldierName]
+            soldier.damagedCount = soldier.damagedCount + v.soldierDamagedCount
+            soldier.woundedCount = soldier.woundedCount + v.soldierWoundedCount
+        end
+        local soldiers = {}
+        for k, v in pairs(r) do
+            table.insert(soldiers, {name = k, damagedCount = v.damagedCount, woundedCount = v.woundedCount})
+        end
+        return {dragon = dragon, soldiers = soldiers}
+    end
     function report:GetFightAttackName()
         return "进攻方"
     end
     function report:GetFightDefenceName()
         return "防守方"
-    end 
+    end
     function report:IsDragonFight()
         return true
     end
@@ -532,6 +575,7 @@ end
 
 
 return GameUtils
+
 
 
 

@@ -302,6 +302,7 @@ function GameUIDwelling:createTabButtons()
             self.infomationLayer:setVisible(true)
             self:RefreshListView()
         elseif tag == "citizen" then
+            self.citizen_panel:UpdateData()
             self.citizen_panel:setVisible(true)
             self.infomationLayer:setVisible(false)
         else

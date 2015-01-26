@@ -475,7 +475,9 @@ function GameUIReplay:PlayDragonBattle()
         :next(cocos_promise.delay(0.8))
 
     promise.new():next(cocos_promise.delay(0.2)):next(function()
-        self.dragon_battle:getAnimation():play("Animation1", -1, 0)
+        if self.dragon_battle then
+            self.dragon_battle:getAnimation():play("Animation1", -1, 0)
+        end
     end):resolve()
 
     self.dragon_battle:getAnimation():setMovementEventCallFunc(function(armatureBack, movementType, movementID)

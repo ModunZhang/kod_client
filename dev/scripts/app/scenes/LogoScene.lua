@@ -7,7 +7,7 @@ local LogoScene = class("LogoScene", function()
 end)
 --提前加载splash需要的资源
 function LogoScene:ctor()
--- self:PreLoadResource()
+    self:PreLoadResource()
 end
 
 function LogoScene:onEnter()
@@ -38,19 +38,20 @@ function LogoScene:beginAnimate()
 end
 
 function LogoScene:PreLoadResource()
-    local soldier_anmations = {
-        {"animations/Infantry_1_render0.plist","animations/Infantry_1_render0.png","animations/Infantry_1_render.ExportJson"},
-        {"animations/Cavalry_1_render0.plist","animations/Cavalry_1_render0.png","animations/Cavalry_1_render.ExportJson"},
-        {"animations/Archer_1_render0.plist","animations/Archer_1_render0.png","animations/Archer_1_render.ExportJson"},
-        {"animations/Catapult_1_render0.plist","animations/Catapult_1_render0.png","animations/Catapult_1_render.ExportJson"},
-        {"animations/Cloud_Animation0.plist","animations/Cloud_Animation0.png","animations/Cloud_Animation.ExportJson"},
-    }
-    for _,v in ipairs(soldier_anmations) do
-        local plist,png,export_json = unpack(v)
-        display.addSpriteFrames(plist,png,function(plistFilename, image)
-            print("load resoures-->",plistFilename, image)
-        end)
-    end
+    -- local soldier_anmations = {
+    --     {"animations/Infantry_1_render0.plist","animations/Infantry_1_render0.png","animations/Infantry_1_render.ExportJson"},
+    --     {"animations/Cavalry_1_render0.plist","animations/Cavalry_1_render0.png","animations/Cavalry_1_render.ExportJson"},
+    --     {"animations/Archer_1_render0.plist","animations/Archer_1_render0.png","animations/Archer_1_render.ExportJson"},
+    --     {"animations/Catapult_1_render0.plist","animations/Catapult_1_render0.png","animations/Catapult_1_render.ExportJson"},
+    --     {"animations/Cloud_Animation0.plist","animations/Cloud_Animation0.png","animations/Cloud_Animation.ExportJson"},
+    -- }
+    -- for _,v in ipairs(soldier_anmations) do
+    --     local plist,png,export_json = unpack(v)
+    --     display.addSpriteFrames(plist,png,function(plistFilename, image)
+    --         print("load resoures-->",plistFilename, image)
+    --     end)
+    -- end
+    display.addSpriteFrames("emoji/emoji.plist","emoji/emoji.png")
 end
 
 

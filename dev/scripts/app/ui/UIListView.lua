@@ -36,7 +36,6 @@ local UIListViewItem = import(".UIListViewItem")
 
 
 UIListView.DELEGATE					= "ListView_delegate"
-UIListView.UPDATE_ITEM_DELEGATE		= "ListView_Update_Item_delegate"
 UIListView.TOUCH_DELEGATE			= "ListView_Touch_delegate"
 
 UIListView.CELL_TAG					= "Cell"
@@ -1086,26 +1085,6 @@ function UIListView:isItemInViewRectWithLogicIndex(index)
 			return v
 		end
 	end
-end
-
-
-function UIListView:updateAllItemInViewRect()
-	assert(self.bAsyncLoad, "UIListView:updateItemInViewRect() - syncload not support updateItemInViewRect")
-	assert(self.delegate_[UIListView.UPDATE_ITEM_DELEGATE],"UIListView:updateItemInViewRect() - please call setUpdateItemDelegate to set a delegate")
-	for __,v in ipairs(self.items_) do
-		self.delegate_[UIListView.UPDATE_ITEM_DELEGATE](v,v.idx_)
-	end
-end
-
-function UIListView:updateItemAtIdx(idx)
-	assert(self.bAsyncLoad, "UIListView:updateItemAtIdx() - syncload not support updateItemAtIdx")
-	idx = checkint(idx)
-	if not self:isItemInViewRectWithLogicIndex() then return end
-
-end
-
-function UIListView:setUpdateItemDelegate(delegate)
-	self.delegate_[UIListView.UPDATE_ITEM_DELEGATE] = delegate
 end
 
 function UIListView:offsetItemsIdx(offset)
