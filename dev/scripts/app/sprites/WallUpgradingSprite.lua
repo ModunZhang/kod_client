@@ -10,14 +10,6 @@ end
 ----
 function WallUpgradingSprite:ctor(city_layer, entity)
     WallUpgradingSprite.super.ctor(self, city_layer, entity)
-    self:CreateBase()
-
-    -- local entity = self:GetEntity()
-    -- if entity:GetOrient() == Orient.X then
-    --     -- self:hide()
-    -- elseif entity:GetOrient() == Orient.NEG_X then
-    --     self:hide()
-    -- end
 end
 function WallUpgradingSprite:GetSpriteFile()
     local entity = self:GetEntity()
@@ -75,15 +67,15 @@ function WallUpgradingSprite:GetBottomOffset()
     end
     assert(false)
 end
-function WallUpgradingSprite:GetLogicZorder()
-    local entity = self:GetEntity()
-    if entity:GetOrient() == Orient.X then
-        local x, y = self:GetLogicPosition()
-        return self:GetMapLayer():GetZOrderBy(self, x, y) - 295
-    end
-    local x, y = self:GetLogicPosition()
-    return self:GetMapLayer():GetZOrderBy(self, x, y)
-end
+-- function WallUpgradingSprite:GetLogicZorder()
+--     local entity = self:GetEntity()
+--     if entity:GetOrient() == Orient.X then
+--         local x, y = self:GetLogicPosition()
+--         return self:GetMapLayer():GetZOrderBy(self, x, y) - 295
+--     end
+--     local x, y = self:GetLogicPosition()
+--     return self:GetMapLayer():GetZOrderBy(self, x, y)
+-- end
 return WallUpgradingSprite
 
 

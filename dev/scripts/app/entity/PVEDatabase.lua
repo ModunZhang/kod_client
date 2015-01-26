@@ -30,6 +30,18 @@ function PVEDatabase:OnUserDataChanged(user_data)
         for i, v in ipairs(pve.floors) do
             self.pve_maps[v.level]:Load(v)
         end
+    elseif pve.__floors then
+        for _, v in ipairs(pve.__floors) do
+            local type_ = v.type
+            if type_ == "add" then
+                assert(false)
+            elseif type_ == "edit" then
+                local data = v.data
+                self.pve_maps[data.level]:Load(data)
+            elseif type_ == "remove" then
+                assert(false)
+            end
+        end
     end
 end
 function PVEDatabase:EncodeLocation()
@@ -99,5 +111,6 @@ end
 
 
 return PVEDatabase
+
 
 

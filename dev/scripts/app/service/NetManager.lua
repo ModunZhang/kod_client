@@ -148,7 +148,7 @@ onPlayerDataChanged_callbacks = {}
 function NetManager:addPlayerDataChangedEventListener()
     self:addEventListener("onPlayerDataChanged", function(success, msg)
         if success then
-            dump(msg, "onPlayerDataChanged")
+            LuaUtils:outputTable("onPlayerDataChanged", msg)
             DataManager:setUserData(msg)
         end
         local callback = onPlayerDataChanged_callbacks[1]
@@ -482,7 +482,7 @@ function NetManager:addLoginEventListener()
                 self.m_netService:setDeltatime(msg.serverTime - ext.now())
                 DataManager:setUserData(msg)
             else
-                dump(msg, "onPlayerLoginSuccess")
+                LuaUtils:outputTable("onPlayerLoginSuccess", msg)
                 self.m_netService:setDeltatime(msg.serverTime - ext.now())
                 local InitGame = import("app.service.InitGame")
                 InitGame(msg)

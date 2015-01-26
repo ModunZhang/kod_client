@@ -128,7 +128,6 @@ function WidgetPVEDialog:Search()
     local x, y = self:GetObject():Position()
     local searched = self:GetObject():Searched()
     self:GetPVEMap():ModifyObject(x, y, searched + 1)
-    self:GetPVEMap():GetDatabase():Dump()
 end
 
 

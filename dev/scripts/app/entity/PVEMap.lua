@@ -65,6 +65,8 @@ function PVEMap:IsSearched()
     return #self.searched_fogs > 0 or #self.searched_objects > 0
 end
 function PVEMap:Load(floor)
+    assert(floor.fogs)
+    assert(floor.objects)
     local f = loadstring(string.format("return {fogs=%s, objects=%s}", floor.fogs, floor.objects))
     local data = assert(f)()
     self.searched_fogs = data.fogs

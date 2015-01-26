@@ -32,6 +32,8 @@ function User:ctor(p)
         [STRENGTH] = AutomaticUpdateResource.new(),
     }
     self:GetGemResource():SetValueLimit(math.huge) -- 会有人充值这么多的宝石吗？
+    self:GetStrengthResource():SetValueLimit(100)
+
 
     self.pve_database = PVEDatabase.new(self)
     local _,_, index = self.pve_database:GetCharPosition()
@@ -53,11 +55,23 @@ function User:ctor(p)
         self:SetId(p)
     end
 end
+function User:SetPveData(fight_data, rewards_data)
+    self.fight_data = fight_data
+    self.rewards_data = rewards_data
+end
 function User:EncodePveData()
+    local fightData = self.fight_data
+    local rewards = self.rewards_data
+    self.fight_data = nil
+    self.rewards_data = nil
     return {
-        staminaUsed = 1,
-        location = self.pve_database:EncodeLocation(),
-        floor = self.cur_pve_map:EncodeMap(),
+        pveData = {
+            staminaUsed = self.pre_strenth - self:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
+            location = self.pve_database:EncodeLocation(),
+            floor = self.cur_pve_map:EncodeMap(),
+        },
+        fightData = fightData,
+        rewards = rewards,
     }
 end
 function User:ResetAllListeners()
@@ -235,9 +249,8 @@ function User:OnPropertyChange(property_name, old_value, new_value)
         })
     end)
 end
-function User:OnUserDataChanged(userData)
-
-    self:OnGemChanged(userData.resources)
+function User:OnUserDataChanged(userData, current_time)
+    self:OnResourcesChangedByTime(userData.resources, current_time)
     self:OnBasicInfoChanged(userData.basicInfo)
     self:OnNewInviteAllianceEventsComming(userData.__inviteToAllianceEvents)
     self:OnNewRequestToAllianceEventsComming(userData.__requestToAllianceEvents)
@@ -253,9 +266,16 @@ function User:OnUserDataChanged(userData)
     self:GetPVEDatabase():OnUserDataChanged(userData)
     return self
 end
-function User:OnGemChanged(resources)
-    if resources and resources.gem then
+function User:OnResourcesChangedByTime(resources, current_time)
+    if not resources then return end
+    if resources.gem then
         self:GetGemResource():SetValue(resources.gem)
+    end
+    if resources.stamina then
+        local strength = self:GetStrengthResource()
+        strength:UpdateResource(current_time, resources.stamina)
+        strength:SetProductionPerHour(current_time, 4)
+        self.pre_strenth = strength:GetResourceValueByCurrentTime(current_time)
     end
 end
 function User:OnBasicInfoChanged(basicInfo)
@@ -464,6 +484,8 @@ function User:OnNewDailyQuestsEvent(changed_map)
     end)
 end
 return User
+
+
 
 
 
