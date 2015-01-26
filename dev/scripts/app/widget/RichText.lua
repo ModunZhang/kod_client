@@ -37,7 +37,8 @@ function RichText:ctor(params)
 end
 
 function RichText:Text(str)
-    assert(not self.lines, "富文本不可变!")
+    -- assert(not self.lines, "富文本不可变!")
+    self:removeAllChildren()
     local items = LuaUtils:table_map(GameUtils:parseRichText(str), function(k, v)
         local type_ = type(v)
         if type_ == "string" then
@@ -130,7 +131,14 @@ end
 
 function RichText:align(anchorPoint, x, y)
     assert(self.lines, "必须先生成富文本!")
-    local ANCHOR_POINTSint = display.ANCHOR_POINTS[anchorPoint]
+    local ANCHOR_POINTSint 
+    if not anchorPoint and not x and not y then
+        ANCHOR_POINTSint = self:getAnchorPoint()
+        x = self:getPositionX()
+        y = self:getPositionY()
+    else 
+        ANCHOR_POINTSint = display.ANCHOR_POINTS[anchorPoint]
+    end
     local size = self:getCascadeBoundingBox()
     local offset_x = ANCHOR_POINTSint.x * size.width
     local offset_y = (1-ANCHOR_POINTSint.y) * size.height

@@ -7,8 +7,33 @@
 local EmojiUtil = class("EmojiUtil")
 
 --将表情化标签转换成富文本语法
-function EmojiUtil:ConvertEmojiToRichText(str)
-
+function EmojiUtil:ConvertEmojiToRichText(chatmsg)
+	local dest = {}
+	local s,e = string.find(chatmsg,"%[/[%P]+%]")
+	if not s and string.len(chatmsg) > 0 then
+		table.insert(dest, chatmsg)
+	end
+	while s do
+		if s ~= 1 then
+			table.insert(dest, string.sub(chatmsg,1,s - 1))
+		end
+		table.insert(dest, string.sub(chatmsg,s,e))
+		chatmsg = string.sub(chatmsg,e+1)
+		print(chatmsg)
+		s,e =  string.find(chatmsg,"%[/[%P]+%]")
+		if not s and string.len(chatmsg) > 0 then
+			table.insert(dest, chatmsg)
+		end
+	end
+	for i,v in ipairs(dest) do
+		local result,count = string.gsub(v,"%[/([%P]+)%]", "%1")
+		if count == 0 then
+			dest[i] = string.format('{type = "text", value = "%s", size = 30}', v)
+		else
+			dest[i] = string.format('{type = "image", value = "%s"}',string.format("#%s.png", result))
+		end
+	end
+	return table.concat(dest)
 end
 
 --end
@@ -77,7 +102,6 @@ function ChatManager:callEventsChangedListeners_(LISTEN_TYPE,tabel_param)
 end
 
 function ChatManager:__checkNotifyIf()
-	print("__checkNotifyIf---->",#self.push_buff_queue ~= 0)
 	if #self.push_buff_queue ~= 0 then
 		self:callEventsChangedListeners_(self.LISTEN_TYPE.TO_TOP,{self.push_buff_queue})
 		self:emptyPushQueue_()

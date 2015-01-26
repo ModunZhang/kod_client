@@ -90,8 +90,8 @@ end
 
 function DragonManager:OnUserDataChanged(user_data, current_time, location_id, sub_location_id,hp_recovery_perHour)
     self:RefreshDragonData(user_data.dragons,current_time,hp_recovery_perHour)
-    self:RefreshDragonEvents(user_data.dragonEvents)
-    self:RefreshDragonEvents__(user_data.__dragonEvents)
+    self:RefreshDragonEvents(user_data.dragonHatchEvents)
+    self:RefreshDragonEvents__(user_data.__dragonHatchEvents)
 end
 
 function DragonManager:GetDragonEventByDragonType(dragon_type)

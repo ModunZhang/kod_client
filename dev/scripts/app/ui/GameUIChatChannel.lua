@@ -8,6 +8,7 @@ local NetService = import('..service.NetService')
 local window = import("..utils.window")
 local UIListView = import(".UIListView")
 local ChatManager = import("..entity.ChatManager")
+local RichText = import("..widget.RichText")
 
 GameUIChatChannel.LISTVIEW_WIDTH = 549
 GameUIChatChannel.PLAYERMENU_ZORDER = 2
