@@ -17,6 +17,8 @@ property(AllianceMember, "wallHp")
 property(AllianceMember, "wallLevel")
 property(AllianceMember, "keepLevel")
 property(AllianceMember, "isProtected")
+property(AllianceMember, "lastRewardData")
+property(AllianceMember, "lastThreeDaysKillData")
 
 local titles_enum = Enum("member",
     "elite",
@@ -135,6 +137,10 @@ function AllianceMember:DecodeFromJson(data)
     local member = AllianceMember.new(data.id)
     for k, v in pairs(data) do
         member[k] = v 
+        print("DecodeFromJson",k,v)
+        if k == "lastThreeDaysKillData" then
+            dump(v)
+        end
     end
     return member
 end

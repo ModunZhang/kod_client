@@ -386,7 +386,7 @@ function NetManager:addOnBuildingLevelUpListener()
         --     local buildingName = Localize.getBuildingLocalizedKeyByBuildingType(msg.buildingType)
         --     GameGlobalUI:showTips(_("建筑升级完成"),string.format('%s(LV %d)',_(buildingName),msg.level))
         -- end
-    end)
+        end)
 end
 function NetManager:addOnHouseLevelUpListener()
     self:addEventListener("onHouseLevelUp", function(success, msg)
@@ -394,20 +394,20 @@ function NetManager:addOnHouseLevelUpListener()
         --     local houseName = Localize.getHouseLocalizedKeyByBuildingType(msg.houseType)
         --     GameGlobalUI:showTips(_("小屋升级完成"),string.format('%s(LV %d)',_(houseName),msg.level))
         -- end
-    end)
+        end)
 end
 function NetManager:addOnTowerLevelUpListener()
     self:addEventListener("onTowerLevelUp", function(success, msg)
         -- if success then
         --     GameGlobalUI:showTips(_("城墙升级完成"),string.format('LV %d',msg.level))
         -- end
-    end)
+        end)
 end
 function NetManager:addOnWallLevelUp()
     self:addEventListener("onWallLevelUp", function(success, msg)
         if success then
-            -- local buildingName = Localize.getBuildingLocalizedKeyByBuildingType(msg.buildingType)
-            -- GameGlobalUI:showTips(_("建筑升级完成"),string.format('%s(LV %d)',_(buildingName),msg.level))
+        -- local buildingName = Localize.getBuildingLocalizedKeyByBuildingType(msg.buildingType)
+        -- GameGlobalUI:showTips(_("建筑升级完成"),string.format('%s(LV %d)',_(buildingName),msg.level))
         end
     end)
 end
@@ -1448,9 +1448,19 @@ end
 --
 --设置pve数据
 function NetManager:getSetPveDataPromise(pveData)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.setPveData", 
+    return promise.all(get_blocking_request_promise("logic.playerHandler.setPveData",
         pveData, "设置pve数据失败!"), get_playerdata_callback()):next(get_response_msg)
 end
+--为联盟成员添加荣耀值
+function NetManager:getGiveLoyaltyToAllianceMemberPromise(memberId,count)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.giveLoyaltyToAllianceMember",
+        {
+            memberId=memberId,
+            count=count
+        },
+        "为联盟成员添加荣耀值失败!"),get_alliancedata_callback()):next(get_response_msg)
+end
+
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"
@@ -1504,5 +1514,6 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
