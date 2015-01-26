@@ -5,9 +5,12 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetAllianceBuildingUpgrade = import("..widget.WidgetAllianceBuildingUpgrade")
 local GameUIAlliancePalace = UIKit:createUIClass('GameUIAlliancePalace', "GameUIAllianceBuilding")
 local Flag = import("..entity.Flag")
+local NetService = import('..service.NetService')
+local Alliance = import("..entity.Alliance")
 local UIListView = import(".UIListView")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local WidgetInfoWithTitle = import("..widget.WidgetInfoWithTitle")
+local WidgetInfoNotListView = import("..widget.WidgetInfoNotListView")
 local Localize = import("..utils.Localize")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetInfo = import("..widget.WidgetInfo")
@@ -51,6 +54,9 @@ function GameUIAlliancePalace:onEnter()
     --info_layer
     self:InitInfoPart()
 
+    local alliance = self.alliance
+    alliance:AddListenOnType(self,Alliance.LISTEN_TYPE.BASIC)
+    alliance:AddListenOnType(self,Alliance.LISTEN_TYPE.MEMBER)
 end
 function GameUIAlliancePalace:CreateBetweenBgAndTitle()
     GameUIAlliancePalace.super.CreateBetweenBgAndTitle(self)
@@ -63,6 +69,9 @@ function GameUIAlliancePalace:CreateBetweenBgAndTitle()
     self:addChild(self.info_layer)
 end
 function GameUIAlliancePalace:onExit()
+    local alliance = self.alliance
+    alliance:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.BASIC)
+    alliance:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.MEMBER)
     GameUIAlliancePalace.super.onExit(self)
 end
 
@@ -76,7 +85,7 @@ function GameUIAlliancePalace:InitImposePart()
     }):align(display.LEFT_CENTER, window.left+60,window.top_bottom-20):addTo(layer)
 
     -- 荣耀值
-    self:GetHonourNode():addTo(layer):align(display.CENTER,window.right-100, window.top_bottom-5)
+    self.current_honour = self:GetHonourNode():addTo(layer):align(display.CENTER,window.right-100, window.top_bottom-5)
 
     -- 可发放奖励成员列表
     local list,list_node = UIKit:commonListView({
@@ -86,6 +95,11 @@ function GameUIAlliancePalace:InitImposePart()
     list_node:addTo(layer):align(display.BOTTOM_CENTER, window.cx, window.bottom_top+20)
     self.award_menmber_listview = list
 
+    self:SetAwardMemberList()
+
+end
+function GameUIAlliancePalace:SetAwardMemberList()
+    self.award_menmber_listview:removeAllItems()
     local alliance = self.alliance
     local members = alliance:GetAllMembers()
     local sort_member = {}
@@ -95,10 +109,11 @@ function GameUIAlliancePalace:InitImposePart()
     table.sort(sort_member,function (a,b)
         return self:GetLastThreeDaysKill(a:LastThreeDaysKillData()) > self:GetLastThreeDaysKill(b:LastThreeDaysKillData())
     end)
+    self.items = {}
     for i,v in ipairs(sort_member) do
         self:CreateAwardMemberItem(v,i)
     end
-    list:reload()
+    self.award_menmber_listview:reload()
 end
 function GameUIAlliancePalace:CreateAwardMemberItem(member,index)
     local list = self.award_menmber_listview
@@ -118,24 +133,16 @@ function GameUIAlliancePalace:CreateAwardMemberItem(member,index)
         color = 0xffedae,
     }):align(display.LEFT_CENTER, 60, title_bg:getContentSize().height/2):addTo(title_bg)
 
-    local lastRewardData = member:LastRewardData()
-    local lastRewardTime = tolua.type(lastRewardData) == "table" and GameUtils:formatTimeAsTimeAgoStyle(lastRewardData.time) or _("无")
-    local lastRewardCount = tolua.type(lastRewardData) == "table" and string.formatnumberthousands(lastRewardData.count) or _("无")
-    local lastThreeDaysKill = string.formatnumberthousands(self:GetLastThreeDaysKill(member:LastThreeDaysKillData()))
-    LuaUtils:outputTable("member:LastThreeDaysKillData()", member:LastThreeDaysKillData())
 
     -- 上次发放奖励时间
-    UIKit:ttfLabel({
-        text = lastRewardTime,
+    local last_reward_time = UIKit:ttfLabel({
         size = 20,
         color = 0xc0b694,
     }):align(display.RIGHT_CENTER, title_bg:getContentSize().width-30, title_bg:getContentSize().height/2):addTo(title_bg)
 
-    WidgetInfo.new({
-        info={
-            {_("最近三日击杀"),lastThreeDaysKill},
-            {_("最近奖励"),lastRewardCount},
-        },
+    local widget_info = WidgetInfoNotListView.new({
+        info={_("最近三日击杀"),""},
+        {_("最近奖励"),""},
         w =398
     }):align(display.BOTTOM_LEFT, 10 , 10)
         :addTo(content)
@@ -154,11 +161,27 @@ function GameUIAlliancePalace:CreateAwardMemberItem(member,index)
             end
         end):align(display.BOTTOM_RIGHT, item_width-10,10):addTo(content)
 
+    local palace_ui = self
+    function item:RefreshItem(member)
+        local lastRewardData = member:LastRewardData()
+        local lastRewardTime = tolua.type(lastRewardData) == "table" and NetService:formatTimeAsTimeAgoStyleByServerTime( lastRewardData.time ) or _("无")
+        local lastRewardCount = tolua.type(lastRewardData) == "table" and string.formatnumberthousands(lastRewardData.count) or _("无")
+        local lastThreeDaysKill = string.formatnumberthousands(palace_ui:GetLastThreeDaysKill(member:LastThreeDaysKillData()))
+        local info={
+            {_("最近三日击杀"),lastThreeDaysKill},
+            {_("最近奖励"),lastRewardCount},
+        }
+        widget_info:SetInfo(info)
+        last_reward_time:setString(lastRewardTime)
+    end
+    item:RefreshItem(member)
     item:addContent(content)
     list:addItem(item)
+    self.items[member:Id()] = item
 end
 function GameUIAlliancePalace:OpenAwardDialog(member)
-    local body = WidgetPopDialog.new(282,_("奖励"),window.top-160):addToCurrentScene():GetBody()
+    local dialog = WidgetPopDialog.new(282,_("奖励"),window.top-160):addToCurrentScene()
+    local body = dialog:GetBody()
     local body_size = body:getContentSize()
     self:GetHonourNode():addTo(body):align(display.BOTTOM_LEFT,50,60)
 
@@ -201,6 +224,7 @@ function GameUIAlliancePalace:OpenAwardDialog(member)
             if event.name == "CLICKED_EVENT" then
                 if self.alliance:GetSelf():IsArchon() then
                     NetManager:getGiveLoyaltyToAllianceMemberPromise(member:Id(),slider:GetValue())
+                    dialog:leftButtonClicked()
                 else
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))
                         :SetPopMessage(_("只有盟主拥有权限"))
@@ -211,13 +235,9 @@ function GameUIAlliancePalace:OpenAwardDialog(member)
 end
 function GameUIAlliancePalace:GetLastThreeDaysKill(lastThreeDaysKillData)
     if not lastThreeDaysKillData then return 0 end
-    -- print( os.date("%Y-%m-%d",app.timer:GetServerTime()-24 * 60 * 60  ))
-    local today = os.date("%Y-%m-%d",app.timer:GetServerTime())
-    local yesterday = os.date("%Y-%m-%d",app.timer:GetServerTime()-24 * 60 * 60  )
-    local theDayBeforeYesterday = os.date("%Y-%m-%d",app.timer:GetServerTime()-24 * 60 * 60 * 2  )
-    print("today=",today)
-    print("yesterday=",yesterday)
-    print("theDayBeforeYesterday=",theDayBeforeYesterday)
+    local today = os.date("%Y",app.timer:GetServerTime()).."-"..tonumber(os.date("%m",app.timer:GetServerTime())).."-"..tonumber(os.date("%d",app.timer:GetServerTime()))
+    local yesterday = os.date("%Y",app.timer:GetServerTime()-24 * 60 * 60).."-"..tonumber(os.date("%m",app.timer:GetServerTime()-24 * 60 * 60)).."-"..tonumber(os.date("%d",app.timer:GetServerTime()-24 * 60 * 60))
+    local theDayBeforeYesterday = os.date("%Y",app.timer:GetServerTime()-24 * 60 * 60 * 2).."-"..tonumber(os.date("%m",app.timer:GetServerTime()-24 * 60 * 60 * 2)).."-"..tonumber(os.date("%d",app.timer:GetServerTime()-24 * 60 * 60 * 2))
     local kill = 0
     for k,v in pairs(lastThreeDaysKillData) do
         print("v.date",v.date)
@@ -236,11 +256,14 @@ function GameUIAlliancePalace:GetHonourNode(honour)
     -- 荣耀值
     display.newSprite("honour.png"):align(display.CENTER, 0, 0):addTo(node):scale(1.2)
     local honour_bg = display.newSprite("back_ground_114x36.png"):align(display.CENTER,80, 0):addTo(node)
-    UIKit:ttfLabel({
+    local honour_label = UIKit:ttfLabel({
         text = honour or self.alliance:Honour(),
         size = 20,
         color = 0x403c2f,
     }):addTo(honour_bg):align(display.CENTER,honour_bg:getContentSize().width/2,honour_bg:getContentSize().height/2)
+    function node:RefreshHonour(honour)
+        honour_label:setString(honour)
+    end
     return node
 end
 function GameUIAlliancePalace:MapTerrianToIndex(terrian)
@@ -368,8 +391,37 @@ function GameUIAlliancePalace:InitInfoPart()
     }):addTo(layer)
         :align(display.BOTTOM_CENTER, window.cx, window.bottom_top+20)
 end
-
+function GameUIAlliancePalace:OnBasicChanged(alliance,changed_map)
+    if changed_map.honour then
+        local new = changed_map.honour.new
+        self.current_honour:RefreshHonour(new)
+    end
+end
+function GameUIAlliancePalace:OnMemberChanged(alliance,changed_map)
+    if changed_map.added then
+        for k,v in pairs(changed_map.added) do
+            self:CreateAwardMemberItem(v,LuaUtils:table_size(self.award_menmber_listview:getItems()) + 1)
+        end
+        self.award_menmber_listview:reload()
+    end
+    if changed_map.removed then
+        self:SetAwardMemberList()
+    end
+    if changed_map.changed then
+        for k,v in pairs(changed_map.changed) do
+            if self.items[v:Id()] then
+                self.items[v:Id()]:RefreshItem(v)
+            end
+        end
+    end
+end
 return GameUIAlliancePalace
+
+
+
+
+
+
 
 
 
