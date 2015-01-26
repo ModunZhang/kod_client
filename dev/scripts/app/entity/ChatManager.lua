@@ -157,6 +157,28 @@ function ChatManager:FetchChannelMessage(channel)
 	end)
 end
 
+function ChatManager:__formatLastMessage(chat)
+	if not chat then return "" end
+	return string.format("[%s] %s",chat.fromName,self:GetEmojiUtil():ConvertEmojiToRichText(chat.text))
+end
+function ChatManager:FetchLastChannelMessage()
+	local messages_1 = self:__getMessageWithChannel(self.CHANNNEL_TYPE.GLOBAL)
+	local messages_2 = self:__getMessageWithChannel(self.CHANNNEL_TYPE.ALLIANCE)
+	messages_1 =  LuaUtils:table_filteri(messages_1,function(_,v)
+		return not self:__checkIsBlocked(v)
+	end)
+	messages_2 =  LuaUtils:table_filteri(messages_2,function(_,v)
+		return not self:__checkIsBlocked(v)
+	end)
+	return 
+	{
+		self:__formatLastMessage(messages_1[1]),
+		self:__formatLastMessage(messages_1[2]),
+		self:__formatLastMessage(messages_2[1]),
+		self:__formatLastMessage(messages_2[2])
+	}
+end
+
 function ChatManager:FetchAllChatMessageFromServer()
 	NetManager:getFetchChatPromise():next(function(messages)
 		self:HandleNetMessage('onAllChat',messages)

@@ -10,8 +10,8 @@ local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local GameUIHelp = import(".GameUIHelp")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local Alliance = import("..entity.Alliance")
-
-
+local RichText = import("..widget.RichText")
+local ChatManager = import("..entity.ChatManager")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
 
 
@@ -39,6 +39,11 @@ end
 function GameUIHome:ctor(city)
     GameUIHome.super.ctor(self)
     self.city = city
+    self.chatManager = app:GetChatManager()
+end
+
+function GameUIHome:GetChatManager()
+    return self.chatManager
 end
 
 function GameUIHome:onEnter()
@@ -47,6 +52,8 @@ function GameUIHome:onEnter()
     -- 上背景
     self:CreateTop()
     self.bottom = self:CreateBottom()
+    self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
+    self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
     self.event_tab = WidgetEventTabButtons.new(self.city)
     local rect1 = self.chat_bg:getCascadeBoundingBox()
     local rect2 = self.event_tab:getCascadeBoundingBox()
@@ -65,7 +72,28 @@ function GameUIHome:onEnter()
     Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
 
 end
+
+function GameUIHome:TO_TOP()
+    self:RefreshChatMessage()
+end
+
+function GameUIHome:TO_REFRESH()
+    self:RefreshChatMessage()
+end
+
+function GameUIHome:RefreshChatMessage()
+    if not self.chat_labels then return end
+    local last_chat_messages = self:GetChatManager():FetchLastChannelMessage()
+    for i,v in ipairs(self.chat_labels) do
+        local rich_text = self.chat_labels[i]
+        rich_text:Text(last_chat_messages[i])
+        rich_text:align(display.LEFT_CENTER, 0, 10)
+    end
+end
+
 function GameUIHome:onExit()
+    self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
+    self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
     self.city:GetResourceManager():RemoveObserver(self)
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
@@ -323,8 +351,10 @@ function GameUIHome:CreateBottom()
 
     local size = chat_bg:getContentSize()
     local pv = UIPageView.new {
-        viewRect = cc.rect(10, 4, size.width-80, size.height)}
-        :onTouch(function (event)
+        viewRect = cc.rect(10, 4, size.width-80, size.height),
+        row = 2,
+        padding = {left = 0, right = 0, top = 10, bottom = 0}
+    }:onTouch(function (event)
             dump(event,"UIPageView event")
             if event.name == "pageChange" then
                 if 1 == event.pageIdx then
@@ -338,28 +368,28 @@ function GameUIHome:CreateBottom()
                 if event.pageIdx == 1 then
                     UIKit:newGameUI('GameUIChatChannel',"global"):addToCurrentScene(true)
                 elseif event.pageIdx == 2 then
-                    UIKit:newGameUI('GameUIChat',"alliance"):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIChatChannel',"alliance"):addToCurrentScene(true)
                 end
             end
         end)
         :addTo(chat_bg)
     pv:setTouchEnabled(true)
     pv:setTouchSwallowEnabled(false)
+    self.chat_labels = {}
+    local last_chat_messages = self:GetChatManager():FetchLastChannelMessage()
     -- add items
-    for i=1,2 do
+    for i=1,4 do
         local item = pv:newItem()
         local content
 
         content = display.newLayer()
-        content:setContentSize(540, 40)
+        content:setContentSize(540, 20)
         content:setTouchEnabled(false)
-        local text_tag = i==1 and "世界聊天" or "联盟聊天"
-        UIKit:ttfLabel(
-            {text = text_tag,
-                size = 24,
-                color = 0xf3f0b6})
-            :addTo(content)
-            :align(display.CENTER, content:getContentSize().width/2, content:getContentSize().height/2)
+        local label = RichText.new({width = 540,size = 16,color = 0xc7bd97})
+        label:Text(last_chat_messages[i])
+        label:addTo(content):align(display.LEFT_CENTER, 0, content:getContentSize().height/2)
+        table.insert(self.chat_labels, label)
+        print("test------->",last_chat_messages[i])
         item:addChild(content)
         pv:addItem(item)
     end

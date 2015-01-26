@@ -3,7 +3,6 @@ local City_ = import("..entity.City")
 local AllianceManager_ = import("..entity.AllianceManager")
 local User_ = import("..entity.User")
 local MailManager_ = import("..entity.MailManager")
--- local ChatCenter = import('..entity.ChatCenter')
 
 local app = app
 local timer = app.timer
@@ -20,9 +19,6 @@ return function(userData)
     timer:AddListener(Alliance_Manager)
     timer:Start()
     app:GetChatManager():FetchAllChatMessageFromServer()
-    -- local chatCenter = ChatCenter.new()
-    -- chatCenter:requestAllMessage()
-    -- app.chatCenter = chatCenter
 end
 
 
