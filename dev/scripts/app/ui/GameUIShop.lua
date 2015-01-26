@@ -925,7 +925,7 @@ function GameUIShop:onEnter()
         :onButtonClicked(function(event)
             NetManager:getFindAllianceToFightPromose()
         end)
-     WidgetPushButton.new(
+    WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
@@ -943,6 +943,29 @@ function GameUIShop:onEnter()
             end)
         end)
 
+    -- WidgetPushButton.new(
+    --     {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+    --     {scale9 = false}
+    -- ):setButtonLabel(cc.ui.UILabel.new({
+    --     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+    --     text = "购买所有可被出售的道具 1",
+    --     size = 20,
+    --     font = UIKit:getFontFilePath(),
+    --     color = UIKit:hex2c3b(0xfff3c7)}))
+    --     :addTo(content)
+    --     :align(display.CENTER, window.left + 140, window.top - 1600)
+    --     :onButtonClicked(function(event)
+    --         for k,v in pairs(GameDatas.Items) do
+    --             if k ~= "buffTypes" then
+    --                 for item_name,item in pairs(v) do
+    --                     if item.isSell then
+    --                         NetManager:getBuyItemPromise(item_name,1)
+    --                     end
+    --                 end
+    --             end
+    --         end
+    --     end)
+
 
     item:addContent(content)
     item:setItemSize(640, 1000)
@@ -955,6 +978,8 @@ end
 
 
 return GameUIShop
+
+
 
 
 

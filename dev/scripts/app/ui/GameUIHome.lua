@@ -442,6 +442,8 @@ function GameUIHome:OnBottomButtonClicked(event)
     elseif tag == 3 then
         UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
     elseif tag == 2 then
+        UIKit:newGameUI('GameUIItems',_("道具"),self.city):addToCurrentScene(true)
+    elseif tag == 1 then
         app:EnterPVEScene()
     end
 end
