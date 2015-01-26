@@ -268,6 +268,8 @@ function CityScene:OnCreateDecoratorSprite(building_sprite)
 end
 function CityScene:OnDestoryDecoratorSprite(building_sprite)
 end
+function CityScene:OnTilesChanged(tiles)
+end
 function CityScene:OnTreesChanged(trees, road)
 end
 function CityScene:OnTowersChanged(old_towers, new_towers)

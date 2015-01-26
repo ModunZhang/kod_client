@@ -560,45 +560,20 @@ function CityLayer:UpdateTilesWithCity(city)
             table.insert(self.tiles, self:CreateTileWithTile(tile):addTo(city_node))
         end
     end)
+    self:NotifyObservers(function(listener)
+        listener:OnTilesChanged(self.tiles)
+    end)
 end
 function CityLayer:UpdateTreesWithCity(city)
     local city_node = self:GetCityNode()
-
-    -- if self.road then
-    --     self.road:removeFromParent()
-    -- end
-    if self.trees then
-        for k, v in pairs(self.trees) do
-            v:removeFromParent()
-        end
+    for k, v in pairs(self.trees) do
+        v:removeFromParent()
     end
-
     self.trees = {}
-    -- self.road = nil
-
-    -- local face_tile = city:GetTileFaceToGate()
-    -- self.road = self:CreateRoadWithTile(face_tile):addTo(city_node)
-
-    local face_tiles = city:GetTilesFaceToGate()
-
     city:IteratorTilesByFunc(function(x, y, tile)
-        -- local find = false
-        -- for i, v in ipairs(face_tiles) do
-        --     if x == v.x and y == v.y then
-        --         find = true
-        --         break
-        --     end
-        -- end
-        -- if not find and tile.locked then
-        if tile.locked then
+        if tile.locked and tile.x ~= 2 then
             table.insert(self.trees, self:CreateTreeWithTile(tile):addTo(city_node))
         end
-    end)
-
-    self:NotifyObservers(function(listener)
-        -- local road = city:GetTileByIndex(face_tile.x, face_tile.y) and self.road or nil
-        -- listener:OnTreesChanged(self.trees, road)
-        listener:OnTreesChanged(self.trees)
     end)
 end
 function CityLayer:UpdateWallsWithCity(city)
@@ -806,7 +781,7 @@ local function on_move(_, sprite)
 end
 function CityLayer:OnSceneMove()
     self:IteratorCanUpgradingBuilding(on_move)
-    table.foreach(self.trees, on_move)
+    table.foreach(self.tiles, on_move)
     table.foreach(self.ruins, on_move)
     -- if self.road then
     --     on_move(nil, self.road)
@@ -823,6 +798,7 @@ function CityLayer:OnSceneScale()
 end
 
 return CityLayer
+
 
 
 

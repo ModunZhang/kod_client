@@ -74,45 +74,6 @@ function TreeSprite:CreateSprite()
     end
     return ppsprite
 end
-function TreeSprite:GetSpriteFile()
-    -- local tile = self:GetEntity()
-    -- local x, y, city = tile.x, tile.y, tile.city
-    -- local xb = city:GetTileByIndex(x - 1, y)
-    -- local yb = city:GetTileByIndex(x, y - 1)
-    -- local xn = city:GetTileByIndex(x + 1, y)
-    -- local yn = city:GetTileByIndex(x, y + 1)
-    -- local xyb = city:GetTileByIndex(x - 1, y - 1)
-    -- -- 路的地块
-    -- if x == 2 then
-    --     local face_tile = city:GetTileFaceToGate()
-    --     return string.format("road_%d_%s.png", y - 3, self:GetMapLayer():Terrain())
-    -- end
-    -- -- 检查X负方向
-    -- if xb and xb:IsUnlocked() then
-    --     -- 若X,Y方向都被解锁，则是
-    --     if yb and yb:IsUnlocked() then
-    --         if yn and yn:IsUnlocked() then
-    --             return string.format("unlock_trees_y_%s.png", self:GetMapLayer():Terrain())
-    --         end
-    --         return string.format("unlock_trees_y_%s.png", self:GetMapLayer():Terrain())
-    --     end
-    --     --
-    --     return string.format("unlock_trees_5_%s.png", self:GetMapLayer():Terrain())
-    -- end
-    -- -- 检查Y方向
-    -- if yb and yb:IsUnlocked() then
-    --     if xb and xb:IsUnlocked() then
-    --         return string.format("unlock_trees_5_%s.png", self:GetMapLayer():Terrain())
-    --     end
-    --     return string.format("unlock_trees_3_%s.png", self:GetMapLayer():Terrain())
-    -- end
-    -- -- 拐角
-    -- if xb and xb.locked and yb and yb.locked and xyb and xyb:IsUnlocked() then
-    --     return string.format("unlock_trees_4_%s.png", self:GetMapLayer():Terrain())
-    -- end
-    -- 全覆盖
-    return string.format("trees_down_%s.png", self:GetMapLayer():Terrain())
-end
 function TreeSprite:GetSpriteOffset()
     return 0, 0
 end

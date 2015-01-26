@@ -227,25 +227,17 @@ end
 function MyCityScene:OnDestoryDecoratorSprite(building_sprite)
     self:GetSceneUILayer():RemoveUIFromBuildingSprite(building_sprite)
 end
-function MyCityScene:OnTreesChanged(trees, road)
+function MyCityScene:OnTilesChanged(tiles)
     local city = self:GetCity()
     self:GetSceneUILayer():RemoveAllLockButtons()
-    table.foreach(trees, function(_, tree_)
-        if tree_:GetEntity().location_id then
-            local building = city:GetBuildingByLocationId(tree_:GetEntity().location_id)
+    table.foreach(tiles, function(_, tile)
+        if tile:GetEntity().location_id then
+            local building = city:GetBuildingByLocationId(tile:GetEntity().location_id)
             if building and not building:IsUpgrading() then
-                self:GetSceneUILayer():NewLockButtonFromBuildingSprite(tree_)
+                self:GetSceneUILayer():NewLockButtonFromBuildingSprite(tile)
             end
         end
     end)
-    if road then
-        if road:GetEntity().location_id then
-            local building = city:GetBuildingByLocationId(road:GetEntity().location_id)
-            if building and not building:IsUpgrading() then
-                self:GetSceneUILayer():NewLockButtonFromBuildingSprite(road)
-            end
-        end
-    end
 end
 function MyCityScene:OnTowersChanged(old_towers, new_towers)
     table.foreach(old_towers, function(k, tower)
