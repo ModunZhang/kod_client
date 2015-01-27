@@ -21,7 +21,7 @@ function GameUIEmojiSelect:onEnter()
         :addTo(self,self.PLAYERMENU_ZORDER)
     local bg =  WidgetUIBackGround.new({height=658}):addTo(shieldView):pos(window.left+20,window.bottom+100)
     local header = display.newSprite("alliance_blue_title_600x42.png")
-        :addTo(bg)
+        :addTo(bg,3)
         :align(display.CENTER_BOTTOM, 304, 644)
     UIKit:closeButton():addTo(header)
         :align(display.BOTTOM_RIGHT,header:getContentSize().width, 0)
@@ -34,54 +34,95 @@ function GameUIEmojiSelect:onEnter()
         color = 0xffedae,
     }):align(display.CENTER,header:getContentSize().width/2, header:getContentSize().height/2):addTo(header)
     self.bg = bg
-
     local dropList = WidgetDropList.new(
 		{
 			{tag = "Smiley",label = _("笑脸"),default = true},
 			{tag = "Flower",label = _("花")},
 		},
 		function(tag)
-			-- if tag == 'Smiley' then
-
-			-- end
-			self:DisplayEmojiWithCategory(tag)
+			if self.content then 
+				self.content:hide()
+			end
+			if self['DisplayEmojiWith_' .. tag] then
+				self.content = self['DisplayEmojiWith_' .. tag](self)
+				self.content:show()
+			end
 		end
 	)
-	dropList:align(display.CENTER_TOP,bg:getContentSize().width/2,640):addTo(bg)
-	self.scrollView = UIScrollView.new({
-        	viewRect = cc.rect(30,20,bg:getContentSize().width - 60,560),
-        	bgColor = UIKit:hex2c4b(0x7a000000),
-    	}):setDirection(UIScrollView.DIRECTION_VERTICAL):addTo(bg)
-        -- :addScrollNode(self:CreateScrollNode():pos(40, 0))
-    -- local pv = UIPageView.new {
-    --     viewRect = cc.rect(10, 4, size.width-80, size.height),
-    --     row = 2,
-    --     padding = {left = 0, right = 0, top = 10, bottom = 0}
-    -- }:onTouch(function (event)
-    --         dump(event,"UIPageView event")
-    --         if event.name == "pageChange" then
-    --             if 1 == event.pageIdx then
-    --                 index_1:setPositionX(chat_bg:getContentSize().width/2-10)
-    --                 index_2:setPositionX(chat_bg:getContentSize().width/2+10)
-    --             elseif 2 == event.pageIdx then
-    --                 index_1:setPositionX(chat_bg:getContentSize().width/2+10)
-    --                 index_2:setPositionX(chat_bg:getContentSize().width/2-10)
-    --             end
-    --         elseif event.name == "clicked" then
-    --             if event.pageIdx == 1 then
-    --                 UIKit:newGameUI('GameUIChatChannel',"global"):addToCurrentScene(true)
-    --             elseif event.pageIdx == 2 then
-    --                 UIKit:newGameUI('GameUIChatChannel',"alliance"):addToCurrentScene(true)
-    --             end
-    --         end
-    --     end)
-    --     :addTo(chat_bg)
-    -- pv:setTouchEnabled(true)
-    -- pv:setTouchSwallowEnabled(false)
+	dropList:align(display.CENTER_TOP,bg:getContentSize().width/2,640):addTo(bg,2)
 end
 
-function GameUIEmojiSelect:DisplayEmojiWithCategory()
+function GameUIEmojiSelect:DisplayEmojiWith_Smiley()
+	if self.emoji_node_smiley then
+		return self.emoji_node_smiley
+	end
+	local emoji_node = display.newNode():size(self.bg:getContentSize().width - 60,560):pos(10,20):addTo(self.bg,1)
+	local emojis = EmojiTable:GetSmileyImages()
+	local x,y = 32,518
+	for i,v in ipairs(emojis) do
+		local img = "#" .. v
+        local __,e = string.find(v,"%.")
+        local key = string.sub(v,1,e - 1)
+        local button = WidgetPushButton.new({normal = img,pressed = img})
+            :align(display.CENTER, x,y):addTo(emoji_node)
+            :scale(0.7)
+        button:onButtonClicked(function()
+            	self:__callFunc(key)
+            	local action =  transition.sequence({cc.ScaleTo:create(0.1,1),cc.ScaleTo:create(0.1,0.7)})
+        		button:runAction(action)
+        end)
+        x = x + 20 + 32
+        if i % 11 == 0 then
+            y = y - 52
+            x = 32
+        end
+	end
+	self.emoji_node_smiley = emoji_node
+	return self.emoji_node_smiley 
+end
 
+
+function GameUIEmojiSelect:DisplayEmojiWith_Flower()
+	if self.emoji_node_flower then
+		return self.emoji_node_flower
+	end
+	local emoji_node = display.newNode():size(self.bg:getContentSize().width - 60,560):pos(10,20):addTo(self.bg,1)
+	local emojis = EmojiTable:GetFlowerImages()
+	local x,y = 32,518
+	for i,v in ipairs(emojis) do
+		local img = "#" .. v
+        local __,e = string.find(v,"%.")
+        local key = string.sub(v,1,e - 1)
+        local button = WidgetPushButton.new({normal = img,pressed = img})
+            :align(display.CENTER, x,y):addTo(emoji_node)
+            :scale(0.7)
+        button:onButtonClicked(function()
+            	self:__callFunc(key)
+            	local action =  transition.sequence({cc.ScaleTo:create(0.1,1),cc.ScaleTo:create(0.1,0.7)})
+        		button:runAction(action)
+        end)
+        x = x + 20 + 32
+        if i % 11 == 0 then
+            y = y - 52
+            x = 32
+        end
+	end
+	self.emoji_node_flower = emoji_node
+	return self.emoji_node_flower 
+end
+
+function GameUIEmojiSelect:onMoveOutStage()
+	self.content = nil
+	self.emoji_node_smiley = nil
+	self.emoji_node_flower = nil
+
+	GameUIEmojiSelect.super.onMoveOutStage(self)
+end
+
+function GameUIEmojiSelect:__callFunc(key)
+	if self.selectFunc_ then
+		self.selectFunc_("[/" .. key .. "]")
+	end
 end
 
 return GameUIEmojiSelect

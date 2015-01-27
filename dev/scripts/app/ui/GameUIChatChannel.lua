@@ -387,9 +387,9 @@ function GameUIChatChannel:HandleCellUIData(mainContent,chat)
 
     --bind
     titleLabel:setString(chat.fromName)
-    if not chat.timeStr then
+    -- if not chat.timeStr then
         chat.timeStr = NetService:formatTimeAsTimeAgoStyleByServerTime(chat.time)
-    end
+    -- end
     timeLabel:setString(chat.timeStr)
 
     local palyerIcon = currentContent:getChildByTag(self.CELL_PLAYER_ICON_TAG)
@@ -688,44 +688,10 @@ function GameUIChatChannel:CreatePlayerMenu(event)
 end
 
 function GameUIChatChannel:CreateEmojiPanel()
-    UIKit:newGameUI("GameUIEmojiSelect"):addToCurrentScene(true)
-    -- local shieldView = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
-    --     :addTo(self,self.PLAYERMENU_ZORDER)
-    -- local bg =  WidgetUIBackGround.new({height=608}):addTo(shieldView):pos(window.left+20,window.bottom+150)
-    -- local header = display.newSprite("alliance_blue_title_600x42.png")
-    --     :addTo(bg)
-    --     :align(display.CENTER_BOTTOM, 304, 594)
-    -- UIKit:closeButton():addTo(header)
-    --     :align(display.BOTTOM_RIGHT,header:getContentSize().width, 0)
-    --     :onButtonClicked(function ()
-    --         shieldView:removeFromParent(true)
-    --     end)
-    -- local title_label = UIKit:ttfLabel({
-    --     text = _("表情"),
-    --     size = 24,
-    --     color = 0xffedae,
-    -- }):align(display.CENTER,header:getContentSize().width/2, header:getContentSize().height/2):addTo(header)
-    -- local x,y = 40,580
-    -- for i,v in ipairs(EmojiTable:GetSmileyImages()) do
-    --     local img = "#" .. v
-    --     local __,e = string.find(v,"%.")
-    --     local key = string.sub(v,1,e - 1)
-    --     WidgetPushButton.new({normal = img,pressed = img})
-    --         :align(display.LEFT_TOP, x,y):addTo(bg)
-    --         :scale(0.7)
-    --         :onButtonClicked(function()
-    --             print("key---->","[/" .. key .. "]")
-    --             local text = self.editbox:getText()
-    --             self.editbox:setText(string.trim(text) .. "[/" .. key .. "]")
-    --             shieldView:removeFromParent(true)
-    --         end)
-    --     x = x + 20 + 32
-    --     if i % 10 == 0 then
-    --         y = y - 52
-    --         x = 40
-    --     end
-    -- end
-
+    UIKit:newGameUI("GameUIEmojiSelect",function(code)
+         local text = self.editbox:getText()
+        self.editbox:setText(string.trim(text) .. code)
+    end):addToCurrentScene(true)
 end
 
 return GameUIChatChannel
