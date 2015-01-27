@@ -175,7 +175,7 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 	if not self.draongConteNode then
 		local dragonAnimateNode,draongConteNode = self:CreateDragonAnimateNode()
 		self.draongConteNode = draongConteNode
-		dragonAnimateNode:addTo(self.dragonNode):pos(window.cx - 304,window.top_bottom - 576)
+		dragonAnimateNode:addTo(self.dragonNode):pos(window.cx - 310,window.top_bottom - 576)
 		--info
 		local info_bg = display.newSprite("dragon_info_bg_290x92.png")
 			:align(display.BOTTOM_CENTER, 309, 50)
@@ -302,37 +302,35 @@ function GameUIDragonEyrieMain:GetCurrentDragon()
 end
 
 function GameUIDragonEyrieMain:CreateDragonAnimateNode()
-	local clipNode = display.newClippingRegionNode(cc.rect(0,0,611,596))
+	local clipNode = display.newClippingRegionNode(cc.rect(0,0,620,600))
 	local contenNode = WidgetDragons.new(
 		{
 			OnFilterChangedEvent = handler(self, self.OnFilterChangedEvent),
 			OnLeaveIndexEvent = handler(self, self.OnLeaveIndexEvent),
 			OnEnterIndexEvent = handler(self, self.OnEnterIndexEvent),
 		}
-	):addTo(clipNode):pos(309,298)
+	):addTo(clipNode):pos(310,300)
 	for i,v in ipairs(contenNode:GetItems()) do
 		local dragon = self.dragon_manager:GetDragonByIndex(i)
 		if dragon:Ishated() then
 			local dragon_type = dragon:Type()
 			local image_name = self:GetDraongIdeImageName(dragon_type)
 			local dragon_image = display.newSprite(image_name, nil, nil, {class=cc.FilteredSpriteWithOne})
-				:align(display.CENTER, 360,350)
+				:align(display.CENTER, 330,355)
 				:addTo(v)
 			dragon_image:scale(0.7)
 			v.dragon_image = dragon_image
     		dragon_image.resolution = {dragon_image:getContentSize().width,dragon_image:getContentSize().height}
 		else
 			local dragon_image = display.newSprite("dragon_egg_139x187.png", nil, nil, {class=cc.FilteredSpriteWithOne})
-				:align(display.CENTER, 307,307)
+				:align(display.CENTER, 290,355)
 				:addTo(v)
 			v.dragon_image = dragon_image
     		dragon_image.resolution = {dragon_image:getContentSize().width,dragon_image:getContentSize().height}
 		end
-
-
 		local dragon_armature = DragonSprite.new(display.getRunningScene():GetSceneLayer(),dragon:GetTerrain())
 			:addTo(v)
-			:align(display.CENTER, 307,400)
+			:align(display.CENTER, 290,420)
 			:hide()
 		v.armature = dragon_armature
 	end
@@ -384,7 +382,6 @@ function GameUIDragonEyrieMain:OnFilterChangedEvent(eyrie,b,i)
                 sampleNum = 2
             })
         )
-
 		eyrie.dragon_image:setFilter(filter_)
 	end
 end

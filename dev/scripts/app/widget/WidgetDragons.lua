@@ -6,8 +6,8 @@ end)
 local filter = filter
 
 local math = math
-local pos = {619 * 0.5, 300, 0.0}
-local radius = 320.0
+local pos = {624 * 0.5, 250, 0.0}
+local radius = 300.0
 local back_height = 300
 local getinfo = function(angle)
     local r = math.rad(angle)
@@ -39,7 +39,7 @@ function WidgetDragons:ctor(callbacks)
     self.OnEnterIndexEvent = callbacks.OnEnterIndexEvent
 
     self.touch_judgment = TouchJudgment.new(self)
-    local back_node = display.newScale9Sprite("dragon_animate_bg.png"):size(619,596):addTo(self)
+    local back_node = display.newScale9Sprite("dragon_animate_bg_624x606.png"):size(624,606):addTo(self)
         :align(display.CENTER)
     back_node:setTouchEnabled(true)
     back_node:setTouchSwallowEnabled(true)
@@ -66,9 +66,9 @@ function WidgetDragons:ctor(callbacks)
     end)
     self:scheduleUpdate()
 
-    self.dragon1 = display.newSprite("eyrie_613x509.png", nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(back_node)
-    self.dragon2 = display.newSprite("eyrie_613x509.png", nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(back_node)
-    self.dragon3 = display.newSprite("eyrie_613x509.png", nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(back_node)
+    self.dragon1 = display.newSprite("eyrie_584x547.png", nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(back_node)
+    self.dragon2 = display.newSprite("eyrie_584x547.png", nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(back_node)
+    self.dragon3 = display.newSprite("eyrie_584x547.png", nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(back_node)
     table.insert(self.items, self.dragon1)
     table.insert(self.items, self.dragon2)
     table.insert(self.items, self.dragon3)
