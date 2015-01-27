@@ -303,11 +303,15 @@ end
 
 --升级需要的经验值
 function Dragon:GetMaxExp()
-	return tonumber(config_dragonAttribute[self:Star()].perLevelExp) * math.pow(self:Level(),2)
+	if config_dragonAttribute[self:Star()] then
+		return tonumber(config_dragonAttribute[self:Star()].perLevelExp) * math.pow(self:Level(),2)
+	else
+		return 0
+	end
 end
 --当前星级最大等级
 function Dragon:GetMaxLevel()
-	return config_dragonAttribute[self:Star()].levelMax
+	return config_dragonAttribute[self:Star()] and config_dragonAttribute[self:Star()].levelMax or 0
 end
 
 --是否达到晋级等级
