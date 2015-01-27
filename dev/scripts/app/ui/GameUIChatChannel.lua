@@ -357,8 +357,11 @@ function GameUIChatChannel:sourceDelegate(listView, tag, idx)
     end
 end
 
-function GameUIChatChannel:HandleCellUIData(mainContent,chat)
+function GameUIChatChannel:HandleCellUIData(mainContent,chat,update_time)
     if not chat then return end
+    if type(update_time) ~= 'boolean' then
+        update_time = true
+    end
     local isSelf = DataManager:getUserData()._id == chat.fromId
     local isVip = chat.fromVip and chat.fromVip > 0
     local currentContent = nil
@@ -387,9 +390,9 @@ function GameUIChatChannel:HandleCellUIData(mainContent,chat)
 
     --bind
     titleLabel:setString(chat.fromName)
-    -- if not chat.timeStr then
+    if update_time or not chat.timeStr then
         chat.timeStr = NetService:formatTimeAsTimeAgoStyleByServerTime(chat.time)
-    -- end
+    end
     timeLabel:setString(chat.timeStr)
 
     local palyerIcon = currentContent:getChildByTag(self.CELL_PLAYER_ICON_TAG)
@@ -586,7 +589,7 @@ function GameUIChatChannel:CreatePlayerMenu(event)
     local p = item:getParent():convertToWorldSpace(cc.p(x,y))
     local targetP = menuLayer:convertToNodeSpace(p)
     local newItem = self:GetChatItemCell()
-    self:HandleCellUIData(newItem,chat)
+    self:HandleCellUIData(newItem,chat,false)
     newItem.transition_action = nil
     newItem:setPosition(targetP)
     newItem:addTo(menuLayer)
