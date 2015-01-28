@@ -34,6 +34,7 @@ function RichText:ctor(params)
     self.size = params.size or 30
     self.color = params.color or 0xffffff
     self.lineHeight = params.lineHeight or self.size
+    self.url_handle = params.url_handle
 end
 
 function RichText:Text(str)
@@ -66,6 +67,7 @@ function RichText:Text(str)
     end
     newLine()
     for i, v in ipairs(items) do
+        local url = v.url
         if v.type == "image" then
             local img = display.newSprite(v.value)
             local size = img:getContentSize()
@@ -77,6 +79,18 @@ function RichText:Text(str)
             if w > 5 + width - cur_x then newLine() end
 
             img:align(display.CENTER, cur_x + w * 0.5, 0):addTo(curLine())
+            img:setTouchEnabled(true)
+            img:setTouchSwallowEnabled(false)
+            img:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+                local name, x, y = event.name, event.x, event.y
+                local box = img:getCascadeBoundingBox()
+                if name == "ended" and box:containsPoint(cc.p(x,y)) then
+                    if type(self.url_handle) == "function" then
+                        self.url_handle(url)
+                    end
+                end
+                return box:containsPoint(cc.p(x,y))
+            end)
 
             cur_x = cur_x + w
 
@@ -85,7 +99,7 @@ function RichText:Text(str)
             local head, tail, is_newline = v.value, ""
             local size = v.size or self.size
             local color = v.color or self.color
-            
+
             repeat
                 if width - cur_x < size then newLine() end
                 local label = UIKit:ttfLabel({
@@ -108,6 +122,18 @@ function RichText:Text(str)
                     label:removeFromParent()
                 else
                     label:addTo(curLine())
+                    label:setTouchEnabled(true)
+                    label:setTouchSwallowEnabled(false)
+                    label:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+                        local name, x, y = event.name, event.x, event.y
+                        local box = label:getCascadeBoundingBox()
+                        if name == "ended" and box:containsPoint(cc.p(x,y)) then
+                            if type(self.url_handle) == "function" then
+                                self.url_handle(url)
+                            end
+                        end
+                        return box:containsPoint(cc.p(x,y))
+                    end)
                 end
 
                 cur_x = cur_x + size.width
@@ -120,14 +146,6 @@ function RichText:Text(str)
     self.lines = lines
     return self
 end
--- function RichText:HandleElement(item)
---     if item.type == "image" then
---         return self:HandleImage(item)
---     end
--- end
--- function RichText:HandleImage(item)
---     return display.newSprite(item.value)
--- end
 
 function RichText:align(anchorPoint, x, y)
     assert(self.lines, "必须先生成富文本!")
@@ -162,3 +180,6 @@ end
 
 
 return RichText
+
+
+
