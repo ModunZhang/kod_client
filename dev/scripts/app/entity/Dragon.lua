@@ -81,7 +81,7 @@ function DragonEquipment:IsLoaded()
 end
 
 function DragonEquipment:MaxStar()
-	return self.maxStar_
+	return self.maxStar_ or 0
 end
 
 function DragonEquipment:SetMaxStar(maxStar)
@@ -228,7 +228,6 @@ function Dragon:CheckEquipemtIfLocked_()
           		self:GetEquipmentByBody(self.DRAGON_BODY[equipment["category"]]):SetMaxStar(equipment.maxStar)
             end
         end
-
     end
 end
 
@@ -379,8 +378,10 @@ function Dragon:TotalStrength()
 	local buff = self:__getDragonStrengthBuff()
 	strength = strength + math.floor(strength * buff)
 	for __,equipment in pairs(self:Equipments()) do
-		local ___,strength_add = equipment:GetVitalityAndStrengh()
-		strength = strength + strength_add
+		if equipment:IsLoaded() then
+			local ___,strength_add = equipment:GetVitalityAndStrengh()
+			strength = strength + strength_add
+		end
 	end
 	return strength
 end
@@ -395,8 +396,10 @@ function Dragon:TotalVitality()
 	local buff = self:__getDragonVitalityBuff()
 	vitality = vitality + math.floor(vitality * buff)
 	for __,equipment in pairs(self:Equipments()) do
-		local vitality_add,___ = equipment:GetVitalityAndStrengh()
-		vitality = vitality + vitality_add
+		if equipment:IsLoaded() then
+			local vitality_add,___ = equipment:GetVitalityAndStrengh()
+			vitality = vitality + vitality_add
+		end
 	end
 	return vitality
 end
@@ -411,8 +414,10 @@ function Dragon:TotalLeadership()
 	local buff = self:__getDragonLeadershipBuff()
 	leadership = leadership + math.floor(leadership * buff)
 	for __,equipment in pairs(self:Equipments()) do
-		local leadership_add = equipment:GetLeadership()
-		leadership = leadership + leadership_add
+		if equipment:IsLoaded() then
+			local leadership_add = equipment:GetLeadership()
+			leadership = leadership + leadership_add
+		end
 	end
 	return leadership
 end

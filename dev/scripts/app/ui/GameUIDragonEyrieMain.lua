@@ -121,6 +121,7 @@ function GameUIDragonEyrieMain:RefreshUI()
 		self.progress_content_hated:hide()
 		self.strength_val_label:setString("0")
 		self.vitality_val_label:setString("0")
+		self.leadership_val_label:setString("0")
 		self.state_label:setString(_("未孵化"))
 	else
 		self.dragon_info:show()
@@ -131,6 +132,7 @@ function GameUIDragonEyrieMain:RefreshUI()
 		self.progress_content_hated:show()
 		self.strength_val_label:setString(dragon:TotalStrength())
 		self.vitality_val_label:setString(dragon:TotalVitality())
+		self.leadership_val_label:setString(dragon:TotalLeadership())
 		self.dragon_hp_label:setString(dragon:Hp() .. "/" .. dragon:GetMaxHP())
 		self.progress_hated:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
 		self.state_label:setString(Localize.dragon_status[dragon:Status()])
@@ -238,9 +240,9 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
     	self.progress_content_hated,self.progress_hated = self:CreateProgressTimer()
     	self.progress_content_hated:align(display.CENTER_TOP,window.cx,info_layer:getPositionY()-18):addTo(self.dragonNode)
     	
-		local info_panel = UIKit:CreateBoxPanel9({width = 548, height = 136})
+		local info_panel = UIKit:CreateBoxPanel9({width = 548, height = 114})
 			:addTo(self.dragonNode)
-			:align(display.CENTER_TOP,window.cx,self.progress_content_hated:getPositionY() - self.progress_content_hated:getContentSize().height - 12)
+			:align(display.CENTER_TOP,window.cx,self.progress_content_hated:getPositionY() - self.progress_content_hated:getContentSize().height - 32)
 		self.progress_content_not_hated,self.progress_content_not_hated_timer = self:GetHateLabel()
 		self.progress_content_not_hated:align(display.CENTER_TOP,window.cx,info_layer:getPositionY()-10):addTo(self.dragonNode)
 		self.progress_content_not_hated_timer:align(display.CENTER_TOP,window.cx,info_layer:getPositionY()-36):addTo(self.dragonNode)
@@ -248,30 +250,42 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 			text = _("力量"),
 			color = 0x797154,
 			size  = 20
-		}):addTo(info_panel):align(display.LEFT_BOTTOM,20,80)
+		}):addTo(info_panel):align(display.LEFT_BOTTOM,10,45)
 		self.strength_val_label =  UIKit:ttfLabel({
 			text = "",
 			color = 0x403c2f,
 			size  = 20
-		}):addTo(info_panel):align(display.LEFT_BOTTOM, 80, 80)
+		}):addTo(info_panel):align(display.LEFT_BOTTOM, 100, 45)
 
 		local vitality_title_label =  UIKit:ttfLabel({
 			text = _("活力"),
 			color = 0x797154,
 			size  = 20
-		}):addTo(info_panel):align(display.LEFT_BOTTOM,20,36)
+		}):addTo(info_panel):align(display.LEFT_BOTTOM,10,10)
 
 		self.vitality_val_label =  UIKit:ttfLabel({
 			text = "",
 			color = 0x403c2f,
 			size  = 20
-		}):addTo(info_panel):align(display.LEFT_BOTTOM, 80, 36)
+		}):addTo(info_panel):align(display.LEFT_BOTTOM, 100, 10)
+
+		local leadership_title_label =  UIKit:ttfLabel({
+			text = _("领导力"),
+			color = 0x797154,
+			size  = 20
+		}):addTo(info_panel):align(display.LEFT_BOTTOM,10,80)
+
+		self.leadership_val_label =  UIKit:ttfLabel({
+			text = "",
+			color = 0x403c2f,
+			size  = 20
+		}):addTo(info_panel):align(display.LEFT_BOTTOM, 100, 80)
 
 		self.state_label = UIKit:ttfLabel({
 			text = "",
 			color = 0x403c2f,
 			size  = 20
-		}):addTo(info_panel):align(display.CENTER_BOTTOM,540 - 92,90)
+		}):addTo(info_panel):align(display.CENTER_BOTTOM,540 - 92,75)
 
 		local detailButton = cc.ui.UIPushButton.new({
 			normal = "dragon_yellow_button.png",pressed = "dragon_yellow_button_h.png"
@@ -280,7 +294,7 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 			size = 24,
 			color = 0xffedae,
 			shadow = true
-		})):addTo(info_panel):align(display.RIGHT_BOTTOM,540,10):onButtonClicked(function()
+		})):addTo(info_panel):align(display.RIGHT_BOTTOM,540,5):onButtonClicked(function()
 			UIKit:newGameUI("GameUIDragonEyrieDetail",self.city,self.building,self:GetCurrentDragon():Type()):addToCurrentScene(true)
 		end)
 		self.detailButton = detailButton
