@@ -185,15 +185,15 @@ create_building_config(
 -- walls
 create_building_config(
     "wall"
-    ,create_config(MIN_LEVEL, level(1), "gate_292x302.png", offset(0, 100), scale(1))
-    ,create_config(level(2), level(2), "gate_292x302.png", offset(0, 100), scale(1))
-    ,create_config(level(3), MAX_LEVEL, "gate_292x302.png", offset(0, 100), scale(1))
+    ,create_config(MIN_LEVEL, level(1), "gate.png", offset(0, 100), scale(1))
+    ,create_config(level(2), level(2), "gate.png", offset(0, 100), scale(1))
+    ,create_config(level(3), MAX_LEVEL, "gate.png", offset(0, 100), scale(1))
 )
 create_building_config(
     "tower"
-    ,create_config(MIN_LEVEL, level(1), "tower_head_78x124.png", offset(0, 100), scale(1))
-    ,create_config(level(2), level(2), "tower_head_78x124.png", offset(0, 100), scale(1))
-    ,create_config(level(3), MAX_LEVEL, "tower_head_78x124.png", offset(0, 100), scale(1))
+    ,create_config(MIN_LEVEL, level(1), "tower_none.png", offset(0, 100), scale(1))
+    ,create_config(level(2), level(2), "tower_none.png", offset(0, 100), scale(1))
+    ,create_config(level(3), MAX_LEVEL, "tower_none.png", offset(0, 100), scale(1))
 )
 
 -- village

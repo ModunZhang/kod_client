@@ -198,6 +198,21 @@ function Tile:GetRightWall()
     -- return WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x + 2, y = end_y - 2, len = 6, orient = Orient.X, building_type = "wall", city = self.city })
 end
 -- 这将是生成城门的边，城门边长为6格
+local function generateDownWalls(tile, gate_index)
+    local end_x, end_y = tile:GetEndPos()
+    local r = {}
+    local i = 1
+    while i >= -9 do
+        local index = #r + 1
+        local len = index == gate_index and 6 or 2
+        r[index] = WallUpgradeBuilding.new({ location_id = tile.location_id, x = end_x + i, y = end_y + 3, len = len, orient = Orient.Y, building_type = "wall", city = tile.city })
+        if len == 6 then
+            r[index]:SetGate()
+        end
+        i = i - len
+    end
+    return r
+end
 function Tile:GetDownWall()
     local x, y, city = self.x, self.y, self.city
     local yn = city:GetTileByIndex(x, y + 1)
@@ -212,58 +227,21 @@ function Tile:GetDownWall()
         local xn = city:GetTileByIndex(x + 1, y)
         local xbyn = city:GetTileByIndex(x - 1, y + 1)
         local xnyn = city:GetTileByIndex(x + 1, y + 1)
-        if not xb:NeedWalls() and not xn:NeedWalls() then
-            return {
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x + 1, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 1, y = end_y + 3, len = 6, orient = Orient.Y, building_type = "wall", city = self.city }):SetGate(),
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 7, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 9, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-            }
-        elseif xb:NeedWalls() and not xn:NeedWalls() then
-            return {
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x + 1, y = end_y + 3, len = 6, orient = Orient.Y, building_type = "wall", city = self.city }):SetGate(),
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 5, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 7, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 9, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-            }
-        elseif not xb:NeedWalls() and xn:NeedWalls() then
-            return {
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 1, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 3, y = end_y + 3, len = 6, orient = Orient.Y, building_type = "wall", city = self.city }):SetGate(),
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 7, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 9, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-            }
-        elseif xbyn and xbyn:NeedWalls() then
-            return {
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x + 1, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 1, y = end_y + 3, len = 6, orient = Orient.Y, building_type = "wall", city = self.city }):SetGate(),
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 7, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 9, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-            }
+        if xbyn and xbyn:NeedWalls() then
+            return generateDownWalls(self, 1)
         elseif xnyn and xnyn:NeedWalls() then
-            return {
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x + 1, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 1, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 3, y = end_y + 3, len = 6, orient = Orient.Y, building_type = "wall", city = self.city }):SetGate(),
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 9, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-            }
+            return generateDownWalls(self, 3)
+        elseif not xb:NeedWalls() and not xn:NeedWalls() then
+            return generateDownWalls(self, 3)
+        elseif xb:NeedWalls() and not xn:NeedWalls() then
+            return generateDownWalls(self, 2)
+        elseif not xb:NeedWalls() and xn:NeedWalls() then
+            return generateDownWalls(self, 3)
         elseif xb:NeedWalls() and xn:NeedWalls() then
-            return {
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x + 1, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 1, y = end_y + 3, len = 6, orient = Orient.Y, building_type = "wall", city = self.city }):SetGate(),
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 7, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-                WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 9, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-            }
+            return generateDownWalls(self, 2)
         end
     end
-    return {
-        WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x + 1, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-        WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 1, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-        WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 3, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-        WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 5, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-        WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 7, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-        WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 9, y = end_y + 3, len = 2, orient = Orient.Y, building_type = "wall", city = self.city }),
-    }
+    return generateDownWalls(self)
     -- return WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 2, y = end_y + 2, len = 6, orient = Orient.Y, building_type = "wall", city = self.city })
 end
 function Tile:GetLeftWall()
@@ -336,6 +314,10 @@ end
 
 
 return Tile
+
+
+
+
 
 
 

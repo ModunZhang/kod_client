@@ -159,9 +159,9 @@ end
 function TowerUpgradingSprite:GetBottomOffset()
     local entity = self:GetEntity()
     if entity:GetOrient() == Orient.X then
-        return 60, 0
+        return 30, 0
     elseif entity:GetOrient() == Orient.Y then
-        return -80, 20
+        return -50, 20
     elseif entity:GetOrient() == Orient.NEG_X then
         return 60, 165
     elseif entity:GetOrient() == Orient.NEG_Y then
@@ -171,7 +171,7 @@ function TowerUpgradingSprite:GetBottomOffset()
     elseif entity:GetOrient() == Orient.DOWN then
         return 0, 0
     elseif entity:GetOrient() == Orient.LEFT then
-        return 0, 0
+        return -20, 0
     elseif entity:GetOrient() == Orient.UP then
         return 0, 125
     elseif entity:GetOrient() == Orient.NONE then

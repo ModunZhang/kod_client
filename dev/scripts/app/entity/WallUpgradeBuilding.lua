@@ -111,11 +111,11 @@ function WallUpgradeBuilding:IntersectWithOtherWall(other_wall)
     if wall1.orient == wall2.orient then
         local end_x, end_y = wall1:GetEndPos()
         local start_x, start_y = wall2:GetStartPos()
-        if self:IsGate() then
-            return { x = end_x - 1, y = end_y, orient = wall1.orient }
-        end
         if abs(end_x - start_x) + abs(end_y - start_y) == 1 then
             return
+        end
+        if self:IsGate() then
+            return { x = end_x - 1, y = end_y, orient = wall1.orient }
         end
         return { x = (wall1.x + wall2.x) * 0.5, y = (wall1.y + wall2.y) * 0.5, orient = wall1.orient }
     elseif wall1.orient == Orient.X and wall2.orient == Orient.Y then

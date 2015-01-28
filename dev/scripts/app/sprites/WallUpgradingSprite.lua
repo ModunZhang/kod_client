@@ -59,6 +59,9 @@ function WallUpgradingSprite:GetBottomOffset()
     if entity:GetOrient() == Orient.X then
         return 120, 20
     elseif entity:GetOrient() == Orient.Y then
+        if entity:IsGate() then
+            return -150, 0
+        end
         return 50, 22
     elseif entity:GetOrient() == Orient.NEG_X then
         return 100, 20
@@ -67,15 +70,6 @@ function WallUpgradingSprite:GetBottomOffset()
     end
     assert(false)
 end
--- function WallUpgradingSprite:GetLogicZorder()
---     local entity = self:GetEntity()
---     if entity:GetOrient() == Orient.X then
---         local x, y = self:GetLogicPosition()
---         return self:GetMapLayer():GetZOrderBy(self, x, y) - 295
---     end
---     local x, y = self:GetLogicPosition()
---     return self:GetMapLayer():GetZOrderBy(self, x, y)
--- end
 return WallUpgradingSprite
 
 
