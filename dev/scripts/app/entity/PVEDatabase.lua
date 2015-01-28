@@ -52,44 +52,6 @@ function PVEDatabase:EncodeLocation()
         z = self.char_floor,
     }
 end
-function PVEDatabase:Reset()
--- local user_default = cc.UserDefault:getInstance()
--- user_default:setStringForKey("char_x", 12)
--- user_default:setStringForKey("char_y", 12)
--- user_default:setStringForKey("char_floor", 1)
--- for _, v in ipairs(self.pve_maps) do
---     user_default:setStringForKey(string.format("pve_%d", v:GetIndex()), "")
--- end
--- user_default:flush()
-end
-function PVEDatabase:Load()
--- local user_default = cc.UserDefault:getInstance()
-
--- local default_x = user_default:getStringForKey("char_x")
--- self.char_x = default_x and tonumber(default_x) or 12
-
--- local default_y = user_default:getStringForKey("char_y")
--- self.char_y = default_y and tonumber(default_y) or 12
-
--- local default_floor = user_default:getStringForKey("char_floor")
--- self.char_floor = default_floor and tonumber(default_floor) or 1
-
--- for _, v in ipairs(self.pve_maps) do
---     v:Load(user_default:getStringForKey(string.format("pve_%d", v:GetIndex())))
--- end
--- return self
-end
-function PVEDatabase:Dump()
--- local user_default = cc.UserDefault:getInstance()
--- user_default:setStringForKey("char_x", self.char_x)
--- user_default:setStringForKey("char_y", self.char_y)
--- user_default:setStringForKey("char_floor", self.char_floor)
--- for _, v in ipairs(self.pve_maps) do
---     user_default:setStringForKey(string.format("pve_%d", v:GetIndex()), v:Dump())
--- end
--- user_default:flush()
--- return self
-end
 function PVEDatabase:GetCharPosition()
     return self.char_x, self.char_y, self.char_floor
 end

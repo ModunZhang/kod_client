@@ -58,7 +58,10 @@ function PVEObject:Searched()
     return self.searched
 end
 function PVEObject:Total()
-    return TOTAL[self.type]
+    return self:TotalByType(self.type)
+end
+function PVEObject:TotalByType(type)
+    return TOTAL[type]
 end
 function PVEObject:Dump()
     return string.format("{%d,%d,%d}", self.x, self.y, self.searched)

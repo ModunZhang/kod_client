@@ -7,28 +7,28 @@ function TowerUpgradeBuilding:ctor(building_info)
     self.sub_orient = building_info.sub_orient
     if self.orient == Orient.X then
         self.w = 1
-        self.h = 4
+        self.h = 2
     elseif self.orient == Orient.Y then
-        self.w = 4
+        self.w = 2
         self.h = 1
     elseif self.orient == Orient.NEG_X then
         self.w = 1
-        self.h = 4
+        self.h = 2
     elseif self.orient == Orient.NEG_Y then
-        self.w = 4
+        self.w = 2
         self.h = 1
     elseif self.orient == Orient.RIGHT then
-        self.w = 4
-        self.h = -4
+        self.w = 2
+        self.h = -2
     elseif self.orient == Orient.DOWN then
-        self.w = 4
-        self.h = 4
+        self.w = 2
+        self.h = 2
     elseif self.orient == Orient.LEFT then
-        self.w = -4
-        self.h = 4
+        self.w = -2
+        self.h = 2
     elseif self.orient == Orient.UP then
-        self.w = -4
-        self.h = -4
+        self.w = -2
+        self.h = -2
     elseif self.orient == Orient.NONE then
         self.w = 1
         self.h = 1
@@ -51,6 +51,7 @@ function TowerUpgradeBuilding:TowerId()
 end
 function TowerUpgradeBuilding:SetTowerId(tower_id)
     self.tower_id = tower_id
+    return self
 end
 function TowerUpgradeBuilding:IsUnlocked()
     return self.tower_id

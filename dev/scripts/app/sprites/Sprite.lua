@@ -69,7 +69,7 @@ function Sprite:ctor(city_layer, entity, x, y)
     self:SetPositionWithZOrder(x, y)
     self:setCascadeOpacityEnabled(true)
     self:setCascadeColorEnabled(true)
-    self:CreateBase()
+    -- self:CreateBase()
 end
 function Sprite:ReloadSpriteCauseTerrainChanged()
     -- print("你应该在子类实现切换地形的功能")

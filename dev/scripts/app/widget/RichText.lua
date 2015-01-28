@@ -138,7 +138,6 @@ function RichText:Text(str)
 
                 cur_x = cur_x + size.width
                 head, tail = tail, ""
-
                 if #head > 0 or cur_x > width or is_newline then newLine() end
             until #head == 0
         end

@@ -2,6 +2,7 @@ local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLeftReverseY")
 local Enum = import("..utils.Enum")
+local PVEObject = import("..entity.PVEObject")
 local PVEDefine = import("..entity.PVEDefine")
 local SpriteConfig = import("..sprites.SpriteConfig")
 local MapLayer = import(".MapLayer")
@@ -25,7 +26,6 @@ OBJECT_IMAGE[PVEDefine.ENTRANCE_DOOR] = "entrance_door.png"
 OBJECT_IMAGE[PVEDefine.TREE] = "tree_2_120x120.png"
 OBJECT_IMAGE[PVEDefine.HILL] = "hill_228x146.png"
 OBJECT_IMAGE[PVEDefine.LAKE] = "lake_220x174.png"
-
 
 function PVELayer:ctor(user)
     PVELayer.super.ctor(self, 0.5, 1)
@@ -61,17 +61,11 @@ function PVELayer:onEnter()
     self:LoadFog()
     -- 加载地图数据
     local objects = {}
-    local size = self.pve_layer:getLayerSize()
-    for x = 0, size.width - 1 do
-        for y = 0, size.height - 1 do
-            local gid = (self.pve_layer:getTileGIDAt(cc.p(x, y)))
-            if gid > 0 then
-                local obj = display.newSprite(OBJECT_IMAGE[gid]):addTo(self.building_layer)
-                    :pos(self:GetLogicMap():ConvertToMapPosition(x, y))
-                objects[#objects + 1] = {sprite = obj, x = x, y = y}
-            end
-        end
-    end
+    self:IteratorObjectsGID(function(x, y, gid)
+        local obj = display.newSprite(OBJECT_IMAGE[gid]):addTo(self.building_layer)
+            :pos(self:GetLogicMap():ConvertToMapPosition(x, y))
+        objects[#objects + 1] = {sprite = obj, x = x, y = y}
+    end)
     self.objects = objects
 
     -- 加载玩家
@@ -83,8 +77,8 @@ function PVELayer:onEnter()
     self.pve_map:AddObserver(self)
 end
 function PVELayer:onExit()
-    PVELayer.super.onExit(self)
     self.pve_map:RemoveObserver(self)
+    PVELayer.super.onExit(self)
 end
 function PVELayer:OnObjectChanged(object)
     self:SetObjectStatus(object)
@@ -94,7 +88,7 @@ function PVELayer:OnObjectChanged(object)
         end):catch(function(err)
             dump(err:reason())
         end)
-    end   
+    end
 end
 function PVELayer:SetObjectStatus(object)
     if not object:Type() then
@@ -107,7 +101,7 @@ function PVELayer:SetObjectStatus(object)
             local flag = display.newSprite("alliacne_search_29x33.png")
             local size2 = flag:getContentSize()
             local x = size1.width - size2.width*0.5
-            local y = size2.height*0.5
+            local y = size2.height * 0.5
             flag:pos(x, y):addTo(sprite)
         end
     end
@@ -169,6 +163,38 @@ function PVELayer:ConvertLogicPositionToMapPosition(lx, ly)
     local map_pos = cc.p(self.normal_map:ConvertToMapPosition(lx, ly))
     return self:convertToNodeSpace(self.background:convertToWorldSpace(map_pos))
 end
+function PVELayer:ExploreDegree()
+    
+end
+function PVELayer:SearchedFogsCount()
+    return self.pve_map:SearchedFogsCount()
+end
+function PVELayer:SearchedObjectsCount()
+    return self.pve_map:SearchedObjectsCount()
+end
+function PVELayer:TotalFogs()
+    local w, h = self:GetLogicMap():GetSize()
+    return (w - 1) * (h - 1)
+end
+function PVELayer:TotalObjects()
+    local count = 0
+    self:IteratorObjectsGID(function(_, _, gid)
+        count = count + PVEObject:TotalByType(gid)
+    end)
+    return count
+end
+function PVELayer:IteratorObjectsGID(func)
+    local pve_layer = self.pve_layer
+    local size = pve_layer:getLayerSize()
+    for x = 0, size.width - 1 do
+        for y = 0, size.height - 1 do
+            local gid = (pve_layer:getTileGIDAt(cc.p(x, y)))
+            if gid > 0 then
+                func(x, y, gid)
+            end
+        end
+    end
+end
 
 ---
 function PVELayer:getContentSize()
@@ -197,6 +223,8 @@ function PVELayer:GotoLogicPoint(x, y, s)
 end
 
 return PVELayer
+
+
 
 
 

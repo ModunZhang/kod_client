@@ -301,7 +301,7 @@ function CityScene:OnTouchEnd(pre_x, pre_y, x, y)
     local tx, ty = self.iso_map:ConvertToLogicPosition(point.x, point.y)
     if self.building then
         local lx, ly = self.building:GetLogicPosition()
-        self.building:zorder(self:GetSceneLayer():GetZOrderBy(nil, lx, ly))
+        self.building:zorder(self:GetSceneLayer():GetZOrderBy(self.building, lx, ly))
         if self.building._shiftx + tx == lx and
             self.building._shifty + ty == ly then
         end

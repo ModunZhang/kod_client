@@ -14,7 +14,10 @@ local MultiObserver = import(".MultiObserver")
 local City = class("City", MultiObserver)
 local ProductionTechnology = import(".ProductionTechnology")
 local ProductionTechnologyEvent = import(".ProductionTechnologyEvent")
-
+local floor = math.floor
+local ceil = math.ceil
+local abs = math.abs
+local max = math.max
 -- 枚举定义
 City.RETURN_CODE = Enum("INNER_ROUND_NOT_UNLOCKED",
     "EDGE_BESIDE_NOT_UNLOCKED",
@@ -524,7 +527,7 @@ function City:GetTileByBuildingPosition(x, y)
     return self:GetTileByIndex(self:GetTileIndexPosition(x, y))
 end
 function City:GetTileIndexPosition(x, y)
-    return math.floor(x / 10) + 1, math.floor(y / 10) + 1
+    return floor(x / 10) + 1, floor(y / 10) + 1
 end
 function City:GetTileByLocationId(location_id)
     local location_info = self:GetLocationById(location_id)
@@ -559,7 +562,7 @@ function City:IsTileCanbeUnlockAt(x, y)
     -- 检查临边
     for iy, row in ipairs(self.tiles) do
         for jx, col in ipairs(row) do
-            if not col.locked and math.abs(x - jx) + math.abs(y - iy) <= 1 then
+            if not col.locked and abs(x - jx) + abs(y - iy) <= 1 then
                 return true
             end
         end
@@ -605,7 +608,7 @@ function City:IsUnlockedInAroundNumber(roundNumber)
     return true
 end
 function City:GetAroundByPosition(x, y)
-    return math.max(x, y)
+    return max(x, y)
 end
 function City:GetWalls()
     return self.walls
@@ -1047,76 +1050,52 @@ function City:OnInitBuilding(building)
     building:AddUpgradeListener(self)
 end
 ---------
+local function find_beside_wall(walls, wall)
+    for i, v in ipairs(walls) do
+        if wall:IsEndJoinStartWithOtherWall(v) then
+            return i
+        end
+    end
+end
 function City:GenerateWalls()
-    local find_wall_neg_and_remove_dup = function (walls, wall)
-        for i, v in ipairs(walls) do
-            if wall:IsNearByOtherWall(v) then
-                table.remove(walls, i)
-                return true
-            end
-        end
-        return false
-    end
-    local find_beside_wall = function(walls, wall)
-        local next_pos = wall:GetEndPos()
-        for i, v in ipairs(walls) do
-            if wall:IsEndJoinStartWithOtherWall(v) then
-                return i
-            end
-        end
-        return false
-    end
-    local find_gate = function(walls)
-        local t = {}
-        for i, v in ipairs(walls) do
-            if v.orient == Orient.Y then
-                local dup = false
-                for _, w in pairs(t) do
-                    if w.x == v.x then
-                        dup = true
-                        break
-                    end
-                end
-                if not dup then
-                    table.insert(t, v)
-                end
-            end
-        end
-        -- return t[math.floor((#t + 1) / 2)]
-        -- 固定城门在倒数第二格
-        return t[#t - 1]
-    end
-
-    -- 找出所有块的边,去除重复边
     local walls = {}
     self:IteratorTilesByFunc(function(x, y, tile)
-        if tile:IsUnlocked() then
-            tile:IteratorWallsAroundSelf(function(dir, wall)
-                if not find_wall_neg_and_remove_dup(walls, wall) then
-                    table.insert(walls, wall)
-                end
+        if tile:NeedWalls() then
+            tile:IteratorWallsAroundSelf(function(_, wall)
+                table.insert(walls, wall)
             end)
         end
     end)
 
-    -- 边排序,首尾相连接
-    local first = table.remove(walls, 1)
-    local sort_walls = { first }
-    while #walls > 0 do
-        local index = find_beside_wall(walls, first)
-        if index then
-            first = table.remove(walls, index)
-            table.insert(sort_walls, first)
-        else
-            break
+    local count = #walls
+
+    for ik, wall in pairs(walls) do
+        for jk, other in pairs(walls) do
+            if wall:IsDupWithOtherWall(other) then
+                walls[ik] = nil
+                walls[jk] = nil
+            end
         end
     end
 
-    -- 找出城门
-    local gate = find_gate(sort_walls)
-    for i, v in ipairs(sort_walls) do
-        if v.x == gate.x and v.y == gate.y and v.orient == gate.orient then
-            v:SetGate()
+    local real_walls = {}
+    for i = 1, count do
+        local w = walls[i]
+        if w then
+            table.insert(real_walls, w)
+        end
+    end
+
+    -- -- 边排序,首尾相连接
+    local first = table.remove(real_walls, 1)
+    local sort_walls = { first }
+    while #real_walls > 0 do
+        local index = find_beside_wall(real_walls, first)
+        if index then
+            local f = first
+            first = table.remove(real_walls, index)
+            table.insert(sort_walls, first)
+        else
             break
         end
     end
@@ -1129,8 +1108,7 @@ function City:GenerateWalls()
 end
 -- 因为重新生成了城墙，所以必须把添加的listener都转移到新的城门上去
 function City:ReloadWalls(walls)
-    local old_walls = self.walls
-    local old_gate = self:GetGateInWalls(old_walls)
+    local old_gate = self:GetGateInWalls(self.walls)
     local new_index = nil
     local new_gate = nil
     for i, v in ipairs(walls) do
@@ -1153,12 +1131,13 @@ function City:ReloadWalls(walls)
     local t = {}
     for _, v in ipairs(walls) do
         local x, y = v:GetLogicPosition()
-        if x > 0 and y > 0 then
+        if (v:GetOrient() == Orient.X) or
+            (v:GetOrient() == Orient.Y) or
+            (x > 0 and y > 0) then
             table.insert(t, v)
         end
     end
     return t
-        -- return walls
 end
 function City:GenerateTowers(walls)
     local towers = {}
@@ -1178,60 +1157,55 @@ function City:GenerateTowers(walls)
     for i, v in pairs(walls) do
         if i < #walls then
             local p = walls[i]:IntersectWithOtherWall(walls[i + 1])
-            table.insert(towers,
-                TowerUpgradeBuilding.new({
-                    building_type = "tower",
-                    x = p.x,
-                    y = p.y,
-                    level = -1,
-                    orient = p.orient,
-                    sub_orient = p.sub_orient,
-                    city = self,
-                })
-            )
+            if p then
+                table.insert(towers,
+                    TowerUpgradeBuilding.new({
+                        building_type = "tower",
+                        x = p.x,
+                        y = p.y,
+                        level = -1,
+                        orient = p.orient,
+                        sub_orient = p.sub_orient,
+                        city = self,
+                    })
+                )
+            end
         end
     end
 
-    local mx, my = 0, 0
-    local index
-    for i, v in ipairs(towers) do
-        if v.x == v.y and v.x > mx then
-            mx, my = v.x, v.y
-            index = i
-        end
-    end
 
-    local t = {}
-    local tower_limit = self:GetUnlockTowerLimit()
-    table.insert(t, index)
-    local i = 1
-    repeat
-        table.insert(t, index + i)
-        if #t >= tower_limit then
-            break
-        end
-        table.insert(t, index - i)
-        i = i + 1
-    until #t >= tower_limit
-
-    for tower_id, tower_index in ipairs(t) do
-        towers[tower_index]:SetTowerId(tower_id)
-    end
-    local t = {}
+    local visible_tower = {}
     for _, v in ipairs(towers) do
         if (v:GetOrient() ~= Orient.NEG_X and
             v:GetOrient() ~= Orient.NEG_Y and
             v:GetOrient() ~= Orient.UP) or
-            v:TowerId() then
-            table.insert(t, v)
+            (v.x > 0 and v.y > 0) then
+            table.insert(visible_tower, v)
         end
     end
-    self.towers = self:ReloadTowers(t)
+
+    local t = {}
+    for i = 1, #visible_tower do
+        t[i] = i
+    end
+
+    local tower_limit = self:GetUnlockTowerLimit()
+    local indexes = {}
+    while #indexes < tower_limit do
+        local i = ceil(#t * 0.5)
+        local index = table.remove(t, i)
+        table.insert(indexes, index)
+    end
+
+    for tower_id, tower_index in ipairs(indexes) do
+        visible_tower[tower_index]:SetTowerId(tower_id)
+    end
+
+    self.towers = self:ReloadTowers(visible_tower)
 end
 function City:ReloadTowers(towers)
-    local old_towers = self.towers
     local old_tower_map = {}
-    for k, v in pairs(old_towers) do
+    for k, v in pairs(self.towers) do
         if v:IsUnlocked() then
             old_tower_map[v:TowerId()] = v
         end
@@ -1450,7 +1424,7 @@ function City:IteratorTechs(func)
 end
 
 function City:FindTechByName(name)
-    local index = productionTechs[name].index 
+    local index = productionTechs[name].index
     if index then
         return self:FindTechByIndex(index)
     end
@@ -1501,7 +1475,7 @@ end
 function City:FastUpdateAllTechsLockState()
     self:IteratorTechs(function(index,tech)
         local unLockByTech = self:FindTechByIndex(tech:UnlockBy())
-        if unLockByTech then 
+        if unLockByTech then
             tech:SetEnable(tech:UnlockLevel() <= unLockByTech:Level() and tech:IsOpen())
         end
     end)
@@ -1529,7 +1503,7 @@ end
 
 function City:__OnProductionTechEventsDataChaned(__productionTechEvents)
     if not __productionTechEvents then return end
-     local changed_map = GameUtils:Event_Handler_Func(
+    local changed_map = GameUtils:Event_Handler_Func(
         __productionTechEvents
         ,function(data)
             if not self:FindProductionTechEventById(data.id) then
@@ -1589,3 +1563,10 @@ end
 
 
 return City
+
+
+
+
+
+
+

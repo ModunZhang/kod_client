@@ -48,9 +48,9 @@ end
 function TowerUpgradingSprite:GetSpriteOffset()
     local entity = self:GetEntity()
     if entity:GetOrient() == Orient.X then
-        return 35, 79
+        return 15, 75
     elseif entity:GetOrient() == Orient.Y then
-        return -48, 84
+        return -14, 74
     elseif entity:GetOrient() == Orient.NEG_X then
         return 83, 83
     elseif entity:GetOrient() == Orient.NEG_Y then
@@ -60,15 +60,15 @@ function TowerUpgradingSprite:GetSpriteOffset()
         if y < 0 then
             return -17, 31
         end
-        return -40, 44
+        return -5, 63
     elseif entity:GetOrient() == Orient.DOWN then
-        return -2, 66
+        return 0, 71
     elseif entity:GetOrient() == Orient.LEFT then
         local x, y = entity:GetLogicPosition()
         if x < 0 then
-            return 33, 24
+            return -44, 73
         end
-        return 35, 45
+        return 16, 62
     elseif entity:GetOrient() == Orient.UP then
         return 0, -7
     elseif entity:GetOrient() == Orient.NONE then

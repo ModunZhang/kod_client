@@ -20,6 +20,15 @@ function TileSprite:GetSpriteFile()
     end
     return string.format("unlock_tile_%d_%s.png", self.png_index, self:GetMapLayer():Terrain())
 end
+-- function TileSprite:GetSpriteOffset()
+--     local tile = self:GetEntity()
+--     local x, y, city = tile.x, tile.y, tile.city
+--     -- 路的地块
+--     if x == 2 then
+--         return 0, 0
+--     end
+--     return -120, -30
+-- end
 function TileSprite:GetLogicZorder()
     return - 1
 end

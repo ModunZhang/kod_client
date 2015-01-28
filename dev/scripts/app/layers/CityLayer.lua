@@ -45,8 +45,8 @@ function CityLayer:GetClickedObject(world_x, world_y)
     }
     self:IteratorClickAble(function(_, v)
         if not v:isVisible() then return false end
-        if v:GetEntity():GetType() == "wall" and not v:GetEntity():IsGate() then return false end
-        if v:GetEntity():GetType() == "tower" and not v:GetEntity():IsUnlocked() then return false end
+        -- if v:GetEntity():GetType() == "wall" and not v:GetEntity():IsGate() then return false end
+        -- if v:GetEntity():GetType() == "tower" and not v:GetEntity():IsUnlocked() then return false end
 
         local check = v:IsContainPointWithFullCheck(logic_x, logic_y, world_x, world_y)
         if check.logic_clicked then
@@ -158,7 +158,7 @@ function CityLayer:GetLogicMap()
 end
 function CityLayer:GetZOrderBy(sprite, x, y)
     local width, _ = self:GetLogicMap():GetSize()
-    return x * width + y + 100
+    return (1 + width) * (x + y)
 end
 function CityLayer:ConvertLogicPositionToMapPosition(lx, ly)
     local map_pos = cc.p(self.iso_map:ConvertToMapPosition(lx, ly))

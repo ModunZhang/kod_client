@@ -27,28 +27,28 @@ end
 function WallUpgradingSprite:GetSpriteOffset()
     local entity = self:GetEntity()
     if entity:GetOrient() == Orient.X then
-        return 58, 77
+        return 15, 49
     elseif entity:GetOrient() == Orient.Y then
         if entity:IsGate() then
-            return -75, 85
+            return -75, 81
         end
-        return -64, 76
+        return -16, 49
     elseif entity:GetOrient() == Orient.NEG_X then
-        return 59, 76
+        return 15, 49
     elseif entity:GetOrient() == Orient.NEG_Y then
-        return -65, 77
+        return -16, 49
     end
     assert(false)
 end
 function WallUpgradingSprite:GetFlipX()
     local entity = self:GetEntity()
     if entity:GetOrient() == Orient.X then
-        return false
+        return true
     elseif entity:GetOrient() == Orient.Y then
         -- return entity:IsGate()
         return false
     elseif entity:GetOrient() == Orient.NEG_X then
-        return false
+        return true
     elseif entity:GetOrient() == Orient.NEG_Y then
         return false
     end
@@ -59,7 +59,7 @@ function WallUpgradingSprite:GetBottomOffset()
     if entity:GetOrient() == Orient.X then
         return 120, 20
     elseif entity:GetOrient() == Orient.Y then
-        return -100, 22
+        return 50, 22
     elseif entity:GetOrient() == Orient.NEG_X then
         return 100, 20
     elseif entity:GetOrient() == Orient.NEG_Y then

@@ -15,6 +15,16 @@ end
 function PVEMap:GetIndex()
     return self.index
 end
+function PVEMap:SearchedFogsCount()
+    return #self.searched_fogs * 0.5
+end
+function PVEMap:SearchedObjectsCount()
+    local count = 0
+    for _, v in ipairs(self.searched_objects) do
+        count = count + v:Searched()
+    end
+    return count
+end
 function PVEMap:IteratorFogs(func)
     local searched_fogs = self.searched_fogs
     for i = 1, #searched_fogs, 2 do
