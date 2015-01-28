@@ -138,7 +138,8 @@ function GameUIToolShop:Manufacture()
     item:UpdateByEvent(self.toolShop:GetMakeMaterialsEventByCategory("technology"))
     self.technology_event = item
 
-    self.list_view:reload():resetPosition()
+    self.list_view:reload()
+    -- :resetPosition()
     -- local material_manager = self.tool_shop_city:GetMaterialManager()
     -- local materials = material_manager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
     -- dump(materials)

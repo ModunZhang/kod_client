@@ -385,7 +385,8 @@ function GameUIReplay:onEnter()
         table.insert(self.right_corps, right)
         self.list_view:addItem(item)
     end
-    self.list_view:reload():resetPosition()
+    self.list_view:reload()
+    -- :resetPosition()
     self.left_morale_max = 0
     self.right_morale_max = 0
     self.left_morale_cur = self.left_morale_max

@@ -101,7 +101,8 @@ function GameUIBarracks:CreateSoldierUI()
         v:SetNumber(soldier_map[k])
     end
 
-    self.list_view:reload():resetPosition()
+    self.list_view:reload()
+    -- :resetPosition()
     return recruit
 end
 function GameUIBarracks:CreateSpecialSoldierUI()
@@ -140,7 +141,8 @@ function GameUIBarracks:CreateSpecialSoldierUI()
         v:SetNumber(soldier_map[k])
     end
 
-    self.special_list_view:reload():resetPosition()
+    self.special_list_view:reload()
+    -- :resetPosition()
     return special
 end
 function GameUIBarracks:TabButtons()

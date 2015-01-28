@@ -33,7 +33,8 @@ function GameUIBuild:onEnter()
         self.base_list_view:addItem(item)
         table.insert(self.base_resource_building_items, item)
     end
-    self.base_list_view:reload():resetPosition()
+    self.base_list_view:reload()
+    -- :resetPosition()
     self:OnCityChanged()
 end
 function GameUIBuild:onExit()

@@ -185,7 +185,8 @@ function GameUIBlackSmith:CreateDragonEquipmentsByType(dragon_type)
         local item = self:CreateItemWithListViewByEquipments(list_view, v.equipments, v.title, equip_map)
         list_view:addItem(item)
     end
-    list_view:reload():resetPosition()
+    list_view:reload()
+    -- :resetPosition()
     return list_view, equip_map,listnode
 end
 function GameUIBlackSmith:GetDragonEquipmentsByType(dragon_type)

@@ -176,7 +176,8 @@ end
 function GameUIHasBeenBuild:LoadFunctionListView()
     if not self.function_list_view then
         self.function_list_view , self.function_list_node= self:CreateListView(self.build_city:GetBuildingsIsUnlocked())
-        self.function_list_view:reload():resetPosition()
+        self.function_list_view:reload()
+        -- :resetPosition()
     end
 end
 function GameUIHasBeenBuild:UnloadFunctionListView()
@@ -191,7 +192,8 @@ end
 function GameUIHasBeenBuild:LoadHouseListView()
     if not self.house_list_view then
         self.house_list_view, self.house_list_node= self:CreateListView(self.build_city:GetHousesWhichIsBuilded())
-        self.house_list_view:reload():resetPosition()
+        self.house_list_view:reload()
+        -- :resetPosition()
     end
 end
 function GameUIHasBeenBuild:UnloadHouseListView()
