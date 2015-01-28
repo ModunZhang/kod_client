@@ -21,13 +21,13 @@ Item.CATEGORY = Enum("BUFF",
 
 local function get_config(name)
     if BUFF[name] then
-        return BUFF
+        return BUFF[name]
     elseif RESOURCE[name] then
-        return RESOURCE
+        return RESOURCE[name]
     elseif SPECIAL[name] then
-        return SPECIAL
+        return SPECIAL[name]
     elseif SPEEDUP[name] then
-        return SPEEDUP
+        return SPEEDUP[name]
     end
 end
 
@@ -42,18 +42,18 @@ local function get_category(name)
         return Item.CATEGORY.SPEEDUP
     end
 end
-
+property(Item,"name","")
+property(Item,"category","")
+property(Item,"buffType","")
+property(Item,"count",0)
+property(Item,"effect",0)
+property(Item,"order",0)
+property(Item,"isSell",false)
+property(Item,"price",0)
+property(Item,"isSellInAlliance",false)
+property(Item,"priceInAlliance",0)
 function Item:ctor()
-    property(self,"name","")
-    property(self,"category","")
-    property(self,"buffType","")
-    property(self,"count",0)
-    property(self,"effect",0)
-    property(self,"order",0)
-    property(self,"isSell",0)
-    property(self,"price",0)
-    property(self,"isSellInAlliance",false)
-    property(self,"priceInAlliance",0)
+
 end
 
 function Item:UpdateData(json_data)
@@ -70,18 +70,19 @@ function Item:UpdateData(json_data)
     self:SetIsSellInAlliance(config.isSellInAlliance)
     self:SetPriceInAlliance(config.priceInAlliance)
     if category == Item.CATEGORY.BUFF then
-    	self:SetBuffType(config.type)
+        self:SetBuffType(config.type)
     end
 end
 function Item:GetLocalizeName()
-	return Localize_item.item_name[self.name]
+    return Localize_item.item_name[self.name]
 end
 function Item:GetLocalizeDesc()
-	return Localize_item.item_desc[self.name]
+    return Localize_item.item_desc[self.name]
 end
 function Item:OnPropertyChange()
 end
 
 return Item
+
 
 
