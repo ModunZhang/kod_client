@@ -70,6 +70,7 @@ function GameUIHome:onEnter()
     city:GetResourceManager():OnResourceChanged()
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    User:AddListenOnType(self, User.LISTEN_TYPE.BASIC)
 
 end
 
@@ -97,14 +98,19 @@ function GameUIHome:onExit()
     self.city:GetResourceManager():RemoveObserver(self)
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    User:RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
     -- GameUIHome.super.onExit(self)
 end
-function GameUIHome:OnBasicChanged(alliance,changed_map)
+function GameUIHome:OnBasicChanged(fromEntity,changed_map)
     if changed_map.id then
         local flag = changed_map.id.new~=nil or changed_map.id.old~=""
         self.help_button:setVisible(flag)
     end
+    if changed_map.name and fromEntity.__cname == "User" then
+        self.name_label:setString(changed_map.name.new)
+    end
 end
+
 function GameUIHome:MailUnreadChanged(...)
     local num =MailManager:GetUnReadMailsNum()+MailManager:GetUnReadReportsNum()
     if num==0 then
@@ -472,6 +478,8 @@ function GameUIHome:OnBottomButtonClicked(event)
     elseif tag == 3 then
         UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
     elseif tag == 2 then
+        UIKit:newGameUI('GameUIItems',_("道具"),self.city):addToCurrentScene(true)
+    elseif tag == 1 then
         app:EnterPVEScene()
     end
 end

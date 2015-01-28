@@ -75,7 +75,6 @@ local VIP_EFFECIVE_VALUE = {
 function GameUIVip:ctor(city,default_tag)
     GameUIVip.super.ctor(self,city,_("PLAYER INFO"))
     self.default_tag = default_tag
-    self.basicInfo = DataManager:getUserData().basicInfo
 end
 
 function GameUIVip:CreateBetweenBgAndTitle()
@@ -92,7 +91,6 @@ end
 
 function GameUIVip:AdapterPlayerList()
     local infos = {}
-    local basicInfo = self.basicInfo
     local alliance = Alliance_Manager:GetMyAlliance()
     if not alliance:IsDefault() then
         local member = alliance:GetMemeberById(DataManager:getUserData()._id)
@@ -156,7 +154,7 @@ function GameUIVip:AddIconOption(icon)
     }):align(display.LEFT_CENTER,10,40)
         :addTo(bg_2)
 
-    if self.basicInfo.icon ~= icon then
+    if User:Icon() ~= icon then
         WidgetPushButton.new(
             {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"},
             {scale9 = false},
@@ -221,17 +219,16 @@ end
 --数据回调
 function GameUIVip:WidgetPlayerNode_DataSource(name)
     if name == 'BasicInfoData' then
-        local basicInfo = self.basicInfo
-        local exp_config = GameDatas.PlayerInitData.playerLevel[basicInfo.level]
+        local exp_config = GameDatas.PlayerInitData.playerLevel[User:Level()]
         local levelUpExp = exp_config.expTo - exp_config.expFrom
         return {
-            name = basicInfo.name,
-            lv = basicInfo.level,
-            currentExp = basicInfo.levelExp,
+            name = User:Name(),
+            lv = User:Level(),
+            currentExp = User:LevelExp(),
             maxExp = levelUpExp,
-            power = basicInfo.power,
-            playerId = DataManager:getUserData()._id,
-            playerIcon = basicInfo.icon,
+            power = User:Power(),
+            playerId = User:Id(),
+            playerIcon = User:Icon(),
             vip = "88"
         }
     elseif name == "MedalData"  then
