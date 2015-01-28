@@ -124,6 +124,7 @@ function GameUIStrikePlayer:GetItem(dragon,power_dragon_type)
 	item.button = button
 	item:addContent(content)
 	item:setItemSize(window.width-80, 132)
+	content:size(window.width-80, 132)
 	return item
 end
 

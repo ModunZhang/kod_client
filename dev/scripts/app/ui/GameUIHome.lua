@@ -87,7 +87,7 @@ function GameUIHome:RefreshChatMessage()
     local last_chat_messages = self:GetChatManager():FetchLastChannelMessage()
     for i,v in ipairs(self.chat_labels) do
         local rich_text = self.chat_labels[i]
-        rich_text:Text(last_chat_messages[i])
+        rich_text:Text(last_chat_messages[i],1)
         rich_text:align(display.LEFT_CENTER, 0, 10)
     end
 end
@@ -392,7 +392,7 @@ function GameUIHome:CreateBottom()
         content:setContentSize(540, 20)
         content:setTouchEnabled(false)
         local label = RichText.new({width = 540,size = 16,color = 0xc7bd97})
-        label:Text(last_chat_messages[i])
+        label:Text(last_chat_messages[i],1)
         label:addTo(content):align(display.LEFT_CENTER, 0, content:getContentSize().height/2)
         table.insert(self.chat_labels, label)
         print("test------->",last_chat_messages[i])
