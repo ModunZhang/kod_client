@@ -3,6 +3,9 @@ local TileSprite = class("TileSprite", Sprite)
 local random = math.random
 function TileSprite:ctor(city_layer, entity, x, y)
     TileSprite.super.ctor(self, city_layer, entity, x, y)
+    if entity:NeedWalls() then
+        self:hide()
+    end
 end
 function TileSprite:ReloadSpriteCauseTerrainChanged()
     self.sprite:removeFromParent()

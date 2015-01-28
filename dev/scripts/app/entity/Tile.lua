@@ -238,11 +238,11 @@ function Tile:GetDownWall()
         elseif not xb:NeedWalls() and xn:NeedWalls() then
             return generateDownWalls(self, 3)
         elseif xb:NeedWalls() and xn:NeedWalls() then
-            return generateDownWalls(self, 2)
+            return generateDownWalls(self, 3)
         end
     end
     return generateDownWalls(self)
-    -- return WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 2, y = end_y + 2, len = 6, orient = Orient.Y, building_type = "wall", city = self.city })
+        -- return WallUpgradeBuilding.new({ location_id = self.location_id, x = end_x - 2, y = end_y + 2, len = 6, orient = Orient.Y, building_type = "wall", city = self.city })
 end
 function Tile:GetLeftWall()
     local x, y, city = self.x, self.y, self.city
@@ -314,6 +314,7 @@ end
 
 
 return Tile
+
 
 
 

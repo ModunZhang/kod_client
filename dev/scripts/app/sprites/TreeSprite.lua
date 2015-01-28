@@ -24,6 +24,7 @@ function TreeSprite:CreateSprite()
     repeat
         if (xb and xb:IsUnlocked()) or 
             (yb and yb:IsUnlocked()) or 
+            (xbyn and xbyn:IsUnlocked()) or
             (xyb and xyb:IsUnlocked()) then
             break
         end
@@ -33,6 +34,7 @@ function TreeSprite:CreateSprite()
     repeat
         if (yb and yb:IsUnlocked()) or 
             (xn and xn:IsUnlocked()) or 
+            (yn and yn:IsUnlocked()) or 
             (xnyb and xnyb:IsUnlocked()) then
             break
         end

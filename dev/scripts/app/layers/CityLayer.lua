@@ -7,6 +7,7 @@ local TowerUpgradingSprite = import("..sprites.TowerUpgradingSprite")
 local WallUpgradingSprite = import("..sprites.WallUpgradingSprite")
 local RoadSprite = import("..sprites.RoadSprite")
 local TileSprite = import("..sprites.TileSprite")
+local LockedTileSprite = import("..sprites.LockedTileSprite")
 local TreeSprite = import("..sprites.TreeSprite")
 local SingleTreeSprite = import("..sprites.SingleTreeSprite")
 local CitizenSprite = import("..sprites.CitizenSprite")
@@ -146,6 +147,7 @@ function CityLayer:ctor(city_scene)
     self.ruins = {}
     self.trees = {}
     self.tiles = {}
+    self.locked_tiles = {}
     self.walls = {}
     self.helpedByTroops = {}
     -- self.road = nil
@@ -526,6 +528,7 @@ function CityLayer:InitWithCity(city)
 end
 ---
 function CityLayer:UpdateAllDynamicWithCity(city)
+    self:UpdateLockedTilesWithCity(city)
     self:UpdateTilesWithCity(city)
     self:UpdateTreesWithCity(city)
     self:UpdateWallsWithCity(city)
@@ -547,6 +550,18 @@ end
 function CityLayer:UpdateSingleTreeVisibleWithCity(city)
     table.foreach(self.single_tree, function(_, tree)
         tree:setVisible(city:GetTileByBuildingPosition(tree.x, tree.y):IsUnlocked())
+    end)
+end
+function CityLayer:UpdateLockedTilesWithCity(city)
+    local city_node = self:GetCityNode()
+    for _, v in pairs(self.locked_tiles) do
+        v:removeFromParent()
+    end
+    self.locked_tiles = {}
+    city:IteratorTilesByFunc(function(x, y, tile)
+        if tile:NeedWalls() and tile.locked then
+            table.insert(self.locked_tiles, self:CreateLockedTileSpriteWithTile(tile):addTo(city_node))
+        end
     end)
 end
 function CityLayer:UpdateTilesWithCity(city)
@@ -732,6 +747,10 @@ end
 function CityLayer:CreateRoadWithTile(tile)
     local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
     return RoadSprite.new(self, tile, x, y)
+end
+function CityLayer:CreateLockedTileSpriteWithTile(tile)
+    local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
+    return LockedTileSprite.new(self, tile, x, y)
 end
 function CityLayer:CreateTileWithTile(tile)
     local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
