@@ -5,6 +5,7 @@ end)
 local GameUtils = GameUtils
 local LuaUtils = LuaUtils
 
+
 local function get_first_line(label, width)
     label:setLineBreakWithoutSpace(true)
     label:setMaxLineWidth(width)
@@ -35,24 +36,19 @@ function RichText:ctor(params)
     self.color = params.color or 0xffffff
     self.lineHeight = params.lineHeight or self.size
     self.url_handle = params.url_handle
+
+    local label = UIKit:ttfLabel({
+        text = "...",
+        size = size,
+        color = color,
+        align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
+    }):align(display.LEFT_CENTER)
+    self.ellipsis_width = label:getContentSize().width
+    label:removeFromParent()
 end
-function RichText:AddUrlTo(item, url)
-    if not url then return end
-    item:setTouchEnabled(true)
-    item:setTouchSwallowEnabled(false)
-    item:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-        local name, x, y = event.name, event.x, event.y
-        local box = item:getCascadeBoundingBox()
-        if name == "ended" and box:containsPoint(cc.p(x,y)) then
-            if type(self.url_handle) == "function" then
-                self.url_handle(url)
-            end
-        end
-        return box:containsPoint(cc.p(x,y))
-    end)
-end
-function RichText:Text(str)
+function RichText:Text(str, line)
     -- assert(not self.lines, "富文本不可变!")
+    line = line or math.huge
     self:removeAllChildren()
     local items = LuaUtils:table_map(GameUtils:parseRichText(str), function(k, v)
         local type_ = type(v)
@@ -78,9 +74,21 @@ function RichText:Text(str)
         cur_x = 0
         cur_y = cur_y + 1
         curLine()
+        width = cur_y ~= line and self.width or self.width - self.ellipsis_width
+    end
+    local function append_ellipsis(cur_width, size, color)
+        lines[#lines]:removeFromParent()
+        lines[#lines] = nil
+        UIKit:ttfLabel({
+            text = "...",
+            size = size or self.size,
+            color = color or self.color,
+            align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
+        }):align(display.LEFT_CENTER):addTo(getLine(cur_y - 1)):pos(cur_width, 0)
     end
     newLine()
     for i, v in ipairs(items) do
+        if cur_y > line then break end
         local url = v.url
         if v.type == "image" then
             local img = display.newSprite(v.value)
@@ -90,22 +98,30 @@ function RichText:Text(str)
             img:setScaleX(w / size.width)
             img:setScaleY(h / size.height)
 
+            local line_width = cur_x
             if w > 5 + width - cur_x then newLine() end
+            if cur_y > line then img:removeFromParent() append_ellipsis(line_width) break end
+
             self:AddUrlTo(img:align(display.CENTER, cur_x + w * 0.5, 0):addTo(curLine()), url)
 
             cur_x = cur_x + w
+
+            local line_width = cur_x
             if cur_x > width then newLine() end
+            if cur_y > line then append_ellipsis(line_width) break end
         elseif v.type == "text" then
             local head, tail, is_newline = v.value, ""
             local underLine = url or v.underLine
-            local size = v.size or self.size
+            local label_size = v.size or self.size
             local color = v.color or self.color
-
             repeat
-                if width - cur_x < size then newLine() end
+                local line_width = cur_x
+                if width - cur_x < label_size then newLine() end
+                if cur_y > line then append_ellipsis(line_width, label_size, color) break end
+
                 local label = UIKit:ttfLabel({
                     text = head,
-                    size = size,
+                    size = label_size,
                     color = color,
                     align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
                 }):align(display.LEFT_CENTER)
@@ -114,7 +130,7 @@ function RichText:Text(str)
 
                 local label = UIKit:ttfLabel({
                     text = head,
-                    size = size,
+                    size = label_size,
                     color = color,
                     align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
                 }):align(display.LEFT_CENTER, 0 + cur_x, 0)
@@ -127,14 +143,30 @@ function RichText:Text(str)
 
                 cur_x = cur_x + size.width
                 head, tail = tail, ""
+                local line_width = cur_x
                 if #head > 0 or cur_x > width or is_newline then newLine() end
+                if cur_y > line then append_ellipsis(line_width, label_size, color) break end
             until #head == 0
         end
     end
     self.lines = lines
     return self
 end
-
+function RichText:AddUrlTo(item, url)
+    if not url then return end
+    item:setTouchEnabled(true)
+    item:setTouchSwallowEnabled(false)
+    item:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        local name, x, y = event.name, event.x, event.y
+        local box = item:getCascadeBoundingBox()
+        if name == "ended" and box:containsPoint(cc.p(x,y)) then
+            if type(self.url_handle) == "function" then
+                self.url_handle(url)
+            end
+        end
+        return box:containsPoint(cc.p(x,y))
+    end)
+end
 function RichText:align(anchorPoint, x, y)
     assert(self.lines, "必须先生成富文本!")
     local ANCHOR_POINTSint
@@ -168,6 +200,10 @@ end
 
 
 return RichText
+
+
+
+
 
 
 
