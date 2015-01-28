@@ -309,7 +309,8 @@ function WidgetEventTabButtons:CreateOpenItem()
             elseif widget:GetCurrentTab() == "soldier" then
                 UIKit:newGameUI('GameUIBarracks', City, self.barracks):addToCurrentScene(true)
             elseif widget:GetCurrentTab() == "technology" then
-                UIKit:newGameUI('GameUIQuickTechnology', City, self.barracks):addToCurrentScene(true)
+                -- UIKit:newGameUI('GameUIQuickTechnology', City, self.barracks):addToCurrentScene(true)
+                UIKit:newGameUI('GameUIQuickTechnology', City):addToCurrentScene(true)
             elseif widget:GetCurrentTab() == "material" then
                 UIKit:newGameUI('GameUIToolShop', City, self.toolShop):addToCurrentScene(true)
             end

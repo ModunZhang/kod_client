@@ -29,7 +29,6 @@ local GameUIAcademy = UIKit:createUIClass("GameUIAcademy","GameUIUpgradeBuilding
 local window = import("..utils.window")
 local UIScrollView = import(".UIScrollView")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-local WidgetSpeedUp = import("..widget.WidgetSpeedUp")
 local GameUITechnologySpeedUp = import(".GameUITechnologySpeedUp")
 
 
