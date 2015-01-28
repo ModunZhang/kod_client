@@ -1445,7 +1445,6 @@ end
 function NetManager:getUpgradeSoldierStarPromise(soldierName)
     return upgrade_soldier_star_promise(soldierName,false)
 end
---
 --设置pve数据
 function NetManager:getSetPveDataPromise(pveData)
     return promise.all(get_blocking_request_promise("logic.playerHandler.setPveData",
@@ -1460,7 +1459,20 @@ function NetManager:getGiveLoyaltyToAllianceMemberPromise(memberId,count)
         },
         "为联盟成员添加荣耀值失败!"),get_alliancedata_callback()):next(get_response_msg)
 end
-
+--购买道具
+function NetManager:getBuyItemPromise(itemName,count)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.buyItem", {
+        itemName = itemName,
+        count = count,
+    }, "购买道具失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+--使用道具
+function NetManager:getUseItemPromise(itemName,params)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.useItem", {
+        itemName = itemName,
+        params = params,
+    }, "使用道具失败!"), get_playerdata_callback()):next(get_response_msg)
+end
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

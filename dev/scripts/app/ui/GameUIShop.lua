@@ -924,7 +924,7 @@ function GameUIShop:onEnter()
         :onButtonClicked(function(event)
             NetManager:getFindAllianceToFightPromose()
         end)
-     WidgetPushButton.new(
+    WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
@@ -959,6 +959,7 @@ function GameUIShop:onEnter()
             device.showAlert("提示","联盟数据输出成功",{_("确定")})
         end)
 
+
     item:addContent(content)
     item:setItemSize(640, 1000)
     list_view:addItem(item)
@@ -971,6 +972,8 @@ end
 
 
 return GameUIShop
+
+
 
 
 
