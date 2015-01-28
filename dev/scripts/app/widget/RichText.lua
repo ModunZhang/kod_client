@@ -36,7 +36,21 @@ function RichText:ctor(params)
     self.lineHeight = params.lineHeight or self.size
     self.url_handle = params.url_handle
 end
-
+function RichText:AddUrlTo(item, url)
+    if not url then return end
+    item:setTouchEnabled(true)
+    item:setTouchSwallowEnabled(false)
+    item:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        local name, x, y = event.name, event.x, event.y
+        local box = item:getCascadeBoundingBox()
+        if name == "ended" and box:containsPoint(cc.p(x,y)) then
+            if type(self.url_handle) == "function" then
+                self.url_handle(url)
+            end
+        end
+        return box:containsPoint(cc.p(x,y))
+    end)
+end
 function RichText:Text(str)
     -- assert(not self.lines, "富文本不可变!")
     self:removeAllChildren()
@@ -77,26 +91,13 @@ function RichText:Text(str)
             img:setScaleY(h / size.height)
 
             if w > 5 + width - cur_x then newLine() end
-
-            img:align(display.CENTER, cur_x + w * 0.5, 0):addTo(curLine())
-            img:setTouchEnabled(true)
-            img:setTouchSwallowEnabled(false)
-            img:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-                local name, x, y = event.name, event.x, event.y
-                local box = img:getCascadeBoundingBox()
-                if name == "ended" and box:containsPoint(cc.p(x,y)) then
-                    if type(self.url_handle) == "function" then
-                        self.url_handle(url)
-                    end
-                end
-                return box:containsPoint(cc.p(x,y))
-            end)
+            self:AddUrlTo(img:align(display.CENTER, cur_x + w * 0.5, 0):addTo(curLine()), url)
 
             cur_x = cur_x + w
-
             if cur_x > width then newLine() end
         elseif v.type == "text" then
             local head, tail, is_newline = v.value, ""
+            local underLine = url or v.underLine
             local size = v.size or self.size
             local color = v.color or self.color
 
@@ -121,19 +122,7 @@ function RichText:Text(str)
                 if size.width == 0 or size.height == 0 then
                     label:removeFromParent()
                 else
-                    label:addTo(curLine())
-                    label:setTouchEnabled(true)
-                    label:setTouchSwallowEnabled(false)
-                    label:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-                        local name, x, y = event.name, event.x, event.y
-                        local box = label:getCascadeBoundingBox()
-                        if name == "ended" and box:containsPoint(cc.p(x,y)) then
-                            if type(self.url_handle) == "function" then
-                                self.url_handle(url)
-                            end
-                        end
-                        return box:containsPoint(cc.p(x,y))
-                    end)
+                    self:AddUrlTo(label:addTo(curLine()), url)
                 end
 
                 cur_x = cur_x + size.width
@@ -179,6 +168,9 @@ end
 
 
 return RichText
+
+
+
 
 
 
