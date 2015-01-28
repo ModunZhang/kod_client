@@ -11,15 +11,18 @@ local Dragon = import(".Dragon")
 local promise = import("..utils.promise")
 DragonManager.promise_callbacks = {}
 local DragonEvent = import(".DragonEvent")
+local DragonDeathEvent = import(".DragonDeathEvent")
 
 DragonManager.DRAGON_TYPE_INDEX = Enum("redDragon","greenDragon","blueDragon")
-DragonManager.LISTEN_TYPE = Enum("OnHPChanged","OnBasicChanged","OnDragonHatched","OnDragonEventChanged","OnDragonEventTimer","OnDefencedDragonChanged")
+DragonManager.LISTEN_TYPE = Enum("OnHPChanged","OnBasicChanged","OnDragonHatched","OnDragonEventChanged","OnDragonEventTimer","OnDefencedDragonChanged",
+    "OnDragonDeathEventChanged","OnDragonDeathEventTimer")
 
 
 function DragonManager:ctor()
     DragonManager.super.ctor(self)
     self.dragons_hp = {}
-    self.dragon_events = {}
+    self.dragon_events = {} --孵化事件
+    self.dragonDeathEvents = {} --复活事件
 end
 
 function DragonManager:GetDragonByIndex(index)
@@ -92,6 +95,8 @@ function DragonManager:OnUserDataChanged(user_data, current_time, location_id, s
     self:RefreshDragonData(user_data.dragons,current_time,hp_recovery_perHour)
     self:RefreshDragonEvents(user_data.dragonHatchEvents)
     self:RefreshDragonEvents__(user_data.__dragonHatchEvents)
+    self:RefreshDragonDeathEvents(user_data.dragonDeathEvents)
+    self:RefreshDragonDeathEvents__(user_data.__dragonDeathEvents)
 end
 
 function DragonManager:GetDragonEventByDragonType(dragon_type)
@@ -152,6 +157,65 @@ function DragonManager:OnDragonEventTimer(dragonEvent)
     end)
 end
 
+--复活事件
+function DragonManager:RefreshDragonDeathEvents(dragonDeathEvents)
+    if not dragonDeathEvents then return end
+    for _,v in ipairs(dragonDeathEvents) do
+        if not self.dragonDeathEvents[v.dragonType] then
+            local dragonDeathEvent = DragonDeathEvent.new()
+            dragonDeathEvent:UpdateData(v)
+            dragonDeathEvent:AddObserver(self)
+            self.dragonDeathEvents[dragonDeathEvent:DragonType()] = dragonDeathEvent
+        end
+    end
+end
+
+function DragonManager:RefreshDragonDeathEvents__(__dragonDeathEvents)
+    if not __dragonDeathEvents then return end
+     local changed_map = GameUtils:Event_Handler_Func(
+        __dragonDeathEvents
+        ,function(event_data)
+            local dragonDeathEvent = DragonDeathEvent.new()
+            dragonDeathEvent:UpdateData(event_data)
+            dragonDeathEvent:AddObserver(self)
+            self.dragonDeathEvents[dragonDeathEvent:DragonType()] = dragonDeathEvent
+            return dragonDeathEvent
+        end
+        ,function(event_data)
+        --TODO:修改复活事件
+        end
+        ,function(event_data)
+            if self.dragonDeathEvents[event_data.dragonType] then
+                local dragonDeathEvent = self.dragonDeathEvents[event_data.dragonType]
+                dragonDeathEvent:Reset()
+                self.dragonDeathEvents[event_data.dragonType] = nil
+                dragonDeathEvent = DragonDeathEvent.new()
+                dragonDeathEvent:UpdateData(event_data)
+                return dragonDeathEvent
+            end
+        end
+    )
+    self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged,function(lisenter)
+        lisenter.OnDragonDeathEventChanged(lisenter,GameUtils:pack_event_table(changed_map))
+    end)
+end
+
+function DragonManager:IteratorDragonDeathEvents(func)
+    for __,v in pairs(self.dragonDeathEvents) do
+       func(v)
+    end
+end
+
+function DragonManager:GetDragonDeathEventByType(dragonType)
+    return self.dragonDeathEvents[dragonType]
+end
+
+function DragonManager:OnDragonDeathEventTimer(dragonDeathEvent)
+    self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer,function(lisenter)
+        lisenter.OnDragonDeathEventTimer(lisenter,dragonDeathEvent)
+    end)
+end
+
 function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recovery_perHour)
     if not dragons then return end
     if not self.dragons_ then -- 初始化龙信息
@@ -198,7 +262,12 @@ end
 
 
 function DragonManager:checkHPRecoveryIf_(dragon,resource_refresh_time,hp_recovery_perHour)
-    if dragon:Ishated() then
+    --龙死了 并且 龙还在血量恢复队列中 从队列中移除这条龙
+    if dragon:Ishated() and dragon:IsDead() and self:GetHPResource(dragon:Type())  then
+        self:RemoveHPResource(dragon:Type())
+    end
+    --判断是否可以执行血量恢复 如果队列中没有这条龙会添加
+    if dragon:Ishated() and not dragon:IsDead() and dragon:Status() ~= 'march' then
         local hp_resource = self:AddHPResource(dragon:Type())
         hp_resource:UpdateResource(resource_refresh_time,dragon:Hp())
         hp_resource:SetProductionPerHour(resource_refresh_time,hp_recovery_perHour)
@@ -214,6 +283,13 @@ function DragonManager:AddHPResource(dragon_type)
     return self:GetHPResource(dragon_type)
 end
 
+function DragonManager:RemoveHPResource(dragon_type)
+    if self:GetHPResource(dragon_type) then 
+        self.dragons_hp[dragon_type] = nil
+    else
+        return true
+    end
+end
 
 function DragonManager:GetHPResource(dragon_type)
     return self.dragons_hp[dragon_type]
@@ -227,8 +303,12 @@ function DragonManager:GetCurrentHPValueByDragonType(dragon_type)
 end
 
 function DragonManager:UpdateHPResourceByTime(current_time)
-    for _, v in pairs(self.dragons_hp) do
+    for dragonType, v in pairs(self.dragons_hp) do
         v:OnTimer(current_time)
+        local dragon = self:GetDragon(dragonType)
+        if dragon then
+            dragon:SetHp(self:GetCurrentHPValueByDragonType(dragonType))
+        end
     end
 end
 
@@ -237,6 +317,9 @@ function DragonManager:OnTimer(current_time)
     self:OnHPChanged()
     self:IteratorDragonEvents(function(dragonEvent)
         dragonEvent:OnTimer(current_time)
+    end)
+    self:IteratorDragonDeathEvents(function(dragonDeathEvent)
+        dragonDeathEvent:OnTimer(current_time)
     end)
 end
 
@@ -247,9 +330,9 @@ function DragonManager:OnHPChanged()
 end
 
 --充能每次消耗的能量值
-function DragonManager:GetEnergyCost()
-    return 20
-end
+-- function DragonManager:GetEnergyCost()
+--     return 20
+-- end
 
 --新手引导
 function DragonManager:PromiseOfFinishEquipementDragon()
@@ -272,8 +355,6 @@ function DragonManager:CheckFinishEquipementDragonPormise()
             table.remove(self.promise_callbacks, 1)
         end
     end
-
 end
 
 return DragonManager
-

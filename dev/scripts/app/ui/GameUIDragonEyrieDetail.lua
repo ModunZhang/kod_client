@@ -43,9 +43,11 @@ end
 
 function GameUIDragonEyrieDetail:CreateBetweenBgAndTitle()
 	self.content_node = display.newNode():addTo(self)
-	self.dragon_base = display.newSprite("dragon_eyrie_base_614x519.png")
-		:align(display.CENTER_TOP, window.cx,window.top)
-		:addTo(self.content_node)
+	local clipNode = display.newClippingRegionNode(cc.rect(0,0,614,519))
+	clipNode:addTo(self.content_node):pos(window.cx - 307,window.top - 519)
+	display.newSprite("dragon_animate_bg_624x606.png"):align(display.LEFT_BOTTOM,-5,0):addTo(clipNode)
+	display.newSprite("eyrie_584x547.png"):align(display.CENTER_TOP,307, 353):addTo(clipNode)
+	self.dragon_base = clipNode
 	self:BuildDragonContent()
 	local star_bg = display.newSprite("dragon_title_bg_534x16.png")
 		:align(display.CENTER_TOP,window.cx,window.top - 100)
