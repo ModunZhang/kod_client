@@ -321,16 +321,20 @@ function GameUtils:parseRichText(str)
     local items = {}
     local str_array = string.split(str, "{")
     for i, v in ipairs(str_array) do
-        local inner_str_array = string.split(v, "}")
-        if #inner_str_array > 1 then
-            for i, v in ipairs(inner_str_array) do
-                table.insert(items, v)
-                if #inner_str_array ~= i then
-                    table.insert(items, "}")
+        if #v > 0 then
+            local inner_str_array = string.split(v, "}")
+            if #inner_str_array > 1 then
+                for i, v in ipairs(inner_str_array) do
+                    if #v > 0 then
+                        table.insert(items, v)
+                        if #inner_str_array ~= i then
+                            table.insert(items, "}")
+                        end
+                    end
                 end
+            else
+                table.insert(items, v)
             end
-        else
-            table.insert(items, v)
         end
         if i ~= #str_array then
             table.insert(items, "{")
@@ -576,6 +580,9 @@ end
 
 
 return GameUtils
+
+
+
 
 
 
