@@ -110,6 +110,11 @@ function DragonEquipment:GetVitalityAndStrengh()
   	return config_category.vitality,config_category.strength
 end
 
+function DragonEquipment:GetLeadership()
+	local config_category = self:GetDetailConfig()
+	return config_category.leadership
+end
+
 function DragonEquipment:GetBufferAndEffect()
 	local r = {}
   	for _,v in ipairs(self:GetBuffData()) do
@@ -125,8 +130,6 @@ end
 ----------------------------------------------------------------------------------------------------
 function Dragon:ctor(drag_type,strength,vitality,status,star,level,exp,hp)
 	property(self, "type", drag_type)
-	property(self, "totalStrength", strength)
-	property(self, "totalVitality", vitality)
 	property(self, "status", status)
 	property(self, "star", star)
 	property(self, "level", level)
@@ -136,13 +139,13 @@ function Dragon:ctor(drag_type,strength,vitality,status,star,level,exp,hp)
 	self.equipments_ = self:DefaultEquipments()
 	self:CheckEquipemtIfLocked_()
 end
---领导力
+--自身的领导力
 function Dragon:Leadership()
 	return config_dragonAttribute[self:Star()].initLeadership + self:Level() * config_dragonAttribute[self:Star()].perLevelLeadership 
 end
---带兵量
+--总带兵量
 function Dragon:LeadCitizen()
-	return self:Leadership() * config_alliance_initData_int.citizenPerLeadership.value
+	return self:TotalLeadership() * config_alliance_initData_int.citizenPerLeadership.value
 end
 
 --自身的力量
@@ -182,14 +185,20 @@ function Dragon:Skills()
 	return self.skills_
 end
 
+function Dragon:GetSkillByName(name)
+	for _,v in pairs(self:Skills()) do
+		if v:Name() == name then
+			return v
+		end
+	end
+end
+
 function Dragon:GetSkillByKey(key) 
 	return self.skills_[key]
 end
 
 function Dragon:Update(json_data)
 	self:SetType(json_data.type)
-	self:SetTotalStrength(json_data.strength)
-	self:SetTotalVitality(json_data.vitality)
 	self:SetStatus(json_data.status)
 
 	local star = self:Star()
@@ -365,4 +374,51 @@ function Dragon:GetWeight()
 	end
 end
 
+function Dragon:TotalStrength()
+	local strength = self:Strength()
+	local buff = self:__getDragonStrengthBuff()
+	strength = strength + math.floor(strength * buff)
+	for __,equipment in pairs(self:Equipments()) do
+		local ___,strength_add = equipment:GetVitalityAndStrengh()
+		strength = strength + strength_add
+	end
+	return strength
+end
+
+function Dragon:__getDragonStrengthBuff()
+	local skill = self:GetSkillByName('dragonBreath')
+	return skill:GetEffect()
+end
+
+function Dragon:TotalVitality()
+	local vitality = self:Vitality()
+	local buff = self:__getDragonVitalityBuff()
+	vitality = vitality + math.floor(vitality * buff)
+	for __,equipment in pairs(self:Equipments()) do
+		local vitality_add,___ = equipment:GetVitalityAndStrengh()
+		vitality = vitality + vitality_add
+	end
+	return vitality
+end
+
+function Dragon:__getDragonVitalityBuff()
+	local skill = self:GetSkillByName('dragonBlood')
+	return skill:GetEffect()
+end
+
+function Dragon:TotalLeadership()
+	local leadership = self:Leadership()
+	local buff = self:__getDragonLeadershipBuff()
+	leadership = leadership + math.floor(leadership * buff)
+	for __,equipment in pairs(self:Equipments()) do
+		local leadership_add = equipment:GetLeadership()
+		leadership = leadership + leadership_add
+	end
+	return leadership
+end
+
+function Dragon:__getDragonLeadershipBuff()
+	local skill = self:GetSkillByName('leadership')
+	return skill:GetEffect()
+end
 return Dragon
