@@ -12,6 +12,7 @@ function DragonEvent:ctor()
 	property(self,"id","")
 	property(self,"dragonType","")
 	property(self,"finishTime","")	
+	property(self,"startTime","")	
 end
 
 function DragonEvent:OnPropertyChange()
@@ -21,6 +22,7 @@ function DragonEvent:UpdateData(json_data)
 	self:SetId(json_data.id or "")
 	self:SetDragonType(json_data.dragonType or  "")
 	self:SetFinishTime(json_data.finishTime/1000 or 0)
+	self:SetStartTime(json_data.startTime/1000 or 0)
 end
 
 function DragonEvent:Reset()

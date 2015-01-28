@@ -10,7 +10,7 @@ local DragonManager = import("..entity.DragonManager")
 local WidgetDragons = import("..widget.WidgetDragons")
 local DragonSprite = import("..sprites.DragonSprite")
 local Localize = import("..utils.Localize")
-
+local WidgetPushButton = import("..widget.WidgetPushButton")
 function GameUIDragonEyrieMain:ctor(city,building)
 	GameUIDragonEyrieMain.super.ctor(self,city,_("龙巢"),building)
 	self.building = building
@@ -21,6 +21,8 @@ function GameUIDragonEyrieMain:ctor(city,building)
 	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonHatched)
 	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventTimer)
 	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventChanged)
+	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
+	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer)
 	self.draong_index = 1
 end
 
@@ -64,6 +66,22 @@ function GameUIDragonEyrieMain:OnDragonEventChanged()
  		self:RefreshUI()
  	end
 end
+function GameUIDragonEyrieMain:OnDragonDeathEventChanged()
+	local dragonDeathEvent = self.dragon_manager:GetDragonDeathEventByType(self:GetCurrentDragon():Type())
+	if dragonDeathEvent then
+ 		self:RefreshUI()
+ 	end
+end
+
+function GameUIDragonEyrieMain:OnDragonDeathEventTimer(dragonDeathEvent)
+	if self:GetCurrentDragon():Type() == dragonDeathEvent:DragonType() 
+		and self.progress_content_death  
+		and self.progress_content_death:isVisible() 
+		then
+			self.progress_death:setPercentage(dragonDeathEvent:GetPercent())
+			self.dragon_death_label:setString(GameUtils:formatTimeStyleDayHour(dragonDeathEvent:GetTime()))
+	end
+end
 
 function GameUIDragonEyrieMain:OnDragonEventTimer(dragonEvent)
 	if self:GetCurrentDragon():Type() == dragonEvent:DragonType() and self.progress_content_not_hated_timer and self.progress_content_not_hated_timer:isVisible() then
@@ -77,6 +95,8 @@ function GameUIDragonEyrieMain:onMoveOutStage()
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonHatched)
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventTimer)
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventChanged)
+	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
+	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer)
 	GameUIDragonEyrieMain.super.onMoveOutStage(self)
 end
 
@@ -107,6 +127,8 @@ function GameUIDragonEyrieMain:RefreshUI()
 	if not self.dragon_info then return end
 	if not self:GetCurrentDragon():Ishated() then
 		self.dragon_info:hide()
+		self.death_speed_button:hide()
+		self.progress_content_death:hide()
 		local dragonEvent = self.dragon_manager:GetDragonEventByDragonType(self:GetCurrentDragon():Type())
  		if dragonEvent then
 			self.progress_content_not_hated:show()
@@ -124,18 +146,35 @@ function GameUIDragonEyrieMain:RefreshUI()
 		self.leadership_val_label:setString("0")
 		self.state_label:setString(_("未孵化"))
 	else
-		self.dragon_info:show()
-		self.draong_info_lv_label:setString("LV " .. dragon:Level() .. "/" .. dragon:GetMaxLevel())
-		self.draong_info_xp_label:setString(dragon:Exp() .. "/" .. dragon:GetMaxExp())
-		self.progress_content_not_hated:hide()
-		self.progress_content_not_hated_timer:hide()
-		self.progress_content_hated:show()
-		self.strength_val_label:setString(dragon:TotalStrength())
-		self.vitality_val_label:setString(dragon:TotalVitality())
-		self.leadership_val_label:setString(dragon:TotalLeadership())
-		self.dragon_hp_label:setString(dragon:Hp() .. "/" .. dragon:GetMaxHP())
-		self.progress_hated:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
-		self.state_label:setString(Localize.dragon_status[dragon:Status()])
+		if dragon:IsDead() then
+			local dragonDeathEvent = self.dragon_manager:GetDragonDeathEventByType(self:GetCurrentDragon():Type())
+			if dragonDeathEvent then
+				self.progress_death:setPercentage(dragonDeathEvent:GetPercent())
+				self.dragon_death_label:setString(GameUtils:formatTimeStyleDayHour(dragonDeathEvent:GetTime()))
+			end
+			self.death_speed_button:show()
+			self.progress_content_death:show()
+			self.progress_content_not_hated_timer:hide()
+			self.progress_content_not_hated:hide()
+			self.progress_content_hated:hide()
+			self.state_label:setString(_("死亡"))
+		else
+			self.progress_content_not_hated_timer:show()
+			self.dragon_info:show()
+			self.draong_info_lv_label:setString("LV " .. dragon:Level() .. "/" .. dragon:GetMaxLevel())
+			self.draong_info_xp_label:setString(dragon:Exp() .. "/" .. dragon:GetMaxExp())
+			self.progress_content_not_hated:hide()
+			self.progress_content_not_hated_timer:hide()
+			self.progress_content_hated:show()
+			self.strength_val_label:setString(dragon:TotalStrength())
+			self.vitality_val_label:setString(dragon:TotalVitality())
+			self.leadership_val_label:setString(dragon:TotalLeadership())
+			self.dragon_hp_label:setString(dragon:Hp() .. "/" .. dragon:GetMaxHP())
+			self.progress_hated:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
+			self.state_label:setString(Localize.dragon_status[dragon:Status()])
+			self.death_speed_button:hide()
+			self.progress_content_death:hide()
+		end
 	end
 	self.nameLabel:setString(dragon:GetLocalizedName())
 	
@@ -170,7 +209,22 @@ function GameUIDragonEyrieMain:CreateProgressTimer()
  		:addTo(bg)
  		:align(display.CENTER_RIGHT,bg:getContentSize().width+10,20)
 	return bg,progressTimer
+end
 
+function GameUIDragonEyrieMain:CreateDeathEventProgressTimer()
+	local bg,progressTimer = nil,nil
+	bg = display.newSprite("progress_bar_364x40_1.png")
+	progressTimer = UIKit:commonProgressTimer("progress_bar_yellow_364x40.png"):addTo(bg):align(display.LEFT_CENTER,0,20)
+	progressTimer:setPercentage(0)
+	local icon_bg = display.newSprite("progress_bg_head_43x43.png"):align(display.LEFT_CENTER, -20, 20):addTo(bg)
+	display.newSprite("hourglass_39x46.png"):align(display.CENTER, 22, 22):addTo(icon_bg):scale(0.8)
+	self.dragon_death_label = UIKit:ttfLabel({
+		text = "",
+		size = 22,
+		color= 0xfff3c7,
+		shadow= true
+	}):addTo(bg):align(display.LEFT_CENTER, 50,20)
+	return bg,progressTimer
 end
 
 function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
@@ -239,7 +293,16 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
     	--
     	self.progress_content_hated,self.progress_hated = self:CreateProgressTimer()
     	self.progress_content_hated:align(display.CENTER_TOP,window.cx,info_layer:getPositionY()-18):addTo(self.dragonNode)
-    	
+    	-- 
+    	self.progress_content_death,self.progress_death = self:CreateDeathEventProgressTimer()
+    	self.progress_content_death:align(display.LEFT_TOP,60,info_layer:getPositionY()-20):addTo(self.dragonNode)
+
+    	self.death_speed_button = WidgetPushButton.new({normal = 'green_btn_up_148x58.png',pressed = 'green_btn_down_148x58.png'})
+    		:setButtonLabel("normal",UIKit:commonButtonLable({
+    			text = _("加速")
+    		})):addTo(self.dragonNode)
+    			:align(display.LEFT_TOP,self.progress_content_death:getPositionX()+self.progress_content_death:getContentSize().width+18,
+    			 self.progress_content_death:getPositionY()+12)
 		local info_panel = UIKit:CreateBoxPanel9({width = 548, height = 114})
 			:addTo(self.dragonNode)
 			:align(display.CENTER_TOP,window.cx,self.progress_content_hated:getPositionY() - self.progress_content_hated:getContentSize().height - 32)
@@ -287,7 +350,7 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 			size  = 20
 		}):addTo(info_panel):align(display.CENTER_BOTTOM,540 - 92,75)
 
-		local detailButton = cc.ui.UIPushButton.new({
+		local detailButton = WidgetPushButton.new({
 			normal = "dragon_yellow_button.png",pressed = "dragon_yellow_button_h.png"
 		}):setButtonLabel("normal",UIKit:ttfLabel({
 			text = _("详情"),
