@@ -139,13 +139,13 @@ function Dragon:ctor(drag_type,strength,vitality,status,star,level,exp,hp)
 	self.equipments_ = self:DefaultEquipments()
 	self:CheckEquipemtIfLocked_()
 end
---领导力
+--自身的领导力
 function Dragon:Leadership()
 	return config_dragonAttribute[self:Star()].initLeadership + self:Level() * config_dragonAttribute[self:Star()].perLevelLeadership 
 end
---带兵量
+--总带兵量
 function Dragon:LeadCitizen()
-	return self:Leadership() * config_alliance_initData_int.citizenPerLeadership.value
+	return self:TotalLeadership() * config_alliance_initData_int.citizenPerLeadership.value
 end
 
 --自身的力量
