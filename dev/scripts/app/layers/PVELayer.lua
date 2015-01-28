@@ -23,7 +23,7 @@ OBJECT_IMAGE[PVEDefine.WARRIORS_TOMB] = "warriors_tomb.png"
 OBJECT_IMAGE[PVEDefine.OBELISK] = "obelisk.png"
 OBJECT_IMAGE[PVEDefine.ANCIENT_RUINS] = "ancient_ruins.png"
 OBJECT_IMAGE[PVEDefine.ENTRANCE_DOOR] = "entrance_door.png"
-OBJECT_IMAGE[PVEDefine.TREE] = "tree_2_120x120.png"
+OBJECT_IMAGE[PVEDefine.TREE] = "tree_2_138x110.png"
 OBJECT_IMAGE[PVEDefine.HILL] = "hill_228x146.png"
 OBJECT_IMAGE[PVEDefine.LAKE] = "lake_220x174.png"
 

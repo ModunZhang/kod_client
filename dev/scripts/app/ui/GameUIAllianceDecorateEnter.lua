@@ -26,7 +26,7 @@ function GameUIAllianceDecorateEnter:GetUITitle()
 end
 
 function GameUIAllianceDecorateEnter:GetBuildingImage()
-	return "tree_1_120x120.png"
+	return "tree_1_112x114.png"
 end
 
 function GameUIAllianceDecorateEnter:GetBuildingCategory()
