@@ -85,7 +85,7 @@ function GameUIAllianceBasicSetting:GetContentNode()
 		:align(display.LEFT_BOTTOM,okButton:getPositionX() - 220, 20)
 		:scale(0.4)
 	local gemLabel = UIKit:ttfLabel({
-		text = "600",
+		text = "50",
 		size = 16,
 		color = 0x797154
 		}):addTo(createContent)

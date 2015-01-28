@@ -8,6 +8,8 @@ local EmojiUtil = class("EmojiUtil")
 
 --将表情化标签转换成富文本语法
 function EmojiUtil:ConvertEmojiToRichText(chatmsg)
+
+	chatmsg = string.gsub(chatmsg,"\n","\\n")
 	local dest = {}
 	local s,e = string.find(chatmsg,"%[/[%P]+%]")
 	if not s and string.len(chatmsg) > 0 then
@@ -28,9 +30,9 @@ function EmojiUtil:ConvertEmojiToRichText(chatmsg)
 	for i,v in ipairs(dest) do
 		local result,count = string.gsub(v,"%[/([%P]+)%]", "%1")
 		if count == 0 then
-			dest[i] = string.format('{type = "text", value = "%s"}', v)
+			dest[i] = string.format("{type = 'text', value = '%s'}", v)
 		else
-			dest[i] = string.format('{type = "image", value = "%s"}',string.format("#%s.png", string.upper(result)))
+			dest[i] = string.format("{type = 'image', value = '%s'}",string.format('#%s.png', string.upper(result)))
 		end
 	end
 	return table.concat(dest)
