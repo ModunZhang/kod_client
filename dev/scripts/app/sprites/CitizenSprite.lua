@@ -1,12 +1,11 @@
 local Sprite = import(".Sprite")
 local CitizenSprite = class("CitizenSprite", Sprite)
+
+local scale = 0.3
 function CitizenSprite:ctor(city_layer, x, y)
-	self.x, self.y = x, y
     CitizenSprite.super.ctor(self, city_layer, nil, city_layer:GetLogicMap():ConvertToMapPosition(x, y))
  	self:TurnRight()
  	self:PlayAnimation("move_1")
- 	-- self:CreateBase()
- 	-- self.sprite:setVisible(false)
 end
 function CitizenSprite:PlayAnimation(animation)
     self.current_animation = animation
@@ -20,24 +19,20 @@ function CitizenSprite:CreateSprite()
     return armature
 end
 function CitizenSprite:TurnRight()
-	self:GetSprite():setScaleX(0.5)
-	self:GetSprite():setScaleY(0.5)
+	self:GetSprite():setScaleX(scale)
+	self:GetSprite():setScaleY(scale)
 	return self
 end
 function CitizenSprite:TurnLeft()
-	self:GetSprite():setScaleX(-0.5)
-	self:GetSprite():setScaleY(0.5)
+	self:GetSprite():setScaleX(-scale)
+	self:GetSprite():setScaleY(scale)
 	return self
 end
 function CitizenSprite:GetSpriteOffset()
-    return 0, 50
-end
-function CitizenSprite:SetPositionWithZOrder(x, y)
-	self.x, self.y = self:GetLogicMap():ConvertToLogicPosition(x, y)
-	CitizenSprite.super.SetPositionWithZOrder(self, x, y)
+    return 0, 15
 end
 function CitizenSprite:GetMidLogicPosition()
-    return self.x, self.y
+    return self:GetLogicMap():ConvertToLogicPosition(self:getPosition())
 end
 function CitizenSprite:CreateBase()
     self:GenerateBaseTiles(1, 1)
