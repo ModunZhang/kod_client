@@ -5,6 +5,7 @@
 
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
+local SoldierManager = import("..entity.SoldierManager")
 local WidgetInfoWithTitle = import("..widget.WidgetInfoWithTitle")
 local WidgetMilitaryTechnologyStatus = import("..widget.WidgetMilitaryTechnologyStatus")
 local WidgetMilitaryTechnology = import("..widget.WidgetMilitaryTechnology")
@@ -57,6 +58,12 @@ function GameUIMilitaryTechBuilding:onEnter()
             self.status:setVisible(false)
         end
     end):pos(window.cx, window.bottom + 34)
+    City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_DATA_CHANGED)
+end
+function GameUIMilitaryTechBuilding:onExit()
+    print("GameUIMilitaryTechBuilding:OnExit")
+    City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_DATA_CHANGED)
+    GameUIMilitaryTechBuilding.super.onExit(self)
 end
 function GameUIMilitaryTechBuilding:CreateBetweenBgAndTitle()
     GameUIMilitaryTechBuilding.super.CreateBetweenBgAndTitle(self)
@@ -87,7 +94,7 @@ function GameUIMilitaryTechBuilding:InitTech()
         :addTo(tech_point_bg)
 
     -- 科技点数
-    UIKit:ttfLabel({
+    self.tech_point_label = UIKit:ttfLabel({
         text = City:GetSoldierManager():GetTechPointsByType(self.building:GetType()),
         size = 22,
         color = 0x403c2f,
@@ -97,4 +104,8 @@ end
 function GameUIMilitaryTechBuilding:InitPromote()
     self.promote_list = WidgetPromoteSoliderList.new(self.building):addTo(self.promote_layer):align(display.BOTTOM_CENTER, window.cx, window.bottom_top+20)
 end
+function GameUIMilitaryTechBuilding:OnMilitaryTechsDataChanged(soldier_manager,changed_map)
+    self.tech_point_label:setString(soldier_manager:GetTechPointsByType(self.building:GetType()))
+end
 return GameUIMilitaryTechBuilding
+

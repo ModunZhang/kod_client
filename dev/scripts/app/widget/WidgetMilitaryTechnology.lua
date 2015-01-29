@@ -11,7 +11,7 @@ local SoldierManager = import("..entity.SoldierManager")
 local Localize = import("..utils.Localize")
 
 local function create_line_item(icon,text_1,text_2)
-    local line = display.newScale9Sprite("divide_line_489x2.png", 0, 0,cc.size(384,2),cc.rect(10,1,364,1))
+    local line = display.newSprite("dividing_line_384x2.png")
     local icon = display.newSprite(icon):addTo(line,2):align(display.LEFT_BOTTOM, 0, 0)
     local text1 = UIKit:ttfLabel({
         text = text_1,
@@ -109,7 +109,7 @@ end
 function WidgetMilitaryTechnology:onExit()
     City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_DATA_CHANGED)
 end
-function WidgetMilitaryTechnology:OnMilitaryTechsDataChanged(city,changed_map)
+function WidgetMilitaryTechnology:OnMilitaryTechsDataChanged(soldier_manager,changed_map)
     for k,v in pairs(changed_map) do
         print("OnMilitaryTechsDataChanged",k,self.items_list[k])
         if self.items_list[k] then
@@ -118,6 +118,7 @@ function WidgetMilitaryTechnology:OnMilitaryTechsDataChanged(city,changed_map)
     end
 end
 return WidgetMilitaryTechnology
+
 
 
 
