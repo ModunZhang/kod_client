@@ -372,6 +372,78 @@ end
 function City:GetLeftBuildingCountsByType(building_type)
     return self:GetMaxHouseCanBeBuilt(building_type) - #self:GetBuildingByType(building_type)
 end
+local function alignmeng_path(path)
+    if #path <= 3 then
+        return path
+    end
+    local index = 1
+    while index <= #path - 2 do
+        local start = path[index]
+        local middle = path[index + 1]
+        local ending = path[index + 2]
+        if (start.x == middle.x and middle.x == ending.x)
+            or (start.y == middle.y and middle.y == ending.y) then
+            table.remove(path, index + 1)
+        else
+            index = index + 1
+        end
+    end
+    return path
+end
+function City:FindAPointWayFromPosition(x, y)
+    return self:FindAPointWayFromTileAt(self:GetTileByBuildingPosition(x, y), {x = x, y = y})
+end
+function City:FindAPointWayFromTile()
+    return self:FindAPointWayFromTileAt()
+end
+function City:FindAPointWayFromTileAt(tile, point)
+    local path_tiles = self:FindATileWayFromTile(tile)
+    local path_point = LuaUtils:table_map(path_tiles, function(k, v)
+        return k, v:GetCrossPoint()
+    end)
+    table.insert(path_point, 1, point or path_tiles[1]:RandomPoint())
+    table.insert(path_point, #path_point + 1, path_tiles[#path_tiles]:RandomPoint())
+    return alignmeng_path(path_point)
+end
+local function find_path_tile(connectedness, start_tile)
+    if #connectedness == 0 then
+        assert(start_tile)
+        return {start_tile}
+    end
+    local r = {start_tile or table.remove(connectedness, math.random(#connectedness))}
+    local index = 1
+    local changed = true
+    while changed do
+        local cur_nearbys = {}
+        for i, v in ipairs(connectedness) do
+            local cur = r[index]
+            if cur:IsNearBy(v) then
+                table.insert(cur_nearbys, i)
+            end
+        end
+        if #cur_nearbys > 0 then
+            table.insert(r, table.remove(connectedness, cur_nearbys[math.random(#cur_nearbys)]))
+            index = index + 1
+            changed = true
+        else
+            changed = false
+        end
+    end
+    return r
+end
+function City:FindATileWayFromTile(tile)
+    local r = tile == nil and self:GetConnectedTiles() or tile:FindConnectedTilesFromThis()
+    return find_path_tile(r, tile)
+end
+function City:GetConnectedTiles()
+    local r = {}
+    self:IteratorTilesByFunc(function(x, y, tile)
+        if tile:IsConnected() then
+            table.insert(r, tile)
+        end
+    end)
+    return r
+end
 function City:GetConnectedTiles()
     local r = {}
     self:IteratorTilesByFunc(function(x, y, tile)
@@ -1572,6 +1644,9 @@ end
 
 
 return City
+
+
+
 
 
 

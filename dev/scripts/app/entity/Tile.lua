@@ -19,6 +19,33 @@ end
 function Tile:IsUnlocked()
     return not self.locked
 end
+local function find_nearby(t, tiles)
+    local connectedness = {t}
+    local index = 1
+    while true do
+        local cur = connectedness[index]
+        if not cur then
+            break
+        end
+        for i, v in ipairs(tiles) do
+            if cur:IsNearBy(v) then
+                table.insert(connectedness, table.remove(tiles, i))
+            end
+        end
+        index = index + 1
+    end
+    return connectedness
+end
+function Tile:FindConnectedTilesFromThis()
+    local connects = {}
+    local r = self.city:GetConnectedTiles()
+    for i,v in ipairs(r) do
+        if v == self then
+            r[1], r[i] = r[i], r[1]
+        end
+    end
+    return find_nearby(table.remove(r, 1), r)
+end
 function Tile:IsConnected()
     local x, y = self.x, self.y
     if (x == 1 and y == 1) or (x == 1 and y == 2) or (x == 2 and y == 1) then
@@ -132,7 +159,6 @@ function Tile:GetCrossPoint()
     return {x = end_x, y = end_y - 6}
 end
 function Tile:IsNearBy(other_tile)
-    assert(other_tile.x ~= self.x or other_tile.y ~= self.y)
     return (math.abs(other_tile.x - self.x) == 1 and other_tile.y == self.y)
         or (other_tile.x == self.x and math.abs(other_tile.y - self.y) == 1)
 end
@@ -321,6 +347,7 @@ end
 
 
 return Tile
+
 
 
 
