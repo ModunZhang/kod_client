@@ -97,7 +97,8 @@ local function handle_next_failed(p, err)
             return p
         end
         dump(err)
-        assert(false, "你应该捕获这个错误!")
+        err = err or ""
+        assert(false, "你应该捕获这个错误!" .. err)
     else
         next_promise.state_ = REJECTED
     end

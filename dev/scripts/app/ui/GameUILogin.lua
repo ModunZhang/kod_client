@@ -82,8 +82,14 @@ function GameUILogin:createStartGame()
     self.start_ui = button
 end
 
-function GameUILogin:setProgressText(str)
+function GameUILogin:setProgressText(str,retryLogin)
+    if type(retryLogin) ~= 'boolean' then
+        retryLogin = false
+    end
     self.progressTips:setString(str)
+    if retryLogin then
+        self:ReTryLogin(str)
+    end
 end
 function GameUILogin:setProgressPercent(num,animac)
     animac = animac or false
@@ -111,7 +117,7 @@ function GameUILogin:connectGateServer()
         self:getLogicServerInfo()
     end):catch(function(err)
         dump(err:reason())
-        self:setProgressText(_("连接网关服务器失败!"))
+        self:setProgressText(_("连接网关服务器失败!"),true)
     end)
 end
 function GameUILogin:getLogicServerInfo()
@@ -120,7 +126,7 @@ function GameUILogin:getLogicServerInfo()
         self:connectLogicServer()
     end):catch(function(err)
         dump(err:reason())
-        self:setProgressText(_("获取游戏服务器信息失败!"))
+        self:setProgressText(_("获取游戏服务器信息失败!"),true)
     end)
 end
 
@@ -131,7 +137,7 @@ function GameUILogin:connectLogicServer()
         self:setProgressPercent(100)
         self:login()
     end):catch(function(err)
-        self:setProgressText(_("连接游戏服务器失败!"))
+        self:setProgressText(_("连接游戏服务器失败!"),true)
     end)
 
 end
@@ -147,7 +153,7 @@ function GameUILogin:login()
         end, 0.5)
     end):catch(function(err)
         dump(err:reason())
-        self:setProgressText(_("登录游戏失败!"))
+        self:setProgressText(_("登录游戏失败!"),true)
     end):done(function()
         if CONFIG_IS_DEBUG then
             if gaozhou then
@@ -183,6 +189,14 @@ function GameUILogin:createVerLabel()
         color = cc.c3b(0,0,0),
     }):addTo(self.ui_layer,2)
     :align(display.RIGHT_BOTTOM,display.right-2,display.bottom)
+end
+
+function GameUILogin:ReTryLogin(msg)
+    msg = msg or ""
+    local str = string.format("%s,%s",msg,_("点击执行重新登陆,或稍后再试."))
+    UIKit:showMessageDialog(_("提示"),str, function()
+        app:restart()
+    end, nil, false)
 end
 
 return GameUILogin

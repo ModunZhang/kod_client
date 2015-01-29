@@ -4,7 +4,7 @@ local UIAutoClose = class("UIAutoClose", function()
     node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         if event.name == "ended" then
             if node.disable then
-                return 
+                return
             end
             node:leftButtonClicked()
         end
@@ -29,14 +29,17 @@ function UIAutoClose:addToScene(scene,anima)
     return self
 end
 function UIAutoClose:onEnter()
-    
+
 end
 function UIAutoClose:onExit()
-   
+
 end
 function UIAutoClose:onCleanup()
     if UIKit:getRegistry().isObjectExists(self.__cname) then
         UIKit:getRegistry().removeObject(self.__cname)
+    end
+    if self.clean_func then
+        self.clean_func()
     end
 end
 function UIAutoClose:addToCurrentScene( anima )
@@ -79,4 +82,8 @@ end
 function UIAutoClose:onMoveOutStage()
     self:removeFromParent(true)
 end
+function UIAutoClose:addCloseCleanFunc(func)
+    self.clean_func=func
+end
 return UIAutoClose
+

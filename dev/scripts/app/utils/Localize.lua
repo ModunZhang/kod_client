@@ -595,7 +595,7 @@ local getLocaliedKeyByType = function(type)
     if house_config[type] then
         return getHouseLocalizedKeyByBuildingType(type)
     else
-        return self:getBuildingLocalizedKeyByBuildingType(type)
+        return getBuildingLocalizedKeyByBuildingType(type)
     end
 end
 

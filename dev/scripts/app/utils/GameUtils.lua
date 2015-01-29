@@ -134,7 +134,7 @@ function GameUtils:Google_Translate(text,cb)
             else
                 cb(nil,"")
             end
-        elseif eventName == "inprogress" then
+        elseif eventName == "progress" then
         else
             cb(nil,eventName)
         end
@@ -197,7 +197,7 @@ function GameUtils:Baidu_Translate(text,cb)
                 print("Baidu Translator::::::-------------------------------------->format error!")
                 cb(nil,"")
             end
-        elseif eventName == "inprogress" then
+        elseif eventName == "progress" then
         else
             cb(nil,eventName)
         end

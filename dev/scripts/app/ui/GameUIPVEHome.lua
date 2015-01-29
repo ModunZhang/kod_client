@@ -2,20 +2,44 @@ local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local UIPageView = import("..ui.UIPageView")
 local window = import("..utils.window")
 local GameUIPVEHome = UIKit:createUIClass('GameUIPVEHome')
-
+local RichText = import("..widget.RichText")
+local ChatManager = import("..entity.ChatManager")
 local timer = app.timer
 function GameUIPVEHome:ctor(user)
     self.user = user
     GameUIPVEHome.super.ctor(self)
+    self.chatManager = app:GetChatManager()
+end
+function GameUIPVEHome:TO_TOP()
+    self:RefreshChatMessage()
+end
+function GameUIPVEHome:TO_REFRESH()
+    self:RefreshChatMessage()
+end
+function GameUIPVEHome:RefreshChatMessage()
+    if not self.chat_labels then return end
+    local last_chat_messages = self:GetChatManager():FetchLastChannelMessage()
+    for i,v in ipairs(self.chat_labels) do
+        local rich_text = self.chat_labels[i]
+        rich_text:Text(last_chat_messages[i],1)
+        rich_text:align(display.LEFT_CENTER, 0, 10)
+    end
+end
+function GameUIPVEHome:GetChatManager()
+    return self.chatManager
 end
 function GameUIPVEHome:onEnter()
     self:CreateTop()
     self:CreateBottom()
     self.user:AddListenOnType(self, self.user.LISTEN_TYPE.RESOURCE)
     self:OnResourceChanged(self.user)
+    self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
+    self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
 end
 function GameUIPVEHome:onExit()
     self.user:RemoveListenerOnType(self, self.user.LISTEN_TYPE.RESOURCE)
+    self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
+    self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
 end
 function GameUIPVEHome:OnResourceChanged(user)
     local strength_resouce = user:GetStrengthResource()
@@ -133,7 +157,10 @@ function GameUIPVEHome:CreateBottom()
 
     local size = chat_bg:getContentSize()
     local pv = UIPageView.new {
-        viewRect = cc.rect(10, 4, size.width-80, size.height)}
+        viewRect = cc.rect(10, 4, size.width-80, size.height),
+        row = 2,
+        padding = {left = 0, right = 0, top = 10, bottom = 0}
+    }
         :onTouch(function (event)
             dump(event,"UIPageView event")
             if event.name == "pageChange" then
@@ -155,26 +182,24 @@ function GameUIPVEHome:CreateBottom()
         :addTo(chat_bg)
     pv:setTouchEnabled(true)
     pv:setTouchSwallowEnabled(false)
+    self.chat_labels = {}
+    local last_chat_messages = self:GetChatManager():FetchLastChannelMessage()
     -- add items
-    for i=1,2 do
+    for i=1,4 do
         local item = pv:newItem()
         local content
 
         content = display.newLayer()
-        content:setContentSize(540, 40)
+        content:setContentSize(540, 20)
         content:setTouchEnabled(false)
-        local text_tag = i==1 and "世界聊天" or "联盟聊天"
-        UIKit:ttfLabel(
-            {text = text_tag,
-                size = 24,
-                color = 0xf3f0b6})
-            :addTo(content)
-            :align(display.CENTER, content:getContentSize().width/2, content:getContentSize().height/2)
+        local label = RichText.new({width = 540,size = 16,color = 0xc7bd97})
+        label:Text(last_chat_messages[i],1)
+        label:addTo(content):align(display.LEFT_CENTER, 0, content:getContentSize().height/2)
+        table.insert(self.chat_labels, label)
         item:addChild(content)
         pv:addItem(item)
     end
     pv:reload()
-
     local map_node = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE):addTo(self)
 end
 

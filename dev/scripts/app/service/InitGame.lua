@@ -18,6 +18,7 @@ return function(userData)
 
     timer:AddListener(User)
     timer:AddListener(City)
+    timer:AddListener(ItemManager)
     timer:AddListener(Alliance_Manager)
     timer:Start()
     app:GetChatManager():FetchAllChatMessageFromServer()

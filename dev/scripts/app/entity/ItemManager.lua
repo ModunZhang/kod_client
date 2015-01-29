@@ -5,9 +5,10 @@
 local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local Item = import(".Item")
+local ItemEvent = import(".ItemEvent")
 local ItemManager = class("ItemManager", MultiObserver)
 
-ItemManager.LISTEN_TYPE = Enum("ITEM_CHANGED")
+ItemManager.LISTEN_TYPE = Enum("ITEM_CHANGED","OnItemEventTimer")
 
 function ItemManager:ctor()
     ItemManager.super.ctor(self)
@@ -16,6 +17,7 @@ function ItemManager:ctor()
     self.items_resource = {}
     self.items_special = {}
     self.items_speedUp = {}
+    self.itemEvents = {}
     self:InitAllItems()
 end
 -- 初始化所有道具，数量 0
@@ -38,6 +40,9 @@ end
 function ItemManager:OnUserDataChanged(user_data)
     self:OnItemsChanged(user_data.items)
     self:__OnItemsChanged(user_data.__items)
+
+    self:OnItemEventsChanged(user_data.itemEvents)
+    self:__OnItemEventsChanged(user_data.__itemEvents)
 end
 function ItemManager:OnItemsChanged(items)
     if items then
@@ -79,6 +84,61 @@ function ItemManager:__OnItemsChanged(__items)
             listener:OnItemsChanged(changed_map)
         end)
     end
+end
+function ItemManager:OnItemEventsChanged( itemEvents )
+    if not itemEvents then return end
+    for i,v in ipairs(itemEvents) do
+        local event = ItemEvent.new()
+        event:UpdateData(v)
+        self.itemEvents[v.type] = event
+        event:AddObserver(self)
+    end
+end
+function ItemManager:__OnItemEventsChanged( __itemEvents )
+    if not __itemEvents then return end
+    local changed_map = GameUtils:Event_Handler_Func(
+        __itemEvents
+        ,function(event_data)
+            local itemEvent = ItemEvent.new()
+            itemEvent:UpdateData(event_data)
+            self.itemEvents[itemEvent:Type()] = itemEvent
+            itemEvent:AddObserver(self)
+            return itemEvent
+        end
+        ,function(event_data)
+            local itemEvent = self.itemEvents[event_data.type]
+            itemEvent:UpdateData(event_data)
+            return itemEvent
+        end
+        ,function(event_data)
+            if self.itemEvents[event_data.type] then
+                local itemEvent = self.itemEvents[event_data.type]
+                itemEvent:Reset()
+                self.itemEvents[event_data.type] = nil
+                itemEvent = ItemEvent.new()
+                itemEvent:UpdateData(event_data)
+                return itemEvent
+            end
+        end
+    )
+end
+function ItemManager:OnTimer(current_time)
+    self:IteratorItmeEvents(function(itemEvent)
+        itemEvent:OnTimer(current_time)
+    end)
+end
+function ItemManager:IteratorItmeEvents(func)
+    for _,itemEvent in pairs(self.itemEvents) do
+        func(itemEvent)
+    end
+end
+function ItemManager:OnItemEventTimer(itemEvent)
+    self:NotifyListeneOnType(ItemManager.LISTEN_TYPE.OnItemEventTimer,function(lisenter)
+        lisenter.OnItemEventTimer(lisenter,itemEvent)
+    end)
+end
+function ItemManager:GetItemEventByType( type )
+    return self.itemEvents[type]
 end
 -- 按照道具类型添加到对应table,并加入总表
 function ItemManager:InsertItem(item)
@@ -154,7 +214,19 @@ function ItemManager:GetSameTypeItems(item)
     end
     return same_items
 end
+function ItemManager:GetCanSellSameTypeItems(item)
+    local same_items = self:GetSameTypeItems(item)
+    local canSell = {}
+    for i,v in ipairs(same_items) do
+        if v:IsSell() then
+            table.insert(canSell, v)
+        end
+    end
+    return canSell
+end
 return ItemManager
+
+
 
 
 
