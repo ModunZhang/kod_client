@@ -16,7 +16,7 @@ local SoldierManager = import("..entity.SoldierManager")
 local WidgetUpgradeMilitaryTech = class("WidgetUpgradeMilitaryTech", WidgetPopDialog)
 
 local function create_line_item(icon,text_1,text_2)
-    local line = display.newScale9Sprite("divide_line_489x2.png", 0, 0,cc.size(546,2))
+    local line = display.newSprite("dividing_line_546x2.png")
     local icon = display.newSprite(icon):addTo(line,2):align(display.LEFT_BOTTOM, 0, 0)
     local text1 = UIKit:ttfLabel({
         text = text_1,
@@ -39,7 +39,7 @@ local function create_line_item(icon,text_1,text_2)
 end
 function WidgetUpgradeMilitaryTech:ctor(tech)
     WidgetUpgradeMilitaryTech.super.ctor(self,694,_("研发军事科技"))
-    self.tech = tech
+    self.tech =  City:GetSoldierManager():GetMilitaryTechsByName(tech:Name())
 end
 
 function WidgetUpgradeMilitaryTech:onEnter()

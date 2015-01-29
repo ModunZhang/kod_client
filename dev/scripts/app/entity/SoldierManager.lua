@@ -224,8 +224,11 @@ function SoldierManager:OnMilitaryTechsDataChanged(militaryTechs)
         listener:OnMilitaryTechsDataChanged(self,changed_map)
     end)
 end
-function SoldierManager:GetMilitaryTechsLevelByName(name)
+function SoldierManager:GetMilitaryTechsLevelByName(name) 
     return self.militaryTechs[name]:Level()
+end
+function SoldierManager:GetMilitaryTechsByName(name) 
+    return self.militaryTechs[name]
 end
 function SoldierManager:IteratorMilitaryTechs(func)
     for name,v in pairs(self.militaryTechs) do
@@ -306,7 +309,7 @@ function SoldierManager:__OnMilitaryTechEventsChanged(__militaryTechEvents)
         ,function(data)
             for i,v in ipairs(self.militaryTechEvents) do
                 if v.id == data.id then
-                    self.militaryTechEvents[i] = nil
+                    table.remove(self.militaryTechEvents,i)
                 end
             end
             return data
@@ -371,7 +374,7 @@ function SoldierManager:__OnSoldierStarEventsChanged(__soldierStarEvents)
         ,function(data)
             for i,v in ipairs(self.soldierStarEvents) do
                 if v.id == data.id then
-                    self.soldierStarEvents[i] = nil
+                    table.remove(self.soldierStarEvents,i)
                 end
             end
             return data

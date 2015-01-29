@@ -41,6 +41,9 @@ function WidgetSpeedUp:ctor()
             color = UIKit:hex2c3b(0xffedae)
         }))
        :align(display.CENTER, 510,468):addTo(body)
+    -- 默认不可用
+    self.free_speedUp_btn:setButtonEnabled(false)
+
     -- 大提示框
     self.tip_bg = display.newScale9Sprite("back_ground_166x84.png", size.width/2, 360,cc.size(546,90),cc.rect(15,10,136,64))
         :align(display.CENTER)
