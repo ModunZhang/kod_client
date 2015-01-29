@@ -3,17 +3,48 @@ local UIPageView = import("..ui.UIPageView")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUICityInfo = UIKit:createUIClass('GameUICityInfo')
-
+local RichText = import("..widget.RichText")
+local ChatManager = import("..entity.ChatManager")
 
 function GameUICityInfo:ctor(user)
     GameUICityInfo.super.ctor(self)
     self.user = user
+    self.chatManager = app:GetChatManager()
+end
+
+function GameUICityInfo:GetChatManager()
+    return self.chatManager
+end
+
+function GameUICityInfo:TO_TOP()
+    self:RefreshChatMessage()
+end
+
+function GameUICityInfo:TO_REFRESH()
+    self:RefreshChatMessage()
+end
+
+function GameUICityInfo:RefreshChatMessage()
+    if not self.chat_labels then return end
+    local last_chat_messages = self:GetChatManager():FetchLastChannelMessage()
+    for i,v in ipairs(self.chat_labels) do
+        local rich_text = self.chat_labels[i]
+        rich_text:Text(last_chat_messages[i],1)
+        rich_text:align(display.LEFT_CENTER, 0, 10)
+    end
 end
 
 function GameUICityInfo:onEnter()
     GameUICityInfo.super.onEnter(self)
     self:CreateTop()
     self:CreateBottom()
+    self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
+    self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
+end
+function GameUICityInfo:onExit()
+    self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
+    self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
+    GameUICityInfo.super.onExit(self)
 end
 function GameUICityInfo:CreateTop()
     local top_bg = display.newSprite("top_bg_768x116.png"):addTo(self)
@@ -167,7 +198,10 @@ function GameUICityInfo:CreateBottom()
 
     local size = chat_bg:getContentSize()
     local pv = UIPageView.new {
-        viewRect = cc.rect(10, 4, size.width-80, size.height)}
+        viewRect = cc.rect(10, 4, size.width-80, size.height),
+        row = 2,
+        padding = {left = 0, right = 0, top = 10, bottom = 0}
+    }
         :onTouch(function (event)
             dump(event,"UIPageView event")
             if event.name == "pageChange" then
@@ -189,21 +223,20 @@ function GameUICityInfo:CreateBottom()
         :addTo(chat_bg)
     pv:setTouchEnabled(true)
     pv:setTouchSwallowEnabled(false)
+    self.chat_labels = {}
+    local last_chat_messages = self:GetChatManager():FetchLastChannelMessage()
     -- add items
-    for i=1,2 do
+    for i=1,4 do
         local item = pv:newItem()
         local content
 
         content = display.newLayer()
-        content:setContentSize(540, 40)
+        content:setContentSize(540, 20)
         content:setTouchEnabled(false)
-        local text_tag = i==1 and "世界聊天" or "联盟聊天"
-        UIKit:ttfLabel(
-            {text = text_tag,
-                size = 24,
-                color = 0xf3f0b6})
-            :addTo(content)
-            :align(display.CENTER, content:getContentSize().width/2, content:getContentSize().height/2)
+        local label = RichText.new({width = 540,size = 16,color = 0xc7bd97})
+        label:Text(last_chat_messages[i],1)
+        label:addTo(content):align(display.LEFT_CENTER, 0, content:getContentSize().height/2)
+        table.insert(self.chat_labels, label)
         item:addChild(content)
         pv:addItem(item)
     end
