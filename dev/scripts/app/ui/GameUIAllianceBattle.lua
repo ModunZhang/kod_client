@@ -350,7 +350,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             self_alliance_bg:setButtonEnabled(false)
             enemy_alliance_bg:setButtonEnabled(false)
 
-            local fight_result =  our_alliance:GetLastAllianceFightReports().fightResult == "ourWin"
+            local fight_result =  our_alliance:GetLastAllianceFightReports().fightResult == "attackWin"
             local our_reprot_data = our_alliance:GetOurLastAllianceFightReportsData()
             local enemy_reprot_data = our_alliance:GetEnemyLastAllianceFightReportsData()
             our_alliance_name:setString("["..our_reprot_data.tag.."]"..our_reprot_data.name)
