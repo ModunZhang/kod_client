@@ -244,11 +244,11 @@ function GameUIChatChannel:GetChatItemCell()
             align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
             valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
             font = UIKit:getFontFilePath(),
-    }):align(display.LEFT_BOTTOM,titleBg:getPositionX()+titleBg:getContentSize().width+20, titleBg:getPositionY()-2):addTo(header,3)
+    }):align(display.LEFT_CENTER,titleBg:getPositionX()+titleBg:getContentSize().width+20, titleBg:getPositionY()+titleBg:getContentSize().height/2):addTo(header,3)
     timeLabel:setTag(self.CELL_TIME_LABEL_TAG)
     local translateButton = display.newSprite("chat_translation.png")
     	:addTo(header,3)
-        :align(display.RIGHT_BOTTOM,header:getContentSize().width-10,titleLabel:getPositionY()+titleLabel:getContentSize().height/2)
+        :align(display.RIGHT_TOP,header:getContentSize().width-10,header:getContentSize().height - 5)
 	playerIcon:addTo(content):align(display.LEFT_TOP, 1, bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
 	translateButton:setTag(self.CELL_TRANSLATEBUTTON)
 	main.other = content
@@ -289,7 +289,7 @@ function GameUIChatChannel:GetChatItemCell()
             align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
             valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
             font = UIKit:getFontFilePath(),
-    }):align(display.LEFT_BOTTOM,20, titleBg:getPositionY()):addTo(header,3)
+    }):align(display.LEFT_CENTER,20, titleBg:getPositionY()+titleBg:getContentSize().height/2):addTo(header,3)
     timeLabel:setTag(self.CELL_TIME_LABEL_TAG)
 	local playerIcon = self:GetChatIcon()
 	playerIcon:setTag(self.CELL_PLAYER_ICON_TAG)

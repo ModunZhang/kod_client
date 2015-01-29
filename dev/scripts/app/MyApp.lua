@@ -136,15 +136,13 @@ function MyApp:retryConnectServer()
         app:lockInput(true)
         local loading
         local need_show,showed = true,false
-        scheduler.performWithDelayGlobal(function()
-            if need_show then
-                loading = UIKit:newGameUI("GameUIWatiForNetWork")
-                loading:addToCurrentScene(true)
-                loading:zorder(2001)
-                showed = true
-                need_show = false
-            end
-        end,2)
+        if need_show then
+            loading = UIKit:newGameUI("GameUIWatiForNetWork")
+            loading:addToCurrentScene(true)
+            loading:zorder(2001)
+            showed = true
+            need_show = false
+        end
         scheduler.performWithDelayGlobal(function()
             NetManager:getConnectLogicServerPromise():next(function()
                 return NetManager:getLoginPromise()
