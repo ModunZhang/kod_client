@@ -84,7 +84,7 @@ function WidgetInfoNotListView:CreateInfoItem(info_message)
 
             end
         end
-
+        meetFlag = not meetFlag
         
         table.insert(self.items, content)
     end

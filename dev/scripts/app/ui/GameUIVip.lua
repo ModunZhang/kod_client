@@ -6,6 +6,7 @@ local UIAutoClose = import(".UIAutoClose")
 local UIListView = import(".UIListView")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetPages = import("..widget.WidgetPages")
+local WidgetInfoNotListView = import("..widget.WidgetInfoNotListView")
 local WidgetInfo = import("..widget.WidgetInfo")
 local window = import("..utils.window")
 
@@ -428,15 +429,15 @@ function GameUIVip:CreateVipExpBar()
 end
 
 function GameUIVip:CreateVIPStatus()
-    local status_bg = WidgetUIBackGround.new({height=490}):addTo(self.vip_layer)
+    local status_bg = WidgetUIBackGround.new({height=532,isFrame="yes"}):addTo(self.vip_layer)
         :align(display.BOTTOM_CENTER, display.cx, display.top-880)
     local bg_size = status_bg:getContentSize()
     -- 透明边框
     WidgetBackGroundLucid.new(300):addTo(status_bg)
-        :align(display.TOP_CENTER, bg_size.width/2, bg_size.height-20)
+        :align(display.TOP_CENTER, bg_size.width/2, bg_size.height-60)
 
-    local title_bg = display.newSprite("title_purple_600x52.png"):addTo(status_bg)
-        :align(display.BOTTOM_CENTER, bg_size.width/2, bg_size.height-15)
+    local title_bg = display.newSprite("title_purple_586x34.png"):addTo(status_bg)
+        :align(display.CENTER, bg_size.width/2, bg_size.height-35)
     local title =  cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = _("未激活VIP"),
@@ -456,7 +457,7 @@ function GameUIVip:CreateVIPStatus()
         {normal = "yellow_button_highlight_190x46.png", pressed = "yellow_button_190x46.png"},
         {scale9 = false}
     ):setButtonLabel(increase_vip_label)
-        :addTo(status_bg):align(display.CENTER, 120, bg_size.height-50)
+        :addTo(status_bg):align(display.CENTER, 120, bg_size.height-100)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 self:OpenIncreaseVIPPoint()
@@ -474,48 +475,24 @@ function GameUIVip:CreateVIPStatus()
         {normal = "yellow_button_highlight_190x46.png", pressed = "yellow_button_190x46.png"},
         {scale9 = false}
     ):setButtonLabel(active_vip_label)
-        :addTo(status_bg):align(display.CENTER, bg_size.width-120, bg_size.height-50)
+        :addTo(status_bg):align(display.CENTER, bg_size.width-120, bg_size.height-100)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 self:OpenActiveVIP()
             end
         end)
 
-    -- title
-    cc.ui.UILabel.new(
+    local widget_info = WidgetInfoNotListView.new(
         {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("状态"),
-            font = UIKit:getFontFilePath(),
-            size = 20,
-            color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.CENTER, bg_size.width/2, 140)
+            info={
+                {_("当前VIP等级"),_("LV 3")},
+                {_("下一次登录"),_("+150 VIP 点数")},
+                {_("连续登录"),_("5天")},
+            }
+        }
+    ):align(display.CENTER, bg_size.width/2, 90)
         :addTo(status_bg)
-
-    self.current_vip_level = self:CreateDividing({
-        width = 594,
-        title = _("当前VIP等级"),
-        value = _("LV 3"),
-        title_color =  UIKit:hex2c3b(0x797154),
-        value_color =  UIKit:hex2c3b(0x403c2f),
-    }):align(display.CENTER, bg_size.width/2, 100)
-        :addTo(status_bg)
-    self.next_login = self:CreateDividing({
-        width = 594,
-        title = _("下一次登录"),
-        value = _("+150 VIP 点数"),
-        title_color =  UIKit:hex2c3b(0x797154),
-        value_color =  UIKit:hex2c3b(0x403c2f),
-    }):align(display.CENTER, bg_size.width/2, 60)
-        :addTo(status_bg)
-    self.current_vip_level = self:CreateDividing({
-        width = 594,
-        title = _("连续登录"),
-        value = _("5天"),
-        title_color =  UIKit:hex2c3b(0x797154),
-        value_color =  UIKit:hex2c3b(0x403c2f),
-    }):align(display.CENTER, bg_size.width/2, 20)
-        :addTo(status_bg)
+    
     local vip_button_group = self:CreateVIPButtons(1):addTo(status_bg)
     vip_button_group:pos(bg_size.width/2 - vip_button_group:getContentSize().width/2, 200)
 end
@@ -531,7 +508,7 @@ function GameUIVip:CreateVIPButtons(level)
             button = WidgetPushButton.new(
                 {normal = "vip_unlock.png", pressed = "vip_unlock.png"},
                 {scale9 = false}
-            ):addTo(button_group):align(display.LEFT_BOTTOM, (math.mod(i-1,5))*gap_x, 100-math.floor((i-1)/5)*100)
+            ):addTo(button_group):align(display.LEFT_BOTTOM, (math.mod(i-1,5))*gap_x, 90-math.floor((i-1)/5)*110)
                 :onButtonClicked(function(event)
                     if event.name == "CLICKED_EVENT" then
                         self:OpenVIPDetails(i)
@@ -541,7 +518,7 @@ function GameUIVip:CreateVIPButtons(level)
             button = WidgetPushButton.new(
                 {normal = "vip_lock.png", pressed = "vip_lock.png"},
                 {scale9 = false}
-            ):addTo(button_group):align(display.LEFT_BOTTOM, (math.mod(i-1,5))*gap_x, 100-math.floor((i-1)/5)*100)
+            ):addTo(button_group):align(display.LEFT_BOTTOM, (math.mod(i-1,5))*gap_x, 90-math.floor((i-1)/5)*110)
                 :onButtonClicked(function(event)
                     if event.name == "CLICKED_EVENT" then
                         self:OpenVIPDetails(i)
@@ -549,8 +526,8 @@ function GameUIVip:CreateVIPButtons(level)
                 end)
 
         end
-        display.newSprite(i..".png"):addTo(button)
-            :align(display.CENTER, 56,50)
+        display.newSprite("vip"..i..".png"):addTo(button)
+            :align(display.CENTER, 52,45)
     end
     return button_group
 end
@@ -853,6 +830,9 @@ function GameUIVip:GetVipLevelByExp(exp)
 end
 
 return GameUIVip
+
+
+
 
 
 
