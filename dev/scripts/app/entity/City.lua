@@ -372,6 +372,15 @@ end
 function City:GetLeftBuildingCountsByType(building_type)
     return self:GetMaxHouseCanBeBuilt(building_type) - #self:GetBuildingByType(building_type)
 end
+function City:GetConnectedTiles()
+    local r = {}
+    self:IteratorTilesByFunc(function(x, y, tile)
+        if tile:IsConnected() then
+            table.insert(r, tile)
+        end
+    end)
+    return r
+end
 -- 取得小屋最大建造数量
 local BUILDING_MAP = {
     dwelling = "townHall",
