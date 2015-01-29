@@ -61,7 +61,7 @@ function GameUIChatChannel:TO_TOP(data)
     local isLastMessageInViewRect = false
     local count = #data
     if count > 0 then
-        isLastMessageInViewRect = self.listView:isItemInViewRectWithLogicIndex(count)
+        isLastMessageInViewRect = self.listView:getItemWithLogicIndex(count)
     end
     if #self:GetDataSource() == 0 or isLastMessageInViewRect then
         self:RefreshListView()
@@ -211,7 +211,7 @@ function GameUIChatChannel:GetChatItemCell()
 	bottom:setTag(self.CELL_BOTTM_TAG)
 	local middle = display.newScale9Sprite("chat_bubble_middle.png"):addTo(content):align(display.RIGHT_BOTTOM, 549, bottom:getContentSize().height)
 	middle:setTag(self.CELL_MIDDLE_TAG)
-	local labelText = "内容x"
+	local labelText = ""
     local contentLable = RichText.new({width = 430,size = 20,color = 0x403c2f})
     contentLable:Text("")
 	contentLable:align(display.LEFT_BOTTOM, 25, 0):addTo(middle,2)
@@ -226,12 +226,11 @@ function GameUIChatChannel:GetChatItemCell()
 	titleBg:setTag(self.CELL_TITLE_BG_TAG)
 	local titleLabel = cc.ui.UILabel.new({
 		UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "玩家名",
+        text = "",
         size = 22,
         color = UIKit:hex2c3b(0xffedae),
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
-        -- dimensions = cc.size(0, 40),
         font = UIKit:getFontFilePath(),
     }):align(display.LEFT_BOTTOM, 10, 0):addTo(titleBg,2)
     titleLabel:setTag(self.CELL_TITLE_LABEL_TAG)
@@ -239,7 +238,7 @@ function GameUIChatChannel:GetChatItemCell()
 	playerIcon:setTag(self.CELL_PLAYER_ICON_TAG)
     local timeLabel =  cc.ui.UILabel.new({
     		UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = "聊天时间",
+            text = "",
             size = 16,
             color = UIKit:hex2c3b(0x403c2f),
             align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
@@ -247,14 +246,9 @@ function GameUIChatChannel:GetChatItemCell()
             font = UIKit:getFontFilePath(),
     }):align(display.LEFT_BOTTOM,titleBg:getPositionX()+titleBg:getContentSize().width+20, titleBg:getPositionY()-2):addTo(header,3)
     timeLabel:setTag(self.CELL_TIME_LABEL_TAG)
-    local translateButton = cc.ui.UIPushButton.new({normal = "chat_translation.png"}, {scale9 = false})
+    local translateButton = display.newSprite("chat_translation.png")
     	:addTo(header,3)
         :align(display.RIGHT_BOTTOM,header:getContentSize().width-10,titleLabel:getPositionY()+titleLabel:getContentSize().height/2)
-        :onButtonClicked(function()
-            if main.transition_action then
-                main.transition_action()
-            end
-        end)
 	playerIcon:addTo(content):align(display.LEFT_TOP, 1, bottom:getContentSize().height+middle:getContentSize().height+header:getContentSize().height-10)
 	translateButton:setTag(self.CELL_TRANSLATEBUTTON)
 	main.other = content
@@ -277,7 +271,7 @@ function GameUIChatChannel:GetChatItemCell()
 	titleBg:setTag(self.CELL_TITLE_BG_TAG)
 	local titleLabel = cc.ui.UILabel.new({
 			UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = "玩家名称",
+            text = "",
             size = 22,
             color = UIKit:hex2c3b(0xffedae),
             align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
@@ -289,7 +283,7 @@ function GameUIChatChannel:GetChatItemCell()
 	--  timeLable
 	local timeLabel =  cc.ui.UILabel.new({
 			UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = "时间",
+            text = "",
             size = 16,
             color = UIKit:hex2c3b(0x403c2f),
             align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
@@ -315,7 +309,6 @@ function GameUIChatChannel:CreateListView()
         async = true
     }:onTouch(handler(self, self.listviewListener)):addTo(self)
     self.listView:setDelegate(handler(self, self.sourceDelegate))
-    -- self.listView:setUpdateItemDelegate(handler(self, self.updateItemDelegate))
 end
 
 function GameUIChatChannel:RefreshListView()
@@ -326,14 +319,6 @@ function GameUIChatChannel:RefreshListView()
     self.listView:reload()
     return item
 end
-
--- function GameUIChatChannel:updateItemDelegate(item,idx)
---     local content = item:getContent()
---     local data = self.dataSource_[idx]
---     local height = self:HandleCellUIData(content,data)
---     item:setItemSize(549,83 + height)
-
--- end
 
 function GameUIChatChannel:sourceDelegate(listView, tag, idx)
  if cc.ui.UIListView.COUNT_TAG == tag then
@@ -423,32 +408,7 @@ function GameUIChatChannel:HandleCellUIData(mainContent,chat,update_time)
             mainContent:size(549,83 + height)
             return height
         end
-        mainContent.transition_action = function()
-            if not chat._translate_ then
-                    GameUtils:Translate(chat.text,function(result,errText)
-                        if result then
-                            chat._translate_ = result
-                            chat._translateMode_ = true
-                            contentLable:Text(chat._translate_) -- 聊天信息
-                            contentLable:align(display.LEFT_BOTTOM, 25, 0)
-                            adjustFunc()
-                        else
-                            print('Translate error------->',errText)
-                        end
-                    end)
-                else
-                    if chat._translateMode_ then
-                        chat._translateMode_ = false
-                        contentLable:Text(chat.text) -- 聊天信息
-                        contentLable:align(display.LEFT_BOTTOM, 25, 0)
-                    else
-                        chat._translateMode_ = true
-                        contentLable:Text(chat._translate_) -- 聊天信息
-                        contentLable:align(display.LEFT_BOTTOM, 25, 0)
-                    end
-                    adjustFunc()
-                end
-        end
+        mainContent.adjustFunc = adjustFunc
         return adjustFunc()
     else
         local height = contentLable:getCascadeBoundingBox().height or 0
@@ -564,20 +524,61 @@ function GameUIChatChannel:GetBlackListItem(chat,width)
 end
 
 function GameUIChatChannel:listviewListener(event)
-	if not event.listView:isItemInViewRect(event.itemPos) then
-        return
-    end
     local listView = event.listView
     if "clicked" == event.name then
-    	self:CreatePlayerMenu(event)
+        local item = event.item
+        local chat = self.dataSource_[item.idx_]
+        local isSelf = DataManager:getUserData()._id == chat.fromId
+        if isSelf or not chat then return end
+        local content = item:getContent().other
+        local header = content:getChildByTag(self.CELL_HEADER_TAG)
+        local button = header:getChildByTag(self.CELL_TRANSLATEBUTTON)
+        local bound = button:getBoundingBox()
+        local nodePoint = header:convertToWorldSpace(cc.p(bound.x, bound.y))
+        nodePoint = listView:getScrollNode():convertToNodeSpace(nodePoint)
+        bound.x = nodePoint.x
+        bound.y = nodePoint.y
+        if cc.rectContainsPoint(bound,event.point) then
+            local middle = content:getChildByTag(self.CELL_MIDDLE_TAG)
+            local contentLable = middle:getChildByTag(self.CELL_CONTENT_LABEL_TAG)
+            if not chat._translate_ then
+                GameUtils:Translate(chat.text,function(result,errText)
+                    if result then
+                        chat._translate_ = result
+                        chat._translateMode_ = true
+                        contentLable:Text(chat._translate_) -- 聊天信息
+                        contentLable:align(display.LEFT_BOTTOM, 25, 0)
+                        local height = item:getContent().adjustFunc()
+                        item:setItemSize(549,83 + height)
+                    else
+                        print('Translate error------->',errText)
+                    end
+                end)
+            else
+                if chat._translateMode_ then
+                    chat._translateMode_ = false
+                    contentLable:Text(chat.text) -- 聊天信息
+                    contentLable:align(display.LEFT_BOTTOM, 25, 0)
+                else
+                    chat._translateMode_ = true
+                    contentLable:Text(chat._translate_) -- 聊天信息
+                    contentLable:align(display.LEFT_BOTTOM, 25, 0)
+                end
+                local height = item:getContent().adjustFunc()
+                item:setItemSize(549,83 + height)
+            end
+            return
+        end
+        if not listView:isItemFullyInViewRect(event.itemPos) then
+            return
+        end
+    	self:CreatePlayerMenu(event,chat)
     end
 end
 
 
-function GameUIChatChannel:CreatePlayerMenu(event)
+function GameUIChatChannel:CreatePlayerMenu(event,chat)
     local item = event.item
-    local chat = self.dataSource_[item.idx_]
-    if DataManager:getUserData()._id == chat.fromId then return end -- if self return 
     local menuLayer = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
     menuLayer:setTouchEnabled(true)
     menuLayer:addTo(self,self.PLAYERMENU_ZORDER):pos(0, 0)
