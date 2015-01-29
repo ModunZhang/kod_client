@@ -235,7 +235,7 @@ function Tile:GetDownWall()
         local xbyn = city:GetTileByIndex(x - 1, y + 1)
         local xnyn = city:GetTileByIndex(x + 1, y + 1)
         if xbyn and xbyn:NeedWalls() then
-            return generateDownWalls(self, 1)
+            return generateDownWalls(self, 2)
         elseif xnyn and xnyn:NeedWalls() then
             return generateDownWalls(self, 3)
         elseif not xb:NeedWalls() and not xn:NeedWalls() then

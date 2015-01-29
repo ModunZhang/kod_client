@@ -395,7 +395,6 @@ function GameUIHome:CreateBottom()
         label:Text(last_chat_messages[i],1)
         label:addTo(content):align(display.LEFT_CENTER, 0, content:getContentSize().height/2)
         table.insert(self.chat_labels, label)
-        print("test------->",last_chat_messages[i])
         item:addChild(content)
         pv:addItem(item)
     end

@@ -185,15 +185,24 @@ function UIListView:itemSizeChangeListener(listItem, newSize, oldSize)
 	local content = listItem:getContent()
 	transition.moveBy(content,
 				{x = itemW/2, y = itemH/2, time = 0.2})
-
-	self.size.width = self.size.width + itemW
-	self.size.height = self.size.height + itemH
-	if UIScrollView.DIRECTION_VERTICAL == self.direction then
-		transition.moveBy(self.container,
-			{x = -itemW, y = -itemH, time = 0.2})
-		self:moveItems(1, pos - 1, itemW, itemH, true)
+	if self.bAsyncLoad then -- 修改quick bug 异步加载时的size变动处理
+		if UIScrollView.DIRECTION_VERTICAL == self.direction then
+			transition.moveBy(self.container,
+				{x = -itemW, y = -itemH, time = 0.2})
+			self:moveItems(1, pos - 1, itemW, itemH, true)
+		else
+			self:moveItems(pos + 1, table.nums(self.items_), itemW, itemH, true)
+		end
 	else
-		self:moveItems(pos + 1, table.nums(self.items_), itemW, itemH, true)
+		self.size.width = self.size.width + itemW
+		self.size.height = self.size.height + itemH
+		if UIScrollView.DIRECTION_VERTICAL == self.direction then
+			transition.moveBy(self.container,
+				{x = -itemW, y = -itemH, time = 0.2})
+			self:moveItems(1, pos - 1, itemW, itemH, true)
+		else
+			self:moveItems(pos + 1, table.nums(self.items_), itemW, itemH, true)
+		end
 	end
 end
 
@@ -362,12 +371,16 @@ end
 ]]
 function UIListView:isItemInViewRect(pos)
 	local item
-	if "number" == type(pos) then
-		item = self.items_[pos]
-	elseif "userdata" == type(pos) then
-		item = pos
+	--修改quick 如果异步修改获取item方式
+	if self.bAsyncLoad then
+		item = self:getItemWithLogicIndex(pos)
+	else
+		if "number" == type(pos) then
+			item = self.items_[pos]
+		elseif "userdata" == type(pos) then
+			item = pos
+		end
 	end
-
 	if not item then
 		return
 	end
@@ -669,7 +682,6 @@ function UIListView:increaseOrReduceItem_()
 	-- print("enter increase reduceItem")
 
 	if 0 == #self.items_ then
-		--关闭qucik这里的debug输出
 		-- print("ERROR items count is 0") 
 		return
 	end
@@ -754,7 +766,7 @@ function UIListView:increaseOrReduceItem_()
 			end
 		end
 	else
-		--left part of view
+		--left part of view 横向列表
 		local disW = self.viewRect_.x - cascadeBound.x
 		item = self.items_[1]
 		local tempIdx = item.idx_
@@ -1048,7 +1060,7 @@ function UIListView:releaseAllFreeItems_()
 end
 
 
---修改quick:新加接口
+-- 修改quick:新加接口
 ------------------------------------------------------------------------------------------------------------------------------------------ 
 function UIListView:getItems()
 	return self.items_
@@ -1068,7 +1080,9 @@ function UIListView:insertItemAndRefresh(listItem, pos)
 
 	return self
 end
-
+--[[--
+	显示当前listview的情况
+]]
 function UIListView:dumpListView()
 	assert(self.bAsyncLoad, "UIListView:dumpListView() - syncload not support dumpListView")
 	for i,v in ipairs(self.items_) do
@@ -1076,17 +1090,23 @@ function UIListView:dumpListView()
 	end
 	printInfo("Free item size:%d",#self.itemsFree_)
 end
-
-function UIListView:isItemInViewRectWithLogicIndex(index)
-	assert(self.bAsyncLoad, "UIListView:isItemInViewRectWithLogicIndex() - syncload not support isItemInViewRectWithLogicIndex")
+--[[--
+	逻辑索引获取item
+]]
+function UIListView:getItemWithLogicIndex(index)
+	assert(self.bAsyncLoad, "UIListView:getItemWithLogicIndex() - syncload not support getItemWithLogicIndex")
 	if not index then return end
 	for _,v in ipairs(self.items_) do
 		if v.idx_ == checkint(index) then
 			return v
 		end
 	end
+	return nil
 end
+--[[--
 
+	通过偏移量修改显示的item的逻辑索引
+]]
 function UIListView:offsetItemsIdx(offset)
 	assert(self.bAsyncLoad, "UIListView:offsetItemsIdx() - syncload not support offsetItemsIdx")
 	offset = checkint(offset)
@@ -1095,6 +1115,36 @@ function UIListView:offsetItemsIdx(offset)
 	end
 end
 
+function UIListView:rectWholeInRect(rect1,rect2)
+	 return cc.rectGetMaxX(rect1) >= cc.rectGetMaxX(rect2) and cc.rectGetMinX(rect1) <=  cc.rectGetMinX(rect2)
+	 	and  cc.rectGetMaxY(rect1) >= cc.rectGetMaxY(rect2) and cc.rectGetMinY(rect1) <=  cc.rectGetMinY(rect2)
+end
+--[[--
+	判断pos位置的item[完全]在viewRect内
+]]
+function UIListView:isItemFullyInViewRect(pos)
+	local item
+	if self.bAsyncLoad then
+		item = self:getItemWithLogicIndex(pos)
+	else
+		if "number" == type(pos) then
+			item = self.items_[pos]
+		elseif "userdata" == type(pos) then
+			item = pos
+		end
+	end
+
+	if not item then
+		return false
+	end
+	local bound = item:getBoundingBox()
+	local nodePoint = self.container:convertToWorldSpace(
+		cc.p(bound.x, bound.y))
+	bound.x = nodePoint.x
+	bound.y = nodePoint.y
+	return self:rectWholeInRect(self.viewRect_,bound)
+end
+-- end
 ------------------------------------------------------------------------------------------------------------------------------------------ 
 
 
