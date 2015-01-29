@@ -354,15 +354,6 @@ function CityLayer:InitWithCity(city)
     self:UpdateAllDynamicWithCity(city)
     --
     -- --
-    local function find_unlock_tiles()
-        local r = {}
-        city:IteratorTilesByFunc(function(x, y, tile)
-            if tile:IsConnected() then
-                table.insert(r, tile)
-            end
-        end)
-        return r
-    end
     local function find_nearby(t, tiles)
         local connectedness = {t}
         local index = 1
@@ -382,7 +373,7 @@ function CityLayer:InitWithCity(city)
     end
 
     local connects = {}
-    local r = find_unlock_tiles()
+    local r = city:GetConnectedTiles()
     while #r > 0 do
         table.insert(connects, find_nearby(table.remove(r, 1), r))
     end
@@ -468,7 +459,7 @@ function CityLayer:InitWithCity(city)
 
                     local tile = city:GetTileByBuildingPosition(point.x, point.y)
                     local connects = {}
-                    local r = find_unlock_tiles()
+                    local r = city:GetConnectedTiles()
                     while #r > 0 do
                         table.insert(connects, find_nearby(table.remove(r, 1), r))
                     end
@@ -545,7 +536,7 @@ function CityLayer:UpdateLockedTilesWithCity(city)
     end
     self.locked_tiles = {}
     city:IteratorTilesByFunc(function(x, y, tile)
-        if tile:IsConnected() then
+        if tile:NeedWalls() and tile.locked then
             table.insert(self.locked_tiles, self:CreateLockedTileSpriteWithTile(tile):addTo(city_node))
         end
     end)
