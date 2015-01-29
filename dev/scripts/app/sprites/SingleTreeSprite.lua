@@ -6,7 +6,7 @@ function SingleTreeSprite:ctor(city_layer, x, y)
     local ax, ay = city_layer:GetLogicMap():ConvertToMapPosition(x, y)
     SingleTreeSprite.super.ctor(self, city_layer, nil, ax, ay)
     self:GetSprite():align(display.BOTTOM_CENTER)
-    -- self:CreateBase()
+    self:CreateBase()
 end
 function SingleTreeSprite:ReloadSpriteCauseTerrainChanged()
 	self.sprite:removeFromParent()
@@ -16,7 +16,7 @@ function SingleTreeSprite:GetSpriteFile()
 	if not self.png_index then
     	self.png_index = math.random(4)
 	end
-    return string.format("single_tree_%d_%s.png", self.png_index, self:GetMapLayer():Terrain())
+    return string.format("single_tree_%d_%s.png", self.png_index, self:GetMapLayer():Terrain()), 0.8
 end
 function SingleTreeSprite:GetSpriteOffset()
     return 10, -15
