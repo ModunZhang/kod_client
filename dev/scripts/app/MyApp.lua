@@ -13,6 +13,7 @@ require("app.service.NetManager")
 require("app.service.DataManager")
 import('app.ui.GameGlobalUIUtils')
 
+local Store = import(".utils.Store")
 local GameDefautlt = import("app.utils.GameDefautlt")
 local AudioManager = import("app.utils.AudioManager")
 local LocalPushManager = import("app.utils.LocalPushManager")
@@ -52,7 +53,6 @@ function MyApp:ctor()
     self:InitI18N()
     NetManager:init()
     self.timer = Timer.new()
-
     local manager = ccs.ArmatureDataManager:getInstance()
     manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
 end
@@ -252,6 +252,32 @@ function MyApp:EnterViewModelAllianceScene(alliance_id)
         local alliance = Alliance_Manager:DecodeAllianceFromJson(msg)
         app:enterScene("OtherAllianceScene", {alliance}, "custom", -1,transition_)
     end)
+end
+-- Store
+------------------------------------------------------------------------------------------------------------------
+function MyApp:getStore()
+    if not cc.storeProvider then
+        Store.init(handler(self, self.transactionObserver))
+    end
+    return Store
+end
+
+function MyApp:transactionObserver(event)
+    dump(event,"MyApp:transactionObserver-->")
+    local transaction = event.transaction
+    local transaction_state = transaction.state
+    if transaction_state == 'restored' then
+        device.showAlert("提示",_("你已为你恢复以前的购买"),{_("确定")})
+        Store.finishTransaction(transaction)
+    elseif transaction_state == 'purchased' then
+        --TODO:服务器验证 成功或失败后关闭 transaction
+        Store.finishTransaction(transaction)
+    elseif transaction_state == 'purchasing' then
+        --不作任何处理
+    else
+        device.showAlert("提示",transaction.errorString,{_("确定")})
+        Store.finishTransaction(transaction)
+    end
 end
 
 return MyApp
