@@ -170,12 +170,13 @@ function ItemManager:GetBuffItems()
     return self:__order(self.items_buff)
 
 end
-function ItemManager:GeResourcetItems()
+function ItemManager:GetResourcetItems()
     return self:__order(self.items_resource)
 end
 function ItemManager:GetSpeedUpItems()
     return self:__order(self.items_speedUp)
 end
+
 function ItemManager:__order(items)
     local found_keys = {}
     local order_items = {}
@@ -198,6 +199,7 @@ function ItemManager:__order(items)
     end
     return order_items
 end
+
 function ItemManager:GetSameTypeItems(item)
     local same_items = {}
     local find_area = self:GetCategoryItems(item)

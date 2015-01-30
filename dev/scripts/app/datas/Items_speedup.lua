@@ -7,7 +7,9 @@ speedup["speedup_1"] = {
 	["isSell"] = true,
 	["price"] = 10,
 	["isSellInAlliance"] = false,
-	["priceInAlliance"] = 200
+	["sellPriceInAlliance"] = 200,
+	["buyPriceInAlliance"] = 200,
+	["isAdvancedItem"] = false
 }
 speedup["speedup_2"] = {
 	["name"] = "speedup_2",
@@ -16,7 +18,9 @@ speedup["speedup_2"] = {
 	["isSell"] = true,
 	["price"] = 10,
 	["isSellInAlliance"] = false,
-	["priceInAlliance"] = 200
+	["sellPriceInAlliance"] = 200,
+	["buyPriceInAlliance"] = 200,
+	["isAdvancedItem"] = false
 }
 speedup["speedup_3"] = {
 	["name"] = "speedup_3",
@@ -25,7 +29,9 @@ speedup["speedup_3"] = {
 	["isSell"] = true,
 	["price"] = 10,
 	["isSellInAlliance"] = true,
-	["priceInAlliance"] = 200
+	["sellPriceInAlliance"] = 200,
+	["buyPriceInAlliance"] = 200,
+	["isAdvancedItem"] = false
 }
 speedup["speedup_4"] = {
 	["name"] = "speedup_4",
@@ -34,7 +40,9 @@ speedup["speedup_4"] = {
 	["isSell"] = true,
 	["price"] = 10,
 	["isSellInAlliance"] = true,
-	["priceInAlliance"] = 200
+	["sellPriceInAlliance"] = 200,
+	["buyPriceInAlliance"] = 200,
+	["isAdvancedItem"] = false
 }
 speedup["speedup_5"] = {
 	["name"] = "speedup_5",
@@ -43,7 +51,9 @@ speedup["speedup_5"] = {
 	["isSell"] = true,
 	["price"] = 10,
 	["isSellInAlliance"] = true,
-	["priceInAlliance"] = 200
+	["sellPriceInAlliance"] = 200,
+	["buyPriceInAlliance"] = 200,
+	["isAdvancedItem"] = true
 }
 speedup["speedup_6"] = {
 	["name"] = "speedup_6",
@@ -52,7 +62,9 @@ speedup["speedup_6"] = {
 	["isSell"] = true,
 	["price"] = 10,
 	["isSellInAlliance"] = true,
-	["priceInAlliance"] = 200
+	["sellPriceInAlliance"] = 200,
+	["buyPriceInAlliance"] = 200,
+	["isAdvancedItem"] = true
 }
 speedup["speedup_7"] = {
 	["name"] = "speedup_7",
@@ -61,7 +73,9 @@ speedup["speedup_7"] = {
 	["isSell"] = true,
 	["price"] = 10,
 	["isSellInAlliance"] = false,
-	["priceInAlliance"] = 200
+	["sellPriceInAlliance"] = 200,
+	["buyPriceInAlliance"] = 200,
+	["isAdvancedItem"] = false
 }
 speedup["speedup_8"] = {
 	["name"] = "speedup_8",
@@ -70,7 +84,9 @@ speedup["speedup_8"] = {
 	["isSell"] = true,
 	["price"] = 10,
 	["isSellInAlliance"] = false,
-	["priceInAlliance"] = 200
+	["sellPriceInAlliance"] = 200,
+	["buyPriceInAlliance"] = 200,
+	["isAdvancedItem"] = false
 }
 speedup["warSpeedupClass_1"] = {
 	["name"] = "warSpeedupClass_1",
@@ -79,7 +95,9 @@ speedup["warSpeedupClass_1"] = {
 	["isSell"] = true,
 	["price"] = 10,
 	["isSellInAlliance"] = true,
-	["priceInAlliance"] = 200
+	["sellPriceInAlliance"] = 200,
+	["buyPriceInAlliance"] = 200,
+	["isAdvancedItem"] = false
 }
 speedup["warSpeedupClass_2"] = {
 	["name"] = "warSpeedupClass_2",
@@ -88,5 +106,7 @@ speedup["warSpeedupClass_2"] = {
 	["isSell"] = true,
 	["price"] = 10,
 	["isSellInAlliance"] = true,
-	["priceInAlliance"] = 200
+	["sellPriceInAlliance"] = 200,
+	["buyPriceInAlliance"] = 200,
+	["isAdvancedItem"] = true
 }

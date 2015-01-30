@@ -9,6 +9,7 @@ local AllianceMember = import(".AllianceMember")
 local MultiObserver = import(".MultiObserver")
 local MarchAttackEvent = import(".MarchAttackEvent")
 local MarchAttackReturnEvent = import(".MarchAttackReturnEvent")
+local AllianceItemsManager = import(".AllianceItemsManager")
 local Alliance = class("Alliance", MultiObserver)
 local VillageEvent = import(".VillageEvent")
 local AllianceBelvedere = import(".AllianceBelvedere")
@@ -73,6 +74,9 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     self.alliance_villages = {}
     self.alliance_belvedere = AllianceBelvedere.new(self)
     self:SetNeedUpdateEnemyAlliance(false)
+
+    -- 联盟道具管理
+    self.items_manager = AllianceItemsManager.new()
 end
 function Alliance:GetAllianceBelvedere()
     return self.alliance_belvedere
@@ -85,6 +89,9 @@ function Alliance:GetAllianceFight()
 end
 function Alliance:GetVillageLevels()
     return self.villageLevels
+end
+function Alliance:GetItemsManager()
+    return self.items_manager
 end
 function Alliance:ResetAllListeners()
     self.alliance_map:ClearAllListener()
@@ -508,6 +515,9 @@ function Alliance:OnAllianceDataChanged(alliance_data)
 
     self:DecodeAllianceVillages(alliance_data.villages)
     self:DecodeAllianceVillages__(alliance_data.__villages)
+
+    self.items_manager:OnItemsChanged(alliance_data.items)
+    self.items_manager:__OnItemsChanged(alliance_data.__items)
 end
 
 function Alliance:OnNewEventsComming(__events)

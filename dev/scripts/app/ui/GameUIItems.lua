@@ -84,7 +84,7 @@ function GameUIItems:InitShop()
                 self:CreateAllShopItems(buff_items)
             end
             if tag == 'menu_3' then
-                local resource_items = ItemManager:GeResourcetItems()
+                local resource_items = ItemManager:GetResourcetItems()
                 self:CreateAllShopItems(resource_items)
             end
             if tag == 'menu_4' then
@@ -121,7 +121,7 @@ function GameUIItems:InitMyItems()
                 self:CreateAllMyItems(buff_items)
             end
             if tag == 'menu_3' then
-                local resource_items = ItemManager:GeResourcetItems()
+                local resource_items = ItemManager:GetResourcetItems()
                 self:CreateAllMyItems(resource_items)
             end
             if tag == 'menu_4' then

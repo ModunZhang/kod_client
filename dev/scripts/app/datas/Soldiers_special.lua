@@ -15,6 +15,7 @@ special["skeletonWarrior"] = {
 	["load"] = 17,
 	["march"] = 50,
 	["consumeFood"] = 5,
+	["killScore"] = 1,
 	["citizen"] = 1,
 	["recruitTime"] = 40
 }
@@ -33,6 +34,7 @@ special["skeletonArcher"] = {
 	["load"] = 18,
 	["march"] = 64,
 	["consumeFood"] = 18,
+	["killScore"] = 1,
 	["citizen"] = 1,
 	["recruitTime"] = 60
 }
@@ -51,6 +53,7 @@ special["deathKnight"] = {
 	["load"] = 48,
 	["march"] = 80,
 	["consumeFood"] = 48,
+	["killScore"] = 2,
 	["citizen"] = 2,
 	["recruitTime"] = 80
 }
@@ -69,6 +72,7 @@ special["meatWagon"] = {
 	["load"] = 96,
 	["march"] = 52,
 	["consumeFood"] = 96,
+	["killScore"] = 4,
 	["citizen"] = 4,
 	["recruitTime"] = 95
 }
@@ -87,6 +91,7 @@ special["priest"] = {
 	["load"] = 27,
 	["march"] = 52,
 	["consumeFood"] = 27,
+	["killScore"] = 1,
 	["citizen"] = 1,
 	["recruitTime"] = 140
 }
@@ -105,6 +110,7 @@ special["demonHunter"] = {
 	["load"] = 28,
 	["march"] = 72,
 	["consumeFood"] = 28,
+	["killScore"] = 1,
 	["citizen"] = 1,
 	["recruitTime"] = 180
 }
@@ -123,6 +129,7 @@ special["paladin"] = {
 	["load"] = 53,
 	["march"] = 75,
 	["consumeFood"] = 53,
+	["killScore"] = 2,
 	["citizen"] = 2,
 	["recruitTime"] = 240
 }
@@ -141,6 +148,7 @@ special["steamTank"] = {
 	["load"] = 106,
 	["march"] = 48,
 	["consumeFood"] = 106,
+	["killScore"] = 4,
 	["citizen"] = 4,
 	["recruitTime"] = 280
 }
