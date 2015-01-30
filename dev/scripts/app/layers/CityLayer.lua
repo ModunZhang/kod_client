@@ -1,4 +1,5 @@
 local IsoMapAnchorBottomLeft = import("..map.IsoMapAnchorBottomLeft")
+local SpriteConfig = import("..sprites.SpriteConfig")
 local DragonEyrieSprite = import("..sprites.DragonEyrieSprite")
 local FunctionUpgradingSprite = import("..sprites.FunctionUpgradingSprite")
 local UpgradingSprite = import("..sprites.UpgradingSprite")
@@ -351,6 +352,9 @@ function CityLayer:InitWithCity(city)
     end
     self.helpedByTroops = helpedByTroops
 
+
+    display.newSprite("redDragon_icon_151x133.png"):addTo(self, WEATHER_NODE):pos(500, 500)
+
     -- 更新其他需要动态生成的建筑
     self:UpdateAllDynamicWithCity(city)
     self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
@@ -367,7 +371,6 @@ function CityLayer:UpdateAllDynamicWithCity(city)
     self:UpdateTilesWithCity(city)
     self:UpdateTreesWithCity(city)
     self:UpdateWallsWithCity(city)
-    self:UpdateTowersWithCity(city)
     self:UpdateSoldiersVisibleWithSoldierManager(city:GetSoldierManager())
     self:UpdateHelpedByTroopsVisible(city:GetHelpedByTroops())
     self:UpdateCitizen(city)
@@ -431,11 +434,9 @@ function CityLayer:UpdateWallsWithCity(city)
     local city_node = self:GetCityNode()
     local old_walls = self.walls
     local new_walls = {}
+    local _, level = SpriteConfig["wall"]:GetConfigByLevel(city:GetGate():GetLevel())
     for _, v in pairs(city:GetWalls()) do
-        local x, y = v:GetLogicPosition()
-        local wall = self:CreateWall(v)
-        city_node:addChild(wall)
-        table.insert(new_walls, wall)
+        table.insert(new_walls, self:CreateWall(v, level):addTo(city_node))
     end
     self.walls = new_walls
 
@@ -443,22 +444,18 @@ function CityLayer:UpdateWallsWithCity(city)
         listener:OnGateChanged(old_walls, new_walls)
     end)
 
-    if old_walls then
-        for k, v in pairs(old_walls) do
-            v:DestorySelf()
-        end
+    for _, v in pairs(old_walls) do
+        v:DestorySelf()
     end
+    self:UpdateTowersWithCity(city)
 end
 function CityLayer:UpdateTowersWithCity(city)
     local city_node = self:GetCityNode()
     local old_towers = self.towers
     local new_towers = {}
+    local _, level = SpriteConfig["wall"]:GetConfigByLevel(city:GetGate():GetLevel())
     for k, v in pairs(city:GetTowers()) do
-        local x, y = v:GetLogicPosition()
-        local w, h = v:GetSize()
-        local tower = self:CreateTower(v)
-        city_node:addChild(tower)
-        table.insert(new_towers, tower)
+        table.insert(new_towers, self:CreateTower(v, level):addTo(city_node))
     end
     self.towers = new_towers
 
@@ -466,10 +463,8 @@ function CityLayer:UpdateTowersWithCity(city)
         listener:OnTowersChanged(old_towers, new_towers)
     end)
 
-    if old_towers then
-        for k, v in pairs(old_towers) do
-            v:DestorySelf()
-        end
+    for k, v in pairs(old_towers) do
+        v:DestorySelf()
     end
 end
 function CityLayer:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
@@ -607,11 +602,11 @@ function CityLayer:CreateTreeWithTile(tile)
     local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
     return TreeSprite.new(self, tile, x, y)
 end
-function CityLayer:CreateWall(wall)
-    return WallUpgradingSprite.new(self, wall)
+function CityLayer:CreateWall(wall, level)
+    return WallUpgradingSprite.new(self, wall, level)
 end
-function CityLayer:CreateTower(tower)
-    return TowerUpgradingSprite.new(self, tower)
+function CityLayer:CreateTower(tower, level)
+    return TowerUpgradingSprite.new(self, tower, level)
 end
 function CityLayer:CreateRuin(ruin)
     return RuinSprite.new(self, ruin)
@@ -664,6 +659,8 @@ function CityLayer:OnSceneScale()
 end
 
 return CityLayer
+
+
 
 
 

@@ -218,8 +218,10 @@ end
 function MyCityScene:OnUpgrading()
 
 end
-function MyCityScene:OnUpgradingFinished()
-
+function MyCityScene:OnUpgradingFinished(building)
+    if building:GetType() == "wall" then
+        self:GetSceneLayer():UpdateWallsWithCity(self:GetCity())
+    end
 end
 function MyCityScene:OnCreateDecoratorSprite(building_sprite)
     self:GetSceneUILayer():NewUIFromBuildingSprite(building_sprite)
