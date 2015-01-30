@@ -36,7 +36,8 @@ function TowerUpgradeBuilding:ctor(building_info)
 end
 function TowerUpgradeBuilding:IsEfficiency()
     local ex, ey = self:BelongCity():GetGate():GetEndPos()
-    return self:IsVisible() and not (self.w == 1 and self.h == 1 and abs(self.x - ex) + abs(self.y - ey) == 1)
+    return self:IsVisible() 
+    -- and not (self.w == 1 and self.h == 1 and abs(self.x - ex) + abs(self.y - ey) == 1)
 end
 function TowerUpgradeBuilding:IsVisible()
     return (self:GetOrient() ~= Orient.NEG_X and
