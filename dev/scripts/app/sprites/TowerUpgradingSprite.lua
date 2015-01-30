@@ -11,12 +11,12 @@ local offset_map = {
         [Orient.NEG_X] = {83, 83},
         [Orient.NEG_Y] = {-82, 83},
         [Orient.DOWN] = {0, 71},
-        [Orient.RIGHT] = {-5, 63},
+        [Orient.RIGHT] = {-10, 63},
         [Orient.LEFT] = {16, 62},
         [Orient.UP] = {0, -7},
         [Orient.NONE] = {0, 71},
         right_end = {-17, 31},
-        left_end = {16, 62}
+        left_end = {-44, 73}
     },
     [2] = {
         [Orient.X] = {15, 75},
@@ -24,12 +24,12 @@ local offset_map = {
         [Orient.NEG_X] = {83, 83},
         [Orient.NEG_Y] = {-82, 83},
         [Orient.DOWN] = {0, 71},
-        [Orient.RIGHT] = {-5, 63},
+        [Orient.RIGHT] = {-10, 63},
         [Orient.LEFT] = {16, 62},
         [Orient.UP] = {0, -7},
         [Orient.NONE] = {0, 71},
         right_end = {-17, 31},
-        left_end = {16, 62}
+        left_end = {-44, 73}
     },
     [3] = {
         [Orient.X] = {15, 75},
@@ -37,12 +37,12 @@ local offset_map = {
         [Orient.NEG_X] = {83, 83},
         [Orient.NEG_Y] = {-82, 83},
         [Orient.DOWN] = {0, 71},
-        [Orient.RIGHT] = {-5, 63},
+        [Orient.RIGHT] = {-10, 63},
         [Orient.LEFT] = {16, 62},
         [Orient.UP] = {0, -7},
         [Orient.NONE] = {0, 71},
         right_end = {-17, 31},
-        left_end = {16, 62}
+        left_end = {-44, 73}
     },
 }
 
