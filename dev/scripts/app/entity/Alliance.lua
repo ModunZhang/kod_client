@@ -270,16 +270,16 @@ function Alliance:GetAllianceFightReports()
     return self.alliance_fight_reports
 end
 function Alliance:GetLastAllianceFightReports()
-    return self.alliance_fight_reports[#self.alliance_fight_reports]
+    return self.alliance_fight_reports[1]
 end
 function Alliance:GetOurLastAllianceFightReportsData()
-    local last = self.alliance_fight_reports[#self.alliance_fight_reports]
+    local last = self:GetLastAllianceFightReports()
     if last then
         return self.id == last.attackAllianceId and last.attackAlliance or last.defenceAlliance
     end
 end
 function Alliance:GetEnemyLastAllianceFightReportsData()
-    local last = self.alliance_fight_reports[#self.alliance_fight_reports]
+    local last = self:GetLastAllianceFightReports()
     if last then
         return self.id == last.attackAllianceId and last.defenceAlliance or last.attackAlliance
     end
@@ -766,6 +766,9 @@ end
 function Alliance:OnAllianceFightReportsChanged(alliance_data)
     if alliance_data.allianceFightReports then
         self.alliance_fight_reports = alliance_data.allianceFightReports
+        table.sort( self.alliance_fight_reports, function(a, b)
+            return a.fightTime > b.fightTime
+        end )
     end
     if alliance_data.__allianceFightReports then
         local add = {}
@@ -783,13 +786,14 @@ function Alliance:OnAllianceFightReportsChanged(alliance_data)
                 end
             end
         end
+        table.sort( self.alliance_fight_reports, function(a, b)
+            return a.fightTime > b.fightTime
+        end )
         self:NotifyListeneOnType(Alliance.LISTEN_TYPE.FIGHT_REPORTS, function(listener)
             listener:OnAllianceFightReportsChanged({add = add,remove=remove})
         end)
     end
-    table.sort( self.alliance_fight_reports, function(a, b)
-        return a.fightTime > b.fightTime
-    end )
+
 end
 
 function Alliance:OnOneAllianceMemberDataChanged(member_data)
@@ -1419,6 +1423,8 @@ function Alliance:NeedUpdateEnemyAlliance()
 end
 
 return Alliance
+
+
 
 
 
