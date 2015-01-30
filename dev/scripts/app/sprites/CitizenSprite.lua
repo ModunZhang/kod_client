@@ -11,7 +11,7 @@ function CitizenSprite:ctor(city_layer, city, x, y)
     local start_point = table.remove(self.path, 1)
     self:setPosition(self:GetLogicMap():ConvertToMapPosition(start_point.x, start_point.y))
     self:UpdateVelocityByPoints(start_point, self.path[1])
-    self:CreateBase()
+    -- self:CreateBase()
 end
 function CitizenSprite:PlayAnimation(animation)
     self.current_animation = animation
