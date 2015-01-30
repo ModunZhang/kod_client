@@ -9,11 +9,13 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local promise = import("..utils.promise")
 local window = import("..utils.window")
 local GameUIShop = UIKit:createUIClass("GameUIShop", "GameUIWithCommonHeader")
+
 function GameUIShop:ctor(city)
     GameUIShop.super.ctor(self, city, _("商城"))
     self.shop_city = city
 end
 function GameUIShop:onEnter()
+    app:getStore():updateTransactionStates()
     GameUIShop.super.onEnter(self)
 
     local list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 100)
@@ -959,7 +961,32 @@ function GameUIShop:onEnter()
             device.showAlert("提示","联盟数据输出成功",{_("确定")})
         end)
 
+     WidgetPushButton.new(
+        {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = "iOS购买宝石",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color =  cc.c3b(255,0,0)
+    }))
+        :addTo(content)
+        :align(display.CENTER, window.left + 500, window.top - 1600)
+        :onButtonClicked(function(event)
+            if device.platform == 'ios' then
+                -- print(Store.canMakePurchases(),"Store.canMakePurchases--->")
+             
+                    -- Store.loadProducts({"kod.1dollar"}, function(data)
+                    --     dump(data,"data---->")
+                    -- end)
+                    -- Store.purchase("kod.1dollar")
+                    app:getStore().purchaseWithProductId("kod.1dollar",1)
+            else
+                device.showAlert("提示",device.platform .. " is not support for IAP",{_("确定")})
+            end
 
+        end)
     item:addContent(content)
     item:setItemSize(640, 1000)
     list_view:addItem(item)
