@@ -381,8 +381,13 @@ local function alignmeng_path(path)
         local start = path[index]
         local middle = path[index + 1]
         local ending = path[index + 2]
-        if (start.x == middle.x and middle.x == ending.x)
-            or (start.y == middle.y and middle.y == ending.y) then
+        local dx = ending.x - start.x
+        local dy = ending.y - start.y
+        if ((start.x == middle.x and middle.x == ending.x and
+            abs((ending.y + start.y) * 0.5 - middle.y) < abs(ending.y - start.y))
+            or (start.y == middle.y and middle.y == ending.y) and
+            abs((ending.x + start.x) * 0.5 - middle.x) < abs(ending.x - start.x))
+        then
             table.remove(path, index + 1)
         else
             index = index + 1
@@ -434,15 +439,6 @@ end
 function City:FindATileWayFromTile(tile)
     local r = tile == nil and self:GetConnectedTiles() or tile:FindConnectedTilesFromThis()
     return find_path_tile(r, tile)
-end
-function City:GetConnectedTiles()
-    local r = {}
-    self:IteratorTilesByFunc(function(x, y, tile)
-        if tile:IsConnected() then
-            table.insert(r, tile)
-        end
-    end)
-    return r
 end
 function City:GetConnectedTiles()
     local r = {}
@@ -1644,6 +1640,7 @@ end
 
 
 return City
+
 
 
 

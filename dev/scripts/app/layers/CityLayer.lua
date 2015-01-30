@@ -20,8 +20,8 @@ local Observer = import("..entity.Observer")
 local MapLayer = import(".MapLayer")
 local CityLayer = class("CityLayer", MapLayer)
 
-local math = math
 local floor = math.floor
+local min = math.min
 local random = math.random
 local randomseed = math.randomseed
 function CityLayer:GetClickedObject(world_x, world_y)
@@ -150,6 +150,7 @@ function CityLayer:ctor(city_scene)
     self.locked_tiles = {}
     self.walls = {}
     self.helpedByTroops = {}
+    self.citizens = {}
     -- self.road = nil
     self:InitBackground()
     self:InitCity()
@@ -352,62 +353,11 @@ function CityLayer:InitWithCity(city)
 
     -- 更新其他需要动态生成的建筑
     self:UpdateAllDynamicWithCity(city)
-    --
-    -- --
-
-    -- local cc = cc
-    -- local function wrap_point_in_table(...)
-    --     local arg = {...}
-    --     return {x = arg[1], y = arg[2]}
-    -- end
-    -- local function return_dir_and_velocity(start_point, end_point)
-    --     local speed = 50
-    --     local spt = wrap_point_in_table(self.iso_map:ConvertToMapPosition(start_point.x, start_point.y))
-    --     local ept = wrap_point_in_table(self.iso_map:ConvertToMapPosition(end_point.x, end_point.y))
-    --     local dir = cc.pSub(ept, spt)
-    --     local distance = cc.pGetLength(dir)
-    --     local vdir = {x = speed * dir.x / distance, y = speed * dir.y / distance}
-    --     return vdir
-    -- end
-
-
-    -- local path = city:FindAPointWayFromTile()
-    -- local start = false
-    local citizen = self:CreateCitizen(city, 0, 0):addTo(city_node)
-    -- self.vdir = {}
     self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
-        citizen:Update(math.min(dt, 0.05))
-        -- if start then
-        --     local cx, cy = citizen:getPosition()
-        --     local point = path[1]
-        --     local ex, ey = self.iso_map:ConvertToMapPosition(point.x, point.y)
-        --     local disSQ = cc.pDistanceSQ({x = cx, y = cy}, {x = ex, y = ey})
-        --     if disSQ < 10 * 10 then
-        --         if #path <= 1 then
-        --             path = city:FindAPointWayFromPosition(point.x, point.y)
-        --         end
-        --         self.vdir = return_dir_and_velocity(path[1], path[2])
-        --         table.remove(path, 1)
-        --     end
-        --     citizen:SetPositionWithZOrder(cx + self.vdir.x * dt, cy + self.vdir.y * dt)
-        -- else
-        --     print("end")
-        --     if #path < 1 then
-        --         print("end1")
-        --         self:unscheduleUpdate()
-        --         return
-        --     end
-        --     print("end2")
-        --     start = true
-        --     local start_point = table.remove(path, 1)
-        --     local ex, ey = self.iso_map:ConvertToMapPosition(start_point.x, start_point.y)
-        --     citizen:SetPositionWithZOrder(ex, ey)
-        --     if #path < 1 then
-        --         self:unscheduleUpdate()
-        --         return
-        --     end
-        --     self.vdir = return_dir_and_velocity(start_point, path[1])
-        -- end
+        dt = min(dt, 0.05)
+        for i, v in ipairs(self.citizens) do
+            v:Update(dt)
+        end
     end)
     self:scheduleUpdate()
 end
@@ -420,6 +370,7 @@ function CityLayer:UpdateAllDynamicWithCity(city)
     self:UpdateTowersWithCity(city)
     self:UpdateSoldiersVisibleWithSoldierManager(city:GetSoldierManager())
     self:UpdateHelpedByTroopsVisible(city:GetHelpedByTroops())
+    self:UpdateCitizen(city)
 end
 function CityLayer:UpdateRuinsVisibleWithCity(city)
     table.foreach(self.ruins, function(_, ruin)
@@ -535,6 +486,17 @@ function CityLayer:UpdateHelpedByTroopsVisible(helped_by_troops)
 end
 function CityLayer:IteratorHelpedTroops(func)
     table.foreach(self.helpedByTroops, func)
+end
+function CityLayer:UpdateCitizen(city)
+    local count = 0
+    city:IteratorTilesByFunc(function(x, y, tile)
+        if tile:IsConnected() then
+            count = count + 1
+        end
+    end)
+    for i = #self.citizens + 1, count do
+        table.insert(self.citizens, self:CreateCitizen(city, 0, 0):addTo(self:GetCityNode()))
+    end
 end
 -- promise
 function CityLayer:FindBuildingBy(x, y)

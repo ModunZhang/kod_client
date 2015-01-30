@@ -11,6 +11,7 @@ function CitizenSprite:ctor(city_layer, city, x, y)
     local start_point = table.remove(self.path, 1)
     self:setPosition(self:GetLogicMap():ConvertToMapPosition(start_point.x, start_point.y))
     self:UpdateVelocityByPoints(start_point, self.path[1])
+    self:CreateBase()
 end
 function CitizenSprite:PlayAnimation(animation)
     self.current_animation = animation
@@ -47,7 +48,7 @@ local function wrap_point_in_table(...)
     return {x = arg[1], y = arg[2]}
 end
 function CitizenSprite:UpdateVelocityByPoints(start_point, end_point)
-    local speed = 50
+    local speed = 100
     local logic_map = self:GetLogicMap()
     local spt = wrap_point_in_table(logic_map:ConvertToMapPosition(start_point.x, start_point.y))
     local ept = wrap_point_in_table(logic_map:ConvertToMapPosition(end_point.x, end_point.y))
@@ -60,22 +61,27 @@ function CitizenSprite:Speed()
 end
 function CitizenSprite:Update(dt)
     local x, y = self:getPosition()
+
+    local speed = self:Speed()
+    local nx, ny = x + speed.x * dt, y + speed.y * dt
+
     local point = self.path[1]
     local ex, ey = self:GetLogicMap():ConvertToMapPosition(point.x, point.y)
-    local disSQ = cc.pDistanceSQ({x = x, y = y}, {x = ex, y = ey})
-    if disSQ < 10 * 10 then
+
+    if speed.x * (ex - nx) + speed.y * (ey - ny) < 0 then
         if #self.path <= 1 then
             self.path = self.city:FindAPointWayFromPosition(point.x, point.y)
         end
         local path = self.path
         self:UpdateVelocityByPoints(path[1], path[2])
+        nx, ny = ex, ey
         table.remove(path, 1)
     end
-    local speed = self:Speed()
-    self:setPosition(x + speed.x * dt, y + speed.y * dt)
+    self:setPosition(nx, ny)
 end
 
 return CitizenSprite
+
 
 
 

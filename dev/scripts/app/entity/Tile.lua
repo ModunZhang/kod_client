@@ -48,7 +48,7 @@ function Tile:FindConnectedTilesFromThis()
 end
 function Tile:IsConnected()
     local x, y = self.x, self.y
-    if (x == 1 and y == 1) or (x == 1 and y == 2) or (x == 2 and y == 1) then
+    if (x == 1 and y == 1) or (x == 2 and y == 1) then
         return false
     end
     return self:IsUnlocked() or (self:NeedWalls() and self.locked)
@@ -141,11 +141,13 @@ end
 function Tile:RandomPoint()
     local r = math.random(10)
     local sx, sy = self:GetStartPos()
-    -- local side_tile = self.city:GetTileByIndex(self.x + 1, self.y)
-    -- local is_nearby_side = side_tile == nil and true or (not side_tile:IsUnlocked())
-    -- if is_nearby_side then
-    --     return {x = sx + math.random(9) - 1, y = sy + 3}
-    -- end
+    if self.x == 1 and self.y == 2 then
+        if r > 5 then
+            return {x = sx + 9, y = sy + 3 + math.random(6)}
+        elseif r > 0 then
+            return {x = sx + 9, y = sy + math.random(3) - 1}
+        end
+    end
     if r > 4 then
         return {x = sx + math.random(9) - 1, y = sy + 3}
     elseif r > 1 then
@@ -347,6 +349,7 @@ end
 
 
 return Tile
+
 
 
 
