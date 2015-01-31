@@ -185,9 +185,9 @@ create_building_config(
 -- walls
 create_building_config(
     "wall"
-    ,create_config(MIN_LEVEL, level(4), "gate_1.png", offset(0, 100), scale(1))
+    ,create_config(MIN_LEVEL, level(2), "gate_1.png", offset(0, 100), scale(1))
     -- ,create_config(level(2), level(2), "gate_2.png", offset(0, 100), scale(1))
-    ,create_config(level(5), MAX_LEVEL, "gate_2.png", offset(0, 100), scale(1))
+    ,create_config(level(3), MAX_LEVEL, "gate_2.png", offset(0, 100), scale(1))
 )
 create_building_config(
     "tower"

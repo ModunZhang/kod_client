@@ -691,17 +691,7 @@ function City:GetWalls()
     return self.walls
 end
 function City:GetGate()
-    return self:GetGateInWalls(self.walls)
-end
-function City:GetGateInWalls(walls)
-    local gate
-    table.foreach(walls, function(k, wall)
-        if wall:IsGate() then
-            gate = wall
-            return true
-        end
-    end)
-    return gate
+    return self.gate
 end
 function City:GetTowers()
     return self.towers
@@ -1184,8 +1174,18 @@ function City:GenerateWalls()
     self:GenerateTowers(sort_walls)
 end
 -- 因为重新生成了城墙，所以必须把添加的listener都转移到新的城门上去
+local function GetGateInWalls(walls)
+    local gate
+    table.foreach(walls, function(k, wall)
+        if wall:IsGate() then
+            gate = wall
+            return true
+        end
+    end)
+    return gate
+end
 function City:ReloadWalls(walls)
-    local old_gate = self:GetGateInWalls(self.walls)
+    local old_gate = GetGateInWalls(self.walls)
     local new_index = nil
     local new_gate = nil
     for i, v in ipairs(walls) do
@@ -1201,9 +1201,11 @@ function City:ReloadWalls(walls)
     if old_gate then
         walls[new_index] = old_gate
         old_gate:CopyValueFrom(new_gate)
+        self.gate = old_gate
     else
         -- 如果是第一次生成
-        self:OnInitBuilding(self:GetGateInWalls(walls))
+        self.gate = GetGateInWalls(walls)
+        self:OnInitBuilding(self.gate)
     end
     local t = {}
     for _, v in ipairs(walls) do
@@ -1253,24 +1255,23 @@ function City:GenerateTowers(walls)
 
     local visible_tower = {}
     for _, v in ipairs(towers) do
-        if (v:GetOrient() ~= Orient.NEG_X and
-            v:GetOrient() ~= Orient.NEG_Y and
-            v:GetOrient() ~= Orient.UP) or
-            (v.x > 0 and v.y > 0) then
+        if v:IsVisible() then
             table.insert(visible_tower, v)
         end
     end
 
-    local t = {}
+    local efficiency_tower = {}
     for i = 1, #visible_tower do
-        t[i] = i
+        if visible_tower[i]:IsEfficiency() then
+            efficiency_tower[#efficiency_tower + 1] = i
+        end
     end
 
     local tower_limit = self:GetUnlockTowerLimit()
     local indexes = {}
     while #indexes < tower_limit do
-        local i = ceil(#t * 0.5)
-        local index = table.remove(t, i)
+        local i = ceil(#efficiency_tower * 0.5)
+        local index = table.remove(efficiency_tower, i)
         table.insert(indexes, index)
     end
 
@@ -1640,6 +1641,8 @@ end
 
 
 return City
+
+
 
 
 
