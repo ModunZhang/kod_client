@@ -105,8 +105,8 @@ function Tile:GetEmptyGround()
             -- {x = base_x + 7, y = base_y + 4},
             -- {x = base_x + 8, y = base_y + 4},
 
-            {x = base_x + 7, y = base_y + 5},
-            -- {x = base_x + 8, y = base_y + 5},
+            -- {x = base_x + 7, y = base_y + 5},
+            {x = base_x + 8, y = base_y + 5},
 
             -- {x = base_x + 7, y = base_y + 8},
             -- {x = base_x + 8, y = base_y + 8},
@@ -237,11 +237,12 @@ local function generateDownWalls(tile, gate_index)
     local end_x, end_y = tile:GetEndPos()
     local r = {}
     local i = 1
+    local gate_len = 6
     while i >= -9 do
         local index = #r + 1
-        local len = index == gate_index and 6 or 2
+        local len = index == gate_index and gate_len or 2
         r[index] = WallUpgradeBuilding.new({ location_id = tile.location_id, x = end_x + i, y = end_y + 3, len = len, orient = Orient.Y, building_type = "wall", city = tile.city })
-        if len == 6 then
+        if len == gate_len then
             r[index]:SetGate()
         end
         i = i - len

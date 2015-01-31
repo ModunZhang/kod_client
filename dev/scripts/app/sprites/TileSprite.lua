@@ -16,7 +16,7 @@ function TileSprite:GetSpriteFile()
     local x, y, city = tile.x, tile.y, tile.city
     -- 路的地块
     if x == 2 then
-        return string.format("road_%d_%s.png", y - 3, self:GetMapLayer():Terrain())
+        return string.format("road_%d_%s.png", y - city:GetTileFaceToGate().y, self:GetMapLayer():Terrain())
     end
     if not self.png_index then
         self.png_index = random(2)

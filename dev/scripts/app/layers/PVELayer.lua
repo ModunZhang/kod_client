@@ -2,6 +2,7 @@ local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLeftReverseY")
 local Enum = import("..utils.Enum")
+local Observer = import("..entity.Observer")
 local PVEObject = import("..entity.PVEObject")
 local PVEDefine = import("..entity.PVEDefine")
 local SpriteConfig = import("..sprites.SpriteConfig")
@@ -29,6 +30,7 @@ OBJECT_IMAGE[PVEDefine.LAKE] = "lake_220x174.png"
 
 function PVELayer:ctor(user)
     PVELayer.super.ctor(self, 0.5, 1)
+    self.pve_listener = Observer.new()
     self.user = user
     self.pve_map = user:GetCurrentPVEMap()
     self.scene_node = display.newNode():addTo(self)
@@ -80,6 +82,12 @@ function PVELayer:onExit()
     self.pve_map:RemoveObserver(self)
     PVELayer.super.onExit(self)
 end
+function PVELayer:AddPVEListener(l)
+    self.pve_listener:AddObserver(l)
+end
+function PVELayer:RemovePVEListener(l)
+    self.pve_listener:RemoveObserver(l)
+end
 function PVELayer:OnObjectChanged(object)
     self:SetObjectStatus(object)
     if object:Searched() > 0 then
@@ -88,6 +96,7 @@ function PVELayer:OnObjectChanged(object)
         end):catch(function(err)
             dump(err:reason())
         end)
+        self:NotifyExploring()
     end
 end
 function PVELayer:SetObjectStatus(object)
@@ -121,6 +130,12 @@ function PVELayer:MoveCharTo(x, y)
     self.char:pos(self:GetLogicMap():ConvertToMapPosition(x, y))
     self:GotoLogicPoint(x, y, 10)
     self.user:GetPVEDatabase():SetCharPosition(x, y)
+    self:NotifyExploring()
+end
+function PVELayer:NotifyExploring()
+    self.pve_listener:NotifyObservers(function(v)
+        v:OnExploreChanged(self)
+    end)
 end
 function PVELayer:GetSceneNode()
     return self.scene_node
@@ -164,7 +179,7 @@ function PVELayer:ConvertLogicPositionToMapPosition(lx, ly)
     return self:convertToNodeSpace(self.background:convertToWorldSpace(map_pos))
 end
 function PVELayer:ExploreDegree()
-    
+    return (self:SearchedFogsCount() + self:SearchedObjectsCount()) / (self:TotalFogs() + self:TotalObjects())
 end
 function PVELayer:SearchedFogsCount()
     return self.pve_map:SearchedFogsCount()
@@ -223,6 +238,7 @@ function PVELayer:GotoLogicPoint(x, y, s)
 end
 
 return PVELayer
+
 
 
 

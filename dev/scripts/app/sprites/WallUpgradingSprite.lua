@@ -8,21 +8,21 @@ local offset_map = {
         [Orient.Y] = {-16, 49},
         [Orient.NEG_X] = {15, 49},
         [Orient.NEG_Y] = {-16, 49},
-        gate = {-75, 81}
+        gate = {-62, 72}
     },
     [2] = {
         [Orient.X] = {15, 49},
         [Orient.Y] = {-16, 49},
         [Orient.NEG_X] = {15, 49},
         [Orient.NEG_Y] = {-16, 49},
-        gate = {-73, 85}
+        gate = {-62, 72}
     },
     [3] = {
-        [Orient.X] = {15, 49},
-        [Orient.Y] = {-16, 49},
+        [Orient.X] = {13, 46},
+        [Orient.Y] = {-10, 49},
         [Orient.NEG_X] = {15, 49},
         [Orient.NEG_Y] = {-16, 49},
-        gate = {-75, 81}
+        gate = {-38, 67}
     },
 }
 function WallUpgradingSprite:GetWorldPosition()

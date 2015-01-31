@@ -36,13 +36,13 @@ local offset_map = {
         [Orient.Y] = {-14, 74},
         [Orient.NEG_X] = {83, 83},
         [Orient.NEG_Y] = {-82, 83},
-        [Orient.DOWN] = {0, 71},
-        [Orient.RIGHT] = {-10, 63},
+        [Orient.DOWN] = {0, 73},
+        [Orient.RIGHT] = {-15, 61},
         [Orient.LEFT] = {16, 62},
         [Orient.UP] = {0, -7},
-        [Orient.NONE] = {0, 71},
-        right_end = {-17, 31},
-        left_end = {-44, 73}
+        [Orient.NONE] = {-2, 63},
+        right_end = {-3, 25},
+        left_end = {-47, 66}
     },
 }
 
