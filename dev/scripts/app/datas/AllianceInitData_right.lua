@@ -21,7 +21,8 @@ right["archon"] = {
 	["activateAllianceShrineStage"] = true,
 	["findAllianceToFight"] = true,
 	["revengeAlliance"] = true,
-	["buyItem"] = true
+	["addItem"] = true,
+	["giveLoyaltyToAllianceMember"] = true
 }
 right["general"] = {
 	["title"] = "general",
@@ -44,7 +45,8 @@ right["general"] = {
 	["activateAllianceShrineStage"] = true,
 	["findAllianceToFight"] = true,
 	["revengeAlliance"] = true,
-	["buyItem"] = true
+	["addItem"] = true,
+	["giveLoyaltyToAllianceMember"] = true
 }
 right["quartermaster"] = {
 	["title"] = "quartermaster",
@@ -67,7 +69,8 @@ right["quartermaster"] = {
 	["activateAllianceShrineStage"] = false,
 	["findAllianceToFight"] = false,
 	["revengeAlliance"] = false,
-	["buyItem"] = true
+	["addItem"] = true,
+	["giveLoyaltyToAllianceMember"] = false
 }
 right["supervisor"] = {
 	["title"] = "supervisor",
@@ -90,7 +93,8 @@ right["supervisor"] = {
 	["activateAllianceShrineStage"] = false,
 	["findAllianceToFight"] = false,
 	["revengeAlliance"] = false,
-	["buyItem"] = false
+	["addItem"] = false,
+	["giveLoyaltyToAllianceMember"] = false
 }
 right["elite"] = {
 	["title"] = "elite",
@@ -113,7 +117,8 @@ right["elite"] = {
 	["activateAllianceShrineStage"] = false,
 	["findAllianceToFight"] = false,
 	["revengeAlliance"] = false,
-	["buyItem"] = false
+	["addItem"] = false,
+	["giveLoyaltyToAllianceMember"] = false
 }
 right["member"] = {
 	["title"] = "member",
@@ -136,5 +141,6 @@ right["member"] = {
 	["activateAllianceShrineStage"] = false,
 	["findAllianceToFight"] = false,
 	["revengeAlliance"] = false,
-	["buyItem"] = false
+	["addItem"] = false,
+	["giveLoyaltyToAllianceMember"] = false
 }

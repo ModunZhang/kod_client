@@ -166,9 +166,9 @@ function WidgetMilitaryTechnologyStatus:OnTimer(current_time)
         self.upgrading_node:SetProgressInfo(GameUtils:formatTimeStyle1(event.finishTime/1000-current_time), (current_time*1000-event.startTime)/(event.finishTime-event.startTime)*100)
         if self.speedUp and self.speedUp.SetProgressInfo then
             self.speedUp:SetProgressInfo(GameUtils:formatTimeStyle1(event.finishTime/1000-current_time), (current_time*1000-event.startTime)/(event.finishTime-event.startTime)*100)
-            -- if self.speedUp.SetFreeButtonEnabled then
-            --     self.speedUp:SetFreeButtonEnabled(math.floor(soldier_manager:GetUpgradingMitiTaryTechLeftTimeByCurrentTime(app.timer:GetServerTime())) < 300)
-            -- end
+            if self.speedUp.SetFreeButtonEnabled then
+                self.speedUp:SetFreeButtonEnabled(math.floor(soldier_manager:GetUpgradingMitiTaryTechLeftTimeByCurrentTime(app.timer:GetServerTime())) < 300)
+            end
         end
     end
 end

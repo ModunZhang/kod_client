@@ -19,6 +19,11 @@ require("app.datas.ClientInitGame_pve_elite")
 require("app.datas.ClientInitGame_pve_boss")
 require("app.datas.ClientInitGame_pve_npc")
 
+GameDatas.Activities = {
+	["signIn"] = {},
+}
+require("app.datas.Activities_signIn")
+
 GameDatas.AllianceBuilding = {
 	["palace"] = {},
 	["moonGate"] = {},
@@ -207,6 +212,13 @@ require("app.datas.Dragons_dragonAttributes")
 require("app.datas.Dragons_dragonSkills")
 require("app.datas.Dragons_fightFix")
 
+GameDatas.Gacha = {
+	["normal"] = {},
+	["advanced"] = {},
+}
+require("app.datas.Gacha_normal")
+require("app.datas.Gacha_advanced")
+
 GameDatas.GemsPayment = {
 	["time"] = {},
 	["wood"] = {},
@@ -282,6 +294,15 @@ require("app.datas.Items_buff")
 require("app.datas.Items_resource")
 require("app.datas.Items_speedup")
 require("app.datas.Items_buffTypes")
+
+GameDatas.KillDropItems = {
+	["grassLand"] = {},
+	["desert"] = {},
+	["iceField"] = {},
+}
+require("app.datas.KillDropItems_grassLand")
+require("app.datas.KillDropItems_desert")
+require("app.datas.KillDropItems_iceField")
 
 GameDatas.MilitaryTechLevelUp = {
 	["infantry_infantry"] = {},

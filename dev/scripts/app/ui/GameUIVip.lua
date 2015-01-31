@@ -272,7 +272,7 @@ end
 function GameUIVip:InitVip()
     self:CreateAD():addTo(self.vip_layer):align(display.CENTER_TOP, display.cx - 2, display.top-46)
     local exp_bar = self:CreateVipExpBar():addTo(self.vip_layer):pos(display.cx-287, display.top-300)
-    exp_bar:LightLevelBar(self:GetVipLevelByExp(95000))
+    exp_bar:LightLevelBar(self:GetVipLevelByExp(User:VipExp()))
     self:CreateVIPStatus()
 end
 

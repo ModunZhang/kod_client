@@ -1,7 +1,6 @@
 local window = import("..utils.window")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
-local WidgetBuyGoods = import("..widget.WidgetBuyGoods")
 local WidgetStockGoods = import("..widget.WidgetStockGoods")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
@@ -226,7 +225,9 @@ function GameUIOrderHall:LoadMember()
     self.current_loading_num = load_to_index + 1
     if (self.current_loading_num-1) == #sortByPostionMember then
         local listview =self.proficiency_listview
-        listview:removeItem(self.loading_more_item)
+        if self.loading_more_item then
+            listview:removeItem(self.loading_more_item)
+        end
         local _,pre_y = listview.container:getPosition()
         local item_height = 210
         listview.container:setPositionY(pre_y+item_height)

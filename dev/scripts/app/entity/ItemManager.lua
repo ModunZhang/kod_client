@@ -170,34 +170,24 @@ function ItemManager:GetBuffItems()
     return self:__order(self.items_buff)
 
 end
-function ItemManager:GeResourcetItems()
+function ItemManager:GetResourcetItems()
     return self:__order(self.items_resource)
 end
 function ItemManager:GetSpeedUpItems()
     return self:__order(self.items_speedUp)
 end
+
 function ItemManager:__order(items)
-    local found_keys = {}
     local order_items = {}
     for k,v in pairs(items) do
-        local area_types = string.split(v:Name(),"_")
-        if #area_types == 2 and not found_keys[area_types[1]] then
-            for i=1,math.huge do
-                local same_item = items[area_types[1].."_"..i]
-                if same_item then
-                    table.insert(order_items, same_item)
-                else
-                    break
-                end
-            end
-            -- 已经找出的同类型道具，缓存类型key值，之后不再处理
-            found_keys[area_types[1]] = true
-        elseif #area_types == 1 then
-            table.insert(order_items, v)
-        end
+        table.insert(order_items, v)
     end
+    table.sort(order_items,function ( a,b )
+        return a:Order() < b:Order()
+    end)
     return order_items
 end
+
 function ItemManager:GetSameTypeItems(item)
     local same_items = {}
     local find_area = self:GetCategoryItems(item)
@@ -223,6 +213,12 @@ function ItemManager:GetCanSellSameTypeItems(item)
         end
     end
     return canSell
+end
+function ItemManager:CanOpenChest( item )
+    local area_type = string.split(item:Name(),"_")
+    local key_item = self:GetItemByName("chestKey_"..area_type[2])
+    -- 木宝箱不需要钥匙
+    return  not key_item or key_item:Count()>0
 end
 return ItemManager
 

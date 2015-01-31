@@ -51,10 +51,9 @@ property(Item,"order",0)
 property(Item,"isSell",false)
 property(Item,"price",0)
 property(Item,"isSellInAlliance",false)
-property(Item,"priceInAlliance",0)
-function Item:ctor()
-
-end
+property(Item,"sellPriceInAlliance",0)
+property(Item,"buyPriceInAlliance",0)
+property(Item,"isAdvancedItem",false)
 
 function Item:UpdateData(json_data)
     local name = json_data.name
@@ -68,7 +67,9 @@ function Item:UpdateData(json_data)
     self:SetIsSell(config.isSell)
     self:SetPrice(config.price)
     self:SetIsSellInAlliance(config.isSellInAlliance)
-    self:SetPriceInAlliance(config.priceInAlliance)
+    self:SetSellPriceInAlliance(config.sellPriceInAlliance)
+    self:SetBuyPriceInAlliance(config.buyPriceInAlliance)
+    self:SetIsAdvancedItem(config.isAdvancedItem)
     if category == Item.CATEGORY.BUFF then
         self:SetBuffType(config.type)
     end
