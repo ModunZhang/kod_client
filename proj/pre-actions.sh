@@ -2,7 +2,10 @@
 
 export LocalBin="/usr/local/bin/"
 export PATH=$LocalBin:$PATH
-
+ENCRYPT=true
+XXTEAKey="Cbcm78HuH60MCfA7"
+SCRIPT_COMPILE_TOOL=$QUICK_V3_ROOT/quick/bin/compile_scripts.sh
+RES_COMPILE_TOOL=$QUICK_V3_ROOT/quick/bin/pack_files.sh
 DOCROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 VERSION_FILE=$DOCROOT/../dev/scripts/debug_version.lua
 DESTROOT=$DOCROOT/../update
@@ -73,8 +76,24 @@ exportScripts()
 		fi
     done
 }
+exportScriptsEncrypt()
+{
+	outdir=$DESTROOT/scripts
+	$SCRIPT_COMPILE_TOOL -i $RESOURCEROOT/scripts -o $outdir -m files -e xxtea_chunk -ex lua -ek $XXTEAKey
+}
+exportResEncrypt()
+{
+	outdir=$DESTROOT/res/images
+	$RES_COMPILE_TOOL -i $RESOURCEROOT/res/images -o $outdir -ek $XXTEAKey 
+}
 
-exportRes $RESOURCEROOT/res
-exportScripts $RESOURCEROOT/scripts
+if $ENCRYPT; then
+	exportRes $RESOURCEROOT/res
+	# exportResEncrypt
+	exportScriptsEncrypt
+else
+	exportRes $RESOURCEROOT/res
+	exportScripts $RESOURCEROOT/scripts
+fi
 
 find $DESTROOT/* -exec touch {} \;
