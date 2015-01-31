@@ -50,7 +50,7 @@ function RichText:Text(str, line)
     -- assert(not self.lines, "富文本不可变!")
     line = line or math.huge
     self:removeAllChildren()
-    local items = LuaUtils:table_map(GameUtils:parseRichText(str), function(k, v)
+    local items = LuaUtils:table_map(json.decode(str), function(k, v)
         local type_ = type(v)
         if type_ == "string" then
             return k, {type = "text", value = v, size = self.size}
