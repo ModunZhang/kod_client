@@ -34,13 +34,13 @@ void AppDelegateExtern::initLuaEngine()
     LuaEngine *pEngine = LuaEngine::getInstance();
     ScriptEngineManager::getInstance()->setScriptEngine(pEngine);
     LuaStack *pStack = pEngine->getLuaStack();
+    pStack->setXXTEAKeyAndSign("Cbcm78HuH60MCfA7", 16,"XXTEA", 5);
     loadConfigFile();
     checkPath();
     extendApplication();
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // load framework
     pStack->loadChunksFromZIP("res/framework_precompiled.zip");
-    
     // set script path
     string path = FileUtils::getInstance()->fullPathForFilename("scripts/main.lua");
     

@@ -57,6 +57,11 @@ end
 function DragonEyrieUpgradeBuilding:GetNextLevelVitalityRecoveryPerHour()
     return config_function[self:GetNextLevel()].hpRecoveryPerHour
 end
+--Fix bug KOD-175
+function DragonEyrieUpgradeBuilding:ResetAllListeners()
+    DragonEyrieUpgradeBuilding.super.ResetAllListeners(self)
+    self:GetDragonManager():ClearAllListener()
+end
 
 return DragonEyrieUpgradeBuilding
 
