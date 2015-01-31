@@ -1,7 +1,7 @@
 local Orient = import("..entity.Orient")
 local UpgradeBuilding = import(".UpgradeBuilding")
 local TowerUpgradeBuilding = class("TowerUpgradeBuilding", UpgradeBuilding)
-
+local abs = math.abs
 function TowerUpgradeBuilding:ctor(building_info)
     TowerUpgradeBuilding.super.ctor(self, building_info)
     self.sub_orient = building_info.sub_orient
@@ -33,6 +33,17 @@ function TowerUpgradeBuilding:ctor(building_info)
         self.w = 1
         self.h = 1
     end
+end
+function TowerUpgradeBuilding:IsEfficiency()
+    local ex, ey = self:BelongCity():GetGate():GetEndPos()
+    return self:IsVisible() 
+    -- and not (self.w == 1 and self.h == 1 and abs(self.x - ex) + abs(self.y - ey) == 1)
+end
+function TowerUpgradeBuilding:IsVisible()
+    return (self:GetOrient() ~= Orient.NEG_X and
+        self:GetOrient() ~= Orient.NEG_Y and
+        self:GetOrient() ~= Orient.UP) or
+        (self.x > 0 and self.y > 0)
 end
 function TowerUpgradeBuilding:GetSubOrient()
     return self.sub_orient
@@ -91,3 +102,5 @@ function TowerUpgradeBuilding:GetAtk()
 end
 
 return TowerUpgradeBuilding
+
+

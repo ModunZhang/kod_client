@@ -188,6 +188,14 @@ function ResourceManager:GetCitizenAllocated()
     return total_citizen
 end
 function ResourceManager:UpdateFromUserDataByTime(resources, current_time)
+    if not resources then return end
+    if resources.coin then
+        self.resources[COIN]:SetValue(resources.coin)
+    end
+    if resources.blood then
+        self.resources[BLOOD]:SetValue(resources.blood)
+    end
+    if not current_time then return end
     if resources.wood then
         self.resources[WOOD]:UpdateResource(current_time, resources.wood)
     end
@@ -205,12 +213,6 @@ function ResourceManager:UpdateFromUserDataByTime(resources, current_time)
     end
     if resources.citizen then
         self.resources[POPULATION]:UpdateResource(current_time, resources.citizen)
-    end
-    if resources.coin then
-        self.resources[COIN]:SetValue(resources.coin)
-    end
-    if resources.blood then
-        self.resources[BLOOD]:SetValue(resources.blood)
     end
     if resources.wallHp then
         self.resources[WALLHP]:UpdateResource(current_time, resources.wallHp)

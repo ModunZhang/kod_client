@@ -1,4 +1,5 @@
 local IsoMapAnchorBottomLeft = import("..map.IsoMapAnchorBottomLeft")
+local SpriteConfig = import("..sprites.SpriteConfig")
 local DragonEyrieSprite = import("..sprites.DragonEyrieSprite")
 local FunctionUpgradingSprite = import("..sprites.FunctionUpgradingSprite")
 local UpgradingSprite = import("..sprites.UpgradingSprite")
@@ -20,8 +21,8 @@ local Observer = import("..entity.Observer")
 local MapLayer = import(".MapLayer")
 local CityLayer = class("CityLayer", MapLayer)
 
-local math = math
 local floor = math.floor
+local min = math.min
 local random = math.random
 local randomseed = math.randomseed
 function CityLayer:GetClickedObject(world_x, world_y)
@@ -150,6 +151,7 @@ function CityLayer:ctor(city_scene)
     self.locked_tiles = {}
     self.walls = {}
     self.helpedByTroops = {}
+    self.citizens = {}
     -- self.road = nil
     self:InitBackground()
     self:InitCity()
@@ -350,155 +352,15 @@ function CityLayer:InitWithCity(city)
     end
     self.helpedByTroops = helpedByTroops
 
+
+    display.newSprite("redDragon_icon_151x133.png"):addTo(self, WEATHER_NODE):pos(500, 500)
+
     -- 更新其他需要动态生成的建筑
     self:UpdateAllDynamicWithCity(city)
-    --
-    -- --
-    local function find_nearby(t, tiles)
-        local connectedness = {t}
-        local index = 1
-        while true do
-            local cur = connectedness[index]
-            if not cur then
-                break
-            end
-            for i, v in ipairs(tiles) do
-                if cur:IsNearBy(v) then
-                    table.insert(connectedness, table.remove(tiles, i))
-                end
-            end
-            index = index + 1
-        end
-        return connectedness
-    end
-
-    local connects = {}
-    local r = city:GetConnectedTiles()
-    while #r > 0 do
-        table.insert(connects, find_nearby(table.remove(r, 1), r))
-    end
-    local function alignmeng_path(path)
-        if #path <= 3 then
-            return path
-        end
-        local index = 1
-        while index <= #path - 2 do
-            local start = path[index]
-            local middle = path[index + 1]
-            local ending = path[index + 2]
-            if (start.x == middle.x and middle.x == ending.x)
-                or (start.y == middle.y and middle.y == ending.y) then
-                table.remove(path, index + 1)
-            else
-                index = index + 1
-            end
-        end
-        return path
-    end
-    local function find_path_tile(connectedness, start_tile)
-        if #connectedness == 0 then
-            return {start_tile}
-        end
-        local r = {start_tile or table.remove(connectedness, math.random(#connectedness))}
-        local index = 1
-        local changed = true
-        while changed do
-            local cur_nearbys = {}
-            for i, v in ipairs(connectedness) do
-                local cur = r[index]
-                if cur:IsNearBy(v) then
-                    table.insert(cur_nearbys, i)
-                end
-            end
-            if #cur_nearbys > 0 then
-                table.insert(r, table.remove(connectedness, cur_nearbys[math.random(#cur_nearbys)]))
-                index = index + 1
-                changed = true
-            else
-                changed = false
-            end
-        end
-        return r
-    end
-
-    local cc = cc
-    local function wrap_point_in_table(...)
-        local arg = {...}
-        return {x = arg[1], y = arg[2]}
-    end
-    local function return_dir_and_velocity(start_point, end_point)
-        local speed = 50
-        local spt = wrap_point_in_table(self.iso_map:ConvertToMapPosition(start_point.x, start_point.y))
-        local ept = wrap_point_in_table(self.iso_map:ConvertToMapPosition(end_point.x, end_point.y))
-        local dir = cc.pSub(ept, spt)
-        local distance = cc.pGetLength(dir)
-        local vdir = {x = speed * dir.x / distance, y = speed * dir.y / distance}
-        return vdir
-    end
-    local path_tiles = find_path_tile(connects[1])
-    local path_point = LuaUtils:table_map(
-        path_tiles,
-        function(k, v)
-            return k, v:GetCrossPoint()
-        end)
-    table.insert(path_point, 1, path_tiles[1]:RandomPoint())
-    table.insert(path_point, #path_point + 1, path_tiles[#path_tiles]:RandomPoint())
-    local path = alignmeng_path(path_point)
-    local start = false
-    local citizen = self:CreateCitizen(0, 0):addTo(city_node)
-    self.vdir = {}
     self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
-        dt = math.min(dt, 0.05)
-        if start then
-            local cx, cy = citizen:getPosition()
-            local point = path[1]
-            local ex, ey = self.iso_map:ConvertToMapPosition(point.x, point.y)
-            local disSQ = cc.pDistanceSQ({x = cx, y = cy}, {x = ex, y = ey})
-            if disSQ < 10 * 10 then
-                if #path <= 1 then
-
-                    local tile = city:GetTileByBuildingPosition(point.x, point.y)
-                    local connects = {}
-                    local r = city:GetConnectedTiles()
-                    while #r > 0 do
-                        table.insert(connects, find_nearby(table.remove(r, 1), r))
-                    end
-                    for i, v in ipairs(connects[1]) do
-                        if v.x == tile.x and v.y == tile.y then
-                            table.remove(connects[1], i)
-                        end
-                    end
-                    local path_tiles = find_path_tile(connects[1], tile)
-                    local path_point = LuaUtils:table_map(
-                        path_tiles,
-                        function(k, v)
-                            return k, v:GetCrossPoint()
-                        end)
-                    table.insert(path_point, 1, point)
-                    table.insert(path_point, #path_point + 1, path_tiles[#path_tiles]:RandomPoint())
-                    path = alignmeng_path(path_point)
-
-                    -- self:unscheduleUpdate()
-                    -- return
-                end
-                self.vdir = return_dir_and_velocity(path[1], path[2])
-                table.remove(path, 1)
-            end
-            citizen:SetPositionWithZOrder(cx + self.vdir.x * dt, cy + self.vdir.y * dt)
-        else
-            if #path < 1 then
-                self:unscheduleUpdate()
-                return
-            end
-            start = true
-            local start_point = table.remove(path, 1)
-            local ex, ey = self.iso_map:ConvertToMapPosition(start_point.x, start_point.y)
-            citizen:SetPositionWithZOrder(ex, ey)
-            if #path < 1 then
-                self:unscheduleUpdate()
-                return
-            end
-            self.vdir = return_dir_and_velocity(start_point, path[1])
+        dt = min(dt, 0.05)
+        for i, v in ipairs(self.citizens) do
+            v:Update(dt)
         end
     end)
     self:scheduleUpdate()
@@ -509,9 +371,9 @@ function CityLayer:UpdateAllDynamicWithCity(city)
     self:UpdateTilesWithCity(city)
     self:UpdateTreesWithCity(city)
     self:UpdateWallsWithCity(city)
-    self:UpdateTowersWithCity(city)
     self:UpdateSoldiersVisibleWithSoldierManager(city:GetSoldierManager())
     self:UpdateHelpedByTroopsVisible(city:GetHelpedByTroops())
+    self:UpdateCitizen(city)
 end
 function CityLayer:UpdateRuinsVisibleWithCity(city)
     table.foreach(self.ruins, function(_, ruin)
@@ -572,11 +434,9 @@ function CityLayer:UpdateWallsWithCity(city)
     local city_node = self:GetCityNode()
     local old_walls = self.walls
     local new_walls = {}
+    local _, level = SpriteConfig["wall"]:GetConfigByLevel(city:GetGate():GetLevel())
     for _, v in pairs(city:GetWalls()) do
-        local x, y = v:GetLogicPosition()
-        local wall = self:CreateWall(v)
-        city_node:addChild(wall)
-        table.insert(new_walls, wall)
+        table.insert(new_walls, self:CreateWall(v, level):addTo(city_node))
     end
     self.walls = new_walls
 
@@ -584,22 +444,18 @@ function CityLayer:UpdateWallsWithCity(city)
         listener:OnGateChanged(old_walls, new_walls)
     end)
 
-    if old_walls then
-        for k, v in pairs(old_walls) do
-            v:DestorySelf()
-        end
+    for _, v in pairs(old_walls) do
+        v:DestorySelf()
     end
+    self:UpdateTowersWithCity(city)
 end
 function CityLayer:UpdateTowersWithCity(city)
     local city_node = self:GetCityNode()
     local old_towers = self.towers
     local new_towers = {}
+    local _, level = SpriteConfig["wall"]:GetConfigByLevel(city:GetGate():GetLevel())
     for k, v in pairs(city:GetTowers()) do
-        local x, y = v:GetLogicPosition()
-        local w, h = v:GetSize()
-        local tower = self:CreateTower(v)
-        city_node:addChild(tower)
-        table.insert(new_towers, tower)
+        table.insert(new_towers, self:CreateTower(v, level):addTo(city_node))
     end
     self.towers = new_towers
 
@@ -607,10 +463,8 @@ function CityLayer:UpdateTowersWithCity(city)
         listener:OnTowersChanged(old_towers, new_towers)
     end)
 
-    if old_towers then
-        for k, v in pairs(old_towers) do
-            v:DestorySelf()
-        end
+    for k, v in pairs(old_towers) do
+        v:DestorySelf()
     end
 end
 function CityLayer:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
@@ -627,6 +481,17 @@ function CityLayer:UpdateHelpedByTroopsVisible(helped_by_troops)
 end
 function CityLayer:IteratorHelpedTroops(func)
     table.foreach(self.helpedByTroops, func)
+end
+function CityLayer:UpdateCitizen(city)
+    local count = 0
+    city:IteratorTilesByFunc(function(x, y, tile)
+        if tile:IsConnected() then
+            count = count + 1
+        end
+    end)
+    for i = #self.citizens + 1, count do
+        table.insert(self.citizens, self:CreateCitizen(city, 0, 0):addTo(self:GetCityNode()))
+    end
 end
 -- promise
 function CityLayer:FindBuildingBy(x, y)
@@ -737,11 +602,11 @@ function CityLayer:CreateTreeWithTile(tile)
     local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
     return TreeSprite.new(self, tile, x, y)
 end
-function CityLayer:CreateWall(wall)
-    return WallUpgradingSprite.new(self, wall)
+function CityLayer:CreateWall(wall, level)
+    return WallUpgradingSprite.new(self, wall, level)
 end
-function CityLayer:CreateTower(tower)
-    return TowerUpgradingSprite.new(self, tower)
+function CityLayer:CreateTower(tower, level)
+    return TowerUpgradingSprite.new(self, tower, level)
 end
 function CityLayer:CreateRuin(ruin)
     return RuinSprite.new(self, ruin)
@@ -758,8 +623,8 @@ end
 function CityLayer:CreateSingleTree(logic_x, logic_y)
     return SingleTreeSprite.new(self, logic_x, logic_y)
 end
-function CityLayer:CreateCitizen(logic_x, logic_y)
-    return CitizenSprite.new(self, logic_x, logic_y)
+function CityLayer:CreateCitizen(city, logic_x, logic_y)
+    return CitizenSprite.new(self, city, logic_x, logic_y)
 end
 function CityLayer:CreateSoldier(soldier_type, logic_x, logic_y)
     return SoldierSprite.new(self, soldier_type, logic_x, logic_y)
@@ -794,6 +659,8 @@ function CityLayer:OnSceneScale()
 end
 
 return CityLayer
+
+
 
 
 

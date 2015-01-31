@@ -285,7 +285,6 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 			        end)
 			    end
 			end
-			--TODO:?
 		end
 	end
 	item:addContent(bg)

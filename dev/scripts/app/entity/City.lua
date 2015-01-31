@@ -372,6 +372,74 @@ end
 function City:GetLeftBuildingCountsByType(building_type)
     return self:GetMaxHouseCanBeBuilt(building_type) - #self:GetBuildingByType(building_type)
 end
+local function alignmeng_path(path)
+    if #path <= 3 then
+        return path
+    end
+    local index = 1
+    while index <= #path - 2 do
+        local start = path[index]
+        local middle = path[index + 1]
+        local ending = path[index + 2]
+        local dx = ending.x - start.x
+        local dy = ending.y - start.y
+        if ((start.x == middle.x and middle.x == ending.x and
+            abs((ending.y + start.y) * 0.5 - middle.y) < abs(ending.y - start.y))
+            or (start.y == middle.y and middle.y == ending.y) and
+            abs((ending.x + start.x) * 0.5 - middle.x) < abs(ending.x - start.x))
+        then
+            table.remove(path, index + 1)
+        else
+            index = index + 1
+        end
+    end
+    return path
+end
+function City:FindAPointWayFromPosition(x, y)
+    return self:FindAPointWayFromTileAt(self:GetTileByBuildingPosition(x, y), {x = x, y = y})
+end
+function City:FindAPointWayFromTile()
+    return self:FindAPointWayFromTileAt()
+end
+function City:FindAPointWayFromTileAt(tile, point)
+    local path_tiles = self:FindATileWayFromTile(tile)
+    local path_point = LuaUtils:table_map(path_tiles, function(k, v)
+        return k, v:GetCrossPoint()
+    end)
+    table.insert(path_point, 1, point or path_tiles[1]:RandomPoint())
+    table.insert(path_point, #path_point + 1, path_tiles[#path_tiles]:RandomPoint())
+    return alignmeng_path(path_point)
+end
+local function find_path_tile(connectedness, start_tile)
+    if #connectedness == 0 then
+        assert(start_tile)
+        return {start_tile}
+    end
+    local r = {start_tile or table.remove(connectedness, math.random(#connectedness))}
+    local index = 1
+    local changed = true
+    while changed do
+        local cur_nearbys = {}
+        for i, v in ipairs(connectedness) do
+            local cur = r[index]
+            if cur:IsNearBy(v) then
+                table.insert(cur_nearbys, i)
+            end
+        end
+        if #cur_nearbys > 0 then
+            table.insert(r, table.remove(connectedness, cur_nearbys[math.random(#cur_nearbys)]))
+            index = index + 1
+            changed = true
+        else
+            changed = false
+        end
+    end
+    return r
+end
+function City:FindATileWayFromTile(tile)
+    local r = tile == nil and self:GetConnectedTiles() or tile:FindConnectedTilesFromThis()
+    return find_path_tile(r, tile)
+end
 function City:GetConnectedTiles()
     local r = {}
     self:IteratorTilesByFunc(function(x, y, tile)
@@ -623,17 +691,7 @@ function City:GetWalls()
     return self.walls
 end
 function City:GetGate()
-    return self:GetGateInWalls(self.walls)
-end
-function City:GetGateInWalls(walls)
-    local gate
-    table.foreach(walls, function(k, wall)
-        if wall:IsGate() then
-            gate = wall
-            return true
-        end
-    end)
-    return gate
+    return self.gate
 end
 function City:GetTowers()
     return self.towers
@@ -942,7 +1000,7 @@ function City:OnUserDataChanged(userData, current_time)
     self:__OnHelpToTroopsDataChange(userData.__helpToTroops)
     --科技
     self:OnProductionTechsDataChanged(userData.productionTechs)
-    self:__OnProductionTechsDataChanged(userData.productionTechs)
+    self:__OnProductionTechsDataChanged(userData.__productionTechs)
     self:OnProductionTechEventsDataChaned(userData.productionTechEvents)
     self:__OnProductionTechEventsDataChaned(userData.__productionTechEvents)
 
@@ -952,18 +1010,17 @@ function City:OnUserDataChanged(userData, current_time)
     self.material_manager:OnUserDataChanged(userData)
     -- 最后才更新资源
     local basicInfo = userData.basicInfo
-    local resource_refresh_time = current_time
+    local resource_refresh_time
     if basicInfo then
-        resource_refresh_time = basicInfo.resourceRefreshTime / 1000
-
         self.build_queue = basicInfo.buildQueue
         self:SetCityName(basicInfo.cityName)
 
-        if userData.resources then
-            self.resource_manager:UpdateFromUserDataByTime(userData.resources, resource_refresh_time)
-            need_update_resouce_buildings = true
-        end
+        resource_refresh_time = basicInfo.resourceRefreshTime / 1000
+        need_update_resouce_buildings = true
     end
+
+    self.resource_manager:UpdateFromUserDataByTime(userData.resources, resource_refresh_time)
+
     if need_update_resouce_buildings then
         self.resource_manager:UpdateByCity(self, resource_refresh_time)
         self.resource_manager:UpdateResourceByTime(current_time)
@@ -1116,8 +1173,18 @@ function City:GenerateWalls()
     self:GenerateTowers(sort_walls)
 end
 -- 因为重新生成了城墙，所以必须把添加的listener都转移到新的城门上去
+local function GetGateInWalls(walls)
+    local gate
+    table.foreach(walls, function(k, wall)
+        if wall:IsGate() then
+            gate = wall
+            return true
+        end
+    end)
+    return gate
+end
 function City:ReloadWalls(walls)
-    local old_gate = self:GetGateInWalls(self.walls)
+    local old_gate = GetGateInWalls(self.walls)
     local new_index = nil
     local new_gate = nil
     for i, v in ipairs(walls) do
@@ -1133,9 +1200,11 @@ function City:ReloadWalls(walls)
     if old_gate then
         walls[new_index] = old_gate
         old_gate:CopyValueFrom(new_gate)
+        self.gate = old_gate
     else
         -- 如果是第一次生成
-        self:OnInitBuilding(self:GetGateInWalls(walls))
+        self.gate = GetGateInWalls(walls)
+        self:OnInitBuilding(self.gate)
     end
     local t = {}
     for _, v in ipairs(walls) do
@@ -1185,24 +1254,23 @@ function City:GenerateTowers(walls)
 
     local visible_tower = {}
     for _, v in ipairs(towers) do
-        if (v:GetOrient() ~= Orient.NEG_X and
-            v:GetOrient() ~= Orient.NEG_Y and
-            v:GetOrient() ~= Orient.UP) or
-            (v.x > 0 and v.y > 0) then
+        if v:IsVisible() then
             table.insert(visible_tower, v)
         end
     end
 
-    local t = {}
+    local efficiency_tower = {}
     for i = 1, #visible_tower do
-        t[i] = i
+        if visible_tower[i]:IsEfficiency() then
+            efficiency_tower[#efficiency_tower + 1] = i
+        end
     end
 
     local tower_limit = self:GetUnlockTowerLimit()
     local indexes = {}
     while #indexes < tower_limit do
-        local i = ceil(#t * 0.5)
-        local index = table.remove(t, i)
+        local i = ceil(#efficiency_tower * 0.5)
+        local index = table.remove(efficiency_tower, i)
         table.insert(indexes, index)
     end
 
@@ -1572,6 +1640,14 @@ end
 
 
 return City
+
+
+
+
+
+
+
+
 
 
 

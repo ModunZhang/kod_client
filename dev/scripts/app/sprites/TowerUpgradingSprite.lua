@@ -2,84 +2,101 @@ local Orient = import("..entity.Orient")
 local UpgradingSprite = import(".UpgradingSprite")
 local TowerUpgradingSprite = class("TowerUpgradingSprite", UpgradingSprite)
 local HEAD_SPRITE = 2
+
+
+local offset_map = {
+    [1] = {
+        [Orient.X] = {15, 75},
+        [Orient.Y] = {-14, 74},
+        [Orient.NEG_X] = {83, 83},
+        [Orient.NEG_Y] = {-82, 83},
+        [Orient.DOWN] = {0, 71},
+        [Orient.RIGHT] = {-10, 63},
+        [Orient.LEFT] = {16, 62},
+        [Orient.UP] = {0, -7},
+        [Orient.NONE] = {0, 71},
+        right_end = {-17, 31},
+        left_end = {-44, 73}
+    },
+    [2] = {
+        [Orient.X] = {15, 75},
+        [Orient.Y] = {-14, 74},
+        [Orient.NEG_X] = {83, 83},
+        [Orient.NEG_Y] = {-82, 83},
+        [Orient.DOWN] = {0, 71},
+        [Orient.RIGHT] = {-10, 63},
+        [Orient.LEFT] = {16, 62},
+        [Orient.UP] = {0, -7},
+        [Orient.NONE] = {0, 71},
+        right_end = {-17, 31},
+        left_end = {-44, 73}
+    },
+    [3] = {
+        [Orient.X] = {15, 75},
+        [Orient.Y] = {-14, 74},
+        [Orient.NEG_X] = {83, 83},
+        [Orient.NEG_Y] = {-82, 83},
+        [Orient.DOWN] = {0, 73},
+        [Orient.RIGHT] = {-15, 61},
+        [Orient.LEFT] = {16, 62},
+        [Orient.UP] = {0, -7},
+        [Orient.NONE] = {-2, 63},
+        right_end = {-3, 25},
+        left_end = {-47, 66}
+    },
+}
+
 function TowerUpgradingSprite:GetWorldPosition()
     local center_point = self:convertToWorldSpace(cc.p(self:GetSpriteOffset()))
     local bottom_point = self:convertToWorldSpace(cc.p(self:GetBottomOffset()))
     return center_point, bottom_point
 end
 ---- 功能
-function TowerUpgradingSprite:ctor(city_layer, entity)
+function TowerUpgradingSprite:ctor(city_layer, entity, level)
+    self.level = level
     TowerUpgradingSprite.super.ctor(self, city_layer, entity)
 end
 function TowerUpgradingSprite:GetSpriteFile()
     local entity = self:GetEntity()
     if entity:GetOrient() == Orient.X then
-        return "tower_x.png"
+        return string.format("tower_x_%d.png", self.level)
     elseif entity:GetOrient() == Orient.Y then
-        return "tower_y.png"
+        return string.format("tower_y_%d.png", self.level)
     elseif entity:GetOrient() == Orient.NEG_X then
-        -- return "tower_neg_x.png"
         assert(false)
     elseif entity:GetOrient() == Orient.NEG_Y then
-        -- return "tower_neg_y.png"
         assert(false)
     elseif entity:GetOrient() == Orient.RIGHT then
         local x, y = entity:GetLogicPosition()
         if y < 0 then
-            return "tower_right_x.png"
+            return string.format("tower_right_x_%d.png", self.level)
         end
-        return "tower_right.png"
+        return string.format("tower_right_%d.png", self.level)
     elseif entity:GetOrient() == Orient.DOWN then
-        return "tower_down.png"
+        return string.format("tower_down_%d.png", self.level)
     elseif entity:GetOrient() == Orient.LEFT then
         local x, y = entity:GetLogicPosition()
         if x < 0 then
-            return "tower_left_y.png"
+            return string.format("tower_left_y_%d.png", self.level)
         end
-        return "tower_left.png"
+        return string.format("tower_left_%d.png", self.level)
     elseif entity:GetOrient() == Orient.UP then
-        return "tower_up.png"
+        return string.format("tower_up_%d.png", self.level)
     elseif entity:GetOrient() == Orient.NONE then
-        return "tower_none.png"
-        -- return entity:GetSubOrient() ~= nil and "tower_none_158x181.png" or "tower_none_80x154.png"
+        return string.format("tower_none_%d.png", self.level)
     end
     assert(false)
 end
 function TowerUpgradingSprite:GetSpriteOffset()
     local entity = self:GetEntity()
-    if entity:GetOrient() == Orient.X then
-        return 15, 75
-    elseif entity:GetOrient() == Orient.Y then
-        return -14, 74
-    elseif entity:GetOrient() == Orient.NEG_X then
-        return 83, 83
-    elseif entity:GetOrient() == Orient.NEG_Y then
-        return -82, 83
-    elseif entity:GetOrient() == Orient.RIGHT then
-        local x, y = entity:GetLogicPosition()
-        if y < 0 then
-            return -17, 31
-        end
-        return -5, 63
-    elseif entity:GetOrient() == Orient.DOWN then
-        return 0, 71
-    elseif entity:GetOrient() == Orient.LEFT then
-        local x, y = entity:GetLogicPosition()
-        if x < 0 then
-            return -44, 73
-        end
-        return 16, 62
-    elseif entity:GetOrient() == Orient.UP then
-        return 0, -7
-    elseif entity:GetOrient() == Orient.NONE then
-        -- if entity:GetSubOrient() == Orient.LEFT then
-        --     return 38,  38
-        -- elseif entity:GetSubOrient() == Orient.RIGHT then
-        --     return -38,  38
-        -- end
-        return 0, 71
-    end
-    assert(false)
+    local offset = offset_map[self.level]
+    local x,y = entity:GetLogicPosition()
+    if entity:GetOrient() == Orient.RIGHT and y < 0 then
+        return unpack(offset.right_end)
+    elseif entity:GetOrient() == Orient.LEFT and x < 0 then
+        return unpack(offset.left_end)
+    end 
+    return unpack(offset[entity:GetOrient()])
 end
 function TowerUpgradingSprite:GetFlipX()
     local entity = self:GetEntity()

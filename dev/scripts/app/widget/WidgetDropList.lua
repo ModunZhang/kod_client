@@ -64,6 +64,7 @@ function WidgetDropList:onEnter()
 	self:BuildList()
 	local bottom = display.newSprite("drop_down_box_bottom_572x16.png")
 	bottom:align(display.LEFT_BOTTOM,-2,7):addTo(content_box)
+	self:addTouchNode_()
 end
 
 function WidgetDropList:BuildList()
@@ -171,7 +172,45 @@ function WidgetDropList:align(anchorPoint, x, y)
 	header:setPosition(header:getPositionX()+size.width*(header_anchorPoint.x - anchorPoint.x),header:getPositionY()+size.height*(header_anchorPoint.y - anchorPoint.y))
 	local clip_node = self.clip_node
 	clip_node:setPosition(clip_node:getPositionX()+size.width*(- anchorPoint.x), clip_node:getPositionY()+size.height*(- anchorPoint.y))
+	size = self.touchNode_:getContentSize()
+	self.touchNode_:setPosition(self.touchNode_:getPositionX()+size.width*(- anchorPoint.x), self.touchNode_:getPositionY()+size.height*(- anchorPoint.y))
+
 	return self
+end
+
+function WidgetDropList:addTouchNode_()
+	local node
+	if self.touchNode_ then
+		node = self.touchNode_
+	else
+		node = display.newNode()
+		self.touchNode_ = node
+		node:setLocalZOrder(-1)
+		node:setTouchSwallowEnabled(true)
+		node:setTouchEnabled(true)
+		node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function (event)
+	        return self:onTouch_(event)
+	    end)
+		self:addNodeEventListener(cc.NODE_TOUCH_CAPTURE_EVENT, function(event)
+			local cascadeBound = self.header:getCascadeBoundingBox()
+			if cc.rectContainsPoint(cascadeBound, cc.p(event.x, event.y)) then
+				return true
+			else
+        		return not self.lock_ and self:GetState() == self.STATE.open	
+			end
+    	end)
+	    self:addChild(node)
+	end
+	local nodePoint = self:convertToNodeSpace(cc.p(0,0))
+	node:size(display.width,display.height)
+	node:setPosition(nodePoint.x,nodePoint.y)
+end
+
+function WidgetDropList:onTouch_(event)
+	if not self.lock_ and self:GetState() == self.STATE.open then
+		self:OnBoxButtonClicked()
+	end
+	return false
 end
 
 return WidgetDropList

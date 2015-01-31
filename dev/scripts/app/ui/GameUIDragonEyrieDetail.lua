@@ -536,6 +536,7 @@ function GameUIDragonEyrieDetail:RefreshSkillList()
                 self:SkillListItemClicked(skillData)
             end)
         end    
+        content:size(content:getCascadeBoundingBox().width,120)
         item:addContent(content)
         item:setItemSize(content:getCascadeBoundingBox().width,120)
         self.skill_ui.listView:addItem(item)

@@ -5,8 +5,10 @@ local GameUIPVEHome = UIKit:createUIClass('GameUIPVEHome')
 local RichText = import("..widget.RichText")
 local ChatManager = import("..entity.ChatManager")
 local timer = app.timer
-function GameUIPVEHome:ctor(user)
+function GameUIPVEHome:ctor(user, scene)
     self.user = user
+    self.scene = scene
+    self.layer = scene:GetSceneLayer()
     GameUIPVEHome.super.ctor(self)
     self.chatManager = app:GetChatManager()
 end
@@ -35,8 +37,13 @@ function GameUIPVEHome:onEnter()
     self:OnResourceChanged(self.user)
     self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
     self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
+
+    self.layer:AddPVEListener(self)
+    self.layer:NotifyExploring()
 end
 function GameUIPVEHome:onExit()
+    self.layer:RemovePVEListener(self)
+
     self.user:RemoveListenerOnType(self, self.user.LISTEN_TYPE.RESOURCE)
     self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
     self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
@@ -47,15 +54,19 @@ function GameUIPVEHome:OnResourceChanged(user)
     local limit = strength_resouce:GetValueLimit()
     self.strenth:setString(string.format("%d/%d", current_strength, limit))
 end
+function GameUIPVEHome:OnExploreChanged(pve_layer)
+    self.exploring:setString(string.format("%.2f%%", pve_layer:ExploreDegree() * 100))
+end
 function GameUIPVEHome:CreateTop()
     local top_bg = display.newSprite("head_bg.png")
         :align(display.TOP_CENTER, window.cx, window.top)
         :addTo(self)
+    local size = top_bg:getContentSize()
     top_bg:setTouchEnabled(true)
     cc.ui.UIPushButton.new(
         {normal = "return_btn_up_202x93.png", pressed = "return_btn_down_202x93.png"}
     ):addTo(top_bg)
-        :align(display.CENTER, 117, -2)
+        :align(display.LEFT_CENTER, 20, -2)
         :onButtonClicked(function()
             print("返回")
         end):setButtonLabel(cc.ui.UILabel.new({
@@ -70,23 +81,25 @@ function GameUIPVEHome:CreateTop()
     local button = cc.ui.UIPushButton.new(
         {normal = "home/gem_btn_up.png", pressed = "home/gem_btn_down.png"},
         {scale9 = false}
-    ):onButtonClicked(function(event)end):addTo(top_bg):pos(window.right - 103, - 2)
-    display.newSprite("home/gem_1.png"):addTo(button):pos(85, 0)
-    self.gem_label = UIKit:ttfLabel({text = "100,100,100",
+    ):addTo(top_bg):onButtonClicked(function(event)
+    end):align(display.RIGHT_CENTER, size.width - 40, - 2)
+    :setButtonLabel(UIKit:ttfLabel({text = "100,100,100",
         size = 20,
         color = 0xffd200,
         shadow = true
-    }):addTo(button):align(display.CENTER, 0, 0)
+    })):setButtonLabelOffset(20, 0)
+    display.newSprite("home/gem_1.png"):addTo(button):pos(85, 0)
+
 
     self.title = UIKit:ttfLabel({text = "1. 贫瘠之地",
         size = 26,
         color = 0xffedae,
-    }):addTo(top_bg):align(display.LEFT_CENTER, window.left + 30, 60)
+    }):addTo(top_bg):align(display.LEFT_CENTER, 60, 60)
 
     self.exploring = UIKit:ttfLabel({text = "探索度 100%",
         size = 20,
         color = 0xffedae,
-    }):addTo(top_bg):align(display.RIGHT_CENTER, window.right - 30, 60)
+    }):addTo(top_bg):align(display.RIGHT_CENTER, size.width - 60, 60)
 end
 
 function GameUIPVEHome:CreateBottom()

@@ -19,9 +19,36 @@ end
 function Tile:IsUnlocked()
     return not self.locked
 end
+local function find_nearby(t, tiles)
+    local connectedness = {t}
+    local index = 1
+    while true do
+        local cur = connectedness[index]
+        if not cur then
+            break
+        end
+        for i, v in ipairs(tiles) do
+            if cur:IsNearBy(v) then
+                table.insert(connectedness, table.remove(tiles, i))
+            end
+        end
+        index = index + 1
+    end
+    return connectedness
+end
+function Tile:FindConnectedTilesFromThis()
+    local connects = {}
+    local r = self.city:GetConnectedTiles()
+    for i,v in ipairs(r) do
+        if v == self then
+            r[1], r[i] = r[i], r[1]
+        end
+    end
+    return find_nearby(table.remove(r, 1), r)
+end
 function Tile:IsConnected()
     local x, y = self.x, self.y
-    if (x == 1 and y == 1) or (x == 1 and y == 2) or (x == 2 and y == 1) then
+    if (x == 1 and y == 1) or (x == 2 and y == 1) then
         return false
     end
     return self:IsUnlocked() or (self:NeedWalls() and self.locked)
@@ -78,8 +105,8 @@ function Tile:GetEmptyGround()
             -- {x = base_x + 7, y = base_y + 4},
             -- {x = base_x + 8, y = base_y + 4},
 
-            {x = base_x + 7, y = base_y + 5},
-            -- {x = base_x + 8, y = base_y + 5},
+            -- {x = base_x + 7, y = base_y + 5},
+            {x = base_x + 8, y = base_y + 5},
 
             -- {x = base_x + 7, y = base_y + 8},
             -- {x = base_x + 8, y = base_y + 8},
@@ -114,11 +141,13 @@ end
 function Tile:RandomPoint()
     local r = math.random(10)
     local sx, sy = self:GetStartPos()
-    -- local side_tile = self.city:GetTileByIndex(self.x + 1, self.y)
-    -- local is_nearby_side = side_tile == nil and true or (not side_tile:IsUnlocked())
-    -- if is_nearby_side then
-    --     return {x = sx + math.random(9) - 1, y = sy + 3}
-    -- end
+    if self.x == 1 and self.y == 2 then
+        if r > 5 then
+            return {x = sx + 9, y = sy + 3 + math.random(6)}
+        elseif r > 0 then
+            return {x = sx + 9, y = sy + math.random(3) - 1}
+        end
+    end
     if r > 4 then
         return {x = sx + math.random(9) - 1, y = sy + 3}
     elseif r > 1 then
@@ -132,7 +161,6 @@ function Tile:GetCrossPoint()
     return {x = end_x, y = end_y - 6}
 end
 function Tile:IsNearBy(other_tile)
-    assert(other_tile.x ~= self.x or other_tile.y ~= self.y)
     return (math.abs(other_tile.x - self.x) == 1 and other_tile.y == self.y)
         or (other_tile.x == self.x and math.abs(other_tile.y - self.y) == 1)
 end
@@ -209,11 +237,12 @@ local function generateDownWalls(tile, gate_index)
     local end_x, end_y = tile:GetEndPos()
     local r = {}
     local i = 1
+    local gate_len = 6
     while i >= -9 do
         local index = #r + 1
-        local len = index == gate_index and 6 or 2
+        local len = index == gate_index and gate_len or 2
         r[index] = WallUpgradeBuilding.new({ location_id = tile.location_id, x = end_x + i, y = end_y + 3, len = len, orient = Orient.Y, building_type = "wall", city = tile.city })
-        if len == 6 then
+        if len == gate_len then
             r[index]:SetGate()
         end
         i = i - len
@@ -235,7 +264,11 @@ function Tile:GetDownWall()
         local xbyn = city:GetTileByIndex(x - 1, y + 1)
         local xnyn = city:GetTileByIndex(x + 1, y + 1)
         if xbyn and xbyn:NeedWalls() then
-            return generateDownWalls(self, 2)
+            if xn and xn:NeedWalls() then
+                return generateDownWalls(self, 2)
+            else
+                return generateDownWalls(self, 1)
+            end
         elseif xnyn and xnyn:NeedWalls() then
             return generateDownWalls(self, 3)
         elseif not xb:NeedWalls() and not xn:NeedWalls() then
@@ -321,6 +354,8 @@ end
 
 
 return Tile
+
+
 
 
 
