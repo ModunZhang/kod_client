@@ -8,8 +8,11 @@ local EmojiUtil = class("EmojiUtil")
 
 --将表情化标签转换成富文本语法
 function EmojiUtil:ConvertEmojiToRichText(chatmsg)
-
+	chatmsg = chatmsg or ""
+	if string.len(chatmsg) == 0 then return "" end
 	chatmsg = string.gsub(chatmsg,"\n","\\n")
+	chatmsg = string.gsub(chatmsg,"'","\'")
+	chatmsg = string.gsub(chatmsg,'"','\\"')
 	local dest = {}
 	local s,e = string.find(chatmsg,"%[/[%P]+%]")
 	if not s and string.len(chatmsg) > 0 then
@@ -21,7 +24,6 @@ function EmojiUtil:ConvertEmojiToRichText(chatmsg)
 		end
 		table.insert(dest, string.sub(chatmsg,s,e))
 		chatmsg = string.sub(chatmsg,e+1)
-		print(chatmsg)
 		s,e =  string.find(chatmsg,"%[/[%P]+%]")
 		if not s and string.len(chatmsg) > 0 then
 			table.insert(dest, chatmsg)
@@ -30,12 +32,18 @@ function EmojiUtil:ConvertEmojiToRichText(chatmsg)
 	for i,v in ipairs(dest) do
 		local result,count = string.gsub(v,"%[/([%P]+)%]", "%1")
 		if count == 0 then
-			dest[i] = string.format("{type = 'text', value = '%s'}", v)
+			dest[i] = string.format('{\"type\":\"text\", \"value\":\"%s\"}', v)
 		else
-			dest[i] = string.format("{type = 'image', value = '%s'}",string.format('#%s.png', string.upper(result)))
+			dest[i] = string.format('{\"type\":\"image\", \"value\":\"%s\"}',string.format('#%s.png', string.upper(result)))
 		end
 	end
-	return table.concat(dest)
+	local result
+	if #dest > 0 then
+		result = "[" .. table.concat(dest,",") .. "]"
+	else
+		result = ""
+	end
+	return result
 end
 
 --end
@@ -160,8 +168,10 @@ function ChatManager:FetchChannelMessage(channel)
 end
 
 function ChatManager:__formatLastMessage(chat)
-	if not chat then return "" end
-	return string.format("[%s] %s",chat.fromName,self:GetEmojiUtil():ConvertEmojiToRichText(chat.text))
+	if not chat then return ""  end
+	-- return string.format("[%s] %s",chat.fromName,)
+	local str = string.format("[%s] %s",chat.fromName,chat.text)
+	return self:GetEmojiUtil():ConvertEmojiToRichText(str)
 end
 function ChatManager:FetchLastChannelMessage()
 	local messages_1 = self:__getMessageWithChannel(self.CHANNNEL_TYPE.GLOBAL)

@@ -48,6 +48,7 @@ function RichText:ctor(params)
 end
 function RichText:Text(str, line)
     -- assert(not self.lines, "富文本不可变!")
+    if not str or string.len(str) == 0 then str = "[]" end
     line = line or math.huge
     self:removeAllChildren()
     local items = LuaUtils:table_map(json.decode(str), function(k, v)
