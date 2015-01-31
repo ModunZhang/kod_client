@@ -356,8 +356,13 @@ function GameUtils:parseRichText(str)
                 next_char = table.remove(items, i + 1)
             end
             table.insert(str_func, 1, "return ")
-            local f = loadstring(table.concat(str_func, ""))
-            items[i] = assert(f)()
+            local f, err_msg = loadstring(table.concat(str_func, ""))
+            local success, result = pcall(f)
+            if not success then
+                print(err_msg)
+            else
+                items[i] = result
+            end
         end
     end
     return items
