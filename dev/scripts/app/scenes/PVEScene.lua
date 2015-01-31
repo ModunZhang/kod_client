@@ -30,7 +30,7 @@ function PVEScene:onEnter()
     self:GetSceneLayer():ZoomTo(0.8)
     self:GetSceneLayer():MoveCharTo(self.user:GetPVEDatabase():GetCharPosition())
 
-    UIKit:newGameUI('GameUIPVEHome', self.user):addToScene(self, true):setTouchSwallowEnabled(false)
+    UIKit:newGameUI('GameUIPVEHome', self.user, self):addToScene(self, true):setTouchSwallowEnabled(false)
 end
 function PVEScene:CreateSceneLayer()
     return PVELayer.new(self.user)
@@ -60,20 +60,17 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
     if new_x == old_x and new_y == old_y then
         return self:OpenUI(old_x, old_y)
     end
-    -- 检查是否还有体力
+    --
     local strength_resource = self.user:GetStrengthResource()
     local strength = strength_resource:GetResourceValueByCurrentTime(timer:GetServerTime())
-    if strength <= 0 then return end
-    -- 扣除体力
-    strength_resource:ReduceResourceByCurrentTime(timer:GetServerTime(), 1)
-    self.user:OnResourceChanged()
-    --
     local is_offset_x = math.abs(new_x - old_x) > math.abs(new_y - old_y)
     local offset_x = is_offset_x and (new_x - old_x) / math.abs(new_x - old_x) or 0
     local offset_y = is_offset_x and 0 or (new_y - old_y) / math.abs(new_y - old_y)
     local tx, ty = old_x + offset_x, old_y + offset_y
     local width, height = logic_map:GetSize()
-    if tx >= 2 and tx < width - 2 and ty >= 2 and ty < height - 2 then
+    if tx >= 2 and tx < width - 2 and ty >= 2 and ty < height - 2 and strength > 0 then
+        strength_resource:ReduceResourceByCurrentTime(timer:GetServerTime(), 1)
+        self.user:OnResourceChanged()
         self:GetSceneLayer():MoveCharTo(tx, ty)
         self:OpenUI(tx, ty)
     end
@@ -111,6 +108,9 @@ function PVEScene:OpenUI(x, y)
     end
 end
 return PVEScene
+
+
+
 
 
 
