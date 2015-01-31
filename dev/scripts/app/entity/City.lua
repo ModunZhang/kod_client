@@ -1000,7 +1000,7 @@ function City:OnUserDataChanged(userData, current_time)
     self:__OnHelpToTroopsDataChange(userData.__helpToTroops)
     --科技
     self:OnProductionTechsDataChanged(userData.productionTechs)
-    self:__OnProductionTechsDataChanged(userData.productionTechs)
+    self:__OnProductionTechsDataChanged(userData.__productionTechs)
     self:OnProductionTechEventsDataChaned(userData.productionTechEvents)
     self:__OnProductionTechEventsDataChaned(userData.__productionTechEvents)
 
@@ -1012,16 +1012,15 @@ function City:OnUserDataChanged(userData, current_time)
     local basicInfo = userData.basicInfo
     local resource_refresh_time = current_time
     if basicInfo then
-        resource_refresh_time = basicInfo.resourceRefreshTime / 1000
-
         self.build_queue = basicInfo.buildQueue
         self:SetCityName(basicInfo.cityName)
 
-        if userData.resources then
-            self.resource_manager:UpdateFromUserDataByTime(userData.resources, resource_refresh_time)
-            need_update_resouce_buildings = true
-        end
+        resource_refresh_time = basicInfo.resourceRefreshTime / 1000
+        need_update_resouce_buildings = true
     end
+
+    self.resource_manager:UpdateFromUserDataByTime(userData.resources, resource_refresh_time)
+
     if need_update_resouce_buildings then
         self.resource_manager:UpdateByCity(self, resource_refresh_time)
         self.resource_manager:UpdateResourceByTime(current_time)
@@ -1641,6 +1640,8 @@ end
 
 
 return City
+
+
 
 
 
