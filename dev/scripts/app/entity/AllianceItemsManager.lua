@@ -7,7 +7,7 @@ local MultiObserver = import(".MultiObserver")
 local Item = import(".Item")
 local AllianceItemsManager = class("AllianceItemsManager", MultiObserver)
 
-AllianceItemsManager.LISTEN_TYPE = Enum("ITEM_CHANGED")
+AllianceItemsManager.LISTEN_TYPE = Enum("ITEM_CHANGED","ITEM_LOGS_CHANGED")
 
 function AllianceItemsManager:ctor()
     AllianceItemsManager.super.ctor(self)
@@ -16,6 +16,7 @@ function AllianceItemsManager:ctor()
     self.items_resource = {}
     self.items_special = {}
     self.items_speedUp = {}
+    self.item_logs = {}
     self:InitAllItems()
 end
 -- 初始化所有道具，数量 0
@@ -79,6 +80,44 @@ function AllianceItemsManager:__OnItemsChanged(__items)
         end)
     end
 end
+function AllianceItemsManager:OnItemLogsChanged(itemLogs)
+    if itemLogs then
+        table.sort( itemLogs, function ( a,b )
+            return a.time > b.time
+        end )
+        self.item_logs = itemLogs
+    end
+end
+function AllianceItemsManager:__OnItemsLogsChanged(__itemLogs)
+    local item_logs = self.item_logs
+    if __itemLogs then
+        local changed_map = GameUtils:Event_Handler_Func(
+            __itemLogs
+            ,function(data)
+                -- add
+                table.insert(item_logs, 1,data)
+                return data
+            end
+            ,function(data)
+                -- eidt 更新
+                assert(false,"联盟商店记录会更新？")
+                return data
+            end
+            ,function(data)
+                for i,v in ipairs(item_logs) do
+                    if v.id == data.id then
+                        table.remove(item_logs,i)
+                    end
+                end
+                return data
+            end
+        )
+        self:NotifyListeneOnType(AllianceItemsManager.LISTEN_TYPE.ITEM_LOGS_CHANGED, function(listener)
+            listener:OnItemLogsChanged(changed_map)
+        end)
+    end
+end
+
 
 -- 按照道具类型添加到对应table,并加入总表
 function AllianceItemsManager:InsertItem(item)
@@ -174,7 +213,9 @@ function AllianceItemsManager:__order(items)
     end)
     return order_items
 end
-
+function AllianceItemsManager:GetItemLogs()
+    return self.item_logs
+end
 return AllianceItemsManager
 
 

@@ -414,8 +414,8 @@ function WidgetUseItems:OpenChestDialog( item )
     for i,v in ipairs(same_items) do
         self:CreateItemBox(
             v,
-            function ()
-                if ItemManager:CanOpenChest(item)  then
+            function (use_item)
+                if ItemManager:CanOpenChest(use_item)  then
                     return true
                 else
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))
@@ -463,23 +463,34 @@ function WidgetUseItems:OpenVipActive( item )
     local dialog = WidgetPopDialog.new(4 * 138 +40,_("激活VIP"),window.top-230):addToCurrentScene()
     local body = dialog:GetBody()
     local size = body:getContentSize()
-    -- 是否激活buff
-    -- local item_event = ItemManager:GetItemEventByType( string.split(item:Name(),"_")[1] )
-    -- local buff_status_label = UIKit:ttfLabel({
-    --     size = 22,
-    --     color = item_event and 0x007c23 or 0x403c2f,
-    -- }):addTo(body):align(display.CENTER,size.width/2, size.height-50)
-    -- if item_event then
-    --     buff_status_label:setString(_("已激活,剩余时间:")..GameUtils:formatTimeStyle1(item_event:GetTime()))
-    -- else
-    --     buff_status_label:setString(_("未激活"))
-    -- end
+    -- 是否激活 vip
+    local vip_event = User:GetVipEvent()
+    local vip_status_label = UIKit:ttfLabel({
+        size = 22,
+        color = vip_event:IsActived() and 0x007c23 or 0x403c2f,
+    }):addTo(body):align(display.CENTER,size.width/2, size.height-50)
+    if vip_event:IsActived() then
+        vip_status_label:setString(_("已激活,剩余时间:")..GameUtils:formatTimeStyle1(vip_event:GetTime()))
+    else
+        vip_status_label:setString(_("未激活"))
+    end
 
 
-    -- function dialog:OnItemEventTimer( item_event_new )
+    function dialog:OnVipEventTimer( vip_event_new )
+        local time = vip_event_new:GetTime()
+        if time >0 then
+            vip_status_label:setString(_("已激活,剩余时间:")..GameUtils:formatTimeStyle1(time))
+            vip_status_label:setColor(UIKit:hex2c4b(0x007c23))
+        else
+            vip_status_label:setString(_("未激活"))
+            vip_status_label:setColor(UIKit:hex2c4b(0x403c2f))
+        end
+    end
+    dialog:addCloseCleanFunc(function ()
+	    User:RemoveListenerOnType(dialog, User.LISTEN_TYPE.VIP_EVENT)
+    end)
 
-    -- end
-
+    User:AddListenOnType(dialog, User.LISTEN_TYPE.VIP_EVENT)
 
     local list,list_node = UIKit:commonListView({
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
@@ -582,8 +593,8 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc)
         :addTo(body):align(display.CENTER, 490, 34)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                if checkUseFunc() then
-                    btn_call_back()
+                if checkUseFunc(item) then
+                    btn_call_back(item)
                 end
             end
         end)
@@ -595,5 +606,6 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc)
 end
 
 return WidgetUseItems
+
 
 

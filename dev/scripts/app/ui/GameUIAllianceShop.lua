@@ -10,6 +10,7 @@ local Flag = import("..entity.Flag")
 local UIListView = import(".UIListView")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local Localize = import("..utils.Localize")
+local Localize_item = import("..utils.Localize_item")
 
 
 function GameUIAllianceShop:ctor(city,default_tab,building)
@@ -64,6 +65,7 @@ function GameUIAllianceShop:onEnter()
     self:InitRecordPart()
 
     self.alliance:GetItemsManager():AddListenOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_CHANGED)
+    self.alliance:GetItemsManager():AddListenOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_LOGS_CHANGED)
 
 end
 function GameUIAllianceShop:CreateBetweenBgAndTitle()
@@ -81,6 +83,7 @@ function GameUIAllianceShop:CreateBetweenBgAndTitle()
 end
 function GameUIAllianceShop:onExit()
     self.alliance:GetItemsManager():RemoveListenerOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_CHANGED)
+    self.alliance:GetItemsManager():RemoveListenerOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_LOGS_CHANGED)
     GameUIAllianceShop.super.onExit(self)
 end
 function GameUIAllianceShop:InitGoodsPart()
@@ -184,6 +187,19 @@ function GameUIAllianceShop:CreateGoodsBox(goods)
     display.newSprite("tool_1.png"):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
         :addTo(item_bg):scale(0.8)
     local i_icon = display.newSprite("goods_26x26.png"):addTo(item_bg):align(display.CENTER, 15, 15)
+
+    -- 高级道具显示数量
+    if goods:IsAdvancedItem() then
+        -- 拥有数量
+        local own_bg = display.newSprite("back_ground_42x48.png"):align(display.TOP_CENTER, 28, item_bg:getContentSize().height+4):addTo(item_bg)
+
+        local own_label = UIKit:ttfLabel({
+            text = goods:Count(),
+            size = 18,
+            color = 0xfff3ca,
+            shadow = true
+        }):align(display.CENTER, own_bg:getContentSize().width/2, own_bg:getContentSize().height/2+8):addTo(own_bg)
+    end
 
     local num_bg = display.newSprite("back_ground_118x36.png"):align(display.BOTTOM_CENTER, 0, -76)
         :addTo(box_button)
@@ -295,65 +311,66 @@ function GameUIAllianceShop:InitStockPart()
 end
 
 function GameUIAllianceShop:InitRecordPart()
-    self.stock_special_goods_listview = UIListView.new{
-        -- bgColor = UIKit:hex2c4b(0x7a000000),
-        viewRect = cc.rect(display.cx-277, display.top-880, 560, 780),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
-    }:addTo(self.goods_record_layer)
-    self:CreateRecordItem()
-    self:CreateRecordItem()
+    local layer = self.goods_record_layer
+    local list,list_node = UIKit:commonListView({
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
+        viewRect = cc.rect(41, window.bottom_top,568 , window.betweenHeaderAndTab-10),
+    },false)
+    list_node:addTo(layer):align(display.BOTTOM_CENTER, window.cx,window.bottom_top+20)
+    self.record_list = list
 
-    self.stock_special_goods_listview:reload()
+    local item_logs = self.alliance:GetItemsManager():GetItemLogs()
+    self.record_logs_items = {}
+    for i,v in ipairs(item_logs) do
+        self:CreateRecordItem(v)
+    end
+
+    self.record_list:reload()
 end
 
-function GameUIAllianceShop:CreateRecordItem()
-    local item = self.stock_special_goods_listview:newItem()
-    local item_width,item_height = 560 , 112
+function GameUIAllianceShop:CreateRecordItem(item_log,index)
+    LuaUtils:outputTable("item_log", item_log)
+    local item = self.record_list:newItem()
+    local item_width,item_height = 568 , 110
     item:setItemSize(item_width, item_height)
 
-    local content = display.newNode()
-    local tool_bg = display.newSprite("tool_box_104X106.png"):align(display.CENTER, -228, 0):addTo(content)
-    local tool_img = display.newSprite("tool_1.png")
-        :align(display.CENTER, tool_bg:getContentSize().width/2, tool_bg:getContentSize().height/2)
-        :addTo(tool_bg):scale(0.7)
+    local content = display.newSprite("back_ground_568x110.png")
 
-    local info_bg = WidgetUIBackGround.new({
-        width = 426,
-        height = 96,
-        top_img = "back_ground_426x14_top_1.png",
-        bottom_img = "back_ground_426x14_top_1.png",
-        mid_img = "back_ground_426x1_mid_1.png",
-        u_height = 14,
-        b_height = 14,
-        m_height = 1,
-        b_flip = true,
-    }):align(display.CENTER,50, 0):addTo(content)
+    local item_bg = display.newSprite("box_118x118.png"):addTo(content):align(display.CENTER, 58, item_height/2):scale(0.8)
+    local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
+    -- tool image
+    display.newSprite("tool_1.png"):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
+        :addTo(item_bg):scale(0.8)
+
+    local record_type = item_log.type
+    local color_1 = record_type == "addItem" and 0x007c23 or 0x7e0000
+    local text_1 = record_type == "addItem" and _("补充") or _("购买")
     UIKit:ttfLabel({
-        text = _("补充 ItemName X11"),
+        text = text_1..Localize_item.item_name[item_log.itemName].."X"..item_log.itemCount,
         size = 20,
-        color = 0x007c23,
-    }):align(display.LEFT_CENTER, 20 , 70)
-        :addTo(info_bg)
-    local level_img = display.newSprite("leader.png")
-        :align(display.CENTER, 30,30)
-        :addTo(info_bg)
+        color = color_1,
+    }):align(display.LEFT_CENTER, 140 , 70)
+        :addTo(content)
+
 
     UIKit:ttfLabel({
-        text = _("Player name"),
+        text = item_log.playerName,
         size = 20,
         color = 0x403c2f,
-    }):align(display.LEFT_CENTER, 50 , 30)
-        :addTo(info_bg)
+    }):align(display.LEFT_CENTER, 140 , 30)
+        :addTo(content)
 
     UIKit:ttfLabel({
-        text = GameUtils:formatTimeStyle2(app.timer:GetServerTime()),
+        text = GameUtils:formatTimeStyle2(item_log.time/1000),
         size = 20,
         color = 0x797154,
-    }):align(display.LEFT_CENTER, 200 , 30)
-        :addTo(info_bg)
+    }):align(display.LEFT_CENTER, 320 , 30)
+        :addTo(content)
 
     item:addContent(content)
-    self.stock_special_goods_listview:addItem(item)
+    self.record_list:addItem(item,index)
+
+    self.record_logs_items[item_log.time..item_log.playerName] = item
 end
 
 function GameUIAllianceShop:OnItemsChanged(changed_map)
@@ -374,8 +391,22 @@ function GameUIAllianceShop:OnItemsChanged(changed_map)
     end
 end
 
+function GameUIAllianceShop:OnItemLogsChanged( changed_map )
+    for i,v in ipairs(changed_map[1]) do
+        self:CreateRecordItem(v,1)
+    end
 
+    for i,v in ipairs(changed_map[3]) do
+        local record_item = self.record_logs_items[v.time..v.playerName]
+        if record_item then
+            self.record_list:removeItem(record_item)
+        end
+    end
+    self.record_list:reload()
+end
 return GameUIAllianceShop
+
+
 
 
 

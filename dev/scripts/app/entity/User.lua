@@ -1,12 +1,13 @@
 local PVEDatabase = import(".PVEDatabase")
 local Resource = import(".Resource")
+local VipEvent = import(".VipEvent")
 local AutomaticUpdateResource = import(".AutomaticUpdateResource")
 local property = import("..utils.property")
 local TradeManager = import("..entity.TradeManager")
 local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local User = class("User", MultiObserver)
-User.LISTEN_TYPE = Enum("BASIC", "RESOURCE", "INVITE_TO_ALLIANCE", "REQUEST_TO_ALLIANCE","DALIY_QUEST_REFRESH","NEW_DALIY_QUEST","NEW_DALIY_QUEST_EVENT")
+User.LISTEN_TYPE = Enum("BASIC", "RESOURCE", "INVITE_TO_ALLIANCE", "REQUEST_TO_ALLIANCE","DALIY_QUEST_REFRESH","NEW_DALIY_QUEST","NEW_DALIY_QUEST_EVENT","VIP_EVENT")
 local BASIC = User.LISTEN_TYPE.BASIC
 local RESOURCE = User.LISTEN_TYPE.RESOURCE
 local INVITE_TO_ALLIANCE = User.LISTEN_TYPE.INVITE_TO_ALLIANCE
@@ -54,6 +55,10 @@ function User:ctor(p)
     else
         self:SetId(p)
     end
+    -- vip event 
+    local vip_event = VipEvent.new()
+    vip_event:AddObserver(self)
+    self.vip_event = vip_event
 end
 function User:SetPveData(fight_data, rewards_data)
     self.fight_data = fight_data
@@ -96,6 +101,7 @@ end
 function User:OnTimer(current_time)
     self:UpdateResourceByTime(current_time)
     self:OnResourceChanged()
+    self.vip_event:OnTimer(current_time)
 end
 function User:UpdateResourceByTime(current_time)
     for _, v in pairs(self.resources) do
@@ -264,7 +270,32 @@ function User:OnUserDataChanged(userData, current_time)
     -- 交易
     self.trade_manager:OnUserDataChanged(userData)
     self:GetPVEDatabase():OnUserDataChanged(userData)
+
+    -- vip event
+    self:OnVipEventDataChange(userData)
+
     return self
+end
+function User:GetVipEvent()
+    return self.vip_event
+end
+function User:OnVipEventDataChange(userData)
+    if userData.vipEvents then
+        if not LuaUtils:table_empty(userData.vipEvents) then
+            self.vip_event:UpdateData(userData.vipEvents[1])
+        end
+    end
+    if userData.__vipEvents then
+        self.vip_event:UpdateData(userData.__vipEvents[1].data)
+    end
+    self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT, function(listener)
+        listener:OnVipEventTimer(self.vip_event)
+    end)
+end
+function User:OnVipEventTimer( vip_event )
+    self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT, function(listener)
+        listener:OnVipEventTimer(vip_event)
+    end)
 end
 function User:OnResourcesChangedByTime(resources, current_time)
     if not resources then return end

@@ -516,8 +516,12 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     self:DecodeAllianceVillages(alliance_data.villages)
     self:DecodeAllianceVillages__(alliance_data.__villages)
 
+    -- 联盟道具管理
     self.items_manager:OnItemsChanged(alliance_data.items)
     self.items_manager:__OnItemsChanged(alliance_data.__items)
+    self.items_manager:OnItemLogsChanged(alliance_data.itemLogs)
+    self.items_manager:__OnItemsLogsChanged(alliance_data.__itemLogs)
+
 end
 
 function Alliance:OnNewEventsComming(__events)

@@ -216,7 +216,9 @@ function ItemManager:GetCanSellSameTypeItems(item)
 end
 function ItemManager:CanOpenChest( item )
     local area_type = string.split(item:Name(),"_")
-    return self:GetItemByName("chestKey_"..area_type[2]):Count()>0
+    local key_item = self:GetItemByName("chestKey_"..area_type[2])
+    -- 木宝箱不需要钥匙
+    return  not key_item or key_item:Count()>0
 end
 return ItemManager
 
