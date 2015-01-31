@@ -105,8 +105,8 @@ function Tile:GetEmptyGround()
             -- {x = base_x + 7, y = base_y + 4},
             -- {x = base_x + 8, y = base_y + 4},
 
-            {x = base_x + 7, y = base_y + 5},
-            -- {x = base_x + 8, y = base_y + 5},
+            -- {x = base_x + 7, y = base_y + 5},
+            {x = base_x + 8, y = base_y + 5},
 
             -- {x = base_x + 7, y = base_y + 8},
             -- {x = base_x + 8, y = base_y + 8},
