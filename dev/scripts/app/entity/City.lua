@@ -1010,7 +1010,7 @@ function City:OnUserDataChanged(userData, current_time)
     self.material_manager:OnUserDataChanged(userData)
     -- 最后才更新资源
     local basicInfo = userData.basicInfo
-    local resource_refresh_time = current_time
+    local resource_refresh_time
     if basicInfo then
         self.build_queue = basicInfo.buildQueue
         self:SetCityName(basicInfo.cityName)
