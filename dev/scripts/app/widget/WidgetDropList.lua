@@ -192,7 +192,14 @@ function WidgetDropList:addTouchNode_()
 		node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function (event)
 	        return self:onTouch_(event)
 	    end)
-
+		self:addNodeEventListener(cc.NODE_TOUCH_CAPTURE_EVENT, function(event)
+			local cascadeBound = self.header:getCascadeBoundingBox()
+			if cc.rectContainsPoint(cascadeBound, cc.p(event.x, event.y)) then
+				return true
+			else
+        		return not self.lock_ and self:GetState() == self.STATE.open	
+			end
+    	end)
 	    self:addChild(node)
 	end
 	local nodePoint = self:convertToNodeSpace(cc.p(0,0))
