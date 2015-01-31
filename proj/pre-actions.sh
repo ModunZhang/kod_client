@@ -79,7 +79,7 @@ exportScripts()
 exportScriptsEncrypt()
 {
 	outdir=$DESTROOT/scripts
-	$SCRIPT_COMPILE_TOOL -i $RESOURCEROOT/scripts -o $outdir -m files -e xxtea_chunk -ex lua -ek $XXTEAKey
+	$SCRIPT_COMPILE_TOOL -i $RESOURCEROOT/scripts -o $outdir -m files -e xxtea_chunk -ex lua -ek $XXTEAKey -q
 }
 exportResEncrypt()
 {
