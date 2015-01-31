@@ -185,7 +185,6 @@ function WidgetDropList:addTouchNode_()
 	else
 		node = display.newNode()
 		self.touchNode_ = node
-
 		node:setLocalZOrder(-1)
 		node:setTouchSwallowEnabled(true)
 		node:setTouchEnabled(true)
@@ -208,10 +207,6 @@ function WidgetDropList:addTouchNode_()
 end
 
 function WidgetDropList:onTouch_(event)
-	local cascadeBound = self.clip_node:getCascadeBoundingBox()
-	if cc.rectContainsPoint(cascadeBound, cc.p(event.x, event.y)) then
-		return false
-	end
 	if not self.lock_ and self:GetState() == self.STATE.open then
 		self:OnBoxButtonClicked()
 	end
