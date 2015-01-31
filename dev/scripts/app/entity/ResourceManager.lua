@@ -188,6 +188,7 @@ function ResourceManager:GetCitizenAllocated()
     return total_citizen
 end
 function ResourceManager:UpdateFromUserDataByTime(resources, current_time)
+    if not resources then return end
     if resources.coin then
         self.resources[COIN]:SetValue(resources.coin)
     end

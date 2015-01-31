@@ -318,6 +318,9 @@ end
 
 
 function GameUtils:parseRichText(str)
+    str = string.gsub(str, "\n", "\\n")
+    str = string.gsub(str, '"', "\"")
+    str = string.gsub(str, "'", "\'")
     local items = {}
     local str_array = string.split(str, "{")
     for i, v in ipairs(str_array) do
