@@ -7,7 +7,7 @@ local MultiObserver = import(".MultiObserver")
 local Item = import(".Item")
 local AllianceItemsManager = class("AllianceItemsManager", MultiObserver)
 
-AllianceItemsManager.LISTEN_TYPE = Enum("ITEM_CHANGED","OnItemEventTimer")
+AllianceItemsManager.LISTEN_TYPE = Enum("ITEM_CHANGED")
 
 function AllianceItemsManager:ctor()
     AllianceItemsManager.super.ctor(self)
@@ -116,28 +116,65 @@ end
 function AllianceItemsManager:GetSpeedUpItems()
     return self:__order(self.items_speedUp)
 end
-
-function AllianceItemsManager:__order(items)
-    local found_keys = {}
-    local order_items = {}
-    for k,v in pairs(items) do
-        local area_types = string.split(v:Name(),"_")
-        if #area_types == 2 and not found_keys[area_types[1]] then
-            for i=1,math.huge do
-                local same_item = items[area_types[1].."_"..i]
-                if same_item then
-                    table.insert(order_items, same_item)
-                else
-                    break
-                end
-            end
-            -- 已经找出的同类型道具，缓存类型key值，之后不再处理
-            found_keys[area_types[1]] = true
-        elseif #area_types == 1 then
-            table.insert(order_items, v)
+function AllianceItemsManager:GetAllNormalItems()
+    local normal_items = {}
+    for i,v in ipairs(self:GetSpecialItems()) do
+        if not v:IsAdvancedItem() then
+            table.insert(normal_items, v)
         end
     end
+    for i,v in ipairs(self:GetBuffItems()) do
+        if not v:IsAdvancedItem() then
+            table.insert(normal_items, v)
+        end
+    end
+    for i,v in ipairs(self:GetResourcetItems()) do
+        if not v:IsAdvancedItem() then
+            table.insert(normal_items, v)
+        end
+    end
+    for i,v in ipairs(self:GetSpeedUpItems()) do
+        if not v:IsAdvancedItem() then
+            table.insert(normal_items, v)
+        end
+    end
+    return normal_items
+end
+function AllianceItemsManager:GetAllSuperItems()
+	 local super_items = {}
+    for i,v in ipairs(self:GetSpecialItems()) do
+        if v:IsAdvancedItem() then
+            table.insert(super_items, v)
+        end
+    end
+    for i,v in ipairs(self:GetBuffItems()) do
+        if v:IsAdvancedItem() then
+            table.insert(super_items, v)
+        end
+    end
+    for i,v in ipairs(self:GetResourcetItems()) do
+        if v:IsAdvancedItem() then
+            table.insert(super_items, v)
+        end
+    end
+    for i,v in ipairs(self:GetSpeedUpItems()) do
+        if v:IsAdvancedItem() then
+            table.insert(super_items, v)
+        end
+    end
+    return super_items
+end
+function AllianceItemsManager:__order(items)
+    local order_items = {}
+    for k,v in pairs(items) do
+        table.insert(order_items, v)
+    end
+    table.sort(order_items,function ( a,b )
+        return a:Order() < b:Order()
+    end)
     return order_items
 end
 
 return AllianceItemsManager
+
+

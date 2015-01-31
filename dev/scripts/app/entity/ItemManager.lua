@@ -178,25 +178,13 @@ function ItemManager:GetSpeedUpItems()
 end
 
 function ItemManager:__order(items)
-    local found_keys = {}
     local order_items = {}
     for k,v in pairs(items) do
-        local area_types = string.split(v:Name(),"_")
-        if #area_types == 2 and not found_keys[area_types[1]] then
-            for i=1,math.huge do
-                local same_item = items[area_types[1].."_"..i]
-                if same_item then
-                    table.insert(order_items, same_item)
-                else
-                    break
-                end
-            end
-            -- 已经找出的同类型道具，缓存类型key值，之后不再处理
-            found_keys[area_types[1]] = true
-        elseif #area_types == 1 then
-            table.insert(order_items, v)
-        end
+        table.insert(order_items, v)
     end
+    table.sort(order_items,function ( a,b )
+        return a:Order() < b:Order()
+    end)
     return order_items
 end
 
@@ -225,6 +213,10 @@ function ItemManager:GetCanSellSameTypeItems(item)
         end
     end
     return canSell
+end
+function ItemManager:CanOpenChest( item )
+    local area_type = string.split(item:Name(),"_")
+    return self:GetItemByName("chestKey_"..area_type[2]):Count()>0
 end
 return ItemManager
 

@@ -1473,6 +1473,25 @@ function NetManager:getUseItemPromise(itemName,params)
         params = params,
     }, "使用道具失败!"), get_playerdata_callback()):next(get_response_msg)
 end
+--联盟商店补充道具
+function NetManager:getAddAllianceItemPromise(itemName,count)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.addItem",
+        {
+            itemName = itemName,
+            count = count,
+        },
+        "联盟商店补充道具失败!"),get_alliancedata_callback()):next(get_response_msg)
+end
+--购买联盟商店的道具
+function NetManager:getBuyAllianceItemPromise(itemName,count)
+    return promise.all(get_blocking_request_promise("logic.allianceHandler.buyItem",
+        {
+            itemName = itemName,
+            count = count,
+        },
+        "购买联盟商店的道具失败!"),get_alliancedata_callback()):next(get_response_msg)
+end
+
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

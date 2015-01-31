@@ -1,7 +1,7 @@
 local GameUtils = GameUtils
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
-local WidgetSlider = import("..widget.WidgetSlider")
+local WidgetSliderWithInput = import("..widget.WidgetSliderWithInput")
 local window = import("..utils.window")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetBuyGoods = class("WidgetBuyGoods", function(...)
@@ -17,8 +17,14 @@ local WidgetBuyGoods = class("WidgetBuyGoods", function(...)
 end)
 
 function WidgetBuyGoods:ctor(item)
-    self.buy_max = item:Count()
-    local buy_max = self.buy_max
+    self.item = item
+    local buy_max = 0
+    -- 高级道具有数量限制
+    local super_item_count = math.huge
+    if item:IsAdvancedItem() then
+        super_item_count = item:Count()
+    end
+    buy_max =math.min(math.floor(Alliance_Manager:GetMyAlliance():GetSelf():Loyalty()/item:SellPriceInAlliance()),super_item_count) 
 
     local label_origin_x = 190
 
@@ -29,10 +35,6 @@ function WidgetBuyGoods:ctor(item)
     back_ground:setTouchEnabled(true)
 
     -- 道具图片
-    -- local tool_img_bg = display.newSprite("tool_box_green.png"):align(display.TOP_LEFT, 10, 332):addTo(back_ground)
-    -- local tool_img = display.newSprite("tool_1.png")
-    --     :align(display.CENTER,tool_img_bg:getContentSize().width/2,tool_img_bg:getContentSize().height/2)
-    --     :addTo(tool_img_bg)
     local item_bg = display.newSprite("box_118x118.png"):addTo(back_ground):align(display.CENTER, 70, size.height-80)
     local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
     -- tool image
@@ -49,7 +51,7 @@ function WidgetBuyGoods:ctor(item)
         color = 0xffedae,
     }):align(display.LEFT_CENTER,20, title_bg:getContentSize().height/2):addTo(title_bg)
     UIKit:ttfLabel({
-        text = _("高级道具"),
+        text = item:IsAdvancedItem() and _("高级道具") or _("普通道具"),
         size = 20,
         color = 0xe8dfbc,
     }):align(display.RIGHT_CENTER,title_bg:getContentSize().width-40, title_bg:getContentSize().height/2):addTo(title_bg)
@@ -61,45 +63,20 @@ function WidgetBuyGoods:ctor(item)
         dimensions = cc.size(400,0)
     }):align(display.LEFT_TOP,item_bg:getPositionX()+item_bg:getContentSize().width/2+30, 280):addTo(back_ground)
     -- progress
-    local slider_height, label_height = size.height - 190, size.height - 170
-    local slider = WidgetSlider.new(display.LEFT_TO_RIGHT,  {bar = "slider_bg_461x24.png",
-        progress = "slider_progress_445x14.png",
-        button = "slider_btn_66x66.png"}, {max = buy_max}):addTo(back_ground, 2)
-        :align(display.LEFT_CENTER, 25, slider_height)
-        :onSliderValueChanged(function(event)
+    local slider_height, label_height = size.height - 170, size.height - 170
+
+    local slider = WidgetSliderWithInput.new({max = buy_max}):addTo(back_ground):align(display.LEFT_CENTER, 25, slider_height)
+        :SetSliderSize(445, 24)
+        :OnSliderValueChanged(function(event)
             self:OnCountChanged(math.floor(event.value))
         end)
+        :LayoutValueLabel(WidgetSliderWithInput.STYLE_LAYOUT.RIGHT,0)
 
-
-    -- goods count bg
-    local bg = cc.ui.UIImage.new("back_ground_83x32.png"):addTo(back_ground, 2)
-        :align(display.CENTER, size.width - 70, label_height)
-
-    -- goods current
-    local pos = bg:getAnchorPointInPoints()
-    self.goods_current_count = UIKit:ttfLabel({
-        text = "0",
-        size = 20,
-        align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = 0x403c2f
-    }):addTo(bg, 2)
-        :align(display.CENTER, pos.x, pos.y)
-
-    -- goods total count
-    self.goods_total_count = UIKit:ttfLabel({
-        text = string.format("/ %d", buy_max),
-        size = 20,
-        align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = 0x403c2f
-    }):addTo(back_ground)
-        :align(display.CENTER, size.width - 70, label_height - 35)
-
-    self:OnCountChanged(0)
     -- 忠诚值
     display.newSprite("loyalty_1.png"):align(display.CENTER, 200, 50):addTo(back_ground)
     local loyalty_bg = display.newSprite("back_ground_114x36.png"):align(display.CENTER, 300, 50):addTo(back_ground)
     self.loyalty_label = UIKit:ttfLabel({
-        text = item:PriceInAlliance(),
+        text = item:SellPriceInAlliance(),
         size = 20,
         color = 0x403c2f,
     }):addTo(loyalty_bg):align(display.CENTER,loyalty_bg:getContentSize().width/2,loyalty_bg:getContentSize().height/2)
@@ -112,7 +89,15 @@ function WidgetBuyGoods:ctor(item)
         })
         :setButtonLabel(UIKit:commonButtonLable({text = _("购买")}))
         :onButtonClicked(function(event)
-
+             if item:IsAdvancedItem() and not Alliance_Manager:GetMyAlliance():GetSelf():CanBuyAdvancedItemsFromAllianceShop() then
+                FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                    :SetPopMessage(_("购买需要精英或以上权限"))
+                    :AddToCurrentScene()
+                return
+            end
+            NetManager:getBuyAllianceItemPromise(item:Name(),slider:GetValue())
+            self:removeFromParent()
+            
         end):pos(500, 50)
         :addTo(back_ground)
 
@@ -125,7 +110,7 @@ function WidgetBuyGoods:align(anchorPoint, x, y)
 end
 
 function WidgetBuyGoods:OnCountChanged(count)
-    self.goods_current_count:setString(count)
+    self.loyalty_label:setString(self.item:SellPriceInAlliance() * count)
 end
 return WidgetBuyGoods
 
