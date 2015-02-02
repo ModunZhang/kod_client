@@ -183,7 +183,7 @@ end
 
 function GameUIDragonSkill:GetSkillEffection()
   local config = self.skill:GetSkillConfig()
-  local count  = string.format("%d%%",self.skill:Level() * config.effection * 100)
+  local count  = string.format("%d%%",self.skill:Level() * config.effectPerLevel * 100)
   return Localize.dragon_skill_effection[self.skill:Name()] .. " " .. count
 end
 
