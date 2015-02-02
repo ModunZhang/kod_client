@@ -604,7 +604,7 @@ function WidgetRecruitSoldier:OnCountChanged(count)
     local soldier_ui_config = self.soldier_ui_config
     local total_time = soldier_config.recruitTime * count
     -- self.soldier_current_count:setString(string.format("%d", count))
-    self.upkeep:setString(string.format("%s%d/%s", count > 0 and "-" or "", soldier_config.consumeFood * count, _("小时")))
+    self.upkeep:setString(string.format("%s%d/%s", count > 0 and "-" or "", soldier_config.consumeFoodPerHour * count, _("小时")))
     self.recruit_time:setString(GameUtils:formatTimeStyle1(total_time))
 
     -- 检查资源

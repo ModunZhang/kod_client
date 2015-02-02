@@ -756,11 +756,11 @@ local function get_makeMaterial_promise(category)
 end
 -- 建造建筑材料
 function NetManager:getMakeBuildingMaterialPromise()
-    return promise.all(get_makeMaterial_promise("building"), get_playerdata_callback()):next(get_response_msg)
+    return promise.all(get_makeMaterial_promise("buildingMaterials"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 建造科技材料
 function NetManager:getMakeTechnologyMaterialPromise()
-    return promise.all(get_makeMaterial_promise("technology"), get_playerdata_callback()):next(get_response_msg)
+    return promise.all(get_makeMaterial_promise("technologyMaterials"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 获取材料
 local function get_fetchMaterials_promise(category)
@@ -770,11 +770,11 @@ local function get_fetchMaterials_promise(category)
 end
 -- 获取建筑材料
 function NetManager:getFetchBuildingMaterialsPromise()
-    return promise.all(get_fetchMaterials_promise("building"), get_playerdata_callback()):next(get_response_msg)
+    return promise.all(get_fetchMaterials_promise("buildingMaterials"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 获取科技材料
 function NetManager:getFetchTechnologyMaterialsPromise()
-    return promise.all(get_fetchMaterials_promise("technology"), get_playerdata_callback()):next(get_response_msg)
+    return promise.all(get_fetchMaterials_promise("technologyMaterials"), get_playerdata_callback()):next(get_response_msg)
 end
 -- 打造装备
 local function get_makeDragonEquipment_promise(equipment_name, finish_now)

@@ -52,18 +52,14 @@ function GameUIHome:onEnter()
     -- 上背景
     self:CreateTop()
     self.bottom = self:CreateBottom()
+    local ratio = self.bottom:getScale()
     self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
     self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
-    self.event_tab = WidgetEventTabButtons.new(self.city)
+    self.event_tab = WidgetEventTabButtons.new(self.city, ratio)
     local rect1 = self.chat_bg:getCascadeBoundingBox()
     local rect2 = self.event_tab:getCascadeBoundingBox()
-    local ratio = self.bottom:getScale()
-    local x, y = rect1.x + rect1.width - rect2.width + 2 * ratio, rect1.y + rect1.height - 2 * ratio
-    local line = display.newSprite("back_ground_492X14.png")
-    line:addTo(self, 0):align(display.LEFT_TOP, x, y)
-    self.event_tab:addTo(self, 0):pos(x, y)
-
-
+    local x, y = rect1.x + 2 * ratio, rect1.y + rect1.height - 2 * ratio
+    self.event_tab:addTo(self):pos(x, y + 1)
 
     self:RefreshData()
     city:GetResourceManager():AddObserver(self)
@@ -122,11 +118,12 @@ function GameUIHome:MailUnreadChanged(...)
 end
 function GameUIHome:RefreshData()
     -- 更新数值
-    local userdata = DataManager:getUserData()
-    self.name_label:setString(userdata.basicInfo.name)
-    self.power_label:setString(userdata.basicInfo.power)
-    self.level_label:setString(userdata.basicInfo.level)
-    self.vip_label:setString("VIP 1")
+    local user = self.city:GetUser()
+    self.name_label:setString(user:Name())
+    self.power_label:setString(user:Power())
+    self.level_label:setString(user:Level())
+    self.vip_level:removeAllChildren()
+    display.newSprite(string.format("home/%d.png", 1)):addTo(self.vip_level)
 end
 
 
@@ -150,38 +147,35 @@ function GameUIHome:CreateTop()
 
 
     -- 玩家名字背景加文字
+    local ox = 155
     local name_bg = display.newSprite("home/player_name_bg.png"):addTo(top_bg)
-        :align(display.TOP_RIGHT,top_bg:getContentSize().width/2, top_bg:getContentSize().height-10)
-    self.name_label =
-        cc.ui.UILabel.new({
-            text = "",
-            size = 20,
-            font = UIKit:getFontFilePath(),
-            align = cc.ui.TEXT_ALIGN_RIGHT,
-            color = UIKit:hex2c3b(0xf3f0b6)
-        }):addTo(name_bg)
-            :align(display.LEFT_CENTER, 20, name_bg:getContentSize().height/2+5)
+        :align(display.TOP_LEFT, ox, top_bg:getContentSize().height-10)
+    self.name_label = cc.ui.UILabel.new({
+        text = "",
+        size = 18,
+        font = UIKit:getFontFilePath(),
+        align = cc.ui.TEXT_ALIGN_RIGHT,
+        color = UIKit:hex2c3b(0xf3f0b6)
+    }):addTo(name_bg):align(display.LEFT_CENTER, 10, name_bg:getContentSize().height/2 + 3)
 
     -- 玩家战斗值图片
-    display.newSprite("home/power.png"):addTo(top_bg):pos(194, 60)
+    display.newSprite("home/power.png"):addTo(top_bg):pos(ox + 14, 60)
 
     -- 玩家战斗值文字
     UIKit:ttfLabel({
-        text = _("战斗值"),
+        text = _("战斗值："),
         size = 14,
         color = 0x9a946b,
         shadow = true
-    }):addTo(top_bg):align(display.LEFT_CENTER, 204, 60)
-
+    }):addTo(top_bg):align(display.LEFT_CENTER, ox + 24, 60)
 
     -- 玩家战斗值数字
-    self.power_label =
-        UIKit:ttfLabel({
-            text = "",
-            size = 20,
-            color = 0xf3f0b6,
-            shadow = true
-        }):addTo(top_bg):align(display.LEFT_CENTER, 194, 40)
+    self.power_label = UIKit:ttfLabel({
+        text = "",
+        size = 20,
+        color = 0xf3f0b6,
+        shadow = true
+    }):addTo(top_bg):align(display.LEFT_CENTER, ox + 10, 40)
 
 
 
@@ -222,47 +216,30 @@ function GameUIHome:CreateTop()
             })
                 :addTo(button):pos(x + label_padding, y)
     end
-    -- 框
-    -- display.newSprite("home/frame.png"):addTo(top_bg, 1):align(display.LEFT_TOP, 0, 200)
 
     -- 玩家信息背景
-    local player_bg = display.newSprite("home/player_bg.png")
-        :addTo(top_bg, 2)
-        :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 0)
+    local player_bg = display.newSprite("home/player_bg.png"):addTo(top_bg, 2)
+        :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10)
 
-    display.newSprite("home/player_icon.png")
-        :addTo(player_bg)
-        :pos(60, 71)
-    display.newSprite("home/level_bg.png")
-        :addTo(player_bg)
-        :pos(61, 33)
-    self.level_label =
-        UIKit:ttfLabel({text = "10000",
-            size = 20,
-            color = 0xfff1cc,
-            shadow = true
-        })
-            :addTo(player_bg):align(display.CENTER, 61, 32)
-    display.newSprite("home/player_exp_bar.png")
-        :addTo(player_bg)
-        :pos(61, 60)
+    display.newSprite("home/player_icon.png"):addTo(player_bg):pos(55, 53)
+    local level_bg = display.newSprite("home/level_bg.png"):addTo(player_bg):pos(55, 30)
+    self.level_label =UIKit:ttfLabel({text = "10000",
+        size = 20,
+        color = 0xfff1cc,
+        shadow = true,
+    }):addTo(level_bg):align(display.CENTER, 37, 12)
+    self.exp = display.newSprite("home/player_exp_bar.png"):addTo(player_bg):pos(55, 53)
     -- vip
     local vip_btn = cc.ui.UIPushButton.new(
         {normal = "home/vip_bg.png", pressed = "home/vip_bg.png"},
         {scale9 = false}
-    ):onButtonClicked(function(event)
-        if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI('GameUIVip', City,"VIP"):addToCurrentScene(true)
-        end
-    end):addTo(top_bg):align(display.LEFT_TOP, display.width>640 and 56 or 63, 33)
-
-    self.vip_label =
-        UIKit:ttfLabel({text = "VIP 1",
-            size = 18,
-            color = 0xe19319,
-            shadow = true
-        })
-            :addTo(vip_btn):align(display.CENTER, 180, -25)
+    ):addTo(top_bg):align(display.CENTER, ox + 195, 50)
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                UIKit:newGameUI('GameUIVip', City,"VIP"):addToCurrentScene(true)
+            end
+        end)
+    self.vip_level = display.newNode():addTo(vip_btn):pos(0, 10):scale(0.8)
 
 
 
@@ -271,56 +248,41 @@ function GameUIHome:CreateTop()
         {normal = "home/gem_btn_up.png", pressed = "home/gem_btn_down.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        -- NetManager:sendMsg("gem 10000000", NOT_HANDLE)
         UIKit:newGameUI('GameUIShop', City):addToCurrentScene(true)
-    end):addTo(top_bg):pos(596, 0)
-    display.newSprite("home/gem_1.png"):addTo(button):pos(85, 0)
-    -- display.newSprite("home/gem_num_bg.png"):addTo(button):pos(0, -27)
-    self.gem_label =
-        UIKit:ttfLabel({text = "10000000",
-            size = 20,
-            color = 0xffd200,
-            shadow = true
-        })
-            :addTo(button):align(display.CENTER, 0, 0)
+    end):addTo(top_bg):pos(top_bg:getContentSize().width - 155, -16)
+    display.newSprite("home/gem_1.png"):addTo(button):pos(60, 3)
+    self.gem_label = UIKit:ttfLabel({
+        size = 20,
+        color = 0xffd200,
+        shadow = true
+    }):addTo(button):align(display.CENTER, -30, 8)
 
     -- 任务条
-    local quest_bar_bg = display.newSprite("home/quest_bar_bg.png"):addTo(player_bg):pos(202, -62)
-    quest_bar_bg:setTouchEnabled(true)
-    local quest_bg = display.newSprite("home/quest_bg.png"):addTo(quest_bar_bg):pos(-15, 24)
-    local pos = quest_bg:getAnchorPointInPoints()
-    display.newSprite("home/quest_icon.png"):addTo(quest_bg):pos(pos.x, pos.y):scale(0.7)
-    self.quest_label =
-        cc.ui.UILabel.new({text = "挖掘机技术哪家强?",
-            size = 20,
-            font = UIKit:getFontFilePath(),
-            align = cc.ui.TEXT_ALIGN_CENTER,
-            color = UIKit:hex2c3b(0x3b3827)})
-            :addTo(quest_bar_bg):align(display.LEFT_CENTER, 25, 18)
-    display.newSprite("home/quest_info.png"):addTo(quest_bar_bg):pos(300, 20)
-
-    local button = cc.ui.UIPushButton.new(
+    local quest_bar_bg = cc.ui.UIPushButton.new(
         {normal = "home/quest_btn_up.png", pressed = "home/quest_btn_down.png"},
         {scale9 = false}
-    ):onButtonClicked(function(event)
-        -- NetManager:instantMakeBuildingMaterial(NOT_HANDLE)
+    ):addTo(top_bg):pos(255, -10):onButtonClicked(function(event)
         if self.quest_label:getString() == _("挖掘机技术哪家强?") then
             self.quest_label:setString(_("中国山东找蓝翔!"))
         else
             self.quest_label:setString(_("挖掘机技术哪家强?"))
         end
-
-    end):addTo(quest_bar_bg):pos(290, 20)
-    local pos = button:getAnchorPointInPoints()
-    display.newSprite("home/quest_hook.png"):addTo(button):pos(pos.x, pos.y)
+    end)
+    display.newSprite("home/quest_icon.png"):addTo(quest_bar_bg):pos(-162, 0)
+    self.quest_label = cc.ui.UILabel.new({text = "挖掘机技术哪家强?",
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        align = cc.ui.TEXT_ALIGN_CENTER,
+        color = UIKit:hex2c3b(0xfffeb3)})
+        :addTo(quest_bar_bg):align(display.LEFT_CENTER, -120, 0)
 
     -- 礼物按钮
     local button = cc.ui.UIPushButton.new(
         {normal = "home/gift.png", pressed = "home/gift.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        dump(event)
         if event.name == "CLICKED_EVENT" then
+            dump(event)
         end
     end):addTo(top_bg):pos(630, -81):scale(0.6)
 
@@ -361,23 +323,23 @@ function GameUIHome:CreateBottom()
         row = 2,
         padding = {left = 0, right = 0, top = 10, bottom = 0}
     }:onTouch(function (event)
-            dump(event,"UIPageView event")
-            if event.name == "pageChange" then
-                if 1 == event.pageIdx then
-                    index_1:setPositionX(chat_bg:getContentSize().width/2-10)
-                    index_2:setPositionX(chat_bg:getContentSize().width/2+10)
-                elseif 2 == event.pageIdx then
-                    index_1:setPositionX(chat_bg:getContentSize().width/2+10)
-                    index_2:setPositionX(chat_bg:getContentSize().width/2-10)
-                end
-            elseif event.name == "clicked" then
-                if event.pageIdx == 1 then
-                    UIKit:newGameUI('GameUIChatChannel',"global"):addToCurrentScene(true)
-                elseif event.pageIdx == 2 then
-                    UIKit:newGameUI('GameUIChatChannel',"alliance"):addToCurrentScene(true)
-                end
+        dump(event,"UIPageView event")
+        if event.name == "pageChange" then
+            if 1 == event.pageIdx then
+                index_1:setPositionX(chat_bg:getContentSize().width/2-10)
+                index_2:setPositionX(chat_bg:getContentSize().width/2+10)
+            elseif 2 == event.pageIdx then
+                index_1:setPositionX(chat_bg:getContentSize().width/2+10)
+                index_2:setPositionX(chat_bg:getContentSize().width/2-10)
             end
-        end)
+        elseif event.name == "clicked" then
+            if event.pageIdx == 1 then
+                UIKit:newGameUI('GameUIChatChannel',"global"):addToCurrentScene(true)
+            elseif event.pageIdx == 2 then
+                UIKit:newGameUI('GameUIChatChannel',"alliance"):addToCurrentScene(true)
+            end
+        end
+    end)
         :addTo(chat_bg)
     pv:setTouchEnabled(true)
     pv:setTouchSwallowEnabled(false)
@@ -503,6 +465,12 @@ function GameUIHome:Find()
 end
 
 return GameUIHome
+
+
+
+
+
+
 
 
 

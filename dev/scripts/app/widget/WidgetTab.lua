@@ -5,19 +5,22 @@ end)
 
 function WidgetTab:ctor(param, width, height)
     self.pressed = false
-    local png = param.tab
-
     self.back_ground = display.newLayer():addTo(self)
+    self.back_ground:setContentSize(width, height)
+    if param.background then
+        display.newSprite(param.background):addTo(self.back_ground):align(display.CENTER, width/2, height/2)
+    end
     self.tab = cc.ui.UICheckBoxButton.new(param, {scale9 = true})
-        :addTo(self.back_ground)
-        :align(display.LEFT_BOTTOM)
+        :addTo(self.back_ground, 1)
+        :align(display.CENTER, width/2, height/2)
         :setButtonSelected(self.pressed)
         :setButtonSize(width, height)
     self.tab:setTouchEnabled(false)
 
-    if png then
-        cc.ui.UIImage.new(png):addTo(self):align(display.CENTER, width/2, height/2)
+    if param.tab then
+        cc.ui.UIImage.new(param.tab):addTo(self):align(display.CENTER, width/2, height/2)
     end
+
 
     self.back_ground:setContentSize(cc.size(width, height))
     self.back_ground:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
@@ -48,6 +51,20 @@ end
 function WidgetTab:IsPressed()
     return self.pressed
 end
+function WidgetTab:EnableTag(b)
+    local size = self.back_ground:getContentSize()
+    local bg = display.newSprite("tab_background_40x24.png"):addTo(self,1):pos(size.width - 40/2, size.height)
+    self.active = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        size = 16,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfffeb3)}):addTo(bg):align(display.CENTER,40/2,24/2 + 2)
+    return self
+end
+function WidgetTab:SetActive(active, total)
+    self.active:setString(string.format("%d/%d", active, total))
+    return self
+end
 function WidgetTab:Size(width, height)
     self.tab:setButtonSize(width, height)
     self.back_ground:setContentSize(cc.size(width, height))
@@ -67,6 +84,9 @@ end
 
 
 return WidgetTab
+
+
+
 
 
 

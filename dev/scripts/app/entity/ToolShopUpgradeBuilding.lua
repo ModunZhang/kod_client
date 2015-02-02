@@ -100,6 +100,14 @@ end
 function ToolShopUpgradeBuilding:GetMakeMaterialsEvents()
     return self.category
 end
+function ToolShopUpgradeBuilding:IsMakingAny(current_time)
+    for _,v in pairs(self.category) do
+        if v:IsMaking(current_time) then
+            return true
+        end
+    end
+    return false
+end
 function ToolShopUpgradeBuilding:GetMakeMaterialsEventByCategory(category)
     return self.category[category]
 end
@@ -184,9 +192,9 @@ function ToolShopUpgradeBuilding:OnUserDataChanged(...)
         }
 
         for k, v in pairs(materialEvents) do
-            if v.category == "building" then
+            if v.category == "buildingMaterials" then
                 events[BUILDING_EVENT] = v
-            elseif v.category == "technology" then
+            elseif v.category == "technologyMaterials" then
                 events[TECHNOLOGY_EVENT] = v
             end
         end

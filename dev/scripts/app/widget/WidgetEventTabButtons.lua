@@ -3,7 +3,8 @@ local cocos_promise = import("..utils.cocos_promise")
 local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTab = import(".WidgetTab")
-local WIDGET_WIDTH = 492
+local timer = app.timer
+local WIDGET_WIDTH = 640
 local WIDGET_HEIGHT = 300
 local TAB_HEIGHT = 48
 local WidgetEventTabButtons = class("WidgetEventTabButtons", function()
@@ -31,13 +32,13 @@ function WidgetEventTabButtons:isTouchInViewRect(event)
     viewRect.height = self.view_rect.height
     return cc.rectContainsPoint(viewRect, cc.p(event.x, event.y))
 end
-local timer = app.timer
 -- 建筑事件
 function WidgetEventTabButtons:OnDestoryDecorator()
     self:EventChangeOn("build")
 end
 function WidgetEventTabButtons:OnUpgradingBegin(building, current_time, city)
     self:EventChangeOn("build")
+    self:RefreshBuildQueueByType("build")
 end
 function WidgetEventTabButtons:OnUpgrading(building, current_time, city)
     if self:IsShow() and self:GetCurrentTab() == "build" then
@@ -51,6 +52,7 @@ function WidgetEventTabButtons:OnUpgrading(building, current_time, city)
 end
 function WidgetEventTabButtons:OnUpgradingFinished(building, current_time, city)
     self:EventChangeOn("build")
+    self:RefreshBuildQueueByType("build")
 end
 -- 兵营事件
 function WidgetEventTabButtons:OnBeginRecruit(barracks, event)
@@ -102,14 +104,19 @@ function WidgetEventTabButtons:OnGetMaterialsWithEvent(tool_shop, event)
     self:EventChangeOn("material")
 end
 function WidgetEventTabButtons:EventChangeOn(event_type)
+    self:RefreshBuildQueueByType(event_type)
     if self:GetCurrentTab() == event_type then
         self:PromiseOfSwitch()
     end
 end
 ------
-function WidgetEventTabButtons:ctor(city)
+function WidgetEventTabButtons:ctor(city, ratio)
+    self.view_rect = cc.rect(0, 0, WIDGET_WIDTH * ratio, (WIDGET_HEIGHT + TAB_HEIGHT) * ratio)
+    self:setClippingRegion(self.view_rect)
+
     self.item_array = {}
     local node = display.newNode():addTo(self)
+    node:scale(ratio)
     cc.Layer:create():addTo(node):pos(0, -WIDGET_HEIGHT + TAB_HEIGHT):setContentSize(cc.size(WIDGET_WIDTH, WIDGET_HEIGHT + TAB_HEIGHT))
     self.node = node
     self.tab_buttons, self.tab_map = self:CreateTabButtons()
@@ -133,6 +140,25 @@ function WidgetEventTabButtons:ctor(city)
     self.toolShop:AddToolShopListener(self)
 
     self:ShowEvent()
+    self:RefreshBuildQueueByType("build", "soldier", "material", "technology")
+end
+function WidgetEventTabButtons:RefreshBuildQueueByType(...)
+    local city = self.city
+    for _,key in ipairs{...} do
+        local item = self.tab_map[key]
+        if key == "build" then
+            item:SetActive(#city:GetUpgradingBuildings(), city:BuildQueueCounts())
+        elseif key == "soldier" then
+            item:SetActive(self.barracks:IsRecruting() and 1 or 0, 1)
+        elseif key == "material" then
+            local count = 0
+            count = count + (self.blackSmith:IsMakingEquipment() and 1 or 0)
+            count = count + (self.toolShop:IsMakingAny(timer:GetServerTime()) and 1 or 0)
+            item:SetActive(count, 2)
+        elseif key == "technology" then
+
+        end
+    end
 end
 function WidgetEventTabButtons:ShowEvent()
     if #self.city:GetUpgradingBuildings() > 0 then
@@ -156,29 +182,12 @@ end
 -- 构造ui
 function WidgetEventTabButtons:CreateTabButtons()
     local node = display.newNode()
-    local icon_map = {
-        { "material", "battle_39x38.png" },
-        { "technology", "tech_39x38.png" },
-        { "soldier", "soldier_39x38.png" },
-        { "build", "build_39x38.png" },
-    }
-    local tab_map = {}
-    local unit_width = 111
-    local origin_x = unit_width * 4
-    for i, v in ipairs(icon_map) do
-        local tab_type = v[1]
-        local tab_png = v[2]
-        tab_map[tab_type] = WidgetTab.new({
-            on = "tab_button_down_112x48.png",
-            off = "tab_button_up_112x48.png",
-            tab = tab_png
-        }, unit_width, TAB_HEIGHT)
-            :addTo(node):align(display.LEFT_BOTTOM,origin_x + (i - 5) * unit_width, -2)
-            :OnTabPress(handler(self, self.OnTabClicked))
-    end
-    local btn = cc.ui.UIPushButton.new({normal = "hide_btn_up_50x48.png",
-        pressed = "hide_btn_down_50x48.png"}):addTo(node)
-        :align(display.LEFT_BOTTOM, unit_width*4, -2)
+    display.newSprite("tab_background_578x50.png"):addTo(node):align(display.LEFT_CENTER, 0, 25)
+    local origin_x = 138 * 4 + 28
+    -- hide
+    local btn = cc.ui.UIPushButton.new({normal = "hide_btn_up.png",
+        pressed = "hide_btn_down.png"}):addTo(node)
+        :align(display.LEFT_BOTTOM, origin_x, 0)
         :onButtonClicked(function(event)
             if not self:IsShow() then
                 self:PromiseOfShow()
@@ -186,11 +195,33 @@ function WidgetEventTabButtons:CreateTabButtons()
                 self:PromiseOfHide()
             end
         end)
-    self.arrow = cc.ui.UIImage.new("hide_18x19.png"):addTo(btn):align(display.CENTER, 48/2, TAB_HEIGHT/2)
+    self.arrow = cc.ui.UIImage.new("hide_icon.png"):addTo(btn):align(display.CENTER, 56/2, TAB_HEIGHT/2)
+
+
+    local icon_map = {
+        { "material", "battle_39x38.png" },
+        { "technology", "tech_39x38.png" },
+        { "soldier", "soldier_39x38.png" },
+        { "build", "build_39x38.png" },
+    }
+    local tab_map = {}
+    origin_x = origin_x - 2
+    for i, v in ipairs(icon_map) do
+        local tab_type = v[1]
+        local tab_png = v[2]
+        tab_map[tab_type] = WidgetTab.new({
+            on = "tab_button_down_142x42.png",
+            off = "tab_button_up_142x42.png",
+            tab = tab_png,
+        }, 142, TAB_HEIGHT)
+            :addTo(node):align(display.LEFT_BOTTOM,origin_x + (i - 5) * (142 + 2), 0)
+            :OnTabPress(handler(self, self.OnTabClicked))
+            :EnableTag(true):SetActive(0, 1)
+    end
     return node, tab_map
 end
 function WidgetEventTabButtons:CreateBackGround()
-    local back = cc.ui.UIImage.new("back_ground_492x100.png", {scale9 = true,
+    local back = cc.ui.UIImage.new("tab_background_640x106.png", {scale9 = true,
         capInsets = cc.rect(0, 0, WIDGET_WIDTH , 100 - 20)
     }):align(display.LEFT_BOTTOM):setLayoutSize(WIDGET_WIDTH, 50)
     return back
@@ -202,17 +233,19 @@ function WidgetEventTabButtons:CreateBottom()
     return self:CreateOpenItem():align(display.LEFT_CENTER)
 end
 function WidgetEventTabButtons:CreateProgressItem()
-    local progress = display.newProgressTimer("progress_blue_340x46.png", display.PROGRESS_TIMER_BAR)
+    local progress = display.newProgressTimer("progress_bar_432x36.png", display.PROGRESS_TIMER_BAR)
     progress:setBarChangeRate(cc.p(1,0))
     progress:setMidpoint(cc.p(0,0))
     progress:setPercentage(100)
+    display.newSprite("progress_background_432x36.png"):addTo(progress, -1):align(display.LEFT_BOTTOM)
+    local bg = display.newSprite("progress_bg_head_43x43.png"):addTo(progress, 1):align(display.CENTER, 0, 36/2)
+    display.newSprite("hourglass_39x46.png"):addTo(bg):align(display.CENTER, 43/2, 43/2):scale(0.8)
 
     local describe = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("城堡 (等级 2) 00:10:10"),
         size = 18,
         font = UIKit:getFontFilePath(),
-        color = UIKit:hex2c3b(0xd1ca95)}):addTo(progress):align(display.LEFT_CENTER, 10, 43/2)
+        color = UIKit:hex2c3b(0xd1ca95)}):addTo(progress):align(display.LEFT_CENTER, 30, 36/2)
 
     local btn = WidgetPushButton.new({normal = "green_btn_up_142x39.png",
         pressed = "green_btn_down_142x39.png",
@@ -222,7 +255,7 @@ function WidgetEventTabButtons:CreateProgressItem()
     ,{
         disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
     }):addTo(progress)
-        :align(display.RIGHT_CENTER, 482, 43/2)
+        :align(display.RIGHT_CENTER, WIDGET_WIDTH - 55, 36/2)
         :setButtonLabel(cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("加速"),
@@ -231,9 +264,8 @@ function WidgetEventTabButtons:CreateProgressItem()
             color = UIKit:hex2c3b(0xfff3c7)}))
         :onButtonClicked(function(event)
             end)
-    -- btn:scale(120/142)
     cc.ui.UIImage.new("divide_line_489x2.png"):addTo(progress)
-        :align(display.LEFT_BOTTOM, -4, -5):setScaleX(0.96)
+        :align(display.LEFT_BOTTOM, -38, -6):setLayoutSize(638, 2)
 
 
     function progress:SetProgressInfo(str, percent)
@@ -295,8 +327,7 @@ function WidgetEventTabButtons:CreateOpenItem()
     ,{}
     ,{
         disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
-    }):addTo(node)
-        :align(display.RIGHT_CENTER, 482, 0)
+    }):addTo(node):align(display.RIGHT_CENTER, WIDGET_WIDTH - 55, 0)
         :setButtonLabel(UIKit:ttfLabel({
             text = _("打开"),
             size = 18,
@@ -345,7 +376,7 @@ function WidgetEventTabButtons:Reset()
 end
 function WidgetEventTabButtons:ResetItemPosition()
     for i, v in ipairs(self.item_array) do
-        v:pos(5, (i-1) * 50 + 25)
+        v:pos(40, (i-1) * 50 + 25)
     end
 end
 -- 操作
@@ -437,7 +468,7 @@ function WidgetEventTabButtons:AdapterPosition()
     self.tab_buttons:setPositionY(self.back_ground:getContentSize().height)
 end
 function WidgetEventTabButtons:ResetPosition()
-    self.node:setPositionY(- self.back_ground:getContentSize().height)
+    self.node:setPositionY(self:HidePosY())
 end
 function WidgetEventTabButtons:PromiseOfSwitch()
     return self:PromiseOfHide():next(function()
@@ -447,10 +478,9 @@ end
 function WidgetEventTabButtons:PromiseOfHide()
     self.node:stopAllActions()
     self:Lock(true)
-    return cocos_promise.promiseOfMoveTo(self.node, 0,
-        - self.back_ground:getContentSize().height, 0.15, "sineIn"):next(function()
+    return cocos_promise.promiseOfMoveTo(self.node, 0, self:HidePosY(), 0.15, "sineIn"):next(function()
         self:Reset()
-        end)
+    end)
 end
 function WidgetEventTabButtons:PromiseOfShow()
     if not self:OnBeforeShow() then
@@ -466,6 +496,9 @@ function WidgetEventTabButtons:PromiseOfShow()
         self.arrow:flipY(false)
         self:Lock(false)
     end)
+end
+function WidgetEventTabButtons:HidePosY()
+    return -self.back_ground:getContentSize().height + 5
 end
 function WidgetEventTabButtons:OnBeforeShow()
     local tab = self:GetCurrentTab()
@@ -662,5 +695,9 @@ function WidgetEventTabButtons:MaterialDescribe(event)
 end
 
 return WidgetEventTabButtons
+
+
+
+
 
 
