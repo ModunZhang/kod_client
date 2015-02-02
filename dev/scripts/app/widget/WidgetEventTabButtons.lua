@@ -498,7 +498,7 @@ function WidgetEventTabButtons:PromiseOfShow()
     end)
 end
 function WidgetEventTabButtons:HidePosY()
-    return -self.back_ground:getContentSize().height + 5
+    return -self.back_ground:getContentSize().height
 end
 function WidgetEventTabButtons:OnBeforeShow()
     local tab = self:GetCurrentTab()
