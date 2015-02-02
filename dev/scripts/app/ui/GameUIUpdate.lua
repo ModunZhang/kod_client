@@ -53,7 +53,11 @@ function GameUIUpdate:getUpdateFileList()
     local serverAppVersion = serverFileList.appVersion
     if localAppVersion < serverAppVersion then
         device.showAlert(nil, _("游戏版本过低,请更新!"), { _("确定") }, function(event)
-            device.openURL("https://dl.dropboxusercontent.com/s/n1b75nkamnjh9qx/build-index.html")
+            if CONFIG_IS_DEBUG then
+                device.openURL("https://batcat.sinaapp.com/ad_hoc/build-index.html")
+            else
+                device.openURL(CONFIG_APP_URL[device.platform])
+            end
         end)
         return
     end

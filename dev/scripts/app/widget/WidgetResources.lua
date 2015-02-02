@@ -1,5 +1,7 @@
 local ResourceManager = import('..entity.ResourceManager')
 local SoldierManager = import('..entity.SoldierManager')
+local WidgetUseItems= import(".WidgetUseItems")
+local WidgetPushButton = import('.WidgetPushButton')
 local UIListView = import("..ui.UIListView")
 local resource_type = {
     WOOD = ResourceManager.RESOURCE_TYPE.WOOD,
@@ -59,7 +61,7 @@ function WidgetResources:RefreshSpecifyResource(resource,item,maxvalue,occupy_ci
         -- item.tax.title:setString(title_value)
         -- local tax_time = townHall:IsInImposing() and GameUtils:formatTimeStyle1(townHall:GetTaxEvent():LeftTime(app.timer:GetServerTime())) or ""
         -- item.tax.value:setString(tax_time)
-        item.free_citizen.value:setString(self.city:GetResourceManager():GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime()))
+        -- item.free_citizen.value:setString(self.city:GetResourceManager():GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime()))
     end
 end
 function WidgetResources:CreateResourceListView()
@@ -243,21 +245,22 @@ function WidgetResources:AddResourceItem(parms)
         -- })
         -- content:addWidget(item.tax)
         --  空闲人口
-        item.free_citizen = createTipItem({
-            title = _("空闲人口"),
-            title_color = UIKit:hex2c3b(0x797154),
-            value = occupy_citizen ,
-            value_color = UIKit:hex2c3b(0x403c2f),
-            x = 40,
-            y = -40
-        })
-        content:addWidget(item.free_citizen)
+        -- item.free_citizen = createTipItem({
+        --     title = _("空闲人口"),
+        --     title_color = UIKit:hex2c3b(0x797154),
+        --     value = occupy_citizen ,
+        --     value_color = UIKit:hex2c3b(0x403c2f),
+        --     x = 40,
+        --     y = -40
+        -- })
+        -- content:addWidget(item.free_citizen)
     end
 
     -- 使用道具增加资源按钮
-    cc.ui.UIPushButton.new({normal = "button_wareHouseUI_normal.png",pressed = "button_wareHouseUI_pressed.png"})
+    WidgetPushButton.new({normal = "button_wareHouseUI_normal.png",pressed = "button_wareHouseUI_pressed.png"})
         :onButtonClicked(function(event)
-            dump(event)
+            local items = ItemManager:GetItemByName(string.split(resource_icon, "_")[1].."Class_1")
+            WidgetUseItems.new():Create({item = items}):addToCurrentScene()
         end):align(display.CENTER, item_width/2 -30, 0):addTo(content)
         :addChild(display.newSprite("add.png"))
 

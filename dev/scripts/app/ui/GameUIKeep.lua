@@ -6,6 +6,7 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetUIBackGround2= import("..widget.WidgetUIBackGround2")
 local FullScreenPopDialogUI= import(".FullScreenPopDialogUI")
 local WidgetPopDialog= import("..widget.WidgetPopDialog")
+local WidgetUseItems= import("..widget.WidgetUseItems")
 local Localize = import("..utils.Localize")
 local SpriteConfig = import("..sprites.SpriteConfig")
 local window = import('..utils.window')
@@ -281,90 +282,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
 end
 
 function GameUIKeep:CreateModifyCityNameWindow()
-    local layer = WidgetPopDialog.new(450,_("城市名称修改")):addTo(self)
-    local body = layer:GetBody()
-    local editbox = cc.ui.UIInput.new({
-        UIInputType = 1,
-        image = "input_box.png",
-        size = cc.size(576,48),
-        font = UIKit:getFontFilePath(),
-    })
-    editbox:setPlaceHolder(_("输入新的城市名字"))
-    editbox:setMaxLength(14)
-    editbox:setFont(UIKit:getFontFilePath(),22)
-    editbox:setFontColor(cc.c3b(0,0,0))
-    editbox:setPlaceholderFontColor(cc.c3b(204,196,158))
-    editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
-    editbox:align(display.LEFT_TOP,16, 420)
-    editbox:addTo(body)
-
-    local bg2 = WidgetUIBackGround2.new(140)
-    bg2:addTo(body):align(display.CENTER, 304, 280)
-
-    local prop_bg = display.newSprite("background_prop_100_100.png")
-        :align(display.LEFT_CENTER, 10, 82):addTo(bg2)
-    display.newSprite("change_city_name.png")
-        :align(display.CENTER, 50, 50):addTo(prop_bg):scale(0.5)
-    local num_bg = display.newSprite("number_bg_100x40.png")
-        :align(display.CENTER_TOP, 50, 12):addTo(prop_bg)
-    self.number = cc.ui.UILabel.new({
-        size = 20,
-        text = "10000",
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_LEFT,
-        color = UIKit:hex2c3b(0x423f32)
-    }):addTo(num_bg):align(display.CENTER, 50, 20)
-
-    local label_1 = cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("城市名称变更"),
-            font = UIKit:getFontFilePath(),
-            size = 22,
-            color = UIKit:hex2c3b(0x514d3e)
-        }):align(display.LEFT_CENTER, 120, 100)
-        :addTo(bg2)
-
-    local label_2 = cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("提供兵种招募，升级增加每次招募的最大数量"),
-            font = UIKit:getFontFilePath(),
-            size = 20,
-            dimensions = cc.size(300,100),
-            color = UIKit:hex2c3b(0x797154)
-        }):align(display.LEFT_TOP, 120, 70)
-        :addTo(bg2)
-    -- 购买使用按钮
-    local buy_label = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("购买使用"),
-        size = 20,
-        font = UIKit:getFontFilePath(),
-        color = UIKit:hex2c3b(0xfff3c7)})
-
-    buy_label:enableShadow()
-    WidgetPushButton.new(
-        {normal = "green_btn_up_142x39.png", pressed = "green_btn_down_142x39.png"},
-        {scale9 = false}
-    ):setButtonLabel(buy_label)
-        :addTo(bg2):align(display.CENTER, 480, 100)
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                local cityName = string.trim(editbox:getText())
-                if string.len(cityName) == 0 then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("请输入城市名称"))
-                        :CreateOKButton(
-                            {
-                                listener = function()end
-                            })
-                        :AddToCurrentScene()
-                    return
-                end
-                layer:removeFromParent(true)
-            end
-        end)
+    WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.CHANGE_CITY_NAME}):addToCurrentScene()
 end
 
 function GameUIKeep:CreateChangeTerrainWindow()

@@ -981,7 +981,7 @@ function GameUIShop:onEnter()
                     --     dump(data,"data---->")
                     -- end)
                     -- Store.purchase("kod.1dollar")
-                    app:getStore().purchaseWithProductId("kod.1dollar",1)
+                    app:getStore().purchaseWithProductId("product_1",1)
             else
                 device.showAlert("提示",device.platform .. " is not support for IAP",{_("确定")})
             end
