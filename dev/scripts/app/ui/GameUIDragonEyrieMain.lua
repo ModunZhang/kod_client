@@ -494,7 +494,6 @@ function GameUIDragonEyrieMain:OnHpItemUseButtonClicked()
 		item_type = WidgetUseItems.USE_TYPE.DRAGON_EXP,
 		dragon = self:GetCurrentDragon()
 	})
-	widgetUseItems:addTo(self)
 end
 
 --fte

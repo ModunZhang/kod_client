@@ -43,7 +43,7 @@ function GameUIDragonEquipment:onEnter()
 		  :addTo(backgroundImage)
 	  self.mainTitleLabel =  cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "护甲",
+        text = "",
         font = UIKit:getFontFilePath(),
         size = 24,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
@@ -64,7 +64,7 @@ function GameUIDragonEquipment:onEnter()
     self.mainEquipment = mainEquipment
     local titleLable = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "护甲1",
+        text = "",
         font = UIKit:getFontFilePath(),
         size = 24,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
@@ -73,7 +73,7 @@ function GameUIDragonEquipment:onEnter()
     self.titleLable = titleLable
     local countLabel = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "数量 1/4",
+        text = "",
         font = UIKit:getFontFilePath(),
         size = 22,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
@@ -184,7 +184,6 @@ function GameUIDragonEquipment:WidgetDragonEquipIntensifyEvent(widgetDragonEquip
     end)
     local oldExp = exp - widgetDragonEquipIntensify:GetExpPerEq()
     local oldPercent = (oldExp + (equipment.exp or 0))/self:GetEquipmentCategory().enhanceExp * 100
-    print("exp----->",oldExp,exp,self:GetEquipmentCategory().enhanceExp,oldPercent)
     if oldPercent >= 100 then
       return true
     else
@@ -248,13 +247,13 @@ function GameUIDragonEquipment:BuildIntensifyUI()
   }):align(display.LEFT_CENTER,vitality_icon:getPositionX()+vitality_icon:getContentSize().width + 5,vitality_icon:getPositionY() + vitality_icon:getContentSize().height/2)
     :addTo(body)
   self.intensify_ui.vitality_val_label = UIKit:ttfLabel({
-    text = "120",
+    text = "",
     size = 20,
     color = 0x403c2f,
     align = cc.TEXT_ALIGNMENT_RIGHT
   }):addTo(body):align(display.RIGHT_CENTER,540,vitality_title_label:getPositionY())
   self.intensify_ui.vitality_val_label_add = UIKit:ttfLabel({
-    text = "+120",
+    text = "",
     size = 20,
     color = 0x309700,
     align = cc.TEXT_ALIGNMENT_LEFT
@@ -276,14 +275,14 @@ function GameUIDragonEquipment:BuildIntensifyUI()
     :addTo(body)
 
   self.intensify_ui.strength_val_label = UIKit:ttfLabel({
-    text = "120",
+    text = "",
     size = 20,
     color = 0x403c2f,
     align = cc.TEXT_ALIGNMENT_RIGHT
   }):addTo(body):align(display.RIGHT_CENTER,540,strength_title_label:getPositionY())
 
   self.intensify_ui.strength_val_label_add = UIKit:ttfLabel({
-    text = "+120",
+    text = "",
     size = 20,
     color = 0x309700,
     align = cc.TEXT_ALIGNMENT_LEFT
@@ -488,22 +487,10 @@ function GameUIDragonEquipment:RefreshInfoUI()
         self.adornOrResetButton.labels_['normal']:setString(_("装备"))
         self.intensifyButton:hide()
 	      self.titleLable:setString(Localize.equip[equipment:GetCanLoadConfig().name])
-        -- self.countLabel:setString(_("数量") .. " " .. (DataManager:getUserData().dragonEquipments[equipment:Name()] or 0) .. "/" ..  City:GetFirstBuildingByType("materialDepot"):GetMaxMaterial())
-        -- if DataManager:getUserData().dragonEquipments[equipment:GetCanLoadConfig().name] > 0 then
-        --   self.adornOrResetButton:setButtonEnabled(true)
-        -- else
-        --  self.adornOrResetButton:setButtonEnabled(false)
-        -- end
     else -- 已经装备
       self.titleLable:setString(Localize.equip[equipment:Name()])
-      -- self.countLabel:setString(_("数量") .. " " .. (DataManager:getUserData().dragonEquipments[equipment:Name()] or 0) .. "/" ..  City:GetFirstBuildingByType("materialDepot"):GetMaxMaterial())
       self.adornOrResetButton.labels_['normal']:setString(_("重置"))
       self.intensifyButton:show()
-       -- if DataManager:getUserData().dragonEquipments[equipment:GetCanLoadConfig().name] > 0 then
-       --    self.adornOrResetButton:setButtonEnabled(true)
-       --  else
-       --   self.adornOrResetButton:setButtonEnabled(false)
-       --  end
     end
     self.countLabel:setString(_("数量") .. " " .. self:GetCurrentEquipmentCount() .. "/" ..  City:GetFirstBuildingByType("materialDepot"):GetMaxMaterial())
     if self:GetCurrentEquipmentCount() > 0 then
