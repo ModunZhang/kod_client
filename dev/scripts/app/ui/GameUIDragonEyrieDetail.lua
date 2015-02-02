@@ -16,6 +16,8 @@ local Dragon = import("..entity.Dragon")
 local UIListView = import(".UIListView")
 local Localize = import("..utils.Localize")
 local config_floatInit = GameDatas.AllianceInitData.floatInit
+local WidgetUseItems = import("..widget.WidgetUseItems")
+
 -- building = DragonEyrie
 function GameUIDragonEyrieDetail:ctor(city,building,dragon_type)
 	GameUIDragonEyrieDetail.super.ctor(self,city,_("龙巢"))
@@ -458,6 +460,14 @@ function GameUIDragonEyrieDetail:CreateNodeIf_skill()
     local magic_bottle = display.newSprite("dragon_magic_bottle.png")
      	:align(display.RIGHT_BOTTOM,blood_label:getPositionX()-100, list_bg:getPositionY()+320+5-2)
      	:addTo(skill_node)
+    --TODO:临时添加按钮
+    local add_button = WidgetPushButton.new({normal = "add_button_normal_50x50.png",pressed = "add_button_light_50x50.png"})
+ 		:addTo(skill_node)
+ 		:scale(0.7)
+ 		:align(display.LEFT_BOTTOM,magic_bottle:getPositionX()+10,list_bg:getPositionY()+320+5-2)
+ 		:onButtonClicked(function()
+ 			self:OnHeroBloodUseItemClicked()
+	 	end)
     self.skill_ui.magic_bottle = magic_bottle
 	self.skill_node = skill_node
 	return self.skill_node
@@ -619,4 +629,13 @@ function GameUIDragonEyrieDetail:Find(dragon_body)
         return self.equipment_nodes[dragon_body] 
     end)
 end
+
+function GameUIDragonEyrieDetail:OnHeroBloodUseItemClicked()
+	local widgetUseItems = WidgetUseItems.new():Create({
+		item_type = WidgetUseItems.USE_TYPE.HERO_BLOOD,
+		dragon = self:GetDragon()
+	})
+	widgetUseItems:addToCurrentScene()
+end
+
 return GameUIDragonEyrieDetail

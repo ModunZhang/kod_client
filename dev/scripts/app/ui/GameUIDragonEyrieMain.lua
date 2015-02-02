@@ -207,11 +207,11 @@ function GameUIDragonEyrieMain:CreateProgressTimer()
  		 shadow = true,
  		 size = 20
  	}):addTo(bg):align(display.RIGHT_CENTER, bg:getContentSize().width - 50, 20)
- 	local add_button = cc.ui.UIPushButton.new({normal = "add_button_normal_50x50.png",pressed = "add_button_light_50x50.png"})
+ 	local add_button = WidgetPushButton.new({normal = "add_button_normal_50x50.png",pressed = "add_button_light_50x50.png"})
  		:addTo(bg)
  		:align(display.CENTER_RIGHT,bg:getContentSize().width+10,20)
  		:onButtonClicked(function()
- 			self:OnHpItemUseButtonClicked()
+ 			self:OnDragonHpItemUseButtonClicked()
  		end)
 	return bg,progressTimer
 end
@@ -260,6 +260,14 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 			size = 20
 		}):align(display.LEFT_BOTTOM, expIcon:getPositionX()+expIcon:getContentSize().width*0.7+10, 20)
 		:addTo(info_bg)
+		--TODO:临时添加的按钮
+		local add_button = WidgetPushButton.new({normal = "add_button_normal_50x50.png",pressed = "add_button_light_50x50.png"})
+	 		:addTo(info_bg)
+	 		:scale(0.7)
+	 		:align(display.LEFT_BOTTOM,self.draong_info_xp_label:getPositionX()+self.draong_info_xp_label:getContentSize().width,10)
+	 		:onButtonClicked(function()
+	 			self:OnDragonExpItemUseButtonClicked()
+	 		end)
 		-- info end
 		self.nextButton = cc.ui.UIPushButton.new({
 			normal = "dragon_next_icon_28x31.png"
@@ -489,7 +497,15 @@ function GameUIDragonEyrieMain:ChangeDragon(direction)
 		self.isChanging = false
 	end
 end
-function GameUIDragonEyrieMain:OnHpItemUseButtonClicked()
+function GameUIDragonEyrieMain:OnDragonHpItemUseButtonClicked()
+	local widgetUseItems = WidgetUseItems.new():Create({
+		item_type = WidgetUseItems.USE_TYPE.DRAGON_EXP,
+		dragon = self:GetCurrentDragon()
+	})
+	widgetUseItems:addToCurrentScene()
+end
+
+function GameUIDragonEyrieMain:OnDragonExpItemUseButtonClicked()
 	local widgetUseItems = WidgetUseItems.new():Create({
 		item_type = WidgetUseItems.USE_TYPE.DRAGON_EXP,
 		dragon = self:GetCurrentDragon()
