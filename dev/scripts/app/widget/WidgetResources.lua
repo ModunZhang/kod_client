@@ -260,7 +260,7 @@ function WidgetResources:AddResourceItem(parms)
     WidgetPushButton.new({normal = "button_wareHouseUI_normal.png",pressed = "button_wareHouseUI_pressed.png"})
         :onButtonClicked(function(event)
             local items = ItemManager:GetItemByName(string.split(resource_icon, "_")[1].."Class_1")
-            WidgetUseItems.new({item = items})
+            WidgetUseItems.new():Create({item = items}):addToCurrentScene()
         end):align(display.CENTER, item_width/2 -30, 0):addTo(content)
         :addChild(display.newSprite("add.png"))
 

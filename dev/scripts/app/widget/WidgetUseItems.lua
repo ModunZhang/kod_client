@@ -38,37 +38,7 @@ local ITEMS_TYPE = {
 
 }
 
-function WidgetUseItems:ctor(params)
-    local item_type = ITEMS_TYPE[params.item_type] or string.split(params.item:Name(), "_")[1]
-    local item = params.item or self:GetItemByType(item_type,params)
-    if item_type == "changePlayerName"
-        or item_type == "changeCityName"
-    then
-        self:OpenChangePlayerOrCityName(item)
-    elseif item_type == "heroBlood" then
-        self:OpenHeroBloodDialog(item)
-    elseif item_type == "stamina" then
-        self:OpenStrengthDialog(item)
-    elseif item_type == "dragonExp"
-        or item_type == "dragonHp"
-    then
-        if params.dragon then
-            self:OpenOneDragonItemDialog(item,params.dragon)
-        else
-            self:OpenIncreaseDragonExpOrHp(item)
-        end
-    elseif item_type == "chest" then
-        self:OpenChestDialog(item)
-    elseif item_type == "vipActive" then
-        self:OpenVipActive(item)
-    elseif item_type == "buff" or item:Category() == Item.CATEGORY.BUFF then
-        self:OpenBuffDialog(item)
-    elseif item_type == "resource" or item:Category() == Item.CATEGORY.RESOURCE then
-        self:OpenResourceDialog(item)
-    else
-        self:OpenNormalDialog(params.item)
-    end
-end
+
 function WidgetUseItems:GetItemByType(item_type,params)
     local im = ItemManager
     local item
@@ -95,6 +65,39 @@ function WidgetUseItems:GetItemByType(item_type,params)
     end
     return item
 end
+function WidgetUseItems:Create(params)
+    local item_type = ITEMS_TYPE[params.item_type] or string.split(params.item:Name(), "_")[1]
+    local item = params.item or self:GetItemByType(item_type,params)
+    local dialog
+    if item_type == "changePlayerName"
+        or item_type == "changeCityName"
+    then
+        dialog = self:OpenChangePlayerOrCityName(item)
+    elseif item_type == "heroBlood" then
+        dialog = self:OpenHeroBloodDialog(item)
+    elseif item_type == "stamina" then
+        dialog = self:OpenStrengthDialog(item)
+    elseif item_type == "dragonExp"
+        or item_type == "dragonHp"
+    then
+        if params.dragon then
+            dialog = self:OpenOneDragonItemDialog(item,params.dragon)
+        else
+            dialog = self:OpenIncreaseDragonExpOrHp(item)
+        end
+    elseif item_type == "chest" then
+        dialog = self:OpenChestDialog(item)
+    elseif item_type == "vipActive" then
+        dialog = self:OpenVipActive(item)
+    elseif item_type == "buff" or item:Category() == Item.CATEGORY.BUFF then
+        dialog = self:OpenBuffDialog(item)
+    elseif item_type == "resource" or item:Category() == Item.CATEGORY.RESOURCE then
+        dialog = self:OpenResourceDialog(item)
+    else
+        dialog = self:OpenNormalDialog(params.item)
+    end
+    return dialog
+end
 function WidgetUseItems:OpenChangePlayerOrCityName(item)
     local title , eidtbox_holder, request_key
     if item:Name()== "changePlayerName" then
@@ -106,7 +109,7 @@ function WidgetUseItems:OpenChangePlayerOrCityName(item)
         eidtbox_holder=_("输入新的城市名称")
         request_key= "cityName"
     end
-    local dialog = WidgetPopDialog.new(264,title,window.top-230):addToCurrentScene()
+    local dialog = WidgetPopDialog.new(264,title,window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
     local editbox = cc.ui.UIInput.new({
@@ -147,10 +150,11 @@ function WidgetUseItems:OpenChangePlayerOrCityName(item)
         end)
     end
     ):addTo(body):align(display.CENTER,size.width/2,90)
+    return dialog
 end
 function WidgetUseItems:OpenBuffDialog( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(#same_items * 138 + 100,_("激活增益道具"),window.top-230):addToCurrentScene()
+    local dialog = WidgetPopDialog.new(#same_items * 138 + 100,_("激活增益道具"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
@@ -202,10 +206,11 @@ function WidgetUseItems:OpenBuffDialog( item )
     dialog:addCloseCleanFunc(function ()
         ItemManager:RemoveListenerOnType(dialog,ItemManager.LISTEN_TYPE.OnItemEventTimer)
     end)
+    return dialog
 end
 function WidgetUseItems:OpenResourceDialog( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(4 * 138 +40,_("增益道具"),window.top-230):addToCurrentScene()
+    local dialog = WidgetPopDialog.new(4 * 138 +40,_("增益道具"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
@@ -234,10 +239,11 @@ function WidgetUseItems:OpenResourceDialog( item )
         list:addItem(list_item)
     end
     list:reload()
+    return dialog
 end
 function WidgetUseItems:OpenHeroBloodDialog( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(#same_items * 138 +110,_("英雄之血"),window.top-230):addToCurrentScene()
+    local dialog = WidgetPopDialog.new(#same_items * 138 +110,_("英雄之血"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
     local blood_bg = display.newScale9Sprite("back_ground_398x97.png",size.width/2,size.height-50,cc.size(556,58),cc.rect(10,10,378,77))
@@ -269,11 +275,12 @@ function WidgetUseItems:OpenHeroBloodDialog( item )
             end
         ):addTo(body):align(display.CENTER,size.width/2,size.height - 160 - (i-1)*138)
     end
+    return dialog
 end
 function WidgetUseItems:OpenOneDragonItemDialog( item ,dragon)
     local same_items = ItemManager:GetSameTypeItems(item)
     local increase_type = string.split(item:Name(),"_")[1]
-    local dialog = WidgetPopDialog.new(#same_items*138+110,increase_type == "dragonHp" and _("增加龙的生命值") or _("增加龙的经验"),window.top-230):addToCurrentScene()
+    local dialog = WidgetPopDialog.new(#same_items*138+110,increase_type == "dragonHp" and _("增加龙的生命值") or _("增加龙的经验"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
     local blood_bg = display.newScale9Sprite("back_ground_398x97.png",size.width/2,size.height-50,cc.size(556,58),cc.rect(10,10,378,77))
@@ -307,10 +314,11 @@ function WidgetUseItems:OpenOneDragonItemDialog( item ,dragon)
             end
         ):addTo(body):align(display.CENTER,size.width/2,size.height - 160 - (i-1)*138)
     end
+    return dialog
 end
 function WidgetUseItems:OpenStrengthDialog( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(#same_items * 138 +110,_("探索体力值"),window.top-230):addToCurrentScene()
+    local dialog = WidgetPopDialog.new(#same_items * 138 +110,_("探索体力值"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
     local blood_bg = display.newScale9Sprite("back_ground_398x97.png",size.width/2,size.height-50,cc.size(556,58),cc.rect(10,10,378,77))
@@ -342,6 +350,7 @@ function WidgetUseItems:OpenStrengthDialog( item )
             end
         ):addTo(body):align(display.CENTER,size.width/2,size.height - 160 - (i-1)*138)
     end
+    return dialog
 end
 function WidgetUseItems:OpenIncreaseDragonExpOrHp( item )
     local increase_type = string.split(item:Name(),"_")[1]
@@ -431,7 +440,7 @@ function WidgetUseItems:OpenIncreaseDragonExpOrHp( item )
         return dragon_frame
     end
 
-    local dialog = WidgetPopDialog.new(192 + dragon_num*136,increase_type == "dragonHp" and _("增加龙的生命值") or _("增加龙的经验"),window.top-230):addToCurrentScene()
+    local dialog = WidgetPopDialog.new(192 + dragon_num*136,increase_type == "dragonHp" and _("增加龙的生命值") or _("增加龙的经验"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
@@ -495,10 +504,11 @@ function WidgetUseItems:OpenIncreaseDragonExpOrHp( item )
             end)
         end
     ):addTo(body):align(display.CENTER,size.width/2,size.height - 100)
+    return dialog
 end
 function WidgetUseItems:OpenChestDialog( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(#same_items * 138 +100,item:GetLocalizeName(),window.top-230):addToCurrentScene()
+    local dialog = WidgetPopDialog.new(#same_items * 138 +100,item:GetLocalizeName(),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
@@ -526,11 +536,12 @@ function WidgetUseItems:OpenChestDialog( item )
             end
         ):addTo(body):align(display.CENTER,size.width/2,size.height - 120 - (i-1)*138)
     end
+    return dialog
 end
 
 function WidgetUseItems:OpenNormalDialog( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(#same_items * 138 +100,item:GetLocalizeName(),window.top-230):addToCurrentScene()
+    local dialog = WidgetPopDialog.new(#same_items * 138 +100,item:GetLocalizeName(),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
@@ -548,10 +559,11 @@ function WidgetUseItems:OpenNormalDialog( item )
             end
         ):addTo(body):align(display.CENTER,size.width/2,size.height - 120 - (i-1)*138)
     end
+    return dialog
 end
 function WidgetUseItems:OpenVipActive( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(4 * 138 +40,_("激活VIP"),window.top-230):addToCurrentScene()
+    local dialog = WidgetPopDialog.new(4 * 138 +40,_("激活VIP"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
     -- 是否激活 vip
@@ -608,6 +620,7 @@ function WidgetUseItems:OpenVipActive( item )
         list:addItem(list_item)
     end
     list:reload()
+    return dialog
 end
 function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc)
     local body = display.newNode()

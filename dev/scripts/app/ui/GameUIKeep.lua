@@ -282,7 +282,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
 end
 
 function GameUIKeep:CreateModifyCityNameWindow()
-    WidgetUseItems.new({item_type = WidgetUseItems.USE_TYPE.CHANGE_CITY_NAME})
+    WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.CHANGE_CITY_NAME}):addToCurrentScene()
 end
 
 function GameUIKeep:CreateChangeTerrainWindow()

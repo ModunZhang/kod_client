@@ -269,9 +269,9 @@ function GameUIItems:CreateMyItem(items)
             }))
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
-                    WidgetUseItems.new({
+                    WidgetUseItems.new():Create({
                         item = items
-                    })
+                    }):addToCurrentScene()
                 end
             end)
             :align(display.RIGHT_BOTTOM, item_width-10, 15)
