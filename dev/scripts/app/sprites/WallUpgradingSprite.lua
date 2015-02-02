@@ -22,7 +22,7 @@ local offset_map = {
         [Orient.Y] = {-10, 49},
         [Orient.NEG_X] = {15, 49},
         [Orient.NEG_Y] = {-16, 49},
-        gate = {-38, 67}
+        gate = {-36, 66}
     },
 }
 function WallUpgradingSprite:GetWorldPosition()
