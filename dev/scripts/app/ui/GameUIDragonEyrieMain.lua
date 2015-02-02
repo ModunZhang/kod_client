@@ -490,10 +490,11 @@ function GameUIDragonEyrieMain:ChangeDragon(direction)
 	end
 end
 function GameUIDragonEyrieMain:OnHpItemUseButtonClicked()
-	local widgetUseItems = WidgetUseItems.new({
+	local widgetUseItems = WidgetUseItems.new():Create({
 		item_type = WidgetUseItems.USE_TYPE.DRAGON_EXP,
 		dragon = self:GetCurrentDragon()
 	})
+	widgetUseItems:addToCurrentScene()
 end
 
 --fte
