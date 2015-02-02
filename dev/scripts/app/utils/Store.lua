@@ -127,14 +127,15 @@ function Store.restore()
 end
 
 function Store.finishTransaction(transaction)
+    if type(transaction) == "string" then
+        transaction = Store.getTransactionWithIdentifier(transaction)
+    end
     if not checkCCStore() then return false end
 
     if not cc.storeProvider then
         printError("Store.finishTransaction() - store not init")
         return false
     end
-
-	print(type(transaction),type(transaction.transactionIdentifier))
     if type(transaction) ~= "table" or type(transaction.transactionIdentifier) ~= "string" then
         printError("Store.finishTransaction() - invalid transaction")
         return false
@@ -171,6 +172,14 @@ function Store.updateTransactionStates()
         return false
     end
     cc.storeProvider:updateTransactionStates()
+end
+--[[ 
+    构造一个Transaction
+]]--
+function Store.getTransactionWithIdentifier(identifier)
+    return {
+        transactionIdentifier = identifier
+    }
 end
 
 return Store
