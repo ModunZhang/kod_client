@@ -7,18 +7,42 @@ local WidgetPushButton = import(".WidgetPushButton")
 local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetPopDialog = import(".WidgetPopDialog")
 local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
+local Enum = import("..utils.Enum")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
 local Item = import("..entity.Item")
 
 local WidgetUseItems = class("WidgetUseItems")
+WidgetUseItems.USE_TYPE = Enum("CHANGE_PLAYER_NAME",
+    "CHANGE_CITY_NAME",
+    "HERO_BLOOD",
+    "STAMINA",
+    "DRAGON_EXP",
+    "DRAGON_HP",
+    "CHEST",
+    "VIP_ACTIVE",
+    "BUFF",
+    "RESOURCE"
+)
+local ITEMS_TYPE = {
+    "changePlayerName",
+    "changeCityName",
+    "heroBlood",
+    "stamina",
+    "dragonExp",
+    "dragonHp",
+    "chest",
+    "vipActive",
+    "buff",
+    "resource",
 
-function WidgetUseItems:ctor(item)
-    local item_name = item:Name()
-    print("item_name ==",item_name)
-    local item_type = string.split(item_name,"_")[1]
-    if item_name == "changePlayerName"
-        or item_name == "changeCityName"
+}
+
+function WidgetUseItems:ctor(params)
+    local item_type = ITEMS_TYPE[params.item_type] or string.split(params.item:Name(), "_")[1]
+    local item = params.item or self:GetItemByType(item_type,params)
+    if item_type == "changePlayerName"
+        or item_type == "changeCityName"
     then
         self:OpenChangePlayerOrCityName(item)
     elseif item_type == "heroBlood" then
@@ -28,20 +52,49 @@ function WidgetUseItems:ctor(item)
     elseif item_type == "dragonExp"
         or item_type == "dragonHp"
     then
-        self:OpenIncreaseDragonExpOrHp(item)
+        if params.dragon then
+            self:OpenOneDragonItemDialog(item,dragon)
+        else
+            self:OpenIncreaseDragonExpOrHp(item)
+        end
     elseif item_type == "chest" then
         self:OpenChestDialog(item)
     elseif item_type == "vipActive" then
         self:OpenVipActive(item)
-    elseif item:Category() == Item.CATEGORY.BUFF then
+    elseif item_type == "buff" or item:Category() == Item.CATEGORY.BUFF then
         self:OpenBuffDialog(item)
-    elseif item:Category() == Item.CATEGORY.RESOURCE then
+    elseif item_type == "resource" or item:Category() == Item.CATEGORY.RESOURCE then
         self:OpenResourceDialog(item)
     else
-        self:OpenNormalDialog(item)
+        self:OpenNormalDialog(params.item)
     end
 end
-
+function WidgetUseItems:GetItemByType(item_type,params)
+    local im = ItemManager
+    local item
+    if item_type == "changePlayerName"
+        or item_type == "changeCityName"
+    then
+        item = im:GetItemByName(item_type)
+    elseif item_type == "heroBlood" then
+        item = im:GetItemByName(item_type.."_1")
+    elseif item_type == "stamina" then
+        item = im:GetItemByName(item_type.."_1")
+    elseif item_type == "dragonExp"
+        or item_type == "dragonHp"
+    then
+        item = im:GetItemByName(item_type.."_1")
+    elseif item_type == "chest" then
+        item = im:GetItemByName(item_type.."_1")
+    elseif item_type == "vipActive" then
+        item = im:GetItemByName(item_type.."_1")
+    elseif item_type == "buff" then
+        item = im:GetItemByName(params.item_name)
+    elseif item_type == "resource" then
+        item = im:GetItemByName(params.item_name)
+    end
+    return item
+end
 function WidgetUseItems:OpenChangePlayerOrCityName(item)
     local title , eidtbox_holder, request_key
     if item:Name()== "changePlayerName" then
@@ -189,7 +242,7 @@ function WidgetUseItems:OpenHeroBloodDialog( item )
     local size = body:getContentSize()
     local blood_bg = display.newScale9Sprite("back_ground_398x97.png",size.width/2,size.height-50,cc.size(556,58),cc.rect(10,10,378,77))
         :addTo(body)
-    local blood_icon = display.newSprite("buff_tool.png"):addTo(blood_bg):align(display.CENTER, 40, blood_bg:getContentSize().height/2):scale(0.2)
+    -- local blood_icon = display.newSprite("buff_tool.png"):addTo(blood_bg):align(display.CENTER, 40, blood_bg:getContentSize().height/2):scale(0.2)
     UIKit:ttfLabel({
         text = _("英雄之血"),
         size = 22,
@@ -211,6 +264,44 @@ function WidgetUseItems:OpenHeroBloodDialog( item )
             function ()
                 local item_name = v:Name()
                 NetManager:getUseItemPromise(item_name,{}):next(function ()
+                    dialog:leftButtonClicked()
+                end)
+            end
+        ):addTo(body):align(display.CENTER,size.width/2,size.height - 160 - (i-1)*138)
+    end
+end
+function WidgetUseItems:OpenOneDragonItemDialog( item ,dragon)
+    local same_items = ItemManager:GetSameTypeItems(item)
+    local increase_type = string.split(item:Name(),"_")[1]
+    local dialog = WidgetPopDialog.new(192 + dragon_num*136,increase_type == "dragonHp" and _("增加龙的生命值") or _("增加龙的经验"),window.top-230):addToCurrentScene()
+    local body = dialog:GetBody()
+    local size = body:getContentSize()
+    local blood_bg = display.newScale9Sprite("back_ground_398x97.png",size.width/2,size.height-50,cc.size(556,58),cc.rect(10,10,378,77))
+        :addTo(body)
+    -- local blood_icon = display.newSprite("buff_tool.png"):addTo(blood_bg):align(display.CENTER, 40, blood_bg:getContentSize().height/2):scale(0.2)
+    UIKit:ttfLabel({
+        text = increase_type == "dragonHp" and _("生命值") or _("经验"),
+        size = 22,
+        color = 0x797154,
+    }):align(display.LEFT_CENTER,80,blood_bg:getContentSize().height/2)
+        :addTo(blood_bg)
+    UIKit:ttfLabel({
+        text = increase_type == "dragonHp" and dragon:Hp() or dragon:Exp(),
+        size = 22,
+        color = 0x28251d,
+    }):align(display.RIGHT_CENTER,blood_bg:getContentSize().width-40,blood_bg:getContentSize().height/2)
+        :addTo(blood_bg)
+    for i,v in ipairs(same_items) do
+        self:CreateItemBox(
+            v,
+            function ()
+                return true
+            end,
+            function ()
+                local item_name = item:Name()
+                NetManager:getUseItemPromise(item_name,{[item_name] = {
+                    dragonType = dragon:Type()
+                }}):next(function ()
                     dialog:leftButtonClicked()
                 end)
             end
@@ -487,7 +578,7 @@ function WidgetUseItems:OpenVipActive( item )
         end
     end
     dialog:addCloseCleanFunc(function ()
-	    User:RemoveListenerOnType(dialog, User.LISTEN_TYPE.VIP_EVENT)
+        User:RemoveListenerOnType(dialog, User.LISTEN_TYPE.VIP_EVENT)
     end)
 
     User:AddListenOnType(dialog, User.LISTEN_TYPE.VIP_EVENT)
@@ -606,6 +697,10 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc)
 end
 
 return WidgetUseItems
+
+
+
+
 
 
 

@@ -262,10 +262,10 @@ function GameUIResource:ChaiButtonAction( event )
         UIKit:showMessageDialog(_("提示"), _("正在建造或者升级小屋,不能拆除!"), function()end)
         return
     end
-    if tonumber(City:GetUser():GetGemResource():GetValue()) < 100 then
-        UIKit:showMessageDialog(_("提示"), _("宝石不足"), function()end)
-        return
-    end
+    -- if tonumber(City:GetUser():GetGemResource():GetValue()) < 100 then
+    --     UIKit:showMessageDialog(_("提示"), _("宝石不足"), function()end)
+    --     return
+    -- end
     local tile = self.city:GetTileWhichBuildingBelongs(self.building)
     local house_location = tile:GetBuildingLocation(self.building)
 

@@ -269,7 +269,9 @@ function GameUIItems:CreateMyItem(items)
             }))
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
-                    WidgetUseItems.new(items)
+                    WidgetUseItems.new({
+                        item = items
+                    })
                 end
             end)
             :align(display.RIGHT_BOTTOM, item_width-10, 15)
@@ -321,3 +323,4 @@ function GameUIItems:OnItemsChanged( changed_map )
     end
 end
 return GameUIItems
+
