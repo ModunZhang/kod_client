@@ -35,6 +35,7 @@ end
 
 function GameUIDragonEquipment:onEnter()
     GameUIDragonEquipment.super.onEnter(self)
+    UIKit:shadowLayer():addTo(self,-1)
 	  local backgroundImage = WidgetUIBackGround.new({height = BODY_HEIGHT}):addTo(self)
 	  self.background = backgroundImage:pos((display.width-backgroundImage:getContentSize().width)/2,display.height - backgroundImage:getContentSize().height - 80)
 	  local titleBar = display.newSprite("alliance_blue_title_600x42.png")
