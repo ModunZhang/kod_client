@@ -53,7 +53,7 @@ function WidgetUseItems:ctor(params)
         or item_type == "dragonHp"
     then
         if params.dragon then
-            self:OpenOneDragonItemDialog(item,dragon)
+            self:OpenOneDragonItemDialog(item,params.dragon)
         else
             self:OpenIncreaseDragonExpOrHp(item)
         end
