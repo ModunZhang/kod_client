@@ -45,7 +45,7 @@ end
 
 --获取技能的效果
 function DragonSkill:GetEffect()
-	return self:Level() * self:GetSkillConfig().effection
+	return self:Level() * self:GetSkillConfig().effectPerLevel
 end
 
 function DragonSkill:OnPropertyChange( ... )
