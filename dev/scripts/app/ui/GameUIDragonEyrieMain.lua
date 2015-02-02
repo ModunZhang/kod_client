@@ -11,6 +11,8 @@ local WidgetDragons = import("..widget.WidgetDragons")
 local DragonSprite = import("..sprites.DragonSprite")
 local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local WidgetUseItems = import("..widget.WidgetUseItems")
+
 function GameUIDragonEyrieMain:ctor(city,building)
 	GameUIDragonEyrieMain.super.ctor(self,city,_("龙巢"),building)
 	self.building = building
@@ -208,6 +210,9 @@ function GameUIDragonEyrieMain:CreateProgressTimer()
  	local add_button = cc.ui.UIPushButton.new({normal = "add_button_normal_50x50.png",pressed = "add_button_light_50x50.png"})
  		:addTo(bg)
  		:align(display.CENTER_RIGHT,bg:getContentSize().width+10,20)
+ 		:onButtonClicked(function()
+ 			self:OnHpItemUseButtonClicked()
+ 		end)
 	return bg,progressTimer
 end
 
@@ -483,9 +488,16 @@ function GameUIDragonEyrieMain:ChangeDragon(direction)
 		self.draongConteNode:Before()
 		self.isChanging = false
 	end
-	-- self:RefreshUI()
+end
+function GameUIDragonEyrieMain:OnHpItemUseButtonClicked()
+	local widgetUseItems = WidgetUseItems.new():Create({
+		item_type = WidgetUseItems.USE_TYPE.DRAGON_EXP,
+		dragon = self:GetCurrentDragon()
+	})
+	widgetUseItems:addToCurrentScene()
 end
 
+--fte
 function GameUIDragonEyrieMain:Find(type_)
 	if type_ == "dragon" then
 		return cocos_promise.defer(function()
