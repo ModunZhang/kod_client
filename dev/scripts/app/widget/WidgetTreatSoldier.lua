@@ -544,7 +544,7 @@ function WidgetTreatSoldier:OnCountChanged(count)
     local soldier_ui_config = self.soldier_ui_config
     local total_time = soldier_config.treatTime * count
     -- self.soldier_current_count:setString(string.format("%d", count))
-    self.upkeep:setString(string.format("%s%d", count > 0 and "-" or "", soldier_config.consumeFood * count))
+    self.upkeep:setString(string.format("%s%d", count > 0 and "-" or "", soldier_config.consumeFoodPerHour * count))
     self.treat_time:setString(GameUtils:formatTimeStyle1(total_time))
 
     local total_map = self.res_total_map == nil and {} or self.res_total_map

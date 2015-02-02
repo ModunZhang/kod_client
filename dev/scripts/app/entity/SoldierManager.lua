@@ -98,7 +98,7 @@ function SoldierManager:GetTotalUpkeep()
     for k, v in pairs(self.soldier_map) do
         local config_name = k.."_"..self:GetStarBySoldierType(k)
         local config = NORMAL[config_name] or SPECIAL[k]
-        total = total + config.consumeFood * v
+        total = total + config.consumeFoodPerHour * v
     end
     return total
 end

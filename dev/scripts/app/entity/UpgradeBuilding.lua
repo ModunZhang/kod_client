@@ -203,7 +203,11 @@ function UpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id,
 
     -- 更新等级信息
     if user_data.buildings then
+        print("location_id=",location_id)
         local location = user_data.buildings["location_"..location_id]
+        if not location then
+            return
+        end
         if sub_location_id then
             level = get_house_info_from_houses_by_id(location.houses, sub_location_id).level
         else
