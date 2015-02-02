@@ -5,6 +5,8 @@
 local GameUIResource = UIKit:createUIClass("GameUIResource","GameUIUpgradeBuilding")
 local ResourceManager = import("..entity.ResourceManager")
 local WidgetInfoWithTitle = import("..widget.WidgetInfoWithTitle")
+local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
+local WidgetMoveHouse = import("..widget.WidgetMoveHouse")
 local City = City
 local MAX_COUNT_DECORATOR = 5
 local UIListView = import(".UIListView")
@@ -84,6 +86,30 @@ function GameUIResource:CreateInfomation()
         :onButtonClicked(function(event)
             self:ChaiButtonAction(event)
         end)
+
+    local moveButton = cc.ui.UIPushButton.new({normal = "resource_butter_red.png",pressed = "resource_butter_red_highlight.png"}, {scale9 = false})
+        :addTo(infomationLayer)
+        :align(display.TOP_RIGHT, window.right-60, iconBg:getPositionY() - 600)
+        :setButtonLabel("normal",  cc.ui.UILabel.new({
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = _("移动"),
+            font = UIKit:getFontFilePath(),
+            size = 22,
+            color = UIKit:hex2c3b(0xffedae),
+        }))
+        :setButtonLabelOffset(0, 2)
+        :onButtonClicked(function(event)
+            local item = ItemManager:GetItemByName("movingConstruction")
+            if item:Count()<1 then
+                FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                    :SetPopMessage(_("没有建筑移动道具"))
+                    :AddToCurrentScene()
+            else
+                WidgetMoveHouse.new(self.building)
+                self:leftButtonClicked()
+            end
+        end)
+
     local fistLine = display.newScale9Sprite("dividing_line.png")
         :align(display.BOTTOM_LEFT, titleLable:getPositionX(),lvBg:getPositionY()+lvBg:getContentSize().height-15)
         :addTo(infomationLayer)
@@ -262,18 +288,27 @@ function GameUIResource:ChaiButtonAction( event )
         UIKit:showMessageDialog(_("提示"), _("正在建造或者升级小屋,不能拆除!"), function()end)
         return
     end
-    -- if tonumber(City:GetUser():GetGemResource():GetValue()) < 100 then
-    --     UIKit:showMessageDialog(_("提示"), _("宝石不足"), function()end)
-    --     return
-    -- end
-    local tile = self.city:GetTileWhichBuildingBelongs(self.building)
-    local house_location = tile:GetBuildingLocation(self.building)
+  
+    local item = ItemManager:GetItemByName("torch")
 
-    NetManager:getDestroyHouseByLocationPromise(tile.location_id, house_location)
-        :catch(function(err)
-            dump(err:reason())
+    if item:Count()<1 then
+        FullScreenPopDialogUI.new():SetTitle(_("提示"))
+            :SetPopMessage(_("没有拆除建筑道具"))
+            :AddToCurrentScene()
+    else
+        local tile = self.city:GetTileWhichBuildingBelongs(self.building)
+        local house_location = tile:GetBuildingLocation(self.building)
+
+        self:leftButtonClicked(nil)
+        NetManager:getUseItemPromise("torch",{
+            torch = {
+                buildingLocation = tile.location_id,
+                houseLocation = house_location,
+            }
+        }):next(function ()
+            self:leftButtonClicked()
         end)
-    self:leftButtonClicked(nil)
+    end
 end
 
 function GameUIResource:onMoveOutStage()
@@ -290,5 +325,9 @@ function GameUIResource:OnResourceChanged(resource_manager)
 end
 
 return GameUIResource
+
+
+
+
 
 

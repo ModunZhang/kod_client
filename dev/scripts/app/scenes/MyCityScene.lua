@@ -1,6 +1,7 @@
 local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local GameUIWatchTowerTroopDetail = import("..ui.GameUIWatchTowerTroopDetail")
+local WidgetMoveHouse = import("..widget.WidgetMoveHouse")
 local TutorialLayer = import("..ui.TutorialLayer")
 local GameUINpc = import("..ui.GameUINpc")
 local Arrow = import("..ui.Arrow")
@@ -38,6 +39,7 @@ function MyCityScene:LeaveEditMode()
     MyCityScene.super.LeaveEditMode(self)
     self:GetSceneUILayer():LeaveEditMode()
     self:GetHomePage():show()
+    self:GetSceneUILayer():removeChildByTag(WidgetMoveHouse.ADD_TAG, true)
 end
 function MyCityScene:GetArrowTutorial()
     if not self.arrow_tutorial then
@@ -300,7 +302,7 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
 
         if building:GetEntity():GetType() == "ruins" then
             if self:IsEditMode() then
-                dump(building:GetEntity())
+                self:GetSceneUILayer():getChildByTag(WidgetMoveHouse.ADD_TAG):SetMoveToRuins(building)
             else
                 UIKit:newGameUI('GameUIBuild', city, building:GetEntity()):addToScene(self, true)
             end
@@ -345,11 +347,11 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
             UIKit:newGameUI('GameUIWall', city, building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "tower" then
             UIKit:newGameUI('GameUITower', city, building:GetEntity()):addToScene(self, true)
-        elseif building:GetEntity():GetType() == "trainingGround" 
-            or building:GetEntity():GetType() == "stable" 
-            or building:GetEntity():GetType() == "hunterHall" 
-            or building:GetEntity():GetType() == "workshop" 
-            then
+        elseif building:GetEntity():GetType() == "trainingGround"
+            or building:GetEntity():GetType() == "stable"
+            or building:GetEntity():GetType() == "hunterHall"
+            or building:GetEntity():GetType() == "workshop"
+        then
             UIKit:newGameUI('GameUIMilitaryTechBuilding', city, building:GetEntity()):addToScene(self, true)
         end
     elseif self:IsEditMode() then
@@ -357,6 +359,8 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     end
 end
 return MyCityScene
+
+
 
 
 

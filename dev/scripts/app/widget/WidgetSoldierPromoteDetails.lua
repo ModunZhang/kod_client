@@ -191,7 +191,7 @@ function WidgetSoldierPromoteDetails:onEnter()
         },
         {
             {
-                text = "-"..now_config.consumeFood,
+                text = "-"..now_config.consumeFoodPerHour,
                 size = 22,
                 color = 0x403c2f,
             },
@@ -201,7 +201,7 @@ function WidgetSoldierPromoteDetails:onEnter()
                 color = 0x675f45,
             },
             {
-                text = "-"..next_config.consumeFood,
+                text = "-"..next_config.consumeFoodPerHour,
                 size = 22,
                 color = 0x700E00,
             },

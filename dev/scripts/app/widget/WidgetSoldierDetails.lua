@@ -231,7 +231,7 @@ function WidgetSoldierDetails:InitSoldierAttr()
         },
         {
              _("维护费"),
-             sc.consumeFood..""
+             sc.consumeFoodPerHour..""
         },
     }
 

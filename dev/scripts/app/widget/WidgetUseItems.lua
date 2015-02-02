@@ -273,7 +273,7 @@ end
 function WidgetUseItems:OpenOneDragonItemDialog( item ,dragon)
     local same_items = ItemManager:GetSameTypeItems(item)
     local increase_type = string.split(item:Name(),"_")[1]
-    local dialog = WidgetPopDialog.new(192 + dragon_num*136,increase_type == "dragonHp" and _("增加龙的生命值") or _("增加龙的经验"),window.top-230):addToCurrentScene()
+    local dialog = WidgetPopDialog.new(#same_items*138+110,increase_type == "dragonHp" and _("增加龙的生命值") or _("增加龙的经验"),window.top-230):addToCurrentScene()
     local body = dialog:GetBody()
     local size = body:getContentSize()
     local blood_bg = display.newScale9Sprite("back_ground_398x97.png",size.width/2,size.height-50,cc.size(556,58),cc.rect(10,10,378,77))
