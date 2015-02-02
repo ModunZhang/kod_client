@@ -199,8 +199,8 @@ function WidgetEventTabButtons:CreateTabButtons()
 
 
     local icon_map = {
-        { "material", "battle_39x38.png" },
         { "technology", "tech_39x38.png" },
+        { "material", "battle_39x38.png" },
         { "soldier", "soldier_39x38.png" },
         { "build", "build_39x38.png" },
     }
