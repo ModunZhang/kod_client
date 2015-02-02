@@ -24,9 +24,20 @@ function MyCityScene:onEnter()
 
     self:GetCity():AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
     self:GetCity():GetUser():AddListenOnType(self, User.LISTEN_TYPE.BASIC)
+    -- self:EnterEditMode()
 end
 function MyCityScene:onExit()
     MyCityScene.super.onExit(self)
+end
+function MyCityScene:EnterEditMode()
+    MyCityScene.super.EnterEditMode(self)
+    self:GetSceneUILayer():EnterEditMode()
+    self:GetHomePage():hide()
+end
+function MyCityScene:LeaveEditMode()
+    MyCityScene.super.LeaveEditMode(self)
+    self:GetSceneUILayer():LeaveEditMode()
+    self:GetHomePage():show()
 end
 function MyCityScene:GetArrowTutorial()
     if not self.arrow_tutorial then
@@ -287,10 +298,12 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
             return
         end
 
-
-
         if building:GetEntity():GetType() == "ruins" then
-            UIKit:newGameUI('GameUIBuild', city, building:GetEntity()):addToScene(self, true)
+            if self:IsEditMode() then
+                dump(building:GetEntity())
+            else
+                UIKit:newGameUI('GameUIBuild', city, building:GetEntity()):addToScene(self, true)
+            end
         elseif building:GetEntity():GetType() == "keep" then
             self._keep_page = UIKit:newGameUI('GameUIKeep',city,building:GetEntity())
             self._keep_page:addToScene(self, true)
@@ -339,10 +352,11 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
             then
             UIKit:newGameUI('GameUIMilitaryTechBuilding', city, building:GetEntity()):addToScene(self, true)
         end
+    elseif self:IsEditMode() then
+        self:LeaveEditMode()
     end
 end
 return MyCityScene
-
 
 
 

@@ -2,6 +2,7 @@ local Sprite = import(".Sprite")
 local TileSprite = class("TileSprite", Sprite)
 local random = math.random
 function TileSprite:ctor(city_layer, entity, x, y)
+    self.png_index = random(2)
     TileSprite.super.ctor(self, city_layer, entity, x, y)
     if entity:NeedWalls() then
         self:hide()
@@ -14,13 +15,6 @@ end
 function TileSprite:GetSpriteFile()
     local tile = self:GetEntity()
     local x, y, city = tile.x, tile.y, tile.city
-    -- 路的地块
-    -- if x == 2 then
-    --     return string.format("road_%d_%s.png", y - city:GetTileFaceToGate().y, self:GetMapLayer():Terrain())
-    -- end
-    if not self.png_index then
-        self.png_index = random(2)
-    end
     return string.format("unlock_tile_%d_%s.png", self.png_index, self:GetMapLayer():Terrain())
 end
 -- function TileSprite:GetSpriteOffset()
