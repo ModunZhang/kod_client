@@ -58,8 +58,8 @@ function GameUIHome:onEnter()
     self.event_tab = WidgetEventTabButtons.new(self.city, ratio)
     local rect1 = self.chat_bg:getCascadeBoundingBox()
     local rect2 = self.event_tab:getCascadeBoundingBox()
-    local x, y = rect1.x + 2 * ratio, rect1.y + rect1.height - 2 * ratio
-    self.event_tab:addTo(self):pos(x, y + 1)
+    local x, y = rect1.x, rect1.y + rect1.height - 2 * ratio
+    self.event_tab:addTo(self):pos(x, y)
 
     self:RefreshData()
     city:GetResourceManager():AddObserver(self)
@@ -67,6 +67,11 @@ function GameUIHome:onEnter()
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     User:AddListenOnType(self, User.LISTEN_TYPE.BASIC)
+
+
+    -- local back = cc.ui.UIImage.new("tab_background_640x106.png", {scale9 = true,
+    --     capInsets = cc.rect(2, 2, 640 - 4, 106 - 4)
+    -- }):align(display.LEFT_BOTTOM, 40, display.cy):setLayoutSize(640, 50):addTo(self,100)
 
 end
 
@@ -147,7 +152,7 @@ function GameUIHome:CreateTop()
 
 
     -- 玩家名字背景加文字
-    local ox = 155
+    local ox = 159
     local name_bg = display.newSprite("home/player_name_bg.png"):addTo(top_bg)
         :align(display.TOP_LEFT, ox, top_bg:getContentSize().height-10)
     self.name_label = cc.ui.UILabel.new({
@@ -156,10 +161,10 @@ function GameUIHome:CreateTop()
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
         color = UIKit:hex2c3b(0xf3f0b6)
-    }):addTo(name_bg):align(display.LEFT_CENTER, 10, name_bg:getContentSize().height/2 + 3)
+    }):addTo(name_bg):align(display.LEFT_CENTER, 14, name_bg:getContentSize().height/2 + 3)
 
     -- 玩家战斗值图片
-    display.newSprite("home/power.png"):addTo(top_bg):pos(ox + 14, 60)
+    display.newSprite("home/power.png"):addTo(top_bg):pos(ox + 20, 65)
 
     -- 玩家战斗值文字
     UIKit:ttfLabel({
@@ -167,7 +172,7 @@ function GameUIHome:CreateTop()
         size = 14,
         color = 0x9a946b,
         shadow = true
-    }):addTo(top_bg):align(display.LEFT_CENTER, ox + 24, 60)
+    }):addTo(top_bg):align(display.LEFT_CENTER, ox + 30, 65)
 
     -- 玩家战斗值数字
     self.power_label = UIKit:ttfLabel({
@@ -175,7 +180,7 @@ function GameUIHome:CreateTop()
         size = 20,
         color = 0xf3f0b6,
         shadow = true
-    }):addTo(top_bg):align(display.LEFT_CENTER, ox + 10, 40)
+    }):addTo(top_bg):align(display.LEFT_CENTER, ox + 14, 42)
 
 
 
@@ -239,7 +244,7 @@ function GameUIHome:CreateTop()
                 UIKit:newGameUI('GameUIVip', City,"VIP"):addToCurrentScene(true)
             end
         end)
-    self.vip_level = display.newNode():addTo(vip_btn):pos(0, 10):scale(0.8)
+    self.vip_level = display.newNode():addTo(vip_btn):pos(-3, 15):scale(0.8)
 
 
 
@@ -310,7 +315,7 @@ function GameUIHome:CreateBottom()
 
     -- 聊天背景
     local chat_bg = display.newSprite("chat_background.png")
-        :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-10)
+        :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-11)
         :addTo(bottom_bg)
     cc.ui.UIImage.new("home/chat_btn.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width-60, 0)
     local index_1 = display.newSprite("chat_page_index_1.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2-10,chat_bg:getContentSize().height-10)

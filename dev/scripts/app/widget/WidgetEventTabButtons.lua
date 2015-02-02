@@ -6,7 +6,7 @@ local WidgetTab = import(".WidgetTab")
 local timer = app.timer
 local WIDGET_WIDTH = 640
 local WIDGET_HEIGHT = 300
-local TAB_HEIGHT = 48
+local TAB_HEIGHT = 42
 local WidgetEventTabButtons = class("WidgetEventTabButtons", function()
     local rect = cc.rect(0, 0, WIDGET_WIDTH, WIDGET_HEIGHT + TAB_HEIGHT)
     local node = display.newClippingRegionNode(rect)
@@ -182,7 +182,7 @@ end
 -- 构造ui
 function WidgetEventTabButtons:CreateTabButtons()
     local node = display.newNode()
-    display.newSprite("tab_background_578x50.png"):addTo(node):align(display.LEFT_CENTER, 0, 25)
+    display.newSprite("tab_background_578x50.png"):addTo(node):align(display.LEFT_BOTTOM)
     local origin_x = 138 * 4 + 28
     -- hide
     local btn = cc.ui.UIPushButton.new({normal = "hide_btn_up.png",
@@ -205,7 +205,7 @@ function WidgetEventTabButtons:CreateTabButtons()
         { "build", "build_39x38.png" },
     }
     local tab_map = {}
-    origin_x = origin_x - 2
+    origin_x = origin_x - 4
     for i, v in ipairs(icon_map) do
         local tab_type = v[1]
         local tab_png = v[2]
@@ -214,15 +214,18 @@ function WidgetEventTabButtons:CreateTabButtons()
             off = "tab_button_up_142x42.png",
             tab = tab_png,
         }, 142, TAB_HEIGHT)
-            :addTo(node):align(display.LEFT_BOTTOM,origin_x + (i - 5) * (142 + 2), 0)
+            :addTo(node):align(display.LEFT_BOTTOM,origin_x + (i - 5) * (142 + 1), 4)
             :OnTabPress(handler(self, self.OnTabClicked))
             :EnableTag(true):SetActive(0, 1)
+            -- if i <= 3 then
+            --     tab_map[tab_type]:hide()
+            -- end
     end
     return node, tab_map
 end
 function WidgetEventTabButtons:CreateBackGround()
     local back = cc.ui.UIImage.new("tab_background_640x106.png", {scale9 = true,
-        capInsets = cc.rect(0, 0, WIDGET_WIDTH , 100 - 20)
+        capInsets = cc.rect(2, 2, WIDGET_WIDTH - 4, 106 - 4)
     }):align(display.LEFT_BOTTOM):setLayoutSize(WIDGET_WIDTH, 50)
     return back
 end
