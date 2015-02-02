@@ -64,6 +64,24 @@ function CityLayer:GetClickedObject(world_x, world_y)
     table.sort(clicked_list.sprite_clicked, function(a, b)
         return a:getLocalZOrder() > b:getLocalZOrder()
     end)
+    if self:IsEditMode() then
+        local logic_clicked = clicked_list.logic_clicked
+        while #logic_clicked > 0 do
+            if logic_clicked[1]:GetEntity():GetType() == "ruins" then
+                break
+            else
+                table.remove(logic_clicked, 1)
+            end
+        end
+        local sprite_clicked = clicked_list.sprite_clicked
+        while #sprite_clicked > 0 do
+            if sprite_clicked[1]:GetEntity():GetType() == "ruins" then
+                break
+            else
+                table.remove(sprite_clicked, 1)
+            end
+        end 
+    end
     return clicked_list.logic_clicked[1] or clicked_list.sprite_clicked[1]
 end
 function CityLayer:OnTileLocked(city)
@@ -366,6 +384,26 @@ function CityLayer:InitWithCity(city)
     self:scheduleUpdate()
 end
 ---
+function CityLayer:EnterEditMode()
+    table.foreach(self.ruins, function(_, v)
+        v:EnterEditMode()
+    end)
+end
+function CityLayer:LeaveEditMode()
+    table.foreach(self.ruins, function(_, v)
+        v:LeaveEditMode()
+    end)
+end
+function CityLayer:IsEditMode()
+    local is_edit_mode = false
+    table.foreach(self.ruins, function(_, v)
+        if v:IsEditMode() then
+            is_edit_mode = true
+            return true
+        end
+    end)
+    return is_edit_mode
+end
 function CityLayer:UpdateAllDynamicWithCity(city)
     self:UpdateLockedTilesWithCity(city)
     self:UpdateTilesWithCity(city)

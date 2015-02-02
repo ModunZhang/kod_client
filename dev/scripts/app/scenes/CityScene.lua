@@ -29,7 +29,7 @@ function CityScene:onEnter()
     self:GetSceneLayer():ZoomTo(1)
 
     -- local city = self.city
-    
+
 
     -- local ai_create_house_array = {
     --     "woodcutter",
@@ -196,6 +196,18 @@ function CityScene:CreateSceneUILayer()
     function scene_ui_layer:IteratorLockButtons(func)
         table.foreach(self.lock_buttons, func)
     end
+    function scene_ui_layer:EnterEditMode()
+        table.foreach(self.lock_buttons, function(_, v)
+            v:hide()
+        end)
+        self.levelup_node:hide()
+    end
+    function scene_ui_layer:LeaveEditMode()
+        table.foreach(self.lock_buttons, function(_, v)
+            v:show()
+        end)
+        self.levelup_node:show()
+    end
     scene_ui_layer:Init()
     return scene_ui_layer
 end
@@ -263,6 +275,15 @@ function CityScene:CreateTutorialLayer()
     end
     return layer:Reset()
 end
+function CityScene:EnterEditMode()
+    self:GetSceneLayer():EnterEditMode()
+end
+function CityScene:LeaveEditMode()
+    self:GetSceneLayer():LeaveEditMode()
+end
+function CityScene:IsEditMode()
+    return self:GetSceneLayer():IsEditMode()
+end
 --- callback override
 function CityScene:OnCreateDecoratorSprite(building_sprite)
 end
@@ -328,11 +349,14 @@ function CityScene:OnTouchMove(pre_x, pre_y, x, y)
     CityScene.super.OnTouchMove(self, pre_x, pre_y, x, y)
 end
 function CityScene:OnTouchClicked(pre_x, pre_y, x, y)
-    -- local building = self:GetSceneLayer():GetClickedObject(x, y)
-    
+-- local building = self:GetSceneLayer():GetClickedObject(x, y)
+
 end
 
 
+
+
 return CityScene
+
 
 
