@@ -40,6 +40,11 @@ CONFIG_REMOTE_SERVER = {
         name = "gate-server-1"
     },
 }
+-- app store url
+CONFIG_APP_URL = {
+    ios = "https://batcat.sinaapp.com/ad_hoc/build-index.html",
+    android = "https://batcat.sinaapp.com/ad_hoc/build-index.html"
+}
 
 CONFIG_IS_LOCAL = false
 CONFIG_IS_DEBUG = true
