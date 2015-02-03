@@ -199,6 +199,7 @@ onGetAttackMarchEventDetail_callbacks = {}
 onGetHelpDefenceMarchEventDetail_callbacks = {}
 onGetHelpDefenceTroopDetail_callbacks = {}
 onGetSellItemsSuccess_callbacks = {}
+onAddPlayerBillingDataSuccess_callbacks = {}
 function NetManager:addOnSearchAlliancesSuccessListener()
     self:addEventListener("onSearchAlliancesSuccess", function(success, msg)
         if success then
@@ -382,32 +383,29 @@ function NetManager:addOnAllChatListener()
 end
 function NetManager:addOnBuildingLevelUpListener()
     self:addEventListener("onBuildingLevelUp", function(success, msg)
-        -- if success then
-        --     local buildingName = Localize.getBuildingLocalizedKeyByBuildingType(msg.buildingType)
-        --     GameGlobalUI:showTips(_("建筑升级完成"),string.format('%s(LV %d)',_(buildingName),msg.level))
-        -- end
-        end)
+        if success then
+            GameGlobalUI:showBuildingLevelUp(msg)
+        end
+    end)
 end
 function NetManager:addOnHouseLevelUpListener()
     self:addEventListener("onHouseLevelUp", function(success, msg)
-        -- if success then
-        --     local houseName = Localize.getHouseLocalizedKeyByBuildingType(msg.houseType)
-        --     GameGlobalUI:showTips(_("小屋升级完成"),string.format('%s(LV %d)',_(houseName),msg.level))
-        -- end
-        end)
+        if success then
+            GameGlobalUI:showHouseLevelUp(msg)
+        end
+    end)
 end
 function NetManager:addOnTowerLevelUpListener()
     self:addEventListener("onTowerLevelUp", function(success, msg)
-        -- if success then
-        --     GameGlobalUI:showTips(_("城墙升级完成"),string.format('LV %d',msg.level))
-        -- end
-        end)
+        if success then
+            GameGlobalUI:showTips(_("城墙升级完成"),string.format('LV %d',msg.level))
+        end
+    end)
 end
 function NetManager:addOnWallLevelUp()
     self:addEventListener("onWallLevelUp", function(success, msg)
         if success then
-        -- local buildingName = Localize.getBuildingLocalizedKeyByBuildingType(msg.buildingType)
-        -- GameGlobalUI:showTips(_("建筑升级完成"),string.format('%s(LV %d)',_(buildingName),msg.level))
+            GameGlobalUI:showWallLevelUp(msg)
         end
     end)
 end
@@ -471,7 +469,18 @@ function NetManager:addOnGetHelpDefenceTroopDetail()
         end
     end)
 end
-
+function NetManager:addOnAddPlayerBillingDataSuccess()
+    self:addEventListener("onAddPlayerBillingDataSuccess", function(success, msg)
+        if success then
+            assert(#onAddPlayerBillingDataSuccess_callbacks <= 1, "重复addPlayerBillingData请求过多了!")
+            local callback = onAddPlayerBillingDataSuccess_callbacks[1]
+            if type(callback) == "function" then
+                callback(success, msg)
+            end
+            onAddPlayerBillingDataSuccess_callbacks = {}
+        end
+    end)
+end
 --
 --
 ------------------------------------------------------------------------------------------------
@@ -566,6 +575,7 @@ function NetManager:getConnectLogicServerPromise()
         self:addOnGetAttackMarchEventDetail()
         self:addOnGetHelpDefenceMarchEventDetail()
         self:addOnGetHelpDefenceTroopDetail()
+        self:addOnAddPlayerBillingDataSuccess()
     end)
 end
 local function getOpenUDID()
@@ -658,6 +668,10 @@ local function get_gethelpdefencemarcheventdetail_callback()
 end
 local function get_gethelpdefencetroopdetail_callback()
     return  get_callback_promise(onGetHelpDefenceTroopDetail_callbacks, "获取协防事件数据失败!")
+end
+
+local function get_addplayerbillingdata_callback()
+    return  get_callback_promise(onAddPlayerBillingDataSuccess_callbacks, "上传IAP信息失败!") 
 end
 -- 个人修改地形
 local function get_changeTerrain_promise(terrain)
@@ -1490,6 +1504,16 @@ function NetManager:getBuyAllianceItemPromise(itemName,count)
             count = count,
         },
         "购买联盟商店的道具失败!"),get_alliancedata_callback()):next(get_response_msg)
+end
+--玩家内购
+--TODO:
+function NetManager:getVerifyIAPPromise(transactionId,receiptData)
+    return promise.all(get_none_blocking_request_promise("logic.playerHandler.addPlayerBillingData",
+        {
+            transactionId=transactionId,receiptData=receiptData
+        }
+        ,"玩家内购失败"),
+    get_addplayerbillingdata_callback()):next(get_response_msg)
 end
 
 ----------------------------------------------------------------------------------------------------------------
