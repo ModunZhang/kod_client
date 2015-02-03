@@ -11,7 +11,6 @@ require("app.utils.UIKit")
 require("app.utils.window")
 require("app.service.NetManager")
 require("app.service.DataManager")
-import('app.ui.GameGlobalUIUtils')
 
 local Store = import(".utils.Store")
 local GameDefautlt = import("app.utils.GameDefautlt")

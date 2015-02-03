@@ -382,32 +382,29 @@ function NetManager:addOnAllChatListener()
 end
 function NetManager:addOnBuildingLevelUpListener()
     self:addEventListener("onBuildingLevelUp", function(success, msg)
-        -- if success then
-        --     local buildingName = Localize.getBuildingLocalizedKeyByBuildingType(msg.buildingType)
-        --     GameGlobalUI:showTips(_("建筑升级完成"),string.format('%s(LV %d)',_(buildingName),msg.level))
-        -- end
-        end)
+        if success then
+            GameGlobalUI:showBuildingLevelUp(msg)
+        end
+    end)
 end
 function NetManager:addOnHouseLevelUpListener()
     self:addEventListener("onHouseLevelUp", function(success, msg)
-        -- if success then
-        --     local houseName = Localize.getHouseLocalizedKeyByBuildingType(msg.houseType)
-        --     GameGlobalUI:showTips(_("小屋升级完成"),string.format('%s(LV %d)',_(houseName),msg.level))
-        -- end
-        end)
+        if success then
+            GameGlobalUI:showHouseLevelUp(msg)
+        end
+    end)
 end
 function NetManager:addOnTowerLevelUpListener()
     self:addEventListener("onTowerLevelUp", function(success, msg)
-        -- if success then
-        --     GameGlobalUI:showTips(_("城墙升级完成"),string.format('LV %d',msg.level))
-        -- end
-        end)
+        if success then
+            GameGlobalUI:showTips(_("城墙升级完成"),string.format('LV %d',msg.level))
+        end
+    end)
 end
 function NetManager:addOnWallLevelUp()
     self:addEventListener("onWallLevelUp", function(success, msg)
         if success then
-        -- local buildingName = Localize.getBuildingLocalizedKeyByBuildingType(msg.buildingType)
-        -- GameGlobalUI:showTips(_("建筑升级完成"),string.format('%s(LV %d)',_(buildingName),msg.level))
+            GameGlobalUI:showWallLevelUp(msg)
         end
     end)
 end
