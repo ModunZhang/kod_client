@@ -20,6 +20,7 @@ WidgetUseItems.USE_TYPE = Enum("CHANGE_PLAYER_NAME",
     "DRAGON_EXP",
     "DRAGON_HP",
     "CHEST",
+    "VIP_POINT",
     "VIP_ACTIVE",
     "BUFF",
     "RESOURCE"
@@ -32,6 +33,7 @@ local ITEMS_TYPE = {
     "dragonExp",
     "dragonHp",
     "chest",
+    "vipPoint",
     "vipActive",
     "buff",
     "resource",
@@ -57,6 +59,8 @@ function WidgetUseItems:GetItemByType(item_type,params)
     elseif item_type == "chest" then
         item = im:GetItemByName(item_type.."_1")
     elseif item_type == "vipActive" then
+        item = im:GetItemByName(item_type.."_1")
+    elseif item_type == "vipPoint" then
         item = im:GetItemByName(item_type.."_1")
     elseif item_type == "buff" then
         item = im:GetItemByName(params.item_name)
@@ -87,6 +91,8 @@ function WidgetUseItems:Create(params)
         end
     elseif item_type == "chest" then
         dialog = self:OpenChestDialog(item)
+    elseif item_type == "vipPoint" then
+        dialog = self:OpenNormalDialog(item)
     elseif item_type == "vipActive" then
         dialog = self:OpenVipActive(item)
     elseif item_type == "buff" or item:Category() == Item.CATEGORY.BUFF then
@@ -710,6 +716,8 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc)
 end
 
 return WidgetUseItems
+
+
 
 
 
