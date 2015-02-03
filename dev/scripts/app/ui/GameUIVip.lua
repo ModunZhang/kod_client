@@ -218,7 +218,7 @@ function GameUIVip:WidgetPlayerNode_DataSource(name)
             power = User:Power(),
             playerId = User:Id(),
             playerIcon = User:Icon(),
-            vip = "88"
+            vip = User:GetVipLevel()
         }
     elseif name == "MedalData"  then
         return {} -- {"xx.png","xx.png"}
@@ -747,6 +747,7 @@ function GameUIVip:OnBasicChanged(from,changed_map)
             self.vip_layer:removeChildByTag(999, true)
             local exp_bar = self:CreateVipExpBar():addTo(self.vip_layer,1,999):pos(display.cx-287, display.top-300)
             exp_bar:LightLevelBar(vip_level,percent,exp)
+            self.player_node:RefreshUI()
         end
     end
 end

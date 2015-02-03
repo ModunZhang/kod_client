@@ -107,8 +107,14 @@ function GameUIHome:OnBasicChanged(fromEntity,changed_map)
         local flag = changed_map.id.new~=nil or changed_map.id.old~=""
         self.help_button:setVisible(flag)
     end
-    if changed_map.name and fromEntity.__cname == "User" then
-        self.name_label:setString(changed_map.name.new)
+    if fromEntity.__cname == "User" then
+        if changed_map.name then
+            self.name_label:setString(changed_map.name.new)
+        end
+        if changed_map.vipExp then
+            self.vip_level:removeAllChildren()
+            display.newSprite(string.format("home/%d.png", fromEntity:GetVipLevel())):addTo(self.vip_level)
+        end
     end
 end
 
@@ -128,7 +134,7 @@ function GameUIHome:RefreshData()
     self.power_label:setString(user:Power())
     self.level_label:setString(user:Level())
     self.vip_level:removeAllChildren()
-    display.newSprite(string.format("home/%d.png", 1)):addTo(self.vip_level)
+    display.newSprite(string.format("home/%d.png", user:GetVipLevel())):addTo(self.vip_level)
 end
 
 
