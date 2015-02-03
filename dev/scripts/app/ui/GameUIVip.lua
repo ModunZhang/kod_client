@@ -8,6 +8,7 @@ local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetPages = import("..widget.WidgetPages")
 local WidgetInfoNotListView = import("..widget.WidgetInfoNotListView")
 local WidgetInfo = import("..widget.WidgetInfo")
+local WidgetUseItems = import("..widget.WidgetUseItems")
 local window = import("..utils.window")
 
 local GameUIVip = UIKit:createUIClass('GameUIVip',"GameUIWithCommonHeader")
@@ -201,7 +202,7 @@ function GameUIVip:WidgetPlayerNode_OnPlayerIconCliked()
 end
 --修改玩家名
 function GameUIVip:WidgetPlayerNode_OnPlayerNameCliked()
-    print("WidgetPlayerNode_OnPlayerNameCliked-->")
+    WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.CHANGE_PLAYER_NAME}):addToCurrentScene()
 end
 --决定按钮是否可以点击
 function GameUIVip:WidgetPlayerNode_PlayerCanClickedButton(name,args)
@@ -267,11 +268,18 @@ function GameUIVip:onEnter()
 
     end):pos(window.cx, window.bottom + 34)
     self:InitVip()
-end
 
+    User:AddListenOnType(self,User.LISTEN_TYPE.BASIC)
+    User:AddListenOnType(self, User.LISTEN_TYPE.VIP_EVENT)
+end
+function GameUIVip:onExit()
+    User:RemoveListenerOnType(self,User.LISTEN_TYPE.BASIC)
+    User:RemoveListenerOnType(self, User.LISTEN_TYPE.VIP_EVENT)
+    GameUIVip.super.onExit(self)
+end
 function GameUIVip:InitVip()
     self:CreateAD():addTo(self.vip_layer):align(display.CENTER_TOP, display.cx - 2, display.top-46)
-    local exp_bar = self:CreateVipExpBar():addTo(self.vip_layer):pos(display.cx-287, display.top-300)
+    local exp_bar = self:CreateVipExpBar():addTo(self.vip_layer,1,999):pos(display.cx-287, display.top-300)
     exp_bar:LightLevelBar(self:GetVipLevelByExp(User:VipExp()))
     self:CreateVIPStatus()
 end
@@ -438,9 +446,11 @@ function GameUIVip:CreateVIPStatus()
 
     local title_bg = display.newSprite("title_purple_586x34.png"):addTo(status_bg)
         :align(display.CENTER, bg_size.width/2, bg_size.height-35)
-    local title =  cc.ui.UILabel.new({
+
+    local vip_event = User:GetVipEvent()
+    self.vip_title =  cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("未激活VIP"),
+        text = vip_event:IsActived() and _("已激活,剩余时间:")..GameUtils:formatTimeStyle1(vip_event:GetTime()) or _("未激活VIP"),
         size = 22,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xffedae)}):addTo(title_bg)
@@ -460,7 +470,7 @@ function GameUIVip:CreateVIPStatus()
         :addTo(status_bg):align(display.CENTER, 120, bg_size.height-100)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                self:OpenIncreaseVIPPoint()
+                WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.VIP_POINT}):addToCurrentScene()
             end
         end)
     -- 激活VIP按钮
@@ -478,23 +488,24 @@ function GameUIVip:CreateVIPStatus()
         :addTo(status_bg):align(display.CENTER, bg_size.width-120, bg_size.height-100)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                self:OpenActiveVIP()
+                WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.VIP_ACTIVE}):addToCurrentScene()
             end
         end)
 
     local widget_info = WidgetInfoNotListView.new(
         {
             info={
-                {_("当前VIP等级"),_("LV 3")},
-                {_("下一次登录"),_("+150 VIP 点数")},
-                {_("连续登录"),_("5天")},
+                {_("当前VIP等级"),_("Lv").." "..self:GetVipLevelByExp(User:VipExp())},
+                {_("下一次登录"),"XXXXXX"},
+                {_("连续登录"),"xxx"},
             }
         }
     ):align(display.CENTER, bg_size.width/2, 90)
         :addTo(status_bg)
-    
-    local vip_button_group = self:CreateVIPButtons(1):addTo(status_bg)
+
+    local vip_button_group = self:CreateVIPButtons(self:GetVipLevelByExp(User:VipExp())):addTo(status_bg)
     vip_button_group:pos(bg_size.width/2 - vip_button_group:getContentSize().width/2, 200)
+    self.vip_button_group = vip_button_group
 end
 
 function GameUIVip:CreateVIPButtons(level)
@@ -503,31 +514,35 @@ function GameUIVip:CreateVIPButtons(level)
 
     local gap_x = 112
     for i=1,VIP_MAX_LEVEL do
-        local button
+        local btn_pics
         if i<=level then
-            button = WidgetPushButton.new(
-                {normal = "vip_unlock.png", pressed = "vip_unlock.png"},
-                {scale9 = false}
-            ):addTo(button_group):align(display.LEFT_BOTTOM, (math.mod(i-1,5))*gap_x, 90-math.floor((i-1)/5)*110)
-                :onButtonClicked(function(event)
-                    if event.name == "CLICKED_EVENT" then
-                        self:OpenVIPDetails(i)
-                    end
-                end)
+            btn_pics = {normal = "vip_unlock.png", pressed = "vip_unlock.png"}
         else
-            button = WidgetPushButton.new(
-                {normal = "vip_lock.png", pressed = "vip_lock.png"},
-                {scale9 = false}
-            ):addTo(button_group):align(display.LEFT_BOTTOM, (math.mod(i-1,5))*gap_x, 90-math.floor((i-1)/5)*110)
-                :onButtonClicked(function(event)
-                    if event.name == "CLICKED_EVENT" then
-                        self:OpenVIPDetails(i)
-                    end
-                end)
-
+            btn_pics = {normal = "vip_lock.png", pressed = "vip_lock.png"}
         end
+        local button = WidgetPushButton.new(
+            btn_pics,
+            {scale9 = false}
+        ):addTo(button_group,1,i):align(display.LEFT_BOTTOM, (math.mod(i-1,5))*gap_x, 90-math.floor((i-1)/5)*110)
+            :onButtonClicked(function(event)
+                if event.name == "CLICKED_EVENT" then
+                    self:OpenVIPDetails(i)
+                end
+            end)
         display.newSprite("vip"..i..".png"):addTo(button)
             :align(display.CENTER, 52,45)
+    end
+    function button_group:Refresh(vip_level)
+        for i=1,VIP_MAX_LEVEL do
+            local btn_pics
+            if i<=vip_level then
+                btn_pics = {normal = "vip_unlock.png", pressed = "vip_unlock.png"}
+            else
+                btn_pics = {normal = "vip_lock.png", pressed = "vip_lock.png"}
+            end
+            self:getChildByTag(i):setButtonImage("normal", btn_pics.normal, true)
+            self:getChildByTag(i):setButtonImage("pressed", btn_pics.pressed, true)
+        end
     end
     return button_group
 end
@@ -563,91 +578,6 @@ function GameUIVip:CreateDividing(prams)
         return self
     end
     return line
-end
-
-function GameUIVip:OpenIncreaseVIPPoint()
-    local body,layer = self:CreateBackGroundWithTitle(_("增加VIP点数"))
-    layer:addTo(self)
-
-    local rb_size = body:getContentSize()
-
-    self:CreateVIPItem({
-        value = "9999",
-        gem = true,
-        first_label = _("100点VIP 点数"),
-        second_label = _("使用后增长100 点VIP点数"),
-        btn_type = BUY_AND_USE,
-        listener = function (  )
-            print("BUY_AND_USE")
-        end,
-    }):addTo(body):pos(rb_size.width/2-290, rb_size.height-160)
-    self:CreateVIPItem({
-        value = "OWN 2",
-        gem = false,
-        first_label = _("100点VIP 点数"),
-        second_label = _("使用后增长100 点VIP点数"),
-        btn_type = USE,
-        listener = function (  )
-            print("USE")
-        end,
-    }):addTo(body):pos(rb_size.width/2-290, rb_size.height-300)
-    self:CreateVIPItem({
-        value = "OWN 2",
-        gem = false,
-        first_label = _("100点VIP 点数"),
-        second_label = _("使用后增长100 点VIP点数"),
-        btn_type = USE,
-        listener = function (  )
-            print("USE")
-        end,
-    }):addTo(body):pos(rb_size.width/2-290, rb_size.height-440)
-end
-
-function GameUIVip:OpenActiveVIP()
-    local body,layer = self:CreateBackGroundWithTitle(_("激活VIP"))
-    layer:addTo(self)
-
-    local rb_size = body:getContentSize()
-    cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("如果当前VIP已被激活，使用激活VIP道具提供的时间将会自动叠加"),
-            font = UIKit:getFontFilePath(),
-            size = 22,
-            dimensions = cc.size(500,100),
-            color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.CENTER_TOP, body:getContentSize().width/2, body:getContentSize().height-40)
-        :addTo(body)
-    self:CreateVIPItem({
-        value = "9999",
-        gem = true,
-        first_label = _("100点VIP 点数"),
-        second_label = _("使用后增长100 点VIP点数"),
-        btn_type = BUY_AND_USE,
-        listener = function (  )
-            print("BUY_AND_USE")
-        end,
-    }):addTo(body):pos(rb_size.width/2-290, rb_size.height-260)
-    self:CreateVIPItem({
-        value = "OWN 2",
-        gem = false,
-        first_label = _("100点VIP 点数"),
-        second_label = _("使用后增长100 点VIP点数"),
-        btn_type = USE,
-        listener = function (  )
-            print("USE")
-        end,
-    }):addTo(body):pos(rb_size.width/2-290, rb_size.height-390)
-    self:CreateVIPItem({
-        value = "OWN 2",
-        gem = false,
-        first_label = _("100点VIP 点数"),
-        second_label = _("使用后增长100 点VIP点数"),
-        btn_type = USE,
-        listener = function (  )
-            print("USE")
-        end,
-    }):addTo(body):pos(rb_size.width/2-290, rb_size.height-520)
 end
 
 function GameUIVip:CreateBackGroundWithTitle(title_string)
@@ -777,45 +707,46 @@ function GameUIVip:OpenVIPDetails(show_vip_level)
     }):align(display.CENTER, size.width/2, size.height-50)
         :addTo(body)
 
-    self.reach_bg = display.newSprite("vip_bg_4.png")
-    local reach_bg = self.reach_bg
+    if self:GetVipLevelByExp(User:VipExp())<show_vip_level then
+        self.not_reach_bg  = display.newSprite("vip_bg_5.png")
+        local not_reach_bg = self.not_reach_bg
+        not_reach_bg:align(display.CENTER, size.width/2, 80)
+            :addTo(body)
+        cc.ui.UILabel.new(
+            {
+                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+                text = _("到达等级赠送"),
+                font = UIKit:getFontFilePath(),
+                size = 20,
+                color = UIKit:hex2c3b(0xefdea3)
+            }):align(display.LEFT_CENTER, 120, 70)
+            :addTo(not_reach_bg)
+        cc.ui.UILabel.new(
+            {
+                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+                text = _("7 DAY"),
+                font = UIKit:getFontFilePath(),
+                size = 18,
+                color = UIKit:hex2c3b(0x403c2f)
+            }):align(display.CENTER, 70, 12)
+            :addTo(not_reach_bg)
+    else
+        self.reach_bg = display.newSprite("vip_bg_4.png")
+        local reach_bg = self.reach_bg
 
-    reach_bg:hide()
 
-    reach_bg:align(display.CENTER, size.width/2, 40)
-        :addTo(body)
-    cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("已达成"),
-            font = UIKit:getFontFilePath(),
-            size = 20,
-            color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.CENTER, reach_bg:getContentSize().width/2, reach_bg:getContentSize().height/2)
-        :addTo(reach_bg)
-    self.not_reach_bg  = display.newSprite("vip_bg_5.png")
-    local not_reach_bg = self.not_reach_bg
-    not_reach_bg:align(display.CENTER, size.width/2, 80)
-        :addTo(body)
-    cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("到达等级赠送"),
-            font = UIKit:getFontFilePath(),
-            size = 20,
-            color = UIKit:hex2c3b(0xefdea3)
-        }):align(display.LEFT_CENTER, 120, 70)
-        :addTo(not_reach_bg)
-    cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("7 DAY"),
-            font = UIKit:getFontFilePath(),
-            size = 18,
-            color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.CENTER, 70, 12)
-        :addTo(not_reach_bg)
-
+        reach_bg:align(display.CENTER, size.width/2, 40)
+            :addTo(body)
+        cc.ui.UILabel.new(
+            {
+                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+                text = _("已达成"),
+                font = UIKit:getFontFilePath(),
+                size = 20,
+                color = UIKit:hex2c3b(0x403c2f)
+            }):align(display.CENTER, reach_bg:getContentSize().width/2, reach_bg:getContentSize().height/2)
+            :addTo(reach_bg)
+    end
 end
 
 -- 根据当前vip exp 获取对应VIP等级
@@ -829,7 +760,35 @@ function GameUIVip:GetVipLevelByExp(exp)
 
 end
 
+function GameUIVip:OnBasicChanged(from,changed_map)
+    if from.__cname=="User" then
+        if changed_map.name then
+            self.player_node:RefreshUI()
+        end
+        if changed_map.vipExp then
+            self.vip_button_group:Refresh(self:GetVipLevelByExp(User:VipExp()))
+            self.vip_layer:removeChildByTag(999, true)
+            local exp_bar = self:CreateVipExpBar():addTo(self.vip_layer,1,999):pos(display.cx-287, display.top-300)
+            exp_bar:LightLevelBar(self:GetVipLevelByExp(User:VipExp()))
+        end
+    end
+end
+function GameUIVip:OnVipEventTimer( vip_event_new )
+    local time = vip_event_new:GetTime()
+    if time >0 then
+        self.vip_title:setString(_("已激活,剩余时间:")..GameUtils:formatTimeStyle1(time))
+    else
+        self.vip_title:setString(_("未激活VIP"))
+    end
+end
+
 return GameUIVip
+
+
+
+
+
+
 
 
 
