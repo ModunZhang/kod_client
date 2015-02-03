@@ -302,7 +302,9 @@ function GameUIHome:CreateTop()
         {normal = "buff_1_128x128.png", pressed = "buff_1_128x128.png"}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI("GameUIBuff",self.city):addToCurrentScene()
+            -- UIKit:newGameUI("GameUIBuff",self.city):addToCurrentScene()
+    UIKit:newGameUI("GameUIPVESendTroop"):addToCurrentScene()
+
         end
     end):addTo(self):pos(display.cx-280, display.top-260)
         :scale(0.5)
