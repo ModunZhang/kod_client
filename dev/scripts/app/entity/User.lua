@@ -279,6 +279,23 @@ end
 function User:GetVipEvent()
     return self.vip_event
 end
+function User:GetVipLevel()
+    local exp = self.vipExp
+    local vip_level_config = GameDatas.PlayerInitData.vipLevel
+
+    for i=#vip_level_config,1,-1 do
+        local config = vip_level_config[i]
+         if exp >= config.expFrom then
+            local percent = math.floor((exp - config.expFrom)/(config.expTo-config.expFrom)*100)
+            return config.level,percent,exp
+        end
+    end
+end
+function User:GetVipNextLevelExp()
+    local vip_level_config = GameDatas.PlayerInitData.vipLevel
+    local next_level = #vip_level_config >= (self:GetVipLevel() +1) and (self:GetVipLevel() +1) or #vip_level_config
+    return vip_level_config[next_level].expTo
+end
 function User:OnVipEventDataChange(userData)
     if userData.vipEvents then
         if not LuaUtils:table_empty(userData.vipEvents) then

@@ -24,19 +24,6 @@ local function __getPlayerIcons()
         "playerIcon_default.png",
     }
 end
--- vip 经验对应 等级
-local vip_level_table = {
-    [1]= -1,
-    [2]= 99,
-    [3]=199,
-    [4]=599,
-    [5]=1199,
-    [6]=3599,
-    [7]=7999,
-    [8]=19999,
-    [9]=49999,
-    [10]=99998,
-}
 
 -- VIP 效果总览
 local VIP_EFFECIVE_ALL = {
@@ -280,7 +267,7 @@ end
 function GameUIVip:InitVip()
     self:CreateAD():addTo(self.vip_layer):align(display.CENTER_TOP, display.cx - 2, display.top-46)
     local exp_bar = self:CreateVipExpBar():addTo(self.vip_layer,1,999):pos(display.cx-287, display.top-300)
-    exp_bar:LightLevelBar(self:GetVipLevelByExp(User:VipExp()))
+    exp_bar:LightLevelBar(User:GetVipLevel())
     self:CreateVIPStatus()
 end
 
@@ -322,7 +309,7 @@ function GameUIVip:CreateVipExpBar()
             color = UIKit:hex2c3b(0xffedae)}):addTo(tip):align(display.CENTER, tip:getContentSize().width/2, 50)
         cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = vip_level_table[level]+1,
+            text = User:GetVipNextLevelExp(),
             size = 16,
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xffedae)}):addTo(tip):align(display.CENTER, tip:getContentSize().width/2, 25)
@@ -495,7 +482,7 @@ function GameUIVip:CreateVIPStatus()
     local widget_info = WidgetInfoNotListView.new(
         {
             info={
-                {_("当前VIP等级"),_("Lv").." "..self:GetVipLevelByExp(User:VipExp())},
+                {_("当前VIP等级"),_("Lv").." "..User:GetVipLevel()},
                 {_("下一次登录"),"XXXXXX"},
                 {_("连续登录"),"xxx"},
             }
@@ -503,7 +490,7 @@ function GameUIVip:CreateVIPStatus()
     ):align(display.CENTER, bg_size.width/2, 90)
         :addTo(status_bg)
 
-    local vip_button_group = self:CreateVIPButtons(self:GetVipLevelByExp(User:VipExp())):addTo(status_bg)
+    local vip_button_group = self:CreateVIPButtons(User:GetVipLevel()):addTo(status_bg)
     vip_button_group:pos(bg_size.width/2 - vip_button_group:getContentSize().width/2, 200)
     self.vip_button_group = vip_button_group
 end
@@ -707,7 +694,7 @@ function GameUIVip:OpenVIPDetails(show_vip_level)
     }):align(display.CENTER, size.width/2, size.height-50)
         :addTo(body)
 
-    if self:GetVipLevelByExp(User:VipExp())<show_vip_level then
+    if User:GetVipLevel()<show_vip_level then
         self.not_reach_bg  = display.newSprite("vip_bg_5.png")
         local not_reach_bg = self.not_reach_bg
         not_reach_bg:align(display.CENTER, size.width/2, 80)
@@ -749,27 +736,17 @@ function GameUIVip:OpenVIPDetails(show_vip_level)
     end
 end
 
--- 根据当前vip exp 获取对应VIP等级
-function GameUIVip:GetVipLevelByExp(exp)
-    for i=VIP_MAX_LEVEL,1,-1 do
-        if exp > vip_level_table[i] then
-            local percent = math.floor((exp - vip_level_table[i])/vip_level_table[i+1]*100)
-            return i,percent,exp
-        end
-    end
-
-end
-
 function GameUIVip:OnBasicChanged(from,changed_map)
     if from.__cname=="User" then
         if changed_map.name then
             self.player_node:RefreshUI()
         end
         if changed_map.vipExp then
-            self.vip_button_group:Refresh(self:GetVipLevelByExp(User:VipExp()))
+            local vip_level,percent,exp = User:GetVipLevel()
+            self.vip_button_group:Refresh(vip_level)
             self.vip_layer:removeChildByTag(999, true)
             local exp_bar = self:CreateVipExpBar():addTo(self.vip_layer,1,999):pos(display.cx-287, display.top-300)
-            exp_bar:LightLevelBar(self:GetVipLevelByExp(User:VipExp()))
+            exp_bar:LightLevelBar(vip_level,percent,exp)
         end
     end
 end
