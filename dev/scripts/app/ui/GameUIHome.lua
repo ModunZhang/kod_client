@@ -225,15 +225,15 @@ function GameUIHome:CreateTop()
     -- 玩家信息背景
     local player_bg = display.newSprite("home/player_bg.png"):addTo(top_bg, 2)
         :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10)
-
     display.newSprite("home/player_icon.png"):addTo(player_bg):pos(55, 53)
     local level_bg = display.newSprite("home/level_bg.png"):addTo(player_bg):pos(55, 30)
-    self.level_label =UIKit:ttfLabel({text = "10000",
+    self.level_label = UIKit:ttfLabel({
         size = 20,
         color = 0xfff1cc,
         shadow = true,
     }):addTo(level_bg):align(display.CENTER, 37, 12)
     self.exp = display.newSprite("home/player_exp_bar.png"):addTo(player_bg):pos(55, 53)
+
     -- vip
     local vip_btn = cc.ui.UIPushButton.new(
         {normal = "home/vip_bg.png", pressed = "home/vip_bg.png"},
