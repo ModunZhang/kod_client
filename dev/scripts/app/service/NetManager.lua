@@ -732,17 +732,16 @@ function NetManager:getInstantUpgradeBuildingByLocationPromise(location)
     return promise.all(get_upgradeBuilding_promise(location, true), get_playerdata_callback()):next(get_response_msg)
 end
 -- 升级防御塔
-local function get_upgradeTower_promise(location, finish_now)
+local function get_upgradeTower_promise(finish_now)
     return get_blocking_request_promise("logic.playerHandler.upgradeTower", {
-        location = location,
         finishNow = finish_now or false
     }, "升级防御塔失败!")
 end
-function NetManager:getUpgradeTowerByLocationPromise(location)
-    return promise.all(get_upgradeTower_promise(location, false), get_playerdata_callback()):next(get_response_msg)
+function NetManager:getUpgradeTowerPromise()
+    return promise.all(get_upgradeTower_promise(false), get_playerdata_callback()):next(get_response_msg)
 end
-function NetManager:getInstantUpgradeTowerByLocationPromise(location)
-    return promise.all(get_upgradeTower_promise(location, true), get_playerdata_callback()):next(get_response_msg)
+function NetManager:getInstantUpgradeTowerPromise()
+    return promise.all(get_upgradeTower_promise(true), get_playerdata_callback()):next(get_response_msg)
 end
 -- 升级城门
 local function get_upgradeWall_promise(finish_now)

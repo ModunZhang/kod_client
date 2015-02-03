@@ -9,6 +9,7 @@ local SoldierManager = import(".SoldierManager")
 local MaterialManager = import(".MaterialManager")
 local ResourceManager = import(".ResourceManager")
 local Building = import(".Building")
+local TowerEntity = import(".TowerEntity")
 local TowerUpgradeBuilding = import(".TowerUpgradeBuilding")
 local MultiObserver = import(".MultiObserver")
 local City = class("City", MultiObserver)
@@ -54,7 +55,9 @@ function City:ctor(json_data)
     self.belong_user = nil
     self.buildings = {}
     self.walls = {}
-    self.towers = {}
+    self.tower = TowerEntity.new({building_type = "tower", city = self})
+    self:OnInitBuilding(self.tower)
+    self.visible_towers = {}
     self.decorators = {}
     self.helpedByTroops = {}
     self.helpToTroops = {}
@@ -485,9 +488,10 @@ function City:GetNeedUnlockBuildings()
     for i, v in pairs(self:GetAllBuildings()) do
         table.insert(r, v)
     end
-    for i, v in pairs(self:GetCanUpgradingTowers()) do
-        table.insert(r, v)
-    end
+    -- for i, v in pairs(self:GetCanUpgradingTowers()) do
+    --     table.insert(r, v)
+    -- end
+    table.insert(r, self:GetTower())
     table.insert(r, self:GetGate())
     table.sort(r, function(a, b)
         return a:GetType() == b:GetType() and a:IsAheadOfBuilding(b) or a:IsImportantThanBuilding(b)
@@ -693,18 +697,21 @@ end
 function City:GetGate()
     return self.gate
 end
-function City:GetTowers()
-    return self.towers
+function City:GetTower()
+    return self.tower
 end
-function City:GetCanUpgradingTowers()
-    local towers = {}
-    table.foreach(self.towers, function(_, tower)
-        if tower:IsUnlocked() then
-            table.insert(towers, tower)
-        end
-    end)
-    return towers
+function City:GetVisibleTowers()
+    return self.visible_towers
 end
+-- function City:GetCanUpgradingTowers()
+--     local visible_towers = {}
+--     table.foreach(self.visible_towers, function(_, tower)
+--         if tower:IsUnlocked() then
+--             table.insert(visible_towers, tower)
+--         end
+--     end)
+--     return visible_towers
+-- end
 -- 工具
 function City:IteratorCanUpgradeBuildings(func)
     self:IteratorDecoratorBuildingsByFunc(function(key, building)
@@ -713,9 +720,10 @@ function City:IteratorCanUpgradeBuildings(func)
     self:IteratorFunctionBuildingsByFunc(function(key, building)
         func(building)
     end)
-    self:IteratorTowersByFunc(function(key, building)
-        func(building)
-    end)
+    -- self:IteratorTowersByFunc(function(key, building)
+    --     func(building)
+    -- end)
+    func(self:GetTower())
     func(self:GetGate())
 end
 function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time)
@@ -726,9 +734,10 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time)
     self:IteratorFunctionBuildingsByFunc(function(key, building)
         building:OnUserDataChanged(user_data, current_time, self:GetLocationIdByBuilding(building))
     end)
-    self:IteratorTowersByFunc(function(key, building)
-        building:OnUserDataChanged(user_data, current_time)
-    end)
+    -- self:IteratorTowersByFunc(function(key, building)
+    --     building:OnUserDataChanged(user_data, current_time)
+    -- end)
+    self:GetTower():OnUserDataChanged(user_data, current_time)
     self:GetGate():OnUserDataChanged(user_data, current_time)
 end
 function City:IteratorAllNeedTimerEntity(current_time)
@@ -738,9 +747,10 @@ function City:IteratorAllNeedTimerEntity(current_time)
     self:IteratorDecoratorBuildingsByFunc(function(key, building)
         building:OnTimer(current_time)
     end)
-    self:IteratorTowersByFunc(function(key, building)
-        building:OnTimer(current_time)
-    end)
+    -- self:IteratorTowersByFunc(function(key, building)
+    --     building:OnTimer(current_time)
+    -- end)
+    self:GetTower():OnTimer(current_time)
     local gate = self:GetGate()
     if gate then
         gate:OnTimer(current_time)
@@ -756,9 +766,9 @@ function City:IteratorTilesByFunc(func)
         end
     end
 end
-function City:IteratorTowersByFunc(func)
-    table.foreach(self:GetCanUpgradingTowers(), func)
-end
+-- function City:IteratorTowersByFunc(func)
+--     table.foreach(self:GetCanUpgradingTowers(), func)
+-- end
 function City:IteratorFunctionBuildingsByFunc(func)
     table.foreach(self:GetAllBuildings(), func)
 end
@@ -1218,9 +1228,9 @@ function City:ReloadWalls(walls)
     return t
 end
 function City:GenerateTowers(walls)
-    local towers = {}
+    local visible_towers = {}
     local p = walls[#walls]:IntersectWithOtherWall(walls[1])
-    table.insert(towers,
+    table.insert(visible_towers,
         TowerUpgradeBuilding.new({
             building_type = "tower",
             x = p.x,
@@ -1236,7 +1246,7 @@ function City:GenerateTowers(walls)
         if i < #walls then
             local p = walls[i]:IntersectWithOtherWall(walls[i + 1])
             if p then
-                table.insert(towers,
+                table.insert(visible_towers,
                     TowerUpgradeBuilding.new({
                         building_type = "tower",
                         x = p.x,
@@ -1251,59 +1261,56 @@ function City:GenerateTowers(walls)
         end
     end
 
-
     local visible_tower = {}
-    for _, v in ipairs(towers) do
+    for _, v in ipairs(visible_towers) do
         if v:IsVisible() then
             table.insert(visible_tower, v)
         end
     end
 
-    local efficiency_tower = {}
-    for i = 1, #visible_tower do
-        if visible_tower[i]:IsEfficiency() then
-            efficiency_tower[#efficiency_tower + 1] = i
-        end
-    end
+    -- local efficiency_tower = {}
+    -- for i = 1, #visible_tower do
+    --     if visible_tower[i]:IsEfficiency() then
+    --         efficiency_tower[#efficiency_tower + 1] = i
+    --     end
+    -- end
 
-    local tower_limit = self:GetUnlockTowerLimit()
-    local indexes = {}
-    while #indexes < tower_limit do
-        local i = ceil(#efficiency_tower * 0.5)
-        local index = table.remove(efficiency_tower, i)
-        table.insert(indexes, index)
-    end
+    -- local tower_limit = self:GetUnlockTowerLimit()
+    -- local indexes = {}
+    -- while #indexes < tower_limit do
+    --     local i = ceil(#efficiency_tower * 0.5)
+    --     local index = table.remove(efficiency_tower, i)
+    --     table.insert(indexes, index)
+    -- end
 
-    for tower_id, tower_index in ipairs(indexes) do
-        visible_tower[tower_index]:SetTowerId(tower_id)
-    end
-
-    self.towers = self:ReloadTowers(visible_tower)
+    -- for tower_id, tower_index in ipairs(indexes) do
+    --     visible_tower[tower_index]:SetTowerId(tower_id)
+    -- end
+    -- self.visible_towers = self:ReloadTowers(visible_tower)
+    self.visible_towers = visible_tower
 end
-function City:ReloadTowers(towers)
-    local old_tower_map = {}
-    for k, v in pairs(self.towers) do
-        if v:IsUnlocked() then
-            old_tower_map[v:TowerId()] = v
-        end
-    end
-
-
-    for i, v in ipairs(towers) do
-        if v:IsUnlocked() then
-            local old_tower = old_tower_map[v:TowerId()]
-            -- 已经解锁的
-            if old_tower then
-                towers[i] = old_tower
-                old_tower:CopyValueFrom(v)
-            else
-                -- 如果是新解锁的
-                self:OnInitBuilding(v)
-            end
-        end
-    end
-    return towers
-end
+-- function City:ReloadTowers(visible_towers)
+--     local old_tower_map = {}
+--     for k, v in pairs(self.visible_towers) do
+--         if v:IsUnlocked() then
+--             old_tower_map[v:TowerId()] = v
+--         end
+--     end
+--     for i, v in ipairs(visible_towers) do
+--         if v:IsUnlocked() then
+--             local old_tower = old_tower_map[v:TowerId()]
+--             -- 已经解锁的
+--             if old_tower then
+--                 visible_towers[i] = old_tower
+--                 old_tower:CopyValueFrom(v)
+--             else
+--                 -- 如果是新解锁的
+--                 self:OnInitBuilding(v)
+--             end
+--         end
+--     end
+--     return visible_towers
+-- end
 local function findTroopsInHelpedByTroops(helpedByTroops, troops)
     for i, v in pairs(helpedByTroops) do
         if v.id == troops.id then

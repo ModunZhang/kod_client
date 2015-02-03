@@ -256,14 +256,15 @@ function MyCityScene:OnTilesChanged(tiles)
 end
 function MyCityScene:OnTowersChanged(old_towers, new_towers)
     table.foreach(old_towers, function(k, tower)
-        if tower:GetEntity():IsUnlocked() then
+        -- if tower:GetEntity():IsUnlocked() then
             self:GetSceneUILayer():RemoveUIFromBuildingSprite(tower)
-        end
+        -- end
     end)
     table.foreach(new_towers, function(k, tower)
-        if tower:GetEntity():IsUnlocked() then
+        print("hello ==== >")
+        -- if tower:GetEntity():IsUnlocked() then
             self:GetSceneUILayer():NewUIFromBuildingSprite(tower)
-        end
+        -- end
     end)
 end
 function MyCityScene:OnGateChanged(old_walls, new_walls)
@@ -346,7 +347,7 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
         elseif building:GetEntity():GetType() == "wall" then
             UIKit:newGameUI('GameUIWall', city, building:GetEntity()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "tower" then
-            UIKit:newGameUI('GameUITower', city, building:GetEntity()):addToScene(self, true)
+            UIKit:newGameUI('GameUITower', city, building:GetEntity():BelongCity():GetTower()):addToScene(self, true)
         elseif building:GetEntity():GetType() == "trainingGround"
             or building:GetEntity():GetType() == "stable"
             or building:GetEntity():GetType() == "hunterHall"

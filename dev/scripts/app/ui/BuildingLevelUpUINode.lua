@@ -8,6 +8,7 @@ function BuildingLevelUpUINode:OnBuildingUpgradingBegin(building, time)
     self:OnBuildingUpgradeFinished(building, time)
 end
 function BuildingLevelUpUINode:OnBuildingUpgradeFinished(building, time)
+    building = building:GetType() == "tower" and building:BelongCity():GetTower() or building
     self:setVisible(building:GetLevel() > 0)
     self.arrow:setVisible(building:BelongCity():GetKeep():CanUpgradeThis(building))
     self:SetLevel(building:GetLevel())
