@@ -56,55 +56,46 @@ function GameUICityInfo:CreateTop()
     local button = cc.ui.UIPushButton.new(
         {normal = "home/player_btn_up.png", pressed = "home/player_btn_down.png"},
         {scale9 = false}
-    ):onButtonClicked(function(event)
-
-        end):addTo(top_bg):align(display.LEFT_CENTER,top_bg:getContentSize().width/2-2, top_bg:getContentSize().height/2+10)
+    ):addTo(top_bg):align(display.LEFT_CENTER,top_bg:getContentSize().width/2-2, top_bg:getContentSize().height/2+10)
     button:setRotationSkewY(180)
 
     -- 玩家名字背景加文字
+    local ox = 159
     local name_bg = display.newSprite("home/player_name_bg.png"):addTo(top_bg)
-        :align(display.TOP_RIGHT,top_bg:getContentSize().width/2, top_bg:getContentSize().height-10)
-    self.name_label =
-        cc.ui.UILabel.new({
-            text = self.user:Name(),
-            size = 20,
-            font = UIKit:getFontFilePath(),
-            align = cc.ui.TEXT_ALIGN_RIGHT,
-            color = UIKit:hex2c3b(0xf3f0b6)
-        }):addTo(name_bg)
-            :align(display.LEFT_CENTER, 20, name_bg:getContentSize().height/2+5)
+        :align(display.TOP_LEFT, ox, top_bg:getContentSize().height-10)
+    self.name_label = cc.ui.UILabel.new({
+        text = self.user:Name(),
+        size = 18,
+        font = UIKit:getFontFilePath(),
+        align = cc.ui.TEXT_ALIGN_RIGHT,
+        color = UIKit:hex2c3b(0xf3f0b6)
+    }):addTo(name_bg):align(display.LEFT_CENTER, 14, name_bg:getContentSize().height/2 + 3)
 
     -- 玩家战斗值图片
-    display.newSprite("home/power.png"):addTo(top_bg):pos(194, 60)
+    display.newSprite("home/power.png"):addTo(top_bg):pos(ox + 20, 65)
+
 
     -- 玩家战斗值文字
     UIKit:ttfLabel({
-        text = _("战斗值"),
+        text = _("战斗值："),
         size = 14,
         color = 0x9a946b,
         shadow = true
-    }):addTo(top_bg):align(display.LEFT_CENTER, 204, 60)
-
+    }):addTo(top_bg):align(display.LEFT_CENTER, ox + 30, 65)
 
     -- 玩家战斗值数字
-    self.power_label =
-        UIKit:ttfLabel({
-            text = self.user:Power(),
-            size = 20,
-            color = 0xf3f0b6,
-            shadow = true
-        }):addTo(top_bg):align(display.LEFT_CENTER, 194, 40)
+    self.power_label = UIKit:ttfLabel({
+        text = self.user:Power(),
+        size = 20,
+        color = 0xf3f0b6,
+        shadow = true
+    }):addTo(top_bg):align(display.LEFT_CENTER, ox + 14, 42)
 
     -- 资源按钮
     local button = cc.ui.UIPushButton.new(
         {normal = "home/player_btn_up.png", pressed = "home/player_btn_down.png"},
         {scale9 = false}
-    ):onButtonClicked(function(event)
-
-        end):addTo(top_bg):align(display.LEFT_CENTER, top_bg:getContentSize().width/2+2, top_bg:getContentSize().height/2+10)
-
-
-
+    ):addTo(top_bg):align(display.LEFT_CENTER, top_bg:getContentSize().width/2+2, top_bg:getContentSize().height/2+10)
 
     -- 资源图片和文字
     local first_row = 18
@@ -135,42 +126,30 @@ function GameUICityInfo:CreateTop()
 
 
     -- 玩家信息背景
-    local player_bg = display.newSprite("home/player_bg.png")
-        :addTo(top_bg, 2)
-        :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 0)
-
-    display.newSprite("home/player_icon.png")
-        :addTo(player_bg)
-        :pos(60, 71)
-    display.newSprite("home/level_bg.png")
-        :addTo(player_bg)
-        :pos(61, 33)
-    self.level_label =
-        UIKit:ttfLabel({text = self.user:Level(),
-            size = 20,
-            color = 0xfff1cc,
-            shadow = true
-        }):addTo(player_bg):align(display.CENTER, 61, 32)
-    display.newSprite("home/player_exp_bar.png")
-        :addTo(player_bg)
-        :pos(61, 60)
-
+    local player_bg = display.newSprite("home/player_bg.png"):addTo(top_bg, 2)
+        :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10)
+    display.newSprite("home/player_icon.png"):addTo(player_bg):pos(55, 53)
+    local level_bg = display.newSprite("home/level_bg.png"):addTo(player_bg):pos(55, 30)
+    self.level_label = UIKit:ttfLabel({text = "1",
+        size = 20,
+        color = 0xfff1cc,
+        shadow = true,
+    }):addTo(level_bg):align(display.CENTER, 37, 12)
+    self.exp = display.newSprite("home/player_exp_bar.png"):addTo(player_bg):pos(55, 53)
 
 
     -- vip
     local vip_btn = cc.ui.UIPushButton.new(
         {normal = "home/vip_bg.png", pressed = "home/vip_bg.png"},
         {scale9 = false}
-    ):onButtonClicked(function(event)
-
-        end):addTo(top_bg):align(display.LEFT_TOP, display.width>640 and 56 or 63, 33)
-
-    self.vip_label =
-        UIKit:ttfLabel({text = string.format("VIP %d", 1),
-            size = 18,
-            color = 0xe19319,
-            shadow = true
-        }):addTo(vip_btn):align(display.CENTER, 180, -25)
+    ):addTo(top_bg):align(display.CENTER, ox + 195, 50)
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                UIKit:newGameUI('GameUIVip', City,"VIP"):addToCurrentScene(true)
+            end
+        end)
+    self.vip_level = display.newNode():addTo(vip_btn):pos(-3, 15):scale(0.8)
+    display.newSprite(string.format("home/%d.png", 1)):addTo(self.vip_level)
 
     return top_bg
 end
@@ -256,6 +235,7 @@ function GameUICityInfo:CreateBottom()
 end
 
 return GameUICityInfo
+
 
 
 

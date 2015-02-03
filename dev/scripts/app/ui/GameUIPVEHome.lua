@@ -63,6 +63,7 @@ function GameUIPVEHome:CreateTop()
         :addTo(self)
     local size = top_bg:getContentSize()
     top_bg:setTouchEnabled(true)
+
     cc.ui.UIPushButton.new(
         {normal = "return_btn_up_202x93.png", pressed = "return_btn_down_202x93.png"}
     ):addTo(top_bg)
@@ -81,14 +82,16 @@ function GameUIPVEHome:CreateTop()
     local button = cc.ui.UIPushButton.new(
         {normal = "home/gem_btn_up.png", pressed = "home/gem_btn_down.png"},
         {scale9 = false}
-    ):addTo(top_bg):onButtonClicked(function(event)
-    end):align(display.RIGHT_CENTER, size.width - 40, - 2)
-    :setButtonLabel(UIKit:ttfLabel({text = "100,100,100",
+    ):onButtonClicked(function(event)
+        UIKit:newGameUI('GameUIShop', City):addToCurrentScene(true)
+    end):addTo(top_bg):pos(top_bg:getContentSize().width - 130, -16)
+    display.newSprite("home/gem_1.png"):addTo(button):pos(60, 3)
+    self.gem_label = UIKit:ttfLabel({
         size = 20,
         color = 0xffd200,
-        shadow = true
-    })):setButtonLabelOffset(20, 0)
-    display.newSprite("home/gem_1.png"):addTo(button):pos(85, 0)
+        shadow = true,
+        text = "100,100,100"
+    }):addTo(button):align(display.CENTER, -30, 8)
 
 
     self.title = UIKit:ttfLabel({text = "1. 贫瘠之地",
