@@ -291,10 +291,10 @@ function User:GetVipLevel()
         end
     end
 end
-function User:GetVipNextLevelExp()
+function User:GetSpecialVipLevelExp(level)
     local vip_level_config = GameDatas.PlayerInitData.vipLevel
-    local next_level = #vip_level_config >= (self:GetVipLevel() +1) and (self:GetVipLevel() +1) or #vip_level_config
-    return vip_level_config[next_level].expTo
+    local level = #vip_level_config >= level and level or #vip_level_config
+    return vip_level_config[level].expTo
 end
 function User:OnVipEventDataChange(userData)
     if userData.vipEvents then

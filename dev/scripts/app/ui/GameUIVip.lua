@@ -309,7 +309,7 @@ function GameUIVip:CreateVipExpBar()
             color = UIKit:hex2c3b(0xffedae)}):addTo(tip):align(display.CENTER, tip:getContentSize().width/2, 50)
         cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = User:GetVipNextLevelExp(),
+            text = User:GetSpecialVipLevelExp(level),
             size = 16,
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xffedae)}):addTo(tip):align(display.CENTER, tip:getContentSize().width/2, 25)
