@@ -46,6 +46,7 @@ function GameUIAllianceMemberInfo:onMoveInStage()
 	NetManager:getPlayerInfoPromise(self.memberId_):next(function(data)
        self:OnGetPlayerInfoSuccess(data)
     end):catch(function(err)
+    	dump(err,"err--->")
     	self:leftButtonClicked()
     end)
 end
@@ -191,7 +192,7 @@ function GameUIAllianceMemberInfo:AdapterPlayerList()
 	table.insert(r,{_("联盟"),player.alliance})
 	table.insert(r,{_("最后登陆时间"),NetService:formatTimeAsTimeAgoStyleByServerTime(player.lastLoginTime)})
 	table.insert(r,{_("战斗力"),player.power})
-	--TODO: 玩家击杀数量
+	table.insert(r,{_("击杀"),player.kill})
 
 	return r
 end
@@ -244,7 +245,7 @@ function GameUIAllianceMemberInfo:WidgetPlayerNode_DataSource(name)
 	if name == 'BasicInfoData' then
 		return {
 			name = self.player_info.name,
-			lv = self.player_info.level,
+			lv = User:GetPlayerLevelByExp(self.player_info.levelExp),
 			currentExp = 50,
 			maxExp = 100,
 			power = self.player_info.power,
