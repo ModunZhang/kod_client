@@ -171,7 +171,7 @@ function GameUIPVESendTroop:SelectDragonPart()
     local dragon = self.dragon
 
     local dragon_frame = display.newSprite("alliance_item_flag_box_126X126.png")
-        :align(display.LEFT_CENTER, window.left+47,window.top-405)
+        :align(display.LEFT_CENTER, window.left+47,window.top-415)
         :addTo(self)
 
     local dragon_bg = display.newSprite("chat_hero_background.png")
@@ -237,10 +237,10 @@ function GameUIPVESendTroop:SelectDragon()
 end
 function GameUIPVESendTroop:SelectSoldiers()
     local list ,listnode=  UIKit:commonListView({
-        viewRect = cc.rect(0, 0, 520, 376),
+        viewRect = cc.rect(0, 0, 568, 366),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     })
-    listnode:addTo(self):pos(window.cx, window.top-675)
+    listnode:addTo(self):pos(window.cx, window.top-685)
     listnode:align(display.CENTER)
 
     self.soldier_listview = list
@@ -249,16 +249,16 @@ function GameUIPVESendTroop:SelectSoldiers()
             return
         end
         local item = list:newItem()
-        local w,h = 516,118
+        local w,h = 568,128
         item:setItemSize(w, h)
-        local content = display.newSprite(img_dir.."back_ground_516x116.png")
+        local content = display.newSprite("back_ground_568X128.png")
         item.max_soldier = max_soldier
         -- progress
         local slider = WidgetSlider.new(display.LEFT_TO_RIGHT,  {bar = "slider_bg_461x24.png",
             progress = "slider_progress_445x14.png",
             button = "slider_btn_66x66.png"}, {max = item.max_soldier}):addTo(content)
             :align(display.RIGHT_CENTER, w-5, 35)
-            :scale(0.82)
+            :scale(0.95)
         -- soldier name
         local soldier_name_label = UIKit:ttfLabel({
             text = Localize.soldier_name[soldier_type],
@@ -338,7 +338,7 @@ function GameUIPVESendTroop:SelectSoldiers()
         -- 士兵头像
         local soldier_type_with_star = soldier_type..(soldier_level == nil and "" or string.format("_%d", soldier_level))
         local soldier_ui_config = UILib.soldier_image[soldier_type][soldier_level]
-        local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER,60,58):addTo(content):scale(0.8)
+        local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER,60,64):addTo(content):scale(104/128)
         local soldier_head_bg  = display.newSprite("box_soldier_128x128.png"):addTo(soldier_head_icon):pos(soldier_head_icon:getContentSize().width/2,soldier_head_icon:getContentSize().height/2)
 
         item:addContent(content)
@@ -407,7 +407,73 @@ function GameUIPVESendTroop:GetSelectSoldier()
     return soldiers
 end
 function GameUIPVESendTroop:CreateTroopsShow()
-	local body = display.newSprite("back_ground_619x270.png"):addTo(self):align(display.TOP_CENTER,window.cx, window.top_bottom)
+	local TroopsShow = display.newSprite("back_ground_619x270.png"):addTo(self):align(display.TOP_CENTER,window.cx, window.top_bottom+18)
+	local b_size = TroopsShow:getContentSize()
+	local info_bg = display.newSprite("back_ground_619x52.png"):addTo(TroopsShow):align(display.BOTTOM_CENTER,b_size.width/2, 0)
+
+	local function createInfoItem(title,value)
+        local info = display.newLayer()
+        local value_label = UIKit:ttfLabel({
+            text = value,
+            size = 18,
+            color = 0xffedae,
+        })
+        value_label:align(display.BOTTOM_CENTER,value_label:getContentSize().width/2,0)
+            :addTo(info)
+        UIKit:ttfLabel({
+            text = title,
+            size = 16,
+            color = 0xbbae80,
+        }):align(display.BOTTOM_CENTER,value_label:getContentSize().width/2,20)
+            :addTo(info)
+        info:setContentSize(value_label:getContentSize().width, 45)
+        function info:SetValue(value)
+            value_label:setString(value)
+        end
+        return info
+    end
+
+    
+
+    -- 左翻页按钮
+    local left_btn = WidgetPushButton.new({normal = "button_normal_28x210.png",pressed = "button_pressed_28x210.png"})
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                
+            end
+        end):align(display.LEFT_TOP,0,b_size.height):addTo(TroopsShow)
+    -- 右翻页按钮
+    local right_btn = WidgetPushButton.new({normal = "button_normal_28x210.png",pressed = "button_pressed_28x210.png"})
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                
+            end
+        end):align(display.LEFT_BOTTOM,b_size.width-30,0):addTo(TroopsShow)
+    right_btn:setRotationSkewY(180)
+
+
+    local parent = self
+    function TroopsShow:SetPower(power)
+        local power_item = createInfoItem(_("战斗力"),string.formatnumberthousands(power))
+            :align(display.CENTER,40,4)
+            :addTo(info_bg)
+        return self
+    end
+    function TroopsShow:SetCitizen(citizen)
+        local citizen_item = createInfoItem(_("部队容量"),citizen.."/"..parent.dragon:LeadCitizen())
+        citizen_item:align(display.CENTER,310-citizen_item:getContentSize().width/2,4)
+            :addTo(info_bg)
+        return self
+    end
+    function TroopsShow:SetWeight(weight)
+        local weight_item = createInfoItem(_("负重"),string.formatnumberthousands(weight))
+        weight_item:align(display.CENTER,620-weight_item:getContentSize().width-40,4)
+            :addTo(info_bg)
+        return self
+    end
+    TroopsShow:SetPower(0)
+    TroopsShow:SetCitizen(0)
+    TroopsShow:SetWeight(0)
 end
 function GameUIPVESendTroop:OnSoliderCountChanged( soldier_manager,changed_map )
     for i,soldier_type in ipairs(changed_map) do
