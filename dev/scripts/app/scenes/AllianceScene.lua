@@ -24,6 +24,9 @@ function AllianceScene:onEnter()
 
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.OPERATION)
+    local alliance_map = self:GetAlliance():GetAllianceMap()
+    local allianceShirine = self:GetAlliance():GetAllianceShrine()
+    alliance_map:AddListenOnType(allianceShirine,alliance_map.LISTEN_TYPE.BUILDING_LEVEL)
 end
 function AllianceScene:GotoCurrectPosition()
     local location = self:GetAlliance():GetSelf().location

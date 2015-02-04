@@ -134,7 +134,7 @@ end
 function NetManager:addKickEventListener()
     self:addEventListener("onKick", function(success, msg)
         self:disconnect()
-        UIKit:showMessageDialog(_("提示"), _("服务器已断开与你的连接!"), function()
+        UIKit:showMessageDialog(_("提示"), _("你与服务器的连接已断开!"), function()
             app:restart()
         end,nil,false)
     end)

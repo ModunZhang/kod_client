@@ -574,7 +574,7 @@ function GameUIShop:onEnter()
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "修改联盟荣耀 1000",
+        text = "修改联盟荣耀 100000",
         size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
@@ -582,7 +582,7 @@ function GameUIShop:onEnter()
         :align(display.CENTER, window.left + 320, window.top - 1100)
         :onButtonClicked(function(event)
             cocos_promise.promiseWithCatchError(
-                NetManager:getSendGlobalMsgPromise("alliancehonour 1000")
+                NetManager:getSendGlobalMsgPromise("alliancehonour 100000")
             )
         end)
 

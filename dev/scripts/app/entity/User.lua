@@ -12,7 +12,7 @@ local BASIC = User.LISTEN_TYPE.BASIC
 local RESOURCE = User.LISTEN_TYPE.RESOURCE
 local INVITE_TO_ALLIANCE = User.LISTEN_TYPE.INVITE_TO_ALLIANCE
 local REQUEST_TO_ALLIANCE = User.LISTEN_TYPE.REQUEST_TO_ALLIANCE
-
+local config_playerLevel = GameDatas.PlayerInitData.playerLevel
 User.RESOURCE_TYPE = Enum("BLOOD", "COIN", "STRENGTH", "GEM", "RUBY", "BERYL", "SAPPHIRE", "TOPAZ")
 local GEM = User.RESOURCE_TYPE.GEM
 local STRENGTH = User.RESOURCE_TYPE.STRENGTH
@@ -328,9 +328,9 @@ function User:OnResourcesChangedByTime(resources, current_time)
 end
 function User:OnBasicInfoChanged(basicInfo)
     if not basicInfo then return end
-    self:SetLevel(basicInfo.level)
     self:SetTerrain(basicInfo.terrain)
     self:SetLevelExp(basicInfo.levelExp)
+    self:SetLevel(self:GetPlayerLevelByExp(self:LevelExp()))
     self:SetPower(basicInfo.power)
     self:SetName(basicInfo.name)
     self:SetVipExp(basicInfo.vipExp)
@@ -531,6 +531,16 @@ function User:OnNewDailyQuestsEvent(changed_map)
         listener:OnNewDailyQuestsEvent(changed_map)
     end)
 end
+
+function User:GetPlayerLevelByExp(exp)
+    exp = checkint(exp)
+    for i=#config_playerLevel,1,-1 do
+        local config_ = config_playerLevel[i]
+        if exp >= config_.expFrom then return config_.level end
+    end
+    return 0
+end
+
 return User
 
 

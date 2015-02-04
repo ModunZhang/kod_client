@@ -90,6 +90,10 @@ function CityScene:onEnter()
     -- end, 1)
 
     -- self:GetSceneLayer():hide()
+    local alliance = Alliance_Manager:GetMyAlliance()
+    local alliance_map = alliance:GetAllianceMap()
+    local allianceShirine = alliance:GetAllianceShrine()
+    alliance_map:AddListenOnType(allianceShirine,alliance_map.LISTEN_TYPE.BUILDING_LEVEL)
 end
 function CityScene:onExit()
     self:stopAllActions()
