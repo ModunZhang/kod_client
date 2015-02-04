@@ -66,6 +66,10 @@ function WallUpgradingSprite:GetFlipX()
     end
     assert(false)
 end
+function WallUpgradingSprite:GetSpriteTopPosition()
+    local x,y = WallUpgradingSprite.super.GetSpriteTopPosition(self)
+    return x, y - 30
+end
 return WallUpgradingSprite
 
 

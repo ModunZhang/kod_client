@@ -144,6 +144,10 @@ function TowerUpgradingSprite:GetLogicZorder()
     end
     return self:GetMapLayer():GetZOrderBy(self, x, y)
 end
+function TowerUpgradingSprite:GetSpriteTopPosition()
+    local x,y = TowerUpgradingSprite.super.GetSpriteTopPosition(self)
+    return x - 5, y - 30
+end
 return TowerUpgradingSprite
 
 

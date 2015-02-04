@@ -55,15 +55,14 @@ function FunctionUpgradingSprite:ctor(city_layer, entity, city)
 end
 
 function FunctionUpgradingSprite:GetSpriteTopPosition()
+    local x,y = FunctionUpgradingSprite.super.GetSpriteTopPosition(self)
     local type_ = self:GetEntity():GetType()
     if type_ == "keep" then
-        local offset_x, offset_y = self:GetSpriteOffset()
-        return offset_x - 30, offset_y + (self:GetSprite():getContentSize().height/2) * self:GetSprite():getScale() - 50
+        return x - 30, y - 50
     elseif type_ == "watchTower" then
-        local offset_x, offset_y = self:GetSpriteOffset()
-        return offset_x - 30, offset_y + (self:GetSprite():getContentSize().height/2) * self:GetSprite():getScale() - 50
+        return x - 30, y - 50
     end
-    return FunctionUpgradingSprite.super.GetSpriteTopPosition(self)
+    return x,y
 end
 
 
