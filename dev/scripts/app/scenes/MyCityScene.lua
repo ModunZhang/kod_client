@@ -354,6 +354,8 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
             or building:GetEntity():GetType() == "workshop"
         then
             UIKit:newGameUI('GameUIMilitaryTechBuilding', city, building:GetEntity()):addToScene(self, true)
+        elseif building:GetEntity():GetType() == "airship" then
+            app:EnterPVEScene()
         end
     elseif self:IsEditMode() then
         self:LeaveEditMode()

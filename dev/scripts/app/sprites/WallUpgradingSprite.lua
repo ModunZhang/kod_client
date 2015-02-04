@@ -25,11 +25,6 @@ local offset_map = {
         gate = {-36, 66}
     },
 }
-function WallUpgradingSprite:GetWorldPosition()
-    local center_point = self:convertToWorldSpace(cc.p(self:GetSpriteOffset()))
-    local bottom_point = self:convertToWorldSpace(cc.p(self:GetBottomOffset()))
-    return center_point, bottom_point
-end
 ----
 function WallUpgradingSprite:ctor(city_layer, entity, level)
     self.level = level
@@ -71,21 +66,9 @@ function WallUpgradingSprite:GetFlipX()
     end
     assert(false)
 end
-function WallUpgradingSprite:GetBottomOffset()
-    local entity = self:GetEntity()
-    if entity:GetOrient() == Orient.X then
-        return 120, 20
-    elseif entity:GetOrient() == Orient.Y then
-        if entity:IsGate() then
-            return -150, 0
-        end
-        return 50, 22
-    elseif entity:GetOrient() == Orient.NEG_X then
-        return 100, 20
-    elseif entity:GetOrient() == Orient.NEG_Y then
-        return -100, 20
-    end
-    assert(false)
+function WallUpgradingSprite:GetSpriteTopPosition()
+    local x,y = WallUpgradingSprite.super.GetSpriteTopPosition(self)
+    return x, y - 30
 end
 return WallUpgradingSprite
 

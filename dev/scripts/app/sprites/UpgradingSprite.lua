@@ -4,14 +4,14 @@ local UpgradingSprite = class("UpgradingSprite", Sprite)
 ----
 
 function UpgradingSprite:OnSceneMove()
-    local world_point, bottom_world_point = self:GetWorldPosition()
+    local world_point, top = self:GetWorldPosition()
     self:NotifyObservers(function(listener)
-        listener:OnPositionChanged(world_point.x, world_point.y, bottom_world_point.x, bottom_world_point.y)
+        listener:OnPositionChanged(world_point.x, world_point.y, top.x, top.y)
     end)
 end
 function UpgradingSprite:GetWorldPosition()
     return self:convertToWorldSpace(cc.p(self:GetSpriteOffset())),
-        self:convertToWorldSpace(cc.p(self:GetSpriteButtomPosition()))
+        self:convertToWorldSpace(cc.p(self:GetSpriteTopPosition()))
 end
 function UpgradingSprite:OnOrientChanged()
 end

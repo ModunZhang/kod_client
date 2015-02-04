@@ -69,8 +69,7 @@ function CommonUpgradeUI:OnBuildingUpgradeFinished( buidling, finish_time )
     self:SetBuildingIntroduces()
     self:SetUpgradeTime()
     self:SetUpgradeEfficiency()
-    local build_png = SpriteConfig[self.building:GetType()]:GetConfigByLevel(self.building:GetLevel()).png
-    self.building_image:setTexture(build_png)
+    self:ReloadBuildingImage()
     if self.building:GetNextLevel() == self.building:GetLevel() then
         self.upgrade_layer:setVisible(false)
     end
@@ -102,19 +101,22 @@ function CommonUpgradeUI:InitCommonPart()
         :addTo(self):setFlippedX(true)
     cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-145, display.top-175)
         :addTo(self)
+    self:ReloadBuildingImage()
+    self:InitBuildingIntroduces()
+    self:InitNextLevelEfficiency()
+    self:SetBuildingLevel()
+end
+function CommonUpgradeUI:ReloadBuildingImage()
+    if self.building_image then
+        self.building_image:removeFromParent()
+    end
     local build_png = SpriteConfig[self.building:GetType()]:GetConfigByLevel(self.building:GetLevel()).png
-
     self.building_image = display.newSprite(build_png, 0, 0):addTo(self):pos(display.cx-196, display.top-158)
-    self.building_image:setAnchorPoint(cc.p(0.5,0.5))
     if self.building:GetType()=="watchTower" or self.building:GetType()=="tower" then
         self.building_image:setScale(150/self.building_image:getContentSize().height)
     else
         self.building_image:setScale(124/self.building_image:getContentSize().width)
     end
-    self:InitBuildingIntroduces()
-
-    self:InitNextLevelEfficiency()
-    self:SetBuildingLevel()
 end
 
 function CommonUpgradeUI:SetBuildingLevel()
