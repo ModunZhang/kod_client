@@ -42,7 +42,7 @@ locations[4] = {
 }
 locations[5] = {
 	["index"] = 5,
-	["building_type"] = "toolShop",
+	["building_type"] = "barracks",
 	["x"] = 6,
 	["y"] = 29,
 	["w"] = 6,
@@ -52,7 +52,7 @@ locations[5] = {
 }
 locations[6] = {
 	["index"] = 6,
-	["building_type"] = "materialDepot",
+	["building_type"] = "hospital",
 	["x"] = 16,
 	["y"] = 29,
 	["w"] = 6,
@@ -72,7 +72,7 @@ locations[7] = {
 }
 locations[8] = {
 	["index"] = 8,
-	["building_type"] = "barracks",
+	["building_type"] = "materialDepot",
 	["x"] = 26,
 	["y"] = 19,
 	["w"] = 6,
@@ -132,7 +132,7 @@ locations[13] = {
 }
 locations[14] = {
 	["index"] = 14,
-	["building_type"] = "hospital",
+	["building_type"] = "townHall",
 	["x"] = 36,
 	["y"] = 29,
 	["w"] = 6,
@@ -142,7 +142,7 @@ locations[14] = {
 }
 locations[15] = {
 	["index"] = 15,
-	["building_type"] = "townHall",
+	["building_type"] = "toolShop",
 	["x"] = 36,
 	["y"] = 19,
 	["w"] = 6,
