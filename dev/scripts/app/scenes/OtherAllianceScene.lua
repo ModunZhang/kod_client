@@ -53,7 +53,8 @@ function OtherAllianceScene:TimerRequestServer()
 end
 --特殊刷新行军路线-->服务器需要添加缺失的行军事件
 function OtherAllianceScene:RefreshAllianceMarchLine()
-    -- self:GetSceneLayer():CreateCorpsFromMrachEventsIf()
+    --TODO:待验证
+    self:GetSceneLayer():InitAllianceEvent()
 end
 
 function OtherAllianceScene:OnTimer(current_time)
