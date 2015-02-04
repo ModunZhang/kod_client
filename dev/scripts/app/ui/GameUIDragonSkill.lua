@@ -134,9 +134,6 @@ function GameUIDragonSkill:GetListItem(index,key,val)
 	if key == "blood" then
 		title = _("英雄之血")
 		imageIcon = "dragonskill_blood_51x63.png"
-	elseif key == "dragonLevel" then
-		title = _("龙的等级")
-		imageIcon = "dragonskill_xp_51x63.png"
 	end
 	local icon = display.newSprite(imageIcon):addTo(bg):pos(30,bg:getContentSize().height/2)
 	icon:setScale(0.5)
@@ -164,15 +161,13 @@ function GameUIDragonSkill:GetUpgradeSkillCost()
     local config = self.skill:GetSkillConfig()
     local r = {
         {"blood",math.pow(self.skill:Level()+1,2) * config.heroBloodCostPerLevel},
-        {"dragonLevel",1}, --TODO: 升级龙技能需要的龙等级配置表未配置暂时写死
     }
     return r
 end
 
 function GameUIDragonSkill:CanUpgrade()
   local requires = self:GetUpgradeSkillCost()
-  local flag = City:GetResourceManager():GetBloodResource():GetValue() >= requires[2][2]
-    and self:GetDragon():Level() >= requires[2][2]
+  local flag = City:GetResourceManager():GetBloodResource():GetValue() >= requires[1][2]
   return flag
 end
 

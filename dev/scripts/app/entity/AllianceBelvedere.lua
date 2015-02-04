@@ -104,10 +104,13 @@ function AllianceBelvedere:Reset()
 	self:ClearAllListener()
 end
 
---TODO:返回是否有瞭望塔事件发生
+--返回是否有瞭望塔事件发生
 function AllianceBelvedere:HasEvent()
 	if self:GetAlliance():IsDefault() then return false end
+	return #self:GetMyEvents() > 0 or self:GetOtherEvents()
+end
 
+function AllianceBelvedere:FastCheckHasEvent_()
 end
 
 function AllianceBelvedere:OnAttackMarchEventTimerChanged(attackMarchEvent)

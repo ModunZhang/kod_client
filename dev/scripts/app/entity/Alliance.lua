@@ -925,7 +925,10 @@ function Alliance:OnAttackMarchEventsComming(__attackMarchEvents)
             return attackMarchEvent
         end
         ,function(event_data)
-        --TODO:修改行军事件
+            if self.attackMarchEvents[event_data.id] then
+                local attackMarchEvent = self.attackMarchEvents[event_data.id]
+                attackMarchEvent:UpdateData(event_data)
+            end
         end
         ,function(event_data)
             if self.attackMarchEvents[event_data.id] then
@@ -970,7 +973,10 @@ function Alliance:OnAttackMarchReturnEventsCommoing(__attackMarchReturnEvents)
             return attackMarchReturnEvent
         end
         ,function(event_data)
-        --TODO:修改行军事件
+            if self.attackMarchReturnEvents[event_data.id] then
+                local attackMarchReturnEvent = self.attackMarchReturnEvents[event_data.id]
+                attackMarchReturnEvent:UpdateData(event_data)
+            end
         end
         ,function(event_data)
             if self.attackMarchReturnEvents[event_data.id] then
@@ -1120,7 +1126,10 @@ function Alliance:OnStrikeMarchEventsComming(__strikeMarchEvents)
             return strikeMarchEvent
         end
         ,function(event_data)
-        --TODO:修改行军事件
+            if self.strikeMarchEvents[event_data.id] then
+                local strikeMarchEvent = self.strikeMarchEvents[event_data.id]
+                strikeMarchEvent:UpdateData(event_data)
+            end
         end
         ,function(event_data)
             if self.strikeMarchEvents[event_data.id] then
@@ -1164,7 +1173,10 @@ function Alliance:OnStrikeMarchReturnEventsComming(__strikeMarchReturnEvents)
             return strikeMarchReturnEvent
         end
         ,function(event_data)
-        --TODO:修改行军事件
+            if self.strikeMarchReturnEvents[event_data.id] then
+                local strikeMarchReturnEvent = self.strikeMarchReturnEvents[event_data.id]
+                strikeMarchReturnEvent:UpdateData(event_data)
+            end
         end
         ,function(event_data)
             if self.strikeMarchReturnEvents[event_data.id] then
@@ -1286,7 +1298,10 @@ function Alliance:OnVillageEventsDataComming(__villageEvents)
             return villageEvent
         end
         ,function(event_data)
-        --TODO:修改采集事件
+            if self.villageEvents[event_data.id] then
+                local villageEvent = self.villageEvents[event_data.id]
+                villageEvent:UpdateData(event_data)
+            end
         end
         ,function(event_data)
             if self.villageEvents[event_data.id] then

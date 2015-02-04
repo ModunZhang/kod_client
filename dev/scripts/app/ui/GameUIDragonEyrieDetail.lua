@@ -208,7 +208,6 @@ function GameUIDragonEyrieDetail:RefreshUI()
 	local dragon = self:GetDragon()
 	if not dragon:Ishated() then
 		if not self.hate_node then return end
-		--TODO:刷新孵化界面
 	else
 		-- 已孵化的界面
 		assert(self.tab_buttons)

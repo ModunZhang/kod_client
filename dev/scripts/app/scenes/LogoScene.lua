@@ -37,7 +37,7 @@ function LogoScene:beginAnimate()
     })
     self.layer:runAction(sequence)
 end
-
+--TODO:预加载动画和大图
 function LogoScene:PreLoadResource()
     -- local soldier_anmations = {
     --     {"animations/Infantry_1_render0.plist","animations/Infantry_1_render0.png","animations/Infantry_1_render.ExportJson"},
