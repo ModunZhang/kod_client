@@ -33,7 +33,7 @@ local offset_map = {
     },
     [3] = {
         [Orient.X] = {15, 75},
-        [Orient.Y] = {-14, 74},
+        [Orient.Y] = {-10, 73},
         [Orient.NEG_X] = {83, 83},
         [Orient.NEG_Y] = {-82, 83},
         [Orient.DOWN] = {0, 73},
