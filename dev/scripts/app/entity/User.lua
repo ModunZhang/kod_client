@@ -540,6 +540,15 @@ function User:GetPlayerLevelByExp(exp)
     end
     return 0
 end
+--获得有加成的龙类型
+function User:GetBestDragon()
+    local bestDragonForTerrain = {
+        grassLand = "greenDragon",
+        desert= "redDragon",
+        iceField = "blueDragon",
+    }
+    return bestDragonForTerrain[self:Terrain()]
+end
 
 return User
 
