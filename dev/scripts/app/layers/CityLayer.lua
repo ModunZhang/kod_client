@@ -10,6 +10,7 @@ local RoadSprite = import("..sprites.RoadSprite")
 local TileSprite = import("..sprites.TileSprite")
 local LockedTileSprite = import("..sprites.LockedTileSprite")
 local TreeSprite = import("..sprites.TreeSprite")
+local AirshipSprite = import("..sprites.AirshipSprite")
 local SingleTreeSprite = import("..sprites.SingleTreeSprite")
 local CitizenSprite = import("..sprites.CitizenSprite")
 local SoldierSprite = import("..sprites.SoldierSprite")
@@ -377,8 +378,11 @@ function CityLayer:InitWithCity(city)
     end
     self.helpedByTroops = helpedByTroops
 
+    -- pve 入口
+    self.pve_airship = self:CreateAirship(-7, 6):addTo(city_node)
 
-    display.newSprite("redDragon_icon_151x133.png"):addTo(self, WEATHER_NODE):pos(500, 500)
+
+    -- display.newSprite("redDragon_icon_151x133.png"):addTo(self, WEATHER_NODE):pos(500, 500)
 
     -- 更新其他需要动态生成的建筑
     self:UpdateAllDynamicWithCity(city)
@@ -626,6 +630,9 @@ function CityLayer:IteratorClickAble(func)
         if handle then break end
         table.foreach(self.ruins, handle_func)
         if handle then break end
+        if self.pve_airship then
+            handle_func(nil, self.pve_airship)
+        end
     until true
 end
 function CityLayer:IteratorRuins(func)
@@ -683,6 +690,9 @@ function CityLayer:CreateCitizen(city, logic_x, logic_y)
 end
 function CityLayer:CreateSoldier(soldier_type, logic_x, logic_y)
     return SoldierSprite.new(self, soldier_type, logic_x, logic_y)
+end
+function CityLayer:CreateAirship(logic_x, logic_y)
+    return AirshipSprite.new(self, logic_x, logic_y)
 end
 
 ----- override

@@ -54,6 +54,17 @@ function FunctionUpgradingSprite:ctor(city_layer, entity, city)
     self:OnTileChanged(city, city:GetTileWhichBuildingBelongs(entity))
 end
 
+function FunctionUpgradingSprite:GetSpriteTopPosition()
+    local x,y = FunctionUpgradingSprite.super.GetSpriteTopPosition(self)
+    local type_ = self:GetEntity():GetType()
+    if type_ == "keep" then
+        return x - 30, y - 50
+    elseif type_ == "watchTower" then
+        return x - 30, y - 50
+    end
+    return x,y
+end
+
 
 
 return FunctionUpgradingSprite

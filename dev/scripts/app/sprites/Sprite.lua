@@ -118,6 +118,10 @@ end
 function Sprite:GetSpriteOffset()
     return 0, 0
 end
+function Sprite:GetSpriteTopPosition()
+    local offset_x, offset_y = self:GetSpriteOffset()
+    return offset_x, offset_y + (self:GetSprite():getContentSize().height/2) * self:GetSprite():getScale()
+end
 function Sprite:GetSpriteButtomPosition()
     local offset_x, offset_y = self:GetSpriteOffset()
     return offset_x, offset_y - (self:GetSprite():getContentSize().height/2) * self:GetSprite():getScale()
@@ -138,7 +142,7 @@ end
 
 ----------base
 function Sprite:GenerateBaseTiles(w, h)
-    self:newBatchNode(w, h):addTo(self, -2)
+    self:newBatchNode(w, h):addTo(self, 100)
 end
 function Sprite:newBatchNode(w, h)
     local start_x, end_x, start_y, end_y = self:GetLocalRegion(w, h)
