@@ -11,7 +11,6 @@ require("app.utils.UIKit")
 require("app.utils.window")
 require("app.service.NetManager")
 require("app.service.DataManager")
-import('app.ui.GameGlobalUIUtils')
 
 local Store = import(".utils.Store")
 local GameDefautlt = import("app.utils.GameDefautlt")
@@ -271,7 +270,12 @@ function MyApp:transactionObserver(event)
         Store.finishTransaction(transaction)
     elseif transaction_state == 'purchased' then
         --TODO:服务器验证 成功或失败后关闭 transaction
-        Store.finishTransaction(transaction)
+        NetManager:getVerifyIAPPromise(transaction.transactionIdentifier,transaction.receipt):next(function(msg)
+            if msg.transactionId then
+                GameGlobalUI:showTips("恭喜","获得x100宝石")
+                Store.finishTransaction(msg.transactionId)
+            end
+        end)
     elseif transaction_state == 'purchasing' then
         --不作任何处理
     else

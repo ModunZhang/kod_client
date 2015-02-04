@@ -47,9 +47,6 @@ function CityLayer:GetClickedObject(world_x, world_y)
     }
     self:IteratorClickAble(function(_, v)
         if not v:isVisible() then return false end
-        if v:GetEntity():GetType() == "wall" and not v:GetEntity():IsGate() then return false end
-        if v:GetEntity():GetType() == "tower" and not v:GetEntity():IsUnlocked() then return false end
-
         local check = v:IsContainPointWithFullCheck(logic_x, logic_y, world_x, world_y)
         if check.logic_clicked then
             table.insert(clicked_list.logic_clicked, v)
@@ -64,6 +61,16 @@ function CityLayer:GetClickedObject(world_x, world_y)
     table.sort(clicked_list.sprite_clicked, function(a, b)
         return a:getLocalZOrder() > b:getLocalZOrder()
     end)
+    if clicked_list.logic_clicked[1] then
+        if clicked_list.logic_clicked[1]:GetEntity():GetType() == "wall" then
+            clicked_list.logic_clicked[1] = self:GetGate()
+        end
+    end
+    if clicked_list.sprite_clicked[1] then
+        if clicked_list.sprite_clicked[1]:GetEntity():GetType() == "wall" then
+            clicked_list.sprite_clicked[1] = self:GetGate()
+        end
+    end
     if self:IsEditMode() then
         local logic_clicked = clicked_list.logic_clicked
         while #logic_clicked > 0 do
@@ -492,7 +499,7 @@ function CityLayer:UpdateTowersWithCity(city)
     local old_towers = self.towers
     local new_towers = {}
     local _, level = SpriteConfig["wall"]:GetConfigByLevel(city:GetGate():GetLevel())
-    for k, v in pairs(city:GetTowers()) do
+    for k, v in pairs(city:GetVisibleTowers()) do
         table.insert(new_towers, self:CreateTower(v, level):addTo(city_node))
     end
     self.towers = new_towers
@@ -588,9 +595,9 @@ function CityLayer:IteratorCanUpgradingBuilding(func)
         table.foreach(self.houses, handle_func)
         if handle then break end
         table.foreach(self.towers, function(k, tower)
-            if tower:GetEntity():IsUnlocked() then
+            -- if tower:GetEntity():IsUnlocked() then
                 return handle_func(k, tower)
-            end
+            -- end
         end)
         if handle then break end
         table.foreach(self.walls, function(k, wall)
@@ -623,6 +630,16 @@ function CityLayer:IteratorClickAble(func)
 end
 function CityLayer:IteratorRuins(func)
     table.foreach(self.ruins, func)
+end
+function CityLayer:GetGate()
+    local gate 
+    table.foreach(self.walls, function(_, v)
+        if v:GetEntity():IsGate() then
+            gate = v
+            return true
+        end
+    end)
+    return gate
 end
 function CityLayer:CreateRoadWithTile(tile)
     local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())

@@ -2,6 +2,7 @@
 -- Author: dannyhe
 -- Date: 2014-08-05 17:34:54
 --
+require("app.ui.GameGlobalUIUtils")
 local LogoScene = class("LogoScene", function()
     return display.newScene("LogoScene")
 end)
