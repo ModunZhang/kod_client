@@ -4,8 +4,8 @@ local AirshipSprite = class("AirshipSprite", Sprite)
 function AirshipSprite:ctor(city_layer, x, y)
     AirshipSprite.super.ctor(self, city_layer, nil, city_layer:GetLogicMap():ConvertToMapPosition(x, y))
     self:GetSprite():runAction(cc.RepeatForever:create(transition.sequence{
-        cc.MoveBy:create(5, cc.p(0, 20)),
-        cc.MoveBy:create(5, cc.p(0, -20))
+        cc.MoveBy:create(5, cc.p(0, 10)),
+        cc.MoveBy:create(5, cc.p(0, -10))
     }))
     -- self:CreateBase()
 end
