@@ -45,12 +45,6 @@ local offset_map = {
         left_end = {-47, 66}
     },
 }
-
-function TowerUpgradingSprite:GetWorldPosition()
-    local center_point = self:convertToWorldSpace(cc.p(self:GetSpriteOffset()))
-    local bottom_point = self:convertToWorldSpace(cc.p(self:GetBottomOffset()))
-    return center_point, bottom_point
-end
 ---- 功能
 function TowerUpgradingSprite:ctor(city_layer, entity, level)
     self.level = level
@@ -149,52 +143,6 @@ function TowerUpgradingSprite:GetLogicZorder()
         x, y = self:GetMidLogicPosition()
     end
     return self:GetMapLayer():GetZOrderBy(self, x, y)
-end
-function TowerUpgradingSprite:GetHeadOffset()
-    local entity = self:GetEntity()
-    if entity:GetOrient() == Orient.X then
-        return 60, 180
-    elseif entity:GetOrient() == Orient.Y then
-        return -60, 180
-    elseif entity:GetOrient() == Orient.NEG_X then
-        return 60, 175
-    elseif entity:GetOrient() == Orient.NEG_Y then
-        return -60, 175
-    elseif entity:GetOrient() == Orient.RIGHT then
-        return 0, 140
-    elseif entity:GetOrient() == Orient.DOWN then
-        return -10, 135
-    elseif entity:GetOrient() == Orient.LEFT then
-        return 0, 140
-    elseif entity:GetOrient() == Orient.UP then
-        return 0, 130
-    elseif entity:GetOrient() == Orient.NONE then
-        return 0,  135
-    end
-    assert(false)
-end
-function TowerUpgradingSprite:GetBottomOffset()
-    local entity = self:GetEntity()
-    if entity:GetOrient() == Orient.X then
-        return 30, 0
-    elseif entity:GetOrient() == Orient.Y then
-        return -50, 20
-    elseif entity:GetOrient() == Orient.NEG_X then
-        return 60, 165
-    elseif entity:GetOrient() == Orient.NEG_Y then
-        return -60, 165
-    elseif entity:GetOrient() == Orient.RIGHT then
-        return 0, 0
-    elseif entity:GetOrient() == Orient.DOWN then
-        return 0, 0
-    elseif entity:GetOrient() == Orient.LEFT then
-        return -20, 0
-    elseif entity:GetOrient() == Orient.UP then
-        return 0, 125
-    elseif entity:GetOrient() == Orient.NONE then
-        return 0,  0
-    end
-    assert(false)
 end
 return TowerUpgradingSprite
 

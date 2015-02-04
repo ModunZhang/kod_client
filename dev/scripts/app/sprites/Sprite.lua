@@ -118,6 +118,10 @@ end
 function Sprite:GetSpriteOffset()
     return 0, 0
 end
+function Sprite:GetSpriteTopPosition()
+    local offset_x, offset_y = self:GetSpriteOffset()
+    return offset_x, offset_y + (self:GetSprite():getContentSize().height/2) * self:GetSprite():getScale()
+end
 function Sprite:GetSpriteButtomPosition()
     local offset_x, offset_y = self:GetSpriteOffset()
     return offset_x, offset_y - (self:GetSprite():getContentSize().height/2) * self:GetSprite():getScale()

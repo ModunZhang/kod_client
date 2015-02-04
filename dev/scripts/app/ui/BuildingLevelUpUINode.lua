@@ -31,7 +31,7 @@ end
 function BuildingLevelUpUINode:InitWidget()
     self.level_bg = display.newNode():addTo(self)
     self.can_level_up = cc.ui.UIImage.new("can_level_up.png"):addTo(self.level_bg):hide()
-    self.can_not_level_up = cc.ui.UIImage.new("can_not_level_up.png"):addTo(self.level_bg):pos(0,10):hide()
+    self.can_not_level_up = cc.ui.UIImage.new("can_not_level_up.png"):addTo(self.level_bg):pos(0,-10):hide()
     self.text_field = cc.ui.UILabel.new({
         size = 15,
         font = UIKit:getFontFilePath(),

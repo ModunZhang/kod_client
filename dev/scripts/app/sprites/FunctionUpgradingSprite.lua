@@ -54,6 +54,18 @@ function FunctionUpgradingSprite:ctor(city_layer, entity, city)
     self:OnTileChanged(city, city:GetTileWhichBuildingBelongs(entity))
 end
 
+function FunctionUpgradingSprite:GetSpriteTopPosition()
+    local type_ = self:GetEntity():GetType()
+    if type_ == "keep" then
+        local offset_x, offset_y = self:GetSpriteOffset()
+        return offset_x - 30, offset_y + (self:GetSprite():getContentSize().height/2) * self:GetSprite():getScale() - 50
+    elseif type_ == "watchTower" then
+        local offset_x, offset_y = self:GetSpriteOffset()
+        return offset_x - 30, offset_y + (self:GetSprite():getContentSize().height/2) * self:GetSprite():getScale() - 50
+    end
+    return FunctionUpgradingSprite.super.GetSpriteTopPosition(self)
+end
+
 
 
 return FunctionUpgradingSprite
