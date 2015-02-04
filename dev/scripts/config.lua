@@ -18,12 +18,12 @@ LOAD_DEPRECATED_API = true
 -- server config
 CONFIG_LOCAL_SERVER = {
     update = {
-        host = "127.0.0.1",
+        host = "192.168.0.2",
         port = 3000,
         name = "update-server-1"
     },
     gate = {
-        host = "127.0.0.1",
+        host = "192.168.0.2",
         port = 3011,
         name = "gate-server-1"
     },
@@ -46,7 +46,7 @@ CONFIG_APP_URL = {
     android = "https://batcat.sinaapp.com/ad_hoc/build-index.html"
 }
 
-CONFIG_IS_LOCAL = false
+CONFIG_IS_LOCAL = true
 CONFIG_IS_DEBUG = true
 CONFIG_LOG_DEBUG_FILE = true -- 记录日志文件
 

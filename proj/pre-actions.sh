@@ -17,10 +17,14 @@ RES_COMPILE_TOOL=$QUICK_V3_ROOT/quick/bin/pack_files.sh
 DOCROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 VERSION_FILE=$DOCROOT/../dev/scripts/debug_version.lua
 DESTROOT=$DOCROOT/../update
-#clean
-cd $DESTROOT
-rm -rf *
-cd $DOCROOT/
+if  test -d $DESTROOT ; then
+	#clean
+	cd $DESTROOT
+	rm -rfv *
+	cd $DOCROOT/
+else
+	mkdir $DESTROOT
+fi
 echo "------------------------------------"
 echo "\033[32m [INFO]Clean Update folder Success! \033[0m"
 cd $DOCROOT/../

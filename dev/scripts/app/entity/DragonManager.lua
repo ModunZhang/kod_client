@@ -133,7 +133,10 @@ function DragonManager:RefreshDragonEvents__(__dragonEvents)
             return dragonEvent
         end
         ,function(event_data)
-        --TODO:修改孵化事件
+            if self.dragon_events[event_data.dragonType] then
+                local dragonEvent = self.dragon_events[event_data.dragonType]
+                dragonEvent:UpdateData(event_data)
+            end
         end
         ,function(event_data)
             if self.dragon_events[event_data.dragonType] then
@@ -182,7 +185,10 @@ function DragonManager:RefreshDragonDeathEvents__(__dragonDeathEvents)
             return dragonDeathEvent
         end
         ,function(event_data)
-        --TODO:修改复活事件
+            if self.dragonDeathEvents[event_data.dragonType] then
+                local dragonDeathEvent = self.dragonDeathEvents[event_data.dragonType]
+                dragonDeathEvent:UpdateData(event_data)
+            end
         end
         ,function(event_data)
             if self.dragonDeathEvents[event_data.dragonType] then

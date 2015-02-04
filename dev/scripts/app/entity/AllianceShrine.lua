@@ -30,6 +30,14 @@ function AllianceShrine:ctor(alliance)
 	self:loadStages()
 end
 
+function AllianceShrine:OnBuildingLevelChange(building)
+	if building.name == 'shrine' and self.perception then
+		local shire_building = config_shrine[building.level]
+        self.perception:SetProductionPerHour(app.timer:GetServerTime(),shire_building.pRecovery)
+        self.perception:SetValueLimit(shire_building.perception)
+	end
+end
+
 function AllianceShrine:GetAlliance()
 	return self.alliance
 end
@@ -51,7 +59,7 @@ function AllianceShrine:loadStages()
 	local ret = string.sub(large_key,1,s-1)
 	property(self,"maxCountOfStage",checknumber(ret))
 end
--- 这里是否需要先监听者发送移除指令?
+
 function AllianceShrine:Reset()
 	table.foreach(self:Stages(),function(stage_name,stage)
 		stage:Reset()
@@ -63,7 +71,8 @@ function AllianceShrine:Reset()
 	self.shrineReports = {}
 	self.maxCountOfStage = nil
 	self.perception = nil
-
+	local alliance_map = self:GetAlliance():GetAllianceMap()
+	alliance_map:RemoveListenerOnType(self,alliance_map.LISTEN_TYPE.BUILDING_LEVEL)
 end
 
 function AllianceShrine:OnPropertyChange(property_name, old_value, value)
@@ -121,7 +130,7 @@ function  AllianceShrine:OnNewStageOpened(changed_map)
 		listener.OnNewStageOpened(listener,changed_map)
 	end)
 end
--- 洞察力 TODO:升级后改变生产量(alliance_data.buildings.shrine.level)
+-- 洞察力 升级后改变生产量(alliance_data.buildings.shrine.level)
 function AllianceShrine:InitOrUpdatePerception(alliance_data)
 	if not  alliance_data.basicInfo or not alliance_data.basicInfo.perceptionRefreshTime then return end
 	if not self.perception then

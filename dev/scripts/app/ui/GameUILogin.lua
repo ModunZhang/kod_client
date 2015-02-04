@@ -9,7 +9,6 @@ if CONFIG_IS_DEBUG then
     local result
     gaozhou, result = pcall(require, "app.service.gaozhou")
 end
---TODO:这里会遇加载图片资源 应该可以解决点击start后的卡顿
 function GameUILogin:ctor()
     GameUILogin.super.ctor(self)
 end

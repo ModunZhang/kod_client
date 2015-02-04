@@ -11,7 +11,7 @@ local Enum = import("..utils.Enum")
 local Localize = import("..utils.Localize")
 local StarBar = import(".StarBar")
 local UILib = import(".UILib")
---TODO:军事科技水平
+--TODO:军事科技水平、战争增益
 GameUIWatchTowerTroopDetail.ITEM_TYPE = Enum("DRAGON_INFO","DRAGON_EQUIPMENT","DRAGON_SKILL","SOLIDERS","TECHNOLOGY")
 GameUIWatchTowerTroopDetail.DATA_TYPE = Enum("MARCH","HELP_DEFENCE","STRIKE")
 local titles = {
