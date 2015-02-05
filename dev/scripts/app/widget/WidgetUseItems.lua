@@ -101,7 +101,7 @@ function WidgetUseItems:Create(params)
     elseif item_type == "resource" or item:Category() == Item.CATEGORY.RESOURCE then
         dialog = self:OpenResourceDialog(item)
     elseif item_type == "retreatTroop" then
-        dialog = self:OpenNormalDialog(item)
+        dialog = self:OpenRetreatTroopDialog(item,params.event)
     elseif item_type == "warSpeedupClass" then
         dialog = self:OpenWarSpeedupDialog(item,params.event)
     else
@@ -681,6 +681,35 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
     end)
     return dialog
 end
+function WidgetUseItems:OpenRetreatTroopDialog( item,event )
+    local same_items = ItemManager:GetSameTypeItems(item)
+    local dialog = WidgetPopDialog.new(#same_items * 138 +100,item:GetLocalizeName(),window.top-230)
+    local body = dialog:GetBody()
+    local size = body:getContentSize()
+
+    for i,v in ipairs(same_items) do
+        self:CreateItemBox(
+            v,
+            function ()
+                return true
+            end,
+            function ()
+                local item_name = v:Name()
+                NetManager:getUseItemPromise(item_name,{
+                    [item_name]={
+                        eventType = "attackMarchEvents",
+                        eventId=event:Id()
+                    }
+
+                }):next(function ()
+                    dialog:leftButtonClicked()
+                end)
+            end
+        ):addTo(body):align(display.CENTER,size.width/2,size.height - 120 - (i-1)*138)
+    end
+    return dialog
+end
+
 function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc)
     local body = display.newNode()
     body:setContentSize(cc.size(570,128))
