@@ -653,7 +653,13 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
             end,
             function ()
                 local item_name = v:Name()
-                NetManager:getUseItemPromise(item_name,{}):next(function ()
+                NetManager:getUseItemPromise(item_name,{
+                    [item_name]={
+                        eventType = "attackMarchEvents",
+                        eventId=march_event:Id()
+                    }
+
+                }):next(function ()
                     dialog:leftButtonClicked()
                 end)
             end
@@ -763,6 +769,8 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc)
 end
 
 return WidgetUseItems
+
+
 
 
 

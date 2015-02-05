@@ -72,7 +72,7 @@ function WidgetUpgradeMilitaryTech:CurrentInfo()
         color = 0x403c2f,
     }):align(display.CENTER, bg:getContentSize().width/2 , bg:getContentSize().height/2)
         :addTo(bg)
-    self.line1 = create_line_item("icon_hit.png",tech:GetTechLocalize(),"+"..tech:GetAtkEff().."%"):addTo(body):align(display.CENTER, size.width/2, size.height-120)
+    self.line1 = create_line_item("icon_hit.png",tech:GetTechLocalize(),"+"..tech:GetAtkEff()*100.."%"):addTo(body):align(display.CENTER, size.width/2, size.height-120)
     self.line2 = create_line_item("icon_teac.png",tech:GetTechCategory(),"+"..tech:GetTechPoint()):addTo(body):align(display.CENTER, size.width/2, size.height-170)
 end
 function WidgetUpgradeMilitaryTech:UpgradeButtons()
@@ -242,7 +242,7 @@ function WidgetUpgradeMilitaryTech:OnMilitaryTechsDataChanged(city,changed_map)
             self.upgrade_time:setString(GameUtils:formatTimeStyle1(v:GetUpgradeTime()))
             self.upgrade_now_need_gems_label:setString(v:GetInstantUpgradeGems())
             self.upgrade_tip:setString(v:GetTechLocalize().." (".._("升级到").." Lv"..(v:Level()+1)..")")
-            self.line1:SetText("+"..v:GetAtkEff().."%")
+            self.line1:SetText("+"..v:GetAtkEff()*100.."%")
             self.line2:SetText("+"..v:GetTechPoint())
         	self:UpgradeRequirement()
         end
