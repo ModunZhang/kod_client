@@ -23,42 +23,10 @@ local GameUIPVESendTroop = UIKit:createUIClass("GameUIPVESendTroop","GameUIWithC
 
 local img_dir = "allianceHome/"
 
-function GameUIPVESendTroop:ctor(pve_soldiers)
+function GameUIPVESendTroop:ctor(pve_soldiers,march_callback)
     GameUIPVESendTroop.super.ctor(self,City,_("准备进攻"))
-    self.pve_soldiers = pve_soldiers or {
-        {
-            soldier_type = "ranger",
-            soldier_level = 1,
-        },
-        {
-            soldier_type = "catapult",
-            soldier_level = 1,
-        },
-        {
-            soldier_type = "lancer",
-            soldier_level = 1,
-        },
-        {
-            soldier_type = "swordsman",
-            soldier_level = 1,
-        },
-        {
-            soldier_type = "sentinel",
-            soldier_level = 1,
-        },
-        {
-            soldier_type = "crossbowman",
-            soldier_level = 1,
-        },
-        {
-            soldier_type = "horseArcher",
-            soldier_level = 1,
-        },
-        {
-            soldier_type = "ballista",
-            soldier_level = 1,
-        },
-    }
+    self.march_callback = march_callback
+    self.pve_soldiers = pve_soldiers
     self.soldier_manager = City:GetSoldierManager()
     self.dragon_manager = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager()
     self.soldiers_table = {}
@@ -260,6 +228,12 @@ function GameUIPVESendTroop:SelectDragon()
                 {
                     btn_label = _("确定"),
                     btn_callback = function (selectDragon)
+                        if self.dragon:Type() ~= selectDragon:Type() then
+                            self.show:ShowOrRefreshTroops()
+                            for k,item in pairs(self.soldiers_table) do
+                                item:SetSoldierCount(0)
+                            end
+                        end
                         self:RefreashDragon(selectDragon)
                     end,
                 },
@@ -466,11 +440,6 @@ function GameUIPVESendTroop:CreateTroopsShow()
         return info
     end
 
-
-
-
-
-
     local parent = self
     function TroopsShow:GetCurrentPage()
         return self.current or 1
@@ -511,21 +480,25 @@ function GameUIPVESendTroop:CreateTroopsShow()
         local box_width = 104
         local gap_x = 8
         local origin_x = (619 - 5 * box_width - 4 * gap_x)/2 +  box_width/2
-        print("origin_x",origin_x)
         for i=(current_page-1)*5+1,(current_page-1)*5+5 do
-            local soldier_type = soldiers[i].soldier_type
-            local soldier_level = soldiers[i].soldier_level
-            -- 士兵头像
-            local soldier_ui_config = UILib.black_soldier_image[soldier_type][soldier_level]
-            local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER,origin_x+ (i-1-(current_page-1)*5)*(box_width+gap_x),origin_y):addTo(self):scale(104/128)
-            local soldier_head_bg  = display.newSprite("box_soldier_128x128.png"):addTo(soldier_head_icon):pos(soldier_head_icon:getContentSize().width/2,soldier_head_icon:getContentSize().height/2)
-            -- 附上pve士兵类型 用来判定克制关系
-            soldier_head_icon.soldier_type = soldier_type
-            table.insert(self.added_pve_soldiers,soldier_head_icon)
+            if soldiers[i] then
+                local soldier_type = soldiers[i].soldier_type
+                local soldier_level = soldiers[i].soldier_level
+                -- 士兵头像
+                local soldier_ui_config = UILib.black_soldier_image[soldier_type][soldier_level]
+                local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER,origin_x+ (i-1-(current_page-1)*5)*(box_width+gap_x),origin_y):addTo(self):scale(104/128)
+                local soldier_head_bg  = display.newSprite("box_soldier_128x128.png"):addTo(soldier_head_icon):pos(soldier_head_icon:getContentSize().width/2,soldier_head_icon:getContentSize().height/2)
+                -- 附上pve士兵类型 用来判定克制关系
+                soldier_head_icon.soldier_type = soldier_type
+                table.insert(self.added_pve_soldiers,soldier_head_icon)
+            else
+                break
+            end
         end
     end
     function TroopsShow:RefreshMySoldiers(soldier_show_table)
         local my_soldiers = soldier_show_table or {}
+        self.my_soldiers = my_soldiers
         -- 按兵种战力排序
         table.sort(my_soldiers, function(a, b)
             return a.power > b.power
@@ -543,7 +516,6 @@ function GameUIPVESendTroop:CreateTroopsShow()
         local origin_x = (619 - 5 * box_width - 4 * gap_x)/2 +  box_width/2
         if not LuaUtils:table_empty(my_soldiers) then
             for i=(current_page-1)*5+1,(current_page-1)*5+5 do
-                LuaUtils:outputTable(" my_soldiers[i]"..i,  my_soldiers[i])
                 if my_soldiers[i] then
                     local soldier_type = my_soldiers[i].soldier_type
                     local soldier_level = my_soldiers[i].soldier_level
@@ -553,10 +525,10 @@ function GameUIPVESendTroop:CreateTroopsShow()
                     local soldier_head_bg  = display.newSprite("box_soldier_128x128.png"):addTo(soldier_head_icon):pos(soldier_head_icon:getContentSize().width/2,soldier_head_icon:getContentSize().height/2)
                     table.insert(self.added_my_soldiers,soldier_head_icon)
                     -- 克制关系框
-                    local pve_soldier = self.added_pve_soldiers[i]
+                    local pve_soldier = self.pve_soldiers[i]
                     if pve_soldier then
-                    	local forbear_pic = self:GetForbear(soldier_type,pve_soldier.soldier_type) and "forbear_up.png" or "forbear_down.png"
-                    	display.newSprite(forbear_pic):addTo(soldier_head_icon):pos(soldier_head_icon:getContentSize().width/2+5,soldier_head_icon:getContentSize().height/2+5):scale(1.22)
+                        local forbear_pic = self:GetForbear(soldier_type,pve_soldier.soldier_type) and "forbear_up.png" or "forbear_down.png"
+                        display.newSprite(forbear_pic):addTo(soldier_head_icon):pos(soldier_head_icon:getContentSize().width/2+5,soldier_head_icon:getContentSize().height/2+5):scale(1.22)
                     end
                 else
                     break
@@ -589,24 +561,25 @@ function GameUIPVESendTroop:CreateTroopsShow()
         print("my_category",my_category,"pve_category",pve_category)
         local find_my = SOLDIER_VS_MAP[my_category]
         for k,v in pairs(find_my.strong_vs) do
-        	if v == pve_category then
-        		return true
-        	end
+            if v == pve_category then
+                return true
+            end
         end
         for k,v in pairs(find_my.weak_vs) do
-        	if v == pve_category then
-        		return false
-        	end
+            if v == pve_category then
+                return false
+            end
         end
     end
     function TroopsShow:TurnShows( isRight )
         local current_page = self:GetCurrentPage()
         if isRight then
-            self.current = current_page + 1 > #self.pve_soldiers/5 and #self.pve_soldiers/5 or current_page + 1
+            self.current = current_page + 1 > math.ceil(#self.pve_soldiers/5)  and math.ceil(#self.pve_soldiers/5) or current_page + 1
         else
-            self.current = self.current - 1 < 1 and 1 or current_page - 1
+            self.current = current_page - 1 < 1 and 1 or current_page - 1
         end
         self:RefreshPVESoldiers()
+        self:RefreshMySoldiers(self.my_soldiers)
     end
     function TroopsShow:ShowOrRefreshTroops( soldier_show_table )
         local my_soldiers = soldier_show_table or {}
@@ -664,6 +637,8 @@ function GameUIPVESendTroop:onExit()
 end
 
 return GameUIPVESendTroop
+
+
 
 
 
