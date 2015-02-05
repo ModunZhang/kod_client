@@ -317,7 +317,40 @@ local SOLDIER_IMAGES = {
         "soldier_ballista_1.png",
     }
 }
-
+local BLACK_SOLDIER_IMAGES = {
+    ranger = {
+        "b_ranger_1.png",
+        "b_ranger_2.png",
+    },
+    catapult = {
+        "b_catapult_1.png",
+        "b_catapult_2.png",
+    },
+    lancer = {
+        "b_lancer_1.png",
+        "b_lancer_2.png",
+    },
+    swordsman = {
+        "b_swordsman_1.png",
+        "b_swordsman_2.png",
+    },
+    sentinel = {
+        "b_sentinel_1.png",
+        "b_sentinel_2.png",
+    },
+    crossbowman = {
+        "b_crossbowman_1.png",
+        "b_crossbowman_2.png",
+    },
+    horseArcher = {
+        "b_horseArcher_1.png",
+        "b_horseArcher_2.png",
+    },
+    ballista = {
+        "b_ballista_1.png",
+        "b_ballista_2.png",
+    },
+}
 local DRAGON_ANIMATIONS_FILES = {
     redDragon = {
         "animations/dragon_red/dragon_red.ExportJson"
@@ -423,6 +456,7 @@ return {
     soldier_animation_files = SOLDIER_ANIMATION_FILES,
     soldier_animation = SOLDIER_ANIMATIONS,
     soldier_image = SOLDIER_IMAGES,
+    black_soldier_image = BLACK_SOLDIER_IMAGES,
     dragon_head  = DRAGON_HEAD,
     dragon_animations = DRAGON_ANIMATIONS,
     dragon_animations_files = DRAGON_ANIMATIONS_FILES,

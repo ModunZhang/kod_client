@@ -23,9 +23,42 @@ local GameUIPVESendTroop = UIKit:createUIClass("GameUIPVESendTroop","GameUIWithC
 
 local img_dir = "allianceHome/"
 
-function GameUIPVESendTroop:ctor()
+function GameUIPVESendTroop:ctor(pve_soldiers)
     GameUIPVESendTroop.super.ctor(self,City,_("准备进攻"))
-
+    self.pve_soldiers = pve_soldiers or {
+        {
+            soldier_type = "ranger",
+            soldier_level = 1,
+        },
+        {
+            soldier_type = "catapult",
+            soldier_level = 1,
+        },
+        {
+            soldier_type = "lancer",
+            soldier_level = 1,
+        },
+        {
+            soldier_type = "swordsman",
+            soldier_level = 1,
+        },
+        {
+            soldier_type = "sentinel",
+            soldier_level = 1,
+        },
+        {
+            soldier_type = "crossbowman",
+            soldier_level = 1,
+        },
+        {
+            soldier_type = "horseArcher",
+            soldier_level = 1,
+        },
+        {
+            soldier_type = "ballista",
+            soldier_level = 1,
+        },
+    }
     self.soldier_manager = City:GetSoldierManager()
     self.dragon_manager = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager()
     self.soldiers_table = {}
@@ -265,10 +298,10 @@ function GameUIPVESendTroop:SelectSoldiers()
             size = 24,
             color = 0x403c2f
         }):align(display.LEFT_CENTER,140,90):addTo(content)
-        
+
         local function getMax()
-        	local usable_citizen=self.dragon:LeadCitizen()
-        
+            local usable_citizen=self.dragon:LeadCitizen()
+
             for k,item in pairs(self.soldiers_table) do
                 local soldier_t,soldier_l,soldier_n =item:GetSoldierInfo()
                 local soldier_config = normal[soldier_t.."_"..soldier_l] or SPECIAL[soldier_t]
@@ -336,7 +369,6 @@ function GameUIPVESendTroop:SelectSoldiers()
             :align(display.LEFT_CENTER, 400,90)
 
         -- 士兵头像
-        local soldier_type_with_star = soldier_type..(soldier_level == nil and "" or string.format("_%d", soldier_level))
         local soldier_ui_config = UILib.soldier_image[soldier_type][soldier_level]
         local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER,60,64):addTo(content):scale(104/128)
         local soldier_head_bg  = display.newSprite("box_soldier_128x128.png"):addTo(soldier_head_icon):pos(soldier_head_icon:getContentSize().width/2,soldier_head_icon:getContentSize().height/2)
@@ -388,9 +420,11 @@ function GameUIPVESendTroop:RefreashSoldierShow()
                 soldier_num = soldier_number,
                 soldier_weight = soldier_config.load*soldier_number,
                 soldier_citizen = soldier_config.citizen*soldier_number,
+                soldier_level = soldier_level
             })
         end
     end
+    self.show:ShowOrRefreshTroops(soldier_show_table)
 end
 
 function GameUIPVESendTroop:GetSelectSoldier()
@@ -407,11 +441,10 @@ function GameUIPVESendTroop:GetSelectSoldier()
     return soldiers
 end
 function GameUIPVESendTroop:CreateTroopsShow()
-	local TroopsShow = display.newSprite("back_ground_619x270.png"):addTo(self):align(display.TOP_CENTER,window.cx, window.top_bottom+18)
-	local b_size = TroopsShow:getContentSize()
-	local info_bg = display.newSprite("back_ground_619x52.png"):addTo(TroopsShow):align(display.BOTTOM_CENTER,b_size.width/2, 0)
+    local TroopsShow = display.newSprite("back_ground_619x270.png"):addTo(self):align(display.TOP_CENTER,window.cx, window.top_bottom+18)
+    local b_size = TroopsShow:getContentSize()
 
-	local function createInfoItem(title,value)
+    local function createInfoItem(title,value)
         local info = display.newLayer()
         local value_label = UIKit:ttfLabel({
             text = value,
@@ -433,47 +466,186 @@ function GameUIPVESendTroop:CreateTroopsShow()
         return info
     end
 
-    
 
-    -- 左翻页按钮
-    local left_btn = WidgetPushButton.new({normal = "button_normal_28x210.png",pressed = "button_pressed_28x210.png"})
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                
-            end
-        end):align(display.LEFT_TOP,0,b_size.height):addTo(TroopsShow)
-    -- 右翻页按钮
-    local right_btn = WidgetPushButton.new({normal = "button_normal_28x210.png",pressed = "button_pressed_28x210.png"})
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                
-            end
-        end):align(display.LEFT_BOTTOM,b_size.width-30,0):addTo(TroopsShow)
-    right_btn:setRotationSkewY(180)
+
+
 
 
     local parent = self
+    function TroopsShow:GetCurrentPage()
+        return self.current or 1
+    end
     function TroopsShow:SetPower(power)
+        local info_bg =self.info_bg
         local power_item = createInfoItem(_("战斗力"),string.formatnumberthousands(power))
             :align(display.CENTER,40,4)
             :addTo(info_bg)
         return self
     end
     function TroopsShow:SetCitizen(citizen)
+        local info_bg =self.info_bg
         local citizen_item = createInfoItem(_("部队容量"),citizen.."/"..parent.dragon:LeadCitizen())
         citizen_item:align(display.CENTER,310-citizen_item:getContentSize().width/2,4)
             :addTo(info_bg)
         return self
     end
     function TroopsShow:SetWeight(weight)
+        local info_bg =self.info_bg
         local weight_item = createInfoItem(_("负重"),string.formatnumberthousands(weight))
         weight_item:align(display.CENTER,620-weight_item:getContentSize().width-40,4)
             :addTo(info_bg)
         return self
     end
-    TroopsShow:SetPower(0)
-    TroopsShow:SetCitizen(0)
-    TroopsShow:SetWeight(0)
+    function TroopsShow:SetPVESoldiers(soldiers)
+        self.pve_soldiers = soldiers
+    end
+    function TroopsShow:RefreshPVESoldiers()
+        local added_pve_soldiers = self.added_pve_soldiers or {}
+        for i,v in ipairs(added_pve_soldiers) do
+            self:removeChild(v, true)
+        end
+        self.added_pve_soldiers = {}
+        local current_page = self:GetCurrentPage()
+        local soldiers = self.pve_soldiers
+        local origin_y = 210
+        local box_width = 104
+        local gap_x = 8
+        local origin_x = (619 - 5 * box_width - 4 * gap_x)/2 +  box_width/2
+        print("origin_x",origin_x)
+        for i=(current_page-1)*5+1,(current_page-1)*5+5 do
+            local soldier_type = soldiers[i].soldier_type
+            local soldier_level = soldiers[i].soldier_level
+            -- 士兵头像
+            local soldier_ui_config = UILib.black_soldier_image[soldier_type][soldier_level]
+            local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER,origin_x+ (i-1-(current_page-1)*5)*(box_width+gap_x),origin_y):addTo(self):scale(104/128)
+            local soldier_head_bg  = display.newSprite("box_soldier_128x128.png"):addTo(soldier_head_icon):pos(soldier_head_icon:getContentSize().width/2,soldier_head_icon:getContentSize().height/2)
+            -- 附上pve士兵类型 用来判定克制关系
+            soldier_head_icon.soldier_type = soldier_type
+            table.insert(self.added_pve_soldiers,soldier_head_icon)
+        end
+    end
+    function TroopsShow:RefreshMySoldiers(soldier_show_table)
+        local my_soldiers = soldier_show_table or {}
+        -- 按兵种战力排序
+        table.sort(my_soldiers, function(a, b)
+            return a.power > b.power
+        end)
+
+        local added_my_soldiers = self.added_my_soldiers or {}
+        for i,v in ipairs(added_my_soldiers) do
+            self:removeChild(v, true)
+        end
+        self.added_my_soldiers = {}
+        local current_page = self:GetCurrentPage()
+        local origin_y = 106
+        local box_width = 104
+        local gap_x = 8
+        local origin_x = (619 - 5 * box_width - 4 * gap_x)/2 +  box_width/2
+        if not LuaUtils:table_empty(my_soldiers) then
+            for i=(current_page-1)*5+1,(current_page-1)*5+5 do
+                LuaUtils:outputTable(" my_soldiers[i]"..i,  my_soldiers[i])
+                if my_soldiers[i] then
+                    local soldier_type = my_soldiers[i].soldier_type
+                    local soldier_level = my_soldiers[i].soldier_level
+                    -- 士兵头像
+                    local soldier_ui_config = UILib.soldier_image[soldier_type][soldier_level]
+                    local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER,origin_x+ (i-1-(current_page-1)*5)*(box_width+gap_x),origin_y):addTo(self):scale(104/128)
+                    local soldier_head_bg  = display.newSprite("box_soldier_128x128.png"):addTo(soldier_head_icon):pos(soldier_head_icon:getContentSize().width/2,soldier_head_icon:getContentSize().height/2)
+                    table.insert(self.added_my_soldiers,soldier_head_icon)
+                    -- 克制关系框
+                    local pve_soldier = self.added_pve_soldiers[i]
+                    if pve_soldier then
+                    	local forbear_pic = self:GetForbear(soldier_type,pve_soldier.soldier_type) and "forbear_up.png" or "forbear_down.png"
+                    	display.newSprite(forbear_pic):addTo(soldier_head_icon):pos(soldier_head_icon:getContentSize().width/2+5,soldier_head_icon:getContentSize().height/2+5):scale(1.22)
+                    end
+                else
+                    break
+                end
+            end
+        end
+    end
+    -- 获取两个兵种直间的克制关系
+    function TroopsShow:GetForbear(my_soldier,pve_soldier)
+        local SOLDIER_VS_MAP = {
+            ["infantry"] = {
+                strong_vs = { "siege"},
+                weak_vs = { "cavalry", "archer" }
+            },
+            ["archer"] = {
+                strong_vs = { "cavalry", "infantry" },
+                weak_vs = {"siege" }
+            },
+            ["cavalry"] = {
+                strong_vs = { "infantry", "siege" },
+                weak_vs = { "archer"}
+            },
+            ["siege"] = {
+                strong_vs = {"archer" },
+                weak_vs = { "infantry", "cavalry" }
+            },
+        }
+        local my_category = Localize.soldier_category_map[my_soldier]
+        local pve_category = Localize.soldier_category_map[pve_soldier]
+        print("my_category",my_category,"pve_category",pve_category)
+        local find_my = SOLDIER_VS_MAP[my_category]
+        for k,v in pairs(find_my.strong_vs) do
+        	if v == pve_category then
+        		return true
+        	end
+        end
+        for k,v in pairs(find_my.weak_vs) do
+        	if v == pve_category then
+        		return false
+        	end
+        end
+    end
+    function TroopsShow:TurnShows( isRight )
+        local current_page = self:GetCurrentPage()
+        if isRight then
+            self.current = current_page + 1 > #self.pve_soldiers/5 and #self.pve_soldiers/5 or current_page + 1
+        else
+            self.current = self.current - 1 < 1 and 1 or current_page - 1
+        end
+        self:RefreshPVESoldiers()
+    end
+    function TroopsShow:ShowOrRefreshTroops( soldier_show_table )
+        local my_soldiers = soldier_show_table or {}
+        -- 更新
+        self:removeAllChildren()
+        self.info_bg = display.newSprite("back_ground_619x52.png"):addTo(self):align(display.BOTTOM_CENTER,b_size.width/2, 0)
+        -- 左翻页按钮
+        local left_btn = WidgetPushButton.new({normal = "button_normal_28x210.png",pressed = "button_pressed_28x210.png"})
+            :onButtonClicked(function(event)
+                if event.name == "CLICKED_EVENT" then
+                    self:TurnShows(false)
+                end
+            end):align(display.LEFT_TOP,0,b_size.height-5):addTo(self)
+        -- 右翻页按钮
+        local right_btn = WidgetPushButton.new({normal = "button_normal_28x210.png",pressed = "button_pressed_28x210.png"})
+            :onButtonClicked(function(event)
+                if event.name == "CLICKED_EVENT" then
+                    self:TurnShows(true)
+                end
+            end):align(display.LEFT_TOP,b_size.width,b_size.height-5):addTo(self)
+        right_btn:setRotationSkewY(180)
+
+        local total_power , total_weight, total_citizen =0,0,0
+        for index,v in pairs(my_soldiers) do
+
+            total_power = total_power + v.power
+            total_weight = total_weight + v.soldier_weight
+            total_citizen = total_citizen + v.soldier_citizen
+
+        end
+        self:SetPower(total_power)
+        self:SetWeight(total_weight)
+        self:SetCitizen(total_citizen)
+        self:RefreshPVESoldiers()
+        self:RefreshMySoldiers(my_soldiers)
+    end
+    TroopsShow:SetPVESoldiers(self.pve_soldiers)
+    TroopsShow:ShowOrRefreshTroops()
+    return TroopsShow
 end
 function GameUIPVESendTroop:OnSoliderCountChanged( soldier_manager,changed_map )
     for i,soldier_type in ipairs(changed_map) do
@@ -492,4 +664,13 @@ function GameUIPVESendTroop:onExit()
 end
 
 return GameUIPVESendTroop
+
+
+
+
+
+
+
+
+
 

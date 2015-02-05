@@ -616,6 +616,7 @@ return {
     soldier_status = SOLDIER_STATUS,
     dragon_status = DRAGON_STATUS,
     fight_reward = FIGHT_REWARD,
+    soldier_category_map = SOLDIER_CATEGORY_MAP,
     getSoldierCategoryByName = function(soldier_name) return SOLDIER_CATEGORY[SOLDIER_CATEGORY_MAP[soldier_name]] end,
     alliance_authority_list = ALLIANCE_AUTHORITY_LIST,
     village_name = VILLAGE_NAME,

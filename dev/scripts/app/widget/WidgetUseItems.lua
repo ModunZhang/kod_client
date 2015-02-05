@@ -23,7 +23,9 @@ WidgetUseItems.USE_TYPE = Enum("CHANGE_PLAYER_NAME",
     "VIP_POINT",
     "VIP_ACTIVE",
     "BUFF",
-    "RESOURCE"
+    "RESOURCE",
+    "RETREAT_TROOP",
+    "WAR_SPEEDUP_CLASS"
 )
 local ITEMS_TYPE = {
     "changePlayerName",
@@ -37,7 +39,8 @@ local ITEMS_TYPE = {
     "vipActive",
     "buff",
     "resource",
-
+    "retreatTroop",
+    "warSpeedupClass"
 }
 
 
@@ -46,27 +49,25 @@ function WidgetUseItems:GetItemByType(item_type,params)
     local item
     if item_type == "changePlayerName"
         or item_type == "changeCityName"
+        or item_type == "retreatTroop"
     then
         item = im:GetItemByName(item_type)
-    elseif item_type == "heroBlood" then
-        item = im:GetItemByName(item_type.."_1")
-    elseif item_type == "stamina" then
-        item = im:GetItemByName(item_type.."_1")
-    elseif item_type == "dragonExp"
+    elseif item_type == "heroBlood"
+        or item_type == "stamina"
+        or item_type == "dragonExp"
         or item_type == "dragonHp"
+        or item_type == "chest"
+        or item_type == "vipActive"
+        or item_type == "vipPoint"
+        or item_type == "warSpeedupClass"
     then
         item = im:GetItemByName(item_type.."_1")
-    elseif item_type == "chest" then
-        item = im:GetItemByName(item_type.."_1")
-    elseif item_type == "vipActive" then
-        item = im:GetItemByName(item_type.."_1")
-    elseif item_type == "vipPoint" then
-        item = im:GetItemByName(item_type.."_1")
-    elseif item_type == "buff" then
-        item = im:GetItemByName(params.item_name)
-    elseif item_type == "resource" then
+    elseif item_type == "buff"
+        or item_type == "resource"
+    then
         item = im:GetItemByName(params.item_name)
     end
+
     return item
 end
 function WidgetUseItems:Create(params)
@@ -99,6 +100,10 @@ function WidgetUseItems:Create(params)
         dialog = self:OpenBuffDialog(item)
     elseif item_type == "resource" or item:Category() == Item.CATEGORY.RESOURCE then
         dialog = self:OpenResourceDialog(item)
+    elseif item_type == "retreatTroop" then
+        dialog = self:OpenNormalDialog(item)
+    elseif item_type == "warSpeedupClass" then
+        dialog = self:OpenWarSpeedupDialog(item,params.event)
     else
         dialog = self:OpenNormalDialog(params.item)
     end
@@ -628,6 +633,48 @@ function WidgetUseItems:OpenVipActive( item )
     list:reload()
     return dialog
 end
+function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
+    local same_items = ItemManager:GetSameTypeItems(item)
+    local dialog = WidgetPopDialog.new(#same_items * 138 + 100,_("战争沙漏"),window.top-230)
+    local body = dialog:GetBody()
+    local size = body:getContentSize()
+
+    local buff_status_label = UIKit:ttfLabel({
+        text = _("剩余时间:")..GameUtils:formatTimeStyle1(march_event:GetTime()),
+        size = 22,
+        color = 0x007c23,
+    }):addTo(body):align(display.CENTER,size.width/2, size.height-50)
+
+    for i,v in ipairs(same_items) do
+        self:CreateItemBox(
+            v,
+            function ()
+                return true
+            end,
+            function ()
+                local item_name = v:Name()
+                NetManager:getUseItemPromise(item_name,{}):next(function ()
+                    dialog:leftButtonClicked()
+                end)
+            end
+        ):addTo(body):align(display.CENTER,size.width/2,size.height- 150 - (i-1)*138)
+    end
+    function dialog:OnAttackMarchEventTimerChanged( attackMarchEvent )
+        if march_event:Id() == attackMarchEvent:Id() and (attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER
+            or attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER) then
+            buff_status_label:setString(_("剩余时间:")..GameUtils:formatTimeStyle1(attackMarchEvent:GetTime()))
+        end
+    end
+
+    local alliance = Alliance_Manager:GetMyAlliance()
+
+    alliance:AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+
+    dialog:addCloseCleanFunc(function ()
+        alliance:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+    end)
+    return dialog
+end
 function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc)
     local body = display.newNode()
     body:setContentSize(cc.size(570,128))
@@ -716,6 +763,8 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc)
 end
 
 return WidgetUseItems
+
+
 
 
 
