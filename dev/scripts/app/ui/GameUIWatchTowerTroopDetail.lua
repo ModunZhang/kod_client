@@ -242,29 +242,25 @@ function GameUIWatchTowerTroopDetail:GetItem(ITEM_TYPE,item_data)
 	    	end
     	elseif ITEM_TYPE == self.ITEM_TYPE.BUFF_EFFECT then
     		if self:CanShowTechnologyAndBuffEffect() then
-	    		-- local y = 0
-	    		-- for i,v in ipairs(item_data.soldiers) do
-	    		-- 	local name = string.format(_("[%d星]%s"),v.star,Localize.soldier_name[v.name])
-	    		-- 	if not self:CanShowSoliderStar() then
-	    		-- 		name = Localize.soldier_name[v.name]
-	    		-- 	end
-	    		-- 	self:GetSubItem(ITEM_TYPE,i,{name,v.count}):addTo(bg):align(display.LEFT_BOTTOM,0, y)
-	    		-- 	y = y + 36
-	    		-- end
+	    		local y = 0
+	    		for i,v in ipairs(item_data.militaryBuffs) do
+	    			local name = v.type
+	    			self:GetSubItem(ITEM_TYPE,i,{name,_("已激活")}):addTo(bg):align(display.LEFT_BOTTOM,0, y)
+	    			y = y + 36
+	    		end
 	    	else
 	    		self:GetTipsItem():addTo(bg):align(display.LEFT_BOTTOM, 0, 0)
 	    	end
+	    --TODO:显示军事科技的具体buff值
     	elseif ITEM_TYPE == self.ITEM_TYPE.TECHNOLOGY then
     		if self:CanShowTechnologyAndBuffEffect() then
-	    		-- local y = 0
-	    		-- for i,v in ipairs(item_data.soldiers) do
-	    		-- 	local name = string.format(_("[%d星]%s"),v.star,Localize.soldier_name[v.name])
-	    		-- 	if not self:CanShowSoliderStar() then
-	    		-- 		name = Localize.soldier_name[v.name]
-	    		-- 	end
-	    		-- 	self:GetSubItem(ITEM_TYPE,i,{name,v.count}):addTo(bg):align(display.LEFT_BOTTOM,0, y)
-	    		-- 	y = y + 36
-	    		-- end
+	    		local y = 0
+	    		for i,v in ipairs(item_data.militaryTechs) do
+	    			local name = Localize.getMilitaryTechnologyName(v.name)
+	    			local level = _("等级") .. v.level
+	    			self:GetSubItem(ITEM_TYPE,i,{name,level}):addTo(bg):align(display.LEFT_BOTTOM,0, y)
+	    			y = y + 36
+	    		end
 	    	else
 	    		self:GetTipsItem():addTo(bg):align(display.LEFT_BOTTOM, 0, 0)
 	    	end

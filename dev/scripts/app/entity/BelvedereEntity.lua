@@ -160,35 +160,4 @@ function BelvedereEntity:GetAttackPlayerName()
 		return self:WithObject():AttackPlayerData().name
 	end
 end
-
-function BelvedereEntity:RetreatAction(cb)
-	if self:GetType() == self.ENTITY_TYPE.HELPTO then
-		NetManager:getRetreatFromHelpedAllianceMemberPromise(self:WithObject().beHelpedPlayerData.id)
-			:next(function()
-				cb(true)
-			end)
-			:catch(function(err)
-				cb(false)
-			end)
-	elseif self:GetType() == self.ENTITY_TYPE.COLLECT then
-		NetManager:getRetreatFromVillagePromise(self:WithObject():VillageData().alliance.id,self:WithObject():Id()):next(function()
-			cb(true)
-		end):catch(function()
-			cb(false)
-		end)
-	elseif self:GetType() == self.ENTITY_TYPE.MARCH_OUT then
-		cb(true)	
-	end
-end
-
-function BelvedereEntity:SpeedAction(cb)
-	if self:GetType() == self.ENTITY_TYPE.MARCH_OUT then
-		cb(true)
-	elseif self:GetType() == self.ENTITY_TYPE.STRIKE_OUT then
-		cb(true)
-	else
-		assert(false)
-	end
-end
-
 return BelvedereEntity
