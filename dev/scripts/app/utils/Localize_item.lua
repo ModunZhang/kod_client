@@ -4,9 +4,9 @@
 --
 
 local BUFF_TIME = {
-    {_("8小时")},
-    {_("24小时")},
-    {_("3天")},
+    _("8小时"),
+    _("24小时"),
+    _("3天"),
 }
 local ITEM_CATEGORY_NAME = {
     -- buff
@@ -339,3 +339,5 @@ return {
     item_desc = ITEM_DESC,
     item_category_name = ITEM_CATEGORY_NAME
 }
+
+
