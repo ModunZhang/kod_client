@@ -257,7 +257,8 @@ function GameUIWatchTowerTroopDetail:GetItem(ITEM_TYPE,item_data)
 	    		local y = 0
 	    		for i,v in ipairs(item_data.militaryTechs) do
 	    			local name = Localize.getMilitaryTechnologyName(v.name)
-	    			local buff = City:GetSoldierManager():GetMilitaryTechByName(v.name):GetAtkEff() or 0
+	    			--TODO:获取任何人军事科技的buff效果 这里是错误的 这里获取了自己的科技军事水平buff
+	    			local buff = City:GetSoldierManager():GetMilitaryTechByName(v.name):GetAtkEff()
 	    			self:GetSubItem(ITEM_TYPE,i,{name,buff}):addTo(bg):align(display.LEFT_BOTTOM,0, y)
 	    			y = y + 36
 	    		end
