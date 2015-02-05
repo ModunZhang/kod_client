@@ -666,7 +666,7 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
         ):addTo(body):align(display.CENTER,size.width/2,size.height- 150 - (i-1)*138)
     end
     function dialog:OnAttackMarchEventTimerChanged( attackMarchEvent )
-        if march_event:Id() == attackMarchEvent:Id() and (attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER
+        if march_event:WithObject():Id() == attackMarchEvent:Id() and (attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER
             or attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER) then
             buff_status_label:setString(_("剩余时间:")..GameUtils:formatTimeStyle1(attackMarchEvent:GetTime()))
         end
