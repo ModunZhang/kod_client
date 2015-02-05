@@ -308,10 +308,10 @@ function City:IsFunctionBuilding(building)
     end
 end
 function City:IsHouse(building)
-    return not self:IsFunctionBuilding(building) and not self:IsTower(building) and not self:IsGate(building)
+    return iskindof(building, "ResourceUpgradeBuilding")
 end
 function City:IsTower(building)
-    return iskindof(building, "TowerUpgradeBuilding")
+    return iskindof(building, "TowerEntity")
 end
 function City:IsGate(building)
     if iskindof(building, "WallUpgradeBuilding") then

@@ -85,7 +85,7 @@ function UpgradingSprite:ctor(city_layer, entity)
     --     self:CreateShadow(self:GetShadowConfig())
     -- end
 
-    self.handle = self:schedule(function() self:CheckCondition() end, 1)
+    -- self.handle = self:schedule(function() self:CheckCondition() end, 1)
     -- self:InitLabel(entity)
     -- self:CreateBase()
 end

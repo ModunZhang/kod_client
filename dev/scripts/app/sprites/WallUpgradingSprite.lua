@@ -15,7 +15,7 @@ local offset_map = {
         [Orient.Y] = {-16, 49},
         [Orient.NEG_X] = {15, 49},
         [Orient.NEG_Y] = {-16, 49},
-        gate = {-62, 72}
+        gate = {-63, 73}
     },
     [3] = {
         [Orient.X] = {13, 46},

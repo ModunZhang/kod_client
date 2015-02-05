@@ -17,6 +17,9 @@ function WidgetInput:ctor(params)
     local unit = params.unit or ""
     local callback = params.callback or NOT_HANDLE
 
+    -- max 有时会变化
+    self.max = max
+
     local function edit(event, editbox)
         local text = tonumber(editbox:getText()) or min
         if event == "began" then
@@ -25,8 +28,8 @@ function WidgetInput:ctor(params)
             end
         elseif event == "changed" then
             if text then
-                if text > max then
-                    editbox:setText(max)
+                if text > self.max then
+                    editbox:setText(self.max)
                 end
             end
         elseif event == "ended" then
@@ -77,6 +80,8 @@ function WidgetInput:ctor(params)
             end
         end):align(display.CENTER, editbox:getPositionX(),editbox:getPositionY()-50):addTo(body)
 end
-
+function WidgetInput:SetMax( max )
+    self.max = max
+end
 return WidgetInput
 
