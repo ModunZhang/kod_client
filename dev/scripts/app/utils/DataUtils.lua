@@ -196,3 +196,9 @@ function DataUtils:getDragonMaxHp(star,level,skills,equipments)
     local vitality = self:getTotalVitalityFromJson(star,level,skills,equipments)
     return vitality * 2
 end
+
+-- 获得军事科技加成
+local militaryTechs = GameDatas.MilitaryTechs.militaryTechs
+function DataUtils:getMilitaryTechEff(tech_type,level)
+    return militaryTechs[tech_type].effectPerLevel * level
+end
