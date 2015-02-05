@@ -348,7 +348,8 @@ function GameUIWatchTower:GetOtherEventItem(entity)
 		color= 0x403c2f
 	}):addTo(bg):align(display.LEFT_BOTTOM,164+ icon_bg:getCascadeBoundingBox().width+8, 20)
 	self.march_timer_label[entity:WithObject():Id()] = timer_label
-	if self:CanViewEventDetail() or entity:GetTypeStr() == 'HELPTO' then
+	--如果瞭望塔达到等级或者是盟友对我的协助
+	if self:CanViewEventDetail() or (entity:GetTypeStr() == 'MARCH_OUT' and entity:WithObject():MarchType() == 'helpDefence') then
 		WidgetPushButton.new({normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"})
 			:setButtonLabel(UIKit:commonButtonLable({text = _("详情")}))
 	    	:align(display.RIGHT_BOTTOM,555,10):addTo(bg)

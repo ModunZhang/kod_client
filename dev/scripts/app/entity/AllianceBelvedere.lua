@@ -114,7 +114,7 @@ function AllianceBelvedere:FastCheckHasEvent_()
 end
 
 function AllianceBelvedere:OnAttackMarchEventTimerChanged(attackMarchEvent)
-	if attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER and attackMarchEvent:GetTime() <= self:GetWarningTime() then
+	if attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER then
 		local showComming = false
 		self:NotifyListeneOnType(self.LISTEN_TYPE.CheckNotHaveTheEventIf,function(listener)
 			if listener.CheckNotHaveTheEventIf then
