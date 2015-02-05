@@ -640,7 +640,7 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
     local size = body:getContentSize()
 
     local buff_status_label = UIKit:ttfLabel({
-        text = _("剩余时间:")..GameUtils:formatTimeStyle1(march_event:GetTime()),
+        text = _("剩余时间:")..GameUtils:formatTimeStyle1(march_event:WithObject():GetTime()),
         size = 22,
         color = 0x007c23,
     }):addTo(body):align(display.CENTER,size.width/2, size.height-50)
@@ -686,24 +686,24 @@ function WidgetUseItems:OpenRetreatTroopDialog( item,event )
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
-        self:CreateItemBox(
-            item,
-            function ()
-                return true
-            end,
-            function ()
-                local item_name = item:Name()
-                NetManager:getUseItemPromise(item_name,{
-                    [item_name]={
-                        eventType = event:GetEventServerType(),
-                        eventId=event:WithObject():Id()
-                    }
+    self:CreateItemBox(
+        item,
+        function ()
+            return true
+        end,
+        function ()
+            local item_name = item:Name()
+            NetManager:getUseItemPromise(item_name,{
+                [item_name]={
+                    eventType = event:GetEventServerType(),
+                    eventId=event:WithObject():Id()
+                }
 
-                }):next(function ()
-                    dialog:leftButtonClicked()
-                end)
-            end
-        ):addTo(body):align(display.CENTER,size.width/2,size.height - 120)
+            }):next(function ()
+                dialog:leftButtonClicked()
+            end)
+        end
+    ):addTo(body):align(display.CENTER,size.width/2,size.height - 120)
     return dialog
 end
 
@@ -795,6 +795,7 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc)
 end
 
 return WidgetUseItems
+
 
 
 
