@@ -682,19 +682,17 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
     return dialog
 end
 function WidgetUseItems:OpenRetreatTroopDialog( item,event )
-    local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(#same_items * 138 +100,item:GetLocalizeName(),window.top-230)
+    local dialog = WidgetPopDialog.new( 138 +100,item:GetLocalizeName(),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
-    for i,v in ipairs(same_items) do
         self:CreateItemBox(
-            v,
+            item,
             function ()
                 return true
             end,
             function ()
-                local item_name = v:Name()
+                local item_name = item:Name()
                 NetManager:getUseItemPromise(item_name,{
                     [item_name]={
                         eventType = "attackMarchEvents",
@@ -705,8 +703,7 @@ function WidgetUseItems:OpenRetreatTroopDialog( item,event )
                     dialog:leftButtonClicked()
                 end)
             end
-        ):addTo(body):align(display.CENTER,size.width/2,size.height - 120 - (i-1)*138)
-    end
+        ):addTo(body):align(display.CENTER,size.width/2,size.height - 120)
     return dialog
 end
 
