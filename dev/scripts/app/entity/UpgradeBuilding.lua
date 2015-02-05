@@ -50,6 +50,7 @@ function UpgradeBuilding:AddUpgradeListener(listener)
     assert(listener.OnBuildingUpgradeFinished)
     assert(listener.OnBuildingUpgrading)
     self.upgrade_building_observer:AddObserver(listener)
+    return self
 end
 function UpgradeBuilding:RemoveUpgradeListener(listener)
     self.upgrade_building_observer:RemoveObserver(listener)

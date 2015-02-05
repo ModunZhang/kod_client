@@ -55,8 +55,7 @@ function City:ctor(json_data)
     self.belong_user = nil
     self.buildings = {}
     self.walls = {}
-    self.tower = TowerEntity.new({building_type = "tower", city = self})
-    self:OnInitBuilding(self.tower)
+    self.tower = TowerEntity.new({building_type = "tower", city = self}):AddUpgradeListener(self)
     self.visible_towers = {}
     self.decorators = {}
     self.helpedByTroops = {}
@@ -185,7 +184,7 @@ function City:ResetAllListeners()
     self:ClearAllListener()
     self:IteratorCanUpgradeBuildings(function(building)
         building:ResetAllListeners()
-        self:OnInitBuilding(building)
+        building:AddUpgradeListener(self)
     end)
 end
 function City:NewBuildingWithType(building_type, x, y, w, h, level, finish_time)
@@ -248,7 +247,7 @@ function City:InitBuildings(buildings)
             assert(not self.dragonEyrie)
             self.dragonEyrie = building
         end
-        self:OnInitBuilding(building)
+        building:AddUpgradeListener(self)
     end)
 end
 function City:InitLocations()
@@ -260,7 +259,7 @@ end
 function City:InitDecorators(decorators)
     self.decorators = decorators
     table.foreach(decorators, function(key, building)
-        self:OnInitBuilding(building)
+        building:AddUpgradeListener(self)
 
         local tile = self:GetTileWhichBuildingBelongs(building)
         local sub_location = tile:GetBuildingLocation(building)
@@ -1049,7 +1048,7 @@ function City:SetCityName(cityName)
     end
 end
 function City:OnCreateDecorator(current_time, building)
-    self:OnInitBuilding(building)
+    building:AddUpgradeListener(self)
 end
 function City:OnDestoryDecorator(current_time, building)
     building:RemoveUpgradeListener(self)
@@ -1121,10 +1120,10 @@ function City:UnlockTilesByIndex(x, y)
     -- end
     return success, ret_code
 end
-function City:OnInitBuilding(building)
-    building.city = self
-    building:AddUpgradeListener(self)
-end
+-- function City:OnInitBuilding(building)
+--     building.city = self
+--     building:AddUpgradeListener(self)
+-- end
 ---------
 local function find_beside_wall(walls, wall)
     for i, v in ipairs(walls) do
@@ -1214,7 +1213,7 @@ function City:ReloadWalls(walls)
     else
         -- 如果是第一次生成
         self.gate = GetGateInWalls(walls)
-        self:OnInitBuilding(self.gate)
+        self.gate:AddUpgradeListener(self)
     end
     local t = {}
     for _, v in ipairs(walls) do
