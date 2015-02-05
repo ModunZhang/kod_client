@@ -6,6 +6,7 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local UILib = import(".UILib")
 local GameUIWatchTowerTroopDetail = import(".GameUIWatchTowerTroopDetail")
+local WidgetUseItems = import("..widget.WidgetUseItems")
 
 function GameUIWatchTower:ctor(city,building)
     local bn = Localize.building_name
@@ -206,7 +207,7 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 			if entity:GetTypeStr() == 'HELPTO' then
 	            local button = self:GetYellowRetreatButton():pos(558,15):addTo(bg)
 	            	:onButtonClicked(function(event)
-		                entity:RetreatAction(function(success)
+		                self:OnRetreatButtonClicked(entity,function(success)
 		                	if success then
 		                		self:RefreshListView('march')
 		                	end
@@ -222,7 +223,7 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 			elseif entity:GetTypeStr() == 'COLLECT' then
 				self:GetYellowRetreatButton():pos(558,15):addTo(bg)
 	            	:onButtonClicked(function(event)
-		                entity:RetreatAction(function(success)
+		                 self:OnRetreatButtonClicked(entity,function(success)
 		                	if success then
 		                		self:RefreshListView('march')
 		                	end
@@ -271,6 +272,7 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 		               	}))
 		            	:align(display.RIGHT_BOTTOM,555,10):addTo(bg)
 		            	:onButtonClicked(function(event)
+		            		self:OnSpeedUpButtonClicked(entity)
 		            	end)
 		        else
 		        	self.shrine_timer_label[entity:WithObject():Id()] = timer_label
@@ -278,10 +280,8 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 	            if entity:GetTypeStr() ~= "MARCH_RETURN" and "STRIKE_RETURN" ~= entity:GetTypeStr() and entity:GetTypeStr() ~= 'SHIRNE' then
 					self:GetRedRetreatButton():pos(397,10):addTo(bg)
 		            	:onButtonClicked(function(event)
-			                entity:RetreatAction(function(success)
-			                	if success then
-			                	end
-			                end)
+			                self:OnRetreatButtonClicked(entity,function(success)
+		                	end)
 			        end)
 			    end
 			end
@@ -348,7 +348,8 @@ function GameUIWatchTower:GetOtherEventItem(entity)
 		color= 0x403c2f
 	}):addTo(bg):align(display.LEFT_BOTTOM,164+ icon_bg:getCascadeBoundingBox().width+8, 20)
 	self.march_timer_label[entity:WithObject():Id()] = timer_label
-	if self:CanViewEventDetail() or entity:GetTypeStr() == 'HELPTO' then
+	--如果瞭望塔达到等级或者是盟友对我的协助
+	if self:CanViewEventDetail() or (entity:GetTypeStr() == 'MARCH_OUT' and entity:WithObject():MarchType() == 'helpDefence') then
 		WidgetPushButton.new({normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"})
 			:setButtonLabel(UIKit:commonButtonLable({text = _("详情")}))
 	    	:align(display.RIGHT_BOTTOM,555,10):addTo(bg)
@@ -513,6 +514,41 @@ end
 function GameUIWatchTower:CanViewEventDetail()
 	local level = self:GetBuilding():GetLevel()
 	return self:GetAllianceBelvedere():CanViewEventDetail(level)
+end
+function GameUIWatchTower:OnSpeedUpButtonClicked(entity)
+	local widgetUseItems = WidgetUseItems.new():Create({
+		item_type = WidgetUseItems.USE_TYPE.WAR_SPEEDUP_CLASS,
+		event = entity
+	})
+	widgetUseItems:addToCurrentScene()
+end
+
+function GameUIWatchTower:OnRetreatButtonClicked(entity,cb)
+	if entity:GetType() == entity.ENTITY_TYPE.HELPTO then
+		UIKit:showMessageDialog(_("提示"),_("确定撤军?"),function()
+			NetManager:getRetreatFromHelpedAllianceMemberPromise(entity:WithObject().beHelpedPlayerData.id)
+				:next(function()
+					cb(true)
+				end)
+				:catch(function(err)
+					cb(false)
+				end)
+		end)
+	elseif entity:GetType() == entity.ENTITY_TYPE.COLLECT then
+		UIKit:showMessageDialog(_("提示"),_("确定撤军?"),function()
+			NetManager:getRetreatFromVillagePromise(entity:WithObject():VillageData().alliance.id,entity:WithObject():Id()):next(function()
+				cb(true)
+			end):catch(function()
+				cb(false)
+			end)
+		end)
+	elseif entity:GetType() == entity.ENTITY_TYPE.MARCH_OUT then
+		local widgetUseItems = WidgetUseItems.new():Create({
+			item_type = WidgetUseItems.USE_TYPE.RETREAT_TROOP,
+			event = entity:WithObject()
+		})
+		widgetUseItems:addToCurrentScene()
+	end
 end
 
 return GameUIWatchTower
