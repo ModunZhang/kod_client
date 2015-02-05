@@ -545,7 +545,7 @@ function GameUIWatchTower:OnRetreatButtonClicked(entity,cb)
 	elseif entity:GetType() == entity.ENTITY_TYPE.MARCH_OUT then
 		local widgetUseItems = WidgetUseItems.new():Create({
 			item_type = WidgetUseItems.USE_TYPE.RETREAT_TROOP,
-			event = entity:WithObject()
+			event = entity
 		})
 		widgetUseItems:addToCurrentScene()
 	end
