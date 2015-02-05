@@ -20,68 +20,104 @@ function WidgetPVEResource:SetUpButtons()
     return self:GetObject():IsSearched() and
         { { label = _("离开") } } or
         { { label = _("进攻"), callback = function()
-            UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType, soldiers)
-                local dargon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
-                local attack_dragon = {
-                    dragonType = dragonType,
-                    currentHp = dargon:Hp(),
-                    hpMax = dargon:GetMaxHP(),
-                    totalHp = dargon:Hp(),
-                    strength = dargon:TotalStrength(),
-                    vitality = dargon:TotalVitality(),
-                }
-                local attack_soldier = LuaUtils:table_map(soldiers, function(k, v)
-                    return k, {name = v.name,
-                        star = 1,
-                        morale = 100,
-                        currentCount = v.count,
-                        totalCount = v.count,
-                        woundedCount = 0,
-                        round = 0}
-                end)
-
-                local defence_dragon = {
-                    dragonType = "redDragon",
-                    currentHp = 100,
-                    totalHp = 100,
-                    hpMax = 100,
-                    strength = 100,
-                    vitality = 100,
-                }
-                local defence_soldier = {
+            UIKit:newGameUI('GameUIPVESendTroop',
+                {
                     {
-                        name = "ranger",
-                        star = 1,
-                        morale = 100,
-                        currentCount = 50,
-                        totalCount = 50,
-                        woundedCount = 0,
-                        round = 0
+                        soldier_type = "ranger",
+                        soldier_level = 1,
+                    },
+                    {
+                        soldier_type = "catapult",
+                        soldier_level = 1,
+                    },
+                    {
+                        soldier_type = "lancer",
+                        soldier_level = 1,
+                    },
+                    {
+                        soldier_type = "swordsman",
+                        soldier_level = 1,
+                    },
+                    {
+                        soldier_type = "sentinel",
+                        soldier_level = 1,
+                    },
+                    {
+                        soldier_type = "crossbowman",
+                        soldier_level = 1,
+                    },
+                    {
+                        soldier_type = "horseArcher",
+                        soldier_level = 1,
+                    },
+                    {
+                        soldier_type = "ballista",
+                        soldier_level = 1,
+                    },
+                },-- pve 怪数据
+                function(dragonType, soldiers)
+                    local dargon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
+                    local attack_dragon = {
+                        dragonType = dragonType,
+                        currentHp = dargon:Hp(),
+                        hpMax = dargon:GetMaxHP(),
+                        totalHp = dargon:Hp(),
+                        strength = dargon:TotalStrength(),
+                        vitality = dargon:TotalVitality(),
                     }
-                }
-
-                local report = GameUtils:DoBattle(
-                    {dragon = attack_dragon, soldiers = attack_soldier}
-                    ,{dragon = defence_dragon, soldiers = defence_soldier}
-                )
-
-                self.user:SetPveData(report:GetAttackKDA())
-                if report:IsAttackWin() then
-                    self:Search()
-                else
-                    NetManager:getSetPveDataPromise(self.user:EncodePveData()):next(function(result)
-                        dump(result)
-                    end):catch(function(err)
-                        dump(err:reason())
+                    local attack_soldier = LuaUtils:table_map(soldiers, function(k, v)
+                        return k, {name = v.name,
+                            star = 1,
+                            morale = 100,
+                            currentCount = v.count,
+                            totalCount = v.count,
+                            woundedCount = 0,
+                            round = 0}
                     end)
-                end
 
-                UIKit:newGameUI("GameUIReplay",report):addToCurrentScene(true)
-            end):addToCurrentScene(true)
+                    local defence_dragon = {
+                        dragonType = "redDragon",
+                        currentHp = 100,
+                        totalHp = 100,
+                        hpMax = 100,
+                        strength = 100,
+                        vitality = 100,
+                    }
+                    local defence_soldier = {
+                        {
+                            name = "ranger",
+                            star = 1,
+                            morale = 100,
+                            currentCount = 50,
+                            totalCount = 50,
+                            woundedCount = 0,
+                            round = 0
+                        }
+                    }
+
+                    local report = GameUtils:DoBattle(
+                        {dragon = attack_dragon, soldiers = attack_soldier}
+                        ,{dragon = defence_dragon, soldiers = defence_soldier}
+                    )
+
+                    self.user:SetPveData(report:GetAttackKDA())
+                    if report:IsAttackWin() then
+                        self:Search()
+                    else
+                        NetManager:getSetPveDataPromise(self.user:EncodePveData()):next(function(result)
+                            dump(result)
+                        end):catch(function(err)
+                            dump(err:reason())
+                        end)
+                    end
+
+                    UIKit:newGameUI("GameUIReplay",report):addToCurrentScene(true)
+                end):addToCurrentScene(true)
         end }, { label = _("离开") } }
 end
 
 return WidgetPVEResource
+
 
 
 

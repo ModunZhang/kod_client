@@ -34,7 +34,7 @@ function MilitaryTechnology:OnPropertyChange()
 end
 -- 获取攻击加成
 function MilitaryTechnology:GetAtkEff()
-    return military_config[self.name].effectPerLevel * self:Level() * 100
+    return military_config[self.name].effectPerLevel * self:Level()
 end
 -- 获取增加科技点
 function MilitaryTechnology:GetTechPoint()
