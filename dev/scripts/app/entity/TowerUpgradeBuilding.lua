@@ -35,7 +35,7 @@ function TowerUpgradeBuilding:ctor(building_info)
     end
 end
 function TowerUpgradeBuilding:AddUpgradeListener(listener)
-    self:BelongCity():GetTower():AddUpgradeListener(listener)
+    return self:BelongCity():GetTower():AddUpgradeListener(listener)
 end
 function TowerUpgradeBuilding:RemoveUpgradeListener(listener)
     self:BelongCity():GetTower():RemoveUpgradeListener(listener)
