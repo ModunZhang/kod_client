@@ -655,8 +655,8 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
                 local item_name = v:Name()
                 NetManager:getUseItemPromise(item_name,{
                     [item_name]={
-                        eventType = "attackMarchEvents",
-                        eventId=march_event:Id()
+                        eventType = march_event:GetEventServerType(),
+                        eventId=march_event:WithObject():Id()
                     }
 
                 }):next(function ()
@@ -695,8 +695,8 @@ function WidgetUseItems:OpenRetreatTroopDialog( item,event )
                 local item_name = item:Name()
                 NetManager:getUseItemPromise(item_name,{
                     [item_name]={
-                        eventType = "attackMarchEvents",
-                        eventId=event:Id()
+                        eventType = event:GetEventServerType(),
+                        eventId=event:WithObject():Id()
                     }
 
                 }):next(function ()
