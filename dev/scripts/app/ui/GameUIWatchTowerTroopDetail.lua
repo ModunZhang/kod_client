@@ -11,13 +11,16 @@ local Enum = import("..utils.Enum")
 local Localize = import("..utils.Localize")
 local StarBar = import(".StarBar")
 local UILib = import(".UILib")
---TODO:军事科技水平、战争增益
-GameUIWatchTowerTroopDetail.ITEM_TYPE = Enum("DRAGON_INFO","DRAGON_EQUIPMENT","DRAGON_SKILL","SOLIDERS","TECHNOLOGY")
+local Localize_item = import("..utils.Localize_item")
+
+GameUIWatchTowerTroopDetail.ITEM_TYPE = Enum("DRAGON_INFO","DRAGON_EQUIPMENT","DRAGON_SKILL","SOLIDERS","TECHNOLOGY","BUFF_EFFECT")
 GameUIWatchTowerTroopDetail.DATA_TYPE = Enum("MARCH","HELP_DEFENCE","STRIKE")
 local titles = {
 	DRAGON_EQUIPMENT = _("龙的装备"),
 	DRAGON_SKILL = _("龙的技能"),
 	SOLIDERS = _("军事单位"),
+	TECHNOLOGY = _("军事科技水平"),
+	BUFF_EFFECT = _("战争增益"),
 }
 
 function GameUIWatchTowerTroopDetail:ctor(data_type,data,user_id,isFromWathTower)
@@ -130,6 +133,10 @@ function GameUIWatchTowerTroopDetail:RefreshListView()
 	self.listView:addItem(item)	
 	item = self:GetItem(self.ITEM_TYPE.DRAGON_SKILL,self:GetEventData()) 
 	self.listView:addItem(item)
+	item = self:GetItem(self.ITEM_TYPE.TECHNOLOGY,self:GetEventData()) 
+	self.listView:addItem(item)	
+	item = self:GetItem(self.ITEM_TYPE.BUFF_EFFECT,self:GetEventData()) 
+	self.listView:addItem(item)
 	self.listView:reload()
 end
 
@@ -149,6 +156,20 @@ function GameUIWatchTowerTroopDetail:GetItem(ITEM_TYPE,item_data)
 	elseif ITEM_TYPE == self.ITEM_TYPE.SOLIDERS then
 		if self:CanShowSoliderName() then
 			sub_line = #item_data.soldiers
+			height   = sub_line * 36
+		else
+			height = 36
+		end
+	elseif ITEM_TYPE == self.ITEM_TYPE.BUFF_EFFECT then
+		if self:CanShowTechnologyAndBuffEffect() then
+			sub_line = #item_data.militaryBuffs
+			height   = sub_line * 36
+		else
+			height = 36
+		end
+	elseif ITEM_TYPE == self.ITEM_TYPE.TECHNOLOGY then
+		if self:CanShowTechnologyAndBuffEffect() then
+			sub_line = #item_data.militaryTechs
 			height   = sub_line * 36
 		else
 			height = 36
@@ -175,10 +196,10 @@ function GameUIWatchTowerTroopDetail:GetItem(ITEM_TYPE,item_data)
 	    	}):addTo(title_bar):align(display.RIGHT_CENTER,538,19)
 	    end
 		local y = 0
-		local dragon_hp = self:CanShowDragonHP() and item_data.dragon.hp .. "/" .. item_data.dragon.vitality * 2 or "?"
+		local dragon_hp = self:CanShowDragonHP() and item_data.dragon.hp .. "/" .. self:GetDragonMaxHP() or "?"
 		self:GetSubItem(ITEM_TYPE,1,{_("生命值"),dragon_hp}):addTo(bg):align(display.RIGHT_BOTTOM, 547, y)
 		y = y + 38
-		local dragon_strength = self:CanShowDragonStrength() and (item_data.dragon.strength or 0) or "?"
+		local dragon_strength = self:CanShowDragonStrength() and (self:GetDragonStrength() or 0) or "?"
 		self:GetSubItem(ITEM_TYPE,2,{_("力量"),dragon_strength}):addTo(bg):align(display.RIGHT_BOTTOM, 547, y)
 		y = y + 38
 		local dragon_level = self:CanShowDragonLevelAndStar() and item_data.dragon.level or "?"
@@ -220,6 +241,29 @@ function GameUIWatchTowerTroopDetail:GetItem(ITEM_TYPE,item_data)
 	    	else
 	    		self:GetTipsItem():addTo(bg):align(display.LEFT_BOTTOM, 0, 0)
 	    	end
+    	elseif ITEM_TYPE == self.ITEM_TYPE.BUFF_EFFECT then
+    		if self:CanShowTechnologyAndBuffEffect() then
+	    		local y = 0
+	    		for i,v in ipairs(item_data.militaryBuffs) do
+	    			local name = Localize_item.item_category_name[v.type]
+	    			self:GetSubItem(ITEM_TYPE,i,{name,_("已激活")}):addTo(bg):align(display.LEFT_BOTTOM,0, y)
+	    			y = y + 36
+	    		end
+	    	else
+	    		self:GetTipsItem():addTo(bg):align(display.LEFT_BOTTOM, 0, 0)
+	    	end
+    	elseif ITEM_TYPE == self.ITEM_TYPE.TECHNOLOGY then
+    		if self:CanShowTechnologyAndBuffEffect() then
+	    		local y = 0
+	    		for i,v in ipairs(item_data.militaryTechs) do
+	    			local name = Localize.getMilitaryTechnologyName(v.name)
+	    			local buff = City:GetSoldierManager():GetMilitaryTechByName(v.name):GetAtkEff() or 0
+	    			self:GetSubItem(ITEM_TYPE,i,{name,buff}):addTo(bg):align(display.LEFT_BOTTOM,0, y)
+	    			y = y + 36
+	    		end
+	    	else
+	    		self:GetTipsItem():addTo(bg):align(display.LEFT_BOTTOM, 0, 0)
+	    	end
     	elseif ITEM_TYPE == self.ITEM_TYPE.DRAGON_SKILL then
     		local y = 0
     		for i,v in ipairs(item_data.dragon.skills) do
@@ -231,7 +275,6 @@ function GameUIWatchTowerTroopDetail:GetItem(ITEM_TYPE,item_data)
     			y = y + 36
     		end
     	end
-
 	end
 	item:addContent(bg)
 	item:setItemSize(548,height + 38)
@@ -246,6 +289,16 @@ function GameUIWatchTowerTroopDetail:GetTipsItem()
 		color= 0x797154
 	}):align(display.CENTER, 273, 19):addTo(item)
 	return item
+end
+
+function GameUIWatchTowerTroopDetail:GetDragonStrength()
+	local dragon = self:GetEventData().dragon
+	return DataUtils:getDragonTotalStrengthFromJson(dragon.star,dragon.level,dragon.skills,dragon.equipments)
+end
+
+function GameUIWatchTowerTroopDetail:GetDragonMaxHP()
+	local dragon = self:GetEventData().dragon
+	return DataUtils:getDragonMaxHp(dragon.star,dragon.level,dragon.skills,dragon.equipments)
 end
 
 function GameUIWatchTowerTroopDetail:GetSubItem(ITEM_TYPE,index,item_data)
@@ -271,6 +324,12 @@ function GameUIWatchTowerTroopDetail:GetSubItem(ITEM_TYPE,index,item_data)
        		num = item_data[2],
        		scale = 0.8
     	}):addTo(item):align(display.RIGHT_CENTER,526,19)
+	elseif ITEM_TYPE == self.ITEM_TYPE.TECHNOLOGY or ITEM_TYPE == self.ITEM_TYPE.BUFF_EFFECT then
+		local val_label = UIKit:ttfLabel({
+			text = item_data[2],
+			size = 20,
+			color= 0x403c2f
+		}):align(display.RIGHT_CENTER,526, 19):addTo(item)
 	elseif ITEM_TYPE == self.ITEM_TYPE.SOLIDERS then
 		local val_label = UIKit:ttfLabel({
 			text = self:FileterSoliderCount(item_data[2]),
@@ -417,6 +476,23 @@ function GameUIWatchTowerTroopDetail:CanShowDragonEquipment()
 		end
 	end
 end
+
+function GameUIWatchTowerTroopDetail:CanShowTechnologyAndBuffEffect()
+	if self:IsDataFromMyCity() then
+		if self:IsHelpDefence() then 
+			return true 
+		else
+			return self:GetWatchTowerLevel() >= 26
+		end
+	else
+		if self:IsMyAlliance() then
+			return true
+		else
+			return false
+		end
+	end
+end
+
 function GameUIWatchTowerTroopDetail:FileterSoliderCount(count)
 	local watchTower = self:GetWatchTowerLevel()
 	if self:IsDataFromMyCity() then
@@ -445,7 +521,7 @@ function GameUIWatchTowerTroopDetail:FileterSoliderCount(count)
 		end
 	end
 end
-
+--模糊数据
 function GameUIWatchTowerTroopDetail:FuzzyCount(count)
 	count = checkint(count)
 	if count >= math.pow(10,6) then

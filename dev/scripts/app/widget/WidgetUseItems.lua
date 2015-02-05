@@ -11,7 +11,7 @@ local Enum = import("..utils.Enum")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
 local Item = import("..entity.Item")
-
+local Alliance = import("..entity.Alliance")
 local WidgetUseItems = class("WidgetUseItems")
 WidgetUseItems.USE_TYPE = Enum("CHANGE_PLAYER_NAME",
     "CHANGE_CITY_NAME",
@@ -674,10 +674,10 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
 
     local alliance = Alliance_Manager:GetMyAlliance()
 
-    alliance:AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+    alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
 
     dialog:addCloseCleanFunc(function ()
-        alliance:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+        alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
     end)
     return dialog
 end

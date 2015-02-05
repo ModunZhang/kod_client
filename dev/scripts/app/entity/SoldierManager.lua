@@ -235,6 +235,9 @@ function SoldierManager:IteratorMilitaryTechs(func)
         func(name,v)
     end
 end
+function SoldierManager:GetMilitaryTechByName(name)
+    return self.militaryTechs[name]
+end
 function SoldierManager:FindMilitaryTechsByBuildingType(building_type)
     local techs = {}
     self:IteratorMilitaryTechs(function ( name,v )

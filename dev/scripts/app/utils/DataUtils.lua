@@ -117,11 +117,82 @@ function DataUtils:getGemByTimeInterval(interval)
     end
     return gem
 end
+--龙相关计算
+local config_dragonAttribute = GameDatas.Dragons.dragonAttributes
+local config_dragonSkill = GameDatas.Dragons.dragonSkills
+local config_equipments = GameDatas.DragonEquipments.equipments
+local config_dragoneyrie = GameDatas.DragonEquipments
 
+function DataUtils:getDragonTotalStrengthFromJson(star,level,skills,equipments)
+    local strength,__ = self:getDragonBaseStrengthAndVitality(star,level)
+    local buff = self:__getDragonStrengthBuff(skills)
+    strength = strength + math.floor(strength * buff)
+    for body,equipemt in pairs(equipments) do
+        if equipemt.name ~= "" then
+            local config = self:getDragonEquipmentConfig(equipemt.name)
+            local attribute = self:getDragonEquipmentAttribute(body,config.maxStar,equipemt.star)
+            strength = attribute and (strength + attribute.strength) or strength
+        end
+    end
+    return strength
+end
 
+function DataUtils:getTotalVitalityFromJson(star,level,skills,equipments)
+    local __,vitality = self:getDragonBaseStrengthAndVitality(star,level)
+    local buff = self:__getDragonVitalityBuff(skills)
+    vitality = vitality + math.floor(vitality * buff)
+    for body,equipemt in pairs(equipments) do
+        if equipemt.name ~= "" then
+            local config = self:getDragonEquipmentConfig(equipemt.name)
+            local attribute = self:getDragonEquipmentAttribute(body,config.maxStar,equipemt.star)
+            vitality = attribute and (vitality + attribute.vitality) or vitality
+        end
+    end
+    return vitality
+end
 
+function DataUtils:getDragonSkillEffect(skillName,level)
+    level = checkint(level)
+    if config_dragonSkill[skillName] then
+        return level * config_dragonSkill[skillName].effectPerLevel
+    end
+    return 0
+end
 
+function DataUtils:getDragonBaseStrengthAndVitality(star,level)
+    star = checkint(star)
+    level = checkint(level)
+    return config_dragonAttribute[star].initStrength + level * config_dragonAttribute[star].perLevelStrength,
+        config_dragonAttribute[star].initVitality + level * config_dragonAttribute[star].perLevelVitality 
+end
 
+function DataUtils:getDragonEquipmentAttribute(body,max_star,star)
+    return config_dragoneyrie[body][max_star .. "_" .. star]
+end
 
+function DataUtils:getDragonEquipmentConfig(name)
+    return config_equipments[name]
+end
 
+function DataUtils:__getDragonStrengthBuff(skills)
+    for __,v in pairs(skills) do
+        if v.name == 'dragonBreath' then
+            return self:getDragonSkillEffect(v.name,v.level)
+        end
+    end
+    return 0
+end
 
+function DataUtils:__getDragonVitalityBuff(skills)
+    for __,v in pairs(skills) do
+        if v.name == 'dragonBlood' then
+            return self:getDragonSkillEffect(v.name,v.level)
+        end
+    end
+    return 0
+end
+--TODO:如果有道具加龙属性 这里就还未完成
+function DataUtils:getDragonMaxHp(star,level,skills,equipments)
+    local vitality = self:getTotalVitalityFromJson(star,level,skills,equipments)
+    return vitality * 2
+end
