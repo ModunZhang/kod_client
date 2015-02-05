@@ -11,7 +11,8 @@ local Enum = import("..utils.Enum")
 local Localize = import("..utils.Localize")
 local StarBar = import(".StarBar")
 local UILib = import(".UILib")
---TODO:军事科技水平、战争增益
+local Localize_item = import("..utils.Localize_item")
+
 GameUIWatchTowerTroopDetail.ITEM_TYPE = Enum("DRAGON_INFO","DRAGON_EQUIPMENT","DRAGON_SKILL","SOLIDERS","TECHNOLOGY","BUFF_EFFECT")
 GameUIWatchTowerTroopDetail.DATA_TYPE = Enum("MARCH","HELP_DEFENCE","STRIKE")
 local titles = {
@@ -244,21 +245,20 @@ function GameUIWatchTowerTroopDetail:GetItem(ITEM_TYPE,item_data)
     		if self:CanShowTechnologyAndBuffEffect() then
 	    		local y = 0
 	    		for i,v in ipairs(item_data.militaryBuffs) do
-	    			local name = v.type
+	    			local name = Localize_item.item_category_name[v.type]
 	    			self:GetSubItem(ITEM_TYPE,i,{name,_("已激活")}):addTo(bg):align(display.LEFT_BOTTOM,0, y)
 	    			y = y + 36
 	    		end
 	    	else
 	    		self:GetTipsItem():addTo(bg):align(display.LEFT_BOTTOM, 0, 0)
 	    	end
-	    --TODO:显示军事科技的具体buff值
     	elseif ITEM_TYPE == self.ITEM_TYPE.TECHNOLOGY then
     		if self:CanShowTechnologyAndBuffEffect() then
 	    		local y = 0
 	    		for i,v in ipairs(item_data.militaryTechs) do
 	    			local name = Localize.getMilitaryTechnologyName(v.name)
-	    			local level = _("等级") .. v.level
-	    			self:GetSubItem(ITEM_TYPE,i,{name,level}):addTo(bg):align(display.LEFT_BOTTOM,0, y)
+	    			local buff = City:GetSoldierManager():GetMilitaryTechByName(v.name):GetAtkEff() or 0
+	    			self:GetSubItem(ITEM_TYPE,i,{name,buff}):addTo(bg):align(display.LEFT_BOTTOM,0, y)
 	    			y = y + 36
 	    		end
 	    	else

@@ -6,7 +6,14 @@ local BelvedereEntity = class("BelvedereEntity")
 local property = import("..utils.property")
 local Enum = import("..utils.Enum")
 local Localize = import("..utils.Localize")
-
+--[[ 
+	MARCH_OUT:派出的正在路上（攻打城市/村落/协防）部队，
+	MARCH_RETURN:正在返回路上的攻打（城市/村落/协防）部队,
+	HELPTO:已经协防到其他玩家的部队,
+	SHIRNE:已经在参加圣地事件的部队
+	STRIKE_OUT:派出的正在路上突袭（城市/村落）部队
+	STRIKE_RETURN:在返回路上的突袭（城市/村落）部队
+]]--
 BelvedereEntity.ENTITY_TYPE = Enum("NONE","MARCH_OUT","MARCH_RETURN","COLLECT","HELPTO","SHIRNE","STRIKE_OUT","STRIKE_RETURN")
 function BelvedereEntity:OnPropertyChange()
 end
@@ -158,6 +165,24 @@ function BelvedereEntity:GetAttackPlayerName()
 		or self:GetType() == self.ENTITY_TYPE.HELPTO 
 		then
 		return self:WithObject():AttackPlayerData().name
+	end
+end
+--获取事件的服务器类型标识字符串
+function BelvedereEntity:GetEventServerType()
+	if self:GetType() == self.ENTITY_TYPE.HELPTO then
+		return  "attackMarchEvents"
+	elseif self:GetType() == self.ENTITY_TYPE.COLLECT then
+		return "村落采集事件"
+	elseif self:GetType() == self.ENTITY_TYPE.MARCH_OUT then
+		return "attackMarchEvents"
+	elseif self:GetType() == self.ENTITY_TYPE.MARCH_RETURN then
+		return "attackMarchReturnEvents"
+	elseif self:GetType() == self.ENTITY_TYPE.STRIKE_OUT then
+		return "strikeMarchEvents"
+	elseif self:GetType() == self.ENTITY_TYPE.STRIKE_RETURN then
+		return "strikeMarchReturnEvents"
+	elseif self:GetType() == self.ENTITY_TYPE.SHIRNE then
+		return "圣地事件"
 	end
 end
 return BelvedereEntity

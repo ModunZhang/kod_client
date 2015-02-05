@@ -515,31 +515,32 @@ function GameUIWatchTower:CanViewEventDetail()
 	local level = self:GetBuilding():GetLevel()
 	return self:GetAllianceBelvedere():CanViewEventDetail(level)
 end
-
 function GameUIWatchTower:OnSpeedUpButtonClicked(entity)
 	local widgetUseItems = WidgetUseItems.new():Create({
 		item_type = WidgetUseItems.USE_TYPE.WAR_SPEEDUP_CLASS,
-		event = entity:WithObject()
+		event = entity
 	})
 	widgetUseItems:addToCurrentScene()
 end
 
 function GameUIWatchTower:OnRetreatButtonClicked(entity,cb)
-	print("OnRetreatButtonClicked--->")
-	dump(entity,"entity---->")
 	if entity:GetType() == entity.ENTITY_TYPE.HELPTO then
-		NetManager:getRetreatFromHelpedAllianceMemberPromise(entity:WithObject().beHelpedPlayerData.id)
-			:next(function()
+		UIKit:showMessageDialog(_("提示"),_("确定撤军?"),function()
+			NetManager:getRetreatFromHelpedAllianceMemberPromise(entity:WithObject().beHelpedPlayerData.id)
+				:next(function()
+					cb(true)
+				end)
+				:catch(function(err)
+					cb(false)
+				end)
+		end)
+	elseif entity:GetType() == entity.ENTITY_TYPE.COLLECT then
+		UIKit:showMessageDialog(_("提示"),_("确定撤军?"),function()
+			NetManager:getRetreatFromVillagePromise(entity:WithObject():VillageData().alliance.id,entity:WithObject():Id()):next(function()
 				cb(true)
-			end)
-			:catch(function(err)
+			end):catch(function()
 				cb(false)
 			end)
-	elseif entity:GetType() == entity.ENTITY_TYPE.COLLECT then
-		NetManager:getRetreatFromVillagePromise(entity:WithObject():VillageData().alliance.id,entity:WithObject():Id()):next(function()
-			cb(true)
-		end):catch(function()
-			cb(false)
 		end)
 	elseif entity:GetType() == entity.ENTITY_TYPE.MARCH_OUT then
 		local widgetUseItems = WidgetUseItems.new():Create({
