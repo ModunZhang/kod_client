@@ -255,6 +255,9 @@ function ResourceManager:GetTotalBuffData(city)
     end)
     dump(buff_production_map,"学院科技资源产量buff--->")
     dump(buff_limt_map,"学院科技资源上限buff--->")
+    --道具buuff
+    local item_buff = ItemManager:GetAllResourceBuffData()
+    dump(item_buff,"道具buff--->")
     return buff_production_map,buff_limt_map
 end
 
