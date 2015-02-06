@@ -7,22 +7,16 @@ end)
 local NORMAL = GameDatas.Soldiers.normal
 local SPECIAL = GameDatas.Soldiers.special
 
-local LOAD_FILES = {
-    {"animations/Archer_1_render0.plist","animations/Archer_1_render0.png"},
-    {"animations/Catapult_1_render0.plist","animations/Catapult_1_render0.png"},
-    {"animations/Cavalry_1_render0.plist","animations/Cavalry_1_render0.png"},
-    {"animations/Infantry_1_render0.plist","animations/Infantry_1_render0.png"},
-}
 function WidgetSoldierBox:ctor(soldier_png, cb)
-    self:LoadSpriteFrames()
-    self.soldier_bg = WidgetPushButton.new({normal = "star1_114x128.png",
-        pressed = "star1_114x128.png"}):addTo(self)
+    self.soldier_bg = WidgetPushButton.new({normal = "box_120x154.png",
+        pressed = "box_120x154.png"}):addTo(self)
         :onButtonClicked(cb)
+        :align(display.CENTER, 0,0)
 
     local rect = self.soldier_bg:getCascadeBoundingBox()
 
-    local number_bg = cc.ui.UIImage.new("number_bg_116x46.png"):addTo(self)
-        :align(display.CENTER, 0, - rect.height / 2 -5)
+    local number_bg = cc.ui.UIImage.new("back_ground_118x36.png"):addTo(self.soldier_bg)
+        :align(display.CENTER, 0, - rect.height / 2 +20)
 
     local size = number_bg:getContentSize()
     self.number = cc.ui.UILabel.new({
@@ -32,30 +26,18 @@ function WidgetSoldierBox:ctor(soldier_png, cb)
         color = UIKit:hex2c3b(0x423f32)
     }):addTo(number_bg):align(display.CENTER, size.width / 2, size.height / 2)
 end
-function WidgetSoldierBox:LoadSpriteFrames()
-    for k,v in pairs(LOAD_FILES) do
-        display.addSpriteFrames(v[1],v[2])
-    end
-end
-function WidgetSoldierBox:SetSoldier(soldier_type, star)
-    -- local soldier_type_with_star = soldier_type..(star == nil and "" or string.format("_%d", star))
-    print(soldier_type, star)
-    star = checknumber(star)
-    print(UILib.soldier_image[soldier_type][star])
-    local soldier_ui_config = UILib.soldier_image[soldier_type][star]
-    -- local soldier_ui_config = SOLDIER_TYPE[soldier_type_with_star]
-    if soldier_ui_config then
 
-        local bg = UILib.soldier_bg[star]
-        -- local bg = STAR_BG[star]
-        self.soldier_bg:setButtonImage(UIPushButton.NORMAL, bg, true)
-        self.soldier_bg:setButtonImage(UIPushButton.PRESSED, bg, true)
+function WidgetSoldierBox:SetSoldier(soldier_type, star)
+    star = checknumber(star)
+    local soldier_ui_config = UILib.soldier_image[soldier_type][star]
+    if soldier_ui_config then
         if self.soldier then
             self.soldier_bg:removeChild(self.soldier)
         end
         self.soldier = display.newSprite(soldier_ui_config):addTo(self.soldier_bg)
-        :align(display.CENTER, 0, 10)
-        self.soldier:scale(130/self.soldier:getContentSize().height)
+            :align(display.CENTER, 0, 20)
+        self.soldier:scale(104/self.soldier:getContentSize().height)
+        display.newSprite("box_soldier_128x128.png"):addTo(self.soldier):align(display.CENTER, self.soldier:getContentSize().width/2, self.soldier:getContentSize().height-64)
     end
     return self
 end
@@ -79,6 +61,7 @@ function WidgetSoldierBox:SetButtonListener( cb )
 end
 
 return WidgetSoldierBox
+
 
 
 
