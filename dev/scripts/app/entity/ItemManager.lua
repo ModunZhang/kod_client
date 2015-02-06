@@ -7,8 +7,9 @@ local MultiObserver = import(".MultiObserver")
 local Item = import(".Item")
 local ItemEvent = import(".ItemEvent")
 local ItemManager = class("ItemManager", MultiObserver)
+local buffTypes = GameDatas.Items.buffTypes
 
-ItemManager.LISTEN_TYPE = Enum("ITEM_CHANGED","OnItemEventTimer")
+ItemManager.LISTEN_TYPE = Enum("ITEM_CHANGED","OnItemEventTimer","ITEM_EVENT_CHANGED")
 
 function ItemManager:ctor()
     ItemManager.super.ctor(self)
@@ -121,6 +122,9 @@ function ItemManager:__OnItemEventsChanged( __itemEvents )
             end
         end
     )
+    self:NotifyListeneOnType(ItemManager.LISTEN_TYPE.ITEM_EVENT_CHANGED, function(listener)
+        listener:OnItemEventChanged(changed_map)
+    end)
 end
 function ItemManager:OnTimer(current_time)
     self:IteratorItmeEvents(function(itemEvent)
@@ -142,6 +146,9 @@ function ItemManager:GetItemEventByType( type )
 end
 function ItemManager:IsBuffActived( type )
     return tolua.type(self.itemEvents[type]) ~= "nil"
+end
+function ItemManager:GetBuffEffect( type )
+    return buffTypes[type].effect
 end
 function ItemManager:GetAllCityBuffTypes()
     return {
@@ -250,6 +257,7 @@ function ItemManager:CanOpenChest( item )
     return  not key_item or key_item:Count()>0
 end
 return ItemManager
+
 
 
 

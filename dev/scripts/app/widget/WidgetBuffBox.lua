@@ -10,7 +10,9 @@ local boxes = {
     war ={"box_buff_2.png","box_buff_2.png"},
 }
 local WidgetBuffBox = class("WidgetBuffBox", function ()
-    return display.newNode()
+    local node = display.newNode()
+    node:setNodeEventEnabled(true)
+    return node
 end)
 
 function WidgetBuffBox:ctor(params)
@@ -54,7 +56,12 @@ function WidgetBuffBox:SetInfo(info,color)
     end
     return self
 end
-
+function WidgetBuffBox:onEnter()
+    ItemManager:AddListenOnType(self,ItemManager.LISTEN_TYPE.OnItemEventTimer)
+end
+function WidgetBuffBox:onExit()
+    ItemManager:RemoveListenerOnType(self,ItemManager.LISTEN_TYPE.OnItemEventTimer)
+end
 return WidgetBuffBox
 
 
