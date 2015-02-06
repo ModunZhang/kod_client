@@ -35,7 +35,7 @@ function WidgetSelectDragon:ctor(params)
             :addTo(box_bg,2)
         -- 总力量
         local dragon_vitality = UIKit:ttfLabel({
-            text = _("总力量")..dragon:Strength(),
+            text = _("总力量")..dragon:TotalStrength(),
             size = 20,
             color = 0x797154,
         }):align(display.LEFT_CENTER,20,60)
