@@ -1,12 +1,43 @@
 GameUtils = {
 
     }
+local NORMAL = GameDatas.Soldiers.normal
+local SPECIAL = GameDatas.Soldiers.special
+local soldier_vs = GameDatas.ClientInitGame.soldier_vs
 local pow = math.pow
 local ceil = math.ceil
 local sqrt = math.sqrt
 local floor = math.floor
 local round = function(v)
     return floor(v + 0.5)
+end
+function GameUtils:GetVSFromSoldierName(name1, name2)
+    local f = soldier_vs[self:GetSoldierTypeByName(name1)][self:GetSoldierTypeByName(name2)]
+    return f == "strong" and true or false
+end
+function GameUtils:GetSoldierTypeByType(type_)
+    for k, v in pairs(NORMAL) do
+        if k == type_ then
+            return v.type
+        end
+    end
+    for k, v in pairs(SPECIAL) do
+        if k == type_ then
+            return v.type
+        end
+    end
+end
+function GameUtils:GetSoldierTypeByName(name)
+    for k, v in pairs(NORMAL) do
+        if v.name == name then
+            return v.type
+        end
+    end
+    for k, v in pairs(SPECIAL) do
+        if v.name == name then
+            return v.type
+        end
+    end
 end
 function GameUtils:formatTimeStyle1(time)
     local seconds = floor(time) % 60

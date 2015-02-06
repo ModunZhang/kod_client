@@ -15,6 +15,7 @@ function WidgetSoldierInBattle:ctor(filename, options)
         :addTo(soldier_bg):align(display.CENTER, pos.x, pos.y):scale(0.5)
     self.soldier_bg = soldier_bg
     self.soldier = soldier
+    self.soldier_name = options.soldier
 
 
     if options.side == "blue" then
@@ -72,6 +73,9 @@ function WidgetSoldierInBattle:SetUnitStatus(status)
     end
     self.status:setString(Localize.soldier_status[status])
     return self
+end
+function WidgetSoldierInBattle:GetSoldierName()
+    return self.soldier_name
 end
 
 return WidgetSoldierInBattle
