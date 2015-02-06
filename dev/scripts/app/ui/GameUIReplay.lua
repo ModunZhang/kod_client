@@ -349,7 +349,9 @@ function GameUIReplay:onEnter()
         :addTo(back_ground):align(display.CENTER, back_width_half, back_height - 388)
     local bg = cc.ui.UIImage.new("back_ground_82x82.png")
         :addTo(back_ground):align(display.CENTER, back_width_half, back_height - 388 - 48)
-
+    local size = bg:getContentSize()
+    self.strong = display.newSprite("vs_strong.png"):addTo(bg):pos(size.width / 2, size.height /2):hide()
+    self.weak = display.newSprite("vs_weak.png"):addTo(bg):pos(size.width / 2, size.height /2):hide()
 
     local battle = decode_battle_from_report(self.report)
     -- local battle = new_battle
@@ -816,6 +818,7 @@ function GameUIReplay:CreateItemWithListView(list_view, dual)
             {side = "red", soldier = right.soldier, star = 1}):addTo(row_item)
             :align(display.CENTER, 284/2 + gap, 0)
     end
+    -- row_item:setContentSize(cc.size(284, 128))
     local item = list_view:newItem()
     item:addContent(row_item)
     item:setItemSize(284 * 2, 128)
@@ -841,6 +844,17 @@ function GameUIReplay:NextSoldierBySide(side)
     else
         assert(false)
     end
+    if self.right_round > 0 and self.left_round > 0 then
+        self:ShowSoldierVSStatus(self.left_corps[self.left_round]:GetSoldierName(),
+        self.right_corps[self.right_round]:GetSoldierName())
+    end
+end
+function GameUIReplay:ShowSoldierVSStatus(soldier_name_left, soldier_name_right)
+    self:ShowStrongOrWeak(GameUtils:GetVSFromSoldierName(soldier_name_left, soldier_name_right))
+end
+function GameUIReplay:ShowStrongOrWeak(b)
+    self.strong:setVisible(b)
+    self.weak:setVisible(not b)
 end
 function GameUIReplay:Performance(time, onUpdate, onComplete)
     if self.update_handle then
@@ -867,6 +881,8 @@ end
 
 
 return GameUIReplay
+
+
 
 
 

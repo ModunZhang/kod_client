@@ -9,6 +9,7 @@ GameDatas.ClientInitGame = {
 	["pve_elite"] = {},
 	["pve_boss"] = {},
 	["pve_npc"] = {},
+	["soldier_vs"] = {},
 }
 require("app.datas.ClientInitGame_ruins")
 require("app.datas.ClientInitGame_locations")
@@ -18,6 +19,7 @@ require("app.datas.ClientInitGame_pve_normal")
 require("app.datas.ClientInitGame_pve_elite")
 require("app.datas.ClientInitGame_pve_boss")
 require("app.datas.ClientInitGame_pve_npc")
+require("app.datas.ClientInitGame_soldier_vs")
 
 GameDatas.Activities = {
 	["day60"] = {},

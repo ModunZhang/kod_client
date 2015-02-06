@@ -20,42 +20,9 @@ function WidgetPVEResource:SetUpButtons()
     return self:GetObject():IsSearched() and
         { { label = _("离开") } } or
         { { label = _("进攻"), callback = function()
-            dump(self:GetObject():GetNextEnemy())
+            local enemy = self:GetObject():GetNextEnemy()
             UIKit:newGameUI('GameUIPVESendTroop',
-                {
-                    {
-                        name = "ranger",
-                        star = 1,
-                    },
-                    {
-                        name = "catapult",
-                        star = 1,
-                    },
-                    {
-                        name = "lancer",
-                        star = 1,
-                    },
-                    {
-                        name = "swordsman",
-                        star = 1,
-                    },
-                    {
-                        name = "sentinel",
-                        star = 1,
-                    },
-                    {
-                        name = "crossbowman",
-                        star = 1,
-                    },
-                    {
-                        name = "horseArcher",
-                        star = 1,
-                    },
-                    {
-                        name = "ballista",
-                        star = 1,
-                    },
-                },-- pve 怪数据
+                enemy.soldiers,-- pve 怪数据
                 function(dragonType, soldiers)
                     local dargon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
                     local attack_dragon = {
@@ -76,35 +43,19 @@ function WidgetPVEResource:SetUpButtons()
                             round = 0}
                     end)
 
-                    local defence_dragon = {
-                        dragonType = "redDragon",
-                        currentHp = 100,
-                        totalHp = 100,
-                        hpMax = 100,
-                        strength = 100,
-                        vitality = 100,
-                    }
-                    local defence_soldier = {
-                        {
-                            name = "ranger",
-                            star = 1,
-                            morale = 100,
-                            currentCount = 50,
-                            totalCount = 50,
-                            woundedCount = 0,
-                            round = 0
-                        }
-                    }
-
                     local report = GameUtils:DoBattle(
                         {dragon = attack_dragon, soldiers = attack_soldier}
-                        ,{dragon = defence_dragon, soldiers = defence_soldier}
+                        ,{dragon = enemy.dragon, soldiers = enemy.soldiers}
                     )
 
-                    self.user:SetPveData(report:GetAttackKDA())
+                     LuaUtils:outputTable("name", self:GetObject():GetRewards()) 
                     if report:IsAttackWin() then
+                        self.user:SetPveData(report:GetAttackKDA(), enemy.rewards)
+                        -- if self:GetObject():Left() <= 0 then
+                        -- end
                         self:Search()
                     else
+                        self.user:SetPveData(report:GetAttackKDA())
                         NetManager:getSetPveDataPromise(self.user:EncodePveData()):next(function(result)
                             dump(result)
                         end):catch(function(err)
@@ -118,6 +69,7 @@ function WidgetPVEResource:SetUpButtons()
 end
 
 return WidgetPVEResource
+
 
 
 

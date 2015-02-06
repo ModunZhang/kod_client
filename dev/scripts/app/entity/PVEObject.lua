@@ -51,6 +51,13 @@ end
 function PVEObject:Position()
     return self.x, self.y
 end
+function PVEObject:GetRewards()
+    for k, v in pairs(PVEDefine) do
+        if v == self.type then
+            return self:DecodeToRewards(pve_npc[k].rewards)
+        end
+    end  
+end
 function PVEObject:GetNextEnemy()
     return self:GetEnemyByIndex(self.searched + 1)
 end
@@ -64,7 +71,46 @@ function PVEObject:GetEnemyByIndex(index)
     return {}
 end
 function PVEObject:DecodeToEnemy(raw_data)
-    return raw_data
+    local dragonType, hp, strength, vitality = unpack(string.split(raw_data.dragon_hp_strength_vitality, ","))
+    hp, strength, vitality = tonumber(hp), tonumber(strength), tonumber(vitality)
+    local soldiers_raw = string.split(raw_data.soldiers, ";")
+    return {
+        dragon = {
+            dragonType = dragonType,
+            currentHp = tonumber(hp),
+            totalHp = hp,
+            hpMax = hp,
+            strength = strength,
+            vitality = vitality,
+        },
+        soldiers = LuaUtils:table_map(soldiers_raw, function(k, v)
+            local soldierType, count = unpack(string.split(v, ","))
+            count = tonumber(count)
+            local name, star = unpack(string.split(soldierType, "_"))
+            return k, {
+                name = name,
+                star = tonumber(star),
+                morale = 100,
+                currentCount = count,
+                totalCount = count,
+                woundedCount = 0,
+                round = 0
+            }
+        end),
+        rewards = self:DecodeToRewards(raw_data.rewards),
+    }
+end
+function PVEObject:DecodeToRewards(raw)
+    local rewards_raw = string.split(raw, ";")
+    return LuaUtils:table_map(rewards_raw, function(k, v)
+        local rtype, rname, count = unpack(string.split(v, ","))
+        count = tonumber(count)
+        return k, {
+            type = rtype,
+            name = rname,
+            count = count,
+        }
+    end)
 end
 function PVEObject:IsUnSearched()
     return self:Searched() == 0
@@ -92,6 +138,13 @@ function PVEObject:Dump()
 end
 
 return PVEObject
+
+
+
+
+
+
+
 
 
 

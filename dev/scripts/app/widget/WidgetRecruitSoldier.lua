@@ -23,59 +23,25 @@ local WidgetRecruitSoldier = class("WidgetRecruitSoldier", function(...)
 end)
 local NORMAL = GameDatas.Soldiers.normal
 local SPECIAL = GameDatas.Soldiers.special
-local SOLDIER_CATEGORY_MAP = {
-    ["swordsman"] = "infantry",
-    ["sentinel"] = "infantry",
-    ["skeletonWarrior"] = "infantry",
-    ["priest"] = "infantry",
-
-    ["ranger"] = "archer",
-    ["crossbowman"] = "archer",
-    ["skeletonArcher"] = "archer",
-    ["demonHunter"] = "archer",
-
-    ["lancer"] = "cavalry",
-    ["horseArcher"] = "cavalry",
-    ["deathKnight"] = "cavalry",
-    ["paladin"] = "cavalry",
-
-    ["catapult"] = "siege",
-    ["ballista"] = "siege",
-    ["meatWagon"] = "siege",
-    ["steamTank"] = "siege",
-}
-local SOLDIER_VS_MAP = {
-    ["infantry"] = {
-        strong_vs = { "siege", "wall" },
-        weak_vs = { "cavalry", "archer" }
-    },
-    ["archer"] = {
-        strong_vs = { "cavalry", "infantry" },
-        weak_vs = { "wall", "siege" }
-    },
-    ["cavalry"] = {
-        strong_vs = { "infantry", "siege" },
-        weak_vs = { "archer", "wall" }
-    },
-    ["siege"] = {
-        strong_vs = { "wall", "archer" },
-        weak_vs = { "infantry", "cavalry" }
-    },
-    ["wall"] = {
-        strong_vs = { "archer", "cavalry" },
-        weak_vs = { "siege", "infantry"}
-    }
-}
-local function return_vs_soldiers_map(soldier_type)
-    return SOLDIER_VS_MAP[SOLDIER_CATEGORY_MAP[soldier_type]]
+local soldier_vs = GameDatas.ClientInitGame.soldier_vs
+local function return_vs_soldiers_map(soldier_name)
+    local strong_vs = {}
+    local weak_vs = {}
+    for k, v in pairs(soldier_vs[GameUtils:GetSoldierTypeByName(soldier_name)]) do
+        if v == "strong" then
+            table.insert(strong_vs, k)
+        elseif v == "weak" then
+            table.insert(weak_vs, k)
+        end
+    end
+    return {strong_vs = strong_vs, weak_vs = weak_vs}
 end
-
-function WidgetRecruitSoldier:ctor(barracks, city, soldier_type,soldier_star)
+function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
     UIKit:RegistUI(self)
     self.barracks = barracks
-    self.soldier_type = soldier_type
+    self.soldier_name = soldier_name
     self.star = soldier_star or barracks.soldier_star
-    local soldier_config, aaa = self:GetConfigBySoldierTypeAndStar(soldier_type, self.star)
+    local soldier_config, aaa = self:GetConfigBySoldierTypeAndStar(soldier_name, self.star)
     self.recruit_max = math.floor(barracks:GetMaxRecruitSoldierCount() / soldier_config.citizen)
     self.city = city
 
@@ -108,40 +74,41 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type,soldier_star)
         pressed = "i_btn_down_26x26.png"}):addTo(title_blue)
         :align(display.LEFT_CENTER, title_blue:getContentSize().width - 50, size.height/2)
         :onButtonClicked(function(event)
-            WidgetSoldierDetails.new(soldier_type, self.star):addTo(self)
+            WidgetSoldierDetails.new(soldier_name, self.star):addTo(self)
         end)
 
     -- soldier bg
     local size = back_ground:getContentSize()
-    local width, height = 140, 130
-    local soldier_bg = cc.ui.UIImage.new("back_ground_54x127.png",
-        {scale9 = true}):addTo(back_ground, 2)
-        :align(display.CENTER, 84, size.height - 84)
-        -- :align(display.CENTER, 100, size.height - 50)
-        :setLayoutSize(width, height)
+    self.back_ground = back_ground
+    -- local width, height = 140, 130
+    -- local soldier_bg = cc.ui.UIImage.new("back_ground_54x127.png",
+    --     {scale9 = true}):addTo(back_ground, 2)
+    --     :align(display.CENTER, 84, size.height - 84)
+    --     -- :align(display.CENTER, 100, size.height - 50)
+    --     :setLayoutSize(width, height)
 
     -- stars
-    self.stars = {}
-    local origin_x, origin_y, gap_y = width - 15, 15, 25
-    for i = 1, 5 do
-        local bg = cc.ui.UIImage.new("star_bg_24x23.png"):addTo(soldier_bg, 2)
-            :align(display.CENTER, origin_x, origin_y + (i - 1) * gap_y)
+    -- self.stars = {}
+    -- local origin_x, origin_y, gap_y = width - 15, 15, 25
+    -- for i = 1, 5 do
+    --     local bg = cc.ui.UIImage.new("star_bg_24x23.png"):addTo(soldier_bg, 2)
+    --         :align(display.CENTER, origin_x, origin_y + (i - 1) * gap_y)
 
-        local pos = bg:getAnchorPointInPoints()
-        local star = cc.ui.UIImage.new("star_18x16.png"):addTo(bg)
-            :align(display.CENTER, pos.x, pos.y)
-        table.insert(self.stars, star)
-    end
+    --     local pos = bg:getAnchorPointInPoints()
+    --     local star = cc.ui.UIImage.new("star_18x16.png"):addTo(bg)
+    --         :align(display.CENTER, pos.x, pos.y)
+    --     table.insert(self.stars, star)
+    -- end
 
 
-    -- star_bg
-    local size = soldier_bg:getContentSize()
-    local star_bg = cc.ui.UIImage.new("star1_114x128.png"):addTo(soldier_bg, 2)
-        :align(display.CENTER, 55, size.height/2)
-    self.star_bg = star_bg
+    -- -- star_bg
+    -- local size = soldier_bg:getContentSize()
+    -- local star_bg = cc.ui.UIImage.new("star1_114x128.png"):addTo(soldier_bg, 2)
+    --     :align(display.CENTER, 55, size.height/2)
+    -- self.star_bg = star_bg
 
     -- soldier type
-    local pos = star_bg:getAnchorPointInPoints()
+    -- local pos = star_bg:getAnchorPointInPoints()
     -- local soldier = cc.ui.UIImage.new("soldier_130x183.png"):addTo(star_bg)
     --     :align(display.CENTER, pos.x, pos.y + 5):scale(0.7)
     -- self.soldier = soldier
@@ -159,7 +126,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type,soldier_star)
         :align(display.LEFT_BOTTOM, label_origin_x, size.height - 85 - 11)
     -- :align(display.LEFT_BOTTOM, label_origin_x, size.height - 65 - 11)
 
-    local vs_map = return_vs_soldiers_map(soldier_type)
+    local vs_map = return_vs_soldiers_map(soldier_name)
     local strong_vs = {}
     for i, v in ipairs(vs_map.strong_vs) do
         -- table.insert(strong_vs, SOLDIER_LOCALIZE_MAP[v])
@@ -383,7 +350,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type,soldier_star)
                 return
             end
 
-            if SPECIAL[self.soldier_type] then
+            if SPECIAL[self.soldier_name] then
                 local not_enough_material = self:CheckMaterials(self.count)
                 if not_enough_material then
                     FullScreenPopDialogUI.new()
@@ -391,10 +358,10 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type,soldier_star)
                         :SetPopMessage(string.format(_("您当前没有足够%s"),not_enough_material))
                         :CreateCancelButton():AddToCurrentScene()
                 else
-                    NetManager:getInstantRecruitSpecialSoldierPromise(self.soldier_type, self.count)
+                    NetManager:getInstantRecruitSpecialSoldierPromise(self.soldier_name, self.count)
                 end
             else
-                NetManager:getInstantRecruitNormalSoldierPromise(self.soldier_type, self.count)
+                NetManager:getInstantRecruitNormalSoldierPromise(self.soldier_name, self.count)
                     :catch(function(err)
                         dump(err:reason())
                     end)
@@ -438,7 +405,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type,soldier_star)
             color = UIKit:hex2c3b(0xfff3c7)
         }))
         :onButtonClicked(function(event)
-            if SPECIAL[self.soldier_type] then
+            if SPECIAL[self.soldier_name] then
                 local not_enough_material = self:CheckMaterials(self.count)
                 if not_enough_material then
                     FullScreenPopDialogUI.new()
@@ -446,7 +413,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type,soldier_star)
                         :SetPopMessage(string.format(_("您当前没有足够%s"),not_enough_material))
                         :CreateCancelButton():AddToCurrentScene()
                 else
-                    NetManager:getRecruitSpecialSoldierPromise(self.soldier_type, self.count)
+                    NetManager:getRecruitSpecialSoldierPromise(self.soldier_name, self.count)
                     self:Close()
                 end
             else
@@ -460,13 +427,13 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type,soldier_star)
                         :CreateOKButton(
                             {
                                 listener =  function()
-                                    NetManager:getRecruitNormalSoldierPromise(self.soldier_type, self.count)
+                                    NetManager:getRecruitNormalSoldierPromise(self.soldier_name, self.count)
                                     self:Close()
                                 end
                             }
                         ):AddToCurrentScene()
                 else
-                    NetManager:getRecruitNormalSoldierPromise(self.soldier_type, self.count)
+                    NetManager:getRecruitNormalSoldierPromise(self.soldier_name, self.count)
                     self:Close()
                 end
             end
@@ -503,7 +470,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_type,soldier_star)
 
 end
 function WidgetRecruitSoldier:onEnter()
-    self:SetSoldier(self.soldier_type, self.star)
+    self:SetSoldier(self.soldier_name, self.star)
     self.count = 1
 
     self.barracks:AddBarracksListener(self)
@@ -519,33 +486,39 @@ function WidgetRecruitSoldier:onExit()
     self.city:GetResourceManager():RemoveObserver(self)
     UIKit:getRegistry().removeObject(self.__cname)
 end
-function WidgetRecruitSoldier:SetSoldier(soldier_type, star)
-    local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(soldier_type, star)
+function WidgetRecruitSoldier:SetSoldier(soldier_name, star)
+    local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(soldier_name, star)
     -- title
-    self.title:setString(Localize.soldier_name[soldier_type])
+    self.title:setString(Localize.soldier_name[soldier_name])
     -- bg
-    local bg = UILib.soldier_bg[star]
-    self.star_bg:setTexture(display.newSprite(bg):getTexture())
-    -- soldier
-    if self.soldier then
-        self.star_bg:removeChild(self.soldier)
-    end
-    self.soldier = display.newSprite(soldier_ui_config):addTo(self.star_bg)
-        :align(display.CENTER, self.star_bg:getContentSize().width/2, self.star_bg:getContentSize().height/2)
-    self.soldier:scale(130/self.soldier:getContentSize().height)
-    local star = soldier_config.star
-    for i, v in ipairs(self.stars) do
-        v:setVisible(i <= star)
-    end
+    -- local bg = UILib.soldier_bg[star]
+    -- self.star_bg:setTexture(display.newSprite(bg):getTexture())
+    -- -- soldier
+    -- if self.soldier then
+    --     self.star_bg:removeChild(self.soldier)
+    -- end
+    -- self.soldier = display.newSprite(soldier_ui_config):addTo(self.star_bg)
+    --     :align(display.CENTER, self.star_bg:getContentSize().width/2, self.star_bg:getContentSize().height/2)
+    -- self.soldier:scale(130/self.soldier:getContentSize().height)
+    -- local star = soldier_config.star
+    -- for i, v in ipairs(self.stars) do
+    --     v:setVisible(i <= star)
+    -- end
+
+    self.soldier = display.newSprite(soldier_ui_config):addTo(self.back_ground)
+        :align(display.CENTER, 84, self.back_ground:getContentSize().height - 84)
+    -- self.soldier:scale(104/self.soldier:getContentSize().height)
+    display.newSprite("box_soldier_128x128.png"):addTo(self.soldier):align(display.CENTER, self.soldier:getContentSize().width/2, self.soldier:getContentSize().height-64)
+
 
     self.soldier_config = soldier_config
     self.soldier_ui_config = soldier_ui_config
     return self
 end
-function WidgetRecruitSoldier:GetConfigBySoldierTypeAndStar(soldier_type, star)
-    local soldier_type_with_star = soldier_type..(star == nil and "" or string.format("_%d", star))
-    local soldier_config = NORMAL[soldier_type_with_star] == nil and SPECIAL[soldier_type] or NORMAL[soldier_type_with_star]
-    local soldier_ui_config = UILib.soldier_image[soldier_type][star]
+function WidgetRecruitSoldier:GetConfigBySoldierTypeAndStar(soldier_name, star)
+    local soldier_name_with_star = soldier_name..(star == nil and "" or string.format("_%d", star))
+    local soldier_config = NORMAL[soldier_name_with_star] == nil and SPECIAL[soldier_name] or NORMAL[soldier_name_with_star]
+    local soldier_ui_config = UILib.soldier_image[soldier_name][star]
     return soldier_config, soldier_ui_config
 end
 function WidgetRecruitSoldier:align(anchorPoint, x, y)
@@ -676,6 +649,7 @@ end
 
 
 return WidgetRecruitSoldier
+
 
 
 

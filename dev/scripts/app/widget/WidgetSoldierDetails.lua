@@ -65,30 +65,30 @@ function WidgetSoldierDetails:InitSoldierDetails()
             self:removeFromParent(true)
         end):align(display.CENTER, bg_width-30, bg_height+10):addTo(bg,2)
     -- 士兵头像
-    local stars_bg = display.newSprite("soldier_head_stars_bg.png"):align(display.LEFT_TOP,100, bg_height-30):addTo(bg)
-    local soldier_head_bg  = display.newSprite(STAR_BG[self.soldier_level],-30,stars_bg:getContentSize().height/2):addTo(stars_bg)
+    -- local stars_bg = display.newSprite("soldier_head_stars_bg.png"):align(display.LEFT_TOP,100, bg_height-30):addTo(bg)
+    -- local soldier_head_bg  = display.newSprite(STAR_BG[self.soldier_level],-30,stars_bg:getContentSize().height/2):addTo(stars_bg)
 
-    local soldier_type_with_star = self.soldier_type..(self.soldier_level == nil and "" or string.format("_%d", self.soldier_level))
+    -- local soldier_type_with_star = self.soldier_type..(self.soldier_level == nil and "" or string.format("_%d", self.soldier_level))
     local soldier_ui_config = UILib.soldier_image[self.soldier_type][self.soldier_level]
 
 
-    local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.LEFT_BOTTOM,0,10)
+    local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER_TOP,100, bg_height-30)
     soldier_head_icon:scale(130/soldier_head_icon:getContentSize().height)
-    -- soldier_head_icon:setScale(0.7)
-    soldier_head_bg:addChild(soldier_head_icon)
+    display.newSprite("box_soldier_128x128.png"):addTo(soldier_head_icon):align(display.CENTER, soldier_head_icon:getContentSize().width/2, soldier_head_icon:getContentSize().height-64)
+    bg:addChild(soldier_head_icon)
 
-    -- 士兵星级，特殊兵种无星级
-    local soldier_stars = self.soldier_level
-    if soldier_stars then
-        local gap_y = 25
-        for i=1,5 do
-            stars_bg:addChild(display.newSprite("soldier_stars_bg.png", 38, 15+gap_y*(i-1)))
-            if soldier_stars>0 then
-                stars_bg:addChild(display.newSprite("soldier_stars.png", 38, 15+gap_y*(i-1)))
-                soldier_stars = soldier_stars-1
-            end
-        end
-    end
+    -- -- 士兵星级，特殊兵种无星级
+    -- local soldier_stars = self.soldier_level
+    -- if soldier_stars then
+    --     local gap_y = 25
+    --     for i=1,5 do
+    --         stars_bg:addChild(display.newSprite("soldier_stars_bg.png", 38, 15+gap_y*(i-1)))
+    --         if soldier_stars>0 then
+    --             stars_bg:addChild(display.newSprite("soldier_stars.png", 38, 15+gap_y*(i-1)))
+    --             soldier_stars = soldier_stars-1
+    --         end
+    --     end
+    -- end
 
     local num_title_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
