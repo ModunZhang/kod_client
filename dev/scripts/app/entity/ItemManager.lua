@@ -140,6 +140,35 @@ end
 function ItemManager:GetItemEventByType( type )
     return self.itemEvents[type]
 end
+function ItemManager:IsBuffActived( type )
+    return tolua.type(self.itemEvents[type]) ~= "nil"
+end
+function ItemManager:GetAllCityBuffTypes()
+    return {
+        "masterOfDefender",
+        "quarterMaster",
+        "fogOfTrick",
+        "woodBonus",
+        "stoneBonus",
+        "ironBonus",
+        "foodBonus",
+        "taxesBonus",
+        "citizenBonus",
+    }
+end
+function ItemManager:GetAllWarBuffTypes()
+    return {
+        "dragonExpBonus",
+        "troopSizeBonus",
+        "dragonHpBonus",
+        "marchSpeedBonus",
+        "unitHpBonus",
+        "infantryAtkBonus",
+        "archerAtkBonus",
+        "cavalryAtkBonus",
+        "siegeAtkBonus",
+    }
+end
 -- 按照道具类型添加到对应table,并加入总表
 function ItemManager:InsertItem(item)
     self:GetCategoryItems(item)[item:Name()] = item
@@ -221,6 +250,8 @@ function ItemManager:CanOpenChest( item )
     return  not key_item or key_item:Count()>0
 end
 return ItemManager
+
+
 
 
 
