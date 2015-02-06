@@ -1009,7 +1009,6 @@ function City:OnUserDataChanged(userData, current_time)
     self:__OnHelpToTroopsDataChange(userData.__helpToTroops)
     --科技
     self:OnProductionTechsDataChanged(userData.productionTechs)
-    self:__OnProductionTechsDataChanged(userData.__productionTechs)
     self:OnProductionTechEventsDataChaned(userData.productionTechEvents)
     self:__OnProductionTechEventsDataChaned(userData.__productionTechEvents)
 
@@ -1490,14 +1489,33 @@ end
 
 function City:OnProductionTechsDataChanged(productionTechs)
     if not productionTechs then return end
+    local need_fast_update_all_techs = false
+    local edited = {}
     for name,v in pairs(productionTechs) do
-        if not self.productionTechs[v.index] then
+        local productionTechnology = self:FindTechByIndex(v.index)
+        if not productionTechnology then
             local productionTechnology = ProductionTechnology.new()
             productionTechnology:UpdateData(name,v)
             self.productionTechs[productionTechnology:Index()] = productionTechnology
+            need_fast_update_all_techs = true
+        else
+            need_fast_update_all_techs = false
+            if productionTechnology and productionTechnology:Level() ~= v.level then
+                productionTechnology:SetLevel(v.level)
+                local changed = self:CheckDependTechsLockState(productionTechnology)
+                table.insert(edited, productionTechnology)
+                table.insertto(edited,changed)
+            end
         end
     end
-    self:FastUpdateAllTechsLockState()
+    if need_fast_update_all_techs then
+        self:FastUpdateAllTechsLockState()
+    end
+    if #edited > 0 then
+        self:NotifyListeneOnType(City.LISTEN_TYPE.PRODUCTION_DATA_CHANGED, function(listener)
+            listener:OnProductionTechsDataChanged({edited = edited})
+        end)
+    end
 end
 
 function City:IteratorTechs(func)
@@ -1518,22 +1536,6 @@ function City:FindTechByIndex(index)
     return self.productionTechs[index]
 end
 
-function City:__OnProductionTechsDataChanged(__productionTechs)
-    if not __productionTechs then return end
-    local edited = {}
-    for name,data in pairs(__productionTechs) do
-        local productionTechnology = self:FindTechByIndex(data.index)
-        if productionTechnology and productionTechnology:Level() ~= data.level then
-            productionTechnology:SetLevel(data.level)
-            local changed = self:CheckDependTechsLockState(productionTechnology)
-            table.insert(edited, productionTechnology)
-            table.insertto(edited,changed)
-        end
-    end
-    self:NotifyListeneOnType(City.LISTEN_TYPE.PRODUCTION_DATA_CHANGED, function(listener)
-        listener:OnProductionTechsDataChanged({edited = edited})
-    end)
-end
 --查找依赖于此科技的所有科技
 function City:FindDependOnTheTechs(tech)
     local r = {}
@@ -1643,7 +1645,6 @@ end
 function City:FindProductionTechEventById(_id)
     return self.productionTechEvents[_id]
 end
-
 
 return City
 

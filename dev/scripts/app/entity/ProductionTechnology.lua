@@ -7,6 +7,8 @@ local ProductionTechnology = class("ProductionTechnology")
 local property = import("..utils.property")
 local productionTechs = GameDatas.ProductionTechs.productionTechs
 local Localize = import("..utils.Localize")
+local ResourceManager = import(".ResourceManager")
+
 function ProductionTechnology:ctor()
 	property(self,"index","")
 	property(self,"level","")
@@ -86,6 +88,25 @@ end
 
 function ProductionTechnology:IsOpen()
 	return self:Index() < 10
+end
+--如果是资源相关科技返回资源的类型 否则返回nil
+function ProductionTechnology:GetResourceBuffData()
+	local RESOURCE_TYPE = ResourceManager.RESOURCE_TYPE
+	local RESOURCE_BUFF_TYPE = ResourceManager.RESOURCE_BUFF_TYPE
+	local map_resource = {
+		stoneCarving = {RESOURCE_TYPE.STONE,RESOURCE_BUFF_TYPE.PRODUCT},
+		forestation = {RESOURCE_TYPE.WOOD,RESOURCE_BUFF_TYPE.PRODUCT},
+		ironSmelting = {RESOURCE_TYPE.IRON,RESOURCE_BUFF_TYPE.PRODUCT},
+		cropResearch = {RESOURCE_TYPE.FOOD,RESOURCE_BUFF_TYPE.PRODUCT},
+		fastFix = {RESOURCE_TYPE.WALLHP,RESOURCE_BUFF_TYPE.PRODUCT},
+		beerSupply = {RESOURCE_TYPE.POPULATION,RESOURCE_BUFF_TYPE.LIMIT},
+	}
+
+	if map_resource[self:Name()] then
+		local resource_type,buff_type = unpack(map_resource[self:Name()])
+		return resource_type,buff_type,self:GetBuffEffectVal()
+	end
+	return nil,nil,nil
 end
 
 return ProductionTechnology
