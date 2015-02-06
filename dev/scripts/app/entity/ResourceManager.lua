@@ -253,11 +253,23 @@ function ResourceManager:GetTotalBuffData(city)
             target_map[resource_type] = target_map[resource_type] + buff_value
         end
     end)
-    dump(buff_production_map,"学院科技资源产量buff--->")
-    dump(buff_limt_map,"学院科技资源上限buff--->")
     --道具buuff
     local item_buff = ItemManager:GetAllResourceBuffData()
-    dump(item_buff,"道具buff--->")
+    for _,v in ipairs(item_buff) do
+        local resource_type,buff_type,buff_value = unpack(v)
+        if resource_type  then
+            local target_map = buff_type == self.RESOURCE_BUFF_TYPE.PRODUCT and buff_production_map or buff_limt_map
+            if type(resource_type) == 'number' then
+                target_map[resource_type] = target_map[resource_type] + buff_value
+            elseif type(resource_type) == 'table' then
+                for _,one_resource_type in ipairs(resource_type) do
+                    target_map[one_resource_type] = target_map[one_resource_type] + buff_value
+                end
+            end
+        end
+    end
+    dump(buff_production_map,"buff_production_map--->")
+    dump(buff_limt_map,"buff_limt_map--->")
     return buff_production_map,buff_limt_map
 end
 

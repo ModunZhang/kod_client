@@ -165,7 +165,6 @@ function ItemManager:GetAllResourceTypes()
                 RESOURCE_TYPE.FOOD,
                 RESOURCE_TYPE.IRON,
                 RESOURCE_TYPE.STONE,
-                RESOURCE_TYPE.COIN,
             },
             RESOURCE_BUFF_TYPE.PRODUCT
         },
@@ -176,7 +175,7 @@ end
 function ItemManager:GetAllResourceBuffData()
     local all_resource_buff = {}
     local resource_buff_key = self:GetAllResourceTypes()
-    self:IteratorItmeEvents(function(__,event)
+    self:IteratorItmeEvents(function(event)
         if resource_buff_key[event:Type()] then
             local resource_type,buff_type = unpack(resource_buff_key[event:Type()])
             local buff_value = self:GetBuffEffect(event:Type())
