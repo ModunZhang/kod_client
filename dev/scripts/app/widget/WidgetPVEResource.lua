@@ -20,39 +20,40 @@ function WidgetPVEResource:SetUpButtons()
     return self:GetObject():IsSearched() and
         { { label = _("离开") } } or
         { { label = _("进攻"), callback = function()
+            dump(self:GetObject():GetNextEnemy())
             UIKit:newGameUI('GameUIPVESendTroop',
                 {
                     {
-                        soldier_type = "ranger",
-                        soldier_level = 1,
+                        name = "ranger",
+                        star = 1,
                     },
                     {
-                        soldier_type = "catapult",
-                        soldier_level = 1,
+                        name = "catapult",
+                        star = 1,
                     },
                     {
-                        soldier_type = "lancer",
-                        soldier_level = 1,
+                        name = "lancer",
+                        star = 1,
                     },
                     {
-                        soldier_type = "swordsman",
-                        soldier_level = 1,
+                        name = "swordsman",
+                        star = 1,
                     },
                     {
-                        soldier_type = "sentinel",
-                        soldier_level = 1,
+                        name = "sentinel",
+                        star = 1,
                     },
                     {
-                        soldier_type = "crossbowman",
-                        soldier_level = 1,
+                        name = "crossbowman",
+                        star = 1,
                     },
                     {
-                        soldier_type = "horseArcher",
-                        soldier_level = 1,
+                        name = "horseArcher",
+                        star = 1,
                     },
                     {
-                        soldier_type = "ballista",
-                        soldier_level = 1,
+                        name = "ballista",
+                        star = 1,
                     },
                 },-- pve 怪数据
                 function(dragonType, soldiers)

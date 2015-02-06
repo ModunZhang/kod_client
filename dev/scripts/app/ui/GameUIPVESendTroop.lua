@@ -41,9 +41,9 @@ function GameUIPVESendTroop:onEnter()
     self:SelectDragonPart()
     self:SelectSoldiers()
 
-    local function __getSoldierConfig(soldier_type,level)
+    local function __getSoldierConfig(name,level)
         local level = level or 1
-        return normal[soldier_type.."_"..level] or SPECIAL[soldier_type]
+        return normal[name.."_"..level] or SPECIAL[name]
     end
 
     local max_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
@@ -57,28 +57,28 @@ function GameUIPVESendTroop:onEnter()
             if event.name == "CLICKED_EVENT" then
                 local max_soldiers_citizen = 0
                 for k,item in pairs(self.soldiers_table) do
-                    local soldier_type,level,_,max_num = item:GetSoldierInfo()
-                    max_soldiers_citizen=max_soldiers_citizen+max_num*__getSoldierConfig(soldier_type,level).citizen
+                    local name,level,_,max_num = item:GetSoldierInfo()
+                    max_soldiers_citizen=max_soldiers_citizen+max_num*__getSoldierConfig(name,level).citizen
                 end
                 if self.dragon:LeadCitizen()<max_soldiers_citizen then
                     -- 拥有士兵数量大于派兵数量上限时，首先选取power最高的兵种，依次到达最大派兵上限为止
                     local s_table = self.soldiers_table
                     table.sort(s_table, function(a, b)
-                        local soldier_type,level = a:GetSoldierInfo()
-                        local a_power = __getSoldierConfig(soldier_type,level).power
-                        local soldier_type,level = b:GetSoldierInfo()
-                        local b_power = __getSoldierConfig(soldier_type,level).power
+                        local name,level = a:GetSoldierInfo()
+                        local a_power = __getSoldierConfig(name,level).power
+                        local name,level = b:GetSoldierInfo()
+                        local b_power = __getSoldierConfig(name,level).power
                         return a_power > b_power
                     end)
                     local max_troop_num = self.dragon:LeadCitizen()
                     for k,item in ipairs(s_table) do
-                        local soldier_type,level,_,max_num = item:GetSoldierInfo()
-                        local max_citizen = __getSoldierConfig(soldier_type,level).citizen*max_num
+                        local name,level,_,max_num = item:GetSoldierInfo()
+                        local max_citizen = __getSoldierConfig(name,level).citizen*max_num
                         if max_citizen<=max_troop_num then
                             max_troop_num = max_troop_num - max_citizen
                             item:SetSoldierCount(max_num)
                         else
-                            local num = math.floor(max_troop_num/__getSoldierConfig(soldier_type,level).citizen)
+                            local num = math.floor(max_troop_num/__getSoldierConfig(name,level).citizen)
                             item:SetSoldierCount(num)
                             break
                         end
@@ -251,7 +251,7 @@ function GameUIPVESendTroop:SelectSoldiers()
     listnode:align(display.CENTER)
 
     self.soldier_listview = list
-    local function addListItem(soldier_type,soldier_level,max_soldier)
+    local function addListItem(name,star,max_soldier)
         if max_soldier<1 then
             return
         end
@@ -268,7 +268,7 @@ function GameUIPVESendTroop:SelectSoldiers()
             :scale(0.95)
         -- soldier name
         local soldier_name_label = UIKit:ttfLabel({
-            text = Localize.soldier_name[soldier_type],
+            text = Localize.soldier_name[name],
             size = 24,
             color = 0x403c2f
         }):align(display.LEFT_CENTER,140,90):addTo(content)
@@ -279,11 +279,11 @@ function GameUIPVESendTroop:SelectSoldiers()
             for k,item in pairs(self.soldiers_table) do
                 local soldier_t,soldier_l,soldier_n =item:GetSoldierInfo()
                 local soldier_config = normal[soldier_t.."_"..soldier_l] or SPECIAL[soldier_t]
-                if soldier_type~=soldier_t then
+                if name~=soldier_t then
                     usable_citizen =usable_citizen-soldier_config.citizen*soldier_n
                 end
             end
-            local soldier_config = normal[soldier_type.."_"..soldier_level] or SPECIAL[soldier_type]
+            local soldier_config = normal[name.."_"..star] or SPECIAL[name]
             return math.floor(usable_citizen/soldier_config.citizen)
         end
 
@@ -322,11 +322,11 @@ function GameUIPVESendTroop:SelectSoldiers()
             for k,item in pairs(self.soldiers_table) do
                 local soldier_t,soldier_l,soldier_n =item:GetSoldierInfo()
                 local soldier_config = normal[soldier_t.."_"..soldier_l] or SPECIAL[soldier_t]
-                if soldier_type~=soldier_t then
+                if name~=soldier_t then
                     usable_citizen =usable_citizen-soldier_config.citizen*soldier_n
                 end
             end
-            local soldier_config = normal[soldier_type.."_"..soldier_level] or SPECIAL[soldier_type]
+            local soldier_config = normal[name.."_"..star] or SPECIAL[name]
             if soldier_config.citizen*math.floor(value)< usable_citizen+1 then
                 return math.floor(value)
             else
@@ -343,7 +343,7 @@ function GameUIPVESendTroop:SelectSoldiers()
             :align(display.LEFT_CENTER, 400,90)
 
         -- 士兵头像
-        local soldier_ui_config = UILib.soldier_image[soldier_type][soldier_level]
+        local soldier_ui_config = UILib.soldier_image[name][star]
         local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER,60,64):addTo(content):scale(104/128)
         local soldier_head_bg  = display.newSprite("box_soldier_128x128.png"):addTo(soldier_head_icon):pos(soldier_head_icon:getContentSize().width/2,soldier_head_icon:getContentSize().height/2)
 
@@ -356,7 +356,7 @@ function GameUIPVESendTroop:SelectSoldiers()
         end
 
         function item:GetSoldierInfo()
-            return soldier_type,soldier_level,math.floor(slider:getSliderValue()), self.max_soldier
+            return name,star,math.floor(slider:getSliderValue()), self.max_soldier
         end
         function item:SetSoldierCount(count)
             btn_text:setString(count)
@@ -366,13 +366,13 @@ function GameUIPVESendTroop:SelectSoldiers()
     end
     local sm = self.soldier_manager
     local soldiers = {}
-    for soldier_type,soldier_num in pairs(sm:GetSoldierMap()) do
+    for name,soldier_num in pairs(sm:GetSoldierMap()) do
         if soldier_num>0 then
-            table.insert(soldiers, {soldier_type = soldier_type,level = sm:GetStarBySoldierType(soldier_type), max_num = soldier_num})
+            table.insert(soldiers, {name = name,level = sm:GetStarBySoldierType(name), max_num = soldier_num})
         end
     end
     for k,v in pairs(soldiers) do
-        table.insert(self.soldiers_table, addListItem(v.soldier_type,v.level,v.max_num))
+        table.insert(self.soldiers_table, addListItem(v.name,v.level,v.max_num))
     end
     list:reload()
 
@@ -384,17 +384,17 @@ end
 function GameUIPVESendTroop:RefreashSoldierShow()
     local soldier_show_table = {}
     for k,item in pairs(self.soldiers_table) do
-        local soldier_type,soldier_level,soldier_number =item:GetSoldierInfo()
-        -- print("--soldier_type,soldier_level,soldier_number----",soldier_type,soldier_level,soldier_number)
-        local soldier_config = normal[soldier_type.."_"..soldier_level] or SPECIAL[soldier_type]
+        local name,star,soldier_number =item:GetSoldierInfo()
+        -- print("--name,star,soldier_number----",name,star,soldier_number)
+        local soldier_config = normal[name.."_"..star] or SPECIAL[name]
         if soldier_number>0 then
             table.insert(soldier_show_table, {
-                soldier_type = soldier_type,
+                name = name,
                 power = soldier_config.power*soldier_number,
                 soldier_num = soldier_number,
                 soldier_weight = soldier_config.load*soldier_number,
                 soldier_citizen = soldier_config.citizen*soldier_number,
-                soldier_level = soldier_level
+                star = star
             })
         end
     end
@@ -404,10 +404,10 @@ end
 function GameUIPVESendTroop:GetSelectSoldier()
     local soldiers = {}
     for k,item in pairs(self.soldiers_table) do
-        local soldier_type,soldier_level,soldier_number =item:GetSoldierInfo()
+        local name,star,soldier_number =item:GetSoldierInfo()
         if soldier_number>0 then
             table.insert(soldiers, {
-                name = soldier_type,
+                name = name,
                 count = soldier_number,
             })
         end
@@ -482,14 +482,14 @@ function GameUIPVESendTroop:CreateTroopsShow()
         local origin_x = (619 - 5 * box_width - 4 * gap_x)/2 +  box_width/2
         for i=(current_page-1)*5+1,(current_page-1)*5+5 do
             if soldiers[i] then
-                local soldier_type = soldiers[i].soldier_type
-                local soldier_level = soldiers[i].soldier_level
+                local name = soldiers[i].name
+                local star = soldiers[i].star
                 -- 士兵头像
-                local soldier_ui_config = UILib.black_soldier_image[soldier_type][soldier_level]
+                local soldier_ui_config = UILib.black_soldier_image[name][star]
                 local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER,origin_x+ (i-1-(current_page-1)*5)*(box_width+gap_x),origin_y):addTo(self):scale(104/128)
                 local soldier_head_bg  = display.newSprite("box_soldier_128x128.png"):addTo(soldier_head_icon):pos(soldier_head_icon:getContentSize().width/2,soldier_head_icon:getContentSize().height/2)
                 -- 附上pve士兵类型 用来判定克制关系
-                soldier_head_icon.soldier_type = soldier_type
+                soldier_head_icon.name = name
                 table.insert(self.added_pve_soldiers,soldier_head_icon)
             else
                 break
@@ -517,17 +517,17 @@ function GameUIPVESendTroop:CreateTroopsShow()
         if not LuaUtils:table_empty(my_soldiers) then
             for i=(current_page-1)*5+1,(current_page-1)*5+5 do
                 if my_soldiers[i] then
-                    local soldier_type = my_soldiers[i].soldier_type
-                    local soldier_level = my_soldiers[i].soldier_level
+                    local name = my_soldiers[i].name
+                    local star = my_soldiers[i].star
                     -- 士兵头像
-                    local soldier_ui_config = UILib.soldier_image[soldier_type][soldier_level]
+                    local soldier_ui_config = UILib.soldier_image[name][star]
                     local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER,origin_x+ (i-1-(current_page-1)*5)*(box_width+gap_x),origin_y):addTo(self):scale(104/128)
                     local soldier_head_bg  = display.newSprite("box_soldier_128x128.png"):addTo(soldier_head_icon):pos(soldier_head_icon:getContentSize().width/2,soldier_head_icon:getContentSize().height/2)
                     table.insert(self.added_my_soldiers,soldier_head_icon)
                     -- 克制关系框
                     local pve_soldier = self.pve_soldiers[i]
                     if pve_soldier then
-                        local forbear_pic = self:GetForbear(soldier_type,pve_soldier.soldier_type) and "forbear_up.png" or "forbear_down.png"
+                        local forbear_pic = self:GetForbear(name,pve_soldier.name) and "forbear_up.png" or "forbear_down.png"
                         display.newSprite(forbear_pic):addTo(soldier_head_icon):pos(soldier_head_icon:getContentSize().width/2+5,soldier_head_icon:getContentSize().height/2+5):scale(1.22)
                     end
                 else
@@ -621,10 +621,10 @@ function GameUIPVESendTroop:CreateTroopsShow()
     return TroopsShow
 end
 function GameUIPVESendTroop:OnSoliderCountChanged( soldier_manager,changed_map )
-    for i,soldier_type in ipairs(changed_map) do
+    for i,name in ipairs(changed_map) do
         for _,item in pairs(self.soldiers_table) do
             local item_type = item:GetSoldierInfo()
-            if soldier_type == item_type then
+            if name == item_type then
                 item:SetMaxSoldier(City:GetSoldierManager():GetCountBySoldierType(item_type))
             end
         end
