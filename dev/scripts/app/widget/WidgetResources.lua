@@ -80,7 +80,7 @@ function WidgetResources:InitAllResources()
             resource_icon="food_icon.png",
             resource_limit_value=maxfood,
             resource_current_value=crm:GetFoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
-            total_income=crm:GetFoodResource():GetProductionPerHour().."/h",
+            total_income=crm:GetFoodProductionPerHour().."/h",
             occupy_citizen=City:GetCitizenByType("farmer"),
             maintenance_cost="-"..self.city:GetSoldierManager():GetTotalUpkeep(),
         },

@@ -50,10 +50,17 @@ end
 function DragonEyrieUpgradeBuilding:GetDragonManager()
     return self.dragon_manger_ 
 end
-
-function DragonEyrieUpgradeBuilding:GetHPRecoveryPerHour()
-    return config_function[self:GetLevel()].hpRecoveryPerHour
+--withBuff 
+function DragonEyrieUpgradeBuilding:GetHPRecoveryPerHour(withBuff)
+    local hprecoveryperhour = config_function[self:GetLevel()].hpRecoveryPerHour
+    if withBuff == false then return hprecoveryperhour end
+    if ItemManager:IsBuffActived("dragonHpBonus") then
+        hprecoveryperhour = math.floor(hprecoveryperhour * (1 + ItemManager:GetBuffEffect("dragonHpBonus")))
+    end
+    return hprecoveryperhour
 end
+
+--TODO:龙巢已经不再恢复活力，记得删除
 function DragonEyrieUpgradeBuilding:GetNextLevelVitalityRecoveryPerHour()
     return config_function[self:GetNextLevel()].hpRecoveryPerHour
 end

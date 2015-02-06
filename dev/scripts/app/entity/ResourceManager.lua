@@ -101,6 +101,11 @@ function ResourceManager:OnResourceChanged()
         listener:OnResourceChanged(self)
     end)
 end
+--获取食物的生产量
+function ResourceManager:GetFoodProductionPerHour()
+    return City:GetSoldierManager():GetTotalUpkeep() + self:GetFoodResource():GetProductionPerHour()
+end
+
 function ResourceManager:UpdateByCity(city, current_time)
     -- 产量
     -- 资源小车
@@ -117,7 +122,7 @@ function ResourceManager:UpdateByCity(city, current_time)
 
     local total_production_map = {
         [WOOD] = 0,
-        [FOOD] = 0,
+        [FOOD] = -city:GetSoldierManager():GetTotalUpkeep(),
         [IRON] = 0,
         [STONE] = 0,
         [POPULATION] = 0,
@@ -165,7 +170,6 @@ function ResourceManager:UpdateByCity(city, current_time)
             end
         end
     end)
-    total_limit_map[POPULATION] = total_limit_map[POPULATION] * (1 + 0.5)
     --buff对资源的影响
     local buff_production_map,buff_limt_map = self:GetTotalBuffData(city)
     self.resource_citizen = citizen_map
