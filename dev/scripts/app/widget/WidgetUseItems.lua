@@ -213,9 +213,19 @@ function WidgetUseItems:OpenBuffDialog( item )
             end
         end
     end
+    function dialog:OnItemEventChanged( changed_map )
+        for i,v in ipairs(changed_map[3]) do
+            if item_event and v:Id() == item_event:Id() then
+                buff_status_label:setString(_("未激活"))
+                buff_status_label:setColor(UIKit:hex2c4b(0x403c2f))
+            end
+        end
+    end
     ItemManager:AddListenOnType(dialog,ItemManager.LISTEN_TYPE.OnItemEventTimer)
+    ItemManager:AddListenOnType(dialog,ItemManager.LISTEN_TYPE.ITEM_EVENT_CHANGED)
     dialog:addCloseCleanFunc(function ()
         ItemManager:RemoveListenerOnType(dialog,ItemManager.LISTEN_TYPE.OnItemEventTimer)
+        ItemManager:RemoveListenerOnType(dialog,ItemManager.LISTEN_TYPE.ITEM_EVENT_CHANGED)
     end)
     return dialog
 end
