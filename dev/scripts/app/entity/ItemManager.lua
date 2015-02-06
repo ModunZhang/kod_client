@@ -7,8 +7,9 @@ local MultiObserver = import(".MultiObserver")
 local Item = import(".Item")
 local ItemEvent = import(".ItemEvent")
 local ItemManager = class("ItemManager", MultiObserver)
+local buffTypes = GameDatas.Items.buffTypes
 
-ItemManager.LISTEN_TYPE = Enum("ITEM_CHANGED","OnItemEventTimer")
+ItemManager.LISTEN_TYPE = Enum("ITEM_CHANGED","OnItemEventTimer","ITEM_EVENT_CHANGED")
 
 function ItemManager:ctor()
     ItemManager.super.ctor(self)
@@ -121,6 +122,9 @@ function ItemManager:__OnItemEventsChanged( __itemEvents )
             end
         end
     )
+    self:NotifyListeneOnType(ItemManager.LISTEN_TYPE.ITEM_EVENT_CHANGED, function(listener)
+        listener:OnItemEventChanged(changed_map)
+    end)
 end
 function ItemManager:OnTimer(current_time)
     self:IteratorItmeEvents(function(itemEvent)
@@ -139,6 +143,38 @@ function ItemManager:OnItemEventTimer(itemEvent)
 end
 function ItemManager:GetItemEventByType( type )
     return self.itemEvents[type]
+end
+function ItemManager:IsBuffActived( type )
+    return tolua.type(self.itemEvents[type]) ~= "nil"
+end
+function ItemManager:GetBuffEffect( type )
+    return buffTypes[type].effect
+end
+function ItemManager:GetAllCityBuffTypes()
+    return {
+        "masterOfDefender",
+        "quarterMaster",
+        "fogOfTrick",
+        "woodBonus",
+        "stoneBonus",
+        "ironBonus",
+        "foodBonus",
+        "taxesBonus",
+        "citizenBonus",
+    }
+end
+function ItemManager:GetAllWarBuffTypes()
+    return {
+        "dragonExpBonus",
+        "troopSizeBonus",
+        "dragonHpBonus",
+        "marchSpeedBonus",
+        "unitHpBonus",
+        "infantryAtkBonus",
+        "archerAtkBonus",
+        "cavalryAtkBonus",
+        "siegeAtkBonus",
+    }
 end
 -- 按照道具类型添加到对应table,并加入总表
 function ItemManager:InsertItem(item)
@@ -221,6 +257,9 @@ function ItemManager:CanOpenChest( item )
     return  not key_item or key_item:Count()>0
 end
 return ItemManager
+
+
+
 
 
 
