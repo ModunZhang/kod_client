@@ -79,35 +79,36 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
 
     -- soldier bg
     local size = back_ground:getContentSize()
-    local width, height = 140, 130
-    local soldier_bg = cc.ui.UIImage.new("back_ground_54x127.png",
-        {scale9 = true}):addTo(back_ground, 2)
-        :align(display.CENTER, 84, size.height - 84)
-        -- :align(display.CENTER, 100, size.height - 50)
-        :setLayoutSize(width, height)
+    self.back_ground = back_ground
+    -- local width, height = 140, 130
+    -- local soldier_bg = cc.ui.UIImage.new("back_ground_54x127.png",
+    --     {scale9 = true}):addTo(back_ground, 2)
+    --     :align(display.CENTER, 84, size.height - 84)
+    --     -- :align(display.CENTER, 100, size.height - 50)
+    --     :setLayoutSize(width, height)
 
     -- stars
-    self.stars = {}
-    local origin_x, origin_y, gap_y = width - 15, 15, 25
-    for i = 1, 5 do
-        local bg = cc.ui.UIImage.new("star_bg_24x23.png"):addTo(soldier_bg, 2)
-            :align(display.CENTER, origin_x, origin_y + (i - 1) * gap_y)
+    -- self.stars = {}
+    -- local origin_x, origin_y, gap_y = width - 15, 15, 25
+    -- for i = 1, 5 do
+    --     local bg = cc.ui.UIImage.new("star_bg_24x23.png"):addTo(soldier_bg, 2)
+    --         :align(display.CENTER, origin_x, origin_y + (i - 1) * gap_y)
 
-        local pos = bg:getAnchorPointInPoints()
-        local star = cc.ui.UIImage.new("star_18x16.png"):addTo(bg)
-            :align(display.CENTER, pos.x, pos.y)
-        table.insert(self.stars, star)
-    end
+    --     local pos = bg:getAnchorPointInPoints()
+    --     local star = cc.ui.UIImage.new("star_18x16.png"):addTo(bg)
+    --         :align(display.CENTER, pos.x, pos.y)
+    --     table.insert(self.stars, star)
+    -- end
 
 
-    -- star_bg
-    local size = soldier_bg:getContentSize()
-    local star_bg = cc.ui.UIImage.new("star1_114x128.png"):addTo(soldier_bg, 2)
-        :align(display.CENTER, 55, size.height/2)
-    self.star_bg = star_bg
+    -- -- star_bg
+    -- local size = soldier_bg:getContentSize()
+    -- local star_bg = cc.ui.UIImage.new("star1_114x128.png"):addTo(soldier_bg, 2)
+    --     :align(display.CENTER, 55, size.height/2)
+    -- self.star_bg = star_bg
 
     -- soldier type
-    local pos = star_bg:getAnchorPointInPoints()
+    -- local pos = star_bg:getAnchorPointInPoints()
     -- local soldier = cc.ui.UIImage.new("soldier_130x183.png"):addTo(star_bg)
     --     :align(display.CENTER, pos.x, pos.y + 5):scale(0.7)
     -- self.soldier = soldier
@@ -490,19 +491,25 @@ function WidgetRecruitSoldier:SetSoldier(soldier_name, star)
     -- title
     self.title:setString(Localize.soldier_name[soldier_name])
     -- bg
-    local bg = UILib.soldier_bg[star]
-    self.star_bg:setTexture(display.newSprite(bg):getTexture())
-    -- soldier
-    if self.soldier then
-        self.star_bg:removeChild(self.soldier)
-    end
-    self.soldier = display.newSprite(soldier_ui_config):addTo(self.star_bg)
-        :align(display.CENTER, self.star_bg:getContentSize().width/2, self.star_bg:getContentSize().height/2)
-    self.soldier:scale(130/self.soldier:getContentSize().height)
-    local star = soldier_config.star
-    for i, v in ipairs(self.stars) do
-        v:setVisible(i <= star)
-    end
+    -- local bg = UILib.soldier_bg[star]
+    -- self.star_bg:setTexture(display.newSprite(bg):getTexture())
+    -- -- soldier
+    -- if self.soldier then
+    --     self.star_bg:removeChild(self.soldier)
+    -- end
+    -- self.soldier = display.newSprite(soldier_ui_config):addTo(self.star_bg)
+    --     :align(display.CENTER, self.star_bg:getContentSize().width/2, self.star_bg:getContentSize().height/2)
+    -- self.soldier:scale(130/self.soldier:getContentSize().height)
+    -- local star = soldier_config.star
+    -- for i, v in ipairs(self.stars) do
+    --     v:setVisible(i <= star)
+    -- end
+
+    self.soldier = display.newSprite(soldier_ui_config):addTo(self.back_ground)
+        :align(display.CENTER, 84, self.back_ground:getContentSize().height - 84)
+    -- self.soldier:scale(104/self.soldier:getContentSize().height)
+    display.newSprite("box_soldier_128x128.png"):addTo(self.soldier):align(display.CENTER, self.soldier:getContentSize().width/2, self.soldier:getContentSize().height-64)
+
 
     self.soldier_config = soldier_config
     self.soldier_ui_config = soldier_ui_config
@@ -642,6 +649,7 @@ end
 
 
 return WidgetRecruitSoldier
+
 
 
 

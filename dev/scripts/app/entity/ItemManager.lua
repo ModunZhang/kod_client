@@ -7,8 +7,9 @@ local MultiObserver = import(".MultiObserver")
 local Item = import(".Item")
 local ItemEvent = import(".ItemEvent")
 local ItemManager = class("ItemManager", MultiObserver)
-
-ItemManager.LISTEN_TYPE = Enum("ITEM_CHANGED","OnItemEventTimer")
+local buffTypes = GameDatas.Items.buffTypes
+local ResourceManager = import(".ResourceManager")
+ItemManager.LISTEN_TYPE = Enum("ITEM_CHANGED","OnItemEventTimer","ITEM_EVENT_CHANGED")
 
 function ItemManager:ctor()
     ItemManager.super.ctor(self)
@@ -121,6 +122,9 @@ function ItemManager:__OnItemEventsChanged( __itemEvents )
             end
         end
     )
+    self:NotifyListeneOnType(ItemManager.LISTEN_TYPE.ITEM_EVENT_CHANGED, function(listener)
+        listener:OnItemEventChanged(changed_map)
+    end)
 end
 function ItemManager:OnTimer(current_time)
     self:IteratorItmeEvents(function(itemEvent)
@@ -139,6 +143,73 @@ function ItemManager:OnItemEventTimer(itemEvent)
 end
 function ItemManager:GetItemEventByType( type )
     return self.itemEvents[type]
+end
+function ItemManager:IsBuffActived( type )
+    return tolua.type(self.itemEvents[type]) ~= "nil"
+end
+function ItemManager:GetBuffEffect( type )
+    return buffTypes[type].effect
+end
+function ItemManager:GetAllResourceTypes()
+    local RESOURCE_TYPE = ResourceManager.RESOURCE_TYPE
+    local RESOURCE_BUFF_TYPE = ResourceManager.RESOURCE_BUFF_TYPE
+
+    local buff_map =  {
+        woodBonus = {RESOURCE_TYPE.WOOD,RESOURCE_BUFF_TYPE.PRODUCT},
+        stoneBonus = {RESOURCE_TYPE.STONE,RESOURCE_BUFF_TYPE.PRODUCT},
+        ironBonus = {RESOURCE_TYPE.IRON,RESOURCE_BUFF_TYPE.PRODUCT},
+        foodBonus = {RESOURCE_TYPE.FOOD,RESOURCE_BUFF_TYPE.PRODUCT},
+        taxesBonus = {  
+            {   
+                RESOURCE_TYPE.WOOD,
+                RESOURCE_TYPE.FOOD,
+                RESOURCE_TYPE.IRON,
+                RESOURCE_TYPE.STONE,
+            },
+            RESOURCE_BUFF_TYPE.PRODUCT
+        },
+        citizenBonus = {RESOURCE_TYPE.POPULATION,RESOURCE_BUFF_TYPE.PRODUCT},
+    }
+    return buff_map
+end
+function ItemManager:GetAllResourceBuffData()
+    local all_resource_buff = {}
+    local resource_buff_key = self:GetAllResourceTypes()
+    self:IteratorItmeEvents(function(event)
+        if resource_buff_key[event:Type()] then
+            local resource_type,buff_type = unpack(resource_buff_key[event:Type()])
+            local buff_value = self:GetBuffEffect(event:Type())
+            table.insert(all_resource_buff,{resource_type,buff_type,buff_value})
+        end
+    end)
+    return all_resource_buff
+end
+
+function ItemManager:GetAllCityBuffTypes()
+    return {
+        "masterOfDefender",
+        "quarterMaster",
+        "fogOfTrick",
+        "woodBonus",
+        "stoneBonus",
+        "ironBonus",
+        "foodBonus",
+        "taxesBonus",
+        "citizenBonus",
+    }
+end
+function ItemManager:GetAllWarBuffTypes()
+    return {
+        "dragonExpBonus",
+        "troopSizeBonus",
+        "dragonHpBonus",
+        "marchSpeedBonus",
+        "unitHpBonus",
+        "infantryAtkBonus",
+        "archerAtkBonus",
+        "cavalryAtkBonus",
+        "siegeAtkBonus",
+    }
 end
 -- 按照道具类型添加到对应table,并加入总表
 function ItemManager:InsertItem(item)
@@ -221,6 +292,9 @@ function ItemManager:CanOpenChest( item )
     return  not key_item or key_item:Count()>0
 end
 return ItemManager
+
+
+
 
 
 

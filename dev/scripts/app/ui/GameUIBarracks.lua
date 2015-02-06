@@ -123,15 +123,15 @@ function GameUIBarracks:CreateSpecialSoldierUI()
             title = _("亡灵部队"),
             title_img = "title_red_554x34.png",
         },
-        {
-            title = _("精灵部队"),
-            title_img = "title_green_554x34.png",
-        },
+        -- {
+        --     title = _("精灵部队"),
+        --     title_img = "title_green_554x34.png",
+        -- },
     }
 
     for i, v in ipairs({
-        {"skeletonWarrior", "skeletonArcher", "deathKnight", "meatWagon"},
-        {"priest", "demonHunter", "paladin", "steamTank"}
+        {"skeletonWarrior", "skeletonArcher", "deathKnight", "meatWagon"}
+        -- {"priest", "demonHunter", "paladin", "steamTank"}
     }) do
         self.special_list_view:addItem(self:CreateSpecialItemWithListView(self.special_list_view, v,titles[i].title, titles[i].title_img))
     end
@@ -187,7 +187,7 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
     local rect = list_view:getViewRect()
     local origin_x = - rect.width / 2
     local widget_rect = self.timer:getCascadeBoundingBox()
-    local unit_width = 130
+    local unit_width = 120
     local gap_x = (widget_rect.width - unit_width * 4) / 3
     local row_item = display.newNode()
     for i, soldier_name in pairs(soldiers) do
@@ -197,20 +197,20 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
                     :addTo(self)
                     :align(display.CENTER, window.cx, 500 / 2)
             end):addTo(row_item)
-                :alignByPoint(cc.p(0.5, 0.4), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 0)
+                :alignByPoint(cc.p(0.5, 0.5), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 0)
                 :SetSoldier(soldier_name, self.barracks.soldier_star)
     end
 
     local item = list_view:newItem()
     item:addContent(row_item)
-    item:setItemSize(widget_rect.width, 170)
+    item:setItemSize(widget_rect.width, 160)
     return item
 end
 function GameUIBarracks:CreateSpecialItemWithListView( list_view, soldiers ,title,title_img)
     local rect = list_view:getViewRect()
     local origin_x = 10
     local widget_width = 568
-    local unit_width = 130
+    local unit_width = 120
     local gap_x = (widget_width - unit_width * 4-origin_x*2) / 3
     local row_item = WidgetUIBackGround.new({height=274,width=widget_width},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
     for i, soldier_name in pairs(soldiers) do
@@ -220,7 +220,7 @@ function GameUIBarracks:CreateSpecialItemWithListView( list_view, soldiers ,titl
                     :addTo(self)
                     :align(display.CENTER, window.cx, 500 / 2)
             end):addTo(row_item)
-                :alignByPoint(cc.p(0.5, 0.4), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 140)
+                :alignByPoint(cc.p(0.5, 0.5), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 140)
                 :SetSoldier(soldier_name, self.barracks_city:GetSoldierManager():GetStarBySoldierType(soldier_name))
     end
 
