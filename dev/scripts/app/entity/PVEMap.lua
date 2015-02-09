@@ -1,3 +1,4 @@
+local PVEDefine = import(".PVEDefine")
 local PVEObject = import(".PVEObject")
 local Observer = import(".Observer")
 local PVEMap = class("PVEMap", Observer)
@@ -9,11 +10,54 @@ function PVEMap:ctor(database, index)
     self.searched_objects = {}
     self.database = database
 end
+function PVEMap:LoadProperty()
+    local file_name = self:GetFileName()
+    local pve_layer = cc.TMXTiledMap:create(file_name):getLayer("layer1")
+    local size = pve_layer:getLayerSize()
+    local total_objects = 0
+    for x = 0, size.width - 1 do
+        for y = 0, size.height - 1 do
+            local ccp = cc.p(x, y)
+            local gid = (pve_layer:getTileGIDAt(ccp))
+            if gid > 0 then
+                total_objects = total_objects + PVEObject:TotalByType(gid)
+                if gid == PVEDefine.START_AIRSHIP then
+                    self.start_point = ccp
+                end
+            end
+        end
+    end
+    pve_layer:removeFromParent()
+    self.width = size.width
+    self.height = size.height
+    self.total_objects = total_objects
+    return self
+end
+function PVEMap:GetFileName()
+    return string.format("tmxmaps/pve_%d_info.tmx", self.index)
+end
 function PVEMap:GetDatabase()
     return self.database
 end
 function PVEMap:GetIndex()
     return self.index
+end
+function PVEMap:ExploreDegree()
+    return (self:SearchedFogsCount() + self:SearchedObjectsCount()) / (self:TotalFogs() + self:TotalObjects())
+end
+function PVEMap:TotalFogs()
+    local w, h = self:GetSize()
+    return (w - 1) * (h - 1)
+end
+function PVEMap:TotalObjects()
+    return self.total_objects
+end
+function PVEMap:GetStartPoint()
+    assert(self.start_point)
+    return self.start_point
+end
+function PVEMap:GetSize()
+    return self.width, self.height
 end
 function PVEMap:SearchedFogsCount()
     return #self.searched_fogs * 0.5
@@ -70,6 +114,23 @@ function PVEMap:ModifyObject(x, y, searched, type)
     self:NotifyObservers(function(lisenter)
         lisenter:OnObjectChanged(self.searched_objects[#self.searched_objects])
     end)
+end
+function PVEMap:IsComplete()
+    local complete = false
+    self:IteratorObjects(function(object)
+        if object:IsEntranceDoor() then
+            complete = object:IsSearched()
+        end
+    end)
+    return complete
+end
+function PVEMap:IsHead()
+    local nxt = self.database:GetMapByIndex(self.index + 1)
+    return self:IsAvailable() and (nxt == nil and true or not nxt:IsAvailable())
+end
+function PVEMap:IsAvailable()
+    local pre = self.database:GetMapByIndex(self.index - 1)
+    return pre == nil and true or pre:IsComplete()
 end
 function PVEMap:IsSearched()
     return #self.searched_fogs > 0 or #self.searched_objects > 0

@@ -1,19 +1,21 @@
 local PVEMap = import(".PVEMap")
 local PVEDatabase = class("PVEDatabase")
 
-local MAX_FLOOR = 1
+local MAX_FLOOR = 2
 function PVEDatabase:ctor(user)
     self.user = user
     self.char_x = 12
     self.char_y = 12
     self.char_floor = 1
     self.next_enemy_step = 10
-    self.next_gem_step = 10
     local pve_maps = {}
     for i = 1, MAX_FLOOR do
-        pve_maps[i] = PVEMap.new(self, i)
+        pve_maps[i] = PVEMap.new(self, i):LoadProperty()
     end
     self.pve_maps = pve_maps
+end
+function PVEDatabase:MapLen()
+    return #self.pve_maps
 end
 function PVEDatabase:OnUserDataChanged(user_data)
     local pve = user_data.pve

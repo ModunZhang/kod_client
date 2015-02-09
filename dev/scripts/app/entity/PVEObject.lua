@@ -156,6 +156,9 @@ end
 function PVEObject:TotalByType(type)
     return TOTAL[type]
 end
+function PVEObject:IsEntranceDoor()
+    return self.type == PVEDefine.ENTRANCE_DOOR
+end
 function PVEObject:Dump()
     return string.format("{%d,%d,%d}", self.x, self.y, self.searched)
 end
