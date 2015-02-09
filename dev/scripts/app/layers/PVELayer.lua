@@ -28,18 +28,18 @@ OBJECT_IMAGE[PVEDefine.TREE] = "tree_2_138x110.png"
 OBJECT_IMAGE[PVEDefine.HILL] = "hill_228x146.png"
 OBJECT_IMAGE[PVEDefine.LAKE] = "lake_220x174.png"
 
-function PVELayer:ctor(user)
+function PVELayer:ctor(user, level)
+    level = level or 1
     PVELayer.super.ctor(self, 0.5, 1)
     self.pve_listener = Observer.new()
     self.user = user
     self.pve_map = user:GetCurrentPVEMap()
     self.scene_node = display.newNode():addTo(self)
-    self.background = cc.TMXTiledMap:create("tmxmaps/pve_background.tmx"):addTo(self.scene_node, ZORDER.BACKGROUND)
+    self.background = cc.TMXTiledMap:create(string.format("tmxmaps/pve_%d_background.tmx", level)):addTo(self.scene_node, ZORDER.BACKGROUND)
+    self.war_fog_layer = cc.TMXTiledMap:create(string.format("tmxmaps/pve_%d_fog.tmx", level)):addTo(self.scene_node, ZORDER.FOG):pos(-80, -80):getLayer("layer1")
+    self.pve_layer = cc.TMXTiledMap:create(string.format("tmxmaps/pve_%d_info.tmx", level)):addTo(self):hide():getLayer("layer1")
     self.building_layer = display.newNode():addTo(self.scene_node, ZORDER.BUILDING)
     self.object_layer = display.newNode():addTo(self.scene_node, ZORDER.OBJECT)
-    self.war_fog_layer = cc.TMXTiledMap:create("tmxmaps/pve.tmx"):addTo(self.scene_node, ZORDER.FOG):pos(-80, -80):getLayer("layer1")
-
-    self.pve_layer = cc.TMXTiledMap:create("tmxmaps/pve_1.tmx"):addTo(self):hide():getLayer("layer1")
     local size = self.pve_layer:getLayerSize()
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new({
         tile_w = 80,
@@ -56,10 +56,11 @@ function PVELayer:ctor(user)
 
 
     local layer = self.background:getLayer("layer1")
+    local color = cc.c3b(tonumber(layer:getProperty("r")) or 0, tonumber(layer:getProperty("g")) or 0, tonumber(layer:getProperty("b")) or 0)
     for x = 0, size.width - 1 do
         for y = 0, size.height - 1 do
             local tile = layer:getTileAt(cc.p(x, y))
-            tile:setColor(cc.c3b(120,0,0) + cc.c3b(tile:getColor()))
+            tile:setColor(color + cc.c3b(tile:getColor()))
         end
     end
 end
@@ -191,24 +192,7 @@ function PVELayer:ConvertLogicPositionToMapPosition(lx, ly)
     return self:convertToNodeSpace(self.background:convertToWorldSpace(map_pos))
 end
 function PVELayer:ExploreDegree()
-    return (self:SearchedFogsCount() + self:SearchedObjectsCount()) / (self:TotalFogs() + self:TotalObjects())
-end
-function PVELayer:SearchedFogsCount()
-    return self.pve_map:SearchedFogsCount()
-end
-function PVELayer:SearchedObjectsCount()
-    return self.pve_map:SearchedObjectsCount()
-end
-function PVELayer:TotalFogs()
-    local w, h = self:GetLogicMap():GetSize()
-    return (w - 1) * (h - 1)
-end
-function PVELayer:TotalObjects()
-    local count = 0
-    self:IteratorObjectsGID(function(_, _, gid)
-        count = count + PVEObject:TotalByType(gid)
-    end)
-    return count
+    return self.pve_map:ExploreDegree()
 end
 function PVELayer:IteratorObjectsGID(func)
     local pve_layer = self.pve_layer

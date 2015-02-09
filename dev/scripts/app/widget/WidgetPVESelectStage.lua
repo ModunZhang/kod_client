@@ -7,7 +7,9 @@ local WidgetPVESelectStage = class("WidgetPVESelectStage", WidgetPopDialog)
 
 
 
-function WidgetPVESelectStage:ctor()
+function WidgetPVESelectStage:ctor(user)
+    self.user = user
+    self.pve_database = user:GetPVEDatabase()
     WidgetPVESelectStage.super.ctor(self, 600, _("选择关卡"), display.cy + 250)
     local list_view, listnode=  UIKit:commonListView({
         bgColor = UIKit:hex2c4b(0x7a100000),
@@ -16,7 +18,7 @@ function WidgetPVESelectStage:ctor()
     })
     listnode:addTo(self):align(display.BOTTOM_CENTER, window.cx,window.bottom_top + 100)
 
-    for i = 1, 25 do
+    for i = 1, self.pve_database:MapLen() do
     	list_view:addItem(self:CreateItemWithListView(list_view, i))
     end
     list_view:reload()
@@ -40,6 +42,10 @@ function WidgetPVESelectStage:CreateItemWithListView(list_view, level)
     item:addContent(back_ground)
     item:setItemSize(w, h)
 
+
+
+    local cur_map = self.pve_database:GetMapByIndex(level)
+
     local name = cc.ui.UILabel.new({
         size = 22,
         font = UIKit:getFontFilePath(),
@@ -54,9 +60,8 @@ function WidgetPVESelectStage:CreateItemWithListView(list_view, level)
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_LEFT,
         color = UIKit:hex2c3b(0x403c2f),
-        text = "1 关卡名"
+        text = string.format("探索度 %.2f%%", cur_map:ExploreDegree() * 100)
     }):addTo(back_ground, 2):align(display.LEFT_CENTER, 30, 50)
-
 
     local btn = WidgetPushButton.new(
         {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"}
@@ -72,8 +77,15 @@ function WidgetPVESelectStage:CreateItemWithListView(list_view, level)
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xffedae)}))
         :onButtonClicked(function(event)
-            print(level)
+            if self.user:GetCurrentPVEMap():GetIndex() == level then
+                print("你已经在当前关卡")
+            else
+                print("level ", level)
+            end
         end)
+
+        btn:setButtonEnabled(cur_map:IsAvailable())
+    
 
 
     return item

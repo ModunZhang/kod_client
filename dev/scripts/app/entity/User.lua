@@ -63,7 +63,9 @@ end
 -- return 是否成功使用体力
 function User:UseStrength(num)
     if self:HasAnyStength(num) then
-        self:GetStrengthResource():ReduceResourceByCurrentTime(app.timer:GetServerTime(), num or 1)
+        local current_time = app.timer:GetServerTime()
+        self:GetStrengthResource():ReduceResourceByCurrentTime(current_time, num or 1)
+        self:UpdatePreStrength(current_time)
         self:OnResourceChanged()
     end
     return false
@@ -80,9 +82,12 @@ function User:EncodePveData()
     local rewards = self.rewards_data
     self.fight_data = nil
     self.rewards_data = nil
+
+    local used_strength = self.pre_strenth - self:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    used_strength = used_strength > 0 and used_strength or 0
     return {
         pveData = {
-            staminaUsed = self.pre_strenth - self:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
+            staminaUsed = used_strength,
             location = self.pve_database:EncodeLocation(),
             floor = self.cur_pve_map:EncodeMap(),
         },
@@ -111,6 +116,7 @@ function User:GetTradeManager()
 end
 function User:OnTimer(current_time)
     self:UpdateResourceByTime(current_time)
+    self:UpdatePreStrength(current_time)
     self:OnResourceChanged()
     self.vip_event:OnTimer(current_time)
 end
@@ -334,8 +340,11 @@ function User:OnResourcesChangedByTime(resources, current_time)
         local strength = self:GetStrengthResource()
         strength:UpdateResource(current_time, resources.stamina)
         strength:SetProductionPerHour(current_time, 4)
-        self.pre_strenth = strength:GetResourceValueByCurrentTime(current_time)
+        self:UpdatePreStrength(current_time)
     end
+end
+function User:UpdatePreStrength(current_time)
+    self.pre_strenth = self:GetStrengthResource():GetResourceValueByCurrentTime(current_time)
 end
 function User:OnBasicInfoChanged(basicInfo)
     if not basicInfo then return end
