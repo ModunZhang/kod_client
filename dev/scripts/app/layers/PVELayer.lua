@@ -134,6 +134,10 @@ end
 function PVELayer:GetChar()
     return self.char
 end
+function PVELayer:CanMove(x, y)
+    local width, height = self:GetLogicMap():GetSize()
+    return x >= 2 and x < width - 2 and y >= 2 and y < height - 2 then
+end
 function PVELayer:MoveCharTo(x, y)
     self:LightOn(x, y)
     self.char:pos(self:GetLogicMap():ConvertToMapPosition(x, y))

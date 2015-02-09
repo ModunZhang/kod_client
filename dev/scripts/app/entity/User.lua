@@ -60,6 +60,17 @@ function User:ctor(p)
     vip_event:AddObserver(self)
     self.vip_event = vip_event
 end
+-- return 是否成功使用体力
+function User:UseStrength(num)
+    if self:HasAnyStength(num) then
+        self:GetStrengthResource():ReduceResourceByCurrentTime(app.timer:GetServerTime(), num or 1)
+        self:OnResourceChanged()
+    end
+    return false
+end
+function User:HasAnyStength(num)
+    return self:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()) >= num or 1
+end
 function User:SetPveData(fight_data, rewards_data)
     self.fight_data = fight_data
     self.rewards_data = rewards_data

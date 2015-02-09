@@ -61,16 +61,14 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
         return self:OpenUI(old_x, old_y)
     end
     --
-    local strength_resource = self.user:GetStrengthResource()
-    local strength = strength_resource:GetResourceValueByCurrentTime(timer:GetServerTime())
     local is_offset_x = math.abs(new_x - old_x) > math.abs(new_y - old_y)
     local offset_x = is_offset_x and (new_x - old_x) / math.abs(new_x - old_x) or 0
     local offset_y = is_offset_x and 0 or (new_y - old_y) / math.abs(new_y - old_y)
     local tx, ty = old_x + offset_x, old_y + offset_y
     local width, height = logic_map:GetSize()
-    if tx >= 2 and tx < width - 2 and ty >= 2 and ty < height - 2 and strength > 0 then
-        -- strength_resource:ReduceResourceByCurrentTime(timer:GetServerTime(), 1)
-        -- self.user:OnResourceChanged()
+
+    if self:GetSceneLayer():CanMove(tx, ty) and self.user:HasAnyStength() then
+        self.user:UseStrength(1)
         self:GetSceneLayer():MoveCharTo(tx, ty)
         self:OpenUI(tx, ty)
     end

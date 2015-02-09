@@ -8,138 +8,37 @@ local TECHNOLOGY = MATERIAL_TYPE.TECHNOLOGY
 local DRAGON = MATERIAL_TYPE.DRAGON
 local SOLDIER = MATERIAL_TYPE.SOLDIER
 local EQUIPMENT = MATERIAL_TYPE.EQUIPMENT
+
+local dragonEquipments = GameDatas.DragonEquipments.equipments
+local soldierMaterials = GameDatas.PlayerInitData.soldierMaterials
+local dragonMaterials = GameDatas.PlayerInitData.dragonMaterials
 function MaterialManager:ctor()
     MaterialManager.super.ctor(self)
     self.material_map = {}
-    self.material_map[MaterialManager.MATERIAL_TYPE.BUILD] = {
+    self.material_map[BUILD] = {
         ["tiles"] = 0,
         ["pulley"] = 0,
         ["tools"] = 0,
         ["blueprints"] = 0,
     }
-    self.material_map[MaterialManager.MATERIAL_TYPE.TECHNOLOGY] = {
+    self.material_map[TECHNOLOGY] = {
         ["saddle"] = 0,
         ["bowTarget"] = 0,
         ["ironPart"] = 0,
         ["trainingFigure"] = 0,
     }
-    self.material_map[MaterialManager.MATERIAL_TYPE.DRAGON] = {
-        ["moltenCore"] = 0,
-        ["chargedMagnet"] = 0,
-        ["dolanRune"] = 0,
-        ["infernoSoul"] = 0,
-        ["warsongRune"] = 0,
-        ["challengeRune"] = 0,
-        ["steelIngot"] = 0,
-        ["moltenShard"] = 0,
-        ["moltenMagnet"] = 0,
-        ["lavaSoul"] = 0,
-        ["glacierMagnet"] = 0,
-        ["rageRune"] = 0,
-        ["giantRune"] = 0,
-        ["arcaniteIngot"] = 0,
-        ["moltenShiver"] = 0,
-        ["fairySoul"] = 0,
-        ["chargedShiver"] = 0,
-        ["blizzardSoul"] = 0,
-        ["mithrilIngot"] = 0,
-        ["blackIronIngot"] = 0,
-        ["wispOfCold"] = 0,
-        ["wispOfFire"] = 0,
-        ["ironIngot"] = 0,
-        ["guardRune"] = 0,
-        ["wispOfWind"] = 0,
-        ["forestSoul"] = 0,
-        ["poisonRune"] = 0,
-        ["eternityRune"] = 0,
-        ["chargedShard"] = 0,
-        ["arcanaRune"] = 0,
-        ["glacierShard"] = 0,
-        ["glacierCore"] = 0,
-        ["infernoRune"] = 0,
-        ["suppressRune"] = 0,
-        ["glacierShiver"] = 0,
-        ["chargedCore"] = 0,
-        ["iceSoul"] = 0,
-    }
-    self.material_map[MaterialManager.MATERIAL_TYPE.SOLDIER] = {
-        ["heroBones"] = 0,
-        ["magicBox"] = 0,
-        ["holyBook"] = 0,
-        ["brightAlloy"] = 0,
-        ["soulStone"] = 0,
-        ["deathHand"] = 0,
-        ["confessionHood"] = 0,
-        ["brightRing"] = 0,
-    }
-    self.material_map[MaterialManager.MATERIAL_TYPE.EQUIPMENT] = {
-        ["fireSuppressChest"] = 0,
-        ["rageSting"] = 0,
-        ["frostChest"] = 0,
-        ["moltenArmguard"] = 0,
-        ["eternitySting"] = 0,
-        ["rageArmguard"] = 0,
-        ["poisonChest"] = 0,
-        ["blizzardArmguard"] = 0,
-        ["infernoCrown"] = 0,
-        ["dolanSting"] = 0,
-        ["frostCrown"] = 0,
-        ["glacierCrown"] = 0,
-        ["windSuppressSting"] = 0,
-        ["warsongChest"] = 0,
-        ["frostOrb"] = 0,
-        ["poisonArmguard"] = 0,
-        ["coldSuppressArmguard"] = 0,
-        ["eternityOrb"] = 0,
-        ["rageChest"] = 0,
-        ["fireSuppressArmguard"] = 0,
-        ["windSuppressChest"] = 0,
-        ["windSuppressOrb"] = 0,
-        ["blizzardSting"] = 0,
-        ["giantSting"] = 0,
-        ["warsongSting"] = 0,
-        ["dolanChest"] = 0,
-        ["giantArmguard"] = 0,
-        ["poisonCrown"] = 0,
-        ["moltenCrown"] = 0,
-        ["dolanArmguard"] = 0,
-        ["dolanCrown"] = 0,
-        ["blizzardCrown"] = 0,
-        ["giantChest"] = 0,
-        ["fireSuppressOrb"] = 0,
-        ["eternityChest"] = 0,
-        ["infernoSting"] = 0,
-        ["giantCrown"] = 0,
-        ["warsongCrown"] = 0,
-        ["blizzardOrb"] = 0,
-        ["coldSuppressOrb"] = 0,
-        ["infernoOrb"] = 0,
-        ["fireSuppressCrown"] = 0,
-        ["dolanOrb"] = 0,
-        ["giantOrb"] = 0,
-        ["chargedCrown"] = 0,
-        ["eternityArmguard"] = 0,
-        ["rageOrb"] = 0,
-        ["frostArmguard"] = 0,
-        ["warsongOrb"] = 0,
-        ["warsongArmguard"] = 0,
-        ["glacierArmguard"] = 0,
-        ["coldSuppressCrown"] = 0,
-        ["windSuppressCrown"] = 0,
-        ["coldSuppressChest"] = 0,
-        ["fireSuppressSting"] = 0,
-        ["poisonOrb"] = 0,
-        ["infernoChest"] = 0,
-        ["coldSuppressSting"] = 0,
-        ["infernoArmguard"] = 0,
-        ["eternityCrown"] = 0,
-        ["chargedArmguard"] = 0,
-        ["frostSting"] = 0,
-        ["rageCrown"] = 0,
-        ["blizzardChest"] = 0,
-        ["windSuppressArmguard"] = 0,
-        ["poisonSting"] = 0,
-    }
+    self.material_map[DRAGON] = self:GetTableFromKey(dragonMaterials)
+    self.material_map[SOLDIER] = self:GetTableFromKey(soldierMaterials)
+    self.material_map[EQUIPMENT] = self:GetTableFromKey(dragonEquipments)
+end
+function MaterialManager:GetTableFromKey(t)
+    local r = {}
+    for k,_ in pairs(t) do
+        if k ~= "level" then
+            r[k] = 0
+        end
+    end
+    return r
 end
 function MaterialManager:GetMaterialMap()
     return self.material_map

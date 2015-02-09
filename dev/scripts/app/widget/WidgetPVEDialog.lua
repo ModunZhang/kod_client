@@ -110,13 +110,7 @@ function WidgetPVEDialog:SetUpButtons()
     return { { label = _("离开") } }
 end
 function WidgetPVEDialog:UseStrength(num)
-    local user = self:GetCurrentUser()
-    local strength_resource = user:GetStrengthResource()
-    local strength = strength_resource:GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    if strength < num then return end
-    strength_resource:ReduceResourceByCurrentTime(app.timer:GetServerTime(), 3)
-    user:OnResourceChanged()
-    return true
+    return self:GetCurrentUser():UseStrength(num)
 end
 function WidgetPVEDialog:AddStrength(num)
     local user = self:GetCurrentUser()

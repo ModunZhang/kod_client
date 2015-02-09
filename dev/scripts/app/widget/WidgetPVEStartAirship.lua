@@ -1,5 +1,6 @@
 local SpriteConfig = import("..sprites.SpriteConfig")
-local WidgetPVEDialog = import("..widget.WidgetPVEDialog")
+local WidgetPVEDialog = import(".WidgetPVEDialog")
+local WidgetPVESelectStage = import(".WidgetPVESelectStage")
 local WidgetPVEStartAirship = class("WidgetPVEStartAirship", WidgetPVEDialog)
 
 function WidgetPVEStartAirship:ctor(...)
@@ -22,6 +23,7 @@ function WidgetPVEStartAirship:SetUpButtons()
         {
             {
                 label = _("传送"), callback = function()
+                    WidgetPVESelectStage.new():addToCurrentScene(true)
                     self:removeFromParent()
                 end
             },
