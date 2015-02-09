@@ -5,6 +5,7 @@ local Flag = import(".Flag")
 local AllianceShrine = import(".AllianceShrine")
 local AllianceMoonGate = import(".AllianceMoonGate")
 local AllianceMap = import(".AllianceMap")
+local HelpEvent = import(".HelpEvent")
 local AllianceMember = import(".AllianceMember")
 local MultiObserver = import(".MultiObserver")
 local MarchAttackEvent = import(".MarchAttackEvent")
@@ -296,12 +297,12 @@ function Alliance:GetAllHelpEvents()
 end
 function Alliance:AddHelpEvent(event)
     local help_events = self.help_events
-    assert(help_events[event.eventId] == nil)
-    help_events[event.eventId] = event
+    assert(help_events[event:Id()] == nil)
+    help_events[event:Id()] = event
     return event
 end
 function Alliance:RemoveHelpEvent(event)
-    return self:RemoveHelpEventById(event.eventId)
+    return self:RemoveHelpEventById(event:Id())
 end
 function Alliance:RemoveHelpEventById(id)
     local help_events = self.help_events
@@ -311,7 +312,7 @@ function Alliance:RemoveHelpEventById(id)
 end
 function Alliance:EditHelpEvent(event)
     local help_events = self.help_events
-    help_events[event.eventId] = event
+    help_events[event:Id()] = event
     return event
 end
 function Alliance:ReFreashHelpEvent(changed_help_event)
@@ -323,7 +324,7 @@ end
 function Alliance:IsBuildingHasBeenRequestedToHelpSpeedup(eventId)
     if self.help_events then
         for _,h_event in pairs(self.help_events) do
-            if h_event.id == DataManager:getUserData()._id and h_event.eventId == eventId then
+            if h_event:GetPlayerData():Id() == DataManager:getUserData()._id and h_event:GetEventData():Id() == eventId then
                 return true
             end
         end
@@ -604,14 +605,17 @@ function Alliance:OnNewHelpEventsDataComming(__helpEvents)
         local type_ = v.type
         local help_event = v.data
         if type_ == "add" then
-            self:AddHelpEvent(help_event)
-            table.insert(added, help_event)
+            local helpEvent = HelpEvent.new():UpdateData(help_event)
+            self:AddHelpEvent(helpEvent)
+            table.insert(added, helpEvent)
         elseif type_ == "remove" then
-            self:RemoveHelpEvent(help_event)
-            table.insert(removed, help_event)
+            local helpEvent = HelpEvent.new():UpdateData(help_event)
+            self:RemoveHelpEvent(helpEvent)
+            table.insert(removed, helpEvent)
         elseif type_ == "edit" then
-            self:EditHelpEvent(help_event)
-            table.insert(edit, help_event)
+            local helpEvent = HelpEvent.new():UpdateData(help_event)
+            self:EditHelpEvent(helpEvent)
+            table.insert(edit, helpEvent)
         end
     end
     self:ReFreashHelpEvent{
@@ -816,11 +820,9 @@ end
 function Alliance:OnHelpEventsChanged(helpEvents)
     if not helpEvents then return end
     for _,v in pairs(helpEvents) do
-        self.help_events[v.eventId] = v
+        -- self.help_events[v.eventId] = v
+        self.help_events[v.id] = HelpEvent.new():UpdateData(v)
     end
-    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.HELP_EVENTS, function(listener)
-        listener:OnAllHelpEventChanged(helpEvents)
-    end)
 end
 function Alliance:GetAllianceArchonMember()
     for k,v in pairs(self.members) do

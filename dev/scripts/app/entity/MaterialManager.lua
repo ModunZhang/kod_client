@@ -27,7 +27,7 @@ function MaterialManager:ctor()
         ["ironPart"] = 0,
         ["trainingFigure"] = 0,
     }
-    self.material_map[DRAGON] = self:GetTableFromKey(dragonMaterials)
+    self.material_map[DRAGON] = self:GetTableFromKey__(dragonMaterials)
     self.material_map[SOLDIER] = self:GetTableFromKey(soldierMaterials)
     self.material_map[EQUIPMENT] = self:GetTableFromKey(dragonEquipments)
 end
@@ -36,6 +36,17 @@ function MaterialManager:GetTableFromKey(t)
     for k,_ in pairs(t) do
         if k ~= "level" then
             r[k] = 0
+        end
+    end
+    return r
+end
+function MaterialManager:GetTableFromKey__(t)
+    local r = {}
+    for _,v in pairs(t) do
+        for k,_ in pairs(v) do
+            if  k ~= "level" then
+                r[k] = 0
+            end
         end
     end
     return r
@@ -103,6 +114,7 @@ function MaterialManager:OnMaterialsComing(material_type, materials)
 end
 
 return MaterialManager
+
 
 
 

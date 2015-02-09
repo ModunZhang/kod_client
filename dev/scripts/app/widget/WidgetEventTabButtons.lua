@@ -53,6 +53,15 @@ end
 function WidgetEventTabButtons:OnUpgradingFinished(building, current_time, city)
     self:EventChangeOn("build")
     self:RefreshBuildQueueByType("build")
+    if (building:GetType()== "trainingGround"
+        or building:GetType()== "hunterHall"
+        or building:GetType()== "stable"
+        or building:GetType()== "workshop")
+        and building:GetLevel() == 1
+    then
+        self:EventChangeOn("technology")
+        self:RefreshBuildQueueByType("technology")
+    end
 end
 -- 兵营事件
 function WidgetEventTabButtons:OnBeginRecruit(barracks, event)
@@ -217,9 +226,9 @@ function WidgetEventTabButtons:CreateTabButtons()
             :addTo(node):align(display.LEFT_BOTTOM,origin_x + (i - 5) * (142 + 1), 4)
             :OnTabPress(handler(self, self.OnTabClicked))
             :EnableTag(true):SetActive(0, 1)
-            -- if i <= 3 then
-            --     tab_map[tab_type]:hide()
-            -- end
+        -- if i <= 3 then
+        --     tab_map[tab_type]:hide()
+        -- end
     end
     return node, tab_map
 end
@@ -234,6 +243,9 @@ function WidgetEventTabButtons:CreateItem()
 end
 function WidgetEventTabButtons:CreateBottom()
     return self:CreateOpenItem():align(display.LEFT_CENTER)
+end
+function WidgetEventTabButtons:CreateMilitaryItem(building)
+    return self:CreateOpenMilitaryTechItem(building):align(display.LEFT_CENTER)
 end
 function WidgetEventTabButtons:CreateProgressItem()
     local progress = display.newProgressTimer("progress_bar_432x36.png", display.PROGRESS_TIMER_BAR)
@@ -351,6 +363,49 @@ function WidgetEventTabButtons:CreateOpenItem()
         end)
 
 
+    function node:SetLabel(str)
+        if label:getString() ~= str then
+            label:setString(str)
+        end
+        return self
+    end
+    function node:onEnter()
+    -- button:setButtonEnabled(widget:GetCurrentTab() ~= "technology")
+    end
+    node:setNodeEventEnabled(true)
+
+    return node
+end
+function WidgetEventTabButtons:CreateOpenMilitaryTechItem(building)
+    local widget = self
+    local node = display.newNode()
+    local label = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        size = 18,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xd1ca95)}):addTo(node):align(display.LEFT_CENTER, 10, 0)
+
+    local button = WidgetPushButton.new({normal = "blue_btn_up_142x39.png",
+        pressed = "blue_btn_down_142x39.png",
+        disabled = "blue_btn_up_142x39.png"
+    }
+    ,{}
+    ,{
+        disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+    }):addTo(node):align(display.RIGHT_CENTER, WIDGET_WIDTH - 55, 0)
+        :setButtonLabel(UIKit:ttfLabel({
+            text = _("打开"),
+            size = 18,
+            color = 0xfff3c7,
+            shadow = true
+        }))
+        :onButtonClicked(function(event)
+            print("CreateOpenMilitaryTechItem==",building:GetType())
+            UIKit:newGameUI('GameUIMilitaryTechBuilding', City, building):addToCurrentScene(true)
+        end)
+
+    cc.ui.UIImage.new("divide_line_489x2.png"):addTo(node)
+        :align(display.LEFT_BOTTOM, -38, -25):setLayoutSize(638, 2)
     function node:SetLabel(str)
         if label:getString() ~= str then
             label:setString(str)
@@ -555,13 +610,13 @@ function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
             if not isRequested then
                 local eventType = ""
                 if self.city:IsFunctionBuilding(building) then
-                    eventType = "building"
+                    eventType = "buildingEvents"
                 elseif self.city:IsHouse(building) then
-                    eventType = "house"
+                    eventType = "houseEvents"
                 elseif self.city:IsGate(building) then
-                    eventType = "wall"
+                    eventType = "wallEvents"
                 elseif self.city:IsTower(building) then
-                    eventType = "tower"
+                    eventType = "towerEvents"
                 end
                 NetManager:getRequestAllianceToSpeedUpPromise(eventType,building:UniqueUpgradingKey())
                     :catch(function(err)
@@ -637,6 +692,22 @@ function WidgetEventTabButtons:Load()
                 end
             elseif k == "technology" then
                 self:InsertItem(self:CreateBottom():SetLabel(_("查看现有的科技")))
+                local trainingGround = City:GetFirstBuildingByType("trainingGround")
+                if trainingGround:GetLevel()>0 then
+                    self:InsertItem(self:CreateMilitaryItem(trainingGround):SetLabel(_("训练营地空闲")))
+                end
+                local hunterHall = City:GetFirstBuildingByType("hunterHall")
+                if hunterHall:GetLevel()>0 then
+                    self:InsertItem(self:CreateMilitaryItem(hunterHall):SetLabel(_("猎手大厅空闲")))
+                end
+                local stable = City:GetFirstBuildingByType("stable")
+                if stable:GetLevel()>0 then
+                    self:InsertItem(self:CreateMilitaryItem(stable):SetLabel(_("马厩空闲")))
+                end
+                local workshop = City:GetFirstBuildingByType("workshop")
+                if workshop:GetLevel()>0 then
+                    self:InsertItem(self:CreateMilitaryItem(workshop):SetLabel(_("车间空闲")))
+                end
             elseif k == "material" then
                 self:InsertItem(self:CreateBottom():SetLabel(_("查看材料")))
                 local event = self.blackSmith:GetMakeEquipmentEvent()
@@ -698,6 +769,8 @@ function WidgetEventTabButtons:MaterialDescribe(event)
 end
 
 return WidgetEventTabButtons
+
+
 
 
 
