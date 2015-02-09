@@ -197,7 +197,7 @@ function WidgetUseItems:OpenBuffDialog( item )
     end
     function dialog:OnItemEventTimer( item_event_new )
         local item_event = ItemManager:GetItemEventByType( string.split(item:Name(),"_")[1] )
-        if item_event then
+        if item_event and item_event_new:Type() == item_event:Type() then
             local time = item_event_new:GetTime()
             if time >0 then
                 buff_status_label:setString(_("已激活,剩余时间:")..GameUtils:formatTimeStyle1(time))
