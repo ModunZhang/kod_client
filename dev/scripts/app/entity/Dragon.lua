@@ -145,7 +145,11 @@ function Dragon:Leadership()
 end
 --总带兵量
 function Dragon:LeadCitizen()
-	return self:TotalLeadership() * config_alliance_initData_int.citizenPerLeadership.value
+	local leadCitizen = self:TotalLeadership() * config_alliance_initData_int.citizenPerLeadership.value
+	if ItemManager:IsBuffActived("troopSizeBonus") then
+		leadCitizen = math.floor(leadCitizen * (1 + ItemManager:GetBuffEffect("troopSizeBonus")))
+	end
+	return leadCitizen
 end
 
 --自身的力量

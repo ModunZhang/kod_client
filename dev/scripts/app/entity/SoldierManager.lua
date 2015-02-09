@@ -100,6 +100,9 @@ function SoldierManager:GetTotalUpkeep()
         local config = NORMAL[config_name] or SPECIAL[k]
         total = total + config.consumeFoodPerHour * v
     end
+    if ItemManager:IsBuffActived("quarterMaster") then
+        total = math.ceil(total * (1 - ItemManager:GetBuffEffect("quarterMaster")))
+    end
     return total
 end
 function SoldierManager:GetTreatResource(soldiers)
