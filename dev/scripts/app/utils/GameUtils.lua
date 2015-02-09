@@ -12,8 +12,7 @@ local round = function(v)
     return floor(v + 0.5)
 end
 function GameUtils:GetVSFromSoldierName(name1, name2)
-    local f = soldier_vs[self:GetSoldierTypeByName(name1)][self:GetSoldierTypeByName(name2)]
-    return f == "strong" and true or false
+    return soldier_vs[self:GetSoldierTypeByName(name1)][self:GetSoldierTypeByName(name2)]
 end
 function GameUtils:GetSoldierTypeByType(type_)
     for k, v in pairs(NORMAL) do

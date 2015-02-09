@@ -18,7 +18,7 @@ OBJECT_IMAGE[PVEDefine.MINER] = SpriteConfig["miner"]:GetConfigByLevel(1).png
 OBJECT_IMAGE[PVEDefine.FARMER] = SpriteConfig["farmer"]:GetConfigByLevel(1).png
 OBJECT_IMAGE[PVEDefine.CAMP] = "camp_137x80.png"
 OBJECT_IMAGE[PVEDefine.CRASHED_AIRSHIP] = "crashed_airship_94x80.png"
-OBJECT_IMAGE[PVEDefine.CONSTRUCTION_RUINS] = "ruin_1_136x92.png"
+OBJECT_IMAGE[PVEDefine.CONSTRUCTION_RUINS] = "ruin_1.png"
 OBJECT_IMAGE[PVEDefine.KEEL] = "keel_95x80.png"
 OBJECT_IMAGE[PVEDefine.WARRIORS_TOMB] = "warriors_tomb.png"
 OBJECT_IMAGE[PVEDefine.OBELISK] = "obelisk.png"
@@ -54,6 +54,15 @@ function PVELayer:ctor(user)
     local size_out = self:getContentSize()
     local x, y = size_out.width * 0.5 - size_in.width * 0.5, size_out.height * 0.5 - size_in.height * 0.5
     self.scene_node:pos(x, y)
+
+
+    local layer = self.background:getLayer("layer1")
+    for x = 0, size.width - 1 do
+        for y = 0, size.height - 1 do
+            local tile = layer:getTileAt(cc.p(x, y))
+            tile:setColor(cc.c3b(120,0,0) + cc.c3b(tile:getColor()))
+        end
+    end
 end
 function PVELayer:onEnter()
     PVELayer.super.onEnter(self)

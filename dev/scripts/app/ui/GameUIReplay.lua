@@ -606,6 +606,7 @@ function GameUIReplay:NewDragon(is_left)
             :addTo(self):align(display.CENTER, 130, 60):scale(0.6)
         dragon:getAnimation():play("Idle", -1, -1)
         dragon:setScaleX(is_left and 0.6 or -0.6)
+        -- dragon:setColor(cc.c3b(0,0,128) + dragon:getColor())
         if not is_left then
             dragon:pos(-45, 60)
         end
@@ -846,15 +847,23 @@ function GameUIReplay:NextSoldierBySide(side)
     end
     if self.right_round > 0 and self.left_round > 0 then
         self:ShowSoldierVSStatus(self.left_corps[self.left_round]:GetSoldierName(),
-        self.right_corps[self.right_round]:GetSoldierName())
+            self.right_corps[self.right_round]:GetSoldierName())
     end
 end
 function GameUIReplay:ShowSoldierVSStatus(soldier_name_left, soldier_name_right)
     self:ShowStrongOrWeak(GameUtils:GetVSFromSoldierName(soldier_name_left, soldier_name_right))
 end
-function GameUIReplay:ShowStrongOrWeak(b)
-    self.strong:setVisible(b)
-    self.weak:setVisible(not b)
+function GameUIReplay:ShowStrongOrWeak(vs)
+    if vs == "strong" then
+        self.strong:setVisible(true)
+        self.weak:setVisible(false)
+    elseif vs == "weak" then
+        self.strong:setVisible(false)
+        self.weak:setVisible(true)
+    else
+        self.strong:hide()
+        self.weak:hide()
+    end
 end
 function GameUIReplay:Performance(time, onUpdate, onComplete)
     if self.update_handle then
@@ -881,6 +890,7 @@ end
 
 
 return GameUIReplay
+
 
 
 

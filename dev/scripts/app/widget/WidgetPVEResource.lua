@@ -47,12 +47,12 @@ function WidgetPVEResource:SetUpButtons()
                         {dragon = attack_dragon, soldiers = attack_soldier}
                         ,{dragon = enemy.dragon, soldiers = enemy.soldiers}
                     )
-
-                     LuaUtils:outputTable("name", self:GetObject():GetRewards()) 
                     if report:IsAttackWin() then
-                        self.user:SetPveData(report:GetAttackKDA(), enemy.rewards)
-                        -- if self:GetObject():Left() <= 0 then
-                        -- end
+                        if self:GetObject():Left() <= 0 then
+                            self.user:SetPveData(report:GetAttackKDA(), self:GetObject():GetRewards() + enemy.rewards)
+                        else
+                            self.user:SetPveData(report:GetAttackKDA(), enemy.rewards)
+                        end
                         self:Search()
                     else
                         self.user:SetPveData(report:GetAttackKDA())

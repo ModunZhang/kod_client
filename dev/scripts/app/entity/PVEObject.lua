@@ -56,7 +56,7 @@ function PVEObject:GetRewards()
         if v == self.type then
             return self:DecodeToRewards(pve_npc[k].rewards)
         end
-    end  
+    end
 end
 function PVEObject:GetNextEnemy()
     return self:GetEnemyByIndex(self.searched + 1)
@@ -100,9 +100,30 @@ function PVEObject:DecodeToEnemy(raw_data)
         rewards = self:DecodeToRewards(raw_data.rewards),
     }
 end
+local m = {
+    __add = function(a, b)
+        local r = {}
+        for _, v in ipairs(a) do
+            r[v.type] = v
+        end
+        for _, v in ipairs(b) do
+            local av = r[v.type]
+            if av then
+                av.count = av.count + v.count
+            else
+                r[v.type] = v
+            end
+        end
+        local r1 = {}
+        for _, v in pairs(r) do
+            r1[#r1 + 1] = v
+        end
+        return r1
+    end
+}
 function PVEObject:DecodeToRewards(raw)
     local rewards_raw = string.split(raw, ";")
-    return LuaUtils:table_map(rewards_raw, function(k, v)
+    local r = LuaUtils:table_map(rewards_raw, function(k, v)
         local rtype, rname, count = unpack(string.split(v, ","))
         count = tonumber(count)
         return k, {
@@ -111,6 +132,8 @@ function PVEObject:DecodeToRewards(raw)
             count = count,
         }
     end)
+    setmetatable(r, m)
+    return r
 end
 function PVEObject:IsUnSearched()
     return self:Searched() == 0
@@ -138,6 +161,7 @@ function PVEObject:Dump()
 end
 
 return PVEObject
+
 
 
 

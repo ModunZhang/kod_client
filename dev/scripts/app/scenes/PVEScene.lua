@@ -69,8 +69,8 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
     local tx, ty = old_x + offset_x, old_y + offset_y
     local width, height = logic_map:GetSize()
     if tx >= 2 and tx < width - 2 and ty >= 2 and ty < height - 2 and strength > 0 then
-        strength_resource:ReduceResourceByCurrentTime(timer:GetServerTime(), 1)
-        self.user:OnResourceChanged()
+        -- strength_resource:ReduceResourceByCurrentTime(timer:GetServerTime(), 1)
+        -- self.user:OnResourceChanged()
         self:GetSceneLayer():MoveCharTo(tx, ty)
         self:OpenUI(tx, ty)
     end

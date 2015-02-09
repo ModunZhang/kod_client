@@ -2,6 +2,31 @@ print("加载玩家自定义函数!")
 
 NOT_HANDLE = function(...) print("net message not handel, please check !") end
 
+
+local c3b_m_ = {
+    __add = function(a,b)
+        return {
+            r = a.r + b.r,
+            g = a.g + b.g,
+            b = a.b + b.b,
+        }
+    end
+}
+local c3b_ = cc.c3b
+function cc.c3b( _r,_g,_b )
+    local c
+    if type(_r) == "table" then
+        c = c3b_(_r.r,_r.g,_r.b)
+    else
+        c = c3b_(_r,_g,_b)
+    end
+    setmetatable(c, c3b_m_)
+    return c
+end
+
+
+
+
 local old_ctor = cc.ui.UIPushButton.ctor
 function cc.ui.UIPushButton:ctor(images, options,music_info)
     old_ctor(self, images, options)
@@ -192,3 +217,4 @@ end
 function display.popScene()
     cc.Director:getInstance():popScene()
 end
+
