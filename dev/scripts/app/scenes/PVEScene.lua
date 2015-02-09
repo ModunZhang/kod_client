@@ -68,7 +68,7 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
     local width, height = logic_map:GetSize()
 
     if self:GetSceneLayer():CanMove(tx, ty) and self.user:HasAnyStength() then
-        self.user:UseStrength(1)
+        -- self.user:UseStrength(1)
         self:GetSceneLayer():MoveCharTo(tx, ty)
         self:OpenUI(tx, ty)
     end

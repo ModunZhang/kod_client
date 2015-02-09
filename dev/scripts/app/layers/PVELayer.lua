@@ -37,8 +37,7 @@ function PVELayer:ctor(user)
     self.background = cc.TMXTiledMap:create("tmxmaps/pve_background.tmx"):addTo(self.scene_node, ZORDER.BACKGROUND)
     self.building_layer = display.newNode():addTo(self.scene_node, ZORDER.BUILDING)
     self.object_layer = display.newNode():addTo(self.scene_node, ZORDER.OBJECT)
-    self.war_fog = cc.TMXTiledMap:create("tmxmaps/pve.tmx"):addTo(self.scene_node, ZORDER.FOG):pos(-80, -80)
-    self.war_fog_layer = self.war_fog:getLayer("layer1")
+    self.war_fog_layer = cc.TMXTiledMap:create("tmxmaps/pve.tmx"):addTo(self.scene_node, ZORDER.FOG):pos(-80, -80):getLayer("layer1")
 
     self.pve_layer = cc.TMXTiledMap:create("tmxmaps/pve_1.tmx"):addTo(self):hide():getLayer("layer1")
     local size = self.pve_layer:getLayerSize()
@@ -136,7 +135,7 @@ function PVELayer:GetChar()
 end
 function PVELayer:CanMove(x, y)
     local width, height = self:GetLogicMap():GetSize()
-    return x >= 2 and x < width - 2 and y >= 2 and y < height - 2 then
+    return x >= 2 and x < width - 2 and y >= 2 and y < height - 2
 end
 function PVELayer:MoveCharTo(x, y)
     self:LightOn(x, y)

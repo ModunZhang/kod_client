@@ -69,7 +69,7 @@ function User:UseStrength(num)
     return false
 end
 function User:HasAnyStength(num)
-    return self:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()) >= num or 1
+    return self:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()) >= (num or 1)
 end
 function User:SetPveData(fight_data, rewards_data)
     self.fight_data = fight_data
