@@ -125,6 +125,27 @@ function PVELayer:GetSpriteBy(x, y)
         end
     end
 end
+function PVELayer:PromiseOfTrap()
+    local p = promise.new()
+    local t = 0.025
+    local r = 5
+    self.char:runAction(transition.sequence({
+        cc.RotateBy:create(t, r),
+        cc.RotateBy:create(t, -r),
+        cc.RotateBy:create(t, -r),
+        cc.RotateBy:create(t, r),
+        cc.RotateBy:create(t, r),
+        cc.RotateBy:create(t, -r),
+        cc.RotateBy:create(t, -r),
+        cc.RotateBy:create(t, r),
+        cc.RotateBy:create(t, r),
+        cc.RotateBy:create(t, -r),
+        cc.RotateBy:create(t, -r),
+        cc.RotateBy:create(t, r),
+        cc.CallFunc:create(function() p:resolve() end),
+    }))
+    return p
+end
 function PVELayer:GetChar()
     return self.char
 end
@@ -228,6 +249,9 @@ function PVELayer:GotoLogicPoint(x, y, s)
 end
 
 return PVELayer
+
+
+
 
 
 
