@@ -1257,7 +1257,6 @@ function GameUIAlliance:RefreshDescView()
 end
 
 function GameUIAlliance:OnAllianceJoinTypeButtonClicked(event)  
-    print("OnAllianceJoinTypeButtonClicked---->",event.selected)
     local join_type = "all"
     if event.selected ~= 1 then
         join_type = "audit"
@@ -1265,7 +1264,6 @@ function GameUIAlliance:OnAllianceJoinTypeButtonClicked(event)
     NetManager:getEditAllianceJoinTypePromise(join_type):catch(function(err)
         dump(err:reason())
     end):done(function(result)
-        -- self:RefreshInfomationView()
     end)
 end
 
@@ -1306,7 +1304,6 @@ function GameUIAlliance:OnInfoButtonClicked(tag)
         local mail = GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.ALLIANCE_MAIL)
         mail:SetTitle(_("联盟邮件"))
         mail:SetAddressee(_("发送联盟所有成员"))
-        -- mail:OnSendButtonClicked( GameUIWriteMail.SEND_TYPE.ALLIANCE_MAIL)
         mail:addTo(self)
     end
 end
