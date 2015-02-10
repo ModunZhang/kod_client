@@ -564,7 +564,7 @@ function WidgetEventTabButtons:OnBeforeShow()
         return true
     elseif tab == "soldier" and self.barracks:IsUnlocked() then
         return true
-    elseif tab == "material" and self.toolShop:IsUnlocked() then
+    elseif tab == "material" and (self.toolShop:IsUnlocked() or self.blackSmith:IsUnlocked()) then
         return true
     elseif tab == "technology" then
         return true
