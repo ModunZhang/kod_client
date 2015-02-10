@@ -5,6 +5,8 @@ local WidgetPushButton = import(".WidgetPushButton")
 local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetUIBackGround2 = import(".WidgetUIBackGround2")
 local WidgetPopDialog = import(".WidgetPopDialog")
+local UILib = import("..ui.UILib")
+
 
 local WidgetMakeEquip = class("WidgetMakeEquip", WidgetPopDialog
     --     function()
@@ -25,46 +27,8 @@ local DRAGON_BG = {
     blueDragon = "box_100x100_2.png",
     greenDragon = "box_100x100_3.png",
 }
-local MATERIAL_MAP = {
-    ["ironIngot"] = "ironIngot_92x92.png",
-    ["steelIngot"] = "steelIngot_92x92.png",
-    ["mithrilIngot"] = "mithrilIngot_92x92.png",
-    ["blackIronIngot"] = "blackIronIngot_92x92.png",
-    ["arcaniteIngot"] = "arcaniteIngot_92x92.png",
-    ["wispOfFire"] = "wispOfFire_92x92.png",
-    ["wispOfCold"] = "wispOfCold_92x92.png",
-    ["wispOfWind"] = "wispOfWind_92x92.png",
-    ["lavaSoul"] = "lavaSoul_92x92.png",
-    ["iceSoul"] = "iceSoul_92x92.png",
-    ["forestSoul"] = "forestSoul_92x92.png",
-    ["infernoSoul"] = "infernoSoul_92x92.png",
-    ["blizzardSoul"] = "blizzardSoul_92x92.png",
-    ["fairySoul"] = "fairySoul_92x92.png",
-    ["moltenShard"] = "moltenShard_92x92.png",
-    ["glacierShard"] = "glacierShard_92x92.png",
-    ["chargedShard"] = "chargedShard_92x92.png",
-    ["moltenShiver"] = "moltenShiver_92x92.png",
-    ["glacierShiver"] = "glacierShiver_92x92.png",
-    ["chargedShiver"] = "chargedShiver_92x92.png",
-    ["moltenCore"] = "moltenCore_92x92.png",
-    ["glacierCore"] = "glacierCore_92x92.png",
-    ["chargedCore"] = "chargedCore_92x92.png",
-    ["moltenMagnet"] = "moltenMagnet_92x92.png",
-    ["glacierMagnet"] = "glacierMagnet_92x92.png",
-    ["chargedMagnet"] = "chargedMagnet_92x92.png",
-    ["challengeRune"] = "challengeRune_92x92.png",
-    ["suppressRune"] = "suppressRune_92x92.png",
-    ["rageRune"] = "rageRune_92x92.png",
-    ["guardRune"] = "guardRune_92x92.png",
-    ["poisonRune"] = "poisonRune_92x92.png",
-    ["giantRune"] = "giantRune_92x92.png",
-    ["dolanRune"] = "dolanRune_92x92.png",
-    ["warsongRune"] = "warsongRune_92x92.png",
-    ["infernoRune"] = "infernoRune_92x92.png",
-    ["arcanaRune"] = "arcanaRune_92x92.png",
-    ["eternityRune"] = "eternityRune_92x92.png"
-}
-local EQUIP_LOCALIZE = Localize.equip_material
+
+-- local EQUIP_LOCALIZE = Localize.equip_material
 local EQUIP_LOCALIZE = Localize.equip
 local DRAGON_LOCALIZE = Localize.dragon
 local BODY_LOCALIZE = Localize.body
@@ -261,7 +225,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
             :align(display.CENTER, origin_x + (unit_len + gap_x) * (i - 1), origin_y)
         -- 材料icon
         local pos = material:getAnchorPointInPoints()
-        local material_image = MATERIAL_MAP[material_type]
+        local material_image = UILib.dragon_material_pic_map[material_type]
         local image = cc.ui.UIImage.new(material_image):addTo(material, 2)
             :align(display.CENTER, pos.x, pos.y)
         image:scale(80/math.max(image:getContentSize().width,image:getContentSize().height))
