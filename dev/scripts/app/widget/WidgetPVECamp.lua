@@ -22,58 +22,14 @@ end
 function WidgetPVECamp:SetUpButtons()
     return self:GetObject():IsSearched() and
         { { label = _("离开") } } or
-        { { label = _("进攻"), callback = function()
-            UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType, soldiers)
-                local dargon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
-                local attack_dragon = {
-                    currentHp = dargon:Hp(),
-                    hpMax = dargon:GetMaxHP(),
-                    strength = dargon:TotalStrength(),
-                    vitality = dargon:TotalVitality(),
-                }
-                local attack_soldier = LuaUtils:table_map(soldiers, function(k, v)
-                    return k, {name = v.name,
-                        star = 1,
-                        morale = 100,
-                        currentCount = v.count,
-                        totalCount = v.count,
-                        woundedCount = 0,
-                        round = 0}
-                end)
-
-                local defence_dragon = {
-                    currentHp = 1000,
-                    hpMax = 1000,
-                    strength = 700,
-                    vitality = 200,
-                }
-                local defence_soldier = {
-                    {
-                        name = "ranger",
-                        star = 1,
-                        morale = 100,
-                        currentCount = 50,
-                        totalCount = 50,
-                        woundedCount = 0,
-                        round = 0
-                    }
-                }
-
-                local report = GameUtils:DoBattle(
-                    {dragon = attack_dragon, soldiers = attack_soldier}
-                    ,{dragon = defence_dragon, soldiers = defence_soldier}
-                )
-
-                if report:IsAttackWin() then
-                    self:Search()
-                end
-
-                UIKit:newGameUI("GameUIReplay",report):addToCurrentScene(true)
-            end):addToCurrentScene(true)
-        end }, { label = _("离开") } }
+        { { label = _("进攻"), callback = function() self:Fight() end }, { label = _("离开") } }
 end
 
 return WidgetPVECamp
+
+
+
+
 
 
 

@@ -5,8 +5,11 @@ function __G__TRACKBACK__(errorMessage)
     print("----------------------------------------")
     local errDesc = tostring(errorMessage) .. "\n" .. debug.traceback("", 2)
     device.showAlert("☠错误☠",errDesc,"复制！",function()
-    	ext.copyText(errDesc)
+        ext.copyText(errDesc)
     end)
 end
-
+function _(text)
+    return text
+end
 require("app.MyApp").new():run()
+

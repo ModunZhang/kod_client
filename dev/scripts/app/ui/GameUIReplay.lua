@@ -152,8 +152,9 @@ local function decode_battle(raw)
     return rounds
 end
 
-function GameUIReplay:ctor(report)
+function GameUIReplay:ctor(report, callback)
     self.report = report
+    self.callback = callback
     GameUIReplay.super.ctor(self)
     for _, v in pairs{
         {"animations/Archer_1_render0.plist","animations/Archer_1_render0.png"},
@@ -407,6 +408,12 @@ function GameUIReplay:onEnter()
         end)
     end
 
+end
+function GameUIReplay:onExit()
+    GameUIReplay.super.onExit(self)
+    if type(self.callback) == "function" then
+        self.callback()
+    end
 end
 function GameUIReplay:PlayDragonBattle()
     local report = self.report

@@ -43,7 +43,6 @@ function GameUIPVEHome:onEnter()
 end
 function GameUIPVEHome:onExit()
     self.layer:RemovePVEListener(self)
-
     self.user:RemoveListenerOnType(self, self.user.LISTEN_TYPE.RESOURCE)
     self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
     self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
@@ -53,6 +52,7 @@ function GameUIPVEHome:OnResourceChanged(user)
     local current_strength = strength_resouce:GetResourceValueByCurrentTime(timer:GetServerTime())
     local limit = strength_resouce:GetValueLimit()
     self.strenth:setString(string.format("%d/%d", current_strength, limit))
+    self.gem_label:setString(string.formatnumberthousands(user:GetGemResource():GetValue()))
 end
 function GameUIPVEHome:OnExploreChanged(pve_layer)
     self.exploring:setString(string.format("%.2f%%", pve_layer:ExploreDegree() * 100))
@@ -90,7 +90,6 @@ function GameUIPVEHome:CreateTop()
         size = 20,
         color = 0xffd200,
         shadow = true,
-        text = "100,100,100"
     }):addTo(button):align(display.CENTER, -30, 8)
 
 

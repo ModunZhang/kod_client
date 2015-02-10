@@ -2,12 +2,13 @@ local PVEMap = import(".PVEMap")
 local PVEDatabase = class("PVEDatabase")
 
 local MAX_FLOOR = 2
+local TRAP_NPC_STEPS = 12
 function PVEDatabase:ctor(user)
     self.user = user
     self.char_x = 12
     self.char_y = 12
     self.char_floor = 1
-    self.next_enemy_step = 10
+    self.next_enemy_step = TRAP_NPC_STEPS
     local pve_maps = {}
     for i = 1, MAX_FLOOR do
         pve_maps[i] = PVEMap.new(self, i):LoadProperty()
@@ -47,6 +48,15 @@ function PVEDatabase:OnUserDataChanged(user_data)
         end
     end
 end
+function PVEDatabase:ReduceNextEnemyStep()
+    self.next_enemy_step = self.next_enemy_step - 1
+end
+function PVEDatabase:ResetNextEnemyCounter()
+    self.next_enemy_step = TRAP_NPC_STEPS
+end
+function PVEDatabase:IsInTrap()
+    return self.next_enemy_step == 0
+end
 function PVEDatabase:EncodeLocation()
     return {
         x = self.char_x,
@@ -76,6 +86,7 @@ end
 
 
 return PVEDatabase
+
 
 
 

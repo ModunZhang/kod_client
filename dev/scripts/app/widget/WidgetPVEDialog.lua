@@ -109,6 +109,28 @@ end
 function WidgetPVEDialog:SetUpButtons()
     return { { label = _("离开") } }
 end
+function WidgetPVEDialog:GotoNext()
+    local cur_index = self.pve_map:GetIndex()
+    local next_index = cur_index + 1
+    local next_map = self.user:GetPVEDatabase():GetMapByIndex(next_index)
+    if next_map then
+        local point = next_map:GetStartPoint()
+        self.user:GetPVEDatabase():SetCharPosition(point.x, point.y, next_index)
+        NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):next(function(result)
+            app:EnterPVEScene(next_index)
+        end):catch(function(err)
+            dump(err:reason())
+        end)
+    else
+    end
+end
+function WidgetPVEDialog:HasGem(num)
+    local gem = self:GetCurrentUser():GetGemResource():GetValue()
+    if gem >= num then
+        return true
+    end
+    return false
+end
 function WidgetPVEDialog:UseStrength(num)
     return self:GetCurrentUser():UseStrength(num)
 end
@@ -123,10 +145,79 @@ function WidgetPVEDialog:Search()
     local searched = self:GetObject():Searched()
     self:GetPVEMap():ModifyObject(x, y, searched + 1)
 end
+function WidgetPVEDialog:GetRewardsFromServer(select)
+    self.user:SetPveData(nil, self:GetObject():GetRewards(select))
+    NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
+end
+function WidgetPVEDialog:Fight()
+    local enemy = self:GetObject():GetNextEnemy()
+    UIKit:newGameUI('GameUIPVESendTroop',
+        enemy.soldiers,-- pve 怪数据
+        function(dragonType, soldiers)
+            local dargon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
+            local attack_dragon = {
+                dragonType = dragonType,
+                currentHp = dargon:Hp(),
+                hpMax = dargon:GetMaxHP(),
+                totalHp = dargon:Hp(),
+                strength = dargon:TotalStrength(),
+                vitality = dargon:TotalVitality(),
+            }
+            local attack_soldier = LuaUtils:table_map(soldiers, function(k, v)
+                return k, {name = v.name,
+                    star = 1,
+                    morale = 100,
+                    currentCount = v.count,
+                    totalCount = v.count,
+                    woundedCount = 0,
+                    round = 0}
+            end)
+
+            local report = GameUtils:DoBattle(
+                {dragon = attack_dragon, soldiers = attack_soldier}
+                ,{dragon = enemy.dragon, soldiers = enemy.soldiers}
+            )
+
+            if report:IsAttackWin() then
+                local rewards = self:GetObject():IsLast() and enemy.rewards + self:GetObject():GetRewards() or enemy.rewards
+                self.user:SetPveData(report:GetAttackKDA(), rewards)
+                NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):next(function()
+                    self:Search()
+                    UIKit:newGameUI("GameUIReplay", report, function()
+                        if report:IsAttackWin() then
+                            GameGlobalUI:showTips(_("获得奖励"), rewards)
+                        end
+                    end):addToCurrentScene(true)
+                end):catch(function(err)
+                    dump(err:reason())
+                end)
+            else
+                self.user:SetPveData(report:GetAttackKDA())
+                NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):next(function()
+                    UIKit:newGameUI("GameUIReplay", report):addToCurrentScene(true)
+                end):catch(function(err)
+                    dump(err:reason())
+                end)
+            end
+        end):addToCurrentScene(true)
+end
 
 
 
 return WidgetPVEDialog
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -28,16 +28,15 @@ OBJECT_IMAGE[PVEDefine.TREE] = "tree_2_138x110.png"
 OBJECT_IMAGE[PVEDefine.HILL] = "hill_228x146.png"
 OBJECT_IMAGE[PVEDefine.LAKE] = "lake_220x174.png"
 
-function PVELayer:ctor(user, level)
-    level = level or 1
+function PVELayer:ctor(user)
     PVELayer.super.ctor(self, 0.5, 1)
     self.pve_listener = Observer.new()
     self.user = user
     self.pve_map = user:GetCurrentPVEMap()
     self.scene_node = display.newNode():addTo(self)
-    self.background = cc.TMXTiledMap:create(string.format("tmxmaps/pve_%d_background.tmx", level)):addTo(self.scene_node, ZORDER.BACKGROUND)
-    self.war_fog_layer = cc.TMXTiledMap:create(string.format("tmxmaps/pve_%d_fog.tmx", level)):addTo(self.scene_node, ZORDER.FOG):pos(-80, -80):getLayer("layer1")
-    self.pve_layer = cc.TMXTiledMap:create(string.format("tmxmaps/pve_%d_info.tmx", level)):addTo(self):hide():getLayer("layer1")
+    self.background = cc.TMXTiledMap:create(string.format("tmxmaps/pve_%d_background.tmx", self.pve_map:GetIndex())):addTo(self.scene_node, ZORDER.BACKGROUND)
+    self.war_fog_layer = cc.TMXTiledMap:create(string.format("tmxmaps/pve_%d_fog.tmx", self.pve_map:GetIndex())):addTo(self.scene_node, ZORDER.FOG):pos(-80, -80):getLayer("layer1")
+    self.pve_layer = cc.TMXTiledMap:create(string.format("tmxmaps/pve_%d_info.tmx", self.pve_map:GetIndex())):addTo(self):hide():getLayer("layer1")
     self.building_layer = display.newNode():addTo(self.scene_node, ZORDER.BUILDING)
     self.object_layer = display.newNode():addTo(self.scene_node, ZORDER.OBJECT)
     local size = self.pve_layer:getLayerSize()
@@ -100,11 +99,6 @@ end
 function PVELayer:OnObjectChanged(object)
     self:SetObjectStatus(object)
     if object:Searched() > 0 then
-        NetManager:getSetPveDataPromise(self.user:EncodePveData()):next(function(result)
-            dump(result)
-        end):catch(function(err)
-            dump(err:reason())
-        end)
         self:NotifyExploring()
     end
 end

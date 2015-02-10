@@ -1,9 +1,11 @@
+local Localize_item = import("..utils.Localize_item")
+local Localize = import("..utils.Localize")
+local PVEDefine = import(".PVEDefine")
+local PVEObject = class("PVEObject")
 local pve_normal = GameDatas.ClientInitGame.pve_normal
 local pve_elite = GameDatas.ClientInitGame.pve_elite
 local pve_boss = GameDatas.ClientInitGame.pve_boss
 local pve_npc = GameDatas.ClientInitGame.pve_npc
-local PVEDefine = import(".PVEDefine")
-local PVEObject = class("PVEObject")
 local random = math.random
 local randomseed = math.randomseed
 local TOTAL = {
@@ -23,6 +25,7 @@ local TOTAL = {
     [PVEDefine.TREE] = 0,
     [PVEDefine.HILL] = 0,
     [PVEDefine.LAKE] = 0,
+    [PVEDefine.TRAP] = 0,
 }
 
 local normal_map = {
@@ -30,6 +33,7 @@ local normal_map = {
     [PVEDefine.QUARRIER] = true,
     [PVEDefine.MINER] = true,
     [PVEDefine.FARMER] = true,
+    [PVEDefine.TRAP] = true,
 }
 local elite_map = {
     [PVEDefine.CAMP] = true,
@@ -51,22 +55,17 @@ end
 function PVEObject:Position()
     return self.x, self.y
 end
-function PVEObject:GetRewards()
-    for k, v in pairs(PVEDefine) do
-        if v == self.type then
-            return self:DecodeToRewards(pve_npc[k].rewards)
-        end
-    end
-end
 function PVEObject:GetNextEnemy()
     return self:GetEnemyByIndex(self.searched + 1)
 end
 function PVEObject:GetEnemyByIndex(index)
-    local unique = self.x * self.y * (index + self.type)
+    local unique = self.type ~= PVEDefine.TRAP and random(#pve_normal) or self.x * self.y * (index + self.type)
     if normal_map[self.type] then
         return self:DecodeToEnemy(pve_normal[unique % #pve_normal + 1])
     elseif elite_map[self.type] then
-        return self:DecodeToEnemy(elite_map[unique % #elite_map + 1])
+        return self:DecodeToEnemy(pve_elite[unique % #pve_elite + 1])
+    elseif self.type == PVEDefine.ENTRANCE_DOOR then
+        return self:DecodeToEnemy(pve_boss[1])
     end
     return {}
 end
@@ -118,18 +117,68 @@ local m = {
         for _, v in pairs(r) do
             r1[#r1 + 1] = v
         end
+        setmetatable(r1, getmetatable(a))
         return r1
-    end
+    end,
+    __tostring = function(a)
+        return table.concat(LuaUtils:table_map(a, function(k, v)
+            local txt
+            if v.type == "items" then
+                txt = string.format("%s x%d", Localize_item.item_name[v.name], v.count)
+            elseif v.type == "resources" then
+                txt = string.format("%s x%d", Localize.fight_reward[v.name], v.count)
+            end
+            return k, txt
+        end), ",")
+    end,
+    __concat = function(a, b)
+        return string.format("%s%s", tostring(a), tostring(b))
+    end,
 }
+function PVEObject:GetRewards(select)
+    for k, v in pairs(PVEDefine) do
+        if v == self.type then
+            local rewards = self:DecodeToRewards(pve_npc[k].rewards)
+            if pve_npc[k].rewards_type == "all" then
+                return rewards
+            elseif pve_npc[k].rewards_type == "select" then
+                assert(rewards[select], "选择不存在")
+                local r = {rewards[select]}
+                setmetatable(r, m)
+                return r
+            elseif pve_npc[k].rewards_type == "random" then
+                local p = 0
+                for _, reward in ipairs(rewards) do
+                    p = p + reward.probability
+                end
+                local p = random(p)
+                for _, reward in ipairs(rewards) do
+                    if p > reward.probability then
+                        p = p - reward.probability
+                    else
+                        local r = {reward}
+                        setmetatable(r, m)
+                        return r
+                    end
+                end
+            else
+                assert(false)
+            end
+        end
+    end
+end
 function PVEObject:DecodeToRewards(raw)
     local rewards_raw = string.split(raw, ";")
     local r = LuaUtils:table_map(rewards_raw, function(k, v)
-        local rtype, rname, count = unpack(string.split(v, ","))
+        local rtype, rname, count, probability = unpack(string.split(v, ","))
         count = tonumber(count)
+        probability = probability or 100
+        probability = tonumber(probability)
         return k, {
             type = rtype,
             name = rname,
             count = count,
+            probability = probability
         }
     end)
     setmetatable(r, m)
@@ -143,6 +192,9 @@ function PVEObject:IsSearched()
 end
 function PVEObject:SearchNext()
     self.searched = self.searched + 1
+end
+function PVEObject:IsLast()
+    return self:Left() == 1
 end
 function PVEObject:Left()
     return self:Total() - self:Searched()

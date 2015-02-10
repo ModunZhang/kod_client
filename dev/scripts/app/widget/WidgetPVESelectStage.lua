@@ -19,7 +19,7 @@ function WidgetPVESelectStage:ctor(user)
     listnode:addTo(self):align(display.BOTTOM_CENTER, window.cx,window.bottom_top + 100)
 
     for i = 1, self.pve_database:MapLen() do
-    	list_view:addItem(self:CreateItemWithListView(list_view, i))
+        list_view:addItem(self:CreateItemWithListView(list_view, i))
     end
     list_view:reload()
 end
@@ -42,10 +42,6 @@ function WidgetPVESelectStage:CreateItemWithListView(list_view, level)
     item:addContent(back_ground)
     item:setItemSize(w, h)
 
-
-
-    local cur_map = self.pve_database:GetMapByIndex(level)
-
     local name = cc.ui.UILabel.new({
         size = 22,
         font = UIKit:getFontFilePath(),
@@ -54,7 +50,7 @@ function WidgetPVESelectStage:CreateItemWithListView(list_view, level)
         text = "1 关卡名"
     }):addTo(back_ground, 2):align(display.LEFT_CENTER, 30, h - 50)
 
-
+    local cur_map = self.pve_database:GetMapByIndex(level)
     local status = cc.ui.UILabel.new({
         size = 18,
         font = UIKit:getFontFilePath(),
@@ -80,20 +76,27 @@ function WidgetPVESelectStage:CreateItemWithListView(list_view, level)
             if self.user:GetCurrentPVEMap():GetIndex() == level then
                 print("你已经在当前关卡")
             else
-                print("level ", level)
+                local point = self.user:GetPVEDatabase():GetMapByIndex(level):GetStartPoint()
+                self.user:GetPVEDatabase():SetCharPosition(point.x, point.y, level)
+                NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):next(function(result)
+                    self:removeFromParent()
+                    app:EnterPVEScene(level)
+                end):catch(function(err)
+                    dump(err:reason())
+                end)
             end
         end)
-
-        btn:setButtonEnabled(cur_map:IsAvailable())
-    
-
-
+    btn:setButtonEnabled(cur_map:IsAvailable())
     return item
 end
 
 
 
 return WidgetPVESelectStage
+
+
+
+
 
 
 

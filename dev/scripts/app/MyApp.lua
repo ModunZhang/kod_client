@@ -81,10 +81,6 @@ end
 function MyApp:InitI18N()
     local currentLanFile = string.format("i18n/%s.mo", self:GetGameLanguage())
     local currentLanFilePath = cc.FileUtils:getInstance():fullPathForFilename(currentLanFile)
-
-    function _(text)
-        return text
-    end
     if cc.FileUtils:getInstance():isFileExist(currentLanFilePath) then
         _ = require("app.utils.Gettext").gettextFromFile(currentLanFilePath)
     end
@@ -228,7 +224,8 @@ function MyApp:EnterMyAllianceScene()
     end
     app:enterScene(alliance_name, {City}, "custom", -1, transition_)
 end
-function MyApp:EnterPVEScene()
+function MyApp:EnterPVEScene(level)
+    User:GotoPVEMapByLevel(level)
     app:enterScene("PVEScene", {User}, "custom", -1, transition_)
 end
 

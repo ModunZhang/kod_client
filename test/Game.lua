@@ -2,7 +2,7 @@ require "framework.functions"
 require "framework.debug"
 require "framework.json"
 package.path = package.path .. ";../dev/scripts/?.lua;"
-_ = function()end
+_ = function(txt) return txt end
 local _ = import("app.datas.GameDatas")
 local _ = import("app.utils.LuaUtils")
 local Game = class("Game")

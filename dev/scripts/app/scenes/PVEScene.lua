@@ -15,6 +15,7 @@ local WidgetPVEConstructionRuins = import("..widget.WidgetPVEConstructionRuins")
 local PVEDefine = import("..entity.PVEDefine")
 local PVEObject = import("..entity.PVEObject")
 local PVELayer = import("..layers.PVELayer")
+local GameUIPVEHome = import("..ui.GameUIPVEHome")
 local MapScene = import(".MapScene")
 local PVEScene = class("PVEScene", MapScene)
 
@@ -30,16 +31,10 @@ function PVEScene:onEnter()
     self:GetSceneLayer():ZoomTo(0.8)
     self:GetSceneLayer():MoveCharTo(self.user:GetPVEDatabase():GetCharPosition())
 
-    UIKit:newGameUI('GameUIPVEHome', self.user, self):addToScene(self, true):setTouchSwallowEnabled(false)
+    GameUIPVEHome.new(self.user, self):addToScene(self, true):setTouchSwallowEnabled(false)
 end
 function PVEScene:CreateSceneLayer()
     return PVELayer.new(self.user)
-end
-function PVEScene:CheckObject(x, y, type)
-    local object = self.user:GetCurrentPVEMap():GetObject(x, y)
-    if not object or not object:Type() then
-        self.user:GetCurrentPVEMap():ModifyObject(x, y, 0, type)
-    end
 end
 function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
     local logic_map = self:GetSceneLayer():GetLogicMap()
@@ -68,6 +63,9 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
     local width, height = logic_map:GetSize()
 
     if self:GetSceneLayer():CanMove(tx, ty) and self.user:HasAnyStength() then
+        if not self.user:GetPVEDatabase():IsInTrap() then
+            self.user:GetPVEDatabase():ReduceNextEnemyStep()
+        end
         -- self.user:UseStrength(1)
         self:GetSceneLayer():MoveCharTo(tx, ty)
         self:OpenUI(tx, ty)
@@ -75,7 +73,10 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
 end
 function PVEScene:OpenUI(x, y)
     local gid = self:GetSceneLayer():GetTileInfo(x, y)
-    if gid <= 0 then return end
+    if gid <= 0 then
+        self:CheckTrap()
+        return
+    end
     self:CheckObject(x, y, gid)
     if gid == PVEDefine.START_AIRSHIP then
         WidgetPVEStartAirship.new(x, y, self.user):addToScene(self, true)
@@ -105,7 +106,66 @@ function PVEScene:OpenUI(x, y)
         WidgetPVEEntranceDoor.new(x, y, self.user):addToScene(self, true)
     end
 end
+function PVEScene:CheckTrap()
+    if self.user:GetPVEDatabase():IsInTrap() then
+        local enemy = PVEObject.new(0, 0, 0, PVEDefine.TRAP):GetNextEnemy()
+        UIKit:newGameUI('GameUIPVESendTroop',
+            enemy.soldiers,-- pve 怪数据
+            function(dragonType, soldiers)
+                local dargon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
+                local attack_dragon = {
+                    dragonType = dragonType,
+                    currentHp = dargon:Hp(),
+                    hpMax = dargon:GetMaxHP(),
+                    totalHp = dargon:Hp(),
+                    strength = dargon:TotalStrength(),
+                    vitality = dargon:TotalVitality(),
+                }
+                local attack_soldier = LuaUtils:table_map(soldiers, function(k, v)
+                    return k, {name = v.name,
+                        star = 1,
+                        morale = 100,
+                        currentCount = v.count,
+                        totalCount = v.count,
+                        woundedCount = 0,
+                        round = 0}
+                end)
+
+                local report = GameUtils:DoBattle(
+                    {dragon = attack_dragon, soldiers = attack_soldier}
+                    ,{dragon = enemy.dragon, soldiers = enemy.soldiers}
+                )
+                if report:IsAttackWin() then
+                    self.user:SetPveData(report:GetAttackKDA(), enemy.rewards)
+                else
+                    self.user:SetPveData(report:GetAttackKDA())
+                end
+                NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):next(function()
+                    UIKit:newGameUI("GameUIReplay", report, function()
+                        if report:IsAttackWin() then
+                            GameGlobalUI:showTips(_("获得奖励"), enemy.rewards)
+                        end
+                    end):addToCurrentScene(true)
+                end):catch(function(err)
+                    dump(err:reason())
+                end)
+            end):addToCurrentScene(true)
+        self.user:GetPVEDatabase():ResetNextEnemyCounter()
+    end
+end
+function PVEScene:CheckObject(x, y, type)
+    local object = self.user:GetCurrentPVEMap():GetObject(x, y)
+    if not object or not object:Type() then
+        self.user:GetCurrentPVEMap():ModifyObject(x, y, 0, type)
+    end
+end
 return PVEScene
+
+
+
+
+
+
 
 
 

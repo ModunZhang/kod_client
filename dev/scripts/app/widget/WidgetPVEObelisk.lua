@@ -7,6 +7,7 @@ function WidgetPVEObelisk:ctor(...)
     if self:GetObject():IsUnSearched() then
         self:AddStrength(20)
         self:Search()
+        NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
     end
 end
 function WidgetPVEObelisk:GetIcon()
