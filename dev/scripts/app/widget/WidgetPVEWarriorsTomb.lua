@@ -22,8 +22,11 @@ function WidgetPVEWarriorsTomb:SetUpButtons()
         {
             {
                 label = _("安葬"), callback = function()
-                    self:Search()
-                    self:removeFromParent()
+                    if self:HasGem(10) then
+                        self:Search()
+                        self:GetRewardsFromServer()
+                        self:removeFromParent()
+                    end
                 end
             },
             {

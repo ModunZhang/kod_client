@@ -28,7 +28,7 @@ function MaterialManager:ctor()
         ["trainingFigure"] = 0,
     }
     self.material_map[DRAGON] = self:GetTableFromKey__(dragonMaterials)
-    self.material_map[SOLDIER] = self:GetTableFromKey(soldierMaterials)
+    self.material_map[SOLDIER] = self:GetTableFromKey__(soldierMaterials)
     self.material_map[EQUIPMENT] = self:GetTableFromKey(dragonEquipments)
 end
 function MaterialManager:GetTableFromKey(t)

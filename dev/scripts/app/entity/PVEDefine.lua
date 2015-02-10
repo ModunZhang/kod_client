@@ -14,6 +14,7 @@ return Enum("START_AIRSHIP",
     "ENTRANCE_DOOR",
     "TREE",
     "HILL",
-    "LAKE")
+    "LAKE",
+    "TRAP")
 
 

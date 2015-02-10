@@ -23,12 +23,14 @@ function WidgetPVEKeel:SetUpButtons()
             {
                 label = _("知识"), callback = function()
                     self:Search()
+                    self:GetRewardsFromServer(1)
                     self:removeFromParent()
                 end
             },
             {
                 label = _("生命"), callback = function()
                     self:Search()
+                    self:GetRewardsFromServer(2)
                     self:removeFromParent()
                 end
             }

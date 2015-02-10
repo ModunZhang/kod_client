@@ -61,7 +61,6 @@ function GameUIMilitaryTechBuilding:onEnter()
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_DATA_CHANGED)
 end
 function GameUIMilitaryTechBuilding:onExit()
-    print("GameUIMilitaryTechBuilding:OnExit")
     City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_DATA_CHANGED)
     GameUIMilitaryTechBuilding.super.onExit(self)
 end
@@ -69,7 +68,7 @@ function GameUIMilitaryTechBuilding:CreateBetweenBgAndTitle()
     GameUIMilitaryTechBuilding.super.CreateBetweenBgAndTitle(self)
 
     -- 军事科技升级状态
-    self.status = WidgetMilitaryTechnologyStatus.new():addTo(self,2):pos(window.cx, window.top_bottom)
+    self.status = WidgetMilitaryTechnologyStatus.new(self.building):addTo(self,2):pos(window.cx, window.top_bottom)
 
     -- 科技 layer
     self.tech_layer = display.newLayer()
@@ -102,6 +101,7 @@ function GameUIMilitaryTechBuilding:InitTech()
         :addTo(tech_point_bg)
 end
 function GameUIMilitaryTechBuilding:InitPromote()
+    print("InitPromote",self.building)
     self.promote_list = WidgetPromoteSoliderList.new(self.building):addTo(self.promote_layer):align(display.BOTTOM_CENTER, window.cx, window.bottom_top+20)
 end
 function GameUIMilitaryTechBuilding:OnMilitaryTechsDataChanged(soldier_manager,changed_map)

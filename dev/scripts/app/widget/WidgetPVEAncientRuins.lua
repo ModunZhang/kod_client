@@ -22,8 +22,11 @@ function WidgetPVEAncientRuins:SetUpButtons()
         {
             {
                 label = _("捐献"), callback = function()
-                    self:Search()
-                    self:removeFromParent()
+                    if self:HasGem(20) then
+                        self:Search()
+                        self:GetRewardsFromServer()
+                        self:removeFromParent()
+                    end
                 end
             },
             {
@@ -33,6 +36,7 @@ function WidgetPVEAncientRuins:SetUpButtons()
 end
 
 return WidgetPVEAncientRuins
+
 
 
 

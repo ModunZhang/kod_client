@@ -3,6 +3,9 @@ local SPECIAL = GameDatas.Soldiers.special
 local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local MilitaryTechnology = import(".MilitaryTechnology")
+local MilitaryTechEvents = import(".MilitaryTechEvents")
+local SoldierStarEvents = import(".SoldierStarEvents")
+
 local SoldierManager = class("SoldierManager", MultiObserver)
 
 SoldierManager.LISTEN_TYPE = Enum("SOLDIER_CHANGED",
@@ -10,7 +13,9 @@ SoldierManager.LISTEN_TYPE = Enum("SOLDIER_CHANGED",
     "SOLDIER_STAR_CHANGED",
     "MILITARY_TECHS_EVENTS_CHANGED",
     "MILITARY_TECHS_DATA_CHANGED",
-    "SOLDIER_STAR_EVENTS_CHANGED")
+    "SOLDIER_STAR_EVENTS_CHANGED",
+    "OnSoldierStarEventsTimer",
+    "OnMilitaryTechEventsTimer")
 
 function SoldierManager:ctor()
     SoldierManager.super.ctor(self)
@@ -55,6 +60,8 @@ function SoldierManager:ctor()
     self.soldierStarEvents = {}
     self.militaryTechEvents = {}
     self.militaryTechs = {}
+
+    app.timer:AddListener(self)
 end
 function SoldierManager:IteratorSoldiers(func)
     for k, v in pairs(self:GetSoldierMap()) do
@@ -227,10 +234,10 @@ function SoldierManager:OnMilitaryTechsDataChanged(militaryTechs)
         listener:OnMilitaryTechsDataChanged(self,changed_map)
     end)
 end
-function SoldierManager:GetMilitaryTechsLevelByName(name) 
+function SoldierManager:GetMilitaryTechsLevelByName(name)
     return self.militaryTechs[name]:Level()
 end
-function SoldierManager:GetMilitaryTechsByName(name) 
+function SoldierManager:GetMilitaryTechsByName(name)
     return self.militaryTechs[name]
 end
 function SoldierManager:IteratorMilitaryTechs(func)
@@ -275,18 +282,52 @@ end
 function SoldierManager:GetMilitaryTechEvents()
     return self.militaryTechEvents
 end
-function SoldierManager:GetLatestMilitaryTechEvents()
-    return self.militaryTechEvents[#self.militaryTechEvents]
+function SoldierManager:IteratorMilitaryTechEvents(func)
+    for _,v in pairs(self.militaryTechEvents) do
+        func(v)
+    end
 end
-function SoldierManager:GetUpgradingMilitaryTechNum()
-    return LuaUtils:table_size(self.militaryTechEvents)+LuaUtils:table_size(self.soldierStarEvents)
+function SoldierManager:GetLatestMilitaryTechEvents(building_type)
+    for _,event in pairs(self.militaryTechEvents) do
+        if self.militaryTechs[event:Name()]:Building() == building_type then
+            return event
+        end
+    end
 end
-function SoldierManager:IsUpgradingMilitaryTech()
-    return LuaUtils:table_size(self.militaryTechEvents)>0 or LuaUtils:table_size(self.soldierStarEvents)>0
+function SoldierManager:GetUpgradingMilitaryTechNum(building_type)
+    local count = 0
+    for _,event in pairs(self.militaryTechEvents) do
+        if self.militaryTechs[event:Name()]:Building() == building_type then
+            count = count + 1
+        end
+    end
+    for _,event in pairs(self.soldierStarEvents) do
+        if self:FindSoldierBelongBuilding(event:Name()) == building_type then
+            count = count + 1
+        end
+    end
+    return count
 end
-function SoldierManager:GetUpgradingMilitaryTech()
-    local military_tech_event = self:GetLatestMilitaryTechEvents()
-    local soldier_star_event = self:GetLatestSoldierStarEvents()
+function SoldierManager:GetTotalUpgradingMilitaryTechNum()
+    local count = LuaUtils:table_size(self.militaryTechEvents) + LuaUtils:table_size(self.soldierStarEvents)
+    return count >4 and 4 or count
+end
+-- 对应建筑可以升级对应军事科技和兵种星级
+function SoldierManager:IsUpgradingMilitaryTech(building_type)
+    for _,event in pairs(self.militaryTechEvents) do
+        if self.militaryTechs[event:Name()]:Building() == building_type then
+            return true
+        end
+    end
+    for _,event in pairs(self.soldierStarEvents) do
+        if self:FindSoldierBelongBuilding(event:Name()) == building_type then
+            return true
+        end
+    end
+end
+function SoldierManager:GetUpgradingMilitaryTech(building_type)
+    local military_tech_event = self:GetLatestMilitaryTechEvents(building_type)
+    local soldier_star_event = self:GetLatestSoldierStarEvents(building_type)
     local tech_start_time = military_tech_event and military_tech_event.startTime or 0
     local soldier_star_start_time = soldier_star_event and soldier_star_event.startTime or 0
     return  tech_start_time>soldier_star_start_time and military_tech_event or soldier_star_event
@@ -294,43 +335,46 @@ end
 function SoldierManager:GetSoldierMaxStar()
     return 3
 end
-function SoldierManager:GetUpgradingMitiTaryTechLeftTimeByCurrentTime(current_time)
+function SoldierManager:GetUpgradingMitiTaryTechLeftTimeByCurrentTime(building_type)
     local left_time = 0
-    local event = self:GetUpgradingMilitaryTech()
+    local event = self:GetUpgradingMilitaryTech(building_type)
     if event then
-        left_time = left_time + event.finishTime/1000 - current_time
+        left_time = left_time + event:FinishTime()/1000 - app.timer:GetServerTime()
     end
     return left_time
 end
 function SoldierManager:OnMilitaryTechEventsChanged(militaryTechEvents)
     if not militaryTechEvents then return end
-    -- LuaUtils:outputTable("OnMilitaryTechEventsChanged", militaryTechEvents)
-    self.militaryTechEvents = militaryTechEvents
+    for i,v in ipairs(militaryTechEvents) do
+        local event = MilitaryTechEvents.new()
+        event:UpdateData(v)
+        event:AddObserver(self)
+        self.militaryTechEvents[event:Id()] = event
+    end
 end
 function SoldierManager:__OnMilitaryTechEventsChanged(__militaryTechEvents)
     if not __militaryTechEvents then return end
-    -- LuaUtils:outputTable("__militaryTechEvents", __militaryTechEvents)
     local changed_map = GameUtils:Event_Handler_Func(
         __militaryTechEvents
         ,function(data)
-            table.insert(self.militaryTechEvents, data)
-            return data
+            local event = MilitaryTechEvents.new()
+            event:UpdateData(data)
+            self.militaryTechEvents[event:Id()] = event
+            event:AddObserver(self)
+            return event
         end
         ,function(data)
-            for i,v in ipairs(self.militaryTechEvents) do
-                if v.id == data.id then
-                    self.militaryTechEvents[i] = v
-                end
-            end
-            return data
+            local event = self.militaryTechEvents[data.id]
+            event:UpdateData(data)
+            return event
         end
         ,function(data)
-            for i,v in ipairs(self.militaryTechEvents) do
-                if v.id == data.id then
-                    table.remove(self.militaryTechEvents,i)
-                end
-            end
-            return data
+            local event = self.militaryTechEvents[data.id]
+            event:Reset()
+            self.militaryTechEvents[data.id] = nil
+            event = MilitaryTechEvents.new()
+            event:UpdateData(data)
+            return event
         end
     )
     self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED, function(listener)
@@ -355,21 +399,45 @@ function SoldierManager:FindSoldierStarByBuildingType(building_type)
     end
     return soldiers_star
 end
+function SoldierManager:FindSoldierBelongBuilding(soldier_type)
+    if soldier_type=="sentinel" or soldier_type=="swordsman" then
+        return "trainingGround"
+    elseif soldier_type=="horseArcher" or soldier_type=="lancer" then
+        return "stable"
+    elseif soldier_type=="ranger" or soldier_type=="crossbowman" then
+        return "hunterHall"
+    elseif soldier_type=="ballista" or soldier_type=="catapult"then
+        return "workshop"
+    end
+end
 function SoldierManager:GetSoldierStarEvents()
     return self.soldierStarEvents
 end
-function SoldierManager:GetLatestSoldierStarEvents()
-    return self.soldierStarEvents[#self.soldierStarEvents]
+function SoldierManager:IteratorSoldierStarEvents(func)
+    for _,v in pairs(self.soldierStarEvents) do
+        func(v)
+    end
+end
+function SoldierManager:GetLatestSoldierStarEvents(building_type)
+    for _,event in pairs(self.soldierStarEvents) do
+        if self:FindSoldierBelongBuilding(event:Name()) == building_type then
+            return event
+        end
+    end
 end
 function SoldierManager:OnSoldierStarEventsChanged(soldierStarEvents)
     if not soldierStarEvents then return end
-    self.soldierStarEvents = soldierStarEvents
+    for i,v in ipairs(soldierStarEvents) do
+        local event = SoldierStarEvents.new()
+        event:UpdateData(v)
+        event:AddObserver(self)
+        self.soldierStarEvents[event:Id()] = event
+    end
 end
-function SoldierManager:GetPromotingSoldierName()
-    local soldierStarEvents = self.soldierStarEvents
-    local event = self:GetLatestSoldierStarEvents()
+function SoldierManager:GetPromotingSoldierName(building_type)
+    local event = self:GetLatestSoldierStarEvents(building_type)
     if event then
-        return event.name
+        return event:Name()
     end
 end
 function SoldierManager:__OnSoldierStarEventsChanged(__soldierStarEvents)
@@ -378,31 +446,56 @@ function SoldierManager:__OnSoldierStarEventsChanged(__soldierStarEvents)
     local changed_map = GameUtils:Event_Handler_Func(
         __soldierStarEvents
         ,function(data)
-            table.insert(self.soldierStarEvents, data)
-            return data
+            local event = SoldierStarEvents.new()
+            event:UpdateData(data)
+            event:AddObserver(self)
+            self.soldierStarEvents[event:Id()] = event
+            return event
         end
         ,function(data)
-            for i,v in ipairs(self.soldierStarEvents) do
-                if v.id == data.id then
-                    self.soldierStarEvents[i] = v
-                end
-            end
-            return data
+            local event = self.soldierStarEvents[data.id]
+            event:UpdateData(data)
+            return event
         end
         ,function(data)
-            for i,v in ipairs(self.soldierStarEvents) do
-                if v.id == data.id then
-                    table.remove(self.soldierStarEvents,i)
-                end
-            end
-            return data
+            local event = self.soldierStarEvents[data.id]
+            event:Reset()
+            self.soldierStarEvents[data.id] = nil
+            local event = SoldierStarEvents.new()
+            event:UpdateData(data)
+            return event
         end
     )
     self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED, function(listener)
         listener:OnSoldierStarEventsChanged(self,changed_map)
     end)
 end
+
+function SoldierManager:OnTimer(current_time)
+    self:IteratorSoldierStarEvents(function(star_event)
+        star_event:OnTimer(current_time)
+    end)
+    self:IteratorMilitaryTechEvents(function(tech_event)
+        tech_event:OnTimer(current_time)
+    end)
+end
+function SoldierManager:OnSoldierStarEventsTimer(star_event)
+    self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.OnSoldierStarEventsTimer,function(lisenter)
+        lisenter.OnSoldierStarEventsTimer(lisenter,star_event)
+    end)
+end
+function SoldierManager:OnMilitaryTechEventsTimer(tech_event)
+    self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.OnMilitaryTechEventsTimer,function(lisenter)
+        lisenter.OnMilitaryTechEventsTimer(lisenter,tech_event)
+    end)
+end
 return SoldierManager
+
+
+
+
+
+
 
 
 

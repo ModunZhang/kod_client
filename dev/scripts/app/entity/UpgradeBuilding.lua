@@ -25,14 +25,13 @@ function UpgradeBuilding:ctor(building_info)
     self.upgrade_to_next_level_time = (building_info.finishTime == nil) and 0 or building_info.finishTime
     self.upgrade_building_observer = Observer.new()
     --building剩余升级时间小于5 min时可以免费加速  单位 seconds
-    self.freeSpeedUpTime=300
     self.unique_upgrading_key = nil
 end
 function UpgradeBuilding:IsAbleToFreeSpeedUpByTime(time)
     return self:GetFreeSpeedupTime() >= self:GetUpgradingLeftTimeByCurrentTime(time)
 end
 function UpgradeBuilding:GetFreeSpeedupTime()
-    return self.freeSpeedUpTime
+    return DataUtils:getFreeSpeedUpLimitTime()
 end
 function UpgradeBuilding:UniqueUpgradingKey()
     return self.unique_upgrading_key

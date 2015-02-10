@@ -104,7 +104,7 @@ function MilitaryTechnology:GetUpgradeGems()
         },
     }
     -- 正在升级的军事科技剩余升级时间
-    local left_time = City:GetSoldierManager():GetUpgradingMitiTaryTechLeftTimeByCurrentTime(app.timer:GetServerTime())
+    local left_time = City:GetSoldierManager():GetUpgradingMitiTaryTechLeftTimeByCurrentTime(self.building)
     return DataUtils:buyResource(required.resources, has.resources) + DataUtils:buyMaterial(required.materials, has.materials) + DataUtils:getGemByTimeInterval(left_time)
 end
 function MilitaryTechnology:IsAbleToUpgradeNow()
@@ -117,7 +117,7 @@ function MilitaryTechnology:IsAbleToUpgrade()
     local current_coin = City:GetResourceManager():GetCoinResource():GetValue()
 
     local results = {}
-    if City:GetSoldierManager():IsUpgradingMilitaryTech() then
+    if City:GetSoldierManager():IsUpgradingMilitaryTech(self.building) then
         table.insert(results, _("升级军事科技队列占用"))
     end
     if current_coin<level_up_config.coin then

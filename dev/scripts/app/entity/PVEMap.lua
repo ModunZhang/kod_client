@@ -23,6 +23,8 @@ function PVEMap:LoadProperty()
                 total_objects = total_objects + PVEObject:TotalByType(gid)
                 if gid == PVEDefine.START_AIRSHIP then
                     self.start_point = ccp
+                elseif gid == PVEDefine.ENTRANCE_DOOR then
+                    self.end_point = ccp
                 end
             end
         end
@@ -55,6 +57,10 @@ end
 function PVEMap:GetStartPoint()
     assert(self.start_point)
     return self.start_point
+end
+function PVEMap:GetEndPoint()
+    assert(self.end_point)
+    return self.end_point
 end
 function PVEMap:GetSize()
     return self.width, self.height
@@ -141,8 +147,10 @@ function PVEMap:Load(floor)
     local f = loadstring(string.format("return {fogs=%s, objects=%s}", floor.fogs, floor.objects))
     local data = assert(f)()
     self.searched_fogs = data.fogs
+    local end_point = self:GetEndPoint()
     for _, v in ipairs(data.objects) do
-        self:ModifyObject(unpack(v))
+        local x, y, searched = unpack(v)
+        self:ModifyObject(x, y, searched, (x == end_point.x and y == end_point.y) and PVEDefine.ENTRANCE_DOOR)
     end
 end
 function PVEMap:EncodeMap()
@@ -170,6 +178,7 @@ function PVEMap:DumpObjects()
 end
 
 return PVEMap
+
 
 
 

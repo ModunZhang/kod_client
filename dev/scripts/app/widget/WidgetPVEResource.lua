@@ -19,53 +19,7 @@ end
 function WidgetPVEResource:SetUpButtons()
     return self:GetObject():IsSearched() and
         { { label = _("离开") } } or
-        { { label = _("进攻"), callback = function()
-            local enemy = self:GetObject():GetNextEnemy()
-            UIKit:newGameUI('GameUIPVESendTroop',
-                enemy.soldiers,-- pve 怪数据
-                function(dragonType, soldiers)
-                    local dargon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
-                    local attack_dragon = {
-                        dragonType = dragonType,
-                        currentHp = dargon:Hp(),
-                        hpMax = dargon:GetMaxHP(),
-                        totalHp = dargon:Hp(),
-                        strength = dargon:TotalStrength(),
-                        vitality = dargon:TotalVitality(),
-                    }
-                    local attack_soldier = LuaUtils:table_map(soldiers, function(k, v)
-                        return k, {name = v.name,
-                            star = 1,
-                            morale = 100,
-                            currentCount = v.count,
-                            totalCount = v.count,
-                            woundedCount = 0,
-                            round = 0}
-                    end)
-
-                    local report = GameUtils:DoBattle(
-                        {dragon = attack_dragon, soldiers = attack_soldier}
-                        ,{dragon = enemy.dragon, soldiers = enemy.soldiers}
-                    )
-                    if report:IsAttackWin() then
-                        if self:GetObject():Left() <= 0 then
-                            self.user:SetPveData(report:GetAttackKDA(), self:GetObject():GetRewards() + enemy.rewards)
-                        else
-                            self.user:SetPveData(report:GetAttackKDA(), enemy.rewards)
-                        end
-                        self:Search()
-                    else
-                        self.user:SetPveData(report:GetAttackKDA())
-                        NetManager:getSetPveDataPromise(self.user:EncodePveData()):next(function(result)
-                            dump(result)
-                        end):catch(function(err)
-                            dump(err:reason())
-                        end)
-                    end
-
-                    UIKit:newGameUI("GameUIReplay",report):addToCurrentScene(true)
-                end):addToCurrentScene(true)
-        end }, { label = _("离开") } }
+        { { label = _("进攻"), callback = function() self:Fight() end }, { label = _("离开") } }
 end
 
 return WidgetPVEResource

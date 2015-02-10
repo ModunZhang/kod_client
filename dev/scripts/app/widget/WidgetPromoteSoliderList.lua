@@ -97,7 +97,7 @@ function WidgetPromoteSoliderList:CreateSoliderBox(soldier_type,index,star)
     elseif status == "lock" then
         label:setString(_("未解锁"))
     elseif status == "toUnlock" then
-        if City:GetSoldierManager():GetPromotingSoldierName() == soldier_type then
+        if City:GetSoldierManager():GetPromotingSoldierName(self.building:GetType()) == soldier_type then
             label:setString(_("正在晋级"))
             label:setColor(UIKit:hex2c4b(0x007c23))
         else
@@ -111,7 +111,7 @@ function WidgetPromoteSoliderList:CreateSoliderBox(soldier_type,index,star)
                     color = 0xfff3c7
                 }))
                 :onButtonClicked(function(event)
-                    WidgetSoldierPromoteDetails.new(soldier_type,star):addToCurrentScene()
+                    WidgetSoldierPromoteDetails.new(soldier_type,star,self.building):addToCurrentScene()
                 end)
         end
     end
@@ -124,7 +124,7 @@ function WidgetPromoteSoliderList:CreateSoliderBox(soldier_type,index,star)
         blue_bg:setFilter(filters)
         soldier_icon:setFilter(filters)
     end
-
+    local parent = self
     function soldier_box:Refresh(star)
         local status
         if star >= index then
@@ -150,7 +150,7 @@ function WidgetPromoteSoliderList:CreateSoliderBox(soldier_type,index,star)
         end
         if status == "toUnlock" then
 
-            if City:GetSoldierManager():GetPromotingSoldierName() == soldier_type then
+            if City:GetSoldierManager():GetPromotingSoldierName(parent.building:GetType()) == soldier_type then
                 label:setString("正在晋级")
                 label:setColor(UIKit:hex2c4b(0x007c23))
                 if self.button then
@@ -167,7 +167,7 @@ function WidgetPromoteSoliderList:CreateSoliderBox(soldier_type,index,star)
                         color = 0xfff3c7
                     }))
                     :onButtonClicked(function(event)
-                        WidgetSoldierPromoteDetails.new(soldier_type,star):addToCurrentScene()
+                        WidgetSoldierPromoteDetails.new(soldier_type,star,parent.building):addToCurrentScene()
                     end)
             end
         elseif self.button and status ~= "toUnlock"then

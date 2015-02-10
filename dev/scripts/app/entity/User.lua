@@ -35,12 +35,9 @@ function User:ctor(p)
     self:GetGemResource():SetValueLimit(math.huge) -- 会有人充值这么多的宝石吗？
     self:GetStrengthResource():SetValueLimit(100)
 
-
     self.pve_database = PVEDatabase.new(self)
     local _,_, index = self.pve_database:GetCharPosition()
-    self.cur_pve_map = self.pve_database:GetMapByIndex(index)
-
-
+    self:GotoPVEMapByLevel(index)
 
     self.request_events = {}
     self.invite_events = {}
@@ -60,6 +57,12 @@ function User:ctor(p)
     vip_event:AddObserver(self)
     self.vip_event = vip_event
 end
+function User:GotoPVEMapByLevel(level)
+    if self.cur_pve_map then
+        self.cur_pve_map:RemoveAllObserver()
+    end
+    self.cur_pve_map = self.pve_database:GetMapByIndex(level)
+end
 -- return 是否成功使用体力
 function User:UseStrength(num)
     if self:HasAnyStength(num) then
@@ -67,6 +70,7 @@ function User:UseStrength(num)
         self:GetStrengthResource():ReduceResourceByCurrentTime(current_time, num or 1)
         self:UpdatePreStrength(current_time)
         self:OnResourceChanged()
+        return true
     end
     return false
 end
@@ -77,11 +81,15 @@ function User:SetPveData(fight_data, rewards_data)
     self.fight_data = fight_data
     self.rewards_data = rewards_data
 end
-function User:EncodePveData()
+function User:EncodePveDataAndResetFightRewardsData()
     local fightData = self.fight_data
     local rewards = self.rewards_data
     self.fight_data = nil
     self.rewards_data = nil
+
+    for i,v in ipairs(rewards or {}) do
+        v.probability = nil
+    end
 
     local used_strength = self.pre_strenth - self:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     used_strength = used_strength > 0 and used_strength or 0

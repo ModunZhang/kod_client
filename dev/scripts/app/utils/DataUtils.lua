@@ -375,7 +375,11 @@ function DataUtils:getSoldierRecruitBuffTime(soldier_type,time)
         return 0
     end
 end
-
 function DataUtils:getBuffEfffectTime(time,decreasePercent)
     return time - math.floor(time / (1 + decreasePercent))
 end
+-- 各种升级事件免费加速门坎 单位：秒
+function DataUtils:getFreeSpeedUpLimitTime()
+    return 300
+end
+

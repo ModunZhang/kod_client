@@ -1,6 +1,7 @@
 local promise = import("..utils.promise")
 local cocos_promise = import("..utils.cocos_promise")
 local Localize = import("..utils.Localize")
+local SoldierManager = import("..entity.SoldierManager")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTab = import(".WidgetTab")
 local timer = app.timer
@@ -45,7 +46,7 @@ function WidgetEventTabButtons:OnUpgrading(building, current_time, city)
         self:IteratorAllItem(function(i, v)
             if v:GetEventKey() == building:UniqueKey() then
                 v:SetProgressInfo(self:BuildingDescribe(building))
-                self:SetUpgradeBuilidingBtnLabel(building,v)
+                self:SetProgressItemBtnLabel(self:IsAbleToFreeSpeedup(building),building:UniqueUpgradingKey(),v)
             end
         end)
     end
@@ -112,6 +113,36 @@ end
 function WidgetEventTabButtons:OnGetMaterialsWithEvent(tool_shop, event)
     self:EventChangeOn("material")
 end
+
+-- 军事科技
+function WidgetEventTabButtons:OnSoldierStarEventsTimer(star_event)
+    if self:IsShow() and self:GetCurrentTab() == "technology" then
+        self:IteratorAllItem(function(i, v)
+            if v.GetEventKey and v:GetEventKey() == star_event:Id() then
+                v:SetProgressInfo(self:MilitaryTechDescribe(star_event))
+                self:SetProgressItemBtnLabel(DataUtils:getFreeSpeedUpLimitTime()>star_event:GetTime(),star_event:Id(),v)
+            end
+        end)
+    end
+end
+function WidgetEventTabButtons:OnMilitaryTechEventsTimer(tech_event)
+    if self:IsShow() and self:GetCurrentTab() == "technology" then
+        self:IteratorAllItem(function(i, v)
+            if v.GetEventKey and v:GetEventKey() == tech_event:Id() then
+                v:SetProgressInfo(self:MilitaryTechDescribe(tech_event))
+                self:SetProgressItemBtnLabel(DataUtils:getFreeSpeedUpLimitTime()>tech_event:GetTime(),tech_event:Id(),v)
+            end
+        end)
+    end
+end
+function WidgetEventTabButtons:OnMilitaryTechEventsChanged()
+    self:EventChangeOn("technology")
+    self:RefreshBuildQueueByType("technology")
+end
+function WidgetEventTabButtons:OnSoldierStarEventsChanged()
+    self:EventChangeOn("technology")
+    self:RefreshBuildQueueByType("technology")
+end
 function WidgetEventTabButtons:EventChangeOn(event_type)
     self:RefreshBuildQueueByType(event_type)
     if self:GetCurrentTab() == event_type then
@@ -148,6 +179,12 @@ function WidgetEventTabButtons:ctor(city, ratio)
     self.toolShop = city:GetFirstBuildingByType("toolShop")
     self.toolShop:AddToolShopListener(self)
 
+    city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.OnSoldierStarEventsTimer)
+    city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.OnMilitaryTechEventsTimer)
+    city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
+    city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+
+
     self:ShowEvent()
     self:RefreshBuildQueueByType("build", "soldier", "material", "technology")
 end
@@ -165,7 +202,7 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
             count = count + (self.toolShop:IsMakingAny(timer:GetServerTime()) and 1 or 0)
             item:SetActive(count, 2)
         elseif key == "technology" then
-
+            item:SetActive(City:GetSoldierManager():GetTotalUpgradingMilitaryTechNum(), 5)
         end
     end
 end
@@ -184,6 +221,10 @@ function WidgetEventTabButtons:onExit()
     self.barracks:RemoveBarracksListener(self)
     self.city:RemoveListenerOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
     self.city:RemoveListenerOnType(self, City.LISTEN_TYPE.DESTROY_DECORATOR)
+    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.OnSoldierStarEventsTimer)
+    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.OnMilitaryTechEventsTimer)
+    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
+    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
 end
 function WidgetEventTabButtons:InsertEvent(func)
     table.insert(self.event_queue, func)
@@ -606,7 +647,7 @@ function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
         if not Alliance_Manager:GetMyAlliance():IsDefault() then
             -- 是否已经申请过联盟加速
             local isRequested = Alliance_Manager:GetMyAlliance()
-                :IsBuildingHasBeenRequestedToHelpSpeedup(building:UniqueUpgradingKey())
+                :HasBeenRequestedToHelpSpeedup(building:UniqueUpgradingKey())
             if not isRequested then
                 local eventType = ""
                 if self.city:IsFunctionBuilding(building) then
@@ -626,11 +667,31 @@ function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
         end
     end
 end
-function WidgetEventTabButtons:SetUpgradeBuilidingBtnLabel(building,event_item)
+function WidgetEventTabButtons:MiliTaryTechUpgradeOrSpeedup(event)
+    if DataUtils:getFreeSpeedUpLimitTime()>event:GetTime() then
+        NetManager:getFreeSpeedUpPromise(event:GetEventType(),event:Id())
+            :catch(function(err)
+                dump(err:reason())
+            end)
+    else
+        if not Alliance_Manager:GetMyAlliance():IsDefault() then
+            -- 是否已经申请过联盟加速
+            local isRequested = Alliance_Manager:GetMyAlliance()
+                :HasBeenRequestedToHelpSpeedup(event:Id())
+            if not isRequested then
+                NetManager:getRequestAllianceToSpeedUpPromise(event:GetEventType(),event:Id())
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
+            end
+        end
+    end
+end
+function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp,event_key,event_item)
     local old_status = event_item.status
     local btn_label
     local btn_images
-    if self:IsAbleToFreeSpeedup(building) then
+    if canFreeSpeedUp then
         btn_label = _("免费加速")
         btn_images = {normal = "purple_btn_up_142x39.png",
             pressed = "purple_btn_down_142x39.png",
@@ -641,7 +702,7 @@ function WidgetEventTabButtons:SetUpgradeBuilidingBtnLabel(building,event_item)
         -- 未加入联盟或者已经申请过联盟加速
         if Alliance_Manager:GetMyAlliance():IsDefault() or
             Alliance_Manager:GetMyAlliance()
-                :IsBuildingHasBeenRequestedToHelpSpeedup(building:UniqueUpgradingKey()) then
+                :HasBeenRequestedToHelpSpeedup(event_key) then
             btn_label = _("加速")
             btn_images = {normal = "green_btn_up_142x39.png",
                 pressed = "green_btn_down_142x39.png",
@@ -680,7 +741,7 @@ function WidgetEventTabButtons:Load()
                             end
                         end
                         )
-                    self:SetUpgradeBuilidingBtnLabel(v,event_item)
+                    self:SetProgressItemBtnLabel(self:IsAbleToFreeSpeedup(v),v:UniqueUpgradingKey(),event_item)
                     table.insert(items, event_item)
                 end
                 self:InsertItem(items)
@@ -692,21 +753,88 @@ function WidgetEventTabButtons:Load()
                 end
             elseif k == "technology" then
                 self:InsertItem(self:CreateBottom():SetLabel(_("查看现有的科技")))
+
+                -- 军事科技部分
+                local soldier_manager = self.city:GetSoldierManager()
                 local trainingGround = City:GetFirstBuildingByType("trainingGround")
                 if trainingGround:GetLevel()>0 then
-                    self:InsertItem(self:CreateMilitaryItem(trainingGround):SetLabel(_("训练营地空闲")))
+                    if soldier_manager:IsUpgradingMilitaryTech("trainingGround") then
+                        local event = soldier_manager:GetUpgradingMilitaryTech("trainingGround")
+                        local item = self:CreateItem()
+                            :SetProgressInfo(self:MilitaryTechDescribe(event))
+                            :SetEventKey(event:Id())
+                            :OnClicked(
+                                function(e)
+                                    if e.name == "CLICKED_EVENT" then
+                                        self:MiliTaryTechUpgradeOrSpeedup(event)
+                                    end
+                                end
+                            )
+                        self:SetProgressItemBtnLabel(DataUtils:getFreeSpeedUpLimitTime()>event:GetTime(),event:Id(),item)
+                        self:InsertItem(item)
+                    else
+                        self:InsertItem(self:CreateMilitaryItem(trainingGround):SetLabel(_("训练营地空闲")))
+                    end
                 end
                 local hunterHall = City:GetFirstBuildingByType("hunterHall")
                 if hunterHall:GetLevel()>0 then
-                    self:InsertItem(self:CreateMilitaryItem(hunterHall):SetLabel(_("猎手大厅空闲")))
+                    if soldier_manager:IsUpgradingMilitaryTech("hunterHall") then
+                        local event = soldier_manager:GetUpgradingMilitaryTech("hunterHall")
+                        local item = self:CreateItem()
+                            :SetProgressInfo(self:MilitaryTechDescribe(event))
+                            :SetEventKey(event:Id())
+                            :OnClicked(
+                                function(e)
+                                    if e.name == "CLICKED_EVENT" then
+                                        self:MiliTaryTechUpgradeOrSpeedup(event)
+                                    end
+                                end
+                            )
+                        self:SetProgressItemBtnLabel(DataUtils:getFreeSpeedUpLimitTime()>event:GetTime(),event:Id(),item)
+                        self:InsertItem(item)
+                    else
+                        self:InsertItem(self:CreateMilitaryItem(hunterHall):SetLabel(_("猎手大厅空闲")))
+                    end
                 end
                 local stable = City:GetFirstBuildingByType("stable")
                 if stable:GetLevel()>0 then
-                    self:InsertItem(self:CreateMilitaryItem(stable):SetLabel(_("马厩空闲")))
+                    if soldier_manager:IsUpgradingMilitaryTech("stable") then
+                        local event = soldier_manager:GetUpgradingMilitaryTech("stable")
+                        local item = self:CreateItem()
+                            :SetProgressInfo(self:MilitaryTechDescribe(event))
+                            :SetEventKey(event:Id())
+                            :OnClicked(
+                                function(e)
+                                    if e.name == "CLICKED_EVENT" then
+                                        self:MiliTaryTechUpgradeOrSpeedup(event)
+                                    end
+                                end
+                            )
+                        self:SetProgressItemBtnLabel(DataUtils:getFreeSpeedUpLimitTime()>event:GetTime(),event:Id(),item)
+                        self:InsertItem(item)
+                    else
+                        self:InsertItem(self:CreateMilitaryItem(stable):SetLabel(_("马厩空闲")))
+                    end
                 end
                 local workshop = City:GetFirstBuildingByType("workshop")
                 if workshop:GetLevel()>0 then
-                    self:InsertItem(self:CreateMilitaryItem(workshop):SetLabel(_("车间空闲")))
+                    if soldier_manager:IsUpgradingMilitaryTech("workshop") then
+                        local event = soldier_manager:GetUpgradingMilitaryTech("workshop")
+                        local item = self:CreateItem()
+                            :SetProgressInfo(self:MilitaryTechDescribe(event))
+                            :SetEventKey(event:Id())
+                            :OnClicked(
+                                function(e)
+                                    if e.name == "CLICKED_EVENT" then
+                                        self:MiliTaryTechUpgradeOrSpeedup(event)
+                                    end
+                                end
+                            )
+                        self:SetProgressItemBtnLabel(DataUtils:getFreeSpeedUpLimitTime()>event:GetTime(),event:Id(),item)
+                        self:InsertItem(item)
+                    else
+                        self:InsertItem(self:CreateMilitaryItem(workshop):SetLabel(_("车间空闲")))
+                    end
                 end
             elseif k == "material" then
                 self:InsertItem(self:CreateBottom():SetLabel(_("查看材料")))
@@ -767,8 +895,22 @@ function WidgetEventTabButtons:MaterialDescribe(event)
     local str = string.format("%s x%d %s", _("制造材料"), event:TotalCount(), GameUtils:formatTimeStyle1(event:LeftTime(current_time)))
     return str, event:Percent(current_time)
 end
+function WidgetEventTabButtons:MilitaryTechDescribe(event)
+    local current_time = app.timer:GetServerTime()
+    local str = event:GetLocalizeDesc().."  "..GameUtils:formatTimeStyle1(event:GetTime())
+    return str, event:Percent(current_time)
+end
 
 return WidgetEventTabButtons
+
+
+
+
+
+
+
+
+
 
 
 

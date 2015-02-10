@@ -56,7 +56,7 @@ function UpdateWalls()
     end
 
     for k, v in pairs(City.towers) do
-        map[v.y + offset][v.x + offset] = v:TowerId() or 101
+        map[v.y + offset][v.x + offset] = 101
     end
 
     -- for k, v in pairs(City.ruins) do
@@ -284,15 +284,15 @@ function setup()
         { x = 2, y = 1},
         { x = 2, y = 2},
         { x = 3, y = 2},
-        -- { x = 2, y = 3},
+        { x = 2, y = 3},
         { x = 3, y = 3},
-        -- { x = 1, y = 3},
+        { x = 1, y = 3},
         { x = 3, y = 1},
         -- { x = 4, y = 1},
         -- { x = 4, y = 2},
         -- { x = 4, y = 3},
         -- { x = 4, y = 4},
-        -- { x = 3, y = 4},
+        { x = 3, y = 4},
         -- { x = 2, y = 4},
         -- { x = 1, y = 4},
         -- { x = 1, y = 5},
