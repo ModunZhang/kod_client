@@ -188,7 +188,7 @@ function PVEObject:IsUnSearched()
     return self:Searched() == 0
 end
 function PVEObject:IsSearched()
-    return self:Searched() >= self:Total()
+    return self:Searched() >= self:Total() and self:Searched() > 0
 end
 function PVEObject:SearchNext()
     self.searched = self.searched + 1
