@@ -21,7 +21,7 @@ end
 function GameUIHelp:onEnter()
     local body = self.body
     local rb_size = body:getContentSize()
-    
+
     -- 协助加速介绍
     cc.ui.UILabel.new(
         {
@@ -157,7 +157,35 @@ function GameUIHelp:DeleteHelpItem(id)
         self.help_events_items[id] = nil
     end
 end
-
+function GameUIHelp:GetHelpEventDesc( eventData )
+    local type = eventData:Type()
+    local name = eventData:Name()
+    if type == "buildingEvents"
+        or type == "houseEvents"
+        or type == "towerEvents"
+        or type == "wallEvents"
+    then
+        return _("正在升级")..Localize.building_name[name].._("Lv")..eventData:Level()
+    elseif type == "militaryTechEvents" then
+        return string.format(_("研发%s对%s的攻击到 Lv %d"),Localize.soldier_category[string.split(name, "_")[1]],Localize.soldier_category[string.split(name, "_")[2]],eventData:Level()+1)
+    elseif type == "soldierStarEvents" then
+        return string.format(_("晋升%s的星级 star %d"),Localize.soldier_name[name],eventData:Level()+1)
+    elseif type == "materialEvents" then
+        return _("未处理")
+    elseif type == "soldierEvents" then
+        return _("未处理")
+    elseif type == "treatSoldierEvents" then
+        return _("未处理")
+    elseif type == "dragonEquipmentEvents" then
+        return _("未处理")
+    elseif type == "dragonHatchEvents" then
+        return _("未处理")
+    elseif type == "dragonDeathEvents" then
+        return _("未处理")
+    elseif type == "productionTechEvents" then
+        return _("未处理")
+    end
+end
 function GameUIHelp:CreateHelpItem(event)
     local playerData = event:GetPlayerData()
     local eventData = event:GetEventData()
@@ -182,7 +210,7 @@ function GameUIHelp:CreateHelpItem(event)
     cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
-        text = _("正在升级")..Localize.building_name[eventData:Name()].._("Lv")..eventData:Level(),
+        text = self:GetHelpEventDesc(eventData),
         size = 20,
         color = UIKit:hex2c3b(0x797154),
         dimensions = cc.size(0,0),
@@ -281,4 +309,6 @@ function GameUIHelp:onExit()
 end
 
 return GameUIHelp
+
+
 

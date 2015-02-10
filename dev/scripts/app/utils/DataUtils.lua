@@ -376,3 +376,8 @@ function DataUtils:getSoldierRecruitBuffTime(soldier_type,time)
         return 0
     end
 end
+
+-- 各种升级事件免费加速门坎 单位：秒
+function DataUtils:getFreeSpeedUpLimitTime()
+    return 300
+end
