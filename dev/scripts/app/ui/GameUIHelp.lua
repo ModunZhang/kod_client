@@ -97,7 +97,7 @@ function GameUIHelp:InitHelpEvents()
     local help_events = self.alliance:GetAllHelpEvents()
     if help_events then
         for k,event in pairs(help_events) do
-            if not self:IsHelpedByMe(event.helpedMembers) and not self:IsHelpedToMaxNum(event) then
+            if not self:IsHelpedByMe(event:GetEventData():HelpedMembers()) and not self:IsHelpedToMaxNum(event) then
                 self:InsertItemToList(event)
             end
         end
@@ -107,7 +107,7 @@ end
 function GameUIHelp:InsertItemToList(help_event)
     -- 当前玩家的求助事件需要置顶
     local item = self:CreateHelpItem(help_event)
-    if DataManager:getUserData()._id == help_event.id then
+    if DataManager:getUserData()._id == help_event:GetPlayerData():Id() then
         self.help_listview:addItem(item,1)
     else
         self.help_listview:addItem(item)
@@ -122,7 +122,7 @@ function GameUIHelp:IsHelpedByMe(helpedMembers)
     end
 end
 function GameUIHelp:IsHelpedToMaxNum(event)
-    return #event.helpedMembers == event.maxHelpCount
+    return #event:GetEventData():HelpedMembers() == event:GetEventData():MaxHelpCount()
 end
 function GameUIHelp:RefreshUI(help_events)
     for k,item in pairs(self.help_events_items) do
@@ -131,9 +131,9 @@ function GameUIHelp:RefreshUI(help_events)
         local flag_1 = true
 
         for _,v in pairs(help_events) do
-            if v.eventId==k then
+            if v:Id()==k then
                 -- 帮助过的需要删除
-                if not self:IsHelpedByMe(v.helpedMembers) or not self:IsHelpedToMaxNum(v) then
+                if not self:IsHelpedByMe(v:GetEventData():HelpedMembers()) or not self:IsHelpedToMaxNum(v) then
                     flag = false
                 end
             end
@@ -144,7 +144,7 @@ function GameUIHelp:RefreshUI(help_events)
         end
     end
     for k,event in pairs(help_events) do
-        if not self.help_events_items[event.eventId] then
+        if not self.help_events_items[event:Id()] then
             self:InsertItemToList(event)
             self.help_listview:reload()
         end
@@ -159,8 +159,11 @@ function GameUIHelp:DeleteHelpItem(id)
 end
 
 function GameUIHelp:CreateHelpItem(event)
+    local playerData = event:GetPlayerData()
+    local eventData = event:GetEventData()
+
     local item = self.help_listview:newItem()
-    item.eventId = event.eventId
+    item.eventId = event:Id()
     local item_width, item_height = 568,130
     item:setItemSize(item_width, item_height)
     local bg = display.newSprite("back_ground_568X126.png")
@@ -170,7 +173,7 @@ function GameUIHelp:CreateHelpItem(event)
     local name_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
-        text = event.name,
+        text = playerData:Name(),
         size = 24,
         color = UIKit:hex2c3b(0x514d3e),
         dimensions = cc.size(0,26),
@@ -179,7 +182,7 @@ function GameUIHelp:CreateHelpItem(event)
     cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
-        text = _("正在升级")..Localize.building_name[event.buildingName].._("Lv")..event.buildingLevel,
+        text = _("正在升级")..Localize.building_name[eventData:Name()].._("Lv")..eventData:Level(),
         size = 20,
         color = UIKit:hex2c3b(0x797154),
         dimensions = cc.size(0,0),
@@ -193,23 +196,27 @@ function GameUIHelp:CreateHelpItem(event)
     pro:setBarChangeRate(cc.p(1,0))
     pro:setMidpoint(cc.p(0,0))
     pro:align(display.LEFT_BOTTOM, 0, 0):addTo(bar)
-    pro:setPercentage(math.floor(#event.helpedMembers/event.maxHelpCount*100))
+
+
+    local helpedMembers = eventData:HelpedMembers()
+    local maxHelpCount = eventData:MaxHelpCount()
+    pro:setPercentage(math.floor(#helpedMembers/maxHelpCount*100))
     local help_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
-        text = _("帮助")..#event.helpedMembers.."/"..event.maxHelpCount,
+        text = _("帮助")..#helpedMembers.."/"..maxHelpCount,
         size = 18,
         align = ui.TEXT_ALIGN_CENTER,
         color = UIKit:hex2c3b(0xfff3c7),
     }):addTo(bar):align(display.LEFT_CENTER, 30, bar:getContentSize().height/2)
     -- 帮助按钮
-    if DataManager:getUserData()._id ~= event.id then
+    if DataManager:getUserData()._id ~= playerData:Id() then
         local help_button = WidgetPushButton.new(
             {normal = "yellow_button_146x42.png", pressed = "yellow_button_highlight_146x42.png"}
         ):setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("帮助"), size = 18, color = UIKit:hex2c3b(0xfff3c7)}))
             :onButtonClicked(function(e)
                 if e.name == "CLICKED_EVENT" then
-                    NetManager:getHelpAllianceMemberSpeedUpPromise(event.eventId):catch(function(err)
+                    NetManager:getHelpAllianceMemberSpeedUpPromise(event:Id()):catch(function(err)
                         dump(err:reason())
                     end)
                 end
@@ -217,29 +224,28 @@ function GameUIHelp:CreateHelpItem(event)
     end
     item:addContent(bg)
 
-    self.help_events_items[event.eventId] = item
+    self.help_events_items[event:Id()] = item
 
     function item:SetHelp(event)
-        help_label:setString(_("帮助")..#event.helpedMembers.."/"..event.maxHelpCount)
-        ProgressTimer:setPercentage(math.floor(#event.helpedMembers/event.maxHelpCount*100))
+        help_label:setString(_("帮助")..#event:GetEventData():HelpedMembers().."/"..event:GetEventData():MaxHelpCount())
+        ProgressTimer:setPercentage(math.floor(#event:GetEventData():HelpedMembers()/event:GetEventData():MaxHelpCount()*100))
         return item
     end
 
     function item:IsAbleToHelp()
-        return DataManager:getUserData()._id ~= event.id
+        return DataManager:getUserData()._id ~= event:GetPlayerData():Id()
     end
 
     return item
 end
-function GameUIHelp:OnAllHelpEventChanged(event)
-    self:RefreshUI(event)
-end
+-- function GameUIHelp:OnAllHelpEventChanged(event)
+--     self:RefreshUI(event)
+-- end
 function GameUIHelp:OnHelpEventChanged(changed_help_event)
-    dump(changed_help_event)
     if changed_help_event.added then
         local added = changed_help_event.added
         for _,event in pairs(added) do
-            if not self:IsHelpedByMe(event.helpedMembers) or not self:IsHelpedToMaxNum(event) then
+            if not self:IsHelpedByMe(event:GetEventData():HelpedMembers()) or not self:IsHelpedToMaxNum(event) then
                 self:InsertItemToList(event)
             end
         end
@@ -248,16 +254,16 @@ function GameUIHelp:OnHelpEventChanged(changed_help_event)
     if changed_help_event.removed then
         local removed = changed_help_event.removed
         for _,event in pairs(removed) do
-            self:DeleteHelpItem(event.eventId)
+            self:DeleteHelpItem(event:Id())
         end
     end
     if changed_help_event.edit then
         local edit = changed_help_event.edit
         for _,event in pairs(edit) do
-            local item = self.help_events_items[event.eventId]
+            local item = self.help_events_items[event:Id()]
             if item then
-                if self:IsHelpedByMe(event.helpedMembers) or self:IsHelpedToMaxNum(event) then
-                    self:DeleteHelpItem(event.eventId)
+                if self:IsHelpedByMe(event:GetEventData():HelpedMembers()) or self:IsHelpedToMaxNum(event) then
+                    self:DeleteHelpItem(event:Id())
                 else
                     item:SetHelp(event)
                 end

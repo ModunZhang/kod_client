@@ -14,10 +14,11 @@ local NORMAL = GameDatas.Soldiers.normal
 local WidgetSoldierPromoteDetails = class("WidgetSoldierPromoteDetails", WidgetPopDialog)
 
 
-function WidgetSoldierPromoteDetails:ctor(soldier_type,star)
+function WidgetSoldierPromoteDetails:ctor(soldier_type,star,building)
     WidgetSoldierPromoteDetails.super.ctor(self,720,_("兵种晋级"))
     self.soldier_type = soldier_type
     self.star = star
+    self.building = building
 end
 
 function WidgetSoldierPromoteDetails:onEnter()
@@ -221,7 +222,7 @@ function WidgetSoldierPromoteDetails:onEnter()
             color = 0xfff3c7
         }))
         :onButtonClicked(function(event)
-            WidgetPromoteSoldier.new(soldier_type):addToCurrentScene()
+            WidgetPromoteSoldier.new(soldier_type,self.building:GetType()):addToCurrentScene()
             self:leftButtonClicked()
         end)
 end

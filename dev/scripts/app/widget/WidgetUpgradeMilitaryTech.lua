@@ -148,7 +148,7 @@ function WidgetUpgradeMilitaryTech:UpgradeButtons()
 
     -- 科技减少升级时间
     self.buff_reduce_time = UIKit:ttfLabel({
-        text = "(-00:20:00)",
+        text = "-("..GameUtils:formatTimeStyle1(DataUtils:getTechnilogyUpgradeBuffTime(self.tech:GetUpgradeTime()))..")",
         size = 18,
         color = 0x068329
     }):align(display.LEFT_CENTER,size.width/2+120,size.height-300):addTo(body)
@@ -165,9 +165,9 @@ function WidgetUpgradeMilitaryTech:UpgradeRequirement()
         {
             resource_type = _("升级军事科技队列"),
             isVisible = true,
-            isSatisfy = not  City:GetSoldierManager():IsUpgradingMilitaryTech(),
+            isSatisfy = not  City:GetSoldierManager():IsUpgradingMilitaryTech(self.tech:Building()),
             icon="hammer_31x33.png",
-            description=City:GetSoldierManager():GetUpgradingMilitaryTechNum().."/1"
+            description=City:GetSoldierManager():GetUpgradingMilitaryTechNum(self.tech:Building()).."/1"
         },
         {
             resource_type = Localize.fight_reward.coin,
