@@ -441,12 +441,9 @@ end
 -- 更新buff加成
 function WidgetMakeEquip:UpdateBuffTime()
     local time = self.equip_config.makeTime
-    local math = math
-    local const = 1000000
-    local rate = 1 / (1 + self.black_smith:GetEfficiency())
-    local rate_new = math.floor(rate * const) / const
-    local actual_time = math.floor(rate_new * time)
-    self.buff_time:setString(string.format("(-%s)", GameUtils:formatTimeStyle1(time - actual_time)))
+    local efficiency = self.black_smith:GetEfficiency()
+    local buff_time = DataUtils:getBuffEfffectTime(time,efficiency)
+    self.buff_time:setString(string.format("(-%s)", GameUtils:formatTimeStyle1(buff_time)))
 end
 
 function WidgetMakeEquip:Close()

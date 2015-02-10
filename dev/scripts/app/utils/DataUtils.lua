@@ -216,6 +216,7 @@ function DataUtils:getAllSoldierBuffValue(solider_config)
             end
         end
     end
+    --维护费用
     if ItemManager:IsBuffActived("quarterMaster") then
         local buff_realy_value = (solider_config['consumeFoodPerHour'] or 0 ) * ItemManager:GetBuffEffect("quarterMaster")
         if result['consumeFoodPerHour'] then
@@ -231,7 +232,7 @@ end
 function DataUtils:getBuildingBuff(buildingTime)
     local tech = City:FindTechByName('crane')
     if tech and tech:Level() > 0 then
-        return math.ceil(buildingTime * (1 - tech:GetBuffEffectVal()))
+        return DataUtils:getBuffEfffectTime(buildingTime,tech:GetBuffEffectVal())
     else
         return 0
     end
@@ -250,8 +251,6 @@ end
 function DataUtils:getAllianceLocationDistance(fromAllianceDoc, fromLocation, toAllianceDoc, toLocation)
     local width,height = 0,0
     if fromAllianceDoc == toAllianceDoc then
-        dump(fromLocation,"fromLocation--->")
-        dump(toLocation,"toLocation--->")
         width = math.abs(fromLocation.x - toLocation.x)
         height =  math.abs(fromLocation.y - toLocation.y)
         return DataUtils:getDistance(width,height)
@@ -326,7 +325,7 @@ end
 function DataUtils:getPlayerMarchTimeBuffTime(fullTime)
     local buff_value = DataUtils:getPlayerMarchTimeBuffEffectValue()
     if buff_value > 0 then
-        return  math.ceil(fullTime * (1 - buff_value))
+        return DataUtils:getBuffEfffectTime(fullTime,buff_value)
     else
         return 0
     end
@@ -348,7 +347,7 @@ function DataUtils:getTechnilogyUpgradeBuffTime(time)
     local config = config_academy[level]
     local efficiency = config and config.efficiency or 0 
     if efficiency > 0 then
-        return math.ceil(time/(1 + efficiency))
+        return DataUtils:getBuffEfffectTime(time,efficiency)
     else
         return 0
     end
@@ -371,8 +370,12 @@ function DataUtils:getSoldierRecruitBuffTime(soldier_type,time)
     local config = config_BuildingFunction[building_type][build:GetLevel()]
     local efficiency = config.efficiency
     if efficiency > 0 then
-        return math.ceil(time/(1 + efficiency)) 
+        return DataUtils:getBuffEfffectTime(time,efficiency)
     else
         return 0
     end
+end
+
+function DataUtils:getBuffEfffectTime(time,decreasePercent)
+    return time - math.floor(time / (1 + decreasePercent))
 end
