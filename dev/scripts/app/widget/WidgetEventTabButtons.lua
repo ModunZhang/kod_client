@@ -202,7 +202,7 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
             count = count + (self.toolShop:IsMakingAny(timer:GetServerTime()) and 1 or 0)
             item:SetActive(count, 2)
         elseif key == "technology" then
-
+            item:SetActive(City:GetSoldierManager():GetTotalUpgradingMilitaryTechNum(), 5)
         end
     end
 end

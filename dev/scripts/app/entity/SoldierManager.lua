@@ -308,6 +308,10 @@ function SoldierManager:GetUpgradingMilitaryTechNum(building_type)
     end
     return count
 end
+function SoldierManager:GetTotalUpgradingMilitaryTechNum()
+    local count = LuaUtils:table_size(self.militaryTechEvents) + LuaUtils:table_size(self.soldierStarEvents)
+    return count >4 and 4 or count
+end
 -- 对应建筑可以升级对应军事科技和兵种星级
 function SoldierManager:IsUpgradingMilitaryTech(building_type)
     for _,event in pairs(self.militaryTechEvents) do
