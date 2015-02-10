@@ -349,7 +349,6 @@ function CommonUpgradeUI:InitUpgradePart()
         size = 18,
         color = UIKit:hex2c3b(0x403c2f)
     }):align(display.LEFT_CENTER,display.cx+125,display.top-460):addTo(self.upgrade_layer)
-    self:SetUpgradeTime()
 
     -- 科技减少升级时间
     self.buff_reduce_time = cc.ui.UILabel.new({
@@ -360,6 +359,7 @@ function CommonUpgradeUI:InitUpgradePart()
         color = UIKit:hex2c3b(0x068329)
     }):align(display.LEFT_CENTER,display.cx+120,display.top-480):addTo(self.upgrade_layer)
 
+    self:SetUpgradeTime()
     --升级需求listview
     self:SetUpgradeRequirementListview()
 
@@ -377,6 +377,8 @@ end
 
 function CommonUpgradeUI:SetUpgradeTime()
     self.upgrade_time:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradeTimeToNextLevel()))
+    local buff_time = DataUtils:getBuildingBuff(self.building:GetUpgradeTimeToNextLevel())
+    self.buff_reduce_time:setString(string.format("(-%s)",GameUtils:formatTimeStyle1(buff_time)))
 end
 
 function CommonUpgradeUI:SetUpgradeRequirementListview()

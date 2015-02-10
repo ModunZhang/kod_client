@@ -69,7 +69,6 @@ function GameUIAllianceVillageEnter:GetBuildingDesc()
 	return "本地化缺失"
 end
 
-
 function GameUIAllianceVillageEnter:GetBuildingInfo()
 	local location = {
         {_("坐标"),0x797154},
@@ -213,7 +212,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 		        	if self:CheckCanAttackVillage() then
 						UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
 		                    NetManager:getAttackVillagePromise(dragonType,soldiers,villageEvent:VillageData().alliance.id,village_id)
-		                end):addToCurrentScene(true)
+		                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):addToCurrentScene(true)
 					end
 					self:leftButtonClicked()
 				end)
@@ -230,7 +229,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 		     		if self:CheckCanAttackVillage() then
 						UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
 		                    NetManager:getAttackVillagePromise(dragonType,soldiers,alliance_id,village_id)
-		                end):addToCurrentScene(true)
+		                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):addToCurrentScene(true)
 					end
 					self:leftButtonClicked()
 				end)
@@ -248,7 +247,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 	     		if self:CheckCanAttackVillage() then
 					UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
 	                    NetManager:getAttackVillagePromise(dragonType,soldiers,alliance_id,village_id)
-	                end):addToCurrentScene(true)
+	                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):addToCurrentScene(true)
 				end
 				self:leftButtonClicked()
 			end)
@@ -271,7 +270,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 	    	local huan_fang_button = self:BuildOneButton("village_capture_66x72.png",_("换防")):onButtonClicked(function()
 				UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
                     NetManager:getAttackVillagePromise(dragonType,soldiers,villageEvent:VillageData().alliance.id,village_id)
-	            end):addToCurrentScene(true)
+	            end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):addToCurrentScene(true)
 				self:leftButtonClicked()
 			end)
 	        buttons =  {huan_fang_button}

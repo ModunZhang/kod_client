@@ -118,7 +118,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
 		            if not alliance:CheckHelpDefenceMarchEventsHaveTarget(playerId) then
 		                UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
 		                    NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, playerId)
-		                end):addToCurrentScene(true)
+		                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):addToCurrentScene(true)
 						self:leftButtonClicked()
 		            else
 		                local dialog = FullScreenPopDialogUI.new()
@@ -156,7 +156,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
 					return
 				end
                 NetManager:getAttackPlayerCityPromise(dragonType, soldiers, member:Id())
-            end):addToCurrentScene(true)
+            end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):addToCurrentScene(true)
 			self:leftButtonClicked()
 		end)
 		local strike_button = self:BuildOneButton("Strike_72x72.png",_("突袭")):onButtonClicked(function()

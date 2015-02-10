@@ -69,7 +69,7 @@ function WidgetPVECamp:SetUpButtons()
                 end
 
                 UIKit:newGameUI("GameUIReplay",report):addToCurrentScene(true)
-            end):addToCurrentScene(true)
+            end,{isPVE = true}):addToCurrentScene(true)
         end }, { label = _("离开") } }
 end
 

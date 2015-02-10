@@ -64,6 +64,12 @@ function GameUIAllianceEnterBase:GetBuildingInfo()
         }
 end
 
+function GameUIAllianceEnterBase:GetLogicPosition()
+    local building = self:GetBuilding()
+    local x,y = building:GetLogicPosition()
+    return {x = x , y = y}
+end
+
 function GameUIAllianceEnterBase:GetLocation()
 	local building = self:GetBuilding()
 	local x,y = building:GetLogicPosition()

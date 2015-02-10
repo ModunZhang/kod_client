@@ -191,14 +191,188 @@ function DataUtils:__getDragonVitalityBuff(skills)
     end
     return 0
 end
---TODO:如果有道具加龙属性 这里就还未完成
+--如果有道具加龙属性 这里就还未完成
 function DataUtils:getDragonMaxHp(star,level,skills,equipments)
     local vitality = self:getTotalVitalityFromJson(star,level,skills,equipments)
     return vitality * 2
 end
 
--- 获得军事科技加成
-local militaryTechs = GameDatas.MilitaryTechs.militaryTechs
-function DataUtils:getMilitaryTechEff(tech_type,level)
-    return militaryTechs[tech_type].effectPerLevel * level
+-- 获取兵相关的buff信息  
+-- solider_config:兵详情的配置信息
+function DataUtils:getAllSoldierBuffValue(solider_config)
+    local result = {}
+    local soldier_type = solider_config.type
+    local item_buff = ItemManager:GetAllSoldierBuffData()
+    local military_technology_buff = City:GetSoldierManager():GetAllMilitaryBuffData()
+    table.insertto(item_buff,military_technology_buff)
+    for __,v in ipairs(item_buff) do
+        local effect_soldier,buff_field,buff_value = unpack(v)
+        if effect_soldier == soldier_type or effect_soldier == '*' then
+            local buff_realy_value = (solider_config[buff_field] or 0 ) * buff_value
+            if result[buff_field] then
+                result[buff_field] = result[buff_field] + buff_realy_value
+            else
+                result[buff_field] = buff_realy_value
+            end
+        end
+    end
+    if ItemManager:IsBuffActived("quarterMaster") then
+        local buff_realy_value = (solider_config['consumeFoodPerHour'] or 0 ) * ItemManager:GetBuffEffect("quarterMaster")
+        if result['consumeFoodPerHour'] then
+            result['consumeFoodPerHour'] = result['consumeFoodPerHour'] + buff_realy_value
+        else
+           result['consumeFoodPerHour'] = buff_realy_value
+        end
+    end
+    return result
+end
+--获取建筑时间的buff
+--buildingTime:升级或建造原来的时间
+function DataUtils:getBuildingBuff(buildingTime)
+    local tech = City:FindTechByName('crane')
+    if tech and tech:Level() > 0 then
+        return math.ceil(buildingTime * (1 - tech:GetBuffEffectVal()))
+    else
+        return 0
+    end
+end
+
+local config_intInit = GameDatas.AllianceInitData.intInit
+local AllianceMapSize = {
+    width = config_intInit.allianceRegionMapWidth.value,
+    height= config_intInit.allianceRegionMapHeight.value
+}
+local PlayerInitData = GameDatas.PlayerInitData
+function DataUtils:getDistance(width,height)
+    return math.ceil(math.sqrt(math.pow(width, 2) + math.pow(height, 2)))
+end
+
+function DataUtils:getAllianceLocationDistance(fromAllianceDoc, fromLocation, toAllianceDoc, toLocation)
+    local width,height = 0,0
+    if fromAllianceDoc == toAllianceDoc then
+        dump(fromLocation,"fromLocation--->")
+        dump(toLocation,"toLocation--->")
+        width = math.abs(fromLocation.x - toLocation.x)
+        height =  math.abs(fromLocation.y - toLocation.y)
+        return DataUtils:getDistance(width,height)
+    end
+    if fromAllianceDoc:GetAllianceFight()['attackAllianceId'] == fromAllianceDoc:Id() then
+        local allianceMergeStyle = fromAllianceDoc:GetAllianceFight()['mergeStyle']
+        if allianceMergeStyle == 'left' then
+            width = AllianceMapSize.width - fromLocation.x + toLocation.x
+            height= math.abs(fromLocation.y - toLocation.y)
+            return DataUtils:getDistance(width,height)
+        elseif allianceMergeStyle == 'right' then
+            width = AllianceMapSize.width - toLocation.x + fromLocation.x
+            height= math.abs(fromLocation.y - toLocation.y)
+            return DataUtils:getDistance(width,height)
+        elseif allianceMergeStyle == 'top' then
+            width = math.abs(fromLocation.x - toLocation.x)
+            height= AllianceMapSize.height - fromLocation.y + toLocation.y
+            return DataUtils:getDistance(width,height)
+        elseif allianceMergeStyle == 'bottom' then
+            width = math.abs(fromLocation.x - toLocation.x)
+            height= AllianceMapSize.height - toLocation.y + fromLocation.y
+            return DataUtils:getDistance(width,height)
+        else
+            return 0
+        end
+    else
+        local allianceMergeStyle = fromAllianceDoc:GetAllianceFight()['mergeStyle']
+        if allianceMergeStyle == 'left' then
+            width = AllianceMapSize.width - toLocation.x + fromLocation.x
+            height = math.abs(fromLocation.y - toLocation.y)
+            return DataUtils:getDistance(width,height)
+        elseif allianceMergeStyle == 'right' then
+            width = AllianceMapSize.width - fromLocation.x + toLocation.x
+            height = math.abs(fromLocation.y - toLocation.y)
+            return DataUtils:getDistance(width,height)
+        elseif allianceMergeStyle == 'top' then
+            width = math.abs(fromLocation.x - toLocation.x)
+            height = AllianceMapSize.height - toLocation.y + fromLocation.y
+            return DataUtils:getDistance(width,height)
+        elseif allianceMergeStyle == 'bottom' then
+            width = math.abs(fromLocation.x - toLocation.x)
+            height = AllianceMapSize.height - fromLocation.y + toLocation.y
+            return DataUtils:getDistance(width,height)
+        else
+            return 0
+        end
+    end
+end
+--[[ 
+    -->
+    math.ceil(DataUtils:getPlayerSoldiersMarchTime(...) * (1 - DataUtils:getPlayerMarchTimeBuffEffectValue()))
+    ---> 行军的真实时间
+]]--
+--获取攻击行军总时间
+function DataUtils:getPlayerSoldiersMarchTime(soldiers,fromAllianceDoc, fromLocation, toAllianceDoc, toLocation)
+    local distance = DataUtils:getAllianceLocationDistance(fromAllianceDoc, fromLocation, toAllianceDoc, toLocation)
+    local baseSpeed,totalSpeed,totalCitizen = 2400,0,0
+    for __,soldier_info in ipairs(soldiers) do
+        totalCitizen = totalCitizen + soldier_info.soldier_citizen
+        totalSpeed = totalSpeed + baseSpeed / soldier_info.soldier_march * soldier_info.soldier_citizen
+    end
+    return math.ceil(totalSpeed / totalCitizen * distance)
+end
+
+function DataUtils:getPlayerMarchTimeBuffEffectValue()
+    if ItemManager:IsBuffActived("marchSpeedBonus") then
+        return ItemManager:GetBuffEffect("marchSpeedBonus")
+    end
+    return 0
+end
+--获取攻击行军的buff时间
+function DataUtils:getPlayerMarchTimeBuffTime(fullTime)
+    local buff_value = DataUtils:getPlayerMarchTimeBuffEffectValue()
+    if buff_value > 0 then
+        return  math.ceil(fullTime * (1 - buff_value))
+    else
+        return 0
+    end
+end
+--TODO:界面上添加
+--获得龙的行军时间（突袭）
+function DataUtils:getPlayerDragonMarchTime(fromAllianceDoc, fromLocation, toAllianceDoc, toLocation)
+    local distance = DataUtils:getAllianceLocationDistance(fromAllianceDoc, fromLocation, toAllianceDoc, toLocation)
+    local baseSpeed = 2400 
+    local marchSpeed = PlayerInitData.intInit.dragonMarchSpeed.value
+    local time = math.ceil(baseSpeed / marchSpeed * distance)
+    return time
+end
+--获取科技升级的buff时间
+local config_academy = GameDatas.BuildingFunction.academy
+function DataUtils:getTechnilogyUpgradeBuffTime(time)
+    local academy = City:GetFirstBuildingByType("academy")
+    local level = academy:GetLevel()
+    local config = config_academy[level]
+    local efficiency = config and config.efficiency or 0 
+    if efficiency > 0 then
+        return math.ceil(time/(1 + efficiency))
+    else
+        return 0
+    end
+end
+--获取兵种招募的buff时间
+local config_BuildingFunction = GameDatas.BuildingFunction
+function DataUtils:getSoldierRecruitBuffTime(soldier_type,time)
+    local soldier_type_map_building = {
+        infantry = "trainingGround",
+        cavalry = "stable",
+        archer = "hunterHall",
+        siege = "workshop"
+    }
+    local building_type = soldier_type_map_building[soldier_type]
+    if not time or not building_type then
+        return 0
+    end
+    local build = City:GetFirstBuildingByType(building_type)
+    if not build then return 0 end
+    local config = config_BuildingFunction[building_type][build:GetLevel()]
+    local efficiency = config.efficiency
+    if efficiency > 0 then
+        return math.ceil(time/(1 + efficiency)) 
+    else
+        return 0
+    end
 end

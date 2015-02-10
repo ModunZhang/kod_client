@@ -5,7 +5,7 @@ local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetSliderWithInput = import("..widget.WidgetSliderWithInput")
-local WidgetInfo = import("..widget.WidgetInfo")
+local WidgetInfoBuff = import("..widget.WidgetInfoBuff")
 local window = import("..utils.window")
 local UIAutoClose = import("..ui.UIAutoClose")
 
@@ -30,6 +30,7 @@ function WidgetSoldierDetails:ctor(soldier_type,soldier_level)
     -- 取得对应士兵配置表
     self.s_config = soldier_level and normal[soldier_type.."_"..soldier_level]
         or special[soldier_type]
+    self.s_buff_field = DataUtils:getAllSoldierBuffValue(self.s_config)
     -- LuaUtils:outputTable("self.s_config", self.s_config)
     self:InitSoldierDetails()
 end
@@ -203,35 +204,43 @@ function WidgetSoldierDetails:InitSoldierAttr()
     local  attr_table = {
         {
              _("对步兵攻击"),
-             sc.infantry..""
+             sc.infantry,
+             self:GetSoldierFieldWithBuff("infantry")
         },
         {
              _("对弓箭手攻击"),
-             sc.archer..""
+             sc.archer,
+             self:GetSoldierFieldWithBuff("archer")
         },
         {
-             _("对骑兵攻击"),
-             sc.cavalry..""
+            _("对骑兵攻击"),
+             sc.cavalry,
+            self:GetSoldierFieldWithBuff("cavalry")
         },
         {
              _("对投石车攻击"),
-             sc.siege..""
+             sc.siege,
+             self:GetSoldierFieldWithBuff("siege")
         },
         {
              _("对城墙攻击"),
-             sc.wall..""
+             sc.wall,
+             self:GetSoldierFieldWithBuff("wall")
         },
         {
              _("生命值"),
-             sc.hp..""
+             sc.hp,
+             self:GetSoldierFieldWithBuff("hp")
         },
         {
              _("人口"),
-             sc.citizen..""
+             sc.citizen,
+             self:GetSoldierFieldWithBuff("citizen")
         },
         {
              _("维护费"),
-             sc.consumeFoodPerHour..""
+             sc.consumeFoodPerHour,
+             self:GetSoldierFieldWithBuff("consumeFoodPerHour")
         },
     }
 
@@ -259,10 +268,23 @@ function WidgetSoldierDetails:InitSoldierAttr()
     --     self.attr_listview:addItem(item)
     -- end
     -- self.attr_listview:reload()
-    WidgetInfo.new({
+    WidgetInfoBuff.new({
         info=attr_table,
         h =300,
     }):align(display.TOP_CENTER, window.cx, window.top-500):addTo(self)
+end
+
+function WidgetSoldierDetails:GetSoldierFieldWithBuff(field)
+    local sf = self.s_buff_field
+    if sf[field] then
+        if field ~= 'consumeFoodPerHour' then
+            return  " +" .. sf[field]
+        else
+            return " -" .. sf[field]
+        end
+    else
+        return nil
+    end
 end
 
 return WidgetSoldierDetails

@@ -45,7 +45,33 @@ local STAR_BG = {
 }
 local img_dir = "allianceHome/"
 
-function GameUIAllianceSendTroops:ctor(march_callback)
+function GameUIAllianceSendTroops:GetMyAlliance()
+    return Alliance_Manager:GetMyAlliance()
+end
+
+function GameUIAllianceSendTroops:GetEnemyAlliance()
+    return self:GetMyAlliance():GetEnemyAlliance()
+end
+
+function GameUIAllianceSendTroops:GetMarchTime(soldier_show_table)
+    local fromLocation = self:GetMyAlliance():GetSelf().location
+    local target_alliance = self.targetIsMyAlliance and self:GetMyAlliance() or self:GetEnemyAlliance()
+    local time = DataUtils:getPlayerSoldiersMarchTime(soldier_show_table,self:GetMyAlliance(),fromLocation,target_alliance,self.toLocation)
+    local buffTime = DataUtils:getPlayerMarchTimeBuffTime(time)
+    return time,buffTime
+end
+
+function GameUIAllianceSendTroops:RefreshMarchTimeAndBuff(soldier_show_table)
+    local time,buffTime = self:GetMarchTime(soldier_show_table)
+    self.march_time:setString(GameUtils:formatTimeStyle1(time))
+    self.buff_reduce_time:setString(string.format("-(%s)",GameUtils:formatTimeStyle1(buffTime)))
+end
+
+function GameUIAllianceSendTroops:ctor(march_callback,params)
+    checktable(params)
+    self.isPVE = type(params.isPVE) == 'boolean' and params.isPVE or false
+    self.toLocation = params.toLocation or cc.p(0,0)
+    self.targetIsMyAlliance = type(params.targetIsMyAlliance) == 'boolean' and params.targetIsMyAlliance or true
     GameUIAllianceSendTroops.super.ctor(self,City,_("准备进攻"))
     local manager = ccs.ArmatureDataManager:getInstance()
     for _, anis in pairs(UILib.soldier_animation_files) do
@@ -176,22 +202,23 @@ function GameUIAllianceSendTroops:onEnter()
             end
 
         end):align(display.RIGHT_CENTER,window.right-50,window.top-920):addTo(self)
-    --行军所需时间
-    display.newSprite("upgrade_hourglass.png", window.cx, window.top-920)
-        :addTo(self):scale(0.6)
-    self.march_time = UIKit:ttfLabel({
-        text = "20:00:00",
-        size = 18,
-        color = 0x403c2f
-    }):align(display.LEFT_CENTER,window.cx+20,window.top-910):addTo(self)
+    if not self.isPVE then 
+        --行军所需时间
+        display.newSprite("upgrade_hourglass.png", window.cx, window.top-920)
+            :addTo(self):scale(0.6)
+        self.march_time = UIKit:ttfLabel({
+            text = "00:00:00",
+            size = 18,
+            color = 0x403c2f
+        }):align(display.LEFT_CENTER,window.cx+20,window.top-910):addTo(self)
 
-    -- 科技减少行军时间
-    self.buff_reduce_time = UIKit:ttfLabel({
-        text = "(-00:20:00)",
-        size = 18,
-        color = 0x068329
-    }):align(display.LEFT_CENTER,window.cx+20,window.top-930):addTo(self)
-
+        -- 科技减少行军时间
+        self.buff_reduce_time = UIKit:ttfLabel({
+            text = "-(00:00:00)",
+            size = 18,
+            color = 0x068329
+        }):align(display.LEFT_CENTER,window.cx+20,window.top-930):addTo(self)
+    end
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
 end
 function GameUIAllianceSendTroops:SelectDragonPart()
@@ -446,7 +473,6 @@ function GameUIAllianceSendTroops:RefreashSoldierShow()
     local soldier_show_table = {}
     for k,item in pairs(self.soldiers_table) do
         local soldier_type,soldier_level,soldier_number =item:GetSoldierInfo()
-        -- print("--soldier_type,soldier_level,soldier_number----",soldier_type,soldier_level,soldier_number)
         local soldier_config = normal[soldier_type.."_"..soldier_level] or SPECIAL[soldier_type]
         if soldier_number>0 then
             table.insert(soldier_show_table, {
@@ -455,10 +481,14 @@ function GameUIAllianceSendTroops:RefreashSoldierShow()
                 soldier_num = soldier_number,
                 soldier_weight = soldier_config.load*soldier_number,
                 soldier_citizen = soldier_config.citizen*soldier_number,
+                soldier_march = soldier_config.march
             })
         end
     end
     self.show:ShowOrRefreasTroops(soldier_show_table)
+    if not self.isPVE then
+        self:RefreshMarchTimeAndBuff(soldier_show_table)
+    end
 end
 
 function GameUIAllianceSendTroops:GetSelectSoldier()
