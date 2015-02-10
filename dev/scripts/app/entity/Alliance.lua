@@ -321,7 +321,7 @@ function Alliance:ReFreashHelpEvent(changed_help_event)
     end)
 
 end
-function Alliance:IsBuildingHasBeenRequestedToHelpSpeedup(eventId)
+function Alliance:HasBeenRequestedToHelpSpeedup(eventId)
     if self.help_events then
         for _,h_event in pairs(self.help_events) do
             if h_event:GetPlayerData():Id() == DataManager:getUserData()._id and h_event:GetEventData():Id() == eventId then
