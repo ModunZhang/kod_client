@@ -165,9 +165,9 @@ function WidgetUpgradeMilitaryTech:UpgradeRequirement()
         {
             resource_type = _("升级军事科技队列"),
             isVisible = true,
-            isSatisfy = not  City:GetSoldierManager():IsUpgradingMilitaryTech(),
+            isSatisfy = not  City:GetSoldierManager():IsUpgradingMilitaryTech(self.tech:Building()),
             icon="hammer_31x33.png",
-            description=City:GetSoldierManager():GetUpgradingMilitaryTechNum().."/1"
+            description=City:GetSoldierManager():GetUpgradingMilitaryTechNum(self.tech:Building()).."/1"
         },
         {
             resource_type = Localize.fight_reward.coin,

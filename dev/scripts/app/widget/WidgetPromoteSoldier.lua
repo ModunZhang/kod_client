@@ -14,9 +14,10 @@ local NORMAL = GameDatas.Soldiers.normal
 
 local WidgetPromoteSoldier = class("WidgetPromoteSoldier", WidgetPopDialog)
 
-function WidgetPromoteSoldier:ctor(soldier_type)
+function WidgetPromoteSoldier:ctor(soldier_type,building_type)
     WidgetPromoteSoldier.super.ctor(self,780,_("兵种晋级"))
     self.soldier_type = soldier_type
+    self.building_type = building_type
     self.star = City:GetSoldierManager():GetStarBySoldierType(soldier_type)
 end
 
@@ -176,9 +177,9 @@ function WidgetPromoteSoldier:UpgradeRequirement()
         {
             resource_type = _("升级军事科技队列"),
             isVisible = true,
-            isSatisfy = not  City:GetSoldierManager():IsUpgradingMilitaryTech(),
+            isSatisfy = not  City:GetSoldierManager():IsUpgradingMilitaryTech(self.building_type),
             icon="hammer_31x33.png",
-            description=City:GetSoldierManager():GetUpgradingMilitaryTechNum().."/1"
+            description=City:GetSoldierManager():GetUpgradingMilitaryTechNum(self.building_type).."/1"
         },
         {
             resource_type = Localize.fight_reward.coin,
@@ -267,7 +268,7 @@ function WidgetPromoteSoldier:GetUpgradeGems()
     local config = self:GetNextLevelConfig()
     local current_coin = City:GetResourceManager():GetCoinResource():GetValue()
     -- 正在升级的军事科技剩余升级时间
-    local left_time = City:GetSoldierManager():GetUpgradingMitiTaryTechLeftTimeByCurrentTime(app.timer:GetServerTime())
+    local left_time = City:GetSoldierManager():GetUpgradingMitiTaryTechLeftTimeByCurrentTime(self.building_type)
     return DataUtils:buyResource({coin = config.upgradeCoinNeed}, {coin=current_coin}) + DataUtils:getGemByTimeInterval(left_time)
 
 end
@@ -300,7 +301,7 @@ function WidgetPromoteSoldier:IsAbleToUpgradeSecond()
     local level_up_config = self:GetNextLevelConfig()
     local current_coin = City:GetResourceManager():GetCoinResource():GetValue()
     local results = {}
-    if City:GetSoldierManager():IsUpgradingMilitaryTech() then
+    if City:GetSoldierManager():IsUpgradingMilitaryTech(self.building_type) then
         table.insert(results, _("升级军事科技队列占用"))
     end
     if current_coin<level_up_config.upgradeCoinNeed then

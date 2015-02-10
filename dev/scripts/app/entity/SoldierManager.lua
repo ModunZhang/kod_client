@@ -227,10 +227,10 @@ function SoldierManager:OnMilitaryTechsDataChanged(militaryTechs)
         listener:OnMilitaryTechsDataChanged(self,changed_map)
     end)
 end
-function SoldierManager:GetMilitaryTechsLevelByName(name) 
+function SoldierManager:GetMilitaryTechsLevelByName(name)
     return self.militaryTechs[name]:Level()
 end
-function SoldierManager:GetMilitaryTechsByName(name) 
+function SoldierManager:GetMilitaryTechsByName(name)
     return self.militaryTechs[name]
 end
 function SoldierManager:IteratorMilitaryTechs(func)
@@ -275,18 +275,43 @@ end
 function SoldierManager:GetMilitaryTechEvents()
     return self.militaryTechEvents
 end
-function SoldierManager:GetLatestMilitaryTechEvents()
-    return self.militaryTechEvents[#self.militaryTechEvents]
+function SoldierManager:GetLatestMilitaryTechEvents(building_type)
+    for _,event in pairs(self.militaryTechEvents) do
+        if self.militaryTechs[event.name]:Building() == building_type then
+            return event
+        end
+    end
 end
-function SoldierManager:GetUpgradingMilitaryTechNum()
-    return LuaUtils:table_size(self.militaryTechEvents)+LuaUtils:table_size(self.soldierStarEvents)
+function SoldierManager:GetUpgradingMilitaryTechNum(building_type)
+    local count = 0
+    for _,event in pairs(self.militaryTechEvents) do
+        if self.militaryTechs[event.name]:Building() == building_type then
+            count = count + 1
+        end
+    end
+    for _,event in pairs(self.soldierStarEvents) do
+        if self:FindSoldierBelongBuilding(event.name) == building_type then
+            count = count + 1
+        end
+    end
+    return count
 end
-function SoldierManager:IsUpgradingMilitaryTech()
-    return LuaUtils:table_size(self.militaryTechEvents)>0 or LuaUtils:table_size(self.soldierStarEvents)>0
+-- 对应建筑可以升级对应军事科技和兵种星级
+function SoldierManager:IsUpgradingMilitaryTech(building_type)
+    for _,event in pairs(self.militaryTechEvents) do
+        if self.militaryTechs[event.name]:Building() == building_type then
+            return true
+        end
+    end
+    for _,event in pairs(self.soldierStarEvents) do
+        if self:FindSoldierBelongBuilding(event.name) == building_type then
+            return true
+        end
+    end
 end
-function SoldierManager:GetUpgradingMilitaryTech()
-    local military_tech_event = self:GetLatestMilitaryTechEvents()
-    local soldier_star_event = self:GetLatestSoldierStarEvents()
+function SoldierManager:GetUpgradingMilitaryTech(building_type)
+    local military_tech_event = self:GetLatestMilitaryTechEvents(building_type)
+    local soldier_star_event = self:GetLatestSoldierStarEvents(building_type)
     local tech_start_time = military_tech_event and military_tech_event.startTime or 0
     local soldier_star_start_time = soldier_star_event and soldier_star_event.startTime or 0
     return  tech_start_time>soldier_star_start_time and military_tech_event or soldier_star_event
@@ -294,22 +319,20 @@ end
 function SoldierManager:GetSoldierMaxStar()
     return 3
 end
-function SoldierManager:GetUpgradingMitiTaryTechLeftTimeByCurrentTime(current_time)
+function SoldierManager:GetUpgradingMitiTaryTechLeftTimeByCurrentTime(building_type)
     local left_time = 0
-    local event = self:GetUpgradingMilitaryTech()
+    local event = self:GetUpgradingMilitaryTech(building_type)
     if event then
-        left_time = left_time + event.finishTime/1000 - current_time
+        left_time = left_time + event.finishTime/1000 - app.timer:GetServerTime()
     end
     return left_time
 end
 function SoldierManager:OnMilitaryTechEventsChanged(militaryTechEvents)
     if not militaryTechEvents then return end
-    -- LuaUtils:outputTable("OnMilitaryTechEventsChanged", militaryTechEvents)
     self.militaryTechEvents = militaryTechEvents
 end
 function SoldierManager:__OnMilitaryTechEventsChanged(__militaryTechEvents)
     if not __militaryTechEvents then return end
-    -- LuaUtils:outputTable("__militaryTechEvents", __militaryTechEvents)
     local changed_map = GameUtils:Event_Handler_Func(
         __militaryTechEvents
         ,function(data)
@@ -355,19 +378,34 @@ function SoldierManager:FindSoldierStarByBuildingType(building_type)
     end
     return soldiers_star
 end
+function SoldierManager:FindSoldierBelongBuilding(soldier_type)
+    if soldier_type=="sentinel" or soldier_type=="swordsman" then
+        return "trainingGround"
+    elseif soldier_type=="horseArcher" or soldier_type=="lancer" then
+        return "stable"
+    elseif soldier_type=="ranger" or soldier_type=="crossbowman" then
+        return "hunterHall"
+    elseif soldier_type=="ballista" or soldier_type=="catapult"then
+        return "workshop"
+    end
+end
 function SoldierManager:GetSoldierStarEvents()
     return self.soldierStarEvents
 end
-function SoldierManager:GetLatestSoldierStarEvents()
-    return self.soldierStarEvents[#self.soldierStarEvents]
+function SoldierManager:GetLatestSoldierStarEvents(building_type)
+    for _,event in pairs(self.soldierStarEvents) do
+        if self:FindSoldierBelongBuilding(event.name) == building_type then
+            return event
+        end
+    end
 end
 function SoldierManager:OnSoldierStarEventsChanged(soldierStarEvents)
     if not soldierStarEvents then return end
     self.soldierStarEvents = soldierStarEvents
 end
-function SoldierManager:GetPromotingSoldierName()
+function SoldierManager:GetPromotingSoldierName(building_type)
     local soldierStarEvents = self.soldierStarEvents
-    local event = self:GetLatestSoldierStarEvents()
+    local event = self:GetLatestSoldierStarEvents(building_type)
     if event then
         return event.name
     end
@@ -403,6 +441,7 @@ function SoldierManager:__OnSoldierStarEventsChanged(__soldierStarEvents)
     end)
 end
 return SoldierManager
+
 
 
 
