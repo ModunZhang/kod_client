@@ -185,6 +185,32 @@ function ItemManager:GetAllResourceBuffData()
     return all_resource_buff
 end
 
+function ItemManager:GetAllSoldierBuffTypes()
+    --标识为 “生效兵种_属性” 支持通配符*
+    local buff_map = {
+        marchSpeedBonus = "*_march",
+        unitHpBonus = "*_hp",
+        infantryAtkBonus = "*_infantry",
+        archerAtkBonus = "*_archer",
+        cavalryAtkBonus = "*_cavalry",
+        siegeAtkBonus = "*_siege",
+    }
+    return buff_map
+end
+
+function ItemManager:GetAllSoldierBuffData()
+    local all_soldier_buff = {}
+    local soldier_buff_key = self:GetAllSoldierBuffTypes()
+    self:IteratorItmeEvents(function(event)
+        if soldier_buff_key[event:Type()] then
+            local effect_soldier,buff_field = unpack(string.split(soldier_buff_key[event:Type()],"_"))
+            local buff_value = self:GetBuffEffect(event:Type())
+            table.insert(all_soldier_buff,{effect_soldier,buff_field,buff_value})
+        end
+    end)
+    return all_soldier_buff
+end
+
 function ItemManager:GetAllCityBuffTypes()
     return {
         "masterOfDefender",

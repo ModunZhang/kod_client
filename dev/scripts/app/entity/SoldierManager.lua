@@ -238,6 +238,18 @@ function SoldierManager:IteratorMilitaryTechs(func)
         func(name,v)
     end
 end
+
+function SoldierManager:GetAllMilitaryBuffData()
+    local all_military_buff = {}
+    self:IteratorMilitaryTechs(function(name,tech)
+        if tech:Level() > 0 then
+            local effect_soldier,buff_field = unpack(string.split(name,"_"))
+            table.insert(all_military_buff,{effect_soldier,buff_field,tech:GetAtkEff()})
+        end
+    end)
+    return all_military_buff
+end
+
 function SoldierManager:GetMilitaryTechByName(name)
     return self.militaryTechs[name]
 end

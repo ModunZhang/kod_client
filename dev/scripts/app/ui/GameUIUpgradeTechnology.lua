@@ -53,7 +53,17 @@ function GameUIUpgradeTechnology:GetResourceCost()
     return self:GetProductionTechnology():GetLevelUpCost()
 end
 
+function GameUIUpgradeTechnology:GetLevelUpBuffTimeStr()
+    local buildTime = 0
+    if self:CheckIsMeUpgrade() and not self:CheckMeIsReachLimitLevel() then
+        buildTime = self:GetProductionTechnology():GetNextLevelUpCost().buildTime
+    end
+    buildTime = self:GetProductionTechnology():GetLevelUpCost().buildTime 
+    return  GameUtils:formatTimeStyle1(DataUtils:getTechnilogyUpgradeBuffTime(buildTime))
+end
+
 function GameUIUpgradeTechnology:GetLevelUpTimeStr()
+   
     if self:CheckIsMeUpgrade() and not self:CheckMeIsReachLimitLevel() then
         return GameUtils:formatTimeStyle1(self:GetProductionTechnology():GetNextLevelUpCost().buildTime)
     end
@@ -86,7 +96,7 @@ function GameUIUpgradeTechnology:RefreshUI()
         self.next_effect_val_label:setString(self:GetNextLevelBuffEffectStr())
         self.time_label:setString(self:GetLevelUpTimeStr())
         self.need_gems_label:setString(self:GetUpgradeNowGems())
-        self.buff_time_label:show()
+        self.buff_time_label:setString(self:GetLevelUpBuffTimeStr())
         self.need_gems_icon:show()
         self.time_icon:show()
         self.upgrade_button:show()

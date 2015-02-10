@@ -262,12 +262,18 @@ function GameUIShireFightEvent:GetFightEvent()
 	return self.fight_event
 end
 
+function GameUIShireFightEvent:GetAllianceShrineLocation()
+	local alliance_obj = self:GetAllianceShrine():GetShireObjectFromMap()
+	local location = alliance_obj.location
+	return location
+end
+
 function GameUIShireFightEvent:DispathSoliderButtonClicked()
 	UIKit:newGameUI("GameUIAllianceSendTroops",function(dragonType,soldiers)
 		NetManager:getMarchToShrinePromose(self:GetFightEvent():Id(),dragonType,soldiers):catch(function(err)
 			dump(err:reason())
 		end)
-	end):addToCurrentScene(true)
+	end,{toLocation = self:GetAllianceShrineLocation(),targetIsMyAlliance = true}):addToCurrentScene(true)
 end
 
 function GameUIShireFightEvent:InfomationButtonClicked()

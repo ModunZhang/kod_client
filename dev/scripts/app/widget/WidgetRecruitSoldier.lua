@@ -456,8 +456,8 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
     }):addTo(button, 2)
         :align(display.CENTER, center, -50)
 
-    cc.ui.UILabel.new({
-        text = "-(20:20:20)",
+    self.recruit_buff_time = cc.ui.UILabel.new({
+        text = "(-00:00:00)",
         size = 18,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_CENTER,
@@ -579,6 +579,8 @@ function WidgetRecruitSoldier:OnCountChanged(count)
     -- self.soldier_current_count:setString(string.format("%d", count))
     self.upkeep:setString(string.format("%s%d/%s", count > 0 and "-" or "", soldier_config.consumeFoodPerHour * count, _("小时")))
     self.recruit_time:setString(GameUtils:formatTimeStyle1(total_time))
+    local buff_str = string.format("(-%s)", GameUtils:formatTimeStyle1(DataUtils:getSoldierRecruitBuffTime(soldier_config.type,total_time)))
+    self.recruit_buff_time:setString(buff_str)
 
     -- 检查资源
     local need_resource = self:CheckNeedResource(self.res_total_map, count)
