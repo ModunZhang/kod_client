@@ -3,20 +3,9 @@
 -- Date: 2015-01-16 17:14:13
 --
 local WidgetPushButton = import(".WidgetPushButton")
+local Localize_item = import("..utils.Localize_item")
 local SmallDialogUI = import("..ui.SmallDialogUI")
 local Enum = import("..utils.Enum")
-
-local ACC_TIME_MAP ={
-    "1Min",
-    "15Min",
-    "1Hour",
-    "3Hour",
-    "8Hour",
-    "15Hour",
-    "24Hour",
-    "48Hour",
-}
-
 
 local WidgetAccelerateGroup = class("WidgetAccelerateGroup",function ()
     local node = display.newNode()
@@ -24,9 +13,8 @@ local WidgetAccelerateGroup = class("WidgetAccelerateGroup",function ()
     return node
 end)
 
-WidgetAccelerateGroup.SPEEDUP_TYPE = Enum("BUILDING","TECHNOLOGY")
 
-function WidgetAccelerateGroup:ctor(speed_type,speed_up_callback)
+function WidgetAccelerateGroup:ctor(eventType,eventId)
     local width,height = 640,500
     self.acc_button_layer = display.newNode()
     self.acc_button_layer:setContentSize(cc.size(width,height))
@@ -46,10 +34,22 @@ function WidgetAccelerateGroup:ctor(speed_type,speed_up_callback)
         display.newSprite("upgrade_props_box.png", width/2-220 + gap_x*math.mod(i-1,4), 230-gap_y*math.floor((i-1)/4)):addTo(self)
         -- 花销数值背景
         local cost_bg = display.newSprite("back_ground_138x34.png", width/2-220 + gap_x*math.mod(i-1,4), 160-gap_y*math.floor((i-1)/4)):addTo(self):scale(0.8)
+
+        local speedUp_item_name = "speedup_"..i
+        local speedUp_item = ItemManager:GetItemByName(speedUp_item_name)
+        local speedUp_item_num = speedUp_item:Count()
+        local cost_text = ""
+        if speedUp_item_num>0 then
+            cost_text = _("拥有")..speedUp_item_num
+        else
+            display.newSprite("home/gem_1.png"):addTo(cost_bg):align(display.CENTER, 20, cost_bg:getContentSize().height/2):scale(0.6)
+            cost_text = speedUp_item:Price()
+        end
+
         -- 花销数值
         cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("拥有")..ItemManager:GetItemByName("speedup_"..i):Count(),
+            text = cost_text,
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
@@ -82,7 +82,7 @@ function WidgetAccelerateGroup:ctor(speed_type,speed_up_callback)
                         y = math.floor((i-1)/4)==0 and cost_bg:getPositionY()-cost_bg:getContentSize().height/2 or
                         math.floor((i-1)/4)==1 and acc_button:getPositionY()+acc_button:getCascadeBoundingBox().size.height/2,
                         tips1 = _("使用立即减少升级时间"),
-                        tips2 = string.format(_("使用立即减少%s时间消耗"),ACC_TIME_MAP[i]) ,
+                        tips2 = Localize_item.item_name[speedUp_item_name] ,
                         direction = math.floor((i-1)/4), -- 0表示dialog的箭头指向上方，1反之
                         scale_left = i==1 or i==5,
                         scale_right = i==4 or i==8,
@@ -95,7 +95,25 @@ function WidgetAccelerateGroup:ctor(speed_type,speed_up_callback)
             if event.name == "CLICKED_EVENT" then
                 acc_button:setVisible(false)
                 time_button:setVisible(true)
-                speed_up_callback(i)
+                if speedUp_item_num>0 then
+                    NetManager:getUseItemPromise(speedUp_item_name,{[speedUp_item_name] = {
+                        eventType = eventType,
+                        eventId = eventId
+                    }})
+                else
+                    if speedUp_item:Price() > User:GetGemResource():GetValue() then
+                        FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                            :SetPopMessage(_("宝石不足"))
+                            :AddToCurrentScene()
+                    else
+                        NetManager:getBuyItemPromise(speedUp_item_name,1):next(function ()
+                            NetManager:getUseItemPromise(speedUp_item_name,{[speedUp_item_name] = {
+                                eventType = eventType,
+                                eventId = eventId
+                            }})
+                        end)
+                    end
+                end
             end
         end):align(display.CENTER, width/2-220+gap_x*math.mod(i-1,4), 230-gap_y*math.floor((i-1)/4)):addTo(self.acc_button_layer)
         acc_button:setVisible(false)
@@ -111,10 +129,10 @@ function WidgetAccelerateGroup:ResetAccButtons()
         v:setVisible(false)
     end
 end
-function WidgetAccelerateGroup:CanSpeedUp()
-    return true
-end
 return WidgetAccelerateGroup
+
+
+
 
 
 

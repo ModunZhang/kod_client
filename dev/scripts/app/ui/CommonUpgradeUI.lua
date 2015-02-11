@@ -532,10 +532,23 @@ function CommonUpgradeUI:SetAccTipLabel()
     --TODO 设置对应的提示 ，现在是临时的
     self.acc_tip_label:setString(_("小于5分钟时，可使用免费加速.激活VIP X后，小于5分钟时可使用免费加速"))
 end
-
+function CommonUpgradeUI:GetEventTypeByBuilding()
+    local building = self.building
+    local eventType = ""
+    if self.city:IsFunctionBuilding(building) then
+        eventType = "buildingEvents"
+    elseif self.city:IsHouse(building) then
+        eventType = "houseEvents"
+    elseif self.city:IsGate(building) then
+        eventType = "wallEvents"
+    elseif self.city:IsTower(building) then
+        eventType = "towerEvents"
+    end
+    return eventType
+end
 function CommonUpgradeUI:CreateAccButtons()
     -- 8个加速按钮单独放置在一个layer上方便处理事件
-    self.acc_button_layer = WidgetAccelerateGroup.new(WidgetAccelerateGroup.SPEEDUP_TYPE.BUILDING):addTo(self.acc_layer):align(display.BOTTOM_CENTER,window.cx,window.bottom_top+10)
+    self.acc_button_layer = WidgetAccelerateGroup.new(self:GetEventTypeByBuilding(),self.building:UniqueUpgradingKey()):addTo(self.acc_layer):align(display.BOTTOM_CENTER,window.cx,window.bottom_top+10)
     self:visibleChildLayers()
 end
 
@@ -622,3 +635,4 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+

@@ -6,10 +6,9 @@
 local WidgetProgress = import(".WidgetProgress")
 local WidgetPushButton = import(".WidgetPushButton")
 local WidgetSpeedUp = import(".WidgetSpeedUp")
-local WidgetAccelerateGroup = import(".WidgetAccelerateGroup")
+local GameUIMilitaryTechSpeedUp = import("..ui.GameUIMilitaryTechSpeedUp")
 local Localize = import("..utils.Localize")
 local SoldierManager = import("..entity.SoldierManager")
-
 
 local WidgetMilitaryTechnologyStatus = class("WidgetMilitaryTechnologyStatus", function ()
     local node = display.newNode()
@@ -77,20 +76,7 @@ function WidgetMilitaryTechnologyStatus:CreateUpgradingStatus()
             shadow= true
         }))
         :onButtonClicked(function (event)
-            self.speedUp = WidgetSpeedUp.new():addToCurrentScene()
-                :SetAccBtnsGroup(WidgetAccelerateGroup.SPEEDUP_TYPE.TECHNOLOGY,function ()
-                    print("加速")
-                end)
-                :SetAccTips(_("小于5分钟时，可使用免费加速.激活VIP X后，小于5分钟时可使用免费加速"))
-                :SetUpgradeTip(self.upgrading_node:GetUpgradeTip())
-            self.speedUp:OnFreeButtonClicked(function ()
-
-                    if math.floor(self.soldier_manager:GetUpgradingMitiTaryTechLeftTimeByCurrentTime(self.building_type)) < 300 then
-                        NetManager:getFreeSpeedUpPromise(self.event.type,self.event.id):next(function()
-                            self.speedUp:leftButtonClicked()
-                        end)
-                    end
-            end)
+            GameUIMilitaryTechSpeedUp.new(self.event):addToCurrentScene(true)
         end)
         :align(display.CENTER, 474, 44):addTo(upgrading_node)
 
@@ -167,12 +153,6 @@ function WidgetMilitaryTechnologyStatus:OnTimer(current_time)
     local event = tech_start_time>soldier_star_start_time and military_tech_event or soldier_star_event
     if event then
         self.upgrading_node:SetProgressInfo(GameUtils:formatTimeStyle1(event:GetTime()), event:Percent(current_time))
-        if self.speedUp and self.speedUp.SetProgressInfo then
-            self.speedUp:SetProgressInfo(GameUtils:formatTimeStyle1(event:GetTime()), event:Percent(current_time))
-            if self.speedUp.SetFreeButtonEnabled then
-                self.speedUp:SetFreeButtonEnabled(math.floor(soldier_manager:GetUpgradingMitiTaryTechLeftTimeByCurrentTime(building_type)) < 300)
-            end
-        end
     end
 end
 function WidgetMilitaryTechnologyStatus:OnMilitaryTechEventsChanged(soldier_manager,changed_map)
