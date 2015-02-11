@@ -84,8 +84,8 @@ function WidgetSpeedUp:SetUpgradeTip(tip)
 	self.upgrade_tip:setString(tip)
 	return self
 end
-function WidgetSpeedUp:SetAccBtnsGroup(speed_type,speed_up_callback)
-    self.acc_buttons = WidgetAccelerateGroup.new(speed_type,speed_up_callback):addTo(self.body):align(display.BOTTOM_CENTER,self.body:getContentSize().width/2,10)
+function WidgetSpeedUp:SetAccBtnsGroup(eventType,eventId)
+    self.acc_buttons = WidgetAccelerateGroup.new(eventType,eventId):addTo(self.body):align(display.BOTTOM_CENTER,self.body:getContentSize().width/2,10)
 	return self
 end
 return WidgetSpeedUp

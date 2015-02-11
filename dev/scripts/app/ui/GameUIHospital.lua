@@ -6,6 +6,7 @@ local WidgetTimerProgressStyleTwo = import("..widget.WidgetTimerProgressStyleTwo
 local WidgetTreatSoldier = import("..widget.WidgetTreatSoldier")
 local SoldierManager = import("..entity.SoldierManager")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
+local GameUITreatSoldierSpeedUp = import(".GameUITreatSoldierSpeedUp")
 local HospitalUpgradeBuilding = import("..entity.HospitalUpgradeBuilding")
 
 local window = import("..utils.window")
@@ -101,14 +102,6 @@ function GameUIHospital:OnTreating(hospital, event, current_time)
     end
     self:SetTreatingSoldierNum(treat_count)
     self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(current_time)),event:Percent(current_time))
-    -- TODO 测试数据，小于5分钟可免费加速治疗
-    if math.floor(event:LeftTime(current_time))<=300 and self.timer:GetButtonStatus() ~= "freeSpeedup" then
-        self.timer:SetButtonImages({normal = "purple_btn_up_148x76.png",
-            pressed = "purple_btn_down_148x76.png",
-            disabled = "purple_btn_up_148x76.png",
-        }):SetButtonLabel(_("免费加速"))
-            :SetButtonStatus("freeSpeedup")
-    end
     self.treate_all_soldiers_item:hide()
     self.timer:show()
 end
@@ -253,15 +246,15 @@ function GameUIHospital:TreatListener()
         local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("资源不足，是否花费宝石补足"))
             :CreateOKButton({
-                    listener = treat_fun
-                })
+                listener = treat_fun
+            })
             :CreateNeeds("Topaz-icon.png",self.building:GetTreatGems(soldiers)):AddToCurrentScene()
     elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING then
         local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("正在治愈，是否花费魔法石立即完成"))
             :CreateOKButton({
-                    listener = treat_fun
-                })
+                listener = treat_fun
+            })
             :CreateNeeds("Topaz-icon.png",self.building:GetTreatGems(soldiers)):AddToCurrentScene()
     else
         treat_fun()
@@ -415,7 +408,7 @@ function GameUIHospital:CreateItemWithListView(list_view)
                 City:GetResourceManager():OnResourceChanged()
             end
         end):addTo(row_item)
-            :alignByPoint(cc.p(0.5,0.4), origin_x + (unit_width + gap_x) * row_count + unit_width / 2, 0)
+            :alignByPoint(cc.p(0.5,0.5), origin_x + (unit_width + gap_x) * row_count + unit_width / 2, 0)
             :SetNumber(soldier_number)
         soldier:SetSoldier(soldier_name,1)
         self.treat_soldier_boxes_table[soldier_name] = soldier
@@ -436,7 +429,7 @@ function GameUIHospital:CreateSpeedUpHeal()
         :align(display.CENTER, window.cx, window.top-740)
         :hide()
         :OnButtonClicked(function(event)
-            print("加速伤兵治愈速度")
+            GameUITreatSoldierSpeedUp.new(self.building):addToCurrentScene(true)
         end)
 end
 --设置正在治愈的伤兵数量label
@@ -504,6 +497,10 @@ function GameUIHospital:OnTreatSoliderCountChanged(soldier_manager, treat_soldie
 end
 
 return GameUIHospital
+
+
+
+
 
 
 

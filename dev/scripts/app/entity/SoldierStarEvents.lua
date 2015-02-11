@@ -38,8 +38,9 @@ function SoldierStarEvents:OnTimer(current_time)
     end
 end
 function SoldierStarEvents:Percent(current_time)
+    local c_time = current_time or app.timer:GetServerTime()
     local start_time = self:StartTime()
-    local elapse_time = current_time - start_time
+    local elapse_time = c_time - start_time
     local total_time = self.finishTime - start_time
     return elapse_time * 100.0 / total_time
 end
