@@ -209,7 +209,6 @@ function GameUIUnlockBuilding:PopNotSatisfyDialog(listener,can_not_update_type)
                 {
                     listener = function()
                         listener()
-                        self:removeFromParent(true)
                     end
                 }
             )
@@ -221,9 +220,8 @@ function GameUIUnlockBuilding:PopNotSatisfyDialog(listener,can_not_update_type)
         local required_gems =self.building:getUpgradeRequiredGems()
         dialog:CreateOKButton(
             {
-                listener = function(sender,type)
+                listener = function()
                     listener()
-                    self:removeFromParent(true)
                 end
             })
         dialog:SetTitle(_("立即开始"))
