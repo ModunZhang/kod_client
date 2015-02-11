@@ -7,28 +7,29 @@ local SmallDialogUI = import("..ui.SmallDialogUI")
 local Enum = import("..utils.Enum")
 
 local ACC_TIME_MAP ={
-	"1Min",
-	"15Min",
-	"1Hour",
-	"3Hour",
-	"8Hour",
-	"15Hour",
-	"24Hour",
-	"48Hour",
+    "1Min",
+    "15Min",
+    "1Hour",
+    "3Hour",
+    "8Hour",
+    "15Hour",
+    "24Hour",
+    "48Hour",
 }
 
+
 local WidgetAccelerateGroup = class("WidgetAccelerateGroup",function ()
-	local node = display.newNode()
-	node:setContentSize(cc.size(640,500))
+    local node = display.newNode()
+    node:setContentSize(cc.size(640,500))
     return node
 end)
 
 WidgetAccelerateGroup.SPEEDUP_TYPE = Enum("BUILDING","TECHNOLOGY")
 
 function WidgetAccelerateGroup:ctor(speed_type,speed_up_callback)
-	local width,height = 640,500
-	self.acc_button_layer = display.newNode()
-	self.acc_button_layer:setContentSize(cc.size(width,height))
+    local width,height = 640,500
+    self.acc_button_layer = display.newNode()
+    self.acc_button_layer:setContentSize(cc.size(width,height))
     self.acc_button_layer:addTo(self,2)
     self.acc_button_layer:setTouchSwallowEnabled(false)
     self.acc_button_layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function ( event )
@@ -48,7 +49,7 @@ function WidgetAccelerateGroup:ctor(speed_type,speed_up_callback)
         -- 花销数值
         cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = "X 600",
+            text = _("拥有")..ItemManager:GetItemByName("speedup_"..i):Count(),
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
@@ -111,8 +112,9 @@ function WidgetAccelerateGroup:ResetAccButtons()
     end
 end
 function WidgetAccelerateGroup:CanSpeedUp()
-	return true
+    return true
 end
 return WidgetAccelerateGroup
+
 
 
