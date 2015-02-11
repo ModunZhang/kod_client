@@ -7,6 +7,7 @@ local MaterialManager = import("..entity.MaterialManager")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetNeedBox = import("..widget.WidgetNeedBox")
+local GameUIToolShopSpeedUp = import(".GameUIToolShopSpeedUp")
 local WidgetTimerProgressStyleThree = import("..widget.WidgetTimerProgressStyleThree")
 local GameUIToolShop = UIKit:createUIClass("GameUIToolShop", "GameUIUpgradeBuilding")
 
@@ -354,9 +355,8 @@ function GameUIToolShop:CreateMaterialItemWithListView(list_view, title, materia
         :pos(size.width/2, 110)
         :hide()
         :OnButtonClicked(function(event)
-            print("hello")
+            GameUIToolShopSpeedUp.new(self.toolShop):addToCurrentScene(true)
         end)
-    progress_box:GetSpeedUpButton():setButtonEnabled(false)
 
     local get_material = new_get_material():addTo(content, 2):pos(align_x, align_y):hide()
 

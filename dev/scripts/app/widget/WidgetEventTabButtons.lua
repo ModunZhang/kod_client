@@ -6,6 +6,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUIMilitaryTechSpeedUp = import("..ui.GameUIMilitaryTechSpeedUp")
 local GameUIBuildingSpeedUp = import("..ui.GameUIBuildingSpeedUp")
 local GameUIBarracksSpeedUp = import("..ui.GameUIBarracksSpeedUp")
+local GameUIToolShopSpeedUp = import("..ui.GameUIToolShopSpeedUp")
 local WidgetTab = import(".WidgetTab")
 local timer = app.timer
 local WIDGET_WIDTH = 640
@@ -686,21 +687,13 @@ function WidgetEventTabButtons:MiliTaryTechUpgradeOrSpeedup(event)
         GameUIMilitaryTechSpeedUp.new(event):addToCurrentScene(true)
     end
 end
-function WidgetEventTabButtons:SoldierRecruitUpgradeOrSpeedup(event)
-    -- if not Alliance_Manager:GetMyAlliance():IsDefault() then
-    --     -- 是否已经申请过联盟加速
-    --     local isRequested = Alliance_Manager:GetMyAlliance()
-    --         :HasBeenRequestedToHelpSpeedup(event:Id())
-    --     if not isRequested then
-    --         NetManager:getRequestAllianceToSpeedUpPromise("soldierEvents",event:Id())
-    --             :catch(function(err)
-    --                 dump(err:reason())
-    --             end)
-    --         return
-    --     end
-    -- end
+function WidgetEventTabButtons:SoldierRecruitUpgradeOrSpeedup()
     GameUIBarracksSpeedUp.new(self.city:GetFirstBuildingByType("barracks")):addToCurrentScene(true)
 end
+function WidgetEventTabButtons:MaterialEventUpgradeOrSpeedup()
+    GameUIToolShopSpeedUp.new(self.city:GetFirstBuildingByType("toolShop")):addToCurrentScene(true)
+end
+
 function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp,event_key,event_item)
     local old_status = event_item.status
     local btn_label
@@ -768,7 +761,7 @@ function WidgetEventTabButtons:Load()
                         :OnClicked(
                             function(e)
                                 if e.name == "CLICKED_EVENT" then
-                                    self:SoldierRecruitUpgradeOrSpeedup(event)
+                                    self:SoldierRecruitUpgradeOrSpeedup()
                                 end
                             end
                         )
@@ -863,19 +856,40 @@ function WidgetEventTabButtons:Load()
                 self:InsertItem(self:CreateBottom():SetLabel(_("查看材料")))
                 local event = self.blackSmith:GetMakeEquipmentEvent()
                 if event:IsMaking() then
-                    self:InsertItem(self:CreateItem()
-                        :SetProgressInfo(self:EquipmentDescribe(event))
-                        :SetEventKey(event:UniqueKey())
-                    )
+                    local item = self:CreateItem():SetProgressInfo(self:EquipmentDescribe(event))
+                            :SetEventKey(event:Id())
+                            :OnClicked(
+                                function(e)
+                                    if e.name == "CLICKED_EVENT" then
+                                        self:MaterialEventUpgradeOrSpeedup()
+                                    end
+                                end
+                            )
+                        self:InsertItem(item)
+                    -- self:InsertItem(self:CreateItem()
+                    --     :SetProgressInfo(self:EquipmentDescribe(event))
+                    --     :SetEventKey(event:UniqueKey())
+                    -- )
                 end
                 local events = self.toolShop:GetMakeMaterialsEvents()
                 for k, v in pairs(events) do
                     if v:IsMaking(timer:GetServerTime()) then
-                        self:InsertItem(
-                            self:CreateItem()
-                                :SetProgressInfo(self:MaterialDescribe(v))
-                                :SetEventKey(v:UniqueKey())
-                        )
+                        local item = self:CreateItem():SetProgressInfo(self:MaterialDescribe(v))
+                            :SetEventKey(v:Id())
+                            :OnClicked(
+                                function(e)
+                                    if e.name == "CLICKED_EVENT" then
+                                        self:MaterialEventUpgradeOrSpeedup()
+                                    end
+                                end
+                            )
+                        self:InsertItem(item)
+
+                        -- self:InsertItem(
+                        --     self:CreateItem()
+                        --         :SetProgressInfo(self:MaterialDescribe(v))
+                        --         :SetEventKey(v:UniqueKey())
+                        -- )
                     end
                 end
             end
@@ -925,6 +939,7 @@ function WidgetEventTabButtons:MilitaryTechDescribe(event)
 end
 
 return WidgetEventTabButtons
+
 
 
 
