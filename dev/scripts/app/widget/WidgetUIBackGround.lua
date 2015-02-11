@@ -83,7 +83,7 @@ function WidgetUIBackGround:ctor(params,style)
     end
     -- 最后一块小于中间部分图片原始高度时，缩放高度
     if need_filled_height>0 then
-        display.newSprite(mid_img)
+        display.newScale9Sprite(mid_img, 0, next_y,cc.size(width,m_height))
             :align(display.LEFT_BOTTOM,0, next_y)
             :addTo(self):setScaleY(need_filled_height/m_height)
     end
@@ -96,6 +96,7 @@ function WidgetUIBackGround:ctor(params,style)
 end
 
 return WidgetUIBackGround
+
 
 
 
