@@ -6,6 +6,7 @@ local UIListView = import(".UIListView")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetSlider = import("..widget.WidgetSlider")
 local WidgetSelectDragon = import("..widget.WidgetSelectDragon")
+local WidgetInput = import("..widget.WidgetInput")
 local SoldierManager = import("..entity.SoldierManager")
 
 local Corps = import(".Corps")
@@ -291,97 +292,78 @@ function GameUIAllianceSendTroops:SelectDragon()
     ):addTo(self)
 end
 function GameUIAllianceSendTroops:SelectSoldiers()
-    local body = display.newSprite(img_dir.."back_ground_538x396.png")
-        :align(display.CENTER, window.cx, window.top-695)
-        :addTo(self)
-    self.soldier_listview = UIListView.new{
-        -- bgColor = UIKit:hex2c4b(0x7a004400),
-        viewRect = cc.rect(9, 10, 520, 376),
+    local list ,listnode=  UIKit:commonListView({
+        viewRect = cc.rect(0, 0, 568, 366),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
-    }:addTo(body)
-    local list = self.soldier_listview
-    local function addListItem(soldier_type,soldier_level,max_soldier)
+    })
+    listnode:addTo(self):pos(window.cx, window.top-685)
+    listnode:align(display.CENTER)
+
+    self.soldier_listview = list
+    local function addListItem(name,star,max_soldier)
         if max_soldier<1 then
             return
         end
         local item = list:newItem()
-        local w,h = 516,118
+        local w,h = 568,128
         item:setItemSize(w, h)
-        local content = display.newSprite(img_dir.."back_ground_516x116.png")
+        local content = display.newSprite("back_ground_568X128.png")
         item.max_soldier = max_soldier
         -- progress
         local slider = WidgetSlider.new(display.LEFT_TO_RIGHT,  {bar = "slider_bg_461x24.png",
             progress = "slider_progress_445x14.png",
             button = "slider_btn_66x66.png"}, {max = item.max_soldier}):addTo(content)
             :align(display.RIGHT_CENTER, w-5, 35)
-            :scale(0.82)
-        -- :setSliderValue(4000)
+            :scale(0.95)
         -- soldier name
         local soldier_name_label = UIKit:ttfLabel({
-            text = Localize.soldier_name[soldier_type],
+            text = Localize.soldier_name[name],
             size = 24,
             color = 0x403c2f
         }):align(display.LEFT_CENTER,140,90):addTo(content)
-        local function edit(event, editbox)
-            local text = tonumber(editbox:getText()) or 0
-            if event == "began" then
-                if 0==text then
-                    editbox:setText("")
-                end
-            elseif event == "changed" then
-                if text and text > item.max_soldier then
-                    editbox:setText(item.max_soldier)
-                end
-            elseif event == "ended" then
-                if text=="" or 0==text then
-                    editbox:setText(0)
-                end
-                local edit_value = tonumber(editbox:getText())
 
-                local usable_citizen=self.dragon:LeadCitizen()
-                for k,item in pairs(self.soldiers_table) do
-                    local soldier_t,soldier_l,soldier_n =item:GetSoldierInfo()
-                    local soldier_config = normal[soldier_t.."_"..soldier_l] or SPECIAL[soldier_t]
-                    if soldier_type~=soldier_t then
-                        usable_citizen =usable_citizen-soldier_config.citizen*soldier_n
-                    end
-                end
-                local soldier_config = normal[soldier_type.."_"..soldier_level] or SPECIAL[soldier_type]
-                if soldier_config.citizen*edit_value > usable_citizen then
-                    edit_value = math.floor(usable_citizen/soldier_config.citizen)
-                end
+        local function getMax()
+            local usable_citizen=self.dragon:LeadCitizen()
 
-                editbox:setText(edit_value)
-
-                local slider_value = slider:getSliderValue()
-                if edit_value ~= slider_value then
-                    slider:setSliderValue(edit_value)
-                    self:RefreashSoldierShow()
+            for k,item in pairs(self.soldiers_table) do
+                local soldier_t,soldier_l,soldier_n =item:GetSoldierInfo()
+                local soldier_config = normal[soldier_t.."_"..soldier_l] or SPECIAL[soldier_t]
+                if name~=soldier_t then
+                    usable_citizen =usable_citizen-soldier_config.citizen*soldier_n
                 end
             end
+            local soldier_config = normal[name.."_"..star] or SPECIAL[name]
+            return math.floor(usable_citizen/soldier_config.citizen)
         end
-        -- soldier current
-        local editbox = cc.ui.UIInput.new({
-            UIInputType = 1,
-            image = "back_ground_83x32.png",
-            size = cc.size(100,32),
-            font = UIKit:getFontFilePath(),
-            listener = edit
-        })
-        editbox:setMaxLength(10)
-        editbox:setText(0)
-        editbox:setFont(UIKit:getFontFilePath(),20)
-        editbox:setFontColor(cc.c3b(0,0,0))
-        editbox:setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC)
-        editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
-        editbox:align(display.CENTER, 340,90):addTo(content)
 
+        local text_btn = WidgetPushButton.new({normal = "back_ground_83x32.png",pressed = "back_ground_83x32.png"})
+            :onButtonClicked(function(event)
+                if event.name == "CLICKED_EVENT" then
+                    local p = {
+                        current = math.floor(slider:getSliderValue()),
+                        max= math.min(getMax(),max_soldier),
+                        min=0,
+                        callback = function ( edit_value )
+                            if edit_value ~= slider_value then
+                                slider.fsm_:doEvent("press")
+                                slider:setSliderValue(edit_value)
+                                slider.fsm_:doEvent("release")
+                            end
+                        end
+                    }
+                    WidgetInput.new(p):addToCurrentScene()
+                end
+            end):align(display.CENTER,  340,90):addTo(content)
+        local btn_text = UIKit:ttfLabel({
+            text = 0,
+            size = 22,
+            color = 0x403c2f,
+        }):addTo(text_btn):align(display.CENTER)
 
         slider:onSliderValueChanged(function(event)
-            editbox:setText(math.floor(event.value))
+            btn_text:setString(math.floor(event.value))
         end)
         slider:addSliderReleaseEventListener(function(event)
-            -- print(slider:getSliderValue())
             self:RefreashSoldierShow()
         end)
         slider:setDynamicMaxCallBakc(function (value)
@@ -389,11 +371,11 @@ function GameUIAllianceSendTroops:SelectSoldiers()
             for k,item in pairs(self.soldiers_table) do
                 local soldier_t,soldier_l,soldier_n =item:GetSoldierInfo()
                 local soldier_config = normal[soldier_t.."_"..soldier_l] or SPECIAL[soldier_t]
-                if soldier_type~=soldier_t then
+                if name~=soldier_t then
                     usable_citizen =usable_citizen-soldier_config.citizen*soldier_n
                 end
             end
-            local soldier_config = normal[soldier_type.."_"..soldier_level] or SPECIAL[soldier_type]
+            local soldier_config = normal[name.."_"..star] or SPECIAL[name]
             if soldier_config.citizen*math.floor(value)< usable_citizen+1 then
                 return math.floor(value)
             else
@@ -410,31 +392,10 @@ function GameUIAllianceSendTroops:SelectSoldiers()
             :align(display.LEFT_CENTER, 400,90)
 
         -- 士兵头像
-        local stars_bg = display.newSprite("soldier_head_stars_bg.png", 100,58):scale(0.8)
-            :addTo(content)
-        local soldier_head_bg  = display.newSprite(STAR_BG[soldier_level], 50,58):addTo(content):scale(0.8)
+        local soldier_ui_config = UILib.soldier_image[name][star]
+        local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER,60,64):addTo(content):scale(104/128)
+        local soldier_head_bg  = display.newSprite("box_soldier_128x128.png"):addTo(soldier_head_icon):pos(soldier_head_icon:getContentSize().width/2,soldier_head_icon:getContentSize().height/2)
 
-        local soldier_type_with_star = soldier_type..(soldier_level == nil and "" or string.format("_%d", soldier_level))
-        local soldier_ui_config = UILib.soldier_image[soldier_type][soldier_level]
-
-
-        local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.LEFT_BOTTOM,0,10)
-        soldier_head_icon:scale(130/soldier_head_icon:getContentSize().height)
-        -- soldier_head_icon:setScale(0.7)
-        soldier_head_bg:addChild(soldier_head_icon)
-
-        -- 士兵星级，特殊兵种无星级
-        local soldier_stars = soldier_level
-        if soldier_stars then
-            local gap_y = 25
-            for i=1,5 do
-                stars_bg:addChild(display.newSprite("soldier_stars_bg.png", 38, 15+gap_y*(i-1)))
-                if soldier_stars>0 then
-                    stars_bg:addChild(display.newSprite("soldier_stars.png", 38, 15+gap_y*(i-1)))
-                    soldier_stars = soldier_stars-1
-                end
-            end
-        end
         item:addContent(content)
         list:addItem(item)
         function item:SetMaxSoldier(max_soldier)
@@ -444,23 +405,23 @@ function GameUIAllianceSendTroops:SelectSoldiers()
         end
 
         function item:GetSoldierInfo()
-            return soldier_type,soldier_level,math.floor(slider:getSliderValue()), self.max_soldier
+            return name,star,math.floor(slider:getSliderValue()), self.max_soldier
         end
         function item:SetSoldierCount(count)
-            editbox:setText(count)
+            btn_text:setString(count)
             slider:setSliderValue(count)
         end
         return item
     end
     local sm = self.soldier_manager
     local soldiers = {}
-    for soldier_type,soldier_num in pairs(sm:GetSoldierMap()) do
+    for name,soldier_num in pairs(sm:GetSoldierMap()) do
         if soldier_num>0 then
-            table.insert(soldiers, {soldier_type = soldier_type,level = sm:GetStarBySoldierType(soldier_type), max_num = soldier_num})
+            table.insert(soldiers, {name = name,level = sm:GetStarBySoldierType(name), max_num = soldier_num})
         end
     end
     for k,v in pairs(soldiers) do
-        table.insert(self.soldiers_table, addListItem(v.soldier_type,v.level,v.max_num))
+        table.insert(self.soldiers_table, addListItem(v.name,v.level,v.max_num))
     end
     list:reload()
 

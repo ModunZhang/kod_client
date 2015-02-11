@@ -22,13 +22,18 @@ function HospitalUpgradeBuilding:CreateEvent()
     function event:Reset()
         self.soldiers = nil
         self.finished_time = 0
+        self.id = nil
     end
-    function event:SetTreatInfo(soldiers, finish_time)
+    function event:SetTreatInfo(soldiers, finish_time , id)
         self.soldiers = soldiers
         self.finished_time = finish_time
+        self.id = id
     end
     function event:StartTime()
         return self.finished_time - self:GetTreatingTime()
+    end
+    function event:Id()
+        return self.id
     end
     function event:GetTreatingTime()
         return hospital:GetTreatingTimeByTypeWithCount(self.soldiers)
@@ -85,9 +90,9 @@ end
 function HospitalUpgradeBuilding:IsTreating()
     return not self.treat_event:IsEmpty()
 end
-function HospitalUpgradeBuilding:TreatSoldiersWithFinishTime(soldiers, finish_time)
+function HospitalUpgradeBuilding:TreatSoldiersWithFinishTime(soldiers, finish_time, id)
     local event = self.treat_event
-    event:SetTreatInfo(soldiers, finish_time)
+    event:SetTreatInfo(soldiers, finish_time, id)
     self.hospital_building_observer:NotifyObservers(function(lisenter)
         lisenter:OnBeginTreat(self, event)
     end)
@@ -95,7 +100,7 @@ end
 function HospitalUpgradeBuilding:EndTreatSoldiersWithCurrentTime(current_time)
     local event = self.treat_event
     local soldiers = self.treat_event.soldiers
-    event:SetTreatInfo(nil, 0)
+    event:SetTreatInfo(nil, 0,nil)
     self.hospital_building_observer:NotifyObservers(function(lisenter)
         lisenter:OnEndTreat(self, event, soldiers, current_time)
     end)
@@ -137,9 +142,26 @@ function HospitalUpgradeBuilding:OnUserDataChanged(...)
         if soldierEvent then
             local finished_time = soldierEvent.finishTime / 1000
             if self.treat_event:IsEmpty() then
-                self:TreatSoldiersWithFinishTime(soldierEvent.soldiers, finished_time)
+                self:TreatSoldiersWithFinishTime(soldierEvent.soldiers, finished_time,soldierEvent.id)
             else
-                self.treat_event:SetTreatInfo(soldierEvent.soldiers, finished_time)
+                self.treat_event:SetTreatInfo(soldierEvent.soldiers, finished_time ,soldierEvent.id)
+            end
+        else
+            if self.treat_event:IsTreating() then
+                self:EndTreatSoldiersWithCurrentTime(current_time)
+            end
+        end
+    end
+    if arg[1].__treatSoldierEvents then
+        local soldierEvent = arg[1].__treatSoldierEvents[1].data
+        -- LuaUtils:outputTable("arg[1]arg[1]arg[1]arg[1]arg[1]====", arg[1])
+        -- LuaUtils:outputTable("soldierEvent[1]====", soldierEvent)
+        if soldierEvent then
+            local finished_time = soldierEvent.finishTime / 1000
+            if self.treat_event:IsEmpty() then
+                self:TreatSoldiersWithFinishTime(soldierEvent.soldiers, finished_time,soldierEvent.id)
+            else
+                self.treat_event:SetTreatInfo(soldierEvent.soldiers, finished_time ,soldierEvent.id)
             end
         else
             if self.treat_event:IsTreating() then

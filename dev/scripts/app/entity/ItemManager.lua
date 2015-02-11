@@ -64,6 +64,7 @@ function ItemManager:__OnItemsChanged(__items)
                 item:SetCount(data.count)
                 self:InsertItem(item)
                 print("__OnItemsChanged add",data.name,data.count)
+                GameGlobalUI:showTips(_("获得道具"),item:GetLocalizeName())
                 return item
             end
             ,function(data)

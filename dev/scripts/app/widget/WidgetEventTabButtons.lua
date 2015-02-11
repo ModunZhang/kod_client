@@ -3,6 +3,10 @@ local cocos_promise = import("..utils.cocos_promise")
 local Localize = import("..utils.Localize")
 local SoldierManager = import("..entity.SoldierManager")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local GameUIMilitaryTechSpeedUp = import("..ui.GameUIMilitaryTechSpeedUp")
+local GameUIBuildingSpeedUp = import("..ui.GameUIBuildingSpeedUp")
+local GameUIBarracksSpeedUp = import("..ui.GameUIBarracksSpeedUp")
+local GameUIToolShopSpeedUp = import("..ui.GameUIToolShopSpeedUp")
 local WidgetTab = import(".WidgetTab")
 local timer = app.timer
 local WIDGET_WIDTH = 640
@@ -399,7 +403,7 @@ function WidgetEventTabButtons:CreateOpenItem()
                 -- UIKit:newGameUI('GameUIQuickTechnology', City, self.barracks):addToCurrentScene(true)
                 UIKit:newGameUI('GameUIQuickTechnology', City):addToCurrentScene(true)
             elseif widget:GetCurrentTab() == "material" then
-                -- UIKit:newGameUI('GameUIToolShop', City, self.toolShop):addToCurrentScene(true)
+            -- UIKit:newGameUI('GameUIToolShop', City, self.toolShop):addToCurrentScene(true)
             end
         end)
 
@@ -628,17 +632,17 @@ function WidgetEventTabButtons:IsAbleToFreeSpeedup(building)
     return building:IsAbleToFreeSpeedUpByTime(app.timer:GetServerTime())
 end
 function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
+    local eventType = ""
+    if self.city:IsFunctionBuilding(building) then
+        eventType = "buildingEvents"
+    elseif self.city:IsHouse(building) then
+        eventType = "houseEvents"
+    elseif self.city:IsGate(building) then
+        eventType = "wallEvents"
+    elseif self.city:IsTower(building) then
+        eventType = "towerEvents"
+    end
     if self:IsAbleToFreeSpeedup(building) then
-        local eventType = ""
-        if self.city:IsFunctionBuilding(building) then
-            eventType = "buildingEvents"
-        elseif self.city:IsHouse(building) then
-            eventType = "houseEvents"
-        elseif self.city:IsGate(building) then
-            eventType = "wallEvents"
-        elseif self.city:IsTower(building) then
-            eventType = "towerEvents"
-        end
         NetManager:getFreeSpeedUpPromise(eventType,building:UniqueUpgradingKey())
             :catch(function(err)
                 dump(err:reason())
@@ -649,22 +653,15 @@ function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
             local isRequested = Alliance_Manager:GetMyAlliance()
                 :HasBeenRequestedToHelpSpeedup(building:UniqueUpgradingKey())
             if not isRequested then
-                local eventType = ""
-                if self.city:IsFunctionBuilding(building) then
-                    eventType = "buildingEvents"
-                elseif self.city:IsHouse(building) then
-                    eventType = "houseEvents"
-                elseif self.city:IsGate(building) then
-                    eventType = "wallEvents"
-                elseif self.city:IsTower(building) then
-                    eventType = "towerEvents"
-                end
                 NetManager:getRequestAllianceToSpeedUpPromise(eventType,building:UniqueUpgradingKey())
                     :catch(function(err)
                         dump(err:reason())
                     end)
+                return
             end
         end
+        -- 没加入联盟或者已加入联盟并且申请过帮助时执行使用道具加速
+        GameUIBuildingSpeedUp.new(building):addToCurrentScene(true)
     end
 end
 function WidgetEventTabButtons:MiliTaryTechUpgradeOrSpeedup(event)
@@ -683,10 +680,20 @@ function WidgetEventTabButtons:MiliTaryTechUpgradeOrSpeedup(event)
                     :catch(function(err)
                         dump(err:reason())
                     end)
+                return
             end
         end
+        -- 没加入联盟或者已加入联盟并且申请过帮助时执行使用道具加速
+        GameUIMilitaryTechSpeedUp.new(event):addToCurrentScene(true)
     end
 end
+function WidgetEventTabButtons:SoldierRecruitUpgradeOrSpeedup()
+    GameUIBarracksSpeedUp.new(self.city:GetFirstBuildingByType("barracks")):addToCurrentScene(true)
+end
+function WidgetEventTabButtons:MaterialEventUpgradeOrSpeedup()
+    GameUIToolShopSpeedUp.new(self.city:GetFirstBuildingByType("toolShop")):addToCurrentScene(true)
+end
+
 function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp,event_key,event_item)
     local old_status = event_item.status
     local btn_label
@@ -749,7 +756,16 @@ function WidgetEventTabButtons:Load()
                 self:InsertItem(self:CreateBottom():SetLabel(_("查看现有的士兵")))
                 local event = self.barracks:GetRecruitEvent()
                 if event:IsRecruting() then
-                    self:InsertItem(self:CreateItem():SetProgressInfo(self:SoldierDescribe(event)))
+                    local item = self:CreateItem():SetProgressInfo(self:SoldierDescribe(event))
+                        :SetEventKey(event:Id())
+                        :OnClicked(
+                            function(e)
+                                if e.name == "CLICKED_EVENT" then
+                                    self:SoldierRecruitUpgradeOrSpeedup()
+                                end
+                            end
+                        )
+                    self:InsertItem(item)
                 end
             elseif k == "technology" then
                 self:InsertItem(self:CreateBottom():SetLabel(_("查看现有的科技")))
@@ -840,19 +856,40 @@ function WidgetEventTabButtons:Load()
                 self:InsertItem(self:CreateBottom():SetLabel(_("查看材料")))
                 local event = self.blackSmith:GetMakeEquipmentEvent()
                 if event:IsMaking() then
-                    self:InsertItem(self:CreateItem()
-                        :SetProgressInfo(self:EquipmentDescribe(event))
-                        :SetEventKey(event:UniqueKey())
-                    )
+                    local item = self:CreateItem():SetProgressInfo(self:EquipmentDescribe(event))
+                            :SetEventKey(event:Id())
+                            :OnClicked(
+                                function(e)
+                                    if e.name == "CLICKED_EVENT" then
+                                        self:MaterialEventUpgradeOrSpeedup()
+                                    end
+                                end
+                            )
+                        self:InsertItem(item)
+                    -- self:InsertItem(self:CreateItem()
+                    --     :SetProgressInfo(self:EquipmentDescribe(event))
+                    --     :SetEventKey(event:UniqueKey())
+                    -- )
                 end
                 local events = self.toolShop:GetMakeMaterialsEvents()
                 for k, v in pairs(events) do
                     if v:IsMaking(timer:GetServerTime()) then
-                        self:InsertItem(
-                            self:CreateItem()
-                                :SetProgressInfo(self:MaterialDescribe(v))
-                                :SetEventKey(v:UniqueKey())
-                        )
+                        local item = self:CreateItem():SetProgressInfo(self:MaterialDescribe(v))
+                            :SetEventKey(v:Id())
+                            :OnClicked(
+                                function(e)
+                                    if e.name == "CLICKED_EVENT" then
+                                        self:MaterialEventUpgradeOrSpeedup()
+                                    end
+                                end
+                            )
+                        self:InsertItem(item)
+
+                        -- self:InsertItem(
+                        --     self:CreateItem()
+                        --         :SetProgressInfo(self:MaterialDescribe(v))
+                        --         :SetEventKey(v:UniqueKey())
+                        -- )
                     end
                 end
             end
@@ -902,6 +939,11 @@ function WidgetEventTabButtons:MilitaryTechDescribe(event)
 end
 
 return WidgetEventTabButtons
+
+
+
+
+
 
 
 

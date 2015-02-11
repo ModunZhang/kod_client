@@ -11,12 +11,12 @@ function GameUITechnologySpeedUp:ctor()
 	if City:HaveProductionTechEvent() then
 		self.technologyEvent = City:GetProductionTechEventsArray()[1]
 	end
-	self:SetAccBtnsGroup(WidgetAccelerateGroup.SPEEDUP_TYPE.TECHNOLOGY,function()end)
 	self:SetAccTips(_("小于5min时可以使用免费加速"))
 	if not self.technologyEvent then
 		self:removeFromParent()
 	else
 		local event = self.technologyEvent
+		self:SetAccBtnsGroup("productionTechEvents",event:Id())
 		City:AddListenOnType(self,City.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
 	    City:AddListenOnType(self,City.LISTEN_TYPE.PRODUCTION_EVENT_TIMER)
 		self:SetUpgradeTip(string.format(_("正在研发%s到 Level %d"),event:Entity():GetLocalizedName(),event:Entity():GetNextLevel()))

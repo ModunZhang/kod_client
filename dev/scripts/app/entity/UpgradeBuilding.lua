@@ -24,7 +24,6 @@ function UpgradeBuilding:ctor(building_info)
     self.level = building_info.level and building_info.level or 1
     self.upgrade_to_next_level_time = (building_info.finishTime == nil) and 0 or building_info.finishTime
     self.upgrade_building_observer = Observer.new()
-    --building剩余升级时间小于5 min时可以免费加速  单位 seconds
     self.unique_upgrading_key = nil
 end
 function UpgradeBuilding:IsAbleToFreeSpeedUpByTime(time)
@@ -158,11 +157,26 @@ local function get_building_event_by_location(building_events, loc_id)
         end
     end
 end
+local function get_building_event_change_by_location(building_events, loc_id)
+    for k, v in pairs(building_events) do
+        if v.data.location == loc_id then
+            return v.data
+        end
+    end
+end
 local function get_house_event_by_location(house_events, building_location, sub_id)
     for k, v in pairs(house_events) do
         if v.buildingLocation == building_location and
             v.houseLocation == sub_id then
             return v
+        end
+    end
+end
+local function get_house_event_change_by_location(house_events, building_location, sub_id)
+    for k, v in pairs(house_events) do
+        if v.data.buildingLocation == building_location and
+            v.data.houseLocation == sub_id then
+            return v.data
         end
     end
 end
@@ -175,6 +189,10 @@ local function get_house_info_from_houses_by_id(houses, houses_id)
     return nil
 end
 function UpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id, sub_location_id)
+    self:HandleAllEvents(user_data, current_time, location_id, sub_location_id)
+    self:HandleEventChange(user_data, current_time, location_id, sub_location_id)
+end
+function UpgradeBuilding:HandleAllEvents( user_data, current_time, location_id, sub_location_id )
     -- 是否属于
     local house_events = user_data.houseEvents
     local building_events = user_data.buildingEvents
@@ -214,6 +232,35 @@ function UpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id,
             level = location.level
         end
     end
+    -- 适配
+    self:OnHandle(level, finishTime)
+end
+function UpgradeBuilding:HandleEventChange( user_data, current_time, location_id, sub_location_id )
+    -- 是否属于
+    local house_events = user_data.__houseEvents
+    local building_events = user_data.__buildingEvents
+    local is_has_no_building = not (house_events or building_events)
+    if is_has_no_building then return end
+    --
+    -- 解析
+    local finishTime = self.upgrade_to_next_level_time
+    local level = self:GetLevel()
+    -- 先找小屋
+    if sub_location_id then
+        if house_events then
+            local event = get_house_event_change_by_location(house_events, location_id, sub_location_id)
+            self:OnEvent(event)
+            finishTime = event == nil and 0 or event.finishTime / 1000
+        end
+        -- 再找功能建筑
+    else
+        if building_events then
+            local event = get_building_event_change_by_location(building_events, location_id)
+            self:OnEvent(event)
+            finishTime = event == nil and 0 or event.finishTime / 1000
+        end
+    end
+
     -- 适配
     self:OnHandle(level, finishTime)
 end
