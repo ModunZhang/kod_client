@@ -67,7 +67,8 @@ function PVELayer:onEnter()
     PVELayer.super.onEnter(self)
     local w, h = self.normal_map:GetSize()
     -- 点亮中心
-    self:LightOn((w - 1) * 0.5, (h - 1) * 0.5, 4)
+    local start = self.pve_map:GetStartPoint()
+    self:LightOn(start.x, start.y, 4)
     self:LoadFog()
     -- 加载地图数据
     local objects = {}
@@ -100,6 +101,8 @@ function PVELayer:OnObjectChanged(object)
     self:SetObjectStatus(object)
     if object:Searched() > 0 then
         self:NotifyExploring()
+        -- self.user:SetPveData()
+        -- NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
     end
 end
 function PVELayer:SetObjectStatus(object)
@@ -129,6 +132,11 @@ function PVELayer:PromiseOfTrap()
     local p = promise.new()
     local t = 0.025
     local r = 5
+    local exclamation_time = 0.5
+    local exclamation_scale = 0.2
+    local size = self.char:getContentSize()
+    local s = display.newSprite("exclamation.png")
+        :addTo(self.char):pos(size.width, size.height):scale(0)
     self.char:runAction(transition.sequence({
         cc.RotateBy:create(t, r),
         cc.RotateBy:create(t, -r),
@@ -142,7 +150,18 @@ function PVELayer:PromiseOfTrap()
         cc.RotateBy:create(t, -r),
         cc.RotateBy:create(t, -r),
         cc.RotateBy:create(t, r),
-        cc.CallFunc:create(function() p:resolve() end),
+        cc.CallFunc:create(function()
+            transition.scaleTo(s, {
+                scale = exclamation_scale,
+                time = exclamation_time,
+                easing = "backout",
+            })
+        end),
+        cc.DelayTime:create(exclamation_time),
+        cc.CallFunc:create(function()
+            s:removeFromParent()
+            p:resolve()
+        end),
     }))
     return p
 end
@@ -181,8 +200,12 @@ function PVELayer:LightOn(x, y, size)
     for x_ = sx, ex do
         for y_ = sy, ey do
             if x_ >= 1 and x_ < width - 1 and y_ >= 1 and y_ < height - 1 then
-                self.war_fog_layer:getTileAt(cc.p(x_, y_)):hide()
-                self.pve_map:InsertFog(x_, y_)
+                local fog = self.war_fog_layer:getTileAt(cc.p(x_, y_))
+                if fog:isVisible() then
+                    fog:hide()
+                    print(x_, y_)
+                    self.pve_map:InsertFog(x_, y_)
+                end
             end
         end
     end
@@ -249,6 +272,9 @@ function PVELayer:GotoLogicPoint(x, y, s)
 end
 
 return PVELayer
+
+
+
 
 
 

@@ -1,12 +1,12 @@
 local PVEDefine = import(".PVEDefine")
 local PVEObject = import(".PVEObject")
 local Observer = import(".Observer")
+local BitBaseN = import("..utils.BitBaseN")
 local PVEMap = class("PVEMap", Observer)
-
+local floor = math.floor
 function PVEMap:ctor(database, index)
     PVEMap.super.ctor(self)
     self.index = index
-    self.searched_fogs = {}
     self.searched_objects = {}
     self.database = database
 end
@@ -33,6 +33,7 @@ function PVEMap:LoadProperty()
     self.width = size.width
     self.height = size.height
     self.total_objects = total_objects
+    self.fogs = BitBaseN.new(self.width * self.height)
     return self
 end
 function PVEMap:GetFileName()
@@ -66,7 +67,12 @@ function PVEMap:GetSize()
     return self.width, self.height
 end
 function PVEMap:SearchedFogsCount()
-    return #self.searched_fogs * 0.5
+    local count = 0
+    local fogs = self.fogs
+    for i = 1, fogs:length() do
+        count = count + (fogs[i] and 1 or 0)
+    end
+    return count
 end
 function PVEMap:SearchedObjectsCount()
     local count = 0
@@ -76,20 +82,20 @@ function PVEMap:SearchedObjectsCount()
     return count
 end
 function PVEMap:IteratorFogs(func)
-    local searched_fogs = self.searched_fogs
-    for i = 1, #searched_fogs, 2 do
-        func(searched_fogs[i], searched_fogs[i + 1])
+    local w, h = self:GetSize()
+    local fogs = self.fogs
+    for i = 1, fogs:length() do
+        if fogs[i] then
+            func((i - 1) % w, floor((i - 1) / w))
+        end
     end
 end
 function PVEMap:InsertFog(x, y)
-    local searched_fogs = self.searched_fogs
-    for i = 1, #searched_fogs, 2 do
-        if x == searched_fogs[i] and y == searched_fogs[i + 1] then
-            return
-        end
+    local w,h = self:GetSize()
+    local index = y * w + x + 1
+    if not self.fogs[index] then
+        self.fogs[index] = true
     end
-    searched_fogs[#searched_fogs + 1] = x
-    searched_fogs[#searched_fogs + 1] = y
     return self
 end
 function PVEMap:IteratorObjects(func)
@@ -139,16 +145,22 @@ function PVEMap:IsAvailable()
     return pre == nil and true or pre:IsComplete()
 end
 function PVEMap:IsSearched()
-    return #self.searched_fogs > 0 or #self.searched_objects > 0
+    if #self.searched_objects > 0 then
+        return true
+    end
+    for i = 1, fogs:length() do
+        if fogs[i] then
+            return true
+        end
+    end
+    return false
 end
 function PVEMap:Load(floor)
     assert(floor.fogs)
     assert(floor.objects)
-    local f = loadstring(string.format("return {fogs=%s, objects=%s}", floor.fogs, floor.objects))
-    local data = assert(f)()
-    self.searched_fogs = data.fogs
+    self.fogs:decode(floor.fogs)
     local end_point = self:GetEndPoint()
-    for _, v in ipairs(data.objects) do
+    for _, v in ipairs(json.decode(floor.objects)) do
         local x, y, searched = unpack(v)
         self:ModifyObject(x, y, searched, (x == end_point.x and y == end_point.y) and PVEDefine.ENTRANCE_DOOR)
     end
@@ -161,11 +173,7 @@ function PVEMap:EncodeMap()
     }
 end
 function PVEMap:DumpFogs()
-    local fogs = {}
-    for _, v in ipairs(self.searched_fogs) do
-        fogs[#fogs + 1] = string.format("%d", v)
-    end
-    return string.format("{%s}", table.concat(fogs, ","))
+    return self.fogs:encode()
 end
 function PVEMap:DumpObjects()
     local objects = {}
@@ -174,10 +182,12 @@ function PVEMap:DumpObjects()
             objects[#objects + 1] = v:Dump()
         end
     end
-    return string.format("{%s}", table.concat(objects, ","))
+    return string.format("[%s]", table.concat(objects, ","))
 end
 
 return PVEMap
+
+
 
 
 

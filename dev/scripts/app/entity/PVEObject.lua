@@ -212,7 +212,7 @@ function PVEObject:IsEntranceDoor()
     return self.type == PVEDefine.ENTRANCE_DOOR
 end
 function PVEObject:Dump()
-    return string.format("{%d,%d,%d}", self.x, self.y, self.searched)
+    return string.format("[%d,%d,%d]", self.x, self.y, self.searched)
 end
 
 return PVEObject

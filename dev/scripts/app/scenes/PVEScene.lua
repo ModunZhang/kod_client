@@ -70,15 +70,17 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
         end
         -- self.user:UseStrength(1)
         self:GetSceneLayer():MoveCharTo(tx, ty)
-        self:OpenUI(tx, ty)
+        local gid = self:GetSceneLayer():GetTileInfo(tx, ty)
+        if gid > 0 then
+            self:OpenUI(tx, ty)
+        else
+            self:CheckTrap()
+        end
     end
 end
 function PVEScene:OpenUI(x, y)
     local gid = self:GetSceneLayer():GetTileInfo(x, y)
-    if gid <= 0 then
-        self:CheckTrap()
-        return
-    end
+    if gid <= 0 then return end
     self:CheckObject(x, y, gid)
     if gid == PVEDefine.START_AIRSHIP then
         WidgetPVEStartAirship.new(x, y, self.user):addToScene(self, true)
@@ -111,6 +113,9 @@ end
 function PVEScene:CheckTrap()
     if self.user:GetPVEDatabase():IsInTrap() then
         self:GetSceneLayer():PromiseOfTrap():next(function()
+            self.user:SetPveData()
+            return NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
+        end):next(function()
             local enemy = PVEObject.new(0, 0, 0, PVEDefine.TRAP):GetNextEnemy()
             UIKit:newGameUI('GameUIPVESendTroop',
                 enemy.soldiers,-- pve 怪数据
@@ -161,9 +166,15 @@ function PVEScene:CheckObject(x, y, type)
     local object = self.user:GetCurrentPVEMap():GetObject(x, y)
     if not object or not object:Type() then
         self.user:GetCurrentPVEMap():ModifyObject(x, y, 0, type)
+        self.user:SetPveData()
+        NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
     end
 end
 return PVEScene
+
+
+
+
 
 
 
