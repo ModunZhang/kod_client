@@ -5,6 +5,7 @@ local SoldierManager = import("..entity.SoldierManager")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUIMilitaryTechSpeedUp = import("..ui.GameUIMilitaryTechSpeedUp")
 local GameUIBuildingSpeedUp = import("..ui.GameUIBuildingSpeedUp")
+local GameUIBarracksSpeedUp = import("..ui.GameUIBarracksSpeedUp")
 local WidgetTab = import(".WidgetTab")
 local timer = app.timer
 local WIDGET_WIDTH = 640
@@ -401,7 +402,7 @@ function WidgetEventTabButtons:CreateOpenItem()
                 -- UIKit:newGameUI('GameUIQuickTechnology', City, self.barracks):addToCurrentScene(true)
                 UIKit:newGameUI('GameUIQuickTechnology', City):addToCurrentScene(true)
             elseif widget:GetCurrentTab() == "material" then
-                -- UIKit:newGameUI('GameUIToolShop', City, self.toolShop):addToCurrentScene(true)
+            -- UIKit:newGameUI('GameUIToolShop', City, self.toolShop):addToCurrentScene(true)
             end
         end)
 
@@ -685,6 +686,21 @@ function WidgetEventTabButtons:MiliTaryTechUpgradeOrSpeedup(event)
         GameUIMilitaryTechSpeedUp.new(event):addToCurrentScene(true)
     end
 end
+function WidgetEventTabButtons:SoldierRecruitUpgradeOrSpeedup(event)
+    -- if not Alliance_Manager:GetMyAlliance():IsDefault() then
+    --     -- 是否已经申请过联盟加速
+    --     local isRequested = Alliance_Manager:GetMyAlliance()
+    --         :HasBeenRequestedToHelpSpeedup(event:Id())
+    --     if not isRequested then
+    --         NetManager:getRequestAllianceToSpeedUpPromise("soldierEvents",event:Id())
+    --             :catch(function(err)
+    --                 dump(err:reason())
+    --             end)
+    --         return
+    --     end
+    -- end
+    GameUIBarracksSpeedUp.new(self.city:GetFirstBuildingByType("barracks")):addToCurrentScene(true)
+end
 function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp,event_key,event_item)
     local old_status = event_item.status
     local btn_label
@@ -747,7 +763,16 @@ function WidgetEventTabButtons:Load()
                 self:InsertItem(self:CreateBottom():SetLabel(_("查看现有的士兵")))
                 local event = self.barracks:GetRecruitEvent()
                 if event:IsRecruting() then
-                    self:InsertItem(self:CreateItem():SetProgressInfo(self:SoldierDescribe(event)))
+                    local item = self:CreateItem():SetProgressInfo(self:SoldierDescribe(event))
+                        :SetEventKey(event:Id())
+                        :OnClicked(
+                            function(e)
+                                if e.name == "CLICKED_EVENT" then
+                                    self:SoldierRecruitUpgradeOrSpeedup(event)
+                                end
+                            end
+                        )
+                    self:InsertItem(item)
                 end
             elseif k == "technology" then
                 self:InsertItem(self:CreateBottom():SetLabel(_("查看现有的科技")))
@@ -900,6 +925,9 @@ function WidgetEventTabButtons:MilitaryTechDescribe(event)
 end
 
 return WidgetEventTabButtons
+
+
+
 
 
 

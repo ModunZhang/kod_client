@@ -26,11 +26,16 @@ function BarracksUpgradeBuilding:CreateEvent()
         self.soldier_type = nil
         self.soldier_count = 0
         self.finished_time = 0
+        self.id = nil
     end
-    function event:SetRecruitInfo(soldier_type, count, finish_time)
+    function event:SetRecruitInfo(soldier_type, count, finish_time ,id )
         self.soldier_type = soldier_type
         self.soldier_count = count
         self.finished_time = finish_time
+        self.id = id
+    end
+    function event:Id()
+        return self.id
     end
     function event:StartTime()
         return self.finished_time - self:GetRecruitingTime()
@@ -94,9 +99,9 @@ end
 function BarracksUpgradeBuilding:IsRecruting()
     return not self.recruit_event:IsEmpty()
 end
-function BarracksUpgradeBuilding:RecruitSoldiersWithFinishTime(soldier_type, count, finish_time)
+function BarracksUpgradeBuilding:RecruitSoldiersWithFinishTime(soldier_type, count, finish_time,id)
     local event = self.recruit_event
-    event:SetRecruitInfo(soldier_type, count, finish_time)
+    event:SetRecruitInfo(soldier_type, count, finish_time,id)
     self.barracks_building_observer:NotifyObservers(function(lisenter)
         lisenter:OnBeginRecruit(self, event)
     end)
@@ -107,7 +112,7 @@ function BarracksUpgradeBuilding:EndRecruitSoldiersWithCurrentTime(current_time)
     local event = self.recruit_event
     local soldier_type = self.recruit_event.soldier_type
     local soldier_count = self.recruit_event.soldier_count
-    event:SetRecruitInfo(nil, 0, 0)
+    event:SetRecruitInfo(nil, 0, 0,nil)
     self.barracks_building_observer:NotifyObservers(function(lisenter)
         lisenter:OnEndRecruit(self, event, soldier_type, soldier_count, current_time)
     end)
@@ -145,9 +150,24 @@ function BarracksUpgradeBuilding:OnUserDataChanged(...)
         if soldierEvent then
             local finished_time = soldierEvent.finishTime / 1000
             if self.recruit_event:IsEmpty() then
-                self:RecruitSoldiersWithFinishTime(soldierEvent.name, soldierEvent.count, finished_time)
+                self:RecruitSoldiersWithFinishTime(soldierEvent.name, soldierEvent.count, finished_time,soldierEvent.id)
             else
-                self.recruit_event:SetRecruitInfo(soldierEvent.name, soldierEvent.count, finished_time)
+                self.recruit_event:SetRecruitInfo(soldierEvent.name, soldierEvent.count, finished_time,soldierEvent.id)
+            end
+        else
+            if self.recruit_event:IsRecruting() then
+                self:EndRecruitSoldiersWithCurrentTime(current_time)
+            end
+        end
+    end
+    if arg[1].__soldierEvents then
+        local soldierEvent = arg[1].__soldierEvents[1].data
+        if soldierEvent then
+            local finished_time = soldierEvent.finishTime / 1000
+            if self.recruit_event:IsEmpty() then
+                self:RecruitSoldiersWithFinishTime(soldierEvent.name, soldierEvent.count, finished_time,soldierEvent.id)
+            else
+                self.recruit_event:SetRecruitInfo(soldierEvent.name, soldierEvent.count, finished_time,soldierEvent.id)
             end
         else
             if self.recruit_event:IsRecruting() then
