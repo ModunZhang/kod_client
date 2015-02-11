@@ -46,11 +46,12 @@ function PVEMap:GetIndex()
     return self.index
 end
 function PVEMap:ExploreDegree()
-    return (self:SearchedFogsCount() + self:SearchedObjectsCount()) / (self:TotalFogs() + self:TotalObjects())
+    -- return self:SearchedFogsCount()/self:TotalFogs()
+    return (self:SearchedObjectsCount()/self:TotalObjects() + self:SearchedFogsCount()/self:TotalFogs()) * 0.5
 end
 function PVEMap:TotalFogs()
     local w, h = self:GetSize()
-    return (w - 1) * (h - 1)
+    return (w - 2) * (h - 2)
 end
 function PVEMap:TotalObjects()
     return self.total_objects

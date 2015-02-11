@@ -101,8 +101,6 @@ function PVELayer:OnObjectChanged(object)
     self:SetObjectStatus(object)
     if object:Searched() > 0 then
         self:NotifyExploring()
-        -- self.user:SetPveData()
-        -- NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
     end
 end
 function PVELayer:SetObjectStatus(object)
