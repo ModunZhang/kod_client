@@ -37,11 +37,13 @@ function PVEScene:CreateSceneLayer()
     return PVELayer.new(self.user)
 end
 function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
+    -- 有动画就什么都不处理
+    if self:GetSceneLayer():GetChar():getNumberOfRunningActions() > 0 then return end
+
     local logic_map = self:GetSceneLayer():GetLogicMap()
-    local char = self:GetSceneLayer():GetChar()
     local point = self:GetSceneLayer():GetSceneNode():convertToNodeSpace(cc.p(x, y))
     local new_x, new_y = logic_map:ConvertToLogicPosition(point.x, point.y)
-    local old_x, old_y = logic_map:ConvertToLogicPosition(char:getPosition())
+    local old_x, old_y = logic_map:ConvertToLogicPosition(self:GetSceneLayer():GetChar():getPosition())
 
     -- 检查是不是在中心
     local point = self:GetSceneLayer():GetSceneNode():convertToNodeSpace(cc.p(display.cx, display.cy))
@@ -108,48 +110,50 @@ function PVEScene:OpenUI(x, y)
 end
 function PVEScene:CheckTrap()
     if self.user:GetPVEDatabase():IsInTrap() then
-        local enemy = PVEObject.new(0, 0, 0, PVEDefine.TRAP):GetNextEnemy()
-        UIKit:newGameUI('GameUIPVESendTroop',
-            enemy.soldiers,-- pve 怪数据
-            function(dragonType, soldiers)
-                local dargon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
-                local attack_dragon = {
-                    dragonType = dragonType,
-                    currentHp = dargon:Hp(),
-                    hpMax = dargon:GetMaxHP(),
-                    totalHp = dargon:Hp(),
-                    strength = dargon:TotalStrength(),
-                    vitality = dargon:TotalVitality(),
-                }
-                local attack_soldier = LuaUtils:table_map(soldiers, function(k, v)
-                    return k, {name = v.name,
-                        star = 1,
-                        morale = 100,
-                        currentCount = v.count,
-                        totalCount = v.count,
-                        woundedCount = 0,
-                        round = 0}
-                end)
+        self:GetSceneLayer():PromiseOfTrap():next(function()
+            local enemy = PVEObject.new(0, 0, 0, PVEDefine.TRAP):GetNextEnemy()
+            UIKit:newGameUI('GameUIPVESendTroop',
+                enemy.soldiers,-- pve 怪数据
+                function(dragonType, soldiers)
+                    local dargon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
+                    local attack_dragon = {
+                        dragonType = dragonType,
+                        currentHp = dargon:Hp(),
+                        hpMax = dargon:GetMaxHP(),
+                        totalHp = dargon:Hp(),
+                        strength = dargon:TotalStrength(),
+                        vitality = dargon:TotalVitality(),
+                    }
+                    local attack_soldier = LuaUtils:table_map(soldiers, function(k, v)
+                        return k, {name = v.name,
+                            star = 1,
+                            morale = 100,
+                            currentCount = v.count,
+                            totalCount = v.count,
+                            woundedCount = 0,
+                            round = 0}
+                    end)
 
-                local report = GameUtils:DoBattle(
-                    {dragon = attack_dragon, soldiers = attack_soldier}
-                    ,{dragon = enemy.dragon, soldiers = enemy.soldiers}
-                )
-                if report:IsAttackWin() then
-                    self.user:SetPveData(report:GetAttackKDA(), enemy.rewards)
-                else
-                    self.user:SetPveData(report:GetAttackKDA())
-                end
-                NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):next(function()
-                    UIKit:newGameUI("GameUIReplay", report, function()
-                        if report:IsAttackWin() then
-                            GameGlobalUI:showTips(_("获得奖励"), enemy.rewards)
-                        end
-                    end):addToCurrentScene(true)
-                end):catch(function(err)
-                    dump(err:reason())
-                end)
-            end):addToCurrentScene(true)
+                    local report = GameUtils:DoBattle(
+                        {dragon = attack_dragon, soldiers = attack_soldier}
+                        ,{dragon = enemy.dragon, soldiers = enemy.soldiers}
+                    )
+                    if report:IsAttackWin() then
+                        self.user:SetPveData(report:GetAttackKDA(), enemy.rewards)
+                    else
+                        self.user:SetPveData(report:GetAttackKDA())
+                    end
+                    NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):next(function()
+                        UIKit:newGameUI("GameUIReplay", report, function()
+                            if report:IsAttackWin() then
+                                GameGlobalUI:showTips(_("获得奖励"), enemy.rewards)
+                            end
+                        end):addToCurrentScene(true)
+                    end):catch(function(err)
+                        dump(err:reason())
+                    end)
+                end):addToCurrentScene(true)
+        end)
         self.user:GetPVEDatabase():ResetNextEnemyCounter()
     end
 end
@@ -160,6 +164,8 @@ function PVEScene:CheckObject(x, y, type)
     end
 end
 return PVEScene
+
+
 
 
 

@@ -399,7 +399,7 @@ function WidgetEventTabButtons:CreateOpenItem()
                 -- UIKit:newGameUI('GameUIQuickTechnology', City, self.barracks):addToCurrentScene(true)
                 UIKit:newGameUI('GameUIQuickTechnology', City):addToCurrentScene(true)
             elseif widget:GetCurrentTab() == "material" then
-                UIKit:newGameUI('GameUIToolShop', City, self.toolShop):addToCurrentScene(true)
+                -- UIKit:newGameUI('GameUIToolShop', City, self.toolShop):addToCurrentScene(true)
             end
         end)
 
@@ -605,7 +605,7 @@ function WidgetEventTabButtons:OnBeforeShow()
         return true
     elseif tab == "soldier" and self.barracks:IsUnlocked() then
         return true
-    elseif tab == "material" and self.toolShop:IsUnlocked() then
+    elseif tab == "material" and (self.toolShop:IsUnlocked() or self.blackSmith:IsUnlocked()) then
         return true
     elseif tab == "technology" then
         return true
