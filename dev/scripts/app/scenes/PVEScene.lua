@@ -118,7 +118,7 @@ function PVEScene:CheckTrap()
             self.user:SetPveData()
             return NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
         end):next(function()
-            local enemy = PVEObject.new(0, 0, 0, PVEDefine.TRAP):GetNextEnemy()
+            local enemy = PVEObject.new(0, 0, 0, PVEDefine.TRAP, self:GetSceneLayer():CurrentPVEMap()):GetNextEnemy()
             UIKit:newGameUI('GameUIPVESendTroop',
                 enemy.soldiers,-- pve 怪数据
                 function(dragonType, soldiers)

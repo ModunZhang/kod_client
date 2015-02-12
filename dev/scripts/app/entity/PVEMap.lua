@@ -133,7 +133,7 @@ function PVEMap:ModifyObject(x, y, searched, type)
             return
         end
     end
-    table.insert(self.searched_objects, PVEObject.new(x, y, searched, type))
+    table.insert(self.searched_objects, PVEObject.new(x, y, searched, type, self))
     self:NotifyObservers(function(lisenter)
         lisenter:OnObjectChanged(self.searched_objects[#self.searched_objects])
     end)
