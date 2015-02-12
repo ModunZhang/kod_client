@@ -55,7 +55,7 @@ function GameUIPVEHome:OnResourceChanged(user)
     self.gem_label:setString(string.formatnumberthousands(user:GetGemResource():GetValue()))
 end
 function GameUIPVEHome:OnExploreChanged(pve_layer)
-    self.exploring:setString(string.format("%.2f%%", pve_layer:ExploreDegree() * 100))
+    self.exploring:setString(string.format("探索度 %.2f%%", pve_layer:ExploreDegree() * 100))
 end
 function GameUIPVEHome:CreateTop()
     local top_bg = display.newSprite("head_bg.png")
@@ -93,12 +93,13 @@ function GameUIPVEHome:CreateTop()
     }):addTo(button):align(display.CENTER, -30, 8)
 
 
-    self.title = UIKit:ttfLabel({text = "1. 贫瘠之地",
+    self.title = UIKit:ttfLabel({
+        text = string.format("%d, %s", self.layer:CurrentPVEMap():GetIndex(), self.layer:CurrentPVEMap():Name()),
         size = 26,
         color = 0xffedae,
     }):addTo(top_bg):align(display.LEFT_CENTER, 60, 60)
 
-    self.exploring = UIKit:ttfLabel({text = "探索度 100%",
+    self.exploring = UIKit:ttfLabel({
         size = 20,
         color = 0xffedae,
     }):addTo(top_bg):align(display.RIGHT_CENTER, size.width - 60, 60)

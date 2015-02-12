@@ -367,7 +367,7 @@ function DataUtils:getSoldierRecruitBuffTime(soldier_type,time)
         return 0
     end
     local build = City:GetFirstBuildingByType(building_type)
-    if not build then return 0 end
+    if not build or not build:IsUnlocked() then return 0 end
     local config = config_BuildingFunction[building_type][build:GetLevel()]
     local efficiency = config.efficiency
     if efficiency > 0 then

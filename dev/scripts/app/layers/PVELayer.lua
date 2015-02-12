@@ -233,6 +233,9 @@ function PVELayer:ConvertLogicPositionToMapPosition(lx, ly)
     local map_pos = cc.p(self.normal_map:ConvertToMapPosition(lx, ly))
     return self:convertToNodeSpace(self.background:convertToWorldSpace(map_pos))
 end
+function PVELayer:CurrentPVEMap()
+    return self.pve_map
+end
 function PVELayer:ExploreDegree()
     return self.pve_map:ExploreDegree()
 end

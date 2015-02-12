@@ -42,16 +42,16 @@ function WidgetPVESelectStage:CreateItemWithListView(list_view, level)
     item:addContent(back_ground)
     item:setItemSize(w, h)
 
-    local name = cc.ui.UILabel.new({
+    local cur_map = self.pve_database:GetMapByIndex(level)
+    cc.ui.UILabel.new({
         size = 22,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_LEFT,
         color = UIKit:hex2c3b(0x403c2f),
-        text = "1 关卡名"
+        text = string.format("%d, %s", cur_map:GetIndex(), cur_map:Name()),
     }):addTo(back_ground, 2):align(display.LEFT_CENTER, 30, h - 50)
 
-    local cur_map = self.pve_database:GetMapByIndex(level)
-    local status = cc.ui.UILabel.new({
+    cc.ui.UILabel.new({
         size = 18,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_LEFT,
@@ -59,7 +59,7 @@ function WidgetPVESelectStage:CreateItemWithListView(list_view, level)
         text = string.format("探索度 %.2f%%", cur_map:ExploreDegree() * 100)
     }):addTo(back_ground, 2):align(display.LEFT_CENTER, 30, 50)
 
-    local btn = WidgetPushButton.new(
+    WidgetPushButton.new(
         {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"}
         ,{}
         ,{
@@ -85,14 +85,14 @@ function WidgetPVESelectStage:CreateItemWithListView(list_view, level)
                     dump(err:reason())
                 end)
             end
-        end)
-    btn:setButtonEnabled(cur_map:IsAvailable())
+        end):setButtonEnabled(cur_map:IsAvailable())
     return item
 end
 
 
 
 return WidgetPVESelectStage
+
 
 
 
