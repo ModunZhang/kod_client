@@ -67,9 +67,9 @@ function GameUIPVEHome:CreateTop()
     cc.ui.UIPushButton.new(
         {normal = "return_btn_up_202x93.png", pressed = "return_btn_down_202x93.png"}
     ):addTo(top_bg)
-        :align(display.LEFT_CENTER, 20, -2)
+        :align(display.LEFT_CENTER, 20, -5)
         :onButtonClicked(function()
-            print("返回")
+            self.layer:ResetCharPos()
         end):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = _("返回起点"),
@@ -130,7 +130,8 @@ function GameUIPVEHome:CreateBottom()
     local label_bg = display.newSprite("label_background_146x25.png")
     :addTo(bottom_bg):align(display.LEFT_CENTER, 315, display.bottom + 25)
 
-    self.gem = UIKit:ttfLabel({text = "9,999,999",
+    self.gem = UIKit:ttfLabel({
+        text = "9,999,999",
         size = 20,
         color = 0xbdb582,
     }):addTo(label_bg):align(display.LEFT_CENTER, 20, 13)
