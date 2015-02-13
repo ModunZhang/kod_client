@@ -9,7 +9,7 @@ function TowerEntity:UniqueKey()
 end
 function TowerEntity:OnUserDataChanged(user_data, current_time)
     local event
-    for _,v in ipairs(user_data.buildingEvents) do
+    for _,v in ipairs(user_data.buildingEvents or {}) do
         if v.location == 22 then
             event = v
             break
