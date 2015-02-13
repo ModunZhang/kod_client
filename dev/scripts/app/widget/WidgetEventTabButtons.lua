@@ -632,7 +632,7 @@ function WidgetEventTabButtons:IsAbleToFreeSpeedup(building)
     return building:IsAbleToFreeSpeedUpByTime(app.timer:GetServerTime())
 end
 function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
-    local eventType = self.city:IsHouse(self.building) and "houseEvents" or "buildingEvents"
+    local eventType = self.city:IsHouse(building) and "houseEvents" or "buildingEvents"
     if self:IsAbleToFreeSpeedup(building) then
         NetManager:getFreeSpeedUpPromise(eventType,building:UniqueUpgradingKey())
             :catch(function(err)

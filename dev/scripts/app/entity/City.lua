@@ -1025,22 +1025,26 @@ function City:OnUserDataChanged(userData, current_time)
     self.soldier_manager:OnUserDataChanged(userData)
     -- 更新材料，这里是广义的材料，包括龙的装备
     self.material_manager:OnUserDataChanged(userData)
-    -- 最后才更新资源
+    -- 更新基本信息
     local basicInfo = userData.basicInfo
-    local resource_refresh_time
     if basicInfo then
         self.build_queue = basicInfo.buildQueue
         self:SetCityName(basicInfo.cityName)
-
-        resource_refresh_time = basicInfo.resourceRefreshTime / 1000
+    end
+    -- 最后才更新资源
+    local resources = userData.resources
+    local resource_refresh_time
+    if resources.refreshTime then
+        resource_refresh_time = resources.refreshTime / 1000
         need_update_resouce_buildings = true
     end
 
-    self.resource_manager:UpdateFromUserDataByTime(userData.resources, resource_refresh_time)
+    self.resource_manager:UpdateFromUserDataByTime(resources, resource_refresh_time)
 
     if need_update_resouce_buildings then
+        resource_refresh_time = resource_refresh_time or current_time
         self.resource_manager:UpdateByCity(self, resource_refresh_time)
-        self.resource_manager:UpdateResourceByTime(current_time)
+        self.resource_manager:UpdateResourceByTime(resource_refresh_time)
     end
     return self
 end
@@ -1656,6 +1660,7 @@ function City:FindProductionTechEventById(_id)
 end
 
 return City
+
 
 
 
