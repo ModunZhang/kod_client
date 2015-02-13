@@ -33,13 +33,6 @@ function GameUIBuildingSpeedUp:onCleanup()
     self.building:RemoveUpgradeListener(self)
 end
 
-function GameUIBuildingSpeedUp:OnMilitaryTechEventsTimer(event)
-    if self.progress and event:Id() == self.militaryEvent:Id() then
-        self:SetProgressInfo(GameUtils:formatTimeStyle1(event:GetTime()),event:Percent())
-        self:CheckCanSpeedUpFree()
-    end
-end
-
 function GameUIBuildingSpeedUp:CheckCanSpeedUpFree()
     self:SetFreeButtonEnabled(self.building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime()) <= DataUtils:getFreeSpeedUpLimitTime())
 end
@@ -51,6 +44,7 @@ function GameUIBuildingSpeedUp:OnBuildingUpgradeFinished( building, finish_time 
 end
 function GameUIBuildingSpeedUp:OnBuildingUpgrading( building, current_time )
     self:SetProgressInfo(GameUtils:formatTimeStyle1(building:GetUpgradingLeftTimeByCurrentTime(current_time)),building:GetElapsedTimeByCurrentTime(current_time)/building:GetUpgradeTimeToNextLevel()*100)
+    self:CheckCanSpeedUpFree()
 end
 return GameUIBuildingSpeedUp
 
