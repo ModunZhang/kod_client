@@ -411,6 +411,7 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     -- 还未管理道具，暂时从userdata中取
     -- local m = DataManager:getUserData().materials
     local m =city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
+    local config = self.config_building_levelup[self:GetType()]
 
     -- 升级所需资源不足
     local wood = city.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
