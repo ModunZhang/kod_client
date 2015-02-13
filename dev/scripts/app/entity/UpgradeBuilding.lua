@@ -7,6 +7,7 @@ local Localize = import("..utils.Localize")
 UpgradeBuilding.NOT_ABLE_TO_UPGRADE = {
     TILE_NOT_UNLOCKED = "地块未解锁",
     IS_MAX_LEVEL = "建筑已经达到最高等级",
+    IS_MAX_UNLOCK = "建造数量已达建造上限",
     LEVEL_CAN_NOT_HIGHER_THAN_KEEP_LEVEL = "请首先提升城堡等级",
     RESOURCE_NOT_ENOUGH = "资源不足",
     BUILDINGLIST_NOT_ENOUGH = "建造队列不足",
@@ -363,7 +364,10 @@ function UpgradeBuilding:IsBuildingUpgradeLegal()
     if #level_up_config == level then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.IS_MAX_LEVEL
     end
-
+    -- 是否达到建造上限
+    if city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(city) < 1 and self.level==0 then
+        return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.IS_MAX_UNLOCK
+    end
     local config
     if city:IsHouse(self) then
         config = GameDatas.Houses.houses[self:GetType()]
@@ -385,7 +389,7 @@ function UpgradeBuilding:IsBuildingUpgradeLegal()
         end
     else
         city:IteratorDecoratorBuildingsByFunc(function (index,house)
-            if house:GetLevel()>=self:GetLevel()+preLevel then
+            if house:GetType() == preName and house:GetLevel()>=self:GetLevel()+preLevel then
                 limit = true
             end
         end)
