@@ -504,7 +504,7 @@ function GameUIActivityReward:RefreshLevelUpListView()
 	self.list_view:removeAllItems()
 	local data = self:GetLevelUpData()
 	for index,v in ipairs(data) do
-		local index,title,rewards,flag = unpack(v)
+		local title,rewards,flag = unpack(v)
 		local item = self:GetRewardLevelUpItem(index,title,rewards,flag)
 		self.list_view:addItem(item)
 	end
@@ -559,6 +559,31 @@ function GameUIActivityReward:GetRewardLevelUpItem(index,title,rewards,flag)
 		size = 22,
 		color= 0x514d3e
 	}):align(display.LEFT_CENTER, 34, 52):addTo(content)
+	local x = 104
+	for __,v in ipairs(rewards) do
+		--TODO:
+		local item_bg = display.newSprite("activity_item_bg_110x108.png"):align(display.LEFT_CENTER, x, 52):addTo(content):scale(94/110)
+		display.newSprite("activity_item_icon_90x90.png",55,54):addTo(item_bg)
+		x = x + 130
+	end
+	if flag == 1 then
+		UIKit:ttfLabel({
+			text = _("已领取"),
+			size = 22,
+			color= 0x514d3e
+		}):align(display.LEFT_CENTER,436, 54):addTo(content)
+	else
+		WidgetPushButton.new({normal = 'yellow_btn_up_148x58.png',pressed = 'yellow_btn_down_148x58.png',disabled = 'gray_btn_148x58.png'})
+			:setButtonLabel("normal", UIKit:commonButtonLable({
+				text = _("领取")
+			}))
+			:addTo(content)
+			:pos(450,54)
+			:setButtonEnabled(flag == 2)
+			:onButtonClicked(function()
+				NetManager:getLevelupRewardPromise(index)
+			end)
+	end
 	item:addContent(content)
 	item:setItemSize(548,104)
 	return item

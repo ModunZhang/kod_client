@@ -599,7 +599,7 @@ function NetManager:getLoginPromise(deviceId)
         if gaozhou then
             device_id = getOpenUDID()
         else
-            device_id = "dannyhe123"
+            device_id = getOpenUDID()
         end
     else
         device_id = device.getOpenUDID()
@@ -1530,6 +1530,13 @@ function NetManager:getFirstIAPRewardsPromise()
     return promise.all(get_blocking_request_promise("logic.playerHandler.getFirstIAPRewards",
         nil,
         "获取首充奖励失败!"),get_playerdata_callback()):next(get_response_msg)
+end
+
+-- 新手冲级奖励
+function NetManager:getLevelupRewardPromise(levelupIndex)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.getLevelupReward",
+        {levelupIndex = levelupIndex},
+        "获取新手冲级奖励失败!"),get_playerdata_callback()):next(get_response_msg)
 end
 
 ----------------------------------------------------------------------------------------------------------------
