@@ -541,10 +541,11 @@ function City:GetLocationIdByBuilding(building)
     end
     return nil
 end
+local config_buildings = GameDatas.Buildings.buildings
 function City:GetLocationIdByBuildingType(building_type)
-    for i, v in ipairs(self.locations) do
-        if building_type == v.building_type then
-            return i
+    for _, v in ipairs(config_buildings) do
+        if building_type == v.name then
+            return v.location
         end
     end
     return nil
@@ -565,13 +566,15 @@ function City:GetFirstBuildingByType(build_type)
 end
 function City:GetBuildingByType(build_type)
     local find_buildings = {}
-    local filter = function(key, building)
+    local filter = function(_, building)
         if building:GetType() == build_type then
             table.insert(find_buildings, building)
         end
     end
     self:IteratorFunctionBuildingsByFunc(filter)
     self:IteratorDecoratorBuildingsByFunc(filter)
+    filter(nil, self:GetGate())
+    filter(nil, self:GetTower())
     return find_buildings
 end
 function City:GetHouseByPosition(x, y)

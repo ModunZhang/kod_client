@@ -71,7 +71,8 @@ function UpgradeBuilding:GetUpgradingPercentByCurrentTime(current_time)
     end
 end
 function UpgradeBuilding:CanUpgrade()
-    return not self:IsUpgrading() and self:GetLevel() > 0 and not self:IsMaxLevel()
+    local legal = self:IsBuildingUpgradeLegal()
+    return type(legal) == "nil"
 end
 function UpgradeBuilding:IsUnlocking()
     return self:GetLevel() == 0 and self.upgrade_to_next_level_time ~= 0
@@ -411,6 +412,7 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     -- 还未管理道具，暂时从userdata中取
     -- local m = DataManager:getUserData().materials
     local m =city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
+    local config = self.config_building_levelup[self:GetType()]
 
     -- 升级所需资源不足
     local wood = city.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
