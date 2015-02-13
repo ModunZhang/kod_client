@@ -355,6 +355,7 @@ function GameUIReplay:onEnter()
     self.weak = display.newSprite("vs_weak.png"):addTo(bg):pos(size.width / 2, size.height /2):hide()
 
     local battle = decode_battle_from_report(self.report)
+    LuaUtils:outputTable("name", battle)
     -- local battle = new_battle
     dump(battle)
 
@@ -389,13 +390,12 @@ function GameUIReplay:onEnter()
         self.list_view:addItem(item)
     end
     self.list_view:reload()
-    -- :resetPosition()
+
     self.left_morale_max = 0
     self.right_morale_max = 0
     self.left_morale_cur = self.left_morale_max
     self.right_morale_cur = self.right_morale_max
 
-    -- self:PlaySoldierBattle(decode_battle(battle))
     if self.report:IsDragonFight() then
         self:PlayDragonBattle():next(function()
             self:PlaySoldierBattle(decode_battle(battle))
@@ -758,10 +758,7 @@ function GameUIReplay:DecodeStateBySide(side, is_left)
             self.right_progress:SetProgressInfo("", percent)
         end
     elseif state == "attack" then
-        action = BattleObject:Do(function(corps)
-            self:NewEffect(side.effect, is_left, corps:getPosition())
-            return corps
-        end):next(BattleObject:AttackOnce()):next(function(corps)
+        action = BattleObject:Do(BattleObject:AttackOnce()):next(function(corps)
             BattleObject:Do(BattleObject:BreathForever()):resolve(corps)
             return corps
         end)

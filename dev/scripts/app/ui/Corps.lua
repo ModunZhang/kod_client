@@ -7,6 +7,7 @@ local Corps = class("Corps", BattleObject)
 function Corps:ctor(soldier, row, col, width, height)
 	Corps.super.ctor(self)
     local corps = self
+    self.soldier = soldier
     width = width or 90
     height = height or 120
     local start_x, start_y = - width, - height
@@ -33,6 +34,9 @@ function Corps:ctor(soldier, row, col, width, height)
     end
 end
 function Corps:PlayAnimation(ani, loop_time)
+    if ani == "attack" then
+        app:GetAudioManager():PlayeAttackSoundBySoldierName(self.soldier)
+    end
     for _, v in pairs(self.corps) do
         v:getAnimation():play(ani, -1, loop_time or -1)
     end

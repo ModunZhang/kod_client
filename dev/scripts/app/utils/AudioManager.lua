@@ -63,6 +63,12 @@ function AudioManager:PlayeEffectSound(filename)
 	end
 end
 
+function AudioManager:PlayeAttackSoundBySoldierName(soldier_name)
+	local audio_name = string.format("sfx_%s_attack.wav", soldier_name)
+	assert(audio_name, audio_name.." 音乐不存在")
+	self:PlayeEffectSound(audio_name)
+end
+
 --Api normal
 
 function AudioManager:PlayGameMusic(scene_name)
