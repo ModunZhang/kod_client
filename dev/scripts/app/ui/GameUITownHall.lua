@@ -70,7 +70,7 @@ function GameUITownHall:CreateAdministration()
     local admin_layer = self.admin_layer
 
     local layer_width,layer_height = 600,window.betweenHeaderAndTab
-  
+
 
     -- 每日任务
     UIKit:ttfLabel({
@@ -452,6 +452,7 @@ function GameUITownHall:OnNewDailyQuestsEvent(changed_map)
         for k,v in pairs(changed_map.add) do
             self:CreateQuestItem(v,finished_quest_num+1)
         end
+        self.quest_list_view:reload()
     end
     if changed_map.edit then
         for k,v in pairs(changed_map.edit) do
@@ -478,3 +479,4 @@ function GameUITownHall:OnBuildingUpgrading()
 end
 
 return GameUITownHall
+

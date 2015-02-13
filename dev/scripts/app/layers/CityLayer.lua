@@ -227,6 +227,11 @@ end
 function CityLayer:GetCityNode()
     return self.city_node
 end
+function CityLayer:CheckCanUpgrade()
+    self:IteratorCanUpgradingBuilding(function(_, sprite)
+        sprite:CheckCondition()
+    end)
+end
 --
 function CityLayer:InitWeather()
 -- local sprite = display.newSprite("logos/batcat.png", 0, 0, {class=cc.FilteredSpriteWithOne})

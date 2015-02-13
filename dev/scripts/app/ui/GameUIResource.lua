@@ -322,9 +322,7 @@ function GameUIResource:ChaiButtonAction( event )
                 buildingLocation = tile.location_id,
                 houseLocation = house_location,
             }
-        }):next(function ()
-            self:leftButtonClicked()
-        end)
+        })
     end
 end
 

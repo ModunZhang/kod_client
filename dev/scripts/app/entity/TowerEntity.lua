@@ -8,16 +8,22 @@ function TowerEntity:UniqueKey()
     return string.format("%s", self:GetType())
 end
 function TowerEntity:OnUserDataChanged(user_data, current_time)
+    local buildingEvents = user_data.buildingEvents
     local event
-    for _,v in ipairs(user_data.buildingEvents or {}) do
+    for _,v in ipairs(buildingEvents or {}) do
         if v.location == 22 then
             event = v
             break
         end
     end
-    local finishTime = event == nil and 0 or event.finishTime / 1000
-    self:OnEvent(event)
-    self:OnHandle(user_data.buildings.location_22.level, finishTime)
+    if buildingEvents then
+        self:OnEvent(event)
+    end
+    local buildings = user_data.buildings
+    if buildings and buildings.location_22 then
+        local finishTime = event == nil and 0 or event.finishTime / 1000
+        self:OnHandle(buildings.location_22.level, finishTime)
+    end
 end
 -- 获取对各兵种攻击力
 function TowerEntity:GetAtk()
@@ -28,6 +34,8 @@ function TowerEntity:GetAtk()
 end
 
 return TowerEntity
+
+
 
 
 

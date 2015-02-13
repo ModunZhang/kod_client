@@ -611,19 +611,15 @@ function GameUIShop:onEnter()
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "随机拆除一个装饰物",
+        text = "获取拆除道具",
         size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
         :addTo(content)
         :align(display.CENTER, window.left + 140, window.top - 1200)
         :onButtonClicked(function(event)
-            -- cocos_promise.promiseWithCatchError(
-            --     NetManager:getDistroyAllianceDecoratePromise(
-            --         "WkFMlrSqJL"
-            --     )
-            -- )
-            end)
+            NetManager:getBuyItemPromise("torch",1)
+        end)
 
 
 
@@ -943,7 +939,7 @@ function GameUIShop:onEnter()
             end)
         end)
 
-     WidgetPushButton.new(
+    WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
@@ -960,7 +956,7 @@ function GameUIShop:onEnter()
             device.showAlert("提示","联盟数据输出成功",{_("确定")})
         end)
 
-     WidgetPushButton.new(
+    WidgetPushButton.new(
         {normal = "green_btn_up.png", pressed = "green_btn_down.png"},
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
@@ -975,12 +971,12 @@ function GameUIShop:onEnter()
         :onButtonClicked(function(event)
             if device.platform == 'ios' then
                 -- print(Store.canMakePurchases(),"Store.canMakePurchases--->")
-             
-                    -- Store.loadProducts({"kod.1dollar"}, function(data)
-                    --     dump(data,"data---->")
-                    -- end)
-                    -- Store.purchase("kod.1dollar")
-                    app:getStore().purchaseWithProductId("product_1",1)
+
+                -- Store.loadProducts({"kod.1dollar"}, function(data)
+                --     dump(data,"data---->")
+                -- end)
+                -- Store.purchase("kod.1dollar")
+                app:getStore().purchaseWithProductId("product_1",1)
             else
                 device.showAlert("提示",device.platform .. " is not support for IAP",{_("确定")})
             end
@@ -998,6 +994,7 @@ end
 
 
 return GameUIShop
+
 
 
 

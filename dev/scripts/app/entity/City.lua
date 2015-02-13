@@ -1037,7 +1037,7 @@ function City:OnUserDataChanged(userData, current_time)
     -- 最后才更新资源
     local resources = userData.resources
     local resource_refresh_time
-    if resources.refreshTime then
+    if resources and resources.refreshTime then
         resource_refresh_time = resources.refreshTime / 1000
         need_update_resouce_buildings = true
     end
