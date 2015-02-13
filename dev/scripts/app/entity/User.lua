@@ -54,7 +54,7 @@ function User:ctor(p)
     else
         self:SetId(p)
     end
-    -- vip event 
+    -- vip event
     local vip_event = VipEvent.new()
     vip_event:AddObserver(self)
     self.vip_event = vip_event
@@ -312,9 +312,9 @@ function User:OnCountInfoChanged(countInfo)
             self.countInfo[k] = v
         end
         self:NotifyListeneOnType(COUNT_INFO, function(listener)
-        listener:OnCountInfoChanged(self, {
-        })
-    end)
+            listener:OnCountInfoChanged(self, {
+                })
+        end)
     else
         self.countInfo  = countInfo
     end
@@ -334,7 +334,7 @@ function User:GetVipLevel()
 
     for i=#vip_level_config,1,-1 do
         local config = vip_level_config[i]
-         if exp >= config.expFrom then
+        if exp >= config.expFrom then
             local percent = math.floor((exp - config.expFrom)/(config.expTo-config.expFrom)*100)
             return config.level,percent,exp
         end
@@ -387,7 +387,6 @@ function User:OnBasicInfoChanged(basicInfo)
     self:SetName(basicInfo.name)
     self:SetVipExp(basicInfo.vipExp)
     self:SetIcon(basicInfo.icon)
-    self:SetDailyQuestsRefreshTime(basicInfo.dailyQuestsRefreshTime)
 end
 function User:OnNewRequestToAllianceEventsComming(__requestToAllianceEvents)
     if not __requestToAllianceEvents then return end
@@ -490,9 +489,14 @@ end
 function User:OnDailyQuestsChanged(dailyQuests)
     if not dailyQuests then return end
     LuaUtils:outputTable("OnDailyQuestsChanged", dailyQuests)
+    if dailyQuests.refreshTime then
+        self:SetDailyQuestsRefreshTime(dailyQuests.refreshTime)
+    end
     self.dailyQuests= {}
-    for k,v in pairs(dailyQuests) do
-        self.dailyQuests[v.id] = v
+    if dailyQuests.quests then
+        for k,v in pairs(dailyQuests.quests) do
+            self.dailyQuests[v.id] = v
+        end
     end
     self:OnDailyQuestsRefresh()
 end
@@ -603,6 +607,7 @@ function User:GetBestDragon()
 end
 
 return User
+
 
 
 

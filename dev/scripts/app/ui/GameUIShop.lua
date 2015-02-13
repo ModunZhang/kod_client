@@ -40,7 +40,7 @@ function GameUIShop:onEnter()
         :onButtonClicked(function()
             local current = self.shop_city:GetUser():GetGemResource():GetValue() + add_gem
             -- NetManager:sendMsg("gem "..current, NOT_HANDLE)
-            cocos_promise.promiseWithCatchError(NetManager:getSendGlobalMsgPromise("gem "..current))
+            cocos_promise.promiseWithCatchError(NetManager:getSendGlobalMsgPromise("resources gem "..current))
         end)
     -- :setButtonEnabled(false)
     -- :SetFilter({
@@ -775,7 +775,7 @@ function GameUIShop:onEnter()
             -- 重置玩家和联盟数据
             cocos_promise.promiseWithCatchError(
                 -- 增加宝石
-                NetManager:getSendGlobalMsgPromise("gem "..1000000)
+                NetManager:getSendGlobalMsgPromise("resources gem "..1000000)
                     -- 升级城堡到4级
                     :next(function()
                         return NetManager:getInstantUpgradeBuildingByLocationPromise(1)
@@ -792,7 +792,7 @@ function GameUIShop:onEnter()
                     end)
                     -- 解锁兵营
                     :next(function()
-                        return NetManager:getInstantUpgradeBuildingByLocationPromise(7)
+                        return NetManager:getInstantUpgradeBuildingByLocationPromise(5)
                     end)
                     -- 招募士兵
                     :next(function()
@@ -811,8 +811,6 @@ function GameUIShop:onEnter()
                     :next(function()
                         return NetManager:getSendGlobalMsgPromise("dragonstar blueDragon 3 ")
                     end)
-
-
             )
         end)
     WidgetPushButton.new(

@@ -138,7 +138,7 @@ end
 function WallUpgradeBuilding:OnUserDataChanged(user_data, current_time)
     if self:IsGate() then
         local event
-        for _,v in ipairs(user_data.buildingEvents) do
+        for _,v in ipairs(user_data.buildingEvents or {}) do
             if v.location == 21 then
                 event = v
                 break
