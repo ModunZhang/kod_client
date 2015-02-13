@@ -20,16 +20,7 @@ end
 function GameUIBuildingSpeedUp:GetEventType()
     local building = self.building
     local city = City
-    local eventType = ""
-    if city:IsFunctionBuilding(building) then
-        eventType = "buildingEvents"
-    elseif city:IsHouse(building) then
-        eventType = "houseEvents"
-    elseif city:IsGate(building) then
-        eventType = "wallEvents"
-    elseif city:IsTower(building) then
-        eventType = "towerEvents"
-    end
+    local eventType = city:IsHouse(self.building) and "houseEvents" or "buildingEvents"
     return eventType
 end
 function GameUIBuildingSpeedUp:FreeSpeedUpAction()

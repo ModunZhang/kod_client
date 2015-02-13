@@ -733,28 +733,18 @@ function NetManager:getInstantUpgradeBuildingByLocationPromise(location)
     return promise.all(get_upgradeBuilding_promise(location, true), get_playerdata_callback()):next(get_response_msg)
 end
 -- 升级防御塔
-local function get_upgradeTower_promise(finish_now)
-    return get_blocking_request_promise("logic.playerHandler.upgradeTower", {
-        finishNow = finish_now or false
-    }, "升级防御塔失败!")
-end
 function NetManager:getUpgradeTowerPromise()
-    return promise.all(get_upgradeTower_promise(false), get_playerdata_callback()):next(get_response_msg)
+    return NetManager:getUpgradeBuildingByLocationPromise(22)
 end
 function NetManager:getInstantUpgradeTowerPromise()
-    return promise.all(get_upgradeTower_promise(true), get_playerdata_callback()):next(get_response_msg)
+    return NetManager:getInstantUpgradeBuildingByLocationPromise(22)
 end
 -- 升级城门
-local function get_upgradeWall_promise(finish_now)
-    return get_blocking_request_promise("logic.playerHandler.upgradeWall", {
-        finishNow = finish_now or false
-    }, "升级防御塔失败!")
-end
 function NetManager:getUpgradeWallByLocationPromise()
-    return promise.all(get_upgradeWall_promise(false), get_playerdata_callback()):next(get_response_msg)
+    return NetManager:getUpgradeBuildingByLocationPromise(21)
 end
 function NetManager:getInstantUpgradeWallByLocationPromise()
-    return promise.all(get_upgradeWall_promise(true), get_playerdata_callback()):next(get_response_msg)
+    return NetManager:getInstantUpgradeBuildingByLocationPromise(21)
 end
 -- 征收税
 function NetManager:getImposePromise()

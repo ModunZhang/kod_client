@@ -162,8 +162,6 @@ function GameUIHelp:GetHelpEventDesc( eventData )
     local name = eventData:Name()
     if type == "buildingEvents"
         or type == "houseEvents"
-        or type == "towerEvents"
-        or type == "wallEvents"
     then
         return _("正在升级")..Localize.building_name[name].._("Lv")..eventData:Level()
     elseif type == "militaryTechEvents" then

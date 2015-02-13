@@ -508,16 +508,7 @@ function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                local eventType = ""
-                if self.city:IsFunctionBuilding(self.building) then
-                    eventType = "buildingEvents"
-                elseif self.city:IsHouse(self.building) then
-                    eventType = "houseEvents"
-                elseif self.city:IsGate(self.building) then
-                    eventType = "wallEvents"
-                elseif self.city:IsTower(self.building) then
-                    eventType = "towerEvents"
-                end
+                local eventType = self.city:IsHouse(self.building) and "houseEvents" or "buildingEvents"
                 NetManager:getFreeSpeedUpPromise(eventType,self.building:UniqueUpgradingKey())
                     :catch(function(err)
                         dump(err:reason())
@@ -534,16 +525,7 @@ function CommonUpgradeUI:SetAccTipLabel()
 end
 function CommonUpgradeUI:GetEventTypeByBuilding()
     local building = self.building
-    local eventType = ""
-    if self.city:IsFunctionBuilding(building) then
-        eventType = "buildingEvents"
-    elseif self.city:IsHouse(building) then
-        eventType = "houseEvents"
-    elseif self.city:IsGate(building) then
-        eventType = "wallEvents"
-    elseif self.city:IsTower(building) then
-        eventType = "towerEvents"
-    end
+    local eventType = self.city:IsHouse(self.building) and "houseEvents" or "buildingEvents"
     return eventType
 end
 function CommonUpgradeUI:CreateAccButtons()

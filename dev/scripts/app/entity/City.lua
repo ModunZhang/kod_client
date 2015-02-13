@@ -45,6 +45,14 @@ City.RESOURCE_TYPE_TO_BUILDING_TYPE = {
     [ResourceManager.RESOURCE_TYPE.STONE] = "quarrier",
     [ResourceManager.RESOURCE_TYPE.POPULATION] = "dwelling",
 }
+local illegal_map = {
+    location_21 = true,
+    location_22 = true
+}
+local function illegal_filter(key, func)
+    if illegal_map[key] then return end
+    func()
+end
 -- 初始化
 function City:ctor(json_data)
     City.super.ctor(self)
@@ -99,23 +107,24 @@ function City:InitWithJsonData(userData)
     end
 
     table.foreach(userData.buildings, function(key, location)
-        local location_config = self:GetLocationById(location.location)
-        local event = get_building_event_by_location(location.location)
-        local finishTime = event == nil and 0 or event.finishTime / 1000
-        table.insert(init_buildings,
-            self:NewBuildingWithType(location_config.building_type,
-                location_config.x,
-                location_config.y,
-                location_config.w,
-                location_config.h,
-                location.level,
-                finishTime)
-        )
+        illegal_filter(key, function()
+            local location_config = self:GetLocationById(location.location)
+            local event = get_building_event_by_location(location.location)
+            local finishTime = event == nil and 0 or event.finishTime / 1000
+            table.insert(init_buildings,
+                self:NewBuildingWithType(location_config.building_type,
+                    location_config.x,
+                    location_config.y,
+                    location_config.w,
+                    location_config.h,
+                    location.level,
+                    finishTime)
+            )
 
-
-        if location.level > 0 then
-            table.insert(init_unlock_tiles, {x = location_config.tile_x, y = location_config.tile_y})
-        end
+            if location.level > 0 then
+                table.insert(init_unlock_tiles, {x = location_config.tile_x, y = location_config.tile_y})
+            end
+        end)
     end)
     self:InitBuildings(init_buildings)
 
@@ -152,27 +161,29 @@ function City:InitWithJsonData(userData)
     end
 
     local init_decorators = {}
-    table.foreach(userData.buildings, function(_, location)
-        if #location.houses > 0 then
-            table.foreach(location.houses, function(_, house)
-                local city_location = self:GetLocationById(location.location)
-                local tile_x = city_location.tile_x
-                local tile_y = city_location.tile_y
-                local tile = self:GetTileByIndex(tile_x, tile_y)
-                local absolute_x, absolute_y = tile:GetAbsolutePositionByLocation(house.location)
-                local event = get_house_event_by_location(location.location, house.location)
-                local finishTime = event == nil and 0 or event.finishTime / 1000
-                table.insert(init_decorators,
-                    self:NewBuildingWithType(house.type,
-                        absolute_x,
-                        absolute_y,
-                        3,
-                        3,
-                        house.level,
-                        finishTime)
-                )
-            end)
-        end
+    table.foreach(userData.buildings, function(key, location)
+        illegal_filter(key, function()
+            if #location.houses > 0 then
+                table.foreach(location.houses, function(_, house)
+                    local city_location = self:GetLocationById(location.location)
+                    local tile_x = city_location.tile_x
+                    local tile_y = city_location.tile_y
+                    local tile = self:GetTileByIndex(tile_x, tile_y)
+                    local absolute_x, absolute_y = tile:GetAbsolutePositionByLocation(house.location)
+                    local event = get_house_event_by_location(location.location, house.location)
+                    local finishTime = event == nil and 0 or event.finishTime / 1000
+                    table.insert(init_decorators,
+                        self:NewBuildingWithType(house.type,
+                            absolute_x,
+                            absolute_y,
+                            3,
+                            3,
+                            house.level,
+                            finishTime)
+                    )
+                end)
+            end
+        end)
     end)
     self:InitDecorators(init_decorators)
     self:GenerateWalls()
@@ -733,9 +744,6 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time)
     self:IteratorFunctionBuildingsByFunc(function(key, building)
         building:OnUserDataChanged(user_data, current_time, self:GetLocationIdByBuilding(building))
     end)
-    -- self:IteratorTowersByFunc(function(key, building)
-    --     building:OnUserDataChanged(user_data, current_time)
-    -- end)
     self:GetTower():OnUserDataChanged(user_data, current_time)
     self:GetGate():OnUserDataChanged(user_data, current_time)
 end
@@ -910,7 +918,6 @@ function City:DestoryDecoratorByPosition(current_time, x, y)
         return true
     end
 end
-
 ----------- 功能扩展点
 function City:OnUserDataChanged(userData, current_time)
     -- 解锁，建造，拆除类事件的解析
@@ -921,73 +928,75 @@ function City:OnUserDataChanged(userData, current_time)
     local need_update_resouce_buildings = false
     if userData.buildings then
         table.foreach(userData.buildings, function(key, location)
-            local building = self:GetBuildingByLocationId(location.location)
-            local is_unlocking = building:GetLevel() == 0 and location.level > 0
-            local is_locking = building:GetLevel() > 0 and location.level <= 0
-            local tile = self:GetTileByLocationId(location.location)
-            if is_unlocking then
-                is_unlock_any_tiles = true
-                table.insert(unlock_table, {x = tile.x, y = tile.y})
-            elseif is_locking then
-                is_lock_any_tiles = true
-                table.insert(lock_table, {x = tile.x, y = tile.y})
-            end
-
-            -- 拆除
-            local decorators = self:GetDecoratorsByLocationId(location.location)
-            assert(decorators)
-            local find_building_info_by_location = function(houses, location_id)
-                for _, v in pairs(houses) do
-                    if v.location == location_id then
-                        return v
-                    end
+            illegal_filter(key, function()
+                local building = self:GetBuildingByLocationId(location.location)
+                local is_unlocking = building:GetLevel() == 0 and location.level > 0
+                local is_locking = building:GetLevel() > 0 and location.level <= 0
+                local tile = self:GetTileByLocationId(location.location)
+                if is_unlocking then
+                    is_unlock_any_tiles = true
+                    table.insert(unlock_table, {x = tile.x, y = tile.y})
+                elseif is_locking then
+                    is_lock_any_tiles = true
+                    table.insert(lock_table, {x = tile.x, y = tile.y})
                 end
-                return nil
-            end
-            table.foreach(decorators, function(key, building)
-                -- 当前位置有小建筑并且推送的数据里面没有就认为是拆除
-                local tile = self:GetTileWhichBuildingBelongs(building)
-                local location_id = tile:GetBuildingLocation(building)
-                local building_info = find_building_info_by_location(location.houses, location_id)
-                -- 没有找到，就是已经被拆除了
-                if not building_info then
-                    self:DestoryDecorator(current_time, building)
-                    need_update_resouce_buildings = true
-                end
-            end)
 
-            -- 新建的
-            local hosue_events = userData.houseEvents
-            if hosue_events then
-                local function get_house_event_by_location(building_location, sub_id)
-                    for k, v in pairs(hosue_events) do
-                        if v.buildingLocation == building_location and
-                            v.houseLocation == sub_id then
+                -- 拆除
+                local decorators = self:GetDecoratorsByLocationId(location.location)
+                assert(decorators)
+                local find_building_info_by_location = function(houses, location_id)
+                    for _, v in pairs(houses) do
+                        if v.location == location_id then
                             return v
                         end
                     end
+                    return nil
                 end
-                table.foreach(location.houses, function(key, house)
-                    -- 当前位置没有小建筑并且推送的数据里面有就认为新建小建筑
-                    if not decorators[house.location] then
-                        local tile = self:GetTileByLocationId(location.location)
-                        local absolute_x, absolute_y = tile:GetAbsolutePositionByLocation(house.location)
-                        local event = get_house_event_by_location(location.location, house.location)
-                        -- local finishTime = event == nil and 0 or event.finishTime / 1000
-                        self:CreateDecorator(current_time, BuildingRegister[house.type].new({
-                            x = absolute_x,
-                            y = absolute_y,
-                            w = 3,
-                            h = 3,
-                            building_type = house.type,
-                            level = house.level,
-                            finishTime = 0,
-                            city = self,
-                        }))
+                table.foreach(decorators, function(key, building)
+                    -- 当前位置有小建筑并且推送的数据里面没有就认为是拆除
+                    local tile = self:GetTileWhichBuildingBelongs(building)
+                    local location_id = tile:GetBuildingLocation(building)
+                    local building_info = find_building_info_by_location(location.houses, location_id)
+                    -- 没有找到，就是已经被拆除了
+                    if not building_info then
+                        self:DestoryDecorator(current_time, building)
                         need_update_resouce_buildings = true
                     end
                 end)
-            end
+
+                -- 新建的
+                local hosue_events = userData.houseEvents
+                if hosue_events then
+                    local function get_house_event_by_location(building_location, sub_id)
+                        for k, v in pairs(hosue_events) do
+                            if v.buildingLocation == building_location and
+                                v.houseLocation == sub_id then
+                                return v
+                            end
+                        end
+                    end
+                    table.foreach(location.houses, function(key, house)
+                        -- 当前位置没有小建筑并且推送的数据里面有就认为新建小建筑
+                        if not decorators[house.location] then
+                            local tile = self:GetTileByLocationId(location.location)
+                            local absolute_x, absolute_y = tile:GetAbsolutePositionByLocation(house.location)
+                            local event = get_house_event_by_location(location.location, house.location)
+                            -- local finishTime = event == nil and 0 or event.finishTime / 1000
+                            self:CreateDecorator(current_time, BuildingRegister[house.type].new({
+                                x = absolute_x,
+                                y = absolute_y,
+                                w = 3,
+                                h = 3,
+                                building_type = house.type,
+                                level = house.level,
+                                finishTime = 0,
+                                city = self,
+                            }))
+                            need_update_resouce_buildings = true
+                        end
+                    end)
+                end
+            end)
         end)
     end
     -- 更新地块信息
@@ -1647,6 +1656,11 @@ function City:FindProductionTechEventById(_id)
 end
 
 return City
+
+
+
+
+
 
 
 
