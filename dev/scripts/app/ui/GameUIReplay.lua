@@ -13,6 +13,7 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetSoldierInBattle = import("..widget.WidgetSoldierInBattle")
 local GameUIReplay = UIKit:createUIClass('GameUIReplay')
 
+-- 攻击者默认在左边
 local new_battle = {
     {
         left = {soldier = "lancer", count = 1000, damage = 90, morale = 100, decrease = 20},
@@ -355,42 +356,33 @@ function GameUIReplay:onEnter()
     self.weak = display.newSprite("vs_weak.png"):addTo(bg):pos(size.width / 2, size.height /2):hide()
 
     local battle = decode_battle_from_report(self.report)
-    LuaUtils:outputTable("name", battle)
     -- local battle = new_battle
     dump(battle)
 
     local x, y = bg:getPosition()
     self.list_view = self:CreateVerticalListViewDetached(0, 80, back_ground:getContentSize().width, y - 82 / 2):addTo(back_ground)
-    self.left_corps = {}
-    self.right_corps = {}
-    self.left_round = 0
-    self.right_round = 0
-    local dual = {left = {}, right = {}}
-    for i, v in ipairs(battle) do
-        if v.left.soldier then
-            table.insert(dual.left, v.left.soldier)
-        end
-        if v.right.soldier then
-            table.insert(dual.right, v.right.soldier)
-        end
-    end
+    local attacker_soldiers = self.report:GetOrderedAttackSoldiers()
+    local defencer_soldiers = self.report:GetOrderedDefenceSoldiers()
+    defencer_soldiers[#defencer_soldiers + 1] = report:IsFightWall() and {name = "wall", star = 1} or nil
     local round = {}
-    while 1 do
-        local left = table.remove(dual.left, 1)
-        local right = table.remove(dual.right, 1)
-        if not left and not right then
-            break
-        end
-        table.insert(round, {left = {soldier = left}, right = {soldier = right}})
+    for i = 1, math.max((#attacker_soldiers),(#defencer_soldiers)) do
+        local left, right = attacker_soldiers[i], defencer_soldiers[i]
+        table.insert(round, {left = left, right = right})
     end
+    local left_corps = {}
+    local right_corps = {}
     for i, dual in ipairs(round) do
         local item, left, right = self:CreateItemWithListView(self.list_view, dual)
-        table.insert(self.left_corps, left)
-        table.insert(self.right_corps, right)
+        table.insert(left_corps, left)
+        table.insert(right_corps, right)
         self.list_view:addItem(item)
     end
     self.list_view:reload()
 
+    self.left_corps = left_corps
+    self.right_corps = right_corps
+    self.left_round = 0
+    self.right_round = 0
     self.left_morale_max = 0
     self.right_morale_max = 0
     self.left_morale_cur = self.left_morale_max
@@ -813,17 +805,17 @@ function GameUIReplay:CreateItemWithListView(list_view, dual)
     local row_item = display.newNode()
     local left, right = dual.left, dual.right
     local left_item, right_item
-    if left.soldier then
+    if left then
         left_item = WidgetSoldierInBattle.new("back_ground_284x128.png",
-            {side = "blue", soldier = left.soldier, star = 1}):addTo(row_item)
+            {side = "blue", soldier = left.name, star = left.star}):addTo(row_item)
             :align(display.CENTER, -284/2 - gap, 0)
     end
-    if right.soldier then
+    if right then
         right_item = WidgetSoldierInBattle.new("back_ground_284x128.png",
-            {side = "red", soldier = right.soldier, star = 1}):addTo(row_item)
+            {side = "red", soldier = right.name, star = right.star}):addTo(row_item)
             :align(display.CENTER, 284/2 + gap, 0)
     end
-    -- row_item:setContentSize(cc.size(284, 128))
+    -- row_item:setContentSize(cc.size(284 * 2, 128))
     local item = list_view:newItem()
     item:addContent(row_item)
     item:setItemSize(284 * 2, 128)
