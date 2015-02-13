@@ -344,9 +344,9 @@ function UpgradeBuilding:GetLevelUpCitizen()
     local level = self.level
     return self.config_building_levelup[self:GetType()][self:GetNextLevel()].citizen
 end
-
-function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
-    local city = self:BelongCity()
+-- 升级前置条件
+function UpgradeBuilding:IsBuildingUpgradeLegal()
+    local city =  self:BelongCity()
     local level = self.level
 
     --等级小于0级
@@ -357,19 +357,50 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     if self:IsUpgrading() then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDING_IS_UPGRADING
     end
-    local config = self.config_building_levelup[self:GetType()]
-    -- 地块是否解锁
-    -- local tile = city:GetTileWhichBuildingBelongs(self)
-    -- if not city:IsUnLockedAtIndex(tile.x,tile.y) then
-    --     return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.TILE_NOT_UNLOCKED
-    -- end
-    -- 除了keep以外，被升级建筑等级不能大于keep等级
+    local level_up_config = self.config_building_levelup[self:GetType()]
 
-    if self:GetType()~="keep" and city:GetBuildingByLocationId(1):GetLevel()==level then
-        return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.LEVEL_CAN_NOT_HIGHER_THAN_KEEP_LEVEL
-    elseif #config == level then
+    if #level_up_config == level then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.IS_MAX_LEVEL
     end
+
+    local config
+    if city:IsHouse(self) then
+        config = GameDatas.Houses.houses[self:GetType()]
+    else
+        local location_id = city:GetLocationIdByBuildingType(self:GetType())
+        config = GameDatas.Buildings.buildings[location_id]
+    end
+    local configParams = string.split(config.preCondition,"_")
+    local preType = configParams[1]
+    local preName = configParams[2]
+    local preLevel = tonumber(configParams[3])
+    local limit
+    if preType == "building" then
+        local find_buildings = city:GetBuildingByType(preName)
+        for i,v in ipairs(find_buildings) do
+            if v:GetLevel()>=self:GetLevel()+preLevel then
+                limit = true
+            end
+        end
+    else
+        city:IteratorDecoratorBuildingsByFunc(function (index,house)
+            if house:GetLevel()>=self:GetLevel()+preLevel then
+                limit = true
+            end
+        end)
+    end
+    if not limit then
+        return string.format(_("需要%s达到%d级"),Localize.building_name[preName],self:GetLevel()+preLevel)
+    end
+end
+function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
+    local city = self:BelongCity()
+    
+    local pre_limit = self:IsBuildingUpgradeLegal()
+    if pre_limit then
+        return pre_limit
+    end
+
     local gem = city:GetUser():GetGemResource():GetValue()
     if isUpgradeNow then
         if gem<self:getUpgradeNowNeedGems() then
@@ -449,6 +480,10 @@ function UpgradeBuilding:getUpgradeRequiredGems()
 end
 
 return UpgradeBuilding
+
+
+
+
 
 
 

@@ -491,7 +491,7 @@ function User:OnDailyQuestsChanged(dailyQuests)
     if not dailyQuests then return end
     LuaUtils:outputTable("OnDailyQuestsChanged", dailyQuests)
     self.dailyQuests= {}
-    for k,v in pairs(dailyQuests) do
+    for k,v in pairs(dailyQuests.quests) do
         self.dailyQuests[v.id] = v
     end
     self:OnDailyQuestsRefresh()
