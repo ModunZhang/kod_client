@@ -174,7 +174,6 @@ function Report:GetMyDefenceFightTroop()
         return data.attackPlayerData.fightWithDefenceTroop and data.attackPlayerData.fightWithDefenceTroop.soldiers
             or data.attackPlayerData and data.attackPlayerData.soldiers
     else
-
         return data.defencePlayerData and data.defencePlayerData.soldiers
             or data.defenceVillageData and data.defenceVillageData.soldiers
     end
@@ -474,6 +473,18 @@ end
 function Report:GetFightDefenceWallRoundData()
     local data = self:GetFightReports()
     return data.defencePlayerWallRoundDatas or {}
+end
+function Report:GetOrderedAttackSoldiers()
+    local attackPlayerData = self:GetData().attackPlayerData
+    local troop = attackPlayerData.fightWithHelpDefenceTroop or attackPlayerData.fightWithDefenceTroop
+    local soldiers = troop.soldiers
+    return soldiers
+end
+function Report:GetOrderedDefenceSoldiers()
+    local data = self:GetData()
+    local defenceData = data.helpDefencePlayerData or data.defencePlayerData
+    local soldiers = defenceData.soldiers
+    return soldiers
 end
 function Report:GetFightReports()
     local data = self:GetData()
