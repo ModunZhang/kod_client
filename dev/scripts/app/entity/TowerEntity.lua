@@ -8,7 +8,6 @@ function TowerEntity:UniqueKey()
     return string.format("%s", self:GetType())
 end
 function TowerEntity:OnUserDataChanged(user_data, current_time)
-    local buildings = user_data.buildings
     local buildingEvents = user_data.buildingEvents
     local event
     for _,v in ipairs(buildingEvents or {}) do
@@ -20,7 +19,8 @@ function TowerEntity:OnUserDataChanged(user_data, current_time)
     if buildingEvents then
         self:OnEvent(event)
     end
-    if buildings then
+    local buildings = user_data.buildings
+    if buildings and buildings.location_22 then
         local finishTime = event == nil and 0 or event.finishTime / 1000
         self:OnHandle(buildings.location_22.level, finishTime)
     end
