@@ -196,7 +196,7 @@ function GameUIBase:CreateShopButton(on_clicked)
     gem_button:align(display.RIGHT_TOP, window.cx+314, window.top-5)
     cc.ui.UIImage.new("home/gem_1.png")
         :addTo(gem_button)
-        :pos(-55, -52)
+        :pos(-60, -62)
 
     return UIKit:ttfLabel({
         text = ""..string.formatnumberthousands(City:GetUser():GetGemResource():GetValue()),

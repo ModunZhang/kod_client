@@ -12,7 +12,20 @@ local GameUIAllianceWorld = class("GameUIAllianceWorld", WidgetPopDialog)
 function GameUIAllianceWorld:ctor()
     GameUIAllianceWorld.super.ctor(self,880,_("世界地图"),window.top-60)
 
-    local map = display.newSprite("allianceHome/world_map.jpg"):scale(1.8)
+    local map = display.newSprite("allianceHome/world_map.jpg"):scale(1.8):align(display.CENTER, 278, 270)
+
+    -- local button = WidgetPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
+    --     :setButtonLabel(UIKit:ttfLabel({
+    --         text = "xxxx",
+    --         size = 20,
+    --         color = 0xffedae,
+    --     }))
+    --     :onButtonClicked(function(event)
+    --         if event.name == "CLICKED_EVENT" then
+    --         end
+    --     end)
+    --     :align(display.CENTER, 0,0)
+    --     :addTo(map)    
     local scrollView = UIScrollView.new({
         viewRect = cc.rect(0,0,556,541),
     -- bgColor = UIKit:hex2c4b(0x7a000000),
