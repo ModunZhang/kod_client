@@ -83,8 +83,6 @@ require("app.datas.AllianceVillage_coinVillage")
 require("app.datas.AllianceVillage_gemVillage")
 
 GameDatas.BuildingFunction = {
-	["wall"] = {},
-	["tower"] = {},
 	["keep"] = {},
 	["watchTower"] = {},
 	["warehouse"] = {},
@@ -105,9 +103,9 @@ GameDatas.BuildingFunction = {
 	["trainingGround"] = {},
 	["hunterHall"] = {},
 	["stable"] = {},
+	["wall"] = {},
+	["tower"] = {},
 }
-require("app.datas.BuildingFunction_wall")
-require("app.datas.BuildingFunction_tower")
 require("app.datas.BuildingFunction_keep")
 require("app.datas.BuildingFunction_watchTower")
 require("app.datas.BuildingFunction_warehouse")
@@ -128,10 +126,10 @@ require("app.datas.BuildingFunction_workshop")
 require("app.datas.BuildingFunction_trainingGround")
 require("app.datas.BuildingFunction_hunterHall")
 require("app.datas.BuildingFunction_stable")
+require("app.datas.BuildingFunction_wall")
+require("app.datas.BuildingFunction_tower")
 
 GameDatas.BuildingLevelUp = {
-	["wall"] = {},
-	["tower"] = {},
 	["keep"] = {},
 	["watchTower"] = {},
 	["warehouse"] = {},
@@ -152,9 +150,9 @@ GameDatas.BuildingLevelUp = {
 	["trainingGround"] = {},
 	["hunterHall"] = {},
 	["stable"] = {},
+	["wall"] = {},
+	["tower"] = {},
 }
-require("app.datas.BuildingLevelUp_wall")
-require("app.datas.BuildingLevelUp_tower")
 require("app.datas.BuildingLevelUp_keep")
 require("app.datas.BuildingLevelUp_watchTower")
 require("app.datas.BuildingLevelUp_warehouse")
@@ -175,6 +173,8 @@ require("app.datas.BuildingLevelUp_workshop")
 require("app.datas.BuildingLevelUp_trainingGround")
 require("app.datas.BuildingLevelUp_hunterHall")
 require("app.datas.BuildingLevelUp_stable")
+require("app.datas.BuildingLevelUp_wall")
+require("app.datas.BuildingLevelUp_tower")
 
 GameDatas.Buildings = {
 	["buildings"] = {},
@@ -245,6 +245,11 @@ require("app.datas.GemsPayment_food")
 require("app.datas.GemsPayment_coin")
 require("app.datas.GemsPayment_citizen")
 require("app.datas.GemsPayment_material")
+
+GameDatas.GrowUpTasks = {
+	["tasks"] = {},
+}
+require("app.datas.GrowUpTasks_tasks")
 
 GameDatas.HouseFunction = {
 	["dwelling"] = {},

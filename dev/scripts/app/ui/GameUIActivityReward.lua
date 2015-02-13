@@ -12,21 +12,24 @@ local config_day60 = GameDatas.Activities.day60
 local config_online = GameDatas.Activities.online
 local config_day14 = GameDatas.Activities.day14
 local GameUtils = GameUtils
+local config_stringInit = GameDatas.PlayerInitData.stringInit
 
 local height_config = {
 	EVERY_DAY_LOGIN = 762,
 	ONLINE = 762,
 	CONTINUITY = 762,
 	FIRST_IN_PURGURE = 762,
+	PLAYER_LEVEL_UP = 762,
 }
 local ui_titles = {
 	EVERY_DAY_LOGIN = _("每日登陆奖励"),
 	ONLINE = _("在线奖励"),
 	CONTINUITY = _("王城援军"),
 	FIRST_IN_PURGURE = _("首次充值奖励"),
+	PLAYER_LEVEL_UP = _("新手冲级奖励"),
 }
 
-GameUIActivityReward.REWARD_TYPE = Enum("EVERY_DAY_LOGIN","ONLINE","CONTINUITY","FIRST_IN_PURGURE")
+GameUIActivityReward.REWARD_TYPE = Enum("EVERY_DAY_LOGIN","ONLINE","CONTINUITY","FIRST_IN_PURGURE","PLAYER_LEVEL_UP")
 
 function GameUIActivityReward:ctor(reward_type,params)
 	GameUIActivityReward.super.ctor(self)
@@ -394,6 +397,7 @@ end
 function GameUIActivityReward:ui_FIRST_IN_PURGURE()
 	local bar = display.newSprite("activity_first_purgure_598x190.png"):align(display.TOP_CENTER, 304,self.height - 20):addTo(self.bg)
 	display.newSprite("Npc.png"):align(display.RIGHT_BOTTOM, 305, -20):addTo(self.bg):scale(552/423)
+	local countInfo = User:GetCountInfo()
 	WidgetPushButton.new({normal = 'yellow_btn_up_148x58.png',pressed = 'yellow_btn_down_148x58.png',disabled = 'gray_btn_148x58.png'})
 			:setButtonLabel("normal", UIKit:commonButtonLable({
 				text = _("领取")
@@ -401,7 +405,33 @@ function GameUIActivityReward:ui_FIRST_IN_PURGURE()
 			:addTo(self.bg)
 			:pos(435,54)
 			:onButtonClicked(function()
-
+				NetManager:getFirstIAPRewardsPromise()
 			end)
+			:setButtonEnabled(countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted)
+	local rewards = self:GetFirstPurgureRewards()
+	local x,y = 300,self.height - 245
+	for index,reward in ipairs(rewards) do
+		--TODO:
+		-- local reward_type,reward_name = unpack(reward)
+		if index > 6 then return end
+		local item_bg = display.newSprite("activity_item_bg_110x108.png"):align(display.LEFT_TOP, x, y):addTo(self.bg)
+		display.newSprite("activity_item_icon_90x90.png",55,54):addTo(item_bg)
+		x = x  + 110 + 35 
+		if index % 2 == 0 then 
+			x = 300
+			y = y - 108 - 21 
+		end
+	end
+end
+
+function GameUIActivityReward:GetFirstPurgureRewards()
+	local config = config_stringInit.firstIAPRewards.value
+	local r = {}
+	local rewards = string.split(config, ',')
+	for __,v in ipairs(rewards) do
+		local reward_type,reward_name,count = string.split(v, ':')
+		table.insert(r,{reward_type,reward_name})
+	end
+	return r
 end
 return GameUIActivityReward

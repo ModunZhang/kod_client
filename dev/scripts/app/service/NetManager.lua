@@ -1534,6 +1534,12 @@ function NetManager:getDay14RewardPromise()
         nil,
         "获取在线天数奖励失败!"),get_playerdata_callback()):next(get_response_msg)
 end
+-- 首充奖励
+function NetManager:getFirstIAPRewardsPromise()
+    return promise.all(get_blocking_request_promise("logic.playerHandler.getFirstIAPRewards",
+        nil,
+        "获取首充奖励失败!"),get_playerdata_callback()):next(get_response_msg)
+end
 
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
