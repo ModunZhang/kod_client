@@ -175,6 +175,7 @@ function CityScene:CreateSceneUILayer()
         building_sprite:NotifyObservers(function(ob)
             table.foreachi(self.ui, function(i, v)
                 if ob == v then
+                    building_sprite:RemoveObserver(v)
                     table.remove(self.ui, i)
                     v:removeFromParent()
                 end
