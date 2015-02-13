@@ -26,7 +26,8 @@ end
 
 function GameUITips:BuildUI()
 	local shadowLayer = UIKit:shadowLayer():addTo(self)
-	local bg = WidgetUIBackGround.new({height=762}):addTo(shadowLayer):pos(window.left+10,window.bottom_top)
+	local bg = WidgetUIBackGround.new({height=762}):addTo(shadowLayer)
+	bg:pos(((window.width - bg:getContentSize().width)/2),window.bottom_top)
 	local titleBar = display.newSprite("alliance_blue_title_600x42.png"):align(display.LEFT_BOTTOM,3,747):addTo(bg)
 	local closeButton = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"}, {scale9 = false})
 	   	:addTo(titleBar)
