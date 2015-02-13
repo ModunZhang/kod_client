@@ -33,41 +33,45 @@ function PVELayer:ctor(user)
     self.pve_listener = Observer.new()
     self.user = user
     self.pve_map = user:GetCurrentPVEMap()
-    self.scene_node = display.newNode():addTo(self)
-    self.background = cc.TMXTiledMap:create(string.format("tmxmaps/pve_%d_background.tmx", self.pve_map:GetIndex())):addTo(self.scene_node, ZORDER.BACKGROUND)
-    self.war_fog_layer = cc.TMXTiledMap:create(string.format("tmxmaps/pve_%d_fog.tmx", self.pve_map:GetIndex())):addTo(self.scene_node, ZORDER.FOG):pos(-80, -80):getLayer("layer1")
+
     self.pve_layer = cc.TMXTiledMap:create(string.format("tmxmaps/pve_%d_info.tmx", self.pve_map:GetIndex())):addTo(self):hide():getLayer("layer1")
+    local size = self.pve_layer:getLayerSize()
+    local w, h = size.width, size.height
+
+    self.scene_node = display.newNode():addTo(self)
+    self.background = cc.TMXTiledMap:create(string.format("tmxmaps/pve_background_%dx%d.tmx", w, h)):addTo(self.scene_node, ZORDER.BACKGROUND)
+    self.war_fog_layer = cc.TMXTiledMap:create(string.format("tmxmaps/pve_fog_%dx%d.tmx", w, h)):addTo(self.scene_node, ZORDER.FOG):pos(-80, -80):getLayer("layer1")
+
     self.building_layer = display.newNode():addTo(self.scene_node, ZORDER.BUILDING)
     self.object_layer = display.newNode():addTo(self.scene_node, ZORDER.OBJECT)
-    local size = self.pve_layer:getLayerSize()
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new({
         tile_w = 80,
         tile_h = 80,
-        map_width = size.width,
-        map_height = size.height,
+        map_width = w,
+        map_height = h,
         base_x = 0,
-        base_y = size.height * 80,
+        base_y = h * 80,
     })
     local size_in = self.background:getContentSize()
     local size_out = self:getContentSize()
     local x, y = size_out.width * 0.5 - size_in.width * 0.5, size_out.height * 0.5 - size_in.height * 0.5
     self.scene_node:pos(x, y)
 
-
-    local layer = self.background:getLayer("layer1")
-    local color = cc.c3b(tonumber(layer:getProperty("r")) or 0, tonumber(layer:getProperty("g")) or 0, tonumber(layer:getProperty("b")) or 0)
-    for x = 0, size.width - 1 do
-        for y = 0, size.height - 1 do
-            local tile = layer:getTileAt(cc.p(x, y))
-            tile:setColor(color + cc.c3b(tile:getColor()))
-        end
-    end
+    -- local layer = self.background:getLayer("layer1")
+    -- local color = cc.c3b(tonumber(layer:getProperty("r")) or 0, tonumber(layer:getProperty("g")) or 0, tonumber(layer:getProperty("b")) or 0)
+    -- for x = 0, w - 1 do
+    --     for y = 0, h - 1 do
+    --         local tile = layer:getTileAt(cc.p(x, y))
+    --         tile:setColor(color + cc.c3b(tile:getColor()))
+    --     end
+    -- end
 end
 function PVELayer:onEnter()
     PVELayer.super.onEnter(self)
     local w, h = self.normal_map:GetSize()
     -- 点亮中心
-    self:LightOn((w - 1) * 0.5, (h - 1) * 0.5, 4)
+    local start = self.pve_map:GetStartPoint()
+    self:LightOn(start.x, start.y, 4)
     self:LoadFog()
     -- 加载地图数据
     local objects = {}
@@ -129,6 +133,11 @@ function PVELayer:PromiseOfTrap()
     local p = promise.new()
     local t = 0.025
     local r = 5
+    local exclamation_time = 0.5
+    local exclamation_scale = 0.2
+    local size = self.char:getContentSize()
+    local s = display.newSprite("exclamation.png")
+        :addTo(self.char):pos(size.width, size.height):scale(0)
     self.char:runAction(transition.sequence({
         cc.RotateBy:create(t, r),
         cc.RotateBy:create(t, -r),
@@ -142,7 +151,18 @@ function PVELayer:PromiseOfTrap()
         cc.RotateBy:create(t, -r),
         cc.RotateBy:create(t, -r),
         cc.RotateBy:create(t, r),
-        cc.CallFunc:create(function() p:resolve() end),
+        cc.CallFunc:create(function()
+            transition.scaleTo(s, {
+                scale = exclamation_scale,
+                time = exclamation_time,
+                easing = "backout",
+            })
+        end),
+        cc.DelayTime:create(exclamation_time),
+        cc.CallFunc:create(function()
+            s:removeFromParent()
+            p:resolve()
+        end),
     }))
     return p
 end
@@ -152,6 +172,10 @@ end
 function PVELayer:CanMove(x, y)
     local width, height = self:GetLogicMap():GetSize()
     return x >= 2 and x < width - 2 and y >= 2 and y < height - 2
+end
+function PVELayer:ResetCharPos()
+    local start = self.pve_map:GetStartPoint()
+    self:MoveCharTo(start.x, start.y)
 end
 function PVELayer:MoveCharTo(x, y)
     self:LightOn(x, y)
@@ -181,8 +205,11 @@ function PVELayer:LightOn(x, y, size)
     for x_ = sx, ex do
         for y_ = sy, ey do
             if x_ >= 1 and x_ < width - 1 and y_ >= 1 and y_ < height - 1 then
-                self.war_fog_layer:getTileAt(cc.p(x_, y_)):hide()
-                self.pve_map:InsertFog(x_, y_)
+                local fog = self.war_fog_layer:getTileAt(cc.p(x_, y_))
+                if fog:isVisible() then
+                    fog:hide()
+                    self.pve_map:InsertFog(x_, y_)
+                end
             end
         end
     end
@@ -205,6 +232,9 @@ end
 function PVELayer:ConvertLogicPositionToMapPosition(lx, ly)
     local map_pos = cc.p(self.normal_map:ConvertToMapPosition(lx, ly))
     return self:convertToNodeSpace(self.background:convertToWorldSpace(map_pos))
+end
+function PVELayer:CurrentPVEMap()
+    return self.pve_map
 end
 function PVELayer:ExploreDegree()
     return self.pve_map:ExploreDegree()
@@ -249,6 +279,9 @@ function PVELayer:GotoLogicPoint(x, y, s)
 end
 
 return PVELayer
+
+
+
 
 
 

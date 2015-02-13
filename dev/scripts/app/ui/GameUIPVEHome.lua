@@ -55,7 +55,7 @@ function GameUIPVEHome:OnResourceChanged(user)
     self.gem_label:setString(string.formatnumberthousands(user:GetGemResource():GetValue()))
 end
 function GameUIPVEHome:OnExploreChanged(pve_layer)
-    self.exploring:setString(string.format("%.2f%%", pve_layer:ExploreDegree() * 100))
+    self.exploring:setString(string.format("探索度 %.2f%%", pve_layer:ExploreDegree() * 100))
 end
 function GameUIPVEHome:CreateTop()
     local top_bg = display.newSprite("head_bg.png")
@@ -67,9 +67,9 @@ function GameUIPVEHome:CreateTop()
     cc.ui.UIPushButton.new(
         {normal = "return_btn_up_202x93.png", pressed = "return_btn_down_202x93.png"}
     ):addTo(top_bg)
-        :align(display.LEFT_CENTER, 20, -2)
+        :align(display.LEFT_CENTER, 20, -5)
         :onButtonClicked(function()
-            print("返回")
+            self.layer:ResetCharPos()
         end):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = _("返回起点"),
@@ -93,12 +93,13 @@ function GameUIPVEHome:CreateTop()
     }):addTo(button):align(display.CENTER, -30, 8)
 
 
-    self.title = UIKit:ttfLabel({text = "1. 贫瘠之地",
+    self.title = UIKit:ttfLabel({
+        text = string.format("%d, %s", self.layer:CurrentPVEMap():GetIndex(), self.layer:CurrentPVEMap():Name()),
         size = 26,
         color = 0xffedae,
     }):addTo(top_bg):align(display.LEFT_CENTER, 60, 60)
 
-    self.exploring = UIKit:ttfLabel({text = "探索度 100%",
+    self.exploring = UIKit:ttfLabel({
         size = 20,
         color = 0xffedae,
     }):addTo(top_bg):align(display.RIGHT_CENTER, size.width - 60, 60)
@@ -130,7 +131,8 @@ function GameUIPVEHome:CreateBottom()
     local label_bg = display.newSprite("label_background_146x25.png")
     :addTo(bottom_bg):align(display.LEFT_CENTER, 315, display.bottom + 25)
 
-    self.gem = UIKit:ttfLabel({text = "9,999,999",
+    self.gem = UIKit:ttfLabel({
+        text = "9,999,999",
         size = 20,
         color = 0xbdb582,
     }):addTo(label_bg):align(display.LEFT_CENTER, 20, 13)

@@ -1,4 +1,5 @@
 local promise = import("..utils.promise")
+local GameGlobalUIUtils = import("..ui.GameGlobalUIUtils")
 local cocos_promise = import("..utils.cocos_promise")
 local gaozhou
 if CONFIG_IS_DEBUG then

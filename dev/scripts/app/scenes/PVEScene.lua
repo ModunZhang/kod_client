@@ -1,4 +1,5 @@
 local Enum = import("..utils.Enum")
+local cocos_promise = import("..utils.cocos_promise")
 local WidgetPVEKeel = import("..widget.WidgetPVEKeel")
 local WidgetPVECamp = import("..widget.WidgetPVECamp")
 local WidgetPVEMiner = import("..widget.WidgetPVEMiner")
@@ -70,48 +71,54 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
         end
         -- self.user:UseStrength(1)
         self:GetSceneLayer():MoveCharTo(tx, ty)
-        self:OpenUI(tx, ty)
+        local gid = self:GetSceneLayer():GetTileInfo(tx, ty)
+        if gid > 0 then
+            self:OpenUI(tx, ty)
+        else
+            self:CheckTrap()
+        end
     end
 end
 function PVEScene:OpenUI(x, y)
     local gid = self:GetSceneLayer():GetTileInfo(x, y)
-    if gid <= 0 then
-        self:CheckTrap()
-        return
-    end
-    self:CheckObject(x, y, gid)
-    if gid == PVEDefine.START_AIRSHIP then
-        WidgetPVEStartAirship.new(x, y, self.user):addToScene(self, true)
-    elseif gid == PVEDefine.WOODCUTTER then
-        WidgetPVEWoodcutter.new(x, y, self.user):addToScene(self, true)
-    elseif gid == PVEDefine.QUARRIER then
-        WidgetPVEQuarrier.new(x, y, self.user):addToScene(self, true)
-    elseif gid == PVEDefine.MINER then
-        WidgetPVEMiner.new(x, y, self.user):addToScene(self, true)
-    elseif gid == PVEDefine.FARMER then
-        WidgetPVEFarmer.new(x, y, self.user):addToScene(self, true)
-    elseif gid == PVEDefine.CAMP then
-        WidgetPVECamp.new(x, y, self.user):addToScene(self, true)
-    elseif gid == PVEDefine.CRASHED_AIRSHIP then
-        WidgetPVECrashedAirship.new(x, y, self.user):addToScene(self, true)
-    elseif gid == PVEDefine.CONSTRUCTION_RUINS then
-        WidgetPVEConstructionRuins.new(x, y, self.user):addToScene(self, true)
-    elseif gid == PVEDefine.KEEL then
-        WidgetPVEKeel.new(x, y, self.user):addToScene(self, true)
-    elseif gid == PVEDefine.WARRIORS_TOMB then
-        WidgetPVEWarriorsTomb.new(x, y, self.user):addToScene(self, true)
-    elseif gid == PVEDefine.OBELISK then
-        WidgetPVEObelisk.new(x, y, self.user):addToScene(self, true)
-    elseif gid == PVEDefine.ANCIENT_RUINS then
-        WidgetPVEAncientRuins.new(x, y, self.user):addToScene(self, true)
-    elseif gid == PVEDefine.ENTRANCE_DOOR then
-        WidgetPVEEntranceDoor.new(x, y, self.user):addToScene(self, true)
-    end
+    if gid <= 0 then return end
+    self:PormiseOfCheckObject(x, y, gid):next(function()
+        if gid == PVEDefine.START_AIRSHIP then
+            WidgetPVEStartAirship.new(x, y, self.user):addToScene(self, true)
+        elseif gid == PVEDefine.WOODCUTTER then
+            WidgetPVEWoodcutter.new(x, y, self.user):addToScene(self, true)
+        elseif gid == PVEDefine.QUARRIER then
+            WidgetPVEQuarrier.new(x, y, self.user):addToScene(self, true)
+        elseif gid == PVEDefine.MINER then
+            WidgetPVEMiner.new(x, y, self.user):addToScene(self, true)
+        elseif gid == PVEDefine.FARMER then
+            WidgetPVEFarmer.new(x, y, self.user):addToScene(self, true)
+        elseif gid == PVEDefine.CAMP then
+            WidgetPVECamp.new(x, y, self.user):addToScene(self, true)
+        elseif gid == PVEDefine.CRASHED_AIRSHIP then
+            WidgetPVECrashedAirship.new(x, y, self.user):addToScene(self, true)
+        elseif gid == PVEDefine.CONSTRUCTION_RUINS then
+            WidgetPVEConstructionRuins.new(x, y, self.user):addToScene(self, true)
+        elseif gid == PVEDefine.KEEL then
+            WidgetPVEKeel.new(x, y, self.user):addToScene(self, true)
+        elseif gid == PVEDefine.WARRIORS_TOMB then
+            WidgetPVEWarriorsTomb.new(x, y, self.user):addToScene(self, true)
+        elseif gid == PVEDefine.OBELISK then
+            WidgetPVEObelisk.new(x, y, self.user):addToScene(self, true)
+        elseif gid == PVEDefine.ANCIENT_RUINS then
+            WidgetPVEAncientRuins.new(x, y, self.user):addToScene(self, true)
+        elseif gid == PVEDefine.ENTRANCE_DOOR then
+            WidgetPVEEntranceDoor.new(x, y, self.user):addToScene(self, true)
+        end
+    end)
 end
 function PVEScene:CheckTrap()
     if self.user:GetPVEDatabase():IsInTrap() then
         self:GetSceneLayer():PromiseOfTrap():next(function()
-            local enemy = PVEObject.new(0, 0, 0, PVEDefine.TRAP):GetNextEnemy()
+            self.user:SetPveData()
+            return NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
+        end):next(function()
+            local enemy = PVEObject.new(0, 0, 0, PVEDefine.TRAP, self:GetSceneLayer():CurrentPVEMap()):GetNextEnemy()
             UIKit:newGameUI('GameUIPVESendTroop',
                 enemy.soldiers,-- pve 怪数据
                 function(dragonType, soldiers)
@@ -157,13 +164,22 @@ function PVEScene:CheckTrap()
         self.user:GetPVEDatabase():ResetNextEnemyCounter()
     end
 end
-function PVEScene:CheckObject(x, y, type)
+function PVEScene:PormiseOfCheckObject(x, y, type)
     local object = self.user:GetCurrentPVEMap():GetObject(x, y)
     if not object or not object:Type() then
         self.user:GetCurrentPVEMap():ModifyObject(x, y, 0, type)
+        self.user:SetPveData()
+        return NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
+    else
+        return cocos_promise.defer()
     end
 end
 return PVEScene
+
+
+
+
+
 
 
 

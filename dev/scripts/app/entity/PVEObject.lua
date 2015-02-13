@@ -40,11 +40,15 @@ local elite_map = {
     [PVEDefine.CRASHED_AIRSHIP] = true,
 }
 
-function PVEObject:ctor(x, y, searched, type)
+function PVEObject:ctor(x, y, searched, type, map)
     self.x = x
     self.y = y
     self.searched = searched or 0
     self.type = type
+    self.map = map
+end
+function PVEObject:NpcPower()
+    return self.map:GetIndex()
 end
 function PVEObject:SetType(type)
     self.type = type
@@ -90,8 +94,8 @@ function PVEObject:DecodeToEnemy(raw_data)
                 name = name,
                 star = tonumber(star),
                 morale = 100,
-                currentCount = count,
-                totalCount = count,
+                currentCount = count * self:NpcPower(),
+                totalCount = count * self:NpcPower(),
                 woundedCount = 0,
                 round = 0
             }
@@ -177,7 +181,7 @@ function PVEObject:DecodeToRewards(raw)
         return k, {
             type = rtype,
             name = rname,
-            count = count,
+            count = count * self:NpcPower(),
             probability = probability
         }
     end)
@@ -212,7 +216,7 @@ function PVEObject:IsEntranceDoor()
     return self.type == PVEDefine.ENTRANCE_DOOR
 end
 function PVEObject:Dump()
-    return string.format("{%d,%d,%d}", self.x, self.y, self.searched)
+    return string.format("[%d,%d,%d]", self.x, self.y, self.searched)
 end
 
 return PVEObject
