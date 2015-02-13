@@ -7,7 +7,7 @@ local DRAGON_ZORDER = 1
 
 function DragonEyrieSprite:ctor(...)
     DragonEyrieSprite.super.ctor(self, ...)
-    local dragon_manget = City:GetDragonEyrie():GetDragonManager()
+    local dragon_manget = self:GetEntity():BelongCity():GetDragonEyrie():GetDragonManager()
     dragon_manget:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDefencedDragonChanged)
     self:ReloadSpriteCaseDragonDefencedChanged(dragon_manget:GetDefenceDragon())
 end
@@ -35,7 +35,7 @@ end
 
 
 function DragonEyrieSprite:onCleanup()
-	City:GetDragonEyrie():GetDragonManager():RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDefencedDragonChanged)
+	self:GetEntity():BelongCity():GetDragonEyrie():GetDragonManager():RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDefencedDragonChanged)
 	if DragonEyrieSprite.super.onCleanup then
 		DragonEyrieSprite.super.onCleanup(self)
 	end
