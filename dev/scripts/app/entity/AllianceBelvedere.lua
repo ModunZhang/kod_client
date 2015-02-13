@@ -17,13 +17,11 @@ end
 
 -- read limt or somethiong from alliance data
 function AllianceBelvedere:OnAllianceDataChanged(alliance_data)
-	print("AllianceBelvedere:OnAllianceDataChanged--->")
-	self.limit = 1 -- 自己部队的队列限制数
 
 end
 
 function AllianceBelvedere:GetMarchLimit()
-	return self.limit
+	return User:MarchQueue()
 end
 
 function AllianceBelvedere:IsReachEventLimit()
