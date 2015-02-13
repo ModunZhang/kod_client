@@ -71,7 +71,8 @@ function UpgradeBuilding:GetUpgradingPercentByCurrentTime(current_time)
     end
 end
 function UpgradeBuilding:CanUpgrade()
-    return not self:IsUpgrading() and self:GetLevel() > 0 and not self:IsMaxLevel()
+    local legal = self:IsBuildingUpgradeLegal()
+    return type(legal) == "nil"
 end
 function UpgradeBuilding:IsUnlocking()
     return self:GetLevel() == 0 and self.upgrade_to_next_level_time ~= 0

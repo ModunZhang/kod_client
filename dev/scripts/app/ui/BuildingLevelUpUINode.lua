@@ -11,7 +11,7 @@ function BuildingLevelUpUINode:OnBuildingUpgradeFinished(building, time)
     local city = building:BelongCity()
     building = building:GetType() == "tower" and city:GetTower() or building
     self:setVisible(building:GetLevel() > 0)
-    self:SetCanUpgrade(city:GetKeep():CanUpgradeThis(building))
+    self:SetCanUpgrade(building:CanUpgrade())
     self:SetLevel(building:GetLevel())
 end
 function BuildingLevelUpUINode:OnPositionChanged(x, y, bottom_x, bottom_y)
