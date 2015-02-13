@@ -457,7 +457,7 @@ function GameUIActivityReward:ui_PLAYER_LEVEL_UP()
 	local title_bg = display.newScale9Sprite("alliance_event_type_cyan_222x30.png",0,0, cc.size(390,30), cc.rect(7,7,190,16))
 		:align(display.LEFT_TOP, 180, self.height - 30):addTo(self.bg)
 	UIKit:ttfLabel({
-		text = string.format("当前等级：LV %s",User:Level()),
+		text = string.format("当前等级：LV %s",City:GetFirstBuildingByType('keep'):GetLevel()),
 		size = 22,
 		color= 0xffedae
 	}):align(display.LEFT_CENTER, 14, 15):addTo(title_bg)
@@ -487,7 +487,7 @@ function GameUIActivityReward:ui_PLAYER_LEVEL_UP()
 		level_up_time_label:hide()
 	end
 	local activity_desc_label = UIKit:ttfLabel({
-		text = _("活动期间，升级成败获得丰厚奖励"),
+		text = _("活动期间，升级城堡获得丰厚奖励"),
 		size = 20,
 		color= 0x403c2f
 	}):align(display.LEFT_TOP, 190, level_up_state_label:getPositionY() - level_up_state_label:getContentSize().height - 20):addTo(self.bg)
@@ -512,7 +512,7 @@ function GameUIActivityReward:RefreshLevelUpListView()
 end
 -- flag 1.已领取 2.可以领取 3.不能领取
 function GameUIActivityReward:GetLevelUpData()
-	local current_level = User:Level()
+	local current_level = City:GetFirstBuildingByType('keep'):GetLevel()
 	local r = {}
 	local max_level_got_rewards = self:GetLevelUpRewardMaxLevel()
 	for __,v in ipairs(config_levelup) do
