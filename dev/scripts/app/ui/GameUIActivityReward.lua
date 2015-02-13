@@ -13,6 +13,8 @@ local config_online = GameDatas.Activities.online
 local config_day14 = GameDatas.Activities.day14
 local GameUtils = GameUtils
 local config_stringInit = GameDatas.PlayerInitData.stringInit
+local config_intInit = GameDatas.PlayerInitData.intInit
+local config_levelup = GameDatas.Activities.levelup
 
 local height_config = {
 	EVERY_DAY_LOGIN = 762,
@@ -38,6 +40,11 @@ function GameUIActivityReward:ctor(reward_type,params)
 		local countInfo = User:GetCountInfo()
 		self.diff_time = (countInfo.todayOnLineTime - countInfo.lastLoginTime) / 1000
 		app.timer:AddListener(self)
+	elseif self:GetRewardType() == self.REWARD_TYPE.PLAYER_LEVEL_UP then
+		local countInfo = User:GetCountInfo()
+		self.player_level_up_time = countInfo.registerTime/1000 + config_intInit.playerLevelupRewardsHours.value * 60 * 60 -- 单位秒
+		self.player_level_up_time_residue = self.player_level_up_time - app.timer:GetServerTime() 
+		app.timer:AddListener(self)
 	end
 end
 
@@ -56,10 +63,20 @@ function GameUIActivityReward:OnTimer(current_time)
 		local time =  current_time + self.diff_time
 		self.time_label:setString(GameUtils:formatTimeStyle1(time))
 	end
+	if self.level_up_time_label then
+		self.player_level_up_time_residue = self.player_level_up_time - current_time
+		if self.player_level_up_time_residue > 0 then
+			self.level_up_time_label:setString(GameUtils:formatTimeStyle1(self.player_level_up_time_residue))
+		else
+			self.level_up_time_label:hide()
+			self.level_up_time_desc_label:hide()
+			self.level_up_state_label:show()
+		end
+	end
 end
 
 function GameUIActivityReward:onExit()
-	if self:GetRewardType() == self.REWARD_TYPE.ONLINE then
+	if self:GetRewardType() == self.REWARD_TYPE.ONLINE or self:GetRewardType() == self.REWARD_TYPE.PLAYER_LEVEL_UP then
 		app.timer:RemoveListener(self)
 	end
 	User:RemoveListenerOnType(self,User.LISTEN_TYPE.COUNT_INFO)
@@ -289,7 +306,6 @@ function GameUIActivityReward:ui_CONTINUITY()
 		lineHeight = 34
 	}):align(display.CENTER_TOP,304,self.height - 30):addTo(self.bg)
 	self.list_view = UIListView.new{
-		bgColor = UIKit:hex2c4b(0x7a000000),
         viewRect = cc.rect(26,20,556,630),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.bg)
@@ -433,5 +449,118 @@ function GameUIActivityReward:GetFirstPurgureRewards()
 		table.insert(r,{reward_type,reward_name})
 	end
 	return r
+end
+
+function GameUIActivityReward:ui_PLAYER_LEVEL_UP()
+	local box = display.newSprite("alliance_item_flag_box_126X126.png"):align(display.LEFT_TOP, 20,self.height - 30):addTo(self.bg)
+	display.newSprite("keep_1_420x390.png",63,63):addTo(box):scale(126/420)
+	local title_bg = display.newScale9Sprite("alliance_event_type_cyan_222x30.png",0,0, cc.size(390,30), cc.rect(7,7,190,16))
+		:align(display.LEFT_TOP, 180, self.height - 30):addTo(self.bg)
+	UIKit:ttfLabel({
+		text = string.format("当前等级：LV %s",User:Level()),
+		size = 22,
+		color= 0xffedae
+	}):align(display.LEFT_CENTER, 14, 15):addTo(title_bg)
+	local level_up_time_desc_label = UIKit:ttfLabel({
+		text = _("倒计时:"),
+			size = 20,
+			color= 0x403c2f
+	}):align(display.LEFT_TOP, 190, title_bg:getPositionY() -  40):addTo(self.bg)
+	local level_up_time_label = UIKit:ttfLabel({
+		text = GameUtils:formatTimeStyle1(self.player_level_up_time_residue),
+		size = 20,
+		color= 0x489200
+	}):align(display.LEFT_TOP,level_up_time_desc_label:getPositionX()+level_up_time_desc_label:getContentSize().width,level_up_time_desc_label:getPositionY())
+		:addTo(self.bg)
+	local level_up_state_label = UIKit:ttfLabel({
+		text = _("已失效"),
+		size = 20,
+		color= 0x403c2f
+	}):align(display.LEFT_TOP,190,title_bg:getPositionY() -  40):addTo(self.bg)
+	self.level_up_time_label = level_up_time_label
+	self.level_up_time_desc_label = level_up_time_desc_label
+	self.level_up_state_label = level_up_state_label
+	if self.player_level_up_time_residue > 0 then
+		level_up_state_label:hide()
+	else
+		level_up_time_desc_label:hide()
+		level_up_time_label:hide()
+	end
+	local activity_desc_label = UIKit:ttfLabel({
+		text = _("活动期间，升级成败获得丰厚奖励"),
+		size = 20,
+		color= 0x403c2f
+	}):align(display.LEFT_TOP, 190, level_up_state_label:getPositionY() - level_up_state_label:getContentSize().height - 20):addTo(self.bg)
+
+	local list_bg = display.newScale9Sprite("box_bg_546x214.png"):size(568,544):align(display.BOTTOM_CENTER, 304, 30):addTo(self.bg)
+	self.list_view = UIListView.new{
+        viewRect = cc.rect(13,10,542,524),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+    }:addTo(list_bg)
+    self:RefreshLevelUpListView()
+end
+
+function GameUIActivityReward:RefreshLevelUpListView()
+	self.list_view:removeAllItems()
+	local data = self:GetLevelUpData()
+	for index,v in ipairs(data) do
+		local index,title,rewards,flag = unpack(v)
+		local item = self:GetRewardLevelUpItem(index,title,rewards,flag)
+		self.list_view:addItem(item)
+	end
+	self.list_view:reload()
+end
+-- flag 1.已领取 2.可以领取 3.不能领取
+function GameUIActivityReward:GetLevelUpData()
+	local current_level = User:Level()
+	local r = {}
+	local max_level_got_rewards = self:GetLevelUpRewardMaxLevel()
+	for __,v in ipairs(config_levelup) do
+		local flag = 0
+		if v.level <= max_level_got_rewards then
+			flag = 1
+		elseif v.level == current_level then
+			flag = 2
+		elseif v.level > current_level then
+			flag = 3
+		end
+		local rewards = self:GetLevelUpRewardListFromConfig(v.rewards)
+		table.insert(r,{string.format(_("等级%s"),v.level),rewards,flag})
+	end
+	return r
+end
+
+function GameUIActivityReward:GetLevelUpRewardListFromConfig(config_str)
+	local r = {}
+	local tmp_list = string.split(config_str, ',')
+	for __,v in ipairs(tmp_list) do
+		local reward_type,reward_name,count = unpack(string.split(v, ':'))
+		table.insert(r,{reward_type,reward_name,count})
+	end
+	return r
+end
+
+function GameUIActivityReward:GetLevelUpRewardMaxLevel()
+	local max_level = 0
+	local countInfo = User:GetCountInfo()
+	for __,v in ipairs(countInfo.levelupRewards) do
+		if v > max_level then
+			max_level = v
+		end
+	end
+	return max_level
+end
+
+function GameUIActivityReward:GetRewardLevelUpItem(index,title,rewards,flag)
+	local item = self.list_view:newItem()
+	local content = display.newScale9Sprite(string.format("resource_item_bg%d.png", index % 2)):size(548,104)
+	local title_label = UIKit:ttfLabel({
+		text = title,
+		size = 22,
+		color= 0x514d3e
+	}):align(display.LEFT_CENTER, 34, 52):addTo(content)
+	item:addContent(content)
+	item:setItemSize(548,104)
+	return item
 end
 return GameUIActivityReward

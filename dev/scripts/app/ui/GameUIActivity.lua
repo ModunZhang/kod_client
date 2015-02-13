@@ -37,7 +37,6 @@ function GameUIActivity:onEnter()
 	local list,list_node = UIKit:commonListView({
         direction = UIScrollView.DIRECTION_VERTICAL,
         viewRect = cc.rect(0,0,576,772),
-        bgColor = UIKit:hex2c4b(0x7a000000),
     })
     list_node:addTo(self):pos(window.left + 35,window.bottom_top + 20)
     self.list_view = list
