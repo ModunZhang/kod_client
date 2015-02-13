@@ -7,11 +7,13 @@ local TradeManager = import("..entity.TradeManager")
 local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local User = class("User", MultiObserver)
-User.LISTEN_TYPE = Enum("BASIC", "RESOURCE", "INVITE_TO_ALLIANCE", "REQUEST_TO_ALLIANCE","DALIY_QUEST_REFRESH","NEW_DALIY_QUEST","NEW_DALIY_QUEST_EVENT","VIP_EVENT")
+User.LISTEN_TYPE = Enum("BASIC", "RESOURCE", "INVITE_TO_ALLIANCE", "REQUEST_TO_ALLIANCE","DALIY_QUEST_REFRESH","NEW_DALIY_QUEST","NEW_DALIY_QUEST_EVENT"
+    ,"VIP_EVENT","COUNT_INFO")
 local BASIC = User.LISTEN_TYPE.BASIC
 local RESOURCE = User.LISTEN_TYPE.RESOURCE
 local INVITE_TO_ALLIANCE = User.LISTEN_TYPE.INVITE_TO_ALLIANCE
 local REQUEST_TO_ALLIANCE = User.LISTEN_TYPE.REQUEST_TO_ALLIANCE
+local COUNT_INFO = User.LISTEN_TYPE.COUNT_INFO
 local config_playerLevel = GameDatas.PlayerInitData.playerLevel
 User.RESOURCE_TYPE = Enum("BLOOD", "COIN", "STRENGTH", "GEM", "RUBY", "BERYL", "SAPPHIRE", "TOPAZ")
 local GEM = User.RESOURCE_TYPE.GEM
@@ -283,6 +285,7 @@ end
 function User:OnUserDataChanged(userData, current_time)
     self:OnResourcesChangedByTime(userData.resources, current_time)
     self:OnBasicInfoChanged(userData.basicInfo)
+    self:OnCountInfoChanged(userData.countInfo)
     self:OnNewInviteAllianceEventsComming(userData.__inviteToAllianceEvents)
     self:OnNewRequestToAllianceEventsComming(userData.__requestToAllianceEvents)
     self:OnRequestToAllianceEventsChanged(userData.requestToAllianceEvents)
@@ -301,6 +304,27 @@ function User:OnUserDataChanged(userData, current_time)
 
     return self
 end
+
+function User:OnCountInfoChanged(countInfo)
+    if not countInfo then return end
+    if self.countInfo then
+        for k,v in pairs(countInfo) do
+            self.countInfo[k] = v
+        end
+        self:NotifyListeneOnType(COUNT_INFO, function(listener)
+        listener:OnCountInfoChanged(self, {
+        })
+    end)
+    else
+        self.countInfo  = countInfo
+    end
+end
+
+
+function User:GetCountInfo()
+    return self.countInfo
+end
+
 function User:GetVipEvent()
     return self.vip_event
 end

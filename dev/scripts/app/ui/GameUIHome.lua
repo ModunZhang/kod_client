@@ -293,7 +293,7 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            dump(event)
+            UIKit:newGameUI("GameUIActivity",City):addToCurrentScene()
         end
     end):addTo(top_bg):pos(630, -81):scale(0.6)
 
@@ -452,6 +452,9 @@ function GameUIHome:OnBottomButtonClicked(event)
     elseif tag == 2 then
         UIKit:newGameUI('GameUIItems',_("道具"),self.city):addToCurrentScene(true)
     elseif tag == 1 then
+    elseif tag == 5 then
+        UIKit:newGameUI('GameUISetting',self.city):addToCurrentScene(true)
+
     end
 end
 
