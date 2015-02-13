@@ -33,23 +33,25 @@ function UICanCanelCheckBoxButtonGroup:updateButtonState_(clickedButton)
             return
         end
     end
-    local currentSelectedIndex = 0
-    for index, button in ipairs(self.buttons_) do
-        if button == clickedButton then
-            currentSelectedIndex = index
-            if not button:isButtonSelected() then
-                button:setButtonSelected(true)
-            end
-        else
-            if button:isButtonSelected() then
-                button:setButtonSelected(false)
+    if not self.isSwitchModel then
+        local currentSelectedIndex = 0
+        for index, button in ipairs(self.buttons_) do
+            if button == clickedButton then
+                currentSelectedIndex = index
+                if not button:isButtonSelected() then
+                    button:setButtonSelected(true)
+                end
+            else
+                if button:isButtonSelected() then
+                    button:setButtonSelected(false)
+                end
             end
         end
-    end
-    if self.currentSelectedIndex_ ~= currentSelectedIndex then
-        local last = self.currentSelectedIndex_
-        self.currentSelectedIndex_ = currentSelectedIndex
-        self:dispatchEvent({name = UICheckBoxButtonGroup.BUTTON_SELECT_CHANGED, selected = currentSelectedIndex, last = last})
+        if self.currentSelectedIndex_ ~= currentSelectedIndex then
+            local last = self.currentSelectedIndex_
+            self.currentSelectedIndex_ = currentSelectedIndex
+            self:dispatchEvent({name = UICheckBoxButtonGroup.BUTTON_SELECT_CHANGED, selected = currentSelectedIndex, last = last})
+        end
     end
 end
 
@@ -76,6 +78,11 @@ end
 
 function UICanCanelCheckBoxButtonGroup:setCheckButtonStateChangeFunction(func)
     self.check_func = func
+    return self
+end
+--开启开关模式 唯一的一个选项 
+function UICanCanelCheckBoxButtonGroup:setIsSwitchModel(yesOrNo)
+    self.isSwitchModel = yesOrNo
     return self
 end
 

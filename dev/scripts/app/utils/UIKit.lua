@@ -440,7 +440,7 @@ function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_
 end
 
 function UIKit:showEvaluateDialog()
-    local dialog = FullScreenPopDialogUI.new():SetTitle(_("亲")):SetPopMessage("是否去app store评价我们?")
+    local dialog = FullScreenPopDialogUI.new():SetTitle("亲"):SetPopMessage("是否去app store评价我们?")
         :CreateOKButton({
             listener =  function ()
                 device.openURL("http://www.baidu.com")
@@ -448,7 +448,6 @@ function UIKit:showEvaluateDialog()
         })
         :CreateCancelButton({
                 listener = function ()
-                    cancel_callback()
                 end,btn_name = _("残忍的拒绝")
         })dialog:AddToCurrentScene()
     return dialog

@@ -83,98 +83,98 @@ require("app.datas.AllianceVillage_coinVillage")
 require("app.datas.AllianceVillage_gemVillage")
 
 GameDatas.BuildingFunction = {
-	["wall"] = {},
-	["tower"] = {},
 	["keep"] = {},
 	["watchTower"] = {},
 	["warehouse"] = {},
 	["dragonEyrie"] = {},
-	["toolShop"] = {},
-	["materialDepot"] = {},
-	["academy"] = {},
 	["barracks"] = {},
+	["hospital"] = {},
+	["academy"] = {},
+	["materialDepot"] = {},
 	["blackSmith"] = {},
 	["foundry"] = {},
 	["stoneMason"] = {},
 	["lumbermill"] = {},
 	["mill"] = {},
-	["hospital"] = {},
 	["townHall"] = {},
+	["toolShop"] = {},
 	["tradeGuild"] = {},
 	["workshop"] = {},
 	["trainingGround"] = {},
 	["hunterHall"] = {},
 	["stable"] = {},
+	["wall"] = {},
+	["tower"] = {},
 }
-require("app.datas.BuildingFunction_wall")
-require("app.datas.BuildingFunction_tower")
 require("app.datas.BuildingFunction_keep")
 require("app.datas.BuildingFunction_watchTower")
 require("app.datas.BuildingFunction_warehouse")
 require("app.datas.BuildingFunction_dragonEyrie")
-require("app.datas.BuildingFunction_toolShop")
-require("app.datas.BuildingFunction_materialDepot")
-require("app.datas.BuildingFunction_academy")
 require("app.datas.BuildingFunction_barracks")
+require("app.datas.BuildingFunction_hospital")
+require("app.datas.BuildingFunction_academy")
+require("app.datas.BuildingFunction_materialDepot")
 require("app.datas.BuildingFunction_blackSmith")
 require("app.datas.BuildingFunction_foundry")
 require("app.datas.BuildingFunction_stoneMason")
 require("app.datas.BuildingFunction_lumbermill")
 require("app.datas.BuildingFunction_mill")
-require("app.datas.BuildingFunction_hospital")
 require("app.datas.BuildingFunction_townHall")
+require("app.datas.BuildingFunction_toolShop")
 require("app.datas.BuildingFunction_tradeGuild")
 require("app.datas.BuildingFunction_workshop")
 require("app.datas.BuildingFunction_trainingGround")
 require("app.datas.BuildingFunction_hunterHall")
 require("app.datas.BuildingFunction_stable")
+require("app.datas.BuildingFunction_wall")
+require("app.datas.BuildingFunction_tower")
 
 GameDatas.BuildingLevelUp = {
-	["wall"] = {},
-	["tower"] = {},
 	["keep"] = {},
 	["watchTower"] = {},
 	["warehouse"] = {},
 	["dragonEyrie"] = {},
-	["toolShop"] = {},
-	["materialDepot"] = {},
-	["academy"] = {},
 	["barracks"] = {},
+	["hospital"] = {},
+	["academy"] = {},
+	["materialDepot"] = {},
 	["blackSmith"] = {},
 	["foundry"] = {},
 	["stoneMason"] = {},
 	["lumbermill"] = {},
 	["mill"] = {},
-	["hospital"] = {},
 	["townHall"] = {},
+	["toolShop"] = {},
 	["tradeGuild"] = {},
 	["workshop"] = {},
 	["trainingGround"] = {},
 	["hunterHall"] = {},
 	["stable"] = {},
+	["wall"] = {},
+	["tower"] = {},
 }
-require("app.datas.BuildingLevelUp_wall")
-require("app.datas.BuildingLevelUp_tower")
 require("app.datas.BuildingLevelUp_keep")
 require("app.datas.BuildingLevelUp_watchTower")
 require("app.datas.BuildingLevelUp_warehouse")
 require("app.datas.BuildingLevelUp_dragonEyrie")
-require("app.datas.BuildingLevelUp_toolShop")
-require("app.datas.BuildingLevelUp_materialDepot")
-require("app.datas.BuildingLevelUp_academy")
 require("app.datas.BuildingLevelUp_barracks")
+require("app.datas.BuildingLevelUp_hospital")
+require("app.datas.BuildingLevelUp_academy")
+require("app.datas.BuildingLevelUp_materialDepot")
 require("app.datas.BuildingLevelUp_blackSmith")
 require("app.datas.BuildingLevelUp_foundry")
 require("app.datas.BuildingLevelUp_stoneMason")
 require("app.datas.BuildingLevelUp_lumbermill")
 require("app.datas.BuildingLevelUp_mill")
-require("app.datas.BuildingLevelUp_hospital")
 require("app.datas.BuildingLevelUp_townHall")
+require("app.datas.BuildingLevelUp_toolShop")
 require("app.datas.BuildingLevelUp_tradeGuild")
 require("app.datas.BuildingLevelUp_workshop")
 require("app.datas.BuildingLevelUp_trainingGround")
 require("app.datas.BuildingLevelUp_hunterHall")
 require("app.datas.BuildingLevelUp_stable")
+require("app.datas.BuildingLevelUp_wall")
+require("app.datas.BuildingLevelUp_tower")
 
 GameDatas.Buildings = {
 	["buildings"] = {},
@@ -245,6 +245,11 @@ require("app.datas.GemsPayment_food")
 require("app.datas.GemsPayment_coin")
 require("app.datas.GemsPayment_citizen")
 require("app.datas.GemsPayment_material")
+
+GameDatas.GrowUpTasks = {
+	["tasks"] = {},
+}
+require("app.datas.GrowUpTasks_tasks")
 
 GameDatas.HouseFunction = {
 	["dwelling"] = {},
@@ -355,6 +360,7 @@ require("app.datas.MilitaryTechs_militaryTechs")
 GameDatas.PlayerInitData = {
 	["intInit"] = {},
 	["floatInit"] = {},
+	["stringInit"] = {},
 	["resources"] = {},
 	["materials"] = {},
 	["soldierMaterials"] = {},
@@ -366,6 +372,7 @@ GameDatas.PlayerInitData = {
 }
 require("app.datas.PlayerInitData_intInit")
 require("app.datas.PlayerInitData_floatInit")
+require("app.datas.PlayerInitData_stringInit")
 require("app.datas.PlayerInitData_resources")
 require("app.datas.PlayerInitData_materials")
 require("app.datas.PlayerInitData_soldierMaterials")
@@ -440,3 +447,8 @@ GameDatas.Soldiers = {
 }
 require("app.datas.Soldiers_normal")
 require("app.datas.Soldiers_special")
+
+GameDatas.StoreItems = {
+	["items"] = {},
+}
+require("app.datas.StoreItems_items")
