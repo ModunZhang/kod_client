@@ -1477,6 +1477,14 @@ function NetManager:getUseItemPromise(itemName,params)
         params = params,
     }, "使用道具失败!"), get_playerdata_callback()):next(get_response_msg)
 end
+--购买并使用道具
+function NetManager:getBuyAndUseItemPromise(itemName,params)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.buyAndUseItem", {
+        itemName = itemName,
+        params = params,
+    }, "购买并使用道具失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+
 --联盟商店补充道具
 function NetManager:getAddAllianceItemPromise(itemName,count)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.addItem",
