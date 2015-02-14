@@ -642,6 +642,7 @@ function GameUIMail:InsertMailToListView(listview,item,mail,index)
     mails_table[id] = item
     local add_index = index or self:GetMailsCount(listview)
     listview:insertItemAndRefresh(item,add_index)
+    listview:reload()
 end
 
 function GameUIMail:CreateLoadingMoreItem(listview)
