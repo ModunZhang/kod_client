@@ -331,7 +331,7 @@ function GameUIActivityReward:GetContinutyListData()
 		local flag = 0
 		if v.day <= countInfo.day14RewardsCount then
 			flag = 1 
-		elseif v.day == countInfo.day14RewardsCount + 1 then
+		elseif v.day == countInfo.day14RewardsCount + 1 and countInfo.day14RewardsCount == countInfo.day14 then
 			flag = 3
 		elseif v.day == countInfo.day14 and countInfo.day14 > countInfo.day14RewardsCount then
 			flag = 2
@@ -406,6 +406,11 @@ function GameUIActivityReward:RefreshUI()
 		end
 	elseif self:GetRewardType() == self.REWARD_TYPE.CONTINUITY then
 		self:RefreshContinutyList()
+	elseif self:GetRewardType() == self.REWARD_TYPE.PLAYER_LEVEL_UP then
+		self:RefreshLevelUpListView()
+	elseif self:GetRewardType() == self.REWARD_TYPE.FIRST_IN_PURGURE then
+		local countInfo = User:GetCountInfo()
+		self.purgure_get_button:setButtonEnabled(countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted)
 	elseif self:GetRewardType() == self.REWARD_TYPE.ONLINE then
 		self:RefreshOnLineList()
 	end
@@ -414,7 +419,7 @@ function GameUIActivityReward:ui_FIRST_IN_PURGURE()
 	local bar = display.newSprite("activity_first_purgure_598x190.png"):align(display.TOP_CENTER, 304,self.height - 20):addTo(self.bg)
 	display.newSprite("Npc.png"):align(display.RIGHT_BOTTOM, 305, -20):addTo(self.bg):scale(552/423)
 	local countInfo = User:GetCountInfo()
-	WidgetPushButton.new({normal = 'yellow_btn_up_148x58.png',pressed = 'yellow_btn_down_148x58.png',disabled = 'gray_btn_148x58.png'})
+	self.purgure_get_button = WidgetPushButton.new({normal = 'yellow_btn_up_148x58.png',pressed = 'yellow_btn_down_148x58.png',disabled = 'gray_btn_148x58.png'})
 			:setButtonLabel("normal", UIKit:commonButtonLable({
 				text = _("领取")
 			}))
@@ -423,7 +428,7 @@ function GameUIActivityReward:ui_FIRST_IN_PURGURE()
 			:onButtonClicked(function()
 				NetManager:getFirstIAPRewardsPromise()
 			end)
-			:setButtonEnabled(countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted)
+	self.purgure_get_button:setButtonEnabled(countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted)
 	local rewards = self:GetFirstPurgureRewards()
 	local x,y = 300,self.height - 245
 	for index,reward in ipairs(rewards) do
