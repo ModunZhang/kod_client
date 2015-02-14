@@ -606,6 +606,12 @@ function GameUtils:DoBattle(attacker, defencer)
     function report:GetFightDefenceSoldierRoundData()
         return defence_soldier
     end
+    function report:GetOrderedAttackSoldiers()
+        return attacker
+    end
+    function report:GetOrderedDefenceSoldiers()
+        return defencer
+    end
     function report:IsFightWall()
         return false
     end
@@ -618,6 +624,7 @@ end
 
 
 return GameUtils
+
 
 
 

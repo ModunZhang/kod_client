@@ -194,6 +194,18 @@ local function get_house_info_from_houses_by_id(houses, houses_id)
     return nil
 end
 function UpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id, sub_location_id)
+    -- local event, level, finished_time
+    -- if self:BelongCity():IsHouse(self) then
+    --     event = self:GetHouseEventByLocations(user_data, location_id, sub_location_id)
+    --     level, finished_time = self:GetHouseInfoByEventAndLocation(user_data, event, location_id, sub_location_id)
+    -- else
+    --     event = self:GetBuildingEventFromUserDataByLocation(user_data, location_id)
+    --     level, finished_time = self:GetBuildingInfoByEventAndLocation(user_data, event, location_id)
+    -- end
+    -- self:OnEvent(event)
+    -- if level and finished_time then
+    --     self:OnHandle(level, finished_time)
+    -- end
     self:HandleAllEvents(user_data, current_time, location_id, sub_location_id)
     self:HandleEventChange(user_data, current_time, location_id, sub_location_id)
 end
@@ -269,11 +281,56 @@ function UpgradeBuilding:HandleEventChange( user_data, current_time, location_id
     -- 适配
     self:OnHandle(level, finishTime)
 end
+function UpgradeBuilding:GetHouseInfoByEventAndLocation(user_data, event, location_id, sub_location_id)
+    local buildings = user_data.buildings
+    local building_key = string.format("location_%d", location_id)
+    if buildings and buildings[building_key] then
+        for _, v in pairs(buildings[building_key].houses) do
+            if v.location == sub_location_id then
+                local finishTime = event == nil and 0 or event.finishTime / 1000
+                return v.level, finishTime
+            end
+        end
+    end
+end
+function UpgradeBuilding:GetHouseEventByLocations(user_data, event, location_id, sub_location_id)
+    for k, v in pairs(user_data.__houseEvents or {}) do
+        if v.data.buildingLocation == location_id and
+            v.data.houseLocation == sub_location_id then
+            return v.data
+        end
+    end
+    for k, v in pairs(user_data.houseEvents or {}) do
+        if v.buildingLocation == location_id and
+            v.houseLocation == sub_location_id then
+            return v
+        end
+    end
+end
+function UpgradeBuilding:GetBuildingInfoByEventAndLocation(user_data, event, location)
+    local finishTime = event == nil and 0 or event.finishTime / 1000
+    local buildings = user_data.buildings
+    local building_key = string.format("location_%d", location)
+    if buildings and buildings[building_key] then
+        return buildings[building_key].level, finishTime
+    end
+    return self:GetLevel(), finishTime
+end
+function UpgradeBuilding:GetBuildingEventFromUserDataByLocation(user_data, location)
+    for _,v in ipairs(user_data.__buildingEvents or {}) do
+        if v.data.location == location then
+            return v.data
+        end
+    end
+    for _,v in ipairs(user_data.buildingEvents or {}) do
+        if v.location == location then
+            return v
+        end
+    end
+end
 function UpgradeBuilding:OnEvent(event)
-    if event == nil then
-        self.unique_upgrading_key = nil
-    else
-        self.unique_upgrading_key =  event.id
+    if event then
+        self.unique_upgrading_key = event.id
     end
 end
 function UpgradeBuilding:OnHandle(level, finish_time)
@@ -505,23 +562,6 @@ function UpgradeBuilding:getUpgradeRequiredGems()
 end
 
 return UpgradeBuilding
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
