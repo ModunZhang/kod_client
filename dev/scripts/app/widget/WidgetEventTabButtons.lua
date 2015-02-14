@@ -489,7 +489,21 @@ function WidgetEventTabButtons:IsTabEnable(tab)
     elseif tab == "material" and (self.toolShop:IsUnlocked() or self.blackSmith:IsUnlocked()) then
         return true
     elseif tab == "technology" then
-        return true
+        local city = self.city
+        local total_num = 0
+        local buildings = {
+            "academy",
+            "trainingGround",
+            "hunterHall",
+            "stable",
+            "workshop",
+        }
+        for _,v in ipairs(buildings) do
+            if city:GetFirstBuildingByType(v):IsUnlocked() then
+                total_num = total_num + 1
+            end
+        end
+        return total_num > 0
     end
     return false
 end
@@ -934,6 +948,7 @@ function WidgetEventTabButtons:MilitaryTechDescribe(event)
 end
 
 return WidgetEventTabButtons
+
 
 
 
