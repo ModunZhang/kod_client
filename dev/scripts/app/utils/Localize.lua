@@ -358,15 +358,23 @@ local ALLIANCE_TITLE = {
 local SOLDIER_CATEGORY_MAP = {
     ["swordsman"] = "infantry",
     ["sentinel"] = "infantry",
+    ["skeletonWarrior"] = "infantry",
+    ["priest"] = "infantry",
 
     ["ranger"] = "archer",
     ["crossbowman"] = "archer",
+    ["skeletonArcher"] = "archer",
+    ["demonHunter"] = "archer",
 
     ["lancer"] = "cavalry",
     ["horseArcher"] = "cavalry",
+    ["deathKnight"] = "cavalry",
+    ["paladin"] = "cavalry",
 
     ["catapult"] = "siege",
     ["ballista"] = "siege",
+    ["meatWagon"] = "siege",
+    ["steamTank"] = "siege",
 
 
     ["wall"] = "wall"
