@@ -508,7 +508,7 @@ function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                local eventType = self.city:IsHouse(self.building) and "houseEvents" or "buildingEvents"
+                local eventType = self.building:EventType()
                 NetManager:getFreeSpeedUpPromise(eventType,self.building:UniqueUpgradingKey())
                     :catch(function(err)
                         dump(err:reason())
@@ -524,9 +524,7 @@ function CommonUpgradeUI:SetAccTipLabel()
     self.acc_tip_label:setString(_("小于5分钟时，可使用免费加速.激活VIP X后，小于5分钟时可使用免费加速"))
 end
 function CommonUpgradeUI:GetEventTypeByBuilding()
-    local building = self.building
-    local eventType = self.city:IsHouse(self.building) and "houseEvents" or "buildingEvents"
-    return eventType
+    return self.building:EventType()
 end
 function CommonUpgradeUI:CreateAccButtons()
     -- 8个加速按钮单独放置在一个layer上方便处理事件

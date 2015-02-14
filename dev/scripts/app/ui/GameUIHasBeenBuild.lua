@@ -7,6 +7,7 @@ local WidgetBuildingIntroduce = import("..widget.WidgetBuildingIntroduce")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetBuyBuildingQueue = import("..widget.WidgetBuyBuildingQueue")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local GameUIBuildingSpeedUp = import("..ui.GameUIBuildingSpeedUp")
 local GameUIHasBeenBuild = UIKit:createUIClass('GameUIHasBeenBuild', "GameUIWithCommonHeader")
 local NOT_ABLE_TO_UPGRADE = UpgradeBuilding.NOT_ABLE_TO_UPGRADE
 
@@ -71,18 +72,18 @@ function GameUIHasBeenBuild:OnUpgradingBegin(building, current_time, city)
 
     local is_house = self.build_city:IsHouse(building)
     if self.function_list_view and not is_house then
-        self.function_list_view:UpdateItemsByBuildings(self.build_city:GetBuildingsIsUnlocked())
+        self.function_list_view:UpdateItemsByBuildings(self.build_city:GetBuildingsIsUnlocked(), current_time)
     elseif self.house_list_view and is_house then
-        self.house_list_view:UpdateItemsByBuildings(self.build_city:GetHousesWhichIsBuilded())
+        self.house_list_view:UpdateItemsByBuildings(self.build_city:GetHousesWhichIsBuilded(), current_time)
     end
 end
 function GameUIHasBeenBuild:OnUpgrading(building, current_time, city)
 
     local is_house = self.build_city:IsHouse(building)
     if self.function_list_view and not is_house then
-        self.function_list_view:UpdateItemByBuilding(building)
+        self.function_list_view:UpdateItemByBuilding(building, current_time)
     elseif self.house_list_view and is_house then
-        self.house_list_view:UpdateItemByBuilding(building)
+        self.house_list_view:UpdateItemByBuilding(building, current_time)
     end
 end
 function GameUIHasBeenBuild:OnUpgradingFinished(building, current_time, city)
@@ -90,13 +91,13 @@ function GameUIHasBeenBuild:OnUpgradingFinished(building, current_time, city)
 
     local is_house = self.build_city:IsHouse(building)
     if self.function_list_view and not is_house then
-        self.function_list_view:UpdateItemsByBuildings(self.build_city:GetBuildingsIsUnlocked())
+        self.function_list_view:UpdateItemsByBuildings(self.build_city:GetBuildingsIsUnlocked(), current_time)
         local item = self.function_list_view:GetItemByUniqueKey(building:UniqueKey())
         if item then
             item:UpdateIcon(building)
         end
     elseif self.house_list_view and is_house then
-        self.house_list_view:UpdateItemsByBuildings(self.build_city:GetHousesWhichIsBuilded())
+        self.house_list_view:UpdateItemsByBuildings(self.build_city:GetHousesWhichIsBuilded(), current_time)
         local item = self.house_list_view:GetItemByUniqueKey(building:UniqueKey())
         if item then
             item:UpdateIcon(building)
@@ -215,10 +216,11 @@ function GameUIHasBeenBuild:CreateListView(buildings)
     listnode:addTo(self):align(display.BOTTOM_CENTER,window.cx,window.bottom_top + 20)
     -- 初始化item
     local unique_map = {}
-    for i, v in pairs(buildings) do
+    for _,v in pairs(buildings) do
         local item = self:CreateItemWithListView(list_view)
+        item.building = v
         item:UpdateIcon(v)
-        item:UpdateByBuilding(v)
+        item:UpdateByBuilding(v, timer:GetServerTime())
         unique_map[v:UniqueKey()] = item
         list_view:addItem(item)
     end
@@ -227,15 +229,15 @@ function GameUIHasBeenBuild:CreateListView(buildings)
     function list_view:GetItemByUniqueKey(unique_key)
         return self.unique_map[unique_key]
     end
-    function list_view:UpdateItemsByBuildings(buildings)
+    function list_view:UpdateItemsByBuildings(buildings, current_time)
         for k, v in pairs(buildings) do
-            self:UpdateItemByBuilding(v)
+            self:UpdateItemByBuilding(v, current_time)
         end
     end
-    function list_view:UpdateItemByBuilding(building)
+    function list_view:UpdateItemByBuilding(building, current_time)
         local item = self.unique_map[building:UniqueKey()]
         if item then
-            item:UpdateByBuilding(building)
+            item:UpdateByBuilding(building, current_time)
         end
     end
     return list_view,listnode
@@ -246,15 +248,15 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
 
     local item = list_view:newItem()
     local back_ground = WidgetUIBackGround.new({
-                    width = 568,
-                    height = 142,
-                    top_img = "back_ground_568x16_top.png",
-                    bottom_img = "back_ground_568x80_bottom.png",
-                    mid_img = "back_ground_568x28_mid.png",
-                    u_height = 16,
-                    b_height = 80,
-                    m_height = 28,
-                })
+        width = 568,
+        height = 142,
+        top_img = "back_ground_568x16_top.png",
+        bottom_img = "back_ground_568x80_bottom.png",
+        mid_img = "back_ground_568x28_mid.png",
+        u_height = 16,
+        b_height = 80,
+        m_height = 28,
+    })
     item:addContent(back_ground)
 
     local w, h = back_ground:getContentSize().width, back_ground:getContentSize().height
@@ -271,7 +273,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         {normal = "info_26x26.png",pressed = "info_26x26.png"})
         :addTo(left)
         :align(display.CENTER, 16, 16)
-        
+
 
 
     local building_icon = display.newSprite("keep_131x164.png")
@@ -310,6 +312,21 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         :align(display.LEFT_CENTER, 170, 35)
 
 
+    local free_speedUp = WidgetPushButton.new(
+        {normal = "purple_btn_up_148x58.png",pressed = "purple_btn_down_148x58.png"})
+        :addTo(back_ground)
+        :align(display.CENTER, w - 90, 40)
+        :setButtonLabel(cc.ui.UILabel.new({
+            text = _("免费加速"),
+            size = 24,
+            font = UIKit:getFontFilePath(),
+            color = UIKit:hex2c3b(0xffedae)}))
+        :onButtonClicked(function(event)
+            local building = item.building
+            NetManager:getFreeSpeedUpPromise(building:EventType(), building:UniqueUpgradingKey())
+        end)
+
+
     local instant_build = WidgetPushButton.new(
         {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
         :addTo(back_ground)
@@ -341,9 +358,9 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
             elseif city:IsGate(building) then
                 -- NetManager:instantUpgradeWallByLocation(NOT_HANDLE)
                 NetManager:getInstantUpgradeWallByLocationPromise()
-                            :catch(function(err)
-                                dump(err:reason())
-                            end)
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
             elseif city:IsTower(building) then
                 -- NetManager:instantUpgradeTowerByLocation(building:TowerId(), NOT_HANDLE)
                 NetManager:getInstantUpgradeTowerPromise()
@@ -407,9 +424,9 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
             elseif city:IsGate(building) then
                 -- NetManager:upgradeWallByLocation(NOT_HANDLE)
                 NetManager:getUpgradeWallByLocationPromise()
-                        :catch(function(err)
-                            dump(err:reason())
-                        end)
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
             elseif city:IsTower(building) then
                 -- NetManager:upgradeTowerByLocation(building:TowerId(), NOT_HANDLE)
                 NetManager:getUpgradeTowerPromise()
@@ -438,7 +455,9 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
             size = 24,
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xffedae)}))
-        :setButtonEnabled(false)
+        :onButtonClicked(function(event)
+            GameUIBuildingSpeedUp.new(item.building):addToCurrentScene(true)
+        end)
 
 
     function item:SetBuildingType(building_type, level)
@@ -488,43 +507,33 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         progress:SetProgressInfo(time_label, percent)
         return self
     end
-    function item:UpdateByBuilding(building)
-        self.building = building
+    function item:UpdateByBuilding(building, current_time)
         repeat
             if building:IsUpgrading() then
-                self:ChangeStatus("building")
-                self:OnBuildingUpgrading(building)
+                local can_free_speedUp = building:GetUpgradingLeftTimeByCurrentTime(current_time) <= DataUtils:getFreeSpeedUpLimitTime()
+                self:ChangeStatus(can_free_speedUp and "free" or "building")
+                self:UpdateProgress(building)
                 break
             end
             if building:IsMaxLevel() then
                 self:ChangeStatus("max")
                 break
             end
-            if building:IsAbleToUpgrade(false) == NOT_ABLE_TO_UPGRADE.LEVEL_CAN_NOT_HIGHER_THAN_KEEP_LEVEL then
-                self:ChangeStatus("disable")
-                break
+            local illegal, is_pre_condition = building:IsAbleToUpgrade(false)
+            if illegal then
+                if is_pre_condition then
+                    self:ChangeStatus("disable")
+                else
+                    self:ChangeStatus("instant")
+                    self:SetGemLabel(building:getUpgradeNowNeedGems())
+                end
+                self:SetConditionLabel(illegal, UIKit:hex2c3b(0x7e0000))
+            else
+                self:ChangeStatus("normal")
+                self:SetConditionLabel(_("满足建造条件"), UIKit:hex2c3b(0x007c23))
             end
-            if building:IsAbleToUpgrade(false) == NOT_ABLE_TO_UPGRADE.BUILDINGLIST_AND_RESOURCE_NOT_ENOUGH then
-                self:ChangeStatus("instant")
-                self:SetConditionLabel(_("建筑队列不足"), UIKit:hex2c3b(0x7e0000))
-                self:SetGemLabel(building:getUpgradeNowNeedGems())
-                break
-            end
-            if building:IsAbleToUpgrade(false) == NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH then
-                self:ChangeStatus("instant")
-                self:SetConditionLabel(_("升级资源不足"), UIKit:hex2c3b(0x7e0000))
-                self:SetGemLabel(building:getUpgradeNowNeedGems())
-                break
-            end
-            if building:IsAbleToUpgrade(false) == NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH then
-                self:ChangeStatus("instant")
-                self:SetConditionLabel(_("建筑队列不足"), UIKit:hex2c3b(0x7e0000))
-                self:SetGemLabel(building:getUpgradeNowNeedGems())
-                break
-            end
-            self:ChangeStatus("normal")
         until true
-        self:UpdateDesc(self.building)
+        self:UpdateDesc(building)
     end
     function item:UpdateIcon(building)
         self:SetBuildingType(building:GetType(), building:GetLevel())
@@ -556,72 +565,62 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
             end
         end
     end
-    function item:OnBuildingUpgradingBegin(building)
-        self:ChangeStatus("building")
-    end
-    function item:OnBuildingUpgrading(building)
-        self:UpdateProgress(building)
-    end
-    function item:OnBuildingUpgradingEnd(building)
-        self:ChangeStatus("normal")
-    end
     function item:ChangeStatus(status)
         if self.status == status then
             return
         end
         if status == "instant" then
-            self:HideNormal()
+            self:HideFreeSpeedUp()
+            self:HideNormalButton()
             self:HideProgress()
-            self:HideDisable()
-            self:HideMax()
 
-            self:ShowInstant()
+            self:ShowInstantButton()
+        elseif status == "free" then
+            self:HideNormalButton()
+            self:HideProgress()
+            self:HideInstantButton()
+
+            self:ShowFreeSpeedUp()
         elseif status == "normal" then
-            self:HideInstant()
+            self:HideFreeSpeedUp()
+            self:HideInstantButton()
             self:HideProgress()
-            self:HideDisable()
-            self:HideMax()
 
-            self:ShowNormal()
+            self:ShowNormalButton()
         elseif status == "building" then
-            self:HideInstant()
-            self:HideNormal()
-            self:HideDisable()
-            self:HideMax()
+            self:HideFreeSpeedUp()
+            self:HideInstantButton()
+            self:HideNormalButton()
 
             self:ShowProgress()
         elseif status == "disable" then
-            self:HideInstant()
-            self:HideNormal()
+            self:HideFreeSpeedUp()
+            self:HideInstantButton()
             self:HideProgress()
-            self:HideMax()
-
-            self:ShowDisable()
+            self:ShowNormalButton(false)
         elseif status == "max" then
-            self:HideInstant()
-            self:HideNormal()
+            self:HideFreeSpeedUp()
+            self:HideInstantButton()
+            self:HideNormalButton()
             self:HideProgress()
-            self:HideDisable()
-
-            self:ShowMax()
         end
         self.status = status
         return self
     end
-    function item:HideInstant()
+    function item:HideInstantButton()
         gem_bg:setVisible(false)
         instant_build:setVisible(false)
     end
-    function item:ShowInstant()
+    function item:ShowInstantButton()
         gem_bg:setVisible(true)
         instant_build:setVisible(true)
     end
-    function item:HideNormal()
+    function item:HideNormalButton()
         normal_build:setVisible(false)
     end
-    function item:ShowNormal()
+    function item:ShowNormalButton(able)
         normal_build:setVisible(true)
-        self:SetConditionLabel(_("满足条件升级"), UIKit:hex2c3b(0x007c23))
+        normal_build:setButtonEnabled(able == nil and true or able)
     end
     function item:HideProgress()
         progress:setVisible(false)
@@ -631,26 +630,21 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         progress:setVisible(true)
         speed_up:setVisible(true)
     end
-    function item:HideDisable()
-        normal_build:setButtonEnabled(true)
-        normal_build:setVisible(false)
+    function item:ShowFreeSpeedUp()
+        free_speedUp:show()
     end
-    function item:ShowDisable()
-        normal_build:setButtonEnabled(false)
-        normal_build:setVisible(true)
-        self:SetConditionLabel(_("需要城堡等级")..self.building:GetNextLevel(), UIKit:hex2c3b(0x7e0000))
-    end
-    function item:HideMax()
-
-    end
-    function item:ShowMax()
-        normal_build:setVisible(false)
-        condition_label:setVisible(false)
+    function item:HideFreeSpeedUp()
+        free_speedUp:hide()
     end
     return item
 end
 
 return GameUIHasBeenBuild
+
+
+
+
+
 
 
 

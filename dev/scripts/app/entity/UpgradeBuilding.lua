@@ -5,17 +5,17 @@ local MaterialManager = import("..entity.MaterialManager")
 local UpgradeBuilding = class("UpgradeBuilding", Building)
 local Localize = import("..utils.Localize")
 UpgradeBuilding.NOT_ABLE_TO_UPGRADE = {
-    TILE_NOT_UNLOCKED = "地块未解锁",
-    IS_MAX_LEVEL = "建筑已经达到最高等级",
-    IS_MAX_UNLOCK = "建造数量已达建造上限",
-    LEVEL_CAN_NOT_HIGHER_THAN_KEEP_LEVEL = "请首先提升城堡等级",
-    RESOURCE_NOT_ENOUGH = "资源不足",
-    BUILDINGLIST_NOT_ENOUGH = "建造队列不足",
-    BUILDINGLIST_AND_RESOURCE_NOT_ENOUGH = "资源不足.建造队列不足",
-    GEM_NOT_ENOUGH = "宝石不足",
-    LEVEL_NOT_ENOUGH = "等级小于0级",
-    BUILDING_IS_UPGRADING = "建筑正在升级",
-    FREE_CITIZEN_ERROR = "升级小屋会造成可用城民小于0",
+    TILE_NOT_UNLOCKED = _("地块未解锁"),
+    IS_MAX_LEVEL = _("建筑已经达到最高等级"),
+    IS_MAX_UNLOCK = _("建造数量已达建造上限"),
+    LEVEL_CAN_NOT_HIGHER_THAN_KEEP_LEVEL = _("请首先提升城堡等级"),
+    RESOURCE_NOT_ENOUGH = _("资源不足"),
+    BUILDINGLIST_NOT_ENOUGH = _("建造队列不足"),
+    BUILDINGLIST_AND_RESOURCE_NOT_ENOUGH = _("资源不足.建造队列不足"),
+    GEM_NOT_ENOUGH = _("宝石不足"),
+    LEVEL_NOT_ENOUGH = _("等级小于0级"),
+    BUILDING_IS_UPGRADING = _("建筑正在升级"),
+    FREE_CITIZEN_ERROR = _("升级小屋会造成可用城民小于0"),
 }
 local NOT_ABLE_TO_UPGRADE = UpgradeBuilding.NOT_ABLE_TO_UPGRADE
 function UpgradeBuilding:ctor(building_info)
@@ -32,6 +32,9 @@ function UpgradeBuilding:IsAbleToFreeSpeedUpByTime(time)
 end
 function UpgradeBuilding:GetFreeSpeedupTime()
     return DataUtils:getFreeSpeedUpLimitTime()
+end
+function UpgradeBuilding:EventType()
+    return self:BelongCity():IsHouse(self) and "houseEvents" or "buildingEvents"
 end
 function UpgradeBuilding:UniqueUpgradingKey()
     return self.unique_upgrading_key
@@ -403,7 +406,7 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     
     local pre_limit = self:IsBuildingUpgradeLegal()
     if pre_limit then
-        return pre_limit
+        return pre_limit, true
     end
 
     local gem = city:GetUser():GetGemResource():GetValue()
