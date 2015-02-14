@@ -159,6 +159,14 @@ function WidgetUseItems:OpenChangePlayerOrCityName(item)
         }}):next(function ()
             dialog:leftButtonClicked()
         end)
+    end,
+    function ()
+        local item_name = item:Name()
+        NetManager:getBuyAndUseItemPromise(item_name,{[item_name] = {
+            [request_key] = string.trim(editbox:getText())
+        }}):next(function ()
+            dialog:leftButtonClicked()
+        end)
     end
     ):addTo(body):align(display.CENTER,size.width/2,90)
     return dialog
@@ -190,6 +198,12 @@ function WidgetUseItems:OpenBuffDialog( item )
             function ()
                 local item_name = v:Name()
                 NetManager:getUseItemPromise(item_name,{}):next(function ()
+                    dialog:leftButtonClicked()
+                end)
+            end,
+            function ()
+                local item_name = v:Name()
+                NetManager:getBuyAndUseItemPromise(item_name,{}):next(function ()
                     dialog:leftButtonClicked()
                 end)
             end
@@ -254,6 +268,12 @@ function WidgetUseItems:OpenResourceDialog( item )
                 NetManager:getUseItemPromise(item_name,{}):next(function ()
                     dialog:leftButtonClicked()
                 end)
+            end,
+            function ()
+                local item_name = v:Name()
+                NetManager:getBuyAndUseItemPromise(item_name,{}):next(function ()
+                    dialog:leftButtonClicked()
+                end)
             end
         )
         )
@@ -291,6 +311,12 @@ function WidgetUseItems:OpenHeroBloodDialog( item )
             function ()
                 local item_name = v:Name()
                 NetManager:getUseItemPromise(item_name,{}):next(function ()
+                    dialog:leftButtonClicked()
+                end)
+            end,
+            function ()
+                local item_name = v:Name()
+                NetManager:getBuyAndUseItemPromise(item_name,{}):next(function ()
                     dialog:leftButtonClicked()
                 end)
             end
@@ -332,6 +358,14 @@ function WidgetUseItems:OpenOneDragonItemDialog( item ,dragon)
                 }}):next(function ()
                     dialog:leftButtonClicked()
                 end)
+            end,
+            function ()
+                local item_name = item:Name()
+                NetManager:getBuyAndUseItemPromise(item_name,{[item_name] = {
+                    dragonType = dragon:Type()
+                }}):next(function ()
+                    dialog:leftButtonClicked()
+                end)
             end
         ):addTo(body):align(display.CENTER,size.width/2,size.height - 160 - (i-1)*138)
     end
@@ -366,6 +400,12 @@ function WidgetUseItems:OpenStrengthDialog( item )
             function ()
                 local item_name = v:Name()
                 NetManager:getUseItemPromise(item_name,{}):next(function ()
+                    dialog:leftButtonClicked()
+                end)
+            end,
+            function ()
+                local item_name = v:Name()
+                NetManager:getBuyAndUseItemPromise(item_name,{}):next(function ()
                     dialog:leftButtonClicked()
                 end)
             end
@@ -523,6 +563,21 @@ function WidgetUseItems:OpenIncreaseDragonExpOrHp( item )
             }}):next(function ()
                 dialog:leftButtonClicked()
             end)
+        end,
+        function ()
+            local item_name = item:Name()
+            local select_dragonType = ""
+            for i,v in ipairs(optional_dragon) do
+                if v:IsSelected() then
+                    select_dragonType = v:GetDragonType()
+                    break
+                end
+            end
+            NetManager:getBuyAndUseItemPromise(item_name,{[item_name] = {
+                dragonType = select_dragonType
+            }}):next(function ()
+                dialog:leftButtonClicked()
+            end)
         end
     ):addTo(body):align(display.CENTER,size.width/2,size.height - 100)
     return dialog
@@ -554,6 +609,12 @@ function WidgetUseItems:OpenChestDialog( item )
                 NetManager:getUseItemPromise(item_name,{}):next(function ()
                     dialog:leftButtonClicked()
                 end)
+            end,
+            function ()
+                local item_name = v:Name()
+                NetManager:getBuyAndUseItemPromise(item_name,{}):next(function ()
+                    dialog:leftButtonClicked()
+                end)
             end
         ):addTo(body):align(display.CENTER,size.width/2,size.height - 120 - (i-1)*138)
     end
@@ -575,6 +636,12 @@ function WidgetUseItems:OpenNormalDialog( item )
             function ()
                 local item_name = v:Name()
                 NetManager:getUseItemPromise(item_name,{}):next(function ()
+                    dialog:leftButtonClicked()
+                end)
+            end,
+            function ()
+                local item_name = v:Name()
+                NetManager:getBuyAndUseItemPromise(item_name,{}):next(function ()
                     dialog:leftButtonClicked()
                 end)
             end
@@ -635,6 +702,12 @@ function WidgetUseItems:OpenVipActive( item )
                 NetManager:getUseItemPromise(item_name,{}):next(function ()
                     dialog:leftButtonClicked()
                 end)
+            end,
+            function ()
+                local item_name = v:Name()
+                NetManager:getBuyAndUseItemPromise(item_name,{}):next(function ()
+                    dialog:leftButtonClicked()
+                end)
             end
         )
         )
@@ -669,6 +742,17 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
                         eventId=march_event:WithObject():Id()
                     }
 
+                }):next(function ()
+                    dialog:leftButtonClicked()
+                end)
+            end,
+            function ()
+                local item_name = v:Name()
+                NetManager:getBuyAndUseItemPromise(item_name,{
+                    [item_name]={
+                        eventType = march_event:GetEventServerType(),
+                        eventId=march_event:WithObject():Id()
+                    }
                 }):next(function ()
                     dialog:leftButtonClicked()
                 end)
@@ -708,7 +792,17 @@ function WidgetUseItems:OpenRetreatTroopDialog( item,event )
                     eventType = event:GetEventServerType(),
                     eventId=event:WithObject():Id()
                 }
-
+            }):next(function ()
+                dialog:leftButtonClicked()
+            end)
+        end,
+        function ()
+            local item_name = item:Name()
+            NetManager:getBuyAndUseItemPromise(item_name,{
+                [item_name]={
+                    eventType = event:GetEventServerType(),
+                    eventId=event:WithObject():Id()
+                }
             }):next(function ()
                 dialog:leftButtonClicked()
             end)
@@ -717,7 +811,7 @@ function WidgetUseItems:OpenRetreatTroopDialog( item,event )
     return dialog
 end
 
-function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc)
+function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFunc)
     local body = display.newNode()
     body:setContentSize(cc.size(570,128))
 
@@ -754,9 +848,7 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc)
                     :SetPopMessage(_("宝石不足"))
                     :AddToCurrentScene()
             else
-                NetManager:getBuyItemPromise(item_name,1):next(function ()
-                    useItemFunc()
-                end)
+                buyAndUseFunc()
             end
         end
         if item:IsSell() then
@@ -805,6 +897,13 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc)
 end
 
 return WidgetUseItems
+
+
+
+
+
+
+
 
 
 
