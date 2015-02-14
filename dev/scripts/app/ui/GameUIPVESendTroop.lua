@@ -296,9 +296,8 @@ function GameUIPVESendTroop:SelectSoldiers()
                         min=0,
                         callback = function ( edit_value )
                             if edit_value ~= slider_value then
-                                slider.fsm_:doEvent("press")
                                 slider:setSliderValue(edit_value)
-                                slider.fsm_:doEvent("release")
+                                self:RefreashSoldierShow()
                             end
                         end
                     }
@@ -315,6 +314,7 @@ function GameUIPVESendTroop:SelectSoldiers()
             btn_text:setString(math.floor(event.value))
         end)
         slider:addSliderReleaseEventListener(function(event)
+            print("RefreashSoldierShow---------")
             self:RefreashSoldierShow()
         end)
         slider:setDynamicMaxCallBakc(function (value)

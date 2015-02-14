@@ -104,7 +104,8 @@ function WidgetRequirementListview:RefreshListView(contents)
                     color = UIKit:hex2c3b(0x403c2f)
                 }):align(display.LEFT_CENTER,-180,0):addTo(content)
                 item:addContent(content)
-                self.listview:addItem(item)
+                local index = v.canNotBuy and 1
+                self.listview:addItem(item,index)
                 self.added_items[v.resource_type] = item
                 self.listview:reload()
             end

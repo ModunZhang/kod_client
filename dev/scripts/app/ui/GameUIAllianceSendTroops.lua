@@ -345,9 +345,8 @@ function GameUIAllianceSendTroops:SelectSoldiers()
                         min=0,
                         callback = function ( edit_value )
                             if edit_value ~= slider_value then
-                                slider.fsm_:doEvent("press")
                                 slider:setSliderValue(edit_value)
-                                slider.fsm_:doEvent("release")
+                                self:RefreashSoldierShow()
                             end
                         end
                     }
