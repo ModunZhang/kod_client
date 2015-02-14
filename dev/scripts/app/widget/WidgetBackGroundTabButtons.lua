@@ -52,12 +52,10 @@ end
 function WidgetBackGroundTabButtons:PushButton(tab)
     for _, v in pairs(self.tabs) do
         if v ~= tab then
-            v:Enable(true)
-            v:SetStatus(false)
+            v:Enable(true):Active(false)
             v.label:setColor(UIKit:hex2c3b(0xffedae))
         else
-            v:Enable(false)
-            v:SetStatus(true)
+            v:Enable(false):Active(true)
             v.label:setColor(UIKit:hex2c3b(0x00c0ff))
         end
     end

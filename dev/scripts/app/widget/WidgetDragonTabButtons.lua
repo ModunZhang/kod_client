@@ -2,7 +2,6 @@
 -- Author: Danny He
 -- Date: 2014-11-03 19:14:11
 --
-local WidgetTab = import(".WidgetTab")
 local WidgetDragonTabButtons = class("WidgetDragonTabButtons",function()
 	return display.newNode()
 end)

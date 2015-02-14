@@ -27,7 +27,7 @@ function WidgetTab:ctor(param, width, height)
         if event.name == "began" and
             self.back_ground:getCascadeBoundingBox():containsPoint(cc.p(event.x, event.y)) then
             self.pressed = not self.pressed
-            self:SetStatus(self.pressed)
+            self:Active(self.pressed)
             if type(self.tab_press) == "function" then
                 self:tab_press(self.pressed)
             end
@@ -43,12 +43,20 @@ function WidgetTab:Enable(trueOrFlase)
     self.back_ground:setTouchEnabled(trueOrFlase)
     return self
 end
-function WidgetTab:SetStatus(is_pressed)
-    self.tab:setButtonSelected(is_pressed)
+function WidgetTab:Active(active)
+    self:SetHighLight(active)
+    self:SetSelect(active)
+    return self
+end
+function WidgetTab:SetSelect(is_pressed)
     self.pressed = is_pressed
     return self
 end
-function WidgetTab:IsPressed()
+function WidgetTab:SetHighLight(is_highlight)
+    self.tab:setButtonSelected(is_highlight)
+    return self
+end
+function WidgetTab:IsSelected()
     return self.pressed
 end
 function WidgetTab:EnableTag(b)
@@ -61,7 +69,7 @@ function WidgetTab:EnableTag(b)
         color = UIKit:hex2c3b(0xfffeb3)}):addTo(bg):align(display.CENTER,40/2,24/2 + 2)
     return self
 end
-function WidgetTab:SetActive(active, total)
+function WidgetTab:SetActiveNumber(active, total)
     self.active:setString(string.format("%d/%d", active, total))
     return self
 end
