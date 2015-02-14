@@ -328,8 +328,12 @@ function GameUIAllianceBattle:InitBattleStatistics()
         }):addTo(self_alliance_bg)
             :align(display.CENTER,-180,0)
         -- 敌方联盟名字
+        local a_name = ""
+        if enemy_alliance then
+             a_name = "["..enemy_alliance:AliasName().."]"..enemy_alliance:Name()
+        end
         local enemy_alliance_name = UIKit:ttfLabel({
-            text = "["..enemy_alliance:AliasName().."]"..enemy_alliance:Name(),
+            text =a_name,
             size = 26,
             color = 0xffedae,
         }):addTo(enemy_alliance_bg)

@@ -10,11 +10,8 @@ end
 function TowerEntity:OnUserDataChanged(user_data, current_time)
     local event = self:GetBuildingEventFromUserDataByLocation(user_data, 22)
     self:OnEvent(event)
-    dump(event)
     local level, finished_time = self:GetBuildingInfoByEventAndLocation(user_data, event, 22)
-    print("level and finished_time", level, finished_time)
     if level and finished_time then
-        print("level and finished_time", level, finished_time)
         self:OnHandle(level, finished_time)
     end
 end

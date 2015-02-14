@@ -43,16 +43,22 @@ function WidgetResources:OnResourceChanged(resource_manager)
     }
     if self.resource_items then
         for k,v in pairs(self.resource_items) do
-            self:RefreshSpecifyResource(resource_manager:GetResourceByType(k),v,resource_max[k],City:GetCitizenByType(City.RESOURCE_TYPE_TO_BUILDING_TYPE[k]))
+            self:RefreshSpecifyResource(resource_manager:GetResourceByType(k),v,resource_max[k],City:GetCitizenByType(City.RESOURCE_TYPE_TO_BUILDING_TYPE[k]), k)
         end
     end
 end
 
-function WidgetResources:RefreshSpecifyResource(resource,item,maxvalue,occupy_citizen)
+local city = City
+local FOOD = ResourceManager.RESOURCE_TYPE.FOOD
+function WidgetResources:RefreshSpecifyResource(resource,item,maxvalue,occupy_citizen, type_)
     if maxvalue then
         item.ProgressTimer:setPercentage(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime())/maxvalue*100)
         item.resource_label:setString(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime()).."/"..maxvalue)
-        item.produce_capacity.value:setString(resource:GetProductionPerHour().."/h")
+        if type_ == FOOD then
+            item.produce_capacity.value:setString(city:GetResourceManager():GetFoodProductionPerHour().."/h")
+        else
+            item.produce_capacity.value:setString(resource:GetProductionPerHour().."/h")
+        end
         item.occupy_citizen.value:setString(occupy_citizen.."")
     else
         item.resource_label:setString(resource:GetValue())
