@@ -11,7 +11,7 @@ end
 function AutomaticUpdateResource:SetProductionPerHour(current_time, resource_production_per_hour)
     if self.resource_production_per_hour ~= resource_production_per_hour then
         self:UpdateResource(current_time, self:GetResourceValueByCurrentTime(current_time))
-        self.resource_production_per_hour = resource_production_per_hour < 0 and 0 or resource_production_per_hour
+        self.resource_production_per_hour = resource_production_per_hour
     end
 end
 function AutomaticUpdateResource:AddResourceByCurrentTime(current_time, value)
