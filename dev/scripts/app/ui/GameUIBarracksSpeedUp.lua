@@ -6,7 +6,7 @@ local WidgetSpeedUp = import("..widget.WidgetSpeedUp")
 local SoldierManager = import("..entity.SoldierManager")
 local Localize = import("..utils.Localize")
 local GameUIBarracksSpeedUp = class("GameUIBarracksSpeedUp",WidgetSpeedUp)
-
+local GameUtils = GameUtils
 function GameUIBarracksSpeedUp:ctor(building)
     GameUIBarracksSpeedUp.super.ctor(self)
     self.building = building
@@ -14,9 +14,8 @@ function GameUIBarracksSpeedUp:ctor(building)
     local event = building:GetRecruitEvent()
     local soldier_type, count = event:GetRecruitInfo()
     self:SetAccBtnsGroup(self:GetEventType(),building:GetRecruitEvent():Id())
-    self:SetAccTips(_("小于5min时可以使用免费加速"))
+    self:SetAccTips(_("招募士兵不能免费加速"))
     self:SetUpgradeTip(string.format("%s%s x%d", _("招募"), Localize.soldier_name[soldier_type], count))
-    self:CheckCanSpeedUpFree()
     building:AddBarracksListener(self)
 end
 
@@ -25,6 +24,7 @@ function GameUIBarracksSpeedUp:GetEventType()
 end
 function GameUIBarracksSpeedUp:onCleanup()
     self.building:RemoveBarracksListener(self)
+    GameUIBarracksSpeedUp.super.onCleanup(self)
 end
 
 function GameUIBarracksSpeedUp:CheckCanSpeedUpFree()

@@ -155,12 +155,14 @@ function GameUIUnlockBuilding:SetUpgradeRequirementListview()
     local iron = City.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local stone = City.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local population = City.resource_manager:GetPopulationResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-
+    local building = self.building
 
     -- local userData = DataManager:getUserData()
     local has_materials =City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
-
+    local pre_condition = building:IsBuildingUpgradeLegal()
     local requirements = {
+        {resource_type = _("前置条件"),isVisible = pre_condition, isSatisfy = not pre_condition,canNotBuy=true,
+            icon="hammer_31x33.png",description = pre_condition},
         {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetUpgradingBuildings()<1,
             icon="hammer_31x33.png",description=GameUtils:formatNumber(#City:GetUpgradingBuildings()).."/1"},
         {resource_type = _("木材"),isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),

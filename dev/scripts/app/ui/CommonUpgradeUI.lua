@@ -388,14 +388,15 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
     local population = City.resource_manager:GetPopulationResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
 
 
+    local building = self.building
+    local pre_condition = building:IsBuildingUpgradeLegal()
     local requirements = {
+        {resource_type = _("前置条件"),isVisible = pre_condition, isSatisfy = not pre_condition,canNotBuy=true,
+            icon="hammer_31x33.png",description = pre_condition},
         {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetUpgradingBuildings()<1,
             icon="hammer_31x33.png",description=GameUtils:formatNumber(#City:GetUpgradingBuildings()).."/1"},
-        {resource_type = _("城堡等级"),isVisible = self.building:GetType()~="keep", isSatisfy =  self.building:GetLevel()<=City:GetFirstBuildingByType("keep"):GetLevel(),
-            icon="hammer_31x33.png",description=self.building:GetLevel().."/"..City:GetFirstBuildingByType("keep"):GetLevel()},
         {resource_type = _("木材"),isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
             icon="wood_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpWood()).."/"..GameUtils:formatNumber(wood)},
-
         {resource_type = _("石料"),isVisible = self.building:GetLevelUpStone()>0,     isSatisfy = stone>self.building:GetLevelUpStone() ,
             icon="stone_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpStone()).."/"..GameUtils:formatNumber(stone)},
 
@@ -508,7 +509,7 @@ function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                local eventType = self.city:IsHouse(self.building) and "houseEvents" or "buildingEvents"
+                local eventType = self.building:EventType()
                 NetManager:getFreeSpeedUpPromise(eventType,self.building:UniqueUpgradingKey())
                     :catch(function(err)
                         dump(err:reason())
@@ -524,9 +525,7 @@ function CommonUpgradeUI:SetAccTipLabel()
     self.acc_tip_label:setString(_("小于5分钟时，可使用免费加速.激活VIP X后，小于5分钟时可使用免费加速"))
 end
 function CommonUpgradeUI:GetEventTypeByBuilding()
-    local building = self.building
-    local eventType = self.city:IsHouse(self.building) and "houseEvents" or "buildingEvents"
-    return eventType
+    return self.building:EventType()
 end
 function CommonUpgradeUI:CreateAccButtons()
     -- 8个加速按钮单独放置在一个layer上方便处理事件
@@ -617,4 +616,5 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
