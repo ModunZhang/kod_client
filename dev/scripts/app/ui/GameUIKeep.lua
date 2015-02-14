@@ -136,7 +136,11 @@ function GameUIKeep:CreateLineItem(params)
             color = UIKit:hex2c3b(0x29261c)
         }):align(display.LEFT_BOTTOM, 0, 10)
         :addTo(line)
-    local button = WidgetPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
+    local button = WidgetPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"}
+        ,{}
+        ,{
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+        })
         :setButtonLabel(UIKit:ttfLabel({
             text = params.button_label,
             size = 20,
@@ -340,7 +344,19 @@ function GameUIKeep:CreateChangeTerrainWindow()
             end)
         :align(display.CENTER, 80 , 50)
         :addTo(bg1)
-    group:getButtonAtIndex(1):setButtonSelected(true)
+
+    local terrain = User:Terrain()
+    local default_index = 0
+    if terrain == "grassLand" then
+        default_index = 1
+    elseif terrain == "iceField" then
+        default_index = 2
+    elseif terrain == "desert" then
+        default_index = 3
+    end
+
+
+    group:getButtonAtIndex(default_index):setButtonSelected(true)
 
     local bg2 = WidgetUIBackGround2.new(140)
     bg2:addTo(body):align(display.CENTER, 304, 84)
@@ -397,6 +413,26 @@ function GameUIKeep:CreateChangeTerrainWindow()
         :addTo(bg2):align(display.CENTER, 480, 100)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
+                local selected_index = 1
+                for i=1,group:getButtonsCount() do
+                    if group:getButtonAtIndex(i):isButtonSelected() then
+                        selected_index = i
+                        break
+                    end
+                end
+                if selected_index==default_index then
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("请选择不同的地形"))
+                        :AddToCurrentScene()
+                    return
+                end
+                if selected_index == 1 then
+                    NetManager:getChangeToGrassPromise()
+                elseif selected_index == 2 then
+                    NetManager:getChangeToIceFieldPromise()
+                elseif selected_index == 3 then
+                    NetManager:getChangeToDesertPromise()
+                end
             end
         end)
 end
@@ -442,6 +478,9 @@ end
 
 
 return GameUIKeep
+
+
+
 
 
 
