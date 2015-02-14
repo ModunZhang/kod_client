@@ -331,7 +331,7 @@ function GameUIActivityReward:GetContinutyListData()
 		local flag = 0
 		if v.day <= countInfo.day14RewardsCount then
 			flag = 1 
-		elseif v.day == countInfo.day14RewardsCount + 1 then
+		elseif v.day == countInfo.day14RewardsCount + 1 and countInfo.day14RewardsCount == countInfo.day14 then
 			flag = 3
 		elseif v.day == countInfo.day14 and countInfo.day14 > countInfo.day14RewardsCount then
 			flag = 2
@@ -406,6 +406,11 @@ function GameUIActivityReward:RefreshUI()
 		end
 	elseif self:GetRewardType() == self.REWARD_TYPE.CONTINUITY then
 		self:RefreshContinutyList()
+	elseif self:GetRewardType() == self.REWARD_TYPE.PLAYER_LEVEL_UP then
+		self:RefreshLevelUpListView()
+	elseif self:GetRewardType() == self.REWARD_TYPE.FIRST_IN_PURGURE then
+		local countInfo = User:GetCountInfo()
+		self.purgure_get_button:setButtonEnabled(countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted)
 	elseif self:GetRewardType() == self.REWARD_TYPE.ONLINE then
 		self:RefreshOnLineList()
 	end
@@ -414,7 +419,7 @@ function GameUIActivityReward:ui_FIRST_IN_PURGURE()
 	local bar = display.newSprite("activity_first_purgure_598x190.png"):align(display.TOP_CENTER, 304,self.height - 20):addTo(self.bg)
 	display.newSprite("Npc.png"):align(display.RIGHT_BOTTOM, 305, -20):addTo(self.bg):scale(552/423)
 	local countInfo = User:GetCountInfo()
-	WidgetPushButton.new({normal = 'yellow_btn_up_148x58.png',pressed = 'yellow_btn_down_148x58.png',disabled = 'gray_btn_148x58.png'})
+	self.purgure_get_button = WidgetPushButton.new({normal = 'yellow_btn_up_148x58.png',pressed = 'yellow_btn_down_148x58.png',disabled = 'gray_btn_148x58.png'})
 			:setButtonLabel("normal", UIKit:commonButtonLable({
 				text = _("领取")
 			}))
@@ -423,7 +428,7 @@ function GameUIActivityReward:ui_FIRST_IN_PURGURE()
 			:onButtonClicked(function()
 				NetManager:getFirstIAPRewardsPromise()
 			end)
-			:setButtonEnabled(countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted)
+	self.purgure_get_button:setButtonEnabled(countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted)
 	local rewards = self:GetFirstPurgureRewards()
 	local x,y = 300,self.height - 245
 	for index,reward in ipairs(rewards) do
@@ -457,7 +462,7 @@ function GameUIActivityReward:ui_PLAYER_LEVEL_UP()
 	local title_bg = display.newScale9Sprite("alliance_event_type_cyan_222x30.png",0,0, cc.size(390,30), cc.rect(7,7,190,16))
 		:align(display.LEFT_TOP, 180, self.height - 30):addTo(self.bg)
 	UIKit:ttfLabel({
-		text = string.format("当前等级：LV %s",User:Level()),
+		text = string.format("当前等级：LV %s",City:GetFirstBuildingByType('keep'):GetLevel()),
 		size = 22,
 		color= 0xffedae
 	}):align(display.LEFT_CENTER, 14, 15):addTo(title_bg)
@@ -487,7 +492,7 @@ function GameUIActivityReward:ui_PLAYER_LEVEL_UP()
 		level_up_time_label:hide()
 	end
 	local activity_desc_label = UIKit:ttfLabel({
-		text = _("活动期间，升级成败获得丰厚奖励"),
+		text = _("活动期间，升级城堡获得丰厚奖励"),
 		size = 20,
 		color= 0x403c2f
 	}):align(display.LEFT_TOP, 190, level_up_state_label:getPositionY() - level_up_state_label:getContentSize().height - 20):addTo(self.bg)
@@ -512,7 +517,7 @@ function GameUIActivityReward:RefreshLevelUpListView()
 end
 -- flag 1.已领取 2.可以领取 3.不能领取
 function GameUIActivityReward:GetLevelUpData()
-	local current_level = User:Level()
+	local current_level = City:GetFirstBuildingByType('keep'):GetLevel()
 	local r = {}
 	local max_level_got_rewards = self:GetLevelUpRewardMaxLevel()
 	for __,v in ipairs(config_levelup) do
