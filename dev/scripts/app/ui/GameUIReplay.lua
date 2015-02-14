@@ -363,7 +363,7 @@ function GameUIReplay:onEnter()
     self.list_view = self:CreateVerticalListViewDetached(0, 80, back_ground:getContentSize().width, y - 82 / 2):addTo(back_ground)
     local attacker_soldiers = self.report:GetOrderedAttackSoldiers()
     local defencer_soldiers = self.report:GetOrderedDefenceSoldiers()
-    defencer_soldiers[#defencer_soldiers + 1] = report:IsFightWall() and {name = "wall", star = 1} or nil
+    defencer_soldiers[#defencer_soldiers + 1] = self.report:IsFightWall() and {name = "wall", star = 1} or nil
     local round = {}
     for i = 1, math.max((#attacker_soldiers),(#defencer_soldiers)) do
         local left, right = attacker_soldiers[i], defencer_soldiers[i]
