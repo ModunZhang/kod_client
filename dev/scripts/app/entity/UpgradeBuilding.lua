@@ -401,9 +401,25 @@ function UpgradeBuilding:IsBuildingUpgradeLegal()
         return string.format(_("需要%s达到%d级"),Localize.building_name[preName],self:GetLevel()+preLevel)
     end
 end
+-- 获取升级前置条件描述
+function UpgradeBuilding:GetPreConditionDesc()
+    local city =  self:BelongCity()
+    local config
+    if city:IsHouse(self) then
+        config = GameDatas.Houses.houses[self:GetType()]
+    else
+        local location_id = city:GetLocationIdByBuildingType(self:GetType())
+        config = GameDatas.Buildings.buildings[location_id]
+    end
+    local configParams = string.split(config.preCondition,"_")
+    local preType = configParams[1]
+    local preName = configParams[2]
+    local preLevel = tonumber(configParams[3])
+    return string.format(_("需要%s达到%d级"),Localize.building_name[preName],self:GetLevel()+preLevel)
+end
 function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     local city = self:BelongCity()
-    
+
     local pre_limit = self:IsBuildingUpgradeLegal()
     if pre_limit then
         return pre_limit, true
@@ -489,6 +505,7 @@ function UpgradeBuilding:getUpgradeRequiredGems()
 end
 
 return UpgradeBuilding
+
 
 
 
