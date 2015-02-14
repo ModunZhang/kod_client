@@ -58,7 +58,7 @@ function GameUIWarReport:onEnter()
         end):align(display.RIGHT_CENTER,war_result_image:getContentSize().width - 10,war_result_image:getContentSize().height/2)
         :addTo(war_result_image)
 
-  
+
     -- 战斗发生时间
     local war_result_label = UIKit:ttfLabel(
         {
@@ -117,8 +117,8 @@ function GameUIWarReport:onEnter()
     ):setButtonLabel(replay_label)
         :addTo(report_body):align(display.CENTER, report_body:getContentSize().width-120, rb_size.height-186)
         :onButtonClicked(function(event)
-                UIKit:newGameUI("GameUIReplay",report):addToCurrentScene(true)
-            end)
+            UIKit:newGameUI("GameUIReplay",report):addToCurrentScene(true)
+        end)
 
     -- 删除按钮
     local delete_label = UIKit:ttfLabel({
@@ -394,7 +394,7 @@ function GameUIWarReport:CreateArmyItem(title,troop,dragon,enemy_troop,round_dat
                 totalWounded = totalWounded+data.soldierWoundedCount
             end
         end
-        
+
         army_info = {
             {
                 bg_image = "back_ground_254x28_1.png",
@@ -731,27 +731,28 @@ end
 function GameUIWarReport:CreateSoldiersInfo(soldier)
     local soldier_level = soldier.star
     local soldier_type = soldier.name
-    local soldier_head_bg  = display.newSprite(UILib.soldier_bg[soldier_level])
-
     local soldier_ui_config = UILib.soldier_image[soldier_type][soldier_level]
 
-
     local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.LEFT_BOTTOM,0,10)
-    soldier_head_icon:scale(130/soldier_head_icon:getContentSize().height)
-    soldier_head_bg:addChild(soldier_head_icon)
+    soldier_head_icon:scale(104/soldier_head_icon:getContentSize().height)
+    local soldier_head_bg  = display.newSprite("box_soldier_128x128.png")
+        :align(display.CENTER, soldier_head_icon:getContentSize().width/2, soldier_head_icon:getContentSize().height-64)
+        :addTo(soldier_head_icon)
 
     UIKit:ttfLabel({
         text = soldier.count,
         size = 18,
         color = 0x403c2f
-    }):align(display.CENTER,soldier_head_bg:getContentSize().width/2, -10):addTo(soldier_head_bg)
+    }):align(display.CENTER,soldier_head_bg:getContentSize().width/2, -14):addTo(soldier_head_bg)
+        :scale(soldier_head_icon:getContentSize().height/104)
     UIKit:ttfLabel({
         text = "-"..soldier.countDecreased ,
         size = 18,
         color = 0x980101
-    }):align(display.CENTER,soldier_head_bg:getContentSize().width/2, -30):addTo(soldier_head_bg)
+    }):align(display.CENTER,soldier_head_bg:getContentSize().width/2, -38):addTo(soldier_head_bg)
+        :scale(soldier_head_icon:getContentSize().height/104)
 
-    return soldier_head_bg
+    return soldier_head_icon
 end
 
 function GameUIWarReport:CreateWallPart()
@@ -888,6 +889,8 @@ function GameUIWarReport:GetRewards()
     return  self.report:GetMyRewards()
 end
 return GameUIWarReport
+
+
 
 
 
