@@ -166,7 +166,7 @@ function WidgetEventTabButtons:ctor(city, ratio)
     self.tab_buttons, self.tab_map = self:CreateTabButtons()
     self.tab_buttons:addTo(node, 2):pos(0, 0)
     self.back_ground = self:CreateBackGround():addTo(node)
-    
+
     self.city = city
     city:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
     city:AddListenOnType(self, City.LISTEN_TYPE.DESTROY_DECORATOR)
@@ -205,7 +205,20 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
             count = count + (self.toolShop:IsMakingAny(timer:GetServerTime()) and 1 or 0)
             item:SetActiveNumber(count, 2)
         elseif key == "technology" then
-            item:SetActiveNumber(City:GetSoldierManager():GetTotalUpgradingMilitaryTechNum(), 5)
+            local total_num = 0
+            local buildings = {
+                "academy",
+                "trainingGround",
+                "hunterHall",
+                "stable",
+                "workshop",
+            }
+            for i,v in ipairs(buildings) do
+                if city:GetFirstBuildingByType(v):IsUnlocked() then
+                    total_num = total_num + 1
+                end
+            end
+            item:SetActive(city:GetSoldierManager():GetTotalUpgradingMilitaryTechNum()+#city:GetProductionTechEventsArray(), total_num)
         end
     end
 end
@@ -839,15 +852,15 @@ function WidgetEventTabButtons:Load()
                 local event = self.blackSmith:GetMakeEquipmentEvent()
                 if event:IsMaking() then
                     local item = self:CreateItem():SetProgressInfo(self:EquipmentDescribe(event))
-                            :SetEventKey(event:Id())
-                            :OnClicked(
-                                function(e)
-                                    if e.name == "CLICKED_EVENT" then
-                                        self:MaterialEventUpgradeOrSpeedup()
-                                    end
+                        :SetEventKey(event:Id())
+                        :OnClicked(
+                            function(e)
+                                if e.name == "CLICKED_EVENT" then
+                                    self:MaterialEventUpgradeOrSpeedup()
                                 end
-                            )
-                        self:InsertItem(item)
+                            end
+                        )
+                    self:InsertItem(item)
                     -- self:InsertItem(self:CreateItem()
                     --     :SetProgressInfo(self:EquipmentDescribe(event))
                     --     :SetEventKey(event:UniqueKey())
@@ -921,6 +934,8 @@ function WidgetEventTabButtons:MilitaryTechDescribe(event)
 end
 
 return WidgetEventTabButtons
+
+
 
 
 

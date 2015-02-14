@@ -29,7 +29,7 @@ function GameUIDragonSkill:onEnter()
 		:addTo(self.backgroundImage)
 
   self.mainTitleLabel = UIKit:ttfLabel({
-       text = _("技能升级"),
+       text = _("技能学习"),
        color = 0xffedae,
        align = cc.TEXT_ALIGNMENT_CENTER,
        size  = 24
@@ -68,7 +68,7 @@ function GameUIDragonSkill:onEnter()
     pressed = "dragon_yellow_button_h.png"}, {scale9 = false},{disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}})
       :setButtonLabel("normal",cc.ui.UILabel.new({
           UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-          text = _("升级"),
+          text = _("学习"),
           font = UIKit:getFontFilePath(),
           size = 24,
           align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
@@ -84,7 +84,7 @@ function GameUIDragonSkill:onEnter()
   local list_bg = UIKit:commonTitleBox(250):pos((self.backgroundImage:getContentSize().width-LISTVIEW_WIDTH)/2, 50):addTo(self.backgroundImage)
 
   UIKit:ttfLabel({
-       text = _("升级条件"),
+       text = _("学习条件"),
        size = 22,
        color = 0x403c2f
     }):align(display.CENTER_TOP,270,240):addTo(list_bg)

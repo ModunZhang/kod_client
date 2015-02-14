@@ -7,6 +7,7 @@ local SoldierManager = import("..entity.SoldierManager")
 local Localize = import("..utils.Localize")
 local GameUIToolShopSpeedUp = class("GameUIToolShopSpeedUp",WidgetSpeedUp)
 local GameUtils = GameUtils
+
 function GameUIToolShopSpeedUp:ctor(building)
     GameUIToolShopSpeedUp.super.ctor(self)
     self.building = building

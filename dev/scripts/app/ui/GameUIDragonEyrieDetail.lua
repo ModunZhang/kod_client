@@ -17,6 +17,7 @@ local UIListView = import(".UIListView")
 local Localize = import("..utils.Localize")
 local config_floatInit = GameDatas.AllianceInitData.floatInit
 local WidgetUseItems = import("..widget.WidgetUseItems")
+local GameUIDragonHateSpeedUp = import(".GameUIDragonHateSpeedUp")
 
 -- building = DragonEyrie
 function GameUIDragonEyrieDetail:ctor(city,building,dragon_type)
@@ -39,7 +40,9 @@ end
 function GameUIDragonEyrieDetail:OnDragonEventTimer(dragonEvent)
 	if self:GetDragon():Type() == dragonEvent:DragonType() and self.hate_label_2 and self.hate_label_2:isVisible() then
 		self.hate_label_2:setString(GameUtils:formatTimeStyleDayHour(dragonEvent:GetTime()))
-		self.hate_button:setButtonEnabled(false)
+		self.hate_button:hide()
+		self.hate_speed_button:show()
+		self.dragonEvent__ = dragonEvent
 	end
 end
 
@@ -147,6 +150,19 @@ function GameUIDragonEyrieDetail:CreateHateUIIf()
 			self:OnEnergyButtonClicked()
 		end)
 	self.hate_button = hate_button
+	local speed_button = WidgetPushButton.new({
+			normal = "green_btn_up_142x39.png",pressed = "green_btn_down_142x39.png"
+		},{scale9 = true}):setButtonSize(185, 65):setButtonLabel("normal",UIKit:ttfLabel({
+			text = _("加速"),
+			size = 24,
+			color = 0xffedae,
+			shadow = true
+			}))
+			:addTo(hate_node):align(display.CENTER_BOTTOM,window.cx,window.bottom + 20)
+			:onButtonClicked(handler(self, self.OnHateSpeedUpClicked))
+			:hide()
+			
+	self.hate_speed_button = speed_button
 	local hate_bg = UIKit:CreateBoxPanel9({width = 556,height = 78})
 		:addTo(hate_node)
 		:align(display.CENTER_BOTTOM,window.cx,hate_button:getPositionY()+hate_button:getCascadeBoundingBox().height+6)
@@ -220,7 +236,7 @@ function GameUIDragonEyrieDetail:RefreshUI()
 		elseif button_tag == 'skill' then
 			self:RefreshSkillList()
 			self.skill_ui.blood_label:setString(City:GetResourceManager():GetBloodResource():GetValue())
-			self.skill_ui.magic_bottle:setPositionX(self.skill_ui.blood_label:getPositionX() - self.skill_ui.blood_label:getContentSize().width)
+			-- self.skill_ui.magic_bottle:setPositionX(self.skill_ui.blood_label:getPositionX() - self.skill_ui.blood_label:getContentSize().width)
 		else
 			self:RefreshInfoListView()
 		end
@@ -435,38 +451,44 @@ function GameUIDragonEyrieDetail:CreateNodeIf_skill()
 	self.skill_ui = {}
 	local skill_node = display.newNode():addTo(self)
 
-	local list_bg = UIKit:CreateBoxPanel(320)
+	local list_bg = UIKit:CreateBoxPanel(316)
 		:addTo(skill_node)
-		:pos(window.left+45,self.dragon_base:getPositionY()-self.dragon_base:getContentSize().height - 320 - 65)
-
+		:pos(window.left+45,self.dragon_base:getPositionY()-self.dragon_base:getContentSize().height - 320 - 90)
+	local header_bg = UIKit:CreateBoxPanel9({height = 40}):addTo(skill_node):align(display.LEFT_BOTTOM, list_bg:getPositionX(), list_bg:getPositionY()+316+10)
 	local list = UIListView.new {
-        viewRect = cc.rect(8,8, 552, 304),
+        viewRect = cc.rect(8,8, 552, 302),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         alignment = cc.ui.UIListView.ALIGNMENT_LEFT      
     }:addTo(list_bg)
+    local add_button = WidgetPushButton.new({normal = "add_button_normal_50x50.png",pressed = "add_button_light_50x50.png"})
+ 		:addTo(header_bg)
+ 		:scale(0.7)
+ 		:align(display.RIGHT_CENTER,540,20)
+ 		:onButtonClicked(function()
+ 			self:OnHeroBloodUseItemClicked()
+	 	end)
 
     self.skill_ui.listView = list
     local blood_label = UIKit:ttfLabel({
     		text = "",
     		size = 20,
     		color = 0x403c2f,
-    		align = cc.TEXT_ALIGNMENT_LEFT
+    		align = cc.TEXT_ALIGNMENT_RIGHT
     	})
-    	:addTo(skill_node)
-    	:align(display.RIGHT_BOTTOM,window.right - 50,list_bg:getPositionY()+320+5)
+    	:addTo(header_bg)
+    	:align(display.RIGHT_CENTER,add_button:getPositionX() - 50,add_button:getPositionY())
 
     self.skill_ui.blood_label = blood_label
     local magic_bottle = display.newSprite("dragon_magic_bottle.png")
-     	:align(display.RIGHT_BOTTOM,blood_label:getPositionX()-100, list_bg:getPositionY()+320+5-2)
-     	:addTo(skill_node)
+     	:align(display.LEFT_CENTER,15, blood_label:getPositionY())
+     	:addTo(header_bg)
+    UIKit:ttfLabel({
+    		text = _("英雄之血"),
+    		size = 20,
+    		color = 0x403c2f,
+    		align = cc.TEXT_ALIGNMENT_LEFT
+    }):align(display.LEFT_CENTER, magic_bottle:getPositionX() + magic_bottle:getContentSize().width + 10, magic_bottle:getPositionY()):addTo(header_bg)
     --TODO:临时添加按钮
-    local add_button = WidgetPushButton.new({normal = "add_button_normal_50x50.png",pressed = "add_button_light_50x50.png"})
- 		:addTo(skill_node)
- 		:scale(0.7)
- 		:align(display.LEFT_BOTTOM,magic_bottle:getPositionX()+10,list_bg:getPositionY()+320+5-2)
- 		:onButtonClicked(function()
- 			self:OnHeroBloodUseItemClicked()
-	 	end)
     self.skill_ui.magic_bottle = magic_bottle
 	self.skill_node = skill_node
 	return self.skill_node
@@ -622,6 +644,11 @@ function GameUIDragonEyrieDetail:GetInfoListItem(index,title,val)
 	 }):align(display.RIGHT_CENTER, 510, 24):addTo(bg)
 	 return bg
 end
+
+function GameUIDragonEyrieDetail:OnHateSpeedUpClicked()
+	GameUIDragonHateSpeedUp.new(self.dragonEvent__):addToCurrentScene(true)
+end
+
 -- dragon_body ==> Dragon.DRAGON_BODY.XXX
 function GameUIDragonEyrieDetail:Find(dragon_body)
 	dragon_body = checknumber(dragon_body)
