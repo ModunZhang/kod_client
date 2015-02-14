@@ -11,9 +11,8 @@ function GameUITreatSoldierSpeedUp:ctor(building)
     GameUITreatSoldierSpeedUp.super.ctor(self)
     self.building = building
     self:SetAccBtnsGroup(self:GetEventType(),building:GetTreatEvent():Id())
-    self:SetAccTips(_("小于5min时可以使用免费加速"))
+    self:SetAccTips(_("治疗伤兵不能免费加速"))
     self:SetUpgradeTip(string.format(_("正在治愈%d人口的伤兵"),self:GetTreatCount()))
-    self:CheckCanSpeedUpFree()
     building:AddHospitalListener(self)
 end
 
