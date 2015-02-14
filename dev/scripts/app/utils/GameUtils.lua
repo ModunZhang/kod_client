@@ -543,6 +543,8 @@ end
 
 local floatInit = GameDatas.AllianceInitData.floatInit
 function GameUtils:DoBattle(attacker, defencer)
+    local clone_attacker_soldiers = clone(attacker.soldiers)
+    local clone_defencer_soldiers = clone(defencer.soldiers)
     local attack_dragon, defence_dragon = GameUtils:DragonDragonBattle(attacker.dragon, defencer.dragon, 0)
     local attack_soldier, defence_soldier = GameUtils:SoldierSoldierBattle(attacker.soldiers, 0.4, defencer.soldiers, 0.4)
 
@@ -607,10 +609,10 @@ function GameUtils:DoBattle(attacker, defencer)
         return defence_soldier
     end
     function report:GetOrderedAttackSoldiers()
-        return attacker
+        return clone_attacker_soldiers
     end
     function report:GetOrderedDefenceSoldiers()
-        return defencer
+        return clone_defencer_soldiers
     end
     function report:IsFightWall()
         return false

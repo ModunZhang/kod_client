@@ -6,6 +6,7 @@ local WidgetSpeedUp = import("..widget.WidgetSpeedUp")
 local GameUIDragonDeathSpeedUp = class("GameUIDragonDeathSpeedUp", WidgetSpeedUp)
 local GameUtils = GameUtils
 local Localize = import("..utils.Localize")
+local DragonManager = import("..entity.DragonManager")
 
 function GameUIDragonDeathSpeedUp:ctor(dragonDeathEvent)
 	GameUIDragonDeathSpeedUp.super.ctor(self)
@@ -13,6 +14,9 @@ function GameUIDragonDeathSpeedUp:ctor(dragonDeathEvent)
     self:SetAccTips(_("龙的复活没有免费加速"))
     self:SetUpgradeTip(Localize.dragon[dragonDeathEvent:DragonType()] .. _("正在复活"))
     self.dragonDeathEvent = dragonDeathEvent
+    self.dragon_manager = City:GetDragonEyrie():GetDragonManager()
+	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
+	self.dragon_type = dragonDeathEvent:DragonType()
 end
 
 function GameUIDragonDeathSpeedUp:CheckCanSpeedUpFree()
@@ -30,7 +34,15 @@ end
 
 function GameUIDragonDeathSpeedUp:onCleanup()
     self.dragonDeathEvent:RemoveObserver(self)
+    self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
     GameUIDragonDeathSpeedUp.super.onCleanup(self)
+end
+
+function GameUIDragonDeathSpeedUp:OnDragonDeathEventChanged()
+	local dragonDeathEvent = self.dragon_manager:GetDragonDeathEventByType(self.dragon_type)
+	if not dragonDeathEvent then 
+		self:leftButtonClicked()
+	end
 end
 
 function GameUIDragonDeathSpeedUp:OnDragonDeathEventTimer(event)
