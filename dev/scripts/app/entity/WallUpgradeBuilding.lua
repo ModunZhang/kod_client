@@ -136,29 +136,11 @@ function WallUpgradeBuilding:IntersectWithOtherWall(other_wall)
     assert(false)
 end
 function WallUpgradeBuilding:OnUserDataChanged(user_data, current_time)
-    if not self:IsGate() then return end
-
-    local event = self:GetEventFromUserData(user_data)
-    if event then
-        self:OnEvent(event)
-    end
-    
-    local buildings = user_data.buildings
-    if buildings and buildings.location_21 then
-        local finishTime = event == nil and 0 or event.finishTime / 1000
-        self:OnHandle(buildings.location_21.level, finishTime)
-    end
-end
-function WallUpgradeBuilding:GetEventFromUserData(user_data)
-    for _,v in ipairs(user_data.__buildingEvents or {}) do
-        if v.data.location == 21 then
-            return v.data
-        end
-    end
-    for _,v in ipairs(user_data.buildingEvents or {}) do
-        if v.location == 21 then
-            return v
-        end
+    local event = self:GetBuildingEventFromUserDataByLocation(user_data, 21)
+    self:OnEvent(event)
+    local level, finished_time = self:GetBuildingInfoByEventAndLocation(user_data, event, 21)
+    if level and finished_time then
+        self:OnHandle(level, finished_time)
     end
 end
 function WallUpgradeBuilding:GetWallConfig()
