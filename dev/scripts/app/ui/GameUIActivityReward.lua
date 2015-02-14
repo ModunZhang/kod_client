@@ -15,6 +15,8 @@ local GameUtils = GameUtils
 local config_stringInit = GameDatas.PlayerInitData.stringInit
 local config_intInit = GameDatas.PlayerInitData.intInit
 local config_levelup = GameDatas.Activities.levelup
+local Localize_item = import("..utils.Localize_item")
+local Localize = import("..utils.Localize")
 
 local height_config = {
 	EVERY_DAY_LOGIN = 762,
@@ -237,7 +239,7 @@ function GameUIActivityReward:RefreshOnLineList()
 	self.list_view:removeAllItems()
 	local data = self:GetOnLineTimePointData()
 	for __,v in ipairs(data) do
-		local item_key,time_str,rewards,flag,timePoint = unpack(v)
+		local reward_type,item_key,time_str,rewards,flag,timePoint = unpack(v)
 		local item = self:GetOnLineItem(item_key,time_str,rewards,flag,timePoint)
 		self.list_view:addItem(item)
 	end
@@ -258,9 +260,25 @@ function GameUIActivityReward:GetOnLineTimePointData()
 				flag = 3
 			end
 		end
-		table.insert(r,{item_key,string.format(_("在线%s分钟"),v.onLineMinutes),item_key .. "x" .. count,flag,v.timePoint})
+		local name = self:GetRewardName(reward_type,item_key)
+		table.insert(r,{reward_type,item_key,string.format(_("在线%s分钟"),v.onLineMinutes),name .. "x" .. count,flag,v.timePoint})
 	end
 	return r
+end
+
+function GameUIActivityReward:GetRewardName(reward_type,reward_key)
+	print("reward_type,reward_key---->",reward_type,reward_key)
+	if reward_type == 'special' then
+		return Localize_item.item_name[reward_key]
+	elseif reward_type == 'soldiers' then
+		return Localize.soldier_name[reward_key]
+	elseif reward_type == 'basicInfo' then
+		local localize_basicInfo = {
+			marchQueue = _("行军队列"),
+			buildQueue = _("建筑队列")
+		}
+		return localize_basicInfo[reward_key]
+	end
 end
 
 function GameUIActivityReward:GetMaxOnLineTimePointRewards()
@@ -336,7 +354,8 @@ function GameUIActivityReward:GetContinutyListData()
 		elseif v.day == countInfo.day14 and countInfo.day14 > countInfo.day14RewardsCount then
 			flag = 2
 		end
-		table.insert(r,{reward_type,item_key,string.format(_("第%s天"),v.day), item_key .. "x" .. count,flag})
+		local name = self:GetRewardName(reward_type, item_key)
+		table.insert(r,{reward_type,item_key,string.format(_("第%s天"),v.day), name .. "x" .. count,flag})
 	end
 	return r
 end
