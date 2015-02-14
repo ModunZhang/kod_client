@@ -311,7 +311,7 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
     	self.progress_content_hated:align(display.CENTER_TOP,window.cx,info_layer:getPositionY()-18):addTo(self.dragonNode)
     	-- 
     	self.progress_content_death,self.progress_death = self:CreateDeathEventProgressTimer()
-    	self.progress_content_death:align(display.LEFT_TOP,60,info_layer:getPositionY()-20):addTo(self.dragonNode)
+    	self.progress_content_death:align(display.LEFT_TOP,window.left+60,info_layer:getPositionY()-20):addTo(self.dragonNode)
 
     	self.death_speed_button = WidgetPushButton.new({normal = 'green_btn_up_148x58.png',pressed = 'green_btn_down_148x58.png'})
     		:setButtonLabel("normal",UIKit:commonButtonLable({
