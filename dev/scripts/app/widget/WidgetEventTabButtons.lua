@@ -218,7 +218,7 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
                     total_num = total_num + 1
                 end
             end
-            item:SetActive(city:GetSoldierManager():GetTotalUpgradingMilitaryTechNum()+#city:GetProductionTechEventsArray(), total_num)
+            item:SetActiveNumber(city:GetSoldierManager():GetTotalUpgradingMilitaryTechNum()+#city:GetProductionTechEventsArray(), total_num)
         end
     end
 end
