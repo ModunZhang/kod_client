@@ -12,6 +12,8 @@ local DragonSprite = import("..sprites.DragonSprite")
 local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUseItems = import("..widget.WidgetUseItems")
+local GameUtils = GameUtils
+local GameUIDragonDeathSpeedUp = import(".GameUIDragonDeathSpeedUp")
 
 function GameUIDragonEyrieMain:ctor(city,building)
 	GameUIDragonEyrieMain.super.ctor(self,city,_("龙巢"),building)
@@ -80,6 +82,7 @@ function GameUIDragonEyrieMain:OnDragonDeathEventTimer(dragonDeathEvent)
 		and self.progress_content_death  
 		and self.progress_content_death:isVisible() 
 		then
+			self.dragonDeathEvent__ = dragonDeathEvent
 			self.progress_death:setPercentage(dragonDeathEvent:GetPercent())
 			self.dragon_death_label:setString(GameUtils:formatTimeStyleDayHour(dragonDeathEvent:GetTime()))
 	end
@@ -87,6 +90,7 @@ end
 
 function GameUIDragonEyrieMain:OnDragonEventTimer(dragonEvent)
 	if self:GetCurrentDragon():Type() == dragonEvent:DragonType() and self.progress_content_not_hated_timer and self.progress_content_not_hated_timer:isVisible() then
+		self.dragonEvent__ = dragonEvent
 		self.progress_content_not_hated_timer:setString(GameUtils:formatTimeStyleDayHour(dragonEvent:GetTime()))
 	end
 end
@@ -161,7 +165,6 @@ function GameUIDragonEyrieMain:RefreshUI()
 			self.progress_content_hated:hide()
 			self.state_label:setString(_("死亡"))
 		else
-			self.progress_content_not_hated_timer:show()
 			self.dragon_info:show()
 			self.draong_info_lv_label:setString("LV " .. dragon:Level() .. "/" .. dragon:GetMaxLevel())
 			self.draong_info_xp_label:setString(dragon:Exp() .. "/" .. dragon:GetMaxExp())
@@ -244,6 +247,7 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 		local lv_bg = display.newSprite("dragon_lv_bg_270x30.png")
 			:addTo(info_bg)
 			:align(display.TOP_CENTER,info_bg:getContentSize().width/2,info_bg:getContentSize().height-10)
+		lv_bg:setTouchEnabled(true)
 		self.dragon_info = info_bg
 		self.draong_info_lv_label = UIKit:ttfLabel({
 			text = "LV " .. self:GetCurrentDragon():Level() .. "/" .. self:GetCurrentDragon():GetMaxLevel(),
@@ -260,11 +264,10 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 			size = 20
 		}):align(display.LEFT_BOTTOM, expIcon:getPositionX()+expIcon:getContentSize().width*0.7+10, 20)
 		:addTo(info_bg)
-		--TODO:临时添加的按钮
 		local add_button = WidgetPushButton.new({normal = "add_button_normal_50x50.png",pressed = "add_button_light_50x50.png"})
 	 		:addTo(info_bg)
-	 		:scale(0.7)
-	 		:align(display.LEFT_BOTTOM,self.draong_info_xp_label:getPositionX()+self.draong_info_xp_label:getContentSize().width,10)
+	 		:scale(0.8)
+	 		:align(display.LEFT_CENTER,self.draong_info_xp_label:getPositionX()+self.draong_info_xp_label:getContentSize().width+10,10 + expIcon:getCascadeBoundingBox().height/2)
 	 		:onButtonClicked(function()
 	 			self:OnDragonExpItemUseButtonClicked()
 	 		end)
@@ -316,6 +319,7 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
     		})):addTo(self.dragonNode)
     			:align(display.LEFT_TOP,self.progress_content_death:getPositionX()+self.progress_content_death:getContentSize().width+18,
     			 self.progress_content_death:getPositionY()+12)
+    		:onButtonClicked(handler(self, self.OnDragonDeathSpeedUpClicked))
 		local info_panel = UIKit:CreateBoxPanel9({width = 548, height = 114})
 			:addTo(self.dragonNode)
 			:align(display.CENTER_TOP,window.cx,self.progress_content_hated:getPositionY() - self.progress_content_hated:getContentSize().height - 32)
@@ -499,7 +503,7 @@ function GameUIDragonEyrieMain:ChangeDragon(direction)
 end
 function GameUIDragonEyrieMain:OnDragonHpItemUseButtonClicked()
 	local widgetUseItems = WidgetUseItems.new():Create({
-		item_type = WidgetUseItems.USE_TYPE.DRAGON_EXP,
+		item_type = WidgetUseItems.USE_TYPE.DRAGON_HP,
 		dragon = self:GetCurrentDragon()
 	})
 	widgetUseItems:addToCurrentScene()
@@ -511,6 +515,10 @@ function GameUIDragonEyrieMain:OnDragonExpItemUseButtonClicked()
 		dragon = self:GetCurrentDragon()
 	})
 	widgetUseItems:addToCurrentScene()
+end
+
+function GameUIDragonEyrieMain:OnDragonDeathSpeedUpClicked()
+	GameUIDragonDeathSpeedUp.new(self.dragonDeathEvent__):addToCurrentScene(true)
 end
 
 --fte

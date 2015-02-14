@@ -166,9 +166,6 @@ function WidgetEventTabButtons:ctor(city, ratio)
     self.tab_buttons, self.tab_map = self:CreateTabButtons()
     self.tab_buttons:addTo(node, 2):pos(0, 0)
     self.back_ground = self:CreateBackGround():addTo(node)
-    self:Reset()
-    self:HighLightTab("build")
-
 
     self.city = city
     city:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
@@ -189,7 +186,9 @@ function WidgetEventTabButtons:ctor(city, ratio)
     city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
 
 
-    self:ShowEvent()
+    self:Reset()
+    self.tab_map["build"]:SetSelect(true)
+    self:ShowStartEvent()
     self:RefreshBuildQueueByType("build", "soldier", "material", "technology")
 end
 function WidgetEventTabButtons:RefreshBuildQueueByType(...)
@@ -197,14 +196,14 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
     for _,key in ipairs{...} do
         local item = self.tab_map[key]
         if key == "build" then
-            item:SetActive(#city:GetUpgradingBuildings(), city:BuildQueueCounts())
+            item:SetActiveNumber(#city:GetUpgradingBuildings(), city:BuildQueueCounts())
         elseif key == "soldier" then
-            item:SetActive(self.barracks:IsRecruting() and 1 or 0, 1)
+            item:SetActiveNumber(self.barracks:IsRecruting() and 1 or 0, 1)
         elseif key == "material" then
             local count = 0
             count = count + (self.blackSmith:IsMakingEquipment() and 1 or 0)
             count = count + (self.toolShop:IsMakingAny(timer:GetServerTime()) and 1 or 0)
-            item:SetActive(count, 2)
+            item:SetActiveNumber(count, 2)
         elseif key == "technology" then
             local total_num = 0
             local buildings = {
@@ -219,11 +218,11 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
                     total_num = total_num + 1
                 end
             end
-            item:SetActive(city:GetSoldierManager():GetTotalUpgradingMilitaryTechNum()+#city:GetProductionTechEventsArray(), total_num)
+            item:SetActiveNumber(city:GetSoldierManager():GetTotalUpgradingMilitaryTechNum()+#city:GetProductionTechEventsArray(), total_num)
         end
     end
 end
-function WidgetEventTabButtons:ShowEvent()
+function WidgetEventTabButtons:ShowStartEvent()
     if #self.city:GetUpgradingBuildings() > 0 then
         return self:PromiseOfShowTab("build")
     elseif self.barracks:IsRecruting() then
@@ -283,10 +282,7 @@ function WidgetEventTabButtons:CreateTabButtons()
         }, 142, TAB_HEIGHT)
             :addTo(node):align(display.LEFT_BOTTOM,origin_x + (i - 5) * (142 + 1), 4)
             :OnTabPress(handler(self, self.OnTabClicked))
-            :EnableTag(true):SetActive(0, 1)
-        -- if i <= 3 then
-        --     tab_map[tab_type]:hide()
-        -- end
+            :EnableTag(true):SetActiveNumber(0, 1)
     end
     return node, tab_map
 end
@@ -427,10 +423,6 @@ function WidgetEventTabButtons:CreateOpenItem()
         end
         return self
     end
-    function node:onEnter()
-    -- button:setButtonEnabled(widget:GetCurrentTab() ~= "technology")
-    end
-    node:setNodeEventEnabled(true)
 
     return node
 end
@@ -470,10 +462,6 @@ function WidgetEventTabButtons:CreateOpenMilitaryTechItem(building)
         end
         return self
     end
-    function node:onEnter()
-    -- button:setButtonEnabled(widget:GetCurrentTab() ~= "technology")
-    end
-    node:setNodeEventEnabled(true)
 
     return node
 end
@@ -482,6 +470,9 @@ function WidgetEventTabButtons:Reset()
     for k, v in pairs(self.item_array) do
         v:removeFromParent()
     end
+    for k, v in pairs(self.tab_map) do
+        v:Enable(self:IsTabEnable(k)):SetHighLight(false)
+    end
     self.item_array = {}
     self:ResizeBelowHorizon(0)
     self.node:stopAllActions()
@@ -489,6 +480,32 @@ function WidgetEventTabButtons:Reset()
     self:ResetPosition()
     self.arrow:flipY(true)
     self:Lock(false)
+end
+function WidgetEventTabButtons:IsTabEnable(tab)
+    if tab == "build" then
+        return true
+    elseif tab == "soldier" and self.barracks:IsUnlocked() then
+        return true
+    elseif tab == "material" and (self.toolShop:IsUnlocked() or self.blackSmith:IsUnlocked()) then
+        return true
+    elseif tab == "technology" then
+        local city = self.city
+        local total_num = 0
+        local buildings = {
+            "academy",
+            "trainingGround",
+            "hunterHall",
+            "stable",
+            "workshop",
+        }
+        for _,v in ipairs(buildings) do
+            if city:GetFirstBuildingByType(v):IsUnlocked() then
+                total_num = total_num + 1
+            end
+        end
+        return total_num > 0
+    end
+    return false
 end
 function WidgetEventTabButtons:ResetItemPosition()
     for i, v in ipairs(self.item_array) do
@@ -530,11 +547,9 @@ function WidgetEventTabButtons:PromiseOfShowTab(tab)
 end
 function WidgetEventTabButtons:HighLightTab(tab)
     self:ResetOtherTabByCurrentTab(tab)
-    self.tab_map[tab]:Enable(false)
-    self.tab_map[tab]:SetStatus(true)
+    self.tab_map[tab]:Enable(true):Active(true)
 end
 function WidgetEventTabButtons:OnTabClicked(widget, is_pressed)
-    assert(is_pressed)
     local tab
     for k, v in pairs(self.tab_map) do
         if v == widget then
@@ -543,14 +558,17 @@ function WidgetEventTabButtons:OnTabClicked(widget, is_pressed)
         end
     end
     self:ResetOtherTabByCurrentTab(tab)
-    self.tab_map[tab]:Enable(false)
-    self:PromiseOfForceShow()
+    self.tab_map[tab]:SetSelect(true)
+    if self:IsShow() then
+        self:PromiseOfHide()
+    else
+        self:PromiseOfForceShow()
+    end
 end
 function WidgetEventTabButtons:ResetOtherTabByCurrentTab(tab)
     for k, v in pairs(self.tab_map) do
         if k ~= tab then
-            v:Enable(true)
-            v:SetStatus(false)
+            v:Enable(self:IsTabEnable(k)):Active(false)
         end
     end
 end
@@ -617,21 +635,11 @@ function WidgetEventTabButtons:HidePosY()
     return -self.back_ground:getContentSize().height
 end
 function WidgetEventTabButtons:OnBeforeShow()
-    local tab = self:GetCurrentTab()
-    if tab == "build" then
-        return true
-    elseif tab == "soldier" and self.barracks:IsUnlocked() then
-        return true
-    elseif tab == "material" and (self.toolShop:IsUnlocked() or self.blackSmith:IsUnlocked()) then
-        return true
-    elseif tab == "technology" then
-        return true
-    end
-    return false
+    return self:IsTabEnable(self:GetCurrentTab())
 end
 function WidgetEventTabButtons:GetCurrentTab()
     for k, v in pairs(self.tab_map) do
-        if v:IsPressed() then
+        if v:IsSelected() then
             return k
         end
     end
@@ -736,7 +744,8 @@ function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp,event_key,
 end
 function WidgetEventTabButtons:Load()
     for k, v in pairs(self.tab_map) do
-        if v:IsPressed() then
+        if v:IsSelected() then
+            self:HighLightTab(k)
             if k == "build" then
                 self:InsertItem(self:CreateBottom():SetLabel(_("查看已拥有的建筑")))
 
@@ -943,6 +952,12 @@ function WidgetEventTabButtons:MilitaryTechDescribe(event)
 end
 
 return WidgetEventTabButtons
+
+
+
+
+
+
 
 
 
