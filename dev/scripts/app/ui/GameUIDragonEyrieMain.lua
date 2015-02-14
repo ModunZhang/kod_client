@@ -151,6 +151,7 @@ function GameUIDragonEyrieMain:RefreshUI()
 		self.vitality_val_label:setString("0")
 		self.leadership_val_label:setString("0")
 		self.state_label:setString(_("未孵化"))
+		self.detailButton:setButtonLabelString("normal",_("孵化"))
 	else
 		if dragon:IsDead() then
 			local dragonDeathEvent = self.dragon_manager:GetDragonDeathEventByType(self:GetCurrentDragon():Type())
@@ -180,6 +181,7 @@ function GameUIDragonEyrieMain:RefreshUI()
 			self.death_speed_button:hide()
 			self.progress_content_death:hide()
 		end
+		self.detailButton:setButtonLabelString("normal",_("详情"))
 	end
 	self.nameLabel:setString(dragon:GetLocalizedName())
 	
@@ -366,11 +368,11 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 			color = 0x403c2f,
 			size  = 20
 		}):addTo(info_panel):align(display.CENTER_BOTTOM,540 - 92,75)
-
+		local text_str = self:GetCurrentDragon():Ishated() and _("详情") or _("孵化")
 		local detailButton = WidgetPushButton.new({
 			normal = "dragon_yellow_button.png",pressed = "dragon_yellow_button_h.png"
 		}):setButtonLabel("normal",UIKit:ttfLabel({
-			text = _("详情"),
+			text = text_str,
 			size = 24,
 			color = 0xffedae,
 			shadow = true
