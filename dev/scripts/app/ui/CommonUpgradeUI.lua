@@ -388,14 +388,15 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
     local population = City.resource_manager:GetPopulationResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
 
 
+    local building = self.building
+    local pre_condition = building:IsBuildingUpgradeLegal()
     local requirements = {
         {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetUpgradingBuildings()<1,
             icon="hammer_31x33.png",description=GameUtils:formatNumber(#City:GetUpgradingBuildings()).."/1"},
-        {resource_type = _("城堡等级"),isVisible = self.building:GetType()~="keep", isSatisfy =  self.building:GetLevel()<=City:GetFirstBuildingByType("keep"):GetLevel(),
-            icon="hammer_31x33.png",description=self.building:GetLevel().."/"..City:GetFirstBuildingByType("keep"):GetLevel()},
+        {resource_type = _("前置条件"),isVisible = pre_condition, isSatisfy = not pre_condition,
+            icon="hammer_31x33.png",description = pre_condition},
         {resource_type = _("木材"),isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
             icon="wood_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpWood()).."/"..GameUtils:formatNumber(wood)},
-
         {resource_type = _("石料"),isVisible = self.building:GetLevelUpStone()>0,     isSatisfy = stone>self.building:GetLevelUpStone() ,
             icon="stone_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpStone()).."/"..GameUtils:formatNumber(stone)},
 
@@ -617,4 +618,5 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
