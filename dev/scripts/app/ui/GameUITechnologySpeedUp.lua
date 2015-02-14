@@ -5,6 +5,7 @@
 local WidgetSpeedUp = import("..widget.WidgetSpeedUp")
 local GameUITechnologySpeedUp = class("GameUITechnologySpeedUp",WidgetSpeedUp)
 local WidgetAccelerateGroup = import("..widget.WidgetAccelerateGroup")
+local GameUtils = GameUtils
 
 function GameUITechnologySpeedUp:ctor()
 	GameUITechnologySpeedUp.super.ctor(self)

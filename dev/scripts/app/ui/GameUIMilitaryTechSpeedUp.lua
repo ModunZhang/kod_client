@@ -5,6 +5,7 @@
 local WidgetSpeedUp = import("..widget.WidgetSpeedUp")
 local SoldierManager = import("..entity.SoldierManager")
 local GameUIMilitaryTechSpeedUp = class("GameUIMilitaryTechSpeedUp",WidgetSpeedUp)
+local GameUtils = GameUtils
 
 function GameUIMilitaryTechSpeedUp:ctor(event)
     GameUIMilitaryTechSpeedUp.super.ctor(self)
