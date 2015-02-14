@@ -299,9 +299,10 @@ function GameUIHome:CreateTop()
     local button = cc.ui.UIPushButton.new(
         {normal = "buff_8_128x128.png", pressed = "buff_8_128x128.png"},
         {scale9 = false}
-    ):onButtonClicked(function(event)
+    )
+    button:onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI("GameUITips",City):addToCurrentScene()
+            UIKit:newGameUI("GameUITips",button):addToCurrentScene()
         end
     end):addTo(top_bg):pos(630, -181):scale(0.5)
 

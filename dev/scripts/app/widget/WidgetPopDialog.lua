@@ -20,7 +20,7 @@ function WidgetPopDialog:ctor(height,title_text,y,title_bg)
     self.close_btn = WidgetPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                self:removeFromParent(true)
+                self:leftButtonClicked()
             end
         end):align(display.CENTER, rb_size.width-34,rb_size.height+14):addTo(body)
 end
