@@ -6,6 +6,9 @@ local WidgetSpeedUp = import("..widget.WidgetSpeedUp")
 local SoldierManager = import("..entity.SoldierManager")
 local Localize = import("..utils.Localize")
 local GameUIBuildingSpeedUp = class("GameUIBuildingSpeedUp",WidgetSpeedUp)
+local GameUtils = GameUtils
+local DataUtils = DataUtils
+local timer = app.timer
 
 function GameUIBuildingSpeedUp:ctor(building)
     GameUIBuildingSpeedUp.super.ctor(self)
@@ -26,10 +29,11 @@ end
 function GameUIBuildingSpeedUp:onExit()
     GameUIBuildingSpeedUp.super.onExit(self)
     self.building:RemoveUpgradeListener(self)
+    GameUIBuildingSpeedUp.super.onCleanup(self)
 end
 
 function GameUIBuildingSpeedUp:CheckCanSpeedUpFree()
-    self:SetFreeButtonEnabled(self.building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime()) <= DataUtils:getFreeSpeedUpLimitTime())
+    self:SetFreeButtonEnabled(self.building:GetUpgradingLeftTimeByCurrentTime(timer:GetServerTime()) <= DataUtils:getFreeSpeedUpLimitTime())
 end
 function GameUIBuildingSpeedUp:OnBuildingUpgradingBegin( building, current_time )
     self:SetProgressInfo(GameUtils:formatTimeStyle1(building:GetUpgradingLeftTimeByCurrentTime(current_time)),building:GetElapsedTimeByCurrentTime(current_time)/building:GetUpgradeTimeToNextLevel()*100)

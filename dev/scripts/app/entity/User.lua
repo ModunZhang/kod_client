@@ -28,6 +28,7 @@ property(User, "icon", "")
 property(User, "dailyQuestsRefreshTime", 0)
 property(User, "terrain", "")
 property(User, "id", 0)
+property(User, "marchQueue", 1)
 function User:ctor(p)
     User.super.ctor(self)
     self.resources = {
@@ -387,6 +388,7 @@ function User:OnBasicInfoChanged(basicInfo)
     self:SetName(basicInfo.name)
     self:SetVipExp(basicInfo.vipExp)
     self:SetIcon(basicInfo.icon)
+    self:SetMarchQueue(basicInfo.marchQueue)
 end
 function User:OnNewRequestToAllianceEventsComming(__requestToAllianceEvents)
     if not __requestToAllianceEvents then return end

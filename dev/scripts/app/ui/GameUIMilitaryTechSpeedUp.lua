@@ -5,6 +5,7 @@
 local WidgetSpeedUp = import("..widget.WidgetSpeedUp")
 local SoldierManager = import("..entity.SoldierManager")
 local GameUIMilitaryTechSpeedUp = class("GameUIMilitaryTechSpeedUp",WidgetSpeedUp)
+local GameUtils = GameUtils
 
 function GameUIMilitaryTechSpeedUp:ctor(event)
     GameUIMilitaryTechSpeedUp.super.ctor(self)
@@ -33,6 +34,7 @@ function GameUIMilitaryTechSpeedUp:onCleanup()
     City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.OnMilitaryTechEventsTimer)
     City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
     City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+    GameUIMilitaryTechSpeedUp.super.onCleanup(self)
 end
 
 function GameUIMilitaryTechSpeedUp:OnMilitaryTechEventsTimer(event)

@@ -6,7 +6,7 @@ local WidgetSpeedUp = import("..widget.WidgetSpeedUp")
 local SoldierManager = import("..entity.SoldierManager")
 local Localize = import("..utils.Localize")
 local GameUIToolShopSpeedUp = class("GameUIToolShopSpeedUp",WidgetSpeedUp)
-
+local GameUtils = GameUtils
 function GameUIToolShopSpeedUp:ctor(building)
     GameUIToolShopSpeedUp.super.ctor(self)
     self.building = building
@@ -15,9 +15,8 @@ function GameUIToolShopSpeedUp:ctor(building)
     local building_event = building:GetBuildingEvent()
     local event = (not technology_event:IsEmpty() and technology_event) or (not building_event:IsEmpty() and building_event)
     self:SetAccBtnsGroup(self:GetEventType(),event:Id())
-    self:SetAccTips(_("小于5min时可以使用免费加速"))
+    self:SetAccTips(_("生产材料不能免费加速"))
     self:SetUpgradeTip(_("制造材料").."X 1")
-    self:CheckCanSpeedUpFree()
     building:AddToolShopListener(self)
 end
 
@@ -26,6 +25,7 @@ function GameUIToolShopSpeedUp:GetEventType()
 end
 function GameUIToolShopSpeedUp:onCleanup()
     self.building:RemoveToolShopListener(self)
+    GameUIToolShopSpeedUp.super.onCleanup(self)
 end
 
 function GameUIToolShopSpeedUp:CheckCanSpeedUpFree()
