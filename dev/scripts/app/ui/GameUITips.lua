@@ -11,10 +11,11 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local UICanCanelCheckBoxButtonGroup = import(".UICanCanelCheckBoxButtonGroup")
 local UICheckBoxButton = import(".UICheckBoxButton")
 
-function GameUITips:ctor(show_never_again)
+function GameUITips:ctor(active_button)
 	GameUITips.super.ctor(self)
-	self.show_never_again = type(show_never_again) == 'boolean' and show_never_again or false
-	self.never_show_again = false
+	self.show_never_again = true
+	self.never_show_again = app:GetGameDefautlt():getBasicInfoValueForKey("NEVER_SHOW_TIP_ICON")
+	self.active_button = active_button
 end
 
 
@@ -27,7 +28,7 @@ end
 function GameUITips:BuildUI()
 	local shadowLayer = UIKit:shadowLayer():addTo(self)
 	local bg = WidgetUIBackGround.new({height=762}):addTo(shadowLayer)
-	bg:pos(((window.width - bg:getContentSize().width)/2),window.bottom_top)
+	bg:pos(((display.width - bg:getContentSize().width)/2),window.bottom_top)
 	local titleBar = display.newSprite("alliance_blue_title_600x42.png"):align(display.LEFT_BOTTOM,3,747):addTo(bg)
 	local closeButton = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"}, {scale9 = false})
 	   	:addTo(titleBar)
@@ -72,7 +73,10 @@ function GameUITips:BuildUI()
 		            :onButtonClicked(function(event)
 		            	local target = event.target
 		            	self.never_show_again = target:isButtonSelected()
+		            	app:GetGameDefautlt():setBasicInfoBoolValueForKey("NEVER_SHOW_TIP_ICON",self.never_show_again)
+						app:GetGameDefautlt():flush()
 		            end)
+		            :setButtonSelected(self.never_show_again,true)
 		         )
 		        :setIsSwitchModel(true)
 		        :addTo(bg):pos(15,25)
@@ -123,8 +127,9 @@ function GameUITips:GetItem(index,image,title,text,scale)
 end
 
 function GameUITips:leftButtonClicked()
-	if self.never_show_again then
-		--如果不再显示
+	if self.active_button then
+		-- self.active_button:setVisible(app:GetGameDefautlt():getBasicInfoValueForKey("NEVER_SHOW_TIP_ICON"))
+		print(tolua.type(self.active_button),"self.active_button---->")
 	end
 	GameUITips.super.leftButtonClicked(self)
 end
