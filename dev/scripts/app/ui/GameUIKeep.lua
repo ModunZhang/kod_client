@@ -105,7 +105,7 @@ function GameUIKeep:CreateCityBasicInfo()
     -- 修改地形
     self:CreateLineItem({
         title_1 =  _("城市地形"),
-        title_2 =  _("草原"),
+        title_2 =  Localize.terrain[User:Terrain()],
         button_label =  _("修改"),
         listener =  function ()
             self:CreateChangeTerrainWindow()
@@ -349,9 +349,9 @@ function GameUIKeep:CreateChangeTerrainWindow()
     local default_index = 0
     if terrain == "grassLand" then
         default_index = 1
-    elseif terrain == "iceField" then
-        default_index = 2
     elseif terrain == "desert" then
+        default_index = 2
+    elseif terrain == "iceField" then
         default_index = 3
     end
 
@@ -429,9 +429,9 @@ function GameUIKeep:CreateChangeTerrainWindow()
                 if selected_index == 1 then
                     NetManager:getChangeToGrassPromise()
                 elseif selected_index == 2 then
-                    NetManager:getChangeToIceFieldPromise()
-                elseif selected_index == 3 then
                     NetManager:getChangeToDesertPromise()
+                elseif selected_index == 3 then
+                    NetManager:getChangeToIceFieldPromise()
                 end
             end
         end)
