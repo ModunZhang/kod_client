@@ -576,6 +576,12 @@ local  getBuildingLocalizedKeyByBuildingType = function(name)
             return v.desc
         end
     end
+    local house_config = GameDatas.Houses.houses
+    for _,v in pairs(house_config) do
+        if v.type == name then
+            return v.desc
+        end
+    end
     return "buidling localized string not found"
 end
 
