@@ -547,7 +547,7 @@ function WidgetEventTabButtons:PromiseOfShowTab(tab)
 end
 function WidgetEventTabButtons:HighLightTab(tab)
     self:ResetOtherTabByCurrentTab(tab)
-    self.tab_map[tab]:Enable(false):Active(true)
+    self.tab_map[tab]:Enable(true):Active(true)
 end
 function WidgetEventTabButtons:OnTabClicked(widget, is_pressed)
     local tab
@@ -559,7 +559,11 @@ function WidgetEventTabButtons:OnTabClicked(widget, is_pressed)
     end
     self:ResetOtherTabByCurrentTab(tab)
     self.tab_map[tab]:SetSelect(true)
-    self:PromiseOfForceShow()
+    if self:IsShow() then
+        self:PromiseOfHide()
+    else
+        self:PromiseOfForceShow()
+    end
 end
 function WidgetEventTabButtons:ResetOtherTabByCurrentTab(tab)
     for k, v in pairs(self.tab_map) do
@@ -948,6 +952,10 @@ function WidgetEventTabButtons:MilitaryTechDescribe(event)
 end
 
 return WidgetEventTabButtons
+
+
+
+
 
 
 
