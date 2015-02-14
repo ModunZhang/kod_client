@@ -26,6 +26,7 @@ function GameUIToolShopSpeedUp:GetEventType()
 end
 function GameUIToolShopSpeedUp:onCleanup()
     self.building:RemoveToolShopListener(self)
+    GameUIToolShopSpeedUp.super.onCleanup(self)
 end
 
 function GameUIToolShopSpeedUp:CheckCanSpeedUpFree()

@@ -25,6 +25,7 @@ function GameUIBarracksSpeedUp:GetEventType()
 end
 function GameUIBarracksSpeedUp:onCleanup()
     self.building:RemoveBarracksListener(self)
+    GameUIBarracksSpeedUp.super.onCleanup(self)
 end
 
 function GameUIBarracksSpeedUp:CheckCanSpeedUpFree()

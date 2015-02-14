@@ -33,6 +33,7 @@ function GameUIMilitaryTechSpeedUp:onCleanup()
     City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.OnMilitaryTechEventsTimer)
     City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
     City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+    GameUIMilitaryTechSpeedUp.super.onCleanup(self)
 end
 
 function GameUIMilitaryTechSpeedUp:OnMilitaryTechEventsTimer(event)

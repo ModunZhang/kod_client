@@ -22,6 +22,7 @@ function GameUITreatSoldierSpeedUp:GetEventType()
 end
 function GameUITreatSoldierSpeedUp:onCleanup()
     self.building:RemoveHospitalListener(self)
+    GameUITreatSoldierSpeedUp.super.onCleanup(self)
 end
 
 function GameUITreatSoldierSpeedUp:CheckCanSpeedUpFree()

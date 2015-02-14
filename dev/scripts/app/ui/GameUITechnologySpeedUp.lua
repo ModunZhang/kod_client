@@ -35,6 +35,7 @@ end
 function GameUITechnologySpeedUp:onCleanup()
 	City:RemoveListenerOnType(self,City.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
 	City:RemoveListenerOnType(self,City.LISTEN_TYPE.PRODUCTION_EVENT_TIMER)
+    GameUITechnologySpeedUp.super.onCleanup(self)
 end
 
 function GameUITechnologySpeedUp:OnProductionTechnologyEventDataChanged(changed_map)

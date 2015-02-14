@@ -31,6 +31,7 @@ end
 
 function GameUIBuildingSpeedUp:onCleanup()
     self.building:RemoveUpgradeListener(self)
+    GameUIBuildingSpeedUp.super.onCleanup(self)
 end
 
 function GameUIBuildingSpeedUp:CheckCanSpeedUpFree()
