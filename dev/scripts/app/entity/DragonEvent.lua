@@ -42,5 +42,10 @@ function DragonEvent:GetTime()
 	return self.times_ or 0
 end
 
+function DragonEvent:GetPercent()
+	local totalTime = self:FinishTime() - self:StartTime()
+	return math.ceil(100 - self:GetTime()/totalTime*100)
+end
+
 
 return DragonEvent

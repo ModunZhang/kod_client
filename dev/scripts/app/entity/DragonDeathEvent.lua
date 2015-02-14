@@ -14,9 +14,4 @@ function DragonDeathEvent:OnTimer(current_time)
 	end
 end
 
-function DragonDeathEvent:GetPercent()
-	local totalTime = self:FinishTime() - self:StartTime()
-	return math.ceil(100 - self:GetTime()/totalTime*100)
-end
-
 return DragonDeathEvent

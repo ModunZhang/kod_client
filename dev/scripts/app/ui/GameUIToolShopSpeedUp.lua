@@ -6,6 +6,7 @@ local WidgetSpeedUp = import("..widget.WidgetSpeedUp")
 local SoldierManager = import("..entity.SoldierManager")
 local Localize = import("..utils.Localize")
 local GameUIToolShopSpeedUp = class("GameUIToolShopSpeedUp",WidgetSpeedUp)
+local GameUtils = GameUtils
 
 function GameUIToolShopSpeedUp:ctor(building)
     GameUIToolShopSpeedUp.super.ctor(self)
@@ -26,6 +27,7 @@ function GameUIToolShopSpeedUp:GetEventType()
 end
 function GameUIToolShopSpeedUp:onCleanup()
     self.building:RemoveToolShopListener(self)
+    GameUIToolShopSpeedUp.super.onCleanup(self)
 end
 
 function GameUIToolShopSpeedUp:CheckCanSpeedUpFree()
