@@ -61,10 +61,10 @@ end
 function GameUICommonTips:createUI()
 	local header_sp = display.newSprite("tips_bg_header_640x140.png"):align(display.TOP_CENTER, window.cx, GLOBAL_Y):addTo(self,2)
 	self.header_sp = header_sp
-	self.clipeNode = display.newClippingRegionNode(cc.rect(0,0,640,header_sp:getPositionY()-18)):addTo(self,1)
+	self.clipeNode = display.newClippingRegionNode(cc.rect(0,0,display.width,header_sp:getPositionY()-18)):addTo(self,1)
 	self.content_sp_postion = {
-		close = cc.p(320,header_sp:getPositionY() + 140),
-		open  = cc.p(320,header_sp:getPositionY())
+		close = cc.p(window.cx,header_sp:getPositionY() + 140),
+		open  = cc.p(window.cx,header_sp:getPositionY())
 	}
 	self.content_sp = display.newSprite("tips_bg_content_640x140.png")
 		:addTo(self.clipeNode)
@@ -74,7 +74,7 @@ function GameUICommonTips:createUI()
 		color= 0xf3f0b6,
 		align = cc.TEXT_ALIGNMENT_CENTER,
 		dimensions = cc.size(640,140)
-	}):align(display.TOP_CENTER, 320, 100):addTo(self.content_sp)
+	}):align(display.TOP_CENTER, 335, 100):addTo(self.content_sp)
 end
 
 function GameUICommonTips:GetContentTargetPosition(status)
@@ -97,6 +97,7 @@ end
 function GameUICommonTips:SetMessage(title,content)
 	print(title,content)
 	self.content_label:setString(title .. "\n" .. content)
+	self.content_label:align(display.TOP_CENTER, 335, 100)
 	-- ...
 end
 
