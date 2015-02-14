@@ -391,10 +391,10 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
     local building = self.building
     local pre_condition = building:IsBuildingUpgradeLegal()
     local requirements = {
+        {resource_type = _("前置条件"),isVisible = pre_condition, isSatisfy = not pre_condition,canNotBuy=true,
+            icon="hammer_31x33.png",description = pre_condition},
         {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetUpgradingBuildings()<1,
             icon="hammer_31x33.png",description=GameUtils:formatNumber(#City:GetUpgradingBuildings()).."/1"},
-        {resource_type = _("前置条件"),isVisible = pre_condition, isSatisfy = not pre_condition,
-            icon="hammer_31x33.png",description = pre_condition},
         {resource_type = _("木材"),isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
             icon="wood_icon.png",description=GameUtils:formatNumber(self.building:GetLevelUpWood()).."/"..GameUtils:formatNumber(wood)},
         {resource_type = _("石料"),isVisible = self.building:GetLevelUpStone()>0,     isSatisfy = stone>self.building:GetLevelUpStone() ,
