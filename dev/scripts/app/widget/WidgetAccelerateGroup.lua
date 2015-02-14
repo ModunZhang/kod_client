@@ -106,12 +106,10 @@ function WidgetAccelerateGroup:ctor(eventType,eventId)
                             :SetPopMessage(_("宝石不足"))
                             :AddToCurrentScene()
                     else
-                        NetManager:getBuyItemPromise(speedUp_item_name,1):next(function ()
-                            NetManager:getUseItemPromise(speedUp_item_name,{[speedUp_item_name] = {
-                                eventType = eventType,
-                                eventId = eventId
-                            }})
-                        end)
+                        NetManager:getBuyAndUseItemPromise(speedUp_item_name,{[speedUp_item_name] = {
+                            eventType = eventType,
+                            eventId = eventId
+                        }})
                     end
                 end
             end
@@ -130,6 +128,7 @@ function WidgetAccelerateGroup:ResetAccButtons()
     end
 end
 return WidgetAccelerateGroup
+
 
 
 
