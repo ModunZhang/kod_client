@@ -33,7 +33,8 @@ function AutomaticUpdateResource:UpdateResource(current_time, value)
 end
 function AutomaticUpdateResource:GetResourceValueByCurrentTime(current_time)
     local total_resource_value = self:GetResourceValueByCurrentTimeWithoutLimit(current_time)
-    return total_resource_value > self:GetValueLimit() and self:GetValue() or total_resource_value
+    local resource_value = total_resource_value > self:GetValueLimit() and self:GetValue() or total_resource_value
+    return resource_value < 0 and 0 or resource_value
 end
 --
 function AutomaticUpdateResource:OnTimer(current_time)
