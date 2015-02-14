@@ -27,7 +27,7 @@ function GameUISetting:BuildUI()
 		{text = "账号绑定",image = "setting_account_56x65.png"},
 		{text = "选择服务器",image = "setting_server_55x62.png"},
 		{text = "语言",image = "setting_language_71x70.png"},
-		{text = "游戏说明",image = "setting_ declare_48x67.png"},
+		{text = "游戏说明",image = "setting_declare_48x67.png"},
 		{text = "个人排行榜",image = "setting_rank_p_75x70.png"},
 		{text = "联盟排行榜",image = "setting_rank_a_75x66.png"},
 		{	
