@@ -37,6 +37,7 @@ function Observer:RemoveObserver(observer)
 end
 function Observer:NotifyObservers(func)
 	for i, v in ipairs(self.observer) do
+		if type(v) == nil then table.remove(self.observer,i) return end
 		if func(v) then
 			return
 		end
