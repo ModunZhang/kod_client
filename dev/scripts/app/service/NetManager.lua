@@ -599,7 +599,7 @@ function NetManager:getLoginPromise(deviceId)
         if gaozhou then
             device_id = getOpenUDID()
         else
-            device_id = "dannyhe1234"
+            device_id = getOpenUDID()
         end
     else
         device_id = device.getOpenUDID()
