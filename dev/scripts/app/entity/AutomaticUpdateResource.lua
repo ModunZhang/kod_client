@@ -35,6 +35,26 @@ function AutomaticUpdateResource:UpdateResource(current_time, value)
     self.last_update_time = current_time
     self:SetValue(value)
 end
+-- function AutomaticUpdateResource:GetResourceValueByCurrentTime1(current_time)
+--     local current_value = self:GetValue()
+--     local limit_value = self:GetValueLimit()
+--     local total_resource_value = self:GetResourceValueByCurrentTimeWithoutLimit1(current_time)
+--     local resource_production_per_hour = self.resource_production_per_hour
+--     local is_over_limit = current_value >= limit_value and total_resource_value >= limit_value
+--     local is_product_positive = resource_production_per_hour >= 0
+--     local max_value = is_product_positive and (is_over_limit and current_value or limit_value) or math.huge
+--     -- if total_resource_value > 0 and is_product_positive then
+--         print("=====>")
+--         print("current_value", current_value)
+--         print("total_resource_value", total_resource_value)
+--         print("is_over_limit", is_over_limit)
+--         print("is_product_positive", is_product_positive)
+--         print("max_value", max_value)
+--         print("<=====")
+--     --     assert(false)
+--     -- end
+--     return clamp(0, max_value, total_resource_value)
+-- end
 function AutomaticUpdateResource:GetResourceValueByCurrentTime(current_time)
     local current_value = self:GetValue()
     local limit_value = self:GetValueLimit()
@@ -45,6 +65,14 @@ function AutomaticUpdateResource:GetResourceValueByCurrentTime(current_time)
     local max_value = is_product_positive and (is_over_limit and current_value or limit_value) or math.huge
     return clamp(0, max_value, total_resource_value)
 end
+-- function AutomaticUpdateResource:GetResourceValueByCurrentTimeWithoutLimit1(current_time)
+--     local elapse_time = current_time - self.last_update_time
+--     local has_been_producted_from_last_update_time = elapse_time * self.resource_production_per_hour / 3600
+--     local total_resource_value = self:GetValue() + has_been_producted_from_last_update_time
+--     print("elapse_time===", elapse_time)
+--     print("total_resource_value===", total_resource_value)
+--     return floor(total_resource_value)
+-- end
 function AutomaticUpdateResource:GetResourceValueByCurrentTimeWithoutLimit(current_time)
     local elapse_time = current_time - self.last_update_time
     local has_been_producted_from_last_update_time = elapse_time * self.resource_production_per_hour / 3600
@@ -53,6 +81,8 @@ function AutomaticUpdateResource:GetResourceValueByCurrentTimeWithoutLimit(curre
 end
 
 return AutomaticUpdateResource
+
+
 
 
 
