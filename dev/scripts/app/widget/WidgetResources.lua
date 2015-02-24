@@ -94,7 +94,7 @@ function WidgetResources:InitAllResources()
             resource_icon="wood_icon.png",
             resource_limit_value=maxwood,
             resource_current_value=crm:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
-            total_income=crm:GetFoodResource():GetProductionPerHour().."/h",
+            total_income=crm:GetWoodResource():GetProductionPerHour().."/h",
             occupy_citizen=City:GetCitizenByType("woodcutter"),
         },
         stone = {
