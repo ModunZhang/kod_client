@@ -1583,6 +1583,7 @@ end
 
 function City:OnProductionTechEventsDataChaned(productionTechEvents)
     if not productionTechEvents then return end
+    self.productionTechEvents = {}
     for _,v in ipairs(productionTechEvents) do
         if not self:FindProductionTechEventById(v.id) then
             local productionTechnologyEvent = ProductionTechnologyEvent.new()
@@ -1590,8 +1591,19 @@ function City:OnProductionTechEventsDataChaned(productionTechEvents)
             productionTechnologyEvent:SetEntity(self:FindTechByName(productionTechnologyEvent:Name()))
             self.productionTechEvents[productionTechnologyEvent:Id()] = productionTechnologyEvent
             productionTechnologyEvent:AddObserver(self)
+            self:GeneralTechLocalPush(productionTechnologyEvent)
         end
     end
+end
+
+function City:GeneralTechLocalPush(productionTechEvent)
+    local pushIdentity = productionTechEvent:Id()
+    local title = productionTechEvent:Entity():GetLocalizedName() .. _("研发完成")
+    app:GetPushManager():UpdateTechnologyPush(productionTechEvent:FinishTime(),title,pushIdentity) 
+end
+
+function City:CancelTechLocalPush(productionTechEvent)
+    app:GetPushManager():CancelTechnologyPush(productionTechEvent:Id())
 end
 
 function City:IteratorProductionTechEvents(func)
@@ -1611,6 +1623,7 @@ function City:__OnProductionTechEventsDataChaned(__productionTechEvents)
                 productionTechnologyEvent:SetEntity(self:FindTechByName(productionTechnologyEvent:Name()))
                 productionTechnologyEvent:AddObserver(self)
                 self.productionTechEvents[productionTechnologyEvent:Id()] = productionTechnologyEvent
+                self:GeneralTechLocalPush(productionTechnologyEvent)
                 return productionTechnologyEvent
             end
         end
@@ -1618,6 +1631,7 @@ function City:__OnProductionTechEventsDataChaned(__productionTechEvents)
             local productionTechnologyEvent = self:FindProductionTechEventById(data.id)
             if productionTechnologyEvent then
                 productionTechnologyEvent:UpdateData(data)
+                self:GeneralTechLocalPush(productionTechnologyEvent)
                 return productionTechnologyEvent
             end
         end
@@ -1629,6 +1643,7 @@ function City:__OnProductionTechEventsDataChaned(__productionTechEvents)
                 productionTechnologyEvent = ProductionTechnologyEvent.new()
                 productionTechnologyEvent:UpdateData(data)
                 productionTechnologyEvent:SetEntity(self:FindTechByName(productionTechnologyEvent:Name()))
+                self:CancelTechLocalPush(productionTechnologyEvent)
                 return productionTechnologyEvent
             end
         end

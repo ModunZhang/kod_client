@@ -105,6 +105,7 @@ end
 
 function DragonManager:RefreshDragonEvents(dragonEvents)
     if not dragonEvents then return end
+    self.dragon_events = {}
     for _,v in ipairs(dragonEvents) do
         if not self.dragon_events[v.dragonType] then
             local dragonEvent = DragonEvent.new()
@@ -163,6 +164,7 @@ end
 --复活事件
 function DragonManager:RefreshDragonDeathEvents(dragonDeathEvents)
     if not dragonDeathEvents then return end
+    self.dragonDeathEvents = {}
     for _,v in ipairs(dragonDeathEvents) do
         if not self.dragonDeathEvents[v.dragonType] then
             local dragonDeathEvent = DragonDeathEvent.new()

@@ -907,6 +907,7 @@ end
 
 function Alliance:OnAttackMarchEventsDataChanged(attackMarchEvents)
     if not attackMarchEvents then return end
+    self.attackMarchEvents = {}
     for _,v in ipairs(attackMarchEvents) do
         local attackMarchEvent = MarchAttackEvent.new()
         attackMarchEvent:UpdateData(v)
@@ -955,6 +956,7 @@ end
 
 function Alliance:OnAttackMarchReturnEventsDataChanged(attackMarchReturnEvents)
     if not attackMarchReturnEvents then return end
+    self.attackMarchReturnEvents = {}
     for _,v in ipairs(attackMarchReturnEvents) do
         local attackMarchReturnEvent = MarchAttackReturnEvent.new()
         attackMarchReturnEvent:UpdateData(v)
@@ -1108,6 +1110,7 @@ end
 
 function Alliance:OnStrikeMarchEventsDataChanged(strikeMarchEvents)
     if not strikeMarchEvents then return end
+    self.strikeMarchEvents = {}
     for _,v in ipairs(strikeMarchEvents) do
         local strikeMarchEvent = MarchAttackEvent.new()
         strikeMarchEvent:UpdateData(v)
@@ -1155,6 +1158,7 @@ end
 
 function Alliance:OnStrikeMarchReturnEventsDataChanged(strikeMarchReturnEvents)
     if not strikeMarchReturnEvents then return end
+    self.strikeMarchReturnEvents = {}
     for _,v in ipairs(strikeMarchReturnEvents) do
         local strikeMarchReturnEvent = MarchAttackReturnEvent.new()
         strikeMarchReturnEvent:UpdateData(v)
@@ -1280,6 +1284,7 @@ end
 --村落采集事件
 function Alliance:OnVillageEventsDataChanged(villageEvents)
     if not villageEvents then return end
+    self.villageEvents = {}
     for _,v in ipairs(villageEvents) do
         local villageEvent = VillageEvent.new()
         villageEvent:UpdateData(v)
@@ -1362,6 +1367,7 @@ function Alliance:FindVillageEventByVillageId(village_id)
     end
     return nil
 end
+--TODO:检测村落重新刷新ui更新是否有bug
 function Alliance:DecodeAllianceVillages(villages)
     if not villages then return end
     for _,v in ipairs(villages) do

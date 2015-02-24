@@ -263,7 +263,7 @@ function MyApp:transactionObserver(event)
     local transaction = event.transaction
     local transaction_state = transaction.state
     if transaction_state == 'restored' then
-        device.showAlert("提示",_("已为你恢复以前的购买"),{_("确定")})
+        device.showAlert("提示","已为你恢复以前的购买",{_("确定")})
         Store.finishTransaction(transaction)
     elseif transaction_state == 'purchased' then
         --TODO:服务器验证 成功或失败后关闭 transaction
@@ -276,7 +276,7 @@ function MyApp:transactionObserver(event)
     elseif transaction_state == 'purchasing' then
         --不作任何处理
     else
-        device.showAlert("提示",transaction.errorString,{_("确定")})
+        device.showAlert(_("提示"),transaction.errorString,{_("确定")})
         Store.finishTransaction(transaction)
     end
 end

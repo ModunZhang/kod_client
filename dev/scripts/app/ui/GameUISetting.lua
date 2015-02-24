@@ -7,19 +7,25 @@ local window = import("..utils.window")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 
 function GameUISetting:ctor(city)
-	 GameUISetting.super.ctor(self,city, _("设置"))
+	 GameUISetting.super.ctor(self,city, _("更多"))
 end
 
 function GameUISetting:onEnter()
 	GameUISetting.super.onEnter(self)
 	self:BuildUI()
+	app.timer:AddListener(self)
 end
 
+function GameUISetting:OnTimer(current_time)
+	if self.timer_label then
+		self.timer_label:setString(_("世界时间:") ..  os.date('!%Y-%m-%d %H:%M:%S', app.timer:GetServerTime()))
+	end
+end
 
 function GameUISetting:BuildUI()
 	local header_bg = UIKit:CreateBoxPanelWithBorder({height = 58}):align(display.TOP_CENTER, window.cx, window.top_bottom):addTo(self)
-	UIKit:ttfLabel({
-		text = "世界时间:" ..  os.date('!%Y-%m-%d %H:%M:%S', app.timer:GetServerTime()),
+	self.timer_label = UIKit:ttfLabel({
+		text = _("世界时间:") ..  os.date('!%Y-%m-%d %H:%M:%S', app.timer:GetServerTime()),
 		size = 22,
 		color= 0x28251d
 	}):align(display.CENTER,278,29):addTo(header_bg)
@@ -88,10 +94,15 @@ function GameUISetting:OnButtonClicked(button)
 	if tag == 1 then
 		 GameGlobalUI:showTips("提示","功能还未实现")
 	elseif tag == 2 then
+		UIKit:newGameUI("GameUISettingServer"):addToCurrentScene(true)
 	elseif tag == 3 then
+		UIKit:newGameUI("GameUISettingLanguage"):addToCurrentScene(true)
 	elseif tag == 4 then
+		UIKit:newGameUI("GameUITips"):addToCurrentScene(true)
 	elseif tag == 5 then
+		GameGlobalUI:showTips("提示","功能还未实现")
 	elseif tag == 6 then
+		GameGlobalUI:showTips("提示","功能还未实现")
 	elseif tag == 7 then
 		local is_open = app:GetAudioManager():GetBackgroundMusicState()
 		app:GetAudioManager():SwitchBackgroundMusicState(not is_open)
@@ -105,13 +116,21 @@ function GameUISetting:OnButtonClicked(button)
 		button.normal_image:setVisible(is_open)
 		button.state_image:setVisible(not is_open)
 	elseif tag == 9 then
+		UIKit:newGameUI("GameUISettingPush"):addToCurrentScene(self)
 	elseif tag == 10 then
+		GameGlobalUI:showTips("提示","功能还未实现")
 	elseif tag == 11 then
 		if ext.userVoice then
 			ext.userVoice()
 		end
 	elseif tag == 12 then
+		GameGlobalUI:showTips("提示","功能还未实现")
 	end
+end
+
+function GameUISetting:onCleanup()
+	app.timer:RemoveListener(self)
+	GameUISetting.super.onCleanup(self)
 end
 
 return GameUISetting
