@@ -488,6 +488,7 @@ end
 function NetManager:addLoginEventListener()
     self:addEventListener("onPlayerLoginSuccess", function(success, msg)
         if success then
+            app:GetPushManager():CancelAll()
             if self.m_was_inited_game then
                 self.m_netService:setDeltatime(msg.serverTime - ext.now())
                 DataManager:setUserData(msg)

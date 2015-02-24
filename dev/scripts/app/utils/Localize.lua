@@ -605,6 +605,11 @@ local getLocaliedKeyByType = function(type)
     end
 end
 
+local GAME_LANGUAGE = {
+    en_US = _("英文"),
+    zh_Hans = _("简体中文"),
+}
+
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
@@ -636,6 +641,7 @@ return {
     getBuildingLocalizedKeyByBuildingType = getBuildingLocalizedKeyByBuildingType,
     getHouseLocalizedKeyByBuildingType = getHouseLocalizedKeyByBuildingType,
     getLocaliedKeyByType = getLocaliedKeyByType,
+    game_language = GAME_LANGUAGE,
 }
 
 

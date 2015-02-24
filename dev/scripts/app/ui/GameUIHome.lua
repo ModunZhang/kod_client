@@ -302,7 +302,7 @@ function GameUIHome:CreateTop()
     )
     button:onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI("GameUITips",button):addToCurrentScene()
+            UIKit:newGameUI("GameUITips",button):addToCurrentScene(true)
         end
     end):addTo(top_bg):pos(630, -181):scale(0.5)
 
