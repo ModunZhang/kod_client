@@ -90,7 +90,6 @@ function GameUISettingPush:BuildUI()
     	:setButtonSelected(app:GetPushManager():GetTechnologyPushState(),true)
     technology_push_button:setTag(3)
 end
-
 function GameUISettingPush:onButtonStateChanged(button)
     local tag = button:getTag()
     local isOn = button:isButtonSelected()

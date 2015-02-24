@@ -53,7 +53,6 @@ function GameUISettingLanguage:GetItem(iamge,language_code,selected)
 	local check_bg = display.newSprite("activity_check_bg_55x51.png"):align(display.BOTTOM_CENTER, 65,8):addTo(sp)
 	local check_body = display.newSprite("activity_check_body_55x51.png"):addTo(check_bg):pos(27,25)
 	check_body:setVisible(selected)
-	sp.check_body = check_body
 	WidgetPushTransparentButton.new(cc.rect(0,0,130,168)):addTo(sp):align(display.LEFT_BOTTOM, 0, 0):onButtonClicked(function()
 		local code = app:GetGameLanguage()
 		if code ~= language_code then

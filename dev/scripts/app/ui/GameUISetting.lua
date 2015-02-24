@@ -94,7 +94,7 @@ function GameUISetting:OnButtonClicked(button)
 	if tag == 1 then
 		 GameGlobalUI:showTips("提示","功能还未实现")
 	elseif tag == 2 then
-		GameGlobalUI:showTips("提示","功能还未实现")
+		UIKit:newGameUI("GameUISettingServer"):addToCurrentScene(true)
 	elseif tag == 3 then
 		UIKit:newGameUI("GameUISettingLanguage"):addToCurrentScene(true)
 	elseif tag == 4 then

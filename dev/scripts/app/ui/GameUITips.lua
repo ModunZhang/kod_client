@@ -8,8 +8,6 @@ local UIListView = import(".UIListView")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local window = import("..utils.window")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-local UICanCanelCheckBoxButtonGroup = import(".UICanCanelCheckBoxButtonGroup")
-local UICheckBoxButton = import(".UICheckBoxButton")
 
 function GameUITips:ctor(active_button)
 	GameUITips.super.ctor(self)
@@ -65,21 +63,19 @@ function GameUITips:BuildUI()
 
 	}
 	if self.show_never_again then
-			UICanCanelCheckBoxButtonGroup.new()
-		        :addButton(UICheckBoxButton.new(checkbox_image)
-		            :setButtonLabel(UIKit:ttfLabel({text = _("不再显示"),size = 22,color = 0x514d3e}))
-		            :setButtonLabelOffset(30, 0)
-		            :align(display.LEFT_CENTER)
-		            :onButtonClicked(function(event)
-		            	local target = event.target
-		            	self.never_show_again = target:isButtonSelected()
-		            	app:GetGameDefautlt():setBasicInfoBoolValueForKey("NEVER_SHOW_TIP_ICON",self.never_show_again)
-						app:GetGameDefautlt():flush()
-		            end)
-		            :setButtonSelected(self.never_show_again,true)
-		         )
-		        :setIsSwitchModel(true)
-		        :addTo(bg):pos(15,25)
+		local button = WidgetPushButton.new({normal = 'activity_check_bg_55x51.png'})
+			:addTo(bg)
+			:align(display.LEFT_BOTTOM,15, 25)
+		local check_state = display.newSprite("activity_check_body_55x51.png"):addTo(button):pos(27,25)
+		check_state:setVisible(self.never_show_again)
+		button.check_state = check_state
+		button:onButtonClicked(function()
+			self.never_show_again = not self.never_show_again
+			app:GetGameDefautlt():setBasicInfoBoolValueForKey("NEVER_SHOW_TIP_ICON",self.never_show_again)
+			app:GetGameDefautlt():flush()
+			button.check_state:setVisible(self.never_show_again)
+		end)
+		UIKit:ttfLabel({text = _("不再显示"),size = 22,color = 0x514d3e}):align(display.LEFT_CENTER, 80, 50):addTo(bg)
 	end
 	self:RefreshListView()
 end
@@ -128,7 +124,7 @@ end
 
 function GameUITips:leftButtonClicked()
 	if self.active_button then
-		-- self.active_button:setVisible(app:GetGameDefautlt():getBasicInfoValueForKey("NEVER_SHOW_TIP_ICON"))
+		self.active_button:setVisible(not app:GetGameDefautlt():getBasicInfoValueForKey("NEVER_SHOW_TIP_ICON"))
 		print(tolua.type(self.active_button),"self.active_button---->")
 	end
 	GameUITips.super.leftButtonClicked(self)

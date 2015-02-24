@@ -112,7 +112,7 @@ function LocalPushManager:RecoverLocalPush(push_key)
 		end
 	end
 end
-
+--TODO:push相关函数的调用
 -- api
 function LocalPushManager:GetBuildPushState()
 	return self:GetLocalPushStateByKey("LOCAL_PUSH_KEY_BUILD")
