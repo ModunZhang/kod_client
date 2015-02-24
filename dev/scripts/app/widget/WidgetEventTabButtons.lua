@@ -554,13 +554,16 @@ function WidgetEventTabButtons:OnTabClicked(widget, is_pressed)
     for k, v in pairs(self.tab_map) do
         if v == widget then
             tab = k
-            break
         end
     end
     self:ResetOtherTabByCurrentTab(tab)
     self.tab_map[tab]:SetSelect(true)
     if self:IsShow() then
-        self:PromiseOfHide()
+        if is_pressed then
+            self:PromiseOfSwitch()
+        else
+            self:PromiseOfHide()
+        end
     else
         self:PromiseOfForceShow()
     end
@@ -952,6 +955,8 @@ function WidgetEventTabButtons:MilitaryTechDescribe(event)
 end
 
 return WidgetEventTabButtons
+
+
 
 
 
