@@ -58,13 +58,7 @@ function ResourceManager:ctor()
     }
 end
 function ResourceManager:OnTimer(current_time)
-    self:UpdateResourceByTime(current_time)
     self:OnResourceChanged()
-end
-function ResourceManager:UpdateResourceByTime(current_time)
-    for _, v in pairs(self.resources) do
-        v:OnTimer(current_time)
-    end
 end
 function ResourceManager:GetWallHpResource()
     return self.resources[WALLHP]

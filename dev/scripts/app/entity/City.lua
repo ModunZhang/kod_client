@@ -1042,13 +1042,11 @@ function City:OnUserDataChanged(userData, current_time)
         need_update_resouce_buildings = true
     end
 
-    self.resource_manager:UpdateFromUserDataByTime(resources, resource_refresh_time)
-
     if need_update_resouce_buildings then
         resource_refresh_time = resource_refresh_time or current_time
         self.resource_manager:UpdateByCity(self, resource_refresh_time)
-        self.resource_manager:UpdateResourceByTime(resource_refresh_time)
     end
+    self.resource_manager:UpdateFromUserDataByTime(resources, resource_refresh_time)
     return self
 end
 function City:GetCityName()

@@ -1,10 +1,13 @@
 local Resource = import(".Resource")
 local AutomaticUpdateResource = class("AutomaticUpdateResource", Resource)
+local function clamp(a,b,x)
+    return x < a and a or (x > b and b or x)
+end
+local floor = math.floor
 function AutomaticUpdateResource:ctor()
     AutomaticUpdateResource.super.ctor(self)
     self.last_update_time = 0
     self.resource_production_per_hour = 0
-    self.is_over_limit = false
 end
 function AutomaticUpdateResource:GetProductionPerHour()
     return self.resource_production_per_hour
@@ -33,46 +36,24 @@ function AutomaticUpdateResource:UpdateResource(current_time, value)
     self:SetValue(value)
 end
 function AutomaticUpdateResource:GetResourceValueByCurrentTime(current_time)
-    local total_resource_value = self:GetResourceValueByCurrentTimeWithoutLimit(current_time)
-    local resource_value
-    if self.resource_production_per_hour >= 0 then
-        resource_value = total_resource_value > self:GetValueLimit() and self:GetValue() or total_resource_value
-    else
-        resource_value = total_resource_value
-    end
-    return resource_value < 0 and 0 or resource_value
-end
---
-function AutomaticUpdateResource:OnTimer(current_time)
     local current_value = self:GetValue()
     local limit_value = self:GetValueLimit()
-    local is_producted_over_limit = self:GetResourceValueByCurrentTimeWithoutLimit(current_time) >= limit_value
-    if is_producted_over_limit then
-        if not self:IsOverLimit() then
-            self:SetOverLimit(true)
-            local current_resource = current_value > limit_value and current_value or limit_value
-            self:UpdateResource(current_time, current_resource)
-        end
-    else
-        self:SetOverLimit(false)
-    end
+    local total_resource_value = self:GetResourceValueByCurrentTimeWithoutLimit(current_time)
+    local resource_production_per_hour = self.resource_production_per_hour
+    local is_over_limit = current_value >= limit_value and total_resource_value >= limit_value
+    local is_product_positive = resource_production_per_hour >= 0
+    local max_value = is_product_positive and (is_over_limit and current_value or limit_value) or math.huge
+    return clamp(0, max_value, total_resource_value)
 end
-function AutomaticUpdateResource:SetOverLimit(is_over_limit)
-    self.is_over_limit = is_over_limit
-end
-function AutomaticUpdateResource:IsOverLimit()
-    return self.is_over_limit
-end
-local floor = math.floor
 function AutomaticUpdateResource:GetResourceValueByCurrentTimeWithoutLimit(current_time)
     local elapse_time = current_time - self.last_update_time
     local has_been_producted_from_last_update_time = elapse_time * self.resource_production_per_hour / 3600
     local total_resource_value = self:GetValue() + has_been_producted_from_last_update_time
-    self.really_total_resource_value = total_resource_value
     return floor(total_resource_value)
 end
 
 return AutomaticUpdateResource
+
 
 
 

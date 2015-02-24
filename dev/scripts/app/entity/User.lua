@@ -126,15 +126,9 @@ function User:GetTradeManager()
     return self.trade_manager
 end
 function User:OnTimer(current_time)
-    self:UpdateResourceByTime(current_time)
     self:UpdatePreStrength(current_time)
     self:OnResourceChanged()
     self.vip_event:OnTimer(current_time)
-end
-function User:UpdateResourceByTime(current_time)
-    for _, v in pairs(self.resources) do
-        v:OnTimer(current_time)
-    end
 end
 function User:OnResourceChanged()
     self:NotifyListeneOnType(RESOURCE, function(listener)
