@@ -118,7 +118,7 @@ function GameUISetting:OnButtonClicked(button)
 	elseif tag == 9 then
 		UIKit:newGameUI("GameUISettingPush"):addToCurrentScene(self)
 	elseif tag == 10 then
-		GameGlobalUI:showTips("提示","功能还未实现")
+		UIKit:newGameUI("GameUISettingShield"):addToCurrentScene(self)
 	elseif tag == 11 then
 		if ext.userVoice then
 			ext.userVoice()
