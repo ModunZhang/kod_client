@@ -1,5 +1,6 @@
 local Localize_item = import("..utils.Localize_item")
 local Localize = import("..utils.Localize")
+local NotifyItem = import(".NotifyItem")
 local PVEDefine = import(".PVEDefine")
 local PVEObject = class("PVEObject")
 local pve_normal = GameDatas.ClientInitGame.pve_normal
@@ -103,42 +104,7 @@ function PVEObject:DecodeToEnemy(raw_data)
         rewards = self:DecodeToRewards(raw_data.rewards),
     }
 end
-local m = {
-    __add = function(a, b)
-        local r = {}
-        for _, v in ipairs(a) do
-            r[v.type] = v
-        end
-        for _, v in ipairs(b) do
-            local av = r[v.type]
-            if av then
-                av.count = av.count + v.count
-            else
-                r[v.type] = v
-            end
-        end
-        local r1 = {}
-        for _, v in pairs(r) do
-            r1[#r1 + 1] = v
-        end
-        setmetatable(r1, getmetatable(a))
-        return r1
-    end,
-    __tostring = function(a)
-        return table.concat(LuaUtils:table_map(a, function(k, v)
-            local txt
-            if v.type == "items" then
-                txt = string.format("%s x%d", Localize_item.item_name[v.name], v.count)
-            elseif v.type == "resources" then
-                txt = string.format("%s x%d", Localize.fight_reward[v.name], v.count)
-            end
-            return k, txt
-        end), ",")
-    end,
-    __concat = function(a, b)
-        return string.format("%s%s", tostring(a), tostring(b))
-    end,
-}
+local m = getmetatable(NotifyItem)
 function PVEObject:GetRewards(select)
     for k, v in pairs(PVEDefine) do
         if v == self.type then
@@ -146,10 +112,7 @@ function PVEObject:GetRewards(select)
             if pve_npc[k].rewards_type == "all" then
                 return rewards
             elseif pve_npc[k].rewards_type == "select" then
-                assert(rewards[select], "选择不存在")
-                local r = {rewards[select]}
-                setmetatable(r, m)
-                return r
+                return setmetatable({rewards[select]}, m)
             elseif pve_npc[k].rewards_type == "random" then
                 local p = 0
                 for _, reward in ipairs(rewards) do
@@ -160,9 +123,7 @@ function PVEObject:GetRewards(select)
                     if p > reward.probability then
                         p = p - reward.probability
                     else
-                        local r = {reward}
-                        setmetatable(r, m)
-                        return r
+                        return setmetatable({reward}, m)
                     end
                 end
             else
