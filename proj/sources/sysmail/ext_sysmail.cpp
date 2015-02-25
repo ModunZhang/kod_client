@@ -47,7 +47,7 @@ static int tolua_sysmail_sendmail(lua_State *tolua_S)
     }
 #ifndef TOLUA_RELEASE
 tolua_lerror:
-    tolua_error(tolua_S,"#ferror in function 'tolua_GameCenter_authenticate'.",&tolua_err);
+    tolua_error(tolua_S,"#ferror in function 'tolua_sysmail_sendmail'.",&tolua_err);
     return 0;
 #endif
 }

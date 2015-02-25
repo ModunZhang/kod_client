@@ -19,7 +19,7 @@ end
     函数名和参数同EditBox 构造函数不同
     player/android 不支持
     
-    local textView = cc.DTextView:create(cc.size(549,379),display.newScale9Sprite("chat_setting_listview_bg.png"))
+    local textView = cc.DTextView:create(cc.size(549,379),display.newScale9Sprite(""))
     textView:addTo(self):center()
     textView:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)    
     textView:setFont(UIKit:getFontFilePath(), 24)

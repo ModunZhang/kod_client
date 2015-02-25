@@ -236,11 +236,22 @@ function MyApp:pushScene(sceneName, args, transitionType, time, more)
     display.pushScene(scene, transitionType, time, more)
 end
 
-function MyApp:getSupportMailFormat()
+function MyApp:getSupportMailFormat(category)
+    
     local UTCTime    = "UTC Time:" .. os.date('!%Y-%m-%d %H:%M:%S', self.timer:GetServerTime())
-    print(UTCTime)
-    print(ext.getOSVersion())
-    print(ext.getDeviceModel())
+    local GameName   = "Game:" .. "Kod"
+    local Version    = "Version:" .. CONFIG_APP_VERSION
+    local Username   = "User ID:" .. DataManager:getUserData()._id
+    local Server     = "Server:" .. "World"
+    local OpenUDID   = "Open UDID:" .. device.getOpenUDID()
+    local Category   = "Category:" .. category or ""
+    local Language   = "Language:" .. self:GetGameLanguage()
+    local DeviceType = "Device Type:" ..ext.getDeviceModel()
+    local OSVersion  = "OS Version:" .. ext.getOSVersion()
+
+    local format_str = "\n\n\n\n\n---------------%s---------------\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s"
+    local result_str = string.format(format_str,_("不要删除"),UTCTime,GameName,Version,Username,Server,OpenUDID,Category,Language,DeviceType,OSVersion)
+    return "[KoD]" .. category ,result_str
 end
 
 function MyApp:EnterViewModelAllianceScene(alliance_id)

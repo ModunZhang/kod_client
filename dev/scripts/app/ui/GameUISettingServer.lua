@@ -43,7 +43,6 @@ function GameUISettingServer:BuildUI()
 	self.list_view = UIListView.new{
         viewRect = cc.rect(26,90,556,650),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        -- bgColor = UIKit:hex2c4b(0x7a000000),
     }:addTo(bg):onTouch(handler(self, self.listviewListener))
     self:FetchServers()
 end
