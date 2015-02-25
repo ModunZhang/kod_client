@@ -229,7 +229,6 @@ function GameUIAlliance:CreateAllianceTips()
         viewRect = cc.rect(13,10, 546, 334),
         direction = UIScrollView.DIRECTION_VERTICAL,
         alignment = UIListView.ALIGNMENT_LEFT,
-        bgColor = UIKit:hex2c4b(0x7a000000),
     }:addTo(list_bg)
 
     local tips = {_("将城市迁入联盟领地，受到联盟保护"),_("将城市迁入联盟领地，受到联盟保护"),_("将城市迁入联盟领地，受到联盟保护"),_("将城市迁入联盟领地，受到联盟保护"),_("将城市迁入联盟领地，受到联盟保护"),_("将城市迁入联盟领地，受到联盟保护"),_("将城市迁入联盟领地，受到联盟保护")}

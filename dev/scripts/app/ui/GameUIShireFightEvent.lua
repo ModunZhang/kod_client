@@ -20,6 +20,7 @@ function GameUIShireFightEvent:ctor(fight_event,allianceShrine)
 	self:GetAllianceShrine():GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
 	self:GetAllianceShrine():GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
 	self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
+	self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsRefresh)
 	self.event_bind_to_label = {}
 end
 
@@ -54,6 +55,14 @@ function GameUIShireFightEvent:OnShrineEventsChanged(change_map)
 	end
 end
 
+function GameUIShireFightEvent:OnShrineEventsRefresh()
+	local id_ = self:GetFightEvent():Id()
+	local event = self:GetAllianceShrine():GetShrineEventById(id_)
+	if not event then
+		self:leftButtonClicked()
+	end
+end
+
 function GameUIShireFightEvent:OnAttackMarchEventTimerChanged(event)
 	if self.event_bind_to_label[event:Id()] then
 		self.event_bind_to_label[event:Id()]:setString(GameUtils:formatTimeStyle1(event:GetTime()) .. "后到达")
@@ -63,6 +72,7 @@ end
 function GameUIShireFightEvent:onMoveOutStage()
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
+	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsRefresh)
 	self:GetAllianceShrine():GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
 	self:GetAllianceShrine():GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
 	self.event_bind_to_label = nil

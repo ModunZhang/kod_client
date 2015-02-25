@@ -84,6 +84,7 @@ function GameUIAcademy:onEnter()
     City:AddListenOnType(self,City.LISTEN_TYPE.PRODUCTION_DATA_CHANGED)
     City:AddListenOnType(self,City.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
     City:AddListenOnType(self,City.LISTEN_TYPE.PRODUCTION_EVENT_TIMER)
+    City:AddListenOnType(self,City.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH)
 end
 
 function GameUIAcademy:OnProductionTechsDataChanged(changed_map)
@@ -102,6 +103,10 @@ function GameUIAcademy:OnProductionTechnologyEventDataChanged(changed_map)
 	self:CheckUIChanged()
 end
 
+function GameUIAcademy:OnProductionTechnologyEventDataRefresh()
+	self:CheckUIChanged()
+end
+
 function GameUIAcademy:OnProductionTechnologyEventTimer(event)
 	if self.time_label and self.time_label:isVisible() then
 		self.process_timer:setPercentage(event:GetPercent())
@@ -114,6 +119,7 @@ function GameUIAcademy:onMoveOutStage()
 	City:RemoveListenerOnType(self,City.LISTEN_TYPE.PRODUCTION_DATA_CHANGED)
 	City:RemoveListenerOnType(self,City.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
 	City:RemoveListenerOnType(self,City.LISTEN_TYPE.PRODUCTION_EVENT_TIMER)
+	City:RemoveListenerOnType(self,City.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH)
 end
 
 function GameUIAcademy:CreateBetweenBgAndTitle()

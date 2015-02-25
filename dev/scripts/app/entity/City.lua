@@ -37,7 +37,8 @@ City.LISTEN_TYPE = Enum("LOCK_TILE",
     "HELPED_TO_TROOPS",
     "PRODUCTION_DATA_CHANGED",
     "PRODUCTION_EVENT_CHANGED",
-    "PRODUCTION_EVENT_TIMER")
+    "PRODUCTION_EVENT_TIMER",
+    "PRODUCTION_EVENT_REFRESH")
 City.RESOURCE_TYPE_TO_BUILDING_TYPE = {
     [ResourceManager.RESOURCE_TYPE.WOOD] = "woodcutter",
     [ResourceManager.RESOURCE_TYPE.FOOD] = "farmer",
@@ -1583,6 +1584,11 @@ end
 
 function City:OnProductionTechEventsDataChaned(productionTechEvents)
     if not productionTechEvents then return end
+    --清空之前的数据
+    self:IteratorProductionTechEvents(function(productionTechnologyEvent)
+        productionTechnologyEvent:Reset()
+    end)
+    self.productionTechEvents = {}
     for _,v in ipairs(productionTechEvents) do
         if not self:FindProductionTechEventById(v.id) then
             local productionTechnologyEvent = ProductionTechnologyEvent.new()
@@ -1592,6 +1598,9 @@ function City:OnProductionTechEventsDataChaned(productionTechEvents)
             productionTechnologyEvent:AddObserver(self)
         end
     end
+    self:NotifyListeneOnType(City.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH, function(listener)
+        listener:OnProductionTechnologyEventDataRefresh()
+    end)
 end
 
 function City:IteratorProductionTechEvents(func)

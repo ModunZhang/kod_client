@@ -21,6 +21,7 @@ function GameUIAllianceShrineDetail:ctor(shrineStage,allianceShrine,isActivate)
 		self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnPerceotionChanged)
 		self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
 		self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
+		self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsRefresh)
 	else
 		HEIGHT = 600 -- 修改背景高度
 	end
@@ -39,8 +40,13 @@ function GameUIAllianceShrineDetail:onMoveOutStage()
 		self.allianceShrine_:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnPerceotionChanged)
 		self.allianceShrine_:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
 		self.allianceShrine_:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
+		self.allianceShrine_:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsRefresh)
 	end
 	GameUIAllianceShrineDetail.super.onMoveOutStage(self)
+end
+
+function GameUIAllianceShrineDetail:OnShrineEventsRefresh()
+	self:OnShrineEventsChanged()
 end
 
 function GameUIAllianceShrineDetail:OnShrineEventsChanged( change_map )

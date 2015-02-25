@@ -336,7 +336,6 @@ end
 
 
 function GameUtils:pack_event_table(t)
-    dump(t,"本地通知数据变动---->")
     local ret = {}
     local added,edited,removed = unpack(t)
     if #added > 0 then ret.added = checktable(added) end
