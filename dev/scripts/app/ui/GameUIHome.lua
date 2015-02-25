@@ -18,11 +18,12 @@ local app = app
 local timer = app.timer
 
 function GameUIHome:OnResourceChanged(resource_manager)
-    local wood_number = resource_manager:GetWoodResource():GetResourceValueByCurrentTime(timer:GetServerTime())
-    local food_number = resource_manager:GetFoodResource():GetResourceValueByCurrentTime(timer:GetServerTime())
-    local iron_number = resource_manager:GetIronResource():GetResourceValueByCurrentTime(timer:GetServerTime())
-    local stone_number = resource_manager:GetStoneResource():GetResourceValueByCurrentTime(timer:GetServerTime())
-    local citizen_number = resource_manager:GetPopulationResource():GetNoneAllocatedByTime(timer:GetServerTime())
+    local server_time = timer:GetServerTime()
+    local wood_number = resource_manager:GetWoodResource():GetResourceValueByCurrentTime(server_time)
+    local food_number = resource_manager:GetFoodResource():GetResourceValueByCurrentTime(server_time)
+    local iron_number = resource_manager:GetIronResource():GetResourceValueByCurrentTime(server_time)
+    local stone_number = resource_manager:GetStoneResource():GetResourceValueByCurrentTime(server_time)
+    local citizen_number = resource_manager:GetPopulationResource():GetNoneAllocatedByTime(server_time)
     local coin_number = resource_manager:GetCoinResource():GetValue()
     local gem_number = self.city:GetUser():GetGemResource():GetValue()
     self.wood_label:setString(GameUtils:formatNumber(wood_number))
