@@ -785,8 +785,8 @@
 					"-lpomelo",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "70193a56-4f5e-4440-b87f-7516865c77f0";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "70193a56-4f5e-4440-b87f-7516865c77f0";
+				PROVISIONING_PROFILE = "063d9307-faf0-4cce-8f96-4d1791d4d0ac";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "063d9307-faf0-4cce-8f96-4d1791d4d0ac";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../sources\"/**";
 				VALID_ARCHS = armv7;
@@ -862,8 +862,8 @@
 					"-lpomelo",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "70193a56-4f5e-4440-b87f-7516865c77f0";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "bd94f179-8fd3-4e30-ba12-7762576b1847";
+				PROVISIONING_PROFILE = "6d6e257c-35a4-4a64-93a2-5ada89f0e6f4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6d6e257c-35a4-4a64-93a2-5ada89f0e6f4";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../sources\"/**";
 				VALIDATE_PRODUCT = YES;

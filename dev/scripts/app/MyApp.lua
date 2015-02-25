@@ -249,7 +249,7 @@ function MyApp:getSupportMailFormat(category)
     local DeviceType = "Device Type:" ..ext.getDeviceModel()
     local OSVersion  = "OS Version:" .. ext.getOSVersion()
 
-    local format_str = "---------------%s---------------\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s"
+    local format_str = "\n\n\n\n\n---------------%s---------------\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s"
     local result_str = string.format(format_str,_("不要删除"),UTCTime,GameName,Version,Username,Server,OpenUDID,Category,Language,DeviceType,OSVersion)
     return "[KoD]" .. category ,result_str
 end
