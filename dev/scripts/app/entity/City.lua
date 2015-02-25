@@ -1036,15 +1036,16 @@ function City:OnUserDataChanged(userData, current_time)
     end
     -- 最后才更新资源
     local resources = userData.resources
-    local resource_refresh_time
+    local resource_refresh_time -- maybe nil
     if resources and resources.refreshTime then
-        resource_refresh_time = resources.refreshTime / 1000
+        local refreshTime = resources.refreshTime / 1000
+        resource_refresh_time = refreshTime > current_time and current_time or refreshTime
         need_update_resouce_buildings = true
     end
     self.resource_manager:UpdateFromUserDataByTime(resources, resource_refresh_time)
+
     if need_update_resouce_buildings then
-        resource_refresh_time = resource_refresh_time or current_time
-        self.resource_manager:UpdateByCity(self, resource_refresh_time)
+        self.resource_manager:UpdateByCity(self, resource_refresh_time or current_time)
     end
     return self
 end
