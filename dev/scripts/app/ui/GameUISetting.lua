@@ -124,7 +124,7 @@ function GameUISetting:OnButtonClicked(button)
 			ext.userVoice()
 		end
 	elseif tag == 12 then
-		GameGlobalUI:showTips("提示","功能还未实现")
+		UIKit:newGameUI("GameUISettingFaq"):addToCurrentScene(self)
 	end
 end
 
