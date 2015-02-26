@@ -19,6 +19,7 @@ AllianceShrine.LISTEN_TYPE = Enum(
 	"OnNewStageOpened",
 	"OnFightEventTimerChanged",
 	"OnShrineEventsChanged",
+	"OnShrineEventsRefresh",
 	"OnShrineReportsChanged"
 )
 
@@ -184,6 +185,11 @@ end
 
 function AllianceShrine:RefreshEvents(alliance_data)
 	if alliance_data.shrineEvents then
+		--清空之前的数据
+		table.foreach(self.shrineEvents,function(_,shrineEvent)
+			shrineEvent:Reset()
+		end)
+		self.shrineEvents = {}
 		for _,v in ipairs(alliance_data.shrineEvents) do
 			local fightEvent = ShrineFightEvent.new()
 			fightEvent:Update(v)
@@ -197,6 +203,7 @@ function AllianceShrine:RefreshEvents(alliance_data)
 			self.shrineEvents[fightEvent:Id()] = fightEvent
 			fightEvent:AddObserver(self)
 		end
+		self:OnShrineEventsRefreshed()
 	end
 	self:RefreshShrineEvents(alliance_data.__shrineEvents)
 
@@ -209,6 +216,15 @@ function AllianceShrine:RefreshEvents(alliance_data)
 		end
 	end
 	self:RefreshShrineReports(alliance_data.__shrineReports)
+end
+
+function AllianceShrine:OnShrineEventsRefreshed()
+	self:NotifyListeneOnType(self.LISTEN_TYPE.OnShrineEventsRefresh,function(listener)
+		listener.OnShrineEventsRefresh(listener)
+	end)
+	if self:GetAlliance():GetAllianceBelvedere()['OnShrineEventsRefresh'] then
+		self:GetAlliance():GetAllianceBelvedere():OnShrineEventsRefresh()
+	end
 end
 
 

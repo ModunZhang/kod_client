@@ -17,6 +17,7 @@ function GameUIAllianceShrine:ctor(city,default_tab,building)
 	self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
 	self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
 	self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnNewStageOpened)
+	self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsRefresh)
 	assert(self.allianceShrine)
 	self.event_bind_to_label = {}
 end
@@ -41,6 +42,13 @@ function GameUIAllianceShrine:OnShrineEventsChanged(change_map)
 		self:RefreshFightListView()
 	end
 end
+
+function GameUIAllianceShrine:OnShrineEventsRefresh()
+	if self:GetSelectedButtonTag() == "fight_event" then
+		self:RefreshFightListView()
+	end
+end
+
 function  GameUIAllianceShrine:OnNewStageOpened( change_map )
 	if self:GetSelectedButtonTag() == "stage" then
 		self:RefreshStageListView()
@@ -53,6 +61,7 @@ function GameUIAllianceShrine:onMoveOutStage()
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnNewStageOpened)
+	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsRefresh)
 	GameUIAllianceShrine.super.onMoveOutStage(self)
 end
 

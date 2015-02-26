@@ -249,6 +249,10 @@ function AllianceBelvedere:OnShrineEventsChanged(changed_map)
 	end
 end
 
+function AllianceBelvedere:OnShrineEventsRefresh()
+	self:OnShrineEventsChanged()
+end
+
 function AllianceBelvedere:OnFightEventTimerChanged(fightEvent)
 	if self:GetAlliance():NeedUpdateEnemyAlliance() then
 		self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnFightEventTimerChanged,{fightEvent}) 
