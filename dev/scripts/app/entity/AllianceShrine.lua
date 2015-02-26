@@ -151,7 +151,6 @@ end
 
 function AllianceShrine:OnTimer(current_time)
 	if self.perception then
-		self.perception:OnTimer(current_time)
 		self:OnPerceotionChanged()
 	end
 	for _,shrineEvent in pairs(self.shrineEvents) do

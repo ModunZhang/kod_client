@@ -312,7 +312,6 @@ end
 
 function DragonManager:UpdateHPResourceByTime(current_time)
     for dragonType, v in pairs(self.dragons_hp) do
-        v:OnTimer(current_time)
         local dragon = self:GetDragon(dragonType)
         if dragon then
             dragon:SetHp(self:GetCurrentHPValueByDragonType(dragonType))
