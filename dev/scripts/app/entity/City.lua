@@ -1038,12 +1038,10 @@ function City:OnUserDataChanged(userData, current_time)
     local resources = userData.resources
     local resource_refresh_time -- maybe nil
     if resources and resources.refreshTime then
-        local refreshTime = resources.refreshTime / 1000
-        resource_refresh_time = refreshTime > current_time and current_time or refreshTime
+        resource_refresh_time = resources.refreshTime / 1000
         need_update_resouce_buildings = true
     end
     self.resource_manager:UpdateFromUserDataByTime(resources, resource_refresh_time)
-
     if need_update_resouce_buildings then
         self.resource_manager:UpdateByCity(self, resource_refresh_time or current_time)
     end

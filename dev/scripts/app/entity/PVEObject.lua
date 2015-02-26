@@ -1,5 +1,3 @@
-local Localize_item = import("..utils.Localize_item")
-local Localize = import("..utils.Localize")
 local NotifyItem = import(".NotifyItem")
 local PVEDefine = import(".PVEDefine")
 local PVEObject = class("PVEObject")

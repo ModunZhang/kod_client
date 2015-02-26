@@ -1,13 +1,18 @@
 local Localize_item = import("..utils.Localize_item")
 local Localize = import("..utils.Localize")
 local function unique_key(item)
-    return string.format("%s_%s_%d", item.type, item.name, item.count)
+    return string.format("%s_%s", item.type, item.name)
 end
 local m = {
     __add = function(a, b)
         local r = {}
         for _, v in ipairs(a) do
-            r[unique_key(v)] = v
+            local item = r[unique_key(v)] 
+            if item then
+                item.count = item.count + v.count
+            else
+                r[unique_key(v)] = v
+            end
         end
         for _, v in ipairs(b) do
             local av = r[unique_key(v)]
@@ -20,6 +25,31 @@ local m = {
         local r1 = {}
         for _, v in pairs(r) do
             r1[#r1 + 1] = v
+        end
+        setmetatable(r1, getmetatable(a))
+        return r1
+    end,
+    __sub = function(a, b)
+        local r = {}
+        for _, v in ipairs(a) do
+            local item = r[unique_key(v)] 
+            if item then
+                item.count = item.count + v.count
+            else
+                r[unique_key(v)] = v
+            end
+        end
+        for _, v in ipairs(b) do
+            local av = r[unique_key(v)]
+            if av then
+                av.count = av.count - v.count
+            end
+        end
+        local r1 = {}
+        for _, v in pairs(r) do
+            if v.count > 0 then
+                r1[#r1 + 1] = v
+            end
         end
         setmetatable(r1, getmetatable(a))
         return r1
@@ -40,15 +70,8 @@ local m = {
     end,
 }
 NotifyItem = {}
-function NotifyItem.new(type_, name_, count_)
-    assert(type_ and name_ and count_)
-    return setmetatable({
-        { 
-            type = type_,
-            name = name_,
-            count = count_,
-        }
-    }, m)
+function NotifyItem.new(...)
+    return setmetatable({...}, m)
 end
 return setmetatable(NotifyItem, m)
 
