@@ -1,3 +1,4 @@
+--TODO:这里需要把此类继承GameUIBase 方便统一管理(后台统一关闭界面,半透明背景效果,提示框管理 etc)
 local UIAutoClose = class("UIAutoClose", function()
     local node = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
     node:setNodeEventEnabled(true)

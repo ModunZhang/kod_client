@@ -13,6 +13,7 @@ local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton
 local AllianceShrine = import("..entity.AllianceShrine")
 
 function GameUIAllianceShrineDetail:ctor(shrineStage,allianceShrine,isActivate)
+	HEIGHT = 738
 	GameUIAllianceShrineDetail.super.ctor(self)
 	self.isActivate_ = isActivate or false
 	self.shrineStage_ = shrineStage

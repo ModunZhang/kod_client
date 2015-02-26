@@ -159,6 +159,7 @@ end
 
 function MyApp:onEnterBackground()
     LuaUtils:outputTable("onEnterBackground", {})
+    UIKit:closeAllUI()
     self:flushIf()
 end
 
@@ -222,7 +223,7 @@ function MyApp:EnterMyAllianceScene()
     if my_status == "prepare" or  my_status == "fight" then
         alliance_name = "AllianceBattleScene"
     end
-    app:enterScene(alliance_name, {City}, "custom", -1, transition_)
+    app:enterScene(alliance_name, nil, "custom", -1, transition_)
 end
 function MyApp:EnterPVEScene(level)
     User:GotoPVEMapByLevel(level)

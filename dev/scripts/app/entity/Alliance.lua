@@ -907,6 +907,9 @@ end
 
 function Alliance:OnAttackMarchEventsDataChanged(attackMarchEvents)
     if not attackMarchEvents then return end
+    self:IteratorAttackMarchEvents(function(attackMarchEvent)
+        attackMarchEvent:Reset()
+    end)
     self.attackMarchEvents = {}
     for _,v in ipairs(attackMarchEvents) do
         local attackMarchEvent = MarchAttackEvent.new()
@@ -956,6 +959,9 @@ end
 
 function Alliance:OnAttackMarchReturnEventsDataChanged(attackMarchReturnEvents)
     if not attackMarchReturnEvents then return end
+    self:IteratorAttackMarchReturnEvents(function(attackMarchReturnEvent)
+        attackMarchReturnEvent:Reset()
+    end)
     self.attackMarchReturnEvents = {}
     for _,v in ipairs(attackMarchReturnEvents) do
         local attackMarchReturnEvent = MarchAttackReturnEvent.new()
@@ -1110,6 +1116,9 @@ end
 
 function Alliance:OnStrikeMarchEventsDataChanged(strikeMarchEvents)
     if not strikeMarchEvents then return end
+    self:IteratorStrikeMarchEvents(function(strikeMarchEvent)
+        strikeMarchEvent:Reset()
+    end)
     self.strikeMarchEvents = {}
     for _,v in ipairs(strikeMarchEvents) do
         local strikeMarchEvent = MarchAttackEvent.new()
@@ -1158,6 +1167,9 @@ end
 
 function Alliance:OnStrikeMarchReturnEventsDataChanged(strikeMarchReturnEvents)
     if not strikeMarchReturnEvents then return end
+    self:IteratorStrikeMarchReturnEvents(function(strikeMarchReturnEvent)
+        strikeMarchReturnEvent:Reset()
+    end)
     self.strikeMarchReturnEvents = {}
     for _,v in ipairs(strikeMarchReturnEvents) do
         local strikeMarchReturnEvent = MarchAttackReturnEvent.new()
@@ -1284,6 +1296,11 @@ end
 --村落采集事件
 function Alliance:OnVillageEventsDataChanged(villageEvents)
     if not villageEvents then return end
+    local removed = {}
+    self:IteratorVillageEvents(function(villageEvent)   
+        table.insert(removed,villageEvent)
+        villageEvent:Reset()
+    end)
     self.villageEvents = {}
     for _,v in ipairs(villageEvents) do
         local villageEvent = VillageEvent.new()
@@ -1291,6 +1308,7 @@ function Alliance:OnVillageEventsDataChanged(villageEvents)
         self.villageEvents[villageEvent:Id()] = villageEvent
         villageEvent:AddObserver(self)
     end
+    self:CallEventsChangedListeners(Alliance.LISTEN_TYPE.OnVillageEventsDataChanged,{removed = removed})
 end
 
 function Alliance:OnVillageEventsDataComming(__villageEvents)
