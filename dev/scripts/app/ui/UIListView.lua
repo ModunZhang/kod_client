@@ -1062,6 +1062,17 @@ end
 
 -- 修改quick:新加接口
 ------------------------------------------------------------------------------------------------------------------------------------------ 
+function UIListView:isSideShow()
+    local bound = self.scrollNode:getCascadeBoundingBox()
+    if self.direction == UIScrollView.DIRECTION_VERTICAL then
+        return bound.y > self.viewRect_.y
+            or bound.y + bound.height < self.viewRect_.y + self.viewRect_.height
+    else
+        return bound.x > self.viewRect_.x
+            or bound.x + bound.width < self.viewRect_.x + self.viewRect_.width
+    end
+    return false
+end
 function UIListView:getItems()
 	return self.items_
 end
