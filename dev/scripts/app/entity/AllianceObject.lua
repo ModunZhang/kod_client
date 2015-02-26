@@ -8,7 +8,6 @@ function AllianceObject:ctor(object_type, id, x, y, alliance_map)
     local config = allianceBuildingType[object_type] or {width = 1, height = 1}
     self.w = config.width
     self.h = config.height
-    self.level = 0
     self.alliance_map = alliance_map
 end
 function AllianceObject:GetAllianceBuildingInfo()
@@ -25,12 +24,6 @@ function AllianceObject:GetCategory()
 end
 function AllianceObject:Id()
     return self.id
-end
-function AllianceObject:SetLevel(level)
-    self.level = level
-end
-function AllianceObject:Level()
-    return self.level
 end
 function AllianceObject:GetSize()
     return self.w, self.h
