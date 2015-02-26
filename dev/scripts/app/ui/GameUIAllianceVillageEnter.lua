@@ -11,6 +11,7 @@ function GameUIAllianceVillageEnter:ctor(building,isMyAlliance,my_alliance,enemy
 	GameUIAllianceVillageEnter.super.ctor(self,building,isMyAlliance,my_alliance)
 	self.enemy_alliance = enemy_alliance
 	self.village_info = building:GetAllianceVillageInfo()
+	self.map_id = building:Id()
 end
 
 function GameUIAllianceVillageEnter:GetVillageInfo()
@@ -30,7 +31,7 @@ function GameUIAllianceVillageEnter:GetEnemyAlliance()
 end
 
 function GameUIAllianceVillageEnter:GetBuildingInfoOriginalY()
-	return self.process_bar_bg:getPositionY()-self.process_bar_bg:getContentSize().height-40
+	return self.process_bar_bg:getPositionY() - self.process_bar_bg:getContentSize().height-40
 end
 function GameUIAllianceVillageEnter:GetUIHeight()
 	return 311
@@ -63,6 +64,18 @@ function GameUIAllianceVillageEnter:GetBuildingDesc()
 end
 
 function GameUIAllianceVillageEnter:GetBuildingInfo()
+	self:GetMyAlliance():RemoveListenerOnType(self,self:GetMyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
+	self:GetMyAlliance():AddListenOnType(self,self:GetMyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
+	local alliance_map = self:GetMyAlliance():GetAllianceMap()
+	alliance_map:RemoveListenerOnType(self,alliance_map.LISTEN_TYPE.BUILDING)
+	alliance_map:AddListenOnType(self,alliance_map.LISTEN_TYPE.BUILDING)
+	if self:HasEnemyAlliance() then
+		local alliance_map = self:GetEnemyAlliance():GetAllianceMap()
+		alliance_map:RemoveListenerOnType(self,alliance_map.LISTEN_TYPE.BUILDING)
+		alliance_map:AddListenOnType(self,alliance_map.LISTEN_TYPE.BUILDING)
+		self:GetEnemyAlliance():RemoveListenerOnType(self,self:GetEnemyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
+		self:GetEnemyAlliance():AddListenOnType(self,self:GetEnemyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
+	end
 	local location = {
         {_("坐标"),0x797154},
         {self:GetLocation(),0x403c2f},
@@ -96,7 +109,6 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
 				self:GetProgressTimer():setPercentage(percent*100)
 				self:GetProcessLabel():setString(str)
 				self:GetEnemyAlliance():AddListenOnType(self,self:GetEnemyAlliance().LISTEN_TYPE.OnVillageEventTimer)
-				self:GetEnemyAlliance():AddListenOnType(self,self:GetEnemyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
 		    else --没人占领
 		    	local no_one_label = {
 		            {_("占领者"),0x797154},
@@ -142,7 +154,6 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
 		self:GetProgressTimer():setPercentage(percent*100)
 		self:GetProcessLabel():setString(str)
 		self:GetMyAlliance():AddListenOnType(self,self:GetMyAlliance().LISTEN_TYPE.OnVillageEventTimer)
-		self:GetMyAlliance():AddListenOnType(self,self:GetMyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
  	end
   	return labels
 end
@@ -164,11 +175,44 @@ function GameUIAllianceVillageEnter:OnVillageEventTimer(village_event,left_resou
 	end
 end
 
+function GameUIAllianceVillageEnter:OnBuildingChange(alliance_map,add, remove, modify)
+	dump(remove,"remove---->")
+	dump(modify,"modify---->")
+	dump(self:GetVillageInfo(),"self:GetVillageInfo()--->")
+	local hasHandler = false
+	if remove then
+		for _,v in ipairs(remove) do
+			if v:Id()== self.map_id then
+				self:leftButtonClicked()
+				hasHandler = true
+			end
+		end
+	end
+	if modify and not hasHandler then 
+		for _,v in ipairs(modify) do
+			if v:Id() == self.map_id then
+				self:RefreshUI()
+				hasHandler = true
+			end
+		end
+	end
+end
+
 function GameUIAllianceVillageEnter:OnVillageEventsDataChanged(changed_map)
+	local hasHandler = false
 	if changed_map.removed then
 		for _,v in ipairs(changed_map.removed) do
 			if v:VillageData().id == self:GetVillageInfo().id then
-				self:leftButtonClicked()
+				self:RefreshUI()
+				hasHandler = true
+			end
+		end
+	end
+	if changed_map.added and not hasHandler then 
+		for _,v in ipairs(changed_map.added) do
+			if v:VillageData().id == self:GetVillageInfo().id then
+				self:RefreshUI()
+				hasHandler = true
 			end
 		end
 	end
@@ -275,7 +319,11 @@ end
 function GameUIAllianceVillageEnter:onMoveOutStage()
 	self:GetMyAlliance():RemoveListenerOnType(self,self:GetMyAlliance().LISTEN_TYPE.OnVillageEventTimer)
 	self:GetMyAlliance():RemoveListenerOnType(self,self:GetMyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
+	local alliance_map = self:GetMyAlliance():GetAllianceMap()
+	alliance_map:RemoveListenerOnType(self,alliance_map.LISTEN_TYPE.BUILDING)
 	if self:HasEnemyAlliance() then
+		local alliance_map = self:GetEnemyAlliance():GetAllianceMap()
+		alliance_map:RemoveListenerOnType(self,alliance_map.LISTEN_TYPE.BUILDING)
 		self:GetEnemyAlliance():RemoveListenerOnType(self,self:GetEnemyAlliance().LISTEN_TYPE.OnVillageEventTimer)
 		self:GetEnemyAlliance():RemoveListenerOnType(self,self:GetEnemyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
 	end

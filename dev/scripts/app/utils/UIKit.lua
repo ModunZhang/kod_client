@@ -19,6 +19,7 @@ UIKit =
 local CURRENT_MODULE_NAME = ...
 
 UIKit.BTN_COLOR = Enum("YELLOW","BLUE","GREEN","RED","PURPLE")
+UIKit.UITYPE = Enum("BACKGROUND","WIDGET","MESSAGEDIALOG")
 UIKit.open_ui_callbacks = {}
 
 function UIKit:PromiseOfOpen(ui_name)
@@ -119,6 +120,14 @@ end
 
 function UIKit:getRegistry()
     return self.Registry
+end
+
+function UIKit:closeAllUI()
+    for name,v in pairs(self:getRegistry().objects_) do
+        if v.__isBase and v.__type == self.UITYPE.WIDGET then
+            v:leftButtonClicked()
+        end
+    end
 end
 --[[
     参数和quick原函数一样

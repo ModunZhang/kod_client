@@ -40,19 +40,20 @@ function GameUIAllianceEnterBase:GetUITitle()
 	return _("空地")
 end
 
-function GameUIAllianceEnterBase:GetBody()
-	return self.body
-end
 
 function GameUIAllianceEnterBase:onEnter()
 	GameUIAllianceEnterBase.super.onEnter(self)
-	self.body = self:GetBody()
     self:SetTitle(self:GetUITitle())
 	self:InitBuildingImage()
 	self:InitBuildingDese()
 	self:InitBuildingInfo()
 	self:InitEnterButton()
 	self:FixedUI()
+end
+
+function GameUIAllianceEnterBase:RefreshUI()
+    self:InitBuildingInfo()
+    self:InitEnterButton()
 end
 
 function GameUIAllianceEnterBase:GetBuildingInfo()
@@ -179,14 +180,21 @@ function GameUIAllianceEnterBase:GetBuildingInfoOriginalY()
 end
 
 function GameUIAllianceEnterBase:InitBuildingInfo()
+    if self.BuildingInfoNodes then
+        for __,v in ipairs(self.BuildingInfoNodes) do
+            v:removeFromParent(true)
+        end
+    end
+    self.BuildingInfoNodes = {}
     local original_y = self:GetBuildingInfoOriginalY()
     local gap_y = 40
     local info_count = 0
     local info = self:GetBuildingInfo()
     for k,v in pairs(info) do
-        self:CreateItemWithLine(v)
+        local node = self:CreateItemWithLine(v)
             :align(display.CENTER, 380, original_y - gap_y*info_count)
             :addTo(self.body)
+        table.insert(self.BuildingInfoNodes,node)
         info_count = info_count + 1
     end
 end
@@ -225,12 +233,19 @@ function GameUIAllianceEnterBase:GetInfoLabelByTag(tag)
 end
 
 function GameUIAllianceEnterBase:InitEnterButton()
+    if self.EnterButtonNodes then
+        for __,v in ipairs(self.EnterButtonNodes) do
+            v:removeFromParent(true)
+        end
+    end
+    self.EnterButtonNodes = {}
 	local buttons = self:GetEnterButtons()
     local width = 608
     local btn_width = 124
     local count = 0
     for _,v in ipairs(buttons) do
         local btn = v:align(display.RIGHT_TOP,width-count*btn_width, 10):addTo(self:GetBody())
+        table.insert(self.EnterButtonNodes,btn)
         count = count + 1
     end
 end

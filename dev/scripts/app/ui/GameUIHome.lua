@@ -37,7 +37,7 @@ end
 
 
 function GameUIHome:ctor(city)
-    GameUIHome.super.ctor(self)
+    GameUIHome.super.ctor(self,{type = UIKit.UITYPE.BACKGROUND})
     self.city = city
     self.chatManager = app:GetChatManager()
 end

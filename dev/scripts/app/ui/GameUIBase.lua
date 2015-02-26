@@ -7,13 +7,16 @@ local window = import("..utils.window")
 local UIListView = import(".UIListView")
 local WidgetBackGroundTabButtons = import('..widget.WidgetBackGroundTabButtons')
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
--- local TabButtons = import('.TabButtons')
+local Enum = import("..utils.Enum")
 local GameUIBase = class('GameUIBase', function()
     return display.newLayer()
 end)
 
-function GameUIBase:ctor()
-    -- app:lockInput(true)
+
+function GameUIBase:ctor(params)
+    self.__isBase = true
+    params = checktable(params)
+    self.__type  = params.type or UIKit.UITYPE.WIDGET
     self:setNodeEventEnabled(true)
     return true
 end

@@ -120,6 +120,9 @@ function AllianceScene:EnterNotAllianceBuilding(entity)
     end
     UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance()):addToCurrentScene(true)
 end
+function AllianceScene:ReEnterScene()
+    app:enterScene("AllianceScene")
+end
 return AllianceScene
 
 
