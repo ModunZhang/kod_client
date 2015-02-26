@@ -577,9 +577,9 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
             self:ShowInstantButton()
         elseif status == "free" then
             self:HideNormalButton()
-            self:HideProgress()
             self:HideInstantButton()
 
+            self:ShowProgress()
             self:ShowFreeSpeedUp()
         elseif status == "normal" then
             self:HideFreeSpeedUp()
@@ -624,17 +624,17 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
     end
     function item:HideProgress()
         progress:setVisible(false)
-        speed_up:setVisible(false)
     end
     function item:ShowProgress()
         progress:setVisible(true)
-        speed_up:setVisible(true)
     end
     function item:ShowFreeSpeedUp()
         free_speedUp:show()
+        speed_up:setVisible(false)
     end
     function item:HideFreeSpeedUp()
         free_speedUp:hide()
+        speed_up:setVisible(true)
     end
     return item
 end
