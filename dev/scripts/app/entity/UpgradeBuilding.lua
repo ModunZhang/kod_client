@@ -180,7 +180,6 @@ function UpgradeBuilding:GetHouseInfoByEventAndLocation(user_data, event, locati
             end
         end
     end
-    return self:GetLevel(), finishTime
 end
 function UpgradeBuilding:GetHouseEventByLocations(user_data, location_id, sub_location_id)
     for k, v in pairs(user_data.__houseEvents or {}) do
@@ -203,7 +202,6 @@ function UpgradeBuilding:GetBuildingInfoByEventAndLocation(user_data, event, loc
     if buildings and buildings[building_key] then
         return buildings[building_key].level, finishTime
     end
-    return self:GetLevel(), finishTime
 end
 function UpgradeBuilding:GetBuildingEventFromUserDataByLocation(user_data, location)
     for _,v in ipairs(user_data.__buildingEvents or {}) do
