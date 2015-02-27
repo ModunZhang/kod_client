@@ -31,7 +31,15 @@
 #define KODLOG(format, ...)      CCLOG(format, ##__VA_ARGS__);Kodlog__(format, ##__VA_ARGS__);
 #endif
 #include "ext_sysmail.h"
-using namespace std;
+
+#include "cocos2d.h"
+#include "tolua_fix.h"
+#include "LuaBasicConversions.h"
+#include "base/ccUtils.h"
+extern "C" {
+    #include "tolua++.h"
+}
+#include <iostream>
 
 
 static long getCurrentTime()
@@ -763,7 +771,170 @@ TOLUA_API int tolua_cc_lua_extension(lua_State* tolua_S)
     tolua_beginmodule(tolua_S,"ext");
     ResgisterGlobalExtFunctions(tolua_S);
     RegisterExtModules(tolua_S);
+    lua_register_cocos2dx_TransitionCustom(tolua_S);
     tolua_endmodule(tolua_S);
     tolua_endmodule(tolua_S);
     return 1;
 }
+
+
+
+
+
+
+
+///////////////////////////////////////
+#include "cocos2d.h"
+#include "tolua_fix.h"
+#include "LuaBasicConversions.h"
+NS_CC_BEGIN
+
+
+TransitionCustom::TransitionCustom()
+{
+}
+TransitionCustom::~TransitionCustom()
+{
+}
+
+TransitionCustom* TransitionCustom::create(float duration,Scene* scene)
+{
+    TransitionCustom* newScene = new TransitionCustom();
+    if(newScene && newScene->initWithDuration(duration, scene))
+    {
+        newScene->autorelease();
+        return newScene;
+    }
+    CC_SAFE_DELETE(newScene);
+    return nullptr;
+}
+void TransitionCustom::hideOutEnterShow()
+{
+    _inScene->onEnter();
+    _inScene->setVisible(true);
+    _outScene->setVisible(false);
+}
+void TransitionCustom::onEnter()
+{
+    Scene::onEnter();
+    
+    // disable events while transitions
+    _eventDispatcher->setEnabled(false);
+    
+    // outScene should not receive the onEnter callback
+    // only the onExitTransitionDidStart
+    _outScene->onExitTransitionDidStart();
+}
+
+void TransitionCustom::onExit()
+{
+    TransitionScene::onExit();
+}
+
+
+
+
+int lua_cocos2dx_TransitionCustom_create(lua_State* tolua_S)
+{
+    int argc = 0;
+    bool ok  = true;
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertable(tolua_S,1,"cc.TransitionCustom",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 2)
+    {
+        double arg0;
+        cocos2d::Scene* arg1;
+        ok &= luaval_to_number(tolua_S, 2,&arg0);
+        ok &= luaval_to_object<cocos2d::Scene>(tolua_S, 3, "cc.Scene",&arg1);
+        cocos2d::TransitionCustom* ret = cocos2d::TransitionCustom::create(arg0, arg1);
+        object_to_luaval<cocos2d::TransitionCustom>(tolua_S, "cc.TransitionCustom",(cocos2d::TransitionCustom*)ret);
+        return 1;
+    }
+    CCLOG("%s has wrong number of arguments: %d, was expecting %d\n ", "create",argc, 2);
+    return 0;
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_cocos2dx_TransitionCustom_create'.",&tolua_err);
+#endif
+    return 0;
+}
+
+
+int lua_cocos2dx_TransitionCustom_hideOutEnterShow(lua_State* tolua_S)
+{
+    int argc = 0;
+    cocos2d::TransitionCustom* cobj = nullptr;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"cc.TransitionCustom",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (cocos2d::TransitionCustom*)tolua_tousertype(tolua_S,1,0);
+
+#if COCOS2D_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_cocos2dx_TransitionCustom_hideOutEnterShow'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 0) 
+    {
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_TransitionCustom_hideOutEnterShow'", nullptr);
+            return 0;
+        }
+        cobj->hideOutEnterShow();
+        return 0;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "cc.TransitionCustom:hideOutShowIn",argc, 0);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_cocos2dx_TransitionCustom_hideOutEnterShow'.",&tolua_err);
+#endif
+
+    return 0;
+}
+
+static int lua_cocos2dx_TransitionCustom_finalize(lua_State* tolua_S)
+{
+    printf("luabindings: finalizing LUA object (TransitionCustom)");
+    return 0;
+}
+
+int lua_register_cocos2dx_TransitionCustom(lua_State* tolua_S)
+{
+    tolua_usertype(tolua_S,"cc.TransitionCustom");
+    tolua_cclass(tolua_S,"TransitionCustom","cc.TransitionCustom","cc.TransitionScene",nullptr);
+
+    tolua_beginmodule(tolua_S,"TransitionCustom");
+        tolua_function(tolua_S,"create", lua_cocos2dx_TransitionCustom_create);
+        tolua_function(tolua_S,"hideOutEnterShow",lua_cocos2dx_TransitionCustom_hideOutEnterShow);
+    tolua_endmodule(tolua_S);
+    std::string typeName = typeid(cocos2d::TransitionCustom).name();
+    g_luaType[typeName] = "cc.TransitionCustom";
+    g_typeCast["TransitionCustom"] = "cc.TransitionCustom";
+    return 1;
+}
+
+
+
+NS_CC_END

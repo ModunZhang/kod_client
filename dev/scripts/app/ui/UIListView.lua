@@ -1062,6 +1062,46 @@ end
 
 -- 修改quick:新加接口
 ------------------------------------------------------------------------------------------------------------------------------------------ 
+function UIListView:scrollBy(x, y)
+	local cascadeBound = self:getScrollNodeRect()
+	local disX, disY = 0, 0
+	local viewRect = self:getViewRectInWorldSpace()
+	if UIScrollView.DIRECTION_HORIZONTAL == self.direction then
+		if cascadeBound.width < viewRect.width then
+			disX = viewRect.x - cascadeBound.x
+		else
+			if cascadeBound.x > viewRect.x then
+				disX = viewRect.x - cascadeBound.x
+			elseif cascadeBound.x + cascadeBound.width < viewRect.x + viewRect.width then
+				disX = viewRect.x + viewRect.width - cascadeBound.x - cascadeBound.width
+			end
+		end
+		x = x * (1 - math.abs(disX) / (viewRect.width * 0.5))
+	end
+	if UIScrollView.DIRECTION_VERTICAL == self.direction then
+		if cascadeBound.height < viewRect.height then
+			disY = viewRect.y + viewRect.height - cascadeBound.y - cascadeBound.height
+		else
+			if cascadeBound.y > viewRect.y then
+				disY = viewRect.y - cascadeBound.y
+			elseif cascadeBound.y + cascadeBound.height < viewRect.y + viewRect.height then
+				disY = viewRect.y + viewRect.height - cascadeBound.y - cascadeBound.height
+			end
+		end
+		y = y * (1 - math.abs(disY) / (viewRect.height * 0.5))
+	end
+
+
+	self.position_.x, self.position_.y = self:moveXY(self.position_.x, self.position_.y, x, y)
+	-- self.position_.x = self.position_.x + x
+	-- self.position_.y = self.position_.y + y
+	self.scrollNode:setPosition(self.position_)
+
+	if self.actualRect_ then
+		self.actualRect_.x = self.actualRect_.x + x
+		self.actualRect_.y = self.actualRect_.y + y
+	end
+end
 function UIListView:isSideShow()
     local bound = self.scrollNode:getCascadeBoundingBox()
     if self.direction == UIScrollView.DIRECTION_VERTICAL then
