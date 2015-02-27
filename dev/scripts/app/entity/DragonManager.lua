@@ -13,7 +13,6 @@ DragonManager.promise_callbacks = {}
 local DragonEvent = import(".DragonEvent")
 local DragonDeathEvent = import(".DragonDeathEvent")
 
-DragonManager.DRAGON_TYPE_INDEX = Enum("redDragon","greenDragon","blueDragon")
 DragonManager.LISTEN_TYPE = Enum("OnHPChanged","OnBasicChanged","OnDragonHatched","OnDragonEventChanged","OnDragonEventTimer","OnDefencedDragonChanged",
     "OnDragonDeathEventChanged","OnDragonDeathEventTimer")
 
@@ -25,8 +24,46 @@ function DragonManager:ctor()
     self.dragonDeathEvents = {} --复活事件
 end
 
-function DragonManager:GetDragonByIndex(index)
-    local dragon_type = DragonManager.DRAGON_TYPE_INDEX[index]
+function DragonManager:GetDragonArray()
+    local arr = {"redDragon","greenDragon","blueDragon"}
+    local powerfulDragon = self:GetPowerfulDragonType()
+    if powerfulDragon ~= "" then
+        local type_index = table.indexof(arr,powerfulDragon)
+        local count = #arr
+        local dest = {}
+        for i= type_index,count do
+            table.insert(dest,arr[i])
+        end
+        for i=1,type_index - 1 do
+            table.insert(dest,arr[i])
+        end
+        return dest
+    else
+        return arr
+    end
+end
+
+function DragonManager:SortDragon()
+    self.dragon_index_arr = self:GetDragonArray()
+    for index,v in ipairs(self.dragon_index_arr) do
+        self.dragon_index_arr[v] = index
+    end
+end
+
+function DragonManager:GetDragonIndexByType(dragon_type,needSort)
+    if not self.dragon_index_arr or needSort then
+        self:SortDragon()
+    end
+    local arr = self.dragon_index_arr
+    return arr[dragon_type]
+end
+
+function DragonManager:GetDragonByIndex(index,needSort)
+    if not self.dragon_index_arr or needSort then
+        self:SortDragon()
+    end
+    local arr = self.dragon_index_arr
+    local dragon_type = arr[index]
     return self:GetDragon(dragon_type)
 end
 

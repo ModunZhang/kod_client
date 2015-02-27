@@ -14,7 +14,7 @@ function EmojiUtil:ConvertEmojiToRichText(chatmsg)
 	chatmsg = string.gsub(chatmsg,"'","\'")
 	chatmsg = string.gsub(chatmsg,'"','\\"')
 	local dest = {}
-	local s,e = string.find(chatmsg,"%[/[%P]+%]")
+	local s,e = string.find(chatmsg,"%[[%P]+%]")
 	if not s and string.len(chatmsg) > 0 then
 		table.insert(dest, chatmsg)
 	end
@@ -24,14 +24,14 @@ function EmojiUtil:ConvertEmojiToRichText(chatmsg)
 		end
 		table.insert(dest, string.sub(chatmsg,s,e))
 		chatmsg = string.sub(chatmsg,e+1)
-		s,e =  string.find(chatmsg,"%[/[%P]+%]")
+		s,e =  string.find(chatmsg,"%[[%P]+%]")
 		if not s and string.len(chatmsg) > 0 then
 			table.insert(dest, chatmsg)
 		end
 	end
 	for i,v in ipairs(dest) do
-		local result,count = string.gsub(v,"%[/([%P]+)%]", "%1")
-		if count == 0 then
+		local result,count = string.gsub(v,"%[([%P]+)%]", "%1")
+		if count == 0 or string.len(string.trim(result)) == 0 then
 			dest[i] = string.format('{\"type\":\"text\", \"value\":\"%s\"}', v)
 		else
 			dest[i] = string.format('{\"type\":\"image\", \"value\":\"%s\"}',string.format('#%s.png', string.upper(result)))

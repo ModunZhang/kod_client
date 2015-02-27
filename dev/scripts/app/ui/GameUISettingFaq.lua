@@ -27,7 +27,9 @@ end
 function GameUISettingFaq:BuildUI()
     local function onEdit(event, editbox)
         if event == 'ended' then
-
+            local keyword = string.trim(editbox:getText())
+            self.list_data = self:GetAllListData(string.len(keyword) > 0 and keyword or nil)
+            self:RefreshListView()
         end
     end
     local editbox = cc.ui.UIInput.new({
@@ -68,7 +70,13 @@ function GameUISettingFaq:GetAllListData(filter)
             content = "怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩怎么玩"
         },
     }
-    return orgin_data
+    if filter then
+        return LuaUtils:table_filteri(orgin_data,function(k,v)
+            return string.match(string.lower(v.title),string.lower(filter)) or string.match(string.lower(v.content),string.lower(filter))
+        end)
+    else
+        return orgin_data
+    end
 end
 
 function GameUISettingFaq:RefreshListView()

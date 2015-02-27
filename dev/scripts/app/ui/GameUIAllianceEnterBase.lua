@@ -57,12 +57,13 @@ function GameUIAllianceEnterBase:RefreshUI()
 end
 
 function GameUIAllianceEnterBase:GetBuildingInfo()
-  	return {
-            {
-                {_("坐标"),0x797154},
-                {self:GetLocation(),0x403c2f},
-            }
+  	return 
+    {
+        {
+            {_("坐标"),0x797154},
+            {self:GetLocation(),0x403c2f},
         }
+    }
 end
 
 function GameUIAllianceEnterBase:GetLogicPosition()
