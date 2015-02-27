@@ -19,7 +19,7 @@ local function get_first_line(label, width)
             return utf8.substr(origin_str, 1, char_index), utf8.sub(origin_str, char_index + 2), next_index == len
         end
         char_index = next_index
-        if not label:getLetter(char_index) then
+        if label:getLetter(char_index - 1) and not label:getLetter(char_index) and label:getLetter(char_index + 1) then
             break
         end
     end
