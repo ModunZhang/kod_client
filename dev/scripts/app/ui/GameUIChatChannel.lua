@@ -546,7 +546,7 @@ function GameUIChatChannel:listviewListener(event)
                     if result then
                         chat._translate_ = result
                         chat._translateMode_ = true
-                        contentLable:Text(chat._translate_) -- 聊天信息
+                        contentLable:Text(self:GetChatManager():GetEmojiUtil():ConvertEmojiToRichText(chat._translate_)) -- 聊天信息
                         contentLable:align(display.LEFT_BOTTOM, 25, 0)
                         local height = item:getContent().adjustFunc()
                         item:setItemSize(549,83 + height)
@@ -557,11 +557,11 @@ function GameUIChatChannel:listviewListener(event)
             else
                 if chat._translateMode_ then
                     chat._translateMode_ = false
-                    contentLable:Text(chat.text) -- 聊天信息
+                    contentLable:Text(self:GetChatManager():GetEmojiUtil():ConvertEmojiToRichText(chat.text)) -- 聊天信息
                     contentLable:align(display.LEFT_BOTTOM, 25, 0)
                 else
                     chat._translateMode_ = true
-                    contentLable:Text(chat._translate_) -- 聊天信息
+                    contentLable:Text(self:GetChatManager():GetEmojiUtil():ConvertEmojiToRichText(chat._translate_)) -- 聊天信息
                     contentLable:align(display.LEFT_BOTTOM, 25, 0)
                 end
                 local height = item:getContent().adjustFunc()

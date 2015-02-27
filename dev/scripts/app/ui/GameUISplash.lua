@@ -270,7 +270,7 @@ local function random_indexes_in_rect(number, rect,perRect)
 end
 
 function GameUISplash:ctor()
-	GameUISplash.super.ctor(self)
+	GameUISplash.super.ctor(self,{type = UIKit.UITYPE.BACKGROUND})
     self.random_map_util = RandomMapUtil.new()
     --加载动画信息
     local manager = ccs.ArmatureDataManager:getInstance()

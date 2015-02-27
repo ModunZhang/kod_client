@@ -121,7 +121,7 @@ end
 
 function GameUIEmojiSelect:__callFunc(key)
 	if self.selectFunc_ then
-		self.selectFunc_("[/" .. key .. "]")
+		self.selectFunc_("[" .. key .. "]")
 	end
 end
 

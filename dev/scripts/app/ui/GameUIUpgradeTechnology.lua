@@ -444,7 +444,7 @@ function GameUIUpgradeTechnology:RefreshButtonState()
 end
 
 function GameUIUpgradeTechnology:CheckUpgradeButtonState()
-    if not self:CheckMeIsOpened() or not self:CheckMeDependTechIsUnlock() then
+    if not self:CheckMeIsOpened() or not self:CheckMeDependTechIsUnlock() or self:CheckIsMeUpgrade() then
         return false
     end
     return true

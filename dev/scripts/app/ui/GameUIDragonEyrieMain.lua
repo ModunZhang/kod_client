@@ -47,11 +47,11 @@ function GameUIDragonEyrieMain:OnHPChanged()
 end
 
 function GameUIDragonEyrieMain:OnDragonHatched(dragon)
-	local dragon_index = DragonManager.DRAGON_TYPE_INDEX[dragon:Type()]
+	local dragon_index = self.dragon_manager:GetDragonIndexByType(dragon:Type())
 	local localIndex = dragon_index - 1
 	local eyrie = self.draongConteNode:GetItemByIndex(localIndex)
-	eyrie.dragon_image:setTexture(self:GetDraongIdeImageName(dragon:Type()))
-	eyrie.dragon_image:scale(0.7)
+	eyrie.dragon_image:hide()
+	eyrie.armature:show()
 	self:RefreshUI()
 end
 function GameUIDragonEyrieMain:OnBasicChanged()
@@ -406,43 +406,25 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNode()
 			OnEnterIndexEvent = handler(self, self.OnEnterIndexEvent),
 		}
 	):addTo(clipNode):pos(310,300)
+	self.dragon_manager:SortDragon()
 	for i,v in ipairs(contenNode:GetItems()) do
 		local dragon = self.dragon_manager:GetDragonByIndex(i)
-		if dragon:Ishated() then
-			local dragon_type = dragon:Type()
-			local image_name = self:GetDraongIdeImageName(dragon_type)
-			local dragon_image = display.newSprite(image_name, nil, nil, {class=cc.FilteredSpriteWithOne})
-				:align(display.CENTER, 330,355)
-				:addTo(v)
-			dragon_image:scale(0.7)
-			v.dragon_image = dragon_image
-    		dragon_image.resolution = {dragon_image:getContentSize().width,dragon_image:getContentSize().height}
-		else
-			local dragon_image = display.newSprite("dragon_egg_139x187.png", nil, nil, {class=cc.FilteredSpriteWithOne})
-				:align(display.CENTER, 290,355)
-				:addTo(v)
-			v.dragon_image = dragon_image
-    		dragon_image.resolution = {dragon_image:getContentSize().width,dragon_image:getContentSize().height}
-		end
+		local dragon_image = display.newSprite("dragon_egg_139x187.png", nil, nil, {class=cc.FilteredSpriteWithOne})
+			:align(display.CENTER, 290,355)
+			:addTo(v)
+		v.dragon_image = dragon_image
+		dragon_image.resolution = {dragon_image:getContentSize().width,dragon_image:getContentSize().height}
 		local dragon_armature = DragonSprite.new(display.getRunningScene():GetSceneLayer(),dragon:GetTerrain())
 			:addTo(v)
 			:align(display.CENTER, 290,420)
 			:hide()
 		v.armature = dragon_armature
+		if dragon:Ishated() then
+			v.armature:show()
+			v.dragon_image:hide()
+		end
 	end
 	return clipNode,contenNode
-end
-
-function GameUIDragonEyrieMain:GetDraongIdeImageName(dragon_type)
-	local image_name = ""
-	if dragon_type == "redDragon" then
-		image_name = "red_dragon_ide_475x369.png"
-	elseif dragon_type == "greenDragon" then
-		image_name = "green_dragon_ide_482x378.png"
-	elseif dragon_type == "blueDragon" then
-		image_name = "blue_dragon_ide_4480x373.png"
-	end
-	return image_name
 end
 
 function GameUIDragonEyrieMain:OnEnterIndexEvent(index)
@@ -453,7 +435,7 @@ function GameUIDragonEyrieMain:OnEnterIndexEvent(index)
 		if not self:GetCurrentDragon():Ishated() then return end
 		eyrie.dragon_image:hide()
 		eyrie.armature:show()
-		eyrie.armature:PlayAnimation("Idle")
+		-- eyrie.armature:PlayAnimation("Idle")
 	end
 end
 
@@ -461,9 +443,9 @@ function GameUIDragonEyrieMain:OnLeaveIndexEvent(index)
 	if self.draongConteNode then
 		local eyrie = self.draongConteNode:GetItemByIndex(index)
 		if not self:GetCurrentDragon():Ishated() then return end
-		eyrie.armature:GetSprite():stop()
-		eyrie.armature:hide()
-		eyrie.dragon_image:show()
+		-- eyrie.armature:GetSprite():stop()
+		-- eyrie.armature:hide()
+		-- eyrie.dragon_image:show()
 	end
 end
 
