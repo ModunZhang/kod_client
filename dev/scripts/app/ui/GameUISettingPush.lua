@@ -8,12 +8,8 @@ local window = import("..utils.window")
 local UICheckBoxButton = import(".UICheckBoxButton")
 
 local CHECKBOX_BUTTON_IMAGES = {
-    off = "CheckBoxButtonOff.png",
-    off_pressed = "CheckBoxButtonOffPressed.png",
-    off_disabled = "CheckBoxButtonOffDisabled.png",
-    on = "CheckBoxButtonOn.png",
-    on_pressed = "CheckBoxButtonOnPressed.png",
-    on_disabled = "CheckBoxButtonOnDisabled.png",
+    off = "CheckBoxButtonOff_100x56.png",
+    on = "CheckBoxButtonOn_100x56.png",
 }
 
 function GameUISettingPush:onEnter()

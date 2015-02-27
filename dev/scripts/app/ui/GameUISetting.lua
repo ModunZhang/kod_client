@@ -44,8 +44,8 @@ function GameUISetting:BuildUI()
 		},
 		{	
 			text = "音效",
-			image = "setting_sound_49x55.png",
-			image2 = "setting_sound_close_64x55.png",
+			image = "setting_sound_64x56.png",
+			image2 = "setting_sound_close_64x56.png",
 			state = app:GetAudioManager():GetEffectSoundState() and 1 or 2,
 		},
 		{text = "推送通知",image = "setting_notification_76x66.png"},
