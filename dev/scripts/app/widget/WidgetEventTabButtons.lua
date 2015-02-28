@@ -57,16 +57,7 @@ function WidgetEventTabButtons:OnUpgrading(building, current_time, city)
 end
 function WidgetEventTabButtons:OnUpgradingFinished(building, current_time, city)
     self:EventChangeOn("build")
-    self:RefreshBuildQueueByType("build")
-    if (building:GetType()== "trainingGround"
-        or building:GetType()== "hunterHall"
-        or building:GetType()== "stable"
-        or building:GetType()== "workshop")
-        and building:GetLevel() == 1
-    then
-        self:EventChangeOn("technology")
-        self:RefreshBuildQueueByType("technology")
-    end
+    self:RefreshBuildQueueByType("build", "soldier", "material", "technology")
 end
 -- 兵营事件
 function WidgetEventTabButtons:OnBeginRecruit(barracks, event)
@@ -198,12 +189,15 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
         if key == "build" then
             item:SetActiveNumber(#city:GetUpgradingBuildings(), city:BuildQueueCounts())
         elseif key == "soldier" then
-            item:SetActiveNumber(self.barracks:IsRecruting() and 1 or 0, 1)
+            item:SetActiveNumber(self.barracks:IsRecruting() and 1 or 0, self.barracks:IsUnlocked() and 1 or 0)
         elseif key == "material" then
             local count = 0
             count = count + (self.blackSmith:IsMakingEquipment() and 1 or 0)
             count = count + (self.toolShop:IsMakingAny(timer:GetServerTime()) and 1 or 0)
-            item:SetActiveNumber(count, 2)
+            local total_count = 0
+            total_count = total_count + (self.toolShop:IsUnlocked() and 1 or 0)
+            total_count = total_count + (self.blackSmith:IsUnlocked() and 1 or 0)
+            item:SetActiveNumber(count, total_count)
         elseif key == "technology" then
             local total_num = 0
             local buildings = {

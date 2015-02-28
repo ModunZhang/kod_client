@@ -70,6 +70,7 @@ function WidgetTab:EnableTag(b)
     return self
 end
 function WidgetTab:SetActiveNumber(active, total)
+    self.active:getParent():setVisible(total > 0)
     self.active:setString(string.format("%d/%d", active, total))
     return self
 end
