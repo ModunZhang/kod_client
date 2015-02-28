@@ -249,7 +249,7 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 		local lv_bg = display.newSprite("dragon_lv_bg_270x30.png")
 			:addTo(info_bg)
 			:align(display.TOP_CENTER,info_bg:getContentSize().width/2,info_bg:getContentSize().height-10)
-		lv_bg:setTouchEnabled(true)
+		info_bg:setTouchEnabled(true)
 		self.dragon_info = info_bg
 		self.draong_info_lv_label = UIKit:ttfLabel({
 			text = "LV " .. self:GetCurrentDragon():Level() .. "/" .. self:GetCurrentDragon():GetMaxLevel(),
