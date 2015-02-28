@@ -89,53 +89,55 @@ function WidgetDragons:UpdatePosition(dt)
         local a = self.angle + march_angle
         if sign(self.target_angle - a) == sign(left_angle) then
             self.angle = a
+        elseif (self.target_angle % 120) ~= 0 then
+            self:AutoRotation()
         else
             self.angle = self.target_angle
             self.target_angle = nil
-            local mang = math.mod(self.angle, 360)
-            local cur = sign(mang) > 0 and math.floor(mang / 120) or 3 + math.floor(mang / 120)
-            self:OnEnterIndex(math.abs(cur))
+            self:OnEnterIndex(self:IndexByAngle(self.angle))
         end
     end
     for i, dragon in ipairs(self.items) do
         local x, y, z, s, b = getinfo(self.angle - 120 * (i - 1))
         dragon:pos(x, y):scale(s):setLocalZOrder(z)
-        local filter_ = filter.newFilter("CUSTOM",
-            json.encode({
-                frag = "shaders/blur.fs",
-                shaderName = "blur"..i,
-                resolution = {613, 509},
-                blurRadius = b,
-                sampleNum = 2
-            })
-        )
-        -- dragon:setFilter(filter_)
-        if self.OnFilterChangedEvent then
-            -- self.OnFilterChangedEvent(dragon,b,i)
-        end
+        -- local filter_ = filter.newFilter("CUSTOM",
+        --     json.encode({
+        --         frag = "shaders/blur.fs",
+        --         shaderName = "blur"..i,
+        --         resolution = {613, 509},
+        --         blurRadius = b,
+        --         sampleNum = 2
+        --     })
+        -- )
+        -- -- dragon:setFilter(filter_)
+        -- if self.OnFilterChangedEvent then
+        --     -- self.OnFilterChangedEvent(dragon,b,i)
+        -- end
     end
+end
+function WidgetDragons:IndexByAngle(angle)
+    local mang = math.mod(angle, 360)
+    local cur = sign(mang) > 0 and math.floor(mang / 120) or 3 + math.floor(mang / 120)
+    return math.abs(cur)
 end
 function WidgetDragons:RoundAngle()
 	return self.angle >= 0 and math.floor(self.angle / 360) * 360 or math.ceil(self.angle / 360) * 360
 end
 function WidgetDragons:Next()
-	self.target_angle = self:RoundAngle() + (self.cur_index + 1) * 120
+	self.target_angle = self.angle + 120
 end
 function WidgetDragons:Before()
-	self.target_angle = self:RoundAngle() + (self.cur_index - 1) * 120
+    self.target_angle = self.angle - 120
 end
 function WidgetDragons:OnLeaveIndex(index)
-    self.cur_index = nil
-    print("OnLeaveIndex", index)
     if self.OnLeaveIndexEvent then
         self.OnLeaveIndexEvent(index)
     end
 end
 function WidgetDragons:OnEnterIndex(index)
     self.cur_index = index
-    print("OnEnterIndex", self.cur_index)
     if self.OnEnterIndexEvent then
-        self.OnEnterIndexEvent(self.cur_index)
+        self.OnEnterIndexEvent(index)
     end
 end
 function WidgetDragons:OnTouchBegan(pre_x, pre_y, x, y)
@@ -156,6 +158,7 @@ function WidgetDragons:OnTouchMove(pre_x, pre_y, x, y)
     self:Move(x - pre_x)
     if self.cur_index then
         self:OnLeaveIndex(self.cur_index)
+        self.cur_index = nil
     end
 end
 function WidgetDragons:OnTouchClicked(pre_x, pre_y, x, y)
@@ -190,6 +193,7 @@ function WidgetDragons:AutoRotation()
         local target_angle = is_cur and math.floor(cur_angle / 120 + 1) * 120 or math.floor(cur_angle / 120) * 120
         self.target_angle = target_angle + round * 360
     end
+    print("self.target_angle", self.target_angle)
 end
 
 --
