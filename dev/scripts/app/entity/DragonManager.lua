@@ -112,7 +112,7 @@ function DragonManager:AddDragon(dragon)
 end
 
 function DragonManager:GetDragons()
-    return self.dragons_
+    return self.dragons_ or {}
 end
 -- 获取战力高-低的龙list
 function DragonManager:GetDragonsSortWithPowerful()
