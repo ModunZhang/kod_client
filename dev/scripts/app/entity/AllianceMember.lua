@@ -82,6 +82,15 @@ end
 function AllianceMember:GetCoinCollectLevel()
     return self:GetCollectLevelByType(AllianceMember.COLLECT_TYPE.COIN)
 end
+function AllianceMember:get_collect_config( collectType )
+    local exp = self.allianceExp[collect_type[collectType]]
+    local config = GameDatas.PlayerVillageExp[collect_exp_config[collectType]]
+    for i = #config,1,-1 do
+        if exp>=config[i].expFrom then
+            return config[i]
+        end
+    end
+end
 function AllianceMember:GetCollectLevelByType(collectType)
     local exp = self.allianceExp[collect_type[collectType]]
     local config = GameDatas.PlayerVillageExp[collect_exp_config[collectType]]
@@ -90,6 +99,13 @@ function AllianceMember:GetCollectLevelByType(collectType)
             return i
         end
     end
+end
+function AllianceMember:GetCollectExpsByType(collectType)
+    local exp = self.allianceExp[collect_type[collectType]]
+    return exp,self:get_collect_config(collectType).expTo
+end
+function AllianceMember:GetCollectEffectByType(collectType)
+    return self:get_collect_config(collectType).effect
 end
 function AllianceMember:GetWoodCollectLevelUpExp()
     return self:GetCollectLevelUpExpByType(AllianceMember.COLLECT_TYPE.WOOD)
@@ -136,7 +152,7 @@ end
 function AllianceMember:DecodeFromJson(data)
     local member = AllianceMember.new(data.id)
     for k, v in pairs(data) do
-        member[k] = v 
+        member[k] = v
         print("DecodeFromJson",k,v)
         if k == "lastThreeDaysKillData" then
             dump(v)
@@ -192,7 +208,7 @@ function AllianceMember.Title2Level(title)
 end
 --权限判定函数
 --------------------------------------------------------------------------
---名称 简称 旗帜 地形 语言 
+--名称 简称 旗帜 地形 语言
 function AllianceMember:CanEditAlliance()
     -- return self:IsArchon()
     return allianceRight[self:Title()].CanEditAlliance
@@ -265,19 +281,20 @@ function AllianceMember:CanDemotionMemberLevel(target_current_title)
     return allianceRight[self:Title()].CanDemotionMemberLevel,self:GetTitleLevel() > self.Title2Level(target_current_title)
 end
 function AllianceMember:CanEditAllianceDesc()
-    -- return self:GetTitleLevel() >= self.Title2Level('supervisor') 
+    -- return self:GetTitleLevel() >= self.Title2Level('supervisor')
     return allianceRight[self:Title()].CanEditAllianceDesc
 end
 function AllianceMember:CanEditAllianceJoinType()
-    -- return self:GetTitleLevel() >= self.Title2Level('supervisor') 
+    -- return self:GetTitleLevel() >= self.Title2Level('supervisor')
     return allianceRight[self:Title()].CanEditAllianceJoinType
 end
 function AllianceMember:CanBuyAdvancedItemsFromAllianceShop()
-    -- return self:GetTitleLevel() >= self.Title2Level('elite') 
+    -- return self:GetTitleLevel() >= self.Title2Level('elite')
     return allianceRight[self:Title()].CanBuyAdvancedItemsFromAllianceShop
 end
 function AllianceMember:CanActivateAllianceRevenge()
-    -- return self:GetTitleLevel() >= self.Title2Level('general') 
+    -- return self:GetTitleLevel() >= self.Title2Level('general')
     return allianceRight[self:Title()].CanActivateAllianceRevenge
 end
 return AllianceMember
+
