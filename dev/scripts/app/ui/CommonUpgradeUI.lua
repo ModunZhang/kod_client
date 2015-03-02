@@ -62,7 +62,7 @@ function CommonUpgradeUI:OnBuildingUpgradingBegin( buidling, current_time )
     self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(current_time)))
     self:visibleChildLayers()
 end
-function CommonUpgradeUI:OnBuildingUpgradeFinished( buidling, finish_time )
+function CommonUpgradeUI:OnBuildingUpgradeFinished( buidling )
     self:visibleChildLayers()
     self:SetBuildingLevel()
     self:SetUpgradeNowNeedGems()

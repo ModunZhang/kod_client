@@ -2,12 +2,12 @@ local SpriteUINode = import(".SpriteUINode")
 local BuildingLevelUpUINode = class("BuildingLevelUpUINode", SpriteUINode)
 
 function BuildingLevelUpUINode:OnCheckUpgradingCondition(sprite)
-    self:OnBuildingUpgradeFinished(sprite:GetEntity(), nil)
+    self:OnBuildingUpgradeFinished(sprite:GetEntity())
 end
 function BuildingLevelUpUINode:OnBuildingUpgradingBegin(building, time)
-    self:OnBuildingUpgradeFinished(building, time)
+    self:OnBuildingUpgradeFinished(building)
 end
-function BuildingLevelUpUINode:OnBuildingUpgradeFinished(building, time)
+function BuildingLevelUpUINode:OnBuildingUpgradeFinished(building)
     local city = building:BelongCity()
     building = building:GetType() == "tower" and city:GetTower() or building
     self:setVisible(building:GetLevel() > 0)

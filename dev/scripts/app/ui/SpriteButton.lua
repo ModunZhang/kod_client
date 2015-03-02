@@ -70,7 +70,7 @@ function SpriteButton:OnUpgradingBegin(building, current_time, city)
 end
 function SpriteButton:OnUpgrading(building, current_time, city)
 end
-function SpriteButton:OnUpgradingFinished(building, current_time, city)
+function SpriteButton:OnUpgradingFinished(building, city)
     self:OnTileChanged(city)
 end
 function SpriteButton:OnTileChanged(city)

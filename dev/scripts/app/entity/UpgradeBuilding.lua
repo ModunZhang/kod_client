@@ -94,11 +94,10 @@ function UpgradeBuilding:InstantUpgradeBy(level)
     self:InstantUpgradeTo(self.level + level)
 end
 function UpgradeBuilding:InstantUpgradeTo(level)
-    local finished_time = self.upgrade_to_next_level_time
     self.level = level
     self.upgrade_to_next_level_time = 0
     self.upgrade_building_observer:NotifyObservers(function(lisenter)
-        lisenter:OnBuildingUpgradeFinished(self, finished_time)
+        lisenter:OnBuildingUpgradeFinished(self)
     end)
 end
 function UpgradeBuilding:UpgradeByCurrentTime(current_time)

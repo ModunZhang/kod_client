@@ -55,7 +55,7 @@ function WidgetEventTabButtons:OnUpgrading(building, current_time, city)
         end)
     end
 end
-function WidgetEventTabButtons:OnUpgradingFinished(building, current_time, city)
+function WidgetEventTabButtons:OnUpgradingFinished(building, city)
     self:EventChangeOn("build")
     self:RefreshBuildQueueByType("build", "soldier", "material", "technology")
 end

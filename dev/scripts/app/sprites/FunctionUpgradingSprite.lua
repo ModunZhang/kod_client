@@ -7,7 +7,7 @@ function FunctionUpgradingSprite:OnUpgradingBegin(building, current_time, city)
 end
 function FunctionUpgradingSprite:OnUpgrading(building, current_time, city)
 end
-function FunctionUpgradingSprite:OnUpgradingFinished(building, current_time, city)
+function FunctionUpgradingSprite:OnUpgradingFinished(building, city)
     self:OnTileChanged(city, nil)
 end
 function FunctionUpgradingSprite:OnTileLocked(city)

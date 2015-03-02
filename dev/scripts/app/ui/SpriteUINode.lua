@@ -7,7 +7,7 @@ function SpriteUINode:OnPositionChanged(x, y)
 end
 function SpriteUINode:OnBuildingUpgradingBegin(building, time)
 end
-function SpriteUINode:OnBuildingUpgradeFinished(building, time)
+function SpriteUINode:OnBuildingUpgradeFinished(building)
 end
 function SpriteUINode:OnBuildingUpgrading(building, time)
 end

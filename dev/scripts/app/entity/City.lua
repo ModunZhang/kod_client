@@ -1075,9 +1075,9 @@ function City:OnBuildingUpgrading(building, current_time)
         listener:OnUpgrading(building, current_time, self)
     end)
 end
-function City:OnBuildingUpgradeFinished(building, current_time)
+function City:OnBuildingUpgradeFinished(building)
     self:NotifyListeneOnType(City.LISTEN_TYPE.UPGRADE_BUILDING, function(listener)
-        listener:OnUpgradingFinished(building, current_time, self)
+        listener:OnUpgradingFinished(building, self)
     end)
 
     self:CheckFinishUpgradingBuildingPormise(building)

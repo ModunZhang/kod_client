@@ -38,7 +38,7 @@ end
 function GameUIBuildingSpeedUp:OnBuildingUpgradingBegin( building, current_time )
     self:SetProgressInfo(GameUtils:formatTimeStyle1(building:GetUpgradingLeftTimeByCurrentTime(current_time)),building:GetElapsedTimeByCurrentTime(current_time)/building:GetUpgradeTimeToNextLevel()*100)
 end
-function GameUIBuildingSpeedUp:OnBuildingUpgradeFinished( building, finish_time )
+function GameUIBuildingSpeedUp:OnBuildingUpgradeFinished( building )
     self:leftButtonClicked()
 end
 function GameUIBuildingSpeedUp:OnBuildingUpgrading( building, current_time )

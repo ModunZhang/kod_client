@@ -30,12 +30,12 @@ function UpgradingSprite:OnBuildingUpgradingBegin(building, time)
     -- animation
     self:StartBuildingAnimation()
 end
-function UpgradingSprite:OnBuildingUpgradeFinished(building, time)
+function UpgradingSprite:OnBuildingUpgradeFinished(building)
     if self.label then
         self.label:setString(building:GetType().." "..building:GetLevel())
     end
     self:NotifyObservers(function(listener)
-        listener:OnBuildingUpgradeFinished(building, time)
+        listener:OnBuildingUpgradeFinished(building)
     end)
     self:RefreshSprite()
     -- self:RefreshShadow()
