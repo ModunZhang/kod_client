@@ -978,13 +978,13 @@ end
 
 function GameUIAllianceBattle:InitOtherAlliance()
     local layer = self.other_alliance_layer
-    local face_bg = display.newSprite("allianceHome/banner.png")
-        :align(display.TOP_CENTER, window.cx, window.top-50)
-        :addTo(layer)
+    -- local face_bg = display.newSprite("allianceHome/banner.png")
+    --     :align(display.TOP_CENTER, window.cx, window.top-50)
+    --     :addTo(layer)
 
     --搜索
     local searchIcon = display.newSprite("alliacne_search_29x33.png"):addTo(layer)
-        :align(display.LEFT_CENTER,window.left+50,window.top-260)
+        :align(display.LEFT_CENTER,window.left+50,window.top-120)
     local function onEdit(event, editbox)
         if event == "return" then
             self:SearchAllianAction(self.editbox_tag_search:getText())
@@ -1004,13 +1004,13 @@ function GameUIAllianceBattle:InitOtherAlliance()
     editbox_tag_search:setFontColor(cc.c3b(0,0,0))
     editbox_tag_search:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))
     editbox_tag_search:setReturnType(cc.KEYBOARD_RETURNTYPE_SEARCH)
-    editbox_tag_search:align(display.CENTER,window.cx+20,window.top-260):addTo(layer)
+    editbox_tag_search:align(display.CENTER,window.cx+20,window.top-120):addTo(layer)
     self.editbox_tag_search = editbox_tag_search
 
     -- 搜索结果
     local list,list_node = UIKit:commonListView({
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        viewRect = cc.rect(0, 0,608,550),
+        viewRect = cc.rect(0, 0,608,690),
     })
     list_node:addTo(layer):align(display.BOTTOM_CENTER, window.cx, window.bottom_top+20)
     self.alliance_listview = list

@@ -136,48 +136,50 @@ end
 
 function GameUIAllianceHome:TopTabButtons()
 
-    -- 荣誉,忠诚,坐标,世界按钮背景框
+    -- 荣誉,忠诚,坐标按钮背景框
     local btn_bg = display.newSprite("allianceHome/back_ground_676x100.png")
         :align(display.TOP_CENTER,self.top_bg:getContentSize().width/2,46)
         :addTo(self.top_bg)
     btn_bg:setTouchEnabled(true)
     -- 荣耀按钮
-    local honour_btn = WidgetPushButton.new({normal = "allianceHome/btn_144x44.png",
-        pressed = "allianceHome/btn_144x44_light.png"})
+    local honour_btn = WidgetPushButton.new({normal = "allianceHome/btn_196x44.png",
+        pressed = "allianceHome/btn_196x44_light.png"})
         :onButtonClicked(function (event)
             if event.name == "CLICKED_EVENT" then
                GameUIAllianceContribute.new():addToCurrentScene(true)
             end
         end)
-        :align(display.CENTER, 124, btn_bg:getContentSize().height/2-2)
+        :align(display.CENTER, 145, btn_bg:getContentSize().height/2-1)
         :addTo(btn_bg)
     -- 荣耀值
     display.newSprite("honour.png")
-        :align(display.CENTER, -40,honour_btn:getContentSize().height/2-4)
-        :addTo(honour_btn)
+        :align(display.CENTER, 120,btn_bg:getContentSize().height/2-6)
+        :addTo(btn_bg)
     UIKit:ttfLabel(
         {
             text = _("荣耀值"),
             size = 14,
             color = 0xbdb582
-        }):align(display.LEFT_CENTER, -15, honour_btn:getContentSize().height/2+10)
-        :addTo(honour_btn)
+        }):align(display.LEFT_CENTER, 145, btn_bg:getContentSize().height/2+8)
+        :addTo(btn_bg)
     self.honour_label = UIKit:ttfLabel(
         {
             text = GameUtils:formatNumber(self.alliance:Honour()),
             size = 18,
             color = 0xf5e8c4
-        }):align(display.LEFT_CENTER, -15, honour_btn:getContentSize().height/2-10)
-        :addTo(honour_btn)
+        }):align(display.LEFT_CENTER, 145, btn_bg:getContentSize().height/2-8)
+        :addTo(btn_bg)
+    honour_btn:setRotationSkewY(180)
+
     -- 忠诚按钮
-    local loyalty_btn = WidgetPushButton.new({normal = "allianceHome/btn_140x44.png",
-        pressed = "allianceHome/btn_140x44_light.png"})
+    local loyalty_btn = WidgetPushButton.new({normal = "allianceHome/btn_196x44.png",
+        pressed = "allianceHome/btn_196x44_light.png"})
         :onButtonClicked(function (event)
             if event.name == "CLICKED_EVENT" then
                 UIKit:newGameUI('GameUIAllianceLoyalty'):addToCurrentScene(true)
             end
         end)
-        :align(display.CENTER, 268, btn_bg:getContentSize().height/2-2)
+        :align(display.CENTER, btn_bg:getContentSize().width-144, btn_bg:getContentSize().height/2-1)
         :addTo(btn_bg)
     -- 忠诚值
     display.newSprite("loyalty_1.png")
@@ -199,14 +201,14 @@ function GameUIAllianceHome:TopTabButtons()
         }):align(display.LEFT_CENTER, -15, loyalty_btn:getContentSize().height/2-10)
         :addTo(loyalty_btn)
     -- 坐标按钮
-    local coordinate_btn = WidgetPushButton.new({normal = "allianceHome/btn_140x44.png",
-        pressed = "allianceHome/btn_140x44_light.png"})
+    local coordinate_btn = WidgetPushButton.new({normal = "allianceHome/btn_mid_196x44.png",
+        pressed = "allianceHome/btn_mid_196x44_light.png"})
         :onButtonClicked(function ( event )
             if event.name == "CLICKED_EVENT" then
                 UIKit:newGameUI('GameUIAlliancePosition'):addToCurrentScene(true)
             end
         end)
-        :align(display.CENTER, 412, btn_bg:getContentSize().height/2-2)
+        :align(display.CENTER, btn_bg:getContentSize().width/2+6, btn_bg:getContentSize().height/2-1)
         :addTo(btn_bg)
     -- 坐标
     display.newSprite("allianceHome/coordinate.png")
@@ -226,35 +228,7 @@ function GameUIAllianceHome:TopTabButtons()
             color = 0xf5e8c4
         }):align(display.LEFT_CENTER, -15, coordinate_btn:getContentSize().height/2-10)
         :addTo(coordinate_btn)
-    -- 世界按钮
-    local world_btn = WidgetPushButton.new({normal = "allianceHome/btn_144x44.png",
-        pressed = "allianceHome/btn_144x44_light.png"})
-        :onButtonClicked(function (event)
-            if event.name == "CLICKED_EVENT" then
-                UIKit:newGameUI('GameUIAllianceWorld'):addToCurrentScene(true)
-            end
-        end)
-        :align(display.CENTER, 556, btn_bg:getContentSize().height/2-2)
-        :addTo(btn_bg)
-    world_btn:setRotationSkewY(180)
-    -- 世界
-    display.newSprite("allianceHome/world.png")
-        :align(display.CENTER, btn_bg:getContentSize().width-150,btn_bg:getContentSize().height/2-4)
-        :addTo(btn_bg)
-    UIKit:ttfLabel(
-        {
-            text = _("世界"),
-            size = 14,
-            color = 0xbdb582
-        }):align(display.LEFT_CENTER, btn_bg:getContentSize().width-130, btn_bg:getContentSize().height/2+10)
-        :addTo(btn_bg)
-    local world_label = UIKit:ttfLabel(
-        {
-            text = "NO.9999",
-            size = 18,
-            color = 0xf5e8c4
-        }):align(display.LEFT_CENTER, btn_bg:getContentSize().width-130, btn_bg:getContentSize().height/2-10)
-        :addTo(btn_bg)
+   
 
 end
 
