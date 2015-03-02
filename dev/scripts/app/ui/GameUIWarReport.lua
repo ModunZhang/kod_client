@@ -13,6 +13,7 @@ local GameUIWarReport = UIKit:createUIClass("GameUIWarReport", "UIAutoClose")
 
 
 function GameUIWarReport:ctor(report)
+    GameUIWarReport.super.ctor(self)
     self.body = WidgetUIBackGround.new({height=800}):align(display.TOP_CENTER,display.cx,display.top-100)
     self:addTouchAbleChild(self.body)
     self:setNodeEventEnabled(true)
@@ -20,6 +21,7 @@ function GameUIWarReport:ctor(report)
 end
 
 function GameUIWarReport:onEnter()
+    GameUIWarReport.super.onEnter(self)
     local report = self.report
     local report_body = self.body
     local rb_size = report_body:getContentSize()
@@ -853,10 +855,6 @@ function GameUIWarReport:CreateSmallBackGround(height,title)
         next_y = next_y+m_height
     end
     return r_bg
-end
-
-function GameUIWarReport:onExit()
-
 end
 
 -- 获取自己是防御方还是进攻方

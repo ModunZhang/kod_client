@@ -8,6 +8,7 @@ local WidgetMaterialDetails = UIKit:createUIClass("WidgetMaterialDetails", "UIAu
 
 
 function WidgetMaterialDetails:ctor(material_type,material_name)
+    WidgetMaterialDetails.super.ctor(self)
     self:InitMaterialDetails(material_type,material_name)
 end
 

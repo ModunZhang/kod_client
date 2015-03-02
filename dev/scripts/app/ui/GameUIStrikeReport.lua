@@ -9,6 +9,7 @@ local UILib = import(".UILib")
 local GameUIStrikeReport = UIKit:createUIClass("GameUIStrikeReport", "UIAutoClose")
 
 function GameUIStrikeReport:ctor(report)
+    GameUIStrikeReport.super.ctor(self)
     self:setNodeEventEnabled(true)
     self.report = report
 end

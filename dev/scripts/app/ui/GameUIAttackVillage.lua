@@ -13,6 +13,7 @@ local GameUIAttackVillage = UIKit:createUIClass("GameUIAttackVillage", "UIAutoCl
 
 
 function GameUIAttackVillage:ctor(report)
+    GameUIAttackVillage.super.ctor(self)
     self.body = WidgetUIBackGround.new({height=800}):align(display.TOP_CENTER,display.cx,display.top-100)
     self:addTouchAbleChild(self.body)
     self:setNodeEventEnabled(true)
@@ -20,6 +21,7 @@ function GameUIAttackVillage:ctor(report)
 end
 
 function GameUIAttackVillage:onEnter()
+    GameUIAttackVillage.super.onEnter(self)
     local report = self.report
     local report_body = self.body
     local rb_size = report_body:getContentSize()
@@ -685,10 +687,6 @@ function GameUIAttackVillage:CreateSmallBackGround(height,title)
         next_y = next_y+m_height
     end
     return r_bg
-end
-
-function GameUIAttackVillage:onExit()
-
 end
 
 -- 获取自己是防御方还是进攻方

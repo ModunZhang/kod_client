@@ -4,6 +4,7 @@ local UIAutoClose = import(".UIAutoClose")
 local FullScreenPopDialogUI = class("FullScreenPopDialogUI", UIAutoClose)
 
 function FullScreenPopDialogUI:ctor()
+    FullScreenPopDialogUI.super.ctor(self,{type=UIKit.UITYPE.MESSAGEDIALOG})
     self:Init()
 end
 
