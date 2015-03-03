@@ -314,7 +314,7 @@ function WidgetMakeEquip:onEnter()
     self:UpdateEquipCounts()
     self:UpdateMaterials()
     self:UpdateBuildLabel(self.black_smith:IsEquipmentEventEmpty() and 0 or 1)
-    self:UpdateCoin(self.city:GetResourceManager():GetCoinResource():GetValue())
+    self:UpdateCoin(self.city:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()))
     self:UpdateGemLabel()
     self:UpdateBuffTime()
 end
@@ -334,7 +334,7 @@ function WidgetMakeEquip:OnMaterialsChanged(material_manager, material_type, cha
 end
 -- 资源数量监听
 function WidgetMakeEquip:OnResourceChanged(resource_manager)
-    self:UpdateCoin(resource_manager:GetCoinResource():GetValue())
+    self:UpdateCoin(resource_manager:GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()))
 end
 -- 建造队列监听
 function WidgetMakeEquip:OnBeginMakeEquipmentWithEvent(black_smith, event)
