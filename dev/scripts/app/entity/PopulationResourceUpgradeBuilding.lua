@@ -12,6 +12,9 @@ end
 function PopulationResourceUpgradeBuilding:GetProductionPerHour()
 	return config_dwelling[self:GetLevel()].recoveryCitizen
 end
+function PopulationResourceUpgradeBuilding:GetCoinProductionPerHour()
+	return config_dwelling[self:GetLevel()].poduction
+end
 function PopulationResourceUpgradeBuilding:GetUpdateResourceType()
 	return ResourceManager.RESOURCE_TYPE.POPULATION
 end

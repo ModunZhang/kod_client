@@ -247,9 +247,33 @@ require("app.datas.GemsPayment_citizen")
 require("app.datas.GemsPayment_material")
 
 GameDatas.GrowUpTasks = {
-	["tasks"] = {},
+	["cityBuild"] = {},
+	["dragonLevel"] = {},
+	["dragonStar"] = {},
+	["dragonSkill"] = {},
+	["productionTech"] = {},
+	["militaryTech"] = {},
+	["soldierStar"] = {},
+	["soldierCount"] = {},
+	["pveCount"] = {},
+	["attackWin"] = {},
+	["strikeWin"] = {},
+	["playerKill"] = {},
+	["playerPower"] = {},
 }
-require("app.datas.GrowUpTasks_tasks")
+require("app.datas.GrowUpTasks_cityBuild")
+require("app.datas.GrowUpTasks_dragonLevel")
+require("app.datas.GrowUpTasks_dragonStar")
+require("app.datas.GrowUpTasks_dragonSkill")
+require("app.datas.GrowUpTasks_productionTech")
+require("app.datas.GrowUpTasks_militaryTech")
+require("app.datas.GrowUpTasks_soldierStar")
+require("app.datas.GrowUpTasks_soldierCount")
+require("app.datas.GrowUpTasks_pveCount")
+require("app.datas.GrowUpTasks_attackWin")
+require("app.datas.GrowUpTasks_strikeWin")
+require("app.datas.GrowUpTasks_playerKill")
+require("app.datas.GrowUpTasks_playerPower")
 
 GameDatas.HouseFunction = {
 	["dwelling"] = {},

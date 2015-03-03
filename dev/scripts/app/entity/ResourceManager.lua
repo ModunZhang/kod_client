@@ -42,7 +42,7 @@ function ResourceManager:ctor()
         [STONE] = AutomaticUpdateResource.new(),
         [CART] = AutomaticUpdateResource.new(),
         [POPULATION] = PopulationAutomaticUpdateResource.new(),
-        [COIN] = Resource.new(),
+        [COIN] = AutomaticUpdateResource.new(),
         [BLOOD] = Resource.new(),
         [WALLHP] = AutomaticUpdateResource.new(),
     }
@@ -119,6 +119,7 @@ function ResourceManager:UpdateByCity(city, current_time)
         [FOOD] = -city:GetSoldierManager():GetTotalUpkeep(),
         [IRON] = 0,
         [STONE] = 0,
+        [COIN] = 0,
         [POPULATION] = 0,
         [WALLHP] = wall_hp_production_per_hour or 0,
         [CART] = cart_recovery,
@@ -132,6 +133,7 @@ function ResourceManager:UpdateByCity(city, current_time)
         [FOOD] = max_food,
         [IRON] = max_iron,
         [STONE] = max_stone,
+        [COIN] = math.huge,
         [POPULATION] = 0,
         [CART] = max_cart,
         [WALLHP] = wall_max_hp or 0,
@@ -159,7 +161,8 @@ function ResourceManager:UpdateByCity(city, current_time)
                     citizen_map[resource_type] = citizen_map[resource_type] + citizen
                 end
                 if POPULATION == resource_type then
-                    total_limit_map[resource_type] = total_limit_map[resource_type] + decorator:GetProductionLimit()
+                    total_production_map[COIN] = total_production_map[COIN] + decorator:GetCoinProductionPerHour()
+                    total_limit_map[POPULATION] = total_limit_map[POPULATION] + decorator:GetProductionLimit()
                 end
             end
         end
@@ -192,13 +195,13 @@ function ResourceManager:GetCitizenAllocated()
 end
 function ResourceManager:UpdateFromUserDataByTime(resources, current_time)
     if not resources then return end
-    if resources.coin then
-        self.resources[COIN]:SetValue(resources.coin)
-    end
     if resources.blood then
         self.resources[BLOOD]:SetValue(resources.blood)
     end
     if not current_time then return end
+    if resources.coin then
+        self.resources[COIN]:UpdateResource(current_time, resources.coin)
+    end
     if resources.wood then
         self.resources[WOOD]:UpdateResource(current_time, resources.wood)
     end
@@ -229,6 +232,7 @@ function ResourceManager:GetTotalBuffData(city)
         [FOOD] = 0,
         [IRON] = 0,
         [STONE] = 0,
+        [COIN] = 0,
         [POPULATION] = 0,
         [WALLHP] = 0,
         [CART] = 0,
@@ -239,6 +243,7 @@ function ResourceManager:GetTotalBuffData(city)
         [FOOD] = 0,
         [IRON] = 0,
         [STONE] = 0,
+        [COIN] = 0,
         [POPULATION] = 0,
         [WALLHP] = 0,
         [CART] = 0,

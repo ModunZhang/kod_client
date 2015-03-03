@@ -75,3 +75,13 @@ intInit["playerLevelupRewardsHours"] = {
 	["value"] = 48,
 	["desc"] = "新手冲级奖励时间"
 }
+intInit["switchProductionBuilding"] = {
+	["type"] = "switchProductionBuilding",
+	["value"] = 200,
+	["desc"] = "转换生产建筑所需宝石"
+}
+intInit["soldierMaxStar"] = {
+	["type"] = "soldierMaxStar",
+	["value"] = 3,
+	["desc"] = "士兵最大星级"
+}
