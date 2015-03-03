@@ -569,6 +569,55 @@ local PRODUCTIONTECHNOLOGY_BUFFER = {
     sketching = _("增加生产材料速度"),
     mintedCoin = _("提升市政厅获得银币产量"),
 }
+local WONDER_NAME = {
+    highcastle = _("高庭"),
+    corona = _("圣冠堡"),
+    norland = _("诺兰德"),
+    rainhaven = _("雨城"),
+    dunwall = _("顿沃城"),
+    rockwarren = _("洛克瓦伦"),
+    kanan = _("卡纳"),
+    blackiron = _("黑铁堡"),
+    lostmoor = _("洛斯摩尔"),
+    gateway = _("边关城"),
+    whitemoon = _("明月城"),
+    coldcastle = _("寒冰城"),
+    silverden = _("银登城"),
+    greygriffin = _("灰格里芬"),
+    scar = _("孤崖"),
+}
+local WONDER_TITLE_NAME = {
+    medal_1 = _("帝王之师"),
+    medal_2 = _("暗天使"),
+    medal_3 = _("战争修士"),
+    medal_4 = _("灰骑士"),
+    medal_5 = _("钢铁之手"),
+    medal_6 = _("极限战士"),
+    medal_7 = _("守望者"),
+    curse_1 = _("恐惧折磨"),
+    curse_2 = _("瘟疫之源"),
+    curse_3 = _("腐化之种"),
+    curse_4 = _("暗影魔咒"),
+    curse_5 = _("血之祭祀"),
+    curse_6 = _("丧失神智"),
+    curse_7 = _("寒霜之触"),
+}
+local WONDER_TITLE_BUFF = {
+    medal_1 = _("部队攻击+10%，部队防御+10%，带兵上限+10%"),
+    medal_2 = _("木材/石料/铁矿/粮食产量+10%，暗仓保护+10%"),
+    medal_3 = _("建造速度+10%，研发速度+10%，城墙恢复速度+20%"),
+    medal_4 = _("招募速度+10%，维护费用-10%，带兵上限+10%"),
+    medal_5 = _("部队防御+10%，铁矿产量+10%，粮食产量+10%"),
+    medal_6 = _("部队攻击+5%，龙的生命恢复+10%"),
+    medal_7 = _("木材产量+10%，石料产量+10%，建造速度+5%"),
+    curse_1 = _("部队攻击-10%，部队防御-10%，带兵上限-10%"),
+    curse_2 = _("暗仓保护-10%，行军速度-10%，治疗伤兵速度-20%"),
+    curse_3 = _("木材/石料/铁矿/粮食产量-10%，招募速度-10%"),
+    curse_4 = _("城墙恢复速度-10%，龙的生命恢复-10%"),
+    curse_5 = _("铁矿产量-10%，粮食产量-10%，招募速度-5%"),
+    curse_6 = _("维护费用增加+10%，研发速度-10%"),
+    curse_7 = _("木材产量-10%，石料产量-10%，建造速度-5%"),
+}
 local  getBuildingLocalizedKeyByBuildingType = function(name)
     local building_config = GameDatas.Buildings.buildings
     for _,v in ipairs(building_config) do
@@ -642,16 +691,7 @@ return {
     getHouseLocalizedKeyByBuildingType = getHouseLocalizedKeyByBuildingType,
     getLocaliedKeyByType = getLocaliedKeyByType,
     game_language = GAME_LANGUAGE,
+    wonder_name = WONDER_NAME,
+    wonder_title_name = WONDER_TITLE_NAME,
+    wonder_title_buff = WONDER_TITLE_BUFF,
 }
-
-
- 
-
-
-
-
-
-
-
-
-
