@@ -331,27 +331,30 @@ function UpgradeBuilding:IsBuildingUpgradeLegal()
         local location_id = city:GetLocationIdByBuildingType(self:GetType())
         config = GameDatas.Buildings.buildings[location_id]
     end
-    local configParams = string.split(config.preCondition,"_")
-    local preType = configParams[1]
-    local preName = configParams[2]
-    local preLevel = tonumber(configParams[3])
-    local limit
-    if preType == "building" then
-        local find_buildings = city:GetBuildingByType(preName)
-        for i,v in ipairs(find_buildings) do
-            if v:GetLevel()>=self:GetLevel()+preLevel then
-                limit = true
+    -- 等级大于5级时有升级前置条件
+    if self:GetLevel()>5 then
+        local configParams = string.split(config.preCondition,"_")
+        local preType = configParams[1]
+        local preName = configParams[2]
+        local preLevel = tonumber(configParams[3])
+        local limit
+        if preType == "building" then
+            local find_buildings = city:GetBuildingByType(preName)
+            for i,v in ipairs(find_buildings) do
+                if v:GetLevel()>=self:GetLevel()+preLevel then
+                    limit = true
+                end
             end
+        else
+            city:IteratorDecoratorBuildingsByFunc(function (index,house)
+                if house:GetType() == preName and house:GetLevel()>=self:GetLevel()+preLevel then
+                    limit = true
+                end
+            end)
         end
-    else
-        city:IteratorDecoratorBuildingsByFunc(function (index,house)
-            if house:GetType() == preName and house:GetLevel()>=self:GetLevel()+preLevel then
-                limit = true
-            end
-        end)
-    end
-    if not limit then
-        return string.format(_("需要%s达到%d级"),Localize.building_name[preName],self:GetLevel()+preLevel)
+        if not limit then
+            return string.format(_("需要%s达到%d级"),Localize.building_name[preName],self:GetLevel()+preLevel)
+        end
     end
 end
 -- 获取升级前置条件描述
@@ -458,6 +461,7 @@ function UpgradeBuilding:getUpgradeRequiredGems()
 end
 
 return UpgradeBuilding
+
 
 
 

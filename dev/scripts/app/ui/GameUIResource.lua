@@ -112,16 +112,14 @@ function GameUIResource:CreateInfomation()
     --     end)
 
     WidgetUseItems.new():CreateItemBox(ItemManager:GetItemByName("movingConstruction"),function ()
-        local item = ItemManager:GetItemByName("movingConstruction")
-        if item:Count()<1 then
-            FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                :SetPopMessage(_("没有建筑移动道具"))
-                :AddToCurrentScene()
-        else
-            return true
-        end
+        return true
     end,
     function ()
+        WidgetMoveHouse.new(self.building)
+        self:leftButtonClicked()
+    end,
+    function ()
+        NetManager:getBuyItemPromise("movingConstruction",1)
         WidgetMoveHouse.new(self.building)
         self:leftButtonClicked()
     end
@@ -340,6 +338,7 @@ function GameUIResource:OnResourceChanged(resource_manager)
 end
 
 return GameUIResource
+
 
 
 

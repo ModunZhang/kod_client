@@ -18,7 +18,7 @@ function AllianceBattleScene:onEnter()
     manager:addArmatureFileInfo("animations/green_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Blue_dragon.ExportJson")
-    
+
     AllianceBattleScene.super.onEnter(self)
     self:CreateAllianceUI()
     local location = self:GetAlliance():GetSelf().location
@@ -86,6 +86,8 @@ function AllianceBattleScene:EnterAllianceBuilding(entity,isMyAlliance)
         class_name = "GameUIAllianceShopEnter"
     elseif building_name == 'orderHall' then
         class_name = "GameUIAllianceOrderHallEnter"
+    elseif building_name == 'moonGate' then
+        class_name = "GameUIAllianceMoonGateEnter"
     else
         print("没有此建筑--->",building_name)
         return
@@ -108,6 +110,7 @@ function AllianceBattleScene:EnterNotAllianceBuilding(entity,isMyAlliance)
     UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance(),self:GetEnemyAlliance()):addToCurrentScene(true)
 end
 return AllianceBattleScene
+
 
 
 
