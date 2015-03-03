@@ -10,6 +10,9 @@ GameDatas.ClientInitGame = {
 	["pve_boss"] = {},
 	["pve_npc"] = {},
 	["soldier_vs"] = {},
+	["wonder_grassLand"] = {},
+	["wonder_desert"] = {},
+	["wonder_iceField"] = {},
 }
 require("app.datas.ClientInitGame_ruins")
 require("app.datas.ClientInitGame_locations")
@@ -20,6 +23,9 @@ require("app.datas.ClientInitGame_pve_elite")
 require("app.datas.ClientInitGame_pve_boss")
 require("app.datas.ClientInitGame_pve_npc")
 require("app.datas.ClientInitGame_soldier_vs")
+require("app.datas.ClientInitGame_wonder_grassLand")
+require("app.datas.ClientInitGame_wonder_desert")
+require("app.datas.ClientInitGame_wonder_iceField")
 
 GameDatas.Activities = {
 	["day60"] = {},
