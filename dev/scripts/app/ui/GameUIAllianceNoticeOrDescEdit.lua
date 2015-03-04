@@ -34,7 +34,7 @@ function GameUIAllianceNoticeOrDescEdit:onMoveInStage()
 	}):align(display.CENTER,300,21):addTo(titleBar,2)
 	
 
-	local textView = cc.DTextView:create(cc.size(555,238),display.newScale9Sprite("alliance_edit_bg_555x238.png"))
+	local textView = ccui.UITextView:create(cc.size(555,238),display.newScale9Sprite("alliance_edit_bg_555x238.png"))
     textView:addTo(bg_node):align(display.CENTER_TOP,bg_node:getContentSize().width/2, titleBar:getPositionY() - 10)
     textView:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)    
     textView:setFont(UIKit:getFontFilePath(), 24)

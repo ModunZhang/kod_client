@@ -15,11 +15,11 @@ function PlatformAdapter:android()
 end
 
 --[[
-    模拟器和真机支持cc.DTextView 
+    模拟器和真机支持ccui.UITextView 
     函数名和参数同EditBox 构造函数不同
     player/android 不支持
     
-    local textView = cc.DTextView:create(cc.size(549,379),display.newScale9Sprite(""))
+    local textView = ccui.UITextView:create(cc.size(549,379),display.newScale9Sprite(""))
     textView:addTo(self):center()
     textView:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)    
     textView:setFont(UIKit:getFontFilePath(), 24)
@@ -53,10 +53,10 @@ end
 
 
 function PlatformAdapter:mac()
-    cc.DTextView = {}
-    setmetatable(cc.DTextView,{
+    ccui.UITextView = {}
+    setmetatable(ccui.UITextView,{
         __index= function( ... )
-            assert(false,"\n--- cc.DTextView not support for Player!\n")
+            assert(false,"\n--- ccui.UITextView not support for Player!\n")
         end
     })
     --search path

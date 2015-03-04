@@ -83,7 +83,7 @@ function GameUIWriteMail:ctor(send_type)
         }):align(display.LEFT_CENTER,30,r_size.height-180)
         :addTo(write_mail)
     -- 回复的邮件内容
-    self.textView = cc.DTextView:create(cc.size(580,472),display.newScale9Sprite("background_580X472.png"))
+    self.textView = ccui.UITextView:create(cc.size(580,472),display.newScale9Sprite("background_580X472.png"))
     local textView = self.textView
     textView:addTo(write_mail):align(display.CENTER_BOTTOM,r_size.width/2,76)
     textView:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)

@@ -9,7 +9,7 @@ CONFIG_SCREEN_HEIGHT = 960
 
 -- auto scale mode
 CONFIG_SCREEN_AUTOSCALE = "FIXED_WIDTH"
-
+CONFIG_SCREEN_ORIENTATION = "portrait"
 -- big version config
 CONFIG_APP_VERSION = "0.0.1"
 
