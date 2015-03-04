@@ -1,853 +1,0 @@
-Tlibuv
-v6
-r1
-cCheck dependencies
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/fs-poll.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/fs-poll.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/inet.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/inet.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/uv-common.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/async.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/async.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/core.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/core.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/dl.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/dl.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/error.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/error.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/fs.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fs.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/getaddrinfo.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/getaddrinfo.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/loop.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/loop.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/loop-watcher.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/loop-watcher.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/pipe.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/pipe.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/poll.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/poll.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/process.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/process.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/signal.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/signal.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/stream.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/stream.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/tcp.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/tcp.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/thread.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/thread.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/threadpool.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/threadpool.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/timer.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/timer.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/tty.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/tty.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/udp.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/udp.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/darwin.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/darwin.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/fsevents.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fsevents.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/kqueue.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/kqueue.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cLibtool /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/libuv.a normal x86_64
-
-N/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
-c000000005243E79F00000000000000AA
-t1380181919
-s170
-
-N/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/SDKSettings.plist
-c00000000528245D4000000000000044C
-t1384269268
-s1100
-
-N/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/CoreServices/SystemVersion.plist
-c00000000528245D400000000000001DB
-t1384269268
-s475
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/libuv.a
-t2
-s0
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/async.o
-t1394617041
-s16152
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/core.o
-t1394617042
-s34120
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/darwin.o
-t1394617044
-s34140
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/dl.o
-t1394617041
-s5540
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/error.o
-t1394617041
-s5588
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/fs-poll.o
-t1394617040
-s23152
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/fs.o
-t1394617042
-s65940
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/fsevents.o
-t1394617044
-s22576
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/getaddrinfo.o
-t1394617042
-s18612
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/inet.o
-t1394617040
-s12524
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/kqueue.o
-t1394617044
-s26284
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/loop-watcher.o
-t1394617042
-s20688
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/loop.o
-t1394617042
-s13708
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/pipe.o
-t1394617042
-s23572
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/poll.o
-t1394617042
-s17660
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/process.o
-t1394617043
-s30912
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/signal.o
-t1394617043
-s35376
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/stream.o
-t1394617043
-s66420
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/tcp.o
-t1394617043
-s31500
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/thread.o
-t1394617043
-s21944
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/threadpool.o
-t1394617043
-s23532
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/timer.o
-t1394617043
-s23692
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/tty.o
-t1394617043
-s21300
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/udp.o
-t1394617044
-s40904
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/uv-common.o
-t1394617040
-s43980
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/uv.LinkFileList
-c0000000053202AD00000000000000C2D
-t1394617040
-s3117
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/fs-poll.c
-c0000000052970E9C0000000000001B4A
-t1385631388
-s6986
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/inet.c
-c0000000052970E9C0000000000002018
-t1385631388
-s8216
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/async.c
-c0000000052970E9C0000000000001031
-t1385631388
-s4145
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/core.c
-c0000000052970E9C000000000000364A
-t1385631388
-s13898
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/darwin.c
-c0000000052970E9C0000000000002B1D
-t1385631388
-s11037
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/dl.c
-c0000000052970E9C00000000000008EF
-t1385631388
-s2287
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/error.c
-c0000000052970E9C0000000000000E05
-t1385631388
-s3589
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fs.c
-c0000000052970E9C000000000000521D
-t1385631388
-s21021
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fsevents.c
-c0000000052970E9C0000000000002615
-t1385631388
-s9749
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/getaddrinfo.c
-c0000000052970E9C00000000000011B1
-t1385631388
-s4529
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/kqueue.c
-c0000000052970E9C0000000000002398
-t1385631388
-s9112
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/loop-watcher.c
-c0000000052970E9C0000000000001011
-t1385631388
-s4113
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/loop.c
-c0000000052970E9C0000000000000DDF
-t1385631388
-s3551
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/pipe.c
-c0000000052970E9C0000000000001B03
-t1385631388
-s6915
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/poll.c
-c0000000052970E9C0000000000000BD3
-t1385631388
-s3027
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/process.c
-c0000000052970E9C0000000000002C01
-t1385631388
-s11265
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/signal.c
-c0000000052970E9C0000000000002F10
-t1385631388
-s12048
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/stream.c
-c0000000052970E9C000000000000849E
-t1385631388
-s33950
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/tcp.c
-c0000000052970E9C000000000000227A
-t1385631388
-s8826
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/thread.c
-c0000000052970E9C00000000000022D5
-t1385631388
-s8917
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/threadpool.c
-c0000000052970E9C000000000000182E
-t1385631388
-s6190
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/timer.c
-c0000000052970E9C0000000000000DD7
-t1385631388
-s3543
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/tty.c
-c0000000052970E9C0000000000000E0C
-t1385631388
-s3596
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/udp.c
-c0000000052970E9C00000000000047D8
-t1385631388
-s18392
-
-N/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.c
-c0000000052970E9C0000000000002165
-t1385631388
-s8549
-
-CCheck dependencies
-r0
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies18"Check dependenciesf3ada35062d0b841^486fa45062d0b841^---0#1#1#--18"Check dependencies36"223B616D-72C4-49E3-AEB0-5FB559723DE2-
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/async.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/async.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309840.644480
-e416309841.871095
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/async.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/async.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/async.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection83"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/async.c166"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/async.o [1msrc/unix/async.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilerdb16a55062d0b841^bef8de5162d0b841^---0#0#1#-19%DVTDocumentLocation2@82"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/async.c0000000000000000^2334"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/async.o [1msrc/unix/async.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/async.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/async.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/async.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/async.o36"01456DC0-B4C6-4739-AE6C-311C66783CCE-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/core.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/core.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309840.809501
-e416309842.049095
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/core.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/core.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/core.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection82"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/core.c164"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/core.o [1msrc/unix/core.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compileref59cf5062d0b841^7d910c5262d0b841^---0#0#1#-19%DVTDocumentLocation2@81"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/core.c0000000000000000^2328"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/core.o [1msrc/unix/core.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/core.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/core.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/core.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/core.o36"D2B0FBF0-C44D-49A4-BCD3-167850A81CF8-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/darwin.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/darwin.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309843.640208
-e416309844.214926
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/darwin.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/darwin.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/darwin.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection84"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/darwin.c168"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/darwin.o [1msrc/unix/darwin.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler0802a45362d0b841^d905375462d0b841^---0#0#1#-19%DVTDocumentLocation2@83"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/darwin.c0000000000000000^2340"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/darwin.o [1msrc/unix/darwin.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/darwin.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/darwin.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/darwin.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/darwin.o36"93FF630C-8C9C-43A7-A62A-8539F72F470D-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/dl.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/dl.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309840.818492
-e416309841.860860
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/dl.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/dl.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/dl.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection80"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/dl.c160"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/dl.o [1msrc/unix/dl.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler91d1d15062d0b841^8868dc5162d0b841^---0#0#1#-19%DVTDocumentLocation2@79"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/dl.c0000000000000000^2316"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/dl.o [1msrc/unix/dl.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/dl.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/dl.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/dl.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/dl.o36"29E22390-84BF-4E6F-B30E-A51DF33BA96A-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/error.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/error.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309840.849873
-e416309841.859984
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/error.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/error.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/error.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection83"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/error.c166"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/error.o [1msrc/unix/error.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler28d6d95062d0b841^e927dc5162d0b841^---0#0#1#-19%DVTDocumentLocation2@82"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/error.c0000000000000000^2334"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/error.o [1msrc/unix/error.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/error.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/error.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/error.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/error.o36"2F5E9E9F-5CA0-41EB-BA78-F75F4842642A-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/fs-poll.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/fs-poll.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309840.642886
-e416309840.809167
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/fs-poll.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/fs-poll.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/fs-poll.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection80"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/fs-poll.c165"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/fs-poll.o [1msrc/fs-poll.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilerb9aaa45062d0b841^d53ccf5062d0b841^---0#0#1#-19%DVTDocumentLocation2@79"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/fs-poll.c0000000000000000^2336"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/fs-poll.o [1msrc/fs-poll.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/fs-poll.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/fs-poll.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/fs-poll.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/fs-poll.o36"B600C4C6-D48B-46F1-A18C-37DD82E2BB9B-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/fs.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fs.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309841.860753
-e416309842.538655
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/fs.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fs.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fs.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-o[1m/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fs.c:166:34: [0m[0;1;35mwarning: [0m[1m
-o      incompatible pointer types passing 'int (struct dirent *)' to parameter of
-o      type 'int (*)(const struct dirent *)' [-Wincompatible-pointer-types][0m
-o  n = scandir(req->path, &dents, uv__fs_readdir_filter, alphasort);
-o[0;1;32m                                 ^~~~~~~~~~~~~~~~~~~~~
-o[0mIn file included from /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fs.c:34:
-o[1m/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include/dirent.h:144:11: [0m[0;1;30mnote: [0m
-o      passing argument to parameter here[0m
-o    int (*)(const struct dirent *), int (*)(const struct dirent **, cons...
-o[0;1;32m          ^
-o[0m1 warning generated.
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection80"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fs.c160"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/fs.o [1msrc/unix/fs.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler747cdc5162d0b841^bbf2895262d0b841^-834"[1m/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fs.c:166:34: [0m[0;1;35mwarning: [0m[1m      incompatible pointer types passing 'int (struct dirent *)' to parameter of      type 'int (*)(const struct dirent *)' [-Wincompatible-pointer-types][0m  n = scandir(req->path, &dents, uv__fs_readdir_filter, alphasort);[0;1;32m                                 ^~~~~~~~~~~~~~~~~~~~~[0mIn file included from /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fs.c:34:[1m/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include/dirent.h:144:11: [0m[0;1;30mnote: [0m      passing argument to parameter here[0m    int (*)(const struct dirent *), int (*)(const struct dirent **, cons...[0;1;32m          ^[0m1 warning generated.1(36%IDEClangDiagnosticActivityLogMessage2@112"Incompatible pointer types passing 'int (struct dirent *)' to parameter of type 'int (*)(const struct dirent *)'-416309842#18446744073709551615#0#1(2@34"Passing argument to parameter here-416309842#18446744073709551615#0#-0#27"com.apple.dt.IDE.diagnostic23%DVTTextDocumentLocation3@126"file:///Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include/dirent.h0000000000000000^143#10#143#10#5513#0#14"Semantic Issue--1#27"com.apple.dt.IDE.diagnostic3@79"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fs.c0000000000000000^165#33#165#33#7196#0#14"Semantic Issue1(3@79"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fs.c0000000000000000^165#33#165#54#7196#0#-0#0#1#-19%DVTDocumentLocation4@79"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fs.c0000000000000000^2316"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/fs.o [1msrc/unix/fs.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/fs.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/fs.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fs.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/fs.o36"B97C0A2D-9CDE-49B3-9208-14704C22606E-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/fsevents.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fsevents.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309843.824667
-e416309844.239211
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/fsevents.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fsevents.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fsevents.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection86"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fsevents.c172"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/fsevents.o [1msrc/unix/fsevents.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler363ad35362d0b841^b83d3d5462d0b841^---0#0#1#-19%DVTDocumentLocation2@85"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fsevents.c0000000000000000^2352"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/fsevents.o [1msrc/unix/fsevents.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/fsevents.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/fsevents.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/fsevents.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/fsevents.o36"2DF11F77-6E36-41AB-960B-8E4AE8FD097D-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/getaddrinfo.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/getaddrinfo.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309841.861148
-e416309842.292580
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/getaddrinfo.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/getaddrinfo.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/getaddrinfo.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection89"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/getaddrinfo.c178"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/getaddrinfo.o [1msrc/unix/getaddrinfo.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler3a91dc5162d0b841^4ce04a5262d0b841^---0#0#1#-19%DVTDocumentLocation2@88"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/getaddrinfo.c0000000000000000^2370"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/getaddrinfo.o [1msrc/unix/getaddrinfo.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/getaddrinfo.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/getaddrinfo.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/getaddrinfo.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/getaddrinfo.o36"BB2A821F-1CBC-4EAA-80E7-6D894B109B2C-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/inet.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/inet.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309840.643082
-e416309840.818184
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/inet.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/inet.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/inet.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection77"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/inet.c159"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/inet.o [1msrc/inet.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler0ebea45062d0b841^a9a1d15062d0b841^---0#0#1#-19%DVTDocumentLocation2@76"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/inet.c0000000000000000^2318"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/inet.o [1msrc/inet.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/inet.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/inet.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/inet.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/inet.o36"05862970-75BD-4775-A585-09AD060DB7FB-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/kqueue.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/kqueue.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309843.956450
-e416309844.328522
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/kqueue.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/kqueue.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/kqueue.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection84"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/kqueue.c168"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/kqueue.o [1msrc/unix/kqueue.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilerdbf7f45362d0b841^a81b545462d0b841^---0#0#1#-19%DVTDocumentLocation2@83"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/kqueue.c0000000000000000^2340"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/kqueue.o [1msrc/unix/kqueue.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/kqueue.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/kqueue.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/kqueue.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/kqueue.o36"E9192528-90AA-430A-8CB1-9BB32FC024FC-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/loop-watcher.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/loop-watcher.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309842.050715
-e416309842.513287
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/loop-watcher.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/loop-watcher.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/loop-watcher.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection90"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/loop-watcher.c180"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/loop-watcher.o [1msrc/unix/loop-watcher.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler69190d5262d0b841^f966835262d0b841^---0#0#1#-19%DVTDocumentLocation2@89"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/loop-watcher.c0000000000000000^2376"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/loop-watcher.o [1msrc/unix/loop-watcher.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/loop-watcher.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/loop-watcher.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/loop-watcher.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/loop-watcher.o36"0A455E52-B66E-4FD3-89EC-A44525F405A6-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/loop.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/loop.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309841.871559
-e416309842.293088
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/loop.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/loop.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/loop.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection82"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/loop.c164"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/loop.o [1msrc/unix/loop.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler454adf5162d0b841^b30a4b5262d0b841^---0#0#1#-19%DVTDocumentLocation2@81"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/loop.c0000000000000000^2328"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/loop.o [1msrc/unix/loop.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/loop.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/loop.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/loop.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/loop.o36"15D5CC4B-07D2-4D0D-9E43-52C9A39A0873-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/pipe.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/pipe.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309842.292850
-e416309842.742327
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/pipe.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/pipe.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/pipe.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection82"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/pipe.c164"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/pipe.o [1msrc/unix/pipe.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilerd5254b5262d0b841^124bbe5262d0b841^---0#0#1#-19%DVTDocumentLocation2@81"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/pipe.c0000000000000000^2328"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/pipe.o [1msrc/unix/pipe.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/pipe.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/pipe.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/pipe.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/pipe.o36"6CAAA923-7937-43E3-B6EB-14073D6AB177-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/poll.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/poll.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309842.293712
-e416309842.722108
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/poll.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/poll.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/poll.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection82"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/poll.c164"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/poll.o [1msrc/unix/poll.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilerdc4a4b5262d0b841^2fddb85262d0b841^---0#0#1#-19%DVTDocumentLocation2@81"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/poll.c0000000000000000^2328"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/poll.o [1msrc/unix/poll.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/poll.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/poll.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/poll.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/poll.o36"1860C33F-9CAE-420F-A7B0-3F91EFB382F5-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/process.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/process.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309842.513900
-e416309843.037678
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/process.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/process.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/process.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection85"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/process.c170"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/process.o [1msrc/unix/process.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler07b1835262d0b841^12a5095362d0b841^---0#0#1#-19%DVTDocumentLocation2@84"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/process.c0000000000000000^2346"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/process.o [1msrc/unix/process.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/process.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/process.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/process.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/process.o36"384A6D77-54FB-4428-8333-493AD7624671-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/signal.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/signal.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309842.539655
-e416309843.176863
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/signal.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/signal.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/signal.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection84"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/signal.c168"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/signal.o [1msrc/unix/signal.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler795a8a5262d0b841^39472d5362d0b841^---0#0#1#-19%DVTDocumentLocation2@83"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/signal.c0000000000000000^2340"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/signal.o [1msrc/unix/signal.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/signal.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/signal.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/signal.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/signal.o36"457EFB5C-6A2D-4898-A255-9C15E91D4320-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/stream.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/stream.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309842.722880
-e416309843.525340
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/stream.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/stream.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/stream.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection84"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/stream.c168"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/stream.o [1msrc/unix/stream.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler022db95262d0b841^7c80865362d0b841^---0#0#1#-19%DVTDocumentLocation2@83"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/stream.c0000000000000000^2340"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/stream.o [1msrc/unix/stream.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/stream.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/stream.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/stream.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/stream.o36"F9F6B326-DA63-44C1-81DB-95008129B6D5-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/tcp.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/tcp.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309842.742798
-e416309843.258246
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/tcp.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/tcp.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/tcp.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection81"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/tcp.c162"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/tcp.o [1msrc/unix/tcp.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler5a4abe5262d0b841^971d425362d0b841^---0#0#1#-19%DVTDocumentLocation2@80"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/tcp.c0000000000000000^2322"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/tcp.o [1msrc/unix/tcp.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/tcp.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/tcp.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/tcp.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/tcp.o36"361BD3FB-3F2F-4233-B033-0E04338439A9-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/thread.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/thread.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309843.038011
-e416309843.515597
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/thread.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/thread.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/thread.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection84"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/thread.c168"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/thread.o [1msrc/unix/thread.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilerd3d9095362d0b841^2afe835362d0b841^---0#0#1#-19%DVTDocumentLocation2@83"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/thread.c0000000000000000^2340"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/thread.o [1msrc/unix/thread.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/thread.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/thread.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/thread.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/thread.o36"D76378FB-C1C2-4D27-A227-189B99CFC387-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/threadpool.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/threadpool.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309843.177289
-e416309843.639097
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/threadpool.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/threadpool.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/threadpool.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection88"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/threadpool.c176"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/threadpool.o [1msrc/unix/threadpool.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilere97f2d5362d0b841^1b9da35362d0b841^---0#0#1#-19%DVTDocumentLocation2@87"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/threadpool.c0000000000000000^2364"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/threadpool.o [1msrc/unix/threadpool.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/threadpool.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/threadpool.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/threadpool.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/threadpool.o36"64F58DCA-BEAA-4954-BE1F-9BB92BA3DC8F-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/timer.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/timer.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309843.258608
-e416309843.824328
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/timer.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/timer.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/timer.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection83"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/timer.c166"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/timer.o [1msrc/unix/timer.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilerb151425362d0b841^0707d35362d0b841^---0#0#1#-19%DVTDocumentLocation2@82"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/timer.c0000000000000000^2334"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/timer.o [1msrc/unix/timer.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/timer.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/timer.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/timer.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/timer.o36"39CECD67-E49C-4767-9040-72D0856AB74E-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/tty.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/tty.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309843.516305
-e416309843.956050
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/tty.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/tty.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/tty.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection81"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/tty.c162"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/tty.o [1msrc/unix/tty.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilerdc49845362d0b841^e4bff45362d0b841^---0#0#1#-19%DVTDocumentLocation2@80"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/tty.c0000000000000000^2322"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/tty.o [1msrc/unix/tty.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/tty.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/tty.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/tty.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/tty.o36"341C4A3C-8F8F-40F2-9FD8-24FC6A002C9C-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/udp.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/udp.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309843.525945
-e416309844.076812
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/udp.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/udp.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/udp.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/internal.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection81"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/udp.c162"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/udp.o [1msrc/unix/udp.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler69e1865362d0b841^c6c3135462d0b841^---0#0#1#-19%DVTDocumentLocation2@80"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/udp.c0000000000000000^2322"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/udp.o [1msrc/unix/udp.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/udp.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/udp.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/unix/udp.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/udp.o36"3E8ADB85-CE4C-4722-970E-1B971BBA216A-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CCompileC build/uv.build/Default/libuv.build/Objects-normal/x86_64/uv-common.o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s416309840.643311
-e416309840.849500
-r1
-xCompileC
-xbuild/uv.build/Default/libuv.build/Objects-normal/x86_64/uv-common.o
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.c
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.h
-d/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/include/uv-private/tree.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection82"Compile /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.c169"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/uv-common.o [1msrc/uv-common.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler75cda45062d0b841^1ea6d95062d0b841^---0#0#1#-19%DVTDocumentLocation2@81"file:///Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.c0000000000000000^2348"[1mCompileC[0m build/uv.build/Default/libuv.build/Objects-normal/x86_64/uv-common.o [1msrc/uv-common.c[0m normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DHAVE_CONFIG_H -D_DARWIN_USE_64_BIT_INODE=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/uv.hmap -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/include -Iinclude -Iinclude/uv-private -Isrc -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources/x86_64 -I/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/DerivedSources -F/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -MMD -MT dependencies -MF /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/uv-common.d --serialize-diagnostics /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/uv-common.dia -c /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/src/uv-common.c -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/uv-common.o36"C8B7216A-9D75-4268-9ACC-CAF5ED3AD8A4-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
-CLibtool /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/libuv.a normal x86_64
-s416309844.330408
-e416309844.344676
-r1
-xLibtool
-x/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/libuv.a
-xnormal
-xx86_64
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection51"[1mLibtool[0m build/Default/libuv.a normal x86_6451"[1mLibtool[0m build/Default/libuv.a normal x86_6411a6545462d0b841^683d585462d0b841^---0#0#1#--696"[1mLibtool[0m build/Default/libuv.a normal x86_64    cd /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv    setenv MACOSX_DEPLOYMENT_TARGET 10.9    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool -static -arch_only x86_64 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -L/Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default -filelist /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/uv.build/Default/libuv.build/Objects-normal/x86_64/uv.LinkFileList -o /Users/modun/Software/tmpDownload/libpomelo-master/deps/uv/build/Default/libuv.a36"E8B89CA3-01D0-49B9-A99D-A9DDE6A53409-
-bA0ADBA67-2D33-4D60-82BA-1F9E6E9A137C
-
