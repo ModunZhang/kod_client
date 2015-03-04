@@ -1381,7 +1381,7 @@ function GameUIMail:CreateReplyMail(mail)
 
 
 
-    local textView = cc.DTextView:create(cc.size(578,278),display.newScale9Sprite("background_578X278.png"))
+    local textView = ccui.UITextView:create(cc.size(578,278),display.newScale9Sprite("background_578X278.png"))
     textView:align(display.LEFT_TOP,1,lucid_bg:getContentSize().height-5):addTo(lucid_bg)
     textView:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
     textView:setFont(UIKit:getFontFilePath(), 24)

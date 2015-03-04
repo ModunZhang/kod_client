@@ -266,7 +266,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
     local current_tech = self:GetProductionTechnology()
     local unLockByTech = City:FindTechByIndex(current_tech:UnlockBy())
     local cost =  self:GetResourceCost()
-    local coin = City.resource_manager:GetCoinResource():GetValue()
+    local coin = City.resource_manager:GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     table.insert(requirements, 
         {
             resource_type = _("升级队列"),
@@ -403,7 +403,7 @@ function GameUIUpgradeTechnology:CheckCanUpgradeNow()
 end
 
 function GameUIUpgradeTechnology:GetUpgradeGemsIfResourceNotEnough()
-    local coin = City.resource_manager:GetCoinResource():GetValue()
+    local coin = City.resource_manager:GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local materialManager = City:GetMaterialManager()
     local resource,material,__ = self:GetNeedResourceAndMaterialsAndTime()
     local resource_gems = DataUtils:buyResource(resource,{coin = coin})

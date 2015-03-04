@@ -205,7 +205,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
     elseif self.building:GetType()=="townHall" then
         efficiency = string.format("%s%d",bd.townHall_dwelling,building:GetNextLevelDwellingNum())
     elseif self.building:GetType()=="dwelling" then
-        efficiency = string.format("%s%d,%s+%d,%s+%d",bd.dwelling_citizen,building:GetNextLevelCitizen(),bd.recoveryCitizen,building:GetNextLevelRecoveryCitizen(),bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s%d,%s+%d",bd.dwelling_citizen,building:GetNextLevelCitizen(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="woodcutter" then
         efficiency = string.format("%s%d,%s+%d",bd.woodcutter_poduction,building:GetNextLevelProductionPerHour(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="farmer" then

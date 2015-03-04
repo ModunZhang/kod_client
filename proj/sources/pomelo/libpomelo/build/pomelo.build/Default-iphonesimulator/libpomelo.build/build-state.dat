@@ -1,638 +1,0 @@
-Tlibpomelo
-v6
-r1
-cCheck dependencies
-cCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/client.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/client.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/common.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/common.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/listener.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/listener.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/map.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/map.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/message.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/message.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/msg-json.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-json.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/msg-pb.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-pb.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/network.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/network.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/package.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/package.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-decode.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-encode.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-util.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-util.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pkg-handshake.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-handshake.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pkg-heartbeat.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-heartbeat.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/transport.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/transport.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/protocol.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/protocol.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/thread.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/thread.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-cLibtool /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/libpomelo.a normal i386
-
-N/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk
-c0000000051A3EEBB0000000000000110
-t1369697979
-s272
-
-N/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk/SDKSettings.plist
-c0000000050CE93CC000000000000039A
-t1355715532
-s922
-
-N/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk/System/Library/CoreServices/SystemVersion.plist
-c0000000050ED1146000000000000019E
-t1357713734
-s414
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/libpomelo.a
-t2
-s0
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/client.o
-t1395191721
-s33184
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/common.o
-t1395191721
-s9876
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/listener.o
-t1395191721
-s19588
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/map.o
-t1395191721
-s9524
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/message.o
-t1395191721
-s13452
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/msg-json.o
-t1395191721
-s5296
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/msg-pb.o
-t1395191721
-s5648
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/network.o
-t1395191721
-s40704
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/package.o
-t1395191721
-s11420
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-decode.o
-t1395191721
-s24704
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-encode.o
-t1395191721
-s18568
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-util.o
-t1395191721
-s3392
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pkg-handshake.o
-t1395191721
-s34240
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pkg-heartbeat.o
-t1395191721
-s22732
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pomelo.LinkFileList
-c000000005328EFA90000000000000B13
-t1395191721
-s2835
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/protocol.o
-t1395191722
-s29456
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/thread.o
-t1395191722
-s20364
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/transport.o
-t1395191721
-s22712
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/client.c
-c0000000052970E9C00000000000029FE
-t1385631388
-s10750
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/common.c
-c0000000052970E9C0000000000000066
-t1385631388
-s102
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/listener.c
-c0000000052970E9C000000000000024D
-t1385631388
-s589
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/map.c
-c0000000052970E9C0000000000000E8E
-t1385631388
-s3726
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/message.c
-c0000000052970E9C0000000000001763
-t1385631388
-s5987
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-json.c
-c0000000052970E9C00000000000002D5
-t1385631388
-s725
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-pb.c
-c0000000052970E9C00000000000006D5
-t1385631388
-s1749
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/network.c
-c0000000052970E9C0000000000003DB6
-t1385631388
-s15798
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/package.c
-c0000000052970E9C0000000000001560
-t1385631388
-s5472
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c
-c0000000052970E9C00000000000041ED
-t1385631388
-s16877
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c
-c0000000052970E9C0000000000003707
-t1385631388
-s14087
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-util.c
-c0000000052970E9C0000000000000380
-t1385631388
-s896
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-handshake.c
-c0000000052970E9C0000000000001B31
-t1385631388
-s6961
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-heartbeat.c
-c0000000052970E9C00000000000008BA
-t1385631388
-s2234
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/protocol.c
-c0000000052970E9C0000000000001920
-t1385631388
-s6432
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/thread.c
-c0000000052970E9C0000000000000442
-t1385631388
-s1090
-
-N/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/transport.c
-c0000000052970E9C0000000000000A91
-t1385631388
-s2705
-
-CCheck dependencies
-r0
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies18"Check dependencies1ae0122927d9b841^aef41e2927d9b841^---0#1#1#--18"Check dependencies36"38B43ED1-030B-45B9-B01D-9A3004DDEA5B-
-
-CCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/client.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/client.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884521.124688
-e416884521.590641
-r1
-xCompileC
-xbuild/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/client.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/client.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/client.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/listener.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/package.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/message.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/transport.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/internal.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/common.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection97"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/client.c183"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/client.o [1msrc/client.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler821c202927d9b841^7044972927d9b841^---0#0#1#-19%DVTDocumentLocation2@96"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/client.c0000000000000000^3077"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/client.o [1msrc/client.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/modun/Study/Cocos2dx/sdk/cocos2d-x-3.0rc0/tools/cocos2d-console/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -mios-simulator-version-min=5.0 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources/i386 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/client.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/client.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/client.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/client.o36"E17ACDCD-4ADC-4804-80CF-85B6379ED7B1-
-bC47B6B0F-C3F6-47CB-BEE9-A3798D5E8ED3
-
-CCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/common.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/common.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884521.124960
-e416884521.476114
-r1
-xCompileC
-xbuild/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/common.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/common.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/common.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection97"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/common.c183"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/common.o [1msrc/common.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler751f202927d9b841^4be9792927d9b841^---0#0#1#-19%DVTDocumentLocation2@96"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/common.c0000000000000000^3077"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/common.o [1msrc/common.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/modun/Study/Cocos2dx/sdk/cocos2d-x-3.0rc0/tools/cocos2d-console/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -mios-simulator-version-min=5.0 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources/i386 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/common.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/common.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/common.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/common.o36"40B6D45C-C720-410A-80E0-0BB1B9CAB1C6-
-bC47B6B0F-C3F6-47CB-BEE9-A3798D5E8ED3
-
-CCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/listener.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/listener.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884521.125185
-e416884521.498320
-r1
-xCompileC
-xbuild/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/listener.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/listener.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/listener.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/listener.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection99"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/listener.c187"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/listener.o [1msrc/listener.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler452e202927d9b841^b3957f2927d9b841^---0#0#1#-19%DVTDocumentLocation2@98"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/listener.c0000000000000000^3089"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/listener.o [1msrc/listener.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/modun/Study/Cocos2dx/sdk/cocos2d-x-3.0rc0/tools/cocos2d-console/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -mios-simulator-version-min=5.0 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources/i386 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/listener.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/listener.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/listener.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/listener.o36"4424A414-8DF7-4651-89DE-A71D9FDE4D82-
-bC47B6B0F-C3F6-47CB-BEE9-A3798D5E8ED3
-
-CCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/map.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/map.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884521.126246
-e416884521.332662
-r1
-xCompileC
-xbuild/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/map.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/map.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/map.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection94"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/map.c177"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/map.o [1msrc/map.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compileree7b202927d9b841^3d27552927d9b841^---0#0#1#-19%DVTDocumentLocation2@93"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/map.c0000000000000000^3059"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/map.o [1msrc/map.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/modun/Study/Cocos2dx/sdk/cocos2d-x-3.0rc0/tools/cocos2d-console/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -mios-simulator-version-min=5.0 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources/i386 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/map.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/map.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/map.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/map.o36"2D316C0A-1168-41A5-A727-3BBE1D3267D0-
-bC47B6B0F-C3F6-47CB-BEE9-A3798D5E8ED3
-
-CCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/message.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/message.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884521.333115
-e416884521.540405
-r1
-xCompileC
-xbuild/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/message.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/message.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/message.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/message.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection98"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/message.c185"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/message.o [1msrc/message.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler8c66552927d9b841^855b8a2927d9b841^---0#0#1#-19%DVTDocumentLocation2@97"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/message.c0000000000000000^3083"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/message.o [1msrc/message.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/modun/Study/Cocos2dx/sdk/cocos2d-x-3.0rc0/tools/cocos2d-console/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -mios-simulator-version-min=5.0 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources/i386 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/message.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/message.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/message.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/message.o36"1FC83313-A42D-4702-B62B-D4C3B4BBECA9-
-bC47B6B0F-C3F6-47CB-BEE9-A3798D5E8ED3
-
-CCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/msg-json.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-json.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884521.477252
-e416884521.604051
-r1
-xCompileC
-xbuild/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/msg-json.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-json.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-json.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/message.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection99"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-json.c187"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/msg-json.o [1msrc/msg-json.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler33537a2927d9b841^bdc69a2927d9b841^---0#0#1#-19%DVTDocumentLocation2@98"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-json.c0000000000000000^3089"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/msg-json.o [1msrc/msg-json.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/modun/Study/Cocos2dx/sdk/cocos2d-x-3.0rc0/tools/cocos2d-console/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -mios-simulator-version-min=5.0 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources/i386 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/msg-json.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/msg-json.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-json.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/msg-json.o36"00948665-5FCE-47AB-B76D-596F9E141D19-
-bC47B6B0F-C3F6-47CB-BEE9-A3798D5E8ED3
-
-CCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/msg-pb.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-pb.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884521.499286
-e416884521.632636
-r1
-xCompileC
-xbuild/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/msg-pb.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-pb.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-pb.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/message.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protobuf/pb.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection97"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-pb.c183"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/msg-pb.o [1msrc/msg-pb.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler7ff67f2927d9b841^34f6a12927d9b841^---0#0#1#-19%DVTDocumentLocation2@96"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-pb.c0000000000000000^3077"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/msg-pb.o [1msrc/msg-pb.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/modun/Study/Cocos2dx/sdk/cocos2d-x-3.0rc0/tools/cocos2d-console/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -mios-simulator-version-min=5.0 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources/i386 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/msg-pb.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/msg-pb.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/msg-pb.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/msg-pb.o36"F7797A91-6572-4DFA-B9AD-ACA10C826080-
-bC47B6B0F-C3F6-47CB-BEE9-A3798D5E8ED3
-
-CCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/network.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/network.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884521.543076
-e416884521.873881
-r1
-xCompileC
-xbuild/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/network.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/network.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/network.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/package.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/message.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/common.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/transport.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection98"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/network.c185"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/network.o [1msrc/network.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler412c8b2927d9b841^9015e02927d9b841^---0#0#1#-19%DVTDocumentLocation2@97"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/network.c0000000000000000^3083"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/network.o [1msrc/network.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/modun/Study/Cocos2dx/sdk/cocos2d-x-3.0rc0/tools/cocos2d-console/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -mios-simulator-version-min=5.0 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources/i386 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/network.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/network.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/network.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/network.o36"CB1E0AF3-43F2-4EA1-92F6-77139ECB11C2-
-bC47B6B0F-C3F6-47CB-BEE9-A3798D5E8ED3
-
-CCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/package.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/package.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884521.591638
-e416884521.767635
-r1
-xCompileC
-xbuild/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/package.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/package.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/package.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/internal.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/common.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/package.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection98"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/package.c185"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/package.o [1msrc/package.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compilere599972927d9b841^508cc42927d9b841^---0#0#1#-19%DVTDocumentLocation2@97"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/package.c0000000000000000^3083"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/package.o [1msrc/package.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/modun/Study/Cocos2dx/sdk/cocos2d-x-3.0rc0/tools/cocos2d-console/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -mios-simulator-version-min=5.0 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources/i386 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/package.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/package.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/package.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/package.o36"8F5C82C7-327F-4BC4-A65D-4FA0FE7562ED-
-bC47B6B0F-C3F6-47CB-BEE9-A3798D5E8ED3
-
-CCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-decode.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884521.605489
-e416884521.762073
-r1
-xCompileC
-xbuild/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-decode.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protobuf/pb.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protobuf/pb-util.h
-o[1m/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c:246:45: [0m[0;1;35mwarning: [0m[1m
-o      'memset' call operates on objects of type 'char' while the size is based
-o      on a different type 'char *' [-Wsizeof-pointer-memaccess][0m
-o                memset(head_text, 0, sizeof(head_text));
-o[0;1;32m                       ~~~~~~~~~            ^~~~~~~~~
-o[0m[1m/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c:246:45: [0m[0;1;30mnote: [0m
-o      did you mean to provide an explicit length?[0m
-o                memset(head_text, 0, sizeof(head_text));
-o[0;1;32m                                            ^~~~~~~~~
-o[0m1 warning generated.
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection100"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c189"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-decode.o [1msrc/pb-decode.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compilerb7249b2927d9b841^cd8fc32927d9b841^-735"[1m/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c:246:45: [0m[0;1;35mwarning: [0m[1m      'memset' call operates on objects of type 'char' while the size is based      on a different type 'char *' [-Wsizeof-pointer-memaccess][0m                memset(head_text, 0, sizeof(head_text));[0;1;32m                       ~~~~~~~~~            ^~~~~~~~~[0m[1m/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c:246:45: [0m[0;1;30mnote: [0m      did you mean to provide an explicit length?[0m                memset(head_text, 0, sizeof(head_text));[0;1;32m                                            ^~~~~~~~~[0m1 warning generated.1(36%IDEClangDiagnosticActivityLogMessage2@101"'memset' call operates on objects of type 'char' while the size is based on a different type 'char *'-416884521#18446744073709551615#0#1(2@43"Did you mean to provide an explicit length?-416884521#18446744073709551615#0#-0#27"com.apple.dt.IDE.diagnostic23%DVTTextDocumentLocation3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c0000000000000000^245#44#245#44#8180#0#14"Semantic Issue1(3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c0000000000000000^245#44#245#53#8180#0#-1#27"com.apple.dt.IDE.diagnostic3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c0000000000000000^245#44#245#44#8180#0#14"Semantic Issue2(3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c0000000000000000^245#23#245#32#8159#0#3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c0000000000000000^245#44#245#53#8180#0#-0#0#1#-19%DVTDocumentLocation4@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c0000000000000000^3095"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-decode.o [1msrc/pb-decode.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/modun/Study/Cocos2dx/sdk/cocos2d-x-3.0rc0/tools/cocos2d-console/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -mios-simulator-version-min=5.0 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources/i386 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-decode.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-decode.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-decode.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-decode.o36"33785FF5-A3FD-4A5B-BE46-4A3A099F1669-
-bC47B6B0F-C3F6-47CB-BEE9-A3798D5E8ED3
-
-CCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-encode.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884521.632957
-e416884521.755031
-r1
-xCompileC
-xbuild/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-encode.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protobuf/pb.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protobuf/pb-util.h
-o[1m/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c:262:45: [0m[0;1;35mwarning: [0m[1m
-o      'memset' call operates on objects of type 'char' while the size is based
-o      on a different type 'char *' [-Wsizeof-pointer-memaccess][0m
-o                memset(head_text, 0, sizeof(head_text));
-o[0;1;32m                       ~~~~~~~~~            ^~~~~~~~~
-o[0m[1m/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c:262:45: [0m[0;1;30mnote: [0m
-o      did you mean to provide an explicit length?[0m
-o                memset(head_text, 0, sizeof(head_text));
-o[0;1;32m                                            ^~~~~~~~~
-o[0m1 warning generated.
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection100"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c189"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-encode.o [1msrc/pb-encode.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler452ca22927d9b841^7007c22927d9b841^-735"[1m/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c:262:45: [0m[0;1;35mwarning: [0m[1m      'memset' call operates on objects of type 'char' while the size is based      on a different type 'char *' [-Wsizeof-pointer-memaccess][0m                memset(head_text, 0, sizeof(head_text));[0;1;32m                       ~~~~~~~~~            ^~~~~~~~~[0m[1m/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c:262:45: [0m[0;1;30mnote: [0m      did you mean to provide an explicit length?[0m                memset(head_text, 0, sizeof(head_text));[0;1;32m                                            ^~~~~~~~~[0m1 warning generated.1(36%IDEClangDiagnosticActivityLogMessage2@101"'memset' call operates on objects of type 'char' while the size is based on a different type 'char *'-416884521#18446744073709551615#0#1(2@43"Did you mean to provide an explicit length?-416884521#18446744073709551615#0#-0#27"com.apple.dt.IDE.diagnostic23%DVTTextDocumentLocation3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c0000000000000000^261#44#261#44#9191#0#14"Semantic Issue1(3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c0000000000000000^261#44#261#53#9191#0#-1#27"com.apple.dt.IDE.diagnostic3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c0000000000000000^261#44#261#44#9191#0#14"Semantic Issue2(3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c0000000000000000^261#23#261#32#9170#0#3@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c0000000000000000^261#44#261#53#9191#0#-0#0#1#-19%DVTDocumentLocation4@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c0000000000000000^3095"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-encode.o [1msrc/pb-encode.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/modun/Study/Cocos2dx/sdk/cocos2d-x-3.0rc0/tools/cocos2d-console/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -mios-simulator-version-min=5.0 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources/i386 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-encode.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-encode.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-encode.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-encode.o36"F89C77EC-866C-4825-A5EE-B8409BE5576A-
-bC47B6B0F-C3F6-47CB-BEE9-A3798D5E8ED3
-
-CCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-util.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-util.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884521.756564
-e416884521.810922
-r1
-xCompileC
-xbuild/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-util.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-util.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-util.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protobuf/pb-util.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection98"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-util.c185"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-util.o [1msrc/pb-util.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler9dd6c12927d9b841^2e57cf2927d9b841^---0#0#1#-19%DVTDocumentLocation2@97"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-util.c0000000000000000^3083"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-util.o [1msrc/pb-util.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/modun/Study/Cocos2dx/sdk/cocos2d-x-3.0rc0/tools/cocos2d-console/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -mios-simulator-version-min=5.0 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources/i386 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-util.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-util.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pb-util.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pb-util.o36"3A2755F6-1055-4A31-8279-3F4B9918645E-
-bC47B6B0F-C3F6-47CB-BEE9-A3798D5E8ED3
-
-CCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pkg-handshake.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-handshake.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884521.762343
-e416884521.970507
-r1
-xCompileC
-xbuild/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pkg-handshake.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-handshake.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-handshake.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/package.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection104"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-handshake.c197"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pkg-handshake.o [1msrc/pkg-handshake.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler514bc32927d9b841^058af82927d9b841^---0#0#1#-19%DVTDocumentLocation2@103"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-handshake.c0000000000000000^3119"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pkg-handshake.o [1msrc/pkg-handshake.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/modun/Study/Cocos2dx/sdk/cocos2d-x-3.0rc0/tools/cocos2d-console/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -mios-simulator-version-min=5.0 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources/i386 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pkg-handshake.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pkg-handshake.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-handshake.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pkg-handshake.o36"E0DAA0A5-2622-45A9-9403-30F9119AEBEB-
-bC47B6B0F-C3F6-47CB-BEE9-A3798D5E8ED3
-
-CCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pkg-heartbeat.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-heartbeat.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884521.767934
-e416884521.908642
-r1
-xCompileC
-xbuild/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pkg-heartbeat.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-heartbeat.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-heartbeat.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/package.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection104"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-heartbeat.c197"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pkg-heartbeat.o [1msrc/pkg-heartbeat.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compilerf6b7c42927d9b841^9cdfe82927d9b841^---0#0#1#-19%DVTDocumentLocation2@103"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-heartbeat.c0000000000000000^3119"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pkg-heartbeat.o [1msrc/pkg-heartbeat.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/modun/Study/Cocos2dx/sdk/cocos2d-x-3.0rc0/tools/cocos2d-console/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -mios-simulator-version-min=5.0 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources/i386 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pkg-heartbeat.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pkg-heartbeat.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/pkg-heartbeat.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pkg-heartbeat.o36"5E51534B-C304-4CE0-9A83-4EBF5CA286DF-
-bC47B6B0F-C3F6-47CB-BEE9-A3798D5E8ED3
-
-CCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/protocol.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/protocol.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884521.874304
-e416884522.046026
-r1
-xCompileC
-xbuild/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/protocol.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/protocol.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/protocol.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/internal.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/message.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection99"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/protocol.c187"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/protocol.o [1msrc/protocol.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler88f4df2927d9b841^4bc80b2a27d9b841^---0#0#1#-19%DVTDocumentLocation2@98"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/protocol.c0000000000000000^3089"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/protocol.o [1msrc/protocol.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/modun/Study/Cocos2dx/sdk/cocos2d-x-3.0rc0/tools/cocos2d-console/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -mios-simulator-version-min=5.0 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources/i386 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/protocol.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/protocol.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/protocol.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/protocol.o36"38CD9193-1E61-4371-99FC-5E1E4C7612AF-
-bC47B6B0F-C3F6-47CB-BEE9-A3798D5E8ED3
-
-CCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/thread.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/thread.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884521.909052
-e416884522.043676
-r1
-xCompileC
-xbuild/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/thread.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/thread.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/thread.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/internal.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection97"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/thread.c183"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/thread.o [1msrc/thread.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler49dbe82927d9b841^7b2e0b2a27d9b841^---0#0#1#-19%DVTDocumentLocation2@96"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/thread.c0000000000000000^3077"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/thread.o [1msrc/thread.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/modun/Study/Cocos2dx/sdk/cocos2d-x-3.0rc0/tools/cocos2d-console/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -mios-simulator-version-min=5.0 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources/i386 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/thread.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/thread.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/thread.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/thread.o36"C563E142-C1B9-423E-891B-52014CB5EE66-
-bC47B6B0F-C3F6-47CB-BEE9-A3798D5E8ED3
-
-CCompileC build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/transport.o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/transport.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
-s416884521.811216
-e416884521.955789
-r1
-xCompileC
-xbuild/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/transport.o
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/transport.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/transport.c
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/transport.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-unix.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/uv/include/uv-private/uv-darwin.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/deps/jansson/src/jansson_config.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/map.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-private/ngx-queue.h
-d/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/include/pomelo-protocol/package.h
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection100"Compile /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/transport.c189"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/transport.o [1msrc/transport.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler6cd0cf2927d9b841^dcb9f42927d9b841^---0#0#1#-19%DVTDocumentLocation2@99"file:///Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/transport.c0000000000000000^3095"[1mCompileC[0m build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/transport.o [1msrc/transport.c[0m normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/modun/Study/Cocos2dx/sdk/cocos2d-x-3.0rc0/tools/cocos2d-console/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=80 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200112 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_C_SOURCE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -mios-simulator-version-min=5.0 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/pomelo.hmap -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/include -Iinclude -Ideps/uv/include -Ideps/jansson/src -Ideps/uv/include -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources/i386 -I/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/DerivedSources -F/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator -MMD -MT dependencies -MF /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/transport.d --serialize-diagnostics /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/transport.dia -c /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/src/transport.c -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/transport.o36"EAB870E4-702A-4B5B-A782-D27EB5B03424-
-bC47B6B0F-C3F6-47CB-BEE9-A3798D5E8ED3
-
-CLibtool /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/libpomelo.a normal i386
-s416884522.047776
-e416884522.060180
-r1
-xLibtool
-x/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/libpomelo.a
-xnormal
-xi386
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection69"[1mLibtool[0m build/Default-iphonesimulator/libpomelo.a normal i38669"[1mLibtool[0m build/Default-iphonesimulator/libpomelo.a normal i386e2570c2a27d9b841^cf680f2a27d9b841^---0#0#1#--1149"[1mLibtool[0m build/Default-iphonesimulator/libpomelo.a normal i386    cd /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo    export IPHONEOS_DEPLOYMENT_TARGET=5.0    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/modun/Study/Cocos2dx/sdk/cocos2d-x-3.0rc0/tools/cocos2d-console/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool -static -arch_only i386 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk -L/Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator -filelist /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/pomelo.build/Default-iphonesimulator/libpomelo.build/Objects-normal/i386/pomelo.LinkFileList -o /Users/modun/Work/MyDev/BF/BFClient/frameworks/runtime-src/Classes/libpomelo/build/Default-iphonesimulator/libpomelo.a36"2F2EA806-DFE2-4BDC-8543-DD61A60EA7F9-
-bC47B6B0F-C3F6-47CB-BEE9-A3798D5E8ED3
-

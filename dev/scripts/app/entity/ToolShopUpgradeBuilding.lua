@@ -32,13 +32,13 @@ function ToolShopUpgradeBuilding:CreateEvent(category)
         self.id = nil
     end
     function event:UniqueKey()
-        return self.category
+        return self:Id()
     end
     function event:Category()
         return self.category
     end
     function event:Id()
-        return self.id
+        return UniqueKey
     end
     function event:StartTime()
         return self.finished_time - tool_shop:GetMakingTimeByCategory(self.category)

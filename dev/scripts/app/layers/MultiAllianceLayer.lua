@@ -214,54 +214,55 @@ function MultiAllianceLayer:ManagerCorpsFromChangedMap(changed_map)
     end
 end
 
+
 function MultiAllianceLayer:CreateCorpsIf(marchEvent)
-    if not self:IsExistCorps(marchEvent:Id()) then
-        local from,allianceId = marchEvent:FromLocation()
-        from.index = self:GetAllianceViewIndexById(allianceId)
-        local to,allianceId   = marchEvent:TargetLocation()
-        to.index = self:GetAllianceViewIndexById(allianceId)
-        self:CreateCorps(
-            marchEvent:Id(),
-            from,
-            to,
-            marchEvent:StartTime(),
-            marchEvent:ArriveTime()
-        )
-    end
+    local from,allianceId = marchEvent:FromLocation()
+    from.index = self:GetAllianceViewIndexById(allianceId)
+    local to,allianceId   = marchEvent:TargetLocation()
+    to.index = self:GetAllianceViewIndexById(allianceId)
+    self:CreateCorps(
+        marchEvent:Id(),
+        from,
+        to,
+        marchEvent:StartTime(),
+        marchEvent:ArriveTime()
+    )
 end
+local dir_map = {
+    {"Flying_0", -1},
+    {"Flying_1", -1},
+    {"Flying_2", -1},
+    {"Flying_2", 1},
+    {"Flying_2", 1},
+    {"Flying_1", 1},
+    {"Flying_0", 1},
+    {"Flying_0", -1},
+}
 function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_time)
-    assert(self.corps_map[id] == nil)
     local march_info = self:GetMarchInfoWith(id, start_pos, end_pos)
     march_info.start_time = start_time
     march_info.finish_time = finish_time
     march_info.total_time = finish_time - start_time
     march_info.speed = (march_info.length /  march_info.total_time)
-    local corps = display.newNode():addTo(self:GetCorpsNode())
-    local armature = ccs.Armature:create("dragon_red"):addTo(corps):scale(0.5)
+    if not self.corps_map[id] then
+        local corps = display.newNode():addTo(self:GetCorpsNode())
+        local armature = ccs.Armature:create("dragon_red"):addTo(corps):scale(0.5)
 
-    local dir_map = {
-        {"Flying_0", -1},
-        {"Flying_1", -1},
-        {"Flying_2", -1},
-        {"Flying_2", 1},
-        {"Flying_2", 1},
-        {"Flying_1", 1},
-        {"Flying_0", 1},
-        {"Flying_0", -1},
-    }
-    print("CreateCorps",math.floor(march_info.degree / 45) + 4,march_info.degree)
-    local ani, scalex
-    if march_info.degree>=0 then
-        ani, scalex = unpack(dir_map[math.floor(march_info.degree / 45) + 4])
+        print("CreateCorps",math.floor(march_info.degree / 45) + 4,march_info.degree)
+        local ani, scalex
+        if march_info.degree>=0 then
+            ani, scalex = unpack(dir_map[math.floor(march_info.degree / 45) + 4])
+        else
+            ani, scalex = unpack(dir_map[math.ceil(march_info.degree / 45) + 4])
+        end
+        armature:getAnimation():play(ani)
+        corps:setScaleX(scalex)
+        corps.march_info = march_info
+        self.corps_map[id] = corps
+        self:CreateLine(id, march_info.start_info.logic, march_info.end_info.logic)
     else
-        ani, scalex = unpack(dir_map[math.ceil(march_info.degree / 45) + 4])
+        self.corps_map[id].march_info = march_info
     end
-    armature:getAnimation():play(ani)
-    corps:setScaleX(scalex)
-
-    corps.march_info = march_info
-    self.corps_map[id] = corps
-    self:CreateLine(id, march_info.start_info.logic, march_info.end_info.logic)
     return corps
 end
 function MultiAllianceLayer:DeleteCorpsById(id)
