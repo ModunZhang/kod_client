@@ -72,3 +72,7 @@ intInit["dragonStrikeHpDecreasedPercent"] = {
 	["type"] = "dragonStrikeHpDecreasedPercent",
 	["value"] = 10
 }
+intInit["allianceFightFaiedProtectMinutes"] = {
+	["type"] = "allianceFightFaiedProtectMinutes",
+	["value"] = 2
+}

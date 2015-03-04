@@ -67,7 +67,7 @@ intInit["casinoTokenNeededPerAdvancedGacha"] = {
 }
 intInit["dragonMarchSpeed"] = {
 	["type"] = "dragonMarchSpeed",
-	["value"] = 240,
+	["value"] = 480,
 	["desc"] = "龙的行军速度"
 }
 intInit["playerLevelupRewardsHours"] = {
@@ -84,4 +84,14 @@ intInit["soldierMaxStar"] = {
 	["type"] = "soldierMaxStar",
 	["value"] = 3,
 	["desc"] = "士兵最大星级"
+}
+intInit["playerCitizenRecoverFullNeedHours"] = {
+	["type"] = "playerCitizenRecoverFullNeedHours",
+	["value"] = 12,
+	["desc"] = "城民恢复满需要的小时数"
+}
+intInit["freeNormalGachaCountPerDay"] = {
+	["type"] = "freeNormalGachaCountPerDay",
+	["value"] = 1,
+	["desc"] = "每日免费普通Gacha次数"
 }

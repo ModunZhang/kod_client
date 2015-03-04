@@ -397,7 +397,6 @@ GameDatas.PlayerInitData = {
 	["dragonMaterials"] = {},
 	["houses"] = {},
 	["playerLevel"] = {},
-	["vipLevel"] = {},
 	["collectLevel"] = {},
 }
 require("app.datas.PlayerInitData_intInit")
@@ -409,7 +408,6 @@ require("app.datas.PlayerInitData_soldierMaterials")
 require("app.datas.PlayerInitData_dragonMaterials")
 require("app.datas.PlayerInitData_houses")
 require("app.datas.PlayerInitData_playerLevel")
-require("app.datas.PlayerInitData_vipLevel")
 require("app.datas.PlayerInitData_collectLevel")
 
 GameDatas.PlayerVillageExp = {
@@ -482,3 +480,10 @@ GameDatas.StoreItems = {
 	["items"] = {},
 }
 require("app.datas.StoreItems_items")
+
+GameDatas.Vip = {
+	["level"] = {},
+	["loginDays"] = {},
+}
+require("app.datas.Vip_level")
+require("app.datas.Vip_loginDays")

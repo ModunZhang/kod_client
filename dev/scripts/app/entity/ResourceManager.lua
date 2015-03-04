@@ -161,7 +161,7 @@ function ResourceManager:UpdateByCity(city, current_time)
                     citizen_map[resource_type] = citizen_map[resource_type] + citizen
                 end
                 if POPULATION == resource_type then
-                    total_production_map[COIN] = total_production_map[COIN] + decorator:GetCoinProductionPerHour()
+                    total_production_map[COIN] = total_production_map[COIN] + decorator:GetProductionPerHour()
                     total_limit_map[POPULATION] = total_limit_map[POPULATION] + decorator:GetProductionLimit()
                 end
             end
@@ -175,8 +175,11 @@ function ResourceManager:UpdateByCity(city, current_time)
         local resource_production = math.floor(production * (1 + buff_production_map[resource_type]))
         local resource_limit = math.floor(total_limit_map[resource_type] * (1 + buff_limt_map[resource_type]))
         local resource = self.resources[resource_type]
-        resource:SetProductionPerHour(current_time, resource_production)
         resource:SetValueLimit(resource_limit)
+        resource:SetProductionPerHour(current_time,
+            resource_type ~= POPULATION
+            and resource_production
+            or (resource_limit - resource:GetLowLimitResource()) / 12)
     end
 
     LuaUtils:outputTable("citizen_map", citizen_map)
@@ -226,28 +229,28 @@ function ResourceManager:UpdateFromUserDataByTime(resources, current_time)
 end
 
 function ResourceManager:GetTotalBuffData(city)
-    local buff_production_map = 
-    {
-        [WOOD] = 0,
-        [FOOD] = 0,
-        [IRON] = 0,
-        [STONE] = 0,
-        [COIN] = 0,
-        [POPULATION] = 0,
-        [WALLHP] = 0,
-        [CART] = 0,
-    }
-    local buff_limt_map = 
-    {
-        [WOOD] = 0,
-        [FOOD] = 0,
-        [IRON] = 0,
-        [STONE] = 0,
-        [COIN] = 0,
-        [POPULATION] = 0,
-        [WALLHP] = 0,
-        [CART] = 0,
-    }
+    local buff_production_map =
+        {
+            [WOOD] = 0,
+            [FOOD] = 0,
+            [IRON] = 0,
+            [STONE] = 0,
+            [COIN] = 0,
+            [POPULATION] = 0,
+            [WALLHP] = 0,
+            [CART] = 0,
+        }
+    local buff_limt_map =
+        {
+            [WOOD] = 0,
+            [FOOD] = 0,
+            [IRON] = 0,
+            [STONE] = 0,
+            [COIN] = 0,
+            [POPULATION] = 0,
+            [WALLHP] = 0,
+            [CART] = 0,
+        }
     --学院科技
     city:IteratorTechs(function(__,tech)
         local resource_type,buff_type,buff_value = tech:GetResourceBuffData()
@@ -277,6 +280,11 @@ function ResourceManager:GetTotalBuffData(city)
 end
 
 return ResourceManager
+
+
+
+
+
 
 
 
