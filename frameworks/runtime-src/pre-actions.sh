@@ -8,7 +8,7 @@ ENCRYPT=true
 #如果是Xcode执行 并且为Debug模式目标平台为模拟器 便不加密 否则其他所有情况将加密代码和图片资源
 # $PLATFORM_NAME "iphonesimulator"
 if test "${CONFIGURATION}" = "Debug"; then
-	ENCRYPT=true
+	ENCRYPT=false
 fi
 export LocalBin="/usr/local/bin/"
 export PATH=$LocalBin:$PATH
