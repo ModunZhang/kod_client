@@ -93,7 +93,7 @@ if $ENCRYPT; then
 	echo "\033[32m [INFO] Encrypt is Open! \033[0m"
 	echo "------------------------------------"
 	exportRes $RESOURCEROOT/res
-	# exportResEncrypt
+	exportResEncrypt
 	exportScriptsEncrypt
 else
 	echo "\033[32m [INFO] Encrypt is Close! \033[0m"
