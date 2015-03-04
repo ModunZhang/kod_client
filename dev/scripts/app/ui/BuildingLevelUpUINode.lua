@@ -40,7 +40,7 @@ function BuildingLevelUpUINode:InitWidget()
         align = cc.ui.TEXT_ALIGN_RIGHT,
         color = UIKit:hex2c3b(0xfff1cc)
     }):addTo(self):align(display.CENTER, 10, 18)
-    self.text_field:setSkewY(30)
+    self.text_field:setSkewY(-30)
 end
 
 
