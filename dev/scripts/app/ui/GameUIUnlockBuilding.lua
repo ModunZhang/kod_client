@@ -161,7 +161,7 @@ function GameUIUnlockBuilding:SetUpgradeRequirementListview()
     local has_materials =City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
     local pre_condition = building:IsBuildingUpgradeLegal()
     local requirements = {
-        {resource_type = _("前置条件"),isVisible = true, isSatisfy = not pre_condition,canNotBuy=true,
+        {resource_type = _("前置条件"),isVisible = building:GetLevel()>5, isSatisfy = not pre_condition,canNotBuy=true,
             icon="hammer_31x33.png",description = building:GetPreConditionDesc()},
         {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetUpgradingBuildings()<1,
             icon="hammer_31x33.png",description=GameUtils:formatNumber(#City:GetUpgradingBuildings()).."/1"},

@@ -62,7 +62,7 @@ function CommonUpgradeUI:OnBuildingUpgradingBegin( buidling, current_time )
     self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(current_time)))
     self:visibleChildLayers()
 end
-function CommonUpgradeUI:OnBuildingUpgradeFinished( buidling, finish_time )
+function CommonUpgradeUI:OnBuildingUpgradeFinished( buidling )
     self:visibleChildLayers()
     self:SetBuildingLevel()
     self:SetUpgradeNowNeedGems()
@@ -205,7 +205,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
     elseif self.building:GetType()=="townHall" then
         efficiency = string.format("%s%d",bd.townHall_dwelling,building:GetNextLevelDwellingNum())
     elseif self.building:GetType()=="dwelling" then
-        efficiency = string.format("%s%d,%s+%d,%s+%d",bd.dwelling_citizen,building:GetNextLevelCitizen(),bd.recoveryCitizen,building:GetNextLevelRecoveryCitizen(),bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s%d,%s+%d",bd.dwelling_citizen,building:GetNextLevelCitizen(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="woodcutter" then
         efficiency = string.format("%s%d,%s+%d",bd.woodcutter_poduction,building:GetNextLevelProductionPerHour(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="farmer" then
@@ -391,7 +391,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
     local building = self.building
     local pre_condition = building:IsBuildingUpgradeLegal()
     local requirements = {
-        {resource_type = _("前置条件"),isVisible = true, isSatisfy = not pre_condition,canNotBuy=true,
+        {resource_type = _("前置条件"),isVisible = building:GetLevel()>5, isSatisfy = not pre_condition,canNotBuy=true,
             icon="hammer_31x33.png",description = building:GetPreConditionDesc()},
         {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetUpgradingBuildings()<1,
             icon="hammer_31x33.png",description=GameUtils:formatNumber(#City:GetUpgradingBuildings()).."/1"},

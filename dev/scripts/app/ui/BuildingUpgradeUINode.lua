@@ -4,7 +4,7 @@ local BuildingUpgradeUINode = class("BuildingUpgradeUINode", SpriteUINode)
 function BuildingUpgradeUINode:OnBuildingUpgradingBegin(building, time)
     self:OnBuildingUpgrading(building, time)
 end
-function BuildingUpgradeUINode:OnBuildingUpgradeFinished(building, time)
+function BuildingUpgradeUINode:OnBuildingUpgradeFinished(building)
     self:setVisible(false)
 end
 function BuildingUpgradeUINode:OnBuildingUpgrading(building, time)

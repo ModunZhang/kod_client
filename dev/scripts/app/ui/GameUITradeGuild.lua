@@ -250,7 +250,7 @@ function GameUITradeGuild:CreateSellItemForListView(listView,goods)
             shadow = true
         }))
         :onButtonClicked(function(event)
-            if City:GetResourceManager():GetCoinResource():GetValue()<goods.itemData.price*goods.itemData.count then
+            if City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<goods.itemData.price*goods.itemData.count then
                 FullScreenPopDialogUI.new():SetTitle(_("提示"))
                     :SetPopMessage(_("银币不足"))
                     :AddToCurrentScene()

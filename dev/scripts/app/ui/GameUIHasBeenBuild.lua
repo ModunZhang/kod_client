@@ -86,18 +86,18 @@ function GameUIHasBeenBuild:OnUpgrading(building, current_time, city)
         self.house_list_view:UpdateItemByBuilding(building, current_time)
     end
 end
-function GameUIHasBeenBuild:OnUpgradingFinished(building, current_time, city)
+function GameUIHasBeenBuild:OnUpgradingFinished(building, city)
     self:UpdateBuildingQueue(city)
 
     local is_house = self.build_city:IsHouse(building)
     if self.function_list_view and not is_house then
-        self.function_list_view:UpdateItemsByBuildings(self.build_city:GetBuildingsIsUnlocked(), current_time)
+        self.function_list_view:UpdateItemsByBuildings(self.build_city:GetBuildingsIsUnlocked(), timer:GetServerTime())
         local item = self.function_list_view:GetItemByUniqueKey(building:UniqueKey())
         if item then
             item:UpdateIcon(building)
         end
     elseif self.house_list_view and is_house then
-        self.house_list_view:UpdateItemsByBuildings(self.build_city:GetHousesWhichIsBuilded(), current_time)
+        self.house_list_view:UpdateItemsByBuildings(self.build_city:GetHousesWhichIsBuilded(), timer:GetServerTime())
         local item = self.house_list_view:GetItemByUniqueKey(building:UniqueKey())
         if item then
             item:UpdateIcon(building)
@@ -510,6 +510,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
     function item:UpdateByBuilding(building, current_time)
         repeat
             if building:IsUpgrading() then
+                assert(current_time ~= 0)
                 local can_free_speedUp = building:GetUpgradingLeftTimeByCurrentTime(current_time) <= DataUtils:getFreeSpeedUpLimitTime()
                 self:ChangeStatus(can_free_speedUp and "free" or "building")
                 self:UpdateProgress(building)
@@ -593,6 +594,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
             self:HideNormalButton()
 
             self:ShowProgress()
+            speed_up:show()
         elseif status == "disable" then
             self:HideFreeSpeedUp()
             self:HideInstantButton()
@@ -612,6 +614,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         instant_build:setVisible(false)
     end
     function item:ShowInstantButton()
+        speed_up:setVisible(false)
         gem_bg:setVisible(true)
         instant_build:setVisible(true)
     end
@@ -619,6 +622,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         normal_build:setVisible(false)
     end
     function item:ShowNormalButton(able)
+        speed_up:setVisible(false)
         normal_build:setVisible(true)
         normal_build:setButtonEnabled(able == nil and true or able)
     end
@@ -629,17 +633,18 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         progress:setVisible(true)
     end
     function item:ShowFreeSpeedUp()
-        free_speedUp:show()
         speed_up:setVisible(false)
+        free_speedUp:show()
     end
     function item:HideFreeSpeedUp()
         free_speedUp:hide()
-        speed_up:setVisible(true)
     end
     return item
 end
 
 return GameUIHasBeenBuild
+
+
 
 
 

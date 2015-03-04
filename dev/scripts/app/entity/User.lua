@@ -325,7 +325,7 @@ function User:GetVipEvent()
 end
 function User:GetVipLevel()
     local exp = self.vipExp
-    local vip_level_config = GameDatas.PlayerInitData.vipLevel
+    local vip_level_config = GameDatas.Vip.level
 
     for i=#vip_level_config,1,-1 do
         local config = vip_level_config[i]
@@ -336,7 +336,7 @@ function User:GetVipLevel()
     end
 end
 function User:GetSpecialVipLevelExp(level)
-    local vip_level_config = GameDatas.PlayerInitData.vipLevel
+    local vip_level_config = GameDatas.Vip.level
     local level = #vip_level_config >= level and level or #vip_level_config
     return vip_level_config[level].expTo
 end

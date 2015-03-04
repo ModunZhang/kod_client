@@ -94,7 +94,7 @@ function MilitaryTechnology:GetUpgradeGems()
 
     local has = {
         resources={
-            coin=City:GetResourceManager():GetCoinResource():GetValue(),
+            coin=City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
         },
         materials={
             trainingFigure=has_materials.trainingFigure,
@@ -114,7 +114,7 @@ end
 function MilitaryTechnology:IsAbleToUpgrade()
     local level_up_config = self:GetLevelUpConfig()
     local has_materials = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.TECHNOLOGY)
-    local current_coin = City:GetResourceManager():GetCoinResource():GetValue()
+    local current_coin = City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
 
     local results = {}
     if City:GetSoldierManager():IsUpgradingMilitaryTech(self.building) then

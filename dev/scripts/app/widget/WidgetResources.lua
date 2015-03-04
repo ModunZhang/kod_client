@@ -61,7 +61,7 @@ function WidgetResources:RefreshSpecifyResource(resource,item,maxvalue,occupy_ci
         end
         item.occupy_citizen.value:setString(occupy_citizen.."")
     else
-        item.resource_label:setString(resource:GetValue())
+        item.resource_label:setString(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime()))
         --  local townHall = self.city:GetFirstBuildingByType("townHall")
         -- local title_value = townHall:IsInImposing() and _("正在征税") or _("当前没有进行征税")
         -- item.tax.title:setString(title_value)
@@ -79,13 +79,14 @@ function WidgetResources:CreateResourceListView()
 end
 
 function WidgetResources:InitAllResources()
+    local current_time = app.timer:GetServerTime()
     local maxwood, maxfood, maxiron, maxstone = self.building:GetResourceValueLimit()
     local crm = City:GetResourceManager()
     local all_resources = {
         food = {
             resource_icon="food_icon.png",
             resource_limit_value=maxfood,
-            resource_current_value=crm:GetFoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
+            resource_current_value=crm:GetFoodResource():GetResourceValueByCurrentTime(current_time),
             total_income=crm:GetFoodProductionPerHour().."/h",
             occupy_citizen=City:GetCitizenByType("farmer"),
             maintenance_cost="-"..self.city:GetSoldierManager():GetTotalUpkeep(),
@@ -93,29 +94,29 @@ function WidgetResources:InitAllResources()
         wood = {
             resource_icon="wood_icon.png",
             resource_limit_value=maxwood,
-            resource_current_value=crm:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
+            resource_current_value=crm:GetWoodResource():GetResourceValueByCurrentTime(current_time),
             total_income=crm:GetWoodResource():GetProductionPerHour().."/h",
             occupy_citizen=City:GetCitizenByType("woodcutter"),
         },
         stone = {
             resource_icon="stone_icon.png",
             resource_limit_value=maxstone,
-            resource_current_value=crm:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
+            resource_current_value=crm:GetStoneResource():GetResourceValueByCurrentTime(current_time),
             total_income=crm:GetStoneResource():GetProductionPerHour().."/h",
             occupy_citizen=City:GetCitizenByType("quarrier"),
         },
         iron = {
             resource_icon="iron_icon.png",
             resource_limit_value=maxiron,
-            resource_current_value=crm:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
+            resource_current_value=crm:GetIronResource():GetResourceValueByCurrentTime(current_time),
             total_income=crm:GetIronResource():GetProductionPerHour().."/h",
             occupy_citizen=City:GetCitizenByType("miner"),
         },
         coin = {
             resource_icon="coin_icon.png",
-            resource_current_value=crm:GetCoinResource():GetValue(),
+            resource_current_value=crm:GetCoinResource():GetResourceValueByCurrentTime(current_time),
             total_income=8888,
-            occupy_citizen=self.city:GetResourceManager():GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime()),
+            occupy_citizen=self.city:GetResourceManager():GetPopulationResource():GetNoneAllocatedByTime(current_time),
         },
     }
     self.resource_items = {}
