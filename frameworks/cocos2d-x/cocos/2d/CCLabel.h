@@ -57,15 +57,16 @@ typedef struct _ttfConfig
     const char *customGlyphs;
     bool distanceFieldEnabled;
     int outlineSize;
-
+    int boldSize; //dannyhe
     _ttfConfig(const char* filePath = "",int size = 12, const GlyphCollection& glyphCollection = GlyphCollection::DYNAMIC,
-        const char *customGlyphCollection = nullptr,bool useDistanceField = false,int outline = 0)
+        const char *customGlyphCollection = nullptr,bool useDistanceField = false,int outline = 0,int boldParam = 0)//dannyhe
         :fontFilePath(filePath)
         ,fontSize(size)
         ,glyphs(glyphCollection)
         ,customGlyphs(customGlyphCollection)
         ,distanceFieldEnabled(useDistanceField)
         ,outlineSize(outline)
+        ,boldSize(boldParam) //dannyhe
     {
         if(outline > 0)
         {
@@ -94,7 +95,7 @@ public:
      */
     static Label * createWithTTF(const std::string& text, const std::string& fontFile, float fontSize,
         const Size& dimensions = Size::ZERO, TextHAlignment hAlignment = TextHAlignment::LEFT,
-        TextVAlignment vAlignment = TextVAlignment::TOP);
+        TextVAlignment vAlignment = TextVAlignment::TOP,int boldSize = 0); //dannyhe
 
     /** Create a label with TTF configuration
      * @warning Not support font name.

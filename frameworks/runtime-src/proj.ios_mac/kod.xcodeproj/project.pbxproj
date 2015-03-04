@@ -16,6 +16,9 @@
 		3F1ECBBB1AA53C000012DD9F /* res in Resources */ = {isa = PBXBuildFile; fileRef = 3F1ECBB91AA53C000012DD9F /* res */; };
 		3F1ECBBC1AA53C000012DD9F /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = 3F1ECBBA1AA53C000012DD9F /* scripts */; };
 		3F1ECBCC1AA557F70012DD9F /* Droid Sans Faliback.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F1ECBCB1AA557F70012DD9F /* Droid Sans Faliback.ttf */; };
+		3F7FA3B71AA6FC4B0011BDE2 /* libjansson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F7FA3B41AA6FC4B0011BDE2 /* libjansson.a */; };
+		3F7FA3B81AA6FC4B0011BDE2 /* libpomelo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F7FA3B51AA6FC4B0011BDE2 /* libpomelo.a */; };
+		3F7FA3B91AA6FC4B0011BDE2 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F7FA3B61AA6FC4B0011BDE2 /* libuv.a */; };
 		3FF4DC951AA4650D00CDFAF9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3FF4DC941AA4650D00CDFAF9 /* Images.xcassets */; };
 		3FF4DCB81AA4686700CDFAF9 /* CommonUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3FF4DC9B1AA4686700CDFAF9 /* CommonUtils.mm */; };
 		3FF4DCB91AA4686700CDFAF9 /* crc32.c in Sources */ = {isa = PBXBuildFile; fileRef = 3FF4DC9D1AA4686700CDFAF9 /* crc32.c */; };
@@ -38,9 +41,6 @@
 		3FF4DD131AA46AF100CDFAF9 /* strconv.c in Sources */ = {isa = PBXBuildFile; fileRef = 3FF4DCDB1AA46AF000CDFAF9 /* strconv.c */; };
 		3FF4DD141AA46AF100CDFAF9 /* utf.c in Sources */ = {isa = PBXBuildFile; fileRef = 3FF4DCDC1AA46AF000CDFAF9 /* utf.c */; };
 		3FF4DD151AA46AF100CDFAF9 /* value.c in Sources */ = {isa = PBXBuildFile; fileRef = 3FF4DCDE1AA46AF000CDFAF9 /* value.c */; };
-		3FF4DD191AA46AF100CDFAF9 /* libjansson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FF4DD021AA46AF100CDFAF9 /* libjansson.a */; };
-		3FF4DD1A1AA46AF100CDFAF9 /* libpomelo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FF4DD031AA46AF100CDFAF9 /* libpomelo.a */; };
-		3FF4DD1B1AA46AF100CDFAF9 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FF4DD041AA46AF100CDFAF9 /* libuv.a */; };
 		3FF4DD211AA46DA000CDFAF9 /* CCPomelo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FF4DD1F1AA46DA000CDFAF9 /* CCPomelo.cpp */; };
 		3FF4DD531AA46DEC00CDFAF9 /* ext_uservoice.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3FF4DD241AA46DEC00CDFAF9 /* ext_uservoice.mm */; };
 		3FF4DD541AA46DEC00CDFAF9 /* libUserVoice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FF4DD251AA46DEC00CDFAF9 /* libUserVoice.a */; };
@@ -205,6 +205,9 @@
 		3F1ECBB91AA53C000012DD9F /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; name = res; path = ../../../update/res; sourceTree = "<group>"; };
 		3F1ECBBA1AA53C000012DD9F /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = scripts; path = ../../../update/scripts; sourceTree = "<group>"; };
 		3F1ECBCB1AA557F70012DD9F /* Droid Sans Faliback.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Droid Sans Faliback.ttf"; path = "../../../dev/res/fonts/Droid Sans Faliback.ttf"; sourceTree = "<group>"; };
+		3F7FA3B41AA6FC4B0011BDE2 /* libjansson.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libjansson.a; sourceTree = "<group>"; };
+		3F7FA3B51AA6FC4B0011BDE2 /* libpomelo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpomelo.a; sourceTree = "<group>"; };
+		3F7FA3B61AA6FC4B0011BDE2 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuv.a; sourceTree = "<group>"; };
 		3FF4DC941AA4650D00CDFAF9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = kod/Images.xcassets; sourceTree = SOURCE_ROOT; };
 		3FF4DC9A1AA4686700CDFAF9 /* CommonUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonUtils.h; sourceTree = "<group>"; };
 		3FF4DC9B1AA4686700CDFAF9 /* CommonUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CommonUtils.mm; sourceTree = "<group>"; };
@@ -261,9 +264,6 @@
 		3FF4DCF81AA46AF100CDFAF9 /* message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = message.h; sourceTree = "<group>"; };
 		3FF4DCF91AA46AF100CDFAF9 /* package.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = package.h; sourceTree = "<group>"; };
 		3FF4DCFA1AA46AF100CDFAF9 /* pomelo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pomelo.h; sourceTree = "<group>"; };
-		3FF4DD021AA46AF100CDFAF9 /* libjansson.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libjansson.a; sourceTree = "<group>"; };
-		3FF4DD031AA46AF100CDFAF9 /* libpomelo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpomelo.a; sourceTree = "<group>"; };
-		3FF4DD041AA46AF100CDFAF9 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuv.a; sourceTree = "<group>"; };
 		3FF4DD1F1AA46DA000CDFAF9 /* CCPomelo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCPomelo.cpp; sourceTree = "<group>"; };
 		3FF4DD201AA46DA000CDFAF9 /* CCPomelo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCPomelo.h; sourceTree = "<group>"; };
 		3FF4DD231AA46DEC00CDFAF9 /* ext_uservoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ext_uservoice.h; sourceTree = "<group>"; };
@@ -577,8 +577,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				3FF4DD5F1AA46ED700CDFAF9 /* MessageUI.framework in Frameworks */,
+				3F7FA3B81AA6FC4B0011BDE2 /* libpomelo.a in Frameworks */,
 				3FF4DD5D1AA46EB800CDFAF9 /* GameKit.framework in Frameworks */,
-				3FF4DD1A1AA46AF100CDFAF9 /* libpomelo.a in Frameworks */,
 				9F598A0B19F5F4F4006015D6 /* StoreKit.framework in Frameworks */,
 				9F598A0819F5F3A6006015D6 /* SystemConfiguration.framework in Frameworks */,
 				15427CD5198F222200DC375D /* libluacocos2d iOS.a in Frameworks */,
@@ -590,12 +590,12 @@
 				3FF4DD541AA46DEC00CDFAF9 /* libUserVoice.a in Frameworks */,
 				5023817A17EBBE8300990C9B /* OpenGLES.framework in Frameworks */,
 				F293B3CD15EB7BE500256477 /* QuartzCore.framework in Frameworks */,
+				3F7FA3B71AA6FC4B0011BDE2 /* libjansson.a in Frameworks */,
 				F293B3D115EB7BE500256477 /* OpenAL.framework in Frameworks */,
-				3FF4DD191AA46AF100CDFAF9 /* libjansson.a in Frameworks */,
 				F293B3D315EB7BE500256477 /* AudioToolbox.framework in Frameworks */,
 				F293B3D515EB7BE500256477 /* AVFoundation.framework in Frameworks */,
+				3F7FA3B91AA6FC4B0011BDE2 /* libuv.a in Frameworks */,
 				F293B3D915EB7BE500256477 /* Foundation.framework in Frameworks */,
-				3FF4DD1B1AA46AF100CDFAF9 /* libuv.a in Frameworks */,
 				F293B3DB15EB7BE500256477 /* CoreGraphics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -610,6 +610,16 @@
 				15A8A4251834BDA200142BE0 /* libcocos2d iOS.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		3F7FA3B31AA6FC4B0011BDE2 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				3F7FA3B41AA6FC4B0011BDE2 /* libjansson.a */,
+				3F7FA3B51AA6FC4B0011BDE2 /* libpomelo.a */,
+				3F7FA3B61AA6FC4B0011BDE2 /* libuv.a */,
+			);
+			path = lib;
 			sourceTree = "<group>";
 		};
 		3FF4DC981AA4686700CDFAF9 /* ext */ = {
@@ -704,11 +714,11 @@
 		3FF4DCC81AA46AF000CDFAF9 /* libpomelo */ = {
 			isa = PBXGroup;
 			children = (
+				3F7FA3B31AA6FC4B0011BDE2 /* lib */,
 				3FF4DD1F1AA46DA000CDFAF9 /* CCPomelo.cpp */,
 				3FF4DD201AA46DA000CDFAF9 /* CCPomelo.h */,
 				3FF4DCC91AA46AF000CDFAF9 /* deps */,
 				3FF4DCEC1AA46AF000CDFAF9 /* include */,
-				3FF4DCFB1AA46AF100CDFAF9 /* lib */,
 			);
 			path = libpomelo;
 			sourceTree = "<group>";
@@ -829,32 +839,6 @@
 				3FF4DCF91AA46AF100CDFAF9 /* package.h */,
 			);
 			path = "pomelo-protocol";
-			sourceTree = "<group>";
-		};
-		3FF4DCFB1AA46AF100CDFAF9 /* lib */ = {
-			isa = PBXGroup;
-			children = (
-				3FF4DCFC1AA46AF100CDFAF9 /* ios */,
-			);
-			path = lib;
-			sourceTree = "<group>";
-		};
-		3FF4DCFC1AA46AF100CDFAF9 /* ios */ = {
-			isa = PBXGroup;
-			children = (
-				3FF4DD011AA46AF100CDFAF9 /* sim */,
-			);
-			path = ios;
-			sourceTree = "<group>";
-		};
-		3FF4DD011AA46AF100CDFAF9 /* sim */ = {
-			isa = PBXGroup;
-			children = (
-				3FF4DD021AA46AF100CDFAF9 /* libjansson.a */,
-				3FF4DD031AA46AF100CDFAF9 /* libpomelo.a */,
-				3FF4DD041AA46AF100CDFAF9 /* libuv.a */,
-			);
-			path = sim;
 			sourceTree = "<group>";
 		};
 		3FF4DD221AA46DEC00CDFAF9 /* uservoice */ = {
@@ -1917,11 +1901,11 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBPOMELO_ROOT = "$(SRCROOT)/../../sdk/libpomelo";
 				LIBRARY_SEARCH_PATHS = (
-					"$(LIBPOMELO_ROOT)/lib/ios/sim",
+					"$(LIBPOMELO_ROOT)/lib",
 					"$(SRCROOT)/../../sdk/uservoice",
 				);
 				OTHER_LDFLAGS = "";
-				PROVISIONING_PROFILE = "fbfc14ba-f425-451b-a461-d8d028953458";
+				PROVISIONING_PROFILE = "063d9307-faf0-4cce-8f96-4d1791d4d0ac";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../../cocos2d-x/cocos/platform/ios $(SRCROOT)/../../cocos2d-x/external/curl/include/ios";
@@ -1954,7 +1938,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBPOMELO_ROOT = "$(SRCROOT)/../../sdk/libpomelo";
 				LIBRARY_SEARCH_PATHS = (
-					"$(LIBPOMELO_ROOT)/lib/ios/sim",
+					"$(LIBPOMELO_ROOT)/lib/",
 					"$(SRCROOT)/../../sdk/uservoice",
 				);
 				OTHER_LDFLAGS = "";

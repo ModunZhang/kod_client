@@ -6333,14 +6333,15 @@ static int lua_cocos2dx_Label_createWithTTF01(lua_State* L)
     
     argc = lua_gettop(L) - 1;
     
-    if (argc >= 3 && argc <= 6)
+    if (argc >= 3 && argc <= 7)
     {
         if (!tolua_isstring(L, 2, 0, &tolua_err)  ||
             !tolua_isstring(L, 3, 0, &tolua_err)  ||
             !tolua_isnumber(L, 4, 0, &tolua_err)  ||
             !tolua_istable(L, 5, 1, &tolua_err)   ||
             !tolua_isnumber(L, 6, 1, &tolua_err)  ||
-            !tolua_isnumber(L, 7, 1, &tolua_err) )
+            !tolua_isnumber(L, 7, 1, &tolua_err)  ||
+            !tolua_isnumber(L, 8, 1, &tolua_err) )
         {
             goto tolua_lerror;
         }
@@ -6356,8 +6357,8 @@ static int lua_cocos2dx_Label_createWithTTF01(lua_State* L)
             }
             TextHAlignment hAlignment = static_cast<TextHAlignment>((int)tolua_tonumber(L, 6, 0));
             TextVAlignment vAlignment = static_cast<TextVAlignment>((int)tolua_tonumber(L, 7, 0));
-            
-            cocos2d::Label* ret = cocos2d::Label::createWithTTF(text, fontFile, fontSize, dimensions, hAlignment, vAlignment);
+            int boldSize = (int)tolua_tonumber(L, 8, 0);
+            cocos2d::Label* ret = cocos2d::Label::createWithTTF(text, fontFile, fontSize, dimensions, hAlignment, vAlignment,boldSize);
             
             int ID = ret ? (int)(ret->_ID) : -1;
             int* luaID = ret ? &(ret->_luaID) : nullptr;

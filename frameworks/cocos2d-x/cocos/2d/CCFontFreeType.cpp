@@ -30,7 +30,9 @@ THE SOFTWARE.
 #include "platform/CCFileUtils.h"
 #include "edtaa3func.h"
 #include FT_BBOX_H
-
+//dannyhe
+#include FT_BITMAP_H
+//end
 NS_CC_BEGIN
 
 
@@ -46,9 +48,9 @@ typedef struct _DataRef
 
 static std::unordered_map<std::string, DataRef> s_cacheFontData;
 
-FontFreeType * FontFreeType::create(const std::string &fontName, int fontSize, GlyphCollection glyphs, const char *customGlyphs,bool distanceFieldEnabled /* = false */,int outline /* = 0 */)
+FontFreeType * FontFreeType::create(const std::string &fontName, int fontSize, GlyphCollection glyphs, const char *customGlyphs,bool distanceFieldEnabled /* = false */,int outline /* = 0 */,int boldSize /* = 0 */)//dannyhe
 {
-    FontFreeType *tempFont =  new FontFreeType(distanceFieldEnabled,outline);
+    FontFreeType *tempFont =  new FontFreeType(distanceFieldEnabled,outline,boldSize);//dannyhe
 
     if (!tempFont)
         return nullptr;
@@ -92,11 +94,12 @@ FT_Library FontFreeType::getFTLibrary()
     return _FTlibrary;
 }
 
-FontFreeType::FontFreeType(bool distanceFieldEnabled /* = false */,int outline /* = 0 */)
+FontFreeType::FontFreeType(bool distanceFieldEnabled /* = false */,int outline /* = 0 */,int boldSize)//dannyhe
 : _fontRef(nullptr)
 , _stroker(nullptr)
 , _distanceFieldEnabled(distanceFieldEnabled)
 , _outlineSize(0.0f)
+,_boldSize(boldSize) //dannyhe
 {
     if (outline > 0)
     {
@@ -268,12 +271,28 @@ unsigned char* FontFreeType::getGlyphBitmap(unsigned short theChar, long &outWid
             if (FT_Load_Glyph(_fontRef,glyphIndex,FT_LOAD_RENDER | FT_LOAD_NO_AUTOHINT))
                 break;
         }
-
+        //dannyhe
+        if (_boldSize > 0)
+        {
+            FT_Bitmap_Embolden(_FTlibrary, &_fontRef->glyph->bitmap, (_boldSize << 4)* 1.5 , (_boldSize << 4)*1.5);
+        }
+        //end
         outRect.origin.x    = _fontRef->glyph->metrics.horiBearingX >> 6;
         outRect.origin.y    = - (_fontRef->glyph->metrics.horiBearingY >> 6);
-        outRect.size.width  =   (_fontRef->glyph->metrics.width  >> 6);
-        outRect.size.height =   (_fontRef->glyph->metrics.height >> 6);
+        //dannyhe
+        auto tempOutWidth = (_fontRef->glyph->metrics.width >> 6);
 
+        if (_boldSize > 0)
+        {
+            outRect.size.width = _fontRef->glyph->bitmap.width;
+            outRect.size.height = _fontRef->glyph->bitmap.rows;
+        }
+        else
+        {
+            outRect.size.width  =   (_fontRef->glyph->metrics.width  >> 6);
+            outRect.size.height =   (_fontRef->glyph->metrics.height >> 6);
+        }
+        //end
         xAdvance = (static_cast<int>(_fontRef->glyph->metrics.horiAdvance >> 6));
 
         outWidth  = _fontRef->glyph->bitmap.width;
@@ -327,8 +346,19 @@ unsigned char* FontFreeType::getGlyphBitmap(unsigned short theChar, long &outWid
                     blendImage[2 * index + 1] = copyBitmap[index2];
                 }
             }
-
             xAdvance += 2 * _outlineSize;
+            //dannyhe
+            outRect.origin.x = bbox.xMin >> 6;
+            if (_boldSize > 0) {
+                outRect.origin.y -= py;
+                xAdvance += blendWidth - tempOutWidth;
+            }
+            else
+            {
+                outRect.origin.y = - (bbox.yMax >> 6);
+                xAdvance += 2 * _outlineSize;
+            }
+            //end
             outRect.size.width  =  blendWidth;
             outRect.size.height =  blendHeight;
             outWidth  = blendWidth;
