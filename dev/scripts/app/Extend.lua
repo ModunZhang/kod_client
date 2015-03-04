@@ -189,7 +189,7 @@ function display.newTTFLabel(params)
         "[framework.display] newTTFLabel() invalid params.size")
     local label
     if cc.FileUtils:getInstance():isFileExist(font) then
-        label = cc.Label:createWithTTF(text, font, size, dimensions, textAlign, textValign)
+        label = cc.Label:createWithTTF(text, font, size, dimensions, textAlign, textValign,boldSize)
     else
         label = cc.Label:createWithSystemFont(text, font, size, dimensions, textAlign, textValign)
     end

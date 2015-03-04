@@ -65,13 +65,17 @@ FontAtlas * FontAtlasCache::getFontAtlasTTF(const TTFConfig & config)
     std::stringstream ss;
     ss << config.outlineSize;
     atlasName.append(ss.str());
-
+    //dannyhe
+    std::stringstream bold;
+    bold << config.boldSize;
+    atlasName.append(bold.str());
+    //end
     auto it = _atlasMap.find(atlasName);
 
     if ( it == _atlasMap.end() )
     {
         auto font = FontFreeType::create(config.fontFilePath, fontSize, config.glyphs, 
-            config.customGlyphs, useDistanceField, config.outlineSize);
+            config.customGlyphs, useDistanceField, config.outlineSize,config.boldSize);//dannyhe
         if (font)
         {
             auto tempAtlas = font->createFontAtlas();
