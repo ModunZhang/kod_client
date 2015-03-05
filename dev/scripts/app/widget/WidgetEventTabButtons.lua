@@ -178,18 +178,20 @@ function WidgetEventTabButtons:ctor(city, ratio)
 
 
     self:Reset()
-    self.tab_map["build"]:SetSelect(true)
     self:ShowStartEvent()
+    self.tab_map["build"]:SetSelect(true)
     self:RefreshBuildQueueByType("build", "soldier", "material", "technology")
 end
 function WidgetEventTabButtons:RefreshBuildQueueByType(...)
+    local cur_tab = self:GetCurrentTab()
     local city = self.city
     for _,key in ipairs{...} do
         local item = self.tab_map[key]
+        local able = cur_tab ~= key and self:IsTabEnable(key)
         if key == "build" then
-            item:SetActiveNumber(#city:GetUpgradingBuildings(), city:BuildQueueCounts())
+            item:SetActiveNumber(#city:GetUpgradingBuildings(), city:BuildQueueCounts()):Enable(able)
         elseif key == "soldier" then
-            item:SetActiveNumber(self.barracks:IsRecruting() and 1 or 0, self.barracks:IsUnlocked() and 1 or 0)
+            item:SetActiveNumber(self.barracks:IsRecruting() and 1 or 0, self.barracks:IsUnlocked() and 1 or 0):Enable(able)
         elseif key == "material" then
             local count = 0
             count = count + (self.blackSmith:IsMakingEquipment() and 1 or 0)
@@ -197,7 +199,7 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
             local total_count = 0
             total_count = total_count + (self.toolShop:IsUnlocked() and 1 or 0)
             total_count = total_count + (self.blackSmith:IsUnlocked() and 1 or 0)
-            item:SetActiveNumber(count, total_count)
+            item:SetActiveNumber(count, total_count):Enable(able)
         elseif key == "technology" then
             local total_num = 0
             local buildings = {
@@ -212,7 +214,7 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
                     total_num = total_num + 1
                 end
             end
-            item:SetActiveNumber(city:GetSoldierManager():GetTotalUpgradingMilitaryTechNum()+#city:GetProductionTechEventsArray(), total_num)
+            item:SetActiveNumber(city:GetSoldierManager():GetTotalUpgradingMilitaryTechNum()+#city:GetProductionTechEventsArray(), total_num):Enable(able)
         end
     end
 end
@@ -221,7 +223,7 @@ function WidgetEventTabButtons:ShowStartEvent()
         return self:PromiseOfShowTab("build")
     elseif self.barracks:IsRecruting() then
         return self:PromiseOfShowTab("soldier")
-    elseif self.barracks:IsRecruting() then
+    elseif self.blackSmith:IsMakingEquipment() or self.toolShop:IsMakingAny(timer:GetServerTime()) then
         return self:PromiseOfShowTab("material")
     end
 end
@@ -397,24 +399,16 @@ function WidgetEventTabButtons:CreateOpenItem()
             color = 0xfff3c7,
             shadow = true
         }))
-        :onButtonClicked(function(event)
-            if widget:GetCurrentTab() == "build" then
-                UIKit:newGameUI('GameUIHasBeenBuild', City):addToCurrentScene(true)
-            elseif widget:GetCurrentTab() == "soldier" then
-                UIKit:newGameUI('GameUIBarracks', City, self.barracks):addToCurrentScene(true)
-            elseif widget:GetCurrentTab() == "technology" then
-                -- UIKit:newGameUI('GameUIQuickTechnology', City, self.barracks):addToCurrentScene(true)
-                UIKit:newGameUI('GameUIQuickTechnology', City):addToCurrentScene(true)
-            elseif widget:GetCurrentTab() == "material" then
-            -- UIKit:newGameUI('GameUIToolShop', City, self.toolShop):addToCurrentScene(true)
-            end
-        end)
 
 
     function node:SetLabel(str)
         if label:getString() ~= str then
             label:setString(str)
         end
+        return self
+    end
+    function node:OnOpenClicked(func)
+        button:onButtonClicked(func)
         return self
     end
 
@@ -640,7 +634,6 @@ function WidgetEventTabButtons:GetCurrentTab()
             return k
         end
     end
-    assert(false)
 end
 function WidgetEventTabButtons:Reload()
     self:Reset()
@@ -744,7 +737,9 @@ function WidgetEventTabButtons:Load()
         if v:IsSelected() then
             self:HighLightTab(k)
             if k == "build" then
-                self:InsertItem(self:CreateBottom():SetLabel(_("查看已拥有的建筑")))
+                self:InsertItem(self:CreateBottom():OnOpenClicked(function(event)
+                    UIKit:newGameUI('GameUIHasBeenBuild', self.city):addToCurrentScene(true)
+                end):SetLabel(_("查看已拥有的建筑")))
 
                 local buildings = self.city:GetUpgradingBuildings(true)
                 local items = {}
@@ -763,7 +758,9 @@ function WidgetEventTabButtons:Load()
                 end
                 self:InsertItem(items)
             elseif k == "soldier" then
-                self:InsertItem(self:CreateBottom():SetLabel(_("查看现有的士兵")))
+                self:InsertItem(self:CreateBottom():OnOpenClicked(function(event)
+                    UIKit:newGameUI('GameUIBarracks', self.city, self.barracks):addToCurrentScene(true)
+                end):SetLabel(_("查看现有的士兵")))
                 local event = self.barracks:GetRecruitEvent()
                 if event:IsRecruting() then
                     local item = self:CreateItem():SetProgressInfo(self:SoldierDescribe(event))
@@ -778,7 +775,9 @@ function WidgetEventTabButtons:Load()
                     self:InsertItem(item)
                 end
             elseif k == "technology" then
-                self:InsertItem(self:CreateBottom():SetLabel(_("查看现有的科技")))
+                self:InsertItem(self:CreateBottom():OnOpenClicked(function(event)
+                    UIKit:newGameUI('GameUIQuickTechnology', self.city):addToCurrentScene(true)
+                end):SetLabel(_("查看现有的科技")))
 
                 -- 军事科技部分
                 local soldier_manager = self.city:GetSoldierManager()
@@ -863,7 +862,9 @@ function WidgetEventTabButtons:Load()
                     end
                 end
             elseif k == "material" then
-                self:InsertItem(self:CreateBottom():SetLabel(_("查看材料")))
+                self:InsertItem(self:CreateBottom():OnOpenClicked(function(event)
+                    UIKit:newGameUI('GameUIMaterials', self.toolShop, self.blackSmith):addToCurrentScene(true)
+                end):SetLabel(_("查看材料")))
                 local event = self.blackSmith:GetMakeEquipmentEvent()
                 if event:IsMaking() then
                     local item = self:CreateItem():SetProgressInfo(self:EquipmentDescribe(event))
@@ -949,6 +950,7 @@ function WidgetEventTabButtons:MilitaryTechDescribe(event)
 end
 
 return WidgetEventTabButtons
+
 
 
 
