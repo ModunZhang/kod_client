@@ -60,7 +60,7 @@
     if (ConfigParser::getInstance()->isLanscape()) {
         return UIInterfaceOrientationIsLandscape( interfaceOrientation );
     }else{
-        return UIInterfaceOrientationPortrait == interfaceOrientation;
+        return UIInterfaceOrientationIsPortrait( interfaceOrientation );
     }
     
 }
@@ -71,8 +71,7 @@
     if (ConfigParser::getInstance()->isLanscape()) {
         return UIInterfaceOrientationMaskLandscape;
     }else{
-        //dannyhe fix bug
-        return UIInterfaceOrientationMaskPortrait;
+        return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
     }
 #endif
 }
@@ -81,7 +80,7 @@
     if (ConfigParser::getInstance()->isLanscape()) {
         return YES;
     }else{
-        return NO;
+        return YES;
     }
 }
 

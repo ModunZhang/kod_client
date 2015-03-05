@@ -107,6 +107,7 @@ function MultiAllianceLayer:AddOrRemoveAllianceEvent(isAdd)
             v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
             v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
             v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
+            v:AddListenOnType(self,Alliance.LISTEN_TYPE.OnMarchEventRefreshed)
         end
     else
         for _, v in ipairs(self.alliances) do
@@ -114,6 +115,7 @@ function MultiAllianceLayer:AddOrRemoveAllianceEvent(isAdd)
             v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
             v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
             v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
+            v:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnMarchEventRefreshed)
         end
     end
 end
@@ -183,8 +185,12 @@ function MultiAllianceLayer:CreateAllianceCorps(alliance)
 
 end
 
-
 --changed of marchevent
+--如果是重新登陆数据刷新 刷新所有行军路线
+function MultiAllianceLayer:OnMarchEventRefreshed(eventName)
+    self:InitAllianceEvent()
+end
+
 function MultiAllianceLayer:OnAttackMarchEventDataChanged(changed_map)
     self:ManagerCorpsFromChangedMap(changed_map)
 end
@@ -206,6 +212,10 @@ function MultiAllianceLayer:ManagerCorpsFromChangedMap(changed_map)
     if changed_map.removed then
         table.foreachi(changed_map.removed,function(_,marchEvent)
             self:DeleteCorpsById(marchEvent:Id())
+        end)
+    elseif changed_map.edited then
+         table.foreachi(changed_map.edited,function(_,marchEvent)
+            self:CreateCorpsIf(marchEvent)
         end)
     elseif changed_map.added then
         table.foreachi(changed_map.added,function(_,marchEvent)
