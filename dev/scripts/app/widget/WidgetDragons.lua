@@ -162,7 +162,7 @@ function WidgetDragons:OnTouchMove(pre_x, pre_y, x, y)
     end
 end
 function WidgetDragons:OnTouchClicked(pre_x, pre_y, x, y)
-    self:AutoRotation()
+    -- self:AutoRotation()
 end
 function WidgetDragons:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed_y, millisecond)
 
@@ -183,6 +183,9 @@ end
 function WidgetDragons:AutoRotation()
     local cur_angle = math.mod(self.angle, 360)
     local is_cur = math.abs(math.mod(cur_angle, 120)) <= 60
+    if math.abs(math.mod(cur_angle, 120)) == 0 then
+        return
+    end
     local sign = cur_angle >= 0 and 1 or -1
     if sign > 0 then
         local round = math.floor(self.angle / 360)
@@ -193,7 +196,6 @@ function WidgetDragons:AutoRotation()
         local target_angle = is_cur and math.floor(cur_angle / 120 + 1) * 120 or math.floor(cur_angle / 120) * 120
         self.target_angle = target_angle + round * 360
     end
-    print("self.target_angle", self.target_angle)
 end
 
 --
