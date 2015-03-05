@@ -81,41 +81,50 @@ function GameUIMaterials:OnMaterialsChanged(material_manager, material_type, cha
     end
 end
 function GameUIMaterials:TabButtons()
-    self:CreateTabButtons({
-        {
+    local tab_params = {}
+    if self.toolShop:IsUnlocked() then
+        table.insert(tab_params, {
             label = _("制造材料"),
             tag = "manufacture",
             default = true,
-        },
-        {
+        })
+    end
+    if self.blackSmith:IsUnlocked() then
+        table.insert(tab_params, {
             label = _("红龙装备"),
             tag = "redDragon",
-        },
-        {
+            default = not self.toolShop:IsUnlocked()
+        })
+        table.insert(tab_params, {
             label = _("蓝龙装备"),
             tag = "blueDragon",
-        },
-        {
+        })
+        table.insert(tab_params, {
             label = _("绿龙装备"),
             tag = "greenDragon",
-        }
-    },
-    function(tag)
-        if tag == 'manufacture' then
-            self.title:setVisible(false)
-            for _, v in pairs(self.dragon_map) do
-                v.list_view:setVisible(false)
-                v.list_node:setVisible(false)
+        })
+    end
+    self:CreateTabButtons(tab_params,
+        function(tag)
+            if tag == 'manufacture' then
+                self.title:setVisible(false)
+                for _, v in pairs(self.dragon_map) do
+                    v.list_view:setVisible(false)
+                    v.list_node:setVisible(false)
+                end
+                if self.toolShop:IsUnlocked() then
+                    self.manufacture = WidgetManufacture.new(self.toolShop):addTo(self)
+                end
+            else
+                if self.manufacture then
+                    self.manufacture:removeFromParent()
+                    self.manufacture = nil
+                end
+                if self.blackSmith:IsUnlocked() then
+                    self:SwitchToDragon(tag)
+                end
             end
-            self.manufacture = WidgetManufacture.new(self.toolShop):addTo(self)
-        else
-            if self.manufacture then
-                self.manufacture:removeFromParent()
-                self.manufacture = nil
-            end
-            self:SwitchToDragon(tag)
-        end
-    end):pos(window.cx, window.bottom + 34)
+        end):pos(window.cx, window.bottom + 34)
 end
 function GameUIMaterials:SwitchToDragon(dragon_type)
     if not self.dragon_map[dragon_type] then
@@ -189,7 +198,7 @@ function GameUIMaterials:CreateDragonEquipmentsByType(dragon_type)
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     })
     listnode:addTo(self):align(display.BOTTOM_CENTER,window.cx,window.bottom_top + 20)
-   
+
     -- = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 230)
     for i, v in ipairs(red_dragon_equipments) do
         local item = self:CreateItemWithListViewByEquipments(list_view, v.equipments, v.title, equip_map)
@@ -317,7 +326,7 @@ function GameUIMaterials:CreateEquipmentByType(equip_type)
 
     equip_clicked = function(event)
         WidgetMakeEquip.new(equip_type, self.blackSmith, self.blackSmith:BelongCity()):addToCurrentScene()
-            -- :align(display.CENTER, display.cx, display.cy)
+        -- :align(display.CENTER, display.cx, display.cy)
     end
     info_clicked = function(event)
         print("info_clicked", equip_type)
@@ -327,6 +336,10 @@ function GameUIMaterials:CreateEquipmentByType(equip_type)
 end
 
 return GameUIMaterials
+
+
+
+
 
 
 
