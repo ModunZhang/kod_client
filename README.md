@@ -8,8 +8,8 @@
 - 键盘弹出事件修改
 - 文本框和quick事件冲突修复(CCNode)
 - 修改文本框占位文字的格式bug
-	> _labelPlaceHolder-\>setSystemFontName(pFontName);
-	> _labelPlaceHolder-\>setSystemFontSize(fontSize);
+	''_labelPlaceHolder-\>setSystemFontName(pFontName);
+	''_labelPlaceHolder-\>setSystemFontSize(fontSize);
 - 添加多行输入框
 - GameCenter
 - iap添加接口
@@ -19,5 +19,5 @@
 	2. v3.3/external/lua/lua/lopmodes.def_bak_20150304-111302
 - 添加图片处理命令行工具
 - `输入框使用项目自定义的字体(放弃修改)`
-- Label加粗功能(还未修改)
+- Label加粗功能
 

@@ -13,7 +13,7 @@ local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton
 local contentWidth = window.width - 80
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-local GameUIAllianceBasicSetting = import(".GameUIAllianceBasicSetting")
+local WidgetAllianceCreateOrEdit = import("..widget.WidgetAllianceCreateOrEdit")
 local GameUIAllianceNoticeOrDescEdit = import(".GameUIAllianceNoticeOrDescEdit")
 local Localize = import("..utils.Localize")
 local NetService = import('..service.NetService')
@@ -258,17 +258,16 @@ function GameUIAlliance:NoAllianceTabEvent_createIf()
     if self.createScrollView then
         return self.createScrollView
     end
-    local basic_setting = GameUIAllianceBasicSetting.new()
+    local basic_setting = WidgetAllianceCreateOrEdit.new()
 
     local scrollView = UIScrollView.new({
         viewRect = cc.rect(0,10,window.width,window.betweenHeaderAndTab),
     })
-        :addScrollNode(basic_setting:GetContentNode():pos(55,0))
+        :addScrollNode(basic_setting:pos(55,0))
         :setDirection(UIScrollView.DIRECTION_VERTICAL)
         :addTo(self.main_content)
     scrollView:fixResetPostion(-50)
     self.createScrollView = scrollView
-    basic_setting = nil
     return self.createScrollView
 end
 
