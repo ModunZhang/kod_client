@@ -182,10 +182,10 @@ function WidgetDragons:StopAuto()
 end
 function WidgetDragons:AutoRotation()
     local cur_angle = math.mod(self.angle, 360)
-    local is_cur = math.abs(math.mod(cur_angle, 120)) <= 60
     if math.abs(math.mod(cur_angle, 120)) == 0 then
         return
     end
+    local is_cur = math.abs(math.mod(cur_angle, 120)) <= 60
     local sign = cur_angle >= 0 and 1 or -1
     if sign > 0 then
         local round = math.floor(self.angle / 360)

@@ -99,6 +99,8 @@ function WidgetManufacture:Manufacture()
     item:UpdateByEvent(self.toolShop:GetMakeMaterialsEventByCategory("building"))
     self.building_item = item
 
+
+    local materials = material_manager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.TECHNOLOGY)
     local item = self:CreateMaterialItemWithListView(self.list_view,
         _("军事科技所需材料"),
         {
