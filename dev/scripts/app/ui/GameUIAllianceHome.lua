@@ -55,7 +55,6 @@ function GameUIAllianceHome:CreateOperationButton()
     local first_col = 177
     local label_padding = 100
     for i, v in ipairs({
-        -- {"allianceHome/enemy.png", _("敌方")},
         {"allianceHome/help.png", _("帮助")},
         {"allianceHome/war.png", _("战斗")},
     }) do
@@ -135,7 +134,6 @@ function GameUIAllianceHome:TopBg()
 end
 
 function GameUIAllianceHome:TopTabButtons()
-
     -- 荣誉,忠诚,坐标按钮背景框
     local btn_bg = display.newSprite("allianceHome/back_ground_676x100.png")
         :align(display.TOP_CENTER,self.top_bg:getContentSize().width/2,46)
@@ -651,6 +649,8 @@ function GameUIAllianceHome:OnBottomButtonClicked(event)
         UIKit:newGameUI('GameUIShop', City):addToCurrentScene(true)
     elseif tag == 3 then
         UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
+    elseif tag == 5 then
+        UIKit:newGameUI('GameUISetting',City):addToCurrentScene(true)
     end
 end
 function GameUIAllianceHome:OnMidButtonClicked(event)

@@ -176,9 +176,6 @@ function GameUIAllianceVillageEnter:OnVillageEventTimer(village_event,left_resou
 end
 
 function GameUIAllianceVillageEnter:OnBuildingChange(alliance_map,add, remove, modify)
-	dump(remove,"remove---->")
-	dump(modify,"modify---->")
-	dump(self:GetVillageInfo(),"self:GetVillageInfo()--->")
 	local hasHandler = false
 	if remove then
 		for _,v in ipairs(remove) do
@@ -221,19 +218,11 @@ end
 function GameUIAllianceVillageEnter:GetLevelLabelText()
 	return _("等级") .. self:GetVillageInfo().level
 end
-
+--关闭了进攻和突袭的条件判断
 function GameUIAllianceVillageEnter:CheckCanAttackVillage()
-	local village_id = self:GetVillageInfo().id
-	local can_not_attack = self:GetMyAlliance():CheckVillageMarchEventHaveTarget(village_id)
-	if can_not_attack then
-		UIKit:showMessageDialog(_("错误"),_("已有攻击部队正在行军"),function()end)
-		return false
-	end
-	local can_not_strike_village = self:GetMyAlliance():CheckStrikeVillageHaveTarget(village_id)
-	if can_not_strike_village then
-		UIKit:showMessageDialog(_("错误"),_("已有突袭部队正在行军"),function()end)
-		return false
-	end
+	-- local village_id = self:GetVillageInfo().id
+	-- local can_not_attack = self:GetMyAlliance():CheckVillageMarchEventHaveTarget(village_id)
+	-- local can_not_strike_village = self:GetMyAlliance():CheckStrikeVillageHaveTarget(village_id)
 	return true
 end
 
@@ -304,13 +293,21 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 			end)
 	        buttons =  {che_button}
 	    elseif villageEvent:GetPlayerRole() ==   villageEvent.EVENT_PLAYER_ROLE.Ally then --盟友占领
-	    	local huan_fang_button = self:BuildOneButton("village_capture_66x72.png",_("换防")):onButtonClicked(function()
-				UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
-                    NetManager:getAttackVillagePromise(dragonType,soldiers,villageEvent:VillageData().alliance.id,village_id)
-	            end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):addToCurrentScene(true)
+			local attack_button = self:BuildOneButton("village_capture_66x72.png",_("占领")):onButtonClicked(function()
+	     		if self:CheckCanAttackVillage() then
+					UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
+	                    NetManager:getAttackVillagePromise(dragonType,soldiers,alliance_id,village_id)
+	                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):addToCurrentScene(true)
+				end
 				self:leftButtonClicked()
 			end)
-	        buttons =  {huan_fang_button}
+			local strike_button = self:BuildOneButton("Strike_72x72.png",_("突袭")):onButtonClicked(function()
+				if self:CheckCanAttackVillage() then
+					UIKit:newGameUI("GameUIStrikePlayer",{defenceAllianceId = alliance_id,defenceVillageId = village_id},GameUIStrikePlayer.STRIKE_TYPE.VILLAGE):addToCurrentScene(true)
+				end
+				self:leftButtonClicked()
+			end)
+			buttons = {attack_button,strike_button}
 	    end
  	end
  	return buttons
