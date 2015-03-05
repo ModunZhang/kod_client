@@ -7,6 +7,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local UILib = import(".UILib")
 local GameUIWatchTowerTroopDetail = import(".GameUIWatchTowerTroopDetail")
 local WidgetUseItems = import("..widget.WidgetUseItems")
+local config_day14 = GameDatas.Activities.day14
 
 function GameUIWatchTower:ctor(city,building)
     local bn = Localize.building_name
@@ -142,6 +143,7 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
     	:addTo(bg)
     	:align(display.LEFT_BOTTOM, 10, 19)
 	if not isOpen then
+		local countInfo = User:GetCountInfo()
 		tile_label:setString(_("未解锁"))
 		WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
             :setButtonLabel(
@@ -155,7 +157,7 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
             end)
             :addTo(bg)
         UIKit:ttfLabel({
-        	text = string.format(_("累计签到%s天，永久+1进攻队列"),"5/30"),
+        	text = string.format(_("累计签到%s天，永久+1进攻队列"),countInfo.day14 .. "/" .. #config_day14 ),
         	size = 22,
         	color= 0x403c2f
         }):addTo(bg):align(display.LEFT_TOP, 164, event_bg:getPositionY() + 104)
@@ -472,6 +474,7 @@ end
 --event
 --签到按钮
 function GameUIWatchTower:OnSignButtonClikced()
+	UIKit:newGameUI("GameUIActivity",City):addToCurrentScene()
 end
 
 --内容过滤
