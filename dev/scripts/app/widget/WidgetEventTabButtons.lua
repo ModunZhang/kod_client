@@ -863,8 +863,7 @@ function WidgetEventTabButtons:Load()
                 end
             elseif k == "material" then
                 self:InsertItem(self:CreateBottom():OnOpenClicked(function(event)
-                    print("查看材料")
-                    -- UIKit:newGameUI('GameUIToolShop', self.city, self.toolShop):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIMaterials', self.toolShop, self.blackSmith):addToCurrentScene(true)
                 end):SetLabel(_("查看材料")))
                 local event = self.blackSmith:GetMakeEquipmentEvent()
                 if event:IsMaking() then
