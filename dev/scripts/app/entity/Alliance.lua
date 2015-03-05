@@ -18,7 +18,7 @@ local AllianceBelvedere = import(".AllianceBelvedere")
 Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS","FIGHT_REQUESTS","FIGHT_REPORTS",
     "OnAttackMarchEventDataChanged","OnAttackMarchEventTimerChanged","OnAttackMarchReturnEventDataChanged","ALLIANCE_FIGHT"
     ,"OnStrikeMarchEventDataChanged","OnStrikeMarchReturnEventDataChanged","OnVillageEventsDataChanged","OnVillageEventTimer","COUNT_INFO",
-    "VILLAGE_LEVELS_CHANGED")
+    "VILLAGE_LEVELS_CHANGED","OnMarchEventRefreshed")
 local unpack = unpack
 local function pack(...)
     return {...}
@@ -917,6 +917,7 @@ function Alliance:OnAttackMarchEventsDataChanged(attackMarchEvents)
         self.attackMarchEvents[attackMarchEvent:Id()] = attackMarchEvent
         attackMarchEvent:AddObserver(self)
     end
+    self:CallEventsChangedListeners(Alliance.LISTEN_TYPE.OnMarchEventRefreshed,"OnAttackMarchEventsDataChanged")
 end
 
 function Alliance:OnAttackMarchEventsComming(__attackMarchEvents)
@@ -934,6 +935,7 @@ function Alliance:OnAttackMarchEventsComming(__attackMarchEvents)
             if self.attackMarchEvents[event_data.id] then
                 local attackMarchEvent = self.attackMarchEvents[event_data.id]
                 attackMarchEvent:UpdateData(event_data)
+                return attackMarchEvent
             end
         end
         ,function(event_data)
@@ -969,6 +971,7 @@ function Alliance:OnAttackMarchReturnEventsDataChanged(attackMarchReturnEvents)
         self.attackMarchReturnEvents[attackMarchReturnEvent:Id()] = attackMarchReturnEvent
         attackMarchReturnEvent:AddObserver(self)
     end
+    self:CallEventsChangedListeners(Alliance.LISTEN_TYPE.OnMarchEventRefreshed,"OnAttackMarchReturnEventDataChanged")
 end
 
 function Alliance:OnAttackMarchReturnEventsCommoing(__attackMarchReturnEvents)
@@ -986,6 +989,7 @@ function Alliance:OnAttackMarchReturnEventsCommoing(__attackMarchReturnEvents)
             if self.attackMarchReturnEvents[event_data.id] then
                 local attackMarchReturnEvent = self.attackMarchReturnEvents[event_data.id]
                 attackMarchReturnEvent:UpdateData(event_data)
+                return attackMarchReturnEvent
             end
         end
         ,function(event_data)
@@ -1126,6 +1130,7 @@ function Alliance:OnStrikeMarchEventsDataChanged(strikeMarchEvents)
         self.strikeMarchEvents[strikeMarchEvent:Id()] = strikeMarchEvent
         strikeMarchEvent:AddObserver(self)
     end
+    self:CallEventsChangedListeners(Alliance.LISTEN_TYPE.OnMarchEventRefreshed,"OnStrikeMarchEventDataChanged")
 end
 
 function Alliance:OnStrikeMarchEventsComming(__strikeMarchEvents)
@@ -1143,6 +1148,7 @@ function Alliance:OnStrikeMarchEventsComming(__strikeMarchEvents)
             if self.strikeMarchEvents[event_data.id] then
                 local strikeMarchEvent = self.strikeMarchEvents[event_data.id]
                 strikeMarchEvent:UpdateData(event_data)
+                return strikeMarchEvent
             end
         end
         ,function(event_data)
@@ -1177,6 +1183,7 @@ function Alliance:OnStrikeMarchReturnEventsDataChanged(strikeMarchReturnEvents)
         self.strikeMarchReturnEvents[strikeMarchReturnEvent:Id()] = strikeMarchReturnEvent
         strikeMarchReturnEvent:AddObserver(self)
     end
+    self:CallEventsChangedListeners(Alliance.LISTEN_TYPE.OnMarchEventRefreshed,"OnStrikeMarchReturnEventDataChanged")
 end
 
 function Alliance:OnStrikeMarchReturnEventsComming(__strikeMarchReturnEvents)
@@ -1194,6 +1201,7 @@ function Alliance:OnStrikeMarchReturnEventsComming(__strikeMarchReturnEvents)
             if self.strikeMarchReturnEvents[event_data.id] then
                 local strikeMarchReturnEvent = self.strikeMarchReturnEvents[event_data.id]
                 strikeMarchReturnEvent:UpdateData(event_data)
+                return strikeMarchReturnEvent
             end
         end
         ,function(event_data)
@@ -1326,6 +1334,7 @@ function Alliance:OnVillageEventsDataComming(__villageEvents)
             if self.villageEvents[event_data.id] then
                 local villageEvent = self.villageEvents[event_data.id]
                 villageEvent:UpdateData(event_data)
+                return villageEvent
             end
         end
         ,function(event_data)
@@ -1404,6 +1413,7 @@ function Alliance:DecodeAllianceVillages__(__villages)
         ,function(event_data)
             if self.alliance_villages[event_data.id] then
                 self.alliance_villages[event_data.id] = event_data
+                return event_data
             end
         end
         ,function(event_data)
