@@ -19,6 +19,8 @@ User.RESOURCE_TYPE = Enum("BLOOD", "COIN", "STRENGTH", "GEM", "RUBY", "BERYL", "
 local GEM = User.RESOURCE_TYPE.GEM
 local STRENGTH = User.RESOURCE_TYPE.STRENGTH
 
+local intInit = GameDatas.PlayerInitData.intInit
+
 property(User, "level", 1)
 property(User, "levelExp", 0)
 property(User, "power", 0)
@@ -319,7 +321,10 @@ end
 function User:GetCountInfo()
     return self.countInfo
 end
-
+-- 获取当天剩余普通免费gacha次数
+function User:GetOddFreeNormalGachaCount()
+    return intInit.freeNormalGachaCountPerDay.value - self.countInfo.todayFreeNormalGachaCount
+end
 function User:GetVipEvent()
     return self.vip_event
 end

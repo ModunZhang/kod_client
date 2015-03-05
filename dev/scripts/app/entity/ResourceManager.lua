@@ -20,7 +20,8 @@ ResourceManager.RESOURCE_TYPE = Enum(
     "BERYL",            -- 绿宝石
     "SAPPHIRE",         -- 蓝宝石
     "TOPAZ",            -- 黄宝石
-    "WALLHP")              -- 玩家宝石
+    "WALLHP",
+    "CASINOTOKEN")              -- 玩家宝石
 
 local ENERGY = ResourceManager.RESOURCE_TYPE.ENERGY
 local WOOD = ResourceManager.RESOURCE_TYPE.WOOD
@@ -31,6 +32,7 @@ local CART = ResourceManager.RESOURCE_TYPE.CART
 local POPULATION = ResourceManager.RESOURCE_TYPE.POPULATION
 local COIN = ResourceManager.RESOURCE_TYPE.COIN
 local BLOOD = ResourceManager.RESOURCE_TYPE.BLOOD
+local CASINOTOKEN = ResourceManager.RESOURCE_TYPE.CASINOTOKEN
 local WALLHP = ResourceManager.RESOURCE_TYPE.WALLHP
 
 function ResourceManager:ctor()
@@ -45,6 +47,7 @@ function ResourceManager:ctor()
         [COIN] = AutomaticUpdateResource.new(),
         [BLOOD] = Resource.new(),
         [WALLHP] = AutomaticUpdateResource.new(),
+        [CASINOTOKEN] = Resource.new(),
     }
     self:GetCoinResource():SetValueLimit(math.huge)
 
@@ -86,6 +89,9 @@ function ResourceManager:GetCoinResource()
 end
 function ResourceManager:GetBloodResource()
     return self.resources[BLOOD]
+end
+function ResourceManager:GetCasinoTokenResource()
+    return self.resources[CASINOTOKEN]
 end
 function ResourceManager:GetResourceByType(RESOURCE_TYPE)
     return self.resources[RESOURCE_TYPE]
@@ -200,6 +206,9 @@ function ResourceManager:UpdateFromUserDataByTime(resources, current_time)
     if not resources then return end
     if resources.blood then
         self.resources[BLOOD]:SetValue(resources.blood)
+    end
+    if resources.casinoToken then
+        self.resources[CASINOTOKEN]:SetValue(resources.casinoToken)
     end
     if not current_time then return end
     if resources.coin then
