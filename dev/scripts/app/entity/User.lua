@@ -9,7 +9,7 @@ local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local User = class("User", MultiObserver)
 User.LISTEN_TYPE = Enum("BASIC", "RESOURCE", "INVITE_TO_ALLIANCE", "REQUEST_TO_ALLIANCE","DALIY_QUEST_REFRESH","NEW_DALIY_QUEST","NEW_DALIY_QUEST_EVENT"
-    ,"VIP_EVENT","COUNT_INFO")
+    ,"VIP_EVENT","COUNT_INFO","DAILY_TASKS")
 local BASIC = User.LISTEN_TYPE.BASIC
 local RESOURCE = User.LISTEN_TYPE.RESOURCE
 local INVITE_TO_ALLIANCE = User.LISTEN_TYPE.INVITE_TO_ALLIANCE
@@ -62,7 +62,7 @@ function User:ctor(p)
     local vip_event = VipEvent.new()
     vip_event:AddObserver(self)
     self.vip_event = vip_event
-
+    self.dailyTasks = {}
     self.growUpTaskManger = GrowUpTaskManager.new()
 end
 function User:GotoPVEMapByLevel(level)
@@ -302,8 +302,29 @@ function User:OnUserDataChanged(userData, current_time)
     -- vip event
     self:OnVipEventDataChange(userData)
     self.growUpTaskManger:OnUserDataChanged(userData)
-
+    -- 日常任务
+    self:OnDailyTasksChanged(userData.dailyTasks)
     return self
+end
+
+function User:OnDailyTasksChanged(dailyTasks)
+    if not dailyTasks then return end
+    local changed_task_types = {}
+    for k,v in pairs(dailyTasks) do
+        table.insert(changed_task_types,k)
+        self.dailyTasks[k] = v
+    end
+    self:NotifyListeneOnType(self.LISTEN_TYPE.DAILY_TASKS, function(listener)
+        listener:OnDailyTasksChanged(self, changed_task_types)
+    end)
+end
+
+function User:GetDailyTasksInfo(task_type)
+    return self.dailyTasks[task_type] or {}
+end
+
+function User:GetAllDailyTasks()
+    return self.dailyTasks or {}
 end
 
 function User:OnCountInfoChanged(countInfo)

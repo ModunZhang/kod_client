@@ -457,7 +457,12 @@ local SOLDIER_ANIMATIONS = getAniNameFromAnimationFiles(SOLDIER_ANIMATION_FILES)
 local SOLDIER_EFFECT_ANIMATIONS = getAniNameFromAnimationFiles(EFFECT_ANIMATION_FILES)
 local DRAGON_ANIMATIONS = getAniNameFromAnimationFiles(DRAGON_ANIMATIONS_FILES)
 
-
+local DAILY_TASK_ICON = {
+    empireRise = "Icon_empireRise_91x117.png",
+    conqueror = "Icon_conqueror_104x117.png",
+    brotherClub = "Icon_brotherClub_122x124.png",
+    growUp = "Icon_growUp_108x115.png"
+}
 return {
     resource = RESOURCE,
     soldier_bg = STAR_BG,
@@ -480,6 +485,7 @@ return {
     buff = BUFF,
     village = VILLAGE,
     item = ITEM,
+    daily_task_icon = DAILY_TASK_ICON,
 }
 
 
