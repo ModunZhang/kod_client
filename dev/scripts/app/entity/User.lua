@@ -1,6 +1,7 @@
 local PVEDatabase = import(".PVEDatabase")
 local Resource = import(".Resource")
 local VipEvent = import(".VipEvent")
+local GrowUpTaskManager = import(".GrowUpTaskManager")
 local AutomaticUpdateResource = import(".AutomaticUpdateResource")
 local property = import("..utils.property")
 local TradeManager = import("..entity.TradeManager")
@@ -18,6 +19,8 @@ local config_playerLevel = GameDatas.PlayerInitData.playerLevel
 User.RESOURCE_TYPE = Enum("BLOOD", "COIN", "STRENGTH", "GEM", "RUBY", "BERYL", "SAPPHIRE", "TOPAZ")
 local GEM = User.RESOURCE_TYPE.GEM
 local STRENGTH = User.RESOURCE_TYPE.STRENGTH
+
+local intInit = GameDatas.PlayerInitData.intInit
 
 property(User, "level", 1)
 property(User, "levelExp", 0)
@@ -59,6 +62,8 @@ function User:ctor(p)
     local vip_event = VipEvent.new()
     vip_event:AddObserver(self)
     self.vip_event = vip_event
+
+    self.growUpTaskManger = GrowUpTaskManager.new()
 end
 function User:GotoPVEMapByLevel(level)
     if self.cur_pve_map then
@@ -296,6 +301,7 @@ function User:OnUserDataChanged(userData, current_time)
 
     -- vip event
     self:OnVipEventDataChange(userData)
+    self.growUpTaskManger:OnUserDataChanged(userData)
 
     return self
 end
@@ -319,7 +325,10 @@ end
 function User:GetCountInfo()
     return self.countInfo
 end
-
+-- 获取当天剩余普通免费gacha次数
+function User:GetOddFreeNormalGachaCount()
+    return intInit.freeNormalGachaCountPerDay.value - self.countInfo.todayFreeNormalGachaCount
+end
 function User:GetVipEvent()
     return self.vip_event
 end

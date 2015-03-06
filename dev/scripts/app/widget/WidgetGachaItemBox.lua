@@ -2,6 +2,8 @@
 -- Author: Kenny Dai
 -- Date: 2015-03-03 15:40:53
 --
+local UILib = import("..ui.UILib")
+
 local WidgetGachaItemBox = class("WidgetGachaItemBox",function ()
     return display.newNode()
 end)
@@ -9,6 +11,9 @@ function WidgetGachaItemBox:ctor(gacha_item,isSenior)
     self.gacha_item = gacha_item
     self.isSenior = isSenior
     local gacha_box = display.newSprite("box_gacha_92x92.png"):addTo(self)
+    -- item icon
+    local item_icon = display.newScale9Sprite(self:GetGachaItemIcon()):addTo(self)
+    item_icon:size(74,74)
 end
 -- 设置起点或取消起点状态
 function WidgetGachaItemBox:SetOrginStatus()
@@ -105,8 +110,11 @@ function WidgetGachaItemBox:ResetLigt()
     end
     
 end
-function WidgetGachaItemBox:GetGachaItem( )
-	return self.gacha_item
+function WidgetGachaItemBox:GetGachaItemName( )
+	return self.gacha_item.itemName
+end
+function WidgetGachaItemBox:GetGachaItemIcon( )
+    return UILib.item[self:GetGachaItemName()]
 end
 function WidgetGachaItemBox:RemoveSelectStatus( )
     if self.select_box then

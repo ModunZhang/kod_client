@@ -7,6 +7,7 @@ local GameUIMilitaryTechSpeedUp = import("..ui.GameUIMilitaryTechSpeedUp")
 local GameUIBuildingSpeedUp = import("..ui.GameUIBuildingSpeedUp")
 local GameUIBarracksSpeedUp = import("..ui.GameUIBarracksSpeedUp")
 local GameUIToolShopSpeedUp = import("..ui.GameUIToolShopSpeedUp")
+local GameUIBlackSmithSpeedUp = import("..ui.GameUIBlackSmithSpeedUp")
 local WidgetTab = import(".WidgetTab")
 local timer = app.timer
 local WIDGET_WIDTH = 640
@@ -695,6 +696,9 @@ end
 function WidgetEventTabButtons:MaterialEventUpgradeOrSpeedup()
     GameUIToolShopSpeedUp.new(self.city:GetFirstBuildingByType("toolShop")):addToCurrentScene(true)
 end
+function WidgetEventTabButtons:DragonEquipmentEventsUpgradeOrSpeedup()
+    GameUIBlackSmithSpeedUp.new(self.city:GetFirstBuildingByType("blackSmith")):addToCurrentScene(true)
+end
 
 function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp,event_key,event_item)
     local old_status = event_item.status
@@ -872,7 +876,7 @@ function WidgetEventTabButtons:Load()
                         :OnClicked(
                             function(e)
                                 if e.name == "CLICKED_EVENT" then
-                                    self:MaterialEventUpgradeOrSpeedup()
+                                    self:DragonEquipmentEventsUpgradeOrSpeedup()
                                 end
                             end
                         )

@@ -4,8 +4,14 @@
 --
 local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 local window = import("..utils.window")
+local Localize_item = import("..utils.Localize_item")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local WidgetGachaItemBox = import("..widget.WidgetGachaItemBox")
+local intInit = GameDatas.PlayerInitData.intInit
+
+local NORMAL = GameDatas.Gacha.normal
+local ADVANCED = GameDatas.Gacha.advanced
 
 local GameUIGacha = UIKit:createUIClass("GameUIGacha","GameUIWithCommonHeader")
 
@@ -53,6 +59,8 @@ function GameUIGacha:onEnter()
             self.deluxe_layer:setVisible(false)
         end
     end):pos(window.cx, window.bottom + 34)
+
+    User:AddListenOnType(self,User.LISTEN_TYPE.COUNT_INFO)
 end
 function GameUIGacha:onExit()
     if self.OrdinaryGachaPool then
@@ -61,6 +69,8 @@ function GameUIGacha:onExit()
     if self.DeluxeGachaPool then
         self.DeluxeGachaPool:RemoveDiskSchedule()
     end
+    User:RemoveListenerOnType(self,User.LISTEN_TYPE.COUNT_INFO)
+
     GameUIGacha.super.onExit(self)
 end
 
@@ -99,6 +109,16 @@ function GameUIGacha:CreateGachaPool(layer)
     -- 抽到物品背景
     local draw_thing_bg  = display.newSprite("back_ground_320x172.png"):addTo(layer)
         :align(display.CENTER, window.cx, window.top_bottom-510)
+    -- 当前赌币
+    display.newSprite("icon_casinoToken.png"):addTo(draw_thing_bg)
+        :align(display.CENTER, 120,122):scale(0.3)
+    local city = self.city
+    layer.current_casinoToken_label = UIKit:ttfLabel({
+        text = string.formatnumberthousands(city:GetResourceManager():GetCasinoTokenResource():GetValue()),
+        size = 18,
+        color = 0xffd200,
+    }):addTo(draw_thing_bg):align(display.CENTER,170,118)
+
     local gacha_boxes = {}
     if isSenior then
         table.insert(gacha_boxes,  display.newSprite("box_gacha_92x92.png"):addTo(layer)
@@ -112,12 +132,30 @@ function GameUIGacha:CreateGachaPool(layer)
             :align(display.CENTER, window.cx, window.top_bottom-390))
     end
 
+    -- 打乱gacha物品的顺序
+    local gacha_item_table = {}
+    local temp_table
+    if isSenior then
+        temp_table = ADVANCED
+    else
+        temp_table = NORMAL
+    end
+    for i,v in ipairs(temp_table) do
+        table.insert(gacha_item_table, v)
+    end
+    math.randomseed(os.time())
+    for i=1,10 do
+        local round_num = math.random(1,#gacha_item_table)
+        local remove_element = table.remove(gacha_item_table,round_num)
+        table.insert(gacha_item_table,remove_element)
+    end
+
 
     -- 当前所在位置
     local current_box,current_index
     for i=1,16 do
 
-        local gahca_box =WidgetGachaItemBox.new("temporary_item"..i,isSenior):addTo(layer)
+        local gahca_box =WidgetGachaItemBox.new(gacha_item_table[i],isSenior):addTo(layer)
         if i<6 then
             if i>1 then
                 x = x+box_width+gap
@@ -191,8 +229,10 @@ function GameUIGacha:CreateGachaPool(layer)
         -- self:ChangeDiskSpeed(1)
 
         local draw_item_box = self.draw_item_box
-        local award = display.newSprite("forestSoul_92x92.png"):addTo(layer)
+        local award = display.newScale9Sprite(draw_item_box:GetGachaItemIcon()):addTo(layer)
             :align(display.CENTER, draw_item_box:getPositionX(), draw_item_box:getPositionY())
+        award:size(74,74)
+
         local gacha_box = self.continuous_draw_items and gacha_boxes[self.continuous_index-1] or gacha_boxes[1]
         local gacha_box_lable
 
@@ -201,7 +241,7 @@ function GameUIGacha:CreateGachaPool(layer)
                 onComplete = function ( )
                     transition.scaleTo(award, {scale = 1,time =0.4,onComplete = function ()
                         gacha_box_lable = UIKit:ttfLabel({
-                            text = draw_item_box:GetGachaItem(),
+                            text = Localize_item.item_name[draw_item_box:GetGachaItemName()],
                             size = 20,
                             color = 0xffedae,
                         }):align(display.CENTER, gacha_box:getPositionX(), gacha_box:getPositionY()-56):addTo(layer)
@@ -237,7 +277,7 @@ function GameUIGacha:CreateGachaPool(layer)
         layer:EnAbleButton(false)
         local terminal_point
         for i,item in ipairs(items) do
-            if item:GetGachaItem() == item_name then
+            if item:GetGachaItemName() == item_name then
                 terminal_point = i
                 -- 存在抽到的道具box对象，以便之后获取其位置做抽到奖品动画效果
                 self.draw_item_box = item
@@ -279,10 +319,14 @@ function GameUIGacha:CreateGachaPool(layer)
 
         self:SkipByStep()
         self.run_steps = run_steps + 1
-        if self.handle and self.total_steps-self.run_steps<80 then
+        if self.handle then
             scheduler.unscheduleGlobal(self.handle)
             self.handle = nil
-            self.current_period = self.current_period + 0.001
+            if self.total_steps-self.run_steps<30 then
+                self.current_period = self.current_period + 0.005
+            elseif self.total_steps-self.run_steps<80 then
+                self.current_period = self.current_period + 0.001
+            end
             self.handle = scheduler.scheduleGlobal(handler(self, self.Run), self.current_period, false)
             -- if self.total_steps-self.run_steps<10 then
             -- -- self:ChangeDiskSpeed(self.total_steps-self.run_steps)
@@ -348,20 +392,46 @@ function GameUIGacha:InitOrdinary()
         ,{
             disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
         })
-        :setButtonLabel(UIKit:commonButtonLable({
-            text = _("开始抽奖")
-        }))
         :setButtonLabelOffset(0,20)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                local final = math.random(1,16)
-                OrdinaryGachaPool:ResetPool()
-                OrdinaryGachaPool:StartLotteryDraw("temporary_item"..final)
+                if User:GetOddFreeNormalGachaCount()<1 and self.city:GetResourceManager():GetCasinoTokenResource():GetValue()<intInit.casinoTokenNeededPerNormalGacha.value then
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("赌币不足"))
+                        :CreateOKButton(
+                            {
+                                listener = function()end
+                            })
+                        :AddToCurrentScene()
+                else
+                    ItemManager:AddListenOnType(self,ItemManager.LISTEN_TYPE.ITEM_CHANGED)
+                    NetManager:getNormalGachaPromise()
+                end
             end
         end)
         :align(display.CENTER, window.cx+5, window.bottom+150)
         :addTo(layer)
+    -- 是否有免费抽奖次数
+    if User:GetOddFreeNormalGachaCount()>0 then
+        button:setButtonLabel(UIKit:commonButtonLable({
+            text = _("免费抽奖")
+        }))
+    else
+        button:setButtonLabel(UIKit:commonButtonLable({
+            text = _("开始抽奖")
+        }))
+    end
+    -- 抽奖一次需要赌币
+    display.newSprite("icon_casinoToken.png"):addTo(button)
+        :align(display.CENTER, -72,-8):scale(0.4)
 
+    UIKit:ttfLabel({
+        text = string.formatnumberthousands(intInit.casinoTokenNeededPerNormalGacha.value),
+        size = 18,
+        color = 0xffd200,
+    }):addTo(button):align(display.CENTER,0,-12)
+
+    self.normal_gacha_button = button
     function layer:EnAbleButton(enabled)
         button:setButtonEnabled(enabled)
         print("EnAbleButton",enabled)
@@ -398,26 +468,90 @@ function GameUIGacha:InitDeluxe()
         :setButtonLabelOffset(0,20)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                DeluxeGachaPool:ResetPool()
-                DeluxeGachaPool:StartLotteryDrawThree({"temporary_item3","temporary_item11","temporary_item5"})
+                if self.city:GetResourceManager():GetCasinoTokenResource():GetValue()<intInit.casinoTokenNeededPerAdvancedGacha.value then
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("赌币不足"))
+                        :CreateOKButton(
+                            {
+                                listener = function()end
+                            })
+                        :AddToCurrentScene()
+                else
+                    ItemManager:AddListenOnType(self,ItemManager.LISTEN_TYPE.ITEM_CHANGED)
+                    NetManager:getAdvancedGachaPromise()
+                end
             end
         end)
         :align(display.CENTER, window.cx+5, window.bottom+150)
         :addTo(layer)
+
+    -- 抽奖一次需要赌币
+    display.newSprite("icon_casinoToken.png"):addTo(button)
+        :align(display.CENTER, -72,-8):scale(0.4)
+
+    UIKit:ttfLabel({
+        text = string.formatnumberthousands(intInit.casinoTokenNeededPerAdvancedGacha.value),
+        size = 18,
+        color = 0xffd200,
+    }):addTo(button):align(display.CENTER,0,-12)
     self.DeluxeGachaPool = DeluxeGachaPool
     function layer:EnAbleButton(enabled)
         button:setButtonEnabled(enabled)
     end
 end
+function GameUIGacha:OnResourceChanged(resource_manager)
+    GameUIGacha.super.OnResourceChanged(self,resource_manager)
+    if self.ordinary_layer.current_casinoToken_label then
+        self.ordinary_layer.current_casinoToken_label:setString(string.formatnumberthousands(resource_manager:GetCasinoTokenResource():GetValue()))
+    end
+    if self.deluxe_layer.current_casinoToken_label then
+        self.deluxe_layer.current_casinoToken_label:setString(string.formatnumberthousands(resource_manager:GetCasinoTokenResource():GetValue()))
+    end
+end
+
+function GameUIGacha:OnItemsChanged( changed_map )
+    -- gacha 处理道具增加修改事件
+    -- 增加一个道具为普通gacha,多个为高举gacha（现在是3个）
+    local item_names = {}
+    if changed_map[1] then
+        local gacha_result = changed_map[1]
+        for i,v in ipairs(gacha_result) do
+            table.insert(item_names, v:Name())
+        end
+    end
+    if changed_map[2] then
+        local gacha_result = changed_map[2]
+        for i,v in ipairs(gacha_result) do
+            table.insert(item_names, v:Name())
+        end
+    end
+    if #item_names>1 then
+        -- 首先重置gacha池
+        self.DeluxeGachaPool:ResetPool()
+        self.DeluxeGachaPool:StartLotteryDrawThree(item_names)
+        -- LuaUtils:outputTable(" 高级抽奖返回item_names", item_names)
+    else
+        -- 首先重置gacha池
+        self.OrdinaryGachaPool:ResetPool()
+        self.OrdinaryGachaPool:StartLotteryDraw(item_names[1])
+        -- print("普通抽奖返回",item_names[1])
+    end
+
+    -- 立刻移除监听，避免错误；可能有非gacha 道具增加可能
+    ItemManager:RemoveListenerOnType(self,ItemManager.LISTEN_TYPE.ITEM_CHANGED)
+end
+function GameUIGacha:OnCountInfoChanged(source)
+    if User:GetOddFreeNormalGachaCount()>0 then
+        self.normal_gacha_button:setButtonLabel(UIKit:commonButtonLable({
+            text = _("免费抽奖")
+        }))
+    else
+        self.normal_gacha_button:setButtonLabel(UIKit:commonButtonLable({
+            text = _("开始抽奖")
+        }))
+    end
+end
 return GameUIGacha
-
-
-
-
-
-
-
-
 
 
 
