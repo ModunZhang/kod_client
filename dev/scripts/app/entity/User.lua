@@ -1,6 +1,7 @@
 local PVEDatabase = import(".PVEDatabase")
 local Resource = import(".Resource")
 local VipEvent = import(".VipEvent")
+local GrowUpTaskManager = import(".GrowUpTaskManager")
 local AutomaticUpdateResource = import(".AutomaticUpdateResource")
 local property = import("..utils.property")
 local TradeManager = import("..entity.TradeManager")
@@ -59,6 +60,8 @@ function User:ctor(p)
     local vip_event = VipEvent.new()
     vip_event:AddObserver(self)
     self.vip_event = vip_event
+
+    self.growUpTaskManger = GrowUpTaskManager.new()
 end
 function User:GotoPVEMapByLevel(level)
     if self.cur_pve_map then
@@ -296,6 +299,7 @@ function User:OnUserDataChanged(userData, current_time)
 
     -- vip event
     self:OnVipEventDataChange(userData)
+    self.growUpTaskManger:OnUserDataChanged(userData)
 
     return self
 end
