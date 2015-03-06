@@ -462,6 +462,7 @@ function GameUIHome:OnBottomButtonClicked(event)
     elseif tag == 2 then
         UIKit:newGameUI('GameUIItems',_("道具"),self.city):addToCurrentScene(true)
     elseif tag == 1 then
+        UIKit:newGameUI('GameUIMission',self.city):addToCurrentScene(true)
     elseif tag == 5 then
         UIKit:newGameUI('GameUISetting',self.city):addToCurrentScene(true)
 

@@ -305,6 +305,15 @@ function UIKit:CreateBoxPanel9(params)
     return common_bg
 end
 
+
+function UIKit:CreateBoxWithoutContent(params)
+    if not params then
+        return display.newSprite("mission_box_558x66.png")
+    else
+        local sp = display.newScale9Sprite("mission_box_558x66.png")
+        sp:size(params.width or 558,params.height or 66)
+    end
+end
 function UIKit:CreateBoxPanelWithBorder(params)
     local node = display.newScale9Sprite("panel_556x120.png")
     node:setAnchorPoint(cc.p(0,0))
