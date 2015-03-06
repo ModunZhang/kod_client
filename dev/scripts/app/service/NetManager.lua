@@ -674,7 +674,7 @@ local function get_gethelpdefencetroopdetail_callback()
 end
 
 local function get_addplayerbillingdata_callback()
-    return  get_callback_promise(onAddPlayerBillingDataSuccess_callbacks, "上传IAP信息失败!") 
+    return  get_callback_promise(onAddPlayerBillingDataSuccess_callbacks, "上传IAP信息失败!")
 end
 -- 个人修改地形
 local function get_changeTerrain_promise(terrain)
@@ -1517,7 +1517,7 @@ function NetManager:getVerifyIAPPromise(transactionId,receiptData)
 end
 --获得每日登陆奖励
 function NetManager:getDay60RewardPromise()
-     return promise.all(get_blocking_request_promise("logic.playerHandler.getDay60Reward",
+    return promise.all(get_blocking_request_promise("logic.playerHandler.getDay60Reward",
         nil,
         "获得每日登陆奖励失败!"),get_playerdata_callback()):next(get_response_msg)
 end
@@ -1548,6 +1548,19 @@ function NetManager:getLevelupRewardPromise(levelupIndex)
         {levelupIndex = levelupIndex},
         "获取新手冲级奖励失败!"),get_playerdata_callback()):next(get_response_msg)
 end
+-- 普通gacha
+function NetManager:getNormalGachaPromise()
+    return promise.all(get_blocking_request_promise("logic.playerHandler.gacha",
+        {type = "normal"},
+        "普通gacha失败!"),get_playerdata_callback()):next(get_response_msg)
+end
+-- 高级gacha
+function NetManager:getAdvancedGachaPromise()
+    return promise.all(get_blocking_request_promise("logic.playerHandler.gacha",
+        {type = "advanced"},
+        "高级gacha失败!"),get_playerdata_callback()):next(get_response_msg)
+end
+
 
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
@@ -1602,6 +1615,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 

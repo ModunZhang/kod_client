@@ -434,6 +434,25 @@ local VILLAGE = {
     coinVillage = "woodcutter_1_150x108.png",
 }
 
+local ITEM = {
+    movingConstruction = "icon_movingConstruction.png",
+    torch = "icon_torch.png",
+    changePlayerName = "icon_changePlayerName.png",
+    changeCityName = "icon_changeCityName.png",
+    retreatTroop = "icon_retreatTroop.png",
+    moveTheCity = "icon_moveTheCity.png",
+    dragonExp_1 = "icon_dragonExp_1.png",
+    dragonExp_2 = "icon_dragonExp_2.png",
+    dragonExp_3 = "icon_dragonExp_3.png",
+    dragonHp_1 = "icon_dragonHp_1.png",
+    dragonHp_2 = "icon_dragonHp_2.png",
+    dragonHp_3 = "icon_dragonHp_3.png",
+    heroBlood_1 = "icon_heroBlood_1.png",
+    heroBlood_2 = "icon_heroBlood_2.png",
+    stamina_1 = "icon_stamina_1.png",
+    stamina_2 = "icon_stamina_2.png",
+}
+
 local SOLDIER_ANIMATIONS = getAniNameFromAnimationFiles(SOLDIER_ANIMATION_FILES)
 local SOLDIER_EFFECT_ANIMATIONS = getAniNameFromAnimationFiles(EFFECT_ANIMATION_FILES)
 local DRAGON_ANIMATIONS = getAniNameFromAnimationFiles(DRAGON_ANIMATIONS_FILES)
@@ -460,7 +479,9 @@ return {
     alliance_title_icon =ALLIANCE_TITLE_ICON,
     buff = BUFF,
     village = VILLAGE,
+    item = ITEM,
 }
+
 
 
 
