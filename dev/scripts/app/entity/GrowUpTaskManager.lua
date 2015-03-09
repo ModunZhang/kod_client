@@ -421,15 +421,26 @@ function GrowUpTaskManager:GetFirstCompleteTasks()
     end
     return r
 end
+local type_map = {
+    dragonLevel = true,
+    dragonStar = true
+}
+local index_map = {
+    pveCount = true,
+    attackWin = true,
+    strikeWin = true,
+    playerPower = true,
+    playerKill = true,
+}
 function GrowUpTaskManager:GetFirstCompleteTasksByCategory(category)
     local r = {}
     for i,tag in ipairs(category_map[category]) do
         local mark_map = {}
         for i,v in ipairs(self.task_map[tag]) do
             local category_name = v.name
-            if tag == "dragonLevel" or tag == "dragonStar" then
+            if type_map[tag] then
                 category_name = v.type
-            elseif tag == "pveCount" then
+            elseif index_map[tag] then
                 category_name = v.index
             end
             if not v.rewarded and not mark_map[category_name] then
@@ -682,6 +693,7 @@ end
 
 
 return GrowUpTaskManager
+
 
 
 
