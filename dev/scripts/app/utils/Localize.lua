@@ -448,7 +448,9 @@ local FIGHT_REWARD = {
     stone = _("石料"),
     iron = _("铁矿"),
     coin = _("银币"),
-    wallHp = _("城墙血量")
+    wallHp = _("城墙血量"),
+    exp = _("经验值"),
+    gem = _("宝石"),
 }
 local SELL_TYPE = {
     food = _("粮食"),

@@ -54,6 +54,8 @@ function WidgetSpeedUp:ctor()
         color = 0x403c2f
     }):align(display.LEFT_CENTER, 10,self.tip_bg:getContentSize().height/2)
         :addTo(self.tip_bg)
+    self:SetAccTips(string.format(_("小于%dmin时可以使用免费加速"),User:GetVIPFreeSpeedUpTime()))
+
 end
 
 function WidgetSpeedUp:SetProgressInfo(time_label, percent)

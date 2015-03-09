@@ -647,6 +647,8 @@ function GameUIAllianceHome:OnBottomButtonClicked(event)
     if tag == 4 then -- tag 4 = alliance button
         -- UIKit:newGameUI('GameUIAlliance'):addToCurrentScene(true)
         UIKit:newGameUI('GameUIShop', City):addToCurrentScene(true)
+    elseif tag == 1 then
+        UIKit:newGameUI('GameUIMission',City):addToCurrentScene(true)
     elseif tag == 3 then
         UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
     elseif tag == 5 then

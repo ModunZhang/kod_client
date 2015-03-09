@@ -1,5 +1,6 @@
 local promise = import("..utils.promise")
 local GameGlobalUIUtils = import("..ui.GameGlobalUIUtils")
+local Localize_item = import("..utils.Localize_item")
 local cocos_promise = import("..utils.cocos_promise")
 local gaozhou
 if CONFIG_IS_DEBUG then
@@ -1484,7 +1485,9 @@ function NetManager:getBuyAndUseItemPromise(itemName,params)
     return promise.all(get_blocking_request_promise("logic.playerHandler.buyAndUseItem", {
         itemName = itemName,
         params = params,
-    }, "购买并使用道具失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "购买并使用道具失败!"), get_playerdata_callback()):next(get_response_msg):done(function ()
+        GameGlobalUI:showTips(_("提示"),string.format('使用%s道具成功',Localize_item.item_name[itemName]))
+    end)
 end
 
 --联盟商店补充道具
@@ -1561,11 +1564,21 @@ function NetManager:getAdvancedGachaPromise()
         "高级gacha失败!"),get_playerdata_callback()):next(get_response_msg)
 end
 
+
 -- 通过Selina的考验
 function NetManager:getPassSelinasTestPromise()
     return promise.all(get_blocking_request_promise("logic.playerHandler.passSelinasTest",
         nil,
         "通过Selina的考验!"),get_playerdata_callback()):next(get_response_msg)
+end
+-- 获取成就任务奖励
+function NetManager:getGrowUpTaskRewardsPromise(taskType, taskId)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.getGrowUpTaskRewards",
+        {
+            taskType = taskType,
+            taskId = taskId
+        },
+        "领取奖励失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 
 -- 领取日常任务奖励
@@ -1627,6 +1640,8 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
+
 
 
 

@@ -49,10 +49,10 @@ end
 function GameUIItems:CreateBetweenBgAndTitle()
     GameUIItems.super.CreateBetweenBgAndTitle(self)
     -- shop_layer
-    self.shop_layer = display.newLayer()
+    self.shop_layer = cc.Layer:create()
     self:addChild(self.shop_layer)
     -- myItems_layer
-    self.myItems_layer = display.newLayer()
+    self.myItems_layer = cc.Layer:create()
     self:addChild(self.myItems_layer)
 end
 function GameUIItems:onExit()

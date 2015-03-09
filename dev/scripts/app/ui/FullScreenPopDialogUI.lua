@@ -39,11 +39,16 @@ function FullScreenPopDialogUI:Init()
 
     -- close button
     self.close_btn = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                self:removeFromParent()
+        :align(display.CENTER, size.width-30, size.height+16):addTo(bg)
+
+    self.close_btn:onButtonClicked(function(event)
+        if event.name == "CLICKED_EVENT" then
+            self:removeFromParent()
+            if listener then
+                listener()
             end
-        end):align(display.CENTER, size.width-30, size.height+16):addTo(bg)
+        end
+    end)
 end
 
 function FullScreenPopDialogUI:SetTitle(title)
@@ -142,6 +147,7 @@ function FullScreenPopDialogUI:AddToCurrentScene(anima)
     return self
 end
 return FullScreenPopDialogUI
+
 
 
 

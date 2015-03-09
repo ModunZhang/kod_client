@@ -13,7 +13,6 @@ function WidgetMilitrayTechSpeedUp:ctor()
 		self.militaryTechEvent = soldier_manager:GetUpgradingMilitaryTech()
 	end
 	self:SetAccBtnsGroup(WidgetAccelerateGroup.SPEEDUP_TYPE.TECHNOLOGY,function()end)
-	self:SetAccTips(_("小于5min时可以使用免费加速"))
 	if not self.militaryTechEvent then
 		self:leftButtonClicked()
 	else

@@ -23,7 +23,7 @@ local Game = require("Game")
 --         end
 --     end)
 -- end
--- function consumer(prod)
+-- function consumer(prod)  
 --     while true do
 --         local x = receive(prod)
 --         io.write(x, "\n")
@@ -397,8 +397,63 @@ t=#o --cause o is table,__len not be used
 
 
 
+-- local function clamp(a,b,x)
+--     return x < a and a or (x > b and b or x)
+-- end
+-- print(clamp(1,2,1))
 
 
+
+-- local NotifyItem = import("app.entity.NotifyItem")
+
+-- print(NotifyItem.new({type = "resources", name = "food", count = 100}) -  
+--     NotifyItem.new({type = "resources", name = "food", count = 99}))
+
+-- print(NotifyItem.new({type = "resources", name = "food", count = 100}, {type = "resources", name = "food", count = 100}) -
+--     NotifyItem.new({type = "resources", name = "food", count = 99}))
+
+
+
+-- function Utf8to32(utf8str)
+--     assert(type(utf8str) == "string")
+--     local res, seq, val = {}, 0, nil
+--     for i = 1, #utf8str do
+--         local c = string.byte(utf8str, i)
+--         if seq == 0 then
+--             table.insert(res, val)
+--             seq = c < 0x80 and 1 or c < 0xE0 and 2 or c < 0xF0 and 3 or
+--                   c < 0xF8 and 4 or --c < 0xFC and 5 or c < 0xFE and 6 or
+--                   error("invalid UTF-8 character sequence")
+--             val = bit32.band(c, 2^(8-seq) - 1)
+--         else
+--             val = bit32.bor(bit32.lshift(val, 6), bit32.band(c, 0x3F))
+--         end
+--         seq = seq - 1
+--     end
+--     table.insert(res, val)
+--     table.insert(res, 0)
+--     return res
+-- end
+
+
+-- print(Utf8to32("你"))
+
+
+local m = {}
+m.__index = m
+
+function m:hello()
+    print("hello", self.b)
+end
+
+local a = {
+    b = 1
+}
+
+setmetatable(a, m)
+
+
+a:hello()
 
 
 

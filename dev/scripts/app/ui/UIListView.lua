@@ -35,24 +35,24 @@ local UIListView = class("UIListView", UIScrollView)
 local UIListViewItem = import(".UIListViewItem")
 
 
-UIListView.DELEGATE					= "ListView_delegate"
-UIListView.TOUCH_DELEGATE			= "ListView_Touch_delegate"
+UIListView.DELEGATE                 = "ListView_delegate"
+UIListView.TOUCH_DELEGATE           = "ListView_Touch_delegate"
 
-UIListView.CELL_TAG					= "Cell"
-UIListView.CELL_SIZE_TAG			= "CellSize"
-UIListView.COUNT_TAG				= "Count"
-UIListView.CLICKED_TAG				= "Clicked"
-UIListView.UNLOAD_CELL_TAG			= "UnloadCell"
+UIListView.CELL_TAG                 = "Cell"
+UIListView.CELL_SIZE_TAG            = "CellSize"
+UIListView.COUNT_TAG                = "Count"
+UIListView.CLICKED_TAG              = "Clicked"
+UIListView.UNLOAD_CELL_TAG          = "UnloadCell"
 
-UIListView.BG_ZORDER 				= -1
-UIListView.CONTENT_ZORDER			= 10
+UIListView.BG_ZORDER                = -1
+UIListView.CONTENT_ZORDER           = 10
 
-UIListView.ALIGNMENT_LEFT			= 0
-UIListView.ALIGNMENT_RIGHT			= 1
-UIListView.ALIGNMENT_VCENTER		= 2
-UIListView.ALIGNMENT_TOP			= 3
-UIListView.ALIGNMENT_BOTTOM			= 4
-UIListView.ALIGNMENT_HCENTER		= 5
+UIListView.ALIGNMENT_LEFT           = 0
+UIListView.ALIGNMENT_RIGHT          = 1
+UIListView.ALIGNMENT_VCENTER        = 2
+UIListView.ALIGNMENT_TOP            = 3
+UIListView.ALIGNMENT_BOTTOM         = 4
+UIListView.ALIGNMENT_HCENTER        = 5
 
 --[[--
 
@@ -70,7 +70,7 @@ UIListView构建函数
 -   bgEndColor 渐变背景结束色,nil表示无背景色
 -   bg 背景图
 -   bgScale9 背景图是否可缩放
--	capInsets 缩放区域
+-   capInsets 缩放区域
 
 
 @param table params 参数表
@@ -198,7 +198,10 @@ function UIListView:itemSizeChangeListener(listItem, newSize, oldSize)
         self.size.height = self.size.height + itemH
         if UIScrollView.DIRECTION_VERTICAL == self.direction then
             transition.moveBy(self.container,
-                {x = -itemW, y = -itemH, time = 0.2})
+                {x = -itemW, y = -itemH, time = 0.2,
+                    onComplete = function()
+                        print("move completed")
+                    end})
             self:moveItems(1, pos - 1, itemW, itemH, true)
         else
             self:moveItems(pos + 1, table.nums(self.items_), itemW, itemH, true)
@@ -544,11 +547,11 @@ end
 
 function UIListView:moveItems(beginIdx, endIdx, x, y, bAni)
     if 0 == endIdx then
-        self:elasticScroll()
+        -- why
+        -- self:elasticScroll()
+        return
     end
-
     local posX, posY = 0, 0
-
     local moveByParams = {x = x, y = y, time = 0.2}
     for i=beginIdx, endIdx do
         if bAni then
@@ -677,7 +680,7 @@ end
 ]]
 function UIListView:increaseOrReduceItem_()
     -- if self.nTest > 0 then
-    -- 	return
+    --  return
     -- end
     -- print("enter increase reduceItem")
 
@@ -1078,32 +1081,32 @@ function UIListView:scrollBy(x, y)
 end
 
 local function floor_0(t, c)
-	local abs_c = abs(c)
-	return abs_c > t and (abs_c - t) * (abs_c/c) or 0
+    local abs_c = abs(c)
+    return abs_c > t and (abs_c - t) * (abs_c/c) or 0
 end
 function UIListView:twiningScroll()
-	if self:isSideShow() then
-		-- printInfo("UIScrollView - side is show, so elastic scroll")
-		return false
-	end
+    if self:isSideShow() then
+        -- printInfo("UIScrollView - side is show, so elastic scroll")
+        return false
+    end
 
-	if abs(self.speed.x) < 10 and abs(self.speed.y) < 10 then
-		-- printInfo("#DEBUG, UIScrollView - isn't twinking scroll:"
-		-- 	.. self.speed.x .. " " .. self.speed.y)
-		return false
-	end
-	local disX, disY = self:moveXY(0, 0, self.speed.x*6, self.speed.y*6)
-	local rect = self:getScrollNodeRect()
-	rect.x = rect.x + disX
-	rect.y = rect.y + disY
-	local rx, ry, dx, dy = self:Ratio(rect)
-	local viewRect = self:getViewRectInWorldSpace()
-	transition.moveBy(self.scrollNode,
-		{x = disX + floor_0(viewRect.width * 0.5, dx), y = disY + floor_0(viewRect.height * 0.5, dy), time = 0.3,
-		easing = "sineOut",
-		onComplete = function()
-			self:elasticScroll()
-		end})
+    if abs(self.speed.x) < 10 and abs(self.speed.y) < 10 then
+        -- printInfo("#DEBUG, UIScrollView - isn't twinking scroll:"
+        --  .. self.speed.x .. " " .. self.speed.y)
+        return false
+    end
+    local disX, disY = self:moveXY(0, 0, self.speed.x*6, self.speed.y*6)
+    local rect = self:getScrollNodeRect()
+    rect.x = rect.x + disX
+    rect.y = rect.y + disY
+    local rx, ry, dx, dy = self:Ratio(rect)
+    local viewRect = self:getViewRectInWorldSpace()
+    transition.moveBy(self.scrollNode,
+        {x = disX + floor_0(viewRect.width * 0.5, dx), y = disY + floor_0(viewRect.height * 0.5, dy), time = 0.3,
+            easing = "sineOut",
+            onComplete = function()
+                self:elasticScroll()
+            end})
 end
 function UIListView:Ratio(cascadeBound)
     local disX, disY = 0, 0
@@ -1166,7 +1169,7 @@ function UIListView:insertItemAndRefresh(listItem, pos)
     return self
 end
 --[[--
-	显示当前listview的情况
+    显示当前listview的情况
 ]]
 function UIListView:dumpListView()
     assert(self.bAsyncLoad, "UIListView:dumpListView() - syncload not support dumpListView")
@@ -1176,7 +1179,7 @@ function UIListView:dumpListView()
     printInfo("Free item size:%d",#self.itemsFree_)
 end
 --[[--
-	逻辑索引获取item
+    逻辑索引获取item
 ]]
 function UIListView:getItemWithLogicIndex(index)
     assert(self.bAsyncLoad, "UIListView:getItemWithLogicIndex() - syncload not support getItemWithLogicIndex")
@@ -1190,7 +1193,7 @@ function UIListView:getItemWithLogicIndex(index)
 end
 --[[--
 
-	通过偏移量修改显示的item的逻辑索引
+    通过偏移量修改显示的item的逻辑索引
 ]]
 function UIListView:offsetItemsIdx(offset)
     assert(self.bAsyncLoad, "UIListView:offsetItemsIdx() - syncload not support offsetItemsIdx")
@@ -1205,7 +1208,7 @@ function UIListView:rectWholeInRect(rect1,rect2)
         and  cc.rectGetMaxY(rect1) >= cc.rectGetMaxY(rect2) and cc.rectGetMinY(rect1) <=  cc.rectGetMinY(rect2)
 end
 --[[--
-	判断pos位置的item[完全]在viewRect内
+    判断pos位置的item[完全]在viewRect内
 ]]
 function UIListView:isItemFullyInViewRect(pos)
     local item
@@ -1234,4 +1237,5 @@ end
 
 
 return UIListView
+
 
