@@ -340,54 +340,57 @@ function User:GetVipLevel()
         end
     end
 end
+function User:IsVIPActived()
+    return self.vip_event:IsActived()
+end
 function User:GetVIPFreeSpeedUpTime()
-    return vip_level[self:GetVipLevel()].freeSpeedup
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].freeSpeedup or 5
 end
 function User:GetVIPWoodProductionAdd()
-    return vip_level[self:GetVipLevel()].woodProductionAdd
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].woodProductionAdd or 0
 end
 function User:GetVIPStoneProductionAdd()
-    return vip_level[self:GetVipLevel()].stoneProductionAdd
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].stoneProductionAdd or 0
 end
 function User:GetVIPIronProductionAdd()
-    return vip_level[self:GetVipLevel()].ironProductionAdd
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].ironProductionAdd or 0
 end
 function User:GetVIPFoodProductionAdd()
-    return vip_level[self:GetVipLevel()].foodProductionAdd
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].foodProductionAdd or 0
 end
 function User:GetVIPCitizenRecoveryAdd()
-    return vip_level[self:GetVipLevel()].citizenRecoveryAdd
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].citizenRecoveryAdd or 0
 end
 function User:GetVIPMarchSpeedAdd()
-    return vip_level[self:GetVipLevel()].marchSpeedAdd
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].marchSpeedAdd or 0
 end
 function User:GetVIPNormalGachaAdd()
-    return vip_level[self:GetVipLevel()].normalGachaAdd
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].normalGachaAdd or 0
 end
 --暗仓保护上限提升
 function User:GetVIPStorageProtectAdd()
-    return vip_level[self:GetVipLevel()].storageProtectAdd
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].storageProtectAdd or 0
 end
 function User:GetVIPWallHpRecoveryAdd()
-    return vip_level[self:GetVipLevel()].wallHpRecoveryAdd
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].wallHpRecoveryAdd or 0
 end
 function User:GetVIPDragonExpAdd()
-    return vip_level[self:GetVipLevel()].dragonExpAdd
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].dragonExpAdd or 0
 end
 function User:GetVIPDragonHpRecoveryAdd()
-    return vip_level[self:GetVipLevel()].dragonHpRecoveryAdd
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].dragonHpRecoveryAdd or 0
 end
 function User:GetVIPSoldierAttackPowerAdd()
-    return vip_level[self:GetVipLevel()].soldierAttackPowerAdd
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].soldierAttackPowerAdd or 0
 end
 function User:GetVIPSoldierHpAdd()
-    return vip_level[self:GetVipLevel()].soldierHpAdd
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].soldierHpAdd or 0
 end
 function User:GetVIPDragonLeaderShipAdd()
-    return vip_level[self:GetVipLevel()].dragonLeaderShipAdd
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].dragonLeaderShipAdd or 0
 end
 function User:GetVIPSoldierConsumeSub()
-    return vip_level[self:GetVipLevel()].soldierConsumeSub
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].soldierConsumeSub or 0
 end
 
 function User:GetSpecialVipLevelExp(level)

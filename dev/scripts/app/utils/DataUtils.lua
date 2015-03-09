@@ -380,7 +380,7 @@ function DataUtils:getBuffEfffectTime(time,decreasePercent)
 end
 -- 各种升级事件免费加速门坎 单位：秒
 function DataUtils:getFreeSpeedUpLimitTime()
-    return User:GetFreeSpeedUpTime() * 60
+    return User:GetVIPFreeSpeedUpTime() * 60
 end
 
 function DataUtils:getPlayerOnlineTimeMinutes()
