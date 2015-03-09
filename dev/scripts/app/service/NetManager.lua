@@ -1485,7 +1485,7 @@ function NetManager:getBuyAndUseItemPromise(itemName,params)
     return promise.all(get_blocking_request_promise("logic.playerHandler.buyAndUseItem", {
         itemName = itemName,
         params = params,
-    }, "购买并使用道具失败!"), get_playerdata_callback()):next(get_response_msg):next(function ()
+    }, "购买并使用道具失败!"), get_playerdata_callback()):next(get_response_msg):done(function ()
         GameGlobalUI:showTips(_("提示"),string.format('使用%s道具成功',Localize_item.item_name[itemName]))
     end)
 end
