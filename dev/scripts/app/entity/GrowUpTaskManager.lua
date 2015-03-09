@@ -446,6 +446,9 @@ function GrowUpTaskManager:GetFirstCompleteTasksByCategory(category)
             if not v.rewarded and not mark_map[category_name] then
                 mark_map[category_name] = true
                 table.insert(r, setmetatable(v, meta_map[tag]))
+                if index_map[tag] then
+                    break
+                end
             end
         end
     end
@@ -590,14 +593,10 @@ function GrowUpTaskManager:GetAvailableTasksByCategory(category)
             local r1,count1,total1 = self:GetAvailableTaskByTag(tag, function(available, is_init, cur, next_task)
                 if is_init then
                     if cur.id == 0 then
-                        available[cur.index] = cur.id
+                        available[1] = cur.id
                     end
-                else
-                    if next_task then
-                        available[cur.index] = next_task.id
-                    else
-                        available[cur.index] = nil
-                    end
+                elseif next_task then
+                    available[1] = next_task.id
                 end
             end)
             table.sort(r1, function(a, b)
@@ -636,6 +635,8 @@ function GrowUpTaskManager:GetAvailableTaskByTag(tag, func)
     for i,v in ipairs(self.task_map[tag]) do
         func(available_map, false, v, config[v.id + 1])
     end
+
+    dump(available_map)
 
     -- 找到未完成的任务
     for k,v in pairs(available_map) do
