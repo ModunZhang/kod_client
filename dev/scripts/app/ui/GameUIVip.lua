@@ -9,7 +9,10 @@ local WidgetPages = import("..widget.WidgetPages")
 local WidgetInfoNotListView = import("..widget.WidgetInfoNotListView")
 local WidgetInfo = import("..widget.WidgetInfo")
 local WidgetUseItems = import("..widget.WidgetUseItems")
+local Enum = import("..utils.Enum")
 local window = import("..utils.window")
+local loginDays = GameDatas.Vip.loginDays
+local VIP_LEVEL = GameDatas.Vip.level
 
 local GameUIVip = UIKit:createUIClass('GameUIVip',"GameUIWithCommonHeader")
 
@@ -24,41 +27,45 @@ local function __getPlayerIcons()
         "playerIcon_default.png",
     }
 end
+local VIP_EFFECIVE_ALL_TYPE = Enum(
+    "freeSpeedup",
+    "helpSpeedup",
+    "woodProductionAdd",
+    "stoneProductionAdd",
+    "ironProductionAdd",
+    "foodProductionAdd",
+    "citizenRecoveryAdd",
+    "marchSpeedAdd",
+    "normalGachaAdd",
+    "storageProtectAdd",
+    "wallHpRecoveryAdd",
+    "dragonExpAdd",
+    "dragonHpRecoveryAdd",
+    "soldierAttackPowerAdd",
+    "soldierHpAdd",
+    "dragonLeaderShipAdd",
+    "soldierConsumeSub"
+)
 
 -- VIP 效果总览
 local VIP_EFFECIVE_ALL = {
-    _("立即完成建筑时间"),
-    _("协助加速(城建和科技)"),
-    _("在聊天和档案中点亮VIP徽章"),
-    _("木材产量增加"),
-    _("石料产量增加"),
-    _("铁矿产量增加"),
-    _("粮食产量增加"),
-    _("银币产量增加"),
-    _("城民增长速度"),
-    _("每日免费Gacha"),
-    _("暗仓保护上限提升"),
-    _("巨龙获得经验值加成"),
-    _("巨龙体力恢复速度"),
-    _("城墙修复速度提升"),
-    _("提升带兵上限"),
-    _("提升玩家部队所有类型攻击力"),
-    _("提升玩家部队所有类型防御力"),
-    _("提升行军速度"),
-    _("到达VIP10赠送唯一特殊装饰物"),
-}
--- VIP  效果数值
-local VIP_EFFECIVE_VALUE = {
-    [1] = {"6min","1min+0.6%",""},
-    [2] = {"7min","1min+0.7%","","5%","5%","5%","5%"},
-    [3] = {"8min","1min+0.8%","","6%","6%","6%","6%","5%"},
-    [4] = {"9min","1min+0.9%","","7%","7%","7%","7%","6%","5%"},
-    [5] = {"10min","1min+1%","","8%","8%","8%","8%","7%","7%","+1"},
-    [6] = {"12min","1min+1.1%","","9%","9%","9%","9%","8%","8%","+1","5%"},
-    [7] = {"15min","1min+1.2%","","10%","10%","10%","10%","10%","10%","+1","8%","5%"},
-    [8] = {"18min","1min+1.3%","","12%","12%","12%","12%","12%","12%","+2","10%","8%","5%"},
-    [9] = {"24min","1min+1.4%","","15%","15%","15%","15%","15%","15%","+2","12%","12%","10%","5%","5%","5%","5%","5%"},
-    [10] = {"30min","1min+1.5%","","20%","20%","20%","20%","20%","20%","+2","15%","15%","15%","10%","10%","10%","10%","10%",""},
+    freeSpeedup = _("立即完成建筑时间%dmin"),
+    helpSpeedup = _("协助加速(城建和科技)+%d%%"),
+    woodProductionAdd = _("木材产量增加%d%%"),
+    stoneProductionAdd = _("石料产量增加%d%%"),
+    ironProductionAdd = _("铁矿产量增加%d%%"),
+    foodProductionAdd = _("粮食产量增加%d%%"),
+    citizenRecoveryAdd = _("城民增长速度%d%%"),
+    marchSpeedAdd = _("提升行军速度%d%%"),
+    normalGachaAdd = _("每日免费Gacha+%d"),
+    storageProtectAdd = _("暗仓保护上限提升%d%%"),
+    wallHpRecoveryAdd = _("城墙修复速度提升%d%%"),
+    dragonExpAdd =  _("巨龙获得经验值加成%d%%"),
+    dragonHpRecoveryAdd =  _("巨龙体力恢复速度%d%%"),
+    soldierAttackPowerAdd = _("所有军事单位攻击力提升%d%%"),
+    soldierHpAdd = _("所有军事单位防御力提升%d%%"),
+    dragonLeaderShipAdd = _("提升带兵上限%d%%"),
+    soldierConsumeSub = _("维护费用减少%d%%"),
 }
 
 function GameUIVip:ctor(city,default_tag)
@@ -483,8 +490,8 @@ function GameUIVip:CreateVIPStatus()
         {
             info={
                 {_("当前VIP等级"),_("Lv").." "..User:GetVipLevel()},
-                {_("下一次登录"),"XXXXXX"},
-                {_("连续登录"),"xxx"},
+                {_("下一次登录"),"+"..loginDays[User:GetCountInfo().vipLoginDaysCount].expAdd},
+                {_("连续登录"),User:GetCountInfo().vipLoginDaysCount},
             }
         }
     ):align(display.CENTER, bg_size.width/2, 90)
@@ -666,9 +673,17 @@ function GameUIVip:CreateVIPItem(params)
 end
 function GameUIVip:GetVIPInfoByLevel(level)
     local info ={}
-    for k,v in pairs(VIP_EFFECIVE_VALUE[level]) do
-        local tmp_tip = VIP_EFFECIVE_ALL[k]..v
-        table.insert(info, {tmp_tip})
+
+    for k,v in ipairs(VIP_EFFECIVE_ALL_TYPE) do
+        local effect = VIP_LEVEL[level][v]
+        if effect>0 then
+            if effect<1 then
+                effect = tonumber(effect*100)
+            end
+
+            local tmp_tip = string.format(VIP_EFFECIVE_ALL[v],effect)
+            table.insert(info, {tmp_tip})
+        end
     end
     return info
 end
@@ -761,6 +776,11 @@ function GameUIVip:OnVipEventTimer( vip_event_new )
 end
 
 return GameUIVip
+
+
+
+
+
 
 
 
