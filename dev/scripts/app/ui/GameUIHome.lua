@@ -317,7 +317,7 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):addTo(top_bg):pos(255, -10):onButtonClicked(function(event)
         if self.task then
-            print(self.task:BuildingType())
+            display.getRunningScene():GotoLogicPoint(self.city:GetBuildingByType(self.task:BuildingType())[1]:GetLogicPosition())
         end
     end)
     display.newSprite("home/quest_icon.png"):addTo(quest_bar_bg):pos(-162, 0)
