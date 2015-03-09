@@ -9,7 +9,8 @@ local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local User = class("User", MultiObserver)
 User.LISTEN_TYPE = Enum("BASIC", "RESOURCE", "INVITE_TO_ALLIANCE", "REQUEST_TO_ALLIANCE","DALIY_QUEST_REFRESH","NEW_DALIY_QUEST","NEW_DALIY_QUEST_EVENT"
-    ,"VIP_EVENT","COUNT_INFO")
+    ,"VIP_EVENT","COUNT_INFO", "TASK")
+local TASK = User.LISTEN_TYPE.TASK
 local BASIC = User.LISTEN_TYPE.BASIC
 local RESOURCE = User.LISTEN_TYPE.RESOURCE
 local INVITE_TO_ALLIANCE = User.LISTEN_TYPE.INVITE_TO_ALLIANCE
@@ -41,6 +42,7 @@ function User:ctor(p)
     self:GetGemResource():SetValueLimit(math.huge) -- 会有人充值这么多的宝石吗？
     self:GetStrengthResource():SetValueLimit(100)
 
+    self.used_strength = 0
     self.pve_database = PVEDatabase.new(self)
     local _,_, index = self.pve_database:GetCharPosition()
     self:GotoPVEMapByLevel(index)
@@ -74,9 +76,8 @@ end
 -- return 是否成功使用体力
 function User:UseStrength(num)
     if self:HasAnyStength(num) then
-        local current_time = app.timer:GetServerTime()
-        self:GetStrengthResource():ReduceResourceByCurrentTime(current_time, num or 1)
-        self:UpdatePreStrength(current_time)
+        self.used_strength = self.used_strength + num
+        self:GetStrengthResource():ReduceResourceByCurrentTime(app.timer:GetServerTime(), num or 1)
         self:OnResourceChanged()
         return true
     end
@@ -99,11 +100,9 @@ function User:EncodePveDataAndResetFightRewardsData()
         v.probability = nil
     end
 
-    local used_strength = self.pre_strenth - self:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    used_strength = used_strength > 0 and used_strength or 0
     return {
         pveData = {
-            staminaUsed = used_strength,
+            staminaUsed = self.used_strength,
             location = self.pve_database:EncodeLocation(),
             floor = self.cur_pve_map:EncodeMap(),
         },
@@ -130,8 +129,15 @@ end
 function User:GetTradeManager()
     return self.trade_manager
 end
+function User:GetTaskManager()
+    return self.growUpTaskManger
+end
+function User:OnTaskChanged()
+    self:NotifyListeneOnType(TASK, function(listener)
+        listener:OnTaskChanged(self)
+    end)
+end
 function User:OnTimer(current_time)
-    self:UpdatePreStrength(current_time)
     self:OnResourceChanged()
     self.vip_event:OnTimer(current_time)
 end
@@ -301,7 +307,9 @@ function User:OnUserDataChanged(userData, current_time)
 
     -- vip event
     self:OnVipEventDataChange(userData)
-    self.growUpTaskManger:OnUserDataChanged(userData)
+    if self.growUpTaskManger:OnUserDataChanged(userData) then
+        self:OnTaskChanged()
+    end
 
     return self
 end
@@ -373,14 +381,11 @@ function User:OnResourcesChangedByTime(resources, current_time)
         self:GetGemResource():SetValue(resources.gem)
     end
     if resources.stamina then
+        self.used_strength = 0
         local strength = self:GetStrengthResource()
         strength:UpdateResource(current_time, resources.stamina)
         strength:SetProductionPerHour(current_time, 4)
-        self:UpdatePreStrength(current_time)
     end
-end
-function User:UpdatePreStrength(current_time)
-    self.pre_strenth = self:GetStrengthResource():GetResourceValueByCurrentTime(current_time)
 end
 function User:OnBasicInfoChanged(basicInfo)
     if not basicInfo then return end

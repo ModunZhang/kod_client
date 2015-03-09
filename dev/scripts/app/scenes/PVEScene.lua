@@ -69,7 +69,7 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
         if not self.user:GetPVEDatabase():IsInTrap() then
             self.user:GetPVEDatabase():ReduceNextEnemyStep()
         end
-        -- self.user:UseStrength(1)
+        self.user:UseStrength(1)
         self:GetSceneLayer():MoveCharTo(tx, ty)
         local gid = self:GetSceneLayer():GetTileInfo(tx, ty)
         if gid > 0 then
