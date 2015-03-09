@@ -323,9 +323,18 @@ function User:GetDailyTasksInfo(task_type)
     return self.dailyTasks[task_type] or {}
 end
 
+function User:CheckDailyTasksWasRewarded(task_type)
+    for __,v in ipairs(self:GetAllDailyTasks().rewarded) do
+        return v == task_type
+    end
+    return false
+end
+
 function User:GetAllDailyTasks()
     return self.dailyTasks or {}
 end
+
+
 
 function User:OnCountInfoChanged(countInfo)
     if not countInfo then return end

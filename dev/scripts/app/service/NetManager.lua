@@ -1561,7 +1561,19 @@ function NetManager:getAdvancedGachaPromise()
         "高级gacha失败!"),get_playerdata_callback()):next(get_response_msg)
 end
 
+-- 通过Selina的考验
+function NetManager:getPassSelinasTestPromise()
+    return promise.all(get_blocking_request_promise("logic.playerHandler.passSelinasTest",
+        nil,
+        "通过Selina的考验!"),get_playerdata_callback()):next(get_response_msg)
+end
 
+-- 领取日常任务奖励
+function NetManager:getDailyTaskRewards(taskType)
+     return promise.all(get_blocking_request_promise("logic.playerHandler.getDailyTaskRewards",
+        {taskType = taskType},
+        "领取日常任务奖励!"),get_playerdata_callback()):next(get_response_msg)
+end
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

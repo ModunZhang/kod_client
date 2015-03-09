@@ -58,7 +58,6 @@ end
 
 function MyApp:run()
     self:enterScene('LogoScene')
-    -- self:EnterPVEScene()
 end
 
 function MyApp:showDebugInfo()

@@ -273,7 +273,7 @@ function GameUIMission:OnTodoAchievementMissionClicked(data)
 end
 
 function GameUIMission:OnRecommendMissionClicked()
-	print("OnRecommendMissionClicked--->")
+	UIKit:newGameUI("GameUISelenaQuestion"):addToCurrentScene(true)
 end
 
 --日常任务
@@ -327,7 +327,7 @@ end
 function GameUIMission:RefreshDailyList(key_of_daily)
 	if key_of_daily and #self.daily_list:getItems() > 0 then
 		local index = table.indexof(KEYS_OF_DAILY, key_of_daily)
-		local item = self.list_view:getItems()[index]
+		local item = self.daily_list:getItems()[index]
 		if item then
 			self:RefreshDailyListWithItemAndKeyOfDaily(item,key_of_daily)
 		end

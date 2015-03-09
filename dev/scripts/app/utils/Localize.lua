@@ -678,6 +678,19 @@ local DAILY_TASKS = {
     }
 }
 
+local SELENAQUESTION_TIPS = {
+    _("回答正确"),
+    _("答的好"),
+    _("大答特答"),
+    _("主宰考场"),
+    _("答题如麻"),
+    _("无题能挡"),
+    _("变态答题"),
+    _("妖怪般的答题"),
+    _("如出题人一般"),
+    _("超越出题的人全对"),
+}
+
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
@@ -714,4 +727,5 @@ return {
     wonder_title_name = WONDER_TITLE_NAME,
     wonder_title_buff = WONDER_TITLE_BUFF,
     daily_tasks = DAILY_TASKS,
+    selenaquestion_tips = SELENAQUESTION_TIPS,
 }
