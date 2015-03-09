@@ -597,6 +597,8 @@ function GrowUpTaskManager:GetAvailableTasksByCategory(category)
                     end
                 elseif next_task then
                     available[1] = next_task.id
+                elseif available[1] == 0 then
+                    available[1] = nil
                 end
             end)
             table.sort(r1, function(a, b)
