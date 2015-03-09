@@ -10,8 +10,7 @@ local GameUtils = GameUtils
 function GameUIMilitaryTechSpeedUp:ctor(event)
     GameUIMilitaryTechSpeedUp.super.ctor(self)
     self.militaryEvent = event
-    self:SetAccBtnsGroup(self:GetEventType(),event:Id())
-    self:SetAccTips(_("小于5min时可以使用免费加速"))
+    self:SetAccBtnsGroup(self:GetEvent():GetEventType(),event:Id())
     self:SetUpgradeTip(event:GetLocalizeDesc())
     self:SetProgressInfo(GameUtils:formatTimeStyle1(event:GetTime()),event:Percent())
     self:CheckCanSpeedUpFree()

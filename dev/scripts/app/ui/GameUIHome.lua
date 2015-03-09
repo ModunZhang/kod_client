@@ -66,6 +66,9 @@ function GameUIHome:onEnter()
     city:GetResourceManager():OnResourceChanged()
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
+    Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
+
     User:AddListenOnType(self, User.LISTEN_TYPE.BASIC)
 
 
@@ -99,6 +102,9 @@ function GameUIHome:onExit()
     self.city:GetResourceManager():RemoveObserver(self)
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
+    Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
+
     User:RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
     -- GameUIHome.super.onExit(self)
 end
@@ -116,6 +122,20 @@ function GameUIHome:OnBasicChanged(fromEntity,changed_map)
             display.newSprite(string.format("home/%d.png", fromEntity:GetVipLevel())):addTo(self.vip_level)
         end
     end
+end
+function GameUIHome:OnHelpEventChanged(changed_map)
+    local alliance = Alliance_Manager:GetMyAlliance()
+    self.help_button:setVisible(LuaUtils:table_size(alliance:GetAllHelpEvents())>0)
+    local request_num = alliance:GetOtherRequestEventsNum()
+    self.request_help_num_bg:setVisible(request_num>0)
+    self.request_help_num:setString(GameUtils:formatNumber(request_num))
+end
+function GameUIHome:OnAllHelpEventChanged(help_events)
+    local alliance = Alliance_Manager:GetMyAlliance()
+    self.help_button:setVisible(LuaUtils:table_size(help_events)>0)
+    local request_num = alliance:GetOtherRequestEventsNum()
+    self.request_help_num_bg:setVisible(request_num>0)
+    self.request_help_num:setString(GameUtils:formatNumber(request_num))
 end
 
 function GameUIHome:MailUnreadChanged(...)
@@ -448,7 +468,24 @@ function GameUIHome:CreateBottom()
         end
     end):addTo(self):pos(display.cx+280, display.top-560)
     help_button:setVisible(not Alliance_Manager:GetMyAlliance():IsDefault())
+    help_button:setVisible(LuaUtils:table_size(Alliance_Manager:GetMyAlliance():GetAllHelpEvents())>0)
+
+    -- 请求帮助的其他联盟成员请求帮助事件数量
+    local request_help_num_bg = display.newSprite("home/mail_unread_bg.png"):addTo(help_button):pos(20,-20)
+    local request_num = Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum()
+    self.request_help_num = cc.ui.UILabel.new(
+        {cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = GameUtils:formatNumber(request_num),
+            font = UIKit:getFontFilePath(),
+            size = 16,
+            color = UIKit:hex2c3b(0xf5f2b3)
+        }):align(display.CENTER,request_help_num_bg:getContentSize().width/2,request_help_num_bg:getContentSize().height/2+4)
+        :addTo(request_help_num_bg)
+    request_help_num_bg:setVisible(request_num>0)
+    self.request_help_num_bg = request_help_num_bg
     self.help_button = help_button
+
+
     return bottom_bg
 end
 
@@ -488,6 +525,11 @@ function GameUIHome:Find()
 end
 
 return GameUIHome
+
+
+
+
+
 
 
 

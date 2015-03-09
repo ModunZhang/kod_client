@@ -580,7 +580,6 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
                 {
                     listener = function()
                         listener()
-                        self:getParent():leftButtonClicked()
                     end
                 }
             )

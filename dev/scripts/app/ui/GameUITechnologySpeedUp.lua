@@ -12,7 +12,6 @@ function GameUITechnologySpeedUp:ctor()
 	if City:HaveProductionTechEvent() then
 		self.technologyEvent = City:GetProductionTechEventsArray()[1]
 	end
-	self:SetAccTips(_("小于5min时可以使用免费加速"))
 	if not self.technologyEvent then
 		self:removeFromParent()
 	else

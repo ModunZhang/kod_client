@@ -14,7 +14,6 @@ function GameUIBuildingSpeedUp:ctor(building)
     GameUIBuildingSpeedUp.super.ctor(self)
     self.building = building
     self:SetAccBtnsGroup(building:EventType(),building:UniqueUpgradingKey())
-    self:SetAccTips(_("小于5min时可以使用免费加速"))
     self:SetUpgradeTip(string.format(_("正在升级 %s 到等级 %d"),Localize.getBuildingLocalizedKeyByBuildingType(building:GetType()),building:GetLevel()+1))
     self:CheckCanSpeedUpFree()
     self:OnFreeButtonClicked(handler(self, self.FreeSpeedUpAction))
