@@ -601,8 +601,7 @@ function NetManager:getLoginPromise(deviceId)
         if gaozhou then
             device_id = getOpenUDID()
         else
-            device_id = "aj1"
-            -- device_id = getOpenUDID()
+            device_id = getOpenUDID()
         end
     else
         device_id = device.getOpenUDID()
@@ -1616,6 +1615,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 
