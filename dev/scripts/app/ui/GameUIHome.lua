@@ -9,6 +9,7 @@ local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local GameUIHelp = import(".GameUIHelp")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local Alliance = import("..entity.Alliance")
+local GrowUpTaskManager = import("..entity.GrowUpTaskManager")
 local RichText = import("..widget.RichText")
 local ChatManager = import("..entity.ChatManager")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
@@ -33,6 +34,20 @@ function GameUIHome:OnResourceChanged(resource_manager)
     self.citizen_label:setString(GameUtils:formatNumber(citizen_number))
     self.coin_label:setString(GameUtils:formatNumber(coin_number))
     self.gem_label:setString(string.formatnumberthousands(gem_number))
+end
+
+function GameUIHome:OnTaskChanged(user)
+    local tasks = user:GetTaskManager():GetAvailableTasksByCategory(GrowUpTaskManager.TASK_CATEGORY.BUILD)
+    local re_task
+    for i,v in pairs(tasks.tasks) do
+        if not re_task or v.index < re_task.index then
+            re_task = v
+        end
+    end
+    if re_task then
+        self.quest_label:setString(re_task:Title())
+    end
+    self.task = re_task
 end
 
 
@@ -70,6 +85,7 @@ function GameUIHome:onEnter()
     Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
 
     User:AddListenOnType(self, User.LISTEN_TYPE.BASIC)
+    User:AddListenOnType(self, User.LISTEN_TYPE.TASK)
     User:AddListenOnType(self, User.LISTEN_TYPE.VIP_EVENT_ACTIVE)
     User:AddListenOnType(self, User.LISTEN_TYPE.VIP_EVENT_OVER)
 
@@ -77,7 +93,7 @@ function GameUIHome:onEnter()
     -- local back = cc.ui.UIImage.new("tab_background_640x106.png", {scale9 = true,
     --     capInsets = cc.rect(2, 2, 640 - 4, 106 - 4)
     -- }):align(display.LEFT_BOTTOM, 40, display.cy):setLayoutSize(640, 50):addTo(self,100)
-
+    self:OnTaskChanged(User)
 end
 
 function GameUIHome:TO_TOP()
@@ -108,9 +124,9 @@ function GameUIHome:onExit()
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
 
     User:RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
+    User:RemoveListenerOnType(self, User.LISTEN_TYPE.TASK)
     User:RemoveListenerOnType(self, User.LISTEN_TYPE.VIP_EVENT_ACTIVE)
     User:RemoveListenerOnType(self, User.LISTEN_TYPE.VIP_EVENT_OVER)
-
     -- GameUIHome.super.onExit(self)
 end
 function GameUIHome:OnBasicChanged(fromEntity,changed_map)
@@ -300,14 +316,13 @@ function GameUIHome:CreateTop()
         {normal = "home/quest_btn_up.png", pressed = "home/quest_btn_down.png"},
         {scale9 = false}
     ):addTo(top_bg):pos(255, -10):onButtonClicked(function(event)
-        if self.quest_label:getString() == _("挖掘机技术哪家强?") then
-            self.quest_label:setString(_("中国山东找蓝翔!"))
-        else
-            self.quest_label:setString(_("挖掘机技术哪家强?"))
+        if self.task then
+            display.getRunningScene():GotoLogicPoint(self.city:GetBuildingByType(self.task:BuildingType())[1]:GetLogicPosition())
         end
     end)
     display.newSprite("home/quest_icon.png"):addTo(quest_bar_bg):pos(-162, 0)
-    self.quest_label = cc.ui.UILabel.new({text = "挖掘机技术哪家强?",
+    self.quest_label = cc.ui.UILabel.new({
+        -- text = "挖掘机技术哪家强?",
         size = 20,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_CENTER,

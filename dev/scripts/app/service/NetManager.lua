@@ -1563,7 +1563,15 @@ function NetManager:getAdvancedGachaPromise()
         {type = "advanced"},
         "高级gacha失败!"),get_playerdata_callback()):next(get_response_msg)
 end
-
+-- 获取成就任务奖励
+function NetManager:getGrowUpTaskRewardsPromise(taskType, taskId)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.getGrowUpTaskRewards",
+        {
+            taskType = taskType,
+            taskId = taskId
+        },
+        "领取奖励失败!"), get_playerdata_callback()):next(get_response_msg)
+end
 
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
