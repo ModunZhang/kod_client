@@ -269,7 +269,9 @@ end
 function GameUIMission:GetAchievementMissionData(isFinish)
     isFinish = type(isFinish) == 'boolean' and isFinish or false
     if isFinish then
-        return self.city:GetUser():GetTaskManager():GetFirstCompleteTasks()
+        local tasks = self.city:GetUser():GetTaskManager():GetFirstCompleteTasks()
+        local i1, i2, i3 = unpack(tasks)
+        return {i1, i2, i3}
     else
         return self.city:GetUser():GetTaskManager():GetAvailableTasksGroup()
     end
