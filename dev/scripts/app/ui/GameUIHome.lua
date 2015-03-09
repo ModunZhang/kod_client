@@ -70,6 +70,8 @@ function GameUIHome:onEnter()
     Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
 
     User:AddListenOnType(self, User.LISTEN_TYPE.BASIC)
+    User:AddListenOnType(self, User.LISTEN_TYPE.VIP_EVENT_ACTIVE)
+    User:AddListenOnType(self, User.LISTEN_TYPE.VIP_EVENT_OVER)
 
 
     -- local back = cc.ui.UIImage.new("tab_background_640x106.png", {scale9 = true,
@@ -106,6 +108,9 @@ function GameUIHome:onExit()
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
 
     User:RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
+    User:RemoveListenerOnType(self, User.LISTEN_TYPE.VIP_EVENT_ACTIVE)
+    User:RemoveListenerOnType(self, User.LISTEN_TYPE.VIP_EVENT_OVER)
+
     -- GameUIHome.super.onExit(self)
 end
 function GameUIHome:OnBasicChanged(fromEntity,changed_map)
@@ -118,8 +123,7 @@ function GameUIHome:OnBasicChanged(fromEntity,changed_map)
             self.name_label:setString(changed_map.name.new)
         end
         if changed_map.vipExp then
-            self.vip_level:removeAllChildren()
-            display.newSprite(string.format("home/%d.png", fromEntity:GetVipLevel())):addTo(self.vip_level)
+            self:RefreshVIP()
         end
     end
 end
@@ -153,8 +157,7 @@ function GameUIHome:RefreshData()
     self.name_label:setString(user:Name())
     self.power_label:setString(user:Power())
     self.level_label:setString(user:Level())
-    self.vip_level:removeAllChildren()
-    display.newSprite(string.format("home/%d.png", user:GetVipLevel())):addTo(self.vip_level)
+    self:RefreshVIP()
 end
 
 
@@ -262,7 +265,7 @@ function GameUIHome:CreateTop()
 
     -- vip
     local vip_btn = cc.ui.UIPushButton.new(
-        {normal = "home/vip_bg.png", pressed = "home/vip_bg.png"},
+        {},
         {scale9 = false}
     ):addTo(top_bg):align(display.CENTER, ox + 195, 50)
         :onButtonClicked(function(event)
@@ -270,7 +273,11 @@ function GameUIHome:CreateTop()
                 UIKit:newGameUI('GameUIVip', City,"VIP"):addToCurrentScene(true)
             end
         end)
+    local vip_btn_img = User:IsVIPActived() and "home/vip_bg.png" or "home/vip_bg_disable.png"
+    vip_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, vip_btn_img, true)
+    vip_btn:setButtonImage(cc.ui.UIPushButton.PRESSED, vip_btn_img, true)
     self.vip_level = display.newNode():addTo(vip_btn):pos(-3, 15):scale(0.8)
+    self.vip_btn = vip_btn
 
 
 
@@ -504,7 +511,27 @@ function GameUIHome:OnBottomButtonClicked(event)
         UIKit:newGameUI('GameUISetting',self.city):addToCurrentScene(true)
     end
 end
+function GameUIHome:OnVipEventActive( vip_event )
+    self:RefreshVIP()
+end
+function GameUIHome:OnVipEventOver( vip_event )
+    self:RefreshVIP()
+end
 
+function GameUIHome:RefreshVIP()
+    local vip_btn = self.vip_btn
+    local vip_btn_img = User:IsVIPActived() and "home/vip_bg.png" or "home/vip_bg_disable.png"
+    vip_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, vip_btn_img, true)
+    vip_btn:setButtonImage(cc.ui.UIPushButton.PRESSED, vip_btn_img, true)
+    local vip_level = self.vip_level
+    vip_level:removeAllChildren()
+    local level_img = display.newSprite(string.format("home/%d.png", User:GetVipLevel()),0,0,{class=cc.FilteredSpriteWithOne}):addTo(vip_level)
+    if not User:IsVIPActived() then
+        local my_filter = filter
+        local filters = my_filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1})
+        level_img:setFilter(filters)
+    end
+end
 
 -- fte
 function GameUIHome:DefferShow(tab_type)
@@ -525,6 +552,10 @@ function GameUIHome:Find()
 end
 
 return GameUIHome
+
+
+
+
 
 
 

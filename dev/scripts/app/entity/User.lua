@@ -9,7 +9,7 @@ local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local User = class("User", MultiObserver)
 User.LISTEN_TYPE = Enum("BASIC", "RESOURCE", "INVITE_TO_ALLIANCE", "REQUEST_TO_ALLIANCE","DALIY_QUEST_REFRESH","NEW_DALIY_QUEST","NEW_DALIY_QUEST_EVENT"
-    ,"VIP_EVENT","COUNT_INFO","DAILY_TASKS","VIP_EVENT_OVER")
+    ,"VIP_EVENT","COUNT_INFO","DAILY_TASKS","VIP_EVENT_OVER","VIP_EVENT_ACTIVE")
 local BASIC = User.LISTEN_TYPE.BASIC
 local RESOURCE = User.LISTEN_TYPE.RESOURCE
 local INVITE_TO_ALLIANCE = User.LISTEN_TYPE.INVITE_TO_ALLIANCE
@@ -430,6 +430,14 @@ function User:OnVipEventDataChange(userData)
     end
     if userData.__vipEvents then
         self.vip_event:UpdateData(userData.__vipEvents[1].data)
+        if userData.__vipEvents[1].type=="add" then
+            -- vip 激活，刷新资源
+            City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())
+            -- 通知出去
+            self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_ACTIVE, function(listener)
+                listener:OnVipEventActive(self.vip_event)
+            end)
+        end
         if userData.__vipEvents[1].type=="remove" then
             -- vip 激活结束，刷新资源
             City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())

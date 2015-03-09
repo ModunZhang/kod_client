@@ -447,21 +447,21 @@ function GameUIPVESendTroop:CreateTroopsShow()
     function TroopsShow:SetPower(power)
         local info_bg =self.info_bg
         local power_item = createInfoItem(_("战斗力"),string.formatnumberthousands(power))
-            :align(display.CENTER,40,4)
+            :align(display.CENTER,50,26)
             :addTo(info_bg)
         return self
     end
     function TroopsShow:SetCitizen(citizen)
         local info_bg =self.info_bg
         local citizen_item = createInfoItem(_("部队容量"),citizen.."/"..parent.dragon:LeadCitizen())
-        citizen_item:align(display.CENTER,310-citizen_item:getContentSize().width/2,4)
+        citizen_item:align(display.CENTER,320-citizen_item:getContentSize().width/2,26)
             :addTo(info_bg)
         return self
     end
     function TroopsShow:SetWeight(weight)
         local info_bg =self.info_bg
         local weight_item = createInfoItem(_("负重"),string.formatnumberthousands(weight))
-        weight_item:align(display.CENTER,620-weight_item:getContentSize().width-40,4)
+        weight_item:align(display.CENTER,630-weight_item:getContentSize().width-40,26)
             :addTo(info_bg)
         return self
     end
