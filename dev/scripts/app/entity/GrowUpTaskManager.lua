@@ -103,6 +103,9 @@ end
 function cityBuild_meta:TaskType()
     return "cityBuild"
 end
+function cityBuild_meta:BuildingType()
+    return self:Config().name
+end
 
 ----------------------
 

@@ -44,7 +44,10 @@ function GameUIHome:OnTaskChanged(user)
             re_task = v
         end
     end
-    self.quest_label:setString(re_task:Title())
+    if re_task then
+        self.quest_label:setString(re_task:Title())
+    end
+    self.task = re_task
 end
 
 
@@ -287,11 +290,9 @@ function GameUIHome:CreateTop()
         {normal = "home/quest_btn_up.png", pressed = "home/quest_btn_down.png"},
         {scale9 = false}
     ):addTo(top_bg):pos(255, -10):onButtonClicked(function(event)
-        -- if self.quest_label:getString() == _("挖掘机技术哪家强?") then
-        --     self.quest_label:setString(_("中国山东找蓝翔!"))
-        -- else
-        --     self.quest_label:setString(_("挖掘机技术哪家强?"))
-        -- end
+        if self.task then
+            print(self.task:BuildingType())
+        end
     end)
     display.newSprite("home/quest_icon.png"):addTo(quest_bar_bg):pos(-162, 0)
     self.quest_label = cc.ui.UILabel.new({
