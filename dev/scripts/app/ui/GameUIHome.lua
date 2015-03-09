@@ -81,8 +81,13 @@ function GameUIHome:onEnter()
     city:GetResourceManager():OnResourceChanged()
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
+    Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
+
     User:AddListenOnType(self, User.LISTEN_TYPE.BASIC)
     User:AddListenOnType(self, User.LISTEN_TYPE.TASK)
+    User:AddListenOnType(self, User.LISTEN_TYPE.VIP_EVENT_ACTIVE)
+    User:AddListenOnType(self, User.LISTEN_TYPE.VIP_EVENT_OVER)
 
 
     -- local back = cc.ui.UIImage.new("tab_background_640x106.png", {scale9 = true,
@@ -115,8 +120,13 @@ function GameUIHome:onExit()
     self.city:GetResourceManager():RemoveObserver(self)
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
+    Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
+
     User:RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
     User:RemoveListenerOnType(self, User.LISTEN_TYPE.TASK)
+    User:RemoveListenerOnType(self, User.LISTEN_TYPE.VIP_EVENT_ACTIVE)
+    User:RemoveListenerOnType(self, User.LISTEN_TYPE.VIP_EVENT_OVER)
     -- GameUIHome.super.onExit(self)
 end
 function GameUIHome:OnBasicChanged(fromEntity,changed_map)
@@ -129,10 +139,23 @@ function GameUIHome:OnBasicChanged(fromEntity,changed_map)
             self.name_label:setString(changed_map.name.new)
         end
         if changed_map.vipExp then
-            self.vip_level:removeAllChildren()
-            display.newSprite(string.format("home/%d.png", fromEntity:GetVipLevel())):addTo(self.vip_level)
+            self:RefreshVIP()
         end
     end
+end
+function GameUIHome:OnHelpEventChanged(changed_map)
+    local alliance = Alliance_Manager:GetMyAlliance()
+    self.help_button:setVisible(LuaUtils:table_size(alliance:GetAllHelpEvents())>0)
+    local request_num = alliance:GetOtherRequestEventsNum()
+    self.request_help_num_bg:setVisible(request_num>0)
+    self.request_help_num:setString(GameUtils:formatNumber(request_num))
+end
+function GameUIHome:OnAllHelpEventChanged(help_events)
+    local alliance = Alliance_Manager:GetMyAlliance()
+    self.help_button:setVisible(LuaUtils:table_size(help_events)>0)
+    local request_num = alliance:GetOtherRequestEventsNum()
+    self.request_help_num_bg:setVisible(request_num>0)
+    self.request_help_num:setString(GameUtils:formatNumber(request_num))
 end
 
 function GameUIHome:MailUnreadChanged(...)
@@ -150,8 +173,7 @@ function GameUIHome:RefreshData()
     self.name_label:setString(user:Name())
     self.power_label:setString(user:Power())
     self.level_label:setString(user:Level())
-    self.vip_level:removeAllChildren()
-    display.newSprite(string.format("home/%d.png", user:GetVipLevel())):addTo(self.vip_level)
+    self:RefreshVIP()
 end
 
 
@@ -259,7 +281,7 @@ function GameUIHome:CreateTop()
 
     -- vip
     local vip_btn = cc.ui.UIPushButton.new(
-        {normal = "home/vip_bg.png", pressed = "home/vip_bg.png"},
+        {},
         {scale9 = false}
     ):addTo(top_bg):align(display.CENTER, ox + 195, 50)
         :onButtonClicked(function(event)
@@ -267,7 +289,11 @@ function GameUIHome:CreateTop()
                 UIKit:newGameUI('GameUIVip', City,"VIP"):addToCurrentScene(true)
             end
         end)
+    local vip_btn_img = User:IsVIPActived() and "home/vip_bg.png" or "home/vip_bg_disable.png"
+    vip_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, vip_btn_img, true)
+    vip_btn:setButtonImage(cc.ui.UIPushButton.PRESSED, vip_btn_img, true)
     self.vip_level = display.newNode():addTo(vip_btn):pos(-3, 15):scale(0.8)
+    self.vip_btn = vip_btn
 
 
 
@@ -464,7 +490,24 @@ function GameUIHome:CreateBottom()
         end
     end):addTo(self):pos(display.cx+280, display.top-560)
     help_button:setVisible(not Alliance_Manager:GetMyAlliance():IsDefault())
+    help_button:setVisible(LuaUtils:table_size(Alliance_Manager:GetMyAlliance():GetAllHelpEvents())>0)
+
+    -- 请求帮助的其他联盟成员请求帮助事件数量
+    local request_help_num_bg = display.newSprite("home/mail_unread_bg.png"):addTo(help_button):pos(20,-20)
+    local request_num = Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum()
+    self.request_help_num = cc.ui.UILabel.new(
+        {cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = GameUtils:formatNumber(request_num),
+            font = UIKit:getFontFilePath(),
+            size = 16,
+            color = UIKit:hex2c3b(0xf5f2b3)
+        }):align(display.CENTER,request_help_num_bg:getContentSize().width/2,request_help_num_bg:getContentSize().height/2+4)
+        :addTo(request_help_num_bg)
+    request_help_num_bg:setVisible(request_num>0)
+    self.request_help_num_bg = request_help_num_bg
     self.help_button = help_button
+
+
     return bottom_bg
 end
 
@@ -483,7 +526,27 @@ function GameUIHome:OnBottomButtonClicked(event)
         UIKit:newGameUI('GameUISetting',self.city):addToCurrentScene(true)
     end
 end
+function GameUIHome:OnVipEventActive( vip_event )
+    self:RefreshVIP()
+end
+function GameUIHome:OnVipEventOver( vip_event )
+    self:RefreshVIP()
+end
 
+function GameUIHome:RefreshVIP()
+    local vip_btn = self.vip_btn
+    local vip_btn_img = User:IsVIPActived() and "home/vip_bg.png" or "home/vip_bg_disable.png"
+    vip_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, vip_btn_img, true)
+    vip_btn:setButtonImage(cc.ui.UIPushButton.PRESSED, vip_btn_img, true)
+    local vip_level = self.vip_level
+    vip_level:removeAllChildren()
+    local level_img = display.newSprite(string.format("home/%d.png", User:GetVipLevel()),0,0,{class=cc.FilteredSpriteWithOne}):addTo(vip_level)
+    if not User:IsVIPActived() then
+        local my_filter = filter
+        local filters = my_filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1})
+        level_img:setFilter(filters)
+    end
+end
 
 -- fte
 function GameUIHome:DefferShow(tab_type)
@@ -504,6 +567,15 @@ function GameUIHome:Find()
 end
 
 return GameUIHome
+
+
+
+
+
+
+
+
+
 
 
 

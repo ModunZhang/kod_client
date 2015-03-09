@@ -661,6 +661,25 @@ local GAME_LANGUAGE = {
     zh_Hans = _("简体中文"),
 }
 
+local DAILY_TASKS = {
+    empireRise = {
+        title = _("帝国崛起"),
+        desc  = _("处理城市中的政务,获得奖励")
+    },
+    conqueror = {
+        title = _("征服者"),
+        desc  = _("用武力赢取荣耀和奖励"),
+    },
+    brotherClub = {
+        title = _("兄弟会"),
+        desc  = _("为了联盟兄弟两肋插刀"),
+    },
+    growUp = {
+        title = _("超凡之路"),
+        desc  = _("使用特殊能力提升成长速度")
+    }
+}
+
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
@@ -696,4 +715,5 @@ return {
     wonder_name = WONDER_NAME,
     wonder_title_name = WONDER_TITLE_NAME,
     wonder_title_buff = WONDER_TITLE_BUFF,
+    daily_tasks = DAILY_TASKS,
 }

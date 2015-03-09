@@ -8,8 +8,19 @@ local TradeManager = import("..entity.TradeManager")
 local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local User = class("User", MultiObserver)
-User.LISTEN_TYPE = Enum("BASIC", "RESOURCE", "INVITE_TO_ALLIANCE", "REQUEST_TO_ALLIANCE","DALIY_QUEST_REFRESH","NEW_DALIY_QUEST","NEW_DALIY_QUEST_EVENT"
-    ,"VIP_EVENT","COUNT_INFO", "TASK")
+User.LISTEN_TYPE = Enum("BASIC", 
+    "RESOURCE", 
+    "INVITE_TO_ALLIANCE", 
+    "REQUEST_TO_ALLIANCE",
+    "DALIY_QUEST_REFRESH",
+    "NEW_DALIY_QUEST",
+    "NEW_DALIY_QUEST_EVENT",
+    "VIP_EVENT",
+    "COUNT_INFO",
+    "DAILY_TASKS",
+    "VIP_EVENT_OVER",
+    "VIP_EVENT_ACTIVE", 
+    "TASK")
 local TASK = User.LISTEN_TYPE.TASK
 local BASIC = User.LISTEN_TYPE.BASIC
 local RESOURCE = User.LISTEN_TYPE.RESOURCE
@@ -22,6 +33,7 @@ local GEM = User.RESOURCE_TYPE.GEM
 local STRENGTH = User.RESOURCE_TYPE.STRENGTH
 
 local intInit = GameDatas.PlayerInitData.intInit
+local vip_level = GameDatas.Vip.level
 
 property(User, "level", 1)
 property(User, "levelExp", 0)
@@ -64,7 +76,7 @@ function User:ctor(p)
     local vip_event = VipEvent.new()
     vip_event:AddObserver(self)
     self.vip_event = vip_event
-
+    self.dailyTasks = {}
     self.growUpTaskManger = GrowUpTaskManager.new()
 end
 function User:GotoPVEMapByLevel(level)
@@ -310,8 +322,29 @@ function User:OnUserDataChanged(userData, current_time)
     if self.growUpTaskManger:OnUserDataChanged(userData) then
         self:OnTaskChanged()
     end
-
+    -- 日常任务
+    self:OnDailyTasksChanged(userData.dailyTasks)
     return self
+end
+
+function User:OnDailyTasksChanged(dailyTasks)
+    if not dailyTasks then return end
+    local changed_task_types = {}
+    for k,v in pairs(dailyTasks) do
+        table.insert(changed_task_types,k)
+        self.dailyTasks[k] = v
+    end
+    self:NotifyListeneOnType(self.LISTEN_TYPE.DAILY_TASKS, function(listener)
+        listener:OnDailyTasksChanged(self, changed_task_types)
+    end)
+end
+
+function User:GetDailyTasksInfo(task_type)
+    return self.dailyTasks[task_type] or {}
+end
+
+function User:GetAllDailyTasks()
+    return self.dailyTasks or {}
 end
 
 function User:OnCountInfoChanged(countInfo)
@@ -335,27 +368,78 @@ function User:GetCountInfo()
 end
 -- 获取当天剩余普通免费gacha次数
 function User:GetOddFreeNormalGachaCount()
-    return intInit.freeNormalGachaCountPerDay.value - self.countInfo.todayFreeNormalGachaCount
+    local vip_add = self:GetVipEvent():IsActived() and self:GetVIPNormalGachaAdd() or 0
+    return intInit.freeNormalGachaCountPerDay.value + vip_add - self.countInfo.todayFreeNormalGachaCount
 end
 function User:GetVipEvent()
     return self.vip_event
 end
 function User:GetVipLevel()
     local exp = self.vipExp
-    local vip_level_config = GameDatas.Vip.level
-
-    for i=#vip_level_config,1,-1 do
-        local config = vip_level_config[i]
+    for i=#vip_level,1,-1 do
+        local config = vip_level[i]
         if exp >= config.expFrom then
             local percent = math.floor((exp - config.expFrom)/(config.expTo-config.expFrom)*100)
             return config.level,percent,exp
         end
     end
 end
+function User:IsVIPActived()
+    return self.vip_event:IsActived()
+end
+function User:GetVIPFreeSpeedUpTime()
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].freeSpeedup or 5
+end
+function User:GetVIPWoodProductionAdd()
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].woodProductionAdd or 0
+end
+function User:GetVIPStoneProductionAdd()
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].stoneProductionAdd or 0
+end
+function User:GetVIPIronProductionAdd()
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].ironProductionAdd or 0
+end
+function User:GetVIPFoodProductionAdd()
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].foodProductionAdd or 0
+end
+function User:GetVIPCitizenRecoveryAdd()
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].citizenRecoveryAdd or 0
+end
+function User:GetVIPMarchSpeedAdd()
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].marchSpeedAdd or 0
+end
+function User:GetVIPNormalGachaAdd()
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].normalGachaAdd or 0
+end
+--暗仓保护上限提升
+function User:GetVIPStorageProtectAdd()
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].storageProtectAdd or 0
+end
+function User:GetVIPWallHpRecoveryAdd()
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].wallHpRecoveryAdd or 0
+end
+function User:GetVIPDragonExpAdd()
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].dragonExpAdd or 0
+end
+function User:GetVIPDragonHpRecoveryAdd()
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].dragonHpRecoveryAdd or 0
+end
+function User:GetVIPSoldierAttackPowerAdd()
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].soldierAttackPowerAdd or 0
+end
+function User:GetVIPSoldierHpAdd()
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].soldierHpAdd or 0
+end
+function User:GetVIPDragonLeaderShipAdd()
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].dragonLeaderShipAdd or 0
+end
+function User:GetVIPSoldierConsumeSub()
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()].soldierConsumeSub or 0
+end
+
 function User:GetSpecialVipLevelExp(level)
-    local vip_level_config = GameDatas.Vip.level
-    local level = #vip_level_config >= level and level or #vip_level_config
-    return vip_level_config[level].expTo
+    local level = #vip_level >= level and level or #vip_level
+    return vip_level[level].expFrom
 end
 function User:OnVipEventDataChange(userData)
     if userData.vipEvents then
@@ -365,7 +449,24 @@ function User:OnVipEventDataChange(userData)
     end
     if userData.__vipEvents then
         self.vip_event:UpdateData(userData.__vipEvents[1].data)
+        if userData.__vipEvents[1].type=="add" then
+            -- vip 激活，刷新资源
+            City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())
+            -- 通知出去
+            self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_ACTIVE, function(listener)
+                listener:OnVipEventActive(self.vip_event)
+            end)
+        end
+        if userData.__vipEvents[1].type=="remove" then
+            -- vip 激活结束，刷新资源
+            City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())
+            -- 通知出去
+            self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_OVER, function(listener)
+                listener:OnVipEventOver(self.vip_event)
+            end)
+        end
     end
+
     self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT, function(listener)
         listener:OnVipEventTimer(self.vip_event)
     end)
@@ -617,6 +718,8 @@ function User:GetBestDragon()
 end
 
 return User
+
+
 
 
 

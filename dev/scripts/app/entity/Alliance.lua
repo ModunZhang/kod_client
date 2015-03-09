@@ -15,7 +15,7 @@ local Alliance = class("Alliance", MultiObserver)
 local VillageEvent = import(".VillageEvent")
 local AllianceBelvedere = import(".AllianceBelvedere")
 --注意:突袭用的MarchAttackEvent 所以使用OnAttackMarchEventTimerChanged
-Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS","FIGHT_REQUESTS","FIGHT_REPORTS",
+Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS","ALL_HELP_EVENTS","FIGHT_REQUESTS","FIGHT_REPORTS",
     "OnAttackMarchEventDataChanged","OnAttackMarchEventTimerChanged","OnAttackMarchReturnEventDataChanged","ALLIANCE_FIGHT"
     ,"OnStrikeMarchEventDataChanged","OnStrikeMarchReturnEventDataChanged","OnVillageEventsDataChanged","OnVillageEventTimer","COUNT_INFO",
     "VILLAGE_LEVELS_CHANGED","OnMarchEventRefreshed")
@@ -324,13 +324,24 @@ end
 function Alliance:HasBeenRequestedToHelpSpeedup(eventId)
     if self.help_events then
         for _,h_event in pairs(self.help_events) do
-            if h_event:GetPlayerData():Id() == DataManager:getUserData()._id and h_event:GetEventData():Id() == eventId then
+            if h_event:GetPlayerData():Id() == User:Id() and h_event:GetEventData():Id() == eventId then
                 return true
             end
         end
     end
 end
-
+-- 获取其他所有联盟成员的申请帮助事件数量
+function Alliance:GetOtherRequestEventsNum()
+    local request_num = 0
+    if self.help_events then
+        for _,h_event in pairs(self.help_events) do
+            if h_event:GetPlayerData():Id() ~= User:Id() then
+                request_num = request_num + 1
+            end
+        end
+    end
+    return request_num
+end
 function Alliance:Reset()
     if self:NeedUpdateEnemyAlliance() then
         self:GetEnemyAlliance():Reset()
@@ -823,6 +834,9 @@ function Alliance:OnHelpEventsChanged(helpEvents)
         -- self.help_events[v.eventId] = v
         self.help_events[v.id] = HelpEvent.new():UpdateData(v)
     end
+    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.ALL_HELP_EVENTS, function(listener)
+        listener:OnAllHelpEventChanged(self.help_events)
+    end)
 end
 function Alliance:GetAllianceArchonMember()
     for k,v in pairs(self.members) do
