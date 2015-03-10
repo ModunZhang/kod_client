@@ -1007,7 +1007,7 @@ function NetManager:getRequestAllianceToSpeedUpPromise(eventType, eventId)
     return promise.all(get_blocking_request_promise("logic.allianceHandler.requestAllianceToSpeedUp", {
         eventType = eventType,
         eventId = eventId,
-    }, "请求加速失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "请求加速失败!"), get_alliancedata_callback()):next(get_response_msg)
 end
 -- 免费加速建筑升级
 function NetManager:getFreeSpeedUpPromise(eventType, eventId)

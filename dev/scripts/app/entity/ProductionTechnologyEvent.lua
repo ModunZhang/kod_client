@@ -35,7 +35,7 @@ function ProductionTechnologyEvent:UpdateData(json_data)
 end
 
 function ProductionTechnologyEvent:GetTime()
-	return self.times_ or 0
+	return self.times_ or math.ceil(self:FinishTime() - app.timer:GetServerTime()) 
 end
 
 function ProductionTechnologyEvent:Reset()

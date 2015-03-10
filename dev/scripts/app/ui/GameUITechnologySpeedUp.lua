@@ -39,7 +39,11 @@ function GameUITechnologySpeedUp:onCleanup()
 end
 
 function GameUITechnologySpeedUp:OnProductionTechnologyEventDataChanged(changed_map)
-
+	for __,v in ipairs(changed_map.removed or {}) do
+		if v:Id() == self:GetEvent():Id() then
+			self:leftButtonClicked()
+		end
+	end
 end
 
 function GameUITechnologySpeedUp:OnProductionTechnologyEventTimer(event)
