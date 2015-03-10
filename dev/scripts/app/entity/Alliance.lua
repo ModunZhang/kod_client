@@ -384,60 +384,13 @@ function Alliance:OnEventsChanged()
         listener:OnEventsChanged(self)
     end)
 end
-function Alliance:CreateJoinEventsFromJsonData(json_data)
-    return json_data
-end
-function Alliance:CreateJoinEvents(id, name, level, power, requestTime)
-    return {id = id, name = name, level = level, power = power, requestTime = requestTime}
-end
-function Alliance:AddJoinEventWithNotify(event)
-    local e = self:AddJoinEvent(event)
-    self:OnJoinEventsChanged{
-        added = pack(e),
-        removed = pack(),
-    }
-    return e
-end
-function Alliance:AddJoinEvent(event)
-    local join_events = self.join_events
-    assert(join_events[event.id] == nil)
-    join_events[event.id] = event
-    return event
-end
 
-function Alliance:RemoveJoinEventWithNotify(event)
-    return self:RemoveJoinEventWithNotifyById(event.id)
-end
-function Alliance:RemoveJoinEventWithNotifyById(id)
-    local e = self:RemoveJoinEventById(id)
-    self:OnJoinEventsChanged{
-        added = pack(),
-        removed = pack(e),
-    }
-    return e
-end
-function Alliance:RemoveJoinEventById(id)
-    local join_events = self.join_events
-    local old = join_events[id]
-    join_events[id] = nil
-    return old
-end
-function Alliance:RemoveJoinEvent(event)
-    return self:RemoveJoinEventById(event.id)
-end
-function Alliance:GetJoinEventsCount()
-    local count = 0
-    for _,_ in pairs(self.join_events) do
-        count = count + 1
-    end
-    return count
-end
-function Alliance:GetJoinEventsMap()
+function Alliance:GetJoinEvents()
     return self.join_events
 end
-function Alliance:OnJoinEventsChanged(changed_map)
+function Alliance:OnJoinEventsChanged()
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.JOIN_EVENTS, function(listener)
-        listener:OnJoinEventsChanged(self, changed_map)
+        listener:OnJoinEventsChanged(self)
     end)
 end
 function Alliance:OnAllianceDataChanged(alliance_data)
@@ -546,25 +499,24 @@ function Alliance:OnNewMemberDataComming(__members)
 end
 function Alliance:OnNewJoinRequestDataComming(__joinRequestEvents)
     if not __joinRequestEvents then return end
-    local added = {}
-    local removed = {}
-    for i, v in ipairs(__joinRequestEvents) do
-        local type_ = v.type
-        local join_request = v.data
-        if type_ == "add" then
-            self:AddJoinEvent(join_request)
-            table.insert(added, join_request)
-        elseif type_ == "remove" then
-            self:RemoveJoinEvent(join_request)
-            table.insert(removed, join_request)
-        elseif type_ == "edit" then
-            assert(false, "能修改吗?")
+    GameUtils:Event_Handler_Func(
+        __joinRequestEvents
+        ,function(data) -- add
+            table.insert(self.join_events, data)
         end
-    end
-    self:OnJoinEventsChanged{
-        added = added,
-        removed = removed,
-    }
+        ,function(data) -- edit
+            assert(false, "不能修改")
+        end
+        ,function(data) -- remove
+            for i,v in ipairs(self.join_events) do
+                if v.id == data.id then
+                    table.remove(self.join_events, i)
+                    break
+                end
+        end
+        end
+    )
+    self:OnJoinEventsChanged()
 end
 function Alliance:OnNewHelpEventsDataComming(__helpEvents)
     if not __helpEvents then return end
@@ -616,36 +568,9 @@ function Alliance:OnAllianceEventsChanged(events)
     self:OnEventsChanged()
 end
 function Alliance:OnJoinRequestEventsChanged(joinRequestEvents)
-    if joinRequestEvents == nil then return end
-    local join_events = self.join_events
-    -- 找出新加入的请求
-    local mark_map = {}
-    local added = {}
-    for i, v in ipairs(joinRequestEvents) do
-        if not join_events[v.id] then
-            table.insert(added, v)
-        end
-        mark_map[v.id] = true
-    end
-    -- 找出删除的请求
-    local removed = {}
-    for k, v in pairs(join_events) do
-        if not mark_map[k] then
-            table.insert(removed, v)
-        end
-    end
-    -- 更新集合
-    join_events = {}
-    for i, v in ipairs(joinRequestEvents) do
-        join_events[v.id] = v
-    end
-    self.join_events = join_events
-
-
-    self:OnJoinEventsChanged{
-        added = added,
-        removed = removed,
-    }
+    if not joinRequestEvents then return end
+    self.join_events = joinRequestEvents
+    self:OnJoinEventsChanged()
 end
 function Alliance:OnAllianceMemberDataChanged(members)
     if not members then return end
@@ -1433,6 +1358,7 @@ function Alliance:NeedUpdateEnemyAlliance()
 end
 
 return Alliance
+
 
 
 
