@@ -55,7 +55,7 @@ function GameUIAlliance:OnJoinEventsChanged(alliance,changed_map)
 
 end
 
-function GameUIAlliance:OnEventsChanged(alliance,changed_map)
+function GameUIAlliance:OnEventsChanged(alliance)
     if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
         self:RefreshEventListView()
     end

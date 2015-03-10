@@ -169,7 +169,7 @@ onAllianceDataChanged_callbacks = {}
 function NetManager:addAllianceDataChangedEventListener()
     self:addEventListener("onAllianceDataChanged", function(success, msg)
         if success then
-            dump(msg, "onAllianceDataChanged")
+            LuaUtils:outputTable("onAllianceDataChanged", msg)
             DataManager:setUserAllianceData(msg)
         end
         local callback = onAllianceDataChanged_callbacks[1]
@@ -250,7 +250,7 @@ end
 function NetManager:addOnGetAllianceDataSuccess()
     self:addEventListener("onGetAllianceDataSuccess", function(success, msg)
         if success then
-            dump(msg, "onGetAllianceDataSuccess")
+            LuaUtils:outputTable("onGetAllianceDataSuccess", msg)
             DataManager:setUserAllianceData(msg)
         end
     end)
@@ -600,7 +600,8 @@ function NetManager:getLoginPromise(deviceId)
     local device_id
     if CONFIG_IS_DEBUG then
         if gaozhou then
-            device_id = getOpenUDID()
+            -- device_id = getOpenUDID()
+            device_id = "1"
         else
             device_id = getOpenUDID()
         end
@@ -1563,6 +1564,14 @@ function NetManager:getAdvancedGachaPromise()
         {type = "advanced"},
         "高级gacha失败!"),get_playerdata_callback()):next(get_response_msg)
 end
+
+
+-- 通过Selina的考验
+function NetManager:getPassSelinasTestPromise()
+    return promise.all(get_blocking_request_promise("logic.playerHandler.passSelinasTest",
+        nil,
+        "通过Selina的考验!"),get_playerdata_callback()):next(get_response_msg)
+end
 -- 获取成就任务奖励
 function NetManager:getGrowUpTaskRewardsPromise(taskType, taskId)
     return promise.all(get_blocking_request_promise("logic.playerHandler.getGrowUpTaskRewards",
@@ -1573,6 +1582,12 @@ function NetManager:getGrowUpTaskRewardsPromise(taskType, taskId)
         "领取奖励失败!"), get_playerdata_callback()):next(get_response_msg)
 end
 
+-- 领取日常任务奖励
+function NetManager:getDailyTaskRewards(taskType)
+     return promise.all(get_blocking_request_promise("logic.playerHandler.getDailyTaskRewards",
+        {taskType = taskType},
+        "领取日常任务奖励!"),get_playerdata_callback()):next(get_response_msg)
+end
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

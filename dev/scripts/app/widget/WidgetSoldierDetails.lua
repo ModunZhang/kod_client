@@ -97,7 +97,7 @@ function WidgetSoldierDetails:CreateDismissSoldierSilder()
     display.newSprite("population.png", bg_width/2-106, bg_height-126):addTo(bg)
     local citizen_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("0"),
+        text = "0",
         font = UIKit:getFontFilePath(),
         size = 20,
         color = UIKit:hex2c3b(0x403c2f)})

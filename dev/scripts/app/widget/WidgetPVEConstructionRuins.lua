@@ -9,7 +9,7 @@ function WidgetPVEConstructionRuins:GetIcon()
     return "ruin_1.png"
 end
 function WidgetPVEConstructionRuins:GetTitle()
-    return string.format("%s %s%d", _('坠毁的飞艇'), _('等级'), self:GetPVEMap():GetIndex())
+    return string.format("%s %s%d", _('建筑废墟'), _('等级'), self:GetPVEMap():GetIndex())
 end
 function WidgetPVEConstructionRuins:GetDesc()
     return self:GetObject():IsSearched()

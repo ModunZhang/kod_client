@@ -421,20 +421,34 @@ function GrowUpTaskManager:GetFirstCompleteTasks()
     end
     return r
 end
+local type_map = {
+    dragonLevel = true,
+    dragonStar = true
+}
+local index_map = {
+    pveCount = true,
+    attackWin = true,
+    strikeWin = true,
+    playerPower = true,
+    playerKill = true,
+}
 function GrowUpTaskManager:GetFirstCompleteTasksByCategory(category)
     local r = {}
     for i,tag in ipairs(category_map[category]) do
         local mark_map = {}
         for i,v in ipairs(self.task_map[tag]) do
             local category_name = v.name
-            if tag == "dragonLevel" or tag == "dragonStar" then
+            if type_map[tag] then
                 category_name = v.type
-            elseif tag == "pveCount" then
+            elseif index_map[tag] then
                 category_name = v.index
             end
             if not v.rewarded and not mark_map[category_name] then
                 mark_map[category_name] = true
                 table.insert(r, setmetatable(v, meta_map[tag]))
+                if index_map[tag] then
+                    break
+                end
             end
         end
     end
@@ -579,14 +593,12 @@ function GrowUpTaskManager:GetAvailableTasksByCategory(category)
             local r1,count1,total1 = self:GetAvailableTaskByTag(tag, function(available, is_init, cur, next_task)
                 if is_init then
                     if cur.id == 0 then
-                        available[cur.index] = cur.id
+                        available[1] = cur.id
                     end
-                else
-                    if next_task then
-                        available[cur.index] = next_task.id
-                    else
-                        available[cur.index] = nil
-                    end
+                elseif next_task then
+                    available[1] = next_task.id
+                elseif available[1] == 0 then
+                    available[1] = nil
                 end
             end)
             table.sort(r1, function(a, b)
@@ -626,6 +638,8 @@ function GrowUpTaskManager:GetAvailableTaskByTag(tag, func)
         func(available_map, false, v, config[v.id + 1])
     end
 
+    dump(available_map)
+
     -- 找到未完成的任务
     for k,v in pairs(available_map) do
         table.insert(r, setmetatable(config[v], meta_map[tag]))
@@ -648,28 +662,28 @@ function GrowUpTaskManager:OnUserDataChanged(userData)
         if all_tasks then
             self.task_map[k] = all_tasks
         elseif diff_tasks then
-            local task = self.task_map[k]
-            for i,v in ipairs(diff_tasks) do
-                local type_ = v.type
-                local data = v.data
-                if type_ == "add" then
-                    table.insert(task, data)
-                elseif type_ == "remove" then
-                    for i,v in ipairs(task) do
-                        if v.id == data.id then
-                            table.remove(task, i)
-                            break
-                        end
-                    end
-                elseif type_ == "edit" then
-                    for i,v in ipairs(task) do
-                        if v.id == data.id then
-                            task[i] = data
-                            break
-                        end
-                    end
+            GameUtils:Event_Handler_Func(
+                diff_tasks
+                ,function(event_data) -- add
+                    table.insert(self.task_map[k], event_data)
                 end
-            end
+                ,function(event_data) -- edit
+                    for i,v in ipairs(self.task_map[k]) do
+                        if v.id == event_data.id then
+                            self.task_map[k][i] = event_data
+                            break
+                        end
+                end
+                end
+                ,function(event_data) -- remove
+                    for i,v in ipairs(self.task_map[k]) do
+                        if v.id == event_data.id then
+                            table.remove(self.task_map[k], i)
+                            break
+                        end
+                end
+                end
+            )
         end
         table.sort(self.task_map[k], function(a, b)
             return a.id < b.id
@@ -682,6 +696,11 @@ end
 
 
 return GrowUpTaskManager
+
+
+
+
+
 
 
 

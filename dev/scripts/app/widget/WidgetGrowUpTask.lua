@@ -14,7 +14,7 @@ function WidgetGrowUpTask:ctor(category)
     local body = self:GetBody()
     local size = body:getContentSize()
     self.listview = UIListView.new{
-        bgColor = UIKit:hex2c4b(0x7a100000),
+        -- bgColor = UIKit:hex2c4b(0x7a100000),
         viewRect = cc.rect(0, 20, size.width, size.height - 40),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(body)
@@ -27,12 +27,14 @@ function WidgetGrowUpTask:onExit()
     WidgetGrowUpTask.super.onExit(self)
 end
 function WidgetGrowUpTask:RefreshItems()
-    self.count = 1
     self.listview:removeAllItems()
     for _,v in ipairs(self.category.tasks) do
         self.listview:addItem(self:CreateItem(self.listview, v))
     end
     self.listview:reload()
+    if self.listview:getItems()[1] then
+        self.listview:getItems()[1]:getContent():OnBoxButtonClicked()
+    end
 end
 function WidgetGrowUpTask:CreateItem(listview, task)
     local item = listview:newItem()
@@ -101,7 +103,6 @@ function WidgetGrowUpTask:CreateItem(listview, task)
     content:align(display.CENTER)
     item:addContent(content)
     item:setItemSize(content:getCascadeBoundingBox().width, content:getCascadeBoundingBox().height + 10,false)
-    self.count = self.count + 1
     return item
 end
 

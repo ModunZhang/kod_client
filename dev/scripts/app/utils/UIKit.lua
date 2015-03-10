@@ -449,10 +449,10 @@ function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_
                     cancel_callback()
                 end,btn_name = _("取消")})
         end
-        dialog:VisibleXButton(visible_x_button)
-        if not visible_x_button then
-            dialog:DisableAutoClose()
-        end
+        -- dialog:VisibleXButton(visible_x_button)
+        -- if not visible_x_button then
+        --     dialog:DisableAutoClose()
+        -- end
         dialog:AddToCurrentScene()
         return dialog
 end

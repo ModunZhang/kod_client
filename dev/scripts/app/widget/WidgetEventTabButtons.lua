@@ -186,7 +186,7 @@ function WidgetEventTabButtons:ctor(city, ratio)
     self:Reset()
     self:ShowStartEvent()
     self.tab_map["build"]:SetSelect(true)
-    self:RefreshBuildQueueByType("build", "soldier", "material", "technology")
+    self:RefreshBuildQueueByType("soldier", "material", "technology")
 end
 function WidgetEventTabButtons:RefreshBuildQueueByType(...)
     local cur_tab = self:GetCurrentTab()

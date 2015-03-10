@@ -269,7 +269,9 @@ end
 function GameUIMission:GetAchievementMissionData(isFinish)
     isFinish = type(isFinish) == 'boolean' and isFinish or false
     if isFinish then
-        return self.city:GetUser():GetTaskManager():GetFirstCompleteTasks()
+        local tasks = self.city:GetUser():GetTaskManager():GetFirstCompleteTasks()
+        local i1, i2, i3 = unpack(tasks)
+        return {i1, i2, i3}
     else
         return self.city:GetUser():GetTaskManager():GetAvailableTasksGroup()
     end
@@ -284,11 +286,12 @@ function GameUIMission:OnTodoAchievementMissionClicked(data)
 end
 
 function GameUIMission:OnRecommendMissionClicked()
-    print("OnRecommendMissionClicked--->")
+	UIKit:newGameUI("GameUISelenaQuestion"):addToCurrentScene(true)
 end
 
 --日常任务
 function GameUIMission:CreateUIIf_daily()
+    print("CreateUIIf_daily---->")
 	if self.daily_layer then
 		--refresh list
 		self:RefreshDailyList()
@@ -310,7 +313,7 @@ end
 
 function GameUIMission:GetDailyListData()
 	local r = {}
-	local dailyTasks = User:GetAllDailyTasks()
+	local dailyTasks = self.city:GetUser():GetAllDailyTasks()
 	for __,v in ipairs(KEYS_OF_DAILY) do
 		local text_table = Localize.daily_tasks[v]
 		local tmp_data = dailyTasks[v]
@@ -318,11 +321,13 @@ function GameUIMission:GetDailyListData()
 			table.insert(r,{category = v,percent = #tmp_data/5,title = text_table.title ,image = UILib.daily_task_icon[v],desc = text_table.desc})
 		end
 	end
+    dump(r,"GetDailyListData----->")
+    dump(dailyTasks,"GetDailyListData----->dailyTasks")
 	return r
 end
 
 function GameUIMission:RefreshDailyListWithItemAndKeyOfDaily(item,key_of_daily)
-	local tmp_data = User:GetDailyTasksInfo(key_of_daily)
+	local tmp_data = self.city:GetUser():GetDailyTasksInfo(key_of_daily)
 	local percent = #tmp_data/5 
 	if percent >= 1 then
 		item.finfish_tip_label:show()
@@ -337,7 +342,7 @@ end
 function GameUIMission:RefreshDailyList(key_of_daily)
 	if key_of_daily and #self.daily_list:getItems() > 0 then
 		local index = table.indexof(KEYS_OF_DAILY, key_of_daily)
-		local item = self.list_view:getItems()[index]
+		local item = self.daily_list:getItems()[index]
 		if item then
 			self:RefreshDailyListWithItemAndKeyOfDaily(item,key_of_daily)
 		end

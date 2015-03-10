@@ -222,3 +222,7 @@ function display.popScene()
     cc.Director:getInstance():popScene()
 end
 
+--打开json对null的支持
+local cjson = require("cjson")
+cjson.decode_lua_nil(false)
+------------------------------------------------
