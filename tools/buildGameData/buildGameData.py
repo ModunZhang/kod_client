@@ -123,6 +123,8 @@ def exportSheetAsLua(sheet):
 				text = ('\t["%s"] = %s,\n' % (nakeName(title[j]), "nil") )
 			elif ("" == datarow[j]):
 				continue
+			elif ("LOCAL" == valueType):
+				text = ('\t["%s"] = _("%s"),\n' % (nakeName(title[j]), datarow[j]) )
 			elif ("INT" == valueType):
 				text = ('\t["%s"] = %d,\n' % (nakeName(title[j]), datarow[j]) )
 			elif ("FLOAT" == valueType):
