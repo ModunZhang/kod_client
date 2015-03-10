@@ -134,7 +134,7 @@ function GameUIDailyMissionInfo:GetItem(index,item_data,isFinish)
 				end
 			end)
 			:setButtonLabel("normal", UIKit:commonButtonLable({
-				text = _("前往"),
+				text = item_data.isDesc and _("说明") or _("前往"),
 			}))
 	end
 	item:addContent(content)
@@ -148,6 +148,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         	{
         		index = 1,
         		title = _("升级一次建筑"),
+                isDesc = false,
         		func = function()
         			UIKit:newGameUI("GameUIHasBeenBuild", City):addToCurrentScene(true)
         		end
@@ -155,6 +156,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         	{
         		index = 2,
         		title = _("招募一次兵种"),
+                isDesc = false,
         		func = function()
         			local building = City:GetFirstBuildingByType("barracks") 
         			if  not building:IsUnlocked() then
@@ -167,6 +169,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         	{
         		index = 3,
         		title = _("升级一次科技"),
+                isDesc = false,
         		func = function()
         			local building = City:GetFirstBuildingByType("academy") 
         			if not building:IsUnlocked() then
@@ -179,6 +182,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         	{
         		index = 4,
         		title = _("成功通关塞琳娜的考验"),
+                isDesc = false,
         		func = function()
         			UIKit:newGameUI("GameUISelenaQuestion"):addToCurrentScene(true)
         		end
@@ -186,6 +190,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         	{
         		index = 5,
         		title = _("制造一批建筑材料"),
+                isDesc = false,
         		func = function()
         			
         			local building = City:GetFirstBuildingByType("toolShop") 
@@ -201,46 +206,39 @@ function GameUIDailyMissionInfo:GetMissionConfig()
 	      	{
         		index = 1,
         		title = _("参加一次联盟会战"),
+                isDesc = true,
         		func = function()
-        			if Alliance_Manager:GetMyAlliance():IsDefault() then
-        				GameGlobalUI:showTips(_("错误"),_("你还未加入联盟"))
-        				return 
-        			end
+        			GameGlobalUI:showTips(_("说明"),_("参加一次联盟会战"))
         		end
         	},
         	{
         		index = 2,
         		title = _("对敌方玩家城市进行一次突袭"),
+                isDesc = true,
         		func = function()
-        			if Alliance_Manager:GetMyAlliance():IsDefault() then
-        				GameGlobalUI:showTips(_("错误"),_("你还未加入联盟"))
-        				return 
-        			end
+        		  
         		end
         	},
         	{
         		index = 3,
         		title = _("对地方玩家城市进行一次进攻"),
+                isDesc = true,
         		func = function()
-        			if Alliance_Manager:GetMyAlliance():IsDefault() then
-        				GameGlobalUI:showTips(_("错误"),_("你还未加入联盟"))
-        				return 
-        			end
+        			
         		end
         	},
         	{
         		index = 4,
         		title = _("占领一座村落"),
+                isDesc = true,
         		func = function()
-        			if Alliance_Manager:GetMyAlliance():IsDefault() then
-        				GameGlobalUI:showTips(_("错误"),_("你还未加入联盟"))
-        				return 
-        			end
+        			
         		end
         	},
         	{
         		index = 5,
         		title = _("搭乘飞艇进行一次探索"),
+                isDesc = false,
         		func = function()
         			local dragon_type = City:GetDragonEyrie():GetDragonManager():GetCanFightPowerfulDragonType()
 		            if #dragon_type > 0 then
@@ -256,6 +254,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
 	        {
         		index = 1,
         		title = _("进行一次联盟捐赠"),
+                isDesc = true,
         		func = function()
         			if Alliance_Manager:GetMyAlliance():IsDefault() then
         				GameGlobalUI:showTips(_("错误"),_("你还未加入联盟"))
@@ -266,26 +265,23 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         	{
         		index = 2,
         		title = _("在联盟商店购买一次道具"),
+                isDesc = true,
         		func = function()
-        			if Alliance_Manager:GetMyAlliance():IsDefault() then
-        				GameGlobalUI:showTips(_("错误"),_("你还未加入联盟"))
-        				return 
-        			end
+        			
         		end
         	},
         	{
         		index = 3,
         		title = _("协助一次盟友建造加速"),
+                isDesc = true,
         		func = function()
-        			if Alliance_Manager:GetMyAlliance():IsDefault() then
-        				GameGlobalUI:showTips(_("错误"),_("你还未加入联盟"))
-        				return 
-        			end
+        			
         		end
         	},
         	{
         		index = 4,
-        		title = _("?"),
+        		title = "?",
+                isDesc = true,
         		func = function()
         			
         		end
@@ -293,11 +289,9 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         	{
         		index = 5,
         		title = _("对盟友进行一次协防"),
+                isDesc = true,
         		func = function()
-        			if Alliance_Manager:GetMyAlliance():IsDefault() then
-        				GameGlobalUI:showTips(_("错误"),_("你还未加入联盟"))
-        				return 
-        			end
+        			
         		end
         	}
 	    },
@@ -305,6 +299,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
 	        {
         		index = 1,
         		title = _("加速一次正在升级的建筑"),
+                isDesc = true,
         		func = function()
 
         		end
@@ -312,6 +307,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         	{
         		index = 2,
         		title = _("加速一支正在招募的兵种"),
+                isDesc = true,
         		func = function()
         			
         		end
@@ -319,6 +315,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         	{
         		index = 3,
         		title = _("打造一件龙的装备"),
+                isDesc = false,
         		func = function()
         			
         		end
@@ -326,6 +323,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         	{
         		index = 4,
         		title = _("进行一次高级抽奖"),
+                isDesc = false,
         		func = function()
         			
         		end
@@ -333,6 +331,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         	{
         		index = 5,
         		title = _("在商店购买任意一个道具"),
+                isDesc = false,
         		func = function()
         			UIKit:newGameUI("GameUIShop",City):addToCurrentScene(true)
         		end
