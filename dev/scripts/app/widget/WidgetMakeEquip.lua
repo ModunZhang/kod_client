@@ -86,7 +86,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
     -- 装备数量label
     local pos = back_ground_97x20:getAnchorPointInPoints()
     self.number = cc.ui.UILabel.new({
-        text = _("0 / 99"),
+        text = "",
         size = 18,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,

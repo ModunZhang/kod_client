@@ -9,7 +9,8 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local UIKit = UIKit
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local Enum = import("..utils.Enum")
-local MAX_QUESTION_COUNT = 3
+local config_selena_question = GameDatas.ClientInitGame.selena_question
+local MAX_QUESTION_COUNT = 10
 local ZORDER_INDEX = {
 	TIPS = 10,
 	WELCOME = 9,
@@ -291,45 +292,28 @@ end
 
 --随机生成题目 MAX_QUESTION_COUNT
 function GameUISelenaQuestion:LoadQuestionFromConfig()
-	local questions = {
-		{
-			index = 1,
-			title = "升级木工小屋，石匠小屋，矿工小屋，农夫小屋占用城民，因此我们应该1：",
-			answer_1 = "优先升级住宅1",
-			answer_2 = "优先升级住宅2",
-			answer_3 = "优先升级住宅3",
-			correct  = 1,
-		},
-		{
-			index = 20,
-			title = "升级木工小屋，石匠小屋，矿工小屋，农夫小屋占用城民，因此我们应该2：",
-			answer_1 = "优先升级住宅1",
-			answer_2 = "优先升级住宅2",
-			answer_3 = "优先升级住宅3",
-			correct  = 2,
-		},
-		{
-			index = 2,
-			title = "升级木工小屋，石匠小屋，矿工小屋，农夫小屋占用城民，因此我们应该3：",
-			answer_1 = "优先升级住宅1",
-			answer_2 = "优先升级住宅2",
-			answer_3 = "优先升级住宅3",
-			correct  = 3,
-		}
-	}
+	local questions = {}
+	local indexs = self:RandomIndexForConfig()
+	for index,__ in pairs(indexs) do
+		table.insert(questions,config_selena_question[index])
+	end
+	dump(questions,"questions---->")
 	self._questions = questions
 	self._question_index = 1
 end
 
 function GameUISelenaQuestion:RandomIndexForConfig()
 	local r = {}
+	local total = #config_selena_question
 	for i=1,MAX_QUESTION_COUNT do
-		local random_index = math.random(30)
+		local random_index = math.random(total)
 		while r[random_index] do
-			random_index = math.random(30)
+			random_index = math.random(total)
 		end
 		r[random_index] = true
 	end
+	dump(r,"r---->")
+	return r
 end
 
 function GameUISelenaQuestion:CheckFinishSelenaTestIf()

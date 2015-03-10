@@ -13,6 +13,7 @@ GameDatas.ClientInitGame = {
 	["wonder_grassLand"] = {},
 	["wonder_desert"] = {},
 	["wonder_iceField"] = {},
+	["selena_question"] = {},
 }
 require("app.datas.ClientInitGame_ruins")
 require("app.datas.ClientInitGame_locations")
@@ -26,6 +27,7 @@ require("app.datas.ClientInitGame_soldier_vs")
 require("app.datas.ClientInitGame_wonder_grassLand")
 require("app.datas.ClientInitGame_wonder_desert")
 require("app.datas.ClientInitGame_wonder_iceField")
+require("app.datas.ClientInitGame_selena_question")
 
 GameDatas.Activities = {
 	["day60"] = {},
