@@ -135,6 +135,10 @@ function WidgetEventTabButtons:OnMilitaryTechEventsChanged()
     self:EventChangeOn("technology")
     self:RefreshBuildQueueByType("technology")
 end
+function WidgetEventTabButtons:OnMilitaryTechEventsAllChanged()
+    self:EventChangeOn("technology")
+    self:RefreshBuildQueueByType("technology")
+end
 function WidgetEventTabButtons:OnSoldierStarEventsChanged()
     self:EventChangeOn("technology")
     self:RefreshBuildQueueByType("technology")
@@ -175,6 +179,7 @@ function WidgetEventTabButtons:ctor(city, ratio)
     city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.OnSoldierStarEventsTimer)
     city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.OnMilitaryTechEventsTimer)
     city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
+    city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_ALL_CHANGED)
     city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
 
 
@@ -237,6 +242,7 @@ function WidgetEventTabButtons:onExit()
     self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.OnSoldierStarEventsTimer)
     self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.OnMilitaryTechEventsTimer)
     self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
+    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_ALL_CHANGED)
     self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
 end
 function WidgetEventTabButtons:InsertEvent(func)
@@ -439,7 +445,6 @@ function WidgetEventTabButtons:CreateOpenMilitaryTechItem(building)
             shadow = true
         }))
         :onButtonClicked(function(event)
-            print("CreateOpenMilitaryTechItem==",building:GetType())
             UIKit:newGameUI('GameUIMilitaryTechBuilding', City, building):addToCurrentScene(true)
         end)
 
