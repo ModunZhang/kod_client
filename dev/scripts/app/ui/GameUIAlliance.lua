@@ -51,7 +51,7 @@ function GameUIAlliance:OnBasicChanged(alliance, changed_map)
     end
 end
 
-function GameUIAlliance:OnJoinEventsChanged(alliance,changed_map)
+function GameUIAlliance:OnJoinEventsChanged(alliance)
 
 end
 
@@ -894,9 +894,8 @@ end
 function GameUIAlliance:RefreshEventListView()
     local events = Alliance_Manager:GetMyAlliance():GetEvents()
     self.eventListView:removeAllItems()
-    for i,v in ipairs(events) do
-        local item = self:GetEventItemByIndexAndEvent(i,v)
-        self.eventListView:addItem(item)
+    for i = #events, 1, -1 do
+        self.eventListView:addItem(self:GetEventItemByIndexAndEvent(i,events[i]))
     end
     self.eventListView:reload()
 end
