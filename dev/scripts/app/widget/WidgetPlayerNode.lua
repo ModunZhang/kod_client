@@ -197,12 +197,20 @@ function WidgetPlayerNode:GetBasicInfoItemNode(basic_data)
 		color = 0x403c2f,
 	}):addTo(node)
 		:align(display.LEFT_BOTTOM, power_icon:getPositionX() + power_icon:getContentSize().width + 5, power_icon:getPositionY() - power_icon:getContentSize().height)
-	local ID_label = UIKit:ttfLabel({
-		text = "ID:" .. data_source.playerId,
-		size = 18,
-		color = 0x403c2f,
-	}):align(display.RIGHT_BOTTOM,progress_bg:getPositionX() + progress_bg:getContentSize().width, power_label:getPositionY()):addTo(node)
-	--
+	if self:CallDelegate_(DELEGATE_METHODS.PlayerCanClickedButton,{"PlayerIDCopy"}) then
+		WidgetPushButton.new({
+			normal = "yellow_btn_up_148x58.png",
+			pressed= "yellow_btn_down_148x58.png"
+		})
+			:align(display.RIGHT_BOTTOM,progress_bg:getPositionX() + progress_bg:getContentSize().width, vip_bg:getPositionY())
+			:addTo(node)
+			:setButtonLabel("normal", UIKit:ttfLabel({
+				text = _("复制玩家ID")
+			}))
+			:onButtonClicked(function()
+				ext.copyText(data_source.playerId)
+			end)
+	end
 	item:addContent(node)
 	node:size(self:GetSize().width,node:getCascadeBoundingBox().height)
 	item:setItemSize(self:GetSize().width,node:getCascadeBoundingBox().height)

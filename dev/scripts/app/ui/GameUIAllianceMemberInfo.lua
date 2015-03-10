@@ -212,29 +212,26 @@ end
 --WidgetPlayerNode的回调方法
 --点击勋章
 function GameUIAllianceMemberInfo:WidgetPlayerNode_OnMedalButtonClicked(index)
-	print("OnMedalButtonClicked-->",index)
 end
 -- 点击头衔
 function GameUIAllianceMemberInfo:WidgetPlayerNode_OnTitleButtonClicked()
-	print("OnTitleButtonClicked-->")
 end
 --修改头像
 function GameUIAllianceMemberInfo:WidgetPlayerNode_OnPlayerIconCliked()
-	print("WidgetPlayerNode_OnPlayerIconCliked-->")
 end
 --修改玩家名
 function GameUIAllianceMemberInfo:WidgetPlayerNode_OnPlayerNameCliked()
-	print("WidgetPlayerNode_OnPlayerNameCliked-->")
 end
 --决定按钮是否可以点击
 function GameUIAllianceMemberInfo:WidgetPlayerNode_PlayerCanClickedButton(name,args)
-	print("WidgetPlayerNode_PlayerCanClickedButton-->",name)
 	if name == 'Medal' then --点击勋章
 		return true
 	elseif name == 'PlayerIcon' then --修改头像
 		return false
 	elseif name == 'PlayerTitle' then -- 点击头衔
 		return true
+	elseif name == 'PlayerIDCopy' then --复制玩家ID
+	    return true
 	elseif name == 'PlayerName' then --修改玩家名
 		return false
 	end
