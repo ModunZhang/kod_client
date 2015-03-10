@@ -366,7 +366,27 @@ function GameUIPVESendTroop:SelectSoldiers()
     end
     local sm = self.soldier_manager
     local soldiers = {}
-    for name,soldier_num in pairs(sm:GetSoldierMap()) do
+    local soldier_map = {
+        "swordsman",
+        "ranger",
+        "lancer",
+        "catapult",
+        "sentinel",
+        "crossbowman",
+        "horseArcher",
+        "ballista",
+        "skeletonWarrior",
+        "skeletonArcher",
+        "deathKnight",
+        "meatWagon",
+        "priest",
+        "demonHunter",
+        "paladin",
+        "steamTank",
+    }
+    local map_s = sm:GetSoldierMap()
+    for _,name in pairs(soldier_map) do
+        local soldier_num = map_s[name]
         if soldier_num>0 then
             table.insert(soldiers, {name = name,level = sm:GetStarBySoldierType(name), max_num = soldier_num})
         end
