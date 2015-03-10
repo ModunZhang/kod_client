@@ -169,7 +169,7 @@ onAllianceDataChanged_callbacks = {}
 function NetManager:addAllianceDataChangedEventListener()
     self:addEventListener("onAllianceDataChanged", function(success, msg)
         if success then
-            dump(msg, "onAllianceDataChanged")
+            LuaUtils:outputTable("onAllianceDataChanged", msg)
             DataManager:setUserAllianceData(msg)
         end
         local callback = onAllianceDataChanged_callbacks[1]
@@ -250,7 +250,7 @@ end
 function NetManager:addOnGetAllianceDataSuccess()
     self:addEventListener("onGetAllianceDataSuccess", function(success, msg)
         if success then
-            dump(msg, "onGetAllianceDataSuccess")
+            LuaUtils:outputTable("onGetAllianceDataSuccess", msg)
             DataManager:setUserAllianceData(msg)
         end
     end)
@@ -600,7 +600,8 @@ function NetManager:getLoginPromise(deviceId)
     local device_id
     if CONFIG_IS_DEBUG then
         if gaozhou then
-            device_id = getOpenUDID()
+            -- device_id = getOpenUDID()
+            device_id = "1"
         else
             device_id = getOpenUDID()
         end
