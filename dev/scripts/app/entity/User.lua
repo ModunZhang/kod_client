@@ -425,12 +425,10 @@ function User:OnNewRequestToAllianceEventsComming(__requestToAllianceEvents)
             end
         end
     )
-    dump(self.request_events)
 end
 function User:OnRequestToAllianceEventsChanged(requestToAllianceEvents)
     if not requestToAllianceEvents then return end
     self.request_events = requestToAllianceEvents
-    dump(self.request_events)
 end
 function User:OnNewInviteAllianceEventsComming(__inviteToAllianceEvents)
     if not __inviteToAllianceEvents then return end

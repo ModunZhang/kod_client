@@ -1320,75 +1320,35 @@ end
 --     end
 --     return visible_towers
 -- end
-local function findTroopsInHelpedByTroops(helpedByTroops, troops)
-    for i, v in pairs(helpedByTroops) do
-        if v.id == troops.id then
-            return true
-        end
-    end
-end
 function City:OnHelpedByTroopsDataChange(helpedByTroops)
     if not helpedByTroops then return end
-    local add = {}
-    local removed = {}
-    for i, v in pairs(helpedByTroops) do
-        if not findTroopsInHelpedByTroops(self.helpedByTroops, v) then
-            table.insert(add, v)
-        end
-    end
-    for i, v in pairs(self.helpedByTroops) do
-        if not findTroopsInHelpedByTroops(helpedByTroops, v) then
-            table.insert(removed, v)
-        end
-    end
     self.helpedByTroops = helpedByTroops
     self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_BY_TROOPS, function(listener)
-        listener:OnHelpedTroopsChanged(self, {
-            add = add,
-            removed = removed,
-            edit = {}
-        })
+        listener:OnHelpedTroopsChanged(self)
     end)
 end
 function City:__OnHelpedByTroopsDataChange(__helpedByTroops)
     if not __helpedByTroops then return end
-    for _,v in ipairs(__helpedByTroops) do
-        if v.type == "add" then
-            self:AddHelpedByTroops(v.data)
-        elseif v.type == "remove" then
-            self:RemoveHelpedByTroops(v.data)
-        else
+    GameUtils:Event_Handler_Func(
+        __helpedByTroops
+        ,function(data) -- add
+            table.insert(self.helpedByTroops, data)
+        end,
+        function(data) -- edit
             assert(false)
+        end,
+        function(data) -- remove
+            for i,v in pairs(self.helpedByTroops) do
+                if v.id == data.id then
+                    table.remove(self.helpedByTroops, i)
+                    break
+                end
         end
-    end
-end
-function City:AddHelpedByTroops(troops)
-    table.insert(self.helpedByTroops, troops)
+        end)
     self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_BY_TROOPS, function(listener)
-        listener:OnHelpedTroopsChanged(self, {
-            add = {troops},
-            removed = {},
-            edit = {}
-        })
+        listener:OnHelpedTroopsChanged(self)
     end)
-    return troops
 end
-function City:RemoveHelpedByTroops(troops)
-    for i, v in pairs(self.helpedByTroops) do
-        if v.id == troops.id then
-            local removed = table.remove(self.helpedByTroops, i)
-            self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_BY_TROOPS, function(listener)
-                listener:OnHelpedTroopsChanged(self, {
-                    add = {},
-                    removed = {removed},
-                    edit = {}
-                })
-            end)
-            return removed
-        end
-    end
-end
-
 --helpToTroops
 function City:OnHelpToTroopsDataChange(helpToTroops)
     if not helpToTroops then return end
@@ -1666,6 +1626,15 @@ function City:FindProductionTechEventById(_id)
 end
 
 return City
+
+
+
+
+
+
+
+
+
 
 
 

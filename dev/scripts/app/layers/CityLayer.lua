@@ -150,11 +150,8 @@ end
 function CityLayer:OnSoliderCountChanged(soldier_manager, changed)
     self:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
 end
-function CityLayer:OnHelpedTroopsChanged(city, changed)
-    if #changed.add > 0 or #changed.removed > 0 then
-        print("协防部队发生变化")
-        self:UpdateHelpedByTroopsVisible(city:GetHelpedByTroops())
-    end
+function CityLayer:OnHelpedTroopsChanged(city)
+    self:UpdateHelpedByTroopsVisible(city:GetHelpedByTroops())
 end
 -----
 local SCENE_BACKGROUND = 1
