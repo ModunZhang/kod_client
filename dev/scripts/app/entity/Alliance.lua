@@ -373,56 +373,15 @@ function Alliance:OnOperation(operation_type)
         listener:OnOperation(self, operation_type)
     end)
 end
-function Alliance:IsSameEventWithTwo(event1, event2)
-    return event1.key == event2.key
-        and event1.type == event2.type
-        and event1.category == event2.category
-        and event1.time == event2.time
-end
-function Alliance:PopLastEventWithNotify()
-    local event = self:PopLastEvent()
-    self:OnEventsChanged{
-        pop = pack(event),
-        push = pack()
-    }
-    return event
-end
-function Alliance:PopLastEvent()
-    return table.remove(self.events)
-end
-function Alliance:PushEventInHeadWithNotify(event)
-    local e = self:PushEventInHead(event)
-    self:OnEventsChanged{
-        pop = pack(),
-        push = pack(e)
-    }
-    return e
-end
-function Alliance:PushEventInHead(event)
-    table.insert(self.events, 1, event)
-    return event
-end
-function Alliance:TopEvent()
-    return self:GetEventByIndex(1)
-end
-function Alliance:GetEventByIndex(index)
-    return self.events[index]
-end
 function Alliance:GetEvents()
     return self.events
-end
-function Alliance:CreateEventFromJsonData(json_data)
-    return json_data
-end
-function Alliance:CreateEvent(key, type, category, time, params)
-    return {key = key, type = type, category = category, time = time, params = params}
 end
 function Alliance:GetCountInfo()
     return self.countInfo
 end
-function Alliance:OnEventsChanged(changed_map)
+function Alliance:OnEventsChanged()
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.EVENTS, function(listener)
-        listener:OnEventsChanged(self, changed_map)
+        listener:OnEventsChanged(self)
     end)
 end
 function Alliance:CreateJoinEventsFromJsonData(json_data)
@@ -538,24 +497,24 @@ end
 
 function Alliance:OnNewEventsComming(__events)
     if not __events then return end
-    -- 先按从新到旧排序
-    table.sort(__events, function(a, b)
-        return a.data.time > b.data.time
-    end)
-    local new_coming_events = {}
-    for i = #__events, 1, -1 do
-        local v = __events[i]
-        local event = v.data
-        if v.type == "add" then
-            local new_event = self:CreateEventFromJsonData(event)
-            table.insert(new_coming_events, 1, new_event)
-            self:PushEventInHead(new_event)
+    GameUtils:Event_Handler_Func(
+        __events
+        ,function(data) -- add
+            table.insert(self.events, data)
         end
-    end
-    self:OnEventsChanged{
-        pop = pack(),
-        push = new_coming_events
-    }
+        ,function(data) -- edit
+
+        end
+        ,function(data) -- remove
+            for i,v in ipairs(self.events) do
+                if v.time == data.time and v.type == data.type then
+                    table.remove(self.events, i)
+                    break
+                end
+        end
+        end
+    )
+    self:OnEventsChanged()
 end
 function Alliance:OnNewMemberDataComming(__members)
     if not __members then return end
@@ -652,37 +611,9 @@ function Alliance:OnAllianceBasicInfoChangedFirst(basicInfo)
     self:SetStatusFinishTime(basicInfo.statusFinishTime)
 end
 function Alliance:OnAllianceEventsChanged(events)
-    if events == nil then return end
-    -- 先按从新到旧排序
-    table.sort(events, function(a, b)
-        return a.time > b.time
-    end)
-    -- 只会添加新事件，只会在登录的时候才会重新加载所有事件
-    -- 先找到最近的事件索引
-    local top_event = self:TopEvent() or {time = 0}
-    local index = 0
-    for i, new_event in ipairs(events) do
-        local diff_time = new_event.time - top_event.time
-        if diff_time > 0 then
-            index = i
-        else
-            break
-        end
-    end
-    -- 索引大于0才表明有新的事件来临
-    local is_new_events_coming = index > 0
-    if is_new_events_coming then
-        local new_coming_events = {}
-        for i = index, 1, -1 do
-            local new_event = self:CreateEventFromJsonData(events[i])
-            table.insert(new_coming_events, 1, new_event)
-            self:PushEventInHead(new_event)
-        end
-        self:OnEventsChanged{
-            pop = pack(),
-            push = new_coming_events
-        }
-    end
+    if not events then return end
+    self.events = events
+    self:OnEventsChanged()
 end
 function Alliance:OnJoinRequestEventsChanged(joinRequestEvents)
     if joinRequestEvents == nil then return end
@@ -1319,7 +1250,7 @@ end
 function Alliance:OnVillageEventsDataChanged(villageEvents)
     if not villageEvents then return end
     local removed = {}
-    self:IteratorVillageEvents(function(villageEvent)   
+    self:IteratorVillageEvents(function(villageEvent)
         table.insert(removed,villageEvent)
         villageEvent:Reset()
     end)
@@ -1502,6 +1433,7 @@ function Alliance:NeedUpdateEnemyAlliance()
 end
 
 return Alliance
+
 
 
 

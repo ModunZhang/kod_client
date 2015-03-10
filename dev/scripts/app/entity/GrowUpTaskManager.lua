@@ -662,28 +662,28 @@ function GrowUpTaskManager:OnUserDataChanged(userData)
         if all_tasks then
             self.task_map[k] = all_tasks
         elseif diff_tasks then
-            local task = self.task_map[k]
-            for i,v in ipairs(diff_tasks) do
-                local type_ = v.type
-                local data = v.data
-                if type_ == "add" then
-                    table.insert(task, data)
-                elseif type_ == "remove" then
-                    for i,v in ipairs(task) do
-                        if v.id == data.id then
-                            table.remove(task, i)
-                            break
-                        end
-                    end
-                elseif type_ == "edit" then
-                    for i,v in ipairs(task) do
-                        if v.id == data.id then
-                            task[i] = data
-                            break
-                        end
-                    end
+            GameUtils:Event_Handler_Func(
+                diff_tasks
+                ,function(event_data) -- add
+                    table.insert(self.task_map[k], event_data)
                 end
-            end
+                ,function(event_data) -- edit
+                    for i,v in ipairs(self.task_map[k]) do
+                        if v.id == event_data.id then
+                            self.task_map[k][i] = event_data
+                            break
+                        end
+                end
+                end
+                ,function(event_data) -- remove
+                    for i,v in ipairs(self.task_map[k]) do
+                        if v.id == event_data.id then
+                            table.remove(self.task_map[k], i)
+                            break
+                        end
+                end
+                end
+            )
         end
         table.sort(self.task_map[k], function(a, b)
             return a.id < b.id
@@ -696,6 +696,10 @@ end
 
 
 return GrowUpTaskManager
+
+
+
+
 
 
 
