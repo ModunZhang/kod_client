@@ -1057,7 +1057,7 @@ function Alliance:OnAllianceCountInfoChanged(countInfo)
     end)
 end
 function Alliance:OnAllianceFightChanged(allianceFight)
-    if not allianceFight then return end
+    if not allianceFight or allianceFight == json.null then return end
     for k,v in pairs(allianceFight) do
         if string.find(k,"__") then
             local key = string.sub(k,3,-1)
