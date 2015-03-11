@@ -117,7 +117,7 @@ function GameUIHome:RefreshChatMessage()
 end
 
 function GameUIHome:onExit()
-    self.city:RemoveListenerOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
+    self.city:RemoveListenerOnType(self, self.city.LISTEN_TYPE.UPGRADE_BUILDING)
     self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
     self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
     self.city:GetResourceManager():RemoveObserver(self)
