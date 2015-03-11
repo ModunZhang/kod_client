@@ -111,6 +111,9 @@ function SoldierManager:GetTotalUpkeep()
     if ItemManager:IsBuffActived("quarterMaster") then
         total = math.ceil(total * (1 - ItemManager:GetBuffEffect("quarterMaster")))
     end
+    if User:IsVIPActived() then
+        total = total * (1-User:GetVIPSoldierConsumeSub())
+    end
     return total
 end
 function SoldierManager:GetTreatResource(soldiers)
