@@ -97,7 +97,9 @@ function WidgetSliderWithInput:ctor(params)
     self:setContentSize(cc.size(slider:getCascadeBoundingBox().size.width,slider:getCascadeBoundingBox().size.height))
     self.soldier_total_count = soldier_total_count
 end
-
+function WidgetSliderWithInput:SetValue(value)
+    self.slider:setSliderValue(value)
+end
 function WidgetSliderWithInput:GetValue()
     return tonumber(math.floor(self.slider:getSliderValue()))
 end
