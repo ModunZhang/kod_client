@@ -13,7 +13,7 @@ end
 
 function LogoScene:onEnter()
     self.layer = cc.LayerColor:create(cc.c4b(255,255,255,255)):addTo(self)
-    self.sprite = display.newScale9Sprite("logos/batcat.png", display.cx, display.cy):addTo(self.layer)
+    self.sprite = display.newScale9Sprite("batcat_logo_368x390.png", display.cx, display.cy):addTo(self.layer)
     self:performWithDelay(function() self:beginAnimate() end,1)
 end
 

@@ -6,7 +6,7 @@ end
 function GameUIWatiForNetWork:onEnter()
     GameUIWatiForNetWork.super.onEnter(self)
 
-    self.sprite = display.newSprite("logos/batcat.png", display.cx, display.cy, {class=cc.FilteredSpriteWithOne}):addTo(self)
+    self.sprite = display.newSprite("batcat_logo_368x390.png", display.cx, display.cy, {class=cc.FilteredSpriteWithOne}):addTo(self)
     local size = self.sprite:getContentSize()
     self.sprite:setScaleX(display.width / size.width)
     self.sprite:setScaleY(display.height / size.height)
