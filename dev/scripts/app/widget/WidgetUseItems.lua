@@ -441,7 +441,7 @@ function WidgetUseItems:OpenIncreaseDragonExpOrHp( item )
         local dragon_img = display.newSprite("allianceHome/"..dragon:Type()..".png")
             :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2+5)
             :addTo(dragon_bg)
-        local box_bg = display.newSprite("allianceHome/".."box_426X126.png")
+        local box_bg = display.newSprite("allianceHome/box_426X126.png")
             :align(display.LEFT_CENTER, dragon_frame:getContentSize().width, dragon_frame:getContentSize().height/2)
             :addTo(dragon_frame)
         -- 龙，等级

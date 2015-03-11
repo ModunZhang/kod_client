@@ -106,7 +106,7 @@ function GameUICityInfo:CreateTop()
     for i, v in ipairs({
         {"res_wood_114x100.png", "wood_label"},
         {"res_stone_128x128.png", "stone_label"},
-        {"res_res_citizen_44x50.png", "citizen_label"},
+        {"res_citizen_44x50.png", "citizen_label"},
         {"res_food_114x100.png", "food_label"},
         {"res_iron_114x100.png", "iron_label"},
         {"coin_icon.png", "coin_label"},

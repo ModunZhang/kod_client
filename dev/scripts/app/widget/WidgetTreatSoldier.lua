@@ -298,7 +298,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
         { "treatWood", "res_wood_114x100.png" },
         { "treatIron", "res_iron_114x100.png" },
         { "treatStone", "res_stone_128x128.png" },
-    -- { "citizen", "res_res_citizen_44x50.png" },
+    -- { "citizen", "res_citizen_44x50.png" },
     }
     self.res_map = {}
     for i, v in pairs(res_map) do

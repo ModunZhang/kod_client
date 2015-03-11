@@ -260,7 +260,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
             { "wood", "res_wood_114x100.png" },
             { "iron", "res_iron_114x100.png" },
             { "stone", "res_stone_128x128.png" },
-            { "citizen", "res_res_citizen_44x50.png" },
+            { "citizen", "res_citizen_44x50.png" },
         }
         for i, v in pairs(res_map) do
             local res_type = v[1]

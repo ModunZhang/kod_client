@@ -21,7 +21,7 @@ local items = {
         production_text = _("空闲城民"),
         production_per_hour_text = _("城民增长"),
         tag_color = "dwelling/green_head.png",
-        tag_icon = "res_res_citizen_44x50.png",
+        tag_icon = "res_citizen_44x50.png",
         tag_icon_scale = 0.8
     },
     [FOOD] = {
@@ -66,7 +66,7 @@ function WidgetCitizen:ctor(city)
         :pos(window.left + 45, window.top - 140)
         :addTo(self)
 
-    cc.ui.UIImage.new("res_res_citizen_44x50.png")
+    cc.ui.UIImage.new("res_citizen_44x50.png")
         :addTo(iconBg)
 
     cc.ui.UILabel.new({
