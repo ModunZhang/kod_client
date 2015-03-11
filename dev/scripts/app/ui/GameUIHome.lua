@@ -35,8 +35,14 @@ function GameUIHome:OnResourceChanged(resource_manager)
     self.coin_label:setString(GameUtils:formatNumber(coin_number))
     self.gem_label:setString(string.formatnumberthousands(gem_number))
 end
-
-function GameUIHome:OnTaskChanged(user)
+function GameUIHome:OnUpgradingBegin()
+end
+function GameUIHome:OnUpgrading()
+end
+function GameUIHome:OnUpgradingFinished()
+    self:OnTaskChanged()
+end
+function GameUIHome:OnTaskChanged()
     self.task = self.city:GetRecommendTask()
     if self.task then
         self.quest_label:setString(self.task:Title())
@@ -72,6 +78,7 @@ function GameUIHome:onEnter()
     self.event_tab:addTo(self):pos(x, y)
 
     self:RefreshData()
+    city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
     city:GetResourceManager():AddObserver(self)
     city:GetResourceManager():OnResourceChanged()
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
@@ -110,6 +117,7 @@ function GameUIHome:RefreshChatMessage()
 end
 
 function GameUIHome:onExit()
+    self.city:RemoveListenerOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
     self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
     self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
     self.city:GetResourceManager():RemoveObserver(self)
