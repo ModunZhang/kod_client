@@ -110,15 +110,6 @@ function FullScreenPopDialogUI:CreateCancelButton(params)
                 end
             end
         end):align(display.CENTER, display.cx+6, display.top-610):addTo(self)
-
-    self.close_btn:onButtonClicked(function(event)
-        if event.name == "CLICKED_EVENT" then
-            self:removeFromParent()
-            if listener then
-                listener()
-            end
-        end
-    end)
     return self
 end
 
