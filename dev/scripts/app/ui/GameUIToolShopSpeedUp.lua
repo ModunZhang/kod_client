@@ -14,7 +14,6 @@ function GameUIToolShopSpeedUp:ctor(building)
 
     local technology_event = building:GetTechnologyEvent()
     local building_event = building:GetBuildingEvent()
-    print("technology_event:IsEmpty()",technology_event:IsEmpty(),"building_event:IsEmpty()",building_event:IsEmpty())
     local event = (not technology_event:IsEmpty() and technology_event) or (not building_event:IsEmpty() and building_event)
     self:SetAccBtnsGroup(self:GetEventType(),event:Id())
     self:SetAccTips(_("生产材料不能免费加速"))

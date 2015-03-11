@@ -145,6 +145,8 @@ function BlackSmithUpgradeBuilding:OnUserDataChanged(...)
                     self:EndMakeEquipmentWithCurrentTime(current_time)
                 end
             end
+        else
+            self:EndMakeEquipmentWithCurrentTime()
         end
     end
 end

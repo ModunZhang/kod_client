@@ -12,6 +12,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetMakeEquip = import("..widget.WidgetMakeEquip")
+local GameUIBlackSmithSpeedUp = import("..ui.GameUIBlackSmithSpeedUp")
 local GameUIBlackSmith = UIKit:createUIClass("GameUIBlackSmith", "GameUIUpgradeBuilding")
 
 
@@ -149,9 +150,9 @@ function GameUIBlackSmith:InitEquipmentTitle()
         :align(display.CENTER, display.cx, display.top - 140)
         :hide()
         :OnButtonClicked(function(event)
-            print("hello")
+            GameUIBlackSmithSpeedUp.new(self.black_smith):addToCurrentScene(true)
         end)
-    self.timer:GetSpeedUpButton():setButtonEnabled(false)
+    -- self.timer:GetSpeedUpButton():setButtonEnabled(false)
     return node
 end
 function GameUIBlackSmith:CreateDragonEquipments()
@@ -179,7 +180,7 @@ function GameUIBlackSmith:CreateDragonEquipmentsByType(dragon_type)
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     })
     listnode:addTo(self):align(display.BOTTOM_CENTER,window.cx,window.bottom_top + 20)
-   
+
     -- = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 230)
     for i, v in ipairs(red_dragon_equipments) do
         local item = self:CreateItemWithListViewByEquipments(list_view, v.equipments, v.title, equip_map)
@@ -307,7 +308,7 @@ function GameUIBlackSmith:CreateEquipmentByType(equip_type)
 
     equip_clicked = function(event)
         WidgetMakeEquip.new(equip_type, self.black_smith, self.black_smith_city):addToCurrentScene()
-            -- :align(display.CENTER, display.cx, display.cy)
+        -- :align(display.CENTER, display.cx, display.cy)
     end
     info_clicked = function(event)
         print("info_clicked", equip_type)
@@ -317,6 +318,7 @@ function GameUIBlackSmith:CreateEquipmentByType(equip_type)
 end
 
 return GameUIBlackSmith
+
 
 
 
