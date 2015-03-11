@@ -36,7 +36,7 @@ end
 
 function GameAllianceApproval:RefreshListView()
 	self.listView:removeAllItems()
-	table.foreach(Alliance_Manager:GetMyAlliance():GetJoinEventsMap(),function(k,v)
+	table.foreachi(Alliance_Manager:GetMyAlliance():GetJoinEvents(),function(k,v)
 		local newItem = self:GetListItem(v)
 		self.listView:addItem(newItem)
 	end)
@@ -60,11 +60,12 @@ function GameAllianceApproval:GetListItem(player)
 		color = 0x403c2f
 	}):align(display.LEFT_BOTTOM,line:getPositionX(),line:getPositionY() + 20):addTo(bg)
 	-- --lv
-	UIKit:ttfLabel({
-		text = "LV " .. player.level,
-		size = 20,
-		color = 0x403c2f
-	}):align(display.LEFT_BOTTOM,line:getPositionX() + 170,line:getPositionY() + 20):addTo(bg)
+	-- UIKit:ttfLabel({
+	-- 	text = "LV " ,
+	-- 	-- .. player.level,
+	-- 	size = 20,
+	-- 	color = 0x403c2f
+	-- }):align(display.LEFT_BOTTOM,line:getPositionX() + 170,line:getPositionY() + 20):addTo(bg)
 	local power_icon = display.newSprite("dragon_strength_27x31.png")
         :align(display.LEFT_BOTTOM, line:getPositionX() + 260,line:getPositionY() + 20)
         :addTo(bg)

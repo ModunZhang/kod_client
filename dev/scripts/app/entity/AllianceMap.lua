@@ -1,9 +1,89 @@
 local Enum = import("..utils.Enum")
-local AllianceObject = import(".AllianceObject")
 local MultiObserver = import(".MultiObserver")
 local AllianceMap = class("AllianceMap", MultiObserver)
 local allianceBuildingType = GameDatas.AllianceInitData.buildingType
 AllianceMap.LISTEN_TYPE = Enum("BUILDING","BUILDING_LEVEL")
+
+local mapObject_meta = {}
+mapObject_meta.__index = mapObject_meta
+function mapObject_meta:GetType()
+    return self.type
+end
+function mapObject_meta:GetAllianceBuildingInfo()
+    return self.alliance_map:FindAllianceBuildingInfoByObjects(self)
+end
+function mapObject_meta:GetAllianceVillageInfo()
+    return self.alliance_map:FindAllianceVillagesInfoByObject(self)
+end
+function mapObject_meta:SetAllianceMap(alliance_map)
+    self.alliance_map = alliance_map
+    return self
+end
+function mapObject_meta:GetCategory()
+    return allianceBuildingType[self.type].category
+end
+function mapObject_meta:Id()
+    return self.id
+end
+function mapObject_meta:GetSize()
+    local config = allianceBuildingType[self.type] or {width = 1, height = 1}
+    return config.width, config.height
+end
+function mapObject_meta:GetLogicPosition()
+    local location = self.location
+    return location.x, location.y
+end
+function mapObject_meta:GetMidLogicPosition()
+    local start_x, end_x, start_y, end_y = self:GetGlobalRegion()
+    return (start_x + end_x) / 2, (start_y + end_y) / 2
+end
+function mapObject_meta:GetTopLeftPoint()
+    local start_x, end_x, start_y, end_y = self:GetGlobalRegion()
+    return start_x, start_y
+end
+function mapObject_meta:GetTopRightPoint()
+    local start_x, end_x, start_y, end_y = self:GetGlobalRegion()
+    return end_x, start_y
+end
+function mapObject_meta:GetBottomLeftPoint()
+    local start_x, end_x, start_y, end_y = self:GetGlobalRegion()
+    return start_x, end_y
+end
+function mapObject_meta:GetBottomRightPoint()
+    local start_x, end_x, start_y, end_y = self:GetGlobalRegion()
+    return end_x, end_y
+end
+function mapObject_meta:IsContainPoint(x, y)
+    local start_x, end_x, start_y, end_y = self:GetGlobalRegion()
+    return x >= start_x and x <= end_x and y >= start_y and y <= end_y
+end
+function mapObject_meta:GetGlobalRegion()
+    local w, h = self:GetSize()
+    local x, y = self:GetLogicPosition()
+
+    local start_x, end_x, start_y, end_y
+
+    local is_orient_x = w > 0
+    local is_orient_neg_x = not is_orient_x
+    local is_orient_y = h > 0
+    local is_orient_neg_y = not is_orient_y
+
+    if is_orient_x then
+        start_x, end_x = x - w + 1, x
+    elseif is_orient_neg_x then
+        start_x, end_x = x, x + math.abs(w) - 1
+    end
+
+    if is_orient_y then
+        start_y, end_y = y - h + 1, y
+    elseif is_orient_neg_y then
+        start_y, end_y = y, y + math.abs(h) - 1
+    end
+    return start_x, end_x, start_y, end_y
+end
+
+
+
 
 local function is_alliance_building(type_)
     return type_ == "building"
@@ -20,18 +100,17 @@ end
 function AllianceMap:ctor(alliance)
     AllianceMap.super.ctor(self)
     self.alliance = alliance
-    self.all_objects = {}
-    self.allliance_buildings = {}
-    
+    self.mapObjects = {}
+    self.buildings = {}
 end
 function AllianceMap:Reset()
-    self.all_objects = {}
-    self.allliance_buildings = {}
+    self.mapObjects = {}
+    self.buildings = {}
 end
 function AllianceMap:FindAllianceBuildingInfoByObjects(object)
     if object:GetType() == "building" then
         local x, y = object:GetLogicPosition()
-        for k, v in pairs(self.allliance_buildings) do
+        for k, v in pairs(self.buildings) do
             if v.location.x == x and v.location.y == y then
                 return v
             end
@@ -39,7 +118,7 @@ function AllianceMap:FindAllianceBuildingInfoByObjects(object)
     end
 end
 function AllianceMap:FindAllianceBuildingInfoByName(name)
-    for k, v in pairs(self.allliance_buildings) do
+    for k, v in pairs(self.buildings) do
         if v.name == name then
             return v
         end
@@ -67,24 +146,11 @@ function AllianceMap:IteratorByCategory(category, func)
     end)
 end
 function AllianceMap:IteratorAllObjects(func)
-    for k, v in pairs(self.all_objects) do
+    for k, v in pairs(self.mapObjects) do
         if func(k, v) then
             return
         end
     end
-end
-function AllianceMap:AddObjectById(object)
-    assert(not self.all_objects[object:Id()])
-    self.all_objects[object:Id()] = object
-    return object
-end
-function AllianceMap:RemoveObjectById(id)
-    local old = self.all_objects[id]
-    self.all_objects[id] = nil
-    return old
-end
-function AllianceMap:GetObjectById(id)
-    return self.all_objects[id]
 end
 function AllianceMap:GetAlliance()
     return self.alliance
@@ -94,7 +160,6 @@ function AllianceMap:OnAllianceDataChanged(alliance_data)
     self:DecodeObjectsFromJsonMapObjects__(alliance_data.__mapObjects)
     self:OnAllianceBuildingInfoChange(alliance_data.buildings)
 end
-
 function AllianceMap:FindAllianceVillagesInfoByObject(object)
     if is_village(object:GetType()) then
         local x, y = object:GetLogicPosition()
@@ -105,74 +170,50 @@ function AllianceMap:FindAllianceVillagesInfoByObject(object)
         end
     end
 end
-
-function AllianceMap:OnAllianceBuildingInfoChange(alliance_buildings)
-    if not alliance_buildings then return end
-    for k, v in pairs(alliance_buildings) do
-        local old = self.allliance_buildings[k]
-        self.allliance_buildings[k] = v
-        if v.level ~= old then
-            print("v.level", v.level)
+function AllianceMap:OnAllianceBuildingInfoChange(buildings)
+    if not buildings then return end
+    for k,new in pairs(buildings) do
+        local old = self.buildings[k]
+        self.buildings[k] = new
+        local is_changed = old == nil and true or (old.level ~= new.level)
+        if is_changed then
             self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING_LEVEL, function(listener)
-                listener:OnBuildingLevelChange(v)
+                listener:OnBuildingLevelChange(new)
             end)
         end
     end
 end
 function AllianceMap:DecodeObjectsFromJsonMapObjects__(__mapObjects)
     if not __mapObjects then return end
-    local add = {}
-    local remove = {}
-    local edit = {}
-    for i, v in ipairs(__mapObjects) do
-        local type_ = v.type
-        local data = v.data
-        if type_ == "edit" then
-            local object = self:GetObjectById(data.id)
-            object:SetLogicPosition(data.location.x, data.location.y)
-            table.insert(edit, object)
-        elseif type_ == "add" then
-            local object = self:AddObjectById(AllianceObject.new(data.type, data.id, data.location.x, data.location.y, self))
-            table.insert(add, object)
-        elseif type_ == "remove" then
-            local object = self:RemoveObjectById(data.id)
-            table.insert(remove, object)
+    GameUtils:Event_Handler_Func(
+        __mapObjects
+        ,function(event_data)
+            table.insert(self.mapObjects, setmetatable(event_data, mapObject_meta):SetAllianceMap(self))
         end
-    end
+        ,function(event_data)
+            assert(false, "会有修改吗?")
+        end
+        ,function(event_data)
+            for i,v in ipairs(self.mapObjects) do
+                if v.id == event_data.id then
+                    table.remove(self.mapObjects, i)
+                    break
+                end
+            end
+        end
+    )
     self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING, function(listener)
-        listener:OnBuildingChange(self, add, remove, edit)
+        listener:OnBuildingChange(self)
     end)
 end
 function AllianceMap:DecodeObjectsFromJsonMapObjects(mapObjects)
     if not mapObjects then return end
-    local all_objects = {}
-    local add = {}
-    local remove = {}
-    local modify = {}
-    for _, v in ipairs(mapObjects) do
-        local type_ = v.type
-        local location_ = v.location
-        local id = v.id
-        local old = self.all_objects[id]
-        if old then
-            all_objects[id] = old
-            if location_.x ~= old.x or location_.y ~= old.y then
-                old:SetLogicPosition(location_.x, location_.y)
-                table.insert(modify, old)
-            end
-        else
-            local object = AllianceObject.new(type_, id, location_.x, location_.y, self)
-            all_objects[id] = object
-            table.insert(add, object)
-        end
-        self.all_objects[id] = nil
+    self.mapObjects = mapObjects
+    for k,v in pairs(self.mapObjects) do
+        setmetatable(v, mapObject_meta):SetAllianceMap(self)
     end
-    for k, v in pairs(self.all_objects) do
-        table.insert(remove, v)
-    end
-    self.all_objects = all_objects
     self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING, function(listener)
-        listener:OnBuildingChange(self, add, remove, modify)
+        listener:OnBuildingChange(self)
     end)
 end
 

@@ -12,6 +12,7 @@ SoldierManager.LISTEN_TYPE = Enum("SOLDIER_CHANGED",
     "TREAT_SOLDIER_CHANGED",
     "SOLDIER_STAR_CHANGED",
     "MILITARY_TECHS_EVENTS_CHANGED",
+    "MILITARY_TECHS_EVENTS_ALL_CHANGED",
     "MILITARY_TECHS_DATA_CHANGED",
     "SOLDIER_STAR_EVENTS_CHANGED",
     "OnSoldierStarEventsTimer",
@@ -109,6 +110,9 @@ function SoldierManager:GetTotalUpkeep()
     end
     if ItemManager:IsBuffActived("quarterMaster") then
         total = math.ceil(total * (1 - ItemManager:GetBuffEffect("quarterMaster")))
+    end
+    if User:IsVIPActived() then
+        total = total * (1-User:GetVIPSoldierConsumeSub())
     end
     return total
 end
@@ -345,12 +349,16 @@ function SoldierManager:GetUpgradingMitiTaryTechLeftTimeByCurrentTime(building_t
 end
 function SoldierManager:OnMilitaryTechEventsChanged(militaryTechEvents)
     if not militaryTechEvents then return end
+    self.militaryTechEvents = {}
     for i,v in ipairs(militaryTechEvents) do
         local event = MilitaryTechEvents.new()
         event:UpdateData(v)
         event:AddObserver(self)
         self.militaryTechEvents[event:Id()] = event
     end
+    self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_ALL_CHANGED, function(listener)
+        listener:OnMilitaryTechEventsAllChanged(self,self.militaryTechEvents)
+    end)
 end
 function SoldierManager:__OnMilitaryTechEventsChanged(__militaryTechEvents)
     if not __militaryTechEvents then return end

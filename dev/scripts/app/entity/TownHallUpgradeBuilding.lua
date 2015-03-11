@@ -8,6 +8,6 @@ function TownHallUpgradeBuilding:ctor(building_info)
 end
 
 function TownHallUpgradeBuilding:GetNextLevelDwellingNum()
-    return config_function[self:GetNextLevel()].dwelling
+    return config_function[self:GetNextLevel()].houseAdd
 end
 return TownHallUpgradeBuilding

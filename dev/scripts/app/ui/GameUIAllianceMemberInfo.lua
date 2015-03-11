@@ -8,7 +8,7 @@ local window = import("..utils.window")
 local UIListView = import(".UIListView")
 local UIScrollView = import(".UIScrollView")
 local NetService = import('..service.NetService')
-local AllianceMember = import('..entity.AllianceMember')
+local memberMeta = import('..entity.memberMeta')
 local GameUIWriteMail = import('.GameUIWriteMail')
 local WidgetPlayerNode = import("..widget.WidgetPlayerNode")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -113,7 +113,7 @@ function GameUIAllianceMemberInfo:OnPlayerButtonClicked( tag )
 		self:ShowMessage(msg)
 		return
 	end
-	local member = AllianceMember:DecodeFromJson(self.player_info)
+	local member = memberMeta:DecodeFromJson(self.player_info)
 	if tag == 1 then -- 踢出
        self:ShowSureDialog(string.format(_("您确定逐出玩家:%s?"),member:Name()),function()
        		self:SendToServerWithTag(tag,member)
@@ -262,7 +262,7 @@ end
 function GameUIAllianceMemberInfo:CheckPlayerAuthor(button_tag)
 	local can_do,msg = true,""
 	local me = Alliance_Manager:GetMyAlliance():GetSelf()
-	local member = AllianceMember:DecodeFromJson(self.player_info)
+	local member = memberMeta:DecodeFromJson(self.player_info)
 	if button_tag == 1 then
 		local auth,title_can = me:CanKickOutMember(member:Title())
 		can_do = auth and title_can

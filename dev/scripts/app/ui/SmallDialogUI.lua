@@ -80,9 +80,9 @@ function SmallDialogUI:ctor(parms)
 
     self:setTouchSwallowEnabled(false)
     self:addNodeEventListener(cc.NODE_TOUCH_EVENT, function ( event )
-        -- if event.name == "began" then
-        --     self.dialog:setVisible(false)
-        -- end
+        if event.name == "began" then
+            self:setVisible(false)
+        end
         if event.name == "ended" then
             self:removeFromParent(true)
             if parms.listener then

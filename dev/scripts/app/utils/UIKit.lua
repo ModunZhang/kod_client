@@ -383,7 +383,7 @@ function UIKit:commonButtonWithBG(options)
     return btn_bg
 end
 
-function UIKit:commonListView(params,topEnding)
+function UIKit:commonListView(params,topEnding,bottomEnding)
     assert(params.direction==cc.ui.UIScrollView.DIRECTION_VERTICAL,"错误！只支持上下滑动")
     local viewRect = params.viewRect
     viewRect.x = 0
@@ -402,7 +402,9 @@ function UIKit:commonListView(params,topEnding)
     if isTopEnding then
         cc.ui.UIImage.new("listview_edging.png"):addTo(list_node):align(display.BOTTOM_CENTER,viewRect.width/2,viewRect.height-6)
     end
-    cc.ui.UIImage.new("listview_edging.png"):addTo(list_node):align(display.BOTTOM_CENTER,viewRect.width/2,-11):flipY(true)
+    if bottomEnding == nil or bottomEnding == true then
+        cc.ui.UIImage.new("listview_edging.png"):addTo(list_node):align(display.BOTTOM_CENTER,viewRect.width/2,-11):flipY(true)
+    end
     return list,list_node
 end
 

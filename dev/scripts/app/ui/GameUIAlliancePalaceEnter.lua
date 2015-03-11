@@ -32,7 +32,7 @@ function GameUIAlliancePalaceEnter:GetBuildingInfo()
     }
     local member_count,cities = _("未知"),_("未知")
     if self:IsMyAlliance() then
-    	member_count = self:GetMyAlliance():MemberCount()
+    	member_count = self:GetMyAlliance():GetMembersCount()
     	cities = 10 
     end
     local label_2 = {

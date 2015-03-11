@@ -26,9 +26,9 @@ function GameUIBuildingSpeedUp:FreeSpeedUpAction()
     NetManager:getFreeSpeedUpPromise(event_type,unique_key)
 end
 function GameUIBuildingSpeedUp:onExit()
-    GameUIBuildingSpeedUp.super.onExit(self)
     self.building:RemoveUpgradeListener(self)
     GameUIBuildingSpeedUp.super.onCleanup(self)
+    GameUIBuildingSpeedUp.super.onExit(self)
 end
 
 function GameUIBuildingSpeedUp:CheckCanSpeedUpFree()
@@ -41,8 +41,8 @@ function GameUIBuildingSpeedUp:OnBuildingUpgradeFinished( building )
     self:leftButtonClicked()
 end
 function GameUIBuildingSpeedUp:OnBuildingUpgrading( building, current_time )
-    self:SetProgressInfo(GameUtils:formatTimeStyle1(building:GetUpgradingLeftTimeByCurrentTime(current_time)),building:GetElapsedTimeByCurrentTime(current_time)/building:GetUpgradeTimeToNextLevel()*100)
     self:CheckCanSpeedUpFree()
+    self:SetProgressInfo(GameUtils:formatTimeStyle1(building:GetUpgradingLeftTimeByCurrentTime(current_time)),building:GetElapsedTimeByCurrentTime(current_time)/building:GetUpgradeTimeToNextLevel()*100)
 end
 return GameUIBuildingSpeedUp
 
