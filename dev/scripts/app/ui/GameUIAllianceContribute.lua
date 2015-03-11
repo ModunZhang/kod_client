@@ -84,7 +84,7 @@ function GameUIAllianceContribute:onExit()
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
 end
 function GameUIAllianceContribute:GetDonateValueByType(donate_type)
-    local donate_status = self.alliance:GetMemeberById(DataManager:getUserData()._id):GetDonateStatus()
+    local donate_status = self.alliance:GetMemeberById(DataManager:getUserData()._id):DonateStatus()
     local donate_level = donate_status[donate_type]
     for _,donate in pairs(GameDatas.AllianceInitData.donate) do
         if donate.level==donate_level and donate_type == donate.type then
@@ -341,22 +341,21 @@ function GameUIAllianceContribute:OnResourceChanged(resource_manager)
     }
     self.group:RefreashAllOwn(owns)
 end
-function GameUIAllianceContribute:OnMemberChanged(alliance,changed_map)
-    for k,v in pairs(changed_map.changed) do
-        if v.id == DataManager:getUserData()._id then
-            LuaUtils:outputTable("v.donateStatus", v.donateStatus)
-            local donate = {
-                self:GetDonateValueByType("wood").count,
-                self:GetDonateValueByType("stone").count,
-                self:GetDonateValueByType("food").count,
-                self:GetDonateValueByType("iron").count,
-                self:GetDonateValueByType("coin").count,
-                self:GetDonateValueByType("gem").count,
-            }
-            self.group:RefreashAllDonate(donate)
-            self:RefreashEff()
-        end
-    end
+function GameUIAllianceContribute:OnMemberChanged(alliance)
+    local self_member = alliance:GetMemeberById(DataManager:getUserData()._id)
+    LuaUtils:outputTable("self_member.donateStatus", self_member.donateStatus)
+    local donate = {
+        self:GetDonateValueByType("wood").count,
+        self:GetDonateValueByType("stone").count,
+        self:GetDonateValueByType("food").count,
+        self:GetDonateValueByType("iron").count,
+        self:GetDonateValueByType("coin").count,
+        self:GetDonateValueByType("gem").count,
+    }
+    self.group:RefreashAllDonate(donate)
+    self:RefreashEff()
 end
 return GameUIAllianceContribute
+
+
 

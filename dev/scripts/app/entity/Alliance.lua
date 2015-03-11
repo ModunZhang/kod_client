@@ -6,7 +6,7 @@ local AllianceShrine = import(".AllianceShrine")
 local AllianceMoonGate = import(".AllianceMoonGate")
 local AllianceMap = import(".AllianceMap")
 local HelpEvent = import(".HelpEvent")
-local AllianceMember = import(".AllianceMember")
+local memberMeta = import(".memberMeta")
 local MultiObserver = import(".MultiObserver")
 local MarchAttackEvent = import(".MarchAttackEvent")
 local MarchAttackReturnEvent = import(".MarchAttackReturnEvent")
@@ -188,21 +188,6 @@ function Alliance:IteratorAllMembers(func)
         end
     end
 end
-function Alliance:ReplaceMemberWithNotify(member)
-    if member:IsDifferentWith(self:GetMemeberById(member:Id())) then
-        local old = self:ReplaceMember(member)
-        self:OnMemberChanged{
-            added = pack(),
-            removed = pack(),
-            changed = pack({old = old, new = member}),
-        }
-    end
-end
-function Alliance:ReplaceMember(member)
-    local old = self.members[member:Id()]
-    self.members[member:Id()] = member
-    return old
-end
 function Alliance:GetMemeberById(id)
     return self.members[id]
 end
@@ -211,53 +196,14 @@ function Alliance:GetAllMembers()
 end
 function Alliance:GetMembersCount()
     local count = 0
-    for k,v in pairs(self.members) do
+    for _,v in pairs(self:GetAllMembers()) do
         count = count + 1
     end
     return count
 end
-function Alliance:AddMembersWithNotify(member)
-    local mbr = self:AddMembers(member)
-    self:OnMemberChanged{
-        added = pack(mbr),
-        removed = pack(),
-        changed = pack(),
-    }
-    return mbr
-end
-function Alliance:AddMembers(member)
-    local members = self.members
-    if members[member:Id()] == nil then
-        -- assert(members[member:Id()] == nil)
-        members[member:Id()] = member
-    end
-    return members[member:Id()]
-end
-function Alliance:RemoveMemberByIdWithNotify(id)
-    local member = self:RemoveMemberById(id)
-    self:OnMemberChanged{
-        added = pack(),
-        removed = pack(member),
-        changed = pack(),
-    }
-    for _, _ in pairs(self.members) do
-        return
-    end
-    self:Reset()
-end
-function Alliance:RemoveMemberById(id)
-    local members = self.members
-    local member = members[id]
-    if not member then
-        print("玩家不存在!")
-        return
-    end
-    members[id] = nil
-    return member
-end
-function Alliance:OnMemberChanged(changed_map)
+function Alliance:OnMemberChanged()
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.MEMBER, function(listener)
-        listener:OnMemberChanged(self, changed_map)
+        listener:OnMemberChanged(self)
     end)
 end
 function Alliance:GetFightRequest()
@@ -471,31 +417,19 @@ function Alliance:OnNewEventsComming(__events)
 end
 function Alliance:OnNewMemberDataComming(__members)
     if not __members then return end
-    local add_members = {}
-    local remove_members = {}
-    local update_members = {}
-    for i, v in ipairs(__members) do
-        local type_ = v.type
-        local member_json = v.data
-        if type_ == "add" then
-            table.insert(add_members, self:AddMembers(AllianceMember:DecodeFromJson(member_json)))
-        elseif type_ == "remove" then
-            table.insert(remove_members, self:RemoveMemberById(member_json.id))
-        elseif type_ == "edit" then
-            local member = AllianceMember:DecodeFromJson(member_json)
-            -- if member:IsDifferentWith(self:GetMemeberById(member_json.id)) then
-            self:ReplaceMember(member)
-            table.insert(update_members, member)
-            -- end
-        else
-            assert(false, "还有新类型?")
+    GameUtils:Event_Handler_Func(
+        __members
+        ,function(data) -- add
+            self.members[data.id] = setmetatable(data, memberMeta)
         end
-    end
-    self:OnMemberChanged{
-        added = add_members,
-        removed = remove_members,
-        changed = update_members,
-    }
+        ,function(data) -- edit
+            self.members[data.id] = setmetatable(data, memberMeta)
+        end
+        ,function(data) -- remove
+            self.members[data.id] = nil
+        end
+    )
+    self:OnMemberChanged()
 end
 function Alliance:OnNewJoinRequestDataComming(__joinRequestEvents)
     if not __joinRequestEvents then return end
@@ -574,64 +508,11 @@ function Alliance:OnJoinRequestEventsChanged(joinRequestEvents)
 end
 function Alliance:OnAllianceMemberDataChanged(members)
     if not members then return end
-    -- 先更新成员数量
-    self:SetMemberCount(#members)
-
-    local function find_members_with_id(id)
-        for _, v in ipairs(members) do
-            if v.id == id then
-                return v
-            end
-        end
+    self.members = {}
+    for _,v in ipairs(members) do
+        self.members[v.id] = setmetatable(v, memberMeta)
     end
-    -- 先找退出的成员
-    local remove_members = {}
-    self:IteratorAllMembers(function(id, member)
-        if not find_members_with_id(id) then
-            table.insert(remove_members, member)
-        end
-    end)
-    -- dump(remove_members)
-
-    -- 再找新加入的成员
-    local add_members = {}
-    for _, v in ipairs(members) do
-        if not self:GetMemeberById(v.id) then
-            table.insert(add_members, AllianceMember:DecodeFromJson(v))
-        end
-    end
-    -- dump(add_members)
-
-    -- 成员更新的数据, 直接替换成员数据
-    local update_members = {}
-    for _, v in ipairs(members) do
-        local member = self:GetMemeberById(v.id)
-        local new_data = AllianceMember:DecodeFromJson(v)
-        if member and member:IsDifferentWith(new_data) then
-            local old = self:ReplaceMember(new_data)
-            table.insert(update_members, {old = old, new = new_data})
-        end
-    end
-    -- dump(update_members)
-
-    -- 开始真正删除成员了
-    for _, v in ipairs(remove_members) do
-        self:RemoveMemberById(v.id)
-    end
-
-    -- 开始真正添加成员了
-    for _, v in ipairs(add_members) do
-        self:AddMembers(v)
-    end
-
-    local need_notify = #remove_members > 0 or #add_members > 0 or #update_members > 0
-    if need_notify then
-        self:OnMemberChanged{
-            added = add_members,
-            removed = remove_members,
-            changed = update_members,
-        }
-    end
+    self:OnMemberChanged()
 end
 function Alliance:OnAllianceFightRequestsChanged(alliance_data)
     if alliance_data.fightRequests then
@@ -679,10 +560,6 @@ function Alliance:OnAllianceFightReportsChanged(alliance_data)
         end)
     end
 
-end
-
-function Alliance:OnOneAllianceMemberDataChanged(member_data)
-    self:ReplaceMemberWithNotify(AllianceMember:DecodeFromJson(member_data))
 end
 function Alliance:OnHelpEventsChanged(helpEvents)
     if not helpEvents then return end
@@ -1358,6 +1235,7 @@ function Alliance:NeedUpdateEnemyAlliance()
 end
 
 return Alliance
+
 
 
 

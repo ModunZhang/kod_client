@@ -282,7 +282,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
 
     local title_blue = cc.ui.UIImage.new("title_blue_412x30.png", {scale9 = true})
         :addTo(back_ground):align(display.LEFT_CENTER, right_x, h - 23)
-    -- title_blue:setContentSize(cc.size(435, 48))
+
     local size = title_blue:getContentSize()
     local title_label = cc.ui.UILabel.new({
         size = 22,
@@ -332,7 +332,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         :addTo(back_ground)
         :align(display.CENTER, w - 90, 40)
         :setButtonLabel(cc.ui.UILabel.new({
-            text = _("建造"),
+            text = _("升级"),
             size = 24,
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xffedae)}))
@@ -398,7 +398,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         :addTo(back_ground)
         :align(display.CENTER, w - 90, 40)
         :setButtonLabel(cc.ui.UILabel.new({
-            text = _("建造"),
+            text = _("升级"),
             size = 24,
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xffedae)}))
@@ -531,7 +531,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
                 self:SetConditionLabel(illegal, UIKit:hex2c3b(0x7e0000))
             else
                 self:ChangeStatus("normal")
-                self:SetConditionLabel(_("满足建造条件"), UIKit:hex2c3b(0x007c23))
+                self:SetConditionLabel(_("满足条件"), UIKit:hex2c3b(0x007c23))
             end
         until true
         self:UpdateDesc(building)

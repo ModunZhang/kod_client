@@ -61,7 +61,7 @@ function GameUIAlliance:OnEventsChanged(alliance)
     end
 end
 
-function GameUIAlliance:OnMemberChanged(alliance,changed_map)
+function GameUIAlliance:OnMemberChanged(alliance)
     if self.tab_buttons:GetSelectedButtonTag() == 'members' then
         self:RefreshMemberList()
     end
