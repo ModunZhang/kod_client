@@ -335,7 +335,7 @@ function GameUIVip:CreateVipExpBar()
                 self.exp_bar["exp_bar_"..i-1]:setPercentage(100)
             end
         end
-        if per then
+        if per and level ~=VIP_MAX_LEVEL then
             self.exp_bar["exp_bar_"..level]:setPercentage(per)
         end
         if not self.tip_1 then
