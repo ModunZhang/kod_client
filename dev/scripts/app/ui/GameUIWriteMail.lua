@@ -101,7 +101,7 @@ function GameUIWriteMail:ctor(send_type)
 
     send_label:enableShadow()
     self.send_button = WidgetPushButton.new(
-        {normal = "keep_unlocked_button_normal.png", pressed = "keep_unlocked_button_pressed.png"},
+        {normal = "yellow_btn_up_149x47.png", pressed = "yellow_btn_down_149x47.png"},
         {scale9 = false}
     ):setButtonLabel(send_label)
         :addTo(write_mail):align(display.CENTER, write_mail:getContentSize().width-120, 40)

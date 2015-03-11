@@ -92,7 +92,7 @@ function GameUIAllianceShrineDetail:BuildUI()
 	local background = WidgetUIBackGround.new({height = HEIGHT})
 		:addTo(layer)
 		:pos(window.left+22,window.top - 101 - HEIGHT)
-	local title_bar = display.newSprite("red_title_600x52.png"):align(display.CENTER_BOTTOM, 304,HEIGHT - 15):addTo(background)
+	local title_bar = display.newSprite("title_red_600x52.png"):align(display.CENTER_BOTTOM, 304,HEIGHT - 15):addTo(background)
 	UIKit:ttfLabel({
 		text = self:GetShrineStage():GetStageDesc(),
 		size = 22,
@@ -199,7 +199,7 @@ function GameUIAllianceShrineDetail:GetInfoData()
 	local stage = self:GetShrineStage()
 	local r = {}
 	r[1] = {"dragon_strength_27x31.png",_("敌方总战斗力"),stage:EnemyPower()}
-	r[2] = {"population.png",_("建议玩家数量"),stage:SuggestPlayer()}
+	r[2] = {"res_citizen_44x50.png",_("建议玩家数量"),stage:SuggestPlayer()}
 	r[3] = {"dragon_strength_27x31.png",_("建议部队战斗力"),"> " .. stage:SuggestPower()}
 	return r
 end

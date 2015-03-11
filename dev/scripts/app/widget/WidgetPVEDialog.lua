@@ -43,9 +43,9 @@ function WidgetPVEDialog:Refresh()
     local w,h = size.width, size.height
     local dialog = self.dialog
     -- 建筑图片 放置区域左右边框
-    cc.ui.UIImage.new("building_image_box.png"):align(display.LEFT_CENTER, 50, h*0.5 + 20)
+    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.LEFT_CENTER, 50, h*0.5 + 20)
         :addTo(dialog):flipX(true)
-    cc.ui.UIImage.new("building_image_box.png"):align(display.RIGHT_CENTER, 50 + 133, h*0.5 + 20)
+    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.RIGHT_CENTER, 50 + 133, h*0.5 + 20)
         :addTo(dialog)
     display.newSprite(self:GetIcon()):addTo(dialog):pos(50 + 133 * 0.5, h*0.5 + 20)
 

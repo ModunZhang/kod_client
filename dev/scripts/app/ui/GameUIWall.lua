@@ -129,7 +129,7 @@ function GameUIWall:CreateMilitaryUIIf()
     	self.progressTimer_bg:hide()
     end
 
-   	local button = WidgetPushButton.new({normal = 'add_button_normal_50x50.png',pressed = 'add_button_light_50x50.png'})
+   	local button = WidgetPushButton.new({normal = 'add_btn_up_50x50.png',pressed = 'add_btn_down_50x50.png'})
    		:addTo(progressTimer_bg):align(display.RIGHT_CENTER, 410, 20)
    		:onButtonClicked(handler(self, self.OnDragonHpItemUseButtonClicked))
 

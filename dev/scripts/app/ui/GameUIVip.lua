@@ -23,7 +23,7 @@ local VIP_MAX_LEVEL = 10
 local function __getPlayerIcons()
     return {
         "head_dragon.png",
-        "Hero_1.png",
+        "playerIcon_default.png",
         "playerIcon_default.png",
     }
 end
@@ -579,7 +579,7 @@ function GameUIVip:CreateBackGroundWithTitle(title_string)
     local body = WidgetUIBackGround.new({height=643}):align(display.TOP_CENTER,display.cx,display.top-200)
     layer:addTouchAbleChild(body)
     local rb_size = body:getContentSize()
-    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+10)
+    local title = display.newSprite("title_blue_600x52.png"):align(display.CENTER, rb_size.width/2, rb_size.height+10)
         :addTo(body)
     local title_label = cc.ui.UILabel.new(
         {

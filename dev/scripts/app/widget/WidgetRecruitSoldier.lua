@@ -80,39 +80,6 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
     -- soldier bg
     local size = back_ground:getContentSize()
     self.back_ground = back_ground
-    -- local width, height = 140, 130
-    -- local soldier_bg = cc.ui.UIImage.new("back_ground_54x127.png",
-    --     {scale9 = true}):addTo(back_ground, 2)
-    --     :align(display.CENTER, 84, size.height - 84)
-    --     -- :align(display.CENTER, 100, size.height - 50)
-    --     :setLayoutSize(width, height)
-
-    -- stars
-    -- self.stars = {}
-    -- local origin_x, origin_y, gap_y = width - 15, 15, 25
-    -- for i = 1, 5 do
-    --     local bg = cc.ui.UIImage.new("star_bg_24x23.png"):addTo(soldier_bg, 2)
-    --         :align(display.CENTER, origin_x, origin_y + (i - 1) * gap_y)
-
-    --     local pos = bg:getAnchorPointInPoints()
-    --     local star = cc.ui.UIImage.new("star_18x16.png"):addTo(bg)
-    --         :align(display.CENTER, pos.x, pos.y)
-    --     table.insert(self.stars, star)
-    -- end
-
-
-    -- -- star_bg
-    -- local size = soldier_bg:getContentSize()
-    -- local star_bg = cc.ui.UIImage.new("star1_114x128.png"):addTo(soldier_bg, 2)
-    --     :align(display.CENTER, 55, size.height/2)
-    -- self.star_bg = star_bg
-
-    -- soldier type
-    -- local pos = star_bg:getAnchorPointInPoints()
-    -- local soldier = cc.ui.UIImage.new("soldier_130x183.png"):addTo(star_bg)
-    --     :align(display.CENTER, pos.x, pos.y + 5):scale(0.7)
-    -- self.soldier = soldier
-
 
     --
     local size = back_ground:getContentSize()
@@ -293,7 +260,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
             { "wood", "res_wood_114x100.png" },
             { "iron", "res_iron_114x100.png" },
             { "stone", "res_stone_128x128.png" },
-            { "citizen", "res_citizen_44x50.png" },
+            { "citizen", "res_res_citizen_44x50.png" },
         }
         for i, v in pairs(res_map) do
             local res_type = v[1]
@@ -423,7 +390,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
                     FullScreenPopDialogUI.new()
                         :SetTitle(_("补充资源"))
                         :SetPopMessage(_("您当前没有足够的资源,是否花费魔法石立即补充"))
-                        :CreateNeeds("Topaz-icon.png", required_gems)
+                        :CreateNeeds("gem_66x56.png", required_gems)
                         :CreateOKButton(
                             {
                                 listener =  function()

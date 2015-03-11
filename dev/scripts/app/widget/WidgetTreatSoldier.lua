@@ -159,12 +159,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
 
     -- soldier type
     local pos = star_bg:getAnchorPointInPoints()
-    -- local soldier = cc.ui.UIImage.new("soldier_130x183.png"):addTo(star_bg)
-    --     :align(display.CENTER, pos.x, pos.y + 5):scale(0.7)
-    -- self.soldier = soldier
 
-
-    --
     local size = back_ground:getContentSize()
     local label = cc.ui.UILabel.new({
         text = "强势对抗",
@@ -303,7 +298,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
         { "treatWood", "res_wood_114x100.png" },
         { "treatIron", "res_iron_114x100.png" },
         { "treatStone", "res_stone_128x128.png" },
-    -- { "citizen", "res_citizen_44x50.png" },
+    -- { "citizen", "res_res_citizen_44x50.png" },
     }
     self.res_map = {}
     for i, v in pairs(res_map) do
@@ -427,21 +422,21 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
                             listener = treat_fun
                         }
                     )
-                    :CreateNeeds("Topaz-icon.png",hospital:GetTreatGems(soldiers)):AddToCurrentScene()
+                    :CreateNeeds("gem_66x56.png",hospital:GetTreatGems(soldiers)):AddToCurrentScene()
             elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.LACK_RESOURCE then
                 local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
                     :SetPopMessage(_("资源不足，是否花费宝石补足"))
                     :CreateOKButton({
                             listener = treat_fun
                         })
-                    :CreateNeeds("Topaz-icon.png",hospital:GetTreatGems(soldiers)):AddToCurrentScene()
+                    :CreateNeeds("gem_66x56.png",hospital:GetTreatGems(soldiers)):AddToCurrentScene()
             elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING then
                 local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
                     :SetPopMessage(_("正在治愈，是否花费魔法石立即完成"))
                     :CreateOKButton({
                             listener = treat_fun
                         })
-                    :CreateNeeds("Topaz-icon.png",hospital:GetTreatGems(soldiers)):AddToCurrentScene()
+                    :CreateNeeds("gem_66x56.png",hospital:GetTreatGems(soldiers)):AddToCurrentScene()
             else
                 treat_fun()
             end

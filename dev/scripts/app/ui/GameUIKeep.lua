@@ -80,10 +80,10 @@ end
 function GameUIKeep:CreateCityBasicInfo()
 
     -- 建筑图片 放置区域左右边框
-    local left_frame = cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-250, display.top-175)
+    local left_frame = cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, display.cx-250, display.top-175)
         :addTo(self.info_layer)
     left_frame:setFlippedX(true)
-    cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-145, display.top-175)
+    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, display.cx-145, display.top-175)
         :addTo(self.info_layer)
 
     local building_cp = building_config_map[self.building:GetType()]
@@ -266,10 +266,10 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                 content:addWidget(building_tip)
 
                 -- 建筑图片 放置区域左右边框
-                local filp_bg = cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, -item_width/2+30, 0):scale(0.9)
+                local filp_bg = cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, -item_width/2+30, 0):scale(0.9)
                 filp_bg:setFlippedX(true)
                 content:addWidget(filp_bg)
-                content:addWidget(cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, -item_width/2+125, 0):scale(0.9))
+                content:addWidget(cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, -item_width/2+125, 0):scale(0.9))
 
                 local building_cp = building_config_map[unlock_building:GetType()]
 
@@ -442,7 +442,7 @@ function GameUIKeep:CreateBackGroundWithTitle(title_string)
     local body = WidgetUIBackGround.new({height=450}):align(display.TOP_CENTER,display.cx,display.top-200)
         :addTo(leyer)
     local rb_size = body:getContentSize()
-    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height)
+    local title = display.newSprite("title_blue_600x52.png"):align(display.CENTER, rb_size.width/2, rb_size.height)
         :addTo(body)
     local title_label = cc.ui.UILabel.new(
         {

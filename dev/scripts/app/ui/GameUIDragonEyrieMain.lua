@@ -212,7 +212,7 @@ function GameUIDragonEyrieMain:CreateProgressTimer()
  		 shadow = true,
  		 size = 20
  	}):addTo(bg):align(display.RIGHT_CENTER, bg:getContentSize().width - 50, 20)
- 	local add_button = WidgetPushButton.new({normal = "add_button_normal_50x50.png",pressed = "add_button_light_50x50.png"})
+ 	local add_button = WidgetPushButton.new({normal = "add_btn_up_50x50.png",pressed = "add_btn_down_50x50.png"})
  		:addTo(bg)
  		:align(display.CENTER_RIGHT,bg:getContentSize().width+10,20)
  		:onButtonClicked(function()
@@ -226,7 +226,7 @@ function GameUIDragonEyrieMain:CreateDeathEventProgressTimer()
 	bg = display.newSprite("progress_bar_364x40_1.png")
 	progressTimer = UIKit:commonProgressTimer("progress_bar_yellow_364x40.png"):addTo(bg):align(display.LEFT_CENTER,0,20)
 	progressTimer:setPercentage(0)
-	local icon_bg = display.newSprite("progress_bg_head_43x43.png"):align(display.LEFT_CENTER, -20, 20):addTo(bg)
+	local icon_bg = display.newSprite("back_ground_43x43.png"):align(display.LEFT_CENTER, -20, 20):addTo(bg)
 	display.newSprite("hourglass_39x46.png"):align(display.CENTER, 22, 22):addTo(icon_bg):scale(0.8)
 	self.dragon_death_label = UIKit:ttfLabel({
 		text = "",
@@ -266,7 +266,7 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 			size = 20
 		}):align(display.LEFT_BOTTOM, expIcon:getPositionX()+expIcon:getContentSize().width*0.7+10, 20)
 		:addTo(info_bg)
-		local add_button = WidgetPushButton.new({normal = "add_button_normal_50x50.png",pressed = "add_button_light_50x50.png"})
+		local add_button = WidgetPushButton.new({normal = "add_btn_up_50x50.png",pressed = "add_btn_down_50x50.png"})
 	 		:addTo(info_bg)
 	 		:scale(0.8)
 	 		:align(display.LEFT_CENTER,self.draong_info_xp_label:getPositionX()+self.draong_info_xp_label:getContentSize().width+10,10 + expIcon:getCascadeBoundingBox().height/2)
@@ -293,7 +293,7 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 		self.preButton:setRotation(180)
 
 		local info_layer = UIKit:shadowLayer():size(619,40):pos(window.left+10,dragonAnimateNode:getPositionY()):addTo(self.dragonNode)
-		display.newSprite("dragon_main_line_624x58.png"):align(display.LEFT_TOP,0,20):addTo(info_layer)
+		display.newSprite("line_624x58.png"):align(display.LEFT_TOP,0,20):addTo(info_layer)
 		local nameLabel = UIKit:ttfLabel({
 			text = "",
 			color = 0xffedae,
@@ -370,7 +370,7 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 		}):addTo(info_panel):align(display.CENTER_BOTTOM,540 - 92,75)
 		local text_str = self:GetCurrentDragon():Ishated() and _("详情") or _("孵化")
 		local detailButton = WidgetPushButton.new({
-			normal = "dragon_yellow_button.png",pressed = "dragon_yellow_button_h.png"
+			normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"
 		}):setButtonLabel("normal",UIKit:ttfLabel({
 			text = text_str,
 			size = 24,

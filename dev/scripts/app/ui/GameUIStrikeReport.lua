@@ -55,7 +55,7 @@ function GameUIStrikeReport:onEnter()
     self.body = report_body
 
     local rb_size = report_body:getContentSize()
-    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+10)
+    local title = display.newSprite("title_blue_600x52.png"):align(display.CENTER, rb_size.width/2, rb_size.height+10)
         :addTo(report_body)
 
 
@@ -238,7 +238,7 @@ function GameUIStrikeReport:CreateBootyPart()
     end
 
 
-    local booty_title_bg = display.newSprite("upgrade_resources_title.png")
+    local booty_title_bg = display.newSprite("alliance_evnets_title_548x50.png")
         :align(display.CENTER_BOTTOM, 0,booty_list_bg and booty_list_bg:getContentSize().height/2-25 or -25)
         :addTo(booty_group)
 

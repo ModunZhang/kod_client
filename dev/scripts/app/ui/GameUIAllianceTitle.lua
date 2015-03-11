@@ -51,7 +51,7 @@ end
 function GameUIAllianceTitle:BuildUI()
 	local shadowLayer = UIKit:shadowLayer():addTo(self)
 	local bg = WidgetUIBackGround.new({height=614}):addTo(shadowLayer):pos(window.left+20,window.bottom+150)
-	local title_bar = display.newSprite("alliance_blue_title_600x42.png")
+	local title_bar = display.newSprite("title_blue_600x52.png")
 		:addTo(bg)
 		:align(display.CENTER_BOTTOM, 304, 600)
 	UIKit:closeButton():addTo(title_bar)
@@ -97,7 +97,7 @@ function GameUIAllianceTitle:BuildUI()
     	viewRect = cc.rect(4, 12, 564,325),
         direction = UIScrollView.DIRECTION_VERTICAL,
     }:addTo(listBg)
-    local button = WidgetPushButton.new({normal = "yellow_btn_up.png",pressed = "yellow_btn_down.png"})
+    local button = WidgetPushButton.new({normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"})
     :addTo(bg):pos(304,listBg:getPositionY() - listBg:getContentSize().height - 40)
     :setButtonLabel("normal",
     	UIKit:ttfLabel({
@@ -136,7 +136,7 @@ function GameUIAllianceTitle:RefreshListView(index)
 				size = 20,
 				color = 0x797154,
 			}):addTo(bg):align(display.LEFT_CENTER, 10, 23)
-			local icon_image = v[2] and  "upgrade_mark.png" or "upgrade_prohibited.png"
+			local icon_image = v[2] and  "yes_40x40.png" or "no_40x40.png"
 			display.newSprite(icon_image):align(display.RIGHT_CENTER,537,23):addTo(bg)
     		item:addContent(bg)
     		item:setItemSize(547, 46)
@@ -168,7 +168,7 @@ end
 function GameUIAllianceTitle:CreateEditTitleUI()
     local layer = UIKit:shadowLayer()
     local bg = WidgetUIBackGround.new({height=150}):addTo(layer):pos(window.left+20,window.cy-20)
-    local title_bar = display.newSprite("alliance_blue_title_600x42.png")
+    local title_bar = display.newSprite("title_blue_600x52.png")
         :addTo(bg)
         :align(display.LEFT_BOTTOM, 0,150-15)
 

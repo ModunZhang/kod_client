@@ -310,7 +310,7 @@ function WidgetEventTabButtons:CreateProgressItem()
     progress:setMidpoint(cc.p(0,0))
     progress:setPercentage(100)
     display.newSprite("progress_background_432x36.png"):addTo(progress, -1):align(display.LEFT_BOTTOM)
-    local bg = display.newSprite("progress_bg_head_43x43.png"):addTo(progress, 1):align(display.CENTER, 0, 36/2)
+    local bg = display.newSprite("back_ground_43x43.png"):addTo(progress, 1):align(display.CENTER, 0, 36/2)
     display.newSprite("hourglass_39x46.png"):addTo(bg):align(display.CENTER, 43/2, 43/2):scale(0.8)
 
     local describe = cc.ui.UILabel.new({

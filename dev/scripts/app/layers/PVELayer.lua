@@ -24,7 +24,7 @@ OBJECT_IMAGE[PVEDefine.WARRIORS_TOMB] = "warriors_tomb.png"
 OBJECT_IMAGE[PVEDefine.OBELISK] = "obelisk.png"
 OBJECT_IMAGE[PVEDefine.ANCIENT_RUINS] = "ancient_ruins.png"
 OBJECT_IMAGE[PVEDefine.ENTRANCE_DOOR] = "entrance_door.png"
-OBJECT_IMAGE[PVEDefine.TREE] = "tree_2_138x110.png"
+OBJECT_IMAGE[PVEDefine.TREE] = "grass_tree_1_138x110.png"
 OBJECT_IMAGE[PVEDefine.HILL] = "hill_228x146.png"
 OBJECT_IMAGE[PVEDefine.LAKE] = "lake_220x174.png"
 
@@ -84,7 +84,7 @@ function PVELayer:onEnter()
 
     -- 加载玩家
     self.char = display.newSprite("pve_char_bg_104x106.png"):addTo(self.object_layer)
-    display.newSprite("Hero_1.png"):addTo(self.char):pos(104*0.5, 106*0.5):scale(0.8)
+    display.newSprite("playerIcon_default.png"):addTo(self.char):pos(104*0.5, 106*0.5):scale(0.8)
 
     -- 加载标记
     self.pve_map:IteratorObjects(handler(self, self.SetObjectStatus))

@@ -55,7 +55,7 @@ function GameUIAllianceOrderHallEnter:GetEnterButtons()
 			self:leftButtonClicked()
 		end)
 
-		local village_button = self:BuildOneButton("icon_village.png",_("村落管理")):onButtonClicked(function()
+		local village_button = self:BuildOneButton("village_capture_66x72.png",_("村落管理")):onButtonClicked(function()
 			 UIKit:newGameUI('GameUIOrderHall',City,"village",self:GetBuilding()):addToCurrentScene(true)
 			self:leftButtonClicked()
 		end)

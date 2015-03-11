@@ -21,35 +21,35 @@ local items = {
         production_text = _("空闲城民"),
         production_per_hour_text = _("城民增长"),
         tag_color = "dwelling/green_head.png",
-        tag_icon = "home/res_citizen.png",
+        tag_icon = "res_res_citizen_44x50.png",
         tag_icon_scale = 0.8
     },
     [FOOD] = {
         production_text = _("农夫"),
         production_per_hour_text = _("粮食产量"),
         tag_color = "dwelling/yellow_head.png",
-        tag_icon = "home/res_food.png",
+        tag_icon = "res_food_114x100.png",
         tag_icon_scale = 0.25
     },
     [WOOD] = {
         production_text = _("伐木工"),
         production_per_hour_text = _("木材产量"),
         tag_color = "dwelling/brown_head.png",
-        tag_icon = "home/res_wood.png",
+        tag_icon = "res_wood_114x100.png",
         tag_icon_scale = 0.25
     },
     [IRON] = {
         production_text = _("矿工"),
         production_per_hour_text = _("矿产产量"),
         tag_color = "dwelling/blue_head.png",
-        tag_icon = "home/res_iron.png",
+        tag_icon = "res_iron_114x100.png",
         tag_icon_scale = 0.25
     },
     [STONE] = {
         production_text = _("石匠"),
         production_per_hour_text = _("石料产量"),
         tag_color = "dwelling/grey_head.png",
-        tag_icon = "home/res_stone.png",
+        tag_icon = "res_stone_128x128.png",
         tag_icon_scale = 0.25
     }
 }
@@ -62,11 +62,11 @@ function WidgetCitizen:ctor(city)
     self:setNodeEventEnabled(true)
 	
 	self.city = city
-    local iconBg = cc.ui.UIImage.new("dwelling/citizen_bg.png")
+    local iconBg = cc.ui.UIImage.new("back_ground_43x43.png")
         :pos(window.left + 45, window.top - 140)
         :addTo(self)
 
-    cc.ui.UIImage.new("home/res_citizen.png")
+    cc.ui.UIImage.new("res_res_citizen_44x50.png")
         :addTo(iconBg)
 
     cc.ui.UILabel.new({

@@ -80,16 +80,16 @@ end
 
 
 function GameUIAllianceEnterBase:GetBuildingImage()
-	return "tree_1_112x114.png"
+	return "grass_tree_3_112x114.png"
 end
 
 
 function GameUIAllianceEnterBase:InitBuildingImage()
     local body = self:GetBody()
     -- 建筑图片 放置区域左右边框
-    cc.ui.UIImage.new("building_image_box.png"):align(display.LEFT_CENTER, 30,self:GetUIHeight()-90)
+    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.LEFT_CENTER, 30,self:GetUIHeight()-90)
         :addTo(body):flipX(true)
-    cc.ui.UIImage.new("building_image_box.png"):align(display.RIGHT_CENTER, 163, self:GetUIHeight()-90)
+    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.RIGHT_CENTER, 163, self:GetUIHeight()-90)
         :addTo(body)
     local building_image = display.newSprite(self:GetBuildingImage())
         :addTo(body):pos(105, self:GetUIHeight()-60)

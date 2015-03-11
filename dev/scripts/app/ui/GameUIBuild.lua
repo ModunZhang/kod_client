@@ -86,7 +86,7 @@ function GameUIBuild:OnBuildOnItem(item)
         local required_gems = DataUtils:getGemByTimeInterval(upgrading_buildings[1]:GetUpgradingLeftTimeByCurrentTime(current_time))
         dialog:SetTitle(_("提示"))
         dialog:SetPopMessage(_("您当前没有空闲的建筑队列,是否花费魔法石立即完成上一个队列"))
-        dialog:CreateNeeds("Topaz-icon.png", required_gems)
+        dialog:CreateNeeds("gem_66x56.png", required_gems)
         dialog:CreateOKButton(
             {
                 listener =  function()
@@ -133,25 +133,6 @@ function GameUIBuild:CreateItemWithListView(list_view)
     local building_icon = display.newSprite(SpriteConfig["dwelling"]:GetConfigByLevel(1).png)
         :addTo(content):align(display.BOTTOM_CENTER, (left_x + right_x) / 2, 30)
 
-
-
-    -- local title_bg = display.newSprite("build_item/title_bg.png")
-    --     :addTo(content)
-    --     :pos(w/2, h/2 + 51)
-    -- local title_label = cc.ui.UILabel.new({
-    --     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-    --     text = "2000000",
-    --     size = 24,
-    --     font = UIKit:getFontFilePath(),
-    --     align = cc.ui.TEXT_ALIGN_LEFT,
-    --     color = UIKit:hex2c3b(0xffedae)
-    -- }):addTo(title_bg)
-    --     :align(display.LEFT_CENTER, 172, 24)
-
-    -- display.newSprite("build_item/building_image.png")
-    --     :addTo(content)
-    --     :align(display.LEFT_BOTTOM, 10, 10)
-
     local title_blue = cc.ui.UIImage.new("title_blue_402x48.png", {scale9 = true})
         :addTo(content):align(display.LEFT_CENTER, right_x, h - 33)
     title_blue:setContentSize(cc.size(435, 48))
@@ -166,7 +147,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
 
 
     local btn_info = WidgetPushButton.new(
-        {normal = "build_item/info.png",pressed = "build_item/info.png"})
+        {normal = "info_26x26.png",pressed = "info_26x26.png"})
         :addTo(content)
         :align(display.LEFT_BOTTOM, 10, 10)
 
@@ -189,7 +170,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
         :align(display.LEFT_CENTER, 175, 40)
 
     local build_btn = WidgetPushButton.new(
-        {normal = "build_item/build_btn_up.png",pressed = "build_item/build_btn_down.png"}
+        {normal = "yellow_btn_up_149x47.png",pressed = "yellow_btn_down_149x47.png"}
         ,{}
         ,{
             disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }

@@ -11,7 +11,7 @@ function WidgetDragonTabButtons:ctor(listener)
 	self.listener_ = listener or function(tag)end
 	self.shadow_layer = UIKit:shadowLayer():addTo(self,-2):size(600,58):pos(16,42)
 	self.back_layer = display.newColorLayer(cc.c4b(0,0,0,255)):addTo(self,-2):size(600,58):pos(16,42)
-	local bg = display.newSprite("dragon_tab_bg_624x102.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(self)
+	local bg = display.newSprite("line_624x102.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(self)
 	local buttons = {}
 	local back_button = cc.ui.UIPushButton.new({
     	normal = "home_btn_up.png",

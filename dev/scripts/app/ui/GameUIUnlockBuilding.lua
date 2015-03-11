@@ -36,9 +36,9 @@ function GameUIUnlockBuilding:Init()
     -- bg
     local bg = self.body
     -- 建筑功能介绍
-    cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-250, display.top-265)
+    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, display.cx-250, display.top-265)
         :addTo(self):setFlippedX(true)
-    cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-145, display.top-265)
+    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, display.cx-145, display.top-265)
         :addTo(self)
 
     local build_png = SpriteConfig[self.building:GetType()]:GetConfigByLevel(self.building:GetLevel()).png
@@ -101,7 +101,7 @@ function GameUIUnlockBuilding:Init()
         :addTo(self)
 
     -- 立即升级所需宝石
-    display.newSprite("Topaz-icon.png", display.cx-260, display.top-440):addTo(self):setScale(0.5)
+    display.newSprite("gem_66x56.png", display.cx-260, display.top-440):addTo(self):setScale(0.5)
     self.upgrade_now_need_gems_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
@@ -110,7 +110,7 @@ function GameUIUnlockBuilding:Init()
     }):align(display.LEFT_CENTER,display.cx-240,display.top-446):addTo(self)
     self:SetUpgradeNowNeedGems()
     --升级所需时间
-    display.newSprite("upgrade_hourglass.png", display.cx+100, display.top-440):addTo(self):setScale(0.6)
+    display.newSprite("hourglass_39x46.png", display.cx+100, display.top-440):addTo(self):setScale(0.6)
     self.upgrade_time = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
@@ -166,16 +166,16 @@ function GameUIUnlockBuilding:SetUpgradeRequirementListview()
         {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetUpgradingBuildings()<1,
             icon="hammer_31x33.png",description=GameUtils:formatNumber(#City:GetUpgradingBuildings()).."/1"},
         {resource_type = _("木材"),isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
-            icon="wood_icon.png",description=self.building:GetLevelUpWood().."/"..wood},
+            icon="res_wood_114x100.png",description=self.building:GetLevelUpWood().."/"..wood},
 
         {resource_type = _("石料"),isVisible = self.building:GetLevelUpStone()>0,     isSatisfy = stone>self.building:GetLevelUpStone() ,
             icon="stone_icon.png",description=self.building:GetLevelUpStone().."/"..stone},
 
         {resource_type = _("铁矿"),isVisible = self.building:GetLevelUpIron()>0,      isSatisfy = iron>self.building:GetLevelUpIron() ,
-            icon="iron_icon.png",description=self.building:GetLevelUpIron().."/"..iron},
+            icon="res_iron_114x100.png",description=self.building:GetLevelUpIron().."/"..iron},
 
         {resource_type = _("城民"),isVisible = self.building:GetLevelUpCitizen()>0,   isSatisfy = population>self.building:GetLevelUpCitizen() ,
-            icon="citizen_44x50.png",description=self.building:GetLevelUpCitizen().."/"..population},
+            icon="res_citizen_44x50.png",description=self.building:GetLevelUpCitizen().."/"..population},
 
         {resource_type = _("建筑蓝图"),isVisible = self.building:GetLevelUpBlueprints()>0,isSatisfy = has_materials.blueprints>self.building:GetLevelUpBlueprints() ,
             icon="blueprints_112x112.png",description=self.building:GetLevelUpBlueprints().."/"..has_materials.blueprints},
@@ -216,7 +216,7 @@ function GameUIUnlockBuilding:PopNotSatisfyDialog(listener,can_not_update_type)
             )
             dialog:SetTitle(_("补充资源"))
             dialog:SetPopMessage(_("您当前没有足够的资源,是否花费魔法石立即补充"))
-            dialog:CreateNeeds("Topaz-icon.png",required_gems)
+            dialog:CreateNeeds("gem_66x56.png",required_gems)
         end
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH then
         local required_gems =self.building:getUpgradeRequiredGems()
@@ -228,7 +228,7 @@ function GameUIUnlockBuilding:PopNotSatisfyDialog(listener,can_not_update_type)
             })
         dialog:SetTitle(_("立即开始"))
         dialog:SetPopMessage(_("您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"))
-        dialog:CreateNeeds("Topaz-icon.png",required_gems)
+        dialog:CreateNeeds("gem_66x56.png",required_gems)
     else
         dialog:SetTitle(_("提示"))
         dialog:SetPopMessage(can_not_update_type)

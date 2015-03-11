@@ -78,7 +78,7 @@ function GameUIArmyCamp:CreateTopPart()
         }):align(display.LEFT_CENTER, display.cx-260, display.top-160)
         :addTo(self.info_layer)
     -- 维护费部分
-    display.newSprite("food_icon.png", display.cx+160, display.top-145):addTo(self.info_layer):setScale(0.5)
+    display.newSprite("res_food_114x100.png", display.cx+160, display.top-145):addTo(self.info_layer):setScale(0.5)
     cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
