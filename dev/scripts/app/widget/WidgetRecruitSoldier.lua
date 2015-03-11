@@ -227,12 +227,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
     --     color = UIKit:hex2c3b(0x403c2f)
     -- }):addTo(back_ground, 2)
     --     :align(display.CENTER, size.width - 70, label_height - 35)
-    WidgetSliderWithInput.new({max = self.recruit_max,min=1}):addTo(back_ground):align(display.LEFT_CENTER, 25, 330)
-        :SetSliderSize(445, 24)
-        :OnSliderValueChanged(function(event)
-            self:OnCountChanged(math.floor(event.value))
-        end)
-        :LayoutValueLabel(WidgetSliderWithInput.STYLE_LAYOUT.RIGHT,0)
+
 
 
 
@@ -324,7 +319,13 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
         end
     end
 
-
+    local slider_input = WidgetSliderWithInput.new({max = self.recruit_max,min=1}):addTo(back_ground):align(display.LEFT_CENTER, 25, 330)
+        :SetSliderSize(445, 24)
+        :OnSliderValueChanged(function(event)
+            self:OnCountChanged(math.floor(event.value))
+        end)
+        :LayoutValueLabel(WidgetSliderWithInput.STYLE_LAYOUT.RIGHT,0)
+    self.slider_input = slider_input
     -- 立即招募
     local size = back_ground:getContentSize()
     local instant_button = WidgetPushButton.new(
@@ -478,8 +479,11 @@ function WidgetRecruitSoldier:onEnter()
 
     self:OnResourceChanged(self.city:GetResourceManager())
     self:OnCountChanged(self.count)
+    local max = self:GetCurrentMaxRecruitNum(self.res_total_map)
+    self.slider_input:SetValue(max)
 
     UIKit:CheckOpenUI(self)
+
 end
 function WidgetRecruitSoldier:onExit()
     self.barracks:RemoveBarracksListener(self)
@@ -609,6 +613,26 @@ function WidgetRecruitSoldier:CheckNeedResource(total_resouce, count)
     end
     return current_res_map
 end
+function WidgetRecruitSoldier:GetCurrentMaxRecruitNum(total_resouce)
+    local soldier_config = self.soldier_config
+    local current_res_map = {}
+    local total_map = total_resouce
+    local max_count = math.huge
+    for k, v in pairs(self.res_map) do
+        local total,temp_max
+        if soldier_config.specialMaterials then
+            total = DataManager:getUserData().soldierMaterials[k]
+            temp_max = total
+        else
+            total = total_map[k] == nil and 0 or total_map[k]
+            temp_max = math.floor(total / soldier_config[k])
+        end
+        max_count = math.min(max_count,temp_max)
+    end
+    max_count = math.min(max_count,self.recruit_max)
+
+    return max_count
+end
 function WidgetRecruitSoldier:GetNeedResouce(count)
     local soldier_config = self.soldier_config
     local need_res_map = {}
@@ -651,6 +675,8 @@ end
 
 
 return WidgetRecruitSoldier
+
+
 
 
 
