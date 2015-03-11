@@ -41,9 +41,9 @@ function AllianceView:ctor(layer, alliance, logic_base_x, logic_base_y)
     Observer.extend(self)
     self.layer = layer
     self.alliance = alliance
+    self.objects = {}
     logic_base_x = logic_base_x or 0
     logic_base_y = logic_base_y or 54
-    self.objects = {}
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new{
         tile_w = 80,
         tile_h = 80,
@@ -77,12 +77,11 @@ function AllianceView:InitAlliance()
     self:RefreshBuildings(self:GetAlliance():GetAllianceMap())
 end
 function AllianceView:RefreshBuildings(alliance_map)
-    self:GetBuildingNode():removeAllChildren()
-    local objects = {}
+    self:IteratorAllianceObjects(function(_,v) v:removeFromParent() end)
+    self.objects = {}
     alliance_map:IteratorAllObjects(function(_, entity)
-        objects[entity:Id()] = self:CreateObject(entity)
+        self.objects[entity:Id()] = self:CreateObject(entity)
     end)
-    self.objects = objects
 end
 function AllianceView:GetBuildingNode()
     return self.layer:GetBuildingNode()
@@ -166,6 +165,7 @@ end
 
 
 return AllianceView
+
 
 
 

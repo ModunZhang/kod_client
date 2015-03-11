@@ -20,9 +20,6 @@ Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVEN
     ,"OnStrikeMarchEventDataChanged","OnStrikeMarchReturnEventDataChanged","OnVillageEventsDataChanged","OnVillageEventTimer","COUNT_INFO",
     "VILLAGE_LEVELS_CHANGED","OnMarchEventRefreshed")
 local unpack = unpack
-local function pack(...)
-    return {...}
-end
 property(Alliance, "power", 0)
 property(Alliance, "createTime", 0)
 property(Alliance, "kill", 0)
