@@ -23,6 +23,16 @@ function Report:DecodeFromJsonData(json_data)
     return report
 end
 function Report:SetData(data)
+    local function replace_null_to_nil(t)
+        for k,v in pairs(t) do
+            if v == json.null then
+                t[k] = nil
+            elseif tolua.type(v) == "table" then
+                replace_null_to_nil(v)
+            end
+        end
+    end
+    replace_null_to_nil(data)
     self.data = data
 end
 function Report:GetData()
@@ -492,6 +502,9 @@ function Report:GetFightReports()
         or data.fightWithDefenceVillageReports or {}
 end
 return Report
+
+
+
 
 
 
