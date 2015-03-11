@@ -1,5 +1,5 @@
 local HOUSES = GameDatas.PlayerInitData.houses[1]
-local productionTechs = GameDatas.ProductionTechs.productionTechs
+local config_productionTechs = GameDatas.ProductionTechs.productionTechs
 local BuildingRegister = import(".BuildingRegister")
 local promise = import("..utils.promise")
 local Enum = import("..utils.Enum")
@@ -1496,7 +1496,7 @@ function City:IteratorTechs(func)
 end
 
 function City:FindTechByName(name)
-    local index = productionTechs[name].index
+    local index = config_productionTechs[name].index
     if index then
         return self:FindTechByIndex(index)
     end
@@ -1599,7 +1599,7 @@ function City:__OnProductionTechEventsDataChaned(__productionTechEvents)
         end
     )
     self:NotifyListeneOnType(City.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED, function(listener)
-        listener:OnProductionTechnologyEventDataChanged(changed_map)
+        listener:OnProductionTechnologyEventDataChanged(GameUtils:pack_event_table(changed_map))
     end)
 end
 
