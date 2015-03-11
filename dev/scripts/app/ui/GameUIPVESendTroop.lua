@@ -150,7 +150,7 @@ function GameUIPVESendTroop:onEnter()
 
         end):align(display.RIGHT_CENTER,window.right-50,window.top-910):addTo(self)
     --行军所需时间
-    display.newSprite("upgrade_hourglass.png", window.cx, window.top-910)
+    display.newSprite("hourglass_39x46.png", window.cx, window.top-910)
         :addTo(self):scale(0.6)
     self.march_time = UIKit:ttfLabel({
         text = "20:00:00",

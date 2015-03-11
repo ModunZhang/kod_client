@@ -35,7 +35,7 @@ function GameUIAttackPlayerCity:BuildUI()
 		:addTo(self)
 	local bg_node = WidgetUIBackGround.new({height=content_height}):addTo(shadowLayer):pos(window.left+20,window.bottom+250)
 	self.bg_node = bg_node
-	local titleBar = display.newScale9Sprite("alliance_blue_title_600x42.png")
+	local titleBar = display.newScale9Sprite("title_blue_600x52.png")
 		:size(bg_node:getCascadeBoundingBox().width,42)
 		:align(display.LEFT_BOTTOM, -2,content_height - 15)
 		:addTo(bg_node)
@@ -105,7 +105,7 @@ function GameUIAttackPlayerCity:BuildUI()
 	:onButtonClicked(handler(self, self.OnAttackButtonClicked))
 	
      -- 行军所需时间
-    local icon = display.newSprite("upgrade_hourglass.png"):align(display.LEFT_TOP,260,button:getPositionY()-20)
+    local icon = display.newSprite("hourglass_39x46.png"):align(display.LEFT_TOP,260,button:getPositionY()-20)
         :addTo(bg_node):scale(0.6)
     self.march_time = UIKit:ttfLabel({
         text = "20:00:00",

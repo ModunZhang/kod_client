@@ -13,10 +13,10 @@ local function getAniNameFromAnimationFiles(animation_files)
 end
 local RESOURCE = {
     blood = "dragonskill_blood_51x63.png",
-    food = "food_icon.png",
-    wood = "wood_icon.png",
+    food = "res_food_114x100.png",
+    wood = "res_wood_114x100.png",
     stone = "stone_icon.png",
-    iron = "iron_icon.png",
+    iron = "res_iron_114x100.png",
     coin = "coin_icon_1.png",
     wallHp = "gate_292x302.png",
 }
@@ -385,12 +385,12 @@ local DECORATOR_IMAGE = {
         decorate_tree_3 =  "desert_tree_3_98x96.png",
         decorate_tree_4 =  "desert_tree_4_106x102.png",
     },
-    decorate_lake_1 = "lake_272x158.png",
-    decorate_lake_2 =  "lake_244x142.png",
-    decorate_mountain_2 =  "hill_160x106.png",
-    decorate_mountain_1 =  "hill_254x240.png",
-    decorate_tree_1 =  "tree_2_138x110.png",
-    decorate_tree_2 =  "tree_1_112x114.png",
+    decorate_lake_1 = "grass_lake_272x158.png",
+    decorate_lake_2 =  "grass_lake_244x142.png",
+    decorate_mountain_2 =  "grass_hill_160x106.png",
+    decorate_mountain_1 =  "grass_hill_254x240.png",
+    decorate_tree_1 =  "grass_tree_1_138x110.png",
+    decorate_tree_2 =  "grass_tree_3_112x114.png",
 }
 local DRAGON_HEAD = {
     blueDragon = "Dragon_blue_113x128.png",

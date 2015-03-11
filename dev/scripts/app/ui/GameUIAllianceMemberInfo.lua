@@ -28,7 +28,7 @@ function GameUIAllianceMemberInfo:onMoveInStage()
 
 
 	local bg = WidgetUIBackGround.new({height=main_height}):addTo(shadowLayer):pos(window.left+20,min_y)
-	local title_bar = display.newSprite("alliance_blue_title_600x42.png")
+	local title_bar = display.newSprite("title_blue_600x52.png")
 		:addTo(bg)
 		:align(display.LEFT_BOTTOM, 0, main_height - 15)
 	

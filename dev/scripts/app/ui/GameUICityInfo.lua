@@ -104,12 +104,12 @@ function GameUICityInfo:CreateTop()
     local padding_width = 100
     local padding_height = 35
     for i, v in ipairs({
-        {"home/res_wood.png", "wood_label"},
-        {"home/res_stone.png", "stone_label"},
-        {"home/res_citizen.png", "citizen_label"},
-        {"home/res_food.png", "food_label"},
-        {"home/res_iron.png", "iron_label"},
-        {"home/res_coin.png", "coin_label"},
+        {"res_wood_114x100.png", "wood_label"},
+        {"res_stone_128x128.png", "stone_label"},
+        {"res_citizen_44x50.png", "citizen_label"},
+        {"res_food_114x100.png", "food_label"},
+        {"res_iron_114x100.png", "iron_label"},
+        {"coin_icon.png", "coin_label"},
     }) do
         local row = i > 3 and 1 or 0
         local col = (i - 1) % 3

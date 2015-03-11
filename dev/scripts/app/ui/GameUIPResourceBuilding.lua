@@ -75,12 +75,12 @@ function GameUIPResourceBuilding:ProduceIncreasePart()
         {
             _("达到")..first_count.."/3",string.format(_("+5%%%s"),
                 P_RESOURCE_BUILDING_TYPE_TO_RESOURCE[self.building:GetType()]),
-            house_count>2 and "upgrade_mark.png" or "upgrade_prohibited.png"
+            house_count>2 and "yes_40x40.png" or "no_40x40.png"
         },
         {
             _("达到")..first_count.."/6",string.format(_("+5%%%s"),
                 P_RESOURCE_BUILDING_TYPE_TO_RESOURCE[self.building:GetType()]),
-            house_count>5 and "upgrade_mark.png" or "upgrade_prohibited.png"
+            house_count>5 and "yes_40x40.png" or "no_40x40.png"
         },
     }
     -- bg
@@ -188,12 +188,12 @@ function GameUIPResourceBuilding:RebuildPart()
         {
             string.format(_("%s数量"),Localize.building_name[self.building:GetHouseType()]),
             string.format(_("≤%d"),after_rebuild_max_house_num),
-            #City:GetBuildingByType(self.building:GetHouseType())<=after_rebuild_max_house_num and "upgrade_mark.png" or "upgrade_prohibited.png"
+            #City:GetBuildingByType(self.building:GetHouseType())<=after_rebuild_max_house_num and "yes_40x40.png" or "no_40x40.png"
         },
         {
             _("魔法石"),
             string.format("%d/100",City:GetUser():GetGemResource():GetValue()),
-            City:GetUser():GetGemResource():GetValue()>need_gems and "upgrade_mark.png" or "upgrade_prohibited.png"
+            City:GetUser():GetGemResource():GetValue()>need_gems and "yes_40x40.png" or "no_40x40.png"
         },
     }
     -- bg

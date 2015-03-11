@@ -65,7 +65,7 @@ end
 function GameUIOtherAllianceHome:TopTabButtons()
     -- 坐标按钮
     local coordinate_btn = WidgetPushButton.new({normal = "allianceHome/btn_100x52.png",
-        pressed = "allianceHome/btn_100x52_light.png"})
+        pressed = "btn_100x52.png"})
         :onButtonClicked(function ( event )
             if event.name == "CLICKED_EVENT" then
                 UIKit:newGameUI('GameUIAlliancePosition'):addToCurrentScene(true)

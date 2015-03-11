@@ -257,7 +257,7 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 		     	else
 		     		display.newSprite("unknown_dragon_icon_112x112.png", 67, 67):addTo(event_bg)
 		     	end
-		     	local icon_bg = display.newSprite("progress_bg_head_43x43.png")
+		     	local icon_bg = display.newSprite("back_ground_43x43.png")
 					:align(display.LEFT_BOTTOM,164, 20):addTo(bg):scale(0.7)
 				display.newSprite("hourglass_39x46.png"):align(display.CENTER, 22, 22):addTo(icon_bg)
 
@@ -340,7 +340,7 @@ function GameUIWatchTower:GetOtherEventItem(entity)
  	else
  		display.newSprite("unknown_dragon_icon_112x112.png", 67, 67):addTo(event_bg)
  	end	
-	local icon_bg = display.newSprite("progress_bg_head_43x43.png")
+	local icon_bg = display.newSprite("back_ground_43x43.png")
 					:align(display.LEFT_BOTTOM,164, 20):addTo(bg):scale(0.7)
 	display.newSprite("hourglass_39x46.png"):align(display.CENTER, 22, 22):addTo(icon_bg)
 

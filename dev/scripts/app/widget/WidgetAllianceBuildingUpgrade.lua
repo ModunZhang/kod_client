@@ -41,9 +41,9 @@ function WidgetAllianceBuildingUpgrade:onEnter()
         :addTo(level_bg)
     -- 建筑功能介绍
     -- 建筑图片 放置区域左右边框
-    cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-250, display.top-175)
+    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, display.cx-250, display.top-175)
         :addTo(self):setFlippedX(true)
-    cc.ui.UIImage.new("building_image_box.png"):align(display.CENTER, display.cx-145, display.top-175)
+    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, display.cx-145, display.top-175)
         :addTo(self)
 
     self.building_info_btn = WidgetPushButton.new({normal = UIKit:getImageByBuildingType( self.building.name ,1),
@@ -182,7 +182,7 @@ function WidgetAllianceBuildingUpgrade:InitRequirement()
         {resource_type = _("职位大于等于")..Localize.alliance_title.quartermaster,
             isVisible = true,
             isSatisfy = alliance:GetSelf():CanUpgradeAllianceBuilding() ,
-            icon="leader.png",
+            icon="alliance_item_leader_39x39.png",
             description= ""},
     }
     if not self.requirement_listview then

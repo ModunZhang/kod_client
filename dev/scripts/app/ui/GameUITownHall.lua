@@ -178,7 +178,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
     }):align(display.LEFT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width, icon_bg:getPositionY()-20):addTo(body)
 
     local progress = WidgetProgress.new(UIKit:hex2c3b(0xffedae), "progress_bar_272x40_1.png", "progress_bar_272x40_2.png", {
-        icon_bg = "progress_bg_head_43x43.png",
+        icon_bg = "back_ground_43x43.png",
         icon = "hourglass_39x46.png",
         bar_pos = {x = 0,y = 0}
     }):addTo(body):align(display.LEFT_CENTER, icon_bg:getPositionX()+ icon_bg:getContentSize().width-25, icon_bg:getPositionY()-20)

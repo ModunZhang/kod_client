@@ -17,7 +17,7 @@ function WidgetRequirementListview:ctor(parms)
 
     local list_bg = display.newScale9Sprite("upgrade_requirement_background.png", 0, 0,cc.size(self.width, self.listview_height))
         :align(display.LEFT_BOTTOM):addTo(self)
-    local title_bg = display.newSprite("upgrade_resources_title.png", x, y):align(display.CENTER_BOTTOM, self.width/2, self.listview_height):addTo(self)
+    local title_bg = display.newSprite("alliance_evnets_title_548x50.png", x, y):align(display.CENTER_BOTTOM, self.width/2, self.listview_height):addTo(self)
     UIKit:ttfLabel({
         text = self.title ,
         size = 24,
@@ -56,14 +56,14 @@ function WidgetRequirementListview:RefreshListView(contents)
                 meetFlag =  not meetFlag
                 if v.isSatisfy then
                     -- 符合条件，添加钩钩图标
-                    content.mark:setTexture("upgrade_mark.png")
+                    content.mark:setTexture("yes_40x40.png")
                 else
                     if v.canNotBuy then
                         content.bg:setTexture("upgrade_resources_background_red.png")
-                        content.mark:setTexture("upgrade_prohibited.png")
+                        content.mark:setTexture("no_40x40.png")
                     else
                         -- 不符合条提案，添加!图标
-                        content.mark:setTexture("upgrade_warning.png")
+                        content.mark:setTexture("wow_40x40.png")
                     end
                 end
                 content.resource_value:setString(v.resource_type.." "..v.description)
@@ -83,14 +83,14 @@ function WidgetRequirementListview:RefreshListView(contents)
                 meetFlag =  not meetFlag
                 if v.isSatisfy then
                     -- 符合条件，添加钩钩图标
-                    content.mark = display.newSprite("upgrade_mark.png", item_width/2-25, 0):addTo(content)
+                    content.mark = display.newSprite("yes_40x40.png", item_width/2-25, 0):addTo(content)
                 else
                     if v.canNotBuy then
                         content.bg = display.newSprite("upgrade_resources_background_red.png", 0, 0):addTo(content)
-                        content.mark = display.newSprite("upgrade_prohibited.png", item_width/2-25, 0):addTo(content)
+                        content.mark = display.newSprite("no_40x40.png", item_width/2-25, 0):addTo(content)
                     else
                         -- 不符合条提案，添加X图标
-                        content.mark = display.newSprite("upgrade_warning.png", item_width/2-25, 0):addTo(content)
+                        content.mark = display.newSprite("wow_40x40.png", item_width/2-25, 0):addTo(content)
                     end
                 end
                 -- 资源类型icon

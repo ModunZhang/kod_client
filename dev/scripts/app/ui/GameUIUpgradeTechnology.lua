@@ -142,7 +142,7 @@ end
 function GameUIUpgradeTechnology:BuildUI()
 	UIKit:shadowLayer():addTo(self)
 	local bg_node =  WidgetUIBackGround.new({height = HEIGHT,isFrame = "no"}):addTo(self):align(display.TOP_CENTER, window.cx, window.top_bottom - 100)
-	local title_bar = display.newSprite("alliance_blue_title_600x42.png"):align(display.BOTTOM_CENTER,304,HEIGHT - 15):addTo(bg_node)
+	local title_bar = display.newSprite("title_blue_600x52.png"):align(display.BOTTOM_CENTER,304,HEIGHT - 15):addTo(bg_node)
 	UIKit:closeButton():align(display.RIGHT_BOTTOM,600, 0):addTo(title_bar):onButtonClicked(function()
 		self:leftButtonClicked()
 	end)
@@ -215,7 +215,7 @@ function GameUIUpgradeTechnology:BuildUI()
     ):align(display.RIGHT_TOP, line_2:getPositionX()+line_2:getContentSize().width, line_2:getPositionY() - 30)
      :addTo(bg_node)
     self.upgrade_button = btn_bg
-    local gem = display.newSprite("Topaz-icon.png")
+    local gem = display.newSprite("gem_66x56.png")
     	:addTo(bg_node)
     	:scale(0.5)
     	:align(display.LEFT_TOP, btn_now:getPositionX(), btn_now:getPositionY() - 65 - 10)
@@ -228,7 +228,7 @@ function GameUIUpgradeTechnology:BuildUI()
 
 
     --升级所需时间
-    local time_icon = display.newSprite("upgrade_hourglass.png")
+    local time_icon = display.newSprite("hourglass_39x46.png")
     	:addTo(bg_node)
     	:scale(0.6)
     	:align(display.LEFT_TOP, btn_bg:getPositionX() - 185,btn_bg:getPositionY() - 65 - 10)
@@ -354,7 +354,7 @@ function GameUIUpgradeTechnology:OnUpgradButtonClicked()
                 listener =  function ()
                     self:ForceUpgrade(gems_cost)
                 end})
-            :CreateNeeds("Topaz-icon.png",gems_cost)
+            :CreateNeeds("gem_66x56.png",gems_cost)
             :AddToCurrentScene(true)
     end
 end

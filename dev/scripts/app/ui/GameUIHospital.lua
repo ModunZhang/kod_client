@@ -140,10 +140,10 @@ function GameUIHospital:CreateHealAllSoldierItem()
     end
     local total_iron,total_stone,total_wood,total_food = self.city:GetSoldierManager():GetTreatResource(soldiers)
     local resource_icons = {
-        [WOOD]  = {total_wood,"wood_icon.png"},
+        [WOOD]  = {total_wood,"res_wood_114x100.png"},
         [STONE]  = {total_stone,"stone_icon.png"},
-        [FOOD]  = {total_food,"food_icon.png"},
-        [IRON] = {total_iron,"iron_icon.png"},
+        [FOOD]  = {total_food,"res_food_114x100.png"},
+        [IRON] = {total_iron,"res_iron_114x100.png"},
     }
     -- 资源背景框
     local resource_bg = display.newSprite("back_ground_556x56.png"):addTo(self.treate_all_soldiers_item):pos(self.treate_all_soldiers_item:getContentSize().width/2,180)
@@ -184,7 +184,7 @@ function GameUIHospital:CreateHealAllSoldierItem()
     self.treat_all_now_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
     self.treat_all_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
     -- 立即治愈所需宝石
-    display.newSprite("Topaz-icon.png", bg_size.width/2 - 260, 50):addTo(self.treate_all_soldiers_item):setScale(0.5)
+    display.newSprite("gem_66x56.png", bg_size.width/2 - 260, 50):addTo(self.treate_all_soldiers_item):setScale(0.5)
     self.heal_now_need_gems_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
@@ -193,7 +193,7 @@ function GameUIHospital:CreateHealAllSoldierItem()
     }):align(display.LEFT_CENTER,bg_size.width/2 - 240,50):addTo(self.treate_all_soldiers_item)
     self:SetTreatAllSoldiersNowNeedGems()
     --治愈所需时间
-    display.newSprite("upgrade_hourglass.png", bg_size.width/2+100, 50):addTo(self.treate_all_soldiers_item):setScale(0.6)
+    display.newSprite("hourglass_39x46.png", bg_size.width/2+100, 50):addTo(self.treate_all_soldiers_item):setScale(0.6)
     self.heal_time = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
@@ -241,21 +241,21 @@ function GameUIHospital:TreatListener()
                     listener = treat_fun
                 }
             )
-            :CreateNeeds("Topaz-icon.png",self.building:GetTreatGems(soldiers)):AddToCurrentScene()
+            :CreateNeeds("gem_66x56.png",self.building:GetTreatGems(soldiers)):AddToCurrentScene()
     elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.LACK_RESOURCE then
         local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("资源不足，是否花费宝石补足"))
             :CreateOKButton({
                 listener = treat_fun
             })
-            :CreateNeeds("Topaz-icon.png",self.building:GetTreatGems(soldiers)):AddToCurrentScene()
+            :CreateNeeds("gem_66x56.png",self.building:GetTreatGems(soldiers)):AddToCurrentScene()
     elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING then
         local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("正在治愈，是否花费魔法石立即完成"))
             :CreateOKButton({
                 listener = treat_fun
             })
-            :CreateNeeds("Topaz-icon.png",self.building:GetTreatGems(soldiers)):AddToCurrentScene()
+            :CreateNeeds("gem_66x56.png",self.building:GetTreatGems(soldiers)):AddToCurrentScene()
     else
         treat_fun()
     end
@@ -351,7 +351,7 @@ function GameUIHospital:CreateCasualtyRateBar()
     self:SetProgressCasualtyRateLabel()
 
     -- 进度条头图标
-    display.newSprite("progress_bg_head_43x43.png"):addTo(bar):pos(0, 20)
+    display.newSprite("back_ground_43x43.png"):addTo(bar):pos(0, 20)
     display.newSprite("icon_treat_soldier.png"):addTo(bar):pos(0, 20)
 end
 

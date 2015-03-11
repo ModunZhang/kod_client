@@ -128,7 +128,7 @@ function GameUIAllianceContribute:CreateContributeGroup()
     local gem = City:GetUser():GetGemResource():GetValue()
     local group_table = {
         {
-            icon="wood_icon.png",
+            icon="res_wood_114x100.png",
             own=wood,
             donate=self:GetDonateValueByType("wood").count
         },
@@ -138,12 +138,12 @@ function GameUIAllianceContribute:CreateContributeGroup()
             donate=self:GetDonateValueByType("stone").count
         },
         {
-            icon="food_icon.png",
+            icon="res_food_114x100.png",
             own=food,
             donate=self:GetDonateValueByType("food").count
         },
         {
-            icon="iron_icon.png",
+            icon="res_iron_114x100.png",
             own=iron,
             donate=self:GetDonateValueByType("iron").count
         },

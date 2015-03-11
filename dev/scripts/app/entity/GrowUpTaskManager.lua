@@ -53,9 +53,9 @@ local rewards_icon_map = {
     gem = "gem_66x56.png",
     exp = "upgrade_experience_icon.png",
     coin = "coin_icon.png",
-    food = "food_icon.png",
-    wood = "wood_icon.png",
-    iron = "iron_icon.png",
+    food = "res_food_114x100.png",
+    wood = "res_wood_114x100.png",
+    iron = "res_iron_114x100.png",
     stone = "stone_icon.png",
 }
 

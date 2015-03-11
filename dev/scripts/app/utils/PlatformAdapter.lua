@@ -103,6 +103,16 @@ function PlatformAdapter:common()
     cc.SCROLLVIEW_DIRECTION_HORIZONTAL = 0
     cc.SCROLLVIEW_DIRECTION_VERTICAL = 1
     cc.SCROLLVIEW_DIRECTION_BOTH  = 2
+    --打开文件搜索路径
+    cc.FileUtils:getInstance():setPopupNotify(true)
+    local printError__ = printError
+    printError = function(...)
+        printError__(...)
+        local errDesc =   debug.traceback("", 2)
+        device.showAlert("☠Quick Framework错误☠",errDesc,"复制！",function()
+            ext.copyText(errDesc)
+        end)
+    end
 end
 
 --------------------------------------------------------------------

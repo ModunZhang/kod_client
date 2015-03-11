@@ -140,7 +140,7 @@ function GameUIDragonEyrieDetail:CreateHateUIIf()
 	end
 	local hate_node = display.newNode():addTo(self)
 	local hate_button = WidgetPushButton.new({
-			normal = "dragon_yellow_button.png",pressed = "dragon_yellow_button_h.png"
+			normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"
 		}):setButtonLabel("normal",UIKit:ttfLabel({
 			text = _("开始孵化"),
 			size = 24,
@@ -370,7 +370,7 @@ function GameUIDragonEyrieDetail:GetEquipmentItem(equipment_obj,needInfoIcon)
 		equipment_node = display.newSprite(bgImage):scale(0.71)
 		local icon = display.newFilteredSprite(bodyImage,"GRAY", {0.2, 0.3, 0.5, 0.1}):addTo(equipment_node):pos(73,73)
 		icon:setOpacity(25)
-		display.newSprite("dragon_eq_lock_80x104.png", 73, 73):addTo(equipment_node)
+		display.newSprite("lock_80x104.png", 73, 73):addTo(equipment_node)
 
 	else
 		equipment_node:setTouchEnabled(true)
@@ -460,7 +460,7 @@ function GameUIDragonEyrieDetail:CreateNodeIf_skill()
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         alignment = cc.ui.UIListView.ALIGNMENT_LEFT      
     }:addTo(list_bg)
-    local add_button = WidgetPushButton.new({normal = "add_button_normal_50x50.png",pressed = "add_button_light_50x50.png"})
+    local add_button = WidgetPushButton.new({normal = "add_btn_up_50x50.png",pressed = "add_btn_down_50x50.png"})
  		:addTo(header_bg)
  		:scale(0.7)
  		:align(display.RIGHT_CENTER,540,20)

@@ -151,7 +151,7 @@ function GameUICollectReport:CreateBootyPart()
             booty_item_bg_color_flag = not booty_item_bg_color_flag
         end
     end
-    local booty_title_bg = display.newSprite("upgrade_resources_title.png")
+    local booty_title_bg = display.newSprite("alliance_evnets_title_548x50.png")
         :align(display.CENTER_BOTTOM, 0,booty_list_bg and booty_list_bg:getContentSize().height/2-25 or -25)
 
     booty_group:addChild(booty_title_bg)

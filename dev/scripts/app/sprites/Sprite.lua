@@ -146,7 +146,7 @@ function Sprite:GenerateBaseTiles(w, h)
 end
 function Sprite:newBatchNode(w, h)
     local start_x, end_x, start_y, end_y = self:GetLocalRegion(w, h)
-    local base_node = display.newBatchNode("tile.png", 10)
+    local base_node = display.newBatchNode("tmxmaps/tile.png", 10)
     local map = self:GetLogicMap()
     for ix = start_x, end_x do
         for iy = start_y, end_y do

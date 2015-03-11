@@ -273,7 +273,7 @@ function UIKit:GetPlayerCommonIcon()
 end
 
 function UIKit:GetPlayerIconOnly()
-    return display.newSprite("Hero_1.png")
+    return display.newSprite("playerIcon_default.png")
 end
 --TODO:将这个函数替换成CreateBoxPanel9来实现
 function UIKit:CreateBoxPanel(height)

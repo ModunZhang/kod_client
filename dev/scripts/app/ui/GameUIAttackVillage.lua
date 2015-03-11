@@ -25,7 +25,7 @@ function GameUIAttackVillage:onEnter()
     local report = self.report
     local report_body = self.body
     local rb_size = report_body:getContentSize()
-    local title = display.newSprite("report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+10)
+    local title = display.newSprite("title_blue_600x52.png"):align(display.CENTER, rb_size.width/2, rb_size.height+10)
         :addTo(report_body)
     local title_label = UIKit:ttfLabel(
         {
@@ -118,7 +118,7 @@ function GameUIAttackVillage:onEnter()
 
     replay_label:enableShadow()
     WidgetPushButton.new(
-        {normal = "keep_unlocked_button_normal.png", pressed = "keep_unlocked_button_pressed.png"},
+        {normal = "yellow_btn_up_149x47.png", pressed = "yellow_btn_down_149x47.png"},
         {scale9 = false}
     ):setButtonLabel(replay_label)
         :addTo(report_body):align(display.CENTER, report_body:getContentSize().width-120, rb_size.height-186)
@@ -231,7 +231,7 @@ function GameUIAttackVillage:CreateBootyPart()
             booty_item_bg_color_flag = not booty_item_bg_color_flag
         end
     end
-    local booty_title_bg = display.newSprite("upgrade_resources_title.png")
+    local booty_title_bg = display.newSprite("alliance_evnets_title_548x50.png")
         :align(display.CENTER_BOTTOM, 0,booty_list_bg and booty_list_bg:getContentSize().height/2-25 or 0)
 
     booty_group:addChild(booty_title_bg)
@@ -472,7 +472,7 @@ function GameUIAttackVillage:CreateBelligerentsItem(player)
     -- 玩家头像
     local heroBg = display.newSprite("chat_hero_background.png"):align(display.CENTER, 50, height/2):addTo(player_item)
     heroBg:setScale(0.6)
-    local hero = display.newSprite("Hero_1.png"):align(display.CENTER, 50, height/2)
+    local hero = display.newSprite("playerIcon_default.png"):align(display.CENTER, 50, height/2)
         :addTo(player_item):setScale(0.5)
     -- 玩家名称
     UIKit:ttfLabel({

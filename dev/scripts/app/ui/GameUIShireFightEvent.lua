@@ -89,7 +89,7 @@ function GameUIShireFightEvent:BuildUI()
 	local background = WidgetUIBackGround.new({height = HEIGHT})
 		:addTo(layer)
 		:pos(window.left+22,window.top - 101 - HEIGHT)
-	local title_bar = display.newSprite("alliance_blue_title_600x42.png"):align(display.LEFT_BOTTOM, 0,HEIGHT - 15):addTo(background)
+	local title_bar = display.newSprite("title_blue_600x52.png"):align(display.LEFT_BOTTOM, 0,HEIGHT - 15):addTo(background)
 	UIKit:ttfLabel({
 		text = _("事件详情"),
 		size = 22,
@@ -139,7 +139,7 @@ function GameUIShireFightEvent:BuildUI()
 		color = 0x797154
 	}):align(display.CENTER,287,51):addTo(tips_box)
 	self:RefreshListView()
-	local icon_bg = display.newSprite("progress_bg_head_43x43.png")
+	local icon_bg = display.newSprite("back_ground_43x43.png")
 		:align(display.LEFT_TOP, 20, tips_box:getPositionY() - tips_box:getContentSize().height - 10)
 		:addTo(background):scale(0.7)
 	display.newSprite("hourglass_39x46.png"):align(display.CENTER, 22, 22):addTo(icon_bg)
@@ -148,7 +148,7 @@ function GameUIShireFightEvent:BuildUI()
 		size = 22,
 		color = 0x403c2f
 	}):align(display.LEFT_TOP,icon_bg:getPositionX()+icon_bg:getContentSize().width*0.7+10,icon_bg:getPositionY()):addTo(background)
-	local population_icon = display.newSprite("population.png"):scale(0.7):align(display.RIGHT_TOP,520,icon_bg:getPositionY()+2):addTo(background)
+	local population_icon = display.newSprite("res_citizen_44x50.png"):scale(0.7):align(display.RIGHT_TOP,520,icon_bg:getPositionY()+2):addTo(background)
 	self.popultaion_label = UIKit:ttfLabel({
 		text = #self:GetFightEvent():PlayerTroops() .. "/" .. self:GetFightEvent():Stage():SuggestPlayer(),
 		size = 22,
@@ -210,7 +210,7 @@ function GameUIShireFightEvent:GetListItem(arrived,obj)
 		size = 20,
 		shadow = true
 	}):align(display.LEFT_CENTER,10,15):addTo(title_bar)
-	local icon_bg = display.newSprite("progress_bg_head_43x43.png")
+	local icon_bg = display.newSprite("back_ground_43x43.png")
 		:align(display.LEFT_BOTTOM, icon:getPositionX()+icon:getContentSize().width + 10, 13)
 		:addTo(bg):scale(0.7)
 	display.newSprite("hourglass_39x46.png"):align(display.CENTER, 22, 22):addTo(icon_bg)

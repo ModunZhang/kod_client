@@ -24,7 +24,7 @@ function GameUIDragonSkill:onEnter()
   UIKit:shadowLayer():addTo(self,-1)
 	self.backgroundImage = WidgetUIBackGround.new({height=BODY_HEIGHT}):addTo(self)
 	self.backgroundImage:pos((display.width-self.backgroundImage:getContentSize().width)/2,display.height - self.backgroundImage:getContentSize().height - 280)
-	local titleBar = display.newSprite("alliance_blue_title_600x42.png")
+	local titleBar = display.newSprite("title_blue_600x52.png")
 		:align(display.BOTTOM_LEFT, 2,self.backgroundImage:getContentSize().height - 15)
 		:addTo(self.backgroundImage)
 
@@ -64,8 +64,8 @@ function GameUIDragonSkill:onEnter()
 	}):addTo(self.backgroundImage):align(display.LEFT_TOP, skillBg:getPositionX()+skillBg:getContentSize().width+20, titleLabel:getPositionY()- titleLabel:getContentSize().height - 10)
   self.descLabel = descLabel
 	local upgradeButton = WidgetPushButton.new({
-    normal = "dragon_yellow_button.png",
-    pressed = "dragon_yellow_button_h.png"}, {scale9 = false},{disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}})
+    normal = "yellow_btn_up_185x65.png",
+    pressed = "yellow_btn_down_185x65.png"}, {scale9 = false},{disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}})
       :setButtonLabel("normal",cc.ui.UILabel.new({
           UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
           text = _("学习"),

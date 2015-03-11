@@ -856,7 +856,7 @@ function GameUIMail:ShowSendMailDetails(mail)
         :addTo(title_bg)
     -- player head icon
     local heroBg = display.newSprite("chat_hero_background.png"):align(display.CENTER, 76, bg:getContentSize().height - 70):addTo(bg)
-    local hero = display.newSprite("Hero_1.png"):align(display.CENTER, math.floor(heroBg:getContentSize().width/2), math.floor(heroBg:getContentSize().height/2)+5)
+    local hero = display.newSprite("playerIcon_default.png"):align(display.CENTER, math.floor(heroBg:getContentSize().width/2), math.floor(heroBg:getContentSize().height/2)+5)
     hero:addTo(heroBg)
     --close button
     cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
@@ -961,7 +961,7 @@ function GameUIMail:ShowMailDetails(mail)
         :addTo(title_bg)
     -- player head icon
     local heroBg = display.newSprite("chat_hero_background.png"):align(display.CENTER, 76, bg:getContentSize().height - 70):addTo(bg)
-    local hero = display.newSprite("Hero_1.png"):align(display.CENTER, math.floor(heroBg:getContentSize().width/2), math.floor(heroBg:getContentSize().height/2)+5)
+    local hero = display.newSprite("playerIcon_default.png"):align(display.CENTER, math.floor(heroBg:getContentSize().width/2), math.floor(heroBg:getContentSize().height/2)+5)
     hero:addTo(heroBg)
     --close button
     cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
@@ -1058,7 +1058,7 @@ function GameUIMail:ShowMailDetails(mail)
 
             replay_label:enableShadow()
             WidgetPushButton.new(
-                {normal = "keep_unlocked_button_normal.png", pressed = "keep_unlocked_button_pressed.png"},
+                {normal = "yellow_btn_up_149x47.png", pressed = "yellow_btn_down_149x47.png"},
                 {scale9 = false}
             ):setButtonLabel(replay_label)
                 :addTo(bg):align(display.CENTER, bg:getContentSize().width-140, 50)
@@ -1418,7 +1418,7 @@ function GameUIMail:CreateReplyMail(mail)
 
     send_label:enableShadow()
     WidgetPushButton.new(
-        {normal = "keep_unlocked_button_normal.png", pressed = "keep_unlocked_button_pressed.png"},
+        {normal = "yellow_btn_up_149x47.png", pressed = "yellow_btn_down_149x47.png"},
         {scale9 = false}
     ):setButtonLabel(send_label)
         :addTo(reply_mail):align(display.CENTER, reply_mail:getContentSize().width-120, 40)

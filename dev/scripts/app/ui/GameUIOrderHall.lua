@@ -98,9 +98,9 @@ function GameUIOrderHall:CreateVillageItem(village_type,village_level)
     local content = WidgetUIBackGround.new({width=item_width,height=item_height},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
 
     -- 建筑图片 放置区域左右边框
-    cc.ui.UIImage.new("building_image_box.png"):align(display.LEFT_CENTER, 10, 120)
+    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.LEFT_CENTER, 10, 120)
         :addTo(content):flipX(true)
-    cc.ui.UIImage.new("building_image_box.png"):align(display.RIGHT_CENTER, 143, 120)
+    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.RIGHT_CENTER, 143, 120)
         :addTo(content)
 
     local build_png = SpriteConfig[village_type]:GetConfigByLevel(village_level).png

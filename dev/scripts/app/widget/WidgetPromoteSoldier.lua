@@ -140,7 +140,7 @@ function WidgetPromoteSoldier:UpgradeButtons()
 
 
     -- 立即升级所需宝石
-    display.newSprite("Topaz-icon.png", size.width/2 - 250, size.height-290):addTo(body):setScale(0.5)
+    display.newSprite("gem_66x56.png", size.width/2 - 250, size.height-290):addTo(body):setScale(0.5)
     self.upgrade_now_need_gems_label = UIKit:ttfLabel({
         text = self:GetInstantUpgradeGems(),
         size = 20,
@@ -149,7 +149,7 @@ function WidgetPromoteSoldier:UpgradeButtons()
     --升级所需时间
     local level_up_config = self:GetNextLevelConfig()
 
-    display.newSprite("upgrade_hourglass.png", size.width/2+100, size.height-290):addTo(body):setScale(0.6)
+    display.newSprite("hourglass_39x46.png", size.width/2+100, size.height-290):addTo(body):setScale(0.6)
     self.upgrade_time = UIKit:ttfLabel({
         text = GameUtils:formatTimeStyle1(level_up_config.upgradeTimeSecondsNeed),
         size = 18,
@@ -257,7 +257,7 @@ function WidgetPromoteSoldier:PopNotSatisfyDialog(upgrade_listener,results)
     if need_gem==0 then
         dialog:CreateCancelButton()
     else
-        dialog:CreateNeeds("Topaz-icon.png",self:GetUpgradeGems())
+        dialog:CreateNeeds("gem_66x56.png",self:GetUpgradeGems())
     end
 end
 function WidgetPromoteSoldier:GetInstantUpgradeGems()

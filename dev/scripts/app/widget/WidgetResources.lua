@@ -84,7 +84,7 @@ function WidgetResources:InitAllResources()
     local crm = City:GetResourceManager()
     local all_resources = {
         food = {
-            resource_icon="food_icon.png",
+            resource_icon="res_food_114x100.png",
             resource_limit_value=maxfood,
             resource_current_value=crm:GetFoodResource():GetResourceValueByCurrentTime(current_time),
             total_income=crm:GetFoodProductionPerHour().."/h",
@@ -92,7 +92,7 @@ function WidgetResources:InitAllResources()
             maintenance_cost="-"..self.city:GetSoldierManager():GetTotalUpkeep(),
         },
         wood = {
-            resource_icon="wood_icon.png",
+            resource_icon="res_wood_114x100.png",
             resource_limit_value=maxwood,
             resource_current_value=crm:GetWoodResource():GetResourceValueByCurrentTime(current_time),
             total_income=crm:GetWoodResource():GetProductionPerHour().."/h",
@@ -106,7 +106,7 @@ function WidgetResources:InitAllResources()
             occupy_citizen=City:GetCitizenByType("quarrier"),
         },
         iron = {
-            resource_icon="iron_icon.png",
+            resource_icon="res_iron_114x100.png",
             resource_limit_value=maxiron,
             resource_current_value=crm:GetIronResource():GetResourceValueByCurrentTime(current_time),
             total_income=crm:GetIronResource():GetProductionPerHour().."/h",

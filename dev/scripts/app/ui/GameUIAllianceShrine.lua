@@ -355,7 +355,7 @@ function GameUIAllianceShrine:BuildFightItemBox(event)
 	local player_count_bg = display.newScale9Sprite("box_bg_item_520x48_0.png")
 			:size(377,40):addTo(box,2)
 			:align(display.LEFT_BOTTOM, 11,player_strengh_bg:getPositionY()+40)
-	display.newSprite("population.png"):scale(0.7):align(display.LEFT_CENTER,5,20):addTo(player_count_bg,2)
+	display.newSprite("res_citizen_44x50.png"):scale(0.7):align(display.LEFT_CENTER,5,20):addTo(player_count_bg,2)
 	display.newSprite("dragon_strength_27x31.png"):align(display.LEFT_CENTER,5,20):addTo(player_strengh_bg,2)
 	UIKit:ttfLabel({
 		text = _("建议玩家数量"),
@@ -474,7 +474,7 @@ function GameUIAllianceShrine:BuildReportItemBox(report)
 	local player_count_bg = display.newScale9Sprite("box_bg_item_520x48_0.png")
 			:size(377,40):addTo(box,2)
 			:align(display.LEFT_BOTTOM, 11,player_strengh_bg:getPositionY()+40)
-	display.newSprite("population.png"):scale(0.7):align(display.LEFT_CENTER,5,20):addTo(player_count_bg,2)
+	display.newSprite("res_citizen_44x50.png"):scale(0.7):align(display.LEFT_CENTER,5,20):addTo(player_count_bg,2)
 	display.newSprite("dragon_strength_27x31.png"):align(display.LEFT_CENTER,5,20):addTo(player_strengh_bg,2)
 	UIKit:ttfLabel({
 		text = _("参与玩家"),

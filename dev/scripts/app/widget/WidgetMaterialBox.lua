@@ -18,7 +18,7 @@ function WidgetMaterialBox:ctor(material_type,material_name,cb,is_has_i_icon)
     local material = cc.ui.UIImage.new(self:GetMaterialImage(material_type,material_name)):addTo(self.material_bg)
         :align(display.LEFT_BOTTOM, 5, 5)
     -- if is_has_i_icon then
-    --     local material_bg_i = cc.ui.UIImage.new("back_ground_i_46X45.png"):addTo(self.material_bg,2)
+    --     local material_bg_i = cc.ui.UIImage.new("info_46x45.png"):addTo(self.material_bg,2)
     --         :align(display.BOTTOM_RIGHT, rect.width, 0)
     -- end
 

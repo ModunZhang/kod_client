@@ -9,7 +9,7 @@ function WidgetPopDialog:ctor(height,title_text,y,title_bg)
     local body = self.body
     self:addTouchAbleChild(body)
     local rb_size = body:getContentSize()
-    local title = display.newSprite(title_bg or "report_title.png"):align(display.CENTER, rb_size.width/2, rb_size.height+10)
+    local title = display.newSprite(title_bg or "title_blue_600x52.png"):align(display.CENTER, rb_size.width/2, rb_size.height+10)
         :addTo(body)
     self.title_label = UIKit:ttfLabel({
         text = title_text,
