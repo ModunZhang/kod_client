@@ -144,7 +144,7 @@ function GameUIAllianceHome:TopTabButtons()
         pressed = "allianceHome/btn_196x44_light.png"})
         :onButtonClicked(function (event)
             if event.name == "CLICKED_EVENT" then
-               GameUIAllianceContribute.new():addToCurrentScene(true)
+                GameUIAllianceContribute.new():addToCurrentScene(true)
             end
         end)
         :align(display.CENTER, 145, btn_bg:getContentSize().height/2-1)
@@ -226,7 +226,7 @@ function GameUIAllianceHome:TopTabButtons()
             color = 0xf5e8c4
         }):align(display.LEFT_CENTER, -15, coordinate_btn:getContentSize().height/2-10)
         :addTo(coordinate_btn)
-   
+
 
 end
 
@@ -538,7 +538,7 @@ function GameUIAllianceHome:CreateBottom()
     local size = chat_bg:getContentSize()
     local pv = UIPageView.new {
         viewRect =  cc.rect(10, 4, size.width-80, size.height),
-         row = 2,
+        row = 2,
         padding = {left = 0, right = 0, top = 10, bottom = 0}
     }
         :onTouch(function (event)
@@ -678,12 +678,9 @@ function GameUIAllianceHome:OnBasicChanged(alliance,changed_map)
         self.top:Refresh()
     end
 end
-function GameUIAllianceHome:OnMemberChanged(alliance,changed_map)
-    for i,v in pairs(changed_map.changed) do
-        if v.id == DataManager:getUserData()._id then
-            self.loyalty_label:setString(GameUtils:formatNumber(v.loyalty))
-        end
-    end
+function GameUIAllianceHome:OnMemberChanged(alliance)
+    local self_member = alliance:GetMemeberById(DataManager:getUserData()._id)
+    self.loyalty_label:setString(GameUtils:formatNumber(self_member.loyalty))
 end
 -- function GameUIAllianceHome:OnAllianceCountInfoChanged(alliance,countInfo)
 --     self.count = 0
@@ -725,7 +722,7 @@ function GameUIAllianceHome:OnAllianceFightChanged(alliance,allianceFight)
         if our and enemy then
             self.top:SetOurPowerOrKill(our.kill)
             self.top:SetEnemyPowerOrKill(enemy.kill)
-    end
+        end
     end
 end
 function GameUIAllianceHome:OnTimer(current_time)
@@ -760,6 +757,8 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
+
 
 
 

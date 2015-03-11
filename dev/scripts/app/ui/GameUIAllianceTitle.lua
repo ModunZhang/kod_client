@@ -10,7 +10,7 @@ local UIListView = import(".UIListView")
 local UIScrollView = import(".UIScrollView")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetPages = import("..widget.WidgetPages")
-local AllianceMember = import("..entity.AllianceMember")
+local memberMeta = import("..entity.memberMeta")
 local UILib = import(".UILib")
 local Alliance_Manager = Alliance_Manager
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
@@ -66,7 +66,7 @@ function GameUIAllianceTitle:BuildUI()
 	}):align(display.CENTER,title_bar:getContentSize().width/2, title_bar:getContentSize().height/2)
 		:addTo(title_bar)
 	local titles,images = self:GetAllTitlesAndImages()
-	local member_level = AllianceMember.Title2Level(self.title_)
+	local member_level = memberMeta.Title2Level(self.title_)
 	local widget_page = WidgetPages.new({
         page = #titles, -- 页数
         titles =  titles, -- 标题 type -> table
@@ -161,7 +161,7 @@ end
 
 function GameUIAllianceTitle:RefreshTitle()
 	local alliance = Alliance_Manager:GetMyAlliance()
-	local index =  AllianceMember.Title2Level(self.title_)
+	local index =  memberMeta.Title2Level(self.title_)
 	self.widget_page:ResetOneTitle(alliance:GetTitles()[self.title_],index)
 end
 

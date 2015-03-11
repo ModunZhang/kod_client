@@ -457,6 +457,15 @@ a:hello()
 
 
 
+-- local memberMeta = import("app.entity.memberMeta")
+
+
+-- local t = memberMeta:DecodeFromJson({
+--     id = 1
+--     })
+
+
+
 
 
 
