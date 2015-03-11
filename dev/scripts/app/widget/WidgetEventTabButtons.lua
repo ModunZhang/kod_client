@@ -50,7 +50,7 @@ end
 function WidgetEventTabButtons:OnUpgrading(building, current_time, city)
     if self:IsShow() and self:GetCurrentTab() == "build" then
         self:IteratorAllItem(function(i, v)
-            if v:GetEventKey() == building:UniqueKey() then
+            if i ~= 1 and v:GetEventKey() == building:UniqueKey() then
                 v:SetProgressInfo(self:BuildingDescribe(building))
                 self:SetProgressItemBtnLabel(self:IsAbleToFreeSpeedup(building),building:UniqueUpgradingKey(),v)
             end
@@ -68,7 +68,9 @@ end
 function WidgetEventTabButtons:OnRecruiting(barracks, event, current_time)
     if self:IsShow() and self:GetCurrentTab() == "soldier" then
         self:IteratorAllItem(function(i, v)
-            v:SetProgressInfo(self:SoldierDescribe(event))
+            if i ~= 1 then
+                v:SetProgressInfo(self:SoldierDescribe(event))
+            end
         end)
     end
 end
@@ -82,7 +84,7 @@ end
 function WidgetEventTabButtons:OnMakingEquipmentWithEvent(black_smith, event, current_time)
     if self:IsShow() and self:GetCurrentTab() == "material" then
         self:IteratorAllItem(function(i, v)
-            if v:GetEventKey() == event:UniqueKey() then
+            if i ~= 1 and v:GetEventKey() == event:UniqueKey() then
                 v:SetProgressInfo(self:EquipmentDescribe(event))
             end
         end)
@@ -98,7 +100,7 @@ end
 function WidgetEventTabButtons:OnMakingMaterialsWithEvent(tool_shop, event, current_time)
     if self:IsShow() and self:GetCurrentTab() == "material" then
         self:IteratorAllItem(function(i, v)
-            if v:GetEventKey() == event:UniqueKey() then
+            if i ~= 1 and v:GetEventKey() == event:UniqueKey() then
                 v:SetProgressInfo(self:MaterialDescribe(event))
             end
         end)
