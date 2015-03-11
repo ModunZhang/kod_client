@@ -22,7 +22,7 @@ local soldier_arrange = {
     lancer = {row = 3, col = 1},
     catapult = {row = 2, col = 1},
 
-    horseArcher = {row = 4, col = 2},
+    horseArcher = {row = 3, col = 1},
     ballista = {row = 4, col = 2},
     skeletonWarrior = {row = 3, col = 1},
     skeletonArcher = {row = 2, col = 1},
@@ -497,13 +497,13 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
         :setDirection(UIScrollView.DIRECTION_HORIZONTAL)
         :addTo(self)
     -- 战斗力，人口，负重信息展示背景框
-    local info_bg = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
+    local info_bg = cc.LayerColor:create(UIKit:hex2c4b(0x7a000000))
         :pos(window.left+14, window.top-355)
         :addTo(self)
     info_bg:setTouchEnabled(false)
-    info_bg:setContentSize(620, 45)
+    info_bg:setContentSize(620, 46)
     local function createInfoItem(title,value)
-        local info = display.newLayer()
+        local info = cc.Layer:create()
         local value_label = UIKit:ttfLabel({
             text = value,
             size = 18,
@@ -523,9 +523,6 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
         end
         return info
     end
-
-
-
 
     -- line
     local line = display.newSprite(img_dir.."line_624x4.png")
@@ -608,10 +605,10 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
             for index,v in pairs(soldiers) do
                 local corp = self:NewCorps(v.soldier_type,v.power):addTo(self)
                 corp:PlayAnimation("idle_2")
-                x = x - (count ~= 0 and pre_width or corp:getCascadeBoundingBox().size.width/2) -10
-                pre_width = corp:getCascadeBoundingBox().size.width
-                if v.soldier_type =="lancer" then
-                    pre_width = pre_width-60
+                x = x - (count ~= 0 and pre_width or corp:getCascadeBoundingBox().size.width/2)
+                pre_width = corp:getCascadeBoundingBox().size.width/2+40
+                if v.soldier_type =="lancer" or v.soldier_type =="lancer" then
+                    pre_width = pre_width - 60
                 end
                 corp:pos(x,y)
                 count = count + 1
