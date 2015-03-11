@@ -110,7 +110,6 @@ function WidgetAccelerateGroup:ctor(eventType,eventId)
                             eventType = eventType,
                             eventId = eventId
                         }})
-                        print("eventType",eventType,"speedUp_item_name",speedUp_item_name,"eventId",eventId)
                     end
                 end
             end
