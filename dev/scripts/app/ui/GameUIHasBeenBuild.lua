@@ -57,7 +57,6 @@ function GameUIHasBeenBuild:onEnter()
     self.build_city:AddListenOnType(self, self.build_city.LISTEN_TYPE.UPGRADE_BUILDING)
     GameUIHasBeenBuild.super.onEnter(self)
 
-
     self.queue = self:LoadBuildingQueue():addTo(self)
     self:UpdateBuildingQueue(self.build_city)
 
@@ -210,7 +209,7 @@ function GameUIHasBeenBuild:CreateListView(buildings)
     -- local list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 180)
     local list_view ,listnode=  UIKit:commonListView({
         -- bgColor = UIKit:hex2c4b(0x7a100000),
-        viewRect = cc.rect(0, 0, 568, 706),
+        viewRect = cc.rect(0, 0, 568, 680),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     })
     listnode:addTo(self):align(display.BOTTOM_CENTER,window.cx,window.bottom_top + 20)
@@ -249,7 +248,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
     local item = list_view:newItem()
     local back_ground = WidgetUIBackGround.new({
         width = 568,
-        height = 142,
+        height = 150,
         top_img = "back_ground_568x16_top.png",
         bottom_img = "back_ground_568x80_bottom.png",
         mid_img = "back_ground_568x28_mid.png",
@@ -263,15 +262,11 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
     item:setItemSize(w, h)
 
     local left_x, right_x = 5, 150
-    local left = display.newSprite("building_frame_36x136.png")
-        :addTo(back_ground):align(display.LEFT_CENTER, left_x, h/2):flipX(true)
-
-    display.newSprite("building_frame_36x136.png")
-        :addTo(back_ground):align(display.RIGHT_CENTER, right_x, h/2)
+    local frame = display.newSprite("bg_134x134.png"):addTo(back_ground):pos((left_x + right_x) / 2, h/2)
 
     local info_btn = WidgetPushButton.new(
         {normal = "info_26x26.png",pressed = "info_26x26.png"})
-        :addTo(left)
+        :addTo(frame)
         :align(display.CENTER, 16, 16)
 
 
@@ -290,7 +285,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         align = cc.ui.TEXT_ALIGN_LEFT,
         color = UIKit:hex2c3b(0xffedae)
     }):addTo(title_blue, 2)
-        :align(display.LEFT_CENTER, 30, size.height/2)
+        :align(display.LEFT_CENTER, 23 - 5, size.height/2)
 
 
     local condition_label = cc.ui.UILabel.new({
@@ -299,7 +294,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         align = cc.ui.TEXT_ALIGN_LEFT,
         color = UIKit:hex2c3b(0x7e0000)
     }):addTo(back_ground, 2)
-        :align(display.LEFT_CENTER, 170, h/2)
+        :align(display.LEFT_CENTER, 170 - 5, h/2)
 
 
 
@@ -309,7 +304,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         align = cc.ui.TEXT_ALIGN_LEFT,
         color = UIKit:hex2c3b(0x403c2f)
     }):addTo(back_ground, 2)
-        :align(display.LEFT_CENTER, 170, 35)
+        :align(display.LEFT_CENTER, 170 - 5, 35)
 
 
     local free_speedUp = WidgetPushButton.new(

@@ -4,6 +4,7 @@ local Localize = import("..utils.Localize")
 local SoldierManager = import("..entity.SoldierManager")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUIMilitaryTechSpeedUp = import("..ui.GameUIMilitaryTechSpeedUp")
+local GameUITechnologySpeedUp = import("..ui.GameUITechnologySpeedUp")
 local GameUIBuildingSpeedUp = import("..ui.GameUIBuildingSpeedUp")
 local GameUIBarracksSpeedUp = import("..ui.GameUIBarracksSpeedUp")
 local GameUIToolShopSpeedUp = import("..ui.GameUIToolShopSpeedUp")
@@ -49,7 +50,7 @@ end
 function WidgetEventTabButtons:OnUpgrading(building, current_time, city)
     if self:IsShow() and self:GetCurrentTab() == "build" then
         self:IteratorAllItem(function(i, v)
-            if v:GetEventKey() == building:UniqueKey() then
+            if i ~= 1 and v:GetEventKey() == building:UniqueKey() then
                 v:SetProgressInfo(self:BuildingDescribe(building))
                 self:SetProgressItemBtnLabel(self:IsAbleToFreeSpeedup(building),building:UniqueUpgradingKey(),v)
             end
@@ -67,7 +68,9 @@ end
 function WidgetEventTabButtons:OnRecruiting(barracks, event, current_time)
     if self:IsShow() and self:GetCurrentTab() == "soldier" then
         self:IteratorAllItem(function(i, v)
-            v:SetProgressInfo(self:SoldierDescribe(event))
+            if i ~= 1 then
+                v:SetProgressInfo(self:SoldierDescribe(event))
+            end
         end)
     end
 end
@@ -81,7 +84,7 @@ end
 function WidgetEventTabButtons:OnMakingEquipmentWithEvent(black_smith, event, current_time)
     if self:IsShow() and self:GetCurrentTab() == "material" then
         self:IteratorAllItem(function(i, v)
-            if v:GetEventKey() == event:UniqueKey() then
+            if i ~= 1 and v:GetEventKey() == event:UniqueKey() then
                 v:SetProgressInfo(self:EquipmentDescribe(event))
             end
         end)
@@ -97,7 +100,7 @@ end
 function WidgetEventTabButtons:OnMakingMaterialsWithEvent(tool_shop, event, current_time)
     if self:IsShow() and self:GetCurrentTab() == "material" then
         self:IteratorAllItem(function(i, v)
-            if v:GetEventKey() == event:UniqueKey() then
+            if i ~= 1 and v:GetEventKey() == event:UniqueKey() then
                 v:SetProgressInfo(self:MaterialDescribe(event))
             end
         end)
@@ -181,7 +184,9 @@ function WidgetEventTabButtons:ctor(city, ratio)
     city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
     city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_ALL_CHANGED)
     city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
-
+    city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_TIMER)
+    city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
+    city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH)
 
     self:Reset()
     self:ShowStartEvent()
@@ -244,6 +249,9 @@ function WidgetEventTabButtons:onExit()
     self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
     self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_ALL_CHANGED)
     self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+    self.city:RemoveListenerOnType(self,self.city.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH)
+    self.city:RemoveListenerOnType(self,self.city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
+    self.city:RemoveListenerOnType(self,self.city.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH)
 end
 function WidgetEventTabButtons:InsertEvent(func)
     table.insert(self.event_queue, func)
@@ -509,7 +517,7 @@ end
 -- 操作
 function WidgetEventTabButtons:IteratorAllItem(func)
     for i, v in pairs(self.item_array) do
-        if i ~= 1 and func(i, v) then
+        if func(i, v) then
             return
         end
     end
@@ -784,9 +792,26 @@ function WidgetEventTabButtons:Load()
                     self:InsertItem(item)
                 end
             elseif k == "technology" then
-                self:InsertItem(self:CreateBottom():OnOpenClicked(function(event)
-                    UIKit:newGameUI('GameUIQuickTechnology', self.city):addToCurrentScene(true)
-                end):SetLabel(_("查看现有的科技")))
+                if City:HaveProductionTechEvent() then
+                    City:IteratorProductionTechEvents(function(event)
+                            local item = self:CreateItem()
+                            :SetProgressInfo(self:GetProductionTechnologyEventProgressInfo(event))
+                            :SetEventKey(event:Id())
+                            :OnClicked(
+                                function(e)
+                                    if e.name == "CLICKED_EVENT" then
+                                        self:ProductionTechnologyEventUpgradeOrSpeedup(event)
+                                    end
+                                end
+                            )
+                        self:SetProgressItemBtnLabel(DataUtils:getFreeSpeedUpLimitTime()>event:GetTime(),event:Id(),item)
+                        self:InsertItem(item)
+                    end)
+                else
+                    self:InsertItem(self:CreateBottom():OnOpenClicked(function(event)
+                        UIKit:newGameUI('GameUIQuickTechnology', self.city):addToCurrentScene(true)
+                    end):SetLabel(_("查看现有的科技")))
+                end
 
                 -- 军事科技部分
                 local soldier_manager = self.city:GetSoldierManager()
@@ -957,7 +982,49 @@ function WidgetEventTabButtons:MilitaryTechDescribe(event)
     local str = event:GetLocalizeDesc().."  "..GameUtils:formatTimeStyle1(event:GetTime())
     return str, event:Percent(current_time)
 end
+--学院科技
+function WidgetEventTabButtons:OnProductionTechnologyEventTimer(event)
+     if self:IsShow() and self:GetCurrentTab() == "technology" then
+        self:IteratorAllItem(function(i, v)
+            if v.GetEventKey and v:GetEventKey() == event:Id() then
+                v:SetProgressInfo(self:GetProductionTechnologyEventProgressInfo(event))
+                self:SetProgressItemBtnLabel(DataUtils:getFreeSpeedUpLimitTime()>event:GetTime(),event:Id(),v)
+            end
+        end)
+    end
+end
+function WidgetEventTabButtons:OnProductionTechnologyEventDataChanged(changed_map)
+   self:OnProductionTechnologyEventDataRefresh()
+end
+function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh()
+    self:EventChangeOn("technology")
+end
 
+function WidgetEventTabButtons:ProductionTechnologyEventUpgradeOrSpeedup(event)
+    if DataUtils:getFreeSpeedUpLimitTime() > event:GetTime() then
+        NetManager:getFreeSpeedUpPromise("productionTechEvents",event:Id()):next(function()
+
+        end)
+    else
+        if not Alliance_Manager:GetMyAlliance():IsDefault() then
+            -- 是否已经申请过联盟加速
+            local isRequested = Alliance_Manager:GetMyAlliance():HasBeenRequestedToHelpSpeedup(event:Id())
+            if not isRequested then
+                NetManager:getRequestAllianceToSpeedUpPromise("productionTechEvents",event:Id())
+                    :next(function()
+                        self:OnProductionTechnologyEventDataRefresh()
+                    end)
+                return
+            end
+        end
+        -- 没加入联盟或者已加入联盟并且申请过帮助时执行使用道具加速
+        GameUITechnologySpeedUp.new():addToCurrentScene(true)
+    end
+end
+
+function WidgetEventTabButtons:GetProductionTechnologyEventProgressInfo(event)
+    return _("研发") .. event:Entity():GetLocalizedName() .. " " .. GameUtils:formatTimeStyle1(event:GetTime()),event:GetPercent()
+end
 return WidgetEventTabButtons
 
 

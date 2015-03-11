@@ -24,8 +24,17 @@ function GameUIBuild:ctor(city, building)
 end
 function GameUIBuild:onEnter()
     GameUIBuild.super.onEnter(self)
+
+    self.queue = self:LoadBuildingQueue():addTo(self)
+    self:UpdateBuildingQueue(self.build_city)
+
+    local list_view ,listnode =  UIKit:commonListView({
+        viewRect = cc.rect(0, 0, 568, 760),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+    }, true, false)
+    listnode:addTo(self):align(display.BOTTOM_CENTER,window.cx,window.bottom_top - 60)
     self.base_resource_building_items = {}
-    self.base_list_view = self:CreateVerticalListView(window.left + 20, window.bottom+20, window.right - 20, window.top - 100)
+    self.base_list_view = list_view
     for i, v in ipairs(base_items) do
         local item = self:CreateItemWithListView(self.base_list_view)
         item.building = v
@@ -34,14 +43,57 @@ function GameUIBuild:onEnter()
         table.insert(self.base_resource_building_items, item)
     end
     self.base_list_view:reload()
-    -- :resetPosition()
     self:OnCityChanged()
 end
 function GameUIBuild:onExit()
     self.build_city:RemoveListenerOnType(self, self.build_city.LISTEN_TYPE.UPGRADE_BUILDING)
     GameUIBuild.super.onExit(self)
 end
+function GameUIBuild:LoadBuildingQueue()
+    local back_ground = cc.ui.UIImage.new("back_ground_534x46.png"):align(display.CENTER, window.cx, window.top - 120)
+    local check = cc.ui.UICheckBoxButton.new({on = "yes_40x40.png", off = "wow_40x40.png" })
+        :addTo(back_ground)
+        :align(display.CENTER, 30, back_ground:getContentSize().height/2)
+    check:setTouchEnabled(false)
+    local building_label = cc.ui.UILabel.new({
+        text = _("建筑队列"),
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        align = cc.ui.TEXT_ALIGN_LEFT,
+        color = UIKit:hex2c3b(0x797154)
+    }):addTo(back_ground, 2)
+        :align(display.LEFT_CENTER, 60, back_ground:getContentSize().height/2)
 
+    WidgetPushButton.new(
+        {normal = "add_btn_up_50x50.png",pressed = "add_btn_down_50x50.png"}
+        ,{}
+        ,{
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+        })
+        :addTo(back_ground)
+        :align(display.CENTER, back_ground:getContentSize().width - 25, back_ground:getContentSize().height/2)
+        -- :setButtonEnabled(false)
+        :onButtonClicked(function ( event )
+            if event.name == "CLICKED_EVENT" then
+                WidgetBuyBuildingQueue.new():addToCurrentScene()
+            end
+        end)
+
+
+    function back_ground:SetBuildingQueue(current, max)
+        local enable = current > 0
+        check:setButtonSelected(enable)
+        local str = string.format("%s %d/%d", _("建筑队列"), current, max)
+        if building_label:getString() ~= str then
+            building_label:setString(str)
+        end
+    end
+
+    return back_ground
+end
+function GameUIBuild:UpdateBuildingQueue(city)
+    self.queue:SetBuildingQueue(city:GetAvailableBuildQueueCounts(), city:BuildQueueCounts())
+end
 function GameUIBuild:OnUpgradingBegin(building)
     self:OnCityChanged()
 end
@@ -111,7 +163,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
     local item = list_view:newItem()
     local back_ground = WidgetUIBackGround.new({
         width = 568,
-        height = 142,
+        height = 150,
         top_img = "back_ground_568x16_top.png",
         bottom_img = "back_ground_568x80_bottom.png",
         mid_img = "back_ground_568x28_mid.png",
@@ -126,15 +178,10 @@ function GameUIBuild:CreateItemWithListView(list_view)
 
 
     local left_x, right_x = 5, 150
-    local left = display.newSprite("building_frame_36x136.png")
-        :addTo(back_ground):align(display.LEFT_CENTER, left_x, h/2):flipX(true)
-
-    display.newSprite("building_frame_36x136.png")
-        :addTo(back_ground):align(display.RIGHT_CENTER, right_x, h/2)
-
+    local frame = display.newSprite("bg_134x134.png"):addTo(back_ground):pos((left_x + right_x) / 2, h/2)
     local info_btn = WidgetPushButton.new(
         {normal = "info_26x26.png",pressed = "info_26x26.png"})
-        :addTo(left)
+        :addTo(frame)
         :align(display.CENTER, 16, 16)
 
 
