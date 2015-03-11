@@ -30,7 +30,7 @@ function GameUIMission:onEnter()
     GameUIMission.super.onEnter(self)
     self:CreateTabButtons()
     self.city:GetUser():AddListenOnType(self, User.LISTEN_TYPE.TASK)
-	self.city:GetUser():AddListenOnType(self, User.LISTEN_TYPE.DAILY_TASKS)
+    self.city:GetUser():AddListenOnType(self, User.LISTEN_TYPE.DAILY_TASKS)
 end
 function GameUIMission:onExit()
     GameUIMission.super.onExit(self)
@@ -256,14 +256,11 @@ end
 
 -- TODO:
 function GameUIMission:GetRecommendMissionDesc()
-    local tasks = self.city:GetUser():GetTaskManager():GetAvailableTasksByCategory(GrowUpTaskManager.TASK_CATEGORY.BUILD)
-    local re_task
-    for i,v in pairs(tasks.tasks) do
-        if not re_task or v.index < re_task.index then
-            re_task = v
-        end
+    local task = self.city:GetRecommendTask()
+    if task then
+        return task:Title()
     end
-    return re_task:Title()
+    return _("当前没有推荐任务!")
 end
 
 function GameUIMission:GetAchievementMissionData(isFinish)
@@ -286,149 +283,150 @@ function GameUIMission:OnTodoAchievementMissionClicked(data)
 end
 
 function GameUIMission:OnRecommendMissionClicked()
-	UIKit:newGameUI("GameUISelenaQuestion"):addToCurrentScene(true)
+    UIKit:newGameUI("GameUISelenaQuestion"):addToCurrentScene(true)
 end
 
 --日常任务
 function GameUIMission:CreateUIIf_daily()
     print("CreateUIIf_daily---->")
-	if self.daily_layer then
-		--refresh list
-		self:RefreshDailyList()
-		return self.daily_layer
-	end
-	local layer = self:GetCommentBgNode():addTo(self.main_ui)
-	self.daily_layer = layer 
-	local list,list_node = UIKit:commonListView({
-		viewRect = cc.rect(0, 0,568,layer:getContentSize().height - 40),
+    if self.daily_layer then
+        --refresh list
+        self:RefreshDailyList()
+        return self.daily_layer
+    end
+    local layer = self:GetCommentBgNode():addTo(self.main_ui)
+    self.daily_layer = layer
+    local list,list_node = UIKit:commonListView({
+        viewRect = cc.rect(0, 0,568,layer:getContentSize().height - 40),
         direction = UIScrollView.DIRECTION_VERTICAL,
-	})
-	list:onTouch(handler(self, self.dailyListviewListener))
-	list_node:addTo(layer):pos((layer:getContentSize().width - 568)/2,14)
-	self.daily_list = list
-	self:RefreshDailyList()
-	return self.daily_layer
+    })
+    list:onTouch(handler(self, self.dailyListviewListener))
+    list_node:addTo(layer):pos((layer:getContentSize().width - 568)/2,14)
+    self.daily_list = list
+    self:RefreshDailyList()
+    return self.daily_layer
 end
 
 
 function GameUIMission:GetDailyListData()
-	local r = {}
-	local dailyTasks = self.city:GetUser():GetAllDailyTasks()
-	for __,v in ipairs(KEYS_OF_DAILY) do
-		local text_table = Localize.daily_tasks[v]
-		local tmp_data = dailyTasks[v]
-		if text_table and tmp_data then
-			table.insert(r,{category = v,percent = #tmp_data/5,title = text_table.title ,image = UILib.daily_task_icon[v],desc = text_table.desc})
-		end
-	end
+    local r = {}
+    local dailyTasks = self.city:GetUser():GetAllDailyTasks()
+    for __,v in ipairs(KEYS_OF_DAILY) do
+        local text_table = Localize.daily_tasks[v]
+        local tmp_data = dailyTasks[v]
+        if text_table and tmp_data then
+            table.insert(r,{category = v,percent = #tmp_data/5,title = text_table.title ,image = UILib.daily_task_icon[v],desc = text_table.desc})
+        end
+    end
     dump(r,"GetDailyListData----->")
     dump(dailyTasks,"GetDailyListData----->dailyTasks")
-	return r
+    return r
 end
 
 function GameUIMission:RefreshDailyListWithItemAndKeyOfDaily(item,key_of_daily)
-	local tmp_data = self.city:GetUser():GetDailyTasksInfo(key_of_daily)
-	local percent = #tmp_data/5 
-	if percent >= 1 then
-		item.finfish_tip_label:show()
-		item.progress_bg:hide()
-	else
-		item.finfish_tip_label:hide()
-		item.progress_bg:show()
-		item.progress:setPercentage(100 * percent)
-	end
+    local tmp_data = self.city:GetUser():GetDailyTasksInfo(key_of_daily)
+    local percent = #tmp_data/5
+    if percent >= 1 then
+        item.finfish_tip_label:show()
+        item.progress_bg:hide()
+    else
+        item.finfish_tip_label:hide()
+        item.progress_bg:show()
+        item.progress:setPercentage(100 * percent)
+    end
 end
 
 function GameUIMission:RefreshDailyList(key_of_daily)
-	if key_of_daily and #self.daily_list:getItems() > 0 then
-		local index = table.indexof(KEYS_OF_DAILY, key_of_daily)
-		local item = self.daily_list:getItems()[index]
-		if item then
-			self:RefreshDailyListWithItemAndKeyOfDaily(item,key_of_daily)
-		end
-	else
-		self.daily_list:removeAllItems()
-		local  data = self:GetDailyListData()
-		for __,v in ipairs(data) do
-			local item = self:GetDailyItem(v)
-			self.daily_list:addItem(item)
-		end
-		self.daily_list:reload()
-	end
+    if key_of_daily and #self.daily_list:getItems() > 0 then
+        local index = table.indexof(KEYS_OF_DAILY, key_of_daily)
+        local item = self.daily_list:getItems()[index]
+        if item then
+            self:RefreshDailyListWithItemAndKeyOfDaily(item,key_of_daily)
+        end
+    else
+        self.daily_list:removeAllItems()
+        local  data = self:GetDailyListData()
+        for __,v in ipairs(data) do
+            local item = self:GetDailyItem(v)
+            self.daily_list:addItem(item)
+        end
+        self.daily_list:reload()
+    end
 end
 
 function GameUIMission:GetDailyItem(data)
-	local item = self.daily_list:newItem()
-	local content = WidgetUIBackGround.new({width = 568,height = 154},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
-	local flag_box = display.newScale9Sprite("alliance_item_flag_box_126X126.png"):align(display.LEFT_CENTER, 8, 77):addTo(content):size(134,134)
-	local icon_bg = display.newSprite("technology_bg_116x116.png", 67, 67):addTo(flag_box)
-	local offset = cc.p(0,6)
-	display.newSprite(data.image, 58 + offset.x, 58 + offset.y):addTo(icon_bg)
-	local header = display.newScale9Sprite("alliance_event_type_darkblue_222x30.png",0,0, cc.size(412,30), cc.rect(7,7,190,16))
-		:align(display.LEFT_BOTTOM, 146, 112)
-		:addTo(content)
-	UIKit:ttfLabel({
-		size = 22,
-		color= 0xffedae,
-		text = data.title
-	}):align(display.LEFT_CENTER, 8, 15):addTo(header)
+    local item = self.daily_list:newItem()
+    local content = WidgetUIBackGround.new({width = 568,height = 154},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
+    local flag_box = display.newScale9Sprite("alliance_item_flag_box_126X126.png"):align(display.LEFT_CENTER, 8, 77):addTo(content):size(134,134)
+    local icon_bg = display.newSprite("technology_bg_116x116.png", 67, 67):addTo(flag_box)
+    local offset = cc.p(0,6)
+    display.newSprite(data.image, 58 + offset.x, 58 + offset.y):addTo(icon_bg)
+    local header = display.newScale9Sprite("alliance_event_type_darkblue_222x30.png",0,0, cc.size(412,30), cc.rect(7,7,190,16))
+        :align(display.LEFT_BOTTOM, 146, 112)
+        :addTo(content)
+    UIKit:ttfLabel({
+        size = 22,
+        color= 0xffedae,
+        text = data.title
+    }):align(display.LEFT_CENTER, 8, 15):addTo(header)
 
-	UIKit:ttfLabel({
-		text = data.desc,
-		size = 20,
-		color= 0x403c2f
-	}):align(display.LEFT_BOTTOM, 156, 68):addTo(content)
-	local progress_bg,progress =  self:GetProgressBar()
-	local finfish_tip_label = UIKit:ttfLabel({
-		text = _("今日的任务已经全部完成！"),
-		size = 20,
-		color= 0x007c23
-	}):align(display.LEFT_BOTTOM, 156, 22):addTo(content)
-	item.finfish_tip_label = finfish_tip_label
-	item.progress = progress
-	item.progress_bg = progress_bg
-	progress_bg:align(display.LEFT_BOTTOM, 154, 12):addTo(content)
-	if data.percent >= 1 then
-		finfish_tip_label:show()
-		progress_bg:hide()
-	else
-		finfish_tip_label:hide()
-		progress_bg:show()
-		progress:setPercentage(100 * data.percent)
-	end
+    UIKit:ttfLabel({
+        text = data.desc,
+        size = 20,
+        color= 0x403c2f
+    }):align(display.LEFT_BOTTOM, 156, 68):addTo(content)
+    local progress_bg,progress =  self:GetProgressBar()
+    local finfish_tip_label = UIKit:ttfLabel({
+        text = _("今日的任务已经全部完成！"),
+        size = 20,
+        color= 0x007c23
+    }):align(display.LEFT_BOTTOM, 156, 22):addTo(content)
+    item.finfish_tip_label = finfish_tip_label
+    item.progress = progress
+    item.progress_bg = progress_bg
+    progress_bg:align(display.LEFT_BOTTOM, 154, 12):addTo(content)
+    if data.percent >= 1 then
+        finfish_tip_label:show()
+        progress_bg:hide()
+    else
+        finfish_tip_label:hide()
+        progress_bg:show()
+        progress:setPercentage(100 * data.percent)
+    end
 
-	display.newSprite("activity_next_32x37.png"):align(display.LEFT_CENTER, 530, 77):addTo(content)
+    display.newSprite("activity_next_32x37.png"):align(display.LEFT_CENTER, 530, 77):addTo(content)
 
 
-	item:addContent(content)
-	item:setMargin({left = 0, right = 0, top = 0, bottom = 4})
-	item:setItemSize(568,154,false)
-	return item
+    item:addContent(content)
+    item:setMargin({left = 0, right = 0, top = 0, bottom = 4})
+    item:setItemSize(568,154,false)
+    return item
 end
 
 function GameUIMission:GetProgressBar()
-	local bg = display.newSprite("mission_progress_bar_bg_348x40.png")
-	local progress = UIKit:commonProgressTimer("mission_progress_bar_content_348x40.png"):align(display.LEFT_CENTER, 0, 20):addTo(bg)
-	local box = display.newSprite("mission_progress_bar_box_348x40.png"):align(display.LEFT_CENTER, 0, 20):addTo(bg)
-	display.newSprite("Icon_reward_174x141.png"):align(display.LEFT_CENTER, 310, 20):addTo(box):scale(48/174)
-	return bg,progress
+    local bg = display.newSprite("mission_progress_bar_bg_348x40.png")
+    local progress = UIKit:commonProgressTimer("mission_progress_bar_content_348x40.png"):align(display.LEFT_CENTER, 0, 20):addTo(bg)
+    local box = display.newSprite("mission_progress_bar_box_348x40.png"):align(display.LEFT_CENTER, 0, 20):addTo(bg)
+    display.newSprite("Icon_reward_174x141.png"):align(display.LEFT_CENTER, 310, 20):addTo(box):scale(48/174)
+    return bg,progress
 end
 
 function GameUIMission:OnDailyTasksChanged(user,changed_task_types)
-	if not self:CurrentIsDailyMission() then return end
-	for __,v in ipairs(changed_task_types) do
-		self:RefreshDailyList(v)
-	end
+    if not self:CurrentIsDailyMission() then return end
+    for __,v in ipairs(changed_task_types) do
+        self:RefreshDailyList(v)
+    end
 end
 
 
 function GameUIMission:dailyListviewListener(event)
-	local listView = event.listView
+    local listView = event.listView
     if "clicked" == event.name then
-    	local pos = event.itemPos
-    	local keys_of_daily = KEYS_OF_DAILY[pos]
-    	UIKit:newGameUI("GameUIDailyMissionInfo",keys_of_daily):addToCurrentScene(true)
+        local pos = event.itemPos
+        local keys_of_daily = KEYS_OF_DAILY[pos]
+        UIKit:newGameUI("GameUIDailyMissionInfo",keys_of_daily):addToCurrentScene(true)
     end
 end
 return GameUIMission
+
 
