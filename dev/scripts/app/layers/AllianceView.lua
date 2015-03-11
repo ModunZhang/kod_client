@@ -74,8 +74,12 @@ function AllianceView:RandomSeed()
     return 1985423439857
 end
 function AllianceView:InitAlliance()
+    self:RefreshBuildings(self:GetAlliance():GetAllianceMap())
+end
+function AllianceView:RefreshBuildings(alliance_map)
+    self:GetBuildingNode():removeAllChildren()
     local objects = {}
-    self:GetAlliance():GetAllianceMap():IteratorAllObjects(function(_, entity)
+    alliance_map:IteratorAllObjects(function(_, entity)
         objects[entity:Id()] = self:CreateObject(entity)
     end)
     self.objects = objects
@@ -102,25 +106,8 @@ function AllianceView:GetZOrderBy(sprite, x, y)
     local width, _ = self:GetLogicMap():GetSize()
     return x + y * width + 100
 end
-function AllianceView:OnBuildingChange(alliance_map, add, remove, modify)
-    dump(add)
-    if #add > 0 then
-        for _, v in pairs(add) do
-            self.objects[v:Id()] = self:CreateObject(v)
-        end
-    end
-    dump(remove)
-    if #remove > 0 then
-        for _, v in pairs(remove) do
-            self.objects[v:Id()]:removeFromParent()
-            self.objects[v:Id()] = nil
-        end
-    end
-    if #modify > 0 then
-        for _, v in pairs(modify) do
-            self.objects[v:Id()]:SetPositionWithZOrder(self:GetLogicMap():ConvertToMapPosition(v:GetLogicPosition()))
-        end
-    end
+function AllianceView:OnBuildingChange(alliance_map)
+    self:RefreshBuildings(alliance_map)
 end
 function AllianceView:CreateObject(entity)
     local category = entity:GetCategory()
