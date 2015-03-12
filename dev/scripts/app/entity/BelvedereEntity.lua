@@ -87,19 +87,24 @@ function BelvedereEntity:GetDestination()
 
 		return Localize.village_name[self:WithObject():VillageData().type] .. "Lv" .. self:WithObject():VillageData().level
 	elseif self:GetType() == self.ENTITY_TYPE.MARCH_OUT  
-		or self:GetType() == self.ENTITY_TYPE.MARCH_RETURN 
+		-- or self:GetType() == self.ENTITY_TYPE.MARCH_RETURN 
 		or self:GetType() == self.ENTITY_TYPE.STRIKE_OUT 
-		or self:GetType() == self.ENTITY_TYPE.STRIKE_RETURN 
+		-- or self:GetType() == self.ENTITY_TYPE.STRIKE_RETURN 
 		then
 
 		if self:WithObject():MarchType() == 'city' or self:WithObject():MarchType() == 'helpDefence' then
 			return self:WithObject():GetDefenceData().cityName
 		elseif self:WithObject():MarchType() == 'village' then
+			dump(self:WithObject(),"self:WithObject()---->")
 			local village_data = self:WithObject():GetDefenceData() 
 			return Localize.village_name[village_data.type] .. "Lv" .. village_data.level
 		elseif self:WithObject():MarchType() == 'shrine' then
 			return _("圣地")
 		end
+	elseif self:GetType() == self.ENTITY_TYPE.MARCH_RETURN  
+		or self:GetType() == self.ENTITY_TYPE.STRIKE_RETURN then
+
+			return self:WithObject():AttackPlayerData().cityName
 	elseif self:GetType() == self.ENTITY_TYPE.SHIRNE then
 		return _("圣地")
 	end
@@ -115,7 +120,8 @@ function BelvedereEntity:GetDestinationLocation()
 		or self:GetType() == self.ENTITY_TYPE.STRIKE_OUT 
 		or self:GetType() == self.ENTITY_TYPE.STRIKE_RETURN 
 		then
-		return self:WithObject():GetDefenceData().location.x .. "," .. self:WithObject():GetDefenceData().location.y
+		local location = self:WithObject():TargetLocation()
+		return location.x .. "," .. location.y
 	elseif self:GetType() == self.ENTITY_TYPE.HELPTO then
 		return self:WithObject().beHelpedPlayerData.location.x .. "," .. self:WithObject().beHelpedPlayerData.location.y
 	elseif self:GetType() == self.ENTITY_TYPE.SHIRNE then

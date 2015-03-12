@@ -52,7 +52,7 @@ function GameUISelenaQuestion:BuildUI()
 	
 end
 
-function GameUISelenaQuestion:ShowTips(isCorrect)
+function GameUISelenaQuestion:ShowTips(isCorrect,callback)
 	isCorrect = type(isCorrect) == 'boolean' and isCorrect or false
 	if not self.tips then
 		self.tips = self:GetTipContent()
@@ -73,6 +73,9 @@ function GameUISelenaQuestion:ShowTips(isCorrect)
 	self.tips:show()
 	self:performWithDelay(function()
 		self.tips:hide()
+		if callback then
+			callback()
+		end
 	end, 0.8)
 end
 
@@ -144,8 +147,8 @@ function GameUISelenaQuestion:GetQuestionLayer(question)
 	}):align(display.LEFT_CENTER, 14, 25):addTo(panel)
 	local q_3_button= WidgetPushButton.new({
 		normal = 'activity_check_bg_55x51.png'
-	}):align(display.LEFT_BOTTOM, 536, 24):addTo(layer):onButtonClicked(function()
-		self:OnAnswerButtonClicked(3)
+	}):align(display.LEFT_BOTTOM, 536, 24):addTo(layer):onButtonClicked(function(event)
+		self:OnAnswerButtonClicked(3,event.target)
 	end)
 	local check_state = display.newSprite("activity_check_body_55x51.png"):addTo(q_3_button):pos(27,25)
 	q_3_button.check_state = check_state
@@ -159,8 +162,8 @@ function GameUISelenaQuestion:GetQuestionLayer(question)
 	}):align(display.LEFT_CENTER, 14, 25):addTo(panel)
 	local q_2_button= WidgetPushButton.new({
 		normal = 'activity_check_bg_55x51.png'
-	}):align(display.LEFT_BOTTOM, 536, 86):addTo(layer):onButtonClicked(function()
-		self:OnAnswerButtonClicked(2)
+	}):align(display.LEFT_BOTTOM, 536, 86):addTo(layer):onButtonClicked(function(event)
+		self:OnAnswerButtonClicked(2,event.target)
 	end)
 	local check_state = display.newSprite("activity_check_body_55x51.png"):addTo(q_2_button):pos(27,25)
 	q_2_button.check_state = check_state
@@ -174,8 +177,8 @@ function GameUISelenaQuestion:GetQuestionLayer(question)
 	}):align(display.LEFT_CENTER, 14, 25):addTo(panel)
 	local q_1_button= WidgetPushButton.new({
 		normal = 'activity_check_bg_55x51.png'
-	}):align(display.LEFT_BOTTOM, 536, 148):addTo(layer):onButtonClicked(function()
-		self:OnAnswerButtonClicked(1)
+	}):align(display.LEFT_BOTTOM, 536, 148):addTo(layer):onButtonClicked(function(event)
+		self:OnAnswerButtonClicked(1,event.target)
 	end)
 	local check_state = display.newSprite("activity_check_body_55x51.png"):addTo(q_1_button):pos(27,25)
 	q_1_button.check_state = check_state
@@ -268,15 +271,21 @@ function GameUISelenaQuestion:LoadNextQuestion()
 	end
 end
 
-function GameUISelenaQuestion:OnAnswerButtonClicked(index)
+function GameUISelenaQuestion:OnAnswerButtonClicked(index,button)
+	if button then
+		-- print("show--->")
+		button.check_state:show()
+	end
 	local question = self:GetCurrentQuestion()
 	if question.correct == index then --correct! 
-		self:ShowTips(true)
-		self:LoadNextQuestion()
+		self:ShowTips(true,function()
+			self:LoadNextQuestion()
+		end)
 	else
-		self:ShowTips(false)
-		self:GetWelcomeLayer(self.WELCOME_UI_TYPE.FAILED):show()
-		self:GetQuestionLayer():hide()
+		self:ShowTips(false,function()
+			self:GetWelcomeLayer(self.WELCOME_UI_TYPE.FAILED):show()
+			self:GetQuestionLayer():hide()
+		end)
 	end
 end
 
@@ -297,7 +306,6 @@ function GameUISelenaQuestion:LoadQuestionFromConfig()
 	for index,__ in pairs(indexs) do
 		table.insert(questions,config_selena_question[index])
 	end
-	dump(questions,"questions---->")
 	self._questions = questions
 	self._question_index = 1
 end
@@ -312,7 +320,6 @@ function GameUISelenaQuestion:RandomIndexForConfig()
 		end
 		r[random_index] = true
 	end
-	dump(r,"r---->")
 	return r
 end
 
