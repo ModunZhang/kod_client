@@ -881,7 +881,7 @@ function GameUITradeGuild:OpenSellDialog()
         return self.total_price
     end
     function body:CreateSellLayer()
-        local layer = display.newColorLayer(cc.c4b(12,12,12,0))
+        local layer = cc.Layer:create()
         local layer_w,layer_h = 608,520
         layer:setContentSize(cc.size(layer_w,layer_h))
         layer:pos(0,10)

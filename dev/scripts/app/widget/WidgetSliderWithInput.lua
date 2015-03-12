@@ -75,7 +75,7 @@ function WidgetSliderWithInput:ctor(params)
                 }
                 WidgetInput.new(p):addToCurrentScene()
             end
-        end):align(display.CENTER, slider:getCascadeBoundingBox().size.width+60,30):addTo(self)
+        end):align(display.CENTER, slider:getCascadeBoundingBox().size.width,30):addTo(self)
     self.btn_text = UIKit:ttfLabel({
         text = min,
         size = 22,
@@ -93,7 +93,7 @@ function WidgetSliderWithInput:ctor(params)
         size = 20,
         color = 0x403c2f
     }):addTo(slider)
-        :align(display.LEFT_CENTER, slider:getCascadeBoundingBox().size.width+30,0)
+        :align(display.RIGHT_CENTER, slider:getCascadeBoundingBox().size.width,0)
     self:setContentSize(cc.size(slider:getCascadeBoundingBox().size.width,slider:getCascadeBoundingBox().size.height))
     self.soldier_total_count = soldier_total_count
 end
@@ -119,10 +119,10 @@ function WidgetSliderWithInput:OnSliderValueChanged(func)
 end
 function WidgetSliderWithInput:LayoutValueLabel(layout,offset)
     if WidgetSliderWithInput.STYLE_LAYOUT.TOP == layout then
-        self.soldier_total_count:setPosition(self:getContentSize().width-self.soldier_total_count:getContentSize().width-10,offset)
+        self.soldier_total_count:setPosition(self:getContentSize().width,offset)
         self.text_btn:setPosition(self:getContentSize().width-self.soldier_total_count:getContentSize().width-10-60,offset)
     else
-        self.soldier_total_count:setPosition(self.slider.scale9Size_[1]+30,0)
+        self.soldier_total_count:setPosition(self.slider.scale9Size_[1]+80,0)
         self.text_btn:setPosition(self.slider.scale9Size_[1]+60,30)
     end
     return self
