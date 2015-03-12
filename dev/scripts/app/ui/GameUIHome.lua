@@ -35,19 +35,20 @@ function GameUIHome:OnResourceChanged(resource_manager)
     self.coin_label:setString(GameUtils:formatNumber(coin_number))
     self.gem_label:setString(string.formatnumberthousands(gem_number))
 end
-
-function GameUIHome:OnTaskChanged(user)
-    local tasks = user:GetTaskManager():GetAvailableTasksByCategory(GrowUpTaskManager.TASK_CATEGORY.BUILD)
-    local re_task
-    for i,v in pairs(tasks.tasks) do
-        if not re_task or v.index < re_task.index then
-            re_task = v
-        end
+function GameUIHome:OnUpgradingBegin()
+end
+function GameUIHome:OnUpgrading()
+end
+function GameUIHome:OnUpgradingFinished()
+    self:OnTaskChanged()
+end
+function GameUIHome:OnTaskChanged()
+    self.task = self.city:GetRecommendTask()
+    if self.task then
+        self.quest_label:setString(self.task:Title())
+    else
+        self.quest_label:setString(_("当前没有推荐任务!"))
     end
-    if re_task then
-        self.quest_label:setString(re_task:Title())
-    end
-    self.task = re_task
 end
 
 
@@ -77,6 +78,7 @@ function GameUIHome:onEnter()
     self.event_tab:addTo(self):pos(x, y)
 
     self:RefreshData()
+    city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
     city:GetResourceManager():AddObserver(self)
     city:GetResourceManager():OnResourceChanged()
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
@@ -115,6 +117,7 @@ function GameUIHome:RefreshChatMessage()
 end
 
 function GameUIHome:onExit()
+    self.city:RemoveListenerOnType(self, self.city.LISTEN_TYPE.UPGRADE_BUILDING)
     self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
     self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
     self.city:GetResourceManager():RemoveObserver(self)
@@ -317,12 +320,19 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):addTo(top_bg):pos(255, -10):onButtonClicked(function(event)
         if self.task then
-            display.getRunningScene():GotoLogicPoint(self.city:GetBuildingByType(self.task:BuildingType())[1]:GetMidLogicPosition())
+            local building
+            if self.task:BuildingType() == "tower" then
+                building = self.city:GetNearGateTower()
+            else
+                building = self.city:GetHighestBuildingByType(self.task:BuildingType())
+            end
+            if building then
+                display.getRunningScene():GotoLogicPoint(building:GetMidLogicPosition())
+            end
         end
     end)
     display.newSprite("home/quest_icon.png"):addTo(quest_bar_bg):pos(-162, 0)
     self.quest_label = cc.ui.UILabel.new({
-        -- text = "挖掘机技术哪家强?",
         size = 20,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_CENTER,
@@ -567,6 +577,9 @@ function GameUIHome:Find()
 end
 
 return GameUIHome
+
+
+
 
 
 

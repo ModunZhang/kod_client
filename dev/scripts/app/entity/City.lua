@@ -1,5 +1,6 @@
 local HOUSES = GameDatas.PlayerInitData.houses[1]
 local config_productionTechs = GameDatas.ProductionTechs.productionTechs
+local GrowUpTaskManager = import(".GrowUpTaskManager")
 local BuildingRegister = import(".BuildingRegister")
 local promise = import("..utils.promise")
 local Enum = import("..utils.Enum")
@@ -84,6 +85,22 @@ function City:ctor(json_data)
     --
     self.upgrading_building_callbacks = {}
     self.finish_upgrading_callbacks = {}
+end
+function City:GetRecommendTask()
+    local building_map = {}
+    self:IteratorCanUpgradeBuildings(function(building)
+        if building:CanUpgrade() and building:IsUnlocked() then
+            building_map[building:GetType()] = true
+        end
+    end)
+    local tasks = self:GetUser():GetTaskManager():GetAvailableTasksByCategory(GrowUpTaskManager.TASK_CATEGORY.BUILD)
+    local re_task
+    for i,v in pairs(tasks.tasks) do
+        if not re_task or (building_map[v:BuildingType()] and v.index < re_task.index) then
+            re_task = v
+        end
+    end
+    return re_task
 end
 function City:GetUser()
     return self.belong_user
@@ -565,6 +582,15 @@ end
 function City:GetFirstBuildingByType(build_type)
     return self:GetBuildingByType(build_type)[1]
 end
+function City:GetHighestBuildingByType(build_type)
+    local highest
+    for _,v in ipairs(self:GetBuildingByType(build_type)) do
+        if not highest or highest:GetLevel() < v:GetLevel() then
+            highest = v
+        end
+    end
+    return highest
+end
 function City:GetBuildingByType(build_type)
     local find_buildings = {}
     local filter = function(_, building)
@@ -716,6 +742,15 @@ function City:GetTower()
 end
 function City:GetVisibleTowers()
     return self.visible_towers
+end
+function City:GetNearGateTower()
+    local gate = self:GetGate()
+    for _,v in pairs(self:GetVisibleTowers()) do
+        if v:IsNearByBuildingWithLength(gate, 5) then
+            return v
+        end
+    end
+    return self:GetVisibleTowers()[1]
 end
 -- function City:GetCanUpgradingTowers()
 --     local visible_towers = {}

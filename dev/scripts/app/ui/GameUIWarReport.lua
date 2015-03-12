@@ -119,7 +119,7 @@ function GameUIWarReport:onEnter()
     ):setButtonLabel(replay_label)
         :addTo(report_body):align(display.CENTER, report_body:getContentSize().width-120, rb_size.height-186)
         :onButtonClicked(function(event)
-            UIKit:newGameUI("GameUIReplay",report):addToCurrentScene(true)
+            UIKit:newGameUI("GameUIReplay",clone(report)):addToCurrentScene(true)
         end)
 
     -- 删除按钮
@@ -682,7 +682,7 @@ function GameUIWarReport:CreateWallPart()
         m_height = 1,
     })
 
-    display.newSprite("gate_292x302.png"):addTo(bg):align(display.LEFT_CENTER,20,50):scale(0.3)
+    display.newSprite("gate_1.png"):addTo(bg):align(display.LEFT_CENTER,20,50):scale(0.3)
 
     UIKit:ttfLabel({
         text = _("城墙生命值") ,
