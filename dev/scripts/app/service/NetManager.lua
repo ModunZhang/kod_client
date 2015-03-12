@@ -154,7 +154,7 @@ onPlayerDataChanged_callbacks = {}
 function NetManager:addPlayerDataChangedEventListener()
     self:addEventListener("onPlayerDataChanged", function(success, msg)
         if success then
-            LuaUtils:outputTable("onPlayerDataChanged", msg)
+            -- LuaUtils:outputTable("onPlayerDataChanged", msg)
             -- self.m_netService:setDeltatime(msg.serverTime - ext.now())
             DataManager:setUserData(msg)
         end
@@ -173,7 +173,7 @@ onAllianceDataChanged_callbacks = {}
 function NetManager:addAllianceDataChangedEventListener()
     self:addEventListener("onAllianceDataChanged", function(success, msg)
         if success then
-            LuaUtils:outputTable("onAllianceDataChanged", msg)
+            -- LuaUtils:outputTable("onAllianceDataChanged", msg)
             DataManager:setUserAllianceData(msg)
         end
         local callback = onAllianceDataChanged_callbacks[1]
@@ -254,7 +254,7 @@ end
 function NetManager:addOnGetAllianceDataSuccess()
     self:addEventListener("onGetAllianceDataSuccess", function(success, msg)
         if success then
-            LuaUtils:outputTable("onGetAllianceDataSuccess", msg)
+            -- LuaUtils:outputTable("onGetAllianceDataSuccess", msg)
             DataManager:setUserAllianceData(msg)
         end
     end)
@@ -285,7 +285,7 @@ function NetManager:addOnGetSellItemsSuccess()
     self:addEventListener("onGetSellItemsSuccess", function(success, msg)
         if success then
             local callback = onGetSellItemsSuccess_callbacks[1]
-            LuaUtils:outputTable("onGetSellItemsSuccess", msg)
+            -- LuaUtils:outputTable("onGetSellItemsSuccess", msg)
             if type(callback) == "function" then
                 callback(success, msg)
             end
@@ -499,7 +499,7 @@ function NetManager:addLoginEventListener()
                 self.m_netService:setDeltatime(msg.serverTime - ext.now())
                 DataManager:setUserData(msg)
             else
-                LuaUtils:outputTable("onPlayerLoginSuccess", msg)
+                -- LuaUtils:outputTable("onPlayerLoginSuccess", msg)
                 self.m_netService:setDeltatime(msg.serverTime - ext.now())
                 local InitGame = import("app.service.InitGame")
                 InitGame(msg)

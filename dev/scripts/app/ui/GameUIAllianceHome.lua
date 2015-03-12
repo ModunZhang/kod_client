@@ -33,7 +33,7 @@ function GameUIAllianceHome:onEnter()
     local rect2 = self.top_bg:getCascadeBoundingBox()
     self.screen_rect = cc.rect(0, rect1.height, display.width, rect2.y - rect1.height)
     self.arrow = display.newSprite("arrow_home.png")
-    :addTo(self):align(display.TOP_CENTER):scale(0.3):hide()
+        :addTo(self):align(display.TOP_CENTER):scale(0.3):hide()
     self.arrow:setTouchEnabled(true)
     self.arrow:setTouchSwallowEnabled(true)
     self.arrow:setTouchMode(cc.TOUCH_MODE_ONE_BY_ONE)
@@ -49,6 +49,13 @@ function GameUIAllianceHome:onEnter()
         end
         return true
     end)
+    local size = self.arrow:getContentSize()
+    self.arrow_label = cc.ui.UILabel.new({
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xf5e8c4)
+    }):addTo(self.arrow):rotation(90)
+        :align(display.LEFT_CENTER, size.width/2 + 10, size.height/2 + 10)
 
     if self.top then
         self.top:Refresh()
@@ -639,29 +646,28 @@ function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
         local right_bottom_point = cc.p(screen_rect.x + screen_rect.width, screen_rect.y)
         local right_top_point = cc.p(screen_rect.x + screen_rect.width, screen_rect.y + screen_rect.height)
         if not cc.rectContainsPoint(screen_rect, world_point) then
-            repeat
-                local degree = math.deg(cc.pGetAngle(cc.pSub(mid_point, world_point), cc.p(0, 1))) + 180
-                local p,s = pGetIntersectPoint(mid_point, world_point, right_bottom_point, right_top_point)
+            local degree = math.deg(cc.pGetAngle(cc.pSub(mid_point, world_point), cc.p(0, 1))) + 180
+            local points = {right_bottom_point,right_top_point,left_top_point,left_bottom_point}
+            for i = 1, #points do
+                local p1, p2
+                if i ~= #points then
+                    p1 = points[i]
+                    p2 = points[i + 1]
+                else
+                    p1 = points[i]
+                    p2 = points[1]
+                end
+                local p,s = pGetIntersectPoint(mid_point, world_point, p1, p2)
                 if s > 0 and cc.rectContainsPoint(screen_rect, p) then
                     self.arrow:show():pos(p.x, p.y):rotation(degree)
+                    local isflip = (degree > 0 and degree < 180)
+                    self.arrow_label:align(isflip and display.RIGHT_CENTER or display.LEFT_CENTER)
+                    self.arrow_label:scale(isflip and -3 or 3)
+                    local distance = math.ceil(cc.pGetLength(cc.pSub(world_point, p)) / 80)
+                    self.arrow_label:setString(string.format("%dM", distance))
                     break
                 end
-                local p,s = pGetIntersectPoint(mid_point, world_point, right_top_point, left_top_point)
-                if s > 0 and cc.rectContainsPoint(screen_rect, p) then
-                    self.arrow:show():pos(p.x, p.y):rotation(degree)
-                    break
-                end
-                local p,s = pGetIntersectPoint(mid_point, world_point, left_top_point, left_bottom_point)
-                if s > 0 and cc.rectContainsPoint(screen_rect, p) then
-                    self.arrow:show():pos(p.x, p.y):rotation(degree)
-                    break
-                end
-                local p,s = pGetIntersectPoint(mid_point, world_point, left_bottom_point, right_bottom_point)
-                if s > 0 and cc.rectContainsPoint(screen_rect, p) then
-                    self.arrow:show():pos(p.x, p.y):rotation(degree)
-                    break
-                end
-            until true
+            end
         else
             self.arrow:hide()
         end
@@ -716,6 +722,8 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
+
 
 
 
