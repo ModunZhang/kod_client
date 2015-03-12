@@ -11,10 +11,10 @@ end)
 function SmallDialogUI:ctor(parms)
     self.dialog = cc.ui.UIGroup.new():align(display.CENTER):addTo(self):enableTouch(true)
     --设置缩放九宫格
-    self.center_part = cc.ui.UIImage.new("smaleDialogUI/centerDialog.png"):align(display.CENTER, 0, 0):addTo(self.dialog)
-    self.left_part = cc.ui.UIImage.new("smaleDialogUI/broadsideDialog.png"):align(display.RIGHT_CENTER, -50, 0):addTo(self.dialog)
-    self.right_part = cc.ui.UIImage.new("smaleDialogUI/broadsideDialog.png"):align(display.LEFT_CENTER, 50, 0):addTo(self.dialog)
-    self.dialogDividing = display.newScale9Sprite("smaleDialogUI/dialogDividing.png", 0, -10, cc.size(292,5)):addTo(self.dialog)
+    self.center_part = cc.ui.UIImage.new("centerDialog_100x144.png"):align(display.CENTER, 0, 0):addTo(self.dialog)
+    self.left_part = cc.ui.UIImage.new("broadsideDialog_104x144.png"):align(display.RIGHT_CENTER, -50, 0):addTo(self.dialog)
+    self.right_part = cc.ui.UIImage.new("broadsideDialog_104x144.png"):align(display.LEFT_CENTER, 50, 0):addTo(self.dialog)
+    self.dialogDividing = display.newScale9Sprite("dialogDividing_390x5.png", 0, -10, cc.size(292,5)):addTo(self.dialog)
     self.right_part:setFlippedX(true)
     -- tips 两条
     self.tips1 = cc.ui.UILabel.new({

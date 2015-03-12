@@ -13,7 +13,6 @@ local Flag = import("..entity.Flag")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 
 local GameUIAllianceBattle = UIKit:createUIClass('GameUIAllianceBattle', "GameUIWithCommonHeader")
-local img_dir = "allianceHome/"
 
 function GameUIAllianceBattle:ctor(city)
     GameUIAllianceBattle.super.ctor(self, city, _("联盟会战"))
@@ -298,22 +297,22 @@ function GameUIAllianceBattle:InitBattleStatistics()
         local our_alliance = self.alliance
         -- local enemy_alliance = self.alliance:GetAllianceMoonGate():GetEnemyAlliance()
         local enemy_alliance = Alliance_Manager:GetMyAlliance():GetEnemyAlliance()
-        local top_bg = display.newSprite(img_dir.."back_ground_580x118.png")
+        local top_bg = display.newSprite("back_ground_580x118.png")
             :align(display.TOP_CENTER, window.cx, window.top-120)
             :addTo(layer)
         -- :scale(0.85)
         local t_size = top_bg:getContentSize()
 
-        local self_alliance_bg = WidgetPushButton.new({normal = "allianceHome/button_blue_normal_314X88.png",
-            pressed = "allianceHome/button_blue_pressed_314X88.png"})
+        local self_alliance_bg = WidgetPushButton.new({normal = "button_blue_normal_314X88.png",
+            pressed = "button_blue_pressed_314X88.png"})
             :onButtonClicked(function()
                 self:OpenAllianceDetails(true)
             end)
             :align(display.RIGHT_CENTER,t_size.width/2, t_size.height/2)
             :addTo(top_bg)
             :scale(0.8)
-        local enemy_alliance_bg = WidgetPushButton.new({normal = "allianceHome/button_red_normal_314X88.png",
-            pressed = "allianceHome/button_red_pressed_314X88.png"})
+        local enemy_alliance_bg = WidgetPushButton.new({normal = "button_red_normal_314X88.png",
+            pressed = "button_red_pressed_314X88.png"})
             :onButtonClicked(function()
                 self:OpenAllianceDetails(false)
             end)
@@ -338,11 +337,11 @@ function GameUIAllianceBattle:InitBattleStatistics()
             color = 0xffedae,
         }):addTo(enemy_alliance_bg)
             :align(display.CENTER,180,0)
-        local period_bg = display.newSprite(img_dir.."box_104x104.png")
+        local period_bg = display.newSprite("box_104x104.png")
             :align(display.CENTER, t_size.width/2, t_size.height/2-4)
             :addTo(top_bg)
             :scale(0.75)
-        display.newSprite(img_dir.."VS_.png")
+        display.newSprite("VS_73x44.png")
             :align(display.CENTER, period_bg:getContentSize().width/2, period_bg:getContentSize().height/2)
             :addTo(period_bg)
 
@@ -735,7 +734,7 @@ function GameUIAllianceBattle:GetFightRequestsInfo()
     for _,id in pairs(fight_requests) do
         -- 玩家
         local menber = alliance:GetMemeberById(id)
-        table.insert(info, {menber:Name(),string.formatnumberthousands(menber:Power()) ,"allianceHome/power.png",true})
+        table.insert(info, {menber:Name(),string.formatnumberthousands(menber:Power()) ,"power_24x29.png",true})
     end
     return info
 end
@@ -978,9 +977,6 @@ end
 
 function GameUIAllianceBattle:InitOtherAlliance()
     local layer = self.other_alliance_layer
-    -- local face_bg = display.newSprite("allianceHome/banner.png")
-    --     :align(display.TOP_CENTER, window.cx, window.top-50)
-    --     :addTo(layer)
 
     --搜索
     local searchIcon = display.newSprite("alliacne_search_29x33.png"):addTo(layer)
@@ -1076,7 +1072,7 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance)
     }):align(display.LEFT_CENTER,200,70)
         :addTo(content)
     -- 联盟击杀
-    display.newSprite("allianceHome/hit_icon.png")
+    display.newSprite("hit_icon_29x32.png")
         :align(display.CENTER, 180,30)
         :addTo(content)
     local hit_label  = UIKit:ttfLabel({

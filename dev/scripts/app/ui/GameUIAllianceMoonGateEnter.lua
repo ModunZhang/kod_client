@@ -49,12 +49,7 @@ end
 
 function GameUIAllianceMoonGateEnter:GetEnterButtons()
 	if self:IsMyAlliance() then
-		-- local info_button = self:BuildOneButton("icon_info_1.png",_("驻防部队")):onButtonClicked(function()
-		-- 	UIKit:newGameUI('GameUIMoonGate',City,"garrison",self:GetBuilding()):addToCurrentScene(true)
-		-- 	self:leftButtonClicked()
-		-- end)
-
-		local village_button = self:BuildOneButton("hit_icon.png",_("王城")):onButtonClicked(function()
+		local village_button = self:BuildOneButton("hit_icon_29x32.png",_("王城")):onButtonClicked(function()
 			 UIKit:newGameUI('GameUIMoonGate',City,"",self:GetBuilding()):addToCurrentScene(true)
 			self:leftButtonClicked()
 		end)

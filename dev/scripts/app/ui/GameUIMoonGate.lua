@@ -8,7 +8,6 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetInfo = import("..widget.WidgetInfo")
 local UIScrollView = import(".UIScrollView")
 local Localize = import("..utils.Localize")
-local img_dir = "allianceHome/"
 
 local wonder_grassLand = GameDatas.ClientInitGame.wonder_grassLand
 local wonder_desert = GameDatas.ClientInitGame.wonder_desert
@@ -53,7 +52,7 @@ function GameUIMoonGate:InitKingCity()
         x,y = biggest_wonder_iceField.x,biggest_wonder_iceField.y
     end
 
-    local map = display.newSprite(img_dir.."world_map.jpg"):align(display.LEFT_BOTTOM, scroll_view_width/2-50-x,scroll_view_height/2-y)
+    local map = display.newSprite("world_map.jpg"):align(display.LEFT_BOTTOM, scroll_view_width/2-50-x,scroll_view_height/2-y)
     self:CreateAllWonders(map)
 
     local scrollView = UIScrollView.new({
@@ -166,7 +165,7 @@ function GameUIMoonGate:InitWonderDetails()
     local layer = self.wonder_layer
     -- 放地图的裁剪区域
     local map_rect = display.newClippingRegionNode(cc.rect(window.left+15, window.top_bottom-364,612,384)):addTo(layer)
-    local map = display.newSprite(img_dir.."world_map.jpg"):align(display.LEFT_BOTTOM)
+    local map = display.newSprite("world_map.jpg"):align(display.LEFT_BOTTOM)
         :addTo(map_rect)
     self:CreateAllWonders(map)
     local shadowLayer = UIKit:shadowLayer():addTo(layer)

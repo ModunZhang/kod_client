@@ -18,7 +18,7 @@ function WidgetTabButtons:ctor(buttons, tab_param, listener)
 
     self.buttons = {}
 
-    local tab_bg = cc.ui.UIImage.new("tabs/tab_bg.png", {scale9 = true})
+    local tab_bg = cc.ui.UIImage.new("tab_bg_550x61.png", {scale9 = true})
         :addTo(self)
         :align(display.CENTER, 0, 0)
     tab_bg:setCapInsets(cc.rect(origin_x, origin_y, tab_bg:getContentSize().width - origin_x * 2, tab_bg:getContentSize().height - origin_y * 2))
@@ -39,7 +39,7 @@ function WidgetTabButtons:ctor(buttons, tab_param, listener)
             x = x - gap/2 + margin_left
             width = unit_len - gap/2 - margin_left
             button = cc.ui.UIPushButton.new(
-                {normal = "tabs/tab_right.png"},
+                {normal = "tab_right_279x63.png"},
                 {scale9 = true})
                 :addTo(tab_bg, 100)
             button:setScaleX(-1)
@@ -50,7 +50,7 @@ function WidgetTabButtons:ctor(buttons, tab_param, listener)
             x = x + gap/2 - margin_right
             width = unit_len - gap/2 - margin_right
             button = cc.ui.UIPushButton.new(
-                {normal = "tabs/tab_right.png"},
+                {normal = "tab_right_279x63.png"},
                 {scale9 = true})
                 :addTo(tab_bg, 100)
             for i, v in ipairs(button.sprite_) do
@@ -59,7 +59,7 @@ function WidgetTabButtons:ctor(buttons, tab_param, listener)
         else
             width = unit_len - gap
             button = cc.ui.UIPushButton.new(
-                {normal = "tabs/tab_middle.png"},
+                {normal = "tab_middle_188x64.png"},
                 {scale9 = true})
                 :addTo(tab_bg, 100)
         end

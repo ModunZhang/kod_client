@@ -280,7 +280,7 @@ end
 
 -- 创建广告框
 function GameUIVip:CreateAD()
-    local ad = display.newSprite("allianceHome/banner.png")
+    local ad = display.newSprite("banner_617x166.png")
 
     display.newSprite("line_663x58.png"):addTo(ad):pos(ad:getContentSize().width/2,6)
     return ad
@@ -619,7 +619,7 @@ function GameUIVip:CreateVIPItem(params)
         })
         :addTo(num_bg)
     if params.gem then
-        local gem_icon = display.newSprite("home/gem_1.png"):align(display.RIGHT_CENTER, 42,num_bg:getContentSize().height/2):addTo(num_bg):scale(0.5)
+        local gem_icon = display.newSprite("gem_icon_62x61.png"):align(display.RIGHT_CENTER, 42,num_bg:getContentSize().height/2):addTo(num_bg):scale(0.5)
         num_label:align(display.LEFT_CENTER, 45, num_bg:getContentSize().height/2)
     else
         num_label:align(display.CENTER, num_bg:getContentSize().width/2, num_bg:getContentSize().height/2)

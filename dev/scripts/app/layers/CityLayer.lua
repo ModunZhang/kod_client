@@ -231,21 +231,7 @@ function CityLayer:CheckCanUpgrade()
 end
 --
 function CityLayer:InitWeather()
--- local sprite = display.newSprite("logos/batcat.png", 0, 0, {class=cc.FilteredSpriteWithOne})
---     :addTo(self, WEATHER_NODE):align(display.LEFT_BOTTOM, 0, 0)
--- local size1 = self:getContentSize()
--- local size2 = sprite:getContentSize()
--- sprite:setScale(size1.width / size2.width, size1.height / size2.height)
--- sprite:setFilter(filter.newFilter("CUSTOM",
---     json.encode({
---         frag = "shaders/snow.fs",
---         u_resolution = {size1.width, size1.height},
---         u_position = {0.5, 0.5},
---     })
--- ))
--- self.weather = sprite
--- self.weather_glstate = self.weather:getFilter(0):getGLProgramState()
--- self:UpdateWeather()
+
 end
 function CityLayer:ChangeTerrain()
     self:ReloadSceneBackground()

@@ -19,9 +19,9 @@ function WidgetBuyBuildingQueue:CreateBuyItem()
     local width,height = size.width,size.height
     local item = WidgetBackGroundLucid.new(128)
     local box = display.newSprite("box_blue_138x138.png"):addTo(item):align(display.LEFT_CENTER,-10,item:getContentSize().height/2)
-    local icon = cc.ui.UIImage.new("allianceHome/help.png"):addTo(box):align(display.CENTER, box:getContentSize().width/2, box:getContentSize().height/2)
+    local icon = cc.ui.UIImage.new("help_68x60.png"):addTo(box):align(display.CENTER, box:getContentSize().width/2, box:getContentSize().height/2)
     local price_bg = display.newSprite("vip_bg_2.png"):addTo(box):align(display.BOTTOM_CENTER, box:getContentSize().width/2, 6)
-    local gem_icon = display.newSprite("home/gem_1.png"):addTo(price_bg):align(display.CENTER, 20, price_bg:getContentSize().height/2):scale(0.7)
+    local gem_icon = display.newSprite("gem_icon_62x61.png"):addTo(price_bg):align(display.CENTER, 20, price_bg:getContentSize().height/2):scale(0.7)
     local price_label = UIKit:ttfLabel({
         text = "998",
         size = 22,

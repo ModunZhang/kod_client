@@ -114,7 +114,7 @@ function GameUIMail:onEnter()
     self:InitUnreadMark()
 end
 function GameUIMail:InitUnreadMark()
-    self.mail_unread_num_bg = display.newSprite("home/mail_unread_bg.png"):addTo(self)
+    self.mail_unread_num_bg = display.newSprite("mail_unread_bg_36x23.png"):addTo(self)
         :pos(window.left+154, window.bottom_top)
     self.mail_unread_num_label = UIKit:ttfLabel(
         {
@@ -125,7 +125,7 @@ function GameUIMail:InitUnreadMark()
         :addTo(self.mail_unread_num_bg)
 
 
-    self.report_unread_num_bg = display.newSprite("home/mail_unread_bg.png"):addTo(self)
+    self.report_unread_num_bg = display.newSprite("mail_unread_bg_36x23.png"):addTo(self)
         :pos(window.left+300, window.bottom_top)
     self.report_unread_num_label = UIKit:ttfLabel(
         {

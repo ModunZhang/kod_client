@@ -20,35 +20,35 @@ local items = {
     [CITIZEN] = {
         production_text = _("空闲城民"),
         production_per_hour_text = _("城民增长"),
-        tag_color = "dwelling/green_head.png",
+        tag_color = "green_head_42x98.png",
         tag_icon = "res_citizen_44x50.png",
         tag_icon_scale = 0.8
     },
     [FOOD] = {
         production_text = _("农夫"),
         production_per_hour_text = _("粮食产量"),
-        tag_color = "dwelling/yellow_head.png",
+        tag_color = "yellow_head_42x98.png",
         tag_icon = "res_food_114x100.png",
         tag_icon_scale = 0.25
     },
     [WOOD] = {
         production_text = _("伐木工"),
         production_per_hour_text = _("木材产量"),
-        tag_color = "dwelling/brown_head.png",
+        tag_color = "brown_head_42x98.png",
         tag_icon = "res_wood_114x100.png",
         tag_icon_scale = 0.25
     },
     [IRON] = {
         production_text = _("矿工"),
         production_per_hour_text = _("矿产产量"),
-        tag_color = "dwelling/blue_head.png",
+        tag_color = "blue_head_42x98.png",
         tag_icon = "res_iron_114x100.png",
         tag_icon_scale = 0.25
     },
     [STONE] = {
         production_text = _("石匠"),
         production_per_hour_text = _("石料产量"),
-        tag_color = "dwelling/grey_head.png",
+        tag_color = "grey_head_42x98.png",
         tag_icon = "res_stone_128x128.png",
         tag_icon_scale = 0.25
     }
@@ -91,7 +91,7 @@ function WidgetCitizen:ctor(city)
     }):addTo(self)
         :align(display.LEFT_CENTER, window.left + 100, window.top - 124)
 
-    local citizen_num_bg = cc.ui.UIImage.new("dwelling/citizen_num_bg.png")
+    local citizen_num_bg = cc.ui.UIImage.new("citizen_num_bg_170x714.png")
         :addTo(self)
         :pos(window.left + 45, window.top - 150 - 702)
 
@@ -108,11 +108,11 @@ function WidgetCitizen:ctor(city)
 
 
     self.citizen_ui = {}
-    self.citizen_ui[CITIZEN] = cc.ui.UIImage.new("dwelling/green_line.png"):addTo(citizen_num_bg)
-    self.citizen_ui[FOOD] = cc.ui.UIImage.new("dwelling/yellow_line.png"):addTo(citizen_num_bg)
-    self.citizen_ui[WOOD] = cc.ui.UIImage.new("dwelling/brown_line.png"):addTo(citizen_num_bg)
-    self.citizen_ui[IRON] = cc.ui.UIImage.new("dwelling/blue_line.png"):addTo(citizen_num_bg)
-    self.citizen_ui[STONE] = cc.ui.UIImage.new("dwelling/grey_line.png"):addTo(citizen_num_bg)
+    self.citizen_ui[CITIZEN] = cc.ui.UIImage.new("green_line_130x1.png"):addTo(citizen_num_bg)
+    self.citizen_ui[FOOD] = cc.ui.UIImage.new("yellow_line_130x1.png"):addTo(citizen_num_bg)
+    self.citizen_ui[WOOD] = cc.ui.UIImage.new("brown_line_130x1.png"):addTo(citizen_num_bg)
+    self.citizen_ui[IRON] = cc.ui.UIImage.new("blue_line_130x1.png"):addTo(citizen_num_bg)
+    self.citizen_ui[STONE] = cc.ui.UIImage.new("grey_line_130x1.png"):addTo(citizen_num_bg)
 
 
     self.citizen_number = {}
@@ -124,9 +124,9 @@ function WidgetCitizen:ctor(city)
 
         local cur_pos = end_pos - (count - i) * 110 - (i~=CITIZEN and 150 or 0)
 
-        local res_info_bg = cc.ui.UIImage.new("dwelling/res_info_bg.png"):addTo(self):pos(window.left + 215, cur_pos)
+        local res_info_bg = cc.ui.UIImage.new("res_info_bg_392x106.png"):addTo(self):pos(window.left + 215, cur_pos)
 
-        cc.ui.UIImage.new("dwelling/dividing_line.png"):addTo(res_info_bg):pos(0, 53)
+        cc.ui.UIImage.new("dividing_line_352x2.png"):addTo(res_info_bg):pos(0, 53)
 
         cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -169,15 +169,15 @@ function WidgetCitizen:ctor(city)
         }):addTo(res_info_bg):align(display.RIGHT_CENTER, 350, 25)
 
         local head = cc.ui.UIImage.new(item_info.tag_color):addTo(res_info_bg):pos(4, 4)
-        local res_bg = cc.ui.UIImage.new("dwelling/res_bg.png"):addTo(head):align(display.CENTER, 20, 53)
+        local res_bg = cc.ui.UIImage.new("res_bg_37x41.png"):addTo(head):align(display.CENTER, 20, 53)
         local res_bg_pos = res_bg:getAnchorPointInPoints()
         cc.ui.UIImage.new(item_info.tag_icon):addTo(res_bg):scale(item_info.tag_icon_scale):align(display.CENTER, res_bg_pos.x, res_bg_pos.y)
 
         if i == CITIZEN then
             local add_btn = cc.ui.UIPushButton.new(
-                {normal = "dwelling/add_btn_up.png",pressed = "dwelling/add_btn_down.png"})
+                {normal = "add_btn_up_30x88.png",pressed = "add_btn_down_30x88.png"})
                 :addTo(res_info_bg):pos(375, 53)
-            cc.ui.UIImage.new("dwelling/add.png"):addTo(add_btn):align(display.CENTER, 0, 0)
+            cc.ui.UIImage.new("add_18x19.png"):addTo(add_btn):align(display.CENTER, 0, 0)
         end
 
         self.citizen_number[i] = {production, productionPerHour}

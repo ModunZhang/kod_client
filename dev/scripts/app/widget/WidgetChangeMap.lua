@@ -46,7 +46,7 @@ function WidgetChangeMap:ctor(map_type)
     clippingNode:setAlphaThreshold(0.5)
     clippingNode:scale(scale_x)
     -- 底板
-    -- clippingNode:addChild(display.newSprite("allianceHome/world_map.jpg"))
+    -- clippingNode:addChild(display.newSprite("world_map_2000x200.jpg"))
     self:addChild(clippingNode)
     child_layer:setTouchSwallowEnabled(false)
 

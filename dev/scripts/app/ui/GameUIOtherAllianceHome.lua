@@ -36,7 +36,7 @@ function GameUIOtherAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
     self.coordinate_title_label:setString(is_mine)
 end
 function GameUIOtherAllianceHome:TopBg()
-    local top_bg = display.newSprite("allianceHome/alliance_home_top_bg.png")
+    local top_bg = display.newSprite("alliance_home_top_bg_768x116.png")
         :align(display.TOP_CENTER, window.cx, window.top)
         :addTo(self)
     if display.width >640 then
@@ -46,14 +46,14 @@ function GameUIOtherAllianceHome:TopBg()
     local t_size = top_bg:getContentSize()
     self.top_bg = top_bg
     -- 顶部背景,为按钮
-    local top_self_bg = WidgetPushButton.new({normal = "allianceHome/button_blue_normal_314X88.png",
-        pressed = "allianceHome/button_blue_normal_314X88.png"})
+    local top_self_bg = WidgetPushButton.new({normal = "button_blue_normal_314X88.png",
+        pressed = "button_blue_normal_314X88.png"})
         :align(display.TOP_CENTER, t_size.width/2-160, t_size.height-4)
         :addTo(top_bg)
     top_self_bg:setTouchEnabled(true)
     top_self_bg:setTouchSwallowEnabled(true)
-    local top_enemy_bg = WidgetPushButton.new({normal = "allianceHome/button_red_normal_314X88.png",
-        pressed = "allianceHome/button_red_normal_314X88.png"})
+    local top_enemy_bg = WidgetPushButton.new({normal = "button_red_normal_314X88.png",
+        pressed = "button_red_normal_314X88.png"})
         :align(display.TOP_CENTER, t_size.width/2+160, t_size.height-4)
         :addTo(top_bg)
     top_enemy_bg:setTouchEnabled(true)
@@ -64,7 +64,7 @@ end
 
 function GameUIOtherAllianceHome:TopTabButtons()
     -- 坐标按钮
-    local coordinate_btn = WidgetPushButton.new({normal = "allianceHome/btn_100x52.png",
+    local coordinate_btn = WidgetPushButton.new({normal = "btn_100x52.png",
         pressed = "btn_100x52.png"})
         :onButtonClicked(function ( event )
             if event.name == "CLICKED_EVENT" then
@@ -97,8 +97,8 @@ function GameUIOtherAllianceHome:CreateOperationButton()
     local first_col = 177
     local label_padding = 100
     for i, v in ipairs({
-        {"allianceHome/help.png", _("帮助")},
-        {"allianceHome/war.png", _("战斗")},
+        {"help_68x60.png", _("帮助")},
+        {"war_54x55.png", _("战斗")},
     }) do
         local col = i - 1
         local y =  first_row + col*label_padding

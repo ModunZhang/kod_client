@@ -174,7 +174,7 @@ function GameUIItems:CreateShopItem(items)
     local i_icon = display.newSprite("goods_26x26.png"):addTo(item_bg):align(display.CENTER, 15, 15)
 
     -- gem icon
-    local gem_icon = display.newSprite("home/gem_1.png"):addTo(num_bg):align(display.CENTER, 20, num_bg:getContentSize().height/2):scale(0.6)
+    local gem_icon = display.newSprite("gem_icon_62x61.png"):addTo(num_bg):align(display.CENTER, 20, num_bg:getContentSize().height/2):scale(0.6)
     UIKit:ttfLabel({
         text = string.formatnumberthousands(items:Price()),
         size = 20,

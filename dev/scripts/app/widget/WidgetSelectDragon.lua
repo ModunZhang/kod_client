@@ -5,7 +5,6 @@ local Localize = import("..utils.Localize")
 
 local WidgetSelectDragon = class("WidgetSelectDragon", WidgetPopDialog)
 
-local img_dir = "allianceHome/"
 
 function WidgetSelectDragon:ctor(params)
     WidgetSelectDragon.super.ctor(self,516,params.title)
@@ -20,10 +19,10 @@ function WidgetSelectDragon:ctor(params)
         local dragon_bg = display.newSprite("chat_hero_background.png")
             :align(display.LEFT_CENTER, 7,dragon_frame:getContentSize().height/2)
             :addTo(dragon_frame)
-        local dragon_img = display.newSprite(img_dir..dragon:Type()..".png")
+        local dragon_img = display.newSprite(dragon:Type()..".png")
             :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2+5)
             :addTo(dragon_bg)
-        local box_bg = display.newSprite(img_dir.."box_426X126.png")
+        local box_bg = display.newSprite("box_426X126.png")
             :align(display.LEFT_CENTER, dragon_frame:getContentSize().width, dragon_frame:getContentSize().height/2)
             :addTo(dragon_frame)
         -- 龙，等级
