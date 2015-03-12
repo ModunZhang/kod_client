@@ -663,7 +663,8 @@ function GameUITradeGuild:OpenDollyIntro()
 end
 function GameUITradeGuild:OpenSellDialog()
     local tradeGuildUI = self
-    local body = WidgetPopDialog.new(654,_("出售资源")):addToCurrentScene():GetBody()
+    local root = WidgetPopDialog.new(654,_("出售资源")):addToCurrentScene()
+    local body = root:GetBody()
     -- 资源，材料出售价格区间
     local PRICE_SCOPE = {
         resource = {
@@ -979,7 +980,7 @@ function GameUITradeGuild:OpenSellDialog()
             end
         end
     )
-    body.drop_list:align(display.TOP_CENTER,body_width/2,body_height-30):addTo(body,2)
+    body.drop_list:align(display.TOP_CENTER,window.cx,window.top-180):addTo(root)
 end
 
 function GameUITradeGuild:OnBuildingUpgradingBegin()
