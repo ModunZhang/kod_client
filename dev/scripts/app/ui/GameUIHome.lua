@@ -186,7 +186,7 @@ function GameUIHome:CreateTop()
 
     -- 玩家按钮
     local button = cc.ui.UIPushButton.new(
-        {normal = "home/player_btn_up.png", pressed = "home/player_btn_down.png"},
+        {normal = "player_btn_up_314x86.png", pressed = "player_btn_down_314x86.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
@@ -198,7 +198,7 @@ function GameUIHome:CreateTop()
 
     -- 玩家名字背景加文字
     local ox = 159
-    local name_bg = display.newSprite("home/player_name_bg.png"):addTo(top_bg)
+    local name_bg = display.newSprite("player_name_bg_168x30.png"):addTo(top_bg)
         :align(display.TOP_LEFT, ox, top_bg:getContentSize().height-10)
     self.name_label = cc.ui.UILabel.new({
         text = "",
@@ -209,7 +209,7 @@ function GameUIHome:CreateTop()
     }):addTo(name_bg):align(display.LEFT_CENTER, 14, name_bg:getContentSize().height/2 + 3)
 
     -- 玩家战斗值图片
-    display.newSprite("home/power.png"):addTo(top_bg):pos(ox + 20, 65)
+    display.newSprite("power_16x19.png"):addTo(top_bg):pos(ox + 20, 65)
 
     -- 玩家战斗值文字
     UIKit:ttfLabel({
@@ -232,7 +232,7 @@ function GameUIHome:CreateTop()
     -----------------------
     -- 资源按钮
     local button = cc.ui.UIPushButton.new(
-        {normal = "home/player_btn_up.png", pressed = "home/player_btn_down.png"},
+        {normal = "player_btn_up_314x86.png", pressed = "player_btn_down_314x86.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
@@ -268,16 +268,16 @@ function GameUIHome:CreateTop()
     end
 
     -- 玩家信息背景
-    local player_bg = display.newSprite("home/player_bg.png"):addTo(top_bg, 2)
+    local player_bg = display.newSprite("player_bg_110x106.png"):addTo(top_bg, 2)
         :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10)
-    display.newSprite("home/player_icon.png"):addTo(player_bg):pos(55, 53)
-    local level_bg = display.newSprite("home/level_bg.png"):addTo(player_bg):pos(55, 30)
+    display.newSprite("player_icon_110x106.png"):addTo(player_bg):pos(55, 53)
+    local level_bg = display.newSprite("level_bg_74x24.png"):addTo(player_bg):pos(55, 30)
     self.level_label = UIKit:ttfLabel({
         size = 20,
         color = 0xfff1cc,
         shadow = true,
     }):addTo(level_bg):align(display.CENTER, 37, 12)
-    self.exp = display.newSprite("home/player_exp_bar.png"):addTo(player_bg):pos(55, 53)
+    self.exp = display.newSprite("player_exp_bar_110x106.png"):addTo(player_bg):pos(55, 53)
 
     -- vip
     local vip_btn = cc.ui.UIPushButton.new(
@@ -289,7 +289,7 @@ function GameUIHome:CreateTop()
                 UIKit:newGameUI('GameUIVip', City,"VIP"):addToCurrentScene(true)
             end
         end)
-    local vip_btn_img = User:IsVIPActived() and "home/vip_bg.png" or "home/vip_bg_disable.png"
+    local vip_btn_img = User:IsVIPActived() and "vip_bg_110x124.png" or "vip_bg_disable_110x124.png"
     vip_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, vip_btn_img, true)
     vip_btn:setButtonImage(cc.ui.UIPushButton.PRESSED, vip_btn_img, true)
     self.vip_level = display.newNode():addTo(vip_btn):pos(-3, 15):scale(0.8)
@@ -299,12 +299,12 @@ function GameUIHome:CreateTop()
 
     -- 宝石按钮
     local button = cc.ui.UIPushButton.new(
-        {normal = "home/gem_btn_up.png", pressed = "home/gem_btn_down.png"},
+        {normal = "gem_btn_up_196x68.png", pressed = "gem_btn_down_196x68.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
         UIKit:newGameUI('GameUIShop', City):addToCurrentScene(true)
     end):addTo(top_bg):pos(top_bg:getContentSize().width - 155, -16)
-    display.newSprite("home/gem_1.png"):addTo(button):pos(60, 3)
+    display.newSprite("gem_icon_62x61.png"):addTo(button):pos(60, 3)
     self.gem_label = UIKit:ttfLabel({
         size = 20,
         color = 0xffd200,
@@ -313,14 +313,14 @@ function GameUIHome:CreateTop()
 
     -- 任务条
     local quest_bar_bg = cc.ui.UIPushButton.new(
-        {normal = "home/quest_btn_up.png", pressed = "home/quest_btn_down.png"},
+        {normal = "quest_btn_up_386x62.png", pressed = "quest_btn_down_386x62.png"},
         {scale9 = false}
     ):addTo(top_bg):pos(255, -10):onButtonClicked(function(event)
         if self.task then
             display.getRunningScene():GotoLogicPoint(self.city:GetBuildingByType(self.task:BuildingType())[1]:GetMidLogicPosition())
         end
     end)
-    display.newSprite("home/quest_icon.png"):addTo(quest_bar_bg):pos(-162, 0)
+    display.newSprite("quest_icon_27x42.png"):addTo(quest_bar_bg):pos(-162, 0)
     self.quest_label = cc.ui.UILabel.new({
         -- text = "挖掘机技术哪家强?",
         size = 20,
@@ -331,7 +331,7 @@ function GameUIHome:CreateTop()
 
     -- 礼物按钮
     local button = cc.ui.UIPushButton.new(
-        {normal = "home/gift.png", pressed = "home/gift.png"},
+        {normal = "gift_128x128.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
@@ -375,7 +375,7 @@ function GameUIHome:CreateBottom()
     local chat_bg = display.newSprite("chat_background.png")
         :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-11)
         :addTo(bottom_bg)
-    cc.ui.UIImage.new("home/chat_btn.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width-60, 0)
+    cc.ui.UIImage.new("chat_btn_60x48.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width-60, 0)
     local index_1 = display.newSprite("chat_page_index_1.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2-10,chat_bg:getContentSize().height-10)
     local index_2 = display.newSprite("chat_page_index_2.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2+10,chat_bg:getContentSize().height-10)
     self.chat_bg = chat_bg
@@ -431,11 +431,11 @@ function GameUIHome:CreateBottom()
     local label_padding = 20
     local padding_width = 100
     for i, v in ipairs({
-        {"home/bottom_icon_1.png", _("任务")},
-        {"home/bottom_icon_2.png", _("物品")},
-        {"home/mail.png", _("邮件")},
-        {"home/bottom_icon_4.png", _("联盟")},
-        {"home/bottom_icon_2.png", _("更多")},
+        {"bottom_icon_mission_77x67.png", _("任务")},
+        {"bottom_icon_package_77x67.png", _("物品")},
+        {"mail_64x49.png", _("邮件")},
+        {"bottom_icon_alliance_77x67.png", _("联盟")},
+        {"bottom_icon_package_77x67.png", _("更多")},
     }) do
         local col = i - 1
         local x, y = first_col + col * padding_width, first_row
@@ -454,7 +454,7 @@ function GameUIHome:CreateBottom()
     end
 
     -- 未读邮件或战报数量显示条
-    self.mail_unread_num_bg = display.newSprite("home/mail_unread_bg.png"):addTo(bottom_bg):pos(460, first_row+20)
+    self.mail_unread_num_bg = display.newSprite("mail_unread_bg_36x23.png"):addTo(bottom_bg):pos(460, first_row+20)
     self.mail_unread_num_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
             text = GameUtils:formatNumber(MailManager:GetUnReadMailsAndReportsNum() or 0),
@@ -493,7 +493,7 @@ function GameUIHome:CreateBottom()
     help_button:setVisible(LuaUtils:table_size(Alliance_Manager:GetMyAlliance():GetAllHelpEvents())>0)
 
     -- 请求帮助的其他联盟成员请求帮助事件数量
-    local request_help_num_bg = display.newSprite("home/mail_unread_bg.png"):addTo(help_button):pos(20,-20)
+    local request_help_num_bg = display.newSprite("mail_unread_bg_36x23.png"):addTo(help_button):pos(20,-20)
     local request_num = Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum()
     self.request_help_num = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -535,12 +535,12 @@ end
 
 function GameUIHome:RefreshVIP()
     local vip_btn = self.vip_btn
-    local vip_btn_img = User:IsVIPActived() and "home/vip_bg.png" or "home/vip_bg_disable.png"
+    local vip_btn_img = User:IsVIPActived() and "vip_bg_110x124.png" or "vip_bg_disable_110x124.png"
     vip_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, vip_btn_img, true)
     vip_btn:setButtonImage(cc.ui.UIPushButton.PRESSED, vip_btn_img, true)
     local vip_level = self.vip_level
     vip_level:removeAllChildren()
-    local level_img = display.newSprite(string.format("home/%d.png", User:GetVipLevel()),0,0,{class=cc.FilteredSpriteWithOne}):addTo(vip_level)
+    local level_img = display.newSprite(string.format("VIP_%d_46x32.png", User:GetVipLevel()),0,0,{class=cc.FilteredSpriteWithOne}):addTo(vip_level)
     if not User:IsVIPActived() then
         local my_filter = filter
         local filters = my_filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1})

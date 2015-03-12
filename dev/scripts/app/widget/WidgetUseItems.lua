@@ -854,7 +854,7 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
         if item:IsSell() then
             local price_bg = display.newSprite("back_ground_118x36.png"):addTo(body):align(display.CENTER,490,84)
             -- gem icon
-            local gem_icon = display.newSprite("home/gem_1.png"):addTo(price_bg):align(display.CENTER, 20, price_bg:getContentSize().height/2):scale(0.6)
+            local gem_icon = display.newSprite("gem_icon_62x61.png"):addTo(price_bg):align(display.CENTER, 20, price_bg:getContentSize().height/2):scale(0.6)
             UIKit:ttfLabel({
                 text = string.formatnumberthousands(item:Price()),
                 size = 20,

@@ -54,14 +54,14 @@ function GameUICityInfo:CreateTop()
     end
     -- 玩家按钮
     local button = cc.ui.UIPushButton.new(
-        {normal = "home/player_btn_up.png", pressed = "home/player_btn_down.png"},
+        {normal = "player_btn_up_314x86.png", pressed = "player_btn_down_314x86.png"},
         {scale9 = false}
     ):addTo(top_bg):align(display.LEFT_CENTER,top_bg:getContentSize().width/2-2, top_bg:getContentSize().height/2+10)
     button:setRotationSkewY(180)
 
     -- 玩家名字背景加文字
     local ox = 159
-    local name_bg = display.newSprite("home/player_name_bg.png"):addTo(top_bg)
+    local name_bg = display.newSprite("player_name_bg_168x30.png"):addTo(top_bg)
         :align(display.TOP_LEFT, ox, top_bg:getContentSize().height-10)
     self.name_label = cc.ui.UILabel.new({
         text = self.user:Name(),
@@ -72,7 +72,7 @@ function GameUICityInfo:CreateTop()
     }):addTo(name_bg):align(display.LEFT_CENTER, 14, name_bg:getContentSize().height/2 + 3)
 
     -- 玩家战斗值图片
-    display.newSprite("home/power.png"):addTo(top_bg):pos(ox + 20, 65)
+    display.newSprite("power_16x19.png"):addTo(top_bg):pos(ox + 20, 65)
 
 
     -- 玩家战斗值文字
@@ -93,7 +93,7 @@ function GameUICityInfo:CreateTop()
 
     -- 资源按钮
     local button = cc.ui.UIPushButton.new(
-        {normal = "home/player_btn_up.png", pressed = "home/player_btn_down.png"},
+        {normal = "player_btn_up_314x86.png", pressed = "player_btn_down_314x86.png"},
         {scale9 = false}
     ):addTo(top_bg):align(display.LEFT_CENTER, top_bg:getContentSize().width/2+2, top_bg:getContentSize().height/2+10)
 
@@ -126,21 +126,21 @@ function GameUICityInfo:CreateTop()
 
 
     -- 玩家信息背景
-    local player_bg = display.newSprite("home/player_bg.png"):addTo(top_bg, 2)
+    local player_bg = display.newSprite("player_bg_110x106.png"):addTo(top_bg, 2)
         :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10)
-    display.newSprite("home/player_icon.png"):addTo(player_bg):pos(55, 53)
-    local level_bg = display.newSprite("home/level_bg.png"):addTo(player_bg):pos(55, 30)
+    display.newSprite("player_icon_110x106.png"):addTo(player_bg):pos(55, 53)
+    local level_bg = display.newSprite("level_bg_74x24.png"):addTo(player_bg):pos(55, 30)
     self.level_label = UIKit:ttfLabel({text = "1",
         size = 20,
         color = 0xfff1cc,
         shadow = true,
     }):addTo(level_bg):align(display.CENTER, 37, 12)
-    self.exp = display.newSprite("home/player_exp_bar.png"):addTo(player_bg):pos(55, 53)
+    self.exp = display.newSprite("player_exp_bar_110x106.png"):addTo(player_bg):pos(55, 53)
 
 
     -- vip
     local vip_btn = cc.ui.UIPushButton.new(
-        {normal = "home/vip_bg.png", pressed = "home/vip_bg.png"},
+        {normal = "vip_bg_110x124.png", pressed = "vip_bg_110x124.png"},
         {scale9 = false}
     ):addTo(top_bg):align(display.CENTER, ox + 195, 50)
         :onButtonClicked(function(event)
@@ -149,7 +149,7 @@ function GameUICityInfo:CreateTop()
             end
         end)
     self.vip_level = display.newNode():addTo(vip_btn):pos(-3, 15):scale(0.8)
-    display.newSprite(string.format("home/%d.png", 1)):addTo(self.vip_level)
+    display.newSprite(string.format("VIP_%d_46x32.png", 1)):addTo(self.vip_level)
 
     return top_bg
 end
@@ -170,7 +170,7 @@ function GameUICityInfo:CreateBottom()
     local chat_bg = display.newSprite("chat_background.png")
         :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-10)
         :addTo(bottom_bg)
-    cc.ui.UIImage.new("home/chat_btn.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width-60, 0)
+    cc.ui.UIImage.new("chat_btn_60x48.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width-60, 0)
     local index_1 = display.newSprite("chat_page_index_1.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2-10,chat_bg:getContentSize().height-10)
     local index_2 = display.newSprite("chat_page_index_2.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2+10,chat_bg:getContentSize().height-10)
     self.chat_bg = chat_bg

@@ -80,12 +80,12 @@ function GameUIPVEHome:CreateTop()
 
     -- 宝石按钮
     local button = cc.ui.UIPushButton.new(
-        {normal = "home/gem_btn_up.png", pressed = "home/gem_btn_down.png"},
+        {normal = "gem_btn_up_196x68.png", pressed = "gem_btn_down_196x68.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
         UIKit:newGameUI('GameUIShop', City):addToCurrentScene(true)
     end):addTo(top_bg):pos(top_bg:getContentSize().width - 130, -16)
-    display.newSprite("home/gem_1.png"):addTo(button):pos(60, 3)
+    display.newSprite("gem_icon_62x61.png"):addTo(button):pos(60, 3)
     self.gem_label = UIKit:ttfLabel({
         size = 20,
         color = 0xffd200,
@@ -167,7 +167,7 @@ function GameUIPVEHome:CreateBottom()
     local chat_bg = display.newSprite("chat_background.png")
         :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-10)
         :addTo(bottom_bg)
-    cc.ui.UIImage.new("home/chat_btn.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width-60, 0)
+    cc.ui.UIImage.new("chat_btn_60x48.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width-60, 0)
     local index_1 = display.newSprite("chat_page_index_1.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2-10,chat_bg:getContentSize().height-10)
     local index_2 = display.newSprite("chat_page_index_2.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2+10,chat_bg:getContentSize().height-10)
     self.chat_bg = chat_bg

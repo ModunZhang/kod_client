@@ -42,7 +42,7 @@ function WidgetAccelerateGroup:ctor(eventType,eventId)
         if speedUp_item_num>0 then
             cost_text = _("拥有")..speedUp_item_num
         else
-            display.newSprite("home/gem_1.png"):addTo(cost_bg):align(display.CENTER, 20, cost_bg:getContentSize().height/2):scale(0.6)
+            display.newSprite("gem_icon_62x61.png"):addTo(cost_bg):align(display.CENTER, 20, cost_bg:getContentSize().height/2):scale(0.6)
             cost_text = speedUp_item:Price()
         end
 

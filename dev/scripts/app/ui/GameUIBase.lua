@@ -197,7 +197,7 @@ function GameUIBase:CreateShopButton(on_clicked)
         end
     end):addTo(self)
     gem_button:align(display.RIGHT_TOP, window.cx+314, window.top-5)
-    cc.ui.UIImage.new("home/gem_1.png")
+    cc.ui.UIImage.new("gem_icon_62x61.png")
         :addTo(gem_button)
         :pos(-60, -62)
 
