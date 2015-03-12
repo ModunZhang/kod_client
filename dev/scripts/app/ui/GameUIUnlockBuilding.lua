@@ -133,16 +133,23 @@ function GameUIUnlockBuilding:Init()
 end
 
 function GameUIUnlockBuilding:InitBuildingIntroduces()
-    self.building_introduces = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        font = UIKit:getFontFilePath(),
+    self.building_name = UIKit:ttfLabel({
+        size = 24,
+        dimensions = cc.size(350, 90),
+        color = 0x403c2f
+    }):align(display.LEFT_CENTER,display.cx-100, display.top-240):addTo(self)
+    self.building_introduces = UIKit:ttfLabel({
         size = 22,
         dimensions = cc.size(350, 90),
-        color = UIKit:hex2c3b(0x403c2f)
+        color = 0x403c2f
     }):align(display.LEFT_CENTER,display.cx-100, display.top-280):addTo(self)
+    self:SetBuildingName()
     self:SetBuildingIntroduces()
 end
-
+function GameUIUnlockBuilding:SetBuildingName()
+    local bd = Localize.building_name
+    self.building_name:setString(bd[self.building:GetType()])
+end
 function GameUIUnlockBuilding:SetBuildingIntroduces()
     local bd = Localize.building_description
     self.building_introduces:setString(bd[self.building:GetType()])
@@ -251,6 +258,7 @@ end
 
 
 return GameUIUnlockBuilding
+
 
 
 

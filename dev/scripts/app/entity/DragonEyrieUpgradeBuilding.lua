@@ -59,8 +59,7 @@ function DragonEyrieUpgradeBuilding:GetHPRecoveryPerHour(withBuff)
 end
 
 
---TODO:龙巢已经不再恢复活力，记得删除
-function DragonEyrieUpgradeBuilding:GetNextLevelVitalityRecoveryPerHour()
+function DragonEyrieUpgradeBuilding:GetNextLevelHPRecoveryPerHour()
     return config_function[self:GetNextLevel()].hpRecoveryPerHour
 end
 --Fix bug KOD-175

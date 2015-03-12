@@ -1,6 +1,7 @@
 local BuildingLevelUp = GameDatas.BuildingLevelUp
 local GemsPayment = GameDatas.GemsPayment
 local HouseLevelUp = GameDatas.HouseLevelUp
+local VipLevel = GameDatas.Vip.level
 
 DataUtils = {}
 
@@ -412,6 +413,16 @@ function DataUtils:getPlayerOnlineTimeMinutes()
     local countInfo = User:GetCountInfo()
     local onlineTime = countInfo.todayOnLineTime + (NetManager:getServerTime() - countInfo.lastLoginTime)
     return math.floor(onlineTime / 1000 / 60)
+end
+-- 根据vip exp获得vip等级,当前等级已升经验百分比
+function DataUtils:getPlayerVIPLevel(exp)
+    for i=#VipLevel,1,-1 do
+        local config = VipLevel[i]
+        if exp >= config.expFrom then
+            local percent = math.floor((exp - config.expFrom)/(config.expTo-config.expFrom)*100)
+            return config.level,percent,exp
+        end
+    end
 end
 --龙的生命值恢复buff
 function DataUtils:GetDragonHpBuffTotal()

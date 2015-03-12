@@ -410,6 +410,7 @@ function GameUITownHall:RemoveQuestItemById( questId )
     local item = self.quest_items[questId]
     self.quest_list_view:removeItem(item)
     self.quest_items[questId]  = nil
+    self.quest_list_view:reload()
 end
 function GameUITownHall:ResetQuest()
     self.quest_items = {}

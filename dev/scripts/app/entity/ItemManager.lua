@@ -214,7 +214,7 @@ function ItemManager:GetAllCityBuffTypes()
         "stoneBonus",
         "ironBonus",
         "foodBonus",
-        "taxesBonus",
+        "coinBonus",
         "citizenBonus",
     }
 end
