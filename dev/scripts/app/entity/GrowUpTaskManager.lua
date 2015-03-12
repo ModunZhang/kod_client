@@ -653,6 +653,17 @@ function GrowUpTaskManager:GetAvailableTaskByTag(tag, func)
 
     return r, count_cur, #config + 1
 end
+function GrowUpTaskManager:GetCompleteTaskCount()
+    local count = 0
+    for _,category in pairs(self.task_map) do
+        for _,task in ipairs(category) do
+            if not task.rewarded then
+                count = count + 1
+            end
+        end
+    end
+    return count
+end
 function GrowUpTaskManager:OnUserDataChanged(userData)
     if not userData.growUpTasks then return end
     local growUpTasks = userData.growUpTasks
