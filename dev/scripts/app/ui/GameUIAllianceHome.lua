@@ -95,7 +95,7 @@ function GameUIAllianceHome:CreateOperationButton()
             )
             )
             :setButtonLabelOffset(0, -40)
-            :addTo(self):pos(window.right-50, y)
+            :addTo(self):pos(display.right-50, y)
         button:setTag(i)
         button:setTouchSwallowEnabled(true)
     end

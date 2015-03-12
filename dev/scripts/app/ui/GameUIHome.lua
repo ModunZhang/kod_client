@@ -356,7 +356,7 @@ function GameUIHome:CreateTop()
         if event.name == "CLICKED_EVENT" then
             UIKit:newGameUI("GameUIActivity",City):addToCurrentScene()
         end
-    end):addTo(top_bg):pos(630, -81):scale(0.6)
+    end):addTo(self):pos(display.right-40, display.top-200):scale(0.6)
     --帮助
     local button = cc.ui.UIPushButton.new(
         {normal = "buff_8_128x128.png", pressed = "buff_8_128x128.png"},
@@ -366,7 +366,7 @@ function GameUIHome:CreateTop()
         if event.name == "CLICKED_EVENT" then
             UIKit:newGameUI("GameUITips",button):addToCurrentScene(true)
         end
-    end):addTo(top_bg):pos(630, -181):scale(0.5)
+    end):addTo(self):pos(display.right-40, display.top-290):scale(0.5)
 
     -- BUFF按钮
     local buff_button = cc.ui.UIPushButton.new(
@@ -375,7 +375,7 @@ function GameUIHome:CreateTop()
         if event.name == "CLICKED_EVENT" then
             UIKit:newGameUI("GameUIBuff",self.city):addToCurrentScene()
         end
-    end):addTo(self):pos(display.cx-280, display.top-260)
+    end):addTo(self):pos(display.left+40, display.top-200)
         :scale(0.5)
     return top_bg
 end
@@ -520,7 +520,7 @@ function GameUIHome:CreateBottom()
                     :AddToCurrentScene()
             end
         end
-    end):addTo(self):pos(display.cx+280, display.top-560)
+    end):addTo(self):pos(display.right-40, display.top-560)
     help_button:setVisible(not Alliance_Manager:GetMyAlliance():IsDefault())
     help_button:setVisible(LuaUtils:table_size(Alliance_Manager:GetMyAlliance():GetAllHelpEvents())>0)
 
