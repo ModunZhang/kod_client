@@ -85,7 +85,7 @@ function GameUIPResourceBuilding:ProduceIncreasePart()
     }
     -- bg
     local bg = WidgetInfoWithTitle.new({
-        title = string.format(_("周围2格范围的%s数量"),self.building:GetHouseType()),
+        title = string.format(_("周围2格范围的%s数量"),Localize.building_name[self.building:GetHouseType()]),
         h = 146,
         info = info
     }):align(display.CENTER, display.cx, display.top-180):addTo(self.info_layer)
@@ -212,3 +212,4 @@ function GameUIPResourceBuilding:RebuildPart()
         :addTo(bg)
 end
 return GameUIPResourceBuilding
+

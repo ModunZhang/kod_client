@@ -25,14 +25,11 @@ function WidgetMoveHouse:ctor(house)
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
                 	local from_house_tile = City:GetTileWhichBuildingBelongs(house)
-                	print("from house x=",house:GetLogicPosition())
                 	local _fromBuildingLocation = from_house_tile.location_id
                 	local _fromHouseLocation = from_house_tile:GetBuildingLocation(house)
-                	print("_fromBuildingLocation=",_fromBuildingLocation,"_fromHouseLocation=",_fromHouseLocation)
                 	local to_house_tile = City:GetTileWhichBuildingBelongs(self.move_to_ruins:GetEntity())
                 	local _toBuildingLocation = to_house_tile.location_id
                 	local _toHouseLocation = to_house_tile:GetBuildingLocation(self.move_to_ruins:GetEntity())
-                	print("_toBuildingLocation=",_toBuildingLocation,"_toHouseLocation=",_toHouseLocation)
                     NetManager:getUseItemPromise("movingConstruction",{
                         movingConstruction = {
                             fromBuildingLocation = _fromBuildingLocation,
@@ -41,7 +38,7 @@ function WidgetMoveHouse:ctor(house)
                             toHouseLocation = _toHouseLocation,
                         }
                     }):next(function ()
-                    	self:removeFromParent()
+                        running_scene:LeaveEditMode()
                     end)
                 end
             end)
@@ -53,7 +50,7 @@ function WidgetMoveHouse:ctor(house)
             :addTo(self):pos(-100,0)
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
-                    self:removeFromParent()
+                    running_scene:LeaveEditMode()
                 end
             end)
         self.cancel_btn:setVisible(false)
