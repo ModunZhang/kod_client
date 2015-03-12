@@ -49,6 +49,15 @@ function GameUIHome:OnTaskChanged()
     else
         self.quest_label:setString(_("当前没有推荐任务!"))
     end
+    self:SetCompleteTaskCount(self.city:GetUser():GetTaskManager():GetCompleteTaskCount())
+end
+function GameUIHome:SetCompleteTaskCount(count)
+    if count > 0 then
+        self.complete_task_count:show()
+        self.complete_task_count_label:setString(count)
+    else
+        self.complete_task_count:hide()
+    end
 end
 
 
@@ -449,7 +458,7 @@ function GameUIHome:CreateBottom()
     }) do
         local col = i - 1
         local x, y = first_col + col * padding_width, first_row
-        local button = WidgetPushButton.new({normal = v[1]})
+        local button = cc.ui.UIPushButton.new({normal = v[1]})
             :onButtonClicked(handler(self, self.OnBottomButtonClicked))
             :setButtonLabel("normal",cc.ui.UILabel.new({text = v[2],
                 size = 16,
@@ -461,6 +470,19 @@ function GameUIHome:CreateBottom()
             :addTo(bottom_bg):pos(x, y)
             :scale(0.9)
         button:setTag(i)
+
+        if i == 1 then
+            -- 未读邮件或战报数量显示条
+            self.complete_task_count = display.newSprite("mail_unread_bg_36x23.png"):addTo(button):pos(25, 15)
+            local size = self.complete_task_count:getContentSize()
+            self.complete_task_count_label = cc.ui.UILabel.new(
+                {cc.ui.UILabel.LABEL_TYPE_TTF,
+                    text = GameUtils:formatNumber(0),
+                    font = UIKit:getFontFilePath(),
+                    size = 16,
+                    color = UIKit:hex2c3b(0xf5f2b3)
+                }):align(display.CENTER, size.width/2, size.height/2+4):addTo(self.complete_task_count)
+        end
     end
 
     -- 未读邮件或战报数量显示条
@@ -577,6 +599,10 @@ function GameUIHome:Find()
 end
 
 return GameUIHome
+
+
+
+
 
 
 
