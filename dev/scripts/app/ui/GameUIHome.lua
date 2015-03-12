@@ -520,7 +520,7 @@ function GameUIHome:CreateBottom()
                     :AddToCurrentScene()
             end
         end
-    end):addTo(self):pos(display.right-40, display.top-560)
+    end):addTo(self):pos(display.right-40, display.bottom+300)
     help_button:setVisible(not Alliance_Manager:GetMyAlliance():IsDefault())
     help_button:setVisible(LuaUtils:table_size(Alliance_Manager:GetMyAlliance():GetAllHelpEvents())>0)
 
