@@ -160,15 +160,7 @@ function ItemManager:GetAllResourceTypes()
         stoneBonus = {RESOURCE_TYPE.STONE,RESOURCE_BUFF_TYPE.PRODUCT},
         ironBonus = {RESOURCE_TYPE.IRON,RESOURCE_BUFF_TYPE.PRODUCT},
         foodBonus = {RESOURCE_TYPE.FOOD,RESOURCE_BUFF_TYPE.PRODUCT},
-        taxesBonus = {  
-            {   
-                RESOURCE_TYPE.WOOD,
-                RESOURCE_TYPE.FOOD,
-                RESOURCE_TYPE.IRON,
-                RESOURCE_TYPE.STONE,
-            },
-            RESOURCE_BUFF_TYPE.PRODUCT
-        },
+        coinBonus = {RESOURCE_TYPE.COIN,RESOURCE_BUFF_TYPE.PRODUCT},
         citizenBonus = {RESOURCE_TYPE.POPULATION,RESOURCE_BUFF_TYPE.PRODUCT},
     }
     return buff_map
