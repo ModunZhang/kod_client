@@ -195,6 +195,7 @@ function ItemManager:GetAllSoldierBuffTypes()
         archerAtkBonus = "*_archer",
         cavalryAtkBonus = "*_cavalry",
         siegeAtkBonus = "*_siege",
+        quarterMaster = "*_consumeFoodPerHour"
     }
     return buff_map
 end
