@@ -228,7 +228,7 @@ local BUILDING_DESCRIPTION = {
     ["atk"] = _("提供城墙攻击力"),
 
     ["dragonEyrie"] = _("龙巢可以查看龙的信息，强化龙的装备并晋级，升级建筑能够提升在城市中的龙体力恢复速度"),
-    ["vitalityRecoveryPerHour"] = _("每小时恢复龙的活力"),
+    ["vitalityRecoveryPerHour"] = _("每小时恢复龙的生命值"),
 
     ["hospital"] = _("医院提供治愈伤兵的功能，每次进攻或防守都能将一部分阵亡的士兵转化为伤兵并治愈，升级建筑能够提升伤兵的最大容量上限"),
     ["maxCasualty"] = _("容纳伤兵上限"),

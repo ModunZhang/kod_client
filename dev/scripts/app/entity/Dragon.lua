@@ -146,9 +146,6 @@ end
 --总带兵量
 function Dragon:LeadCitizen()
 	local leadCitizen = self:TotalLeadership() * config_alliance_initData_int.citizenPerLeadership.value
-	if ItemManager:IsBuffActived("troopSizeBonus") then
-		leadCitizen = math.floor(leadCitizen * (1 + ItemManager:GetBuffEffect("troopSizeBonus")))
-	end
 	return leadCitizen
 end
 
@@ -427,7 +424,21 @@ function Dragon:TotalLeadership()
 end
 
 function Dragon:__getDragonLeadershipBuff()
+	local effect = 0
 	local skill = self:GetSkillByName('leadership')
-	return skill:GetEffect()
+	if skill then
+		effect  = effect + skill:GetEffect()
+	end
+	if ItemManager:IsBuffActived("troopSizeBonus") then
+		effect = effect + ItemManager:GetBuffEffect("troopSizeBonus")
+	end
+	effect = effect + User:GetVIPDragonLeaderShipAdd() 
+	local eq_buffs = self:GetAllEquipmentBuffEffect()
+	table.foreachi(eq_buffs,function(__,buffData)
+		if buffData[1] == 'troopSizeAdd' then
+			effect = effect + buffData[2]
+		end
+	end)
+	return effect
 end
 return Dragon
