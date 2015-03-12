@@ -16,7 +16,7 @@ function AllianceScene:onEnter()
 
 
     AllianceScene.super.onEnter(self)
-    
+
     self:CreateAllianceUI()
     self:GotoCurrectPosition()
     app:GetAudioManager():PlayGameMusic("AllianceScene")
@@ -53,6 +53,12 @@ function AllianceScene:onExit()
 end
 function AllianceScene:CreateSceneLayer()
     return MultiAllianceLayer.new(nil, self:GetAlliance())
+end
+function AllianceScene:GotoLogicPosition(x, y)
+    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(x, y)
+    return self:GetSceneLayer():PromiseOfMove(point.x, point.y):next(function()
+        print("hello")
+    end)
 end
 function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building = self:GetSceneLayer():GetClickedObject(x, y)
@@ -93,7 +99,7 @@ function AllianceScene:EnterAllianceBuilding(entity)
     elseif building_name == 'palace' then
         class_name = "GameUIAlliancePalaceEnter"
     elseif building_name == 'shop' then
-        class_name = "GameUIAllianceShopEnter"    
+        class_name = "GameUIAllianceShopEnter"
     elseif building_name == 'orderHall' then
         class_name = "GameUIAllianceOrderHallEnter"
     elseif building_name == 'moonGate' then
@@ -111,11 +117,11 @@ function AllianceScene:EnterNotAllianceBuilding(entity)
     local class_name = ""
     if category == 'none' then
         class_name = "GameUIAllianceEnterBase"
-    elseif category == 'member' then 
+    elseif category == 'member' then
         class_name = "GameUIAllianceCityEnter"
-    elseif category == 'decorate' then 
-         class_name = "GameUIAllianceDecorateEnter"
-    elseif category == 'village' then 
+    elseif category == 'decorate' then
+        class_name = "GameUIAllianceDecorateEnter"
+    elseif category == 'village' then
         class_name = "GameUIAllianceVillageEnter"
     end
     UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance()):addToCurrentScene(true)
@@ -124,6 +130,7 @@ function AllianceScene:ReEnterScene()
     app:enterScene("AllianceScene")
 end
 return AllianceScene
+
 
 
 

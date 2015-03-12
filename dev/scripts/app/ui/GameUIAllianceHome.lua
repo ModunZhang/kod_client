@@ -12,11 +12,8 @@ local GameUIHelp = import(".GameUIHelp")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local RichText = import("..widget.RichText")
 local ChatManager = import("..entity.ChatManager")
-
-
 local GameUIAllianceHome = UIKit:createUIClass('GameUIAllianceHome')
-
-
+local cc = cc
 function GameUIAllianceHome:ctor(alliance)
     GameUIAllianceHome.super.ctor(self)
     self.alliance = alliance
@@ -31,6 +28,28 @@ function GameUIAllianceHome:onEnter()
     GameUIAllianceHome.super.onEnter(self)
     self.bottom = self:CreateBottom()
     self.top = self:CreateTop()
+
+    local rect1 = self.bottom:getCascadeBoundingBox()
+    local rect2 = self.top_bg:getCascadeBoundingBox()
+    self.screen_rect = cc.rect(0, rect1.height, display.width, rect2.y - rect1.height)
+    self.arrow = display.newSprite("arrow_home.png")
+    :addTo(self):align(display.TOP_CENTER):scale(0.3):hide()
+    self.arrow:setTouchEnabled(true)
+    self.arrow:setTouchSwallowEnabled(true)
+    self.arrow:setTouchMode(cc.TOUCH_MODE_ONE_BY_ONE)
+    self.arrow:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        local touch_type = event.name
+        local pre_x, pre_y, x, y = event.prevX, event.prevY, event.x, event.y
+        if touch_type == "began" then
+        elseif touch_type == "moved" then
+        elseif touch_type == "ended" then
+            local scene = display.getRunningScene()
+            local location = scene:GetAlliance():GetSelf().location
+            scene:GotoLogicPosition(location.x, location.y, scene:GetAlliance():Id())
+        end
+        return true
+    end)
+
     if self.top then
         self.top:Refresh()
     end
@@ -405,7 +424,7 @@ function GameUIAllianceHome:MailUnreadChanged(...)
     end
 end
 function GameUIAllianceHome:CreateBottom()
-   
+
     -- 底部背景
     local bottom_bg = display.newSprite("bottom_bg_768x136.png")
         :align(display.BOTTOM_CENTER, display.cx, display.bottom)
@@ -585,6 +604,15 @@ end
 --         end
 --     end
 -- end
+local function pGetIntersectPoint(pt1,pt2,pt3,pt4)
+    local s,t, ret = 0,0,false
+    ret,s,t = cc.pIsLineIntersect(pt1,pt2,pt3,pt4,s,t)
+    if ret then
+        return cc.p(pt1.x + s * (pt2.x - pt1.x), pt1.y + s * (pt2.y - pt1.y)), s
+    else
+        return cc.p(0,0), s
+    end
+end
 function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
     local coordinate_str = string.format("%d, %d", logic_x, logic_y)
     local is_mine
@@ -595,6 +623,49 @@ function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
     end
     self.coordinate_label:setString(coordinate_str)
     self.coordinate_title_label:setString(is_mine)
+
+    -- ----- arrow
+    local scene = display.getRunningScene()
+    if scene.GetAlliance then
+        local alliance = scene:GetAlliance()
+        local layer = scene:GetSceneLayer()
+        local location = alliance:GetSelf().location
+        local point = layer:ConvertLogicPositionToMapPosition(location.x, location.y, alliance:Id())
+        local world_point = layer:convertToWorldSpace(point)
+        local mid_point = cc.p(display.cx, display.cy)
+        local screen_rect = self.screen_rect
+        local left_bottom_point = cc.p(screen_rect.x, screen_rect.y)
+        local left_top_point = cc.p(screen_rect.x, screen_rect.y + screen_rect.height)
+        local right_bottom_point = cc.p(screen_rect.x + screen_rect.width, screen_rect.y)
+        local right_top_point = cc.p(screen_rect.x + screen_rect.width, screen_rect.y + screen_rect.height)
+        if not cc.rectContainsPoint(screen_rect, world_point) then
+            repeat
+                local degree = math.deg(cc.pGetAngle(cc.pSub(mid_point, world_point), cc.p(0, 1))) + 180
+                local p,s = pGetIntersectPoint(mid_point, world_point, right_bottom_point, right_top_point)
+                if s > 0 and cc.rectContainsPoint(screen_rect, p) then
+                    self.arrow:show():pos(p.x, p.y):rotation(degree)
+                    break
+                end
+                local p,s = pGetIntersectPoint(mid_point, world_point, right_top_point, left_top_point)
+                if s > 0 and cc.rectContainsPoint(screen_rect, p) then
+                    self.arrow:show():pos(p.x, p.y):rotation(degree)
+                    break
+                end
+                local p,s = pGetIntersectPoint(mid_point, world_point, left_top_point, left_bottom_point)
+                if s > 0 and cc.rectContainsPoint(screen_rect, p) then
+                    self.arrow:show():pos(p.x, p.y):rotation(degree)
+                    break
+                end
+                local p,s = pGetIntersectPoint(mid_point, world_point, left_bottom_point, right_bottom_point)
+                if s > 0 and cc.rectContainsPoint(screen_rect, p) then
+                    self.arrow:show():pos(p.x, p.y):rotation(degree)
+                    break
+                end
+            until true
+        else
+            self.arrow:hide()
+        end
+    end
 end
 function GameUIAllianceHome:OnAllianceFightChanged(alliance,allianceFight)
     local status = self.alliance:Status()
@@ -645,6 +716,10 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
+
+
+
 
 
 

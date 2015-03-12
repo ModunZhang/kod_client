@@ -59,6 +59,12 @@ function AllianceBattleScene:CreateSceneLayer()
         return MultiAllianceLayer.new(arrange, self:GetEnemyAlliance(), self:GetAlliance())
     end
 end
+function AllianceBattleScene:GotoLogicPosition(x, y, id)
+    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(x, y, id)
+    return self:GetSceneLayer():PromiseOfMove(point.x, point.y):next(function()
+        print("hello")
+    end)
+end
 function AllianceBattleScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building,isMyAlliance = self:GetSceneLayer():GetClickedObject(x, y)
     if building then

@@ -32,9 +32,8 @@ function MapLayer:ctor(min_scale, max_scale)
             if (tx - current_x) * (tx - new_x) <= 0 and (ty - current_y) * (ty - new_y) <= 0 then
                 self.target_position = nil
                 new_x, new_y = tx, ty
-                local move_callbacks = self.move_callbacks
-                if #move_callbacks > 0 then
-                    (table.remove(move_callbacks, 1))()
+                if #self.move_callbacks > 0 then
+                    (table.remove(self.move_callbacks, 1))()
                 end
             end
             self:setPosition(cc.p(new_x, new_y))
@@ -79,12 +78,12 @@ function MapLayer:GetLogicMap()
     return nil
 end
 function MapLayer:PromiseOfMove(map_x, map_y, speed_)
+    local scene_mid_point = self:getParent():convertToNodeSpace(cc.p(display.cx, display.cy))
+    local len = cc.pGetLength(scene_mid_point, cc.p(map_x, map_y))
     self.move_callbacks = {}
-    local move_callbacks = self.move_callbacks
-    assert(#move_callbacks == 0)
     local p = promise.new()
-    self:MoveToPosition(map_x, map_y, speed_)
-    table.insert(move_callbacks, function()
+    self:MoveToPosition(map_x, map_y, speed_ or len * 0.1)
+    table.insert(self.move_callbacks, function()
         p:resolve()
     end)
     return p
