@@ -20,9 +20,6 @@ local SPECIAL = GameDatas.Soldiers.special
 
 local GameUIPVESendTroop = UIKit:createUIClass("GameUIPVESendTroop","GameUIWithCommonHeader")
 
-
-local img_dir = "allianceHome/"
-
 function GameUIPVESendTroop:ctor(pve_soldiers,march_callback)
     GameUIPVESendTroop.super.ctor(self,City,_("准备进攻"))
     self.march_callback = march_callback
@@ -178,10 +175,10 @@ function GameUIPVESendTroop:SelectDragonPart()
     local dragon_bg = display.newSprite("chat_hero_background.png")
         :align(display.LEFT_CENTER, 7,dragon_frame:getContentSize().height/2)
         :addTo(dragon_frame)
-    self.dragon_img = cc.ui.UIImage.new(img_dir..dragon:Type()..".png")
+    self.dragon_img = cc.ui.UIImage.new(dragon:Type()..".png")
         :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2+5)
         :addTo(dragon_bg)
-    local box_bg = display.newSprite(img_dir.."box_426X126.png")
+    local box_bg = display.newSprite("box_426X126.png")
         :align(display.LEFT_CENTER, dragon_frame:getContentSize().width, dragon_frame:getContentSize().height/2)
         :addTo(dragon_frame)
     -- 龙，等级
@@ -214,7 +211,7 @@ function GameUIPVESendTroop:SelectDragonPart()
 
 end
 function GameUIPVESendTroop:RefreashDragon(dragon)
-    self.dragon_img:setTexture(img_dir..dragon:Type()..".png")
+    self.dragon_img:setTexture(dragon:Type()..".png")
     self.dragon_name:setString(_(dragon:Type()).."（LV "..dragon:Level().."）")
     self.dragon_vitality:setString(_("生命值")..dragon:Hp().."/"..dragon:GetMaxHP())
     self.dragon = dragon

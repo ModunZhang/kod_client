@@ -52,7 +52,7 @@ function LogoScene:PreLoadResource()
     --         print("load resoures-->",plistFilename, image)
     --     end)
     -- end
-    display.addSpriteFrames("emoji/emoji.plist","emoji/emoji.png")
+    display.addSpriteFrames("PlistImage/emoji.plist","PlistImage/emoji.png")
 end
 
 

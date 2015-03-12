@@ -44,7 +44,6 @@ local STAR_BG = {
     "star4_118x132.png",
     "star5_118x132.png",
 }
-local img_dir = "allianceHome/"
 
 function GameUIAllianceSendTroops:GetMyAlliance()
     return Alliance_Manager:GetMyAlliance()
@@ -233,10 +232,10 @@ function GameUIAllianceSendTroops:SelectDragonPart()
     local dragon_bg = display.newSprite("chat_hero_background.png")
         :align(display.LEFT_CENTER, 7,dragon_frame:getContentSize().height/2)
         :addTo(dragon_frame)
-    self.dragon_img = cc.ui.UIImage.new(img_dir..dragon:Type()..".png")
+    self.dragon_img = cc.ui.UIImage.new(dragon:Type()..".png")
         :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2+5)
         :addTo(dragon_bg)
-    local box_bg = display.newSprite(img_dir.."box_426X126.png")
+    local box_bg = display.newSprite("box_426X126.png")
         :align(display.LEFT_CENTER, dragon_frame:getContentSize().width, dragon_frame:getContentSize().height/2)
         :addTo(dragon_frame)
     -- 龙，等级
@@ -269,7 +268,7 @@ function GameUIAllianceSendTroops:SelectDragonPart()
 
 end
 function GameUIAllianceSendTroops:RefreashDragon(dragon)
-    self.dragon_img:setTexture(img_dir..dragon:Type()..".png")
+    self.dragon_img:setTexture(dragon:Type()..".png")
     self.dragon_name:setString(_(dragon:Type()).."（LV "..dragon:Level().."）")
     self.dragon_vitality:setString(_("生命值")..dragon:Hp().."/"..dragon:GetMaxHP())
     self.dragon = dragon
@@ -525,7 +524,7 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
     end
 
     -- line
-    local line = display.newSprite(img_dir.."line_624x4.png")
+    local line = display.newSprite("line_624x4.png")
         :align(display.CENTER, window.cx+2, window.top-355)
         :addTo(self)
 
@@ -550,7 +549,7 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
     function TroopShow:NewCorps(soldier,soldier_number)
         local arrange = soldier_arrange[soldier]
         local corps = Corps.new(soldier, arrange.row, arrange.col)
-        local label = display.newSprite(img_dir.."back_ground_122x24.png")
+        local label = display.newSprite("back_ground_122x24.png")
             :align(display.CENTER, 0, -40)
             :addTo(corps)
         if soldier=="lancer" or soldier=="catapult" then

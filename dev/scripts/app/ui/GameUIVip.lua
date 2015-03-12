@@ -280,7 +280,7 @@ end
 
 -- 创建广告框
 function GameUIVip:CreateAD()
-    local ad = display.newSprite("allianceHome/banner.png")
+    local ad = display.newSprite("banner_617x166.png")
 
     display.newSprite("line_663x58.png"):addTo(ad):pos(ad:getContentSize().width/2,6)
     return ad
