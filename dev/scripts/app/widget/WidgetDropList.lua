@@ -47,6 +47,9 @@ function WidgetDropList:onEnter()
 		:size(566,ClipHeight)
 		:align(display.LEFT_BOTTOM, 0, ClipHeight)
 		:addTo(clip_node)
+	content_box:setTouchCaptureEnabled(false)
+	content_box:setTouchEnabled(true)
+	content_box:setTouchSwallowEnabled(false)
 	self.clip_node = clip_node
 	local header = display.newSprite("drop_down_box_content_562x58.png"):align(display.LEFT_BOTTOM,2,0):addTo(self)
 	self.header = header
@@ -76,6 +79,8 @@ function WidgetDropList:BuildList()
 			:setButtonSize(548, 52)
 			:align(display.LEFT_BOTTOM,x, y):addTo(self.content_box)
 			:onButtonClicked(function(event)
+				print("OnItemSelected---->")
+				dump(event,"event--->")
 				self:OnItemSelected(item.tag)
 			end)
 		local statebutton = cc.ui.UIPushButton.new({normal = "checkbox_unselected.png",disabled = "checkbox_selectd.png"})
@@ -148,7 +153,7 @@ function WidgetDropList:OnBoxButtonClicked( event )
     		onComplete = function()
         		self.state_ = self.STATE.open
         		self.lock_ = false
-
+        		self.content_box:setTouchCaptureEnabled(true)
     		end,
 		})
 	else
@@ -158,6 +163,7 @@ function WidgetDropList:OnBoxButtonClicked( event )
     			self.content_box:hide()
         		self.state_ = self.STATE.close
         		self.lock_ = false
+        		self.content_box:setTouchCaptureEnabled(false)
     		end,
 		})
 	end
@@ -188,13 +194,16 @@ function WidgetDropList:addTouchNode_()
 		node:setLocalZOrder(-1)
 		node:setTouchEnabled(true)
 		node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function (event)
+			print("cc.NODE_TOUCH_EVENT---->")
 	        return self:onTouch_(event)
 	    end)
 		node:addNodeEventListener(cc.NODE_TOUCH_CAPTURE_EVENT, function(event)
 			local cascadeBound = self.header:getCascadeBoundingBox()
 			if cc.rectContainsPoint(cascadeBound, cc.p(event.x, event.y)) then
+				print("cc.NODE_TOUCH_CAPTURE_EVENT---->true")
 				return true
 			else
+				print("cc.NODE_TOUCH_CAPTURE_EVENT---->",not self.lock_ and self:GetState() == self.STATE.open	)
         		return not self.lock_ and self:GetState() == self.STATE.open	
 			end
     	end)
