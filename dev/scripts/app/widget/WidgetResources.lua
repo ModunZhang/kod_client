@@ -11,7 +11,7 @@ local resource_type = {
     COIN = ResourceManager.RESOURCE_TYPE.COIN
 }
 local WidgetResources = class("WidgetResources", function ()
-	return display.newLayer()
+    return display.newLayer()
 end)
 
 function WidgetResources:ctor()
@@ -20,7 +20,7 @@ function WidgetResources:ctor()
     self.building = self.city:GetFirstBuildingByType("warehouse")
 end
 function WidgetResources:onEnter()
-	self:CreateResourceListView()
+    self:CreateResourceListView()
     self:InitAllResources()
     self.city:GetResourceManager():AddObserver(self)
     self.city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
@@ -90,6 +90,7 @@ function WidgetResources:InitAllResources()
             total_income=crm:GetFoodProductionPerHour().."/h",
             occupy_citizen=City:GetCitizenByType("farmer"),
             maintenance_cost="-"..self.city:GetSoldierManager():GetTotalUpkeep(),
+            type = "food"
         },
         wood = {
             resource_icon="res_wood_114x100.png",
@@ -97,6 +98,7 @@ function WidgetResources:InitAllResources()
             resource_current_value=crm:GetWoodResource():GetResourceValueByCurrentTime(current_time),
             total_income=crm:GetWoodResource():GetProductionPerHour().."/h",
             occupy_citizen=City:GetCitizenByType("woodcutter"),
+            type = "wood"
         },
         stone = {
             resource_icon="stone_icon.png",
@@ -104,6 +106,7 @@ function WidgetResources:InitAllResources()
             resource_current_value=crm:GetStoneResource():GetResourceValueByCurrentTime(current_time),
             total_income=crm:GetStoneResource():GetProductionPerHour().."/h",
             occupy_citizen=City:GetCitizenByType("quarrier"),
+            type = "stone"
         },
         iron = {
             resource_icon="res_iron_114x100.png",
@@ -111,12 +114,14 @@ function WidgetResources:InitAllResources()
             resource_current_value=crm:GetIronResource():GetResourceValueByCurrentTime(current_time),
             total_income=crm:GetIronResource():GetProductionPerHour().."/h",
             occupy_citizen=City:GetCitizenByType("miner"),
+            type = "iron"
         },
         coin = {
             resource_icon="coin_icon.png",
             resource_current_value=crm:GetCoinResource():GetResourceValueByCurrentTime(current_time),
             total_income=8888,
             occupy_citizen=self.city:GetResourceManager():GetPopulationResource():GetNoneAllocatedByTime(current_time),
+            type = "coin"
         },
     }
     self.resource_items = {}
@@ -266,7 +271,8 @@ function WidgetResources:AddResourceItem(parms)
     -- 使用道具增加资源按钮
     WidgetPushButton.new({normal = "button_wareHouseUI_normal.png",pressed = "button_wareHouseUI_pressed.png"})
         :onButtonClicked(function(event)
-            local items = ItemManager:GetItemByName(string.split(resource_icon, "_")[1].."Class_1")
+            print("string.split(resource_icon, )[1]",string.split(resource_icon, "_")[1])
+            local items = ItemManager:GetItemByName(parms.type.."Class_1")
             WidgetUseItems.new():Create({item = items}):addToCurrentScene()
         end):align(display.CENTER, item_width/2 -30, 0):addTo(content)
         :addChild(display.newSprite("add.png"))
@@ -279,3 +285,4 @@ function WidgetResources:AddResourceItem(parms)
 end
 
 return WidgetResources
+

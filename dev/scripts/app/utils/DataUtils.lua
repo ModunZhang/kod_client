@@ -1,6 +1,7 @@
 local BuildingLevelUp = GameDatas.BuildingLevelUp
 local GemsPayment = GameDatas.GemsPayment
 local HouseLevelUp = GameDatas.HouseLevelUp
+local VipLevel = GameDatas.Vip.level
 
 DataUtils = {}
 
@@ -205,6 +206,8 @@ function DataUtils:getAllSoldierBuffValue(solider_config)
     local item_buff = ItemManager:GetAllSoldierBuffData()
     local military_technology_buff = City:GetSoldierManager():GetAllMilitaryBuffData()
     table.insertto(item_buff,military_technology_buff)
+    local vip_buff = self:getAllSoldierVipBuffValue()
+    table.insertto(item_buff,vip_buff)
     for __,v in ipairs(item_buff) do
         local effect_soldier,buff_field,buff_value = unpack(v)
         if effect_soldier == soldier_type or effect_soldier == '*' then
@@ -216,17 +219,37 @@ function DataUtils:getAllSoldierBuffValue(solider_config)
             end
         end
     end
-    --维护费用
-    if ItemManager:IsBuffActived("quarterMaster") then
-        local buff_realy_value = (solider_config['consumeFoodPerHour'] or 0 ) * ItemManager:GetBuffEffect("quarterMaster")
-        if result['consumeFoodPerHour'] then
-            result['consumeFoodPerHour'] = result['consumeFoodPerHour'] + buff_realy_value
-        else
-           result['consumeFoodPerHour'] = buff_realy_value
-        end
-    end
     return result
 end
+
+
+--获取vip等级对兵种的影响
+function DataUtils:getAllSoldierVipBuffValue()
+    local buff_table = {}
+    --攻击力加成
+    local attck_buff = User:GetVIPSoldierAttackPowerAdd()
+    if attck_buff > 0 then
+        buff_table = {
+            {"*","infantry",attck_buff},
+            {"*","archer",attck_buff},
+            {"*","cavalry",attck_buff},
+            {"*","siege",attck_buff},
+            {"*","wall",attck_buff},
+        }
+    end
+    --防御
+    local defence_buff = User:GetVIPSoldierHpAdd()
+    if defence_buff > 0 then
+        table.insert(buff_table,{"*","hp",defence_buff})
+    end
+    --维护费用
+    local consumeFood_buff = User:GetVIPSoldierConsumeSub()
+    if consumeFood_buff > 0 then
+        table.insert(buff_table,{"*","consumeFoodPerHour",consumeFood_buff})
+    end
+    return buff_table
+end
+
 --获取建筑时间的buff
 --buildingTime:升级或建造原来的时间
 function DataUtils:getBuildingBuff(buildingTime)
@@ -316,10 +339,13 @@ function DataUtils:getPlayerSoldiersMarchTime(soldiers,fromAllianceDoc, fromLoca
 end
 
 function DataUtils:getPlayerMarchTimeBuffEffectValue()
+    local effect = 0
     if ItemManager:IsBuffActived("marchSpeedBonus") then
-        return ItemManager:GetBuffEffect("marchSpeedBonus")
+        effect = effect + ItemManager:GetBuffEffect("marchSpeedBonus")
     end
-    return 0
+    --vip buffer
+    effect = effect + User:GetVIPMarchSpeedAdd()
+    return effect
 end
 --获取攻击行军的buff时间
 function DataUtils:getPlayerMarchTimeBuffTime(fullTime)
@@ -330,8 +356,8 @@ function DataUtils:getPlayerMarchTimeBuffTime(fullTime)
         return 0
     end
 end
---TODO:界面上添加
---获得龙的行军时间（突袭）
+--TODO:界面上添加ui暂时未设计
+--获得龙的行军时间（突袭）不加入任何buffer
 function DataUtils:getPlayerDragonMarchTime(fromAllianceDoc, fromLocation, toAllianceDoc, toLocation)
     local distance = DataUtils:getAllianceLocationDistance(fromAllianceDoc, fromLocation, toAllianceDoc, toLocation)
     local baseSpeed = 2400 
@@ -387,4 +413,23 @@ function DataUtils:getPlayerOnlineTimeMinutes()
     local countInfo = User:GetCountInfo()
     local onlineTime = countInfo.todayOnLineTime + (NetManager:getServerTime() - countInfo.lastLoginTime)
     return math.floor(onlineTime / 1000 / 60)
+end
+-- 根据vip exp获得vip等级,当前等级已升经验百分比
+function DataUtils:getPlayerVIPLevel(exp)
+    for i=#VipLevel,1,-1 do
+        local config = VipLevel[i]
+        if exp >= config.expFrom then
+            local percent = math.floor((exp - config.expFrom)/(config.expTo-config.expFrom)*100)
+            return config.level,percent,exp
+        end
+    end
+end
+--龙的生命值恢复buff
+function DataUtils:GetDragonHpBuffTotal()
+    local effect = 0
+    if ItemManager:IsBuffActived("dragonHpBonus") then
+        effect = effect + ItemManager:GetBuffEffect("dragonHpBonus")
+    end
+    effect = effect + User:GetVIPDragonHpRecoveryAdd()
+    return effect
 end

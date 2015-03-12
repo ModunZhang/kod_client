@@ -283,13 +283,7 @@ function User:GetVipEvent()
 end
 function User:GetVipLevel()
     local exp = self.vipExp
-    for i=#vip_level,1,-1 do
-        local config = vip_level[i]
-        if exp >= config.expFrom then
-            local percent = math.floor((exp - config.expFrom)/(config.expTo-config.expFrom)*100)
-            return config.level,percent,exp
-        end
-    end
+    return DataUtils:getPlayerVIPLevel(exp)
 end
 function User:IsVIPActived()
     return self.vip_event:IsActived()

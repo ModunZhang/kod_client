@@ -291,6 +291,9 @@ function ResourceManager:GetTotalBuffData(city)
             end
         end
     end
+    --vip buff
+    buff_production_map[WALLHP] = buff_production_map[WALLHP] + User:GetVIPWallHpRecoveryAdd()
+    --end
     dump(buff_production_map,"buff_production_map--->")
     dump(buff_limt_map,"buff_limt_map--->")
     return buff_production_map,buff_limt_map
