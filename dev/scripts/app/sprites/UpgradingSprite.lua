@@ -78,7 +78,7 @@ function UpgradingSprite:ctor(city_layer, entity)
     self.config = SpriteConfig[entity:GetType()]
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     UpgradingSprite.super.ctor(self, city_layer, entity, x, y)
-    -- entity:AddBaseListener(self)
+    entity:AddBaseListener(self)
     entity:AddUpgradeListener(self)
 
     -- if entity:IsUnlocked() and self:GetShadowConfig() then
@@ -90,7 +90,7 @@ function UpgradingSprite:ctor(city_layer, entity)
     -- self:CreateBase()
 end
 function UpgradingSprite:DestorySelf()
-    -- self:GetEntity():RemoveBaseListener(self)
+    self:GetEntity():RemoveBaseListener(self)
     self:GetEntity():RemoveUpgradeListener(self)
     self:removeFromParent()
 end

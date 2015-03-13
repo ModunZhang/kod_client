@@ -958,6 +958,14 @@ function City:DestoryDecoratorByPosition(current_time, x, y)
     end
 end
 ----------- 功能扩展点
+local function find_building_info_by_location(houses, location_id)
+    for _, v in pairs(houses) do
+        if v.location == location_id then
+            return v
+        end
+    end
+    return nil
+end
 function City:OnUserDataChanged(userData, current_time)
     -- 解锁，建造，拆除类事件的解析
     local lock_table = {}
@@ -982,15 +990,6 @@ function City:OnUserDataChanged(userData, current_time)
 
                 -- 拆除
                 local decorators = self:GetDecoratorsByLocationId(location.location)
-                assert(decorators)
-                local find_building_info_by_location = function(houses, location_id)
-                    for _, v in pairs(houses) do
-                        if v.location == location_id then
-                            return v
-                        end
-                    end
-                    return nil
-                end
                 table.foreach(decorators, function(key, building)
                     -- 当前位置有小建筑并且推送的数据里面没有就认为是拆除
                     local tile = self:GetTileWhichBuildingBelongs(building)
@@ -1661,6 +1660,7 @@ function City:FindProductionTechEventById(_id)
 end
 
 return City
+
 
 
 
