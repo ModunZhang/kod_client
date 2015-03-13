@@ -86,7 +86,7 @@ end
 @param [boolean bNoMargin] 是否不使用margin margin可调用setMargin赋值
 
 ]]
-function UIListViewItem:setItemSize(w, h, bNoMargin)
+function UIListViewItem:setItemSize(w, h, bNoMargin, ani)
 	if not bNoMargin then
 		if UIScrollView.DIRECTION_VERTICAL == self.lvDirection_ then
 			h = h + self.margin_.top + self.margin_.bottom
@@ -110,7 +110,7 @@ function UIListViewItem:setItemSize(w, h, bNoMargin)
 		bg:setPosition(cc.p(w/2, h/2))
 	end
 
-	self.listener(self, newSize, oldSize)
+	self.listener(self, newSize, oldSize, ani)
 end
 
 --[[--

@@ -279,7 +279,7 @@ function GameUIMission:OnGetAchievementRewardButtonClicked(data)
 end
 
 function GameUIMission:OnTodoAchievementMissionClicked(data)
-    WidgetGrowUpTask.new(data):addToCurrentScene()
+    WidgetGrowUpTask.new(data):addTo(self)
 end
 
 function GameUIMission:OnRecommendMissionClicked()

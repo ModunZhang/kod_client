@@ -38,20 +38,8 @@ function WidgetDropItem:OnBoxButtonClicked( event )
     self.lock_ = true
     if self:GetState() == self.STATE.close then
         self:OnOpen()
-        -- transition.execute(self:GetContent(), cc.MoveBy:create(Animate_Time_Inteval, cc.p(0, -ClipHeight)), {
-        --     easing = "sineInOut",
-        --     onComplete = function()
-        --         self:OnOpen()
-        --     end,
-        -- })
     else
         self:OnClose()
-        -- transition.execute(self.content_box, cc.MoveTo:create(Animate_Time_Inteval, cc.p(0,ClipHeight)), {
-        --     easing = "sineInOut",
-        --     onComplete = function()
-        --         self:OnClose()
-        --     end,
-        -- })
     end
 end
 function WidgetDropItem:OnClose()
@@ -61,15 +49,15 @@ function WidgetDropItem:OnClose()
     self.lock_ = false
     self.arrow:flipY(false)
     if type(self.callback) == "function" then
-        self.callback()
+        self.callback(nil, true)
     end
 end
-function WidgetDropItem:OnOpen()
+function WidgetDropItem:OnOpen(ani)
     self.state_ = self.STATE.open
     self.lock_ = false
     self.arrow:flipY(true)
     if type(self.callback) == "function" then
-        self.callback(self:GetContent())
+        self.callback(self:GetContent(), ani == nil and true or ani)
     end
 end
 function WidgetDropItem:GetContent()

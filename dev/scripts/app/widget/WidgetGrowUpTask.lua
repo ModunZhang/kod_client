@@ -33,12 +33,12 @@ function WidgetGrowUpTask:RefreshItems()
     end
     self.listview:reload()
     if self.listview:getItems()[1] then
-        self.listview:getItems()[1]:getContent():OnBoxButtonClicked()
+        self.listview:getItems()[1]:getContent():OnOpen(false)
     end
 end
 function WidgetGrowUpTask:CreateItem(listview, task)
     local item = listview:newItem()
-    local content = WidgetDropItem.new({title=task:Title()}, function(content)
+    local content = WidgetDropItem.new({title=task:Title()}, function(content, ani)
         if content then
             local extend = (#task:GetRewards() - 4)
             content:size(572, 304 + (extend > 0 and extend or 0) * 40)
@@ -50,13 +50,13 @@ function WidgetGrowUpTask:CreateItem(listview, task)
         local offset = (new_h - h) * 0.5
         local item_rect = item:getCascadeBoundingBox()
         self.touch_layer:setTouchEnabled(true)
-        transition.moveTo(item:getContent(), {x = x, y = y + offset, time = 0.2,
+        transition.moveTo(item:getContent(), {x = x, y = y + offset, time = ani and 0.2 or 0,
             onComplete = function()
                 self.touch_layer:setTouchEnabled(false)
                 if content then
                     local viewRect_ = listview:getViewRectInWorldSpace()
                     local offset_y = (viewRect_.y + viewRect_.height) - (item_rect.y + item_rect.height)
-                    listview.container:moveBy(0.1, 0, offset_y)
+                    listview.container:moveBy(ani and 0.1 or 0, 0, offset_y)
 
                     local size = content:getContentSize()
                     local desc = UIKit:ttfLabel({
@@ -98,13 +98,14 @@ function WidgetGrowUpTask:CreateItem(listview, task)
                 end
             end
         })
-        item:setItemSize(w, new_h, false)
+        item:setItemSize(w, new_h, false, ani)
     end)
     content:align(display.CENTER)
     item:addContent(content)
-    item:setItemSize(content:getCascadeBoundingBox().width, content:getCascadeBoundingBox().height + 10,false)
+    item:setItemSize(content:getCascadeBoundingBox().width, content:getCascadeBoundingBox().height + 10,false,false)
     return item
 end
+
 
 
 

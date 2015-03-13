@@ -169,7 +169,7 @@ function UIListView:setViewRect(viewRect)
     UIListView.super.setViewRect(self, viewRect)
 end
 
-function UIListView:itemSizeChangeListener(listItem, newSize, oldSize)
+function UIListView:itemSizeChangeListener(listItem, newSize, oldSize, ani)
     local pos = self:getItemPos(listItem)
     if not pos then
         return
@@ -181,30 +181,27 @@ function UIListView:itemSizeChangeListener(listItem, newSize, oldSize)
     else
         itemH = 0
     end
-
+    local ani_time = ani and 0.2 or 0
     local content = listItem:getContent()
     transition.moveBy(content,
-        {x = itemW/2, y = itemH/2, time = 0.2})
+        {x = itemW/2, y = itemH/2, time = ani_time})
     if self.bAsyncLoad then -- 修改quick bug 异步加载时的size变动处理
         if UIScrollView.DIRECTION_VERTICAL == self.direction then
             transition.moveBy(self.container,
-                {x = -itemW, y = -itemH, time = 0.2})
-            self:moveItems(1, pos - 1, itemW, itemH, true)
+                {x = -itemW, y = -itemH, time = ani_time})
+            self:moveItems(1, pos - 1, itemW, itemH, ani)
     else
-        self:moveItems(pos + 1, table.nums(self.items_), itemW, itemH, true)
+        self:moveItems(pos + 1, table.nums(self.items_), itemW, itemH, ani)
     end
     else
         self.size.width = self.size.width + itemW
         self.size.height = self.size.height + itemH
         if UIScrollView.DIRECTION_VERTICAL == self.direction then
             transition.moveBy(self.container,
-                {x = -itemW, y = -itemH, time = 0.2,
-                    onComplete = function()
-                        print("move completed")
-                    end})
-            self:moveItems(1, pos - 1, itemW, itemH, true)
+                {x = -itemW, y = -itemH, time = ani_time,})
+            self:moveItems(1, pos - 1, itemW, itemH, ani)
         else
-            self:moveItems(pos + 1, table.nums(self.items_), itemW, itemH, true)
+            self:moveItems(pos + 1, table.nums(self.items_), itemW, itemH, ani)
         end
     end
 end
