@@ -71,8 +71,18 @@ function GameUIHome:GetChatManager()
     return self.chatManager
 end
 
+function GameUIHome:DisplayOn()
+    self.visible_count = self.visible_count + 1
+    self:setVisible(self.visible_count > 0)
+end
+function GameUIHome:DisplayOff()
+    self.visible_count = self.visible_count - 1
+    self:setVisible(self.visible_count > 0)
+end
+
 function GameUIHome:onEnter()
     -- GameUIHome.super.onEnter(self)
+    self.visible_count = 1
     local city = self.city
     -- 上背景
     self:CreateTop()
@@ -599,6 +609,7 @@ function GameUIHome:Find()
 end
 
 return GameUIHome
+
 
 
 
