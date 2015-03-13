@@ -16,6 +16,7 @@ UpgradeBuilding.NOT_ABLE_TO_UPGRADE = {
     LEVEL_NOT_ENOUGH = _("等级小于0级"),
     BUILDING_IS_UPGRADING = _("建筑正在升级"),
     FREE_CITIZEN_ERROR = _("升级小屋会造成可用城民小于0"),
+    PRE_CONDITION = _("前置建筑等级未满足"),
 }
 local NOT_ABLE_TO_UPGRADE = UpgradeBuilding.NOT_ABLE_TO_UPGRADE
 function UpgradeBuilding:ctor(building_info)
@@ -352,7 +353,7 @@ function UpgradeBuilding:IsBuildingUpgradeLegal()
             end)
         end
         if not limit then
-            return string.format(_("需要%s达到%d级"),Localize.building_name[preName],self:GetLevel()+preLevel)
+            return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.PRE_CONDITION
         end
     end
 end
@@ -367,10 +368,29 @@ function UpgradeBuilding:GetPreConditionDesc()
         config = GameDatas.Buildings.buildings[location_id]
     end
     local configParams = string.split(config.preCondition,"_")
-    local preType = configParams[1]
     local preName = configParams[2]
     local preLevel = tonumber(configParams[3])
     return string.format(_("需要%s达到%d级"),Localize.building_name[preName],self:GetLevel()+preLevel)
+end
+-- 获取等级最高建筑的升级前置条件建筑
+function UpgradeBuilding:GetPreConditionBuilding()
+    local city =  self:BelongCity()
+    local config
+    if city:IsHouse(self) then
+        config = GameDatas.Houses.houses[self:GetType()]
+    else
+        local location_id = city:GetLocationIdByBuildingType(self:GetType())
+        config = GameDatas.Buildings.buildings[location_id]
+    end
+    local configParams = string.split(config.preCondition,"_")
+    local preName = configParams[2]
+    local highest_level_building
+    if preName ~= "tower" then
+        highest_level_building = city:GetHighestBuildingByType(preName)
+    else
+        highest_level_building = city:GetNearGateTower()
+    end
+    return highest_level_building
 end
 function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     local city = self:BelongCity()

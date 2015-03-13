@@ -380,7 +380,22 @@ function CommonUpgradeUI:SetUpgradeTime()
     local buff_time = DataUtils:getBuildingBuff(self.building:GetUpgradeTimeToNextLevel())
     self.buff_reduce_time:setString(string.format("(-%s)",GameUtils:formatTimeStyle1(buff_time)))
 end
-
+function CommonUpgradeUI:GotoPreconditionBuilding()
+    local current_scene =display.getRunningScene()
+    local jump_building = self.building:GetPreConditionBuilding()
+    local building_sprite = current_scene:GetSceneLayer():FindBuildingSpriteByBuilding(jump_building, self.city)
+    self:getParent():leftButtonClicked()
+    current_scene:GotoLogicPoint(jump_building:GetLogicPosition())
+    -- 指向建筑的箭头
+    local arrow = display.newSprite("arrow_home.png"):addTo(building_sprite):pos(0,160):scale(0.4)
+    arrow:setRotation(240)
+    local seq_1 = transition.sequence{
+        cc.ScaleTo:create(0.4, 0.8),
+        cc.ScaleTo:create(0.4, 0.4)
+    }
+    arrow:runAction(cc.RepeatForever:create(seq_1))
+    building_sprite:performWithDelay(function() building_sprite:removeChild(arrow, true) end, 5.0)
+end
 function CommonUpgradeUI:SetUpgradeRequirementListview()
     local wood = City.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local iron = City.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
@@ -392,7 +407,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
     local pre_condition = building:IsBuildingUpgradeLegal()
     local requirements = {
         {resource_type = _("前置条件"),isVisible = building:GetLevel()>5, isSatisfy = not pre_condition,canNotBuy=true,
-            icon="hammer_31x33.png",description = building:GetPreConditionDesc()},
+            icon="hammer_31x33.png",description = building:GetPreConditionDesc(),jump_call = handler(self,self.GotoPreconditionBuilding)},
         {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetUpgradingBuildings()<1,
             icon="hammer_31x33.png",description=GameUtils:formatNumber(#City:GetUpgradingBuildings()).."/1"},
         {resource_type = _("木材"),isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
@@ -608,6 +623,15 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
         dialog:SetTitle(_("立即开始"))
         dialog:SetPopMessage(can_not_update_type)
         dialog:CreateNeeds("gem_66x56.png",required_gems)
+    elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.PRE_CONDITION then
+        dialog:CreateOKButton(
+            {
+                listener = handler(self,self.GotoPreconditionBuilding),
+                btn_name= _("前往")
+            }
+        )
+        dialog:SetTitle(_("提示"))
+        dialog:SetPopMessage(can_not_update_type)
     else
         dialog:SetTitle(_("提示"))
         dialog:SetPopMessage(can_not_update_type)
@@ -615,5 +639,8 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
+
 
 
