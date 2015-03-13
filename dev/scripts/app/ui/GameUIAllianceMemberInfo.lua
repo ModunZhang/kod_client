@@ -13,7 +13,6 @@ local GameUIWriteMail = import('.GameUIWriteMail')
 local WidgetPlayerNode = import("..widget.WidgetPlayerNode")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local Localize = import("..utils.Localize")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 
 function GameUIAllianceMemberInfo:ctor(isMyAlliance,memberId)
 	GameUIAllianceMemberInfo.super.ctor(self)
@@ -24,7 +23,7 @@ end
 function GameUIAllianceMemberInfo:onMoveInStage()
 	GameUIAllianceMemberInfo.super.onMoveInStage(self)
 	local shadowLayer = UIKit:shadowLayer():addTo(self)
-	local main_height,min_y = 860,window.bottom + 10
+	local main_height,min_y = 900,window.bottom + 10
 
 
 	local bg = WidgetUIBackGround.new({height=main_height}):addTo(shadowLayer):pos(window.left+20,min_y)
@@ -39,7 +38,7 @@ function GameUIAllianceMemberInfo:onMoveInStage()
 		text = _("玩家信息"),
 		size = 24,
 		color = 0xffedae,
-	}):align(display.CENTER, 300, 21):addTo(title_bar)
+	}):align(display.CENTER, 300, 26):addTo(title_bar)
 	self.bg = bg
 	self.title_bar = title_bar
 
@@ -102,8 +101,8 @@ function GameUIAllianceMemberInfo:BuildUI()
 	            end)
 	            :addTo(self.bg)
 	end
-	local player_node = WidgetPlayerNode.new(cc.size(564,760),self)
-		:addTo(self.bg):pos(22,79)
+	local player_node = WidgetPlayerNode.new(cc.size(564,794),self)
+		:addTo(self.bg):pos(22,82)
 	self.player_node = player_node
 end
 
@@ -123,13 +122,9 @@ function GameUIAllianceMemberInfo:OnPlayerButtonClicked( tag )
        		self:SendToServerWithTag(tag,member)
        end)
 	elseif tag == 3 then --降级
-	  self:ShowSureDialog(string.format(_("您确定设置玩家%s职位为:%s?"),member:Name(),Localize.alliance_title[member:TitleDegrade()]),function()
-       		self:SendToServerWithTag(tag,member)
-       end)
+       	self:SendToServerWithTag(tag,member)
 	elseif tag == 4 then --晋级
-		self:ShowSureDialog(string.format(_("您确定设置玩家%s职位为:%s?"),member:Name(),Localize.alliance_title[member:TitleUpgrade()]),function()
-       		self:SendToServerWithTag(tag,member)
-       end)
+       	self:SendToServerWithTag(tag,member)
 	else
 		self:SendToServerWithTag(tag,member)
 	end
@@ -157,6 +152,7 @@ function GameUIAllianceMemberInfo:SendToServerWithTag(tag,member)
 	elseif tag == 3 then --降级
 		 if not member:IsTitleLowest() then
 		 	  NetManager:getEditAllianceMemberTitlePromise(member:Id(), member:TitleDegrade()):next(function(data)
+		 	  	UIKit:showMessageDialog(_("提示"), string.format(_("%s已降级为%s"),member:Name(),Localize.alliance_title[member:TitleDegrade()]))
 	 	  		local alliacne =  Alliance_Manager:GetMyAlliance()
 	 	  		local title = alliacne:GetMemeberById(member:Id()):Title()
 	 	  		self.player_info.title = title
@@ -166,6 +162,7 @@ function GameUIAllianceMemberInfo:SendToServerWithTag(tag,member)
 	elseif tag == 4 then --晋级
 		if not member:IsTitleHighest() then
             NetManager:getEditAllianceMemberTitlePromise(member:Id(), member:TitleUpgrade()):next(function(data)
+            	UIKit:showMessageDialog(_("提示"), string.format(_("%s已晋级为%s"),member:Name(),Localize.alliance_title[member:TitleUpgrade()]))
         		local alliacne =  Alliance_Manager:GetMyAlliance()
 	 	  		local title = alliacne:GetMemeberById(member:Id()):Title()
 	 	  		self.player_info.title = title
@@ -307,28 +304,12 @@ function GameUIAllianceMemberInfo:CheckPlayerAuthor(button_tag)
 end
 
 function GameUIAllianceMemberInfo:ShowMessage(msg)
-	local dialog = FullScreenPopDialogUI.new()
-    dialog:SetTitle(_("提示"))
-    dialog:SetPopMessage(msg)
-    dialog:AddToCurrentScene()
+ 	UIKit:showMessageDialog(_("提示"), msg,function()end)
 end
 
 function GameUIAllianceMemberInfo:ShowSureDialog(msg,ok_func,cancel_func)
 	cancel_func = cancel_func or function()end
-	local dialog = FullScreenPopDialogUI.new()
-    dialog:SetTitle(_("提示"))
-    dialog:SetPopMessage(msg)
-    dialog:CreateOKButton( {
-        listener =  function ()
-          	ok_func()
-        end
-	})
-    dialog:CreateCancelButton({
-    	listener = function()
-    		cancel_func()
-    	end
-    })
-    dialog:AddToCurrentScene()
+ 	UIKit:showMessageDialog(_("提示"), msg, ok_func, cancel_func)
 end
 
 return GameUIAllianceMemberInfo

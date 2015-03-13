@@ -88,29 +88,6 @@ function GameUIResource:CreateInfomation()
             self:ChaiButtonAction(event)
         end)
 
-    -- local moveButton = cc.ui.UIPushButton.new({normal = "resource_butter_red.png",pressed = "resource_butter_red_highlight.png"}, {scale9 = false})
-    --     :addTo(infomationLayer)
-    --     :align(display.TOP_RIGHT, window.right-60, iconBg:getPositionY() - 600)
-    --     :setButtonLabel("normal",  cc.ui.UILabel.new({
-    --         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-    --         text = _("移动"),
-    --         font = UIKit:getFontFilePath(),
-    --         size = 22,
-    --         color = UIKit:hex2c3b(0xffedae),
-    --     }))
-    --     :setButtonLabelOffset(0, 2)
-    --     :onButtonClicked(function(event)
-    --         local item = ItemManager:GetItemByName("movingConstruction")
-    --         if item:Count()<1 then
-    --             FullScreenPopDialogUI.new():SetTitle(_("提示"))
-    --                 :SetPopMessage(_("没有建筑移动道具"))
-    --                 :AddToCurrentScene()
-    --         else
-    --             WidgetMoveHouse.new(self.building)
-    --             self:leftButtonClicked()
-    --         end
-    --     end)
-
     WidgetUseItems.new():CreateItemBox(ItemManager:GetItemByName("movingConstruction"),function ()
         return true
     end,
@@ -306,10 +283,8 @@ function GameUIResource:ChaiButtonAction( event )
 
     local item = ItemManager:GetItemByName("torch")
 
-    if item:Count()<1 then
-        FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("没有拆除建筑道具"))
-            :AddToCurrentScene()
+    if item:Count() < 1 then
+        UIKit:showMessageDialog(_("提示"), _("没有拆除建筑道具"), function()end)
     else
         local tile = self.city:GetTileWhichBuildingBelongs(self.building)
         local house_location = tile:GetBuildingLocation(self.building)

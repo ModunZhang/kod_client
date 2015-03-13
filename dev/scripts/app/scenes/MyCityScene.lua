@@ -19,14 +19,13 @@ function MyCityScene:onEnter()
     MyCityScene.super.onEnter(self)
     self.arrow_layer = self:CreateArrowLayer()
     self.tutorial_layer = self:CreateTutorialLayer()
-    home_page = self:CreateHomePage()
+    self.home_page = self:CreateHomePage()
     self:GetSceneLayer():IteratorInnnerBuildings(function(_, building)
         self:GetSceneUILayer():NewUIFromBuildingSprite(building)
     end)
 
     self:GetCity():AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
     self:GetCity():GetUser():AddListenOnType(self, User.LISTEN_TYPE.BASIC)
-    -- self:EnterEditMode()
 end
 function MyCityScene:onExit()
     MyCityScene.super.onExit(self)
@@ -34,12 +33,12 @@ end
 function MyCityScene:EnterEditMode()
     MyCityScene.super.EnterEditMode(self)
     self:GetSceneUILayer():EnterEditMode()
-    self:GetHomePage():hide()
+    self:GetHomePage():DisplayOff()
 end
 function MyCityScene:LeaveEditMode()
     MyCityScene.super.LeaveEditMode(self)
     self:GetSceneUILayer():LeaveEditMode()
-    self:GetHomePage():show()
+    self:GetHomePage():DisplayOn()
     self:GetSceneUILayer():removeChildByTag(WidgetMoveHouse.ADD_TAG, true)
 end
 function MyCityScene:GetArrowTutorial()
@@ -57,7 +56,7 @@ function MyCityScene:DestoryArrowTutorial(func)
     return cocos_promise.defer(func)
 end
 function MyCityScene:GetHomePage()
-    return home_page
+    return self.home_page
 end
 function MyCityScene:onEnterTransitionFinish()
     if device.platform == "mac" then
@@ -153,7 +152,7 @@ function MyCityScene:CreateHomePage()
 end
 function MyCityScene:onExit()
     self:GetCity():GetUser():RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
-    home_page = nil
+    self.home_page = nil
     MyCityScene.super.onExit(self)
 end
 function MyCityScene:GetTutorialLayer()

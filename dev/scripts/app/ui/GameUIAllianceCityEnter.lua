@@ -4,7 +4,6 @@
 --
 local GameUIAllianceCityEnter = UIKit:createUIClass("GameUIAllianceCityEnter","GameUIAllianceEnterBase")
 local config_wall = GameDatas.BuildingFunction.wall
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local GameUIWriteMail = import(".GameUIWriteMail")
 
 function GameUIAllianceCityEnter:ctor(building,isMyAlliance,my_alliance,enemy_alliance)
@@ -121,10 +120,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
 		                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):addToCurrentScene(true)
 						self:leftButtonClicked()
 		            else
-		                local dialog = FullScreenPopDialogUI.new()
-		                dialog:SetTitle(_("错误"))
-		                dialog:SetPopMessage(_("已有协防部队正在行军"))
-		                dialog:AddToCurrentScene()
+		                UIKit:showMessageDialog(_("错误"), _("已有协防部队正在行军"), function()end)
 		                self:leftButtonClicked()
 		                return
 		            end

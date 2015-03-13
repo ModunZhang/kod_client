@@ -23,9 +23,17 @@ end
 function GameUIAllianceHome:GetChatManager()
     return self.chatManager
 end
-
+function GameUIAllianceHome:DisplayOn()
+    self.visible_count = self.visible_count + 1
+    self:setVisible(self.visible_count > 0)
+end
+function GameUIAllianceHome:DisplayOff()
+    self.visible_count = self.visible_count - 1
+    self:setVisible(self.visible_count > 0)
+end
 function GameUIAllianceHome:onEnter()
     GameUIAllianceHome.super.onEnter(self)
+    self.visible_count = 1
     self.bottom = self:CreateBottom()
     self.top = self:CreateTop()
 
@@ -722,6 +730,7 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
 
 
 

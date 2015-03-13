@@ -30,28 +30,28 @@ function GameUISetting:BuildUI()
 		color= 0x28251d
 	}):align(display.CENTER,278,29):addTo(header_bg)
 	local buttons_info = {
-		{text = "账号绑定",image = "setting_account_56x65.png"},
-		{text = "选择服务器",image = "setting_server_55x62.png"},
-		{text = "语言",image = "setting_language_71x70.png"},
-		{text = "游戏说明",image = "setting_declare_48x67.png"},
-		{text = "个人排行榜",image = "setting_rank_p_75x70.png"},
-		{text = "联盟排行榜",image = "setting_rank_a_75x66.png"},
+		{text = _("账号绑定"),image = "setting_account_56x65.png"},
+		{text = _("选择服务器"),image = "setting_server_55x62.png"},
+		{text = _("语言"),image = "setting_language_71x70.png"},
+		{text = _("游戏说明"),image = "setting_declare_48x67.png"},
+		{text = _("个人排行榜"),image = "setting_rank_p_75x70.png"},
+		{text = _("联盟排行榜"),image = "setting_rank_a_75x66.png"},
 		{	
-			text = "声音",
+			text = _("音乐"),
 			image = "setting_music_65x60.png",
 			image2 = "setting_music_close_66x60.png",
 			state = app:GetAudioManager():GetBackgroundMusicState() and 1 or 2,
 		},
 		{	
-			text = "音效",
+			text = _("音效"),
 			image = "setting_sound_64x56.png",
 			image2 = "setting_sound_close_64x56.png",
 			state = app:GetAudioManager():GetEffectSoundState() and 1 or 2,
 		},
-		{text = "推送通知",image = "setting_notification_76x66.png"},
-		{text = "已屏蔽用户",image = "setting_shield_58x70.png"},
-		{text = "我有建议",image = "setting_user_voice_62x63.png"},
-		{text = "遇到问题",image = "setting_help_64x65.png"},
+		{text = _("推送通知"),image = "setting_notification_76x66.png"},
+		{text = _("已屏蔽用户"),image = "setting_shield_58x70.png"},
+		{text = _("我有建议"),image = "setting_user_voice_62x63.png"},
+		{text = _("遇到问题"),image = "setting_help_64x65.png"},
 	}
 	local x,y = window.left + 50,window.top_bottom - 80
 	for i,v in ipairs(buttons_info) do
@@ -59,7 +59,7 @@ function GameUISetting:BuildUI()
 			x = window.left + 50
 			y = y - 42 - 112
 		end
-		local button = WidgetPushButton.new(
+		local button = cc.ui.UIPushButton.new(
 	        {normal = "setting_btn_n_112x112.png", pressed = "setting_btn_h_112x112.png"},
 	        {scale9 = false}
     	)

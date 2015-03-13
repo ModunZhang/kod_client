@@ -1,7 +1,6 @@
 local GameUIBase = import('.GameUIBase')
 local GameUIWithCommonHeader = class('GameUIWithCommonHeader', GameUIBase)
 
-local visible_count = 1
 function GameUIWithCommonHeader:ctor(city, title)
     GameUIWithCommonHeader.super.ctor(self)
     self.title = title
@@ -15,16 +14,11 @@ function GameUIWithCommonHeader:onEnter()
     self:CreateTitle(self.title)
     self.home_btn = self:CreateHomeButton()
     self.gem_label = self:CreateShopButton(function()
-    end)
+        end)
     self.city:GetResourceManager():AddObserver(self)
-    local page = home_page or (display.getRunningScene().__cname == "AllianceScene" and display.getRunningScene():GetHomePage())
 
-    if page then
-        print(visible_count)
-        visible_count = visible_count - 1
-        if visible_count == 0 then
-            page:setVisible(false)
-        end
+    if display.getRunningScene():GetHomePage() then
+        display.getRunningScene():GetHomePage():DisplayOff()
     end
 end
 function GameUIWithCommonHeader:CreateBetweenBgAndTitle()
@@ -33,13 +27,9 @@ end
 function GameUIWithCommonHeader:onExit()
     self.city:GetResourceManager():RemoveObserver(self)
     GameUIWithCommonHeader.super.onExit(self)
-    local page = home_page or (display.getRunningScene().__cname == "AllianceScene" and display.getRunningScene():GetHomePage())
 
-    if page then
-        visible_count = visible_count + 1
-        if visible_count > 0 then
-            page:setVisible(true)
-        end
+    if display.getRunningScene():GetHomePage() then
+        display.getRunningScene():GetHomePage():DisplayOn()
     end
 end
 function GameUIWithCommonHeader:OnResourceChanged(resource_manager)
@@ -48,3 +38,4 @@ end
 
 
 return GameUIWithCommonHeader
+
