@@ -57,14 +57,58 @@ function WidgetDropItem:OnOpen(ani)
     self.lock_ = false
     self.arrow:flipY(true)
     if type(self.callback) == "function" then
-        self.callback(self:GetContent(), ani == nil and true or ani)
+        self.callback(self, ani == nil and true or ani)
     end
 end
 function WidgetDropItem:GetContent()
     if not self.content_box then
-        self.content_box = display.newScale9Sprite("drop_down_box_bg_572x304.png"):align(display.CENTER_TOP):addTo(self, -1)
+        self.content_box = display.newScale9Sprite("drop_down_box_bg_572x304.png"):align(display.CENTER_TOP):addTo(self, -1):pos(2, 0)
     end
     return self.content_box
+end
+function WidgetDropItem:CreateRewardsPanel(task)
+    local content = self:GetContent()
+
+    local extend = (#task:GetRewards() - 4)
+    content:size(572, 304 + (extend > 0 and extend or 0) * 40)
+
+    local size = content:getContentSize()
+    local desc = UIKit:ttfLabel({
+        text = task:Desc(),
+        size = 18,
+        color = 0x797154,
+        dimensions = cc.size(500,0)
+    }):align(display.LEFT_TOP, 40, size.height - 30):addTo(content)
+
+    local under_y = 20
+    local base_under_line = size.height - 110 - under_y
+    UIKit:ttfLabel({
+        text = _("任务奖励"),
+        size = 20,
+        color = 0x403c2f,
+    }):align(display.CENTER, 572/2, size.height - 100):addTo(content)
+    display.newSprite("line_550x2.png"):align(display.CENTER, 572/2, base_under_line):addTo(content)
+
+    local base_y = base_under_line
+    local gap_y = 20
+    for i,v in ipairs(task:GetRewards()) do
+        local cur_y = base_y - gap_y
+        cc.ui.UIImage.new(v:Icon()):align(display.CENTER, 572/2 - 230, cur_y):addTo(content):setLayoutSize(30, 30)
+        UIKit:ttfLabel({
+            text = v:Desc(),
+            size = 20,
+            color = 0x403c2f,
+        }):align(display.CENTER, 572/2 - 180, cur_y):addTo(content)
+        UIKit:ttfLabel({
+            text = v:CountDesc(),
+            size = 20,
+            color = 0x403c2f,
+        }):align(display.CENTER, 572/2 + 220, cur_y):addTo(content)
+        if i ~= #task:GetRewards() then
+            display.newSprite("line_550x2.png"):align(display.CENTER, 572/2, cur_y - under_y):addTo(content)
+        end
+        base_y = cur_y - under_y
+    end
 end
 
 function WidgetDropItem:align(anchorPoint, x, y)

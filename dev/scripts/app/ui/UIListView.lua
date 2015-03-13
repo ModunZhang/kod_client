@@ -181,29 +181,55 @@ function UIListView:itemSizeChangeListener(listItem, newSize, oldSize, ani)
     else
         itemH = 0
     end
-    local ani_time = ani and 0.2 or 0
-    local content = listItem:getContent()
-    transition.moveBy(content,
-        {x = itemW/2, y = itemH/2, time = ani_time})
-    if self.bAsyncLoad then -- 修改quick bug 异步加载时的size变动处理
-        if UIScrollView.DIRECTION_VERTICAL == self.direction then
-            transition.moveBy(self.container,
-                {x = -itemW, y = -itemH, time = ani_time})
-            self:moveItems(1, pos - 1, itemW, itemH, ani)
-    else
-        self:moveItems(pos + 1, table.nums(self.items_), itemW, itemH, ani)
-    end
-    else
-        self.size.width = self.size.width + itemW
-        self.size.height = self.size.height + itemH
-        if UIScrollView.DIRECTION_VERTICAL == self.direction then
-            transition.moveBy(self.container,
-                {x = -itemW, y = -itemH, time = ani_time,})
-            self:moveItems(1, pos - 1, itemW, itemH, ani)
+    local ani_time = 0.2
+    if ani then
+        local content = listItem:getContent()
+        transition.moveBy(content,
+            {x = itemW/2, y = itemH/2, time = ani_time})
+        if self.bAsyncLoad then -- 修改quick bug 异步加载时的size变动处理
+            if UIScrollView.DIRECTION_VERTICAL == self.direction then
+                transition.moveBy(self.container,
+                    {x = -itemW, y = -itemH, time = ani_time})
+                self:moveItems(1, pos - 1, itemW, itemH, ani)
         else
             self:moveItems(pos + 1, table.nums(self.items_), itemW, itemH, ani)
         end
+        else
+            self.size.width = self.size.width + itemW
+            self.size.height = self.size.height + itemH
+            if UIScrollView.DIRECTION_VERTICAL == self.direction then
+                transition.moveBy(self.container,
+                    {x = -itemW, y = -itemH, time = ani_time,})
+                self:moveItems(1, pos - 1, itemW, itemH, ani)
+            else
+                self:moveItems(pos + 1, table.nums(self.items_), itemW, itemH, ani)
+            end
+        end
+    else
+        local content = listItem:getContent()
+        local x,y = content:getPosition()
+        content:pos(x + itemW/2, y + itemH/2)
+        if self.bAsyncLoad then -- 修改quick bug 异步加载时的size变动处理
+            if UIScrollView.DIRECTION_VERTICAL == self.direction then
+                local x,y = self.container:getPosition()
+                self.container:pos(x - itemW, y - itemH)
+                self:moveItems(1, pos - 1, itemW, itemH, ani)
+        else
+            self:moveItems(pos + 1, table.nums(self.items_), itemW, itemH, ani)
+        end
+        else
+            self.size.width = self.size.width + itemW
+            self.size.height = self.size.height + itemH
+            if UIScrollView.DIRECTION_VERTICAL == self.direction then
+                local x,y = self.container:getPosition()
+                self.container:pos(x - itemW, y - itemH)
+                self:moveItems(1, pos - 1, itemW, itemH, ani)
+            else
+                self:moveItems(pos + 1, table.nums(self.items_), itemW, itemH, ani)
+            end
+        end
     end
+
 end
 
 function UIListView:scrollListener(event)
@@ -1234,5 +1260,7 @@ end
 
 
 return UIListView
+
+
 
 
