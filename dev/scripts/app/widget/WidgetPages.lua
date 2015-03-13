@@ -44,10 +44,9 @@ function WidgetPages:ctor(params)
         :align(display.RIGHT_BOTTOM,page_label:getPositionX() - page_label:getContentSize().width,15)
         :addTo(self)
 
-    self.left_button = WidgetPushButton.new(
-        {normal = "shrine_page_btn_normal_52x44.png",pressed = "shrine_page_btn_light_52x44.png"},
-        {scale9 = false},
-        {disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}}
+    self.left_button = cc.ui.UIPushButton.new(
+        {normal = "shrine_page_btn_normal_52x44.png",pressed = "shrine_page_btn_light_52x44.png",disabled="shrine_page_btn_disable_52x44.png"},
+        {scale9 = false}
     ):addTo(self):align(display.LEFT_CENTER,7,29)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
@@ -58,10 +57,9 @@ function WidgetPages:ctor(params)
     icon:setFlippedX(true)
     icon:addTo(self.left_button):pos(26,0)
 
-    self.right_button = WidgetPushButton.new(
-        {normal = "shrine_page_btn_normal_52x44.png",pressed = "shrine_page_btn_light_52x44.png"},
-        {scale9 = false},
-        {disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}}
+    self.right_button = cc.ui.UIPushButton.new(
+        {normal = "shrine_page_btn_normal_52x44.png",pressed = "shrine_page_btn_light_52x44.png",disabled="shrine_page_btn_disable_52x44.png"},
+        {scale9 = false}
     ):addTo(self):align(display.RIGHT_CENTER,557,29)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
@@ -82,8 +80,6 @@ function WidgetPages:ChangePage_(page_change)
     else
         to_page = change <= 1 and 1 or change
     end
-    self.left_button:setButtonEnabled(to_page ~= 1)
-    self.right_button:setButtonEnabled(to_page ~= self.page)
 
     self.title_label:setString(self.titles[to_page])
     self.current_page = to_page
@@ -91,6 +87,10 @@ function WidgetPages:ChangePage_(page_change)
     if self.icon and type(self.icon_image) == 'table' then
         self.icon:setTexture(self.icon_image[to_page])
     end
+    local l_enable = to_page ~= 1
+    local r_enable = to_page ~= self.page
+    self.left_button:setButtonEnabled(l_enable)
+    self.right_button:setButtonEnabled(r_enable)
     self.cb(to_page)
 end
 function WidgetPages:SelectPage(page)
@@ -111,8 +111,9 @@ end
 function WidgetPages:GetTitleLabel()
     return self.title_label
 end
-
 return WidgetPages
+
+
 
 
 

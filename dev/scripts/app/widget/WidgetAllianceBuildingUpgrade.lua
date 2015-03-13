@@ -84,7 +84,7 @@ function WidgetAllianceBuildingUpgrade:onEnter()
         }
     ):pos(display.cx, display.top-430)
         :addTo(self)
-    self.upgrade_button = btn_bg.button
+    self.upgrade_button = btn_bg
 
     self:VisibleUpgradeButton()
 
@@ -219,7 +219,7 @@ end
 
 function WidgetAllianceBuildingUpgrade:VisibleUpgradeButton()
     if #self.building_config == self.building.level then
-        self.upgrade_button:setVisible(false)
+        self.upgrade_button:hide()
     end
 end
 

@@ -398,6 +398,7 @@ function GameUIAlliancePalace:OnBasicChanged(alliance,changed_map)
     end
 end
 function GameUIAlliancePalace:OnMemberChanged(alliance,changed_map)
+    if not changed_map then return end
     if changed_map.added then
         for k,v in pairs(changed_map.added) do
             self:CreateAwardMemberItem(v,LuaUtils:table_size(self.award_menmber_listview:getItems()) + 1)
