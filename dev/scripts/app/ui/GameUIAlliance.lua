@@ -11,7 +11,6 @@ local GameUIAlliance = UIKit:createUIClass("GameUIAlliance","GameUIWithCommonHea
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
 local contentWidth = window.width - 80
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetAllianceCreateOrEdit = import("..widget.WidgetAllianceCreateOrEdit")
 local GameUIAllianceNoticeOrDescEdit = import(".GameUIAllianceNoticeOrDescEdit")
@@ -68,7 +67,6 @@ function GameUIAlliance:OnMemberChanged(alliance)
 end
 
 function GameUIAlliance:OnOperation(alliance,operation_type)
-    dump(operation_type,"OnOperation---->")
     self:RefreshMainUI()
 end
 
@@ -616,10 +614,9 @@ function GameUIAlliance:commonListItemAction( listType,item,alliance,tag)
             end)
         else
             NetManager:getRequestToJoinAlliancePromise(alliance.id):next(function()
-                local dialog = FullScreenPopDialogUI.new()
-                dialog:SetTitle(_("申请成功"))
-                dialog:SetPopMessage(string.format(_("您的申请已发送至%s,如果被接受将加入该联盟,如果被拒绝,将收到一封通知邮件."),alliance.name))
-                dialog:AddToCurrentScene()
+                UIKit:showMessageDialog(_("申请成功"),
+                    string.format(_("您的申请已发送至%s,如果被接受将加入该联盟,如果被拒绝,将收到一封通知邮件."),alliance.name),
+                    function()end)
             end):catch(function(err)
                 self:SearchAllianAction(self.editbox_tag_search:getText())
             end)
@@ -723,7 +720,6 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
     local noticeView = UIListView.new {
         viewRect =  cc.rect(21,14,537,123),
         direction = UIScrollView.DIRECTION_VERTICAL,
-    -- bgColor = UIKit:hex2c4b(0x7a000000),
     }:addTo(notice_bg)
     self.ui_overview.noticeView = noticeView
 
@@ -738,10 +734,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
         )
         :onButtonClicked(function(event)
             if not Alliance_Manager:GetMyAlliance():GetSelf():CanEditAllianceNotice() then
-                local dialog = FullScreenPopDialogUI.new()
-                dialog:SetTitle(_("提示"))
-                dialog:SetPopMessage(_("您没有此操作权限"))
-                dialog:AddToCurrentScene()
+                UIKit:showMessageDialog(_("提示"), _("您没有此操作权限"), function()end)
                 return
             end
             UIKit:newGameUI('GameUIAllianceNoticeOrDescEdit',GameUIAllianceNoticeOrDescEdit.EDIT_TYPE.ALLIANCE_NOTICE)
@@ -902,10 +895,7 @@ end
 
 function GameUIAlliance:OnAllianceSettingButtonClicked(event)
     if not Alliance_Manager:GetMyAlliance():GetSelf():CanEditAlliance() then
-        local dialog = FullScreenPopDialogUI.new()
-        dialog:SetTitle(_("提示"))
-        dialog:SetPopMessage(_("您没有此操作权限"))
-        dialog:AddToCurrentScene()
+        UIKit:showMessageDialog(_("提示"), _("您没有此操作权限"), function()end)
         return
     end
     UIKit:newGameUI('GameUIAllianceBasicSetting',true):addToCurrentScene(true)
@@ -1130,10 +1120,7 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
         )
         :onButtonClicked(function(event)
             if not Alliance_Manager:GetMyAlliance():GetSelf():CanEditAllianceDesc() then
-                local dialog = FullScreenPopDialogUI.new()
-                dialog:SetTitle(_("提示"))
-                dialog:SetPopMessage(_("您没有此操作权限"))
-                dialog:AddToCurrentScene()
+                UIKit:showMessageDialog(_("提示"), _("您没有此操作权限"), function()end)
                 return
             end
             UIKit:newGameUI('GameUIAllianceNoticeOrDescEdit',GameUIAllianceNoticeOrDescEdit.EDIT_TYPE.ALLIANCE_DESC)
@@ -1169,29 +1156,20 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
         :pos(notice_bg:getPositionX() - notice_bg:getContentSize().width/2,notice_bg:getPositionY() - notice_bg:getContentSize().height/2 - 118)
         :setCheckButtonStateChangeFunction(function(group,currentSelectedIndex,oldIndex)
              if  not Alliance_Manager:GetMyAlliance():GetSelf():CanEditAllianceJoinType() then
-                local dialog = FullScreenPopDialogUI.new()
-                dialog:SetTitle(_("提示"))
-                dialog:SetPopMessage(_("您没有此操作权限"))
-                dialog:AddToCurrentScene()
+                UIKit:showMessageDialog(_("提示"), _("您没有此操作权限"), function()end)
                 return false
             end
             if currentSelectedIndex ~= oldIndex then
                 local title = _("允许玩家立即加入联盟")
                 if currentSelectedIndex ~= 1 then
-                        title = _("玩家仅能通过申请或者邀请的方式加入")
+                    title = _("玩家仅能通过申请或者邀请的方式加入")
                 end
-                FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("你将设置联盟加入方式为") .. title)
-                    :CreateOKButton(
-                        {
-                            listener =  function ()
-                                self.joinTypeButton:sureSelectedButtonIndex(currentSelectedIndex)
-                            end
-                        }
-                    )
-                    :CreateCancelButton({listener = function ()
-                    end,btn_name = _("取消")})
-                    :AddToCurrentScene()
+                UIKit:showMessageDialog(_("提示"), 
+                    _("你将设置联盟加入方式为") .. title,
+                    function()
+                        self.joinTypeButton:sureSelectedButtonIndex(currentSelectedIndex)
+                    end,
+                    function()end)
             end
             return false
         end)
@@ -1272,10 +1250,7 @@ end
 
 function GameUIAlliance:OnInfoButtonClicked(tag)
     if not self:IsOperateButtonEnable(tag) then
-        local dialog = FullScreenPopDialogUI.new()
-        dialog:SetTitle(_("提示"))
-        dialog:SetPopMessage(_("您没有此操作权限"))
-        dialog:AddToCurrentScene()
+       UIKit:showMessageDialog(_("提示"), _("您没有此操作权限"), function()end)
         return
     end
     if tag == 1 then
@@ -1283,16 +1258,11 @@ function GameUIAlliance:OnInfoButtonClicked(tag)
             UIKit:showMessageDialog(_("提示"),_("仅当联盟成员为空时,盟主才能退出联盟"), function()end)
             return
         end
-        FullScreenPopDialogUI.new():SetTitle(_("退出联盟"))
-            :SetPopMessage(_("您必须在没有部队在外行军的情况下，才可以退出联盟。退出联盟会损失当前未打开的联盟礼物。"))
-            :CreateOKButton(
-                {
-                    listener =  function()
-                        NetManager:getQuitAlliancePromise():done()
-                    end
-                }
-            )
-            :AddToCurrentScene()
+        UIKit:showMessageDialog(_("退出联盟"),
+            _("您必须在没有部队在外行军的情况下，才可以退出联盟。退出联盟会损失当前未打开的联盟礼物。"),
+            function() 
+                NetManager:getQuitAlliancePromise():done()
+            end)
     elseif tag == 2 then
         self:CreateInvateUI()
     elseif tag == 3 then
@@ -1349,33 +1319,16 @@ function GameUIAlliance:CreateInvateUI()
         :onButtonClicked(function(event)
             local playerID = string.trim(editbox:getText())
             if string.len(playerID) == 0 then
-                FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("请输入邀请的玩家ID"))
-                    :CreateOKButton(
-                        {
-                            listener =  function()end
-                        }
-                    )
-                    :AddToCurrentScene()
+                UIKit:showMessageDialog(_("提示"), _("请输入邀请的玩家ID"), function()end)
                 return
             end
             NetManager:getInviteToJoinAlliancePromise(playerID)
                 :next(function(result)
                     layer:removeFromParent(true)
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("邀请发送成功"))
-                        :CreateOKButton({
-                            listener =  function()end
-                        })
-                        :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("提示"), _("邀请发送成功"), function()end)
                 end)
                 :catch(function(err)
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(err:reason())
-                        :CreateOKButton({
-                            listener =  function()end
-                        })
-                        :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("提示"), err:reason(), function()end)
                 end)
         end)
         :addTo(bg):align(display.RIGHT_BOTTOM,editbox:getPositionX(), 20)

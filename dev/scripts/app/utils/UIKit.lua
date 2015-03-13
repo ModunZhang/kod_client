@@ -9,7 +9,6 @@ local promise = import(".promise")
 local Enum = import("..utils.Enum")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local UIListView = import("..ui.UIListView")
-local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 
 UIKit =
     {
@@ -124,7 +123,8 @@ end
 
 function UIKit:closeAllUI()
     for name,v in pairs(self:getRegistry().objects_) do
-        if v.__isBase and v.__type == self.UITYPE.WIDGET then
+
+        if v.__isBase and v.__type ~= self.UITYPE.BACKGROUND then
             v:leftButtonClicked()
         end
     end
@@ -437,7 +437,7 @@ end
 function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_x_button)
     title = title or _("提示")
     if type(visible_x_button) ~= 'boolean' then visible_x_button = true end
-    local dialog = FullScreenPopDialogUI.new():SetTitle(title):SetPopMessage(tips)
+    local dialog = UIKit:newGameUI("FullScreenPopDialogUI"):SetTitle(title):SetPopMessage(tips)
         :CreateOKButton({
             listener =  function ()
                 if ok_callback then
@@ -451,16 +451,16 @@ function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_
                     cancel_callback()
                 end,btn_name = _("取消")})
         end
-        -- dialog:VisibleXButton(visible_x_button)
-        -- if not visible_x_button then
-        --     dialog:DisableAutoClose()
-        -- end
+        dialog:VisibleXButton(visible_x_button)
+        if not visible_x_button then
+            dialog:DisableAutoClose()
+        end
         dialog:AddToCurrentScene()
         return dialog
 end
 
 function UIKit:showEvaluateDialog()
-    local dialog = FullScreenPopDialogUI.new():SetTitle("亲"):SetPopMessage("是否去app store评价我们?")
+    local dialog = UIKit:newGameUI("FullScreenPopDialogUI"):SetTitle("亲"):SetPopMessage("是否去app store评价我们?")
         :CreateOKButton({
             listener =  function ()
                 device.openURL("http://www.baidu.com")

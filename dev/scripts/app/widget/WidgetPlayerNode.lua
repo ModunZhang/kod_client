@@ -222,7 +222,7 @@ function WidgetPlayerNode:BuildDataItemNode(data_list_data)
 	local data_list_data = data_list_data or self:CallDelegate_(DELEGATE_METHODS.DataSource,{"DataInfoData"})
 	local item = self:GetListView():newItem()
 	if #data_list_data == 0 then return end
-	local box_height = #data_list_data * 48 + 76
+	local box_height = #data_list_data * 48 + 64
 	local node = display.newNode():size(self:GetSize().width,box_height)
 	local data_panel = UIKit:commonTitleBox(box_height):addTo(node):pos((self:GetSize().width - 540)/2,0) --width:540
 	UIKit:ttfLabel({
@@ -230,7 +230,7 @@ function WidgetPlayerNode:BuildDataItemNode(data_list_data)
 		size = 24,
 		color= 0xffedae
 	}):align(display.CENTER_TOP,270,box_height - 12):addTo(data_panel)
-	local x,y = 14,20
+	local x,y = 14,10
 	for i,v in ipairs(data_list_data) do
 		local image_name = string.format("box_bg_item_520x48_%d.png",i % 2)
 		local bg = display.newSprite(image_name):align(display.LEFT_BOTTOM, x, y + (i - 1) * 48):addTo(data_panel)

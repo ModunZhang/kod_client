@@ -9,7 +9,6 @@ local StarBar = import(".StarBar")
 local DragonSprite = import("..sprites.DragonSprite")
 local GameUIDragonEyrieMain = import(".GameUIDragonEyrieMain")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local DragonManager = import("..entity.DragonManager")
 local WidgetDragonTabButtons = import("..widget.WidgetDragonTabButtons")
 local Dragon = import("..entity.Dragon")
@@ -320,18 +319,12 @@ end
 function GameUIDragonEyrieDetail:UpgradeDragonStar()
     local dragon = self:GetDragon()
     if not dragon:IsReachPromotionLevel() then
-        local dialog = FullScreenPopDialogUI.new()
-        dialog:SetTitle(_("提示"))
-        dialog:SetPopMessage(_("龙未达到晋级等级!"))
-        dialog:AddToCurrentScene()
+        UIKit:showMessageDialog(_("提示"), _("龙未达到晋级等级"), function()end)
         return
     end
 
     if not dragon:EquipmentsIsReachMaxStar() then
-        local dialog = FullScreenPopDialogUI.new()
-        dialog:SetTitle(_("提示"))
-        dialog:SetPopMessage(_("所有装备未达到最高星级!"))
-        dialog:AddToCurrentScene()
+         UIKit:showMessageDialog(_("提示"), _("所有装备未达到最高星级"), function()end)
         return
     end
     

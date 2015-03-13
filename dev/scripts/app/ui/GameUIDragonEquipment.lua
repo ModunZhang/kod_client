@@ -217,11 +217,8 @@ function GameUIDragonEquipment:IntensifyEvent()
       end
   end)
   if #equipments == 0 then 
-    local dialog = FullScreenPopDialogUI.new()
-        dialog:SetTitle(_("提示"))
-        dialog:SetPopMessage(_("请选择用来强化的装备!"))
-        dialog:AddToCurrentScene()
-        return  
+      UIKit:showMessageDialog(_("提示"), _("请选择用来强化的装备"), function()end)
+      return  
   end 
   local equipment = self:GetEquipment()
   NetManager:getEnhanceDragonEquipmentPromise(self.dragon:Type(),equipment:Body(),equipments):next(function(result)
