@@ -88,7 +88,7 @@ function CityLayer:GetClickedObject(world_x, world_y)
             else
                 table.remove(sprite_clicked, 1)
             end
-        end 
+        end
     end
     return clicked_list.logic_clicked[1] or clicked_list.sprite_clicked[1]
 end
@@ -588,8 +588,8 @@ function CityLayer:IteratorCanUpgradingBuilding(func)
         if handle then break end
         table.foreach(self.towers, function(k, tower)
             -- if tower:GetEntity():IsUnlocked() then
-                return handle_func(k, tower)
-            -- end
+            return handle_func(k, tower)
+                -- end
         end)
         if handle then break end
         table.foreach(self.walls, function(k, wall)
@@ -598,6 +598,40 @@ function CityLayer:IteratorCanUpgradingBuilding(func)
             end
         end)
     until true
+end
+function CityLayer:FindBuildingSpriteByBuilding(buildingEntity,city)
+    local find_sprite
+    table.foreach(self.buildings, function(k, building)
+        if building:GetEntity()==buildingEntity then
+            find_sprite = building
+            return true
+        end
+    end)
+    if find_sprite then return find_sprite end
+    table.foreach(self.houses, function(k, house)
+        if house:GetEntity() == buildingEntity then
+            find_sprite = house
+            return true
+        end
+    end)
+    if find_sprite then return find_sprite end
+    local near_tower = city:GetNearGateTower()
+    if  near_tower == buildingEntity then
+        table.foreach(self.towers, function(k, tower)
+            if tower:GetEntity()==near_tower then
+                find_sprite = tower
+                return true
+            end
+        end)
+    end
+    if find_sprite then return find_sprite end
+    table.foreach(self.walls, function(k, wall)
+        if wall:GetEntity()==buildingEntity then
+            find_sprite = wall
+            return true
+        end
+    end)
+    if find_sprite then return find_sprite end
 end
 function CityLayer:IteratorClickAble(func)
     local handle = false
@@ -627,7 +661,7 @@ function CityLayer:IteratorRuins(func)
     table.foreach(self.ruins, func)
 end
 function CityLayer:GetGate()
-    local gate 
+    local gate
     table.foreach(self.walls, function(_, v)
         if v:GetEntity():IsGate() then
             gate = v
@@ -712,6 +746,8 @@ function CityLayer:OnSceneScale()
 end
 
 return CityLayer
+
+
 
 
 

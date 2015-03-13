@@ -61,6 +61,25 @@ function WidgetRequirementListview:RefreshListView(contents)
                     if v.canNotBuy then
                         content.bg:setTexture("upgrade_resources_background_red.png")
                         content.mark:setTexture("no_40x40.png")
+                        if v.jump_call then
+                            content.mark:stopAllActions()
+
+                            local seq_1 = transition.sequence{
+                                cc.ScaleTo:create(0.4, 0.5),
+                                cc.ScaleTo:create(0.4, 1)
+                            }
+                            content.mark:runAction(cc.RepeatForever:create(seq_1))
+                            
+                            content.bg:setNodeEventEnabled(true)
+                            content.bg:setTouchEnabled(true)
+                            content.bg:removeAllNodeEventListeners()
+                            content.bg:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+                                if event.name == "ended" then
+                                    v.jump_call()
+                                end
+                                return true
+                            end)
+                        end
                     else
                         -- 不符合条提案，添加!图标
                         content.mark:setTexture("wow_40x40.png")
@@ -69,7 +88,6 @@ function WidgetRequirementListview:RefreshListView(contents)
                 content.resource_value:setString(v.resource_type.." "..v.description)
             else
                 -- 添加新条件
-                print("添加新条件",v.resource_type)
                 local item = self.listview:newItem()
                 local item_width,item_height = self.listview_width,48
                 item:setItemSize(item_width,item_height)
@@ -88,6 +106,24 @@ function WidgetRequirementListview:RefreshListView(contents)
                     if v.canNotBuy then
                         content.bg = display.newSprite("upgrade_resources_background_red.png", 0, 0):addTo(content)
                         content.mark = display.newSprite("no_40x40.png", item_width/2-25, 0):addTo(content)
+                        if v.jump_call then
+                            content.mark:removeAllNodeEventListeners()
+                            content.mark:stopAllActions()
+
+                            local seq_1 = transition.sequence{
+                                cc.ScaleTo:create(0.4, 0.5),
+                                cc.ScaleTo:create(0.4, 1)
+                            }
+                            content.mark:runAction(cc.RepeatForever:create(seq_1))
+                            content.mark:setNodeEventEnabled(true)
+                            content.mark:setTouchEnabled(true)
+                            content.mark:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+                                if event.name == "ended" then
+                                    v.jump_call()
+                                end
+                                return true
+                            end)
+                        end
                     else
                         -- 不符合条提案，添加X图标
                         content.mark = display.newSprite("wow_40x40.png", item_width/2-25, 0):addTo(content)
@@ -121,6 +157,8 @@ function WidgetRequirementListview:RefreshListView(contents)
 end
 
 return WidgetRequirementListview
+
+
 
 
 
