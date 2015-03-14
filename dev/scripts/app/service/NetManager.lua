@@ -1476,14 +1476,18 @@ function NetManager:getBuyItemPromise(itemName,count)
     return promise.all(get_blocking_request_promise("logic.playerHandler.buyItem", {
         itemName = itemName,
         count = count,
-    }, "购买道具失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "购买道具失败!"), get_playerdata_callback()):next(get_response_msg):done(function ()
+        ext.market_sdk.onPlayerBuyGameItems(itemName,count,DataUtils:GetItemPriceByItemName(itemName))
+    end)
 end
 --使用道具
 function NetManager:getUseItemPromise(itemName,params)
     return promise.all(get_blocking_request_promise("logic.playerHandler.useItem", {
         itemName = itemName,
         params = params,
-    }, "使用道具失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "使用道具失败!"), get_playerdata_callback()):next(get_response_msg):done(function ()
+        ext.market_sdk.onPlayerUseGameItems(itemName,1)
+    end)
 end
 --购买并使用道具
 function NetManager:getBuyAndUseItemPromise(itemName,params)
@@ -1492,6 +1496,8 @@ function NetManager:getBuyAndUseItemPromise(itemName,params)
         params = params,
     }, "购买并使用道具失败!"), get_playerdata_callback()):next(get_response_msg):done(function ()
         GameGlobalUI:showTips(_("提示"),string.format('使用%s道具成功',Localize_item.item_name[itemName]))
+        ext.market_sdk.onPlayerBuyGameItems(itemName,1,DataUtils:GetItemPriceByItemName(itemName))
+        ext.market_sdk.onPlayerUseGameItems(itemName,1)
     end)
 end
 
