@@ -41,6 +41,7 @@ property(User, "dailyQuestsRefreshTime", 0)
 property(User, "terrain", "")
 property(User, "id", 0)
 property(User, "marchQueue", 1)
+property(User, "serverName", "")
 function User:ctor(p)
     User.super.ctor(self)
     self.resources = {
@@ -199,6 +200,9 @@ function User:OnPropertyChange(property_name, old_value, new_value)
     end)
 end
 function User:OnUserDataChanged(userData, current_time)
+    if userData.logicServerId then
+        self:SetServerName(userData.logicServerId)
+    end
     self:OnResourcesChangedByTime(userData.resources, current_time)
     self:OnBasicInfoChanged(userData.basicInfo)
     self:OnCountInfoChanged(userData.countInfo)

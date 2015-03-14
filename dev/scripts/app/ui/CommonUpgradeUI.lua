@@ -383,6 +383,13 @@ end
 function CommonUpgradeUI:GotoPreconditionBuilding()
     local current_scene =display.getRunningScene()
     local jump_building = self.building:GetPreConditionBuilding()
+    if tolua.type(jump_building) == "string" then
+        FullScreenPopDialogUI.new()
+                :AddToCurrentScene()
+                :SetTitle("提示")
+                :SetPopMessage(string.format(_("请首先建造%s"),Localize.building_name[jump_building]))
+        return
+    end
     local building_sprite = current_scene:GetSceneLayer():FindBuildingSpriteByBuilding(jump_building, self.city)
     self:getParent():leftButtonClicked()
     current_scene:GotoLogicPoint(jump_building:GetLogicPosition())

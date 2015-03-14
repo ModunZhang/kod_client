@@ -62,7 +62,7 @@ void MarketSDKTool::onPlayerChargeRequst(const char *orderID, const char *produc
     [TDGAVirtualCurrency onChargeRequst:[NSString stringWithUTF8String:orderID]
                                   iapId:[NSString stringWithUTF8String:productId]
                          currencyAmount:currencyAmount currencyType:[NSString stringWithUTF8String:currencyType]
-                  virtualCurrencyAmount:0
+                  virtualCurrencyAmount:virtualCurrencyAmount
                             paymentType:@"Apple"];
 #endif
 }
