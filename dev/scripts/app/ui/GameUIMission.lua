@@ -33,12 +33,12 @@ function GameUIMission:onEnter()
     self.city:GetUser():AddListenOnType(self, User.LISTEN_TYPE.DAILY_TASKS)
 end
 function GameUIMission:onExit()
-    GameUIMission.super.onExit(self)
-    self.city:GetUser():RemoveListenerOnType(self, User.LISTEN_TYPE.TASK)
-    self.city:GetUser():RemoveListenerOnType(self, User.LISTEN_TYPE.DAILY_TASKS)
     if self.___handle___ then
         scheduler.unscheduleGlobal(self.___handle___)
     end
+    GameUIMission.super.onExit(self)
+    self.city:GetUser():RemoveListenerOnType(self, User.LISTEN_TYPE.TASK)
+    self.city:GetUser():RemoveListenerOnType(self, User.LISTEN_TYPE.DAILY_TASKS)
 end
 function GameUIMission:OnTaskChanged(user)
     self:RefreshAchievementList()

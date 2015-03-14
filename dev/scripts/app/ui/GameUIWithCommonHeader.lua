@@ -17,8 +17,9 @@ function GameUIWithCommonHeader:onEnter()
         end)
     self.city:GetResourceManager():AddObserver(self)
 
-    if display.getRunningScene():GetHomePage() then
-        display.getRunningScene():GetHomePage():DisplayOff()
+    local scene = display.getRunningScene()
+    if scene.GetHomePage and scene:GetHomePage() then
+        scene:GetHomePage():DisplayOff()
     end
 end
 function GameUIWithCommonHeader:CreateBetweenBgAndTitle()
@@ -28,8 +29,9 @@ function GameUIWithCommonHeader:onExit()
     self.city:GetResourceManager():RemoveObserver(self)
     GameUIWithCommonHeader.super.onExit(self)
 
-    if display.getRunningScene():GetHomePage() then
-        display.getRunningScene():GetHomePage():DisplayOn()
+    local scene = display.getRunningScene()
+    if scene.GetHomePage and scene:GetHomePage() then
+        scene:GetHomePage():DisplayOn()
     end
 end
 function GameUIWithCommonHeader:OnResourceChanged(resource_manager)

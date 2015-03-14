@@ -37,6 +37,9 @@ end
 function PVEScene:CreateSceneLayer()
     return PVELayer.new(self.user)
 end
+function PVEScene:GetHomePage()
+
+end
 function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
     -- 有动画就什么都不处理
     if self:GetSceneLayer():GetChar():getNumberOfRunningActions() > 0 then return end
