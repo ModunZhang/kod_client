@@ -2,7 +2,7 @@ local BuildingLevelUp = GameDatas.BuildingLevelUp
 local GemsPayment = GameDatas.GemsPayment
 local HouseLevelUp = GameDatas.HouseLevelUp
 local VipLevel = GameDatas.Vip.level
-
+local items = GameDatas.Items
 DataUtils = {}
 
 --[[
@@ -432,4 +432,14 @@ function DataUtils:GetDragonHpBuffTotal()
     end
     effect = effect + User:GetVIPDragonHpRecoveryAdd()
     return effect
+end
+--龙的生命值恢复buff
+function DataUtils:GetItemPriceByItemName(itemName)
+    for _,item_category in pairs(items) do
+        for k,v in pairs(item_category) do
+            if k==itemName then
+                return v.price
+            end
+        end
+    end
 end
