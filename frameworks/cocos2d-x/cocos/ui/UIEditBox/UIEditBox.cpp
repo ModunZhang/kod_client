@@ -65,7 +65,14 @@ void EditBox::touchDownAction(Ref *sender, TouchEventType controlEvent)
         _editBoxImpl->openKeyboard();
     }
 }
-
+//dannyhe
+void EditBox::setEnable(bool enable)
+{
+    if (_editBoxImpl!=nullptr)
+    {
+        _editBoxImpl->setEnable(enable);
+    }
+}
 EditBox* EditBox::create(const Size& size,
                          const std::string& normalSprite,
                         TextureResType texType /*= TextureResType::LOCAL*/)

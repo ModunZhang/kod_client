@@ -435,6 +435,13 @@ namespace ui {
              * @lua NA
              */
             void touchDownAction(Ref *sender, TouchEventType controlEvent);
+            //dannhe
+            /**
+             *  设置输入框是否可以输入
+             *
+             *  @param enable 是否可以输入
+             */
+            void setEnable(bool enable);
         protected:
             virtual void adaptRenderers();
 
