@@ -638,7 +638,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
             }
         )
         dialog:SetTitle(_("提示"))
-        dialog:SetPopMessage(can_not_update_type)
+        dialog:SetPopMessage(self.building:GetPreConditionDesc())
     else
         dialog:SetTitle(_("提示"))
         dialog:SetPopMessage(can_not_update_type)
