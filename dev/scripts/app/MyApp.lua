@@ -150,7 +150,7 @@ function MyApp:retryConnectServer()
                 if showed then
                     loading:removeFromParent(true)
                 end
-            end)        
+            end)      
         end,1)
        
     end
@@ -278,6 +278,7 @@ function MyApp:transactionObserver(event)
         Store.finishTransaction(transaction)
     elseif transaction_state == 'purchased' then
         --TODO:服务器验证 成功或失败后关闭 transaction
+        -- ext.market_sdk.onPlayerChargeRequst(transaction.transactionIdentifier,transaction.productIdentifier,30,)
         NetManager:getVerifyIAPPromise(transaction.transactionIdentifier,transaction.receipt):next(function(msg)
             if msg.transactionId then
                 GameGlobalUI:showTips("恭喜","获得x100宝石")

@@ -30,7 +30,7 @@
 #import "AppDelegate.h"
 #import "RootViewController.h"
 #import "platform/ios/CCEAGLView-ios.h"
-
+#include "MarketSDKTool.h"
 @implementation AppController
 @synthesize remoteDeviceToken;
 #pragma mark -
@@ -64,11 +64,11 @@ static AppDelegate s_sharedApplication;
     viewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
     viewController.wantsFullScreenLayout = YES;
     viewController.view = eaglView;
-    //dannyhe
+    //dannyhe 启用通知
     [self setRemoteDeviceToken:@""];
-    //启用本地通知的BadgeNumber权限 后面会加入远程通知
-    if (IOS_VERSION >= 8) {
-        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge|UIUserNotificationTypeAlert|UIUserNotificationTypeSound categories:nil];
+    if ([application respondsToSelector:@selector(isRegisteredForRemoteNotifications)]) {
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge|UIUserNotificationTypeAlert|UIUserNotificationTypeSound
+                                                                                 categories:nil];
         [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
         [[UIApplication sharedApplication] registerForRemoteNotifications];
     }
@@ -76,7 +76,6 @@ static AppDelegate s_sharedApplication;
     {
         [[UIApplication sharedApplication]registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
     }
-    
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0]; //清空红圈
     // Set RootViewController to window
     if ( [[UIDevice currentDevice].systemVersion floatValue] < 6.0)
@@ -97,8 +96,10 @@ static AppDelegate s_sharedApplication;
     // IMPORTANT: Setting the GLView should be done after creating the RootViewController
     cocos2d::GLView *glview = cocos2d::GLViewImpl::createWithEAGLView(eaglView);
     cocos2d::Director::getInstance()->setOpenGLView(glview);
-
+    
     app->run();
+    //启动sdk
+    MarketSDKTool::getInstance()->initSDK();
     return YES;
 }
 

@@ -7,10 +7,6 @@
 	#import <UIKit/UIKit.h>
 #endif
 
-#ifndef IOS_VERSION
-#define IOS_VERSION [[UIDevice currentDevice].systemVersion intValue]
-#endif
-
 #ifndef DEBUG
 #define NSLog(format,...)
 #else
