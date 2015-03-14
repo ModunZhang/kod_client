@@ -19,6 +19,7 @@ function setup()
     })
     City:InitDecorators({})
     City:ClearAllListener()
+    City:GenerateWalls()
 end
 function test_build_dwelling()
 
@@ -37,7 +38,7 @@ function test_build_dwelling()
                 x = 12, y = 12, building_type = "dwelling", level = 1, w = 10, h = 10
             })
 
-            assert_equal(20, decorator_building:GetProductionPerHour())
+            assert_equal(300, decorator_building:GetProductionPerHour())
 
             City:CreateDecorator(time, decorator_building)
 

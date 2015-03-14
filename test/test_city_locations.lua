@@ -18,6 +18,7 @@ function setup()
         UpgradeBuilding.new({ x = 16, y = 19, building_type = "warehouse", level = 1, w = 6, h = 6 }),
     })
     test_city:InitDecorators({})
+    test_city:GenerateWalls()
 end
 function test_city_locations()
     -- assert_equal("keep", test_city:GetBuildingByLocationId(1):GetType())

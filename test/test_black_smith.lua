@@ -13,6 +13,7 @@ function setup()
     City:InitBuildings({
         BlackSmithUpgradeBuilding.new({ x = 19, y = 19, building_type = "blackSmith", level = 1, w = 6, h = 6 }),
     })
+    City:GenerateWalls()
 end
 
 
@@ -29,12 +30,12 @@ function test_blackSmith()
             -- print("OnMakingMaterialsWithEvent", current_time)
         end,
         OnEndMakeEquipmentWithEvent = function(lisenter, black_smith, event, equipment)
-            assert_equal("moltenCrown", equipment)
+            assert_equal("redCrown_s1", equipment)
             assert_true(event:IsEmpty())
         end,
     })
 
-    blackSmith:MakeEquipmentWithFinishTime("moltenCrown", blackSmith:GetMakingTimeByEquipment("moltenCrown"))
+    blackSmith:MakeEquipmentWithFinishTime("redCrown_s1", blackSmith:GetMakingTimeByEquipment("redCrown_s1"))
 
     Game.new():OnUpdate(function(time)
         blackSmith:OnTimer(time)
@@ -43,10 +44,10 @@ function test_blackSmith()
             assert_true(not blackSmith:IsEquipmentEventEmpty())
             assert_equal(1, blackSmith:GetMakeEquipmentEvent():ElapseTime(time))
             assert_equal(1600 - 1, blackSmith:GetMakeEquipmentEvent():LeftTime(time))
-            assert_equal(1600, blackSmith:GetMakingTimeByEquipment("moltenCrown"))
-        elseif time == blackSmith:GetMakingTimeByEquipment("moltenCrown") then
+            assert_equal(1600, blackSmith:GetMakingTimeByEquipment("redCrown_s1"))
+        elseif time == blackSmith:GetMakingTimeByEquipment("redCrown_s1") then
             blackSmith:EndMakeEquipmentWithCurrentTime(time)
-        elseif time == blackSmith:GetMakingTimeByEquipment("moltenCrown") + 1 then
+        elseif time == blackSmith:GetMakingTimeByEquipment("redCrown_s1") + 1 then
             return false
         end
         return true

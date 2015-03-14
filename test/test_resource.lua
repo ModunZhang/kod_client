@@ -8,8 +8,6 @@ local DragonEyrieUpgradeBuilding = import("app.entity.DragonEyrieUpgradeBuilding
 City = import("app.entity.City").new()
 
 
-
-
 module( "test_resource", lunit.testcase, package.seeall )
 function test_resource()
     local resource = Resource.new()
@@ -33,7 +31,6 @@ function test_automaticupdateresource()
     automaticUpdateResource:SetProductionPerHour(0, 3600)
     automaticUpdateResource:SetValueLimit(5)
     Game.new():OnUpdate(function(time)
-        automaticUpdateResource:OnTimer(time)
         if time == 1 then
         	-- automaticUpdateResource:AddResourceByCurrentTime(time, 2)
         	assert_equal(1, automaticUpdateResource:GetResourceValueByCurrentTime(time))
@@ -74,6 +71,7 @@ function setup()
         WarehouseUpgradeBuilding.new({ x = 9, y = 9, building_type = "warehouse", level = 1, w = 9, h = 10 }),
         DragonEyrieUpgradeBuilding.new({ x = 9, y = 9, building_type = "dragonEyrie", level = 1, w = 9, h = 10 }),
         })
+    test_city:GenerateWalls()
 end
 function test_resource_manager()
     local decorator_building = PopulationResourceUpgradeBuilding.new({ x = 12, y = 12, building_type = "dwelling", level = 1, w = 10, h = 10})

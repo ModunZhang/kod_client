@@ -55,7 +55,7 @@ function UpdateWalls()
         end
     end
 
-    for k, v in pairs(City.towers) do
+    for k, v in pairs(City.visible_towers) do
         map[v.y + offset][v.x + offset] = 101
     end
 

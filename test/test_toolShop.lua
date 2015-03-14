@@ -13,6 +13,7 @@ function setup()
     City:InitBuildings({
         ToolShopUpgradeBuilding.new({ x = 19, y = 19, building_type = "toolShop", level = 1, w = 6, h = 6 }),
     })
+    City:GenerateWalls()
 end
 
 

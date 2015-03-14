@@ -16,6 +16,7 @@ function setup()
     })
     City:InitDecorators({})
     City:ClearAllListener()
+    City:GenerateWalls()
 end
 function test_barracks()
     local barracks = City:GetFirstBuildingByType("barracks")

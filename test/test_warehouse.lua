@@ -25,6 +25,7 @@ function setup()
     --     { location_id = 3, building_type = "warehouse", x = 19, y = 19, w = 6, h = 6 },
     --     { location_id = 4, building_type = "dragonEyrie", x = 19, y = 9, w = 10, h = 10 },
     -- })
+    City:GenerateWalls()
 end
 
 

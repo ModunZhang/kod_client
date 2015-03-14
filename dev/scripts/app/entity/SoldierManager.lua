@@ -61,8 +61,10 @@ function SoldierManager:ctor()
     self.soldierStarEvents = {}
     self.militaryTechEvents = {}
     self.militaryTechs = {}
-
-    app.timer:AddListener(self)
+    
+    if app then
+        app.timer:AddListener(self)
+    end
 end
 function SoldierManager:IteratorSoldiers(func)
     for k, v in pairs(self:GetSoldierMap()) do
