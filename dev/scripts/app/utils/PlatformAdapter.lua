@@ -66,6 +66,14 @@ function PlatformAdapter:mac()
     fileutils:addSearchPath("dev/res/images/")
     fileutils:addSearchPath("dev/res/fonts/")
     ext.getDeviceToken = function ()end
+    ext.market_sdk = {}
+    setmetatable(ext.market_sdk,{
+        __index= function(t,key)
+            return function ( ... )
+                print("\nfunction: ext.market_sdk." .. key .. "\n","args: ",...)
+            end
+        end
+    })
 end
 
 

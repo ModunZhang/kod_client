@@ -30,6 +30,7 @@
 #include "ext_uservoice.h"
 #define KODLOG(format, ...)      CCLOG(format, ##__VA_ARGS__);Kodlog__(format, ##__VA_ARGS__);
 #endif
+#include "MarketSDKTool.h"
 #include "ext_sysmail.h"
 
 #include "cocos2d.h"
@@ -750,6 +751,7 @@ static void RegisterExtModules(lua_State* tolua_S)
     tolua_ext_module_localpush(tolua_S); //local push
     tolua_ext_module_gamecenter(tolua_S);
     tolua_ext_module_sysmail(tolua_S);
+    tolua_ext_module_market(tolua_S);
 #endif
 }
 
