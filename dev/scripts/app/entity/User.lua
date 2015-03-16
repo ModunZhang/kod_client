@@ -280,7 +280,7 @@ end
 -- 获取当天剩余普通免费gacha次数
 function User:GetOddFreeNormalGachaCount()
     local vip_add = self:GetVipEvent():IsActived() and self:GetVIPNormalGachaAdd() or 0
-    return intInit.freeNormalGachaCountPerDay.value + vip_add - self.countInfo.todayFreeNormalGachaCount
+    return intInit.freeNormalGachaCountPerDay.value + vip_add - seluserf.countInfo.todayFreeNormalGachaCount
 end
 function User:GetVipEvent()
     return self.vip_event
@@ -537,7 +537,20 @@ function User:OnNewDailyQuestsEventsComming(__dailyQuestEvents)
         }
     )
 end
-
+-- 判定是否正在进行每日任务
+function User:IsOnDailyQuestEvents()
+    local dailyQuestEvents = self.dailyQuestEvents
+    if LuaUtils:table_empty(dailyQuestEvents) then
+        return false
+    else
+        for k,v in pairs(dailyQuestEvents) do
+            if v.finishTime == 0 then
+                return false
+            end
+        end
+        return true
+    end
+end
 function User:OnDailyQuestsRefresh()
     self:NotifyListeneOnType(User.LISTEN_TYPE.DALIY_QUEST_REFRESH, function(listener)
         listener:OnDailyQuestsRefresh(self:GetDailyQuests())

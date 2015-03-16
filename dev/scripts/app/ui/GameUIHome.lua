@@ -455,7 +455,7 @@ function GameUIHome:CreateBottom()
     pv:reload()
 
     -- 底部按钮
-    local first_row = 60
+    local first_row = 64
     local first_col = 240
     local label_padding = 20
     local padding_width = 100
@@ -471,14 +471,21 @@ function GameUIHome:CreateBottom()
         local button = cc.ui.UIPushButton.new({normal = v[1]})
             :onButtonClicked(handler(self, self.OnBottomButtonClicked))
             :addTo(bottom_bg):pos(x, y)
-            :scale(0.5)
+            :scale(0.55)
         UIKit:ttfLabel({
             text = v[2],
             size = 16,
             color = 0xf5e8c4})
             :addTo(bottom_bg):align(display.CENTER,x, y-40)
         button:setTag(i)
-
+        button:addButtonPressedEventListener(function ()
+            local seq_1 = transition.sequence{
+                cc.ScaleTo:create(0.1, 0.55),
+                cc.ScaleTo:create(0.1, 0.6),
+                cc.ScaleTo:create(0.1, 0.55),
+            }
+            button:runAction(seq_1)
+        end)
         if i == 1 then
             -- 未读邮件或战报数量显示条
             self.complete_task_count = display.newSprite("mail_unread_bg_36x23.png"):addTo(bottom_bg):pos(260, first_row+20)
@@ -565,6 +572,9 @@ function GameUIHome:OnBottomButtonClicked(event)
     elseif tag == 5 then
         UIKit:newGameUI('GameUISetting',self.city):addToCurrentScene(true)
     end
+
+
+
 end
 function GameUIHome:OnVipEventActive( vip_event )
     self:RefreshVIP()
@@ -607,6 +617,9 @@ function GameUIHome:Find()
 end
 
 return GameUIHome
+
+
+
 
 
 
