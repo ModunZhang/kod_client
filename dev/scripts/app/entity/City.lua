@@ -130,7 +130,7 @@ function City:InitWithJsonData(userData)
             local event = get_building_event_by_location(location.location)
             local finishTime = event == nil and 0 or event.finishTime / 1000
             table.insert(init_buildings,
-                self:NewBuildingWithType(location_config.building_type,
+                self:NewBuildingWithType(location.type,
                     location_config.x,
                     location_config.y,
                     location_config.w,
@@ -562,7 +562,15 @@ function City:GetLocationIdByBuildingType(building_type)
     return nil
 end
 function City:GetBuildingByLocationId(location_id)
-    return self:GetFirstBuildingByType(self.locations[location_id].building_type)
+    if location_id == 2 then
+        return self:GetFirstBuildingByType("watchTower")
+    end
+    for _,v in pairs(self:GetAllBuildings()) do
+        if self:GetTileByLocationId(location_id):IsContainBuilding(v) then
+            return v
+        end
+    end
+    return nil
 end
 function City:GetBuildingByTypeWithSpecificPosition(building_type, x, y)
     for _, v in pairs(self:GetBuildingByType(building_type)) do

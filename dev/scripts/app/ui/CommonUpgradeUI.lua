@@ -203,7 +203,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
     elseif self.building:GetType()=="hospital" then
         efficiency = string.format("%s%d,%s+%d",bd.maxCasualty,building:GetNextLevelMaxCasualty(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="townHall" then
-        efficiency = string.format("%s%d",bd.townHall_dwelling,building:GetNextLevelDwellingNum())
+        efficiency = string.format("%s%d",bd.townHall_dwelling,building:GetNextLevelMaxHouseNum())
     elseif self.building:GetType()=="dwelling" then
         efficiency = string.format("%s%d,%s+%d",bd.dwelling_citizen,building:GetNextLevelCitizen(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="woodcutter" then

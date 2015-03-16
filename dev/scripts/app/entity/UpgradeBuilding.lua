@@ -156,13 +156,19 @@ function UpgradeBuilding:OnTimer(current_time)
     end
 end
 function UpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id, sub_location_id)
-    local event, level, finished_time
+    local event, level, finished_time, type_
     if self:BelongCity():IsHouse(self) then
         event = self:GetHouseEventByLocations(user_data, location_id, sub_location_id)
         level, finished_time = self:GetHouseInfoByEventAndLocation(user_data, event, location_id, sub_location_id)
     else
         event = self:GetBuildingEventFromUserDataByLocation(user_data, location_id)
-        level, finished_time = self:GetBuildingInfoByEventAndLocation(user_data, event, location_id)
+        level, finished_time, type_ = self:GetBuildingInfoByEventAndLocation(user_data, event, location_id)
+        if type_ ~= self:GetType() then
+            self.building_type = type_
+            self.base_building_observer:NotifyObservers(function(lisenter)
+                lisenter:OnTransformed(self)
+            end)
+        end
     end
     self:OnEvent(event)
     if level and finished_time then
@@ -203,14 +209,17 @@ end
 function UpgradeBuilding:GetBuildingInfoByEventAndLocation(user_data, event, location)
     local finishTime = event == nil and 0 or event.finishTime / 1000
     local level = self:GetLevel()
+    local type_ = self:GetType()
     local buildings = user_data.buildings
     local building_key = string.format("location_%d", location)
     if buildings and buildings[building_key] then
-        level = buildings[building_key].level
+        local location_info = buildings[building_key]
+        level = location_info.level
+        type_ = location_info.type
     elseif not event then
         finishTime = self.upgrade_to_next_level_time
     end
-    return level, finishTime
+    return level, finishTime, type_
 end
 function UpgradeBuilding:GetBuildingEventFromUserDataByLocation(user_data, location)
     for _,v in ipairs(user_data.__buildingEvents or {}) do
