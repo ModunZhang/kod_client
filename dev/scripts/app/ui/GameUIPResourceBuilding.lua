@@ -211,6 +211,7 @@ function GameUIPResourceBuilding:RebuildPart()
         :onButtonClicked(function(event)
             if self:CheckSwitch(self.selected_rebuild_to_building) then
                 NetManager:getSwitchBuildingPromise(City:GetLocationIdByBuilding(self.building),self.selected_rebuild_to_building)
+                self:leftButtonClicked()
             end
         end)
         :align(display.CENTER_RIGHT, bg_size.width-20, 50)
@@ -230,6 +231,12 @@ function GameUIPResourceBuilding:CheckSwitch(switch_to_building_type)
             :AddToCurrentScene()
             :SetTitle("提示")
             :SetPopMessage(_("小屋数量过多"))
+        return
+    elseif current_building:IsUpgrading() then
+        FullScreenPopDialogUI.new()
+            :AddToCurrentScene()
+            :SetTitle("提示")
+            :SetPopMessage(_("建筑正在升级"))
         return
     end
 
@@ -271,6 +278,7 @@ function GameUIPResourceBuilding:CheckSwitch(switch_to_building_type)
     return true
 end
 return GameUIPResourceBuilding
+
 
 
 
