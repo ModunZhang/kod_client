@@ -69,6 +69,7 @@ end
 function Building:AddBaseListener(listener)
     assert(listener.OnOrientChanged)
     assert(listener.OnLogicPositionChanged)
+    assert(listener.OnTransformed)
     return self.base_building_observer:AddObserver(listener)
 end
 function Building:RemoveBaseListener(listener)

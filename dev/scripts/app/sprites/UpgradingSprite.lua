@@ -19,6 +19,8 @@ end
 function UpgradingSprite:OnLogicPositionChanged(x, y)
     self:SetPositionWithZOrder(self:GetLogicMap():ConvertToMapPosition(x, y))
 end
+function UpgradingSprite:OnTransformed()
+end
 function UpgradingSprite:OnBuildingUpgradingBegin(building, time)
     if self.label then
         self.label:setString(building:GetType().." "..building:GetLevel())

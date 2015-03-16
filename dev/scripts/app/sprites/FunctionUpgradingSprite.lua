@@ -1,3 +1,4 @@
+local SpriteConfig = import(".SpriteConfig")
 local UpgradingSprite = import(".UpgradingSprite")
 local FunctionUpgradingSprite = class("FunctionUpgradingSprite", UpgradingSprite)
 
@@ -48,10 +49,16 @@ function FunctionUpgradingSprite:TranslateToCanNotBeUnlock()
     self:setVisible(false)
 end
 --
-
+function FunctionUpgradingSprite:OnTransformed(entity)
+    self.config = SpriteConfig[entity:GetType()]
+    self:ReloadSprite()
+end
 function FunctionUpgradingSprite:ctor(city_layer, entity, city)
     FunctionUpgradingSprite.super.ctor(self, city_layer, entity)
     self:OnTileChanged(city, city:GetTileWhichBuildingBelongs(entity))
+end
+function FunctionUpgradingSprite:ReloadSprite()
+    FunctionUpgradingSprite.super.RefreshSprite(self)
 end
 function FunctionUpgradingSprite:RefreshSprite()
     

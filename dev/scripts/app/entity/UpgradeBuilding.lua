@@ -164,7 +164,10 @@ function UpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id,
         event = self:GetBuildingEventFromUserDataByLocation(user_data, location_id)
         level, finished_time, type_ = self:GetBuildingInfoByEventAndLocation(user_data, event, location_id)
         if type_ ~= self:GetType() then
-            print("转化")
+            self.building_type = type_
+            self.base_building_observer:NotifyObservers(function(lisenter)
+                lisenter:OnTransformed(self)
+            end)
         end
     end
     self:OnEvent(event)
