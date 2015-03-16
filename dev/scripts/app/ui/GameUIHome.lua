@@ -460,30 +460,28 @@ function GameUIHome:CreateBottom()
     local label_padding = 20
     local padding_width = 100
     for i, v in ipairs({
-        {"bottom_icon_mission_77x67.png", _("任务")},
-        {"bottom_icon_package_77x67.png", _("物品")},
-        {"mail_64x49.png", _("邮件")},
-        {"bottom_icon_alliance_77x67.png", _("联盟")},
+        {"bottom_icon_mission_128x128.png", _("任务")},
+        {"bottom_icon_package_128x128.png", _("物品")},
+        {"mail_icon_128x128.png", _("邮件")},
+        {"bottom_icon_alliance_128x128.png", _("联盟")},
         {"bottom_icon_package_77x67.png", _("更多")},
     }) do
         local col = i - 1
         local x, y = first_col + col * padding_width, first_row
         local button = cc.ui.UIPushButton.new({normal = v[1]})
             :onButtonClicked(handler(self, self.OnBottomButtonClicked))
-            :setButtonLabel("normal",cc.ui.UILabel.new({text = v[2],
-                size = 16,
-                font = UIKit:getFontFilePath(),
-                color = UIKit:hex2c3b(0xf5e8c4)}
-            )
-            )
-            :setButtonLabelOffset(0, -40)
             :addTo(bottom_bg):pos(x, y)
-            :scale(0.9)
+            :scale(0.5)
+        UIKit:ttfLabel({
+            text = v[2],
+            size = 16,
+            color = 0xf5e8c4})
+            :addTo(bottom_bg):align(display.CENTER,x, y-40)
         button:setTag(i)
 
         if i == 1 then
             -- 未读邮件或战报数量显示条
-            self.complete_task_count = display.newSprite("mail_unread_bg_36x23.png"):addTo(button):pos(25, 15)
+            self.complete_task_count = display.newSprite("mail_unread_bg_36x23.png"):addTo(bottom_bg):pos(260, first_row+20)
             local size = self.complete_task_count:getContentSize()
             self.complete_task_count_label = cc.ui.UILabel.new(
                 {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -609,6 +607,7 @@ function GameUIHome:Find()
 end
 
 return GameUIHome
+
 
 
 

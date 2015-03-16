@@ -329,7 +329,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
         -- 敌方联盟名字
         local a_name = ""
         if enemy_alliance then
-             a_name = "["..enemy_alliance:AliasName().."]"..enemy_alliance:Name()
+            a_name = "["..enemy_alliance:AliasName().."]"..enemy_alliance:Name()
         end
         local enemy_alliance_name = UIKit:ttfLabel({
             text =a_name,
@@ -421,9 +421,9 @@ function GameUIAllianceBattle:InitBattleStatistics()
             local honour_bg = display.newScale9Sprite("back_ground_138x34.png",window.left+70,window.top-350,cc.size(188,34))
                 :align(display.LEFT_CENTER)
                 :addTo(layer)
-            display.newSprite("honour.png"):align(display.CENTER,0,honour_bg:getContentSize().height/2)
+            display.newSprite("honour_128x128.png"):align(display.CENTER,0,honour_bg:getContentSize().height/2)
                 :addTo(honour_bg,2)
-                :scale(1.2)
+                :scale(50/128)
             UIKit:ttfLabel({
                 text = string.formatnumberthousands(2384028014),
                 size = 20,
@@ -1091,8 +1091,8 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance)
                 shadow= true
             }))
             :onButtonClicked(function(event)
-                    app:EnterViewModelAllianceScene(alliance._id)
-                end):align(display.RIGHT_CENTER,w-20,45):addTo(content)
+                app:EnterViewModelAllianceScene(alliance._id)
+            end):align(display.RIGHT_CENTER,w-20,45):addTo(content)
     end
     item:addContent(content)
     self.alliance_listview:addItem(item)
@@ -1260,6 +1260,7 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
 
 
 

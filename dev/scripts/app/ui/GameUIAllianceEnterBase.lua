@@ -10,9 +10,9 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local Localize = import("..utils.Localize")
 -- building is allianceobject
 function GameUIAllianceEnterBase:ctor(building,isMyAlliance,my_alliance)
-	GameUIAllianceEnterBase.super.ctor(self,self:GetUIHeight(),"",display.top-200)
-	self.building = building
-	self.my_alliance = my_alliance
+    GameUIAllianceEnterBase.super.ctor(self,self:GetUIHeight(),"",display.top-200)
+    self.building = building
+    self.my_alliance = my_alliance
     self.isMyAlliance = isMyAlliance
 end
 
@@ -21,7 +21,7 @@ function GameUIAllianceEnterBase:IsMyAlliance()
 end
 
 function GameUIAllianceEnterBase:GetBuilding()
-	return self.building
+    return self.building
 end
 
 function GameUIAllianceEnterBase:GetMyAlliance()
@@ -29,26 +29,26 @@ function GameUIAllianceEnterBase:GetMyAlliance()
 end
 
 function GameUIAllianceEnterBase:GetBuildingCategory()
-	return self:GetBuilding():GetCategory()
+    return self:GetBuilding():GetCategory()
 end
 
 function GameUIAllianceEnterBase:GetUIHeight()
-	return 242
+    return 242
 end
 
 function GameUIAllianceEnterBase:GetUITitle()
-	return _("空地")
+    return _("空地")
 end
 
 
 function GameUIAllianceEnterBase:onEnter()
-	GameUIAllianceEnterBase.super.onEnter(self)
+    GameUIAllianceEnterBase.super.onEnter(self)
     self:SetTitle(self:GetUITitle())
-	self:InitBuildingImage()
-	self:InitBuildingDese()
-	self:InitBuildingInfo()
-	self:InitEnterButton()
-	self:FixedUI()
+    self:InitBuildingImage()
+    self:InitBuildingDese()
+    self:InitBuildingInfo()
+    self:InitEnterButton()
+    self:FixedUI()
 end
 
 function GameUIAllianceEnterBase:RefreshUI()
@@ -57,13 +57,13 @@ function GameUIAllianceEnterBase:RefreshUI()
 end
 
 function GameUIAllianceEnterBase:GetBuildingInfo()
-  	return 
-    {
+    return
         {
-            {_("坐标"),0x797154},
-            {self:GetLocation(),0x403c2f},
+            {
+                {_("坐标"),0x797154},
+                {self:GetLocation(),0x403c2f},
+            }
         }
-    }
 end
 
 function GameUIAllianceEnterBase:GetLogicPosition()
@@ -73,14 +73,14 @@ function GameUIAllianceEnterBase:GetLogicPosition()
 end
 
 function GameUIAllianceEnterBase:GetLocation()
-	local building = self:GetBuilding()
-	local x,y = building:GetLogicPosition()
-	return x .. "," .. y
+    local building = self:GetBuilding()
+    local x,y = building:GetLogicPosition()
+    return x .. "," .. y
 end
 
 
 function GameUIAllianceEnterBase:GetBuildingImage()
-	return "grass_tree_3_112x114.png"
+    return "grass_tree_3_112x114.png"
 end
 
 
@@ -104,8 +104,9 @@ function GameUIAllianceEnterBase:InitBuildingImage()
         :addTo(level_bg)
     self.level_bg = level_bg
     self.level_label = label
-    local honour_icon = display.newSprite("honour.png"):align(display.CENTER, 20, level_bg:getContentSize().height/2)
+    local honour_icon = display.newSprite("honour_128x128.png"):align(display.CENTER, 20, level_bg:getContentSize().height/2)
         :addTo(level_bg)
+        :scale(42/128)
     local honour_label= UIKit:ttfLabel({
         text = self:GetHonourLabelText(),
         size = 20,
@@ -117,31 +118,31 @@ function GameUIAllianceEnterBase:InitBuildingImage()
 end
 
 function GameUIAllianceEnterBase:GetLevelBg()
-	return self.level_bg
+    return self.level_bg
 end
 
 function GameUIAllianceEnterBase:GetLevelLabelText()
-	return self:GetBuilding().level and _("等级") .. self:GetBuilding().level or ""
+    return self:GetBuilding().level and _("等级") .. self:GetBuilding().level or ""
 end
 
 function GameUIAllianceEnterBase:GetHonourLabelText()
-	return "1000"
+    return "1000"
 end
 
 function GameUIAllianceEnterBase:GetLevelLabel()
-	return self.level_label
+    return self.level_label
 end
 
 function GameUIAllianceEnterBase:GetHonourIcon()
-	return self.honour_icon
+    return self.honour_icon
 end
 
 function GameUIAllianceEnterBase:GetHonourLabel()
-	return self.honour_label
+    return self.honour_label
 end
 
 function GameUIAllianceEnterBase:FixedUI()
-	self:GetLevelBg():hide()
+    self:GetLevelBg():hide()
     self.process_bar_bg:hide()
 end
 
@@ -154,7 +155,7 @@ function GameUIAllianceEnterBase:InitBuildingDese()
         dimensions = cc.size(400,0)
     }):align(display.LEFT_TOP, 180, self:GetUIHeight()-20):addTo(body)
 
-    self.process_bar_bg = display.newSprite("Progress_bar_1.png"):align(display.LEFT_TOP, 180, self:GetUIHeight()-30):addTo(body)    
+    self.process_bar_bg = display.newSprite("Progress_bar_1.png"):align(display.LEFT_TOP, 180, self:GetUIHeight()-30):addTo(body)
     self.progressTimer = UIKit:commonProgressTimer("progress_bar_366x34.png"):addTo(self.process_bar_bg):align(display.LEFT_BOTTOM,0,0):scale(386/366)
     self.progressTimer:setPercentage(100)
     self.process_icon_bg =   display.newSprite("back_ground_43x43.png"):addTo(self.process_bar_bg):pos(10,18)
@@ -240,7 +241,7 @@ function GameUIAllianceEnterBase:InitEnterButton()
         end
     end
     self.EnterButtonNodes = {}
-	local buttons = self:GetEnterButtons()
+    local buttons = self:GetEnterButtons()
     local width = 608
     local btn_width = 124
     local count = 0
@@ -253,12 +254,12 @@ end
 
 function GameUIAllianceEnterBase:GetEnterButtons()
     if self:IsMyAlliance() then
-    	local move_city_button = self:BuildOneButton("icon_move_city.png",_("迁移城市")):onButtonClicked(function()
-    		self:leftButtonClicked()
-    	end)
-    	local move_building_button = self:BuildOneButton("icon_move_alliance_building.png",_("迁移联盟建筑")):onButtonClicked(function()
-    		self:leftButtonClicked()
-    	end)
+        local move_city_button = self:BuildOneButton("icon_move_city.png",_("迁移城市")):onButtonClicked(function()
+            self:leftButtonClicked()
+        end)
+        local move_building_button = self:BuildOneButton("icon_move_alliance_building.png",_("迁移联盟建筑")):onButtonClicked(function()
+            self:leftButtonClicked()
+        end)
         return {move_city_button,move_building_button}
     else
         return {}
@@ -267,31 +268,32 @@ end
 
 
 function GameUIAllianceEnterBase:BuildOneButton(image,title)
-	local btn = WidgetPushButton.new({normal = "btn_138x110.png",pressed = "btn_pressed_138x110.png"})
+    local btn = WidgetPushButton.new({normal = "btn_138x110.png",pressed = "btn_pressed_138x110.png"})
     local s = btn:getCascadeBoundingBox().size
     display.newSprite(image):align(display.CENTER, -s.width/2, -s.height/2+22):addTo(btn)
     UIKit:ttfLabel({
-            text =  title,
-            size = 18,
-            color = 0xffedae,
+        text =  title,
+        size = 18,
+        color = 0xffedae,
     }):align(display.CENTER, -s.width/2 , -s.height+25):addTo(btn)
     return btn
 end
 
 function GameUIAllianceEnterBase:GetDescLabel()
-	return self.desc_label
+    return self.desc_label
 end
 
 function GameUIAllianceEnterBase:GetProcessIcon()
-	return "wall_36x41.png",1
+    return "wall_36x41.png",1
 end
 
 function GameUIAllianceEnterBase:GetProcessLabelText()
-	return "100/100"
+    return "100/100"
 end
 
 function GameUIAllianceEnterBase:GetBuildingDesc()
-	return _("联盟将军可将联盟建筑移动到空地,玩家可将自己的城市移动到空地处,空地定期刷新放逐者的村落,树木,山脉和湖泊")
+    return _("联盟将军可将联盟建筑移动到空地,玩家可将自己的城市移动到空地处,空地定期刷新放逐者的村落,树木,山脉和湖泊")
 end
 
 return GameUIAllianceEnterBase
+

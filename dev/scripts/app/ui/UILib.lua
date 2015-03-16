@@ -451,6 +451,134 @@ local ITEM = {
     heroBlood_2 = "icon_heroBlood_2.png",
     stamina_1 = "icon_stamina_1.png",
     stamina_2 = "icon_stamina_2.png",
+
+    speedup_1 = "wood_sandglass.png",
+    speedup_2 = "copper_sandglass.png",
+    speedup_3 = "silver_sandglass.png",
+    speedup_4 = "gold_sandglass.png",
+    speedup_5 = "platinum_sandglass.png",
+    speedup_6 = "crystal_sandglass.png",
+    speedup_7 = "drak_gold_sandglass.png",
+    speedup_8 = "secret_power_sandglass.png",
+    warSpeedupClass_1 = "normal_war_sandglass.png",
+    warSpeedupClass_2 = "strengthen_war_sandglass.png",
+
+    casinoTokenClass_1 = "casinoToken_1.png",
+    casinoTokenClass_2 = "casinoToken_2.png",
+    casinoTokenClass_3 = "casinoToken_3.png",
+    casinoTokenClass_4 = "casinoToken_3.png",
+
+    woodClass_1 = "item_wood_1.png",
+    woodClass_2 = "item_wood_1.png",
+    woodClass_3 = "item_wood_2.png",
+    woodClass_4 = "item_wood_2.png",
+    woodClass_5 = "item_wood_2.png",
+    woodClass_6 = "item_wood_3.png",
+    woodClass_7 = "item_wood_3.png",
+    stoneClass_1 = "item_stone_1.png",
+    stoneClass_2 = "item_stone_1.png",
+    stoneClass_3 = "item_stone_2.png",
+    stoneClass_4 = "item_stone_2.png",
+    stoneClass_5 = "item_stone_2.png",
+    stoneClass_6 = "item_stone_3.png",
+    stoneClass_7 = "item_stone_3.png",
+    ironClass_1 = "item_iron_1.png",
+    ironClass_2 = "item_iron_1.png",
+    ironClass_3 = "item_iron_2.png",
+    ironClass_4 = "item_iron_2.png",
+    ironClass_5 = "item_iron_2.png",
+    ironClass_6 = "item_iron_3.png",
+    ironClass_7 = "item_iron_3.png",
+    foodClass_1 = "item_food_1.png",
+    foodClass_2 = "item_food_1.png",
+    foodClass_3 = "item_food_2.png",
+    foodClass_4 = "item_food_2.png",
+    foodClass_5 = "item_food_2.png",
+    foodClass_6 = "item_food_3.png",
+    foodClass_7 = "item_food_3.png",
+    coinClass_1 = "item_coin_1.png",
+    coinClass_2 = "item_coin_1.png",
+    coinClass_3 = "item_coin_2.png",
+    coinClass_4 = "item_coin_2.png",
+    coinClass_5 = "item_coin_3.png",
+    coinClass_6 = "item_coin_3.png",
+
+    siegeAtkBonus_1 = "siegeAtkBonus_1.png",
+    siegeAtkBonus_2 = "siegeAtkBonus_1.png",
+    siegeAtkBonus_3 = "siegeAtkBonus_1.png",
+    unitHpBonus_1 = "unitHpBonus_1.png",
+    unitHpBonus_2 = "unitHpBonus_1.png",
+    unitHpBonus_3 = "unitHpBonus_1.png",
+    cavalryAtkBonus_1 = "cavalryAtkBonus_1.png",
+    cavalryAtkBonus_2 = "cavalryAtkBonus_1.png",
+    cavalryAtkBonus_3 = "cavalryAtkBonus_1.png",
+    archerAtkBonus_1 = "archerAtkBonus_1.png",
+    archerAtkBonus_2 = "archerAtkBonus_1.png",
+    archerAtkBonus_3 = "archerAtkBonus_1.png",
+    infantryAtkBonus_1 = "infantryAtkBonus_1.png",
+    infantryAtkBonus_2 = "infantryAtkBonus_1.png",
+    infantryAtkBonus_3 = "infantryAtkBonus_1.png",
+    marchSpeedBonus_1 = "marchSpeedBonus_1.png",
+    marchSpeedBonus_2 = "marchSpeedBonus_1.png",
+    marchSpeedBonus_3 = "marchSpeedBonus_1.png",
+    dragonHpBonus_1 = "dragonHpBonus_1.png",
+    dragonHpBonus_2 = "dragonHpBonus_1.png",
+    dragonHpBonus_3 = "dragonHpBonus_1.png",
+    dragonExpBonus_1 = "dragonExpBonus_1.png",
+    dragonExpBonus_2 = "dragonExpBonus_1.png",
+    dragonExpBonus_3 = "dragonExpBonus_1.png",
+    troopSizeBonus_1 = "troopSizeBonus_1.png",
+    troopSizeBonus_2 = "troopSizeBonus_1.png",
+    troopSizeBonus_3 = "troopSizeBonus_1.png",
+    citizenBonus_1 = "citizenBonus_1.png",
+    citizenBonus_2 = "citizenBonus_1.png",
+    citizenBonus_3 = "citizenBonus_1.png",
+    coinBonus_1 = "coinBonus_1.png",
+    coinBonus_2 = "coinBonus_1.png",
+    coinBonus_3 = "coinBonus_1.png",
+    foodBonus_1 = "foodBonus_1.png",
+    foodBonus_2 = "foodBonus_1.png",
+    foodBonus_3 = "foodBonus_1.png",
+    ironBonus_1 = "ironBonus_1.png",
+    ironBonus_2 = "ironBonus_1.png",
+    ironBonus_3 = "ironBonus_1.png",
+    stoneBonus_1 = "stoneBonus_1.png",
+    stoneBonus_2 = "stoneBonus_1.png",
+    stoneBonus_3 = "stoneBonus_1.png",
+    woodBonus_1 = "woodBonus_1.png",
+    woodBonus_2 = "woodBonus_1.png",
+    woodBonus_3 = "woodBonus_1.png",
+    fogOfTrick_1 = "fogOfTrick_1.png",
+    fogOfTrick_2 = "fogOfTrick_1.png",
+    fogOfTrick_3 = "fogOfTrick_1.png",
+    quarterMaster_1 = "quarterMaster_1.png",
+    quarterMaster_2 = "quarterMaster_1.png",
+    quarterMaster_3 = "quarterMaster_1.png",
+    vipPoint_1 = "vipPoint_1.png",
+    vipPoint_2 = "vipPoint_1.png",
+    vipPoint_3 = "vipPoint_1.png",
+    vipPoint_4 = "vipPoint_1.png",
+    vipActive_1 = "vipActive_1.png",
+    vipActive_2 = "vipActive_1.png",
+    vipActive_3 = "vipActive_1.png",
+    vipActive_4 = "vipActive_1.png",
+    vipActive_5 = "vipActive_1.png",
+    chestKey_2 = "chestKey_2.png",
+    chestKey_3 = "chestKey_3.png",
+    chestKey_4 = "chestKey_4.png",
+    restoreWall_1 = "restoreWall_1.png",
+    restoreWall_2 = "restoreWall_1.png",
+    restoreWall_3 = "restoreWall_1.png",
+    heroBlood_1 = "heroBlood_1.png",
+    heroBlood_2 = "heroBlood_1.png",
+    heroBlood_3 = "heroBlood_1.png",
+    stamina_1 = "stamina_1.png",
+    stamina_2 = "stamina_2.png",
+    stamina_3 = "stamina_3.png",
+    retreatTroop = "retreatTroop.png",
+    torch = "torch.png",
+    changePlayerName = "changePlayerName.png",
+    changeCityName = "changeCityName.png",
 }
 
 local SOLDIER_ANIMATIONS = getAniNameFromAnimationFiles(SOLDIER_ANIMATION_FILES)
@@ -487,6 +615,30 @@ return {
     item = ITEM,
     daily_task_icon = DAILY_TASK_ICON,
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

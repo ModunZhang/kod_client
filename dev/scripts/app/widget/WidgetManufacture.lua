@@ -37,14 +37,14 @@ end
 --
 
 local MATERIALS_MAP = {
-    blueprints = { "blueprints_103x103.png",  _("建筑图纸"), 1},
-    tools = { "tools_103x103.png",  _("建筑工具"), 2},
-    tiles = { "tiles_103x103.png",  _("砖石瓦片"), 3},
-    pulley = { "pulley_103x103.png",  _("滑轮组"), 4},
-    trainingFigure = { "trainingFigure_103x103.png",  _("木人桩"), 1},
-    bowTarget = { "bowTarget_103x103.png", _("箭靶"), 2},
-    saddle = { "saddle_103x103.png",  _("马鞍"), 3},
-    ironPart = { "ironPart_103x103.png",  _("精铁零件"), 4},
+    blueprints = { "blueprints_128x128.png",  _("建筑图纸"), 1},
+    tools = { "tools_128x128.png",  _("建筑工具"), 2},
+    tiles = { "tiles_128x128.png",  _("砖石瓦片"), 3},
+    pulley = { "pulley_128x128.png",  _("滑轮组"), 4},
+    trainingFigure = { "trainingFigure_128x128.png",  _("木人桩"), 1},
+    bowTarget = { "bowTarget_128x128.png", _("箭靶"), 2},
+    saddle = { "saddle_128x128.png",  _("马鞍"), 3},
+    ironPart = { "ironPart_128x128.png",  _("精铁零件"), 4},
 }
 function WidgetManufacture:ctor(toolShop)
 	self.toolShop = toolShop
@@ -185,7 +185,7 @@ function WidgetManufacture:CreateMaterialItemWithListView(list_view, title, mate
         local material = cc.ui.UIImage.new(png)
             :addTo(back_ground)
             :align(display.CENTER, pos.x, pos.y)
-
+            :scale(103/128)
 
         local num_bg = cc.ui.UIImage.new("number_bg_116x46.png")
             :addTo(back_ground):align(display.TOP_LEFT,4,10)

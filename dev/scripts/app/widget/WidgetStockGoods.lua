@@ -81,7 +81,7 @@ function WidgetStockGoods:ctor(item)
 
 
     -- 荣耀值
-    display.newSprite("honour.png"):align(display.CENTER, 200, 50):addTo(back_ground)
+    display.newSprite("honour_128x128.png"):align(display.CENTER, 200, 50):addTo(back_ground):scale(42/128)
     local honour_bg = display.newSprite("back_ground_114x36.png"):align(display.CENTER, 300, 50):addTo(back_ground)
     self.honour_label = UIKit:ttfLabel({
         text = "0",
@@ -120,6 +120,7 @@ function WidgetStockGoods:OnCountChanged(count)
     self.honour_label:setString(self.item:BuyPriceInAlliance()*count)
 end
 return WidgetStockGoods
+
 
 
 

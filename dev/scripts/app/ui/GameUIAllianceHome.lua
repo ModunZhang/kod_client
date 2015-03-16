@@ -184,9 +184,10 @@ function GameUIAllianceHome:TopTabButtons()
         :align(display.CENTER, 145, btn_bg:getContentSize().height/2-1)
         :addTo(btn_bg)
     -- 荣耀值
-    display.newSprite("honour.png")
-        :align(display.CENTER, 120,btn_bg:getContentSize().height/2-6)
+    display.newSprite("honour_128x128.png")
+        :align(display.CENTER, 120,btn_bg:getContentSize().height/2-3)
         :addTo(btn_bg)
+        :scale(42/128)
     UIKit:ttfLabel(
         {
             text = _("荣耀值"),
@@ -214,9 +215,10 @@ function GameUIAllianceHome:TopTabButtons()
         :align(display.CENTER, btn_bg:getContentSize().width-144, btn_bg:getContentSize().height/2-1)
         :addTo(btn_bg)
     -- 忠诚值
-    display.newSprite("loyalty_1.png")
+    display.newSprite("loyalty_128x128.png")
         :align(display.CENTER, -40,loyalty_btn:getContentSize().height/2-4)
         :addTo(loyalty_btn)
+        :scale(42/128)
     UIKit:ttfLabel(
         {
             text = _("忠诚值"),
@@ -243,9 +245,10 @@ function GameUIAllianceHome:TopTabButtons()
         :align(display.CENTER, btn_bg:getContentSize().width/2+6, btn_bg:getContentSize().height/2-1)
         :addTo(btn_bg)
     -- 坐标
-    display.newSprite("coordinate_42x42.png")
+    display.newSprite("coordinate_128x128.png")
         :align(display.CENTER, -40,coordinate_btn:getContentSize().height/2-4)
         :addTo(coordinate_btn)
+        :scale(42/128)
     self.coordinate_title_label = UIKit:ttfLabel(
         {
             text = _("坐标"),
@@ -512,26 +515,24 @@ function GameUIAllianceHome:CreateBottom()
     local label_padding = 20
     local padding_width = 100
     for i, v in ipairs({
-        {"bottom_icon_mission_77x67.png", _("任务")},
-        {"bottom_icon_package_77x67.png", _("物品")},
-        {"mail_64x49.png", _("邮件")},
-        {"bottom_icon_alliance_77x67.png", _("联盟")},
+        {"bottom_icon_mission_128x128.png", _("任务")},
+        {"bottom_icon_package_128x128.png", _("物品")},
+        {"mail_icon_128x128.png", _("邮件")},
+        {"bottom_icon_alliance_128x128.png", _("联盟")},
         {"bottom_icon_package_77x67.png", _("更多")},
     }) do
         local col = i - 1
         local x, y = first_col + col * padding_width, first_row
         local button = WidgetPushButton.new({normal = v[1]})
             :onButtonClicked(handler(self, self.OnBottomButtonClicked))
-            :setButtonLabel("normal",cc.ui.UILabel.new({text = v[2],
-                size = 16,
-                font = UIKit:getFontFilePath(),
-                color = UIKit:hex2c3b(0xf5e8c4)}
-            )
-            )
-            :setButtonLabelOffset(0, -40)
             :addTo(bottom_bg):pos(x, y)
-            :scale(0.9)
+            :scale(0.5)
         button:setTag(i)
+        UIKit:ttfLabel({
+            text = v[2],
+            size = 16,
+            color = 0xf5e8c4})
+            :addTo(bottom_bg):align(display.CENTER,x, y-40)
     end
 
     -- 未读邮件或战报数量显示条
@@ -730,6 +731,9 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
+
+
 
 
 
