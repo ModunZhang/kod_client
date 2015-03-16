@@ -1,12 +1,5 @@
 local IsoMapAnchorBottomLeft = import("..map.IsoMapAnchorBottomLeft")
 local SpriteConfig = import("..sprites.SpriteConfig")
--- local DragonEyrieSprite = import("..sprites.DragonEyrieSprite")
--- local WareHouseSprite = import("..sprites.WareHouseSprite")
--- local BarracksSprite = import("..sprites.BarracksSprite")
--- local HospitalSprite = import("..sprites.HospitalSprite")
--- local ToolShopSprite = import("..sprites.ToolShopSprite")
--- local BlackSmithSprite = import("..sprites.BlackSmithSprite")
--- local FunctionUpgradingSprite = import("..sprites.FunctionUpgradingSprite")
 local UpgradingSprite = import("..sprites.UpgradingSprite")
 local RuinSprite = import("..sprites.RuinSprite")
 local TowerUpgradingSprite = import("..sprites.TowerUpgradingSprite")
@@ -38,7 +31,8 @@ local BuildingSpriteRegister = setmetatable({
     hospital        = import("..sprites.HospitalSprite"),
     academy         = import("..sprites.AcademySprite"),
     townHall        = import("..sprites.TownHallSprite"),
-    tradeGuild        = import("..sprites.TradeGuildSprite"),
+    tradeGuild      = import("..sprites.TradeGuildSprite"),
+    workshop        = import("..sprites.WorkShopSprite"),
 }, {__index = function(t, k)
     return FunctionUpgradingSprite
 end})
