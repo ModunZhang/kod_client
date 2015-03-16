@@ -754,6 +754,15 @@ end
 function NetManager:getInstantUpgradeWallByLocationPromise()
     return NetManager:getInstantUpgradeBuildingByLocationPromise(21)
 end
+--转换生产建筑类型
+function NetManager:getSwitchBuildingPromise(buildingLocation,newBuildingName)
+    return promise.all(get_blocking_request_promise("logic.playerHandler.switchBuilding", {
+        buildingLocation = buildingLocation,
+        newBuildingName = newBuildingName
+    },
+        "转换生产建筑类型失败!"), get_playerdata_callback()):next(get_response_msg)
+end
+
 -- 征收税
 function NetManager:getImposePromise()
     return promise.all(get_blocking_request_promise("logic.playerHandler.impose", nil,
