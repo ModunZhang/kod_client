@@ -123,7 +123,6 @@ static int tolua_market_onPlayerLogin(lua_State *tolua_S)
     else
 #endif
     {
-        printf("%s,%s,%s",tolua_tostring(tolua_S, 1, 0),tolua_tostring(tolua_S, 2, 0),tolua_tostring(tolua_S, 3, 0));
         MarketSDKTool::getInstance()->onPlayerLogin(tolua_tostring(tolua_S, 1, 0), tolua_tostring(tolua_S, 2, 0),tolua_tostring(tolua_S, 3, 0));
         return 0;
     }

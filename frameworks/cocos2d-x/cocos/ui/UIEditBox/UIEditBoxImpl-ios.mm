@@ -334,6 +334,11 @@ bool EditBoxImplIOS::initWithSize(const Size& size)
     return false;
 }
 
+void EditBoxImplIOS::setEnable(bool enable)
+{
+    [_systemControl.textField setEnabled:enable?YES:NO];
+}
+    
 void EditBoxImplIOS::initInactiveLabels(const Size& size)
 {
 	const char* pDefaultFontName = [[_systemControl.textField.font fontName] UTF8String];

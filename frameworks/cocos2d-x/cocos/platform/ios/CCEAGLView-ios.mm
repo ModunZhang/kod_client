@@ -377,7 +377,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     
     for(UIView* view in subviews)
     {
-        if([view isKindOfClass:NSClassFromString(@"CCCustomUITextField")] ||
+        if([view isKindOfClass:NSClassFromString(@"UICustomUITextField")] ||
            [view isKindOfClass:NSClassFromString(@"CCCustomUITextView")])
         {
             if ([view isFirstResponder])
