@@ -212,8 +212,8 @@ function UpgradeBuilding:GetBuildingInfoByEventAndLocation(user_data, event, loc
     local type_ = self:GetType()
     local buildings = user_data.buildings
     local building_key = string.format("location_%d", location)
-    local location_info = buildings[building_key]
-    if buildings and location_info then
+    if buildings and buildings[building_key] then
+        local location_info = buildings[building_key]
         level = location_info.level
         type_ = location_info.type
     elseif not event then
