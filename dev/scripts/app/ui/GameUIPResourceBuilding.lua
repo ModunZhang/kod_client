@@ -9,7 +9,10 @@ local WidgetInfoWithTitle = import('..widget.WidgetInfoWithTitle')
 local SpriteConfig = import("..sprites.SpriteConfig")
 local WidgetInfo = import('..widget.WidgetInfo')
 local Localize = import('..utils.Localize')
+local FullScreenPopDialogUI = import('.FullScreenPopDialogUI')
 local GameUIPResourceBuilding = UIKit:createUIClass('GameUIPResourceBuilding',"GameUIUpgradeBuilding")
+local intInit = GameDatas.PlayerInitData.intInit
+local buildings = GameDatas.Buildings.buildings
 local P_RESOURCE_BUILDING_TYPE = {
     "foundry",
     "stoneMason" ,
@@ -162,8 +165,8 @@ function GameUIPResourceBuilding:RebuildPart()
         :setButtonsLayoutMargin(0, 125, 0, 0)
         :onButtonSelectChanged(function(event)
             self.selected_rebuild_to_building = rebuild_list[event.selected]
-            -- printf("Option %d selected, Option %d unselected", event.selected, event.last)
-            -- print( self.selected_rebuild_to_building,"选中")
+            printf("Option %d selected, Option %d unselected", event.selected, event.last)
+            print( self.selected_rebuild_to_building,"选中")
         end)
         :align(display.CENTER, 95 , 270)
         :addTo(bg)
@@ -192,7 +195,7 @@ function GameUIPResourceBuilding:RebuildPart()
         },
         {
             _("魔法石"),
-            string.format("%d/100",City:GetUser():GetGemResource():GetValue()),
+            string.format("%d/"..intInit.switchProductionBuilding.value,City:GetUser():GetGemResource():GetValue()),
             City:GetUser():GetGemResource():GetValue()>need_gems and "yes_40x40.png" or "no_40x40.png"
         },
     }
@@ -206,10 +209,69 @@ function GameUIPResourceBuilding:RebuildPart()
     cc.ui.UIPushButton.new({normal = "green_btn_up_250x65.png",pressed = "green_btn_down_250x65.png"})
         :setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("立即转换"), size = 20, color = display.COLOR_WHITE}))
         :onButtonClicked(function(event)
-            print("转换建筑")
+            if self:CheckSwitch(self.selected_rebuild_to_building) then
+                NetManager:getSwitchBuildingPromise(City:GetLocationIdByBuilding(self.building),self.selected_rebuild_to_building)
+            end
         end)
         :align(display.CENTER_RIGHT, bg_size.width-20, 50)
         :addTo(bg)
 end
+function GameUIPResourceBuilding:CheckSwitch(switch_to_building_type)
+    local current_building = self.building
+    local city = current_building:BelongCity()
+    if city:GetUser():GetGemResource():GetValue()<intInit.switchProductionBuilding.value then
+        FullScreenPopDialogUI.new()
+            :AddToCurrentScene()
+            :SetTitle("提示")
+            :SetPopMessage(_("宝石不足"))
+        return
+    elseif (city:GetMaxHouseCanBeBuilt(current_building:GetHouseType())-current_building:GetMaxHouseNum())<#city:GetBuildingByType(current_building:GetHouseType()) then
+        FullScreenPopDialogUI.new()
+            :AddToCurrentScene()
+            :SetTitle("提示")
+            :SetPopMessage(_("小屋数量过多"))
+        return
+    end
+
+    local config
+    for i,v in ipairs(buildings) do
+        if v.name==switch_to_building_type then
+            config = v
+        end
+    end
+    -- 等级大于5级时有升级前置条件
+    if current_building:GetLevel()>5 then
+        local configParams = string.split(config.preCondition,"_")
+        local preType = configParams[1]
+        local preName = configParams[2]
+        local preLevel = tonumber(configParams[3])
+        local limit
+        if preType == "building" then
+            local find_buildings = city:GetBuildingByType(preName)
+            for i,v in ipairs(find_buildings) do
+                if v:GetLevel()>=current_building:GetLevel()+preLevel then
+                    limit = true
+                end
+            end
+        else
+            city:IteratorDecoratorBuildingsByFunc(function (index,house)
+                if house:GetType() == preName and house:GetLevel()>=current_building:GetLevel()+preLevel then
+                    limit = true
+                end
+            end)
+        end
+        if not limit then
+            FullScreenPopDialogUI.new()
+                :AddToCurrentScene()
+                :SetTitle("提示")
+                :SetPopMessage(string.format(_("前置建筑%s等级需要大于等于%d级"),preName,current_building:GetLevel()+preLevel))
+            return
+        end
+    end
+    return true
+end
 return GameUIPResourceBuilding
+
+
+
 
