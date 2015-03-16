@@ -11,6 +11,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local Enum = import("..utils.Enum")
 local config_selena_question = GameDatas.ClientInitGame.selena_question
 local MAX_QUESTION_COUNT = 10
+local UIListView = import(".UIListView")
 local ZORDER_INDEX = {
 	TIPS = 10,
 	WELCOME = 9,
@@ -139,68 +140,59 @@ function GameUISelenaQuestion:GetQuestionLayer(question)
 		lineHeight = 36,
 	}):align(display.LEFT_TOP, 22, 280):addTo(layer)
 	layer.question_label = question_label
-	local panel = UIKit:CreateBoxPanel9({width = 496,height = 51}):align(display.LEFT_BOTTOM, 22, 24):addTo(layer)
-	local q_3_label = UIKit:ttfLabel({
-		text = "",
-		size = 22,
-		color= 0x403c2f
-	}):align(display.LEFT_CENTER, 14, 25):addTo(panel)
-	local q_3_button= WidgetPushButton.new({
-		normal = 'activity_check_bg_55x51.png'
-	}):align(display.LEFT_BOTTOM, 536, 24):addTo(layer):onButtonClicked(function(event)
-		self:OnAnswerButtonClicked(3,event.target)
-	end)
-	local check_state = display.newSprite("activity_check_body_55x51.png"):addTo(q_3_button):pos(27,25)
-	q_3_button.check_state = check_state
-	layer.q_3_label = q_3_label
-	layer.q_3_button = q_3_button
-	panel = UIKit:CreateBoxPanel9({width = 496,height = 51}):align(display.LEFT_BOTTOM, 22, 86):addTo(layer)
-	local q_2_label = UIKit:ttfLabel({
-		text = "",
-		size = 22,
-		color= 0x403c2f
-	}):align(display.LEFT_CENTER, 14, 25):addTo(panel)
-	local q_2_button= WidgetPushButton.new({
-		normal = 'activity_check_bg_55x51.png'
-	}):align(display.LEFT_BOTTOM, 536, 86):addTo(layer):onButtonClicked(function(event)
-		self:OnAnswerButtonClicked(2,event.target)
-	end)
-	local check_state = display.newSprite("activity_check_body_55x51.png"):addTo(q_2_button):pos(27,25)
-	q_2_button.check_state = check_state
-	layer.q_2_label = q_2_label
-	layer.q_2_button = q_2_button
-	panel = UIKit:CreateBoxPanel9({width = 496,height = 51}):align(display.LEFT_BOTTOM, 22, 148):addTo(layer)
-	local q_1_label = UIKit:ttfLabel({
-		text = "",
-		size = 22,
-		color= 0x403c2f
-	}):align(display.LEFT_CENTER, 14, 25):addTo(panel)
-	local q_1_button= WidgetPushButton.new({
-		normal = 'activity_check_bg_55x51.png'
-	}):align(display.LEFT_BOTTOM, 536, 148):addTo(layer):onButtonClicked(function(event)
-		self:OnAnswerButtonClicked(1,event.target)
-	end)
-	local check_state = display.newSprite("activity_check_body_55x51.png"):addTo(q_1_button):pos(27,25)
-	q_1_button.check_state = check_state
-	layer.q_1_label = q_1_label
-	layer.q_1_button = q_1_button
-
+	local listView = UIListView.new({
+        viewRect = cc.rect(22,18,560, 180),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+    }):addTo(layer)
+    self.question_layer_list = listView
 	self.question_layer = layer
 	self:RefreshQuestionLayer(question)
 	return self.question_layer
 end
 
+function GameUISelenaQuestion:GetListItem(index,question)
+	local item = self.question_layer_list:newItem()
+	local label = UIKit:ttfLabel({
+		text = question,
+		size = 22,
+		color= 0x403c2f,
+		dimensions = cc.size(496,0),
+	})
+	local content = display.newNode()
+	local height = math.max(label:getContentSize().height,51)
+	local panel = UIKit:CreateBoxPanel9({width = 496,height = height}):addTo(content)
+	label:align(display.LEFT_CENTER, 14, math.floor(height/2)):addTo(panel)
+
+	local button = WidgetPushButton.new({
+			normal = 'activity_check_bg_55x51.png'
+		})
+		:align(display.LEFT_CENTER, 500, math.floor(height/2))
+		:addTo(content)
+		:onButtonClicked(function(event)
+			self:OnAnswerButtonClicked(index,event.target)
+		end)
+	local check_state = display.newSprite("activity_check_body_55x51.png"):addTo(button):pos(27,0):hide()
+	button.check_state = check_state
+	content:size(560,height)
+	item:addContent(content)
+	item:setMargin({left = 0, right = 0, top = 0, bottom = 11})
+	item:setItemSize(560, height,false)
+	return item
+end
+
 function GameUISelenaQuestion:RefreshQuestionLayer(question)
 	if not question then return end
 	local layer = self.question_layer
+	local random_indexs = self:RandomThreeSeqNum()
 	layer.title_label:setString(string.format(_("连续答题 %s"),self._question_index))
 	layer.question_label:setString(question.title)
-	layer.q_1_label:setString(question.answer_1)
-	layer.q_1_button.check_state:hide()
-	layer.q_2_label:setString(question.answer_2)
-	layer.q_2_button.check_state:hide()
-	layer.q_3_label:setString(question.answer_3)
-	layer.q_3_button.check_state:hide()
+	question.correct = table.indexof(random_indexs,question.correct)
+	self.question_layer_list:removeAllItems()
+	for index,v in ipairs(random_indexs) do
+		local item = self:GetListItem(index,question['answer_' .. v])
+		self.question_layer_list:addItem(item)
+	end
+	self.question_layer_list:reload()
 end
 
 function GameUISelenaQuestion:GetWelcomeLayer(welcome_ui_type)
@@ -273,7 +265,6 @@ end
 
 function GameUISelenaQuestion:OnAnswerButtonClicked(index,button)
 	if button then
-		-- print("show--->")
 		button.check_state:show()
 	end
 	local question = self:GetCurrentQuestion()
@@ -319,6 +310,22 @@ function GameUISelenaQuestion:RandomIndexForConfig()
 			random_index = math.random(total)
 		end
 		r[random_index] = true
+	end
+	return r
+end
+
+function GameUISelenaQuestion:RandomThreeSeqNum()
+	math.newrandomseed()
+	local r = {}
+	local indexs = {}
+	local total_num = 3
+	for i=1,total_num do
+		local random_index = math.random(total_num)
+		while indexs[random_index] do
+			random_index = math.random(total_num)
+		end
+		indexs[random_index] = true
+		table.insert(r,random_index)
 	end
 	return r
 end

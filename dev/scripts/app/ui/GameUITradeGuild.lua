@@ -407,7 +407,7 @@ function GameUITradeGuild:LoadMyGoodsPage()
             self:OpenDollyIntro()
         end)
     -- 资源小车 icon
-    display.newSprite("icon_dolly_110x95.png"):addTo(car_btn)
+    display.newSprite("icon_dolly_128x128.png"):addTo(car_btn)
         :align(display.CENTER, 0,0):scale(0.9)
 
     -- i icon
@@ -626,7 +626,7 @@ function GameUITradeGuild:OpenDollyIntro()
         :align(display.CENTER, 80,h-90)
 
     -- 资源小车 icon
-    display.newSprite("icon_dolly_110x95.png"):addTo(dolly_icon_bg)
+    display.newSprite("icon_dolly_128x128.png"):addTo(dolly_icon_bg)
         :align(display.CENTER, dolly_icon_bg:getContentSize().width/2,dolly_icon_bg:getContentSize().height/2)
         :scale(0.9)
     -- 资源小车介绍
@@ -759,7 +759,7 @@ function GameUITradeGuild:OpenSellDialog()
             }):align(display.LEFT_CENTER, 54 ,30)
             :addTo(layer)
         -- 需要小车icon
-        local temp_icon = display.newSprite("icon_dolly_110x95.png")
+        local temp_icon = display.newSprite("icon_dolly_128x128.png")
             :align(display.CENTER, temp_label:getPositionX()+temp_label:getContentSize().width+20, 30)
             :addTo(layer)
             :scale(0.2)

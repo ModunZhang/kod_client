@@ -176,7 +176,7 @@ function WidgetAllianceBuildingUpgrade:InitRequirement()
         {resource_type = _("荣耀点"),
             isVisible = true,
             isSatisfy = alliance:Honour()>=now_c.needHonour,
-            icon="honour.png",
+            icon="honour_128x128.png",
             description=alliance:Honour().."/"..now_c.needHonour},
 
         {resource_type = _("职位大于等于")..Localize.alliance_title.quartermaster,
@@ -233,6 +233,7 @@ function WidgetAllianceBuildingUpgrade:getNextLevelConfig__()
 end
 
 return WidgetAllianceBuildingUpgrade
+
 
 
 

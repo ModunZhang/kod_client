@@ -148,7 +148,7 @@ function GameUIOrderHall:CreateVillageItem(village_type,village_level)
 
     if alliance:GetSelf():CanUpgradeAllianceBuilding() then
         -- 荣耀值
-        display.newSprite("honour.png"):align(display.CENTER, 250, 40):addTo(content)
+        display.newSprite("honour_128x128.png"):align(display.CENTER, 250, 40):addTo(content):scale(42/128)
         local honour_bg = display.newSprite("back_ground_114x36.png"):align(display.CENTER, 330, 40):addTo(content)
         local need_honour = GameDatas.AllianceVillage[village_type][village_level+1].needHonour
         item.honour_label = UIKit:ttfLabel({
@@ -389,6 +389,7 @@ function GameUIOrderHall:onExit()
 end
 
 return GameUIOrderHall
+
 
 
 

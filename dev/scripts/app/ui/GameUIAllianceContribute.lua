@@ -29,7 +29,7 @@ function GameUIAllianceContribute:ctor()
 
     -- 捐赠能获得荣耀点
     local honour_bg = display.newSprite("back_ground_138x34.png"):align(display.LEFT_CENTER, 30, 90):addTo(self.body)
-    display.newSprite("honour.png"):align(display.CENTER, 30, 90):addTo(self.body)
+    display.newSprite("honour_128x128.png"):align(display.CENTER, 30, 90):addTo(self.body):scale(42/128)
     self.donate_honour = UIKit:ttfLabel({
         text = "+0",
         size = 22,
@@ -38,7 +38,7 @@ function GameUIAllianceContribute:ctor()
         :addTo(honour_bg)
     -- 捐赠能获得忠诚
     local loyalty_bg = display.newSprite("back_ground_138x34.png"):align(display.LEFT_CENTER, 200, 90):addTo(self.body)
-    display.newSprite("loyalty_1.png"):align(display.CENTER, 200, 90):addTo(self.body)
+    display.newSprite("loyalty_128x128.png"):align(display.CENTER, 200, 90):addTo(self.body):scale(42/128)
     self.donate_loyalty = UIKit:ttfLabel({
         text = "+0",
         size = 22,
@@ -356,6 +356,8 @@ function GameUIAllianceContribute:OnMemberChanged(alliance)
     self:RefreashEff()
 end
 return GameUIAllianceContribute
+
+
 
 
 

@@ -64,7 +64,7 @@ public:
     virtual int  getMaxLength();
     virtual void setReturnType(EditBox::KeyboardReturnType returnType);
     virtual bool isEditing();
-    
+    virtual void setEnable(bool enable);
     virtual void setText(const char* pText);
     virtual const char* getText(void);
     virtual void setPlaceHolder(const char* pText);

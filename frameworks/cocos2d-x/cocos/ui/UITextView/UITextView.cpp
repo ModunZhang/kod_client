@@ -171,6 +171,14 @@ const char* UITextView::getText(void)
     
     return "";
 }
+    
+void UITextView::setEnable(bool enable)
+{
+     if (_textViewImpl != nullptr)
+     {
+         _textViewImpl->setEnable(enable);
+     }
+}
 
 void UITextView::setFont(const char* pFontName, int fontSize)
 {
@@ -414,8 +422,13 @@ void UITextView::keyboardWillShow(IMEKeyboardNotificationInfo& info)
 {
     // CCLOG("CCEditBox::keyboardWillShow");
     Rect rectTracked = getRect(this);
+    //dannyhe
+    if (getRectTrackedNode()!=nullptr)
+    {
+        rectTracked = getRect(getRectTrackedNode());
+    }
     // some adjustment for margin between the keyboard and the edit box.
-    rectTracked.origin.y -= 4;
+    rectTracked.origin.y -= 20;
     
     // if the keyboard area doesn't intersect with the tracking node area, nothing needs to be done.
     if (!rectTracked.intersectsRect(info.end))

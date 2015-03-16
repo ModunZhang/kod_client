@@ -311,6 +311,11 @@ void EditBoxImplAndroid::closeKeyboard()
 {
 	
 }
+//dannyhe TODO:
+void EditBoxImplAndroid::setEnable(bool enable)
+{
+        
+}
 
 }
 

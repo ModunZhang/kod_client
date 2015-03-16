@@ -52,7 +52,7 @@ function GameUIHelp:onEnter()
     }):addTo(bar):align(display.LEFT_CENTER, 30, bar:getContentSize().height/2)
     self:SetLoyalty()
     local pro_head_bg = display.newSprite("back_ground_43x43.png", 0, bar:getContentSize().height/2):addTo(bar)
-    display.newSprite("loyalty.png",pro_head_bg:getContentSize().width/2,pro_head_bg:getContentSize().height/2):addTo(pro_head_bg)
+    display.newSprite("loyalty_128x128.png",pro_head_bg:getContentSize().width/2,pro_head_bg:getContentSize().height/2):addTo(pro_head_bg):scale(42/128)
 
     -- 帮助列表
     local help_list_bg = WidgetUIBackGround2.new(522):addTo(body):pos((rb_size.width-572)/2, 90)
@@ -307,6 +307,7 @@ function GameUIHelp:onExit()
 end
 
 return GameUIHelp
+
 
 
 

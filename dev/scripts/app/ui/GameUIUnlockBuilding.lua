@@ -164,7 +164,6 @@ function GameUIUnlockBuilding:SetUpgradeRequirementListview()
     local population = City.resource_manager:GetPopulationResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local building = self.building
 
-    -- local userData = DataManager:getUserData()
     local has_materials =City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
     local pre_condition = building:IsBuildingUpgradeLegal()
     local requirements = {
@@ -185,13 +184,13 @@ function GameUIUnlockBuilding:SetUpgradeRequirementListview()
             icon="res_citizen_44x50.png",description=self.building:GetLevelUpCitizen().."/"..population},
 
         {resource_type = _("建筑蓝图"),isVisible = self.building:GetLevelUpBlueprints()>0,isSatisfy = has_materials.blueprints>self.building:GetLevelUpBlueprints() ,
-            icon="blueprints_112x112.png",description=self.building:GetLevelUpBlueprints().."/"..has_materials.blueprints},
+            icon="blueprints_128x128.png",description=self.building:GetLevelUpBlueprints().."/"..has_materials.blueprints},
         {resource_type = _("建造工具"),isVisible = self.building:GetLevelUpTools()>0,     isSatisfy = has_materials.tools>self.building:GetLevelUpTools() ,
-            icon="tools_112x112.png",description=self.building:GetLevelUpTools().."/"..has_materials.tools},
+            icon="tools_128x128.png",description=self.building:GetLevelUpTools().."/"..has_materials.tools},
         {resource_type = _("砖石瓦片"),isVisible = self.building:GetLevelUpTiles()>0,     isSatisfy = has_materials.tiles>self.building:GetLevelUpTiles() ,
-            icon="tiles_112x112.png",description=self.building:GetLevelUpTiles().."/"..has_materials.tiles},
+            icon="tiles_128x128.png",description=self.building:GetLevelUpTiles().."/"..has_materials.tiles},
         {resource_type = _("滑轮组"),isVisible = self.building:GetLevelUpPulley()>0,    isSatisfy = has_materials.pulley>self.building:GetLevelUpPulley() ,
-            icon="pulley_112x112.png",description=self.building:GetLevelUpPulley().."/"..has_materials.pulley},
+            icon="pulley_128x128.png",description=self.building:GetLevelUpPulley().."/"..has_materials.pulley},
     }
 
     if not self.requirement_listview then

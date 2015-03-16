@@ -207,7 +207,7 @@ function GameUIAlliancePalace:OpenAwardDialog(member)
 
     -- icon
     local x,y = slider:GetEditBoxPostion()
-    local icon = display.newSprite("loyalty_1.png")
+    local icon = display.newSprite("loyalty_128x128.png")
         :align(display.CENTER, x-80, y)
         :addTo(slider)
     local max = math.max(icon:getContentSize().width,icon:getContentSize().height)
@@ -254,7 +254,7 @@ function GameUIAlliancePalace:GetHonourNode(honour)
     local node = display.newNode()
     node:setContentSize(cc.size(160,36))
     -- 荣耀值
-    display.newSprite("honour.png"):align(display.CENTER, 0, 0):addTo(node):scale(1.2)
+    display.newSprite("honour_128x128.png"):align(display.CENTER, 0, 0):addTo(node):scale(20/128)
     local honour_bg = display.newSprite("back_ground_114x36.png"):align(display.CENTER,80, 0):addTo(node)
     local honour_label = UIKit:ttfLabel({
         text = honour or self.alliance:Honour(),
@@ -417,6 +417,7 @@ function GameUIAlliancePalace:OnMemberChanged(alliance,changed_map)
     end
 end
 return GameUIAlliancePalace
+
 
 
 

@@ -24,7 +24,7 @@ function WidgetBuyGoods:ctor(item)
     if item:IsAdvancedItem() then
         super_item_count = item:Count()
     end
-    buy_max =math.min(math.floor(Alliance_Manager:GetMyAlliance():GetSelf():Loyalty()/item:SellPriceInAlliance()),super_item_count) 
+    buy_max =math.min(math.floor(Alliance_Manager:GetMyAlliance():GetSelf():Loyalty()/item:SellPriceInAlliance()),super_item_count)
 
     local label_origin_x = 190
 
@@ -73,7 +73,7 @@ function WidgetBuyGoods:ctor(item)
         :LayoutValueLabel(WidgetSliderWithInput.STYLE_LAYOUT.RIGHT,0)
 
     -- 忠诚值
-    display.newSprite("loyalty_1.png"):align(display.CENTER, 200, 50):addTo(back_ground)
+    display.newSprite("loyalty_128x128.png"):align(display.CENTER, 200, 50):addTo(back_ground):scale(42/128)
     local loyalty_bg = display.newSprite("back_ground_114x36.png"):align(display.CENTER, 300, 50):addTo(back_ground)
     self.loyalty_label = UIKit:ttfLabel({
         text = item:SellPriceInAlliance(),
@@ -89,7 +89,7 @@ function WidgetBuyGoods:ctor(item)
         })
         :setButtonLabel(UIKit:commonButtonLable({text = _("购买")}))
         :onButtonClicked(function(event)
-             if item:IsAdvancedItem() and not Alliance_Manager:GetMyAlliance():GetSelf():CanBuyAdvancedItemsFromAllianceShop() then
+            if item:IsAdvancedItem() and not Alliance_Manager:GetMyAlliance():GetSelf():CanBuyAdvancedItemsFromAllianceShop() then
                 FullScreenPopDialogUI.new():SetTitle(_("提示"))
                     :SetPopMessage(_("购买需要精英或以上权限"))
                     :AddToCurrentScene()
@@ -97,7 +97,7 @@ function WidgetBuyGoods:ctor(item)
             end
             NetManager:getBuyAllianceItemPromise(item:Name(),slider:GetValue())
             self:removeFromParent()
-            
+
         end):pos(500, 50)
         :addTo(back_ground)
 
@@ -113,6 +113,7 @@ function WidgetBuyGoods:OnCountChanged(count)
     self.loyalty_label:setString(self.item:SellPriceInAlliance() * count)
 end
 return WidgetBuyGoods
+
 
 
 

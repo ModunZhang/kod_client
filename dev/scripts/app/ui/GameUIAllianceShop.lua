@@ -203,7 +203,7 @@ function GameUIAllianceShop:CreateGoodsBox(goods)
 
     local num_bg = display.newSprite("back_ground_118x36.png"):align(display.BOTTOM_CENTER, 0, -76)
         :addTo(box_button)
-    display.newSprite("loyalty_1.png"):align(display.CENTER, 24, num_bg:getContentSize().height/2-2):addTo(num_bg):scale(0.8)
+    display.newSprite("loyalty_128x128.png"):align(display.CENTER, 24, num_bg:getContentSize().height/2-2):addTo(num_bg):scale(34/128)
     UIKit:ttfLabel({
         text = goods:SellPriceInAlliance(),
         size = 22,
@@ -238,7 +238,7 @@ function GameUIAllianceShop:CreateStockGoodsBox(goods)
 
     local num_bg = display.newSprite("back_ground_118x36.png"):align(display.BOTTOM_CENTER, 0, -76)
         :addTo(box_button)
-    display.newSprite("honour.png"):align(display.CENTER, 24, num_bg:getContentSize().height/2-2):addTo(num_bg):scale(0.8)
+    display.newSprite("honour_128x128.png"):align(display.CENTER, 24, num_bg:getContentSize().height/2-2):addTo(num_bg):scale(34/128)
     UIKit:ttfLabel({
         text = goods:BuyPriceInAlliance(),
         size = 22,
@@ -405,6 +405,8 @@ function GameUIAllianceShop:OnItemLogsChanged( changed_map )
     self.record_list:reload()
 end
 return GameUIAllianceShop
+
+
 
 
 

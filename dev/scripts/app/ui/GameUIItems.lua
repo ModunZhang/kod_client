@@ -9,6 +9,7 @@ local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
+local UILib = import("..ui.UILib")
 local Item = import("..entity.Item")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 
@@ -171,8 +172,9 @@ function GameUIItems:CreateShopItem(items)
     local num_bg = display.newSprite("back_ground_118x36.png"):addTo(icon_bg):align(display.CENTER, icon_bg:getContentSize().width/2, 20)
     local item_bg = display.newSprite("box_118x118.png"):addTo(icon_bg):align(display.CENTER, icon_bg:getContentSize().width/2, icon_bg:getContentSize().height-60)
     local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
+    local item_icon = display.newSprite(UILib.item[items:Name()]):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
+    item_icon:scale(100/item_icon:getContentSize().width)
     local i_icon = display.newSprite("goods_26x26.png"):addTo(item_bg):align(display.CENTER, 15, 15)
-
     -- gem icon
     local gem_icon = display.newSprite("gem_icon_62x61.png"):addTo(num_bg):align(display.CENTER, 20, num_bg:getContentSize().height/2):scale(0.6)
     UIKit:ttfLabel({
@@ -244,6 +246,9 @@ function GameUIItems:CreateMyItem(items)
     local item_bg = display.newSprite("box_118x118.png"):addTo(icon_bg):align(display.CENTER, icon_bg:getContentSize().width/2, icon_bg:getContentSize().height-60)
     local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
     local i_icon = display.newSprite("goods_26x26.png"):addTo(item_bg):align(display.CENTER, 15, 15)
+    local item_icon = display.newSprite(UILib.item[items:Name()]):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
+    item_icon:scale(100/item_icon:getContentSize().width)
+
 
     local own_num = UIKit:ttfLabel({
         text = _("拥有")..string.formatnumberthousands(items:Count()),
@@ -323,4 +328,5 @@ function GameUIItems:OnItemsChanged( changed_map )
     end
 end
 return GameUIItems
+
 

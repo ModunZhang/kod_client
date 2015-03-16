@@ -181,26 +181,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingBG()
 end
 
 function GameUIKeep:CreateCanBeUnlockedBuildingListView()
-    local building_introduces = {
-        ["keep"] = _("城堡是权利的象征，城市的核心建筑，升级能够解锁更多的地块，提供更高的建筑等级。"),
-        ["watchTower"] = _("瞭望塔可以让你查看到自己部队的情况，并提供敌方来袭时的信息，等级越高信息越详细。"),
-        ["warehouse"] = _("资源仓库存放木材，石料，铁矿，粮食。等级越高，每种资源存放的上限越大。"),
-        ["dragonEyrie"] = _("龙巢可以查看龙的信息，强化龙的装备并晋级。升级能够提升龙的体力恢复速度。"),
-        ["toolShop"] = _("工具作坊提供常用材料的制作，升级能够提升每次制作的工具数量。"),
-        ["materialDepot"] = _("材料库房能够存储各种材料，等级越高，每种材料的存放上限越高。"),
-        ["armyCamp"] = _("军帐提供出兵时的带兵上限，等级越高，每次出兵和防御时可派出的部队人口上限越大。"),
-        ["barracks"] = _("兵营提供军事单位的招募，将城民转换成各种作战单位。升级提升每次招募的最大数量。"),
-        ["blackSmith"] = _("铁匠铺打造和强化龙的装备。升级建筑提升装备打造速度。"),
-        ["foundry"] = _("铸造坊提升可建造的矿工小屋和铁矿生产效率。周围建立更多的矿工小屋，可获得额外的铁矿产量。"),
-        ["stoneMason"] = _("石匠作坊提升可建造的石匠小屋和石料的生产效率。周围建立更多的石匠小屋，可获得额外的石料产量。"),
-        ["lumbermill"] = _("锯木坊提升可建造的木工小屋和木材生产效率。周围建立更多的木工小屋，可获得额外的木材产量。"),
-        ["mill"] = _("磨坊提升可建造的农夫小屋和粮食生产效率。周围建立更多的农夫小屋，可获得额外的粮食产量。"),
-        ["hospital"] = _("医院提供治愈伤兵的功能，升级能够提升伤兵的最大容量。"),
-        ["townHall"] = _("市政厅提升可建造的住宅的数量，并提升城民的增长速度。周围建立更多的住宅，可获得额外的城民增长。"),
-        ["academy"] = _("学院提供的科技能够提升城市生产和防御能力，等级越过研发速度越快。"),
-        ["tradeGuild"] = _("贸易行会提供玩家资源和材料的交易平台。消耗运输小车挂出自己的资源需求，升级提升运输小车总量和生产速度。"),
-
-    }
+    local building_introduces = Localize.building_description
 
 
     self.building_listview ,self.listnode=  UIKit:commonListView({
@@ -211,7 +192,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
     self.listnode:align(display.BOTTOM_CENTER)
     local buildings = GameDatas.Buildings.buildings
     for i,v in ipairs(buildings) do
-        if v.location<17 then
+        if v.location<21 then
             local unlock_building = City:GetBuildingByLocationId(v.location)
             local tile = City:GetTileByLocationId(v.location)
 
@@ -220,12 +201,12 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
             local canUnlock = City:IsTileCanbeUnlockAt(b_x,b_y)
             -- 建筑已经解锁
             local isUnlocked = City:IsUnLockedAtIndex(b_x,b_y)
-            if canUnlock or  isUnlocked then
-                local item = self.building_listview:newItem()
-                item:setItemSize(568, 144)
-                local item_width, item_height = item:getItemSize()
-                local content = cc.ui.UIGroup.new()
+            local content = cc.ui.UIGroup.new()
+            local item = self.building_listview:newItem()
+            item:setItemSize(568, 144)
+            local item_width, item_height = item:getItemSize()
 
+            if canUnlock or isUnlocked then
                 content:addWidget(WidgetPushButton.new({normal = "back_ground_568X142.png",pressed = "back_ground_568X142.png"})
                     :onButtonClicked(function(event)
                         if event.name == "CLICKED_EVENT" then
@@ -235,51 +216,58 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                             end
                         end
                     end))
-                local title_bg = display.newSprite("title_blue_412x30.png"):pos(70,46)
-                content:addWidget(title_bg)
-                -- building name
-                UIKit:ttfLabel({
-                    text = _(Localize.building_name[unlock_building:GetType()]),
-                    size = 22,
-                    color = 0xffedae}):align(display.CENTER_LEFT, 14, title_bg:getContentSize().height/2)
-                    :addTo(title_bg)
-                if canUnlock then
-                    display.newSprite("dragon_next_icon_28x31.png"):align(display.CENTER, 260, 0):addTo(content, 10)
-                end
 
-                UIKit:ttfLabel({
-                    text = canUnlock and _("未解锁") or _("已解锁"),
-                    size = 18,
-                    color = canUnlock and 0xffedae or 0x0db13c}):align(display.CENTER_RIGHT, title_bg:getContentSize().width-30, title_bg:getContentSize().height/2)
-                    :addTo(title_bg)
-
-                -- building introduce
-                local building_tip = cc.ui.UILabel.new({
-                    UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                    text = building_introduces[unlock_building:GetType()],
-                    font = UIKit:getFontFilePath(),
-                    size = 20,
-                    aglin = ui.TEXT_ALIGN_LEFT,
-                    valign = ui.TEXT_VALIGN_CENTER,
-                    dimensions = cc.size(354, 65),
-                    color = UIKit:hex2c3b(0x797154)}):align(display.TOP_LEFT, -120, 10)
-                content:addWidget(building_tip)
-
-                -- 建筑图片 放置区域左右边框
-                local filp_bg = cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, -item_width/2+30, 0):scale(0.9)
-                filp_bg:setFlippedX(true)
-                content:addWidget(filp_bg)
-                content:addWidget(cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, -item_width/2+125, 0):scale(0.9))
-
-                local building_cp = building_config_map[unlock_building:GetType()]
-
-                local build_png = SpriteConfig[unlock_building:GetType()]:GetConfigByLevel(unlock_building:GetLevel()).png
-                local building_image = display.newScale9Sprite(build_png, building_cp.offset.x, building_cp.offset.y)
-                    :scale(building_cp.scale)
-                    :addTo(filp_bg)
-                item:addContent(content)
-                self.building_listview:addItem(item)
+            else
+                content:addWidget(display.newSprite("back_ground_568X142.png"))
             end
+
+            local title_bg = display.newSprite("title_blue_412x30.png"):pos(70,46)
+            content:addWidget(title_bg)
+            -- building name
+            UIKit:ttfLabel({
+                text = _(Localize.building_name[unlock_building:GetType()]),
+                size = 22,
+                color = 0xffedae}):align(display.CENTER_LEFT, 14, title_bg:getContentSize().height/2)
+                :addTo(title_bg)
+            if canUnlock then
+                display.newSprite("dragon_next_icon_28x31.png"):align(display.CENTER, 260, 0):addTo(content, 10)
+            end
+
+            UIKit:ttfLabel({
+                text = isUnlocked and  _("已解锁") or _("未解锁"),
+                size = 18,
+                color = isUnlocked and 0x0db13c or 0xffedae}):align(display.CENTER_RIGHT, title_bg:getContentSize().width-30, title_bg:getContentSize().height/2)
+                :addTo(title_bg)
+
+            -- building introduce
+            local building_tip = UIKit:ttfLabel({
+                text = building_introduces[unlock_building:GetType()],
+                size = 20,
+                aglin = ui.TEXT_ALIGN_LEFT,
+                valign = ui.TEXT_VALIGN_CENTER,
+                dimensions = cc.size(354, 65),
+                color = 0x797154}):align(display.TOP_LEFT, -120, 10)
+            content:addWidget(building_tip)
+
+            -- 建筑图片 放置区域左右边框
+            local filp_bg = cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, -item_width/2+30, 0):scale(0.9)
+            filp_bg:setFlippedX(true)
+            content:addWidget(filp_bg)
+            content:addWidget(cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, -item_width/2+125, 0):scale(0.9))
+
+            local building_cp = building_config_map[unlock_building:GetType()]
+
+            local build_png = SpriteConfig[unlock_building:GetType()]:GetConfigByLevel(unlock_building:GetLevel()).png
+            local building_image = display.newSprite(build_png, building_cp.offset.x, building_cp.offset.y,{class=cc.FilteredSpriteWithOne})
+                :scale(building_cp.scale)
+                :addTo(filp_bg)
+            if not (canUnlock or isUnlocked) then
+                local my_filter = filter
+                local filters = my_filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1})
+                building_image:setFilter(filters)
+            end
+            item:addContent(content)
+            self.building_listview:addItem(item)
         end
     end
     self.building_listview:reload()
@@ -478,6 +466,10 @@ end
 
 
 return GameUIKeep
+
+
+
+
 
 
 

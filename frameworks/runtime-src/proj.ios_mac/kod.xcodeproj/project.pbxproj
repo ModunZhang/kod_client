@@ -1940,7 +1940,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(LIBPOMELO_ROOT)/lib",
 					"$(SRCROOT)/../../sdk/uservoice",
-					/Volumes/WorkSpace/kod_client/frameworks/sdk/TalkingData,
+					"$(SRCROOT)/../../sdk/TalkingData",
 				);
 				OTHER_LDFLAGS = "";
 				PROVISIONING_PROFILE = "063d9307-faf0-4cce-8f96-4d1791d4d0ac";
@@ -1979,7 +1979,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(LIBPOMELO_ROOT)/lib/",
 					"$(SRCROOT)/../../sdk/uservoice",
-					/Volumes/WorkSpace/kod_client/frameworks/sdk/TalkingData,
+					"$(SRCROOT)/../../sdk/TalkingData",
 				);
 				OTHER_LDFLAGS = "";
 				PROVISIONING_PROFILE = "6d6e257c-35a4-4a64-93a2-5ada89f0e6f4";

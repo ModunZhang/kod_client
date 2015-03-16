@@ -429,13 +429,13 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
             icon="res_citizen_44x50.png",description=GameUtils:formatNumber(self.building:GetLevelUpCitizen()).."/"..GameUtils:formatNumber(population)},
 
         {resource_type = _("建筑蓝图"),isVisible = self.building:GetLevelUpBlueprints()>0,isSatisfy = self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"]>self.building:GetLevelUpBlueprints() ,
-            icon="blueprints_112x112.png",description=GameUtils:formatNumber(self.building:GetLevelUpBlueprints()).."/"..GameUtils:formatNumber(self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"])},
+            icon="blueprints_128x128.png",description=GameUtils:formatNumber(self.building:GetLevelUpBlueprints()).."/"..GameUtils:formatNumber(self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"])},
         {resource_type = _("建造工具"),isVisible = self.building:GetLevelUpTools()>0,     isSatisfy = self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"]>self.building:GetLevelUpTools() ,
-            icon="tools_112x112.png",description=GameUtils:formatNumber(self.building:GetLevelUpTools()).."/"..GameUtils:formatNumber(self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"])},
+            icon="tools_128x128.png",description=GameUtils:formatNumber(self.building:GetLevelUpTools()).."/"..GameUtils:formatNumber(self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"])},
         {resource_type =_("砖石瓦片"),isVisible = self.building:GetLevelUpTiles()>0,     isSatisfy = self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tiles"]>self.building:GetLevelUpTiles() ,
-            icon="tiles_112x112.png",description=GameUtils:formatNumber(self.building:GetLevelUpTiles()).."/"..GameUtils:formatNumber(self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tiles"])},
+            icon="tiles_128x128.png",description=GameUtils:formatNumber(self.building:GetLevelUpTiles()).."/"..GameUtils:formatNumber(self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tiles"])},
         {resource_type = _("滑轮组"),isVisible = self.building:GetLevelUpPulley()>0,    isSatisfy = self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"]>self.building:GetLevelUpPulley() ,
-            icon="pulley_112x112.png",description=GameUtils:formatNumber(self.building:GetLevelUpPulley()).."/"..GameUtils:formatNumber(self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"])},
+            icon="pulley_128x128.png",description=GameUtils:formatNumber(self.building:GetLevelUpPulley()).."/"..GameUtils:formatNumber(self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"])},
     }
 
     if not self.requirement_listview then
@@ -638,7 +638,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
             }
         )
         dialog:SetTitle(_("提示"))
-        dialog:SetPopMessage(can_not_update_type)
+        dialog:SetPopMessage(self.building:GetPreConditionDesc())
     else
         dialog:SetTitle(_("提示"))
         dialog:SetPopMessage(can_not_update_type)
