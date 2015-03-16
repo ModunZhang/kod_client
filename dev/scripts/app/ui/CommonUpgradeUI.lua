@@ -248,10 +248,10 @@ function CommonUpgradeUI:InitUpgradePart()
                                 dump(err:reason())
                             end)
                     else
-                        local location = City:GetLocationIdByBuildingType(self.building:GetType())
+                        local location = City:GetLocationIdByBuilding(self.building)
                         if location then
 
-                            local location_id = City:GetLocationIdByBuildingType(self.building:GetType())
+                            local location_id = City:GetLocationIdByBuilding(self.building)
                             NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
                                 :catch(function(err)
                                     dump(err:reason())
@@ -299,9 +299,9 @@ function CommonUpgradeUI:InitUpgradePart()
                                 dump(err:reason())
                             end)
                     else
-                        local location = City:GetLocationIdByBuildingType(self.building:GetType())
+                        local location = City:GetLocationIdByBuilding(self.building)
                         if location then
-                            local location_id = City:GetLocationIdByBuildingType(self.building:GetType())
+                            local location_id = City:GetLocationIdByBuilding(self.building)
                             NetManager:getUpgradeBuildingByLocationPromise(location_id)
                                 :catch(function(err)
                                     dump(err:reason())

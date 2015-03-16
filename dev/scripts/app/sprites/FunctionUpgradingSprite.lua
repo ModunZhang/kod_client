@@ -53,7 +53,9 @@ function FunctionUpgradingSprite:ctor(city_layer, entity, city)
     FunctionUpgradingSprite.super.ctor(self, city_layer, entity)
     self:OnTileChanged(city, city:GetTileWhichBuildingBelongs(entity))
 end
-
+function FunctionUpgradingSprite:RefreshSprite()
+    
+end
 function FunctionUpgradingSprite:GetSpriteTopPosition()
     local x,y = FunctionUpgradingSprite.super.GetSpriteTopPosition(self)
     local type_ = self:GetEntity():GetType()

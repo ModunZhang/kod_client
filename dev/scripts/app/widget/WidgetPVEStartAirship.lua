@@ -6,9 +6,6 @@ local WidgetPVEStartAirship = class("WidgetPVEStartAirship", WidgetPVEDialog)
 function WidgetPVEStartAirship:ctor(...)
     WidgetPVEStartAirship.super.ctor(self, ...)
 end
-function WidgetPVEStartAirship:GetIcon()
-    return "airship_106x81.png"
-end
 function WidgetPVEStartAirship:GetTitle()
     return _("飞艇")
 end

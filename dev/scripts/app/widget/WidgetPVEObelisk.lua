@@ -5,13 +5,9 @@ local WidgetPVEObelisk = class("WidgetPVEObelisk", WidgetPVEDialog)
 function WidgetPVEObelisk:ctor(...)
     WidgetPVEObelisk.super.ctor(self, ...)
     if self:GetObject():IsUnSearched() then
-        self:AddStrength(20)
         self:Search()
         NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
     end
-end
-function WidgetPVEObelisk:GetIcon()
-    return "obelisk.png"
 end
 function WidgetPVEObelisk:GetTitle()
     return string.format("%s %s%d", _('方尖碑'), _('等级'), self:GetPVEMap():GetIndex())

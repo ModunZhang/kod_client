@@ -5,9 +5,6 @@ local WidgetPVEFarmer = class("WidgetPVEFarmer", WidgetPVEResource)
 function WidgetPVEFarmer:ctor(...)
     WidgetPVEFarmer.super.ctor(self, ...)
 end
-function WidgetPVEFarmer:GetIcon()
-    return SpriteConfig["farmer"]:GetConfigByLevel(1).png
-end
 function WidgetPVEFarmer:GetTitle()
     return string.format("%s %s%d", _('废弃的农夫小屋'), _('等级'), self:GetPVEMap():GetIndex())
 end

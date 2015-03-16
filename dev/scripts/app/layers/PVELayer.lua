@@ -6,28 +6,10 @@ local Observer = import("..entity.Observer")
 local PVEObject = import("..entity.PVEObject")
 local PVEDefine = import("..entity.PVEDefine")
 local SpriteConfig = import("..sprites.SpriteConfig")
+local UILib = import("..ui.UILib")
 local MapLayer = import(".MapLayer")
 local PVELayer = class("PVELayer", MapLayer)
 local ZORDER = Enum("BACKGROUND", "BUILDING", "OBJECT", "FOG")
-
-local OBJECT_IMAGE = {}
-OBJECT_IMAGE[PVEDefine.START_AIRSHIP] = "airship_106x81.png"
-OBJECT_IMAGE[PVEDefine.WOODCUTTER] = SpriteConfig["woodcutter"]:GetConfigByLevel(1).png
-OBJECT_IMAGE[PVEDefine.QUARRIER] = SpriteConfig["quarrier"]:GetConfigByLevel(1).png
-OBJECT_IMAGE[PVEDefine.MINER] = SpriteConfig["miner"]:GetConfigByLevel(1).png
-OBJECT_IMAGE[PVEDefine.FARMER] = SpriteConfig["farmer"]:GetConfigByLevel(1).png
-OBJECT_IMAGE[PVEDefine.CAMP] = "camp_137x80.png"
-OBJECT_IMAGE[PVEDefine.CRASHED_AIRSHIP] = "crashed_airship_94x80.png"
-OBJECT_IMAGE[PVEDefine.CONSTRUCTION_RUINS] = "ruin_1.png"
-OBJECT_IMAGE[PVEDefine.KEEL] = "keel_95x80.png"
-OBJECT_IMAGE[PVEDefine.WARRIORS_TOMB] = "warriors_tomb.png"
-OBJECT_IMAGE[PVEDefine.OBELISK] = "obelisk.png"
-OBJECT_IMAGE[PVEDefine.ANCIENT_RUINS] = "ancient_ruins.png"
-OBJECT_IMAGE[PVEDefine.ENTRANCE_DOOR] = "entrance_door.png"
-OBJECT_IMAGE[PVEDefine.TREE] = "grass_tree_1_138x110.png"
-OBJECT_IMAGE[PVEDefine.HILL] = "hill_228x146.png"
-OBJECT_IMAGE[PVEDefine.LAKE] = "lake_220x174.png"
-
 function PVELayer:ctor(user)
     PVELayer.super.ctor(self, 0.5, 1)
     self.pve_listener = Observer.new()
@@ -76,8 +58,15 @@ function PVELayer:onEnter()
     -- 加载地图数据
     local objects = {}
     self:IteratorObjectsGID(function(x, y, gid)
-        local obj = display.newSprite(OBJECT_IMAGE[gid]):addTo(self.building_layer)
-            :pos(self:GetLogicMap():ConvertToMapPosition(x, y))
+        local type,image,s = unpack(UILib.pve[gid])
+        local obj
+        if type == "image" then
+            obj = display.newSprite(image)
+        else
+            obj = ccs.Armature:create(image)
+            obj:getAnimation():playWithIndex(0)
+        end
+        obj:addTo(self.building_layer):pos(self:GetLogicMap():ConvertToMapPosition(x, y)):scale(s or 1)
         objects[#objects + 1] = {sprite = obj, x = x, y = y}
     end)
     self.objects = objects

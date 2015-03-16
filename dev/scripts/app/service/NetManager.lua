@@ -604,8 +604,8 @@ function NetManager:getLoginPromise(deviceId)
     local device_id
     if CONFIG_IS_DEBUG then
         if gaozhou then
-            -- device_id = getOpenUDID()
-            device_id = "1"
+            device_id = getOpenUDID()
+            -- device_id = "1"
         else
             device_id = getOpenUDID()
         end

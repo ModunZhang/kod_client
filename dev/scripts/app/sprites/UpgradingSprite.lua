@@ -1,4 +1,5 @@
 local SpriteConfig = import(".SpriteConfig")
+local UILib = import("..ui.UILib")
 local Sprite = import(".Sprite")
 local UpgradingSprite = class("UpgradingSprite", Sprite)
 ----
@@ -19,7 +20,6 @@ function UpgradingSprite:OnLogicPositionChanged(x, y)
     self:SetPositionWithZOrder(self:GetLogicMap():ConvertToMapPosition(x, y))
 end
 function UpgradingSprite:OnBuildingUpgradingBegin(building, time)
-    print(building:GetType())
     if self.label then
         self.label:setString(building:GetType().." "..building:GetLevel())
     end
@@ -118,14 +118,25 @@ function UpgradingSprite:CreateSprite()
         :scale(scale == nil and 1 or scale)
         :flipX(self:GetFlipX())
     local p = sprite:getAnchorPointInPoints()
+    local ani_array = {}
     for _, v in ipairs(config.decorator) do
         if v.deco_type == "image" then
             display.newSprite(v.deco_name):addTo(sprite):pos(p.x + v.offset.x, p.y + v.offset.y)
-        else
-            assert(false)
+        elseif v.deco_type == "animation" then
+            local offset = v.offset
+            local armature = ccs.Armature:create(v.deco_name):addTo(sprite):
+                scale(v.scale or 1):align(display.CENTER, offset.x or p.x, offset.y or p.y)
+            local animation = armature:getAnimation()
+            animation:setSpeedScale(2)
+            animation:playWithIndex(0)
+            ani_array[#ani_array + 1] = armature
         end
     end
+    self.ani_array = ani_array
     return sprite
+end
+function UpgradingSprite:GetAniArray()
+    return self.ani_array
 end
 -- function UpgradingSprite:GetShadowConfig()
 --     local config = self:GetCurrentConfig()
@@ -159,6 +170,7 @@ end
 
 
 return UpgradingSprite
+
 
 
 

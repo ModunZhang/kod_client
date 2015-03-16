@@ -1,5 +1,6 @@
 local cocos_promise = import("..utils.cocos_promise")
 local window = import("..utils.window")
+local UILib = import("..ui.UILib")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetPVEDialog = class("WidgetPVEDialog", WidgetPopDialog)
 
@@ -47,7 +48,12 @@ function WidgetPVEDialog:Refresh()
         :addTo(dialog):flipX(true)
     cc.ui.UIImage.new("building_frame_36x136.png"):align(display.RIGHT_CENTER, 50 + 133, h*0.5 + 20)
         :addTo(dialog)
-    display.newSprite(self:GetIcon()):addTo(dialog):pos(50 + 133 * 0.5, h*0.5 + 20)
+    local type_,image,s = self:GetIcon()
+    if type_ == "image" then
+        display.newSprite(image):addTo(dialog):pos(50 + 133 * 0.5, h*0.5 + 20):scale(s or 1)
+    else
+        ccs.Armature:create(image):addTo(dialog):pos(50 + 133 * 0.5, h*0.5 + 20):scale(s or 1):getAnimation():gotoAndPause(0)
+    end
 
     --
     local level_bg = display.newSprite("back_ground_138x34.png")
@@ -89,7 +95,7 @@ function WidgetPVEDialog:Refresh()
     end
 end
 function WidgetPVEDialog:GetIcon()
-    return "airship_106x81.png"
+    return unpack(UILib.pve[self:GetObject():Type()])
 end
 function WidgetPVEDialog:GetTitle()
     return ""

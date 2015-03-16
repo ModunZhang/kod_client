@@ -5,9 +5,6 @@ local WidgetPVECamp = class("WidgetPVECamp", WidgetPVEDialog)
 function WidgetPVECamp:ctor(...)
     WidgetPVECamp.super.ctor(self, ...)
 end
-function WidgetPVECamp:GetIcon()
-    return "camp_137x80.png"
-end
 function WidgetPVECamp:GetTitle()
     return string.format("%s %s%d", _('野外营地'), _('等级'), self:GetPVEMap():GetIndex())
 end

@@ -550,14 +550,7 @@ function City:GetDecoratorsByLocationId(location_id)
     return self.locations_decorators[location_id]
 end
 function City:GetLocationIdByBuilding(building)
-    local x, y = building:GetLogicPosition()
-    local building_type = building:GetType()
-    for i, v in ipairs(self.locations) do
-        if building_type == v.building_type and v.x == x and v.y == y then
-            return i
-        end
-    end
-    return nil
+    return self:GetTileWhichBuildingBelongs(building).location_id
 end
 local config_buildings = GameDatas.Buildings.buildings
 function City:GetLocationIdByBuildingType(building_type)

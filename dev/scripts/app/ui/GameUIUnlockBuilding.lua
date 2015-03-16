@@ -56,7 +56,7 @@ function GameUIUnlockBuilding:Init()
             labelParams = {text = _("立即解锁")},
             listener = function ()
                 local upgrade_listener = function()
-                    local location_id = City:GetLocationIdByBuildingType(self.building:GetType())
+                    local location_id = City:GetLocationIdByBuilding(self.building)
                     NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
                         :catch(function(err)
                             dump(err:reason())
@@ -84,7 +84,7 @@ function GameUIUnlockBuilding:Init()
             labelParams = {text = _("解锁")},
             listener = function ()
                 local upgrade_listener = function()
-                    local location_id = City:GetLocationIdByBuildingType(self.building:GetType())
+                    local location_id = City:GetLocationIdByBuilding(self.building)
                     NetManager:getUpgradeBuildingByLocationPromise(location_id)
                     self:removeFromParent(true)
                 end
