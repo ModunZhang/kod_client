@@ -334,9 +334,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         :onButtonClicked(function(event)
             local building = item.building
             if city:IsFunctionBuilding(building) then
-                -- NetManager:instantUpgradeBuildingByLocation(city:GetLocationIdByBuildingType(building:GetType()), NOT_HANDLE)
-
-                local location_id = city:GetLocationIdByBuildingType(building:GetType())
+                local location_id = city:GetLocationIdByBuilding(building)
                 NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
                     :catch(function(err)
                         dump(err:reason())
@@ -344,8 +342,6 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
             elseif city:IsHouse(building) then
                 local tile = city:GetTileWhichBuildingBelongs(building)
                 local house_location = tile:GetBuildingLocation(building)
-                -- NetManager:instantUpgradeHouseByLocation(tile.location_id, house_location, NOT_HANDLE)
-
                 NetManager:getInstantUpgradeHouseByLocationPromise(tile.location_id, house_location)
                     :catch(function(err)
                         dump(err:reason())
@@ -400,9 +396,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         :onButtonClicked(function(event)
             local building = item.building
             if city:IsFunctionBuilding(building) then
-                -- NetManager:upgradeBuildingByLocation(city:GetLocationIdByBuildingType(building:GetType()), NOT_HANDLE)
-
-                local location_id = city:GetLocationIdByBuildingType(building:GetType())
+                local location_id = city:GetLocationIdByBuilding(building)
                 NetManager:getUpgradeBuildingByLocationPromise(location_id)
                     :catch(function(err)
                         dump(err:reason())
@@ -410,7 +404,6 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
             elseif city:IsHouse(building) then
                 local tile = city:GetTileWhichBuildingBelongs(building)
                 local house_location = tile:GetBuildingLocation(building)
-                -- NetManager:upgradeHouseByLocation(tile.location_id, house_location, NOT_HANDLE)
 
                 NetManager:getUpgradeHouseByLocationPromise(tile.location_id, house_location)
                     :catch(function(err)
