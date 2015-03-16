@@ -271,7 +271,7 @@ function GameUIPResourceBuilding:CheckSwitch(switch_to_building_type)
             FullScreenPopDialogUI.new()
                 :AddToCurrentScene()
                 :SetTitle("提示")
-                :SetPopMessage(string.format(_("前置建筑%s等级需要大于等于%d级"),preName,current_building:GetLevel()+preLevel))
+                :SetPopMessage(string.format(_("前置建筑%s等级需要大于等于%d级"),Localize.building_name[preName],current_building:GetLevel()+preLevel))
             return
         end
     end
