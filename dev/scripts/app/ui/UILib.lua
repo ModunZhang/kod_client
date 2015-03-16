@@ -11,6 +11,53 @@ local function getAniNameFromAnimationFiles(animation_files)
     end
     return anis
 end
+
+
+local BUILDING_ANIMATIONS_FILES = {
+    watchTower = {
+        "animations/watchTower/liaowangta.ExportJson"
+    },
+    barracks = {
+        "animations/bingyin/bingyin.ExportJson",
+        "animations/bingyin_1/bingyin_1.ExportJson"
+    },
+    tradeGuild = {
+        "animations/maoyihanghui/maoyihanghui.ExportJson",
+    },
+    mill = {
+        "animations/mofang/mofang.ExportJson",
+    },
+    townHall = {
+        "animations/shizhenting/shizhenting.ExportJson",
+    },
+    academy = {
+        "animations/xueyuan/xueyuan.ExportJson",
+    },
+    hospital = {
+        "animations/yiyuan/yiyuan.ExportJson",
+    },
+    warehouse = {
+        "animations/ziyuancangku/ziyuancangku.ExportJson",
+    },
+    smoke = {
+        "animations/yan/yan.ExportJson",
+    },
+    hammer = {
+        "animations/chuizi/chuizi.ExportJson",
+    },
+    airShip = {
+        "animations/feiting/feiting.ExportJson",
+    },
+    citizen = {
+        "animations/caodi_nan/caodi_nan.ExportJson",
+        "animations/caodi_nv/caodi_nv.ExportJson",
+        "animations/xuedi_nan/xuedi_nan.ExportJson",
+        "animations/xuedi_nv/xuedi_nv.ExportJson",
+        "animations/shadi_nan/shadi_nan.ExportJson",
+        "animations/shadi_nv/shadi_nv.ExportJson",
+    }
+}
+local BUILDING_ANIMATIONS = getAniNameFromAnimationFiles(BUILDING_ANIMATIONS_FILES)
 local RESOURCE = {
     blood = "dragonskill_blood_51x63.png",
     food = "res_food_114x100.png",
@@ -177,9 +224,9 @@ local EFFECT_ANIMATION_FILES = {
 }
 local SOLDIER_ANIMATION_FILES = {
     ranger = {
-        "animations/Archer_1_render.ExportJson",
-        "animations/Archer_1_render.ExportJson",
-        "animations/Archer_1_render.ExportJson",
+        "animations/gongjianshou_1/gongjianshou_1.ExportJson",
+        "animations/gongjianshou_1/gongjianshou_1.ExportJson",
+        "animations/gongjianshou_1/gongjianshou_1.ExportJson",
     },
     crossbowman = {
         "animations/Archer_1_render.ExportJson",
@@ -207,9 +254,9 @@ local SOLDIER_ANIMATION_FILES = {
         "animations/Cavalry_1_render.ExportJson",
     },
     swordsman = {
-        "animations/Infantry_1_render.ExportJson",
-        "animations/Infantry_1_render.ExportJson",
-        "animations/Infantry_1_render.ExportJson",
+        "animations/bubing_1/bubing_1.ExportJson",
+        "animations/bubing_2/bubing_2.ExportJson",
+        "animations/bubing_3/bubing_3.ExportJson",
     },
     sentinel = {
         "animations/Infantry_1_render.ExportJson",
@@ -463,6 +510,64 @@ local DAILY_TASK_ICON = {
     brotherClub = "Icon_brotherClub_122x124.png",
     growUp = "Icon_growUp_108x115.png"
 }
+local PVEDefine = import("..entity.PVEDefine")
+local SpriteConfig = import("..sprites.SpriteConfig")
+local PVE = {
+    [PVEDefine.START_AIRSHIP] = {"image", "airship.png", 0.4},
+    [PVEDefine.WOODCUTTER] = {"image", SpriteConfig["woodcutter"]:GetConfigByLevel(1).png},
+    [PVEDefine.QUARRIER] = {"image", SpriteConfig["quarrier"]:GetConfigByLevel(1).png},
+    [PVEDefine.MINER] = {"image", SpriteConfig["miner"]:GetConfigByLevel(1).png},
+    [PVEDefine.FARMER] = {"image", SpriteConfig["farmer"]:GetConfigByLevel(1).png},
+    [PVEDefine.CAMP] = {"animation", "yewaiyindi"},
+    [PVEDefine.CRASHED_AIRSHIP] = {"image", "crashed_airship_80x70.png"},
+    [PVEDefine.CONSTRUCTION_RUINS] = {"image", "ruin_1.png"},
+    [PVEDefine.KEEL] = {"image", "keel_95x80.png"},
+    [PVEDefine.WARRIORS_TOMB] = {"image", "warriors_tomb_80x72.png"},
+    [PVEDefine.OBELISK] = {"animation", "zhihuishi"},
+    [PVEDefine.ANCIENT_RUINS] = {"image", "ancient_ruins.png"},
+    [PVEDefine.ENTRANCE_DOOR] = {"image", "entrance_door.png"},
+    [PVEDefine.TREE] = {"image", "grass_tree_1_138x110.png"},
+    [PVEDefine.HILL] = {"image", "hill_228x146.png"},
+    [PVEDefine.LAKE] = {"image", "lake_220x174.png"},
+}
+local PVE_ANIMATION_FILES = {
+    "animations/yewaiyindi/yewaiyindi.ExportJson",
+    "animations/zhihuishi/zhihuishi.ExportJson",
+}
+-- local PVE_ANIMATIONS = getAniNameFromAnimationFiles(PVE_ANIMATION_FILES)
+local function loadBuildingAnimation()
+    local manager = ccs.ArmatureDataManager:getInstance()
+    for _,animations in pairs(BUILDING_ANIMATIONS_FILES) do
+        for _,ani_file in pairs(animations) do
+            manager:addArmatureFileInfo(ani_file)
+        end
+    end
+end
+local function unLoadBuildingAnimation()
+    local manager = ccs.ArmatureDataManager:getInstance()
+    for _,animations in pairs(BUILDING_ANIMATIONS_FILES) do
+        for _,ani_file in pairs(animations) do
+            manager:removeArmatureFileInfo(ani_file)
+        end
+    end
+end
+--
+local function loadSolidersAnimation()
+    local manager = ccs.ArmatureDataManager:getInstance()
+    for _,animations in pairs(SOLDIER_ANIMATION_FILES) do
+        for _,ani_file in pairs(animations) do
+            manager:addArmatureFileInfo(ani_file)
+        end
+    end
+end
+local function unLoadSolidersAnimation()
+    local manager = ccs.ArmatureDataManager:getInstance()
+    for _,animations in pairs(SOLDIER_ANIMATION_FILES) do
+        for _,ani_file in pairs(animations) do
+            manager:removeArmatureFileInfo(ani_file)
+        end
+    end
+end
 return {
     resource = RESOURCE,
     soldier_bg = STAR_BG,
@@ -486,7 +591,16 @@ return {
     village = VILLAGE,
     item = ITEM,
     daily_task_icon = DAILY_TASK_ICON,
+    building_animations = BUILDING_ANIMATIONS,
+    building_animations_files = BUILDING_ANIMATIONS_FILES,
+    pve = PVE,
+    pve_animation_files = PVE_ANIMATION_FILES,
+    loadBuildingAnimation = loadBuildingAnimation,
+    unLoadBuildingAnimation = unLoadBuildingAnimation,
+    loadSolidersAnimation = loadSolidersAnimation,
+    unLoadSolidersAnimation = unLoadSolidersAnimation,
 }
+
 
 
 

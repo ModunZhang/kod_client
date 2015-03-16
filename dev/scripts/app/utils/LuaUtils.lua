@@ -13,7 +13,6 @@ function LuaUtils:printTab(n)
         io.write('\t')
     end
 end
-
 function LuaUtils:table_size(t)
     local r = 0
     for _, _ in pairs(t) do r = r + 1 end

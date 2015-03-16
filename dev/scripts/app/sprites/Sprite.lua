@@ -142,7 +142,7 @@ end
 
 ----------base
 function Sprite:GenerateBaseTiles(w, h)
-    self:newBatchNode(w, h):addTo(self, 100)
+    self:newBatchNode(w, h):addTo(self, -1)
 end
 function Sprite:newBatchNode(w, h)
     local start_x, end_x, start_y, end_y = self:GetLocalRegion(w, h)

@@ -96,6 +96,7 @@ function CityScene:onEnter()
     alliance_map:AddListenOnType(allianceShirine,alliance_map.LISTEN_TYPE.BUILDING_LEVEL)
 end
 function CityScene:onExit()
+    UILib.unLoadBuildingAnimation()
     self:stopAllActions()
     --TODO:注意：这里因为主城现在播放两个音乐文件 所以这里要关掉鸟叫的sound音效
     audio.stopAllSounds()
@@ -104,19 +105,8 @@ end
 -- init ui
 function CityScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
-    for _, animations in pairs(UILib.soldier_animation_files) do
-        for i, ani_file in pairs(animations) do
-            manager:removeArmatureFileInfo(ani_file)
-            manager:addArmatureFileInfo(ani_file)
-        end
-    end
-
-    manager:removeArmatureFileInfo("animations/chuizidonghua.ExportJson")
-    manager:removeArmatureFileInfo("animations/green_dragon.ExportJson")
-    manager:removeArmatureFileInfo("animations/Red_dragon.ExportJson")
-    manager:removeArmatureFileInfo("animations/Blue_dragon.ExportJson")
-
-    manager:addArmatureFileInfo("animations/chuizidonghua.ExportJson")
+    UILib.loadSolidersAnimation()
+    UILib.loadBuildingAnimation()
     manager:addArmatureFileInfo("animations/green_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
     manager:addArmatureFileInfo("animations/Blue_dragon.ExportJson")

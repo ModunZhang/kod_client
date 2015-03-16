@@ -27,8 +27,8 @@ local scale = value_return
 local level = value_return
 
 
-local decorator = function(deco_type, deco_name, offset)
-    return {deco_type = deco_type, deco_name = deco_name, offset = offset}
+local decorator = function(deco_type, deco_name, offset, scale)
+    return {deco_type = deco_type, deco_name = deco_name, offset = offset or {}, scale = scale}
 end
 local function create_config(b, e, png, offset, scale, ...)
     return {
@@ -64,6 +64,17 @@ local function create_building_config(building_type, ...)
     SpriteConfig[building_type] = config
 end
 
+
+
+
+local function smoke(x, y, s)
+    s = s or 0.8
+    smoke_offset_x = 276*0.5*s
+    smoke_offset_y = 274*0.5*s
+    return decorator("animation", "yan", offset(x + smoke_offset_x, y + smoke_offset_y), scale(s))
+end
+
+
 create_building_config(
     "keep"
     ,create_config(MIN_LEVEL, level(1), "keep_1_420x390.png", offset(60, 225), scale(1), decorator("image", "keep_1_d_168x222.png", offset(124, -100)))
@@ -76,15 +87,15 @@ create_building_config(
 )
 create_building_config(
     "watchTower"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "watchTower_230x348.png", offset(50, 180), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "watchTower_230x348.png", offset(50, 180), scale(1), decorator("animation", "liaowangta"))
 )
 create_building_config(
     "warehouse"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "warehouse_232x214.png", offset(-5, 105), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "warehouse_232x214.png", offset(-5, 105), scale(1), decorator("animation", "ziyuancangku"))
 )
 create_building_config(
     "toolShop"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "toolShop_228x232.png", offset(20, 100), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "toolShop_228x232.png", offset(20, 100), scale(1), smoke(111, 167))
 )
 create_building_config(
     "materialDepot"
@@ -96,15 +107,15 @@ create_building_config(
 )
 create_building_config(
     "barracks"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "barracks_252x240.png", offset(20, 120), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "barracks_252x240.png", offset(20, 120), scale(1), decorator("animation", "bingyin_1"), decorator("animation", "bingyin"))
 )
 create_building_config(
     "blackSmith"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "blackSmith_208x244.png", offset(20, 100), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "blackSmith_208x244.png", offset(20, 100), scale(1), smoke(17, 181), smoke(28, 196))
 )
 create_building_config(
     "foundry"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "foundry_258x254.png", offset(20, 120), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "foundry_258x254.png", offset(20, 120), scale(1), smoke(55, 213), smoke(79, 180))
 )
 create_building_config(
     "stoneMason"
@@ -116,27 +127,27 @@ create_building_config(
 )
 create_building_config(
     "mill"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "mill_268x236.png", offset(20, 100), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "mill_288x260.png", offset(20, 100), scale(1), decorator("animation", "mofang"))
 )
 create_building_config(
     "hospital"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "hospital_258x230.png", offset(40, 100), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "hospital_258x230.png", offset(40, 100), scale(1), decorator("animation", "yiyuan"))
 )
 create_building_config(
     "townHall"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "townHall_280x294.png", offset(20, 140), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "townHall_280x294.png", offset(20, 140), scale(1), decorator("animation", "shizhenting"))
 )
 create_building_config(
     "tradeGuild"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "tradeGuild_248x176.png", offset(20, 80), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "tradeGuild_248x234.png", offset(20, 100), scale(1), decorator("animation", "maoyihanghui"))
 )
 create_building_config(
     "academy"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "academy_214x220.png", offset(20, 120), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "academy_214x224.png", offset(20, 120), scale(1), decorator("animation", "xueyuan"))
 )
 create_building_config(
     "workshop"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "workShop_230x240.png", offset(20, 130), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "workShop_230x240.png", offset(20, 130), scale(1), smoke(19, 181))
 )
 create_building_config(
     "trainingGround"

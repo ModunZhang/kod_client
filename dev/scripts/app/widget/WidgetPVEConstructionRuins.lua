@@ -5,9 +5,6 @@ local WidgetPVEConstructionRuins = class("WidgetPVEConstructionRuins", WidgetPVE
 function WidgetPVEConstructionRuins:ctor(...)
     WidgetPVEConstructionRuins.super.ctor(self, ...)
 end
-function WidgetPVEConstructionRuins:GetIcon()
-    return "ruin_1.png"
-end
 function WidgetPVEConstructionRuins:GetTitle()
     return string.format("%s %s%d", _('建筑废墟'), _('等级'), self:GetPVEMap():GetIndex())
 end

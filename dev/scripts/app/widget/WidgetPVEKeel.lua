@@ -5,9 +5,6 @@ local WidgetPVEKeel = class("WidgetPVEKeel", WidgetPVEDialog)
 function WidgetPVEKeel:ctor(...)
     WidgetPVEKeel.super.ctor(self, ...)
 end
-function WidgetPVEKeel:GetIcon()
-    return "keel_95x80.png"
-end
 function WidgetPVEKeel:GetTitle()
     return string.format("%s %s%d", _('龙骨'), _('等级'), self:GetPVEMap():GetIndex())
 end

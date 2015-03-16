@@ -5,9 +5,6 @@ local WidgetPVEEntranceDoor = class("WidgetPVEEntranceDoor", WidgetPVEDialog)
 function WidgetPVEEntranceDoor:ctor(...)
     WidgetPVEEntranceDoor.super.ctor(self, ...)
 end
-function WidgetPVEEntranceDoor:GetIcon()
-    return "entrance_door.png"
-end
 function WidgetPVEEntranceDoor:GetTitle()
     return string.format("%s %s%d", _('异界之门'), _('等级'), self:GetPVEMap():GetIndex())
 end

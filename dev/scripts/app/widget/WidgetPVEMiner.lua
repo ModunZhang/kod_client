@@ -5,9 +5,6 @@ local WidgetPVEMiner = class("WidgetPVEMiner", WidgetPVEResource)
 function WidgetPVEMiner:ctor(...)
     WidgetPVEMiner.super.ctor(self, ...)
 end
-function WidgetPVEMiner:GetIcon()
-    return SpriteConfig["miner"]:GetConfigByLevel(1).png
-end
 function WidgetPVEMiner:GetTitle()
     return string.format("%s %s%d", _('废弃的矿工小屋'), _('等级'), self:GetPVEMap():GetIndex())
 end

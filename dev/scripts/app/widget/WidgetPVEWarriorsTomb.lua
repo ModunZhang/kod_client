@@ -5,9 +5,6 @@ local WidgetPVEWarriorsTomb = class("WidgetPVEWarriorsTomb", WidgetPVEDialog)
 function WidgetPVEWarriorsTomb:ctor(...)
     WidgetPVEWarriorsTomb.super.ctor(self, ...)
 end
-function WidgetPVEWarriorsTomb:GetIcon()
-    return "warriors_tomb.png"
-end
 function WidgetPVEWarriorsTomb:GetTitle()
     return string.format("%s %s%d", _('勇士之墓'), _('等级'), self:GetPVEMap():GetIndex())
 end

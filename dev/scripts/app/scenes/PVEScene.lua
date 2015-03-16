@@ -17,6 +17,7 @@ local PVEDefine = import("..entity.PVEDefine")
 local PVEObject = import("..entity.PVEObject")
 local PVELayer = import("..layers.PVELayer")
 local GameUIPVEHome = import("..ui.GameUIPVEHome")
+local UILib = import("..ui.UILib")
 local MapScene = import(".MapScene")
 local PVEScene = class("PVEScene", MapScene)
 
@@ -26,6 +27,7 @@ function PVEScene:ctor(user)
     self.user = user
 end
 function PVEScene:onEnter()
+    self:LoadAnimation()
     PVEScene.super.onEnter(self)
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(self.user:GetPVEDatabase():GetCharPosition())
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
@@ -33,6 +35,12 @@ function PVEScene:onEnter()
     self:GetSceneLayer():MoveCharTo(self.user:GetPVEDatabase():GetCharPosition())
 
     GameUIPVEHome.new(self.user, self):addToScene(self, true):setTouchSwallowEnabled(false)
+end
+function PVEScene:LoadAnimation()
+    local manager = ccs.ArmatureDataManager:getInstance()
+    for _,ani_file in pairs(UILib.pve_animation_files) do
+        manager:addArmatureFileInfo(ani_file)
+    end
 end
 function PVEScene:CreateSceneLayer()
     return PVELayer.new(self.user)

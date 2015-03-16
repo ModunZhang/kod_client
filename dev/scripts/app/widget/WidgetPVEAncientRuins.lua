@@ -5,9 +5,6 @@ local WidgetPVEAncientRuins = class("WidgetPVEAncientRuins", WidgetPVEDialog)
 function WidgetPVEAncientRuins:ctor(...)
     WidgetPVEAncientRuins.super.ctor(self, ...)
 end
-function WidgetPVEAncientRuins:GetIcon()
-    return "ancient_ruins.png"
-end
 function WidgetPVEAncientRuins:GetTitle()
     return string.format("%s %s%d", _('上古遗迹'), _('等级'), self:GetPVEMap():GetIndex())
 end

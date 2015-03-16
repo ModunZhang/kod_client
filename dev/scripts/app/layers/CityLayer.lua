@@ -1,7 +1,12 @@
 local IsoMapAnchorBottomLeft = import("..map.IsoMapAnchorBottomLeft")
 local SpriteConfig = import("..sprites.SpriteConfig")
-local DragonEyrieSprite = import("..sprites.DragonEyrieSprite")
-local FunctionUpgradingSprite = import("..sprites.FunctionUpgradingSprite")
+-- local DragonEyrieSprite = import("..sprites.DragonEyrieSprite")
+-- local WareHouseSprite = import("..sprites.WareHouseSprite")
+-- local BarracksSprite = import("..sprites.BarracksSprite")
+-- local HospitalSprite = import("..sprites.HospitalSprite")
+-- local ToolShopSprite = import("..sprites.ToolShopSprite")
+-- local BlackSmithSprite = import("..sprites.BlackSmithSprite")
+-- local FunctionUpgradingSprite = import("..sprites.FunctionUpgradingSprite")
 local UpgradingSprite = import("..sprites.UpgradingSprite")
 local RuinSprite = import("..sprites.RuinSprite")
 local TowerUpgradingSprite = import("..sprites.TowerUpgradingSprite")
@@ -21,6 +26,24 @@ local promise = import("..utils.promise")
 local Observer = import("..entity.Observer")
 local MapLayer = import(".MapLayer")
 local CityLayer = class("CityLayer", MapLayer)
+
+
+local FunctionUpgradingSprite = import("..sprites.FunctionUpgradingSprite")
+local BuildingSpriteRegister = setmetatable({
+    warehouse       = import("..sprites.WareHouseSprite"),
+    toolShop        = import("..sprites.ToolShopSprite"),
+    blackSmith      = import("..sprites.BlackSmithSprite"),
+    barracks        = import("..sprites.BarracksSprite"),
+    dragonEyrie     = import("..sprites.DragonEyrieSprite"),
+    hospital        = import("..sprites.HospitalSprite"),
+    academy         = import("..sprites.AcademySprite"),
+    townHall        = import("..sprites.TownHallSprite"),
+    tradeGuild        = import("..sprites.TradeGuildSprite"),
+}, {__index = function(t, k)
+    return FunctionUpgradingSprite
+end})
+
+
 
 local floor = math.floor
 local min = math.min
@@ -247,6 +270,9 @@ function CityLayer:ChangeTerrain()
     table.foreach(self.buildings, function(_, v)
         v:ReloadSpriteCauseTerrainChanged()
     end)
+    table.foreach(self.citizens, function(_, v)
+        v:ReloadSpriteCauseTerrainChanged()
+    end)
     -- if self.road then
     --     self.road:ReloadSpriteCauseTerrainChanged()
     -- end
@@ -292,12 +318,7 @@ function CityLayer:InitWithCity(city)
 
     -- 加功能建筑
     for _, building in pairs(city:GetAllBuildings()) do
-        local building_sprite
-        if building:GetType() == "dragonEyrie" then
-            building_sprite = self:CreateDragonEyrie(building, city):addTo(city_node)
-        else
-            building_sprite = self:CreateBuilding(building, city):addTo(city_node)
-        end
+        local building_sprite = self:CreateBuilding(building, city):addTo(city_node)
         city:AddListenOnType(building_sprite, city.LISTEN_TYPE.LOCK_TILE)
         city:AddListenOnType(building_sprite, city.LISTEN_TYPE.UNLOCK_TILE)
         city:AddListenOnType(building_sprite, city.LISTEN_TYPE.UPGRADE_BUILDING)
@@ -333,21 +354,21 @@ function CityLayer:InitWithCity(city)
     -- 兵种
     local soldiers = {}
     for i, v in ipairs({
-        {x = 8, y = 18, soldier_type = "deathKnight"},
-        {x = 6, y = 18, soldier_type = "skeletonWarrior"},
-        {x = 4, y = 18, soldier_type = "skeletonArcher"},
-        {x = 2, y = 18, soldier_type = "meatWagon"},
+        -- {x = 8, y = 18, soldier_type = "deathKnight"},
+        -- {x = 6, y = 18, soldier_type = "skeletonWarrior"},
+        -- {x = 4, y = 18, soldier_type = "skeletonArcher"},
+        -- {x = 2, y = 18, soldier_type = "meatWagon"},
 
-        {x = 8, y = 16, soldier_type = "lancer"},
-        {x = 6, y = 16, soldier_type = "swordsman"},
-        {x = 4, y = 16, soldier_type = "ranger"},
-        {x = 2, y = 16, soldier_type = "catapult"},
+        -- {x = 8, y = 16, soldier_type = "lancer"},
+        -- {x = 6, y = 16, soldier_type = "swordsman"},
+        -- {x = 4, y = 16, soldier_type = "ranger"},
+        -- {x = 2, y = 16, soldier_type = "catapult"},
 
-        {x = 8, y = 14, soldier_type = "horseArcher"},
-        {x = 6, y = 14, soldier_type = "sentinel"},
-        {x = 4, y = 14, soldier_type = "crossbowman"},
-        {x = 2, y = 14, soldier_type = "ballista"},
-    }) do
+        -- {x = 8, y = 14, soldier_type = "horseArcher"},
+        -- {x = 6, y = 14, soldier_type = "sentinel"},
+        -- {x = 4, y = 14, soldier_type = "crossbowman"},
+        -- {x = 2, y = 14, soldier_type = "ballista"},
+        }) do
         local soldier = self:CreateSoldier(v.soldier_type, v.x, v.y):addTo(city_node)
         local x, y = soldier:getPosition()
         soldier:pos(x, y + 25)
@@ -698,11 +719,8 @@ end
 function CityLayer:CreateDecorator(house)
     return UpgradingSprite.new(self, house)
 end
-function CityLayer:CreateDragonEyrie(building, city)
-    return DragonEyrieSprite.new(self, building, city)
-end
 function CityLayer:CreateBuilding(building, city)
-    return FunctionUpgradingSprite.new(self, building, city)
+    return BuildingSpriteRegister[building:GetType()].new(self, building, city)
 end
 function CityLayer:CreateSingleTree(logic_x, logic_y)
     return SingleTreeSprite.new(self, logic_x, logic_y)
@@ -746,6 +764,7 @@ function CityLayer:OnSceneScale()
 end
 
 return CityLayer
+
 
 
 

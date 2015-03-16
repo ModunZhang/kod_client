@@ -22,6 +22,14 @@ end
 function AirshipSprite:GetSpriteFile()
     return "airship.png"
 end
+function AirshipSprite:CreateSprite()
+    local sprite = AirshipSprite.super.CreateSprite(self)
+    local p = sprite:getAnchorPointInPoints()
+    local armature = ccs.Armature:create("feiting"):addTo(sprite)
+    armature:align(display.CENTER, p.x, p.y):getAnimation():playWithIndex(0)
+    armature:getAnimation():setSpeedScale(2)
+    return sprite
+end
 function AirshipSprite:GetSpriteOffset()
     return 50, 50
 end

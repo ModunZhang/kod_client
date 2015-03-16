@@ -5,9 +5,6 @@ local WidgetPVECrashedAirship = class("WidgetPVECrashedAirship", WidgetPVEDialog
 function WidgetPVECrashedAirship:ctor(...)
     WidgetPVECrashedAirship.super.ctor(self, ...)
 end
-function WidgetPVECrashedAirship:GetIcon()
-    return "crashed_airship_94x80.png"
-end
 function WidgetPVECrashedAirship:GetTitle()
     return string.format("%s %s%d", _('坠毁的飞艇'), _('等级'), self:GetPVEMap():GetIndex())
 end
