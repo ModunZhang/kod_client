@@ -249,13 +249,13 @@ function GameUIPResourceBuilding:CheckSwitch(switch_to_building_type)
         if preType == "building" then
             local find_buildings = city:GetBuildingByType(preName)
             for i,v in ipairs(find_buildings) do
-                if v:GetLevel()>=self:GetLevel()+preLevel then
+                if v:GetLevel()>=current_building:GetLevel()+preLevel then
                     limit = true
                 end
             end
         else
             city:IteratorDecoratorBuildingsByFunc(function (index,house)
-                if house:GetType() == preName and house:GetLevel()>=self:GetLevel()+preLevel then
+                if house:GetType() == preName and house:GetLevel()>=current_building:GetLevel()+preLevel then
                     limit = true
                 end
             end)
@@ -264,7 +264,7 @@ function GameUIPResourceBuilding:CheckSwitch(switch_to_building_type)
             FullScreenPopDialogUI.new()
                 :AddToCurrentScene()
                 :SetTitle("提示")
-                :SetPopMessage(string.format(_("前置建筑%s等级需要大于等于%d级"),preName,self:GetLevel()+preLevel))
+                :SetPopMessage(string.format(_("前置建筑%s等级需要大于等于%d级"),preName,current_building:GetLevel()+preLevel))
             return
         end
     end
