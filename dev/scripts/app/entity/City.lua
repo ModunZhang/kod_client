@@ -635,6 +635,9 @@ function City:GetTileFaceToGate()
     end
 end
 function City:GetTileWhichBuildingBelongs(building)
+    if building:GetType() == "watchTower" then
+        return self:GetTileByLocationId(2)
+    end
     return self:GetTileByBuildingPosition(building.x, building.y)
 end
 function City:GetTileByBuildingPosition(x, y)
