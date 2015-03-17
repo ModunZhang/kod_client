@@ -12,27 +12,37 @@ local SUCCESS_CODE = 200
 local FAILED_CODE = 500
 local TIME_OUT = 15
 --- 解析服务器返回的数据
+local unpack = unpack
+local ipairs = ipairs
+local table = table
+local edit_meta = {}
 local function decodeInUserDataFromDeltaData(userData, deltaData)
-    local unpack = unpack
+    local edit = {}
     for _,v in ipairs(deltaData) do
         local origin_key,value = unpack(v)
         local keys = string.split(origin_key, ".")
         if #keys == 1 then
-            userData[unpack(keys)] = value
+            local k = unpack(keys)
+            edit[k] = value
+            userData[k] = value
         else
+            local tmp = edit
             local curRoot = userData
             local len = #keys
             for i = 1,len do
                 local v = keys[i]
                 local k = tonumber(v) or v
                 if type(k) == "number" then k = k + 1 end
-
                 if i ~= len then
                     curRoot = curRoot[k]
+                    tmp[k] = tmp[k] or {}
+                    tmp = tmp[k]
                     assert(curRoot)
                 else
-                    if value == json.null then 
-                        table.remove(curRoot, k) 
+                    tmp[k] = value
+                    setmetatable(tmp, edit_meta)
+                    if value == json.null then
+                        table.remove(curRoot, k)
                     else
                         curRoot[k] = value
                     end
@@ -40,13 +50,14 @@ local function decodeInUserDataFromDeltaData(userData, deltaData)
             end
         end
     end
+    return edit
 end
 
 -- 过滤器
 local function get_response_msg(response)
     local user_data = DataManager:getUserData()
-    decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
-    DataManager:setUserData(user_data)
+    local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
+    DataManager:setUserData(user_data, edit)
     return response.msg.playerData
 end
 local function check_response(m)
@@ -189,8 +200,8 @@ function NetManager:addPlayerDataChangedEventListener()
         if success then
             LuaUtils:outputTable("onPlayerDataChanged", response)
             local user_data = DataManager:getUserData()
-            decodeInUserDataFromDeltaData(user_data, response)
-            DataManager:setUserData(user_data)
+            local edit = decodeInUserDataFromDeltaData(user_data, response)
+            DataManager:setUserData(user_data, edit)
         end
         local callback = onPlayerDataChanged_callbacks[1]
         if type(callback) == "function" then
@@ -522,29 +533,7 @@ function NetManager:addOnAddPlayerBillingDataSuccess()
         end
     end)
 end
---
---
-------------------------------------------------------------------------------------------------
-function NetManager:addLoginEventListener()
-    self:addEventListener("onPlayerLoginSuccess", function(success, msg)
-        if success then
-            app:GetPushManager():CancelAll()
-            if self.m_was_inited_game then
-                self.m_netService:setDeltatime(msg.serverTime - ext.now())
-                DataManager:setUserData(msg)
-            else
-                LuaUtils:outputTable("onPlayerLoginSuccess", msg)
-                self.m_netService:setDeltatime(msg.serverTime - ext.now())
-                local InitGame = import("app.service.InitGame")
-                InitGame(msg)
-            end
-            self.m_was_inited_game = false
-        end
-    end)
-end
-function NetManager:removeLoginEventListener(  )
-    self:removeEventListener("onPlayerLoginSuccess")
-end
+
 
 
 --连接网关服务器
@@ -590,7 +579,6 @@ function NetManager:getConnectLogicServerPromise()
         self:addKickEventListener()
         self:addPlayerDataChangedEventListener()
         self:addAllianceDataChangedEventListener()
-        self:addLoginEventListener()
 
         self:addOnSearchAlliancesSuccessListener()
         self:addOnGetNearedAllianceInfosSuccessListener()
@@ -1631,9 +1619,9 @@ end
 -- 获取成就任务奖励
 function NetManager:getGrowUpTaskRewardsPromise(taskType, taskId)
     return get_blocking_request_promise("logic.playerHandler.getGrowUpTaskRewards",{
-            taskType = taskType,
-            taskId = taskId
-        }, "领取奖励失败!"):next(get_response_msg)
+        taskType = taskType,
+        taskId = taskId
+    }, "领取奖励失败!"):next(get_response_msg)
 end
 
 -- 领取日常任务奖励
@@ -1695,6 +1683,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 
