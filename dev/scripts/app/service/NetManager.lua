@@ -15,7 +15,6 @@ local TIME_OUT = 15
 local unpack = unpack
 local ipairs = ipairs
 local table = table
-local edit_meta = {}
 local function decodeInUserDataFromDeltaData(userData, deltaData)
     local edit = {}
     for _,v in ipairs(deltaData) do
@@ -40,7 +39,6 @@ local function decodeInUserDataFromDeltaData(userData, deltaData)
                     assert(curRoot)
                 else
                     tmp[k] = value
-                    setmetatable(tmp, edit_meta)
                     if value == json.null then
                         table.remove(curRoot, k)
                     else
@@ -1078,7 +1076,9 @@ function NetManager:getCreateAlliancePromise(name, tag, language, terrain, flag)
         language = language,
         terrain = terrain,
         flag = flag
-    }, "创建联盟失败!"):next(get_response_msg)
+    }, "创建联盟失败!"):next(function(data)
+        dump(data)
+    end)
 end
 -- 退出联盟
 function NetManager:getQuitAlliancePromise()

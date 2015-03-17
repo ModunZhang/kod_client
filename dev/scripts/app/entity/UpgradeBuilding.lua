@@ -216,11 +216,6 @@ function UpgradeBuilding:GetBuildingInfoByEventAndLocation(user_data, event, loc
     return level, finishTime, type_
 end
 function UpgradeBuilding:GetBuildingEventFromUserDataByLocation(user_data, location)
-    for _,v in ipairs(user_data.__buildingEvents or {}) do
-        if v.data.location == location then
-            return v.data
-        end
-    end
     for _,v in ipairs(user_data.buildingEvents or {}) do
         if v.location == location then
             return v
