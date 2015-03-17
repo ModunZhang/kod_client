@@ -597,7 +597,7 @@ function WidgetRecruitSoldier:GetCurrentMaxRecruitNum(total_resouce)
         max_count = math.min(max_count,temp_max)
     end
     max_count = math.min(max_count,self.recruit_max)
-
+    max_count = max_count == 0 and 1 or max_count
     return max_count
 end
 function WidgetRecruitSoldier:GetNeedResouce(count)
