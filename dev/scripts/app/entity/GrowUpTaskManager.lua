@@ -434,9 +434,11 @@ local index_map = {
 }
 function GrowUpTaskManager:GetFirstCompleteTasksByCategory(category)
     local r = {}
-    for i,tag in ipairs(category_map[category]) do
+    for _,tag in ipairs(category_map[category]) do
         local mark_map = {}
-        for i,v in ipairs(self.task_map[tag]) do
+        local tasks = clone(self.task_map[tag])
+        table.sort(tasks, function(a, b) return a.id < b.id end)
+        for _,v in ipairs(tasks) do
             local category_name = v.name
             if type_map[tag] then
                 category_name = v.type
@@ -638,8 +640,6 @@ function GrowUpTaskManager:GetAvailableTaskByTag(tag, func)
         func(available_map, false, v, config[v.id + 1])
     end
 
-    dump(available_map)
-
     -- 找到未完成的任务
     for k,v in pairs(available_map) do
         table.insert(r, setmetatable(config[v], meta_map[tag]))
@@ -668,39 +668,9 @@ function GrowUpTaskManager:OnUserDataChanged(userData)
     if not userData.growUpTasks then return end
     local growUpTasks = userData.growUpTasks
     for k,v in pairs(self.task_map) do
-        local all_tasks = growUpTasks[k]
-        local diff_tasks = growUpTasks[string.format("__%s", k)]
-        if all_tasks then
-            self.task_map[k] = all_tasks
-        elseif diff_tasks then
-            GameUtils:Event_Handler_Func(
-                diff_tasks
-                ,function(event_data) -- add
-                    table.insert(self.task_map[k], event_data)
-                end
-                ,function(event_data) -- edit
-                    for i,v in ipairs(self.task_map[k]) do
-                        if v.id == event_data.id then
-                            self.task_map[k][i] = event_data
-                            break
-                        end
-                end
-                end
-                ,function(event_data) -- remove
-                    for i,v in ipairs(self.task_map[k]) do
-                        if v.id == event_data.id then
-                            table.remove(self.task_map[k], i)
-                            break
-                        end
-                end
-                end
-            )
-        end
-        table.sort(self.task_map[k], function(a, b)
-            return a.id < b.id
-        end)
+        self.task_map[k] = growUpTasks[k]
     end
-    LuaUtils:outputTable("self.task_map", self.task_map)
+    -- LuaUtils:outputTable("self.task_map", self.task_map)
     return true
 end
 

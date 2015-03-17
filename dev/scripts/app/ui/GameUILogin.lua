@@ -144,20 +144,6 @@ end
 function GameUILogin:login()
     self:setProgressText(_("登陆游戏服务器...."))
     NetManager:getLoginPromise():next(function(response)
-        if response.success then
-            app:GetPushManager():CancelAll()
-            local playerData = response.msg.playerData
-            if NetManager.m_was_inited_game then
-                NetManager.m_netService:setDeltatime(playerData.serverTime - ext.now())
-                DataManager:setUserData(playerData)
-            else
-                LuaUtils:outputTable("onPlayerLoginSuccess", response)
-                NetManager.m_netService:setDeltatime(playerData.serverTime - ext.now())
-                local InitGame = import("app.service.InitGame")
-                InitGame(playerData)
-            end
-            NetManager.m_was_inited_game = false
-        end
         self:setProgressText(_("登录游戏成功!"))
         ext.market_sdk.onPlayerLogin(User:Id(),User:Name(),User:ServerName())
         ext.market_sdk.onPlayerLevelUp(User:Level())

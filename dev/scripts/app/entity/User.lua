@@ -454,7 +454,7 @@ function User:OnInviteAllianceEventsChanged(inviteToAllianceEvents)
 end
 function User:OnDailyQuestsChanged(dailyQuests)
     if not dailyQuests then return end
-    LuaUtils:outputTable("OnDailyQuestsChanged", dailyQuests)
+    -- LuaUtils:outputTable("OnDailyQuestsChanged", dailyQuests)
     if dailyQuests.refreshTime then
         self:SetDailyQuestsRefreshTime(dailyQuests.refreshTime)
     end
@@ -468,7 +468,7 @@ function User:OnDailyQuestsChanged(dailyQuests)
 end
 function User:OnDailyQuestsEventsChanged(dailyQuestEvents)
     if not dailyQuestEvents then return end
-    LuaUtils:outputTable("dailyQuestEvents", dailyQuestEvents)
+    -- LuaUtils:outputTable("dailyQuestEvents", dailyQuestEvents)
     for k,v in pairs(dailyQuestEvents) do
         self.dailyQuestEvents[v.id] = v
     end

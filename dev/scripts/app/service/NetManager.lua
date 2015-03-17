@@ -11,9 +11,43 @@ NetManager = {}
 local SUCCESS_CODE = 200
 local FAILED_CODE = 500
 local TIME_OUT = 15
+--- 解析服务器返回的数据
+local function decodeInUserDataFromDeltaData(userData, deltaData)
+    local unpack = unpack
+    for _,v in ipairs(deltaData) do
+        local origin_key,value = unpack(v)
+        local keys = string.split(origin_key, ".")
+        if #keys == 1 then
+            userData[unpack(keys)] = value
+        else
+            local curRoot = userData
+            local len = #keys
+            for i = 1,len do
+                local v = keys[i]
+                local k = tonumber(v) or v
+                if type(k) == "number" then k = k + 1 end
+
+                if i ~= len then
+                    curRoot = curRoot[k]
+                    assert(curRoot)
+                else
+                    if value == json.null then 
+                        table.remove(curRoot, k) 
+                    else
+                        curRoot[k] = value
+                    end
+                end
+            end
+        end
+    end
+end
+
 -- 过滤器
-local function get_response_msg(results)
-    return results[2].msg
+local function get_response_msg(response)
+    local user_data = DataManager:getUserData()
+    decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
+    DataManager:setUserData(user_data)
+    return response.msg.playerData
 end
 local function check_response(m)
     return function(result)
@@ -26,7 +60,6 @@ end
 local function check_request(m)
     return function(result)
         if not result.success or result.msg.code ~= SUCCESS_CODE then
-            print("check_request", m)
             if result.msg.code == 0 then
                 promise.reject(result.msg.message, "timeout")
             else
@@ -152,15 +185,16 @@ end
 
 onPlayerDataChanged_callbacks = {}
 function NetManager:addPlayerDataChangedEventListener()
-    self:addEventListener("onPlayerDataChanged", function(success, msg)
+    self:addEventListener("onPlayerDataChanged", function(success, response)
         if success then
-            LuaUtils:outputTable("onPlayerDataChanged", msg)
-            -- self.m_netService:setDeltatime(msg.serverTime - ext.now())
-            DataManager:setUserData(msg)
+            LuaUtils:outputTable("onPlayerDataChanged", response)
+            local user_data = DataManager:getUserData()
+            decodeInUserDataFromDeltaData(user_data, response)
+            DataManager:setUserData(user_data)
         end
         local callback = onPlayerDataChanged_callbacks[1]
         if type(callback) == "function" then
-            callback(success, msg)
+            callback(success, response)
         end
         onPlayerDataChanged_callbacks = {}
     end)
@@ -499,7 +533,7 @@ function NetManager:addLoginEventListener()
                 self.m_netService:setDeltatime(msg.serverTime - ext.now())
                 DataManager:setUserData(msg)
             else
-                -- LuaUtils:outputTable("onPlayerLoginSuccess", msg)
+                LuaUtils:outputTable("onPlayerLoginSuccess", msg)
                 self.m_netService:setDeltatime(msg.serverTime - ext.now())
                 local InitGame = import("app.service.InitGame")
                 InitGame(msg)
@@ -598,9 +632,6 @@ local function getOpenUDID()
 end
 -- 登录
 function NetManager:getLoginPromise(deviceId)
-    if deviceId then
-        return get_none_blocking_request_promise("logic.entryHandler.login", {deviceId = deviceId})
-    end
     local device_id
     if CONFIG_IS_DEBUG then
         if gaozhou then
@@ -612,7 +643,22 @@ function NetManager:getLoginPromise(deviceId)
     else
         device_id = device.getOpenUDID()
     end
-    return get_none_blocking_request_promise("logic.entryHandler.login", {deviceId = device_id})
+    return get_none_blocking_request_promise("logic.entryHandler.login", {deviceId = deviceId or device_id}):next(function(response)
+        if response.success then
+            app:GetPushManager():CancelAll()
+            local playerData = response.msg.playerData
+            if self.m_was_inited_game then
+                self.m_netService:setDeltatime(playerData.serverTime - ext.now())
+                DataManager:setUserData(playerData)
+            else
+                LuaUtils:outputTable("logic.entryHandler.login", response)
+                self.m_netService:setDeltatime(playerData.serverTime - ext.now())
+                local InitGame = import("app.service.InitGame")
+                InitGame(playerData)
+            end
+            self.m_was_inited_game = false
+        end
+    end)
 end
 -- 事件回调promise
 local function get_playerdata_callback()
@@ -689,29 +735,29 @@ local function get_changeTerrain_promise(terrain)
     }, "修改地形失败!")
 end
 function NetManager:getChangeToGrassPromise()
-    return promise.all(get_changeTerrain_promise("grassLand"), get_playerdata_callback()):next(get_response_msg)
+    return get_changeTerrain_promise("grassLand"):next(get_response_msg)
 end
 function NetManager:getChangeToDesertPromise()
-    return promise.all(get_changeTerrain_promise("desert"), get_playerdata_callback()):next(get_response_msg)
+    return get_changeTerrain_promise("desert"):next(get_response_msg)
 end
 function NetManager:getChangeToIceFieldPromise()
-    return promise.all(get_changeTerrain_promise("iceField"), get_playerdata_callback()):next(get_response_msg)
+    return get_changeTerrain_promise("iceField"):next(get_response_msg)
 end
 -- 建造小屋
 function NetManager:getCreateHouseByLocationPromise(location, sub_location, building_type)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.createHouse", {
+    return get_blocking_request_promise("logic.playerHandler.createHouse", {
         buildingLocation = location,
         houseLocation = sub_location,
         houseType = building_type,
         finishNow = false
-    }, "建造小屋失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "建造小屋失败!"):next(get_response_msg)
 end
 -- 拆除小屋
 function NetManager:getDestroyHouseByLocationPromise(location, sub_location)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.destroyHouse", {
+    return get_blocking_request_promise("logic.playerHandler.destroyHouse", {
         buildingLocation = location,
         houseLocation = sub_location
-    }, "拆除小屋失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "拆除小屋失败!"):next(get_response_msg)
 end
 -- 升级小屋
 local function get_upgradeHouse_promise(location, sub_location, finish_now)
@@ -719,26 +765,26 @@ local function get_upgradeHouse_promise(location, sub_location, finish_now)
         buildingLocation = location,
         houseLocation = sub_location,
         finishNow = finish_now or false
-    }, "升级小屋失败!")
+    }, "升级小屋失败!"):next(get_response_msg)
 end
 function NetManager:getUpgradeHouseByLocationPromise(location, sub_location)
-    return promise.all(get_upgradeHouse_promise(location, sub_location, false), get_playerdata_callback()):next(get_response_msg)
+    return get_upgradeHouse_promise(location, sub_location, false)
 end
 function NetManager:getInstantUpgradeHouseByLocationPromise(location, sub_location)
-    return promise.all(get_upgradeHouse_promise(location, sub_location, true), get_playerdata_callback()):next(get_response_msg)
+    return get_upgradeHouse_promise(location, sub_location, true)
 end
 -- 升级功能建筑
 local function get_upgradeBuilding_promise(location, finish_now)
     return get_blocking_request_promise("logic.playerHandler.upgradeBuilding", {
         location = location,
         finishNow = finish_now or false
-    }, "升级功能建筑失败!")
+    }, "升级功能建筑失败!"):next(get_response_msg)
 end
 function NetManager:getUpgradeBuildingByLocationPromise(location)
-    return promise.all(get_upgradeBuilding_promise(location, false), get_playerdata_callback()):next(get_response_msg)
+    return get_upgradeBuilding_promise(location, false)
 end
 function NetManager:getInstantUpgradeBuildingByLocationPromise(location)
-    return promise.all(get_upgradeBuilding_promise(location, true), get_playerdata_callback()):next(get_response_msg)
+    return get_upgradeBuilding_promise(location, true)
 end
 -- 升级防御塔
 function NetManager:getUpgradeTowerPromise()
@@ -756,59 +802,55 @@ function NetManager:getInstantUpgradeWallByLocationPromise()
 end
 --转换生产建筑类型
 function NetManager:getSwitchBuildingPromise(buildingLocation,newBuildingName)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.switchBuilding", {
+    return get_blocking_request_promise("logic.playerHandler.switchBuilding", {
         buildingLocation = buildingLocation,
         newBuildingName = newBuildingName
     },
-        "转换生产建筑类型失败!"), get_playerdata_callback()):next(get_response_msg)
+    "转换生产建筑类型失败!"):next(get_response_msg)
 end
 
--- 征收税
-function NetManager:getImposePromise()
-    return promise.all(get_blocking_request_promise("logic.playerHandler.impose", nil,
-        "收税失败!"), get_playerdata_callback()):next(get_response_msg)
-end
+
 -- 制造材料
 local function get_makeMaterial_promise(category)
     return get_blocking_request_promise("logic.playerHandler.makeMaterial", {
         category = category,
         finishNow = false
-    }, "制造材料失败!")
+    }, "制造材料失败!"):next(get_response_msg)
 end
 -- 建造建筑材料
 function NetManager:getMakeBuildingMaterialPromise()
-    return promise.all(get_makeMaterial_promise("buildingMaterials"), get_playerdata_callback()):next(get_response_msg)
+    return get_makeMaterial_promise("buildingMaterials")
 end
 -- 建造科技材料
 function NetManager:getMakeTechnologyMaterialPromise()
-    return promise.all(get_makeMaterial_promise("technologyMaterials"), get_playerdata_callback()):next(get_response_msg)
+    return get_makeMaterial_promise("technologyMaterials")
 end
 -- 获取材料
 local function get_fetchMaterials_promise(category)
     return get_blocking_request_promise("logic.playerHandler.getMaterials", {
         category = category,
-    }, "获取材料失败!")
+    }, "获取材料失败!"):next(get_response_msg)
 end
 -- 获取建筑材料
 function NetManager:getFetchBuildingMaterialsPromise()
-    return promise.all(get_fetchMaterials_promise("buildingMaterials"), get_playerdata_callback()):next(get_response_msg)
+    return get_fetchMaterials_promise("buildingMaterials"):next(get_response_msg)
 end
 -- 获取科技材料
 function NetManager:getFetchTechnologyMaterialsPromise()
-    return promise.all(get_fetchMaterials_promise("technologyMaterials"), get_playerdata_callback()):next(get_response_msg)
+    return get_fetchMaterials_promise("technologyMaterials"):next(get_response_msg)
 end
 -- 打造装备
 local function get_makeDragonEquipment_promise(equipment_name, finish_now)
     return get_blocking_request_promise("logic.playerHandler.makeDragonEquipment", {
         equipmentName = equipment_name,
         finishNow = finish_now or false
-    }, "打造装备失败!")
+    }, "打造装备失败!"):next(get_response_msg)
 end
 function NetManager:getMakeDragonEquipmentPromise(equipment_name)
-    return promise.all(get_makeDragonEquipment_promise(equipment_name), get_playerdata_callback()):next(get_response_msg)
+    return get_makeDragonEquipment_promise(equipment_name)
 end
 function NetManager:getInstantMakeDragonEquipmentPromise(equipment_name)
-    return promise.all(get_makeDragonEquipment_promise(equipment_name, true), get_playerdata_callback()):next(get_response_msg)
+    return get_makeDragonEquipment_promise(equipment_name, true)
 end
 -- 招募士兵
 local function get_recruitNormalSoldier_promise(soldierName, count, finish_now)
@@ -816,13 +858,13 @@ local function get_recruitNormalSoldier_promise(soldierName, count, finish_now)
         soldierName = soldierName,
         count = count,
         finishNow = finish_now or false
-    }, "招募普通士兵失败!")
+    }, "招募普通士兵失败!"):next(get_response_msg)
 end
 function NetManager:getRecruitNormalSoldierPromise(soldierName, count, cb)
-    return promise.all(get_recruitNormalSoldier_promise(soldierName, count), get_playerdata_callback()):next(get_response_msg)
+    return get_recruitNormalSoldier_promise(soldierName, count)
 end
 function NetManager:getInstantRecruitNormalSoldierPromise(soldierName, count, cb)
-    return promise.all(get_recruitNormalSoldier_promise(soldierName, count, true), get_playerdata_callback()):next(get_response_msg)
+    return get_recruitNormalSoldier_promise(soldierName, count, true)
 end
 -- 招募特殊士兵
 local function get_recruitSpecialSoldier_promise(soldierName, count, finish_now)
@@ -830,347 +872,347 @@ local function get_recruitSpecialSoldier_promise(soldierName, count, finish_now)
         soldierName = soldierName,
         count = count,
         finishNow = finish_now or false
-    }, "招募特殊士兵失败!")
+    }, "招募特殊士兵失败!"):next(get_response_msg)
 end
 function NetManager:getRecruitSpecialSoldierPromise(soldierName, count)
-    return promise.all(get_recruitSpecialSoldier_promise(soldierName, count), get_playerdata_callback()):next(get_response_msg)
+    return get_recruitSpecialSoldier_promise(soldierName, count)
 end
 function NetManager:getInstantRecruitSpecialSoldierPromise(soldierName, count)
-    return promise.all(get_recruitSpecialSoldier_promise(soldierName, count, true), get_playerdata_callback()):next(get_response_msg)
+    return get_recruitSpecialSoldier_promise(soldierName, count, true)
 end
 -- 普通治疗士兵
 local function get_treatSoldier_promise(soldiers, finish_now)
     return get_blocking_request_promise("logic.playerHandler.treatSoldier", {
         soldiers = soldiers,
         finishNow = finish_now or false
-    }, "普通治疗士兵失败!")
+    }, "普通治疗士兵失败!"):next(get_response_msg)
 end
 function NetManager:getTreatSoldiersPromise(soldiers)
-    return promise.all(get_treatSoldier_promise(soldiers), get_playerdata_callback()):next(get_response_msg)
+    return get_treatSoldier_promise(soldiers)
 end
 function NetManager:getInstantTreatSoldiersPromise(soldiers)
-    return promise.all(get_treatSoldier_promise(soldiers), get_playerdata_callback()):next(get_response_msg)
+    return get_treatSoldier_promise(soldiers, true)
 end
 -- 孵化
 function NetManager:getHatchDragonPromise(dragonType)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.hatchDragon", {
+    return get_blocking_request_promise("logic.playerHandler.hatchDragon", {
         dragonType = dragonType,
-    }, "孵化失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "孵化失败!"):next(get_response_msg)
 end
 -- 装备
 function NetManager:getLoadDragonEquipmentPromise(dragonType, equipmentCategory, equipmentName)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.setDragonEquipment", {
+    return get_blocking_request_promise("logic.playerHandler.setDragonEquipment", {
         dragonType = dragonType,
         equipmentCategory = equipmentCategory,
         equipmentName = equipmentName
-    }, "装备失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "装备失败!"):next(get_response_msg)
 end
 -- 卸载装备
 function NetManager:getResetDragonEquipmentPromise(dragonType, equipmentCategory)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.resetDragonEquipment", {
+    return get_blocking_request_promise("logic.playerHandler.resetDragonEquipment", {
         dragonType = dragonType,
         equipmentCategory = equipmentCategory
-    }, "卸载装备失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "卸载装备失败!"):next(get_response_msg)
 end
 -- 强化装备
 function NetManager:getEnhanceDragonEquipmentPromise(dragonType, equipmentCategory, equipments)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.enhanceDragonEquipment", {
+    return get_blocking_request_promise("logic.playerHandler.enhanceDragonEquipment", {
         dragonType = dragonType,
         equipmentCategory = equipmentCategory,
         equipments = equipments
-    }, "强化装备失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "强化装备失败!"):next(get_response_msg)
 end
 -- 升级龙星
 function NetManager:getUpgradeDragonStarPromise(dragonType)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.upgradeDragonStar", {
+    return get_blocking_request_promise("logic.playerHandler.upgradeDragonStar", {
         dragonType = dragonType,
-    }, "升级龙星失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "升级龙星失败!"):next(get_response_msg)
 end
 -- 升级龙技能
 function NetManager:getUpgradeDragonDragonSkillPromise(dragonType, skillKey)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.upgradeDragonSkill", {
+    return get_blocking_request_promise("logic.playerHandler.upgradeDragonSkill", {
         dragonType = dragonType,
         skillKey = skillKey
-    }, "升级龙技能失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "升级龙技能失败!"):next(get_response_msg)
 end
 -- 获取每日任务列表
 function NetManager:getDailyQuestsPromise()
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getDailyQuests", {},
-        "获取每日任务列表失败!"), get_playerdata_callback()):next(get_response_msg)
+    return get_blocking_request_promise("logic.playerHandler.getDailyQuests", {},
+        "获取每日任务列表失败!"):next(get_response_msg)
 end
 -- 为每日任务中某个任务增加星级
 function NetManager:getAddDailyQuestStarPromise(questId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.addDailyQuestStar",
+    return get_blocking_request_promise("logic.playerHandler.addDailyQuestStar",
         {
             questId = questId
         },
-        "为每日任务中某个任务增加星级失败!"), get_playerdata_callback()):next(get_response_msg)
+        "为每日任务中某个任务增加星级失败!"):next(get_response_msg)
 end
 -- 开始一个每日任务
 function NetManager:getStartDailyQuestPromise(questId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.startDailyQuest",
+    return get_blocking_request_promise("logic.playerHandler.startDailyQuest",
         {
             questId = questId
         },
-        "开始一个每日任务失败!"), get_playerdata_callback()):next(get_response_msg)
+        "开始一个每日任务失败!"):next(get_response_msg)
 end
 -- 领取每日任务奖励
 function NetManager:getDailyQeustRewardPromise(questEventId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getDailyQeustReward",
+    return get_blocking_request_promise("logic.playerHandler.getDailyQeustReward",
         {
             questEventId = questEventId
         },
-        "领取每日任务奖励失败!"), get_playerdata_callback()):next(get_response_msg)
+        "领取每日任务奖励失败!"):next(get_response_msg)
 end
 -- 发送个人邮件
 function NetManager:getSendPersonalMailPromise(memberName, title, content)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.sendMail", {
+    return get_blocking_request_promise("logic.playerHandler.sendMail", {
         memberName = memberName,
         title = title,
         content = content,
-    }, "发送个人邮件失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "发送个人邮件失败!"):next(get_response_msg)
 end
 -- 获取收件箱邮件
 function NetManager:getFetchMailsPromise(fromIndex)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getMails", {
+    return get_blocking_request_promise("logic.playerHandler.getMails", {
         fromIndex = fromIndex
-    }, "获取收件箱邮件失败!"), get_inboxmails_callback()):next(get_response_msg)
+    }, "获取收件箱邮件失败!"):next(get_response_msg)
 end
 -- 阅读邮件
 function NetManager:getReadMailsPromise(mailIds)
-    return promise.all(get_none_blocking_request_promise("logic.playerHandler.readMails", {
+    return get_none_blocking_request_promise("logic.playerHandler.readMails", {
         mailIds = mailIds
-    }, "阅读邮件失败!"))
+    }, "阅读邮件失败!"):next(get_response_msg)
 end
 -- 收藏邮件
 function NetManager:getSaveMailPromise(mailId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.saveMail", {
+    return get_blocking_request_promise("logic.playerHandler.saveMail", {
         mailId = mailId
-    }, "收藏邮件失败!"))
+    }, "收藏邮件失败!")
 end
 -- 取消收藏邮件
 function NetManager:getUnSaveMailPromise(mailId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.unSaveMail", {
+    return get_blocking_request_promise("logic.playerHandler.unSaveMail", {
         mailId = mailId
-    }, "取消收藏邮件失败!"))
+    }, "取消收藏邮件失败!")
 end
 -- 获取收藏邮件
 function NetManager:getFetchSavedMailsPromise(fromIndex)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getSavedMails", {
+    return get_blocking_request_promise("logic.playerHandler.getSavedMails", {
         fromIndex = fromIndex
-    }, "获取收藏邮件失败!"), get_savedmails_callback()):next(get_response_msg)
+    }, "获取收藏邮件失败!"):next(get_response_msg)
 end
 -- 获取已发送邮件
 function NetManager:getFetchSendMailsPromise(fromIndex)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getSendMails", {
+    return get_blocking_request_promise("logic.playerHandler.getSendMails", {
         fromIndex = fromIndex
-    }, "获取已发送邮件失败!"), get_sendmails_callback()):next(get_response_msg)
+    }, "获取已发送邮件失败!"):next(get_response_msg)
 end
 -- 删除邮件
 function NetManager:getDeleteMailsPromise(mailIds)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.deleteMails", {
+    return get_blocking_request_promise("logic.playerHandler.deleteMails", {
         mailIds = mailIds
-    }, "删除邮件失败!"))
+    }, "删除邮件失败!")
 end
 -- 发送联盟邮件
 function NetManager:getSendAllianceMailPromise(title, content)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.sendAllianceMail", {
+    return get_blocking_request_promise("logic.allianceHandler.sendAllianceMail", {
         title = title,
         content = content,
-    }, "发送联盟邮件失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "发送联盟邮件失败!"):next(get_response_msg)
 end
 -- 阅读战报
 function NetManager:getReadReportsPromise(reportIds)
-    return promise.all(get_none_blocking_request_promise("logic.playerHandler.readReports", {
+    return get_none_blocking_request_promise("logic.playerHandler.readReports", {
         reportIds = reportIds
-    }, "阅读战报失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "阅读战报失败!"):next(get_response_msg)
 end
 -- 收藏战报
 function NetManager:getSaveReportPromise(reportId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.saveReport", {
+    return get_blocking_request_promise("logic.playerHandler.saveReport", {
         reportId = reportId
-    }, "收藏战报失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "收藏战报失败!"):next(get_response_msg)
 end
 -- 取消收藏战报
 function NetManager:getUnSaveReportPromise(reportId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.unSaveReport", {
+    return get_blocking_request_promise("logic.playerHandler.unSaveReport", {
         reportId = reportId
-    }, "取消收藏战报失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "取消收藏战报失败!"):next(get_response_msg)
 end
 -- 获取玩家战报
 function NetManager:getReportsPromise(fromIndex)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getReports", {
+    return get_blocking_request_promise("logic.playerHandler.getReports", {
         fromIndex = fromIndex
-    }, "获取玩家战报失败!"), get_reports_callback()):next(get_response_msg)
+    }, "获取玩家战报失败!"):next(get_response_msg)
 end
 -- 获取玩家已存战报
 function NetManager:getSavedReportsPromise(fromIndex)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getSavedReports", {
+    return get_blocking_request_promise("logic.playerHandler.getSavedReports", {
         fromIndex = fromIndex
-    }, "获取玩家已存战报失败!"), get_savedreports_callback()):next(get_response_msg)
+    }, "获取玩家已存战报失败!"):next(get_response_msg)
 end
 -- 删除战报
 function NetManager:getDeleteReportsPromise(reportIds)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.deleteReports", {
+    return get_blocking_request_promise("logic.playerHandler.deleteReports", {
         reportIds = reportIds
-    }, "删除战报失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "删除战报失败!"):next(get_response_msg)
 end
 -- 请求加速
 function NetManager:getRequestAllianceToSpeedUpPromise(eventType, eventId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.requestAllianceToSpeedUp", {
+    return get_blocking_request_promise("logic.allianceHandler.requestAllianceToSpeedUp", {
         eventType = eventType,
         eventId = eventId,
-    }, "请求加速失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "请求加速失败!"):next(get_response_msg)
 end
 -- 免费加速建筑升级
 function NetManager:getFreeSpeedUpPromise(eventType, eventId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.freeSpeedUp", {
+    return get_blocking_request_promise("logic.playerHandler.freeSpeedUp", {
         eventType = eventType,
         eventId = eventId,
-    }, "请求免费加速失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "请求免费加速失败!"):next(get_response_msg)
 end
 -- 协助玩家加速
 function NetManager:getHelpAllianceMemberSpeedUpPromise(eventId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.helpAllianceMemberSpeedUp", {
+    return get_blocking_request_promise("logic.allianceHandler.helpAllianceMemberSpeedUp", {
         eventId = eventId,
-    }, "协助玩家加速失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "协助玩家加速失败!"):next(get_response_msg)
 end
 -- 协助所有玩家加速
 function NetManager:getHelpAllAllianceMemberSpeedUpPromise()
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.helpAllAllianceMemberSpeedUp", {}
-        , "协助所有玩家加速失败!"), get_alliancedata_callback()):next(get_response_msg)
+    return get_blocking_request_promise("logic.allianceHandler.helpAllAllianceMemberSpeedUp", {}
+        , "协助所有玩家加速失败!"):next(get_response_msg)
 end
 -- 创建联盟
 function NetManager:getCreateAlliancePromise(name, tag, language, terrain, flag)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.createAlliance", {
+    return get_blocking_request_promise("logic.allianceHandler.createAlliance", {
         name = name,
         tag = tag,
         language = language,
         terrain = terrain,
         flag = flag
-    }, "创建联盟失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "创建联盟失败!"):next(get_response_msg)
 end
 -- 退出联盟
 function NetManager:getQuitAlliancePromise()
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.quitAlliance", nil
-        , "退出联盟失败!"), get_playerdata_callback()):next(get_response_msg)
+    return get_blocking_request_promise("logic.allianceHandler.quitAlliance", nil
+        , "退出联盟失败!"):next(get_response_msg)
 end
 -- 修改联盟加入条件
 function NetManager:getEditAllianceJoinTypePromise(join_type)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.editAllianceJoinType", {
+    return get_blocking_request_promise("logic.allianceHandler.editAllianceJoinType", {
         joinType = join_type
-    }, "修改联盟加入条件失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "修改联盟加入条件失败!"):next(get_response_msg)
 end
 -- 拒绝玩家
 function NetManager:getRefuseJoinAllianceRequestPromise(memberId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.handleJoinAllianceRequest", {
+    return get_blocking_request_promise("logic.allianceHandler.handleJoinAllianceRequest", {
         memberId = memberId,
         agree = false
-    }, "拒绝玩家失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "拒绝玩家失败!"):next(get_response_msg)
 end
 -- 接受玩家
 function NetManager:getAgreeJoinAllianceRequestPromise(memberId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.handleJoinAllianceRequest", {
+    return get_blocking_request_promise("logic.allianceHandler.handleJoinAllianceRequest", {
         memberId = memberId,
         agree = true
-    }, "接受玩家失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "接受玩家失败!"):next(get_response_msg)
 end
 -- 踢出玩家
 function NetManager:getKickAllianceMemberOffPromise(memberId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.kickAllianceMemberOff", {
+    return get_blocking_request_promise("logic.allianceHandler.kickAllianceMemberOff", {
         memberId = memberId,
-    }, "踢出玩家失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "踢出玩家失败!"):next(get_response_msg)
 end
 -- 搜索特定标签联盟
 function NetManager:getSearchAllianceByTagPromsie(tag)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.searchAllianceByTag", {
+    return get_blocking_request_promise("logic.allianceHandler.searchAllianceByTag", {
         tag = tag
-    }, "搜索特定标签联盟失败!"), get_searchalliance_callback()):next(get_response_msg)
+    }, "搜索特定标签联盟失败!"):next(get_response_msg)
 end
 -- 搜索能直接加入联盟
 function NetManager:getFetchCanDirectJoinAlliancesPromise()
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.getCanDirectJoinAlliances", nil
-        , "搜索直接加入联盟失败!"), get_directjoin_callback()):next(get_response_msg)
+    return get_blocking_request_promise("logic.allianceHandler.getCanDirectJoinAlliances", nil
+        , "搜索直接加入联盟失败!"):next(get_response_msg)
 end
 -- 邀请加入联盟
 function NetManager:getInviteToJoinAlliancePromise(memberId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.inviteToJoinAlliance", {
+    return get_blocking_request_promise("logic.allianceHandler.inviteToJoinAlliance", {
         memberId = memberId
-    }, "邀请加入联盟联盟失败!"))
+    }, "邀请加入联盟联盟失败!")
 end
 -- 直接加入联盟
 function NetManager:getJoinAllianceDirectlyPromise(allianceId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.joinAllianceDirectly", {
+    return get_blocking_request_promise("logic.allianceHandler.joinAllianceDirectly", {
         allianceId = allianceId
-    }, "直接加入联盟失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "直接加入联盟失败!"):next(get_response_msg)
 end
 -- 请求加入联盟
 function NetManager:getRequestToJoinAlliancePromise(allianceId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.requestToJoinAlliance", {
+    return get_blocking_request_promise("logic.allianceHandler.requestToJoinAlliance", {
         allianceId = allianceId
-    }, "请求加入联盟失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "请求加入联盟失败!"):next(get_response_msg)
 end
 -- 获取玩家信息
 function NetManager:getPlayerInfoPromise(memberId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getPlayerInfo", {
+    return get_blocking_request_promise("logic.playerHandler.getPlayerInfo", {
         memberId = memberId
-    }, "获取玩家信息失败!"), get_playerinfo_callback()):next(get_response_msg)
+    }, "获取玩家信息失败!"):next(get_response_msg)
 end
 -- 获取玩家城市信息
 function NetManager:getPlayerCityInfoPromise(targetPlayerId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getPlayerViewData", {
+    return get_blocking_request_promise("logic.playerHandler.getPlayerViewData", {
         targetPlayerId = targetPlayerId
-    }, "获取玩家城市信息失败!"), get_cityinfo_callback()):next(get_response_msg)
+    }, "获取玩家城市信息失败!"):next(get_response_msg)
 end
 -- 移交萌主
 function NetManager:getHandOverAllianceArchonPromise(memberId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.handOverAllianceArchon", {
+    return get_blocking_request_promise("logic.allianceHandler.handOverAllianceArchon", {
         memberId = memberId,
-    }, "移交萌主失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "移交萌主失败!"):next(get_response_msg)
 end
 -- 修改成员职位
 function NetManager:getEditAllianceMemberTitlePromise(memberId, title)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.editAllianceMemberTitle", {
+    return get_blocking_request_promise("logic.allianceHandler.editAllianceMemberTitle", {
         memberId = memberId,
         title = title
-    }, "修改成员职位失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "修改成员职位失败!"):next(get_response_msg)
 end
 -- 修改联盟公告
 function NetManager:getEditAllianceNoticePromise(notice)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.editAllianceNotice", {
+    return get_blocking_request_promise("logic.allianceHandler.editAllianceNotice", {
         notice = notice
-    }, "修改联盟公告失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "修改联盟公告失败!"):next(get_response_msg)
 end
 -- 修改联盟描述
 function NetManager:getEditAllianceDescriptionPromise(description)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.editAllianceDescription", {
+    return get_blocking_request_promise("logic.allianceHandler.editAllianceDescription", {
         description = description
-    }, "修改联盟描述失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "修改联盟描述失败!"):next(get_response_msg)
 end
 -- 修改职位名字
 function NetManager:getEditAllianceTitleNamePromise(title, titleName)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.editAllianceTitleName", {
+    return get_blocking_request_promise("logic.allianceHandler.editAllianceTitleName", {
         title = title,
         titleName = titleName
-    }, "修改职位名字失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "修改职位名字失败!"):next(get_response_msg)
 end
 -- 发送秘籍
 function NetManager:getSendGlobalMsgPromise(text)
-    return promise.all(get_blocking_request_promise("chat.chatHandler.send", {
+    return get_blocking_request_promise("chat.chatHandler.send", {
         ["text"] = text,
         ["channel"] = "global"
-    }, "发送世界聊天信息失败!"))
+    }, "发送世界聊天信息失败!")
 end
 --发送聊天信息
 function NetManager:getSendChatPromise(channel,text)
-    return promise.all(get_none_blocking_request_promise("chat.chatHandler.send", {
+    return get_none_blocking_request_promise("chat.chatHandler.send", {
         ["text"] = text,
         ["channel"] = channel
-    }, "发送聊天信息失败!"),get_sendchat_callback())
+    }, "发送聊天信息失败!")
 end
 --获取所有聊天信息
 function NetManager:getFetchChatPromise()
-    return promise.all(get_none_blocking_request_promise("chat.chatHandler.getAll",nil, "获取聊天信息失败!"),get_fetchchat_callback()):next(get_response_msg)
+    return get_none_blocking_request_promise("chat.chatHandler.getAll",nil, "获取聊天信息失败!")
 end
 --处理联盟的对玩家的邀请
 local function getHandleJoinAllianceInvitePromise(allianceId, agree)
@@ -1180,270 +1222,266 @@ local function getHandleJoinAllianceInvitePromise(allianceId, agree)
     }, "处理联盟的对玩家的邀请失败!")
 end
 function NetManager:getHandleJoinAllianceInvitePromise(allianceId, agree)
-    return promise.all(getHandleJoinAllianceInvitePromise(allianceId, agree))
+    return getHandleJoinAllianceInvitePromise(allianceId, agree)
 end
 function NetManager:getAgreeJoinAllianceInvitePromise(allianceId)
     return getHandleJoinAllianceInvitePromise(allianceId, true)
 end
 function NetManager:getDisagreeJoinAllianceInvitePromise(allianceId)
-    return promise.all(getHandleJoinAllianceInvitePromise(allianceId, false))
+    return getHandleJoinAllianceInvitePromise(allianceId, false)
 end
 --取消申请联盟
 function NetManager:getCancelJoinAlliancePromise(allianceId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.cancelJoinAllianceRequest", {
+    return get_blocking_request_promise("logic.allianceHandler.cancelJoinAllianceRequest", {
         ["allianceId"] = allianceId,
-    }, "取消申请联盟失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "取消申请联盟失败!"):next(get_response_msg)
 end
 --修改联盟基本信息
 function NetManager:getEditAllianceBasicInfoPromise(name, tag, language, flag)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.editAllianceBasicInfo", {
+    return get_blocking_request_promise("logic.allianceHandler.editAllianceBasicInfo", {
         name = name,
         tag = tag,
         language = language,
         flag = flag
-    }, "修改联盟基本信息失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "修改联盟基本信息失败!"):next(get_response_msg)
 end
 -- 移动联盟建筑
 function NetManager:getMoveAllianceBuildingPromise(buildingName, locationX, locationY)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.moveAllianceBuilding", {
+    return get_blocking_request_promise("logic.allianceHandler.moveAllianceBuilding", {
         buildingName = buildingName,
         locationX = locationX,
         locationY = locationY
-    }, "移动联盟建筑失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "移动联盟建筑失败!"):next(get_response_msg)
 end
 -- 移动玩家城市
 function NetManager:getMoveAllianceMemberPromise(locationX, locationY)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.moveAllianceMember", {
+    return get_blocking_request_promise("logic.allianceHandler.moveAllianceMember", {
         locationX = locationX,
         locationY = locationY
-    }, "移动玩家城市失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "移动玩家城市失败!"):next(get_response_msg)
 end
 -- 拆除装饰物
 function NetManager:getDistroyAllianceDecoratePromise(decorateId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.distroyAllianceDecorate", {
+    return get_blocking_request_promise("logic.allianceHandler.distroyAllianceDecorate", {
         decorateId = decorateId
-    }, "拆除装饰物失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "拆除装饰物失败!"):next(get_response_msg)
 end
 -- 激活联盟事件
 function NetManager:getActivateAllianceShrineStagePromise(stageName)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.activateAllianceShrineStage", {
+    return get_blocking_request_promise("logic.allianceHandler.activateAllianceShrineStage", {
         stageName = stageName
-    }, "激活联盟事件失败!"),get_alliancedata_callback()):next(get_response_msg)
+    }, "激活联盟事件失败!"):next(get_response_msg)
 end
 -- 升级联盟建筑
 function NetManager:getUpgradeAllianceBuildingPromise(buildingName)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.upgradeAllianceBuilding", {
+    return get_blocking_request_promise("logic.allianceHandler.upgradeAllianceBuilding", {
         buildingName = buildingName
-    }, "升级联盟建筑失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "升级联盟建筑失败!"):next(get_response_msg)
 end
 -- 升级联盟村落
 function NetManager:getUpgradeAllianceVillagePromise(villageType)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.upgradeAllianceVillage", {
+    return get_blocking_request_promise("logic.allianceHandler.upgradeAllianceVillage", {
         villageType = villageType
-    }, "升级联盟村落失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "升级联盟村落失败!"):next(get_response_msg)
 end
 -- 联盟捐赠
 function NetManager:getDonateToAlliancePromise(donateType)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.donateToAlliance", {
+    return get_blocking_request_promise("logic.allianceHandler.donateToAlliance", {
         donateType = donateType
-    }, "联盟捐赠失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "联盟捐赠失败!"):next(get_response_msg)
 end
 -- 编辑联盟地形
 function NetManager:getEditAllianceTerrianPromise(terrain)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.editAllianceTerrian", {
+    return get_blocking_request_promise("logic.allianceHandler.editAllianceTerrian", {
         terrain = terrain
-    }, "编辑联盟地形失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "编辑联盟地形失败!"):next(get_response_msg)
 end
 
 function NetManager:getMarchToShrinePromose(shrineEventId,dragonType,soldiers)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.attackAllianceShrine", {
+    return get_blocking_request_promise("logic.allianceHandler.attackAllianceShrine", {
         dragonType = dragonType,
         shrineEventId = shrineEventId,
         soldiers = soldiers
-    }, "圣地派兵失败!"), get_alliancedata_callback()):next(get_response_msg)
+    }, "圣地派兵失败!"):next(get_response_msg)
 end
 --查找合适的联盟进行战斗
 function NetManager:getFindAllianceToFightPromose()
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.findAllianceToFight",
-        {}, "查找合适的联盟进行战斗失败!"), get_alliancedata_callback()):next(get_response_msg)
+    return get_blocking_request_promise("logic.allianceHandler.findAllianceToFight",
+        {}, "查找合适的联盟进行战斗失败!"):next(get_response_msg)
 end
 --行军到月门
 function NetManager:getMarchToMoonGatePromose(dragonType,soldiers)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.marchToMoonGate",
+    return get_blocking_request_promise("logic.allianceHandler.marchToMoonGate",
         {dragonType = dragonType,
-            soldiers = soldiers}, "行军到月门失败!"), get_alliancedata_callback()):next(get_response_msg)
+            soldiers = soldiers}, "行军到月门失败!"):next(get_response_msg)
 end
 --获取对手联盟数据
 function NetManager:getFtechAllianceViewDataPromose(targetAllianceId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.getAllianceViewData",
+    return get_blocking_request_promise("logic.allianceHandler.getAllianceViewData",
         {targetAllianceId = targetAllianceId,
             includeMoonGateData = true
-        },"获取对手联盟数据失败!"),get_fetchallianceview_callback()):next(get_response_msg)
+        },"获取对手联盟数据失败!"):next(get_response_msg)
 end
 --从月门撤兵
 function NetManager:getRetreatFromMoonGatePromose()
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.retreatFromMoonGate",{},
-        "从月门撤兵失败!"),get_alliancedata_callback()):next(get_response_msg)
+    return get_blocking_request_promise("logic.allianceHandler.retreatFromMoonGate",{},
+        "从月门撤兵失败!"):next(get_response_msg)
 end
 --联盟战月门挑战
 function NetManager:getChallengeMoonGateEnemyTroopPromose()
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.challengeMoonGateEnemyTroop",{},
-        "联盟战月门挑战失败!"),get_alliancedata_callback()):next(get_response_msg)
+    return get_blocking_request_promise("logic.allianceHandler.challengeMoonGateEnemyTroop",{},
+        "联盟战月门挑战失败!"):next(get_response_msg)
 end
 --请求联盟进行联盟战
 function NetManager:getRequestAllianceToFightPromose()
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.requestAllianceToFight",{},
-        "请求联盟进行联盟战失败!"),get_alliancedata_callback()):next(get_response_msg)
+    return get_blocking_request_promise("logic.allianceHandler.requestAllianceToFight",{},
+        "请求联盟进行联盟战失败!"):next(get_response_msg)
 end
 
 --协防
 function NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, targetPlayerId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.helpAllianceMemberDefence",
+    return get_blocking_request_promise("logic.allianceHandler.helpAllianceMemberDefence",
         {
             dragonType = dragonType,
             soldiers   = soldiers,
             targetPlayerId = targetPlayerId,
         },
-        "协防玩家失败!"),get_alliancedata_callback()):next(get_response_msg)
+        "协防玩家失败!"):next(get_response_msg)
 end
 --撤销协防
 function NetManager:getRetreatFromHelpedAllianceMemberPromise(beHelpedPlayerId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.retreatFromBeHelpedAllianceMember",
+    return get_blocking_request_promise("logic.allianceHandler.retreatFromBeHelpedAllianceMember",
         {
             beHelpedPlayerId = beHelpedPlayerId,
         },
-        "撤销协防失败!"),get_alliancedata_callback()):next(get_response_msg)
+        "撤销协防失败!"):next(get_response_msg)
 end
 --复仇其他联盟
 function NetManager:getRevengeAlliancePromise(reportId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.revengeAlliance",
+    return get_blocking_request_promise("logic.allianceHandler.revengeAlliance",
         {
             reportId = reportId,
         },
-        "复仇其他联盟失败!"),get_alliancedata_callback()):next(get_response_msg)
+        "复仇其他联盟失败!"):next(get_response_msg)
 end
 --查看战力相近的高低3个联盟的数据
 function NetManager:getNearedAllianceInfosPromise()
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.getNearedAllianceInfos",
+    return get_blocking_request_promise("logic.allianceHandler.getNearedAllianceInfos",
         {},
-        "查看战力相近的高低3个联盟的数据失败!"),get_nearedallianceinfos_callback()):next(get_response_msg)
+        "查看战力相近的高低3个联盟的数据失败!"):next(get_response_msg)
 end
 --根据Tag搜索联盟战斗数据
 function NetManager:getSearchAllianceInfoByTagPromise(tag)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.searchAllianceInfoByTag",
+    return get_blocking_request_promise("logic.allianceHandler.searchAllianceInfoByTag",
         {tag=tag},
-        "根据Tag搜索联盟战斗数据失败!"),get_searchallianceinfobytag_callback()):next(get_response_msg)
+        "根据Tag搜索联盟战斗数据失败!"):next(get_response_msg)
 end
 --突袭玩家城市
 function NetManager:getStrikePlayerCityPromise(dragonType,defencePlayerId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.strikePlayerCity",
+    return get_blocking_request_promise("logic.allianceHandler.strikePlayerCity",
         {dragonType=dragonType,defencePlayerId=defencePlayerId},
-        "突袭玩家城市失败!"),get_alliancedata_callback()):next(get_response_msg)
+        "突袭玩家城市失败!"):next(get_response_msg)
 end
 --攻打玩家城市
 function NetManager:getAttackPlayerCityPromise(dragonType, soldiers,defencePlayerId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.attackPlayerCity",
-        {defencePlayerId=defencePlayerId,dragonType=dragonType,soldiers = soldiers},"攻打玩家城市失败!"),
-    get_alliancedata_callback()):next(get_response_msg)
+    return get_blocking_request_promise("logic.allianceHandler.attackPlayerCity",
+        {defencePlayerId=defencePlayerId,dragonType=dragonType,soldiers = soldiers},"攻打玩家城市失败!"):next(get_response_msg)
 end
 
 --设置驻防使用的龙
 function NetManager:getSetDefenceDragonPromise(dragonType)
-    return promise.all(get_none_blocking_request_promise("logic.playerHandler.setDefenceDragon",
+    return get_none_blocking_request_promise("logic.playerHandler.setDefenceDragon",
         {dragonType=dragonType},
-        "设置驻防使用的龙失败!"),get_playerdata_callback()):next(get_response_msg)
+        "设置驻防使用的龙失败!"):next(get_response_msg)
 end
 --取消龙驻防
 function NetManager:getCancelDefenceDragonPromise()
-    return promise.all(get_none_blocking_request_promise("logic.playerHandler.cancelDefenceDragon",
+    return get_none_blocking_request_promise("logic.playerHandler.cancelDefenceDragon",
         nil,
-        "取消龙驻防失败!"),get_playerdata_callback()):next(get_response_msg)
+        "取消龙驻防失败!"):next(get_response_msg)
 end
 --攻击村落
 function NetManager:getAttackVillagePromise(dragonType,soldiers,defenceAllianceId,defenceVillageId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.attackVillage",
-        {defenceVillageId = defenceVillageId,defenceAllianceId=defenceAllianceId,dragonType=dragonType,soldiers = soldiers},"攻打村落失败!"),
-    get_alliancedata_callback()):next(get_response_msg)
+    return get_blocking_request_promise("logic.allianceHandler.attackVillage",
+        {defenceVillageId = defenceVillageId,defenceAllianceId=defenceAllianceId,dragonType=dragonType,soldiers = soldiers},"攻打村落失败!"):next(get_response_msg)
 end
 --从村落撤退
 function NetManager:getRetreatFromVillagePromise(allianceId,eventId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.retreatFromVillage",
-        {villageEventId = eventId},"村落撤退失败!"),
-    get_alliancedata_callback()):next(get_response_msg)
+    return get_blocking_request_promise("logic.allianceHandler.retreatFromVillage",
+        {villageEventId = eventId},"村落撤退失败!"):next(get_response_msg)
 end
 --突袭村落
 function NetManager:getStrikeVillagePromise(dragonType,defenceAllianceId,defenceVillageId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.strikeVillage",
-        {dragonType = dragonType,defenceAllianceId = defenceAllianceId,defenceVillageId=defenceVillageId},"突袭村落失败!"),
-    get_alliancedata_callback()):next(get_response_msg)
+    return get_blocking_request_promise("logic.allianceHandler.strikeVillage",
+        {dragonType = dragonType,defenceAllianceId = defenceAllianceId,defenceVillageId=defenceVillageId},"突袭村落失败!"):next(get_response_msg)
 end
 --查看敌方进攻行军事件详细信息
 function NetManager:getAttackMarchEventDetailPromise(eventId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.getAttackMarchEventDetail",
-        {eventId = eventId},"获取行军事件数据失败!"),get_attackmarcheventdetail_callback()):next(get_response_msg)
+    return get_blocking_request_promise("logic.allianceHandler.getAttackMarchEventDetail",
+        {eventId = eventId},"获取行军事件数据失败!"):next(get_response_msg)
 end
 --查看敌方突袭行军事件详细信息
 function NetManager:getStrikeMarchEventDetailPromise(eventId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.getStrikeMarchEventDetail",
-        {eventId = eventId},"获取突袭事件数据失败!"),get_strikemarcheventdetail_callback()):next(get_response_msg)
+    return get_blocking_request_promise("logic.allianceHandler.getStrikeMarchEventDetail",
+        {eventId = eventId},"获取突袭事件数据失败!"):next(get_response_msg)
 end
 --查看协助部队行军事件详细信息
 function NetManager:getHelpDefenceMarchEventDetailPromise(eventId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.getHelpDefenceMarchEventDetail",
-        {eventId = eventId},"获取协防事件数据失败!"),get_gethelpdefencemarcheventdetail_callback()):next(get_response_msg)
+    return get_blocking_request_promise("logic.allianceHandler.getHelpDefenceMarchEventDetail",
+        {eventId = eventId},"获取协防事件数据失败!"):next(get_response_msg)
 end
 --查看协防部队详细信息
 function NetManager:getHelpDefenceTroopDetailPromise(playerId,helpedByPlayerId)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.getHelpDefenceTroopDetail",
-        {playerId = playerId,helpedByPlayerId = helpedByPlayerId},"查看协防部队详细信息失败!"),get_gethelpdefencetroopdetail_callback()):next(get_response_msg)
+    return get_blocking_request_promise("logic.allianceHandler.getHelpDefenceTroopDetail",
+        {playerId = playerId,helpedByPlayerId = helpedByPlayerId},"查看协防部队详细信息失败!"):next(get_response_msg)
 end
 -- 出售商品
 function NetManager:getSellItemPromise(type,name,count,price)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.sellItem", {
+    return get_blocking_request_promise("logic.playerHandler.sellItem", {
         type = type,
         name = name,
         count = count,
         price = price,
-    }, "出售商品失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "出售商品失败!"):next(get_response_msg)
 end
 -- 获取商品列表
 function NetManager:getGetSellItemsPromise(type,name)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getSellItems", {
+    return get_blocking_request_promise("logic.playerHandler.getSellItems", {
         type = type,
         name = name,
-    }, "获取商品列表失败!"), get_sellitems_callback()):next(get_response_msg)
+    }, "获取商品列表失败!"):next(get_response_msg)
 end
 -- 购买出售的商品
 function NetManager:getBuySellItemPromise(itemId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.buySellItem", {
+    return get_blocking_request_promise("logic.playerHandler.buySellItem", {
         itemId = itemId
-    }, "购买出售的商品失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "购买出售的商品失败!"):next(get_response_msg)
 end
 -- 获取出售后赚取的银币
 function NetManager:getGetMyItemSoldMoneyPromise(itemId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getMyItemSoldMoney", {
+    return get_blocking_request_promise("logic.playerHandler.getMyItemSoldMoney", {
         itemId = itemId
-    }, "获取出售后赚取的银币失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "获取出售后赚取的银币失败!"):next(get_response_msg)
 end
 -- 下架商品
 function NetManager:getRemoveMySellItemPromise(itemId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.removeMySellItem", {
+    return get_blocking_request_promise("logic.playerHandler.removeMySellItem", {
         itemId = itemId
-    }, "下架商品失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "下架商品失败!"):next(get_response_msg)
 end
 --升级生产科技
 function NetManager:getUpgradeProductionTechPromise(techName,finishNow)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.upgradeProductionTech", {
+    return get_blocking_request_promise("logic.playerHandler.upgradeProductionTech", {
         techName = techName,
         finishNow = finishNow,
-    }, "升级生产科技失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "升级生产科技失败!"):next(get_response_msg)
 end
 -- 升级军事科技
 local function upgrade_military_tech_promise(techName,finishNow)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.upgradeMilitaryTech", {
+    return get_blocking_request_promise("logic.playerHandler.upgradeMilitaryTech", {
         techName = techName,
         finishNow = finishNow,
-    }, "升级军事科技失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "升级军事科技失败!"):next(get_response_msg)
 end
 
 
@@ -1468,42 +1506,42 @@ function NetManager:getUpgradeSoldierStarPromise(soldierName)
 end
 --设置pve数据
 function NetManager:getSetPveDataPromise(pveData)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.setPveData",
-        pveData, "设置pve数据失败!"), get_playerdata_callback()):next(get_response_msg)
+    return get_blocking_request_promise("logic.playerHandler.setPveData",
+        pveData, "设置pve数据失败!"):next(get_response_msg)
 end
 --为联盟成员添加荣耀值
 function NetManager:getGiveLoyaltyToAllianceMemberPromise(memberId,count)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.giveLoyaltyToAllianceMember",
+    return get_blocking_request_promise("logic.allianceHandler.giveLoyaltyToAllianceMember",
         {
             memberId=memberId,
             count=count
         },
-        "为联盟成员添加荣耀值失败!"),get_alliancedata_callback()):next(get_response_msg)
+        "为联盟成员添加荣耀值失败!"):next(get_response_msg)
 end
 --购买道具
 function NetManager:getBuyItemPromise(itemName,count)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.buyItem", {
+    return get_blocking_request_promise("logic.playerHandler.buyItem", {
         itemName = itemName,
         count = count,
-    }, "购买道具失败!"), get_playerdata_callback()):next(get_response_msg):done(function ()
+    }, "购买道具失败!"):next(get_response_msg):done(function ()
         ext.market_sdk.onPlayerBuyGameItems(itemName,count,DataUtils:GetItemPriceByItemName(itemName))
     end)
 end
 --使用道具
 function NetManager:getUseItemPromise(itemName,params)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.useItem", {
+    return get_blocking_request_promise("logic.playerHandler.useItem", {
         itemName = itemName,
         params = params,
-    }, "使用道具失败!"), get_playerdata_callback()):next(get_response_msg):done(function ()
+    }, "使用道具失败!"):next(get_response_msg):done(function ()
         ext.market_sdk.onPlayerUseGameItems(itemName,1)
     end)
 end
 --购买并使用道具
 function NetManager:getBuyAndUseItemPromise(itemName,params)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.buyAndUseItem", {
+    return get_blocking_request_promise("logic.playerHandler.buyAndUseItem", {
         itemName = itemName,
         params = params,
-    }, "购买并使用道具失败!"), get_playerdata_callback()):next(get_response_msg):done(function ()
+    }, "购买并使用道具失败!"):next(get_response_msg):done(function()
         GameGlobalUI:showTips(_("提示"),string.format('使用%s道具成功',Localize_item.item_name[itemName]))
         ext.market_sdk.onPlayerBuyGameItems(itemName,1,DataUtils:GetItemPriceByItemName(itemName))
         ext.market_sdk.onPlayerUseGameItems(itemName,1)
@@ -1512,100 +1550,97 @@ end
 
 --联盟商店补充道具
 function NetManager:getAddAllianceItemPromise(itemName,count)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.addItem",
+    return get_blocking_request_promise("logic.allianceHandler.addItem",
         {
             itemName = itemName,
             count = count,
         },
-        "联盟商店补充道具失败!"),get_alliancedata_callback()):next(get_response_msg)
+        "联盟商店补充道具失败!"):next(get_response_msg)
 end
 --购买联盟商店的道具
 function NetManager:getBuyAllianceItemPromise(itemName,count)
-    return promise.all(get_blocking_request_promise("logic.allianceHandler.buyItem",
+    return get_blocking_request_promise("logic.allianceHandler.buyItem",
         {
             itemName = itemName,
             count = count,
         },
-        "购买联盟商店的道具失败!"),get_alliancedata_callback()):next(get_response_msg)
+        "购买联盟商店的道具失败!"):next(get_response_msg)
 end
 --玩家内购
 --TODO:
 function NetManager:getVerifyIAPPromise(transactionId,receiptData)
-    return promise.all(get_none_blocking_request_promise("logic.playerHandler.addPlayerBillingData",
+    return get_none_blocking_request_promise("logic.playerHandler.addPlayerBillingData",
         {
             transactionId=transactionId,receiptData=receiptData
         }
-        ,"玩家内购失败"),
-    get_addplayerbillingdata_callback()):next(get_response_msg)
+        ,"玩家内购失败"):next(get_response_msg)
 end
 --获得每日登陆奖励
 function NetManager:getDay60RewardPromise()
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getDay60Reward",
+    return get_blocking_request_promise("logic.playerHandler.getDay60Reward",
         nil,
-        "获得每日登陆奖励失败!"),get_playerdata_callback()):next(get_response_msg)
+        "获得每日登陆奖励失败!"):next(get_response_msg)
 end
 
 -- 获取每日在线奖励
 function NetManager:getOnlineRewardPromise(timePoint)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getOnlineReward",
+    return get_blocking_request_promise("logic.playerHandler.getOnlineReward",
         {timePoint = timePoint},
-        "获取每日在线奖励失败!"),get_playerdata_callback()):next(get_response_msg)
+        "获取每日在线奖励失败!"):next(get_response_msg)
 end
 
 -- 获取在线天数奖励
 function NetManager:getDay14RewardPromise()
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getDay14Reward",
+    return get_blocking_request_promise("logic.playerHandler.getDay14Reward",
         nil,
-        "获取在线天数奖励失败!"),get_playerdata_callback()):next(get_response_msg)
+        "获取在线天数奖励失败!"):next(get_response_msg)
 end
 -- 首充奖励
 function NetManager:getFirstIAPRewardsPromise()
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getFirstIAPRewards",
+    return get_blocking_request_promise("logic.playerHandler.getFirstIAPRewards",
         nil,
-        "获取首充奖励失败!"),get_playerdata_callback()):next(get_response_msg)
+        "获取首充奖励失败!"):next(get_response_msg)
 end
 
 -- 新手冲级奖励
 function NetManager:getLevelupRewardPromise(levelupIndex)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getLevelupReward",
+    return get_blocking_request_promise("logic.playerHandler.getLevelupReward",
         {levelupIndex = levelupIndex},
-        "获取新手冲级奖励失败!"),get_playerdata_callback()):next(get_response_msg)
+        "获取新手冲级奖励失败!"):next(get_response_msg)
 end
 -- 普通gacha
 function NetManager:getNormalGachaPromise()
-    return promise.all(get_blocking_request_promise("logic.playerHandler.gacha",
+    return get_blocking_request_promise("logic.playerHandler.gacha",
         {type = "normal"},
-        "普通gacha失败!"),get_playerdata_callback()):next(get_response_msg)
+        "普通gacha失败!"):next(get_response_msg)
 end
 -- 高级gacha
 function NetManager:getAdvancedGachaPromise()
-    return promise.all(get_blocking_request_promise("logic.playerHandler.gacha",
+    return get_blocking_request_promise("logic.playerHandler.gacha",
         {type = "advanced"},
-        "高级gacha失败!"),get_playerdata_callback()):next(get_response_msg)
+        "高级gacha失败!"):next(get_response_msg)
 end
 
 
 -- 通过Selina的考验
 function NetManager:getPassSelinasTestPromise()
-    return promise.all(get_blocking_request_promise("logic.playerHandler.passSelinasTest",
+    return get_blocking_request_promise("logic.playerHandler.passSelinasTest",
         nil,
-        "通过Selina的考验!"),get_playerdata_callback()):next(get_response_msg)
+        "通过Selina的考验!"):next(get_response_msg)
 end
 -- 获取成就任务奖励
 function NetManager:getGrowUpTaskRewardsPromise(taskType, taskId)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getGrowUpTaskRewards",
-        {
+    return get_blocking_request_promise("logic.playerHandler.getGrowUpTaskRewards",{
             taskType = taskType,
             taskId = taskId
-        },
-        "领取奖励失败!"), get_playerdata_callback()):next(get_response_msg)
+        }, "领取奖励失败!"):next(get_response_msg)
 end
 
 -- 领取日常任务奖励
 function NetManager:getDailyTaskRewards(taskType)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.getDailyTaskRewards",
+    return get_blocking_request_promise("logic.playerHandler.getDailyTaskRewards",
         {taskType = taskType},
-        "领取日常任务奖励!"),get_playerdata_callback()):next(get_response_msg)
+        "领取日常任务奖励!"):next(get_response_msg)
 end
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
@@ -1660,6 +1695,12 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
+
+
+
+
+
 
 
 

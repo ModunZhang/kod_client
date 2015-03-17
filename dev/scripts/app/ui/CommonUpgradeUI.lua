@@ -248,8 +248,7 @@ function CommonUpgradeUI:InitUpgradePart()
                                 dump(err:reason())
                             end)
                     else
-                        local location = City:GetLocationIdByBuilding(self.building)
-                        if location then
+                        if City:IsFunctionBuilding(self.building) then
 
                             local location_id = City:GetLocationIdByBuilding(self.building)
                             NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
@@ -299,8 +298,7 @@ function CommonUpgradeUI:InitUpgradePart()
                                 dump(err:reason())
                             end)
                     else
-                        local location = City:GetLocationIdByBuilding(self.building)
-                        if location then
+                        if City:IsFunctionBuilding(self.building) then
                             local location_id = City:GetLocationIdByBuilding(self.building)
                             NetManager:getUpgradeBuildingByLocationPromise(location_id)
                                 :catch(function(err)
@@ -385,9 +383,9 @@ function CommonUpgradeUI:GotoPreconditionBuilding()
     local jump_building = self.building:GetPreConditionBuilding()
     if tolua.type(jump_building) == "string" then
         FullScreenPopDialogUI.new()
-                :AddToCurrentScene()
-                :SetTitle("提示")
-                :SetPopMessage(string.format(_("请首先建造%s"),Localize.building_name[jump_building]))
+            :AddToCurrentScene()
+            :SetTitle("提示")
+            :SetPopMessage(string.format(_("请首先建造%s"),Localize.building_name[jump_building]))
         return
     end
     local building_sprite = current_scene:GetSceneLayer():FindBuildingSpriteByBuilding(jump_building, self.city)
@@ -646,6 +644,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
 
 
