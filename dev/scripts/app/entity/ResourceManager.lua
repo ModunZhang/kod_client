@@ -105,7 +105,6 @@ end
 function ResourceManager:GetFoodProductionPerHour()
     return City:GetSoldierManager():GetTotalUpkeep() + self:GetFoodResource():GetProductionPerHour()
 end
-
 function ResourceManager:UpdateByCity(city, current_time)
     -- 产量
     -- 资源小车
@@ -173,7 +172,7 @@ function ResourceManager:UpdateByCity(city, current_time)
             end
         end
     end)
-    --buff对资源的影响
+    -- buff对资源的影响
     local buff_production_map,buff_limt_map = self:GetTotalBuffData(city)
     self.resource_citizen = citizen_map
     self:GetPopulationResource():SetLowLimitResource(total_citizen)
@@ -187,7 +186,7 @@ function ResourceManager:UpdateByCity(city, current_time)
             and resource_production
             or (resource_limit - resource:GetLowLimitResource()) / 12)
     end
-    --VIP对资源的影响
+    -- VIP对资源的影响
     if User:GetVipEvent():IsActived() then
         local vip_production_map = self:GetTotalVIPData()
         for resource_type, production in pairs(total_production_map) do
@@ -244,7 +243,13 @@ function ResourceManager:UpdateFromUserDataByTime(resources, current_time)
         self.resources[WALLHP]:UpdateResource(current_time, resources.wallHp)
     end
 end
-
+local resource_building_map = {
+    mill = FOOD,
+    lumbermill = WOOD,
+    foundry = IRON,
+    stoneMason = STONE,
+    townHall = POPULATION,
+}
 function ResourceManager:GetTotalBuffData(city)
     local buff_production_map =
         {
@@ -268,6 +273,21 @@ function ResourceManager:GetTotalBuffData(city)
             [WALLHP] = 0,
             [CART] = 0,
         }
+    -- 建筑对资源的影响
+    -- 以及小屋位置对资源的影响
+    city:IteratorFunctionBuildingsByFunc(function(_,v)
+        local resource_type = resource_building_map[v:GetType()]
+        if resource_type then
+            local count = #city:GetHousesAroundFunctionBuildingByType(v, v:GetHouseType(), 2)
+            local house_buff = 0
+            if count >= 6 then
+                house_buff = 0.1
+            elseif count >= 3 then
+                house_buff = 0.05
+            end
+            buff_production_map[resource_type] = buff_production_map[resource_type] + v:GetAddEfficency() + house_buff
+        end
+    end)
     --学院科技
     city:IteratorTechs(function(__,tech)
         local resource_type,buff_type,buff_value = tech:GetResourceBuffData()

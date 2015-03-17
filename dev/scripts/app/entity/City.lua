@@ -309,22 +309,16 @@ function City:GetDragonEyrie()
 end
 function City:GetHousesAroundFunctionBuildingByType(building, building_type, len)
     return self:GetHousesAroundFunctionBuildingWithFilter(building, len, function(house)
-        return house:GetType() == building_type
+        return house:GetType() == building_type and house:IsUnlocked()
     end)
 end
 function City:GetHousesAroundFunctionBuildingWithFilter(building, len, filter)
     assert(self:IsFunctionBuilding(building))
+    len = len or 2
     local r = {}
-    self:IteratorDecoratorBuildingsByFunc(function(k, v)
-        local is_neighbour = building:IsNearByBuildingWithLength(v, len)
-        if is_neighbour then
-            if type(filter) == "function" then
-                if filter(v) then
-                    table.insert(r, v)
-                end
-            else
-                table.insert(r, v)
-            end
+    self:IteratorDecoratorBuildingsByFunc(function(_,v)
+        if building:IsNearByBuildingWithLength(v, len) and type(filter) == "function" and filter(v) then
+            table.insert(r, v)
         end
     end)
     return r
@@ -903,9 +897,8 @@ function City:GetRuinsNotBeenOccupied()
 end
 --根据type获取装饰物列表
 function City:GetCitizenByType(building_type)
-    local buildings = self:GetDecoratorsByType(building_type)
     local total_citizen = 0
-    for k, v in pairs(buildings) do
+    for k, v in pairs(self:GetDecoratorsByType(building_type)) do
         total_citizen = total_citizen + v:GetCitizen()
     end
     return total_citizen
@@ -978,6 +971,7 @@ function City:OnUserDataChanged(userData, current_time)
     local is_lock_any_tiles = false
     local need_update_resouce_buildings = false
     if userData.buildings then
+        need_update_resouce_buildings = true
         table.foreach(userData.buildings, function(key, location)
             illegal_filter(key, function()
                 local building = self:GetBuildingByLocationId(location.location)
@@ -1002,7 +996,6 @@ function City:OnUserDataChanged(userData, current_time)
                     -- 没有找到，就是已经被拆除了
                     if not building_info then
                         self:DestoryDecorator(current_time, building)
-                        need_update_resouce_buildings = true
                     end
                 end)
 
@@ -1033,7 +1026,6 @@ function City:OnUserDataChanged(userData, current_time)
                             finishTime = 0,
                             city = self,
                         }))
-                        need_update_resouce_buildings = true
                     end
                 end)
             end)
@@ -1664,6 +1656,8 @@ function City:FindProductionTechEventById(_id)
 end
 
 return City
+
+
 
 
 

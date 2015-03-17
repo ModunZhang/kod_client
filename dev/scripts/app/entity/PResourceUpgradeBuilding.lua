@@ -36,7 +36,7 @@ end
 -- 获取对应资源生产加速比
 function PResourceUpgradeBuilding:GetAddEfficency()
 	local level = self:GetLevel()
-    return config_function[self:GetType()][level].addEfficency
+    return config_function[self:GetType()][level].addEfficency or 0
 end
 -- 获取对应小屋类型
 function PResourceUpgradeBuilding:GetHouseType()
