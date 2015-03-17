@@ -276,16 +276,18 @@ function ResourceManager:GetTotalBuffData(city)
     -- 建筑对资源的影响
     -- 以及小屋位置对资源的影响
     city:IteratorFunctionBuildingsByFunc(function(_,v)
-        local resource_type = resource_building_map[v:GetType()]
-        if resource_type then
-            local count = #city:GetHousesAroundFunctionBuildingByType(v, v:GetHouseType(), 2)
-            local house_buff = 0
-            if count >= 6 then
-                house_buff = 0.1
-            elseif count >= 3 then
-                house_buff = 0.05
+        if v:IsUnlocked() then
+            local resource_type = resource_building_map[v:GetType()]
+            if resource_type then
+                local count = #city:GetHousesAroundFunctionBuildingByType(v, v:GetHouseType(), 2)
+                local house_buff = 0
+                if count >= 6 then
+                    house_buff = 0.1
+                elseif count >= 3 then
+                    house_buff = 0.05
+                end
+                buff_production_map[resource_type] = buff_production_map[resource_type] + v:GetAddEfficency() + house_buff
             end
-            buff_production_map[resource_type] = buff_production_map[resource_type] + v:GetAddEfficency() + house_buff
         end
     end)
     --学院科技
@@ -334,6 +336,7 @@ function ResourceManager:GetTotalVIPData()
 end
 
 return ResourceManager
+
 
 
 
