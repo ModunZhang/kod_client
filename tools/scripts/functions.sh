@@ -111,4 +111,9 @@ getXXTEASign()
 {
 	echo "XXTEA"
 }
+getPVRTexTool()
+{
+	DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+	echo $DIR/../TextureTools/PVRTexToolCLI
+}
 $@
