@@ -186,18 +186,6 @@ function ResourceManager:UpdateByCity(city, current_time)
             and resource_production
             or (resource_limit - resource:GetLowLimitResource()) / 12)
     end
-    -- VIP对资源的影响
-    if User:GetVipEvent():IsActived() then
-        local vip_production_map = self:GetTotalVIPData()
-        for resource_type, production in pairs(total_production_map) do
-            if vip_production_map[resource_type] then
-                local resource_production = math.floor(production * (1 + vip_production_map[resource_type]))
-                local resource = self.resources[resource_type]
-                resource:SetProductionPerHour(current_time,resource_production)
-            end
-        end
-    end
-
 end
 function ResourceManager:GetCitizenAllocInfo()
     return self.resource_citizen
@@ -315,24 +303,15 @@ function ResourceManager:GetTotalBuffData(city)
     end
     --vip buff
     buff_production_map[WALLHP] = buff_production_map[WALLHP] + User:GetVIPWallHpRecoveryAdd()
+    buff_production_map[WOOD] = buff_production_map[WOOD] + User:GetVIPWoodProductionAdd()
+    buff_production_map[FOOD] = buff_production_map[FOOD] + User:GetVIPFoodProductionAdd()
+    buff_production_map[IRON] = buff_production_map[IRON] + User:GetVIPIronProductionAdd()
+    buff_production_map[STONE] = buff_production_map[STONE] + User:GetVIPStoneProductionAdd()
+    buff_production_map[POPULATION] = buff_production_map[POPULATION] + User:GetVIPCitizenRecoveryAdd()
     --end
     dump(buff_production_map,"buff_production_map--->")
     dump(buff_limt_map,"buff_limt_map--->")
     return buff_production_map,buff_limt_map
-end
-
-
-function ResourceManager:GetTotalVIPData()
-    local vip_production_map =
-        {
-            [WOOD] = User:GetVIPWoodProductionAdd(),
-            [FOOD] = User:GetVIPFoodProductionAdd(),
-            [IRON] = User:GetVIPIronProductionAdd(),
-            [STONE] = User:GetVIPStoneProductionAdd(),
-            [POPULATION] = User:GetVIPCitizenRecoveryAdd(),
-        }
-
-    return vip_production_map
 end
 
 return ResourceManager
