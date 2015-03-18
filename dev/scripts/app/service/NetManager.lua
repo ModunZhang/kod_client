@@ -50,10 +50,10 @@ local function decodeInUserDataFromDeltaData(userData, deltaData)
                 if type(k) == "number" then k = k + 1 end
                 local parent_root = tmp
                 if i ~= len then
+                    curRoot[k] = curRoot[k] or {}
                     curRoot = curRoot[k]
                     tmp[k] = tmp[k] or {}
                     tmp = tmp[k]
-                    assert(curRoot)
                 else
                     if type(k) == "number" then
                         if is_json_null then
