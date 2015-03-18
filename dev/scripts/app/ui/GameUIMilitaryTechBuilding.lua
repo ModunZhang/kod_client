@@ -105,7 +105,9 @@ function GameUIMilitaryTechBuilding:InitPromote()
     self.promote_list = WidgetPromoteSoliderList.new(self.building):addTo(self.promote_layer):align(display.BOTTOM_CENTER, window.cx, window.bottom_top+20)
 end
 function GameUIMilitaryTechBuilding:OnMilitaryTechsDataChanged(soldier_manager,changed_map)
-    self.tech_point_label:setString(soldier_manager:GetTechPointsByType(self.building:GetType()))
+    if self.tech_point_label then
+        self.tech_point_label:setString(soldier_manager:GetTechPointsByType(self.building:GetType()))
+    end
 end
 return GameUIMilitaryTechBuilding
 
