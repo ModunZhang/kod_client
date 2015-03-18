@@ -50,10 +50,10 @@ local function decodeInUserDataFromDeltaData(userData, deltaData)
                 if type(k) == "number" then k = k + 1 end
                 local parent_root = tmp
                 if i ~= len then
+                    curRoot[k] = curRoot[k] or {}
                     curRoot = curRoot[k]
                     tmp[k] = tmp[k] or {}
                     tmp = tmp[k]
-                    assert(curRoot)
                 else
                     if type(k) == "number" then
                         if is_json_null then
@@ -88,14 +88,25 @@ local function get_response_msg(response)
         DataManager:setUserData(user_data, edit)
         return response
     end
+   
+    return response
+end
+
+local function get_alliance_response_msg(response)
+    print("get_alliance_response_msg--->")
     if response.msg.allianceData then
         local user_alliance_data = DataManager:getUserAllianceData()
-        local edit = decodeInUserDataFromDeltaData(user_alliance_data,response.msg.allianceData)
-        DataManager:setUserAllianceData(user_alliance_data, edit)
+        if user_alliance_data == json.null then
+            DataManager:setUserAllianceData(response.msg.allianceData)
+        else
+            local edit = decodeInUserDataFromDeltaData(user_alliance_data,response.msg.allianceData)
+            DataManager:setUserAllianceData(user_alliance_data, edit)
+        end
         return response
     end
     return response
 end
+
 local function check_response(m)
     return function(result)
         if result.success then
@@ -1120,7 +1131,7 @@ function NetManager:getCreateAlliancePromise(name, tag, language, terrain, flag)
         language = language,
         terrain = terrain,
         flag = flag
-    }, "创建联盟失败!"):next(get_response_msg)
+    }, "创建联盟失败!"):next(get_response_msg):next(get_alliance_response_msg)
 end
 -- 退出联盟
 function NetManager:getQuitAlliancePromise()

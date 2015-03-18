@@ -10,23 +10,20 @@ function AllianceManager:GetMyAlliance()
 end
 
 function AllianceManager:OnUserDataChanged(user_data,time,deltaData)
-    dump(deltaData,"deltaData--->")
-    dump(user_data,"user_data--->")
     local alliance = user_data.alliance
     local my_alliance = self:GetMyAlliance()
-    if alliance == json.null then
+    if alliance == json.null or not alliance then
         my_alliance:Reset()
+        DataManager:setUserAllianceData(json.null)
     else
         my_alliance:SetId(alliance.id)
         my_alliance:SetName(alliance.name)
         my_alliance:SetAliasName(alliance.tag)
     end
-
 end
 
 function AllianceManager:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
-    dump(alliance_data,"alliance_data---->")
-    self:GetMyAlliance():OnAllianceDataChanged(alliance_data,deltaData)
+    self:GetMyAlliance():OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
     self:RefreshAllianceSceneIf()
 end
 
@@ -34,7 +31,6 @@ function AllianceManager:OnTimer(current_time)
     self:GetMyAlliance():OnTimer(current_time)
 end
 
----------------
 function AllianceManager:DecodeAllianceFromJson( json_data )
     local alliance = Alliance.new()
     alliance:SetId(json_data._id)

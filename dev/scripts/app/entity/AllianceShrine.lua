@@ -79,43 +79,52 @@ end
 function AllianceShrine:OnPropertyChange(property_name, old_value, value)
 end
 
-function AllianceShrine:GetMaxStageFromServer(alliance_data)
-	--默认第一关始终打开
-	self:GetStatgeByName("1_1"):SetIsLocked(false)
-	if alliance_data.shrineDatas then
-		local large_key = ""
-		for _,v in ipairs(alliance_data.shrineDatas) do
-			if v.stageName > large_key then
-				large_key = v.stageName
+function AllianceShrine:GetMaxStageFromServer(alliance_data,deltaData)
+	local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.shrineDatas ~= nil
+    if is_fully_update then
+		--默认第一关始终打开
+		self:GetStatgeByName("1_1"):SetIsLocked(false)
+		if alliance_data.shrineDatas then
+			local large_key = ""
+			for _,v in ipairs(alliance_data.shrineDatas) do
+				if v.stageName > large_key then
+					large_key = v.stageName
+				end
+				self:GetStatgeByName(v.stageName):SetIsLocked(false)
+				self:GetStatgeByName(v.stageName):SetStar(v.maxStar)
 			end
-			self:GetStatgeByName(v.stageName):SetIsLocked(false)
-			self:GetStatgeByName(v.stageName):SetStar(v.maxStar)
-		end
-		if large_key ~= "" then
-			local next_stage = self:GetStageByIndex(self:GetStatgeByName(large_key):Index() + 1)
-			if next_stage then
-				next_stage:SetIsLocked(false)
+			if large_key ~= "" then
+				local next_stage = self:GetStageByIndex(self:GetStatgeByName(large_key):Index() + 1)
+				if next_stage then
+					next_stage:SetIsLocked(false)
+				end
 			end
 		end
 	end
-	if alliance_data.__shrineDatas then
-		local changed_map = {
-			added = {},
-			edited = {},
-			removed = {}
-		}
-
+	if is_delta_update then
 		local large_key = ""
-		for _,v in ipairs(alliance_data.__shrineDatas) do
-			if changed_map[v.type] then
-				table.insert(changed_map[v.type],v.data)
+		local changed_map = GameUtils:Handler_DeltaData_Func(
+			deltaData.shrineDatas,
+			function(data)
+				if data.stageName > large_key then
+					large_key = data.stageName
+				end
+				self:GetStatgeByName(data.stageName):SetIsLocked(false)
+				self:GetStatgeByName(data.stageName):SetStar(data.maxStar)
+				return data
+			end,
+			function(data)
+				if data.stageName > large_key then
+					large_key = data.stageName
+				end
+				self:GetStatgeByName(data.stageName):SetIsLocked(false)
+				self:GetStatgeByName(data.stageName):SetStar(data.maxStar)
+				return data
+			end,
+			function(data)
 			end
-			if v.data.stageName > large_key then
-				large_key = v.data.stageName
-			end
-			self:GetStatgeByName(v.data.stageName):SetIsLocked(false)
-			self:GetStatgeByName(v.data.stageName):SetStar(v.data.maxStar)
-		end
+		)
 		if large_key ~= "" then
 			local next_stage = self:GetStageByIndex(self:GetStatgeByName(large_key):Index() + 1)
 			if next_stage then
@@ -124,6 +133,33 @@ function AllianceShrine:GetMaxStageFromServer(alliance_data)
 		end
 		self:OnNewStageOpened(changed_map)
 	end
+
+	-- if alliance_data.__shrineDatas then
+	-- 	local changed_map = {
+	-- 		added = {},
+	-- 		edited = {},
+	-- 		removed = {}
+	-- 	}
+
+		-- local large_key = ""
+		-- for _,v in ipairs(alliance_data.__shrineDatas) do
+		-- 	if changed_map[v.type] then
+		-- 		table.insert(changed_map[v.type],v.data)
+		-- 	end
+		-- 	if v.data.stageName > large_key then
+		-- 		large_key = v.data.stageName
+		-- 	end
+		-- 	self:GetStatgeByName(v.data.stageName):SetIsLocked(false)
+		-- 	self:GetStatgeByName(v.data.stageName):SetStar(v.data.maxStar)
+		-- end
+		-- if large_key ~= "" then
+		-- 	local next_stage = self:GetStageByIndex(self:GetStatgeByName(large_key):Index() + 1)
+		-- 	if next_stage then
+		-- 		next_stage:SetIsLocked(false)
+		-- 	end
+		-- end
+		-- self:OnNewStageOpened(changed_map)
+	-- end
 end
 
 function  AllianceShrine:OnNewStageOpened(changed_map)
@@ -182,39 +218,115 @@ function AllianceShrine:OnFightEventTimerChanged(fightEvent)
 	end
 end
 
-function AllianceShrine:RefreshEvents(alliance_data)
-	if alliance_data.shrineEvents then
-		--清空之前的数据
-		table.foreach(self.shrineEvents,function(_,shrineEvent)
-			shrineEvent:Reset()
-		end)
-		self.shrineEvents = {}
-		for _,v in ipairs(alliance_data.shrineEvents) do
-			local fightEvent = ShrineFightEvent.new()
-			fightEvent:Update(v)
-			local palyerDatas = {}
-			for _,playerData in ipairs(v.playerTroops) do
-				playerData.location = self:GetPlayerLocation(playerData.id)
-				table.insert(palyerDatas,playerData)
+function AllianceShrine:RefreshEvents(alliance_data,deltaData)
+	local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.shrineEvents ~= nil
+    if is_fully_update then
+		if alliance_data.shrineEvents then
+			--清空之前的数据
+			table.foreach(self.shrineEvents,function(_,shrineEvent)
+				shrineEvent:Reset()
+			end)
+			self.shrineEvents = {}
+			for _,v in ipairs(alliance_data.shrineEvents) do
+				local fightEvent = ShrineFightEvent.new()
+				fightEvent:Update(v)
+				local palyerDatas = {}
+				for _,playerData in ipairs(v.playerTroops) do
+					playerData.location = self:GetPlayerLocation(playerData.id)
+					table.insert(palyerDatas,playerData)
+				end
+				fightEvent:SetPlayerTroops(palyerDatas)
+				fightEvent:SetStage(self:GetStatgeByName(fightEvent:StageName()))
+				self.shrineEvents[fightEvent:Id()] = fightEvent
+				fightEvent:AddObserver(self)
 			end
-			fightEvent:SetPlayerTroops(palyerDatas)
-			fightEvent:SetStage(self:GetStatgeByName(fightEvent:StageName()))
-			self.shrineEvents[fightEvent:Id()] = fightEvent
-			fightEvent:AddObserver(self)
+			self:OnShrineEventsRefreshed()
 		end
-		self:OnShrineEventsRefreshed()
 	end
-	self:RefreshShrineEvents(alliance_data.__shrineEvents)
+	if is_delta_update then
+		-- self:RefreshShrineEvents(alliance_data.__shrineEvents)
+		local change_map = GameUtils:Handler_DeltaData_Func(
+			deltaData.shrineEvents
+			,function(event) --add
+				if not self.shrineEvents[event.id] then
+					local fightEvent = ShrineFightEvent.new()
+					fightEvent:Update(event)
+					local palyerDatas = {}
+					for _,playerData in ipairs(event.playerTroops) do
+						playerData.location = self:GetPlayerLocation(playerData.id)
+						table.insert(palyerDatas,playerData)
+					end
+					fightEvent:SetPlayerTroops(palyerDatas)
+					fightEvent:SetStage(self:GetStatgeByName(fightEvent:StageName()))
+					self.shrineEvents[fightEvent:Id()] = fightEvent
+					fightEvent:AddObserver(self)
+					return fightEvent
+				end
+			end
+			,function(event) --edit
+				local fightEvent = self:GetShrineEventById(event.id)
+				if fightEvent then
+					fightEvent:Update(event)
+					local palyerDatas = {}
+					for _,playerData in ipairs(event.playerTroops) do
+						playerData.location = self:GetPlayerLocation(playerData.id)
+						table.insert(palyerDatas,playerData)
+					end
+					fightEvent:SetPlayerTroops(palyerDatas)
+				end
+				return fightEvent
+			end
+			,function(event) --remove
+				local fightEvent = self:GetShrineEventById(event.id)
+				if fightEvent then
+					fightEvent:RemoveObserver(self)
+					self.shrineEvents[event.id] = nil
+					return fightEvent
+				end
+			end
+		)
+		self:OnShrineEventsChanged(GameUtils:pack_event_table(change_map))
+	end
 
-	if alliance_data.shrineReports then
-		for _,v in ipairs(alliance_data.shrineReports) do
-			local report = ShrineReport.new()
-			report:Update(v)
-			report:SetStage(self:GetStatgeByName(report:StageName()))
-			table.insert(self.shrineReports,report)
+	is_fully_update = deltaData == nil
+	is_delta_update = not is_fully_update and deltaData.shrineReports ~= nil
+
+	if is_fully_update then
+		if alliance_data.shrineReports then
+			self.shrineReports = {}
+			for _,v in ipairs(alliance_data.shrineReports) do
+				local report = ShrineReport.new()
+				report:Update(v)
+				report:SetStage(self:GetStatgeByName(report:StageName()))
+				table.insert(self.shrineReports,report)
+			end
 		end
 	end
-	self:RefreshShrineReports(alliance_data.__shrineReports)
+	if is_delta_update then
+		-- self:RefreshShrineReports(alliance_data.__shrineReports)
+		local change_map = GameUtils:Handler_DeltaData_Func(
+			deltaData.shrineReports
+			,function(event)
+					local report = ShrineReport.new()
+					report:Update(event)
+					report:SetStage(self:GetStatgeByName(report:StageName()))
+					table.insert(self.shrineReports,report)
+					return report
+			end
+			,function(event) 
+				--修改事件记录?
+			end
+			,function(event)
+				table.remove(self.shrineReports,#self.shrineReports)
+				local report = ShrineReport.new()
+				report:Update(event)
+				report:SetStage(self:GetStatgeByName(report:StageName()))
+				return report
+			end
+		)
+		self:OnShrineReportsChanged(GameUtils:pack_event_table(change_map))
+	end
 end
 
 function AllianceShrine:OnShrineEventsRefreshed()
@@ -227,30 +339,30 @@ function AllianceShrine:OnShrineEventsRefreshed()
 end
 
 
-function AllianceShrine:RefreshShrineReports( __shrineReports )
-	if not __shrineReports then return end
-	local change_map = GameUtils:Event_Handler_Func(
-		__shrineReports
-		,function(event)
-				local report = ShrineReport.new()
-				report:Update(event)
-				report:SetStage(self:GetStatgeByName(report:StageName()))
-				table.insert(self.shrineReports,report)
-				return report
-		end
-		,function(event) 
-			--修改事件记录?
-		end
-		,function(event)
-			table.remove(self.shrineReports,#self.shrineReports)
-			local report = ShrineReport.new()
-			report:Update(event)
-			report:SetStage(self:GetStatgeByName(report:StageName()))
-			return report
-		end
-	)
-	self:OnShrineReportsChanged(GameUtils:pack_event_table(change_map))
-end
+-- function AllianceShrine:RefreshShrineReports( __shrineReports )
+-- 	if not __shrineReports then return end
+-- 	local change_map = GameUtils:Event_Handler_Func(
+-- 		__shrineReports
+-- 		,function(event)
+-- 				local report = ShrineReport.new()
+-- 				report:Update(event)
+-- 				report:SetStage(self:GetStatgeByName(report:StageName()))
+-- 				table.insert(self.shrineReports,report)
+-- 				return report
+-- 		end
+-- 		,function(event) 
+-- 			--修改事件记录?
+-- 		end
+-- 		,function(event)
+-- 			table.remove(self.shrineReports,#self.shrineReports)
+-- 			local report = ShrineReport.new()
+-- 			report:Update(event)
+-- 			report:SetStage(self:GetStatgeByName(report:StageName()))
+-- 			return report
+-- 		end
+-- 	)
+-- 	self:OnShrineReportsChanged(GameUtils:pack_event_table(change_map))
+-- end
 
 function AllianceShrine:OnShrineReportsChanged(changed_map)
 	self:NotifyListeneOnType(self.LISTEN_TYPE.OnShrineReportsChanged,function(listener)
@@ -258,50 +370,50 @@ function AllianceShrine:OnShrineReportsChanged(changed_map)
 	end)
 end
 
-function AllianceShrine:RefreshShrineEvents(__shrineEvents)
-	if not __shrineEvents then return end
-	local change_map = GameUtils:Event_Handler_Func(
-		__shrineEvents
-		,function(event) --add
-			if not self.shrineEvents[event.id] then
-				local fightEvent = ShrineFightEvent.new()
-				fightEvent:Update(event)
-				local palyerDatas = {}
-				for _,playerData in ipairs(event.playerTroops) do
-					playerData.location = self:GetPlayerLocation(playerData.id)
-					table.insert(palyerDatas,playerData)
-				end
-				fightEvent:SetPlayerTroops(palyerDatas)
-				fightEvent:SetStage(self:GetStatgeByName(fightEvent:StageName()))
-				self.shrineEvents[fightEvent:Id()] = fightEvent
-				fightEvent:AddObserver(self)
-				return fightEvent
-			end
-		end
-		,function(event) --edit
-			local fightEvent = self:GetShrineEventById(event.id)
-			if fightEvent then
-				fightEvent:Update(event)
-				local palyerDatas = {}
-				for _,playerData in ipairs(event.playerTroops) do
-					playerData.location = self:GetPlayerLocation(playerData.id)
-					table.insert(palyerDatas,playerData)
-				end
-				fightEvent:SetPlayerTroops(palyerDatas)
-			end
-			return fightEvent
-		end
-		,function(event) --remove
-			local fightEvent = self:GetShrineEventById(event.id)
-			if fightEvent then
-				fightEvent:RemoveObserver(self)
-				self.shrineEvents[event.id] = nil
-				return fightEvent
-			end
-		end
-	)
-	self:OnShrineEventsChanged(GameUtils:pack_event_table(change_map))
-end
+-- function AllianceShrine:RefreshShrineEvents(__shrineEvents)
+-- 	if not __shrineEvents then return end
+-- 	local change_map = GameUtils:Event_Handler_Func(
+-- 		__shrineEvents
+-- 		,function(event) --add
+-- 			if not self.shrineEvents[event.id] then
+-- 				local fightEvent = ShrineFightEvent.new()
+-- 				fightEvent:Update(event)
+-- 				local palyerDatas = {}
+-- 				for _,playerData in ipairs(event.playerTroops) do
+-- 					playerData.location = self:GetPlayerLocation(playerData.id)
+-- 					table.insert(palyerDatas,playerData)
+-- 				end
+-- 				fightEvent:SetPlayerTroops(palyerDatas)
+-- 				fightEvent:SetStage(self:GetStatgeByName(fightEvent:StageName()))
+-- 				self.shrineEvents[fightEvent:Id()] = fightEvent
+-- 				fightEvent:AddObserver(self)
+-- 				return fightEvent
+-- 			end
+-- 		end
+-- 		,function(event) --edit
+-- 			local fightEvent = self:GetShrineEventById(event.id)
+-- 			if fightEvent then
+-- 				fightEvent:Update(event)
+-- 				local palyerDatas = {}
+-- 				for _,playerData in ipairs(event.playerTroops) do
+-- 					playerData.location = self:GetPlayerLocation(playerData.id)
+-- 					table.insert(palyerDatas,playerData)
+-- 				end
+-- 				fightEvent:SetPlayerTroops(palyerDatas)
+-- 			end
+-- 			return fightEvent
+-- 		end
+-- 		,function(event) --remove
+-- 			local fightEvent = self:GetShrineEventById(event.id)
+-- 			if fightEvent then
+-- 				fightEvent:RemoveObserver(self)
+-- 				self.shrineEvents[event.id] = nil
+-- 				return fightEvent
+-- 			end
+-- 		end
+-- 	)
+-- 	self:OnShrineEventsChanged(GameUtils:pack_event_table(change_map))
+-- end
 
 function AllianceShrine:OnShrineEventsChanged(changed_map)
 	self:NotifyListeneOnType(self.LISTEN_TYPE.OnShrineEventsChanged,function(listener)
@@ -317,10 +429,10 @@ function AllianceShrine:OnAllianceDataChanged(alliance_data)
 	self:DecodeObjectsFromJsonAlliance(alliance_data)
 end
 
-function AllianceShrine:DecodeObjectsFromJsonAlliance(alliance_data)
-	self:GetMaxStageFromServer(alliance_data)
+function AllianceShrine:DecodeObjectsFromJsonAlliance(alliance_data,deltaData)
+	self:GetMaxStageFromServer(alliance_data,deltaData)
 	self:InitOrUpdatePerception(alliance_data)
-	self:RefreshEvents(alliance_data)
+	self:RefreshEvents(alliance_data,deltaData)
 end
 
 function AllianceShrine:GetShireObjectFromMap()

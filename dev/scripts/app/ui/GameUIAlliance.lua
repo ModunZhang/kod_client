@@ -314,14 +314,14 @@ end
 function GameUIAlliance:GetJoinList(tag)
     if tag  then
         NetManager:getSearchAllianceByTagPromsie(tag):next(function(data)
-            if #data.alliances > 0 then
-                self:RefreshJoinListView(data.alliances)
+            if #data.allianceDatas > 0 then
+                self:RefreshJoinListView(data.allianceDatas)
             end
         end)
     else
         NetManager:getFetchCanDirectJoinAlliancesPromise():next(function(data)
-            if #data.alliances > 0 then
-                self:RefreshJoinListView(data.alliances)
+            if #data.allianceDatas > 0 then
+                self:RefreshJoinListView(data.allianceDatas)
             end
         end)
     end
@@ -419,6 +419,7 @@ end
 
 --  listType:join appy invate
 function GameUIAlliance:getCommonListItem_(listType,alliance)
+    dump(alliance,"alliance----->")
     local targetListView = nil
     local item = nil
     local terrain,flag_info = nil,nil

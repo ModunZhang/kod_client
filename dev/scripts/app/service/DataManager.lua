@@ -5,13 +5,15 @@ function DataManager:setUserData( userData, deltaData )
     self:OnUserDataChanged(self.user, app.timer:GetServerTime(), deltaData)
 end
 function DataManager:setUserAllianceData(allianceData,deltaData)
+	dump(allianceData,"setUserAllianceData allianceData-->")
+	dump(deltaData,"setUserAllianceData deltaData-->")
 	self.alliance = allianceData
 	if allianceData == json.null then return end
 	Alliance_Manager:OnAllianceDataChanged(allianceData,app.timer:GetServerTime(),deltaData)
 end
 
 function DataManager:getUserAllianceData()
-	return self.alliance or {}
+	return self.alliance
 end
 
 function DataManager:getUserData(  )
@@ -19,7 +21,6 @@ function DataManager:getUserData(  )
 end
 
 function DataManager:OnUserDataChanged(userData,timer, deltaData)
-	dump(deltaData,"deltaData----->")
 	User:OnUserDataChanged(userData, timer, deltaData)
 	ItemManager:OnUserDataChanged(userData, timer, deltaData)
     City:OnUserDataChanged(userData, timer, deltaData)
