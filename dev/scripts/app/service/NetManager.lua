@@ -245,7 +245,7 @@ onPlayerDataChanged_callbacks = {}
 function NetManager:addPlayerDataChangedEventListener()
     self:addEventListener("onPlayerDataChanged", function(success, response)
         if success then
-            LuaUtils:outputTable("onPlayerDataChanged", response)
+            -- LuaUtils:outputTable("onPlayerDataChanged", response)
             local user_data = DataManager:getUserData()
             local edit = decodeInUserDataFromDeltaData(user_data, response)
             DataManager:setUserData(user_data, edit)
@@ -691,7 +691,7 @@ function NetManager:getLoginPromise(deviceId)
                 DataManager:setUserData(playerData)
                 DataManager:setUserAllianceData(user_alliance_data)
             else
-                LuaUtils:outputTable("logic.entryHandler.login", response)
+                -- LuaUtils:outputTable("logic.entryHandler.login", response)
                 self.m_netService:setDeltatime(playerData.serverTime - ext.now())
                 local InitGame = import("app.service.InitGame")
                 InitGame(playerData)
@@ -867,18 +867,10 @@ function NetManager:getMakeTechnologyMaterialPromise()
     return get_makeMaterial_promise("technologyMaterials")
 end
 -- 获取材料
-local function get_fetchMaterials_promise(category)
+function NetManager:getFetchMaterialsPromise(id)
     return get_blocking_request_promise("logic.playerHandler.getMaterials", {
-        category = category,
+        eventId = id,
     }, "获取材料失败!"):next(get_response_msg)
-end
--- 获取建筑材料
-function NetManager:getFetchBuildingMaterialsPromise()
-    return get_fetchMaterials_promise("buildingMaterials"):next(get_response_msg)
-end
--- 获取科技材料
-function NetManager:getFetchTechnologyMaterialsPromise()
-    return get_fetchMaterials_promise("technologyMaterials"):next(get_response_msg)
 end
 -- 打造装备
 local function get_makeDragonEquipment_promise(equipment_name, finish_now)
@@ -1110,7 +1102,7 @@ function NetManager:getFreeSpeedUpPromise(eventType, eventId)
     return get_blocking_request_promise("logic.playerHandler.freeSpeedUp", {
         eventType = eventType,
         eventId = eventId,
-    }, "请求免费加速失败!"):next(get_response_msg)
+    }, "请求免费加速失败!")
 end
 -- 协助玩家加速
 function NetManager:getHelpAllianceMemberSpeedUpPromise(eventId)
@@ -1534,10 +1526,10 @@ function NetManager:getUpgradeMilitaryTechPromise(techName)
 end
 -- 士兵晋级
 local function upgrade_soldier_star_promise(soldierName,finishNow)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.upgradeSoldierStar", {
+    return get_blocking_request_promise("logic.playerHandler.upgradeSoldierStar", {
         soldierName = soldierName,
         finishNow = finishNow,
-    }, "士兵晋级失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "士兵晋级失败!"):next(get_response_msg)
 end
 function NetManager:getInstantUpgradeSoldierStarPromise(soldierName)
     return upgrade_soldier_star_promise(soldierName,true)
@@ -1736,6 +1728,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 

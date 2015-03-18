@@ -74,17 +74,20 @@ function MaterialManager:IteratorMaterialsByType(material_type, func)
         func(k, v)
     end
 end
-function MaterialManager:OnUserDataChanged(user_data)
-    local user_map = {
+function MaterialManager:OnUserDataChanged(userData, deltaData)
+    local is_fully_update = deltaData == nil
+    local materialsMap = {
         [BUILD] = "buildingMaterials",
         [TECHNOLOGY] = "technologyMaterials",
         [DRAGON] = "dragonMaterials",
         [SOLDIER] = "soldierMaterials",
         [EQUIPMENT] = "dragonEquipments",
     }
-    for i, v in ipairs(user_map) do
-        if user_data[v] then
-            self:OnMaterialsComing(i, user_data[v])
+    for i,v in ipairs(materialsMap) do
+        local is_delta_update = not is_fully_update and deltaData[v]
+        if is_fully_update or is_delta_update then
+            print("MaterialManager:OnUserDataChanged", v)
+            self:OnMaterialsComing(i, userData[v])
         end
     end
 end
@@ -98,13 +101,6 @@ function MaterialManager:OnMaterialsComing(material_type, materials)
             changed[k] = {old = old, new = new}
         end
     end
-    -- for k, new in pairs(materials) do
-    --     local old = old_materials[k]
-    --     if new ~= old then
-    --         old_materials[k] = new
-    --         changed[k] = {old = old, new = new}
-    --     end
-    -- end
     for _, _ in pairs(changed) do
         self:NotifyObservers(function(listener)
             listener:OnMaterialsChanged(self, material_type, changed)
@@ -114,6 +110,7 @@ function MaterialManager:OnMaterialsComing(material_type, materials)
 end
 
 return MaterialManager
+
 
 
 

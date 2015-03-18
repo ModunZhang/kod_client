@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="35" height="35" tilewidth="100" tileheight="100" nextobjectid="1">
+ <tileset firstgid="1" name="edit" tilewidth="100" tileheight="100">
+  <image source="edit.png" width="400" height="400"/>
+ </tileset>
+ <layer name="layer1" width="35" height="35">
+  <data encoding="base64" compression="zlib">
+   eJzNmNsOwyAIht2p3VF9/6ddL2pCCFiooH6JCUWtzPGjaQhzEbeWtpb3VuziT7sNxxVfRvOod8GxuL88w1jO8mqYS62fmTFvg3U4fsCG+8LF0osesXyE4yJhf5Vr3ZXjOTJjjyAxtjdPwqfNl6tRLBRUvozCqtZxaPLaOxYNtXyx0qoUi1rXms8rEUtPTVNQOnqMCCTYavrSOL+njo60ANeX5MutIZYjJHcpT+Bvm6nWwb3w0LRGk7V8kdQwy/yZtdaNvNctYa59OXs2as8JSV5560hDTUe9z0iPfTl7n9GeR5as6Fmro8UwFgz+j8r3Eer7SgQtM348j+rD/dA3G39NtggM
+  </data>
+ </layer>
+</map>

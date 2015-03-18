@@ -629,14 +629,21 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
         dialog:SetPopMessage(can_not_update_type)
         dialog:CreateNeeds("gem_66x56.png",required_gems)
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.PRE_CONDITION then
-        dialog:CreateOKButton(
-            {
-                listener = handler(self,self.GotoPreconditionBuilding),
-                btn_name= _("前往")
-            }
-        )
-        dialog:SetTitle(_("提示"))
-        dialog:SetPopMessage(self.building:GetPreConditionDesc())
+        local jump_building = self.building:GetPreConditionBuilding()
+        if tolua.type(jump_building) == "string" then
+            dialog:SetTitle("提示")
+                :SetPopMessage(string.format(_("请首先建造%s"),Localize.building_name[jump_building]))
+                :CreateOKButton()
+        else
+            dialog:CreateOKButton(
+                {
+                    listener = handler(self,self.GotoPreconditionBuilding),
+                    btn_name= _("前往")
+                }
+            )
+            dialog:SetTitle(_("提示"))
+            dialog:SetPopMessage(self.building:GetPreConditionDesc())
+        end
     else
         dialog:SetTitle(_("提示"))
         dialog:SetPopMessage(can_not_update_type)
@@ -644,6 +651,9 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
+
 
 
 

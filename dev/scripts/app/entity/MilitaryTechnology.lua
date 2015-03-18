@@ -26,7 +26,7 @@ end
 
 function MilitaryTechnology:UpdateData(name,json_data)
     self:SetName(name or "")
-    self:SetBuilding(json_data.building or "")
+    self:SetBuilding(json_data.building or self.building or "")
     self:SetLevel(json_data.level or 0)
 end
 

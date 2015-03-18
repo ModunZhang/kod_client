@@ -108,10 +108,11 @@ function User:EncodePveDataAndResetFightRewardsData()
     for i,v in ipairs(rewards or {}) do
         v.probability = nil
     end
-
+    local used_strength = self.used_strength
+    self.used_strength = 0
     return {
         pveData = {
-            staminaUsed = self.used_strength,
+            staminaUsed = used_strength,
             location = self.pve_database:EncodeLocation(),
             floor = self.cur_pve_map:EncodeMap(),
         },
@@ -199,29 +200,26 @@ function User:OnPropertyChange(property_name, old_value, new_value)
         })
     end)
 end
-function User:OnUserDataChanged(userData, current_time)
-    if userData.logicServerId then
-        self:SetServerName(userData.logicServerId)
-    end
-    self:OnResourcesChangedByTime(userData.resources, current_time)
-    self:OnBasicInfoChanged(userData.basicInfo)
-    self:OnCountInfoChanged(userData.countInfo)
-    self:OnNewInviteAllianceEventsComming(userData.__inviteToAllianceEvents)
-    self:OnRequestToAllianceEventsChanged(userData.requestToAllianceEvents)
-    self:OnNewRequestToAllianceEventsComming(userData.__requestToAllianceEvents)
-    self:OnInviteAllianceEventsChanged(userData.inviteToAllianceEvents)
+function User:OnUserDataChanged(userData, current_time, deltaData)
+
+    self:SetServerName(userData.logicServerId)
+
+    self:OnResourcesChangedByTime(userData, current_time, deltaData)
+    self:OnBasicInfoChanged(userData, deltaData)
+    self:OnCountInfoChanged(userData, deltaData)
+
+    self.request_events = userData.requestToAllianceEvents
+    self.invite_events = userData.inviteToAllianceEvents
     -- 每日任务
     self:OnDailyQuestsChanged(userData.dailyQuests)
     self:OnDailyQuestsEventsChanged(userData.dailyQuestEvents)
-    self:OnNewDailyQuestsComming(userData.__dailyQuests)
-    self:OnNewDailyQuestsEventsComming(userData.__dailyQuestEvents)
     -- 交易
     self.trade_manager:OnUserDataChanged(userData)
-    self:GetPVEDatabase():OnUserDataChanged(userData)
+    self:GetPVEDatabase():OnUserDataChanged(userData, deltaData)
 
     -- vip event
     self:OnVipEventDataChange(userData)
-    if self.growUpTaskManger:OnUserDataChanged(userData) then
+    if self.growUpTaskManger:OnUserDataChanged(userData, deltaData) then
         self:OnTaskChanged()
     end
     -- 日常任务
@@ -258,18 +256,14 @@ end
 
 
 
-function User:OnCountInfoChanged(countInfo)
-    if not countInfo then return end
-    if self.countInfo then
-        for k,v in pairs(countInfo) do
-            self.countInfo[k] = v
-        end
+function User:OnCountInfoChanged(userData, deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.countInfo
+    if is_fully_update or is_delta_update then
+        self.countInfo = userData.countInfo
         self:NotifyListeneOnType(COUNT_INFO, function(listener)
-            listener:OnCountInfoChanged(self, {
-                })
+            listener:OnCountInfoChanged(self)
         end)
-    else
-        self.countInfo  = countInfo
     end
 end
 
@@ -280,7 +274,7 @@ end
 -- 获取当天剩余普通免费gacha次数
 function User:GetOddFreeNormalGachaCount()
     local vip_add = self:GetVipEvent():IsActived() and self:GetVIPNormalGachaAdd() or 0
-    return intInit.freeNormalGachaCountPerDay.value + vip_add - seluserf.countInfo.todayFreeNormalGachaCount
+    return intInit.freeNormalGachaCountPerDay.value + vip_add - self.countInfo.todayFreeNormalGachaCount
 end
 function User:GetVipEvent()
     return self.vip_event
@@ -381,76 +375,31 @@ function User:OnVipEventTimer( vip_event )
         listener:OnVipEventTimer(vip_event)
     end)
 end
-function User:OnResourcesChangedByTime(resources, current_time)
-    if not resources then return end
-    if resources.gem then
-        self:GetGemResource():SetValue(resources.gem)
-    end
-    if resources.stamina then
-        self.used_strength = 0
+function User:OnResourcesChangedByTime(userData, current_time, deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.resources and deltaData.resources.stamina
+    local resources = userData.resources
+    if is_fully_update or is_delta_update then
         local strength = self:GetStrengthResource()
         strength:UpdateResource(current_time, resources.stamina)
         strength:SetProductionPerHour(current_time, 4)
     end
+    self:GetGemResource():SetValue(resources.gem)
 end
-function User:OnBasicInfoChanged(basicInfo)
-    if not basicInfo then return end
-    self:SetTerrain(basicInfo.terrain)
-    self:SetLevelExp(basicInfo.levelExp)
-    self:SetLevel(self:GetPlayerLevelByExp(self:LevelExp()))
-    self:SetPower(basicInfo.power)
-    self:SetName(basicInfo.name)
-    self:SetVipExp(basicInfo.vipExp)
-    self:SetIcon(basicInfo.icon)
-    self:SetMarchQueue(basicInfo.marchQueue)
-end
-function User:OnNewRequestToAllianceEventsComming(__requestToAllianceEvents)
-    if not __requestToAllianceEvents then return end
-    GameUtils:Event_Handler_Func(
-        __requestToAllianceEvents
-        ,function(event_data)
-            table.insert(self.request_events, event_data)
-        end
-        ,function(event_data)
-            assert(false, "会有修改吗?")
-        end
-        ,function(event_data)
-            for i,v in ipairs(self.request_events) do
-                if v.requestTime == event_data.requestTime then
-                    table.remove(self.request_events, i)
-                    break
-                end
-            end
-        end
-    )
-end
-function User:OnRequestToAllianceEventsChanged(requestToAllianceEvents)
-    if not requestToAllianceEvents then return end
-    self.request_events = requestToAllianceEvents
-end
-function User:OnNewInviteAllianceEventsComming(__inviteToAllianceEvents)
-    if not __inviteToAllianceEvents then return end
-    GameUtils:Event_Handler_Func(
-        __inviteToAllianceEvents
-        ,function(event_data)
-            table.insert(self.invite_events, event_data)
-        end
-        ,function(event_data)
-            assert(false, "会有修改吗?")
-        end
-        ,function(event_data)
-            for i,v in ipairs(self.invite_events) do
-                if v.inviteTime == event_data.inviteTime and v.id == event_data.id then
-                    table.remove(self.invite_events, i)
-                    break
-                end
-            end
-        end
-    )
-end
-function User:OnInviteAllianceEventsChanged(inviteToAllianceEvents)
-    if not inviteToAllianceEvents then return end
-    self.invite_events = inviteToAllianceEvents
+function User:OnBasicInfoChanged(userData, deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.basicInfo
+    if is_fully_update or is_delta_update then
+        local basicInfo = userData.basicInfo
+        self:SetTerrain(basicInfo.terrain)
+        self:SetLevelExp(basicInfo.levelExp)
+        self:SetLevel(self:GetPlayerLevelByExp(self:LevelExp()))
+        self:SetPower(basicInfo.power)
+        self:SetName(basicInfo.name)
+        self:SetVipExp(basicInfo.vipExp)
+        self:SetIcon(basicInfo.icon)
+        self:SetMarchQueue(basicInfo.marchQueue)
+    end
 end
 function User:OnDailyQuestsChanged(dailyQuests)
     if not dailyQuests then return end
@@ -586,6 +535,8 @@ function User:GetBestDragon()
 end
 
 return User
+
+
 
 
 
