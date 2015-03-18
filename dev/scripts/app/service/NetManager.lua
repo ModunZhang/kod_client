@@ -19,10 +19,26 @@ local function decodeInUserDataFromDeltaData(userData, deltaData)
     local edit = {}
     for _,v in ipairs(deltaData) do
         local origin_key,value = unpack(v)
+        local is_json_null = value == json.null
         local keys = string.split(origin_key, ".")
         if #keys == 1 then
             local k = unpack(keys)
-            edit[k] = value
+            k = tonumber(k) or k
+            if type(k) == "number" then -- 索引更新
+                k = k + 1
+                if is_json_null then            -- 认为是删除
+                    edit[k].remove = edit[k].remove or {}
+                    table.insert(edit[k].remove, userData[k])
+                elseif userData[k] then         -- 认为更新
+                    edit[k].edit = edit[k].edit or {}
+                    table.insert(edit[k].edit, value)
+                else                            -- 认为添加
+                    edit[k].add = edit[k].add or {}
+                    table.insert(edit[k].add, value)
+                end
+            else -- key更新
+                edit[k] = value
+            end
             userData[k] = value
         else
             local tmp = edit
@@ -32,16 +48,28 @@ local function decodeInUserDataFromDeltaData(userData, deltaData)
                 local v = keys[i]
                 local k = tonumber(v) or v
                 if type(k) == "number" then k = k + 1 end
+                local parent_root = tmp
                 if i ~= len then
                     curRoot = curRoot[k]
                     tmp[k] = tmp[k] or {}
                     tmp = tmp[k]
                     assert(curRoot)
                 else
-                    tmp[k] = value
-                    if value == json.null then
-                        table.remove(curRoot, k)
+                    if type(k) == "number" then
+                        if is_json_null then
+                            tmp.remove = tmp.remove or {}
+                            table.insert(tmp.remove, table.remove(curRoot, k))
+                        elseif curRoot[k] then
+                            tmp.edit = tmp.edit or {}
+                            table.insert(tmp.edit, value)
+                            curRoot[k] = value
+                        else
+                            tmp.add = tmp.add or {}
+                            table.insert(tmp.add, value)
+                            curRoot[k] = value
+                        end
                     else
+                        tmp[k] = value
                         curRoot[k] = value
                     end
                 end
@@ -1697,6 +1725,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 
