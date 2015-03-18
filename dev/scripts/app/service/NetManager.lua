@@ -53,10 +53,20 @@ end
 
 -- 过滤器
 local function get_response_msg(response)
-    local user_data = DataManager:getUserData()
-    local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
-    DataManager:setUserData(user_data, edit)
-    return response.msg.playerData
+    dump(response,"get_response_msg---->")
+    if response.msg.playerData then
+        local user_data = DataManager:getUserData()
+        local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
+        DataManager:setUserData(user_data, edit)
+        return response
+    end
+    if response.msg.allianceData then
+        local user_alliance_data = DataManager:getUserAllianceData()
+        local edit = decodeInUserDataFromDeltaData(user_alliance_data,response.msg.allianceData)
+        DataManager:setUserAllianceData(user_alliance_data, edit)
+        return response
+    end
+    return response
 end
 local function check_response(m)
     return function(result)
@@ -217,7 +227,10 @@ function NetManager:addAllianceDataChangedEventListener()
     self:addEventListener("onAllianceDataChanged", function(success, msg)
         if success then
             -- LuaUtils:outputTable("onAllianceDataChanged", msg)
-            DataManager:setUserAllianceData(msg)
+            -- DataManager:setUserAllianceData(msg)
+            local user_alliance_data = DataManager:getUserAllianceData()
+            local edit = decodeInUserDataFromDeltaData(user_alliance_data,msg)
+            DataManager:setUserAllianceData(user_alliance_data, edit)
         end
         local callback = onAllianceDataChanged_callbacks[1]
         if type(callback) == "function" then
@@ -633,14 +646,17 @@ function NetManager:getLoginPromise(deviceId)
         if response.success then
             app:GetPushManager():CancelAll()
             local playerData = response.msg.playerData
+            local user_alliance_data = response.msg.allianceData
             if self.m_was_inited_game then
                 self.m_netService:setDeltatime(playerData.serverTime - ext.now())
                 DataManager:setUserData(playerData)
+                DataManager:setUserAllianceData(user_alliance_data)
             else
                 LuaUtils:outputTable("logic.entryHandler.login", response)
                 self.m_netService:setDeltatime(playerData.serverTime - ext.now())
                 local InitGame = import("app.service.InitGame")
                 InitGame(playerData)
+                DataManager:setUserAllianceData(user_alliance_data)
             end
             self.m_was_inited_game = false
         end
@@ -1076,9 +1092,7 @@ function NetManager:getCreateAlliancePromise(name, tag, language, terrain, flag)
         language = language,
         terrain = terrain,
         flag = flag
-    }, "创建联盟失败!"):next(function(data)
-        dump(data)
-    end)
+    }, "创建联盟失败!"):next(get_response_msg)
 end
 -- 退出联盟
 function NetManager:getQuitAlliancePromise()
@@ -1282,7 +1296,7 @@ end
 function NetManager:getEditAllianceTerrianPromise(terrain)
     return get_blocking_request_promise("logic.allianceHandler.editAllianceTerrian", {
         terrain = terrain
-    }, "编辑联盟地形失败!"):next(get_response_msg)
+    }, "编辑联盟地形失败!")
 end
 
 function NetManager:getMarchToShrinePromose(shrineEventId,dragonType,soldiers)
