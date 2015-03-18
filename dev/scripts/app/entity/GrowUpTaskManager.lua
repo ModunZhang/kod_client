@@ -407,9 +407,9 @@ end
 
 
 function GrowUpTaskManager:ctor()
-    self.task_map = {}
+    self.growUpTasks = {}
     for k,v in pairs(GameDatas.GrowUpTasks) do
-        self.task_map[k] = {}
+        self.growUpTasks[k] = {}
     end
 end
 function GrowUpTaskManager:GetFirstCompleteTasks()
@@ -436,7 +436,7 @@ function GrowUpTaskManager:GetFirstCompleteTasksByCategory(category)
     local r = {}
     for _,tag in ipairs(category_map[category]) do
         local mark_map = {}
-        local tasks = clone(self.task_map[tag])
+        local tasks = clone(self.growUpTasks[tag])
         table.sort(tasks, function(a, b) return a.id < b.id end)
         for _,v in ipairs(tasks) do
             local category_name = v.name
@@ -636,7 +636,7 @@ function GrowUpTaskManager:GetAvailableTaskByTag(tag, func)
     end
 
     -- 找到未完成的任务id
-    for i,v in ipairs(self.task_map[tag]) do
+    for i,v in ipairs(self.growUpTasks[tag]) do
         func(available_map, false, v, config[v.id + 1])
     end
 
@@ -655,7 +655,7 @@ function GrowUpTaskManager:GetAvailableTaskByTag(tag, func)
 end
 function GrowUpTaskManager:GetCompleteTaskCount()
     local count = 0
-    for _,category in pairs(self.task_map) do
+    for _,category in pairs(self.growUpTasks) do
         for _,task in ipairs(category) do
             if not task.rewarded then
                 count = count + 1
@@ -664,45 +664,18 @@ function GrowUpTaskManager:GetCompleteTaskCount()
     end
     return count
 end
-function GrowUpTaskManager:OnUserDataChanged(userData)
-    if not userData.growUpTasks then return end
-    local growUpTasks = userData.growUpTasks
-    for k,v in pairs(self.task_map) do
-        self.task_map[k] = growUpTasks[k]
+function GrowUpTaskManager:OnUserDataChanged(userData, deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.growUpTasks
+    if is_fully_update or is_delta_update then
+        self.growUpTasks = userData.growUpTasks
+        return true
     end
-    -- LuaUtils:outputTable("self.task_map", self.task_map)
-    return true
 end
 
 
 
 return GrowUpTaskManager
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -982,7 +982,7 @@ function City:OnUserDataChanged(userData, current_time, deltaData)
     -- 最后才更新资源
 
     local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.resources
+    local is_delta_update = not is_fully_update and deltaData.resources and deltaData.resources.refreshTime
     if is_delta_update then
         need_update_resouce_buildings = true
     end

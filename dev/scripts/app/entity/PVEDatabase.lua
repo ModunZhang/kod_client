@@ -18,35 +18,29 @@ end
 function PVEDatabase:MapLen()
     return #self.pve_maps
 end
-function PVEDatabase:OnUserDataChanged(user_data)
-    local pve = user_data.pve
-    if not pve then return end
-
-    local location = pve.location
-    if location then
-        self.char_x = location.x
-        self.char_y = location.y
-        self.char_floor = location.z
-    end
-
-    if pve.floors then
-        for i, v in ipairs(pve.floors) do
+function PVEDatabase:OnUserDataChanged(userData, deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.pve and deltaData.pve.floors
+    local pve = userData.pve
+    if is_fully_update then
+        for _,v in ipairs(pve.floors) do
             self.pve_maps[v.level]:Load(v)
         end
-    elseif pve.__floors then
-        for _, v in ipairs(pve.__floors) do
-            local type_ = v.type
-            if type_ == "add" then
-                local data = v.data
-                self.pve_maps[data.level]:Load(data)
-            elseif type_ == "edit" then
-                local data = v.data
-                self.pve_maps[data.level]:Load(data)
-            elseif type_ == "remove" then
-                assert(false)
-            end
+    elseif is_delta_update then
+        local floors = deltaData.pve.floors
+        for i,v in ipairs(floors.add or {}) do
+            self.pve_maps[v.level]:Load(v)
+        end
+        for i,v in ipairs(floors.edit or {}) do
+            print("floors.edit")
+            self.pve_maps[v.level]:Load(v)
         end
     end
+
+    local location = pve.location
+    self.char_x = location.x
+    self.char_y = location.y
+    self.char_floor = location.z
 end
 function PVEDatabase:ReduceNextEnemyStep()
     self.next_enemy_step = self.next_enemy_step - 1
