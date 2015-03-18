@@ -145,34 +145,17 @@ function BarracksUpgradeBuilding:OnUserDataChanged(...)
     BarracksUpgradeBuilding.super.OnUserDataChanged(self, ...)
     local arg = {...}
     local current_time = arg[2]
-    if arg[1].soldierEvents then
-        local soldierEvent = arg[1].soldierEvents[1]
-        if soldierEvent then
-            local finished_time = soldierEvent.finishTime / 1000
-            if self.recruit_event:IsEmpty() then
-                self:RecruitSoldiersWithFinishTime(soldierEvent.name, soldierEvent.count, finished_time,soldierEvent.id)
-            else
-                self.recruit_event:SetRecruitInfo(soldierEvent.name, soldierEvent.count, finished_time,soldierEvent.id)
-            end
+    local event = arg[1].soldierEvents[1]
+    if event then
+        local finished_time = event.finishTime / 1000
+        if self.recruit_event:IsEmpty() then
+            self:RecruitSoldiersWithFinishTime(event.name, event.count, finished_time,event.id)
         else
-            if self.recruit_event:IsRecruting() then
-                self:EndRecruitSoldiersWithCurrentTime(current_time)
-            end
+            self.recruit_event:SetRecruitInfo(event.name, event.count, finished_time,event.id)
         end
-    end
-    if arg[1].__soldierEvents then
-        local soldierEvent = arg[1].__soldierEvents[1].data
-        if soldierEvent then
-            local finished_time = soldierEvent.finishTime / 1000
-            if self.recruit_event:IsEmpty() then
-                self:RecruitSoldiersWithFinishTime(soldierEvent.name, soldierEvent.count, finished_time,soldierEvent.id)
-            else
-                self.recruit_event:SetRecruitInfo(soldierEvent.name, soldierEvent.count, finished_time,soldierEvent.id)
-            end
-        else
-            if self.recruit_event:IsRecruting() then
-                self:EndRecruitSoldiersWithCurrentTime(current_time)
-            end
+    else
+        if self.recruit_event:IsRecruting() then
+            self:EndRecruitSoldiersWithCurrentTime(current_time)
         end
     end
 end
@@ -208,6 +191,7 @@ function BarracksUpgradeBuilding:PromiseOfFinishSoldier(soldier_type)
 end
 
 return BarracksUpgradeBuilding
+
 
 
 
