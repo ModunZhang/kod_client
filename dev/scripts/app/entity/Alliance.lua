@@ -336,7 +336,7 @@ function Alliance:OnJoinEventsChanged()
         listener:OnJoinEventsChanged(self)
     end)
 end
-function Alliance:OnAllianceDataChanged(alliance_data)
+function Alliance:OnAllianceDataChanged(alliance_data,deltaData)
     if self:NeedUpdateEnemyAlliance() then
         self:UpdateEnemyAlliance(alliance_data.enemyAllianceDoc,alliance_data.basicInfo and alliance_data.basicInfo.status or nil)
     end
@@ -353,10 +353,10 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     self:OnAllianceBasicInfoChangedFirst(alliance_data.basicInfo)
 
     self:GetAllianceBelvedere():OnAllianceDataChanged(alliance_data)
-    self:OnNewEventsComming(alliance_data.__events)
-    self:OnNewMemberDataComming(alliance_data.__members)
-    self:OnNewJoinRequestDataComming(alliance_data.__joinRequestEvents)
-    self:OnNewHelpEventsDataComming(alliance_data.__helpEvents)
+    -- self:OnNewEventsComming(alliance_data.__events)
+    -- self:OnNewMemberDataComming(alliance_data.__members)
+    -- self:OnNewJoinRequestDataComming(alliance_data.__joinRequestEvents)
+    -- self:OnNewHelpEventsDataComming(alliance_data.__helpEvents)
     self:OnAllianceEventsChanged(alliance_data.events)
     self:OnJoinRequestEventsChanged(alliance_data.joinRequestEvents)
     self:OnHelpEventsChanged(alliance_data.helpEvents)
@@ -369,25 +369,25 @@ function Alliance:OnAllianceDataChanged(alliance_data)
     self.alliance_map:OnAllianceDataChanged(alliance_data)
 
     self:OnAttackMarchEventsDataChanged(alliance_data.attackMarchEvents)
-    self:OnAttackMarchEventsComming(alliance_data.__attackMarchEvents)
+    -- self:OnAttackMarchEventsComming(alliance_data.__attackMarchEvents)
     self:OnAttackMarchReturnEventsDataChanged(alliance_data.attackMarchReturnEvents)
-    self:OnAttackMarchReturnEventsCommoing(alliance_data.__attackMarchReturnEvents)
+    -- self:OnAttackMarchReturnEventsCommoing(alliance_data.__attackMarchReturnEvents)
     self:OnStrikeMarchEventsDataChanged(alliance_data.strikeMarchEvents)
-    self:OnStrikeMarchEventsComming(alliance_data.__strikeMarchEvents)
+    -- self:OnStrikeMarchEventsComming(alliance_data.__strikeMarchEvents)
     self:OnStrikeMarchReturnEventsDataChanged(alliance_data.strikeMarchReturnEvents)
-    self:OnStrikeMarchReturnEventsComming(alliance_data.__strikeMarchReturnEvents)
+    -- self:OnStrikeMarchReturnEventsComming(alliance_data.__strikeMarchReturnEvents)
 
     self:OnVillageEventsDataChanged(alliance_data.villageEvents)
-    self:OnVillageEventsDataComming(alliance_data.__villageEvents)
+    -- self:OnVillageEventsDataComming(alliance_data.__villageEvents)
 
     self:DecodeAllianceVillages(alliance_data.villages)
-    self:DecodeAllianceVillages__(alliance_data.__villages)
+    -- self:DecodeAllianceVillages__(alliance_data.__villages)
 
     -- 联盟道具管理
     self.items_manager:OnItemsChanged(alliance_data.items)
-    self.items_manager:__OnItemsChanged(alliance_data.__items)
+    -- self.items_manager:__OnItemsChanged(alliance_data.__items)
     self.items_manager:OnItemLogsChanged(alliance_data.itemLogs)
-    self.items_manager:__OnItemsLogsChanged(alliance_data.__itemLogs)
+    -- self.items_manager:__OnItemsLogsChanged(alliance_data.__itemLogs)
 
 end
 

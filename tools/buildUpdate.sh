@@ -1,9 +1,9 @@
 #!/bin/bash
 
-echo ---------------- 清理文件
-rm -rf ../update
-echo ---------------- 编译代码
-sh ../frameworks/runtime-src/pre-actions.sh
+# echo ---------------- 清理文件
+# rm -rf ../update
+# echo ---------------- 编译代码
+# sh ../frameworks/runtime-src/pre-actions.sh
 
 
 # echo ---------------- 提交代码
