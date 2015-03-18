@@ -26,13 +26,15 @@ exportAnimationsRes()
 		    	fi
 			else
 				if test $file -nt $outfile;then
-					if  test -n `which TexturePacker`; then
-						echo 处理${file##*/}
-						# $PVRTOOL -p -f $IMAGEFORMAT -i $file 
-						TexturePacker --quiet --format cocos2d --no-trim --disable-rotation --texture-format pvr2 --opt $IMAGEFORMAT  --padding 0 $file --sheet ${file%.*}.pvr
-						test -d $finalDir || mkdir -p $finalDir && cp ${file%.*}.pvr $outfile
-						rm -f ${file%.*}.pvr
-					fi
+					# if  test -n `which TexturePacker`; then
+					# 	echo 处理${file##*/}
+					# 	# $PVRTOOL -p -f $IMAGEFORMAT -i $file 
+					# 	TexturePacker --quiet --format cocos2d --no-trim --disable-rotation --texture-format pvr2 --opt $IMAGEFORMAT  --padding 0 $file --sheet ${file%.*}.pvr
+					# 	test -d $finalDir || mkdir -p $finalDir && cp ${file%.*}.pvr $outfile
+					# 	rm -f ${file%.*}.pvr
+					# else
+						test -d $finalDir || mkdir -p $finalDir && cp $file $finalDir
+					# fi
 				fi
 			fi
 		elif test -d $file; then
