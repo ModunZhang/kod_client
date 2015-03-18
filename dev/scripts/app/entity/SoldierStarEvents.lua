@@ -19,10 +19,10 @@ function SoldierStarEvents:OnPropertyChange()
 end
 
 function SoldierStarEvents:UpdateData(json_data)
-    self:SetId(json_data.id or "")
-    self:SetName(json_data.name or  "")
-    self:SetStartTime(json_data.startTime/1000 or 0)
-    self:SetFinishTime(json_data.finishTime/1000 or 0)
+    self:SetId(json_data.id or self.id or "")
+    self:SetName(json_data.name or self.name or "")
+    self:SetStartTime(json_data.startTime/1000 or self.startTime or 0)
+    self:SetFinishTime(json_data.finishTime/1000 or self.finishTime or 0)
 end
 
 function SoldierStarEvents:Reset()

@@ -61,7 +61,7 @@ function SoldierManager:ctor()
     self.soldierStarEvents = {}
     self.militaryTechEvents = {}
     self.militaryTechs = {}
-    
+
     if app then
         app.timer:AddListener(self)
     end
@@ -157,9 +157,14 @@ function SoldierManager:GetTotalTreatSoldierCount()
     end
     return total_count
 end
-function SoldierManager:OnUserDataChanged(user_data)
-    if user_data.soldiers then
-        local soldiers = user_data.soldiers
+function SoldierManager:OnUserDataChanged(user_data,current_time, deltaData)
+    local soldiers = {}
+    local woundedSoldiers = {}
+    local soldierStars = {}
+    soldiers = user_data.soldiers
+    woundedSoldiers = user_data.woundedSoldiers
+    soldierStars = user_data.soldierStars
+    if soldiers then
         local changed = {}
         local soldier_map = self.soldier_map
         for k, old in pairs(soldier_map) do
@@ -169,44 +174,31 @@ function SoldierManager:OnUserDataChanged(user_data)
                 table.insert(changed, k)
             end
         end
-        -- for k, new in pairs(soldiers) do
-        --     if soldier_map[k] ~= new then
-        --         soldier_map[k] = new
-        --         table.insert(changed, k)
-        --     end
-        -- end
         if #changed > 0 then
             self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED,function(listener)
                 listener:OnSoliderCountChanged(self, changed)
             end)
         end
     end
-    if user_data.woundedSoldiers then
+    if woundedSoldiers then
         -- 伤兵列表
-        local treatSoldiers = user_data.woundedSoldiers
         local treat_soldier_changed = {}
         local treatSoldiers_map = self.treatSoldiers_map
         for k, old in pairs(treatSoldiers_map) do
-            local new = treatSoldiers[k]
+            local new = woundedSoldiers[k]
             if new and old ~= new then
                 treatSoldiers_map[k] = new
                 table.insert(treat_soldier_changed, k)
             end
         end
-        -- for k, new in pairs(treatSoldiers) do
-        --     if treatSoldiers_map[k] ~= new then
-        --         treatSoldiers_map[k] = new
-        --         table.insert(treat_soldier_changed, k)
-        --     end
-        -- end
+
         if #treat_soldier_changed > 0 then
             self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.TREAT_SOLDIER_CHANGED,function(listener)
                 listener:OnTreatSoliderCountChanged(self, treat_soldier_changed)
             end)
         end
     end
-    if user_data.soldierStars then
-        local soldierStars = user_data.soldierStars
+    if soldierStars then
         local soldier_star_changed = {}
         for k,v in pairs(soldierStars) do
             self.soldierStars[k] = v
@@ -218,24 +210,50 @@ function SoldierManager:OnUserDataChanged(user_data)
             end)
         end
     end
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.militaryTechs ~= nil
     --军事科技
-    self:OnMilitaryTechsDataChanged(user_data.militaryTechs)
-    self:OnMilitaryTechEventsChanged(user_data.militaryTechEvents)
-    self:__OnMilitaryTechEventsChanged(user_data.__militaryTechEvents)
+    if is_fully_update then
+        self:OnMilitaryTechsDataChanged(user_data.militaryTechs)
+        self:OnMilitaryTechEventsChanged(user_data.militaryTechEvents)
+        self:OnSoldierStarEventsChanged(user_data.soldierStarEvents)
+    elseif is_delta_update then
+        self:OnPartOfMilitaryTechsDataChanged(deltaData.militaryTechs)
+    end
+
+
+    is_delta_update = not is_fully_update and deltaData.militaryTechEvents ~= nil
+    if is_delta_update then
+        self:__OnMilitaryTechEventsChanged(deltaData.militaryTechEvents)
+    end
+
     -- 士兵升星
-    self:OnSoldierStarEventsChanged(user_data.soldierStarEvents)
-    self:__OnSoldierStarEventsChanged(user_data.__soldierStarEvents)
+    is_delta_update = not is_fully_update and deltaData.soldierStarEvents ~= nil
+    if is_delta_update then
+        self:__OnSoldierStarEventsChanged(deltaData.soldierStarEvents)
+    end
 
 end
 
 function SoldierManager:OnMilitaryTechsDataChanged(militaryTechs)
     if not militaryTechs then return end
-    local changed_map = {}
+    self.militaryTechs = {}
     for name,v in pairs(militaryTechs) do
         local militaryTechnology = MilitaryTechnology.new()
         militaryTechnology:UpdateData(name,v)
         self.militaryTechs[name] = militaryTechnology
-        changed_map[name] = militaryTechnology
+    end
+    self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.MILITARY_TECHS_DATA_CHANGED, function(listener)
+        listener:OnMilitaryTechsDataChanged(self,self.militaryTechs)
+    end)
+end
+function SoldierManager:OnPartOfMilitaryTechsDataChanged(militaryTechs)
+    local changed_map = {}
+    for k,v in pairs(militaryTechs) do
+        if self.militaryTechs[k] then
+            self.militaryTechs[k]:UpdateData(k,v)
+            changed_map[k] = self.militaryTechs[k]
+        end
     end
     self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.MILITARY_TECHS_DATA_CHANGED, function(listener)
         listener:OnMilitaryTechsDataChanged(self,changed_map)
@@ -365,29 +383,37 @@ function SoldierManager:OnMilitaryTechEventsChanged(militaryTechEvents)
 end
 function SoldierManager:__OnMilitaryTechEventsChanged(__militaryTechEvents)
     if not __militaryTechEvents then return end
-    local changed_map = GameUtils:Event_Handler_Func(
-        __militaryTechEvents
-        ,function(data)
+    local added,edited,removed = {},{},{}
+    local changed_map = {added,edited,removed}
+    local add = __militaryTechEvents.add
+    local edit = __militaryTechEvents.edit
+    local remove = __militaryTechEvents.remove
+    if add then
+        for k,data in pairs(add) do
             local event = MilitaryTechEvents.new()
             event:UpdateData(data)
             self.militaryTechEvents[event:Id()] = event
             event:AddObserver(self)
-            return event
+            table.insert(added, event)
         end
-        ,function(data)
+    end
+    if edit then
+        for k,data in pairs(edit) do
             local event = self.militaryTechEvents[data.id]
             event:UpdateData(data)
-            return event
+            table.insert(edited, event)
         end
-        ,function(data)
+    end
+    if remove then
+        for k,data in pairs(remove) do
             local event = self.militaryTechEvents[data.id]
             event:Reset()
             self.militaryTechEvents[data.id] = nil
             event = MilitaryTechEvents.new()
             event:UpdateData(data)
-            return event
+            table.insert(removed, event)
         end
-    )
+    end
     self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED, function(listener)
         listener:OnMilitaryTechEventsChanged(self,changed_map)
     end)
@@ -438,6 +464,7 @@ function SoldierManager:GetLatestSoldierStarEvents(building_type)
 end
 function SoldierManager:OnSoldierStarEventsChanged(soldierStarEvents)
     if not soldierStarEvents then return end
+    self.soldierStarEvents = {}
     for i,v in ipairs(soldierStarEvents) do
         local event = SoldierStarEvents.new()
         event:UpdateData(v)
@@ -453,30 +480,38 @@ function SoldierManager:GetPromotingSoldierName(building_type)
 end
 function SoldierManager:__OnSoldierStarEventsChanged(__soldierStarEvents)
     if not __soldierStarEvents then return end
-    -- LuaUtils:outputTable("__soldierStarEvents", __soldierStarEvents)
-    local changed_map = GameUtils:Event_Handler_Func(
-        __soldierStarEvents
-        ,function(data)
+    local added,edited,removed = {},{},{}
+    local changed_map = {added,edited,removed}
+    local add = __soldierStarEvents.add
+    local edit = __soldierStarEvents.edit
+    local remove = __soldierStarEvents.remove
+    if add then
+        for k,data in pairs(add) do
             local event = SoldierStarEvents.new()
             event:UpdateData(data)
             event:AddObserver(self)
             self.soldierStarEvents[event:Id()] = event
-            return event
+            table.insert(added, event)
         end
-        ,function(data)
+    end
+    if edit then
+        for k,data in pairs(edit) do
             local event = self.soldierStarEvents[data.id]
             event:UpdateData(data)
-            return event
+            table.insert(edited, event)
         end
-        ,function(data)
+    end
+    if remove then
+        for k,data in pairs(remove) do
             local event = self.soldierStarEvents[data.id]
             event:Reset()
             self.soldierStarEvents[data.id] = nil
             local event = SoldierStarEvents.new()
             event:UpdateData(data)
-            return event
+            table.insert(removed, event)
         end
-    )
+    end
+    
     self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED, function(listener)
         listener:OnSoldierStarEventsChanged(self,changed_map)
     end)
@@ -501,6 +536,10 @@ function SoldierManager:OnMilitaryTechEventsTimer(tech_event)
     end)
 end
 return SoldierManager
+
+
+
+
 
 
 

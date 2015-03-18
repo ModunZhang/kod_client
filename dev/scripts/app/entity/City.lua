@@ -973,7 +973,7 @@ function City:OnUserDataChanged(userData, current_time, deltaData)
     self:__OnProductionTechEventsDataChaned(userData.__productionTechEvents)
 
     -- 更新兵种
-    self.soldier_manager:OnUserDataChanged(userData)
+    self.soldier_manager:OnUserDataChanged(userData,current_time, deltaData)
     -- 更新材料，这里是广义的材料，包括龙的装备
     self.material_manager:OnUserDataChanged(userData)
     -- 更新基本信息

@@ -1083,7 +1083,7 @@ function NetManager:getFreeSpeedUpPromise(eventType, eventId)
     return get_blocking_request_promise("logic.playerHandler.freeSpeedUp", {
         eventType = eventType,
         eventId = eventId,
-    }, "请求免费加速失败!"):next(get_response_msg)
+    }, "请求免费加速失败!")
 end
 -- 协助玩家加速
 function NetManager:getHelpAllianceMemberSpeedUpPromise(eventId)
@@ -1509,10 +1509,10 @@ function NetManager:getUpgradeMilitaryTechPromise(techName)
 end
 -- 士兵晋级
 local function upgrade_soldier_star_promise(soldierName,finishNow)
-    return promise.all(get_blocking_request_promise("logic.playerHandler.upgradeSoldierStar", {
+    return get_blocking_request_promise("logic.playerHandler.upgradeSoldierStar", {
         soldierName = soldierName,
         finishNow = finishNow,
-    }, "士兵晋级失败!"), get_playerdata_callback()):next(get_response_msg)
+    }, "士兵晋级失败!"):next(get_response_msg)
 end
 function NetManager:getInstantUpgradeSoldierStarPromise(soldierName)
     return upgrade_soldier_star_promise(soldierName,true)
@@ -1711,6 +1711,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 
