@@ -193,12 +193,6 @@ function UpgradeBuilding:GetHouseInfoByEventAndLocation(user_data, event, locati
     return level, finishTime
 end
 function UpgradeBuilding:GetHouseEventByLocations(user_data, location_id, sub_location_id)
-    for k, v in pairs(user_data.__houseEvents or {}) do
-        if v.data.buildingLocation == location_id and
-            v.data.houseLocation == sub_location_id then
-            return v.data
-        end
-    end
     for k, v in pairs(user_data.houseEvents or {}) do
         if v.buildingLocation == location_id and
             v.houseLocation == sub_location_id then
@@ -222,11 +216,6 @@ function UpgradeBuilding:GetBuildingInfoByEventAndLocation(user_data, event, loc
     return level, finishTime, type_
 end
 function UpgradeBuilding:GetBuildingEventFromUserDataByLocation(user_data, location)
-    for _,v in ipairs(user_data.__buildingEvents or {}) do
-        if v.data.location == location then
-            return v.data
-        end
-    end
     for _,v in ipairs(user_data.buildingEvents or {}) do
         if v.location == location then
             return v
