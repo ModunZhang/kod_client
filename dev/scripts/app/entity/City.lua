@@ -782,6 +782,10 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time, del
         end)
         self:GetTower():OnUserDataChanged(user_data, current_time, deltaData)
         self:GetGate():OnUserDataChanged(user_data, current_time, deltaData)
+    else
+        self:IteratorFunctionBuildingsByFunc(function(key, building)
+            building:OnUserDataChanged(user_data, current_time, self:GetLocationIdByBuilding(building), deltaData)
+        end)
     end
 end
 function City:IteratorAllNeedTimerEntity(current_time)
