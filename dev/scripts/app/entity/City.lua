@@ -771,7 +771,7 @@ end
 function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time, deltaData)
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and (deltaData.buildings or deltaData.buildingEvents or deltaData.houseEvents)
-    
+
     if is_fully_update or is_delta_update then
         self:IteratorDecoratorBuildingsByFunc(function(key, building)
             local tile = self:GetTileWhichBuildingBelongs(building)
@@ -964,17 +964,17 @@ function City:OnUserDataChanged(userData, current_time, deltaData)
     -- 更新建筑信息
     self:IteratorCanUpgradeBuildingsByUserData(userData, current_time, deltaData)
     -- 更新协防信息
-    self:OnHelpedByTroopsDataChange(userData.helpedByTroops)
+    self:OnHelpedByTroopsDataChange(userData, deltaData)
     --更新派出的协防信息
-    self:OnHelpToTroopsDataChange(userData.helpToTroops)
+    self:OnHelpToTroopsDataChange(userData, deltaData)
     --科技
     self:OnProductionTechsDataChanged(userData.productionTechs)
     self:OnProductionTechEventsDataChaned(userData.productionTechEvents)
 
     -- 更新兵种
-    self.soldier_manager:OnUserDataChanged(userData,current_time, deltaData)
+    self.soldier_manager:OnUserDataChanged(userData, current_time, deltaData)
     -- 更新材料，这里是广义的材料，包括龙的装备
-    self.material_manager:OnUserDataChanged(userData)
+    self.material_manager:OnUserDataChanged(userData, deltaData)
     -- 更新基本信息
     local basicInfo = userData.basicInfo
     self.build_queue = basicInfo.buildQueue
@@ -1352,19 +1352,25 @@ end
 --     end
 --     return visible_towers
 -- end
-function City:OnHelpedByTroopsDataChange(helpedByTroops)
-    if not helpedByTroops then return end
-    self.helpedByTroops = helpedByTroops
-    self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_BY_TROOPS, function(listener)
-        listener:OnHelpedTroopsChanged(self)
-    end)
+function City:OnHelpedByTroopsDataChange(userData, deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.helpedByTroops
+    if is_fully_update or is_delta_update then
+        self.helpedByTroops = userData.helpedByTroops
+        self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_BY_TROOPS, function(listener)
+            listener:OnHelpedTroopsChanged(self)
+        end)
+    end
 end
 --helpToTroops
-function City:OnHelpToTroopsDataChange(helpToTroops)
-    if not helpToTroops then return end
-    for _,v in ipairs(helpToTroops) do
-        if not self.helpToTroops[v.beHelpedPlayerData.id] then
-            self.helpToTroops[v.beHelpedPlayerData.id] = v
+function City:OnHelpToTroopsDataChange(userData, deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.helpToTroops
+    if is_fully_update or is_delta_update then
+        for _,v in ipairs(userData.helpToTroops) do
+            if not self.helpToTroops[v.beHelpedPlayerData.id] then
+                self.helpToTroops[v.beHelpedPlayerData.id] = v
+            end
         end
     end
 end
@@ -1569,6 +1575,8 @@ function City:FindProductionTechEventById(_id)
 end
 
 return City
+
+
 
 
 
