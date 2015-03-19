@@ -37,9 +37,9 @@ end
 --     return ResourceManager.RESOURCE_TYPE.ENERGY
 -- end
 
-function DragonEyrieUpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id, sub_location_id)
-    DragonEyrieUpgradeBuilding.super.OnUserDataChanged(self,user_data, current_time, location_id, sub_location_id)
-    self:GetDragonManager():OnUserDataChanged(user_data, current_time, location_id, sub_location_id,self:GetHPRecoveryPerHour())
+function DragonEyrieUpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id, deltaData)
+    DragonEyrieUpgradeBuilding.super.OnUserDataChanged(self,user_data, current_time, location_id)
+    self:GetDragonManager():OnUserDataChanged(user_data, current_time, location_id, deltaData,self:GetHPRecoveryPerHour())
 end
 
 
