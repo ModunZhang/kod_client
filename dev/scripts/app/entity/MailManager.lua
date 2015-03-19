@@ -350,6 +350,7 @@ function MailManager:OnUserDataChanged(userData,timer,deltaData)
         self:OnSendMailsChanged(userData.sendMails)
     end
     LuaUtils:outputTable("MailManager deltaData", deltaData)
+    print("ta")
     is_delta_update = not is_fully_update and deltaData.mails ~= nil
     if is_delta_update then
         self:OnNewMailsChanged(deltaData.mails)

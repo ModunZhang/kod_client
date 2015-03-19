@@ -150,6 +150,8 @@ function GameUIAllianceShop:InitGoodsPart()
     }):align(display.CENTER, title_bg:getContentSize().width/2, title_bg:getContentSize().height/2):addTo(title_bg)
     title_item:addContent(title_bg)
 
+    self.super_goods_boxes = {}
+
     -- 道具部分
     local super_items = self.items_manager:GetAllSuperItems()
     for i=1,#super_items,row_count do
@@ -160,8 +162,11 @@ function GameUIAllianceShop:InitGoodsPart()
         for index=i,i + row_count -1 do
             local goods = super_items[index]
             if goods then
-                self:CreateGoodsBox(goods):addTo(node):pos(origin_x+(count-1)*(gap_x+box_width), goods_item_height/2)
+                local goods_box = self:CreateGoodsBox(goods):addTo(node):pos(origin_x+(count-1)*(gap_x+box_width), goods_item_height/2)
                 count = count + 1
+                if goods:IsAdvancedItem() then
+                    self.super_goods_boxes[goods:Name()] = goods_box
+                end
             else
                 break
             end
@@ -199,6 +204,10 @@ function GameUIAllianceShop:CreateGoodsBox(goods)
             color = 0xfff3ca,
             shadow = true
         }):align(display.CENTER, own_bg:getContentSize().width/2, own_bg:getContentSize().height/2+8):addTo(own_bg)
+
+        function box_button:SetOwnCount( count )
+            own_label:setString(count)
+        end
     end
 
     local num_bg = display.newSprite("back_ground_118x36.png"):align(display.BOTTOM_CENTER, 0, -76)
@@ -378,15 +387,24 @@ function GameUIAllianceShop:OnItemsChanged(changed_map)
         if self.stock_boxes and self.stock_boxes[v:Name()] then
             self.stock_boxes[v:Name()]:SetOwnCount(v:Count())
         end
+        if self.super_goods_boxes and self.super_goods_boxes[v:Name()] then
+            self.super_goods_boxes[v:Name()]:SetOwnCount(v:Count())
+        end
     end
     for i,v in ipairs(changed_map[2]) do
         if self.stock_boxes and self.stock_boxes[v:Name()] then
             self.stock_boxes[v:Name()]:SetOwnCount(v:Count())
         end
+        if self.super_goods_boxes and self.super_goods_boxes[v:Name()] then
+            self.super_goods_boxes[v:Name()]:SetOwnCount(v:Count())
+        end
     end
     for i,v in ipairs(changed_map[3]) do
         if self.stock_boxes and self.stock_boxes[v:Name()] then
             self.stock_boxes[v:Name()]:SetOwnCount(v:Count())
+        end
+        if self.super_goods_boxes and self.super_goods_boxes[v:Name()] then
+            self.super_goods_boxes[v:Name()]:SetOwnCount(v:Count())
         end
     end
 end

@@ -39,19 +39,19 @@ function AllianceItemsManager:InitAllItems()
     end
 end
 
-function AllianceItemsManager:OnItemsChanged(items)
-    if items then
-        for i,v in ipairs(items) do
+function AllianceItemsManager:OnItemsChanged(alliance_data,deltaData)
+    local is_fully_update = deltaData == nil
+    if is_fully_update then
+        for i,v in ipairs(alliance_data.items) do
             local item = self:GetItemByName(v.name)
             item:SetCount(v.count)
             self:InsertItem(item)
         end
     end
-end
-function AllianceItemsManager:__OnItemsChanged(__items)
-    if __items then
-        local changed_map = GameUtils:Event_Handler_Func(
-            __items
+    local is_delta_update = not is_fully_update and deltaData.items ~= nil
+    if is_delta_update then
+        local changed_map = GameUtils:Handler_DeltaData_Func(
+            deltaData.items
             ,function(data)
                 -- add
                 local item = self:GetItemByName(data.name)
@@ -80,19 +80,20 @@ function AllianceItemsManager:__OnItemsChanged(__items)
         end)
     end
 end
-function AllianceItemsManager:OnItemLogsChanged(itemLogs)
-    if itemLogs then
+function AllianceItemsManager:OnItemLogsChanged(alliance_data,deltaData)
+    local is_fully_update = deltaData == nil
+    if is_fully_update then
+        local itemLogs = clone(alliance_data.itemLogs)
         table.sort( itemLogs, function ( a,b )
             return a.time > b.time
         end )
         self.item_logs = itemLogs
     end
-end
-function AllianceItemsManager:__OnItemsLogsChanged(__itemLogs)
+    local is_delta_update = not is_fully_update and deltaData.itemLogs ~= nil
     local item_logs = self.item_logs
-    if __itemLogs then
-        local changed_map = GameUtils:Event_Handler_Func(
-            __itemLogs
+    if is_delta_update then
+        local changed_map = GameUtils:Handler_DeltaData_Func(
+            deltaData.itemLogs
             ,function(data)
                 -- add
                 table.insert(item_logs, 1,data)

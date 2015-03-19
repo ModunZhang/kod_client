@@ -384,10 +384,8 @@ function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
     self:DecodeAllianceVillages(alliance_data,deltaData)
 
     -- 联盟道具管理 TODO:
-    self.items_manager:OnItemsChanged(alliance_data.items)
-    self.items_manager:__OnItemsChanged(alliance_data.__items)
-    self.items_manager:OnItemLogsChanged(alliance_data.itemLogs)
-    self.items_manager:__OnItemsLogsChanged(alliance_data.__itemLogs)
+    self.items_manager:OnItemsChanged(alliance_data,deltaData)
+    self.items_manager:OnItemLogsChanged(alliance_data,deltaData)
 
 end
 
