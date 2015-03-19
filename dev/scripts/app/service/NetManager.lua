@@ -995,9 +995,9 @@ function NetManager:getDailyQeustRewardPromise(questEventId)
         "领取每日任务奖励失败!"):next(get_response_msg)
 end
 -- 发送个人邮件
-function NetManager:getSendPersonalMailPromise(memberName, title, content)
+function NetManager:getSendPersonalMailPromise(memberId, title, content)
     return get_blocking_request_promise("logic.playerHandler.sendMail", {
-        memberName = memberName,
+        memberId = memberId,
         title = title,
         content = content,
     }, "发送个人邮件失败!"):next(get_response_msg)
@@ -1006,7 +1006,18 @@ end
 function NetManager:getFetchMailsPromise(fromIndex)
     return get_blocking_request_promise("logic.playerHandler.getMails", {
         fromIndex = fromIndex
-    }, "获取收件箱邮件失败!"):next(get_response_msg)
+    }, "获取收件箱邮件失败!"):next(function (response)
+        if response.msg.mails then
+            local user_data = DataManager:getUserData()
+            local fetch_mails = {}
+            for i,v in ipairs(response.msg.mails) do
+                table.insert(user_data.mails, v)
+                MailManager:AddMailsToEnd(v)
+                table.insert(fetch_mails, v)
+            end
+            return fetch_mails
+        end
+    end)
 end
 -- 阅读邮件
 function NetManager:getReadMailsPromise(mailIds)
@@ -1725,6 +1736,8 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
+
 
 
 
