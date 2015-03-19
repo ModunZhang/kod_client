@@ -221,7 +221,13 @@ function Alliance:GetAllianceFightReports()
     return self.alliance_fight_reports
 end
 function Alliance:GetLastAllianceFightReports()
-    return self.alliance_fight_reports[1]
+    local last_report
+    for _,v in pairs(self.alliance_fight_reports) do
+        if not last_report or v.fightTime > last_report.fightTime then
+            last_report = v
+        end
+    end
+    return last_report
 end
 function Alliance:GetOurLastAllianceFightReportsData()
     local last = self:GetLastAllianceFightReports()
@@ -350,7 +356,7 @@ function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
         self:SetTitleNames(alliance_data.titles)
     end
     self:OnAllianceBasicInfoChangedFirst(alliance_data,deltaData)
-    self:OnAllianceFightReportsChanged(alliance_data)
+    self:OnAllianceFightReportsChanged(alliance_data, deltaData)
 
     self:OnAllianceMemberDataChanged(alliance_data,deltaData)
 
@@ -360,16 +366,16 @@ function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
 
     self:OnHelpEventsChanged(alliance_data,deltaData)
 
-    self:OnAllianceCountInfoChanged(alliance_data.countInfo)
-    
-    self:OnAllianceFightChanged(alliance_data.allianceFight)
+    self:OnAllianceCountInfoChanged(alliance_data, deltaData)
 
-    self:OnAllianceFightRequestsChanged(alliance_data)
+    self:OnAllianceFightChanged(alliance_data, deltaData)
 
-    self:OnVillageLevelsChanged(alliance_data.villageLevels)
+    self:OnAllianceFightRequestsChanged(alliance_data, deltaData)
+
+    self:OnVillageLevelsChanged(alliance_data, deltaData)
     self.alliance_shrine:OnAllianceDataChanged(alliance_data,deltaData)
+    self.alliance_map:OnAllianceDataChanged(alliance_data, deltaData)
     --TODO:
-    self.alliance_map:OnAllianceDataChanged(alliance_data)
 
     self:OnAttackMarchEventsDataChanged(alliance_data,deltaData)
 
@@ -410,7 +416,7 @@ function Alliance:OnAllianceBasicInfoChangedFirst(alliance_data,deltaData)
 end
 function Alliance:OnAllianceEventsChanged(alliance_data,deltaData)
     if not alliance_data.events then return end
-    local is_fully_update = deltaData == nil 
+    local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.events ~= nil
     if is_fully_update then
         self.events = alliance_data.events
@@ -422,7 +428,7 @@ function Alliance:OnAllianceEventsChanged(alliance_data,deltaData)
 end
 function Alliance:OnJoinRequestEventsChanged(alliance_data,deltaData)
     if not alliance_data.joinRequestEvents then return end
-    local is_fully_update = deltaData == nil 
+    local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.joinRequestEvents ~= nil
     if is_fully_update then
         self.join_events = alliance_data.joinRequestEvents
@@ -431,7 +437,7 @@ function Alliance:OnJoinRequestEventsChanged(alliance_data,deltaData)
     if is_delta_update then
         self:OnJoinEventsChanged()
     end
-    
+
 end
 function Alliance:OnAllianceMemberDataChanged(alliance_data,deltaData)
     if not alliance_data.members then return end
@@ -448,56 +454,58 @@ function Alliance:OnAllianceMemberDataChanged(alliance_data,deltaData)
         self:OnMemberChanged()
     end
 end
-function Alliance:OnAllianceFightRequestsChanged(alliance_data)
-    if alliance_data.fightRequests then
+function Alliance:OnAllianceFightRequestsChanged(alliance_data, deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.fightRequests ~= nil
+    if is_fully_update or is_delta_update then
         self.fight_requests = alliance_data.fightRequests
-    end
-    if alliance_data.__fightRequests then
-        for k,v in pairs(alliance_data.__fightRequests) do
-            if v.type == "add" then
-                table.insert(self.fight_requests,v.data)
-            end
-        end
         self:NotifyListeneOnType(Alliance.LISTEN_TYPE.FIGHT_REQUESTS, function(listener)
             listener:OnAllianceFightRequestsChanged(#self.fight_requests)
         end)
     end
 end
-function Alliance:OnAllianceFightReportsChanged(alliance_data)
-    if alliance_data.allianceFightReports then
+function Alliance:OnAllianceFightReportsChanged(alliance_data, deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.allianceFightReports ~= nil
+    if is_fully_update or is_delta_update then
         self.alliance_fight_reports = alliance_data.allianceFightReports
-        table.sort( self.alliance_fight_reports, function(a, b)
-            return a.fightTime > b.fightTime
-        end )
+        -- self:NotifyListeneOnType(Alliance.LISTEN_TYPE.FIGHT_REPORTS, function(listener)
+        --     listener:OnAllianceFightReportsChanged({add = add,remove=remove})
+        -- end)
     end
-    if alliance_data.__allianceFightReports then
-        local add = {}
-        local remove = {}
-        for k,v in pairs(alliance_data.__allianceFightReports) do
-            if v.type == "add" then
-                table.insert(self.alliance_fight_reports,v.data)
-                table.insert(add,v.data)
-            elseif v.type == "remove" then
-                for index,old in pairs(self.alliance_fight_reports) do
-                    if old.id == v.data.id then
-                        table.remove(self.alliance_fight_reports,index)
-                        table.insert(remove,v.data)
-                    end
-                end
-            end
-        end
-        table.sort( self.alliance_fight_reports, function(a, b)
-            return a.fightTime > b.fightTime
-        end )
-        self:NotifyListeneOnType(Alliance.LISTEN_TYPE.FIGHT_REPORTS, function(listener)
-            listener:OnAllianceFightReportsChanged({add = add,remove=remove})
-        end)
-    end
-
+    -- if alliance_data.allianceFightReports then
+    --     self.alliance_fight_reports = alliance_data.allianceFightReports
+    --     table.sort( self.alliance_fight_reports, function(a, b)
+    --         return a.fightTime > b.fightTime
+    --     end )
+    -- end
+    -- if alliance_data.__allianceFightReports then
+    --     local add = {}
+    --     local remove = {}
+    --     for k,v in pairs(alliance_data.__allianceFightReports) do
+    --         if v.type == "add" then
+    --             table.insert(self.alliance_fight_reports,v.data)
+    --             table.insert(add,v.data)
+    --         elseif v.type == "remove" then
+    --             for index,old in pairs(self.alliance_fight_reports) do
+    --                 if old.id == v.data.id then
+    --                     table.remove(self.alliance_fight_reports,index)
+    --                     table.insert(remove,v.data)
+    --                 end
+    --             end
+    --         end
+    --     end
+    --     table.sort( self.alliance_fight_reports, function(a, b)
+    --         return a.fightTime > b.fightTime
+    --     end )
+    --     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.FIGHT_REPORTS, function(listener)
+    --         listener:OnAllianceFightReportsChanged({add = add,remove=remove})
+    --     end)
+    -- end
 end
 function Alliance:OnHelpEventsChanged(alliance_data,deltaData)
     if not alliance_data.helpEvents then return end
-    local is_fully_update = deltaData == nil 
+    local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.helpEvents ~= nil
     if is_fully_update then
         for _,v in pairs(alliance_data.helpEvents) do
@@ -619,7 +627,7 @@ end
 
 function Alliance:OnAttackMarchEventsDataChanged(alliance_data,deltaData)
     if not alliance_data.attackMarchEvents then return end
-    local is_fully_update = deltaData == nil 
+    local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.attackMarchEvents ~= nil
     if is_fully_update then
         self:IteratorAttackMarchEvents(function(attackMarchEvent)
@@ -662,8 +670,8 @@ function Alliance:OnAttackMarchEventsDataChanged(alliance_data,deltaData)
                     return attackMarchEvent
                 end
             end
-     )
-     self:CallEventsChangedListeners(Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged,GameUtils:pack_event_table(changed_map))
+        )
+        self:CallEventsChangedListeners(Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged,GameUtils:pack_event_table(changed_map))
     end
 end
 
@@ -676,7 +684,7 @@ end
 
 function Alliance:OnAttackMarchReturnEventsDataChanged(alliance_data,deltaData)
     if not alliance_data.attackMarchReturnEvents then return end
-    local is_fully_update = deltaData == nil 
+    local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.attackMarchReturnEvents ~= nil
     if is_fully_update then
         self:IteratorAttackMarchReturnEvents(function(attackMarchReturnEvent)
@@ -750,61 +758,47 @@ function Alliance:ResetMarchEvent()
     self.strikeMarchReturnEvents = {}
 end
 
-function Alliance:OnAllianceCountInfoChanged(countInfo)
-    if not countInfo then
-        return
+function Alliance:OnAllianceCountInfoChanged(alliance_data, deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.countInfo ~= nil
+    if is_fully_update or is_delta_update then
+        self.countInfo = alliance_data.countInfo
+        self:NotifyListeneOnType(Alliance.LISTEN_TYPE.COUNT_INFO, function(listener)
+            listener:OnAllianceCountInfoChanged(self, self.countInfo)
+        end)
     end
-    self.countInfo = countInfo
-    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.COUNT_INFO, function(listener)
-        listener:OnAllianceCountInfoChanged(self,self.countInfo)
-    end)
 end
-function Alliance:OnAllianceFightChanged(allianceFight)
-    if not allianceFight or allianceFight == json.null then return end
-    for k,v in pairs(allianceFight) do
-        if string.find(k,"__") then
-            local key = string.sub(k,3,-1)
-            for _,change in pairs(v) do
-                if change.type == "add" then
-                    table.insert(self.allianceFight[key], change.data)
-                elseif change.type == "edit" then
-                    for index,playerKill in pairs(self.allianceFight[key]) do
-                        if playerKill.id==change.data.id then
-                            self.allianceFight[key][index] = change.data
-                        end
-                    end
-                end
+function Alliance:OnAllianceFightChanged(alliance_data, deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.allianceFight ~= nil
+    if is_fully_update or is_delta_update then
+        self.allianceFight = alliance_data.allianceFight
+        if not LuaUtils:table_empty(self.allianceFight or {}) then
+            local mergeStyle = self:GetAllianceFight()['mergeStyle']
+            local isAttacker = self:Id() == self:GetAllianceFight()['attackAllianceId']
+            if isAttacker then
+                self:SetFightPosition(mergeStyle)
+            else
+                self:SetFightPosition(self:GetReversedPosition(mergeStyle))
             end
         else
-            self.allianceFight[k] = v
+            self.allianceFight = {}
+            self:SetFightPosition("")
         end
+        self:NotifyListeneOnType(Alliance.LISTEN_TYPE.ALLIANCE_FIGHT, function(listener)
+            listener:OnAllianceFightChanged(self,self.allianceFight)
+        end)
     end
-    if not LuaUtils:table_empty(allianceFight) then
-        local mergeStyle = self:GetAllianceFight()['mergeStyle']
-        local isAttacker = self:Id() == self:GetAllianceFight()['attackAllianceId']
-        if isAttacker then
-            self:SetFightPosition(mergeStyle)
-        else
-            self:SetFightPosition(self:GetReversedPosition(mergeStyle))
-        end
-    else
-        self.allianceFight = {}
-        self:SetFightPosition("")
-    end
-    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.ALLIANCE_FIGHT, function(listener)
-        listener:OnAllianceFightChanged(self,self.allianceFight)
-    end)
 end
-function Alliance:OnVillageLevelsChanged(villageLevels)
-    if not villageLevels then return end
-    local changed_map = {}
-    for k,v in pairs(villageLevels) do
-        self.villageLevels[k] = v
-        changed_map[k] = v
+function Alliance:OnVillageLevelsChanged(alliance_data, deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.villageLevels ~= nil
+    if is_fully_update or is_delta_update then
+        self.villageLevels = alliance_data.villageLevels
+        self:NotifyListeneOnType(Alliance.LISTEN_TYPE.VILLAGE_LEVELS_CHANGED, function(listener)
+            listener:OnVillageLevelsChanged(self)
+        end)
     end
-    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.VILLAGE_LEVELS_CHANGED, function(listener)
-        listener:OnVillageLevelsChanged(self,changed_map)
-    end)
 end
 function Alliance:GetReversedPosition(p)
     if p == 'left' then
@@ -837,7 +831,7 @@ end
 
 function Alliance:OnStrikeMarchEventsDataChanged(alliance_data,deltaData)
     if not alliance_data.strikeMarchEvents then return end
-    local is_fully_update = deltaData == nil 
+    local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.strikeMarchEvents ~= nil
     if is_fully_update then
         self:IteratorStrikeMarchEvents(function(strikeMarchEvent)
@@ -892,7 +886,7 @@ end
 
 function Alliance:OnStrikeMarchReturnEventsDataChanged(alliance_data,deltaData)
     if not alliance_data.strikeMarchReturnEvents then return end
-    local is_fully_update = deltaData == nil 
+    local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.strikeMarchReturnEvents ~= nil
     if is_fully_update then
         self:IteratorStrikeMarchReturnEvents(function(strikeMarchReturnEvent)
@@ -1025,7 +1019,7 @@ end
 --村落采集事件
 function Alliance:OnVillageEventsDataChanged(alliance_data,deltaData)
     if not alliance_data.villageEvents then return end
-    local is_fully_update = deltaData == nil 
+    local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.villageEvents ~= nil
     if is_fully_update then
         local removed = {}
@@ -1120,7 +1114,7 @@ end
 --TODO:检测村落重新刷新ui更新是否有bug
 function Alliance:DecodeAllianceVillages(alliance_data,deltaData)
     if not alliance_data.villages then return end
-    local is_fully_update = deltaData == nil 
+    local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.villages ~= nil
     if is_fully_update then
         for _,v in ipairs(alliance_data.villages) do
@@ -1129,7 +1123,7 @@ function Alliance:DecodeAllianceVillages(alliance_data,deltaData)
     end
     if is_delta_update then
         local changed_map = GameUtils:Handler_DeltaData_Func(
-             deltaData.villages
+            deltaData.villages
             ,function(event_data)
                 self.alliance_villages[event_data.id] = event_data
             end
@@ -1210,3 +1204,7 @@ function Alliance:NeedUpdateEnemyAlliance()
 end
 
 return Alliance
+
+
+
+
