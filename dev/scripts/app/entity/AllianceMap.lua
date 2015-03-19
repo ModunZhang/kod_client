@@ -207,7 +207,7 @@ function AllianceMap:OnMapObjectsChanged(allianceData, deltaData)
                 setmetatable(v, mapObject_meta):SetAllianceMap(self)
             end
             for i,v in ipairs(deltaData.mapObjects.edit or {}) do
-                setmetatable(v, mapObject_meta):SetAllianceMap(self)
+                -- todo
             end
             for i,v in ipairs(deltaData.mapObjects.remove or {}) do
                 setmetatable(v, mapObject_meta):SetAllianceMap(self)

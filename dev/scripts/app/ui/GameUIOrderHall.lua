@@ -375,8 +375,8 @@ function GameUIOrderHall:CreateLoadingMoreItem()
     listview:reload()
     self.loading_more_item = item
 end
-function GameUIOrderHall:OnVillageLevelsChanged(alliance,changed_map)
-    for k,v in pairs(changed_map) do
+function GameUIOrderHall:OnVillageLevelsChanged(alliance)
+    for k,v in pairs(alliance:GetVillageLevels()) do
         if self.village_items[k] then
             self.village_items[k]:LevelUpRefresh(k,v)
         end
