@@ -369,7 +369,7 @@ function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
     self:OnVillageLevelsChanged(alliance_data.villageLevels)
     self.alliance_shrine:OnAllianceDataChanged(alliance_data,deltaData)
     --TODO:
-    self.alliance_map:OnAllianceDataChanged(alliance_data)
+    self.alliance_map:OnAllianceDataChanged(alliance_data, deltaData)
 
     self:OnAttackMarchEventsDataChanged(alliance_data,deltaData)
 

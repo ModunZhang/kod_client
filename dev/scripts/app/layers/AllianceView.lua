@@ -105,8 +105,20 @@ function AllianceView:GetZOrderBy(sprite, x, y)
     local width, _ = self:GetLogicMap():GetSize()
     return x + y * width + 100
 end
-function AllianceView:OnBuildingChange(alliance_map)
-    self:RefreshBuildings(alliance_map)
+function AllianceView:OnBuildingFullUpdate(allianceMap)
+    self:RefreshBuildings(allianceMap)
+end
+function AllianceView:OnBuildingDeltaUpdate(allianceMap, deltaMapObjects)
+    for _,entity in ipairs(deltaMapObjects.add or {}) do
+        self.objects[entity:Id()] = self:CreateObject(entity)
+    end
+    for _,entity in ipairs(deltaMapObjects.edit or {}) do
+        -- todo
+    end
+    for _,entity in ipairs(deltaMapObjects.remove or {}) do
+        self.objects[entity:Id()]:removeFromParent()
+        self.objects[entity:Id()] = nil
+    end
 end
 function AllianceView:CreateObject(entity)
     local category = entity:GetCategory()
