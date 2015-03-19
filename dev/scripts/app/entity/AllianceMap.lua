@@ -155,68 +155,76 @@ end
 function AllianceMap:GetAlliance()
     return self.alliance
 end
-function AllianceMap:OnAllianceDataChanged(alliance_data)
-    self:DecodeObjectsFromJsonMapObjects(alliance_data.mapObjects)
-    self:DecodeObjectsFromJsonMapObjects__(alliance_data.__mapObjects)
-    self:OnAllianceBuildingInfoChange(alliance_data.buildings)
+function AllianceMap:OnAllianceDataChanged(allianceData, deltaData)
+    self:OnMapObjectsChanged(allianceData, deltaData)
+    self:OnAllianceBuildingInfoChange(allianceData, deltaData)
 end
 function AllianceMap:FindAllianceVillagesInfoByObject(object)
     if is_village(object:GetType()) then
         local x, y = object:GetLogicPosition()
         for _,village_info in pairs(self:GetAlliance():GetAllianceVillageInfos()) do
-            if village_info.location.x == x and village_info.location.y == y then 
-               return village_info
+            if village_info.location.x == x and village_info.location.y == y then
+                return village_info
             end
         end
     end
 end
-function AllianceMap:OnAllianceBuildingInfoChange(buildings)
-    if not buildings then return end
-    for k,new in pairs(buildings) do
-        local old = self.buildings[k]
-        self.buildings[k] = new
-        local is_changed = old == nil and true or (old.level ~= new.level)
-        if is_changed then
-            self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING_LEVEL, function(listener)
-                listener:OnBuildingLevelChange(new)
+function AllianceMap:OnAllianceBuildingInfoChange(allianceData, deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.buildings ~= nil
+    if is_fully_update or is_delta_update then
+        self.buildings = allianceData.buildings
+        if is_fully_update then
+            for _,v in pairs(self.buildings) do
+                self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING_LEVEL, function(listener)
+                    listener:OnBuildingLevelChange(v)
+                end)
+            end
+        elseif is_delta_update then
+            for k,_ in pairs(deltaData.buildings) do
+                local v = self.buildings[k]
+                self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING_LEVEL, function(listener)
+                    listener:OnBuildingLevelChange(v)
+                end)
+            end
+        end
+    end
+end
+function AllianceMap:OnMapObjectsChanged(allianceData, deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.mapObjects ~= nil
+    if is_fully_update or is_delta_update then
+        self.mapObjects = allianceData.mapObjects
+        for k,v in pairs(self.mapObjects) do
+            setmetatable(v, mapObject_meta):SetAllianceMap(self)
+        end
+        if is_fully_update then
+            self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING, function(listener)
+                listener:OnBuildingFullUpdate(self)
+            end)
+        elseif is_delta_update then
+            for i,v in ipairs(deltaData.mapObjects.add or {}) do
+                setmetatable(v, mapObject_meta):SetAllianceMap(self)
+            end
+            for i,v in ipairs(deltaData.mapObjects.edit or {}) do
+                -- todo
+            end
+            for i,v in ipairs(deltaData.mapObjects.remove or {}) do
+                setmetatable(v, mapObject_meta):SetAllianceMap(self)
+            end
+            self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING, function(listener)
+                listener:OnBuildingDeltaUpdate(self, deltaData.mapObjects)
             end)
         end
     end
 end
-function AllianceMap:DecodeObjectsFromJsonMapObjects__(__mapObjects)
-    if not __mapObjects then return end
-    GameUtils:Event_Handler_Func(
-        __mapObjects
-        ,function(event_data)
-            table.insert(self.mapObjects, setmetatable(event_data, mapObject_meta):SetAllianceMap(self))
-        end
-        ,function(event_data)
-            assert(false, "会有修改吗?")
-        end
-        ,function(event_data)
-            for i,v in ipairs(self.mapObjects) do
-                if v.id == event_data.id then
-                    table.remove(self.mapObjects, i)
-                    break
-                end
-            end
-        end
-    )
-    self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING, function(listener)
-        listener:OnBuildingChange(self)
-    end)
-end
-function AllianceMap:DecodeObjectsFromJsonMapObjects(mapObjects)
-    if not mapObjects then return end
-    self.mapObjects = mapObjects
-    for k,v in pairs(self.mapObjects) do
-        setmetatable(v, mapObject_meta):SetAllianceMap(self)
-    end
-    self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING, function(listener)
-        listener:OnBuildingChange(self)
-    end)
-end
 
 
 return AllianceMap
+
+
+
+
+
+
 
