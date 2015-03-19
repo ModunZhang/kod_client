@@ -101,7 +101,7 @@ function BlackSmithUpgradeBuilding:MakeEquipmentWithFinishTime(equipment, finish
         lisenter:OnBeginMakeEquipmentWithEvent(self, event)
     end)
 end
-function BlackSmithUpgradeBuilding:EndMakeEquipmentWithCurrentTime(current_time)
+function BlackSmithUpgradeBuilding:EndMakeEquipmentWithCurrentTime()
     local event = self.making_event
     local equipment = event:Content()
     event:SetContentWithFinishTime(nil, 0)
@@ -128,30 +128,22 @@ function BlackSmithUpgradeBuilding:OnUserDataChanged(...)
 
     local arg = {...}
     local current_time = arg[2]
-    local dragonEquipmentEvents = arg[1].dragonEquipmentEvents or arg[1].__dragonEquipmentEvents
-    if dragonEquipmentEvents then
-        if #dragonEquipmentEvents>0 then
-            local event = dragonEquipmentEvents[1].data or dragonEquipmentEvents[1]
-            if event then
-                local finished_time = event.finishTime / 1000
-                local is_making_end = finished_time == 0
-                if self:IsEquipmentEventEmpty() then
-                    self:MakeEquipmentWithFinishTime(event.name, finished_time, event.id)
-                else
-                    self:GetMakeEquipmentEvent():SetContentWithFinishTime(event.name, finished_time,event.id)
-                end
-            else
-                if not self:IsEquipmentEventEmpty() then
-                    self:EndMakeEquipmentWithCurrentTime(current_time)
-                end
-            end
+    local event = arg[1].dragonEquipmentEvents[1]
+    if event then
+        local finished_time = event.finishTime / 1000
+        if self:IsEquipmentEventEmpty() then
+            self:MakeEquipmentWithFinishTime(event.name, finished_time, event.id)
         else
-            self:EndMakeEquipmentWithCurrentTime()
+            self:GetMakeEquipmentEvent():SetContentWithFinishTime(event.name, finished_time, event.id)
         end
+    elseif not self:IsEquipmentEventEmpty() then
+        self:EndMakeEquipmentWithCurrentTime()
     end
 end
 
 return BlackSmithUpgradeBuilding
+
+
 
 
 

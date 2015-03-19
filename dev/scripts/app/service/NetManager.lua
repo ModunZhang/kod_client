@@ -50,10 +50,10 @@ local function decodeInUserDataFromDeltaData(userData, deltaData)
                 if type(k) == "number" then k = k + 1 end
                 local parent_root = tmp
                 if i ~= len then
+                    curRoot[k] = curRoot[k] or {}
                     curRoot = curRoot[k]
                     tmp[k] = tmp[k] or {}
                     tmp = tmp[k]
-                    assert(curRoot)
                 else
                     if type(k) == "number" then
                         if is_json_null then
@@ -88,14 +88,25 @@ local function get_response_msg(response)
         DataManager:setUserData(user_data, edit)
         return response
     end
+   
+    return response
+end
+
+local function get_alliance_response_msg(response)
+    print("get_alliance_response_msg--->")
     if response.msg.allianceData then
         local user_alliance_data = DataManager:getUserAllianceData()
-        local edit = decodeInUserDataFromDeltaData(user_alliance_data,response.msg.allianceData)
-        DataManager:setUserAllianceData(user_alliance_data, edit)
+        if user_alliance_data == json.null then
+            DataManager:setUserAllianceData(response.msg.allianceData)
+        else
+            local edit = decodeInUserDataFromDeltaData(user_alliance_data,response.msg.allianceData)
+            DataManager:setUserAllianceData(user_alliance_data, edit)
+        end
         return response
     end
     return response
 end
+
 local function check_response(m)
     return function(result)
         if result.success then
@@ -234,7 +245,7 @@ onPlayerDataChanged_callbacks = {}
 function NetManager:addPlayerDataChangedEventListener()
     self:addEventListener("onPlayerDataChanged", function(success, response)
         if success then
-            LuaUtils:outputTable("onPlayerDataChanged", response)
+            -- LuaUtils:outputTable("onPlayerDataChanged", response)
             local user_data = DataManager:getUserData()
             local edit = decodeInUserDataFromDeltaData(user_data, response)
             DataManager:setUserData(user_data, edit)
@@ -680,7 +691,7 @@ function NetManager:getLoginPromise(deviceId)
                 DataManager:setUserData(playerData)
                 DataManager:setUserAllianceData(user_alliance_data)
             else
-                LuaUtils:outputTable("logic.entryHandler.login", response)
+                -- LuaUtils:outputTable("logic.entryHandler.login", response)
                 self.m_netService:setDeltatime(playerData.serverTime - ext.now())
                 local InitGame = import("app.service.InitGame")
                 InitGame(playerData)
@@ -856,18 +867,10 @@ function NetManager:getMakeTechnologyMaterialPromise()
     return get_makeMaterial_promise("technologyMaterials")
 end
 -- 获取材料
-local function get_fetchMaterials_promise(category)
+function NetManager:getFetchMaterialsPromise(id)
     return get_blocking_request_promise("logic.playerHandler.getMaterials", {
-        category = category,
+        eventId = id,
     }, "获取材料失败!"):next(get_response_msg)
-end
--- 获取建筑材料
-function NetManager:getFetchBuildingMaterialsPromise()
-    return get_fetchMaterials_promise("buildingMaterials"):next(get_response_msg)
-end
--- 获取科技材料
-function NetManager:getFetchTechnologyMaterialsPromise()
-    return get_fetchMaterials_promise("technologyMaterials"):next(get_response_msg)
 end
 -- 打造装备
 local function get_makeDragonEquipment_promise(equipment_name, finish_now)
@@ -1131,7 +1134,7 @@ function NetManager:getCreateAlliancePromise(name, tag, language, terrain, flag)
         language = language,
         terrain = terrain,
         flag = flag
-    }, "创建联盟失败!"):next(get_response_msg)
+    }, "创建联盟失败!"):next(get_response_msg):next(get_alliance_response_msg)
 end
 -- 退出联盟
 function NetManager:getQuitAlliancePromise()

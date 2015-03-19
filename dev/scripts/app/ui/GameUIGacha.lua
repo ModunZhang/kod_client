@@ -540,7 +540,7 @@ function GameUIGacha:OnItemsChanged( changed_map )
     -- 立刻移除监听，避免错误；可能有非gacha 道具增加可能
     ItemManager:RemoveListenerOnType(self,ItemManager.LISTEN_TYPE.ITEM_CHANGED)
 end
-function GameUIGacha:OnCountInfoChanged(source)
+function GameUIGacha:OnCountInfoChanged()
     if User:GetOddFreeNormalGachaCount()>0 then
         self.normal_gacha_button:setButtonLabel(UIKit:commonButtonLable({
             text = _("免费抽奖")

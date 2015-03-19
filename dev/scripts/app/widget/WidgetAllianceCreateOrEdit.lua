@@ -17,8 +17,9 @@ local WidgetAllianceCreateOrEdit = class("WidgetAllianceCreateOrEdit",function()
 end)
 
 
-function WidgetAllianceCreateOrEdit:ctor(isModify)
+function WidgetAllianceCreateOrEdit:ctor(isModify,callback)
 	self.isModify = isModify
+	self.callback = callback
 	self.alliance_ui_helper = WidgetAllianceUIHelper.new()
 	if self:IsCreate() then
 		self.flag_info = Flag.new():RandomFlag()
@@ -98,7 +99,9 @@ function WidgetAllianceCreateOrEdit:CreateAllianceButtonClicked()
 			UIKit:showMessageDialog(_("提示"),_("联盟信息当前没有任何改动!"))
 		else
 			NetManager:getEditAllianceBasicInfoPromise(data.name,data.tag,data.language,data.flag):done(function(result)
-				self:leftButtonClicked()
+				if self.callback and type(self.callback) == 'function' then
+					self.callback()
+				end
 			end)
 		end
 	end

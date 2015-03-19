@@ -15,11 +15,6 @@ function AllianceBelvedere:ctor(alliance)
 	self.alliance = alliance
 end
 
--- read limt or somethiong from alliance data
-function AllianceBelvedere:OnAllianceDataChanged(alliance_data)
-
-end
-
 function AllianceBelvedere:GetMarchLimit()
 	return User:MarchQueue()
 end

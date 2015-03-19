@@ -768,16 +768,25 @@ function City:IteratorCanUpgradeBuildings(func)
     func(self:GetTower())
     func(self:GetGate())
 end
-function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time)
-    self:IteratorDecoratorBuildingsByFunc(function(key, building)
-        local tile = self:GetTileWhichBuildingBelongs(building)
-        building:OnUserDataChanged(user_data, current_time, tile.location_id, tile:GetBuildingLocation(building))
-    end)
-    self:IteratorFunctionBuildingsByFunc(function(key, building)
-        building:OnUserDataChanged(user_data, current_time, self:GetLocationIdByBuilding(building))
-    end)
-    self:GetTower():OnUserDataChanged(user_data, current_time)
-    self:GetGate():OnUserDataChanged(user_data, current_time)
+function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time, deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and (deltaData.buildings or deltaData.buildingEvents or deltaData.houseEvents)
+
+    if is_fully_update or is_delta_update then
+        self:IteratorDecoratorBuildingsByFunc(function(key, building)
+            local tile = self:GetTileWhichBuildingBelongs(building)
+            building:OnUserDataChanged(user_data, current_time, tile.location_id, tile:GetBuildingLocation(building), deltaData)
+        end)
+        self:IteratorFunctionBuildingsByFunc(function(key, building)
+            building:OnUserDataChanged(user_data, current_time, self:GetLocationIdByBuilding(building), deltaData)
+        end)
+        self:GetTower():OnUserDataChanged(user_data, current_time, deltaData)
+        self:GetGate():OnUserDataChanged(user_data, current_time, deltaData)
+    else
+        self:IteratorFunctionBuildingsByFunc(function(key, building)
+            building:OnUserDataChanged(user_data, current_time, self:GetLocationIdByBuilding(building), deltaData)
+        end)
+    end
 end
 function City:IteratorAllNeedTimerEntity(current_time)
     self:IteratorFunctionBuildingsByFunc(function(key, building)
@@ -950,50 +959,46 @@ function City:DestoryDecoratorByPosition(current_time, x, y)
     end
 end
 ----------- 功能扩展点
+function City:OnUserDataChanged(userData, current_time, deltaData)
+    local need_update_resouce_buildings = self:OnHouseChanged(userData, current_time, deltaData)
+    -- 更新建筑信息
+    self:IteratorCanUpgradeBuildingsByUserData(userData, current_time, deltaData)
+    -- 更新协防信息
+    self:OnHelpedByTroopsDataChange(userData, deltaData)
+    --更新派出的协防信息
+    self:OnHelpToTroopsDataChange(userData, deltaData)
+    --科技
+    self:OnProductionTechsDataChanged(userData.productionTechs)
+    self:OnProductionTechEventsDataChaned(userData.productionTechEvents)
+
+    -- 更新兵种
+    self.soldier_manager:OnUserDataChanged(userData, current_time, deltaData)
+    -- 更新材料，这里是广义的材料，包括龙的装备
+    self.material_manager:OnUserDataChanged(userData, deltaData)
+    -- 更新基本信息
+    local basicInfo = userData.basicInfo
+    self.build_queue = basicInfo.buildQueue
+    self:SetCityName(basicInfo.cityName)
+    -- 最后才更新资源
+
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.resources and deltaData.resources.refreshTime
+    if is_delta_update then
+        need_update_resouce_buildings = true
+    end
+    local resource_refresh_time = userData.resources.refreshTime / 1000
+    self.resource_manager:UpdateFromUserDataByTime(userData.resources, resource_refresh_time)
+    if need_update_resouce_buildings then
+        self.resource_manager:UpdateByCity(self, resource_refresh_time)
+    end
+    return self
+end
 local function find_building_info_by_location(houses, location_id)
     for _, v in pairs(houses) do
         if v.location == location_id then
             return v
         end
     end
-end
-function City:OnUserDataChanged(userData, current_time, deltaData)
-    local need_update_resouce_buildings = self:OnHouseChanged(userData, current_time, deltaData)
-    -- 更新建筑信息
-    self:IteratorCanUpgradeBuildingsByUserData(userData, current_time)
-    -- 更新协防信息
-    self:OnHelpedByTroopsDataChange(userData.helpedByTroops)
-    self:__OnHelpedByTroopsDataChange(userData.__helpedByTroops)
-    --更新派出的协防信息
-    self:OnHelpToTroopsDataChange(userData.helpToTroops)
-    self:__OnHelpToTroopsDataChange(userData.__helpToTroops)
-    --科技
-    self:OnProductionTechsDataChanged(userData.productionTechs)
-    self:OnProductionTechEventsDataChaned(userData.productionTechEvents)
-    self:__OnProductionTechEventsDataChaned(userData.__productionTechEvents)
-
-    -- 更新兵种
-    self.soldier_manager:OnUserDataChanged(userData,current_time, deltaData)
-    -- 更新材料，这里是广义的材料，包括龙的装备
-    self.material_manager:OnUserDataChanged(userData)
-    -- 更新基本信息
-    local basicInfo = userData.basicInfo
-    if basicInfo then
-        self.build_queue = basicInfo.buildQueue
-        self:SetCityName(basicInfo.cityName)
-    end
-    -- 最后才更新资源
-    local resources = userData.resources
-    local resource_refresh_time -- maybe nil
-    if resources and resources.refreshTime then
-        resource_refresh_time = resources.refreshTime / 1000
-        need_update_resouce_buildings = true
-    end
-    self.resource_manager:UpdateFromUserDataByTime(resources, resource_refresh_time)
-    if need_update_resouce_buildings then
-        self.resource_manager:UpdateByCity(self, resource_refresh_time or current_time)
-    end
-    return self
 end
 function City:OnHouseChanged(userData, current_time, deltaData)
     local is_fully_update = deltaData == nil
@@ -1007,14 +1012,11 @@ function City:OnHouseChanged(userData, current_time, deltaData)
     local buildings = {}
     if is_fully_update then
         buildings = userData.buildings
-        print("is_fully_update")
     elseif is_delta_update then
         local userDataBuildings = userData.buildings
         for k,v in pairs(deltaData.buildings) do
             buildings[k] = userDataBuildings[k]
         end
-        dump(buildings)
-        print("is_delta_update")
     else
         return false
     end
@@ -1350,73 +1352,27 @@ end
 --     end
 --     return visible_towers
 -- end
-function City:OnHelpedByTroopsDataChange(helpedByTroops)
-    if not helpedByTroops then return end
-    self.helpedByTroops = helpedByTroops
-    self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_BY_TROOPS, function(listener)
-        listener:OnHelpedTroopsChanged(self)
-    end)
-end
-function City:__OnHelpedByTroopsDataChange(__helpedByTroops)
-    if not __helpedByTroops then return end
-    GameUtils:Event_Handler_Func(
-        __helpedByTroops
-        ,function(data) -- add
-            table.insert(self.helpedByTroops, data)
-        end,
-        function(data) -- edit
-            assert(false)
-        end,
-        function(data) -- remove
-            for i,v in pairs(self.helpedByTroops) do
-                if v.id == data.id then
-                    table.remove(self.helpedByTroops, i)
-                    break
-                end
-        end
+function City:OnHelpedByTroopsDataChange(userData, deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.helpedByTroops
+    if is_fully_update or is_delta_update then
+        self.helpedByTroops = userData.helpedByTroops
+        self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_BY_TROOPS, function(listener)
+            listener:OnHelpedTroopsChanged(self)
         end)
-    self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_BY_TROOPS, function(listener)
-        listener:OnHelpedTroopsChanged(self)
-    end)
-end
---helpToTroops
-function City:OnHelpToTroopsDataChange(helpToTroops)
-    if not helpToTroops then return end
-    for _,v in ipairs(helpToTroops) do
-        if not self.helpToTroops[v.beHelpedPlayerData.id] then
-            self.helpToTroops[v.beHelpedPlayerData.id] = v
-        end
     end
 end
-
-function City:__OnHelpToTroopsDataChange(__helpToTroops)
-    if not __helpToTroops then return end
-    local change_map = GameUtils:Event_Handler_Func(
-        __helpToTroops
-        ,function(data)
-            if not self.helpToTroops[data.beHelpedPlayerData.id] then
-                self.helpToTroops[data.beHelpedPlayerData.id] = data
-            end
-            return data
-        end
-        ,function(data)
-            -- 会修改已经派出协防的信息?
-            return nil
-        end
-        ,function(data)
-            if self.helpToTroops[data.beHelpedPlayerData.id] then
-                self.helpToTroops[data.beHelpedPlayerData.id] = nil
-                return data
+--helpToTroops
+function City:OnHelpToTroopsDataChange(userData, deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.helpToTroops
+    if is_fully_update or is_delta_update then
+        for _,v in ipairs(userData.helpToTroops) do
+            if not self.helpToTroops[v.beHelpedPlayerData.id] then
+                self.helpToTroops[v.beHelpedPlayerData.id] = v
             end
         end
-    )
-    self:__OnHelpToTroopsDataChanged(GameUtils:pack_event_table(change_map))
-end
-
-function City:__OnHelpToTroopsDataChanged(changed_map)
-    self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_TO_TROOPS, function(listener)
-        listener:OnHelpToTroopsChanged(self,changed_map)
-    end)
+    end
 end
 
 function City:IteratorHelpToTroops(func)
@@ -1595,43 +1551,6 @@ function City:IteratorProductionTechEvents(func)
     end
 end
 
-function City:__OnProductionTechEventsDataChaned(__productionTechEvents)
-    if not __productionTechEvents then return end
-    local changed_map = GameUtils:Event_Handler_Func(
-        __productionTechEvents
-        ,function(data)
-            if not self:FindProductionTechEventById(data.id) then
-                local productionTechnologyEvent = ProductionTechnologyEvent.new()
-                productionTechnologyEvent:UpdateData(data)
-                productionTechnologyEvent:SetEntity(self:FindTechByName(productionTechnologyEvent:Name()))
-                productionTechnologyEvent:AddObserver(self)
-                self.productionTechEvents[productionTechnologyEvent:Id()] = productionTechnologyEvent
-                return productionTechnologyEvent
-            end
-        end
-        ,function(data)
-            local productionTechnologyEvent = self:FindProductionTechEventById(data.id)
-            if productionTechnologyEvent then
-                productionTechnologyEvent:UpdateData(data)
-                return productionTechnologyEvent
-            end
-        end
-        ,function(data)
-            local productionTechnologyEvent = self:FindProductionTechEventById(data.id)
-            if productionTechnologyEvent then
-                productionTechnologyEvent:Reset()
-                self.productionTechEvents[productionTechnologyEvent:Id()] = nil
-                productionTechnologyEvent = ProductionTechnologyEvent.new()
-                productionTechnologyEvent:UpdateData(data)
-                productionTechnologyEvent:SetEntity(self:FindTechByName(productionTechnologyEvent:Name()))
-                return productionTechnologyEvent
-            end
-        end
-    )
-    self:NotifyListeneOnType(City.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED, function(listener)
-        listener:OnProductionTechnologyEventDataChanged(GameUtils:pack_event_table(changed_map))
-    end)
-end
 
 function City:OnProductionTechnologyEventTimer(productionTechnologyEvent)
     self:NotifyListeneOnType(City.LISTEN_TYPE.PRODUCTION_EVENT_TIMER, function(listener)
@@ -1656,6 +1575,11 @@ function City:FindProductionTechEventById(_id)
 end
 
 return City
+
+
+
+
+
 
 
 

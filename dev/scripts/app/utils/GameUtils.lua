@@ -343,7 +343,33 @@ function GameUtils:pack_event_table(t)
     if #removed > 0 then ret.removed = checktable(removed) end
     return ret
 end
-
+-- DeltaData--> entity
+function GameUtils:Handler_DeltaData_Func(data,add_func,edit_func,remove_func)
+    local not_hanler = function(...)end
+    add_func = add_func or not_hanler
+    remove_func = remove_func or not_hanler
+    edit_func = edit_func or not_hanler
+    local added,edited,removed = {},{},{}
+    for data_type,item in pairs(data) do
+        if data_type == 'add' then
+            for __,v in ipairs(item) do
+                local result = add_func(v)
+                if result then table.insert(added,result) end
+            end
+        elseif data_type == 'edit' then
+            for __,v in ipairs(item) do
+                local result = edit_func(v)
+                if result then table.insert(edited,result) end
+            end
+        elseif data_type == 'remove' then
+            for __,v in ipairs(item) do
+                local result = remove_func(v)
+                if result then table.insert(removed,result) end
+            end
+        end
+    end
+     return {added,edited,removed} -- each of return is a table
+end
 
 
 function GameUtils:parseRichText(str)

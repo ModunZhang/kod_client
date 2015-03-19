@@ -198,38 +198,17 @@ function ResourceManager:GetCitizenAllocated()
     return total_citizen
 end
 function ResourceManager:UpdateFromUserDataByTime(resources, current_time)
-    if not resources then return end
-    if resources.blood then
-        self.resources[BLOOD]:SetValue(resources.blood)
-    end
-    if resources.casinoToken then
-        self.resources[CASINOTOKEN]:SetValue(resources.casinoToken)
-    end
-    if not current_time then return end
-    if resources.coin then
-        self.resources[COIN]:UpdateResource(current_time, resources.coin)
-    end
-    if resources.wood then
-        self.resources[WOOD]:UpdateResource(current_time, resources.wood)
-    end
-    if resources.food then
-        self.resources[FOOD]:UpdateResource(current_time, resources.food)
-    end
-    if resources.iron then
-        self.resources[IRON]:UpdateResource(current_time, resources.iron)
-    end
-    if resources.stone then
-        self.resources[STONE]:UpdateResource(current_time, resources.stone)
-    end
-    if resources.cart then
-        self.resources[CART]:UpdateResource(current_time, resources.cart)
-    end
-    if resources.citizen then
-        self.resources[POPULATION]:UpdateResource(current_time, resources.citizen)
-    end
-    if resources.wallHp then
-        self.resources[WALLHP]:UpdateResource(current_time, resources.wallHp)
-    end
+    local my_resources = self.resources
+    my_resources[BLOOD]:SetValue(resources.blood)
+    my_resources[CASINOTOKEN]:SetValue(resources.casinoToken)
+    my_resources[COIN]:UpdateResource(current_time, resources.coin)
+    my_resources[WOOD]:UpdateResource(current_time, resources.wood)
+    my_resources[FOOD]:UpdateResource(current_time, resources.food)
+    my_resources[IRON]:UpdateResource(current_time, resources.iron)
+    my_resources[STONE]:UpdateResource(current_time, resources.stone)
+    my_resources[CART]:UpdateResource(current_time, resources.cart)
+    my_resources[POPULATION]:UpdateResource(current_time, resources.citizen)
+    my_resources[WALLHP]:UpdateResource(current_time, resources.wallHp)
 end
 local resource_building_map = {
     mill = FOOD,
@@ -315,6 +294,7 @@ function ResourceManager:GetTotalBuffData(city)
 end
 
 return ResourceManager
+
 
 
 
