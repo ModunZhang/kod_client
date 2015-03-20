@@ -25,7 +25,8 @@ WidgetUseItems.USE_TYPE = Enum("CHANGE_PLAYER_NAME",
     "BUFF",
     "RESOURCE",
     "RETREAT_TROOP",
-    "WAR_SPEEDUP_CLASS"
+    "WAR_SPEEDUP_CLASS",
+    "MOVE_THE_CITY"
 )
 local ITEMS_TYPE = {
     "changePlayerName",
@@ -40,7 +41,8 @@ local ITEMS_TYPE = {
     "buff",
     "resource",
     "retreatTroop",
-    "warSpeedupClass"
+    "warSpeedupClass",
+    "moveTheCity"
 }
 
 
@@ -50,6 +52,7 @@ function WidgetUseItems:GetItemByType(item_type,params)
     if item_type == "changePlayerName"
         or item_type == "changeCityName"
         or item_type == "retreatTroop"
+        or item_type == "moveTheCity"
     then
         item = im:GetItemByName(item_type)
     elseif item_type == "heroBlood"
@@ -104,6 +107,8 @@ function WidgetUseItems:Create(params)
         dialog = self:OpenRetreatTroopDialog(item,params.event)
     elseif item_type == "warSpeedupClass" then
         dialog = self:OpenWarSpeedupDialog(item,params.event)
+    elseif item_type == "moveTheCity" then
+        dialog = self:OpenMoveTheCityDialog(item,params)
     else
         dialog = self:OpenNormalDialog(params.item)
     end
@@ -620,7 +625,43 @@ function WidgetUseItems:OpenChestDialog( item )
     end
     return dialog
 end
+function WidgetUseItems:OpenMoveTheCityDialog( item ,params)
+    local dialog = WidgetPopDialog.new(138 +100,item:GetLocalizeName(),window.top-230)
+    local body = dialog:GetBody()
+    local size = body:getContentSize()
 
+    self:CreateItemBox(
+        item,
+        function ()
+            return true
+        end,
+        function ()
+            local item_name = item:Name()
+            NetManager:getUseItemPromise(item_name,{
+                [item_name]={
+                    locationX = params.locationX,
+                    locationY = params.locationY
+                }
+
+            }):next(function ()
+                dialog:leftButtonClicked()
+            end)
+        end,
+        function ()
+            local item_name = item:Name()
+            NetManager:getBuyAndUseItemPromise(item_name,{
+                [item_name]={
+                    locationX = params.locationX,
+                    locationY = params.locationY
+                }
+
+            }):next(function ()
+                dialog:leftButtonClicked()
+            end)
+        end
+    ):addTo(body):align(display.CENTER,size.width/2,size.height - 120 )
+    return dialog
+end
 function WidgetUseItems:OpenNormalDialog( item )
     local same_items = ItemManager:GetSameTypeItems(item)
     local dialog = WidgetPopDialog.new(#same_items * 138 +100,item:GetLocalizeName(),window.top-230)
@@ -897,6 +938,7 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
 end
 
 return WidgetUseItems
+
 
 
 
