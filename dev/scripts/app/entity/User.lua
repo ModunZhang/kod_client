@@ -211,10 +211,10 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
     self.request_events = userData.requestToAllianceEvents
     self.invite_events = userData.inviteToAllianceEvents
     -- 每日任务
-    self:OnDailyQuestsChanged(userData.dailyQuests)
+    self:OnDailyQuestsChanged(userData,deltaData)
     self:OnDailyQuestsEventsChanged(userData.dailyQuestEvents)
     -- 交易
-    self.trade_manager:OnUserDataChanged(userData)
+    self.trade_manager:OnUserDataChanged(userData,deltaData)
     self:GetPVEDatabase():OnUserDataChanged(userData, deltaData)
 
     -- vip event
@@ -401,19 +401,20 @@ function User:OnBasicInfoChanged(userData, deltaData)
         self:SetMarchQueue(basicInfo.marchQueue)
     end
 end
-function User:OnDailyQuestsChanged(dailyQuests)
-    if not dailyQuests then return end
-    -- LuaUtils:outputTable("OnDailyQuestsChanged", dailyQuests)
-    if dailyQuests.refreshTime then
-        self:SetDailyQuestsRefreshTime(dailyQuests.refreshTime)
-    end
-    self.dailyQuests= {}
-    if dailyQuests.quests then
-        for k,v in pairs(dailyQuests.quests) do
-            self.dailyQuests[v.id] = v
+function User:OnDailyQuestsChanged(userData, deltaData)
+    local is_fully_update = deltaData == nil
+    if is_fully_update then
+        if userData.dailyQuests.refreshTime then
+            self:SetDailyQuestsRefreshTime(userData.dailyQuests.refreshTime)
         end
+        self.dailyQuests= {}
+        if userData.dailyQuests.quests then
+            for k,v in pairs(userData.dailyQuests.quests) do
+                self.dailyQuests[v.id] = v
+            end
+        end
+        self:OnDailyQuestsRefresh()
     end
-    self:OnDailyQuestsRefresh()
 end
 function User:OnDailyQuestsEventsChanged(dailyQuestEvents)
     if not dailyQuestEvents then return end
@@ -535,6 +536,7 @@ function User:GetBestDragon()
 end
 
 return User
+
 
 
 

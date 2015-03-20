@@ -110,18 +110,41 @@ function MailManager:DeleteSavedMail(mail)
     end
 end
 function MailManager:DeleteMail(mail)
+    -- 由于服务器每次删除邮件后都回更改index，所以每次删除邮件后，对于客服端本地保存的邮件的服务器index大于当前删除邮件的都需要-1
+    local delete_mail_server_index
     for k,v in pairs(self.mails) do
         if v.id == mail.id then
             table.remove(self.mails,k)
+            delete_mail_server_index = v.index
+        end
+    end
+    for k,v in pairs(self.mails) do
+        if v.index > delete_mail_server_index then
+            v.index = v.index - 1
         end
     end
 end
 function MailManager:ModifyMail(mail)
     for k,v in pairs(self.mails) do
         if v.id == mail.id then
-            self.mails[k] = mail
+            dump(v,"before ModifyMail")
+            for i,modify in ipairs(mail) do
+                v[i] = modify
+            end
+            dump(v,"after ModifyMail")
+            return v
         end
     end
+end
+-- 更新某项属性
+function MailManager:ModifyMailAttr(index,attr)
+    local mail = self.mails[index]
+    print("index==",index,#self.mails)
+    assert(mail,"修改邮件属性，邮件不存在")
+    for k,v in pairs(attr) do
+        mail[k] = v
+    end
+    return mail
 end
 function MailManager:DeleteSendMail(mail)
     for k,v in pairs(self.sendMails) do
@@ -186,6 +209,18 @@ function MailManager:GetMails(fromIndex)
         end
     end
     return mails
+end
+function MailManager:GetMailByServerIndex(serverIndex)
+    local mails = self.mails
+    for i,v in ipairs(mails) do
+        print(".....v.index == index",v.title,v.index,serverIndex,v.index == serverIndex)
+    end
+    for i,v in ipairs(mails) do
+        print("v.index == index",v.title,v.index,serverIndex,v.index == serverIndex)
+        if v.index == serverIndex then
+            return i
+        end
+    end
 end
 function MailManager:FetchMailsFromServer(fromIndex)
     NetManager:getFetchMailsPromise(fromIndex):next(function ( fetch_mails )
@@ -278,9 +313,10 @@ function MailManager:OnNewMailsChanged( mails )
             end
         elseif type == "edit" then
             for i,data in ipairs(mail) do
-                table.insert(edit_mails, data)
-                self:ModifyMail(data)
+                table.insert(edit_mails, self:ModifyMail(data))
             end
+        elseif tolua.type(type) == "number" then
+            table.insert(edit_mails, self:ModifyMailAttr(tonumber(type),mail))
         end
     end
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.MAILS_CHANGED,function(listener)
@@ -505,6 +541,8 @@ function MailManager:GetSavedReports(fromIndex)
     end
 end
 return MailManager
+
+
 
 
 
