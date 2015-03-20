@@ -91,7 +91,7 @@ function SoldierSprite:ctor(city_layer, soldier_type, x, y)
     self.soldier_star = soldier_star or 1
     SoldierSprite.super.ctor(self, city_layer, x, y)
     self:PlayAnimation("idle_1")
-    self:GetSprite():setScaleX(-1)
+    -- self:GetSprite():setScaleX(1)
 
     self:CreateBase()
     -- ui.newTTFLabel({text = soldier_type, size = 20, x = 0, y = 100}):addTo(self, 10)
@@ -130,9 +130,7 @@ function SoldierSprite:CreateSprite()
     end
     local animation,_,_,s = unpack(self:GetConfig()[self.soldier_star])
     for _,v in ipairs(position_map[self:GetConfig().count]) do
-        local armature = ccs.Armature:create(animation):addTo(node):align(display.CENTER, v.x, v.y)
-        armature:setScaleX(-s)
-        armature:setScaleY(s)
+        ccs.Armature:create(animation):addTo(node):align(display.CENTER, v.x, v.y):scale(s)
     end
     return node
 end
