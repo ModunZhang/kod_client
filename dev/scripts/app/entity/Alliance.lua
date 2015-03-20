@@ -777,7 +777,7 @@ function Alliance:OnAllianceFightChanged(alliance_data, deltaData)
     local is_delta_update = not is_fully_update and deltaData.allianceFight ~= nil
     if is_fully_update or is_delta_update then
         self.allianceFight = alliance_data.allianceFight
-        if not LuaUtils:table_empty(self.allianceFight or {}) then
+        if self.allianceFight ~= json.null and not LuaUtils:table_empty(self.allianceFight or {}) then
             local mergeStyle = self:GetAllianceFight()['mergeStyle']
             local isAttacker = self:Id() == self:GetAllianceFight()['attackAllianceId']
             if isAttacker then

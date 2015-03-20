@@ -693,6 +693,14 @@ local SELENAQUESTION_TIPS = {
     _("超越出题的人全对"),
 }
 
+local ALLIANCE_BUILDINGS = {
+    shop = _("联盟商店"),
+    moonGate = _("月门"),
+    shrine = _("圣地"),
+    orderHall = _("秩序大厅"),
+    palace = _("联盟宫殿")
+}
+
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
@@ -730,4 +738,5 @@ return {
     wonder_title_buff = WONDER_TITLE_BUFF,
     daily_tasks = DAILY_TASKS,
     selenaquestion_tips = SELENAQUESTION_TIPS,
+    alliance_buildings = ALLIANCE_BUILDINGS,
 }

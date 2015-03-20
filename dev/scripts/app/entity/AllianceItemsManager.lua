@@ -42,6 +42,7 @@ end
 function AllianceItemsManager:OnItemsChanged(alliance_data,deltaData)
     local is_fully_update = deltaData == nil
     if is_fully_update then
+        if not alliance_data.items then return end
         for i,v in ipairs(alliance_data.items) do
             local item = self:GetItemByName(v.name)
             item:SetCount(v.count)
@@ -83,6 +84,7 @@ end
 function AllianceItemsManager:OnItemLogsChanged(alliance_data,deltaData)
     local is_fully_update = deltaData == nil
     if is_fully_update then
+        if not alliance_data.itemLogs then return end
         local itemLogs = clone(alliance_data.itemLogs)
         table.sort( itemLogs, function ( a,b )
             return a.time > b.time

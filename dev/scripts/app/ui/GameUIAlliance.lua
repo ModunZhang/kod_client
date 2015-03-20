@@ -314,14 +314,16 @@ end
 function GameUIAlliance:GetJoinList(tag)
     if tag  then
         NetManager:getSearchAllianceByTagPromsie(tag):next(function(data)
-            if #data.allianceDatas > 0 then
-                self:RefreshJoinListView(data.allianceDatas)
+            if not data.msg or not data.msg.allianceDatas then return end
+            if #data.msg.allianceDatas > 0 then
+                self:RefreshJoinListView(data.msg.allianceDatas)
             end
         end)
     else
         NetManager:getFetchCanDirectJoinAlliancesPromise():next(function(data)
-            if #data.allianceDatas > 0 then
-                self:RefreshJoinListView(data.allianceDatas)
+            if not data.msg or not data.msg.allianceDatas then return end
+            if #data.msg.allianceDatas > 0 then
+                self:RefreshJoinListView(data.msg.allianceDatas)
             end
         end)
     end
