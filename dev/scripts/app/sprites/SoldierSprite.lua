@@ -1,50 +1,73 @@
 local PeopleSprite = import(".PeopleSprite")
 local SoldierSprite = class("SoldierSprite", PeopleSprite)
 local soldier_config = {
+    ----
     ["swordsman"] = {
         count = 4,
-        {"bubing_1", 10, 50, 1},
-        {"bubing_2", 0, 40, 1},
-        {"bubing_3", 0, 40, 1},
+        {"Infantry_1_render", 0, 50, 0.3},
+        {"Infantry_1_render", 0, 50, 0.3},
+        {"Infantry_1_render", 0, 50, 0.3},
     },
     ["ranger"] = {
         count = 4,
-        {"gongjianshou_1", 10, 50, 1},
-        {"gongjianshou_1", 0, 40, 1},
-        {"gongjianshou_1", 0, 40, 1},
+        {"Archer_1_render", 30, 50, 0.3},
+        {"Archer_1_render", 30, 50, 0.3},
+        {"Archer_1_render", 30, 50, 0.3},
     },
     ["lancer"] = {
-        animation = "Cavalry_1_render", count = 2, scale = 0.3, offset = {x = 20, y = 50}
+        count = 2,
+        {"Cavalry_1_render", 20, 50, 0.3},
+        {"Cavalry_1_render", 20, 50, 0.3},
+        {"Cavalry_1_render", 20, 50, 0.3},
     },
     ["catapult"] = {
-        animation = "Catapult_1_render", count = 1, scale = 0.4, offset = {x = -10, y = 50}
-    },
-    --
-    ["sentinel"] = {
-        animation = "Infantry_1_render", count = 4, scale = 0.3, offset = {x = 0, y = 50}
-    },
-    ["crossbowman"] = {
-        animation = "Archer_1_render", count = 4, scale = 0.3, offset = {x = 30, y = 50}
-    },
-    ["horseArcher"] = {
-        animation = "Cavalry_1_render", count = 2, scale = 0.3, offset = {x = 20, y = 50}
-    },
-    ["ballista"] = {
-        animation = "Catapult_1_render", count = 1, scale = 0.4, offset = {x = -10, y = 50}
+        count = 1,
+        {"Catapult_1_render", -10, 50, 0.4},
+        {"Catapult_1_render", -10, 50, 0.4},
+        {"Catapult_1_render", -10, 50, 0.4},
     },
 
-    --
+    -----
+    ["sentinel"] = {
+        count = 4,
+        {"Infantry_1_render", 0, 50, 0.3},
+        {"Infantry_1_render", 0, 50, 0.3},
+        {"Infantry_1_render", 0, 50, 0.3},
+    },
+    ["crossbowman"] = {
+        count = 4,
+        {"Archer_1_render", 30, 50, 0.3},
+        {"Archer_1_render", 30, 50, 0.3},
+        {"Archer_1_render", 30, 50, 0.3},
+    },
+    ["horseArcher"] = {
+        count = 2,
+        {"Cavalry_1_render", 20, 50, 0.3},
+        {"Cavalry_1_render", 20, 50, 0.3},
+        {"Cavalry_1_render", 20, 50, 0.3},
+    },
+    ["ballista"] = {
+        count = 1,
+        {"Catapult_1_render", -10, 50, 0.4},
+        {"Catapult_1_render", -10, 50, 0.4},
+        {"Catapult_1_render", -10, 50, 0.4},
+    },
+    ----
     ["skeletonWarrior"] = {
-        animation = "Infantry_1_render", count = 4, scale = 0.3, offset = {x = 0, y = 50}
+        count = 4,
+        {"Infantry_1_render", 0, 50, 0.3},
     },
     ["skeletonArcher"] = {
-        animation = "Archer_1_render", count = 4, scale = 0.3, offset = {x = 30, y = 50}
+        count = 4,
+        {"Archer_1_render", 30, 50, 0.3},
     },
     ["deathKnight"] = {
-        animation = "Cavalry_1_render", count = 2, scale = 0.3, offset = {x = 20, y = 50}
+        count = 2,
+        {"Cavalry_1_render", 20, 50, 0.3},
     },
     ["meatWagon"] = {
-        animation = "Catapult_1_render", count = 1, scale = 0.4, offset = {x = -10, y = 50}
+        count = 1,
+        {"Catapult_1_render", -10, 50, 0.4},
     },
 }
 local position_map = {
@@ -65,9 +88,10 @@ local position_map = {
 function SoldierSprite:ctor(city_layer, soldier_type, x, y)
     assert(soldier_type)
     self.soldier_type = soldier_type
-    self.soldier_star = soldier_star or 3
+    self.soldier_star = soldier_star or 1
     SoldierSprite.super.ctor(self, city_layer, x, y)
-    self:PlayAnimation("idle_45")
+    self:PlayAnimation("idle_1")
+    self:GetSprite():setScaleX(-1)
 
     self:CreateBase()
     -- ui.newTTFLabel({text = soldier_type, size = 20, x = 0, y = 100}):addTo(self, 10)
