@@ -1225,7 +1225,7 @@ end
 function NetManager:getJoinAllianceDirectlyPromise(allianceId)
     return get_blocking_request_promise("logic.allianceHandler.joinAllianceDirectly", {
         allianceId = allianceId
-    }, "直接加入联盟失败!"):next(get_response_msg)
+    }, "直接加入联盟失败!"):next(get_response_msg):next(get_alliance_response_msg)
 end
 -- 请求加入联盟
 function NetManager:getRequestToJoinAlliancePromise(allianceId)
