@@ -42,6 +42,7 @@ property(User, "terrain", "")
 property(User, "id", 0)
 property(User, "marchQueue", 1)
 property(User, "serverName", "")
+property(User, "apnId", "")
 function User:ctor(p)
     User.super.ctor(self)
     self.resources = {
@@ -203,6 +204,7 @@ end
 function User:OnUserDataChanged(userData, current_time, deltaData)
 
     self:SetServerName(userData.logicServerId)
+    self:SetApnId(userData.apnId)
 
     self:OnResourcesChangedByTime(userData, current_time, deltaData)
     self:OnBasicInfoChanged(userData, deltaData)
