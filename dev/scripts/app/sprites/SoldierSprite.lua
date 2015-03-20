@@ -93,7 +93,7 @@ function SoldierSprite:ctor(city_layer, soldier_type, x, y)
     self:PlayAnimation("idle_1")
     -- self:GetSprite():setScaleX(1)
 
-    self:CreateBase()
+    -- self:CreateBase()
     -- ui.newTTFLabel({text = soldier_type, size = 20, x = 0, y = 100}):addTo(self, 10)
 end
 function SoldierSprite:CreateSprite()

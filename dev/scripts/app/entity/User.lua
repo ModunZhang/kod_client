@@ -202,28 +202,27 @@ function User:OnPropertyChange(property_name, old_value, new_value)
     end)
 end
 function User:OnUserDataChanged(userData, current_time, deltaData)
-
     self:SetServerName(userData.logicServerId)
     self:SetApnId(userData.apnId)
-
     self:OnResourcesChangedByTime(userData, current_time, deltaData)
     self:OnBasicInfoChanged(userData, deltaData)
     self:OnCountInfoChanged(userData, deltaData)
-
+    self:GetPVEDatabase():OnUserDataChanged(userData, deltaData)
+    if self.growUpTaskManger:OnUserDataChanged(userData, deltaData) then
+        self:OnTaskChanged()
+    end
     self.request_events = userData.requestToAllianceEvents
     self.invite_events = userData.inviteToAllianceEvents
+
+    -- 下面还没做增量判断
     -- 每日任务
     self:OnDailyQuestsChanged(userData.dailyQuests)
     self:OnDailyQuestsEventsChanged(userData.dailyQuestEvents)
     -- 交易
     self.trade_manager:OnUserDataChanged(userData)
-    self:GetPVEDatabase():OnUserDataChanged(userData, deltaData)
 
     -- vip event
     self:OnVipEventDataChange(userData)
-    if self.growUpTaskManger:OnUserDataChanged(userData, deltaData) then
-        self:OnTaskChanged()
-    end
     -- 日常任务
     self:OnDailyTasksChanged(userData.dailyTasks)
     return self
