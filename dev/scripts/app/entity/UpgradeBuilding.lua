@@ -155,14 +155,23 @@ function UpgradeBuilding:OnTimer(current_time)
         end
     end
 end
-function UpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id, sub_location_id)
+function UpgradeBuilding:OnUserDataChanged(userData, current_time, location_id, sub_location_id, deltaData)
+    local is_fully_update = not deltaData or (deltaData.houseEvents or deltaData.buildingEvents)
+    local is_delta_update = not is_fully_update and deltaData and deltaData.buildings
+    if is_delta_update then
+        local builidng_key = string.format("location_%d", location_id)
+        if not deltaData.buildings[builidng_key] then
+            return
+        end
+    end
+    print("UpgradeBuilding:OnUserDataChanged", location_id, sub_location_id)
     local event, level, finished_time, type_
     if self:BelongCity():IsHouse(self) then
-        event = self:GetHouseEventByLocations(user_data, location_id, sub_location_id)
-        level, finished_time = self:GetHouseInfoByEventAndLocation(user_data, event, location_id, sub_location_id)
+        event = self:GetHouseEventByLocations(userData, location_id, sub_location_id)
+        level, finished_time = self:GetHouseInfoByEventAndLocation(userData, event, location_id, sub_location_id)
     else
-        event = self:GetBuildingEventFromUserDataByLocation(user_data, location_id)
-        level, finished_time, type_ = self:GetBuildingInfoByEventAndLocation(user_data, event, location_id)
+        event = self:GetBuildingEventFromUserDataByLocation(userData, location_id)
+        level, finished_time, type_ = self:GetBuildingInfoByEventAndLocation(userData, event, location_id)
         if type_ ~= self:GetType() then
             self.building_type = type_
             self.base_building_observer:NotifyObservers(function(lisenter)
@@ -478,6 +487,9 @@ function UpgradeBuilding:getUpgradeRequiredGems()
 end
 
 return UpgradeBuilding
+
+
+
 
 
 
