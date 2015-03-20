@@ -42,11 +42,12 @@ end
 function AllianceItemsManager:OnItemsChanged(alliance_data,deltaData)
     local is_fully_update = deltaData == nil
     if is_fully_update then
-        if not alliance_data.items then return end
-        for i,v in ipairs(alliance_data.items) do
-            local item = self:GetItemByName(v.name)
-            item:SetCount(v.count)
-            self:InsertItem(item)
+        if alliance_data.items then
+            for i,v in ipairs(alliance_data.items) do
+                local item = self:GetItemByName(v.name)
+                item:SetCount(v.count)
+                self:InsertItem(item)
+            end
         end
     end
     local is_delta_update = not is_fully_update and deltaData.items ~= nil
@@ -84,7 +85,6 @@ end
 function AllianceItemsManager:OnItemLogsChanged(alliance_data,deltaData)
     local is_fully_update = deltaData == nil
     if is_fully_update then
-        if not alliance_data.itemLogs then return end
         local itemLogs = clone(alliance_data.itemLogs)
         table.sort( itemLogs, function ( a,b )
             return a.time > b.time
@@ -183,7 +183,7 @@ function AllianceItemsManager:GetAllNormalItems()
     return normal_items
 end
 function AllianceItemsManager:GetAllSuperItems()
-	 local super_items = {}
+    local super_items = {}
     for i,v in ipairs(self:GetSpecialItems()) do
         if v:IsAdvancedItem() then
             table.insert(super_items, v)
@@ -220,5 +220,6 @@ function AllianceItemsManager:GetItemLogs()
     return self.item_logs
 end
 return AllianceItemsManager
+
 
 

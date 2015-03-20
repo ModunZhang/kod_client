@@ -107,6 +107,7 @@ function MapScene:OnTwoTouch(x1, y1, x2, y2, event_type)
         scene:StopScaleAnimation()
         self.distance = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
         scene:ZoomBegin(x1, y1, x2, y2)
+        self.touch_judgment:OnTwoTouchBegan()
     elseif event_type == "moved" then
         local new_distance = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
         scene:ZoomBy(new_distance / self.distance, (x1 + x2) * 0.5, (y1 + y2) * 0.5)

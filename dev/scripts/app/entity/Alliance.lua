@@ -395,7 +395,7 @@ function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
 
     self:DecodeAllianceVillages(alliance_data,deltaData)
 
-    -- 联盟道具管理 TODO:
+    -- 联盟道具管理
     self.items_manager:OnItemsChanged(alliance_data,deltaData)
     self.items_manager:OnItemLogsChanged(alliance_data,deltaData)
 

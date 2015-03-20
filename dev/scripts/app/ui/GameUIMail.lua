@@ -596,9 +596,9 @@ end
 function GameUIMail:ReadMailOrReports(Ids,cb)
     local control_type = self:GetCurrentSelectType()
     if control_type == "mail" then
-        NetManager:getReadMailsPromise(Ids):done(cb):catch(function(err)
-            dump(err:reason())
-        end)
+        NetManager:getReadMailsPromise(Ids):next(function (response)
+
+        end):done(cb)
     elseif control_type == "report" then
         NetManager:getReadReportsPromise(Ids):done(cb):catch(function(err)
             dump(err:reason())
@@ -752,6 +752,7 @@ function GameUIMail:OnInboxMailsChanged(changed_mails)
     if changed_mails.remove_mails then
         for _,remove_mail in pairs(changed_mails.remove_mails) do
             self.inbox_listview:removeItem(self.inbox_mails[remove_mail.id])
+            self.inbox_listview:reload()
             self.inbox_mails[remove_mail.id]=nil
         end
     end
@@ -1065,8 +1066,6 @@ function GameUIMail:ShowMailDetails(mail)
                 if event.name == "CLICKED_EVENT" then
                     NetManager:getDeleteMailsPromise({mail.id}):done(function ()
                         layer_bg:removeFromParent()
-                    end):catch(function(err)
-                        dump(err:reason())
                     end)
                 end
             end)

@@ -88,7 +88,44 @@ local function get_response_msg(response)
         DataManager:setUserData(user_data, edit)
         return response
     end
-   
+
+    return response
+end
+local function get_response_mail_msg(response)
+    dump(response,"get_response_mail_msg---->")
+    if response.msg.playerData then
+        local user_data = DataManager:getUserData()
+        LuaUtils:outputTable("response.msg.playerData", response.msg.playerData)
+        local mail_response = response.msg.playerData
+        for i,v in ipairs(mail_response) do
+
+            print("tolua.type(v)",type(v))
+
+            if type(v) == "table" then
+                local keys = string.split(v[1], ".")
+                LuaUtils:outputTable("keys", keys)
+                local newKey = ""
+                local len = #keys
+                for i=1,len do
+                    local k = tonumber(keys[i]) or keys[i]
+                    if type(k) == "number" then
+                        local client_index = MailManager:GetMailByServerIndex(k) - 1
+                        newKey = newKey..client_index..(i~=len and "." or "")
+                    else
+                        newKey = newKey..keys[i]..(i~=len and "." or "")
+                    end
+                end
+                print("ta")
+                mail_response[i][1] = newKey
+            end
+        end
+        LuaUtils:outputTable("response.msg.playerData", response.msg.playerData)
+        print("ta")
+        local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
+        DataManager:setUserData(user_data, edit)
+        return response
+    end
+
     return response
 end
 
@@ -1026,7 +1063,7 @@ end
 function NetManager:getReadMailsPromise(mailIds)
     return get_none_blocking_request_promise("logic.playerHandler.readMails", {
         mailIds = mailIds
-    }, "阅读邮件失败!"):next(get_response_msg)
+    }, "阅读邮件失败!"):next(get_response_mail_msg)
 end
 -- 收藏邮件
 function NetManager:getSaveMailPromise(mailId)
@@ -1056,7 +1093,7 @@ end
 function NetManager:getDeleteMailsPromise(mailIds)
     return get_blocking_request_promise("logic.playerHandler.deleteMails", {
         mailIds = mailIds
-    }, "删除邮件失败!")
+    }, "删除邮件失败!"):next(get_response_mail_msg)
 end
 -- 发送联盟邮件
 function NetManager:getSendAllianceMailPromise(title, content)
@@ -1745,6 +1782,8 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
+
 
 
 

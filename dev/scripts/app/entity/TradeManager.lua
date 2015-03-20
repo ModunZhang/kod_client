@@ -15,62 +15,77 @@ end
 function TradeManager:GetMyDeals()
     return self.my_deals
 end
-function TradeManager:OnUserDataChanged(user_data)
-    local deals = user_data.deals
-    if deals then
-        self.my_deals = {}
-        for k,v in pairs(deals) do
-            table.insert(self.my_deals, v)
+function TradeManager:OnUserDataChanged(user_data,deltaData)
+    local is_fully_update = deltaData == nil
+    if is_fully_update then
+        local deals = user_data.deals
+        if deals then
+            self.my_deals = {}
+            for k,v in pairs(deals) do
+                table.insert(self.my_deals, v)
+            end
+            self:NotifyListeneOnType(TradeManager.LISTEN_TYPE.MY_DEAL_REFRESH, function(listener)
+                listener:OnMyDealsRefresh()
+            end)
         end
-        self:NotifyListeneOnType(TradeManager.LISTEN_TYPE.MY_DEAL_REFRESH, function(listener)
-            listener:OnMyDealsRefresh({
-                add=add,
-                edit=edit,
-                remove=remove,
-            })
-        end)
+    end
+    local is_delta_update = not is_fully_update and deltaData.deals ~= nil
+    if is_delta_update then
+        local __deals = deltaData.deals
+        local add = {}
+        local edit = {}
+        local remove = {}
+        if __deals then
+            for k,v in pairs(__deals) do
+                if k == "add" then
+                    for _,deal in pairs(v) do
+                        table.insert(self.my_deals, deal)
+                        table.insert(add, deal)
+                    end
+                end
+                if k == "edit" then
+                    for _,deal in pairs(v) do
+                        for index,myDeal in pairs(self.my_deals) do
+                            if myDeal.id == deal.id then
+                                self.my_deals[index] = deal
+                                table.insert(edit,deal)
+                            end
+                        end
+                    end
+                end
+                if k == "remove" then
+                    for _,deal in pairs(v) do
+                        for index,myDeal in pairs(self.my_deals) do
+                            if myDeal.id == deal.id then
+                                self.my_deals[index] = nil
+                                table.insert(remove,deal)
+                            end
+                        end
+                    end
+                end
+            end
+            self:NotifyListeneOnType(TradeManager.LISTEN_TYPE.DEAL_CHANGED, function(listener)
+                listener:OnDealChanged(
+                    {
+                        add=add,
+                        edit=edit,
+                        remove=remove,
+                    }
+                )
+            end)
+        end
     end
 
-    local __deals = user_data.__deals
-    local add = {}
-    local edit = {}
-    local remove = {}
-    if __deals then
-        for k,v in pairs(__deals) do
-            if v.type == "add" then
-                table.insert(self.my_deals, v.data)
-                table.insert(add, v.data)
-            end
-            if v.type == "edit" then
-                for index,myDeal in pairs(self.my_deals) do
-                    if myDeal.id == v.data.id then
-                        self.my_deals[index] = v.data
-                    end
-                end
-                table.insert(edit,v.data)
-            end
-            if v.type == "remove" then
-                for index,myDeal in pairs(self.my_deals) do
-                    if myDeal.id == v.data.id then
-                        self.my_deals[index] = nil
-                    end
-                end
-                table.insert(remove,v.data)
-            end
-        end
-        self:NotifyListeneOnType(TradeManager.LISTEN_TYPE.DEAL_CHANGED, function(listener)
-            listener:OnDealChanged(
-                {
-                    add=add,
-                    edit=edit,
-                    remove=remove,
-                }
-            )
-        end)
-    end
 end
 
 return TradeManager
+
+
+
+
+
+
+
 
 
 

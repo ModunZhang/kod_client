@@ -158,21 +158,68 @@ function SoldierManager:GetTotalTreatSoldierCount()
     return total_count
 end
 function SoldierManager:OnUserDataChanged(user_data,current_time, deltaData)
-    local soldiers = {}
-    local woundedSoldiers = {}
-    local soldierStars = {}
-    soldiers = user_data.soldiers
-    woundedSoldiers = user_data.woundedSoldiers
-    soldierStars = user_data.soldierStars
-    if soldiers then
-        local changed = {}
-        local soldier_map = self.soldier_map
-        for k, old in pairs(soldier_map) do
-            local new = soldiers[k]
-            if new and old ~= new then
-                soldier_map[k] = new
-                table.insert(changed, k)
+    local is_fully_update = deltaData == nil
+    if is_fully_update then
+        local soldiers = {}
+        local woundedSoldiers = {}
+        local soldierStars = {}
+        soldiers = user_data.soldiers
+        woundedSoldiers = user_data.woundedSoldiers
+        soldierStars = user_data.soldierStars
+        if soldiers then
+            local changed = {}
+            local soldier_map = self.soldier_map
+            for k, old in pairs(soldier_map) do
+                local new = soldiers[k]
+                if new and old ~= new then
+                    soldier_map[k] = new
+                    table.insert(changed, k)
+                end
             end
+            if #changed > 0 then
+                self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED,function(listener)
+                    listener:OnSoliderCountChanged(self, changed)
+                end)
+            end
+        end
+        if woundedSoldiers then
+            -- 伤兵列表
+            local treat_soldier_changed = {}
+            local treatSoldiers_map = self.treatSoldiers_map
+            for k, old in pairs(treatSoldiers_map) do
+                local new = woundedSoldiers[k]
+                if new and old ~= new then
+                    treatSoldiers_map[k] = new
+                    table.insert(treat_soldier_changed, k)
+                end
+            end
+
+            if #treat_soldier_changed > 0 then
+                self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.TREAT_SOLDIER_CHANGED,function(listener)
+                    listener:OnTreatSoliderCountChanged(self, treat_soldier_changed)
+                end)
+            end
+        end
+        if soldierStars then
+            local soldier_star_changed = {}
+            for k,v in pairs(soldierStars) do
+                self.soldierStars[k] = v
+                table.insert(soldier_star_changed, k)
+            end
+            if #soldier_star_changed > 0 then
+                self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED,function(listener)
+                    listener:OnSoliderStarCountChanged(self, soldier_star_changed)
+                end)
+            end
+        end
+    end
+    local is_delta_update = not is_fully_update and deltaData.soldiers ~= nil
+    if is_delta_update then
+        local soldier_map = self.soldier_map
+        local changed = {}
+        for k, new in pairs(deltaData.soldiers) do
+            soldier_map[k] = new
+            table.insert(changed, k)
         end
         if #changed > 0 then
             self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED,function(listener)
@@ -180,16 +227,14 @@ function SoldierManager:OnUserDataChanged(user_data,current_time, deltaData)
             end)
         end
     end
-    if woundedSoldiers then
+    is_delta_update = not is_fully_update and deltaData.woundedSoldiers ~= nil
+    if is_delta_update then
         -- 伤兵列表
         local treat_soldier_changed = {}
         local treatSoldiers_map = self.treatSoldiers_map
-        for k, old in pairs(treatSoldiers_map) do
-            local new = woundedSoldiers[k]
-            if new and old ~= new then
-                treatSoldiers_map[k] = new
-                table.insert(treat_soldier_changed, k)
-            end
+        for k, new in pairs(deltaData.woundedSoldiers) do
+            treatSoldiers_map[k] = new
+            table.insert(treat_soldier_changed, k)
         end
 
         if #treat_soldier_changed > 0 then
@@ -198,9 +243,10 @@ function SoldierManager:OnUserDataChanged(user_data,current_time, deltaData)
             end)
         end
     end
-    if soldierStars then
+    is_delta_update = not is_fully_update and deltaData.soldierStars ~= nil
+    if is_delta_update then
         local soldier_star_changed = {}
-        for k,v in pairs(soldierStars) do
+        for k,v in pairs(deltaData.soldierStars) do
             self.soldierStars[k] = v
             table.insert(soldier_star_changed, k)
         end
@@ -210,8 +256,8 @@ function SoldierManager:OnUserDataChanged(user_data,current_time, deltaData)
             end)
         end
     end
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.militaryTechs ~= nil
+
+    is_delta_update = not is_fully_update and deltaData.militaryTechs ~= nil
     --军事科技
     if is_fully_update then
         self:OnMilitaryTechsDataChanged(user_data.militaryTechs)
@@ -511,7 +557,7 @@ function SoldierManager:__OnSoldierStarEventsChanged(__soldierStarEvents)
             table.insert(removed, event)
         end
     end
-    
+
     self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED, function(listener)
         listener:OnSoldierStarEventsChanged(self,changed_map)
     end)
@@ -536,6 +582,9 @@ function SoldierManager:OnMilitaryTechEventsTimer(tech_event)
     end)
 end
 return SoldierManager
+
+
+
 
 
 
