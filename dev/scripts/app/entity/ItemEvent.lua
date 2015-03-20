@@ -18,10 +18,10 @@ function ItemEvent:OnPropertyChange()
 end
 
 function ItemEvent:UpdateData(json_data)
-	self:SetId(json_data.id or "")
-	self:SetType(json_data.type or  "")
-	self:SetStartTime(json_data.startTime/1000 or 0)
-	self:SetFinishTime(json_data.finishTime/1000 or 0)
+	self:SetId(json_data.id or self.id or "")
+	self:SetType(json_data.type or self.type or "")
+	self:SetStartTime(json_data.startTime/1000 or self.startTime or 0)
+	self:SetFinishTime(json_data.finishTime/1000 or self.finishTime or 0)
 end
 
 function ItemEvent:Reset()

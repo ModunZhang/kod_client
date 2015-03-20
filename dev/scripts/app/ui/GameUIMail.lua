@@ -101,6 +101,7 @@ function GameUIMail:onEnter()
     self.manager:AddListenOnType(self,MailManager.LISTEN_TYPE.MAILS_CHANGED)
     self.manager:AddListenOnType(self,MailManager.LISTEN_TYPE.REPORTS_CHANGED)
     self.manager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
+    self.manager:AddListenOnType(self,MailManager.LISTEN_TYPE.FETCH_MAILS)
     -- local mails = self.manager:GetMails(function (...)
     --     local saved_mails = self.manager:GetSavedMails(function (...)
     --         local send_mails = self.manager:GetSendMails(function (...)end)
@@ -242,6 +243,7 @@ function GameUIMail:onExit()
     self.manager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.MAILS_CHANGED)
     self.manager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.REPORTS_CHANGED)
     self.manager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
+    self.manager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.FETCH_MAILS)
     GameUIMail.super.onExit(self)
 end
 function GameUIMail:CreateWriteMailButton()
@@ -666,8 +668,12 @@ function GameUIMail:CreateLoadingMoreItem(listview)
     loading_more_button:onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
             local mails = self:GetMailsOrReports(listview)
-            if mails then
+            LuaUtils:outputTable("载入更多 mails", mails)
+            print("ssssss")
+            if #mails == GameUIMail.ONE_TIME_LOADING_MAILS then
                 self:AddLoadingMoreMails(listview,mails)
+            else
+                self:FetchMailsOrReportsFromServer(listview,#mails)
             end
         end
     end)
@@ -680,6 +686,19 @@ end
 function GameUIMail:GetMailsOrReports(listview)
     if listview == self.inbox_listview then
         return self.manager:GetMails(self:GetMailsCount(listview))
+    elseif self.save_mails_listview and listview == self.save_mails_listview then
+        return self.manager:GetSavedMails(self:GetMailsCount(listview))
+    elseif self.send_mail_listview and listview == self.send_mail_listview then
+        return self.manager:GetSendMails(self:GetMailsCount(listview))
+    elseif listview == self.report_listview then
+        return self.manager:GetReports(self:GetMailsCount(listview))
+    elseif listview == self.saved_reports_listview then
+        return self.manager:GetSavedReports(self:GetMailsCount(listview))
+    end
+end
+function GameUIMail:FetchMailsOrReportsFromServer(listview,fromIndex)
+    if listview == self.inbox_listview then
+        return self.manager:FetchMailsFromServer(self:GetMailsCount(listview)+fromIndex)
     elseif self.save_mails_listview and listview == self.save_mails_listview then
         return self.manager:GetSavedMails(self:GetMailsCount(listview))
     elseif self.send_mail_listview and listview == self.send_mail_listview then
@@ -736,6 +755,10 @@ function GameUIMail:OnInboxMailsChanged(changed_mails)
             self.inbox_mails[remove_mail.id]=nil
         end
     end
+end
+function GameUIMail:OnFetchMailsSuccess(fetch_mails)
+    local mails = self:GetMailsOrReports(self.inbox_listview)
+    self:AddLoadingMoreMails(self.inbox_listview,mails)
 end
 function GameUIMail:OnSavedMailsChanged(changed_mails)
     if changed_mails.add_mails then
@@ -1668,4 +1691,7 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
+
+
 

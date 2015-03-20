@@ -38,12 +38,22 @@ function ItemManager:InitAllItems()
         end
     end
 end
-function ItemManager:OnUserDataChanged(user_data)
-    self:OnItemsChanged(user_data.items)
-    self:__OnItemsChanged(user_data.__items)
+function ItemManager:OnUserDataChanged(user_data,current_time,deltaData)
+    local is_fully_update = deltaData == nil
+    if is_fully_update then
+        self:OnItemsChanged(user_data.items)
+        self:OnItemEventsChanged(user_data.itemEvents)
+    end
 
-    self:OnItemEventsChanged(user_data.itemEvents)
-    self:__OnItemEventsChanged(user_data.__itemEvents)
+    local is_delta_update = not is_fully_update and deltaData.items ~= nil
+    if is_delta_update then
+        self:__OnItemsChanged(deltaData.items)
+    end
+
+    is_delta_update = not is_fully_update and deltaData.itemEvents ~= nil
+    if is_delta_update then
+        self:__OnItemEventsChanged(deltaData.itemEvents)
+    end
 end
 function ItemManager:OnItemsChanged(items)
     if items then
@@ -56,32 +66,39 @@ function ItemManager:OnItemsChanged(items)
 end
 function ItemManager:__OnItemsChanged(__items)
     if __items then
-        local changed_map = GameUtils:Event_Handler_Func(
-            __items
-            ,function(data)
+        local added,edited,removed = {},{},{}
+        local changed_map = {added,edited,removed}
+        local add = __items.add
+        local edit = __items.edit
+        local remove = __items.remove
+        if add then
+            for k,data in pairs(add) do
                 -- add
                 local item = self:GetItemByName(data.name)
                 item:SetCount(data.count)
                 self:InsertItem(item)
-                print("__OnItemsChanged add",data.name,data.count)
                 GameGlobalUI:showTips(_("获得道具"),item:GetLocalizeName())
-                return item
+                table.insert(added, item)
             end
-            ,function(data)
+        end
+        if edit then
+            for k,data in pairs(edit) do
                 -- eidt 更新
                 local item = self:GetItemByName(data.name)
                 item:SetCount(data.count)
                 self:InsertItem(item)
-                print("__OnItemsChanged edit",data.name,data.count)
-                return item
+                table.insert(edited, item)
             end
-            ,function(data)
+        end
+        if remove then
+            for k,data in pairs(remove) do
                 -- remove
                 local item = self:GetItemByName(data.name)
                 self:RemoveItem(item)
-                return item
+                table.insert(removed, item)
             end
-        )
+        end
+
         self:NotifyListeneOnType(ItemManager.LISTEN_TYPE.ITEM_CHANGED, function(listener)
             listener:OnItemsChanged(changed_map)
         end)
@@ -98,31 +115,38 @@ function ItemManager:OnItemEventsChanged( itemEvents )
 end
 function ItemManager:__OnItemEventsChanged( __itemEvents )
     if not __itemEvents then return end
-    local changed_map = GameUtils:Event_Handler_Func(
-        __itemEvents
-        ,function(event_data)
+    local added,edited,removed = {},{},{}
+    local changed_map = {added,edited,removed}
+    local add = __itemEvents.add
+    local edit = __itemEvents.edit
+    local remove = __itemEvents.remove
+    if add then
+        for k,event_data in pairs(add) do
             local itemEvent = ItemEvent.new()
             itemEvent:UpdateData(event_data)
             self.itemEvents[itemEvent:Type()] = itemEvent
             itemEvent:AddObserver(self)
-            return itemEvent
+            table.insert(added, itemEvent)
         end
-        ,function(event_data)
+    end
+    if edit then
+        for k,event_data in pairs(edit) do
             local itemEvent = self.itemEvents[event_data.type]
             itemEvent:UpdateData(event_data)
-            return itemEvent
+            table.insert(edited, itemEvent)
         end
-        ,function(event_data)
-            if self.itemEvents[event_data.type] then
-                local itemEvent = self.itemEvents[event_data.type]
-                itemEvent:Reset()
-                self.itemEvents[event_data.type] = nil
-                itemEvent = ItemEvent.new()
-                itemEvent:UpdateData(event_data)
-                return itemEvent
-            end
+    end
+    if remove then
+        for k,event_data in pairs(remove) do
+            local itemEvent = self.itemEvents[event_data.type]
+            itemEvent:Reset()
+            self.itemEvents[event_data.type] = nil
+            itemEvent = ItemEvent.new()
+            itemEvent:UpdateData(event_data)
+            table.insert(removed, itemEvent)
         end
-    )
+    end
+
     self:NotifyListeneOnType(ItemManager.LISTEN_TYPE.ITEM_EVENT_CHANGED, function(listener)
         listener:OnItemEventChanged(changed_map)
     end)
@@ -312,6 +336,9 @@ function ItemManager:CanOpenChest( item )
     return  not key_item or key_item:Count()>0
 end
 return ItemManager
+
+
+
 
 
 

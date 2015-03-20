@@ -3,7 +3,7 @@ local MultiObserver = import("..entity.MultiObserver")
 local Report = import("..entity.Report")
 
 local MailManager = class("MailManager", MultiObserver)
-MailManager.LISTEN_TYPE = Enum("MAILS_CHANGED","UNREAD_MAILS_CHANGED","REPORTS_CHANGED")
+MailManager.LISTEN_TYPE = Enum("MAILS_CHANGED","UNREAD_MAILS_CHANGED","REPORTS_CHANGED","FETCH_MAILS")
 
 function MailManager:ctor()
     MailManager.super.ctor(self)
@@ -132,49 +132,51 @@ function MailManager:DeleteSendMail(mail)
 end
 
 function MailManager:dispatchMailServerData( eventName,msg )
-    if eventName == "onGetMailsSuccess" then
-        -- 获取邮件成功,加入MailManager缓存
-        for _,mail in pairs(msg.mails) do
-            table.insert(self.mails, mail)
-        end
-    elseif eventName == "onGetSavedMailsSuccess" then
-        -- 获取邮件成功,加入MailManager缓存
-        for _,mail in pairs(msg.mails) do
-            table.insert(self.savedMails, mail)
-        end
-    elseif eventName == "onGetSendMailsSuccess" then
-        -- 获取邮件成功,加入MailManager缓存
-        for _,mail in pairs(msg.mails) do
-            table.insert(self.sendMails, mail)
-        end
-    elseif eventName == "onSendMailSuccess" then
-        for _,mail in pairs(msg.mail) do
-            table.insert(self.sendMails, mail)
-        end
-    elseif eventName == "onGetReportsSuccess" then
-        for _,report in pairs(msg.reports) do
-            table.insert(self.reports, Report:DecodeFromJsonData(report))
-        end
-    elseif eventName == "onGetSavedReportsSuccess" then
-        for _,report in pairs(msg.reports) do
-            table.insert(self.savedReports,Report:DecodeFromJsonData(report))
-        end
-    else
-        return
-    end
-    self:NotifyListeneOnType(MailManager.LISTEN_TYPE.MAILS_CHANGED,function(listener)
-        listener:OnServerDataEvent({
-            eventType = eventName,
-            data = msg
-        })
-    end)
+-- if eventName == "onGetMailsSuccess" then
+--     -- 获取邮件成功,加入MailManager缓存
+--     for _,mail in pairs(msg.mails) do
+--         table.insert(self.mails, mail)
+--     end
+-- elseif eventName == "onGetSavedMailsSuccess" then
+--     -- 获取邮件成功,加入MailManager缓存
+--     for _,mail in pairs(msg.mails) do
+--         table.insert(self.savedMails, mail)
+--     end
+-- elseif eventName == "onGetSendMailsSuccess" then
+--     -- 获取邮件成功,加入MailManager缓存
+--     for _,mail in pairs(msg.mails) do
+--         table.insert(self.sendMails, mail)
+--     end
+-- elseif eventName == "onSendMailSuccess" then
+--     for _,mail in pairs(msg.mail) do
+--         table.insert(self.sendMails, mail)
+--     end
+-- elseif eventName == "onGetReportsSuccess" then
+--     for _,report in pairs(msg.reports) do
+--         table.insert(self.reports, Report:DecodeFromJsonData(report))
+--     end
+-- elseif eventName == "onGetSavedReportsSuccess" then
+--     for _,report in pairs(msg.reports) do
+--         table.insert(self.savedReports,Report:DecodeFromJsonData(report))
+--     end
+-- else
+--     return
+-- end
+-- self:NotifyListeneOnType(MailManager.LISTEN_TYPE.MAILS_CHANGED,function(listener)
+--     listener:OnServerDataEvent({
+--         eventType = eventName,
+--         data = msg
+--     })
+-- end)
 end
-
+function MailManager:AddMailsToEnd(mail)
+    table.insert(self.mails, mail)
+end
 function MailManager:GetMails(fromIndex)
     -- 首先检查本地MailManager是否缓存有之前获取到的邮件
     local fromIndex = fromIndex or 0
+    local mails = {}
     if self.mails[fromIndex+1] then
-        local mails = {}
         for i=fromIndex+1,fromIndex+10 do
             if self.mails[i] then
                 table.insert(mails, self.mails[i])
@@ -182,15 +184,16 @@ function MailManager:GetMails(fromIndex)
                 break
             end
         end
-        return mails
-    else
-        -- 本地没有缓存，则从服务器获取
-        NetManager:getFetchMailsPromise(fromIndex):catch(function(err)
-            dump(err:reason())
-        end)
     end
+    return mails
 end
-
+function MailManager:FetchMailsFromServer(fromIndex)
+    NetManager:getFetchMailsPromise(fromIndex):next(function ( fetch_mails )
+        self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_MAILS,function(listener)
+            listener:OnFetchMailsSuccess(fetch_mails)
+        end)
+    end)
+end
 function MailManager:GetSavedMails(fromIndex)
     -- 首先检查本地MailManager是否缓存有之前获取到的邮件
     local fromIndex = fromIndex or 0
@@ -248,7 +251,7 @@ function MailManager:OnMailStatusChanged( mailStatus )
     end)
 end
 function MailManager:OnMailsChanged( mails )
-    self.mails = mails
+    self.mails = clone(mails)
 end
 function MailManager:OnSavedMailsChanged( savedMails )
     self.savedMails = savedMails
@@ -261,17 +264,23 @@ function MailManager:OnNewMailsChanged( mails )
     local add_mails = {}
     local remove_mails = {}
     local edit_mails = {}
-    for _,mail in pairs(mails) do
-        if mail.type == "add" then
-            table.insert(add_mails, mail.data)
-            table.insert(self.mails, mail.data)
-            self:IncreaseUnReadMailsNum(1)
-        elseif mail.type == "remove" then
-            table.insert(remove_mails, mail.data)
-            self:DeleteMail(mail.data)
-        elseif mail.type == "edit" then
-            table.insert(edit_mails, mail.data)
-            self:ModifyMail(mail.data)
+    for type,mail in pairs(mails) do
+        if type == "add" then
+            for i,data in ipairs(mail) do
+                table.insert(add_mails, data)
+                table.insert(self.mails, 1, data)
+                self:IncreaseUnReadMailsNum(1)
+            end
+        elseif type == "remove" then
+            for i,data in ipairs(mail) do
+                table.insert(remove_mails, data)
+                self:DeleteMail(data)
+            end
+        elseif type == "edit" then
+            for i,data in ipairs(mail) do
+                table.insert(edit_mails, data)
+                self:ModifyMail(data)
+            end
         end
     end
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.MAILS_CHANGED,function(listener)
@@ -285,13 +294,17 @@ end
 function MailManager:OnNewSavedMailsChanged( savedMails )
     local add_mails = {}
     local remove_mails = {}
-    for _,mail in pairs(savedMails) do
-        if mail.type == "add" then
-            table.insert(add_mails, mail.data)
-            table.insert(self.savedMails, mail.data)
-        elseif mail.type == "remove" then
-            table.insert(remove_mails, mail.data)
-            self:DeleteSavedMail(mail.data)
+    for type,mail in pairs(savedMails) do
+        if type == "add" then
+            for i,data in ipairs(mail) do
+                table.insert(add_mails, data)
+                table.insert(self.savedMails, data)
+            end
+        elseif type == "remove" then
+            for i,data in ipairs(mail) do
+                table.insert(remove_mails, data)
+                self:DeleteSavedMail(data)
+            end
         end
     end
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.MAILS_CHANGED,function(listener)
@@ -304,13 +317,17 @@ end
 function MailManager:OnNewSendMailsChanged( sendMails )
     local add_mails = {}
     local remove_mails = {}
-    for _,mail in pairs(sendMails) do
-        if mail.type == "add" then
-            table.insert(add_mails, mail.data)
-            table.insert(self.sendMails, mail.data)
-        elseif mail.type == "remove" then
-            table.insert(remove_mails, mail.data)
-            self:DeleteSendMail(mail.data)
+    for type,mail in pairs(sendMails) do
+        if type == "add" then
+            for i,data in ipairs(mail) do
+                table.insert(add_mails, data)
+                table.insert(self.sendMails, data)
+            end
+        elseif type == "remove" then
+            for i,data in ipairs(mail) do
+                table.insert(remove_mails, data)
+                self:DeleteSendMail(data)
+            end
         end
     end
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.MAILS_CHANGED,function(listener)
@@ -320,28 +337,31 @@ function MailManager:OnNewSendMailsChanged( sendMails )
         })
     end)
 end
-function MailManager:OnUserDataChanged(userData,timer)
-    -- 未读邮件和战报信息
-    if userData.mailStatus then
+function MailManager:OnUserDataChanged(userData,timer,deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.mailStatus ~= nil
+    -- 邮件
+    if is_fully_update or is_delta_update then
         self:OnMailStatusChanged(userData.mailStatus)
     end
-    if userData.mails then
+    if is_fully_update then
         self:OnMailsChanged(userData.mails)
-    end
-    if userData.savedMails then
         self:OnSavedMailsChanged(userData.savedMails)
-    end
-    if userData.sendMails then
         self:OnSendMailsChanged(userData.sendMails)
     end
-    if userData.__mails then
-        self:OnNewMailsChanged(userData.__mails)
+    LuaUtils:outputTable("MailManager deltaData", deltaData)
+    print("ta")
+    is_delta_update = not is_fully_update and deltaData.mails ~= nil
+    if is_delta_update then
+        self:OnNewMailsChanged(deltaData.mails)
     end
-    if userData.__savedMails then
-        self:OnNewSavedMailsChanged(userData.__savedMails)
+    is_delta_update = not is_fully_update and deltaData.savedMails ~= nil
+    if is_delta_update then
+        self:OnNewSavedMailsChanged(deltaData.savedMails)
     end
-    if userData.__sendMails then
-        self:OnNewSendMailsChanged(userData.__sendMails)
+    is_delta_update = not is_fully_update and deltaData.sendMails ~= nil
+    if is_delta_update then
+        self:OnNewSendMailsChanged(deltaData.sendMails)
     end
 
     -- 战报部分
@@ -485,3 +505,20 @@ function MailManager:GetSavedReports(fromIndex)
     end
 end
 return MailManager
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
