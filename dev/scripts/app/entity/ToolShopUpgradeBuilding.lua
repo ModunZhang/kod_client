@@ -185,9 +185,13 @@ end
 
 function ToolShopUpgradeBuilding:OnUserDataChanged(...)
     ToolShopUpgradeBuilding.super.OnUserDataChanged(self, ...)
-
-    local userData, current_time = ...
-
+    local userData, current_time, location_id, sub_location_id, deltaData = ...
+    local is_fully_update = deltaData == nil
+    local is_delta_update = self:IsUnlocked() and deltaData and deltaData.materialEvents
+    if not is_fully_update and not is_delta_update then
+        return 
+    end
+    print("ToolShopUpgradeBuilding:OnUserDataChanged")
     local BUILDING_EVENT = 1
     local TECHNOLOGY_EVENT = 2
     local category_map = {

@@ -771,20 +771,19 @@ end
 function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time, deltaData)
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and (deltaData.buildings or deltaData.buildingEvents or deltaData.houseEvents)
-
     if is_fully_update or is_delta_update then
         self:IteratorDecoratorBuildingsByFunc(function(key, building)
             local tile = self:GetTileWhichBuildingBelongs(building)
             building:OnUserDataChanged(user_data, current_time, tile.location_id, tile:GetBuildingLocation(building), deltaData)
         end)
         self:IteratorFunctionBuildingsByFunc(function(key, building)
-            building:OnUserDataChanged(user_data, current_time, self:GetLocationIdByBuilding(building), deltaData)
+            building:OnUserDataChanged(user_data, current_time, self:GetLocationIdByBuilding(building), nil, deltaData)
         end)
         self:GetTower():OnUserDataChanged(user_data, current_time, deltaData)
         self:GetGate():OnUserDataChanged(user_data, current_time, deltaData)
     else
         self:IteratorFunctionBuildingsByFunc(function(key, building)
-            building:OnUserDataChanged(user_data, current_time, self:GetLocationIdByBuilding(building), deltaData)
+            building:OnUserDataChanged(user_data, current_time, self:GetLocationIdByBuilding(building), nil, deltaData)
         end)
     end
 end

@@ -224,9 +224,9 @@ local EFFECT_ANIMATION_FILES = {
 }
 local SOLDIER_ANIMATION_FILES = {
     ranger = {
-        "animations/gongjianshou_1/gongjianshou_1.ExportJson",
-        "animations/gongjianshou_1/gongjianshou_1.ExportJson",
-        "animations/gongjianshou_1/gongjianshou_1.ExportJson",
+        "animations/Archer_1_render.ExportJson",
+        "animations/Archer_1_render.ExportJson",
+        "animations/Archer_1_render.ExportJson",
     },
     crossbowman = {
         "animations/Archer_1_render.ExportJson",
