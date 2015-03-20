@@ -195,9 +195,11 @@ function GameUIAllianceMemberInfo:AdapterPlayerList()
 end
 
 function GameUIAllianceMemberInfo:OnGetPlayerInfoSuccess(data)
-	self.player_info = data
-	self:BuildUI()
-	self:RefreshListView()
+	if data.success then
+		self.player_info = data.msg.playerViewData
+		self:BuildUI()
+		self:RefreshListView()
+	end
 end
 
 function GameUIAllianceMemberInfo:onMoveOutStage()

@@ -156,7 +156,7 @@ function GameUISelenaQuestion:GetListItem(index,question)
 		text = question,
 		size = 22,
 		color= 0x403c2f,
-		dimensions = cc.size(496,0),
+		dimensions = cc.size(494,0),
 	})
 	local content = display.newNode()
 	local height = math.max(label:getContentSize().height,51)
@@ -186,7 +186,7 @@ function GameUISelenaQuestion:RefreshQuestionLayer(question)
 	local random_indexs = self:RandomThreeSeqNum()
 	layer.title_label:setString(string.format(_("连续答题 %s"),self._question_index))
 	layer.question_label:setString(question.title)
-	question.correct = table.indexof(random_indexs,question.correct)
+	question.correct = table.indexof(random_indexs,1) -- 配置表的第一列为正确答案
 	self.question_layer_list:removeAllItems()
 	for index,v in ipairs(random_indexs) do
 		local item = self:GetListItem(index,question['answer_' .. v])

@@ -337,8 +337,14 @@ function Alliance:OnJoinEventsChanged()
     end)
 end
 function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
-    if self:NeedUpdateEnemyAlliance() then
-        self:UpdateEnemyAlliance(alliance_data.enemyAllianceDoc,alliance_data.basicInfo and alliance_data.basicInfo.status or nil)
+    if self:NeedUpdateEnemyAlliance() and alliance_data.enemyAllianceDoc then
+        if deltaData then
+            self:UpdateEnemyAlliance(alliance_data.enemyAllianceDoc,alliance_data.basicInfo and alliance_data.basicInfo.status or nil,
+                deltaData.enemyAllianceDoc or {})
+        else
+            self:UpdateEnemyAlliance(alliance_data.enemyAllianceDoc,alliance_data.basicInfo and alliance_data.basicInfo.status or nil,deltaData)
+        end
+
     end
     if alliance_data.notice then
         self:SetNotice(alliance_data.notice)
@@ -1176,7 +1182,7 @@ function Alliance:InitEnemyAlliance()
     self:SetEnemyAlliance(enemy_alliance)
 end
 
-function Alliance:UpdateEnemyAlliance(json_data,my_alliance_status)
+function Alliance:UpdateEnemyAlliance(json_data,my_alliance_status,deltaData)
     if not json_data then return end
     if my_alliance_status == 'protect' or my_alliance_status == 'peace' then
         self:GetEnemyAlliance():Reset()
@@ -1197,7 +1203,7 @@ function Alliance:UpdateEnemyAlliance(json_data,my_alliance_status)
             enemy_alliance:SetName(json_data.basicInfo.name)
             enemy_alliance:SetAliasName(json_data.basicInfo.tag)
         end
-        enemy_alliance:OnAllianceDataChanged(json_data)
+        enemy_alliance:OnAllianceDataChanged(json_data,deltaData)
     end
 end
 
