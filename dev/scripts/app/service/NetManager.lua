@@ -302,7 +302,7 @@ onAllianceDataChanged_callbacks = {}
 function NetManager:addAllianceDataChangedEventListener()
     self:addEventListener("onAllianceDataChanged", function(success, msg)
         if success then
-            -- LuaUtils:outputTable("onAllianceDataChanged", msg)
+            LuaUtils:outputTable("onAllianceDataChanged", msg)
             -- DataManager:setUserAllianceData(msg)
             local user_alliance_data = DataManager:getUserAllianceData()
             local edit = decodeInUserDataFromDeltaData(user_alliance_data,msg)
@@ -1722,6 +1722,12 @@ function NetManager:getDailyTaskRewards(taskType)
     return get_blocking_request_promise("logic.playerHandler.getDailyTaskRewards",
         {taskType = taskType},
         "领取日常任务奖励!"):next(get_response_msg)
+end
+
+-- 设置玩家Apple Push Notification Id
+function NetManager:getSetApnIdPromise(apnId)
+    return get_none_blocking_request_promise("logic.playerHandler.setApnId",{apnId=apnId},
+        "设置玩家Apple Push失败"):next(get_response_msg)
 end
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)

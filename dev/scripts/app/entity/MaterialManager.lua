@@ -83,11 +83,11 @@ function MaterialManager:OnUserDataChanged(userData, deltaData)
         [SOLDIER] = "soldierMaterials",
         [EQUIPMENT] = "dragonEquipments",
     }
-    for i,v in ipairs(materialsMap) do
+    for material_type,v in ipairs(materialsMap) do
         local is_delta_update = not is_fully_update and deltaData[v]
         if is_fully_update or is_delta_update then
             print("MaterialManager:OnUserDataChanged", v)
-            self:OnMaterialsComing(i, userData[v])
+            self:OnMaterialsComing(material_type, userData[v])
         end
     end
 end

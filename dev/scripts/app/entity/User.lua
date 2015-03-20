@@ -42,6 +42,7 @@ property(User, "terrain", "")
 property(User, "id", 0)
 property(User, "marchQueue", 1)
 property(User, "serverName", "")
+property(User, "apnId", "")
 function User:ctor(p)
     User.super.ctor(self)
     self.resources = {
@@ -201,15 +202,19 @@ function User:OnPropertyChange(property_name, old_value, new_value)
     end)
 end
 function User:OnUserDataChanged(userData, current_time, deltaData)
-
     self:SetServerName(userData.logicServerId)
-
+    self:SetApnId(userData.apnId)
     self:OnResourcesChangedByTime(userData, current_time, deltaData)
     self:OnBasicInfoChanged(userData, deltaData)
     self:OnCountInfoChanged(userData, deltaData)
-
+    self:GetPVEDatabase():OnUserDataChanged(userData, deltaData)
+    if self.growUpTaskManger:OnUserDataChanged(userData, deltaData) then
+        self:OnTaskChanged()
+    end
     self.request_events = userData.requestToAllianceEvents
     self.invite_events = userData.inviteToAllianceEvents
+
+    -- 下面还没做增量判断
     -- 每日任务
     self:OnDailyQuestsChanged(userData,deltaData)
     self:OnDailyQuestsEventsChanged(userData.dailyQuestEvents)
@@ -219,9 +224,6 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
 
     -- vip event
     self:OnVipEventDataChange(userData)
-    if self.growUpTaskManger:OnUserDataChanged(userData, deltaData) then
-        self:OnTaskChanged()
-    end
     -- 日常任务
     self:OnDailyTasksChanged(userData.dailyTasks)
     return self

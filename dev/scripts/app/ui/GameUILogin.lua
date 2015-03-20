@@ -73,12 +73,21 @@ function GameUILogin:createStartGame()
     :onButtonClicked(function()
         local sp = cc.Spawn:create(cc.ScaleTo:create(1,1.5),cc.FadeOut:create(1))
         local seq = transition.sequence({sp,cc.CallFunc:create(function()
-                print(ext.getDeviceToken(),"getDeviceToken----->")
+                self:sendApnIdIf()
                 app:EnterMyCityScene()
             end)})
             self.start_ui:runAction(seq)
         end)
     self.start_ui = button
+end
+
+function GameUILogin:sendApnIdIf()
+    local token = ext.getDeviceToken() or ""
+    if string.len(token) > 0 and token ~= User:ApnId() then 
+        token = string.sub(token,2,string.len(token)-1)
+        token = string.gsub(token," ","")
+        NetManager:getSetApnIdPromise(token)
+    end
 end
 
 function GameUILogin:setProgressText(str,retryLogin)

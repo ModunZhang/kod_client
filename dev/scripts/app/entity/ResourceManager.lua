@@ -121,7 +121,7 @@ function ResourceManager:UpdateByCity(city, current_time)
 
     local total_production_map = {
         [WOOD] = 0,
-        [FOOD] = -city:GetSoldierManager():GetTotalUpkeep(),
+        [FOOD] = 0,
         [IRON] = 0,
         [STONE] = 0,
         [COIN] = 0,
@@ -178,6 +178,9 @@ function ResourceManager:UpdateByCity(city, current_time)
     self:GetPopulationResource():SetLowLimitResource(total_citizen)
     for resource_type, production in pairs(total_production_map) do
         local resource_production = math.floor(production * (1 + buff_production_map[resource_type]))
+        if resource_type == FOOD then
+            resource_production = resource_production - city:GetSoldierManager():GetTotalUpkeep()
+        end
         local resource_limit = math.floor(total_limit_map[resource_type] * (1 + buff_limt_map[resource_type]))
         local resource = self.resources[resource_type]
         resource:SetValueLimit(resource_limit)
