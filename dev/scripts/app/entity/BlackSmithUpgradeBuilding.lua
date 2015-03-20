@@ -125,10 +125,14 @@ function BlackSmithUpgradeBuilding:OnTimer(current_time)
 end
 function BlackSmithUpgradeBuilding:OnUserDataChanged(...)
     BlackSmithUpgradeBuilding.super.OnUserDataChanged(self, ...)
-
-    local arg = {...}
-    local current_time = arg[2]
-    local event = arg[1].dragonEquipmentEvents[1]
+    local userData, current_time, location_id, deltaData = ...
+    local is_fully_update = deltaData == nil
+    local is_delta_update = self:IsUnlocked() and deltaData and deltaData.dragonEquipmentEvents
+    if not is_fully_update and not is_delta_update then
+        return 
+    end
+    print("BlackSmithUpgradeBuilding:OnUserDataChanged")
+    local event = userData.dragonEquipmentEvents[1]
     if event then
         local finished_time = event.finishTime / 1000
         if self:IsEquipmentEventEmpty() then
