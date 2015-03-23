@@ -151,9 +151,9 @@ function WidgetPVEDialog:Search()
     local searched = self:GetObject():Searched()
     self:GetPVEMap():ModifyObject(x, y, searched + 1)
 end
-function WidgetPVEDialog:GetRewardsFromServer(select)
-    self.user:SetPveData(nil, self:GetObject():GetRewards(select))
-    NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
+function WidgetPVEDialog:GetRewardsFromServer(select, gem_used)
+    self.user:SetPveData(nil, self:GetObject():GetRewards(select), gem_used)
+    return NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
 end
 function WidgetPVEDialog:Fight()
     local enemy = self:GetObject():GetNextEnemy()
