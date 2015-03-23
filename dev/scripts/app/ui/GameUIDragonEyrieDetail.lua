@@ -210,7 +210,10 @@ end
 
 function GameUIDragonEyrieDetail:OnResourceChanged(resource_manager)
     GameUIDragonEyrieDetail.super.OnResourceChanged(self,resource_manager)
-    if self:GetDragon():Ishated() then return end
+    if not self:GetDragon():Ishated() then return end
+    if self.skill_ui and self.skill_ui.blood_label then
+    	self.skill_ui.blood_label:setString(resource_manager:GetBloodResource():GetValue())
+    end
 end
 
 function GameUIDragonEyrieDetail:GetDragon()
@@ -485,7 +488,6 @@ function GameUIDragonEyrieDetail:CreateNodeIf_skill()
     		color = 0x403c2f,
     		align = cc.TEXT_ALIGNMENT_LEFT
     }):align(display.LEFT_CENTER, magic_bottle:getPositionX() + magic_bottle:getContentSize().width + 10, magic_bottle:getPositionY()):addTo(header_bg)
-    --TODO:临时添加按钮
     self.skill_ui.magic_bottle = magic_bottle
 	self.skill_node = skill_node
 	return self.skill_node
