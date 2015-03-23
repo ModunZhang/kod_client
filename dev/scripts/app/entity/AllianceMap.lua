@@ -57,7 +57,7 @@ function mapObject_meta:IsContainPoint(x, y)
     local start_x, end_x, start_y, end_y = self:GetGlobalRegion()
     return x >= start_x and x <= end_x and y >= start_y and y <= end_y
 end
-function mapObject_meta:IsInterSect(building)
+function mapObject_meta:IsIntersect(building)
     local start_x, end_x, start_y, end_y = building:GetGlobalRegion()
     if self:IsContainPoint(start_x, start_y) then
         return true

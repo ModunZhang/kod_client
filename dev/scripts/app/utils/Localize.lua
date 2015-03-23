@@ -127,6 +127,7 @@ local DRAGON_SKILL_EFFECTION = {
     ["greedy"] = _("减少敌方的暗仓保护比例"),
     ["scheme"] = _("增加捕获敌军几率"),
     ["recover"] = _("提升阵亡士兵的治愈率"),
+    ["battleHunger"] = _("提升一定比例的英雄之血获得量"),
 }
 
 local DRAGON_SKILL = {
@@ -144,6 +145,7 @@ local DRAGON_SKILL = {
     ["greedy"] = _("贪婪"),
     ["scheme"] = _("暗算"),
     ["recover"] = _("恢复"),
+    ["battleHunger"] = _("饥渴"),
 }
 
 local DRAGON_BUFF_EFFECTION = {

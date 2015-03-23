@@ -40,7 +40,7 @@ function GameUIMoveAllianceBuilding:onEnter()
     self.listView = list
     self:RefreshListView()
 end
-
+-- 不能移动到目标点位
 function GameUIMoveAllianceBuilding:GetListData()
 	local list_data = {}
     Alliance_Manager:GetMyAlliance():GetAllianceMap():IteratorAllianceBuildings(function(__,alliance_object)
@@ -54,7 +54,8 @@ function GameUIMoveAllianceBuilding:GetListData()
 				moveNeedHonour = self:GetMoveNeedHonour(info.name,info.level),
 				location = {x = x,y = y},
 				size = w*h,
-				key = info.name
+				key = info.name,
+				obj = alliance_object
 			})
     	end
     end)
@@ -139,7 +140,7 @@ function GameUIMoveAllianceBuilding:GetItem(data)
 			text = _("迁移")
 		}))
 		:onButtonClicked(function()
-			self:OnMoveButtonClick(data.key,data.moveNeedHonour)
+			self:OnMoveButtonClick(data)
 		end)
 	local icon = display.newSprite("honour_128x128.png")
 		:align(display.LEFT_BOTTOM,area_info_val:getPositionX() + 34, 70)
@@ -160,9 +161,14 @@ function GameUIMoveAllianceBuilding:GetItem(data)
 	return item
 end
 
-function GameUIMoveAllianceBuilding:OnMoveButtonClick(buildingKey,moveNeedHonour)
-	if moveNeedHonour <= Alliance_Manager:GetMyAlliance():Honour() then
-		NetManager:getMoveAllianceBuildingPromise(buildingKey,self.target_location.x,self.target_location.y)
+function GameUIMoveAllianceBuilding:OnMoveButtonClick(data)
+	dump(data.obj,"data--->obj")
+	if not Alliance_Manager:GetMyAlliance():GetAllianceMap():CanMoveBuilding(data.obj,self.target_location.x,self.target_location.y) then
+		UIKit:showMessageDialog(nil, _("不能移动到目标点位"),function()end)
+		return
+	end
+	if data.moveNeedHonour <= Alliance_Manager:GetMyAlliance():Honour() then
+		NetManager:getMoveAllianceBuildingPromise(data.key,self.target_location.x,self.target_location.y)
 			:next(function(msg)
 				self:leftButtonClicked()
 			end)

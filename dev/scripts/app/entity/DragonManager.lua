@@ -131,11 +131,7 @@ end
 function DragonManager:OnUserDataChanged(user_data, current_time, location_id, deltaData,hp_recovery_perHour)
     self:RefreshDragonData(user_data.dragons,current_time,hp_recovery_perHour)
     self:RefreshDragonEvents(user_data,deltaData)
-    -- self:RefreshDragonEvents(user_data.dragonHatchEvents)
-    -- self:RefreshDragonEvents__(user_data.__dragonHatchEvents)
     self:RefreshDragonDeathEvents(user_data,deltaData)
-    -- self:RefreshDragonDeathEvents(user_data.dragonDeathEvents)
-    -- self:RefreshDragonDeathEvents__(user_data.__dragonDeathEvents)
 end
 
 function DragonManager:GetDragonEventByDragonType(dragon_type)
@@ -195,39 +191,6 @@ function DragonManager:IteratorDragonEvents(func)
         func(dragonEvent)
     end
 end
-
--- function DragonManager:RefreshDragonEvents__(__dragonEvents)
---     if not __dragonEvents then return end
---     local changed_map = GameUtils:Event_Handler_Func(
---         __dragonEvents
---         ,function(event_data)
---             local dragonEvent = DragonEvent.new()
---             dragonEvent:UpdateData(event_data)
---             self.dragon_events[dragonEvent:DragonType()] = dragonEvent
---             dragonEvent:AddObserver(self)
---             return dragonEvent
---         end
---         ,function(event_data)
---             if self.dragon_events[event_data.dragonType] then
---                 local dragonEvent = self.dragon_events[event_data.dragonType]
---                 dragonEvent:UpdateData(event_data)
---             end
---         end
---         ,function(event_data)
---             if self.dragon_events[event_data.dragonType] then
---                 local dragonEvent = self.dragon_events[event_data.dragonType]
---                 dragonEvent:Reset()
---                 self.dragon_events[event_data.dragonType] = nil
---                 dragonEvent = DragonEvent.new()
---                 dragonEvent:UpdateData(event_data)
---                 return dragonEvent
---             end
---         end
---     )
---     self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonEventChanged,function(lisenter)
---         lisenter.OnDragonEventChanged(lisenter,GameUtils:pack_event_table(changed_map))
---     end)
--- end
 
 function DragonManager:OnDragonEventTimer(dragonEvent)
     self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonEventTimer,function(lisenter)
@@ -444,11 +407,6 @@ function DragonManager:OnHPChanged()
         lisenter.OnHPChanged(lisenter)
     end)
 end
-
---充能每次消耗的能量值
--- function DragonManager:GetEnergyCost()
---     return 20
--- end
 
 --新手引导
 function DragonManager:PromiseOfFinishEquipementDragon()
