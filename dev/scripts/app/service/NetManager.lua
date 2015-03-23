@@ -279,7 +279,21 @@ function NetManager:removeKickEventListener(  )
     self:removeEventListener("onKick")
 end
 
+-- function NetManager:InitEventsMap()
+--     self.event_map = {}
+-- end
+-- function NetManager:RemoveAllEvents()
+--     for event_name,v in pairs(self.event_map) do
+--         self:removeEventListener(event_name)
+--     end
+--     self.event_map = {}
+-- end
+
 onPlayerDataChanged_callbacks = {}
+onAllianceDataChanged_callbacks = {}
+onSendChatSuccess_callbacks = {}
+onGetAllChatSuccess_callbacks = {}
+
 function NetManager:addPlayerDataChangedEventListener()
     self:addEventListener("onPlayerDataChanged", function(success, response)
         if success then
@@ -299,7 +313,7 @@ function NetManager:removePlayerDataChangedEventListener(  )
     self:removeEventListener("onPlayerDataChanged")
 end
 
-onAllianceDataChanged_callbacks = {}
+
 function NetManager:addAllianceDataChangedEventListener()
     self:addEventListener("onAllianceDataChanged", function(success, msg)
         if success then
@@ -319,71 +333,6 @@ end
 function NetManager:removeAllianceDataChangedEventListener(  )
     self:removeEventListener("onAllianceDataChanged")
 end
----
-onSearchAlliancesSuccess_callbacks = {}
-onGetNearedAllianceInfosSuccess_callbacks = {}
-onSearchAllianceInfoByTagSuccess_callbacks = {}
-onGetCanDirectJoinAlliancesSuccess_callbacks = {}
-onGetPlayerInfoSuccess_callbacks = {}
-onGetMailsSuccess_callbacks = {}
-onGetSavedMailsSuccess_callbacks = {}
-onGetSendMailsSuccess_callbacks = {}
-onGetReportsSuccess_callbacks = {}
-onGetSavedReportsSuccess_callbacks = {}
-onSendChatSuccess_callbacks = {}
-onGetAllChatSuccess_callbacks = {}
-onFetchAllianceViewData_callbacks = {}
-onGetPlayerViewDataSuccess_callbacks = {}
-onGetStrikeMarchEventDetail_callbacks = {}
-onGetAttackMarchEventDetail_callbacks = {}
-onGetHelpDefenceMarchEventDetail_callbacks = {}
-onGetHelpDefenceTroopDetail_callbacks = {}
-onGetSellItemsSuccess_callbacks = {}
-onAddPlayerBillingDataSuccess_callbacks = {}
-function NetManager:addOnSearchAlliancesSuccessListener()
-    self:addEventListener("onSearchAlliancesSuccess", function(success, msg)
-        if success then
-            local callback = onSearchAlliancesSuccess_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onSearchAlliancesSuccess_callbacks = {}
-        end
-    end)
-end
-function NetManager:addOnGetNearedAllianceInfosSuccessListener()
-    self:addEventListener("onGetNearedAllianceInfosSuccess", function(success, msg)
-        if success then
-            local callback = onGetNearedAllianceInfosSuccess_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetNearedAllianceInfosSuccess_callbacks = {}
-        end
-    end)
-end
-function NetManager:addOnSearchAllianceInfoByTagSuccessListener()
-    self:addEventListener("onSearchAllianceInfoByTagSuccess", function(success, msg)
-        if success then
-            local callback = onSearchAllianceInfoByTagSuccess_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onSearchAllianceInfoByTagSuccess_callbacks = {}
-        end
-    end)
-end
-function NetManager:addOnGetCanDirectJoinAlliancesSuccessListener()
-    self:addEventListener("onGetCanDirectJoinAlliancesSuccess", function(success, msg)
-        if success then
-            local callback = onGetCanDirectJoinAlliancesSuccess_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetCanDirectJoinAlliancesSuccess_callbacks = {}
-        end
-    end)
-end
 function NetManager:addOnGetAllianceDataSuccess()
     self:addEventListener("onGetAllianceDataSuccess", function(success, msg)
         if success then
@@ -392,109 +341,6 @@ function NetManager:addOnGetAllianceDataSuccess()
         end
     end)
 end
-function NetManager:addOnGetPlayerInfoSuccessListener()
-    self:addEventListener("onGetPlayerInfoSuccess", function(success, msg)
-        if success then
-            local callback = onGetPlayerInfoSuccess_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetPlayerInfoSuccess_callbacks = {}
-        end
-    end)
-end
-function NetManager:addOnGetPlayerViewDataSuccess()
-    self:addEventListener("onGetPlayerViewDataSuccess", function(success, msg)
-        if success then
-            local callback = onGetPlayerViewDataSuccess_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetPlayerViewDataSuccess_callbacks = {}
-        end
-    end)
-end
-function NetManager:addOnGetSellItemsSuccess()
-    self:addEventListener("onGetSellItemsSuccess", function(success, msg)
-        if success then
-            local callback = onGetSellItemsSuccess_callbacks[1]
-            -- LuaUtils:outputTable("onGetSellItemsSuccess", msg)
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetSellItemsSuccess_callbacks = {}
-        end
-    end)
-end
-
-function NetManager:addOnGetMailsSuccessListener()
-    self:addEventListener("onGetMailsSuccess", function(success, msg)
-        if success then
-            assert(#onGetMailsSuccess_callbacks <= 1, "重复请求过多了!")
-
-            dump(msg, "onGetMailsSuccess")
-            MailManager:dispatchMailServerData( "onGetMailsSuccess",msg )
-            local callback = onGetMailsSuccess_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetMailsSuccess_callbacks = {}
-        end
-    end)
-end
-function NetManager:addOnGetSavedMailsSuccessListener()
-    self:addEventListener("onGetSavedMailsSuccess", function(success, msg)
-        if success then
-            assert(#onGetSavedMailsSuccess_callbacks <= 1, "重复请求过多了!")
-            MailManager:dispatchMailServerData( "onGetSavedMailsSuccess",msg )
-            local callback = onGetSavedMailsSuccess_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetSavedMailsSuccess_callbacks = {}
-        end
-    end)
-end
-function NetManager:addOnGetSendMailsSuccessListener()
-    self:addEventListener("onGetSendMailsSuccess", function(success, msg)
-        if success then
-            assert(#onGetSendMailsSuccess_callbacks <= 1, "重复请求过多了!")
-            MailManager:dispatchMailServerData( "onGetSendMailsSuccess",msg )
-            local callback = onGetSendMailsSuccess_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetSendMailsSuccess_callbacks = {}
-        end
-    end)
-end
-function NetManager:addOnGetReportsSuccessListener()
-    self:addEventListener("onGetReportsSuccess", function(success, msg)
-        if success then
-            assert(#onGetReportsSuccess_callbacks <= 1, "重复请求过多了!")
-            MailManager:dispatchMailServerData( "onGetReportsSuccess",msg )
-            local callback = onGetReportsSuccess_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetReportsSuccess_callbacks = {}
-        end
-    end)
-end
-function NetManager:addOnGetSavedReportsSuccessListener()
-    self:addEventListener("onGetSavedReportsSuccess", function(success, msg)
-        if success then
-            assert(#onGetSavedReportsSuccess_callbacks <= 1, "重复请求过多了!")
-            MailManager:dispatchMailServerData( "onGetSavedReportsSuccess",msg )
-            local callback = onGetSavedReportsSuccess_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetSavedReportsSuccess_callbacks = {}
-        end
-    end)
-end
-
 --保留
 function NetManager:addOnChatListener()
     self:addEventListener("onChat", function(success, msg)
@@ -523,105 +369,18 @@ function NetManager:addOnAllChatListener()
         end
     end)
 end
-function NetManager:addOnBuildingLevelUpListener()
-    self:addEventListener("onBuildingLevelUp", function(success, msg)
-        if success then
-            GameGlobalUI:showBuildingLevelUp(msg)
-        end
-    end)
+-- 事件回调promise
+local function get_playerdata_callback()
+    return get_callback_promise(onPlayerDataChanged_callbacks, "返回玩家数据失败!")
 end
-function NetManager:addOnHouseLevelUpListener()
-    self:addEventListener("onHouseLevelUp", function(success, msg)
-        if success then
-            GameGlobalUI:showHouseLevelUp(msg)
-        end
-    end)
+local function get_alliancedata_callback()
+    return get_callback_promise(onAllianceDataChanged_callbacks, "修改联盟信息失败!")
 end
-function NetManager:addOnTowerLevelUpListener()
-    self:addEventListener("onTowerLevelUp", function(success, msg)
-        if success then
-            GameGlobalUI:showTips(_("城墙升级完成"),string.format('LV %d',msg.level))
-        end
-    end)
+local function get_sendchat_callback()
+    return get_callback_promise(onSendChatSuccess_callbacks, "发送聊天失败!")
 end
-function NetManager:addOnWallLevelUp()
-    self:addEventListener("onWallLevelUp", function(success, msg)
-        if success then
-            GameGlobalUI:showWallLevelUp(msg)
-        end
-    end)
-end
-function NetManager:addOnFetchAllianceViewSuccess()
-    self:addEventListener("onGetAllianceViewDataSuccess", function(success, msg)
-        if success then
-            assert(#onFetchAllianceViewData_callbacks <= 1, "重复fetchAllianceView请求过多了!")
-            local callback = onFetchAllianceViewData_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onFetchAllianceViewData_callbacks = {}
-        end
-    end)
-end
-function NetManager:addOnGetStrikeMarchEventDetail()
-    self:addEventListener("onGetStrikeMarchEventDetail", function(success, msg)
-        if success then
-            assert(#onGetStrikeMarchEventDetail_callbacks <= 1, "重复getStrikeMarchEventDetail请求过多了!")
-            local callback = onGetStrikeMarchEventDetail_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetStrikeMarchEventDetail_callbacks = {}
-        end
-    end)
-end
-function NetManager:addOnGetAttackMarchEventDetail()
-    self:addEventListener("onGetAttackMarchEventDetail", function(success, msg)
-        if success then
-            assert(#onGetAttackMarchEventDetail_callbacks <= 1, "重复getAttackMarchEventDetail请求过多了!")
-            local callback = onGetAttackMarchEventDetail_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetAttackMarchEventDetail_callbacks = {}
-        end
-    end)
-end
-function NetManager:addOnGetHelpDefenceMarchEventDetail()
-    self:addEventListener("onGetHelpDefenceMarchEventDetail", function(success, msg)
-        if success then
-            assert(#onGetHelpDefenceMarchEventDetail_callbacks <= 1, "重复getHelpDefenceMarchEventDetail请求过多了!")
-            local callback = onGetHelpDefenceMarchEventDetail_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetHelpDefenceMarchEventDetail_callbacks = {}
-        end
-    end)
-end
-function NetManager:addOnGetHelpDefenceTroopDetail()
-    self:addEventListener("onGetHelpDefenceTroopDetail", function(success, msg)
-        if success then
-            assert(#onGetHelpDefenceTroopDetail_callbacks <= 1, "重复getHelpDefenceTroopDetail请求过多了!")
-            local callback = onGetHelpDefenceTroopDetail_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetHelpDefenceTroopDetail_callbacks = {}
-        end
-    end)
-end
-function NetManager:addOnAddPlayerBillingDataSuccess()
-    self:addEventListener("onAddPlayerBillingDataSuccess", function(success, msg)
-        if success then
-            assert(#onAddPlayerBillingDataSuccess_callbacks <= 1, "重复addPlayerBillingData请求过多了!")
-            local callback = onAddPlayerBillingDataSuccess_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onAddPlayerBillingDataSuccess_callbacks = {}
-        end
-    end)
+local function get_fetchchat_callback()
+    return get_callback_promise(onGetAllChatSuccess_callbacks, "获取聊天失败!")
 end
 
 
@@ -664,38 +423,18 @@ local function get_connectLogicServer_promise()
 end
 function NetManager:getConnectLogicServerPromise()
     return get_connectLogicServer_promise():next(function(result)
+        -- base
         self:addDisconnectEventListener()
         self:addTimeoutEventListener()
         self:addKickEventListener()
+        -- player
         self:addPlayerDataChangedEventListener()
-        self:addAllianceDataChangedEventListener()
-
-        self:addOnSearchAlliancesSuccessListener()
-        self:addOnGetNearedAllianceInfosSuccessListener()
-        self:addOnSearchAllianceInfoByTagSuccessListener()
-        self:addOnGetCanDirectJoinAlliancesSuccessListener()
-        self:addOnGetPlayerInfoSuccessListener()
-        self:addOnGetPlayerViewDataSuccess()
-        self:addOnGetSellItemsSuccess()
-        self:addOnGetMailsSuccessListener()
-        self:addOnGetSavedMailsSuccessListener()
-        self:addOnGetSendMailsSuccessListener()
-        self:addOnGetReportsSuccessListener()
-        self:addOnGetSavedReportsSuccessListener()
+        -- chat
         self:addOnChatListener()
         self:addOnAllChatListener()
+        -- alliance
         self:addOnGetAllianceDataSuccess()
-
-        self:addOnBuildingLevelUpListener()
-        self:addOnHouseLevelUpListener()
-        self:addOnTowerLevelUpListener()
-        self:addOnWallLevelUp()
-        self:addOnFetchAllianceViewSuccess()
-        self:addOnGetStrikeMarchEventDetail()
-        self:addOnGetAttackMarchEventDetail()
-        self:addOnGetHelpDefenceMarchEventDetail()
-        self:addOnGetHelpDefenceTroopDetail()
-        self:addOnAddPlayerBillingDataSuccess()
+        self:addAllianceDataChangedEventListener()
     end)
 end
 local function getOpenUDID()
@@ -741,74 +480,7 @@ function NetManager:getLoginPromise(deviceId)
         end
     end)
 end
--- 事件回调promise
-local function get_playerdata_callback()
-    return get_callback_promise(onPlayerDataChanged_callbacks, "返回玩家数据失败!")
-end
-local function get_searchalliance_callback()
-    return get_callback_promise(onSearchAlliancesSuccess_callbacks, "搜索联盟失败!")
-end
-local function get_nearedallianceinfos_callback()
-    return get_callback_promise(onGetNearedAllianceInfosSuccess_callbacks, "查看战力相近的3个联盟的数据失败!")
-end
-local function get_searchallianceinfobytag_callback()
-    return get_callback_promise(onSearchAllianceInfoByTagSuccess_callbacks, "根据Tag搜索联盟战斗数据失败!")
-end
-local function get_directjoin_callback()
-    return get_callback_promise(onGetCanDirectJoinAlliancesSuccess_callbacks, "搜索能直接加入的联盟失败!")
-end
-local function get_playerinfo_callback()
-    return get_callback_promise(onGetPlayerInfoSuccess_callbacks, "查询玩家信息失败!")
-end
-local function get_cityinfo_callback()
-    return get_callback_promise(onGetPlayerViewDataSuccess_callbacks, "查询玩家城市信息失败!")
-end
-local function get_sellitems_callback()
-    return get_callback_promise(onGetSellItemsSuccess_callbacks, "获取出售列表失败!")
-end
-local function get_alliancedata_callback()
-    return get_callback_promise(onAllianceDataChanged_callbacks, "修改联盟信息失败!")
-end
-local function get_inboxmails_callback()
-    return get_callback_promise(onGetMailsSuccess_callbacks, "获取收件箱邮件失败!")
-end
-local function get_savedmails_callback()
-    return get_callback_promise(onGetSavedMailsSuccess_callbacks, "获取收藏邮件失败!")
-end
-local function get_sendmails_callback()
-    return get_callback_promise(onGetSendMailsSuccess_callbacks, "获取发件箱邮件失败!")
-end
-local function get_reports_callback()
-    return get_callback_promise(onGetReportsSuccess_callbacks, "获取玩家失败!")
-end
-local function get_savedreports_callback()
-    return get_callback_promise(onGetSavedReportsSuccess_callbacks, "获取玩家收藏战报失败!")
-end
-local function get_sendchat_callback()
-    return get_callback_promise(onSendChatSuccess_callbacks, "发送聊天失败!")
-end
-local function get_fetchchat_callback()
-    return get_callback_promise(onGetAllChatSuccess_callbacks, "获取聊天失败!")
-end
-local function get_fetchallianceview_callback()
-    return  get_callback_promise(onFetchAllianceViewData_callbacks, "获取对方联盟数据失败!")
-end
-local function get_strikemarcheventdetail_callback()
-    return  get_callback_promise(onGetStrikeMarchEventDetail_callbacks, "获取突袭事件数据失败!")
-end
-local function get_attackmarcheventdetail_callback()
-    return  get_callback_promise(onGetAttackMarchEventDetail_callbacks, "获取行军事件数据失败!")
-end
-local function get_gethelpdefencemarcheventdetail_callback()
-    return  get_callback_promise(onGetHelpDefenceMarchEventDetail_callbacks, "获取协防事件数据失败!")
-end
-local function get_gethelpdefencetroopdetail_callback()
-    return  get_callback_promise(onGetHelpDefenceTroopDetail_callbacks, "获取协防事件数据失败!")
-end
 
-local function get_addplayerbillingdata_callback()
-    return  get_callback_promise(onAddPlayerBillingDataSuccess_callbacks, "上传IAP信息失败!")
-end
 -- 个人修改地形
 local function get_changeTerrain_promise(terrain)
     return get_blocking_request_promise("logic.playerHandler.setTerrain", {
@@ -1790,6 +1462,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 
