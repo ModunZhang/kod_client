@@ -36,7 +36,7 @@ function GameUIAllianceNoticeOrDescEdit:onMoveInStage()
 	local textView = ccui.UITextView:create(cc.size(555,238),display.newScale9Sprite("alliance_edit_bg_555x238.png"))
     textView:addTo(bg_node):align(display.CENTER_TOP,bg_node:getContentSize().width/2, titleBar:getPositionY() - 10)
     textView:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)    
-    textView:setFont(UIKit:getFontFilePath(), 24)
+    textView:setFont(UIKit:getEditBoxFont(), 24)
     textView:setPlaceHolder(_("最多输入600个字符"))
     textView:setFontColor(UIKit:hex2c3b(0x000000))
     if self.isNotice_ then

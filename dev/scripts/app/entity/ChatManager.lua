@@ -169,8 +169,7 @@ end
 
 function ChatManager:__formatLastMessage(chat)
 	if not chat then return ""  end
-	-- return string.format("[%s] %s",chat.fromName,)
-	local str = string.format("[%s] %s",chat.fromName,chat.text)
+	local str = string.format("%s : %s",chat.fromName,chat.text)
 	return self:GetEmojiUtil():ConvertEmojiToRichText(str)
 end
 function ChatManager:FetchLastChannelMessage()

@@ -105,7 +105,7 @@ function GameUIAlliancePosition:ctor()
         listener = edit
     })
     editbox_x:setMaxLength(2)
-    editbox_x:setFont(UIKit:getFontFilePath(),22)
+    editbox_x:setFont(UIKit:getEditBoxFont(),22)
     editbox_x:setFontColor(cc.c3b(0,0,0))
     editbox_x:setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC)
     editbox_x:setPlaceholderFontColor(cc.c3b(204,196,158))
@@ -122,7 +122,7 @@ function GameUIAlliancePosition:ctor()
         UIInputType = 1,
         image = "input_box_174X40.png",
         size = cc.size(174,40),
-        font = UIKit:getFontFilePath(),
+        font = UIKit:getEditBoxFont(),
         listener = edit
     })
     editbox_y:setMaxLength(2)

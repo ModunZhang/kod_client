@@ -195,7 +195,7 @@ function GameUIAllianceTitle:CreateEditTitleUI()
         image = "input_box.png",
         size = cc.size(422,40),
     })
-    editbox:setFont(UIKit:getFontFilePath(),18)
+    editbox:setFont(UIKit:getEditBoxFont(),18)
     editbox:setFontColor(cc.c3b(0,0,0))
     editbox:setPlaceHolder(self:GetAllianceTitleAndLevelPng(self.title_))
     editbox:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))
