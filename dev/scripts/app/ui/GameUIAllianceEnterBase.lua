@@ -8,6 +8,8 @@ local GameUIAllianceEnterBase = class("GameUIAllianceEnterBase",WidgetPopDialog)
 local window = import("..utils.window")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local Localize = import("..utils.Localize")
+local WidgetUseItems = import("..widget.WidgetUseItems")
+
 -- building is allianceobject
 function GameUIAllianceEnterBase:ctor(building,isMyAlliance,my_alliance)
     GameUIAllianceEnterBase.super.ctor(self,self:GetUIHeight(),"",display.top-200)
@@ -255,6 +257,12 @@ end
 function GameUIAllianceEnterBase:GetEnterButtons()
     if self:IsMyAlliance() then
         local move_city_button = self:BuildOneButton("icon_move_city.png",_("迁移城市")):onButtonClicked(function()
+            local location = self:GetLogicPosition()
+            WidgetUseItems.new():Create({
+                item_type = WidgetUseItems.USE_TYPE.MOVE_THE_CITY,
+                locationX=location.x,
+                locationY=location.y
+            }):addToCurrentScene()
             self:leftButtonClicked()
         end)
         local move_building_button = self:BuildOneButton("icon_move_alliance_building.png",_("迁移联盟建筑")):onButtonClicked(function()

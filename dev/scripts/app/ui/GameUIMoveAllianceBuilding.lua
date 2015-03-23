@@ -83,6 +83,9 @@ function GameUIMoveAllianceBuilding:GetItem(data)
 	local item = self.listView:newItem()
 	local content = WidgetUIBackGround.new({width = 568,height = 154},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
 	local box = display.newSprite("bg_134x134.png"):align(display.LEFT_CENTER, 10, 77):addTo(content)
+	local icon = display.newSprite(data.image, 67, 67):addTo(box)
+	icon:scale(100/icon:getContentSize().width)
+
 	local title_bar = display.newScale9Sprite("alliance_event_type_darkblue_222x30.png",0,0, cc.size(406,30), cc.rect(7,7,190,16))
 		:addTo(content)
 		:align(display.LEFT_TOP, box:getPositionX() + 140, box:getPositionY() + 67)
@@ -129,26 +132,43 @@ function GameUIMoveAllianceBuilding:GetItem(data)
 		:align(display.RIGHT_BOTTOM,location_info_line:getPositionX()+location_info_line:getContentSize().width,location_info_label:getPositionY())
 		:addTo(content)
 
-	WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
+	local button = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
 		:addTo(content)
 		:align(display.LEFT_BOTTOM, area_info_val:getPositionX() + 10, 15)
 		:setButtonLabel("normal", UIKit:commonButtonLable({
 			text = _("迁移")
 		}))
 		:onButtonClicked(function()
-			self:OnMoveButtonClick(data.key)
+			self:OnMoveButtonClick(data.key,data.moveNeedHonour)
 		end)
+	local icon = display.newSprite("honour_128x128.png")
+		:align(display.LEFT_BOTTOM,area_info_val:getPositionX() + 34, 70)
+		:addTo(content)
+		:scale(0.25)
+	UIKit:ttfLabel({
+		text = data.moveNeedHonour,
+		size = 20,
+		color= 0x423f32
+		})
+		:align(display.LEFT_CENTER,icon:getPositionX() + icon:getCascadeBoundingBox().width + 2, icon:getPositionY() + icon:getCascadeBoundingBox().width/2)
+		:addTo(content)
+
+
 	content:size(568,154)
 	item:addContent(content)
 	item:setItemSize(568, 154)
 	return item
 end
 
-function GameUIMoveAllianceBuilding:OnMoveButtonClick(buildingKey)
-	NetManager:getMoveAllianceBuildingPromise(buildingKey,self.target_location.x,self.target_location.y)
-		:next(function(msg)
-			self:leftButtonClicked()
-		end)
+function GameUIMoveAllianceBuilding:OnMoveButtonClick(buildingKey,moveNeedHonour)
+	if moveNeedHonour <= Alliance_Manager:GetMyAlliance():Honour() then
+		NetManager:getMoveAllianceBuildingPromise(buildingKey,self.target_location.x,self.target_location.y)
+			:next(function(msg)
+				self:leftButtonClicked()
+			end)
+	else
+		UIKit:showMessageDialog(nil, _("联盟荣誉值不足"),function()end)
+	end
 end
 
 return GameUIMoveAllianceBuilding

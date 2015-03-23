@@ -1332,7 +1332,7 @@ function NetManager:getMoveAllianceBuildingPromise(buildingName, locationX, loca
         buildingName = buildingName,
         locationX = locationX,
         locationY = locationY
-    }, "移动联盟建筑失败!"):next(get_response_msg)
+    }, "移动联盟建筑失败!"):next(get_response_msg):next(get_alliance_response_msg)
 end
 -- 移动玩家城市
 function NetManager:getMoveAllianceMemberPromise(locationX, locationY)
