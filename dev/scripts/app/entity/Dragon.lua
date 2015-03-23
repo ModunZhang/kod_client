@@ -305,9 +305,9 @@ function Dragon:DefaultEquipments()
     r[self.DRAGON_BODY.sting] = DragonEquipment.new("sting",self:Type())
     return r
 end
-
+--TODO:服务器需要修改
 function Dragon:GetMaxHP()
-	return self:TotalVitality() * 2
+	return self:TotalVitality() * 4
 end
 
 --升级需要的经验值
