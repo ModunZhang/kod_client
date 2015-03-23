@@ -17,9 +17,9 @@ function VipEvent:OnPropertyChange()
 end
 
 function VipEvent:UpdateData(json_data)
-    self:SetId(json_data.id or "")
-    self:SetStartTime(json_data.startTime/1000 or 0)
-    self:SetFinishTime(json_data.finishTime/1000 or 0)
+    self:SetId(json_data.id or self.id or "")
+    self:SetStartTime(json_data.startTime and json_data.startTime/1000 or self.startTime or 0)
+    self:SetFinishTime(json_data.finishTime and json_data.finishTime/1000 or self.finishTime or 0)
 end
 
 function VipEvent:Reset()
@@ -42,4 +42,5 @@ function VipEvent:IsActived()
     return self.times_ and self.times_ > 0 or self.finishTime-self.startTime>0
 end
 return VipEvent
+
 

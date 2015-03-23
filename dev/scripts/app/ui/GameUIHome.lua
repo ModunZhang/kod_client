@@ -164,6 +164,7 @@ function GameUIHome:OnBasicChanged(fromEntity,changed_map)
             self:RefreshVIP()
         end
     end
+    self:RefreshData()
 end
 function GameUIHome:OnHelpEventChanged(changed_map)
     local alliance = Alliance_Manager:GetMyAlliance()

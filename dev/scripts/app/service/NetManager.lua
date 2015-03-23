@@ -1150,7 +1150,7 @@ function NetManager:getFreeSpeedUpPromise(eventType, eventId)
     return get_blocking_request_promise("logic.playerHandler.freeSpeedUp", {
         eventType = eventType,
         eventId = eventId,
-    }, "请求免费加速失败!")
+    }, "请求免费加速失败!"):next(get_response_msg)
 end
 -- 协助玩家加速
 function NetManager:getHelpAllianceMemberSpeedUpPromise(eventId)

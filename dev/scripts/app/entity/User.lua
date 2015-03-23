@@ -223,7 +223,7 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
     self:GetPVEDatabase():OnUserDataChanged(userData, deltaData)
 
     -- vip event
-    self:OnVipEventDataChange(userData)
+    self:OnVipEventDataChange(userData, deltaData)
     -- 日常任务
     self:OnDailyTasksChanged(userData.dailyTasks)
     return self
@@ -342,35 +342,51 @@ function User:GetSpecialVipLevelExp(level)
     local level = #vip_level >= level and level or #vip_level
     return vip_level[level].expFrom
 end
-function User:OnVipEventDataChange(userData)
-    if userData.vipEvents then
-        if not LuaUtils:table_empty(userData.vipEvents) then
-            self.vip_event:UpdateData(userData.vipEvents[1])
+function User:OnVipEventDataChange(userData, deltaData)
+    local is_fully_update = deltaData == nil
+
+    local is_delta_update = not is_fully_update and deltaData.vipEvents ~= nil
+    if is_fully_update then
+        if userData.vipEvents then
+            if not LuaUtils:table_empty(userData.vipEvents) then
+                self.vip_event:UpdateData(userData.vipEvents[1])
+            end
         end
+        self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT, function(listener)
+            listener:OnVipEventTimer(self.vip_event)
+        end)
     end
-    if userData.__vipEvents then
-        self.vip_event:UpdateData(userData.__vipEvents[1].data)
-        if userData.__vipEvents[1].type=="add" then
-            -- vip 激活，刷新资源
-            City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())
-            -- 通知出去
-            self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_ACTIVE, function(listener)
-                listener:OnVipEventActive(self.vip_event)
-            end)
-        end
-        if userData.__vipEvents[1].type=="remove" then
+    if is_delta_update then
+        local add = deltaData.vipEvents.add
+        local remove = deltaData.vipEvents.remove
+
+        if remove and #remove >0 then
             -- vip 激活结束，刷新资源
             City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())
             -- 通知出去
             self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_OVER, function(listener)
                 listener:OnVipEventOver(self.vip_event)
             end)
+            self.vip_event:UpdateData(remove[1])
         end
+        if add and #add >0 then
+            -- vip 激活，刷新资源
+            City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())
+            -- 通知出去
+            self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_ACTIVE, function(listener)
+                listener:OnVipEventActive(self.vip_event)
+            end)
+            self.vip_event:UpdateData(add[1])
+        end
+        for k,v in pairs(deltaData.vipEvents) do
+            if tolua.type(k) == "number" then
+                self.vip_event:UpdateData(v)
+            end
+        end
+        self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT, function(listener)
+            listener:OnVipEventTimer(self.vip_event)
+        end)
     end
-
-    self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT, function(listener)
-        listener:OnVipEventTimer(self.vip_event)
-    end)
 end
 function User:OnVipEventTimer( vip_event )
     self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT, function(listener)
@@ -550,6 +566,14 @@ function User:GetBestDragon()
 end
 
 return User
+
+
+
+
+
+
+
+
 
 
 
