@@ -42,7 +42,7 @@ exportAnimationsRes()
 		fi
 	done
 }
-
+#不复制字体文件和po文件
 exportRes()
 {
 	currentDir=$1
