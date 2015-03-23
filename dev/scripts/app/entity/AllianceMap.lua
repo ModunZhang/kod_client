@@ -57,6 +57,21 @@ function mapObject_meta:IsContainPoint(x, y)
     local start_x, end_x, start_y, end_y = self:GetGlobalRegion()
     return x >= start_x and x <= end_x and y >= start_y and y <= end_y
 end
+function mapObject_meta:IsInterSect(building)
+    local start_x, end_x, start_y, end_y = building:GetGlobalRegion()
+    if self:IsContainPoint(start_x, start_y) then
+        return true
+    end
+    if self:IsContainPoint(start_x, end_y) then
+        return true
+    end
+    if self:IsContainPoint(end_x, start_y) then
+        return true
+    end
+    if self:IsContainPoint(end_x, end_y) then
+        return true
+    end
+end
 function mapObject_meta:GetGlobalRegion()
     local w, h = self:GetSize()
     local x, y = self:GetLogicPosition()
@@ -155,8 +170,29 @@ function AllianceMap:IteratorAllObjects(func)
         end
     end
 end
-function AllianceMap:CanPlaceWithBuilding(allince_building)
-    
+function AllianceMap:CanMoveBuilding(allianceBuilding, x, y)
+    local building = clone(allianceBuilding)
+    building.location.x = x
+    building.location.y = y
+    -- 
+    for _,v in ipairs({building:GetGlobalRegion()}) do
+        if v < 0 and v >= 51 then
+            return false
+        end
+    end
+
+    -- 
+    local x1,y1 = allianceBuilding:GetLogicPosition()
+    for _,v in pairs(self.mapObjects) do
+        local x2,y2 = v:GetLogicPosition()
+        -- 不一样才能比较
+        if x1 ~= x2 or y1 ~= y2 then
+            if building:IsInterSect(v) then
+                return false
+            end
+        end
+    end
+    return true
 end
 function AllianceMap:GetAlliance()
     return self.alliance
@@ -215,7 +251,7 @@ function AllianceMap:OnMapObjectsChanged(allianceData, deltaData)
                 setmetatable(v, mapObject_meta):SetAllianceMap(self)
             end
             for i,v in ipairs(deltaData.mapObjects.edit or {}) do
-                -- todo
+            -- todo
             end
             for i,v in ipairs(deltaData.mapObjects.remove or {}) do
                 setmetatable(v, mapObject_meta):SetAllianceMap(self)
@@ -229,6 +265,7 @@ end
 
 
 return AllianceMap
+
 
 
 
