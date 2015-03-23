@@ -21,7 +21,7 @@ function WidgetPVEAncientRuins:SetUpButtons()
                 label = _("捐献"), callback = function()
                     if self:HasGem(20) then
                         self:Search()
-                        self:GetRewardsFromServer()
+                        self:GetRewardsFromServer(nil, 20)
                         self:removeFromParent()
                     end
                 end

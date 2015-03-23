@@ -97,11 +97,12 @@ function User:HasAnyStength(num)
     return self:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()) >= (num or 1)
 end
 function User:ResetPveData()
-    self:SetPveData(nil, nil)
+    self:SetPveData(nil, nil, nil)
 end
-function User:SetPveData(fight_data, rewards_data)
+function User:SetPveData(fight_data, rewards_data, gem_used)
     self.fight_data = fight_data
     self.rewards_data = rewards_data
+    self.gem_used = gem_used
 end
 function User:EncodePveDataAndResetFightRewardsData()
     local fightData = self.fight_data
@@ -114,8 +115,12 @@ function User:EncodePveDataAndResetFightRewardsData()
     end
     local used_strength = self.used_strength
     self.used_strength = 0
+
+    local gem_used = self.gem_used
+    self.gem_used = nil
     return {
         pveData = {
+            gemUsed = gem_used,
             staminaUsed = used_strength,
             location = self.pve_database:EncodeLocation(),
             floor = self.cur_pve_map:EncodeMap(),

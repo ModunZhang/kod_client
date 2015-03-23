@@ -21,7 +21,7 @@ function WidgetPVEWarriorsTomb:SetUpButtons()
                 label = _("安葬"), callback = function()
                     if self:HasGem(10) then
                         self:Search()
-                        self:GetRewardsFromServer()
+                        self:GetRewardsFromServer(nil, 10)
                         self:removeFromParent()
                     end
                 end
