@@ -495,7 +495,7 @@ function NetManager:addOnGetSavedReportsSuccessListener()
     end)
 end
 
-
+--保留
 function NetManager:addOnChatListener()
     self:addEventListener("onChat", function(success, msg)
         if success then
@@ -509,9 +509,11 @@ function NetManager:addOnChatListener()
         end
     end)
 end
+--保留
 function NetManager:addOnAllChatListener()
     self:addEventListener("onAllChat", function(success, msg)
         if success then
+            app:GetChatManager():HandleNetMessage("onAllChat",msg)
             assert(#onGetAllChatSuccess_callbacks <= 1, "重复请求过多了!")
             local callback = onGetAllChatSuccess_callbacks[1]
             if type(callback) == "function" then

@@ -192,7 +192,7 @@ end
 
 function ChatManager:FetchAllChatMessageFromServer()
 	NetManager:getFetchChatPromise():next(function(messages)
-		self:HandleNetMessage('onAllChat',messages)
+		-- self:HandleNetMessage('onAllChat',messages)
 	end)
 end
 
