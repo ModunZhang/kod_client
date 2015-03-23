@@ -10,6 +10,36 @@ local UILib = import("..ui.UILib")
 local MapLayer = import(".MapLayer")
 local PVELayer = class("PVELayer", MapLayer)
 local ZORDER = Enum("BACKGROUND", "BUILDING", "OBJECT", "FOG")
+
+
+local pve_color = {
+    cc.c3b(125,0,125),
+    cc.c3b(0,0,0),
+    cc.c3b(0,0,125),
+    cc.c3b(0,0,0),
+    cc.c3b(125,125,125),
+    cc.c3b(125,125,0),
+    cc.c3b(125,125,0),
+    cc.c3b(125,125,125),
+    cc.c3b(125,125,125),
+    cc.c3b(125,125,125),
+    cc.c3b(125,125,125),
+    cc.c3b(125,125,125),
+    cc.c3b(125,125,125),
+    cc.c3b(125,125,125),
+    cc.c3b(125,125,125),
+    cc.c3b(125,125,125),
+    cc.c3b(125,125,125),
+    cc.c3b(125,125,125),
+    cc.c3b(125,125,125),
+    cc.c3b(125,125,125),
+    cc.c3b(125,125,125),
+    cc.c3b(125,125,125),
+    cc.c3b(125,125,125),
+    cc.c3b(125,125,125),
+}
+
+
 function PVELayer:ctor(user)
     PVELayer.super.ctor(self, 0.5, 1)
     self.pve_listener = Observer.new()
@@ -39,14 +69,16 @@ function PVELayer:ctor(user)
     local x, y = size_out.width * 0.5 - size_in.width * 0.5, size_out.height * 0.5 - size_in.height * 0.5
     self.scene_node:pos(x, y)
 
-    -- local layer = self.background:getLayer("layer1")
-    -- local color = cc.c3b(tonumber(layer:getProperty("r")) or 0, tonumber(layer:getProperty("g")) or 0, tonumber(layer:getProperty("b")) or 0)
-    -- for x = 0, w - 1 do
-    --     for y = 0, h - 1 do
-    --         local tile = layer:getTileAt(cc.p(x, y))
-    --         tile:setColor(color + cc.c3b(tile:getColor()))
-    --     end
-    -- end
+    local layer = self.background:getLayer("layer1")
+    local color = pve_color[self.pve_map.index]
+    for x = 0, w - 1 do
+        for y = 0, h - 1 do
+            local tile = layer:getTileAt(cc.p(x, y))
+            tile:setColor(color + cc.c3b(tile:getColor()))
+            dump(tile:getColor())
+            break
+        end
+    end
 end
 function PVELayer:onEnter()
     PVELayer.super.onEnter(self)

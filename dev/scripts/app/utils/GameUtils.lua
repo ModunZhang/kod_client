@@ -368,7 +368,7 @@ function GameUtils:Handler_DeltaData_Func(data,add_func,edit_func,remove_func)
             end
         end
     end
-     return {added,edited,removed} -- each of return is a table
+    return {added,edited,removed} -- each of return is a table
 end
 
 
@@ -439,17 +439,23 @@ local special_soldier = GameDatas.Soldiers.special
 local function createSoldiers(name, star, count)
     return {name = name, star = star, morale = 100, currentCount = count, totalCount = count, woundedCount = 0, round = 0}
 end
-function GameUtils:SoldierSoldierBattle(attackSoldiers, attackWoundedSoldierPercent, defenceSoldiers, defenceWoundedSoldierPercent)
+function GameUtils:GetSoldiersConfig(soldier_name, soldier_star)
+    local soldier_config = special_soldier[soldier_name]
+    if not soldier_config then
+        soldier_config = normal_soldier[string.format("%s_%d", soldier_name, soldier_star)]
+    end
+    assert(soldier_config)
+    return soldier_config
+end
+function GameUtils:SoldierSoldierBattle(attackSoldiers, attackWoundedSoldierPercent, attackSoldierMoraleDecreasedPercent, defenceSoldiers, defenceWoundedSoldierPercent, defenceSoldierMoraleDecreasedPercent)
     local attackResults = {}
     local defenceResults = {}
     while #attackSoldiers > 0 and #defenceSoldiers > 0 do
         local attackSoldier = attackSoldiers[1]
-        local attackSoldierType = string.format("%s_%d", attackSoldier.name, attackSoldier.star)
-        local attackSoldierConfig = normal_soldier[attackSoldierType]
+        local attackSoldierConfig = self:GetSoldiersConfig(attackSoldier.name, attackSoldier.star)
 
         local defenceSoldier = defenceSoldiers[1]
-        local defenceSoldierType = string.format("%s_%d", defenceSoldier.name, defenceSoldier.star)
-        local defenceSoldierConfig = normal_soldier[defenceSoldierType]
+        local defenceSoldierConfig = self:GetSoldiersConfig(defenceSoldier.name, defenceSoldier.star)
         --
         local attackSoldierHp = attackSoldierConfig.hp
         local attackTotalPower = attackSoldierConfig[defenceSoldierConfig.type] * attackSoldier.currentCount
@@ -474,8 +480,8 @@ function GameUtils:SoldierSoldierBattle(attackSoldiers, attackWoundedSoldierPerc
             defenceDamagedSoldierCount = floor(defenceSoldier.currentCount * 0.7)
         end
         --
-        local attackMoraleDecreased = ceil(attackDamagedSoldierCount * pow(2, attackSoldier.round - 1) / attackSoldier.totalCount * 100)
         local attackWoundedSoldierCount = ceil(attackDamagedSoldierCount * attackWoundedSoldierPercent)
+        local attackMoraleDecreased = ceil(attackDamagedSoldierCount * pow(2, attackSoldier.round - 1) / attackSoldier.totalCount * 100 * attackSoldierMoraleDecreasedPercent)
         table.insert(attackResults, {
             soldierName = attackSoldier.name,
             soldierStar = attackSoldier.star,
@@ -492,8 +498,8 @@ function GameUtils:SoldierSoldierBattle(attackSoldiers, attackWoundedSoldierPerc
         attackSoldier.morale = attackSoldier.morale - attackMoraleDecreased
 
 
-        local dfenceMoraleDecreased = ceil(defenceDamagedSoldierCount * pow(2, attackSoldier.round - 1) / defenceSoldier.totalCount * 100)
         local defenceWoundedSoldierCount = ceil(defenceDamagedSoldierCount * defenceWoundedSoldierPercent)
+        local dfenceMoraleDecreased = ceil(defenceDamagedSoldierCount * pow(2, attackSoldier.round - 1) / defenceSoldier.totalCount * 100 * defenceSoldierMoraleDecreasedPercent)
         table.insert(defenceResults, {
             soldierName = defenceSoldier.name,
             soldierStar = defenceSoldier.star,
@@ -531,47 +537,109 @@ function GameUtils:DragonDragonBattle(attackDragon, defenceDragon, effect)
     assert(defenceDragon.vitality)
     assert(defenceDragon.totalHp)
     assert(defenceDragon.currentHp)
-    local attackDragonPower = attackDragon.strength
-    local defenceDragonPower = defenceDragon.strength
+    local attackDragonStrength = attackDragon.strength
+    local defenceDragonStrength = defenceDragon.strength
     if effect >= 0 then
-        defenceDragonPower = defenceDragonPower * (1 - effect)
+        defenceDragonStrength = defenceDragonStrength * (1 - effect)
     else
-        attackDragonPower = attackDragonPower * (1 + effect)
+        attackDragonStrength = attackDragonStrength * (1 + effect)
     end
     local attackDragonHpDecreased
     local defenceDragonHpDecreased
-    if attackDragonPower >= defenceDragonPower then
-        attackDragonHpDecreased = floor(defenceDragonPower * 0.5)
-        defenceDragonHpDecreased = floor(pow(attackDragonPower * defenceDragonPower, 2) * 0.5)
+    if attackDragonStrength >= defenceDragonStrength then
+        attackDragonHpDecreased = floor(defenceDragonStrength * 0.5)
+        defenceDragonHpDecreased = floor(sqrt(attackDragonStrength * defenceDragonStrength) * 0.5)
     else
-        attackDragonHpDecreased = floor(pow(attackDragonPower * defenceDragonPower, 2) * 0.5)
-        defenceDragonHpDecreased = floor(attackDragonPower * 0.5)
+        attackDragonHpDecreased = floor(sqrt(attackDragonStrength * defenceDragonStrength) * 0.5)
+        defenceDragonHpDecreased = floor(attackDragonStrength * 0.5)
     end
 
     attackDragon.currentHp = attackDragonHpDecreased > attackDragon.currentHp and 0 or attackDragon.currentHp - attackDragonHpDecreased
     defenceDragon.currentHp = defenceDragonHpDecreased > defenceDragon.currentHp and 0 or defenceDragon.currentHp - defenceDragonHpDecreased
-    attackDragon.isWin = attackDragonPower >= defenceDragonPower
-    defenceDragon.isWin = attackDragonPower < defenceDragonPower
+    attackDragon.isWin = attackDragonStrength >= defenceDragonStrength
+    defenceDragon.isWin = attackDragonStrength < defenceDragonStrength
 
     return {
         hp = attackDragon.totalHp,
         hpDecreased = attackDragon.totalHp - attackDragon.currentHp,
         hpMax = attackDragon.hpMax,
-        isWin = attackDragonPower >= defenceDragonPower
+        isWin = attackDragonStrength >= defenceDragonStrength
     }, {
         hp = defenceDragon.totalHp,
         hpDecreased = defenceDragon.totalHp - defenceDragon.currentHp,
         hpMax = defenceDragon.hpMax,
-        isWin = attackDragonPower < defenceDragonPower
+        isWin = attackDragonStrength < defenceDragonStrength
     }
 end
 
 local floatInit = GameDatas.AllianceInitData.floatInit
+local function getSumPower(soldiersForFight)
+    local power = 0
+    for i,v in ipairs(soldiersForFight) do
+        power = power + soldierForFight.power * soldierForFight.totalCount
+    end
+    return power
+end
+local fightFix = GameDatas.Dragons.fightFix
+local function getEffectPercent(multiple)
+    local configs = fightFix
+    for _,config in ipairs(configs) do
+        if config.multipleMax > multiple then
+            return config.effect
+        end
+    end
+    return configs[#configs].effect
+end
+local function getDragonFightFixedEffect(attackSoldiersForFight, defenceSoldiersForFight)
+    local attackSumPower = getSumPower(attackSoldiersForFight)
+    local defenceSumPower = getSumPower(defenceSoldiersForFight)
+    local effect = attackSumPower >= defenceSumPower and getEffectPercent(attackSumPower / defenceSumPower) or -getEffectPercent(defenceSumPower / attackSumPower)
+    return effect
+end
+local function getPlayerTreatSoldierPercent(dragon)
+    local basePercent = 0.3
+    local skillBuff = 0
+    local equipmentBuff = 0
+
+    local skill = dargon:GetSkillByName("recover")
+    if skill then
+        skillBuff = skill:GetEffect()
+    end
+
+    for _,v in ipairs(dargon:GetAllEquipmentBuffEffect()) do
+        local k,buff = unpack(v)
+        if k == "recoverAdd" then
+            equipmentBuff = buff
+            break
+        end
+    end
+    return basePercent + skillBuff + equipmentBuff
+end
+local function getPlayerSoldierMoraleDecreasedPercent(dragon)
+    local basePercent = 1
+    local skillBuff = 0
+
+    local skill = dargon:GetSkillByName("insensitive")
+    if skill then
+        skillBuff = skill:GetEffect()
+    end
+
+    return basePercent - skillBuff
+end
 function GameUtils:DoBattle(attacker, defencer)
     local clone_attacker_soldiers = clone(attacker.soldiers)
     local clone_defencer_soldiers = clone(defencer.soldiers)
-    local attack_dragon, defence_dragon = GameUtils:DragonDragonBattle(attacker.dragon, defencer.dragon, 0)
-    local attack_soldier, defence_soldier = GameUtils:SoldierSoldierBattle(attacker.soldiers, 0.4, defencer.soldiers, 0.4)
+
+    local dragonFightFixedEffect = getDragonFightFixedEffect(clone_attacker_soldiers, clone_defencer_soldiers)
+    local attack_dragon, defence_dragon = GameUtils:DragonDragonBattle(attacker.dragon, defencer.dragon, dragonFightFixedEffect)
+
+    local attackWoundedSoldierPercent = getPlayerTreatSoldierPercent(attacker.dragon.dragon)
+    local attackSoldierMoraleDecreasedPercent = getPlayerSoldierMoraleDecreasedPercent(attacker.dragon.dragon)
+    local attack_soldier, defence_soldier =
+        GameUtils:SoldierSoldierBattle(
+            attacker.soldiers, attackWoundedSoldierPercent, attackSoldierMoraleDecreasedPercent,
+            defencer.soldiers, 0.4, 1
+        )
 
     local report = {}
     function report:GetAttackKDA()
@@ -651,6 +719,10 @@ end
 
 
 return GameUtils
+
+
+
+
 
 
 

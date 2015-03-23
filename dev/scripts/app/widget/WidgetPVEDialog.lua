@@ -168,16 +168,22 @@ function WidgetPVEDialog:Fight()
                 totalHp = dargon:Hp(),
                 strength = dargon:TotalStrength(),
                 vitality = dargon:TotalVitality(),
+                dragon = dragon,
             }
             local attack_soldier = LuaUtils:table_map(soldiers, function(k, v)
                 return k, {name = v.name,
                     star = 1,
+                    power = GameUtils:GetSoldiersConfig(v.name, 1),
                     morale = 100,
                     currentCount = v.count,
                     totalCount = v.count,
                     woundedCount = 0,
                     round = 0}
             end)
+
+
+            dump(dargon:GetSkillByName("dragonBlood"))
+            dump(dargon:GetAllEquipmentBuffEffect())
 
             local report = GameUtils:DoBattle(
                 {dragon = attack_dragon, soldiers = attack_soldier}

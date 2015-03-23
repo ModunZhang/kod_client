@@ -1,5 +1,6 @@
 local Enum = import("..utils.Enum")
 local cocos_promise = import("..utils.cocos_promise")
+local WidgetUseItems = import("..widget.WidgetUseItems")
 local WidgetPVEKeel = import("..widget.WidgetPVEKeel")
 local WidgetPVECamp = import("..widget.WidgetPVECamp")
 local WidgetPVEMiner = import("..widget.WidgetPVEMiner")
@@ -35,6 +36,10 @@ function PVEScene:onEnter()
     self:GetSceneLayer():MoveCharTo(self.user:GetPVEDatabase():GetCharPosition())
 
     GameUIPVEHome.new(self.user, self):addToScene(self, true):setTouchSwallowEnabled(false)
+end
+function PVEScene:onExit()
+    PVEScene.super.onExit(self)
+    NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData(), true)
 end
 function PVEScene:LoadAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
@@ -88,6 +93,11 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
         else
             self:CheckTrap()
         end
+    elseif not self.user:HasAnyStength() then
+        NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData(), true)
+        WidgetUseItems.new():Create({
+                        item_type = WidgetUseItems.USE_TYPE.STAMINA
+                    }):addToCurrentScene()
     end
 end
 function PVEScene:OpenUI(x, y)
@@ -126,7 +136,7 @@ end
 function PVEScene:CheckTrap()
     if self.user:GetPVEDatabase():IsInTrap() then
         self:GetSceneLayer():PromiseOfTrap():next(function()
-            self.user:SetPveData()
+            self.user:ResetPveData()
             return NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
         end):next(function()
             local enemy = PVEObject.new(0, 0, 0, PVEDefine.TRAP, self:GetSceneLayer():CurrentPVEMap()):GetNextEnemy()
@@ -179,7 +189,7 @@ function PVEScene:PormiseOfCheckObject(x, y, type)
     local object = self.user:GetCurrentPVEMap():GetObject(x, y)
     if not object or not object:Type() then
         self.user:GetCurrentPVEMap():ModifyObject(x, y, 0, type)
-        self.user:SetPveData()
+        self.user:ResetPveData()
         return NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
     else
         return cocos_promise.defer()

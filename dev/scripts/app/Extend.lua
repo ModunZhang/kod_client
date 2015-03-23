@@ -20,8 +20,7 @@ function cc.c3b( _r,_g,_b )
     else
         c = c3b_(_r,_g,_b)
     end
-    setmetatable(c, c3b_m_)
-    return c
+    return setmetatable(c, c3b_m_)
 end
 
 

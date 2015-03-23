@@ -442,10 +442,10 @@ function GameUIReplay:PlayDragonBattle()
         :next(cocos_promise.delay(0.8))
         :next(function()
             local p = promise.new()
-            if attack_dragon then
+            if attack_dragon and self.left_dragon then
                 self.left_dragon:ShowBuff()
             end
-            if defend_dragon then
+            if defend_dragon and self.right_dragon then
                 self.right_dragon:ShowBuff()
             end
             self:Performance(0.5, function(pos)

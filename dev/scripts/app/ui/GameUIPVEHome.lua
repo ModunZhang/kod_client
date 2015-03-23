@@ -2,6 +2,7 @@ local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local UIPageView = import("..ui.UIPageView")
 local window = import("..utils.window")
 local GameUIPVEHome = UIKit:createUIClass('GameUIPVEHome')
+local WidgetUseItems = import("..widget.WidgetUseItems")
 local RichText = import("..widget.RichText")
 local ChatManager = import("..entity.ChatManager")
 local timer = app.timer
@@ -159,7 +160,9 @@ function GameUIPVEHome:CreateBottom()
         :addTo(label_bg)
         :align(display.CENTER, 131, 13)
         :onButtonClicked(function ( event )
-            print("hgell")
+            WidgetUseItems.new():Create({
+                        item_type = WidgetUseItems.USE_TYPE.STAMINA
+                    }):addToCurrentScene()
         end):scale(0.6)
     
 

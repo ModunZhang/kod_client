@@ -187,7 +187,8 @@ local function get_blocking_request_promise(request_route, data, m,need_catch)
     return cocos_promise.promiseFilterNetError(p,need_catch)
 end
 local function get_none_blocking_request_promise(request_route, data, m)
-    return cocos_promise.promiseWithTimeOut(get_request_promise(request_route, data, m), TIME_OUT)
+    -- return cocos_promise.promiseWithTimeOut(get_request_promise(request_route, data, m), TIME_OUT)
+    return get_request_promise(request_route, data, m)
 end
 local function get_callback_promise(callbacks, m)
     local p = promise.new(check_response(m or ""))
@@ -1586,9 +1587,14 @@ function NetManager:getUpgradeSoldierStarPromise(soldierName)
     return upgrade_soldier_star_promise(soldierName,false)
 end
 --设置pve数据
-function NetManager:getSetPveDataPromise(pveData)
-    return get_blocking_request_promise("logic.playerHandler.setPveData",
-        pveData, "设置pve数据失败!"):next(get_response_msg)
+function NetManager:getSetPveDataPromise(pveData, is_none_blocking)
+    if is_none_blocking then
+        return get_none_blocking_request_promise("logic.playerHandler.setPveData",
+            pveData, "设置pve数据失败!"):next(get_response_msg)
+    else
+        return get_blocking_request_promise("logic.playerHandler.setPveData",
+            pveData, "设置pve数据失败!"):next(get_response_msg)
+    end
 end
 --为联盟成员添加荣耀值
 function NetManager:getGiveLoyaltyToAllianceMemberPromise(memberId,count)
@@ -1782,6 +1788,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 
