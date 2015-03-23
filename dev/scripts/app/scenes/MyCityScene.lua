@@ -289,6 +289,7 @@ function MyCityScene:OnSceneScale(scene_layer)
     end
 end
 function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
+    if self.event_manager:TouchCounts() > 0 then return end
     local city = self:GetCity()
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
