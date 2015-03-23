@@ -217,7 +217,7 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
     -- 下面还没做增量判断
     -- 每日任务
     self:OnDailyQuestsChanged(userData,deltaData)
-    self:OnDailyQuestsEventsChanged(userData.dailyQuestEvents)
+    self:OnDailyQuestsEventsChanged(userData,deltaData)
     -- 交易
     self.trade_manager:OnUserDataChanged(userData,deltaData)
     self:GetPVEDatabase():OnUserDataChanged(userData, deltaData)
@@ -417,77 +417,89 @@ function User:OnDailyQuestsChanged(userData, deltaData)
         end
         self:OnDailyQuestsRefresh()
     end
-end
-function User:OnDailyQuestsEventsChanged(dailyQuestEvents)
-    if not dailyQuestEvents then return end
-    -- LuaUtils:outputTable("dailyQuestEvents", dailyQuestEvents)
-    for k,v in pairs(dailyQuestEvents) do
-        self.dailyQuestEvents[v.id] = v
+    local is_delta_update = not is_fully_update and deltaData.dailyQuests ~= nil
+
+    if is_delta_update then
+        local add = {}
+        local edit = {}
+        local remove = {}
+        for k,v in pairs(deltaData.dailyQuests) do
+            if k == "add" then
+                for _,data in ipairs(v) do
+                    self.dailyQuests[data.id] = data
+                    table.insert(add,data)
+                end
+            end
+            if k == "edit" then
+                for _,data in ipairs(v) do
+                    if self.dailyQuests[data.id] then
+                        self.dailyQuests[data.id] = data
+                        table.insert(edit,data)
+                    end
+                end
+            end
+            if k == "remove" then
+                for _,data in ipairs(v) do
+                    if self.dailyQuests[data.id] then
+                        self.dailyQuests[data.id] = nil
+                        table.insert(remove,data)
+                    end
+                end
+            end
+        end
+        self:OnNewDailyQuests(
+            {
+                add= add,
+                edit= edit,
+                remove= remove,
+            }
+        )
     end
 end
-function User:OnNewDailyQuestsComming(__dailyQuests)
-    if not __dailyQuests then return end
-    LuaUtils:outputTable("__dailyQuests", __dailyQuests)
-    local add = {}
-    local edit = {}
-    local remove = {}
-    for k,v in pairs(__dailyQuests) do
-        if v.type == "add" then
-            self.dailyQuests[v.data.id] = v.data
-            table.insert(add,v.data)
-        end
-        if v.type == "edit" then
-            if self.dailyQuests[v.data.id] then
-                self.dailyQuests[v.data.id] = v.data
-                table.insert(edit,v.data)
-            end
-        end
-        if v.type == "remove" then
-            if self.dailyQuests[v.data.id] then
-                self.dailyQuests[v.data.id] = nil
-                table.insert(remove,v.data)
-            end
+function User:OnDailyQuestsEventsChanged(userData,deltaData)
+    local is_fully_update = deltaData == nil
+    if is_fully_update then
+        for k,v in pairs(userData.dailyQuestEvents) do
+            self.dailyQuestEvents[v.id] = v
         end
     end
-    self:OnNewDailyQuests(
-        {
-            add= add,
-            edit= edit,
-            remove= remove,
-        }
-    )
-end
-function User:OnNewDailyQuestsEventsComming(__dailyQuestEvents)
-    if not __dailyQuestEvents then return end
-    LuaUtils:outputTable("__dailyQuestEvents", __dailyQuestEvents)
-    local add = {}
-    local edit = {}
-    local remove = {}
-    for k,v in pairs(__dailyQuestEvents) do
-        if v.type == "add" then
-            self.dailyQuestEvents[v.data.id] = v.data
-            table.insert(add,v.data)
-        end
-        if v.type == "edit" then
-            if self.dailyQuestEvents[v.data.id] then
-                self.dailyQuestEvents[v.data.id] = v.data
-                table.insert(edit,v.data)
+    local is_delta_update = not is_fully_update and deltaData.dailyQuestEvents ~= nil
+    if is_delta_update then
+        local add = {}
+        local edit = {}
+        local remove = {}
+        for k,v in pairs(deltaData.dailyQuestEvents) do
+            if k == "add" then
+                for _,data in ipairs(v) do
+                    self.dailyQuestEvents[data.id] = data
+                    table.insert(add,data)
+                end
+            end
+            if k == "edit" then
+                for _,data in ipairs(v) do
+                    if self.dailyQuestEvents[data.id] then
+                        self.dailyQuestEvents[data.id] = data
+                        table.insert(edit,data)
+                    end
+                end
+            end
+            if k == "remove" then
+                for _,data in ipairs(v) do
+                    if self.dailyQuestEvents[data.id] then
+                        self.dailyQuestEvents[data.id] = nil
+                        table.insert(remove,data)
+                    end
+                end
             end
         end
-        if v.type == "remove" then
-            if self.dailyQuestEvents[v.data.id] then
-                self.dailyQuestEvents[v.data.id] = nil
-                table.insert(remove,v.data)
-            end
-        end
+        self:OnNewDailyQuestsEvent(
+            {
+                add= add,
+                edit= edit,
+                remove= remove,
+            }
+        )
     end
-    self:OnNewDailyQuestsEvent(
-        {
-            add= add,
-            edit= edit,
-            remove= remove,
-        }
-    )
 end
 -- 判定是否正在进行每日任务
 function User:IsOnDailyQuestEvents()
@@ -538,6 +550,15 @@ function User:GetBestDragon()
 end
 
 return User
+
+
+
+
+
+
+
+
+
 
 
 

@@ -90,7 +90,7 @@ function WidgetAllianceBuildingUpgrade:onEnter()
 
     self:InitRequirement()
 
-    self.alliance:GetAllianceMap():AddListenOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_LEVEL)
+    self.alliance:GetAllianceMap():AddListenOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_INFO)
 
 end
 
@@ -196,7 +196,7 @@ function WidgetAllianceBuildingUpgrade:InitRequirement()
 end
 
 function WidgetAllianceBuildingUpgrade:onExit()
-    self.alliance:GetAllianceMap():RemoveListenerOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_LEVEL)
+    self.alliance:GetAllianceMap():RemoveListenerOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_INFO)
 end
 
 function WidgetAllianceBuildingUpgrade:IsAbleToUpgrade()
@@ -209,7 +209,7 @@ function WidgetAllianceBuildingUpgrade:IsAbleToUpgrade()
     end
 end
 
-function WidgetAllianceBuildingUpgrade:OnBuildingLevelChange(building)
+function WidgetAllianceBuildingUpgrade:OnBuildingInfoChange(building)
     self:RefreahBuilding(building)
     self:InitRequirement()
     self:SetBuildingLevel()

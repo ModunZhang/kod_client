@@ -2,7 +2,7 @@ local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local AllianceMap = class("AllianceMap", MultiObserver)
 local allianceBuildingType = GameDatas.AllianceInitData.buildingType
-AllianceMap.LISTEN_TYPE = Enum("BUILDING","BUILDING_LEVEL")
+AllianceMap.LISTEN_TYPE = Enum("BUILDING","BUILDING_INFO")
 
 local mapObject_meta = {}
 mapObject_meta.__index = mapObject_meta
@@ -145,12 +145,18 @@ function AllianceMap:IteratorByCategory(category, func)
         end
     end)
 end
+function AllianceMap:GetMapObjects()
+    return self.mapObjects
+end
 function AllianceMap:IteratorAllObjects(func)
     for k, v in pairs(self.mapObjects) do
         if func(k, v) then
             return
         end
     end
+end
+function AllianceMap:CanPlaceWithBuilding(allince_building)
+    
 end
 function AllianceMap:GetAlliance()
     return self.alliance
@@ -172,19 +178,20 @@ end
 function AllianceMap:OnAllianceBuildingInfoChange(allianceData, deltaData)
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.buildings ~= nil
+
     if is_fully_update or is_delta_update then
         self.buildings = allianceData.buildings
         if is_fully_update then
             for _,v in pairs(self.buildings) do
-                self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING_LEVEL, function(listener)
-                    listener:OnBuildingLevelChange(v)
+                self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING_INFO, function(listener)
+                    listener:OnBuildingInfoChange(v)
                 end)
             end
         elseif is_delta_update then
             for k,_ in pairs(deltaData.buildings) do
                 local v = self.buildings[k]
-                self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING_LEVEL, function(listener)
-                    listener:OnBuildingLevelChange(v)
+                self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING_INFO, function(listener)
+                    listener:OnBuildingInfoChange(v)
                 end)
             end
         end
@@ -193,6 +200,7 @@ end
 function AllianceMap:OnMapObjectsChanged(allianceData, deltaData)
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.mapObjects ~= nil
+
     if is_fully_update or is_delta_update then
         self.mapObjects = allianceData.mapObjects
         for k,v in pairs(self.mapObjects) do
