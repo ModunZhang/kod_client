@@ -119,8 +119,8 @@ function GameUIPVEHome:CreateBottom()
     local char_bg = display.newSprite("chat_hero_background.png")
     :addTo(bottom_bg, 1):pos(250, display.bottom + 50):scale(0.65)
     display.newSprite("playerIcon_default.png"):addTo(char_bg):pos(55, 55):scale(0.9)
-
-    self.tag = UIKit:ttfLabel({text = string.format("[%s] %s", "", self.user:Name() and "gaozhou"),
+    local alliance_name = Alliance_Manager:GetMyAlliance():IsDefault() and "" or Alliance_Manager:GetMyAlliance():Name()
+    self.tag = UIKit:ttfLabel({text = string.format("[%s] %s", alliance_name, self.user:Name()),
         size = 20,
         color = 0xffedae,
     }):addTo(bottom_bg):align(display.LEFT_CENTER, 300, display.bottom + 65)
@@ -132,7 +132,7 @@ function GameUIPVEHome:CreateBottom()
     :addTo(bottom_bg):align(display.LEFT_CENTER, 315, display.bottom + 25)
 
     self.gem = UIKit:ttfLabel({
-        text = "9,999,999",
+        text = self.user:Power(),
         size = 20,
         color = 0xbdb582,
     }):addTo(label_bg):align(display.LEFT_CENTER, 20, 13)

@@ -174,20 +174,18 @@ function AllianceMap:CanMoveBuilding(allianceBuilding, x, y)
     local building = clone(allianceBuilding)
     building.location.x = x
     building.location.y = y
-    -- 
     for _,v in ipairs({building:GetGlobalRegion()}) do
         if v < 0 and v >= 51 then
             return false
         end
     end
-
     -- 
     local x1,y1 = allianceBuilding:GetLogicPosition()
     for _,v in pairs(self.mapObjects) do
         local x2,y2 = v:GetLogicPosition()
         -- 不一样才能比较
         if x1 ~= x2 or y1 ~= y2 then
-            if building:IsInterSect(v) then
+            if building:IsIntersect(v) then
                 return false
             end
         end
