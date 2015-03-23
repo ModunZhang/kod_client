@@ -95,15 +95,10 @@ local function get_response_mail_msg(response)
     dump(response,"get_response_mail_msg---->")
     if response.msg.playerData then
         local user_data = DataManager:getUserData()
-        LuaUtils:outputTable("response.msg.playerData", response.msg.playerData)
         local mail_response = response.msg.playerData
         for i,v in ipairs(mail_response) do
-
-            print("tolua.type(v)",type(v))
-
             if type(v) == "table" then
                 local keys = string.split(v[1], ".")
-                LuaUtils:outputTable("keys", keys)
                 local newKey = ""
                 local len = #keys
                 for i=1,len do
@@ -115,15 +110,39 @@ local function get_response_mail_msg(response)
                         newKey = newKey..keys[i]..(i~=len and "." or "")
                     end
                 end
-                print("ta")
                 mail_response[i][1] = newKey
             end
         end
-        LuaUtils:outputTable("response.msg.playerData", response.msg.playerData)
-        print("ta")
         local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
         DataManager:setUserData(user_data, edit)
-        return response
+    end
+
+    return response
+end
+local function get_response_report_msg(response)
+    dump(response,"get_response_report_msg---->")
+    if response.msg.playerData then
+        local user_data = DataManager:getUserData()
+        local report_response = response.msg.playerData
+        for i,v in ipairs(report_response) do
+            if type(v) == "table" then
+                local keys = string.split(v[1], ".")
+                local newKey = ""
+                local len = #keys
+                for i=1,len do
+                    local k = tonumber(keys[i]) or keys[i]
+                    if type(k) == "number" then
+                        local client_index = MailManager:GetReportByServerIndex(k) - 1
+                        newKey = newKey..client_index..(i~=len and "." or "")
+                    else
+                        newKey = newKey..keys[i]..(i~=len and "." or "")
+                    end
+                end
+                report_response[i][1] = newKey
+            end
+        end
+        local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
+        DataManager:setUserData(user_data, edit)
     end
 
     return response
@@ -297,7 +316,6 @@ onGetAllChatSuccess_callbacks = {}
 function NetManager:addPlayerDataChangedEventListener()
     self:addEventListener("onPlayerDataChanged", function(success, response)
         if success then
-            -- LuaUtils:outputTable("onPlayerDataChanged", response)
             local user_data = DataManager:getUserData()
             local edit = decodeInUserDataFromDeltaData(user_data, response)
             DataManager:setUserData(user_data, edit)
@@ -333,6 +351,7 @@ end
 function NetManager:removeAllianceDataChangedEventListener(  )
     self:removeEventListener("onAllianceDataChanged")
 end
+
 function NetManager:addOnGetAllianceDataSuccess()
     self:addEventListener("onGetAllianceDataSuccess", function(success, msg)
         if success then
@@ -744,25 +763,47 @@ end
 function NetManager:getSaveMailPromise(mailId)
     return get_blocking_request_promise("logic.playerHandler.saveMail", {
         mailId = mailId
-    }, "收藏邮件失败!")
+    }, "收藏邮件失败!"):next(get_response_mail_msg)
 end
 -- 取消收藏邮件
 function NetManager:getUnSaveMailPromise(mailId)
     return get_blocking_request_promise("logic.playerHandler.unSaveMail", {
         mailId = mailId
-    }, "取消收藏邮件失败!")
+    }, "取消收藏邮件失败!"):next(get_response_mail_msg)
 end
 -- 获取收藏邮件
 function NetManager:getFetchSavedMailsPromise(fromIndex)
     return get_blocking_request_promise("logic.playerHandler.getSavedMails", {
         fromIndex = fromIndex
-    }, "获取收藏邮件失败!"):next(get_response_msg)
+    }, "获取收藏邮件失败!"):next(function (response)
+        if response.msg.mails then
+            local user_data = DataManager:getUserData()
+            local fetch_mails = {}
+            for i,v in ipairs(response.msg.mails) do
+                table.insert(user_data.savedMails, v)
+                MailManager:AddSavedMailsToEnd(v)
+                table.insert(fetch_mails, v)
+            end
+            return fetch_mails
+        end
+    end)
 end
 -- 获取已发送邮件
 function NetManager:getFetchSendMailsPromise(fromIndex)
     return get_blocking_request_promise("logic.playerHandler.getSendMails", {
         fromIndex = fromIndex
-    }, "获取已发送邮件失败!"):next(get_response_msg)
+    }, "获取已发送邮件失败!"):next(function (response)
+        if response.msg.mails then
+            local user_data = DataManager:getUserData()
+            local fetch_mails = {}
+            for i,v in ipairs(response.msg.mails) do
+                table.insert(user_data.sendMails, v)
+                MailManager:AddSendMailsToEnd(v)
+                table.insert(fetch_mails, v)
+            end
+            return fetch_mails
+        end
+    end)
 end
 -- 删除邮件
 function NetManager:getDeleteMailsPromise(mailIds)
@@ -781,37 +822,59 @@ end
 function NetManager:getReadReportsPromise(reportIds)
     return get_none_blocking_request_promise("logic.playerHandler.readReports", {
         reportIds = reportIds
-    }, "阅读战报失败!"):next(get_response_msg)
+    }, "阅读战报失败!"):next(get_response_report_msg)
 end
 -- 收藏战报
 function NetManager:getSaveReportPromise(reportId)
     return get_blocking_request_promise("logic.playerHandler.saveReport", {
         reportId = reportId
-    }, "收藏战报失败!"):next(get_response_msg)
+    }, "收藏战报失败!"):next(get_response_report_msg)
 end
 -- 取消收藏战报
 function NetManager:getUnSaveReportPromise(reportId)
     return get_blocking_request_promise("logic.playerHandler.unSaveReport", {
         reportId = reportId
-    }, "取消收藏战报失败!"):next(get_response_msg)
+    }, "取消收藏战报失败!"):next(get_response_report_msg)
 end
 -- 获取玩家战报
 function NetManager:getReportsPromise(fromIndex)
     return get_blocking_request_promise("logic.playerHandler.getReports", {
         fromIndex = fromIndex
-    }, "获取玩家战报失败!"):next(get_response_msg)
+    }, "获取玩家战报失败!"):next(function (response)
+        if response.msg.reports then
+            local user_data = DataManager:getUserData()
+            local fetch_reports = {}
+            for i,v in ipairs(response.msg.reports) do
+                table.insert(user_data.reports, v)
+                MailManager:AddReportsToEnd(v)
+                table.insert(fetch_reports, v)
+            end
+            return fetch_reports
+        end
+    end)
 end
 -- 获取玩家已存战报
 function NetManager:getSavedReportsPromise(fromIndex)
     return get_blocking_request_promise("logic.playerHandler.getSavedReports", {
         fromIndex = fromIndex
-    }, "获取玩家已存战报失败!"):next(get_response_msg)
+    }, "获取玩家已存战报失败!"):next(function (response)
+        if response.msg.reports then
+            local user_data = DataManager:getUserData()
+            local fetch_reports = {}
+            for i,v in ipairs(response.msg.reports) do
+                table.insert(user_data.reports, v)
+                MailManager:AddSavedReportsToEnd(v)
+                table.insert(fetch_reports, v)
+            end
+            return fetch_reports
+        end
+    end)
 end
 -- 删除战报
 function NetManager:getDeleteReportsPromise(reportIds)
     return get_blocking_request_promise("logic.playerHandler.deleteReports", {
         reportIds = reportIds
-    }, "删除战报失败!"):next(get_response_msg)
+    }, "删除战报失败!"):next(get_response_report_msg)
 end
 -- 请求加速
 function NetManager:getRequestAllianceToSpeedUpPromise(eventType, eventId)
