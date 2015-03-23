@@ -766,7 +766,7 @@ function GameUIMail:OnSavedMailsChanged(changed_mails)
         for _,add_mail in pairs(changed_mails.add_mails) do
             -- 收藏成功，收藏夹添加此封邮件
             local item =  self:CreateMailItem(self.save_mails_listview, add_mail)
-            self:AddMails(self.save_mails_listview, item, add_mail ,1)
+            self:AddMails(self.save_mails_listview, item, add_mail)
         end
     end
 
@@ -1316,7 +1316,7 @@ function GameUIMail:InitSavedReports()
             end
         end
     )
-    dropList:align(display.TOP_CENTER,display.cx,display.top-100):addTo(self.saved_layer)
+    dropList:align(display.TOP_CENTER,display.cx,display.top-100):addTo(self.saved_layer,2)
 end
 
 function GameUIMail:CreateReplyMail(mail)

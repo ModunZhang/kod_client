@@ -143,6 +143,9 @@ function MailManager:ModifyMailAttr(index,attr)
     assert(mail,"修改邮件属性，邮件不存在")
     for k,v in pairs(attr) do
         mail[k] = v
+        if k == "isSaved" then
+            self:OnNewSavedMailsChanged(mail)
+        end
     end
     return mail
 end
@@ -245,12 +248,16 @@ function MailManager:GetSavedMails(fromIndex)
         return savedMails
     else
         -- 本地没有缓存，则从服务器获取
-        NetManager:getFetchSavedMailsPromise(fromIndex):catch(function(err)
-            dump(err:reason())
-        end)
+        NetManager:getFetchSavedMailsPromise(fromIndex)
     end
 end
-
+function MailManager:FetchSavedMailsFromServer(fromIndex)
+    NetManager:getFetchSavedMailsPromise(fromIndex):next(function ( fetch_mails )
+        self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_MAILS,function(listener)
+            listener:OnFetchMailsSuccess(fetch_mails)
+        end)
+    end)
+end
 function MailManager:GetSendMails(fromIndex)
     -- 首先检查本地MailManager是否缓存有之前获取到的邮件
     local fromIndex = fromIndex or 0
@@ -289,10 +296,10 @@ function MailManager:OnMailsChanged( mails )
     self.mails = clone(mails)
 end
 function MailManager:OnSavedMailsChanged( savedMails )
-    self.savedMails = savedMails
+    self.savedMails = clone(savedMails)
 end
 function MailManager:OnSendMailsChanged( sendMails )
-    self.sendMails = sendMails
+    self.sendMails = clone(sendMails)
 end
 
 function MailManager:OnNewMailsChanged( mails )
@@ -302,9 +309,28 @@ function MailManager:OnNewMailsChanged( mails )
     for type,mail in pairs(mails) do
         if type == "add" then
             for i,data in ipairs(mail) do
+                -- 收到
+                if not data.index then
+                    data.index = self.mails[1].index + 1
+                    print("收到新邮件，计算服务器下标,客服端最新邮件下标",self.mails[1].index)
+                end
                 table.insert(add_mails, data)
                 table.insert(self.mails, 1, data)
                 self:IncreaseUnReadMailsNum(1)
+
+                -- 由于当前 DataManager中的mails 最新这条是服务器的index,需要修正为客户端index
+                LuaUtils:outputTable("DataManager:需要修正为客户端index().mails", DataManager:getUserData().mails)
+
+                local u_mails = DataManager:getUserData().mails
+                local max_index = 0
+                for k,v in pairs(u_mails) do
+                    max_index = math.max(k,max_index)
+                end
+                local max_mail = u_mails[max_index]
+                local temp_mail = table.remove(u_mails,max_index)
+                table.insert(u_mails, 1 ,temp_mail)
+                LuaUtils:outputTable("DataManager:getUserData().mails", DataManager:getUserData().mails)
+                print("ta")
             end
         elseif type == "remove" then
             for i,data in ipairs(mail) do
@@ -330,18 +356,12 @@ end
 function MailManager:OnNewSavedMailsChanged( savedMails )
     local add_mails = {}
     local remove_mails = {}
-    for type,mail in pairs(savedMails) do
-        if type == "add" then
-            for i,data in ipairs(mail) do
-                table.insert(add_mails, data)
-                table.insert(self.savedMails, data)
-            end
-        elseif type == "remove" then
-            for i,data in ipairs(mail) do
-                table.insert(remove_mails, data)
-                self:DeleteSavedMail(data)
-            end
-        end
+    if savedMails.isSaved then
+        table.insert(add_mails, savedMails)
+        table.insert(self.savedMails, savedMails)
+    else
+        table.insert(remove_mails, savedMails)
+                self:DeleteSavedMail(savedMails)
     end
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.MAILS_CHANGED,function(listener)
         listener:OnSavedMailsChanged({
@@ -390,10 +410,6 @@ function MailManager:OnUserDataChanged(userData,timer,deltaData)
     is_delta_update = not is_fully_update and deltaData.mails ~= nil
     if is_delta_update then
         self:OnNewMailsChanged(deltaData.mails)
-    end
-    is_delta_update = not is_fully_update and deltaData.savedMails ~= nil
-    if is_delta_update then
-        self:OnNewSavedMailsChanged(deltaData.savedMails)
     end
     is_delta_update = not is_fully_update and deltaData.sendMails ~= nil
     if is_delta_update then

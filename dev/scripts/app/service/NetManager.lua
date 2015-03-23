@@ -110,6 +110,7 @@ local function get_response_mail_msg(response)
                     local k = tonumber(keys[i]) or keys[i]
                     if type(k) == "number" then
                         local client_index = MailManager:GetMailByServerIndex(k) - 1
+                        print("client_index===",client_index)
                         newKey = newKey..client_index..(i~=len and "." or "")
                     else
                         newKey = newKey..keys[i]..(i~=len and "." or "")
@@ -1069,13 +1070,13 @@ end
 function NetManager:getSaveMailPromise(mailId)
     return get_blocking_request_promise("logic.playerHandler.saveMail", {
         mailId = mailId
-    }, "收藏邮件失败!")
+    }, "收藏邮件失败!"):next(get_response_mail_msg)
 end
 -- 取消收藏邮件
 function NetManager:getUnSaveMailPromise(mailId)
     return get_blocking_request_promise("logic.playerHandler.unSaveMail", {
         mailId = mailId
-    }, "取消收藏邮件失败!")
+    }, "取消收藏邮件失败!"):next(get_response_mail_msg)
 end
 -- 获取收藏邮件
 function NetManager:getFetchSavedMailsPromise(fromIndex)
@@ -1782,6 +1783,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 
