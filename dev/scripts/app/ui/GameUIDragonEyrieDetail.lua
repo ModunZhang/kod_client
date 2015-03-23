@@ -131,6 +131,11 @@ function GameUIDragonEyrieDetail:GetHateLabelText()
 			config_floatInit['playerHatchDragonNeedHours']['value']),_("龙巢同一时间只能孵化一只巨龙")
 	end
 end
+
+function GameUIDragonEyrieDetail:CheckCanSpeedUpDragonHate()
+	return self.dragon_manager:GetDragonEventByDragonType(self:GetDragon():Type()) ~= nil
+end
+
 --孵化界面
 function GameUIDragonEyrieDetail:CreateHateUIIf()
 	if self.hate_node then
@@ -159,7 +164,7 @@ function GameUIDragonEyrieDetail:CreateHateUIIf()
 			}))
 			:addTo(hate_node):align(display.CENTER_BOTTOM,window.cx,window.bottom + 20)
 			:onButtonClicked(handler(self, self.OnHateSpeedUpClicked))
-			:hide()
+	speed_button:setVisible(self:CheckCanSpeedUpDragonHate())
 			
 	self.hate_speed_button = speed_button
 	local hate_bg = UIKit:CreateBoxPanel9({width = 556,height = 78})
@@ -235,7 +240,6 @@ function GameUIDragonEyrieDetail:RefreshUI()
 		elseif button_tag == 'skill' then
 			self:RefreshSkillList()
 			self.skill_ui.blood_label:setString(City:GetResourceManager():GetBloodResource():GetValue())
-			-- self.skill_ui.magic_bottle:setPositionX(self.skill_ui.blood_label:getPositionX() - self.skill_ui.blood_label:getContentSize().width)
 		else
 			self:RefreshInfoListView()
 		end
@@ -490,7 +494,6 @@ end
 function GameUIDragonEyrieDetail:GetSkillListItem(skill)
     local bg = WidgetPushButton.new({normal = "dragon_skill_item_bg_176x116.png"}, {scale9 = false})
     bg:setAnchorPoint(cc.p(0,0))
-
     UIKit:ttfLabel({
     		text = Localize.dragon_skill[skill:Name()],
     		size = 18,
@@ -554,15 +557,15 @@ function GameUIDragonEyrieDetail:RefreshSkillList()
             local skillData = lineData[j]
             local oneSkill = self:GetSkillListItem(skillData)
             oneSkill:addTo(content)
-            local x = (j-1) * (oneSkill:getCascadeBoundingBox().width + 3)
+            local x = (j-1) * (176 + 4)
             oneSkill:pos(x,0)
             oneSkill:onButtonClicked(function(event)
                 self:SkillListItemClicked(skillData)
             end)
         end    
-        content:size(content:getCascadeBoundingBox().width,120)
+        content:size(552,120)
         item:addContent(content)
-        item:setItemSize(content:getCascadeBoundingBox().width,120)
+        item:setItemSize(552,120)
         self.skill_ui.listView:addItem(item)
     end
     self.skill_ui.listView:reload()
@@ -639,7 +642,7 @@ function GameUIDragonEyrieDetail:GetInfoListItem(index,title,val)
 end
 
 function GameUIDragonEyrieDetail:OnHateSpeedUpClicked()
-	GameUIDragonHateSpeedUp.new(self.dragonEvent__):addToCurrentScene(true)
+	GameUIDragonHateSpeedUp.new(self.dragon_manager,self.dragonEvent__):addToCurrentScene(true)
 end
 
 -- dragon_body ==> Dragon.DRAGON_BODY.XXX

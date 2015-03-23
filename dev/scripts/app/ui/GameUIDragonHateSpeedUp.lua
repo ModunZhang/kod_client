@@ -8,12 +8,15 @@ local Localize = import("..utils.Localize")
 local WidgetSpeedUp = import("..widget.WidgetSpeedUp")
 local GameUIDragonHateSpeedUp = class("GameUIDragonHateSpeedUp", WidgetSpeedUp)
 
-function GameUIDragonHateSpeedUp:ctor(hateEvent)
+function GameUIDragonHateSpeedUp:ctor(dragon_manager,hateEvent)
 	GameUIDragonHateSpeedUp.super.ctor(self)
 	self.hateEvent = hateEvent
+	self.dragon_manager = dragon_manager
+
 	self:SetAccBtnsGroup(self:GetEventType(),hateEvent:Id())
     self:SetAccTips(_("龙的孵化没有免费加速"))
     self:SetUpgradeTip(Localize.dragon[hateEvent:DragonType()] .. _("正在孵化"))
+    self.dragon_manager:AddListenOnType(self,self.dragon_manager.LISTEN_TYPE.OnDragonHatched)
 end
 
 function GameUIDragonHateSpeedUp:GetEventType()
@@ -30,6 +33,11 @@ function GameUIDragonHateSpeedUp:CheckCanSpeedUpFree()
 	return false
 end
 
+function GameUIDragonHateSpeedUp:OnDragonHatched(dragon)
+	if dragon:Type() == self.hateEvent:DragonType() then
+		self:leftButtonClicked()
+	end
+end
 
 function GameUIDragonHateSpeedUp:OnDragonEventTimer(event)
 	if event:GetTime() >= 0 then
@@ -39,6 +47,7 @@ end
 
 function GameUIDragonHateSpeedUp:onCleanup()
     self.hateEvent:RemoveObserver(self)
+    self.dragon_manager:RemoveListenerOnType(self,self.dragon_manager.LISTEN_TYPE.OnDragonHatched)
     GameUIDragonHateSpeedUp.super.onCleanup(self)
 end
 
