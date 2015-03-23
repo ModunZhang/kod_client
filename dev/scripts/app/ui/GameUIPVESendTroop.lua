@@ -425,6 +425,7 @@ function GameUIPVESendTroop:GetSelectSoldier()
         if soldier_number>0 then
             table.insert(soldiers, {
                 name = name,
+                star = star,
                 count = soldier_number,
             })
         end
