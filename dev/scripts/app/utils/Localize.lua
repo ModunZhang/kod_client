@@ -149,29 +149,28 @@ local DRAGON_SKILL = {
 }
 
 local DRAGON_BUFF_EFFECTION = {
-    ["addInfantryAtk"] = _("步兵攻击加成"),
-    ["addInfantryHp"] = _("步兵生命值加成"),
-    ["addInfantryLoad"] = _("提升步兵负重加成"),
-    ["addInfantryMarch"] = _("步兵行军速度加成"),
+    ["infantryAtkAdd"] = _("步兵攻击加成"),
+    ["infantryHpAdd"] = _("步兵生命值加成"),
+    ["infantryLoadAdd"] = _("提升步兵负重加成"),
+    ["infantryMarchAdd"] = _("步兵行军速度加成"),
 
-    ["addHunterAtk"] = _("弓手攻击加成"),
-    ["addHunterHp"] = _("弓手生命值加成"),
-    ["addHunterLoad"] = _("弓手负重加成"),
-    ["addHunterMarch"] = _("弓手行军速度加成"),
+    ["hHunterAtkAdd"] = _("弓手攻击加成"),
+    ["hunterHpAdd"] = _("弓手生命值加成"),
+    ["hunterLoadAdd"] = _("弓手负重加成"),
+    ["hunterMarchAdd"] = _("弓手行军速度加成"),
 
-    ["addCavalryAtk"] = _("骑兵攻击加成"),
-    ["addCavalryHp"] = _("骑兵生命值加成"),
-    ["addCavalryLoad"] = _("骑兵负重加成"),
-    ["addCavalryMarch"] = _("骑兵行军速度加成"),
+    ["cavalryAtkAdd"] = _("骑兵攻击加成"),
+    ["cavalryHpAdd"] = _("骑兵生命值加成"),
+    ["cavalryLoadAdd"] = _("骑兵负重加成"),
+    ["cavalryMarchAdd"] = _("骑兵行军速度加成"),
 
-    ["addSiegeAtk"] = _("攻城系攻击加成"),
-    ["addSiegeHp"] = _("攻城系生命值加成"),
-    ["addSiegeLoad"] = _("攻城系负重加成"),
-    ["addSiegeMarch"] = _("攻城系行军速度加成"),
+    ["siegeAtkAdd"] = _("攻城系攻击加成"),
+    ["siegeHpAdd"] = _("攻城系生命值加成"),
+    ["siegeLoadAdd"] = _("攻城系负重加成"),
+    ["siegeMarchAdd"] = _("攻城系行军速度加成"),
 
-    ["addMarchSize"] = _("带兵上限加成"),
-    ["addMarchSize"] = _("带兵上限加成"),
-    ["addCasualtyRate"] = _("可治愈伤兵几率加成"),
+    ["troopSizeAdd"] = _("带兵上限加成"),
+    ["recoverAdd"] = _("可治愈伤兵几率加成"),
 }
 
 local BUILDING_DESCRIPTION = {
