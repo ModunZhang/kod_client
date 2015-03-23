@@ -996,7 +996,7 @@ function GameUIAllianceBattle:InitOtherAlliance()
 
     editbox_tag_search:setPlaceHolder(_("搜索联盟标签"))
     editbox_tag_search:setMaxLength(600)
-    editbox_tag_search:setFont(UIKit:getFontFilePath(),18)
+    editbox_tag_search:setFont(UIKit:getEditBoxFont(),18)
     editbox_tag_search:setFontColor(cc.c3b(0,0,0))
     editbox_tag_search:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))
     editbox_tag_search:setReturnType(cc.KEYBOARD_RETURNTYPE_SEARCH)

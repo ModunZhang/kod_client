@@ -71,10 +71,12 @@ function UIKit:newGameUI(gameUIName,... )
 end
 
 function UIKit:getFontFilePath()
-    return "Droid Sans Faliback.ttf"
+    return "Droid Sans Fallback.ttf"
 end
 
-
+function UIKit:getEditBoxFont()
+    return "DroidSansFallback"
+end
 
 function UIKit:hex2rgba(hexNum)
     local a = bit:_rshift(hexNum,24)
