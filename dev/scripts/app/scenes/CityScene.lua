@@ -93,7 +93,7 @@ function CityScene:onEnter()
     local alliance = Alliance_Manager:GetMyAlliance()
     local alliance_map = alliance:GetAllianceMap()
     local allianceShirine = alliance:GetAllianceShrine()
-    alliance_map:AddListenOnType(allianceShirine,alliance_map.LISTEN_TYPE.BUILDING_LEVEL)
+    alliance_map:AddListenOnType(allianceShirine,alliance_map.LISTEN_TYPE.BUILDING_INFO)
 end
 function CityScene:onExit()
     UILib.unLoadBuildingAnimation()

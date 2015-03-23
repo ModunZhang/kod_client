@@ -119,6 +119,15 @@ function AllianceView:OnBuildingDeltaUpdate(allianceMap, deltaMapObjects)
         self.objects[entity:Id()]:removeFromParent()
         self.objects[entity:Id()] = nil
     end
+
+    -- 修改位置
+    for index,_ in pairs(deltaMapObjects) do
+        if type(index) == "number" then
+            local entity = allianceMap:GetMapObjects()[index]
+            self.objects[entity:Id()]:removeFromParent()
+            self.objects[entity:Id()] = self:CreateObject(entity)
+        end
+    end
 end
 function AllianceView:CreateObject(entity)
     local category = entity:GetCategory()

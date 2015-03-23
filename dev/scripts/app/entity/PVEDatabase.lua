@@ -32,7 +32,6 @@ function PVEDatabase:OnUserDataChanged(userData, deltaData)
             self.pve_maps[v.level]:Load(v)
         end
         for i,v in ipairs(floors.edit or {}) do
-            print("floors.edit")
             self.pve_maps[v.level]:Load(v)
         end
     end

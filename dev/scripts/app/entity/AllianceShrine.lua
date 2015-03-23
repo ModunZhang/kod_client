@@ -31,7 +31,7 @@ function AllianceShrine:ctor(alliance)
 	self:loadStages()
 end
 
-function AllianceShrine:OnBuildingLevelChange(building)
+function AllianceShrine:OnBuildingInfoChange(building)
 	if building.name == 'shrine' and self.perception then
 		local shire_building = config_shrine[building.level]
         self.perception:SetProductionPerHour(app.timer:GetServerTime(),shire_building.pRecovery)
@@ -73,7 +73,7 @@ function AllianceShrine:Reset()
 	self.maxCountOfStage = nil
 	self.perception = nil
 	local alliance_map = self:GetAlliance():GetAllianceMap()
-	alliance_map:RemoveListenerOnType(self,alliance_map.LISTEN_TYPE.BUILDING_LEVEL)
+	alliance_map:RemoveListenerOnType(self,alliance_map.LISTEN_TYPE.BUILDING_INFO)
 end
 
 function AllianceShrine:OnPropertyChange(property_name, old_value, value)
