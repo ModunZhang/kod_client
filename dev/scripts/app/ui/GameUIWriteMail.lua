@@ -37,7 +37,7 @@ function GameUIWriteMail:ctor(send_type)
     local editbox_addressee = self.editbox_addressee
     editbox_addressee:setPlaceHolder(_("最多可输入140字符"))
     editbox_addressee:setMaxLength(140)
-    editbox_addressee:setFont(UIKit:getFontFilePath(),22)
+    editbox_addressee:setFont(UIKit:getEditBoxFont(),22)
     editbox_addressee:setFontColor(cc.c3b(0,0,0))
     editbox_addressee:setPlaceholderFontColor(cc.c3b(204,196,158))
     editbox_addressee:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
@@ -64,7 +64,7 @@ function GameUIWriteMail:ctor(send_type)
     local editbox_subject = self.editbox_subject
     editbox_subject:setPlaceHolder(_("最多可输入140字符"))
     editbox_subject:setMaxLength(140)
-    editbox_subject:setFont(UIKit:getFontFilePath(),22)
+    editbox_subject:setFont(UIKit:getEditBoxFont(),22)
     editbox_subject:setFontColor(cc.c3b(0,0,0))
     editbox_subject:setPlaceholderFontColor(cc.c3b(204,196,158))
     editbox_subject:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
@@ -87,7 +87,7 @@ function GameUIWriteMail:ctor(send_type)
     local textView = self.textView
     textView:addTo(write_mail):align(display.CENTER_BOTTOM,r_size.width/2,76)
     textView:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
-    textView:setFont(UIKit:getFontFilePath(), 24)
+    textView:setFont(UIKit:getEditBoxFont(), 24)
 
     textView:setFontColor(cc.c3b(0,0,0))
 

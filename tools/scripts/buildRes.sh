@@ -51,10 +51,10 @@ exportRes()
 	do
 		outfile=$outdir/${file##*/res/}
 		fileExt=${file##*.}
-		if test -f $file && test $fileExt != "po";then
+		if test -f "$file" && test $fileExt != "po" && test $fileExt != "ttf";then
 			finalDir=${outfile%/*}
-			if test $file -nt $outfile;then
-		    	test -d $finalDir || mkdir -p $finalDir && cp $file $finalDir
+			if test "$file" -nt "$outfile";then
+		    	test -d "$finalDir" || mkdir -p "$finalDir" && cp "$file" "$finalDir"
 		    fi
 		elif test -d $file;then
 			if [[ ${file/"animations"//} != $file ]];then

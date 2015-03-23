@@ -26,7 +26,7 @@
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Droid Sans Faliback.ttf</string>
+		<string>Droid Sans Fallback.ttf</string>
 	</array>
 	<key>UIPrerenderedIcon</key>
 	<true/>

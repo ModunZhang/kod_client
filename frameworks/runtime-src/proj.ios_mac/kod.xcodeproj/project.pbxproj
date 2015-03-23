@@ -15,10 +15,10 @@
 		3EEEDB61197107C0006A9FF8 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EEEDB60197107C0006A9FF8 /* MediaPlayer.framework */; };
 		3F1ECBBB1AA53C000012DD9F /* res in Resources */ = {isa = PBXBuildFile; fileRef = 3F1ECBB91AA53C000012DD9F /* res */; };
 		3F1ECBBC1AA53C000012DD9F /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = 3F1ECBBA1AA53C000012DD9F /* scripts */; };
-		3F1ECBCC1AA557F70012DD9F /* Droid Sans Faliback.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F1ECBCB1AA557F70012DD9F /* Droid Sans Faliback.ttf */; };
 		3F7FA3B71AA6FC4B0011BDE2 /* libjansson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F7FA3B41AA6FC4B0011BDE2 /* libjansson.a */; };
 		3F7FA3B81AA6FC4B0011BDE2 /* libpomelo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F7FA3B51AA6FC4B0011BDE2 /* libpomelo.a */; };
 		3F7FA3B91AA6FC4B0011BDE2 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F7FA3B61AA6FC4B0011BDE2 /* libuv.a */; };
+		3FC173251AC00A9D00128301 /* Droid Sans Fallback.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3FC173241AC00A9D00128301 /* Droid Sans Fallback.ttf */; };
 		3FE02F2C1AB2997E00BDC12B /* libTalkingDataGA.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FE02F2A1AB2997E00BDC12B /* libTalkingDataGA.a */; };
 		3FE02F301AB299A200BDC12B /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FE02F2F1AB299A200BDC12B /* CoreTelephony.framework */; };
 		3FE02F321AB299B100BDC12B /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FE02F311AB299B100BDC12B /* AdSupport.framework */; };
@@ -210,10 +210,10 @@
 		3EEEDB60197107C0006A9FF8 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/System/Library/Frameworks/MediaPlayer.framework; sourceTree = DEVELOPER_DIR; };
 		3F1ECBB91AA53C000012DD9F /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; name = res; path = ../../../update/res; sourceTree = "<group>"; };
 		3F1ECBBA1AA53C000012DD9F /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = scripts; path = ../../../update/scripts; sourceTree = "<group>"; };
-		3F1ECBCB1AA557F70012DD9F /* Droid Sans Faliback.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Droid Sans Faliback.ttf"; path = "../../../dev/res/fonts/Droid Sans Faliback.ttf"; sourceTree = "<group>"; };
 		3F7FA3B41AA6FC4B0011BDE2 /* libjansson.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libjansson.a; sourceTree = "<group>"; };
 		3F7FA3B51AA6FC4B0011BDE2 /* libpomelo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpomelo.a; sourceTree = "<group>"; };
 		3F7FA3B61AA6FC4B0011BDE2 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuv.a; sourceTree = "<group>"; };
+		3FC173241AC00A9D00128301 /* Droid Sans Fallback.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Droid Sans Fallback.ttf"; path = "../../../dev/res/fonts/Droid Sans Fallback.ttf"; sourceTree = "<group>"; };
 		3FE02F2A1AB2997E00BDC12B /* libTalkingDataGA.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTalkingDataGA.a; sourceTree = "<group>"; };
 		3FE02F2B1AB2997E00BDC12B /* TalkingDataGA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TalkingDataGA.h; sourceTree = "<group>"; };
 		3FE02F2F1AB299A200BDC12B /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/CoreTelephony.framework; sourceTree = DEVELOPER_DIR; };
@@ -1508,7 +1508,7 @@
 		F293BC4615EB859D00256477 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				3F1ECBCB1AA557F70012DD9F /* Droid Sans Faliback.ttf */,
+				3FC173241AC00A9D00128301 /* Droid Sans Fallback.ttf */,
 				3F1ECBB91AA53C000012DD9F /* res */,
 				3F1ECBBA1AA53C000012DD9F /* scripts */,
 				3FF4DC941AA4650D00CDFAF9 /* Images.xcassets */,
@@ -1651,13 +1651,13 @@
 				3FF4DD5A1AA46DEC00CDFAF9 /* uv_idea.png in Resources */,
 				3F1ECBBB1AA53C000012DD9F /* res in Resources */,
 				3FF4DD551AA46DEC00CDFAF9 /* UserVoice.strings in Resources */,
+				3FC173251AC00A9D00128301 /* Droid Sans Fallback.ttf in Resources */,
 				3FF4DD0F1AA46AF100CDFAF9 /* Makefile.am in Resources */,
 				3FF4DD5B1AA46DEC00CDFAF9 /* uv_idea@2x.png in Resources */,
 				3FF4DD571AA46DEC00CDFAF9 /* uv_article@2x.png in Resources */,
 				3FF4DD561AA46DEC00CDFAF9 /* uv_article.png in Resources */,
 				3F1ECBBC1AA53C000012DD9F /* scripts in Resources */,
 				3FF4DD0D1AA46AF100CDFAF9 /* jansson_config.h.in in Resources */,
-				3F1ECBCC1AA557F70012DD9F /* Droid Sans Faliback.ttf in Resources */,
 				3FF4DC951AA4650D00CDFAF9 /* Images.xcassets in Resources */,
 				3FF4DD591AA46DEC00CDFAF9 /* uv_heart@2x.png in Resources */,
 				C05D1C121923449100B808A4 /* config.json in Resources */,
