@@ -254,9 +254,9 @@ local SOLDIER_ANIMATION_FILES = {
         "animations/Cavalry_1_render.ExportJson",
     },
     swordsman = {
-        "animations/Archer_1_render.ExportJson",
-        "animations/Archer_1_render.ExportJson",
-        "animations/Archer_1_render.ExportJson",
+        "animations/Infantry_1_render.ExportJson",
+        "animations/Infantry_1_render.ExportJson",
+        "animations/Infantry_1_render.ExportJson",
     },
     sentinel = {
         "animations/Infantry_1_render.ExportJson",

@@ -575,7 +575,7 @@ end
 local floatInit = GameDatas.AllianceInitData.floatInit
 local function getSumPower(soldiersForFight)
     local power = 0
-    for i,v in ipairs(soldiersForFight) do
+    for i,soldierForFight in ipairs(soldiersForFight) do
         power = power + soldierForFight.power * soldierForFight.totalCount
     end
     return power
@@ -601,12 +601,12 @@ local function getPlayerTreatSoldierPercent(dragon)
     local skillBuff = 0
     local equipmentBuff = 0
 
-    local skill = dargon:GetSkillByName("recover")
+    local skill = dragon:GetSkillByName("recover")
     if skill then
         skillBuff = skill:GetEffect()
     end
 
-    for _,v in ipairs(dargon:GetAllEquipmentBuffEffect()) do
+    for _,v in ipairs(dragon:GetAllEquipmentBuffEffect()) do
         local k,buff = unpack(v)
         if k == "recoverAdd" then
             equipmentBuff = buff
@@ -619,7 +619,7 @@ local function getPlayerSoldierMoraleDecreasedPercent(dragon)
     local basePercent = 1
     local skillBuff = 0
 
-    local skill = dargon:GetSkillByName("insensitive")
+    local skill = dragon:GetSkillByName("insensitive")
     if skill then
         skillBuff = skill:GetEffect()
     end
@@ -676,7 +676,9 @@ function GameUtils:DoBattle(attacker, defencer)
         end
         local soldiers = {}
         for k, v in pairs(r) do
-            table.insert(soldiers, {name = k, damagedCount = v.damagedCount, woundedCount = v.woundedCount})
+            if v.damagedCount > 0 then
+                table.insert(soldiers, {name = k, damagedCount = v.damagedCount, woundedCount = v.woundedCount})
+            end
         end
         return {dragon = dragon, soldiers = soldiers}
     end

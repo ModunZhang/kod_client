@@ -91,7 +91,7 @@ function PVEObject:DecodeToEnemy(raw_data)
             local name, star = unpack(string.split(soldierType, "_"))
             return k, {
                 name = name,
-                power = GameUtils:GetSoldiersConfig(name, tonumber(star)),
+                power = GameUtils:GetSoldiersConfig(name, tonumber(star)).power,
                 star = tonumber(star),
                 morale = 100,
                 currentCount = count * self:NpcPower(),

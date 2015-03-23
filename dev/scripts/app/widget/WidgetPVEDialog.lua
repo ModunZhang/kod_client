@@ -160,20 +160,20 @@ function WidgetPVEDialog:Fight()
     UIKit:newGameUI('GameUIPVESendTroop',
         enemy.soldiers,-- pve 怪数据
         function(dragonType, soldiers)
-            local dargon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
+            local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
             local attack_dragon = {
                 dragonType = dragonType,
-                currentHp = dargon:Hp(),
-                hpMax = dargon:GetMaxHP(),
-                totalHp = dargon:Hp(),
-                strength = dargon:TotalStrength(),
-                vitality = dargon:TotalVitality(),
+                currentHp = dragon:Hp(),
+                hpMax = dragon:GetMaxHP(),
+                totalHp = dragon:Hp(),
+                strength = dragon:TotalStrength(),
+                vitality = dragon:TotalVitality(),
                 dragon = dragon,
             }
             local attack_soldier = LuaUtils:table_map(soldiers, function(k, v)
                 return k, {name = v.name,
-                    star = 1,
-                    power = GameUtils:GetSoldiersConfig(v.name, 1),
+                    star = v.star,
+                    power = GameUtils:GetSoldiersConfig(v.name, v.star).power,
                     morale = 100,
                     currentCount = v.count,
                     totalCount = v.count,
@@ -181,20 +181,16 @@ function WidgetPVEDialog:Fight()
                     round = 0}
             end)
 
-
-            dump(dargon:GetSkillByName("dragonBlood"))
-            dump(dargon:GetAllEquipmentBuffEffect())
-
             local report = GameUtils:DoBattle(
                 {dragon = attack_dragon, soldiers = attack_soldier}
                 ,{dragon = enemy.dragon, soldiers = enemy.soldiers}
             )
 
             if report:IsAttackWin() then
+                self:Search()
                 local rewards = self:GetObject():IsLast() and enemy.rewards + self:GetObject():GetRewards() or enemy.rewards
                 self.user:SetPveData(report:GetAttackKDA(), rewards)
                 NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):next(function()
-                    self:Search()
                     UIKit:newGameUI("GameUIReplay", report, function()
                         if report:IsAttackWin() then
                             GameGlobalUI:showTips(_("获得奖励"), rewards)

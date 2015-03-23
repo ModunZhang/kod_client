@@ -143,18 +143,20 @@ function PVEScene:CheckTrap()
             UIKit:newGameUI('GameUIPVESendTroop',
                 enemy.soldiers,-- pve 怪数据
                 function(dragonType, soldiers)
-                    local dargon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
+                    local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
                     local attack_dragon = {
                         dragonType = dragonType,
-                        currentHp = dargon:Hp(),
-                        hpMax = dargon:GetMaxHP(),
-                        totalHp = dargon:Hp(),
-                        strength = dargon:TotalStrength(),
-                        vitality = dargon:TotalVitality(),
+                        currentHp = dragon:Hp(),
+                        hpMax = dragon:GetMaxHP(),
+                        totalHp = dragon:Hp(),
+                        strength = dragon:TotalStrength(),
+                        vitality = dragon:TotalVitality(),
+                        dragon = dragon
                     }
                     local attack_soldier = LuaUtils:table_map(soldiers, function(k, v)
                         return k, {name = v.name,
-                            star = 1,
+                            star = v.star,
+                            power = GameUtils:GetSoldiersConfig(v.name, v.star).power,
                             morale = 100,
                             currentCount = v.count,
                             totalCount = v.count,
