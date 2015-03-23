@@ -95,36 +95,54 @@ local function get_response_mail_msg(response)
     dump(response,"get_response_mail_msg---->")
     if response.msg.playerData then
         local user_data = DataManager:getUserData()
-        LuaUtils:outputTable("response.msg.playerData", response.msg.playerData)
         local mail_response = response.msg.playerData
         for i,v in ipairs(mail_response) do
-
-            print("tolua.type(v)",type(v))
-
             if type(v) == "table" then
                 local keys = string.split(v[1], ".")
-                LuaUtils:outputTable("keys", keys)
                 local newKey = ""
                 local len = #keys
                 for i=1,len do
                     local k = tonumber(keys[i]) or keys[i]
                     if type(k) == "number" then
                         local client_index = MailManager:GetMailByServerIndex(k) - 1
-                        print("client_index===",client_index)
                         newKey = newKey..client_index..(i~=len and "." or "")
                     else
                         newKey = newKey..keys[i]..(i~=len and "." or "")
                     end
                 end
-                print("ta")
                 mail_response[i][1] = newKey
             end
         end
-        LuaUtils:outputTable("response.msg.playerData", response.msg.playerData)
-        print("ta")
         local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
         DataManager:setUserData(user_data, edit)
-        return response
+    end
+
+    return response
+end
+local function get_response_report_msg(response)
+    dump(response,"get_response_report_msg---->")
+    if response.msg.playerData then
+        local user_data = DataManager:getUserData()
+        local report_response = response.msg.playerData
+        for i,v in ipairs(report_response) do
+            if type(v) == "table" then
+                local keys = string.split(v[1], ".")
+                local newKey = ""
+                local len = #keys
+                for i=1,len do
+                    local k = tonumber(keys[i]) or keys[i]
+                    if type(k) == "number" then
+                        local client_index = MailManager:GetReportByServerIndex(k) - 1
+                        newKey = newKey..client_index..(i~=len and "." or "")
+                    else
+                        newKey = newKey..keys[i]..(i~=len and "." or "")
+                    end
+                end
+                report_response[i][1] = newKey
+            end
+        end
+        local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
+        DataManager:setUserData(user_data, edit)
     end
 
     return response
@@ -283,7 +301,6 @@ onPlayerDataChanged_callbacks = {}
 function NetManager:addPlayerDataChangedEventListener()
     self:addEventListener("onPlayerDataChanged", function(success, response)
         if success then
-            -- LuaUtils:outputTable("onPlayerDataChanged", response)
             local user_data = DataManager:getUserData()
             local edit = decodeInUserDataFromDeltaData(user_data, response)
             DataManager:setUserData(user_data, edit)
@@ -325,11 +342,11 @@ onGetNearedAllianceInfosSuccess_callbacks = {}
 onSearchAllianceInfoByTagSuccess_callbacks = {}
 onGetCanDirectJoinAlliancesSuccess_callbacks = {}
 onGetPlayerInfoSuccess_callbacks = {}
-onGetMailsSuccess_callbacks = {}
-onGetSavedMailsSuccess_callbacks = {}
-onGetSendMailsSuccess_callbacks = {}
-onGetReportsSuccess_callbacks = {}
-onGetSavedReportsSuccess_callbacks = {}
+-- onGetMailsSuccess_callbacks = {}
+-- onGetSavedMailsSuccess_callbacks = {}
+-- onGetSendMailsSuccess_callbacks = {}
+-- onGetReportsSuccess_callbacks = {}
+-- onGetSavedReportsSuccess_callbacks = {}
 onSendChatSuccess_callbacks = {}
 onGetAllChatSuccess_callbacks = {}
 onFetchAllianceViewData_callbacks = {}
@@ -427,73 +444,73 @@ function NetManager:addOnGetSellItemsSuccess()
     end)
 end
 
-function NetManager:addOnGetMailsSuccessListener()
-    self:addEventListener("onGetMailsSuccess", function(success, msg)
-        if success then
-            assert(#onGetMailsSuccess_callbacks <= 1, "重复请求过多了!")
+-- function NetManager:addOnGetMailsSuccessListener()
+--     self:addEventListener("onGetMailsSuccess", function(success, msg)
+--         if success then
+--             assert(#onGetMailsSuccess_callbacks <= 1, "重复请求过多了!")
 
-            dump(msg, "onGetMailsSuccess")
-            MailManager:dispatchMailServerData( "onGetMailsSuccess",msg )
-            local callback = onGetMailsSuccess_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetMailsSuccess_callbacks = {}
-        end
-    end)
-end
-function NetManager:addOnGetSavedMailsSuccessListener()
-    self:addEventListener("onGetSavedMailsSuccess", function(success, msg)
-        if success then
-            assert(#onGetSavedMailsSuccess_callbacks <= 1, "重复请求过多了!")
-            MailManager:dispatchMailServerData( "onGetSavedMailsSuccess",msg )
-            local callback = onGetSavedMailsSuccess_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetSavedMailsSuccess_callbacks = {}
-        end
-    end)
-end
-function NetManager:addOnGetSendMailsSuccessListener()
-    self:addEventListener("onGetSendMailsSuccess", function(success, msg)
-        if success then
-            assert(#onGetSendMailsSuccess_callbacks <= 1, "重复请求过多了!")
-            MailManager:dispatchMailServerData( "onGetSendMailsSuccess",msg )
-            local callback = onGetSendMailsSuccess_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetSendMailsSuccess_callbacks = {}
-        end
-    end)
-end
-function NetManager:addOnGetReportsSuccessListener()
-    self:addEventListener("onGetReportsSuccess", function(success, msg)
-        if success then
-            assert(#onGetReportsSuccess_callbacks <= 1, "重复请求过多了!")
-            MailManager:dispatchMailServerData( "onGetReportsSuccess",msg )
-            local callback = onGetReportsSuccess_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetReportsSuccess_callbacks = {}
-        end
-    end)
-end
-function NetManager:addOnGetSavedReportsSuccessListener()
-    self:addEventListener("onGetSavedReportsSuccess", function(success, msg)
-        if success then
-            assert(#onGetSavedReportsSuccess_callbacks <= 1, "重复请求过多了!")
-            MailManager:dispatchMailServerData( "onGetSavedReportsSuccess",msg )
-            local callback = onGetSavedReportsSuccess_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetSavedReportsSuccess_callbacks = {}
-        end
-    end)
-end
+--             dump(msg, "onGetMailsSuccess")
+--             MailManager:dispatchMailServerData( "onGetMailsSuccess",msg )
+--             local callback = onGetMailsSuccess_callbacks[1]
+--             if type(callback) == "function" then
+--                 callback(success, msg)
+--             end
+--             onGetMailsSuccess_callbacks = {}
+--         end
+--     end)
+-- end
+-- function NetManager:addOnGetSavedMailsSuccessListener()
+--     self:addEventListener("onGetSavedMailsSuccess", function(success, msg)
+--         if success then
+--             assert(#onGetSavedMailsSuccess_callbacks <= 1, "重复请求过多了!")
+--             MailManager:dispatchMailServerData( "onGetSavedMailsSuccess",msg )
+--             local callback = onGetSavedMailsSuccess_callbacks[1]
+--             if type(callback) == "function" then
+--                 callback(success, msg)
+--             end
+--             onGetSavedMailsSuccess_callbacks = {}
+--         end
+--     end)
+-- end
+-- function NetManager:addOnGetSendMailsSuccessListener()
+--     self:addEventListener("onGetSendMailsSuccess", function(success, msg)
+--         if success then
+--             assert(#onGetSendMailsSuccess_callbacks <= 1, "重复请求过多了!")
+--             MailManager:dispatchMailServerData( "onGetSendMailsSuccess",msg )
+--             local callback = onGetSendMailsSuccess_callbacks[1]
+--             if type(callback) == "function" then
+--                 callback(success, msg)
+--             end
+--             onGetSendMailsSuccess_callbacks = {}
+--         end
+--     end)
+-- end
+-- function NetManager:addOnGetReportsSuccessListener()
+--     self:addEventListener("onGetReportsSuccess", function(success, msg)
+--         if success then
+--             assert(#onGetReportsSuccess_callbacks <= 1, "重复请求过多了!")
+--             MailManager:dispatchMailServerData( "onGetReportsSuccess",msg )
+--             local callback = onGetReportsSuccess_callbacks[1]
+--             if type(callback) == "function" then
+--                 callback(success, msg)
+--             end
+--             onGetReportsSuccess_callbacks = {}
+--         end
+--     end)
+-- end
+-- function NetManager:addOnGetSavedReportsSuccessListener()
+--     self:addEventListener("onGetSavedReportsSuccess", function(success, msg)
+--         if success then
+--             assert(#onGetSavedReportsSuccess_callbacks <= 1, "重复请求过多了!")
+--             MailManager:dispatchMailServerData( "onGetSavedReportsSuccess",msg )
+--             local callback = onGetSavedReportsSuccess_callbacks[1]
+--             if type(callback) == "function" then
+--                 callback(success, msg)
+--             end
+--             onGetSavedReportsSuccess_callbacks = {}
+--         end
+--     end)
+-- end
 
 
 function NetManager:addOnChatListener()
@@ -675,11 +692,11 @@ function NetManager:getConnectLogicServerPromise()
         self:addOnGetPlayerInfoSuccessListener()
         self:addOnGetPlayerViewDataSuccess()
         self:addOnGetSellItemsSuccess()
-        self:addOnGetMailsSuccessListener()
-        self:addOnGetSavedMailsSuccessListener()
-        self:addOnGetSendMailsSuccessListener()
-        self:addOnGetReportsSuccessListener()
-        self:addOnGetSavedReportsSuccessListener()
+        -- self:addOnGetMailsSuccessListener()
+        -- self:addOnGetSavedMailsSuccessListener()
+        -- self:addOnGetSendMailsSuccessListener()
+        -- self:addOnGetReportsSuccessListener()
+        -- self:addOnGetSavedReportsSuccessListener()
         self:addOnChatListener()
         self:addOnAllChatListener()
         self:addOnGetAllianceDataSuccess()
@@ -767,21 +784,21 @@ end
 local function get_alliancedata_callback()
     return get_callback_promise(onAllianceDataChanged_callbacks, "修改联盟信息失败!")
 end
-local function get_inboxmails_callback()
-    return get_callback_promise(onGetMailsSuccess_callbacks, "获取收件箱邮件失败!")
-end
-local function get_savedmails_callback()
-    return get_callback_promise(onGetSavedMailsSuccess_callbacks, "获取收藏邮件失败!")
-end
-local function get_sendmails_callback()
-    return get_callback_promise(onGetSendMailsSuccess_callbacks, "获取发件箱邮件失败!")
-end
-local function get_reports_callback()
-    return get_callback_promise(onGetReportsSuccess_callbacks, "获取玩家失败!")
-end
-local function get_savedreports_callback()
-    return get_callback_promise(onGetSavedReportsSuccess_callbacks, "获取玩家收藏战报失败!")
-end
+-- local function get_inboxmails_callback()
+--     return get_callback_promise(onGetMailsSuccess_callbacks, "获取收件箱邮件失败!")
+-- end
+-- local function get_savedmails_callback()
+--     return get_callback_promise(onGetSavedMailsSuccess_callbacks, "获取收藏邮件失败!")
+-- end
+-- local function get_sendmails_callback()
+--     return get_callback_promise(onGetSendMailsSuccess_callbacks, "获取发件箱邮件失败!")
+-- end
+-- local function get_reports_callback()
+--     return get_callback_promise(onGetReportsSuccess_callbacks, "获取玩家失败!")
+-- end
+-- local function get_savedreports_callback()
+--     return get_callback_promise(onGetSavedReportsSuccess_callbacks, "获取玩家收藏战报失败!")
+-- end
 local function get_sendchat_callback()
     return get_callback_promise(onSendChatSuccess_callbacks, "发送聊天失败!")
 end
@@ -1082,13 +1099,35 @@ end
 function NetManager:getFetchSavedMailsPromise(fromIndex)
     return get_blocking_request_promise("logic.playerHandler.getSavedMails", {
         fromIndex = fromIndex
-    }, "获取收藏邮件失败!"):next(get_response_msg)
+    }, "获取收藏邮件失败!"):next(function (response)
+        if response.msg.mails then
+            local user_data = DataManager:getUserData()
+            local fetch_mails = {}
+            for i,v in ipairs(response.msg.mails) do
+                table.insert(user_data.savedMails, v)
+                MailManager:AddSavedMailsToEnd(v)
+                table.insert(fetch_mails, v)
+            end
+            return fetch_mails
+        end
+    end)
 end
 -- 获取已发送邮件
 function NetManager:getFetchSendMailsPromise(fromIndex)
     return get_blocking_request_promise("logic.playerHandler.getSendMails", {
         fromIndex = fromIndex
-    }, "获取已发送邮件失败!"):next(get_response_msg)
+    }, "获取已发送邮件失败!"):next(function (response)
+        if response.msg.mails then
+            local user_data = DataManager:getUserData()
+            local fetch_mails = {}
+            for i,v in ipairs(response.msg.mails) do
+                table.insert(user_data.sendMails, v)
+                MailManager:AddSendMailsToEnd(v)
+                table.insert(fetch_mails, v)
+            end
+            return fetch_mails
+        end
+    end)
 end
 -- 删除邮件
 function NetManager:getDeleteMailsPromise(mailIds)
@@ -1107,37 +1146,59 @@ end
 function NetManager:getReadReportsPromise(reportIds)
     return get_none_blocking_request_promise("logic.playerHandler.readReports", {
         reportIds = reportIds
-    }, "阅读战报失败!"):next(get_response_msg)
+    }, "阅读战报失败!"):next(get_response_report_msg)
 end
 -- 收藏战报
 function NetManager:getSaveReportPromise(reportId)
     return get_blocking_request_promise("logic.playerHandler.saveReport", {
         reportId = reportId
-    }, "收藏战报失败!"):next(get_response_msg)
+    }, "收藏战报失败!"):next(get_response_report_msg)
 end
 -- 取消收藏战报
 function NetManager:getUnSaveReportPromise(reportId)
     return get_blocking_request_promise("logic.playerHandler.unSaveReport", {
         reportId = reportId
-    }, "取消收藏战报失败!"):next(get_response_msg)
+    }, "取消收藏战报失败!"):next(get_response_report_msg)
 end
 -- 获取玩家战报
 function NetManager:getReportsPromise(fromIndex)
     return get_blocking_request_promise("logic.playerHandler.getReports", {
         fromIndex = fromIndex
-    }, "获取玩家战报失败!"):next(get_response_msg)
+    }, "获取玩家战报失败!"):next(function (response)
+        if response.msg.reports then
+            local user_data = DataManager:getUserData()
+            local fetch_reports = {}
+            for i,v in ipairs(response.msg.reports) do
+                table.insert(user_data.reports, v)
+                MailManager:AddReportsToEnd(v)
+                table.insert(fetch_reports, v)
+            end
+            return fetch_reports
+        end
+    end)
 end
 -- 获取玩家已存战报
 function NetManager:getSavedReportsPromise(fromIndex)
     return get_blocking_request_promise("logic.playerHandler.getSavedReports", {
         fromIndex = fromIndex
-    }, "获取玩家已存战报失败!"):next(get_response_msg)
+    }, "获取玩家已存战报失败!"):next(function (response)
+        if response.msg.reports then
+            local user_data = DataManager:getUserData()
+            local fetch_reports = {}
+            for i,v in ipairs(response.msg.reports) do
+                table.insert(user_data.reports, v)
+                MailManager:AddSavedReportsToEnd(v)
+                table.insert(fetch_reports, v)
+            end
+            return fetch_reports
+        end
+    end)
 end
 -- 删除战报
 function NetManager:getDeleteReportsPromise(reportIds)
     return get_blocking_request_promise("logic.playerHandler.deleteReports", {
         reportIds = reportIds
-    }, "删除战报失败!"):next(get_response_msg)
+    }, "删除战报失败!"):next(get_response_report_msg)
 end
 -- 请求加速
 function NetManager:getRequestAllianceToSpeedUpPromise(eventType, eventId)
