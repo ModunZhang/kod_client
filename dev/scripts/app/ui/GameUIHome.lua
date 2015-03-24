@@ -86,7 +86,7 @@ function GameUIHome:FadeToSelf(isFullDisplay)
     self:setCascadeOpacityEnabled(true)
     local opacity = isFullDisplay == true and 255 or 0
     -- self.event_tab:setVisible(isFullDisplay)
-    transition.fadeTo(self, {opacity = opacity, time = 0.5})
+    transition.fadeTo(self, {opacity = opacity, time = 0.2})
 end
 
 function GameUIHome:onEnter()
