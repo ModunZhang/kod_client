@@ -5,13 +5,8 @@ function GameUIWarehouse:ctor(city,building)
     GameUIWarehouse.super.ctor(self,city,_("仓库"),building)
 end
 
-function GameUIWarehouse:CreateBetweenBgAndTitle()
-    GameUIWarehouse.super.CreateBetweenBgAndTitle(self)
-    self.resource_layer = WidgetResources.new():addTo(self:GetView())
-end
-
-function GameUIWarehouse:onEnter()
-    GameUIWarehouse.super.onEnter(self)
+function GameUIWarehouse:OnMoveInStage()
+    GameUIWarehouse.super.OnMoveInStage(self)
     self:CreateTabButtons({
         {
             label = _("资源"),
@@ -19,9 +14,14 @@ function GameUIWarehouse:onEnter()
         },
     },function(tag)
         if tag == 'resource' then
+            if not self.resource_layer then
+                self.resource_layer = WidgetResources.new():addTo(self:GetView())
+            end
             self.resource_layer:setVisible(true)
         else
-            self.resource_layer:setVisible(false)
+            if self.resource_layer then
+                self.resource_layer:setVisible(false)
+            end
         end
     end):pos(display.cx, display.top - 924)
 
@@ -31,3 +31,4 @@ function GameUIWarehouse:onExit()
 end
 
 return GameUIWarehouse
+

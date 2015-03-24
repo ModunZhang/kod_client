@@ -55,8 +55,8 @@ function GameUIHospital:CreateBetweenBgAndTitle()
     self.heal_layer = display.newLayer():addTo(self:GetView())
 end
 
-function GameUIHospital:onEnter()
-    GameUIHospital.super.onEnter(self)
+function GameUIHospital:OnMoveInStage()
+    GameUIHospital.super.OnMoveInStage(self)
     self:CreateTabButtons({
         {
             label = _("治愈"),

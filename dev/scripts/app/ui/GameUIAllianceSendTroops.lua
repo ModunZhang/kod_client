@@ -88,8 +88,8 @@ function GameUIAllianceSendTroops:ctor(march_callback,params)
     self.dragon = self.dragon_manager:GetDragon(self.dragon_manager:GetCanFightPowerfulDragonType()) or self.dragon_manager:GetDragon(self.dragon_manager:GetPowerfulDragonType())
 end
 
-function GameUIAllianceSendTroops:onEnter()
-    GameUIAllianceSendTroops.super.onEnter(self)
+function GameUIAllianceSendTroops:OnMoveInStage()
+    GameUIAllianceSendTroops.super.OnMoveInStage(self)
 
     self:SelectDragonPart()
     self:SelectSoldiers()
@@ -145,7 +145,7 @@ function GameUIAllianceSendTroops:onEnter()
                     self:RefreashSoldierShow()
                 end
             end
-        end):align(display.LEFT_CENTER,window.left+50,window.top-920):addTo(self)
+        end):align(display.LEFT_CENTER,window.left+50,window.top-920):addTo(self:GetView())
     local march_btn = WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("行军"),
@@ -201,7 +201,7 @@ function GameUIAllianceSendTroops:onEnter()
                 end
             end
 
-        end):align(display.RIGHT_CENTER,window.right-50,window.top-920):addTo(self)
+        end):align(display.RIGHT_CENTER,window.right-50,window.top-920):addTo(self:GetView())
     if not self.isPVE then 
         --行军所需时间
         display.newSprite("hourglass_39x46.png", window.cx, window.top-920)
@@ -210,14 +210,14 @@ function GameUIAllianceSendTroops:onEnter()
             text = "00:00:00",
             size = 18,
             color = 0x403c2f
-        }):align(display.LEFT_CENTER,window.cx+20,window.top-910):addTo(self)
+        }):align(display.LEFT_CENTER,window.cx+20,window.top-910):addTo(self:GetView())
 
         -- 科技减少行军时间
         self.buff_reduce_time = UIKit:ttfLabel({
             text = "-(00:00:00)",
             size = 18,
             color = 0x068329
-        }):align(display.LEFT_CENTER,window.cx+20,window.top-930):addTo(self)
+        }):align(display.LEFT_CENTER,window.cx+20,window.top-930):addTo(self:GetView())
     end
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
 end
@@ -227,7 +227,7 @@ function GameUIAllianceSendTroops:SelectDragonPart()
 
     local dragon_frame = display.newSprite("alliance_item_flag_box_126X126.png")
         :align(display.LEFT_CENTER, window.left+47,window.top-425)
-        :addTo(self)
+        :addTo(self:GetView())
 
     local dragon_bg = display.newSprite("chat_hero_background.png")
         :align(display.LEFT_CENTER, 7,dragon_frame:getContentSize().height/2)
@@ -288,14 +288,14 @@ function GameUIAllianceSendTroops:SelectDragon()
             },
 
         }
-    ):addTo(self)
+    ):addTo(self:GetView())
 end
 function GameUIAllianceSendTroops:SelectSoldiers()
     local list ,listnode=  UIKit:commonListView({
         viewRect = cc.rect(0, 0, 568, 366),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     })
-    listnode:addTo(self):pos(window.cx, window.top-685)
+    listnode:addTo(self:GetView()):pos(window.cx, window.top-685)
     listnode:align(display.CENTER)
 
     self.soldier_listview = list
@@ -494,11 +494,11 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
     }):addScrollNode(TroopShow)
         :setBounceable(false)
         :setDirection(UIScrollView.DIRECTION_HORIZONTAL)
-        :addTo(self)
+        :addTo(self:GetView())
     -- 战斗力，人口，负重信息展示背景框
     local info_bg = cc.LayerColor:create(UIKit:hex2c4b(0x7a000000))
         :pos(window.left+14, window.top-355)
-        :addTo(self)
+        :addTo(self:GetView())
     info_bg:setTouchEnabled(false)
     info_bg:setContentSize(620, 46)
     local function createInfoItem(title,value)
@@ -526,7 +526,7 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
     -- line
     local line = display.newSprite("line_624x4.png")
         :align(display.CENTER, window.cx+2, window.top-355)
-        :addTo(self)
+        :addTo(self:GetView())
 
     function TroopShow:SetPower(power)
         local power_item = createInfoItem(_("战斗力"),string.formatnumberthousands(power))

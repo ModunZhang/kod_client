@@ -21,7 +21,6 @@ end
 
 function GameUIResource:onEnter()
     GameUIResource.super.onEnter(self)
-    self:CreateUI()
 end
 function GameUIResource:CreateUI()
     self:CreateInfomation()
@@ -267,6 +266,7 @@ end
 
 function GameUIResource:OnMoveInStage()
     GameUIResource.super.OnMoveInStage(self)
+    self:CreateUI()
     local resource = City.resource_manager:GetResourceByType(self.building:GetUpdateResourceType())
     local citizen = self.building:GetCitizen()
     self.firstValueLabel:setString(string.format('%d',citizen))
