@@ -11,7 +11,6 @@ end
 function GameUIUpgradeBuilding:CreateBetweenBgAndTitle()
     GameUIUpgradeBuilding.super.CreateBetweenBgAndTitle(self)
     -- 加入升级layer
-    self.upgrade_layer = CommonUpgradeUI.new(self.upgrade_city, self.building):addTo(self:GetView())
 end
 
 function GameUIUpgradeBuilding:CreateTabButtons(param, cb)
@@ -29,7 +28,10 @@ function GameUIUpgradeBuilding:CreateTabButtons(param, cb)
         cb(tag)
     end)
 end
-
+function GameUIUpgradeBuilding:OnMoveInStage()
+    GameUIUpgradeBuilding.super.OnMoveInStage(self)
+    self.upgrade_layer = CommonUpgradeUI.new(self.upgrade_city, self.building):addTo(self:GetView())
+end
 function GameUIUpgradeBuilding:GetBuilding()
     return self.building
 end

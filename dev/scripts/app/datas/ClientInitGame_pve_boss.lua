@@ -2,151 +2,121 @@ local pve_boss = GameDatas.ClientInitGame.pve_boss
 
 pve_boss[1] = {
 	["index"] = 1,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,100",
-	["soldiers"] = "swordsman_1,100;sentinel_1,100",
-	["rewards"] = "resources,wood,12"
+	["soldiers"] = "catapult_3,3;swordsman_3,11;lancer_3,5;archer_3,9",
+	["rewards"] = "resources,gem,10"
 }
 pve_boss[2] = {
 	["index"] = 2,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,101",
-	["soldiers"] = "swordsman_1,100;sentinel_1,101",
-	["rewards"] = "resources,wood,13"
+	["soldiers"] = "ballista_3,13;sentinel_3,47;horseArcher_3,20;crossbowman_3,33",
+	["rewards"] = "resources,gem,20"
 }
 pve_boss[3] = {
 	["index"] = 3,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,102",
-	["soldiers"] = "swordsman_1,100;sentinel_1,102",
-	["rewards"] = "resources,wood,14"
+	["soldiers"] = "catapult_3,37;swordsman_3,126;lancer_3,52;archer_3,83",
+	["rewards"] = "resources,gem,30"
 }
 pve_boss[4] = {
 	["index"] = 4,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,103",
-	["soldiers"] = "swordsman_1,100;sentinel_1,103",
-	["rewards"] = "resources,wood,15"
+	["soldiers"] = "ballista_3,79;sentinel_3,267;horseArcher_3,109;crossbowman_3,170",
+	["rewards"] = "resources,gem,40"
 }
 pve_boss[5] = {
 	["index"] = 5,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,104",
-	["soldiers"] = "swordsman_1,100;sentinel_1,104",
-	["rewards"] = "resources,wood,16"
+	["soldiers"] = "catapult_3,143;swordsman_3,483;lancer_3,196;archer_3,302",
+	["rewards"] = "resources,gem,50"
 }
 pve_boss[6] = {
 	["index"] = 6,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,105",
-	["soldiers"] = "swordsman_1,100;sentinel_1,105",
-	["rewards"] = "resources,wood,17"
+	["soldiers"] = "ballista_3,235;sentinel_3,791;horseArcher_3,320;crossbowman_3,489",
+	["rewards"] = "resources,gem,60"
 }
 pve_boss[7] = {
 	["index"] = 7,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,106",
-	["soldiers"] = "swordsman_1,100;sentinel_1,106",
-	["rewards"] = "resources,wood,18"
+	["soldiers"] = "catapult_3,359;swordsman_3,1204;lancer_3,486;archer_3,739",
+	["rewards"] = "resources,gem,70"
 }
 pve_boss[8] = {
 	["index"] = 8,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,107",
-	["soldiers"] = "swordsman_1,100;sentinel_1,107",
-	["rewards"] = "resources,wood,19"
+	["soldiers"] = "ballista_3,519;sentinel_3,1737;horseArcher_3,700;crossbowman_3,1061",
+	["rewards"] = "resources,gem,80"
 }
 pve_boss[9] = {
 	["index"] = 9,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,108",
-	["soldiers"] = "swordsman_1,100;sentinel_1,108",
-	["rewards"] = "resources,wood,20"
+	["soldiers"] = "catapult_3,718;swordsman_3,2403;lancer_3,967;archer_3,1463",
+	["rewards"] = "resources,gem,90"
 }
 pve_boss[10] = {
 	["index"] = 10,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,109",
-	["soldiers"] = "swordsman_1,100;sentinel_1,109",
-	["rewards"] = "resources,wood,21"
+	["soldiers"] = "ballista_3,961;sentinel_3,3215;horseArcher_3,1292;crossbowman_3,1953",
+	["rewards"] = "resources,gem,100"
 }
 pve_boss[11] = {
 	["index"] = 11,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,110",
-	["soldiers"] = "swordsman_1,100;sentinel_1,110",
-	["rewards"] = "resources,wood,22"
+	["soldiers"] = "catapult_3,1252;swordsman_3,4186;lancer_3,1681;archer_3,2538",
+	["rewards"] = "resources,gem,110"
 }
 pve_boss[12] = {
 	["index"] = 12,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,111",
-	["soldiers"] = "swordsman_1,100;sentinel_1,111",
-	["rewards"] = "resources,wood,23"
+	["soldiers"] = "ballista_3,1595;sentinel_3,5328;horseArcher_3,2139;crossbowman_3,3226",
+	["rewards"] = "resources,gem,120"
 }
 pve_boss[13] = {
 	["index"] = 13,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,112",
-	["soldiers"] = "swordsman_1,100;sentinel_1,112",
-	["rewards"] = "resources,wood,24"
+	["soldiers"] = "catapult_3,1993;swordsman_3,6655;lancer_3,2670;archer_3,4024",
+	["rewards"] = "resources,gem,130"
 }
 pve_boss[14] = {
 	["index"] = 14,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,113",
-	["soldiers"] = "swordsman_1,100;sentinel_1,113",
-	["rewards"] = "resources,wood,25"
+	["soldiers"] = "ballista_3,2449;sentinel_3,8177;horseArcher_3,3279;crossbowman_3,4940",
+	["rewards"] = "resources,gem,140"
 }
 pve_boss[15] = {
 	["index"] = 15,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,114",
-	["soldiers"] = "swordsman_1,100;sentinel_1,114",
-	["rewards"] = "resources,wood,26"
+	["soldiers"] = "catapult_3,2968;swordsman_3,9908;lancer_3,3972;archer_3,5981",
+	["rewards"] = "resources,gem,150"
 }
 pve_boss[16] = {
 	["index"] = 16,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,115",
-	["soldiers"] = "swordsman_1,100;sentinel_1,115",
-	["rewards"] = "resources,wood,27"
+	["soldiers"] = "ballista_3,3553;sentinel_3,11859;horseArcher_4753;crossbowman_3,7154",
+	["rewards"] = "resources,gem,160"
 }
 pve_boss[17] = {
 	["index"] = 17,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,116",
-	["soldiers"] = "swordsman_1,100;sentinel_1,116",
-	["rewards"] = "resources,wood,28"
+	["soldiers"] = "catapult_3,4207;swordsman_3,14041;lancer_3,5627;archer_3,8465",
+	["rewards"] = "resources,gem,170"
 }
 pve_boss[18] = {
 	["index"] = 18,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,117",
-	["soldiers"] = "swordsman_1,100;sentinel_1,117",
-	["rewards"] = "resources,wood,29"
+	["soldiers"] = "ballista_3,4934;sentinel_3,16466;horseArcher_3,6597;crossbowman_3,9923",
+	["rewards"] = "resources,gem,180"
 }
 pve_boss[19] = {
 	["index"] = 19,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,118",
-	["soldiers"] = "swordsman_1,100;sentinel_1,118",
-	["rewards"] = "resources,wood,30"
+	["soldiers"] = "catapult_3,5738;swordsman_3,19146;lancer_3,7670;archer_3,11533",
+	["rewards"] = "resources,gem,190"
 }
 pve_boss[20] = {
 	["index"] = 20,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,119",
-	["soldiers"] = "swordsman_1,100;sentinel_1,119",
-	["rewards"] = "resources,wood,31"
+	["soldiers"] = "ballista_3,6621;sentinel_3,22091;horseArcher_3,8848;crossbowman_3,13303",
+	["rewards"] = "resources,gem,200"
 }
 pve_boss[21] = {
 	["index"] = 21,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,120",
-	["soldiers"] = "swordsman_1,100;sentinel_1,120",
-	["rewards"] = "resources,wood,32"
+	["soldiers"] = "catapult_3,7588;swordsman_3,25313;lancer_3,10138;archer_3,15238",
+	["rewards"] = "resources,gem,210"
 }
 pve_boss[22] = {
 	["index"] = 22,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,121",
-	["soldiers"] = "swordsman_1,100;sentinel_1,121",
-	["rewards"] = "resources,wood,33"
+	["soldiers"] = "ballista_3,8640;sentinel_3,28824;horseArcher_3,11543;crossbowman_3,17347",
+	["rewards"] = "resources,gem,220"
 }
 pve_boss[23] = {
 	["index"] = 23,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,122",
-	["soldiers"] = "swordsman_1,100;sentinel_1,122",
-	["rewards"] = "resources,wood,34"
+	["soldiers"] = "catapult_3,9783;swordsman_3,32632;lancer_3,13067;archer_3,19635",
+	["rewards"] = "resources,gem,230"
 }
 pve_boss[24] = {
 	["index"] = 24,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,123",
-	["soldiers"] = "swordsman_1,100;sentinel_1,123",
-	["rewards"] = "resources,wood,35"
-}
-pve_boss[25] = {
-	["index"] = 25,
-	["dragon_hp_strength_vitality"] = "redDragon,100,100,124",
-	["soldiers"] = "swordsman_1,100;sentinel_1,124",
-	["rewards"] = "resources,wood,36"
+	["soldiers"] = "ballista_3,11018;sentinel_3,36751;horseArcher_3,14715;crossbowman_3,22108",
+	["rewards"] = "resources,gem,240"
 }

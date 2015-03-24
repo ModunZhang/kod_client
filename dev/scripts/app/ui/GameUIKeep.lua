@@ -41,13 +41,6 @@ function GameUIKeep:ctor(city,building)
     GameUIKeep.super.ctor(self,city,_("城堡"),building)
 end
 
-function GameUIKeep:CreateBetweenBgAndTitle()
-    GameUIKeep.super.CreateBetweenBgAndTitle(self)
-
-    -- 加入城堡info_layer
-    self.info_layer = display.newLayer():addTo(self:GetView())
-end
-
 function GameUIKeep:OnMoveInStage()
     GameUIKeep.super.OnMoveInStage(self)
     self:CreateTabButtons({
@@ -57,15 +50,20 @@ function GameUIKeep:OnMoveInStage()
         },
     }, function(tag)
         if tag == 'info' then
+            if not self.info_layer then
+                self.info_layer = display.newLayer():addTo(self:GetView())
+                self:CreateCanBeUnlockedBuildingBG()
+                self:CreateCanBeUnlockedBuildingListView()
+                self:CreateCityBasicInfo()
+                self.city:AddListenOnType(self, City.LISTEN_TYPE.CITY_NAME)
+            end
             self.info_layer:setVisible(true)
         else
-            self.info_layer:setVisible(false)
+            if self.info_layer then
+                self.info_layer:setVisible(false)
+            end
         end
     end):pos(window.cx, window.bottom + 34)
-    self:CreateCanBeUnlockedBuildingBG()
-    self:CreateCanBeUnlockedBuildingListView()
-    self:CreateCityBasicInfo()
-    self.city:AddListenOnType(self, City.LISTEN_TYPE.CITY_NAME)
 
 end
 function GameUIKeep:OnCityNameChanged(cityName)
@@ -354,7 +352,7 @@ function GameUIKeep:CreateChangeTerrainWindow()
         :align(display.CENTER, 50, 50):addTo(prop_bg):scale(0.5)
     local num_bg = display.newSprite("number_bg_100x40.png")
         :align(display.CENTER_TOP, 50, 12):addTo(prop_bg)
-    local gem_img = display.newSprite("gem_66x56.png")
+    local gem_img = display.newSprite("gem_icon_62x61.png")
         :align(display.LEFT_CENTER, 10, 20):addTo(num_bg):scale(0.4)
     self.number = cc.ui.UILabel.new({
         size = 20,
@@ -414,16 +412,43 @@ function GameUIKeep:CreateChangeTerrainWindow()
                     return
                 end
                 if selected_index == 1 then
-                    NetManager:getChangeToGrassPromise()
+                    NetManager:getChangeToGrassPromise():next(function (response)
+                        dump(response)
+                        if response.success then
+                            self:PlayCloudAnimation()
+                        end
+                    end)
                 elseif selected_index == 2 then
-                    NetManager:getChangeToDesertPromise()
+                    NetManager:getChangeToDesertPromise():next(function (response)
+                        dump(response)
+                        if response.success then
+                            self:PlayCloudAnimation()
+                        end
+                    end)
                 elseif selected_index == 3 then
-                    NetManager:getChangeToIceFieldPromise()
+                    NetManager:getChangeToIceFieldPromise():next(function (response)
+                        dump(response)
+                        if response.success then
+                            self:PlayCloudAnimation()
+                        end
+                    end)
                 end
             end
         end)
 end
-
+function GameUIKeep:PlayCloudAnimation()
+    local armature = ccs.Armature:create("Cloud_Animation"):addTo(display.getRunningScene(),5000):pos(display.cx, display.cy)
+    cc.LayerColor:create(UIKit:hex2c4b(0x00ffffff)):addTo(display.getRunningScene(),5000):runAction(
+        transition.sequence{
+            cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
+            cc.FadeIn:create(0.75),
+            cc.DelayTime:create(0.5),
+            cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
+            cc.CallFunc:create(function() self:LeftButtonClicked() end),
+            cc.FadeOut:create(0.75),
+        }
+    )
+end
 function GameUIKeep:CreateBackGroundWithTitle(title_string)
     local leyer = display.newColorLayer(cc.c4b(0,0,0,127))
     local body = WidgetUIBackGround.new({height=450}):align(display.TOP_CENTER,display.cx,display.top-200)
@@ -465,6 +490,10 @@ end
 
 
 return GameUIKeep
+
+
+
+
 
 
 

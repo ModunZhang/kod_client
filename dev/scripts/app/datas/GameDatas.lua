@@ -8,6 +8,7 @@ GameDatas.ClientInitGame = {
 	["pve_normal"] = {},
 	["pve_elite"] = {},
 	["pve_boss"] = {},
+	["pve_dragon"] = {},
 	["pve_npc"] = {},
 	["soldier_vs"] = {},
 	["wonder_grassLand"] = {},
@@ -22,6 +23,7 @@ require("app.datas.ClientInitGame_watchTower")
 require("app.datas.ClientInitGame_pve_normal")
 require("app.datas.ClientInitGame_pve_elite")
 require("app.datas.ClientInitGame_pve_boss")
+require("app.datas.ClientInitGame_pve_dragon")
 require("app.datas.ClientInitGame_pve_npc")
 require("app.datas.ClientInitGame_soldier_vs")
 require("app.datas.ClientInitGame_wonder_grassLand")
