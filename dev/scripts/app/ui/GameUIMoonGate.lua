@@ -25,8 +25,8 @@ function GameUIMoonGate:onEnter()
 end
 function GameUIMoonGate:CreateBetweenBgAndTitle()
     GameUIMoonGate.super.CreateBetweenBgAndTitle(self)
-    self.map_layer = display.newLayer():addTo(self)
-    self.wonder_layer = display.newLayer():addTo(self)
+    self.map_layer = display.newLayer():addTo(self:GetView())
+    self.wonder_layer = display.newLayer():addTo(self:GetView())
     self.wonder_layer:setVisible(false)
     self:InitKingCity()
     self:InitWonderDetails()
@@ -52,7 +52,7 @@ function GameUIMoonGate:InitKingCity()
         x,y = biggest_wonder_iceField.x,biggest_wonder_iceField.y
     end
 
-    local map = display.newSprite("world_map.jpg"):align(display.LEFT_BOTTOM, scroll_view_width/2-50-x,scroll_view_height/2-y)
+    local map = display.newSprite("world_map_2000x200.jpg"):align(display.LEFT_BOTTOM, scroll_view_width/2-50-x,scroll_view_height/2-y)
     self:CreateAllWonders(map)
 
     local scrollView = UIScrollView.new({
@@ -165,7 +165,7 @@ function GameUIMoonGate:InitWonderDetails()
     local layer = self.wonder_layer
     -- 放地图的裁剪区域
     local map_rect = display.newClippingRegionNode(cc.rect(window.left+15, window.top_bottom-364,612,384)):addTo(layer)
-    local map = display.newSprite("world_map.jpg"):align(display.LEFT_BOTTOM)
+    local map = display.newSprite("world_map_2000x200.jpg"):align(display.LEFT_BOTTOM)
         :addTo(map_rect)
     self:CreateAllWonders(map)
     local shadowLayer = UIKit:shadowLayer():addTo(layer)

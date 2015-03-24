@@ -10,4 +10,7 @@ end
 function TownHallUpgradeBuilding:GetNextLevelDwellingNum()
     return config_function[self:GetNextLevel()].houseAdd
 end
+function TownHallUpgradeBuilding:GetNextLevelEfficiency()
+    return config_function[self:GetNextLevel()].efficiency
+end
 return TownHallUpgradeBuilding

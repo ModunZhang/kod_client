@@ -28,8 +28,7 @@ function GameUIAllianceBuilding:CreateBetweenBgAndTitle()
     GameUIAllianceBuilding.super.CreateBetweenBgAndTitle(self)
 
     -- upgrade_layer
-    self.upgrade_layer = WidgetAllianceBuildingUpgrade.new(self.building)
-    self:addChild(self.upgrade_layer)
+    self.upgrade_layer = WidgetAllianceBuildingUpgrade.new(self.building):addTo(self:GetView())
 end
 
 

@@ -76,8 +76,8 @@ end
 function GameUIVip:CreateBetweenBgAndTitle()
     GameUIVip.super.CreateBetweenBgAndTitle(self)
     self.player_node = WidgetPlayerNode.new(cc.size(564,760),self)
-        :addTo(self):pos(window.cx-564/2,window.bottom_top+30)
-    self.vip_layer = display.newLayer():addTo(self)
+        :addTo(self:GetView()):pos(window.cx-564/2,window.bottom_top+30)
+    self.vip_layer = display.newLayer():addTo(self:GetView())
     self:RefreshListView()
 end
 
@@ -235,8 +235,8 @@ function GameUIVip:WidgetPlayerNode_DataSource(name)
         return self:AdapterPlayerList() -- {{"职位","将军"},{"职位","将军"},{"职位","将军"}}
     end
 end
-function GameUIVip:onEnter()
-    GameUIVip.super.onEnter(self)
+function GameUIVip:OnMoveInStage()
+    GameUIVip.super.OnMoveInStage(self)
     self:CreateTabButtons({
         {
             label = _("信息"),

@@ -193,13 +193,13 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
     elseif self.building:GetType()=="blackSmith" then
         efficiency = string.format("%s%d%%,%s+%d",bd.blackSmith_efficiency,building:GetNextLevelEfficiency()*100,bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="foundry" then
-        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.foundry_miner,building:GetNextLevelMaxHouseNum(),bd.foundry_addEfficency,building:GetNextLevelAddEfficency()*100,bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.foundry_miner,building:GetNextLevelMaxHouseNum(),bd.foundry_protection,building:GetNextLevelProtection()*100,bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="lumbermill" then
-        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.lumbermill_woodcutter,building:GetNextLevelMaxHouseNum(),bd.lumbermill_addEfficency,building:GetNextLevelAddEfficency()*100,bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.lumbermill_woodcutter,building:GetNextLevelMaxHouseNum(),bd.lumbermill_protection,building:GetNextLevelProtection()*100,bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="mill" then
-        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.mill_farmer,building:GetNextLevelMaxHouseNum(),bd.mill_addEfficency,building:GetNextLevelAddEfficency()*100,bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.mill_farmer,building:GetNextLevelMaxHouseNum(),bd.mill_protection,building:GetNextLevelProtection()*100,bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="stoneMason" then
-        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.stoneMason_quarrier,building:GetNextLevelMaxHouseNum(),bd.stoneMason_addEfficency,building:GetNextLevelAddEfficency()*100,bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.stoneMason_quarrier,building:GetNextLevelMaxHouseNum(),bd.stoneMason_protection,building:GetNextLevelProtection()*100,bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="hospital" then
         efficiency = string.format("%s%d,%s+%d",bd.maxCasualty,building:GetNextLevelMaxCasualty(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="townHall" then

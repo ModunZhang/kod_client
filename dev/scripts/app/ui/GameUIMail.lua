@@ -1,4 +1,4 @@
-local GameUIBase = import('.GameUIBase')
+local GameUIWithCommonHeader = import('.GameUIWithCommonHeader')
 local UIListView = import(".UIListView")
 local UICheckBoxButton = import(".UICheckBoxButton")
 local GameUIStrikeReport = import(".GameUIStrikeReport")
@@ -16,7 +16,7 @@ local GameUICollectReport = import(".GameUICollectReport")
 local Report = import("..entity.Report")
 
 
-local GameUIMail = class('GameUIMail', GameUIBase)
+local GameUIMail = class('GameUIMail', GameUIWithCommonHeader)
 
 GameUIMail.ONE_TIME_LOADING_MAILS = 10
 GameUIMail.ONE_TIME_LOADING_REPORTS = 10
@@ -33,13 +33,8 @@ function GameUIMail:ctor(title,city)
     self.item_saved_reports = {}
 end
 
-function GameUIMail:onEnter()
-    GameUIMail.super.onEnter(self)
-    self:CreateBackGround()
-    self:CreateBetweenBgAndTitle()
-    self:CreateTitle(self.title)
-    self.home_btn = self:CreateHomeButton()
-    self:CreateWriteMailButton()
+function GameUIMail:OnMoveInStage()
+    GameUIMail.super.OnMoveInStage(self)
     self:CreateTabButtons({
         {
             label = _("收件箱"),
@@ -247,32 +242,29 @@ function GameUIMail:onExit()
     self.manager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.FETCH_SAVED_REPORTS)
     GameUIMail.super.onExit(self)
 end
-function GameUIMail:CreateWriteMailButton()
+function GameUIMail:CreateShopButton()
     local write_mail_button = WidgetPushButton.new(
         {normal = "home_btn_up.png", pressed = "home_btn_down.png"}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
             self:CreateWriteMail()
         end
-    end):addTo(self)
-    write_mail_button:align(display.RIGHT_TOP, window.cx+314, window.top-5)
+    end)
+    write_mail_button:align(display.RIGHT_TOP,  670, 86)
     cc.ui.UIImage.new("write_mail_58X46.png")
         :addTo(write_mail_button)
         :pos(-75, -48)
         :scale(0.8)
+    return write_mail_button
 end
 function GameUIMail:CreateBetweenBgAndTitle()
-    self.inbox_layer = display.newLayer()
-    self:addChild(self.inbox_layer)
+    self.inbox_layer = display.newLayer():addTo(self:GetView())
 
-    self.report_layer = display.newLayer()
-    self:addChild(self.report_layer)
+    self.report_layer = display.newLayer():addTo(self:GetView())
 
-    self.saved_layer = display.newLayer()
-    self:addChild(self.saved_layer)
+    self.saved_layer = display.newLayer():addTo(self:GetView())
 
-    self.sent_layer = display.newLayer()
-    self:addChild(self.sent_layer)
+    self.sent_layer = display.newLayer():addTo(self:GetView())
 end
 
 function GameUIMail:InitInbox(mails)
