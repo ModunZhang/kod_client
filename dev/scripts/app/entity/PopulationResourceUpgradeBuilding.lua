@@ -7,13 +7,14 @@ function PopulationResourceUpgradeBuilding:ctor(building_info)
     PopulationResourceUpgradeBuilding.super.ctor(self, building_info)
 end
 function PopulationResourceUpgradeBuilding:GetProductionLimit()
-	return config_dwelling[self:GetLevel()].citizen
+    return config_dwelling[self:GetEfficiencyLevel()].citizen
 end
 function PopulationResourceUpgradeBuilding:GetUpdateResourceType()
-	return ResourceManager.RESOURCE_TYPE.POPULATION
+    return ResourceManager.RESOURCE_TYPE.POPULATION
 end
 function PopulationResourceUpgradeBuilding:GetNextLevelCitizen()
-	return config_dwelling[self:GetNextLevel()].citizen
+    return config_dwelling[self:GetNextLevel()].citizen
 end
 
 return PopulationResourceUpgradeBuilding
+

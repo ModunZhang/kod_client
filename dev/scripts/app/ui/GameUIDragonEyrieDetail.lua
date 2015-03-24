@@ -14,7 +14,7 @@ local WidgetDragonTabButtons = import("..widget.WidgetDragonTabButtons")
 local Dragon = import("..entity.Dragon")
 local UIListView = import(".UIListView")
 local Localize = import("..utils.Localize")
-local config_floatInit = GameDatas.AllianceInitData.floatInit
+local config_intInit = GameDatas.PlayerInitData.intInit
 local WidgetUseItems = import("..widget.WidgetUseItems")
 local GameUIDragonHateSpeedUp = import(".GameUIDragonHateSpeedUp")
 
@@ -46,7 +46,7 @@ function GameUIDragonEyrieDetail:OnDragonEventTimer(dragonEvent)
 end
 
 function GameUIDragonEyrieDetail:CreateBetweenBgAndTitle()
-	self.content_node = display.newNode():addTo(self)
+	self.content_node = display.newNode():addTo(self:GetView())
 	local clipNode = display.newClippingRegionNode(cc.rect(0,0,614,519))
 	clipNode:addTo(self.content_node):pos(window.cx - 307,window.top - 519)
 	display.newSprite("dragon_animate_bg_624x606.png"):align(display.LEFT_BOTTOM,-5,0):addTo(clipNode)
@@ -128,7 +128,7 @@ function GameUIDragonEyrieDetail:GetHateLabelText()
 		return _("正在孵化,剩余时间"),GameUtils:formatTimeStyleDayHour(dragonEvent:GetTime())
 	else
 		return string.format(Localize.hate_dragon[self:GetDragon():Type()] .. _("需要%.1f个小时"),
-			config_floatInit['playerHatchDragonNeedHours']['value']),_("龙巢同一时间只能孵化一只巨龙")
+			config_intInit['playerHatchDragonNeedMinutes']['value']),_("龙巢同一时间只能孵化一只巨龙")
 	end
 end
 
@@ -142,7 +142,7 @@ function GameUIDragonEyrieDetail:CreateHateUIIf()
 		self.hate_node:show()
 		return
 	end
-	local hate_node = display.newNode():addTo(self)
+	local hate_node = display.newNode():addTo(self:GetView())
 	local hate_button = WidgetPushButton.new({
 			normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"
 		}):setButtonLabel("normal",UIKit:ttfLabel({
@@ -265,7 +265,7 @@ end
 --装备
 function GameUIDragonEyrieDetail:CreateNodeIf_equipment()
 	if self.equipment_node then return self.equipment_node end
-	local equipment_node = display.newNode():addTo(self)
+	local equipment_node = display.newNode():addTo(self:GetView())
 	self.equipment_ui = {}
 	--lv label 是公用
 	self.lv_label = UIKit:ttfLabel({
@@ -273,7 +273,7 @@ function GameUIDragonEyrieDetail:CreateNodeIf_equipment()
 		size = 22,
 		color = 0x403c2f
 	}):align(display.BOTTOM_CENTER,window.cx,self.dragon_base:getPositionY()-self.dragon_base:getContentSize().height - 35)
-	:addTo(self)
+	:addTo(self:GetView())
 	self.equipment_ui.promotionLevel_label =  UIKit:ttfLabel({
 		text = "晋级需要龙的等级达到16 级，集全全套装备，并全部强化到2星",
 		size = 20,
@@ -449,7 +449,7 @@ end
 function GameUIDragonEyrieDetail:CreateNodeIf_skill()
 	if self.skill_node then return self.skill_node end
 	self.skill_ui = {}
-	local skill_node = display.newNode():addTo(self)
+	local skill_node = display.newNode():addTo(self:GetView())
 
 	local list_bg = UIKit:CreateBoxPanel(316)
 		:addTo(skill_node)
@@ -581,7 +581,7 @@ end
 --信息
 function GameUIDragonEyrieDetail:CreateNodeIf_info()
 	if self.info_node then return self.info_node end
-	local info_node = display.newNode():addTo(self)
+	local info_node = display.newNode():addTo(self:GetView())
 	local list_bg = display.newScale9Sprite("box_bg_546x214.png")
 		:addTo(info_node)
 		:align(display.LEFT_BOTTOM, window.left+45,self.lv_label:getPositionY() - 212 - 20)

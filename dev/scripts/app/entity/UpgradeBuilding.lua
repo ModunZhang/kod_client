@@ -133,6 +133,9 @@ function UpgradeBuilding:GetBeforeLevel()
         return 0
     end
 end
+function UpgradeBuilding:GetEfficiencyLevel()
+    return self.level <= 0 and 1 or self.level
+end
 function UpgradeBuilding:GetLevel()
     return self.level
 end

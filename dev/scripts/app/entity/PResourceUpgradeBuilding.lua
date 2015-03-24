@@ -28,19 +28,14 @@ function PResourceUpgradeBuilding:GetNextLevelAddEfficency()
 end
 -- 获取当前等级可以建造的最大小屋数量
 function PResourceUpgradeBuilding:GetMaxHouseNum()
-    local level = self:GetLevel()
-    if level <= 0 then return 0 end
-    local type = self:GetType()
-    return config_function[type][level].houseAdd
+    return config_function[self:GetType()][self:GetEfficiencyLevel()].houseAdd
 end
 -- 获取对应资源生产加速比
 function PResourceUpgradeBuilding:GetAddEfficency()
-	local level = self:GetLevel()
-    return config_function[self:GetType()][level].addEfficency or 0
+    return config_function[self:GetType()][self:GetEfficiencyLevel()].addEfficency or 0
 end
 -- 获取对应小屋类型
 function PResourceUpgradeBuilding:GetHouseType()
-    local level = self:GetLevel()
     return p_resource_building_to_house[self:GetType()]
 end
 return PResourceUpgradeBuilding
