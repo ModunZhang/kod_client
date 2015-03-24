@@ -39,6 +39,7 @@ function PVEScene:onEnter()
 end
 function PVEScene:onExit()
     PVEScene.super.onExit(self)
+    self.user:ResetPveData()
     NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData(), true)
 end
 function PVEScene:LoadAnimation()
@@ -94,6 +95,7 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
             self:CheckTrap()
         end
     elseif not self.user:HasAnyStength() then
+        self.user:ResetPveData()
         NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData(), true)
         WidgetUseItems.new():Create({
                         item_type = WidgetUseItems.USE_TYPE.STAMINA

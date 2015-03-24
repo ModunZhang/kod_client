@@ -298,108 +298,92 @@ function NetManager:removeKickEventListener(  )
     self:removeEventListener("onKick")
 end
 
--- function NetManager:InitEventsMap()
---     self.event_map = {}
--- end
--- function NetManager:RemoveAllEvents()
---     for event_name,v in pairs(self.event_map) do
---         self:removeEventListener(event_name)
---     end
---     self.event_map = {}
--- end
 
-onPlayerDataChanged_callbacks = {}
-onAllianceDataChanged_callbacks = {}
-onSendChatSuccess_callbacks = {}
-onGetAllChatSuccess_callbacks = {}
-
-function NetManager:addPlayerDataChangedEventListener()
-    self:addEventListener("onPlayerDataChanged", function(success, response)
+local logic_event_map = {
+    -- player
+    onPlayerDataChanged = function(success, response)
         if success then
             local user_data = DataManager:getUserData()
             local edit = decodeInUserDataFromDeltaData(user_data, response)
             DataManager:setUserData(user_data, edit)
         end
-        local callback = onPlayerDataChanged_callbacks[1]
-        if type(callback) == "function" then
-            callback(success, response)
-        end
-        onPlayerDataChanged_callbacks = {}
-    end)
-end
-function NetManager:removePlayerDataChangedEventListener(  )
-    self:removeEventListener("onPlayerDataChanged")
-end
-
-
-function NetManager:addAllianceDataChangedEventListener()
-    self:addEventListener("onAllianceDataChanged", function(success, msg)
+    end,
+    -- chat
+    onChat = function(success, response)
         if success then
-            LuaUtils:outputTable("onAllianceDataChanged", msg)
-            -- DataManager:setUserAllianceData(msg)
+            app:GetChatManager():HandleNetMessage("onChat", response)
+        end
+    end,
+    onAllChat = function(success, response)
+        if success then
+            app:GetChatManager():HandleNetMessage("onAllChat", response)
+        end
+    end,
+    -- alliance
+    onAllianceDataChanged = function(success, response)
+        if success then
+            LuaUtils:outputTable("onAllianceDataChanged", response)
             local user_alliance_data = DataManager:getUserAllianceData()
-            local edit = decodeInUserDataFromDeltaData(user_alliance_data,msg)
+            local edit = decodeInUserDataFromDeltaData(user_alliance_data, response)
             DataManager:setUserAllianceData(user_alliance_data, edit)
         end
-        local callback = onAllianceDataChanged_callbacks[1]
-        if type(callback) == "function" then
-            callback(success, msg)
-        end
-        onAllianceDataChanged_callbacks = {}
-    end)
-end
-function NetManager:removeAllianceDataChangedEventListener(  )
-    self:removeEventListener("onAllianceDataChanged")
-end
-
-function NetManager:addOnGetAllianceDataSuccess()
-    self:addEventListener("onGetAllianceDataSuccess", function(success, msg)
+    end,
+    onGetAllianceDataSuccess = function(success, response)
         if success then
-            -- LuaUtils:outputTable("onGetAllianceDataSuccess", msg)
-            DataManager:setUserAllianceData(msg)
+            DataManager:setUserAllianceData(response)
         end
-    end)
+    end
+}
+---
+function NetManager:InitEventsMap(...)
+    local event_map = {}
+    for _,events in ipairs{...} do
+        for k,v in pairs(events) do
+            event_map[k] = v
+        end
+    end
+    self.event_map = event_map
+    --
+    local event_callback_map = {}
+    for event_name,_ in pairs(self.event_map) do
+        event_callback_map[event_name] = {}
+    end
+    self.event_callback_map = event_callback_map
 end
---保留
-function NetManager:addOnChatListener()
-    self:addEventListener("onChat", function(success, msg)
-        if success then
-            app:GetChatManager():HandleNetMessage("onChat",msg)
-            assert(#onSendChatSuccess_callbacks <= 1, "重复请求过多了!")
-            local callback = onSendChatSuccess_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
+function NetManager:AddAllEventListener()
+    for event_name,callback in pairs(self.event_map) do
+        self:addEventListener(event_name, function(success, response)
+            callback(success, response)
+            local callback_ = unpack(self.event_callback_map[event_name])
+            if type(callback_) == "function" then
+                callback_(success, response)
             end
-            onSendChatSuccess_callbacks = {}
-        end
-    end)
+            self.event_callback_map[event_name] = {}
+        end)
+    end
 end
---保留
-function NetManager:addOnAllChatListener()
-    self:addEventListener("onAllChat", function(success, msg)
-        if success then
-            app:GetChatManager():HandleNetMessage("onAllChat",msg)
-            assert(#onGetAllChatSuccess_callbacks <= 1, "重复请求过多了!")
-            local callback = onGetAllChatSuccess_callbacks[1]
-            if type(callback) == "function" then
-                callback(success, msg)
-            end
-            onGetAllChatSuccess_callbacks = {}
-        end
-    end)
+function NetManager:RemoveAllEvents()
+    for event_name,_ in pairs(self.event_map) do
+        self:removeEventListener(event_name)
+    end
+    self.event_map = {}
+    self.event_callback_map = {}
+end
+function NetManager:GetPromiseOfEventName(event_name, failed_info)
+    return get_callback_promise(self.event_callback_map[event_name], failed_info)
 end
 -- 事件回调promise
 local function get_playerdata_callback()
-    return get_callback_promise(onPlayerDataChanged_callbacks, "返回玩家数据失败!")
+    return NetManager:GetPromiseOfEventName("onPlayerDataChanged", "返回玩家数据失败!")
 end
 local function get_alliancedata_callback()
-    return get_callback_promise(onAllianceDataChanged_callbacks, "修改联盟信息失败!")
+    return NetManager:GetPromiseOfEventName("onAllianceDataChanged", "修改联盟信息失败!")
 end
 local function get_sendchat_callback()
-    return get_callback_promise(onSendChatSuccess_callbacks, "发送聊天失败!")
+    return NetManager:GetPromiseOfEventName("onChat", "发送聊天失败!")
 end
 local function get_fetchchat_callback()
-    return get_callback_promise(onGetAllChatSuccess_callbacks, "获取聊天失败!")
+    return NetManager:GetPromiseOfEventName("onAllChat", "获取聊天失败!")
 end
 
 
@@ -446,14 +430,9 @@ function NetManager:getConnectLogicServerPromise()
         self:addDisconnectEventListener()
         self:addTimeoutEventListener()
         self:addKickEventListener()
-        -- player
-        self:addPlayerDataChangedEventListener()
-        -- chat
-        self:addOnChatListener()
-        self:addOnAllChatListener()
-        -- alliance
-        self:addOnGetAllianceDataSuccess()
-        self:addAllianceDataChangedEventListener()
+
+        self:InitEventsMap(logic_event_map)
+        self:AddAllEventListener(logic_event_map)
     end)
 end
 local function getOpenUDID()
@@ -1525,25 +1504,5 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

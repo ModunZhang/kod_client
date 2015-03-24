@@ -120,6 +120,7 @@ function WidgetPVEDialog:GotoNext()
     local next_index = cur_index + 1
     local next_map = self.user:GetPVEDatabase():GetMapByIndex(next_index)
     if next_map then
+        self.user:ResetPveData()
         local point = next_map:GetStartPoint()
         self.user:GetPVEDatabase():SetCharPosition(point.x, point.y, next_index)
         NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):next(function(result)
