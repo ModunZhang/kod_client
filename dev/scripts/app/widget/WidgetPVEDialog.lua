@@ -172,14 +172,11 @@ function WidgetPVEDialog:Fight()
                 dragon = dragon,
             }
             local attack_soldier = LuaUtils:table_map(soldiers, function(k, v)
-                return k, {name = v.name,
+                return k, {
+                    name = v.name,
                     star = v.star,
-                    power = GameUtils:GetSoldiersConfig(v.name, v.star).power,
-                    morale = 100,
-                    currentCount = v.count,
-                    totalCount = v.count,
-                    woundedCount = 0,
-                    round = 0}
+                    count = v.count
+                }
             end)
 
             local report = GameUtils:DoBattle(
@@ -214,6 +211,8 @@ end
 
 
 return WidgetPVEDialog
+
+
 
 
 

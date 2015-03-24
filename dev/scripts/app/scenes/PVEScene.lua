@@ -98,8 +98,8 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
         self.user:ResetPveData()
         NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData(), true)
         WidgetUseItems.new():Create({
-                        item_type = WidgetUseItems.USE_TYPE.STAMINA
-                    }):AddToCurrentScene()
+            item_type = WidgetUseItems.USE_TYPE.STAMINA
+        }):AddToCurrentScene()
     end
 end
 function PVEScene:OpenUI(x, y)
@@ -156,14 +156,11 @@ function PVEScene:CheckTrap()
                         dragon = dragon
                     }
                     local attack_soldier = LuaUtils:table_map(soldiers, function(k, v)
-                        return k, {name = v.name,
+                        return k, {
+                            name = v.name,
                             star = v.star,
-                            power = GameUtils:GetSoldiersConfig(v.name, v.star).power,
-                            morale = 100,
-                            currentCount = v.count,
-                            totalCount = v.count,
-                            woundedCount = 0,
-                            round = 0}
+                            count = v.count
+                        }
                     end)
 
                     local report = GameUtils:DoBattle(
@@ -200,6 +197,7 @@ function PVEScene:PormiseOfCheckObject(x, y, type)
     end
 end
 return PVEScene
+
 
 
 

@@ -79,8 +79,7 @@ function PVEObject:DecodeToEnemy(raw_data)
     return {
         dragon = {
             dragonType = dragonType,
-            currentHp = tonumber(hp),
-            totalHp = hp,
+            currentHp = hp,
             hpMax = hp,
             strength = strength,
             vitality = vitality,
@@ -91,13 +90,8 @@ function PVEObject:DecodeToEnemy(raw_data)
             local name, star = unpack(string.split(soldierType, "_"))
             return k, {
                 name = name,
-                power = GameUtils:GetSoldiersConfig(name, tonumber(star)).power,
                 star = tonumber(star),
-                morale = 100,
-                currentCount = count * self:NpcPower(),
-                totalCount = count * self:NpcPower(),
-                woundedCount = 0,
-                round = 0
+                count = count * self:NpcPower(),
             }
         end),
         rewards = self:DecodeToRewards(raw_data.rewards),
@@ -180,6 +174,8 @@ function PVEObject:Dump()
 end
 
 return PVEObject
+
+
 
 
 
