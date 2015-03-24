@@ -234,6 +234,8 @@ end
 function UpgradeBuilding:OnEvent(event)
     if event then
         self.unique_upgrading_key = event.id
+    else
+        self.unique_upgrading_key = nil
     end
 end
 function UpgradeBuilding:OnHandle(level, finish_time)

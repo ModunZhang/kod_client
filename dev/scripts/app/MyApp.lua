@@ -293,7 +293,9 @@ function MyApp:transactionObserver(event)
         Store.finishTransaction(transaction)
     end
 end
-
+function MyApp:PlayCloudAnimation(scene)
+    transition_(scene, "onEnter")
+end
 return MyApp
 
 

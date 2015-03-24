@@ -62,7 +62,9 @@ function MyCityScene:AddIndicateForBuilding(building_sprite)
         self:setPosition(x+50, y+100)
     end
     function arrow:Remove()
-        building_sprite:RemoveObserver(self)
+        if building_sprite and building_sprite.RemoveObserver then
+            building_sprite:RemoveObserver(self)
+        end
         ui_layer:removeChild(self, true)
     end
     function arrow:OnBuildingUpgradingBegin( )
