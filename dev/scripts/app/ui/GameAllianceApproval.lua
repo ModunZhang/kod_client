@@ -8,8 +8,9 @@ local UIListView = import(".UIListView")
 local UIScrollView = import(".UIScrollView")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-function GameAllianceApproval:OnMoveInStage()
-	GameAllianceApproval.super.OnMoveInStage(self)
+
+function GameAllianceApproval:onEnter()
+	GameAllianceApproval.super.onEnter(self)
 	local layer = UIKit:shadowLayer():addTo(self)
 	local bg = self:CreatePopupBg(754):addTo(layer):pos(window.left+10,window.bottom+50)
 	local title_bar = display.newSprite("title_blue_600x52.png")
@@ -59,13 +60,6 @@ function GameAllianceApproval:GetListItem(player)
 		size = 22,
 		color = 0x403c2f
 	}):align(display.LEFT_BOTTOM,line:getPositionX(),line:getPositionY() + 20):addTo(bg)
-	-- --lv
-	-- UIKit:ttfLabel({
-	-- 	text = "LV " ,
-	-- 	-- .. player.level,
-	-- 	size = 20,
-	-- 	color = 0x403c2f
-	-- }):align(display.LEFT_BOTTOM,line:getPositionX() + 170,line:getPositionY() + 20):addTo(bg)
 	local power_icon = display.newSprite("dragon_strength_27x31.png")
         :align(display.LEFT_BOTTOM, line:getPositionX() + 260,line:getPositionY() + 20)
         :addTo(bg)

@@ -83,7 +83,7 @@ function UIListView:ctor(params)
     self.direction = params.direction or UIScrollView.DIRECTION_VERTICAL
     self.alignment = params.alignment or UIListView.ALIGNMENT_VCENTER
     self.bAsyncLoad = params.async or false
-    self.container = cc.Node:create()
+    self.container = display.newNode()
     -- self.padding_ = params.padding or {left = 0, right = 0, top = 0, bottom = 0}
 
     -- params.viewRect.x = params.viewRect.x + self.padding_.left

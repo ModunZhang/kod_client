@@ -375,7 +375,7 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI("GameUIActivity",City):AddToCurrentScene()
+            UIKit:newGameUI("GameUIActivity",City):AddToCurrentScene(true)
         end
     end):addTo(self):pos(display.right-40, display.top-200):scale(0.6)
     --帮助

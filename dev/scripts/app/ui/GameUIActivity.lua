@@ -31,14 +31,14 @@ function GameUIActivity:ctor(city)
 	self.player_level_up_time_residue = self.player_level_up_time - app.timer:GetServerTime() 
 end
 
-function GameUIActivity:onEnter()
-	GameUIActivity.super.onEnter(self)
+function GameUIActivity:OnMoveInStage()
+	GameUIActivity.super.OnMoveInStage(self)
 
 	local list,list_node = UIKit:commonListView({
         direction = UIScrollView.DIRECTION_VERTICAL,
         viewRect = cc.rect(0,0,576,772),
     })
-    list_node:addTo(self):pos(window.left + 35,window.bottom_top + 20)
+    list_node:addTo(self:GetView()):pos(window.left + 35,window.bottom_top + 20)
     self.list_view = list
     list:onTouch(handler(self, self.OnListViewTouch))
 	self.tab_buttons = self:CreateTabButtons(
