@@ -48,7 +48,7 @@ function GameUIShireFightEvent:OnShrineEventsChanged(change_map)
 		local id_ = self:GetFightEvent():Id()
 		for _,v in ipairs(change_map.removed) do
 			if id_ == v:Id() then 
-				self:leftButtonClicked()
+				self:LeftButtonClicked()
 				break
 			end
 		end
@@ -59,7 +59,7 @@ function GameUIShireFightEvent:OnShrineEventsRefresh()
 	local id_ = self:GetFightEvent():Id()
 	local event = self:GetAllianceShrine():GetShrineEventById(id_)
 	if not event then
-		self:leftButtonClicked()
+		self:LeftButtonClicked()
 	end
 end
 
@@ -69,14 +69,14 @@ function GameUIShireFightEvent:OnAttackMarchEventTimerChanged(event)
 	end
 end
 
-function GameUIShireFightEvent:onMoveOutStage()
+function GameUIShireFightEvent:OnMoveOutStage()
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsRefresh)
 	self:GetAllianceShrine():GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
 	self:GetAllianceShrine():GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
 	self.event_bind_to_label = nil
-	GameUIShireFightEvent.super.onMoveOutStage(self)
+	GameUIShireFightEvent.super.OnMoveOutStage(self)
 end
 
 function GameUIShireFightEvent:GetAllianceShrine()
@@ -98,7 +98,7 @@ function GameUIShireFightEvent:BuildUI()
 	local closeButton = UIKit:closeButton():addTo(title_bar)
 	   	:align(display.BOTTOM_RIGHT,title_bar:getContentSize().width+10, 0)
 	   	:onButtonClicked(function ()
-	   		self:leftButtonClicked()
+	   		self:LeftButtonClicked()
 	   	end)
 	local box = UIKit:CreateBoxPanel9({width=574,height=570}):addTo(background):align(display.BOTTOM_CENTER, 304, 100)
 	self.info_list = UIListView.new({
@@ -283,11 +283,11 @@ function GameUIShireFightEvent:DispathSoliderButtonClicked()
 		NetManager:getMarchToShrinePromose(self:GetFightEvent():Id(),dragonType,soldiers):catch(function(err)
 			dump(err:reason())
 		end)
-	end,{toLocation = self:GetAllianceShrineLocation(),targetIsMyAlliance = true}):addToCurrentScene(true)
+	end,{toLocation = self:GetAllianceShrineLocation(),targetIsMyAlliance = true}):AddToCurrentScene(true)
 end
 
 function GameUIShireFightEvent:InfomationButtonClicked()
-	UIKit:newGameUI("GameUIAllianceShrineDetail",self:GetFightEvent():Stage(),self:GetAllianceShrine()):addToCurrentScene(true)
+	UIKit:newGameUI("GameUIAllianceShrineDetail",self:GetFightEvent():Stage(),self:GetAllianceShrine()):AddToCurrentScene(true)
 end
 
 return GameUIShireFightEvent

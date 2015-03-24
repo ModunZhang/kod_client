@@ -8,9 +8,9 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIAllianceBasicSetting = UIKit:createUIClass('GameUIAllianceBasicSetting')
 local WidgetAllianceCreateOrEdit = import("..widget.WidgetAllianceCreateOrEdit")
 
-function GameUIAllianceBasicSetting:onMoveInStage()
+function GameUIAllianceBasicSetting:OnMoveInStage()
 	assert(not self.isCreateAction_)
-	GameUIAllianceBasicSetting.super.onMoveInStage(self)
+	GameUIAllianceBasicSetting.super.OnMoveInStage(self)
 	self:BuildModifyUI()
 end
 
@@ -23,7 +23,7 @@ function GameUIAllianceBasicSetting:BuildModifyUI()
 	   	:addTo(titleBar)
 	   	:align(display.BOTTOM_RIGHT,titleBar:getContentSize().width,0)
 	   	:onButtonClicked(function ()
-	   		self:leftButtonClicked()
+	   		self:LeftButtonClicked()
 	   	end)
 	UIKit:ttfLabel({
 		text = _("联盟设置"),
@@ -34,7 +34,7 @@ function GameUIAllianceBasicSetting:BuildModifyUI()
 
 	local scrollView = UIScrollView.new({viewRect = cc.rect(0,10,bg:getContentSize().width,titleBar:getPositionY() - 10)})
         :addScrollNode(WidgetAllianceCreateOrEdit.new(true,function()
-        	self:leftButtonClicked()
+        	self:LeftButtonClicked()
         end):pos(35,0))
         :setDirection(UIScrollView.DIRECTION_VERTICAL)
         :addTo(bg)

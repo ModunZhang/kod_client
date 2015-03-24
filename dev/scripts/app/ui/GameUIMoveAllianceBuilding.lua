@@ -24,7 +24,7 @@ function GameUIMoveAllianceBuilding:onEnter()
 	   	:addTo(titleBar)
 	   	:align(display.BOTTOM_RIGHT,titleBar:getContentSize().width,0)
 	   	:onButtonClicked(function ()
-	   		self:leftButtonClicked()
+	   		self:LeftButtonClicked()
 	   	end)
 	UIKit:ttfLabel({
 		text = _("迁移联盟建筑"),
@@ -170,7 +170,7 @@ function GameUIMoveAllianceBuilding:OnMoveButtonClick(data)
 	if data.moveNeedHonour <= Alliance_Manager:GetMyAlliance():Honour() then
 		NetManager:getMoveAllianceBuildingPromise(data.key,self.target_location.x,self.target_location.y)
 			:next(function(msg)
-				self:leftButtonClicked()
+				self:LeftButtonClicked()
 			end)
 	else
 		UIKit:showMessageDialog(nil, _("联盟荣誉值不足"),function()end)

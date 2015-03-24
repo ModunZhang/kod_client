@@ -106,7 +106,7 @@ function GameUIVip:AdapterPlayerList()
 end
 -- 选择新头像弹出框
 function GameUIVip:OpenSelectHeadIcon()
-    local pd = WidgetPopDialog.new(644,_("选择头像")):addToCurrentScene()
+    local pd = WidgetPopDialog.new(644,_("选择头像")):AddToCurrentScene()
     local body = pd:GetBody()
     self.head_icon_list = UIListView.new{
         -- bgColor = UIKit:hex2c4b(0x7a100000),
@@ -196,7 +196,7 @@ function GameUIVip:WidgetPlayerNode_OnPlayerIconCliked()
 end
 --修改玩家名
 function GameUIVip:WidgetPlayerNode_OnPlayerNameCliked()
-    WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.CHANGE_PLAYER_NAME}):addToCurrentScene()
+    WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.CHANGE_PLAYER_NAME}):AddToCurrentScene()
 end
 --决定按钮是否可以点击
 function GameUIVip:WidgetPlayerNode_PlayerCanClickedButton(name,args)
@@ -464,7 +464,7 @@ function GameUIVip:CreateVIPStatus()
         :addTo(status_bg):align(display.CENTER, 120, bg_size.height-100)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.VIP_POINT}):addToCurrentScene()
+                WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.VIP_POINT}):AddToCurrentScene()
             end
         end)
     -- 激活VIP按钮
@@ -482,7 +482,7 @@ function GameUIVip:CreateVIPStatus()
         :addTo(status_bg):align(display.CENTER, bg_size.width-120, bg_size.height-100)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.VIP_ACTIVE}):addToCurrentScene()
+                WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.VIP_ACTIVE}):AddToCurrentScene()
             end
         end)
 
@@ -693,7 +693,7 @@ function GameUIVip:SetVIPInfo(level)
 end
 function GameUIVip:OpenVIPDetails(show_vip_level)
     local layer = WidgetPopDialog.new(737,_("VIP"),display.top-140,"title_purple_600x52.png")
-        :addToCurrentScene()
+        :AddToCurrentScene()
     local body = layer:GetBody()
     local size = body:getContentSize()
     self.widget_info = WidgetInfo.new({info={},h=500}):align(display.TOP_CENTER, size.width/2, size.height-90)

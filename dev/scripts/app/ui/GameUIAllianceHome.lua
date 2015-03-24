@@ -178,7 +178,7 @@ function GameUIAllianceHome:TopTabButtons()
         pressed = "btn_196x44_light.png"})
         :onButtonClicked(function (event)
             if event.name == "CLICKED_EVENT" then
-                GameUIAllianceContribute.new():addToCurrentScene(true)
+                GameUIAllianceContribute.new():AddToCurrentScene(true)
             end
         end)
         :align(display.CENTER, 145, btn_bg:getContentSize().height/2-1)
@@ -209,7 +209,7 @@ function GameUIAllianceHome:TopTabButtons()
         pressed = "btn_196x44_light.png"})
         :onButtonClicked(function (event)
             if event.name == "CLICKED_EVENT" then
-                UIKit:newGameUI('GameUIAllianceLoyalty'):addToCurrentScene(true)
+                UIKit:newGameUI('GameUIAllianceLoyalty'):AddToCurrentScene(true)
             end
         end)
         :align(display.CENTER, btn_bg:getContentSize().width-144, btn_bg:getContentSize().height/2-1)
@@ -239,7 +239,7 @@ function GameUIAllianceHome:TopTabButtons()
         pressed = "btn_mid_196x44_light.png"})
         :onButtonClicked(function ( event )
             if event.name == "CLICKED_EVENT" then
-                UIKit:newGameUI('GameUIAlliancePosition'):addToCurrentScene(true)
+                UIKit:newGameUI('GameUIAlliancePosition'):AddToCurrentScene(true)
             end
         end)
         :align(display.CENTER, btn_bg:getContentSize().width/2+6, btn_bg:getContentSize().height/2-1)
@@ -478,9 +478,9 @@ function GameUIAllianceHome:CreateBottom()
                 end
             elseif event.name == "clicked" then
                 if event.pageIdx == 1 then
-                    UIKit:newGameUI('GameUIChatChannel',"global"):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIChatChannel',"global"):AddToCurrentScene(true)
                 elseif event.pageIdx == 2 then
-                    UIKit:newGameUI('GameUIChatChannel',"alliance"):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIChatChannel',"alliance"):AddToCurrentScene(true)
                 end
             end
         end)
@@ -569,21 +569,21 @@ end
 function GameUIAllianceHome:OnTopButtonClicked(event)
     print("OnTopButtonClicked=",event.name)
     if event.name == "CLICKED_EVENT" then
-        UIKit:newGameUI("GameUIAllianceBattle",City):addToCurrentScene()
+        UIKit:newGameUI("GameUIAllianceBattle",City):AddToCurrentScene()
     end
 end
 function GameUIAllianceHome:OnBottomButtonClicked(event)
     local tag = event.target:getTag()
     if not tag then return end
     if tag == 4 then -- tag 4 = alliance button
-        -- UIKit:newGameUI('GameUIAlliance'):addToCurrentScene(true)
-        UIKit:newGameUI('GameUIShop', City):addToCurrentScene(true)
+        -- UIKit:newGameUI('GameUIAlliance'):AddToCurrentScene(true)
+        UIKit:newGameUI('GameUIShop', City):AddToCurrentScene(true)
     elseif tag == 1 then
-        UIKit:newGameUI('GameUIMission',City):addToCurrentScene(true)
+        UIKit:newGameUI('GameUIMission',City):AddToCurrentScene(true)
     elseif tag == 3 then
-        UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
+        UIKit:newGameUI('GameUIMail',_("邮件"),self.city):AddToCurrentScene(true)
     elseif tag == 5 then
-        UIKit:newGameUI('GameUISetting',City):addToCurrentScene(true)
+        UIKit:newGameUI('GameUISetting',City):AddToCurrentScene(true)
     end
 end
 function GameUIAllianceHome:OnMidButtonClicked(event)

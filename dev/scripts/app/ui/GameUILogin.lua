@@ -23,7 +23,7 @@ function GameUILogin:onEnter()
 end
 
 
-function GameUILogin:onMoveInStage()
+function GameUILogin:OnMoveInStage()
     self:showVersion()
     self:proLoad()
 end

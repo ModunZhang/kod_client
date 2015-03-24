@@ -52,9 +52,9 @@ function GameUIChatChannel:onEnter()
     self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
 end
 
-function GameUIChatChannel:onMoveOutStage()
+function GameUIChatChannel:OnMoveOutStage()
     self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
-    GameUIChatChannel.super.onMoveOutStage(self)    
+    GameUIChatChannel.super.OnMoveOutStage(self)    
 end
 
 function GameUIChatChannel:TO_TOP(data)
@@ -626,7 +626,7 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
         }))
         :onButtonClicked(function(event)
             menuLayer:removeFromParent(true)
-            UIKit:newGameUI("GameUIAllianceMemberInfo",false,chat.fromId):addToCurrentScene(true)
+            UIKit:newGameUI("GameUIAllianceMemberInfo",false,chat.fromId):AddToCurrentScene(true)
         end)
         :align(display.LEFT_BOTTOM, tabBg:getContentSize().width/5, 2)
         :addTo(tabBg)
@@ -695,7 +695,7 @@ function GameUIChatChannel:CreateEmojiPanel()
     UIKit:newGameUI("GameUIEmojiSelect",function(code)
          local text = self.editbox:getText()
         self.editbox:setText(string.trim(text) .. code)
-    end):addToCurrentScene(true)
+    end):AddToCurrentScene(true)
 end
 
 return GameUIChatChannel

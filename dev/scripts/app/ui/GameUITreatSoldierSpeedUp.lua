@@ -44,7 +44,7 @@ function GameUITreatSoldierSpeedUp:OnTreating(hospital, event, current_time)
 end
 
 function GameUITreatSoldierSpeedUp:OnEndTreat(hospital, event, soldiers, current_time)
-    self:leftButtonClicked()
+    self:LeftButtonClicked()
 end
 return GameUITreatSoldierSpeedUp
 

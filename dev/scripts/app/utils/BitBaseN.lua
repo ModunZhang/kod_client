@@ -1,25 +1,29 @@
+local byte = string.byte
+local char = string.char
+local rawget = rawget
+local math = math
 
 local function get_number(c)
-    local code = string.byte(c)
-    if code <= string.byte('9') then
-        return code - string.byte('0')
-    elseif code <= string.byte('Z') then
-        return code - string.byte('A') + 10
-    elseif code <= string.byte('z') then
-        return code - string.byte('a') + 36
+    local code = byte(c)
+    if code <= byte('9') then
+        return code - byte('0')
+    elseif code <= byte('Z') then
+        return code - byte('A') + 10
+    elseif code <= byte('z') then
+        return code - byte('a') + 36
     else
-        return code - string.byte('{') + 62
+        return code - byte('{') + 62
     end
 end
 local function get_char(n)
     if n >= 62 then
-        return string.char(string.byte('{') + n - 62)
+        return char(byte('{') + n - 62)
     elseif n >= 36 then
-        return string.char(string.byte('a') + n - 36)
+        return char(byte('a') + n - 36)
     elseif n >= 10 then
-        return string.char(string.byte('A') + n - 10)
+        return char(byte('A') + n - 10)
     else
-        return string.char(string.byte('0') + n)
+        return char(byte('0') + n)
     end
 end
 local m = {

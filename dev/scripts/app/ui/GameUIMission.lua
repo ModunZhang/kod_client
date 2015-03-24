@@ -26,19 +26,19 @@ function GameUIMission:ctor(city,mission_type)
     self.city = city
     self.init_mission_type = mission_type or self.MISSION_TYPE.achievement
 end
-function GameUIMission:onEnter()
-    GameUIMission.super.onEnter(self)
+function GameUIMission:OnMoveInStage()
+    GameUIMission.super.OnMoveInStage(self)
     self:CreateTabButtons()
     self.city:GetUser():AddListenOnType(self, User.LISTEN_TYPE.TASK)
     self.city:GetUser():AddListenOnType(self, User.LISTEN_TYPE.DAILY_TASKS)
 end
-function GameUIMission:onExit()
+function GameUIMission:OnMoveOutStage()
     if self.___handle___ then
         scheduler.unscheduleGlobal(self.___handle___)
     end
-    GameUIMission.super.onExit(self)
     self.city:GetUser():RemoveListenerOnType(self, User.LISTEN_TYPE.TASK)
     self.city:GetUser():RemoveListenerOnType(self, User.LISTEN_TYPE.DAILY_TASKS)
+    GameUIMission.super.OnMoveOutStage(self)
 end
 function GameUIMission:OnTaskChanged(user)
     self:RefreshAchievementList()
@@ -58,7 +58,7 @@ function GameUIMission:CreateTabButtons()
     },
     function(tag)
         self:OnTabButtonClicked(tag)
-    end):addTo(self):pos(window.cx, window.bottom + 34)
+    end):addTo(self:GetView()):pos(window.cx, window.bottom + 34)
 end
 
 function GameUIMission:OnTabButtonClicked(tag)
@@ -141,7 +141,7 @@ end
 
 function GameUIMission:CreateBetweenBgAndTitle()
     GameUIMission.super.CreateBetweenBgAndTitle(self)
-    local layer = display.newNode():pos(0,0):addTo(self)
+    local layer = display.newNode():pos(0,0):addTo(self:GetView())
     layer:size(window.width,window.height)
     self.main_ui = layer
 end
@@ -283,7 +283,7 @@ function GameUIMission:OnTodoAchievementMissionClicked(data)
 end
 
 function GameUIMission:OnRecommendMissionClicked()
-    UIKit:newGameUI("GameUISelenaQuestion"):addToCurrentScene(true)
+    UIKit:newGameUI("GameUISelenaQuestion"):AddToCurrentScene(true)
 end
 
 --日常任务
@@ -424,7 +424,7 @@ function GameUIMission:dailyListviewListener(event)
     if "clicked" == event.name then
         local pos = event.itemPos
         local keys_of_daily = KEYS_OF_DAILY[pos]
-        UIKit:newGameUI("GameUIDailyMissionInfo",keys_of_daily):addToCurrentScene(true)
+        UIKit:newGameUI("GameUIDailyMissionInfo",keys_of_daily):AddToCurrentScene(true)
     end
 end
 return GameUIMission

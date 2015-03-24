@@ -86,7 +86,7 @@ function WidgetMilitaryTechnology:CreateItem(tech)
             color = 0xffedae,
             shadow = true
         })):onButtonClicked(function (event)
-        WidgetUpgradeMilitaryTech.new(tech):addToCurrentScene()
+        WidgetUpgradeMilitaryTech.new(tech):AddToCurrentScene()
         end)
         :align(display.CENTER, item_width-90, 44):addTo(content)
 

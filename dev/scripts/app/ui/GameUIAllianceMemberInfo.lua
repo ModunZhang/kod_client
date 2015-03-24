@@ -20,8 +20,8 @@ function GameUIAllianceMemberInfo:ctor(isMyAlliance,memberId)
 	self.memberId_ = memberId
 end
 
-function GameUIAllianceMemberInfo:onMoveInStage()
-	GameUIAllianceMemberInfo.super.onMoveInStage(self)
+function GameUIAllianceMemberInfo:OnMoveInStage()
+	GameUIAllianceMemberInfo.super.OnMoveInStage(self)
 	local shadowLayer = UIKit:shadowLayer():addTo(self)
 	local main_height,min_y = 900,window.bottom + 10
 
@@ -32,7 +32,7 @@ function GameUIAllianceMemberInfo:onMoveInStage()
 		:align(display.LEFT_BOTTOM, 0, main_height - 15)
 	
 	UIKit:closeButton():align(display.RIGHT_BOTTOM,600,0):addTo(title_bar):onButtonClicked(function()
-		self:leftButtonClicked()
+		self:LeftButtonClicked()
 	end)
 	UIKit:ttfLabel({
 		text = _("玩家信息"),
@@ -46,7 +46,7 @@ function GameUIAllianceMemberInfo:onMoveInStage()
        self:OnGetPlayerInfoSuccess(data)
     end):catch(function(err)
     	dump(err,"err--->")
-    	self:leftButtonClicked()
+    	self:LeftButtonClicked()
     end)
 end
 
@@ -135,7 +135,7 @@ function GameUIAllianceMemberInfo:SendToServerWithTag(tag,member)
 	if tag == 1 then -- 踢出
         NetManager:getKickAllianceMemberOffPromise(member:Id())
            	:next(function(data)
-           		self:leftButtonClicked()
+           		self:LeftButtonClicked()
            	end)
 	elseif tag == 2 then -- 移交盟主
         NetManager:getHandOverAllianceArchonPromise(member:Id())
@@ -144,7 +144,7 @@ function GameUIAllianceMemberInfo:SendToServerWithTag(tag,member)
 	 	  			local title = alliacne:GetMemeberById(member:Id()):Title()
                    	self.player_info.title = title
 	 	  			self:RefreshListView()
-	 	  			self:leftButtonClicked()	
+	 	  			self:LeftButtonClicked()	
                 end)
                 :catch(function(err)
                     dump(err:reason())
@@ -202,8 +202,8 @@ function GameUIAllianceMemberInfo:OnGetPlayerInfoSuccess(data)
 	end
 end
 
-function GameUIAllianceMemberInfo:onMoveOutStage()
-	GameUIAllianceMemberInfo.super.onMoveOutStage(self)
+function GameUIAllianceMemberInfo:OnMoveOutStage()
+	GameUIAllianceMemberInfo.super.OnMoveOutStage(self)
 end
 
 

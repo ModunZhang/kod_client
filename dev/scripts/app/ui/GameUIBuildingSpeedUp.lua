@@ -22,7 +22,7 @@ end
 function GameUIBuildingSpeedUp:FreeSpeedUpAction()
     local event_type = self.building:EventType()
     local unique_key = self.building:UniqueUpgradingKey()
-    self:leftButtonClicked()
+    self:LeftButtonClicked()
     NetManager:getFreeSpeedUpPromise(event_type,unique_key)
 end
 function GameUIBuildingSpeedUp:onExit()
@@ -38,7 +38,7 @@ function GameUIBuildingSpeedUp:OnBuildingUpgradingBegin( building, current_time 
     self:SetProgressInfo(GameUtils:formatTimeStyle1(building:GetUpgradingLeftTimeByCurrentTime(current_time)),building:GetElapsedTimeByCurrentTime(current_time)/building:GetUpgradeTimeToNextLevel()*100)
 end
 function GameUIBuildingSpeedUp:OnBuildingUpgradeFinished( building )
-    self:leftButtonClicked()
+    self:LeftButtonClicked()
 end
 function GameUIBuildingSpeedUp:OnBuildingUpgrading( building, current_time )
     self:CheckCanSpeedUpFree()

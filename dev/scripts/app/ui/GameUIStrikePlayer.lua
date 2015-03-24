@@ -142,11 +142,11 @@ end
 function GameUIStrikePlayer:OnStrikeButtonClicked()
 	if self.strike_type == self.STRIKE_TYPE.CITY then
 		NetManager:getStrikePlayerCityPromise(self:GetSelectDragonType(),self.params):next(function()
-			self:leftButtonClicked()
+			self:LeftButtonClicked()
 		end)
 	else
 		NetManager:getStrikeVillagePromise(self:GetSelectDragonType(),self.params.defenceAllianceId,self.params.defenceVillageId):next(function()
-			self:leftButtonClicked()
+			self:LeftButtonClicked()
 		end)
 	end
 end

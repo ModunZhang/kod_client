@@ -47,7 +47,7 @@ function GameUIAttackPlayerCity:BuildUI()
 	local closeButton = UIKit:closeButton():addTo(titleBar)
    		:align(display.BOTTOM_RIGHT,titleBar:getContentSize().width+10, 0)
    		:onButtonClicked(function ()
-   		self:leftButtonClicked()
+   		self:LeftButtonClicked()
    	end)
    	local box = display.newSprite("alliance_item_flag_box_126X126.png"):align(display.LEFT_TOP,30,titleBar:getPositionY()-10):addTo(bg_node):scale(0.7)
    	local head_bg = display.newSprite("chat_hero_background.png", 63, 63):addTo(box)
@@ -144,7 +144,7 @@ end
 
 function GameUIAttackPlayerCity:OnAttackButtonClicked(event)
 	NetManager:getAttackPlayerCityPromise(self.enemyPlayerId):next(function(msg)
-		self:leftButtonClicked()
+		self:LeftButtonClicked()
 		-- local current_scene = display.getRunningScene()
 		-- if type(current_scene.TimerRequestServer) == 'function' then
 		-- 	current_scene:TimerRequestServer()

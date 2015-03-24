@@ -11,8 +11,6 @@ function BarracksUpgradeBuilding:ctor(...)
     self.soldier_star = 1
     self.recruit_event = self:CreateEvent()
     BarracksUpgradeBuilding.super.ctor(self, ...)
-
-
     self.recruit_soldier_callbacks = {}
     self.finish_soldier_callbacks = {}
 end
@@ -164,6 +162,16 @@ function BarracksUpgradeBuilding:OnUserDataChanged(...)
             self:EndRecruitSoldiersWithCurrentTime(current_time)
         end
     end
+end
+function BarracksUpgradeBuilding:GetUnlockSoldiers()
+    local r = {}
+    for _,config in ipairs(barracks_config) do
+        for _,v in ipairs(string.split(config.unlockedSoldiers, ",")) do
+            local level = r[v]
+            r[v] = not level and config.level or (config.level < level and config.level or level)
+        end
+    end
+    return r
 end
 
 -- fte

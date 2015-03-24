@@ -20,8 +20,8 @@ function GameUIAllianceTitle:ctor(title)
 	self.title_ = title
 end
 
-function GameUIAllianceTitle:onMoveInStage()
-	GameUIAllianceTitle.super.onMoveInStage(self)
+function GameUIAllianceTitle:OnMoveInStage()
+	GameUIAllianceTitle.super.OnMoveInStage(self)
 	self:BuildUI()
 end
 
@@ -57,7 +57,7 @@ function GameUIAllianceTitle:BuildUI()
 	UIKit:closeButton():addTo(title_bar)
 	   	:align(display.BOTTOM_RIGHT,title_bar:getContentSize().width, 0)
 	   	:onButtonClicked(function ()
-	   		self:leftButtonClicked()
+	   		self:LeftButtonClicked()
 	   	end)
 	self.title_label = UIKit:ttfLabel({
 		text = _("联盟权限"),

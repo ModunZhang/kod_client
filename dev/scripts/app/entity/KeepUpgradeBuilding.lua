@@ -30,9 +30,9 @@ function KeepUpgradeBuilding:GetUnlockPoint()
 end
 
 --派兵上限
-function KeepUpgradeBuilding:GetTroopPopulation()
+function KeepUpgradeBuilding:GetBeHelpedCount()
     local level = self:GetLevel()
-    return config_function[level].troopPopulation
+    return config_function[level].beHelpedCount
 end
 
 function KeepUpgradeBuilding:GetNextLevelUnlockPoint()
@@ -40,9 +40,9 @@ function KeepUpgradeBuilding:GetNextLevelUnlockPoint()
     return config_function[level].unlock
 end
 
-function KeepUpgradeBuilding:GetNextLevelTroopPopulation()
+function KeepUpgradeBuilding:GetNextLevelBeHelpedCount()
     local level = self:GetNextLevel()
-    return config_function[level].troopPopulation
+    return config_function[level].beHelpedCount
 end
 
 return KeepUpgradeBuilding

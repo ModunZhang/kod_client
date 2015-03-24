@@ -71,16 +71,16 @@ end
 function GameUIAllianceShrineEnter:GetEnterButtons()
 	if self:IsMyAlliance() then
 		local fight_event_button = self:BuildOneButton("icon_info_1.png",_("战争事件")):onButtonClicked(function()
-			UIKit:newGameUI('GameUIAllianceShrine',City,"fight_event",self:GetBuilding()):addToCurrentScene(true)
-			self:leftButtonClicked()
+			UIKit:newGameUI('GameUIAllianceShrine',City,"fight_event",self:GetBuilding()):AddToCurrentScene(true)
+			self:LeftButtonClicked()
 		end)
 		local alliance_shirine_event_button = self:BuildOneButton("icon_alliance_crisis.png",_("联盟危机")):onButtonClicked(function()
-			 UIKit:newGameUI('GameUIAllianceShrine',City,"stage",self:GetBuilding()):addToCurrentScene(true)
-			self:leftButtonClicked()
+			 UIKit:newGameUI('GameUIAllianceShrine',City,"stage",self:GetBuilding()):AddToCurrentScene(true)
+			self:LeftButtonClicked()
 		end)
 		local upgrade_button = self:BuildOneButton("icon_upgrade_1.png",_("升级")):onButtonClicked(function()
-			UIKit:newGameUI('GameUIAllianceShrine',City,"upgrade",self:GetBuilding()):addToCurrentScene(true)
-			self:leftButtonClicked()
+			UIKit:newGameUI('GameUIAllianceShrine',City,"upgrade",self:GetBuilding()):AddToCurrentScene(true)
+			self:LeftButtonClicked()
 		end)
 	    return {fight_event_button,alliance_shirine_event_button,upgrade_button}
 	else

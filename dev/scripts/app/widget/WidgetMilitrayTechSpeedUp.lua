@@ -14,7 +14,7 @@ function WidgetMilitrayTechSpeedUp:ctor()
 	end
 	self:SetAccBtnsGroup(WidgetAccelerateGroup.SPEEDUP_TYPE.TECHNOLOGY,function()end)
 	if not self.militaryTechEvent then
-		self:leftButtonClicked()
+		self:LeftButtonClicked()
 	else
 		local event = self.militaryTechEvent
 		City:AddListenOnType(self,City.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
@@ -28,7 +28,7 @@ end
 
 function WidgetMilitrayTechSpeedUp:FreeSpeedUpAction()
 	NetManager:getFreeSpeedUpPromise("productionTechEvents",self:GetEvent():Id()):next(function()
-		self:leftButtonClicked()
+		self:LeftButtonClicked()
 	end)
 end
 

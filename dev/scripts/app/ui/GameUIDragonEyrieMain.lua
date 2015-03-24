@@ -32,7 +32,7 @@ end
 
 function GameUIDragonEyrieMain:CreateBetweenBgAndTitle()
 	GameUIDragonEyrieMain.super.CreateBetweenBgAndTitle(self)
-	self.dragonNode = display.newNode():size(window.width,window.height):addTo(self)
+	self.dragonNode = display.newNode():size(window.width,window.height):addTo(self:GetView())
 end
 
 -- event
@@ -59,8 +59,8 @@ function GameUIDragonEyrieMain:OnBasicChanged()
 end
 ------------------------------------------------------------------
 
-function GameUIDragonEyrieMain:onMoveInStage()
-	GameUIDragonEyrieMain.super.onMoveInStage(self)
+function GameUIDragonEyrieMain:OnMoveInStage()
+	GameUIDragonEyrieMain.super.OnMoveInStage(self)
 	self:CreateUI()
 end
 
@@ -95,7 +95,7 @@ function GameUIDragonEyrieMain:OnDragonEventTimer(dragonEvent)
 	end
 end
 
-function GameUIDragonEyrieMain:onMoveOutStage()
+function GameUIDragonEyrieMain:OnMoveOutStage()
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnHPChanged)
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonHatched)
@@ -103,7 +103,7 @@ function GameUIDragonEyrieMain:onMoveOutStage()
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventChanged)
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer)
-	GameUIDragonEyrieMain.super.onMoveOutStage(self)
+	GameUIDragonEyrieMain.super.OnMoveOutStage(self)
 end
 
 function GameUIDragonEyrieMain:CreateUI()
@@ -377,7 +377,7 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 			color = 0xffedae,
 			shadow = true
 		})):addTo(info_panel):align(display.RIGHT_BOTTOM,540,5):onButtonClicked(function()
-			UIKit:newGameUI("GameUIDragonEyrieDetail",self.city,self.building,self:GetCurrentDragon():Type()):addToCurrentScene(true)
+			UIKit:newGameUI("GameUIDragonEyrieDetail",self.city,self.building,self:GetCurrentDragon():Type()):AddToCurrentScene(true)
 		end)
 		self.detailButton = detailButton
 		self.draongConteNode:OnEnterIndex(math.abs(0))
@@ -490,7 +490,7 @@ function GameUIDragonEyrieMain:OnDragonHpItemUseButtonClicked()
 		item_type = WidgetUseItems.USE_TYPE.DRAGON_HP,
 		dragon = self:GetCurrentDragon()
 	})
-	widgetUseItems:addToCurrentScene()
+	widgetUseItems:AddToCurrentScene()
 end
 
 function GameUIDragonEyrieMain:OnDragonExpItemUseButtonClicked()
@@ -498,11 +498,11 @@ function GameUIDragonEyrieMain:OnDragonExpItemUseButtonClicked()
 		item_type = WidgetUseItems.USE_TYPE.DRAGON_EXP,
 		dragon = self:GetCurrentDragon()
 	})
-	widgetUseItems:addToCurrentScene()
+	widgetUseItems:AddToCurrentScene()
 end
 
 function GameUIDragonEyrieMain:OnDragonDeathSpeedUpClicked()
-	GameUIDragonDeathSpeedUp.new(self.dragonDeathEvent__):addToCurrentScene(true)
+	GameUIDragonDeathSpeedUp.new(self.dragonDeathEvent__):AddToCurrentScene(true)
 end
 
 --fte

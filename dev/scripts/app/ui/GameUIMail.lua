@@ -1169,13 +1169,13 @@ function GameUIMail:CreateReportItem(listview,report)
                 end
                 if report:Type() == "strikeCity" or report:Type()== "cityBeStriked"
                     or report:Type() == "villageBeStriked" or report:Type()== "strikeVillage" then
-                    GameUIStrikeReport.new(report):addToCurrentScene()
+                    GameUIStrikeReport.new(report):AddToCurrentScene()
                 elseif report:Type() == "attackCity" or report:Type() == "attackVillage" then
-                    GameUIWarReport.new(report):addToCurrentScene()
+                    GameUIWarReport.new(report):AddToCurrentScene()
                     -- elseif report:Type() == "villageBeStriked" or report:Type()== "strikeVillage" then
                     -- elseif report:Type() == "attackVillage" then
                 elseif report:Type() == "collectResource" then
-                    GameUICollectReport.new(report):addToCurrentScene()
+                    GameUICollectReport.new(report):AddToCurrentScene()
                 end
 
             end

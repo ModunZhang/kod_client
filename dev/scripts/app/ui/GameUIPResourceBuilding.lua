@@ -211,7 +211,7 @@ function GameUIPResourceBuilding:RebuildPart()
         :onButtonClicked(function(event)
             if self:CheckSwitch(self.selected_rebuild_to_building) then
                 NetManager:getSwitchBuildingPromise(City:GetLocationIdByBuilding(self.building),self.selected_rebuild_to_building)
-                self:leftButtonClicked()
+                self:LeftButtonClicked()
             end
         end)
         :align(display.CENTER_RIGHT, bg_size.width-20, 50)

@@ -132,7 +132,7 @@ function GameUIPVESendTroop:onEnter()
                                 listener =  function ()
                                     self.march_callback(dragonType,soldiers)
                                     -- 确认派兵后关闭界面
-                                    self:leftButtonClicked()
+                                    self:LeftButtonClicked()
                                 end
                             }
                         )
@@ -140,7 +140,7 @@ function GameUIPVESendTroop:onEnter()
                 else
                     self.march_callback(dragonType,soldiers)
                     -- 确认派兵后关闭界面
-                    self:leftButtonClicked()
+                    self:LeftButtonClicked()
 
                 end
             end
@@ -298,7 +298,7 @@ function GameUIPVESendTroop:SelectSoldiers()
                             end
                         end
                     }
-                    WidgetInput.new(p):addToCurrentScene()
+                    WidgetInput.new(p):AddToCurrentScene()
                 end
             end):align(display.CENTER,  340,90):addTo(content)
         local btn_text = UIKit:ttfLabel({

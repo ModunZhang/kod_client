@@ -222,8 +222,8 @@ function WidgetSoldierPromoteDetails:onEnter()
             color = 0xfff3c7
         }))
         :onButtonClicked(function(event)
-            WidgetPromoteSoldier.new(soldier_type,self.building:GetType()):addToCurrentScene()
-            self:leftButtonClicked()
+            WidgetPromoteSoldier.new(soldier_type,self.building:GetType()):AddToCurrentScene()
+            self:LeftButtonClicked()
         end)
 end
 function WidgetSoldierPromoteDetails:CreateSoldierBox(isGray)

@@ -36,7 +36,7 @@ function GameUIBlackSmithSpeedUp:OnMakingEquipmentWithEvent(blackSmith, event, c
 end
 
 function GameUIBlackSmithSpeedUp:OnEndMakeEquipmentWithEvent(blackSmith, event, current_time)
-    self:leftButtonClicked()
+    self:LeftButtonClicked()
 end
 
 return GameUIBlackSmithSpeedUp

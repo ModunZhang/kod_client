@@ -35,10 +35,11 @@ function PVEScene:onEnter()
     self:GetSceneLayer():ZoomTo(0.8)
     self:GetSceneLayer():MoveCharTo(self.user:GetPVEDatabase():GetCharPosition())
 
-    GameUIPVEHome.new(self.user, self):addToScene(self, true):setTouchSwallowEnabled(false)
+    GameUIPVEHome.new(self.user, self):AddToScene(self, true):setTouchSwallowEnabled(false)
 end
 function PVEScene:onExit()
     PVEScene.super.onExit(self)
+    self.user:ResetPveData()
     NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData(), true)
 end
 function PVEScene:LoadAnimation()
@@ -94,10 +95,11 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
             self:CheckTrap()
         end
     elseif not self.user:HasAnyStength() then
+        self.user:ResetPveData()
         NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData(), true)
         WidgetUseItems.new():Create({
                         item_type = WidgetUseItems.USE_TYPE.STAMINA
-                    }):addToCurrentScene()
+                    }):AddToCurrentScene()
     end
 end
 function PVEScene:OpenUI(x, y)
@@ -105,31 +107,31 @@ function PVEScene:OpenUI(x, y)
     if gid <= 0 then return end
     self:PormiseOfCheckObject(x, y, gid):next(function()
         if gid == PVEDefine.START_AIRSHIP then
-            WidgetPVEStartAirship.new(x, y, self.user):addToScene(self, true)
+            WidgetPVEStartAirship.new(x, y, self.user):AddToScene(self, true)
         elseif gid == PVEDefine.WOODCUTTER then
-            WidgetPVEWoodcutter.new(x, y, self.user):addToScene(self, true)
+            WidgetPVEWoodcutter.new(x, y, self.user):AddToScene(self, true)
         elseif gid == PVEDefine.QUARRIER then
-            WidgetPVEQuarrier.new(x, y, self.user):addToScene(self, true)
+            WidgetPVEQuarrier.new(x, y, self.user):AddToScene(self, true)
         elseif gid == PVEDefine.MINER then
-            WidgetPVEMiner.new(x, y, self.user):addToScene(self, true)
+            WidgetPVEMiner.new(x, y, self.user):AddToScene(self, true)
         elseif gid == PVEDefine.FARMER then
-            WidgetPVEFarmer.new(x, y, self.user):addToScene(self, true)
+            WidgetPVEFarmer.new(x, y, self.user):AddToScene(self, true)
         elseif gid == PVEDefine.CAMP then
-            WidgetPVECamp.new(x, y, self.user):addToScene(self, true)
+            WidgetPVECamp.new(x, y, self.user):AddToScene(self, true)
         elseif gid == PVEDefine.CRASHED_AIRSHIP then
-            WidgetPVECrashedAirship.new(x, y, self.user):addToScene(self, true)
+            WidgetPVECrashedAirship.new(x, y, self.user):AddToScene(self, true)
         elseif gid == PVEDefine.CONSTRUCTION_RUINS then
-            WidgetPVEConstructionRuins.new(x, y, self.user):addToScene(self, true)
+            WidgetPVEConstructionRuins.new(x, y, self.user):AddToScene(self, true)
         elseif gid == PVEDefine.KEEL then
-            WidgetPVEKeel.new(x, y, self.user):addToScene(self, true)
+            WidgetPVEKeel.new(x, y, self.user):AddToScene(self, true)
         elseif gid == PVEDefine.WARRIORS_TOMB then
-            WidgetPVEWarriorsTomb.new(x, y, self.user):addToScene(self, true)
+            WidgetPVEWarriorsTomb.new(x, y, self.user):AddToScene(self, true)
         elseif gid == PVEDefine.OBELISK then
-            WidgetPVEObelisk.new(x, y, self.user):addToScene(self, true)
+            WidgetPVEObelisk.new(x, y, self.user):AddToScene(self, true)
         elseif gid == PVEDefine.ANCIENT_RUINS then
-            WidgetPVEAncientRuins.new(x, y, self.user):addToScene(self, true)
+            WidgetPVEAncientRuins.new(x, y, self.user):AddToScene(self, true)
         elseif gid == PVEDefine.ENTRANCE_DOOR then
-            WidgetPVEEntranceDoor.new(x, y, self.user):addToScene(self, true)
+            WidgetPVEEntranceDoor.new(x, y, self.user):AddToScene(self, true)
         end
     end)
 end
@@ -178,11 +180,11 @@ function PVEScene:CheckTrap()
                             if report:IsAttackWin() then
                                 GameGlobalUI:showTips(_("获得奖励"), enemy.rewards)
                             end
-                        end):addToCurrentScene(true)
+                        end):AddToCurrentScene(true)
                     end):catch(function(err)
                         dump(err:reason())
                     end)
-                end):addToCurrentScene(true)
+                end):AddToCurrentScene(true)
         end)
         self.user:GetPVEDatabase():ResetNextEnemyCounter()
     end

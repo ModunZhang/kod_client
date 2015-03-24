@@ -36,14 +36,14 @@ function GameUIAllianceShrineDetail:IsActivate()
 	return self.isActivate_
 end
 
-function GameUIAllianceShrineDetail:onMoveOutStage()
+function GameUIAllianceShrineDetail:OnMoveOutStage()
 	if self:IsActivate() then
 		self.allianceShrine_:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnPerceotionChanged)
 		self.allianceShrine_:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
 		self.allianceShrine_:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
 		self.allianceShrine_:RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsRefresh)
 	end
-	GameUIAllianceShrineDetail.super.onMoveOutStage(self)
+	GameUIAllianceShrineDetail.super.OnMoveOutStage(self)
 end
 
 function GameUIAllianceShrineDetail:OnShrineEventsRefresh()
@@ -102,7 +102,7 @@ function GameUIAllianceShrineDetail:BuildUI()
 	   	:addTo(title_bar)
 	   	:align(display.BOTTOM_RIGHT,title_bar:getContentSize().width, 0)
 	   	:onButtonClicked(function ()
-	   		self:leftButtonClicked()
+	   		self:LeftButtonClicked()
 	   	end)
 	if self:IsActivate() then
 		local desc_label = UIKit:ttfLabel({
@@ -288,7 +288,7 @@ function GameUIAllianceShrineDetail:GetShrineStage()
 end
 
 function GameUIAllianceShrineDetail:ShowRewardsButtonClicked()
-	UIKit:newGameUI("GameUIAllianceShrineRewardList",self:GetShrineStage()):addToCurrentScene(true)
+	UIKit:newGameUI("GameUIAllianceShrineRewardList",self:GetShrineStage()):AddToCurrentScene(true)
 end
 
 function GameUIAllianceShrineDetail:OnEventButtonClicked()

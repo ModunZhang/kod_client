@@ -92,9 +92,10 @@ function GameUIAlliance:Reset()
     self.member_list_bg = nil
 end
 
-function GameUIAlliance:onEnter()
-    GameUIAlliance.super.onEnter(self)
+function GameUIAlliance:OnMoveInStage()
+    GameUIAlliance.super.OnMoveInStage(self)
     self:RefreshMainUI()
+    self:AddListenerOfMyAlliance()
 end
 
 function GameUIAlliance:RefreshMainUI()
@@ -111,16 +112,16 @@ function GameUIAlliance:RefreshMainUI()
 end
 
 function GameUIAlliance:CreateBetweenBgAndTitle()
-    self.main_content = display.newNode():addTo(self):pos(window.left,window.bottom_top)
+    self.main_content = display.newNode():addTo(self:GetView()):pos(window.left,window.bottom_top)
     self.main_content:setContentSize(cc.size(window.width,window.betweenHeaderAndTab))
 end
 
-function GameUIAlliance:onMoveInStage()
-    GameUIAlliance.super.onMoveInStage(self)
-    self:AddListenerOfMyAlliance()
-end
+-- function GameUIAlliance:OnMoveInStage()
+--     GameUIAlliance.super.OnMoveInStage(self)
+--     self:AddListenerOfMyAlliance()
+-- end
 
-function GameUIAlliance:onMoveOutStage()
+function GameUIAlliance:OnMoveOutStage()
     local myAlliance = Alliance_Manager:GetMyAlliance()
     myAlliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     -- join or quit
@@ -128,7 +129,7 @@ function GameUIAlliance:onMoveOutStage()
     myAlliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
     myAlliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.EVENTS)
     myAlliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.JOIN_EVENTS)
-    GameUIAlliance.super.onMoveOutStage(self)
+    GameUIAlliance.super.OnMoveOutStage(self)
 end
 
 ------------------------------------------------------------------------------------------------
@@ -173,7 +174,7 @@ end
 function GameUIAlliance:CreateAllianceTips()
     Alliance_Manager.open_alliance = true
     local shadowLayer = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
-        :addTo(self)
+        :addTo(self:GetView())
     local backgroundImage = WidgetUIBackGround.new({height=542}):addTo(shadowLayer):pos(window.left+20,window.top - 700)
     local titleBar = display.newSprite("title_blue_600x52.png")
         :pos(backgroundImage:getContentSize().width/2, backgroundImage:getContentSize().height+8)
@@ -741,7 +742,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
                 return
             end
             UIKit:newGameUI('GameUIAllianceNoticeOrDescEdit',GameUIAllianceNoticeOrDescEdit.EDIT_TYPE.ALLIANCE_NOTICE)
-                :addToCurrentScene(true)
+                :AddToCurrentScene(true)
         end)
         :addTo(notice_bg)
         :align(display.TOP_CENTER,292,181)
@@ -901,7 +902,7 @@ function GameUIAlliance:OnAllianceSettingButtonClicked(event)
         UIKit:showMessageDialog(_("提示"), _("您没有此操作权限"), function()end)
         return
     end
-    UIKit:newGameUI('GameUIAllianceBasicSetting',true):addToCurrentScene(true)
+    UIKit:newGameUI('GameUIAllianceBasicSetting',true):AddToCurrentScene(true)
 end
 
 --成员
@@ -1090,11 +1091,11 @@ function GameUIAlliance:GetNormalSubItem(index,playerName,level,power,memberId)
 end
 
 function GameUIAlliance:OnAllianceTitleClicked( title )
-    UIKit:newGameUI('GameUIAllianceTitle',title):addToCurrentScene(true)
+    UIKit:newGameUI('GameUIAllianceTitle',title):AddToCurrentScene(true)
 end
 
 function GameUIAlliance:OnPlayerDetailButtonClicked(memberId)
-    UIKit:newGameUI('GameUIAllianceMemberInfo',true,memberId):addToCurrentScene(true)
+    UIKit:newGameUI('GameUIAllianceMemberInfo',true,memberId):AddToCurrentScene(true)
 end
 -- 信息
 function GameUIAlliance:HaveAlliaceUI_infomationIf()
@@ -1127,7 +1128,7 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
                 return
             end
             UIKit:newGameUI('GameUIAllianceNoticeOrDescEdit',GameUIAllianceNoticeOrDescEdit.EDIT_TYPE.ALLIANCE_DESC)
-                :addToCurrentScene(true)
+                :AddToCurrentScene(true)
         end)
         :addTo(notice_bg)
         :align(display.TOP_CENTER,292,181)
@@ -1269,7 +1270,7 @@ function GameUIAlliance:OnInfoButtonClicked(tag)
     elseif tag == 2 then
         self:CreateInvateUI()
     elseif tag == 3 then
-        UIKit:newGameUI("GameAllianceApproval"):addToCurrentScene(true)
+        UIKit:newGameUI("GameAllianceApproval"):AddToCurrentScene(true)
     elseif tag == 4 then -- 邮件
         local mail = GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.ALLIANCE_MAIL)
         mail:SetTitle(_("联盟邮件"))

@@ -23,7 +23,7 @@ function GameUISettingFaqDetail:BuildUI()
 	   	:addTo(titleBar)
 	   	:align(display.BOTTOM_RIGHT,titleBar:getContentSize().width,0)
 	   	:onButtonClicked(function ()
-	   		self:leftButtonClicked()
+	   		self:LeftButtonClicked()
 	   	end)
 	UIKit:ttfLabel({
 		text = _("遇到问题"),

@@ -129,7 +129,7 @@ function GameUIHasBeenBuild:LoadBuildingQueue()
         -- :setButtonEnabled(false)
         :onButtonClicked(function ( event )
             if event.name == "CLICKED_EVENT" then
-                WidgetBuyBuildingQueue.new():addToCurrentScene()
+                WidgetBuyBuildingQueue.new():AddToCurrentScene()
             end
         end)
 
@@ -444,7 +444,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xffedae)}))
         :onButtonClicked(function(event)
-            GameUIBuildingSpeedUp.new(item.building):addToCurrentScene(true)
+            GameUIBuildingSpeedUp.new(item.building):AddToCurrentScene(true)
         end)
 
 
@@ -459,7 +459,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
         building_icon:pos(base_x + config.offset.x, base_y + config.offset.y)
         info_btn:onButtonClicked(function (event)
             if event.name == "CLICKED_EVENT" then
-                WidgetBuildingIntroduce.new(City:GetFirstBuildingByType(building_type)):addToCurrentScene()
+                WidgetBuildingIntroduce.new(City:GetFirstBuildingByType(building_type)):AddToCurrentScene()
             end
         end)
         return self

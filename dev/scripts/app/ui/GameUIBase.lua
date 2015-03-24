@@ -8,6 +8,7 @@ local UIListView = import(".UIListView")
 local WidgetBackGroundTabButtons = import('..widget.WidgetBackGroundTabButtons')
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local Enum = import("..utils.Enum")
+
 local GameUIBase = class('GameUIBase', function()
     return display.newLayer()
 end)
@@ -30,9 +31,6 @@ function GameUIBase:onEnter()
         ext.closeKeyboard()
     end
     UIKit:CheckOpenUI(self)
-    if type(display.getRunningScene().BlurRenderScene) == "function" then
-        display.getRunningScene():BlurRenderScene()
-    end
 end
 
 function GameUIBase:onEnterTransitionFinish()
@@ -43,11 +41,29 @@ function GameUIBase:onExitTransitionStart()
     print("onExitTransitionStart->")
 end
 
+function GameUIBase:BlurRenderScene()
+    -- if type(display.getRunningScene().BlurRenderScene) == "function" then
+    --     print("GameUIBase:BlurRenderScene--->")
+    --     display.getRunningScene():BlurRenderScene()
+    -- end
+    local scene = display.getRunningScene()
+    if scene.GetHomePage and scene:GetHomePage() then
+        scene:GetHomePage():DisplayOff()
+    end
+end
+
+function GameUIBase:ResetRenderSceneState()
+    -- if type(display.getRunningScene().ResetRenderState) == "function" then
+    --     display.getRunningScene():ResetRenderState()
+    -- end
+    local scene = display.getRunningScene()
+    if scene.GetHomePage and scene:GetHomePage() then
+        scene:GetHomePage():DisplayOn()
+    end
+end
+
 function GameUIBase:onExit()
     print("onExit--->")
-    if type(display.getRunningScene().ResetRenderState) == "function" then
-        display.getRunningScene():ResetRenderState()
-    end
 end
 
 
@@ -56,20 +72,17 @@ function GameUIBase:onCleanup()
     if UIKit:getRegistry().isObjectExists(self.__cname) then
         UIKit:getRegistry().removeObject(self.__cname)
     end
-    -- app:lockInput(false)
 end
 
 
 -- overwrite in subclass
 --------------------------------------
-function GameUIBase:rightButtonClicked()
-end
 
-function GameUIBase:onMoveInStage()
+function GameUIBase:OnMoveInStage()
 -- app:lockInput(false)
 end
 
-function GameUIBase:onMoveOutStage()
+function GameUIBase:OnMoveOutStage()
     self:removeFromParent(true)
 end
 
@@ -77,60 +90,56 @@ end
 -- public methods
 --------------------------------------
 
-function GameUIBase:leftButtonClicked()
+function GameUIBase:IsAnimaShow()
+    return self.moveInAnima
+end
+
+function GameUIBase:LeftButtonClicked()
     if self:isVisible() then
         if self.moveInAnima then
             self:UIAnimationMoveOut()
         else
-            self:onMoveOutStage() -- fix
+            self:OnMoveOutStage() -- fix
         end
     end
 end
 
-function GameUIBase:addToScene(scene,anima)
-    print("addToScene->",tolua.type(scene))
-    anima = false
+function GameUIBase:AddToScene(scene,anima)
     if scene and tolua.type(scene) == 'cc.Scene' then
         scene:addChild(self, 2000)
         self.moveInAnima = anima == nil and false or anima
         if self.moveInAnima then
             self:UIAnimationMoveIn()
         else
-            self:onMoveInStage()
+            self:OnMoveInStage()
         end
     end
     return self
 end
 
-function GameUIBase:addToCurrentScene(anima)
-    return self:addToScene(display.getRunningScene(),anima)
+function GameUIBase:AddToCurrentScene(anima)
+    return self:AddToScene(display.getRunningScene(),anima)
 end
 
 -- ui入场动画
 function GameUIBase:UIAnimationMoveIn()
-    -- app:lockInput(true)
-    self:pos(0,-self:getContentSize().height)
-    transition.execute(self, cc.MoveTo:create(0.5, cc.p(0, 0)),
-        {
-            easing = "sineIn",
-            onComplete = function()
-                self:onMoveInStage()
-            end
-        })
+    self:opacity(0)
+    transition.fadeIn(self,{
+        time = 0.35,
+        onComplete = function()
+            self:OnMoveInStage()
+        end
+    })
 end
 
 -- ui 出场动画
 function GameUIBase:UIAnimationMoveOut()
-    print("UIAnimationMoveOut->",self,tolua.type(self))
-    -- app:lockInput(true)
-    transition.execute(self, cc.MoveTo:create(0.5, cc.p(0, -self:getContentSize().height)),
-        {
-            easing = "sineIn",
-            onComplete = function()
-                -- app:lockInput(false)
-                self:onMoveOutStage()
-            end
-        })
+   transition.fadeOut(self,{
+        time = 0.35,
+        onComplete = function()
+            self:OnMoveOutStage()
+        end
+    })
 end
 
 -- Private Methods
@@ -139,18 +148,6 @@ end
 --
 
 function GameUIBase:CreateBackGround()
-    -- local node = display.newNode()
-    -- local bg = display.newScale9Sprite("common_bg_center.png")
-    --     :pos(display.cx,display.cy)
-    --     :addTo(node)
-    -- bg:setContentSize(cc.size(bg:getContentSize().width,display.height))
-    -- display.newSprite("common_bg_top.png")
-    --     :align(display.CENTER, display.cx, display.top - 72)
-    --     :addTo(node)
-    -- display.newSprite("common_bg_top.png")
-    --     :align(display.CENTER, display.cx, display.bottom)
-    --     :addTo(node)
-    -- return node:addTo(self)
     return display.newSprite("common_bg_center.png"):align(display.CENTER_TOP, window.cx,window.top-40):addTo(self)
 end
 function GameUIBase:CreateTitle(title)
@@ -174,7 +171,7 @@ function GameUIBase:CreateHomeButton(on_clicked)
             if on_clicked then
                 on_clicked()
             else
-                self:leftButtonClicked()
+                self:LeftButtonClicked()
             end
         end)
         :align(display.LEFT_TOP, window.cx-314 , window.top-5)
@@ -193,7 +190,7 @@ function GameUIBase:CreateShopButton(on_clicked)
         if on_clicked then
             on_clicked()
         else
-            self:leftButtonClicked()
+            self:LeftButtonClicked()
         end
     end):addTo(self)
     gem_button:align(display.RIGHT_TOP, window.cx+314, window.top-5)

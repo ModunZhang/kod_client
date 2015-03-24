@@ -16,7 +16,7 @@ function GameUIAllianceNoticeOrDescEdit:ctor(edit_type)
 	self.isNotice_ = edit_type == self.EDIT_TYPE.ALLIANCE_NOTICE
 end
 
-function GameUIAllianceNoticeOrDescEdit:onMoveInStage()
+function GameUIAllianceNoticeOrDescEdit:OnMoveInStage()
 	--base UI
 	local shadowLayer = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
 		:addTo(self)
@@ -57,7 +57,7 @@ function GameUIAllianceNoticeOrDescEdit:onMoveInStage()
 			})
 		)
 		:onButtonClicked(function()
-			self:leftButtonClicked()
+			self:LeftButtonClicked()
 		end)
 		:addTo(bg_node)
 		:align(display.LEFT_BOTTOM,25, 20)
@@ -84,12 +84,12 @@ function GameUIAllianceNoticeOrDescEdit:onOkButtonClicked()
 	if self.isNotice_ then
 		NetManager:getEditAllianceNoticePromise(content)
         	:done(function()
-        		self:leftButtonClicked()
+        		self:LeftButtonClicked()
         	end)
 	else
 		NetManager:getEditAllianceDescriptionPromise(content)
 			:done(function()
-        		self:leftButtonClicked()
+        		self:LeftButtonClicked()
         	end)
 	end
 end

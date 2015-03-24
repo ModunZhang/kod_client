@@ -7,7 +7,7 @@ function MainScene:ctor()
 end
 
 function MainScene:onEnter()
-    self.ui:addToScene(self,false)
+    self.ui:AddToScene(self,false)
 end
 
 function MainScene:onExit()

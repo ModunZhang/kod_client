@@ -60,7 +60,7 @@ end
 
 function WidgetSpeedUp:SetProgressInfo(time_label, percent)
 	if math.floor(percent) ==100 then
-		self:leftButtonClicked()
+		self:LeftButtonClicked()
 		return
 	end
     self.progress:SetProgressInfo(time_label, percent)

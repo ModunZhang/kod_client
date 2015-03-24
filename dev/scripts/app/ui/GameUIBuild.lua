@@ -75,7 +75,7 @@ function GameUIBuild:LoadBuildingQueue()
         -- :setButtonEnabled(false)
         :onButtonClicked(function ( event )
             if event.name == "CLICKED_EVENT" then
-                WidgetBuyBuildingQueue.new():addToCurrentScene()
+                WidgetBuyBuildingQueue.new():AddToCurrentScene()
             end
         end)
 
@@ -155,7 +155,7 @@ function GameUIBuild:BuildWithRuins(select_ruins, building_type)
     local house_location = tile:GetBuildingLocation(select_ruins)
     NetManager:getCreateHouseByLocationPromise(tile.location_id,
         house_location, building_type):done(function()
-        self:leftButtonClicked()
+        self:LeftButtonClicked()
         end)
 end
 

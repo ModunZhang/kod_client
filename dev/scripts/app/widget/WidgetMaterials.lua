@@ -85,7 +85,7 @@ function WidgetMaterials:SelectOneTypeMaterials(m_type)
     end
 end
 function WidgetMaterials:OpenMaterialDetails(material_type,material_name,num)
-    WidgetMaterialDetails.new(material_type,material_name,num):addToCurrentScene()
+    WidgetMaterialDetails.new(material_type,material_name,num):AddToCurrentScene()
 end
 function WidgetMaterials:CreateSelectButton()
 	 self.dropList = WidgetDropList.new(

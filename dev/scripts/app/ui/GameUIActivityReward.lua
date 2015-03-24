@@ -97,7 +97,7 @@ function GameUIActivityReward:BuildUI()
 	   	:addTo(titleBar)
 	   	:align(display.BOTTOM_RIGHT,titleBar:getContentSize().width,0)
 	   	:onButtonClicked(function ()
-	   		self:leftButtonClicked()
+	   		self:LeftButtonClicked()
 	   	end)
 	UIKit:ttfLabel({
 		text = ui_titles[self.REWARD_TYPE[self:GetRewardType()]],

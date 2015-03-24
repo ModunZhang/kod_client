@@ -132,7 +132,7 @@ function MyApp:retryConnectServer()
         local need_show,showed = true,false
         if need_show then
             loading = UIKit:newGameUI("GameUIWatiForNetWork")
-            loading:addToCurrentScene(true)
+            loading:AddToCurrentScene(true)
             loading:zorder(2001)
             showed = true
             need_show = false

@@ -93,12 +93,12 @@ function GameUIResource:CreateInfomation()
     end,
     function ()
         WidgetMoveHouse.new(self.building)
-        self:leftButtonClicked()
+        self:LeftButtonClicked()
     end,
     function ()
         NetManager:getBuyItemPromise("movingConstruction",1)
         WidgetMoveHouse.new(self.building)
-        self:leftButtonClicked()
+        self:LeftButtonClicked()
     end
     ):addTo(infomationLayer):align(display.CENTER, window.cx, iconBg:getPositionY() - 230)
 
@@ -265,8 +265,8 @@ function GameUIResource:GetTitleByType(building)
     end
 end
 
-function GameUIResource:onMoveInStage()
-    GameUIResource.super.onMoveInStage(self)
+function GameUIResource:OnMoveInStage()
+    GameUIResource.super.OnMoveInStage(self)
     local resource = City.resource_manager:GetResourceByType(self.building:GetUpdateResourceType())
     local citizen = self.building:GetCitizen()
     self.firstValueLabel:setString(string.format('%d',citizen))
@@ -289,7 +289,7 @@ function GameUIResource:ChaiButtonAction( event )
         local tile = self.city:GetTileWhichBuildingBelongs(self.building)
         local house_location = tile:GetBuildingLocation(self.building)
 
-        self:leftButtonClicked(nil)
+        self:LeftButtonClicked(nil)
         NetManager:getUseItemPromise("torch",{
             torch = {
                 buildingLocation = tile.location_id,
@@ -299,10 +299,10 @@ function GameUIResource:ChaiButtonAction( event )
     end
 end
 
-function GameUIResource:onMoveOutStage()
+function GameUIResource:OnMoveOutStage()
     self.dataSource = nil
     self.building = nil
-    GameUIResource.super.onMoveOutStage(self)
+    GameUIResource.super.OnMoveOutStage(self)
 end
 
 function GameUIResource:OnResourceChanged(resource_manager)

@@ -370,14 +370,14 @@ function GameUIWatchTower:OnEventDetailButtonClicked(entity)
 		if entity:WithObject():MarchType() == "helpDefence" then
 			NetManager:getHelpDefenceMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
 				UIKit:newGameUI("GameUIWatchTowerTroopDetail",GameUIWatchTowerTroopDetail.DATA_TYPE.MARCH,msg,DataManager:getUserData()._id)
-					:addToCurrentScene(true)
+					:AddToCurrentScene(true)
 			end)
 		else
 			local my_status = Alliance_Manager:GetMyAlliance():Status()
     		if my_status == "prepare" or  my_status == "fight" then
 				NetManager:getAttackMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
 					UIKit:newGameUI("GameUIWatchTowerTroopDetail",GameUIWatchTowerTroopDetail.DATA_TYPE.HELP_DEFENCE,msg,DataManager:getUserData()._id)
-						:addToCurrentScene(true)
+						:AddToCurrentScene(true)
 				end)
 			else
 				UIKit:showMessageDialog(_("错误"),_("联盟未处于战争期"),function()end)
@@ -388,7 +388,7 @@ function GameUIWatchTower:OnEventDetailButtonClicked(entity)
     	if my_status == "prepare" or  my_status == "fight" then
 			NetManager:getStrikeMarchEventDetailPromise(entity:WithObject():Id()):next(function(msg)
 				UIKit:newGameUI("GameUIWatchTowerTroopDetail",GameUIWatchTowerTroopDetail.DATA_TYPE.STRIKE,msg,DataManager:getUserData()._id)
-						:addToCurrentScene(true)
+						:AddToCurrentScene(true)
 			end)
 		else
 			UIKit:showMessageDialog(_("错误"),_("联盟未处于战争期"),function()end)
@@ -474,7 +474,7 @@ end
 --event
 --签到按钮
 function GameUIWatchTower:OnSignButtonClikced()
-	UIKit:newGameUI("GameUIActivity",City):addToCurrentScene()
+	UIKit:newGameUI("GameUIActivity",City):AddToCurrentScene()
 end
 
 --内容过滤
@@ -523,7 +523,7 @@ function GameUIWatchTower:OnSpeedUpButtonClicked(entity)
 		item_type = WidgetUseItems.USE_TYPE.WAR_SPEEDUP_CLASS,
 		event = entity
 	})
-	widgetUseItems:addToCurrentScene()
+	widgetUseItems:AddToCurrentScene()
 end
 
 function GameUIWatchTower:OnRetreatButtonClicked(entity,cb)
@@ -550,7 +550,7 @@ function GameUIWatchTower:OnRetreatButtonClicked(entity,cb)
 			item_type = WidgetUseItems.USE_TYPE.RETREAT_TROOP,
 			event = entity
 		})
-		widgetUseItems:addToCurrentScene()
+		widgetUseItems:AddToCurrentScene()
 	end
 end
 

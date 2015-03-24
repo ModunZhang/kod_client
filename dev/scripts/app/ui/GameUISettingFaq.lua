@@ -16,7 +16,7 @@ function GameUISettingFaq:onEnter()
     local gem_button = cc.ui.UIPushButton.new({
     	normal = "contact_n_148x60.png", pressed = "contact_h_148x60.png"
     }):onButtonClicked(function(event)
-       	UIKit:newGameUI("GameUISettingContactUs"):addToCurrentScene(true)
+       	UIKit:newGameUI("GameUISettingContactUs"):AddToCurrentScene(true)
     end):addTo(self):setButtonLabel("normal", UIKit:commonButtonLable({
     	text = _("联系我们"),
     }))
@@ -92,7 +92,7 @@ end
 function GameUISettingFaq:listviewListener(event)
     if "clicked" == event.name then
         local data = self.list_data[event.itemPos]
-        UIKit:newGameUI("GameUISettingFaqDetail", data):addToCurrentScene(true)
+        UIKit:newGameUI("GameUISettingFaqDetail", data):AddToCurrentScene(true)
     end
 end
 function GameUISettingFaq:GetItem(data)

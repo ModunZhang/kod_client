@@ -31,7 +31,7 @@ local WidgetEventTabButtons = class("WidgetEventTabButtons", function()
             return false
         end
     end)
-    return node
+    return node:setCascadeOpacityEnabled(true)
 end)
 function WidgetEventTabButtons:isTouchInViewRect(event)
     local viewRect = self:convertToWorldSpace(cc.p(self.view_rect.x, self.view_rect.y))
@@ -160,7 +160,7 @@ function WidgetEventTabButtons:ctor(city, ratio)
     self.item_array = {}
     local node = display.newNode():addTo(self)
     node:scale(ratio)
-    cc.Layer:create():addTo(node):pos(0, -WIDGET_HEIGHT + TAB_HEIGHT):setContentSize(cc.size(WIDGET_WIDTH, WIDGET_HEIGHT + TAB_HEIGHT))
+    cc.Layer:create():addTo(node):pos(0, -WIDGET_HEIGHT + TAB_HEIGHT):setContentSize(cc.size(WIDGET_WIDTH, WIDGET_HEIGHT + TAB_HEIGHT)):setCascadeOpacityEnabled(true)
     self.node = node
     self.tab_buttons, self.tab_map = self:CreateTabButtons()
     self.tab_buttons:addTo(node, 2):pos(0, 0)
@@ -453,7 +453,7 @@ function WidgetEventTabButtons:CreateOpenMilitaryTechItem(building)
             shadow = true
         }))
         :onButtonClicked(function(event)
-            UIKit:newGameUI('GameUIMilitaryTechBuilding', City, building):addToCurrentScene(true)
+            UIKit:newGameUI('GameUIMilitaryTechBuilding', City, building):AddToCurrentScene(true)
         end)
 
     cc.ui.UIImage.new("divide_line_489x2.png"):addTo(node)
@@ -677,7 +677,7 @@ function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
             end
         end
         -- 没加入联盟或者已加入联盟并且申请过帮助时执行使用道具加速
-        GameUIBuildingSpeedUp.new(building):addToCurrentScene(true)
+        GameUIBuildingSpeedUp.new(building):AddToCurrentScene(true)
     end
 end
 function WidgetEventTabButtons:MiliTaryTechUpgradeOrSpeedup(event)
@@ -700,17 +700,17 @@ function WidgetEventTabButtons:MiliTaryTechUpgradeOrSpeedup(event)
             end
         end
         -- 没加入联盟或者已加入联盟并且申请过帮助时执行使用道具加速
-        GameUIMilitaryTechSpeedUp.new(event):addToCurrentScene(true)
+        GameUIMilitaryTechSpeedUp.new(event):AddToCurrentScene(true)
     end
 end
 function WidgetEventTabButtons:SoldierRecruitUpgradeOrSpeedup()
-    GameUIBarracksSpeedUp.new(self.city:GetFirstBuildingByType("barracks")):addToCurrentScene(true)
+    GameUIBarracksSpeedUp.new(self.city:GetFirstBuildingByType("barracks")):AddToCurrentScene(true)
 end
 function WidgetEventTabButtons:MaterialEventUpgradeOrSpeedup()
-    GameUIToolShopSpeedUp.new(self.city:GetFirstBuildingByType("toolShop")):addToCurrentScene(true)
+    GameUIToolShopSpeedUp.new(self.city:GetFirstBuildingByType("toolShop")):AddToCurrentScene(true)
 end
 function WidgetEventTabButtons:DragonEquipmentEventsUpgradeOrSpeedup()
-    GameUIBlackSmithSpeedUp.new(self.city:GetFirstBuildingByType("blackSmith")):addToCurrentScene(true)
+    GameUIBlackSmithSpeedUp.new(self.city:GetFirstBuildingByType("blackSmith")):AddToCurrentScene(true)
 end
 
 function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp,event_key,event_item)
@@ -755,7 +755,7 @@ function WidgetEventTabButtons:Load()
             self:HighLightTab(k)
             if k == "build" then
                 self:InsertItem(self:CreateBottom():OnOpenClicked(function(event)
-                    UIKit:newGameUI('GameUIHasBeenBuild', self.city):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIHasBeenBuild', self.city):AddToCurrentScene(true)
                 end):SetLabel(_("查看已拥有的建筑")))
 
                 local buildings = self.city:GetUpgradingBuildings(true)
@@ -776,7 +776,7 @@ function WidgetEventTabButtons:Load()
                 self:InsertItem(items)
             elseif k == "soldier" then
                 self:InsertItem(self:CreateBottom():OnOpenClicked(function(event)
-                    UIKit:newGameUI('GameUIBarracks', self.city, self.barracks):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIBarracks', self.city, self.barracks):AddToCurrentScene(true)
                 end):SetLabel(_("查看现有的士兵")))
                 local event = self.barracks:GetRecruitEvent()
                 if event:IsRecruting() then
@@ -809,7 +809,7 @@ function WidgetEventTabButtons:Load()
                     end)
                 else
                     self:InsertItem(self:CreateBottom():OnOpenClicked(function(event)
-                        UIKit:newGameUI('GameUIQuickTechnology', self.city):addToCurrentScene(true)
+                        UIKit:newGameUI('GameUIQuickTechnology', self.city):AddToCurrentScene(true)
                     end):SetLabel(_("查看现有的科技")))
                 end
 
@@ -897,7 +897,7 @@ function WidgetEventTabButtons:Load()
                 end
             elseif k == "material" then
                 self:InsertItem(self:CreateBottom():OnOpenClicked(function(event)
-                    UIKit:newGameUI('GameUIMaterials', self.toolShop, self.blackSmith):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIMaterials', self.toolShop, self.blackSmith):AddToCurrentScene(true)
                 end):SetLabel(_("查看材料")))
                 local event = self.blackSmith:GetMakeEquipmentEvent()
                 if event:IsMaking() then
@@ -1018,7 +1018,7 @@ function WidgetEventTabButtons:ProductionTechnologyEventUpgradeOrSpeedup(event)
             end
         end
         -- 没加入联盟或者已加入联盟并且申请过帮助时执行使用道具加速
-        GameUITechnologySpeedUp.new():addToCurrentScene(true)
+        GameUITechnologySpeedUp.new():AddToCurrentScene(true)
     end
 end
 

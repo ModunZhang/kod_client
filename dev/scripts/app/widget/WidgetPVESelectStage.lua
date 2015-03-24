@@ -76,6 +76,7 @@ function WidgetPVESelectStage:CreateItemWithListView(list_view, level)
             if self.user:GetCurrentPVEMap():GetIndex() == level then
                 print("你已经在当前关卡")
             else
+                self.user:ResetPveData()
                 local point = self.user:GetPVEDatabase():GetMapByIndex(level):GetStartPoint()
                 self.user:GetPVEDatabase():SetCharPosition(point.x, point.y, level)
                 NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):next(function(result)

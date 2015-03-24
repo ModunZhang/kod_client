@@ -35,9 +35,9 @@ function GameUIWall:onEnter()
     end):pos(window.cx, window.bottom + 34)
 end
 
-function GameUIWall:onMoveOutStage()
+function GameUIWall:OnMoveOutStage()
 	self.dragon_manager:RemoveListenerOnType(self,self.dragon_manager.LISTEN_TYPE.OnHPChanged)
-	GameUIWall.super.onMoveOutStage(self)
+	GameUIWall.super.OnMoveOutStage(self)
 end
 
 function GameUIWall:CreateMilitaryUIIf()
@@ -230,7 +230,7 @@ function GameUIWall:OnDragonHpItemUseButtonClicked()
 		item_type = WidgetUseItems.USE_TYPE.DRAGON_EXP,
 		dragon = self:GetDragon()
 	})
-	widgetUseItems:addToCurrentScene()
+	widgetUseItems:AddToCurrentScene()
 end
 
 function GameUIWall:GetTipsBoxWithTipsContent(content)

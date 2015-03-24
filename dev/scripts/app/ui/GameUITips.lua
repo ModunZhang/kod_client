@@ -32,7 +32,7 @@ function GameUITips:BuildUI()
 	   	:addTo(titleBar)
 	   	:align(display.BOTTOM_RIGHT,titleBar:getContentSize().width,0)
 	   	:onButtonClicked(function ()
-	   		self:leftButtonClicked()
+	   		self:LeftButtonClicked()
 	   	end)
 	UIKit:ttfLabel({
 		text = _("帮助"),
@@ -51,7 +51,7 @@ function GameUITips:BuildUI()
 		}))
 		:addTo(bg):pos(500,50)
 		:onButtonClicked(function()
-			self:leftButtonClicked()
+			self:LeftButtonClicked()
 		end)
 	local checkbox_image = {
 	        off = "checkbox_unselected.png",
@@ -122,12 +122,12 @@ function GameUITips:GetItem(index,image,title,text,scale)
 	return item
 end
 
-function GameUITips:leftButtonClicked()
+function GameUITips:LeftButtonClicked()
 	if self.active_button then
 		self.active_button:setVisible(not app:GetGameDefautlt():getBasicInfoValueForKey("NEVER_SHOW_TIP_ICON"))
 		print(tolua.type(self.active_button),"self.active_button---->")
 	end
-	GameUITips.super.leftButtonClicked(self)
+	GameUITips.super.LeftButtonClicked(self)
 end
 
 return GameUITips

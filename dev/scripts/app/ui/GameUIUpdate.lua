@@ -15,7 +15,7 @@ function GameUIUpdate:ctor()
 end
 
 -- 复写UILogin方法
-function GameUIUpdate:onMoveInStage()
+function GameUIUpdate:OnMoveInStage()
 	self:showVersion()
 	self:loadLocalJson()
 	self:loadServerJson()

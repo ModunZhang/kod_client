@@ -55,14 +55,14 @@ function  GameUIAllianceShrine:OnNewStageOpened( change_map )
 	end
 end
 
-function GameUIAllianceShrine:onMoveOutStage()
+function GameUIAllianceShrine:OnMoveOutStage()
 	self.event_bind_to_label = nil
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnPerceotionChanged)
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnNewStageOpened)
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsRefresh)
-	GameUIAllianceShrine.super.onMoveOutStage(self)
+	GameUIAllianceShrine.super.OnMoveOutStage(self)
 end
 
 
@@ -332,7 +332,7 @@ function GameUIAllianceShrine:RefreshStageListView()
 end
 
 function GameUIAllianceShrine:OnResearchButtonClick(stage_obj)
-	UIKit:newGameUI("GameUIAllianceShrineDetail",stage_obj,self:GetAllianceShrine(),true):addToCurrentScene(true)
+	UIKit:newGameUI("GameUIAllianceShrineDetail",stage_obj,self:GetAllianceShrine(),true):AddToCurrentScene(true)
 end
 
 --战斗事件
@@ -439,7 +439,7 @@ function GameUIAllianceShrine:RefreshFightListView()
 end
 
 function GameUIAllianceShrine:OnDispatchSoliderButtonClicked(event)
-	UIKit:newGameUI("GameUIShireFightEvent",event,self:GetAllianceShrine()):addToCurrentScene(true)
+	UIKit:newGameUI("GameUIShireFightEvent",event,self:GetAllianceShrine()):AddToCurrentScene(true)
 end
 
 --事件记录
@@ -549,6 +549,6 @@ function GameUIAllianceShrine:GetReportsItem(report)
 end
 
 function GameUIAllianceShrine:OnReportButtonClicked(shrineReport)
-	UIKit:newGameUI("GameUIShrineReport",shrineReport):addToCurrentScene(true)
+	UIKit:newGameUI("GameUIShrineReport",shrineReport):AddToCurrentScene(true)
 end
 return GameUIAllianceShrine

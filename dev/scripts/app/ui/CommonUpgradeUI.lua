@@ -175,7 +175,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
     local building = self.building
     local efficiency
     if self.building:GetType()=="keep" then
-        efficiency = string.format("%s%d,%s%d,%s+%d",bd.unlock,building:GetNextLevelUnlockPoint(),bd.troopPopulation,building:GetNextLevelTroopPopulation(),bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s%d,%s%d,%s+%d",bd.unlock,building:GetNextLevelUnlockPoint(),bd.troopPopulation,building:GetNextLevelBeHelpedCount(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="dragonEyrie" then
         efficiency = string.format("%s%d,%s+%d",bd.vitalityRecoveryPerHour,building:GetNextLevelHPRecoveryPerHour(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="watchTower" then
@@ -314,7 +314,7 @@ function CommonUpgradeUI:InitUpgradePart()
                                 end)
                         end
                     end
-                    self:getParent():leftButtonClicked()
+                    self:getParent():LeftButtonClicked()
                 end
 
                 local can_not_update_type = self.building:IsAbleToUpgrade(false)
@@ -389,7 +389,7 @@ function CommonUpgradeUI:GotoPreconditionBuilding()
     end
     local current_scene =display.getRunningScene()
     local building_sprite = current_scene:GetSceneLayer():FindBuildingSpriteByBuilding(jump_building, self.city)
-    self:getParent():leftButtonClicked()
+    self:getParent():LeftButtonClicked()
     current_scene:GotoLogicPoint(jump_building:GetLogicPosition())
     if current_scene.AddIndicateForBuilding then
         current_scene:AddIndicateForBuilding(building_sprite)
@@ -583,8 +583,8 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
             dialog:CreateOKButton(
                 {
                     listener = function()
-                        UIKit:newGameUI('GameUIShop', City):addToCurrentScene(true)
-                        self:getParent():leftButtonClicked()
+                        UIKit:newGameUI('GameUIShop', City):AddToCurrentScene(true)
+                        self:getParent():LeftButtonClicked()
                     end
                 }
             )

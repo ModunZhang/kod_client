@@ -25,14 +25,22 @@ function GameUIBarracks:onEnter()
     self.recruit = self:CreateSoldierUI()
     self.specialRecruit = self:CreateSpecialSoldierUI()
     self:TabButtons()
+    self.barracks:AddUpgradeListener(self)
     self.barracks:AddBarracksListener(self)
     self.barracks_city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
-
 end
 function GameUIBarracks:onExit()
+    self.barracks:AddUpgradeListener(self)
     self.barracks:RemoveBarracksListener(self)
     self.barracks_city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
     GameUIBarracks.super.onExit(self)
+end
+function GameUIBarracks:OnBuildingUpgradingBegin()
+end
+function GameUIBarracks:OnBuildingUpgradeFinished()
+    self:RefershUnlockInfo()
+end
+function GameUIBarracks:OnBuildingUpgrading()
 end
 function GameUIBarracks:OnBeginRecruit(barracks, event)
     self.tips:setVisible(false)
@@ -67,7 +75,7 @@ function GameUIBarracks:CreateTimerAndTips()
         :align(display.CENTER, window.cx, window.top - 160)
         :hide()
         :OnButtonClicked(function(event)
-            GameUIBarracksSpeedUp.new(self.barracks):addToCurrentScene(true)
+            GameUIBarracksSpeedUp.new(self.barracks):AddToCurrentScene(true)
             -- print("hello")
         end)
     -- self.timer:GetSpeedUpButton():setButtonEnabled(false)
@@ -177,11 +185,12 @@ function GameUIBarracks:TabButtons()
             self.recruit:setVisible(true)
             self.timerAndTips:setVisible(true)
             self.specialRecruit:setVisible(false)
+            self:RefershUnlockInfo()
         elseif tag == "specialRecruit" then
             self.recruit:setVisible(false)
             self.timerAndTips:setVisible(true)
             self.specialRecruit:setVisible(true)
-            -- NetManager:getRecruitSpecialSoldierPromise("skeletonWarrior", 1, NOT_HANDLE)
+            self:RefershUnlockInfo()
         end
     end):pos(window.cx, window.bottom + 34)
 end
@@ -195,6 +204,9 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
     for i, soldier_name in pairs(soldiers) do
         self.soldier_map[soldier_name] =
             WidgetSoldierBox.new(nil, function(event)
+                if self.soldier_map[soldier_name]:IsLocked() then
+                    return
+                end
                 WidgetRecruitSoldier.new(self.barracks, self.barracks_city, soldier_name)
                     :addTo(self)
                     :align(display.CENTER, window.cx, 500 / 2)
@@ -255,11 +267,27 @@ function GameUIBarracks:CreateSpecialItemWithListView( list_view, soldiers ,titl
     item:setItemSize(widget_width, 284)
     return item
 end
-function GameUIBarracks:OnSoliderCountChanged(...)
+function GameUIBarracks:OnSoliderCountChanged()
     local soldier_map = self.barracks_city:GetSoldierManager():GetSoldierMap()
     for k, v in pairs(self.soldier_map) do
-        v:SetNumber(soldier_map[k])
+        if not v:IsLocked() then
+            v:SetNumber(soldier_map[k])
+        end
     end
+end
+function GameUIBarracks:RefershUnlockInfo()
+    local unlock_soldiers = self.barracks:GetUnlockSoldiers()
+    local level = self.barracks:GetLevel()
+    for k,v in pairs(self.soldier_map) do
+        if unlock_soldiers[k] then
+            local is_unlock = unlock_soldiers[k] <= level
+            v:Enable(is_unlock)
+            if not is_unlock then
+                v:SetCondition(string.format("%s%d%s", _("兵营"), unlock_soldiers[k], _("级解锁")))
+            end
+        end
+    end
+    self:OnSoliderCountChanged()
 end
 
 --fte

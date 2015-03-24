@@ -237,7 +237,7 @@ function GameUIActivity:OnListViewTouch(event)
 end
 
 function GameUIActivity:OnSelectAtItem(item_type)
-	UIKit:newGameUI("GameUIActivityReward",GameUIActivityReward.REWARD_TYPE[self.ITEMS_TYPE[item_type]]):addToCurrentScene(true)
+	UIKit:newGameUI("GameUIActivityReward",GameUIActivityReward.REWARD_TYPE[self.ITEMS_TYPE[item_type]]):AddToCurrentScene(true)
 end
 
 function GameUIActivity:GetOnLineTimePointData()

@@ -35,7 +35,7 @@ function AllianceScene:GotoCurrectPosition()
 end
 
 function AllianceScene:CreateAllianceUI()
-    -- local home_page = UIKit:newGameUI('GameUIAllianceHome',Alliance_Manager:GetMyAlliance()):addToScene(self)
+    -- local home_page = UIKit:newGameUI('GameUIAllianceHome',Alliance_Manager:GetMyAlliance()):AddToScene(self)
     local home_page = GameUIAllianceHome.new(self:GetAlliance()):addTo(self)
     self:GetSceneLayer():AddObserver(home_page)
     home_page:setTouchSwallowEnabled(false)
@@ -108,7 +108,7 @@ function AllianceScene:EnterAllianceBuilding(entity)
         print("没有此建筑--->",building_name)
         return
     end
-    UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance()):addToCurrentScene(true)
+    UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance()):AddToCurrentScene(true)
 end
 
 function AllianceScene:EnterNotAllianceBuilding(entity)
@@ -124,7 +124,7 @@ function AllianceScene:EnterNotAllianceBuilding(entity)
     elseif category == 'village' then
         class_name = "GameUIAllianceVillageEnter"
     end
-    UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance()):addToCurrentScene(true)
+    UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance()):AddToCurrentScene(true)
 end
 function AllianceScene:ReEnterScene()
     app:enterScene("AllianceScene")
