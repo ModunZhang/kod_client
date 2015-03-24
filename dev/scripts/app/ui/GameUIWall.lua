@@ -17,8 +17,8 @@ function GameUIWall:ctor(city,building)
     self.dragon_manager:AddListenOnType(self,self.dragon_manager.LISTEN_TYPE.OnHPChanged)
 end
 
-function GameUIWall:onEnter()
-	GameUIWall.super.onEnter(self)
+function GameUIWall:OnMoveInStage()
+	GameUIWall.super.OnMoveInStage(self)
 	self:CreateMilitaryUIIf():addTo(self:GetView()):hide():pos(window.left,window.bottom)
 	self:CreateTabButtons({
         {

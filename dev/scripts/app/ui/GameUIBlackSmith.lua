@@ -32,8 +32,8 @@ function GameUIBlackSmith:ctor(city, black_smith)
     self.black_smith_city = city
     self.black_smith = black_smith
 end
-function GameUIBlackSmith:onEnter()
-    GameUIBlackSmith.super.onEnter(self)
+function GameUIBlackSmith:OnMoveInStage()
+    GameUIBlackSmith.super.OnMoveInStage(self)
     self.title = self:InitEquipmentTitle()
     -- self.dragon_map = self:CreateDragonEquipments()
     self:TabButtons()

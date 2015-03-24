@@ -17,8 +17,8 @@ function GameUITownHall:ctor(city, townHall)
     self.town_hall_city = city
     self.town_hall = townHall
 end
-function GameUITownHall:onEnter()
-    GameUITownHall.super.onEnter(self)
+function GameUITownHall:OnMoveInStage()
+    GameUITownHall.super.OnMoveInStage(self)
     self:CreateDwelling()
     self:TabButtons()
     self:UpdateDwellingCondition()
@@ -320,7 +320,8 @@ function GameUITownHall:CreateQuestItem(quest,index)
     item:SetStatus(quest)
 
     item:addContent(body)
-    list:insertItemAndRefresh(item,index)
+    list:addItem(item,index)
+    list:reload()
 
     self.quest_items[quest.id] = item
 end
@@ -480,4 +481,5 @@ function GameUITownHall:OnBuildingUpgrading()
 end
 
 return GameUITownHall
+
 

@@ -190,6 +190,10 @@ end
 function User:GetNextDailyQuestsRefreshTime()
     return GameDatas.PlayerInitData.intInit.dailyQuestsRefreshMinites.value * 60 + self.dailyQuestsRefreshTime/1000
 end
+function User:SetDailyQuestsRefreshTime(dailyQuestsRefreshTime)
+    self.dailyQuestsRefreshTime = dailyQuestsRefreshTime
+end
+
 function User:GetDailyQuestEvents()
     return self.dailyQuestEvents
 end
@@ -447,7 +451,18 @@ function User:OnDailyQuestsChanged(userData, deltaData)
         local add = {}
         local edit = {}
         local remove = {}
-        for k,v in pairs(deltaData.dailyQuests) do
+        if deltaData.dailyQuests.refreshTime then
+            self:SetDailyQuestsRefreshTime(userData.dailyQuests.refreshTime)
+            if deltaData.dailyQuests.quests then
+                self.dailyQuests = {}
+                for k,v in pairs(deltaData.dailyQuests.quests) do
+                    self.dailyQuests[v.id] = v
+                end
+                self:OnDailyQuestsRefresh()
+            end
+        end
+
+        for k,v in pairs(deltaData.dailyQuests.quests) do
             if k == "add" then
                 for _,data in ipairs(v) do
                     self.dailyQuests[data.id] = data
@@ -470,6 +485,8 @@ function User:OnDailyQuestsChanged(userData, deltaData)
                     end
                 end
             end
+
+
         end
         self:OnNewDailyQuests(
             {
@@ -513,6 +530,15 @@ function User:OnDailyQuestsEventsChanged(userData,deltaData)
                         self.dailyQuestEvents[data.id] = nil
                         table.insert(remove,data)
                     end
+                end
+            end
+            if tolua.type(k) == "number" then
+                local u_dailyQuestEvent = DataManager:getUserData().dailyQuestEvents[k]
+                if u_dailyQuestEvent then
+                    for attr,value in pairs(v) do
+                        self.dailyQuestEvents[u_dailyQuestEvent.id][attr] = value
+                    end
+                    table.insert(edit,clone(u_dailyQuestEvent))
                 end
             end
         end
@@ -574,6 +600,13 @@ function User:GetBestDragon()
 end
 
 return User
+
+
+
+
+
+
+
 
 
 

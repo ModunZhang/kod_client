@@ -67,8 +67,8 @@ function GameUIAcademy:GetNodeForKey(key)
 	return self.techNodes[key]
 end
 
-function GameUIAcademy:onEnter()
-	GameUIAcademy.super.onEnter(self)
+function GameUIAcademy:OnMoveInStage()
+	GameUIAcademy.super.OnMoveInStage(self)
 	self:CreateTabButtons({
         {
             label = _("科技"),
