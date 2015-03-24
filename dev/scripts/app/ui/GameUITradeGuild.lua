@@ -55,15 +55,13 @@ function GameUITradeGuild:CreateBetweenBgAndTitle()
     GameUITradeGuild.super.CreateBetweenBgAndTitle(self)
 
     -- 购买页面
-    self.buy_layer = display.newLayer()
-    self:addChild(self.buy_layer)
+    self.buy_layer = display.newLayer():addTo(self:GetView())
     -- 我的商品页面
-    self.my_goods_layer = display.newLayer()
-    self:addChild(self.my_goods_layer)
+    self.my_goods_layer = display.newLayer():addTo(self:GetView())
 end
 
-function GameUITradeGuild:onEnter()
-    GameUITradeGuild.super.onEnter(self)
+function GameUITradeGuild:OnMoveInStage()
+    GameUITradeGuild.super.OnMoveInStage(self)
     self:CreateTabButtons({
         {
             label = _("购买"),
@@ -187,7 +185,7 @@ function GameUITradeGuild:RefreshSellListView(goods_type,selected)
     local list_view = self:GetSellListViewByGoodsType(goods_type)
     list_view:removeAllItems()
     NetManager:getGetSellItemsPromise(self:GetGoodsTypeMapToString(goods_type),goods_type[selected]):next(function(data)
-        for k,v in pairs(data) do
+        for k,v in pairs(data.msg.itemDocs) do
             self:CreateSellItemForListView(list_view,v)
         end
         list_view:reload()

@@ -18,8 +18,8 @@ local GameUIItems = UIKit:createUIClass("GameUIItems","GameUIWithCommonHeader")
 function GameUIItems:ctor(title,city)
     GameUIItems.super.ctor(self,city,title)
 end
-function GameUIItems:onEnter()
-    GameUIItems.super.onEnter(self)
+function GameUIItems:OnMoveInStage()
+    GameUIItems.super.OnMoveInStage(self)
     self:CreateTabButtons({
         {
             label = _("商城"),
@@ -50,11 +50,9 @@ end
 function GameUIItems:CreateBetweenBgAndTitle()
     GameUIItems.super.CreateBetweenBgAndTitle(self)
     -- shop_layer
-    self.shop_layer = cc.Layer:create()
-    self:addChild(self.shop_layer)
+    self.shop_layer = cc.Layer:create():addTo(self:GetView())
     -- myItems_layer
-    self.myItems_layer = cc.Layer:create()
-    self:addChild(self.myItems_layer)
+    self.myItems_layer = cc.Layer:create():addTo(self:GetView())
 end
 function GameUIItems:onExit()
     ItemManager:RemoveListenerOnType(self,ItemManager.LISTEN_TYPE.ITEM_CHANGED)

@@ -25,8 +25,8 @@ function GameUIMilitaryTechBuilding:ctor(city,building)
     GameUIMilitaryTechBuilding.super.ctor(self,city,bn[building:GetType()],building)
 end
 
-function GameUIMilitaryTechBuilding:onEnter()
-    GameUIMilitaryTechBuilding.super.onEnter(self)
+function GameUIMilitaryTechBuilding:OnMoveInStage()
+    GameUIMilitaryTechBuilding.super.OnMoveInStage(self)
     self:CreateTabButtons({
         {
             label = _("科技"),
@@ -68,15 +68,13 @@ function GameUIMilitaryTechBuilding:CreateBetweenBgAndTitle()
     GameUIMilitaryTechBuilding.super.CreateBetweenBgAndTitle(self)
 
     -- 军事科技升级状态
-    self.status = WidgetMilitaryTechnologyStatus.new(self.building):addTo(self,2):pos(window.cx, window.top_bottom)
+    self.status = WidgetMilitaryTechnologyStatus.new(self.building):addTo(self:GetView(),2):pos(window.cx, window.top_bottom)
 
     -- 科技 layer
-    self.tech_layer = display.newLayer()
-    self:addChild(self.tech_layer)
+    self.tech_layer = display.newLayer():addTo(self:GetView())
 
     -- 晋升 layer
-    self.promote_layer = display.newLayer()
-    self:addChild(self.promote_layer)
+    self.promote_layer = display.newLayer():addTo(self:GetView())
 end
 
 function GameUIMilitaryTechBuilding:InitTech()
