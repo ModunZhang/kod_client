@@ -7,14 +7,14 @@ function GameUIBuff:ctor(city)
     GameUIBuff.super.ctor(self, city, _("增益"))
 end
 
-function GameUIBuff:onEnter()
-    GameUIBuff.super.onEnter(self)
+function GameUIBuff:OnMoveInStage()
+    GameUIBuff.super.OnMoveInStage(self)
     local list_view ,listnode=  UIKit:commonListView({
         -- bgColor = UIKit:hex2c4b(0x7a100000),
         viewRect = cc.rect(0, 0, 568, 845),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     })
-    listnode:addTo(self):align(display.BOTTOM_CENTER,window.cx,window.bottom+40)
+    listnode:addTo(self:GetView()):align(display.BOTTOM_CENTER,window.cx,window.bottom+40)
     self.list = list_view
     self:CityBuff()
     self:WarBuff()

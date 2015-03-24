@@ -23,8 +23,8 @@ function GameUIAllianceBattle:ctor(city)
     self.history_items = {}
 end
 
-function GameUIAllianceBattle:onEnter()
-    GameUIAllianceBattle.super.onEnter(self)
+function GameUIAllianceBattle:OnMoveInStage()
+    GameUIAllianceBattle.super.OnMoveInStage(self)
     self:CreateTabButtons({
         {
             label = _("战争统计"),
@@ -112,14 +112,11 @@ function GameUIAllianceBattle:CreateBetweenBgAndTitle()
     GameUIAllianceBattle.super.CreateBetweenBgAndTitle(self)
 
     -- statistics_layer
-    self.statistics_layer = display.newLayer()
-    self:addChild(self.statistics_layer)
+    self.statistics_layer = display.newLayer():addTo(self:GetView())
     -- history_layer
-    self.history_layer = display.newLayer()
-    self:addChild(self.history_layer)
+    self.history_layer = display.newLayer():addTo(self:GetView())
     -- other_alliance_layer
-    self.other_alliance_layer = display.newLayer()
-    self:addChild(self.other_alliance_layer)
+    self.other_alliance_layer = display.newLayer():addTo(self:GetView())
 
 end
 

@@ -66,8 +66,8 @@ function GameUIAllianceShrine:OnMoveOutStage()
 end
 
 
-function GameUIAllianceShrine:onEnter()
-	GameUIAllianceShrine.super.onEnter(self)
+function GameUIAllianceShrine:OnMoveInStage()
+	GameUIAllianceShrine.super.OnMoveInStage(self)
 	self.tab_buttons = self:CreateTabButtons(
 		{
 	        {
@@ -107,7 +107,7 @@ end
 
 function GameUIAllianceShrine:CreateBetweenBgAndTitle()
 	GameUIAllianceShrine.super.CreateBetweenBgAndTitle(self)
-	self.main_content = display.newNode():addTo(self):pos(window.left,window.bottom_top)
+	self.main_content = display.newNode():addTo(self:GetView()):pos(window.left,window.bottom_top)
 end
 
 function GameUIAllianceShrine:GetSelectedButtonTag()

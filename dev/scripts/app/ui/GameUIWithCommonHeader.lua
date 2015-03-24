@@ -56,12 +56,11 @@ end
 
 function GameUIWithCommonHeader:UIAnimationMoveIn()
     self:GetView():pos(0,display.top + 200)
-    self:GetTitleBar():opacity(0)
+    -- self:GetTitleBar():opacity(0)
     self:BlurRenderScene()
     transition.fadeIn(self:GetTitleBar(),{
-        time = 0.35,
+        time = 0.05,
         onComplete = function()
-            
             transition.moveTo(self:GetView(),{
                 x = 0, 
                 y = 0, 
@@ -79,10 +78,10 @@ function GameUIWithCommonHeader:UIAnimationMoveOut()
     transition.moveTo(self:GetView(),{
                 x = 0, 
                 y = display.top + 200, 
-                time = 0.2,
+                time = 0.15,
                 onComplete = function()
                     transition.fadeOut(self:GetTitleBar(),{
-                        time = 0.35,
+                        time = 0.05,
                         onComplete = function()
                             self:OnMoveOutStage()
                         end
@@ -92,6 +91,7 @@ function GameUIWithCommonHeader:UIAnimationMoveOut()
 end
 
 function GameUIWithCommonHeader:RightButtonClicked()
+    UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
 end
 
 function GameUIWithCommonHeader:CreateTitle(title)

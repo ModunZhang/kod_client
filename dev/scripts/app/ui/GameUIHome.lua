@@ -86,7 +86,7 @@ function GameUIHome:FadeToSelf(isFullDisplay)
     self:setCascadeOpacityEnabled(true)
     local opacity = isFullDisplay == true and 255 or 0
     -- self.event_tab:setVisible(isFullDisplay)
-    transition.fadeTo(self, {opacity = opacity, time = 0.5})
+    transition.fadeTo(self, {opacity = opacity, time = 0.2})
 end
 
 function GameUIHome:onEnter()
@@ -394,7 +394,7 @@ function GameUIHome:CreateTop()
         {normal = "buff_1_128x128.png", pressed = "buff_1_128x128.png"}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI("GameUIBuff",self.city):AddToCurrentScene()
+            UIKit:newGameUI("GameUIBuff",self.city):AddToCurrentScene(true)
         end
     end):addTo(self):pos(display.left+40, display.top-200)
         :scale(0.5)

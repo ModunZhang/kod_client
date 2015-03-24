@@ -21,8 +21,8 @@ function GameUIAllianceShop:ctor(city,default_tab,building)
     self.items_manager = self.alliance:GetItemsManager()
 end
 
-function GameUIAllianceShop:onEnter()
-    GameUIAllianceShop.super.onEnter(self)
+function GameUIAllianceShop:OnMoveInStage()
+    GameUIAllianceShop.super.OnMoveInStage(self)
     self:CreateTabButtons({
         {
             label = _("商品"),
@@ -72,14 +72,11 @@ function GameUIAllianceShop:CreateBetweenBgAndTitle()
     GameUIAllianceShop.super.CreateBetweenBgAndTitle(self)
 
     -- goods_layer
-    self.goods_layer = display.newLayer()
-    self:addChild(self.goods_layer)
+    self.goods_layer = display.newLayer():addTo(self:GetView())
     -- stock_layer
-    self.stock_layer = display.newLayer()
-    self:addChild(self.stock_layer)
+    self.stock_layer = display.newLayer():addTo(self:GetView())
     -- goods_record_layer
-    self.goods_record_layer = display.newLayer()
-    self:addChild(self.goods_record_layer)
+    self.goods_record_layer = display.newLayer():addTo(self:GetView())
 end
 function GameUIAllianceShop:onExit()
     self.alliance:GetItemsManager():RemoveListenerOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_CHANGED)
