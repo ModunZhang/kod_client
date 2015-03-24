@@ -11,6 +11,8 @@ local User = import("..entity.User")
 local CityScene = import(".CityScene")
 local MyCityScene = class("MyCityScene", CityScene)
 
+MyCityScene.INDICATE_TAG = 800
+
 function MyCityScene:ctor(...)
     MyCityScene.super.ctor(self, ...)
     self.clicked_callbacks = {}
@@ -40,6 +42,48 @@ function MyCityScene:LeaveEditMode()
     self:GetSceneUILayer():LeaveEditMode()
     self:GetHomePage():DisplayOn()
     self:GetSceneUILayer():removeChildByTag(WidgetMoveHouse.ADD_TAG, true)
+end
+-- 给对应建筑添加指示动画
+function MyCityScene:AddIndicateForBuilding(building_sprite)
+    -- 已经添加，则移除
+    if self.indicate then
+        self.indicate:Remove()
+        self.indicate = nil
+    end
+    local ui_layer = self:GetSceneUILayer()
+    -- 指向建筑的箭头
+    local postions = building_sprite:GetWorldPosition()
+    local arrow = display.newSprite("arrow_home.png")
+        :scale(0.4)
+    ui_layer:addChild(arrow, 1, MyCityScene.INDICATE_TAG)
+    arrow:setRotation(240)
+    building_sprite:AddObserver(arrow)
+    function arrow:OnPositionChanged(  x,y )
+        self:setPosition(x+50, y+100)
+    end
+    function arrow:Remove()
+        building_sprite:RemoveObserver(self)
+        ui_layer:removeChild(self, true)
+    end
+    function arrow:OnBuildingUpgradingBegin( )
+    end
+    function arrow:OnBuildingUpgradeFinished( )
+    end
+    function arrow:OnBuildingUpgrading()
+    end
+
+    local seq_1 = transition.sequence{
+        cc.ScaleTo:create(0.4, 0.8),
+        cc.ScaleTo:create(0.4, 0.4)
+    }
+    arrow:runAction(cc.RepeatForever:create(seq_1))
+    ui_layer:performWithDelay(function()
+        if arrow.Remove then
+            arrow:Remove()
+            self.indicate = nil
+        end
+    end, 5.0)
+    self.indicate = arrow
 end
 function MyCityScene:GetArrowTutorial()
     if not self.arrow_tutorial then
@@ -363,9 +407,9 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
                 app:EnterPVEScene(index)
             else
                 FullScreenPopDialogUI.new()
-                :AddToCurrentScene()
-                :SetTitle("陛下")
-                :SetPopMessage("必须有一条空闲的龙，才能进入pve")
+                    :AddToCurrentScene()
+                    :SetTitle("陛下")
+                    :SetPopMessage("必须有一条空闲的龙，才能进入pve")
             end
         end
     elseif self:IsEditMode() then
@@ -373,6 +417,13 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     end
 end
 return MyCityScene
+
+
+
+
+
+
+
 
 
 
