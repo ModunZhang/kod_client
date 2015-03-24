@@ -22,13 +22,13 @@ function GameUIStrikePlayer:GetDragonManager()
 	return self.dragon_manager
 end
 
-function GameUIStrikePlayer:onEnter()
-	GameUIStrikePlayer.super.onEnter(self)
+function GameUIStrikePlayer:OnMoveInStage()
+	GameUIStrikePlayer.super.OnMoveInStage(self)
 	self:BuildUI()
 end
 
 function GameUIStrikePlayer:CreateBetweenBgAndTitle()
-	self.content_node = display.newNode():addTo(self)
+	self.content_node = display.newNode():addTo(self:GetView())
 end
 
 function GameUIStrikePlayer:BuildUI()

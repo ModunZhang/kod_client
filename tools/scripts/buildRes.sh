@@ -56,7 +56,7 @@ exportRes()
 			if test "$file" -nt "$outfile";then
 		    	test -d "$finalDir" || mkdir -p "$finalDir" && cp "$file" "$finalDir"
 		    fi
-		elif test -d $file;then
+		elif test -d "$file";then
 			if [[ ${file/"animations"//} != $file ]];then
 	    		exportAnimationsRes $file
 	    	else

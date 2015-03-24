@@ -26,7 +26,7 @@ function GameUIAllianceShrine:OnPerceotionChanged()
 	if self:GetSelectedButtonTag() ~= "stage" then return end
 	local resource = self:GetAllianceShrine():GetPerceptionResource()
 	local display_str = string.format(_("感知力:%s"),resource:GetResourceValueByCurrentTime(app.timer:GetServerTime()) .. "/" .. resource:GetValueLimit())
-	if self.stage_ui.insight_label:getString() ~= display_str then
+	if self.stage_ui and self.stage_ui.insight_label:getString() ~= display_str then
 		self.stage_ui.insight_label:setString(display_str)
 		self.stage_ui.progressBar:setPercentage(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime())/resource:GetValueLimit()*100)
 	end

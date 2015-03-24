@@ -91,7 +91,7 @@ function GameUIWithCommonHeader:UIAnimationMoveOut()
 end
 
 function GameUIWithCommonHeader:RightButtonClicked()
-    UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+    UIKit:newGameUI("GameUIStore"):AddToCurrentScene(false)
 end
 
 function GameUIWithCommonHeader:CreateTitle(title)
