@@ -248,6 +248,14 @@ function display.newScale9Sprite(...)
     return sp
 end
 
+display.__newClippingRegionNode = display.newClippingRegionNode
+
+function display.newClippingRegionNode(...)
+    local node = display.__newClippingRegionNode(...)
+    node:setCascadeOpacityEnabled(true)
+    return node
+end
+
 --打开json对null的支持
 local cjson = require("cjson")
 cjson.decode_lua_nil(false)

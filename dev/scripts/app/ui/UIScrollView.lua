@@ -30,7 +30,8 @@ quick 滚动控件
 ]]
 
 local UIScrollView = class("UIScrollView", function()
-	return cc.ClippingRegionNode:create()
+	-- return cc.ClippingRegionNode:create()
+	return display.newClippingRegionNode()
 end)
 
 UIScrollView.BG_ZORDER 				= -100
