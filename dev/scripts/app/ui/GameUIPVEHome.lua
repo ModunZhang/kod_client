@@ -1,4 +1,5 @@
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
+local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local UIPageView = import("..ui.UIPageView")
 local window = import("..utils.window")
 local GameUIPVEHome = UIKit:createUIClass('GameUIPVEHome')

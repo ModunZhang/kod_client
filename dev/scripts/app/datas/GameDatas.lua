@@ -55,7 +55,6 @@ require("app.datas.AllianceBuilding_shop")
 
 GameDatas.AllianceInitData = {
 	["intInit"] = {},
-	["floatInit"] = {},
 	["stringInit"] = {},
 	["right"] = {},
 	["buildingType"] = {},
@@ -63,7 +62,6 @@ GameDatas.AllianceInitData = {
 	["decorateCount"] = {},
 }
 require("app.datas.AllianceInitData_intInit")
-require("app.datas.AllianceInitData_floatInit")
 require("app.datas.AllianceInitData_stringInit")
 require("app.datas.AllianceInitData_right")
 require("app.datas.AllianceInitData_buildingType")
@@ -92,97 +90,97 @@ require("app.datas.AllianceVillage_gemVillage")
 
 GameDatas.BuildingFunction = {
 	["keep"] = {},
-	["watchTower"] = {},
-	["warehouse"] = {},
 	["dragonEyrie"] = {},
+	["watchTower"] = {},
+	["wall"] = {},
+	["warehouse"] = {},
+	["tower"] = {},
 	["barracks"] = {},
 	["hospital"] = {},
 	["academy"] = {},
 	["materialDepot"] = {},
 	["blackSmith"] = {},
-	["foundry"] = {},
-	["stoneMason"] = {},
-	["lumbermill"] = {},
-	["mill"] = {},
 	["townHall"] = {},
 	["toolShop"] = {},
 	["tradeGuild"] = {},
-	["workshop"] = {},
+	["lumbermill"] = {},
+	["stoneMason"] = {},
+	["foundry"] = {},
+	["mill"] = {},
 	["trainingGround"] = {},
 	["hunterHall"] = {},
 	["stable"] = {},
-	["wall"] = {},
-	["tower"] = {},
+	["workshop"] = {},
 }
 require("app.datas.BuildingFunction_keep")
-require("app.datas.BuildingFunction_watchTower")
-require("app.datas.BuildingFunction_warehouse")
 require("app.datas.BuildingFunction_dragonEyrie")
+require("app.datas.BuildingFunction_watchTower")
+require("app.datas.BuildingFunction_wall")
+require("app.datas.BuildingFunction_warehouse")
+require("app.datas.BuildingFunction_tower")
 require("app.datas.BuildingFunction_barracks")
 require("app.datas.BuildingFunction_hospital")
 require("app.datas.BuildingFunction_academy")
 require("app.datas.BuildingFunction_materialDepot")
 require("app.datas.BuildingFunction_blackSmith")
-require("app.datas.BuildingFunction_foundry")
-require("app.datas.BuildingFunction_stoneMason")
-require("app.datas.BuildingFunction_lumbermill")
-require("app.datas.BuildingFunction_mill")
 require("app.datas.BuildingFunction_townHall")
 require("app.datas.BuildingFunction_toolShop")
 require("app.datas.BuildingFunction_tradeGuild")
-require("app.datas.BuildingFunction_workshop")
+require("app.datas.BuildingFunction_lumbermill")
+require("app.datas.BuildingFunction_stoneMason")
+require("app.datas.BuildingFunction_foundry")
+require("app.datas.BuildingFunction_mill")
 require("app.datas.BuildingFunction_trainingGround")
 require("app.datas.BuildingFunction_hunterHall")
 require("app.datas.BuildingFunction_stable")
-require("app.datas.BuildingFunction_wall")
-require("app.datas.BuildingFunction_tower")
+require("app.datas.BuildingFunction_workshop")
 
 GameDatas.BuildingLevelUp = {
 	["keep"] = {},
-	["watchTower"] = {},
-	["warehouse"] = {},
 	["dragonEyrie"] = {},
+	["watchTower"] = {},
+	["wall"] = {},
+	["warehouse"] = {},
+	["tower"] = {},
 	["barracks"] = {},
 	["hospital"] = {},
 	["academy"] = {},
 	["materialDepot"] = {},
 	["blackSmith"] = {},
-	["foundry"] = {},
-	["stoneMason"] = {},
-	["lumbermill"] = {},
-	["mill"] = {},
 	["townHall"] = {},
 	["toolShop"] = {},
 	["tradeGuild"] = {},
-	["workshop"] = {},
+	["lumbermill"] = {},
+	["stoneMason"] = {},
+	["foundry"] = {},
+	["mill"] = {},
 	["trainingGround"] = {},
 	["hunterHall"] = {},
 	["stable"] = {},
-	["wall"] = {},
-	["tower"] = {},
+	["workshop"] = {},
 }
 require("app.datas.BuildingLevelUp_keep")
-require("app.datas.BuildingLevelUp_watchTower")
-require("app.datas.BuildingLevelUp_warehouse")
 require("app.datas.BuildingLevelUp_dragonEyrie")
+require("app.datas.BuildingLevelUp_watchTower")
+require("app.datas.BuildingLevelUp_wall")
+require("app.datas.BuildingLevelUp_warehouse")
+require("app.datas.BuildingLevelUp_tower")
 require("app.datas.BuildingLevelUp_barracks")
 require("app.datas.BuildingLevelUp_hospital")
 require("app.datas.BuildingLevelUp_academy")
 require("app.datas.BuildingLevelUp_materialDepot")
 require("app.datas.BuildingLevelUp_blackSmith")
-require("app.datas.BuildingLevelUp_foundry")
-require("app.datas.BuildingLevelUp_stoneMason")
-require("app.datas.BuildingLevelUp_lumbermill")
-require("app.datas.BuildingLevelUp_mill")
 require("app.datas.BuildingLevelUp_townHall")
 require("app.datas.BuildingLevelUp_toolShop")
 require("app.datas.BuildingLevelUp_tradeGuild")
-require("app.datas.BuildingLevelUp_workshop")
+require("app.datas.BuildingLevelUp_lumbermill")
+require("app.datas.BuildingLevelUp_stoneMason")
+require("app.datas.BuildingLevelUp_foundry")
+require("app.datas.BuildingLevelUp_mill")
 require("app.datas.BuildingLevelUp_trainingGround")
 require("app.datas.BuildingLevelUp_hunterHall")
 require("app.datas.BuildingLevelUp_stable")
-require("app.datas.BuildingLevelUp_wall")
-require("app.datas.BuildingLevelUp_tower")
+require("app.datas.BuildingLevelUp_workshop")
 
 GameDatas.Buildings = {
 	["buildings"] = {},
@@ -227,6 +225,11 @@ require("app.datas.Dragons_dragons")
 require("app.datas.Dragons_dragonAttributes")
 require("app.datas.Dragons_dragonSkills")
 require("app.datas.Dragons_fightFix")
+
+GameDatas.Errors = {
+	["errors"] = {},
+}
+require("app.datas.Errors_errors")
 
 GameDatas.Gacha = {
 	["normal"] = {},
@@ -299,15 +302,15 @@ require("app.datas.HouseFunction_farmer")
 GameDatas.HouseLevelUp = {
 	["dwelling"] = {},
 	["woodcutter"] = {},
-	["farmer"] = {},
 	["quarrier"] = {},
 	["miner"] = {},
+	["farmer"] = {},
 }
 require("app.datas.HouseLevelUp_dwelling")
 require("app.datas.HouseLevelUp_woodcutter")
-require("app.datas.HouseLevelUp_farmer")
 require("app.datas.HouseLevelUp_quarrier")
 require("app.datas.HouseLevelUp_miner")
+require("app.datas.HouseLevelUp_farmer")
 
 GameDatas.HouseReturn = {
 	["dwelling"] = {},
@@ -391,7 +394,6 @@ require("app.datas.MilitaryTechs_militaryTechs")
 
 GameDatas.PlayerInitData = {
 	["intInit"] = {},
-	["floatInit"] = {},
 	["stringInit"] = {},
 	["resources"] = {},
 	["materials"] = {},
@@ -402,7 +404,6 @@ GameDatas.PlayerInitData = {
 	["collectLevel"] = {},
 }
 require("app.datas.PlayerInitData_intInit")
-require("app.datas.PlayerInitData_floatInit")
 require("app.datas.PlayerInitData_stringInit")
 require("app.datas.PlayerInitData_resources")
 require("app.datas.PlayerInitData_materials")
