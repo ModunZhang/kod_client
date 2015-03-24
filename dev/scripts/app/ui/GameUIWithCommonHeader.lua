@@ -11,7 +11,7 @@ end
 
 function GameUIWithCommonHeader:onEnter()
     GameUIWithCommonHeader.super.onEnter(self)
-    self.__view = display.newLayer():addTo(self):pos(0,display.top + 200)
+    self.__view = display.newLayer():addTo(self)
     self:CreateBackGround()
     self:CreateBetweenBgAndTitle()
     local titleBar = self:CreateTitle(self.title)
@@ -55,6 +55,7 @@ function GameUIWithCommonHeader:OnMoveInStage()
 end
 
 function GameUIWithCommonHeader:UIAnimationMoveIn()
+    self:GetView():pos(0,display.top + 200)
     self:GetTitleBar():opacity(0)
     self:BlurRenderScene()
     transition.fadeIn(self:GetTitleBar(),{
