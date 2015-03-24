@@ -41,12 +41,11 @@ function GameUIPResourceBuilding:CreateBetweenBgAndTitle()
     GameUIPResourceBuilding.super.CreateBetweenBgAndTitle(self)
 
     -- 加入军用帐篷info_layer
-    self.info_layer = display.newLayer()
-    self:addChild(self.info_layer)
+    self.info_layer = display.newLayer():addTo(self:GetView())
 end
 
-function GameUIPResourceBuilding:onEnter()
-    GameUIPResourceBuilding.super.onEnter(self)
+function GameUIPResourceBuilding:OnMoveInStage()
+    GameUIPResourceBuilding.super.OnMoveInStage(self)
     self:CreateTabButtons({
         {
             label = _("信息"),

@@ -254,19 +254,19 @@ local BUILDING_DESCRIPTION = {
 
     ["lumbermill"] = _("锯木坊能够提升可建造的木工小屋数量和木材的生产效率，周围修建一定数量的木工小屋还能获得额外的木材产量加成"),
     ["lumbermill_woodcutter"] = _("木工小屋数量"),
-    ["lumbermill_addEfficency"] = _("木材产量"),
+    ["lumbermill_protection"] = _("木材保护"),
 
     ["mill"] = _("磨坊能够提升可建造的农夫小屋数量和粮食的生产效率，周围修建一定数量的农夫小屋还能获得额外的粮食产量加成"),
     ["mill_farmer"] = _("农夫小屋数量"),
-    ["mill_addEfficency"] = _("粮食产量"),
+    ["mill_protection"] = _("粮食保护"),
 
     ["stoneMason"] = _("石匠作坊能够提升可建造的石匠小屋数量和石料的生产效率，周围修建一定数量的石匠小屋还能获得额外的石料产量加成"),
     ["stoneMason_quarrier"] = _("石匠小屋数量"),
-    ["stoneMason_addEfficency"] = _("石料产量"),
+    ["stoneMason_protection"] = _("石料保护"),
 
     ["foundry"] = _("铸造坊能够提升可建造的矿工小屋数量和铁矿的生产效率，周围修建一定数量的矿工小屋还能获得额外的铁矿产量加成"),
     ["foundry_miner"] = _("矿工小屋数量"),
-    ["foundry_addEfficency"] = _("铁矿产量"),
+    ["foundry_protection"] = _("铁矿保护"),
 
     ["townHall"] = _("市政厅能够提升可建造的住宅数量，并向城市中得空闲城民征税。周围建立一定数量的住宅，可获得额外的城民增长"),
     ["townHall_dwelling"] = _("住宅数量"),
