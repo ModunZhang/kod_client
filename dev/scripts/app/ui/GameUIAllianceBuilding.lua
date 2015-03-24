@@ -24,14 +24,11 @@ function GameUIAllianceBuilding:CreateTabButtons(param, cb)
         cb(tag)
     end)
 end
-function GameUIAllianceBuilding:CreateBetweenBgAndTitle()
-    GameUIAllianceBuilding.super.CreateBetweenBgAndTitle(self)
 
-    -- upgrade_layer
+function GameUIAllianceBuilding:OnMoveInStage()
+    GameUIAllianceBuilding.super.OnMoveInStage(self)
     self.upgrade_layer = WidgetAllianceBuildingUpgrade.new(self.building):addTo(self:GetView())
 end
-
-
 
 return GameUIAllianceBuilding
 
