@@ -47,7 +47,7 @@ end
 
 
 function GameUIResource:CreateInfomation()
-    local infomationLayer = display.newNode():addTo(self)
+    local infomationLayer = display.newNode():addTo(self:GetView())
     self.infomationLayer = infomationLayer
     local iconBg = display.newSprite("resource_icon_background.png"):align(display.LEFT_TOP, window.left+60, window.top - 110):addTo(infomationLayer)
     display.newSprite("resource_icon.png"):align(display.CENTER, iconBg:getContentSize().width/2, iconBg:getContentSize().height/2):addTo(iconBg)

@@ -124,7 +124,7 @@ end
 
 function GameUIAcademy:CreateBetweenBgAndTitle()
     GameUIAcademy.super.CreateBetweenBgAndTitle(self)
-	self.technology_node = self:BuildTechnologyUI():addTo(self):pos(window.left,window.bottom_top)
+	self.technology_node = self:BuildTechnologyUI():addTo(self:GetView()):pos(window.left,window.bottom_top)
 end
 
 function GameUIAcademy:BuildTipsUI(technology_node,y)

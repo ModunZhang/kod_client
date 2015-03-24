@@ -22,18 +22,24 @@ function ResourceUpgradeBuilding:GetNextLevel()
     return #config == self.level and self.level or self.level + 1
 end
 function ResourceUpgradeBuilding:GetCitizen()
-	local config = config_house_levelup[self:GetType()]
-	local current_config = self:IsUpgrading() and config[self:GetNextLevel()] or config[self:GetLevel()]
-	return current_config.citizen
+    local config = config_house_levelup[self:GetType()]
+    local current_config = self:IsUpgrading() and config[self:GetNextLevel()] or config[self:GetLevel()]
+    if current_config then
+        return current_config.citizen
+    end
+    return 0
 end
 function ResourceUpgradeBuilding:GetNextLevelLevelCitizen()
     local config = config_house_levelup[self:GetType()]
     return config[self:GetNextLevel()].citizen
 end
 function ResourceUpgradeBuilding:GetProductionPerHour()
-	local config = config_house_function[self:GetType()]
-	local current_config = config[self:GetLevel()]
-	return current_config.poduction
+    local config = config_house_function[self:GetType()]
+    local current_config = config[self:GetLevel()]
+    if current_config then
+        return current_config.poduction
+    end
+    return 0
 end
 function ResourceUpgradeBuilding:GetNextLevelProductionPerHour()
     local config = config_house_function[self:GetType()]
@@ -41,10 +47,10 @@ function ResourceUpgradeBuilding:GetNextLevelProductionPerHour()
     return current_config.poduction
 end
 function ResourceUpgradeBuilding:GetUpdateResourceType()
-	return nil
+    return nil
 end
 function ResourceUpgradeBuilding:getUpgradeNowNeedGems()
-    
+
     local resource_config = DataUtils:getHouseUpgradeRequired(self.building_type, self.level+1)
     local required_gems = 0
     required_gems = required_gems + DataUtils:buyResource(resource_config.resources, {})
@@ -64,7 +70,7 @@ function ResourceUpgradeBuilding:getUpgradeRequiredGems()
         citizen = city.resource_manager:GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime()),
     }
 
-    
+
     local has_materials =city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
 
     local resource_config = DataUtils:getHouseUpgradeRequired(self.building_type, self.level+1)
@@ -85,3 +91,5 @@ function ResourceUpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     return ResourceUpgradeBuilding.super.IsAbleToUpgrade(self,isUpgradeNow)
 end
 return ResourceUpgradeBuilding
+
+

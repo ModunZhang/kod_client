@@ -49,16 +49,12 @@ function GameUIResourceOverview:onEnter()
 end
 function GameUIResourceOverview:CreateBetweenBgAndTitle()
     GameUIResourceOverview.super.CreateBetweenBgAndTitle(self.material_layer)
-
     -- 资源
-    self.resource_layer = WidgetResources.new()
-    self:addChild(self.resource_layer)
+    self.resource_layer = WidgetResources.new():addTo(self:GetView())
     -- 材料
-    self.material_layer = WidgetMaterials.new(self.city,self.city:GetFirstBuildingByType("materialDepot"))
-    self:addChild(self.material_layer)
+    self.material_layer = WidgetMaterials.new(self.city,self.city:GetFirstBuildingByType("materialDepot")):addTo(self:GetView())
     -- 城民
-    self.citizen_layer = WidgetCitizen.new(self.city)
-    self:addChild(self.citizen_layer)
+    self.citizen_layer = WidgetCitizen.new(self.city):addTo(self:GetView())
 end
 function GameUIResourceOverview:onExit()
     GameUIResourceOverview.super.onExit(self)

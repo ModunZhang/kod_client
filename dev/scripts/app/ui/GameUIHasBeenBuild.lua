@@ -53,11 +53,11 @@ function GameUIHasBeenBuild:ctor(city)
     GameUIHasBeenBuild.super.ctor(self, city, _("建筑列表"))
     self.build_city = city
 end
-function GameUIHasBeenBuild:onEnter()
+function GameUIHasBeenBuild:OnMoveInStage()
     self.build_city:AddListenOnType(self, self.build_city.LISTEN_TYPE.UPGRADE_BUILDING)
-    GameUIHasBeenBuild.super.onEnter(self)
+    GameUIHasBeenBuild.super.OnMoveInStage(self)
 
-    self.queue = self:LoadBuildingQueue():addTo(self)
+    self.queue = self:LoadBuildingQueue():addTo(self:GetView())
     self:UpdateBuildingQueue(self.build_city)
 
     self:TabButtons()
@@ -212,7 +212,7 @@ function GameUIHasBeenBuild:CreateListView(buildings)
         viewRect = cc.rect(0, 0, 568, 680),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     })
-    listnode:addTo(self):align(display.BOTTOM_CENTER,window.cx,window.bottom_top + 20)
+    listnode:addTo(self:GetView()):align(display.BOTTOM_CENTER,window.cx,window.bottom_top + 20)
     -- 初始化item
     local unique_map = {}
     for _,v in pairs(buildings) do

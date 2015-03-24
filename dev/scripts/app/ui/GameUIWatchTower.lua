@@ -32,7 +32,7 @@ function GameUIWatchTower:CreateUI()
         viewRect = cc.rect(0,0,window.width - 70, window.betweenHeaderAndTab - 10),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
     },false)
-	list_node:addTo(self)
+	list_node:addTo(self:GetView())
 	list_node:pos(window.left+35, window.bottom_top+20)
 	self.list_node = list_node
 	self.listView  = list

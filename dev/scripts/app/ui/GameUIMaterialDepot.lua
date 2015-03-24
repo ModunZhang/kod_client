@@ -12,8 +12,7 @@ function GameUIMaterialDepot:CreateBetweenBgAndTitle()
     GameUIMaterialDepot.super.CreateBetweenBgAndTitle(self)
 
     -- 加入军用帐篷info_layer
-    self.info_layer = WidgetMaterials.new(self.city,self.building)
-    self:addChild(self.info_layer)
+    self.info_layer = WidgetMaterials.new(self.city,self.building):addTo(self:GetView())
 end
 
 function GameUIMaterialDepot:onEnter()

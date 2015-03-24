@@ -7,8 +7,7 @@ end
 
 function GameUIWarehouse:CreateBetweenBgAndTitle()
     GameUIWarehouse.super.CreateBetweenBgAndTitle(self)
-    self.resource_layer = WidgetResources.new()
-    self:addChild(self.resource_layer)
+    self.resource_layer = WidgetResources.new():addTo(self:GetView())
 end
 
 function GameUIWarehouse:onEnter()

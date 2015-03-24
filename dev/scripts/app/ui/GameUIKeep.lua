@@ -45,8 +45,7 @@ function GameUIKeep:CreateBetweenBgAndTitle()
     GameUIKeep.super.CreateBetweenBgAndTitle(self)
 
     -- 加入城堡info_layer
-    self.info_layer = display.newLayer()
-    self:addChild(self.info_layer)
+    self.info_layer = display.newLayer():addTo(self:GetView())
 end
 
 function GameUIKeep:onEnter()
@@ -278,7 +277,7 @@ function GameUIKeep:CreateModifyCityNameWindow()
 end
 
 function GameUIKeep:CreateChangeTerrainWindow()
-    local layer = WidgetPopDialog.new(450,_("城市地形修改")):addTo(self)
+    local layer = WidgetPopDialog.new(450,_("城市地形修改")):addTo(self:GetView())
     local body = layer:GetBody()
     local bg1 = WidgetUIBackGround.new({
         width = 580,

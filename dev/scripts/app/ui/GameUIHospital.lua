@@ -52,8 +52,7 @@ function GameUIHospital:CreateBetweenBgAndTitle()
     GameUIHospital.super.CreateBetweenBgAndTitle(self)
 
     -- 加入治愈heal_layer
-    self.heal_layer = display.newLayer()
-    self:addChild(self.heal_layer)
+    self.heal_layer = display.newLayer():addTo(self:GetView())
 end
 
 function GameUIHospital:onEnter()

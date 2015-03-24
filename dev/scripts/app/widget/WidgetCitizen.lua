@@ -278,6 +278,7 @@ function WidgetCitizen:onEnter()
     self.city:AddListenOnType(self, self.city.LISTEN_TYPE.UPGRADE_BUILDING)
 
     self.city:GetResourceManager():AddObserver(self)
+    self:OnResourceChanged(self.city:GetResourceManager())
 end
 
 function WidgetCitizen:onExit()

@@ -141,7 +141,7 @@ function GameUIBlackSmith:SwitchToDragon(dragon_type)
     end
 end
 function GameUIBlackSmith:InitEquipmentTitle()
-    local node = display.newNode():addTo(self)
+    local node = display.newNode():addTo(self:GetView())
     self.tips = WidgetTips.new(_("建造队列空闲"), _("请选择一个装备进行制造")):addTo(node)
         :align(display.CENTER, display.cx, display.top - 140)
         :show()
@@ -179,7 +179,7 @@ function GameUIBlackSmith:CreateDragonEquipmentsByType(dragon_type)
         viewRect = cc.rect(0, 0, 568, 650),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     })
-    listnode:addTo(self):align(display.BOTTOM_CENTER,window.cx,window.bottom_top + 20)
+    listnode:addTo(self:GetView()):align(display.BOTTOM_CENTER,window.cx,window.bottom_top + 20)
 
     -- = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 230)
     for i, v in ipairs(red_dragon_equipments) do

@@ -33,8 +33,7 @@ function GameUITower:CreateBetweenBgAndTitle()
     GameUITower.super.CreateBetweenBgAndTitle(self)
 
     -- 加入城堡info_layer
-    self.info_layer = display.newLayer()
-    self:addChild(self.info_layer)
+    self.info_layer = display.newLayer():addTo(self:GetView())
 end
 
 function GameUITower:InitInfo()

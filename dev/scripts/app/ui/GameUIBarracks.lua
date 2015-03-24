@@ -18,8 +18,8 @@ function GameUIBarracks:ctor(city, barracks)
     self.barracks_city = city
     self.barracks = barracks
 end
-function GameUIBarracks:onEnter()
-    GameUIBarracks.super.onEnter(self)
+function GameUIBarracks:OnMoveInStage()
+    GameUIBarracks.super.OnMoveInStage(self)
     self.soldier_map = {}
     self.timerAndTips = self:CreateTimerAndTips()
     self.recruit = self:CreateSoldierUI()
@@ -66,7 +66,7 @@ function GameUIBarracks:OnEndRecruit(barracks, event, current_time)
     self.timer:setVisible(false)
 end
 function GameUIBarracks:CreateTimerAndTips()
-    local timerAndTips = display.newNode():addTo(self)
+    local timerAndTips = display.newNode():addTo(self:GetView())
     self.tips = WidgetTips.new(_("招募队列空闲"), _("请选择一个兵种进行招募")):addTo(timerAndTips)
         :align(display.CENTER, window.cx, window.top - 160)
         :show()
@@ -83,7 +83,7 @@ function GameUIBarracks:CreateTimerAndTips()
 end
 
 function GameUIBarracks:CreateSoldierUI()
-    local recruit = display.newNode():addTo(self)
+    local recruit = display.newNode():addTo(self:GetView())
     -- self.tips = WidgetTips.new(_("招募队列空闲"), _("请选择一个兵种进行招募")):addTo(recruit)
     --     :align(display.CENTER, window.cx, window.top - 160)
     --     :show()
@@ -116,7 +116,7 @@ function GameUIBarracks:CreateSoldierUI()
     return recruit
 end
 function GameUIBarracks:CreateSpecialSoldierUI()
-    local special = display.newNode():addTo(self)
+    local special = display.newNode():addTo(self:GetView())
 
 
     local rect = self.timer:getCascadeBoundingBox()
@@ -208,7 +208,7 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
                     return
                 end
                 WidgetRecruitSoldier.new(self.barracks, self.barracks_city, soldier_name)
-                    :addTo(self)
+                    :addTo(self:GetView())
                     :align(display.CENTER, window.cx, 500 / 2)
             end):addTo(row_item)
                 :alignByPoint(cc.p(0.5, 0.5), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 0)
@@ -231,7 +231,7 @@ function GameUIBarracks:CreateSpecialItemWithListView( list_view, soldiers ,titl
         self.soldier_map[soldier_name] =
             WidgetSoldierBox.new(nil, function(event)
                 WidgetRecruitSoldier.new(self.barracks, self.barracks_city, soldier_name,self.barracks_city:GetSoldierManager():GetStarBySoldierType(soldier_name))
-                    :addTo(self)
+                    :addTo(self:GetView())
                     :align(display.CENTER, window.cx, 500 / 2)
             end):addTo(row_item)
                 :alignByPoint(cc.p(0.5, 0.5), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 140)

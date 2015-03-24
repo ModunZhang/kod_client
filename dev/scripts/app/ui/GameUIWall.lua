@@ -19,7 +19,7 @@ end
 
 function GameUIWall:onEnter()
 	GameUIWall.super.onEnter(self)
-	self:CreateMilitaryUIIf():addTo(self):hide():pos(window.left,window.bottom)
+	self:CreateMilitaryUIIf():addTo(self:GetView()):hide():pos(window.left,window.bottom)
 	self:CreateTabButtons({
         {
             label = _("驻防"),
@@ -326,7 +326,7 @@ function GameUIWall:OnSelectDragonButtonClicked()
 			}
 		},
 		default_dragon_type = self.dragon_manager:GetDefenceDragon() and self.dragon_manager:GetDefenceDragon():Type()
-	}):addTo(self)
+	}):addTo(self:GetView())
 end
 
 function GameUIWall:OnDragonSelected(dragon)

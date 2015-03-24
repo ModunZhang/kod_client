@@ -3,6 +3,7 @@ local promise = import("..utils.promise")
 local window = import("..utils.window")
 local BuildingRegister = import("..entity.BuildingRegister")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
+local WidgetBuyBuildingQueue = import("..widget.WidgetBuyBuildingQueue")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local SpriteConfig = import("..sprites.SpriteConfig")
@@ -22,17 +23,17 @@ function GameUIBuild:ctor(city, building)
     self.select_ruins_list = city:GetNeighbourRuinWithSpecificRuin(building)
     self.build_city:AddListenOnType(self, self.build_city.LISTEN_TYPE.UPGRADE_BUILDING)
 end
-function GameUIBuild:onEnter()
-    GameUIBuild.super.onEnter(self)
+function GameUIBuild:OnMoveInStage()
+    GameUIBuild.super.OnMoveInStage(self)
 
-    self.queue = self:LoadBuildingQueue():addTo(self)
+    self.queue = self:LoadBuildingQueue():addTo(self:GetView())
     self:UpdateBuildingQueue(self.build_city)
 
     local list_view ,listnode =  UIKit:commonListView({
         viewRect = cc.rect(0, 0, 568, 760),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }, true, false)
-    listnode:addTo(self):align(display.BOTTOM_CENTER,window.cx,window.bottom_top - 60)
+    listnode:addTo(self:GetView()):align(display.BOTTOM_CENTER,window.cx,window.bottom_top - 60)
     self.base_resource_building_items = {}
     self.base_list_view = list_view
     for i, v in ipairs(base_items) do
@@ -134,7 +135,7 @@ function GameUIBuild:OnBuildOnItem(item)
     if current > 0 then
         self:BuildWithRuins(self.select_ruins, item.building.building_type)
     else
-        local dialog = FullScreenPopDialogUI.new():addTo(self)
+        local dialog = FullScreenPopDialogUI.new():addTo(self:GetView())
         local required_gems = DataUtils:getGemByTimeInterval(upgrading_buildings[1]:GetUpgradingLeftTimeByCurrentTime(current_time))
         dialog:SetTitle(_("提示"))
         dialog:SetPopMessage(_("您当前没有空闲的建筑队列,是否花费魔法石立即完成上一个队列"))

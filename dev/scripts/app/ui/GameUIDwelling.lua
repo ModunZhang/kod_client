@@ -23,7 +23,7 @@ function GameUIDwelling:OnMoveOutStage()
     GameUIDwelling.super.OnMoveOutStage(self)
 end
 function GameUIDwelling:CreateCitizenPanel()
-    return WidgetCitizen.new(self.city):addTo(self)
+    return WidgetCitizen.new(self.city):addTo(self:GetView())
 end
 
 function GameUIDwelling:createTabButtons()
