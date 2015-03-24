@@ -523,14 +523,14 @@ local function createFightSoldiers(soldiers, dragon, terrain)
         local tech_to_archer_buff = soldier_man:GetMilitaryTechsByName(config.type.."_".."archer"):GetAtkEff()
         local tech_to_cavalry_buff = soldier_man:GetMilitaryTechsByName(config.type.."_".."cavalry"):GetAtkEff()
         local tech_to_siege_buff = soldier_man:GetMilitaryTechsByName(config.type.."_".."siege"):GetAtkEff()
-        dump(hp_buff)
-        dump(hp_vip_buff)
-        dump(atk_buff)
-        dump(atk_vip_buff)
-        dump(tech_to_infantry_buff)
-        dump(tech_to_archer_buff)
-        dump(tech_to_cavalry_buff)
-        dump(tech_to_siege_buff)
+        -- dump(hp_buff, "hp_buff")
+        -- dump(hp_vip_buff, "hp_vip_buff")
+        -- dump(atk_buff, "atk_buff")
+        -- dump(atk_vip_buff, "atk_vip_buff")
+        -- dump(tech_to_infantry_buff, "tech_to_infantry_buff")
+        -- dump(tech_to_archer_buff, "tech_to_archer_buff")
+        -- dump(tech_to_cavalry_buff, "tech_to_cavalry_buff")
+        -- dump(tech_to_siege_buff, "tech_to_siege_buff")
         return k, {
             name = soldier.name,
             star = soldier.star,
@@ -553,7 +553,14 @@ local function createFightSoldiers(soldiers, dragon, terrain)
     end)
 end
 local function createFightDragon(dragon)
-
+    return {
+        dragonType = dragon.dragonType,
+        currentHp = dragon.currentHp,
+        totalHp = dragon.currentHp,
+        hpMax = dragon.hpMax,
+        strength = dragon.strength,
+        vitality = dragon.vitality,
+    }
 end
 function GameUtils:SoldierSoldierBattle(attackSoldiers, attackWoundedSoldierPercent, attackSoldierMoraleDecreasedPercent, defenceSoldiers, defenceWoundedSoldierPercent, defenceSoldierMoraleDecreasedPercent)
     local attackResults = {}
@@ -680,7 +687,7 @@ function GameUtils:DragonDragonBattle(attackDragon, defenceDragon, effect)
     }
 end
 
-local floatInit = GameDatas.AllianceInitData.floatInit
+local intInit = GameDatas.AllianceInitData.intInit
 local function getSumPower(soldiersForFight)
     local power = 0
     for i,soldierForFight in ipairs(soldiersForFight) do
@@ -735,18 +742,24 @@ local function getPlayerSoldierMoraleDecreasedPercent(dragon)
     return basePercent - skillBuff
 end
 function GameUtils:DoBattle(attacker, defencer, terrain)
-    local clone_attacker_soldiers = createFightSoldiers(attacker.soldiers, attacker.dragon.dragon, terrain or "iceFiled")
-    local clone_defencer_soldiers = createFightSoldiers(defencer.soldiers)
+    local attacker_soldiers = createFightSoldiers(attacker.soldiers, attacker.dragon.dragon, terrain or "iceFiled")
+    local defencer_soldiers = createFightSoldiers(defencer.soldiers)
 
-    local dragonFightFixedEffect = getDragonFightFixedEffect(clone_attacker_soldiers, clone_defencer_soldiers)
-    local attack_dragon, defence_dragon = GameUtils:DragonDragonBattle(attacker.dragon, defencer.dragon, dragonFightFixedEffect)
+    local clone_attacker_soldiers = clone(attacker_soldiers)
+    local clone_defencer_soldiers = clone(defencer_soldiers)
+
+    local attacker_dragon = createFightDragon(attacker.dragon)
+    local defencer_dragon = createFightDragon(defencer.dragon)
+
+    local dragonFightFixedEffect = getDragonFightFixedEffect(attacker_soldiers, defencer_soldiers)
+    local attack_dragon, defence_dragon = GameUtils:DragonDragonBattle(attacker_dragon, defencer_dragon, dragonFightFixedEffect)
 
     local attackWoundedSoldierPercent = getPlayerTreatSoldierPercent(attacker.dragon.dragon)
     local attackSoldierMoraleDecreasedPercent = getPlayerSoldierMoraleDecreasedPercent(attacker.dragon.dragon)
     local attack_soldier, defence_soldier =
         GameUtils:SoldierSoldierBattle(
-            attacker.soldiers, attackWoundedSoldierPercent, attackSoldierMoraleDecreasedPercent,
-            defencer.soldiers, 0.4, 1
+            attacker_soldiers, attackWoundedSoldierPercent, attackSoldierMoraleDecreasedPercent,
+            defencer_soldiers, 0.4, 1
         )
 
     local report = {}
@@ -761,16 +774,16 @@ function GameUtils:DoBattle(attacker, defencer, terrain)
             local key = string.format("%s_%d", v.soldierName, v.soldierStar)
             r[key] = r[key] + v.soldierDamagedCount
         end
-        local killed = 0
+        local killScore = 0
         for k, v in pairs(r) do
             local config = normal_soldier[k] or special_soldier[k]
             assert(config, "查无此类兵种。")
-            killed = killed + v * config.citizen
+            killScore = killScore + v * config.killScore
         end
         local dragon = {
             type = attacker.dragon.dragonType,
             hpDecreased = attack_dragon.hpDecreased,
-            expAdd = floor(killed * floatInit.dragonExpByKilledCitizen.value)
+            expAdd = floor(killScore * intInit.KilledCitizenPerDragonExp.value)
         }
         -- 兵种战损
         local r = {}
@@ -829,6 +842,7 @@ end
 
 
 return GameUtils
+
 
 
 

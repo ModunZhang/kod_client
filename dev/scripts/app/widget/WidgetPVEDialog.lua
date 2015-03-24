@@ -166,10 +166,9 @@ function WidgetPVEDialog:Fight()
                 dragonType = dragonType,
                 currentHp = dragon:Hp(),
                 hpMax = dragon:GetMaxHP(),
-                totalHp = dragon:Hp(),
                 strength = dragon:TotalStrength(),
                 vitality = dragon:TotalVitality(),
-                dragon = dragon,
+                dragon = dragon
             }
             local attack_soldier = LuaUtils:table_map(soldiers, function(k, v)
                 return k, {

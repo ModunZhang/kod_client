@@ -150,7 +150,6 @@ function PVEScene:CheckTrap()
                         dragonType = dragonType,
                         currentHp = dragon:Hp(),
                         hpMax = dragon:GetMaxHP(),
-                        totalHp = dragon:Hp(),
                         strength = dragon:TotalStrength(),
                         vitality = dragon:TotalVitality(),
                         dragon = dragon

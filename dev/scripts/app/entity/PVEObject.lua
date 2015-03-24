@@ -79,10 +79,11 @@ function PVEObject:DecodeToEnemy(raw_data)
     return {
         dragon = {
             dragonType = dragonType,
-            currentHp = hp,
-            hpMax = hp,
             strength = strength,
             vitality = vitality,
+            currentHp = vitality * 4,
+            totalHp = vitality * 4,
+            hpMax = vitality * 4,
         },
         soldiers = LuaUtils:table_map(soldiers_raw, function(k, v)
             local soldierType, count = unpack(string.split(v, ","))
