@@ -256,7 +256,7 @@ function ResourceManager:GetTotalBuffData(city)
                 elseif count >= 3 then
                     house_buff = 0.05
                 end
-                buff_production_map[resource_type] = buff_production_map[resource_type] + v:GetAddEfficency() + house_buff
+                buff_production_map[resource_type] = buff_production_map[resource_type] + house_buff
             end
         end
     end)
