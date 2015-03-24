@@ -41,13 +41,6 @@ function GameUIKeep:ctor(city,building)
     GameUIKeep.super.ctor(self,city,_("城堡"),building)
 end
 
-function GameUIKeep:CreateBetweenBgAndTitle()
-    GameUIKeep.super.CreateBetweenBgAndTitle(self)
-
-    -- 加入城堡info_layer
-    self.info_layer = display.newLayer():addTo(self:GetView())
-end
-
 function GameUIKeep:OnMoveInStage()
     GameUIKeep.super.OnMoveInStage(self)
     self:CreateTabButtons({
@@ -57,15 +50,20 @@ function GameUIKeep:OnMoveInStage()
         },
     }, function(tag)
         if tag == 'info' then
+            if not self.info_layer then
+                self.info_layer = display.newLayer():addTo(self:GetView())
+                self:CreateCanBeUnlockedBuildingBG()
+                self:CreateCanBeUnlockedBuildingListView()
+                self:CreateCityBasicInfo()
+                self.city:AddListenOnType(self, City.LISTEN_TYPE.CITY_NAME)
+            end
             self.info_layer:setVisible(true)
         else
-            self.info_layer:setVisible(false)
+            if self.info_layer then
+                self.info_layer:setVisible(false)
+            end
         end
     end):pos(window.cx, window.bottom + 34)
-    self:CreateCanBeUnlockedBuildingBG()
-    self:CreateCanBeUnlockedBuildingListView()
-    self:CreateCityBasicInfo()
-    self.city:AddListenOnType(self, City.LISTEN_TYPE.CITY_NAME)
 
 end
 function GameUIKeep:OnCityNameChanged(cityName)
@@ -492,6 +490,7 @@ end
 
 
 return GameUIKeep
+
 
 
 

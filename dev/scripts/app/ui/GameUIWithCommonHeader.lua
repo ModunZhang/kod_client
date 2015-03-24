@@ -166,7 +166,7 @@ end
 function GameUIWithCommonHeader:CreateTabButtons(param, func)
     return WidgetBackGroundTabButtons.new(param,
         func)
-        :addTo(self:GetView())
+        :addTo(self:GetView(),2)
 end
 
 return GameUIWithCommonHeader
