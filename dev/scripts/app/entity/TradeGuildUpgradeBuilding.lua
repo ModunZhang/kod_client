@@ -14,23 +14,21 @@ function TradeGuildUpgradeBuilding:ctor(building_info)
 end
 
 function TradeGuildUpgradeBuilding:GetMaxCart()
-	local config = config_function[self:GetLevel()]
-	return config.maxCart
+	return config_function[self:GetEfficiencyLevel()].maxCart
 end
 function TradeGuildUpgradeBuilding:GetMaxSellQueue()
-	local config = config_function[self:GetLevel()]
-	return config.maxSellQueue
+	return config_function[self:GetEfficiencyLevel()].maxSellQueue
 end
 function TradeGuildUpgradeBuilding:GetCartRecovery()
-	local config = config_function[self:GetLevel()]
-	return config.cartRecovery
+	return config_function[self:GetEfficiencyLevel()].cartRecovery
 end
 function TradeGuildUpgradeBuilding:GetUnlockSellQueueLevel(queueIndex)
-	for k,v in pairs(config_function) do
-		if v.maxSellQueue==queueIndex then
-			return k
-		end
-	end
+    for k,v in pairs(config_function) do
+        if v.maxSellQueue==queueIndex then
+            return k
+        end
+    end
 end
 
 return TradeGuildUpgradeBuilding
+

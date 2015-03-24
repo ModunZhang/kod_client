@@ -209,11 +209,11 @@ function HospitalUpgradeBuilding:GetNextLevelMaxCasualty()
 end
 --获取伤病最大上限
 function HospitalUpgradeBuilding:GetMaxCasualty()
-    return config_function[self:GetLevel()].maxCitizen
+    return config_function[self:GetEfficiencyLevel()].maxCitizen
 end
 --获取战斗伤病比例
 function HospitalUpgradeBuilding:GetCasualtyRate()
-    return config_function[self:GetLevel()].casualtyRate
+    return config_function[self:GetEfficiencyLevel()].casualtyRate
 end
 
 return HospitalUpgradeBuilding

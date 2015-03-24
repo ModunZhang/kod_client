@@ -22,7 +22,7 @@ function DragonEyrieUpgradeBuilding:OnTimer(current_time)
 end
 
 function DragonEyrieUpgradeBuilding:EnergyMax()
-    return config_function[self:GetLevel()].energyMax
+    return config_function[self:GetEfficiencyLevel()].energyMax
 end
 -- 能量生产
 -- function DragonEyrieUpgradeBuilding:GetProductionPerHour()
@@ -52,7 +52,7 @@ function DragonEyrieUpgradeBuilding:GetDragonManager()
 end
 --withBuff 
 function DragonEyrieUpgradeBuilding:GetHPRecoveryPerHour(withBuff)
-    local hprecoveryperhour = config_function[self:GetLevel()].hpRecoveryPerHour
+    local hprecoveryperhour = config_function[self:GetEfficiencyLevel()].hpRecoveryPerHour
     if withBuff == false then return hprecoveryperhour end
     hprecoveryperhour = math.floor(hprecoveryperhour * (1 + DataUtils:GetDragonHpBuffTotal()))
     return hprecoveryperhour

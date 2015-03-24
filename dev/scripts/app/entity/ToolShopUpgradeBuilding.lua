@@ -159,7 +159,7 @@ function ToolShopUpgradeBuilding:GetMakingTimeByCategory(category)
 end
 local needs = {"Wood", "Stone", "Iron", "time"}
 function ToolShopUpgradeBuilding:GetNeedByCategory(category)
-    local config = config_function[self:GetLevel()]
+    local config = config_function[self:GetEfficiencyLevel()]
     local key = category == "building" and "Bm" or "Am"
     local need = {}
     for _, v in ipairs(needs) do

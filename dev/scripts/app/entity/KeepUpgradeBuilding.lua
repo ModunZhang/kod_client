@@ -6,14 +6,6 @@ local KeepUpgradeBuilding = class("KeepUpgradeBuilding", UpgradeBuilding)
 function KeepUpgradeBuilding:ctor(building_info)
     KeepUpgradeBuilding.super.ctor(self, building_info)
 end
-function KeepUpgradeBuilding:CanUpgradeThis(building)
-    if self == building then
-        return self:CanUpgrade()
-    else
-        return building:GetLevel() < self:GetLevel() and building:CanUpgrade()
-    end
-end
---
 function KeepUpgradeBuilding:GetFreeUnlockPoint(city)
     local unlock_tile_count = 0
     city:IteratorTilesByFunc(function(x, y, tile)
@@ -25,19 +17,16 @@ function KeepUpgradeBuilding:GetFreeUnlockPoint(city)
     return self:GetUnlockPoint() - unlock_tile_count
 end
 function KeepUpgradeBuilding:GetUnlockPoint()
-    local level = self:GetLevel()
-    return config_function[level].unlock
+    return config_function[self:GetEfficiencyLevel()].unlock
 end
 
 --派兵上限
 function KeepUpgradeBuilding:GetBeHelpedCount()
-    local level = self:GetLevel()
-    return config_function[level].beHelpedCount
+    return config_function[self:GetEfficiencyLevel()].beHelpedCount
 end
 
 function KeepUpgradeBuilding:GetNextLevelUnlockPoint()
-    local level = self:GetNextLevel()
-    return config_function[level].unlock
+    return config_function[self:GetEfficiencyLevel()].unlock
 end
 
 function KeepUpgradeBuilding:GetNextLevelBeHelpedCount()
