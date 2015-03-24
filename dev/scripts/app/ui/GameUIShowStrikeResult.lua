@@ -46,7 +46,7 @@ function GameUIShowStrikeResult:OnInterval()
 		NetManager:getStrikePlayerCityPromise(self.dragonType,self.enemyPlayerId):catch(function(err)
 			dump(err:reason())
 		end)
-		self:leftButtonClicked()
+		self:LeftButtonClicked()
 	end
 end
 

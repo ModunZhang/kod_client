@@ -340,7 +340,7 @@ function WidgetManufacture:CreateMaterialItemWithListView(list_view, title, mate
         :pos(size.width/2, 110)
         :hide()
         :OnButtonClicked(function(event)
-            GameUIToolShopSpeedUp.new(self.toolShop):addToCurrentScene(true)
+            GameUIToolShopSpeedUp.new(self.toolShop):AddToCurrentScene(true)
         end)
 
     local get_material = new_get_material():addTo(content, 2):pos(align_x, align_y):hide()

@@ -40,7 +40,7 @@ function GameUIToolShopSpeedUp:OnMakingMaterialsWithEvent(tool_shop, event, curr
 end
 
 function GameUIToolShopSpeedUp:OnEndMakeMaterialsWithEvent(tool_shop, event, current_time)
-    self:leftButtonClicked()
+    self:LeftButtonClicked()
 end
 function GameUIToolShopSpeedUp:OnGetMaterialsWithEvent(tool_shop, event)
 end

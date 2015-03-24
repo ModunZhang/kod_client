@@ -32,7 +32,7 @@ function GameUIDailyMissionInfo:BuildUI()
 	   	:addTo(titleBar)
 	   	:align(display.BOTTOM_RIGHT,titleBar:getContentSize().width,0)
 	   	:onButtonClicked(function ()
-	   		self:leftButtonClicked()
+	   		self:LeftButtonClicked()
 	   	end)
 	UIKit:ttfLabel({
 		text = Localize.daily_tasks[self:GetKeyOfDaily()].title,
@@ -150,7 +150,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         		title = _("升级一次建筑"),
                 isDesc = false,
         		func = function()
-        			UIKit:newGameUI("GameUIHasBeenBuild", City):addToCurrentScene(true)
+        			UIKit:newGameUI("GameUIHasBeenBuild", City):AddToCurrentScene(true)
         		end
         	},
         	{
@@ -163,7 +163,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         				GameGlobalUI:showTips(_("错误"),_("你还未建造兵营"))
         				return
         			end
-        			UIKit:newGameUI("GameUIBarracks", City,building):addToCurrentScene(true)
+        			UIKit:newGameUI("GameUIBarracks", City,building):AddToCurrentScene(true)
         		end
         	},
         	{
@@ -176,7 +176,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         				GameGlobalUI:showTips(_("错误"),_("你还未建造学院"))
         				return
         			end
-        			UIKit:newGameUI("GameUIAcademy", City,building):addToCurrentScene(true)
+        			UIKit:newGameUI("GameUIAcademy", City,building):AddToCurrentScene(true)
         		end
         	},
         	{
@@ -184,7 +184,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         		title = _("成功通关塞琳娜的考验"),
                 isDesc = false,
         		func = function()
-        			UIKit:newGameUI("GameUISelenaQuestion"):addToCurrentScene(true)
+        			UIKit:newGameUI("GameUISelenaQuestion"):AddToCurrentScene(true)
         		end
         	},
         	{
@@ -198,7 +198,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         				GameGlobalUI:showTips(_("错误"),_("你还未建造工具作坊"))
         				return
         			end
-        			UIKit:newGameUI("GameUIToolShop", City,building):addToCurrentScene(true)
+        			UIKit:newGameUI("GameUIToolShop", City,building):AddToCurrentScene(true)
         		end
         	}
     	},
@@ -333,7 +333,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         		title = _("在商店购买任意一个道具"),
                 isDesc = false,
         		func = function()
-        			UIKit:newGameUI("GameUIShop",City):addToCurrentScene(true)
+        			UIKit:newGameUI("GameUIShop",City):AddToCurrentScene(true)
         		end
         	}
 	    }

@@ -90,7 +90,7 @@ function GameUIWatchTowerTroopDetail:onEnter()
 	UIKit:closeButton():addTo(title_bar)
 	   	:align(display.BOTTOM_RIGHT,title_bar:getContentSize().width, 0)
 	   	:onButtonClicked(function ()
-	   		self:leftButtonClicked()
+	   		self:LeftButtonClicked()
 	   	end)
 	self.title_label = UIKit:ttfLabel({
 		text = _("部队详情"),

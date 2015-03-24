@@ -180,7 +180,7 @@ function GameUIAlliancePalace:CreateAwardMemberItem(member,index)
     self.items[member:Id()] = item
 end
 function GameUIAlliancePalace:OpenAwardDialog(member)
-    local dialog = WidgetPopDialog.new(282,_("奖励"),window.top-160):addToCurrentScene()
+    local dialog = WidgetPopDialog.new(282,_("奖励"),window.top-160):AddToCurrentScene()
     local body = dialog:GetBody()
     local body_size = body:getContentSize()
     self:GetHonourNode():addTo(body):align(display.BOTTOM_LEFT,50,60)
@@ -224,7 +224,7 @@ function GameUIAlliancePalace:OpenAwardDialog(member)
             if event.name == "CLICKED_EVENT" then
                 if self.alliance:GetSelf():IsArchon() then
                     NetManager:getGiveLoyaltyToAllianceMemberPromise(member:Id(),slider:GetValue())
-                    dialog:leftButtonClicked()
+                    dialog:LeftButtonClicked()
                 else
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))
                         :SetPopMessage(_("只有盟主拥有权限"))

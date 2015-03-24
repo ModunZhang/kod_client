@@ -314,7 +314,7 @@ function CommonUpgradeUI:InitUpgradePart()
                                 end)
                         end
                     end
-                    self:getParent():leftButtonClicked()
+                    self:getParent():LeftButtonClicked()
                 end
 
                 local can_not_update_type = self.building:IsAbleToUpgrade(false)
@@ -389,7 +389,7 @@ function CommonUpgradeUI:GotoPreconditionBuilding()
         return
     end
     local building_sprite = current_scene:GetSceneLayer():FindBuildingSpriteByBuilding(jump_building, self.city)
-    self:getParent():leftButtonClicked()
+    self:getParent():LeftButtonClicked()
     current_scene:GotoLogicPoint(jump_building:GetLogicPosition())
     -- 指向建筑的箭头
     local arrow = display.newSprite("arrow_home.png"):addTo(building_sprite):pos(0,160):scale(0.4)
@@ -589,8 +589,8 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
             dialog:CreateOKButton(
                 {
                     listener = function()
-                        UIKit:newGameUI('GameUIShop', City):addToCurrentScene(true)
-                        self:getParent():leftButtonClicked()
+                        UIKit:newGameUI('GameUIShop', City):AddToCurrentScene(true)
+                        self:getParent():LeftButtonClicked()
                     end
                 }
             )

@@ -243,12 +243,12 @@ function GameUISelenaQuestion:CheckClose()
 			_("提示"),
 			_("你正在回答问题,如果关闭此界面，之前回答正确的题目数将被清零,是否继续关闭该界面"),
 			function()
-				self:leftButtonClicked()
+				self:LeftButtonClicked()
 			end,
 			function()
 			end)
 	else
-		self:leftButtonClicked()
+		self:LeftButtonClicked()
 	end
 end
 

@@ -35,7 +35,7 @@ end
 
 function GameUIDragonHateSpeedUp:OnDragonHatched(dragon)
 	if dragon:Type() == self.hateEvent:DragonType() then
-		self:leftButtonClicked()
+		self:LeftButtonClicked()
 	end
 end
 

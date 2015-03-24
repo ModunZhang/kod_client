@@ -325,7 +325,7 @@ function GameUIMaterials:CreateEquipmentByType(equip_type)
     end
 
     equip_clicked = function(event)
-        WidgetMakeEquip.new(equip_type, self.blackSmith, self.blackSmith:BelongCity()):addToCurrentScene()
+        WidgetMakeEquip.new(equip_type, self.blackSmith, self.blackSmith:BelongCity()):AddToCurrentScene()
         -- :align(display.CENTER, display.cx, display.cy)
     end
     info_clicked = function(event)

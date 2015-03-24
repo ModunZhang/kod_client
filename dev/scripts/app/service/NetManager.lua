@@ -175,7 +175,7 @@ end
 local function get_blocking_request_promise(request_route, data, m,need_catch)
     --默认后面的处理需要主动catch错误
     need_catch = type(need_catch) == 'boolean' and need_catch or true
-    local loading = UIKit:newGameUI("GameUIWatiForNetWork"):addToCurrentScene(true)
+    local loading = UIKit:newGameUI("GameUIWatiForNetWork"):AddToCurrentScene(true)
     if loading then
         loading:setLocalZOrder(2001)
     end

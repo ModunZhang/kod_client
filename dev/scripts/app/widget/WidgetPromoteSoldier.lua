@@ -119,7 +119,7 @@ function WidgetPromoteSoldier:UpgradeButtons()
             listener = function ()
                 local upgrade_listener = function()
                     NetManager:getUpgradeSoldierStarPromise(self.soldier_type)
-                    self:leftButtonClicked()
+                    self:LeftButtonClicked()
                 end
 
                 local results = self:IsAbleToUpgradeFirst()
@@ -232,7 +232,7 @@ function WidgetPromoteSoldier:OnSoliderStarCountChanged(soldier_manager,changed_
     for i,v in ipairs(changed_map) do
         if v == self.soldier_type then
             if City:GetSoldierManager():GetSoldierMaxStar() == City:GetSoldierManager():GetStarBySoldierType(v) then
-                self:leftButtonClicked()
+                self:LeftButtonClicked()
             else
                 self:UpgradeFinishRefresh()
             end

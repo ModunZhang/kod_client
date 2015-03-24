@@ -261,8 +261,8 @@ function GameUINpc:PromiseOfSay(...)
         instance:InitDialog(...)
         instance:StartDialog()
     else
-        instance = UIKit:newGameUI('GameUINpc', ...):addToCurrentScene(true)
-        UIKit:newGameUI('GameUINpc', {words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"}):addToScene(self, true)
+        instance = UIKit:newGameUI('GameUINpc', ...):AddToCurrentScene(true)
+        UIKit:newGameUI('GameUINpc', {words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"}):AddToScene(self, true)
     end
     return instance:PromiseOfDialogEnded(#{...})
 end
@@ -282,7 +282,7 @@ function GameUINpc:PromiseOfLeave()
         table.insert(callbacks, function()
             return p:resolve()
         end)
-        instance:leftButtonClicked()
+        instance:LeftButtonClicked()
         return p
     end
     return cocos_promise.defer()

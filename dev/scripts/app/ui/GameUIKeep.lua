@@ -211,7 +211,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                     :onButtonClicked(function(event)
                         if event.name == "CLICKED_EVENT" then
                             if canUnlock then
-                                self:leftButtonClicked()
+                                self:LeftButtonClicked()
                                 display.getRunningScene():GotoLogicPoint(unlock_building:GetLogicPosition())
                             end
                         end
@@ -274,7 +274,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
 end
 
 function GameUIKeep:CreateModifyCityNameWindow()
-    WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.CHANGE_CITY_NAME}):addToCurrentScene()
+    WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.CHANGE_CITY_NAME}):AddToCurrentScene()
 end
 
 function GameUIKeep:CreateChangeTerrainWindow()

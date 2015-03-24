@@ -28,7 +28,7 @@ function WidgetBuffBox:ctor(params)
         :onButtonClicked(function ( event )
             print("buff_type====",buff_type)
             WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.BUFF,item_name = buff_type.."_1"})
-                :addToCurrentScene()
+                :AddToCurrentScene()
         end)
     -- buff icon
     local buff_icon = display.newSprite(UILib.buff[buff_type],0,12,{class=cc.FilteredSpriteWithOne})

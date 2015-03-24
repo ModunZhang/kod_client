@@ -76,7 +76,7 @@ function WidgetInput:ctor(params)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 callback(tonumber(editbox:getText()))
-                self:leftButtonClicked()
+                self:LeftButtonClicked()
             end
         end):align(display.CENTER, editbox:getPositionX(),editbox:getPositionY()-50):addTo(body)
 end

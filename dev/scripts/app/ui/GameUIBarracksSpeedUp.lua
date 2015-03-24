@@ -38,7 +38,7 @@ function GameUIBarracksSpeedUp:OnRecruiting(barracks, event, current_time)
 end
 
 function GameUIBarracksSpeedUp:OnEndRecruit(barracks, event, current_time)
-    self:leftButtonClicked()
+    self:LeftButtonClicked()
 end
 
 return GameUIBarracksSpeedUp

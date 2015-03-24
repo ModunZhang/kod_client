@@ -172,7 +172,7 @@ end
 --     return self
 -- end
 
-function GameUIWriteMail:addToCurrentScene()
+function GameUIWriteMail:AddToCurrentScene()
     return self:addTo(display.getRunningScene())
 end
 

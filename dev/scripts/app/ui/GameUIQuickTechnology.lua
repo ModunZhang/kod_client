@@ -97,8 +97,8 @@ function GameUIQuickTechnology:OnProductionTechnologyEventTimer(event)
 	end
 end
 
-function GameUIQuickTechnology:onMoveOutStage()
-	GameUIQuickTechnology.super.onMoveOutStage(self)
+function GameUIQuickTechnology:OnMoveOutStage()
+	GameUIQuickTechnology.super.OnMoveOutStage(self)
 	City:RemoveListenerOnType(self,City.LISTEN_TYPE.PRODUCTION_DATA_CHANGED)
 	City:RemoveListenerOnType(self,City.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
 	City:RemoveListenerOnType(self,City.LISTEN_TYPE.PRODUCTION_EVENT_TIMER)
@@ -151,7 +151,7 @@ function GameUIQuickTechnology:BuildTipsUI(technology_node,y)
 		:addTo(tips_bg)
 		:setButtonLabel("normal",UIKit:commonButtonLable({text = _("加速")}))
 		:onButtonClicked(function()
-			GameUITechnologySpeedUp.new():addToCurrentScene(true)
+			GameUITechnologySpeedUp.new():AddToCurrentScene(true)
 		end)
 	self.speedButton = speedButton
 end
@@ -243,7 +243,7 @@ function GameUIQuickTechnology:GetItem(tech)
 	end
 	item.changeState(tech:Enable())
 	item:onButtonClicked(function(event)
-        UIKit:newGameUI("GameUIUpgradeTechnology",tech):addToCurrentScene(true)
+        UIKit:newGameUI("GameUIUpgradeTechnology",tech):AddToCurrentScene(true)
 	end)
 	item:setTag(tech:Index())
 	return item

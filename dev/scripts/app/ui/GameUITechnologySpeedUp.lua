@@ -41,7 +41,7 @@ end
 function GameUITechnologySpeedUp:OnProductionTechnologyEventDataChanged(changed_map)
 	for __,v in ipairs(changed_map.removed or {}) do
 		if v:Id() == self:GetEvent():Id() then
-			self:leftButtonClicked()
+			self:LeftButtonClicked()
 		end
 	end
 end

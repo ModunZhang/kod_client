@@ -195,19 +195,19 @@ function WidgetPVEDialog:Fight()
                         if report:IsAttackWin() then
                             GameGlobalUI:showTips(_("获得奖励"), rewards)
                         end
-                    end):addToCurrentScene(true)
+                    end):AddToCurrentScene(true)
                 end):catch(function(err)
                     dump(err:reason())
                 end)
             else
                 self.user:SetPveData(report:GetAttackKDA())
                 NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):next(function()
-                    UIKit:newGameUI("GameUIReplay", report):addToCurrentScene(true)
+                    UIKit:newGameUI("GameUIReplay", report):AddToCurrentScene(true)
                 end):catch(function(err)
                     dump(err:reason())
                 end)
             end
-        end):addToCurrentScene(true)
+        end):AddToCurrentScene(true)
 end
 
 

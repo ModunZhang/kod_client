@@ -273,7 +273,7 @@ function WidgetResources:AddResourceItem(parms)
         :onButtonClicked(function(event)
             print("string.split(resource_icon, )[1]",string.split(resource_icon, "_")[1])
             local items = ItemManager:GetItemByName(parms.type.."Class_1")
-            WidgetUseItems.new():Create({item = items}):addToCurrentScene()
+            WidgetUseItems.new():Create({item = items}):AddToCurrentScene()
         end):align(display.CENTER, item_width/2 -30, 0):addTo(content)
         :addChild(display.newSprite("add.png"))
 

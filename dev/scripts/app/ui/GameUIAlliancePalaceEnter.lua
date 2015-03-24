@@ -50,16 +50,16 @@ end
 function GameUIAlliancePalaceEnter:GetEnterButtons()
 	if self:IsMyAlliance() then
 		local info_button = self:BuildOneButton("icon_info_1.png",_("信息")):onButtonClicked(function()
-			UIKit:newGameUI('GameUIAlliancePalace',City,"info",self:GetBuilding()):addToCurrentScene(true)
-			self:leftButtonClicked()
+			UIKit:newGameUI('GameUIAlliancePalace',City,"info",self:GetBuilding()):AddToCurrentScene(true)
+			self:LeftButtonClicked()
 		end)
 		local tax_button = self:BuildOneButton("icon_tax.png",_("奖励")):onButtonClicked(function()
-			 UIKit:newGameUI('GameUIAlliancePalace',City,"impose",self:GetBuilding()):addToCurrentScene(true)
-			self:leftButtonClicked()
+			 UIKit:newGameUI('GameUIAlliancePalace',City,"impose",self:GetBuilding()):AddToCurrentScene(true)
+			self:LeftButtonClicked()
 		end)
 		local upgrade_button = self:BuildOneButton("icon_upgrade_1.png",_("升级")):onButtonClicked(function()
-			UIKit:newGameUI('GameUIAlliancePalace',City,"upgrade",self:GetBuilding()):addToCurrentScene(true)
-			self:leftButtonClicked()
+			UIKit:newGameUI('GameUIAlliancePalace',City,"upgrade",self:GetBuilding()):AddToCurrentScene(true)
+			self:LeftButtonClicked()
 		end)
 	    return {info_button,tax_button,upgrade_button}
 	else

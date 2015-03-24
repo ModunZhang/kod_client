@@ -33,7 +33,7 @@ function GameUIAllianceShrineRewardList:BuildUI()
 	   	:addTo(title_bar)
 	   	:align(display.BOTTOM_RIGHT,title_bar:getContentSize().width, 0)
 	   	:onButtonClicked(function ()
-	   		self:leftButtonClicked()
+	   		self:LeftButtonClicked()
 	   	end)
 
 	self.rewards_listView = UIListView.new({
@@ -50,7 +50,7 @@ function GameUIAllianceShrineRewardList:BuildUI()
 		text = _("确定")
 	}))
 	:onButtonClicked(function()
-		self:leftButtonClicked()
+		self:LeftButtonClicked()
 	end)
 	self:RefreshRewardListView()
 end

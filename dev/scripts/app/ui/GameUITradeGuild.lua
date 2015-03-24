@@ -616,7 +616,7 @@ function GameUITradeGuild:GetOnSellGoods()
     return sell_goods
 end
 function GameUITradeGuild:OpenDollyIntro()
-    local layer = WidgetPopDialog.new(350,_("资源小车"),display.top-240):addToCurrentScene()
+    local layer = WidgetPopDialog.new(350,_("资源小车"),display.top-240):AddToCurrentScene()
     local body = layer:GetBody()
     local w,h = body:getContentSize().width,body:getContentSize().height
 
@@ -663,7 +663,7 @@ function GameUITradeGuild:OpenDollyIntro()
 end
 function GameUITradeGuild:OpenSellDialog()
     local tradeGuildUI = self
-    local root = WidgetPopDialog.new(654,_("出售资源")):addToCurrentScene()
+    local root = WidgetPopDialog.new(654,_("出售资源")):AddToCurrentScene()
     local body = root:GetBody()
     -- 资源，材料出售价格区间
     local PRICE_SCOPE = {
@@ -815,7 +815,7 @@ function GameUITradeGuild:OpenSellDialog()
                 end
                 NetManager:getSellItemPromise(type,goods_type[selected],self.sell_num_item:GetValue(),self.sell_price_item:GetValue())
                     :next(function(result)
-                        self:getParent():leftButtonClicked()
+                        self:getParent():LeftButtonClicked()
                     end)
             end)
 

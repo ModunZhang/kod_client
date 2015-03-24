@@ -150,7 +150,7 @@ function GameUIBlackSmith:InitEquipmentTitle()
         :align(display.CENTER, display.cx, display.top - 140)
         :hide()
         :OnButtonClicked(function(event)
-            GameUIBlackSmithSpeedUp.new(self.black_smith):addToCurrentScene(true)
+            GameUIBlackSmithSpeedUp.new(self.black_smith):AddToCurrentScene(true)
         end)
     -- self.timer:GetSpeedUpButton():setButtonEnabled(false)
     return node
@@ -307,7 +307,7 @@ function GameUIBlackSmith:CreateEquipmentByType(equip_type)
     end
 
     equip_clicked = function(event)
-        WidgetMakeEquip.new(equip_type, self.black_smith, self.black_smith_city):addToCurrentScene()
+        WidgetMakeEquip.new(equip_type, self.black_smith, self.black_smith_city):AddToCurrentScene()
         -- :align(display.CENTER, display.cx, display.cy)
     end
     info_clicked = function(event)

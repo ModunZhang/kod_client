@@ -41,7 +41,7 @@ function GameUIShrineReport:BuildUI()
     local closeButton = UIKit:closeButton():addTo(titleBar)
         :align(display.BOTTOM_RIGHT,titleBar:getContentSize().width, 0)
         :onButtonClicked(function ()
-            self:leftButtonClicked()
+            self:LeftButtonClicked()
         end)
     self.drop_list = WidgetDropList.new(
         {
@@ -153,7 +153,7 @@ function GameUIShrineReport:OnDropListSelected( tag )
 end
 
 function GameUIShrineReport:OnRePlayClicked(roundData)
-    UIKit:newGameUI("GameUIReplay",self:GetShrineReport():GetFightReportObjectWithJson(roundData)):addToCurrentScene(true)
+    UIKit:newGameUI("GameUIReplay",self:GetShrineReport():GetFightReportObjectWithJson(roundData)):AddToCurrentScene(true)
 end
 
 function GameUIShrineReport:RefreshUI(tag)

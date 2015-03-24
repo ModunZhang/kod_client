@@ -73,7 +73,7 @@ function WidgetSliderWithInput:ctor(params)
                         end
                     end
                 }
-                WidgetInput.new(p):addToCurrentScene()
+                WidgetInput.new(p):AddToCurrentScene()
             end
         end):align(display.CENTER, slider:getCascadeBoundingBox().size.width,30):addTo(self)
     self.btn_text = UIKit:ttfLabel({

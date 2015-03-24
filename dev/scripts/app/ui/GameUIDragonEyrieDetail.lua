@@ -76,17 +76,17 @@ function GameUIDragonEyrieDetail:CreateBetweenBgAndTitle()
 	
 end
 
-function GameUIDragonEyrieDetail:onMoveInStage()
-	GameUIDragonEyrieDetail.super.onMoveInStage(self)
+function GameUIDragonEyrieDetail:OnMoveInStage()
+	GameUIDragonEyrieDetail.super.OnMoveInStage(self)
 	self:BuildUI()
 end
 
-function GameUIDragonEyrieDetail:onMoveOutStage()
+function GameUIDragonEyrieDetail:OnMoveOutStage()
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonHatched)
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventTimer)
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventChanged)
-	GameUIDragonEyrieDetail.super.onMoveOutStage(self)
+	GameUIDragonEyrieDetail.super.OnMoveOutStage(self)
 end
 
 function GameUIDragonEyrieDetail:VisibleStarBar(v)
@@ -427,7 +427,7 @@ end
 
 function GameUIDragonEyrieDetail:OnTabButtonClicked(tag)
 	if tag == 'back' then
-		self:leftButtonClicked()
+		self:LeftButtonClicked()
 		return
 	end
 	if not self:GetDragon():Ishated() then return end
@@ -442,7 +442,7 @@ function GameUIDragonEyrieDetail:OnTabButtonClicked(tag)
 end
 
 function GameUIDragonEyrieDetail:HandleClickedOnEquipmentItem(equipment_obj)
-	UIKit:newGameUI("GameUIDragonEquipment",self.building,self:GetDragon(),equipment_obj):addToCurrentScene(true)
+	UIKit:newGameUI("GameUIDragonEquipment",self.building,self:GetDragon(),equipment_obj):AddToCurrentScene(true)
 end
 
 --技能
@@ -575,7 +575,7 @@ end
 
 function GameUIDragonEyrieDetail:SkillListItemClicked(skill)
 	if skill:IsLocked() then return end
-	UIKit:newGameUI("GameUIDragonSkill",self.building,skill):addToCurrentScene(true)
+	UIKit:newGameUI("GameUIDragonSkill",self.building,skill):AddToCurrentScene(true)
 end
 
 --信息
@@ -644,7 +644,7 @@ function GameUIDragonEyrieDetail:GetInfoListItem(index,title,val)
 end
 
 function GameUIDragonEyrieDetail:OnHateSpeedUpClicked()
-	GameUIDragonHateSpeedUp.new(self.dragon_manager,self.dragonEvent__):addToCurrentScene(true)
+	GameUIDragonHateSpeedUp.new(self.dragon_manager,self.dragonEvent__):AddToCurrentScene(true)
 end
 
 -- dragon_body ==> Dragon.DRAGON_BODY.XXX
@@ -663,7 +663,7 @@ function GameUIDragonEyrieDetail:OnHeroBloodUseItemClicked()
 		item_type = WidgetUseItems.USE_TYPE.HERO_BLOOD,
 		dragon = self:GetDragon()
 	})
-	widgetUseItems:addToCurrentScene()
+	widgetUseItems:AddToCurrentScene()
 end
 
 return GameUIDragonEyrieDetail

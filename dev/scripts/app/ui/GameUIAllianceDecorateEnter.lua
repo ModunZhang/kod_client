@@ -60,7 +60,7 @@ function GameUIAllianceDecorateEnter:GetEnterButtons()
         else
         	UIKit:showMessageDialog(nil, _("您没有此操作权限"),function()end)
         end
-		self:leftButtonClicked()
+		self:LeftButtonClicked()
 	end)
  	return {chai_button}
 end

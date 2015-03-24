@@ -145,7 +145,7 @@ function GameUICityInfo:CreateTop()
     ):addTo(top_bg):align(display.CENTER, ox + 195, 50)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                UIKit:newGameUI('GameUIVip', City,"VIP"):addToCurrentScene(true)
+                UIKit:newGameUI('GameUIVip', City,"VIP"):AddToCurrentScene(true)
             end
         end)
     self.vip_level = display.newNode():addTo(vip_btn):pos(-3, 15):scale(0.8)
@@ -193,9 +193,9 @@ function GameUICityInfo:CreateBottom()
                 end
             elseif event.name == "clicked" then
                 if event.pageIdx == 1 then
-                    UIKit:newGameUI('GameUIChatChannel',"global"):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIChatChannel',"global"):AddToCurrentScene(true)
                 elseif event.pageIdx == 2 then
-                    UIKit:newGameUI('GameUIChatChannel',"alliance"):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIChatChannel',"alliance"):AddToCurrentScene(true)
                 end
             end
         end)

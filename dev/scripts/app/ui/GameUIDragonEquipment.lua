@@ -27,9 +27,9 @@ function GameUIDragonEquipment:ctor(building,dragon,equipment_obj)
   self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
 end
 
-function GameUIDragonEquipment:onMoveOutStage()
+function GameUIDragonEquipment:OnMoveOutStage()
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
-    GameUIDragonEquipment.super.onMoveOutStage(self)
+    GameUIDragonEquipment.super.OnMoveOutStage(self)
 end
 
 
@@ -56,7 +56,7 @@ function GameUIDragonEquipment:onEnter()
       :addTo(titleBar)
       :align(display.BOTTOM_RIGHT,titleBar:getContentSize().width, 0)
       :onButtonClicked(function ()
-          self:leftButtonClicked()
+          self:LeftButtonClicked()
       end)
   local mainEquipment = self:GetEquipmentItem()
     :addTo(backgroundImage)
@@ -436,7 +436,7 @@ end
 function GameUIDragonEquipment:OnMakeButtonClicked()
     local blackSmith = City:GetFirstBuildingByType("blackSmith")
     if blackSmith:IsUnlocked() then
-         UIKit:newGameUI('GameUIBlackSmith', City, blackSmith):addToCurrentScene(true)
+         UIKit:newGameUI('GameUIBlackSmith', City, blackSmith):AddToCurrentScene(true)
     end
 end
 

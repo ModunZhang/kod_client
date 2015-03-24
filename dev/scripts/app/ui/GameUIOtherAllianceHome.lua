@@ -68,7 +68,7 @@ function GameUIOtherAllianceHome:TopTabButtons()
         pressed = "btn_100x52.png"})
         :onButtonClicked(function ( event )
             if event.name == "CLICKED_EVENT" then
-                UIKit:newGameUI('GameUIAlliancePosition'):addToCurrentScene(true)
+                UIKit:newGameUI('GameUIAlliancePosition'):AddToCurrentScene(true)
             end
         end)
         :align(display.TOP_CENTER, window.cx,window.top-94)

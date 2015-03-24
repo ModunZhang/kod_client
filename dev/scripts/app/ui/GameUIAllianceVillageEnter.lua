@@ -180,7 +180,7 @@ function GameUIAllianceVillageEnter:OnBuildingChange(alliance_map,add, remove, m
 	if remove then
 		for _,v in ipairs(remove) do
 			if v:Id()== self.map_id then
-				self:leftButtonClicked()
+				self:LeftButtonClicked()
 				hasHandler = true
 			end
 		end
@@ -238,15 +238,15 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 		        	if self:CheckCanAttackVillage() then
 						UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
 		                    NetManager:getAttackVillagePromise(dragonType,soldiers,villageEvent:VillageData().alliance.id,village_id)
-		                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):addToCurrentScene(true)
+		                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):AddToCurrentScene(true)
 					end
-					self:leftButtonClicked()
+					self:LeftButtonClicked()
 				end)
 				local strike_button = self:BuildOneButton("Strike_72x72.png",_("突袭")):onButtonClicked(function()
 					if self:CheckCanAttackVillage() then
-						UIKit:newGameUI("GameUIStrikePlayer",{defenceAllianceId = villageEvent:VillageData().alliance.id,defenceVillageId = village_id},GameUIStrikePlayer.STRIKE_TYPE.VILLAGE):addToCurrentScene(true)
+						UIKit:newGameUI("GameUIStrikePlayer",{defenceAllianceId = villageEvent:VillageData().alliance.id,defenceVillageId = village_id},GameUIStrikePlayer.STRIKE_TYPE.VILLAGE):AddToCurrentScene(true)
 					end
-					self:leftButtonClicked()
+					self:LeftButtonClicked()
 				end)
 				buttons = {attack_button,strike_button}
 		    else --没人占领
@@ -255,15 +255,15 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 		     		if self:CheckCanAttackVillage() then
 						UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
 		                    NetManager:getAttackVillagePromise(dragonType,soldiers,alliance_id,village_id)
-		                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):addToCurrentScene(true)
+		                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):AddToCurrentScene(true)
 					end
-					self:leftButtonClicked()
+					self:LeftButtonClicked()
 				end)
 				local strike_button = self:BuildOneButton("Strike_72x72.png",_("突袭")):onButtonClicked(function()
 					if self:CheckCanAttackVillage() then
-						UIKit:newGameUI("GameUIStrikePlayer",{defenceAllianceId = alliance_id,defenceVillageId = village_id},GameUIStrikePlayer.STRIKE_TYPE.VILLAGE):addToCurrentScene(true)
+						UIKit:newGameUI("GameUIStrikePlayer",{defenceAllianceId = alliance_id,defenceVillageId = village_id},GameUIStrikePlayer.STRIKE_TYPE.VILLAGE):AddToCurrentScene(true)
 					end
-					self:leftButtonClicked()
+					self:LeftButtonClicked()
 				end)
 				buttons = {attack_button,strike_button}
 		    end
@@ -273,15 +273,15 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 	     		if self:CheckCanAttackVillage() then
 					UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
 	                    NetManager:getAttackVillagePromise(dragonType,soldiers,alliance_id,village_id)
-	                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):addToCurrentScene(true)
+	                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):AddToCurrentScene(true)
 				end
-				self:leftButtonClicked()
+				self:LeftButtonClicked()
 			end)
 			local strike_button = self:BuildOneButton("Strike_72x72.png",_("突袭")):onButtonClicked(function()
 				if self:CheckCanAttackVillage() then
-					UIKit:newGameUI("GameUIStrikePlayer",{defenceAllianceId = alliance_id,defenceVillageId = village_id},GameUIStrikePlayer.STRIKE_TYPE.VILLAGE):addToCurrentScene(true)
+					UIKit:newGameUI("GameUIStrikePlayer",{defenceAllianceId = alliance_id,defenceVillageId = village_id},GameUIStrikePlayer.STRIKE_TYPE.VILLAGE):AddToCurrentScene(true)
 				end
-				self:leftButtonClicked()
+				self:LeftButtonClicked()
 			end)
 			buttons = {attack_button,strike_button}
 		end
@@ -289,7 +289,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 		if villageEvent:GetPlayerRole() == villageEvent.EVENT_PLAYER_ROLE.Me then --自己占领
 			local che_button = self:BuildOneButton("village_capture_66x72.png",_("撤军")):onButtonClicked(function()
 				NetManager:getRetreatFromVillagePromise(villageEvent:VillageData().alliance.id,villageEvent:Id())
-				self:leftButtonClicked()
+				self:LeftButtonClicked()
 			end)
 	        buttons =  {che_button}
 	    elseif villageEvent:GetPlayerRole() ==   villageEvent.EVENT_PLAYER_ROLE.Ally then --盟友占领
@@ -297,15 +297,15 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 	     		if self:CheckCanAttackVillage() then
 					UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
 	                    NetManager:getAttackVillagePromise(dragonType,soldiers,alliance_id,village_id)
-	                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):addToCurrentScene(true)
+	                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):AddToCurrentScene(true)
 				end
-				self:leftButtonClicked()
+				self:LeftButtonClicked()
 			end)
 			local strike_button = self:BuildOneButton("Strike_72x72.png",_("突袭")):onButtonClicked(function()
 				if self:CheckCanAttackVillage() then
-					UIKit:newGameUI("GameUIStrikePlayer",{defenceAllianceId = alliance_id,defenceVillageId = village_id},GameUIStrikePlayer.STRIKE_TYPE.VILLAGE):addToCurrentScene(true)
+					UIKit:newGameUI("GameUIStrikePlayer",{defenceAllianceId = alliance_id,defenceVillageId = village_id},GameUIStrikePlayer.STRIKE_TYPE.VILLAGE):AddToCurrentScene(true)
 				end
-				self:leftButtonClicked()
+				self:LeftButtonClicked()
 			end)
 			buttons = {attack_button,strike_button}
 	    end
@@ -313,7 +313,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
  	return buttons
 end
 
-function GameUIAllianceVillageEnter:onMoveOutStage()
+function GameUIAllianceVillageEnter:OnMoveOutStage()
 	self:GetMyAlliance():RemoveListenerOnType(self,self:GetMyAlliance().LISTEN_TYPE.OnVillageEventTimer)
 	self:GetMyAlliance():RemoveListenerOnType(self,self:GetMyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
 	local alliance_map = self:GetMyAlliance():GetAllianceMap()
@@ -324,6 +324,6 @@ function GameUIAllianceVillageEnter:onMoveOutStage()
 		self:GetEnemyAlliance():RemoveListenerOnType(self,self:GetEnemyAlliance().LISTEN_TYPE.OnVillageEventTimer)
 		self:GetEnemyAlliance():RemoveListenerOnType(self,self:GetEnemyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
 	end
-	GameUIAllianceVillageEnter.super.onMoveOutStage(self)
+	GameUIAllianceVillageEnter.super.OnMoveOutStage(self)
 end
 return GameUIAllianceVillageEnter

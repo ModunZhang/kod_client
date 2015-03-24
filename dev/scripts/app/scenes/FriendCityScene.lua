@@ -8,7 +8,7 @@ function FriendCityScene:ctor(user, city)
 end
 function FriendCityScene:onEnter()
     FriendCityScene.super.onEnter(self)
-    UIKit:newGameUI('GameUICityInfo', self.user):addToScene(self):setTouchSwallowEnabled(false)
+    UIKit:newGameUI('GameUICityInfo', self.user):AddToScene(self):setTouchSwallowEnabled(false)
 end
 
 function FriendCityScene:OnTouchClicked(pre_x, pre_y, x, y)
@@ -17,7 +17,7 @@ function FriendCityScene:OnTouchClicked(pre_x, pre_y, x, y)
         if iskindof(building, "HelpedTroopsSprite") then
             local type_ = GameUIWatchTowerTroopDetail.DATA_TYPE.HELP_DEFENCE
             local helped = self.city:GetHelpedByTroops()[building:GetIndex()]
-            UIKit:newGameUI("GameUIWatchTowerTroopDetail", type_, helped, self.user:Id()):addToCurrentScene(true)
+            UIKit:newGameUI("GameUIWatchTowerTroopDetail", type_, helped, self.user:Id()):AddToCurrentScene(true)
         end
     end
 end

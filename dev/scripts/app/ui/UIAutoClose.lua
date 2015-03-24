@@ -13,7 +13,7 @@ function UIAutoClose:ctor(params)
             if node.disable then
                 return
             end
-            self:leftButtonClicked()
+            self:LeftButtonClicked()
         end
         return true
     end)

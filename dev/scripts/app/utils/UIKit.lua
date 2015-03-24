@@ -61,7 +61,7 @@ end
 function UIKit:newGameUI(gameUIName,... )
     if self.Registry.isObjectExists(gameUIName) then
         print("已经创建过一个Object-->",gameUIName)
-        return {addToCurrentScene=function(...)end,addToScene=function(...)end} -- 适配后面的调用不报错
+        return {AddToCurrentScene=function(...)end,AddToScene=function(...)end} -- 适配后面的调用不报错
     end
     local viewPackageName = app.packageRoot .. ".ui." .. gameUIName
     local viewClass = require(viewPackageName)
@@ -127,7 +127,7 @@ function UIKit:closeAllUI()
     for name,v in pairs(self:getRegistry().objects_) do
 
         if v.__isBase and v.__type ~= self.UITYPE.BACKGROUND then
-            v:leftButtonClicked()
+            v:LeftButtonClicked()
         end
     end
 end

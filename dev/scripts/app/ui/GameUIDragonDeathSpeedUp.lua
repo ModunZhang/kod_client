@@ -41,7 +41,7 @@ end
 function GameUIDragonDeathSpeedUp:OnDragonDeathEventChanged()
 	local dragonDeathEvent = self.dragon_manager:GetDragonDeathEventByType(self.dragon_type)
 	if not dragonDeathEvent then 
-		self:leftButtonClicked()
+		self:LeftButtonClicked()
 	end
 end
 

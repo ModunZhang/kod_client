@@ -51,17 +51,17 @@ end
 function GameUIAllianceOrderHallEnter:GetEnterButtons()
 	if self:IsMyAlliance() then
 		local info_button = self:BuildOneButton("icon_info_1.png",_("熟练度")):onButtonClicked(function()
-			UIKit:newGameUI('GameUIOrderHall',City,"proficiency",self:GetBuilding()):addToCurrentScene(true)
-			self:leftButtonClicked()
+			UIKit:newGameUI('GameUIOrderHall',City,"proficiency",self:GetBuilding()):AddToCurrentScene(true)
+			self:LeftButtonClicked()
 		end)
 
 		local village_button = self:BuildOneButton("village_capture_66x72.png",_("村落管理")):onButtonClicked(function()
-			 UIKit:newGameUI('GameUIOrderHall',City,"village",self:GetBuilding()):addToCurrentScene(true)
-			self:leftButtonClicked()
+			 UIKit:newGameUI('GameUIOrderHall',City,"village",self:GetBuilding()):AddToCurrentScene(true)
+			self:LeftButtonClicked()
 		end)
 		local upgrade_button = self:BuildOneButton("icon_upgrade_1.png",_("升级")):onButtonClicked(function()
-			 UIKit:newGameUI('GameUIOrderHall',City,"upgrade",self:GetBuilding()):addToCurrentScene(true)
-			self:leftButtonClicked()
+			 UIKit:newGameUI('GameUIOrderHall',City,"upgrade",self:GetBuilding()):AddToCurrentScene(true)
+			self:LeftButtonClicked()
 		end)
     	return {info_button,village_button,upgrade_button}
     else

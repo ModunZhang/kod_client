@@ -20,7 +20,7 @@ function WidgetPVEStartAirship:SetUpButtons()
         {
             {
                 label = _("传送"), callback = function()
-                    WidgetPVESelectStage.new(self.user):addToCurrentScene(true)
+                    WidgetPVESelectStage.new(self.user):AddToCurrentScene(true)
                     self:removeFromParent()
                 end
             },

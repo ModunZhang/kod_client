@@ -19,8 +19,8 @@ function GameUIDwelling:CreateUI()
     self.citizen_panel = self:CreateCitizenPanel()
     self:createTabButtons()
 end
-function GameUIDwelling:onMoveOutStage()
-    GameUIDwelling.super.onMoveOutStage(self)
+function GameUIDwelling:OnMoveOutStage()
+    GameUIDwelling.super.OnMoveOutStage(self)
 end
 function GameUIDwelling:CreateCitizenPanel()
     return WidgetCitizen.new(self.city):addTo(self)

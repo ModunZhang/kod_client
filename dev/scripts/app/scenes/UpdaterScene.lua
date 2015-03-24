@@ -11,7 +11,7 @@ function UpdaterScene:ctor()
 end
 
 function UpdaterScene:onEnter()
-    self.ui:addToScene(self,false)
+    self.ui:AddToScene(self,false)
 end
 
 function UpdaterScene:onExit()

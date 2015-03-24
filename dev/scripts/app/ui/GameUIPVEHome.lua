@@ -84,7 +84,7 @@ function GameUIPVEHome:CreateTop()
         {normal = "gem_btn_up_196x68.png", pressed = "gem_btn_down_196x68.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        UIKit:newGameUI('GameUIShop', City):addToCurrentScene(true)
+        UIKit:newGameUI('GameUIShop', City):AddToCurrentScene(true)
     end):addTo(top_bg):pos(top_bg:getContentSize().width - 130, -16)
     display.newSprite("gem_icon_62x61.png"):addTo(button):pos(60, 3)
     self.gem_label = UIKit:ttfLabel({
@@ -162,7 +162,7 @@ function GameUIPVEHome:CreateBottom()
         :onButtonClicked(function ( event )
             WidgetUseItems.new():Create({
                         item_type = WidgetUseItems.USE_TYPE.STAMINA
-                    }):addToCurrentScene()
+                    }):AddToCurrentScene()
         end):scale(0.6)
     
 
@@ -193,9 +193,9 @@ function GameUIPVEHome:CreateBottom()
                 end
             elseif event.name == "clicked" then
                 if event.pageIdx == 1 then
-                    UIKit:newGameUI('GameUIChatChannel',"global"):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIChatChannel',"global"):AddToCurrentScene(true)
                 elseif event.pageIdx == 2 then
-                    UIKit:newGameUI('GameUIChatChannel',"alliance"):addToCurrentScene(true)
+                    UIKit:newGameUI('GameUIChatChannel',"alliance"):AddToCurrentScene(true)
                 end
             end
         end)

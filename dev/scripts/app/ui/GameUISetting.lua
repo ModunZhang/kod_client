@@ -23,7 +23,7 @@ function GameUISetting:OnTimer(current_time)
 end
 
 function GameUISetting:BuildUI()
-	local header_bg = UIKit:CreateBoxPanelWithBorder({height = 58}):align(display.TOP_CENTER, window.cx, window.top_bottom):addTo(self)
+	local header_bg = UIKit:CreateBoxPanelWithBorder({height = 58}):align(display.TOP_CENTER, window.cx, window.top_bottom):addTo(self:GetView())
 	self.timer_label = UIKit:ttfLabel({
 		text = _("世界时间:") ..  os.date('!%Y-%m-%d %H:%M:%S', app.timer:GetServerTime()),
 		size = 22,
@@ -70,7 +70,7 @@ function GameUISetting:BuildUI()
 	    		size = 18
     		}))
 	    	:setButtonLabelOffset(0,-70)
-	        :addTo(self)
+	        :addTo(self:GetView())
 	        :align(display.LEFT_TOP,x, y)
 	        :onButtonClicked(function(event)
            		self:OnButtonClicked(button)
@@ -94,11 +94,11 @@ function GameUISetting:OnButtonClicked(button)
 	if tag == 1 then
 		 GameGlobalUI:showTips("提示","功能还未实现")
 	elseif tag == 2 then
-		UIKit:newGameUI("GameUISettingServer"):addToCurrentScene(true)
+		UIKit:newGameUI("GameUISettingServer"):AddToCurrentScene(true)
 	elseif tag == 3 then
-		UIKit:newGameUI("GameUISettingLanguage"):addToCurrentScene(true)
+		UIKit:newGameUI("GameUISettingLanguage"):AddToCurrentScene(true)
 	elseif tag == 4 then
-		UIKit:newGameUI("GameUITips"):addToCurrentScene(true)
+		UIKit:newGameUI("GameUITips"):AddToCurrentScene(true)
 	elseif tag == 5 then
 		GameGlobalUI:showTips("提示","功能还未实现")
 	elseif tag == 6 then
@@ -116,15 +116,15 @@ function GameUISetting:OnButtonClicked(button)
 		button.normal_image:setVisible(is_open)
 		button.state_image:setVisible(not is_open)
 	elseif tag == 9 then
-		UIKit:newGameUI("GameUISettingPush"):addToCurrentScene(self)
+		UIKit:newGameUI("GameUISettingPush"):AddToCurrentScene(self)
 	elseif tag == 10 then
-		UIKit:newGameUI("GameUISettingShield"):addToCurrentScene(self)
+		UIKit:newGameUI("GameUISettingShield"):AddToCurrentScene(self)
 	elseif tag == 11 then
 		if ext.userVoice then
 			ext.userVoice()
 		end
 	elseif tag == 12 then
-		UIKit:newGameUI("GameUISettingFaq"):addToCurrentScene(self)
+		UIKit:newGameUI("GameUISettingFaq"):AddToCurrentScene(self)
 	end
 end
 

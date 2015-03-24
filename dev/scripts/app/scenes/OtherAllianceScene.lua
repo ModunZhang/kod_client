@@ -28,7 +28,7 @@ end
 
 function OtherAllianceScene:CreateAllianceUI()
  
-	local home = UIKit:newGameUI('GameUIOtherAllianceHome',self:GetAlliance()):addToScene(self)
+	local home = UIKit:newGameUI('GameUIOtherAllianceHome',self:GetAlliance()):AddToScene(self)
     self:GetSceneLayer():AddObserver(home)
     home:setTouchSwallowEnabled(false)
 end

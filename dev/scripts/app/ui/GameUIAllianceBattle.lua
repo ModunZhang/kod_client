@@ -557,7 +557,7 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
     local alliance_terrain = isOur and alliance:Terrain() or enemy_alliance:Terrain()
 
 
-    local body = WidgetPopDialog.new(726,_("联盟详情")):addToCurrentScene():GetBody()
+    local body = WidgetPopDialog.new(726,_("联盟详情")):AddToCurrentScene():GetBody()
     local rb_size = body:getContentSize()
 
 
@@ -661,7 +661,7 @@ end
 
 
 function GameUIAllianceBattle:OpenWarDetails()
-    local body = WidgetPopDialog.new(608,_("联盟对战")):addToCurrentScene():GetBody()
+    local body = WidgetPopDialog.new(608,_("联盟对战")):AddToCurrentScene():GetBody()
     local rb_size = body:getContentSize()
 
     local war_introduce_table = {
@@ -717,7 +717,7 @@ function GameUIAllianceBattle:OpenWarDetails()
 
 end
 function GameUIAllianceBattle:OpenRequestFightList()
-    local body = WidgetPopDialog.new(500,_("请求开战玩家")):addToCurrentScene():GetBody()
+    local body = WidgetPopDialog.new(500,_("请求开战玩家")):AddToCurrentScene():GetBody()
     local rb_size = body:getContentSize()
 
     WidgetInfo.new({

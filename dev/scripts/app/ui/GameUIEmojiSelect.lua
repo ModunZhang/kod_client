@@ -26,7 +26,7 @@ function GameUIEmojiSelect:onEnter()
     UIKit:closeButton():addTo(header)
         :align(display.BOTTOM_RIGHT,header:getContentSize().width, 0)
         :onButtonClicked(function ()
-            self:leftButtonClicked()
+            self:LeftButtonClicked()
         end)
     local title_label = UIKit:ttfLabel({
         text = _("表情"),
@@ -111,12 +111,12 @@ function GameUIEmojiSelect:DisplayEmojiWith_Flower()
 	return self.emoji_node_flower 
 end
 
-function GameUIEmojiSelect:onMoveOutStage()
+function GameUIEmojiSelect:OnMoveOutStage()
 	self.content = nil
 	self.emoji_node_smiley = nil
 	self.emoji_node_flower = nil
 
-	GameUIEmojiSelect.super.onMoveOutStage(self)
+	GameUIEmojiSelect.super.OnMoveOutStage(self)
 end
 
 function GameUIEmojiSelect:__callFunc(key)

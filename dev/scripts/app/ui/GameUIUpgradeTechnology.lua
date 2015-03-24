@@ -26,8 +26,8 @@ function GameUIUpgradeTechnology:onEnter()
     self:RefreshButtonState()
 end
 
-function GameUIUpgradeTechnology:onMoveOutStage()
-    GameUIUpgradeTechnology.super.onMoveOutStage(self)
+function GameUIUpgradeTechnology:OnMoveOutStage()
+    GameUIUpgradeTechnology.super.OnMoveOutStage(self)
     City:RemoveListenerOnType(self,City.LISTEN_TYPE.PRODUCTION_DATA_CHANGED)
 end
 
@@ -144,7 +144,7 @@ function GameUIUpgradeTechnology:BuildUI()
 	local bg_node =  WidgetUIBackGround.new({height = HEIGHT,isFrame = "no"}):addTo(self):align(display.TOP_CENTER, window.cx, window.top_bottom - 100)
 	local title_bar = display.newSprite("title_blue_600x52.png"):align(display.BOTTOM_CENTER,304,HEIGHT - 15):addTo(bg_node)
 	UIKit:closeButton():align(display.RIGHT_BOTTOM,600, 0):addTo(title_bar):onButtonClicked(function()
-		self:leftButtonClicked()
+		self:LeftButtonClicked()
 	end)
 	UIKit:ttfLabel({text = _("科技研发"),
 		size = 22,
@@ -346,7 +346,7 @@ function GameUIUpgradeTechnology:OnUpgradButtonClicked()
         return
     elseif gems_cost == 0 then
         NetManager:getUpgradeProductionTechPromise(self:GetProductionTechnology():Name(),false):next(function(msg)
-            self:leftButtonClicked()
+            self:LeftButtonClicked()
         end)
     else
         local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示")):SetPopMessage(msg)
@@ -364,7 +364,7 @@ function GameUIUpgradeTechnology:ForceUpgrade(gem_cost)
          UIKit:showMessageDialog(_("提示"),_("宝石不足"), function()end)
     else
          NetManager:getUpgradeProductionTechPromise(self:GetProductionTechnology():Name(),false):next(function(msg)
-            self:leftButtonClicked()
+            self:LeftButtonClicked()
         end)
     end
 end

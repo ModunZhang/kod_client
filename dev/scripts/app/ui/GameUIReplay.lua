@@ -226,7 +226,7 @@ function GameUIReplay:onEnter()
         color = UIKit:hex2c3b(0xfff3c7)}))
         :addTo(back_ground):align(display.CENTER, back_width - 100, 50)
         :onButtonClicked(function(event)
-            self:leftButtonClicked()
+            self:LeftButtonClicked()
         end)
 
 

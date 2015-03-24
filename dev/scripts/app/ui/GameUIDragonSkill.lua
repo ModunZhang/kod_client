@@ -39,7 +39,7 @@ function GameUIDragonSkill:onEnter()
     self.titleBar = titleBar
     UIKit:closeButton():align(display.RIGHT_BOTTOM,600, 0)
       :addTo(titleBar):onButtonClicked(function()
-          self:leftButtonClicked()
+          self:LeftButtonClicked()
       end)
   local skillBg = display.newSprite("dragon_skill_box_84x84.png")
         :addTo(self.backgroundImage):align(display.LEFT_TOP,30,titleBar:getPositionY() - 20)
@@ -116,9 +116,9 @@ function GameUIDragonSkill:RefreshUI()
   self.upgradeButton:setButtonEnabled(self:CanUpgrade())
 end
 
-function GameUIDragonSkill:onMoveOutStage()
+function GameUIDragonSkill:OnMoveOutStage()
   self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
-  GameUIDragonSkill.super.onMoveOutStage(self)
+  GameUIDragonSkill.super.OnMoveOutStage(self)
 end
 
 function GameUIDragonSkill:UpgradeButtonClicked()

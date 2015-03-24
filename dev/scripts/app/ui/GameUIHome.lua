@@ -73,11 +73,20 @@ end
 
 function GameUIHome:DisplayOn()
     self.visible_count = self.visible_count + 1
-    self:setVisible(self.visible_count > 0)
+    -- self:setVisible(self.visible_count > 0)
+    self:FadeToSelf(self.visible_count > 0)
 end
 function GameUIHome:DisplayOff()
     self.visible_count = self.visible_count - 1
-    self:setVisible(self.visible_count > 0)
+    -- self:setVisible(self.visible_count > 0)
+    self:FadeToSelf(self.visible_count > 0)
+end
+
+function GameUIHome:FadeToSelf(isFullDisplay)
+    self:setCascadeOpacityEnabled(true)
+    local opacity = isFullDisplay == true and 255 or 0
+    -- self.event_tab:setVisible(isFullDisplay)
+    transition.fadeTo(self, {opacity = opacity, time = 0.5})
 end
 
 function GameUIHome:onEnter()
@@ -87,6 +96,7 @@ function GameUIHome:onEnter()
     -- 上背景
     self:CreateTop()
     self.bottom = self:CreateBottom()
+    self.bottom:setCascadeOpacityEnabled(true)
     local ratio = self.bottom:getScale()
     self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
     self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
@@ -202,7 +212,7 @@ end
 
 function GameUIHome:CreateTop()
     local top_bg = display.newSprite("top_bg_768x116.png"):addTo(self)
-        :align(display.TOP_CENTER, display.cx, display.top )
+        :align(display.TOP_CENTER, display.cx, display.top ):setCascadeOpacityEnabled(true)
     if display.width>640 then
         top_bg:scale(display.width/768)
     end
@@ -213,7 +223,7 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI('GameUIVip', City,"info"):addToCurrentScene(true)
+            UIKit:newGameUI('GameUIVip', City,"info"):AddToCurrentScene(true)
         end
     end):addTo(top_bg):align(display.LEFT_CENTER,top_bg:getContentSize().width/2-2, top_bg:getContentSize().height/2+10)
     button:setRotationSkewY(180)
@@ -222,7 +232,7 @@ function GameUIHome:CreateTop()
     -- 玩家名字背景加文字
     local ox = 159
     local name_bg = display.newSprite("player_name_bg_168x30.png"):addTo(top_bg)
-        :align(display.TOP_LEFT, ox, top_bg:getContentSize().height-10)
+        :align(display.TOP_LEFT, ox, top_bg:getContentSize().height-10):setCascadeOpacityEnabled(true)
     self.name_label = cc.ui.UILabel.new({
         text = "",
         size = 18,
@@ -259,7 +269,7 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI("GameUIResourceOverview",self.city):addToCurrentScene(true)
+            UIKit:newGameUI("GameUIResourceOverview",self.city):AddToCurrentScene(true)
         end
     end):addTo(top_bg):align(display.LEFT_CENTER, top_bg:getContentSize().width/2+2, top_bg:getContentSize().height/2+10)
 
@@ -292,9 +302,9 @@ function GameUIHome:CreateTop()
 
     -- 玩家信息背景
     local player_bg = display.newSprite("player_bg_110x106.png"):addTo(top_bg, 2)
-        :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10)
+        :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10):setCascadeOpacityEnabled(true)
     display.newSprite("player_icon_110x106.png"):addTo(player_bg):pos(55, 53)
-    local level_bg = display.newSprite("level_bg_74x24.png"):addTo(player_bg):pos(55, 30)
+    local level_bg = display.newSprite("level_bg_74x24.png"):addTo(player_bg):pos(55, 30):setCascadeOpacityEnabled(true)
     self.level_label = UIKit:ttfLabel({
         size = 20,
         color = 0xfff1cc,
@@ -309,7 +319,7 @@ function GameUIHome:CreateTop()
     ):addTo(top_bg):align(display.CENTER, ox + 195, 50)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                UIKit:newGameUI('GameUIVip', City,"VIP"):addToCurrentScene(true)
+                UIKit:newGameUI('GameUIVip', City,"VIP"):AddToCurrentScene(true)
             end
         end)
     local vip_btn_img = User:IsVIPActived() and "vip_bg_110x124.png" or "vip_bg_disable_110x124.png"
@@ -325,7 +335,7 @@ function GameUIHome:CreateTop()
         {normal = "gem_btn_up_196x68.png", pressed = "gem_btn_down_196x68.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        UIKit:newGameUI('GameUIShop', City):addToCurrentScene(true)
+        UIKit:newGameUI('GameUIShop', City):AddToCurrentScene(true)
     end):addTo(top_bg):pos(top_bg:getContentSize().width - 155, -16)
     display.newSprite("gem_icon_62x61.png"):addTo(button):pos(60, 3)
     self.gem_label = UIKit:ttfLabel({
@@ -365,7 +375,7 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI("GameUIActivity",City):addToCurrentScene()
+            UIKit:newGameUI("GameUIActivity",City):AddToCurrentScene()
         end
     end):addTo(self):pos(display.right-40, display.top-200):scale(0.6)
     --帮助
@@ -375,7 +385,7 @@ function GameUIHome:CreateTop()
     )
     button:onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI("GameUITips",button):addToCurrentScene(true)
+            UIKit:newGameUI("GameUITips",button):AddToCurrentScene(true)
         end
     end):addTo(self):pos(display.right-40, display.top-290):scale(0.5)
 
@@ -384,7 +394,7 @@ function GameUIHome:CreateTop()
         {normal = "buff_1_128x128.png", pressed = "buff_1_128x128.png"}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI("GameUIBuff",self.city):addToCurrentScene()
+            UIKit:newGameUI("GameUIBuff",self.city):AddToCurrentScene()
         end
     end):addTo(self):pos(display.left+40, display.top-200)
         :scale(0.5)
@@ -405,6 +415,7 @@ function GameUIHome:CreateBottom()
     local chat_bg = display.newSprite("chat_background.png")
         :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-11)
         :addTo(bottom_bg)
+    chat_bg:setCascadeOpacityEnabled(true)
     cc.ui.UIImage.new("chat_btn_60x48.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width-60, 0)
     local index_1 = display.newSprite("chat_page_index_1.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2-10,chat_bg:getContentSize().height-10)
     local index_2 = display.newSprite("chat_page_index_2.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2+10,chat_bg:getContentSize().height-10)
@@ -427,9 +438,9 @@ function GameUIHome:CreateBottom()
             end
         elseif event.name == "clicked" then
             if event.pageIdx == 1 then
-                UIKit:newGameUI('GameUIChatChannel',"global"):addToCurrentScene(true)
+                UIKit:newGameUI('GameUIChatChannel',"global"):AddToCurrentScene(true)
             elseif event.pageIdx == 2 then
-                UIKit:newGameUI('GameUIChatChannel',"alliance"):addToCurrentScene(true)
+                UIKit:newGameUI('GameUIChatChannel',"alliance"):AddToCurrentScene(true)
             end
         end
     end)
@@ -563,15 +574,15 @@ function GameUIHome:OnBottomButtonClicked(event)
     local tag = event.target:getTag()
     if not tag then return end
     if tag == 4 then -- tag 4 = alliance button
-        UIKit:newGameUI('GameUIAlliance'):addToCurrentScene(true)
+        UIKit:newGameUI('GameUIAlliance'):AddToCurrentScene(true)
     elseif tag == 3 then
-        UIKit:newGameUI('GameUIMail',_("邮件"),self.city):addToCurrentScene(true)
+        UIKit:newGameUI('GameUIMail',_("邮件"),self.city):AddToCurrentScene(true)
     elseif tag == 2 then
-        UIKit:newGameUI('GameUIItems',_("道具"),self.city):addToCurrentScene(true)
+        UIKit:newGameUI('GameUIItems',_("道具"),self.city):AddToCurrentScene(true)
     elseif tag == 1 then
-        UIKit:newGameUI('GameUIMission',self.city):addToCurrentScene(true)
+        UIKit:newGameUI('GameUIMission',self.city):AddToCurrentScene(true)
     elseif tag == 5 then
-        UIKit:newGameUI('GameUISetting',self.city):addToCurrentScene(true)
+        UIKit:newGameUI('GameUISetting',self.city):AddToCurrentScene(true)
     end
 
 

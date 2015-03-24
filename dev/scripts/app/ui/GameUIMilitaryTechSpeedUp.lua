@@ -24,7 +24,7 @@ end
 
 function GameUIMilitaryTechSpeedUp:FreeSpeedUpAction()
     NetManager:getFreeSpeedUpPromise(self:GetEvent():GetEventType(),self:GetEvent():Id()):next(function()
-        self:leftButtonClicked()
+        self:LeftButtonClicked()
     end)
 end
 
@@ -52,7 +52,7 @@ function GameUIMilitaryTechSpeedUp:OnMilitaryTechEventsChanged(changed_map)
     if changed_map[3] then
         for i,v in ipairs(changed_map[3]) do
             if v:Id() ==  self.militaryEvent:Id() then
-                self:leftButtonClicked()
+                self:LeftButtonClicked()
             end
         end
     end
@@ -61,7 +61,7 @@ function GameUIMilitaryTechSpeedUp:OnSoldierStarEventsChanged(changed_map)
     if changed_map[3] then
         for i,v in ipairs(changed_map[3]) do
             if v:Id() ==  self.militaryEvent:Id() then
-                self:leftButtonClicked()
+                self:LeftButtonClicked()
             end
         end
     end

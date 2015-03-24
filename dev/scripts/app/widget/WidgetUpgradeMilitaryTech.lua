@@ -115,7 +115,7 @@ function WidgetUpgradeMilitaryTech:UpgradeButtons()
             listener = function ()
                 local upgrade_listener = function()
                     NetManager:getUpgradeMilitaryTechPromise(self.tech:Name())
-                    self:leftButtonClicked()
+                    self:LeftButtonClicked()
                 end
 
                 local results = self.tech:IsAbleToUpgrade()
