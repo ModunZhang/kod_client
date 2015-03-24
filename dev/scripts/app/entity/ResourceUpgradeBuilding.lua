@@ -35,7 +35,7 @@ function ResourceUpgradeBuilding:GetNextLevelLevelCitizen()
 end
 function ResourceUpgradeBuilding:GetProductionPerHour()
     local config = config_house_function[self:GetType()]
-    local current_config = config[self:GetEfficiencyLevel()].poduction
+    return config[self:GetEfficiencyLevel()].poduction
 end
 function ResourceUpgradeBuilding:GetNextLevelProductionPerHour()
     local config = config_house_function[self:GetType()]
