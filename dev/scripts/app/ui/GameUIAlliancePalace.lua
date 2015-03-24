@@ -24,8 +24,8 @@ function GameUIAlliancePalace:ctor(city,default_tab,building)
     self.alliance = Alliance_Manager:GetMyAlliance()
 end
 
-function GameUIAlliancePalace:onEnter()
-    GameUIAlliancePalace.super.onEnter(self)
+function GameUIAlliancePalace:OnMoveInStage()
+    GameUIAlliancePalace.super.OnMoveInStage(self)
     self:CreateTabButtons({
         {
             label = _("奖励"),
@@ -62,11 +62,9 @@ function GameUIAlliancePalace:CreateBetweenBgAndTitle()
     GameUIAlliancePalace.super.CreateBetweenBgAndTitle(self)
 
     -- impose_layer
-    self.impose_layer = display.newLayer()
-    self:addChild(self.impose_layer)
+    self.impose_layer = display.newLayer():addTo(self:GetView())
     -- info_layer
-    self.info_layer = display.newLayer()
-    self:addChild(self.info_layer)
+    self.info_layer = display.newLayer():addTo(self:GetView())
 end
 function GameUIAlliancePalace:onExit()
     local alliance = self.alliance

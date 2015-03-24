@@ -28,8 +28,8 @@ function GameUIOrderHall:ctor(city,default_tab,building)
     self.alliance = Alliance_Manager:GetMyAlliance()
 end
 
-function GameUIOrderHall:onEnter()
-    GameUIOrderHall.super.onEnter(self)
+function GameUIOrderHall:OnMoveInStage()
+    GameUIOrderHall.super.OnMoveInStage(self)
     self:CreateTabButtons({
         {
             label = _("村落管理"),
@@ -64,11 +64,9 @@ function GameUIOrderHall:CreateBetweenBgAndTitle()
     GameUIOrderHall.super.CreateBetweenBgAndTitle(self)
 
     -- village_layer
-    self.village_layer = display.newLayer()
-    self:addChild(self.village_layer)
+    self.village_layer = display.newLayer():addTo(self:GetView())
     -- proficiency_layer
-    self.proficiency_layer = display.newLayer()
-    self:addChild(self.proficiency_layer)
+    self.proficiency_layer = display.newLayer():addTo(self:GetView())
 end
 
 function GameUIOrderHall:InitVillagePart()

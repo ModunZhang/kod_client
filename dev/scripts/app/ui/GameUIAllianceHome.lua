@@ -569,7 +569,7 @@ end
 function GameUIAllianceHome:OnTopButtonClicked(event)
     print("OnTopButtonClicked=",event.name)
     if event.name == "CLICKED_EVENT" then
-        UIKit:newGameUI("GameUIAllianceBattle",City):AddToCurrentScene()
+        UIKit:newGameUI("GameUIAllianceBattle",City):AddToCurrentScene(true)
     end
 end
 function GameUIAllianceHome:OnBottomButtonClicked(event)
