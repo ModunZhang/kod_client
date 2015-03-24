@@ -73,7 +73,8 @@ function MyCityScene:AddIndicateForBuilding(building_sprite)
     end
     function arrow:OnBuildingUpgrading()
     end
-
+    function arrow:OnCheckUpgradingCondition()
+    end
     local seq_1 = transition.sequence{
         cc.ScaleTo:create(0.4, 0.8),
         cc.ScaleTo:create(0.4, 0.4)

@@ -314,7 +314,7 @@ function CommonUpgradeUI:InitUpgradePart()
                                 end)
                         end
                     end
-                    self:getParent():LeftButtonClicked()
+                    self:getParent():getParent():LeftButtonClicked()
                 end
 
                 local can_not_update_type = self.building:IsAbleToUpgrade(false)
@@ -389,7 +389,7 @@ function CommonUpgradeUI:GotoPreconditionBuilding()
     end
     local current_scene =display.getRunningScene()
     local building_sprite = current_scene:GetSceneLayer():FindBuildingSpriteByBuilding(jump_building, self.city)
-    self:getParent():LeftButtonClicked()
+    self:getParent():getParent():LeftButtonClicked()
     current_scene:GotoLogicPoint(jump_building:GetLogicPosition())
     if current_scene.AddIndicateForBuilding then
         current_scene:AddIndicateForBuilding(building_sprite)
@@ -584,7 +584,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
                 {
                     listener = function()
                         UIKit:newGameUI('GameUIShop', City):AddToCurrentScene(true)
-                        self:getParent():LeftButtonClicked()
+                        self:getParent():getParent():LeftButtonClicked()
                     end
                 }
             )

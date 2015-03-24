@@ -149,8 +149,13 @@ function GameUIHelp:CheckEventFinished(help_event)
         end)
     elseif type == "militaryTechEvents" then
         city:GetSoldierManager():IteratorMilitaryTechEvents(function(militaryTechEvent)
-            print("militaryTechEvents ==  ",militaryTechEvent:Name())
             if militaryTechEvent:Id() == event_id then
+                isFinished = false
+            end
+        end)
+    elseif type == "soldierStarEvents" then
+        city:GetSoldierManager():IteratorSoldierStarEvents(function(soldierStarEvent)
+            if soldierStarEvent:Id() == event_id then
                 isFinished = false
             end
         end)
@@ -352,6 +357,7 @@ function GameUIHelp:onExit()
 end
 
 return GameUIHelp
+
 
 
 

@@ -308,14 +308,11 @@ function MailManager:OnNewMailsChanged( mails )
                 -- 收到
                 if not data.index then
                     data.index = self.mails[1].index + 1
-                    print("收到新邮件，计算服务器下标,客服端最新邮件下标",self.mails[1].index)
                 end
                 table.insert(add_mails, data)
                 table.insert(self.mails, 1, data)
                 self:IncreaseUnReadMailsNum(1)
 
-                -- 由于当前 DataManager中的mails 最新这条是服务器的index,需要修正为客户端index
-                LuaUtils:outputTable("DataManager:需要修正为客户端index().mails", DataManager:getUserData().mails)
 
                 local u_mails = DataManager:getUserData().mails
                 local max_index = 0
@@ -325,8 +322,6 @@ function MailManager:OnNewMailsChanged( mails )
                 local max_mail = u_mails[max_index]
                 local temp_mail = table.remove(u_mails,max_index)
                 table.insert(u_mails, 1 ,temp_mail)
-                LuaUtils:outputTable("DataManager:getUserData().mails", DataManager:getUserData().mails)
-                print("ta")
             end
         elseif type == "remove" then
             for i,data in ipairs(mail) do
@@ -407,8 +402,6 @@ function MailManager:OnUserDataChanged(userData,timer,deltaData)
         self:OnSavedMailsChanged(userData.savedMails)
         self:OnSendMailsChanged(userData.sendMails)
     end
-    LuaUtils:outputTable("MailManager deltaData", deltaData)
-    print("ta")
     is_delta_update = not is_fully_update and deltaData.mails ~= nil
     if is_delta_update then
         self:OnNewMailsChanged(deltaData.mails)
@@ -456,7 +449,6 @@ function MailManager:OnNewReportsChanged( __reports )
                 self:IncreaseUnReadReportNum(1)
 
                 -- 由于当前 DataManager中的reports 最新这条是服务器的index,需要修正为客户端index
-                LuaUtils:outputTable("DataManager:需要修正为客户端index().reports", DataManager:getUserData().reports)
 
                 local u_reports = DataManager:getUserData().reports
                 local max_index = 0
@@ -466,8 +458,6 @@ function MailManager:OnNewReportsChanged( __reports )
                 local max_mail = u_reports[max_index]
                 local temp_report = table.remove(u_reports,max_index)
                 table.insert(u_reports, 1 ,temp_report)
-                LuaUtils:outputTable("DataManager:getUserData().reports", DataManager:getUserData().reports)
-                print("ta")
             end
         elseif type == "remove" then
             for k,data in pairs(rp) do
