@@ -1179,12 +1179,13 @@ end
 
 function UIListView:insertItemAndRefresh(listItem, pos)
     assert(not self.bAsyncLoad, "UIListView:insertItemAndRefresh() - Asyncload not support insertItemAndRefresh")
+    local pre_x,pre_y = self.container:getPosition()
     self:addItem(listItem, pos)
     self:layout_()
     local item_width,item_height = listItem:getItemSize()
-    local pre_x,pre_y = self.container:getPosition()
     if self.direction == UIListView.DIRECTION_VERTICAL then
-        self.container:setPosition(0, pre_y-item_height)
+    self.container:setPosition(0, pre_y-item_height)
+        print("insertItemAndRefresh  item_height=",item_height,"pre_y=",pre_y)
     else
         self.container:setPosition(0, self.viewRect_.height - self.size.height)
     end

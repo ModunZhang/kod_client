@@ -6,7 +6,7 @@ function WidgetPVEObelisk:ctor(...)
     WidgetPVEObelisk.super.ctor(self, ...)
     if self:GetObject():IsUnSearched() then
         self:Search()
-        NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
+        self:GetRewardsFromServer()
     end
 end
 function WidgetPVEObelisk:GetTitle()

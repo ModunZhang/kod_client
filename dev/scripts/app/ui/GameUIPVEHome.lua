@@ -1,4 +1,5 @@
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
+local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local UIPageView = import("..ui.UIPageView")
 local window = import("..utils.window")
 local GameUIPVEHome = UIKit:createUIClass('GameUIPVEHome')
@@ -70,7 +71,16 @@ function GameUIPVEHome:CreateTop()
     ):addTo(top_bg)
         :align(display.LEFT_CENTER, 20, -5)
         :onButtonClicked(function()
-            self.layer:ResetCharPos()
+            FullScreenPopDialogUI.new():SetTitle(_("返回起点"))
+                :SetPopMessage(_("返回当前关卡的起点需要消耗您10个金龙币,您是否同意?"))
+                :CreateOKButton({
+                    listener =  function()
+                        self.user:SetPveData(nil, nil, 10)
+                        self.layer:ResetCharPos()
+                        NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
+                    end
+                }):CreateCancelButton():AddToCurrentScene()
+            
         end):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = _("返回起点"),
@@ -118,7 +128,7 @@ function GameUIPVEHome:CreateBottom()
 
 
     local char_bg = display.newSprite("chat_hero_background.png")
-    :addTo(bottom_bg, 1):pos(250, display.bottom + 50):scale(0.65)
+        :addTo(bottom_bg, 1):pos(250, display.bottom + 50):scale(0.65)
     display.newSprite("playerIcon_default.png"):addTo(char_bg):pos(55, 55):scale(0.9)
     local alliance_name = Alliance_Manager:GetMyAlliance():IsDefault() and "" or Alliance_Manager:GetMyAlliance():Name()
     self.tag = UIKit:ttfLabel({text = string.format("[%s] %s", alliance_name, self.user:Name()),
@@ -127,10 +137,10 @@ function GameUIPVEHome:CreateBottom()
     }):addTo(bottom_bg):align(display.LEFT_CENTER, 300, display.bottom + 65)
 
     display.newSprite("dragon_strength_27x31.png")
-    :addTo(bottom_bg):align(display.CENTER, 310, display.bottom + 25)
+        :addTo(bottom_bg):align(display.CENTER, 310, display.bottom + 25)
 
     local label_bg = display.newSprite("label_background_146x25.png")
-    :addTo(bottom_bg):align(display.LEFT_CENTER, 315, display.bottom + 25)
+        :addTo(bottom_bg):align(display.LEFT_CENTER, 315, display.bottom + 25)
 
     self.gem = UIKit:ttfLabel({
         text = self.user:Power(),
@@ -141,10 +151,10 @@ function GameUIPVEHome:CreateBottom()
 
 
     display.newSprite("dragon_lv_icon.png"):scale(0.8)
-    :addTo(bottom_bg, 1):align(display.CENTER, 510, display.bottom + 25)
+        :addTo(bottom_bg, 1):align(display.CENTER, 510, display.bottom + 25)
 
     local label_bg = display.newSprite("label_background_146x25.png")
-    :addTo(bottom_bg):align(display.LEFT_CENTER, 515, display.bottom + 25)
+        :addTo(bottom_bg):align(display.LEFT_CENTER, 515, display.bottom + 25)
 
     self.strenth = UIKit:ttfLabel({text = "",
         size = 20,
@@ -161,10 +171,10 @@ function GameUIPVEHome:CreateBottom()
         :align(display.CENTER, 131, 13)
         :onButtonClicked(function ( event )
             WidgetUseItems.new():Create({
-                        item_type = WidgetUseItems.USE_TYPE.STAMINA
-                    }):AddToCurrentScene()
+                item_type = WidgetUseItems.USE_TYPE.STAMINA
+            }):AddToCurrentScene()
         end):scale(0.6)
-    
+
 
     -- 聊天背景
     local chat_bg = display.newSprite("chat_background.png")
@@ -226,6 +236,7 @@ end
 
 
 return GameUIPVEHome
+
 
 
 

@@ -523,7 +523,7 @@ function GameUIVip:CreateVIPButtons(level)
                     self:OpenVIPDetails(i)
                 end
             end)
-        display.newSprite("vip"..i..".png"):addTo(button)
+        display.newSprite("VIP_"..i.."_46x32.png"):addTo(button)
             :align(display.CENTER, 52,45)
     end
     function button_group:Refresh(vip_level)

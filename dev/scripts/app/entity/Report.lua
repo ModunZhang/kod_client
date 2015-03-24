@@ -6,21 +6,26 @@ local Localize = import("..utils.Localize")
 local Report = class("Report")
 Report.REPORT_TYPE = Enum("strikeCity","cityBeStriked","strikeVillage","villageBeStriked","attackCity","attackVillage","collectResource")
 local STRIKECITY,CITYBESTRIKED,STRIKEVILLAGE,VILLAGEBESTRIKED,ATTACKCITY,ATTACKVILLAGE,COLLECTRESOURCE = 1,2,3,4,5,6,7
-function Report:ctor(id,type,createTime,isRead,isSaved)
+function Report:ctor(id,type,createTime,isRead,isSaved,index)
     property(self, "id", id)
     property(self, "type", type)
     property(self, "createTime", createTime)
     property(self, "isRead", isRead)
     property(self, "isSaved", isSaved)
+    property(self, "index", index)
     self.player_id = DataManager:getUserData()._id
 end
 function Report:OnPropertyChange(property_name, old_value, new_value)
 
 end
 function Report:DecodeFromJsonData(json_data)
-    local report = Report.new(json_data.id, json_data.type, json_data.createTime, json_data.isRead, json_data.isSaved)
+    local report = Report.new(json_data.id, json_data.type, json_data.createTime, json_data.isRead, json_data.isSaved,json_data.index)
     report:SetData(json_data[json_data.type])
     return report
+end
+function Report:Update( json_data )
+    self:SetIsRead(json_data.isRead or self.isRead)
+    self:SetIsSaved(json_data.isSaved or self.isSaved)
 end
 function Report:SetData(data)
     local function replace_null_to_nil(t)

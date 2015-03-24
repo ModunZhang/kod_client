@@ -98,7 +98,11 @@ function PVELayer:onEnter()
             obj = ccs.Armature:create(image)
             obj:getAnimation():playWithIndex(0)
         end
-        obj:addTo(self.building_layer):pos(self:GetLogicMap():ConvertToMapPosition(x, y)):scale(s or 1)
+        local zorder = 0
+        if PVEDefine.TREE ~= gid and PVEDefine.HILL ~= gid and PVEDefine.LAKE ~= gid then
+            zorder = 10
+        end
+        obj:addTo(self.building_layer, zorder):pos(self:GetLogicMap():ConvertToMapPosition(x, y)):scale(s or 1)
         objects[#objects + 1] = {sprite = obj, x = x, y = y}
     end)
     self.objects = objects

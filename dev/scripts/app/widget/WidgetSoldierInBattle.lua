@@ -7,14 +7,16 @@ function WidgetSoldierInBattle:ctor(filename, options)
     WidgetSoldierInBattle.super.ctor(self, filename, options)
     local pos = {x = 284/2,y = 128/2}
 
-
-    local soldier_bg = display.newSprite(UILib.soldier_bg[options.star], nil, nil, {class=cc.FilteredSpriteWithOne})
-        :addTo(self):align(display.CENTER, 55, pos.y):scale(0.9)
-    local pos = soldier_bg:getAnchorPointInPoints()
-    local soldier = display.newSprite(UILib.soldier_image[options.soldier][options.star], nil, nil, {class=cc.FilteredSpriteWithOne})
-        :addTo(soldier_bg):align(display.CENTER, pos.x, pos.y):scale(0.5)
-    self.soldier_bg = soldier_bg
-    self.soldier = soldier
+    local soldier_level = options.star
+    local soldier_type = options.soldier
+    local soldier_ui_config = UILib.soldier_image[soldier_type][soldier_level]
+    local soldier_head_icon = display.newSprite(soldier_ui_config, nil, nil, {class=cc.FilteredSpriteWithOne}):align(display.LEFT_BOTTOM,0,10)
+    soldier_head_icon:scale(104/soldier_head_icon:getContentSize().height)
+    local soldier_head_bg  = display.newSprite("box_soldier_128x128.png")
+        :align(display.CENTER, soldier_head_icon:getContentSize().width/2, soldier_head_icon:getContentSize().height-64)
+        :addTo(soldier_head_icon)
+    soldier_head_icon:addTo(self):align(display.CENTER, 55, pos.y):scale(0.9)
+    self.soldier = soldier_head_icon
     self.soldier_name = options.soldier
 
 
@@ -57,16 +59,16 @@ end
 function WidgetSoldierInBattle:SetUnitStatus(status)
     if status == "waiting" then
         self.status:setColor(UIKit:hex2c3b(0x403c2f))
-        self.soldier_bg:clearFilter()
+        -- self.soldier_bg:clearFilter()
         self.soldier:clearFilter()
     elseif status == "fighting" then
         self.status:setColor(UIKit:hex2c3b(0x007c23))
-        self.soldier_bg:clearFilter()
+        -- self.soldier_bg:clearFilter()
         self.soldier:clearFilter()
     elseif status == "defeated" then
         self.status:setColor(UIKit:hex2c3b(0x7e0000))
         local filter = filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1})
-        self.soldier_bg:setFilter(filter)
+        -- self.soldier_bg:setFilter(filter)
         self.soldier:setFilter(filter)
     else
         assert(false, "没有状态!")
@@ -79,6 +81,7 @@ function WidgetSoldierInBattle:GetSoldierName()
 end
 
 return WidgetSoldierInBattle
+
 
 
 

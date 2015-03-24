@@ -175,7 +175,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
     local building = self.building
     local efficiency
     if self.building:GetType()=="keep" then
-        efficiency = string.format("%s%d,%s%d,%s+%d",bd.unlock,building:GetNextLevelUnlockPoint(),bd.troopPopulation,building:GetNextLevelTroopPopulation(),bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s%d,%s%d,%s+%d",bd.unlock,building:GetNextLevelUnlockPoint(),bd.troopPopulation,building:GetNextLevelBeHelpedCount(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="dragonEyrie" then
         efficiency = string.format("%s%d,%s+%d",bd.vitalityRecoveryPerHour,building:GetNextLevelHPRecoveryPerHour(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="watchTower" then

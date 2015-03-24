@@ -20,7 +20,7 @@ function WidgetSoldierBox:ctor(soldier_png, cb)
 
     local size = number_bg:getContentSize()
     self.number = cc.ui.UILabel.new({
-        size = 20,
+        size = 18,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_LEFT,
         color = UIKit:hex2c3b(0x423f32)
@@ -34,7 +34,7 @@ function WidgetSoldierBox:SetSoldier(soldier_type, star)
         if self.soldier then
             self.soldier_bg:removeChild(self.soldier)
         end
-        self.soldier = display.newSprite(soldier_ui_config):addTo(self.soldier_bg)
+        self.soldier = display.newSprite(soldier_ui_config, nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(self.soldier_bg)
             :align(display.CENTER, 0, 20)
         self.soldier:scale(104/self.soldier:getContentSize().height)
         display.newSprite("box_soldier_128x128.png"):addTo(self.soldier):align(display.CENTER, self.soldier:getContentSize().width/2, self.soldier:getContentSize().height-64)
@@ -42,8 +42,23 @@ function WidgetSoldierBox:SetSoldier(soldier_type, star)
     return self
 end
 function WidgetSoldierBox:SetNumber(number)
-    self.number:setString(number)
+    self.number:setString(string.format("%s%d", _("数量: "), number))
     return self
+end
+function WidgetSoldierBox:Enable(b)
+    if b then
+        self.soldier:clearFilter()
+    else
+        self.soldier:setFilter(filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1}))
+    end
+    return self
+end
+function WidgetSoldierBox:SetCondition(text)
+    self.number:setString(text)
+    return self
+end
+function WidgetSoldierBox:IsLocked()
+    return self.soldier:getFilter()
 end
 function WidgetSoldierBox:align(anchorPoint, x, y)
     self.soldier_bg:align(anchorPoint)

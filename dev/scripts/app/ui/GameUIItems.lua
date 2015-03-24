@@ -212,7 +212,9 @@ function GameUIItems:CreateAllMyItems(items)
     list:removeAllItems()
     self.my_items = {}
     for k,v in pairs(items) do
-        self:CreateMyItem(v)
+        if v:Count()>0 then
+            self:CreateMyItem(v)
+        end
     end
     list:reload()
 end
@@ -328,5 +330,6 @@ function GameUIItems:OnItemsChanged( changed_map )
     end
 end
 return GameUIItems
+
 
 

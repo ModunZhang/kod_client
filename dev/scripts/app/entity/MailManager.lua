@@ -3,7 +3,8 @@ local MultiObserver = import("..entity.MultiObserver")
 local Report = import("..entity.Report")
 
 local MailManager = class("MailManager", MultiObserver)
-MailManager.LISTEN_TYPE = Enum("MAILS_CHANGED","UNREAD_MAILS_CHANGED","REPORTS_CHANGED","FETCH_MAILS")
+MailManager.LISTEN_TYPE = Enum("MAILS_CHANGED","UNREAD_MAILS_CHANGED","REPORTS_CHANGED","FETCH_MAILS","FETCH_SAVED_MAILS","FETCH_SEND_MAILS"
+    ,"FETCH_REPORTS","FETCH_SAVED_REPORTS")
 
 function MailManager:ctor()
     MailManager.super.ctor(self)
@@ -103,9 +104,16 @@ function MailManager:AddSavedMail(mail)
     table.insert(self.savedMails,1, mail)
 end
 function MailManager:DeleteSavedMail(mail)
+    local delete_mail_server_index
     for k,v in pairs(self.savedMails) do
         if v.id == mail.id then
+            delete_mail_server_index = v.index
             table.remove(self.savedMails,k)
+        end
+    end
+    for k,v in pairs(self.savedMails) do
+        if v.index > delete_mail_server_index then
+            v.index = v.index - 1
         end
     end
 end
@@ -116,6 +124,10 @@ function MailManager:DeleteMail(mail)
         if v.id == mail.id then
             table.remove(self.mails,k)
             delete_mail_server_index = v.index
+            if v.isSaved then
+                v.isSaved = false
+                self:OnNewSavedMailsChanged(v)
+            end
         end
     end
     for k,v in pairs(self.mails) do
@@ -127,11 +139,9 @@ end
 function MailManager:ModifyMail(mail)
     for k,v in pairs(self.mails) do
         if v.id == mail.id then
-            dump(v,"before ModifyMail")
             for i,modify in ipairs(mail) do
                 v[i] = modify
             end
-            dump(v,"after ModifyMail")
             return v
         end
     end
@@ -143,6 +153,12 @@ function MailManager:ModifyMailAttr(index,attr)
     assert(mail,"修改邮件属性，邮件不存在")
     for k,v in pairs(attr) do
         mail[k] = v
+        if k == "isSaved" then
+            self:OnNewSavedMailsChanged(mail)
+        end
+        if k == "isRead" then
+            self:OnNewSavedMailsChanged(mail,true)
+        end
     end
     return mail
 end
@@ -154,46 +170,20 @@ function MailManager:DeleteSendMail(mail)
     end
 end
 
-function MailManager:dispatchMailServerData( eventName,msg )
--- if eventName == "onGetMailsSuccess" then
---     -- 获取邮件成功,加入MailManager缓存
---     for _,mail in pairs(msg.mails) do
---         table.insert(self.mails, mail)
---     end
--- elseif eventName == "onGetSavedMailsSuccess" then
---     -- 获取邮件成功,加入MailManager缓存
---     for _,mail in pairs(msg.mails) do
---         table.insert(self.savedMails, mail)
---     end
--- elseif eventName == "onGetSendMailsSuccess" then
---     -- 获取邮件成功,加入MailManager缓存
---     for _,mail in pairs(msg.mails) do
---         table.insert(self.sendMails, mail)
---     end
--- elseif eventName == "onSendMailSuccess" then
---     for _,mail in pairs(msg.mail) do
---         table.insert(self.sendMails, mail)
---     end
--- elseif eventName == "onGetReportsSuccess" then
---     for _,report in pairs(msg.reports) do
---         table.insert(self.reports, Report:DecodeFromJsonData(report))
---     end
--- elseif eventName == "onGetSavedReportsSuccess" then
---     for _,report in pairs(msg.reports) do
---         table.insert(self.savedReports,Report:DecodeFromJsonData(report))
---     end
--- else
---     return
--- end
--- self:NotifyListeneOnType(MailManager.LISTEN_TYPE.MAILS_CHANGED,function(listener)
---     listener:OnServerDataEvent({
---         eventType = eventName,
---         data = msg
---     })
--- end)
-end
 function MailManager:AddMailsToEnd(mail)
     table.insert(self.mails, mail)
+end
+function MailManager:AddSavedMailsToEnd(mail)
+    table.insert(self.savedMails, mail)
+end
+function MailManager:AddSendMailsToEnd(mail)
+    table.insert(self.sendMails, mail)
+end
+function MailManager:AddReportsToEnd(report)
+    table.insert(self.reports, Report:DecodeFromJsonData(report))
+end
+function MailManager:AddSavedReportsToEnd(report)
+    table.insert(self.savedReports, Report:DecodeFromJsonData(report))
 end
 function MailManager:GetMails(fromIndex)
     -- 首先检查本地MailManager是否缓存有之前获取到的邮件
@@ -222,6 +212,17 @@ function MailManager:GetMailByServerIndex(serverIndex)
         end
     end
 end
+function MailManager:GetReportByServerIndex(serverIndex)
+    local reports = self.reports
+    for i,v in ipairs(reports) do
+        print(".....v.index == index",v:Index(),serverIndex)
+    end
+    for i,v in ipairs(reports) do
+        if v:Index() == serverIndex then
+            return i
+        end
+    end
+end
 function MailManager:FetchMailsFromServer(fromIndex)
     NetManager:getFetchMailsPromise(fromIndex):next(function ( fetch_mails )
         self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_MAILS,function(listener)
@@ -233,8 +234,8 @@ function MailManager:GetSavedMails(fromIndex)
     -- 首先检查本地MailManager是否缓存有之前获取到的邮件
     local fromIndex = fromIndex or 0
 
+    local savedMails = {}
     if self.savedMails[fromIndex+1] then
-        local savedMails = {}
         for i=fromIndex+1,fromIndex+10 do
             if self.savedMails[i] then
                 table.insert(savedMails, self.savedMails[i])
@@ -242,32 +243,34 @@ function MailManager:GetSavedMails(fromIndex)
                 break
             end
         end
-        return savedMails
-    else
-        -- 本地没有缓存，则从服务器获取
-        NetManager:getFetchSavedMailsPromise(fromIndex):catch(function(err)
-            dump(err:reason())
-        end)
     end
+    return savedMails
 end
-
+function MailManager:FetchSavedMailsFromServer(fromIndex)
+    NetManager:getFetchSavedMailsPromise(fromIndex):next(function ( fetch_mails )
+        self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_SAVED_MAILS,function(listener)
+            listener:OnFetchSavedMailsSuccess(fetch_mails)
+        end)
+    end)
+end
 function MailManager:GetSendMails(fromIndex)
-    -- 首先检查本地MailManager是否缓存有之前获取到的邮件
     local fromIndex = fromIndex or 0
+    local sendMails = {}
     if self.sendMails[fromIndex+1] then
-        local sendMails = {}
         for i=fromIndex+1,fromIndex+10 do
             if self.sendMails[i] then
                 table.insert(sendMails, self.sendMails[i])
             end
         end
-        return sendMails
-    else
-        -- 本地没有缓存，则从服务器获取
-        NetManager:getFetchSendMailsPromise(fromIndex):catch(function(err)
-            dump(err:reason())
-        end)
     end
+    return sendMails
+end
+function MailManager:FetchSendMailsFromServer(fromIndex)
+    NetManager:getFetchSendMailsPromise(fromIndex):next(function ( fetch_mails )
+        self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_SEND_MAILS,function(listener)
+            listener:OnFetchSendMailsSuccess(fetch_mails)
+        end)
+    end)
 end
 function MailManager:OnMailStatusChanged( mailStatus )
     if mailStatus.unreadMails then
@@ -289,10 +292,10 @@ function MailManager:OnMailsChanged( mails )
     self.mails = clone(mails)
 end
 function MailManager:OnSavedMailsChanged( savedMails )
-    self.savedMails = savedMails
+    self.savedMails = clone(savedMails)
 end
 function MailManager:OnSendMailsChanged( sendMails )
-    self.sendMails = sendMails
+    self.sendMails = clone(sendMails)
 end
 
 function MailManager:OnNewMailsChanged( mails )
@@ -302,9 +305,28 @@ function MailManager:OnNewMailsChanged( mails )
     for type,mail in pairs(mails) do
         if type == "add" then
             for i,data in ipairs(mail) do
+                -- 收到
+                if not data.index then
+                    data.index = self.mails[1].index + 1
+                    print("收到新邮件，计算服务器下标,客服端最新邮件下标",self.mails[1].index)
+                end
                 table.insert(add_mails, data)
                 table.insert(self.mails, 1, data)
                 self:IncreaseUnReadMailsNum(1)
+
+                -- 由于当前 DataManager中的mails 最新这条是服务器的index,需要修正为客户端index
+                LuaUtils:outputTable("DataManager:需要修正为客户端index().mails", DataManager:getUserData().mails)
+
+                local u_mails = DataManager:getUserData().mails
+                local max_index = 0
+                for k,v in pairs(u_mails) do
+                    max_index = math.max(k,max_index)
+                end
+                local max_mail = u_mails[max_index]
+                local temp_mail = table.remove(u_mails,max_index)
+                table.insert(u_mails, 1 ,temp_mail)
+                LuaUtils:outputTable("DataManager:getUserData().mails", DataManager:getUserData().mails)
+                print("ta")
             end
         elseif type == "remove" then
             for i,data in ipairs(mail) do
@@ -327,26 +349,26 @@ function MailManager:OnNewMailsChanged( mails )
         })
     end)
 end
-function MailManager:OnNewSavedMailsChanged( savedMails )
+function MailManager:OnNewSavedMailsChanged( savedMails,isRead )
     local add_mails = {}
     local remove_mails = {}
-    for type,mail in pairs(savedMails) do
-        if type == "add" then
-            for i,data in ipairs(mail) do
-                table.insert(add_mails, data)
-                table.insert(self.savedMails, data)
-            end
-        elseif type == "remove" then
-            for i,data in ipairs(mail) do
-                table.insert(remove_mails, data)
-                self:DeleteSavedMail(data)
-            end
+    local edit_mails = {}
+    if isRead then
+        table.insert(edit_mails, savedMails)
+    else
+        if savedMails.isSaved then
+            table.insert(add_mails, savedMails)
+            table.insert(self.savedMails, savedMails)
+        else
+            table.insert(remove_mails, savedMails)
+            self:DeleteSavedMail(savedMails)
         end
     end
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.MAILS_CHANGED,function(listener)
         listener:OnSavedMailsChanged({
             add_mails = add_mails,
             remove_mails = remove_mails,
+            edit_mails = edit_mails,
         })
     end)
 end
@@ -391,28 +413,21 @@ function MailManager:OnUserDataChanged(userData,timer,deltaData)
     if is_delta_update then
         self:OnNewMailsChanged(deltaData.mails)
     end
-    is_delta_update = not is_fully_update and deltaData.savedMails ~= nil
-    if is_delta_update then
-        self:OnNewSavedMailsChanged(deltaData.savedMails)
-    end
     is_delta_update = not is_fully_update and deltaData.sendMails ~= nil
     if is_delta_update then
         self:OnNewSendMailsChanged(deltaData.sendMails)
     end
 
     -- 战报部分
-    if userData.reports then
+    if is_fully_update then
         self:OnReportsChanged(userData.reports)
-    end
-    if userData.savedReports then
         self:OnSavedReportsChanged(userData.savedReports)
     end
-    if userData.__reports then
-        self:OnNewReportsChanged(userData.__reports)
+    local is_delta_update = not is_fully_update and deltaData.reports ~= nil
+    if is_delta_update then
+        self:OnNewReportsChanged(deltaData.reports)
     end
-    if userData.__savedReports then
-        self:OnNewSavedReportsChanged(userData.__savedReports)
-    end
+
 end
 
 function MailManager:OnReportsChanged( reports )
@@ -429,18 +444,42 @@ function MailManager:OnNewReportsChanged( __reports )
     local add_reports = {}
     local remove_reports = {}
     local edit_reports = {}
-    for _,rp in pairs(__reports) do
-        if rp.type == "add" then
-            local c_report = Report:DecodeFromJsonData(rp.data)
-            table.insert(add_reports, c_report)
-            table.insert(self.reports,1, c_report)
-            self:IncreaseUnReadReportNum(1)
-        elseif rp.type == "remove" then
-            table.insert(remove_reports, Report:DecodeFromJsonData(rp.data))
-            self:DeleteReport(rp.data)
-        elseif rp.type == "edit" then
-            table.insert(edit_reports, Report:DecodeFromJsonData(rp.data))
-            self:ModifyReport(rp.data)
+    for type,rp in pairs(__reports) do
+        if type == "add" then
+            for k,data in pairs(rp) do
+                if not data.index then
+                    data.index = self.reports[1]:Index() + 1
+                end
+                local c_report = Report:DecodeFromJsonData(data)
+                table.insert(add_reports, c_report)
+                table.insert(self.reports,1, c_report)
+                self:IncreaseUnReadReportNum(1)
+
+                -- 由于当前 DataManager中的reports 最新这条是服务器的index,需要修正为客户端index
+                LuaUtils:outputTable("DataManager:需要修正为客户端index().reports", DataManager:getUserData().reports)
+
+                local u_reports = DataManager:getUserData().reports
+                local max_index = 0
+                for k,v in pairs(u_reports) do
+                    max_index = math.max(k,max_index)
+                end
+                local max_mail = u_reports[max_index]
+                local temp_report = table.remove(u_reports,max_index)
+                table.insert(u_reports, 1 ,temp_report)
+                LuaUtils:outputTable("DataManager:getUserData().reports", DataManager:getUserData().reports)
+                print("ta")
+            end
+        elseif type == "remove" then
+            for k,data in pairs(rp) do
+                table.insert(remove_reports, Report:DecodeFromJsonData(data))
+                self:DeleteReport(data)
+            end
+        elseif type == "edit" then
+            for k,data in pairs(rp) do
+                table.insert(edit_reports,self:ModifyReport(data))
+            end
+        elseif tolua.type(type) == "number" then
+            table.insert(edit_reports, self:ModifyReportByIndex(tonumber(type),rp))
         end
     end
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.REPORTS_CHANGED,function(listener)
@@ -455,45 +494,74 @@ function MailManager:OnNewSavedReportsChanged( __savedReports )
     local add_reports = {}
     local remove_reports = {}
     local edit_reports = {}
-    for _,rp in pairs(__savedReports) do
-        if rp.type == "add" then
-            table.insert(add_reports, Report:DecodeFromJsonData(rp.data))
-            table.insert(self.savedReports, Report:DecodeFromJsonData(rp.data))
-        elseif rp.type == "remove" then
-            table.insert(remove_reports, Report:DecodeFromJsonData(rp.data))
-            self:DeleteSavedReport(rp.data)
-        elseif rp.type == "edit" then
-            table.insert(edit_reports, Report:DecodeFromJsonData(rp.data))
-            self:ModifySavedReport(rp.data)
-        end
+    if __savedReports.isSaved then
+        table.insert(add_reports, __savedReports)
+        table.insert(self.savedReports, __savedReports)
+    else
+        table.insert(remove_reports, __savedReports)
+        self:DeleteSavedReport(__savedReports)
     end
+
 
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.REPORTS_CHANGED,function(listener)
         listener:OnSavedReportsChanged({
             add = add_reports,
             remove = remove_reports,
-            edit = edit_reports,
         })
     end)
+
 end
 function MailManager:DeleteReport( report )
+    local delete_report_server_index
     for k,v in pairs(self.reports) do
         if v:Id() == report.id then
+            delete_report_server_index = v:Index()
             table.remove(self.reports,k)
+            -- 收藏的战报需要在收藏夹中删除
+            if v:IsSaved() then
+                v:SetIsSaved(false)
+                self:OnNewSavedReportsChanged(v)
+            end
+        end
+    end
+    for k,v in pairs(self.reports) do
+        if v:Index() > delete_report_server_index then
+            v:SetIndex(v:Index() - 1)
         end
     end
 end
 function MailManager:ModifyReport( report )
     for k,v in pairs(self.reports) do
         if v:Id() == report.id then
-            self.reports[k] = Report:DecodeFromJsonData(report)
+            self.reports[k]:Update(report)
+            return self.reports[k]
         end
     end
 end
+function MailManager:ModifyReportByIndex( index,attr )
+    local report = self.reports[index]
+    print("index==",index,#self.reports)
+    assert(report,"修改战报属性，战报不存在")
+    for k,v in pairs(attr) do
+        report[k] = v
+        print("ModifyReportByIndex",k,v)
+        if k == "isSaved" then
+            self:OnNewSavedReportsChanged(report)
+        end
+    end
+    return report
+end
 function MailManager:DeleteSavedReport( report )
+    local delete_index
     for k,v in pairs(self.savedReports) do
-        if v:Id() == report.id then
+        if v:Id() == report:Id() then
+            delete_index = v:Index()
             table.remove(self.savedReports,k)
+        end
+    end
+    for k,v in pairs(self.savedReports) do
+        if v:Index() > delete_index then
+            v:SetIndex(v:Index()-1)
         end
     end
 end
@@ -507,8 +575,8 @@ end
 function MailManager:GetReports(fromIndex)
     -- 首先检查本地MailManager是否缓存有之前获取到的邮件
     local fromIndex = fromIndex or 0
+    local reports = {}
     if self.reports[fromIndex+1] then
-        local reports = {}
         for i=fromIndex+1,fromIndex+10 do
             if self.reports[i] then
                 table.insert(reports, self.reports[i])
@@ -516,17 +584,20 @@ function MailManager:GetReports(fromIndex)
                 break
             end
         end
-        return reports
-    else
-        -- 本地没有缓存，则从服务器获取
-        NetManager:getReportsPromise(fromIndex)
     end
+    return reports
+end
+function MailManager:FetchReportsFromServer(fromIndex)
+    NetManager:getReportsPromise(fromIndex):next(function ( fetch_reports )
+        self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_REPORTS,function(listener)
+            listener:OnFetchReportsSuccess(fetch_reports)
+        end)
+    end)
 end
 function MailManager:GetSavedReports(fromIndex)
-    -- 首先检查本地MailManager是否缓存有之前获取到的邮件
     local fromIndex = fromIndex or 0
+    local reports = {}
     if self.savedReports[fromIndex+1] then
-        local reports = {}
         for i=fromIndex+1,fromIndex+10 do
             if self.savedReports[i] then
                 table.insert(reports, self.savedReports[i])
@@ -534,13 +605,28 @@ function MailManager:GetSavedReports(fromIndex)
                 break
             end
         end
-        return reports
-    else
-        -- 本地没有缓存，则从服务器获取
-        NetManager:getSavedReportsPromise(fromIndex)
     end
+    return reports
+end
+function MailManager:FetchSavedReportsFromServer(fromIndex)
+    NetManager:getSavedReportsPromise(fromIndex):next(function ( fetch_reports )
+        self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_SAVED_REPORTS,function(listener)
+            listener:OnFetchSavedReportsSuccess(fetch_reports)
+        end)
+    end)
 end
 return MailManager
+
+
+
+
+
+
+
+
+
+
+
 
 
 
