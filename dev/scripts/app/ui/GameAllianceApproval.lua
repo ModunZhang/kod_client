@@ -100,13 +100,13 @@ function GameAllianceApproval:GetListItem(player)
 end
 
 function GameAllianceApproval:OnRefuseButtonClicked(memberId)
-	NetManager:getRefuseJoinAllianceRequestPromise(memberId):done(function(result)
+	NetManager:getRemoveJoinAllianceReqeustsPromise({memberId}):done(function(result)
         self:RefreshListView()
     end)
 end
 
 function GameAllianceApproval:OnAgreeButtonClicked(memberId)
-	NetManager:getAgreeJoinAllianceRequestPromise(memberId):done(function(result)
+	NetManager:getApproveJoinAllianceRequestPromise(memberId):done(function(result)
 		self:RefreshListView()
 	end)
 end
