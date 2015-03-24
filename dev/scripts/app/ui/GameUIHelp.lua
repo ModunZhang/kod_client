@@ -108,10 +108,60 @@ function GameUIHelp:InsertItemToList(help_event)
     -- 当前玩家的求助事件需要置顶
     local item = self:CreateHelpItem(help_event)
     if DataManager:getUserData()._id == help_event:GetPlayerData():Id() then
-        self.help_listview:addItem(item,1)
+        -- 检查自己请求帮助的事件是否已经结束了
+        if not self:CheckEventFinished(help_event) then
+            self.help_listview:addItem(item,1)
+        end
     else
         self.help_listview:addItem(item)
     end
+end
+function GameUIHelp:CheckEventFinished(help_event)
+    local city = City
+    local eventData = help_event:GetEventData()
+    local type = eventData:Type()
+    local event_id = eventData:Id()
+    local isFinished = true
+    if type == "buildingEvents" then
+        city:IteratorFunctionBuildingsByFunc(function(key, building)
+            if building:UniqueUpgradingKey() == event_id then
+                isFinished = false
+            end
+        end)
+        -- 城墙，箭塔
+        if city:GetGate():UniqueUpgradingKey() == event_id then
+            isFinished = false
+        end
+        if city:GetTower():UniqueUpgradingKey() == event_id then
+            isFinished = false
+        end
+    elseif type == "houseEvents" then
+        city:IteratorDecoratorBuildingsByFunc(function(key, building)
+            if building:UniqueUpgradingKey() == event_id then
+                isFinished = false
+            end
+        end)
+    elseif type == "productionTechEvents" then
+        city:IteratorProductionTechEvents(function(productionTechnologyEvent)
+            if productionTechnologyEvent:Id() == event_id then
+                isFinished = false
+            end
+        end)
+    elseif type == "militaryTechEvents" then
+        city:GetSoldierManager():IteratorMilitaryTechEvents(function(militaryTechEvent)
+            if militaryTechEvent:Id() == event_id then
+                isFinished = false
+            end
+        end)
+    elseif type == "soldierStarEvents" then
+        city:GetSoldierManager():IteratorSoldierStarEvents(function(soldierStarEvent)
+            if soldierStarEvent:Id() == event_id then
+                isFinished = false
+            end
+        end)
+    end
+
+    return isFinished
 end
 function GameUIHelp:IsHelpedByMe(helpedMembers)
     local _id = DataManager:getUserData()._id
@@ -307,6 +357,10 @@ function GameUIHelp:onExit()
 end
 
 return GameUIHelp
+
+
+
+
 
 
 

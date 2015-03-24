@@ -314,7 +314,7 @@ function CommonUpgradeUI:InitUpgradePart()
                                 end)
                         end
                     end
-                    self:getParent():LeftButtonClicked()
+                    self:getParent():getParent():LeftButtonClicked()
                 end
 
                 local can_not_update_type = self.building:IsAbleToUpgrade(false)
@@ -379,7 +379,6 @@ function CommonUpgradeUI:SetUpgradeTime()
     self.buff_reduce_time:setString(string.format("(-%s)",GameUtils:formatTimeStyle1(buff_time)))
 end
 function CommonUpgradeUI:GotoPreconditionBuilding()
-    local current_scene =display.getRunningScene()
     local jump_building = self.building:GetPreConditionBuilding()
     if tolua.type(jump_building) == "string" then
         FullScreenPopDialogUI.new()
@@ -388,18 +387,13 @@ function CommonUpgradeUI:GotoPreconditionBuilding()
             :SetPopMessage(string.format(_("请首先建造%s"),Localize.building_name[jump_building]))
         return
     end
+    local current_scene =display.getRunningScene()
     local building_sprite = current_scene:GetSceneLayer():FindBuildingSpriteByBuilding(jump_building, self.city)
-    self:getParent():LeftButtonClicked()
+    self:getParent():getParent():LeftButtonClicked()
     current_scene:GotoLogicPoint(jump_building:GetLogicPosition())
-    -- 指向建筑的箭头
-    local arrow = display.newSprite("arrow_home.png"):addTo(building_sprite):pos(0,160):scale(0.4)
-    arrow:setRotation(240)
-    local seq_1 = transition.sequence{
-        cc.ScaleTo:create(0.4, 0.8),
-        cc.ScaleTo:create(0.4, 0.4)
-    }
-    arrow:runAction(cc.RepeatForever:create(seq_1))
-    building_sprite:performWithDelay(function() building_sprite:removeChild(arrow, true) end, 5.0)
+    if current_scene.AddIndicateForBuilding then
+        current_scene:AddIndicateForBuilding(building_sprite)
+    end
 end
 function CommonUpgradeUI:SetUpgradeRequirementListview()
     local wood = City.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
@@ -590,7 +584,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
                 {
                     listener = function()
                         UIKit:newGameUI('GameUIShop', City):AddToCurrentScene(true)
-                        self:getParent():LeftButtonClicked()
+                        self:getParent():getParent():LeftButtonClicked()
                     end
                 }
             )

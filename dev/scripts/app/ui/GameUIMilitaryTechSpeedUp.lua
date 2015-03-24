@@ -48,7 +48,7 @@ function GameUIMilitaryTechSpeedUp:OnSoldierStarEventsTimer(event)
         self:CheckCanSpeedUpFree()
     end
 end
-function GameUIMilitaryTechSpeedUp:OnMilitaryTechEventsChanged(changed_map)
+function GameUIMilitaryTechSpeedUp:OnMilitaryTechEventsChanged(soldier_manager,changed_map)
     if changed_map[3] then
         for i,v in ipairs(changed_map[3]) do
             if v:Id() ==  self.militaryEvent:Id() then

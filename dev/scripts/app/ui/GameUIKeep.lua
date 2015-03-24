@@ -48,8 +48,8 @@ function GameUIKeep:CreateBetweenBgAndTitle()
     self.info_layer = display.newLayer():addTo(self:GetView())
 end
 
-function GameUIKeep:onEnter()
-    GameUIKeep.super.onEnter(self)
+function GameUIKeep:OnMoveInStage()
+    GameUIKeep.super.OnMoveInStage(self)
     self:CreateTabButtons({
         {
             label = _("信息"),
