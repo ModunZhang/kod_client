@@ -1,6 +1,7 @@
 local NotifyItem = import(".NotifyItem")
 local PVEDefine = import(".PVEDefine")
 local PVEObject = class("PVEObject")
+local pve_dragon = GameDatas.ClientInitGame.pve_dragon
 local pve_normal = GameDatas.ClientInitGame.pve_normal
 local pve_elite = GameDatas.ClientInitGame.pve_elite
 local pve_boss = GameDatas.ClientInitGame.pve_boss
@@ -46,7 +47,7 @@ function PVEObject:ctor(x, y, searched, type, map)
     self.type = type
     self.map = map
 end
-function PVEObject:NpcPower()
+function PVEObject:Floor()
     return self.map:GetIndex()
 end
 function PVEObject:SetType(type)
@@ -61,20 +62,32 @@ end
 function PVEObject:GetNextEnemy()
     return self:GetEnemyByIndex(self.searched + 1)
 end
+-- 当前数值*关卡数^3-(关卡数-1)*20
+-- 当前数值*关卡数^2
 function PVEObject:GetEnemyByIndex(index)
-    local unique = self.type ~= PVEDefine.TRAP and random(#pve_normal) or self.x * self.y * (index + self.type)
+    local unique = self.type == PVEDefine.TRAP and random(#pve_normal) or self.x * self.y * (index + self.type)
     if normal_map[self.type] then
         return self:DecodeToEnemy(pve_normal[unique % #pve_normal + 1])
     elseif elite_map[self.type] then
         return self:DecodeToEnemy(pve_elite[unique % #pve_elite + 1])
     elseif self.type == PVEDefine.ENTRANCE_DOOR then
-        return self:DecodeToEnemy(pve_boss[1])
+        return self:DecodeToEnemy(pve_boss[self:Floor()])
     end
     return {}
 end
 function PVEObject:DecodeToEnemy(raw_data)
-    local dragonType, hp, strength, vitality = unpack(string.split(raw_data.dragon_hp_strength_vitality, ","))
-    hp, strength, vitality = tonumber(hp), tonumber(strength), tonumber(vitality)
+    local raw_dragon
+    local cur_floor_dragon_config = pve_dragon[self:Floor()]
+    if normal_map[self.type] then
+        raw_dragon = cur_floor_dragon_config.normal_dragon_strength_vitality
+    elseif elite_map[self.type] then
+        raw_dragon = cur_floor_dragon_config.elite_dragon_strength_vitality
+    else
+        raw_dragon = cur_floor_dragon_config.boss_dragon_strength_vitality
+    end
+    local is_not_boss = normal_map[self.type] or elite_map[self.type]
+    local dragonType, strength, vitality = unpack(string.split(raw_dragon, ","))
+    strength, vitality = tonumber(strength), tonumber(vitality)
     local soldiers_raw = string.split(raw_data.soldiers, ";")
     return {
         dragon = {
@@ -92,7 +105,7 @@ function PVEObject:DecodeToEnemy(raw_data)
             return k, {
                 name = name,
                 star = tonumber(star),
-                count = count * self:NpcPower(),
+                count = is_not_boss and (count * self:Floor()) ^ 3 - (self:Floor() - 1) * 20 or count,
             }
         end),
         rewards = self:DecodeToRewards(raw_data.rewards),
@@ -127,6 +140,7 @@ function PVEObject:GetRewards(select)
     end
 end
 function PVEObject:DecodeToRewards(raw)
+    local is_not_boss = normal_map[self.type] or elite_map[self.type]
     local rewards_raw = string.split(raw, ";")
     local r = LuaUtils:table_map(rewards_raw, function(k, v)
         local rtype, rname, count, probability = unpack(string.split(v, ","))
@@ -136,7 +150,7 @@ function PVEObject:DecodeToRewards(raw)
         return k, {
             type = rtype,
             name = rname,
-            count = count * self:NpcPower(),
+            count = is_not_boss and (count * self:Floor()) ^ 2 or count,
             probability = probability
         }
     end)
