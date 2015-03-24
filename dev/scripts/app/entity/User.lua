@@ -188,7 +188,7 @@ function User:GetDailyQuests()
 end
 -- 下次刷新任务时间
 function User:GetNextDailyQuestsRefreshTime()
-    return GameDatas.PlayerInitData.floatInit.dailyQuestsRefreshHours.value * 60 * 60 + self.dailyQuestsRefreshTime/1000
+    return GameDatas.PlayerInitData.intInit.dailyQuestsRefreshMinites.value * 60 + self.dailyQuestsRefreshTime/1000
 end
 function User:GetDailyQuestEvents()
     return self.dailyQuestEvents

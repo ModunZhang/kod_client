@@ -32,7 +32,7 @@ function GameUIToolShop:TabButtons()
                 self.manufacture = nil
             end
         elseif tag == "manufacture" then
-            self.manufacture = WidgetManufacture.new(self.toolShop):addTo(self)
+            self.manufacture = WidgetManufacture.new(self.toolShop):addTo(self:GetView())
         end
     end):pos(window.cx, window.bottom + 34)
 end
