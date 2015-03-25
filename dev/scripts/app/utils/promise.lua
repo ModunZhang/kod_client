@@ -57,13 +57,13 @@ local function complete_and_pop_promise(p)
 end
 local function do_function_with_protect(func, param)
     local success, result
-    if CONFIG_IS_DEBUG then
-        success, result = true,func(param)
-    else
+    -- if CONFIG_IS_DEBUG then
+    --     success, result = true,func(param)
+    -- else
         success, result = pcall(func, param)
-    end
+    -- end
     if not success then
-        result = not is_error(result) and err_class.new(result) or result
+        result = not is_error(result) and err_class.new(result, "syntaxError") or result
     end
     return success, result
 end
@@ -121,7 +121,7 @@ local function handle_result(p, success, result, failed_func)
         -- 如果当前任务有错误处理函数,捕获并继续传入下一个任务进行处理
         p.state_ = REJECTED
         if not is_error(result) then
-            result = err_class.new(result)
+            result = err_class.new(result, "syntaxError")
         end
         if type(failed_func) == "function" then
             local success_, result_ = do_function_with_protect(failed_func, err)
