@@ -30,6 +30,7 @@ end
 
 function NetService:disconnect( )
     self.m_pomelo:cleanup() -- clean the callback in pomelo thread
+    self.m_pomelo:stop()
     self.net_state = self.NET_STATE.DISCONNECT
 end
 

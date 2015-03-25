@@ -126,7 +126,6 @@ end
 
 function MyApp:retryConnectServer()
     if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
-        NetManager:disconnect()
         app:lockInput(true)
         local loading
         local need_show,showed = true,false
@@ -158,6 +157,7 @@ end
 
 function MyApp:onEnterBackground()
     LuaUtils:outputTable("onEnterBackground", {})
+    NetManager:disconnect()
     UIKit:closeAllUI()
     self:flushIf()
 end
