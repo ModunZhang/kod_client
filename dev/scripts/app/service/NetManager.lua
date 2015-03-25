@@ -1449,6 +1449,21 @@ function NetManager:getSetApnIdPromise(apnId)
     return get_none_blocking_request_promise("logic.playerHandler.setApnId",{apnId=apnId},
         "设置玩家Apple Push失败"):next(get_response_msg)
 end
+
+-- 获取排行榜
+function NetManager:getPlayerRankPromise(rankType, fromRank)
+    return get_blocking_request_promise("logic.playerHandler.getPlayerRankList",{
+        rankType = rankType,
+        fromRank = fromRank or 0
+    },"获取排行榜失败!")
+end
+function NetManager:getAllianceRankPromise(rankType, fromRank)
+    return get_blocking_request_promise("logic.playerHandler.getAllianceRankList",{
+        rankType = rankType,
+        fromRank = fromRank or 0
+    },"获取排行榜失败!")
+end
+
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"
@@ -1502,5 +1517,6 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 

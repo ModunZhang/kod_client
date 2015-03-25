@@ -143,7 +143,6 @@ function PVEScene:CheckTrap()
         end):next(function()
             local trap_obj = PVEObject.new(0, 0, 0, PVEDefine.TRAP, self:GetSceneLayer():CurrentPVEMap())
             local enemy = trap_obj:GetNextEnemy()
-            dump(enemy)
             UIKit:newGameUI('GameUIPVESendTroop',
                 enemy.soldiers,-- pve 怪数据
                 function(dragonType, soldiers)
