@@ -38,7 +38,7 @@ function GameUIDragonDeathSpeedUp:onCleanup()
     GameUIDragonDeathSpeedUp.super.onCleanup(self)
 end
 
-function GameUIDragonDeathSpeedUp:OnDragonDeathEventChanged()
+function GameUIDragonDeathSpeedUp:OnDragonDeathEventChanged(changed_map)
 	local dragonDeathEvent = self.dragon_manager:GetDragonDeathEventByType(self.dragon_type)
 	if not dragonDeathEvent then 
 		self:LeftButtonClicked()
