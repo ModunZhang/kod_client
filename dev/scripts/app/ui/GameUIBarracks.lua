@@ -30,7 +30,7 @@ function GameUIBarracks:OnMoveInStage()
     self.barracks_city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
 end
 function GameUIBarracks:onExit()
-    self.barracks:AddUpgradeListener(self)
+    self.barracks:RemoveUpgradeListener(self)
     self.barracks:RemoveBarracksListener(self)
     self.barracks_city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
     GameUIBarracks.super.onExit(self)
@@ -208,7 +208,7 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
                     return
                 end
                 WidgetRecruitSoldier.new(self.barracks, self.barracks_city, soldier_name)
-                    :addTo(self:GetView())
+                    :addTo(self:GetView(),2)
                     :align(display.CENTER, window.cx, 500 / 2)
             end):addTo(row_item)
                 :alignByPoint(cc.p(0.5, 0.5), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 0)
@@ -231,7 +231,7 @@ function GameUIBarracks:CreateSpecialItemWithListView( list_view, soldiers ,titl
         self.soldier_map[soldier_name] =
             WidgetSoldierBox.new(nil, function(event)
                 WidgetRecruitSoldier.new(self.barracks, self.barracks_city, soldier_name,self.barracks_city:GetSoldierManager():GetStarBySoldierType(soldier_name))
-                    :addTo(self:GetView())
+                    :addTo(self:GetView(),2)
                     :align(display.CENTER, window.cx, 500 / 2)
             end):addTo(row_item)
                 :alignByPoint(cc.p(0.5, 0.5), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 140)

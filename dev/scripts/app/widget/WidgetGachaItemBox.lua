@@ -13,7 +13,7 @@ function WidgetGachaItemBox:ctor(gacha_item,isSenior)
     local gacha_box = display.newSprite("box_gacha_92x92.png"):addTo(self)
     -- item icon
     local item_icon = display.newScale9Sprite(self:GetGachaItemIcon()):addTo(self)
-    item_icon:size(74,74)
+    item_icon:scale(74/item_icon:getContentSize().width)
 end
 -- 设置起点或取消起点状态
 function WidgetGachaItemBox:SetOrginStatus()

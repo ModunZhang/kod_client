@@ -22,15 +22,13 @@ end
 function GameUIGacha:CreateBetweenBgAndTitle()
     GameUIGacha.super.CreateBetweenBgAndTitle(self)
 
-    self.ordinary_layer = display.newLayer()
-    self:addChild(self.ordinary_layer)
+    self.ordinary_layer = display.newLayer():addTo(self:GetView())
 
-    self.deluxe_layer = display.newLayer()
-    self:addChild(self.deluxe_layer)
+    self.deluxe_layer = display.newLayer():addTo(self:GetView())
 end
 
-function GameUIGacha:onEnter()
-    GameUIGacha.super.onEnter(self)
+function GameUIGacha:OnMoveInStage()
+    GameUIGacha.super.OnMoveInStage(self)
     self:CreateTabButtons({
         {
             label = _("普通抽奖"),

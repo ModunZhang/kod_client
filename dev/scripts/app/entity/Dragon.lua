@@ -57,8 +57,8 @@ end
 --获取技能的效果
 function DragonSkill:GetEffect()
 	local config = self:GetSkillConfig()
-	if config and config[self:Level()] then
-		return config[self:Level()].effect
+	if config then
+		return config.effect
 	end
 	return 0
 end

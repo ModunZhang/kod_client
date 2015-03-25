@@ -248,40 +248,6 @@ function DragonManager:RefreshDragonDeathEvents(user_data,deltaData)
     end
 end
 
--- function DragonManager:RefreshDragonDeathEvents__(__dragonDeathEvents)
---     if not __dragonDeathEvents then return end
---      local changed_map = GameUtils:Event_Handler_Func(
---         __dragonDeathEvents
---         ,function(event_data)
---             local dragonDeathEvent = DragonDeathEvent.new()
---             dragonDeathEvent:UpdateData(event_data)
---             dragonDeathEvent:AddObserver(self)
---             self.dragonDeathEvents[dragonDeathEvent:DragonType()] = dragonDeathEvent
---             return dragonDeathEvent
---         end
---         ,function(event_data)
---             if self.dragonDeathEvents[event_data.dragonType] then
---                 local dragonDeathEvent = self.dragonDeathEvents[event_data.dragonType]
---                 dragonDeathEvent:UpdateData(event_data)
---             end
---             return dragonDeathEvent
---         end
---         ,function(event_data)
---             if self.dragonDeathEvents[event_data.dragonType] then
---                 local dragonDeathEvent = self.dragonDeathEvents[event_data.dragonType]
---                 dragonDeathEvent:Reset()
---                 self.dragonDeathEvents[event_data.dragonType] = nil
---                 dragonDeathEvent = DragonDeathEvent.new()
---                 dragonDeathEvent:UpdateData(event_data)
---                 return dragonDeathEvent
---             end
---         end
---     )
---     self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged,function(lisenter)
---         lisenter.OnDragonDeathEventChanged(lisenter,GameUtils:pack_event_table(changed_map))
---     end)
--- end
-
 function DragonManager:IteratorDragonDeathEvents(func)
     for __,v in pairs(self.dragonDeathEvents) do
        func(v)
