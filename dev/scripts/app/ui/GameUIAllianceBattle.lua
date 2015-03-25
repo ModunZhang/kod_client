@@ -124,7 +124,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
     local layer = self.statistics_layer
     layer:removeAllChildren()
     self.info_listview = nil
-
+    self.request_num_label = nil
     local period_label = UIKit:ttfLabel({
         text = self:GetAlliancePeriod(),
         size = 22,
@@ -1240,7 +1240,6 @@ function GameUIAllianceBattle:OnAllianceFightRequestsChanged(request_num)
     end
 end
 function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
-    LuaUtils:outputTable("OnAllianceFightReportsChanged changed_map", changed_map)
     if changed_map.add then
         for k,v in pairs(changed_map.add) do
             self:AddHistoryItem(v, 1)

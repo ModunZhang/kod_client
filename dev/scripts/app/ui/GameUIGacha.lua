@@ -62,13 +62,12 @@ function GameUIGacha:OnMoveInStage()
 end
 function GameUIGacha:onExit()
     if self.OrdinaryGachaPool then
-        self.OrdinaryGachaPool:RemoveDiskSchedule()
+        self.OrdinaryGachaPool:Destory()
     end
     if self.DeluxeGachaPool then
-        self.DeluxeGachaPool:RemoveDiskSchedule()
+        self.DeluxeGachaPool:Destory()
     end
     User:RemoveListenerOnType(self,User.LISTEN_TYPE.COUNT_INFO)
-
     GameUIGacha.super.onExit(self)
 end
 
@@ -229,7 +228,7 @@ function GameUIGacha:CreateGachaPool(layer)
         local draw_item_box = self.draw_item_box
         local award = display.newScale9Sprite(draw_item_box:GetGachaItemIcon()):addTo(layer)
             :align(display.CENTER, draw_item_box:getPositionX(), draw_item_box:getPositionY())
-        award:size(74,74)
+        award:scale(74/award:getContentSize().width)
 
         local gacha_box = self.continuous_draw_items and gacha_boxes[self.continuous_index-1] or gacha_boxes[1]
         local gacha_box_lable
@@ -237,7 +236,7 @@ function GameUIGacha:CreateGachaPool(layer)
         transition.scaleTo(award, {scale = 1.5,time =0.4,onComplete = function ()
             transition.moveTo(award, {x = gacha_box:getPositionX(), y=gacha_box:getPositionY() ,time =0.4 ,
                 onComplete = function ( )
-                    transition.scaleTo(award, {scale = 1,time =0.4,onComplete = function ()
+                    transition.scaleTo(award, {scale = 74/award:getContentSize().width,time =0.4,onComplete = function ()
                         gacha_box_lable = UIKit:ttfLabel({
                             text = Localize_item.item_name[draw_item_box:GetGachaItemName()],
                             size = 20,
@@ -331,7 +330,13 @@ function GameUIGacha:CreateGachaPool(layer)
             -- end
         end
     end
-
+    function GachaPool:Destory()
+        self:RemoveDiskSchedule()
+        if self.handle then
+            scheduler.unscheduleGlobal(self.handle)
+            self.handle = nil
+        end
+    end
     -- 创建成功，转盘默然旋转
     GachaPool.disk_speed = 1
     GachaPool.disk_handle = scheduler.scheduleGlobal(handler(GachaPool, GachaPool.DiskRotate), 0.01, false)
@@ -550,6 +555,7 @@ function GameUIGacha:OnCountInfoChanged()
     end
 end
 return GameUIGacha
+
 
 
 
