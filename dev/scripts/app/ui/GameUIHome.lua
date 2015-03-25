@@ -357,7 +357,10 @@ function GameUIHome:CreateTop()
                 building = self.city:GetHighestBuildingByType(self.task:BuildingType())
             end
             if building then
-                display.getRunningScene():GotoLogicPoint(building:GetMidLogicPosition())
+                local current_scene = display.getRunningScene()
+                current_scene:GotoLogicPoint(building:GetMidLogicPosition())
+                local building_sprite = current_scene:GetSceneLayer():FindBuildingSpriteByBuilding(building, self.city)
+                current_scene:AddIndicateForBuilding(building_sprite)
             end
         end
     end)

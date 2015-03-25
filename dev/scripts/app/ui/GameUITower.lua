@@ -10,8 +10,8 @@ function GameUITower:ctor(city,building)
 end
 
 
-function GameUITower:onEnter()
-    GameUITower.super.onEnter(self)
+function GameUITower:OnMoveInStage()
+    GameUITower.super.OnMoveInStage(self)
     self:CreateTabButtons({
         {
             label = _("信息"),

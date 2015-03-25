@@ -902,18 +902,16 @@ function NetManager:getEditAllianceJoinTypePromise(join_type)
     }, "修改联盟加入条件失败!"):next(get_response_msg)
 end
 -- 拒绝玩家
-function NetManager:getRefuseJoinAllianceRequestPromise(memberId)
-    return get_blocking_request_promise("logic.allianceHandler.handleJoinAllianceRequest", {
-        memberId = memberId,
-        agree = false
-    }, "拒绝玩家失败!"):next(get_response_msg)
+function NetManager:getRemoveJoinAllianceReqeustsPromise(requestEventIds)
+    return get_blocking_request_promise("logic.allianceHandler.removeJoinAllianceReqeusts",{
+        requestEventIds = requestEventIds}, "拒绝玩家失败!")
+        :next(get_alliance_response_msg)
 end
 -- 接受玩家
-function NetManager:getAgreeJoinAllianceRequestPromise(memberId)
-    return get_blocking_request_promise("logic.allianceHandler.handleJoinAllianceRequest", {
-        memberId = memberId,
-        agree = true
-    }, "接受玩家失败!"):next(get_response_msg)
+function NetManager:getApproveJoinAllianceRequestPromise(requestEventId)
+    return get_blocking_request_promise("logic.allianceHandler.approveJoinAllianceRequest", {
+        requestEventId = requestEventId
+    }, "接受玩家失败!"):next(get_alliance_response_msg)
 end
 -- 踢出玩家
 function NetManager:getKickAllianceMemberOffPromise(memberId)
