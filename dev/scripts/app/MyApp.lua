@@ -158,11 +158,11 @@ end
 function MyApp:onEnterBackground()
     LuaUtils:outputTable("onEnterBackground", {})
     NetManager:disconnect()
-    UIKit:closeAllUI()
     self:flushIf()
 end
 
 function MyApp:onEnterForeground()
+    UIKit:closeAllUI()
     LuaUtils:outputTable("onEnterForeground", {})
     self:retryConnectServer()
 end
@@ -270,20 +270,28 @@ function MyApp:getStore()
 end
 
 function MyApp:transactionObserver(event)
-    dump(event,"MyApp:transactionObserver-->")
     local transaction = event.transaction
     local transaction_state = transaction.state
     if transaction_state == 'restored' then
         device.showAlert("提示","已为你恢复以前的购买",{_("确定")})
         Store.finishTransaction(transaction)
     elseif transaction_state == 'purchased' then
-        --TODO:服务器验证 成功或失败后关闭 transaction
-        ext.market_sdk.onPlayerChargeRequst(transaction.transactionIdentifier,transaction.productIdentifier,30,100,"USD")
-        NetManager:getVerifyIAPPromise(transaction.transactionIdentifier,transaction.receipt):next(function(msg)
+        local info = DataUtils:getIapInfo(transaction.productIdentifier)
+        ext.market_sdk.onPlayerChargeRequst(transaction.transactionIdentifier,transaction.productIdentifier,info.price,info.gem,"USD")
+        NetManager:getVerifyIAPPromise(transaction.transactionIdentifier,transaction.receipt):next(function(response)
+            local msg = response.msg
             if msg.transactionId then
-                GameGlobalUI:showTips("恭喜","获得x100宝石")
-                Store.finishTransaction(msg.transactionId)
+                GameGlobalUI:showTips(_("提示"),DataUtils:getIapRewardMessage(transaction.productIdentifier))
+                Store.finishTransaction(transaction)
                 ext.market_sdk.onPlayerChargeSuccess(transaction.transactionIdentifier)
+            end
+        end):catch(function(err)
+            local msg,code_type = err:reason()
+            local code = msg.code
+            if code_type ~= "syntaxError" then
+                if code == 612 or code == 613 or code == 614 then
+                    Store.finishTransaction(transaction)
+                end
             end
         end)
     elseif transaction_state == 'purchasing' then
