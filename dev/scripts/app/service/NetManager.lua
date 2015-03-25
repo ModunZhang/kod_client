@@ -2,6 +2,13 @@ local promise = import("..utils.promise")
 local GameGlobalUIUtils = import("..ui.GameGlobalUIUtils")
 local Localize_item = import("..utils.Localize_item")
 local cocos_promise = import("..utils.cocos_promise")
+
+local error_code = {}
+for k,v in pairs(GameDatas.Errors.errors) do
+    error_code[v.code] = v
+end
+-- dump(error_code)
+
 local gaozhou
 if CONFIG_IS_DEBUG then
     local result
@@ -174,10 +181,13 @@ end
 local function check_request(m)
     return function(result)
         if not result.success or result.msg.code ~= SUCCESS_CODE then
+            local code = result.msg.code
+            local error_data = error_code[code] or {}
+            local msg = error_data.message or _("未知错误!")
             if result.msg.code == 0 then
-                promise.reject(result.msg.message, "timeout")
+                promise.reject({code = code, msg = msg}, "timeout")
             else
-                promise.reject(result.msg.message, m)
+                promise.reject({code = code, msg = msg}, m)
             end
         end
         return result

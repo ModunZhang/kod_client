@@ -41,7 +41,9 @@ end
 
 local function promiseFilterNetError(p,need_catch)
     return p:catch(function(err)
-        dump(err)
+        if err:isSyntaxError() then
+            return
+        end
         local content, title = err:reason()
         title = title or ""
         if title == 'timeout' then
@@ -53,7 +55,7 @@ local function promiseFilterNetError(p,need_catch)
             end
         end,nil,false)
         if need_catch then
-            promise.reject {"",{msg=err.errcode[1]}}
+            promise.reject(content, title)
         else
             return {"",{msg=err.errcode[1]}}
         end

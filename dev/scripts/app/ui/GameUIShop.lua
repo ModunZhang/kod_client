@@ -15,7 +15,6 @@ function GameUIShop:ctor(city)
     self.shop_city = city
 end
 function GameUIShop:onEnter()
-    app:getStore():updateTransactionStates()
     GameUIShop.super.onEnter(self)
 
     local list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 100)
