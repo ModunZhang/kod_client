@@ -219,8 +219,8 @@ function GameUITownHall:CreateQuestItem(quest,index)
                     TownHallUI.isFinishedQuest = false
                 end)
             else
-                -- progress:setVisible(true)
-                -- status = _("正在处理政务")
+                progress:setVisible(true)
+                status = _("正在处理政务")
                 -- control_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, "green_btn_up_148x58.png", true)
                 -- control_btn:setButtonImage(cc.ui.UIPushButton.PRESSED,"green_btn_down_148x58.png", true)
                 -- control_btn:setButtonLabel(
@@ -321,7 +321,6 @@ function GameUITownHall:CreateQuestItem(quest,index)
 
     item:addContent(body)
     list:addItem(item,index)
-    list:reload()
 
     self.quest_items[quest.id] = item
 end
@@ -401,7 +400,8 @@ function GameUITownHall:OnTimer(current_time)
             self.started_quest_item = nil
             return
         end
-        self.started_quest_item:SetProgress(GameUtils:formatTimeStyle1(quest.finishTime/1000-current_time), 100-(quest.finishTime-current_time*1000)/(quest.finishTime-quest.startTime)*100 )
+        local show_time = quest.finishTime/1000-current_time <0 and 0 or quest.finishTime/1000-current_time
+        self.started_quest_item:SetProgress(GameUtils:formatTimeStyle1(show_time), 100-(quest.finishTime-current_time*1000)/(quest.finishTime-quest.startTime)*100 )
     end
 end
 function GameUITownHall:GetQuestItemById(questId)
