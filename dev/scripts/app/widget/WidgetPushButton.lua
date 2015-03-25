@@ -143,8 +143,10 @@ function WidgetPushButton:onTouch_(event)
         -- print("----began")
         if not self:checkTouchInSprite_(x, y) then return false end
         -- print("----doEvent('press')")
-        self.fsm_:doEvent("press")
-        self:dispatchEvent({name = UIPushButton.PRESSED_EVENT, x = x, y = y, touchInTarget = true})
+        if self:isButtonEnabled() then
+            self.fsm_:doEvent("press")
+            self:dispatchEvent({name = UIPushButton.PRESSED_EVENT, x = x, y = y, touchInTarget = true})
+        end
         return true
     end
 
@@ -170,8 +172,6 @@ function WidgetPushButton:onTouch_(event)
         end
     end
 end
-
-
 
 return WidgetPushButton
 
