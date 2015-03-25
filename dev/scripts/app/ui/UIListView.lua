@@ -1088,6 +1088,14 @@ end
 
 -- 修改quick:新加接口
 ------------------------------------------------------------------------------------------------------------------------------------------
+function UIListView:setRedundancyViewVal(len)
+    if UIScrollView.DIRECTION_VERTICAL == self.direction then
+        self.redundancyViewVal = len
+    else
+        self.redundancyViewVal = len
+    end
+    return self
+end
 local abs = math.abs
 function UIListView:scrollBy(x, y)
     local rx, ry = self:Ratio(self:getScrollNodeRect())

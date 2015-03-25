@@ -77,7 +77,6 @@ function ItemManager:__OnItemsChanged(__items)
                 local item = self:GetItemByName(data.name)
                 item:SetCount(data.count)
                 self:InsertItem(item)
-                GameGlobalUI:showTips(_("获得道具"),item:GetLocalizeName())
                 table.insert(added, item)
             end
         end

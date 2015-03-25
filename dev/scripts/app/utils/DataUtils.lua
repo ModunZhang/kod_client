@@ -443,3 +443,13 @@ function DataUtils:GetItemPriceByItemName(itemName)
         end
     end
 end
+-- 计算道具组价格
+local Items = GameDatas.Items
+function DataUtils:getItemsPrice( items )
+    local total_price = 0
+    for k,v in pairs(items) do
+        local tag_item = Items.buff[k] or Items.resource[k] or Items.special[k] or Items.speedup[k]
+        total_price = total_price + tag_item.price
+    end
+    return total_price
+end

@@ -543,7 +543,7 @@ function GameUIHome:CreateBottom()
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
             if not Alliance_Manager:GetMyAlliance():IsDefault() then
-                GameUIHelp.new():AddToCurrentScene()
+                GameUIHelp.new():AddToCurrentScene(true)
             else
                 FullScreenPopDialogUI.new():SetTitle(_("提示"))
                     :SetPopMessage(_("加入联盟才能激活帮助功能"))
@@ -569,6 +569,15 @@ function GameUIHome:CreateBottom()
     self.request_help_num_bg = request_help_num_bg
     self.help_button = help_button
 
+    -- TODO:临时gacha按钮
+    local gacha_button = cc.ui.UIPushButton.new(
+        {normal = "icon_casinoToken.png", pressed = "icon_casinoToken.png"},
+        {scale9 = false}
+    ):onButtonClicked(function(event)
+        if event.name == "CLICKED_EVENT" then
+            UIKit:newGameUI("GameUIGacha", self.city):AddToCurrentScene(true)
+        end
+    end):addTo(self):pos(display.right-40, display.bottom+400):scale(0.6)
 
     return bottom_bg
 end

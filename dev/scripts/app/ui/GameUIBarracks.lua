@@ -30,7 +30,7 @@ function GameUIBarracks:OnMoveInStage()
     self.barracks_city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
 end
 function GameUIBarracks:onExit()
-    self.barracks:AddUpgradeListener(self)
+    self.barracks:RemoveUpgradeListener(self)
     self.barracks:RemoveBarracksListener(self)
     self.barracks_city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
     GameUIBarracks.super.onExit(self)

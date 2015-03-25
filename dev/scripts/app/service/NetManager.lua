@@ -1325,6 +1325,7 @@ function NetManager:getBuyItemPromise(itemName,count)
         itemName = itemName,
         count = count,
     }, "购买道具失败!"):next(get_response_msg):done(function ()
+        GameGlobalUI:showTips(_("提示"),string.format('购买%s道具成功',Localize_item.item_name[itemName]))
         ext.market_sdk.onPlayerBuyGameItems(itemName,count,DataUtils:GetItemPriceByItemName(itemName))
     end)
 end
@@ -1334,6 +1335,7 @@ function NetManager:getUseItemPromise(itemName,params)
         itemName = itemName,
         params = params,
     }, "使用道具失败!"):next(get_response_msg):done(function ()
+        GameGlobalUI:showTips(_("提示"),string.format('使用%s道具成功',Localize_item.item_name[itemName]))
         ext.market_sdk.onPlayerUseGameItems(itemName,1)
     end)
 end
@@ -1449,6 +1451,21 @@ function NetManager:getSetApnIdPromise(apnId)
     return get_none_blocking_request_promise("logic.playerHandler.setApnId",{apnId=apnId},
         "设置玩家Apple Push失败"):next(get_response_msg)
 end
+
+-- 获取排行榜
+function NetManager:getPlayerRankPromise(rankType, fromRank)
+    return get_blocking_request_promise("logic.playerHandler.getPlayerRankList",{
+        rankType = rankType,
+        fromRank = fromRank or 0
+    },"获取排行榜失败!")
+end
+function NetManager:getAllianceRankPromise(rankType, fromRank)
+    return get_blocking_request_promise("logic.playerHandler.getAllianceRankList",{
+        rankType = rankType,
+        fromRank = fromRank or 0
+    },"获取排行榜失败!")
+end
+
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"
@@ -1502,5 +1519,6 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
