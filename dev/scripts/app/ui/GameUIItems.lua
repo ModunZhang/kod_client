@@ -62,10 +62,13 @@ end
 function GameUIItems:InitShop()
     local layer = self.shop_layer
     local list,list_node = UIKit:commonListView({
+        async = true, --异步加载
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         viewRect = cc.rect(0, 0,568,window.betweenHeaderAndTab-110),
     })
     list_node:addTo(layer):align(display.BOTTOM_CENTER, window.cx, window.bottom_top+20)
+    list:setRedundancyViewVal(list:getViewRect().height + 76 * 2)
+    list:setDelegate(handler(self, self.sourceDelegate))
     self.shop_listview = list
     self.shop_dropList = WidgetDropList.new(
         {
@@ -75,77 +78,62 @@ function GameUIItems:InitShop()
             {tag = "menu_4",label = "时间加速"},
         },
         function(tag)
-            if tag == 'menu_1' then
-                local special_items = ItemManager:GetSpecialItems()
-                self:CreateAllShopItems(special_items)
-            end
-            if tag == 'menu_2' then
-                local buff_items = ItemManager:GetBuffItems()
-                self:CreateAllShopItems(buff_items)
-            end
-            if tag == 'menu_3' then
-                local resource_items = ItemManager:GetResourcetItems()
-                self:CreateAllShopItems(resource_items)
-            end
-            if tag == 'menu_4' then
-                local speedUp_items = ItemManager:GetSpeedUpItems()
-                self:CreateAllShopItems(speedUp_items)
-            end
+            self:ReloadShopList(tag)
         end
     ):align(display.TOP_CENTER,window.cx,window.top-100):addTo(layer)
 
 
 end
-function GameUIItems:InitMyItems()
-    local layer = self.myItems_layer
-    local list,list_node = UIKit:commonListView({
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        viewRect = cc.rect(0, 0,568,window.betweenHeaderAndTab-110),
-    })
-    list_node:addTo(layer):align(display.BOTTOM_CENTER, window.cx, window.bottom_top+20)
-    self.myItems_listview = list
-    self.myItems_dropList = WidgetDropList.new(
-        {
-            {tag = "menu_1",label = "特殊",default = true},
-            {tag = "menu_2",label = "持续增益"},
-            {tag = "menu_3",label = "增益"},
-            {tag = "menu_4",label = "时间加速"},
-        },
-        function(tag)
-            if tag == 'menu_1' then
-                local special_items = ItemManager:GetSpecialItems()
-                self:CreateAllMyItems(special_items)
-            end
-            if tag == 'menu_2' then
-                local buff_items = ItemManager:GetBuffItems()
-                self:CreateAllMyItems(buff_items)
-            end
-            if tag == 'menu_3' then
-                local resource_items = ItemManager:GetResourcetItems()
-                self:CreateAllMyItems(resource_items)
-            end
-            if tag == 'menu_4' then
-                local speedUp_items = ItemManager:GetSpeedUpItems()
-                self:CreateAllMyItems(speedUp_items)
-            end
-        end
-    ):align(display.TOP_CENTER,window.cx,window.top-100):addTo(layer)
+function GameUIItems:ReloadShopList( tag )
+    self.shop_select_tag = tag
+    self.shop_listview:reload()
+    print("ReloadShopList",tag)
 end
-function GameUIItems:CreateAllShopItems(items)
-    local list = self.shop_listview
-    list:removeAllItems()
-    for k,v in pairs(items) do
+function GameUIItems:sourceDelegate(listView, tag, idx)
+    if cc.ui.UIListView.COUNT_TAG == tag then
+        return #self:GetShopItemByTag(self.shop_select_tag)
+    elseif cc.ui.UIListView.CELL_TAG == tag then
+        local item
+        local content
+        item = listView:dequeueItem()
+        if not item then
+            item = listView:newItem()
+            content = self:CreateShopContentByIndex(idx)
+
+            item:addContent(content)
+        else
+            content = item:getContent()
+        end
+        local size = content:getContentSize()
+        item:setItemSize(size.width, size.height)
+        return item
+    else
+    end
+end
+function GameUIItems:FilterShopItems( items )
+    local f_items = {}
+    for i,v in ipairs(items) do
         if v:IsSell() then
-            self:CreateShopItem(v)
+            table.insert(f_items, v)
         end
     end
-    list:reload()
+    return f_items
 end
-function GameUIItems:CreateShopItem(items)
-    local list = self.shop_listview
-    local item = list:newItem()
+function GameUIItems:GetShopItemByTag(tag)
+    if tag == 'menu_1' then
+        return self:FilterShopItems(ItemManager:GetSpecialItems())
+    elseif tag == 'menu_2' then
+        return self:FilterShopItems(ItemManager:GetBuffItems())
+    elseif tag == 'menu_3' then
+        return  self:FilterShopItems(ItemManager:GetResourcetItems())
+    elseif tag == 'menu_4' then
+        return self:FilterShopItems(ItemManager:GetSpeedUpItems())
+    end
+end
+function GameUIItems:CreateShopContentByIndex( idx )
+    local items = self:GetShopItemByTag(self.shop_select_tag)[idx]
+
     local item_width,item_height = 568,164
-    item:setItemSize(item_width,item_height)
 
     local content = WidgetUIBackGround.new({width = item_width,height=item_height},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
 
@@ -182,7 +170,7 @@ function GameUIItems:CreateShopItem(items)
     }):align(display.LEFT_CENTER, 50 , num_bg:getContentSize().height/2)
         :addTo(num_bg)
 
-    local button = WidgetPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
+    local button = cc.ui.UIPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("购买"),
             size = 20,
@@ -202,25 +190,80 @@ function GameUIItems:CreateShopItem(items)
         :align(display.RIGHT_BOTTOM, item_width-10, 15)
         :addTo(content)
 
-    item:addContent(content)
-    list:addItem(item)
+    return content
 end
-function GameUIItems:CreateAllMyItems(items)
-    local list = self.myItems_listview
-    list:removeAllItems()
-    self.my_items = {}
-    for k,v in pairs(items) do
+function GameUIItems:InitMyItems()
+    local layer = self.myItems_layer
+    local list,list_node = UIKit:commonListView({
+        async = true, --异步加载
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
+        viewRect = cc.rect(0, 0,568,window.betweenHeaderAndTab-110),
+    })
+    list_node:addTo(layer):align(display.BOTTOM_CENTER, window.cx, window.bottom_top+20)
+    list:setRedundancyViewVal(list:getViewRect().height + 76 * 2)
+    list:setDelegate(handler(self, self.myItemSourceDelegate))
+    self.myItems_listview = list
+    self.myItems_dropList = WidgetDropList.new(
+        {
+            {tag = "menu_1",label = "特殊",default = true},
+            {tag = "menu_2",label = "持续增益"},
+            {tag = "menu_3",label = "增益"},
+            {tag = "menu_4",label = "时间加速"},
+        },
+        function(tag)
+            self.my_items = {}
+            self:ReloadMyItemsList(tag)
+        end
+    ):align(display.TOP_CENTER,window.cx,window.top-100):addTo(layer)
+end
+function GameUIItems:ReloadMyItemsList( tag )
+    self.my_item_tag = tag
+    self.myItems_listview:reload()
+end
+function GameUIItems:FilterMyItems( items )
+    local f_items = {}
+    for i,v in ipairs(items) do
         if v:Count()>0 then
-            self:CreateMyItem(v)
+            table.insert(f_items, v)
         end
     end
-    list:reload()
+    return f_items
 end
-function GameUIItems:CreateMyItem(items)
-    local list = self.myItems_listview
-    local item = list:newItem()
+function GameUIItems:GetMyItemByTag(tag)
+    if tag == 'menu_1' then
+        return self:FilterMyItems(ItemManager:GetSpecialItems())
+    elseif tag == 'menu_2' then
+        return self:FilterMyItems(ItemManager:GetBuffItems())
+    elseif tag == 'menu_3' then
+        return  self:FilterMyItems(ItemManager:GetResourcetItems())
+    elseif tag == 'menu_4' then
+        return self:FilterMyItems(ItemManager:GetSpeedUpItems())
+    end
+end
+function GameUIItems:myItemSourceDelegate(listView, tag, idx)
+    if cc.ui.UIListView.COUNT_TAG == tag then
+        return #self:GetMyItemByTag(self.my_item_tag)
+    elseif cc.ui.UIListView.CELL_TAG == tag then
+        local item
+        local content
+        item = listView:dequeueItem()
+        if not item then
+            item = listView:newItem()
+            content = self:CreateMyItemContentByIndex(idx)
+
+            item:addContent(content)
+        else
+            content = item:getContent()
+        end
+        local size = content:getContentSize()
+        item:setItemSize(size.width, size.height)
+        return item
+    else
+    end
+end
+function GameUIItems:CreateMyItemContentByIndex( idx )
+    local items = self:GetMyItemByTag(self.my_item_tag)[idx]
     local item_width,item_height = 568,164
-    item:setItemSize(item_width,item_height)
 
     local content = WidgetUIBackGround.new({width = item_width,height=item_height},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
 
@@ -283,13 +326,11 @@ function GameUIItems:CreateMyItem(items)
             :addTo(content)
     end
 
-    item:addContent(content)
-    list:addItem(item)
-
-    function item:SetOwnCount( count )
+    function content:SetOwnCount( count )
         own_num:setString(_("拥有")..string.formatnumberthousands(count))
     end
-    self.my_items[items:Name()] = item
+    self.my_items[items:Name()] = content
+    return content
 end
 
 function GameUIItems:OnItemsChanged( changed_map )
@@ -328,6 +369,10 @@ function GameUIItems:OnItemsChanged( changed_map )
     end
 end
 return GameUIItems
+
+
+
+
 
 
 
