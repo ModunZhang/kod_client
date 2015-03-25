@@ -71,13 +71,13 @@ function WidgetRankingList:onEnter()
                 if not self.rank_map.kill then
                     if self.type_ == "player" then
                         NetManager:getPlayerRankPromise("kill"):next(function(response)
-                            self.rank_map.power = response.msg
-                            self:ReloadRank(self.rank_map.power)
+                            self.rank_map.kill = response.msg
+                            self:ReloadRank(self.rank_map.kill)
                         end)
                     else
                         NetManager:getAllianceRankPromise("kill"):next(function(response)
-                            self.rank_map.power = response.msg
-                            self:ReloadRank(self.rank_map.power)
+                            self.rank_map.kill = response.msg
+                            self:ReloadRank(self.rank_map.kill)
                         end)
                     end
                 else
