@@ -182,7 +182,8 @@ local function check_request(m)
     return function(result)
         if not result.success or result.msg.code ~= SUCCESS_CODE then
             local code = result.msg.code
-            local msg = error_code[code].message
+            local error_data = error_code[code] or {}
+            local msg = error_data.message or _("未知错误!")
             if result.msg.code == 0 then
                 promise.reject({code = code, msg = msg}, "timeout")
             else
