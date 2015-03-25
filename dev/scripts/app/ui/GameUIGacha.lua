@@ -79,7 +79,7 @@ function GameUIGacha:CreateGachaPool(layer)
 
 
     local items = {}
-    local x , y = 92,window.top - 254
+    local x , y = window.left+92,window.top - 254
     local box_width = 112
     local gap = (570 - 5*box_width)/4
     -- 奖品，是否高级抽奖
@@ -231,22 +231,22 @@ function GameUIGacha:CreateGachaPool(layer)
         award:scale(74/award:getContentSize().width)
 
         local gacha_box = self.continuous_draw_items and gacha_boxes[self.continuous_index-1] or gacha_boxes[1]
-        local gacha_box_lable
+        -- local gacha_box_lable
 
         transition.scaleTo(award, {scale = 1.5,time =0.4,onComplete = function ()
             transition.moveTo(award, {x = gacha_box:getPositionX(), y=gacha_box:getPositionY() ,time =0.4 ,
                 onComplete = function ( )
                     transition.scaleTo(award, {scale = 74/award:getContentSize().width,time =0.4,onComplete = function ()
-                        gacha_box_lable = UIKit:ttfLabel({
-                            text = Localize_item.item_name[draw_item_box:GetGachaItemName()],
-                            size = 20,
-                            color = 0xffedae,
-                        }):align(display.CENTER, gacha_box:getPositionX(), gacha_box:getPositionY()-56):addTo(layer)
+                        -- gacha_box_lable = UIKit:ttfLabel({
+                        --     text = Localize_item.item_name[draw_item_box:GetGachaItemName()],
+                        --     size = 20,
+                        --     color = 0xffedae,
+                        -- }):align(display.CENTER, gacha_box:getPositionX(), gacha_box:getPositionY()-56):addTo(layer)
                         if self.continuous_draw_items and not self.continuous_draw_items[self.continuous_index] or not self.continuous_draw_items then
                             layer:EnAbleButton(true)
                         end
                         table.insert(self.award, award)
-                        table.insert(self.award, gacha_box_lable)
+                        -- table.insert(self.award, gacha_box_lable)
                         if self.continuous_draw_items and self.continuous_draw_items[self.continuous_index] then
                             self:StartLotteryDraw(self.continuous_draw_items[self.continuous_index])
                             self.continuous_index = self.continuous_index + 1
@@ -282,8 +282,8 @@ function GameUIGacha:CreateGachaPool(layer)
         end
 
         -- 随机转几圈
-        math.randomseed(os.time())
-        local round_num = math.random(5,12)
+        math.randomseed(tostring(os.time()):reverse():sub(1, 6))
+        local round_num = math.random(3,5)
         -- 总共要跳动的格子数
         self.total_steps = round_num*16+terminal_point - current_index
         -- 当前计时器周期
@@ -319,9 +319,9 @@ function GameUIGacha:CreateGachaPool(layer)
         if self.handle then
             scheduler.unscheduleGlobal(self.handle)
             self.handle = nil
-            if self.total_steps-self.run_steps<30 then
-                self.current_period = self.current_period + 0.005
-            elseif self.total_steps-self.run_steps<80 then
+            if self.total_steps-self.run_steps<10 then
+                self.current_period = self.current_period + 0.03
+            elseif self.total_steps-self.run_steps<40 then
                 self.current_period = self.current_period + 0.001
             end
             self.handle = scheduler.scheduleGlobal(handler(self, self.Run), self.current_period, false)
