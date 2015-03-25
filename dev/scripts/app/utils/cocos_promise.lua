@@ -53,7 +53,7 @@ local function promiseFilterNetError(p,need_catch)
             end
         end,nil,false)
         if need_catch then
-            promise.reject {"",{msg=err.errcode[1]}}
+            promise.reject(content, title)
         else
             return {"",{msg=err.errcode[1]}}
         end
