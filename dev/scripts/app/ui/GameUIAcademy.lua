@@ -76,9 +76,14 @@ function GameUIAcademy:OnMoveInStage()
         },
     },function(tag)
         if tag == 'technology' then
+        	if not self.technology_node then
+				self.technology_node = self:BuildTechnologyUI():addTo(self:GetView()):pos(window.left,window.bottom_top)
+            end
             self.technology_node:show()
         else
-            self.technology_node:hide()
+        	if self.technology_node then
+            	self.technology_node:hide()
+            end
         end
     end):pos(window.cx, window.bottom + 34)
     City:AddListenOnType(self,City.LISTEN_TYPE.PRODUCTION_DATA_CHANGED)
@@ -124,7 +129,7 @@ end
 
 function GameUIAcademy:CreateBetweenBgAndTitle()
     GameUIAcademy.super.CreateBetweenBgAndTitle(self)
-	self.technology_node = self:BuildTechnologyUI():addTo(self:GetView()):pos(window.left,window.bottom_top)
+	
 end
 
 function GameUIAcademy:BuildTipsUI(technology_node,y)
