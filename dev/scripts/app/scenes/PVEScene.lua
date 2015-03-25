@@ -141,7 +141,8 @@ function PVEScene:CheckTrap()
             self.user:ResetPveData()
             return NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
         end):next(function()
-            local enemy = PVEObject.new(0, 0, 0, PVEDefine.TRAP, self:GetSceneLayer():CurrentPVEMap()):GetNextEnemy()
+            local trap_obj = PVEObject.new(0, 0, 0, PVEDefine.TRAP, self:GetSceneLayer():CurrentPVEMap())
+            local enemy = trap_obj:GetNextEnemy()
             dump(enemy)
             UIKit:newGameUI('GameUIPVESendTroop',
                 enemy.soldiers,-- pve 怪数据
@@ -166,7 +167,7 @@ function PVEScene:CheckTrap()
                     local report = GameUtils:DoBattle(
                         {dragon = attack_dragon, soldiers = attack_soldier},
                         {dragon = enemy.dragon, soldiers = enemy.soldiers},
-                        enemy:GetMap():Terrain()
+                        trap_obj:GetMap():Terrain()
                     )
                     if report:IsAttackWin() then
                         self.user:SetPveData(report:GetAttackKDA(), enemy.rewards)
