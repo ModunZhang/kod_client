@@ -28,77 +28,77 @@ function WidgetChangeMap:ctor(map_type)
     end
 
     -- 遮罩效果
-    -- 模板
-    local stencil = display.newNode()
-    local child_layer = display.newColorLayer(cc.c4b(100,255,255,255))
-    child_layer:setContentSize(cc.size(100,384))
-    child_layer:pos(-50,0)
-    stencil:addChild(child_layer)
+    -- -- 模板
+    -- local stencil = display.newNode()
+    -- local child_layer = display.newColorLayer(cc.c4b(100,255,255,255))
+    -- child_layer:setContentSize(cc.size(100,384))
+    -- child_layer:pos(-50,0)
+    -- stencil:addChild(child_layer)
 
-    -- stencil
+    -- -- stencil
 
-    -- 初始化一个裁剪节点
-    local clippingNode = cc.ClippingNode:create(stencil)
-        :pos(window.cx-260*scale_x, 90*scale_x)
-    if device.platform ~= "mac" then
-        clippingNode:setInverted(true)
-    end
-    clippingNode:setAlphaThreshold(0.5)
-    clippingNode:scale(scale_x)
-    -- 底板
-    -- clippingNode:addChild(display.newSprite("world_map_2000x200.jpg"))
-    self:addChild(clippingNode)
-    child_layer:setTouchSwallowEnabled(false)
-
-
-
-    self.map_bg = display.newSprite("select_map_bg_100X384.png")
-        :align(display.BOTTOM_CENTER, 0,-380)
-        :addTo(clippingNode)
-    self.map_bg:setTouchEnabled(true)
-    self.map_bg:setTouchSwallowEnabled(true)
-
-
-    local map_bg = self.map_bg
+    -- -- 初始化一个裁剪节点
+    -- local clippingNode = cc.ClippingNode:create(stencil)
+    --     :pos(window.cx-260*scale_x, 90*scale_x)
+    -- if device.platform ~= "mac" then
+    --     clippingNode:setInverted(true)
+    -- end
+    -- clippingNode:setAlphaThreshold(0.5)
+    -- clippingNode:scale(scale_x)
+    -- -- 底板
+    -- -- clippingNode:addChild(display.newSprite("world_map_2000x200.jpg"))
+    -- self:addChild(clippingNode)
+    -- child_layer:setTouchSwallowEnabled(false)
 
 
 
-    self.enemy_btn = WidgetPushButton.new(
-        {normal = "change_map_icon.png", pressed = "change_map_icon.png"}
-    ):addTo(map_bg)
-        :pos(50, 300)
-        :setButtonLabel("normal",UIKit:ttfLabel({text = _("敌方领地"),
-            size = 16,
-            color = 0xf3f0b6,
-            shadow = true
-        })
-        )
-        :setButtonLabelOffset(0, -48)
+    -- self.map_bg = display.newSprite("select_map_bg_100X384.png")
+    --     :align(display.BOTTOM_CENTER, 0,-380)
+    --     :addTo(clippingNode)
+    -- self.map_bg:setTouchEnabled(true)
+    -- self.map_bg:setTouchSwallowEnabled(true)
 
 
-    self.our_alliance_btn = WidgetPushButton.new(
-        {normal = "change_map_icon.png", pressed = "change_map_icon.png"}
-    ):addTo(map_bg)
-        :pos(50, 190)
-        :setButtonLabel("normal",UIKit:ttfLabel({text = _("我方领地"),
-            size = 16,
-            color = 0xf3f0b6,
-            shadow = true
-        })
-        )
-        :setButtonLabelOffset(0, -48)
+    -- local map_bg = self.map_bg
 
-    self.our_city_btn =WidgetPushButton.new(
-        {normal = "change_map_icon.png", pressed = "change_map_icon.png"}
-    ):addTo(map_bg)
-        :pos(50, 80)
-        :setButtonLabel("normal",UIKit:ttfLabel({text = _("我的城市"),
-            size = 16,
-            color = 0xf3f0b6,
-            shadow = true
-        })
-        )
-        :setButtonLabelOffset(0, -48)
+
+
+    -- self.enemy_btn = WidgetPushButton.new(
+    --     {normal = "change_map_icon.png", pressed = "change_map_icon.png"}
+    -- ):addTo(map_bg)
+    --     :pos(50, 300)
+    --     :setButtonLabel("normal",UIKit:ttfLabel({text = _("敌方领地"),
+    --         size = 16,
+    --         color = 0xf3f0b6,
+    --         shadow = true
+    --     })
+    --     )
+    --     :setButtonLabelOffset(0, -48)
+
+
+    -- self.our_alliance_btn = WidgetPushButton.new(
+    --     {normal = "change_map_icon.png", pressed = "change_map_icon.png"}
+    -- ):addTo(self)
+    --     :pos(50, 190)
+    --     :setButtonLabel("normal",UIKit:ttfLabel({text = _("我方领地"),
+    --         size = 16,
+    --         color = 0xf3f0b6,
+    --         shadow = true
+    --     })
+    --     )
+    --     :setButtonLabelOffset(0, -48)
+
+    -- self.our_city_btn =WidgetPushButton.new(
+    --     {normal = "change_map_icon.png", pressed = "change_map_icon.png"}
+    -- ):addTo(self)
+    --     :pos(50, 80)
+    --     :setButtonLabel("normal",UIKit:ttfLabel({text = _("我的城市"),
+    --         size = 16,
+    --         color = 0xf3f0b6,
+    --         shadow = true
+    --     })
+    --     )
+    --     :setButtonLabelOffset(0, -48)
 
     local btn = WidgetPushButton.new(
         {normal = "map_bg_145X146.png", pressed = "map_bg_145X146.png"}
@@ -155,26 +155,26 @@ function WidgetChangeMap:SetMapType( map_type )
     if map_type == WidgetChangeMap.MAP_TYPE.OUR_CITY then
 
         -- 设置按钮事件
-        self.our_city_btn:onButtonClicked(function(event)
-            self:Retraction()
-        end)
+        -- self.our_city_btn:onButtonClicked(function(event)
+        --     self:Retraction()
+        -- end)
 
-        self.our_alliance_btn:onButtonClicked(function(event)
-            if Alliance_Manager:GetMyAlliance()
+        -- self.our_alliance_btn:onButtonClicked(function(event)
+        --     if Alliance_Manager:GetMyAlliance()
 
-                :IsDefault() then
-                local dialog = FullScreenPopDialogUI.new():AddToCurrentScene()
-                dialog:SetTitle("提示")
-                dialog:SetPopMessage("未加入联盟!")
-                return
-            end
-            self.map_frame:setPositionY(179)
-            self:Retraction()
+        --         :IsDefault() then
+        --         local dialog = FullScreenPopDialogUI.new():AddToCurrentScene()
+        --         dialog:SetTitle("提示")
+        --         dialog:SetPopMessage("未加入联盟!")
+        --         return
+        --     end
+        --     self.map_frame:setPositionY(179)
+        --     self:Retraction()
 
-            -- app:enterScene("AllianceBattleScene", nil, "custom", -1,handler(self, self.CloudArmature) )
-            -- app:enterScene("AllianceScene", nil, "custom", -1,handler(self, self.CloudArmature) )
-            app:EnterMyAllianceScene()
-        end)
+        --     -- app:enterScene("AllianceBattleScene", nil, "custom", -1,handler(self, self.CloudArmature) )
+        --     -- app:enterScene("AllianceScene", nil, "custom", -1,handler(self, self.CloudArmature) )
+        --     app:EnterMyAllianceScene()
+        -- end)
 
         -- self.enemy_btn:onButtonClicked(function(event)
         -- local enemy_alliance_id = Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():GetEnemyAlliance().id
@@ -208,7 +208,7 @@ function WidgetChangeMap:SetMapType( map_type )
             self:Retraction()
         end)
 
-        self.enemy_btn:onButtonClicked(function(event)
+        -- self.enemy_btn:onButtonClicked(function(event)
             -- local enemy_alliance_id = Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():GetEnemyAlliance().id
             -- if enemy_alliance_id and string.trim(enemy_alliance_id) ~= "" then
             --     self.map_frame:setPositionY(289)
@@ -223,7 +223,7 @@ function WidgetChangeMap:SetMapType( map_type )
             --         :SetPopMessage(_("当前是和平期"))
             --         :AddToCurrentScene()
             -- end
-            end)
+            -- end)
 
 
         y = 179
