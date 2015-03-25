@@ -128,7 +128,10 @@ function BarracksUpgradeBuilding:GetNextLevelMaxRecruitSoldierCount()
     return barracks_config[self:GetNextLevel()].maxRecruit
 end
 function BarracksUpgradeBuilding:GetMaxRecruitSoldierCount()
-    return barracks_config[self:GetEfficiencyLevel()].maxRecruit
+    if self:GetLevel() > 0 then
+        return barracks_config[self:GetEfficiencyLevel()].maxRecruit
+    end
+    return 0
 end
 function BarracksUpgradeBuilding:OnTimer(current_time)
     local event = self.recruit_event
