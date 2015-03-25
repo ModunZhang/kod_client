@@ -219,14 +219,16 @@ require("app.datas.DragonEquipments_orb")
 
 GameDatas.Dragons = {
 	["dragons"] = {},
-	["dragonAttributes"] = {},
-	["dragonSkills"] = {},
 	["fightFix"] = {},
+	["dragonStar"] = {},
+	["dragonLevel"] = {},
+	["dragonSkills"] = {},
 }
 require("app.datas.Dragons_dragons")
-require("app.datas.Dragons_dragonAttributes")
-require("app.datas.Dragons_dragonSkills")
 require("app.datas.Dragons_fightFix")
+require("app.datas.Dragons_dragonStar")
+require("app.datas.Dragons_dragonLevel")
+require("app.datas.Dragons_dragonSkills")
 
 GameDatas.Errors = {
 	["errors"] = {},

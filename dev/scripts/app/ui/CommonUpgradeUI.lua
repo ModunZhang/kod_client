@@ -183,7 +183,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
     elseif self.building:GetType()=="warehouse" then
         efficiency = string.format("%s%d,%s+%d",bd.warehouse_max,building:GetResourceNextLevelValueLimit(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="toolShop" then
-        efficiency = string.format("%s%d%s,%s+%d",bd.poduction,building:GetNextLevelPoducttion(),bd.poduction_1,bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s%d%s,%s+%d",bd.poduction,building:GetNextLevelProduction(),bd.poduction_1,bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="materialDepot" then
         efficiency = string.format("%s%d,%s+%d",bd.maxMaterial,building:GetNextLevelMaxMaterial(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="armyCamp" then

@@ -2,7 +2,7 @@ local pve_boss = GameDatas.ClientInitGame.pve_boss
 
 pve_boss[1] = {
 	["index"] = 1,
-	["soldiers"] = "catapult_3,3;swordsman_3,11;lancer_3,5;archer_3,9",
+	["soldiers"] = "catapult_3,3;swordsman_3,11;lancer_3,5;ranger_3,9",
 	["rewards"] = "resources,gem,10"
 }
 pve_boss[2] = {
@@ -12,7 +12,7 @@ pve_boss[2] = {
 }
 pve_boss[3] = {
 	["index"] = 3,
-	["soldiers"] = "catapult_3,37;swordsman_3,126;lancer_3,52;archer_3,83",
+	["soldiers"] = "catapult_3,37;swordsman_3,126;lancer_3,52;ranger_3,83",
 	["rewards"] = "resources,gem,30"
 }
 pve_boss[4] = {
@@ -22,7 +22,7 @@ pve_boss[4] = {
 }
 pve_boss[5] = {
 	["index"] = 5,
-	["soldiers"] = "catapult_3,143;swordsman_3,483;lancer_3,196;archer_3,302",
+	["soldiers"] = "catapult_3,143;swordsman_3,483;lancer_3,196;ranger_3,302",
 	["rewards"] = "resources,gem,50"
 }
 pve_boss[6] = {
@@ -32,7 +32,7 @@ pve_boss[6] = {
 }
 pve_boss[7] = {
 	["index"] = 7,
-	["soldiers"] = "catapult_3,359;swordsman_3,1204;lancer_3,486;archer_3,739",
+	["soldiers"] = "catapult_3,359;swordsman_3,1204;lancer_3,486;ranger_3,739",
 	["rewards"] = "resources,gem,70"
 }
 pve_boss[8] = {
@@ -42,7 +42,7 @@ pve_boss[8] = {
 }
 pve_boss[9] = {
 	["index"] = 9,
-	["soldiers"] = "catapult_3,718;swordsman_3,2403;lancer_3,967;archer_3,1463",
+	["soldiers"] = "catapult_3,718;swordsman_3,2403;lancer_3,967;ranger_3,1463",
 	["rewards"] = "resources,gem,90"
 }
 pve_boss[10] = {
@@ -52,7 +52,7 @@ pve_boss[10] = {
 }
 pve_boss[11] = {
 	["index"] = 11,
-	["soldiers"] = "catapult_3,1252;swordsman_3,4186;lancer_3,1681;archer_3,2538",
+	["soldiers"] = "catapult_3,1252;swordsman_3,4186;lancer_3,1681;ranger_3,2538",
 	["rewards"] = "resources,gem,110"
 }
 pve_boss[12] = {
@@ -62,7 +62,7 @@ pve_boss[12] = {
 }
 pve_boss[13] = {
 	["index"] = 13,
-	["soldiers"] = "catapult_3,1993;swordsman_3,6655;lancer_3,2670;archer_3,4024",
+	["soldiers"] = "catapult_3,1993;swordsman_3,6655;lancer_3,2670;ranger_3,4024",
 	["rewards"] = "resources,gem,130"
 }
 pve_boss[14] = {
@@ -72,7 +72,7 @@ pve_boss[14] = {
 }
 pve_boss[15] = {
 	["index"] = 15,
-	["soldiers"] = "catapult_3,2968;swordsman_3,9908;lancer_3,3972;archer_3,5981",
+	["soldiers"] = "catapult_3,2968;swordsman_3,9908;lancer_3,3972;ranger_3,5981",
 	["rewards"] = "resources,gem,150"
 }
 pve_boss[16] = {
@@ -82,7 +82,7 @@ pve_boss[16] = {
 }
 pve_boss[17] = {
 	["index"] = 17,
-	["soldiers"] = "catapult_3,4207;swordsman_3,14041;lancer_3,5627;archer_3,8465",
+	["soldiers"] = "catapult_3,4207;swordsman_3,14041;lancer_3,5627;ranger_3,8465",
 	["rewards"] = "resources,gem,170"
 }
 pve_boss[18] = {
@@ -92,7 +92,7 @@ pve_boss[18] = {
 }
 pve_boss[19] = {
 	["index"] = 19,
-	["soldiers"] = "catapult_3,5738;swordsman_3,19146;lancer_3,7670;archer_3,11533",
+	["soldiers"] = "catapult_3,5738;swordsman_3,19146;lancer_3,7670;ranger_3,11533",
 	["rewards"] = "resources,gem,190"
 }
 pve_boss[20] = {
@@ -102,7 +102,7 @@ pve_boss[20] = {
 }
 pve_boss[21] = {
 	["index"] = 21,
-	["soldiers"] = "catapult_3,7588;swordsman_3,25313;lancer_3,10138;archer_3,15238",
+	["soldiers"] = "catapult_3,7588;swordsman_3,25313;lancer_3,10138;ranger_3,15238",
 	["rewards"] = "resources,gem,210"
 }
 pve_boss[22] = {
@@ -112,7 +112,7 @@ pve_boss[22] = {
 }
 pve_boss[23] = {
 	["index"] = 23,
-	["soldiers"] = "catapult_3,9783;swordsman_3,32632;lancer_3,13067;archer_3,19635",
+	["soldiers"] = "catapult_3,9783;swordsman_3,32632;lancer_3,13067;ranger_3,19635",
 	["rewards"] = "resources,gem,230"
 }
 pve_boss[24] = {
