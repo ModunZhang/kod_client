@@ -8,7 +8,8 @@ local Enum = import("app.utils.Enum")
 local Dragon = class("Dragon",MultiObserver)
 local DragonEquipment = class("DragonEquipment")
 local DragonSkill =  class("DragonSkill")
-local config_dragonAttribute = GameDatas.Dragons.dragonAttributes
+local config_dragonLevel = GameDatas.Dragons.dragonLevel
+local config_dragonStar = GameDatas.Dragons.dragonStar
 local config_equipments = GameDatas.DragonEquipments.equipments
 local config_dragonSkill = GameDatas.Dragons.dragonSkills
 local Localize = import("..utils.Localize")
@@ -28,11 +29,13 @@ function DragonSkill:ctor(key,name,level,dragon_star,dragon_type)
 	property(self, "star", dragon_star)
 	property(self, "type", dragon_type)
 	self:LoadConfig_()
+	print("self:Name()---->",self:Name())
+	print("self:Key()---->",self:Key())
 end
 
 --将配置表里的数据直接注入object
 function DragonSkill:LoadConfig_()
-	self.config_ = config_dragonSkill[self:Name()]
+	self.config_ = config_dragonSkill[self:Level()]
 end
 
 function DragonSkill:GetSkillConfig()
@@ -40,12 +43,32 @@ function DragonSkill:GetSkillConfig()
 end
 
 function DragonSkill:IsLocked()
-	return self:Star() < self:GetSkillConfig().unlockStar
+	if config_dragonStar[self:Star()] then
+		local unlockSkills = string.split(config_dragonStar[self:Star()].skillsUnlocked,",")
+		if not table.indexof(unlockSkills,self:Name()) then
+			return true
+		else
+			return false
+		end
+	end
+	return true
 end
 
 --获取技能的效果
 function DragonSkill:GetEffect()
-	return self:Level() * self:GetSkillConfig().effectPerLevel
+	local config = self:GetSkillConfig()
+	if config and config[self:Level()] then
+		return config[self:Level()].effect
+	end
+	return 0
+end
+
+function DragonSkill:GetBloodCost()
+	local config = config_dragonSkill[self:Level() + 1]
+	if config and config[self:Name() .. 'BloodCost'] then
+		return config[self:Name() .. 'BloodCost']
+	end
+	return 0
 end
 
 function DragonSkill:OnPropertyChange( ... )
@@ -141,7 +164,7 @@ function Dragon:ctor(drag_type,strength,vitality,status,star,level,exp,hp)
 end
 --自身的领导力
 function Dragon:Leadership()
-	return config_dragonAttribute[self:Star()].initLeadership + self:Level() * config_dragonAttribute[self:Star()].perLevelLeadership 
+	return config_dragonLevel[self:Level()].leadership
 end
 --总带兵量
 function Dragon:LeadCitizen()
@@ -151,11 +174,11 @@ end
 
 --自身的力量
 function Dragon:Strength()
-  	return config_dragonAttribute[self:Star()].initStrength + self:Level() * config_dragonAttribute[self:Star()].perLevelStrength 
+  	return config_dragonLevel[self:Level()].strength
 end
 --自身的活力
 function Dragon:Vitality()
-	return config_dragonAttribute[self:Star()].initVitality + self:Level() * config_dragonAttribute[self:Star()].perLevelVitality 
+	return config_dragonLevel[self:Level()].vitality
 end
 function Dragon:IsHpLow()
 	return math.floor(self.hp/self:GetMaxHP()*100)<20
@@ -311,16 +334,12 @@ function Dragon:GetMaxHP()
 end
 
 --升级需要的经验值
-function Dragon:GetMaxExp()
-	if config_dragonAttribute[self:Star()] then
-		return tonumber(config_dragonAttribute[self:Star()].perLevelExp) * math.pow(self:Level(),2)
-	else
-		return 0
-	end
+function Dragon:GetMaxExp()	
+	return config_dragonLevel[self:Level() + 1 ] and config_dragonLevel[self:Level() + 1 ].expNeed or 0
 end
 --当前星级最大等级
 function Dragon:GetMaxLevel()
-	return config_dragonAttribute[self:Star()] and config_dragonAttribute[self:Star()].levelMax or 0
+	return config_dragonStar[self:Star()] and config_dragonStar[self:Star()].levelMax or 0
 end
 
 --是否达到晋级等级
@@ -333,8 +352,7 @@ function Dragon:MaxStar()
 end
 
 function Dragon:GetPromotionLevel()
-	local star = self:Star() + 1 > self:MaxStar() and self:MaxStar() or self:Star() + 1
-	return config_dragonAttribute[star].promotionLevel
+	return self:GetMaxLevel()
 end
 
 --获取所有装备的buffers信息
