@@ -6,12 +6,17 @@ local GameUIStore = UIKit:createUIClass("GameUIStore", "GameUIWithCommonHeader")
 local UIListView = import(".UIListView")
 local window = import("..utils.window")
 local config_store = GameDatas.StoreItems.items
+local WidgetPushButton = import("..widget.WidgetPushButton")
+local Localize = import("..utils.Localize")
+local UILib = import(".UILib")
+local Localize_item = import("..utils.Localize_item")
 
 function GameUIStore:ctor()
 	GameUIStore.super.ctor(self,City,_("获得金龙币"))
 end
 
 function GameUIStore:OnMoveInStage()
+	-- app:getStore():updateTransactionStates()
 	GameUIStore.super.OnMoveInStage(self)
 	self:CreateUI()
 end
@@ -32,9 +37,10 @@ function GameUIStore:GetStoreData()
 		temp_data['productId'] = v.productId
 		temp_data['price'] = string.format("%.2f",v.price)
 		temp_data['gem'] = v.gem
-		temp_data['name'] = v.name
+		temp_data['name'] = Localize.iap_package_name[v.productId]
 		temp_data['order'] = v.order
 		temp_data['rewards'] = self:FormatGemRewards(v.rewards)
+		temp_data['config'] = UILib.iap_package_image[v.productId]
 		table.insert(data,temp_data)
 	end
 	return data
@@ -63,24 +69,113 @@ end
 
 function GameUIStore:GetItem(data)
 	local item = self.listView:newItem()
-	local content_image = "store_item_black_610x514.png"
-
-	if data.order == 1 or data.order == 5 then
-		content_image = "store_item_red_610x514.png"
-	end
-	local content = display.newSprite(content_image)
-	
+	local content = display.newSprite(data.config.content)
 	UIKit:ttfLabel({
 		text = data.name,
 		color= 0xfed36c,
 		size = 24
-	}):align(display.CENTER_TOP, 305, 495):addTo(content)
-
-	local logo = display.newSprite(string.format("gem_logo_592x139_%d.png",data.order)):align(display.CENTER_TOP, 305, 450):addTo(content)
+	}):align(display.CENTER_TOP, 305, 494):addTo(content)
+	local logo = self:GetItemLogo(data):align(display.CENTER_TOP, 305, 450):addTo(content)
+	self:GetItemBuyButton(data):addTo(content):pos(305,72)
+	self:GetItemMoreButton(data):addTo(content):pos(305,142)
+	self:AddRewardsForItem(content,data)
 	item:addContent(content)
 	item:setItemSize(610, 514)
 	return item
 end
+
+function GameUIStore:GetItemLogo(data)
+	local logo = display.newSprite(data.config.logo)
+	local logo_box = display.newSprite("store_logo_box_592x141.png",296,69):addTo(logo):zorder(5)
+	local bg = display.newSprite(data.config.desc)
+	if data.config.npc then
+		bg:align(display.RIGHT_CENTER, 530, 69):addTo(logo)
+		display.newSprite(data.config.npc):align(display.RIGHT_BOTTOM, 592, 0):addTo(logo)
+	else
+		bg:align(display.RIGHT_CENTER, 592, 69):addTo(logo)
+	end
+	local gem_box = display.newSprite("store_gem_box_260x116.png"):align(display.CENTER, 0, 46):addTo(bg)
+	display.newSprite("store_gem_260x116.png", 130, 58):addTo(gem_box)
+	UIKit:ttfLabel({
+		text = data.gem,
+		size = 30,
+		color= 0xffd200,
+	}):align(display.TOP_CENTER, 167, 92):addTo(bg)
+	UIKit:ttfLabel({
+		text = _("礼包中包含下列所有物品"),
+		size = 16,
+		color= 0xfed36c
+	}):align(display.BOTTOM_CENTER, 167,6):addTo(bg)
+	UIKit:ttfLabel({
+		text = _("+价值8000的道具"),
+		size = 20,
+		color= 0xffd200
+	}):align(display.CENTER, 167,44):addTo(bg)
+	return logo
+end
+
+function GameUIStore:GetItemBuyButton(data)
+	local button = WidgetPushButton.new({
+		normal = "store_buy_button_n_332x76.png",
+		pressed= "store_buy_button_l_332x76.png"
+	})
+	local icon = display.newSprite("store_buy_icon_332x76.png"):addTo(button)
+	local label = UIKit:ttfLabel({
+		text = _("购买"),
+		size = 24,
+		color= 0xfff3c7
+	})
+	button:onButtonClicked(function()
+		self:OnBuyButtonClicked(data.productId)
+	end)
+	button:setButtonLabel("normal", label)
+	button:setButtonLabelOffset(0, 20)
+	UIKit:ttfLabel({
+		text = "$" .. data.price,
+		size =  24,
+		color= 0xffd200
+	}):addTo(icon):align(display.CENTER_BOTTOM, 166, 10)
+	return button
+end
+
+function GameUIStore:OnBuyButtonClicked(productId)
+	dump(productId,"buy----->")
+end
+
+function GameUIStore:GetItemMoreButton(data)
+	local button = WidgetPushButton.new({normal = data.config.more.normal,pressed = data.config.more.pressed})
+	button:setButtonLabel("normal",UIKit:commonButtonLable({
+		text = _("更多")
+	})):onButtonClicked(function()
+		UIKit:newGameUI("GameUIStorePackage",data):AddToCurrentScene(true)
+	end)
+	return button
+end
+
+function GameUIStore:AddRewardsForItem(content,data)
+	local rewards = data.rewards
+	local x_1,x_2,x_3,y = 24,66,586,285
+	for i=1,3 do
+		local reward = rewards[i]
+		if reward then
+			local icon = display.newSprite(UILib.item[reward.key]):align(display.LEFT_CENTER, x_1, y):addTo(content)
+			icon:scale(36/math.max(icon:getContentSize().width,icon:getContentSize().height))
+			UIKit:ttfLabel({
+				text = Localize_item.item_name[reward.key],
+				size = 20,
+				color= 0xffedae
+			}):align(display.LEFT_CENTER, x_2, y):addTo(content)
+			UIKit:ttfLabel({
+				text = "x " .. reward.count,
+				size = 20,
+				color= 0xffedae,
+				align = cc.TEXT_ALIGNMENT_RIGHT,
+			}):align(display.RIGHT_CENTER, x_3, y):addTo(content)
+			y = y - 50
+		end
+	end
+end
+
 
 function GameUIStore:RightButtonClicked()
 end

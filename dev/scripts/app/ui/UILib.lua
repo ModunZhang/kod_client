@@ -709,6 +709,47 @@ local function unLoadSolidersAnimation()
         end
     end
 end
+
+local IAP_PACKAGE_IMAGE = {
+    product_1 = {
+        content = "store_item_red_610x514.png",
+        logo = "gem_logo_592x139_1.png",
+        desc = "store_desc_black_335x92.png",
+        npc  = "store_npc_1_109x130.png",
+        more = {normal = "store_more_red_button_n_584x34.png",pressed = "store_more_red_button_l_584x34.png"},
+        small_content = "store_item_content_red_s_588x186.png",
+    },
+    product_2 = {
+        content = "store_item_black_610x514.png",
+        logo = "gem_logo_592x139_2.png",
+        desc = "store_desc_red_282x92.png",
+        more = {normal = "store_more_black_button_n_584x34.png",pressed = "store_more_black_button_l_584x34.png"},
+        small_content = "store_item_content_black_s_588x186.png",
+    },
+    product__3 = {
+        content = "store_item_black_610x514.png",
+        logo = "gem_logo_592x139_3.png",
+        desc = "store_desc_red_282x92.png",
+        more = {normal = "store_more_black_button_n_584x34.png",pressed = "store_more_black_button_l_584x34.png"},
+        small_content = "store_item_content_black_s_588x186.png",
+    },
+    product_4 = {
+        content = "store_item_black_610x514.png",
+        logo = "gem_logo_592x139_4.png",
+        desc = "store_desc_red_282x92.png",
+        more = {normal = "store_more_black_button_n_584x34.png",pressed = "store_more_black_button_l_584x34.png"},
+        small_content = "store_item_content_black_s_588x186.png",
+    },
+    product_5 = {
+        content = "store_item_red_610x514.png",
+        logo = "gem_logo_592x139_5.png",
+        desc = "store_desc_black_335x92.png",
+        npc  = "store_npc_2_171x130.png",
+        more = {normal = "store_more_red_button_n_584x34.png",pressed = "store_more_red_button_l_584x34.png"},
+        small_content = "store_item_content_red_s_588x186.png",
+    },
+}
+
 return {
     resource = RESOURCE,
     soldier_bg = STAR_BG,
@@ -740,5 +781,6 @@ return {
     unLoadBuildingAnimation = unLoadBuildingAnimation,
     loadSolidersAnimation = loadSolidersAnimation,
     unLoadSolidersAnimation = unLoadSolidersAnimation,
+    iap_package_image = IAP_PACKAGE_IMAGE,
 }
 
