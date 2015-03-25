@@ -25,9 +25,9 @@ function UpgradingSprite:OnBuildingUpgradingBegin(building, time)
     if self.label then
         self.label:setString(building:GetType().." "..building:GetLevel())
     end
-    self:NotifyObservers(function(listener)
-        listener:OnBuildingUpgradingBegin(building, time)
-    end)
+    -- self:NotifyObservers(function(listener)
+    --     listener:OnBuildingUpgradingBegin(building, time)
+    -- end)
 
     -- animation
     self:StartBuildingAnimation()
@@ -36,12 +36,12 @@ function UpgradingSprite:OnBuildingUpgradeFinished(building)
     if self.label then
         self.label:setString(building:GetType().." "..building:GetLevel())
     end
-    self:NotifyObservers(function(listener)
-        listener:OnBuildingUpgradeFinished(building)
-    end)
+    -- self:NotifyObservers(function(listener)
+    --     listener:OnBuildingUpgradeFinished(building)
+    -- end)
     self:RefreshSprite()
     -- self:RefreshShadow()
-    self:OnSceneMove()
+    -- self:OnSceneMove()
 
     -- animation
     self:StopBuildingAnimation()
@@ -50,9 +50,9 @@ function UpgradingSprite:OnBuildingUpgrading(building, time)
     if self.label then
         self.label:setString("upgrading "..building:GetLevel().."\n"..math.round(building:GetUpgradingLeftTimeByCurrentTime(time)))
     end
-    self:NotifyObservers(function(listener)
-        listener:OnBuildingUpgrading(building, time)
-    end)
+    -- self:NotifyObservers(function(listener)
+    --     listener:OnBuildingUpgrading(building, time)
+    -- end)
 
     -- animation
     self:StartBuildingAnimation()
@@ -65,16 +65,30 @@ function UpgradingSprite:StartBuildingAnimation()
     }
     self:stopAllActions()
     self.building_animation = self:runAction(cc.RepeatForever:create(sequence))
+
+    self.hammer_animation = ccs.Armature:create("chuizi"):addTo(self):scale(0.6):align(display.CENTER):pos(self:GetSpriteOffset())
+    self.hammer_animation:getAnimation():playWithIndex(0)
 end
 function UpgradingSprite:StopBuildingAnimation()
     self:stopAllActions()
     self:setColor(display.COLOR_WHITE)
     self.building_animation = nil
+    self.hammer_animation:removeFromParent()
+    self.hammer_animation = nil
 end
 function UpgradingSprite:CheckCondition()
-    self:NotifyObservers(function(listener)
-        listener:OnCheckUpgradingCondition(self)
-    end)
+    -- self:NotifyObservers(function(listener)
+    --     listener:OnCheckUpgradingCondition(self)
+    -- end)
+    if not self.level_bg then return end
+    local city = self:GetEntity():BelongCity()
+    building = self:GetEntity():GetType() == "tower" and city:GetTower() or self:GetEntity()
+    local level = building:GetLevel()
+    local canUpgrade = building:CanUpgrade()
+    self.level_bg:setVisible(level > 0)
+    self.text_field:setString(level)
+    self.can_level_up:setVisible(canUpgrade)
+    self.can_not_level_up:setVisible(not canUpgrade)
 end
 function UpgradingSprite:ctor(city_layer, entity)
     self.config = SpriteConfig[entity:GetType()]
@@ -82,6 +96,16 @@ function UpgradingSprite:ctor(city_layer, entity)
     UpgradingSprite.super.ctor(self, city_layer, entity, x, y)
     entity:AddBaseListener(self)
     entity:AddUpgradeListener(self)
+
+    if entity:GetType() == "wall" then
+        if entity:IsGate() then
+            self:CreateLevelNode()
+        end
+    else
+        self:CreateLevelNode()
+    end
+    self:CheckCondition()
+
 
     -- if entity:IsUnlocked() and self:GetShadowConfig() then
     --     self:CreateShadow(self:GetShadowConfig())
@@ -169,9 +193,38 @@ end
 function UpgradingSprite:GetCenterPosition()
     return self:GetLogicMap():ConvertToMapPosition(self:GetEntity():GetMidLogicPosition())
 end
-
-
+function UpgradingSprite:CreateLevelNode()
+    self.level_bg = display.newNode():addTo(self, 1000):pos(self:GetSpriteTopPosition())
+    self.level_bg:setCascadeOpacityEnabled(true)
+    self.can_level_up = cc.ui.UIImage.new("can_level_up.png"):addTo(self.level_bg):show()
+    self.can_not_level_up = cc.ui.UIImage.new("can_not_level_up.png"):addTo(self.level_bg):pos(0,-10):hide()
+    self.text_field = cc.ui.UILabel.new({
+        size = 16,
+        font = UIKit:getFontFilePath(),
+        align = cc.ui.TEXT_ALIGN_RIGHT,
+        color = UIKit:hex2c3b(0xfff1cc)
+    }):addTo(self.level_bg):align(display.CENTER, 10, 18)
+    self.text_field:setSkewY(-30)
+end
+function UpgradingSprite:ShowLevelUpNode()
+    if self.status == "show" then
+        return
+    end
+    self.level_bg:stopAllActions()
+    self.level_bg:fadeTo(0.5, 255)
+    self.status = "show"
+end
+function UpgradingSprite:HideLevelUpNode()
+    if self.status == "hide" then
+        return
+    end
+    self.level_bg:stopAllActions()
+    self.level_bg:fadeTo(0.5, 0)
+    self.status = "hide"
+end
 return UpgradingSprite
+
+
 
 
 

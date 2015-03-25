@@ -125,7 +125,6 @@ end
 
 function UIKit:closeAllUI()
     for name,v in pairs(self:getRegistry().objects_) do
-
         if v.__isBase and v.__type ~= self.UITYPE.BACKGROUND then
             v:LeftButtonClicked()
         end
