@@ -59,7 +59,7 @@ function GameUIStorePackage:CreateItemLogo()
 		color= 0xfed36c
 	}):align(display.BOTTOM_CENTER, 167,6):addTo(bg)
 	UIKit:ttfLabel({
-		text = _("+价值8000的道具"),
+		text = string.format(_("+价值%d的道具"),data.rewards_price),
 		size = 20,
 		color= 0xffd200
 	}):align(display.CENTER, 167,44):addTo(bg)
@@ -136,8 +136,9 @@ function GameUIStorePackage:CreateBuyButton()
 	end)
 end
 
-function GameUIStorePackage:OnBuyButtonClicked(productId)
+function GameUIStorePackage:OnBuyButtonClicked()
 	dump(self:GetData().productId,"buy----->")
+	app:getStore().purchaseWithProductId(self:GetData().productId,1)
 end
 
 return GameUIStorePackage

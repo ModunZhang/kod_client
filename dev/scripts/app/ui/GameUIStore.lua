@@ -16,7 +16,7 @@ function GameUIStore:ctor()
 end
 
 function GameUIStore:OnMoveInStage()
-	-- app:getStore():updateTransactionStates()
+	app:getStore():updateTransactionStates()
 	GameUIStore.super.OnMoveInStage(self)
 	self:CreateUI()
 end
@@ -39,7 +39,9 @@ function GameUIStore:GetStoreData()
 		temp_data['gem'] = v.gem
 		temp_data['name'] = Localize.iap_package_name[v.productId]
 		temp_data['order'] = v.order
-		temp_data['rewards'] = self:FormatGemRewards(v.rewards)
+		local rewards,rewards_price = self:FormatGemRewards(v.rewards)
+		temp_data['rewards'] = rewards
+		temp_data['rewards_price'] = rewards_price
 		temp_data['config'] = UILib.iap_package_image[v.productId]
 		table.insert(data,temp_data)
 	end
@@ -48,13 +50,15 @@ end
 
 function GameUIStore:FormatGemRewards(rewards)
 	local result_rewards = {}
+	local rewards_price = {}
 	local all_rewards = string.split(rewards, ",")
 	for __,v in ipairs(all_rewards) do
 		local one_reward = string.split(v,":")
 		local category,key,count = unpack(one_reward)
 		table.insert(result_rewards,{category = category,key = key,count = count})
+		rewards_price[key] = count
 	end
-	return result_rewards
+	return result_rewards,DataUtils:getItemsPrice(rewards_price)
 end
 
 function GameUIStore:RefreshListView()
@@ -107,7 +111,7 @@ function GameUIStore:GetItemLogo(data)
 		color= 0xfed36c
 	}):align(display.BOTTOM_CENTER, 167,6):addTo(bg)
 	UIKit:ttfLabel({
-		text = _("+价值8000的道具"),
+		text = string.format(_("+价值%d的道具"),data.rewards_price),
 		size = 20,
 		color= 0xffd200
 	}):align(display.CENTER, 167,44):addTo(bg)
@@ -139,7 +143,7 @@ function GameUIStore:GetItemBuyButton(data)
 end
 
 function GameUIStore:OnBuyButtonClicked(productId)
-	dump(productId,"buy----->")
+	app:getStore().purchaseWithProductId(productId,1)
 end
 
 function GameUIStore:GetItemMoreButton(data)
