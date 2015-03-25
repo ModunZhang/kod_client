@@ -24,22 +24,10 @@ end
 function DragonEyrieUpgradeBuilding:EnergyMax()
     return config_function[self:GetEfficiencyLevel()].energyMax
 end
--- 能量生产
--- function DragonEyrieUpgradeBuilding:GetProductionPerHour()
---     return 3600 / self:GetTimePerEnergy()
--- end
 
--- function DragonEyrieUpgradeBuilding:GetTimePerEnergy()
---     return config_function[self:GetLevel()].perEnergyTime
--- end
-
--- function DragonEyrieUpgradeBuilding:GetUpdateResourceType()
---     return ResourceManager.RESOURCE_TYPE.ENERGY
--- end
-
-function DragonEyrieUpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id, deltaData)
-    DragonEyrieUpgradeBuilding.super.OnUserDataChanged(self,user_data, current_time, location_id, nil, deltaData)
-    self:GetDragonManager():OnUserDataChanged(user_data, current_time, location_id, deltaData,self:GetHPRecoveryPerHour())
+function DragonEyrieUpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id,sub_location,deltaData)
+    DragonEyrieUpgradeBuilding.super.OnUserDataChanged(self,user_data, current_time, location_id, sub_location, deltaData)
+    self:GetDragonManager():OnUserDataChanged(user_data, current_time, deltaData,self:GetHPRecoveryPerHour())
 end
 
 
