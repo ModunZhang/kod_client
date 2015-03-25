@@ -465,7 +465,7 @@ function DataUtils:getIapRewardMessage(productId)
         local __,key,count = unpack(one_reward)
         message = message .. Localize_item.item_name[key] .. " x" .. count .. " "
     end
-    return message
+    return message,info
 end
 
 function DataUtils:getIapInfo(productId)

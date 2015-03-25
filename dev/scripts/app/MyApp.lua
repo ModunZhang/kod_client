@@ -276,12 +276,12 @@ function MyApp:transactionObserver(event)
         device.showAlert("提示","已为你恢复以前的购买",{_("确定")})
         Store.finishTransaction(transaction)
     elseif transaction_state == 'purchased' then
-        local info = DataUtils:getIapInfo(transaction.productIdentifier)
+        local rewards_msg,info = DataUtils:getIapRewardMessage(transaction.productIdentifier)
         ext.market_sdk.onPlayerChargeRequst(transaction.transactionIdentifier,transaction.productIdentifier,info.price,info.gem,"USD")
         NetManager:getVerifyIAPPromise(transaction.transactionIdentifier,transaction.receipt):next(function(response)
             local msg = response.msg
             if msg.transactionId then
-                GameGlobalUI:showTips(_("提示"),DataUtils:getIapRewardMessage(transaction.productIdentifier))
+                GameGlobalUI:showTips(_("提示"),rewards_msg)
                 Store.finishTransaction(transaction)
                 ext.market_sdk.onPlayerChargeSuccess(transaction.transactionIdentifier)
             end
