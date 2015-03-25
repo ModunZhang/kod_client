@@ -219,20 +219,20 @@ function GameUITownHall:CreateQuestItem(quest,index)
                     TownHallUI.isFinishedQuest = false
                 end)
             else
-                progress:setVisible(true)
-                status = _("正在处理政务")
-                control_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, "green_btn_up_148x58.png", true)
-                control_btn:setButtonImage(cc.ui.UIPushButton.PRESSED,"green_btn_down_148x58.png", true)
-                control_btn:setButtonLabel(
-                    UIKit:commonButtonLable({
-                        color = 0xfff3c7,
-                        text  = _("加速")
-                    })
-                ):onButtonClicked(function(event)
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("暂无加速功能"))
-                        :AddToCurrentScene()
-                end)
+                -- progress:setVisible(true)
+                -- status = _("正在处理政务")
+                -- control_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, "green_btn_up_148x58.png", true)
+                -- control_btn:setButtonImage(cc.ui.UIPushButton.PRESSED,"green_btn_down_148x58.png", true)
+                -- control_btn:setButtonLabel(
+                --     UIKit:commonButtonLable({
+                --         color = 0xfff3c7,
+                --         text  = _("加速")
+                --     })
+                -- ):onButtonClicked(function(event)
+                --     FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                --         :SetPopMessage(_("暂无加速功能"))
+                --         :AddToCurrentScene()
+                -- end)
             end
             need_time_label:setVisible(false)
             add_star_btn:setVisible(false)
