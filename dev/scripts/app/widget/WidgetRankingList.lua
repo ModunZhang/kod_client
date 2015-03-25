@@ -1,9 +1,15 @@
 local cocos_promise = import("..utils.cocos_promise")
 local window = import("..utils.window")
+local Flag = import("..entity.Flag")
 local UIListView = import("..ui.UIListView")
 local WidgetPopDialog = import(".WidgetPopDialog")
+local WidgetAllianceUIHelper = import(".WidgetAllianceUIHelper")
 local WidgetDropList = import("..widget.WidgetDropList")
 local WidgetRankingList = class("WidgetRankingList", WidgetPopDialog)
+
+local ui_helper = WidgetAllianceUIHelper.new()
+
+
 function WidgetRankingList:ctor(type_)
     self.type_ = type_
     local str = type_ == "player" and _("个人排行榜") or _("联盟排行榜")
@@ -19,6 +25,7 @@ function WidgetRankingList:onEnter()
         :align(display.TOP_CENTER, size.width / 2, size.height - 110)
 
     self.my_ranking = UIKit:ttfLabel({
+        text = "",
         size = 22,
         color = 0x403c2f,
     }):align(display.CENTER, bg:getContentSize().width/2, bg:getContentSize().height/2)
@@ -112,7 +119,10 @@ function WidgetRankingList:sourceDelegate(listView, tag, idx)
         item = self.listview:dequeueItem()
         if not item then
             item = self.listview:newItem()
-            content = self:CreatePlayerContentByIndex(idx)
+            content = self.type_ == "player" 
+            and self:CreatePlayerContentByIndex(idx) 
+            or self:CreateAllianceContentByIndex(idx)
+
             item:addContent(content)
         else
             content = item:getContent()
@@ -135,24 +145,27 @@ function WidgetRankingList:CreatePlayerContentByIndex(idx)
     display.newSprite("dragon_strength_27x31.png"):addTo(item):pos(400, 40)
 
     item.rank = UIKit:ttfLabel({
+        text = "",
         size = 22,
         color = 0x403c2f,
     }):align(display.CENTER, 50, 40):addTo(item)
 
     item.name = UIKit:ttfLabel({
+        text = "",
         size = 22,
         color = 0x403c2f,
     }):align(display.LEFT_CENTER, 160, 40):addTo(item)
 
     item.value = UIKit:ttfLabel({
+        text = "",
         size = 22,
         color = 0x403c2f,
     }):align(display.LEFT_CENTER, 400 + 20, 40):addTo(item)
 
 
     function item:SetData(data)
-        self.name:setString(cur_data.name)
-        self.value:setString(cur_data.value)
+        self.name:setString(data.name)
+        self.value:setString(data.value)
         return self
     end
     function item:SetIndex(index)
@@ -212,23 +225,34 @@ end
 function WidgetRankingList:CreateAllianceContentByIndex(idx)
     local item = display.newSprite("background2_548x76.png")
     local size = item:getContentSize()
+    
     item.bg2 = display.newSprite("background1_548x76.png"):addTo(item)
         :pos(size.width/2, size.height/2)
-    display.newSprite("background_57x57.png"):addTo(item):pos(120, 40)
-    display.newSprite("playerIcon_default.png"):addTo(item, 1):pos(120, 40):scale(0.5)
+
+    
+
     display.newSprite("dragon_strength_27x31.png"):addTo(item):pos(400, 40)
 
     item.rank = UIKit:ttfLabel({
+        text = "",
         size = 22,
         color = 0x403c2f,
     }):align(display.CENTER, 50, 40):addTo(item)
 
     item.name = UIKit:ttfLabel({
+        text = "",
         size = 22,
         color = 0x403c2f,
     }):align(display.LEFT_CENTER, 160, 40):addTo(item)
 
+    item.tag = UIKit:ttfLabel({
+        text = "",
+        size = 18,
+        color = 0x403c2f,
+    }):align(display.LEFT_CENTER, 160, 20):addTo(item)
+
     item.value = UIKit:ttfLabel({
+        text = "",
         size = 22,
         color = 0x403c2f,
     }):align(display.LEFT_CENTER, 400 + 20, 40):addTo(item)
@@ -236,7 +260,13 @@ function WidgetRankingList:CreateAllianceContentByIndex(idx)
 
     function item:SetData(data)
         self.name:setString(data.name)
+        self.tag:setString(string.format("(%s)", data.tag))
         self.value:setString(data.value)
+        if self.flag then
+            self.flag:removeFromParent()
+        end
+        self.flag = ui_helper:CreateFlagContentSprite(Flag:DecodeFromJson(data.flag))
+        :addTo(self):align(display.CENTER, 80, 5):scale(0.5)
         return self
     end
     function item:SetIndex(index)
