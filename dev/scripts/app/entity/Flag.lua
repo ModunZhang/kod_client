@@ -70,19 +70,22 @@ function Flag:IsSameWith(flag)
         and this_flag.graphicColor[2] == flag_.graphicColor[2]
 end
 -- 随机不会替换以前的旗帜
+local math = math
+local random = math.random
+local randomseed = math.randomseed
 function Flag:RandomFlag()
     local flag = Flag.new()
-    math.randomseed(tostring(os.time()):reverse():sub(1, 6))
-    flag:SetBackStyle(math.random(4))
-    local oneColor = math.random(0,#flag_color_map - 1) + 1
-    local otherColor = math.random(#flag_color_map)
+    randomseed(tostring(os.time()):reverse():sub(1, 6))
+    flag:SetBackStyle(random(4))
+    local oneColor = random(0,#flag_color_map - 1) + 1
+    local otherColor = random(#flag_color_map)
     flag:SetBackColors(flag_color_map[oneColor], flag_color_map[otherColor])
-    flag:SetFrontStyle(math.random(4))
-    local imageName = math.random(0,16) + 1
-    local otherName = math.random(17)
+    flag:SetFrontStyle(random(4))
+    local imageName = random(0,16) + 1
+    local otherName = random(17)
     flag:SetFrontImagesStyle(imageName, otherName)
-    oneColor = math.random(0,#flag_color_map - 2) + 2
-    otherColor = math.random(#flag_color_map)
+    oneColor = random(0,#flag_color_map - 2) + 2
+    otherColor = random(#flag_color_map)
     flag:SetFrontImageColors(flag_color_map[oneColor], flag_color_map[otherColor])
     return flag
 end
