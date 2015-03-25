@@ -322,7 +322,6 @@ function GameUIDragonEyrieDetail:CreateNodeIf_equipment()
 	return self.equipment_node
 end
 
-
 function GameUIDragonEyrieDetail:UpgradeDragonStar()
     local dragon = self:GetDragon()
     if not dragon:IsReachPromotionLevel() then

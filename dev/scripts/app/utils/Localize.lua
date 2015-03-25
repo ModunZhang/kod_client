@@ -702,6 +702,14 @@ local ALLIANCE_BUILDINGS = {
     palace = _("联盟宫殿")
 }
 
+local IAP_PACKAGE_NAME = {
+    product_1 = _("新手大礼包"),
+    product_2 = _("探险家礼包"),
+    product__3 = _("铁血军团礼包"),
+    product_4 = _("帝国荣耀礼包"),
+    product_5 = _("龙族王朝礼包"),
+}
+
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
@@ -740,4 +748,5 @@ return {
     daily_tasks = DAILY_TASKS,
     selenaquestion_tips = SELENAQUESTION_TIPS,
     alliance_buildings = ALLIANCE_BUILDINGS,
+    iap_package_name = IAP_PACKAGE_NAME,
 }

@@ -174,7 +174,7 @@ function Store.updateTransactionStates()
     cc.storeProvider:updateTransactionStates()
 end
 --[[ 
-    构造一个Transaction
+    新加 构造一个Transaction
 ]]--
 function Store.getTransactionWithIdentifier(identifier)
     return {
