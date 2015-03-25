@@ -16,9 +16,9 @@ function GameUIWatchTower:ctor(city,building)
 
 end
 
-function GameUIWatchTower:onEnter()
+function GameUIWatchTower:OnMoveInStage()
 	self:ResetTimerNodeTable()
-	GameUIWatchTower.super.onEnter(self)
+	GameUIWatchTower.super.OnMoveInStage(self)
 	self:AddOrRemoveListener(true)
 	self:CreateUI()
 end
