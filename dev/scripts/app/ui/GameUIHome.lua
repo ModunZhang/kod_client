@@ -634,7 +634,7 @@ function GameUIHome:Find()
     end)
     return cocos_promise.defer(function()
         if not item then
-            promise.reject("没有找到对应item")
+            promise.reject({code = -1, msg = "没有找到对应item"}, "")
         end
         return item
     end)

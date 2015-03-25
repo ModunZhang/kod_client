@@ -557,7 +557,7 @@ function CityLayer:FindBuildingBy(x, y)
     end)
     return cocos_promise.defer(function()
         if not building then
-            promise.reject({x = x, y = y}, "没有找到对应坐标的建筑")
+            promise.reject({code = -1, msg = ""}, "没有找到对应坐标的建筑")
         end
         return building
     end)
