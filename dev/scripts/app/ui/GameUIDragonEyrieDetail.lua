@@ -614,13 +614,13 @@ function GameUIDragonEyrieDetail:GetInfomationData()
 	local dragon = self:GetDragon()
 	for __,v in ipairs(dragon:GetAllEquipmentBuffEffect()) do
 		if v[2]*100 > 0 then
-			table.insert(r,{Localize.dragon_buff_effection[v[1]] or v[1],v[2]*100})
+			table.insert(r,{Localize.dragon_buff_effection[v[1]] or v[1],string.format("%d%%",v[2]*100)})
 		end
 	end
 
 	for __,v in ipairs(dragon:GetAllSkillBuffEffect()) do
 		if v[2]*100 > 0 then
-			table.insert(r,{Localize.dragon_skill_effection[v[1]] or v[1],v[2]*100})
+			table.insert(r,{Localize.dragon_skill_effection[v[1]] or v[1],string.format("%d%%",v[2]*100)})
 		end
 	end
 	return r

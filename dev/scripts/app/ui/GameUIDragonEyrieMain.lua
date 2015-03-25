@@ -377,7 +377,7 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 			color = 0xffedae,
 			shadow = true
 		})):addTo(info_panel):align(display.RIGHT_BOTTOM,540,5):onButtonClicked(function()
-			UIKit:newGameUI("GameUIDragonEyrieDetail",self.city,self.building,self:GetCurrentDragon():Type()):AddToCurrentScene(true)
+			UIKit:newGameUI("GameUIDragonEyrieDetail",self.city,self.building,self:GetCurrentDragon():Type()):AddToCurrentScene(false)
 		end)
 		self.detailButton = detailButton
 		self.draongConteNode:OnEnterIndex(math.abs(0))
