@@ -13,6 +13,10 @@ end
 function err_class:reason()
     return unpack(self.errcode)
 end
+function err_class:isSyntaxError()
+    local _,code = unpack(self.errcode)
+    return code == "syntaxError"
+end
 local function is_error(obj)
     return getmetatable(obj) == err_class
 end
