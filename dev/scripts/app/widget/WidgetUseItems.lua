@@ -357,7 +357,7 @@ function WidgetUseItems:OpenOneDragonItemDialog( item ,dragon)
                 return true
             end,
             function ()
-                local item_name = item:Name()
+                local item_name = v:Name()
                 NetManager:getUseItemPromise(item_name,{[item_name] = {
                     dragonType = dragon:Type()
                 }}):next(function ()
@@ -365,7 +365,7 @@ function WidgetUseItems:OpenOneDragonItemDialog( item ,dragon)
                 end)
             end,
             function ()
-                local item_name = item:Name()
+                local item_name = v:Name()
                 NetManager:getBuyAndUseItemPromise(item_name,{[item_name] = {
                     dragonType = dragon:Type()
                 }}):next(function ()
