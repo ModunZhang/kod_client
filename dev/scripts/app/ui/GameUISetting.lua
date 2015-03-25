@@ -4,6 +4,7 @@
 --
 local GameUISetting = UIKit:createUIClass("GameUISetting","GameUIWithCommonHeader")
 local window = import("..utils.window")
+local WidgetRankingList = import("..widget.WidgetRankingList")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 
 function GameUISetting:ctor(city)
@@ -100,7 +101,8 @@ function GameUISetting:OnButtonClicked(button)
 	elseif tag == 4 then
 		UIKit:newGameUI("GameUITips"):AddToCurrentScene(true)
 	elseif tag == 5 then
-		GameGlobalUI:showTips("提示","功能还未实现")
+		WidgetRankingList.new():AddToCurrentScene(true)
+		-- GameGlobalUI:showTips("提示","功能还未实现")
 	elseif tag == 6 then
 		GameGlobalUI:showTips("提示","功能还未实现")
 	elseif tag == 7 then

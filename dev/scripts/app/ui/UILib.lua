@@ -389,6 +389,19 @@ local BLACK_SOLDIER_IMAGES = {
         "b_ballista_1.png",
         "b_ballista_2.png",
     },
+    
+    skeletonWarrior = {
+        "skeletonWarrior.png",
+    },
+    skeletonArcher = {
+        "skeletonArcher.png",
+    },
+    deathKnight = {
+        "deathKnight.png",
+    },
+    meatWagon = {
+        "meatWagon.png",
+    },
 }
 local DRAGON_ANIMATIONS_FILES = {
     redDragon = {

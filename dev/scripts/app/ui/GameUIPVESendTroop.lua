@@ -32,8 +32,8 @@ function GameUIPVESendTroop:ctor(pve_soldiers,march_callback)
     self.dragon = self.dragon_manager:GetDragon(self.dragon_manager:GetCanFightPowerfulDragonType()) or self.dragon_manager:GetDragon(self.dragon_manager:GetPowerfulDragonType())
 end
 
-function GameUIPVESendTroop:onEnter()
-    GameUIPVESendTroop.super.onEnter(self)
+function GameUIPVESendTroop:OnMoveInStage()
+    GameUIPVESendTroop.super.OnMoveInStage(self)
 
     self:SelectDragonPart()
     self:SelectSoldiers()
@@ -89,7 +89,7 @@ function GameUIPVESendTroop:onEnter()
                     self:RefreashSoldierShow()
                 end
             end
-        end):align(display.LEFT_CENTER,window.left+50,window.top-910):addTo(self)
+        end):align(display.LEFT_CENTER,window.left+50,window.top-910):addTo(self:GetView())
     local march_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("行军"),
@@ -145,7 +145,7 @@ function GameUIPVESendTroop:onEnter()
                 end
             end
 
-        end):align(display.RIGHT_CENTER,window.right-50,window.top-910):addTo(self)
+        end):align(display.RIGHT_CENTER,window.right-50,window.top-910):addTo(self:GetView())
     --行军所需时间
     display.newSprite("hourglass_39x46.png", window.cx, window.top-910)
         :addTo(self):scale(0.6)
@@ -153,14 +153,14 @@ function GameUIPVESendTroop:onEnter()
         text = "20:00:00",
         size = 18,
         color = 0x403c2f
-    }):align(display.LEFT_CENTER,window.cx+20,window.top-900):addTo(self)
+    }):align(display.LEFT_CENTER,window.cx+20,window.top-900):addTo(self:GetView())
 
     -- 科技减少行军时间
     self.buff_reduce_time = UIKit:ttfLabel({
         text = "(-00:20:00)",
         size = 18,
         color = 0x068329
-    }):align(display.LEFT_CENTER,window.cx+20,window.top-920):addTo(self)
+    }):align(display.LEFT_CENTER,window.cx+20,window.top-920):addTo(self:GetView())
 
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
 end
@@ -170,7 +170,7 @@ function GameUIPVESendTroop:SelectDragonPart()
 
     local dragon_frame = display.newSprite("alliance_item_flag_box_126X126.png")
         :align(display.LEFT_CENTER, window.left+47,window.top-415)
-        :addTo(self)
+        :addTo(self:GetView())
 
     local dragon_bg = display.newSprite("chat_hero_background.png")
         :align(display.LEFT_CENTER, 7,dragon_frame:getContentSize().height/2)
@@ -237,14 +237,14 @@ function GameUIPVESendTroop:SelectDragon()
             },
 
         }
-    ):addTo(self)
+    ):addTo(self:GetView())
 end
 function GameUIPVESendTroop:SelectSoldiers()
     local list ,listnode=  UIKit:commonListView({
         viewRect = cc.rect(0, 0, 568, 366),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     })
-    listnode:addTo(self):pos(window.cx, window.top-685)
+    listnode:addTo(self:GetView()):pos(window.cx, window.top-685)
     listnode:align(display.CENTER)
 
     self.soldier_listview = list
@@ -433,7 +433,7 @@ function GameUIPVESendTroop:GetSelectSoldier()
     return soldiers
 end
 function GameUIPVESendTroop:CreateTroopsShow()
-    local TroopsShow = display.newSprite("back_ground_619x270.png"):addTo(self):align(display.TOP_CENTER,window.cx, window.top_bottom+18)
+    local TroopsShow = display.newSprite("back_ground_619x270.png"):addTo(self:GetView()):align(display.TOP_CENTER,window.cx, window.top_bottom+18)
     local b_size = TroopsShow:getContentSize()
 
     local function createInfoItem(title,value)
@@ -501,7 +501,7 @@ function GameUIPVESendTroop:CreateTroopsShow()
         for i=(current_page-1)*5+1,(current_page-1)*5+5 do
             if soldiers[i] then
                 local name = soldiers[i].name
-                local star = soldiers[i].star
+                local star = soldiers[i].star or 1
                 -- 士兵头像
                 local soldier_ui_config = UILib.black_soldier_image[name][star]
                 local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER,origin_x+ (i-1-(current_page-1)*5)*(box_width+gap_x),origin_y):addTo(self):scale(104/128)

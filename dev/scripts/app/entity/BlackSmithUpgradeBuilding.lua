@@ -15,7 +15,10 @@ function BlackSmithUpgradeBuilding:GetNextLevelEfficiency()
     return config_function[self:GetNextLevel()].efficiency
 end
 function BlackSmithUpgradeBuilding:GetEfficiency()
-    return config_function[self:GetEfficiencyLevel()].efficiency
+    if self:GetLevel() > 0 then
+        return config_function[self:GetEfficiencyLevel()].efficiency
+    end
+    return 0
 end
 function BlackSmithUpgradeBuilding:CreateEvent()
     local black_smith = self

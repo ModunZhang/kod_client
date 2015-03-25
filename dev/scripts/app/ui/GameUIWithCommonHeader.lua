@@ -22,7 +22,6 @@ function GameUIWithCommonHeader:onEnter()
     self.__titleBar = titleBar
     if gem_label then
         self.__gem_label= gem_label
-        self.city:GetResourceManager():AddObserver(self)
     end
 
 end
@@ -52,6 +51,9 @@ end
 
 function GameUIWithCommonHeader:OnMoveInStage()
     GameUIWithCommonHeader.super.OnMoveInStage(self)
+    if self.__gem_label then
+        self.city:GetResourceManager():AddObserver(self)
+    end
 end
 
 function GameUIWithCommonHeader:UIAnimationMoveIn()

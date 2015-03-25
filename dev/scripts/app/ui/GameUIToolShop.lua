@@ -11,8 +11,8 @@ function GameUIToolShop:ctor(city, toolShop)
     self.tool_shop_city = city
     self.toolShop = toolShop
 end
-function GameUIToolShop:onEnter()
-    GameUIToolShop.super.onEnter(self)
+function GameUIToolShop:OnMoveInStage()
+    GameUIToolShop.super.OnMoveInStage(self)
     self:TabButtons()
 end
 function GameUIToolShop:onExit()

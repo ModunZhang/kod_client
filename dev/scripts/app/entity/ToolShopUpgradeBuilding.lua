@@ -165,11 +165,11 @@ function ToolShopUpgradeBuilding:GetNeedByCategory(category)
     for _, v in ipairs(needs) do
         table.insert(need, config[string.format("product%s%s", key, v)])
     end
-    return config["poduction"], unpack(need)
+    return config["production"], unpack(need)
 end
-function ToolShopUpgradeBuilding:GetNextLevelPoducttion()
+function ToolShopUpgradeBuilding:GetNextLevelProduction()
     local config = config_function[self:GetNextLevel()]
-    return config["poduction"]
+    return config["production"]
 end
 
 function ToolShopUpgradeBuilding:OnTimer(current_time)

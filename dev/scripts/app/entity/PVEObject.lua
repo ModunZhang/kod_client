@@ -47,6 +47,9 @@ function PVEObject:ctor(x, y, searched, type, map)
     self.type = type
     self.map = map
 end
+function PVEObject:GetMap()
+    return self.map
+end
 function PVEObject:Floor()
     return self.map:GetIndex()
 end
@@ -105,7 +108,7 @@ function PVEObject:DecodeToEnemy(raw_data)
             return k, {
                 name = name,
                 star = tonumber(star),
-                count = is_not_boss and (count * self:Floor()) ^ 3 - (self:Floor() - 1) * 20 or count,
+                count = is_not_boss and count * self:Floor() ^ 3 - (self:Floor() - 1) * 20 or count,
             }
         end),
         rewards = self:DecodeToRewards(raw_data.rewards),
@@ -150,7 +153,7 @@ function PVEObject:DecodeToRewards(raw)
         return k, {
             type = rtype,
             name = rname,
-            count = is_not_boss and (count * self:Floor()) ^ 2 or count,
+            count = is_not_boss and count * self:Floor() ^ 2 or count,
             probability = probability
         }
     end)

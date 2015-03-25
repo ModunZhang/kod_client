@@ -85,11 +85,13 @@ end
 function AllianceItemsManager:OnItemLogsChanged(alliance_data,deltaData)
     local is_fully_update = deltaData == nil
     if is_fully_update then
-        local itemLogs = clone(alliance_data.itemLogs)
-        table.sort( itemLogs, function ( a,b )
-            return a.time > b.time
-        end )
-        self.item_logs = itemLogs
+        if alliance_data.itemLogs then
+            local itemLogs = clone(alliance_data.itemLogs)
+            table.sort( itemLogs, function ( a,b )
+                return a.time > b.time
+            end )
+            self.item_logs = itemLogs
+        end
     end
     local is_delta_update = not is_fully_update and deltaData.itemLogs ~= nil
     local item_logs = self.item_logs
@@ -220,6 +222,7 @@ function AllianceItemsManager:GetItemLogs()
     return self.item_logs
 end
 return AllianceItemsManager
+
 
 
 

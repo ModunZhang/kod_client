@@ -5,6 +5,36 @@ local Observer = import(".Observer")
 local BitBaseN = import("..utils.BitBaseN")
 local PVEMap = class("PVEMap", Observer)
 local floor = math.floor
+
+local pve_terrain = {
+    "iceField",
+    "iceField",
+    "grassLand",
+    "grassLand",
+    "desert",
+    "desert",
+    "iceField",
+    "iceField",
+    "iceField",
+    "desert",
+    "desert",
+    "desert",
+    "grassLand",
+    "grassLand",
+    "grassLand",
+    "desert",
+    "desert",
+    "desert",
+    "iceField",
+    "iceField",
+    "iceField",
+    "grassLand",
+    "grassLand",
+    "grassLand",
+}
+
+
+
 function PVEMap:ctor(database, index)
     PVEMap.super.ctor(self)
     self.index = index
@@ -54,6 +84,9 @@ function PVEMap:GetDatabase()
 end
 function PVEMap:GetIndex()
     return self.index
+end
+function PVEMap:Terrain()
+    return pve_terrain[self:GetIndex()]
 end
 function PVEMap:ExploreDegree()
     -- return self:SearchedFogsCount()/self:TotalFogs()

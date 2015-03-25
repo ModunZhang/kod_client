@@ -180,8 +180,9 @@ function WidgetPVEDialog:Fight()
     --         end)
 
     --         local report = GameUtils:DoBattle(
-    --             {dragon = attack_dragon, soldiers = attack_soldier}
-    --             ,{dragon = enemy.dragon, soldiers = enemy.soldiers}
+    --             {dragon = attack_dragon, soldiers = attack_soldier},
+    --             {dragon = enemy.dragon, soldiers = enemy.soldiers},
+    --             enemy:GetMap():Terrain()
     --         )
 
     --         if report:IsAttackWin() then

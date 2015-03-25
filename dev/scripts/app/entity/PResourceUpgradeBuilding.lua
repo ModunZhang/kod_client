@@ -28,7 +28,10 @@ function PResourceUpgradeBuilding:GetNextLevelProtection()
 end
 -- 获取当前等级可以建造的最大小屋数量
 function PResourceUpgradeBuilding:GetMaxHouseNum()
-    return config_function[self:GetType()][self:GetEfficiencyLevel()].houseAdd
+	if self:GetLevel() > 0 then
+    	return config_function[self:GetType()][self:GetEfficiencyLevel()].houseAdd
+	end
+	return 0
 end
 -- 获取对应资源的保护
 function PResourceUpgradeBuilding:GetProtection()

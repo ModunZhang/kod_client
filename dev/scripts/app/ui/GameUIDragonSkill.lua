@@ -160,7 +160,7 @@ end
 function GameUIDragonSkill:GetUpgradeSkillCost()
     local config = self.skill:GetSkillConfig()
     local r = {
-        {"blood",math.pow(self.skill:Level()+1,2) * config.heroBloodCostPerLevel},
+        {"blood",self.skill:GetBloodCost()},
     }
     return r
 end
@@ -172,8 +172,7 @@ function GameUIDragonSkill:CanUpgrade()
 end
 
 function GameUIDragonSkill:GetSkillEffection()
-  local config = self.skill:GetSkillConfig()
-  local count  = string.format("%d%%",self.skill:Level() * config.effectPerLevel * 100)
+  local count  = string.format("%d%%",self.skill:GetEffect() * 100)
   return Localize.dragon_skill_effection[self.skill:Name()] .. " " .. count
 end
 

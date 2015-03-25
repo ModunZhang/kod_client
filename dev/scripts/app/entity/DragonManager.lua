@@ -128,7 +128,7 @@ function DragonManager:GetDragonsSortWithPowerful()
     return dragon_list
 end
 
-function DragonManager:OnUserDataChanged(user_data, current_time, location_id, deltaData,hp_recovery_perHour)
+function DragonManager:OnUserDataChanged(user_data, current_time, deltaData,hp_recovery_perHour)
     self:RefreshDragonData(user_data.dragons,current_time,hp_recovery_perHour)
     self:RefreshDragonEvents(user_data,deltaData)
     self:RefreshDragonDeathEvents(user_data,deltaData)
@@ -229,6 +229,7 @@ function DragonManager:RefreshDragonDeathEvents(user_data,deltaData)
                     local dragonDeathEvent = self.dragonDeathEvents[event_data.dragonType]
                     dragonDeathEvent:UpdateData(event_data)
                 end
+                return dragonDeathEvent
             end
             ,function(event_data)
                 if self.dragonDeathEvents[event_data.dragonType] then
@@ -245,39 +246,6 @@ function DragonManager:RefreshDragonDeathEvents(user_data,deltaData)
             lisenter.OnDragonDeathEventChanged(lisenter,GameUtils:pack_event_table(changed_map))
         end)
     end
-end
-
-function DragonManager:RefreshDragonDeathEvents__(__dragonDeathEvents)
-    if not __dragonDeathEvents then return end
-     local changed_map = GameUtils:Event_Handler_Func(
-        __dragonDeathEvents
-        ,function(event_data)
-            local dragonDeathEvent = DragonDeathEvent.new()
-            dragonDeathEvent:UpdateData(event_data)
-            dragonDeathEvent:AddObserver(self)
-            self.dragonDeathEvents[dragonDeathEvent:DragonType()] = dragonDeathEvent
-            return dragonDeathEvent
-        end
-        ,function(event_data)
-            if self.dragonDeathEvents[event_data.dragonType] then
-                local dragonDeathEvent = self.dragonDeathEvents[event_data.dragonType]
-                dragonDeathEvent:UpdateData(event_data)
-            end
-        end
-        ,function(event_data)
-            if self.dragonDeathEvents[event_data.dragonType] then
-                local dragonDeathEvent = self.dragonDeathEvents[event_data.dragonType]
-                dragonDeathEvent:Reset()
-                self.dragonDeathEvents[event_data.dragonType] = nil
-                dragonDeathEvent = DragonDeathEvent.new()
-                dragonDeathEvent:UpdateData(event_data)
-                return dragonDeathEvent
-            end
-        end
-    )
-    self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged,function(lisenter)
-        lisenter.OnDragonDeathEventChanged(lisenter,GameUtils:pack_event_table(changed_map))
-    end)
 end
 
 function DragonManager:IteratorDragonDeathEvents(func)

@@ -10,7 +10,9 @@ function WidgetGrowUpTask:ctor(category)
     self.touch_layer:setTouchEnabled(false)
 
     self.category = category
-
+end
+function WidgetGrowUpTask:onEnter()
+    WidgetGrowUpTask.super.onEnter(self)
     local body = self:GetBody()
     local size = body:getContentSize()
     self.listview = UIListView.new{
@@ -19,9 +21,6 @@ function WidgetGrowUpTask:ctor(category)
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(body)
     self:RefreshItems()
-end
-function WidgetGrowUpTask:onEnter()
-    WidgetGrowUpTask.super.onEnter(self)
 end
 function WidgetGrowUpTask:onExit()
     WidgetGrowUpTask.super.onExit(self)
