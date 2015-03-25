@@ -101,10 +101,9 @@ function GameUISetting:OnButtonClicked(button)
 	elseif tag == 4 then
 		UIKit:newGameUI("GameUITips"):AddToCurrentScene(true)
 	elseif tag == 5 then
-		WidgetRankingList.new():AddToCurrentScene(true)
-		-- GameGlobalUI:showTips("提示","功能还未实现")
+		WidgetRankingList.new("player"):AddToCurrentScene(true)
 	elseif tag == 6 then
-		GameGlobalUI:showTips("提示","功能还未实现")
+		WidgetRankingList.new("alliance"):AddToCurrentScene(true)
 	elseif tag == 7 then
 		local is_open = app:GetAudioManager():GetBackgroundMusicState()
 		app:GetAudioManager():SwitchBackgroundMusicState(not is_open)
