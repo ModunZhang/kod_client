@@ -83,9 +83,11 @@ end
 
 function GameUILogin:sendApnIdIf()
     local token = ext.getDeviceToken() or ""
-    if string.len(token) > 0 and token ~= User:ApnId() then 
+    if string.len(token) > 0 then 
         token = string.sub(token,2,string.len(token)-1)
         token = string.gsub(token," ","")
+    end
+    if token ~= User:ApnId() then
         NetManager:getSetApnIdPromise(token)
     end
 end
