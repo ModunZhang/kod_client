@@ -73,14 +73,6 @@ function GameUIVip:ctor(city,default_tag)
     self.default_tag = default_tag
 end
 
-function GameUIVip:CreateBetweenBgAndTitle()
-    GameUIVip.super.CreateBetweenBgAndTitle(self)
-    self.player_node = WidgetPlayerNode.new(cc.size(564,760),self)
-        :addTo(self:GetView()):pos(window.cx-564/2,window.bottom_top+30)
-    self.vip_layer = display.newLayer():addTo(self:GetView())
-    self:RefreshListView()
-end
-
 function GameUIVip:RefreshListView()
     self.player_node:RefreshUI()
 end
@@ -250,21 +242,32 @@ function GameUIVip:OnMoveInStage()
         },
     }, function(tag)
         if tag == 'info' then
+            if not self.player_node then
+                self.player_node = WidgetPlayerNode.new(cc.size(564,760),self)
+                    :addTo(self:GetView()):pos(window.cx-564/2,window.bottom_top+30)
+                self:RefreshListView()
+                User:AddListenOnType(self,User.LISTEN_TYPE.BASIC)
+            end
             self.player_node:setVisible(true)
         else
-            self.player_node:setVisible(false)
+            if self.player_node then
+                self.player_node:setVisible(false)
+            end
         end
         if tag == 'VIP' then
+            if not self.vip_layer then
+                self.vip_layer = display.newLayer():addTo(self:GetView())
+                self:InitVip()
+                User:AddListenOnType(self, User.LISTEN_TYPE.VIP_EVENT)
+            end
             self.vip_layer:setVisible(true)
         else
-            self.vip_layer:setVisible(false)
+            if self.vip_layer then
+                self.vip_layer:setVisible(false)
+            end
         end
-
     end):pos(window.cx, window.bottom + 34)
-    self:InitVip()
 
-    User:AddListenOnType(self,User.LISTEN_TYPE.BASIC)
-    User:AddListenOnType(self, User.LISTEN_TYPE.VIP_EVENT)
 end
 function GameUIVip:onExit()
     User:RemoveListenerOnType(self,User.LISTEN_TYPE.BASIC)
@@ -776,6 +779,10 @@ function GameUIVip:OnVipEventTimer( vip_event_new )
 end
 
 return GameUIVip
+
+
+
+
 
 
 
