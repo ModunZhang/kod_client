@@ -362,7 +362,7 @@ function CityLayer:InitWithCity(city)
         {x = 6, y = 14, soldier_type = "sentinel"},
         {x = 4, y = 14, soldier_type = "crossbowman"},
         {x = 2, y = 14, soldier_type = "ballista"},
-        }) do
+    }) do
         local soldier = self:CreateSoldier(v.soldier_type, v.x, v.y):addTo(city_node)
         local x, y = soldier:getPosition()
         soldier:pos(x, y + 25)
@@ -589,30 +589,26 @@ function CityLayer:IteratorInnnerBuildings(func)
     until true
 end
 function CityLayer:IteratorCanUpgradingBuilding(func)
-    local handle = false
-    local handle_func = function(k, v)
+    for k,v in pairs(self.buildings) do
         if func(k, v) then
-            handle = true
-            return true
+            return
         end
     end
-    repeat
-        table.foreach(self.buildings, handle_func)
-        if handle then break end
-        table.foreach(self.houses, handle_func)
-        if handle then break end
-        table.foreach(self.towers, function(k, tower)
-            -- if tower:GetEntity():IsUnlocked() then
-            return handle_func(k, tower)
-                -- end
-        end)
-        if handle then break end
-        table.foreach(self.walls, function(k, wall)
-            if wall:GetEntity():IsGate() then
-                return handle_func(k, wall)
-            end
-        end)
-    until true
+    for k,v in pairs(self.houses) do
+        if func(k, v) then
+            return
+        end
+    end
+    for k,v in pairs(self.towers) do
+        if func(k, v) then
+            return
+        end
+    end
+    for k,v in pairs(self.walls) do
+        if v:GetEntity():IsGate() and func(k, v) then
+            return
+        end
+    end
 end
 function CityLayer:FindBuildingSpriteByBuilding(buildingEntity,city)
     local find_sprite
@@ -740,9 +736,11 @@ local function on_move(_, sprite)
     sprite:OnSceneMove()
 end
 function CityLayer:OnSceneMove()
-    self:IteratorCanUpgradingBuilding(on_move)
-    table.foreach(self.tiles, on_move)
-    table.foreach(self.ruins, on_move)
+    -- self:IteratorCanUpgradingBuilding(on_move)
+    table.foreach(self.tiles, function(_, sprite)
+        sprite:OnSceneMove()
+    end)
+    -- table.foreach(self.ruins, on_move)
     -- if self.road then
     --     on_move(nil, self.road)
     -- end
@@ -756,8 +754,21 @@ end
 function CityLayer:OnSceneScale()
     self.city_scene:OnSceneScale(self)
 end
+function CityLayer:HideLevelUpNode()
+    self:IteratorCanUpgradingBuilding(function(_, sprite)
+        sprite:HideLevelUpNode()
+    end)
+end
+function CityLayer:ShowLevelUpNode()
+    self:IteratorCanUpgradingBuilding(function(_, sprite)
+        sprite:ShowLevelUpNode()
+    end)
+end
 
 return CityLayer
+
+
+
 
 
 

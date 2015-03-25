@@ -149,28 +149,28 @@ function CityScene:CreateSceneUILayer()
         end
         self.lock_buttons = {}
     end
-    function scene_ui_layer:NewUIFromBuildingSprite(building_sprite)
-        local progress = BuildingUpgradeUINode.new():addTo(self)
-        building_sprite:AddObserver(progress)
-        table.insert(self.ui, progress)
+    -- function scene_ui_layer:NewUIFromBuildingSprite(building_sprite)
+    --     local progress = BuildingUpgradeUINode.new():addTo(self)
+    --     building_sprite:AddObserver(progress)
+    --     table.insert(self.ui, progress)
 
-        local levelup = BuildingLevelUpUINode.new():addTo(self.levelup_node)
-        building_sprite:AddObserver(levelup)
-        table.insert(self.ui, levelup)
+    --     local levelup = BuildingLevelUpUINode.new():addTo(self.levelup_node)
+    --     building_sprite:AddObserver(levelup)
+    --     table.insert(self.ui, levelup)
 
-        building_sprite:CheckCondition()
-        building_sprite:OnSceneMove()
-    end
-    function scene_ui_layer:RemoveUIFromBuildingSprite(building_sprite)
-        building_sprite:NotifyObservers(function(ob)
-            table.foreachi(self.ui, function(i, v)
-                if ob == v then
-                    table.remove(self.ui, i)
-                    v:removeFromParent()
-                end
-            end)
-        end)
-    end
+    --     building_sprite:CheckCondition()
+    --     building_sprite:OnSceneMove()
+    -- end
+    -- function scene_ui_layer:RemoveUIFromBuildingSprite(building_sprite)
+    --     building_sprite:NotifyObservers(function(ob)
+    --         table.foreachi(self.ui, function(i, v)
+    --             if ob == v then
+    --                 table.remove(self.ui, i)
+    --                 v:removeFromParent()
+    --             end
+    --         end)
+    --     end)
+    -- end
     function scene_ui_layer:ShowLevelUpNode()
         if self.status == "show" then
             return
