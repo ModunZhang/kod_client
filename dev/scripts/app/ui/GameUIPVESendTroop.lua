@@ -501,7 +501,7 @@ function GameUIPVESendTroop:CreateTroopsShow()
         for i=(current_page-1)*5+1,(current_page-1)*5+5 do
             if soldiers[i] then
                 local name = soldiers[i].name
-                local star = soldiers[i].star
+                local star = soldiers[i].star or 1
                 -- 士兵头像
                 local soldier_ui_config = UILib.black_soldier_image[name][star]
                 local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER,origin_x+ (i-1-(current_page-1)*5)*(box_width+gap_x),origin_y):addTo(self):scale(104/128)
