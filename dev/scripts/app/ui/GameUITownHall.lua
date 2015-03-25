@@ -394,7 +394,7 @@ function GameUITownHall:OnTimer(current_time)
         end
     end
 
-    if self.started_quest_item then
+    if self.started_quest_item and self.started_quest_item.GetQuest then
         local quest = self.started_quest_item:GetQuest()
         if User:IsQuestFinished(quest) then
             self.started_quest_item = nil
