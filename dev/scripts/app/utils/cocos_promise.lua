@@ -23,7 +23,7 @@ end
 local function timeOut(time)
     local time = time or 0
     return delay_(time):next(function()
-        promise.reject(time, "timeout")
+        promise.reject({code = 0, msg = time}, "timeout")
     end)
 end
 local function promiseWithTimeOut(p, time)

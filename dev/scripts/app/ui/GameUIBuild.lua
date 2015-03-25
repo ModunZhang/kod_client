@@ -291,7 +291,7 @@ function GameUIBuild:Find(building_type)
     end)
     return cocos_promise.defer(function()
         if not item then
-            promise.reject("没有找到对应item", building_type)
+            promise.reject({code = -1, msg = "没有找到对应item"}, building_type)
         end
         return item
     end)
