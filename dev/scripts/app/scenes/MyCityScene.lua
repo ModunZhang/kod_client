@@ -27,6 +27,8 @@ function MyCityScene:onEnter()
 
     self:GetCity():AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
     self:GetCity():GetUser():AddListenOnType(self, User.LISTEN_TYPE.BASIC)
+
+    self.action_node = display.newNode():addTo(self)
 end
 function MyCityScene:onExit()
     MyCityScene.super.onExit(self)
@@ -59,7 +61,8 @@ function MyCityScene:AddIndicateForBuilding(building_sprite)
     }
     arrow:runAction(cc.RepeatForever:create(seq_1))
     self.indicate = arrow
-    building_sprite:performWithDelay(function()
+    self.action_node:stopAllActions()
+    self.action_node:performWithDelay(function()
         if self.indicate then
             self.indicate:removeFromParent(true)
             self.indicate = nil
