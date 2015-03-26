@@ -175,7 +175,7 @@ local function check_response(m)
         if result.success then
             return result
         end
-        promise.reject(m, m)
+        promise.reject({code = -1, msg = m}, m)
     end
 end
 local function check_request(m)

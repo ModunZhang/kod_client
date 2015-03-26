@@ -49,7 +49,7 @@ local function promiseFilterNetError(p,need_catch)
         if title == 'timeout' then
             content = _("请求超时")
         end
-        local dialog = UIKit:showMessageDialog(title == 'timeout' and _("错误") or title,content,function()
+        local dialog = UIKit:showMessageDialog(title == 'timeout' and _("错误") or title, content.msg,function()
             if title == 'timeout' then
                 app:retryConnectServer()
             end
