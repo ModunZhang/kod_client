@@ -415,6 +415,8 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
                     :SetTitle("陛下")
                     :SetPopMessage("必须有一条空闲的龙，才能进入pve")
             end
+        elseif type_ == "FairGround" then
+            UIKit:newGameUI("GameUIGacha", self.city):AddToCurrentScene(true)
         end
     elseif self:IsEditMode() then
         self:LeaveEditMode()
