@@ -9,7 +9,8 @@ DataUtils = {}
   获取建筑升级时,需要的资源和道具
 ]]
 function DataUtils:getBuildingUpgradeRequired(buildingType, buildingLevel)
-    local config = BuildingLevelUp[buildingType][buildingLevel]
+    local temp = BuildingLevelUp[buildingType] or HouseLevelUp[buildingType]
+    local config = temp[buildingLevel]
     local required = {
         resources={
             wood=config.wood,
@@ -27,28 +28,7 @@ function DataUtils:getBuildingUpgradeRequired(buildingType, buildingLevel)
     }
     return required
 end
---[[
-  获取house升级时,需要的资源和道具
-]]
-function DataUtils:getHouseUpgradeRequired(buildingType, buildingLevel)
-    local config = HouseLevelUp[buildingType][buildingLevel]
-    local required = {
-        resources={
-            wood=config.wood,
-            stone=config.stone,
-            iron=config.iron,
-            citizen=config.citizen
-        },
-        materials={
-            blueprints=config.blueprints,
-            tools=config.tools,
-            tiles=config.tiles,
-            pulley=config.pulley
-        },
-        buildTime=config.buildTime
-    }
-    return required
-end
+
 --[[
   购买资源
   @param need
