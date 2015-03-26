@@ -11,7 +11,6 @@ local User = import("..entity.User")
 local CityScene = import(".CityScene")
 local MyCityScene = class("MyCityScene", CityScene)
 
-MyCityScene.INDICATE_TAG = 800
 
 function MyCityScene:ctor(...)
     MyCityScene.super.ctor(self, ...)
@@ -47,46 +46,25 @@ end
 function MyCityScene:AddIndicateForBuilding(building_sprite)
     -- 已经添加，则移除
     if self.indicate then
-        self.indicate:Remove()
+        self.indicate:removeFromParent(true)
         self.indicate = nil
     end
-    local ui_layer = self:GetSceneUILayer()
     -- 指向建筑的箭头
-    local postions = building_sprite:GetWorldPosition()
     local arrow = display.newSprite("arrow_home.png")
-        :scale(0.4)
-    ui_layer:addChild(arrow, 1, MyCityScene.INDICATE_TAG)
+        :scale(0.4):addTo(building_sprite):pos(building_sprite:GetSpriteTopPosition()):setLocalZOrder(1001)
     arrow:setRotation(240)
-    building_sprite:AddObserver(arrow)
-    function arrow:OnPositionChanged(  x,y )
-        self:setPosition(x+50, y+100)
-    end
-    function arrow:Remove()
-        if building_sprite and building_sprite.RemoveObserver then
-            building_sprite:RemoveObserver(self)
-        end
-        ui_layer:removeChild(self, true)
-    end
-    function arrow:OnBuildingUpgradingBegin( )
-    end
-    function arrow:OnBuildingUpgradeFinished( )
-    end
-    function arrow:OnBuildingUpgrading()
-    end
-    function arrow:OnCheckUpgradingCondition()
-    end
     local seq_1 = transition.sequence{
         cc.ScaleTo:create(0.4, 0.8),
-        cc.ScaleTo:create(0.4, 0.4)
+        cc.ScaleTo:create(0.4, 0.4),
     }
     arrow:runAction(cc.RepeatForever:create(seq_1))
-    ui_layer:performWithDelay(function()
-        if arrow.Remove then
-            arrow:Remove()
+    self.indicate = arrow
+    building_sprite:performWithDelay(function()
+        if self.indicate then
+            self.indicate:removeFromParent(true)
             self.indicate = nil
         end
-    end, 5.0)
-    self.indicate = arrow
+    end, 4.0)
 end
 function MyCityScene:GetArrowTutorial()
     if not self.arrow_tutorial then

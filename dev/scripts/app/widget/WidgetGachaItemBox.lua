@@ -3,6 +3,7 @@
 -- Date: 2015-03-03 15:40:53
 --
 local UILib = import("..ui.UILib")
+local Localize_item = import("..utils.Localize_item")
 
 local WidgetGachaItemBox = class("WidgetGachaItemBox",function ()
     return display.newNode()
@@ -14,6 +15,24 @@ function WidgetGachaItemBox:ctor(gacha_item,isSenior)
     -- item icon
     local item_icon = display.newScale9Sprite(self:GetGachaItemIcon()):addTo(self)
     item_icon:scale(74/item_icon:getContentSize().width)
+
+
+    -- item_icon:setTouchEnabled(true)
+    -- item_icon:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+    --     if event.name == "began" then
+    --         UIKit:ttfLabel({text = Localize_item.item_name[self.gacha_item.itemName],size = 40 ,color = 0xfff2b3})
+    --         :addTo(item_icon):align(display.CENTER,item_icon:getContentSize().width/2,0)
+    --     elseif event.name == "ended" then
+    --         item_icon:removeAllChildren()
+    --     elseif event.name == "moved" then
+    --         local rect = item_icon:convertToNodeSpace(cc.p(event.x,event.y))
+    --         local box = item_icon:getCascadeBoundingBox().size
+    --         if box.width < rect.x or rect.x<0 or box.height < rect.y or rect.y < 0 then
+    --         item_icon:removeAllChildren()
+    --         end
+    --     end
+    --     return true
+    -- end)
 end
 -- 设置起点或取消起点状态
 function WidgetGachaItemBox:SetOrginStatus()

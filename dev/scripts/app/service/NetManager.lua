@@ -1330,7 +1330,7 @@ function NetManager:getBuyItemPromise(itemName,count)
         itemName = itemName,
         count = count,
     }, "购买道具失败!"):next(get_response_msg):done(function ()
-        GameGlobalUI:showTips(_("提示"),string.format('购买%s道具成功',Localize_item.item_name[itemName]))
+        GameGlobalUI:showTips(_("提示"),string.format(_('购买%s道具成功'),Localize_item.item_name[itemName]))
         ext.market_sdk.onPlayerBuyGameItems(itemName,count,DataUtils:GetItemPriceByItemName(itemName))
     end)
 end
@@ -1340,7 +1340,7 @@ function NetManager:getUseItemPromise(itemName,params)
         itemName = itemName,
         params = params,
     }, "使用道具失败!"):next(get_response_msg):done(function ()
-        GameGlobalUI:showTips(_("提示"),string.format('使用%s道具成功',Localize_item.item_name[itemName]))
+        GameGlobalUI:showTips(_("提示"),string.format(_('使用%s道具成功'),Localize_item.item_name[itemName]))
         ext.market_sdk.onPlayerUseGameItems(itemName,1)
     end)
 end
@@ -1350,7 +1350,7 @@ function NetManager:getBuyAndUseItemPromise(itemName,params)
         itemName = itemName,
         params = params,
     }, "购买并使用道具失败!"):next(get_response_msg):done(function()
-        GameGlobalUI:showTips(_("提示"),string.format('使用%s道具成功',Localize_item.item_name[itemName]))
+        GameGlobalUI:showTips(_("提示"),string.format(_('使用%s道具成功'),Localize_item.item_name[itemName]))
         ext.market_sdk.onPlayerBuyGameItems(itemName,1,DataUtils:GetItemPriceByItemName(itemName))
         ext.market_sdk.onPlayerUseGameItems(itemName,1)
     end)

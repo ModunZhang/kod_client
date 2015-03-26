@@ -48,36 +48,6 @@ end
 function ResourceUpgradeBuilding:GetUpdateResourceType()
     return nil
 end
-function ResourceUpgradeBuilding:getUpgradeNowNeedGems()
-
-    local resource_config = DataUtils:getHouseUpgradeRequired(self.building_type, self.level+1)
-    local required_gems = 0
-    required_gems = required_gems + DataUtils:buyResource(resource_config.resources, {})
-    required_gems = required_gems + DataUtils:buyMaterial(resource_config.materials, {})
-    required_gems = required_gems + DataUtils:getGemByTimeInterval(resource_config.buildTime)
-
-    return required_gems
-end
-
-function ResourceUpgradeBuilding:getUpgradeRequiredGems()
-    local city = self:BelongCity()
-    local required_gems = 0
-    local has_resourcce = {
-        wood = city.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
-        iron = city.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
-        stone = city.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
-        citizen = city.resource_manager:GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime()),
-    }
-
-
-    local has_materials =city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
-
-    local resource_config = DataUtils:getHouseUpgradeRequired(self.building_type, self.level+1)
-    required_gems = required_gems + DataUtils:buyResource(resource_config.resources, has_resourcce)
-    required_gems = required_gems + DataUtils:buyMaterial(resource_config.materials, has_materials)
-    print("required_gems",required_gems)
-    return required_gems
-end
 
 function ResourceUpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     -- 升级是否使空闲城民小于0

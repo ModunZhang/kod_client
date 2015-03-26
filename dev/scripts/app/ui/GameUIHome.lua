@@ -492,12 +492,10 @@ function GameUIHome:CreateBottom()
             :addTo(bottom_bg):align(display.CENTER,x, y-40)
         button:setTag(i)
         button:addButtonPressedEventListener(function ()
-            local seq_1 = transition.sequence{
-                cc.ScaleTo:create(0.1, 0.55),
-                cc.ScaleTo:create(0.1, 0.6),
-                cc.ScaleTo:create(0.1, 0.55),
-            }
-            button:runAction(seq_1)
+            button:runAction(cc.ScaleTo:create(0.1, 0.7))
+        end)
+        button:addButtonReleaseEventListener(function ()
+            button:runAction(cc.ScaleTo:create(0.1, 0.55))
         end)
         if i == 1 then
             -- 未读邮件或战报数量显示条
@@ -639,6 +637,7 @@ function GameUIHome:Find()
 end
 
 return GameUIHome
+
 
 
 
