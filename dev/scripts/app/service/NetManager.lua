@@ -3,17 +3,6 @@ local GameGlobalUIUtils = import("..ui.GameGlobalUIUtils")
 local Localize_item = import("..utils.Localize_item")
 local cocos_promise = import("..utils.cocos_promise")
 
-local error_code = {}
-for k,v in pairs(GameDatas.Errors.errors) do
-    error_code[v.code] = v
-end
--- dump(error_code)
-
-local gaozhou
-if CONFIG_IS_DEBUG then
-    local result
-    gaozhou, result = pcall(require, "app.service.gaozhou")
-end
 NetManager = {}
 local SUCCESS_CODE = 200
 local FAILED_CODE = 500
@@ -182,7 +171,7 @@ local function check_request(m)
     return function(result)
         if not result.success or result.msg.code ~= SUCCESS_CODE then
             local code = result.msg.code
-            local error_data = error_code[code] or {}
+            local error_data = UIKit:getErrorCodeData(code) or {}
             local msg = error_data.message or _("未知错误!")
             if result.msg.code == 0 then
                 promise.reject({code = code, msg = msg}, "timeout")
@@ -293,7 +282,7 @@ end
 function NetManager:addKickEventListener()
     self:addEventListener("onKick", function(success, msg)
         self:disconnect()
-        UIKit:showMessageDialog(_("提示"), _("服务器维护中!"), function()
+        UIKit:showMessageDialog(_("提示"), _("服务器连接断开!"), function()
             app:restart(false)
         end,nil,false)
     end)
@@ -454,12 +443,7 @@ end
 function NetManager:getLoginPromise(deviceId)
     local device_id
     if CONFIG_IS_DEBUG then
-        if gaozhou then
-            device_id = getOpenUDID()
-            -- device_id = "1"
-        else
-            device_id = getOpenUDID()
-        end
+        device_id = getOpenUDID()
     else
         device_id = device.getOpenUDID()
     end

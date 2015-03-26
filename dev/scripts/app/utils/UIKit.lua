@@ -10,6 +10,11 @@ local Enum = import("..utils.Enum")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local UIListView = import("..ui.UIListView")
 
+local error_code = {}
+for k,v in pairs(GameDatas.Errors.errors) do
+    error_code[v.code] = v
+end
+
 UIKit =
     {
         Registry   = import('framework.cc.Registry'),
@@ -116,6 +121,7 @@ function UIKit:commonProgressTimer(png)
     ProgressTimer:setBarChangeRate(cc.p(1,0))
     ProgressTimer:setMidpoint(cc.p(0,0))
     ProgressTimer:setPercentage(0)
+    ProgressTimer:setCascadeOpacityEnabled(true)
     return ProgressTimer
 end
 
@@ -486,4 +492,12 @@ function UIKit:NoWaitForNet()
     if scene.__cname  ~= 'UpdaterScene' and scene.__cname  ~= 'MainScene' then
         scene:NoWaitForNet()
     end
+end
+
+function UIKit:getErrorCodeData(code)
+    return error_code[code]
+end
+
+function UIKit:getErrorCodeKey(code)
+    return self:getErrorCodeData(code).key or ""
 end

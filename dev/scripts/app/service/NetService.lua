@@ -58,7 +58,15 @@ function NetService:request(route, lmsg, cb)
     lmsg.__time__ = ext.now() + self.m_deltatime
     self.m_pomelo:request(route, json.encode(lmsg), function ( success, jmsg )
             if not success then  self.net_state = self.NET_STATE.DISCONNECT end 
-            cb(success, jmsg and json.decode(jmsg) or nil)
+            if jmsg then
+                jmsg = json.decode(jmsg)
+                if jmsg.code == 510 then
+                    self.net_state = self.NET_STATE.DISCONNECT
+                end
+            else
+               jmsg = nil 
+            end
+            cb(success, jmsg)
     end)
 end
 

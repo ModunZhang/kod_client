@@ -4,11 +4,6 @@
 --
 local GameUILogin = UIKit:createUIClass('GameUILogin','GameUISplash')
 local WidgetPushButton = import("..widget.WidgetPushButton")
-local gaozhou
-if CONFIG_IS_DEBUG then
-    local result
-    gaozhou, result = pcall(require, "app.service.gaozhou")
-end
 function GameUILogin:ctor()
     GameUILogin.super.ctor(self)
 end
@@ -164,12 +159,14 @@ function GameUILogin:login()
             self.start_ui:show()
         end, 0.5) 
     end):catch(function(err)
-        dump(err:reason())
-        self:setProgressText(_("登录游戏失败!"),true)
-    end):done(function()
-        if CONFIG_IS_DEBUG then
-            if gaozhou then
-                return app:EnterMyCityScene()
+        if err:isSyntaxError() then
+            return
+        else
+            local content, title = err:reason()
+            if UIKit:getErrorCodeKey(content.code) == 'reLoginNeeded' then
+                self:login()
+            else
+                self:setProgressText(_("登录游戏失败!"),true)
             end
         end
     end)
@@ -205,8 +202,7 @@ end
 
 function GameUILogin:ReTryLogin(msg)
     msg = msg or ""
-    local str = string.format("%s,%s",msg,_("点击执行重新登陆,或稍后再试."))
-    UIKit:showMessageDialog(_("提示"),str, function()
+    UIKit:showMessageDialog(_("提示"),msg, function()
         app:restart()
     end, nil, false)
 end

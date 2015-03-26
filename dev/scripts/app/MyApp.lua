@@ -283,7 +283,8 @@ function MyApp:transactionObserver(event)
             local msg,code_type = err:reason()
             local code = msg.code
             if code_type ~= "syntaxError" then
-                if code == 612 or code == 613 or code == 614 then
+                local code_key = UIKit:getErrorCodeKey(code)
+                if code_key == 'duplicateIAPTransactionId' or code_key == 'iapProductNotExist' or code_key == 'iapValidateFaild' then
                     Store.finishTransaction(transaction)
                 end
             end
