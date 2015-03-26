@@ -65,8 +65,10 @@ function MyApp:showDebugInfo()
     return "Client Ver:" .. __debugVer .. "\nPlayerID:" .. DataManager:getUserData()._id .. "\nDeviceID:" .. DataManager:getUserData().countInfo.deviceId
 end
 
-function MyApp:restart()
-    NetManager:disconnect()
+function MyApp:restart(needDisconnect)
+    if needDisconnect == true or type(needDisconnect) == 'nil' then
+        NetManager:disconnect()
+    end
     self.timer:Stop()
     self:GetAudioManager():StopAll()
     self:GetChatManager():Reset()
@@ -131,7 +133,7 @@ function MyApp:retryConnectServer()
             NetManager:getConnectLogicServerPromise():next(function()
                 return NetManager:getLoginPromise()
             end):catch(function(err)
-                UIKit:showMessageDialog(_("错误"), _("连接服务器失败,请检测你的网络环境!"), function()
+                UIKit:showMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
                     app:retryConnectServer()
                 end,nil,false)
             end):always(function()
