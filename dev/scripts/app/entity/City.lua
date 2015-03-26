@@ -1034,7 +1034,7 @@ function City:OnHouseChanged(userData, current_time, deltaData)
                 table.insert(lock_table, {x = tile.x, y = tile.y})
             end
 
-            -- 拆除
+            -- 拆除 or 交换
             local decorators = self:GetDecoratorsByLocationId(location.location)
             table.foreach(decorators, function(key, building)
                 -- 当前位置有小建筑并且推送的数据里面没有就认为是拆除
@@ -1042,7 +1042,8 @@ function City:OnHouseChanged(userData, current_time, deltaData)
                 local location_id = tile:GetBuildingLocation(building)
                 local building_info = find_building_info_by_location(location.houses, location_id)
                 -- 没有找到，就是已经被拆除了
-                if not building_info then
+                -- 如果类型不对，也认为是拆除
+                if not building_info or (building_info.type ~= building:GetType()) then
                     self:DestoryDecorator(current_time, building)
                 end
             end)
