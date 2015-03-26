@@ -1,6 +1,6 @@
 
 #import "platform/ios/CCNativeIOS.h"
-
+#import "MBProgressHUD.h"
 #ifndef utf8cstr
 #define utf8cstr(nsstr) (nsstr ? [nsstr cStringUsingEncoding:NSUTF8StringEncoding] : "")
 #endif
@@ -35,37 +35,47 @@ static NativeIOS *s_sharedInstance;
 
 - (void)showActivityIndicator:(UIActivityIndicatorViewStyle)style
 {
-    if (activityIndicatorView_)
-    {
-        CCLOG("[NativeIOS] ERR, showActivityIndicator() activity indicator already visible");
-        return;
-    }
+//    if (activityIndicatorView_)
+//    {
+//        CCLOG("[NativeIOS] ERR, showActivityIndicator() activity indicator already visible");
+//        return;
+//    }
     
     CCLOG("[NativeIOS] showActivityIndicator()");
-    activityIndicatorView_ = [UIActivityIndicatorView  alloc];
-    [activityIndicatorView_ initWithActivityIndicatorStyle:style];
-    [activityIndicatorView_ autorelease];
-    [activityIndicatorView_ retain];
-    
+//    activityIndicatorView_ = [UIActivityIndicatorView  alloc];
+//    [activityIndicatorView_ initWithActivityIndicatorStyle:style];
+//    [activityIndicatorView_ autorelease];
+//    [activityIndicatorView_ retain];
+//    
+//    NSInteger count = [UIApplication sharedApplication].windows.count;
+//    UIWindow* topWindow = [[UIApplication sharedApplication].windows objectAtIndex:count - 1];
+//    [topWindow addSubview: activityIndicatorView_];
+//    activityIndicatorView_.center = topWindow.center;
+//    [activityIndicatorView_ startAnimating];
+    //dannyhe 修改hud
     NSInteger count = [UIApplication sharedApplication].windows.count;
     UIWindow* topWindow = [[UIApplication sharedApplication].windows objectAtIndex:count - 1];
-    [topWindow addSubview: activityIndicatorView_];
-    activityIndicatorView_.center = topWindow.center;
-    [activityIndicatorView_ startAnimating];
+    MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:topWindow animated:YES];
+    hud.margin = 10;
+    
 }
 
 - (void)hideActivityIndicator
 {
-    if (!activityIndicatorView_)
-    {
-        CCLOG("[NativeIOS] ERR, hideActivityIndicator() activity indicator not visible");
-        return;
-    }
-    
-    CCLOG("[NativeIOS] hideActivityIndicator()");
-    [activityIndicatorView_ removeFromSuperview];
-    [activityIndicatorView_ release];
-    activityIndicatorView_ = nil;
+//    if (!activityIndicatorView_)
+//    {
+//        CCLOG("[NativeIOS] ERR, hideActivityIndicator() activity indicator not visible");
+//        return;
+//    }
+//    
+//    CCLOG("[NativeIOS] hideActivityIndicator()");
+//    [activityIndicatorView_ removeFromSuperview];
+//    [activityIndicatorView_ release];
+//    activityIndicatorView_ = nil;
+    //dannyhe 修改hud
+    NSInteger count = [UIApplication sharedApplication].windows.count;
+    UIWindow* topWindow = [[UIApplication sharedApplication].windows objectAtIndex:count - 1];
+    [MBProgressHUD hideAllHUDsForView:topWindow animated:YES];
 }
 
 
