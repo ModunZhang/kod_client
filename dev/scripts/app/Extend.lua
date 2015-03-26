@@ -221,6 +221,24 @@ function display.popScene()
     cc.Director:getInstance():popScene()
 end
 
+local newScene = display.newScene
+function display.newScene(name)
+    local scene = newScene(name)
+    function scene:WaitForNet()
+        if not self.wait_for_net then
+            self.wait_for_net = UIKit:newGameUI("GameUIWatiForNetWork"):AddToScene(self, true):zorder(2001)
+        end
+    end
+    function scene:NoWaitForNet()
+        if self.wait_for_net then
+            self.wait_for_net:removeFromParent()
+            self.wait_for_net = nil
+        end
+    end
+    return scene
+end
+
+
 display.__newLayer = display.newLayer
 
 function display.newLayer()

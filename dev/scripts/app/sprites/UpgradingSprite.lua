@@ -73,8 +73,11 @@ function UpgradingSprite:StopBuildingAnimation()
     self:stopAllActions()
     self:setColor(display.COLOR_WHITE)
     self.building_animation = nil
-    self.hammer_animation:removeFromParent()
-    self.hammer_animation = nil
+    
+    if self.hammer_animation then
+        self.hammer_animation:removeFromParent()
+        self.hammer_animation = nil
+    end
 end
 function UpgradingSprite:CheckCondition()
     -- self:NotifyObservers(function(listener)

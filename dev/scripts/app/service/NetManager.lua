@@ -175,7 +175,7 @@ local function check_response(m)
         if result.success then
             return result
         end
-        promise.reject(m, m)
+        promise.reject({code = -1, msg = m}, m)
     end
 end
 local function check_request(m)
@@ -204,14 +204,9 @@ end
 local function get_blocking_request_promise(request_route, data, m,need_catch)
     --默认后面的处理需要主动catch错误
     need_catch = type(need_catch) == 'boolean' and need_catch or true
-    local loading = UIKit:newGameUI("GameUIWatiForNetWork"):AddToCurrentScene(true)
-    if loading then
-        loading:setLocalZOrder(2001)
-    end
+    display.getRunningScene():WaitForNet()
     local p =  cocos_promise.promiseWithTimeOut(get_request_promise(request_route, data, m), TIME_OUT):always(function()
-        if loading then
-            loading:removeFromParent()
-        end
+        display.getRunningScene():NoWaitForNet()
     end)
     return cocos_promise.promiseFilterNetError(p,need_catch)
 end
@@ -284,7 +279,7 @@ end
 function NetManager:addDisconnectEventListener()
     self:addEventListener("disconnect", function(success, msg)
         if self.m_netService:isConnected() then
-            UIKit:showMessageDialog(_("错误"), _("连接服务器失败,请检测你的网络环境!"), function()
+            UIKit:showMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
                 app:retryConnectServer()
             end,nil,false)
         end
@@ -297,8 +292,9 @@ end
 
 function NetManager:addKickEventListener()
     self:addEventListener("onKick", function(success, msg)
-        UIKit:showMessageDialog(_("提示"), _("你与服务器的连接已断开!"), function()
-            app:restart()
+        self:disconnect()
+        UIKit:showMessageDialog(_("提示"), _("服务器维护中!"), function()
+            app:restart(false)
         end,nil,false)
     end)
 end
@@ -1528,6 +1524,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 

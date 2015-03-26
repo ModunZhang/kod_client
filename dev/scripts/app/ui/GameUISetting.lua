@@ -103,7 +103,11 @@ function GameUISetting:OnButtonClicked(button)
 	elseif tag == 5 then
 		WidgetRankingList.new("player"):AddToCurrentScene(true)
 	elseif tag == 6 then
-		WidgetRankingList.new("alliance"):AddToCurrentScene(true)
+		if not Alliance_Manager:GetMyAlliance():IsDefault() then
+			WidgetRankingList.new("alliance"):AddToCurrentScene(true)
+		else
+			GameGlobalUI:showTips("提示", "玩家未加入联盟")
+		end
 	elseif tag == 7 then
 		local is_open = app:GetAudioManager():GetBackgroundMusicState()
 		app:GetAudioManager():SwitchBackgroundMusicState(not is_open)

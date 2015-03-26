@@ -26,6 +26,7 @@ function GameUIDragonEyrieMain:ctor(city,building)
 	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventTimer)
 	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventChanged)
 	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
+	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventRefresh)
 	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer)
 	self.draong_index = 1
 end
@@ -77,6 +78,10 @@ function GameUIDragonEyrieMain:OnDragonDeathEventChanged()
  	end
 end
 
+function GameUIDragonEyrieMain:OnDragonDeathEventRefresh(dragonDeathEvents)
+	self:RefreshUI()
+end
+
 function GameUIDragonEyrieMain:OnDragonDeathEventTimer(dragonDeathEvent)
 	if self:GetCurrentDragon():Type() == dragonDeathEvent:DragonType() 
 		and self.progress_content_death  
@@ -102,6 +107,7 @@ function GameUIDragonEyrieMain:OnMoveOutStage()
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventTimer)
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventChanged)
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
+	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventRefresh)
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer)
 	GameUIDragonEyrieMain.super.OnMoveOutStage(self)
 end
@@ -169,6 +175,9 @@ function GameUIDragonEyrieMain:RefreshUI()
 			self.dragon_info:show()
 			self.draong_info_lv_label:setString("LV " .. dragon:Level() .. "/" .. dragon:GetMaxLevel())
 			self.draong_info_xp_label:setString(dragon:Exp() .. "/" .. dragon:GetMaxExp())
+			self.expIcon:setPositionX(self.draong_info_xp_label:getPositionX() - self.draong_info_xp_label:getContentSize().width/2 - 10)
+			self.exp_add_button:setPositionX(self.draong_info_xp_label:getPositionX() + self.draong_info_xp_label:getContentSize().width/2 + 10)
+
 			self.progress_content_not_hated:hide()
 			self.progress_content_not_hated_timer:hide()
 			self.progress_content_hated:show()
@@ -256,23 +265,25 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 			color = 0xb1a475,
 			size = 22
 		}):addTo(lv_bg):align(display.CENTER,lv_bg:getContentSize().width/2,lv_bg:getContentSize().height/2)
-		local expIcon = display.newSprite("dragonskill_xp_51x63.png")
-			:addTo(info_bg)
-			:scale(0.7)
-			:align(display.BOTTOM_LEFT, 90,10)
 		self.draong_info_xp_label = UIKit:ttfLabel({
 			text = self:GetCurrentDragon():Exp() .. "/" .. self:GetCurrentDragon():GetMaxExp(),
 			color = 0x403c2f,
-			size = 20
-		}):align(display.LEFT_BOTTOM, expIcon:getPositionX()+expIcon:getContentSize().width*0.7+10, 20)
-		:addTo(info_bg)
+			size = 20,
+			align = cc.TEXT_ALIGNMENT_CENTER,
+		}):align(display.CENTER_BOTTOM, 145, 20):addTo(info_bg)
+		local expIcon = display.newSprite("dragonskill_xp_51x63.png")
+			:addTo(info_bg)
+			:scale(0.7)
+			:align(display.BOTTOM_RIGHT, self.draong_info_xp_label:getPositionX() - self.draong_info_xp_label:getContentSize().width/2 - 10,10)
+		self.expIcon = expIcon
 		local add_button = WidgetPushButton.new({normal = "add_btn_up_50x50.png",pressed = "add_btn_down_50x50.png"})
 	 		:addTo(info_bg)
 	 		:scale(0.8)
-	 		:align(display.LEFT_CENTER,self.draong_info_xp_label:getPositionX()+self.draong_info_xp_label:getContentSize().width+10,10 + expIcon:getCascadeBoundingBox().height/2)
+	 		:align(display.LEFT_CENTER,self.draong_info_xp_label:getPositionX()+self.draong_info_xp_label:getContentSize().width/2+10,10 + expIcon:getCascadeBoundingBox().height/2)
 	 		:onButtonClicked(function()
 	 			self:OnDragonExpItemUseButtonClicked()
 	 		end)
+	 	self.exp_add_button = add_button
 		-- info end
 		self.nextButton = cc.ui.UIPushButton.new({
 			normal = "dragon_next_icon_28x31.png"

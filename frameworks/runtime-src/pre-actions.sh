@@ -11,7 +11,7 @@ gitDebugVersion()
 	#获取内部版本
 	TIME_VERSION=`git rev-list HEAD | wc -l | tr -d "  " | awk '{print $0}'`
 	echo "------------------------------------"
-	echo "\033[32m [INFO]Debug Version:  $TIME_VERSION \033[0m"
+	echo "> Debug Version:  $TIME_VERSION"
 	echo "local __debugVer = ${TIME_VERSION}
 		return __debugVer
 	" > $VERSION_FILE

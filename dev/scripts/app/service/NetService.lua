@@ -21,14 +21,18 @@ function NetService:isDisconnected()
 end
 
 function NetService:connect(host, port, cb)
-    if  self.net_state ~= self.NET_STATE.DISCONNECT then return end
     self.m_pomelo:asyncConnect(host, port, function ( success ) 
-        if success then self.net_state = self.NET_STATE.CONNECT end
+        if success then 
+            self.net_state = self.NET_STATE.CONNECT
+        else
+            self.net_state = self.NET_STATE.DISCONNECT
+        end
         cb(success)
     end)
 end
 
 function NetService:disconnect( )
+    if self.net_state == self.NET_STATE.DISCONNECT then return end
     self.m_pomelo:cleanup() -- clean the callback in pomelo thread
     self.m_pomelo:stop()
     self.net_state = self.NET_STATE.DISCONNECT

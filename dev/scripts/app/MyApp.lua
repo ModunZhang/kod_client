@@ -65,11 +65,15 @@ function MyApp:showDebugInfo()
     return "Client Ver:" .. __debugVer .. "\nPlayerID:" .. DataManager:getUserData()._id .. "\nDeviceID:" .. DataManager:getUserData().countInfo.deviceId
 end
 
-function MyApp:restart()
-    NetManager:disconnect()
+function MyApp:restart(needDisconnect)
+    if needDisconnect == true or type(needDisconnect) == 'nil' then
+        NetManager:disconnect()
+    end
+    --关闭所有状态
     self.timer:Stop()
     self:GetAudioManager():StopAll()
     self:GetChatManager():Reset()
+    device.hideActivityIndicator()
     if device.platform == 'mac' then
         PlayerProtocol:getInstance():relaunch()
     else
@@ -126,29 +130,16 @@ end
 
 function MyApp:retryConnectServer()
     if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
-        app:lockInput(true)
-        local loading
-        local need_show,showed = true,false
-        if need_show then
-            loading = UIKit:newGameUI("GameUIWatiForNetWork")
-            loading:AddToCurrentScene(true)
-            loading:zorder(2001)
-            showed = true
-            need_show = false
-        end
+        UIKit:WaitForNet()
         scheduler.performWithDelayGlobal(function()
             NetManager:getConnectLogicServerPromise():next(function()
                 return NetManager:getLoginPromise()
             end):catch(function(err)
-                UIKit:showMessageDialog(_("错误"), _("连接服务器失败,请检测你的网络环境!"), function()
+                UIKit:showMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
                     app:retryConnectServer()
                 end,nil,false)
             end):always(function()
-                app:lockInput(false)
-                need_show = false
-                if showed then
-                    loading:removeFromParent(true)
-                end
+                UIKit:NoWaitForNet()
             end)      
         end,1)
        
@@ -275,10 +266,12 @@ function MyApp:transactionObserver(event)
     if transaction_state == 'restored' then
         device.showAlert("提示","已为你恢复以前的购买",{_("确定")})
         Store.finishTransaction(transaction)
+        device.hideActivityIndicator()
     elseif transaction_state == 'purchased' then
         local rewards_msg,info = DataUtils:getIapRewardMessage(transaction.productIdentifier)
         ext.market_sdk.onPlayerChargeRequst(transaction.transactionIdentifier,transaction.productIdentifier,info.price,info.gem,"USD")
         NetManager:getVerifyIAPPromise(transaction.transactionIdentifier,transaction.receipt):next(function(response)
+            device.hideActivityIndicator()
             local msg = response.msg
             if msg.transactionId then
                 GameGlobalUI:showTips(_("提示"),rewards_msg)
@@ -286,6 +279,7 @@ function MyApp:transactionObserver(event)
                 ext.market_sdk.onPlayerChargeSuccess(transaction.transactionIdentifier)
             end
         end):catch(function(err)
+            device.hideActivityIndicator()
             local msg,code_type = err:reason()
             local code = msg.code
             if code_type ~= "syntaxError" then
@@ -296,9 +290,11 @@ function MyApp:transactionObserver(event)
         end)
     elseif transaction_state == 'purchasing' then
         --不作任何处理
+        device.hideActivityIndicator()
     else
         device.showAlert(_("提示"),transaction.errorString,{_("确定")})
         Store.finishTransaction(transaction)
+        device.hideActivityIndicator()
     end
 end
 return MyApp
