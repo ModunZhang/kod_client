@@ -326,7 +326,10 @@ function GameUIAllianceBattle:InitBattleStatistics()
         -- 敌方联盟名字
         local a_name = ""
         if enemy_alliance then
-            a_name = "["..enemy_alliance:AliasName().."]"..enemy_alliance:Name()
+            if enemy_alliance:AliasName()
+                and enemy_alliance:Name() then
+                a_name = "["..enemy_alliance:AliasName().."]"..enemy_alliance:Name()
+            end
         end
         local enemy_alliance_name = UIKit:ttfLabel({
             text =a_name,
@@ -1256,6 +1259,7 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
 
 
 
