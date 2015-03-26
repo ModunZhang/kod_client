@@ -371,7 +371,7 @@ function GameUIAllianceHome:CreateTop()
             if enemy_name_bg:getChildByTag(201) then
                 enemy_name_bg:removeChildByTag(201, true)
             end
-            if status=="fight"  then
+            if status=="fight" or status=="prepare" then
                 local enemy_flag = ui_helper:CreateFlagContentSprite(enemyAlliance:Flag()):scale(0.5)
                 enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
                     :addTo(enemy_name_bg)
