@@ -6,7 +6,7 @@ local GameUIAllianceCityEnter = UIKit:createUIClass("GameUIAllianceCityEnter","G
 local config_wall = GameDatas.BuildingFunction.wall
 local GameUIWriteMail = import(".GameUIWriteMail")
 local Alliance = import("..entity.Alliance")
-
+local PROGRESS_TAG = 100
 
 function GameUIAllianceCityEnter:ctor(building,isMyAlliance,my_alliance,enemy_alliance)
     GameUIAllianceCityEnter.super.ctor(self,building,isMyAlliance,my_alliance)
@@ -36,13 +36,14 @@ function GameUIAllianceCityEnter:onEnter()
 end
 function GameUIAllianceCityEnter:onExit()
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.BASIC)
+    app.timer:RemoveListener(self)
     GameUIAllianceCityEnter.super.onExit(self)
 end
 function GameUIAllianceCityEnter:OnBasicChanged( alliance,changed_map )
-	if changed_map.status and not self:IsMyAlliance() then
-		self:GetEnterButtonByIndex(1):setButtonEnabled(changed_map.status.new == "fight") 
-		self:GetEnterButtonByIndex(2):setButtonEnabled(changed_map.status.new == "fight") 
-	end
+    if changed_map.status and not self:IsMyAlliance() then
+        self:GetEnterButtonByIndex(1):setButtonEnabled(changed_map.status.new == "fight")
+        self:GetEnterButtonByIndex(2):setButtonEnabled(changed_map.status.new == "fight")
+    end
 end
 function GameUIAllianceCityEnter:GetPlayerByLocation( x,y )
     for _,member in pairs(self:GetCurrentAlliance():GetAllMembers()) do
@@ -194,9 +195,54 @@ function GameUIAllianceCityEnter:GetEnterButtons()
         self:LeftButtonClicked()
     end)
     table.insert(buttons,info_button)
+
+    -- 准备期做一个progress倒计时按钮可使用时间
+    if my_allaince:Status() == "prepare" then
+        local statusStartTime = math.floor(my_allaince:StatusStartTime()/1000)
+        local statusFinishTime = math.floor(my_allaince:StatusFinishTime()/1000)
+
+        local percent = math.floor((statusFinishTime-app.timer:GetServerTime())/(statusFinishTime-statusStartTime)*100)
+        local progress_1 = display.newProgressTimer("progress_bg_116x89.png", display.PROGRESS_TIMER_RADIAL)
+            :pos(-68, -54)
+            :addTo(attack_button)
+        progress_1:setPercentage(percent)
+        progress_1:setRotationSkewY(180)
+        progress_1:setTag(PROGRESS_TAG)
+        local progress_2 = display.newProgressTimer("progress_bg_116x89.png", display.PROGRESS_TIMER_RADIAL)
+            :pos(-68, -54)
+            :addTo(strike_button)
+        progress_2:setPercentage(percent)
+        progress_2:setTag(PROGRESS_TAG)
+        progress_2:setRotationSkewY(180)
+        app.timer:AddListener(self)
+    end
     end
     return buttons
 end
+function GameUIAllianceCityEnter:OnTimer(current_time)
+    local my_allaince = Alliance_Manager:GetMyAlliance()
+    local status = my_allaince:Status()
+    if not self:IsMyAlliance() then
+        if status == "prepare" then
+            local statusStartTime = math.floor(my_allaince:StatusStartTime()/1000)
+            local statusFinishTime = math.floor(my_allaince:StatusFinishTime()/1000)
 
+            local percent = math.floor((statusFinishTime-current_time)/(statusFinishTime-statusStartTime)*100)
+            print("percent====",percent)
+            self:GetEnterButtonByIndex(1):getChildByTag(PROGRESS_TAG):setPercentage(percent)
+            self:GetEnterButtonByIndex(2):getChildByTag(PROGRESS_TAG):setPercentage(percent)
+        else
+            self:GetEnterButtonByIndex(1):removeChildByTag(PROGRESS_TAG, true)
+            self:GetEnterButtonByIndex(2):removeChildByTag(PROGRESS_TAG, true)
+            app.timer:RemoveListener(self)
+        end
+    end
+end
 return GameUIAllianceCityEnter
+
+
+
+
+
+
 
