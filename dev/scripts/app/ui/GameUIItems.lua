@@ -87,7 +87,6 @@ end
 function GameUIItems:ReloadShopList( tag )
     self.shop_select_tag = tag
     self.shop_listview:reload()
-    print("ReloadShopList",tag)
 end
 function GameUIItems:sourceDelegate(listView, tag, idx)
     if cc.ui.UIListView.COUNT_TAG == tag then
@@ -104,6 +103,8 @@ function GameUIItems:sourceDelegate(listView, tag, idx)
         else
             content = item:getContent()
         end
+        content:SetData(idx)
+
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         return item
@@ -139,15 +140,13 @@ function GameUIItems:CreateShopContentByIndex( idx )
 
     local title_bg = display.newScale9Sprite("title_blue_430x30.png",item_width/2+66,item_height-28,cc.size(428,30),cc.rect(15,10,400,10))
         :addTo(content)
-    UIKit:ttfLabel({
-        text = items:GetLocalizeName(),
+    local item_name = UIKit:ttfLabel({
         size = 22,
         color = 0xffedae,
     }):align(display.LEFT_CENTER, 20 , title_bg:getContentSize().height/2)
         :addTo(title_bg)
 
-    UIKit:ttfLabel({
-        text = items:GetLocalizeDesc(),
+    local desc = UIKit:ttfLabel({
         size = 18,
         color = 0x797154,
         dimensions = cc.size(260,0)
@@ -158,38 +157,51 @@ function GameUIItems:CreateShopContentByIndex( idx )
     local num_bg = display.newSprite("back_ground_118x36.png"):addTo(icon_bg):align(display.CENTER, icon_bg:getContentSize().width/2, 20)
     local item_bg = display.newSprite("box_118x118.png"):addTo(icon_bg):align(display.CENTER, icon_bg:getContentSize().width/2, icon_bg:getContentSize().height-60)
     local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
-    local item_icon = display.newSprite(UILib.item[items:Name()]):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
+    local item_icon = cc.ui.UIImage.new(UILib.item[items:Name()]):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
     item_icon:scale(100/item_icon:getContentSize().width)
     local i_icon = display.newSprite("goods_26x26.png"):addTo(item_bg):align(display.CENTER, 15, 15)
     -- gem icon
     local gem_icon = display.newSprite("gem_icon_62x61.png"):addTo(num_bg):align(display.CENTER, 20, num_bg:getContentSize().height/2):scale(0.6)
-    UIKit:ttfLabel({
-        text = string.formatnumberthousands(items:Price()),
+    local price = UIKit:ttfLabel({
         size = 20,
         color = 0x403c2f,
     }):align(display.LEFT_CENTER, 50 , num_bg:getContentSize().height/2)
         :addTo(num_bg)
 
-    local button = cc.ui.UIPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("购买"),
-            size = 20,
-            color = 0xffedae,
-        }))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                if items:Price() > User:GetGemResource():GetValue() then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("宝石不足"))
-                        :AddToCurrentScene()
-                else
-                    NetManager:getBuyItemPromise(items:Name(),1)
-                end
-            end
-        end)
-        :align(display.RIGHT_BOTTOM, item_width-10, 15)
-        :addTo(content)
 
+
+    local parent = self
+    function content:SetData( idx )
+        local items = parent:GetShopItemByTag(parent.shop_select_tag)[idx]
+        price:setString(string.formatnumberthousands(items:Price()))
+        local item_iamge = UILib.item[items:Name()]
+        if item_iamge then
+            item_icon:setTexture(item_iamge)
+            item_icon:scale(100/item_icon:getContentSize().width)
+        end
+        desc:setString(items:GetLocalizeDesc())
+        item_name:setString(items:GetLocalizeName())
+        self:removeChild(button, true)
+        local button = cc.ui.UIPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
+            :setButtonLabel(UIKit:ttfLabel({
+                text = _("购买"),
+                size = 20,
+                color = 0xffedae,
+            }))
+            :onButtonClicked(function(event)
+                if event.name == "CLICKED_EVENT" then
+                    if items:Price() > User:GetGemResource():GetValue() then
+                        FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                            :SetPopMessage(_("宝石不足"))
+                            :AddToCurrentScene()
+                    else
+                        NetManager:getBuyItemPromise(items:Name(),1)
+                    end
+                end
+            end)
+            :align(display.RIGHT_BOTTOM, item_width-10, 15)
+            :addTo(self)
+    end
     return content
 end
 function GameUIItems:InitMyItems()
@@ -255,6 +267,7 @@ function GameUIItems:myItemSourceDelegate(listView, tag, idx)
         else
             content = item:getContent()
         end
+        content:SetData(idx)
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         return item
@@ -269,14 +282,14 @@ function GameUIItems:CreateMyItemContentByIndex( idx )
 
     local title_bg = display.newScale9Sprite("title_blue_430x30.png",item_width/2+66,item_height-28,cc.size(428,30),cc.rect(15,10,400,10))
         :addTo(content)
-    UIKit:ttfLabel({
+    local item_name = UIKit:ttfLabel({
         text = items:GetLocalizeName(),
         size = 22,
         color = 0xffedae,
     }):align(display.LEFT_CENTER, 20 , title_bg:getContentSize().height/2)
         :addTo(title_bg)
 
-    UIKit:ttfLabel({
+    local desc = UIKit:ttfLabel({
         text = items:GetLocalizeDesc(),
         size = 18,
         color = 0x797154,
@@ -288,8 +301,8 @@ function GameUIItems:CreateMyItemContentByIndex( idx )
     local num_bg = display.newSprite("back_ground_118x36.png"):addTo(icon_bg):align(display.CENTER, icon_bg:getContentSize().width/2, 20)
     local item_bg = display.newSprite("box_118x118.png"):addTo(icon_bg):align(display.CENTER, icon_bg:getContentSize().width/2, icon_bg:getContentSize().height-60)
     local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
-    local i_icon = display.newSprite("goods_26x26.png"):addTo(item_bg):align(display.CENTER, 15, 15)
-    local item_icon = display.newSprite(UILib.item[items:Name()]):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
+    local i_icon = cc.ui.UIImage.new("goods_26x26.png"):addTo(item_bg):align(display.CENTER, 15, 15)
+    local item_icon = cc.ui.UIImage.new("Dragon_red_113x128.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
     item_icon:scale(100/item_icon:getContentSize().width)
 
 
@@ -300,36 +313,52 @@ function GameUIItems:CreateMyItemContentByIndex( idx )
     }):align(display.CENTER, num_bg:getContentSize().width/2 , num_bg:getContentSize().height/2)
         :addTo(num_bg)
 
-    if items:Category()~=Item.CATEGORY.SPEEDUP
-        and items:Name()~="movingConstruction"
-        and items:Name()~="torch"
-        and items:Name()~="retreatTroop"
-        and items:Name()~="moveTheCity"
-        and items:Name()~="chestKey_2"
-        and items:Name()~="chestKey_3"
-        and items:Name()~="chestKey_4"
-    then
-        local button = WidgetPushButton.new({normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"})
-            :setButtonLabel(UIKit:ttfLabel({
-                text = _("使用"),
-                size = 20,
-                color = 0xffedae,
-            }))
-            :onButtonClicked(function(event)
-                if event.name == "CLICKED_EVENT" then
-                    WidgetUseItems.new():Create({
-                        item = items
-                    }):AddToCurrentScene()
-                end
-            end)
-            :align(display.RIGHT_BOTTOM, item_width-10, 15)
-            :addTo(content)
-    end
 
+
+    local parent = self
     function content:SetOwnCount( count )
         own_num:setString(_("拥有")..string.formatnumberthousands(count))
     end
-    self.my_items[items:Name()] = content
+    function content:SetData( idx )
+        local items = parent:GetMyItemByTag(parent.my_item_tag)[idx]
+        self:SetOwnCount(string.formatnumberthousands(items:Count()))
+        local item_image =UILib.item[items:Name()]
+        if item_image then
+            item_icon:setTexture(item_image)
+            item_icon:scale(100/item_icon:getContentSize().width)
+        end
+        desc:setString(items:GetLocalizeDesc())
+        item_name:setString(items:GetLocalizeName())
+        if self.button then
+            self:removeChild(self.button, true)
+        end
+        if items:Category()~=Item.CATEGORY.SPEEDUP
+            and items:Name()~="movingConstruction"
+            and items:Name()~="torch"
+            and items:Name()~="retreatTroop"
+            and items:Name()~="moveTheCity"
+            and items:Name()~="chestKey_2"
+            and items:Name()~="chestKey_3"
+            and items:Name()~="chestKey_4"
+        then
+            self.button = cc.ui.UIPushButton.new({normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"})
+                :setButtonLabel(UIKit:ttfLabel({
+                    text = _("使用"),
+                    size = 20,
+                    color = 0xffedae,
+                }))
+                :onButtonClicked(function(event)
+                    if event.name == "CLICKED_EVENT" then
+                        WidgetUseItems.new():Create({
+                            item = items
+                        }):AddToCurrentScene()
+                    end
+                end)
+                :align(display.RIGHT_BOTTOM, item_width-10, 15)
+                :addTo(self)
+        end
+        parent.my_items[items:Name()] = self
+    end
     return content
 end
 
@@ -342,6 +371,7 @@ function GameUIItems:OnItemsChanged( changed_map )
                 if item then
                     item:SetOwnCount( v:Count() )
                 end
+                self:ReloadMyItemsList( self.my_item_tag)
             end
         end
     end
@@ -369,6 +399,10 @@ function GameUIItems:OnItemsChanged( changed_map )
     end
 end
 return GameUIItems
+
+
+
+
 
 
 
