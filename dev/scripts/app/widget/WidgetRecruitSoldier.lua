@@ -618,7 +618,7 @@ function WidgetRecruitSoldier:CheckMaterials(count)
     if soldier_config.specialMaterials then
         local specialMaterials = string.split(soldier_config.specialMaterials,",")
         for k,v in pairs(specialMaterials) do
-            local temp = string.split(k, "_")
+            local temp = string.split(v, "_")
             local total = self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.SOLDIER)[temp[1]]
             if total< count then
                 return v

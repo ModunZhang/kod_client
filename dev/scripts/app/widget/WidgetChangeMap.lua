@@ -101,9 +101,9 @@ function WidgetChangeMap:ctor(map_type)
     --     :setButtonLabelOffset(0, -48)
 
     local btn = WidgetPushButton.new(
-        {normal = "map_bg_145X146.png", pressed = "map_bg_145X146.png"}
+        {normal = "map_bg_104X112.png", pressed = "map_bg_104X112.png"}
     ):addTo(self)
-        :align(display.LEFT_CENTER,window.cx-335*scale_x, 50*scale_x)
+        :align(display.LEFT_CENTER,window.cx-315*scale_x, 50*scale_x)
         :onButtonClicked(function(event)
             -- dump(event)
             -- self:Move()
@@ -124,7 +124,7 @@ function WidgetChangeMap:ctor(map_type)
             end
         end)
         :scale(scale_x)
-    display.newSprite("change_map_icon.png"):addTo(btn):align(display.CENTER, 73, 0)
+    display.newSprite("change_map_icon.png"):addTo(btn):align(display.CENTER, 52, 0)
     btn:setTouchSwallowEnabled(true)
 
     -- self:SetMapType(map_type)
