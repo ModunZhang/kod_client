@@ -99,7 +99,8 @@ function GameUISetting:OnButtonClicked(button)
 	elseif tag == 3 then
 		UIKit:newGameUI("GameUISettingLanguage"):AddToCurrentScene(true)
 	elseif tag == 4 then
-		UIKit:newGameUI("GameUITips"):AddToCurrentScene(true)
+		UIKit:newGameUI('GameUIShop', City):AddToCurrentScene(true)
+		-- UIKit:newGameUI("GameUITips"):AddToCurrentScene(true)
 	elseif tag == 5 then
 		WidgetRankingList.new("player"):AddToCurrentScene(true)
 	elseif tag == 6 then

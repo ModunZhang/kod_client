@@ -333,7 +333,7 @@ function GameUIHome:CreateTop()
         {normal = "gem_btn_up_196x68.png", pressed = "gem_btn_down_196x68.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        UIKit:newGameUI('GameUIShop', City):AddToCurrentScene(true)
+        UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
     end):addTo(top_bg):pos(top_bg:getContentSize().width - 155, -16)
     display.newSprite("gem_icon_62x61.png"):addTo(button):pos(60, 3)
     self.gem_label = UIKit:ttfLabel({
