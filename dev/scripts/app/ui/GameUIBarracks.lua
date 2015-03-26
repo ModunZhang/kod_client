@@ -13,6 +13,7 @@ local WidgetRecruitSoldier = import("..widget.WidgetRecruitSoldier")
 local SoldierManager = import("..entity.SoldierManager")
 local GameUIBarracksSpeedUp = import(".GameUIBarracksSpeedUp")
 local GameUIBarracks = UIKit:createUIClass("GameUIBarracks", "GameUIUpgradeBuilding")
+local WidgetRecruitSoldier_tag = 1
 function GameUIBarracks:ctor(city, barracks)
     GameUIBarracks.super.ctor(self, city, _("兵营"),barracks)
     self.barracks_city = city
@@ -34,6 +35,12 @@ function GameUIBarracks:onExit()
     self.barracks:RemoveBarracksListener(self)
     self.barracks_city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
     GameUIBarracks.super.onExit(self)
+end
+function GameUIBarracks:RightButtonClicked()
+    if self:GetView():getChildByTag(WidgetRecruitSoldier_tag) then
+        self:GetView():getChildByTag(WidgetRecruitSoldier_tag):removeFromParent()
+    end
+    GameUIBarracks.super.RightButtonClicked(self)
 end
 function GameUIBarracks:OnBuildingUpgradingBegin()
 end
@@ -208,7 +215,7 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
                     return
                 end
                 WidgetRecruitSoldier.new(self.barracks, self.barracks_city, soldier_name)
-                    :addTo(self:GetView(),2)
+                    :addTo(self:GetView(),2, WidgetRecruitSoldier_tag)
                     :align(display.CENTER, window.cx, 500 / 2)
             end):addTo(row_item)
                 :alignByPoint(cc.p(0.5, 0.5), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 0)
@@ -231,7 +238,7 @@ function GameUIBarracks:CreateSpecialItemWithListView( list_view, soldiers ,titl
         self.soldier_map[soldier_name] =
             WidgetSoldierBox.new(nil, function(event)
                 WidgetRecruitSoldier.new(self.barracks, self.barracks_city, soldier_name,self.barracks_city:GetSoldierManager():GetStarBySoldierType(soldier_name))
-                    :addTo(self:GetView(),2)
+                    :addTo(self:GetView(),2, WidgetRecruitSoldier_tag)
                     :align(display.CENTER, window.cx, 500 / 2)
             end):addTo(row_item)
                 :alignByPoint(cc.p(0.5, 0.5), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 140)
