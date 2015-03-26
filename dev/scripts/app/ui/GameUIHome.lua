@@ -292,10 +292,10 @@ function GameUIHome:CreateTop()
         local x, y = first_col + col * padding_width, first_row - (row * padding_height)
         display.newSprite(v[1]):addTo(button):pos(x, y):scale(i == 3 and 0.65 or 0.25)
         self[v[2]] = UIKit:ttfLabel({text = "",
-                size = 18,
-                color = 0xf3f0b6,
-                shadow = true
-            }):addTo(button):pos(x + label_padding, y)
+            size = 18,
+            color = 0xf3f0b6,
+            shadow = true
+        }):addTo(button):pos(x + label_padding, y)
     end
 
     -- 玩家信息背景
@@ -417,12 +417,10 @@ function GameUIHome:CreateBottom()
         :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-11)
         :addTo(bottom_bg)
     chat_bg:setCascadeOpacityEnabled(true)
-    cc.ui.UIImage.new("chat_btn_60x48.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width-60, 0)
+    local size = chat_bg:getContentSize()
     local index_1 = display.newSprite("chat_page_index_1.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2-10,chat_bg:getContentSize().height-10)
     local index_2 = display.newSprite("chat_page_index_2.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2+10,chat_bg:getContentSize().height-10)
     self.chat_bg = chat_bg
-
-    local size = chat_bg:getContentSize()
     local pv = UIPageView.new {
         viewRect = cc.rect(10, 4, size.width-80, size.height),
         row = 2,
@@ -444,8 +442,7 @@ function GameUIHome:CreateBottom()
                 UIKit:newGameUI('GameUIChatChannel',"alliance"):AddToCurrentScene(true)
             end
         end
-    end)
-        :addTo(chat_bg)
+    end):addTo(chat_bg)
     pv:setTouchEnabled(true)
     pv:setTouchSwallowEnabled(false)
     self.chat_labels = {}
@@ -466,6 +463,17 @@ function GameUIHome:CreateBottom()
         pv:addItem(item)
     end
     pv:reload()
+
+    cc.ui.UIPushButton.new({normal = "chat_btn_60x48.png",
+        pressed = "chat_btn_60x48.png"}):addTo(chat_bg)
+        :pos(chat_bg:getContentSize().width-30, size.height/2)
+        :onButtonClicked(function()
+            if 1 == pv:getCurPageIdx() then
+                UIKit:newGameUI('GameUIChatChannel',"global"):AddToCurrentScene(true)
+            elseif 2 == pv:getCurPageIdx() then
+                UIKit:newGameUI('GameUIChatChannel',"alliance"):AddToCurrentScene(true)
+            end
+        end)
 
     -- 底部按钮
     local first_row = 64
@@ -637,6 +645,7 @@ function GameUIHome:Find()
 end
 
 return GameUIHome
+
 
 
 
