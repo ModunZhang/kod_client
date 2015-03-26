@@ -4,12 +4,12 @@ function CitySprite:ctor(city_layer, entity)
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     CitySprite.super.ctor(self, city_layer, entity, x, y)
 
-    local bg = display.newSprite("can_not_level_up.png"):addTo(self):align(display.TOP_CENTER, -20, -20)
+    local bg = display.newSprite("can_not_level_up.png"):addTo(self):align(display.TOP_CENTER, 30, -10)
     self.keepLevel = UIKit:ttfLabel({
         text = entity:GetAllianceMemberInfo():KeepLevel(),
         size = 22,
         color = 0xfff1cc,
-    }):addTo(bg):align(display.CENTER, 10, 18)
+    }):addTo(bg):align(display.CENTER, 10, 20)
     self.info = bg
 
     -- local bg = display.newSprite("back_ground_284x128.png")
