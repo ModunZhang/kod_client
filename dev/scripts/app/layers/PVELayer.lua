@@ -75,8 +75,6 @@ function PVELayer:ctor(user)
         for y = 0, h - 1 do
             local tile = layer:getTileAt(cc.p(x, y))
             tile:setColor(color + cc.c3b(tile:getColor()))
-            dump(tile:getColor())
-            break
         end
     end
 end
