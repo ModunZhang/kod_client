@@ -518,7 +518,7 @@ function WidgetRecruitSoldier:OnRecruiting()
 end
 function WidgetRecruitSoldier:OnEndRecruit()
     local enable = self.count > 0
-    self.normal_button:setButtonEnabled(self.barracks:IsRecruitEventEmpty() and enable)
+    -- self.normal_button:setButtonEnabled(self.barracks:IsRecruitEventEmpty() and enable)
 end
 function WidgetRecruitSoldier:OnInstantButtonClicked(func)
     self.instant_button_clicked = func
@@ -540,7 +540,7 @@ function WidgetRecruitSoldier:OnCountChanged(count)
     local enable = count > 0
     -- 按钮
     self.instant_button:setButtonEnabled(enable)
-    self.normal_button:setButtonEnabled(enable and self.barracks:IsRecruitEventEmpty())
+    -- self.normal_button:setButtonEnabled(enable and self.barracks:IsRecruitEventEmpty())
 
     -- 数量和时间
     local soldier_config = self.soldier_config
@@ -572,9 +572,12 @@ function WidgetRecruitSoldier:CheckNeedResource(total_resouce, count)
             current = soldier_config[k] * count
             current_res_map[k] = current
         end
-        local color = total >= current and UIKit:hex2c3b(0x403c2f) or display.COLOR_RED
+        local color = total >= current 
+        -- and UIKit:hex2c3b(0x403c2f) 
+        and display.COLOR_BLUE
+        or display.COLOR_RED
         v.total:setString(string.format("%s", GameUtils:formatNumber(total)))
-        v.total:setColor(color)
+        -- v.total:setColor(color)
         v.need:setString(string.format("/ %s", GameUtils:formatNumber(current)))
         v.need:setColor(color)
     end

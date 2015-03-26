@@ -93,7 +93,7 @@ function CityLayer:GetClickedObject(world_x, world_y)
     if self:IsEditMode() then
         local logic_clicked = clicked_list.logic_clicked
         while #logic_clicked > 0 do
-            if logic_clicked[1]:GetEntity():GetType() == "ruins" then
+            if logic_clicked[1]:GetEntity():IsHouse() or logic_clicked[1]:GetEntity():GetType() == "ruins" then
                 break
             else
                 table.remove(logic_clicked, 1)
@@ -101,7 +101,7 @@ function CityLayer:GetClickedObject(world_x, world_y)
         end
         local sprite_clicked = clicked_list.sprite_clicked
         while #sprite_clicked > 0 do
-            if sprite_clicked[1]:GetEntity():GetType() == "ruins" then
+            if sprite_clicked[1]:GetEntity():IsHouse() or sprite_clicked[1]:GetEntity():GetType() == "ruins" then
                 break
             else
                 table.remove(sprite_clicked, 1)

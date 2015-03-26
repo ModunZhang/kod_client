@@ -18,17 +18,17 @@ local sort_map = Enum(
     "watchTower",
     "warehouse",
     "dragonEyrie",
-    "toolShop",
-    "materialDepot",
-    "academy",
     "barracks",
+    "hospital",
+    "academy",
+    "materialDepot",
     "blackSmith",
     "foundry",
     "stoneMason",
     "lumbermill",
     "mill",
-    "hospital",
     "townHall",
+    "toolShop",
     "tradeGuild",
     "workshop",
     "trainingGround",
@@ -42,6 +42,8 @@ local sort_map = Enum(
     "wall",
     "tower"
 )
+
+
 function Building:ctor(building_info)
     assert(building_info)
     self.x = building_info.x and building_info.x or 0
@@ -95,6 +97,16 @@ function Building:GetSize()
 end
 function Building:GetType()
     return self.building_type
+end
+local house_type = {
+    ["dwelling"] = true,
+    ["woodcutter"] = true,
+    ["farmer"] = true,
+    ["quarrier"] = true,
+    ["miner"] = true,
+}
+function Building:IsHouse()
+    return house_type[self:GetType()]
 end
 function Building:GetOrient()
     return self.orient

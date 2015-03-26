@@ -319,6 +319,15 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     local city = self:GetCity()
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
+
+        if self:IsEditMode() then
+            if building:GetEntity():GetType() == "ruins" then
+                self:GetSceneUILayer():getChildByTag(WidgetMoveHouse.ADD_TAG):SetMoveToRuins(building)
+            end
+            return
+        end
+
+
         if self:CheckClickPromise(building) then return end
 
         if iskindof(building, "HelpedTroopsSprite") then
@@ -329,12 +338,8 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
             return
         end
         local type_ = building:GetEntity():GetType()
-        if type_ == "ruins" then
-            if self:IsEditMode() then
-                self:GetSceneUILayer():getChildByTag(WidgetMoveHouse.ADD_TAG):SetMoveToRuins(building)
-            else
-                UIKit:newGameUI('GameUIBuild', city, building:GetEntity()):AddToScene(self, true)
-            end
+        if type_ == "ruins" and not self:IsEditMode() then
+            UIKit:newGameUI('GameUIBuild', city, building:GetEntity()):AddToScene(self, true)
         elseif type_ == "keep" then
             self._keep_page = UIKit:newGameUI('GameUIKeep',city,building:GetEntity())
             self._keep_page:AddToScene(self, true)
@@ -399,6 +404,8 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     elseif self:IsEditMode() then
         self:LeaveEditMode()
     end
+
+
 end
 return MyCityScene
 

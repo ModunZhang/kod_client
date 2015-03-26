@@ -85,8 +85,12 @@ end
 function GameUIHome:FadeToSelf(isFullDisplay)
     self:setCascadeOpacityEnabled(true)
     local opacity = isFullDisplay == true and 255 or 0
-    -- self.event_tab:setVisible(isFullDisplay)
-    transition.fadeTo(self, {opacity = opacity, time = 0.2})
+    local p = isFullDisplay and 0 or 99999999
+    transition.fadeTo(self, {opacity = opacity, time = 0.2,
+        onComplete = function()
+                self:pos(p, p)
+            end
+        })
 end
 
 function GameUIHome:onEnter()
@@ -445,6 +449,7 @@ function GameUIHome:CreateBottom()
     end):addTo(chat_bg)
     pv:setTouchEnabled(true)
     pv:setTouchSwallowEnabled(false)
+    pv:setCascadeOpacityEnabled(true)
     self.chat_labels = {}
     local last_chat_messages = self:GetChatManager():FetchLastChannelMessage()
     -- add items
