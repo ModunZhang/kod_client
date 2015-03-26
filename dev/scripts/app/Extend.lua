@@ -225,7 +225,9 @@ local newScene = display.newScene
 function display.newScene(name)
     local scene = newScene(name)
     function scene:WaitForNet()
-        self.wait_for_net = UIKit:newGameUI("GameUIWatiForNetWork"):AddToScene(self, true):zorder(2001)
+        if not self.wait_for_net then
+            self.wait_for_net = UIKit:newGameUI("GameUIWatiForNetWork"):AddToScene(self, true):zorder(2001)
+        end
     end
     function scene:NoWaitForNet()
         if self.wait_for_net then

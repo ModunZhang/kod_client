@@ -126,16 +126,7 @@ end
 
 function MyApp:retryConnectServer()
     if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
-        app:lockInput(true)
-        local loading
-        local need_show,showed = true,false
-        if need_show then
-            loading = UIKit:newGameUI("GameUIWatiForNetWork")
-            loading:AddToCurrentScene(true)
-            loading:zorder(2001)
-            showed = true
-            need_show = false
-        end
+        UIKit:WaitForNet()
         scheduler.performWithDelayGlobal(function()
             NetManager:getConnectLogicServerPromise():next(function()
                 return NetManager:getLoginPromise()
@@ -144,11 +135,7 @@ function MyApp:retryConnectServer()
                     app:retryConnectServer()
                 end,nil,false)
             end):always(function()
-                app:lockInput(false)
-                need_show = false
-                if showed then
-                    loading:removeFromParent(true)
-                end
+                UIKit:NoWaitForNet()
             end)      
         end,1)
        

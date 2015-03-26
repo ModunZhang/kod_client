@@ -473,3 +473,17 @@ function UIKit:showEvaluateDialog()
         })dialog:AddToCurrentScene()
     return dialog
 end
+
+function UIKit:WaitForNet()
+    local scene = display.getRunningScene()
+    if scene.__cname  ~= 'UpdaterScene' and scene.__cname  ~= 'MainScene' then
+        scene:WaitForNet()
+    end
+end
+
+function UIKit:NoWaitForNet()
+     local scene = display.getRunningScene()
+    if scene.__cname  ~= 'UpdaterScene' and scene.__cname  ~= 'MainScene' then
+        scene:NoWaitForNet()
+    end
+end
