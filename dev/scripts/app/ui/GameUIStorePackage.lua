@@ -139,6 +139,7 @@ end
 function GameUIStorePackage:OnBuyButtonClicked()
 	dump(self:GetData().productId,"buy----->")
 	app:getStore().purchaseWithProductId(self:GetData().productId,1)
+	device.showActivityIndicator()
 end
 
 return GameUIStorePackage

@@ -143,6 +143,7 @@ function GameUIStore:GetItemBuyButton(data)
 end
 
 function GameUIStore:OnBuyButtonClicked(productId)
+	device.showActivityIndicator()
 	app:getStore().purchaseWithProductId(productId,1)
 end
 

@@ -279,7 +279,7 @@ end
 function NetManager:addDisconnectEventListener()
     self:addEventListener("disconnect", function(success, msg)
         if self.m_netService:isConnected() then
-            UIKit:showMessageDialog(_("错误"), _("连接服务器失败,请检测你的网络环境!"), function()
+            UIKit:showMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
                 app:retryConnectServer()
             end,nil,false)
         end
@@ -292,8 +292,9 @@ end
 
 function NetManager:addKickEventListener()
     self:addEventListener("onKick", function(success, msg)
-        UIKit:showMessageDialog(_("提示"), _("你与服务器的连接已断开!"), function()
-            app:restart()
+        self:disconnect()
+        UIKit:showMessageDialog(_("提示"), _("服务器维护中!"), function()
+            app:restart(false)
         end,nil,false)
     end)
 end

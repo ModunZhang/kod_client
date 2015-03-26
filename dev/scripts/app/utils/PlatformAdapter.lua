@@ -78,19 +78,6 @@ end
 
 
 function PlatformAdapter:common()
-    --重写菊花显示的时候锁住事件
-    local showActivityIndicator = device.showActivityIndicator
-    local hideActivityIndicator = device.hideActivityIndicator
-
-    device.showActivityIndicator = function()
-        showActivityIndicator()
-        app:lockInput(true)
-    end
-
-    device.hideActivityIndicator = function()
-        hideActivityIndicator()
-        app:lockInput(false)
-    end
     --CCTableView
     cc.TABLEVIEW_FILL_TOPDOWN = 0
     cc.TABLEVIEW_FILL_BOTTOMUP = 1

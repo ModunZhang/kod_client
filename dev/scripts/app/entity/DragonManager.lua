@@ -14,7 +14,7 @@ local DragonEvent = import(".DragonEvent")
 local DragonDeathEvent = import(".DragonDeathEvent")
 
 DragonManager.LISTEN_TYPE = Enum("OnHPChanged","OnBasicChanged","OnDragonHatched","OnDragonEventChanged","OnDragonEventTimer","OnDefencedDragonChanged",
-    "OnDragonDeathEventChanged","OnDragonDeathEventTimer")
+    "OnDragonDeathEventChanged","OnDragonDeathEventTimer","OnDragonDeathEventRefresh")
 
 
 function DragonManager:ctor()
@@ -203,7 +203,12 @@ function DragonManager:RefreshDragonDeathEvents(user_data,deltaData)
     if not user_data.dragonDeathEvents then return end
     local is_fully_update = deltaData == nil 
     local is_delta_update = not is_fully_update and deltaData.dragonDeathEvents ~= nil
-    if is_fully_update then
+    local is_full_array = is_delta_update and not deltaData.dragonDeathEvents.add and not deltaData.dragonDeathEvents.edit and not deltaData.dragonDeathEvents.remove
+
+    if is_fully_update or is_full_array then
+        for __,v in pairs(self.dragonDeathEvents) do
+            v:Reset()
+        end
         self.dragonDeathEvents = {}
         for _,v in ipairs(user_data.dragonDeathEvents) do
             if not self.dragonDeathEvents[v.dragonType] then
@@ -213,8 +218,11 @@ function DragonManager:RefreshDragonDeathEvents(user_data,deltaData)
                 self.dragonDeathEvents[dragonDeathEvent:DragonType()] = dragonDeathEvent
             end
         end
+        self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonDeathEventRefresh,function(lisenter)
+            lisenter.OnDragonDeathEventRefresh(lisenter,self.dragonDeathEvents)
+        end)
     end
-    if is_delta_update then
+    if is_delta_update and not is_full_array then
         local changed_map = GameUtils:Handler_DeltaData_Func(
             deltaData.dragonDeathEvents
             ,function(event_data)
