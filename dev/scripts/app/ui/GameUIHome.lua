@@ -291,13 +291,11 @@ function GameUIHome:CreateTop()
         local col = (i - 1) % 3
         local x, y = first_col + col * padding_width, first_row - (row * padding_height)
         display.newSprite(v[1]):addTo(button):pos(x, y):scale(i == 3 and 0.65 or 0.25)
-        self[v[2]] =
-            UIKit:ttfLabel({text = "",
+        self[v[2]] = UIKit:ttfLabel({text = "",
                 size = 18,
                 color = 0xf3f0b6,
                 shadow = true
-            })
-                :addTo(button):pos(x + label_padding, y)
+            }):addTo(button):pos(x + label_padding, y)
     end
 
     -- 玩家信息背景
