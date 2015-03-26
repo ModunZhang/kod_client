@@ -24,7 +24,7 @@ end
 function GameUIStore:CreateUI()
 	self.listView = UIListView.new({
 		bgColor = cc.c4b(13,17,19,255),
-        viewRect = cc.rect(window.left+(window.width - 610)/2, window.bottom + 14, 610,window.betweenHeaderAndTab + 90),
+        viewRect = cc.rect(window.left+math.ceil((window.width - 614)/2), window.bottom + 14, 614,window.betweenHeaderAndTab + 90),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
 	}):addTo(self:GetView())
 	self:RefreshListView()

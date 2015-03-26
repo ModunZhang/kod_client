@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#Error.xls 修改了列的标题
 ClientDir=../../dev/scripts/app/datas
 GameDataDir=../../gameData
 
