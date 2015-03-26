@@ -147,9 +147,9 @@ function AllianceView:IteratorAllianceObjects(func)
     table.foreach(self.objects, func)
 end
 function AllianceView:OnSceneMove()
-    self:IteratorAllianceObjects(function(_, object)
-        object:OnSceneMove()
-    end)
+    -- self:IteratorAllianceObjects(function(_, object)
+    --     object:OnSceneMove()
+    -- end)
 end
 function AllianceView:GetClickedObject(world_x, world_y)
     local point = self:GetBuildingNode():convertToNodeSpace(cc.p(world_x, world_y))
@@ -182,6 +182,13 @@ function AllianceView:EmptyGround(x, y)
             return AllianceObject.new(nil, nil, x, y)
         end
     }
+end
+function AllianceView:OnSceneScale(s)
+    for _,v in pairs(self.objects) do
+        if v:GetEntity():GetType() == "member" then
+            v:OnSceneScale(s)
+        end
+    end
 end
 
 

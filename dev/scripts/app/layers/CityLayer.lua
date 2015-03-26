@@ -9,6 +9,7 @@ local TileSprite = import("..sprites.TileSprite")
 local LockedTileSprite = import("..sprites.LockedTileSprite")
 local TreeSprite = import("..sprites.TreeSprite")
 local AirshipSprite = import("..sprites.AirshipSprite")
+local FairGroundSprite = import("..sprites.FairGroundSprite")
 local SingleTreeSprite = import("..sprites.SingleTreeSprite")
 local CitizenSprite = import("..sprites.CitizenSprite")
 local SoldierSprite = import("..sprites.SoldierSprite")
@@ -383,6 +384,7 @@ function CityLayer:InitWithCity(city)
 
     -- pve 入口
     self.pve_airship = self:CreateAirship(-7, 6):addTo(city_node)
+    self.fair_ground = self:CreateFairGround(60, 45):addTo(city_node)
 
 
     -- display.newSprite("redDragon_icon_151x133.png"):addTo(self, WEATHER_NODE):pos(500, 500)
@@ -666,6 +668,9 @@ function CityLayer:IteratorClickAble(func)
         if self.pve_airship then
             handle_func(nil, self.pve_airship)
         end
+        if self.fair_ground then
+            handle_func(nil, self.fair_ground)
+        end
     until true
 end
 function CityLayer:IteratorRuins(func)
@@ -723,6 +728,9 @@ function CityLayer:CreateSoldier(soldier_type, logic_x, logic_y)
 end
 function CityLayer:CreateAirship(logic_x, logic_y)
     return AirshipSprite.new(self, logic_x, logic_y)
+end
+function CityLayer:CreateFairGround(logic_x, logic_y)
+    return FairGroundSprite.new(self, logic_x, logic_y)
 end
 
 ----- override

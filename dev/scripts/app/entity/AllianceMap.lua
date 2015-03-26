@@ -15,6 +15,13 @@ end
 function mapObject_meta:GetAllianceVillageInfo()
     return self.alliance_map:FindAllianceVillagesInfoByObject(self)
 end
+function mapObject_meta:GetAllianceMemberInfo()
+    return self.alliance_map:GetAllianceMemberInfo(self)
+end
+function mapObject_meta:GetAllianceMap()
+    self.alliance_map = alliance_map
+    return self
+end
 function mapObject_meta:SetAllianceMap(alliance_map)
     self.alliance_map = alliance_map
     return self
@@ -121,6 +128,16 @@ end
 function AllianceMap:Reset()
     self.mapObjects = {}
     self.buildings = {}
+end
+function AllianceMap:GetAllianceMemberInfo(object)
+    if is_city(object:GetType()) then
+        local x, y = object:GetLogicPosition()
+        for _,member in pairs(self:GetAlliance():GetAllMembers()) do
+            if member.location.x == x and member.location.y == y then
+                return member
+            end
+        end
+    end
 end
 function AllianceMap:FindAllianceBuildingInfoByObjects(object)
     if object:GetType() == "building" then

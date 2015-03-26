@@ -291,13 +291,11 @@ function GameUIHome:CreateTop()
         local col = (i - 1) % 3
         local x, y = first_col + col * padding_width, first_row - (row * padding_height)
         display.newSprite(v[1]):addTo(button):pos(x, y):scale(i == 3 and 0.65 or 0.25)
-        self[v[2]] =
-            UIKit:ttfLabel({text = "",
+        self[v[2]] = UIKit:ttfLabel({text = "",
                 size = 18,
                 color = 0xf3f0b6,
                 shadow = true
-            })
-                :addTo(button):pos(x + label_padding, y)
+            }):addTo(button):pos(x + label_padding, y)
     end
 
     -- 玩家信息背景
@@ -335,7 +333,7 @@ function GameUIHome:CreateTop()
         {normal = "gem_btn_up_196x68.png", pressed = "gem_btn_down_196x68.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
-        UIKit:newGameUI('GameUIShop', City):AddToCurrentScene(true)
+        UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
     end):addTo(top_bg):pos(top_bg:getContentSize().width - 155, -16)
     display.newSprite("gem_icon_62x61.png"):addTo(button):pos(60, 3)
     self.gem_label = UIKit:ttfLabel({
@@ -494,12 +492,10 @@ function GameUIHome:CreateBottom()
             :addTo(bottom_bg):align(display.CENTER,x, y-40)
         button:setTag(i)
         button:addButtonPressedEventListener(function ()
-            local seq_1 = transition.sequence{
-                cc.ScaleTo:create(0.1, 0.55),
-                cc.ScaleTo:create(0.1, 0.6),
-                cc.ScaleTo:create(0.1, 0.55),
-            }
-            button:runAction(seq_1)
+            button:runAction(cc.ScaleTo:create(0.1, 0.7))
+        end)
+        button:addButtonReleaseEventListener(function ()
+            button:runAction(cc.ScaleTo:create(0.1, 0.55))
         end)
         if i == 1 then
             -- 未读邮件或战报数量显示条
@@ -570,14 +566,14 @@ function GameUIHome:CreateBottom()
     self.help_button = help_button
 
     -- TODO:临时gacha按钮
-    local gacha_button = cc.ui.UIPushButton.new(
-        {normal = "icon_casinoToken.png", pressed = "icon_casinoToken.png"},
-        {scale9 = false}
-    ):onButtonClicked(function(event)
-        if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI("GameUIGacha", self.city):AddToCurrentScene(true)
-        end
-    end):addTo(self):pos(display.right-40, display.bottom+400):scale(0.6)
+    -- local gacha_button = cc.ui.UIPushButton.new(
+    --     {normal = "icon_casinoToken.png", pressed = "icon_casinoToken.png"},
+    --     {scale9 = false}
+    -- ):onButtonClicked(function(event)
+    --     if event.name == "CLICKED_EVENT" then
+    --         UIKit:newGameUI("GameUIGacha", self.city):AddToCurrentScene(true)
+    --     end
+    -- end):addTo(self):pos(display.right-40, display.bottom+400):scale(0.6)
 
     return bottom_bg
 end
@@ -641,6 +637,7 @@ function GameUIHome:Find()
 end
 
 return GameUIHome
+
 
 
 

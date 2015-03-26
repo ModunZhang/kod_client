@@ -27,17 +27,23 @@ local function transition_(scene, status)
         local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
         cc.LayerColor:create(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
             transition.sequence{
-                cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
+                cc.CallFunc:create(function() 
+                    armature:getAnimation():stop()
+                    armature:getAnimation():play("Animation1", -1, 0) 
+                end),
                 cc.FadeIn:create(0.75),
                 cc.CallFunc:create(function() 
                     if scene.hideOutEnterShow then
                         scene:hideOutEnterShow()
                     else
-                        scene:hideOutShowIn() 
+                        scene:hideOutShowIn()
                     end
                 end),
                 cc.DelayTime:create(0.5),
-                cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
+                cc.CallFunc:create(function() 
+                    armature:getAnimation():stop()
+                    armature:getAnimation():play("Animation4", -1, 0) 
+                end),
                 cc.FadeOut:create(0.75),
                 cc.CallFunc:create(function() scene:finish() end),
             }

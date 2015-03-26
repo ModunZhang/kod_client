@@ -5,12 +5,16 @@ function GameUIWatiForNetWork:ctor()
 end
 function GameUIWatiForNetWork:onEnter()
     GameUIWatiForNetWork.super.onEnter(self)
+    display.newColorLayer(cc.c4b(255,255,255,0)):addTo(self):setTouchEnabled(true)
 
     self:performWithDelay(function()
-        self:show()
-    end, 0.5)
+        self.sprite:show()
+        self.loading:show()
+    end, 1)
 
-    self.sprite = display.newSprite("batcat_logo_368x390.png", display.cx, display.cy, {class=cc.FilteredSpriteWithOne}):addTo(self)
+    self.sprite = display.newSprite("batcat_logo_368x390.png", display.cx, display.cy, {class=cc.FilteredSpriteWithOne})
+    :addTo(self)
+
     local size = self.sprite:getContentSize()
     self.sprite:setScaleX(display.width / size.width)
     self.sprite:setScaleY(display.height / size.height)
@@ -22,10 +26,12 @@ function GameUIWatiForNetWork:onEnter()
         })
     )
     self.sprite:setFilter(filter)
-    local loading = display.newSprite("loading_88x86.png"):addTo(self):pos(display.cx, display.cy)
-    loading:runAction(cc.RepeatForever:create(cc.RotateBy:create(7, 360)))
 
-    self:hide()
+    self.loading = display.newSprite("loading_88x86.png"):addTo(self):pos(display.cx, display.cy)
+    self.loading:runAction(cc.RepeatForever:create(cc.RotateBy:create(7, 360)))
+
+    self.sprite:hide()
+    self.loading:hide()
 end
 
 

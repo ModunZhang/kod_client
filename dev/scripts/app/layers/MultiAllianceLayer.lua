@@ -396,7 +396,11 @@ function MultiAllianceLayer:GetAllianceCoordWithPoint(x, y)
     end
     return logic_x, logic_y, alliance_view
 end
-
+function MultiAllianceLayer:OnSceneScale(s)
+    for _,v in pairs(self.alliance_views) do
+        v:OnSceneScale(s)
+    end
+end
 
 
 
