@@ -325,7 +325,7 @@ function City:IsFunctionBuilding(building)
     end
 end
 function City:IsHouse(building)
-    return iskindof(building, "ResourceUpgradeBuilding")
+    return building:IsHouse()
 end
 function City:IsTower(building)
     return iskindof(building, "TowerEntity")
