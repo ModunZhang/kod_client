@@ -113,6 +113,7 @@ function GameUIAllianceShrineRewardList:RefreshRewardListView()
 		local item = self.rewards_listView:newItem()
 		local content = self:GetListItem(i,v)
 		item:addContent(content)
+		content:size(595,100)
 		item:setItemSize(595,100)
 		self.rewards_listView:addItem(item)
 	end

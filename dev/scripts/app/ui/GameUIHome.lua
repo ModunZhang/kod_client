@@ -54,7 +54,7 @@ end
 function GameUIHome:SetCompleteTaskCount(count)
     if count > 0 then
         self.complete_task_count:show()
-        self.complete_task_count_label:setString(count > 99 and "..." or count)
+        self.complete_task_count_label:setString(count > 99 and "99+" or count)
     else
         self.complete_task_count:hide()
     end

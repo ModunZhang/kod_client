@@ -486,14 +486,13 @@ function GameUIAllianceShrine:BuildReportItemBox(report)
 		size = 20,
 		color = 0x403c2f
 	}):align(display.RIGHT_CENTER, 370, 20):addTo(player_count_bg,2)
-	--TODO:服务器未返回人均战斗力
 	UIKit:ttfLabel({
 		text = _("人均战斗力"),
 		size = 18,
 		color = 0x5d563f
 	}):align(display.LEFT_CENTER, 40, 20):addTo(player_strengh_bg,2)
 	UIKit:ttfLabel({
-		text = "1000",
+		text = report.playerAvgPower,
 		size = 20,
 		color = 0x403c2f
 	}):align(display.RIGHT_CENTER, 370, 20):addTo(player_strengh_bg,2)
