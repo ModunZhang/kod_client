@@ -34,6 +34,7 @@ function PVEScene:onEnter()
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
     self:GetSceneLayer():ZoomTo(0.8)
     self:GetSceneLayer():MoveCharTo(self.user:GetPVEDatabase():GetCharPosition())
+    app:GetAudioManager():PlayGameMusic("AllianceScene")
 
     GameUIPVEHome.new(self.user, self):AddToScene(self, true):setTouchSwallowEnabled(false)
 end
