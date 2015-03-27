@@ -924,7 +924,7 @@ function GameUIAllianceBattle:AddHistoryItem(report,index)
         end)
 
 
-        local revenge_time_limit = GameDatas.AllianceInitData.intInit.allianceRevengeMaxTime.value + math.floor(fightTime/1000)
+        local revenge_time_limit = GameDatas.AllianceInitData.intInit.allianceRevengeMaxMinutes.value * 60 + math.floor(fightTime/1000)
         local revenge_time_label
         local title_label
         if app.timer:GetServerTime()>revenge_time_limit then

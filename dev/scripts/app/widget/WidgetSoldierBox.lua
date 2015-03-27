@@ -46,6 +46,7 @@ function WidgetSoldierBox:SetNumber(number)
          self.number:setString(number)
     elseif type(number) == 'number' then
         self.number:setString(string.format("%s%d", _("数量: "), number))
+        self:Enable(number>0)
     end
     return self
 end

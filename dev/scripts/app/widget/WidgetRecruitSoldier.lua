@@ -44,6 +44,9 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
     self.star = soldier_star or barracks.soldier_star
     local soldier_config, aaa = self:GetConfigBySoldierTypeAndStar(soldier_name, self.star)
     self.recruit_max = barracks:GetMaxRecruitSoldierCount()
+    if soldier_config.citizen ~= 0 then
+        self.recruit_max = math.floor(barracks:GetMaxRecruitSoldierCount()/soldier_config.citizen)
+    end
     self.city = city
 
     local label_origin_x = 190
@@ -375,17 +378,17 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
             local current_time = app.timer:GetServerTime()
             local left_time = self.barracks:GetRecruitEvent():LeftTime(current_time)
             local queue_need_gem = self.barracks:IsRecruting()
-                    and DataUtils:getGemByTimeInterval(left_time) or 0
+                and DataUtils:getGemByTimeInterval(left_time) or 0
 
             if SPECIAL[self.soldier_name] then
                 local not_enough_material = self:CheckMaterials(self.count)
                 if not_enough_material then
                     UIKit:showMessageDialog(_("招募材料不足"), string.format(_("您当前没有足够%s"), not_enough_material))
                 elseif queue_need_gem > 0 then
-                        UIKit:showMessageDialog(_("队列不足"), _("您当前没有足够的队列,是否花费魔法石立即补充"),function()
-                            NetManager:getRecruitSpecialSoldierPromise(self.soldier_name, self.count)
-                            self:Close()
-                        end):CreateNeeds("gem_66x56.png", queue_need_gem)
+                    UIKit:showMessageDialog(_("队列不足"), _("您当前没有足够的队列,是否花费魔法石立即补充"),function()
+                        NetManager:getRecruitSpecialSoldierPromise(self.soldier_name, self.count)
+                        self:Close()
+                    end):CreateNeeds("gem_66x56.png", queue_need_gem)
                 else
                     NetManager:getRecruitSpecialSoldierPromise(self.soldier_name, self.count)
                     self:Close()
@@ -647,6 +650,7 @@ end
 
 
 return WidgetRecruitSoldier
+
 
 
 
