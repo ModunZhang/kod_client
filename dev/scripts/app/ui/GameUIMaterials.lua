@@ -32,8 +32,8 @@ function GameUIMaterials:ctor(toolShop, blackSmith)
     self.toolShop = toolShop
     self.blackSmith = blackSmith
 end
-function GameUIMaterials:onEnter()
-    GameUIMaterials.super.onEnter(self)
+function GameUIMaterials:OnMoveInStage()
+    GameUIMaterials.super.OnMoveInStage(self)
     self.title = self:InitEquipmentTitle()
     self:TabButtons()
     self.blackSmith:BelongCity():GetMaterialManager():AddObserver(self)

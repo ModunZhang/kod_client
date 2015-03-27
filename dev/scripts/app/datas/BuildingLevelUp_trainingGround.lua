@@ -9,8 +9,7 @@ trainingGround[1] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 4400,
-	["citizen"] = 0
+	["buildTime"] = 4400
 }
 trainingGround[2] = {
 	["level"] = 2,
@@ -21,8 +20,7 @@ trainingGround[2] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 4600,
-	["citizen"] = 0
+	["buildTime"] = 4600
 }
 trainingGround[3] = {
 	["level"] = 3,
@@ -33,8 +31,7 @@ trainingGround[3] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 4800,
-	["citizen"] = 0
+	["buildTime"] = 4800
 }
 trainingGround[4] = {
 	["level"] = 4,
@@ -45,8 +42,7 @@ trainingGround[4] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 5092,
-	["citizen"] = 0
+	["buildTime"] = 5092
 }
 trainingGround[5] = {
 	["level"] = 5,
@@ -57,8 +53,7 @@ trainingGround[5] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 5584,
-	["citizen"] = 0
+	["buildTime"] = 5584
 }
 trainingGround[6] = {
 	["level"] = 6,
@@ -69,8 +64,7 @@ trainingGround[6] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 6568,
-	["citizen"] = 0
+	["buildTime"] = 6568
 }
 trainingGround[7] = {
 	["level"] = 7,
@@ -81,8 +75,7 @@ trainingGround[7] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 7552,
-	["citizen"] = 0
+	["buildTime"] = 7552
 }
 trainingGround[8] = {
 	["level"] = 8,
@@ -93,8 +86,7 @@ trainingGround[8] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 10504,
-	["citizen"] = 0
+	["buildTime"] = 10504
 }
 trainingGround[9] = {
 	["level"] = 9,
@@ -105,8 +97,7 @@ trainingGround[9] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 16408,
-	["citizen"] = 0
+	["buildTime"] = 16408
 }
 trainingGround[10] = {
 	["level"] = 10,
@@ -117,8 +108,7 @@ trainingGround[10] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 22312,
-	["citizen"] = 0
+	["buildTime"] = 22312
 }
 trainingGround[11] = {
 	["level"] = 11,
@@ -129,8 +119,7 @@ trainingGround[11] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 28216,
-	["citizen"] = 0
+	["buildTime"] = 28216
 }
 trainingGround[12] = {
 	["level"] = 12,
@@ -141,8 +130,7 @@ trainingGround[12] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 34120,
-	["citizen"] = 0
+	["buildTime"] = 34120
 }
 trainingGround[13] = {
 	["level"] = 13,
@@ -153,8 +141,7 @@ trainingGround[13] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 40024,
-	["citizen"] = 0
+	["buildTime"] = 40024
 }
 trainingGround[14] = {
 	["level"] = 14,
@@ -165,8 +152,7 @@ trainingGround[14] = {
 	["tools"] = 3,
 	["tiles"] = 3,
 	["pulley"] = 3,
-	["buildTime"] = 45928,
-	["citizen"] = 0
+	["buildTime"] = 45928
 }
 trainingGround[15] = {
 	["level"] = 15,
@@ -177,8 +163,7 @@ trainingGround[15] = {
 	["tools"] = 5,
 	["tiles"] = 5,
 	["pulley"] = 5,
-	["buildTime"] = 51832,
-	["citizen"] = 0
+	["buildTime"] = 51832
 }
 trainingGround[16] = {
 	["level"] = 16,
@@ -189,8 +174,7 @@ trainingGround[16] = {
 	["tools"] = 8,
 	["tiles"] = 8,
 	["pulley"] = 8,
-	["buildTime"] = 57736,
-	["citizen"] = 0
+	["buildTime"] = 57736
 }
 trainingGround[17] = {
 	["level"] = 17,
@@ -201,8 +185,7 @@ trainingGround[17] = {
 	["tools"] = 12,
 	["tiles"] = 12,
 	["pulley"] = 12,
-	["buildTime"] = 63640,
-	["citizen"] = 0
+	["buildTime"] = 63640
 }
 trainingGround[18] = {
 	["level"] = 18,
@@ -213,8 +196,7 @@ trainingGround[18] = {
 	["tools"] = 18,
 	["tiles"] = 18,
 	["pulley"] = 18,
-	["buildTime"] = 69544,
-	["citizen"] = 0
+	["buildTime"] = 69544
 }
 trainingGround[19] = {
 	["level"] = 19,
@@ -225,8 +207,7 @@ trainingGround[19] = {
 	["tools"] = 26,
 	["tiles"] = 26,
 	["pulley"] = 26,
-	["buildTime"] = 75448,
-	["citizen"] = 0
+	["buildTime"] = 75448
 }
 trainingGround[20] = {
 	["level"] = 20,
@@ -237,8 +218,7 @@ trainingGround[20] = {
 	["tools"] = 35,
 	["tiles"] = 35,
 	["pulley"] = 35,
-	["buildTime"] = 81352,
-	["citizen"] = 0
+	["buildTime"] = 81352
 }
 trainingGround[21] = {
 	["level"] = 21,
@@ -249,8 +229,7 @@ trainingGround[21] = {
 	["tools"] = 47,
 	["tiles"] = 47,
 	["pulley"] = 47,
-	["buildTime"] = 87256,
-	["citizen"] = 0
+	["buildTime"] = 87256
 }
 trainingGround[22] = {
 	["level"] = 22,
@@ -261,8 +240,7 @@ trainingGround[22] = {
 	["tools"] = 61,
 	["tiles"] = 61,
 	["pulley"] = 61,
-	["buildTime"] = 93160,
-	["citizen"] = 0
+	["buildTime"] = 93160
 }
 trainingGround[23] = {
 	["level"] = 23,
@@ -273,8 +251,7 @@ trainingGround[23] = {
 	["tools"] = 78,
 	["tiles"] = 78,
 	["pulley"] = 78,
-	["buildTime"] = 99064,
-	["citizen"] = 0
+	["buildTime"] = 99064
 }
 trainingGround[24] = {
 	["level"] = 24,
@@ -285,8 +262,7 @@ trainingGround[24] = {
 	["tools"] = 98,
 	["tiles"] = 98,
 	["pulley"] = 98,
-	["buildTime"] = 110872,
-	["citizen"] = 0
+	["buildTime"] = 110872
 }
 trainingGround[25] = {
 	["level"] = 25,
@@ -297,8 +273,7 @@ trainingGround[25] = {
 	["tools"] = 121,
 	["tiles"] = 121,
 	["pulley"] = 121,
-	["buildTime"] = 122680,
-	["citizen"] = 0
+	["buildTime"] = 122680
 }
 trainingGround[26] = {
 	["level"] = 26,
@@ -309,8 +284,7 @@ trainingGround[26] = {
 	["tools"] = 148,
 	["tiles"] = 148,
 	["pulley"] = 148,
-	["buildTime"] = 134488,
-	["citizen"] = 0
+	["buildTime"] = 134488
 }
 trainingGround[27] = {
 	["level"] = 27,
@@ -321,8 +295,7 @@ trainingGround[27] = {
 	["tools"] = 179,
 	["tiles"] = 179,
 	["pulley"] = 179,
-	["buildTime"] = 146296,
-	["citizen"] = 0
+	["buildTime"] = 146296
 }
 trainingGround[28] = {
 	["level"] = 28,
@@ -333,8 +306,7 @@ trainingGround[28] = {
 	["tools"] = 213,
 	["tiles"] = 213,
 	["pulley"] = 213,
-	["buildTime"] = 158104,
-	["citizen"] = 0
+	["buildTime"] = 158104
 }
 trainingGround[29] = {
 	["level"] = 29,
@@ -345,8 +317,7 @@ trainingGround[29] = {
 	["tools"] = 252,
 	["tiles"] = 252,
 	["pulley"] = 252,
-	["buildTime"] = 169912,
-	["citizen"] = 0
+	["buildTime"] = 169912
 }
 trainingGround[30] = {
 	["level"] = 30,
@@ -357,8 +328,7 @@ trainingGround[30] = {
 	["tools"] = 295,
 	["tiles"] = 295,
 	["pulley"] = 295,
-	["buildTime"] = 181720,
-	["citizen"] = 0
+	["buildTime"] = 181720
 }
 trainingGround[31] = {
 	["level"] = 31,
@@ -369,8 +339,7 @@ trainingGround[31] = {
 	["tools"] = 343,
 	["tiles"] = 343,
 	["pulley"] = 343,
-	["buildTime"] = 193528,
-	["citizen"] = 0
+	["buildTime"] = 193528
 }
 trainingGround[32] = {
 	["level"] = 32,
@@ -381,8 +350,7 @@ trainingGround[32] = {
 	["tools"] = 396,
 	["tiles"] = 396,
 	["pulley"] = 396,
-	["buildTime"] = 205336,
-	["citizen"] = 0
+	["buildTime"] = 205336
 }
 trainingGround[33] = {
 	["level"] = 33,
@@ -393,8 +361,7 @@ trainingGround[33] = {
 	["tools"] = 454,
 	["tiles"] = 454,
 	["pulley"] = 454,
-	["buildTime"] = 217144,
-	["citizen"] = 0
+	["buildTime"] = 217144
 }
 trainingGround[34] = {
 	["level"] = 34,
@@ -405,8 +372,7 @@ trainingGround[34] = {
 	["tools"] = 518,
 	["tiles"] = 518,
 	["pulley"] = 518,
-	["buildTime"] = 228952,
-	["citizen"] = 0
+	["buildTime"] = 228952
 }
 trainingGround[35] = {
 	["level"] = 35,
@@ -417,8 +383,7 @@ trainingGround[35] = {
 	["tools"] = 588,
 	["tiles"] = 588,
 	["pulley"] = 588,
-	["buildTime"] = 240760,
-	["citizen"] = 0
+	["buildTime"] = 240760
 }
 trainingGround[36] = {
 	["level"] = 36,
@@ -429,8 +394,7 @@ trainingGround[36] = {
 	["tools"] = 663,
 	["tiles"] = 663,
 	["pulley"] = 663,
-	["buildTime"] = 252568,
-	["citizen"] = 0
+	["buildTime"] = 252568
 }
 trainingGround[37] = {
 	["level"] = 37,
@@ -441,8 +405,7 @@ trainingGround[37] = {
 	["tools"] = 745,
 	["tiles"] = 745,
 	["pulley"] = 745,
-	["buildTime"] = 264376,
-	["citizen"] = 0
+	["buildTime"] = 264376
 }
 trainingGround[38] = {
 	["level"] = 38,
@@ -453,8 +416,7 @@ trainingGround[38] = {
 	["tools"] = 833,
 	["tiles"] = 833,
 	["pulley"] = 833,
-	["buildTime"] = 276184,
-	["citizen"] = 0
+	["buildTime"] = 276184
 }
 trainingGround[39] = {
 	["level"] = 39,
@@ -465,8 +427,7 @@ trainingGround[39] = {
 	["tools"] = 928,
 	["tiles"] = 928,
 	["pulley"] = 928,
-	["buildTime"] = 287992,
-	["citizen"] = 0
+	["buildTime"] = 287992
 }
 trainingGround[40] = {
 	["level"] = 40,
@@ -477,6 +438,5 @@ trainingGround[40] = {
 	["tools"] = 1030,
 	["tiles"] = 1030,
 	["pulley"] = 1030,
-	["buildTime"] = 299800,
-	["citizen"] = 0
+	["buildTime"] = 299800
 }

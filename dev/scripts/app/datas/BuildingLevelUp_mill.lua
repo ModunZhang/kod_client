@@ -9,8 +9,7 @@ mill[1] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 1600,
-	["citizen"] = 0
+	["buildTime"] = 1600
 }
 mill[2] = {
 	["level"] = 2,
@@ -21,8 +20,7 @@ mill[2] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 1800,
-	["citizen"] = 0
+	["buildTime"] = 1800
 }
 mill[3] = {
 	["level"] = 3,
@@ -33,8 +31,7 @@ mill[3] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 2100,
-	["citizen"] = 0
+	["buildTime"] = 2100
 }
 mill[4] = {
 	["level"] = 4,
@@ -45,8 +42,7 @@ mill[4] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 2400,
-	["citizen"] = 0
+	["buildTime"] = 2400
 }
 mill[5] = {
 	["level"] = 5,
@@ -57,8 +53,7 @@ mill[5] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 2624,
-	["citizen"] = 0
+	["buildTime"] = 2624
 }
 mill[6] = {
 	["level"] = 6,
@@ -69,8 +64,7 @@ mill[6] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 3248,
-	["citizen"] = 0
+	["buildTime"] = 3248
 }
 mill[7] = {
 	["level"] = 7,
@@ -81,8 +75,7 @@ mill[7] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 3872,
-	["citizen"] = 0
+	["buildTime"] = 3872
 }
 mill[8] = {
 	["level"] = 8,
@@ -93,8 +86,7 @@ mill[8] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 5744,
-	["citizen"] = 0
+	["buildTime"] = 5744
 }
 mill[9] = {
 	["level"] = 9,
@@ -105,8 +97,7 @@ mill[9] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 9488,
-	["citizen"] = 0
+	["buildTime"] = 9488
 }
 mill[10] = {
 	["level"] = 10,
@@ -117,8 +108,7 @@ mill[10] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 13232,
-	["citizen"] = 0
+	["buildTime"] = 13232
 }
 mill[11] = {
 	["level"] = 11,
@@ -129,8 +119,7 @@ mill[11] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 16976,
-	["citizen"] = 0
+	["buildTime"] = 16976
 }
 mill[12] = {
 	["level"] = 12,
@@ -141,8 +130,7 @@ mill[12] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 20720,
-	["citizen"] = 0
+	["buildTime"] = 20720
 }
 mill[13] = {
 	["level"] = 13,
@@ -153,8 +141,7 @@ mill[13] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 24464,
-	["citizen"] = 0
+	["buildTime"] = 24464
 }
 mill[14] = {
 	["level"] = 14,
@@ -165,8 +152,7 @@ mill[14] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 28208,
-	["citizen"] = 0
+	["buildTime"] = 28208
 }
 mill[15] = {
 	["level"] = 15,
@@ -177,8 +163,7 @@ mill[15] = {
 	["tools"] = 1,
 	["tiles"] = 1,
 	["pulley"] = 1,
-	["buildTime"] = 31952,
-	["citizen"] = 0
+	["buildTime"] = 31952
 }
 mill[16] = {
 	["level"] = 16,
@@ -189,8 +174,7 @@ mill[16] = {
 	["tools"] = 2,
 	["tiles"] = 2,
 	["pulley"] = 2,
-	["buildTime"] = 35696,
-	["citizen"] = 0
+	["buildTime"] = 35696
 }
 mill[17] = {
 	["level"] = 17,
@@ -201,8 +185,7 @@ mill[17] = {
 	["tools"] = 3,
 	["tiles"] = 3,
 	["pulley"] = 3,
-	["buildTime"] = 39440,
-	["citizen"] = 0
+	["buildTime"] = 39440
 }
 mill[18] = {
 	["level"] = 18,
@@ -213,8 +196,7 @@ mill[18] = {
 	["tools"] = 6,
 	["tiles"] = 6,
 	["pulley"] = 6,
-	["buildTime"] = 43184,
-	["citizen"] = 0
+	["buildTime"] = 43184
 }
 mill[19] = {
 	["level"] = 19,
@@ -225,8 +207,7 @@ mill[19] = {
 	["tools"] = 10,
 	["tiles"] = 10,
 	["pulley"] = 10,
-	["buildTime"] = 46928,
-	["citizen"] = 0
+	["buildTime"] = 46928
 }
 mill[20] = {
 	["level"] = 20,
@@ -237,8 +218,7 @@ mill[20] = {
 	["tools"] = 16,
 	["tiles"] = 16,
 	["pulley"] = 16,
-	["buildTime"] = 50672,
-	["citizen"] = 0
+	["buildTime"] = 50672
 }
 mill[21] = {
 	["level"] = 21,
@@ -249,8 +229,7 @@ mill[21] = {
 	["tools"] = 23,
 	["tiles"] = 23,
 	["pulley"] = 23,
-	["buildTime"] = 54416,
-	["citizen"] = 0
+	["buildTime"] = 54416
 }
 mill[22] = {
 	["level"] = 22,
@@ -261,8 +240,7 @@ mill[22] = {
 	["tools"] = 32,
 	["tiles"] = 32,
 	["pulley"] = 32,
-	["buildTime"] = 58160,
-	["citizen"] = 0
+	["buildTime"] = 58160
 }
 mill[23] = {
 	["level"] = 23,
@@ -273,8 +251,7 @@ mill[23] = {
 	["tools"] = 44,
 	["tiles"] = 44,
 	["pulley"] = 44,
-	["buildTime"] = 61904,
-	["citizen"] = 0
+	["buildTime"] = 61904
 }
 mill[24] = {
 	["level"] = 24,
@@ -285,8 +262,7 @@ mill[24] = {
 	["tools"] = 58,
 	["tiles"] = 58,
 	["pulley"] = 58,
-	["buildTime"] = 69392,
-	["citizen"] = 0
+	["buildTime"] = 69392
 }
 mill[25] = {
 	["level"] = 25,
@@ -297,8 +273,7 @@ mill[25] = {
 	["tools"] = 74,
 	["tiles"] = 74,
 	["pulley"] = 74,
-	["buildTime"] = 76880,
-	["citizen"] = 0
+	["buildTime"] = 76880
 }
 mill[26] = {
 	["level"] = 26,
@@ -309,8 +284,7 @@ mill[26] = {
 	["tools"] = 94,
 	["tiles"] = 94,
 	["pulley"] = 94,
-	["buildTime"] = 84368,
-	["citizen"] = 0
+	["buildTime"] = 84368
 }
 mill[27] = {
 	["level"] = 27,
@@ -321,8 +295,7 @@ mill[27] = {
 	["tools"] = 117,
 	["tiles"] = 117,
 	["pulley"] = 117,
-	["buildTime"] = 91856,
-	["citizen"] = 0
+	["buildTime"] = 91856
 }
 mill[28] = {
 	["level"] = 28,
@@ -333,8 +306,7 @@ mill[28] = {
 	["tools"] = 144,
 	["tiles"] = 144,
 	["pulley"] = 144,
-	["buildTime"] = 99344,
-	["citizen"] = 0
+	["buildTime"] = 99344
 }
 mill[29] = {
 	["level"] = 29,
@@ -345,8 +317,7 @@ mill[29] = {
 	["tools"] = 174,
 	["tiles"] = 174,
 	["pulley"] = 174,
-	["buildTime"] = 106832,
-	["citizen"] = 0
+	["buildTime"] = 106832
 }
 mill[30] = {
 	["level"] = 30,
@@ -357,8 +328,7 @@ mill[30] = {
 	["tools"] = 208,
 	["tiles"] = 208,
 	["pulley"] = 208,
-	["buildTime"] = 114320,
-	["citizen"] = 0
+	["buildTime"] = 114320
 }
 mill[31] = {
 	["level"] = 31,
@@ -369,8 +339,7 @@ mill[31] = {
 	["tools"] = 247,
 	["tiles"] = 247,
 	["pulley"] = 247,
-	["buildTime"] = 121808,
-	["citizen"] = 0
+	["buildTime"] = 121808
 }
 mill[32] = {
 	["level"] = 32,
@@ -381,8 +350,7 @@ mill[32] = {
 	["tools"] = 290,
 	["tiles"] = 290,
 	["pulley"] = 290,
-	["buildTime"] = 129296,
-	["citizen"] = 0
+	["buildTime"] = 129296
 }
 mill[33] = {
 	["level"] = 33,
@@ -393,8 +361,7 @@ mill[33] = {
 	["tools"] = 337,
 	["tiles"] = 337,
 	["pulley"] = 337,
-	["buildTime"] = 136784,
-	["citizen"] = 0
+	["buildTime"] = 136784
 }
 mill[34] = {
 	["level"] = 34,
@@ -405,8 +372,7 @@ mill[34] = {
 	["tools"] = 390,
 	["tiles"] = 390,
 	["pulley"] = 390,
-	["buildTime"] = 144272,
-	["citizen"] = 0
+	["buildTime"] = 144272
 }
 mill[35] = {
 	["level"] = 35,
@@ -417,8 +383,7 @@ mill[35] = {
 	["tools"] = 448,
 	["tiles"] = 448,
 	["pulley"] = 448,
-	["buildTime"] = 151760,
-	["citizen"] = 0
+	["buildTime"] = 151760
 }
 mill[36] = {
 	["level"] = 36,
@@ -429,8 +394,7 @@ mill[36] = {
 	["tools"] = 512,
 	["tiles"] = 512,
 	["pulley"] = 512,
-	["buildTime"] = 159248,
-	["citizen"] = 0
+	["buildTime"] = 159248
 }
 mill[37] = {
 	["level"] = 37,
@@ -441,8 +405,7 @@ mill[37] = {
 	["tools"] = 580,
 	["tiles"] = 580,
 	["pulley"] = 580,
-	["buildTime"] = 166736,
-	["citizen"] = 0
+	["buildTime"] = 166736
 }
 mill[38] = {
 	["level"] = 38,
@@ -453,8 +416,7 @@ mill[38] = {
 	["tools"] = 660,
 	["tiles"] = 660,
 	["pulley"] = 660,
-	["buildTime"] = 174224,
-	["citizen"] = 0
+	["buildTime"] = 174224
 }
 mill[39] = {
 	["level"] = 39,
@@ -465,8 +427,7 @@ mill[39] = {
 	["tools"] = 740,
 	["tiles"] = 740,
 	["pulley"] = 740,
-	["buildTime"] = 181712,
-	["citizen"] = 0
+	["buildTime"] = 181712
 }
 mill[40] = {
 	["level"] = 40,
@@ -477,6 +438,5 @@ mill[40] = {
 	["tools"] = 830,
 	["tiles"] = 830,
 	["pulley"] = 830,
-	["buildTime"] = 189200,
-	["citizen"] = 0
+	["buildTime"] = 189200
 }

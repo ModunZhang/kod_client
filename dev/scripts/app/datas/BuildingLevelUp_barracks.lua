@@ -9,8 +9,7 @@ barracks[1] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 45,
-	["citizen"] = 0
+	["buildTime"] = 45
 }
 barracks[2] = {
 	["level"] = 2,
@@ -21,8 +20,7 @@ barracks[2] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 90,
-	["citizen"] = 0
+	["buildTime"] = 90
 }
 barracks[3] = {
 	["level"] = 3,
@@ -33,8 +31,7 @@ barracks[3] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 225,
-	["citizen"] = 0
+	["buildTime"] = 225
 }
 barracks[4] = {
 	["level"] = 4,
@@ -45,8 +42,7 @@ barracks[4] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 450,
-	["citizen"] = 0
+	["buildTime"] = 450
 }
 barracks[5] = {
 	["level"] = 5,
@@ -57,8 +53,7 @@ barracks[5] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 900,
-	["citizen"] = 0
+	["buildTime"] = 900
 }
 barracks[6] = {
 	["level"] = 6,
@@ -69,8 +64,7 @@ barracks[6] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 1800,
-	["citizen"] = 0
+	["buildTime"] = 1800
 }
 barracks[7] = {
 	["level"] = 7,
@@ -81,8 +75,7 @@ barracks[7] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 2700,
-	["citizen"] = 0
+	["buildTime"] = 2700
 }
 barracks[8] = {
 	["level"] = 8,
@@ -93,8 +86,7 @@ barracks[8] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 5400,
-	["citizen"] = 0
+	["buildTime"] = 5400
 }
 barracks[9] = {
 	["level"] = 9,
@@ -105,8 +97,7 @@ barracks[9] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 10800,
-	["citizen"] = 0
+	["buildTime"] = 10800
 }
 barracks[10] = {
 	["level"] = 10,
@@ -117,8 +108,7 @@ barracks[10] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 16200,
-	["citizen"] = 0
+	["buildTime"] = 16200
 }
 barracks[11] = {
 	["level"] = 11,
@@ -129,8 +119,7 @@ barracks[11] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 21600,
-	["citizen"] = 0
+	["buildTime"] = 21600
 }
 barracks[12] = {
 	["level"] = 12,
@@ -141,8 +130,7 @@ barracks[12] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 27000,
-	["citizen"] = 0
+	["buildTime"] = 27000
 }
 barracks[13] = {
 	["level"] = 13,
@@ -153,8 +141,7 @@ barracks[13] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 32400,
-	["citizen"] = 0
+	["buildTime"] = 32400
 }
 barracks[14] = {
 	["level"] = 14,
@@ -165,8 +152,7 @@ barracks[14] = {
 	["tools"] = 1,
 	["tiles"] = 1,
 	["pulley"] = 1,
-	["buildTime"] = 37800,
-	["citizen"] = 0
+	["buildTime"] = 37800
 }
 barracks[15] = {
 	["level"] = 15,
@@ -177,8 +163,7 @@ barracks[15] = {
 	["tools"] = 1,
 	["tiles"] = 1,
 	["pulley"] = 1,
-	["buildTime"] = 43200,
-	["citizen"] = 0
+	["buildTime"] = 43200
 }
 barracks[16] = {
 	["level"] = 16,
@@ -189,8 +174,7 @@ barracks[16] = {
 	["tools"] = 2,
 	["tiles"] = 2,
 	["pulley"] = 2,
-	["buildTime"] = 48600,
-	["citizen"] = 0
+	["buildTime"] = 48600
 }
 barracks[17] = {
 	["level"] = 17,
@@ -201,8 +185,7 @@ barracks[17] = {
 	["tools"] = 4,
 	["tiles"] = 4,
 	["pulley"] = 4,
-	["buildTime"] = 54000,
-	["citizen"] = 0
+	["buildTime"] = 54000
 }
 barracks[18] = {
 	["level"] = 18,
@@ -213,8 +196,7 @@ barracks[18] = {
 	["tools"] = 8,
 	["tiles"] = 8,
 	["pulley"] = 8,
-	["buildTime"] = 59400,
-	["citizen"] = 0
+	["buildTime"] = 59400
 }
 barracks[19] = {
 	["level"] = 19,
@@ -225,8 +207,7 @@ barracks[19] = {
 	["tools"] = 13,
 	["tiles"] = 13,
 	["pulley"] = 13,
-	["buildTime"] = 64800,
-	["citizen"] = 0
+	["buildTime"] = 64800
 }
 barracks[20] = {
 	["level"] = 20,
@@ -237,8 +218,7 @@ barracks[20] = {
 	["tools"] = 21,
 	["tiles"] = 21,
 	["pulley"] = 21,
-	["buildTime"] = 70200,
-	["citizen"] = 0
+	["buildTime"] = 70200
 }
 barracks[21] = {
 	["level"] = 21,
@@ -249,8 +229,7 @@ barracks[21] = {
 	["tools"] = 32,
 	["tiles"] = 32,
 	["pulley"] = 32,
-	["buildTime"] = 75600,
-	["citizen"] = 0
+	["buildTime"] = 75600
 }
 barracks[22] = {
 	["level"] = 22,
@@ -261,8 +240,7 @@ barracks[22] = {
 	["tools"] = 47,
 	["tiles"] = 47,
 	["pulley"] = 47,
-	["buildTime"] = 81000,
-	["citizen"] = 0
+	["buildTime"] = 81000
 }
 barracks[23] = {
 	["level"] = 23,
@@ -273,8 +251,7 @@ barracks[23] = {
 	["tools"] = 65,
 	["tiles"] = 65,
 	["pulley"] = 65,
-	["buildTime"] = 86400,
-	["citizen"] = 0
+	["buildTime"] = 86400
 }
 barracks[24] = {
 	["level"] = 24,
@@ -285,8 +262,7 @@ barracks[24] = {
 	["tools"] = 88,
 	["tiles"] = 88,
 	["pulley"] = 88,
-	["buildTime"] = 97200,
-	["citizen"] = 0
+	["buildTime"] = 97200
 }
 barracks[25] = {
 	["level"] = 25,
@@ -297,8 +273,7 @@ barracks[25] = {
 	["tools"] = 116,
 	["tiles"] = 116,
 	["pulley"] = 116,
-	["buildTime"] = 108000,
-	["citizen"] = 0
+	["buildTime"] = 108000
 }
 barracks[26] = {
 	["level"] = 26,
@@ -309,8 +284,7 @@ barracks[26] = {
 	["tools"] = 150,
 	["tiles"] = 150,
 	["pulley"] = 150,
-	["buildTime"] = 118800,
-	["citizen"] = 0
+	["buildTime"] = 118800
 }
 barracks[27] = {
 	["level"] = 27,
@@ -321,8 +295,7 @@ barracks[27] = {
 	["tools"] = 189,
 	["tiles"] = 189,
 	["pulley"] = 189,
-	["buildTime"] = 129600,
-	["citizen"] = 0
+	["buildTime"] = 129600
 }
 barracks[28] = {
 	["level"] = 28,
@@ -333,8 +306,7 @@ barracks[28] = {
 	["tools"] = 235,
 	["tiles"] = 235,
 	["pulley"] = 235,
-	["buildTime"] = 140400,
-	["citizen"] = 0
+	["buildTime"] = 140400
 }
 barracks[29] = {
 	["level"] = 29,
@@ -345,8 +317,7 @@ barracks[29] = {
 	["tools"] = 288,
 	["tiles"] = 288,
 	["pulley"] = 288,
-	["buildTime"] = 151200,
-	["citizen"] = 0
+	["buildTime"] = 151200
 }
 barracks[30] = {
 	["level"] = 30,
@@ -357,8 +328,7 @@ barracks[30] = {
 	["tools"] = 349,
 	["tiles"] = 349,
 	["pulley"] = 349,
-	["buildTime"] = 162000,
-	["citizen"] = 0
+	["buildTime"] = 162000
 }
 barracks[31] = {
 	["level"] = 31,
@@ -369,8 +339,7 @@ barracks[31] = {
 	["tools"] = 417,
 	["tiles"] = 417,
 	["pulley"] = 417,
-	["buildTime"] = 172800,
-	["citizen"] = 0
+	["buildTime"] = 172800
 }
 barracks[32] = {
 	["level"] = 32,
@@ -381,8 +350,7 @@ barracks[32] = {
 	["tools"] = 494,
 	["tiles"] = 494,
 	["pulley"] = 494,
-	["buildTime"] = 183600,
-	["citizen"] = 0
+	["buildTime"] = 183600
 }
 barracks[33] = {
 	["level"] = 33,
@@ -393,8 +361,7 @@ barracks[33] = {
 	["tools"] = 580,
 	["tiles"] = 580,
 	["pulley"] = 580,
-	["buildTime"] = 194400,
-	["citizen"] = 0
+	["buildTime"] = 194400
 }
 barracks[34] = {
 	["level"] = 34,
@@ -405,8 +372,7 @@ barracks[34] = {
 	["tools"] = 676,
 	["tiles"] = 676,
 	["pulley"] = 676,
-	["buildTime"] = 205200,
-	["citizen"] = 0
+	["buildTime"] = 205200
 }
 barracks[35] = {
 	["level"] = 35,
@@ -417,8 +383,7 @@ barracks[35] = {
 	["tools"] = 781,
 	["tiles"] = 781,
 	["pulley"] = 781,
-	["buildTime"] = 216000,
-	["citizen"] = 0
+	["buildTime"] = 216000
 }
 barracks[36] = {
 	["level"] = 36,
@@ -429,8 +394,7 @@ barracks[36] = {
 	["tools"] = 897,
 	["tiles"] = 897,
 	["pulley"] = 897,
-	["buildTime"] = 226800,
-	["citizen"] = 0
+	["buildTime"] = 226800
 }
 barracks[37] = {
 	["level"] = 37,
@@ -441,8 +405,7 @@ barracks[37] = {
 	["tools"] = 1024,
 	["tiles"] = 1024,
 	["pulley"] = 1024,
-	["buildTime"] = 237600,
-	["citizen"] = 0
+	["buildTime"] = 237600
 }
 barracks[38] = {
 	["level"] = 38,
@@ -453,8 +416,7 @@ barracks[38] = {
 	["tools"] = 1163,
 	["tiles"] = 1163,
 	["pulley"] = 1163,
-	["buildTime"] = 248400,
-	["citizen"] = 0
+	["buildTime"] = 248400
 }
 barracks[39] = {
 	["level"] = 39,
@@ -465,8 +427,7 @@ barracks[39] = {
 	["tools"] = 1320,
 	["tiles"] = 1320,
 	["pulley"] = 1320,
-	["buildTime"] = 259200,
-	["citizen"] = 0
+	["buildTime"] = 259200
 }
 barracks[40] = {
 	["level"] = 40,
@@ -477,6 +438,5 @@ barracks[40] = {
 	["tools"] = 1480,
 	["tiles"] = 1480,
 	["pulley"] = 1480,
-	["buildTime"] = 270000,
-	["citizen"] = 0
+	["buildTime"] = 270000
 }

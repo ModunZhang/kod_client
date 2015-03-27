@@ -9,8 +9,7 @@ tradeGuild[1] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 1000,
-	["citizen"] = 0
+	["buildTime"] = 1000
 }
 tradeGuild[2] = {
 	["level"] = 2,
@@ -21,8 +20,7 @@ tradeGuild[2] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 1300,
-	["citizen"] = 0
+	["buildTime"] = 1300
 }
 tradeGuild[3] = {
 	["level"] = 3,
@@ -33,8 +31,7 @@ tradeGuild[3] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 1680,
-	["citizen"] = 0
+	["buildTime"] = 1680
 }
 tradeGuild[4] = {
 	["level"] = 4,
@@ -45,8 +42,7 @@ tradeGuild[4] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 1860,
-	["citizen"] = 0
+	["buildTime"] = 1860
 }
 tradeGuild[5] = {
 	["level"] = 5,
@@ -57,8 +53,7 @@ tradeGuild[5] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 2220,
-	["citizen"] = 0
+	["buildTime"] = 2220
 }
 tradeGuild[6] = {
 	["level"] = 6,
@@ -69,8 +64,7 @@ tradeGuild[6] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 2940,
-	["citizen"] = 0
+	["buildTime"] = 2940
 }
 tradeGuild[7] = {
 	["level"] = 7,
@@ -81,8 +75,7 @@ tradeGuild[7] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 3660,
-	["citizen"] = 0
+	["buildTime"] = 3660
 }
 tradeGuild[8] = {
 	["level"] = 8,
@@ -93,8 +86,7 @@ tradeGuild[8] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 5820,
-	["citizen"] = 0
+	["buildTime"] = 5820
 }
 tradeGuild[9] = {
 	["level"] = 9,
@@ -105,8 +97,7 @@ tradeGuild[9] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 10140,
-	["citizen"] = 0
+	["buildTime"] = 10140
 }
 tradeGuild[10] = {
 	["level"] = 10,
@@ -117,8 +108,7 @@ tradeGuild[10] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 14460,
-	["citizen"] = 0
+	["buildTime"] = 14460
 }
 tradeGuild[11] = {
 	["level"] = 11,
@@ -129,8 +119,7 @@ tradeGuild[11] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 18780,
-	["citizen"] = 0
+	["buildTime"] = 18780
 }
 tradeGuild[12] = {
 	["level"] = 12,
@@ -141,8 +130,7 @@ tradeGuild[12] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 23100,
-	["citizen"] = 0
+	["buildTime"] = 23100
 }
 tradeGuild[13] = {
 	["level"] = 13,
@@ -153,8 +141,7 @@ tradeGuild[13] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 27420,
-	["citizen"] = 0
+	["buildTime"] = 27420
 }
 tradeGuild[14] = {
 	["level"] = 14,
@@ -165,8 +152,7 @@ tradeGuild[14] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 31740,
-	["citizen"] = 0
+	["buildTime"] = 31740
 }
 tradeGuild[15] = {
 	["level"] = 15,
@@ -177,8 +163,7 @@ tradeGuild[15] = {
 	["tools"] = 1,
 	["tiles"] = 1,
 	["pulley"] = 1,
-	["buildTime"] = 36060,
-	["citizen"] = 0
+	["buildTime"] = 36060
 }
 tradeGuild[16] = {
 	["level"] = 16,
@@ -189,8 +174,7 @@ tradeGuild[16] = {
 	["tools"] = 2,
 	["tiles"] = 2,
 	["pulley"] = 2,
-	["buildTime"] = 40380,
-	["citizen"] = 0
+	["buildTime"] = 40380
 }
 tradeGuild[17] = {
 	["level"] = 17,
@@ -201,8 +185,7 @@ tradeGuild[17] = {
 	["tools"] = 4,
 	["tiles"] = 4,
 	["pulley"] = 4,
-	["buildTime"] = 44700,
-	["citizen"] = 0
+	["buildTime"] = 44700
 }
 tradeGuild[18] = {
 	["level"] = 18,
@@ -213,8 +196,7 @@ tradeGuild[18] = {
 	["tools"] = 7,
 	["tiles"] = 7,
 	["pulley"] = 7,
-	["buildTime"] = 49020,
-	["citizen"] = 0
+	["buildTime"] = 49020
 }
 tradeGuild[19] = {
 	["level"] = 19,
@@ -225,8 +207,7 @@ tradeGuild[19] = {
 	["tools"] = 12,
 	["tiles"] = 12,
 	["pulley"] = 12,
-	["buildTime"] = 53340,
-	["citizen"] = 0
+	["buildTime"] = 53340
 }
 tradeGuild[20] = {
 	["level"] = 20,
@@ -237,8 +218,7 @@ tradeGuild[20] = {
 	["tools"] = 18,
 	["tiles"] = 18,
 	["pulley"] = 18,
-	["buildTime"] = 57660,
-	["citizen"] = 0
+	["buildTime"] = 57660
 }
 tradeGuild[21] = {
 	["level"] = 21,
@@ -249,8 +229,7 @@ tradeGuild[21] = {
 	["tools"] = 27,
 	["tiles"] = 27,
 	["pulley"] = 27,
-	["buildTime"] = 61980,
-	["citizen"] = 0
+	["buildTime"] = 61980
 }
 tradeGuild[22] = {
 	["level"] = 22,
@@ -261,8 +240,7 @@ tradeGuild[22] = {
 	["tools"] = 37,
 	["tiles"] = 37,
 	["pulley"] = 37,
-	["buildTime"] = 66300,
-	["citizen"] = 0
+	["buildTime"] = 66300
 }
 tradeGuild[23] = {
 	["level"] = 23,
@@ -273,8 +251,7 @@ tradeGuild[23] = {
 	["tools"] = 51,
 	["tiles"] = 51,
 	["pulley"] = 51,
-	["buildTime"] = 70620,
-	["citizen"] = 0
+	["buildTime"] = 70620
 }
 tradeGuild[24] = {
 	["level"] = 24,
@@ -285,8 +262,7 @@ tradeGuild[24] = {
 	["tools"] = 67,
 	["tiles"] = 67,
 	["pulley"] = 67,
-	["buildTime"] = 79260,
-	["citizen"] = 0
+	["buildTime"] = 79260
 }
 tradeGuild[25] = {
 	["level"] = 25,
@@ -297,8 +273,7 @@ tradeGuild[25] = {
 	["tools"] = 86,
 	["tiles"] = 86,
 	["pulley"] = 86,
-	["buildTime"] = 87900,
-	["citizen"] = 0
+	["buildTime"] = 87900
 }
 tradeGuild[26] = {
 	["level"] = 26,
@@ -309,8 +284,7 @@ tradeGuild[26] = {
 	["tools"] = 108,
 	["tiles"] = 108,
 	["pulley"] = 108,
-	["buildTime"] = 96540,
-	["citizen"] = 0
+	["buildTime"] = 96540
 }
 tradeGuild[27] = {
 	["level"] = 27,
@@ -321,8 +295,7 @@ tradeGuild[27] = {
 	["tools"] = 134,
 	["tiles"] = 134,
 	["pulley"] = 134,
-	["buildTime"] = 105180,
-	["citizen"] = 0
+	["buildTime"] = 105180
 }
 tradeGuild[28] = {
 	["level"] = 28,
@@ -333,8 +306,7 @@ tradeGuild[28] = {
 	["tools"] = 163,
 	["tiles"] = 163,
 	["pulley"] = 163,
-	["buildTime"] = 113820,
-	["citizen"] = 0
+	["buildTime"] = 113820
 }
 tradeGuild[29] = {
 	["level"] = 29,
@@ -345,8 +317,7 @@ tradeGuild[29] = {
 	["tools"] = 197,
 	["tiles"] = 197,
 	["pulley"] = 197,
-	["buildTime"] = 122460,
-	["citizen"] = 0
+	["buildTime"] = 122460
 }
 tradeGuild[30] = {
 	["level"] = 30,
@@ -357,8 +328,7 @@ tradeGuild[30] = {
 	["tools"] = 234,
 	["tiles"] = 234,
 	["pulley"] = 234,
-	["buildTime"] = 131100,
-	["citizen"] = 0
+	["buildTime"] = 131100
 }
 tradeGuild[31] = {
 	["level"] = 31,
@@ -369,8 +339,7 @@ tradeGuild[31] = {
 	["tools"] = 277,
 	["tiles"] = 277,
 	["pulley"] = 277,
-	["buildTime"] = 139740,
-	["citizen"] = 0
+	["buildTime"] = 139740
 }
 tradeGuild[32] = {
 	["level"] = 32,
@@ -381,8 +350,7 @@ tradeGuild[32] = {
 	["tools"] = 324,
 	["tiles"] = 324,
 	["pulley"] = 324,
-	["buildTime"] = 148380,
-	["citizen"] = 0
+	["buildTime"] = 148380
 }
 tradeGuild[33] = {
 	["level"] = 33,
@@ -393,8 +361,7 @@ tradeGuild[33] = {
 	["tools"] = 376,
 	["tiles"] = 376,
 	["pulley"] = 376,
-	["buildTime"] = 157020,
-	["citizen"] = 0
+	["buildTime"] = 157020
 }
 tradeGuild[34] = {
 	["level"] = 34,
@@ -405,8 +372,7 @@ tradeGuild[34] = {
 	["tools"] = 433,
 	["tiles"] = 433,
 	["pulley"] = 433,
-	["buildTime"] = 165660,
-	["citizen"] = 0
+	["buildTime"] = 165660
 }
 tradeGuild[35] = {
 	["level"] = 35,
@@ -417,8 +383,7 @@ tradeGuild[35] = {
 	["tools"] = 496,
 	["tiles"] = 496,
 	["pulley"] = 496,
-	["buildTime"] = 174300,
-	["citizen"] = 0
+	["buildTime"] = 174300
 }
 tradeGuild[36] = {
 	["level"] = 36,
@@ -429,8 +394,7 @@ tradeGuild[36] = {
 	["tools"] = 564,
 	["tiles"] = 564,
 	["pulley"] = 564,
-	["buildTime"] = 182940,
-	["citizen"] = 0
+	["buildTime"] = 182940
 }
 tradeGuild[37] = {
 	["level"] = 37,
@@ -441,8 +405,7 @@ tradeGuild[37] = {
 	["tools"] = 640,
 	["tiles"] = 640,
 	["pulley"] = 640,
-	["buildTime"] = 191580,
-	["citizen"] = 0
+	["buildTime"] = 191580
 }
 tradeGuild[38] = {
 	["level"] = 38,
@@ -453,8 +416,7 @@ tradeGuild[38] = {
 	["tools"] = 720,
 	["tiles"] = 720,
 	["pulley"] = 720,
-	["buildTime"] = 200220,
-	["citizen"] = 0
+	["buildTime"] = 200220
 }
 tradeGuild[39] = {
 	["level"] = 39,
@@ -465,8 +427,7 @@ tradeGuild[39] = {
 	["tools"] = 810,
 	["tiles"] = 810,
 	["pulley"] = 810,
-	["buildTime"] = 208860,
-	["citizen"] = 0
+	["buildTime"] = 208860
 }
 tradeGuild[40] = {
 	["level"] = 40,
@@ -477,6 +438,5 @@ tradeGuild[40] = {
 	["tools"] = 900,
 	["tiles"] = 900,
 	["pulley"] = 900,
-	["buildTime"] = 217500,
-	["citizen"] = 0
+	["buildTime"] = 217500
 }
