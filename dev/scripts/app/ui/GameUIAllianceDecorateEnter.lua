@@ -56,6 +56,10 @@ function GameUIAllianceDecorateEnter:GetEnterButtons()
 		local alliacne =  self:GetMyAlliance()
         local isEqualOrGreater = alliacne:GetSelf():CanEditAllianceObject()
         if isEqualOrGreater then
+            if self:GetMyAlliance():Honour() < self:GetHonourLabelText() then 
+                UIKit:showMessageDialog(nil, _("联盟荣耀值不足"),function()end)
+                return 
+            end
             NetManager:getDistroyAllianceDecoratePromise(self:GetBuilding():Id())
         else
         	UIKit:showMessageDialog(nil, _("您没有此操作权限"),function()end)
