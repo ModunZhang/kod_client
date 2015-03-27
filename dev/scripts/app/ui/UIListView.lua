@@ -347,7 +347,11 @@ function UIListView:removeItem(listItem, bAni)
     self.size.width = self.size.width - itemW
     self.size.height = self.size.height - itemH
     if UIScrollView.DIRECTION_VERTICAL == self.direction then
-        self:moveItems(1, pos - 1, -itemW, -itemH, bAni)
+        if pos == 1 then
+            self:moveItems(1, #self.items_, -itemW, itemH, bAni)
+        else    
+            self:moveItems(1, pos - 1, -itemW, -itemH, bAni)
+        end
     else
         self:moveItems(pos, table.nums(self.items_), -itemW, -itemH, bAni)
     end
