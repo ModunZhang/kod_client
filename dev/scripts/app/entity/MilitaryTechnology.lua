@@ -58,6 +58,10 @@ end
 function MilitaryTechnology:GetUpgradeTime()
     return upgrade_config[self.name][self.level+1].buildTime
 end
+-- 是否达到最大等级
+function MilitaryTechnology:IsMaxLevel()
+    return self.level == #upgrade_config[self.name]
+end
 -- 获取立即升级需要宝石
 function MilitaryTechnology:GetInstantUpgradeGems()
     local config = self:GetLevelUpConfig()

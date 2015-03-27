@@ -89,7 +89,7 @@ function WidgetMilitaryTechnology:CreateItem(tech)
         WidgetUpgradeMilitaryTech.new(tech):AddToCurrentScene()
         end)
         :align(display.CENTER, item_width-90, 44):addTo(content)
-
+    upgrade_btn:setVisible(not tech:IsMaxLevel())
 
     local soldiers = string.split(tech:Name(), "_")
     local soldier_category = Localize.soldier_category
@@ -100,6 +100,9 @@ function WidgetMilitaryTechnology:CreateItem(tech)
         tech_level:setString(string.format("Lv%d",tech:Level()))
         line1:SetText("+"..(tech:GetAtkEff()*100).."%")
         line2:SetText("+"..tech:GetTechPoint())
+        if tech:IsMaxLevel() then
+            upgrade_btn:hide()
+        end
     end
     return item
 end
@@ -118,6 +121,7 @@ function WidgetMilitaryTechnology:OnMilitaryTechsDataChanged(soldier_manager,cha
     end
 end
 return WidgetMilitaryTechnology
+
 
 
 
