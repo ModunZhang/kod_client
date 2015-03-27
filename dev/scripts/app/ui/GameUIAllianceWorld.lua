@@ -12,7 +12,7 @@ local GameUIAllianceWorld = class("GameUIAllianceWorld", WidgetPopDialog)
 function GameUIAllianceWorld:ctor()
     GameUIAllianceWorld.super.ctor(self,880,_("世界地图"),window.top-60)
 
-    local map = display.newSprite("world_map_2000x200.jpg"):scale(1.8):align(display.CENTER, 278, 270)
+    local map = display.newSprite("world_map_2000x2000.jpg"):scale(1.8):align(display.CENTER, 278, 270)
 
     -- local button = WidgetPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
     --     :setButtonLabel(UIKit:ttfLabel({

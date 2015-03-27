@@ -238,6 +238,10 @@ end
 function WidgetUpgradeMilitaryTech:OnMilitaryTechsDataChanged(city,changed_map)
     for k,v in pairs(changed_map) do
         if v:Name() == self.tech:Name() then
+            if v:IsMaxLevel() then
+                self:LeftButtonClicked()
+                return
+            end
             self.tech = v
             self.upgrade_time:setString(GameUtils:formatTimeStyle1(v:GetUpgradeTime()))
             self.upgrade_now_need_gems_label:setString(v:GetInstantUpgradeGems())
