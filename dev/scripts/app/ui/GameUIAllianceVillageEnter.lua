@@ -175,23 +175,25 @@ function GameUIAllianceVillageEnter:OnVillageEventTimer(village_event,left_resou
 	end
 end
 
-function GameUIAllianceVillageEnter:OnBuildingChange(alliance_map,add, remove, modify)
-	local hasHandler = false
-	if remove then
-		for _,v in ipairs(remove) do
-			if v:Id()== self.map_id then
-				self:LeftButtonClicked()
-				hasHandler = true
-			end
+function GameUIAllianceVillageEnter:OnBuildingDeltaUpdate(alliance_map,mapObjects)
+	self:OnBuildingChange(alliance_map)
+end
+
+function GameUIAllianceVillageEnter:OnBuildingFullUpdate(alliance_map)
+	self:OnBuildingChange(alliance_map)
+end
+
+function GameUIAllianceVillageEnter:OnBuildingChange(alliance_map)
+	local has = false
+	alliance_map:IteratorVillages(function(__,v)
+		if v:Id()== self.map_id then
+			has = true
 		end
-	end
-	if modify and not hasHandler then 
-		for _,v in ipairs(modify) do
-			if v:Id() == self.map_id then
-				self:RefreshUI()
-				hasHandler = true
-			end
-		end
+	end)
+	if has then
+		self:RefreshUI()
+	else
+		self:LeftButtonClicked()
 	end
 end
 
