@@ -767,11 +767,11 @@ function GameUtils:DoBattle(attacker, defencer, terrain)
         -- 龙战损
         local r = {}
         for _, v in ipairs(defence_soldier) do
-            local key = string.format("%s_%d", v.soldierName, v.soldierStar)
+            local key = v.soldierStar and string.format("%s_%d", v.soldierName, v.soldierStar) or v.soldierName
             r[key] = 0
         end
         for _, v in ipairs(defence_soldier) do
-            local key = string.format("%s_%d", v.soldierName, v.soldierStar)
+            local key = v.soldierStar and string.format("%s_%d", v.soldierName, v.soldierStar) or v.soldierName
             r[key] = r[key] + v.soldierDamagedCount
         end
         local killScore = 0

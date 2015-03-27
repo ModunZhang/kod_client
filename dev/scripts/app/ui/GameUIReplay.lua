@@ -185,11 +185,8 @@ function GameUIReplay:ctor(report, callback)
 
     manager:addArmatureFileInfo("animations/dragon_battle/paizi.ExportJson")
 end
-function GameUIReplay:onExit()
-    GameUIReplay.super.onExit(self)
-end
-function GameUIReplay:onEnter()
-    GameUIReplay.super.onEnter(self)
+function GameUIReplay:OnMoveInStage()
+    GameUIReplay.super.OnMoveInStage(self)
     display.newColorLayer(UIKit:hex2c4b(0x7a000000)):addTo(self)
     local back_width = 608
     local back_width_half = back_width / 2
@@ -399,10 +396,11 @@ function GameUIReplay:onEnter()
             dump(err:reason())
         end)
     end
-
+    app:GetAudioManager():PlayGameMusic("AllianceBattleScene")
 end
 function GameUIReplay:onExit()
     GameUIReplay.super.onExit(self)
+    app:GetAudioManager():PlayGameMusic()
     if type(self.callback) == "function" then
         self.callback()
     end
