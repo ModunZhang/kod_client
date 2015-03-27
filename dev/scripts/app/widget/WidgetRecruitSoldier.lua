@@ -372,39 +372,38 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
             color = UIKit:hex2c3b(0xfff3c7)
         }))
         :onButtonClicked(function(event)
+            local current_time = app.timer:GetServerTime()
+            local left_time = self.barracks:GetRecruitEvent():LeftTime(current_time)
+            local queue_need_gem = self.barracks:IsRecruting()
+                    and DataUtils:getGemByTimeInterval(left_time) or 0
+
             if SPECIAL[self.soldier_name] then
                 local not_enough_material = self:CheckMaterials(self.count)
                 if not_enough_material then
-                    FullScreenPopDialogUI.new()
-                        :SetTitle(_("招募材料不足"))
-                        :SetPopMessage(string.format(_("您当前没有足够%s"),not_enough_material))
-                        :CreateCancelButton():AddToCurrentScene()
+                    UIKit:showMessageDialog(_("招募材料不足"), string.format(_("您当前没有足够%s"), not_enough_material))
+                elseif queue_need_gem > 0 then
+                        UIKit:showMessageDialog(_("队列不足"), _("您当前没有足够的队列,是否花费魔法石立即补充"),function()
+                            NetManager:getRecruitSpecialSoldierPromise(self.soldier_name, self.count)
+                            self:Close()
+                        end):CreateNeeds("gem_66x56.png", queue_need_gem)
                 else
                     NetManager:getRecruitSpecialSoldierPromise(self.soldier_name, self.count)
                     self:Close()
                 end
             else
-                local need_resource = self:GetNeedResouce(self.count)
-                local required_gems = DataUtils:buyResource(need_resource, {})
-                if required_gems > 0 then
-                    FullScreenPopDialogUI.new()
-                        :SetTitle(_("补充资源"))
-                        :SetPopMessage(_("您当前没有足够的资源,是否花费魔法石立即补充"))
-                        :CreateNeeds("gem_66x56.png", required_gems)
-                        :CreateOKButton(
-                            {
-                                listener =  function()
-                                    NetManager:getRecruitNormalSoldierPromise(self.soldier_name, self.count)
-                                    self:Close()
-                                end
-                            }
-                        ):AddToCurrentScene()
+                local required_gems = DataUtils:buyResource(self:GetNeedResouce(self.count), {})
+                if queue_need_gem + required_gems > 0 then
+                    local title = string.format("%s/%s", queue_need_gem > 0 and _("队列不足") or "", required_gems > 0 and _("资源不足") or "")
+                    local content = string.format("%s%s%s", queue_need_gem > 0 and _("您当前没有足够的队列") or "", required_gems > 0 and _("您当前没有足够的资源") or "", _("是否花费魔法石立即补充"))
+                    UIKit:showMessageDialog(title, content,function()
+                        NetManager:getRecruitNormalSoldierPromise(self.soldier_name, self.count)
+                        self:Close()
+                    end):CreateNeeds("gem_66x56.png", queue_need_gem + required_gems)
                 else
                     NetManager:getRecruitNormalSoldierPromise(self.soldier_name, self.count)
                     self:Close()
                 end
             end
-
         end)
     assert(not self.normal_button)
     self.normal_button = button
@@ -566,16 +565,16 @@ function WidgetRecruitSoldier:CheckNeedResource(total_resouce, count)
         if soldier_config.specialMaterials then
             local temp = string.split(k, "_")
             total = self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.SOLDIER)[temp[1]]
-            current = count * tonumber(temp[2]) 
+            current = count * tonumber(temp[2])
         else
             total = total_map[k] == nil and 0 or total_map[k]
             current = soldier_config[k] * count
             current_res_map[k] = current
         end
-        local color = total >= current 
-        -- and UIKit:hex2c3b(0x403c2f) 
-        and display.COLOR_BLUE
-        or display.COLOR_RED
+        local color = total >= current
+            -- and UIKit:hex2c3b(0x403c2f)
+            and display.COLOR_BLUE
+            or display.COLOR_RED
         v.total:setString(string.format("%s", GameUtils:formatNumber(total)))
         -- v.total:setColor(color)
         v.need:setString(string.format("/ %s", GameUtils:formatNumber(current)))
@@ -648,6 +647,8 @@ end
 
 
 return WidgetRecruitSoldier
+
+
 
 
 

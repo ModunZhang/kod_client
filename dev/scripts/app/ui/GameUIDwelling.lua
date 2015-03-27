@@ -15,8 +15,6 @@ function GameUIDwelling:ctor(building, city)
 end
 
 function GameUIDwelling:CreateUI()
-    self:CreateInfomation()
-    self.citizen_panel = self:CreateCitizenPanel()
     self:createTabButtons()
 end
 function GameUIDwelling:OnMoveOutStage()
@@ -39,21 +37,39 @@ function GameUIDwelling:createTabButtons()
     },
     function(tag)
         if tag == 'infomation' then
-            self.citizen_panel:setVisible(false)
-            self.infomationLayer:setVisible(true)
+            if self.citizen_panel then
+                self.citizen_panel:removeFromParent()
+                self.citizen_panel = nil
+            end
+            if not self.infomationLayer then
+                self:CreateInfomation()
+            end
             self:RefreshListView()
         elseif tag == "citizen" then
+            if self.infomationLayer then
+                self.infomationLayer:removeFromParent()
+                self.infomationLayer = nil
+            end
+            if not self.citizen_panel then
+                self.citizen_panel = self:CreateCitizenPanel()
+            end
             self.citizen_panel:UpdateData()
-            self.citizen_panel:setVisible(true)
-            self.infomationLayer:setVisible(false)
         else
-            self.citizen_panel:setVisible(false)
-            self.infomationLayer:setVisible(false)
+            if self.infomationLayer then
+                self.infomationLayer:removeFromParent()
+                self.infomationLayer = nil
+            end
+            if self.citizen_panel then
+                self.citizen_panel:removeFromParent()
+                self.citizen_panel = nil
+            end
         end
     end):pos(window.cx, window.bottom + 34)
 end
 
 return GameUIDwelling
+
+
 
 
 

@@ -23,7 +23,6 @@ function GameUIResource:onEnter()
     GameUIResource.super.onEnter(self)
 end
 function GameUIResource:CreateUI()
-    self:CreateInfomation()
     self:createTabButtons()
 end
 
@@ -36,10 +35,15 @@ function GameUIResource:createTabButtons()
     },
     function(tag)
         if tag == 'infomation' then
-            self.infomationLayer:setVisible(true)
+            if not self.infomationLayer then
+                self:CreateInfomation()
+            end
             self:RefreshListView()
         else
-            self.infomationLayer:setVisible(false)
+            if self.infomationLayer then
+                self.infomationLayer:removeFromParent()
+                self.infomationLayer = nil
+            end
         end
     end):pos(window.cx, window.bottom + 34)
 end
@@ -181,7 +185,13 @@ function GameUIResource:CreateInfomation()
         :align(display.TOP_CENTER, window.cx,secondLine:getPositionY()-200)
 
     self.listView = self.info:GetListView()
-    self.infomationLayer:setVisible(false)
+
+    local resource = City.resource_manager:GetResourceByType(self.building:GetUpdateResourceType())
+    local citizen = self.building:GetCitizen()
+    self.firstValueLabel:setString(string.format('%d',citizen))
+    local _,resource_title = self:GetTitleByType(self.building)
+    self.secondLabel:setString(resource_title)
+    self.secondValueLabel:setString(string.format("%d/h",resource:GetProductionPerHour()))
 end
 
 
@@ -267,12 +277,6 @@ end
 function GameUIResource:OnMoveInStage()
     GameUIResource.super.OnMoveInStage(self)
     self:CreateUI()
-    local resource = City.resource_manager:GetResourceByType(self.building:GetUpdateResourceType())
-    local citizen = self.building:GetCitizen()
-    self.firstValueLabel:setString(string.format('%d',citizen))
-    local _,resource_title = self:GetTitleByType(self.building)
-    self.secondLabel:setString(resource_title)
-    self.secondValueLabel:setString(string.format("%d/h",resource:GetProductionPerHour()))
 end
 
 function GameUIResource:ChaiButtonAction( event )
@@ -313,6 +317,7 @@ function GameUIResource:OnResourceChanged(resource_manager)
 end
 
 return GameUIResource
+
 
 
 

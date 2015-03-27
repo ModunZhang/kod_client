@@ -59,10 +59,6 @@ function WidgetMoveHouse:ctor(house)
 
 end
 function WidgetMoveHouse:SetMoveToRuins( ruins )
-    if self.move_to_ruins then
-        self.move_to_ruins:RemoveObserver(self)
-    end
-    -- ruins:AddObserver(self)
     self.move_to_ruins=ruins
     self.ok_btn:setVisible(true)
 
@@ -71,16 +67,10 @@ function WidgetMoveHouse:SetMoveToRuins( ruins )
     local world_pos = ruins:GetWorldPosition()
     self:setPosition(world_pos.x, world_pos.y)
 end
-function WidgetMoveHouse:OnPositionChanged(  x,y )
-    self:setPosition(x, y)
+function WidgetMoveHouse:GetRuins( )
+    return self.move_to_ruins
 end
-function WidgetMoveHouse:onEnter()
-end
-function WidgetMoveHouse:onExit()
-    -- if self.move_to_ruins then
-        -- self.move_to_ruins:RemoveObserver(self)
-    -- end
-end
+
 return WidgetMoveHouse
 
 
