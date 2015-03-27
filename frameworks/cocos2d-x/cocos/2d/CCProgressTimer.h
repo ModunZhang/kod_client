@@ -114,6 +114,9 @@ public:
     virtual void setOpacity(GLubyte opacity) override;
     virtual GLubyte getOpacity() const override;
     
+    virtual void updateDisplayedOpacity(GLubyte parentOpacity);
+    virtual void setCascadeOpacityEnabled(bool cascadeOpacityEnabled);
+    
 CC_CONSTRUCTOR_ACCESS:
     /**
      * @js ctor
