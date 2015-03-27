@@ -8,12 +8,14 @@ local ShrinePlayFightReport = class("ShrinePlayFightReport")
 function ShrineReport:ctor()
 	property(self,"id","")
 	property(self,"star",0)
+	property(self,"time",0)
 	property(self,"stageName","")
 	property(self,"fightDatas",{})
 	property(self,"playerDatas",{})
 	property(self,"playerAvgPower",{})
 	property(self,"playerCount",{})
 	property(self,"stage",{}) -- will be set in
+	                     
 end
 
 function ShrineReport:OnPropertyChange()
@@ -27,6 +29,7 @@ function ShrineReport:Update(json_data)
 	self:SetPlayerDatas(json_data.playerDatas)
 	self:SetPlayerAvgPower(json_data.playerAvgPower)
 	self:SetPlayerCount(json_data.playerCount)
+	self:SetTime(json_data.time and json_data.time/1000 or 0)
 end
 
 --获取相应星级的声望奖励
