@@ -259,7 +259,9 @@ function AllianceMap:OnMapObjectsChanged(allianceData, deltaData)
         end
         if is_fully_update then
             self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING, function(listener)
-                listener:OnBuildingFullUpdate(self)
+                if listener.OnBuildingFullUpdate then
+                    listener:OnBuildingFullUpdate(self)
+                end
             end)
         elseif is_delta_update then
             for i,v in ipairs(deltaData.mapObjects.add or {}) do
@@ -272,7 +274,9 @@ function AllianceMap:OnMapObjectsChanged(allianceData, deltaData)
                 setmetatable(v, mapObject_meta):SetAllianceMap(self)
             end
             self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING, function(listener)
-                listener:OnBuildingDeltaUpdate(self, deltaData.mapObjects)
+                if listener.OnBuildingDeltaUpdate then
+                    listener:OnBuildingDeltaUpdate(self, deltaData.mapObjects)
+                end
             end)
         end
     end

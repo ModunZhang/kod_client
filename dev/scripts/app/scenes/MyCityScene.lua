@@ -324,9 +324,7 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     if building then
 
         if self:IsEditMode() then
-            if building:GetEntity():GetType() == "ruins" then
-                self:GetSceneUILayer():getChildByTag(WidgetMoveHouse.ADD_TAG):SetMoveToRuins(building)
-            end
+            self:GetSceneUILayer():getChildByTag(WidgetMoveHouse.ADD_TAG):SetMoveToRuins(building)
             return
         end
 

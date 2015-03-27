@@ -9,8 +9,7 @@ workshop[1] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 5000,
-	["citizen"] = 0
+	["buildTime"] = 5000
 }
 workshop[2] = {
 	["level"] = 2,
@@ -21,8 +20,7 @@ workshop[2] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 5200,
-	["citizen"] = 0
+	["buildTime"] = 5200
 }
 workshop[3] = {
 	["level"] = 3,
@@ -33,8 +31,7 @@ workshop[3] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 5464,
-	["citizen"] = 0
+	["buildTime"] = 5464
 }
 workshop[4] = {
 	["level"] = 4,
@@ -45,8 +42,7 @@ workshop[4] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 5728,
-	["citizen"] = 0
+	["buildTime"] = 5728
 }
 workshop[5] = {
 	["level"] = 5,
@@ -57,8 +53,7 @@ workshop[5] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 6256,
-	["citizen"] = 0
+	["buildTime"] = 6256
 }
 workshop[6] = {
 	["level"] = 6,
@@ -69,8 +64,7 @@ workshop[6] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 7312,
-	["citizen"] = 0
+	["buildTime"] = 7312
 }
 workshop[7] = {
 	["level"] = 7,
@@ -81,8 +75,7 @@ workshop[7] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 8368,
-	["citizen"] = 0
+	["buildTime"] = 8368
 }
 workshop[8] = {
 	["level"] = 8,
@@ -93,8 +86,7 @@ workshop[8] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 11536,
-	["citizen"] = 0
+	["buildTime"] = 11536
 }
 workshop[9] = {
 	["level"] = 9,
@@ -105,8 +97,7 @@ workshop[9] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 17872,
-	["citizen"] = 0
+	["buildTime"] = 17872
 }
 workshop[10] = {
 	["level"] = 10,
@@ -117,8 +108,7 @@ workshop[10] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 24208,
-	["citizen"] = 0
+	["buildTime"] = 24208
 }
 workshop[11] = {
 	["level"] = 11,
@@ -129,8 +119,7 @@ workshop[11] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 30544,
-	["citizen"] = 0
+	["buildTime"] = 30544
 }
 workshop[12] = {
 	["level"] = 12,
@@ -141,8 +130,7 @@ workshop[12] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 36880,
-	["citizen"] = 0
+	["buildTime"] = 36880
 }
 workshop[13] = {
 	["level"] = 13,
@@ -153,8 +141,7 @@ workshop[13] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 43216,
-	["citizen"] = 0
+	["buildTime"] = 43216
 }
 workshop[14] = {
 	["level"] = 14,
@@ -165,8 +152,7 @@ workshop[14] = {
 	["tools"] = 3,
 	["tiles"] = 3,
 	["pulley"] = 3,
-	["buildTime"] = 49552,
-	["citizen"] = 0
+	["buildTime"] = 49552
 }
 workshop[15] = {
 	["level"] = 15,
@@ -177,8 +163,7 @@ workshop[15] = {
 	["tools"] = 5,
 	["tiles"] = 5,
 	["pulley"] = 5,
-	["buildTime"] = 55888,
-	["citizen"] = 0
+	["buildTime"] = 55888
 }
 workshop[16] = {
 	["level"] = 16,
@@ -189,8 +174,7 @@ workshop[16] = {
 	["tools"] = 8,
 	["tiles"] = 8,
 	["pulley"] = 8,
-	["buildTime"] = 62224,
-	["citizen"] = 0
+	["buildTime"] = 62224
 }
 workshop[17] = {
 	["level"] = 17,
@@ -201,8 +185,7 @@ workshop[17] = {
 	["tools"] = 12,
 	["tiles"] = 12,
 	["pulley"] = 12,
-	["buildTime"] = 68560,
-	["citizen"] = 0
+	["buildTime"] = 68560
 }
 workshop[18] = {
 	["level"] = 18,
@@ -213,8 +196,7 @@ workshop[18] = {
 	["tools"] = 18,
 	["tiles"] = 18,
 	["pulley"] = 18,
-	["buildTime"] = 74896,
-	["citizen"] = 0
+	["buildTime"] = 74896
 }
 workshop[19] = {
 	["level"] = 19,
@@ -225,8 +207,7 @@ workshop[19] = {
 	["tools"] = 26,
 	["tiles"] = 26,
 	["pulley"] = 26,
-	["buildTime"] = 81232,
-	["citizen"] = 0
+	["buildTime"] = 81232
 }
 workshop[20] = {
 	["level"] = 20,
@@ -237,8 +218,7 @@ workshop[20] = {
 	["tools"] = 35,
 	["tiles"] = 35,
 	["pulley"] = 35,
-	["buildTime"] = 87568,
-	["citizen"] = 0
+	["buildTime"] = 87568
 }
 workshop[21] = {
 	["level"] = 21,
@@ -249,8 +229,7 @@ workshop[21] = {
 	["tools"] = 47,
 	["tiles"] = 47,
 	["pulley"] = 47,
-	["buildTime"] = 93904,
-	["citizen"] = 0
+	["buildTime"] = 93904
 }
 workshop[22] = {
 	["level"] = 22,
@@ -261,8 +240,7 @@ workshop[22] = {
 	["tools"] = 61,
 	["tiles"] = 61,
 	["pulley"] = 61,
-	["buildTime"] = 100240,
-	["citizen"] = 0
+	["buildTime"] = 100240
 }
 workshop[23] = {
 	["level"] = 23,
@@ -273,8 +251,7 @@ workshop[23] = {
 	["tools"] = 78,
 	["tiles"] = 78,
 	["pulley"] = 78,
-	["buildTime"] = 106576,
-	["citizen"] = 0
+	["buildTime"] = 106576
 }
 workshop[24] = {
 	["level"] = 24,
@@ -285,8 +262,7 @@ workshop[24] = {
 	["tools"] = 98,
 	["tiles"] = 98,
 	["pulley"] = 98,
-	["buildTime"] = 119248,
-	["citizen"] = 0
+	["buildTime"] = 119248
 }
 workshop[25] = {
 	["level"] = 25,
@@ -297,8 +273,7 @@ workshop[25] = {
 	["tools"] = 121,
 	["tiles"] = 121,
 	["pulley"] = 121,
-	["buildTime"] = 131920,
-	["citizen"] = 0
+	["buildTime"] = 131920
 }
 workshop[26] = {
 	["level"] = 26,
@@ -309,8 +284,7 @@ workshop[26] = {
 	["tools"] = 148,
 	["tiles"] = 148,
 	["pulley"] = 148,
-	["buildTime"] = 144592,
-	["citizen"] = 0
+	["buildTime"] = 144592
 }
 workshop[27] = {
 	["level"] = 27,
@@ -321,8 +295,7 @@ workshop[27] = {
 	["tools"] = 179,
 	["tiles"] = 179,
 	["pulley"] = 179,
-	["buildTime"] = 157264,
-	["citizen"] = 0
+	["buildTime"] = 157264
 }
 workshop[28] = {
 	["level"] = 28,
@@ -333,8 +306,7 @@ workshop[28] = {
 	["tools"] = 213,
 	["tiles"] = 213,
 	["pulley"] = 213,
-	["buildTime"] = 169936,
-	["citizen"] = 0
+	["buildTime"] = 169936
 }
 workshop[29] = {
 	["level"] = 29,
@@ -345,8 +317,7 @@ workshop[29] = {
 	["tools"] = 252,
 	["tiles"] = 252,
 	["pulley"] = 252,
-	["buildTime"] = 182608,
-	["citizen"] = 0
+	["buildTime"] = 182608
 }
 workshop[30] = {
 	["level"] = 30,
@@ -357,8 +328,7 @@ workshop[30] = {
 	["tools"] = 295,
 	["tiles"] = 295,
 	["pulley"] = 295,
-	["buildTime"] = 195280,
-	["citizen"] = 0
+	["buildTime"] = 195280
 }
 workshop[31] = {
 	["level"] = 31,
@@ -369,8 +339,7 @@ workshop[31] = {
 	["tools"] = 343,
 	["tiles"] = 343,
 	["pulley"] = 343,
-	["buildTime"] = 207952,
-	["citizen"] = 0
+	["buildTime"] = 207952
 }
 workshop[32] = {
 	["level"] = 32,
@@ -381,8 +350,7 @@ workshop[32] = {
 	["tools"] = 396,
 	["tiles"] = 396,
 	["pulley"] = 396,
-	["buildTime"] = 220624,
-	["citizen"] = 0
+	["buildTime"] = 220624
 }
 workshop[33] = {
 	["level"] = 33,
@@ -393,8 +361,7 @@ workshop[33] = {
 	["tools"] = 454,
 	["tiles"] = 454,
 	["pulley"] = 454,
-	["buildTime"] = 233296,
-	["citizen"] = 0
+	["buildTime"] = 233296
 }
 workshop[34] = {
 	["level"] = 34,
@@ -405,8 +372,7 @@ workshop[34] = {
 	["tools"] = 518,
 	["tiles"] = 518,
 	["pulley"] = 518,
-	["buildTime"] = 245968,
-	["citizen"] = 0
+	["buildTime"] = 245968
 }
 workshop[35] = {
 	["level"] = 35,
@@ -417,8 +383,7 @@ workshop[35] = {
 	["tools"] = 588,
 	["tiles"] = 588,
 	["pulley"] = 588,
-	["buildTime"] = 258640,
-	["citizen"] = 0
+	["buildTime"] = 258640
 }
 workshop[36] = {
 	["level"] = 36,
@@ -429,8 +394,7 @@ workshop[36] = {
 	["tools"] = 663,
 	["tiles"] = 663,
 	["pulley"] = 663,
-	["buildTime"] = 271312,
-	["citizen"] = 0
+	["buildTime"] = 271312
 }
 workshop[37] = {
 	["level"] = 37,
@@ -441,8 +405,7 @@ workshop[37] = {
 	["tools"] = 745,
 	["tiles"] = 745,
 	["pulley"] = 745,
-	["buildTime"] = 283984,
-	["citizen"] = 0
+	["buildTime"] = 283984
 }
 workshop[38] = {
 	["level"] = 38,
@@ -453,8 +416,7 @@ workshop[38] = {
 	["tools"] = 833,
 	["tiles"] = 833,
 	["pulley"] = 833,
-	["buildTime"] = 296656,
-	["citizen"] = 0
+	["buildTime"] = 296656
 }
 workshop[39] = {
 	["level"] = 39,
@@ -465,8 +427,7 @@ workshop[39] = {
 	["tools"] = 928,
 	["tiles"] = 928,
 	["pulley"] = 928,
-	["buildTime"] = 309328,
-	["citizen"] = 0
+	["buildTime"] = 309328
 }
 workshop[40] = {
 	["level"] = 40,
@@ -477,6 +438,5 @@ workshop[40] = {
 	["tools"] = 1030,
 	["tiles"] = 1030,
 	["pulley"] = 1030,
-	["buildTime"] = 322000,
-	["citizen"] = 0
+	["buildTime"] = 322000
 }

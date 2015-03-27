@@ -62,7 +62,7 @@ function WidgetMoveHouse:SetMoveToRuins( ruins )
     if self.move_to_ruins then
         self.move_to_ruins:RemoveObserver(self)
     end
-    ruins:AddObserver(self)
+    -- ruins:AddObserver(self)
     self.move_to_ruins=ruins
     self.ok_btn:setVisible(true)
 
@@ -77,9 +77,9 @@ end
 function WidgetMoveHouse:onEnter()
 end
 function WidgetMoveHouse:onExit()
-    if self.move_to_ruins then
-        self.move_to_ruins:RemoveObserver(self)
-    end
+    -- if self.move_to_ruins then
+        -- self.move_to_ruins:RemoveObserver(self)
+    -- end
 end
 return WidgetMoveHouse
 

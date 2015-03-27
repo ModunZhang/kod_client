@@ -9,8 +9,7 @@ toolShop[1] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 1200,
-	["citizen"] = 0
+	["buildTime"] = 1200
 }
 toolShop[2] = {
 	["level"] = 2,
@@ -21,8 +20,7 @@ toolShop[2] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 1600,
-	["citizen"] = 0
+	["buildTime"] = 1600
 }
 toolShop[3] = {
 	["level"] = 3,
@@ -33,8 +31,7 @@ toolShop[3] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 2000,
-	["citizen"] = 0
+	["buildTime"] = 2000
 }
 toolShop[4] = {
 	["level"] = 4,
@@ -45,8 +42,7 @@ toolShop[4] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 2400,
-	["citizen"] = 0
+	["buildTime"] = 2400
 }
 toolShop[5] = {
 	["level"] = 5,
@@ -57,8 +53,7 @@ toolShop[5] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 2792,
-	["citizen"] = 0
+	["buildTime"] = 2792
 }
 toolShop[6] = {
 	["level"] = 6,
@@ -69,8 +64,7 @@ toolShop[6] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 3584,
-	["citizen"] = 0
+	["buildTime"] = 3584
 }
 toolShop[7] = {
 	["level"] = 7,
@@ -81,8 +75,7 @@ toolShop[7] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 4376,
-	["citizen"] = 0
+	["buildTime"] = 4376
 }
 toolShop[8] = {
 	["level"] = 8,
@@ -93,8 +86,7 @@ toolShop[8] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 6752,
-	["citizen"] = 0
+	["buildTime"] = 6752
 }
 toolShop[9] = {
 	["level"] = 9,
@@ -105,8 +97,7 @@ toolShop[9] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 11504,
-	["citizen"] = 0
+	["buildTime"] = 11504
 }
 toolShop[10] = {
 	["level"] = 10,
@@ -117,8 +108,7 @@ toolShop[10] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 16256,
-	["citizen"] = 0
+	["buildTime"] = 16256
 }
 toolShop[11] = {
 	["level"] = 11,
@@ -129,8 +119,7 @@ toolShop[11] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 21008,
-	["citizen"] = 0
+	["buildTime"] = 21008
 }
 toolShop[12] = {
 	["level"] = 12,
@@ -141,8 +130,7 @@ toolShop[12] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 25760,
-	["citizen"] = 0
+	["buildTime"] = 25760
 }
 toolShop[13] = {
 	["level"] = 13,
@@ -153,8 +141,7 @@ toolShop[13] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 30512,
-	["citizen"] = 0
+	["buildTime"] = 30512
 }
 toolShop[14] = {
 	["level"] = 14,
@@ -165,8 +152,7 @@ toolShop[14] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 35264,
-	["citizen"] = 0
+	["buildTime"] = 35264
 }
 toolShop[15] = {
 	["level"] = 15,
@@ -177,8 +163,7 @@ toolShop[15] = {
 	["tools"] = 1,
 	["tiles"] = 1,
 	["pulley"] = 1,
-	["buildTime"] = 40016,
-	["citizen"] = 0
+	["buildTime"] = 40016
 }
 toolShop[16] = {
 	["level"] = 16,
@@ -189,8 +174,7 @@ toolShop[16] = {
 	["tools"] = 2,
 	["tiles"] = 2,
 	["pulley"] = 2,
-	["buildTime"] = 44768,
-	["citizen"] = 0
+	["buildTime"] = 44768
 }
 toolShop[17] = {
 	["level"] = 17,
@@ -201,8 +185,7 @@ toolShop[17] = {
 	["tools"] = 4,
 	["tiles"] = 4,
 	["pulley"] = 4,
-	["buildTime"] = 49520,
-	["citizen"] = 0
+	["buildTime"] = 49520
 }
 toolShop[18] = {
 	["level"] = 18,
@@ -213,8 +196,7 @@ toolShop[18] = {
 	["tools"] = 7,
 	["tiles"] = 7,
 	["pulley"] = 7,
-	["buildTime"] = 54272,
-	["citizen"] = 0
+	["buildTime"] = 54272
 }
 toolShop[19] = {
 	["level"] = 19,
@@ -225,8 +207,7 @@ toolShop[19] = {
 	["tools"] = 12,
 	["tiles"] = 12,
 	["pulley"] = 12,
-	["buildTime"] = 59024,
-	["citizen"] = 0
+	["buildTime"] = 59024
 }
 toolShop[20] = {
 	["level"] = 20,
@@ -237,8 +218,7 @@ toolShop[20] = {
 	["tools"] = 18,
 	["tiles"] = 18,
 	["pulley"] = 18,
-	["buildTime"] = 63776,
-	["citizen"] = 0
+	["buildTime"] = 63776
 }
 toolShop[21] = {
 	["level"] = 21,
@@ -249,8 +229,7 @@ toolShop[21] = {
 	["tools"] = 27,
 	["tiles"] = 27,
 	["pulley"] = 27,
-	["buildTime"] = 68528,
-	["citizen"] = 0
+	["buildTime"] = 68528
 }
 toolShop[22] = {
 	["level"] = 22,
@@ -261,8 +240,7 @@ toolShop[22] = {
 	["tools"] = 37,
 	["tiles"] = 37,
 	["pulley"] = 37,
-	["buildTime"] = 73280,
-	["citizen"] = 0
+	["buildTime"] = 73280
 }
 toolShop[23] = {
 	["level"] = 23,
@@ -273,8 +251,7 @@ toolShop[23] = {
 	["tools"] = 51,
 	["tiles"] = 51,
 	["pulley"] = 51,
-	["buildTime"] = 78032,
-	["citizen"] = 0
+	["buildTime"] = 78032
 }
 toolShop[24] = {
 	["level"] = 24,
@@ -285,8 +262,7 @@ toolShop[24] = {
 	["tools"] = 67,
 	["tiles"] = 67,
 	["pulley"] = 67,
-	["buildTime"] = 87536,
-	["citizen"] = 0
+	["buildTime"] = 87536
 }
 toolShop[25] = {
 	["level"] = 25,
@@ -297,8 +273,7 @@ toolShop[25] = {
 	["tools"] = 86,
 	["tiles"] = 86,
 	["pulley"] = 86,
-	["buildTime"] = 97040,
-	["citizen"] = 0
+	["buildTime"] = 97040
 }
 toolShop[26] = {
 	["level"] = 26,
@@ -309,8 +284,7 @@ toolShop[26] = {
 	["tools"] = 108,
 	["tiles"] = 108,
 	["pulley"] = 108,
-	["buildTime"] = 106544,
-	["citizen"] = 0
+	["buildTime"] = 106544
 }
 toolShop[27] = {
 	["level"] = 27,
@@ -321,8 +295,7 @@ toolShop[27] = {
 	["tools"] = 134,
 	["tiles"] = 134,
 	["pulley"] = 134,
-	["buildTime"] = 116048,
-	["citizen"] = 0
+	["buildTime"] = 116048
 }
 toolShop[28] = {
 	["level"] = 28,
@@ -333,8 +306,7 @@ toolShop[28] = {
 	["tools"] = 163,
 	["tiles"] = 163,
 	["pulley"] = 163,
-	["buildTime"] = 125552,
-	["citizen"] = 0
+	["buildTime"] = 125552
 }
 toolShop[29] = {
 	["level"] = 29,
@@ -345,8 +317,7 @@ toolShop[29] = {
 	["tools"] = 197,
 	["tiles"] = 197,
 	["pulley"] = 197,
-	["buildTime"] = 135056,
-	["citizen"] = 0
+	["buildTime"] = 135056
 }
 toolShop[30] = {
 	["level"] = 30,
@@ -357,8 +328,7 @@ toolShop[30] = {
 	["tools"] = 234,
 	["tiles"] = 234,
 	["pulley"] = 234,
-	["buildTime"] = 144560,
-	["citizen"] = 0
+	["buildTime"] = 144560
 }
 toolShop[31] = {
 	["level"] = 31,
@@ -369,8 +339,7 @@ toolShop[31] = {
 	["tools"] = 277,
 	["tiles"] = 277,
 	["pulley"] = 277,
-	["buildTime"] = 154064,
-	["citizen"] = 0
+	["buildTime"] = 154064
 }
 toolShop[32] = {
 	["level"] = 32,
@@ -381,8 +350,7 @@ toolShop[32] = {
 	["tools"] = 324,
 	["tiles"] = 324,
 	["pulley"] = 324,
-	["buildTime"] = 163568,
-	["citizen"] = 0
+	["buildTime"] = 163568
 }
 toolShop[33] = {
 	["level"] = 33,
@@ -393,8 +361,7 @@ toolShop[33] = {
 	["tools"] = 376,
 	["tiles"] = 376,
 	["pulley"] = 376,
-	["buildTime"] = 173072,
-	["citizen"] = 0
+	["buildTime"] = 173072
 }
 toolShop[34] = {
 	["level"] = 34,
@@ -405,8 +372,7 @@ toolShop[34] = {
 	["tools"] = 433,
 	["tiles"] = 433,
 	["pulley"] = 433,
-	["buildTime"] = 182576,
-	["citizen"] = 0
+	["buildTime"] = 182576
 }
 toolShop[35] = {
 	["level"] = 35,
@@ -417,8 +383,7 @@ toolShop[35] = {
 	["tools"] = 496,
 	["tiles"] = 496,
 	["pulley"] = 496,
-	["buildTime"] = 192080,
-	["citizen"] = 0
+	["buildTime"] = 192080
 }
 toolShop[36] = {
 	["level"] = 36,
@@ -429,8 +394,7 @@ toolShop[36] = {
 	["tools"] = 564,
 	["tiles"] = 564,
 	["pulley"] = 564,
-	["buildTime"] = 201584,
-	["citizen"] = 0
+	["buildTime"] = 201584
 }
 toolShop[37] = {
 	["level"] = 37,
@@ -441,8 +405,7 @@ toolShop[37] = {
 	["tools"] = 640,
 	["tiles"] = 640,
 	["pulley"] = 640,
-	["buildTime"] = 211088,
-	["citizen"] = 0
+	["buildTime"] = 211088
 }
 toolShop[38] = {
 	["level"] = 38,
@@ -453,8 +416,7 @@ toolShop[38] = {
 	["tools"] = 720,
 	["tiles"] = 720,
 	["pulley"] = 720,
-	["buildTime"] = 220592,
-	["citizen"] = 0
+	["buildTime"] = 220592
 }
 toolShop[39] = {
 	["level"] = 39,
@@ -465,8 +427,7 @@ toolShop[39] = {
 	["tools"] = 810,
 	["tiles"] = 810,
 	["pulley"] = 810,
-	["buildTime"] = 230096,
-	["citizen"] = 0
+	["buildTime"] = 230096
 }
 toolShop[40] = {
 	["level"] = 40,
@@ -477,6 +438,5 @@ toolShop[40] = {
 	["tools"] = 900,
 	["tiles"] = 900,
 	["pulley"] = 900,
-	["buildTime"] = 239600,
-	["citizen"] = 0
+	["buildTime"] = 239600
 }
