@@ -752,6 +752,12 @@ function CityLayer:OnSceneMove()
     -- if self.road then
     --     on_move(nil, self.road)
     -- end
+    local move_widget = self.city_scene:GetSceneUILayer():getChildByTag(989)
+    if move_widget then
+        local ruins = move_widget:GetRuins()
+        local world_pos = ruins:GetWorldPosition()
+        move_widget:setPosition(world_pos.x, world_pos.y)
+    end
     -- self:UpdateWeather()
 end
 function CityLayer:UpdateWeather()
