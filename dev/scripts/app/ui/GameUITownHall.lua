@@ -410,8 +410,8 @@ end
 function GameUITownHall:RemoveQuestItemById( questId )
     local item = self.quest_items[questId]
     self.quest_list_view:removeItem(item)
+    print("RemoveQuestItemById questId",questId)
     self.quest_items[questId]  = nil
-    self.quest_list_view:reload()
 end
 function GameUITownHall:ResetQuest()
     self.quest_items = {}
@@ -452,9 +452,11 @@ function GameUITownHall:OnNewDailyQuestsEvent(changed_map)
             end
         end
         for k,v in pairs(changed_map.add) do
-            self:CreateQuestItem(v,finished_quest_num+1)
+            -- self:performWithDelay(function()
+                self:CreateQuestItem(v,finished_quest_num+1)
+                self.quest_list_view:reload()
+            -- end,0.5)
         end
-        self.quest_list_view:reload()
     end
     if changed_map.edit then
         for k,v in pairs(changed_map.edit) do
@@ -481,5 +483,8 @@ function GameUITownHall:OnBuildingUpgrading()
 end
 
 return GameUITownHall
+
+
+
 
 
