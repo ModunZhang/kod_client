@@ -9,8 +9,7 @@ watchTower[1] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 42,
-	["citizen"] = 0
+	["buildTime"] = 42
 }
 watchTower[2] = {
 	["level"] = 2,
@@ -21,8 +20,7 @@ watchTower[2] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 84,
-	["citizen"] = 0
+	["buildTime"] = 84
 }
 watchTower[3] = {
 	["level"] = 3,
@@ -33,8 +31,7 @@ watchTower[3] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 210,
-	["citizen"] = 0
+	["buildTime"] = 210
 }
 watchTower[4] = {
 	["level"] = 4,
@@ -45,8 +42,7 @@ watchTower[4] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 420,
-	["citizen"] = 0
+	["buildTime"] = 420
 }
 watchTower[5] = {
 	["level"] = 5,
@@ -57,8 +53,7 @@ watchTower[5] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 840,
-	["citizen"] = 0
+	["buildTime"] = 840
 }
 watchTower[6] = {
 	["level"] = 6,
@@ -69,8 +64,7 @@ watchTower[6] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 1680,
-	["citizen"] = 0
+	["buildTime"] = 1680
 }
 watchTower[7] = {
 	["level"] = 7,
@@ -81,8 +75,7 @@ watchTower[7] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 2520,
-	["citizen"] = 0
+	["buildTime"] = 2520
 }
 watchTower[8] = {
 	["level"] = 8,
@@ -93,8 +86,7 @@ watchTower[8] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 5040,
-	["citizen"] = 0
+	["buildTime"] = 5040
 }
 watchTower[9] = {
 	["level"] = 9,
@@ -105,8 +97,7 @@ watchTower[9] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 10080,
-	["citizen"] = 0
+	["buildTime"] = 10080
 }
 watchTower[10] = {
 	["level"] = 10,
@@ -117,8 +108,7 @@ watchTower[10] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 15120,
-	["citizen"] = 0
+	["buildTime"] = 15120
 }
 watchTower[11] = {
 	["level"] = 11,
@@ -129,8 +119,7 @@ watchTower[11] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 20160,
-	["citizen"] = 0
+	["buildTime"] = 20160
 }
 watchTower[12] = {
 	["level"] = 12,
@@ -141,8 +130,7 @@ watchTower[12] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 25200,
-	["citizen"] = 0
+	["buildTime"] = 25200
 }
 watchTower[13] = {
 	["level"] = 13,
@@ -153,8 +141,7 @@ watchTower[13] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 30240,
-	["citizen"] = 0
+	["buildTime"] = 30240
 }
 watchTower[14] = {
 	["level"] = 14,
@@ -165,8 +152,7 @@ watchTower[14] = {
 	["tools"] = 1,
 	["tiles"] = 1,
 	["pulley"] = 1,
-	["buildTime"] = 35280,
-	["citizen"] = 0
+	["buildTime"] = 35280
 }
 watchTower[15] = {
 	["level"] = 15,
@@ -177,8 +163,7 @@ watchTower[15] = {
 	["tools"] = 2,
 	["tiles"] = 2,
 	["pulley"] = 2,
-	["buildTime"] = 40320,
-	["citizen"] = 0
+	["buildTime"] = 40320
 }
 watchTower[16] = {
 	["level"] = 16,
@@ -189,8 +174,7 @@ watchTower[16] = {
 	["tools"] = 3,
 	["tiles"] = 3,
 	["pulley"] = 3,
-	["buildTime"] = 45360,
-	["citizen"] = 0
+	["buildTime"] = 45360
 }
 watchTower[17] = {
 	["level"] = 17,
@@ -201,8 +185,7 @@ watchTower[17] = {
 	["tools"] = 5,
 	["tiles"] = 5,
 	["pulley"] = 5,
-	["buildTime"] = 50400,
-	["citizen"] = 0
+	["buildTime"] = 50400
 }
 watchTower[18] = {
 	["level"] = 18,
@@ -213,8 +196,7 @@ watchTower[18] = {
 	["tools"] = 7,
 	["tiles"] = 7,
 	["pulley"] = 7,
-	["buildTime"] = 55440,
-	["citizen"] = 0
+	["buildTime"] = 55440
 }
 watchTower[19] = {
 	["level"] = 19,
@@ -225,8 +207,7 @@ watchTower[19] = {
 	["tools"] = 12,
 	["tiles"] = 12,
 	["pulley"] = 12,
-	["buildTime"] = 60480,
-	["citizen"] = 0
+	["buildTime"] = 60480
 }
 watchTower[20] = {
 	["level"] = 20,
@@ -237,8 +218,7 @@ watchTower[20] = {
 	["tools"] = 18,
 	["tiles"] = 18,
 	["pulley"] = 18,
-	["buildTime"] = 65520,
-	["citizen"] = 0
+	["buildTime"] = 65520
 }
 watchTower[21] = {
 	["level"] = 21,
@@ -249,8 +229,7 @@ watchTower[21] = {
 	["tools"] = 27,
 	["tiles"] = 27,
 	["pulley"] = 27,
-	["buildTime"] = 70560,
-	["citizen"] = 0
+	["buildTime"] = 70560
 }
 watchTower[22] = {
 	["level"] = 22,
@@ -261,8 +240,7 @@ watchTower[22] = {
 	["tools"] = 38,
 	["tiles"] = 38,
 	["pulley"] = 38,
-	["buildTime"] = 75600,
-	["citizen"] = 0
+	["buildTime"] = 75600
 }
 watchTower[23] = {
 	["level"] = 23,
@@ -273,8 +251,7 @@ watchTower[23] = {
 	["tools"] = 54,
 	["tiles"] = 54,
 	["pulley"] = 54,
-	["buildTime"] = 80640,
-	["citizen"] = 0
+	["buildTime"] = 80640
 }
 watchTower[24] = {
 	["level"] = 24,
@@ -285,8 +262,7 @@ watchTower[24] = {
 	["tools"] = 73,
 	["tiles"] = 73,
 	["pulley"] = 73,
-	["buildTime"] = 90720,
-	["citizen"] = 0
+	["buildTime"] = 90720
 }
 watchTower[25] = {
 	["level"] = 25,
@@ -297,8 +273,7 @@ watchTower[25] = {
 	["tools"] = 95,
 	["tiles"] = 95,
 	["pulley"] = 95,
-	["buildTime"] = 100800,
-	["citizen"] = 0
+	["buildTime"] = 100800
 }
 watchTower[26] = {
 	["level"] = 26,
@@ -309,8 +284,7 @@ watchTower[26] = {
 	["tools"] = 125,
 	["tiles"] = 125,
 	["pulley"] = 125,
-	["buildTime"] = 110880,
-	["citizen"] = 0
+	["buildTime"] = 110880
 }
 watchTower[27] = {
 	["level"] = 27,
@@ -321,8 +295,7 @@ watchTower[27] = {
 	["tools"] = 160,
 	["tiles"] = 160,
 	["pulley"] = 160,
-	["buildTime"] = 120960,
-	["citizen"] = 0
+	["buildTime"] = 120960
 }
 watchTower[28] = {
 	["level"] = 28,
@@ -333,8 +306,7 @@ watchTower[28] = {
 	["tools"] = 200,
 	["tiles"] = 200,
 	["pulley"] = 200,
-	["buildTime"] = 131040,
-	["citizen"] = 0
+	["buildTime"] = 131040
 }
 watchTower[29] = {
 	["level"] = 29,
@@ -345,8 +317,7 @@ watchTower[29] = {
 	["tools"] = 240,
 	["tiles"] = 240,
 	["pulley"] = 240,
-	["buildTime"] = 141120,
-	["citizen"] = 0
+	["buildTime"] = 141120
 }
 watchTower[30] = {
 	["level"] = 30,
@@ -357,8 +328,7 @@ watchTower[30] = {
 	["tools"] = 280,
 	["tiles"] = 280,
 	["pulley"] = 280,
-	["buildTime"] = 151200,
-	["citizen"] = 0
+	["buildTime"] = 151200
 }
 watchTower[31] = {
 	["level"] = 31,
@@ -369,8 +339,7 @@ watchTower[31] = {
 	["tools"] = 362,
 	["tiles"] = 362,
 	["pulley"] = 362,
-	["buildTime"] = 161280,
-	["citizen"] = 0
+	["buildTime"] = 161280
 }
 watchTower[32] = {
 	["level"] = 32,
@@ -381,8 +350,7 @@ watchTower[32] = {
 	["tools"] = 431,
 	["tiles"] = 431,
 	["pulley"] = 431,
-	["buildTime"] = 171360,
-	["citizen"] = 0
+	["buildTime"] = 171360
 }
 watchTower[33] = {
 	["level"] = 33,
@@ -393,8 +361,7 @@ watchTower[33] = {
 	["tools"] = 509,
 	["tiles"] = 509,
 	["pulley"] = 509,
-	["buildTime"] = 181440,
-	["citizen"] = 0
+	["buildTime"] = 181440
 }
 watchTower[34] = {
 	["level"] = 34,
@@ -405,8 +372,7 @@ watchTower[34] = {
 	["tools"] = 560,
 	["tiles"] = 560,
 	["pulley"] = 560,
-	["buildTime"] = 191520,
-	["citizen"] = 0
+	["buildTime"] = 191520
 }
 watchTower[35] = {
 	["level"] = 35,
@@ -417,8 +383,7 @@ watchTower[35] = {
 	["tools"] = 660,
 	["tiles"] = 660,
 	["pulley"] = 660,
-	["buildTime"] = 201600,
-	["citizen"] = 0
+	["buildTime"] = 201600
 }
 watchTower[36] = {
 	["level"] = 36,
@@ -429,8 +394,7 @@ watchTower[36] = {
 	["tools"] = 798,
 	["tiles"] = 798,
 	["pulley"] = 798,
-	["buildTime"] = 211680,
-	["citizen"] = 0
+	["buildTime"] = 211680
 }
 watchTower[37] = {
 	["level"] = 37,
@@ -441,8 +405,7 @@ watchTower[37] = {
 	["tools"] = 915,
 	["tiles"] = 915,
 	["pulley"] = 915,
-	["buildTime"] = 221760,
-	["citizen"] = 0
+	["buildTime"] = 221760
 }
 watchTower[38] = {
 	["level"] = 38,
@@ -453,8 +416,7 @@ watchTower[38] = {
 	["tools"] = 1042,
 	["tiles"] = 1042,
 	["pulley"] = 1042,
-	["buildTime"] = 231840,
-	["citizen"] = 0
+	["buildTime"] = 231840
 }
 watchTower[39] = {
 	["level"] = 39,
@@ -465,8 +427,7 @@ watchTower[39] = {
 	["tools"] = 1182,
 	["tiles"] = 1182,
 	["pulley"] = 1182,
-	["buildTime"] = 241920,
-	["citizen"] = 0
+	["buildTime"] = 241920
 }
 watchTower[40] = {
 	["level"] = 40,
@@ -477,6 +438,5 @@ watchTower[40] = {
 	["tools"] = 1350,
 	["tiles"] = 1350,
 	["pulley"] = 1350,
-	["buildTime"] = 252000,
-	["citizen"] = 0
+	["buildTime"] = 252000
 }

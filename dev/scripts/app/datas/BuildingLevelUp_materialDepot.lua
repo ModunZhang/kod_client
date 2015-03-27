@@ -9,8 +9,7 @@ materialDepot[1] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 40,
-	["citizen"] = 0
+	["buildTime"] = 40
 }
 materialDepot[2] = {
 	["level"] = 2,
@@ -21,8 +20,7 @@ materialDepot[2] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 80,
-	["citizen"] = 0
+	["buildTime"] = 80
 }
 materialDepot[3] = {
 	["level"] = 3,
@@ -33,8 +31,7 @@ materialDepot[3] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 195,
-	["citizen"] = 0
+	["buildTime"] = 195
 }
 materialDepot[4] = {
 	["level"] = 4,
@@ -45,8 +42,7 @@ materialDepot[4] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 390,
-	["citizen"] = 0
+	["buildTime"] = 390
 }
 materialDepot[5] = {
 	["level"] = 5,
@@ -57,8 +53,7 @@ materialDepot[5] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 780,
-	["citizen"] = 0
+	["buildTime"] = 780
 }
 materialDepot[6] = {
 	["level"] = 6,
@@ -69,8 +64,7 @@ materialDepot[6] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 1560,
-	["citizen"] = 0
+	["buildTime"] = 1560
 }
 materialDepot[7] = {
 	["level"] = 7,
@@ -81,8 +75,7 @@ materialDepot[7] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 2340,
-	["citizen"] = 0
+	["buildTime"] = 2340
 }
 materialDepot[8] = {
 	["level"] = 8,
@@ -93,8 +86,7 @@ materialDepot[8] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 4680,
-	["citizen"] = 0
+	["buildTime"] = 4680
 }
 materialDepot[9] = {
 	["level"] = 9,
@@ -105,8 +97,7 @@ materialDepot[9] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 9360,
-	["citizen"] = 0
+	["buildTime"] = 9360
 }
 materialDepot[10] = {
 	["level"] = 10,
@@ -117,8 +108,7 @@ materialDepot[10] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 14040,
-	["citizen"] = 0
+	["buildTime"] = 14040
 }
 materialDepot[11] = {
 	["level"] = 11,
@@ -129,8 +119,7 @@ materialDepot[11] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 18720,
-	["citizen"] = 0
+	["buildTime"] = 18720
 }
 materialDepot[12] = {
 	["level"] = 12,
@@ -141,8 +130,7 @@ materialDepot[12] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 23400,
-	["citizen"] = 0
+	["buildTime"] = 23400
 }
 materialDepot[13] = {
 	["level"] = 13,
@@ -153,8 +141,7 @@ materialDepot[13] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 28080,
-	["citizen"] = 0
+	["buildTime"] = 28080
 }
 materialDepot[14] = {
 	["level"] = 14,
@@ -165,8 +152,7 @@ materialDepot[14] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 32760,
-	["citizen"] = 0
+	["buildTime"] = 32760
 }
 materialDepot[15] = {
 	["level"] = 15,
@@ -177,8 +163,7 @@ materialDepot[15] = {
 	["tools"] = 1,
 	["tiles"] = 1,
 	["pulley"] = 1,
-	["buildTime"] = 37440,
-	["citizen"] = 0
+	["buildTime"] = 37440
 }
 materialDepot[16] = {
 	["level"] = 16,
@@ -189,8 +174,7 @@ materialDepot[16] = {
 	["tools"] = 1,
 	["tiles"] = 1,
 	["pulley"] = 1,
-	["buildTime"] = 42120,
-	["citizen"] = 0
+	["buildTime"] = 42120
 }
 materialDepot[17] = {
 	["level"] = 17,
@@ -201,8 +185,7 @@ materialDepot[17] = {
 	["tools"] = 2,
 	["tiles"] = 2,
 	["pulley"] = 2,
-	["buildTime"] = 46800,
-	["citizen"] = 0
+	["buildTime"] = 46800
 }
 materialDepot[18] = {
 	["level"] = 18,
@@ -213,8 +196,7 @@ materialDepot[18] = {
 	["tools"] = 3,
 	["tiles"] = 3,
 	["pulley"] = 3,
-	["buildTime"] = 51480,
-	["citizen"] = 0
+	["buildTime"] = 51480
 }
 materialDepot[19] = {
 	["level"] = 19,
@@ -225,8 +207,7 @@ materialDepot[19] = {
 	["tools"] = 7,
 	["tiles"] = 7,
 	["pulley"] = 7,
-	["buildTime"] = 56160,
-	["citizen"] = 0
+	["buildTime"] = 56160
 }
 materialDepot[20] = {
 	["level"] = 20,
@@ -237,8 +218,7 @@ materialDepot[20] = {
 	["tools"] = 12,
 	["tiles"] = 12,
 	["pulley"] = 12,
-	["buildTime"] = 60840,
-	["citizen"] = 0
+	["buildTime"] = 60840
 }
 materialDepot[21] = {
 	["level"] = 21,
@@ -249,8 +229,7 @@ materialDepot[21] = {
 	["tools"] = 20,
 	["tiles"] = 20,
 	["pulley"] = 20,
-	["buildTime"] = 65520,
-	["citizen"] = 0
+	["buildTime"] = 65520
 }
 materialDepot[22] = {
 	["level"] = 22,
@@ -261,8 +240,7 @@ materialDepot[22] = {
 	["tools"] = 30,
 	["tiles"] = 30,
 	["pulley"] = 30,
-	["buildTime"] = 70200,
-	["citizen"] = 0
+	["buildTime"] = 70200
 }
 materialDepot[23] = {
 	["level"] = 23,
@@ -273,8 +251,7 @@ materialDepot[23] = {
 	["tools"] = 45,
 	["tiles"] = 45,
 	["pulley"] = 45,
-	["buildTime"] = 74880,
-	["citizen"] = 0
+	["buildTime"] = 74880
 }
 materialDepot[24] = {
 	["level"] = 24,
@@ -285,8 +262,7 @@ materialDepot[24] = {
 	["tools"] = 63,
 	["tiles"] = 63,
 	["pulley"] = 63,
-	["buildTime"] = 84240,
-	["citizen"] = 0
+	["buildTime"] = 84240
 }
 materialDepot[25] = {
 	["level"] = 25,
@@ -297,8 +273,7 @@ materialDepot[25] = {
 	["tools"] = 86,
 	["tiles"] = 86,
 	["pulley"] = 86,
-	["buildTime"] = 93600,
-	["citizen"] = 0
+	["buildTime"] = 93600
 }
 materialDepot[26] = {
 	["level"] = 26,
@@ -309,8 +284,7 @@ materialDepot[26] = {
 	["tools"] = 113,
 	["tiles"] = 113,
 	["pulley"] = 113,
-	["buildTime"] = 102960,
-	["citizen"] = 0
+	["buildTime"] = 102960
 }
 materialDepot[27] = {
 	["level"] = 27,
@@ -321,8 +295,7 @@ materialDepot[27] = {
 	["tools"] = 147,
 	["tiles"] = 147,
 	["pulley"] = 147,
-	["buildTime"] = 112320,
-	["citizen"] = 0
+	["buildTime"] = 112320
 }
 materialDepot[28] = {
 	["level"] = 28,
@@ -333,8 +306,7 @@ materialDepot[28] = {
 	["tools"] = 186,
 	["tiles"] = 186,
 	["pulley"] = 186,
-	["buildTime"] = 121680,
-	["citizen"] = 0
+	["buildTime"] = 121680
 }
 materialDepot[29] = {
 	["level"] = 29,
@@ -345,8 +317,7 @@ materialDepot[29] = {
 	["tools"] = 232,
 	["tiles"] = 232,
 	["pulley"] = 232,
-	["buildTime"] = 131040,
-	["citizen"] = 0
+	["buildTime"] = 131040
 }
 materialDepot[30] = {
 	["level"] = 30,
@@ -357,8 +328,7 @@ materialDepot[30] = {
 	["tools"] = 284,
 	["tiles"] = 284,
 	["pulley"] = 284,
-	["buildTime"] = 140400,
-	["citizen"] = 0
+	["buildTime"] = 140400
 }
 materialDepot[31] = {
 	["level"] = 31,
@@ -369,8 +339,7 @@ materialDepot[31] = {
 	["tools"] = 345,
 	["tiles"] = 345,
 	["pulley"] = 345,
-	["buildTime"] = 149760,
-	["citizen"] = 0
+	["buildTime"] = 149760
 }
 materialDepot[32] = {
 	["level"] = 32,
@@ -381,8 +350,7 @@ materialDepot[32] = {
 	["tools"] = 413,
 	["tiles"] = 413,
 	["pulley"] = 413,
-	["buildTime"] = 159120,
-	["citizen"] = 0
+	["buildTime"] = 159120
 }
 materialDepot[33] = {
 	["level"] = 33,
@@ -393,8 +361,7 @@ materialDepot[33] = {
 	["tools"] = 490,
 	["tiles"] = 490,
 	["pulley"] = 490,
-	["buildTime"] = 168480,
-	["citizen"] = 0
+	["buildTime"] = 168480
 }
 materialDepot[34] = {
 	["level"] = 34,
@@ -405,8 +372,7 @@ materialDepot[34] = {
 	["tools"] = 575,
 	["tiles"] = 575,
 	["pulley"] = 575,
-	["buildTime"] = 177840,
-	["citizen"] = 0
+	["buildTime"] = 177840
 }
 materialDepot[35] = {
 	["level"] = 35,
@@ -417,8 +383,7 @@ materialDepot[35] = {
 	["tools"] = 671,
 	["tiles"] = 671,
 	["pulley"] = 671,
-	["buildTime"] = 187200,
-	["citizen"] = 0
+	["buildTime"] = 187200
 }
 materialDepot[36] = {
 	["level"] = 36,
@@ -429,8 +394,7 @@ materialDepot[36] = {
 	["tools"] = 776,
 	["tiles"] = 776,
 	["pulley"] = 776,
-	["buildTime"] = 196560,
-	["citizen"] = 0
+	["buildTime"] = 196560
 }
 materialDepot[37] = {
 	["level"] = 37,
@@ -441,8 +405,7 @@ materialDepot[37] = {
 	["tools"] = 892,
 	["tiles"] = 892,
 	["pulley"] = 892,
-	["buildTime"] = 205920,
-	["citizen"] = 0
+	["buildTime"] = 205920
 }
 materialDepot[38] = {
 	["level"] = 38,
@@ -453,8 +416,7 @@ materialDepot[38] = {
 	["tools"] = 1018,
 	["tiles"] = 1018,
 	["pulley"] = 1018,
-	["buildTime"] = 215280,
-	["citizen"] = 0
+	["buildTime"] = 215280
 }
 materialDepot[39] = {
 	["level"] = 39,
@@ -465,8 +427,7 @@ materialDepot[39] = {
 	["tools"] = 1160,
 	["tiles"] = 1160,
 	["pulley"] = 1160,
-	["buildTime"] = 224640,
-	["citizen"] = 0
+	["buildTime"] = 224640
 }
 materialDepot[40] = {
 	["level"] = 40,
@@ -477,6 +438,5 @@ materialDepot[40] = {
 	["tools"] = 1300,
 	["tiles"] = 1300,
 	["pulley"] = 1300,
-	["buildTime"] = 234000,
-	["citizen"] = 0
+	["buildTime"] = 234000
 }

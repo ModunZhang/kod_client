@@ -9,8 +9,7 @@ keep[1] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 60,
-	["citizen"] = 0
+	["buildTime"] = 60
 }
 keep[2] = {
 	["level"] = 2,
@@ -21,8 +20,7 @@ keep[2] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 120,
-	["citizen"] = 0
+	["buildTime"] = 120
 }
 keep[3] = {
 	["level"] = 3,
@@ -33,8 +31,7 @@ keep[3] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 300,
-	["citizen"] = 0
+	["buildTime"] = 300
 }
 keep[4] = {
 	["level"] = 4,
@@ -45,8 +42,7 @@ keep[4] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 600,
-	["citizen"] = 0
+	["buildTime"] = 600
 }
 keep[5] = {
 	["level"] = 5,
@@ -57,8 +53,7 @@ keep[5] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 1200,
-	["citizen"] = 0
+	["buildTime"] = 1200
 }
 keep[6] = {
 	["level"] = 6,
@@ -69,8 +64,7 @@ keep[6] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 2400,
-	["citizen"] = 0
+	["buildTime"] = 2400
 }
 keep[7] = {
 	["level"] = 7,
@@ -81,8 +75,7 @@ keep[7] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 3600,
-	["citizen"] = 0
+	["buildTime"] = 3600
 }
 keep[8] = {
 	["level"] = 8,
@@ -93,8 +86,7 @@ keep[8] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 7200,
-	["citizen"] = 0
+	["buildTime"] = 7200
 }
 keep[9] = {
 	["level"] = 9,
@@ -105,8 +97,7 @@ keep[9] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 14400,
-	["citizen"] = 0
+	["buildTime"] = 14400
 }
 keep[10] = {
 	["level"] = 10,
@@ -117,8 +108,7 @@ keep[10] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 21600,
-	["citizen"] = 0
+	["buildTime"] = 21600
 }
 keep[11] = {
 	["level"] = 11,
@@ -129,8 +119,7 @@ keep[11] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 28800,
-	["citizen"] = 0
+	["buildTime"] = 28800
 }
 keep[12] = {
 	["level"] = 12,
@@ -141,8 +130,7 @@ keep[12] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 36000,
-	["citizen"] = 0
+	["buildTime"] = 36000
 }
 keep[13] = {
 	["level"] = 13,
@@ -153,8 +141,7 @@ keep[13] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 43200,
-	["citizen"] = 0
+	["buildTime"] = 43200
 }
 keep[14] = {
 	["level"] = 14,
@@ -165,8 +152,7 @@ keep[14] = {
 	["tools"] = 1,
 	["tiles"] = 1,
 	["pulley"] = 1,
-	["buildTime"] = 50400,
-	["citizen"] = 0
+	["buildTime"] = 50400
 }
 keep[15] = {
 	["level"] = 15,
@@ -177,8 +163,7 @@ keep[15] = {
 	["tools"] = 2,
 	["tiles"] = 2,
 	["pulley"] = 2,
-	["buildTime"] = 57600,
-	["citizen"] = 0
+	["buildTime"] = 57600
 }
 keep[16] = {
 	["level"] = 16,
@@ -189,8 +174,7 @@ keep[16] = {
 	["tools"] = 4,
 	["tiles"] = 4,
 	["pulley"] = 4,
-	["buildTime"] = 64800,
-	["citizen"] = 0
+	["buildTime"] = 64800
 }
 keep[17] = {
 	["level"] = 17,
@@ -201,8 +185,7 @@ keep[17] = {
 	["tools"] = 7,
 	["tiles"] = 7,
 	["pulley"] = 7,
-	["buildTime"] = 72000,
-	["citizen"] = 0
+	["buildTime"] = 72000
 }
 keep[18] = {
 	["level"] = 18,
@@ -213,8 +196,7 @@ keep[18] = {
 	["tools"] = 13,
 	["tiles"] = 13,
 	["pulley"] = 13,
-	["buildTime"] = 79200,
-	["citizen"] = 0
+	["buildTime"] = 79200
 }
 keep[19] = {
 	["level"] = 19,
@@ -225,8 +207,7 @@ keep[19] = {
 	["tools"] = 21,
 	["tiles"] = 21,
 	["pulley"] = 21,
-	["buildTime"] = 86400,
-	["citizen"] = 0
+	["buildTime"] = 86400
 }
 keep[20] = {
 	["level"] = 20,
@@ -237,8 +218,7 @@ keep[20] = {
 	["tools"] = 32,
 	["tiles"] = 32,
 	["pulley"] = 32,
-	["buildTime"] = 93600,
-	["citizen"] = 0
+	["buildTime"] = 93600
 }
 keep[21] = {
 	["level"] = 21,
@@ -249,8 +229,7 @@ keep[21] = {
 	["tools"] = 46,
 	["tiles"] = 46,
 	["pulley"] = 46,
-	["buildTime"] = 100800,
-	["citizen"] = 0
+	["buildTime"] = 100800
 }
 keep[22] = {
 	["level"] = 22,
@@ -261,8 +240,7 @@ keep[22] = {
 	["tools"] = 65,
 	["tiles"] = 65,
 	["pulley"] = 65,
-	["buildTime"] = 108000,
-	["citizen"] = 0
+	["buildTime"] = 108000
 }
 keep[23] = {
 	["level"] = 23,
@@ -273,8 +251,7 @@ keep[23] = {
 	["tools"] = 88,
 	["tiles"] = 88,
 	["pulley"] = 88,
-	["buildTime"] = 115200,
-	["citizen"] = 0
+	["buildTime"] = 115200
 }
 keep[24] = {
 	["level"] = 24,
@@ -285,8 +262,7 @@ keep[24] = {
 	["tools"] = 102,
 	["tiles"] = 102,
 	["pulley"] = 102,
-	["buildTime"] = 129600,
-	["citizen"] = 0
+	["buildTime"] = 129600
 }
 keep[25] = {
 	["level"] = 25,
@@ -297,8 +273,7 @@ keep[25] = {
 	["tools"] = 135,
 	["tiles"] = 135,
 	["pulley"] = 135,
-	["buildTime"] = 144000,
-	["citizen"] = 0
+	["buildTime"] = 144000
 }
 keep[26] = {
 	["level"] = 26,
@@ -309,8 +284,7 @@ keep[26] = {
 	["tools"] = 189,
 	["tiles"] = 189,
 	["pulley"] = 189,
-	["buildTime"] = 158400,
-	["citizen"] = 0
+	["buildTime"] = 158400
 }
 keep[27] = {
 	["level"] = 27,
@@ -321,8 +295,7 @@ keep[27] = {
 	["tools"] = 235,
 	["tiles"] = 235,
 	["pulley"] = 235,
-	["buildTime"] = 172800,
-	["citizen"] = 0
+	["buildTime"] = 172800
 }
 keep[28] = {
 	["level"] = 28,
@@ -333,8 +306,7 @@ keep[28] = {
 	["tools"] = 288,
 	["tiles"] = 288,
 	["pulley"] = 288,
-	["buildTime"] = 187200,
-	["citizen"] = 0
+	["buildTime"] = 187200
 }
 keep[29] = {
 	["level"] = 29,
@@ -345,8 +317,7 @@ keep[29] = {
 	["tools"] = 320,
 	["tiles"] = 320,
 	["pulley"] = 320,
-	["buildTime"] = 201600,
-	["citizen"] = 0
+	["buildTime"] = 201600
 }
 keep[30] = {
 	["level"] = 30,
@@ -357,8 +328,7 @@ keep[30] = {
 	["tools"] = 390,
 	["tiles"] = 390,
 	["pulley"] = 390,
-	["buildTime"] = 216000,
-	["citizen"] = 0
+	["buildTime"] = 216000
 }
 keep[31] = {
 	["level"] = 31,
@@ -369,8 +339,7 @@ keep[31] = {
 	["tools"] = 494,
 	["tiles"] = 494,
 	["pulley"] = 494,
-	["buildTime"] = 230400,
-	["citizen"] = 0
+	["buildTime"] = 230400
 }
 keep[32] = {
 	["level"] = 32,
@@ -381,8 +350,7 @@ keep[32] = {
 	["tools"] = 580,
 	["tiles"] = 580,
 	["pulley"] = 580,
-	["buildTime"] = 244800,
-	["citizen"] = 0
+	["buildTime"] = 244800
 }
 keep[33] = {
 	["level"] = 33,
@@ -393,8 +361,7 @@ keep[33] = {
 	["tools"] = 675,
 	["tiles"] = 675,
 	["pulley"] = 675,
-	["buildTime"] = 259200,
-	["citizen"] = 0
+	["buildTime"] = 259200
 }
 keep[34] = {
 	["level"] = 34,
@@ -405,8 +372,7 @@ keep[34] = {
 	["tools"] = 781,
 	["tiles"] = 781,
 	["pulley"] = 781,
-	["buildTime"] = 273600,
-	["citizen"] = 0
+	["buildTime"] = 273600
 }
 keep[35] = {
 	["level"] = 35,
@@ -417,8 +383,7 @@ keep[35] = {
 	["tools"] = 897,
 	["tiles"] = 897,
 	["pulley"] = 897,
-	["buildTime"] = 288000,
-	["citizen"] = 0
+	["buildTime"] = 288000
 }
 keep[36] = {
 	["level"] = 36,
@@ -429,8 +394,7 @@ keep[36] = {
 	["tools"] = 1024,
 	["tiles"] = 1024,
 	["pulley"] = 1024,
-	["buildTime"] = 302400,
-	["citizen"] = 0
+	["buildTime"] = 302400
 }
 keep[37] = {
 	["level"] = 37,
@@ -441,8 +405,7 @@ keep[37] = {
 	["tools"] = 1162,
 	["tiles"] = 1162,
 	["pulley"] = 1162,
-	["buildTime"] = 316800,
-	["citizen"] = 0
+	["buildTime"] = 316800
 }
 keep[38] = {
 	["level"] = 38,
@@ -453,8 +416,7 @@ keep[38] = {
 	["tools"] = 1313,
 	["tiles"] = 1313,
 	["pulley"] = 1313,
-	["buildTime"] = 331200,
-	["citizen"] = 0
+	["buildTime"] = 331200
 }
 keep[39] = {
 	["level"] = 39,
@@ -465,8 +427,7 @@ keep[39] = {
 	["tools"] = 1476,
 	["tiles"] = 1476,
 	["pulley"] = 1476,
-	["buildTime"] = 345600,
-	["citizen"] = 0
+	["buildTime"] = 345600
 }
 keep[40] = {
 	["level"] = 40,
@@ -477,6 +438,5 @@ keep[40] = {
 	["tools"] = 1652,
 	["tiles"] = 1652,
 	["pulley"] = 1652,
-	["buildTime"] = 360000,
-	["citizen"] = 0
+	["buildTime"] = 360000
 }
