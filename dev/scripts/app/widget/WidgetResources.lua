@@ -119,7 +119,7 @@ function WidgetResources:InitAllResources()
         coin = {
             resource_icon="coin_icon.png",
             resource_current_value=crm:GetCoinResource():GetResourceValueByCurrentTime(current_time),
-            total_income=8888,
+            total_income=crm:GetCoinResource():GetProductionPerHour().."/h",
             occupy_citizen=self.city:GetResourceManager():GetPopulationResource():GetNoneAllocatedByTime(current_time),
             type = "coin"
         },
@@ -241,6 +241,16 @@ function WidgetResources:AddResourceItem(parms)
             align = ui.TEXT_ALIGN_CENTER,
             color = UIKit:hex2c3b(0x403c2f),
         }):align(display.LEFT_CENTER, -155, 40):addTo(content)
+        -- 单位产能
+        item.produce_capacity = createTipItem({
+            title = _("单位产能"),
+            title_color = UIKit:hex2c3b(0x797154),
+            value = total_income ,
+            value_color = UIKit:hex2c3b(0x403c2f),
+            x = 40,
+            y = -10
+        })
+        content:addWidget(item.produce_capacity)
         -- item.resource_label:setAnchorPoint(cc.p(0,0.5))
         -- item.resource_label:pos(-125, 40)
         -- 是否在征税

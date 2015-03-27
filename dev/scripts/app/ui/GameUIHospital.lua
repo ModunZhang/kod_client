@@ -381,7 +381,10 @@ function GameUIHospital:CreateItemWithListView(list_view)
     local row_item = display.newNode()
     local treat_soldier_map = City:GetSoldierManager():GetTreatSoldierMap()
     local row_count = -1
-    for i,soldier_name in pairs(GameUIHospital.SOLDIERS_NAME) do
+    for i, soldier_name in ipairs({
+        "swordsman", "ranger", "lancer", "catapult",
+        "sentinel", "crossbowman", "horseArcher", "ballista"
+    }) do
         local soldier_number = treat_soldier_map[soldier_name] or 0
         row_count = row_count + 1
         local soldier = WidgetSoldierBox.new("",function ()
@@ -408,8 +411,9 @@ function GameUIHospital:CreateItemWithListView(list_view)
             end
         end):addTo(row_item)
             :alignByPoint(cc.p(0.5,0.5), origin_x + (unit_width + gap_x) * row_count + unit_width / 2, 0)
-            :SetNumber(soldier_number)
         soldier:SetSoldier(soldier_name,1)
+        soldier:SetNumber(soldier_number)
+        soldier:Enable(soldier_number>0)
         self.treat_soldier_boxes_table[soldier_name] = soldier
         if row_count>2 then
             local item = list_view:newItem()
@@ -440,6 +444,7 @@ function GameUIHospital:OnTreatSoliderCountChanged(soldier_manager, treat_soldie
     for k,soldier_type in pairs(treat_soldier_changed) do
         local changed_treat_soldier_num = soldier_manager:GetTreatCountBySoldierType(soldier_type)
         self.treat_soldier_boxes_table[soldier_type]:SetNumber(changed_treat_soldier_num)
+        self.treat_soldier_boxes_table[soldier_type]:Enable(soldier_number>0)
         self.treat_soldier_boxes_table[soldier_type]:SetButtonListener(function ()
             local widget = WidgetTreatSoldier.new(soldier_type,
                 1,
@@ -496,6 +501,10 @@ function GameUIHospital:OnTreatSoliderCountChanged(soldier_manager, treat_soldie
 end
 
 return GameUIHospital
+
+
+
+
 
 
 
