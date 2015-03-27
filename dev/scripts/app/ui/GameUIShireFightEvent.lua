@@ -37,7 +37,6 @@ end
 
 function GameUIShireFightEvent:OnAttackMarchEventDataChanged(change_map)
 	if change_map.added or change_map.removed then
-		self.dispath_button:setButtonEnabled(self:GetAllianceShrine():CheckSelfCanDispathSoldiers())
 		self.popultaion_label:setString(#self:GetFightEvent():PlayerTroops() .. "/" .. self:GetFightEvent():Stage():SuggestPlayer())
 		self:RefreshListView()
 	end
@@ -129,7 +128,6 @@ function GameUIShireFightEvent:BuildUI()
 		:onButtonClicked(function()
 			self:DispathSoliderButtonClicked()
 		end)
-		:setButtonEnabled(self:GetAllianceShrine():CheckSelfCanDispathSoldiers())
 	self.dispath_button = dispath_button
 	local tips_box = UIKit:CreateBoxPanel9({width=574,height=102}):addTo(background):align(display.TOP_CENTER,304, title_bar:getPositionY()- 10)
 	UIKit:ttfLabel({
@@ -279,6 +277,10 @@ function GameUIShireFightEvent:GetAllianceShrineLocation()
 end
 
 function GameUIShireFightEvent:DispathSoliderButtonClicked()
+	if not self:GetAllianceShrine():CheckSelfCanDispathSoldiers() then
+		UIKit:showMessageDialog(nil,_("你已经向圣地派遣了部队"))
+		return
+	end
 	UIKit:newGameUI("GameUIAllianceSendTroops",function(dragonType,soldiers)
 		NetManager:getMarchToShrinePromose(self:GetFightEvent():Id(),dragonType,soldiers):catch(function(err)
 			dump(err:reason())

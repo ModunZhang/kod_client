@@ -389,7 +389,7 @@ function GameUIHospital:CreateItemWithListView(list_view)
                 local widget = WidgetTreatSoldier.new(soldier_name,
                     1,
                     soldier_number)
-                    :addTo(self)
+                    :addTo(self,1000)
                     :align(display.CENTER, window.cx, 500 / 2)
                     :OnBlankClicked(function(widget)
                         City:GetResourceManager():RemoveObserver(widget)
@@ -444,7 +444,7 @@ function GameUIHospital:OnTreatSoliderCountChanged(soldier_manager, treat_soldie
             local widget = WidgetTreatSoldier.new(soldier_type,
                 1,
                 changed_treat_soldier_num)
-                :addTo(self)
+                :addTo(self,1000)
                 :align(display.CENTER, window.cx, 500 / 2)
                 :OnBlankClicked(function(widget)
                     City:GetResourceManager():RemoveObserver(widget)

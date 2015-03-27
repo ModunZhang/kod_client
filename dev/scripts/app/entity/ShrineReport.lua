@@ -56,22 +56,31 @@ function ShrinePlayFightReport:ctor(attackName,defenceName,attackDragonRoundData
 	self.defenceDragonRoundData = defenceDragonRoundData
 	self.fightAttackSoldierRoundData = fightAttackSoldierRoundData
 	self.fightDefenceSoldierRoundData = fightDefenceSoldierRoundData
+	for __,v in ipairs(fightAttackSoldierRoundData) do
+		v.name = v.soldierName
+		v.star = v.soldierStar
+	end
+	for __,v in ipairs(fightDefenceSoldierRoundData) do
+		v.name = v.soldierName
+		v.star = v.soldierStar
+	end
 end
 
+
 function ShrinePlayFightReport:GetFightAttackName()
-    return self.attackName
+  	return self.attackName
 end
 function ShrinePlayFightReport:GetFightDefenceName()
-   return self.defenceName
+   	return self.defenceName
 end
 function ShrinePlayFightReport:IsDragonFight()
-    return true
+ 	return true
 end
 function ShrinePlayFightReport:GetFightAttackDragonRoundData()
-   return self.attackDragonRoundData or {}
+ 	return self.attackDragonRoundData or {}
 end
 function ShrinePlayFightReport:GetFightDefenceDragonRoundData()
-   return self.defenceDragonRoundData or {}
+   	return self.defenceDragonRoundData or {}
 end
 function ShrinePlayFightReport:GetFightAttackSoldierRoundData()
     return self.fightAttackSoldierRoundData or {}
@@ -80,14 +89,18 @@ function ShrinePlayFightReport:GetFightDefenceSoldierRoundData()
     return self.fightDefenceSoldierRoundData or {}
 end
 function ShrinePlayFightReport:IsFightWall()
-    return false
+  	return false 
 end
 function ShrinePlayFightReport:GetFightAttackWallRoundData()
-    return {}
+   	return {}
 end
-
 function ShrinePlayFightReport:GetFightDefenceWallRoundData()
     return {}
 end
-
+function ShrinePlayFightReport:GetOrderedAttackSoldiers()
+   return self.fightAttackSoldierRoundData or {}
+end
+function ShrinePlayFightReport:GetOrderedDefenceSoldiers()
+   return self.fightDefenceSoldierRoundData or {}
+end
 return ShrineReport
