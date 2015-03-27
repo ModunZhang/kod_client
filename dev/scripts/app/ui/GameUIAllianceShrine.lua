@@ -544,6 +544,17 @@ function GameUIAllianceShrine:GetReportsItem(report)
 		:onButtonClicked(function()
 			self:OnReportButtonClicked(report)
 		end)
+	local date_label = UIKit:ttfLabel({
+		text = os.date("%Y-%m-%d",report:Time()),
+		size = 20,
+		color = 0x403c2f,
+	}):align(display.CENTER_TOP, button:getPositionX() - 71, box:getPositionY()):addTo(bg)
+
+	local time_label = UIKit:ttfLabel({
+		text = os.date("%H:%M:%S",report:Time()),
+		size = 20,
+		color = 0x403c2f,
+	}):align(display.CENTER_TOP, date_label:getPositionX(), date_label:getPositionY() - date_label:getContentSize().height - 4):addTo(bg)
 	return bg	
 end
 
