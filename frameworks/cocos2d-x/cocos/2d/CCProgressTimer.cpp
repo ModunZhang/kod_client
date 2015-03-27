@@ -243,6 +243,28 @@ GLubyte ProgressTimer::getOpacity() const
     return _sprite->getOpacity();
 }
 
+void ProgressTimer::updateDisplayedOpacity(GLubyte parentOpacity)
+{
+    _sprite->updateDisplayedOpacity(parentOpacity);
+    _displayedOpacity = _realOpacity * parentOpacity/255.0;
+     updateColor();
+    if (_cascadeOpacityEnabled)
+    {
+        for(auto child : _children)
+        {
+            child->updateDisplayedOpacity(_displayedOpacity);
+        }
+    }
+
+}
+
+
+void ProgressTimer::setCascadeOpacityEnabled(bool cascadeOpacityEnabled)
+{
+    Node::setCascadeColorEnabled(cascadeOpacityEnabled);
+    _sprite->setCascadeColorEnabled(cascadeOpacityEnabled);
+}
+
 void ProgressTimer::setMidpoint(const Vec2& midPoint)
 {
     _midpoint = midPoint.getClampPoint(Vec2::ZERO, Vec2(1, 1));
