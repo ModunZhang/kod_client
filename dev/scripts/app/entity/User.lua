@@ -430,6 +430,7 @@ function User:OnBasicInfoChanged(userData, deltaData)
         self:SetIcon(basicInfo.icon)
         self:SetMarchQueue(basicInfo.marchQueue)
     end
+    return self
 end
 function User:OnDailyQuestsChanged(userData, deltaData)
     local is_fully_update = deltaData == nil

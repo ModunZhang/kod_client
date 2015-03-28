@@ -160,6 +160,7 @@ function GameUILogin:login()
         end, 0.5) 
     end):catch(function(err)
         if err:isSyntaxError() then
+            dump(err)
             return
         else
             local content, title = err:reason()

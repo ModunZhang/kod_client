@@ -985,8 +985,11 @@ function City:OnUserDataChanged(userData, current_time, deltaData)
     if is_delta_update then
         need_update_resouce_buildings = true
     end
-    local resource_refresh_time = userData.resources.refreshTime / 1000
-    self.resource_manager:UpdateFromUserDataByTime(userData.resources, resource_refresh_time)
+    local resource_refresh_time = current_time
+    if userData.resources then
+        resource_refresh_time = userData.resources.refreshTime / 1000
+        self.resource_manager:UpdateFromUserDataByTime(userData.resources, resource_refresh_time)
+    end
     if need_update_resouce_buildings then
         self.resource_manager:UpdateByCity(self, resource_refresh_time)
     end
@@ -1356,7 +1359,7 @@ function City:OnHelpedByTroopsDataChange(userData, deltaData)
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.helpedByTroops
     if is_fully_update or is_delta_update then
-        self.helpedByTroops = userData.helpedByTroops
+        self.helpedByTroops = userData.helpedByTroops or {}
         self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_BY_TROOPS, function(listener)
             listener:OnHelpedTroopsChanged(self)
         end)
@@ -1367,7 +1370,7 @@ function City:OnHelpToTroopsDataChange(userData, deltaData)
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.helpToTroops
     if is_fully_update or is_delta_update then
-        for _,v in ipairs(userData.helpToTroops) do
+        for _,v in ipairs(userData.helpToTroops or {}) do
             if not self.helpToTroops[v.beHelpedPlayerData.id] then
                 self.helpToTroops[v.beHelpedPlayerData.id] = v
             end
@@ -1575,6 +1578,7 @@ function City:FindProductionTechEventById(_id)
 end
 
 return City
+
 
 
 
