@@ -145,6 +145,9 @@ end
 function BarracksUpgradeBuilding:OnUserDataChanged(...)
     BarracksUpgradeBuilding.super.OnUserDataChanged(self, ...)
     local userData, current_time, location_id, sub_location_id, deltaData = ...
+
+    if not userData.soldierEvents then return end
+
     local is_fully_update = deltaData == nil
     local is_delta_update = self:IsUnlocked() and deltaData and deltaData.soldierEvents
     if not is_fully_update and not is_delta_update then

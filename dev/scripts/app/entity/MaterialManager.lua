@@ -92,6 +92,7 @@ function MaterialManager:OnUserDataChanged(userData, deltaData)
     end
 end
 function MaterialManager:OnMaterialsComing(material_type, materials)
+    if not materials then return end
     local changed = {}
     local old_materials = self.material_map[material_type]
     for k, old in pairs(old_materials) do
@@ -101,15 +102,15 @@ function MaterialManager:OnMaterialsComing(material_type, materials)
             changed[k] = {old = old, new = new}
         end
     end
-    for _, _ in pairs(changed) do
+    if next(changed) then
         self:NotifyObservers(function(listener)
             listener:OnMaterialsChanged(self, material_type, changed)
         end)
-        break
     end
 end
 
 return MaterialManager
+
 
 
 

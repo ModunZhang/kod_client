@@ -145,7 +145,7 @@ function GameUICityInfo:CreateTop()
     ):addTo(top_bg):align(display.CENTER, ox + 195, 50)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                UIKit:newGameUI('GameUIVip', City,"VIP"):AddToCurrentScene(true)
+                -- UIKit:newGameUI('GameUIVip', City,"VIP"):AddToCurrentScene(true)
             end
         end)
     self.vip_level = display.newNode():addTo(vip_btn):pos(-3, 15):scale(0.8)

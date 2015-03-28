@@ -44,7 +44,7 @@ function WidgetEventTabButtons:OnDestoryDecorator()
     self:EventChangeOn("build")
 end
 function WidgetEventTabButtons:OnUpgradingBegin(building, current_time, city)
-    self:EventChangeOn("build")
+    self:EventChangeOn("build", true)
     self:RefreshBuildQueueByType("build")
 end
 function WidgetEventTabButtons:OnUpgrading(building, current_time, city)
@@ -63,7 +63,7 @@ function WidgetEventTabButtons:OnUpgradingFinished(building, city)
 end
 -- 兵营事件
 function WidgetEventTabButtons:OnBeginRecruit(barracks, event)
-    self:EventChangeOn("soldier")
+    self:EventChangeOn("soldier", true)
 end
 function WidgetEventTabButtons:OnRecruiting(barracks, event, current_time)
     if self:IsShow() and self:GetCurrentTab() == "soldier" then
@@ -79,7 +79,7 @@ function WidgetEventTabButtons:OnEndRecruit(barracks, event, current_time)
 end
 -- 装备事件
 function WidgetEventTabButtons:OnBeginMakeEquipmentWithEvent(black_smith, event)
-    self:EventChangeOn("material")
+    self:EventChangeOn("material", true)
 end
 function WidgetEventTabButtons:OnMakingEquipmentWithEvent(black_smith, event, current_time)
     if self:IsShow() and self:GetCurrentTab() == "material" then
@@ -95,7 +95,7 @@ function WidgetEventTabButtons:OnEndMakeEquipmentWithEvent(black_smith, event, e
 end
 -- 材料事件
 function WidgetEventTabButtons:OnBeginMakeMaterialsWithEvent(tool_shop, event)
-    self:EventChangeOn("material")
+    self:EventChangeOn("material", true)
 end
 function WidgetEventTabButtons:OnMakingMaterialsWithEvent(tool_shop, event, current_time)
     if self:IsShow() and self:GetCurrentTab() == "material" then
@@ -194,7 +194,6 @@ function WidgetEventTabButtons:ctor(city, ratio)
 
     self:Reset()
     self:ShowStartEvent()
-    self.tab_map["build"]:SetSelect(true)
     self:RefreshBuildQueueByType("build", "soldier", "material", "technology")
 end
 function WidgetEventTabButtons:RefreshBuildQueueByType(...)
@@ -234,13 +233,27 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
     end
 end
 function WidgetEventTabButtons:ShowStartEvent()
-    if #self.city:GetUpgradingBuildings() > 0 then
+    if self:HasAnyBuildingEvent() then
         return self:PromiseOfShowTab("build")
-    elseif self.barracks:IsRecruting() then
+    elseif self:HasAnySoldierEvent() then
         return self:PromiseOfShowTab("soldier")
-    elseif self.blackSmith:IsMakingEquipment() or self.toolShop:IsMakingAny(timer:GetServerTime()) then
+    elseif self:HasAnyMaterialEvent() then
         return self:PromiseOfShowTab("material")
+    elseif self:HasAnyTechnologyEvent() then
+        return self:PromiseOfShowTab("technology")
     end
+end
+function WidgetEventTabButtons:HasAnyBuildingEvent()
+    return #self.city:GetUpgradingBuildings() > 0
+end
+function WidgetEventTabButtons:HasAnySoldierEvent()
+    return self.barracks:IsRecruting()
+end
+function WidgetEventTabButtons:HasAnyMaterialEvent()
+    return self.blackSmith:IsMakingEquipment() or self.toolShop:IsMakingAny(timer:GetServerTime())
+end
+function WidgetEventTabButtons:HasAnyTechnologyEvent()
+    return self.city:GetSoldierManager():IsUpgradingAnyMilitaryTech() or self.city:HaveProductionTechEvent()
 end
 function WidgetEventTabButtons:onExit()
     self.toolShop:RemoveToolShopListener(self)
@@ -256,9 +269,6 @@ function WidgetEventTabButtons:onExit()
     self.city:RemoveListenerOnType(self,self.city.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH)
     self.city:RemoveListenerOnType(self,self.city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
     self.city:RemoveListenerOnType(self,self.city.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH)
-end
-function WidgetEventTabButtons:InsertEvent(func)
-    table.insert(self.event_queue, func)
 end
 -- 构造ui
 function WidgetEventTabButtons:CreateTabButtons()
@@ -488,7 +498,7 @@ function WidgetEventTabButtons:Reset()
     self:Lock(false)
 end
 function WidgetEventTabButtons:IsTabEnable(tab)
-    if tab == "build" then
+    if tab == "build" or tab == nil then
         return true
     elseif tab == "soldier" and self.barracks:IsUnlocked() then
         return true
@@ -754,6 +764,9 @@ function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp,event_key,
     end
 end
 function WidgetEventTabButtons:Load()
+    if not self:GetCurrentTab() then
+        self.tab_map["build"]:SetSelect(true)
+    end
     for k, v in pairs(self.tab_map) do
         if v:IsSelected() then
             self:HighLightTab(k)
@@ -998,10 +1011,11 @@ function WidgetEventTabButtons:OnProductionTechnologyEventTimer(event)
     end
 end
 function WidgetEventTabButtons:OnProductionTechnologyEventDataChanged(changed_map)
-   self:OnProductionTechnologyEventDataRefresh()
+   self:OnProductionTechnologyEventDataRefresh(changed_map)
 end
-function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh()
-    self:EventChangeOn("technology")
+function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh(changed_map)
+    changed_map = changed_map or {}
+    self:EventChangeOn("technology", next(changed_map.add or {}))
 end
 
 function WidgetEventTabButtons:ProductionTechnologyEventUpgradeOrSpeedup(event)
