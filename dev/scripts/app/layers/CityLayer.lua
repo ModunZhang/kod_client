@@ -628,6 +628,13 @@ function CityLayer:FindBuildingSpriteByBuilding(buildingEntity,city)
         end
     end)
     if find_sprite then return find_sprite end
+    table.foreach(self.ruins, function(k, ruin)
+        if ruin:GetEntity() == buildingEntity then
+            find_sprite = ruin
+            return true
+        end
+    end)
+    if find_sprite then return find_sprite end
     local near_tower = city:GetNearGateTower()
     if  near_tower == buildingEntity then
         table.foreach(self.towers, function(k, tower)

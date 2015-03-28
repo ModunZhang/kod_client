@@ -398,7 +398,7 @@ function UpgradeBuilding:GetPreConditionBuilding()
     else
         highest_level_building = city:GetNearGateTower()
     end
-    return highest_level_building or preName
+    return highest_level_building or city:GetRuinsNotBeenOccupied()[1] or preName
 end
 function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     local city = self:BelongCity()
