@@ -884,13 +884,13 @@ function NetManager:getFreeSpeedUpPromise(eventType, eventId)
 end
 -- 协助玩家加速
 function NetManager:getHelpAllianceMemberSpeedUpPromise(eventId)
-    return get_blocking_request_promise("logic.allianceHandler.helpAllianceMemberSpeedUp", {
+    return get_none_blocking_request_promise("logic.allianceHandler.helpAllianceMemberSpeedUp", {
         eventId = eventId,
     }, "协助玩家加速失败!"):next(get_response_msg)
 end
 -- 协助所有玩家加速
 function NetManager:getHelpAllAllianceMemberSpeedUpPromise()
-    return get_blocking_request_promise("logic.allianceHandler.helpAllAllianceMemberSpeedUp", {}
+    return get_none_blocking_request_promise("logic.allianceHandler.helpAllAllianceMemberSpeedUp", {}
         , "协助所有玩家加速失败!"):next(get_response_msg)
 end
 -- 创建联盟

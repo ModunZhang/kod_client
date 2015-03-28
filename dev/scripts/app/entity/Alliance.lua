@@ -279,12 +279,12 @@ function Alliance:HasBeenRequestedToHelpSpeedup(eventId)
         end
     end
 end
--- 获取其他所有联盟成员的申请帮助事件数量
+-- 获取其他所有联盟成员的申请的没有被自己帮助过的事件数量
 function Alliance:GetOtherRequestEventsNum()
     local request_num = 0
     if self.help_events then
         for _,h_event in pairs(self.help_events) do
-            if h_event:GetPlayerData():Id() ~= User:Id() then
+            if h_event:GetPlayerData():Id() ~= User:Id() and not h_event:IsHelpedByMe() then
                 request_num = request_num + 1
             end
         end
@@ -532,18 +532,24 @@ function Alliance:OnAllianceFightReportsChanged(alliance_data, deltaData)
     -- end
 end
 function Alliance:OnHelpEventsChanged(alliance_data,deltaData)
-    if not alliance_data.helpEvents then return end
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.helpEvents ~= nil
+
     if is_fully_update then
-        for _,v in pairs(alliance_data.helpEvents) do
-            self.help_events[v.id] = HelpEvent.new():UpdateData(v)
+        LuaUtils:outputTable("alliance_data.helpEvents", alliance_data.helpEvents)
+        print("ta")
+        if alliance_data.helpEvents then
+            for _,v in pairs(alliance_data.helpEvents) do
+                self.help_events[v.id] = HelpEvent.new():UpdateData(v)
+            end
+            self:NotifyListeneOnType(Alliance.LISTEN_TYPE.ALL_HELP_EVENTS, function(listener)
+                listener:OnAllHelpEventChanged(self.help_events)
+            end)
         end
-        self:NotifyListeneOnType(Alliance.LISTEN_TYPE.ALL_HELP_EVENTS, function(listener)
-            listener:OnAllHelpEventChanged(self.help_events)
-        end)
     end
     if is_delta_update then
+        LuaUtils:outputTable("deltaData.helpEvents", deltaData.helpEvents)
+        print("ta")
         local added = {}
         local removed = {}
         local edit = {}
@@ -1232,6 +1238,7 @@ function Alliance:NeedUpdateEnemyAlliance()
 end
 
 return Alliance
+
 
 
 

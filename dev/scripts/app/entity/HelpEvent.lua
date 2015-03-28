@@ -54,5 +54,14 @@ end
 function HelpEvent:GetEventData()
     return self.eventData
 end
+function HelpEvent:IsHelpedByMe()
+    local _id = User:Id()
+    local helpedMembers = self.eventData:HelpedMembers()
+    for k,id in pairs(helpedMembers) do
+        if id == _id then
+            return true
+        end
+    end
+end
 return HelpEvent
 
