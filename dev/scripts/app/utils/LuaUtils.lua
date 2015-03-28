@@ -76,7 +76,7 @@ end
 
 function LuaUtils:outputTable(name, t) 
     io.write((type(name) == "table" and "name" or name) .. ' = ')
-    self:printTable(name or t)
+    self:printTable(type(name) == "table" and name or t)
 end
 
 

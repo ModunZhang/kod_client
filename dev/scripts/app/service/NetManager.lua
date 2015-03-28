@@ -46,6 +46,10 @@ local function decodeInUserDataFromDeltaData(userData, deltaData)
                 if type(k) == "number" then k = k + 1 end
                 local parent_root = tmp
                 if i ~= len then
+                    if type(k) == "number" then
+                        tmp.edit = tmp.edit or {}
+                        table.insert(tmp.edit, curRoot[k])
+                    end
                     curRoot[k] = curRoot[k] or {}
                     curRoot = curRoot[k]
                     tmp[k] = tmp[k] or {}
@@ -81,6 +85,7 @@ local function get_response_msg(response)
     if response.msg.playerData then
         local user_data = DataManager:getUserData()
         local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
+        LuaUtils:outputTable(edit)
         DataManager:setUserData(user_data, edit)
         return response
     end
