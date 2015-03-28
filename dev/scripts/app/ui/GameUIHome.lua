@@ -561,7 +561,6 @@ function GameUIHome:CreateBottom()
         end
     end):addTo(self):pos(display.right-40, display.bottom+300)
     help_button:setVisible(not Alliance_Manager:GetMyAlliance():IsDefault())
-    help_button:setVisible(LuaUtils:table_size(Alliance_Manager:GetMyAlliance():GetAllHelpEvents())>0)
 
     -- 请求帮助的其他联盟成员请求帮助事件数量
     local request_help_num_bg = display.newSprite("mail_unread_bg_36x23.png"):addTo(help_button):pos(20,-20)
@@ -575,6 +574,7 @@ function GameUIHome:CreateBottom()
         }):align(display.CENTER,request_help_num_bg:getContentSize().width/2,request_help_num_bg:getContentSize().height/2+4)
         :addTo(request_help_num_bg)
     request_help_num_bg:setVisible(request_num>0)
+    help_button:setVisible(request_num>0)
     self.request_help_num_bg = request_help_num_bg
     self.help_button = help_button
 

@@ -70,9 +70,6 @@ function GameUIHelp:onEnter()
             if event.name == "CLICKED_EVENT" then
                 if self:IsAbleToHelpAll() then
                     NetManager:getHelpAllAllianceMemberSpeedUpPromise()
-                        :catch(function(err)
-                            dump(err:reason())
-                        end)
                 else
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))
                         :SetPopMessage(_("没有联盟成员需要协助加速"))
