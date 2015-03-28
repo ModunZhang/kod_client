@@ -7,7 +7,7 @@ local UIListView = import(".UIListView")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetPages = import("..widget.WidgetPages")
 local WidgetInfoNotListView = import("..widget.WidgetInfoNotListView")
-local WidgetInfo = import("..widget.WidgetInfo")
+local WidgetVIPInfo = import("..widget.WidgetVIPInfo")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 local Enum = import("..utils.Enum")
 local window = import("..utils.window")
@@ -49,23 +49,23 @@ local VIP_EFFECIVE_ALL_TYPE = Enum(
 
 -- VIP 效果总览
 local VIP_EFFECIVE_ALL = {
-    freeSpeedup = _("立即完成建筑时间%dmin"),
-    helpSpeedup = _("协助加速(城建和科技)+%d%%"),
-    woodProductionAdd = _("木材产量增加%d%%"),
-    stoneProductionAdd = _("石料产量增加%d%%"),
-    ironProductionAdd = _("铁矿产量增加%d%%"),
-    foodProductionAdd = _("粮食产量增加%d%%"),
-    citizenRecoveryAdd = _("城民增长速度%d%%"),
-    marchSpeedAdd = _("提升行军速度%d%%"),
-    normalGachaAdd = _("每日免费Gacha+%d"),
-    storageProtectAdd = _("暗仓保护上限提升%d%%"),
-    wallHpRecoveryAdd = _("城墙修复速度提升%d%%"),
-    dragonExpAdd =  _("巨龙获得经验值加成%d%%"),
-    dragonHpRecoveryAdd =  _("巨龙体力恢复速度%d%%"),
-    soldierAttackPowerAdd = _("所有军事单位攻击力提升%d%%"),
-    soldierHpAdd = _("所有军事单位防御力提升%d%%"),
-    dragonLeaderShipAdd = _("提升带兵上限%d%%"),
-    soldierConsumeSub = _("维护费用减少%d%%"),
+    freeSpeedup = _("立即完成建筑时间"),
+    helpSpeedup = _("协助加速(城建和科技)+"),
+    woodProductionAdd = _("木材产量增加"),
+    stoneProductionAdd = _("石料产量增加"),
+    ironProductionAdd = _("铁矿产量增加"),
+    foodProductionAdd = _("粮食产量增加"),
+    citizenRecoveryAdd = _("城民增长速度"),
+    marchSpeedAdd = _("提升行军速度"),
+    normalGachaAdd = _("每日免费Gacha+"),
+    storageProtectAdd = _("暗仓保护上限提升"),
+    wallHpRecoveryAdd = _("城墙修复速度提升"),
+    dragonExpAdd =  _("巨龙获得经验值加成"),
+    dragonHpRecoveryAdd =  _("巨龙体力恢复速度"),
+    soldierAttackPowerAdd = _("所有军事单位攻击力提升"),
+    soldierHpAdd = _("所有军事单位防御力提升"),
+    dragonLeaderShipAdd = _("提升带兵上限"),
+    soldierConsumeSub = _("维护费用减少"),
 }
 
 function GameUIVip:ctor(city,default_tag)
@@ -681,11 +681,43 @@ function GameUIVip:GetVIPInfoByLevel(level)
         local effect = VIP_LEVEL[level][v]
         if effect>0 then
             if effect<1 then
-                effect = tonumber(effect*100)
+                effect = tonumber(effect*100).."%"
             end
-
-            local tmp_tip = string.format(VIP_EFFECIVE_ALL[v],effect)
-            table.insert(info, {tmp_tip})
+            -- 特殊处理下 freeSpeedup
+            if v == "freeSpeedup" then
+                effect = effect .. _("分钟")
+            end
+            
+            if (level-1)>0 then
+                local previous_vip = VIP_LEVEL[level-1]
+                -- 上一等级的vip没有此项加成
+                if previous_vip[v] == 0  then
+                    local tmp_tip = VIP_EFFECIVE_ALL[v]..effect
+                    table.insert(info, 1 ,{"new",tmp_tip})
+                else
+                    -- 数值没变
+                    if previous_vip[v] == VIP_LEVEL[level][v] then
+                        local tmp_tip = VIP_EFFECIVE_ALL[v]..effect
+                        table.insert(info, {"changeless",tmp_tip})
+                    else -- 数值改变
+                        -- 找到最后一条新增项index
+                        local last_new_index
+                        for i,v in ipairs(info) do
+                            if v[1] ~= "new" then
+                                last_new_index = i
+                            end
+                        end
+                        if last_new_index then
+                            table.insert(info, last_new_index,{"edit",VIP_EFFECIVE_ALL[v],effect})
+                        else
+                            table.insert(info,{"edit",VIP_EFFECIVE_ALL[v],effect})
+                        end
+                    end
+                end
+            else
+                local tmp_tip = VIP_EFFECIVE_ALL[v]..effect
+                table.insert(info, {"changeless",tmp_tip})
+            end
         end
     end
     return info
@@ -699,7 +731,7 @@ function GameUIVip:OpenVIPDetails(show_vip_level)
         :AddToCurrentScene()
     local body = layer:GetBody()
     local size = body:getContentSize()
-    self.widget_info = WidgetInfo.new({info={},h=500}):align(display.TOP_CENTER, size.width/2, size.height-90)
+    self.widget_info = WidgetVIPInfo.new({info={},h=500}):align(display.TOP_CENTER, size.width/2, size.height-90)
         :addTo(body)
     local widget_page = WidgetPages.new({
         page = 10, -- 页数
@@ -779,6 +811,7 @@ function GameUIVip:OnVipEventTimer( vip_event_new )
 end
 
 return GameUIVip
+
 
 
 
