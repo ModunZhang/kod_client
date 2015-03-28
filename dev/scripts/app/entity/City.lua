@@ -968,7 +968,7 @@ function City:OnUserDataChanged(userData, current_time, deltaData)
     self:OnHelpToTroopsDataChange(userData, deltaData)
     --科技
     self:OnProductionTechsDataChanged(userData.productionTechs)
-    self:OnProductionTechEventsDataChaned(userData.productionTechEvents)
+    self:OnProductionTechEventsDataChaned(userData,deltaData)
 
     -- 更新兵种
     self.soldier_manager:OnUserDataChanged(userData, current_time, deltaData)
@@ -1524,25 +1524,65 @@ function City:FastUpdateAllTechsLockState()
 end
 
 
-function City:OnProductionTechEventsDataChaned(productionTechEvents)
-    if not productionTechEvents then return end
-    --清空之前的数据
-    self:IteratorProductionTechEvents(function(productionTechnologyEvent)
-        productionTechnologyEvent:Reset()
-    end)
-    self.productionTechEvents = {}
-    for _,v in ipairs(productionTechEvents) do
-        if not self:FindProductionTechEventById(v.id) then
-            local productionTechnologyEvent = ProductionTechnologyEvent.new()
-            productionTechnologyEvent:UpdateData(v)
-            productionTechnologyEvent:SetEntity(self:FindTechByName(productionTechnologyEvent:Name()))
-            self.productionTechEvents[productionTechnologyEvent:Id()] = productionTechnologyEvent
-            productionTechnologyEvent:AddObserver(self)
+function City:OnProductionTechEventsDataChaned(userData,deltaData)
+    if not userData.productionTechEvents then return end
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.productionTechEvents ~= nil
+    if is_fully_update then
+        --清空之前的数据
+        self:IteratorProductionTechEvents(function(productionTechnologyEvent)
+            productionTechnologyEvent:Reset()
+        end)
+        self.productionTechEvents = {}
+        for _,v in ipairs(userData.productionTechEvents) do
+            if not self:FindProductionTechEventById(v.id) then
+                local productionTechnologyEvent = ProductionTechnologyEvent.new()
+                productionTechnologyEvent:UpdateData(v)
+                productionTechnologyEvent:SetEntity(self:FindTechByName(productionTechnologyEvent:Name()))
+                self.productionTechEvents[productionTechnologyEvent:Id()] = productionTechnologyEvent
+                productionTechnologyEvent:AddObserver(self)
+            end
         end
+        self:NotifyListeneOnType(City.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH, function(listener)
+            listener:OnProductionTechnologyEventDataRefresh()
+        end)
     end
-    self:NotifyListeneOnType(City.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH, function(listener)
-        listener:OnProductionTechnologyEventDataRefresh()
-    end)
+    if is_delta_update then
+        local changed_map = GameUtils:Handler_DeltaData_Func(
+            deltaData.productionTechEvents
+            ,function(v)
+               if not self:FindProductionTechEventById(v.id) then
+                    local productionTechnologyEvent = ProductionTechnologyEvent.new()
+                    productionTechnologyEvent:UpdateData(v)
+                    productionTechnologyEvent:SetEntity(self:FindTechByName(productionTechnologyEvent:Name()))
+                    self.productionTechEvents[productionTechnologyEvent:Id()] = productionTechnologyEvent
+                    productionTechnologyEvent:AddObserver(self)
+                    return productionTechnologyEvent
+                end
+            end
+            ,function(v)
+                 if self:FindProductionTechEventById(v.id) then
+                    local productionTechnologyEvent = self:FindProductionTechEventById(v.id)
+                    productionTechnologyEvent:UpdateData(v)
+                    return productionTechnologyEvent
+                end
+            end
+            ,function(v)
+                if self:FindProductionTechEventById(v.id) then
+                    local productionTechnologyEvent = self:FindProductionTechEventById(v.id)
+                    productionTechnologyEvent:Reset()
+                    self.productionTechEvents[productionTechnologyEvent:Id()] = nil
+                    productionTechnologyEvent = ProductionTechnologyEvent.new()
+                    productionTechnologyEvent:UpdateData(v)
+                    productionTechnologyEvent:SetEntity(self:FindTechByName(productionTechnologyEvent:Name()))
+                    return productionTechnologyEvent
+                end
+            end
+        )
+        self:NotifyListeneOnType(City.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED, function(listener)
+            listener:OnProductionTechnologyEventDataChanged(GameUtils:pack_event_table(changed_map))
+        end)
+    end
 end
 
 function City:IteratorProductionTechEvents(func)
