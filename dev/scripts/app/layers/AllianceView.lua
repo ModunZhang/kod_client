@@ -113,7 +113,7 @@ function AllianceView:OnBuildingDeltaUpdate(allianceMap, deltaMapObjects)
         self.objects[entity:Id()] = self:CreateObject(entity)
     end
     for _,entity in ipairs(deltaMapObjects.edit or {}) do
-        -- todo
+    -- todo
     end
     for _,entity in ipairs(deltaMapObjects.remove or {}) do
         self.objects[entity:Id()]:removeFromParent()
@@ -147,9 +147,9 @@ function AllianceView:IteratorAllianceObjects(func)
     table.foreach(self.objects, func)
 end
 function AllianceView:OnSceneMove()
-    -- self:IteratorAllianceObjects(function(_, object)
-    --     object:OnSceneMove()
-    -- end)
+-- self:IteratorAllianceObjects(function(_, object)
+--     object:OnSceneMove()
+-- end)
 end
 function AllianceView:GetClickedObject(world_x, world_y)
     local point = self:GetBuildingNode():convertToNodeSpace(cc.p(world_x, world_y))
@@ -177,11 +177,14 @@ function AllianceView:GetClickedObject(world_x, world_y)
     return clicked_object or self:EmptyGround(logic_x, logic_y)
 end
 function AllianceView:EmptyGround(x, y)
-    return {
-        GetEntity = function()
-            return AllianceObject.new(nil, nil, x, y)
-        end
-    }
+    local w,h = self.normal_map:GetSize()
+    if x >=0 and x <= w-1 and y >=0 and y <= h-1 then
+        return {
+            GetEntity = function()
+                return AllianceObject.new(nil, nil, x, y)
+            end
+        }
+    end
 end
 function AllianceView:OnSceneScale(s)
     for _,v in pairs(self.objects) do
@@ -193,6 +196,7 @@ end
 
 
 return AllianceView
+
 
 
 
