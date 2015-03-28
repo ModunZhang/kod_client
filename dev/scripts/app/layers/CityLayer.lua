@@ -755,8 +755,10 @@ function CityLayer:OnSceneMove()
     local move_widget = self.city_scene:GetSceneUILayer():getChildByTag(989)
     if move_widget then
         local ruins = move_widget:GetRuins()
-        local world_pos = ruins:GetWorldPosition()
-        move_widget:setPosition(world_pos.x, world_pos.y)
+        if ruins then
+            local world_pos = ruins:GetWorldPosition()
+            move_widget:setPosition(world_pos.x, world_pos.y)
+        end
     end
     -- self:UpdateWeather()
     self.city_scene:GetSceneUILayer():OnSceneMove()
@@ -781,6 +783,7 @@ function CityLayer:ShowLevelUpNode()
 end
 
 return CityLayer
+
 
 
 
