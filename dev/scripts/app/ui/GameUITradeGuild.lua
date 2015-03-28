@@ -902,7 +902,7 @@ function GameUITradeGuild:OpenSellDialog()
         -- slider
         local slider = WidgetSliderWithInput.new({max = parms.max,min=parms.min,unit = parms.unit})
             :addTo(item)
-            :align(display.CENTER, item:getContentSize().width/2, parms.min==0 and 40 or 60)
+            :align(display.CENTER, item:getContentSize().width/2,  60)
             :OnSliderValueChanged(function(event)
                 parms.onSliderValueChanged(math.floor(event.value))
             end)
@@ -1050,3 +1050,4 @@ function GameUITradeGuild:GetMaterialIndexByName(material_type)
     return build_temp[material_type] or teach_temp[material_type]
 end
 return GameUITradeGuild
+
