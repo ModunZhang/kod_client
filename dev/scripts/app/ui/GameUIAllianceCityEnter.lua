@@ -5,6 +5,8 @@
 local GameUIAllianceCityEnter = UIKit:createUIClass("GameUIAllianceCityEnter","GameUIAllianceEnterBase")
 local config_wall = GameDatas.BuildingFunction.wall
 local GameUIWriteMail = import(".GameUIWriteMail")
+
+local WidgetAllianceEnterButtonProgress = import("..widget.WidgetAllianceEnterButtonProgress")
 local Alliance = import("..entity.Alliance")
 local PROGRESS_TAG = 100
 
@@ -198,46 +200,17 @@ function GameUIAllianceCityEnter:GetEnterButtons()
 
     -- 准备期做一个progress倒计时按钮可使用时间
     if my_allaince:Status() == "prepare" then
-        local statusStartTime = math.floor(my_allaince:StatusStartTime()/1000)
-        local statusFinishTime = math.floor(my_allaince:StatusFinishTime()/1000)
-
-        local percent = math.floor((statusFinishTime-app.timer:GetServerTime())/(statusFinishTime-statusStartTime)*100)
-        local progress_1 = display.newProgressTimer("progress_bg_116x89.png", display.PROGRESS_TIMER_RADIAL)
+        local progress_1 = WidgetAllianceEnterButtonProgress.new()
             :pos(-68, -54)
             :addTo(attack_button)
-        progress_1:setPercentage(percent)
-        progress_1:setRotationSkewY(180)
-        progress_1:setTag(PROGRESS_TAG)
-        local progress_2 = display.newProgressTimer("progress_bg_116x89.png", display.PROGRESS_TIMER_RADIAL)
+        local progress_2 = WidgetAllianceEnterButtonProgress.new()
             :pos(-68, -54)
             :addTo(strike_button)
-        progress_2:setPercentage(percent)
-        progress_2:setTag(PROGRESS_TAG)
-        progress_2:setRotationSkewY(180)
-        app.timer:AddListener(self)
     end
     end
     return buttons
 end
-function GameUIAllianceCityEnter:OnTimer(current_time)
-    local my_allaince = Alliance_Manager:GetMyAlliance()
-    local status = my_allaince:Status()
-    if not self:IsMyAlliance() then
-        if status == "prepare" then
-            local statusStartTime = math.floor(my_allaince:StatusStartTime()/1000)
-            local statusFinishTime = math.floor(my_allaince:StatusFinishTime()/1000)
 
-            local percent = math.floor((statusFinishTime-current_time)/(statusFinishTime-statusStartTime)*100)
-            print("percent====",percent)
-            self:GetEnterButtonByIndex(1):getChildByTag(PROGRESS_TAG):setPercentage(percent)
-            self:GetEnterButtonByIndex(2):getChildByTag(PROGRESS_TAG):setPercentage(percent)
-        else
-            self:GetEnterButtonByIndex(1):removeChildByTag(PROGRESS_TAG, true)
-            self:GetEnterButtonByIndex(2):removeChildByTag(PROGRESS_TAG, true)
-            app.timer:RemoveListener(self)
-        end
-    end
-end
 return GameUIAllianceCityEnter
 
 
