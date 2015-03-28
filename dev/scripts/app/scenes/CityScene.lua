@@ -128,6 +128,7 @@ function CityScene:CreateSceneUILayer()
     scene_ui_layer:setTouchEnabled(true)
     scene_ui_layer:setTouchSwallowEnabled(false)
     function scene_ui_layer:Init()
+        self.action_node = display.newNode():addTo(self)
         self.levelup_node = display.newNode():addTo(self)
         self.levelup_node:setCascadeOpacityEnabled(true)
         self.ui = {}
@@ -148,6 +149,40 @@ function CityScene:CreateSceneUILayer()
             city:RemoveListenerOnType(v, city.LISTEN_TYPE.UPGRADE_BUILDING)
         end
         self.lock_buttons = {}
+    end
+    function scene_ui_layer:ShowIndicatorOnBuilding(building_sprite)
+        if not self.indicator then
+            self.building__ = building_sprite
+            self.indicator = display.newSprite("arrow_home.png")
+                :addTo(self)
+                :scale(0.4)
+                :rotation(240)
+                :zorder(1001)
+
+            self.indicator:runAction(cc.RepeatForever:create(transition.sequence{
+                cc.ScaleTo:create(0.4, 0.8),
+                cc.ScaleTo:create(0.4, 0.4),
+            }))
+
+            self.action_node:stopAllActions()
+            self.action_node:performWithDelay(function()
+                self:HideIndicator()
+            end, 4.0)
+            self:OnSceneMove()
+        end
+    end
+    function scene_ui_layer:HideIndicator()
+        if self.indicator then
+            self.action_node:stopAllActions()
+            self.indicator:removeFromParent()
+            self.indicator = nil
+        end
+    end
+    function scene_ui_layer:OnSceneMove()
+        if self.indicator then
+            local _,top = self.building__:GetWorldPosition()
+            self.indicator:pos(top.x, top.y)
+        end
     end
     -- function scene_ui_layer:NewUIFromBuildingSprite(building_sprite)
     --     local progress = BuildingUpgradeUINode.new():addTo(self)
@@ -351,6 +386,8 @@ end
 
 
 return CityScene
+
+
 
 
 

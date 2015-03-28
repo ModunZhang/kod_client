@@ -301,11 +301,10 @@ function MultiAllianceLayer:CreateLine(id, start_pos, end_pos)
     local sprite = display.newSprite("arrow_16x22.png", nil, nil, {class=cc.FilteredSpriteWithOne})
         :addTo(self:GetLineNode()):pos(middle.x, middle.y):rotation(march_info.degree)
     -- local line_id = string.format("_(%d,%d)->(%d,%d)", start_pos.x, start_pos.y, end_pos.x, end_pos.y)
-    local line_id = math.floor(march_info.length)
     sprite:setFilter(filter.newFilter("CUSTOM",
         json.encode({
             frag = "shaders/multi_tex.fs",
-            shaderName = "lineShader"..line_id,
+            shaderName = "lineShader"..unit_count,
             unit_count = unit_count
         })
     ))

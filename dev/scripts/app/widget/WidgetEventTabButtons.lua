@@ -146,10 +146,14 @@ function WidgetEventTabButtons:OnSoldierStarEventsChanged()
     self:EventChangeOn("technology")
     self:RefreshBuildQueueByType("technology")
 end
-function WidgetEventTabButtons:EventChangeOn(event_type)
+function WidgetEventTabButtons:EventChangeOn(event_type, is_begin)
     self:RefreshBuildQueueByType(event_type)
-    if self:GetCurrentTab() == event_type then
-        self:PromiseOfSwitch()
+    if is_begin then
+        self:PromiseOfShowTab(event_type)
+    else
+        if self:GetCurrentTab() == event_type then
+            self:PromiseOfSwitch()
+        end
     end
 end
 ------
@@ -191,7 +195,7 @@ function WidgetEventTabButtons:ctor(city, ratio)
     self:Reset()
     self:ShowStartEvent()
     self.tab_map["build"]:SetSelect(true)
-    self:RefreshBuildQueueByType("soldier", "material", "technology")
+    self:RefreshBuildQueueByType("build", "soldier", "material", "technology")
 end
 function WidgetEventTabButtons:RefreshBuildQueueByType(...)
     local cur_tab = self:GetCurrentTab()

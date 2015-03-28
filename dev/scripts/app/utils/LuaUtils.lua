@@ -74,9 +74,9 @@ function LuaUtils:printTable(t, depth)
     io.write('}\n')
 end
 
-function LuaUtils:outputTable(name, t)
-    io.write(name .. ' = ')
-    self:printTable(t)
+function LuaUtils:outputTable(name, t) 
+    io.write((type(name) == "table" and "name" or name) .. ' = ')
+    self:printTable(type(name) == "table" and name or t)
 end
 
 

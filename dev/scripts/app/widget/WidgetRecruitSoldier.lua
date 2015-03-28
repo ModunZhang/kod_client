@@ -477,10 +477,17 @@ function WidgetRecruitSoldier:SetSoldier(soldier_name, star)
     --     v:setVisible(i <= star)
     -- end
 
-    self.soldier = display.newSprite(soldier_ui_config):addTo(self.back_ground)
+    self.soldier = cc.ui.UIPushButton.new({normal = soldier_ui_config,
+        pressed = soldier_ui_config}):addTo(self.back_ground)
         :align(display.CENTER, 84, self.back_ground:getContentSize().height - 84)
+        :onButtonClicked(function(event)
+            WidgetSoldierDetails.new(soldier_name, star):addTo(self)
+        end)
+    -- self.soldier = display.newSprite(soldier_ui_config):addTo(self.back_ground)
+        -- :align(display.CENTER, 84, self.back_ground:getContentSize().height - 84)
     -- self.soldier:scale(104/self.soldier:getContentSize().height)
-    display.newSprite("box_soldier_128x128.png"):addTo(self.soldier):align(display.CENTER, self.soldier:getContentSize().width/2, self.soldier:getContentSize().height-64)
+    local rect = self.soldier:getCascadeBoundingBox()
+    display.newSprite("box_soldier_128x128.png"):addTo(self.soldier):align(display.CENTER, 0,0)
 
 
     self.soldier_config = soldier_config
