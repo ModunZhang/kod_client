@@ -455,6 +455,30 @@ function Alliance:OnAllianceMemberDataChanged(alliance_data,deltaData)
         self:OnMemberChanged()
     end
     if is_delta_update then
+        local changed_map = GameUtils:Handler_DeltaData_Func(
+            deltaData.members
+            ,function(event_data)
+                if not self.members[event_data.id] then
+                    local member = setmetatable(event_data, memberMeta)
+                    self.members[event_data.id] = member
+                    return member
+                end
+            end
+            ,function(event_data)
+                if self.members[event_data.id] then
+                    local member = setmetatable(event_data, memberMeta)
+                    self.members[event_data.id] = member
+                    return member
+                end
+            end
+            ,function(event_data)
+                 if self.members[event_data.id] then
+                    local member = setmetatable(event_data, memberMeta)
+                    self.members[event_data.id] = nil
+                    return member
+                end
+            end
+        )
         self:OnMemberChanged()
     end
 end
