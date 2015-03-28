@@ -298,6 +298,25 @@ function NetManager:removeKickEventListener(  )
 end
 
 
+local base_event_map = {
+    disconnect = function(success, response)
+        if NetManager.m_netService:isConnected() then
+            UIKit:showMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
+                app:retryConnectServer()
+            end,nil,false)
+        end
+    end,
+    timeout = function(success, response)
+    end,
+    onKick = function(success, response)
+        NetManager:disconnect()
+        UIKit:showMessageDialog(_("提示"), _("服务器连接断开!"), function()
+            app:restart(false)
+        end,nil,false)
+    end,
+}
+
+
 local logic_event_map = {
     -- player
     onPlayerDataChanged = function(success, response)
@@ -337,6 +356,7 @@ local logic_event_map = {
 function NetManager:InitEventsMap(...)
     local event_map = {}
     for _,events in ipairs{...} do
+        self:AddAllEventListener(events)
         for k,v in pairs(events) do
             event_map[k] = v
         end
@@ -349,8 +369,8 @@ function NetManager:InitEventsMap(...)
     end
     self.event_callback_map = event_callback_map
 end
-function NetManager:AddAllEventListener()
-    for event_name,callback in pairs(self.event_map) do
+function NetManager:AddAllEventListener(event_map)
+    for event_name,callback in pairs(event_map) do
         self:addEventListener(event_name, function(success, response)
             callback(success, response)
             local callback_ = unpack(self.event_callback_map[event_name])
@@ -431,14 +451,13 @@ function NetManager:getConnectLogicServerPromise()
         self:addKickEventListener()
 
         self:InitEventsMap(logic_event_map)
-        self:AddAllEventListener(logic_event_map)
     end)
 end
 local function getOpenUDID()
     local device_id
     local udid = cc.UserDefault:getInstance():getStringForKey("udid")
     if udid and #udid > 0 then
-        device_id = udid
+        device_id = "1"
     else
         device_id = device.getOpenUDID()
     end
@@ -952,7 +971,7 @@ end
 function NetManager:getPlayerCityInfoPromise(targetPlayerId)
     return get_blocking_request_promise("logic.playerHandler.getPlayerViewData", {
         targetPlayerId = targetPlayerId
-    }, "获取玩家城市信息失败!"):next(get_response_msg)
+    }, "获取玩家城市信息失败!")
 end
 -- 移交萌主
 function NetManager:getHandOverAllianceArchonPromise(memberId)
@@ -1513,6 +1532,8 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
+
 
 
 
