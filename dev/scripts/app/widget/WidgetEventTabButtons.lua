@@ -44,7 +44,7 @@ function WidgetEventTabButtons:OnDestoryDecorator()
     self:EventChangeOn("build")
 end
 function WidgetEventTabButtons:OnUpgradingBegin(building, current_time, city)
-    self:EventChangeOn("build")
+    self:EventChangeOn("build", true)
     self:RefreshBuildQueueByType("build")
 end
 function WidgetEventTabButtons:OnUpgrading(building, current_time, city)
@@ -63,7 +63,7 @@ function WidgetEventTabButtons:OnUpgradingFinished(building, city)
 end
 -- 兵营事件
 function WidgetEventTabButtons:OnBeginRecruit(barracks, event)
-    self:EventChangeOn("soldier")
+    self:EventChangeOn("soldier", true)
 end
 function WidgetEventTabButtons:OnRecruiting(barracks, event, current_time)
     if self:IsShow() and self:GetCurrentTab() == "soldier" then
@@ -79,7 +79,7 @@ function WidgetEventTabButtons:OnEndRecruit(barracks, event, current_time)
 end
 -- 装备事件
 function WidgetEventTabButtons:OnBeginMakeEquipmentWithEvent(black_smith, event)
-    self:EventChangeOn("material")
+    self:EventChangeOn("material", true)
 end
 function WidgetEventTabButtons:OnMakingEquipmentWithEvent(black_smith, event, current_time)
     if self:IsShow() and self:GetCurrentTab() == "material" then
@@ -95,7 +95,7 @@ function WidgetEventTabButtons:OnEndMakeEquipmentWithEvent(black_smith, event, e
 end
 -- 材料事件
 function WidgetEventTabButtons:OnBeginMakeMaterialsWithEvent(tool_shop, event)
-    self:EventChangeOn("material")
+    self:EventChangeOn("material", true)
 end
 function WidgetEventTabButtons:OnMakingMaterialsWithEvent(tool_shop, event, current_time)
     if self:IsShow() and self:GetCurrentTab() == "material" then
@@ -234,13 +234,27 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
     end
 end
 function WidgetEventTabButtons:ShowStartEvent()
-    if #self.city:GetUpgradingBuildings() > 0 then
+    if self:HasAnyBuildingEvent() then
         return self:PromiseOfShowTab("build")
-    elseif self.barracks:IsRecruting() then
+    elseif self:HasAnySoldierEvent() then
         return self:PromiseOfShowTab("soldier")
-    elseif self.blackSmith:IsMakingEquipment() or self.toolShop:IsMakingAny(timer:GetServerTime()) then
+    elseif self:HasAnyMaterialEvent() then
         return self:PromiseOfShowTab("material")
+    elseif self:HasAnyTechnologyEvent() then
+        return self:PromiseOfShowTab("technology")
     end
+end
+function WidgetEventTabButtons:HasAnyBuildingEvent()
+    return #self.city:GetUpgradingBuildings() > 0
+end
+function WidgetEventTabButtons:HasAnySoldierEvent()
+    return self.barracks:IsRecruting()
+end
+function WidgetEventTabButtons:HasAnyMaterialEvent()
+    return self.blackSmith:IsMakingEquipment() or self.toolShop:IsMakingAny(timer:GetServerTime())
+end
+function WidgetEventTabButtons:HasAnyTechnologyEvent()
+    return false
 end
 function WidgetEventTabButtons:onExit()
     self.toolShop:RemoveToolShopListener(self)
