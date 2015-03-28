@@ -759,6 +759,7 @@ function CityLayer:OnSceneMove()
         move_widget:setPosition(world_pos.x, world_pos.y)
     end
     -- self:UpdateWeather()
+    self.city_scene:GetSceneUILayer():OnSceneMove()
 end
 function CityLayer:UpdateWeather()
     local size = self:getContentSize()
