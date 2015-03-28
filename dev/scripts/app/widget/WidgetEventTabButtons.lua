@@ -194,7 +194,6 @@ function WidgetEventTabButtons:ctor(city, ratio)
 
     self:Reset()
     self:ShowStartEvent()
-    self.tab_map["build"]:SetSelect(true)
     self:RefreshBuildQueueByType("build", "soldier", "material", "technology")
 end
 function WidgetEventTabButtons:RefreshBuildQueueByType(...)
@@ -254,7 +253,7 @@ function WidgetEventTabButtons:HasAnyMaterialEvent()
     return self.blackSmith:IsMakingEquipment() or self.toolShop:IsMakingAny(timer:GetServerTime())
 end
 function WidgetEventTabButtons:HasAnyTechnologyEvent()
-    return false
+    return self.city:GetSoldierManager():IsUpgradingAnyMilitaryTech() or self.city:HaveProductionTechEvent()
 end
 function WidgetEventTabButtons:onExit()
     self.toolShop:RemoveToolShopListener(self)
@@ -270,9 +269,6 @@ function WidgetEventTabButtons:onExit()
     self.city:RemoveListenerOnType(self,self.city.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH)
     self.city:RemoveListenerOnType(self,self.city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
     self.city:RemoveListenerOnType(self,self.city.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH)
-end
-function WidgetEventTabButtons:InsertEvent(func)
-    table.insert(self.event_queue, func)
 end
 -- 构造ui
 function WidgetEventTabButtons:CreateTabButtons()
@@ -502,7 +498,7 @@ function WidgetEventTabButtons:Reset()
     self:Lock(false)
 end
 function WidgetEventTabButtons:IsTabEnable(tab)
-    if tab == "build" then
+    if tab == "build" or tab == nil then
         return true
     elseif tab == "soldier" and self.barracks:IsUnlocked() then
         return true
@@ -768,6 +764,9 @@ function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp,event_key,
     end
 end
 function WidgetEventTabButtons:Load()
+    if not self:GetCurrentTab() then
+        self.tab_map["build"]:SetSelect(true)
+    end
     for k, v in pairs(self.tab_map) do
         if v:IsSelected() then
             self:HighLightTab(k)
@@ -1012,10 +1011,11 @@ function WidgetEventTabButtons:OnProductionTechnologyEventTimer(event)
     end
 end
 function WidgetEventTabButtons:OnProductionTechnologyEventDataChanged(changed_map)
-   self:OnProductionTechnologyEventDataRefresh()
+   self:OnProductionTechnologyEventDataRefresh(changed_map)
 end
-function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh()
-    self:EventChangeOn("technology")
+function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh(changed_map)
+    changed_map = changed_map or {}
+    self:EventChangeOn("technology", next(changed_map.add or {}))
 end
 
 function WidgetEventTabButtons:ProductionTechnologyEventUpgradeOrSpeedup(event)
