@@ -61,11 +61,11 @@ local function complete_and_pop_promise(p)
 end
 local function do_function_with_protect(func, param)
     local success, result
-    if CONFIG_IS_DEBUG then
-        success, result = true,func(param)
-    else
+    -- if CONFIG_IS_DEBUG then
+    --     success, result = true,func(param)
+    -- else
         success, result = pcall(func, param)
-    end
+    -- end
     if not success then
         result = not is_error(result) and err_class.new(result, "syntaxError") or result
     end

@@ -53,8 +53,7 @@ extern "C" {
 #include "lua_cocos2dx_physics_manual.hpp"
 #include "lua_cocos2dx_experimental_auto.hpp"
 #include "lua_cocos2dx_experimental_manual.hpp"
-
-
+#include "../sdk/MarketSDKTool.h"
 namespace {
 int lua_print(lua_State * luastate)
 {
@@ -444,6 +443,8 @@ int LuaStack::executeFunction(int numArgs)
         if (traceback == 0)
         {
             CCLOG("[LUA ERROR] %s", lua_tostring(_state, - 1));        /* L: ... error */
+            //dannyhe lua Error log
+            MarketSDKTool::getInstance()->onPlayerEvent("LUA_ERROR",lua_tostring(_state, - 1));
             lua_pop(_state, 1); // remove error message from stack
         }
         else                                                            /* L: ... G error */
