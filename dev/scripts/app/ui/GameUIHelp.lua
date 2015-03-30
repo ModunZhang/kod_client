@@ -91,12 +91,10 @@ function GameUIHelp:SetLoyalty()
     self.ProgressTimer:setPercentage(math.floor(DataManager:getUserData().allianceInfo.loyalty/10000*100))
 end
 function GameUIHelp:InitHelpEvents()
-    local help_events = self.alliance:GetAllHelpEvents()
+    local help_events = self.alliance:GetCouldShowHelpEvents()
     if help_events then
         for k,event in pairs(help_events) do
-            if not self:IsHelpedByMe(event:GetEventData():HelpedMembers()) and not self:IsHelpedToMaxNum(event) then
                 self:InsertItemToList(event)
-            end
         end
         self.help_listview:reload()
     end
@@ -104,11 +102,9 @@ end
 function GameUIHelp:InsertItemToList(help_event)
     -- 当前玩家的求助事件需要置顶
     local item = self:CreateHelpItem(help_event)
-    if User:Id() == help_event:GetPlayerData():Id() then
         -- 检查自己请求帮助的事件是否已经结束了
-        if not self:CheckEventFinished(help_event) then
-            self.help_listview:addItem(item,1)
-        end
+    if User:Id() == help_event:GetPlayerData():Id() then
+        self.help_listview:addItem(item,1)
     else
         self.help_listview:addItem(item)
     end

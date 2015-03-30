@@ -244,6 +244,76 @@ end
 function Alliance:GetAllHelpEvents()
     return self.help_events
 end
+function Alliance:GetCouldShowHelpEvents()
+    local could_show = {}
+    for k,event in pairs(self.help_events) do
+        -- 去掉被自己帮助过的
+        local isHelped
+        local _id = User:Id()
+        for k,id in pairs(event:GetEventData():HelpedMembers()) do
+            if id == _id then
+                isHelped = true
+            end
+        end
+        if not isHelped then
+            -- 已经帮助到最大次数的去掉
+            if #event:GetEventData():HelpedMembers() < event:GetEventData():MaxHelpCount() then
+
+                -- 属于自己的求助事件，已经结束的
+                local isFinished = false
+                if User:Id() == event:GetPlayerData():Id() then
+                    local city = City
+                    local eventData = event:GetEventData()
+                    local type = eventData:Type()
+                    local event_id = eventData:Id()
+                    -- print("属于自己的求助事件，已经结束的>>>",type,eventData:Name())
+                    if type == "buildingEvents" then
+                        city:IteratorFunctionBuildingsByFunc(function(key, building)
+                            if building:UniqueUpgradingKey() == event_id then
+                                isFinished = true
+                            end
+                        end)
+                        -- 城墙，箭塔
+                        if city:GetGate():UniqueUpgradingKey() == event_id then
+                            isFinished = true
+                        end
+                        if city:GetTower():UniqueUpgradingKey() == event_id then
+                            isFinished = true
+                        end
+                    elseif type == "houseEvents" then
+                        city:IteratorDecoratorBuildingsByFunc(function(key, building)
+                            if building:UniqueUpgradingKey() == event_id then
+                                isFinished = true
+                            end
+                        end)
+                    elseif type == "productionTechEvents" then
+                        city:IteratorProductionTechEvents(function(productionTechnologyEvent)
+                            if productionTechnologyEvent:Id() == event_id then
+                                isFinished = true
+                            end
+                        end)
+                    elseif type == "militaryTechEvents" then
+                        city:GetSoldierManager():IteratorMilitaryTechEvents(function(militaryTechEvent)
+                            if militaryTechEvent:Id() == event_id then
+                                isFinished = true
+                            end
+                        end)
+                    elseif type == "soldierStarEvents" then
+                        city:GetSoldierManager():IteratorSoldierStarEvents(function(soldierStarEvent)
+                            if soldierStarEvent:Id() == event_id then
+                                isFinished = true
+                            end
+                        end)
+                    end
+                end
+                if isFinished then
+                    table.insert(could_show, event)
+                end
+            end
+        end
+    end
+    return could_show
+end
 function Alliance:AddHelpEvent(event)
     local help_events = self.help_events
     assert(help_events[event:Id()] == nil)
@@ -472,7 +542,7 @@ function Alliance:OnAllianceMemberDataChanged(alliance_data,deltaData)
                 end
             end
             ,function(event_data)
-                 if self.members[event_data.id] then
+                if self.members[event_data.id] then
                     local member = setmetatable(event_data, memberMeta)
                     self.members[event_data.id] = nil
                     return member
@@ -541,6 +611,7 @@ function Alliance:OnHelpEventsChanged(alliance_data,deltaData)
         if alliance_data.helpEvents then
             for _,v in pairs(alliance_data.helpEvents) do
                 self.help_events[v.id] = HelpEvent.new():UpdateData(v)
+                print("OnHelpEventsChanged:",self.help_events[v.id]:GetEventData():Name(),self.help_events[v.id]:GetEventData():Id())
             end
             self:NotifyListeneOnType(Alliance.LISTEN_TYPE.ALL_HELP_EVENTS, function(listener)
                 listener:OnAllHelpEventChanged(self.help_events)
@@ -1238,6 +1309,14 @@ function Alliance:NeedUpdateEnemyAlliance()
 end
 
 return Alliance
+
+
+
+
+
+
+
+
 
 
 

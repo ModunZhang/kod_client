@@ -218,6 +218,7 @@ function GameUIGacha:CreateGachaPool(layer)
         temp_box:SetPassStatus()
         current_box = temp_box
         current_index = next_index
+        app:GetAudioManager():PlayeEffectSound("sfx_gacha.mp3")
     end
     function GachaPool:Stop()
         current_box:ResetLigt()
@@ -227,14 +228,14 @@ function GameUIGacha:CreateGachaPool(layer)
 
         local draw_item_box = self.draw_item_box
         local award = display.newScale9Sprite(draw_item_box:GetGachaItemIcon()):addTo(layer)
-            :align(display.CENTER, draw_item_box:getPositionX(), draw_item_box:getPositionY())
+            :align(display.CENTER, draw_item_box:getPositionX()-draw_item_box:getContentSize().width/2, draw_item_box:getPositionY()-draw_item_box:getContentSize().height/2)
         award:scale(74/award:getContentSize().width)
 
         local gacha_box = self.continuous_draw_items and gacha_boxes[self.continuous_index-1] or gacha_boxes[1]
         -- local gacha_box_lable
 
         transition.scaleTo(award, {scale = 1.5,time =0.4,onComplete = function ()
-            transition.moveTo(award, {x = gacha_box:getPositionX(), y=gacha_box:getPositionY() ,time =0.4 ,
+            transition.moveTo(award, {x = gacha_box:getPositionX(), y=gacha_box:getPositionY() ,time =0.2 ,
                 onComplete = function ( )
                     transition.scaleTo(award, {scale = 74/award:getContentSize().width,time =0.4,onComplete = function ()
                         -- gacha_box_lable = UIKit:ttfLabel({
