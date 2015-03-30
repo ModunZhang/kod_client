@@ -209,7 +209,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                         if event.name == "CLICKED_EVENT" then
                             if canUnlock then
                                 self:LeftButtonClicked()
-                                display.getRunningScene():GotoLogicPoint(unlock_building:GetLogicPosition())
+                                display.getRunningScene():GotoLogicPoint(unlock_building:GetMidLogicPosition())
                             end
                         end
                     end))

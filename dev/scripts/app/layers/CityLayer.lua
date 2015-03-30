@@ -52,7 +52,7 @@ function CityLayer:GetClickedObject(world_x, world_y)
     self:IteratorHelpedTroops(function(_, v)
         if v:isVisible() then
             local x, y = v:GetLogicPosition()
-            if (logic_x == x and logic_y == y) or v:IsContainRealPoint(world_x, world_y) then
+            if (logic_x == x and logic_y == y) or v:IsContainWorldPoint(world_x, world_y) then
                 clicked_helped_troops = v
                 return true
             end
@@ -69,8 +69,8 @@ function CityLayer:GetClickedObject(world_x, world_y)
         local check = v:IsContainPointWithFullCheck(logic_x, logic_y, world_x, world_y)
         if check.logic_clicked then
             table.insert(clicked_list.logic_clicked, v)
-            return true
-        elseif check.sprite_clicked then
+        end
+        if check.sprite_clicked then
             table.insert(clicked_list.sprite_clicked, v)
         end
     end)
@@ -108,7 +108,11 @@ function CityLayer:GetClickedObject(world_x, world_y)
             end
         end
     end
-    return clicked_list.logic_clicked[1] or clicked_list.sprite_clicked[1]
+    print("=======>", #clicked_list.sprite_clicked)
+    for _,v in ipairs(clicked_list.sprite_clicked) do
+        print(v:GetEntity():GetType(), v:getLocalZOrder())
+    end
+    return clicked_list.sprite_clicked[1] or clicked_list.logic_clicked[1]
 end
 function CityLayer:OnTileLocked(city)
     self:OnTileChanged(city)

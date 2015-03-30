@@ -395,6 +395,22 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
             color = UIKit:hex2c3b(0xffedae)}))
         :onButtonClicked(function(event)
             local building = item.building
+            local illegal, is_pre_condition = building:IsAbleToUpgrade(false)
+            local jump_building = building:GetPreConditionBuilding()
+            local cur_scene = display.getRunningScene()
+            if illegal and is_pre_condition
+                and type(jump_building) == "table"
+                and cur_scene.AddIndicateForBuilding then
+                UIKit:showMessageDialog(_("提示"), _("前置建筑条件不满足, 请前往。"), function()
+                    local building_sprite = cur_scene:GetSceneLayer():FindBuildingSpriteByBuilding(jump_building, self.city)
+                    cur_scene:GotoLogicPoint(jump_building:GetMidLogicPosition())
+                    cur_scene:AddIndicateForBuilding(building_sprite)
+                    self:LeftButtonClicked()
+                end)
+                return
+            end
+
+
             if city:IsFunctionBuilding(building) then
                 local location_id = city:GetLocationIdByBuilding(building)
                 NetManager:getUpgradeBuildingByLocationPromise(location_id)
@@ -612,7 +628,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
     function item:ShowNormalButton(able)
         speed_up:setVisible(false)
         normal_build:setVisible(true)
-        normal_build:setButtonEnabled(able == nil and true or able)
+        -- normal_build:setButtonEnabled(able == nil and true or able)
     end
     function item:HideProgress()
         progress:setVisible(false)
@@ -631,6 +647,13 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
 end
 
 return GameUIHasBeenBuild
+
+
+
+
+
+
+
 
 
 

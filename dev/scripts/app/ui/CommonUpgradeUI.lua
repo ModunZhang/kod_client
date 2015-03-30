@@ -387,10 +387,10 @@ function CommonUpgradeUI:GotoPreconditionBuilding()
             :SetPopMessage(string.format(_("请首先建造%s"),Localize.building_name[jump_building]))
         return
     end
-    local current_scene =display.getRunningScene()
+    local current_scene = display.getRunningScene()
     local building_sprite = current_scene:GetSceneLayer():FindBuildingSpriteByBuilding(jump_building, self.city)
     self:getParent():getParent():LeftButtonClicked()
-    current_scene:GotoLogicPoint(jump_building:GetLogicPosition())
+    current_scene:GotoLogicPoint(jump_building:GetMidLogicPosition())
     if current_scene.AddIndicateForBuilding then
         current_scene:AddIndicateForBuilding(building_sprite)
     end

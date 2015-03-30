@@ -248,7 +248,6 @@ end
 function CityScene:GotoLogicPoint(x, y)
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(x, y)
     return self:GetSceneLayer():PromiseOfMove(point.x, point.y)
-        :next(function() print("hello") end)
 end
 function CityScene:PlayBackgroundMusic()
     app:GetAudioManager():PlayGameMusic("MyCityScene")

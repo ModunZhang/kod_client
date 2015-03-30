@@ -47,28 +47,6 @@ end
 -- 给对应建筑添加指示动画
 function MyCityScene:AddIndicateForBuilding(building_sprite)
     self:GetSceneUILayer():ShowIndicatorOnBuilding(building_sprite)
-    -- -- 已经添加，则移除
-    -- if self.indicate then
-    --     self.indicate:removeFromParent()
-    --     self.indicate = nil
-    -- end
-    -- -- 指向建筑的箭头
-    -- local arrow = display.newSprite("arrow_home.png")
-    --     :scale(0.4):addTo(building_sprite):pos(building_sprite:GetSpriteTopPosition()):setLocalZOrder(1001)
-    -- arrow:setRotation(240)
-    -- local seq_1 = transition.sequence{
-    --     cc.ScaleTo:create(0.4, 0.8),
-    --     cc.ScaleTo:create(0.4, 0.4),
-    -- }
-    -- arrow:runAction(cc.RepeatForever:create(seq_1))
-    -- self.indicate = arrow
-    -- self.action_node:stopAllActions()
-    -- self.action_node:performWithDelay(function()
-    --     if self.indicate then
-    --         self.indicate:removeFromParent()
-    --         self.indicate = nil
-    --     end
-    -- end, 4.0)
 end
 function MyCityScene:GetArrowTutorial()
     if not self.arrow_tutorial then
