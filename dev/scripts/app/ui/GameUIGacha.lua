@@ -79,7 +79,7 @@ function GameUIGacha:CreateGachaPool(layer)
 
 
     local items = {}
-    local x , y = window.left+92,window.top - 254
+    local x , y = window.left+138,window.top - 208
     local box_width = 112
     local gap = (570 - 5*box_width)/4
     -- 奖品，是否高级抽奖
