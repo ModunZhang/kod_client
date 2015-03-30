@@ -48,10 +48,10 @@ function TouchJudgment:UpdateResistanceTime(millisecond)
         local old_speed_y = self.speed.y
         local new_speed_x = self.has_reduced_factor * old_speed_x
         local new_speed_y = self.has_reduced_factor * old_speed_y
-        self.touch_handle:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed_y, millisecond)
         if self.has_reduced_factor < 0.02 then
             self.time_has_resisted = self.resistance_time
         end
+        self.touch_handle:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed_y, millisecond, self.has_reduced_factor < 0.02)
     else
         self:ResetTouch()
     end
@@ -95,7 +95,7 @@ function TouchJudgment:OnTouchMove(pre_x, pre_y, x, y)
 end
 function TouchJudgment:OnTouchEnd(pre_x, pre_y, x, y)
     self:OnTouchOver(pre_x, pre_y, x, y)
-    self.touch_handle:OnTouchEnd(pre_x, pre_y, x, y)
+    self.touch_handle:OnTouchEnd(pre_x, pre_y, x, y, self.speed)
     if self.one_touch_begin then
         local begin_x, begin_y = self.one_touch_begin.x, self.one_touch_begin.y
         local dx = x - begin_x
@@ -129,6 +129,9 @@ function TouchJudgment:OnTouchOver(pre_x, pre_y, x, y)
     self.speed.y = self.speed.y / self.speed.dt
     self.one_touch_array = {}
     self.one_touch_begin = nil
+end
+function TouchJudgment:ResetSpeed()
+    self.speed = nil
 end
 
 return TouchJudgment
