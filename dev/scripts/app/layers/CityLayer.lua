@@ -112,7 +112,7 @@ function CityLayer:GetClickedObject(world_x, world_y)
     for _,v in ipairs(clicked_list.sprite_clicked) do
         print(v:GetEntity():GetType(), v:getLocalZOrder())
     end
-    return clicked_list.sprite_clicked[1] or clicked_list.logic_clicked[1]
+    return clicked_list.logic_clicked[1] or clicked_list.sprite_clicked[1]
 end
 function CityLayer:OnTileLocked(city)
     self:OnTileChanged(city)
