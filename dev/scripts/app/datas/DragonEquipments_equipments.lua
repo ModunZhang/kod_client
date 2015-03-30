@@ -188,7 +188,7 @@ equipments["redChest_s2"] = {
 	["resolveLExp"] = 400,
 	["resolveMExp"] = 300,
 	["resolveSExp"] = 200,
-	["materials"] = "ingot_2:2,redSoul_2:2,runes_2:2",
+	["materials"] = "ingo_2:2,redSoul_2:2,runes_2:2",
 	["coin"] = 20000,
 	["makeTime"] = 4800
 }
@@ -200,7 +200,7 @@ equipments["blueChest_s2"] = {
 	["resolveLExp"] = 400,
 	["resolveMExp"] = 300,
 	["resolveSExp"] = 200,
-	["materials"] = "ingot_2:2,blueSoul_2:2,runes_2:2",
+	["materials"] = "ingo_2:2,blueSoul_2:2,runes_2:2",
 	["coin"] = 20000,
 	["makeTime"] = 4800
 }
@@ -212,7 +212,7 @@ equipments["greenChest_s2"] = {
 	["resolveLExp"] = 400,
 	["resolveMExp"] = 300,
 	["resolveSExp"] = 200,
-	["materials"] = "ingot_2:2,greenSoul_2:2,runes_2:2",
+	["materials"] = "ingo_2:2,greenSoul_2:2,runes_2:2",
 	["coin"] = 20000,
 	["makeTime"] = 4800
 }
@@ -224,7 +224,7 @@ equipments["redChest_s3"] = {
 	["resolveLExp"] = 1600,
 	["resolveMExp"] = 1200,
 	["resolveSExp"] = 800,
-	["materials"] = "ingot_3:2,redSoul_3:2,runes_3:2",
+	["materials"] = "ingo_3:2,redSoul_3:2,runes_3:2",
 	["coin"] = 112000,
 	["makeTime"] = 9600
 }
@@ -236,7 +236,7 @@ equipments["blueChest_s3"] = {
 	["resolveLExp"] = 1600,
 	["resolveMExp"] = 1200,
 	["resolveSExp"] = 800,
-	["materials"] = "ingot_3:2,blueSoul_3:2,runes_3:2",
+	["materials"] = "ingo_3:2,blueSoul_3:2,runes_3:2",
 	["coin"] = 112000,
 	["makeTime"] = 9600
 }
@@ -248,7 +248,7 @@ equipments["greenChest_s3"] = {
 	["resolveLExp"] = 1600,
 	["resolveMExp"] = 1200,
 	["resolveSExp"] = 800,
-	["materials"] = "ingot_3:2,greenSoul_3:2,runes_3:2",
+	["materials"] = "ingo_3:2,greenSoul_3:2,runes_3:2",
 	["coin"] = 112000,
 	["makeTime"] = 9600
 }
@@ -260,7 +260,7 @@ equipments["redChest_s4"] = {
 	["resolveLExp"] = 5600,
 	["resolveMExp"] = 4200,
 	["resolveSExp"] = 2800,
-	["materials"] = "ingot_4:2,redSoul_4:2,runes_4:2",
+	["materials"] = "ingo_4:2,redSoul_4:2,runes_4:2",
 	["coin"] = 348000,
 	["makeTime"] = 19200
 }
@@ -272,7 +272,7 @@ equipments["blueChest_s4"] = {
 	["resolveLExp"] = 5600,
 	["resolveMExp"] = 4200,
 	["resolveSExp"] = 2800,
-	["materials"] = "ingot_4:2,blueSoul_4:2,runes_4:2",
+	["materials"] = "ingo_4:2,blueSoul_4:2,runes_4:2",
 	["coin"] = 348000,
 	["makeTime"] = 19200
 }
@@ -284,7 +284,7 @@ equipments["greenChest_s4"] = {
 	["resolveLExp"] = 5600,
 	["resolveMExp"] = 4200,
 	["resolveSExp"] = 2800,
-	["materials"] = "ingot_4:2,greenSoul_4:2,runes_4:2",
+	["materials"] = "ingo_4:2,greenSoul_4:2,runes_4:2",
 	["coin"] = 348000,
 	["makeTime"] = 19200
 }
@@ -296,7 +296,7 @@ equipments["redChest_s5"] = {
 	["resolveLExp"] = 22400,
 	["resolveMExp"] = 16800,
 	["resolveSExp"] = 11200,
-	["materials"] = "ingot_5:2,redSoul_5:2,runes_5:2",
+	["materials"] = "ingo_5:2,redSoul_5:2,runes_5:2",
 	["coin"] = 1044000,
 	["makeTime"] = 38400
 }
@@ -308,7 +308,7 @@ equipments["blueChest_s5"] = {
 	["resolveLExp"] = 22400,
 	["resolveMExp"] = 16800,
 	["resolveSExp"] = 11200,
-	["materials"] = "ingot_5:2,blueSoul_5:2,runes_5:2",
+	["materials"] = "ingo_5:2,blueSoul_5:2,runes_5:2",
 	["coin"] = 1044000,
 	["makeTime"] = 38400
 }
@@ -320,7 +320,7 @@ equipments["greenChest_s5"] = {
 	["resolveLExp"] = 22400,
 	["resolveMExp"] = 16800,
 	["resolveSExp"] = 11200,
-	["materials"] = "ingot_5:2,greenSoul_5:2,runes_5:2",
+	["materials"] = "ingo_5:2,greenSoul_5:2,runes_5:2",
 	["coin"] = 1044000,
 	["makeTime"] = 38400
 }
@@ -332,7 +332,7 @@ equipments["redSting_s2"] = {
 	["resolveLExp"] = 400,
 	["resolveMExp"] = 300,
 	["resolveSExp"] = 200,
-	["materials"] = "ingot_2:2,redCrystal_2:2,runes_2:2",
+	["materials"] = "ingo_2:2,redCrystal_2:2,runes_2:2",
 	["coin"] = 20000,
 	["makeTime"] = 4800
 }
@@ -344,7 +344,7 @@ equipments["blueSting_s2"] = {
 	["resolveLExp"] = 400,
 	["resolveMExp"] = 300,
 	["resolveSExp"] = 200,
-	["materials"] = "ingot_2:2,blueCrystal_2:2,runes_2:2",
+	["materials"] = "ingo_2:2,blueCrystal_2:2,runes_2:2",
 	["coin"] = 20000,
 	["makeTime"] = 4800
 }
@@ -356,7 +356,7 @@ equipments["greenSting_s2"] = {
 	["resolveLExp"] = 400,
 	["resolveMExp"] = 300,
 	["resolveSExp"] = 200,
-	["materials"] = "ingot_2:2,greenCrystal_2:2,runes_2:2",
+	["materials"] = "ingo_2:2,greenCrystal_2:2,runes_2:2",
 	["coin"] = 20000,
 	["makeTime"] = 4800
 }
@@ -368,7 +368,7 @@ equipments["redSting_s3"] = {
 	["resolveLExp"] = 1600,
 	["resolveMExp"] = 1200,
 	["resolveSExp"] = 800,
-	["materials"] = "ingot_3:2,redCrystal_3:2,runes_3:2",
+	["materials"] = "ingo_3:2,redCrystal_3:2,runes_3:2",
 	["coin"] = 112000,
 	["makeTime"] = 9600
 }
@@ -380,7 +380,7 @@ equipments["blueSting_s3"] = {
 	["resolveLExp"] = 1600,
 	["resolveMExp"] = 1200,
 	["resolveSExp"] = 800,
-	["materials"] = "ingot_3:2,blueCrystal_3:2,runes_3:2",
+	["materials"] = "ingo_3:2,blueCrystal_3:2,runes_3:2",
 	["coin"] = 112000,
 	["makeTime"] = 9600
 }
@@ -392,7 +392,7 @@ equipments["greenSting_s3"] = {
 	["resolveLExp"] = 1600,
 	["resolveMExp"] = 1200,
 	["resolveSExp"] = 800,
-	["materials"] = "ingot_3:2,greenCrystal_3:2,runes_3:2",
+	["materials"] = "ingo_3:2,greenCrystal_3:2,runes_3:2",
 	["coin"] = 112000,
 	["makeTime"] = 9600
 }
@@ -404,7 +404,7 @@ equipments["redSting_s4"] = {
 	["resolveLExp"] = 5600,
 	["resolveMExp"] = 4200,
 	["resolveSExp"] = 2800,
-	["materials"] = "ingot_4:2,redCrystal_4:2,runes_4:2",
+	["materials"] = "ingo_4:2,redCrystal_4:2,runes_4:2",
 	["coin"] = 348000,
 	["makeTime"] = 19200
 }
@@ -416,7 +416,7 @@ equipments["blueSting_s4"] = {
 	["resolveLExp"] = 5600,
 	["resolveMExp"] = 4200,
 	["resolveSExp"] = 2800,
-	["materials"] = "ingot_4:2,blueCrystal_4:2,runes_4:2",
+	["materials"] = "ingo_4:2,blueCrystal_4:2,runes_4:2",
 	["coin"] = 348000,
 	["makeTime"] = 19200
 }
@@ -428,7 +428,7 @@ equipments["greenSting_s4"] = {
 	["resolveLExp"] = 5600,
 	["resolveMExp"] = 4200,
 	["resolveSExp"] = 2800,
-	["materials"] = "ingot_4:2,greenCrystal_4:2,runes_4:2",
+	["materials"] = "ingo_4:2,greenCrystal_4:2,runes_4:2",
 	["coin"] = 348000,
 	["makeTime"] = 19200
 }
@@ -440,7 +440,7 @@ equipments["redSting_s5"] = {
 	["resolveLExp"] = 22400,
 	["resolveMExp"] = 16800,
 	["resolveSExp"] = 11200,
-	["materials"] = "ingot_5:2,redCrystal_5:2,runes_5:2",
+	["materials"] = "ingo_5:2,redCrystal_5:2,runes_5:2",
 	["coin"] = 1044000,
 	["makeTime"] = 38400
 }
@@ -452,7 +452,7 @@ equipments["blueSting_s5"] = {
 	["resolveLExp"] = 22400,
 	["resolveMExp"] = 16800,
 	["resolveSExp"] = 11200,
-	["materials"] = "ingot_5:2,blueCrystal_5:2,runes_5:2",
+	["materials"] = "ingo_5:2,blueCrystal_5:2,runes_5:2",
 	["coin"] = 1044000,
 	["makeTime"] = 38400
 }
@@ -464,7 +464,7 @@ equipments["greenSting_s5"] = {
 	["resolveLExp"] = 22400,
 	["resolveMExp"] = 16800,
 	["resolveSExp"] = 11200,
-	["materials"] = "ingot_5:2,greenCrystal_5:2,runes_5:2",
+	["materials"] = "ingo_5:2,greenCrystal_5:2,runes_5:2",
 	["coin"] = 1044000,
 	["makeTime"] = 38400
 }
@@ -620,7 +620,7 @@ equipments["redArmguard_s1"] = {
 	["resolveLExp"] = 100,
 	["resolveMExp"] = 75,
 	["resolveSExp"] = 50,
-	["materials"] = "ingot_1:3,redCrystal_1:3",
+	["materials"] = "ingo_1:3,redCrystal_1:3",
 	["coin"] = 1500,
 	["makeTime"] = 2400
 }
@@ -632,7 +632,7 @@ equipments["blueArmguard_s1"] = {
 	["resolveLExp"] = 100,
 	["resolveMExp"] = 75,
 	["resolveSExp"] = 50,
-	["materials"] = "ingot_1:3,blueCrystal_1:3",
+	["materials"] = "ingo_1:3,blueCrystal_1:3",
 	["coin"] = 1500,
 	["makeTime"] = 2400
 }
@@ -644,7 +644,7 @@ equipments["greenArmguard_s1"] = {
 	["resolveLExp"] = 100,
 	["resolveMExp"] = 75,
 	["resolveSExp"] = 50,
-	["materials"] = "ingot_1:3,greenCrystal_1:3",
+	["materials"] = "ingo_1:3,greenCrystal_1:3",
 	["coin"] = 1500,
 	["makeTime"] = 2400
 }
@@ -656,7 +656,7 @@ equipments["redArmguard_s2"] = {
 	["resolveLExp"] = 400,
 	["resolveMExp"] = 300,
 	["resolveSExp"] = 200,
-	["materials"] = "ingot_2:3,redCrystal_2:3",
+	["materials"] = "ingo_2:3,redCrystal_2:3",
 	["coin"] = 20000,
 	["makeTime"] = 4800
 }
@@ -668,7 +668,7 @@ equipments["blueArmguard_s2"] = {
 	["resolveLExp"] = 400,
 	["resolveMExp"] = 300,
 	["resolveSExp"] = 200,
-	["materials"] = "ingot_2:3,blueCrystal_2:3",
+	["materials"] = "ingo_2:3,blueCrystal_2:3",
 	["coin"] = 20000,
 	["makeTime"] = 4800
 }
@@ -680,7 +680,7 @@ equipments["greenArmguard_s2"] = {
 	["resolveLExp"] = 400,
 	["resolveMExp"] = 300,
 	["resolveSExp"] = 200,
-	["materials"] = "ingot_2:3,greenCrystal_2:3",
+	["materials"] = "ingo_2:3,greenCrystal_2:3",
 	["coin"] = 20000,
 	["makeTime"] = 4800
 }
@@ -692,7 +692,7 @@ equipments["redArmguard_s3"] = {
 	["resolveLExp"] = 1600,
 	["resolveMExp"] = 1200,
 	["resolveSExp"] = 800,
-	["materials"] = "ingot_3:3,redCrystal_3:3",
+	["materials"] = "ingo_3:3,redCrystal_3:3",
 	["coin"] = 112000,
 	["makeTime"] = 9600
 }
@@ -704,7 +704,7 @@ equipments["blueArmguard_s3"] = {
 	["resolveLExp"] = 1600,
 	["resolveMExp"] = 1200,
 	["resolveSExp"] = 800,
-	["materials"] = "ingot_3:3,blueCrystal_3:3",
+	["materials"] = "ingo_3:3,blueCrystal_3:3",
 	["coin"] = 112000,
 	["makeTime"] = 9600
 }
@@ -716,7 +716,7 @@ equipments["greenArmguard_s3"] = {
 	["resolveLExp"] = 1600,
 	["resolveMExp"] = 1200,
 	["resolveSExp"] = 800,
-	["materials"] = "ingot_3:3,greenCrystal_3:3",
+	["materials"] = "ingo_3:3,greenCrystal_3:3",
 	["coin"] = 112000,
 	["makeTime"] = 9600
 }
@@ -728,7 +728,7 @@ equipments["redArmguard_s4"] = {
 	["resolveLExp"] = 5600,
 	["resolveMExp"] = 4200,
 	["resolveSExp"] = 2800,
-	["materials"] = "ingot_4:3,redCrystal_4:3",
+	["materials"] = "ingo_4:3,redCrystal_4:3",
 	["coin"] = 348000,
 	["makeTime"] = 19200
 }
@@ -740,7 +740,7 @@ equipments["blueArmguard_s4"] = {
 	["resolveLExp"] = 5600,
 	["resolveMExp"] = 4200,
 	["resolveSExp"] = 2800,
-	["materials"] = "ingot_4:3,blueCrystal_4:3",
+	["materials"] = "ingo_4:3,blueCrystal_4:3",
 	["coin"] = 348000,
 	["makeTime"] = 19200
 }
@@ -752,7 +752,7 @@ equipments["greenArmguard_s4"] = {
 	["resolveLExp"] = 5600,
 	["resolveMExp"] = 4200,
 	["resolveSExp"] = 2800,
-	["materials"] = "ingot_4:3,greenCrystal_4:3",
+	["materials"] = "ingo_4:3,greenCrystal_4:3",
 	["coin"] = 348000,
 	["makeTime"] = 19200
 }
@@ -764,7 +764,7 @@ equipments["redArmguard_s5"] = {
 	["resolveLExp"] = 22400,
 	["resolveMExp"] = 16800,
 	["resolveSExp"] = 11200,
-	["materials"] = "ingot_5:3,redCrystal_5:3",
+	["materials"] = "ingo_5:3,redCrystal_5:3",
 	["coin"] = 1044000,
 	["makeTime"] = 38400
 }
@@ -776,7 +776,7 @@ equipments["blueArmguard_s5"] = {
 	["resolveLExp"] = 22400,
 	["resolveMExp"] = 16800,
 	["resolveSExp"] = 11200,
-	["materials"] = "ingot_5:3,blueCrystal_5:3",
+	["materials"] = "ingo_5:3,blueCrystal_5:3",
 	["coin"] = 1044000,
 	["makeTime"] = 38400
 }
@@ -788,7 +788,7 @@ equipments["greenArmguard_s5"] = {
 	["resolveLExp"] = 22400,
 	["resolveMExp"] = 16800,
 	["resolveSExp"] = 11200,
-	["materials"] = "ingot_5:3,greenCrystal_5:3",
+	["materials"] = "ingo_5:3,greenCrystal_5:3",
 	["coin"] = 1044000,
 	["makeTime"] = 38400
 }

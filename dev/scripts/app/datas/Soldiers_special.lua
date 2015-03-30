@@ -78,7 +78,7 @@ special["meatWagon"] = {
 	["killScore"] = 30,
 	["citizen"] = 0,
 	["recruitTime"] = 100,
-	["techBuildingName"] = "siege"
+	["techBuildingName"] = "workshop"
 }
 special["priest"] = {
 	["name"] = "priest",
@@ -158,5 +158,5 @@ special["steamTank"] = {
 	["killScore"] = 36,
 	["citizen"] = 4,
 	["recruitTime"] = 100,
-	["techBuildingName"] = "siege"
+	["techBuildingName"] = "workshop"
 }
