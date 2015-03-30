@@ -76,6 +76,7 @@ function MyApp:restart(needDisconnect)
         NetManager:disconnect()
     end
     --关闭所有状态
+    self:EndCheckGameCenterIf()
     self.timer:Stop()
     self:GetAudioManager():StopAll()
     self:GetChatManager():Reset()
@@ -308,6 +309,52 @@ function MyApp:transactionObserver(event)
         device.hideActivityIndicator()
     end
 end
+-- GameCenter
+------------------------------------------------------------------------------------------------------------------
+function MyApp:StarCheckGameCenterIf()
+    if not self.___handle___ then
+        self.___handle___ = scheduler.scheduleGlobal(handler(self, self.__checkGameCenter),5)
+    end
+end
+function MyApp:EndCheckGameCenterIf()
+    if self.___handle___ then
+        scheduler.unscheduleGlobal(self.___handle___)
+    end
+    self.___handle___ = nil
+end
+
+function MyApp:__checkGameCenter()
+    if ext.gamecenter.isAuthenticated() then
+        local __,gcId = ext.gamecenter.getPlayerNameAndId() 
+        if string.len(gcId) > 0 and NetManager:isConnected() and User and not User:IsBindGameCenter() then
+            NetManager:getGcBindStatusPromise(gcId):next(function(response)
+            if not response.msg.isBind then
+                NetManager:getBindGcIdPromise(gc_id):next(function()
+                    app:EndCheckGameCenterIf()
+                end)
+            end
+            ext.gamecenter.gc_bind = response.msg.isBind
+        end)
+        end 
+    end
+end
+
+-- 如果登陆成功 函数将会被回调
+function __G__GAME_CENTER_CALLBACK(gc_name,gc_id)
+    app:StarCheckGameCenterIf()
+    --如果玩家当前未绑定gc并且当前的gc未绑定任何账号 执行自动绑定
+    if gc_name and gc_id and NetManager:isConnected() then
+        NetManager:getGcBindStatusPromise(gc_id):next(function(response)
+            if User and not User:IsBindGameCenter() and not response.msg.isBind then
+                NetManager:getBindGcIdPromise(gc_id):next(function()
+                    app:EndCheckGameCenterIf()
+                end)
+            end
+            ext.gamecenter.gc_bind = response.msg.isBind
+        end)
+    end
+end
+
 return MyApp
 
 

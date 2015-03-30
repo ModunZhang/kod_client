@@ -93,7 +93,7 @@ end
 function GameUISetting:OnButtonClicked(button)
 	local tag = button:getTag()
 	if tag == 1 then
-		 GameGlobalUI:showTips("提示","功能还未实现")
+		UIKit:newGameUI("GameUISettingAccount"):AddToCurrentScene(true)
 	elseif tag == 2 then
 		UIKit:newGameUI("GameUISettingServer"):AddToCurrentScene(true)
 	elseif tag == 3 then

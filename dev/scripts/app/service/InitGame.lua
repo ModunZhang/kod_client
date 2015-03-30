@@ -22,6 +22,9 @@ return function(userData)
     timer:AddListener(Alliance_Manager)
     timer:Start()
     app:GetChatManager():FetchAllChatMessageFromServer()
+    if ext.gamecenter.isGameCenterEnabled() and not ext.gamecenter.isAuthenticated() then
+         ext.gamecenter.authenticate(false)
+    end
 end
 
 

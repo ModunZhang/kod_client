@@ -100,6 +100,20 @@ function PlatformAdapter:common()
             ext.copyText(errDesc)
         end)
     end
+    self:gameCenter()
+end
+
+function PlatformAdapter:gameCenter()
+    if not ext.gamecenter then
+        local ep_func = function(...)end
+        ext.gamecenter = {
+            isGameCenterEnabled = ep_func,
+            authenticate = ep_func,
+            showAchivevementController = ep_func,
+            getPlayerNameAndId = ep_func,
+            isAuthenticated = ep_func,
+        }
+    end
 end
 
 --------------------------------------------------------------------

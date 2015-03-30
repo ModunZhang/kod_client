@@ -6,6 +6,7 @@ local GameUIAllianceVillageEnter = UIKit:createUIClass("GameUIAllianceVillageEnt
 local Localize = import("..utils.Localize")
 local VillageEvent = import("..entity.VillageEvent")
 local GameUIStrikePlayer = import(".GameUIStrikePlayer")
+local WidgetAllianceEnterButtonProgress = import("..widget.WidgetAllianceEnterButtonProgress")
 
 function GameUIAllianceVillageEnter:ctor(building,isMyAlliance,my_alliance,enemy_alliance)
 	GameUIAllianceVillageEnter.super.ctor(self,building,isMyAlliance,my_alliance)
@@ -267,6 +268,14 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 					end
 					self:LeftButtonClicked()
 				end)
+				if not self:IsMyAlliance() and self:GetMyAlliance():Status() == "prepare" then
+					 local progress_1 = WidgetAllianceEnterButtonProgress.new()
+			            :pos(-68, -54)
+			            :addTo(attack_button)
+        			local progress_2 = WidgetAllianceEnterButtonProgress.new()
+            			:pos(-68, -54)
+            			:addTo(strike_button)
+				end
 				buttons = {attack_button,strike_button}
 		    end
 		else --没人占领
@@ -285,6 +294,14 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 				end
 				self:LeftButtonClicked()
 			end)
+			if not self:IsMyAlliance() and self:GetMyAlliance():Status() == "prepare" then
+				local progress_1 = WidgetAllianceEnterButtonProgress.new()
+		            :pos(-68, -54)
+		            :addTo(attack_button)
+    			local progress_2 = WidgetAllianceEnterButtonProgress.new()
+        			:pos(-68, -54)
+        			:addTo(strike_button)
+			end
 			buttons = {attack_button,strike_button}
 		end
 	else --我方占领
