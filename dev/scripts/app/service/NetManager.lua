@@ -1413,17 +1413,34 @@ function NetManager:getSetApnIdPromise(apnId)
 end
 
 -- 获取排行榜
+
+local function rank_sort(response)
+    local data = response.msg
+    data.myRank = data.myRank + 1
+    if data.rankData[data.myRank] then
+        data.rankData[data.myRank].is_mine = true
+    end
+    table.sort(data.rankData, function(a, b)
+        return a.value > b.value
+    end)
+    for i,v in ipairs(data.rankData) do
+        if v.is_mine then
+            data.myRank = i
+        end
+    end
+    return response
+end
 function NetManager:getPlayerRankPromise(rankType, fromRank)
     return get_blocking_request_promise("logic.playerHandler.getPlayerRankList",{
         rankType = rankType,
         fromRank = fromRank or 0
-    },"获取排行榜失败!")
+    },"获取排行榜失败!"):next(rank_sort)
 end
 function NetManager:getAllianceRankPromise(rankType, fromRank)
     return get_blocking_request_promise("logic.playerHandler.getAllianceRankList",{
         rankType = rankType,
         fromRank = fromRank or 0
-    },"获取排行榜失败!")
+    },"获取排行榜失败!"):next(rank_sort)
 end
 
 ----------------------------------------------------------------------------------------------------------------

@@ -225,7 +225,23 @@ function GameUIReplay:OnMoveInStage()
 
 
     -- 按钮
-    WidgetPushButton.new(
+    self.pass = cc.ui.UIPushButton.new(
+        {normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = _("跳过"),
+        size = 24,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(back_ground):align(display.CENTER, back_width - 100, 50)
+        :onButtonClicked(function(event)
+            self:ShowResult()
+            self.pass:hide()
+            self.close:show()
+        end)
+
+    self.close = cc.ui.UIPushButton.new(
         {normal = "yellow_btn_up_149x47.png",pressed = "yellow_btn_down_149x47.png"},
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
@@ -237,7 +253,7 @@ function GameUIReplay:OnMoveInStage()
         :addTo(back_ground):align(display.CENTER, back_width - 100, 50)
         :onButtonClicked(function(event)
             self:LeftButtonClicked()
-        end)
+        end):hide()
 
 
     -- title
@@ -402,26 +418,28 @@ function GameUIReplay:OnMoveInStage()
         self:PlayDragonBattle():next(function()
             return self:PlaySoldierBattle(decode_battle(battle))
         end):next(function()
-            if self.report:GetReportResult() then
-                display.newSprite("victory_459x194.png"):addTo(self):pos(window.cx, window.cy + 250)
-            else
-                display.newSprite("defeat_469x263.png"):addTo(self):pos(window.cx, window.cy + 250)
-            end
+            self:ShowResult()
         end):catch(function(err)
             dump(err:reason())
         end)
     else
         self:PlaySoldierBattle(decode_battle(battle)):next(function()
-            if self.report:GetReportResult() then
-                display.newSprite("victory_459x194.png"):addTo(self):pos(window.cx, window.cy + 250)
-            else
-                display.newSprite("defeat_469x263.png"):addTo(self):pos(window.cx, window.cy + 250)
-            end
+            self:ShowResult()
         end):catch(function(err)
             dump(err:reason())
         end)
     end
     app:GetAudioManager():PlayGameMusic("AllianceBattleScene")
+end
+function GameUIReplay:ShowResult()
+    if not self.showed_result then
+        if self.report:GetReportResult() then
+            display.newSprite("victory_459x194.png"):addTo(self):pos(window.cx, window.cy + 250)
+        else
+            display.newSprite("defeat_469x263.png"):addTo(self):pos(window.cx, window.cy + 250)
+        end
+        self.showed_result = true
+    end
 end
 function GameUIReplay:onExit()
     GameUIReplay.super.onExit(self)
@@ -909,6 +927,7 @@ end
 
 
 return GameUIReplay
+
 
 
 

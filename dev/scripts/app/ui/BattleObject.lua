@@ -93,6 +93,7 @@ function BattleObject:defeat()
             p:resolve(self)
         end
     })
+    app:GetAudioManager():PlayeEffectSound("sfx_troop_lose.wav")
     return p
 end
 function BattleObject:Defeat()

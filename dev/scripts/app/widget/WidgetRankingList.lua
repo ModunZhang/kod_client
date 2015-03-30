@@ -1,3 +1,4 @@
+local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 local cocos_promise = import("..utils.cocos_promise")
 local window = import("..utils.window")
 local Flag = import("..entity.Flag")
@@ -9,27 +10,25 @@ local WidgetRankingList = class("WidgetRankingList", WidgetPopDialog)
 
 local ui_helper = WidgetAllianceUIHelper.new()
 
-local function rank_sort(response)
-    local data = response.msg
-    data.myRank = data.myRank + 1
-    if data.rankData[data.myRank] then
-        data.rankData[data.myRank].is_mine = true
-    end
-    table.sort(data.rankData, function(a, b)
-        return a.value > b.value
-    end)
-    for i,v in ipairs(data.rankData) do
-        if v.is_mine then
-            data.myRank = i
-        end
-    end
-    return response
-end
-
+WidgetRankingList.lock = false
+WidgetRankingList.rank_data = {
+    player = {},
+    alliance = {},
+}
+local rank_data = WidgetRankingList.rank_data
+local EXPIRE_TIME = 60
 function WidgetRankingList:ctor(type_)
-    self.type_ = type_
     local str = type_ == "player" and _("个人排行榜") or _("联盟排行榜")
     WidgetRankingList.super.ctor(self, 762, str, display.cy + 350)
+    self.type_ = type_
+    self.rank_map = rank_data[type_]
+    WidgetRankingList.lock = true
+    scheduler.performWithDelayGlobal(function()
+        if not WidgetRankingList.lock then
+            WidgetRankingList.rank_data.player = {}
+            WidgetRankingList.rank_data.alliance = {}
+        end
+    end, EXPIRE_TIME)
 end
 function WidgetRankingList:onEnter()
     WidgetRankingList.super.onEnter(self)
@@ -60,7 +59,6 @@ function WidgetRankingList:onEnter()
     self.listview:setRedundancyViewVal(self.listview:getViewRect().height + 76 * 2)
     self.listview:setDelegate(handler(self, self.sourceDelegate))
 
-    self.rank_map = {}
     WidgetDropList.new(
         {
             {tag = "power",label = _("战斗力排行榜"),default = true},
@@ -70,12 +68,12 @@ function WidgetRankingList:onEnter()
             if tag == 'power' then
                 if not self.rank_map.power then
                     if self.type_ == "player" then
-                        NetManager:getPlayerRankPromise("power"):next(rank_sort):next(function(response)
+                        NetManager:getPlayerRankPromise("power"):next(function(response)
                             self.rank_map.power = response.msg
                             self:ReloadRank(self.rank_map.power)
                         end)
                     else
-                        NetManager:getAllianceRankPromise("power"):next(rank_sort):next(function(response)
+                        NetManager:getAllianceRankPromise("power"):next(function(response)
                             self.rank_map.power = response.msg
                             self:ReloadRank(self.rank_map.power)
                         end)
@@ -86,12 +84,12 @@ function WidgetRankingList:onEnter()
             elseif tag == 'kill' then
                 if not self.rank_map.kill then
                     if self.type_ == "player" then
-                        NetManager:getPlayerRankPromise("kill"):next(rank_sort):next(function(response)
+                        NetManager:getPlayerRankPromise("kill"):next(function(response)
                             self.rank_map.kill = response.msg
                             self:ReloadRank(self.rank_map.kill)
                         end)
                     else
-                        NetManager:getAllianceRankPromise("kill"):next(rank_sort):next(function(response)
+                        NetManager:getAllianceRankPromise("kill"):next(function(response)
                             self.rank_map.kill = response.msg
                             self:ReloadRank(self.rank_map.kill)
                         end)
@@ -105,6 +103,7 @@ function WidgetRankingList:onEnter()
 end
 function WidgetRankingList:onExit()
     WidgetRankingList.super.onExit(self)
+    WidgetRankingList.lock = false
 end
 function WidgetRankingList:ReloadRank(rank)
     if self.rank_map.power == rank then
@@ -135,9 +134,9 @@ function WidgetRankingList:sourceDelegate(listView, tag, idx)
         item = self.listview:dequeueItem()
         if not item then
             item = self.listview:newItem()
-            content = self.type_ == "player" 
-            and self:CreatePlayerContentByIndex(idx) 
-            or self:CreateAllianceContentByIndex(idx)
+            content = self.type_ == "player"
+                and self:CreatePlayerContentByIndex(idx)
+                or self:CreateAllianceContentByIndex(idx)
 
             item:addContent(content)
         else
@@ -241,11 +240,11 @@ end
 function WidgetRankingList:CreateAllianceContentByIndex(idx)
     local item = display.newSprite("background2_548x76.png")
     local size = item:getContentSize()
-    
+
     item.bg2 = display.newSprite("background1_548x76.png"):addTo(item)
         :pos(size.width/2, size.height/2)
 
-    
+
 
     display.newSprite("dragon_strength_27x31.png"):addTo(item):pos(400, 40)
 
@@ -282,7 +281,7 @@ function WidgetRankingList:CreateAllianceContentByIndex(idx)
             self.flag:removeFromParent()
         end
         self.flag = ui_helper:CreateFlagContentSprite(Flag:DecodeFromJson(data.flag))
-        :addTo(self):align(display.CENTER, 80, 5):scale(0.5)
+            :addTo(self):align(display.CENTER, 80, 5):scale(0.5)
         return self
     end
     function item:SetIndex(index)
@@ -343,6 +342,7 @@ end
 
 
 return WidgetRankingList
+
 
 
 
