@@ -5,7 +5,18 @@
 local WidgetAllianceEnterButtonProgress = class("WidgetAllianceEnterButtonProgress", function ()
     local progress =display.newProgressTimer("progress_bg_116x89.png", display.PROGRESS_TIMER_RADIAL)
     progress:setRotationSkewY(180)
+    local my_allaince = Alliance_Manager:GetMyAlliance()
+    local status = my_allaince:Status()
+    if status == "prepare" then
+        local statusStartTime = math.floor(my_allaince:StatusStartTime()/1000)
+        local statusFinishTime = math.floor(my_allaince:StatusFinishTime()/1000)
+
+        local percent = math.floor((statusFinishTime-current_time)/(statusFinishTime-statusStartTime)*100)
+        progress:setPercentage(percent)
+    end
     app.timer:AddListener(progress)
+    progress:setNodeEventEnabled(true)
+
     return progress
 end)
 
@@ -19,11 +30,14 @@ function WidgetAllianceEnterButtonProgress:OnTimer(current_time)
         local percent = math.floor((statusFinishTime-current_time)/(statusFinishTime-statusStartTime)*100)
         self:setPercentage(percent)
     else
-        self:removeFromParent()
         app.timer:RemoveListener(self)
+        self:removeFromParent()
     end
 end
-
+function WidgetAllianceEnterButtonProgress:onExit()
+    app.timer:RemoveListener(self)
+end
 return WidgetAllianceEnterButtonProgress
+
 
 

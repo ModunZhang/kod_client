@@ -4,6 +4,7 @@ local window = import("..utils.window")
 local UIPageView = import("..ui.UIPageView")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
+local SoldierManager = import("..entity.SoldierManager")
 local Arrow = import(".Arrow")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local GameUIHelp = import(".GameUIHelp")
@@ -41,6 +42,7 @@ function GameUIHome:OnUpgrading()
 end
 function GameUIHome:OnUpgradingFinished()
     self:OnTaskChanged()
+    self:RefreshHelpButtonVisible()
 end
 function GameUIHome:OnTaskChanged()
     self.task = self.city:GetRecommendTask()
@@ -50,6 +52,21 @@ function GameUIHome:OnTaskChanged()
         self.quest_label:setString(_("当前没有推荐任务!"))
     end
     self:SetCompleteTaskCount(self.city:GetUser():GetTaskManager():GetCompleteTaskCount())
+end
+function GameUIHome:OnMilitaryTechEventsChanged()
+    self:RefreshHelpButtonVisible()
+end
+function GameUIHome:OnSoldierStarEventsChanged()
+    self:RefreshHelpButtonVisible()
+end
+function GameUIHome:OnProductionTechnologyEventDataChanged()
+    self:RefreshHelpButtonVisible()
+end
+function GameUIHome:RefreshHelpButtonVisible()
+    if self.help_button then
+        local alliance = Alliance_Manager:GetMyAlliance()
+        self.help_button:setVisible(not alliance:IsDefault() and #alliance:GetCouldShowHelpEvents()>0)
+    end
 end
 function GameUIHome:SetCompleteTaskCount(count)
     if count > 0 then
@@ -62,7 +79,7 @@ end
 
 
 function GameUIHome:ctor(city)
-    GameUIHome.super.ctor(self,{type = UIKit.UITYPE.BACKGROUND})
+GameUIHome.super.ctor(self,{type = UIKit.UITYPE.BACKGROUND})
     self.city = city
     self.chatManager = app:GetChatManager()
 end
@@ -88,9 +105,9 @@ function GameUIHome:FadeToSelf(isFullDisplay)
     local p = isFullDisplay and 0 or 99999999
     transition.fadeTo(self, {opacity = opacity, time = 0.2,
         onComplete = function()
-                self:pos(p, p)
-            end
-        })
+            self:pos(p, p)
+        end
+    })
 end
 
 function GameUIHome:onEnter()
@@ -118,6 +135,10 @@ function GameUIHome:onEnter()
     Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
     Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
+
+    city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
+    city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+    city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
 
     User:AddListenOnType(self, User.LISTEN_TYPE.BASIC)
     User:AddListenOnType(self, User.LISTEN_TYPE.TASK)
@@ -150,7 +171,8 @@ function GameUIHome:RefreshChatMessage()
 end
 
 function GameUIHome:onExit()
-    self.city:RemoveListenerOnType(self, self.city.LISTEN_TYPE.UPGRADE_BUILDING)
+    local city = self.city
+    city:RemoveListenerOnType(self, self.city.LISTEN_TYPE.UPGRADE_BUILDING)
     self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
     self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
     self.city:GetResourceManager():RemoveObserver(self)
@@ -158,6 +180,9 @@ function GameUIHome:onExit()
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
+    city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
+    city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+    city:RemoveListenerOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
 
     User:RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
     User:RemoveListenerOnType(self, User.LISTEN_TYPE.TASK)
@@ -166,9 +191,8 @@ function GameUIHome:onExit()
     -- GameUIHome.super.onExit(self)
 end
 function GameUIHome:OnBasicChanged(fromEntity,changed_map)
-    if changed_map.id then
-        local flag = changed_map.id.new~=nil or changed_map.id.old~=""
-        self.help_button:setVisible(flag)
+    if fromEntity.__cname == "Alliance" and changed_map.id then
+        self:RefreshHelpButtonVisible()
     end
     if fromEntity.__cname == "User" then
         if changed_map.name then
@@ -181,15 +205,15 @@ function GameUIHome:OnBasicChanged(fromEntity,changed_map)
     self:RefreshData()
 end
 function GameUIHome:OnHelpEventChanged(changed_map)
+    self:RefreshHelpButtonVisible()
     local alliance = Alliance_Manager:GetMyAlliance()
-    self.help_button:setVisible(LuaUtils:table_size(alliance:GetAllHelpEvents())>0)
     local request_num = alliance:GetOtherRequestEventsNum()
     self.request_help_num_bg:setVisible(request_num>0)
     self.request_help_num:setString(GameUtils:formatNumber(request_num))
 end
 function GameUIHome:OnAllHelpEventChanged(help_events)
+    self:RefreshHelpButtonVisible()
     local alliance = Alliance_Manager:GetMyAlliance()
-    self.help_button:setVisible(LuaUtils:table_size(help_events)>0)
     local request_num = alliance:GetOtherRequestEventsNum()
     self.request_help_num_bg:setVisible(request_num>0)
     self.request_help_num:setString(GameUtils:formatNumber(request_num))
@@ -560,23 +584,22 @@ function GameUIHome:CreateBottom()
             end
         end
     end):addTo(self):pos(display.right-40, display.bottom+300)
-    help_button:setVisible(not Alliance_Manager:GetMyAlliance():IsDefault())
-    help_button:setVisible(LuaUtils:table_size(Alliance_Manager:GetMyAlliance():GetAllHelpEvents())>0)
+    self.help_button = help_button
+    self:RefreshHelpButtonVisible()
+
 
     -- 请求帮助的其他联盟成员请求帮助事件数量
     local request_help_num_bg = display.newSprite("mail_unread_bg_36x23.png"):addTo(help_button):pos(20,-20)
     local request_num = Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum()
-    self.request_help_num = cc.ui.UILabel.new(
-        {cc.ui.UILabel.LABEL_TYPE_TTF,
+    self.request_help_num = UIKit:ttfLabel(
+        {
             text = GameUtils:formatNumber(request_num),
-            font = UIKit:getFontFilePath(),
             size = 16,
-            color = UIKit:hex2c3b(0xf5f2b3)
+            color = 0xf5f2b3
         }):align(display.CENTER,request_help_num_bg:getContentSize().width/2,request_help_num_bg:getContentSize().height/2+4)
         :addTo(request_help_num_bg)
     request_help_num_bg:setVisible(request_num>0)
     self.request_help_num_bg = request_help_num_bg
-    self.help_button = help_button
 
     -- TODO:临时gacha按钮
     -- local gacha_button = cc.ui.UIPushButton.new(
@@ -650,6 +673,8 @@ function GameUIHome:Find()
 end
 
 return GameUIHome
+
+
 
 
 

@@ -38,7 +38,6 @@ function GameUIAllianceCityEnter:onEnter()
 end
 function GameUIAllianceCityEnter:onExit()
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.BASIC)
-    app.timer:RemoveListener(self)
     GameUIAllianceCityEnter.super.onExit(self)
 end
 function GameUIAllianceCityEnter:OnBasicChanged( alliance,changed_map )

@@ -1153,7 +1153,22 @@ y+=ytranslate;         \
             }
         }
     }
-    
+    void Scale9Sprite::setGlobalZOrder(float globalZOrder)
+    {
+        int j = 0;
+        if (_scale9Enabled)
+        {
+            for( ; j < _protectedChildren.size(); j++ )
+            {
+                auto node = _protectedChildren.at(j);
+                node->setGlobalZOrder(globalZOrder);
+            }
+        }else
+        {
+            this->getSprite()->setGlobalZOrder(globalZOrder);
+        }
+
+    }
     void Scale9Sprite::updateDisplayedOpacity(GLubyte parentOpacity)
     {
         _displayedOpacity = _realOpacity * parentOpacity/255.0;
