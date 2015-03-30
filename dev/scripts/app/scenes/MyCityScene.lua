@@ -298,18 +298,23 @@ function MyCityScene:OnSceneScale(scene_layer)
     end
 end
 local FLASH_TIME = 0.5
-function MyCityScene:PromiseOfFlash(building)
+function MyCityScene:PromiseOfFlash(...)
     local p = promise.new()
+    local buildings = {...}
     local director = cc.Director:getInstance()
-    building:GetSprite():setFilter(filter.newFilter("CUSTOM", json.encode({
-        frag = "shaders/flash.fs",
-        shaderName = "flash",
-        startTime = director:getTotalFrames() * director:getAnimationInterval(),
-        lastTime = FLASH_TIME,
-    })))
+    for i,v in ipairs(buildings) do
+        v:GetSprite():setFilter(filter.newFilter("CUSTOM", json.encode({
+            frag = "shaders/flash.fs",
+            shaderName = "flash",
+            startTime = director:getTotalFrames() * director:getAnimationInterval(),
+            lastTime = FLASH_TIME,
+        })))
+    end
     self.util_node:performWithDelay(function()
-        if building.GetSprite then
-            building:GetSprite():clearFilter()
+        for i,v in ipairs(buildings) do
+            if v.GetSprite and v:GetSprite() then
+                v:GetSprite():clearFilter()
+            end
         end
         p:resolve()
     end, FLASH_TIME)
@@ -321,7 +326,20 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     if building then
         self:GetSceneUILayer():HideIndicator()
 
-        self:PromiseOfFlash(building):next(function()
+        local buildings = {}
+        if building:GetEntity():GetType() == "wall" then
+            for i,v in ipairs(self:GetSceneLayer():GetWalls()) do
+                table.insert(buildings, v)
+            end
+            for i,v in ipairs(self:GetSceneLayer():GetTowers()) do
+                table.insert(buildings, v)
+            end
+        elseif building:GetEntity():GetType() == "tower" then
+            buildings = {unpack(self:GetSceneLayer():GetTowers())}
+        else
+            buildings = {building}
+        end
+        self:PromiseOfFlash(unpack(buildings)):next(function()
             if self:IsEditMode() then
                 self:GetSceneUILayer():getChildByTag(WidgetMoveHouse.ADD_TAG):SetMoveToRuins(building)
                 return
@@ -410,6 +428,7 @@ function MyCityScene:OpenUI(building)
     end
 end
 return MyCityScene
+
 
 
 
