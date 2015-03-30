@@ -246,7 +246,6 @@ function GameUIVip:OnMoveInStage()
                 self.player_node = WidgetPlayerNode.new(cc.size(564,760),self)
                     :addTo(self:GetView()):pos(window.cx-564/2,window.bottom_top+30)
                 self:RefreshListView()
-                User:AddListenOnType(self,User.LISTEN_TYPE.BASIC)
             end
             self.player_node:setVisible(true)
         else
@@ -267,6 +266,7 @@ function GameUIVip:OnMoveInStage()
             end
         end
     end):pos(window.cx, window.bottom + 34)
+    User:AddListenOnType(self,User.LISTEN_TYPE.BASIC)
 
 end
 function GameUIVip:onExit()
@@ -687,7 +687,7 @@ function GameUIVip:GetVIPInfoByLevel(level)
             if v == "freeSpeedup" then
                 effect = effect .. _("分钟")
             end
-            
+
             if (level-1)>0 then
                 local previous_vip = VIP_LEVEL[level-1]
                 -- 上一等级的vip没有此项加成
@@ -788,16 +788,18 @@ end
 
 function GameUIVip:OnBasicChanged(from,changed_map)
     if from.__cname=="User" then
-        if changed_map.name then
+        if changed_map.name and self.player_node then
             self.player_node:RefreshUI()
         end
-        if changed_map.vipExp then
+        if changed_map.vipExp and self.vip_layer then
             local vip_level,percent,exp = User:GetVipLevel()
             self.vip_button_group:Refresh(vip_level)
             self.vip_layer:removeChildByTag(999, true)
             local exp_bar = self:CreateVipExpBar():addTo(self.vip_layer,1,999):pos(display.cx-287, display.top-300)
             exp_bar:LightLevelBar(vip_level,percent,exp)
-            self.player_node:RefreshUI()
+            if self.player_node then
+                self.player_node:RefreshUI()
+            end
         end
     end
 end
@@ -811,6 +813,9 @@ function GameUIVip:OnVipEventTimer( vip_event_new )
 end
 
 return GameUIVip
+
+
+
 
 
 

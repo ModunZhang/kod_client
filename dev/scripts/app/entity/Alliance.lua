@@ -303,6 +303,8 @@ function Alliance:GetCouldShowHelpEvents()
                             end
                         end)
                     end
+                else
+                    isFinished = true
                 end
                 if isFinished then
                     table.insert(could_show, event)
@@ -602,7 +604,6 @@ end
 function Alliance:OnHelpEventsChanged(alliance_data,deltaData)
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.helpEvents ~= nil
-
     if is_fully_update then
         if alliance_data.helpEvents then
             for _,v in pairs(alliance_data.helpEvents) do
@@ -1302,6 +1303,7 @@ function Alliance:NeedUpdateEnemyAlliance()
 end
 
 return Alliance
+
 
 
 

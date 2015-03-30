@@ -398,6 +398,9 @@ function User:OnVipEventDataChange(userData, deltaData)
         for k,v in pairs(deltaData.vipEvents) do
             if tolua.type(k) == "number" then
                 self.vip_event:UpdateData(v)
+                self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_ACTIVE, function(listener)
+                    listener:OnVipEventActive(self.vip_event)
+                end)
             end
         end
         self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT, function(listener)
@@ -606,6 +609,8 @@ function User:GetBestDragon()
 end
 
 return User
+
+
 
 
 
