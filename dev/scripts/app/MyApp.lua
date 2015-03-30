@@ -134,7 +134,10 @@ function MyApp:flushIf()
     end
 end
 
-function MyApp:retryConnectServer()
+function MyApp:retryConnectServer(need_disconnect)
+    if need_disconnect or type(need_disconnect) == "nil" then
+        NetManager:disconnect()
+    end
     if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
         UIKit:WaitForNet()
         scheduler.performWithDelayGlobal(function()
@@ -142,7 +145,7 @@ function MyApp:retryConnectServer()
                 return NetManager:getLoginPromise()
             end):catch(function(err)
                 UIKit:showMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
-                    app:retryConnectServer()
+                    app:retryConnectServer(false)
                 end,nil,false)
             end):always(function()
                 UIKit:NoWaitForNet()
@@ -161,7 +164,7 @@ end
 function MyApp:onEnterForeground()
     UIKit:closeAllUI()
     LuaUtils:outputTable("onEnterForeground", {})
-    self:retryConnectServer()
+    self:retryConnectServer(false)
 end
 function MyApp:onEnterPause()
     LuaUtils:outputTable("onEnterPause", {})
@@ -190,9 +193,10 @@ function MyApp:EnterPlayerCityScene(id)
     self:EnterCitySceneByPlayerAndAlliance(id, false)
 end
 function MyApp:EnterCitySceneByPlayerAndAlliance(id, is_my_alliance)
-    NetManager:getPlayerCityInfoPromise(id):next(function(user_data)
-        local user = User_.new(user_data):OnUserDataChanged(user_data)
-        local city = City.new(user_data):SetUser(user):OnUserDataChanged(user_data)
+    NetManager:getPlayerCityInfoPromise(id):next(function(response)
+        local user_data = response.msg.playerViewData
+        local user = User_.new(user_data):OnBasicInfoChanged(user_data)
+        local city = City.new(user_data):SetUser(user):OnUserDataChanged(user_data, app.timer:GetServerTime())
         if is_my_alliance then
             app:enterScene("FriendCityScene", {user, city}, "custom", -1, transition_)
         else

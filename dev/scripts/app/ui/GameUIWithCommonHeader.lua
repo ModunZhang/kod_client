@@ -18,7 +18,7 @@ function GameUIWithCommonHeader:onEnter()
     local home_button = self:CreateHomeButton():addTo(titleBar)
     local gem_button,gem_label = self:CreateShopButton()
     gem_button:addTo(titleBar)
-    
+    self.home_button = home_button
     self.__titleBar = titleBar
     if gem_label then
         self.__gem_label= gem_label
@@ -44,7 +44,9 @@ end
 function GameUIWithCommonHeader:GetGemLabel()
     return self.__gem_label
 end
-
+function GameUIWithCommonHeader:GetHomeButton()
+    return self.home_button
+end
 function GameUIWithCommonHeader:OnMoveOutStage()
     GameUIWithCommonHeader.super.OnMoveOutStage(self)
 end
@@ -116,7 +118,7 @@ end
 
 function GameUIWithCommonHeader:CreateHomeButton(on_clicked)
      local home_button = cc.ui.UIPushButton.new(
-        {normal = "home_btn_up.png",pressed = "home_btn_down.png"})
+        {normal = "home_btn_up.png",pressed = "home_btn_down.png",disabled = "home_btn_disabled.png"})
         :onButtonClicked(function(event)
             if on_clicked then
                 on_clicked()

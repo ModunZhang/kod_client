@@ -628,6 +628,13 @@ function CityLayer:FindBuildingSpriteByBuilding(buildingEntity,city)
         end
     end)
     if find_sprite then return find_sprite end
+    table.foreach(self.ruins, function(k, ruin)
+        if ruin:GetEntity() == buildingEntity then
+            find_sprite = ruin
+            return true
+        end
+    end)
+    if find_sprite then return find_sprite end
     local near_tower = city:GetNearGateTower()
     if  near_tower == buildingEntity then
         table.foreach(self.towers, function(k, tower)
@@ -755,8 +762,10 @@ function CityLayer:OnSceneMove()
     local move_widget = self.city_scene:GetSceneUILayer():getChildByTag(989)
     if move_widget then
         local ruins = move_widget:GetRuins()
-        local world_pos = ruins:GetWorldPosition()
-        move_widget:setPosition(world_pos.x, world_pos.y)
+        if ruins then
+            local world_pos = ruins:GetWorldPosition()
+            move_widget:setPosition(world_pos.x, world_pos.y)
+        end
     end
     -- self:UpdateWeather()
     self.city_scene:GetSceneUILayer():OnSceneMove()
@@ -781,6 +790,7 @@ function CityLayer:ShowLevelUpNode()
 end
 
 return CityLayer
+
 
 
 

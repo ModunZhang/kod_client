@@ -51,6 +51,7 @@ function WidgetMilitaryTechnology:ctor(building)
     for k,v in pairs(techs) do
         self.items_list[k] =  self:CreateItem(v)
     end
+    self:VisibleUpgradeButton()
     self.listview:reload()
 end
 
@@ -89,7 +90,6 @@ function WidgetMilitaryTechnology:CreateItem(tech)
         WidgetUpgradeMilitaryTech.new(tech):AddToCurrentScene()
         end)
         :align(display.CENTER, item_width-90, 44):addTo(content)
-    upgrade_btn:setVisible(not tech:IsMaxLevel())
 
     local soldiers = string.split(tech:Name(), "_")
     local soldier_category = Localize.soldier_category
@@ -104,23 +104,49 @@ function WidgetMilitaryTechnology:CreateItem(tech)
             upgrade_btn:hide()
         end
     end
+    function item:GetTech()
+        return tech
+    end
+    function item:SetUpgradeBtnVisible(visible)
+        upgrade_btn:setVisible(visible and not tech:IsMaxLevel())
+    end
     return item
 end
 function WidgetMilitaryTechnology:onEnter()
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_DATA_CHANGED)
+    City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
 end
 function WidgetMilitaryTechnology:onExit()
     City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_DATA_CHANGED)
+    City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
 end
 function WidgetMilitaryTechnology:OnMilitaryTechsDataChanged(soldier_manager,changed_map)
     for k,v in pairs(changed_map) do
-        print("OnMilitaryTechsDataChanged",k,self.items_list[k])
         if self.items_list[k] then
             self.items_list[k]:LevelUpRefresh(v)
         end
     end
 end
+function WidgetMilitaryTechnology:OnMilitaryTechEventsChanged(soldier_manager,changed_map)
+    self:VisibleUpgradeButton()
+end
+function WidgetMilitaryTechnology:VisibleUpgradeButton()
+    for i,v in pairs(self.items_list) do
+        local visible = true
+        City:GetSoldierManager():IteratorMilitaryTechEvents(function (event)
+            if v:GetTech():Name() == event:Name() then
+                visible = false
+                return
+            end
+        end)
+        v:SetUpgradeBtnVisible(visible)
+    end
+end
 return WidgetMilitaryTechnology
+
+
+
+
 
 
 

@@ -132,11 +132,14 @@ end
 function MapScene:OnTouchBegan(pre_x, pre_y, x, y)
 
 end
-function MapScene:OnTouchEnd(pre_x, pre_y, x, y)
-
+function MapScene:OnTouchEnd(pre_x, pre_y, x, y, speed)
+    if not speed then
+        self.touch_judgment:ResetTouch()
+        self.scene_layer:MakeElastic()
+    end
 end
 function MapScene:OnTouchCancelled(pre_x, pre_y, x, y)
-
+    print("OnTouchCancelled")
 end
 function MapScene:OnTouchMove(pre_x, pre_y, x, y)
     if self.distance then return end
@@ -151,7 +154,7 @@ end
 function MapScene:OnTouchClicked(pre_x, pre_y, x, y)
 
 end
-function MapScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed_y, millisecond)
+function MapScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed_y, millisecond, is_end)
     local parent = self.scene_layer:getParent()
     local speed = parent:convertToNodeSpace(cc.p(new_speed_x, new_speed_y))
     local x, y  = self.scene_layer:getPosition()
@@ -160,6 +163,11 @@ function MapScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed
     speed.y = speed.y > max_speed and max_speed or speed.y
     local sp = self:convertToNodeSpace(cc.p(speed.x * millisecond, speed.y * millisecond))
     self.scene_layer:setPosition(cc.p(x + sp.x, y + sp.y))
+
+    if is_end or self.scene_layer:IsCollideSide() then
+        self.touch_judgment:ResetTouch()
+        self.scene_layer:MakeElastic()
+    end
 end
 
 return MapScene

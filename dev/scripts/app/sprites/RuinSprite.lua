@@ -29,7 +29,10 @@ end
 function RuinSprite:IsEditMode()
 	return self:getNumberOfRunningActions() > 0
 end
-
+function RuinSprite:GetWorldPosition()
+    return self:convertToWorldSpace(cc.p(self:GetSpriteOffset())),
+        self:convertToWorldSpace(cc.p(self:GetSpriteTopPosition()))
+end
 return RuinSprite
 
 

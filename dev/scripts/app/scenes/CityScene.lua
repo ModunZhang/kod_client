@@ -344,7 +344,8 @@ function CityScene:OnTouchBegan(pre_x, pre_y, x, y)
         end
     end
 end
-function CityScene:OnTouchEnd(pre_x, pre_y, x, y)
+function CityScene:OnTouchEnd(pre_x, pre_y, x, y, speed)
+    CityScene.super.OnTouchEnd(self, pre_x, pre_y, x, y, speed)
     if not DEBUG_LOCAL then return end
     local citynode = self:GetSceneLayer():GetCityNode()
     local point = citynode:convertToNodeSpace(cc.p(x, y))

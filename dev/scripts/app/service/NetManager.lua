@@ -245,8 +245,12 @@ end
 
 function NetManager:disconnect()
     self.m_was_inited_game = true
-    self:removeDisConnectEventListener()
+    self:removeEventListener("disconnect")
     self.m_netService:disconnect()
+end
+
+function NetManager:isConnected()
+    return self.m_netService:isConnected()
 end
 
 function NetManager:addEventListener(event, cb)
@@ -259,43 +263,23 @@ function NetManager:removeEventListener(event)
     self.m_netService:removeListener(event)
 end
 
-function NetManager:addTimeoutEventListener()
-    self:addEventListener("timeout", function(success, msg)
-        -- print("addTimeoutEventListener----->timeout")
-        end)
-end
-
-function NetManager:removeTimeoutEventListener()
-    -- print("removeTimeoutEventListener----->timeout")
-    self:removeEventListener("timeout")
-end
-
-function NetManager:addDisconnectEventListener()
-    self:addEventListener("disconnect", function(success, msg)
-        if self.m_netService:isConnected() then
+local base_event_map = {
+    disconnect = function(success, response)
+        if NetManager.m_netService:isConnected() then
             UIKit:showMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
                 app:retryConnectServer()
             end,nil,false)
         end
-    end)
-end
-
-function NetManager:removeDisConnectEventListener(  )
-    self:removeEventListener("disconnect")
-end
-
-function NetManager:addKickEventListener()
-    self:addEventListener("onKick", function(success, msg)
-        self:disconnect()
+    end,
+    timeout = function(success, response)
+    end,
+    onKick = function(success, response)
+        NetManager:disconnect()
         UIKit:showMessageDialog(_("提示"), _("服务器连接断开!"), function()
             app:restart(false)
         end,nil,false)
-    end)
-end
-
-function NetManager:removeKickEventListener(  )
-    self:removeEventListener("onKick")
-end
+    end,
+}
 
 
 local logic_event_map = {
@@ -335,34 +319,26 @@ local logic_event_map = {
 }
 ---
 function NetManager:InitEventsMap(...)
-    local event_map = {}
+    self:CleanAllEventListeners()
     for _,events in ipairs{...} do
+        for event_name,callback in pairs(events) do
+            self:addEventListener(event_name, function(success, response)
+                callback(success, response)
+                local callback_ = unpack(self.event_callback_map[event_name])
+                if type(callback_) == "function" then
+                    callback_(success, response)
+                end
+                self.event_callback_map[event_name] = {}
+            end)
+        end
         for k,v in pairs(events) do
-            event_map[k] = v
+            self.event_map[k] = v
+            self.event_callback_map[k] = {}
         end
     end
-    self.event_map = event_map
-    --
-    local event_callback_map = {}
-    for event_name,_ in pairs(self.event_map) do
-        event_callback_map[event_name] = {}
-    end
-    self.event_callback_map = event_callback_map
 end
-function NetManager:AddAllEventListener()
-    for event_name,callback in pairs(self.event_map) do
-        self:addEventListener(event_name, function(success, response)
-            callback(success, response)
-            local callback_ = unpack(self.event_callback_map[event_name])
-            if type(callback_) == "function" then
-                callback_(success, response)
-            end
-            self.event_callback_map[event_name] = {}
-        end)
-    end
-end
-function NetManager:RemoveAllEvents()
-    for event_name,_ in pairs(self.event_map) do
+function NetManager:CleanAllEventListeners()
+    for event_name,_ in pairs(self.event_map or {}) do
         self:removeEventListener(event_name)
     end
     self.event_map = {}
@@ -397,18 +373,14 @@ local function get_connectGateServer_promise()
 end
 function NetManager:getConnectGateServerPromise()
     return get_connectGateServer_promise():next(function(result)
-        self:addDisconnectEventListener()
-        self:addTimeoutEventListener()
-        self:addKickEventListener()
+        self:InitEventsMap(base_event_map)
     end)
 end
 -- 获取服务器列表
 function NetManager:getLogicServerInfoPromise()
     return get_none_blocking_request_promise("gate.gateHandler.queryEntry", nil, "获取逻辑服务器失败")
         :next(function(result)
-            self:removeTimeoutEventListener()
-            self:removeDisConnectEventListener()
-            self:removeKickEventListener()
+            self:CleanAllEventListeners()
             self.m_netService:disconnect()
             self.m_logicServer.host = result.msg.data.host
             self.m_logicServer.port = result.msg.data.port
@@ -425,20 +397,14 @@ local function get_connectLogicServer_promise()
 end
 function NetManager:getConnectLogicServerPromise()
     return get_connectLogicServer_promise():next(function(result)
-        -- base
-        self:addDisconnectEventListener()
-        self:addTimeoutEventListener()
-        self:addKickEventListener()
-
-        self:InitEventsMap(logic_event_map)
-        self:AddAllEventListener(logic_event_map)
+        self:InitEventsMap(base_event_map, logic_event_map)
     end)
 end
 local function getOpenUDID()
     local device_id
     local udid = cc.UserDefault:getInstance():getStringForKey("udid")
     if udid and #udid > 0 then
-        device_id = udid
+        device_id = "1"
     else
         device_id = device.getOpenUDID()
     end
@@ -865,13 +831,13 @@ function NetManager:getFreeSpeedUpPromise(eventType, eventId)
 end
 -- 协助玩家加速
 function NetManager:getHelpAllianceMemberSpeedUpPromise(eventId)
-    return get_blocking_request_promise("logic.allianceHandler.helpAllianceMemberSpeedUp", {
+    return get_none_blocking_request_promise("logic.allianceHandler.helpAllianceMemberSpeedUp", {
         eventId = eventId,
     }, "协助玩家加速失败!"):next(get_response_msg)
 end
 -- 协助所有玩家加速
 function NetManager:getHelpAllAllianceMemberSpeedUpPromise()
-    return get_blocking_request_promise("logic.allianceHandler.helpAllAllianceMemberSpeedUp", {}
+    return get_none_blocking_request_promise("logic.allianceHandler.helpAllAllianceMemberSpeedUp", {}
         , "协助所有玩家加速失败!"):next(get_response_msg)
 end
 -- 创建联盟
@@ -952,7 +918,7 @@ end
 function NetManager:getPlayerCityInfoPromise(targetPlayerId)
     return get_blocking_request_promise("logic.playerHandler.getPlayerViewData", {
         targetPlayerId = targetPlayerId
-    }, "获取玩家城市信息失败!"):next(get_response_msg)
+    }, "获取玩家城市信息失败!")
 end
 -- 移交萌主
 function NetManager:getHandOverAllianceArchonPromise(memberId)
@@ -1534,6 +1500,10 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
+
+
+
 
 
 

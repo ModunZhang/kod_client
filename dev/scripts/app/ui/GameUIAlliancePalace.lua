@@ -197,7 +197,7 @@ function GameUIAlliancePalace:OpenAwardDialog(member)
     -- slider
     local slider = WidgetSliderWithInput.new({max = self.alliance:Honour()})
         :addTo(slider_bg)
-        :align(display.CENTER, slider_bg:getContentSize().width/2, self.alliance:Honour()==0 and 45 or 65)
+        :align(display.CENTER, slider_bg:getContentSize().width/2,  65)
         :OnSliderValueChanged(function(event)
             -- parms.onSliderValueChanged(math.floor(event.value))
             end)
