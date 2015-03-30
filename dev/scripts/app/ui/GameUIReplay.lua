@@ -40,6 +40,8 @@ local function decode_battle_from_report(report)
     local attacks = report:GetFightAttackSoldierRoundData()
     local defends = report:GetFightDefenceSoldierRoundData()
     if report:IsFightWall() then
+        assert(report.GetFightAttackWallRoundData)
+        assert(report.GetFightDefenceWallRoundData)
         for i, v in ipairs(report:GetFightAttackWallRoundData()) do
             attacks[#attacks + 1] = v
         end
@@ -154,6 +156,17 @@ local function decode_battle(raw)
 end
 
 function GameUIReplay:ctor(report, callback)
+    assert(report.GetFightAttackName)
+    assert(report.GetFightDefenceName)
+    assert(report.IsDragonFight)
+    assert(report.GetFightAttackDragonRoundData)
+    assert(report.GetFightDefenceDragonRoundData)
+    assert(report.GetFightAttackSoldierRoundData)
+    assert(report.GetFightDefenceSoldierRoundData)
+    assert(report.IsFightWall)
+    assert(report.GetOrderedAttackSoldiers)
+    assert(report.GetOrderedDefenceSoldiers)
+    assert(report.GetReportResult)
     self.report = report
     self.callback = callback
     GameUIReplay.super.ctor(self)
@@ -387,12 +400,24 @@ function GameUIReplay:OnMoveInStage()
 
     if self.report:IsDragonFight() then
         self:PlayDragonBattle():next(function()
-            self:PlaySoldierBattle(decode_battle(battle))
+            return self:PlaySoldierBattle(decode_battle(battle))
+        end):next(function()
+            if self.report:GetReportResult() then
+                display.newSprite("victory_459x194.png"):addTo(self):pos(window.cx, window.cy + 250)
+            else
+                display.newSprite("defeat_469x263.png"):addTo(self):pos(window.cx, window.cy + 250)
+            end
         end):catch(function(err)
             dump(err:reason())
         end)
     else
-        self:PlaySoldierBattle(decode_battle(battle)):catch(function(err)
+        self:PlaySoldierBattle(decode_battle(battle)):next(function()
+            if self.report:GetReportResult() then
+                display.newSprite("victory_459x194.png"):addTo(self):pos(window.cx, window.cy + 250)
+            else
+                display.newSprite("defeat_469x263.png"):addTo(self):pos(window.cx, window.cy + 250)
+            end
+        end):catch(function(err)
             dump(err:reason())
         end)
     end

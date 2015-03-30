@@ -804,10 +804,10 @@ function GameUtils:DoBattle(attacker, defencer, terrain)
         return {dragon = dragon, soldiers = soldiers}
     end
     function report:GetFightAttackName()
-        return "进攻方"
+        return _("进攻方")
     end
     function report:GetFightDefenceName()
-        return "防守方"
+        return _("防守方")
     end
     function report:IsDragonFight()
         return true
@@ -836,6 +836,9 @@ function GameUtils:DoBattle(attacker, defencer, terrain)
     function report:IsAttackWin()
         local round = self:GetFightAttackSoldierRoundData()
         return round[#round].isWin
+    end
+    function report:GetReportResult()
+        return self:IsAttackWin()
     end
     return report
 end
