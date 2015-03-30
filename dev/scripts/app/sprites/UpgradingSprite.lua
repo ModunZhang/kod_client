@@ -73,7 +73,7 @@ function UpgradingSprite:StopBuildingAnimation()
     self:stopAllActions()
     self:setColor(display.COLOR_WHITE)
     self.building_animation = nil
-    
+
     if self.hammer_animation then
         self.hammer_animation:removeFromParent()
         self.hammer_animation = nil
@@ -143,7 +143,7 @@ end
 function UpgradingSprite:CreateSprite()
     local config = self:GetCurrentConfig()
     local sprite_file, scale = self:GetSpriteFile()
-    local sprite = display.newSprite(sprite_file)
+    local sprite = display.newSprite(sprite_file, nil, nil, {class=cc.FilteredSpriteWithOne})
         :scale(scale == nil and 1 or scale)
         :flipX(self:GetFlipX())
     local p = sprite:getAnchorPointInPoints()
@@ -226,6 +226,7 @@ function UpgradingSprite:HideLevelUpNode()
     self.status = "hide"
 end
 return UpgradingSprite
+
 
 
 

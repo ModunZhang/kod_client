@@ -1,3 +1,4 @@
+local promise = import("..utils.promise")
 local Orient = import("..entity.Orient")
 local Observer = import("..entity.Observer")
 local Sprite = class("Sprite", function(...)
@@ -100,7 +101,7 @@ function Sprite:RefreshSprite()
 end
 function Sprite:CreateSprite()
     local sprite_file, scale = self:GetSpriteFile()
-    return display.newSprite(sprite_file)
+    return display.newSprite(sprite_file, nil, nil, {class=cc.FilteredSpriteWithOne})
         :scale(scale == nil and 1 or scale)
         :flipX(self:GetFlipX())
 end
@@ -138,7 +139,6 @@ end
 function Sprite:GetLogicMap()
     return self.logic_map
 end
-
 
 ----------base
 function Sprite:GenerateBaseTiles(w, h)
