@@ -11,7 +11,7 @@ local ui_helper = WidgetAllianceUIHelper.new()
 
 local function rank_sort(response)
     local data = response.msg
-    data.myRank  = ata.myRank + 1
+    data.myRank = data.myRank + 1
     if data.rankData[data.myRank] then
         data.rankData[data.myRank].is_mine = true
     end
