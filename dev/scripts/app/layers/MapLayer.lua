@@ -124,7 +124,7 @@ function MapLayer:GetScaleRange()
     return self.min_scale, self.max_scale
 end
 -------
-local elastic_len = 100
+local elastic_len = 50
 function MapLayer:MakeElastic()
     local mx, my = self:GetCollideLength()
     local mid = self:convertToNodeSpace(cc.p(display.cx, display.cy))
