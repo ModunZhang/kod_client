@@ -336,6 +336,9 @@ function GameUIGacha:CreateGachaPool(layer)
             -- end
         end
     end
+    function GachaPool:IsRunning()
+        return self.handle
+    end
     function GachaPool:Destory()
         self:RemoveDiskSchedule()
         if self.handle then
@@ -437,8 +440,16 @@ function GameUIGacha:InitOrdinary()
     -- 是否有免费抽奖次数
     if User:GetOddFreeNormalGachaCount()>0 then
         button:setButtonLabel(UIKit:commonButtonLable({
-            text = _("免费抽奖")
+            text = _("免费抽奖"),
+            size = 24
         }))
+        :setButtonLabelOffset(0,0)
+
+        local btn_images = {normal = "green_btn_up_250x65.png",
+            pressed = "green_btn_down_250x65.png"
+        }
+        button:setButtonImage(cc.ui.UIPushButton.NORMAL, btn_images["normal"], true)
+        button:setButtonImage(cc.ui.UIPushButton.PRESSED, btn_images["pressed"], true)
     else
         button:setButtonLabel(UIKit:commonButtonLable({
             text = _("开始抽奖")
@@ -546,16 +557,34 @@ end
 
 function GameUIGacha:OnCountInfoChanged()
     if User:GetOddFreeNormalGachaCount()>0 then
-        self.normal_gacha_button:setButtonLabel(UIKit:commonButtonLable({
-            text = _("免费抽奖")
-        }))
+        local button = self.normal_gacha_button
+        button:setButtonLabel(UIKit:commonButtonLable({
+            text = _("免费抽奖"),
+            size = 24
+
+        })):setButtonLabelOffset(0,0)
+
+        local btn_images = {normal = "green_btn_up_250x65.png",
+            pressed = "green_btn_down_250x65.png"
+        }
+        button:setButtonImage(cc.ui.UIPushButton.NORMAL, btn_images["normal"], true)
+        button:setButtonImage(cc.ui.UIPushButton.PRESSED, btn_images["pressed"], true)
     else
         local button = self.normal_gacha_button
         button:setButtonLabel(UIKit:commonButtonLable({
-            text = _("开始抽奖")
-        }))
+            text = _("开始抽奖"),
+            size = 20
+        })):setButtonLabelOffset(0,20)
+
+        local btn_images = {normal = "green_btn_up_252x78.png",
+            pressed = "green_btn_down_252x78.png"
+        }
+        button:setButtonImage(cc.ui.UIPushButton.NORMAL, btn_images["normal"], true)
+        button:setButtonImage(cc.ui.UIPushButton.PRESSED, btn_images["pressed"], true)
+
         button:removeChildByTag(111, true)
         button:removeChildByTag(112, true)
+        button:setButtonEnabled(not self.OrdinaryGachaPool:IsRunning())
         -- 抽奖一次需要赌币
         display.newSprite("icon_casinoToken.png"):addTo(button,1,111)
             :align(display.CENTER, -72,-8):scale(0.4)
@@ -568,6 +597,7 @@ function GameUIGacha:OnCountInfoChanged()
     end
 end
 return GameUIGacha
+
 
 
 
