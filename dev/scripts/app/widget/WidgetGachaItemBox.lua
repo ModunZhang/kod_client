@@ -30,8 +30,8 @@ function WidgetGachaItemBox:SetNodeEvent(gacha_box)
                 tip_x = -70
             end
             local tips_bg = display.newScale9Sprite("back_ground_240x73.png",tip_x,0,cc.size(240,73),cc.rect(10,10,220,53))
-                :addTo(self,2,100):align(display.CENTER)
-            tips_bg:setGlobalZOrder(100)
+                :addTo(self):align(display.CENTER)
+            tips_bg:setTag(100)
             local text_1 = UIKit:ttfLabel({text = Localize_item.item_name[self.gacha_item.itemName],size = 20 ,color = 0xfff2b3})
                 :addTo(tips_bg)
             text_1:setGlobalZOrder(100)
@@ -43,6 +43,7 @@ function WidgetGachaItemBox:SetNodeEvent(gacha_box)
             text_1:align(display.CENTER, t_size.width/2, 50)
 
             text_2:align(display.CENTER, t_size.width/2, 20)
+            tips_bg:setGlobalZOrder(100)
         elseif event.name == "ended" then
             if self:getChildByTag(100) then
                 self:removeChildByTag(100, true)
@@ -167,6 +168,7 @@ function WidgetGachaItemBox:RemoveSelectStatus( )
     end
 end
 return WidgetGachaItemBox
+
 
 
 

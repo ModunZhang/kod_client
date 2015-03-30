@@ -211,7 +211,6 @@ function Alliance:GetFightRequestPlayerNum()
 end
 function Alliance:IsRequested()
     for k,v in pairs(self.fight_requests) do
-        print("User:Id()=",User:Id(),"fight request=",v)
         if v == User:Id() then
             return true
         end
@@ -266,7 +265,6 @@ function Alliance:GetCouldShowHelpEvents()
                     local eventData = event:GetEventData()
                     local type = eventData:Type()
                     local event_id = eventData:Id()
-                    -- print("属于自己的求助事件，已经结束的>>>",type,eventData:Name())
                     if type == "buildingEvents" then
                         city:IteratorFunctionBuildingsByFunc(function(key, building)
                             if building:UniqueUpgradingKey() == event_id then
@@ -606,12 +604,9 @@ function Alliance:OnHelpEventsChanged(alliance_data,deltaData)
     local is_delta_update = not is_fully_update and deltaData.helpEvents ~= nil
 
     if is_fully_update then
-        LuaUtils:outputTable("alliance_data.helpEvents", alliance_data.helpEvents)
-        print("ta")
         if alliance_data.helpEvents then
             for _,v in pairs(alliance_data.helpEvents) do
                 self.help_events[v.id] = HelpEvent.new():UpdateData(v)
-                print("OnHelpEventsChanged:",self.help_events[v.id]:GetEventData():Name(),self.help_events[v.id]:GetEventData():Id())
             end
             self:NotifyListeneOnType(Alliance.LISTEN_TYPE.ALL_HELP_EVENTS, function(listener)
                 listener:OnAllHelpEventChanged(self.help_events)
@@ -619,8 +614,6 @@ function Alliance:OnHelpEventsChanged(alliance_data,deltaData)
         end
     end
     if is_delta_update then
-        LuaUtils:outputTable("deltaData.helpEvents", deltaData.helpEvents)
-        print("ta")
         local added = {}
         local removed = {}
         local edit = {}

@@ -353,6 +353,7 @@ namespace ui {
          * @return true if the widget is flipped vertically, flase otherwise.
          */
         virtual bool isFlippedY()const;
+        virtual void setGlobalZOrder(float globalZOrder);
         
         //override the setScale function of Node
         virtual void setScaleX(float scaleX) override;
