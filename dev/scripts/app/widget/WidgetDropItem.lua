@@ -39,25 +39,29 @@ function WidgetDropItem:OnBoxButtonClicked( event )
     if self:GetState() == self.STATE.close then
         self:OnOpen()
     else
-        self:OnClose()
+        self:OnClose(true)
     end
 end
-function WidgetDropItem:OnClose()
-    self.content_box:removeFromParent()
-    self.content_box = nil
+function WidgetDropItem:OnClose(ani)
+    ani = ani == nil and true or ani
+    if self.content_box then
+        self.content_box:removeFromParent()
+        self.content_box = nil
+    end
     self.state_ = self.STATE.close
     self.lock_ = false
     self.arrow:flipY(false)
     if type(self.callback) == "function" then
-        self.callback(nil, true)
+        self.callback(nil, ani)
     end
 end
 function WidgetDropItem:OnOpen(ani)
+    ani = ani == nil and true or ani
     self.state_ = self.STATE.open
     self.lock_ = false
     self.arrow:flipY(true)
     if type(self.callback) == "function" then
-        self.callback(self, ani == nil and true or ani)
+        self.callback(self, ani)
     end
 end
 function WidgetDropItem:GetContent()

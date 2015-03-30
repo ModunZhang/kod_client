@@ -245,8 +245,12 @@ end
 
 function NetManager:disconnect()
     self.m_was_inited_game = true
-    self:removeDisConnectEventListener()
+    self:removeEventListener("disconnect")
     self.m_netService:disconnect()
+end
+
+function NetManager:isConnected()
+    return self.m_netService:isConnected()
 end
 
 function NetManager:addEventListener(event, cb)
@@ -258,8 +262,6 @@ end
 function NetManager:removeEventListener(event)
     self.m_netService:removeListener(event)
 end
-
-
 
 local base_event_map = {
     disconnect = function(success, response)
