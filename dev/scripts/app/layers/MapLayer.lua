@@ -123,6 +123,40 @@ end
 function MapLayer:GetScaleRange()
     return self.min_scale, self.max_scale
 end
+-------
+local elastic_len = 100
+function MapLayer:MakeElastic()
+    local mx, my = self:GetCollideLength()
+    local mid = self:convertToNodeSpace(cc.p(display.cx, display.cy))
+    self:PromiseOfMove(mid.x - mx, mid.y - my, 10)
+end
+local abs = math.abs
+function MapLayer:IsCollideSide()
+    local mx, my = self:GetCollideLength()
+    return abs(mx) > 0 or abs(my) > 0
+end
+function MapLayer:GetCollideLength()
+    local width,height = self:getContentWidthAndHeight()
+    
+    local left_bottom = self:convertToNodeSpace(cc.p(display.left, display.bottom))
+    local right_top = self:convertToNodeSpace(cc.p(display.right, display.top))
+    
+    local left, bottom, right, top = left_bottom.x, left_bottom.y, right_top.x, right_top.y
+
+    local left_offset = left - elastic_len
+    local right_offset = width - right - elastic_len
+
+    local move_x = left_offset >= 0 and 0 or left_offset
+    move_x = move_x + (right_offset >= 0 and 0 or - right_offset)
+
+    local bottom_offset = bottom - elastic_len
+    local top_offset = height - top - elastic_len
+
+    local move_y = bottom_offset >= 0 and 0 or bottom_offset
+    move_y = move_y + (top_offset >= 0 and 0 or - top_offset)
+
+    return move_x, move_y
+end
 
 -------
 function MapLayer:GotoMapPositionInMiddle(x, y)
@@ -134,23 +168,24 @@ function MapLayer:GotoMapPositionInMiddle(x, y)
 end
 function MapLayer:setPosition(position)
     local x, y = position.x, position.y
-    local parent_node = self:getParent()
     local super = getmetatable(self)
     super.setPosition(self, position)
-    local left_bottom_pos = self:GetLeftBottomPositionWithConstrain(x, y)
-    local right_top_pos = self:GetRightTopPositionWithConstrain(x, y)
+    local left_bottom_pos, is_collide1 = self:GetLeftBottomPositionWithConstrain(x, y)
+    local right_top_pos, is_collide2 = self:GetRightTopPositionWithConstrain(x, y)
     local rx = x >= 0 and min(left_bottom_pos.x, right_top_pos.x) or max(left_bottom_pos.x, right_top_pos.x)
     local ry = y >= 0 and min(left_bottom_pos.y, right_top_pos.y) or max(left_bottom_pos.y, right_top_pos.y)
     super.setPosition(self, cc.p(rx, ry))
-    self:OnSceneMove()
+    self:OnSceneMove(is_collide1 or is_collide2)
 end
 function MapLayer:GetLeftBottomPositionWithConstrain(x, y)
     local parent_node = self:getParent()
     local world_position = parent_node:convertToWorldSpace(cc.p(x, y))
-    world_position.x = world_position.x > display.left and display.left or world_position.x
-    world_position.y = world_position.y > display.bottom and display.bottom or world_position.y
+    local is_collide_left = world_position.x >= display.left
+    local is_collide_bottom = world_position.y >= display.bottom
+    world_position.x = is_collide_left and display.left or world_position.x
+    world_position.y = is_collide_bottom and display.bottom or world_position.y
     local left_bottom_pos = parent_node:convertToNodeSpace(world_position)
-    return left_bottom_pos
+    return left_bottom_pos, is_collide_left or is_collide_bottom
 end
 function MapLayer:GetRightTopPositionWithConstrain(x, y)
     -- 右上角是否超出
@@ -160,11 +195,13 @@ function MapLayer:GetRightTopPositionWithConstrain(x, y)
     local display_top_right_position = parent_node:convertToNodeSpace(cc.p(display.right, display.top))
     local dx = display_top_right_position.x - scene_top_right_position.x
     local dy = display_top_right_position.y - scene_top_right_position.y
+    local is_collide_right = scene_top_right_position.x >= display_top_right_position.x
+    local is_collide_top = scene_top_right_position.y >= display_top_right_position.y
     local right_top_pos = {
-        x = scene_top_right_position.x < display_top_right_position.x and x + dx or x,
-        y = scene_top_right_position.y < display_top_right_position.y and y + dy or y
+        x = is_collide_right and x or x + dx,
+        y = is_collide_top and y or y + dy
     }
-    return right_top_pos
+    return right_top_pos, is_collide_right or is_collide_top
 end
 function MapLayer:getContentWidthAndHeight()
     if not self.content_width or not self.content_height then
