@@ -56,9 +56,7 @@ function AllianceScene:CreateSceneLayer()
 end
 function AllianceScene:GotoLogicPosition(x, y)
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(x, y)
-    return self:GetSceneLayer():PromiseOfMove(point.x, point.y):next(function()
-        print("hello")
-    end)
+    return self:GetSceneLayer():PromiseOfMove(point.x, point.y)
 end
 function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building = self:GetSceneLayer():GetClickedObject(x, y)

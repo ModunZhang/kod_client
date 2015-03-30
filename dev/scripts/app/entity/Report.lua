@@ -44,28 +44,6 @@ function Report:GetData()
     return self.data
 end
 -- 进攻玩家城市战报api BEGIN --
-function Report:GetReportResult()
-    local data = self.data
-    if data.attackPlayerData.id == self.player_id then
-        if data.fightWithHelpDefencePlayerReports then
-            local round = data.fightWithHelpDefencePlayerReports.attackPlayerSoldierRoundDatas
-            return  not round or round[#round].isWin
-        elseif data.fightWithDefencePlayerReports then
-            local round = data.fightWithDefencePlayerReports.attackPlayerSoldierRoundDatas
-            return  not round or round[#round].isWin
-        end
-    elseif data.defencePlayerData and data.defencePlayerData.id == self.player_id then
-        local round = data.fightWithDefencePlayerReports.defencePlayerSoldierRoundDatas
-        if not round then
-            return false
-        end
-        return round[#round].isWin
-    elseif data.helpDefencePlayerData and
-        data.helpDefencePlayerData.id == DataManager:getUserData()._id then
-        local round = data.fightWithHelpDefencePlayerReports.defencePlayerSoldierRoundDatas
-        return round[#round].isWin
-    end
-end
 function Report:IsRenamed()
     local data = self:GetData()
     return data.isRenamed
@@ -505,6 +483,28 @@ function Report:GetFightReports()
     local data = self:GetData()
     return data.fightWithHelpDefencePlayerReports or data.fightWithDefencePlayerReports
         or data.fightWithDefenceVillageReports or {}
+end
+function Report:GetReportResult()
+    local data = self.data
+    if data.attackPlayerData.id == self.player_id then
+        if data.fightWithHelpDefencePlayerReports then
+            local round = data.fightWithHelpDefencePlayerReports.attackPlayerSoldierRoundDatas
+            return  not round or round[#round].isWin
+        elseif data.fightWithDefencePlayerReports then
+            local round = data.fightWithDefencePlayerReports.attackPlayerSoldierRoundDatas
+            return  not round or round[#round].isWin
+        end
+    elseif data.defencePlayerData and data.defencePlayerData.id == self.player_id then
+        local round = data.fightWithDefencePlayerReports.defencePlayerSoldierRoundDatas
+        if not round then
+            return false
+        end
+        return round[#round].isWin
+    elseif data.helpDefencePlayerData and
+        data.helpDefencePlayerData.id == DataManager:getUserData()._id then
+        local round = data.fightWithHelpDefencePlayerReports.defencePlayerSoldierRoundDatas
+        return round[#round].isWin
+    end
 end
 return Report
 

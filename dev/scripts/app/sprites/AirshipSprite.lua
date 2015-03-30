@@ -10,7 +10,7 @@ function AirshipSprite:ctor(city_layer, x, y)
     -- self:CreateBase()
 end
 function AirshipSprite:IsContainPointWithFullCheck(x, y, world_x, world_y)
-    return { logic_clicked = false, sprite_clicked = self:IsContainRealPoint(world_x, world_y)}
+    return { logic_clicked = false, sprite_clicked = self:IsContainWorldPoint(world_x, world_y)}
 end
 function AirshipSprite:GetEntity()
     return {
