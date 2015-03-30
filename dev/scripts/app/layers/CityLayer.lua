@@ -697,6 +697,12 @@ function CityLayer:GetGate()
     end)
     return gate
 end
+function CityLayer:GetWalls()
+    return self.walls
+end
+function CityLayer:GetTowers()
+    return self.towers
+end
 function CityLayer:CreateRoadWithTile(tile)
     local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
     return RoadSprite.new(self, tile, x, y)
