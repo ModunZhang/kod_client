@@ -352,8 +352,13 @@ function GameUIAllianceBattle:InitBattleStatistics()
             -- 禁用联盟按钮
             self_alliance_bg:setButtonEnabled(false)
             enemy_alliance_bg:setButtonEnabled(false)
-
-            local fight_result =  our_alliance:GetLastAllianceFightReports().fightResult == "attackWin"
+            local last_fight_reports = our_alliance:GetLastAllianceFightReports()
+            local fight_result
+            if our_alliance:Id() == last_fight_reports.attackAllianceId then
+                fight_result = last_fight_reports.fightResult == "attackWin"
+            else
+                fight_result = last_fight_reports.fightResult == "defenceWin"
+            end
             local our_reprot_data = our_alliance:GetOurLastAllianceFightReportsData()
             local enemy_reprot_data = our_alliance:GetEnemyLastAllianceFightReportsData()
             our_alliance_name:setString("["..our_reprot_data.tag.."]"..our_reprot_data.name)
@@ -1259,6 +1264,7 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
 
 
 

@@ -104,7 +104,7 @@ end
 function GameUIHelp:InsertItemToList(help_event)
     -- 当前玩家的求助事件需要置顶
     local item = self:CreateHelpItem(help_event)
-    if DataManager:getUserData()._id == help_event:GetPlayerData():Id() then
+    if User:Id() == help_event:GetPlayerData():Id() then
         -- 检查自己请求帮助的事件是否已经结束了
         if not self:CheckEventFinished(help_event) then
             self.help_listview:addItem(item,1)
@@ -161,7 +161,7 @@ function GameUIHelp:CheckEventFinished(help_event)
     return isFinished
 end
 function GameUIHelp:IsHelpedByMe(helpedMembers)
-    local _id = DataManager:getUserData()._id
+    local _id = User:Id()
     for k,id in pairs(helpedMembers) do
         if id == _id then
             return true
@@ -283,7 +283,7 @@ function GameUIHelp:CreateHelpItem(event)
         color = UIKit:hex2c3b(0xfff3c7),
     }):addTo(bar):align(display.LEFT_CENTER, 30, bar:getContentSize().height/2)
     -- 帮助按钮
-    if DataManager:getUserData()._id ~= playerData:Id() then
+    if User:Id() ~= playerData:Id() then
         local help_button = WidgetPushButton.new(
             {normal = "yellow_button_146x42.png", pressed = "yellow_button_highlight_146x42.png"}
         ):setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("帮助"), size = 18, color = UIKit:hex2c3b(0xfff3c7)}))
@@ -306,7 +306,7 @@ function GameUIHelp:CreateHelpItem(event)
     end
 
     function item:IsAbleToHelp()
-        return DataManager:getUserData()._id ~= event:GetPlayerData():Id()
+        return User:Id() ~= event:GetPlayerData():Id()
     end
 
     return item
@@ -354,6 +354,7 @@ function GameUIHelp:onExit()
 end
 
 return GameUIHelp
+
 
 
 

@@ -409,6 +409,12 @@ function UISlider:updateButtonPosition_()
     barSize.height = barSize.height * self.barSprite_:getScaleY()
     local buttonSize = self.buttonSprite_:getContentSize()
     local offset = (self.value_ - self.min_) / (self.max_ - self.min_)
+
+    -- 代国强 当self.max_==0 时需要修正offset，否则offset 为NaN
+    if offset~=offset then
+        offset = 0
+    end
+
     local ap = self:getAnchorPoint()
 
     if self.isHorizontal_ then

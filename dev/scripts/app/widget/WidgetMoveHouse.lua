@@ -59,6 +59,9 @@ function WidgetMoveHouse:ctor(house)
 
 end
 function WidgetMoveHouse:SetMoveToRuins( ruins )
+    if ruins:GetEntity() == self.house then
+        return
+    end
     self.move_to_ruins=ruins
     self.ok_btn:setVisible(true)
 
