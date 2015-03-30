@@ -413,7 +413,7 @@ function SoldierManager:GetUpgradingMitiTaryTechLeftTimeByCurrentTime(building_t
     local left_time = 0
     local event = self:GetUpgradingMilitaryTech(building_type)
     if event then
-        left_time = left_time + event:FinishTime()/1000 - app.timer:GetServerTime()
+        left_time = left_time + event:FinishTime() - app.timer:GetServerTime()
     end
     return left_time
 end
