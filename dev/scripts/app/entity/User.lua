@@ -79,7 +79,7 @@ function User:ctor(p)
     self.growUpTaskManger = GrowUpTaskManager.new()
 end
 function User:IsBindGameCenter()
-    return self:GcId() ~= ""
+    return self:GcId() ~= "" and self:GcId() ~= json.null
 end
 function User:GotoPVEMapByLevel(level)
     if self.cur_pve_map then
