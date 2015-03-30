@@ -29,14 +29,6 @@ end
 ]]--
 
 function PlatformAdapter:ios()
-    if ext.gamecenter.isGameCenterEnabled() then
-        ext.gamecenter.authenticate(function(Name,PlayerID)
-            if Name and PlayerID then
-                print("GameCenter启动成功",Name,PlayerID)
-                ext.gamecenter.showAchivevementController()
-            end
-        end)
-    end
     if CONFIG_LOG_DEBUG_FILE then
         local print__ = print
          print = function ( ... )
