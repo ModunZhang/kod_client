@@ -418,7 +418,7 @@ function NetManager:getLoginPromise(deviceId)
     else
         device_id = device.getOpenUDID()
     end
-    return get_none_blocking_request_promise("logic.entryHandler.login", {deviceId = deviceId or device_id}):next(function(response)
+return get_none_blocking_request_promise("logic.entryHandler.login", {deviceId = deviceId or device_id}):next(function(response)
         if response.success then
             app:GetPushManager():CancelAll()
             local playerData = response.msg.playerData
@@ -1330,7 +1330,6 @@ function NetManager:getBuyAllianceItemPromise(itemName,count)
         "购买联盟商店的道具失败!"):next(get_response_msg)
 end
 --玩家内购
---TODO:
 function NetManager:getVerifyIAPPromise(transactionId,receiptData)
     return get_none_blocking_request_promise("logic.playerHandler.addPlayerBillingData",
         {
@@ -1441,6 +1440,28 @@ function NetManager:getAllianceRankPromise(rankType, fromRank)
         rankType = rankType,
         fromRank = fromRank or 0
     },"获取排行榜失败!"):next(rank_sort)
+end
+-- 获取GameCenter账号绑定状态
+function NetManager:getGcBindStatusPromise(gcId)
+     return get_none_blocking_request_promise("logic.playerHandler.getGcBindStatus",{gcId=gcId},
+        "获取GameCenter账号绑定状态失败")
+end
+-- 设置GameCenter Id
+function NetManager:getBindGcIdPromise(gcId)
+    return get_none_blocking_request_promise("logic.playerHandler.bindGcId",{gcId=gcId},
+        "设置GameCenter失败"):next(get_response_msg)
+end
+
+-- 切换GameCenter账号
+function NetManager:getSwitchGcIdPromise(gcId)
+    return get_none_blocking_request_promise("logic.playerHandler.switchGcId",{gcId=gcId},
+        "切换GameCenter账号失败")
+end
+
+-- 强制切换GameCenter账号到原GameCenter账号下的玩家数据,当前未绑定的玩家账号数据会丢失
+function NetManager:getForceSwitchGcId(gcId)
+    return get_none_blocking_request_promise("logic.playerHandler.forceSwitchGcId",{gcId=gcId},
+        "切换GameCenter账号失败")
 end
 
 ----------------------------------------------------------------------------------------------------------------
