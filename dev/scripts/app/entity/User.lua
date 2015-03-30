@@ -43,6 +43,7 @@ property(User, "id", 0)
 property(User, "marchQueue", 1)
 property(User, "serverName", "")
 property(User, "apnId", "")
+property(User, "gcId", "")
 function User:ctor(p)
     User.super.ctor(self)
     self.resources = {
@@ -76,6 +77,9 @@ function User:ctor(p)
     self.vip_event = vip_event
     self.dailyTasks = {}
     self.growUpTaskManger = GrowUpTaskManager.new()
+end
+function User:IsBindGameCenter()
+    return self:GcId() ~= ""
 end
 function User:GotoPVEMapByLevel(level)
     if self.cur_pve_map then
@@ -214,6 +218,7 @@ function User:OnPropertyChange(property_name, old_value, new_value)
     end)
 end
 function User:OnUserDataChanged(userData, current_time, deltaData)
+    self:SetGcId(userData.gcId)
     self:SetServerName(userData.logicServerId)
     self:SetApnId(userData.apnId)
     self:OnResourcesChangedByTime(userData, current_time, deltaData)

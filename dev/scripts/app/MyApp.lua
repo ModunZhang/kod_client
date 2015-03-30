@@ -304,6 +304,21 @@ function MyApp:transactionObserver(event)
         device.hideActivityIndicator()
     end
 end
+-- GameCenter
+-- 如果登陆成功 函数将会被回调
+------------------------------------------------------------------------------------------------------------------
+function __G__GAME_CENTER_CALLBACK(gc_name,gc_id)
+    --如果玩家当前未绑定gc并且当前的gc未绑定任何账号 执行自动绑定
+    if gc_name and gc_id then
+        NetManager:getGcBindStatusPromise(gc_id):next(function(response)
+            if User and not User:IsBindGameCenter() and not response.msg.isBind then
+                NetManager:getBindGcIdPromise(gc_id)
+            end
+            ext.gamecenter.gc_bind = response.msg.isBind
+        end)
+    end
+end
+
 return MyApp
 
 

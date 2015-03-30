@@ -29,14 +29,6 @@ end
 ]]--
 
 function PlatformAdapter:ios()
-    if ext.gamecenter.isGameCenterEnabled() then
-        ext.gamecenter.authenticate(function(Name,PlayerID)
-            if Name and PlayerID then
-                print("GameCenter启动成功",Name,PlayerID)
-                ext.gamecenter.showAchivevementController()
-            end
-        end)
-    end
     if CONFIG_LOG_DEBUG_FILE then
         local print__ = print
          print = function ( ... )
@@ -107,6 +99,20 @@ function PlatformAdapter:common()
         device.showAlert("☠Quick Framework错误☠",errDesc,"复制！",function()
             ext.copyText(errDesc)
         end)
+    end
+    self:gameCenter()
+end
+
+function PlatformAdapter:gameCenter()
+    if not ext.gamecenter then
+        local ep_func = function(...)end
+        ext.gamecenter = {
+            isGameCenterEnabled = ep_func,
+            authenticate = ep_func,
+            showAchivevementController = ep_func,
+            getPlayerNameAndId = ep_func,
+            isAuthenticated = ep_func,
+        }
     end
 end
 
