@@ -50,7 +50,7 @@ local VIP_EFFECIVE_ALL_TYPE = Enum(
 -- VIP 效果总览
 local VIP_EFFECIVE_ALL = {
     freeSpeedup = _("立即完成建筑时间"),
-    helpSpeedup = _("协助加速(城建和科技)+"),
+    helpSpeedup = _("协助加速(城建和科技) 1分钟+升级事件剩余时间的"),
     woodProductionAdd = _("木材产量增加"),
     stoneProductionAdd = _("石料产量增加"),
     ironProductionAdd = _("铁矿产量增加"),
@@ -680,12 +680,15 @@ function GameUIVip:GetVIPInfoByLevel(level)
     for k,v in ipairs(VIP_EFFECIVE_ALL_TYPE) do
         local effect = VIP_LEVEL[level][v]
         if effect>0 then
-            if effect<1 then
+            if effect<1 and v ~="helpSpeedup" then
                 effect = tonumber(effect*100).."%"
             end
             -- 特殊处理下 freeSpeedup
             if v == "freeSpeedup" then
                 effect = effect .. _("分钟")
+            end
+            if v == "helpSpeedup" then
+                effect = effect .. "%"
             end
 
             if (level-1)>0 then
@@ -693,7 +696,13 @@ function GameUIVip:GetVIPInfoByLevel(level)
                 -- 上一等级的vip没有此项加成
                 if previous_vip[v] == 0  then
                     local tmp_tip = VIP_EFFECIVE_ALL[v]..effect
-                    table.insert(info, 1 ,{"new",tmp_tip})
+                    local last_new_index = 1
+                    for l,t in ipairs(info) do
+                        if t[1] == "new" then
+                            last_new_index = l + 1
+                        end
+                    end
+                    table.insert(info, last_new_index ,{"new",tmp_tip})
                 else
                     -- 数值没变
                     if previous_vip[v] == VIP_LEVEL[level][v] then
@@ -701,16 +710,22 @@ function GameUIVip:GetVIPInfoByLevel(level)
                         table.insert(info, {"changeless",tmp_tip})
                     else -- 数值改变
                         -- 找到最后一条新增项index
-                        local last_new_index
-                        for i,v in ipairs(info) do
-                            if v[1] ~= "new" then
-                                last_new_index = i
+                        local last_edit_index
+                        for l,t in ipairs(info) do
+                            if t[1] == "edit" then
+                                last_edit_index = l + 1
                             end
                         end
-                        if last_new_index then
-                            table.insert(info, last_new_index,{"edit",VIP_EFFECIVE_ALL[v],effect})
+                        if last_edit_index then
+                            table.insert(info, last_edit_index,{"edit",VIP_EFFECIVE_ALL[v],effect})
                         else
-                            table.insert(info,{"edit",VIP_EFFECIVE_ALL[v],effect})
+                            local last_new_index = 1
+                            for l,t in ipairs(info) do
+                                if t[1] == "new" then
+                                    last_new_index = l + 1
+                                end
+                            end
+                            table.insert(info,last_new_index,{"edit",VIP_EFFECIVE_ALL[v],effect})
                         end
                     end
                 end
@@ -813,6 +828,11 @@ function GameUIVip:OnVipEventTimer( vip_event_new )
 end
 
 return GameUIVip
+
+
+
+
+
 
 
 
