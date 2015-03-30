@@ -298,6 +298,7 @@ function MyCityScene:OnSceneScale(scene_layer)
     end
 end
 local FLASH_TIME = 0.5
+local FLASH_SHADER_ID = 0
 function MyCityScene:PromiseOfFlash(...)
     local p = promise.new()
     local buildings = {...}
@@ -305,10 +306,11 @@ function MyCityScene:PromiseOfFlash(...)
     for i,v in ipairs(buildings) do
         v:GetSprite():setFilter(filter.newFilter("CUSTOM", json.encode({
             frag = "shaders/flash.fs",
-            shaderName = "flash",
+            shaderName = "flash"..FLASH_SHADER_ID,
             startTime = director:getTotalFrames() * director:getAnimationInterval(),
             lastTime = FLASH_TIME,
         })))
+        FLASH_SHADER_ID = FLASH_SHADER_ID + 1
     end
     self.util_node:performWithDelay(function()
         for i,v in ipairs(buildings) do
