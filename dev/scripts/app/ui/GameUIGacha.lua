@@ -253,6 +253,8 @@ function GameUIGacha:CreateGachaPool(layer)
                             self.continuous_index = self.continuous_index + 1
                         else
                             self.continuous_draw_items = nil
+                            -- 恢复ui退出home_button
+                            main:GetHomeButton():setButtonEnabled(true)
                         end
                     end})
                 end })
@@ -269,6 +271,8 @@ function GameUIGacha:CreateGachaPool(layer)
         self.continuous_index = continuous_index + 1
     end
     function GachaPool:StartLotteryDraw(item)
+        -- 禁用ui退出home_button
+        main:GetHomeButton():setButtonEnabled(false)
         self.award =self.award or {} -- 抽到物品的图标和名字node,开启下次抽奖需移除
         local item_name = item[1]
         self.current_gacha_item_count = item[2]
@@ -564,6 +568,7 @@ function GameUIGacha:OnCountInfoChanged()
     end
 end
 return GameUIGacha
+
 
 
 
