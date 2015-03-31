@@ -377,23 +377,30 @@ function User:OnVipEventDataChange(userData, deltaData)
         local add = deltaData.vipEvents.add
         local remove = deltaData.vipEvents.remove
 
-        if remove and #remove >0 then
-            -- vip 激活结束，刷新资源
+        if LuaUtils:table_empty(deltaData.vipEvents) then
+            self.vip_event:UpdateData({finishTime = 0})
             City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())
-            -- 通知出去
             self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_OVER, function(listener)
                 listener:OnVipEventOver(self.vip_event)
             end)
+        end
+        if remove and #remove >0 then
+            -- vip 激活结束，刷新资源
+            -- 通知出去
             self.vip_event:UpdateData(remove[1])
+            City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())
+            self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_OVER, function(listener)
+                listener:OnVipEventOver(self.vip_event)
+            end)
         end
         if add and #add >0 then
             -- vip 激活，刷新资源
-            City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())
             -- 通知出去
+            self.vip_event:UpdateData(add[1])
+            City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())
             self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_ACTIVE, function(listener)
                 listener:OnVipEventActive(self.vip_event)
             end)
-            self.vip_event:UpdateData(add[1])
         end
         for k,v in pairs(deltaData.vipEvents) do
             if tolua.type(k) == "number" then
