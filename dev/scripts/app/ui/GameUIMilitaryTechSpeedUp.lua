@@ -57,7 +57,7 @@ function GameUIMilitaryTechSpeedUp:OnMilitaryTechEventsChanged(soldier_manager,c
         end
     end
 end
-function GameUIMilitaryTechSpeedUp:OnSoldierStarEventsChanged(changed_map)
+function GameUIMilitaryTechSpeedUp:OnSoldierStarEventsChanged(soldier_manager,changed_map)
     if changed_map[3] then
         for i,v in ipairs(changed_map[3]) do
             if v:Id() ==  self.militaryEvent:Id() then
