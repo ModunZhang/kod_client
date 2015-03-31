@@ -12,6 +12,7 @@ local UILib = import(".UILib")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local Alliance = import("..entity.Alliance")
 local Localize = import("..utils.Localize")
+local AllianceVillage = GameDatas.AllianceVillage
 
 -- 联盟成员采集熟练度列表一次加载条数
 local LOADING_NUM = 3
@@ -148,7 +149,7 @@ function GameUIOrderHall:CreateVillageItem(village_type,village_level)
         -- 荣耀值
         display.newSprite("honour_128x128.png"):align(display.CENTER, 250, 40):addTo(content):scale(42/128)
         local honour_bg = display.newSprite("back_ground_114x36.png"):align(display.CENTER, 330, 40):addTo(content)
-        local need_honour = GameDatas.AllianceVillage[village_type][village_level+1].needHonour
+        local need_honour = AllianceVillage[village_type][village_level+1].needHonour
         item.honour_label = UIKit:ttfLabel({
             text = need_honour,
             size = 20,
@@ -183,7 +184,7 @@ function GameUIOrderHall:CreateVillageItem(village_type,village_level)
         local build_png = SpriteConfig[village_type]:GetConfigByLevel(village_level).png
         building_image:setTexture(build_png)
         if self.honour_label then
-            local need_honour = GameDatas.AllianceVillage[village_type][village_level+1].needHonour
+            local need_honour = AllianceVillage[village_type][village_level+1].needHonour
             self.honour_label:setString(need_honour)
         end
     end
