@@ -15,6 +15,16 @@ function LogoScene:onEnter()
     self.layer = cc.LayerColor:create(cc.c4b(255,255,255,255)):addTo(self)
     self.sprite = display.newScale9Sprite("batcat_logo_368x390.png", display.cx, display.cy):addTo(self.layer)
     self:performWithDelay(function() self:beginAnimate() end,1)
+
+    -- local director = cc.Director:getInstance()
+    -- display.newSprite("Fairground_386x297.png", nil,nil , {class=cc.FilteredSpriteWithOne}):addTo(self)
+    --     :pos(display.cx, display.cy)
+    --     :setFilter(filter.newFilter("CUSTOM", json.encode({
+    --         frag = "shaders/flash.fs",
+    --         shaderName = "flash",
+    --         startTime = director:getTotalFrames() * director:getAnimationInterval(),
+    --         lastTime = 1.0,
+    --     })))
 end
 
 function LogoScene:beginAnimate()
@@ -61,5 +71,7 @@ function LogoScene:onExit()
 end
 
 return LogoScene
+
+
 
 

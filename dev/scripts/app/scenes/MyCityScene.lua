@@ -244,11 +244,13 @@ function MyCityScene:OnUpgradingFinished(building)
         self:GetSceneLayer():UpdateWallsWithCity(self:GetCity())
     end
     self:GetSceneLayer():CheckCanUpgrade()
+    app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
 end
 function MyCityScene:OnCreateDecoratorSprite(building_sprite)
 -- self:GetSceneUILayer():NewUIFromBuildingSprite(building_sprite)
 end
 function MyCityScene:OnDestoryDecoratorSprite(building_sprite)
+    -- app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_DESTROY")
 -- self:GetSceneUILayer():RemoveUIFromBuildingSprite(building_sprite)
 end
 function MyCityScene:OnTilesChanged(tiles)
@@ -298,20 +300,20 @@ function MyCityScene:OnSceneScale(scene_layer)
     end
 end
 local FLASH_TIME = 0.5
-local FLASH_SHADER_ID = 0
 function MyCityScene:PromiseOfFlash(...)
     local p = promise.new()
     local buildings = {...}
     local director = cc.Director:getInstance()
     for i,v in ipairs(buildings) do
+        v:GetSprite():clearFilter()
         v:GetSprite():setFilter(filter.newFilter("CUSTOM", json.encode({
             frag = "shaders/flash.fs",
-            shaderName = "flash"..FLASH_SHADER_ID,
+            shaderName = "flash",
             startTime = director:getTotalFrames() * director:getAnimationInterval(),
             lastTime = FLASH_TIME,
         })))
-        FLASH_SHADER_ID = FLASH_SHADER_ID + 1
     end
+    self.util_node:stopAllActions()
     self.util_node:performWithDelay(function()
         for i,v in ipairs(buildings) do
             if v.GetSprite and v:GetSprite() then

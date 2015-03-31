@@ -31,6 +31,8 @@ function GameUIMail:ctor(title,city)
     self.send_mails = {}
     self.item_reports = {}
     self.item_saved_reports = {}
+
+    app:GetAudioManager():PlayeEffectSoundWithKey("OPEN_MAIL")
 end
 
 function GameUIMail:OnMoveInStage()

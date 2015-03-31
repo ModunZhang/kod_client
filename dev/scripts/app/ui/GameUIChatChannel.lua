@@ -144,7 +144,7 @@ end
 
 function GameUIChatChannel:CreateSettingButton()
 	--right button
-	local rightbutton = cc.ui.UIPushButton.new({normal = "home_btn_up.png",pressed = "home_btn_down.png"}, {scale9 = false})
+	local rightbutton = cc.ui.UIPushButton.new({normal = "home_btn_up.png",pressed = "home_btn_down.png"}, {scale9 = false}, {down = "HOME_PAGE"})
 		:onButtonClicked(function(event)
 			self:CreatShieldView()
     	end)

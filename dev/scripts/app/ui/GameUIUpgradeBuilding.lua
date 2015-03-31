@@ -6,6 +6,7 @@ function GameUIUpgradeBuilding:ctor(city, title , building)
     GameUIUpgradeBuilding.super.ctor(self,city, title)
     self.upgrade_city = city
     self.building = building
+    app:GetAudioManager():PlayBuildingEffectByType(building:GetType())
 end
 
 function GameUIUpgradeBuilding:CreateBetweenBgAndTitle()

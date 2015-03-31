@@ -277,6 +277,7 @@ end
 function GameUIMission:OnGetAchievementRewardButtonClicked(data)
     NetManager:getGrowUpTaskRewardsPromise(data:TaskType(), data.id):next(function()
         GameGlobalUI:showTips(_("获得奖励"), data:GetRewards())
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
     end)
 end
 
