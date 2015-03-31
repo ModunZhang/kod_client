@@ -89,7 +89,7 @@ function WidgetRequirementListview:RefreshListView(contents)
             else
                 -- 添加新条件
                 local item = self.listview:newItem()
-                local item_width,item_height = self.listview_width,48
+                local item_width,item_height = self.listview_width,46
                 item:setItemSize(item_width,item_height)
                 local content = cc.ui.UIGroup.new()
                 --  筛选不同背景颜色 bg

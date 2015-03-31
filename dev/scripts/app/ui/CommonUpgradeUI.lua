@@ -148,23 +148,19 @@ function CommonUpgradeUI:InitNextLevelEfficiency()
     -- 下一级 框
     local bg  = display.newSprite("upgrade_next_level_bg.png", window.left+114, window.top-310):addTo(self)
     local bg_size = bg:getContentSize()
-    self.next_level = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        font = UIKit:getFontFilePath(),
+    self.next_level = UIKit:ttfLabel({
         size = 20,
-        color = UIKit:hex2c3b(0x403c2f)
+        color = 0x403c2f
     }):align(display.CENTER,bg_size.width/2,bg_size.height/2):addTo(bg)
 
     local efficiency_bg = display.newSprite("back_ground_398x97.png", window.cx+74, window.top-310):addTo(self)
     local efficiency_bg_size = efficiency_bg:getContentSize()
-    self.efficiency = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        font = UIKit:getFontFilePath(),
+    self.efficiency = UIKit:ttfLabel({
         size = 20,
-        dimensions = cc.size(380,40),
+        dimensions = cc.size(380,0),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
         align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-        color = UIKit:hex2c3b(0x403c2f)
+        color = 0x403c2f
     }):addTo(efficiency_bg):align(display.LEFT_CENTER)
     self.efficiency:pos(10,efficiency_bg_size.height/2)
     self:SetUpgradeEfficiency()
