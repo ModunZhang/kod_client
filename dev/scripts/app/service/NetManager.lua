@@ -418,7 +418,7 @@ function NetManager:getLoginPromise(deviceId)
     else
         device_id = device.getOpenUDID()
     end
-return get_none_blocking_request_promise("logic.entryHandler.login", {deviceId = deviceId or device_id}):next(function(response)
+    return get_none_blocking_request_promise("logic.entryHandler.login", {deviceId = deviceId or device_id}):next(function(response)
         if response.success then
             app:GetPushManager():CancelAll()
             local playerData = response.msg.playerData
@@ -482,7 +482,9 @@ function NetManager:getUpgradeHouseByLocationPromise(location, sub_location)
     return get_upgradeHouse_promise(location, sub_location, false)
 end
 function NetManager:getInstantUpgradeHouseByLocationPromise(location, sub_location)
-    return get_upgradeHouse_promise(location, sub_location, true)
+    return get_upgradeHouse_promise(location, sub_location, true):next(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end)
 end
 -- 升级功能建筑
 local function get_upgradeBuilding_promise(location, finish_now)
@@ -495,7 +497,9 @@ function NetManager:getUpgradeBuildingByLocationPromise(location)
     return get_upgradeBuilding_promise(location, false)
 end
 function NetManager:getInstantUpgradeBuildingByLocationPromise(location)
-    return get_upgradeBuilding_promise(location, true)
+    return get_upgradeBuilding_promise(location, true):next(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end)
 end
 -- 升级防御塔
 function NetManager:getUpgradeTowerPromise()
@@ -567,7 +571,9 @@ function NetManager:getRecruitNormalSoldierPromise(soldierName, count, cb)
     return get_recruitNormalSoldier_promise(soldierName, count)
 end
 function NetManager:getInstantRecruitNormalSoldierPromise(soldierName, count, cb)
-    return get_recruitNormalSoldier_promise(soldierName, count, true)
+    return get_recruitNormalSoldier_promise(soldierName, count, true):next(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_COMPLETE")
+    end)
 end
 -- 招募特殊士兵
 local function get_recruitSpecialSoldier_promise(soldierName, count, finish_now)
@@ -581,7 +587,9 @@ function NetManager:getRecruitSpecialSoldierPromise(soldierName, count)
     return get_recruitSpecialSoldier_promise(soldierName, count)
 end
 function NetManager:getInstantRecruitSpecialSoldierPromise(soldierName, count)
-    return get_recruitSpecialSoldier_promise(soldierName, count, true)
+    return get_recruitSpecialSoldier_promise(soldierName, count, true):next(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_COMPLETE")
+    end)
 end
 -- 普通治疗士兵
 local function get_treatSoldier_promise(soldiers, finish_now)
@@ -1284,9 +1292,10 @@ function NetManager:getBuyItemPromise(itemName,count)
     return get_blocking_request_promise("logic.playerHandler.buyItem", {
         itemName = itemName,
         count = count,
-    }, "购买道具失败!"):next(get_response_msg):done(function ()
+    }, "购买道具失败!"):next(get_response_msg):next(function ()
         GameGlobalUI:showTips(_("提示"),string.format(_('购买%s道具成功'),Localize_item.item_name[itemName]))
         ext.market_sdk.onPlayerBuyGameItems(itemName,count,DataUtils:GetItemPriceByItemName(itemName))
+        app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
     end)
 end
 --使用道具
@@ -1294,9 +1303,14 @@ function NetManager:getUseItemPromise(itemName,params)
     return get_blocking_request_promise("logic.playerHandler.useItem", {
         itemName = itemName,
         params = params,
-    }, "使用道具失败!"):next(get_response_msg):done(function ()
+    }, "使用道具失败!"):next(get_response_msg):next(function ()
         GameGlobalUI:showTips(_("提示"),string.format(_('使用%s道具成功'),Localize_item.item_name[itemName]))
         ext.market_sdk.onPlayerUseGameItems(itemName,1)
+        if itemName == "torch" then
+            app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_DESTROY")
+        else
+            app:GetAudioManager():PlayeEffectSoundWithKey("USE_ITEM")
+        end
     end)
 end
 --购买并使用道具
@@ -1443,7 +1457,7 @@ function NetManager:getAllianceRankPromise(rankType, fromRank)
 end
 -- 获取GameCenter账号绑定状态
 function NetManager:getGcBindStatusPromise(gcId)
-     return get_none_blocking_request_promise("logic.playerHandler.getGcBindStatus",{gcId=gcId},
+    return get_none_blocking_request_promise("logic.playerHandler.getGcBindStatus",{gcId=gcId},
         "获取GameCenter账号绑定状态失败")
 end
 -- 设置GameCenter Id
@@ -1517,6 +1531,9 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
+
+
 
 
 

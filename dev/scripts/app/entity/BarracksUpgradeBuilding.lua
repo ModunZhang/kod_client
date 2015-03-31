@@ -155,6 +155,13 @@ function BarracksUpgradeBuilding:OnUserDataChanged(...)
     end
 
     print("BarracksUpgradeBuilding:OnUserDataChanged")
+
+    if is_delta_update then
+        local soldierEvents = deltaData.soldierEvents
+        if soldierEvents.add and soldierEvents.remove then
+            self:EndRecruitSoldiersWithCurrentTime(current_time)
+        end
+    end
     local event = userData.soldierEvents[1]
     if event then
         local finished_time = event.finishTime / 1000

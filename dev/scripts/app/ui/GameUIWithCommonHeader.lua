@@ -118,7 +118,7 @@ end
 
 function GameUIWithCommonHeader:CreateHomeButton(on_clicked)
      local home_button = cc.ui.UIPushButton.new(
-        {normal = "home_btn_up.png",pressed = "home_btn_down.png",disabled = "home_btn_disabled.png"})
+        {normal = "home_btn_up.png",pressed = "home_btn_down.png",disabled = "home_btn_disabled.png"}, nil, {down = "HOME_PAGE"})
         :onButtonClicked(function(event)
             if on_clicked then
                 on_clicked()

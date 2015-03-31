@@ -29,7 +29,9 @@ end
 local old_ctor = cc.ui.UIPushButton.ctor
 function cc.ui.UIPushButton:ctor(images, options,music_info)
     old_ctor(self, images, options)
-    music_info = music_info or {down = "NORMAL_DOWN",up = "NORMAL_UP"}
+    music_info = music_info or {down = "NORMAL_DOWN"
+        -- , up = "NORMAL_UP"
+        }
     self:addButtonPressedEventListener(function(event)
         if type(music_info.down) == 'string' and music_info.down ~= "" then
             app:GetAudioManager():PlayeEffectSoundWithKey(music_info.down)
@@ -278,3 +280,4 @@ end
 local cjson = require("cjson")
 cjson.decode_lua_nil(false)
 ------------------------------------------------
+

@@ -22,8 +22,6 @@ function GameUIBase:ctor(params)
     return true
 end
 
--- local visible_count = 1
--- Node Event
 --------------------------------------
 function GameUIBase:onEnter()
     print("onEnter->",self.__cname)
@@ -166,7 +164,7 @@ function GameUIBase:CreateTitle(title)
 end
 function GameUIBase:CreateHomeButton(on_clicked)
     local home_button = cc.ui.UIPushButton.new(
-        {normal = "home_btn_up.png",pressed = "home_btn_down.png"})
+        {normal = "home_btn_up.png",pressed = "home_btn_down.png"}, nil, {down = "HOME_PAGE"})
         :onButtonClicked(function(event)
             if on_clicked then
                 on_clicked()

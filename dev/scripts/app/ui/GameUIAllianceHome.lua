@@ -52,8 +52,10 @@ function GameUIAllianceHome:onEnter()
         elseif touch_type == "moved" then
         elseif touch_type == "ended" then
             local scene = display.getRunningScene()
-            local location = scene:GetAlliance():GetSelf().location
-            scene:GotoLogicPosition(location.x, location.y, scene:GetAlliance():Id())
+            local alliance = scene:GetAlliance()
+            local mapObject = alliance:GetAllianceMap():FindMapObjectById(alliance:GetSelf():MapId())
+            local location = mapObject.location
+            scene:GotoLogicPosition(location.x, location.y, alliance:Id())
         end
         return true
     end)

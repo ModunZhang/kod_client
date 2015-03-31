@@ -74,8 +74,13 @@ function BattleObject:breath(is_forever)
     end)
     return p
 end
+local function step()
+    app:GetAudioManager():PlaySoldierStepEffectByType("infantry")
+end
 function BattleObject:move(time, x, y)
     self:PlayAnimation("move_2")
+
+    
     local p = promise.new()
     transition.moveTo(self, {
         x = x, y = y, time = time,
@@ -83,6 +88,17 @@ function BattleObject:move(time, x, y)
             p:resolve(self)
         end
     })
+
+    self:runAction(transition.sequence({cc.CallFunc:create(step),
+        cc.DelayTime:create(0.5),
+        cc.CallFunc:create(step),
+        cc.DelayTime:create(0.5),
+        cc.CallFunc:create(step),
+        cc.DelayTime:create(0.5),
+        cc.CallFunc:create(step),
+        cc.DelayTime:create(0.5)}))
+
+
     return p
 end
 function BattleObject:defeat()
@@ -93,7 +109,7 @@ function BattleObject:defeat()
             p:resolve(self)
         end
     })
-    app:GetAudioManager():PlayeEffectSound("sfx_troop_lose.wav")
+    app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_LOSE")
     return p
 end
 function BattleObject:Defeat()
@@ -171,6 +187,10 @@ function BattleObject:Do(p)
 end
 
 return BattleObject
+
+
+
+
 
 
 

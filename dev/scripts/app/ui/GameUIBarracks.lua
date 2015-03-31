@@ -68,7 +68,7 @@ function GameUIBarracks:OnRecruiting(barracks, event, current_time)
         self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(current_time)), event:Percent(current_time))
     end
 end
-function GameUIBarracks:OnEndRecruit(barracks, event, current_time)
+function GameUIBarracks:OnEndRecruit(barracks)
     self.tips:setVisible(true)
     self.timer:setVisible(false)
 end
