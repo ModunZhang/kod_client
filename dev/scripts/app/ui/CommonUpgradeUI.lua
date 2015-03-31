@@ -80,7 +80,7 @@ function CommonUpgradeUI:OnBuildingUpgrading( buidling, current_time )
     pro:setPercentage(self.building:GetElapsedTimeByCurrentTime(current_time)/self.building:GetUpgradeTimeToNextLevel()*100)
     self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(current_time)))
     if not self.acc_layer.acc_button:isButtonEnabled() and
-        self.building:GetFreeSpeedupTime()>=self.building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime()) then
+        self.building:IsAbleToFreeSpeedUpByTime(current_time) then
         self.acc_layer.acc_button:setButtonEnabled(true)
     end
 end
@@ -416,7 +416,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
 
         {resource_type = _("铁矿"),isVisible = self.building:GetLevelUpIron()>0,      isSatisfy = iron>self.building:GetLevelUpIron() ,
             icon="res_iron_114x100.png",description=GameUtils:formatNumber(self.building:GetLevelUpIron()).."/"..GameUtils:formatNumber(iron)},
-       
+
         {resource_type = _("建筑蓝图"),isVisible = self.building:GetLevelUpBlueprints()>0,isSatisfy = self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"]>self.building:GetLevelUpBlueprints() ,
             icon="blueprints_128x128.png",description=GameUtils:formatNumber(self.building:GetLevelUpBlueprints()).."/"..GameUtils:formatNumber(self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"])},
         {resource_type = _("建造工具"),isVisible = self.building:GetLevelUpTools()>0,     isSatisfy = self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"]>self.building:GetLevelUpTools() ,
@@ -527,7 +527,12 @@ function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
                     end)
             end
         end):align(display.CENTER, display.cx+185, display.top - 435):addTo(self.acc_layer)
-    self.acc_layer.acc_button:setButtonEnabled(false)
+    local building = self.building
+    if building:IsUpgrading() and building:IsAbleToFreeSpeedUpByTime(app.timer:GetServerTime()) then
+        self.acc_layer.acc_button:setButtonEnabled(true)
+    else
+        self.acc_layer.acc_button:setButtonEnabled(false)
+    end
 
 end
 
@@ -642,6 +647,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
 
 
