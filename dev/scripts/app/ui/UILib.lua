@@ -68,14 +68,14 @@ local RESOURCE = {
     wallHp = "gate_1.png",
 }
 local MATERIALS = {
-    blueprints = "blueprints_112x112.png",
-    tools =  "tools_112x112.png",
-    tiles = "tiles_112x112.png",
-    pulley = "pulley_112x112.png",
-    trainingFigure = "trainingFigure_112x112.png",
-    bowTarget = "bowTarget_112x112.png",
-    saddle = "saddle_112x112.png",
-    ironPart = "ironPart_112x112.png",
+    blueprints = "blueprints_128x128.png",
+    tools =  "tools_128x128.png",
+    tiles = "tiles_128x128.png",
+    pulley = "pulley_128x128.png",
+    trainingFigure = "trainingFigure_128x128.png",
+    bowTarget = "bowTarget_128x128.png",
+    saddle = "saddle_128x128.png",
+    ironPart = "ironPart_128x128.png",
 }
 local DRAGON_MATERIAL_PIC_MAP = {
     ["ingo_1"] = "ironIngot_92x92.png",
