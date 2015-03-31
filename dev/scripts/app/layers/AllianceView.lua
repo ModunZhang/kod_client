@@ -11,6 +11,7 @@ local AllianceView = class("AllianceView", function()
     node:setNodeEventEnabled(true)
     return node
 end)
+local intInit = GameDatas.AllianceInitData.intInit
 local floor = math.floor
 local random = math.random
 local function random_indexes_in_rect(number, rect)
@@ -47,8 +48,8 @@ function AllianceView:ctor(layer, alliance, logic_base_x, logic_base_y)
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new{
         tile_w = 80,
         tile_h = 80,
-        map_width = 51,
-        map_height = 51,
+        map_width = intInit.allianceRegionMapWidth.value,
+        map_height = intInit.allianceRegionMapHeight.value,
         base_x = logic_base_x * 80,
         base_y = logic_base_y * 80
     }
