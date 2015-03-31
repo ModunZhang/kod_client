@@ -100,15 +100,15 @@ function AllianceBattleScene:EnterAllianceBuilding(entity,isMyAlliance)
 end
 
 function AllianceBattleScene:EnterNotAllianceBuilding(entity,isMyAlliance)
-    local category = entity:GetCategory()
+    local type_ = entity:GetType()
     local class_name = ""
-    if category == 'none' then
+    if type_ == 'none' then
         class_name = "GameUIAllianceEnterBase"
-    elseif category == 'member' then
+    elseif type_ == 'member' then
         class_name = "GameUIAllianceCityEnter"
-    elseif category == 'decorate' then
+    elseif type_ == 'decorate' then
         class_name = "GameUIAllianceDecorateEnter"
-    elseif category == 'village' then
+    elseif type_ == 'village' then
         class_name = "GameUIAllianceVillageEnter"
     end
     UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance(),self:GetEnemyAlliance()):AddToCurrentScene(true)

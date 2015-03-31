@@ -1,45 +1,36 @@
--- {
--- 			["helpedByTroopsCount"] = 0,
--- 			["kill"] = 0,
--- 			["lastRewardData"] = userdata,
--- 			["donateStatus"] = {
--- 				["wood"] = 1,
--- 				["gem"] = 1,
--- 				["iron"] = 1,
--- 				["food"] = 1,
--- 				["stone"] = 1,
--- 				["coin"] = 1,
--- 			}
--- ,
--- 			["isProtected"] = false,
--- 			["status"] = "normal",
--- 			["wallHp"] = 1000,
--- 			["loyalty"] = 20250,
--- 			["keepLevel"] = 1,
--- 			["id"] = "QyjsfcgY",
--- 			["allianceExp"] = {
--- 				["foodExp"] = 0,
--- 				["ironExp"] = 0,
--- 				["stoneExp"] = 0,
--- 				["coinExp"] = 0,
--- 				["woodExp"] = 0,
--- 			}
--- ,
--- 			["title"] = "archon",
--- 			["lastLoginTime"] = 1426038655032,
--- 			["name"] = "player_14426669",
--- 			["power"] = 240,
--- 			["location"] = {
--- 				["y"] = 25,
--- 				["x"] = 39,
--- 			}
--- ,
--- 			["icon"] = "playerIcon_default.png",
--- 			["wallLevel"] = 1,
--- 			["lastThreeDaysKillData"] = {
--- 			}
--- ,
--- 		}
+--                 "id": "X1x8lpX35",
+--                 "lastThreeDaysKillData": [],
+--                 "loyalty": 0,
+--                 "power": 478,
+--                 "status": "normal",
+--                 "mapId": "XyiX0nnNn5",
+--                 "icon": "playerIcon_default.png",
+--                 "language": "cn",
+--                 "isProtected": false,
+--                 "kill": 0,
+--                 "wallHp": 124,
+--                 "wallLevel": 1,
+--                 "name": "player_Xk8g6Xhq",
+--                 "lastRewardData": null,
+--                 "keepLevel": 3,
+--                 "title": "archon",
+--                 "helpedByTroopsCount": 0,
+--                 "donateStatus": {
+--                     "wood": 1,
+--                     "gem": 1,
+--                     "iron": 1,
+--                     "coin": 1,
+--                     "stone": 1,
+--                     "food": 1
+--                 },
+--                 "lastLoginTime": 1427768779105,
+--                 "allianceExp": {
+--                     "woodExp": 0,
+--                     "ironExp": 0,
+--                     "stoneExp": 0,
+--                     "foodExp": 0,
+--                     "coinExp": 0
+--                 }
 local Enum = import("..utils.Enum")
 local property = import("..utils.property")
 local allianceRight = GameDatas.ClientInitGame.allianceRight
@@ -47,8 +38,10 @@ local memberMeta = {}
 memberMeta.__index = memberMeta
 
 property(memberMeta, "id")
+property(memberMeta, "mapId")
 property(memberMeta, "level", 0)
 property(memberMeta, "name")
+property(memberMeta, "language")
 property(memberMeta, "title")
 property(memberMeta, "icon", "")
 property(memberMeta, "lastLoginTime", 0)
@@ -88,8 +81,21 @@ local COLLECT_TYPE = Enum("WOOD",
     "FOOD",
     "COIN")
 
+
+function memberMeta.new(x, y)
+    return setmetatable({
+        x = x,
+        y = y
+    }, memberMeta)
+end
 function memberMeta:DecodeFromJson(json)
-	return setmetatable(json, memberMeta)
+    return setmetatable(json, memberMeta)
+end
+function memberMeta:GetType()
+    return "none"
+end
+function memberMeta:GetLogicPosition()
+    return self.x, self.y
 end
 function memberMeta:IsArchon()
     return self:Title() == "archon"
@@ -266,3 +272,5 @@ function memberMeta:CanActivateAllianceRevenge()
 end
 
 return memberMeta
+
+

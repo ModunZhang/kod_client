@@ -13,8 +13,15 @@ local PROGRESS_TAG = 100
 function GameUIAllianceCityEnter:ctor(building,isMyAlliance,my_alliance,enemy_alliance)
     GameUIAllianceCityEnter.super.ctor(self,building,isMyAlliance,my_alliance)
     self.enemy_alliance = enemy_alliance
-    local x,y = self:GetBuilding():GetLogicPosition()
-    self.member = self:GetPlayerByLocation(x,y)
+
+    local id = self:GetBuilding():Id()
+    for k,v in pairs(self:GetCurrentAlliance():GetAllMembers()) do
+        if v:MapId() == id then
+            self.member = v
+            break
+        end
+    end
+    assert(self.member)
 end
 
 function GameUIAllianceCityEnter:GetMember()
@@ -46,14 +53,14 @@ function GameUIAllianceCityEnter:OnBasicChanged( alliance,changed_map )
         self:GetEnterButtonByIndex(2):setButtonEnabled(changed_map.status.new == "fight")
     end
 end
-function GameUIAllianceCityEnter:GetPlayerByLocation( x,y )
-    for _,member in pairs(self:GetCurrentAlliance():GetAllMembers()) do
-        print(member.location.x,member.location.y)
-        if member.location.x == x and y == member.location.y then
-            return member
-        end
-    end
-end
+-- function GameUIAllianceCityEnter:GetPlayerByLocation( x,y )
+--     for _,member in pairs(self:GetCurrentAlliance():GetAllMembers()) do
+--         print(member.location.x,member.location.y)
+--         if member.location.x == x and y == member.location.y then
+--             return member
+--         end
+--     end
+-- end
 
 function GameUIAllianceCityEnter:GetBuildingInfoOriginalY()
     return self.process_bar_bg:getPositionY()-self.process_bar_bg:getContentSize().height-40
@@ -81,7 +88,7 @@ function GameUIAllianceCityEnter:GetBuildingImage()
     return "keep_760x855.png"
 end
 
-function GameUIAllianceCityEnter:GetBuildingCategory()
+function GameUIAllianceCityEnter:GetBuildingType()
     return 'member'
 end
 

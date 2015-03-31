@@ -16,7 +16,7 @@ function GameUIAlliancePalaceEnter:GetBuildingImage()
 	return "palace_421x481.png"
 end
 
-function GameUIAlliancePalaceEnter:GetBuildingCategory()
+function GameUIAlliancePalaceEnter:GetBuildingType()
 	return 'palace'
 end
 

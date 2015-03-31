@@ -2,7 +2,7 @@ local CitySprite = import("..sprites.CitySprite")
 local VillageSprite = import("..sprites.VillageSprite")
 local AllianceDecoratorSprite = import("..sprites.AllianceDecoratorSprite")
 local AllianceBuildingSprite = import("..sprites.AllianceBuildingSprite")
-local AllianceObject = import("..entity.AllianceObject")
+local memberMeta = import("..entity.memberMeta")
 local AllianceMap = import("..entity.AllianceMap")
 local Observer = import("..entity.Observer")
 local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLeftReverseY")
@@ -130,15 +130,15 @@ function AllianceView:OnBuildingDeltaUpdate(allianceMap, deltaMapObjects)
     end
 end
 function AllianceView:CreateObject(entity)
-    local category = entity:GetCategory()
+    local type_ = entity:GetType()
     local object
-    if category == "building" then
+    if type_ == "building" then
         object = AllianceBuildingSprite.new(self, entity):addTo(self:GetBuildingNode())
-    elseif category == "member" then
+    elseif type_ == "member" then
         object = CitySprite.new(self, entity):addTo(self:GetBuildingNode())
-    elseif category == "village" then
+    elseif type_ == "village" then
         object = VillageSprite.new(self, entity):addTo(self:GetBuildingNode())
-    elseif category == "decorate" then
+    elseif type_ == "decorate" then
         object = AllianceDecoratorSprite.new(self, entity):addTo(self:GetBuildingNode())
     end
     return object
@@ -181,7 +181,7 @@ function AllianceView:EmptyGround(x, y)
     if x >=0 and x <= w-1 and y >=0 and y <= h-1 then
         return {
             GetEntity = function()
-                return AllianceObject.new(nil, nil, x, y)
+                return memberMeta.new(x, y)
             end
         }
     end

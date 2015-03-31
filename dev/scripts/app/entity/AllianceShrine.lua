@@ -174,7 +174,16 @@ function AllianceShrine:InitOrUpdatePerception(alliance_data)
 		local resource_refresh_time = alliance_data.basicInfo.perceptionRefreshTime / 1000.0
 		self.perception = AutomaticUpdateResource.new()
 		self.perception:UpdateResource(resource_refresh_time,alliance_data.basicInfo.perception)
-		local shire_building = config_shrine[alliance_data.buildings.shrine.level]
+		
+		local building
+		for i,v in ipairs(alliance_data.buildings) do
+			if v.name == "shrine" then
+				building = v
+				break
+			end
+		end
+		local shire_building = config_shrine[building.level]
+
         self.perception:SetProductionPerHour(resource_refresh_time,shire_building.pRecovery)
         self.perception:SetValueLimit(shire_building.perception)
     else

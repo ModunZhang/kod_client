@@ -16,7 +16,7 @@ end
 function AllianceObject:GetAllianceVillageInfo()
     return self.alliance_map:FindAllianceVillagesInfoByObject(self)
 end
-function AllianceObject:GetCategory()
+function AllianceObject:GetType()
     if self:GetType() == "none" then
         return "none"
     end

@@ -6,8 +6,7 @@ shrine[1] = {
 	["needKeep"] = 3,
 	["power"] = 200,
 	["perception"] = 50,
-	["pRecovery"] = 5,
-	["moveNeedHonour"] = 100
+	["pRecovery"] = 5
 }
 shrine[2] = {
 	["level"] = 2,
@@ -15,8 +14,7 @@ shrine[2] = {
 	["needKeep"] = 5,
 	["power"] = 400,
 	["perception"] = 100,
-	["pRecovery"] = 10,
-	["moveNeedHonour"] = 100
+	["pRecovery"] = 10
 }
 shrine[3] = {
 	["level"] = 3,
@@ -24,8 +22,7 @@ shrine[3] = {
 	["needKeep"] = 8,
 	["power"] = 800,
 	["perception"] = 150,
-	["pRecovery"] = 15,
-	["moveNeedHonour"] = 100
+	["pRecovery"] = 15
 }
 shrine[4] = {
 	["level"] = 4,
@@ -33,8 +30,7 @@ shrine[4] = {
 	["needKeep"] = 9,
 	["power"] = 1600,
 	["perception"] = 200,
-	["pRecovery"] = 20,
-	["moveNeedHonour"] = 100
+	["pRecovery"] = 20
 }
 shrine[5] = {
 	["level"] = 5,
@@ -42,8 +38,7 @@ shrine[5] = {
 	["needKeep"] = 10,
 	["power"] = 3200,
 	["perception"] = 250,
-	["pRecovery"] = 25,
-	["moveNeedHonour"] = 100
+	["pRecovery"] = 25
 }
 shrine[6] = {
 	["level"] = 6,
@@ -51,8 +46,7 @@ shrine[6] = {
 	["needKeep"] = 12,
 	["power"] = 6400,
 	["perception"] = 300,
-	["pRecovery"] = 30,
-	["moveNeedHonour"] = 100
+	["pRecovery"] = 30
 }
 shrine[7] = {
 	["level"] = 7,
@@ -60,8 +54,7 @@ shrine[7] = {
 	["needKeep"] = 14,
 	["power"] = 12800,
 	["perception"] = 350,
-	["pRecovery"] = 35,
-	["moveNeedHonour"] = 100
+	["pRecovery"] = 35
 }
 shrine[8] = {
 	["level"] = 8,
@@ -69,8 +62,7 @@ shrine[8] = {
 	["needKeep"] = 16,
 	["power"] = 25600,
 	["perception"] = 400,
-	["pRecovery"] = 40,
-	["moveNeedHonour"] = 100
+	["pRecovery"] = 40
 }
 shrine[9] = {
 	["level"] = 9,
@@ -78,8 +70,7 @@ shrine[9] = {
 	["needKeep"] = 18,
 	["power"] = 51200,
 	["perception"] = 450,
-	["pRecovery"] = 45,
-	["moveNeedHonour"] = 100
+	["pRecovery"] = 45
 }
 shrine[10] = {
 	["level"] = 10,
@@ -87,6 +78,5 @@ shrine[10] = {
 	["needKeep"] = 20,
 	["power"] = 102400,
 	["perception"] = 500,
-	["pRecovery"] = 50,
-	["moveNeedHonour"] = 100
+	["pRecovery"] = 50
 }

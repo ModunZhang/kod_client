@@ -30,8 +30,8 @@ function GameUIAllianceEnterBase:GetMyAlliance()
     return self.my_alliance
 end
 
-function GameUIAllianceEnterBase:GetBuildingCategory()
-    return self:GetBuilding():GetCategory()
+function GameUIAllianceEnterBase:GetBuildingType()
+    return self:GetBuilding():GetType()
 end
 
 function GameUIAllianceEnterBase:GetUIHeight()

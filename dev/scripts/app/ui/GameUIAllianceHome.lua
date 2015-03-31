@@ -653,7 +653,9 @@ function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
     if scene.GetAlliance then
         local alliance = scene:GetAlliance()
         local layer = scene:GetSceneLayer()
-        local location = alliance:GetSelf().location
+
+        local mapObject = alliance:GetAllianceMap():FindMapObjectById(alliance:GetSelf():MapId())
+        local location = mapObject.location
         local point = layer:ConvertLogicPositionToMapPosition(location.x, location.y, alliance:Id())
         local world_point = layer:convertToWorldSpace(point)
         local mid_point = cc.p(display.cx, display.cy)

@@ -29,7 +29,8 @@ function AllianceScene:onEnter()
     alliance_map:AddListenOnType(allianceShirine,alliance_map.LISTEN_TYPE.BUILDING_INFO)
 end
 function AllianceScene:GotoCurrectPosition()
-    local location = self:GetAlliance():GetSelf().location
+    local mapObject = self:GetAlliance():GetAllianceMap():FindMapObjectById(self:GetAlliance():GetSelf():MapId())
+    local location = mapObject.location
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(location.x, location.y)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
 end
@@ -111,15 +112,15 @@ end
 
 function AllianceScene:EnterNotAllianceBuilding(entity)
     local isMyAlliance = true
-    local category = entity:GetCategory()
+    local type_ = entity:GetType()
     local class_name = ""
-    if category == 'none' then
+    if type_ == 'none' then
         class_name = "GameUIAllianceEnterBase"
-    elseif category == 'member' then
+    elseif type_ == 'member' then
         class_name = "GameUIAllianceCityEnter"
-    elseif category == 'decorate' then
+    elseif type_ == 'decorate' then
         class_name = "GameUIAllianceDecorateEnter"
-    elseif category == 'village' then
+    elseif type_ == 'village' then
         class_name = "GameUIAllianceVillageEnter"
     end
     UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance()):AddToCurrentScene(true)

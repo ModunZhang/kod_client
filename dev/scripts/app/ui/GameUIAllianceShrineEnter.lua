@@ -14,7 +14,8 @@ end
 -- end
 
 function GameUIAllianceShrineEnter:GetLocation()
-	return self:GetBuilding().location.x .. "," .. self:GetBuilding().location.y
+	local mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	return mapObject.location.x .. "," .. mapObject.location.y
 end
 
 function GameUIAllianceShrineEnter:GetUIHeight()
@@ -29,7 +30,7 @@ function GameUIAllianceShrineEnter:GetBuildingImage()
 	return "shrine_256x210.png"
 end
 
-function GameUIAllianceShrineEnter:GetBuildingCategory()
+function GameUIAllianceShrineEnter:GetBuildingType()
 	return 'shrine'
 end
 

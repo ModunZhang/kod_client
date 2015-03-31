@@ -56,7 +56,7 @@ function GameUIAllianceVillageEnter:GetBuildingImage()
 	return "woodcutter_1_150x108.png"
 end
 
-function GameUIAllianceVillageEnter:GetBuildingCategory()
+function GameUIAllianceVillageEnter:GetBuildingType()
 	return 'village'
 end
 

@@ -59,16 +59,16 @@ GameDatas.AllianceInitData = {
 	["intInit"] = {},
 	["stringInit"] = {},
 	["right"] = {},
-	["buildingType"] = {},
 	["donate"] = {},
-	["decorateCount"] = {},
+	["buildingName"] = {},
+	["buildings"] = {},
 }
 require("app.datas.AllianceInitData_intInit")
 require("app.datas.AllianceInitData_stringInit")
 require("app.datas.AllianceInitData_right")
-require("app.datas.AllianceInitData_buildingType")
 require("app.datas.AllianceInitData_donate")
-require("app.datas.AllianceInitData_decorateCount")
+require("app.datas.AllianceInitData_buildingName")
+require("app.datas.AllianceInitData_buildings")
 
 GameDatas.AllianceShrine = {
 	["shrineStage"] = {},

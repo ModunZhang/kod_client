@@ -3,14 +3,15 @@
 -- Date: 2014-12-29 17:09:39
 --
 local GameUIAllianceDecorateEnter = UIKit:createUIClass("GameUIAllianceDecorateEnter","GameUIAllianceEnterBase")
-local buildingType_config = GameDatas.AllianceInitData.buildingType
+-- local buildingType_config = GameDatas.AllianceInitData.buildingType
+local buildingName = GameDatas.AllianceInitData.buildingName
 
 function GameUIAllianceDecorateEnter:GetUIHeight()
 	return 242
 end
 
 function GameUIAllianceDecorateEnter:GetHonourLabelText()
-	return buildingType_config[self:GetBuilding():GetType()].distroyNeedHonour 
+    return buildingName[self:GetBuilding():GetName()].moveNeedHonour
 end
 
 function GameUIAllianceDecorateEnter:FixedUI()
@@ -29,7 +30,7 @@ function GameUIAllianceDecorateEnter:GetBuildingImage()
 	return "grass_tree_3_112x114.png"
 end
 
-function GameUIAllianceDecorateEnter:GetBuildingCategory()
+function GameUIAllianceDecorateEnter:GetBuildingType()
 	return 'decorate'
 end
 

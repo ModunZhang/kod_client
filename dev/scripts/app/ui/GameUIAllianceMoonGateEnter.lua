@@ -17,7 +17,7 @@ function GameUIAllianceMoonGateEnter:GetBuildingImage()
 	return "moonGate_200x217.png"
 end
 
-function GameUIAllianceMoonGateEnter:GetBuildingCategory()
+function GameUIAllianceMoonGateEnter:GetBuildingType()
 	return 'orderHall'
 end
 
