@@ -13,14 +13,36 @@ function GameUIAllianceVillageEnter:ctor(building,isMyAlliance,my_alliance,enemy
 	self.enemy_alliance = enemy_alliance
 	self.village_info = building:GetAllianceVillageInfo()
 	self.map_id = building:Id()
+	if not self.village_info then
+		self.isRuins = true
+	else
+		self.isRuins = false
+	end
+end
+
+
+function GameUIAllianceVillageEnter:IsRuins()
+	return self.isRuins
 end
 
 function GameUIAllianceVillageEnter:GetVillageInfo()
 	return self.village_info
 end
 
+function GameUIAllianceVillageEnter:GetProcessIconConfig()
+	local config  = {
+		woodVillage = {"res_wood_114x100.png",0.4},
+	    stoneVillage= {"res_stone_128x128.png",0.4},
+	    ironVillage = {"res_iron_114x100.png",0.4},
+	    foodVillage = {"res_food_114x100.png",0.4},
+	    coinVillage = {"coin_icon.png",0.4},
+	}
+	return config
+end
+
 function GameUIAllianceVillageEnter:GetProcessIcon()
-	return "res_food_114x100.png",0.4
+	local config = self:GetProcessIconConfig()
+	return unpack(config[self:GetBuilding():GetName()])
 end
 
 function GameUIAllianceVillageEnter:HasEnemyAlliance()
@@ -43,13 +65,21 @@ function GameUIAllianceVillageEnter:GetProcessLabelText()
 end
 
 function GameUIAllianceVillageEnter:FixedUI()
-	self:GetDescLabel():hide()
+	if self:IsRuins() then
+		self:GetDescLabel():show()
+		self:GetLevelBg():hide()
+	    self.process_bar_bg:hide()
+   	else
+   		self:GetDescLabel():hide()
+		self:GetLevelBg():show()
+	    self.process_bar_bg:show()
+   	end
 	self:GetHonourIcon():hide()
 	self:GetHonourLabel():hide()
 end
 
 function GameUIAllianceVillageEnter:GetUITitle()
-	return Localize.village_name[self:GetBuilding():GetType()]
+	return Localize.village_name[self:GetBuilding():GetName()]
 end
 
 function GameUIAllianceVillageEnter:GetBuildingImage()
@@ -61,10 +91,19 @@ function GameUIAllianceVillageEnter:GetBuildingType()
 end
 
 function GameUIAllianceVillageEnter:GetBuildingDesc()
-	return "本地化缺失"
+	if self:IsRuins() then
+		return _("废弃的村落")
+	end
+	return ""
 end
 
 function GameUIAllianceVillageEnter:GetBuildingInfo()
+	if self:IsRuins() then
+		return {{
+	        {_("坐标"),0x797154},
+	        {self:GetLocation(),0x403c2f},
+    	}}
+	end
 	self:GetMyAlliance():RemoveListenerOnType(self,self:GetMyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
 	self:GetMyAlliance():AddListenOnType(self,self:GetMyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
 	local alliance_map = self:GetMyAlliance():GetAllianceMap()
@@ -160,6 +199,7 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
 end
 
 function GameUIAllianceVillageEnter:OnVillageEventTimer(village_event,left_resource)
+	if self:IsRuins() then return end
 	if village_event:VillageData().id == self:GetVillageInfo().id then
 		local str = left_resource .. "/" .. VillageEvent.GetVillageConfig(self:GetVillageInfo().name,self:GetVillageInfo().level).production
 		local percent = left_resource/VillageEvent.GetVillageConfig(self:GetVillageInfo().name,self:GetVillageInfo().level).production
@@ -199,6 +239,7 @@ function GameUIAllianceVillageEnter:OnBuildingChange(alliance_map)
 end
 
 function GameUIAllianceVillageEnter:OnVillageEventsDataChanged(changed_map)
+	if self:IsRuins() then return end
 	local hasHandler = false
 	if changed_map.removed then
 		for _,v in ipairs(changed_map.removed) do
@@ -219,17 +260,16 @@ function GameUIAllianceVillageEnter:OnVillageEventsDataChanged(changed_map)
 end
 
 function GameUIAllianceVillageEnter:GetLevelLabelText()
+	if self:IsRuins() then return "" end
 	return _("等级") .. self:GetVillageInfo().level
 end
 --关闭了进攻和突袭的条件判断
 function GameUIAllianceVillageEnter:CheckCanAttackVillage()
-	-- local village_id = self:GetVillageInfo().id
-	-- local can_not_attack = self:GetMyAlliance():CheckVillageMarchEventHaveTarget(village_id)
-	-- local can_not_strike_village = self:GetMyAlliance():CheckStrikeVillageHaveTarget(village_id)
 	return true
 end
 
 function GameUIAllianceVillageEnter:GetEnterButtons()
+	if self:IsRuins() then return {} end
 	local buttons = {}
 	local village_id = self:GetVillageInfo().id
     local villageEvent = self:GetMyAlliance():FindVillageEventByVillageId(village_id)

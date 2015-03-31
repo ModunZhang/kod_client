@@ -50,7 +50,6 @@ function VillageEvent:TargetLocation()
 	return self:VillageData().location,self:VillageData().alliance.id
 end
 
-
 function VillageEvent:Reset()
 	self:RemoveAllObserver()
 end
