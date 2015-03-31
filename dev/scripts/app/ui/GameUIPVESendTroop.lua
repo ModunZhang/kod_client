@@ -50,8 +50,15 @@ function GameUIPVESendTroop:OnMoveInStage()
             color = 0xffedae,
             shadow= true
         }))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
+    max_btn:onButtonClicked(function(event)
+        if event.name == "CLICKED_EVENT" then
+            if self.is_now_max then
+                self:AdapterMaxButton()
+                for k,item in pairs(self.soldiers_table) do
+                    item:SetSoldierCount(0)
+                end
+            else
+                self:AdapterMaxButton()
                 local max_soldiers_citizen = 0
                 for k,item in pairs(self.soldiers_table) do
                     local name,level,_,max_num = item:GetSoldierInfo()
@@ -89,7 +96,10 @@ function GameUIPVESendTroop:OnMoveInStage()
                     self:RefreashSoldierShow()
                 end
             end
-        end):align(display.LEFT_CENTER,window.left+50,window.top-910):addTo(self:GetView())
+        end
+    end):align(display.LEFT_CENTER,window.left+50,window.top-910):addTo(self:GetView())
+    self.max_btn = max_btn
+
     local march_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("进攻"),
@@ -146,9 +156,24 @@ function GameUIPVESendTroop:OnMoveInStage()
             end
 
         end):align(display.RIGHT_CENTER,window.right-50,window.top-910):addTo(self:GetView())
-    
+
 
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
+end
+function GameUIPVESendTroop:AdapterMaxButton(max)
+    local btn_labe = max and _("最大") or self.is_now_max and _("最大") or _("最小")
+    if max then
+        self.is_now_max = false
+    else
+        self.is_now_max = not self.is_now_max
+    end
+    self.max_btn:setButtonLabel(UIKit:ttfLabel({
+        text = btn_labe,
+        size = 24,
+        color = 0xffedae,
+        shadow= true
+    }))
+
 end
 function GameUIPVESendTroop:SelectDragonPart()
     if not self.dragon then return end
@@ -281,6 +306,7 @@ function GameUIPVESendTroop:SelectSoldiers()
                             if edit_value ~= slider_value then
                                 slider:setSliderValue(edit_value)
                                 self:RefreashSoldierShow()
+                                self:AdapterMaxButton(true)
                             end
                         end
                     }
@@ -297,7 +323,7 @@ function GameUIPVESendTroop:SelectSoldiers()
             btn_text:setString(math.floor(event.value))
         end)
         slider:addSliderReleaseEventListener(function(event)
-            print("RefreashSoldierShow---------")
+            self:AdapterMaxButton(true)
             self:RefreashSoldierShow()
         end)
         slider:setDynamicMaxCallBakc(function (value)
@@ -641,6 +667,9 @@ function GameUIPVESendTroop:onExit()
 end
 
 return GameUIPVESendTroop
+
+
+
 
 
 
