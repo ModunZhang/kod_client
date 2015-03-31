@@ -336,6 +336,7 @@ function GameUIDragonEquipment:BuildIntensifyUI()
         table.insert(self.allEquipemnts,tempNode)
       end
       item:addContent(node)
+      node:size(node:getCascadeBoundingBox().width, node:getCascadeBoundingBox().height+10)
       item:setItemSize(node:getCascadeBoundingBox().width, node:getCascadeBoundingBox().height+10)
       self.intensify_ui.listView:addItem(item)
   end
