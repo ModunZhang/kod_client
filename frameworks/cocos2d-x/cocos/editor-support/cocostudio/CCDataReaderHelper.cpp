@@ -139,6 +139,7 @@ static const char *COLOR_INFO = "color";
 
 static const char *CONFIG_FILE_PATH = "config_file_path";
 static const char *CONTENT_SCALE = "content_scale";
+static const char *CONFIG_PNG_PATH = "config_png_path";
 
 namespace cocostudio {
 
@@ -484,10 +485,19 @@ void DataReaderHelper::addDataAsyncCallBack(float dt)
         while (!pDataInfo->configFileQueue.empty())
         {
             std::string configPath = pDataInfo->configFileQueue.front();
+#ifndef COCOSTUDIO_JSON_USE_CONFIG_PNG_FILE
             _getFileMutex.lock();
             ArmatureDataManager::getInstance()->addSpriteFrameFromFile((pAsyncStruct->baseFilePath + configPath + ".plist").c_str(), (pAsyncStruct->baseFilePath + configPath + ".png").c_str(),pDataInfo->filename.c_str());
             _getFileMutex.unlock();
             pDataInfo->configFileQueue.pop();
+#else
+            std::string filePath = configPath;
+            filePath = filePath.erase(filePath.find_last_of("."));
+            _getFileMutex.lock();
+            ArmatureDataManager::getInstance()->addSpriteFrameFromFile((pAsyncStruct->baseFilePath + filePath + ".plist").c_str(), (pAsyncStruct->baseFilePath + configPath).c_str(),pDataInfo->filename.c_str());
+            _getFileMutex.unlock();
+            pDataInfo->configFileQueue.pop();
+#endif
         }
 
 
@@ -1311,19 +1321,20 @@ void DataReaderHelper::addDataFromJsonCache(const std::string& fileContent, Data
     bool autoLoad = dataInfo->asyncStruct == nullptr ? ArmatureDataManager::getInstance()->isAutoLoadSpriteFile() : dataInfo->asyncStruct->autoLoadSpriteFile;
     if (autoLoad)
     {
+#ifndef COCOSTUDIO_JSON_USE_CONFIG_PNG_FILE
         length =  DICTOOL->getArrayCount_json(json, CONFIG_FILE_PATH); // json[CONFIG_FILE_PATH].IsNull() ? 0 : json[CONFIG_FILE_PATH].Size();
         for (int i = 0; i < length; i++)
         {
-			const char *path = DICTOOL->getStringValueFromArray_json(json, CONFIG_FILE_PATH, i); // json[CONFIG_FILE_PATH][i].IsNull() ? nullptr : json[CONFIG_FILE_PATH][i].GetString();
+            const char *path = DICTOOL->getStringValueFromArray_json(json, CONFIG_FILE_PATH, i); // json[CONFIG_FILE_PATH][i].IsNull() ? nullptr : json[CONFIG_FILE_PATH][i].GetString();
             if (path == nullptr)
             {
                 CCLOG("load CONFIG_FILE_PATH error.");
                 return;
             }
-
+            
             std::string filePath = path;
             filePath = filePath.erase(filePath.find_last_of("."));
-
+            
             if (dataInfo->asyncStruct)
             {
                 dataInfo->configFileQueue.push(filePath);
@@ -1332,10 +1343,36 @@ void DataReaderHelper::addDataFromJsonCache(const std::string& fileContent, Data
             {
                 std::string plistPath = filePath + ".plist";
                 std::string pngPath =  filePath + ".png";
-
+                
                 ArmatureDataManager::getInstance()->addSpriteFrameFromFile((dataInfo->baseFilePath + plistPath).c_str(), (dataInfo->baseFilePath + pngPath).c_str(), dataInfo->filename.c_str());
             }
         }
+#else
+        length =  DICTOOL->getArrayCount_json(json, CONFIG_PNG_PATH); // json[CONFIG_FILE_PATH].IsNull() ? 0 : json[CONFIG_FILE_PATH].Size();
+        for (int i = 0; i < length; i++)
+        {
+            const char *path = DICTOOL->getStringValueFromArray_json(json, CONFIG_PNG_PATH, i); // json[CONFIG_FILE_PATH][i].IsNull() ? nullptr : json[CONFIG_FILE_PATH][i].GetString();
+            if (path == nullptr)
+            {
+                CCLOG("load CONFIG_PNG_PATH error.");
+                return;
+            }
+            
+            std::string filePath = path;
+            filePath = filePath.erase(filePath.find_last_of("."));
+            
+            if (dataInfo->asyncStruct)
+            {
+                dataInfo->configFileQueue.push(path);
+            }
+            else
+            {
+                std::string plistPath = filePath + ".plist";
+                
+                ArmatureDataManager::getInstance()->addSpriteFrameFromFile((dataInfo->baseFilePath + plistPath).c_str(), (dataInfo->baseFilePath + path).c_str(), dataInfo->filename.c_str());
+            }
+        }
+#endif
     }
 }
 
