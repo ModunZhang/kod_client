@@ -92,7 +92,7 @@ function GameUIPVESendTroop:OnMoveInStage()
         end):align(display.LEFT_CENTER,window.left+50,window.top-910):addTo(self:GetView())
     local march_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
         :setButtonLabel(UIKit:ttfLabel({
-            text = _("行军"),
+            text = _("进攻"),
             size = 24,
             color = 0xffedae,
             shadow= true
@@ -125,7 +125,7 @@ function GameUIPVESendTroop:OnMoveInStage()
                     return
                 end
                 if self.dragon:IsHpLow() then
-                    FullScreenPopDialogUI.new():SetTitle(_("行军"))
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
                         :SetPopMessage(_("您的龙的HP低于20%,有很大几率阵亡,确定要派出吗?"))
                         :CreateOKButton(
                             {
@@ -146,21 +146,7 @@ function GameUIPVESendTroop:OnMoveInStage()
             end
 
         end):align(display.RIGHT_CENTER,window.right-50,window.top-910):addTo(self:GetView())
-    --行军所需时间
-    display.newSprite("hourglass_39x46.png", window.cx, window.top-910)
-        :addTo(self):scale(0.6)
-    self.march_time = UIKit:ttfLabel({
-        text = "20:00:00",
-        size = 18,
-        color = 0x403c2f
-    }):align(display.LEFT_CENTER,window.cx+20,window.top-900):addTo(self:GetView())
-
-    -- 科技减少行军时间
-    self.buff_reduce_time = UIKit:ttfLabel({
-        text = "(-00:20:00)",
-        size = 18,
-        color = 0x068329
-    }):align(display.LEFT_CENTER,window.cx+20,window.top-920):addTo(self:GetView())
+    
 
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
 end
@@ -517,7 +503,7 @@ function GameUIPVESendTroop:CreateTroopsShow()
     function TroopsShow:RefreshMySoldiers(soldier_show_table)
         local my_soldiers = soldier_show_table or {}
         self.my_soldiers = my_soldiers
-        -- 按兵种战力排序
+        -- 按兵种战力排序行军
         table.sort(my_soldiers, function(a, b)
             return a.power > b.power
         end)
