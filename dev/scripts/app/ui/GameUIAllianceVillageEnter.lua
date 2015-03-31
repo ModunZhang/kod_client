@@ -105,8 +105,8 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
 		            },
         		}
         		labels = {location,occupy_label,current_collect_label,end_time_label}
-        		local str = self:GetVillageInfo().resource - villageEvent:CollectCount() .. "/" .. VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
-				local percent = (self:GetVillageInfo().resource - villageEvent:CollectCount())/VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
+        		local str = self:GetVillageInfo().resource - villageEvent:CollectCount() .. "/" .. VillageEvent.GetVillageConfig(self:GetVillageInfo().name,self:GetVillageInfo().level).production
+				local percent = (self:GetVillageInfo().resource - villageEvent:CollectCount())/VillageEvent.GetVillageConfig(self:GetVillageInfo().name,self:GetVillageInfo().level).production
 				self:GetProgressTimer():setPercentage(percent*100)
 				self:GetProcessLabel():setString(str)
 				self:GetEnemyAlliance():AddListenOnType(self,self:GetEnemyAlliance().LISTEN_TYPE.OnVillageEventTimer)
@@ -116,8 +116,8 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
 		            {_("无"),0x403c2f}
         		}
         		labels = {location,no_one_label}
-        		local str = self:GetVillageInfo().resource .. "/" .. VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
-				local percent = self:GetVillageInfo().resource/VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
+        		local str = self:GetVillageInfo().resource .. "/" .. VillageEvent.GetVillageConfig(self:GetVillageInfo().name,self:GetVillageInfo().level).production
+				local percent = self:GetVillageInfo().resource/VillageEvent.GetVillageConfig(self:GetVillageInfo().name,self:GetVillageInfo().level).production
 				self:GetProgressTimer():setPercentage(percent*100)
 				self:GetProcessLabel():setString(str)
 		    end
@@ -127,8 +127,8 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
 		        {_("无"),0x403c2f}
 			}
 			labels = {location,no_one_label}
-			local str = self:GetVillageInfo().resource .. "/" .. VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
-			local percent = self:GetVillageInfo().resource/VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
+			local str = self:GetVillageInfo().resource .. "/" .. VillageEvent.GetVillageConfig(self:GetVillageInfo().name,self:GetVillageInfo().level).production
+			local percent = self:GetVillageInfo().resource/VillageEvent.GetVillageConfig(self:GetVillageInfo().name,self:GetVillageInfo().level).production
 			self:GetProgressTimer():setPercentage(percent*100)
 			self:GetProcessLabel():setString(str)
 		end
@@ -150,8 +150,8 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
             },
 		}
 		labels = {location,occupy_label,current_collect_label,end_time_label}
-		local str = self:GetVillageInfo().resource - villageEvent:CollectCount() .. "/" .. VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
-		local percent = (self:GetVillageInfo().resource - villageEvent:CollectCount())/VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
+		local str = self:GetVillageInfo().resource - villageEvent:CollectCount() .. "/" .. VillageEvent.GetVillageConfig(self:GetVillageInfo().name,self:GetVillageInfo().level).production
+		local percent = (self:GetVillageInfo().resource - villageEvent:CollectCount())/VillageEvent.GetVillageConfig(self:GetVillageInfo().name,self:GetVillageInfo().level).production
 		self:GetProgressTimer():setPercentage(percent*100)
 		self:GetProcessLabel():setString(str)
 		self:GetMyAlliance():AddListenOnType(self,self:GetMyAlliance().LISTEN_TYPE.OnVillageEventTimer)
@@ -161,8 +161,8 @@ end
 
 function GameUIAllianceVillageEnter:OnVillageEventTimer(village_event,left_resource)
 	if village_event:VillageData().id == self:GetVillageInfo().id then
-		local str = left_resource .. "/" .. VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
-		local percent = left_resource/VillageEvent.GetVillageConfig(self:GetVillageInfo().type,self:GetVillageInfo().level).production
+		local str = left_resource .. "/" .. VillageEvent.GetVillageConfig(self:GetVillageInfo().name,self:GetVillageInfo().level).production
+		local percent = left_resource/VillageEvent.GetVillageConfig(self:GetVillageInfo().name,self:GetVillageInfo().level).production
 		self:GetProgressTimer():setPercentage(percent*100)
 		self:GetProcessLabel():setString(str)
 		local label = self:GetInfoLabelByTag(900)
