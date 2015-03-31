@@ -4,7 +4,7 @@ local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
 local UIPageView = import("..ui.UIPageView")
 local Flag = import("..entity.Flag")
 local Alliance = import("..entity.Alliance")
-local AllianceMoonGate = import("..entity.AllianceMoonGate")
+local SoldierManager = import("..entity.SoldierManager")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local GameUIAllianceContribute = import(".GameUIAllianceContribute")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
@@ -77,9 +77,14 @@ function GameUIAllianceHome:onEnter()
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
-
+    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
+    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
-
+    local city = City
+    city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
+    city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
+    city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+    city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
     -- 添加到全局计时器中，以便显示各个阶段的时间
     app.timer:AddListener(self)
 end
@@ -106,18 +111,78 @@ function GameUIAllianceHome:CreateOperationButton()
             :addTo(self):pos(display.right-50, y)
         button:setTag(i)
         button:setTouchSwallowEnabled(true)
+        if i == 1 then
+            self:RefreshHelpButtonVisible()
+            local alliance = self.alliance
+            -- 请求帮助的其他联盟成员请求帮助事件数量
+            local request_help_num_bg = display.newSprite("mail_unread_bg_36x23.png"):addTo(button):pos(20,-20)
+            local request_num = alliance:GetOtherRequestEventsNum()
+            self.request_help_num = UIKit:ttfLabel(
+                {
+                    text = GameUtils:formatNumber(request_num),
+                    size = 16,
+                    color = 0xf5f2b3
+                }):align(display.CENTER,request_help_num_bg:getContentSize().width/2,request_help_num_bg:getContentSize().height/2+4)
+                :addTo(request_help_num_bg)
+            self.request_help_num_bg = request_help_num_bg
+            self:VisibleRequestHelpNum()
+        end
     end
 end
-
+function GameUIAllianceHome:VisibleRequestHelpNum()
+    local alliance = self.alliance
+    local request_num = alliance:GetOtherRequestEventsNum()
+    self.request_help_num_bg:setVisible(request_num>0)
+    self.request_help_num:setString(GameUtils:formatNumber(request_num))
+end
+function GameUIAllianceHome:RefreshHelpButtonVisible()
+    local help_button = self:getChildByTag(1)
+    if help_button then
+        local alliance = Alliance_Manager:GetMyAlliance()
+        help_button:setVisible(not alliance:IsDefault() and #alliance:GetCouldShowHelpEvents()>0)
+    end
+end
+function GameUIAllianceHome:OnUpgradingBegin()
+end
+function GameUIAllianceHome:OnUpgrading()
+end
+function GameUIAllianceHome:OnUpgradingFinished()
+    self:RefreshHelpButtonVisible()
+end
+function GameUIAllianceHome:OnMilitaryTechEventsChanged()
+    self:RefreshHelpButtonVisible()
+end
+function GameUIAllianceHome:OnSoldierStarEventsChanged()
+    self:RefreshHelpButtonVisible()
+end
+function GameUIAllianceHome:OnProductionTechnologyEventDataChanged()
+    self:RefreshHelpButtonVisible()
+end
+function GameUIAllianceHome:OnHelpEventChanged()
+    self:RefreshHelpButtonVisible()
+    self:VisibleRequestHelpNum()
+end
+function GameUIAllianceHome:OnAllHelpEventChanged()
+    self:RefreshHelpButtonVisible()
+    self:VisibleRequestHelpNum()
+end
 function GameUIAllianceHome:onExit()
     app.timer:RemoveListener(self)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
+    self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
+    self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
     self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
+
+    local city = City
+    city:RemoveListenerOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
+    city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
+    city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+    city:RemoveListenerOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
     GameUIAllianceHome.super.onExit(self)
 end
 
@@ -581,7 +646,7 @@ function GameUIAllianceHome:OnBottomButtonClicked(event)
     elseif tag == 1 then
         UIKit:newGameUI('GameUIMission',City):AddToCurrentScene(true)
     elseif tag == 3 then
-        UIKit:newGameUI('GameUIMail',_("邮件"),self.city):AddToCurrentScene(true)
+        UIKit:newGameUI('GameUIMail',_("邮件"),City):AddToCurrentScene(true)
     elseif tag == 5 then
         UIKit:newGameUI('GameUISetting',City):AddToCurrentScene(true)
     end
@@ -741,6 +806,10 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
+
+
+
 
 
 

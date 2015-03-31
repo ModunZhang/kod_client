@@ -80,7 +80,7 @@ function CommonUpgradeUI:OnBuildingUpgrading( buidling, current_time )
     pro:setPercentage(self.building:GetElapsedTimeByCurrentTime(current_time)/self.building:GetUpgradeTimeToNextLevel()*100)
     self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(current_time)))
     if not self.acc_layer.acc_button:isButtonEnabled() and
-        self.building:GetFreeSpeedupTime()>=self.building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime()) then
+        self.building:IsAbleToFreeSpeedUpByTime(current_time) then
         self.acc_layer.acc_button:setButtonEnabled(true)
     end
 end
@@ -148,23 +148,19 @@ function CommonUpgradeUI:InitNextLevelEfficiency()
     -- 下一级 框
     local bg  = display.newSprite("upgrade_next_level_bg.png", window.left+114, window.top-310):addTo(self)
     local bg_size = bg:getContentSize()
-    self.next_level = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        font = UIKit:getFontFilePath(),
+    self.next_level = UIKit:ttfLabel({
         size = 20,
-        color = UIKit:hex2c3b(0x403c2f)
+        color = 0x403c2f
     }):align(display.CENTER,bg_size.width/2,bg_size.height/2):addTo(bg)
 
     local efficiency_bg = display.newSprite("back_ground_398x97.png", window.cx+74, window.top-310):addTo(self)
     local efficiency_bg_size = efficiency_bg:getContentSize()
-    self.efficiency = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        font = UIKit:getFontFilePath(),
+    self.efficiency = UIKit:ttfLabel({
         size = 20,
-        dimensions = cc.size(380,40),
+        dimensions = cc.size(380,0),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
         align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-        color = UIKit:hex2c3b(0x403c2f)
+        color = 0x403c2f
     }):addTo(efficiency_bg):align(display.LEFT_CENTER)
     self.efficiency:pos(10,efficiency_bg_size.height/2)
     self:SetUpgradeEfficiency()
@@ -416,7 +412,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
 
         {resource_type = _("铁矿"),isVisible = self.building:GetLevelUpIron()>0,      isSatisfy = iron>self.building:GetLevelUpIron() ,
             icon="res_iron_114x100.png",description=GameUtils:formatNumber(self.building:GetLevelUpIron()).."/"..GameUtils:formatNumber(iron)},
-       
+
         {resource_type = _("建筑蓝图"),isVisible = self.building:GetLevelUpBlueprints()>0,isSatisfy = self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"]>self.building:GetLevelUpBlueprints() ,
             icon="blueprints_128x128.png",description=GameUtils:formatNumber(self.building:GetLevelUpBlueprints()).."/"..GameUtils:formatNumber(self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"])},
         {resource_type = _("建造工具"),isVisible = self.building:GetLevelUpTools()>0,     isSatisfy = self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"]>self.building:GetLevelUpTools() ,
@@ -527,7 +523,12 @@ function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
                     end)
             end
         end):align(display.CENTER, display.cx+185, display.top - 435):addTo(self.acc_layer)
-    self.acc_layer.acc_button:setButtonEnabled(false)
+    local building = self.building
+    if building:IsUpgrading() and building:IsAbleToFreeSpeedUpByTime(app.timer:GetServerTime()) then
+        self.acc_layer.acc_button:setButtonEnabled(true)
+    else
+        self.acc_layer.acc_button:setButtonEnabled(false)
+    end
 
 end
 
@@ -642,6 +643,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
 
 
