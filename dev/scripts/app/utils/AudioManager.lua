@@ -24,11 +24,17 @@ local effect_sound_map = {
 	USE_ITEM = "sfx_use_item.wav",
 	BUY_ITEM = "sfx_buy_item.wav",
 	COMPLETE = "sfx_complete.wav",
+	TROOP_LOSE = "sfx_troop_lose.wav",
+	TROOP_SENDOUT = "sfx_troop_sendOut.wav",
 	SPLASH_BUTTON_START = "sfx_click_start.mp3",
 	UI_BUILDING_UPGRADE_START = "sfx_building_upgrade.wav",
 	UI_BUILDING_DESTROY = "sfx_building_destroy.wav",
 	UI_BLACKSMITH_FORGE = "ui_blacksmith_forge.mp3",
 	UI_TOOLSHOP_CRAFT_START = "ui_toolShop_craft_start.mp3"
+}
+
+local soldier_step_sfx_map = {
+	infantry = {"sfx_step_infantry01.wav", "sfx_step_infantry02.wav", "sfx_step_infantry03.wav"}
 }
 
 local building_sfx_map = {
@@ -115,6 +121,13 @@ function AudioManager:PlayBuildingEffectByType(type_)
 		self:PlayeEffectSound(sfx[math.random(#sfx)])
 	end
 end
+function AudioManager:PlaySoldierStepEffectByType(type_)
+	local sfx = soldier_step_sfx_map[type_]
+	if sfx then
+		print(sfx[math.random(#sfx)])
+		self:PlayeEffectSound(sfx[math.random(#sfx)])
+	end
+end
 
 function AudioManager:PlayGameMusic(scene_name)
 	local file_key = scene_name or display.getRunningScene().__cname
@@ -122,9 +135,9 @@ function AudioManager:PlayGameMusic(scene_name)
  	if bg_music_map[file_key] then
 		self:PlayeBgMusic(bg_music_map[file_key])
 	end
-	if bg_sound_map[file_key] then
-		self:PlayeBgSound(bg_sound_map[file_key])
-	end
+	-- if bg_sound_map[file_key] then
+	-- 	self:PlayeBgSound(bg_sound_map[file_key])
+	-- end
 end
 
 function AudioManager:PlayeEffectSoundWithKey(key)

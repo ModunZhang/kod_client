@@ -237,7 +237,6 @@ function GameUIReplay:OnMoveInStage()
         :addTo(back_ground):align(display.CENTER, back_width - 100, 50)
         :onButtonClicked(function(event)
             self:ShowResult()
-            self.pass:hide()
             self.close:show()
         end)
 
@@ -440,6 +439,7 @@ function GameUIReplay:ShowResult()
         end
         self.showed_result = true
     end
+    self.pass:hide()
 end
 function GameUIReplay:onExit()
     GameUIReplay.super.onExit(self)

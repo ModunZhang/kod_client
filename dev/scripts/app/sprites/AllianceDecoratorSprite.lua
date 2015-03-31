@@ -39,7 +39,7 @@ local decorator_map = {
 function AllianceDecoratorSprite:ctor(city_layer, entity)
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     AllianceDecoratorSprite.super.ctor(self, city_layer, entity, x, y)
-    self:CreateBase()
+    -- self:CreateBase()
     -- self:GetSprite():setVisible(false)
 end
 function AllianceDecoratorSprite:GetSpriteFile()

@@ -76,6 +76,7 @@ function BattleObject:breath(is_forever)
 end
 function BattleObject:move(time, x, y)
     self:PlayAnimation("move_2")
+    -- local sp = cc.Spawn:create(cc.ScaleTo:create(1,1.5),cc.FadeOut:create(1))
     local p = promise.new()
     transition.moveTo(self, {
         x = x, y = y, time = time,
@@ -93,7 +94,7 @@ function BattleObject:defeat()
             p:resolve(self)
         end
     })
-    app:GetAudioManager():PlayeEffectSound("sfx_troop_lose.wav")
+    app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_LOSE")
     return p
 end
 function BattleObject:Defeat()
