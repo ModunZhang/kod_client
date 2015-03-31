@@ -440,6 +440,7 @@ function GameUIReplay:ShowResult()
         self.showed_result = true
     end
     self.pass:hide()
+    self.close:show()
 end
 function GameUIReplay:onExit()
     GameUIReplay.super.onExit(self)
