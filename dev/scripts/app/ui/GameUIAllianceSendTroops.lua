@@ -54,7 +54,8 @@ function GameUIAllianceSendTroops:GetEnemyAlliance()
 end
 
 function GameUIAllianceSendTroops:GetMarchTime(soldier_show_table)
-    local fromLocation = self:GetMyAlliance():GetSelf().location
+    local mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetMyAlliance():GetSelf():MapId())
+    local fromLocation = mapObject.location
     local target_alliance = self.targetIsMyAlliance and self:GetMyAlliance() or self:GetEnemyAlliance()
     local time = DataUtils:getPlayerSoldiersMarchTime(soldier_show_table,self:GetMyAlliance(),fromLocation,target_alliance,self.toLocation)
     local buffTime = DataUtils:getPlayerMarchTimeBuffTime(time)

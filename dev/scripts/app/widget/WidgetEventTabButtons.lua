@@ -74,7 +74,7 @@ function WidgetEventTabButtons:OnRecruiting(barracks, event, current_time)
         end)
     end
 end
-function WidgetEventTabButtons:OnEndRecruit(barracks, event, current_time)
+function WidgetEventTabButtons:OnEndRecruit(barracks)
     self:EventChangeOn("soldier")
 end
 -- 装备事件

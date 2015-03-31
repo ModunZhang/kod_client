@@ -26,6 +26,7 @@ local effect_sound_map = {
 	COMPLETE = "sfx_complete.wav",
 	TROOP_LOSE = "sfx_troop_lose.wav",
 	TROOP_SENDOUT = "sfx_troop_sendOut.wav",
+	TROOP_COMPLETE = "sfx_troop_complete.wav",
 	SPLASH_BUTTON_START = "sfx_click_start.mp3",
 	UI_BUILDING_UPGRADE_START = "sfx_building_upgrade.wav",
 	UI_BUILDING_DESTROY = "sfx_building_destroy.wav",
