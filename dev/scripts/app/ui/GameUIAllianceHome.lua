@@ -645,8 +645,10 @@ function GameUIAllianceHome:OnBottomButtonClicked(event)
         UIKit:newGameUI('GameUIShop', City):AddToCurrentScene(true)
     elseif tag == 1 then
         UIKit:newGameUI('GameUIMission',City):AddToCurrentScene(true)
+    elseif tag == 2 then
+        UIKit:newGameUI('GameUIItems',City):AddToCurrentScene(true)
     elseif tag == 3 then
-        UIKit:newGameUI('GameUIMail',_("邮件"),City):AddToCurrentScene(true)
+        UIKit:newGameUI('GameUIMail',City):AddToCurrentScene(true)
     elseif tag == 5 then
         UIKit:newGameUI('GameUISetting',City):AddToCurrentScene(true)
     end

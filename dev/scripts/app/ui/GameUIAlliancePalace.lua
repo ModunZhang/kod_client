@@ -252,7 +252,7 @@ function GameUIAlliancePalace:GetHonourNode(honour)
     local node = display.newNode()
     node:setContentSize(cc.size(160,36))
     -- 荣耀值
-    display.newSprite("honour_128x128.png"):align(display.CENTER, 0, 0):addTo(node):scale(20/128)
+    display.newSprite("honour_128x128.png"):align(display.CENTER, 0, 0):addTo(node):scale(42/128)
     local honour_bg = display.newSprite("back_ground_114x36.png"):align(display.CENTER,80, 0):addTo(node)
     local honour_label = UIKit:ttfLabel({
         text = honour or self.alliance:Honour(),
@@ -309,7 +309,13 @@ function GameUIAlliancePalace:InitInfoPart()
     -- 沙漠
     display.newSprite("desert1_800x560.png")
         :align(display.CENTER, 462, 220):addTo(bg1):scale(0.2)
-
+    -- 地形介绍
+    local terian_intro = UIKit:ttfLabel({
+        -- text = _("草地地形能产出绿龙装备材料，每当在自己的领土上完成任务，或者击杀一点战斗力的敌方单位，就由一定几率获得装备材料。"),
+        size = 20,
+        color = 0x514d3e,
+        dimensions = cc.size(520, 0),
+    }):align(display.BOTTOM_CENTER, bg1:getContentSize().width/2, 10):addTo(bg1)
     local checkbox_image = {
         off = "checkbox_unselected.png",
         off_pressed = "checkbox_unselected.png",
@@ -329,19 +335,28 @@ function GameUIAlliancePalace:InitInfoPart()
         :onButtonSelectChanged(function(event)
             -- self.selected_rebuild_to_building = rebuild_list[event.selected]
             self.select_terrian_index = event.selected
+            local t_name = {
+           {
+           _("草地"),
+           _("绿龙"),
+           },
+           {
+           _("雪地"),
+           _("蓝龙"),
+           },
+           {
+           _("沙漠"),
+           _("红龙"),
+           },
+        }
+            terian_intro:setString(string.format(_("%s地形能产出%s装备材料，每当在自己的领土上完成任务，或者击杀一点战斗力的敌方单位，就由一定几率获得装备材料。"),t_name[self.select_terrian_index][1],t_name[self.select_terrian_index][2]))
         end)
         :align(display.CENTER, 57 , 90)
         :addTo(bg1)
     self.select_terrian_index = self:MapTerrianToIndex(self.alliance:Terrain())
     group:getButtonAtIndex(self.select_terrian_index):setButtonSelected(true)
 
-    -- 介绍
-    UIKit:ttfLabel({
-        text = _("草地地形能产出绿龙装备材料，每当在自己的领土上完成任务，或者击杀一点战斗力的敌方单位，就由一定几率获得装备材料。"),
-        size = 20,
-        color = 0x514d3e,
-        dimensions = cc.size(520, 0),
-    }):align(display.BOTTOM_CENTER, bg1:getContentSize().width/2, 10):addTo(bg1)
+
     -- 消耗荣耀值更换地形
     local need_honour = GameDatas.AllianceInitData.intInit.editAllianceTerrianHonour.value
     self:GetHonourNode(need_honour):addTo(layer):align(display.CENTER,window.cx+30, window.top-454)
@@ -380,7 +395,7 @@ function GameUIAlliancePalace:InitInfoPart()
         {_("击溃城市"),string.formatnumberthousands(countInfo.routCount)},
         {_("联盟战胜利"),string.formatnumberthousands(countInfo.winCount)},
         {_("联盟战失败"),string.formatnumberthousands(countInfo.failedCount)},
-        {_("胜率"),(math.floor(countInfo.winCount/(countInfo.winCount+countInfo.failedCount)*1000)/10).."%"},
+        {_("胜率"),countInfo.winCount +countInfo.failedCount~=0 and (math.floor(countInfo.winCount/(countInfo.winCount+countInfo.failedCount)*1000)/10).."%" or "0%"},
     }
     WidgetInfoWithTitle.new({
         info = info_message,
@@ -415,6 +430,7 @@ function GameUIAlliancePalace:OnMemberChanged(alliance,changed_map)
     end
 end
 return GameUIAlliancePalace
+
 
 
 

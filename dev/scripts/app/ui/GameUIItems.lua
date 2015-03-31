@@ -15,8 +15,8 @@ local WidgetUseItems = import("..widget.WidgetUseItems")
 
 local GameUIItems = UIKit:createUIClass("GameUIItems","GameUIWithCommonHeader")
 
-function GameUIItems:ctor(title,city)
-    GameUIItems.super.ctor(self,city,title)
+function GameUIItems:ctor(city)
+    GameUIItems.super.ctor(self,city,_("道具"))
 end
 function GameUIItems:OnMoveInStage()
     GameUIItems.super.OnMoveInStage(self)

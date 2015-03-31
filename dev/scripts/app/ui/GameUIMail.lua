@@ -21,9 +21,9 @@ local GameUIMail = class('GameUIMail', GameUIWithCommonHeader)
 GameUIMail.ONE_TIME_LOADING_MAILS = 10
 GameUIMail.ONE_TIME_LOADING_REPORTS = 10
 
-function GameUIMail:ctor(title,city)
+function GameUIMail:ctor(city)
     GameUIMail.super.ctor(self)
-    self.title = title
+    self.title = _("邮件")
     self.city = city
     self.manager = MailManager
     self.inbox_mails = {}
