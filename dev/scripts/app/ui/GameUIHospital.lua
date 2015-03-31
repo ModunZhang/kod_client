@@ -444,28 +444,32 @@ function GameUIHospital:OnTreatSoliderCountChanged(soldier_manager, treat_soldie
     for k,soldier_type in pairs(treat_soldier_changed) do
         local changed_treat_soldier_num = soldier_manager:GetTreatCountBySoldierType(soldier_type)
         self.treat_soldier_boxes_table[soldier_type]:SetNumber(changed_treat_soldier_num)
-        self.treat_soldier_boxes_table[soldier_type]:Enable(soldier_number>0)
-        self.treat_soldier_boxes_table[soldier_type]:SetButtonListener(function ()
-            local widget = WidgetTreatSoldier.new(soldier_type,
-                1,
-                changed_treat_soldier_num)
-                :addTo(self,1000)
-                :align(display.CENTER, window.cx, 500 / 2)
-                :OnBlankClicked(function(widget)
-                    City:GetResourceManager():RemoveObserver(widget)
-                    widget:removeFromParent()
-                end)
-                :OnNormalButtonClicked(function(widget)
-                    City:GetResourceManager():RemoveObserver(widget)
-                    widget:removeFromParent()
-                end)
-                :OnInstantButtonClicked(function(widget)
-                    City:GetResourceManager():RemoveObserver(widget)
-                    widget:removeFromParent()
-                end)
-            City:GetResourceManager():AddObserver(widget)
-            City:GetResourceManager():OnResourceChanged()
-        end)
+        self.treat_soldier_boxes_table[soldier_type]:Enable(changed_treat_soldier_num>0)
+        if changed_treat_soldier_num>0 then
+            self.treat_soldier_boxes_table[soldier_type]:SetButtonListener(function ()
+                local widget = WidgetTreatSoldier.new(soldier_type,
+                    1,
+                    changed_treat_soldier_num)
+                    :addTo(self,1000)
+                    :align(display.CENTER, window.cx, 500 / 2)
+                    :OnBlankClicked(function(widget)
+                        City:GetResourceManager():RemoveObserver(widget)
+                        widget:removeFromParent()
+                    end)
+                    :OnNormalButtonClicked(function(widget)
+                        City:GetResourceManager():RemoveObserver(widget)
+                        widget:removeFromParent()
+                    end)
+                    :OnInstantButtonClicked(function(widget)
+                        City:GetResourceManager():RemoveObserver(widget)
+                        widget:removeFromParent()
+                    end)
+                City:GetResourceManager():AddObserver(widget)
+                City:GetResourceManager():OnResourceChanged()
+            end)
+        else
+            self.treat_soldier_boxes_table[soldier_type]:SetButtonListener(function ()end)
+        end
         local soldiers = {}
         for k,v in pairs(self.city:GetSoldierManager():GetTreatSoldierMap()) do
             table.insert(soldiers,{name=k,count=v})
@@ -501,6 +505,7 @@ function GameUIHospital:OnTreatSoliderCountChanged(soldier_manager, treat_soldie
 end
 
 return GameUIHospital
+
 
 
 
