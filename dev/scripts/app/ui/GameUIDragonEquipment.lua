@@ -183,12 +183,12 @@ function GameUIDragonEquipment:WidgetDragonEquipIntensifyEvent(widgetDragonEquip
         exp = exp + v:GetTotalExp()
     end)
     local oldExp = exp - widgetDragonEquipIntensify:GetExpPerEq()
-    local oldPercent = (oldExp + (equipment.exp or 0))/self:GetEquipmentCategory().enhanceExp * 100
+    local oldPercent = (oldExp + (equipment.exp or 0))/equipment:GetNextStarDetailConfig().enhanceExp * 100
     if oldPercent >= 100 then
       return true
     else
-      local percent = (exp + (equipment.exp or 0))/self:GetEquipmentCategory().enhanceExp * 100
-      local str = equipment.exp .. "/" .. self:GetEquipmentCategory().enhanceExp
+      local percent = (exp + (equipment.exp or 0))/equipment:GetNextStarDetailConfig().enhanceExp * 100
+      local str = equipment.exp .. "/" .. equipment:GetNextStarDetailConfig().enhanceExp
       if exp > 0 then
         str = str .. " +" .. exp
       end
@@ -363,9 +363,9 @@ function GameUIDragonEquipment:RefreshIntensifyUI()
   self.adornOrResetButton.labels_['normal']:setString(_("强化"))
   if equipment:Star() < self.dragon:Star() then 
     self.adornOrResetButton:setButtonEnabled(true)
-    self.intensify_ui.expLabel:setString(equipment.exp .. "/" .. self:GetEquipmentCategory().enhanceExp)
-    self.intensify_ui.yellowProgress:setPercentage((equipment:Exp() or 0)/self:GetEquipmentCategory().enhanceExp * 100)
-    self.intensify_ui.greenProgress:setPercentage((equipment:Exp() or 0)/self:GetEquipmentCategory().enhanceExp * 100)
+    self.intensify_ui.expLabel:setString(equipment.exp .. "/" .. equipment:GetNextStarDetailConfig().enhanceExp)
+    self.intensify_ui.yellowProgress:setPercentage((equipment:Exp() or 0)/equipment:GetNextStarDetailConfig().enhanceExp * 100)
+    self.intensify_ui.greenProgress:setPercentage((equipment:Exp() or 0)/equipment:GetNextStarDetailConfig().enhanceExp * 100)
   else
     self.intensify_ui.yellowProgress:setPercentage(100)
     self.intensify_ui.greenProgress:setPercentage(100)
