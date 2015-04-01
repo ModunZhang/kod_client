@@ -242,7 +242,7 @@ local random = math.random
 local timer_val = 20
 GameUISplash.SOLDIER_2_1_TYPE = Enum("I_VS_I","C_VS_C","C_VS_I")
 GameUISplash.WATCHER_ANIMATE = {
-    {"Cavalry_1_render",scale_tile/400}, {"Infantry_1_render",scale_tile/336},{"Archer_1_render",scale_tile/340} --,{"Catapult_1_render",scale_tile/200}
+    {"qibing_1",scale_tile/400}, {"bubing_1",scale_tile/336},{"gongjianshou_1",scale_tile/340} --,{"toushiche",scale_tile/200}
 }
 local function random_indexes_in_rect(number, rect,perRect)
     local indexes = {}
@@ -273,19 +273,21 @@ function GameUISplash:ctor()
 	GameUISplash.super.ctor(self,{type = UIKit.UITYPE.BACKGROUND})
     self.random_map_util = RandomMapUtil.new()
     --加载动画信息
-    local manager = ccs.ArmatureDataManager:getInstance()
-    local soldier_anmations = {
-        {"animations/Infantry_1_render0.plist","animations/Infantry_1_render0.png","animations/Infantry_1_render.ExportJson"},
-        {"animations/Cavalry_1_render0.plist","animations/Cavalry_1_render0.png","animations/Cavalry_1_render.ExportJson"},
-        {"animations/Archer_1_render0.plist","animations/Archer_1_render0.png","animations/Archer_1_render.ExportJson"},
-        {"animations/Catapult_1_render0.plist","animations/Catapult_1_render0.png","animations/Catapult_1_render.ExportJson"},
-        {"animations/Cloud_Animation0.plist","animations/Cloud_Animation0.png","animations/Cloud_Animation.ExportJson"},
-    }
-    for _,v in ipairs(soldier_anmations) do
-        local plist,png,export_json = unpack(v)
-        display.addSpriteFrames(plist,png)
-        manager:addArmatureFileInfo(export_json)
-    end
+    -- local manager = ccs.ArmatureDataManager:getInstance()
+    -- local soldier_anmations = {
+    --     {"animations/Infantry_1_render0.plist","animations/Infantry_1_render0.png","animations/bubing_1.ExportJson"},
+    --     {"animations/Cavalry_1_render0.plist","animations/Cavalry_1_render0.png","animations/qibing_1.ExportJson"},
+    --     {"animations/Archer_1_render0.plist","animations/Archer_1_render0.png","animations/gongjianshou_1.ExportJson"},
+    --     {"animations/Catapult_1_render0.plist","animations/Catapult_1_render0.png","animations/toushiche.ExportJson"},
+    --     {"animations/Cloud_Animation0.plist","animations/Cloud_Animation0.png","animations/Cloud_Animation.ExportJson"},
+    -- }
+    -- for _,v in ipairs(soldier_anmations) do
+    --     local plist,png,export_json = unpack(v)
+    --     display.addSpriteFrames(plist,png)
+    --     manager:addArmatureFileInfo(export_json)
+    -- end
+
+    UILib.loadSolidersAnimation()
 end
 
 function GameUISplash:onEnter()
@@ -354,12 +356,12 @@ function GameUISplash:RandomVsSoliders(layer,postion_x,postion_y)
     -- display.newScale9Sprite("grass_80x80_.png"):size(160,80):align(display.RIGHT_BOTTOM, postion_x,postion_y):addTo(layer)
     local vs_type = math.floor(math.random() * 100000) % 3 + 1
     if vs_type == self.SOLDIER_2_1_TYPE.I_VS_I then
-        local infantry_1 = ccs.Armature:create("Infantry_1_render")
+        local infantry_1 = ccs.Armature:create("bubing_1")
                 :align(display.RIGHT_BOTTOM, postion_x - 40 ,postion_y)
                 :addTo(layer)
                 :scale(scale_tile/336)
         infantry_1:getAnimation():play("attack", -1, -1)
-        local infantry_2 = ccs.Armature:create("Infantry_1_render")
+        local infantry_2 = ccs.Armature:create("bubing_1")
                 :align(display.LEFT_BOTTOM, postion_x,postion_y)
                 :addTo(layer)
         infantry_2:setScaleY(scale_tile/336)
@@ -368,12 +370,12 @@ function GameUISplash:RandomVsSoliders(layer,postion_x,postion_y)
             infantry_2:getAnimation():play("attack", -1, -1)
         end, 1)
     elseif vs_type == self.SOLDIER_2_1_TYPE.C_VS_C then
-        local cavalry_1 = ccs.Armature:create("Cavalry_1_render")
+        local cavalry_1 = ccs.Armature:create("qibing_1")
             :align(display.RIGHT_BOTTOM, postion_x - 40 ,postion_y)
             :addTo(layer)
             :scale(scale_tile/400)
         cavalry_1:getAnimation():play("attack", -1, -1)
-        local cavalry_2 = ccs.Armature:create("Cavalry_1_render")
+        local cavalry_2 = ccs.Armature:create("qibing_1")
             :align(display.LEFT_BOTTOM, postion_x,postion_y)
             :addTo(layer)
         cavalry_2:setScaleY(scale_tile/400)
@@ -382,12 +384,12 @@ function GameUISplash:RandomVsSoliders(layer,postion_x,postion_y)
             cavalry_2:getAnimation():play("attack", -1, -1)
         end, 1)
     elseif vs_type == self.SOLDIER_2_1_TYPE.C_VS_I then
-        local cavalry_1 = ccs.Armature:create("Cavalry_1_render")
+        local cavalry_1 = ccs.Armature:create("qibing_1")
             :align(display.RIGHT_BOTTOM, postion_x - 40 ,postion_y)
             :addTo(layer)
             :scale(scale_tile/400)
         cavalry_1:getAnimation():play("attack", -1, -1)
-        local infantry_2 = ccs.Armature:create("Infantry_1_render")
+        local infantry_2 = ccs.Armature:create("bubing_1")
                 :align(display.LEFT_BOTTOM, postion_x,postion_y)
                 :addTo(layer)
         infantry_2:setScaleY(scale_tile/336)
@@ -405,7 +407,7 @@ function GameUISplash:RandomWatcher(layer,postion_x,postion_y)
             :align(display.RIGHT_BOTTOM, postion_x ,postion_y)
             :addTo(layer)
             :scale(info[2])
-    watcher:getAnimation():play("idle_1", -1, -1)
+    watcher:getAnimation():play("idle_45", -1, -1)
 end
 
 function GameUISplash:BuildDecorateWithiOffset(map_data,layer,offset_x,offset_y)
@@ -525,48 +527,48 @@ function GameUISplash:InitSoldiersLayer()
 	local soldiers_layer = display.newLayer()
     --骑兵 
     local x,y = unpack(self:ConvertToLocalPosition(6,9))
-    local cavalry_1 = ccs.Armature:create("Cavalry_1_render"):addTo(soldiers_layer):pos(x - 40,y + 20 + 20)
-    cavalry_1:getAnimation():play("move_2", -1, -1)
+    local cavalry_1 = ccs.Armature:create("qibing_1"):addTo(soldiers_layer):pos(x - 40,y + 20 + 20)
+    cavalry_1:getAnimation():play("move_90", -1, -1)
     cavalry_1:scale(scale_tile/400)
     x,y = unpack(self:ConvertToLocalPosition(6,8))
-    local cavalry_2 = ccs.Armature:create("Cavalry_1_render"):addTo(soldiers_layer):pos(x - 40,y)
-    cavalry_2:getAnimation():play("move_2", -1, -1)
+    local cavalry_2 = ccs.Armature:create("qibing_1"):addTo(soldiers_layer):pos(x - 40,y)
+    cavalry_2:getAnimation():play("move_90", -1, -1)
     cavalry_2:scale(scale_tile/400)
     --步兵
     x,y = unpack(self:ConvertToLocalPosition(5,8))
-    local infantry_1 = ccs.Armature:create("Infantry_1_render"):addTo(soldiers_layer):pos(x - 10,y)
-    infantry_1:getAnimation():play("move_2", -1, -1)
+    local infantry_1 = ccs.Armature:create("bubing_1"):addTo(soldiers_layer):pos(x - 10,y)
+    infantry_1:getAnimation():play("move_90", -1, -1)
     infantry_1:scale(scale_tile/336)
-    local infantry_2 = ccs.Armature:create("Infantry_1_render"):addTo(soldiers_layer):pos(x - 40,y)
-    infantry_2:getAnimation():play("move_2", -1, -1)
+    local infantry_2 = ccs.Armature:create("bubing_1"):addTo(soldiers_layer):pos(x - 40,y)
+    infantry_2:getAnimation():play("move_90", -1, -1)
     infantry_2:scale(scale_tile/336)
     x,y = unpack(self:ConvertToLocalPosition(5,9))
-    local infantry_3 = ccs.Armature:create("Infantry_1_render"):addTo(soldiers_layer):pos(x - 10,y + 20 + 20)
-    infantry_3:getAnimation():play("move_2", -1, -1)
+    local infantry_3 = ccs.Armature:create("bubing_1"):addTo(soldiers_layer):pos(x - 10,y + 20 + 20)
+    infantry_3:getAnimation():play("move_90", -1, -1)
     infantry_3:scale(scale_tile/336)
-    local infantry_4 = ccs.Armature:create("Infantry_1_render"):addTo(soldiers_layer):pos(x - 40,y + 20 + 20)
-    infantry_4:getAnimation():play("move_2", -1, -1)
+    local infantry_4 = ccs.Armature:create("bubing_1"):addTo(soldiers_layer):pos(x - 40,y + 20 + 20)
+    infantry_4:getAnimation():play("move_90", -1, -1)
     infantry_4:scale(scale_tile/336)
     --弓箭手
     x,y = unpack(self:ConvertToLocalPosition(4,8))
-    -- Archer_1_render
-    local archer_1 = ccs.Armature:create("Archer_1_render"):addTo(soldiers_layer):pos(x - 10,y)
-    archer_1:getAnimation():play("move_2", -1, -1)
+    -- gongjianshou_1
+    local archer_1 = ccs.Armature:create("gongjianshou_1"):addTo(soldiers_layer):pos(x - 10,y)
+    archer_1:getAnimation():play("move_90", -1, -1)
     archer_1:scale(scale_tile/340)
-    local archer_2 = ccs.Armature:create("Archer_1_render"):addTo(soldiers_layer):pos(x - 40,y)
-    archer_2:getAnimation():play("move_2", -1, -1)
+    local archer_2 = ccs.Armature:create("gongjianshou_1"):addTo(soldiers_layer):pos(x - 40,y)
+    archer_2:getAnimation():play("move_90", -1, -1)
     archer_2:scale(scale_tile/340)
     x,y = unpack(self:ConvertToLocalPosition(4,9))
-    local archer_3 = ccs.Armature:create("Archer_1_render"):addTo(soldiers_layer):pos(x - 10,y + 20 + 20)
-    archer_3:getAnimation():play("move_2", -1, -1)
+    local archer_3 = ccs.Armature:create("gongjianshou_1"):addTo(soldiers_layer):pos(x - 10,y + 20 + 20)
+    archer_3:getAnimation():play("move_90", -1, -1)
     archer_3:scale(scale_tile/340)
-    local archer_4 = ccs.Armature:create("Archer_1_render"):addTo(soldiers_layer):pos(x - 40,y + 20 + 20)
-    archer_4:getAnimation():play("move_2", -1, -1)
+    local archer_4 = ccs.Armature:create("gongjianshou_1"):addTo(soldiers_layer):pos(x - 40,y + 20 + 20)
+    archer_4:getAnimation():play("move_90", -1, -1)
     archer_4:scale(scale_tile/340)
     --投石车
     x,y = unpack(self:ConvertToLocalPosition(3,9))
-    local catapult = ccs.Armature:create("Catapult_1_render"):addTo(soldiers_layer):pos(x - 40,y + 50)
-    catapult:getAnimation():play("move_2", -1, -1)
+    local catapult = ccs.Armature:create("toushiche"):addTo(soldiers_layer):pos(x - 40,y + 50)
+    catapult:getAnimation():play("move_90", -1, -1)
     catapult:scale(scale_tile/200)
 	return soldiers_layer
 end

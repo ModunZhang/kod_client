@@ -1,73 +1,85 @@
-local PeopleSprite = import(".PeopleSprite")
-local SoldierSprite = class("SoldierSprite", PeopleSprite)
+local AnimationSprite = import(".AnimationSprite")
+local SoldierSprite = class("SoldierSprite", AnimationSprite)
+
+local normal = GameDatas.Soldiers.normal
+local special = GameDatas.Soldiers.special
+
 local soldier_config = {
     ----
     ["swordsman"] = {
         count = 4,
-        {"Infantry_1_render", 0, 50, 0.3},
-        {"Infantry_1_render", 0, 50, 0.3},
-        {"Infantry_1_render", 0, 50, 0.3},
+        {"bubing_1", -10, 45, 0.8},
+        {"bubing_2", -20, 40, 0.8},
+        {"bubing_3", -15, 35, 0.8},
     },
     ["ranger"] = {
         count = 4,
-        {"Archer_1_render", 30, 50, 0.3},
-        {"Archer_1_render", 30, 50, 0.3},
-        {"Archer_1_render", 30, 50, 0.3},
+        {"gongjianshou_1", 0, 45, 0.8},
+        {"gongjianshou_2", 0, 45, 0.8},
+        {"gongjianshou_3", 0, 45, 0.8},
     },
     ["lancer"] = {
         count = 2,
-        {"Cavalry_1_render", 20, 50, 0.3},
-        {"Cavalry_1_render", 20, 50, 0.3},
-        {"Cavalry_1_render", 20, 50, 0.3},
+        {"qibing_1", -10, 50, 0.8},
+        {"qibing_2", -10, 50, 0.8},
+        {"qibing_3", -10, 50, 0.8},
     },
     ["catapult"] = {
         count = 1,
-        {"Catapult_1_render", -10, 50, 0.4},
-        {"Catapult_1_render", -10, 50, 0.4},
-        {"Catapult_1_render", -10, 50, 0.4},
+        {  "toushiche", 0, 35, 1},
+        {"toushiche_2", 0, 35, 1},
+        {"toushiche_3", 0, 35, 1},
     },
 
     -----
     ["sentinel"] = {
         count = 4,
-        {"Infantry_1_render", 0, 50, 0.3},
-        {"Infantry_1_render", 0, 50, 0.3},
-        {"Infantry_1_render", 0, 50, 0.3},
+        {"shaobing_1", 0, 55, 0.8},
+        {"shaobing_2", 0, 55, 0.8},
+        {"shaobing_3", 0, 55, 0.8},
     },
     ["crossbowman"] = {
         count = 4,
-        {"Archer_1_render", 30, 50, 0.3},
-        {"Archer_1_render", 30, 50, 0.3},
-        {"Archer_1_render", 30, 50, 0.3},
+        {"nugongshou_1", 0, 45, 0.8},
+        {"nugongshou_2", 0, 50, 0.8},
+        {"nugongshou_3", 15, 45, 0.8},
     },
     ["horseArcher"] = {
         count = 2,
-        {"Cavalry_1_render", 20, 50, 0.3},
-        {"Cavalry_1_render", 20, 50, 0.3},
-        {"Cavalry_1_render", 20, 50, 0.3},
+        {"youqibing_1", -15, 55, 0.8},
+        {"youqibing_2", -15, 55, 0.8},
+        {"youqibing_3", -15, 55, 0.8},
     },
     ["ballista"] = {
         count = 1,
-        {"Catapult_1_render", -10, 50, 0.4},
-        {"Catapult_1_render", -10, 50, 0.4},
-        {"Catapult_1_render", -10, 50, 0.4},
+        {"nuche_1", 0, 30, 1},
+        {"nuche_2", 0, 30, 1},
+        {"nuche_3", 0, 30, 1},
     },
     ----
     ["skeletonWarrior"] = {
         count = 4,
-        {"Infantry_1_render", 0, 50, 0.3},
+        {"kulouyongshi", 0, 40, 0.8},
+        {"kulouyongshi", 0, 40, 0.8},
+        {"kulouyongshi", 0, 40, 0.8},
     },
     ["skeletonArcher"] = {
         count = 4,
-        {"Archer_1_render", 30, 50, 0.3},
+        {"kulousheshou", 25, 40, 0.8},
+        {"kulousheshou", 25, 40, 0.8},
+        {"kulousheshou", 25, 40, 0.8},
     },
     ["deathKnight"] = {
         count = 2,
-        {"Cavalry_1_render", 20, 50, 0.3},
+        {"siwangqishi", -10, 50, 0.8},
+        {"siwangqishi", -10, 50, 0.8},
+        {"siwangqishi", -10, 50, 0.8},
     },
     ["meatWagon"] = {
         count = 1,
-        {"Catapult_1_render", -10, 50, 0.4},
+        {"jiaorouche", 0, 30, 0.8},
+        {"jiaorouche", 0, 30, 0.8},
+        {"jiaorouche", 0, 30, 0.8},
     },
 }
 local position_map = {
@@ -75,8 +87,8 @@ local position_map = {
         {x = 0, y = 0}
     },
     [2] = {
-        {x = 10, y = -10},
-        {x = -15, y = -25},
+        {x = 20, y = -40},
+        {x = -5, y = -25},
     },
     [4] = {
         {x = 0, y = -5},
@@ -85,13 +97,14 @@ local position_map = {
         {x = 0, y = -35},
     }
 }
-function SoldierSprite:ctor(city_layer, soldier_type, x, y)
+function SoldierSprite:ctor(city_layer, soldier_type, soldier_star, x, y)
     assert(soldier_type)
     self.soldier_type = soldier_type
-    self.soldier_star = soldier_star or 1
-    SoldierSprite.super.ctor(self, city_layer, x, y)
-    self:PlayAnimation("idle_1")
-    -- self:GetSprite():setScaleX(1)
+    local config = special[soldier_type] or normal[soldier_type.."_"..soldier_star]
+    self.soldier_star = soldier_star or config.star
+    self.x, self.y = x, y
+    SoldierSprite.super.ctor(self, city_layer, nil, city_layer:GetLogicMap():ConvertToMapPosition(x, y))
+    self:PlayAnimation("idle_45")
 
     -- self:CreateBase()
     -- ui.newTTFLabel({text = soldier_type, size = 20, x = 0, y = 100}):addTo(self, 10)
@@ -100,6 +113,12 @@ function SoldierSprite:CreateSprite()
     local node = display.newNode()
     function node:getAnimation()
         return self
+    end
+    function node:playWithIndex(...)
+        local args = {...}
+        table.foreach(self:getChildren(), function(_, v)
+            v:getAnimation():playWithIndex(unpack(args))
+        end)
     end
     function node:play(...)
         local args = {...}
@@ -144,11 +163,18 @@ end
 function SoldierSprite:CreateBase()
     self:GenerateBaseTiles(2, 2)
 end
-function SoldierSprite:GetSoldierType()
-    return self.soldier_type
+function SoldierSprite:GetSoldierTypeAndStar()
+    return self.soldier_type, self.soldier_star
 end
 function SoldierSprite:GetConfig()
     return soldier_config[self.soldier_type]
+end
+function SoldierSprite:SetPositionWithZOrder(x, y)
+    self.x, self.y = self:GetLogicMap():ConvertToLogicPosition(x, y)
+    SoldierSprite.super.SetPositionWithZOrder(self, x, y)
+end
+function SoldierSprite:GetMidLogicPosition()
+    return self.x - 1, self.y - 1
 end
 
 return SoldierSprite

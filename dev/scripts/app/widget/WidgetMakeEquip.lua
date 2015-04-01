@@ -119,7 +119,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
     }):addTo(eq_info_bg)
         :align(display.BOTTOM_CENTER, eq_info_bg:getContentSize().width/2, 42)
 
- 
+
     -- used for dragon category
     cc.ui.UILabel.new({
         text = BODY_LOCALIZE[equip_config.category],
@@ -143,10 +143,12 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
             color = UIKit:hex2c3b(0xfff3c7)
         }))
         :onButtonClicked(function(event)
-            NetManager:getInstantMakeDragonEquipmentPromise(equip_type):catch(function(err)
-                dump(err:reason())
-            end)
-            self:Close()
+            if self:IsAbleToMakeEqui(true) then
+                NetManager:getInstantMakeDragonEquipmentPromise(equip_type):catch(function(err)
+                    dump(err:reason())
+                end)
+                self:Close()
+            end
         end)
 
     -- gem
@@ -181,10 +183,12 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
             color = UIKit:hex2c3b(0xfff3c7)
         }))
         :onButtonClicked(function(event)
-            NetManager:getMakeDragonEquipmentPromise(equip_type):catch(function(err)
-                dump(err:reason())
-            end)
-            self:Close()
+            if self:IsAbleToMakeEqui(false) then
+                NetManager:getMakeDragonEquipmentPromise(equip_type):catch(function(err)
+                    dump(err:reason())
+                end)
+                self:Close()
+            end
         end)
     self.normal_build_btn = button
 
@@ -366,6 +370,9 @@ function WidgetMakeEquip:UpdateMaterials()
         local matrials_need = tonumber(v[2])
         local ui = matrials_map[i]
         local current = materials[material_type]
+        LuaUtils:outputTable("materials[material_type]", materials)
+        print("current>>",tolua.type(current))
+
         ui:setString(string.format("%d/%d", current, matrials_need))
         local un_reached = matrials_need > current
         ui:setColor(un_reached and display.COLOR_RED or UIKit:hex2c3b(0xffedae))
@@ -428,11 +435,43 @@ function WidgetMakeEquip:align(anchorPoint, x, y)
     return self
 end
 
-
-
-
+function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
+    local city = self.city
+    local equip_config = self.equip_config
+    if isFinishNow then
+        local gem =  DataUtils:buyResource({coin = equip_config.coin}, {}) + DataUtils:getGemByTimeInterval(equip_config.makeTime)
+        if gem > User:GetGemResource():GetValue() then
+            UIKit:showMessageDialog(_("提示"),_("宝石不足"),function()end)
+            return false
+        end
+    end
+    local material_manager = city:GetMaterialManager()
+    local is_material_enough = true
+    for k,v in pairs(self.matrials) do
+        if not is_material_enough then
+            break
+        end
+        material_manager:IteratorDragonMaterialsByType(function (m_name,m_count)
+            if m_name == v[1] then
+                if tonumber(v[2]) > m_count then
+                    UIKit:showMessageDialog(_("提示"),_("材料不足"),function()end)
+                    is_material_enough = false
+                end
+            end
+        end)
+    end
+    if not is_material_enough  then
+        return is_material_enough
+    end
+    return true
+end
 
 return WidgetMakeEquip
+
+
+
+
+
 
 
 

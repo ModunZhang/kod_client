@@ -26,7 +26,7 @@ function DemoLayer:ctor()
             manager:addArmatureFileInfo(v)
         end
     end
-    manager:addArmatureFileInfo("animations/dragon_red/dragon_red.ExportJson")
+    -- manager:addArmatureFileInfo("animations/dragon_red/dragon_red.ExportJson")
 
     local corps = {}
     for i = 1, 6 do

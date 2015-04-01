@@ -11,12 +11,6 @@ end
 function AnimationSprite:CreateSprite()
     assert(false, "在子类实实现动画函数")
 end
-function AnimationSprite:TurnRight()
-    self:setScaleX(1)
-end
-function AnimationSprite:TurnLeft()
-    self:setScaleX(-1)
-end
 ---- 动画相关
 function AnimationSprite:AddAnimationCallbackTo(sprite)
     sprite:getAnimation():setMovementEventCallFunc(handler(self, self.OnAnimationCallback))
@@ -37,6 +31,7 @@ end
 function AnimationSprite:OnAnimationEnded(animation_name)
 end
 function AnimationSprite:PlayAnimation(animation)
+    -- self:GetSprite():getAnimation():playWithIndex(0)
     self:GetSprite():getAnimation():play(animation)
 end
 function AnimationSprite:CurrentAnimation()

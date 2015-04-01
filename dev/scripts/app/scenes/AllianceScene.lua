@@ -1,4 +1,5 @@
 local window = import("..utils.window")
+local UILib = import("..ui.UILib")
 local MultiAllianceLayer = import("..layers.MultiAllianceLayer")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local MapScene = import(".MapScene")
@@ -9,12 +10,8 @@ function AllianceScene:ctor()
     AllianceScene.super.ctor(self)
 end
 function AllianceScene:onEnter()
-    local manager = ccs.ArmatureDataManager:getInstance()
-    manager:addArmatureFileInfo("animations/green_dragon.ExportJson")
-    manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
-    manager:addArmatureFileInfo("animations/Blue_dragon.ExportJson")
-
-
+    self:LoadAnimation()
+    
     AllianceScene.super.onEnter(self)
 
     self:CreateAllianceUI()
@@ -27,6 +24,10 @@ function AllianceScene:onEnter()
     local alliance_map = self:GetAlliance():GetAllianceMap()
     local allianceShirine = self:GetAlliance():GetAllianceShrine()
     alliance_map:AddListenOnType(allianceShirine,alliance_map.LISTEN_TYPE.BUILDING_INFO)
+end
+function AllianceScene:LoadAnimation()
+    UILib.loadSolidersAnimation()
+    UILib.loadDragonAnimation()
 end
 function AllianceScene:GotoCurrectPosition()
     local mapObject = self:GetAlliance():GetAllianceMap():FindMapObjectById(self:GetAlliance():GetSelf():MapId())

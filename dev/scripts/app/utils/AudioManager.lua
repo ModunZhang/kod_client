@@ -23,10 +23,13 @@ local effect_sound_map = {
 	OPEN_MAIL = "sfx_open_mail.wav",
 	USE_ITEM = "sfx_use_item.wav",
 	BUY_ITEM = "sfx_buy_item.wav",
-	COMPLETE = "sfx_complete.wav",
+	COMPLETE = "sfx_player_levelup.wav",
 	TROOP_LOSE = "sfx_troop_lose.wav",
 	TROOP_SENDOUT = "sfx_troop_sendOut.wav",
 	TROOP_COMPLETE = "sfx_troop_complete.wav",
+	BATTLE_DEFEATED = "sfx_battle_defeated.wav",
+	BATTLE_VICTORY = "sfx_battle_victory.wav",
+	BATTLE_DRAGON = "sfx_dragonPK.wav",
 	SPLASH_BUTTON_START = "sfx_click_start.mp3",
 	UI_BUILDING_UPGRADE_START = "sfx_building_upgrade.wav",
 	UI_BUILDING_DESTROY = "sfx_building_destroy.wav",
@@ -35,7 +38,10 @@ local effect_sound_map = {
 }
 
 local soldier_step_sfx_map = {
-	infantry = {"sfx_step_infantry01.wav", "sfx_step_infantry02.wav", "sfx_step_infantry03.wav"}
+	infantry = {"sfx_step_infantry01.wav", "sfx_step_infantry02.wav", "sfx_step_infantry03.wav"},
+	archer = {"sfx_step_archer01.wav", "sfx_step_archer02.wav", "sfx_step_archer03.wav"},
+	cavalry = {"sfx_step_cavalry01.wav", "sfx_step_cavalry02.wav", "sfx_step_cavalry03.wav"},
+	siege = {"sfx_step_siege01.wav", "sfx_step_siege02.wav", "sfx_step_siege03.wav"},
 }
 
 local building_sfx_map = {
@@ -80,6 +86,7 @@ function AudioManager:ctor(game_default)
 	self.is_bg_auido_on = self:GetGameDefault():getBasicInfoValueForKey(BACKGROUND_MUSIC_KEY,true)
 	self.is_effect_audio_on = self:GetGameDefault():getBasicInfoValueForKey(EFFECT_MUSIC_KEY,true)
 	self:PreLoadAudio()
+	self:SetEffectsVolume(0.4)
 end
 
 function AudioManager:GetGameDefault()
@@ -194,5 +201,12 @@ function AudioManager:StopAll()
 	self:StopMusic()
 	self:StopEffectSound()
 end
+
+function AudioManager:SetEffectsVolume(volume)
+	audio.setSoundsVolume(volume)
+end
+
+
+-- function AudioManager:
 
 return AudioManager

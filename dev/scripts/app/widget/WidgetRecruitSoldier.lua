@@ -41,7 +41,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
     UIKit:RegistUI(self)
     self.barracks = barracks
     self.soldier_name = soldier_name
-    self.star = soldier_star or barracks.soldier_star
+    self.star = soldier_star or city:GetSoldierManager():GetStarBySoldierType(soldier_name)
     local soldier_config, aaa = self:GetConfigBySoldierTypeAndStar(soldier_name, self.star)
     self.recruit_max = barracks:GetMaxRecruitSoldierCount()
     if soldier_config.citizen ~= 0 then
@@ -497,6 +497,7 @@ end
 function WidgetRecruitSoldier:GetConfigBySoldierTypeAndStar(soldier_name, star)
     local soldier_name_with_star = soldier_name..(star == nil and "" or string.format("_%d", star))
     local soldier_config = NORMAL[soldier_name_with_star] == nil and SPECIAL[soldier_name] or NORMAL[soldier_name_with_star]
+    print("GetConfigBySoldierTypeAndStar>>>>>>",soldier_name_with_star,star)
     local soldier_ui_config = UILib.soldier_image[soldier_name][star]
     return soldier_config, soldier_ui_config
 end
@@ -564,7 +565,7 @@ function WidgetRecruitSoldier:OnCountChanged(count)
     -- 检查资源
     local need_resource = self:CheckNeedResource(self.res_total_map, count)
     self.count = count
-    self.gem_label:setString(DataUtils:buyResource(need_resource, {}) + DataUtils:getGemByTimeInterval(total_time))
+    self.gem_label:setString(DataUtils:buyResource(need_resource, {}) + DataUtils:getGemByTimeInterval(total_time-DataUtils:getSoldierRecruitBuffTime(soldier_config.type,total_time)))
 end
 function WidgetRecruitSoldier:CheckNeedResource(total_resouce, count)
     local soldier_config = self.soldier_config

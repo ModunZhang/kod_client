@@ -442,6 +442,16 @@ function GameUIPVESendTroop:GetSelectSoldier()
             })
         end
     end
+    local function __getSoldierConfig(name,level)
+        local level = level or 1
+        return normal[name.."_"..level] or SPECIAL[name]
+    end
+    -- 按战斗力从大到小排序
+    table.sort(soldiers,function ( a,b )
+        local power_a = __getSoldierConfig(a.name,a.star).power*a.count
+        local power_b = __getSoldierConfig(b.name,b.star).power*b.count
+        return power_a > power_b
+    end)
     return soldiers
 end
 function GameUIPVESendTroop:CreateTroopsShow()

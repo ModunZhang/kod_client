@@ -67,20 +67,15 @@ function BattleObject:attack()
     return p
 end
 function BattleObject:breath(is_forever)
-    self:PlayAnimation("idle_2", is_forever and -1 or 0)
+    self:PlayAnimation("idle_90", is_forever and -1 or 0)
     local p = promise.new()
-    self:OnAnimationPlayEnd("idle_2", function()
+    self:OnAnimationPlayEnd("idle_90", function()
         p:resolve(self)
     end)
     return p
 end
-local function step()
-    app:GetAudioManager():PlaySoldierStepEffectByType("infantry")
-end
 function BattleObject:move(time, x, y)
-    self:PlayAnimation("move_2")
-
-    
+    self:PlayAnimation("move_90")
     local p = promise.new()
     transition.moveTo(self, {
         x = x, y = y, time = time,
@@ -88,17 +83,6 @@ function BattleObject:move(time, x, y)
             p:resolve(self)
         end
     })
-
-    self:runAction(transition.sequence({cc.CallFunc:create(step),
-        cc.DelayTime:create(0.5),
-        cc.CallFunc:create(step),
-        cc.DelayTime:create(0.5),
-        cc.CallFunc:create(step),
-        cc.DelayTime:create(0.5),
-        cc.CallFunc:create(step),
-        cc.DelayTime:create(0.5)}))
-
-
     return p
 end
 function BattleObject:defeat()
@@ -164,9 +148,9 @@ function BattleObject:TurnRight()
 end
 function BattleObject:Move()
     return function(object)
-        object:PlayAnimation("move_2")
+        object:PlayAnimation("move_90")
         local p = promise.new()
-        object:OnAnimationPlayEnd("move_2", function()
+        object:OnAnimationPlayEnd("move_90", function()
             p:resolve(object)
         end)
         return p
@@ -187,6 +171,7 @@ function BattleObject:Do(p)
 end
 
 return BattleObject
+
 
 
 

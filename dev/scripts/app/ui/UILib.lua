@@ -15,46 +15,49 @@ end
 
 local BUILDING_ANIMATIONS_FILES = {
     watchTower = {
-        "animations/watchTower/liaowangta.ExportJson"
+        "animations/liaowangta.ExportJson"
     },
     barracks = {
-        "animations/bingyin/bingyin.ExportJson",
-        "animations/bingyin_1/bingyin_1.ExportJson"
+        "animations/bingyin.ExportJson",
+        "animations/bingyin_1.ExportJson"
     },
     tradeGuild = {
-        "animations/maoyihanghui/maoyihanghui.ExportJson",
+        "animations/maoyihanghui.ExportJson",
     },
     mill = {
-        "animations/mofang/mofang.ExportJson",
+        "animations/mofang.ExportJson",
     },
     townHall = {
-        "animations/shizhenting/shizhenting.ExportJson",
+        "animations/shizhenting.ExportJson",
     },
     academy = {
-        "animations/xueyuan/xueyuan.ExportJson",
+        "animations/xueyuan.ExportJson",
     },
     hospital = {
-        "animations/yiyuan/yiyuan.ExportJson",
+        "animations/yiyuan.ExportJson",
     },
     warehouse = {
-        "animations/ziyuancangku/ziyuancangku.ExportJson",
+        "animations/ziyuancangku.ExportJson",
     },
     smoke = {
-        "animations/yan/yan.ExportJson",
+        "animations/yan.ExportJson",
     },
     hammer = {
-        "animations/chuizi/chuizi.ExportJson",
+        "animations/chuizi.ExportJson",
     },
     airShip = {
-        "animations/feiting/feiting.ExportJson",
+        "animations/feiting.ExportJson",
     },
     citizen = {
-        "animations/caodi_nan/caodi_nan.ExportJson",
-        "animations/caodi_nv/caodi_nv.ExportJson",
-        "animations/xuedi_nan/xuedi_nan.ExportJson",
-        "animations/xuedi_nv/xuedi_nv.ExportJson",
-        "animations/shadi_nan/shadi_nan.ExportJson",
-        "animations/shadi_nv/shadi_nv.ExportJson",
+        "animations/caodi_nan.ExportJson",
+        "animations/caodi_nv.ExportJson",
+        "animations/xuedi_nan.ExportJson",
+        "animations/xuedi_nv.ExportJson",
+        "animations/shadi_nan.ExportJson",
+        "animations/shadi_nv.ExportJson",
+    },
+    bird = {
+        "animations/gezi.ExportJson",
     }
 }
 local BUILDING_ANIMATIONS = getAniNameFromAnimationFiles(BUILDING_ANIMATIONS_FILES)
@@ -224,44 +227,56 @@ local EFFECT_ANIMATION_FILES = {
 }
 local SOLDIER_ANIMATION_FILES = {
     ranger = {
-        "animations/Archer_1_render.ExportJson",
-        "animations/Archer_1_render.ExportJson",
-        "animations/Archer_1_render.ExportJson",
+        "animations/gongjianshou_1.ExportJson",
+        "animations/gongjianshou_2.ExportJson",
+        "animations/gongjianshou_3.ExportJson",
     },
     crossbowman = {
-        "animations/Archer_1_render.ExportJson",
-        "animations/Archer_1_render.ExportJson",
-        "animations/Archer_1_render.ExportJson",
+        "animations/nugongshou_1.ExportJson",
+        "animations/nugongshou_2.ExportJson",
+        "animations/nugongshou_3.ExportJson",
     },
     catapult = {
-        "animations/Catapult_1_render.ExportJson",
-        "animations/Catapult_1_render.ExportJson",
-        "animations/Catapult_1_render.ExportJson",
+        "animations/toushiche.ExportJson",
+        "animations/toushiche_2.ExportJson",
+        "animations/toushiche_3.ExportJson",
     },
     ballista = {
-        "animations/Catapult_1_render.ExportJson",
-        "animations/Catapult_1_render.ExportJson",
-        "animations/Catapult_1_render.ExportJson",
+        "animations/nuche_1.ExportJson",
+        "animations/nuche_2.ExportJson",
+        "animations/nuche_3.ExportJson",
     },
     lancer = {
-        "animations/Cavalry_1_render.ExportJson",
-        "animations/Cavalry_1_render.ExportJson",
-        "animations/Cavalry_1_render.ExportJson",
+        "animations/qibing_1.ExportJson",
+        "animations/qibing_2.ExportJson",
+        "animations/qibing_3.ExportJson",
     },
     horseArcher = {
-        "animations/Cavalry_1_render.ExportJson",
-        "animations/Cavalry_1_render.ExportJson",
-        "animations/Cavalry_1_render.ExportJson",
+        "animations/youqibing_1.ExportJson",
+        "animations/youqibing_2.ExportJson",
+        "animations/youqibing_3.ExportJson",
     },
     swordsman = {
-        "animations/Infantry_1_render.ExportJson",
-        "animations/Infantry_1_render.ExportJson",
-        "animations/Infantry_1_render.ExportJson",
+        "animations/bubing_1.ExportJson",
+        "animations/bubing_2.ExportJson",
+        "animations/bubing_3.ExportJson",
     },
     sentinel = {
-        "animations/Infantry_1_render.ExportJson",
-        "animations/Infantry_1_render.ExportJson",
-        "animations/Infantry_1_render.ExportJson",
+        "animations/shaobing_1.ExportJson",
+        "animations/shaobing_2.ExportJson",
+        "animations/shaobing_3.ExportJson",
+    },
+    skeletonWarrior = {
+        "animations/kulouyongshi.ExportJson",
+    },
+    skeletonArcher = {
+        "animations/kulousheshou.ExportJson",
+    },
+    deathKnight = {
+        "animations/siwangqishi.ExportJson",
+    },
+    meatWagon = {
+        "animations/jiaorouche.ExportJson",
     },
     wall = {
         "animations/chengqiang_1.ExportJson",
@@ -389,7 +404,7 @@ local BLACK_SOLDIER_IMAGES = {
         "b_ballista_1.png",
         "b_ballista_2.png",
     },
-    
+
     skeletonWarrior = {
         "skeletonWarrior.png",
     },
@@ -405,13 +420,13 @@ local BLACK_SOLDIER_IMAGES = {
 }
 local DRAGON_ANIMATIONS_FILES = {
     redDragon = {
-        "animations/dragon_red/dragon_red.ExportJson"
+        "animations/red_long.ExportJson"
     },
     blueDragon = {
-        "animations/Blue_dragon.ExportJson"
+        "animations/blue_long.ExportJson"
     },
     greenDragon = {
-        "animations/green_dragon.ExportJson"
+        "animations/green_long.ExportJson"
     }
 }
 local DECORATOR_IMAGE = {
@@ -678,22 +693,22 @@ local PVE = {
     [PVEDefine.LAKE] = {"image", "lake_220x174.png"},
 }
 local PVE_ANIMATION_FILES = {
-    "animations/yewaiyindi/yewaiyindi.ExportJson",
-    "animations/zhihuishi/zhihuishi.ExportJson",
+    "animations/yewaiyindi.ExportJson",
+    "animations/zhihuishi.ExportJson",
 }
--- local PVE_ANIMATIONS = getAniNameFromAnimationFiles(PVE_ANIMATION_FILES)
+
 local function loadBuildingAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
-    for _,animations in pairs(BUILDING_ANIMATIONS_FILES) do
-        for _,ani_file in pairs(animations) do
+    for _,all_files in pairs(BUILDING_ANIMATIONS_FILES) do
+        for _,ani_file in pairs(all_files) do
             manager:addArmatureFileInfo(ani_file)
         end
     end
 end
 local function unLoadBuildingAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
-    for _,animations in pairs(BUILDING_ANIMATIONS_FILES) do
-        for _,ani_file in pairs(animations) do
+    for _,all_files in pairs(BUILDING_ANIMATIONS_FILES) do
+        for _,ani_file in pairs(all_files) do
             manager:removeArmatureFileInfo(ani_file)
         end
     end
@@ -701,20 +716,52 @@ end
 --
 local function loadSolidersAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
-    for _,animations in pairs(SOLDIER_ANIMATION_FILES) do
-        for _,ani_file in pairs(animations) do
+    for _,all_files in pairs(SOLDIER_ANIMATION_FILES) do
+        for _,ani_file in pairs(all_files) do
             manager:addArmatureFileInfo(ani_file)
         end
     end
 end
 local function unLoadSolidersAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
-    for _,animations in pairs(SOLDIER_ANIMATION_FILES) do
-        for _,ani_file in pairs(animations) do
+    for _,all_files in pairs(SOLDIER_ANIMATION_FILES) do
+        for _,ani_file in pairs(all_files) do
             manager:removeArmatureFileInfo(ani_file)
         end
     end
 end
+
+local function loadPveAnimation()
+    local manager = ccs.ArmatureDataManager:getInstance()
+    for _,ani_file in pairs(PVE_ANIMATION_FILES) do
+        manager:addArmatureFileInfo(ani_file)
+    end
+end
+local function unLoadPveAnimation()
+    local manager = ccs.ArmatureDataManager:getInstance()
+    for _,all_files in pairs(PVE_ANIMATION_FILES) do
+        manager:removeArmatureFileInfo(ani_file)
+    end
+end
+
+local function loadDragonAnimation()
+    local manager = ccs.ArmatureDataManager:getInstance()
+    for _, anis in pairs(DRAGON_ANIMATIONS_FILES) do
+        for _, v in pairs(anis) do
+            manager:addArmatureFileInfo(v)
+        end
+    end
+end
+local function unLoadDragonAnimation()
+    local manager = ccs.ArmatureDataManager:getInstance()
+    for _, anis in pairs(DRAGON_ANIMATIONS_FILES) do
+        for _, v in pairs(anis) do
+            manager:removeArmatureFileInfo(v)
+        end
+    end
+end
+
+
 
 local IAP_PACKAGE_IMAGE = {
     product_1 = {
@@ -782,11 +829,15 @@ return {
     building_animations = BUILDING_ANIMATIONS,
     building_animations_files = BUILDING_ANIMATIONS_FILES,
     pve = PVE,
-    pve_animation_files = PVE_ANIMATION_FILES,
     loadBuildingAnimation = loadBuildingAnimation,
     unLoadBuildingAnimation = unLoadBuildingAnimation,
     loadSolidersAnimation = loadSolidersAnimation,
     unLoadSolidersAnimation = unLoadSolidersAnimation,
+    loadPveAnimation = loadPveAnimation,
+    unLoadPveAnimation = unLoadPveAnimation,
+    loadDragonAnimation = loadDragonAnimation,
+    unLoadDragonAnimation = unLoadDragonAnimation,
     iap_package_image = IAP_PACKAGE_IMAGE,
 }
+
 

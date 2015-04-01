@@ -10,14 +10,7 @@ function AllianceBattleScene:ctor()
     AllianceBattleScene.super.ctor(self)
 end
 function AllianceBattleScene:onEnter()
-    local manager = ccs.ArmatureDataManager:getInstance()
-    manager:removeArmatureFileInfo("animations/green_dragon.ExportJson")
-    manager:removeArmatureFileInfo("animations/Red_dragon.ExportJson")
-    manager:removeArmatureFileInfo("animations/Blue_dragon.ExportJson")
-
-    manager:addArmatureFileInfo("animations/green_dragon.ExportJson")
-    manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
-    manager:addArmatureFileInfo("animations/Blue_dragon.ExportJson")
+    self:LoadAnimation()
 
     AllianceBattleScene.super.onEnter(self)
     self:CreateAllianceUI()
@@ -29,7 +22,10 @@ function AllianceBattleScene:onEnter()
     app:GetAudioManager():PlayGameMusic("AllianceBattleScene")
     self:GetSceneLayer():ZoomTo(1)
 end
-
+function AllianceBattleScene:LoadAnimation()
+    UILib.loadSolidersAnimation()
+    UILib.loadDragonAnimation()
+end
 function AllianceBattleScene:CreateAllianceUI()
     local home_page = GameUIAllianceHome.new(self:GetAlliance()):addTo(self)
     self:GetSceneLayer():AddObserver(home_page)
