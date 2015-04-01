@@ -155,9 +155,11 @@ function PVEMap:GetObject(x, y)
     end
 end
 function PVEMap:ModifyObject(x, y, searched, type)
+    local old_searched = 0
     for _, v in ipairs(self.searched_objects) do
         if v.x == x and v.y == y then
             if v.searched ~= searched then
+                old_searched = v.searched
                 v.searched = searched
                 self:NotifyObservers(function(lisenter)
                     lisenter:OnObjectChanged(v)
@@ -170,6 +172,8 @@ function PVEMap:ModifyObject(x, y, searched, type)
     self:NotifyObservers(function(lisenter)
         lisenter:OnObjectChanged(self.searched_objects[#self.searched_objects])
     end)
+
+    return function() self:ModifyObject(x, y, old_searched, type) end
 end
 function PVEMap:IsComplete()
     local complete = false
