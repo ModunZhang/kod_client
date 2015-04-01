@@ -81,7 +81,6 @@ end
 
 -- 过滤器
 local function get_response_msg(response)
-    dump(response,"get_response_msg---->")
     if response.msg.playerData then
         local user_data = DataManager:getUserData()
         local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
@@ -93,7 +92,6 @@ local function get_response_msg(response)
     return response
 end
 local function get_response_mail_msg(response)
-    dump(response,"get_response_mail_msg---->")
     if response.msg.playerData then
         local user_data = DataManager:getUserData()
         local mail_response = response.msg.playerData
@@ -121,7 +119,6 @@ local function get_response_mail_msg(response)
     return response
 end
 local function get_response_report_msg(response)
-    dump(response,"get_response_report_msg---->")
     if response.msg.playerData then
         local user_data = DataManager:getUserData()
         local report_response = response.msg.playerData
@@ -150,7 +147,6 @@ local function get_response_report_msg(response)
 end
 
 local function get_alliance_response_msg(response)
-    print("get_alliance_response_msg--->")
     if response.msg.allianceData then
         local user_alliance_data = DataManager:getUserAllianceData()
         if user_alliance_data == json.null then
