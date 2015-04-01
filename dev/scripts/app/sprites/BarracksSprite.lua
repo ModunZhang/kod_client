@@ -8,7 +8,7 @@ function BarracksSprite:OnRecruiting()
 end
 function BarracksSprite:OnEndRecruit()
     self:StopAni()
-    app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_COMPLETE")
+    app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
 end
 
 function BarracksSprite:ctor(city_layer, entity, city)
