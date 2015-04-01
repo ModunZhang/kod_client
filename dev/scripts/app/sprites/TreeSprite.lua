@@ -22,20 +22,20 @@ function TreeSprite:CreateSprite()
     local ppsprite
     local sprite
     repeat
-        if (xb and xb:IsUnlocked()) or 
-            (yb and yb:IsUnlocked()) or 
-            (xbyn and xbyn:IsUnlocked()) or
-            (xyb and xyb:IsUnlocked()) then
+        if (xb and xb:NeedWalls()) or 
+            (yb and yb:NeedWalls()) or 
+            (xbyn and xbyn:NeedWalls()) or
+            (xyb and xyb:NeedWalls()) then
             break
         end
         sprite = display.newSprite(string.format("trees_up_%s.png", terrain))
         ppsprite = sprite
     until true
     repeat
-        if (yb and yb:IsUnlocked()) or 
-            (xn and xn:IsUnlocked()) or 
-            (yn and yn:IsUnlocked()) or 
-            (xnyb and xnyb:IsUnlocked()) then
+        if (yb and yb:NeedWalls()) or 
+            (xn and xn:NeedWalls()) or 
+            (yn and yn:NeedWalls()) or 
+            (xnyb and xnyb:NeedWalls()) then
             break
         end
         if sprite then
@@ -46,10 +46,10 @@ function TreeSprite:CreateSprite()
         end
     until true
     repeat
-        if (xb and xb:IsUnlocked()) or 
-            (xn and xn:IsUnlocked()) or 
-            (yn and yn:IsUnlocked()) or 
-            (xbyn and xbyn:IsUnlocked()) then
+        if (xb and xb:NeedWalls()) or 
+            (xn and xn:NeedWalls()) or 
+            (yn and yn:NeedWalls()) or 
+            (xbyn and xbyn:NeedWalls()) then
             break
         end
         if sprite then
@@ -60,8 +60,8 @@ function TreeSprite:CreateSprite()
         end
     until true
     repeat
-        if (xn and xn:IsUnlocked()) or 
-            (yn and yn:IsUnlocked()) then
+        if (xn and xn:NeedWalls()) or 
+            (yn and yn:NeedWalls()) then
             break
         end
         if sprite then
