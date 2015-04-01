@@ -207,7 +207,7 @@ function GameUITradeGuild:CreateSellItemForListView(listView,goods)
         :addTo(icon_bg)
     -- 缩放icon到合适大小
     local max = math.max(icon_image:getContentSize().width,icon_image:getContentSize().height)
-    icon_image:scale(50/max)
+    icon_image:scale(42/max)
     -- 商品数量
     UIKit:ttfLabel(
         {
