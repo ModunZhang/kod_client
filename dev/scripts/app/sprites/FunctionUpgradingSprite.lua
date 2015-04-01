@@ -36,11 +36,9 @@ function FunctionUpgradingSprite:OnTileChanged(city)
 end
 function FunctionUpgradingSprite:TranslateToUpgrading()
     self:setVisible(true)
-    self:GetSprite():setVisible(false)
 end
 function FunctionUpgradingSprite:TranslateToUnlock()
     self:setVisible(true)
-    self:GetSprite():setVisible(true)
 end
 function FunctionUpgradingSprite:TranslateToCanbeUnlock()
     self:setVisible(false)

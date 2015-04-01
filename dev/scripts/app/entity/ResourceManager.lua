@@ -5,6 +5,8 @@ local PopulationAutomaticUpdateResource = import(".PopulationAutomaticUpdateReso
 local Observer = import(".Observer")
 local ResourceManager = class("ResourceManager", Observer)
 
+local intInit = GameDatas.PlayerInitData.intInit
+
 ResourceManager.RESOURCE_BUFF_TYPE = Enum("PRODUCT","LIMIT")
 
 ResourceManager.RESOURCE_TYPE = Enum(
@@ -187,7 +189,7 @@ function ResourceManager:UpdateByCity(city, current_time)
         resource:SetProductionPerHour(current_time,
             resource_type ~= POPULATION
             and resource_production
-            or (resource_limit - resource:GetLowLimitResource()) / 12)
+            or (resource_limit - resource:GetLowLimitResource()) / intInit.playerCitizenRecoverFullNeedHours.value)
     end
 end
 function ResourceManager:GetCitizenAllocInfo()

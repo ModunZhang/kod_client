@@ -53,13 +53,25 @@ function Tile:IsConnected()
     end
     return self:IsUnlocked() or (self:NeedWalls() and self.locked)
 end
+function Tile:IsOutOfWalls()
+    return not self:NeedWalls()
+end
 function Tile:NeedWalls()
     local x, y, city = self.x, self.y, self.city
     local xb = city:GetTileByIndex(x - 1, y)
     local yb = city:GetTileByIndex(x, y - 1)
     local xn = city:GetTileByIndex(x + 1, y)
     local yn = city:GetTileByIndex(x, y + 1)
-    return self:IsUnlocked() or (xb and xb:IsUnlocked() and yb and yb:IsUnlocked()) and ((xn and xn:IsUnlocked()) or (yn and yn:IsUnlocked()))
+
+    local need_walls = false
+    if self.locked then
+        local building = city:GetBuildingByLocationId(self.location_id)
+        if building and building:IsUnlocking() then
+            need_walls = true
+        end
+    end
+
+    return need_walls or self:IsUnlocked() or (xb and xb:IsUnlocked() and yb and yb:IsUnlocked()) and ((xn and xn:IsUnlocked()) or (yn and yn:IsUnlocked()))
 end
 local math = math
 local max = math.max
@@ -354,6 +366,7 @@ end
 
 
 return Tile
+
 
 
 
