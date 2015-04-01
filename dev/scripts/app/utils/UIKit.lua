@@ -495,7 +495,7 @@ function UIKit:NoWaitForNet()
 end
 
 function UIKit:getErrorCodeData(code)
-    return error_code[code]
+    return error_code[code] or {}
 end
 
 function UIKit:getErrorCodeKey(code)
