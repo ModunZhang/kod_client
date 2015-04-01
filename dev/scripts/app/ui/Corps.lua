@@ -3,11 +3,16 @@ local UILib = import(".UILib")
 local BattleObject = import(".BattleObject")
 local Corps = class("Corps", BattleObject)
 
+local normal = GameDatas.Soldiers.normal
+local special = GameDatas.Soldiers.special
 
-function Corps:ctor(soldier, row, col, width, height)
+
+function Corps:ctor(soldier, star, row, col, width, height)
 	Corps.super.ctor(self)
     local corps = self
     self.soldier = soldier
+    local config = special[self.soldier] or normal[self.soldier.."_"..star]
+    self.star = config.star
     width = width or 90
     height = height or 120
     local start_x, start_y = - width, - height
@@ -24,7 +29,7 @@ function Corps:ctor(soldier, row, col, width, height)
     local t = {}
     local ani = UILib.soldier_animation[soldier] and UILib.soldier_animation[soldier][1] or "Infantry_1_render"
     for i = 0, col_max * row_max - 1 do
-        local armature = ccs.Armature:create(ani):addTo(corps):scale(0.5):pos(return_x_y_by_index(row_max, col_max, i))
+        local armature = ccs.Armature:create(ani):addTo(corps):scale(1):pos(return_x_y_by_index(row_max, col_max, i))
         table.insert(t, armature)
     end
     self.corps = t
@@ -46,6 +51,30 @@ function Corps:turnLeft()
 end
 function Corps:turnRight()
     self:setScaleX(1)
+end
+function Corps:GetSoldierConfig()
+    return special[self.soldier] or normal[self.soldier.."_"..self.star]
+end
+function Corps:move(time, x, y)
+    local config = self:GetSoldierConfig()
+    local type_ = config.type
+    local function step()
+        app:GetAudioManager():PlaySoldierStepEffectByType(type_)
+    end
+    self:runAction(
+        transition.sequence{
+            cc.CallFunc:create(step),
+            cc.DelayTime:create(0.5),
+            cc.CallFunc:create(step),
+            cc.DelayTime:create(0.5),
+            cc.CallFunc:create(step),
+            cc.DelayTime:create(0.5),
+            cc.CallFunc:create(step),
+            cc.DelayTime:create(0.5),
+            cc.CallFunc:create(step)
+        }
+    )
+    return Corps.super.move(self, time, x, y)
 end
 return Corps
 

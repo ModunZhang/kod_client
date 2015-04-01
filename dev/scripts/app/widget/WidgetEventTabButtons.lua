@@ -142,8 +142,8 @@ function WidgetEventTabButtons:OnMilitaryTechEventsAllChanged()
     self:EventChangeOn("technology")
     self:RefreshBuildQueueByType("technology")
 end
-function WidgetEventTabButtons:OnSoldierStarEventsChanged()
-    self:EventChangeOn("technology")
+function WidgetEventTabButtons:OnSoldierStarEventsChanged(soldier_manager, changed)
+    self:EventChangeOn("technology", changed[1])
     self:RefreshBuildQueueByType("technology")
 end
 function WidgetEventTabButtons:EventChangeOn(event_type, is_begin)

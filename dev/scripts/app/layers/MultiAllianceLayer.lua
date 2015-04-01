@@ -10,9 +10,6 @@ local floor = math.floor
 MultiAllianceLayer.ARRANGE = Enum("H", "V")
 
 function MultiAllianceLayer:ctor(arrange, ...)
-    local manager = ccs.ArmatureDataManager:getInstance()
-    manager:addArmatureFileInfo("animations/dragon_red/dragon_red.ExportJson")
-
     Observer.extend(self)
     MultiAllianceLayer.super.ctor(self, 0.4, 1.2)
     self.arrange = arrange

@@ -24,11 +24,11 @@ local PVEScene = class("PVEScene", MapScene)
 
 local timer = app.timer
 function PVEScene:ctor(user)
+    self:LoadAnimation()
     PVEScene.super.ctor(self)
     self.user = user
 end
 function PVEScene:onEnter()
-    self:LoadAnimation()
     PVEScene.super.onEnter(self)
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(self.user:GetPVEDatabase():GetCharPosition())
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
@@ -44,10 +44,8 @@ function PVEScene:onExit()
     NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData(), true)
 end
 function PVEScene:LoadAnimation()
-    local manager = ccs.ArmatureDataManager:getInstance()
-    for _,ani_file in pairs(UILib.pve_animation_files) do
-        manager:addArmatureFileInfo(ani_file)
-    end
+    UILib.loadSolidersAnimation()
+    UILib.loadPveAnimation()
 end
 function PVEScene:CreateSceneLayer()
     return PVELayer.new(self.user)
