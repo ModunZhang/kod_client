@@ -236,14 +236,16 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent)
     )
 end
 local dir_map = {
-    {"Flying_0", -1},
-    {"Flying_1", -1},
-    {"Flying_2", -1},
-    {"Flying_2", 1},
-    {"Flying_2", 1},
-    {"Flying_1", 1},
-    {"Flying_0", 1},
-    {"Flying_0", -1},
+    {"flying_45", -1}, -- x-,y+
+    {"flying_90", -1}, -- x-
+
+    {"flying_-45", -1}, -- x-,y-
+    {"flying_-45", 1}, -- y+
+    {"flying_-45", 1}, -- x+,y+
+
+    {"flying_90", 1}, -- x+
+    {"flying_45", 1}, -- x+,y-
+    {"flying_45", 1}, -- y-
 }
 function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_time)
     local march_info = self:GetMarchInfoWith(id, start_pos, end_pos)
@@ -253,15 +255,16 @@ function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, fini
     march_info.speed = (march_info.length /  march_info.total_time)
     if not self.corps_map[id] then
         local corps = display.newNode():addTo(self:GetCorpsNode())
-        local armature = ccs.Armature:create("dragon_red"):addTo(corps):scale(0.5)
+        local armature = ccs.Armature:create("red_long"):addTo(corps)
 
-        print("CreateCorps",math.floor(march_info.degree / 45) + 4,march_info.degree)
+        print("CreateCorps", id, math.floor(march_info.degree / 45) + 4,march_info.degree)
         local ani, scalex
         if march_info.degree>=0 then
             ani, scalex = unpack(dir_map[math.floor(march_info.degree / 45) + 4])
         else
             ani, scalex = unpack(dir_map[math.ceil(march_info.degree / 45) + 4])
         end
+        armature:align(display.CENTER)
         armature:getAnimation():play(ani)
         corps:setScaleX(scalex)
         corps.march_info = march_info
