@@ -55,6 +55,9 @@ local BUILDING_ANIMATIONS_FILES = {
         "animations/xuedi_nv.ExportJson",
         "animations/shadi_nan.ExportJson",
         "animations/shadi_nv.ExportJson",
+    },
+    bird = {
+        "animations/gezi.ExportJson",
     }
 }
 local BUILDING_ANIMATIONS = getAniNameFromAnimationFiles(BUILDING_ANIMATIONS_FILES)
@@ -268,10 +271,10 @@ local SOLDIER_ANIMATION_FILES = {
     },
     skeletonArcher = {
         "animations/kulousheshou.ExportJson",
-    }, 
+    },
     deathKnight = {
         "animations/siwangqishi.ExportJson",
-    }, 
+    },
     meatWagon = {
         "animations/jiaorouche.ExportJson",
     },
@@ -401,7 +404,7 @@ local BLACK_SOLDIER_IMAGES = {
         "b_ballista_1.png",
         "b_ballista_2.png",
     },
-    
+
     skeletonWarrior = {
         "skeletonWarrior.png",
     },
@@ -836,4 +839,5 @@ return {
     unLoadDragonAnimation = unLoadDragonAnimation,
     iap_package_image = IAP_PACKAGE_IMAGE,
 }
+
 

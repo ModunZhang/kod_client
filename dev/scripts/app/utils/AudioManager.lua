@@ -23,7 +23,7 @@ local effect_sound_map = {
 	OPEN_MAIL = "sfx_open_mail.wav",
 	USE_ITEM = "sfx_use_item.wav",
 	BUY_ITEM = "sfx_buy_item.wav",
-	COMPLETE = "sfx_complete.wav",
+	COMPLETE = "sfx_player_levelup.wav",
 	TROOP_LOSE = "sfx_troop_lose.wav",
 	TROOP_SENDOUT = "sfx_troop_sendOut.wav",
 	TROOP_COMPLETE = "sfx_troop_complete.wav",
@@ -86,6 +86,7 @@ function AudioManager:ctor(game_default)
 	self.is_bg_auido_on = self:GetGameDefault():getBasicInfoValueForKey(BACKGROUND_MUSIC_KEY,true)
 	self.is_effect_audio_on = self:GetGameDefault():getBasicInfoValueForKey(EFFECT_MUSIC_KEY,true)
 	self:PreLoadAudio()
+	self:SetEffectsVolume(0.4)
 end
 
 function AudioManager:GetGameDefault()
@@ -200,5 +201,12 @@ function AudioManager:StopAll()
 	self:StopMusic()
 	self:StopEffectSound()
 end
+
+function AudioManager:SetEffectsVolume(volume)
+	audio.setSoundsVolume(volume)
+end
+
+
+-- function AudioManager:
 
 return AudioManager
