@@ -577,7 +577,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
         dialog:SetPopMessage(_("您当前没有足够的资源,是否花费魔法石立即补充"))
 
         if owen_gem<required_gems then
-            dialog:CreateNeeds("gem_66x56.png",required_gems,0x7e0000)
+            dialog:CreateNeeds({value = required_gems,color =0x7e0000})
             dialog:CreateOKButton(
                 {
                     listener = function()
@@ -587,7 +587,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
                 }
             )
         else
-            dialog:CreateNeeds("gem_66x56.png",required_gems)
+            dialog:CreateNeeds({value = required_gems})
             dialog:CreateOKButton(
                 {
                     listener = function()
@@ -607,7 +607,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
         )
         dialog:SetTitle(_("立即开始"))
         dialog:SetPopMessage(_("您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"))
-        dialog:CreateNeeds("gem_66x56.png",required_gems)
+        dialog:CreateNeeds({value = required_gems})
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_AND_RESOURCE_NOT_ENOUGH then
         local required_gems = self.building:getUpgradeRequiredGems()
         dialog:CreateOKButton(
@@ -619,7 +619,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
         )
         dialog:SetTitle(_("立即开始"))
         dialog:SetPopMessage(can_not_update_type)
-        dialog:CreateNeeds("gem_66x56.png",required_gems)
+        dialog:CreateNeeds({value = required_gems})
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.PRE_CONDITION then
         local jump_building = self.building:GetPreConditionBuilding()
         if tolua.type(jump_building) == "string" then
@@ -643,6 +643,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
 
 

@@ -232,7 +232,7 @@ function WidgetUpgradeMilitaryTech:PopNotSatisfyDialog(upgrade_listener,results)
         :CreateOKButton({
             listener =  upgrade_listener
         })
-        :CreateNeeds("gem_66x56.png",self.tech:GetUpgradeGems())
+        :CreateNeeds({value = self.tech:GetUpgradeGems()})
         :AddToCurrentScene()
 end
 function WidgetUpgradeMilitaryTech:OnMilitaryTechsDataChanged(city,changed_map)
@@ -248,11 +248,12 @@ function WidgetUpgradeMilitaryTech:OnMilitaryTechsDataChanged(city,changed_map)
             self.upgrade_tip:setString(v:GetTechLocalize().." (".._("升级到").." Lv"..(v:Level()+1)..")")
             self.line1:SetText("+"..(v:GetAtkEff()*100).."%")
             self.line2:SetText("+"..v:GetTechPoint())
-        	self:UpgradeRequirement()
+            self:UpgradeRequirement()
         end
     end
 end
 return WidgetUpgradeMilitaryTech
+
 
 
 

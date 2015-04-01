@@ -422,21 +422,21 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
                             listener = treat_fun
                         }
                     )
-                    :CreateNeeds("gem_66x56.png",hospital:GetTreatGems(soldiers)):AddToCurrentScene()
+                    :CreateNeeds({value = hospital:GetTreatGems(soldiers)}):AddToCurrentScene()
             elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.LACK_RESOURCE then
                 local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
                     :SetPopMessage(_("资源不足，是否花费宝石补足"))
                     :CreateOKButton({
-                            listener = treat_fun
-                        })
-                    :CreateNeeds("gem_66x56.png",hospital:GetTreatGems(soldiers)):AddToCurrentScene()
+                        listener = treat_fun
+                    })
+                    :CreateNeeds({value = hospital:GetTreatGems(soldiers)}):AddToCurrentScene()
             elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING then
                 local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
                     :SetPopMessage(_("正在治愈，是否花费魔法石立即完成"))
                     :CreateOKButton({
-                            listener = treat_fun
-                        })
-                    :CreateNeeds("gem_66x56.png",hospital:GetTreatGems(soldiers)):AddToCurrentScene()
+                        listener = treat_fun
+                    })
+                    :CreateNeeds({value = hospital:GetTreatGems(soldiers)}):AddToCurrentScene()
             else
                 treat_fun()
             end
@@ -569,6 +569,7 @@ function WidgetTreatSoldier:OnCountChanged(count)
     self.gem_label:setString(self.treat_now_gems)
 end
 return WidgetTreatSoldier
+
 
 
 

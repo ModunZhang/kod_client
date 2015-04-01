@@ -354,7 +354,7 @@ function GameUIUpgradeTechnology:OnUpgradButtonClicked()
                 listener =  function ()
                     self:ForceUpgrade(gems_cost)
                 end})
-            :CreateNeeds("gem_66x56.png",gems_cost)
+            :CreateNeeds({value = gems_cost})
             :AddToCurrentScene(true)
     end
 end

@@ -257,7 +257,7 @@ function WidgetPromoteSoldier:PopNotSatisfyDialog(upgrade_listener,results)
     if need_gem==0 then
         dialog:CreateCancelButton()
     else
-        dialog:CreateNeeds("gem_66x56.png",self:GetUpgradeGems())
+        dialog:CreateNeeds({value = self:GetUpgradeGems()})
     end
 end
 function WidgetPromoteSoldier:GetInstantUpgradeGems()
