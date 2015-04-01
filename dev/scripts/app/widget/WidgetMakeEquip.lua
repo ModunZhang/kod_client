@@ -381,7 +381,7 @@ end
 -- 更新建筑队列
 function WidgetMakeEquip:UpdateBuildLabel(queue)
     local is_enough = queue == 0
-    self.normal_build_btn:setButtonEnabled(is_enough)
+    -- self.normal_build_btn:setButtonEnabled(is_enough)
     local label = string.format("%s %d/%d", _("制造队列"), queue, 1)
     if label ~= self.build_label:getString() then
         self.build_label:setString(label)
@@ -463,10 +463,46 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
     if not is_material_enough  then
         return is_material_enough
     end
+
+
+    if not isFinishNow then
+        local not_suitble = {}
+        local need_gems = 0
+        -- 制造队列
+        if self.black_smith:IsMakingEquipment() then
+            local making_event = self.black_smith:GetMakeEquipmentEvent()
+            local time_gem = DataUtils:getGemByTimeInterval(making_event:LeftTime(app.timer:GetServerTime()))
+            need_gems = need_gems + time_gem
+            table.insert(not_suitble, _("完成当前制造队列,需要")..time_gem)
+        end
+        -- 检查银币
+        local current_coin = city:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+        if equip_config.coin>current_coin then
+            local coin_gem = DataUtils:buyResource({coin = equip_config.coin}, {coin =current_coin })
+            table.insert(not_suitble, _("银币不足,需要")..coin_gem)
+            need_gems = need_gems + coin_gem
+        end
+
+        if not LuaUtils:table_empty(not_suitble) then
+            local message = ""
+            for k,v in ipairs(not_suitble) do
+                message = message .. v .. "\n"
+            end
+            UIKit:showMessageDialog(_("提示"),message,function()
+                NetManager:getMakeDragonEquipmentPromise(self.equip_type):catch(function(err)
+                    dump(err:reason())
+                end)
+                self:Close()
+            end):CreateNeeds({value = need_gems})
+            return false
+        end
+    end
     return true
 end
 
 return WidgetMakeEquip
+
+
 
 
 

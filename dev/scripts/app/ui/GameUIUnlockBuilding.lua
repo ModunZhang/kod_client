@@ -219,7 +219,7 @@ function GameUIUnlockBuilding:PopNotSatisfyDialog(listener,can_not_update_type)
             )
             dialog:SetTitle(_("补充资源"))
             dialog:SetPopMessage(_("您当前没有足够的资源,是否花费魔法石立即补充"))
-            dialog:CreateNeeds("gem_66x56.png",required_gems)
+            dialog:CreateNeeds({value = required_gems})
         end
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH then
         local required_gems =self.building:getUpgradeRequiredGems()
@@ -231,7 +231,7 @@ function GameUIUnlockBuilding:PopNotSatisfyDialog(listener,can_not_update_type)
             })
         dialog:SetTitle(_("立即开始"))
         dialog:SetPopMessage(_("您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"))
-        dialog:CreateNeeds("gem_66x56.png",required_gems)
+        dialog:CreateNeeds({value = required_gems})
     else
         dialog:SetTitle(_("提示"))
         dialog:SetPopMessage(can_not_update_type)
