@@ -169,6 +169,9 @@ function CityLayer:OnDestoryDecorator(destory_decorator, release_ruins)
         end
     end
 end
+function CityLayer:OnSoliderStarCountChanged(soldier_manager, soldier_star_changed)
+    self:UpdateSoldiersStar(soldier_manager, soldier_star_changed)
+end
 function CityLayer:OnSoliderCountChanged(soldier_manager, changed)
     self:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
 end
@@ -351,29 +354,7 @@ function CityLayer:InitWithCity(city)
     self.single_tree = single_tree
 
     -- 兵种
-    local soldiers = {}
-    for i, v in ipairs({
-        {x = 8, y = 18, soldier_type = "deathKnight"},
-        {x = 6, y = 18, soldier_type = "skeletonWarrior"},
-        {x = 4, y = 18, soldier_type = "skeletonArcher"},
-        {x = 2, y = 18, soldier_type = "meatWagon"},
-
-        {x = 8, y = 16, soldier_type = "lancer"},
-        {x = 6, y = 16, soldier_type = "swordsman"},
-        {x = 4, y = 16, soldier_type = "ranger"},
-        {x = 2, y = 16, soldier_type = "catapult"},
-
-        {x = 8, y = 14, soldier_type = "horseArcher"},
-        {x = 6, y = 14, soldier_type = "sentinel"},
-        {x = 4, y = 14, soldier_type = "crossbowman"},
-        {x = 2, y = 14, soldier_type = "ballista"},
-    }) do
-        local soldier = self:CreateSoldier(v.soldier_type, v.x, v.y):addTo(city_node)
-        local x, y = soldier:getPosition()
-        soldier:pos(x, y + 25)
-        table.insert(soldiers, soldier)
-    end
-    self.soldiers = soldiers
+    self:RefreshSoldiers(city:GetSoldierManager())
 
 
     -- 协防的部队
@@ -528,9 +509,55 @@ end
 function CityLayer:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
     local map = soldier_manager:GetSoldierMap()
     self:IteratorSoldiers(function(_, v)
-        local is_visible = map[v:GetSoldierType()] > 0
+        local type_, star = v:GetSoldierTypeAndStar()
+        local is_visible = map[type_] > 0
         v:setVisible(is_visible)
     end)
+end
+function CityLayer:UpdateSoldiersStar(soldier_manager)
+    local need_refresh = false
+    self:IteratorSoldiers(function(_, v)
+        local type_, star_old = v:GetSoldierTypeAndStar()
+        local star_now = soldier_manager:GetStarBySoldierType(type_)
+        if star_now ~= star_old then
+            need_refresh = true
+        end
+    end)
+    if need_refresh then
+        self:RefreshSoldiers(soldier_manager)
+    end
+end
+function CityLayer:RefreshSoldiers(soldier_manager)
+    for _,v in pairs(self.soldiers or {}) do
+        v:removeFromParent()
+    end
+    local soldiers = {}
+    for i, v in ipairs({
+        {x = 6, y = 18, soldier_type = "skeletonWarrior"},
+        {x = 4, y = 18, soldier_type = "skeletonArcher"},
+        {x = 8, y = 18, soldier_type = "deathKnight"},
+        {x = 2, y = 18, soldier_type = "meatWagon"},
+
+        {x = 8, y = 16, soldier_type = "lancer"},
+        {x = 6, y = 16, soldier_type = "swordsman"},
+        {x = 4, y = 16, soldier_type = "ranger"},
+        {x = 2, y = 16, soldier_type = "catapult"},
+
+        {x = 8, y = 14, soldier_type = "horseArcher"},
+        {x = 6, y = 14, soldier_type = "sentinel"},
+        {x = 4, y = 14, soldier_type = "crossbowman"},
+        -- {x = 2, y = 14, soldier_type = "ballista"},
+    }) do
+        local star = soldier_manager:GetStarBySoldierType(v.soldier_type)
+        local star = 2
+        local soldier = self:CreateSoldier(v.soldier_type, star, v.x, v.y):addTo(self:GetCityNode())
+        local x, y = soldier:getPosition()
+        soldier:pos(x, y + 25)
+        table.insert(soldiers, soldier)
+    end
+    self.soldiers = soldiers
+
+    self:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
 end
 function CityLayer:UpdateHelpedByTroopsVisible(helped_by_troops)
     self:IteratorHelpedTroops(function(i, v)
@@ -740,8 +767,8 @@ end
 function CityLayer:CreateCitizen(city, logic_x, logic_y)
     return CitizenSprite.new(self, city, logic_x, logic_y)
 end
-function CityLayer:CreateSoldier(soldier_type, logic_x, logic_y)
-    return SoldierSprite.new(self, soldier_type, logic_x, logic_y)
+function CityLayer:CreateSoldier(soldier_type, star, logic_x, logic_y)
+    return SoldierSprite.new(self, soldier_type, star, logic_x, logic_y)
 end
 function CityLayer:CreateAirship(logic_x, logic_y)
     return AirshipSprite.new(self, logic_x, logic_y)

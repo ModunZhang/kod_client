@@ -1429,16 +1429,16 @@ end
 
 local function rank_sort(response)
     local data = response.msg
-    data.myRank = data.myRank + 1
-    if data.rankData[data.myRank] then
-        data.rankData[data.myRank].is_mine = true
+    data.myData.rank = data.myData.rank + 1
+    if data.datas[data.myData.rank] then
+        data.datas[data.myData.rank].is_mine = true
     end
-    table.sort(data.rankData, function(a, b)
+    table.sort(data.datas, function(a, b)
         return a.value > b.value
     end)
-    for i,v in ipairs(data.rankData) do
+    for i,v in ipairs(data.datas) do
         if v.is_mine then
-            data.myRank = i
+            data.myData.rank = i
         end
     end
     return response

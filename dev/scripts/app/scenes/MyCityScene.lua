@@ -6,6 +6,7 @@ local WidgetMoveHouse = import("..widget.WidgetMoveHouse")
 local TutorialLayer = import("..ui.TutorialLayer")
 local GameUINpc = import("..ui.GameUINpc")
 local Arrow = import("..ui.Arrow")
+local SoldierManager = import("..entity.SoldierManager")
 local City = import("..entity.City")
 local User = import("..entity.User")
 local CityScene = import(".CityScene")
@@ -28,8 +29,7 @@ function MyCityScene:onEnter()
 
     self:GetCity():AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
     self:GetCity():GetUser():AddListenOnType(self, User.LISTEN_TYPE.BASIC)
-
-    self.action_node = display.newNode():addTo(self)
+    self:GetCity():GetSoldierManager():AddListenOnType(self, SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
 end
 function MyCityScene:onExit()
     MyCityScene.super.onExit(self)
@@ -228,6 +228,9 @@ end
 
 
 ---
+function MyCityScene:OnSoliderStarCountChanged(soldier_manager, soldier_star_changed)
+    self:GetSceneLayer():OnSoliderStarCountChanged(soldier_manager, soldier_star_changed)
+end
 function MyCityScene:OnBasicChanged(user, changed)
     if changed.terrain then
         self:ChangeTerrain(changed.terrain.new)

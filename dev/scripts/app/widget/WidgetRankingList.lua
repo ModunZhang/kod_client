@@ -108,10 +108,10 @@ end
 function WidgetRankingList:ReloadRank(rank)
     if self.rank_map.power == rank then
         local str = self.type_ == "player" and _("我的战斗力排行") or _("我的联盟战斗力排行")
-        self.my_ranking:setString(string.format("%s : %d", str, rank.myRank))
+        self.my_ranking:setString(string.format("%s : %d", str, rank.myData.rank))
     elseif self.rank_map.kill == rank then
         local str = self.type_ == "player" and _("我的击杀排行") or _("我的联盟击杀排行")
-        self.my_ranking:setString(string.format("%s : %d", str, rank.myRank))
+        self.my_ranking:setString(string.format("%s : %d", str, rank.myData.rank))
     end
     self.current_rank = rank
     self.listview:reload()
@@ -125,7 +125,7 @@ end
 function WidgetRankingList:sourceDelegate(listView, tag, idx)
     if cc.ui.UIListView.COUNT_TAG == tag then
         if self.current_rank then
-            return #self.current_rank.rankData
+            return #self.current_rank.datas
         end
         return 0
     elseif cc.ui.UIListView.CELL_TAG == tag then
@@ -143,7 +143,7 @@ function WidgetRankingList:sourceDelegate(listView, tag, idx)
             content = item:getContent()
             content:SetIndex(idx)
         end
-        content:SetData(self.current_rank.rankData[idx])
+        content:SetData(self.current_rank.datas[idx])
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         return item

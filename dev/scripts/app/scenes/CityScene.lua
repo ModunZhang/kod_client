@@ -28,68 +28,6 @@ function CityScene:onEnter()
     self:GotoLogicPointInstant(6, 4)
     self:GetSceneLayer():ZoomTo(1)
 
-    -- local city = self.city
-
-
-    -- local ai_create_house_array = {
-    --     "woodcutter",
-    --     "quarrier",
-    --     "miner",
-    --     "farmer",
-    -- }
-    -- local ai_house_index = 1
-    -- self:performWithDelay(function()
-    --     local city = self.city
-    --     print("新一轮ai循环")
-    --     -- step 1
-    --     -- 先检查小屋可不可以建造,建造小屋的顺序为:
-    --     -- 首先检查住宅小屋,造满才能建造其他的小屋
-    --     city:IteratorTilesByFunc(function(x, y, tile)
-    --         if tile:IsUnlocked() and tile:CanBuildHouses() then
-    --             for i = 1, 3 do
-    --                 local x, y = tile:GetAbsolutePositionByLocation(i)
-    --                 if city:GetAvailableBuildQueueCounts() > 0 then
-    --                     local building = city:GetHouseByPosition(x, y)
-    --                     if not building then
-    --                         print("可以建造!", tile.location_id, i, "dwelling")
-    --                         -- 还能不能建造住宅?
-    --                         local house_type
-    --                         if city:GetLeftBuildingCountsByType("dwelling") > 0 then
-    --                             house_type = "dwelling"
-    --                         else
-    --                             local ht = ai_create_house_array[ai_house_index]
-    --                             if city:GetLeftBuildingCountsByType(ht) > 0 then
-    --                                 house_type = ht
-    --                             else
-    --                                 for i, v in ipairs(ai_create_house_array) do
-    --                                     if city:GetLeftBuildingCountsByType(v) > 0 then
-    --                                         ai_house_index = i
-    --                                         house_type = v
-    --                                     end
-    --                                 end
-    --                             end
-    --                             -- 下一次造的建筑
-    --                             ai_house_index = (ai_house_index - 1) % #ai_create_house_array + 1
-    --                         end
-    --                         if house_type then
-    --                             NetManager:getCreateHouseByLocationPromise(tile.location_id, i, house_type)
-    --                         end
-    --                         return
-    --                     end
-    --                 end
-    --             end
-    --         end
-    --     end)
-
-    --     -- step 2
-    --     -- 检查能升级的建筑物,如果没有则升级主城
-
-    --     -- step 3
-    --     -- 最后检查有没有免费加速的建筑物如果有则加速
-
-    -- end, 1)
-
-    -- self:GetSceneLayer():hide()
     local alliance = Alliance_Manager:GetMyAlliance()
     local alliance_map = alliance:GetAllianceMap()
     local allianceShirine = alliance:GetAllianceShrine()
@@ -104,12 +42,9 @@ function CityScene:onExit()
 end
 -- init ui
 function CityScene:LoadAnimation()
-    local manager = ccs.ArmatureDataManager:getInstance()
     UILib.loadSolidersAnimation()
     UILib.loadBuildingAnimation()
-    manager:addArmatureFileInfo("animations/green_dragon.ExportJson")
-    manager:addArmatureFileInfo("animations/Red_dragon.ExportJson")
-    manager:addArmatureFileInfo("animations/Blue_dragon.ExportJson")
+    UILib.loadDragonAnimation()
 end
 function CityScene:GetCity()
     return self.city
