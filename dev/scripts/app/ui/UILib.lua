@@ -68,14 +68,14 @@ local RESOURCE = {
     wallHp = "gate_1.png",
 }
 local MATERIALS = {
-    blueprints = "blueprints_112x112.png",
-    tools =  "tools_112x112.png",
-    tiles = "tiles_112x112.png",
-    pulley = "pulley_112x112.png",
-    trainingFigure = "trainingFigure_112x112.png",
-    bowTarget = "bowTarget_112x112.png",
-    saddle = "saddle_112x112.png",
-    ironPart = "ironPart_112x112.png",
+    blueprints = "blueprints_128x128.png",
+    tools =  "tools_128x128.png",
+    tiles = "tiles_128x128.png",
+    pulley = "pulley_128x128.png",
+    trainingFigure = "trainingFigure_128x128.png",
+    bowTarget = "bowTarget_128x128.png",
+    saddle = "saddle_128x128.png",
+    ironPart = "ironPart_128x128.png",
 }
 local DRAGON_MATERIAL_PIC_MAP = {
     ["ingo_1"] = "ironIngot_92x92.png",
@@ -436,6 +436,8 @@ local DECORATOR_IMAGE = {
         decorate_tree_2 =  "grass_tree_2_124x122.png",
         decorate_tree_3 =  "grass_tree_3_112x114.png",
         decorate_tree_4 =  "grass_tree_4_100x106.png",
+        stone_mountain  = "grass_stone_mountain_80x58.png",
+        farmland        = "grass_farmland_80x55.png"
     },
     iceField = {
         decorate_lake_1 = "ice_lake_280x166.png",
@@ -446,6 +448,8 @@ local DECORATOR_IMAGE = {
         decorate_tree_2 =  "ice_tree_2_124x106.png",
         decorate_tree_3 =  "ice_tree_3_102x96.png",
         decorate_tree_4 =  "ice_tree_4_102x98.png",
+        stone_mountain  = "ice_stone_mountain_80x58.png",
+        farmland        = "ice_farmland_80x55.png"
     },
     desert = {
         decorate_lake_1 = "desert_lake_276x162.png",
@@ -456,6 +460,8 @@ local DECORATOR_IMAGE = {
         decorate_tree_2 =  "desert_tree_2_128x106.png",
         decorate_tree_3 =  "desert_tree_3_98x96.png",
         decorate_tree_4 =  "desert_tree_4_106x102.png",
+        stone_mountain  = "desert_stone_mountain_80x58.png",
+        farmland        = "desert_farmland_80x55.png"
     },
     decorate_lake_1 = "grass_lake_272x158.png",
     decorate_lake_2 =  "grass_lake_244x142.png",

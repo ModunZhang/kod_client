@@ -234,6 +234,7 @@ function GameUIGacha:CreateGachaPool(layer)
         local gacha_box = self.continuous_draw_items and gacha_boxes[self.continuous_index-1] or gacha_boxes[1]
         -- local gacha_box_lable
 
+        app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
         transition.scaleTo(award, {scale = 1.5,time =0.4,onComplete = function ()
             transition.moveTo(award, {x = gacha_box:getPositionX(), y=gacha_box:getPositionY() ,time =0.2 ,
                 onComplete = function ( )
@@ -444,7 +445,7 @@ function GameUIGacha:InitOrdinary()
             text = _("免费抽奖"),
             size = 24
         }))
-        :setButtonLabelOffset(0,0)
+            :setButtonLabelOffset(0,0)
 
         local btn_images = {normal = "green_btn_up_250x65.png",
             pressed = "green_btn_down_250x65.png"
@@ -598,6 +599,7 @@ function GameUIGacha:OnCountInfoChanged()
     end
 end
 return GameUIGacha
+
 
 
 

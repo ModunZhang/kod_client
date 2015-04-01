@@ -107,8 +107,15 @@ function GameUIAllianceSendTroops:OnMoveInStage()
             color = 0xffedae,
             shadow= true
         }))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
+    max_btn:onButtonClicked(function(event)
+        if event.name == "CLICKED_EVENT" then
+            if self.is_now_max then
+                self:AdapterMaxButton()
+                for k,item in pairs(self.soldiers_table) do
+                    item:SetSoldierCount(0)
+                end
+            else
+                self:AdapterMaxButton()
                 local max_soldiers_citizen = 0
                 for k,item in pairs(self.soldiers_table) do
                     local soldier_type,level,_,max_num = item:GetSoldierInfo()
@@ -146,7 +153,10 @@ function GameUIAllianceSendTroops:OnMoveInStage()
                     self:RefreashSoldierShow()
                 end
             end
-        end):align(display.LEFT_CENTER,window.left+50,window.top-920):addTo(self:GetView())
+        end
+    end):align(display.LEFT_CENTER,window.left+50,window.top-920):addTo(self:GetView())
+    self.max_btn = max_btn
+
     local march_btn = WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("行军"),
@@ -203,7 +213,7 @@ function GameUIAllianceSendTroops:OnMoveInStage()
             end
 
         end):align(display.RIGHT_CENTER,window.right-50,window.top-920):addTo(self:GetView())
-    if not self.isPVE then 
+    if not self.isPVE then
         --行军所需时间
         display.newSprite("hourglass_39x46.png", window.cx, window.top-920)
             :addTo(self):scale(0.6)
@@ -221,6 +231,21 @@ function GameUIAllianceSendTroops:OnMoveInStage()
         }):align(display.LEFT_CENTER,window.cx+20,window.top-930):addTo(self:GetView())
     end
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
+end
+function GameUIAllianceSendTroops:AdapterMaxButton(max)
+    local btn_labe = max and _("最大") or self.is_now_max and _("最大") or _("最小")
+    if max then
+        self.is_now_max = false
+    else
+        self.is_now_max = not self.is_now_max
+    end
+    self.max_btn:setButtonLabel(UIKit:ttfLabel({
+        text = btn_labe,
+        size = 24,
+        color = 0xffedae,
+        shadow= true
+    }))
+
 end
 function GameUIAllianceSendTroops:SelectDragonPart()
     if not self.dragon then return end
@@ -346,6 +371,8 @@ function GameUIAllianceSendTroops:SelectSoldiers()
                         callback = function ( edit_value )
                             if edit_value ~= slider_value then
                                 slider:setSliderValue(edit_value)
+                                -- 只要改变，就把最大按钮置为最大
+                                self:AdapterMaxButton(true)
                                 self:RefreashSoldierShow()
                             end
                         end
@@ -364,6 +391,8 @@ function GameUIAllianceSendTroops:SelectSoldiers()
         end)
         slider:addSliderReleaseEventListener(function(event)
             self:RefreashSoldierShow()
+            -- 只要改变，就把最大按钮置为最大
+            self:AdapterMaxButton(true)
         end)
         slider:setDynamicMaxCallBakc(function (value)
             local usable_citizen=self.dragon:LeadCitizen()
@@ -645,6 +674,16 @@ function GameUIAllianceSendTroops:onExit()
 end
 
 return GameUIAllianceSendTroops
+
+
+
+
+
+
+
+
+
+
 
 
 

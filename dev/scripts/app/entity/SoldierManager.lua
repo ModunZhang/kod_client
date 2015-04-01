@@ -16,7 +16,8 @@ SoldierManager.LISTEN_TYPE = Enum("SOLDIER_CHANGED",
     "MILITARY_TECHS_DATA_CHANGED",
     "SOLDIER_STAR_EVENTS_CHANGED",
     "OnSoldierStarEventsTimer",
-    "OnMilitaryTechEventsTimer")
+    "OnMilitaryTechEventsTimer",
+    "ALL_SOLDIER_STAR_EVENTS_CHANGED")
 
 function SoldierManager:ctor()
     SoldierManager.super.ctor(self)
@@ -520,6 +521,9 @@ function SoldierManager:OnSoldierStarEventsChanged(soldierStarEvents)
         event:AddObserver(self)
         self.soldierStarEvents[event:Id()] = event
     end
+    self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.ALL_SOLDIER_STAR_EVENTS_CHANGED, function(listener)
+        listener:OnSoldierStarEventsChanged(self,self.soldierStarEvents)
+    end)
 end
 function SoldierManager:GetPromotingSoldierName(building_type)
     local event = self:GetLatestSoldierStarEvents(building_type)
