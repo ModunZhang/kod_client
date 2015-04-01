@@ -565,7 +565,7 @@ function WidgetRecruitSoldier:OnCountChanged(count)
     -- 检查资源
     local need_resource = self:CheckNeedResource(self.res_total_map, count)
     self.count = count
-    self.gem_label:setString(DataUtils:buyResource(need_resource, {}) + DataUtils:getGemByTimeInterval(total_time))
+    self.gem_label:setString(DataUtils:buyResource(need_resource, {}) + DataUtils:getGemByTimeInterval(total_time-DataUtils:getSoldierRecruitBuffTime(soldier_config.type,total_time)))
 end
 function WidgetRecruitSoldier:CheckNeedResource(total_resouce, count)
     local soldier_config = self.soldier_config
