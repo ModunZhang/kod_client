@@ -65,13 +65,16 @@ function CityLayer:GetClickedObject(world_x, world_y)
         sprite_clicked = {}
     }
     self:IteratorClickAble(function(_, v)
-        if not v:isVisible() then return false end
-        local check = v:IsContainPointWithFullCheck(logic_x, logic_y, world_x, world_y)
-        if check.logic_clicked then
-            table.insert(clicked_list.logic_clicked, v)
-        end
-        if check.sprite_clicked then
-            table.insert(clicked_list.sprite_clicked, v)
+        if v:isVisible() then
+            if v:GetEntity().IsUnlocked == nil and true or v:GetEntity():IsUnlocked() then
+                local check = v:IsContainPointWithFullCheck(logic_x, logic_y, world_x, world_y)
+                if check.logic_clicked then
+                    table.insert(clicked_list.logic_clicked, v)
+                end
+                if check.sprite_clicked then
+                    table.insert(clicked_list.sprite_clicked, v)
+                end
+            end
         end
     end)
     table.sort(clicked_list.logic_clicked, function(a, b)
@@ -119,6 +122,7 @@ function CityLayer:OnTileLocked(city)
 end
 function CityLayer:OnTileUnlocked(city)
     self:OnTileChanged(city)
+    print("OnTileUnlocked")
 end
 function CityLayer:OnTileChanged(city)
     self:UpdateRuinsVisibleWithCity(city)
@@ -437,7 +441,8 @@ function CityLayer:UpdateLockedTilesWithCity(city)
     end
     self.locked_tiles = {}
     city:IteratorTilesByFunc(function(x, y, tile)
-        if tile:NeedWalls() and tile.locked then
+        local building = city:GetBuildingByLocationId(tile.location_id)
+        if tile:NeedWalls() and tile.locked and not building:IsUnlocking() then
             table.insert(self.locked_tiles, self:CreateLockedTileSpriteWithTile(tile):addTo(city_node))
         end
     end)
@@ -464,7 +469,7 @@ function CityLayer:UpdateTreesWithCity(city)
     end
     self.trees = {}
     city:IteratorTilesByFunc(function(x, y, tile)
-        if tile.locked and tile.x ~= 2 then
+        if tile:IsOutOfWalls() and tile.x ~= 2 then
             table.insert(self.trees, self:CreateTreeWithTile(tile):addTo(city_node))
         end
     end)
@@ -546,7 +551,7 @@ function CityLayer:RefreshSoldiers(soldier_manager)
         {x = 8, y = 14, soldier_type = "horseArcher"},
         {x = 6, y = 14, soldier_type = "sentinel"},
         {x = 4, y = 14, soldier_type = "crossbowman"},
-        -- {x = 2, y = 14, soldier_type = "ballista"},
+    -- {x = 2, y = 14, soldier_type = "ballista"},
     }) do
         local star = soldier_manager:GetStarBySoldierType(v.soldier_type)
         local star = 2
@@ -827,6 +832,8 @@ function CityLayer:ShowLevelUpNode()
 end
 
 return CityLayer
+
+
 
 
 

@@ -151,7 +151,6 @@ function City:InitWithJsonData(userData)
     end)
     self:InitBuildings(init_buildings)
 
-
     -- table.insert(init_unlock_tiles, {x = 1, y = 3})
     -- table.insert(init_unlock_tiles, {x = 2, y = 3})
     -- table.insert(init_unlock_tiles, {x = 3, y = 3})
@@ -959,9 +958,17 @@ function City:DestoryDecoratorByPosition(current_time, x, y)
 end
 ----------- 功能扩展点
 function City:OnUserDataChanged(userData, current_time, deltaData)
-    local need_update_resouce_buildings = self:OnHouseChanged(userData, current_time, deltaData)
+    local need_update_resouce_buildings, is_unlock_any_tiles, unlock_table = self:OnHouseChanged(userData, current_time, deltaData)
     -- 更新建筑信息
     self:IteratorCanUpgradeBuildingsByUserData(userData, current_time, deltaData)
+
+
+    -- 更新地块信息
+    if is_unlock_any_tiles then
+        LuaUtils:outputTable("unlock_table", unlock_table)
+        self:UnlockTilesByIndexArray(unlock_table)
+    end
+
     -- 更新协防信息
     self:OnHelpedByTroopsDataChange(userData, deltaData)
     --更新派出的协防信息
@@ -1004,41 +1011,41 @@ local function find_building_info_by_location(houses, location_id)
 end
 function City:OnHouseChanged(userData, current_time, deltaData)
     local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.buildings ~= nil
-
-    local lock_table = {}
-    local unlock_table = {}
-    local is_unlock_any_tiles = false
-    local is_lock_any_tiles = false
+    local is_delta_update = not is_fully_update and (deltaData.buildings ~= nil or deltaData.buildingEvents ~= nil)
 
     local buildings = {}
     if is_fully_update then
         buildings = userData.buildings
     elseif is_delta_update then
         local userDataBuildings = userData.buildings
-        for k,v in pairs(deltaData.buildings) do
+        for k,v in pairs(deltaData.buildings or {}) do
             buildings[k] = userDataBuildings[k]
         end
     else
         return false
     end
 
+    local unlock_table = {}
+    local is_unlock_any_tiles = false
+    for i,v in ipairs(userData.buildingEvents) do
+        if self:GetBuildingByLocationId(v.location):GetLevel() == 0 then
+            is_unlock_any_tiles = true
+            break
+        end
+    end
     table.foreach(buildings, function(key, location)
+        local location_id = location.location
         illegal_filter(key, function()
-            local building = self:GetBuildingByLocationId(location.location)
-            local is_unlocking = building:GetLevel() == 0 and location.level > 0
-            local is_locking = building:GetLevel() > 0 and location.level <= 0
-            local tile = self:GetTileByLocationId(location.location)
-            if is_unlocking then
+            local building = self:GetBuildingByLocationId(location_id)
+            local is_unlocking = building:GetLevel() == 0 and (location.level > 0)
+            local tile = self:GetTileByLocationId(location_id)
+            if is_unlocking and tile.locked then
                 is_unlock_any_tiles = true
                 table.insert(unlock_table, {x = tile.x, y = tile.y})
-            elseif is_locking then
-                is_lock_any_tiles = true
-                table.insert(lock_table, {x = tile.x, y = tile.y})
             end
 
             -- 拆除 or 交换
-            local decorators = self:GetDecoratorsByLocationId(location.location)
+            local decorators = self:GetDecoratorsByLocationId(location_id)
             table.foreach(decorators, function(key, building)
                 -- 当前位置有小建筑并且推送的数据里面没有就认为是拆除
                 local tile = self:GetTileWhichBuildingBelongs(building)
@@ -1070,16 +1077,7 @@ function City:OnHouseChanged(userData, current_time, deltaData)
             end)
         end)
     end)
-    -- 更新地块信息
-    if is_unlock_any_tiles then
-        LuaUtils:outputTable("unlock_table", unlock_table)
-        self:UnlockTilesByIndexArray(unlock_table)
-    end
-    if is_lock_any_tiles then
-        LuaUtils:outputTable("lock_table", lock_table)
-        self:LockTilesByIndexArray(lock_table)
-    end
-    return true
+    return true, is_unlock_any_tiles, unlock_table
 end
 function City:GetCityName()
     return self.cityName
@@ -1554,7 +1552,7 @@ function City:OnProductionTechEventsDataChaned(userData,deltaData)
         local changed_map = GameUtils:Handler_DeltaData_Func(
             deltaData.productionTechEvents
             ,function(v)
-               if not self:FindProductionTechEventById(v.id) then
+                if not self:FindProductionTechEventById(v.id) then
                     local productionTechnologyEvent = ProductionTechnologyEvent.new()
                     productionTechnologyEvent:UpdateData(v)
                     productionTechnologyEvent:SetEntity(self:FindTechByName(productionTechnologyEvent:Name()))
@@ -1564,7 +1562,7 @@ function City:OnProductionTechEventsDataChaned(userData,deltaData)
                 end
             end
             ,function(v)
-                 if self:FindProductionTechEventById(v.id) then
+                if self:FindProductionTechEventById(v.id) then
                     local productionTechnologyEvent = self:FindProductionTechEventById(v.id)
                     productionTechnologyEvent:UpdateData(v)
                     return productionTechnologyEvent
@@ -1618,6 +1616,7 @@ function City:FindProductionTechEventById(_id)
 end
 
 return City
+
 
 
 
