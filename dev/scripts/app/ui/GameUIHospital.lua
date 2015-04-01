@@ -81,14 +81,22 @@ function GameUIHospital:OnMoveInStage()
 
     self.city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.TREAT_SOLDIER_CHANGED)
     self.building:AddHospitalListener(self)
+    self.building:AddUpgradeListener(self)
 end
 
 function GameUIHospital:onExit()
     self.building:RemoveHospitalListener(self)
+    self.building:RemoveUpgradeListener(self)
     self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.TREAT_SOLDIER_CHANGED)
     GameUIHospital.super.onExit(self)
 end
-
+function GameUIHospital:OnBuildingUpgradingBegin( ... )
+end
+function GameUIHospital:OnBuildingUpgradeFinished( ... )
+    self:SetProgressCasualtyRateLabel()
+end
+function GameUIHospital:OnBuildingUpgrading( ... )
+end
 function GameUIHospital:OnBeginTreat(hospital, event)
     self:OnTreating(hospital, event, app.timer:GetServerTime())
 end
