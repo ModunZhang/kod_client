@@ -424,6 +424,8 @@ local DECORATOR_IMAGE = {
         decorate_tree_2 =  "grass_tree_2_124x122.png",
         decorate_tree_3 =  "grass_tree_3_112x114.png",
         decorate_tree_4 =  "grass_tree_4_100x106.png",
+        stone_mountain  = "grass_stone_mountain_80x58.png",
+        farmland        = "grass_farmland_80x55.png"
     },
     iceField = {
         decorate_lake_1 = "ice_lake_280x166.png",
@@ -434,6 +436,8 @@ local DECORATOR_IMAGE = {
         decorate_tree_2 =  "ice_tree_2_124x106.png",
         decorate_tree_3 =  "ice_tree_3_102x96.png",
         decorate_tree_4 =  "ice_tree_4_102x98.png",
+        stone_mountain  = "ice_stone_mountain_80x58.png",
+        farmland        = "ice_farmland_80x55.png"
     },
     desert = {
         decorate_lake_1 = "desert_lake_276x162.png",
@@ -444,6 +448,8 @@ local DECORATOR_IMAGE = {
         decorate_tree_2 =  "desert_tree_2_128x106.png",
         decorate_tree_3 =  "desert_tree_3_98x96.png",
         decorate_tree_4 =  "desert_tree_4_106x102.png",
+        stone_mountain  = "desert_stone_mountain_80x58.png",
+        farmland        = "desert_farmland_80x55.png"
     },
     decorate_lake_1 = "grass_lake_272x158.png",
     decorate_lake_2 =  "grass_lake_244x142.png",

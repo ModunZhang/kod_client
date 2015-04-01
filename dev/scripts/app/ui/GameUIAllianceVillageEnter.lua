@@ -7,6 +7,8 @@ local Localize = import("..utils.Localize")
 local VillageEvent = import("..entity.VillageEvent")
 local GameUIStrikePlayer = import(".GameUIStrikePlayer")
 local WidgetAllianceEnterButtonProgress = import("..widget.WidgetAllianceEnterButtonProgress")
+local SpriteConfig = import("..sprites.SpriteConfig")
+local UILib = import(".UILib")
 
 function GameUIAllianceVillageEnter:ctor(building,isMyAlliance,my_alliance,enemy_alliance)
 	GameUIAllianceVillageEnter.super.ctor(self,building,isMyAlliance,my_alliance)
@@ -31,11 +33,11 @@ end
 
 function GameUIAllianceVillageEnter:GetProcessIconConfig()
 	local config  = {
-		woodVillage = {"res_wood_114x100.png",0.4},
-	    stoneVillage= {"res_stone_128x128.png",0.4},
-	    ironVillage = {"res_iron_114x100.png",0.4},
-	    foodVillage = {"res_food_114x100.png",0.4},
-	    coinVillage = {"coin_icon.png",0.4},
+		woodVillage = {"res_wood_114x100.png",41/114},
+	    stoneVillage= {"res_stone_128x128.png",41/128},
+	    ironVillage = {"res_iron_114x100.png",41/114},
+	    foodVillage = {"res_food_114x100.png",41/114},
+	    coinVillage = {"coin_icon.png",41/107},
 	}
 	return config
 end
@@ -54,7 +56,11 @@ function GameUIAllianceVillageEnter:GetEnemyAlliance()
 end
 
 function GameUIAllianceVillageEnter:GetBuildingInfoOriginalY()
-	return self.process_bar_bg:getPositionY() - self.process_bar_bg:getContentSize().height-40
+	if not self:IsRuins() then
+		return self.process_bar_bg:getPositionY() - self.process_bar_bg:getContentSize().height-40
+	else
+		return self.process_bar_bg:getPositionY() - self.process_bar_bg:getContentSize().height
+	end
 end
 function GameUIAllianceVillageEnter:GetUIHeight()
 	return 311
@@ -66,7 +72,7 @@ end
 
 function GameUIAllianceVillageEnter:FixedUI()
 	if self:IsRuins() then
-		self:GetDescLabel():show()
+		self:GetDescLabel():hide()
 		self:GetLevelBg():hide()
 	    self.process_bar_bg:hide()
    	else
@@ -83,7 +89,27 @@ function GameUIAllianceVillageEnter:GetUITitle()
 end
 
 function GameUIAllianceVillageEnter:GetBuildingImage()
-	return "woodcutter_1_150x108.png"
+	if not self:IsRuins() then
+		local village_info = self:GetVillageInfo()
+		local build_png = SpriteConfig[village_info.name]:GetConfigByLevel(village_info.level).png
+	    return build_png
+	else
+		local terrain = self:IsMyAlliance() and self:GetMyAlliance():Terrain() or self:GetEnemyAlliance():Terrain()
+		local village_name = self:GetBuilding():GetName()
+
+        if village_name == 'woodVillage' then
+            local decorate_tree = UILib.decorator_image[terrain].decorate_tree_1
+            return decorate_tree
+        elseif village_name == 'ironVillage' then
+            return "iron_ruins_276x200.png"
+        elseif village_name == 'stoneVillage' then
+            local stone_mountain = UILib.decorator_image[terrain].stone_mountain
+            return stone_mountain
+        elseif village_name == 'foodVillage' then
+            local farmland = UILib.decorator_image[terrain].farmland
+            return farmland
+        end
+	end
 end
 
 function GameUIAllianceVillageEnter:GetBuildingType()

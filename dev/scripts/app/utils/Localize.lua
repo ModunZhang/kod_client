@@ -530,7 +530,7 @@ local ALLIANCE_AUTHORITY_LIST = {
 local VILLAGE_NAME = {
     woodVillage = _("木材村落"),
     stoneVillage= _("矿石村落"),
-    ironVillage = _("银矿村落"),
+    ironVillage = _("铁矿村落"),
     foodVillage = _("粮食村落"),
     coinVillage = _("硬币村落"),
 }
