@@ -150,7 +150,7 @@ end
 function WidgetPVEDialog:Search()
     local x, y = self:GetObject():Position()
     local searched = self:GetObject():Searched()
-    self:GetPVEMap():ModifyObject(x, y, searched + 1)
+    return self:GetPVEMap():ModifyObject(x, y, searched + 1)
 end
 function WidgetPVEDialog:GetRewardsFromServer(select, gem_used)
     self.user:SetPveData(nil, self:GetObject():GetRewards(select), gem_used)
@@ -185,7 +185,7 @@ function WidgetPVEDialog:Fight()
             )
 
             if report:IsAttackWin() then
-                self:Search()
+                local rollback = self:Search()
                 local rewards = self:GetObject():IsLast() and enemy.rewards + self:GetObject():GetRewards() or enemy.rewards
                 self.user:SetPveData(report:GetAttackKDA(), rewards)
                 NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):next(function()
@@ -195,7 +195,11 @@ function WidgetPVEDialog:Fight()
                         end
                     end):AddToCurrentScene(true)
                 end):catch(function(err)
-                    dump(err:reason())
+                    local _,code_type = err:reason()
+                    if not err:isSyntaxError() and code_type ~= "timeout" then
+                        dump(err:reason())
+                        rollback()
+                    end
                 end)
             else
                 self.user:SetPveData(report:GetAttackKDA())
@@ -211,6 +215,7 @@ end
 
 
 return WidgetPVEDialog
+
 
 
 
