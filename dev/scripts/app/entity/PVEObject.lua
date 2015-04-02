@@ -157,8 +157,7 @@ function PVEObject:DecodeToRewards(raw)
             probability = probability
         }
     end)
-    setmetatable(r, m)
-    return r
+    return setmetatable(r, m)
 end
 function PVEObject:IsUnSearched()
     return self:Searched() == 0

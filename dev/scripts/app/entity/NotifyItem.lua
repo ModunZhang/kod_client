@@ -61,6 +61,8 @@ m.__tostring = function(a)
             txt = string.format("%s x%d", Localize_item.item_name[v.name], v.count)
         elseif v.type == "resources" then
             txt = string.format("%s x%d", Localize.fight_reward[v.name], v.count)
+        elseif v.type == "soldierMaterials" then
+            txt = string.format("%s x%d", Localize.soldier_material[v.name], v.count)
         end
         return k, txt
     end), ", ")
