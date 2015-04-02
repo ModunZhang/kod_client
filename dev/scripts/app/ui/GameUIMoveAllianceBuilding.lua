@@ -7,7 +7,7 @@ local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIMoveAllianceBuilding = UIKit:createUIClass("GameUIMoveAllianceBuilding")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-local config_alliance_building = GameDatas.AllianceBuilding
+local config_alliance_building = GameDatas.AllianceInitData.buildingName
 local Localize = import("..utils.Localize")
 
 function GameUIMoveAllianceBuilding:ctor(params)
@@ -63,8 +63,8 @@ function GameUIMoveAllianceBuilding:GetListData()
 end
 
 function GameUIMoveAllianceBuilding:GetMoveNeedHonour(buildingKey,level)
-	if config_alliance_building[buildingKey] and config_alliance_building[buildingKey][level] then 
-		return config_alliance_building[buildingKey][level].moveNeedHonour
+	if config_alliance_building[buildingKey] then 
+		return config_alliance_building[buildingKey].moveNeedHonour
 	else
 		return 0
 	end
