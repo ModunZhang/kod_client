@@ -257,13 +257,14 @@ function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, fini
         local corps = display.newNode():addTo(self:GetCorpsNode())
         local armature = ccs.Armature:create("red_long"):addTo(corps)
 
-        print("CreateCorps", id, math.floor(march_info.degree / 45) + 4,march_info.degree)
-        local ani, scalex
-        if march_info.degree>=0 then
-            ani, scalex = unpack(dir_map[math.floor(march_info.degree / 45) + 4])
-        else
-            ani, scalex = unpack(dir_map[math.ceil(march_info.degree / 45) + 4])
-        end
+        local ani, scalex = unpack(dir_map[math.floor(march_info.degree / 45) + 4])
+        -- if march_info.degree>=0 then
+        --     print("CreateCorps", id, math.floor(march_info.degree / 45) + 4,march_info.degree)
+        --     ani, scalex = unpack(dir_map[math.floor(march_info.degree / 45) + 4])
+        -- else
+        --     print("CreateCorps", id, math.floor(march_info.degree / 45) + 4,march_info.degree)
+        --     ani, scalex = unpack(dir_map[math.floor(march_info.degree / 45) + 4])
+        -- end
         armature:align(display.CENTER)
         armature:getAnimation():play(ani)
         corps:setScaleX(scalex)
