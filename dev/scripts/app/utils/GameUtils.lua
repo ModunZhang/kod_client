@@ -514,10 +514,13 @@ end
 local function createFightSoldiers(soldiers, dragon, terrain)
     return LuaUtils:table_map(soldiers, function(k, soldier)
         local config = getSoldiersConfig(soldier.name, soldier.star)
+        
         local hp_buff = getSoliderHpBuff(soldier.name, soldier.star, dragon, terrain)
         local hp_vip_buff = User:GetVIPSoldierHpAdd()
+
         local atk_buff = getPlayerSoldierAtkBuff(soldier.name, soldier.star, dragon, terrain)
         local atk_vip_buff = User:GetVIPSoldierAttackPowerAdd()
+
         local soldier_man = City:GetSoldierManager()
         local tech_to_infantry_buff = soldier_man:GetMilitaryTechsByName(config.type.."_".."infantry"):GetAtkEff()
         local tech_to_archer_buff = soldier_man:GetMilitaryTechsByName(config.type.."_".."archer"):GetAtkEff()
@@ -567,36 +570,31 @@ function GameUtils:SoldierSoldierBattle(attackSoldiers, attackWoundedSoldierPerc
     local defenceResults = {}
     while #attackSoldiers > 0 and #defenceSoldiers > 0 do
         local attackSoldier = attackSoldiers[1]
-        local attackSoldierConfig = getSoldiersConfig(attackSoldier.name, attackSoldier.star)
-
         local defenceSoldier = defenceSoldiers[1]
-        local defenceSoldierConfig = getSoldiersConfig(defenceSoldier.name, defenceSoldier.star)
-        --
-        local attackSoldierHp = attackSoldierConfig.hp
-        local attackTotalPower = attackSoldierConfig[defenceSoldierConfig.type] * attackSoldier.currentCount
-
-        local defenceSoldierHp = defenceSoldierConfig.hp
-        local defenceTotalPower = defenceSoldierConfig[attackSoldierConfig.type] * defenceSoldier.currentCount
-        --计算
-        local attackDamagedSoldierCount
-        local defenceDamagedSoldierCount
+        local attackSoldierType = attackSoldier.type
+        local defenceSoldierType = defenceSoldier.type
+        local attackTotalPower = attackSoldier.attackPower[defenceSoldierType] * attackSoldier.currentCount
+        local defenceTotalPower = defenceSoldier.attackPower[attackSoldierType] * defenceSoldier.currentCount
+        local attackDamagedSoldierCount = nil
+        local defenceDamagedSoldierCount = nil
         if attackTotalPower >= defenceTotalPower then
-            attackDamagedSoldierCount = round(defenceTotalPower * 0.5 / attackSoldierHp)
-            defenceDamagedSoldierCount = round(sqrt(attackTotalPower * defenceTotalPower) * 0.5 / defenceSoldierHp)
+            attackDamagedSoldierCount = ceil(defenceTotalPower * 0.5 / attackSoldier.hp)
+            defenceDamagedSoldierCount = ceil(sqrt(attackTotalPower * defenceTotalPower) * 0.5 / defenceSoldier.hp)
         else
-            attackDamagedSoldierCount = round(sqrt(attackTotalPower * defenceTotalPower) * 0.5 / attackSoldierHp)
-            defenceDamagedSoldierCount = round(attackTotalPower * 0.5 / defenceSoldierHp)
+            attackDamagedSoldierCount = ceil(sqrt(attackTotalPower * defenceTotalPower) * 0.5 / attackSoldier.hp)
+            defenceDamagedSoldierCount = ceil(attackTotalPower * 0.5 / defenceSoldier.hp)
         end
-        -- 修正
         if attackDamagedSoldierCount > attackSoldier.currentCount * 0.7 then
-            attackDamagedSoldierCount = floor(attackSoldier.currentCount * 0.7)
+            attackDamagedSoldierCount = ceil(attackSoldier.currentCount * 0.7)
         end
         if defenceDamagedSoldierCount > defenceSoldier.currentCount * 0.7 then
-            defenceDamagedSoldierCount = floor(defenceSoldier.currentCount * 0.7)
+            defenceDamagedSoldierCount = ceil(defenceSoldier.currentCount * 0.7)
         end
         --
         local attackWoundedSoldierCount = ceil(attackDamagedSoldierCount * attackWoundedSoldierPercent)
+        local defenceWoundedSoldierCount = ceil(defenceDamagedSoldierCount * defenceWoundedSoldierPercent)
         local attackMoraleDecreased = ceil(attackDamagedSoldierCount * pow(2, attackSoldier.round - 1) / attackSoldier.totalCount * 100 * attackSoldierMoraleDecreasedPercent)
+        local dfenceMoraleDecreased = ceil(defenceDamagedSoldierCount * pow(2, defenceSoldier.round - 1) / defenceSoldier.totalCount * 100 * defenceSoldierMoraleDecreasedPercent)
         table.insert(attackResults, {
             soldierName = attackSoldier.name,
             soldierStar = attackSoldier.star,
@@ -607,14 +605,6 @@ function GameUtils:SoldierSoldierBattle(attackSoldiers, attackWoundedSoldierPerc
             moraleDecreased = attackMoraleDecreased > attackSoldier.morale and attackSoldier.morale or attackMoraleDecreased,
             isWin = attackTotalPower >= defenceTotalPower
         })
-        attackSoldier.round = attackSoldier.round + 1
-        attackSoldier.currentCount = attackSoldier.currentCount - attackDamagedSoldierCount
-        attackSoldier.woundedCount = attackSoldier.woundedCount + attackWoundedSoldierCount
-        attackSoldier.morale = attackSoldier.morale - attackMoraleDecreased
-
-
-        local defenceWoundedSoldierCount = ceil(defenceDamagedSoldierCount * defenceWoundedSoldierPercent)
-        local dfenceMoraleDecreased = ceil(defenceDamagedSoldierCount * pow(2, attackSoldier.round - 1) / defenceSoldier.totalCount * 100 * defenceSoldierMoraleDecreasedPercent)
         table.insert(defenceResults, {
             soldierName = defenceSoldier.name,
             soldierStar = defenceSoldier.star,
@@ -625,6 +615,11 @@ function GameUtils:SoldierSoldierBattle(attackSoldiers, attackWoundedSoldierPerc
             moraleDecreased = dfenceMoraleDecreased > defenceSoldier.morale and defenceSoldier.morale or dfenceMoraleDecreased,
             isWin = attackTotalPower < defenceTotalPower
         })
+        attackSoldier.round = attackSoldier.round + 1
+        attackSoldier.currentCount = attackSoldier.currentCount - attackDamagedSoldierCount
+        attackSoldier.woundedCount = attackSoldier.woundedCount + attackWoundedSoldierCount
+        attackSoldier.morale = attackSoldier.morale - attackMoraleDecreased
+
         defenceSoldier.round = defenceSoldier.round + 1
         defenceSoldier.currentCount = defenceSoldier.currentCount - defenceDamagedSoldierCount
         defenceSoldier.woundedCount = defenceSoldier.woundedCount + defenceWoundedSoldierCount
@@ -638,7 +633,15 @@ function GameUtils:SoldierSoldierBattle(attackSoldiers, attackWoundedSoldierPerc
             table.remove(defenceSoldiers, 1)
         end
     end
-    return attackResults, defenceResults
+
+    local fightResult = true
+    if(#attackSoldiers > 0 or (#attackSoldiers == 0 and #defenceSoldiers== 0)) then
+        fightResult = true
+    else
+        fightResult = false
+    end
+
+    return attackResults, defenceResults, fightResult
 end
 
 function GameUtils:DragonDragonBattle(attackDragon, defenceDragon, effect)
@@ -756,7 +759,7 @@ function GameUtils:DoBattle(attacker, defencer, terrain)
 
     local attackWoundedSoldierPercent = getPlayerTreatSoldierPercent(attacker.dragon.dragon)
     local attackSoldierMoraleDecreasedPercent = getPlayerSoldierMoraleDecreasedPercent(attacker.dragon.dragon)
-    local attack_soldier, defence_soldier =
+    local attack_soldier, defence_soldier, is_attack_win =
         GameUtils:SoldierSoldierBattle(
             attacker_soldiers, attackWoundedSoldierPercent, attackSoldierMoraleDecreasedPercent,
             defencer_soldiers, 0.4, 1
@@ -834,8 +837,7 @@ function GameUtils:DoBattle(attacker, defencer, terrain)
         return false
     end
     function report:IsAttackWin()
-        local round = self:GetFightAttackSoldierRoundData()
-        return round[#round].isWin
+        return is_attack_win
     end
     function report:GetReportResult()
         return self:IsAttackWin()
@@ -845,6 +847,7 @@ end
 
 
 return GameUtils
+
 
 
 
