@@ -80,7 +80,7 @@ function WidgetAllianceCreateOrEdit:CreateAllianceButtonClicked()
 	if string.utf8len(data.name) < 3 or string.utf8len(data.name) > 20 or string.find(data.name,"%p") then
 		errMsg = _("联盟名称不合法")
 	end 
-	if string.utf8len(data.tag) < 3 or string.utf8len(data.tag) > 20 or string.find(data.tag,"%p") then
+	if string.utf8len(data.tag) < 1 or string.utf8len(data.tag) > 3 or not string.match(data.tag,"%w+%w+%w+") then
 		errMsg = _("联盟标签不合法")
 	end
 	if errMsg ~= "" then
@@ -315,7 +315,7 @@ end
 function WidgetAllianceCreateOrEdit:createTextfieldPanel()
 	local node = display.newNode()
 	local limitLabel = UIKit:ttfLabel({
-		text = _("只允许字母、数字和空格，需要3~20个字符"),
+		text = _("只允许字母、数字需要1~3个字符"),
 		size = 18,
 		color = 0x797154
 	}):addTo(node):align(display.LEFT_BOTTOM, 0, 0)
@@ -326,7 +326,7 @@ function WidgetAllianceCreateOrEdit:createTextfieldPanel()
         size = cc.size(552,48),
     })
     editbox_tag:setPlaceHolder(_("最多可输入20字符"))
-    editbox_tag:setMaxLength(20)
+    editbox_tag:setMaxLength(3)
     editbox_tag:setFont(UIKit:getEditBoxFont(),18)
     editbox_tag:setFontColor(cc.c3b(0,0,0))
     editbox_tag:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))
