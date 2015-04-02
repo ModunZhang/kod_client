@@ -208,12 +208,11 @@ end
 function GameUIVip:WidgetPlayerNode_DataSource(name)
     if name == 'BasicInfoData' then
         local exp_config = GameDatas.PlayerInitData.playerLevel[User:Level()]
-        local levelUpExp = exp_config.expTo - exp_config.expFrom
         return {
             name = User:Name(),
             lv = User:Level(),
             currentExp = User:LevelExp(),
-            maxExp = levelUpExp,
+            maxExp = exp_config.expTo,
             power = User:Power(),
             playerId = User:Id(),
             playerIcon = User:Icon(),
