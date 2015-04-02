@@ -3,13 +3,18 @@ local UILib = import("..ui.UILib")
 local UIImage = cc.ui.UIImage
 local WidgetSoldierInBattle = class("WidgetSoldierInBattle", UIImage)
 
+local normal = GameDatas.Soldiers.normal
+local special = GameDatas.Soldiers.special
+
 function WidgetSoldierInBattle:ctor(filename, options)
     WidgetSoldierInBattle.super.ctor(self, filename, options)
     local pos = {x = 284/2,y = 128/2}
 
+    dump(options)
     local soldier_level = options.star
     local soldier_type = options.soldier
-    local soldier_ui_config = UILib.soldier_image[soldier_type][soldier_level]
+    local config = special[soldier_type] or normal[soldier_type.."_"..options.star]
+    local soldier_ui_config = UILib.soldier_image[soldier_type][config.star]
     local soldier_head_icon = display.newSprite(soldier_ui_config, nil, nil, {class=cc.FilteredSpriteWithOne}):align(display.LEFT_BOTTOM,0,10)
     soldier_head_icon:scale(104/soldier_head_icon:getContentSize().height)
     local soldier_head_bg  = display.newSprite("box_soldier_128x128.png")

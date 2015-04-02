@@ -464,6 +464,18 @@ local SOLDIER_STATUS = {
     ["defeated"] = _("击溃!"),
 }
 
+
+local SOLDIER_MATERIAL = {
+    ["deathHand"] = _("士兵材料"),
+    ["heroBones"] = _("士兵材料"),
+    ["soulStone"] = _("士兵材料"),
+    ["magicBox"] = _("士兵材料"),
+    ["confessionHood"] = _("士兵材料"),
+    ["brightRing"] = _("士兵材料"),
+    ["holyBook"] = _("士兵材料"),
+    ["brightAlloy"] = _("士兵材料")
+}
+
 local DRAGON_STATUS = {
     free = _("空闲"),
     march = _("出征中"),
@@ -765,6 +777,7 @@ return {
     alliance_title = ALLIANCE_TITLE,
     alliance_events = ALLIANCE_EVENTS,
     soldier_name = SOLDIER_NAME,
+    soldier_material = SOLDIER_MATERIAL,
     soldier_category = SOLDIER_CATEGORY,
     soldier_status = SOLDIER_STATUS,
     dragon_status = DRAGON_STATUS,

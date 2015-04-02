@@ -325,23 +325,23 @@ local SOLDIER_IMAGES = {
     },
 
     skeletonWarrior = {
-        "",
         "skeletonWarrior.png",
-        "",
+        "skeletonWarrior.png",
+        "skeletonWarrior.png",
     },
     skeletonArcher = {
-        "",
         "skeletonArcher.png",
-        "",
+        "skeletonArcher.png",
+        "skeletonArcher.png",
     },
     deathKnight = {
-        "",
-        "",
+        "deathKnight.png",
+        "deathKnight.png",
         "deathKnight.png",
     },
     meatWagon = {
-        "",
-        "",
+        "meatWagon.png",
+        "meatWagon.png",
         "meatWagon.png",
     },
     priest = {

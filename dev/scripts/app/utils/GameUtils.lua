@@ -515,25 +515,26 @@ local function createFightSoldiers(soldiers, dragon, terrain)
     return LuaUtils:table_map(soldiers, function(k, soldier)
         local config = getSoldiersConfig(soldier.name, soldier.star)
         
-        local hp_buff = getSoliderHpBuff(soldier.name, soldier.star, dragon, terrain)
-        local hp_vip_buff = User:GetVIPSoldierHpAdd()
-
-        local atk_buff = getPlayerSoldierAtkBuff(soldier.name, soldier.star, dragon, terrain)
-        local atk_vip_buff = User:GetVIPSoldierAttackPowerAdd()
+        local atkBuff = getPlayerSoldierAtkBuff(soldier.name, soldier.star, dragon, terrain)
+        local hpBuff = getSoliderHpBuff(soldier.name, soldier.star, dragon, terrain)
 
         local soldier_man = City:GetSoldierManager()
-        local tech_to_infantry_buff = soldier_man:GetMilitaryTechsByName(config.type.."_".."infantry"):GetAtkEff()
-        local tech_to_archer_buff = soldier_man:GetMilitaryTechsByName(config.type.."_".."archer"):GetAtkEff()
-        local tech_to_cavalry_buff = soldier_man:GetMilitaryTechsByName(config.type.."_".."cavalry"):GetAtkEff()
-        local tech_to_siege_buff = soldier_man:GetMilitaryTechsByName(config.type.."_".."siege"):GetAtkEff()
-        -- dump(hp_buff, "hp_buff")
-        -- dump(hp_vip_buff, "hp_vip_buff")
-        -- dump(atk_buff, "atk_buff")
-        -- dump(atk_vip_buff, "atk_vip_buff")
-        -- dump(tech_to_infantry_buff, "tech_to_infantry_buff")
-        -- dump(tech_to_archer_buff, "tech_to_archer_buff")
-        -- dump(tech_to_cavalry_buff, "tech_to_cavalry_buff")
-        -- dump(tech_to_siege_buff, "tech_to_siege_buff")
+        local techBuffToInfantry = soldier_man:GetMilitaryTechsByName(config.type.."_".."infantry"):GetAtkEff()
+        local techBuffToArcher = soldier_man:GetMilitaryTechsByName(config.type.."_".."archer"):GetAtkEff()
+        local techBuffToCavalry = soldier_man:GetMilitaryTechsByName(config.type.."_".."cavalry"):GetAtkEff()
+        local techBuffToSiege = soldier_man:GetMilitaryTechsByName(config.type.."_".."siege"):GetAtkEff()
+        local techBuffHpAdd = soldier_man:GetMilitaryTechsByName(config.type.."_".."hpAdd"):GetAtkEff()
+        
+        local vipHpBuff = User:GetVIPSoldierHpAdd()
+        local vipAttackBuff = User:GetVIPSoldierAttackPowerAdd()
+        -- dump(hpBuff, "hpBuff")
+        -- dump(vipHpBuff, "vipHpBuff")
+        -- dump(atkBuff, "atkBuff")
+        -- dump(vipAttackBuff, "vipAttackBuff")
+        -- dump(techBuffToInfantry, "techBuffToInfantry")
+        -- dump(techBuffToArcher, "techBuffToArcher")
+        -- dump(techBuffToCavalry, "techBuffToCavalry")
+        -- dump(techBuffToSiege, "techBuffToSiege")
         return k, {
             name = soldier.name,
             star = soldier.star,
@@ -542,15 +543,14 @@ local function createFightSoldiers(soldiers, dragon, terrain)
             totalCount = soldier.count,
             woundedCount = 0,
             power = config.power,
-            hp = math.floor(config.hp * (1 + hp_buff + hp_vip_buff)),
+            hp = math.floor(config.hp * (1 + hpBuff + techBuffHpAdd + vipHpBuff)),
             morale = 100,
             round = 0,
             attackPower = {
-                infantry = math.floor(config.infantry * (1 + atk_buff + tech_to_infantry_buff + atk_vip_buff)),
-                archer = math.floor(config.archer * (1 + atk_buff + tech_to_archer_buff + atk_vip_buff)),
-                cavalry = math.floor(config.cavalry * (1 + atk_buff + tech_to_cavalry_buff + atk_vip_buff)),
-                siege = math.floor(config.siege * (1 + atk_buff + tech_to_siege_buff + atk_vip_buff)),
-            -- wall = math.floor(config.wall * (1 + atk_buff + atkWallBuff + atk_vip_buff))
+                infantry = math.floor(config.infantry * (1 + atkBuff + techBuffToInfantry + vipAttackBuff)),
+                archer = math.floor(config.archer * (1 + atkBuff + techBuffToArcher + vipAttackBuff)),
+                cavalry = math.floor(config.cavalry * (1 + atkBuff + techBuffToCavalry + vipAttackBuff)),
+                siege = math.floor(config.siege * (1 + atkBuff + techBuffToSiege + vipAttackBuff)),
             }
         }
     end)
