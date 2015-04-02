@@ -813,6 +813,7 @@ function City:IteratorAllNeedTimerEntity(current_time)
     end
     self.resource_manager:OnTimer(current_time)
 end
+-- 遍历顺序影响城墙的生成
 function City:IteratorTilesByFunc(func)
     for iy, row in pairs(self.tiles) do
         for jx, col in pairs(row) do
@@ -821,6 +822,13 @@ function City:IteratorTilesByFunc(func)
             end
         end
     end
+    -- for iy, row in ipairs(self.tiles) do
+    --     for ix = #row, 1, -1 do
+    --         if func(jx, iy, row[ix]) then
+    --             return
+    --         end
+    --     end
+    -- end
 end
 -- function City:IteratorTowersByFunc(func)
 --     table.foreach(self:GetCanUpgradingTowers(), func)
