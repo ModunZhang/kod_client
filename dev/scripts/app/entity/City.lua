@@ -263,6 +263,9 @@ function City:InitBuildings(buildings)
         if type_ == "keep" then
             assert(not self.keep)
             self.keep = building
+        elseif type_ == "watchTower" then
+            assert(not self.watchTower)
+            self.watchTower = building
         elseif type_ == "barracks" then
             assert(not self.barracks)
             self.barracks = building
@@ -294,6 +297,9 @@ end
 -- 取值函数
 function City:GetKeep()
     return self.keep
+end
+function City:GetWatchTower()
+    return self.watchTower
 end
 function City:GetBarracks()
     return self.barracks
@@ -551,7 +557,11 @@ function City:GetLocationIdByBuildingType(building_type)
 end
 function City:GetBuildingByLocationId(location_id)
     if location_id == 2 then
-        return self:GetFirstBuildingByType("watchTower")
+        return self:GetWatchTower()
+    elseif location_id == 21 then
+        return self:GetGate()
+    elseif location_id == 22 then
+        return self:GetTower()
     end
     for _,v in pairs(self:GetAllBuildings()) do
         if self:GetTileByLocationId(location_id):IsContainBuilding(v) then

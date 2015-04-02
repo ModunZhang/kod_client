@@ -56,22 +56,32 @@ end
 function Tile:IsOutOfWalls()
     return not self:NeedWalls()
 end
+function Tile:IsUnlocking()
+    local building = self.city:GetBuildingByLocationId(self.location_id)
+    if building and building:IsUnlocking() then
+        return true
+    end
+end
 function Tile:NeedWalls()
+    if self:IsUnlocking() then
+        return true
+    end
     local x, y, city = self.x, self.y, self.city
     local xb = city:GetTileByIndex(x - 1, y)
     local yb = city:GetTileByIndex(x, y - 1)
     local xn = city:GetTileByIndex(x + 1, y)
     local yn = city:GetTileByIndex(x, y + 1)
-
     local need_walls = false
     if self.locked then
-        local building = city:GetBuildingByLocationId(self.location_id)
-        if building and building:IsUnlocking() then
-            need_walls = true
-        end
+        local x_dir = (xb and (xb:IsUnlocked() or xb:IsUnlocking())) and (xn and (xn:IsUnlocked() or xn:IsUnlocking()))
+        local y_dir = (yb and (yb:IsUnlocked() or yb:IsUnlocking())) and (yn and (yn:IsUnlocked() or yn:IsUnlocking()))
+        need_walls = x_dir or y_dir
+    else
+        local x_dir = (xn == nil and true or (xn:IsUnlocked() or xn:IsUnlocking())) or (xb and (xb:IsUnlocked() or xb:IsUnlocking()))
+        local y_dir = (yn == nil and true or (yn:IsUnlocked() or yn:IsUnlocking())) or (yb and (yb:IsUnlocked() or yb:IsUnlocking()))
+        need_walls = x_dir or y_dir
     end
-
-    return need_walls or self:IsUnlocked() or (xb and xb:IsUnlocked() and yb and yb:IsUnlocked()) and ((xn and xn:IsUnlocked()) or (yn and yn:IsUnlocked()))
+    return need_walls
 end
 local math = math
 local max = math.max
@@ -366,6 +376,9 @@ end
 
 
 return Tile
+
+
+
 
 
 
